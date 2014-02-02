@@ -1,0 +1,53 @@
+<div class="box">
+	<div id="list-box" class="content">
+	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" id="listForm">
+	<table border="0" align="center" class="list">
+		<tr>
+			<th>Order ID</th>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Status</th>
+			<th>Assigned Staff</th>
+			<th>Total Items</th>
+			<th>Order Total</th>
+			<th>Date Added</th>
+			<th>Time Added</th>
+			<th>Restaurant Location</th>
+			<!--<th>Email Sent</th>-->
+			<th width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
+			<th class="right">Actions(s)</th>
+		</tr>
+		<?php if ($orders) { ?>
+		<?php foreach ($orders as $order) { ?>
+		<tr>
+			<td class="id"><?php echo $order['order_id']; ?></td>
+			<td><?php echo $order['first_name']; ?></td>
+			<td><?php echo $order['last_name']; ?></td>
+			<td><?php echo $order['order_status']; ?></td>
+			<td><?php echo $order['staff_name']; ?></td>
+			<td><?php echo $order['total_items']; ?></td>
+			<td><?php echo $order['order_total']; ?></td>
+			<td><?php echo $order['date_added']; ?></td>
+			<td><?php echo $order['order_time']; ?></td>
+			<td><?php echo $order['location_name']; ?></td>
+			<!--<td><?php echo $order['notify'] ? 'YES' : '<b>NO</b>'; ?></td>-->
+			<td class="delete"><input type="checkbox" value="<?php echo $order['order_id']; ?>" name="delete[]" /></td>
+			<td class="right"><a class="edit" title="Edit" href="<?php echo $order['edit']; ?>"></a></td>
+		</tr>
+		<?php } ?>
+		<?php } else { ?>
+		<tr>
+			<td colspan="12" align="center"><?php echo $text_empty; ?></td>
+		</tr>
+		<?php } ?>
+	</table>
+	</form>
+	</div>
+	
+	<?php if ($pagination['links']) { ?>
+	<div class="pagination">
+		<div class="links"><?php echo $pagination['links']; ?></div>
+		<div class="info"><?php echo $pagination['info']; ?></div> 
+	</div>
+	<?php } ?>
+</div>

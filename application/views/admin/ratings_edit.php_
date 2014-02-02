@@ -1,0 +1,18 @@
+<div class="box">
+	<h2>UPDATE: <?php echo $rating_name; ?></h2>
+
+	<?php echo form_open(current_url()) ?>
+	<table class="form">
+	<tr>
+		<td><b>Rating Name:</b></td>
+    	<td><input type="text" name="rating_name" value="<?php echo set_value('rating_name', $rating_name); ?>" id="name" class="textfield" /></td>
+		<td></td>
+    </tr>
+    <tr>
+    	<td><b>Delete:</b></td>
+    	<td><input type="checkbox" name="delete" value="1" /></td>
+		<td></td>
+    </tr>
+	</table>
+
+</div>

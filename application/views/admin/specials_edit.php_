@@ -1,0 +1,46 @@
+<div class="box">
+	<form enctype="multipart/form-data" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" id="updateForm">
+	<table class="form">
+		<tr>
+			<td><b>Special Name:</b></td>
+	    	<td><input type="text" name="special_name" id="name" value="<?php echo set_value('special_name', $special_name); ?>" class="textfield" /></td>
+		</tr>
+    	<tr>
+    		<td><b>Special Description:</b></td>
+    		<td><textarea name="special_description" id="description" rows="5" cols="45"><?php echo set_value('special_description', $special_description); ?></textarea></td>
+    	</tr>
+    	<tr>
+    		<td><b>Special Price:</b></td>
+    		<td><input type="text" name="special_price" id="price" value="<?php echo set_value('special_price'), $special_price; ?>" class="textfield" size="5"/></td>
+    	</tr>
+    	<tr>
+    		<td><b>Start Date:</b></td>
+    		<td><input type="text" name="start_date" id="start-date" value="<?php echo set_value('start_date'), $start_date; ?>" class="textfield" size="10" /></td>
+    	</tr>
+    	<tr>
+    		<td><b>End Date:</b></td>
+    		<td><input type="text" name="end_date" id="end-date" value="<?php echo set_value('end_date'), $end_date; ?>" class="textfield" size="10" /></td>
+    	</tr>
+    	<tr>
+    		<td><b>Special Photo:</b></td>
+    		<td><input type="file" name="special_photo" id="photo"/></td>
+    	</tr>
+		<tr>
+			<td><b>Stock Quantity:</b></td>
+			<td><input type="text" name="stock_qty" value="<?php echo set_value('stock_qty', $stock_qty); ?>" id="stock" size="5" class="textfield" /></td>
+		</tr>
+    	<tr>
+    		<td><b>Delete:</b></td>
+    		<td><input type="checkbox" name="delete" value="1" /></td>
+	    </tr>
+	</table>
+	</form>
+</div>
+<script type="text/javascript" src="<?php echo base_url("assets/js/jquery-ui-timepicker-addon.js"); ?>"></script> 
+<script type="text/javascript"><!--
+$(document).ready(function() {
+	$('#start-date, #end-date').datepicker({
+		dateFormat: 'yy-mm-dd',
+	});
+});
+//--></script>
