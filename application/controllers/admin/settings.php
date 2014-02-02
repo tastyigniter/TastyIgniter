@@ -8,7 +8,6 @@ class Settings extends CI_Controller {
 		$this->load->model('Countries_model');
 		$this->load->model('Currencies_model');
 		$this->load->model('Statuses_model');	    
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 	}
 
 	public function index() {

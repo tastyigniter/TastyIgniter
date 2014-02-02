@@ -8,7 +8,6 @@ class Find_table extends MX_Controller {
 		$this->load->model('Reservations_model');
 		$this->load->model('Customers_model');
 		$this->load->model('Security_questions_model');
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 	}
 
 	public function index() {

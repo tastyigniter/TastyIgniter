@@ -33,7 +33,7 @@ if (defined('ENVIRONMENT'))
 	switch (ENVIRONMENT)
 	{
 		case 'development':
-			error_reporting(E_ALL);
+			error_reporting(E_ALL & ~E_DEPRECATED);
 		break;
 	
 		case 'testing':
@@ -96,7 +96,7 @@ if (defined('ENVIRONMENT'))
  */
 	// The directory name, relative to the "controllers" folder.  Leave blank
 	// if your controller is not in a sub-folder within the "controllers" folder
-	// $routing['directory'] = '';
+	// $routing['directory'] = 'main';
 
 	// The controller class file name.  Example:  Mycontroller
 	// $routing['controller'] = '';
@@ -104,6 +104,18 @@ if (defined('ENVIRONMENT'))
 	// The controller function you wish to be called.
 	// $routing['function']	= '';
 
+
+/*
+|---------------------------------------------------------------
+| DEFAULT TIMEZONE
+|---------------------------------------------------------------
+|
+| Set the default timezone for date/time functions to use if
+| none is set on the server.
+|
+*/
+
+date_default_timezone_set('Europe/London');
 
 /*
  * -------------------------------------------------------------------

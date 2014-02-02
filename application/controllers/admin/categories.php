@@ -6,7 +6,6 @@ class Categories extends CI_Controller {
 		$this->load->library('user');
 		$this->load->library('pagination');
 		$this->load->model('Menus_model'); // load the menus model
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 	}
 
 	public function index() {

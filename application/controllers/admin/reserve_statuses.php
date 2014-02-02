@@ -5,7 +5,6 @@ class Reserve_statuses extends CI_Controller {
 		parent::__construct(); //  calls the constructor
 		$this->load->library('user');
 		$this->load->model('Statuses_model');
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 	}
 
 	public function index() {

@@ -11,7 +11,6 @@ class Cart_module extends MX_Controller {
 	}
 
 	public function index() {
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 		$this->lang->load('main/cart_module');  														// loads language file
 		
 		if ( !file_exists(APPPATH .'/extensions/main/views/cart_module.php')) { 								//check if file exists in views folder
@@ -125,7 +124,6 @@ class Cart_module extends MX_Controller {
 	}		
 
 	public function add() {																		// add() method to add item to cart
-		//$this->output->enable_profiler(TRUE); 												// for debugging profiler... remove later
 		$json = array();
 		$menu_data = array();
 		$menu_option_data = array();

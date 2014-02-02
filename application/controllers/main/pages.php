@@ -8,7 +8,6 @@ class Pages extends CI_Controller {
 
 	public function home() {
 			
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 		//check if file exists in views
 		if ( !file_exists('application/views/main/home.php')) {
 			// Whoops, we don't have a page for that!

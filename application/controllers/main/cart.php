@@ -7,7 +7,6 @@ class Cart extends CI_Controller {
 		$this->load->model('Foods_model');
 		$this->load->library('cart');
 		$this->load->library('currency');
-		//$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 	}
 
 	public function index() {

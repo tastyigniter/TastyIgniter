@@ -6,7 +6,6 @@ class Layouts extends CI_Controller {
 		$this->load->library('user');
 		$this->load->model('Design_model');
 		$this->load->model('Settings_model');
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 	}
 
 	public function index() {

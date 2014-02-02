@@ -5,7 +5,6 @@ class Departments extends CI_Controller {
 		parent::__construct(); //  calls the constructor
 		$this->load->library('user');
 		$this->load->model('Departments_model');
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 	}
 
 	public function index() {

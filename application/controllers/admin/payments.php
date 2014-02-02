@@ -5,7 +5,6 @@ class Payments extends CI_Controller {
 		parent::__construct();
 		$this->load->library('user');
 		$this->load->model('Payments_model');
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 	}
 
 	public function index() {

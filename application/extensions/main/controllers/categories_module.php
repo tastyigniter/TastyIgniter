@@ -8,7 +8,6 @@ class Categories_module extends MX_Controller {
 	}
 
 	public function index() {
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 		$this->lang->load('main/categories_module');  														// loads language file
 		
 		if ( !file_exists(APPPATH .'/extensions/main/views/categories_module.php')) { 								//check if file exists in views folder

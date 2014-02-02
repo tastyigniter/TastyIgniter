@@ -4,7 +4,6 @@ class Backup extends CI_Controller {
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
 		$this->load->library('user');
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 	}
 
 	public function index() {

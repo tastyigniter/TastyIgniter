@@ -8,7 +8,6 @@ class Dashboard extends CI_Controller {
 		$this->load->library('currency'); // load the currency library
 		$this->load->model('Dashboard_model');
 		$this->load->model('Orders_model');
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 	}
 
 	public function index() {

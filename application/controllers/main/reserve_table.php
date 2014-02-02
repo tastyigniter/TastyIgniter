@@ -10,7 +10,6 @@ class Reserve_table extends MX_Controller {
 	}
 
 	public function index() {
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 		$this->load->library('location'); // load the location library
 		$this->lang->load('main/reserve_table');  // loads language file
 		

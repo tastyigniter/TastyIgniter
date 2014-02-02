@@ -7,7 +7,6 @@ class Details extends MX_Controller {
 		//$this->load->library('customer'); 													// load the customer library
 		$this->load->model('Customers_model');													// load the customers model
 		$this->load->model('Security_questions_model');											// load the security questions model
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 	}
 
 	public function index() {

@@ -8,7 +8,6 @@ class Menus extends MX_Controller {
 	}
 
 	public function index() {
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 		$this->load->library('location'); 														// load the location library
 		$this->load->library('currency'); 														// load the currency library
 		$this->load->model('Locations_model'); 													// load the locations model

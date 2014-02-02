@@ -6,7 +6,6 @@ class Account extends MX_Controller {
 		parent::__construct(); 																	//  calls the constructor
 		$this->load->model('Customers_model');													// load the customers model
 		$this->load->model('Security_questions_model');											// load the security questions model
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 	}
 
 	public function index() {

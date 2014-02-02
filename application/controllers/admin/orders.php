@@ -15,7 +15,6 @@ class Orders extends CI_Controller {
 		$this->load->model('Statuses_model');
 		$this->load->model('Payments_model');
 		$this->load->model('Countries_model');
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 	}
 
 	public function index() {

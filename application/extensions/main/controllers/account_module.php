@@ -3,7 +3,6 @@
 class Account_module extends MX_Controller {
 
 	public function index() {
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 		$this->lang->load('main/account_module');  														// loads language file
 		
 		if ( !file_exists(APPPATH .'/extensions/main/views/account_module.php')) { 								//check if file exists in views folder

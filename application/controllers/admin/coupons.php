@@ -6,7 +6,6 @@ class Coupons extends CI_Controller {
 		$this->load->library('user');
 		$this->load->library('pagination');
 		$this->load->model('Coupons_model');
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 	}
 
 	public function index() {

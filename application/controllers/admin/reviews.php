@@ -6,7 +6,6 @@ class Reviews extends CI_Controller {
 		$this->load->library('user');
 		$this->load->library('pagination');
 		$this->load->model('Reviews_model'); // load the reviews model
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 	}
 
 	public function index() {

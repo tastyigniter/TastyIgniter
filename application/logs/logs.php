@@ -530,3 +530,4 @@ ERROR - 2014-01-27 23:10:17 --> Severity: Notice  --> Undefined index: location_
 ERROR - 2014-01-27 23:10:17 --> Severity: Notice  --> Undefined index: location_city /Applications/XAMPP/xamppfiles/htdocs/TastyIgniter/application/extensions/main/views/local_module.php 6
 ERROR - 2014-01-27 23:10:17 --> Severity: Notice  --> Undefined index: location_postcode /Applications/XAMPP/xamppfiles/htdocs/TastyIgniter/application/extensions/main/views/local_module.php 6
 ERROR - 2014-01-27 23:10:17 --> Severity: Notice  --> Undefined index: location_telephone /Applications/XAMPP/xamppfiles/htdocs/TastyIgniter/application/extensions/main/views/local_module.php 7
+ERROR - 2014-02-02 15:11:03 --> Severity: Notice  --> Undefined property: Setting::$input /Applications/XAMPP/xamppfiles/htdocs/TastyIgniter/application/libraries/Setting.php 22

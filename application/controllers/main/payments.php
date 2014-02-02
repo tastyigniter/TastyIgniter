@@ -8,7 +8,6 @@ class Payments extends MX_Controller {
 		$this->load->library('currency'); 														// load the currency library
 		$this->load->model('Orders_model'); 													// load the orders model
 		$this->load->model('Payments_model'); 													// load the payments model
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 	}
 
 	public function index() {

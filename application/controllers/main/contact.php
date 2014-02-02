@@ -7,7 +7,6 @@ class Contact extends MX_Controller {
 		$this->load->model('Locations_model'); 													// loads the location model
 		$this->load->library('location'); 														// load the location library
 		$this->load->library('currency'); 														// load the currency library
-		$this->output->enable_profiler(TRUE); 													// for debugging profiler... remove later
 	}
 
 	public function index() {

@@ -7,7 +7,6 @@ class Alerts extends CI_Controller {
 		$this->load->library('pagination');
 		$this->load->model('Messages_model');
 		$this->load->model('Staffs_model');
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 	}
 
 	public function index() {

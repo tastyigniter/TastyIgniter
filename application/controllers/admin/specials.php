@@ -8,7 +8,6 @@ class Specials extends CI_Controller {
 		$this->load->library('user');
 		$this->load->model('Specials_model');
 		//$this->load->library('upload');
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 		//setting upload preference
 		$config['upload_path'] = './assets/img/';
 		$config['allowed_types'] = 'gif|jpg|png';

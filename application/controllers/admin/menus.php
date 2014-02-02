@@ -12,7 +12,6 @@ class Menus extends CI_Controller {
 	}
 
 	public function index() {
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 
 		if ( !file_exists(APPPATH .'/views/admin/menus.php')) { //check if file exists in views folder
 			show_404(); // Whoops, show 404 error page!
@@ -134,7 +133,6 @@ class Menus extends CI_Controller {
 	}
 
 	public function edit() {
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 		
 		if ( !file_exists(APPPATH .'/views/admin/menus_edit.php')) { //check if file exists in views folder
 			show_404(); // Whoops, show 404 error page!

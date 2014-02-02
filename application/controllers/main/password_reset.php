@@ -17,44 +17,8 @@ class Password_reset extends MX_Controller {
 		
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
-class Password_reset extends CI_Controller {
-
-	public function __construct() {
-		parent::__construct();
-		$this->load->model('Customers_model');
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
-	}
-
-	public function index() {
-		//check if file exists in views
-		if ( !file_exists(APPPATH .'/views/main/password_reset.php')) {
-			// Whoops, we don't have a page for that!
-			show_404();
 		}
 		
-		if ($this->session->flashdata('alert')) {
-			$data['alert'] = $this->session->flashdata('alert');
-		} else {
-			$data['alert'] = '';
-		}
-		
-		if ($this->customer->islogged()) { 														// checks if customer is logged in then redirect to account page.	
-  			redirect('account');
-		}
-
-		// START of retrieving lines from language file to pass to view.
-		$data['text_heading'] 				= $this->lang->line('text_heading');
-		$data['entry_email'] 				= $this->lang->line('entry_email');
-		$data['entry_s_question'] 			= $this->lang->line('entry_s_question');
-		$data['entry_s_answer'] 			= $this->lang->line('entry_s_answer');
-		$data['button_continue'] 			= $this->lang->line('button_continue');
-		$data['button_reset_password'] 		= $this->lang->line('button_reset_password');
-		// END of retrieving lines from language file to send to view.
-		
-		$data['questions'] = array();
-		$results = $this->Security_questions_model->getQuestions();						// retrieve array of security questions from getQuestions method in Security questions model
-		foreach ($results as $result) {															// loop through security questions array
-			$data['questions'][] = array(														// create an array of security questions to pass to view
 		if ($this->customer->islogged()) {  
   			redirect('account');
 		}
@@ -162,6 +126,9 @@ class Password_reset extends CI_Controller {
 
 				redirect('main/password_reset');												// redirect to password reset page
 			}
+		}
+	}
+	
 	/*public function _checkEmail() {
 						
 		if ($this->input->post('submit') === 'Check Email') {

@@ -10,7 +10,6 @@ class Home extends MX_Controller {
 	}
 
 	public function index() {
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 		$this->lang->load('main/home');  														// loads home language file
 					
 		if ( !file_exists(APPPATH .'/views/main/home.php')) { 								//check if file exists in views

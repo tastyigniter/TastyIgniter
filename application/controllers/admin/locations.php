@@ -9,7 +9,6 @@ class Locations extends CI_Controller {
 		$this->load->model('Locations_model'); // load the locations model
 		$this->load->model('Tables_model');
 		$this->load->model('Countries_model');
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 	}
 
 	public function index() {

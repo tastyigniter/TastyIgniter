@@ -8,7 +8,6 @@ class Staffs extends CI_Controller {
 		$this->load->model('Staffs_model');
 		$this->load->model('Locations_model'); // load the locations model
 		$this->load->model('Departments_model');
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 	}
 
 	public function index() {

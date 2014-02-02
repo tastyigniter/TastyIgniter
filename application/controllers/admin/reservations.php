@@ -9,7 +9,6 @@ class Reservations extends CI_Controller {
 		$this->load->library('pagination');
 		$this->load->model('Reservations_model');
 		$this->load->model('Statuses_model');
-		$this->output->enable_profiler(TRUE); // for debugging profiler... remove later
 	}
 
 	public function index() {
