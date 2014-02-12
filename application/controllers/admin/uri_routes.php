@@ -9,12 +9,6 @@ class Uri_routes extends CI_Controller {
 
 	public function index() {
 			
-		//check if file exists in views
-		if ( !file_exists(APPPATH .'/controllers/admin/uri_routes.php')) {
-			// Whoops, we don't have a page for that!
-			show_404();
-		}
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -30,7 +24,7 @@ class Uri_routes extends CI_Controller {
 		}		
 				
 		$data['heading'] 			= 'URI Routes';
-		$data['sub_menu_update'] 	= 'Update';
+		$data['sub_menu_save'] 	= 'Save';
 
 		if ($this->input->post('routes')) {
 			$routes = $this->input->post('routes');
@@ -55,9 +49,13 @@ class Uri_routes extends CI_Controller {
 			redirect('admin/uri_routes');
 		}
 		
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/uri_routes', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/uri_routes', $data);
 	}
 
 	public function _updateRoute() {

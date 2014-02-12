@@ -10,10 +10,6 @@ class Countries extends CI_Controller {
 
 	public function index() {
 
-		if ( !file_exists(APPPATH .'/views/admin/countries.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -35,15 +31,14 @@ class Countries extends CI_Controller {
 			$filter['page'] = 1;
 		}
 		
-		if ($this->config->item('config_page_limit')) {
-			$filter['limit'] = $this->config->item('config_page_limit');
+		if ($this->config->item('page_limit')) {
+			$filter['limit'] = $this->config->item('page_limit');
 		}
 				
 		$data['heading'] 			= 'Countries';
-		$data['sub_menu_add'] 		= 'Add';
+		$data['sub_menu_add'] 		= 'Add new country';
 		$data['sub_menu_delete'] 	= 'Delete';
-		$data['sub_menu_list'] 		= '<li><a id="menu-add">Add new country</a></li>';
-		$data['text_empty'] 		= 'There are no countries, please add!.';
+		$data['text_empty'] 		= 'There are no countries available.';
 
 		$data['countries'] = array();
 		$results = $this->Countries_model->getList($filter);
@@ -52,7 +47,7 @@ class Countries extends CI_Controller {
 				'country_id'	=>	$result['country_id'],
 				'name'			=>	$result['country_name'],
 				'status'		=>	$result['status'],
-				'edit' 			=> $this->config->site_url('admin/countries/edit/' . $result['country_id'])
+				'edit' 			=> $this->config->site_url('admin/countries/edit?id=' . $result['country_id'])
 			);
 		}
 
@@ -68,29 +63,22 @@ class Countries extends CI_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		if ($this->input->post() && $this->_addCountry() === TRUE) {
-		
-			redirect('admin/countries');  			
-		}
-
-		//check if POST submit then remove food_id
 		if ($this->input->post('delete') && $this->_deleteCountry() === TRUE) {
 			
 			redirect('admin/countries');  			
 		}	
 
-		//load home page content
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/countries', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/countries', $data);
 	}
 
 	public function edit() {
 
-		if ( !file_exists(APPPATH .'/views/admin/countries_edit.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-		
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -106,35 +94,43 @@ class Countries extends CI_Controller {
 		}		
 		
 		//check if /rating_id is set in uri string
-		if (is_numeric($this->uri->segment(4))) {
-			$country_id = $this->uri->segment(4);
+		if (is_numeric($this->input->get('id'))) {
+			$country_id = $this->input->get('id');
+			$data['action']	= $this->config->site_url('admin/countries/edit?id='. $country_id);
 		} else {
-		    redirect('admin/countries');
+		    $country_id = 0;
+			$data['action']	= $this->config->site_url('admin/countries/edit');
 		}
 		
 		$result = $this->Countries_model->getCountry($country_id);
 		
-		if ($result) {
-			$data['heading'] 			= 'Countries';
-			$data['sub_menu_update'] 	= 'Update';
-			$data['sub_menu_back'] 		= $this->config->site_url('admin/countries');
+		$data['heading'] 			= 'Countries - '. $result['country_name'];
+		$data['sub_menu_save'] 		= 'Save';
+		$data['sub_menu_back'] 		= $this->config->site_url('admin/countries');
 
-			$data['country_name'] 		= $result['country_name'];
-			$data['iso_code_2'] 		= $result['iso_code_2'];
-			$data['iso_code_3'] 		= $result['iso_code_3'];
-			$data['format'] 			= '';
-			$data['status'] 			= $result['status'];
+		$data['country_name'] 		= $result['country_name'];
+		$data['iso_code_2'] 		= $result['iso_code_2'];
+		$data['iso_code_3'] 		= $result['iso_code_3'];
+		$data['format'] 			= '';
+		$data['status'] 			= $result['status'];
 
-			//check if POST add_Ratings, validate fields and add Ratings to model
-			if ($this->input->post() && $this->_updateCountry($country_id) === TRUE) {
-						
-				redirect('admin/countries');
-			}
+		if ($this->input->post() && $this->_addCountry() === TRUE) {
+		
+			redirect('admin/countries');  			
 		}
-				
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/countries_edit', $data);
-		$this->load->view('admin/footer');
+
+		if ($this->input->post() && $this->_updateCountry() === TRUE) {
+					
+			redirect('admin/countries');
+		}
+			
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/countries_edit', $data);
 	}
 
 	public function _addCountry() {
@@ -144,7 +140,7 @@ class Countries extends CI_Controller {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
   			return TRUE;
     	
-    	} else if ( ! $this->input->post('delete')) { 
+    	} else if ( ! $this->input->get('id')) { 
 		
 			$this->form_validation->set_rules('country_name', 'Country', 'trim|required|min_length[2]|max_length[128]');
 			$this->form_validation->set_rules('iso_code_2', 'ISO Code (2)', 'trim|required|exact_length[2]');
@@ -174,14 +170,14 @@ class Countries extends CI_Controller {
 		}
 	}
 	
-	public function _updateCountry($country_id) {
+	public function _updateCountry() {
     	
     	if (!$this->user->hasPermissions('modify', 'admin/countries')) {
 		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
   			return TRUE;
     	
-    	} else if ( ! $this->input->post('delete')) { 
+    	} else if ($this->input->get('id')) { 
 		
 			$this->form_validation->set_rules('country_name', 'Country', 'trim|required|min_length[2]|max_length[128]');
 			$this->form_validation->set_rules('iso_code_2', 'ISO Code (2)', 'trim|required|exact_length[2]');
@@ -192,7 +188,7 @@ class Countries extends CI_Controller {
 			if ($this->form_validation->run() === TRUE) {
 				$update = array();
 				
-				$update['country_id'] 		= $country_id;
+				$update['country_id'] 		= $this->input->get('id');
 				$update['country_name'] 	= $this->input->post('country_name');
 				$update['iso_code_2'] 		= $this->input->post('iso_code_2');
 				$update['iso_code_3'] 		= $this->input->post('iso_code_3');
@@ -213,7 +209,7 @@ class Countries extends CI_Controller {
 		}		
 	}	
 	
-	public function _deleteCountry($country_id = FALSE) {
+	public function _deleteCountry() {
     	if (!$this->user->hasPermissions('modify', 'admin/countries')) {
 		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');

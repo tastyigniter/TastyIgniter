@@ -1,6 +1,6 @@
 <div class="content">
 <div class="wrap">
- 	<h3><?php echo $text_filter; ?></h3>
+ 	<!--<h3><?php echo $text_filter; ?></h3>-->
 	<div class="menu_list">
 	<?php if ($menus) {?>
     <table width="100%" align="center" class="list">
@@ -15,7 +15,7 @@
 			<?php foreach ($menus as $menu) { ?>
 			<tr id="<?php echo $menu['menu_id']; ?>">
 				<td align="center"><?php echo $menu['menu_id']; ?></td>
-				<td align="center"><img src="<?php echo $menu['menu_photo']; ?>" width="80" height="70"></td>
+				<td align="center"><div class="img_inner"><img src="<?php echo $menu['menu_photo']; ?>" width="80" height="70"></div></td>
 				<td class="menu_name"><?php echo $menu['menu_name']; ?><br />
 					<font size="1"><?php echo $text_category; ?>: <?php echo $menu['category_name']; ?><br />
 
@@ -29,9 +29,10 @@
 						<?php }?>
 					</font>
 				</td>
-				<td align="center"><?php echo $menu['menu_price']; ?></td>
+				<td align="center"><div class="price"><?php echo $menu['menu_price']; ?></div></td>
 				<td align="center">
-					<select name="quantity" class="cart" onChange="addToCart('<?php echo $menu['menu_id']; ?>');">
+				<div class="cart">
+					<select name="quantity" class="" onChange="addToCart('<?php echo $menu['menu_id']; ?>');">
 						<?php foreach ($quantities as $key => $value) { ?>
 							<option value="<?php echo $value; ?>"><?php echo $value; ?></option>
 						<?php }?>
@@ -56,6 +57,7 @@
 					<?php }?>
 					<?php }?>
 					</div></font>
+				</div>
 				</td>
 			</tr>
 			<?php } ?>

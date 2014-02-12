@@ -32,7 +32,13 @@ class Menus_model extends CI_Model {
 			}
 			
 			$query = $this->db->get('menus');
-			return $query->result_array();
+			$result = array();
+		
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+		
+			return $result;
 		}
 	}
 	
@@ -42,7 +48,13 @@ class Menus_model extends CI_Model {
 		$this->db->join('categories', 'categories.category_id = menus.menu_category_id', 'left');
 	
 		$query = $this->db->get();
-		return $query->result_array();
+		$result = array();
+	
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+	
+		return $result;
 	}
 	
 	public function getMainMenus($filter = array()) {
@@ -61,11 +73,18 @@ class Menus_model extends CI_Model {
 		$this->db->where('menu_status', '1');
 			
 		$query = $this->db->get();
-		return $query->result_array();															// return an array of available menus
+		$result = array();
+	
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+	
+		return $result;
 	}
 
 	public function getAdminMenu($menu_id) {					
 		//$this->db->select('menus.menu_id, *');
+		$this->db->select('menus.menu_id, menu_name, menu_description, menu_price, menu_photo, menu_category_id, stock_qty, minimum_qty, subtract_stock, menu_status, category_id, category_name, category_description, category_special, special_id, start_date, end_date, special_price');
 		$this->db->from('menus');
 		$this->db->join('categories', 'categories.category_id = menus.menu_category_id', 'left');
 		$this->db->join('menus_specials', 'menus_specials.menu_id = menus.menu_id', 'left');
@@ -87,7 +106,13 @@ class Menus_model extends CI_Model {
 			$this->db->from('menu_options');
 		
 			$query = $this->db->get();
-			return $query->result_array();
+			$result = array();
+		
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+		
+			return $result;
        	}
     }
     
@@ -96,7 +121,13 @@ class Menus_model extends CI_Model {
 		$this->db->from('menu_options');
 		
 		$query = $this->db->get();
-		return $query->result_array();
+		$result = array();
+	
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+	
+		return $result;
 	}
 
 	public function getMenuOption($option_id) {		
@@ -147,7 +178,13 @@ class Menus_model extends CI_Model {
 			$this->db->from('categories');
 		
 			$query = $this->db->get();
-			return $query->result_array();
+			$result = array();
+		
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+		
+			return $result;
        	}
     }
     
@@ -157,7 +194,13 @@ class Menus_model extends CI_Model {
 			$this->db->from('categories');
 
 			$query = $this->db->get();
-			return $query->result_array();
+			$result = array();
+		
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+		
+			return $result;
 		}
 	}
 
@@ -184,7 +227,13 @@ class Menus_model extends CI_Model {
 			}
 	
 			$query = $this->db->get();
-			return $query->result_array();
+			$result = array();
+		
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+		
+			return $result;
 		}
 	}
 	
@@ -198,7 +247,13 @@ class Menus_model extends CI_Model {
 			}
 	
 			$query = $this->db->get();
-			return $query->result_array();
+			$result = array();
+		
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+		
+			return $result;
 		}
 	}
 
@@ -223,7 +278,7 @@ class Menus_model extends CI_Model {
 		}
 	
 		if (!empty($update['menu_photo'])) {
-			$this->db->set('menu_photo', $menu_photo);
+			$this->db->set('menu_photo', $update['menu_photo']);
 		}
 		
 		if ($update['stock_qty'] > 0) {

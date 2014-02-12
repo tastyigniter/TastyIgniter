@@ -4,16 +4,13 @@ class Orders extends MX_Controller {
 
 	public function __construct() {
 		parent::__construct(); 																	//  calls the constructor
+		$this->load->library('customer'); 														// load the customer library
 		$this->load->model('Orders_model');														// load orders model
 		$this->load->library('currency'); 														// load the currency library
 	}
 
 	public function index() {
 		$this->lang->load('main/orders');  														// loads language file
-		
-		if ( !file_exists(APPPATH .'/views/main/orders.php')) { 								//check if file exists in views folder
-			show_404(); 																		// Whoops, show 404 error page!
-		}
 		
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
@@ -65,11 +62,14 @@ class Orders extends MX_Controller {
 			);
 		}
 				
-		// pass array $data and load view files
-		$this->load->view('main/header', $data);
-		$this->load->view('main/content_left');
-		$this->load->view('main/orders', $data);
-		$this->load->view('main/footer');
+		$regions = array(
+			'main/header',
+			'main/content_left',
+			'main/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('main/orders', $data);
 	}
 }
 

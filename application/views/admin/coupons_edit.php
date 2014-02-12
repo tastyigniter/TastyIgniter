@@ -1,7 +1,7 @@
 <div class="box">
 	<div id="update-box" class="content">
-	<h2>UPDATE: <?php echo $name; ?></h2>
-	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" id="updateForm">
+	<h2>Coupon Details</h2>
+	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
 	<table class="form">
 		<tr>
 			<td><b>Coupon Name:</b></td>

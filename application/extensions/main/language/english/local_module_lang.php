@@ -19,6 +19,7 @@ $lang['text_delivery_charge'] 	= 'Delivery Charge';
 $lang['text_min_total'] 		= 'Minimum Total';
 $lang['text_none'] 				= 'None';
 
+$lang['button_check_postcode'] 	= 'Search Restaurant';
 $lang['button_view_menu'] 		= 'View Menu';
 
 $lang['text_postcode'] 			= 'Enter your postcode to order(UK only):';

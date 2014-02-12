@@ -20,7 +20,13 @@ class Reviews_model extends CI_Model {
 			$this->db->join('menus', 'menus.menu_id = reviews.menu_id', 'left');
 
 			$query = $this->db->get();
-			return $query->result_array();
+			$result = array();
+	
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+	
+			return $result;
 		}
 	}
 
@@ -29,7 +35,7 @@ class Reviews_model extends CI_Model {
 		//$this->db->join('customers', 'customers.customer_id = reviews.customer_id', 'left');
 		$this->db->join('menus', 'menus.menu_id = reviews.menu_id', 'left');
 
-		if ($this->config->item('config_approve_reviews') === '1') {
+		if ($this->config->item('approve_reviews') === '1') {
 			$this->db->where('review_status', '1');
 		}
 	}
@@ -38,18 +44,26 @@ class Reviews_model extends CI_Model {
 		$this->db->from('ratings');
 
 		$query = $this->db->get();
-		return $query->result_array();
+		$result = array();
+	
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+	
+		return $result;
 	}
 
 	public function getReview($review_id) {
 		$this->db->from('reviews');
-		//$this->db->join('customers', 'customers.customer_id = reviews.customer_id', 'left');
 		$this->db->join('menus', 'menus.menu_id = reviews.menu_id', 'left');
 
 		$this->db->where('review_id', $review_id);
 
 		$query = $this->db->get();
-		return $query->row_array();
+
+		if ($query->num_rows() > 0) {
+			return $query->row_array();
+		}
 	}
 
 	public function getTotalReviews() {
@@ -100,7 +114,7 @@ class Reviews_model extends CI_Model {
 			$this->db->set('review_text', $review_text);
 			$this->db->set('date_added', $date_added);
 			
-			if ($this->config->item('config_approve_reviews') === '1') {
+			if ($this->config->item('approve_reviews') === '1') {
 				$this->db->set('review_status', '0');			
 			} else {
 				$this->db->set('review_status', '1');			

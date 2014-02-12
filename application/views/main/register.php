@@ -1,9 +1,9 @@
 <div class="content">
-<h2><?php echo $text_login_register; ?></h2>
+<!--<h2><?php echo $text_login_register; ?></h2>
+    <h3><?php echo $text_register; ?></h3>	-->
 <div class="wrap">
-    <h3><?php echo $text_register; ?></h3>	
 	<form method="post" accept-charset="utf-8" action="<?php echo current_url(); ?>">
-	<table cellpadding="2" border="0" width="400px" align="center">
+	<table cellpadding="2" border="0" width="400px" align="">
     	<tr>
         	<td colspan="2" align="center"><font size="1" color="red"><?php echo $text_required; ?></font></td>
         </tr>

@@ -144,7 +144,7 @@ class Cart_module extends MX_Controller {
 		
 		if ( ! $this->location->local()) { 														// if local restaurant is not selected
 			$error = 3;
-		} else if ( ! $this->location->isOpened()) { 											// else if local restaurant is not open
+		} else if ($this->config->item('allow_order') === '0' && ! $this->location->isOpened()) { 											// else if local restaurant is not open
 			$error = 4;
 		}
 		

@@ -13,8 +13,13 @@ class Statuses_model extends CI_Model {
 		}
 		
 		$query = $this->db->get();
-		
-		return $query->result_array();
+		$result = array();
+	
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+	
+		return $result;
 	}
 
 	public function getStatus($status_id) {
@@ -23,7 +28,9 @@ class Statuses_model extends CI_Model {
 		$this->db->where('status_id', $status_id);
 		$query = $this->db->get();
 		
-		return $query->row_array();
+		if ($this->db->affected_rows() > 0) {
+			return $query->row_array();
+		}
 	}
 
 	public function updateStatus($status_for = FALSE, $update = array()) {

@@ -1,67 +1,60 @@
+<div class="slider-relative">
+    <div class="slider-block">
+		<ul class="bxslider">
+			<li><img src="<?php echo base_url("assets/img/slide.jpg"); ?>" /></li>
+			<li><img src="<?php echo base_url("assets/img/slide1.jpg"); ?>" /></li>
+			<li class="mb0"><img src="<?php echo base_url("assets/img/slide2.jpg"); ?>" /></li>
+		</ul>
+	</div>
+</div>
 <div class="content">
+	<div class="separator"></div>
 	<div id="search-location">
 	<form id="location-form" method="POST" action="<?php echo site_url('main/local_module/distance'); ?>">
-		<label for="postcode"><b><?php echo $text_postcode; ?></b></label>
+		<label for="postcode"><b><?php echo $text_postcode; ?></b></label><br />
   		<input type="text" id="postcodeInput" name="postcode" size="20" value="<?php echo $postcode; ?>">
     	<input type="button" id="search" onclick="$('#location-form').submit();"value="<?php echo $text_find; ?>"/>
 	</form>
 	</div>
 
+	<div class="separator"></div>
 	<?php if ($local_location) { ?>
 	<div class="search-content" style="display: block;">
-	<div id="map" class="right" style="height:350px;"></div>   	
+	<div id="map" class="right"><div class="img_inner"><div id="map-holder" style="height:370px;"></div></div></div>   	
 	<div id="selectedLocation" class="left">
-		<h2><?php echo $text_local; ?></h2>	
-		<div id="restaurant-info">
-			<h4><?php echo $location_name; ?></h4>  	
-			<address><?php echo $location_address_1; ?>, <?php echo $location_city; ?>, <?php echo $location_postcode; ?></address> 	
-			<?php echo $location_telephone; ?><br /><br />
-	
-			<span class="is-open"><?php echo $text_open_or_close; ?></span><br />
-			<span class=""><?php echo $text_delivery; ?></span><br />
-			<span class=""><?php echo $text_collection; ?></span><br />
-		</div>
-		<br />
+		<div class="img_inner">
+			<div class="container_24">
+				<h2><?php echo $text_local; ?></h2>	
+				<div class="buttons"><a class="button" href="<?php echo site_url("menus"); ?>"><?php echo $button_view_menu; ?></a></div>
+				<dl id="restaurant-info">
+					<dt>
+						<h3><address><?php echo $location_name; ?> - <?php echo $location_address_1; ?>, <?php echo $location_city; ?>, <?php echo $location_postcode; ?><br/><?php echo $location_telephone; ?></address></h3>
+					</dt>
+					<dd><?php echo $text_open_or_close; ?></dd>
+					<dd><?php echo $text_delivery; ?></dd>
+					<dd><?php echo $text_collection; ?></dd>
+					<dd class="distance"><span><?php echo $text_distance; ?>:</span> <?php echo $distance; ?></dd>		
+					<dd class="charges"><span><?php echo $text_delivery_charge; ?>:</span> <?php echo $delivery_charge; ?></dd>
+					<dd class="review"><span><?php echo $text_reviews; ?>:</span> <?php echo $reviews; ?></dd>
+				</dl>
 		
-		<div id="restaurant-extras">
-		<table width="50%">
-			<tr class="distance">
-				<td><?php echo $text_distance; ?>:</td>
-				<td><?php echo $distance; ?></td>		
-			</tr>
-			<tr class="charges">
-				<td><?php echo $text_delivery_charge; ?>:</td>
-				<td><?php echo $delivery_charge; ?></td>
-			</tr>
-			<tr class="review">
-				<td><?php echo $text_reviews; ?>:</td>
-				<td><?php echo $reviews; ?></td>
-			</tr>
-		</table>
-		</div>
-		<br />
-		
-		<?php if ($opening_hours) { ?>
-		<div class="opening-hour">
-		<b><?php echo $text_opening_hours; ?>:</b>
-		<table width="50%">
-		<?php foreach ($opening_hours as $opening_hour) { ?>
-			<tr>
-				<td><?php echo $opening_hour['day']; ?>:</td>
-				<?php if ($opening_hour['open'] !== '00:00' || $opening_hour['close'] !== '00:00') { ?>
-					<td><?php echo $opening_hour['open']; ?> - <?php echo $opening_hour['close']; ?></td>
-				<?php } else { ?>
-					<td><?php echo $text_close; ?></td>
+				<?php if ($opening_hours) { ?>
+				<dl class="opening-hour">
+					<dt><?php echo $text_opening_hours; ?>:</dt>
+					<?php foreach ($opening_hours as $opening_hour) { ?>
+						<dd><span><?php echo $opening_hour['day']; ?>:</span>
+						<?php if ($opening_hour['open'] !== '00:00' || $opening_hour['close'] !== '00:00') { ?>
+							<?php echo $opening_hour['open']; ?> - <?php echo $opening_hour['close']; ?>
+						<?php } else { ?>
+							<?php echo $text_close; ?>
+						<?php } ?>
+						</dd>
+					<?php } ?>
+				</dl>
 				<?php } ?>
-			</tr>
-		<?php } ?>
-		</table>
+			</div>
 		</div>
-		<?php } ?>
 	</div>
-	</div>
-	<div class="buttons">
-		<div class="right"><a class="button" href="<?php echo site_url("menus"); ?>"><?php echo $button_view_menu; ?></a></div>
 	</div>
 	<?php } ?>
 </div>
@@ -91,7 +84,7 @@
 			mapTypeId: google.maps.MapTypeId.ROADMAP
 		}
 				
-		var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+		var map = new google.maps.Map(document.getElementById('map-holder'), mapOptions);
 
 		var infowindow = new google.maps.InfoWindow({
 			content: html
@@ -141,3 +134,13 @@
 //]]>
 </script>
 <?php } ?>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.bxslider').bxSlider({
+	adaptiveHeight: true,
+	auto: true,
+	autoControls: true,
+	slideWidth: 960
+});
+});
+</script>

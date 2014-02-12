@@ -12,10 +12,6 @@ class Contact extends MX_Controller {
 	public function index() {
 		$this->lang->load('main/contact');  													// loads home language file
 					
-		if ( !file_exists(APPPATH .'/views/main/home.php')) { 								//check if file exists in views
-			show_404(); 																		// Whoops, we don't have a page for that!
-		}
-			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert'); 								// retrieve session flashdata variable if available
 		} else {
@@ -52,7 +48,7 @@ class Contact extends MX_Controller {
 			$data['location_city'] 			= $data['local_location']['location_city'];
 			$data['location_postcode'] 		= $data['local_location']['location_postcode'];
 			$data['location_telephone'] 	= $data['local_location']['location_telephone'];
-			//$data['distance'] 				= number_format($this->location->distance(),2) .' '. $this->lang->line('text_miles'); //format diatance to 2 decimal place
+			//$data['distance'] 			= number_format($this->location->distance(),2) .' '. $this->lang->line('text_miles'); //format diatance to 2 decimal place
 		}
 		
 		$data['opening_hours'] = $this->location->openingHours(); 								//retrieve local location opening hours from location library
@@ -72,10 +68,13 @@ class Contact extends MX_Controller {
 			redirect('contact');																// redirect to contact page
 		}
 		
-		//load view files and pass $data array
-		$this->load->view('main/header', $data);
-		$this->load->view('main/contact', $data);
-		$this->load->view('main/footer');
+		$regions = array(
+			'main/header',
+			'main/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('main/contact', $data);
 	}
 
 	// method to validate contact form fields and email contact details to store email
@@ -94,12 +93,12 @@ class Contact extends MX_Controller {
 			$this->load->library('email');														//loading upload library
 
 			//setting email preference
-			$this->email->set_protocol($this->config->item('config_protocol'));
-			$this->email->set_mailtype($this->config->item('config_mailtype'));
-			$this->email->set_smtp_host($this->config->item('config_smtp_host'));
-			$this->email->set_smtp_port($this->config->item('config_smtp_port'));
-			$this->email->set_smtp_user($this->config->item('config_smtp_user'));
-			$this->email->set_smtp_pass($this->config->item('config_smtp_pass'));
+			$this->email->set_protocol($this->config->item('protocol'));
+			$this->email->set_mailtype($this->config->item('mailtype'));
+			$this->email->set_smtp_host($this->config->item('smtp_host'));
+			$this->email->set_smtp_port($this->config->item('smtp_port'));
+			$this->email->set_smtp_user($this->config->item('smtp_user'));
+			$this->email->set_smtp_pass($this->config->item('smtp_pass'));
 			$this->email->set_newline("\r\n");
 			$this->email->initialize();
 

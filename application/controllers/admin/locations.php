@@ -13,10 +13,6 @@ class Locations extends CI_Controller {
 
 	public function index() {
 		
-		if ( !file_exists(APPPATH .'/views/admin/locations.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -38,17 +34,16 @@ class Locations extends CI_Controller {
 			$filter['page'] = 1;
 		}
 		
-		if ($this->config->item('config_page_limit')) {
-			$filter['limit'] = $this->config->item('config_page_limit');
+		if ($this->config->item('page_limit')) {
+			$filter['limit'] = $this->config->item('page_limit');
 		}
 				
 		$data['heading'] 			= 'Locations';
-		$data['sub_menu_add'] 		= 'Add';
+		$data['sub_menu_add'] 		= 'Add new location';
 		$data['sub_menu_delete'] 	= 'Delete';
-		$data['sub_menu_list'] 		= '<li><a id="menu-add">Add new location</a></li>';
-		$data['text_no_locations'] 	= 'There are no location(s).';
+		$data['text_empty'] 		= 'There are no locations available.';
 
-		$data['country_id'] = $this->config->item('config_country');
+		$data['country_id'] = $this->config->item('country_id');
 		
 		//load category data into array
 		$data['locations'] = array();
@@ -64,7 +59,7 @@ class Locations extends CI_Controller {
 				'location_lat'			=> $result['location_lat'],
 				'location_lng'			=> $result['location_lng'],
 				'location_status'		=> $result['location_status'],
-				'edit' 					=> $this->config->site_url('admin/locations/edit/' . $result['location_id'])
+				'edit' 					=> $this->config->site_url('admin/locations/edit?id=' . $result['location_id'])
 			);
 		}
 
@@ -104,29 +99,21 @@ class Locations extends CI_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		// check if POST add_location, validate fields and add Locations to model
-		if ($this->input->post() && $this->_addLocation() === TRUE) {
-		
-			redirect('/admin/locations');
-		}
-
-		//check if POST delete location
 		if ($this->input->post('delete') && $this->_deleteLocation() === TRUE) {
 			
 			redirect('admin/locations');  			
 		}	
 
-		//load home page content
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/locations', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/locations', $data);
 	}
 
 	public function edit() {
-		
-		if ( !file_exists(APPPATH .'/views/admin/location_edit.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
 		
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
@@ -143,90 +130,98 @@ class Locations extends CI_Controller {
 		}		
 
 		//check if /location_id is set in uri string
-		if (is_numeric($this->uri->segment(4))) {
-			$location_id = (int)$this->uri->segment(4);
+		if (is_numeric($this->input->get('id'))) {
+			$location_id = (int)$this->input->get('id');
+			$data['action']	= $this->config->site_url('admin/locations/edit?id='. $location_id);
 		} else {
-		    redirect('admin/locations');
+		    $location_id = 0;
+			$data['action']	= $this->config->site_url('admin/locations/edit');
 		}
 		
 		$result = $this->Locations_model->getLocation($location_id);
 		
-		if ($result) {
-			$data['heading'] 			= 'Locations';
-			$data['sub_menu_update'] 	= 'Update';
-			$data['sub_menu_back'] 		= $this->config->site_url('admin/locations');
+		$data['heading'] 				= 'Location - '. $result['location_name'];
+		$data['sub_menu_save'] 			= 'Save';
+		$data['sub_menu_back'] 			= $this->config->site_url('admin/locations');
 
-			$data['location_id'] 			= $result['location_id'];
-			$data['location_name'] 			= $result['location_name'];
-			$data['location_address_1'] 	= $result['location_address_1'];
-			$data['location_address_2'] 	= $result['location_address_2'];
-			$data['location_city'] 			= $result['location_city'];
-			$data['location_postcode'] 		= $result['location_postcode'];
-			$data['location_email'] 		= $result['location_email'];
-			$data['location_telephone'] 	= $result['location_telephone'];
-			$data['location_lat'] 			= $result['location_lat'];
-			$data['location_lng'] 			= $result['location_lng'];
-			$data['location_radius'] 		= $result['location_radius'];
-			$data['location_status'] 		= $result['location_status'];
-			$data['offer_delivery'] 		= $result['offer_delivery'];
-			$data['offer_collection'] 		= $result['offer_collection'];
-			$data['ready_time'] 			= $result['ready_time'];
-			$data['delivery_charge'] 		= $result['delivery_charge'];
-			$data['min_delivery_total'] 	= $result['min_delivery_total'];
-			
-			if ($result['location_country_id']) {
-				$data['country_id'] = $result['location_country_id'];
-			} else if ($this->config->item('config_country')) {
-				$data['country_id'] = $this->config->item('config_country');
-			}
+		$data['location_id'] 			= $result['location_id'];
+		$data['location_name'] 			= $result['location_name'];
+		$data['location_address_1'] 	= $result['location_address_1'];
+		$data['location_address_2'] 	= $result['location_address_2'];
+		$data['location_city'] 			= $result['location_city'];
+		$data['location_postcode'] 		= $result['location_postcode'];
+		$data['location_email'] 		= $result['location_email'];
+		$data['location_telephone'] 	= $result['location_telephone'];
+		$data['location_lat'] 			= $result['location_lat'];
+		$data['location_lng'] 			= $result['location_lng'];
+		$data['location_radius'] 		= $result['location_radius'];
+		$data['location_status'] 		= $result['location_status'];
+		$data['offer_delivery'] 		= $result['offer_delivery'];
+		$data['offer_collection'] 		= $result['offer_collection'];
+		$data['ready_time'] 			= $result['ready_time'];
+		$data['delivery_charge'] 		= $result['delivery_charge'];
+		$data['min_delivery_total'] 	= $result['min_delivery_total'];
+		
+		if ($result['location_country_id']) {
+			$data['country_id'] = $result['location_country_id'];
+		} else if ($this->config->item('country_id')) {
+			$data['country_id'] = $this->config->item('country_id');
+		}
 
-			$weekdays = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
+		$weekdays = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
 
-			if ($this->input->post('hours')) {
-				$data['hours'] = $this->input->post('hours');
-				$data['hours']['day'] = $weekdays;
-			} else {
-				$data['hours'] = $this->Locations_model->getOpeningHours($location_id);
-			}
-						
-			if ($this->input->post('tables')) {
-				$data['location_tables'] = $this->input->post('tables');
-			} else {
-				$data['location_tables'] = $this->Tables_model->getTablesByLocation($location_id);
-			}
-			
-			$data['tables'] = array();
-			$tables = $this->Tables_model->getTables();
-			if ($tables) {
-				foreach ($tables as $table) {
-				$data['tables'][] = array(
-					'table_id'			=> $table['table_id'],
-					'table_name'		=> $table['table_name'],
-					'min_capacity'		=> $table['min_capacity'],
-					'max_capacity'	=> $table['max_capacity']
-				);
-				}
-			}
-
-			$data['countries'] = array();
-			$results = $this->Countries_model->getCountries();
-			foreach ($results as $result) {					
-				$data['countries'][] = array(
-					'country_id'	=>	$result['country_id'],
-					'name'			=>	$result['country_name'],
-				);
-			}
-
-			// check if POST add_food, validate fields and add Food to model
-			if ($this->input->post() && $this->_updateLocation($location_id) === TRUE) {
-						
-				redirect('admin/locations');
-			}
+		if ($this->input->post('hours')) {
+			$data['hours'] = $this->input->post('hours');
+			$data['hours']['day'] = $weekdays;
+		} else {
+			$data['hours'] = $this->Locations_model->getOpeningHours($location_id);
+		}
+					
+		if ($this->input->post('tables')) {
+			$data['location_tables'] = $this->input->post('tables');
+		} else {
+			$data['location_tables'] = $this->Tables_model->getTablesByLocation($location_id);
 		}
 		
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/location_edit', $data);
-		$this->load->view('admin/footer');
+		$data['tables'] = array();
+		$tables = $this->Tables_model->getTables();
+		if ($tables) {
+			foreach ($tables as $table) {
+			$data['tables'][] = array(
+				'table_id'			=> $table['table_id'],
+				'table_name'		=> $table['table_name'],
+				'min_capacity'		=> $table['min_capacity'],
+				'max_capacity'	=> $table['max_capacity']
+			);
+			}
+		}
+
+		$data['countries'] = array();
+		$results = $this->Countries_model->getCountries();
+		foreach ($results as $result) {					
+			$data['countries'][] = array(
+				'country_id'	=>	$result['country_id'],
+				'name'			=>	$result['country_name'],
+			);
+		}
+
+		if ($this->input->post() && $this->_addLocation() === TRUE) {
+		
+			redirect('/admin/locations');
+		}
+
+		if ($this->input->post() && $this->_updateLocation() === TRUE) {
+					
+			redirect('admin/locations');
+		}
+		
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/location_edit', $data);
 	}
 
 	public function _addLocation() {
@@ -236,7 +231,7 @@ class Locations extends CI_Controller {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
 			return TRUE;
     	
-    	} else if (	! $this->input->post('delete')) { 
+    	} else if (	! $this->input->get('id')) { 
 			
 			//form validation
 			$this->form_validation->set_rules('location_name', 'Location Name', 'trim|required|min_length[2]|max_length[45]');
@@ -291,14 +286,14 @@ class Locations extends CI_Controller {
 		}
 	}
 
-	public function _updateLocation($location_id) {
+	public function _updateLocation() {
 									
     	if (!$this->user->hasPermissions('modify', 'admin/locations')) {
 		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
 			return TRUE;
     	
-    	} else if (!$this->input->post('delete')) { 
+    	} else if ($this->input->get('id')) { 
 			
 			//form validation
 			$this->form_validation->set_rules('location_name', 'Location Name', 'trim|required|min_length[2]|max_length[45]');
@@ -325,7 +320,7 @@ class Locations extends CI_Controller {
 				$update = array();
 				
 				//Sanitizing the POST values
-				$update['location_id'] 			= $location_id;
+				$update['location_id'] 			= $this->input->get('id');
 				$update['location_name'] 		= $this->input->post('location_name');
 				$update['address'] 				= $this->input->post('address');
 				$update['email'] 				= $this->input->post('email');			

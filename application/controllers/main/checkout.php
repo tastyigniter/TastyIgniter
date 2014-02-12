@@ -3,6 +3,7 @@ class Checkout extends MX_Controller {
 	
 	public function __construct() {
 		parent::__construct(); 																	//  calls the constructor
+		$this->load->library('customer'); 														// load the customer library
 		$this->load->library('cart'); 															// load the cart library
 		$this->load->library('location'); 														// load the location library
 		$this->load->library('currency'); 														// load the currency library
@@ -19,10 +20,6 @@ class Checkout extends MX_Controller {
 		$this->load->library('user_agent');
 		$this->lang->load('main/checkout');  													// loads language file
 		
-		if ( !file_exists('application/views/main/checkout.php')) { 							//check if file exists in views folder
-			show_404(); 																		// Whoops, show 404 error page!
-		}
-
 		if ( ! $this->cart->contents()) { 														// checks if cart contents is empty  
 			$this->session->set_flashdata('alert', $this->lang->line('warning_no_cart'));
   			redirect('menus');																	// redirect to menus page and display error
@@ -123,8 +120,8 @@ class Checkout extends MX_Controller {
 			$data['telephone'] = '';
 		}
 		
-		if ($this->config->item('config_country')) {
-			$data['country_id'] = $this->config->item('config_country'); 						// retrieve country_id from config settings
+		if ($this->config->item('country_id')) {
+			$data['country_id'] = $this->config->item('country_id'); 						// retrieve country_id from config settings
 		}
 						
 		if ($this->input->post('order_type')) {
@@ -191,7 +188,7 @@ class Checkout extends MX_Controller {
 		if ($this->location->readyTime()) {
 			$ready_time = $this->location->readyTime();
 		} else {
-			$ready_time = $this->config->item('config_ready_time');
+			$ready_time = $this->config->item('ready_time');
 		}
 		
 		$data['asap_time'] = mdate('%H:%i', strtotime($current_time) + 5 * 60);
@@ -209,21 +206,19 @@ class Checkout extends MX_Controller {
 		if ($this->input->post() && $this->_validateCheckout() === TRUE) { 						// check if post data and validate checkout is successful
 			redirect('payments');
 		}
-		
 
-		// pass array $data and load view files
-		$this->load->view('main/header', $data);
-		$this->load->view('main/content_right', $data);
-		$this->load->view('main/checkout', $data);
-		$this->load->view('main/footer');
+		$regions = array(
+			'main/header',
+			'main/content_right',
+			'main/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('main/checkout', $data);
 	}
 		
 	public function success() {
 		$this->lang->load('main/checkout');
-		
-		if ( !file_exists('application/views/main/checkout_success.php')) { 					//check if file exists in views folder
-			show_404(); 																		// Whoops, show 404 error page!
-		}
 		
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
@@ -278,14 +273,17 @@ class Checkout extends MX_Controller {
 			$data['location_name'] = $location_info['location_name'];
 			$data['location_address'] = $location_info['location_address_1'] .' '. $location_info['location_address_2'] .', '. $location_info['location_city'] .' '. $location_info['location_postcode'] .'.';
 	
-		//} else {																				// else redirect to checkout
-		//	redirect('checkout');
+		} else {																				// else redirect to checkout
+			redirect('home');
 		}
 				
-		// pass array $data and load view files
-		$this->load->view('main/header', $data);
-		$this->load->view('main/checkout_success', $data);
-		$this->load->view('main/footer');
+		$regions = array(
+			'main/header',
+			'main/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('main/checkout_success', $data);
 	}
 	
 	public function _validateCheckout() {														// method to validate checkout form fields
@@ -346,7 +344,7 @@ class Checkout extends MX_Controller {
 			$order_details['new_address'] 	= $this->input->post('new_address');
 		
 			if (($this->input->post('new_address') === '1') && ($this->input->post('order_type') === '1')) {								// checks if new-address $_POST data is set else use existing address $_POST data
-				$order_details['order_address_id'] = $this->Customers_model->addAddress($this->customer->getId(), $this->input->post('address')); 	// send new-address $_POST data and customer id to addAddress method in Customers model
+				$order_details['order_address_id'] = $this->Customers_model->addCustomerAddress($this->customer->getId(), $this->input->post('address')); 	// send new-address $_POST data and customer id to addCustomerAddress method in Customers model
 			}
 				
 			if (($this->input->post('new_address') === '2') && ($this->input->post('order_type') === '1')) {								// checks if new-address $_POST data is set else use existing address $_POST data

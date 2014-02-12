@@ -19,7 +19,13 @@ class Tables_model extends CI_Model {
 			//$this->db->join('locations', 'locations.location_id = tables.location_id', 'left');
 
 			$query = $this->db->get();
-			return $query->result_array();
+			$result = array();
+		
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+		
+			return $result;
 		}
 	}
 	
@@ -28,7 +34,13 @@ class Tables_model extends CI_Model {
 		//$this->db->join('locations', 'locations.location_id = tables.location_id', 'left');
 
 		$query = $this->db->get();
-		return $query->result_array();
+		$result = array();
+	
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+	
+		return $result;
 	}
 
 	public function getTable($table_id) {		
@@ -71,7 +83,13 @@ class Tables_model extends CI_Model {
 			}
 	
 			$query = $this->db->get();
-			return $query->result_array();
+			$result = array();
+		
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+		
+			return $result;
 		}
 	}
 

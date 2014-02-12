@@ -10,7 +10,13 @@ class Design_model extends CI_Model {
 		
 		$query = $this->db->get();
 		
-		return $query->result_array();
+		$result = array();
+	
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+	
+		return $result;
 	}
 
 	public function getRoutes($status = 0) {
@@ -23,7 +29,13 @@ class Design_model extends CI_Model {
 		$this->db->order_by('priority', 'ASC');
 		
 		$query = $this->db->get();
-		return $query->result_array();	
+		$result = array();
+	
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+	
+		return $result;
 	}
 	
 	public function getLayout($layout_id) {
@@ -45,7 +57,13 @@ class Design_model extends CI_Model {
 
 		$query = $this->db->get();
 		
-		return $query->result_array();
+		$result = array();
+	
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+	
+		return $result;
 	}
 
 	public function getLayoutRouteId($route = FALSE) {
@@ -96,13 +114,13 @@ class Design_model extends CI_Model {
 			}
 					
 			if ($this->db->affected_rows() > 0) {
-				$this->saveRoutes();
+				$this->writeRoutes();
 				return TRUE;
 			}
 		}
 	}
 
-	public function saveRoutes() {
+	public function writeRoutes() {
         $routes = $this->getRoutes(1);
 
         $data = array();
@@ -117,6 +135,7 @@ class Design_model extends CI_Model {
 				$data .= "<"."?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');\n\n";
 				
 				$data .= "$"."route['default_controller'] = 'main/home';\n";
+				$data .= "$"."route['admin'] = 'admin/dashboard';\n";
 
 				foreach ($routes as $route) {
 					$data .= "$"."route['". $route['route'] ."'] = '". $route['controller'] ."';\n";

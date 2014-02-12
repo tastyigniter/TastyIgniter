@@ -11,10 +11,6 @@ class Alerts extends CI_Controller {
 
 	public function index() {
 			
-		if ( !file_exists(APPPATH .'/views/admin/alerts.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -32,8 +28,8 @@ class Alerts extends CI_Controller {
 			$filter['page'] = 1;
 		}
 		
-		if ($this->config->item('config_page_limit')) {
-			$filter['limit'] = $this->config->item('config_page_limit');
+		if ($this->config->item('page_limit')) {
+			$filter['limit'] = $this->config->item('page_limit');
 		}
 				
 		if ($this->user->getStaffId()) {
@@ -42,7 +38,7 @@ class Alerts extends CI_Controller {
 
 		$data['heading'] 			= 'Alerts';
 		$data['sub_menu_delete'] 	= 'Delete';
-		$data['text_empty'] 		= 'There are no alert(s).';
+		$data['text_empty'] 		= 'There are no alerts available.';
 
 		//load ratings data into array
 		$data['alerts'] = array();
@@ -55,7 +51,7 @@ class Alerts extends CI_Controller {
 				'sender'		=> $result['staff_name'],
 				'subject' 		=> $result['subject'],
 				'body' 			=> substr(strip_tags(html_entity_decode($result['body'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..',
-				'view'			=> $this->config->site_url('admin/alerts/view/' . $result['message_id'])
+				'view'			=> $this->config->site_url('admin/alerts/view?id=' . $result['message_id'])
 			);
 		}
 		
@@ -77,17 +73,16 @@ class Alerts extends CI_Controller {
 			redirect('admin/alerts');
 		}	
 
-		//load home page content
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/alerts', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/alerts', $data);
 	}
 
 	public function view() {
-		
-		if ( !file_exists(APPPATH .'/views/admin/alerts_view.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
 		
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
@@ -100,8 +95,8 @@ class Alerts extends CI_Controller {
 		}
 
 		//check if customer_id is set in uri string
-		if ($this->uri->segment(4)) {
-			$message_id = (int)$this->uri->segment(4);
+		if (is_numeric($this->input->get('id'))) {
+			$message_id = (int)$this->input->get('id');
 		} else {
 		    redirect('admin/alerts');
 		}
@@ -128,10 +123,13 @@ class Alerts extends CI_Controller {
 			$data['body'] 			= $message_info['body'];
 		}		
 
-		//load customer_edit page content
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/alerts_view', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/alerts_view', $data);
 	}
 
 	public function _deleteMessage($menu_id = FALSE) {

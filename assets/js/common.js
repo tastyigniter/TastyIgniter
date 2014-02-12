@@ -1,3 +1,31 @@
+$.fn.tabs = function() {
+	var selector = this;
+	
+	this.each(function() {
+		var obj = $(this); 
+		
+		$(obj.attr('rel')).hide();
+		
+		$(obj).click(function() {
+			$(selector).removeClass('active');
+			
+			$(selector).each(function(i, element) {
+				$($(element).attr('rel')).hide();
+			});
+			
+			$(this).addClass('active');
+			
+			$($(this).attr('rel')).show();
+			
+			return false;
+		});
+	});
+
+	$(this).show();
+	
+	$(this).first().click();
+};
+
 function searchLocal() {
 	
 	var postcode = $('input[name=\'postcode\']').val();

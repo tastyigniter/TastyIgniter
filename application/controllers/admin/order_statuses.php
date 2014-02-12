@@ -9,10 +9,6 @@ class Order_statuses extends CI_Controller {
 
 	public function index() {
 			
-		if ( !file_exists(APPPATH .'/views/admin/order_statuses.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -28,9 +24,9 @@ class Order_statuses extends CI_Controller {
 		}
 
 		$data['heading'] 			= 'Order Statuses';
-		$data['sub_menu_add'] 		= 'Add';
+		$data['sub_menu_add'] 		= 'Add new order status';
 		$data['sub_menu_delete'] 	= 'Delete';
-		$data['sub_menu_list'] 	= '<li><a id="menu-add">Add new status</a></li>';
+		$data['text_empty'] 		= 'There is no order status available.';
 
 		//load ratings data into array
 		$data['statuses'] = array();
@@ -42,33 +38,25 @@ class Order_statuses extends CI_Controller {
 				'status_name'		=> $result['status_name'],
 				'status_comment'	=> $result['status_comment'],
 				'notify_customer' 	=> ($result['notify_customer'] === '1') ? 'Yes' : 'No',
-				'edit' 				=> $this->config->site_url('admin/order_statuses/edit/' . $result['status_id'])				
+				'edit' 				=> $this->config->site_url('admin/order_statuses/edit?id=' . $result['status_id'])				
 			);
 		}
 
-		// check POST submit, validate fields and send rating data to model
-		if ($this->input->post() && $this->_addStatus() === TRUE) {
-		
-			redirect('admin/order_statuses');  			
-		}
-
-		//check if POST submit then remove Ratings_id
 		if ($this->input->post('delete') && $this->_deleteStatus() === TRUE) {
 			
 			redirect('admin/order_statuses');  			
 		}	
 
-		//load home page content
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/order_statuses', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/order_statuses', $data);
 	}
 
 	public function edit() {
-		
-		if ( !file_exists(APPPATH .'/views/admin/order_statuses_edit.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
 		
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
@@ -85,35 +73,43 @@ class Order_statuses extends CI_Controller {
 		}		
 		
 		//check if /rating_id is set in uri string
-		if (is_numeric($this->uri->segment(4))) {
-			$status_id = $this->uri->segment(4);
+		if (is_numeric($this->input->get('id'))) {
+			$status_id = $this->input->get('id');
+			$data['action']	= $this->config->site_url('admin/order_statuses/edit?id='. $status_id);
 		} else {
-		    redirect('admin/order_statuses');
+		    $status_id = 0;
+			$data['action']	= $this->config->site_url('admin/order_statuses/edit');
 		}
 		
 		$status_info = $this->Statuses_model->getStatus($status_id);
 		
-		if ($status_info) {
-			$data['heading'] 			= 'Order Statuses';
-			$data['sub_menu_update'] 	= 'Update';
-			$data['sub_menu_back'] 		= $this->config->site_url('admin/order_statuses');
+		$data['heading'] 			= 'Order Status - '. $status_info['status_name'];
+		$data['sub_menu_save'] 		= 'Save';
+		$data['sub_menu_back'] 		= $this->config->site_url('admin/order_statuses');
 
-			$data['status_id'] 			= $status_info['status_id'];
-			$data['status_name'] 		= $status_info['status_name'];
-			$data['status_comment'] 	= $status_info['status_comment'];
-			$data['status_for'] 		= $status_info['status_for'];
-			$data['notify_customer'] 	= $status_info['notify_customer'];
+		$data['status_id'] 			= $status_info['status_id'];
+		$data['status_name'] 		= $status_info['status_name'];
+		$data['status_comment'] 	= $status_info['status_comment'];
+		$data['status_for'] 		= $status_info['status_for'];
+		$data['notify_customer'] 	= $status_info['notify_customer'];
 
-			//check if POST add_Ratings, validate fields and add Ratings to model
-			if ($this->input->post() && $this->_updateStatus($status_id) === TRUE) {
-						
-				redirect('admin/order_statuses');
-			}
+		if ($this->input->post() && $this->_addStatus() === TRUE) {
+		
+			redirect('admin/order_statuses');  			
+		}
+
+		if ($this->input->post() && $this->_updateStatus() === TRUE) {
+					
+			redirect('admin/order_statuses');
 		}
 				
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/order_statuses_edit', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/order_statuses_edit', $data);
 	}
 
 	public function _addStatus() {
@@ -123,7 +119,7 @@ class Order_statuses extends CI_Controller {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
 			return TRUE;
     	
-    	} else if ( ! $this->input->post('delete')) { 
+    	} else if ( ! $this->input->get('id')) { 
 			
 			//validate category value
 			$this->form_validation->set_rules('status_name', 'Status Name', 'trim|required|min_length[2]|max_length[32]');
@@ -150,14 +146,14 @@ class Order_statuses extends CI_Controller {
 		}
 	}
 	
-	public function _updateStatus($status_id) {
+	public function _updateStatus() {
     	
     	if (!$this->user->hasPermissions('modify', 'admin/order_statuses')) {
 		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
 			return TRUE;
     	
-    	} else if ( ! $this->input->post('delete')) { 
+    	} else if ($this->input->get('id')) { 
 			
 			$this->form_validation->set_rules('status_name', 'Status Name', 'trim|required|min_length[2]|max_length[32]');
 			$this->form_validation->set_rules('status_comment', 'Status Comment', 'trim|max_length[1028]');
@@ -167,7 +163,7 @@ class Order_statuses extends CI_Controller {
 				$update = array();
 			
 				//Sanitizing the POST values
-				$update['status_id'] 		= $status_id;
+				$update['status_id'] 		= $this->input->get('id');
 				$update['status_name'] 		= $this->input->post('status_name');
 				$update['status_comment'] 	= $this->input->post('status_comment');
 				$update['notify_customer'] 	= $this->input->post('notify_customer');

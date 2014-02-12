@@ -12,8 +12,10 @@ class Extensions_model extends CI_Model {
 		
 		$extensions = array();
 		
-		foreach ($query->result_array() as $row) {
-			$extensions[$row['code']] = $row['name'];
+		if ($query->num_rows() > 0) {
+			foreach ($query->result_array() as $row) {
+				$extensions[$row['code']] = $row['name'];
+			}
 		}
 		
 		return $extensions;
@@ -23,8 +25,14 @@ class Extensions_model extends CI_Model {
 		$this->db->from('extensions');
 		
 		$query = $this->db->get();
-		
-		return $query->result_array();
+	
+		$result = array();
+	
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+	
+		return $result;
 	}
 
 	public function getExtension($module, $extension) {

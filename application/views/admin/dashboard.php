@@ -12,6 +12,10 @@
 				<td><?php echo $total_sales_by_year; ?></td>
 			</tr>
 			<tr>
+				<td><b>Total Lost Sales:</b></td>
+				<td><?php echo $total_lost_sales; ?></td>
+			</tr>
+			<tr>
 				<td><b>Total Customers:</b></td>
 				<td><?php echo $total_customers; ?></td>
 			</tr>
@@ -96,7 +100,7 @@
 		<th>Status</th>
 		<th>Assigned Staff</th>
 		<th>Order Time</th>
-		<th class="right">Date Added</th>
+		<th class="center">Date Added</th>
 		<th class="right">Date Modified</th>
 		<th class="right">Action</th>
 	</tr>
@@ -109,14 +113,14 @@
 		<td><?php echo $order['order_status']; ?></td>
 		<td><?php echo $order['staff_name'] ? $order['staff_name'] : 'NONE'; ?></td>
 		<td><?php echo $order['order_time']; ?></td>
-		<td class="right"><?php echo $order['date_added']; ?></td>
+		<td class="center"><?php echo $order['date_added']; ?></td>
 		<td class="right"><?php echo $order['date_modified']; ?></td>
 		<td class="right"><a class="edit" title="Edit" href="<?php echo $order['edit']; ?>"></a></td>
 	</tr>
 	<?php } ?>
 	<?php } else { ?>
 	<tr>
-		<td colspan="12" align="center"><?php echo $text_empty; ?></td>
+		<td colspan="9" align="center"><?php echo $text_empty; ?></td>
 	</tr>
 	<?php } ?>
 	</table>

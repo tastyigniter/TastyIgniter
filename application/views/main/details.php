@@ -76,6 +76,7 @@
   	</table>
   	</div>
 
+	<div class="separator"></div>
 	<div class="buttons">
 		<div class="left"><a class="button" href="<?php echo $back; ?>"><?php echo $button_back; ?></a></div>
 		<div class="right"><input type="submit" name="submit" value="<?php echo $button_save; ?>" /></div>

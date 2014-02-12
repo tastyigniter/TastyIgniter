@@ -1,6 +1,6 @@
 <div class="box">
 	<div id="list-box" class="content">
-	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" id="listForm">
+	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
 	<table border="0" align="center" class="list">
 		<tr>
 			<th>Name</th>
@@ -8,8 +8,8 @@
 			<th class="right">Action</th>
 		</tr>
 		<tr>
-			<td>COD</td>
-			<td>Enabled</td>
+			<td><?php echo $cod_name; ?></td>
+			<td><?php echo $cod_status; ?></td>
 			<td class="right"><a class="edit" title="Edit" href="<?php echo $cod_edit; ?>"></a></td>
 		</tr>
 		<tr>

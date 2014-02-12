@@ -13,10 +13,6 @@ class Find_table extends MX_Controller {
 	public function index() {
 		$this->lang->load('main/reserve_table');  // loads language file
 		
-		if ( !file_exists(APPPATH .'/views/main/find_table.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
 		} else {
@@ -126,9 +122,13 @@ class Find_table extends MX_Controller {
 			redirect('reserve/table');		
 		}	
 			
-		$this->load->view('main/header', $data);
-		$this->load->view('main/find_table', $data);
-		$this->load->view('main/footer');
+		$regions = array(
+			'main/header',
+			'main/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('main/find_table', $data);
 	}
 
 

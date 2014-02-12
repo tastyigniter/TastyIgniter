@@ -41,9 +41,21 @@ class Dashboard_model extends CI_Model {
 		}
 	}
 
+	public function getTotalLostSales() {
+
+		$this->db->select_sum('order_total', 'total_sales');
+		$this->db->where('status_id', '13'); //$this->config->item('order_canceled')
+		$query = $this->db->get('orders');
+		
+		if ($query->num_rows() > 0) {
+			$row = $query->row_array();
+			return $row['total_sales'];
+		}
+	}
+
 	public function getTotalOrdersReceived() {
 
-		$this->db->where('status_id', $this->config->item('config_order_received'));
+		$this->db->where('status_id', $this->config->item('order_received'));
 		$this->db->from('orders');
 		
 		return $this->db->count_all_results();
@@ -51,7 +63,7 @@ class Dashboard_model extends CI_Model {
 
 	public function getTotalOrdersCompleted() {
 
-		$this->db->where('status_id', $this->config->item('config_order_completed'));
+		$this->db->where('status_id', $this->config->item('order_completed'));
 		$this->db->from('orders');
 		
 		return $this->db->count_all_results();
@@ -80,7 +92,7 @@ class Dashboard_model extends CI_Model {
 
 	public function getTotalTablesReserved() {
 
-		$this->db->where('status', $this->config->item('config_reserve_status'));
+		$this->db->where('status', $this->config->item('reserve_status'));
 		$this->db->from('reservations');
 		
 		return $this->db->count_all_results();

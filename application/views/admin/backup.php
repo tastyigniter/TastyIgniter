@@ -1,15 +1,15 @@
 <div class="box">
-	<div id="update-box" style="display:block">
-	<form enctype="multipart/form-data" accept-charset="utf-8" method="post" action="<?php echo site_url('admin/backup/restore'); ?>" id="restore">
+	<div id="update-box">
+	<form accept-charset="utf-8" method="post" action="<?php echo site_url('admin/backup'); ?>" enctype="multipart/form-data" id="restore" style="border-bottom:1px solid #ddd;margin-bottom:20px;padding-bottom:5px;">
 	<table class="form">
 		<tr>
 			<td><b>Restore:</b></td>
-			<td><input type="file" name="restore" value="" /></td>
+			<td><input type="file" name="import" value="" id="photo" /></td>
 		</tr>
   	</table>
 	</form>
 
-	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" id="backup">
+	<form accept-charset="utf-8" method="post" action="<?php echo site_url('admin/backup/export'); ?>" enctype="multipart/form-data" id="backup">
 	<table class="form">
 		<tr>
 			<td><b>Backup:</b></td>

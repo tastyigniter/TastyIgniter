@@ -1,22 +1,6 @@
 <div class="box">
-	<div id="add-box" style="display:none">
-	<h2>ADD A NEW MENU OPTION</h2>
-	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" id="addForm">
-	<table class="form">
-		<tr>
-			<td><b>Name:</b></td>
-			<td><input type="text" name="option_name" value="<?php echo set_value('option_name'); ?>" id="option-name" class="textfield" /></td>
-		</tr>
-		<tr>
-			<td><b>Price:</b></td>
-			<td><input type="text" name="option_price" value="<?php echo set_value('option_price'); ?>" size="5" id="option-price" class="textfield" /></td>
-		</tr>
-	</table>
-	</form>
-	</div>
-	
 	<div id="list-box" class="content">
-	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" id="listForm">
+	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
 	<table align="center" class="list">
 		<tr>
 			<th width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>

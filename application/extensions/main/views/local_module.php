@@ -18,7 +18,7 @@
 
 	<div class="check-local" style="display: <?php echo ($local_info ? 'none' : 'block'); ?>">
 	<form id="location-form" method="POST" action="<?php echo site_url('main/local_module/distance'); ?>">
-		<font size="1"><?php echo $text_postcode_warning; ?></font><br />
+		<font size="1"><?php echo $text_postcode_warning; ?></font><br /><br />
 		<label for="postcode"><b><?php echo $text_postcode; ?></b></label>
 		<input type="text" id="postcodeInput" name="postcode" value="<?php echo $postcode; ?>" size="20" />
 		<input type="button" onclick="searchLocal();" value="<?php echo $text_find; ?>" />

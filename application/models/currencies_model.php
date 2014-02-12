@@ -9,7 +9,13 @@ class Currencies_model extends CI_Model {
 		$this->db->from('currencies');
 
 		$query = $this->db->get();
-		return $query->result_array();
+		$result = array();
+	
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+	
+		return $result;
 	}
 
 	public function getCurrencies() {
@@ -18,7 +24,13 @@ class Currencies_model extends CI_Model {
 		$this->db->where('currency_status', '1');
 
 		$query = $this->db->get();
-		return $query->result_array();
+		$result = array();
+	
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+	
+		return $result;
 	}
 
 	public function getCurrency($currency_id) {
@@ -28,7 +40,9 @@ class Currencies_model extends CI_Model {
 
 		$query = $this->db->get();
 		
-		return $query->row_array();
+		if ($this->db->affected_rows() > 0) {
+			return $query->row_array();
+		}
 	}
 	
 	public function updateCurrency($update = array()) {

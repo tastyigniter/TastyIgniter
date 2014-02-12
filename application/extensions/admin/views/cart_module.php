@@ -14,14 +14,14 @@
 		<h3>LAYOUTS</h3>
 	</div>
 
-	<div class="wrap-content">
+	<div class="wrap_content">
 	<table align=""class="list">
 		<tr>
     		<th><b>Layout:</b></th>
     		<th><b>Position:</b></th>
     		<th><b>Priority:</b></th>
     		<th><b>Status:</b></th>
-    		<th><b>Action:</b></th>
+    		<th class="right"><b>Action:</b></th>
 		</tr>
         <?php $table_row = 0; ?>
      	<?php foreach ($modules as $module) { ?>
@@ -57,13 +57,13 @@
     			<option value="1" >Enabled</option>
 			<?php } ?>  
     		</select></td>
-			<td class="left"><img onclick="$(this).parent().parent().remove();" src="<?php echo base_url('assets/img/delete.png'); ?>" /></td>
+			<td class="right"><img onclick="$(this).parent().parent().remove();" src="<?php echo base_url('assets/img/delete32x32.png'); ?>" /></td>
 		</tr>
         <?php $table_row++; ?>
 		<?php } ?>  
 		<tr id="tfoot">
 		  	<td colspan="4"></td>
-		  	<td class="left"><img src="<?php echo base_url('assets/img/add.png'); ?>" onclick="addModule();" /></td>
+		  	<td class="right"><img src="<?php echo base_url('assets/img/add32x32.png'); ?>" onclick="addModule();" /></td>
 		</tr>		 
 	</table>
 	</div>
@@ -89,7 +89,7 @@ function addModule() {
     html += '      <option value="1">Enabled</option>';
     html += '      <option value="0">Disabled</option>';
     html += '   </select></td>';
-	html += '	<td class="left"><img onclick="$(this).parent().parent().remove();" src="<?php echo base_url('assets/img/delete.png'); ?>" /></td>';
+	html += '	<td class="right"><img onclick="$(this).parent().parent().remove();" src="<?php echo base_url('assets/img/delete32x32.png'); ?>" /></td>';
 	html += '</tr>';
 	
 	$('#tfoot').before(html);

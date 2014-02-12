@@ -1,7 +1,7 @@
 <div class="box">
 	<div id="add-box" style="display:none">
 	<h2>SEND MESSAGE TO ALL CUSTOMERS</h2>
-	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" id="addForm">
+	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
 	<table class="form">
 		<tr>
 			<td><b>To:</b></td>
@@ -14,7 +14,7 @@
 		</tr>
 		<tr>
 			<td width="15%"><b>Subject:</b></td>
-			<td><input type="text" name="subject" value="<?php echo set_value('subject'); ?>" class="textfield" /></td>
+			<td><input type="text" name="subject" value="<?php echo set_value('subject'); ?>" class="textfield" size="40" /></td>
 		</tr>
 		<tr>
 			<td><b>Text:</b></td>
@@ -25,7 +25,7 @@
 	</div>
 
 	<div id="list-box" class="content">
-	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" id="listForm">
+	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
 	<table align="center" class="list">
 		<tr>
 			<th width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
@@ -48,7 +48,7 @@
 		<?php } ?>
 		<?php } else { ?>
 		<tr>
-			<td colspan="7" align="center"><?php echo $text_empty; ?></td>
+			<td colspan="6" align="center"><?php echo $text_empty; ?></td>
 		</tr>
 		<?php } ?>
 	</table>

@@ -8,10 +8,6 @@ class Error_logs extends CI_Controller {
 
 	public function index() {
 			
-		if ( !file_exists(APPPATH .'/views/admin/error_logs.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -27,7 +23,7 @@ class Error_logs extends CI_Controller {
 		}
 
 		$data['heading'] 			= 'Error Logs';
-		$data['sub_menu_update'] 	= 'Clear';
+		$data['sub_menu_delete'] 	= 'Clear';
 		
 		if ($this->config->item('log_path') === '') {
 			$log_path = 'application/logs/';
@@ -46,15 +42,18 @@ class Error_logs extends CI_Controller {
 		}
 				
 		//Delete Error Log
-		if ($this->input->post('logs') && $this->_clearLog() === TRUE) {
+		if ($this->input->post() && $this->_clearLog() === TRUE) {
 				
 			redirect('admin/error_logs');
 		}
 
-		//load home page content
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/error_logs', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/error_logs', $data);
 	}
 
 	public function _clearLog() {
@@ -67,16 +66,18 @@ class Error_logs extends CI_Controller {
 			//$this->form_validation->set_rules('logs', '', 'trim|htmlspecialchars|prep_for_form');
 
 			if ($this->config->item('log_path') === '') {
-				$log_path = 'application/logs/';
+				$log_path = APPPATH .'/logs/';
 			} else {
 				$log_path = $this->config->item('log_path');		
 			}
 			
 			if (is_readable($log_path .'logs.php')) {
-				unlink($log_path .'logs.php');
+				$log = "<"."?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?".">\n\n";
+
+				$this->load->helper('file');
+       	 		write_file($log_path .'logs.php', $log);
 
 				$this->session->set_flashdata('alert', '<p class="success">Logs Cleared Sucessfully!</p>');
-
 			}
 		}
 				

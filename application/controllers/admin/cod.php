@@ -9,12 +9,6 @@ class Cod extends CI_Controller {
 
 	public function index() {
 			
-		//check if file exists in views
-		if ( !file_exists(APPPATH .'/views/admin/cod.php')) {
-			// Whoops, we don't have a page for that!
-			show_404();
-		}
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -30,25 +24,25 @@ class Cod extends CI_Controller {
 		}		
 				
 		$data['heading'] 			= 'Cash On Delivery';
-		$data['sub_menu_update'] 	= 'Update';
+		$data['sub_menu_save'] 		= 'Save';
 		$data['sub_menu_back'] 		= $this->config->site_url('admin/payments');
 
-		if (isset($this->input->post['config_cod_total'])) {
-			$data['config_cod_total'] = $this->input->post['config_cod_total'];
+		if (isset($this->input->post['cod_total'])) {
+			$data['cod_total'] = $this->input->post['cod_total'];
 		} else {
-			$data['config_cod_total'] = $this->config->item('config_cod_total');
+			$data['cod_total'] = $this->config->item('cod_total');
 		}				
 
-		if (isset($this->input->post['config_cod_order_status'])) {
-			$data['config_cod_order_status'] = $this->input->post['config_cod_order_status'];
+		if (isset($this->input->post['cod_order_status'])) {
+			$data['cod_order_status'] = $this->input->post['cod_order_status'];
 		} else {
-			$data['config_cod_order_status'] = $this->config->item('config_cod_order_status');
+			$data['cod_order_status'] = $this->config->item('cod_order_status');
 		}				
 
-		if (isset($this->input->post['config_cod_status'])) {
-			$data['config_cod_status'] = $this->input->post['config_cod_status'];
+		if (isset($this->input->post['cod_status'])) {
+			$data['cod_status'] = $this->input->post['cod_status'];
 		} else {
-			$data['config_cod_status'] = $this->config->item('config_cod_status');
+			$data['cod_status'] = $this->config->item('cod_status');
 		}				
 
 		$data['statuses'] = array();
@@ -65,9 +59,13 @@ class Cod extends CI_Controller {
 			redirect('admin/payments');
 		}
 		
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/cod', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/cod', $data);
 	}
 
 	public function _updateCod() {
@@ -79,16 +77,16 @@ class Cod extends CI_Controller {
     	
     	} else if (!$this->input->post('delete')) { 
 		
-			$this->form_validation->set_rules('config_cod_total', 'Minimum Total', 'trim|required|numeric');
-			$this->form_validation->set_rules('config_cod_order_status', 'Order Status', 'trim|required|integer');
-			$this->form_validation->set_rules('config_cod_status', 'Status', 'trim|required|integer');
+			$this->form_validation->set_rules('cod_total', 'Minimum Total', 'trim|required|numeric');
+			$this->form_validation->set_rules('cod_order_status', 'Order Status', 'trim|required|integer');
+			$this->form_validation->set_rules('cod_status', 'Status', 'trim|required|integer');
 
 			if ($this->form_validation->run() === TRUE) {
 				
 				$update = array(
-					'config_cod_total' 			=> $this->input->post('config_cod_total'),
-					'config_cod_order_status' 	=> $this->input->post('config_cod_order_status'),
-					'config_cod_status' 		=> $this->input->post('config_cod_status')
+					'cod_total' 		=> $this->input->post('cod_total'),
+					'cod_order_status' 	=> $this->input->post('cod_order_status'),
+					'cod_status' 		=> $this->input->post('cod_status')
 				);
 	
 				if ($this->Settings_model->updateSettings('cod', $update)) {

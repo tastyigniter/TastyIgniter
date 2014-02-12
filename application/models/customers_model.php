@@ -18,7 +18,13 @@ class Customers_model extends CI_Model {
 			$this->db->from('customers');
 
 			$query = $this->db->get();
-			return $query->result_array();
+			$result = array();
+		
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+		
+			return $result;
 		}
 	}
 
@@ -26,7 +32,13 @@ class Customers_model extends CI_Model {
 		$this->db->from('customers');
 
 		$query = $this->db->get();
-		return $query->result_array();
+		$result = array();
+		
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+		
+		return $result;
 	}
 
 	public function getCustomer($customer_id) {
@@ -47,7 +59,6 @@ class Customers_model extends CI_Model {
 		$query = $this->db->get();
 
 		if ($query->num_rows() === 1) {
-			return $query->row_array();
 			$row = $query->row_array();
 			
 			return $row;
@@ -134,7 +145,13 @@ class Customers_model extends CI_Model {
 		$this->db->where('customer_id', $customer_id);
 
 		$query = $this->db->get();
-		return $query->result_array();
+		$result = array();
+	
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+	
+		return $result;
 	}
 
 	public function getCustomerDefaultAddress($address_id, $customer_id) {
@@ -164,7 +181,13 @@ class Customers_model extends CI_Model {
 			}
 	
 			$query = $this->db->get();
-			return $query->result_array();
+			$result = array();
+		
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+		
+			return $result;
 		}
 	}
 	
@@ -184,37 +207,51 @@ class Customers_model extends CI_Model {
 	public function resetPassword($customer_id = FALSE, $email = FALSE, $security_question_id = FALSE, $security_answer = FALSE) {
 		
 		if ($customer_id != FALSE && $email != FALSE && $security_question_id != FALSE && $security_answer != FALSE) {
-			//Randome Password
-			$alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
-			$pass = array();
-			for ($i = 0; $i < 8; $i++) {
-				$n = rand(0, strlen($alphabet)-1);
-				$pass[$i] = $alphabet[$n];
-			}
-		
-			$password = implode('',$pass);
 
-			$this->db->set('salt', $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9));
-			$this->db->set('password', sha1($salt . sha1($salt . sha1($password))));
+			$this->db->from('customers');
 			$this->db->where('customer_id', $customer_id);
 			$this->db->where('email', strtolower($email));
 			$this->db->where('security_question_id', $security_question_id);
 			$this->db->where('security_answer', $security_answer);
+			$this->db->where('status', '1');
+
+			$query = $this->db->get();
+
+			if ($query->num_rows() === 1) {
+				$row = $query->row_array();
+
+				//Randome Password
+				$alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
+				$pass = array();
+				for ($i = 0; $i < 8; $i++) {
+					$n = rand(0, strlen($alphabet)-1);
+					$pass[$i] = $alphabet[$n];
+				}
+		
+				$password = implode('',$pass);
+
+				$this->db->set('salt', $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9));
+				$this->db->set('password', sha1($salt . sha1($salt . sha1($password))));
+				$this->db->where('customer_id', $row['customer_id']);
+				$this->db->where('email', $row['email']);
 			
-			$this->db->update('customers');
+				$this->db->update('customers');
 
-			if ($this->db->affected_rows() > 0) {
-				$this->lang->load('main/password_reset');
+				if ($this->db->affected_rows() > 0) {
+					$this->lang->load('main/password_reset');
 				
-				$data['text_success_message'] = sprintf($this->lang->line('text_success_message'), $this->config->site_url('account/login'), $password);
+					$data['text_success_message'] = sprintf($this->lang->line('text_success_message'), $this->config->site_url('account/login'), $row['email'], $password);
 				
-				$subject = $this->lang->line('text_subject');
-				$message = $this->load->view('main/password_reset_email', $data, TRUE);
+					$subject = $this->lang->line('text_subject');
+					$message = $this->load->view('main/password_reset_email', $data, TRUE);
 
-				$this->sendMail($email, $subject, $message);
-				return TRUE;
+					$this->sendMail($email, $subject, $message);
+					return TRUE;
+				}
 			}
 		}
+		
+		return FALSE;
 	}
 
 	public function updateCustomer($update = array()) {
@@ -266,19 +303,21 @@ class Customers_model extends CI_Model {
 		}
 			
 		if ($this->db->affected_rows() > 0) {
-			$query = TRUE;
-		}
-
-		if (!empty($update['address']) && !empty($update['customer_id'])) {
-			foreach ($update['address'] as $address) {
-				if (!empty($address['address_id'])) {
-					$address['customer_id'] = $update['customer_id'];
-					$this->updateAddress($address);
-					$query = TRUE;
+			if (!empty($update['address']) && !empty($update['customer_id'])) {
+				foreach ($update['address'] as $address) {
+					if (!empty($address['address_id'])) {
+						$address['customer_id'] = $update['customer_id'];
+						$this->updateAddress($address);
+					} else {
+						$address['customer_id'] = $update['customer_id'];
+						$this->addAddress($address);
+					}
 				}
 			}
+			
+			$query = TRUE;
 		}
-
+		
 		return $query;
 	}	
 
@@ -325,10 +364,20 @@ class Customers_model extends CI_Model {
 		$this->db->insert('customers');
 
 		if ($this->db->affected_rows() > 0) {
+			$customer_id = $this->db->insert_id();
+			
+			if (!empty($add['address']) && $customer_id) {
+				foreach ($add['address'] as $address) {
+					$address['customer_id'] = $customer_id;
+					$this->addAddress($address);
+					$query = TRUE;
+				}
+			}
+			
 			$this->lang->load('main/login_register');
 			
 			$data['text_success_message'] = $this->lang->line('text_success_message');
-			$data['text_signature'] = sprintf($this->lang->line('text_signature'), $this->config->item('config_site_name'));
+			$data['text_signature'] = sprintf($this->lang->line('text_signature'), $this->config->item('site_name'));
 			
 			$subject = $this->lang->line('text_subject');
 			$message = $this->load->view('main/register_email', $data, TRUE);
@@ -356,8 +405,8 @@ class Customers_model extends CI_Model {
 			$this->db->set('postcode', $update['postcode']);
 		}
 
-		if (!empty($update['country'])) {
-			$this->db->set('country_id', $update['country']);
+		if (!empty($update['country_id'])) {
+			$this->db->set('country_id', $update['country_id']);
 		}
 
 		if (isset($update['address_id'], $update['customer_id'])) {
@@ -371,7 +420,37 @@ class Customers_model extends CI_Model {
 		}
 	}	
 
-	public function addAddress($customer_id, $address = array()) {
+	public function addAddress($address = array()) {
+
+		if (!empty($address['address_1'])) {
+			$this->db->set('address_1', $address['address_1']);
+		}
+
+		if (!empty($address['address_2'])) {
+			$this->db->set('address_2', $address['address_2']);
+		}
+
+		if (!empty($address['city'])) {
+			$this->db->set('city', $address['city']);
+		}
+
+		if (!empty($address['postcode'])) {
+			$this->db->set('postcode', $address['postcode']);
+		}
+
+		if (!empty($address['country_id'])) {
+			$this->db->set('country_id', $address['country_id']);
+		}
+			
+		$this->db->insert('address');
+		
+		if ($this->db->affected_rows() > 0) {
+			$address_id = $this->db->insert_id();			
+			return $address_id;
+		}
+	}	
+
+	public function addCustomerAddress($customer_id, $address = array()) {
 
 		if ($customer_id) {
 			$this->db->set('customer_id', $customer_id);
@@ -393,8 +472,8 @@ class Customers_model extends CI_Model {
 			$this->db->set('postcode', $address['postcode']);
 		}
 
-		if (!empty($address['country'])) {
-			$this->db->set('country_id', $address['country']);
+		if (!empty($address['country_id'])) {
+			$this->db->set('country_id', $address['country_id']);
 		}
 			
 		$this->db->insert('address');
@@ -433,16 +512,16 @@ class Customers_model extends CI_Model {
 	   	$this->load->library('email');
 
 		//setting upload preference
-		$this->email->set_protocol($this->config->item('config_protocol'));
-		$this->email->set_mailtype($this->config->item('config_mailtype'));
-		$this->email->set_smtp_host($this->config->item('config_smtp_host'));
-		$this->email->set_smtp_port($this->config->item('config_smtp_port'));
-		$this->email->set_smtp_user($this->config->item('config_smtp_user'));
-		$this->email->set_smtp_pass($this->config->item('config_smtp_pass'));
+		$this->email->set_protocol($this->config->item('protocol'));
+		$this->email->set_mailtype($this->config->item('mailtype'));
+		$this->email->set_smtp_host($this->config->item('smtp_host'));
+		$this->email->set_smtp_port($this->config->item('smtp_port'));
+		$this->email->set_smtp_user($this->config->item('smtp_user'));
+		$this->email->set_smtp_pass($this->config->item('smtp_pass'));
 		$this->email->set_newline("\r\n");
 		$this->email->initialize();
 
-		$this->email->from($this->config->item('config_site_email'), $this->config->item('config_site_name'));
+		$this->email->from($this->config->item('site_email'), $this->config->item('site_name'));
 		$this->email->to(strtolower($email));
 
 		$this->email->subject($subject);

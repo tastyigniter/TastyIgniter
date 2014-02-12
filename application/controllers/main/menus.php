@@ -3,6 +3,7 @@ class Menus extends MX_Controller {
 
 	public function __construct() {
 		parent::__construct(); 																	// calls the constructor
+		$this->load->library('customer'); 														// load the customer library
 		$this->load->model('Menus_model'); 														// load the menus model
 		$this->load->model('Specials_model'); 													// load the reviews model
 	}
@@ -15,10 +16,6 @@ class Menus extends MX_Controller {
 
 		$this->lang->load('main/menus');  														// loads language file
 
-		if ( !file_exists(APPPATH .'/views/main/menus.php')) { 								// check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-		
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert'); 								// retrieve session flashdata variable if available
 		} else {
@@ -110,12 +107,15 @@ class Menus extends MX_Controller {
 
 		$data['button_right'] 		= '<a class="button" href='. $this->config->site_url("checkout") .'>'. $this->lang->line('button_continue') .'</a>';
 
-		// pass array $data and load view files
-		$this->load->view('main/header', $data);
-		$this->load->view('main/content_left');
-		$this->load->view('main/content_right', $data);
-		$this->load->view('main/menus', $data);
-		$this->load->view('main/footer');
+		$regions = array(
+			'main/header',
+			'main/content_left',
+			'main/content_right',
+			'main/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('main/menus', $data);
 	}
 
 	public function review() {

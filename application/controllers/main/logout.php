@@ -3,6 +3,7 @@
 class Logout extends MX_Controller {
 
 	public function index() {
+		$this->load->library('customer');
 		$this->lang->load('main/login_register');  												// loads language file
 
 		if ($this->session->flashdata('alert')) {
@@ -16,7 +17,7 @@ class Logout extends MX_Controller {
 
 		$this->customer->logout();
 		
-		$this->load->template('main/logout', $data);
+		$this->template->load('main/logout', $data);
 	}
 }
 

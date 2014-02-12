@@ -36,7 +36,13 @@ class Orders_model extends CI_Model {
 			}
 
 			$query = $this->db->get();
-			return $query->result_array();
+			$result = array();
+		
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+		
+			return $result;
 		}
 	}
 	
@@ -48,7 +54,13 @@ class Orders_model extends CI_Model {
 		$this->db->order_by('order_id', 'DESC');
 
 		$query = $this->db->get();
-		return $query->result_array();
+		$result = array();
+	
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+	
+		return $result;
 	}
 
 	public function getAdminOrder($order_id = FALSE) {
@@ -78,7 +90,13 @@ class Orders_model extends CI_Model {
 			$this->db->where('order_customer_id', $customer_id);
 
 			$query = $this->db->get();
-			return $query->result_array();
+			$result = array();
+		
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+		
+			return $result;
 		}
 	}
 	
@@ -103,7 +121,13 @@ class Orders_model extends CI_Model {
 		$this->db->where('order_id', $order_id);
 			
 		$query = $this->db->get();
-		return $query->result_array();
+		$result = array();
+	
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+	
+		return $result;
 	}
 
 	public function updateOrder($update = array()) {
@@ -233,12 +257,12 @@ class Orders_model extends CI_Model {
 				
 					$this->addOrderMenus($order_id, $cart_items);
 
-					if ($order_info['payment'] === 'paypal' && $this->config->item('config_paypal_order_status')) {
-						$this->db->set('status_id', $this->config->item('config_paypal_order_status'));
-					} else if ($order_info['payment'] === 'cod' && $this->config->item('config_cod_order_status')) {
-						$this->db->set('status_id', $this->config->item('config_cod_order_status'));
+					if ($order_info['payment'] === 'paypal' && $this->config->item('paypal_order_status')) {
+						$this->db->set('status_id', $this->config->item('paypal_order_status'));
+					} else if ($order_info['payment'] === 'cod' && $this->config->item('cod_order_status')) {
+						$this->db->set('status_id', $this->config->item('cod_order_status'));
 					} else {
-						$this->db->set('status_id', $this->config->item('config_order_received'));
+						$this->db->set('status_id', $this->config->item('order_received'));
 					}
 
 					$notify = $this->_sendOrderMail($order_id, $order_info, $cart_items);
@@ -348,16 +372,16 @@ class Orders_model extends CI_Model {
 		}
 		
 		//setting upload preference
-		$this->email->set_protocol($this->config->item('config_protocol'));
-		$this->email->set_mailtype($this->config->item('config_mailtype'));
-		$this->email->set_smtp_host($this->config->item('config_smtp_host'));
-		$this->email->set_smtp_port($this->config->item('config_smtp_port'));
-		$this->email->set_smtp_user($this->config->item('config_smtp_user'));
-		$this->email->set_smtp_pass($this->config->item('config_smtp_pass'));
+		$this->email->set_protocol($this->config->item('protocol'));
+		$this->email->set_mailtype($this->config->item('mailtype'));
+		$this->email->set_smtp_host($this->config->item('smtp_host'));
+		$this->email->set_smtp_port($this->config->item('smtp_port'));
+		$this->email->set_smtp_user($this->config->item('smtp_user'));
+		$this->email->set_smtp_pass($this->config->item('smtp_pass'));
 		$this->email->set_newline("\r\n");
 		$this->email->initialize();
 
-		$this->email->from($this->config->item('config_site_email'), $this->config->item('config_site_name'));
+		$this->email->from($this->config->item('site_email'), $this->config->item('site_name'));
 		$this->email->cc($this->location->getEmail());
 		$this->email->to(strtolower($order_info['email']));
 

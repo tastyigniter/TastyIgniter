@@ -8,10 +8,6 @@ class Logout extends CI_Controller {
 
 	public function index() {
 		
-		if ( !file_exists(APPPATH .'/views/admin/logout.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
 		} else {
@@ -21,9 +17,13 @@ class Logout extends CI_Controller {
 		$data['heading'] = 'Logged Out'; 
 
 		$this->user->logout();
-
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/logout', $data);
-		$this->load->view('admin/footer');
+		
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/logout', $data);
 	}
 }

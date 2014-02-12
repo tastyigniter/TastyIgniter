@@ -130,7 +130,7 @@ class Local_module extends MX_Controller {
 	
 	function getLatLng($postcode) {																// method to perform regular expression match on postcode string and return latitude and longitude
 		
-		if ($this->config->item('config_search_by') === 'postcode') {
+		if ($this->config->item('search_by') === 'postcode') {
 	
 			$postcode_string = strtoupper(str_replace(' ', '', $postcode));								// strip spaces from postcode string and convert to uppercase
 
@@ -147,7 +147,7 @@ class Local_module extends MX_Controller {
 				return FALSE;
 			}
 		
-		} else if ($this->config->item('config_search_by') === 'address') {
+		} else if ($this->config->item('search_by') === 'address') {
 		
 			$postcode_string = explode(' ', $postcode);								// strip spaces from postcode string and convert to uppercase
 

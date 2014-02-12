@@ -1,4 +1,4 @@
 <div class="content">
-	<p align="center">&nbsp;</p>
-	<?php echo $text_logout_msg; ?>
+	<p align="center">&nbsp;
+	<?php echo $text_logout_msg; ?></p>
 </div>

@@ -1242,22 +1242,6 @@ class CI_Loader {
 			return $filename;
 		}
 	}
-    
-    public function template($template_name, $vars = array(), $return = FALSE)
-    {
-        $content  = $this->view('main/header', $vars, $return);
-        $content .= $this->view($template_name, $vars, $return);
-        $content .= $this->view('main/footer', $vars, $return);
-
-        if (file_exists('application/views/' . $template_name . '.php'))
-        {
-            return $content;
-        }
-        else
-        {
-        	return show_404();
-        }
-    }
 }
 
 /* End of file Loader.php */

@@ -1,6 +1,6 @@
 <div class="box">
 	<div id="list-box" class="content">
-	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" id="listForm">
+	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
 	<table border="0" class="list">
 		<tr>
 			<th width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
@@ -10,8 +10,8 @@
 			<th>Status</th>
 			<th>Assigned Staff</th>
 			<th>Type</th>
-			<th>Ready Time</th>
-			<th class="right">Date Added</th>
+			<th class="center">Ready Time</th>
+			<th class="center">Date Added</th>
 			<th class="right">Date Modified</th>
 			<th class="right">Action</th>
 		</tr>
@@ -25,8 +25,8 @@
 			<td><?php echo $order['order_status']; ?></td>
 			<td><?php echo $order['staff_name'] ? $order['staff_name'] : 'NONE'; ?></td>
 			<td><?php echo $order['order_type']; ?></td>
-			<td><?php echo $order['order_time']; ?></td>
-			<td class="right"><?php echo $order['date_added']; ?></td>
+			<td class="center"><?php echo $order['order_time']; ?></td>
+			<td class="center"><?php echo $order['date_added']; ?></td>
 			<td class="right"><?php echo $order['date_modified']; ?></td>
 			<td class="right"><a class="edit" title="Edit" href="<?php echo $order['edit']; ?>"></a></td>
 		</tr>

@@ -8,10 +8,6 @@ class Login extends CI_Controller {
 	}
 
 	public function index() {
-		
-		if ( !file_exists(APPPATH .'/views/admin/login.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
 
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
@@ -37,8 +33,12 @@ class Login extends CI_Controller {
   			}
     	}
 		
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/login', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/login', $data);
 	}
 }

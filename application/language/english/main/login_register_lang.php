@@ -7,7 +7,7 @@ $lang['text_login'] 			= 'Login (if existing customer)';
 $lang['text_register'] 			= 'Register (if new customer)';
 $lang['text_forgot'] 			= 'Forgot password?';
 $lang['text_required'] 			= '*** All Required fields.';
-$lang['text_logout_msg'] 		= '<h2>You have been logged out.</h2><p align="center"><a href="%s">Click Here</a> to Login</p>';
+$lang['text_logout_msg'] 		= '<h2 align="center">You have been logged out.</h2><p align="center"><a href="%s">Click Here</a> to Login</p>';
 
 $lang['entry_first_name'] 		= 'First Name:';
 $lang['entry_last_name'] 		= 'Last Name:';

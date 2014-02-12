@@ -10,7 +10,13 @@ class Payments_model extends CI_Model {
 		
 		$query = $this->db->get();
 		
-		return $query->result_array();
+		$result = array();
+	
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+	
+		return $result;
 	}
 
 	public function getPayment($payment_id) {
@@ -144,7 +150,7 @@ class Payments_model extends CI_Model {
 			
 			if (strtoupper($response['ACK']) === 'SUCCESS' OR strtoupper($response['ACK']) === 'SUCCESSWITHWARNING') {
 			
-				if ($this->config->item('config_paypal_mode') === 'sandbox') {
+				if ($this->config->item('paypal_mode') === 'sandbox') {
 					$api_mode = '.sandbox';
 				} else {
 					$api_mode = '';
@@ -199,7 +205,7 @@ class Payments_model extends CI_Model {
 	
 	public function sendPaypal($method, $nvp_data) {
 
-		if ($this->config->item('config_paypal_mode') === 'sandbox') {
+		if ($this->config->item('paypal_mode') === 'sandbox') {
 			$api_mode = '.sandbox';
 		} else {
 			$api_mode = '';
@@ -210,13 +216,13 @@ class Payments_model extends CI_Model {
 		// Set the API operation, version, and API signature in the request.
 		$nvp_string  = 'VERSION=76.0';
 		$nvp_string .= '&METHOD='. urlencode($method);
-		$nvp_string .= '&USER='. urlencode($this->config->item('config_paypal_user'));
-		$nvp_string .= '&PWD='. urlencode($this->config->item('config_paypal_pass'));
-		$nvp_string .= '&SIGNATURE='. urlencode($this->config->item('config_paypal_sign'));
+		$nvp_string .= '&USER='. urlencode($this->config->item('paypal_user'));
+		$nvp_string .= '&PWD='. urlencode($this->config->item('paypal_pass'));
+		$nvp_string .= '&SIGNATURE='. urlencode($this->config->item('paypal_sign'));
 		$nvp_string .= '&RETURNURL='. urlencode($this->config->site_url('payments/paypal'));
 		$nvp_string .= '&CANCELURL='. urlencode($this->config->site_url('payments/cancel'));	
 
-		if ($this->config->item('config_paypal_action') === 'sale') {
+		if ($this->config->item('paypal_action') === 'sale') {
 			$nvp_string .= '&PAYMENTREQUEST_0_PAYMENTACTION=SALE';
 		} else {
 			$nvp_string .= '&PAYMENTREQUEST_0_PAYMENTACTION=AUTHORIZATION';		

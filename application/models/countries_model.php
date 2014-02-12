@@ -19,7 +19,13 @@ class Countries_model extends CI_Model {
 			$this->db->order_by('country_name', 'ASC');
 			
 			$query = $this->db->get();
-			return $query->result_array();
+			$result = array();
+		
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+		
+			return $result;
 		}
 	}
 
@@ -28,7 +34,13 @@ class Countries_model extends CI_Model {
 		$this->db->order_by('country_name', 'ASC');
 			
 		$query = $this->db->get();
-		return $query->result_array();
+		$result = array();
+	
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+	
+		return $result;
 	}
 
 	public function getCountry($country_id) {
@@ -36,7 +48,10 @@ class Countries_model extends CI_Model {
 		$this->db->where('country_id', $country_id);
 			
 		$query = $this->db->get();
-		return $query->row_array();
+
+		if ($this->db->affected_rows() > 0) {
+			return $query->row_array();
+		}
 	}
 
 	public function addCountry($add = array()) {

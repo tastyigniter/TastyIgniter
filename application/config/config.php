@@ -16,11 +16,6 @@
 */
 $config['base_url']	= '';
 
-$config['modules_locations'] = array(
-APPPATH.'extensions/' => '../extensions/'
-);
-
-
 /*
 |--------------------------------------------------------------------------
 | Index File
@@ -31,7 +26,7 @@ APPPATH.'extensions/' => '../extensions/'
 | variable so that it is blank.
 |
 */
-$config['index_page'] = '';
+$config['index_page'] = 'index.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -61,7 +56,6 @@ $config['uri_protocol']	= 'AUTO';
 |
 | http://codeigniter.com/user_guide/general/urls.html
 */
-
 $config['url_suffix'] = '';
 
 /*
@@ -131,7 +125,7 @@ $config['subclass_prefix'] = 'TI_';
 | DO NOT CHANGE THIS UNLESS YOU FULLY UNDERSTAND THE REPERCUSSIONS!!
 |
 */
-$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-=&';
+$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
 
 
 /*
@@ -164,39 +158,6 @@ $config['enable_query_strings'] = FALSE;
 $config['controller_trigger']	= 'c';
 $config['function_trigger']		= 'm';
 $config['directory_trigger']	= 'd'; // experimental not currently in use
-
-/*
-|--------------------------------------------------------------------------
-| Error Logging Threshold
-|--------------------------------------------------------------------------
-|
-| If you have enabled error logging, you can set an error threshold to
-| determine what gets logged. Threshold options are:
-| You can enable error logging by setting a threshold over zero. The
-| threshold determines what gets logged. Threshold options are:
-|
-|	0 = Disables logging, Error logging TURNED OFF
-|	1 = Error Messages (including PHP errors)
-|	2 = Debug Messages
-|	3 = Informational Messages
-|	4 = All Messages
-|
-| For a live site you'll usually only enable Errors (1) to be logged otherwise
-| your log files will fill up very fast.
-|
-*/
-//$config['log_threshold'] = 1;
-
-/*
-|--------------------------------------------------------------------------
-| Error Logging Directory Path
-|--------------------------------------------------------------------------
-|
-| Leave this BLANK unless you would like to set something other than the default
-| application/logs/ folder. Use a full server path with trailing slash.
-|
-*/
-//$config['log_path'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -249,12 +210,12 @@ $config['encryption_key'] = 'muh6T37619LO09uJpk1679pCI06LHps4';
 | 'sess_time_to_update'		= how many seconds between CI refreshing Session Information
 |
 */
-$config['sess_cookie_name']		= 'tastysession';
+$config['sess_cookie_name']		= 'tisession';
 $config['sess_expiration']		= 0;
 $config['sess_expire_on_close']	= FALSE;
 $config['sess_encrypt_cookie']	= FALSE;
-$config['sess_use_database']	= TRUE;
-$config['sess_table_name']		= 'ci_sessions';
+$config['sess_use_database']	= FALSE;
+$config['sess_table_name']		= 'ti_sessions';
 $config['sess_match_ip']		= FALSE;
 $config['sess_match_useragent']	= TRUE;
 $config['sess_time_to_update']	= 0;
@@ -335,7 +296,6 @@ $config['compress_output'] = FALSE;
 */
 $config['time_reference'] = 'local';
 
-
 /*
 |--------------------------------------------------------------------------
 | Rewrite PHP Short Tags
@@ -361,6 +321,27 @@ $config['rewrite_short_tags'] = FALSE;
 |
 */
 $config['proxy_ips'] = '';
+
+/*
+|--------------------------------------------------------------------------
+| Extensions locations
+|--------------------------------------------------------------------------
+|
+| These are the folders where your extentions are located. You may define an
+| absolute path to the location or a relative path starting from the root
+| directory.
+|
+*/
+$config['modules_locations'] = array(APPPATH.'extensions/' => '../extensions/');
+
+/*
+|--------------------------------------------------------------------------
+| DO NOT REMOVE
+|--------------------------------------------------------------------------
+|
+|
+*/
+$config['ti_setup'] = '';
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */

@@ -8,9 +8,9 @@ class Currency {
 		$this->CI =& get_instance();
 		$this->CI->load->database();
 		
-		if ($this->CI->config->item('config_currency')) {
+		if ($this->CI->config->item('currency_id')) {
 			$this->CI->db->from('currencies');	
-			$this->CI->db->where('currency_id', $this->CI->config->item('config_currency'));
+			$this->CI->db->where('currency_id', $this->CI->config->item('currency_id'));
 			$query = $this->CI->db->get();
 
 			if ($query->num_rows() === 1) {

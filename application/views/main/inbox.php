@@ -23,6 +23,8 @@
 		<?php } ?>
 	</table>
 	</div>
+
+	<div class="separator"></div>
 	<div class="buttons">
 		<div class="left"><a class="button" href="<?php echo $back; ?>"><?php echo $button_back; ?></a></div>
 	</div>

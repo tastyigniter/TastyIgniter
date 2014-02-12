@@ -3,6 +3,7 @@ class Payments extends MX_Controller {
 	
 	public function __construct() {
 		parent::__construct(); 																	//  calls the constructor
+		$this->load->library('customer'); 														// load the customer library
 		$this->load->library('cart'); 															// load the cart library
 		$this->load->library('location'); 														// load the location library
 		$this->load->library('currency'); 														// load the currency library
@@ -13,10 +14,6 @@ class Payments extends MX_Controller {
 	public function index() {
 		$this->lang->load('main/payments');  													// loads language file
 		
-		if ( !file_exists(APPPATH .'/views/main/payments.php')) { 							//check if file exists in views folder
-			show_404(); 																		// Whoops, show 404 error page!
-		}
-
 		if ( ! $this->cart->contents()) { 														// checks if cart contents is empty  
 			$this->session->set_flashdata('alert', $this->lang->line('warning_no_cart'));
 		  	redirect('menus');																	// redirect to menus page and display error
@@ -65,11 +62,14 @@ class Payments extends MX_Controller {
 			redirect('payments');				
 		}
 		
-		// pass array $data and load view files
-		$this->load->view('main/header', $data);
-		$this->load->view('main/content_right', $data);
-		$this->load->view('main/payments', $data);
-		$this->load->view('main/footer');
+		$regions = array(
+			'main/header',
+			'main/content_right',
+			'main/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('main/payments', $data);
 	}
 
 	public function paypal() {

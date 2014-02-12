@@ -13,10 +13,6 @@ class Reservations extends CI_Controller {
 
 	public function index() {
 	
-		if ( !file_exists(APPPATH .'/views/admin/reservations.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -38,19 +34,29 @@ class Reservations extends CI_Controller {
 			$filter['page'] = 1;
 		}
 		
-		if ($this->config->item('config_page_limit')) {
-			$filter['limit'] = $this->config->item('config_page_limit');
+		if ($this->config->item('page_limit')) {
+			$filter['limit'] = $this->config->item('page_limit');
 		}
 				
-		$data['heading'] 			= 'Reservations';
-		$data['sub_menu_add'] 		= 'Add';
-		$data['sub_menu_delete'] 	= 'Delete';
-		$data['sub_menu_list'] 		= '<li><a href="">Switch to calender view</a></li>';
-		$data['text_no_reservations'] = 'There are no reservation(s).';
+		$data['heading'] 				= 'Reservations';
+		$data['sub_menu_delete'] 		= 'Delete';
+		$data['sub_menu_list'] 			= '<li><a href="">Switch to calender view</a></li>';
+		$data['text_empty'] 			= 'There are no reservations available.';
 		
 		$data['reservations'] = array();
 		$results = $this->Reservations_model->getList($filter);
 		foreach ($results as $result) {					
+			$current_date = mdate('%d-%m-%Y', time());
+			$date_added = mdate('%d-%m-%Y', strtotime($result['date_added']));
+			
+			if ($current_date === $date_added) {
+				$date_added = 'Today';
+   			} else if($date_added === mdate('%d-%m-%Y', time() - (24 * 60 * 60))) {
+				$date_added = 'Yesterday';
+			} else {
+				$date_added = $date_added;
+			}
+			
 			$data['reservations'][] = array(
 				'reservation_id'	=> $result['reservation_id'],
 				'first_name'		=> $result['first_name'],
@@ -62,9 +68,9 @@ class Reservations extends CI_Controller {
 				'reserve_time'		=> mdate('%H:%i', strtotime($result['reserve_time'])),
 				'status_name'		=> $result['status_name'],
 				'staff_name'		=> $result['staff_name'],
-				'date_added'		=> mdate('%d-%m-%Y', strtotime($result['date_added'])),
+				'date_added'		=> $date_added,
 				'date_modified'		=> mdate('%d-%m-%Y', strtotime($result['date_modified'])),
-				'edit'				=> $this->config->site_url('admin/reservations/edit/' . $result['reservation_id'])
+				'edit'				=> $this->config->site_url('admin/reservations/edit?id=' . $result['reservation_id'])
 			);
 		}
 				
@@ -85,16 +91,16 @@ class Reservations extends CI_Controller {
 			redirect('admin/reservations');
 		}	
 
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/reservations', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/reservations', $data);
 	}	
 
 	public function edit() {
-		
-		if ( !file_exists(APPPATH .'/views/admin/reservations_edit.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
 		
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
@@ -110,88 +116,93 @@ class Reservations extends CI_Controller {
 			$data['alert'] = '';
 		}		
 
-		if ($this->uri->segment(4)) {
-			$reservation_id = (int)$this->uri->segment(4);
+		if (is_numeric($this->input->get('id'))) {
+			$reservation_id = $this->input->get('id');
+			$data['action']	= $this->config->site_url('admin/reservations/edit?id='. $reservation_id);
 		} else {
-		    redirect('admin/reservations');
+		    $reservation_id = 0;
+			//$data['action']	= $this->config->site_url('admin/reservations/edit');
+			redirect('admin/orders');
 		}
 		
 		$result = $this->Reservations_model->getAdminReservation($reservation_id);
 
-		if ($result) {
-			$data['heading'] 			= 'Reservations';
-			$data['sub_menu_update'] 	= 'Update';
-			$data['sub_menu_back'] 		= $this->config->site_url('admin/reservations');
+		$data['heading'] 			= 'Reservation - '. $result['table_name'] .'-'.$result['reservation_id'];
+		$data['sub_menu_save'] 		= 'Save';
+		$data['sub_menu_back'] 		= $this->config->site_url('admin/reservations');
 
-			$data['reservation_id'] 	= $result['table_name'] .'-'.$result['reservation_id'];
-			$data['location_name'] 		= $result['location_name'];
-			$data['location_address_1'] = $result['location_address_1'];
-			$data['location_address_2'] = $result['location_address_2'];
-			$data['location_city'] 		= $result['location_city'];
-			$data['location_postcode'] 	= $result['location_postcode'];
-			$data['location_country'] 	= $result['location_country_id'];
-			$data['table_name'] 		= $result['table_name'];
-			$data['min_capacity'] 		= $result['min_capacity'] .' person(s)';
-			$data['max_capacity'] 	= $result['max_capacity'] .' person(s)';
-			$data['guest_num'] 			= $result['guest_num'] .' person(s)';
-			$data['occasion'] 			= $result['occasion_id'];
-			$data['customer_id'] 		= $result['customer_id'];
-			$data['first_name'] 		= $result['first_name'];
-			$data['last_name'] 			= $result['last_name'];
-			$data['email'] 				= $result['email'];
-			$data['telephone'] 			= $result['telephone'];
-			$data['reserve_time'] 		= mdate('%H:%i', strtotime($result['reserve_time']));
-			$data['reserve_date'] 		= mdate('%d-%m-%Y', strtotime($result['reserve_date']));
-			$data['date_added'] 		= mdate('%d-%m-%Y', strtotime($result['date_added']));
-			$data['date_modified'] 		= mdate('%d-%m-%Y', strtotime($result['date_modified']));
-			$data['status_id'] 			= $result['status'];
-			$data['staff_id'] 			= $result['staff_id'];
-			$data['comment'] 			= $result['comment'];
-			$data['notify'] 			= $result['notify'];
-			$data['ip_address'] 		= $result['ip_address'];
-			$data['user_agent'] 		= $result['user_agent'];
-			
-			$data['occasions'] = array(
-				'0' => 'not applicable',
-				'1' => 'birthday',
-				'2' => 'anniversary',
-				'3' => 'general celebration',
-				'4' => 'hen party',
-				'5' => 'stag party'
-			);
-
-			$data['statuses'] = array();
-			$statuses = $this->Statuses_model->getStatuses('reserve');
-			foreach ($statuses as $status) {
-				$data['statuses'][] = array(
-					'status_id'	=> $status['status_id'],
-					'status_name'	=> $status['status_name']
-				);
-			}
-
-			$this->load->model('Staffs_model');
-			$data['staffs'] = array();
-			$staffs = $this->Staffs_model->getStaffs();
-			foreach ($staffs as $staff) {
-				$data['staffs'][] = array(
-					'staff_id'		=> $staff['staff_id'],
-					'staff_name'	=> $staff['staff_name']
-				);
-			}
-
-			// check if POST add_food, validate fields and add Food to model
-			if ($this->input->post() && $this->_updateReservation($reservation_id) === TRUE) {
+		$data['reservation_id'] 	= $result['table_name'] .'-'.$result['reservation_id'];
+		$data['location_name'] 		= $result['location_name'];
+		$data['location_address_1'] = $result['location_address_1'];
+		$data['location_address_2'] = $result['location_address_2'];
+		$data['location_city'] 		= $result['location_city'];
+		$data['location_postcode'] 	= $result['location_postcode'];
+		$data['location_country'] 	= $result['location_country_id'];
+		$data['table_name'] 		= $result['table_name'];
+		$data['min_capacity'] 		= $result['min_capacity'] .' person(s)';
+		$data['max_capacity'] 	= $result['max_capacity'] .' person(s)';
+		$data['guest_num'] 			= $result['guest_num'] .' person(s)';
+		$data['occasion'] 			= $result['occasion_id'];
+		$data['customer_id'] 		= $result['customer_id'];
+		$data['first_name'] 		= $result['first_name'];
+		$data['last_name'] 			= $result['last_name'];
+		$data['email'] 				= $result['email'];
+		$data['telephone'] 			= $result['telephone'];
+		$data['reserve_time'] 		= mdate('%H:%i', strtotime($result['reserve_time']));
+		$data['reserve_date'] 		= mdate('%d-%m-%Y', strtotime($result['reserve_date']));
+		$data['date_added'] 		= mdate('%d-%m-%Y', strtotime($result['date_added']));
+		$data['date_modified'] 		= mdate('%d-%m-%Y', strtotime($result['date_modified']));
+		$data['status_id'] 			= $result['status'];
+		$data['staff_id'] 			= $result['staff_id'];
+		$data['comment'] 			= $result['comment'];
+		$data['notify'] 			= $result['notify'];
+		$data['ip_address'] 		= $result['ip_address'];
+		$data['user_agent'] 		= $result['user_agent'];
 		
-				redirect('admin/reservations');
-			}
+		$data['occasions'] = array(
+			'0' => 'not applicable',
+			'1' => 'birthday',
+			'2' => 'anniversary',
+			'3' => 'general celebration',
+			'4' => 'hen party',
+			'5' => 'stag party'
+		);
+
+		$data['statuses'] = array();
+		$statuses = $this->Statuses_model->getStatuses('reserve');
+		foreach ($statuses as $status) {
+			$data['statuses'][] = array(
+				'status_id'	=> $status['status_id'],
+				'status_name'	=> $status['status_name']
+			);
+		}
+
+		$this->load->model('Staffs_model');
+		$data['staffs'] = array();
+		$staffs = $this->Staffs_model->getStaffs();
+		foreach ($staffs as $staff) {
+			$data['staffs'][] = array(
+				'staff_id'		=> $staff['staff_id'],
+				'staff_name'	=> $staff['staff_name']
+			);
+		}
+
+		// check if POST add_food, validate fields and add Food to model
+		if ($this->input->post() && $this->_updateReservation() === TRUE) {
+	
+			redirect('admin/reservations');
 		}
 				
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/reservations_edit', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/reservations_edit', $data);
 	}
 	
-	public function _updateReservation($reservation_id) {
+	public function _updateReservation() {
 			
     	if (!$this->user->hasPermissions('modify', 'admin/reservations')) {
 		
@@ -209,7 +220,7 @@ class Reservations extends CI_Controller {
 			if ($this->form_validation->run() === TRUE) {
 				$update = array();
 				
-				$update['reservation_id'] = (int)$reservation_id;
+				$update['reservation_id'] = $this->input->get('id');
 				
 				$update['status'] = (int)$this->input->post('status');
 			

@@ -104,7 +104,7 @@ class Location {
 		
 		$this->distance = number_format($this->distance, 2);
 		
-		if ($this->CI->config->item('config_distance_unit') === 'km') {
+		if ($this->CI->config->item('distance_unit') === 'km') {
 			$this->distance = $this->distance .' Km';
 		} else {
 			$this->distance = $this->distance .' Miles';

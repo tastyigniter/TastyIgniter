@@ -1,6 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 $route['default_controller'] = 'main/home';
+$route['admin'] = 'admin/dashboard';
 $route['checkout/success'] = 'main/checkout/success';
 $route['home'] = 'main/home';
 $route['aboutus'] = 'main/home/aboutus';
@@ -19,7 +20,7 @@ $route['account/details'] = 'main/details';
 $route['account/address'] = 'main/address';
 $route['account/orders'] = 'main/orders';
 $route['account/inbox'] = 'main/inbox';
-$route['password/reset'] = 'main/password_reset';
+$route['account/password/reset'] = 'main/password_reset';
 $route['find/table'] = 'main/find_table';
 $route['reserve/table'] = 'main/reserve_table';
 $route['account/inbox/view/:num'] = 'main/inbox/view';

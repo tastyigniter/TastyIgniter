@@ -9,10 +9,6 @@ class Currencies extends CI_Controller {
 
 	public function index() {
 
-		if ( !file_exists(APPPATH .'/views/admin/currencies.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -28,12 +24,10 @@ class Currencies extends CI_Controller {
 		}
 
 		$data['heading'] 			= 'Currencies';
-		$data['sub_menu_add'] 		= 'Add';
+		$data['sub_menu_add'] 		= 'Add new currency';
 		$data['sub_menu_delete'] 	= 'Delete';
-		$data['sub_menu_list'] 		= '<li><a id="menu-add">Add new currency</a></li>';
-		$data['text_empty'] 		= 'There are no quantities, please add!.';
+		$data['text_empty'] 		= 'There are no currencies available.';
 
-		//load ratings data into array
 		$data['currencies'] = array();
 		$results = $this->Currencies_model->getList();
 		foreach ($results as $result) {					
@@ -43,34 +37,26 @@ class Currencies extends CI_Controller {
 				'currency_code'		=> $result['currency_code'],
 				'currency_symbol'	=> $result['currency_symbol'],
 				'currency_status'	=> $result['currency_status'],
-				'edit' 				=> $this->config->site_url('admin/currencies/edit/' . $result['currency_id'])
+				'edit' 				=> $this->config->site_url('admin/currencies/edit?id=' . $result['currency_id'])
 			);
 		}
 
-		// check POST submit, validate fields and send quantity data to model
-		if ($this->input->post() && $this->_addCurrency() === TRUE) {
-		
-			redirect('admin/currencies');  			
-		}
-
-		//check if POST submit then remove food_id
 		if ($this->input->post('delete') && $this->_deleteCurrency() === TRUE) {
 			
 			redirect('admin/currencies');  			
 		}	
 
-		//load home page content
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/currencies', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/currencies', $data);
 	}
 
 	public function edit() {
 
-		if ( !file_exists(APPPATH .'/views/admin/currencies_edit.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-		
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -86,40 +72,42 @@ class Currencies extends CI_Controller {
 		}		
 		
 		//check if /rating_id is set in uri string
-		if (is_numeric($this->uri->segment(4))) {
-			$currency_id = $this->uri->segment(4);
+		if (is_numeric($this->input->get('id'))) {
+			$currency_id = $this->input->get('id');
+			$data['action']	= $this->config->site_url('admin/currencies/edit?id='. $currency_id);
 		} else {
-		    redirect('admin/currencies');
+		    $currency_id = 0;
+			$data['action']	= $this->config->site_url('admin/currencies/edit');
 		}
 		
 		$currency_info = $this->Currencies_model->getCurrency($currency_id);
 		
-		if ($currency_info) {
-			$data['heading'] 			= 'Currencies';
-			$data['sub_menu_update'] 	= 'Update';
-			$data['sub_menu_back'] 		= $this->config->site_url('admin/currencies');
+		$data['heading'] 			= 'Currencies - '. $currency_info['currency_title'];
+		$data['sub_menu_save'] 		= 'Save';
+		$data['sub_menu_back'] 		= $this->config->site_url('admin/currencies');
 
-			$data['currency_title'] 	= $currency_info['currency_title'];
-			$data['currency_code'] 		= $currency_info['currency_code'];
-			$data['currency_symbol'] 	= $currency_info['currency_symbol'];
-			$data['currency_status'] 	= $currency_info['currency_status'];
+		$data['currency_title'] 	= $currency_info['currency_title'];
+		$data['currency_code'] 		= $currency_info['currency_code'];
+		$data['currency_symbol'] 	= $currency_info['currency_symbol'];
+		$data['currency_status'] 	= $currency_info['currency_status'];
 
-			//check if POST add_Ratings, validate fields and add Ratings to model
-			if ($this->input->post() && $this->_updateCurrency($currency_id) === TRUE) {
-						
-				redirect('admin/currencies');
-			}
-						
-			//Remove Ratings
-			if ($this->input->post('delete') && $this->_deleteCurrency($currency_id) === TRUE) {
-					
-				redirect('admin/currencies');
-			}
+		if ($this->input->post() && $this->_addCurrency() === TRUE) {
+		
+			redirect('admin/currencies');  			
 		}
-				
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/currencies_edit', $data);
-		$this->load->view('admin/footer');
+
+		if ($this->input->post() && $this->_updateCurrency() === TRUE) {
+					
+			redirect('admin/currencies');
+		}
+
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/currencies_edit', $data);
 	}
 
 	public function _addCurrency() {
@@ -129,7 +117,7 @@ class Currencies extends CI_Controller {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
   			return TRUE;
     	
-    	} else if ( ! $this->input->post('delete')) { 
+    	} else if ( ! $this->input->get('id')) { 
 		
 			//validate category value
 			$this->form_validation->set_rules('currency_title', 'Currency Title', 'trim|required|min_length[2]|max_length[45]');
@@ -158,14 +146,14 @@ class Currencies extends CI_Controller {
 		}
 	}
 	
-	public function _updateCurrency($currency_id) {
+	public function _updateCurrency() {
     	
     	if (!$this->user->hasPermissions('modify', 'admin/currencies')) {
 		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
   			return TRUE;
     	
-    	} else if ( ! $this->input->post('delete')) { 
+    	} else if ($this->input->get('id')) { 
 		
 			//validate category value
 			$this->form_validation->set_rules('currency_title', 'Currency Title', 'trim|required|min_length[2]|max_length[45]');
@@ -176,7 +164,7 @@ class Currencies extends CI_Controller {
 			if ($this->form_validation->run() === TRUE) {
 				$update = array();
 				
-				$update['currency_id'] 		= $currency_id;
+				$update['currency_id'] 		= $this->input->get('id');
 				$update['currency_title'] 	= $this->input->post('currency_title');
 				$update['currency_code'] 	= $this->input->post('currency_code');
 				$update['currency_symbol'] 	= $this->input->post('currency_symbol');
@@ -195,7 +183,7 @@ class Currencies extends CI_Controller {
 		}		
 	}	
 	
-	public function _deleteCurrency($currency_id = FALSE) {
+	public function _deleteCurrency() {
     	if (!$this->user->hasPermissions('modify', 'admin/currencies')) {
 		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');

@@ -4,6 +4,7 @@ class Address extends MX_Controller {
 
 	public function __construct() {
 		parent::__construct(); 																	//  calls the constructor
+		$this->load->library('customer'); 														// load the customer library
 		$this->load->model('Customers_model');													// load the customers model
 		$this->load->model('Locations_model'); 													// load the locations model
 		$this->load->model('Countries_model');
@@ -12,10 +13,6 @@ class Address extends MX_Controller {
 	public function index() {
 		$this->lang->load('main/address');  													// loads language file
 		
-		if ( !file_exists(APPPATH .'/views/main/address.php')) { 								//check if file exists in views folder
-			show_404(); 																		// Whoops, show 404 error page!
-		}
-
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
@@ -62,11 +59,14 @@ class Address extends MX_Controller {
 			}
 		}
 		
-		// pass array $data and load view files
-		$this->load->view('main/header', $data);
-		$this->load->view('main/content_left');
-		$this->load->view('main/address', $data);
-		$this->load->view('main/footer');
+		$regions = array(
+			'main/header',
+			'main/content_left',
+			'main/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('main/address', $data);
 	}
 
 	public function edit() {																	// method to edit customer address
@@ -108,7 +108,7 @@ class Address extends MX_Controller {
 		// END of retrieving lines from language file to pass to view.
 
 		$data['back'] 					= $this->config->site_url('account/address');
-		$data['country_id'] 			= $this->config->item('config_country');
+		$data['country_id'] 			= $this->config->item('country_id');
 		
 		$data['address'] = array();
 		

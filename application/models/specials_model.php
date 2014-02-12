@@ -21,7 +21,13 @@ class Specials_model extends CI_Model {
 		//$this->db->join('menus', 'menus.menu_id = menus_specials.menu_id', 'left');
 		
 		$query = $this->db->get();
-		return $query->result_array();
+		$result = array();
+	
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+	
+		return $result;
 	}
 	
 	public function getMainSpecials($specials = FALSE) {
@@ -40,7 +46,13 @@ class Specials_model extends CI_Model {
 			$this->db->from('specials');
 
 			$query = $this->db->get();
-			return $query->result_array();
+			$result = array();
+		
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+		
+			return $result;
 		}
 	}
 
@@ -125,7 +137,7 @@ class Specials_model extends CI_Model {
 			$this->db->set('stock_qty', $update['stock_qty']);
 		}
 
-		/*$special_prefix = $this->config->item('config_special_prefix');
+		/*$special_prefix = $this->config->item('special_prefix');
 		
 		if ($special_prefix) {
 			$menu_id = $special_prefix.'_'.$update['special_id'];
@@ -177,7 +189,7 @@ class Specials_model extends CI_Model {
 		if ($this->db->affected_rows() > 0 && $this->db->insert_id()) {
 			$special_id = $this->db->insert_id();
 
-			/*$special_prefix = $this->config->item('config_special_prefix');
+			/*$special_prefix = $this->config->item('special_prefix');
 			
 			if ($special_prefix) {
 				$menu_id = $special_prefix.'_'.$special_id;

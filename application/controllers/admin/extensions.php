@@ -10,12 +10,6 @@ class Extensions extends CI_Controller {
 
 	public function index() {
 			
-		//check if file exists in views
-		if ( !file_exists(APPPATH .'/views/admin/extensions.php')) {
-			// Whoops, we don't have a page for that!
-			show_404();
-		}
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -31,6 +25,7 @@ class Extensions extends CI_Controller {
 		}
 
 		$data['heading'] 			= 'Extensions';
+		$data['text_empty'] 		= 'There are no extensions available.';
 
 		$extensions = $this->Extensions_model->getList();
 		foreach ($extensions as $code => $name) {
@@ -63,10 +58,13 @@ class Extensions extends CI_Controller {
 			}
 		}
 
-		//load home page content
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/extensions', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/extensions', $data);
 	}
 	
 	public function install() {

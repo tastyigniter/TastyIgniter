@@ -2,7 +2,7 @@
 	<div class="account_summary">
   	<table align="left">
   		<tr>
-		<td><h4><?php echo $text_my_details; ?></h4></td>
+		<td><h3><?php echo $text_my_details; ?></h3></td>
   		<td align="right"><a class="" href="<?php echo site_url('account/details'); ?>"><?php echo $text_edit; ?></a></td>
   		</tr>
   		<?php if ($customer_info) { ?>
@@ -39,7 +39,7 @@
   	
   	<table align="right">
   		<tr>
-			<td><h4><?php echo $text_default_address; ?></h4></td>
+			<td><h3><?php echo $text_default_address; ?></h3></td>
   			<td align="right"><a class="" href="<?php echo site_url('account/address'); ?>"><?php echo $text_edit_add; ?></a></td>
   		</tr>
   		<?php if ($address_info) { ?>
@@ -62,7 +62,7 @@
 	<div class="account_summary">  	
   	<table align="left">
   		<tr>
-			<td><h4><?php echo $text_cart; ?></h4></td>
+			<td><h3><?php echo $text_cart; ?></h3></td>
   			<td align="right"><a class="button" href="<?php echo site_url('checkout'); ?>"><?php echo $text_checkout; ?></a></td>
   		</tr>
   		<?php if ($cart_items != '0') { ?>
@@ -79,7 +79,7 @@
 
   	<table align="right">
   		<tr>
-			<td><h4><?php echo $text_orders; ?></h4></td>
+			<td><h3><?php echo $text_orders; ?></h3></td>
 			<td></td>
   			<td align="right"><a class="" href="<?php echo site_url('orders'); ?>"><?php echo $text_view; ?></a></td>
   		</tr>
@@ -96,7 +96,7 @@
 	<div class="account_summary">  	
   	<table align="left">
   		<tr>
-			<td><h4><?php echo $text_reservations; ?></h4></td>
+			<td><h3><?php echo $text_reservations; ?></h3></td>
 			<td></td>
   			<td align="right"><a class="" href="<?php echo site_url('reservations'); ?>"><?php echo $text_view; ?></a></td>
   		</tr>
@@ -111,7 +111,7 @@
 
   	<table align="right">
   		<tr>
-			<td><h4><?php echo $text_inbox; ?></h4></td>
+			<td><h3><?php echo $text_inbox; ?></h3></td>
 			<td></td>
   			<td align="right"><a class="" href="<?php echo site_url('inbox'); ?>"><?php echo $text_view; ?></a></td>
   		</tr>

@@ -4,6 +4,7 @@
   	<div class="address-lists">
 	<?php foreach ($addresses as $address) { ?>
   	<div class="address">
+	<div class="img_inner">
   		<table width="50%" class="form">
 	    <tr>
             <td align="right"><b><?php echo $entry_address_1; ?></b></td>
@@ -28,12 +29,15 @@
     	</tr>    	
   		</table>
   	</div> 
+  	</div> 
 	<?php } ?>
   	</div>  
 	<?php } else { ?>
   		<p><?php echo $text_no_address; ?></p>
 	<?php } ?>
 	</div>
+
+	<div class="separator"></div>
 	<div class="buttons">
 		<div class="left"><a class="button" href="<?php echo $back; ?>"><?php echo $button_back; ?></a></div>
 		<div class="right"><a class="button" href="<?php echo $continue; ?>"><?php echo $button_add; ?></a></div>

@@ -5,9 +5,6 @@
 	<!--<h3>Personal Details</h3>-->
 	<table border="0" cellpadding="2" width="100%" id="personal-details" class="form">
 		<tr>
-			<td colspan="2"><h2><?php echo $text_checkout; ?></h2></td>
-		</tr>
-		<tr>
 			<td align="right"><b><?php echo $entry_first_name; ?></b></td>
 			<td><input type="text" name="first_name" value="<?php echo set_value('first_name', $first_name); ?>" /><br />
     			<?php echo form_error('first_name', '<span class="error">', '</span>'); ?></td>
@@ -58,7 +55,7 @@
 					<option value="<?php echo $delivery_time['24hr']; ?>"><?php echo $delivery_time['12hr']; ?></option>
 				<?php } ?>
 				<?php } ?>
-			</select><?php echo $asap_time; ?><br />
+			</select><br />
     		<?php echo form_error('order_time', '<span class="error">', '</span>'); ?></td>
 		</tr>
 	</table>

@@ -47,7 +47,7 @@
     <table width="100%" height="auto" class="list">
 		<tr>
 			<td class="right"><input type="text" name="coupon" value="<?php echo $coupon_code; ?>" size="" /></td>
-			<td><a onclick="applyCoupon();"><?php echo $button_coupon; ?></a></td>
+			<td><a class="button" onclick="applyCoupon();"><?php echo $button_coupon; ?></a></td>
 		</tr>
     </table>
     </div>

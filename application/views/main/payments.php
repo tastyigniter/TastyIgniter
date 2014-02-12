@@ -9,11 +9,11 @@
 		<tr>
 			<td align="right"><b><?php echo $entry_payment_method; ?></b></td>
 			<td>
-				<?php if ($this->config->item('config_cod_status') === '1') { ?>
+				<?php if ($this->config->item('cod_status') === '1') { ?>
 					<input type="radio" name="payment" value="cod" <?php echo set_radio('payment', 'cod'); ?> /><?php echo $text_cod; ?><br />
 				<?php } ?>
 
-				<?php if ($this->config->item('config_paypal_status') === '1') { ?>
+				<?php if ($this->config->item('paypal_status') === '1') { ?>
 					<input type="radio" name="payment" value="paypal" <?php echo set_radio('payment', 'paypal'); ?> /><?php echo $text_paypal; ?><br />
 				<?php } ?>
     			<?php echo form_error('payment', '<span class="error">', '</span>'); ?>

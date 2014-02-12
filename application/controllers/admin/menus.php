@@ -13,10 +13,6 @@ class Menus extends CI_Controller {
 
 	public function index() {
 
-		if ( !file_exists(APPPATH .'/views/admin/menus.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -31,6 +27,12 @@ class Menus extends CI_Controller {
 			$data['alert'] = '';
 		}
 									
+		$this->breadcrumb->clear();
+		$this->breadcrumb->add_crumb('Home', $this->config->site_url('admin'));
+		$this->breadcrumb->add_crumb('Menus');
+
+  		$data['breadcrumb'] = $this->breadcrumb->output();
+		
 		$filter = array();
 		if ($this->input->get('page')) {
 			$filter['page'] = (int) $this->input->get('page');
@@ -38,8 +40,8 @@ class Menus extends CI_Controller {
 			$filter['page'] = 1;
 		}
 		
-		if ($this->config->item('config_page_limit')) {
-			$filter['limit'] = $this->config->item('config_page_limit');
+		if ($this->config->item('page_limit')) {
+			$filter['limit'] = $this->config->item('page_limit');
 		}
 				
 		if ($this->input->get('filter_category')) {
@@ -50,10 +52,9 @@ class Menus extends CI_Controller {
 		}
 		
 		$data['heading'] 			= 'Menus';
-		$data['sub_menu_add'] 		= 'Add';
+		$data['sub_menu_add'] 		= 'Add new menu';
 		$data['sub_menu_delete'] 	= 'Delete';
-		$data['sub_menu_list'] 		= '<li><a id="menu-add">Add new menu</a></li>';
-		$data['text_no_menus'] 		= 'There are no menus added to your database.';
+		$data['text_no_menus'] 		= 'There are no menus available.';
 		
 		$data['menus'] = array();		
 		$results = $this->Menus_model->getList($filter);
@@ -74,7 +75,7 @@ class Menus extends CI_Controller {
 				'menu_photo'		=> $menu_photo_src,
 				'stock_qty'			=> $result['stock_qty'],
 				'menu_status'		=> ($result['menu_status'] === '1') ? 'Enabled' : 'Disabled',
-				'edit' 				=> $this->config->site_url('admin/menus/edit/' . $result['menu_id'])
+				'edit' 				=> $this->config->site_url('admin/menus/edit?id='. $result['menu_id'])
 			);
 		}	
 
@@ -116,27 +117,22 @@ class Menus extends CI_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		if ($this->input->post() && $this->_addMenu() === TRUE) {
-		
-			redirect('admin/menus');
-		}
-
 		//check if POST update_food then remove menu_id
 		if ($this->input->post('delete') && $this->_deleteMenu() === TRUE) {
 
 			redirect('admin/menus');  			
 		}	
 
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/menus', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/menus', $data);
 	}
 
 	public function edit() {
-		
-		if ( !file_exists(APPPATH .'/views/admin/menus_edit.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
 		
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
@@ -153,16 +149,18 @@ class Menus extends CI_Controller {
 		}		
 		
 		//check if /menu_id is set in uri string
-		if (is_numeric($this->uri->segment(4))) {
-			$menu_id = $this->uri->segment(4);
+		if (is_numeric($this->input->get('id'))) {
+			$menu_id = $this->input->get('id');
+			$data['action']	= $this->config->site_url('admin/menus/edit?id='. $menu_id);
 		} else {
-		    redirect('admin/menus');
+			$menu_id = 0;
+			$data['action']	= $this->config->site_url('admin/menus/edit');
 		}
 		
 		$menu_info = $this->Menus_model->getAdminMenu($menu_id);
 
-		$data['heading'] 			= 'Menus';
-		$data['sub_menu_update'] 	= 'Update';
+		$data['heading'] 			= 'Menu - '. $menu_info['menu_name'];
+		$data['sub_menu_save'] 		= 'Save';
 		$data['sub_menu_back'] 		= $this->config->site_url('admin/menus');
 
 		if (!empty($menu_info['menu_photo'])) {
@@ -196,7 +194,6 @@ class Menus extends CI_Controller {
 			);
 		}
 
-		//load food option data into array
 		$data['menu_options'] = array();
 		$results = $this->Menus_model->getMenuOptions();
 		foreach ($results as $result) {
@@ -207,15 +204,23 @@ class Menus extends CI_Controller {
 			);
 		}
 		
-		// check if POST add_food, validate fields and add Menu to model
-		if ($this->input->post() && $this->_updateMenu($menu_id) === TRUE) {
+		if ( ! $this->input->get('id') && $this->input->post() && $this->_addMenu() === TRUE) {
+		
+			redirect('admin/menus');
+		}
+
+		if ($this->input->get('id') && $this->input->post() && $this->_updateMenu() === TRUE) {
 					
 			redirect('admin/menus');
 		}
 							
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/menus_edit', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/menus_edit', $data);
 	}
 
 	public function autocomplete() {
@@ -248,7 +253,7 @@ class Menus extends CI_Controller {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
   			return TRUE;
   	
-    	} else if ( ! $this->input->post('delete')) { 
+    	} else if ( ! $this->input->get('id')) { 
     	
     		//form validation
 			$this->form_validation->set_rules('menu_name', 'Menu Name', 'trim|required|min_length[2]|max_length[255]');
@@ -301,13 +306,13 @@ class Menus extends CI_Controller {
 		}	
 	}
 
-	public function _updateMenu($menu_id) {
+	public function _updateMenu() {
     	if (!$this->user->hasPermissions('modify', 'admin/menus')) {
 		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
   			return TRUE;
     	
-    	} else { 
+    	} else if ($this->input->get('id')) { 
 		
 			$this->form_validation->set_rules('menu_name', 'Menu Name', 'trim|required|min_length[2]|max_length[255]');
 			$this->form_validation->set_rules('menu_description', 'Menu Description', 'trim|min_length[2]|max_length[1028]');
@@ -327,7 +332,7 @@ class Menus extends CI_Controller {
 			if ($this->form_validation->run() === TRUE) {
 				$update = array();
 
-				$update['menu_id'] 			= $menu_id;
+				$update['menu_id'] 				= $this->input->get('id');
 				
 				//Sanitizing the POST values
 				$update['menu_name'] 			= $this->input->post('menu_name');
@@ -395,19 +400,18 @@ class Menus extends CI_Controller {
 		$this->load->library('upload');
 
 		//setting upload preference
-		$this->upload->set_upload_path($this->config->item('config_upload_path'));
-		$this->upload->set_allowed_types($this->config->item('config_allowed_types'));
-		$this->upload->set_max_filesize($this->config->item('config_max_size'));
-		$this->upload->set_max_width($this->config->item('config_max_width'));
-		$this->upload->set_max_height($this->config->item('config_max_height'));
+		$this->upload->set_upload_path($this->config->item('upload_path'));
+		$this->upload->set_allowed_types($this->config->item('allowed_types'));
+		$this->upload->set_max_filesize($this->config->item('max_size'));
+		$this->upload->set_max_width($this->config->item('max_width'));
+		$this->upload->set_max_height($this->config->item('max_height'));
 
 		if (isset($_FILES['menu_photo']) && !empty($_FILES['menu_photo']['name'])) {
       		
       		if ($this->upload->do_upload('menu_photo')) {
 
         		// set a $_POST value for 'menu_photo' that we can use later
-        		$upload_data    = $this->upload->data();
-        		if ($upload_data) {
+        		if ($upload_data    = $this->upload->data('menu_photo')) {
         			$_POST['menu_photo'] = $this->security->sanitize_filename($upload_data['file_name']);
         		}
         		return TRUE;        

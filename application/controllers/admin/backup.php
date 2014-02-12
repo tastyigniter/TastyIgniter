@@ -8,10 +8,6 @@ class Backup extends CI_Controller {
 
 	public function index() {
 			
-		if ( !file_exists(APPPATH .'/views/admin/backup.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -28,71 +24,41 @@ class Backup extends CI_Controller {
 
 		$data['heading'] 			= 'Backup/Restore';
 		$data['sub_menu_list'] 		= '<li><a class="update_button" onclick="$(\'#backup\').submit();">Backup</a></li><li><a class="update_button" onclick="$(\'#restore\').submit();">Restore</a></li>';
-		$data['text_empty'] 		= 'There are no department(s) added in your database.';
 
 		$data['db_tables'] = $this->Settings_model->getdbTables();
 
-		if ($this->input->post('backup') && $this->_backup() === TRUE) {
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/backup', $data);
+	}
 
+	public function download() {
+
+    	if (!$this->user->hasPermissions('modify', 'admin/backup')) {
+		
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+    	
+    	} else if (file_exists('assets/download/tastyigniter.sql')) {
+			$name = 'tastyigniter.sql';
+			$backup = file_get_contents("assets/download/tastyigniter.sql");
+			unlink('assets/download/tastyigniter.sql');
+			
+			$this->load->helper('download');
+			force_download($name, $backup); 
+		} else {
 		    redirect('admin/backup');
 		}
-
-		if ($this->input->post('restore') && $this->_restore() === TRUE) {
-		
-		     //redirect('admin/backup');
-		}
-
-		//load home page content
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/backup', $data);
-		$this->load->view('admin/footer');
-	}
-
-	public function restore() {
-
-    	if (!$this->user->hasPermissions('modify', 'admin/backup')) {
-		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
-    	
-    	} else if (isset($_FILES['restore']) && !empty($_FILES['restore']['name'])) { 
- 			
-			//loading upload library
-			$this->load->library('upload');
-
-			//setting upload preference
-			$this->upload->set_upload_path('./assets/download/');
-			$this->upload->set_allowed_types('sql|txt');
-			$this->upload->set_max_filesize('2048');
-			$this->upload->set_max_width($this->config->item('config_max_width'));
-			$this->upload->set_max_height($this->config->item('config_max_height'));
-
-    		if ($this->upload->do_upload('restore')) {
-        		$upload_data    = print_r($this->upload->data());
-      		} else {
-        		$upload_data = $this->upload->display_errors();
-     		}
- 
- 			//if (is_uploaded_file($_FILES['restore']['name'])) {
-				//$content = file_get_contents($_FILES['restore']['name']);
-			//} else {
-			//	$content = 'EMPTY';
-			//}
-
-			$this->session->set_flashdata('alert', $upload_data); //'<p class="success">Database Restored Sucessfully!</p>');
-    	} else {
-    	
-			$this->session->set_flashdata('alert', '<p class="warning">Nothing Restored!</p>');
-    	}
-
-		redirect('admin/backup');   	
 	}
 	
-	public function _backup() {
+	public function export() {
 
     	if (!$this->user->hasPermissions('modify', 'admin/backup')) {
 		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
-  			return TRUE;
     	
     	} else if ($this->input->post('backup')) { 
 								
@@ -101,27 +67,29 @@ class Backup extends CI_Controller {
 			if ($this->form_validation->run() === TRUE) {
 
 				if ($this->Settings_model->backupDatabase($this->input->post('backup'))) {
-					$this->session->set_flashdata('alert', '<p class="success">Database Backup Sucessfully!</p>');
+					$this->session->set_flashdata('alert', '<p class="success">Database Backup Sucessfully! <br /><a href="'.site_url('admin/backup/download').'">Download</a></p>');
 				} else {
-					$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');
+					$this->session->set_flashdata('alert', '<p class="warning">Nothing Backup!</p>');
 				}
-				
-				return TRUE;
 			}	
 		}
+
+		redirect('admin/backup');
 	}	
 	
-	public function _restore() {
+	public function import() {
+
     	if (!$this->user->hasPermissions('modify', 'admin/backup')) {
 		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
   			return TRUE;
     	
-    	} else if ($this->input->post('restore')) { 
+    	} else { 
 			
-			$this->form_validation->set_rules('restore', 'Restore', 'required');
+			$this->form_validation->set_rules('import', 'Restore', 'trim|callback_handle_upload');
 
 			if ($this->form_validation->run() === TRUE) {
+		redirect('admin/backup');
 
 				//if (is_uploaded_file($_FILES['restore']['name'])) {
 				//	$content = file_get_contents($_FILES['restore']['name']);
@@ -129,7 +97,7 @@ class Backup extends CI_Controller {
 				//	$content = FALSE;
 				//}
 			
-				if ($this->Settings_model->restoreDatabase($content)) { // calls model to save data to SQL
+				/*if ($this->Settings_model->restoreDatabase($content)) { // calls model to save data to SQL
 			
 					$this->session->set_flashdata('alert', '<p class="success">Database Restored Sucessfully!</p>');
 		
@@ -137,32 +105,33 @@ class Backup extends CI_Controller {
 		
 					$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');
 		
-				}
+				}*/
 		
 				return TRUE;
 			}
 		}
+
+		//redirect('admin/backup');
 	}	
 
- 	/*public function handle_upload() {
+ 	public function handle_upload() {
 		//loading upload library
 		$this->load->library('upload');
 
 		//setting upload preference
-		$this->upload->set_upload_path($this->config->item('config_upload_path'));
-		$this->upload->set_allowed_types($this->config->item('config_allowed_types'));
-		$this->upload->set_max_filesize($this->config->item('config_max_size'));
-		$this->upload->set_max_width($this->config->item('config_max_width'));
-		$this->upload->set_max_height($this->config->item('config_max_height'));
+		$this->upload->set_upload_path($this->config->item('upload_path'));
+		$this->upload->set_allowed_types($this->config->item('allowed_types'));
+		$this->upload->set_max_filesize($this->config->item('max_size'));
+		$this->upload->set_max_width($this->config->item('max_width'));
+		$this->upload->set_max_height($this->config->item('max_height'));
 
-		if (isset($_FILES['restore']) && !empty($_FILES['restore']['name'])) {
+		if (isset($_FILES['import']) && !empty($_FILES['site_logo']['name'])) {
       		
-      		if ($this->upload->do_upload('restore')) {
+      		if ($this->upload->do_upload('import')) {
 
         		// set a $_POST value for 'menu_photo' that we can use later
-        		$upload_data    = $this->upload->data();
-        		if ($upload_data) {
-        			$_POST['restore'] = $this->security->sanitize_filename($upload_data['restore']);
+        		if ($upload_data = $this->upload->data()) {
+        			$_POST['import'] = $this->security->sanitize_filename($upload_data['file_name']);
         		}
         		return TRUE;        
       		} else {
@@ -174,8 +143,8 @@ class Backup extends CI_Controller {
     	} else {
       	
         	// set an empty $_POST value for 'menu_photo' to be used on database queries
-        	$_POST['restore'] = '';
-      		//return TRUE;
+        	$_POST['import'] = '';
+      		return TRUE;
       	}
-    }*/
+    }
 }

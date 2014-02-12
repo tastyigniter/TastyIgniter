@@ -19,10 +19,6 @@ class Orders extends CI_Controller {
 
 	public function index() {
 		
-		if ( !file_exists(APPPATH .'/views/admin/orders.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-		
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -44,20 +40,31 @@ class Orders extends CI_Controller {
 			$filter['page'] = 1;
 		}
 		
-		if ($this->config->item('config_page_limit')) {
-			$filter['limit'] = $this->config->item('config_page_limit');
+		if ($this->config->item('page_limit')) {
+			$filter['limit'] = $this->config->item('page_limit');
 		}
 				
 		$data['heading'] 			= 'Orders';
 		$data['sub_menu_list'] 		= '<li><a href="'. site_url('admin/orders/assigned') . '">Switch to assigned orders</a></li>';
 		$data['sub_menu_delete'] 	= 'Delete';
-		$data['text_empty'] 		= 'There are no order(s).';
+		$data['text_empty'] 		= 'There are no orders available.';
 		
 		$results = $this->Orders_model->getList($filter);
 		
 		//load category data into array
 		$data['orders'] = array();
 		foreach ($results as $result) {					
+			$current_date = mdate('%d-%m-%Y', time());
+			$date_added = mdate('%d-%m-%Y', strtotime($result['date_added']));
+			
+			if ($current_date === $date_added) {
+				$date_added = 'Today';
+   			} else if($date_added === mdate('%d-%m-%Y', time() - (24 * 60 * 60))) {
+				$date_added = 'Yesterday';
+			} else {
+				$date_added = $date_added;
+			}
+			
 			$data['orders'][] = array(
 				'order_id'			=> $result['order_id'],
 				'location_name'		=> $result['location_name'],
@@ -67,9 +74,9 @@ class Orders extends CI_Controller {
 				'order_time'		=> mdate('%H:%i', strtotime($result['order_time'])),
 				'order_status'		=> $result['status_name'],
 				'staff_name'		=> $result['staff_name'],
-				'date_added'		=> mdate('%d-%m-%Y', strtotime($result['date_added'])),
+				'date_added'		=> $date_added,
 				'date_modified'		=> mdate('%d-%m-%Y', strtotime($result['date_modified'])),
-				'edit' 				=> $this->config->site_url('admin/orders/edit/' . $result['order_id'])
+				'edit' 				=> $this->config->site_url('admin/orders/edit?id=' . $result['order_id'])
 			);
 		}
 			
@@ -91,16 +98,16 @@ class Orders extends CI_Controller {
 			redirect('admin/orders');
 		}	
 
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/orders', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/orders', $data);
 	}
 
 	public function assigned() {
-		
-		if ( !file_exists(APPPATH .'/views/admin/orders.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
 		
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
@@ -123,8 +130,8 @@ class Orders extends CI_Controller {
 			$filter['page'] = 1;
 		}
 		
-		if ($this->config->item('config_page_limit')) {
-			$filter['limit'] = $this->config->item('config_page_limit');
+		if ($this->config->item('page_limit')) {
+			$filter['limit'] = $this->config->item('page_limit');
 		}
 				
 		if ($this->user->getStaffId()) {
@@ -139,6 +146,17 @@ class Orders extends CI_Controller {
 		$data['orders'] = array();
 		$results = $this->Orders_model->getList($filter);
 		foreach ($results as $result) {					
+			$current_date = mdate('%d-%m-%Y', time());
+			$date_added = mdate('%d-%m-%Y', strtotime($result['date_added']));
+			
+			if ($current_date === $date_added) {
+				$date_added = 'Today';
+   			} else if($date_added === mdate('%d-%m-%Y', time() - (24 * 60 * 60))) {
+				$date_added = 'Yesterday';
+			} else {
+				$date_added = $date_added;
+			}
+			
 			$data['orders'][] = array(
 				'order_id'			=> $result['order_id'],
 				'location_name'		=> $result['location_name'],
@@ -148,9 +166,9 @@ class Orders extends CI_Controller {
 				'order_time'		=> mdate('%H:%i', strtotime($result['order_time'])),
 				'order_status'		=> $result['status_name'],
 				'staff_name'		=> $result['staff_name'],
-				'date_added'		=> mdate('%d-%m-%Y', strtotime($result['date_added'])),
+				'date_added'		=> $date_added,
 				'date_modified'		=> mdate('%d-%m-%Y', strtotime($result['date_modified'])),
-				'edit' 				=> $this->config->site_url('admin/orders/edit/' . $result['order_id'])
+				'edit' 				=> $this->config->site_url('admin/orders/edit?id=' . $result['order_id'])
 			);
 		}
 				
@@ -172,16 +190,16 @@ class Orders extends CI_Controller {
 			redirect('admin/orders/assigned');
 		}	
 
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/orders', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/orders', $data);
 	}
 
 	public function edit() {
-		
-		if ( !file_exists(APPPATH .'/views/admin/orders_edit.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
 		
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
@@ -198,131 +216,136 @@ class Orders extends CI_Controller {
 		}		
 
 		//check if customer_id is set in uri string
-		if ($this->uri->segment(4)) {
-			$order_id = (int)$this->uri->segment(4);
+		if (is_numeric($this->input->get('id'))) {
+			$order_id = $this->input->get('id');
+			$data['action']	= $this->config->site_url('admin/orders/edit?id='. $order_id);
 		} else {
-		    redirect('admin/orders');
+		    $order_id = 0;
+			//$data['action']	= $this->config->site_url('admin/orders/edit');
+			redirect('admin/orders');
 		}
 		
 		$order_info = $this->Orders_model->getAdminOrder($order_id);
 
-		if ($order_info) {
-			$data['heading'] 			= 'Orders';
-			$data['sub_menu_update'] 	= 'Update';
-			$data['sub_menu_back'] 		= $this->config->site_url('admin/orders');
+		$data['heading'] 			= 'Order - '. $order_info['order_id'];
+		$data['sub_menu_save'] 		= 'Save';
+		$data['sub_menu_back'] 		= $this->config->site_url('admin/orders');
 
-			$data['order_id'] 			= $order_info['order_id'];
-			$data['customer_id'] 		= $order_info['order_customer_id'];
-			$data['first_name'] 		= $order_info['first_name'];
-			$data['last_name'] 			= $order_info['last_name'];
-			$data['email'] 				= $order_info['email'];
-			$data['telephone'] 			= $order_info['telephone'];
-			$data['date_added'] 		= mdate('%d-%m-%Y', strtotime($order_info['date_added']));
-			$data['date_modified'] 		= mdate('%d-%m-%Y', strtotime($order_info['date_modified']));
-			$data['order_time'] 		= mdate('%H:%i', strtotime($order_info['order_time']));
-			$data['order_total'] 		= $this->currency->format($order_info['order_total']);
-			$data['total_items']		= $order_info['total_items'];
-			$data['order_type'] 		= ($order_info['order_type'] === '1') ? 'Delivery' : 'Collection';
-			$data['status_id'] 			= $order_info['status_id'];
-			$data['staff_id'] 			= $order_info['staff_id'];
-			$data['comment'] 			= $order_info['comment'];
-			$data['notify'] 			= $order_info['notify'];
-			$data['ip_address'] 		= $order_info['ip_address'];
-			$data['user_agent'] 		= $order_info['user_agent'];
+		$data['order_id'] 			= $order_info['order_id'];
+		$data['customer_id'] 		= $order_info['order_customer_id'];
+		$data['first_name'] 		= $order_info['first_name'];
+		$data['last_name'] 			= $order_info['last_name'];
+		$data['email'] 				= $order_info['email'];
+		$data['telephone'] 			= $order_info['telephone'];
+		$data['date_added'] 		= mdate('%d-%m-%Y', strtotime($order_info['date_added']));
+		$data['date_modified'] 		= mdate('%d-%m-%Y', strtotime($order_info['date_modified']));
+		$data['order_time'] 		= mdate('%H:%i', strtotime($order_info['order_time']));
+		$data['order_total'] 		= $this->currency->format($order_info['order_total']);
+		$data['total_items']		= $order_info['total_items'];
+		$data['order_type'] 		= ($order_info['order_type'] === '1') ? 'Delivery' : 'Collection';
+		$data['status_id'] 			= $order_info['status_id'];
+		$data['staff_id'] 			= $order_info['staff_id'];
+		$data['comment'] 			= $order_info['comment'];
+		$data['notify'] 			= $order_info['notify'];
+		$data['ip_address'] 		= $order_info['ip_address'];
+		$data['user_agent'] 		= $order_info['user_agent'];
 
-			$location = $this->Locations_model->getLocation($order_info['order_location_id']);
-			$data['location_name'] 		= $location['location_name'];
-			$data['location_address_1'] = $location['location_address_1'];
-			$data['location_address_2'] = $location['location_address_2'];
-			$data['location_city'] 		= $location['location_city'];
-			$data['location_postcode'] 	= $location['location_postcode'];
-			$data['location_country'] 	= $location['country_name'];
-			
-			$customer_address = $this->Customers_model->getCustomerAddress($order_info['order_customer_id'], $order_info['order_address_id']);
-			$data['address_1'] 			= $customer_address['address_1'];
-			$data['address_2'] 			= $customer_address['address_2'];
-			$data['city'] 				= $customer_address['city'];
-			$data['postcode'] 			= $customer_address['postcode'];
-			$data['country'] 			= $customer_address['country'];
+		$location = $this->Locations_model->getLocation($order_info['order_location_id']);
+		$data['location_name'] 		= $location['location_name'];
+		$data['location_address_1'] = $location['location_address_1'];
+		$data['location_address_2'] = $location['location_address_2'];
+		$data['location_city'] 		= $location['location_city'];
+		$data['location_postcode'] 	= $location['location_postcode'];
+		$data['location_country'] 	= $location['country_name'];
 		
-			if ($order_info['payment'] === 'paypal') {
-				$data['payment'] = 'PayPal';
-				$data['paypal_details'] = $this->Payments_model->getPaypalDetails($order_info['order_id'], $order_info['order_customer_id']);
-			} else if ($order_info['payment'] === 'cod') {
-				$data['payment'] = 'Cash On Delivery';
-				$data['paypal_details'] = array();
+		$customer_address = $this->Customers_model->getCustomerAddress($order_info['order_customer_id'], $order_info['order_address_id']);
+		$data['address_1'] 			= $customer_address['address_1'];
+		$data['address_2'] 			= $customer_address['address_2'];
+		$data['city'] 				= $customer_address['city'];
+		$data['postcode'] 			= $customer_address['postcode'];
+		$data['country'] 			= $customer_address['country'];
+	
+		if ($order_info['payment'] === 'paypal') {
+			$data['payment'] = 'PayPal';
+			$data['paypal_details'] = $this->Payments_model->getPaypalDetails($order_info['order_id'], $order_info['order_customer_id']);
+		} else if ($order_info['payment'] === 'cod') {
+			$data['payment'] = 'Cash On Delivery';
+			$data['paypal_details'] = array();
+		} else {
+			$data['payment'] = 'No Payment';
+			$data['paypal_details'] = array();			
+		}
+	
+		
+		$data['cart_items'] = array();			
+		$cart_items = $this->Orders_model->getOrderMenus($order_info['order_id']);
+		foreach ($cart_items as $cart_item) {
+			if (!empty($cart_item['options'])) {
+				$options = unserialize($cart_item['options']);
 			} else {
-				$data['payment'] = 'No Payment';
-				$data['paypal_details'] = array();			
+				$options = '';
 			}
-		
 			
-			$data['cart_items'] = array();			
-			$cart_items = $this->Orders_model->getOrderMenus($order_info['order_id']);
-			foreach ($cart_items as $cart_item) {
-				if (!empty($cart_item['options'])) {
-					$options = unserialize($cart_item['options']);
-				} else {
-					$options = '';
-				}
-				
-				$data['cart_items'][] = array(
-					'id' 			=> $cart_item['menu_id'],
-					'name' 			=> $cart_item['name'],			
-					'qty' 			=> $cart_item['quantity'],
-					'price' 		=> $this->currency->format($cart_item['price']),
-					'subtotal' 		=> $this->currency->format($cart_item['subtotal']),
-					'options'		=> $options
-				);
-			}
-						
-			$data['countries'] = array();
-			$results = $this->Countries_model->getCountries();
-			foreach ($results as $result) {					
-				$data['countries'][] = array(
-					'country_id'	=>	$result['country_id'],
-					'name'			=>	$result['country_name'],
-				);
-			}
-										
-			$data['statuses'] = array();
-			$statuses = $this->Statuses_model->getStatuses('order');
-			foreach ($statuses as $statuses) {
-				$data['statuses'][] = array(
-					'status_id'	=> $statuses['status_id'],
-					'status_name'	=> $statuses['status_name']
-				);
-			}
+			$data['cart_items'][] = array(
+				'id' 			=> $cart_item['menu_id'],
+				'name' 			=> $cart_item['name'],			
+				'qty' 			=> $cart_item['quantity'],
+				'price' 		=> $this->currency->format($cart_item['price']),
+				'subtotal' 		=> $this->currency->format($cart_item['subtotal']),
+				'options'		=> $options
+			);
+		}
+					
+		$data['countries'] = array();
+		$results = $this->Countries_model->getCountries();
+		foreach ($results as $result) {					
+			$data['countries'][] = array(
+				'country_id'	=>	$result['country_id'],
+				'name'			=>	$result['country_name'],
+			);
+		}
+									
+		$data['statuses'] = array();
+		$statuses = $this->Statuses_model->getStatuses('order');
+		foreach ($statuses as $statuses) {
+			$data['statuses'][] = array(
+				'status_id'	=> $statuses['status_id'],
+				'status_name'	=> $statuses['status_name']
+			);
+		}
 
-			$this->load->model('Staffs_model');
-			$data['staffs'] = array();
-			$staffs = $this->Staffs_model->getStaffs();
-			foreach ($staffs as $staff) {
-				$data['staffs'][] = array(
-					'staff_id'		=> $staff['staff_id'],
-					'staff_name'	=> $staff['staff_name']
-				);
-			}
+		$this->load->model('Staffs_model');
+		$data['staffs'] = array();
+		$staffs = $this->Staffs_model->getStaffs();
+		foreach ($staffs as $staff) {
+			$data['staffs'][] = array(
+				'staff_id'		=> $staff['staff_id'],
+				'staff_name'	=> $staff['staff_name']
+			);
+		}
 
-			if ($this->input->post() && $this->_updateOrder($order_id) === TRUE) {
-		
-				redirect('admin/orders');
-			}
+		if ($this->input->post() && $this->_updateOrder() === TRUE) {
+	
+			redirect('admin/orders');
 		}
 				
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/orders_edit', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/orders_edit', $data);
 	}
 
-	public function _updateOrder($order_id) {
+	public function _updateOrder() {
 			
     	if (!$this->user->hasPermissions('modify', 'admin/orders')) {
 		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
 			return TRUE;
     	
-    	} else if ( ! $this->input->post('delete')) { 
+    	} else if ($this->input->get('id')) { 
 			
 			$date_format = '%Y-%m-%d';															// retrieve date format from config
 			$current_date_time = time();														// retrieve current timestamp
@@ -334,7 +357,7 @@ class Orders extends CI_Controller {
 				$update = array();
 				
 				//Sanitizing the POST values
-				$update['order_id'] = (int)$order_id;
+				$update['order_id'] = (int)$this->input->get('id');
 				
 				$update['status_id'] = (int)$this->input->post('order_status');
 			
@@ -355,7 +378,7 @@ class Orders extends CI_Controller {
 		}
 	}
 
-	public function _deleteOrder($order_id = FALSE) {
+	public function _deleteOrder() {
     	if (!$this->user->hasPermissions('modify', 'admin/orders')) {
 		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');

@@ -10,10 +10,6 @@ class Categories extends CI_Controller {
 
 	public function index() {
 			
-		if ( !file_exists(APPPATH .'/views/admin/categories.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -35,14 +31,13 @@ class Categories extends CI_Controller {
 			$filter['page'] = 1;
 		}
 		
-		if ($this->config->item('config_page_limit')) {
-			$filter['limit'] = $this->config->item('config_page_limit');
+		if ($this->config->item('page_limit')) {
+			$filter['limit'] = $this->config->item('page_limit');
 		}
 				
 		$data['heading'] 			= 'Categories';
-		$data['sub_menu_add'] 		= 'Add';
+		$data['sub_menu_add'] 		= 'Add new category';
 		$data['sub_menu_delete'] 	= 'Delete';
-		$data['sub_menu_list'] 		= '<li><a id="menu-add">Add new category</a></li>';
 
 		$categories = array();				
 		$results = $this->Menus_model->getCategoriesList($filter);
@@ -52,7 +47,7 @@ class Categories extends CI_Controller {
 				'category_id' 			=> $result['category_id'],
 				'category_name' 		=> $result['category_name'],
 				'category_description' 	=> substr(strip_tags(html_entity_decode($result['category_description'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..',
-				'edit' 					=> $this->config->site_url('admin/categories/edit/' . $result['category_id'])
+				'edit' 					=> $this->config->site_url('admin/categories/edit?id=' . $result['category_id'])
 			);
 		}
 
@@ -68,29 +63,22 @@ class Categories extends CI_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		if ($this->input->post() && $this->_addCategory() === TRUE) {
-			
-			redirect('admin/categories');
-		}
-
-		//check if POST update_category then remove category_id
 		if ($this->input->post('delete') && $this->_deleteCategory() === TRUE) {
 
 			redirect('admin/categories');  			
 		}	
 				
-		//load home page content
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/categories', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/categories', $data);
 	}
 
 	public function edit() {
 
-		if ( !file_exists(APPPATH .'/views/admin/categories_edit.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-		
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -100,10 +88,12 @@ class Categories extends CI_Controller {
 		}
 		
 		//check if /category_id is set in uri string
-		if (is_numeric($this->uri->segment(4))) {
-			$category_id = (int)$this->uri->segment(4);
+		if (is_numeric($this->input->get('id'))) {
+			$category_id = $this->input->get('id');
+			$data['action']	= $this->config->site_url('admin/categories/edit?id='. $category_id);
 		} else {
-		    redirect('admin/categories');
+		    $category_id = 0;
+			$data['action']	= $this->config->site_url('admin/categories/edit');
 		}
 
 		if ($this->session->flashdata('alert')) {
@@ -114,25 +104,31 @@ class Categories extends CI_Controller {
 
 		$category_info = $this->Menus_model->getCategory($category_id);
 
-		if ($category_info) {
-			$data['heading'] 			= 'Categories';
-			$data['sub_menu_update'] 	= 'Update';
-			$data['sub_menu_back'] 		= $this->config->site_url('admin/categories');
-		
-			$data['category_id'] 		= $category_info['category_id'];
-			$data['category_name'] 		= $category_info['category_name'];
-			$data['category_description'] 	= $category_info['category_description'];
+		$data['heading'] 				= 'Categories - '. $category_info['category_name'];
+		$data['sub_menu_save'] 			= 'Save';
+		$data['sub_menu_back'] 			= $this->config->site_url('admin/categories');
+	
+		$data['category_id'] 			= $category_info['category_id'];
+		$data['category_name'] 			= $category_info['category_name'];
+		$data['category_description'] 	= $category_info['category_description'];
 
-			if ($this->input->post() && $this->_updateCategory($category_id) === TRUE) {
-						
-				redirect('admin/categories');
-			}
+		if ( ! $this->input->get('id') & $this->input->post() && $this->_addCategory() === TRUE) {
+			
+			redirect('admin/categories');
 		}
+
+		if ($this->input->get('id') && $this->input->post() && $this->_updateCategory() === TRUE) {
+					
+			redirect('admin/categories');
+		}
+	
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
 		
-		//load home page content
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/categories_edit', $data);
-		$this->load->view('admin/footer');
+		$this->template->regions($regions);
+		$this->template->load('admin/categories_edit', $data);
 	}
 
 	
@@ -143,7 +139,7 @@ class Categories extends CI_Controller {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
   			return TRUE;
     	
-    	} else { 
+    	} else if ( ! $this->input->get('id')) { 
 
 			//validate category value
 			$this->form_validation->set_rules('category_name', 'Category Name', 'trim|required|min_length[2]|max_length[32]');
@@ -169,22 +165,23 @@ class Categories extends CI_Controller {
 		}
 	}	
 	
-	public function _updateCategory($category_id) {
+	public function _updateCategory() {
 
     	if (!$this->user->hasPermissions('modify', 'admin/categories')) {
 		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
   			return TRUE;
     	
-    	} else if (!$this->input->post('delete')) { 
+    	} else if ($this->input->get('id')) { 
 		
 			$this->form_validation->set_rules('category_name', 'Category Name', 'trim|required|min_length[2]|max_length[32]');
 			$this->form_validation->set_rules('category_description', 'Category Description', 'trim|min_length[2]|max_length[1028]');
 
 	  		if ($this->form_validation->run() === TRUE) {
 
-				$category_name = $this->input->post('category_name');
-				$category_description = $this->input->post('category_description');
+				$category_id			= $this->input->get('id');
+				$category_name 			= $this->input->post('category_name');
+				$category_description 	= $this->input->post('category_description');
 				
 				if ($this->Menus_model->updateCategory($category_id, $category_name, $category_description)) {				
 
@@ -200,7 +197,7 @@ class Categories extends CI_Controller {
 		}
 	}
 
-	public function _deleteCategory($category_id = FALSE) {
+	public function _deleteCategory() {
     	if (!$this->user->hasPermissions('modify', 'admin/categories')) {
 		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');

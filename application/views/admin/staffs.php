@@ -1,59 +1,6 @@
 <div class="box">
-	<div id="add-box" style="display:none">
-	<h2>ADD NEW STAFF</h2>
-	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" id="addForm">
-	<table class="form">
-		<tr>
-    		<td><b>Name:</b></td>
-    		<td><input type="text" name="staff_name" value="<?php echo set_value('staff_name'); ?>" class="textfield" /></td>
-		</tr>
-		<tr>
-    		<td><b>Email:</b></td>
-    		<td><input type="text" name="staff_email" value="<?php echo set_value('staff_email'); ?>" class="textfield" /></td>
-		</tr>
-		<tr>
-			<td><b>Username</b></td>
-			<td><input type="text" name="username" value="<?php echo set_value('username'); ?>" class="textfield" /></td>
-		</tr>
-		<tr>
-			<td><b>Password</b></td>
-			<td><input type="password" name="password" value="<?php echo set_value('password'); ?>" class="textfield" /></td>
-		</tr>
-		<tr>
-			<td><b>Password Confirm</b></td>
-			<td><input type="password" name="password_confirm" class="textfield" /></td>
-		</tr>
-		<tr>
-    		<td><b>Department:</b></td>
-    		<td><select name="department">
-    		<option value="">- please select -</option>
- 			<?php foreach ($departments as $department) { ?>
- 				<option value="<?php echo $department['department_id']; ?>" <?php echo set_select('department', $department['department_id']); ?> ><?php echo $department['department_name']; ?></option>
-			<?php } ?>  
-    		</select></td>
-		</tr>
-		<tr>
-    		<td><b>Location:</b></td>
-    		<td><select name="staff_location">
-    			<option value="">- please select -</option>
-			<?php foreach ($locations as $location) { ?>
-  				<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('staff_location', $location['location_id']); ?> ><?php echo $location['location_name']; ?></option>
-			<?php } ?>  
-    		</select></td>
-		</tr>
-		<tr>
-    		<td><b>Status:</b></td>
-    		<td><select name="staff_status">
-    			<option value="0" <?php echo set_select('staff_status', '0'); ?> >Disabled</option>
-    			<option value="1" <?php echo set_select('staff_status', '1'); ?> >Enabled</option>
-    		</select></td>
-		</tr>
-	</table>
-	</form>
-  	</div>
-  	
 	<div id="list-box" class="content">
-	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" id="listForm">
+	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
 	<table border="0" align="center" class="list">
 		<tr>
 			<th width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
@@ -80,7 +27,7 @@
 		<?php } ?>
 		<?php } else {?>
 		<tr>
-			<td colspan="9" align="center"><?php echo $text_empty; ?></td>
+			<td colspan="8" align="center"><?php echo $text_empty; ?></td>
 		</tr>
 		<?php } ?>
 	</table>

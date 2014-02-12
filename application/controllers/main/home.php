@@ -12,10 +12,6 @@ class Home extends MX_Controller {
 	public function index() {
 		$this->lang->load('main/home');  														// loads home language file
 					
-		if ( !file_exists(APPPATH .'/views/main/home.php')) { 								//check if file exists in views
-			show_404(); 																		// Whoops, we don't have a page for that!
-		}
-			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert'); 								// retrieve session flashdata variable if available
 		} else {
@@ -74,19 +70,18 @@ class Home extends MX_Controller {
 			$data['text_collection'] = $this->lang->line('text_collection_n');						// display we are closed
 		}
 
-		//load view files and pass $data array
-		$this->load->view('main/header', $data);
-		$this->load->view('main/home', $data);
-		$this->load->view('main/footer', $data);
+		$regions = array(
+			'main/header',
+			'main/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('main/home', $data);
 	}
 	
 	public function aboutus() {
 		$this->lang->load('main/aboutus');  													// loads home language file
 		
-		if ( !file_exists(APPPATH .'/views/main/aboutus.php')) { 								// check if file exists in views
-			show_404(); 																		// Whoops, we don't have a page for that!
-		}
-			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert'); 								// retrieve session flashdata variable if available
 		} else {
@@ -98,10 +93,13 @@ class Home extends MX_Controller {
 		$data['text_description'] 	= $this->lang->line('text_description');
 		// END of retrieving lines from language file to send to view.
 
-		//load view files and pass $data array
-		$this->load->view('main/header', $data);
-		$this->load->view('main/aboutus', $data);
-		$this->load->view('main/footer', $data);
+		$regions = array(
+			'main/header',
+			'main/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('main/aboutus', $data);
 	}
 }
 

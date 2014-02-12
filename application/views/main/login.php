@@ -1,9 +1,9 @@
 <div class="content">
- <h2><?php echo $text_login_register; ?></h2>
+<!--<h2><?php echo $text_login_register; ?></h2>
+    <h3><?php echo $text_login; ?></h3>	-->
 
 <div class="wrap left">
 	<form method="post" accept-charset="utf-8" action="<?php echo current_url(); ?>">
-    <h3><?php echo $text_login; ?></h3>
     <table border="0" cellpadding="2" width="400px" align="center">
         <tr>
             <td align="right"><b><?php echo $entry_email; ?></b></td>

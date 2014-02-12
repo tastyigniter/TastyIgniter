@@ -9,10 +9,6 @@ class Departments extends CI_Controller {
 
 	public function index() {
 			
-		if ( !file_exists(APPPATH .'/views/admin/departments.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -28,10 +24,9 @@ class Departments extends CI_Controller {
 		}
 
 		$data['heading'] 			= 'Departments';
-		$data['sub_menu_add'] 		= 'Add';
+		$data['sub_menu_add'] 		= 'Add new department';
 		$data['sub_menu_delete'] 	= 'Delete';
-		$data['sub_menu_list'] 		= '<li><a id="menu-add">Add new department</a></li>';
-		$data['text_empty'] 		= 'There are no department(s) added in your database.';
+		$data['text_empty'] 		= 'There are no departments available.';
 
 		//load ratings data into array
 		$data['departments'] = array();
@@ -40,7 +35,7 @@ class Departments extends CI_Controller {
 			$data['departments'][] = array(
 				'department_id'		=>	$result['department_id'],
 				'department_name'	=>	$result['department_name'],
-				'edit'				=> $this->config->site_url('admin/departments/edit/' . $result['department_id'])
+				'edit'				=> $this->config->site_url('admin/departments/edit?id=' . $result['department_id'])
 			);
 		}
 		
@@ -66,29 +61,21 @@ class Departments extends CI_Controller {
 		
 		$data['paths'] = $paths;
 
-		// check POST submit, validate fields and send quantity data to model
-		if ($this->input->post() && $this->_addDepartment() === TRUE) {
-		
-		    redirect('admin/departments');
-		}
-
-		//check if POST submit then remove quantity_id
 		if ($this->input->post('delete') && $this->_deleteDepartment() === TRUE) {
 			
 		    redirect('admin/departments');
 		}	
 
-		//load home page content
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/departments', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/departments', $data);
 	}
 
 	public function edit() {
-
-		if ( !file_exists(APPPATH .'/views/admin/departments_edit.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
 		
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
@@ -105,78 +92,86 @@ class Departments extends CI_Controller {
 		}
 
 		//check if customer_id is set in uri string
-		if ($this->uri->segment(4)) {
-			$department_id = (int)$this->uri->segment(4);
+		if (is_numeric($this->input->get('id'))) {
+			$department_id = (int)$this->input->get('id');
+			$data['action']	= $this->config->site_url('admin/departments/edit?id='. $department_id);
 		} else {
-		    redirect('admin/departments');
+		    $department_id = 0;
+			$data['action']	= $this->config->site_url('admin/departments/edit');
 		}
 
 		$department_info = $this->Departments_model->getDepartment($department_id);
 		
-		if ($department_info) {
-			$data['heading'] 			= 'Departments';
-			$data['sub_menu_update'] 	= 'Update';
-			$data['sub_menu_back'] 		= $this->config->site_url('admin/departments');
+		$data['heading'] 			= 'Department - '. $department_info['department_name'];
+		$data['sub_menu_save'] 		= 'Save';
+		$data['sub_menu_back'] 		= $this->config->site_url('admin/departments');
 
-			if (isset($this->input->post['department_name'])) {
-				$data['department_name'] = $this->input->post['department_name'];
-			} elseif (isset($department_info['department_name'])) {
-				$data['department_name'] = $department_info['department_name'];
-			} else { 
-				$data['department_name'] = '';
-			}
+		if (isset($this->input->post['department_name'])) {
+			$data['department_name'] = $this->input->post['department_name'];
+		} elseif (isset($department_info['department_name'])) {
+			$data['department_name'] = $department_info['department_name'];
+		} else { 
+			$data['department_name'] = '';
+		}
 
-			$permission = $this->input->post('permission');
+		$permission = $this->input->post('permission');
 
-			if (isset($permission['access'])) {
-				$data['access'] = $permission['access'];
-			} elseif (isset($department_info['permission']['access'])) {
-				$data['access'] = $department_info['permission']['access'];
-			} else { 
-				$data['access'] = array();
-			}
+		if (isset($permission['access'])) {
+			$data['access'] = $permission['access'];
+		} elseif (isset($department_info['permission']['access'])) {
+			$data['access'] = $department_info['permission']['access'];
+		} else { 
+			$data['access'] = array();
+		}
 
-			if (isset($permission['modify'])) {
-				$data['modify'] = $permission['modify'];
-			} elseif (isset($department_info['permission']['modify'])) {
-				$data['modify'] = $department_info['permission']['modify'];
-			} else { 
-				$data['modify'] = array();
-			}
-		
-			$ignore_path = array(
-				'admin/login',
-				'admin/logout',
-				'admin/permission',
-				'admin/dashboard',
-				'admin/alerts'
-			);
-
-			$files = glob(APPPATH .'/controllers/admin/*.php');
-			$extension_files = glob(APPPATH .'extensions/admin/controllers/*.php');
+		if (isset($permission['modify'])) {
+			$data['modify'] = $permission['modify'];
+		} elseif (isset($department_info['permission']['modify'])) {
+			$data['modify'] = $department_info['permission']['modify'];
+		} else { 
+			$data['modify'] = array();
+		}
 	
-			$paths = array();
-			foreach (array_merge($files, $extension_files) as $file) {
-				$file_name = 'admin/'. basename($file, '.php');
+		$ignore_path = array(
+			'admin/login',
+			'admin/logout',
+			'admin/permission',
+			'admin/dashboard',
+			'admin/alerts'
+		);
 
-				if (!in_array($file_name, $ignore_path)) {
-					$paths[] = $file_name;
-				}
-			}
-		
-			$data['paths'] = $paths;
+		$files = glob(APPPATH .'/controllers/admin/*.php');
+		$extension_files = glob(APPPATH .'extensions/admin/controllers/*.php');
 
-			if ($this->input->post() && $this->_updateDepartment($department_id) === TRUE) {
-			
-				redirect('admin/departments');
-	
+		$paths = array();
+		foreach (array_merge($files, $extension_files) as $file) {
+			$file_name = 'admin/'. basename($file, '.php');
+
+			if (!in_array($file_name, $ignore_path)) {
+				$paths[] = $file_name;
 			}
 		}
+	
+		$data['paths'] = $paths;
+
+		if ($this->input->post() && $this->_addDepartment() === TRUE) {
 		
-		//load customer_edit page content
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/departments_edit', $data);
-		$this->load->view('admin/footer');
+		    redirect('admin/departments');
+		}
+
+		if ($this->input->post() && $this->_updateDepartment() === TRUE) {
+		
+			redirect('admin/departments');
+
+		}
+		
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/departments_edit', $data);
 	}
 
 	public function _addDepartment() {
@@ -186,7 +181,7 @@ class Departments extends CI_Controller {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
   			return TRUE;
     	
-    	} else { 
+    	} else if ( ! $this->input->get('id')) { 
 								
 			//form validation
 			$this->form_validation->set_rules('department_name', 'Department', 'trim|required|min_length[2]|max_length[32]');
@@ -219,13 +214,13 @@ class Departments extends CI_Controller {
 		}
 	}
 
-	public function _updateDepartment($department_id) {
+	public function _updateDepartment() {
     	if (!$this->user->hasPermissions('modify', 'admin/departments')) {
 		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
   			return TRUE;
     	
-    	} else if ( ! $this->input->post('delete')) { 
+    	} else if ($this->input->get('id')) { 
 								
 			//form validation
 			$this->form_validation->set_rules('department_name', 'Department', 'trim|required|min_length[2]|max_length[32]');
@@ -237,7 +232,7 @@ class Departments extends CI_Controller {
 				$update = array();
 
 				//Sanitizing the POST values
-				$update['department_id']		= $department_id;
+				$update['department_id']		= $this->input->get('id');
 				$update['department_name']		= $this->input->post('department_name');
 			
 				if ($this->input->post('permission')) {

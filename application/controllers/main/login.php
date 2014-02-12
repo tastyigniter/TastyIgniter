@@ -3,11 +3,8 @@
 class Login extends MX_Controller {
 
 	public function index() {
+		$this->load->library('customer');
 		$this->lang->load('main/login_register');  												// loads language file
-
-		if ( !file_exists(APPPATH .'/views/main/login.php')) { 								//check if file exists in views folder
-			show_404(); 																		// Whoops, show 404 error page!
-		}
 
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');
@@ -51,10 +48,13 @@ class Login extends MX_Controller {
     		}
 		}
 		
-		// pass array $data and load view files
-		$this->load->view('main/header', $data);
-		$this->load->view('main/login', $data);
-		$this->load->view('main/footer');
+		$regions = array(
+			'main/header',
+			'main/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('main/login', $data);
 	}
 }
 

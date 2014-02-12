@@ -27,7 +27,13 @@ class Reservations_model extends CI_Model {
 			}
 
 			$query = $this->db->get();
-			return $query->result_array();
+			$result = array();
+		
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+		
+			return $result;
 		}
 	}
 	
@@ -40,7 +46,13 @@ class Reservations_model extends CI_Model {
 		$this->db->order_by('reserve_date', 'ASC');
 
 		$query = $this->db->get();
-		return $query->result_array();
+		$result = array();
+	
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+	
+		return $result;
 	}
 
 	public function getAdminReservation($reservation_id = FALSE) {
@@ -69,7 +81,13 @@ class Reservations_model extends CI_Model {
 			$this->db->order_by('order_id', 'ASC');
 
 			$query = $this->db->get();
-			return $query->result_array();
+			$result = array();
+		
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+		
+			return $result;
 		}
 	}
 	
@@ -248,7 +266,7 @@ class Reservations_model extends CI_Model {
 				$this->db->set('notify', '1');
 			}
 		
-			$this->db->set('status', $this->config->item('config_reserve_status'));
+			$this->db->set('status', $this->config->item('reserve_status'));
 			$this->db->where('reservation_id', $email['reservation_id']);
 			$this->db->update('reservations');
 			
@@ -320,19 +338,19 @@ class Reservations_model extends CI_Model {
 		$this->lang->load('main/reserve_table');
 
 		//setting upload preference
-		$this->email->set_protocol($this->config->item('config_protocol'));
-		$this->email->set_mailtype($this->config->item('config_mailtype'));
-		$this->email->set_smtp_host($this->config->item('config_smtp_host'));
-		$this->email->set_smtp_port($this->config->item('config_smtp_port'));
-		$this->email->set_smtp_user($this->config->item('config_smtp_user'));
-		$this->email->set_smtp_pass($this->config->item('config_smtp_pass'));
+		$this->email->set_protocol($this->config->item('protocol'));
+		$this->email->set_mailtype($this->config->item('mailtype'));
+		$this->email->set_smtp_host($this->config->item('smtp_host'));
+		$this->email->set_smtp_port($this->config->item('smtp_port'));
+		$this->email->set_smtp_user($this->config->item('smtp_user'));
+		$this->email->set_smtp_pass($this->config->item('smtp_pass'));
 		$this->email->set_newline("\r\n");
 		$this->email->initialize();
 		
 		$location 		= $this->Locations_model->getLocation($email['location_id']);
 		$table 			= $this->Tables_model->getTable($email['table_id']);
 		
-		if ($this->config->item('config_reserve_prefix') === '1') {
+		if ($this->config->item('reserve_prefix') === '1') {
 			$reservation_id = $table['table_name'] .'-'. $email['reservation_id'];
 		} else {
 			$reservation_id = $email['reservation_id'];
@@ -345,12 +363,12 @@ class Reservations_model extends CI_Model {
 						
 		$data['text_success'] = sprintf($this->lang->line('text_success'), $location['location_name'], $guest_num, mdate('%l, %F %j, %Y', strtotime($reserve_date)), $reserve_time);
 		$data['text_greetings'] = sprintf($this->lang->line('text_greetings'), $customer_name);
-		$data['text_signature'] = sprintf($this->lang->line('text_signature'), $this->config->item('config_site_name'));
+		$data['text_signature'] = sprintf($this->lang->line('text_signature'), $this->config->item('site_name'));
 		
 		$subject = sprintf($this->lang->line('text_subject'), $reservation_id);
 		$message = $this->load->view('main/reservation_email', $data, TRUE);
 
-		$this->email->from($this->config->item('config_site_email'), $this->config->item('config_site_name'));
+		$this->email->from($this->config->item('site_email'), $this->config->item('site_name'));
 		$this->email->cc($this->location->getEmail());
 		$this->email->to(strtolower($email['email']));
 

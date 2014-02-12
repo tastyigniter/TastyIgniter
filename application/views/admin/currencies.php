@@ -1,33 +1,6 @@
 <div class="box">
-	<div id="add-box" style="display:none">
-	<h2>ADD A NEW CURRENCY</h2>
-	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" id="addForm">
-	<table class="form" width="">
-		<tr>
-			<td><b>Title:</b></td>
-			<td><input type="text" name="currency_title" value="<?php echo set_value('currency_title'); ?>" class="textfield" /></td>
-		</tr>
-		<tr>
-			<td><b>Code:</b></td>
-			<td><input type="text" name="currency_code" value="<?php echo set_value('currency_code'); ?>" class="textfield" size="5" /></td>
-		</tr>
-		<tr>
-			<td><b>Symbol:</b></td>
-			<td><input type="text" name="currency_symbol" value="<?php echo set_value('currency_symbol'); ?>" class="textfield" size="5" /></td>
-		</tr>
-		<tr>
-			<td><b>Status:</b></td>
-			<td><select name="currency_status">
-				<option value="1" <?php echo set_select('currency_status', '1', TRUE); ?> >Enabled</option>
-				<option value="0" <?php echo set_select('currency_status', '0'); ?> >Disabled</option>
-			</select></td>
-		</tr>
-  	</table>
-	</form>
-	</div>
-	
 	<div id="list-box" class="content">
-	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" id="listForm">
+	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
 	<table align="center" class="list">
 		<tr>
 			<th width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
@@ -50,7 +23,7 @@
 		<?php } ?>
 		<?php } else { ?>
 		<tr>
-			<td colspan="6"><?php echo $text_empty; ?></td>
+			<td colspan="6" align="center"><?php echo $text_empty; ?></td>
 		</tr>
 		<?php } ?>
 	</table>

@@ -1,6 +1,6 @@
 <div class="box">
 	<div id="list-box" class="content">
-	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" id="listForm">
+	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
 	<table border="0" align="center" class="list">
 		<tr>
 			<th width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
@@ -11,8 +11,8 @@
 			<th class="right">Table</th>
 			<th>Status</th>
 			<th>Assigned Staff</th>
-			<th class="right">Time</th>
-			<th class="right">Date</th>
+			<th class="center">Time</th>
+			<th class="center">Date</th>
 			<th class="right">Action</th>
 		</tr>
   	<?php if ($reservations) { ?>
@@ -26,14 +26,14 @@
 			<td class="right"><?php echo $reservation['table_name']; ?></td>
 			<td><?php echo $reservation['status_name']; ?></td>
 			<td><?php echo $reservation['staff_name'] ? $reservation['staff_name'] : 'NONE'; ?></td>
-			<td class="right"><?php echo $reservation['reserve_time']; ?></td>
-			<td class="right"><?php echo $reservation['reserve_date']; ?></td>
+			<td class="center"><?php echo $reservation['reserve_time']; ?></td>
+			<td class="center"><?php echo $reservation['reserve_date']; ?></td>
 			<td class="right"><a class="edit" title="Edit" href="<?php echo $reservation['edit']; ?>"></a></td>
 		</tr>
 		<?php } ?>
 		<?php } else { ?>
 		<tr>
-			<td colspan="8" align="center"><?php echo $text_no_reservations; ?></td>
+			<td colspan="11" align="center"><?php echo $text_empty; ?></td>
 		</tr>
   	<?php } ?>
 	</table>

@@ -7,15 +7,14 @@ class Dashboard extends CI_Controller {
 		$this->load->library('user');
 		$this->load->library('currency'); // load the currency library
 		$this->load->model('Dashboard_model');
-		$this->load->model('Orders_model');
 	}
 
+	public function admin() {
+		$this->index();
+	}
+	
 	public function index() {
 			
-		if ( !file_exists(APPPATH .'/views/admin/dashboard.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -32,8 +31,10 @@ class Dashboard extends CI_Controller {
 				
 		//Showing Summaries
 		$data['heading'] 				= 'Dashboard';
+		$data['text_empty'] 			= 'There are no orders available.';
 		$data['total_sales'] 			= $this->currency->format($this->Dashboard_model->getTotalSales());
 		$data['total_sales_by_year'] 	= $this->currency->format($this->Dashboard_model->getTotalSalesByYear());
+		$data['total_lost_sales'] 		= $this->currency->format($this->Dashboard_model->getTotalLostSales());
 		$data['total_customers'] 		= $this->Dashboard_model->getTotalCustomers();
 		$data['total_orders_received'] 	= $this->Dashboard_model->getTotalOrdersReceived();
 		$data['total_orders_completed'] = $this->Dashboard_model->getTotalOrdersCompleted();
@@ -46,11 +47,25 @@ class Dashboard extends CI_Controller {
 		
 		$data['menus'] = $this->Menus_model->getAdminMenus();
 		
+		$this->load->model('Orders_model');
+
 		$results = $this->Orders_model->getList($filter);
 		
 		//load category data into array
 		$data['orders'] = array();
 		foreach ($results as $result) {					
+			
+			$current_date = mdate('%d-%m-%Y', time());
+			$date_added = mdate('%d-%m-%Y', strtotime($result['date_added']));
+			
+			if ($current_date === $date_added) {
+				$date_added = 'Today';
+   			} else if($date_added === mdate('%d-%m-%Y', time() - (24 * 60 * 60))) {
+				$date_added = 'Yesterday';
+			} else {
+				$date_added = $date_added;
+			}
+			
 			$data['orders'][] = array(
 				'order_id'			=> $result['order_id'],
 				'location_name'		=> $result['location_name'],
@@ -59,9 +74,9 @@ class Dashboard extends CI_Controller {
 				'order_status'		=> $result['status_name'],
 				'staff_name'		=> $result['staff_name'],
 				'order_time'		=> mdate('%H:%i', strtotime($result['order_time'])),
-				'date_added'		=> mdate('%d-%m-%Y', strtotime($result['date_added'])),
+				'date_added'		=> $date_added,
 				'date_modified'		=> mdate('%d-%m-%Y', strtotime($result['date_modified'])),
-				'edit' 				=> $this->config->site_url('admin/orders/edit/' . $result['order_id'])
+				'edit' 				=> $this->config->site_url('admin/orders/edit?id=' . $result['order_id'])
 			);
 		}
 				
@@ -77,9 +92,12 @@ class Dashboard extends CI_Controller {
 			$data['ratings_results'] = array();		
 		}	
 		
-		//load home page content
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/dashboard', $data);
-		$this->load->view('admin/footer', $data);
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/dashboard', $data);
 	}
 }

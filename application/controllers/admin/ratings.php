@@ -8,12 +8,6 @@ class Ratings extends CI_Controller {
 
 	public function index() {
 			
-		//check if file exists in views
-		if ( !file_exists(APPPATH .'/views/admin/ratings.php')) {
-			// Whoops, we don't have a page for that!
-			show_404();
-		}
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -29,7 +23,7 @@ class Ratings extends CI_Controller {
 		}
 
 		$data['heading'] 			= 'Ratings';
-		$data['sub_menu_update'] 	= 'Update';
+		$data['sub_menu_save'] 	= 'Save';
 		$data['text_empty'] 		= 'There are no ratings, please add!.';
 
 		//load ratings data into array
@@ -39,6 +33,8 @@ class Ratings extends CI_Controller {
 			$results = $this->config->item('ratings');
 		} else if ($this->input->post('ratings')) {
 			$results = $this->input->post('ratings');
+		} else {
+			$results = '';
 		}
 		
 		if (is_array($results)) {
@@ -54,10 +50,13 @@ class Ratings extends CI_Controller {
 			redirect('admin/ratings');  			
 		}
 
-		//load home page content
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/ratings', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/ratings', $data);
 	}
 	
 	public function _updateRating() {

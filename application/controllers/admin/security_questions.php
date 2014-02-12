@@ -9,10 +9,6 @@ class Security_questions extends CI_Controller {
 
 	public function index() {
 			
-		if ( !file_exists(APPPATH .'/views/admin/security_questions.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -28,7 +24,7 @@ class Security_questions extends CI_Controller {
 		}
 
 		$data['heading'] 			= 'Security Questions';
-		$data['sub_menu_update'] 	= 'Update';
+		$data['sub_menu_save'] 	= 'Save';
 		$data['text_empty'] 		= 'There are no security questions, please add!.';
 
 		//load questions data into array
@@ -46,10 +42,13 @@ class Security_questions extends CI_Controller {
 			redirect('admin/security_questions');
 		}
 
-		//load home page content
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/security_questions', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/security_questions', $data);
 	}
 
 	public function _updateSecurityQuestion() {

@@ -11,10 +11,6 @@ class Tables extends CI_Controller {
 
 	public function index() {
 			
-		if ( !file_exists(APPPATH .'/views/admin/tables.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -36,14 +32,14 @@ class Tables extends CI_Controller {
 			$filter['page'] = 1;
 		}
 		
-		if ($this->config->item('config_page_limit')) {
-			$filter['limit'] = $this->config->item('config_page_limit');
+		if ($this->config->item('page_limit')) {
+			$filter['limit'] = $this->config->item('page_limit');
 		}
 				
 		$data['heading'] 			= 'Tables';
-		$data['sub_menu_add'] 		= 'Add';
+		$data['sub_menu_add'] 		= 'Add new table';
 		$data['sub_menu_delete'] 	= 'Delete';
-		$data['sub_menu_list'] 		= '<li><a id="menu-add">Add new table</a></li>';
+		$data['text_empty'] 		= 'There are no tables available.';
 
 		//load ratings data into array
 		$data['tables'] = array();
@@ -55,7 +51,7 @@ class Tables extends CI_Controller {
 				'min_capacity'		=> $result['min_capacity'],
 				'max_capacity'		=> $result['max_capacity'],
 				'table_status'		=> ($result['table_status'] == '1') ? 'Enabled' : 'Disabled',
-				'edit'				=> $this->config->site_url('admin/tables/edit/' . $result['table_id'])
+				'edit'				=> $this->config->site_url('admin/tables/edit?id=' . $result['table_id'])
 			);
 		}
 
@@ -71,28 +67,21 @@ class Tables extends CI_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		if ($this->input->post() && $this->_addTable() === TRUE) {
-		
-			redirect('admin/tables');
-		}
-
-		//check if POST delete location
 		if ($this->input->post('delete') && $this->_deleteTable() === TRUE) {
 			
 			redirect('admin/tables');  			
 		}	
 
-		//load home page content
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/tables', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/tables', $data);
 	}
 
 	public function edit() {
-
-		if ( !file_exists(APPPATH .'/views/admin/tables_edit.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
 		
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
@@ -109,43 +98,44 @@ class Tables extends CI_Controller {
 		}		
 
 		//check if /location_id is set in uri string
-		if (is_numeric($this->uri->segment(4))) {
-			$table_id = (int)$this->uri->segment(4);
+		if (is_numeric($this->input->get('id'))) {
+			$table_id = (int)$this->input->get('id');
+			$data['action']	= $this->config->site_url('admin/tables/edit?id='. $table_id);
 		} else {
-		    redirect('admin/tables');
+		    $table_id = 0;
+			$data['action']	= $this->config->site_url('admin/tables/edit');
 		}
 		
 		$table_info = $this->Tables_model->getTable($table_id);
+
+		$data['heading'] 			= 'Table - '. $table_info['table_name'];
+		$data['sub_menu_save'] 		= 'Save';
+		$data['sub_menu_back'] 		= $this->config->site_url('admin/tables');
+
+
+		$data['table_id'] 			= $table_info['table_id'];
+		$data['table_name'] 		= $table_info['table_name'];
+		$data['min_capacity'] 		= $table_info['min_capacity'];
+		$data['max_capacity'] 		= $table_info['max_capacity'];
+		$data['table_status'] 		= $table_info['table_status'];
+
+		if ($this->input->post() && $this->_addTable() === TRUE) {
 		
-		if ($table_info) {
-			$data['heading'] 			= 'Table';
-			$data['sub_menu_update'] 	= 'Update';
-			$data['sub_menu_back'] 		= $this->config->site_url('admin/tables');
+			redirect('admin/tables');
+		}
 
-
-			$data['table_id'] 			= $table_info['table_id'];
-			$data['table_name'] 		= $table_info['table_name'];
-			$data['min_capacity'] 		= $table_info['min_capacity'];
-			$data['max_capacity'] 		= $table_info['max_capacity'];
-			$data['table_status'] 		= $table_info['table_status'];
-
-
-			// check if POST add_food, validate fields and add Food to model
-			if ($this->input->post() && $this->_updateTable($table_id) === TRUE) {
-						
-				redirect('admin/tables');
-			}
-								
-			//Remove Food
-			if ($this->input->post('delete') && $this->_deleteTable($table_id) === TRUE) {
+		if ($this->input->post() && $this->_updateTable() === TRUE) {
 					
-				redirect('admin/tables');
-			}
+			redirect('admin/tables');
 		}
 		
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/tables_edit', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/tables_edit', $data);
 	}
 
 	public function autocomplete() {
@@ -181,7 +171,7 @@ class Tables extends CI_Controller {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
 			return TRUE;
     	
-    	} else { 
+    	} else if ( ! $this->input->get('id')) { 
 					
 			//form validation
 			$this->form_validation->set_rules('table_name', 'Table Name', 'trim|required');
@@ -214,14 +204,14 @@ class Tables extends CI_Controller {
 		}	
 	}
 
-	public function _updateTable($table_id) {
+	public function _updateTable() {
 						
     	if (!$this->user->hasPermissions('modify', 'admin/tables')) {
 		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
 			return TRUE;
     	
-    	} else if (!$this->input->post('delete')) { 
+    	} else if ($this->input->get('id')) { 
 			
 			$this->form_validation->set_rules('table_name', 'Table Name', 'trim|required');
 			$this->form_validation->set_rules('min_capacity', 'Table Minimum', 'trim|required|integer|greater_than[1]');
@@ -232,7 +222,7 @@ class Tables extends CI_Controller {
   		    	$update = array();
 				
 				//Sanitizing the POST values
-				$update['table_id'] 		= $table_id;
+				$update['table_id'] 		= $this->input->get('id');
 				$update['table_name'] 		= $this->input->post('table_name');
 				$update['min_capacity'] 	= $this->input->post('min_capacity');
 				$update['max_capacity'] 	= $this->input->post('max_capacity');
@@ -253,7 +243,7 @@ class Tables extends CI_Controller {
 		}
 	}
 
-	public function _deleteTable($table_id = FALSE) {
+	public function _deleteTable() {
     	if (!$this->user->hasPermissions('modify', 'admin/tables')) {
 		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');

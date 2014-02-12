@@ -1,48 +1,6 @@
 <div class="box">
-	<div id="add-box" style="display:none">
-	<h2>ADD NEW REVIEW</h2>
-	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" id="addForm">
-	<table class="form">
-		<tr>
-    		<td><b>Author:</b></td>
-    		<td><input type="text" name="author" class="textfield" value="<?php echo set_value('author'); ?>"/>
-    			<input type="hidden" name="customer_id" value="<?php echo set_value('customer_id'); ?>"/></td>
-   		</tr>
-		<tr>
-    		<td><b>Menu Name:</b></td>
-    		<td><input type="text" name="menu" class="textfield" value="<?php echo set_value('menu'); ?>"/>
-    			<input type="hidden" name="menu_id" value="<?php echo set_value('menu_id'); ?>"/>
-   		</tr>
-		<tr>
-    		<td><b>Rating Name:</b></td>
-    		<td><select name="rating">
-					<option value="">select rating</option>
-					<?php foreach ($ratings as $key => $rating) { ?>
-						<option value="<?php echo $key; ?>"  <?php echo set_select('rating', $key); ?>><?php echo $rating; ?></option>
-					<?php }?>
-			</select></td>
-   		</tr>
-   		<tr>
-   		    <td><b>Review Text:</b></td>
-    		<td><textarea name="review_text" rows="7" cols="50"><?php echo set_value('review_text'); ?></textarea></td>
-   		</tr>
-		<tr>
-    		<td><b>Review Status:</b></td>
-    		<td><select name="review_status">
-	   			<option value="0" <?php echo set_select('review_status', '0'); ?> >Disabled</option>
-     		<?php if ($review_status === '1') { ?>
-    			<option value="1" <?php echo set_select('review_status', '1', TRUE); ?> >Enabled</option>
-			<?php } else { ?>  
-    			<option value="1" <?php echo set_select('review_status', '1'); ?> >Enabled</option>
-			<?php } ?>  
-    		</select></td>
-		</tr>
-	</table>
-	</form>
-	</div>
-
 	<div id="list-box" class="content">
-	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" id="listForm">
+	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
 	<table align="center" class="list">
 		<tr>
 			<th width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
@@ -68,7 +26,7 @@
 		<?php } ?>
 		<?php } else { ?>
 		<tr>
-			<td colspan="8">There are no reviews added to your database.</td>
+			<td colspan="7" align="center"><?php echo $text_empty; ?></td>
 		</tr>
 		<?php } ?>
 	</table>

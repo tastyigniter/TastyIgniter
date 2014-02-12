@@ -1,6 +1,6 @@
 <div class="box">
 	<div id="update-box" class="content">
-	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" id="updateForm">
+	<form accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
 	<table align=""class="form">
 		<tr>
 			<td><b>Name:</b></td>
@@ -13,7 +13,7 @@
 		<h3>ROUTES</h3>
 	</div>
 
-	<div class="wrap-content">
+	<div class="wrap_content">
 	<table align=""class="list">
 		<tr>
 			<th><b>URI Route</b></th>
@@ -32,13 +32,13 @@
 			<?php } ?>
 			<?php } ?>
 			</select></td>
-			<td class="left"><img onclick="$(this).parent().parent().remove();" src="<?php echo base_url('assets/img/delete.png'); ?>" /></td>
+			<td class="left"><img onclick="$(this).parent().parent().remove();" src="<?php echo base_url('assets/img/delete32x32.png'); ?>" /></td>
 		</tr>
 		<?php $table_row++; ?>
 		<?php } ?>  
 		<tr id="tfoot">
 			<td colspan="1"></td>
-			<td class="left"><img src="<?php echo base_url('assets/img/add.png'); ?>" onclick="addRoute();" /></td>
+			<td class="left"><img src="<?php echo base_url('assets/img/add32x32.png'); ?>" onclick="addRoute();" /></td>
 		</tr>		 
 	</table>
 	</div>
@@ -56,7 +56,7 @@ function addRoute() {
 		html += '<option value="<?php echo $uri_route['uri_route_id']; ?>"><?php echo $uri_route['route']; ?></option>';
 	<?php } ?>
 	html += '</select></td>';
-	html += '	<td class="left"><img onclick="$(this).parent().parent().remove();" src="<?php echo base_url('assets/img/delete.png'); ?>" /></td>';
+	html += '	<td class="left"><img onclick="$(this).parent().parent().remove();" src="<?php echo base_url('assets/img/delete32x32.png'); ?>" /></td>';
 	html += '</tr>';
 	
 	$('#tfoot').before(html);

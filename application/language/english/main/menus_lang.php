@@ -12,13 +12,12 @@ $lang['text_postcode'] 			= 'Enter your postcode to order(UK only):';
 $lang['text_end_days'] 			= 'Ends in: %s days';
 $lang['text_end_today'] 		= 'Ends today';
 
-$lang['column_id'] 				= '#';
+$lang['column_id'] 				= '';
 $lang['column_photo'] 			= 'Photo';
 $lang['column_menu'] 			= 'Menu';
 $lang['column_price'] 			= 'Price';
 $lang['column_action'] 			= 'Action(s)';
 
-$lang['button_check_postcode'] 	= 'Check Postcode';
 $lang['button_continue'] 		= 'Checkout';
 $lang['button_add'] 			= 'Add';
 $lang['button_review'] 			= 'Menu Review';

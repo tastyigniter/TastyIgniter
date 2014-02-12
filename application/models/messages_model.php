@@ -33,29 +33,14 @@ class Messages_model extends CI_Model {
 			$this->db->where('type !=', 'alert');
 
 			$query = $this->db->get();
-			return $query->result_array();
+			$result = array();
+		
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+		
+			return $result;
 		}
-	}
-	
-	public function getMainInbox() {
-		$this->db->from('messages');
-		
-		$this->db->order_by('date', 'DESC');
-
-		$this->db->where('to', '0');
-		$this->db->where('type', 'customers');
-
-		$query = $this->db->get();
-		return $query->result_array();
-	}
-	
-	public function getMainInboxTotal() {
-		$this->db->from('messages');
-		
-		$this->db->where('to', '0');
-		$this->db->where('type', 'customers');
-
-		return $this->db->count_all_results();
 	}
 	
 	public function getAlertsList($filter = array()) {
@@ -77,8 +62,41 @@ class Messages_model extends CI_Model {
 			$this->db->where('type', 'alert');
 
 			$query = $this->db->get();
-			return $query->result_array();		
+			$result = array();
+		
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+		
+			return $result;
 		}
+	}
+	
+	public function getMainInbox() {
+		$this->db->from('messages');
+		
+		$this->db->order_by('date', 'DESC');
+
+		$this->db->where('to', '0');
+		$this->db->where('type', 'customers');
+
+		$query = $this->db->get();
+		$result = array();
+	
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+	
+		return $result;
+	}
+	
+	public function getMainInboxTotal() {
+		$this->db->from('messages');
+		
+		$this->db->where('to', '0');
+		$this->db->where('type', 'customers');
+
+		return $this->db->count_all_results();
 	}
 	
 	public function getStaffAlerts($staff_id) {
@@ -95,7 +113,13 @@ class Messages_model extends CI_Model {
 		$this->db->where('type', 'alert');
 
 		$query = $this->db->get();
-		return $query->result_array();
+		$result = array();
+	
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+	
+		return $result;
 	}
 	
 	public function viewAdminMessage($message_id) {

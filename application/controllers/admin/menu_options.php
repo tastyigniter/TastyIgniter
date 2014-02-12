@@ -11,10 +11,6 @@ class Menu_options extends CI_Controller {
 
 	public function index() {
 		
-		if ( !file_exists(APPPATH .'/views/admin/menu_options.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -36,14 +32,13 @@ class Menu_options extends CI_Controller {
 			$filter['page'] = 1;
 		}
 		
-		if ($this->config->item('config_page_limit')) {
-			$filter['limit'] = $this->config->item('config_page_limit');
+		if ($this->config->item('page_limit')) {
+			$filter['limit'] = $this->config->item('page_limit');
 		}
 
 		$data['heading'] 			= 'Menu Options';
-		$data['sub_menu_add'] 		= 'Add';
+		$data['sub_menu_add'] 		= 'Add new menu option';
 		$data['sub_menu_delete'] 	= 'Delete';
-		$data['sub_menu_list'] 		= '<li><a id="menu-add">Add new menu option</a></li>';
 		$data['text_empty'] 		= 'There are no menu options, please add!.';
 
 		$data['menu_options'] = array();
@@ -53,11 +48,11 @@ class Menu_options extends CI_Controller {
 				'option_id' 	=> $result['option_id'],
 				'option_name' 	=> $result['option_name'],
 				'option_price' 	=> $this->currency->format($result['option_price']),
-				'edit' 			=> $this->config->site_url('admin/menus/options/edit/' . $result['option_id'])
+				'edit' 			=> $this->config->site_url('admin/menu_options/edit?id=' . $result['option_id'])
 			);
 		}
 
-		$config['base_url'] 		= $this->config->site_url('admin/menus/options');
+		$config['base_url'] 		= $this->config->site_url('admin/menu_options');
 		$config['total_rows'] 		= $this->Menus_model->options_record_count();
 		$config['per_page'] 		= $filter['limit'];
 		$config['num_links'] 		= round($config['total_rows'] / $config['per_page']);
@@ -69,29 +64,21 @@ class Menu_options extends CI_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		//check if POST add_menu_option then add option name and price to option DB table
-		if ($this->input->post() && $this->_addMenuOpiton() === TRUE) {
-			
-			redirect('admin/menus/options');
-		}
-
-		//check if POST update_menu then remove menu_id
 		if ($this->input->post('delete') && $this->_deleteMenuOption() === TRUE) {
 			
-			redirect('admin/menus/options');
+			redirect('admin/menu_options');
 		}	
 
-		//load home page content
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/menu_options', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/menu_options', $data);
 	}
 	
 	public function edit() {
-		
-		if ( !file_exists(APPPATH .'/views/admin/menu_options_edit.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
 		
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
@@ -107,38 +94,41 @@ class Menu_options extends CI_Controller {
 			$data['alert'] = '';
 		}		
 		
-		//check if /menu_id is set in uri string
-		if (is_numeric($this->uri->segment(5))) {
-			$option_id = $this->uri->segment(5);
+		if (is_numeric($this->input->get('id'))) {
+			$option_id = $this->input->get('id');
+			$data['action']	= $this->config->site_url('admin/menu_options/edit?id='. $option_id);
 		} else {
-		    redirect('admin/menus/options');
+			$option_id = 0;
+			$data['action']	= $this->config->site_url('admin/menu_options/edit');
 		}
 		
 		$option_info = $this->Menus_model->getMenuOption($option_id);
 	
-		$data['heading'] 			= 'Menus Option';
-		$data['sub_menu_update'] 	= 'Update';
-		$data['sub_menu_back'] 		= $this->config->site_url('admin/menus/options');
+		$data['heading'] 			= 'Menus Option - ' . $option_info['option_name'];
+		$data['sub_menu_save'] 		= 'Save';
+		$data['sub_menu_back'] 		= $this->config->site_url('admin/menu_options');
 
 		$data['option_id'] 		= $option_info['option_id'];
 		$data['option_name'] 	= $option_info['option_name'];
 		$data['option_price'] 	= $option_info['option_price'];
 
-		//check if POST add_menu, validate fields and add Menu to model
-		if ($this->input->post() && $this->_updateMenuOption($option_id) === TRUE){
+		if ( ! $this->input->get('id') && $this->input->post() && $this->_addMenuOpiton() === TRUE) {
+			
+			redirect('admin/menu_options');
+		}
+
+		if ($this->input->get('id') && $this->input->post() && $this->_updateMenuOption() === TRUE){
 					
-			redirect('admin/menus/options');
+			redirect('admin/menu_options');
 		}
 					
-		//Remove Menu
-		if ($this->input->post('delete') && $this->_deleteMenuOption($option_id) === TRUE) {
-				
-			redirect('admin/menus/options');
-		}
-				
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/menu_options_edit', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/menu_options_edit', $data);
 	}
 
 	public function autocomplete() {
@@ -173,7 +163,7 @@ class Menu_options extends CI_Controller {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
   			return TRUE;
     	
-    	} else if ( ! $this->input->post('delete')) { 
+    	} else if ( ! $this->input->get('id')) { 
 			
 			$this->form_validation->set_rules('option_name', 'Option Name', 'trim|required|min_length[2]|max_length[32]');
 			$this->form_validation->set_rules('option_price', 'Option Price', 'trim|required|numeric');
@@ -199,14 +189,14 @@ class Menu_options extends CI_Controller {
 		}
 	}
 
-	public function _updateMenuOption($option_id) {
+	public function _updateMenuOption() {
 						
     	if (!$this->user->hasPermissions('modify', 'admin/menu_options')) {
 		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
   			return TRUE;
     	
-    	} else if ( ! $this->input->post('delete')) { 
+    	} else if ($this->input->get('id')) { 
 			
 			$this->form_validation->set_rules('option_name', 'Option Name', 'trim|required|min_length[2]|max_length[32]');
 			$this->form_validation->set_rules('option_price', 'Option Price', 'trim|required|numeric');
@@ -215,9 +205,9 @@ class Menu_options extends CI_Controller {
 				$update = array();
 			
 				//Sanitizing the POST values
-				$update['option_id'] = $option_id;
-				$update['option_name'] = $this->input->post('option_name');
-				$update['option_price'] = $this->input->post('option_price');	
+				$update['option_id'] 		= $this->input->get('id');
+				$update['option_name'] 		= $this->input->post('option_name');
+				$update['option_price'] 	= $this->input->post('option_price');	
 
 				if ($this->Menus_model->updateMenuOption($update)) {						
 			

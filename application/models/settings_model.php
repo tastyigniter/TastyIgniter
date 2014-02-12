@@ -9,7 +9,13 @@ class Settings_model extends CI_Model {
 		$this->db->from('settings');
 		
 		$query = $this->db->get();
-		return $query->result_array();
+		$result = array();
+	
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+	
+		return $result;
 	}
 
 	public function getdbTables() {
@@ -95,10 +101,8 @@ class Settings_model extends CI_Model {
 
 			$backup =& $this->dbutil->backup($prefs);
 		
-			$name = 'tastyigniter.sql';
-
-			$this->load->helper('download');
-			force_download($name, $backup); 
+			$this->load->helper('file');
+			write_file('./assets/download/tastyigniter.sql', $backup); 
 			
 			return TRUE;
 		}
@@ -107,14 +111,33 @@ class Settings_model extends CI_Model {
 	}
 
 	public function restoreDatabase($sql) {
-		foreach (explode(";\n", $sql) as $sql) {
-    		$sql = trim($sql);
-    		
-			if ($sql) {
-      			$this->db->query($sql);
-    		}
-  		}
-  		
-  		return TRUE;
+
+		$file = APPPATH .'/extensions/setup/tastyigniter.sql';
+
+		if (!file_exists($file)) { 
+			return FALSE; 
+		}
+
+		$lines = file($file);
+
+		if ($lines) {
+			$sql = '';
+
+			foreach($lines as $line) {
+				if ($line && (substr($line, 0, 1) != '#')) {
+					$sql .= $line;
+  
+					if (preg_match('/;\s*$/', $line)) {
+						$this->db->query($sql);
+
+						$sql = '';
+					}
+				}
+			}
+			
+			$this->db->query("SET CHARACTER SET utf8");
+			
+			return TRUE;
+		}
 	}
 }

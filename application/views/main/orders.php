@@ -31,6 +31,8 @@
   	</table>
 	</form>
 	</div>
+
+	<div class="separator"></div>
 	<div class="buttons">
 		<div class="left"><a class="button" href="<?php echo $back; ?>"><?php echo $button_back; ?></a></div>
 		<div class="right"><a class="button" href="<?php echo site_url('menus'); ?>"><?php echo $button_order; ?></a></div>

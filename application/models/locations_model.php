@@ -18,7 +18,13 @@ class Locations_model extends CI_Model {
 			$this->db->from('locations');
 			
 			$query = $this->db->get();
-			return $query->result_array();
+			$result = array();
+		
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+		
+			return $result;
 		}
 	}
 
@@ -28,7 +34,13 @@ class Locations_model extends CI_Model {
 		$this->db->where('location_status', '1');
 			
 		$query = $this->db->get();
-		return $query->result_array();
+		$result = array();
+	
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+	
+		return $result;
 	}
 
 	public function getLocation($location_id) {
@@ -45,21 +57,6 @@ class Locations_model extends CI_Model {
 				return $query->row_array();
 			}
 		}
-	}
-
-	public function getCountries() {
-		$this->db->from('countries');
-			
-		$query = $this->db->get();
-		return $query->result_array();
-	}
-
-	public function getCountry($country_id) {
-		$this->db->from('countries');
-		$this->db->where('country_id', $country_id);
-			
-		$query = $this->db->get();
-		return $query->row_array();
 	}
 
 	public function getOpeningHours($location_id = FALSE) {
@@ -98,7 +95,7 @@ class Locations_model extends CI_Model {
 	public function getLocalRestaurant($lat = FALSE, $lng = FALSE) {
 		$this->session->unset_userdata('local_info');
 		
-		if ($this->config->item('config_distance_unit') === 'km') {
+		if ($this->config->item('distance_unit') === 'km') {
 			$sql  = "SELECT *, ( 6371 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) *";
 		} else {
 			$sql  = "SELECT *, ( 3959 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) *";

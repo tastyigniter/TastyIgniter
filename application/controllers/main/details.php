@@ -4,7 +4,7 @@ class Details extends MX_Controller {
 
 	public function __construct() {
 		parent::__construct(); 																	//  calls the constructor
-		//$this->load->library('customer'); 													// load the customer library
+		$this->load->library('customer'); 													// load the customer library
 		$this->load->model('Customers_model');													// load the customers model
 		$this->load->model('Security_questions_model');											// load the security questions model
 	}
@@ -12,10 +12,6 @@ class Details extends MX_Controller {
 	public function index() {
 		$this->lang->load('main/details');  													// loads language file
 		
-		if ( !file_exists(APPPATH .'/views/main/details.php')) { 								//check if file exists in views folder
-			show_404(); 																		// Whoops, show 404 error page!
-		}
-
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
@@ -75,11 +71,14 @@ class Details extends MX_Controller {
 			redirect('account');
 		}
 
-		// pass array $data and load view files
-		$this->load->view('main/header', $data);
-		$this->load->view('main/content_left');
-		$this->load->view('main/details', $data);
-		$this->load->view('main/footer');
+		$regions = array(
+			'main/header',
+			'main/content_left',
+			'main/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('main/details', $data);
 	}
 
 	public function _updateDetails() {															// method to validate update details form fields

@@ -1,8 +1,8 @@
 <div class="box">
 	<div id="update-box" class="content">
-	<h2>UPDATE: <?php echo $menu_name; ?></h2>
+	<h2>Review Details</h2>
 	<table class="form">
-	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" id="updateForm">
+	<form accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
 		<tr>
     		<td><b>Author:</b></td>
     		<td><input type="text" name="author" class="textfield" value="<?php echo set_value('author', $author); ?>"/>

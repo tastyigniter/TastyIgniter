@@ -1,7 +1,7 @@
 <div class="box">
 	<div id="update-box" class="content">
-	<h2>UPDATE: <?php echo $status_name; ?></h2>
-	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" id="updateForm">
+	<h2>Reservation Status Details</h2>
+	<form accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
 	<table class="form">
 	<tr>
 		<td><b>Name:</b></td>

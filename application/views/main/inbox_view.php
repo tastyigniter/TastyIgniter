@@ -13,11 +13,17 @@
 			<td><b><?php echo $column_subject; ?>:</b></td>
 			<td><?php echo $subject; ?></td>
 		</tr>
+	</table>
+
+	<div class="separator"></div>
+	<table width="100%" align="center">
 		<tr>
 			<td colspan="2"><div class="msg_body"><?php echo $body; ?></div></td>
 		</tr>
 	</table>
 	</div>
+
+	<div class="separator"></div>
 	<div class="buttons">
 		<div class="left"><a class="button" href="<?php echo $back; ?>"><?php echo $button_back; ?></a></div>
 	</div>

@@ -13,10 +13,6 @@ class Customers extends CI_Controller {
 
 	public function index() {
 			
-		if ( !file_exists(APPPATH .'/views/admin/customers.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -38,15 +34,14 @@ class Customers extends CI_Controller {
 			$filter['page'] = 1;
 		}
 		
-		if ($this->config->item('config_page_limit')) {
-			$filter['limit'] = $this->config->item('config_page_limit');
+		if ($this->config->item('page_limit')) {
+			$filter['limit'] = $this->config->item('page_limit');
 		}
 				
 		$data['heading'] 			= 'Customers';
-		$data['sub_menu_add'] 		= 'Add';
+		$data['sub_menu_add'] 		= 'Add new customer';
 		$data['sub_menu_delete'] 	= 'Delete';
-		$data['sub_menu_list'] 		= '<li><a id="menu-add">Add new customer</a></li>';
-		$data['text_no_customers'] 	= 'There are no customer(s).';
+		$data['text_empty'] 		= 'There are no customers available.';
 
 		$data['customers'] = array();
 		$results = $this->Customers_model->getList($filter);
@@ -60,7 +55,7 @@ class Customers extends CI_Controller {
 				'telephone' 		=> $result['telephone'],
 				'date_added' 		=> mdate('%d-%m-%Y', strtotime($result['date_added'])),
 				'status' 			=> ($result['status'] === '1') ? 'Enabled' : 'Disabled',
-				'edit' 				=> $this->config->site_url('admin/customers/edit/' . $result['customer_id'])
+				'edit' 				=> $this->config->site_url('admin/customers/edit?id=' . $result['customer_id'])
 			);
 		}
 
@@ -73,7 +68,7 @@ class Customers extends CI_Controller {
 			);
 		}
 
-		$data['country_id'] = $this->config->item('config_country');
+		$data['country_id'] = $this->config->item('country_id');
 		$data['countries'] = array();
 		$results = $this->Countries_model->getCountries(); 										// retrieve countries array from getCountries method in locations model
 		foreach ($results as $result) {															// loop through crountries array
@@ -95,29 +90,21 @@ class Customers extends CI_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		//if POST sumbit is Register then call the _addCustomer method
-		if ($this->input->post() && $this->_addCustomer() === TRUE) {
-		
-			redirect('admin/customers');
-		}
-
-		//check if POST update_deal then remove deal_id
 		if ($this->input->post('delete') && $this->_deleteCustomer() === TRUE) {
 			
 			redirect('admin/customers');  			
 		}	
 
-		//load customer page content
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/customers', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/customers', $data);
 	}
 	
 	public function edit() {
-		
-		if ( !file_exists(APPPATH .'/views/admin/customers_edit.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
 		
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
@@ -128,10 +115,12 @@ class Customers extends CI_Controller {
 		}
 		
 		//check if customer_id is set in uri string
-		if ($this->uri->segment(4)) {
-			$customer_id = (int)$this->uri->segment(4);
+		if (is_numeric($this->input->get('id'))) {
+			$customer_id = $this->input->get('id');
+			$data['action']	= $this->config->site_url('admin/customers/edit?id='. $customer_id);
 		} else {
-		    redirect('admin/customers');
+		    $customer_id = 0;
+			$data['action']	= $this->config->site_url('admin/customers/edit');
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -141,50 +130,61 @@ class Customers extends CI_Controller {
 		}
 
 		$customer_info = $this->Customers_model->getCustomer($customer_id);
-		if ($customer_info) {
-			$data['heading'] 			= 'Customers';
-			$data['sub_menu_update'] 	= 'Update';
-			$data['sub_menu_back'] 		= $this->config->site_url('admin/customers');
+		$data['heading'] 			= 'Customers - '. $customer_info['first_name'] .' '. $customer_info['last_name'];
+		$data['sub_menu_save'] 		= 'Save';
+		$data['sub_menu_back'] 		= $this->config->site_url('admin/customers');
+	
+		$data['first_name'] 		= $customer_info['first_name'];
+		$data['last_name'] 			= $customer_info['last_name'];
+		$data['email'] 				= $customer_info['email'];
+		$data['telephone'] 			= $customer_info['telephone'];
+		$data['security_question'] 	= $customer_info['security_question_id'];
+		$data['security_answer'] 	= $customer_info['security_answer'];
+		$data['status'] 			= $customer_info['status'];
 		
-			$data['first_name'] 		= $customer_info['first_name'];
-			$data['last_name'] 			= $customer_info['last_name'];
-			$data['email'] 				= $customer_info['email'];
-			$data['telephone'] 			= $customer_info['telephone'];
-			$data['security_question'] 	= $customer_info['security_question_id'];
-			$data['security_answer'] 	= $customer_info['security_answer'];
-			$data['status'] 			= $customer_info['status'];
+		if ($this->input->post('address')) {
+			$data['addresses'] 			= $this->input->post('address');
+		} else {
 			$data['addresses'] 			= $this->Customers_model->getCustomerAddresses($customer_id);
-			
-			$data['questions'] = array();
-			$results = $this->Security_questions_model->getQuestions();
-			foreach ($results as $result) {
-				$data['questions'][] = array(
-					'id'	=> $result['question_id'],
-					'text'	=> $result['question_text']
-				);
-			}
-
-			$data['country_id'] = $this->config->item('config_country');
-			$data['countries'] = array();
-			$results = $this->Countries_model->getCountries(); 										// retrieve countries array from getCountries method in locations model
-			foreach ($results as $result) {															// loop through crountries array
-				$data['countries'][] = array( 														// create array of countries data to pass to view
-					'country_id'	=>	$result['country_id'],
-					'name'			=>	$result['country_name'],
-				);
-			}
-
-			if ($this->input->post() && $this->_updateCustomer($customer_id, $data['email']) === TRUE) {
-
-				redirect('admin/customers');
-
-			}
 		}
 		
-		//load customer_edit page content
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/customers_edit', $data);
-		$this->load->view('admin/footer');
+		$data['questions'] = array();
+		$results = $this->Security_questions_model->getQuestions();
+		foreach ($results as $result) {
+			$data['questions'][] = array(
+				'id'	=> $result['question_id'],
+				'text'	=> $result['question_text']
+			);
+		}
+
+		$data['country_id'] = $this->config->item('country_id');
+		$data['countries'] = array();
+		$results = $this->Countries_model->getCountries(); 										// retrieve countries array from getCountries method in locations model
+		foreach ($results as $result) {															// loop through crountries array
+			$data['countries'][] = array( 														// create array of countries data to pass to view
+				'country_id'	=>	$result['country_id'],
+				'name'			=>	$result['country_name'],
+			);
+		}
+
+		if ($this->input->post() && $this->_addCustomer() === TRUE) {
+		
+			redirect('admin/customers');
+		}
+
+		if ($this->input->post() && $this->_updateCustomer($customer_id, $data['email']) === TRUE) {
+
+			redirect('admin/customers');
+
+		}
+		
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/customers_edit', $data);
 	}
 
 	public function autocomplete() {
@@ -218,24 +218,27 @@ class Customers extends CI_Controller {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
   			return TRUE;
   	
-    	} else {
+    	} else if ( ! $this->input->get('id')) {
     	
 			//validate form
 			$this->form_validation->set_rules('first_name', 'First Name', 'trim|required|min_length[2]|max_length[12]');
 			$this->form_validation->set_rules('last_name', 'First Name', 'trim|required|min_length[2]|max_length[12]');
 			$this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email|max_length[96]|is_unique[customers.email]');
-			$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[6]|max_length[32]|matches[password_confirm]');
-			$this->form_validation->set_rules('password_confirm', 'Password Confirm', 'trim|required');
+			$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[6]|max_length[32]|matches[confirm_password]');
+			$this->form_validation->set_rules('confirm_password', 'Password Confirm', 'trim|required');
 			$this->form_validation->set_rules('telephone', 'Telephone', 'trim|required|integer');
 			$this->form_validation->set_rules('security_question', 'Security Question', 'trim|required|integer');
 			$this->form_validation->set_rules('security_answer', 'Security Answer', 'trim|required|min_length[2]');
-			$this->form_validation->set_rules('status', 'Status', 'trim|required|min_length[2]');
+			$this->form_validation->set_rules('status', 'Status', 'trim|required|integer');
 
-			$this->form_validation->set_rules('address[][address_1]', 'Address 1', 'trim|min_length[3]|max_length[128]');
-			$this->form_validation->set_rules('address[][city]', 'City', 'trim|min_length[2]|max_length[128]');
-			$this->form_validation->set_rules('address[][postcode]', 'Postcode', 'trim|min_length[2]|max_length[10]');
-			$this->form_validation->set_rules('address[][country]', 'Country', 'trim|integer');
-
+			if ($this->input->post('address')) {
+				foreach ($this->input->post('address') as $key => $value) {
+					$this->form_validation->set_rules('address['.$key.'][address_1]', 'Address 1', 'trim|min_length[3]|max_length[128]');
+					$this->form_validation->set_rules('address['.$key.'][city]', 'City', 'trim|min_length[2]|max_length[128]');
+					$this->form_validation->set_rules('address['.$key.'][postcode]', 'Postcode', 'trim|min_length[2]|max_length[10]');
+					$this->form_validation->set_rules('address['.$key.'][country_id]', 'Country', 'trim|integer');
+				}
+			}
 
 			//if validation is true
 			if ($this->form_validation->run() === TRUE) {
@@ -251,6 +254,7 @@ class Customers extends CI_Controller {
 				$add['security_answer'] 		= $this->input->post('security_answer');
 				$add['date_added'] 				= mdate('%Y-%m-%d', time());
 				$add['status']					= $this->input->post('status');
+				$add['address']					= $this->input->post('address');
 
 				//add into database
 				if ($this->Customers_model->addCustomer($add)) {	
@@ -274,7 +278,7 @@ class Customers extends CI_Controller {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
   			return TRUE;
   	
-    	} else if (!$this->input->post('delete')) {
+    	} else if ($this->input->get('id')) {
 
 			$this->form_validation->set_rules('first_name', 'First Name', 'trim|required|min_length[2]|max_length[12]');
 			$this->form_validation->set_rules('last_name', 'First Name', 'trim|required|min_length[2]|max_length[12]');
@@ -293,15 +297,19 @@ class Customers extends CI_Controller {
 			$this->form_validation->set_rules('security_answer', 'Security Answer', 'required|min_length[2]');
 			$this->form_validation->set_rules('status', 'Status', 'trim|required|integer');
 
-			$this->form_validation->set_rules('address[][address_1]', 'Address 1', 'trim|min_length[3]|max_length[128]');
-			$this->form_validation->set_rules('address[][city]', 'City', 'trim|min_length[2]|max_length[128]');
-			$this->form_validation->set_rules('address[][postcode]', 'Postcode', 'trim|min_length[2]|max_length[10]');
-			$this->form_validation->set_rules('address[][country]', 'Country', 'trim|integer');
+			if ($this->input->post('address')) {
+				foreach ($this->input->post('address') as $key => $value) {
+					$this->form_validation->set_rules('address['.$key.'][address_1]', 'Address 1', 'trim|min_length[3]|max_length[128]');
+					$this->form_validation->set_rules('address['.$key.'][city]', 'City', 'trim|min_length[2]|max_length[128]');
+					$this->form_validation->set_rules('address['.$key.'][postcode]', 'Postcode', 'trim|min_length[2]|max_length[10]');
+					$this->form_validation->set_rules('address['.$key.'][country_id]', 'Country', 'trim|integer');
+				}
+			}
 
 			if ($this->form_validation->run() === TRUE) {
 				$update = array();
 				
-				$update['customer_id'] 			= $customer_id;
+				$update['customer_id'] 			= $this->input->get('id');
 				$update['first_name'] 			= $this->input->post('first_name');
 				$update['last_name'] 			= $this->input->post('last_name');
 				$update['telephone'] 			= $this->input->post('telephone');

@@ -10,12 +10,6 @@ class Local_module extends CI_Controller {
 
 	public function index() {
 			
-		//check if file exists in views
-		if ( !file_exists(APPPATH .'/extensions/admin/views/local_module.php')) {
-			// Whoops, we don't have a page for that!
-			show_404();
-		}
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -31,7 +25,7 @@ class Local_module extends CI_Controller {
 		}		
 				
 		$data['heading'] 			= 'Local';
-		$data['sub_menu_update'] 	= 'Update';
+		$data['sub_menu_save'] 	= 'Save';
 		$data['sub_menu_back'] 		= $this->config->site_url('admin/extensions');
 
 		if ($this->input->post('modules')) {
@@ -70,9 +64,13 @@ class Local_module extends CI_Controller {
 			redirect('admin/extensions');
 		}
 		
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/local_module', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/local_module', $data);
 	}
 
 	public function _updateModule() {

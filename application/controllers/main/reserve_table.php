@@ -4,6 +4,7 @@ class Reserve_table extends MX_Controller {
 
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
+		$this->load->library('customer'); 														// load the customer library
 		$this->load->model('Customers_model');
 		$this->load->model('Security_questions_model');
 		$this->load->model('Reservations_model');
@@ -13,10 +14,6 @@ class Reserve_table extends MX_Controller {
 		$this->load->library('location'); // load the location library
 		$this->lang->load('main/reserve_table');  // loads language file
 		
-		if ( !file_exists(APPPATH .'/views/main/reserve_table.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
 		} else {
@@ -120,10 +117,14 @@ class Reserve_table extends MX_Controller {
 		
 		}
 			
-		$this->load->view('main/header', $data);
-		$this->load->view('main/content_right', $data);
-		$this->load->view('main/reserve_table', $data);
-		$this->load->view('main/footer');
+		$regions = array(
+			'main/header',
+			'main/content_right',
+			'main/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('main/reserve_table', $data);
 	}
 
 

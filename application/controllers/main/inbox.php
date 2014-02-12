@@ -4,16 +4,13 @@ class Inbox extends MX_Controller {
 
 	public function __construct() {
 		parent::__construct(); 																	//  calls the constructor
+		$this->load->library('customer'); 														// load the customer library
 		$this->load->model('Messages_model');													// loads messages model
 	}
 
 	public function index() {
 		$this->lang->load('main/inbox');  														// loads language file
 		
-		if ( !file_exists(APPPATH .'/views/main/inbox.php')) { 								//check if file exists in views folder
-			show_404(); 																		// Whoops, show 404 error page!
-		}
-
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
@@ -52,20 +49,19 @@ class Inbox extends MX_Controller {
 			);
 		}
 
-		// pass array $data and load view files
-		$this->load->view('main/header', $data);
-		$this->load->view('main/content_left');
-		$this->load->view('main/inbox', $data);
-		$this->load->view('main/footer');
+		$regions = array(
+			'main/header',
+			'main/content_left',
+			'main/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('main/inbox', $data);
 	}
 
 	public function view() {
 		$this->lang->load('main/inbox');  														// loads language file
 
-		if ( !file_exists(APPPATH .'/views/main/inbox_view.php')) { 							//check if file exists in views folder
-			show_404(); 																		// Whoops, show 404 error page!
-		}
-		
 		if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
   			redirect('account/login');
 		}
@@ -110,11 +106,14 @@ class Inbox extends MX_Controller {
 		$data['body'] 		= $result['body'];
 		
 
-		// pass array $data and load view files
-		$this->load->view('main/header', $data);
-		$this->load->view('main/content_left');
-		$this->load->view('main/inbox_view', $data);
-		$this->load->view('main/footer');
+		$regions = array(
+			'main/header',
+			'main/content_left',
+			'main/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('main/inbox_view', $data);
 	}
 }
 

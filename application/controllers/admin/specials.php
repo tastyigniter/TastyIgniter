@@ -24,12 +24,6 @@ class Specials extends CI_Controller {
 	public function index() {
 		$this->load->library('currency');
 
-		//check if file exists in views
-		if ( !file_exists('application/views/admin/specials.php')) {
-			// Whoops, we don't have a page for that!
-			show_404();
-		}
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -87,25 +81,24 @@ class Specials extends CI_Controller {
 			redirect('admin/specials');  			
 		}	
 
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/specials', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/specials', $data);
 	}
 
 	public function edit() {
-		//check if file exists in views
-		if ( !file_exists('application/views/admin/specials_edit.php')) {
-			// Whoops, we don't have a page for that!
-			show_404();
-		}
 		
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
 
 		//check if /food_id is set in uri string
-		if (is_numeric($this->uri->segment(4))) {
-			$deal_id = (int)$this->uri->segment(4);
+		if (is_numeric($this->input->get('id'))) {
+			$deal_id = (int)$this->input->get('id');
 		} else {
 		    redirect('admin/specials');
 		}
@@ -146,9 +139,13 @@ class Specials extends CI_Controller {
 			redirect('admin/specials');
 		}
 		
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/specials_edit', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/specials_edit', $data);
 	}
 
 	public function _addDeal() {

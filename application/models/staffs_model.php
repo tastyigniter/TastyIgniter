@@ -22,7 +22,13 @@ class Staffs_model extends CI_Model {
 			$this->db->join('locations', 'locations.location_id = staffs.staff_location', 'left');
 
 			$query = $this->db->get();
-			return $query->result_array();
+			$result = array();
+		
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+		
+			return $result;
 		}
 	}
 
@@ -35,7 +41,13 @@ class Staffs_model extends CI_Model {
 		$this->db->where('staff_status', '1');
 
 		$query = $this->db->get();
-		return $query->result_array();
+		$result = array();
+	
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+	
+		return $result;
 	}
 
 	public function getStaff($staff_id = FALSE) {

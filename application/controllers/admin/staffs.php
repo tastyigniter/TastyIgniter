@@ -12,10 +12,6 @@ class Staffs extends CI_Controller {
 
 	public function index() {
 			
-		if ( !file_exists(APPPATH .'/views/admin/staffs.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -37,15 +33,14 @@ class Staffs extends CI_Controller {
 			$filter['page'] = 1;
 		}
 		
-		if ($this->config->item('config_page_limit')) {
-			$filter['limit'] = $this->config->item('config_page_limit');
+		if ($this->config->item('page_limit')) {
+			$filter['limit'] = $this->config->item('page_limit');
 		}
 				
 		$data['heading'] 			= 'Staffs';
-		$data['sub_menu_add'] 		= 'Add';
+		$data['sub_menu_add'] 		= 'Add new staff';
 		$data['sub_menu_delete'] 	= 'Delete';
-		$data['sub_menu_list'] 		= '<li><a id="menu-add">Add new staff</a></li>';
-		$data['text_empty'] 		= 'There are no staff(s).';
+		$data['text_empty'] 		= 'There are no staffs available.';
 
 		$data['staffs'] = array();				
 		$results = $this->Staffs_model->getList($filter);
@@ -59,7 +54,7 @@ class Staffs extends CI_Controller {
 				'staff_location' 	=> $result['location_name'],
 				'date_added' 		=> mdate('%d-%m-%Y', strtotime($result['date_added'])),
 				'staff_status' 		=> $result['staff_status'],
-				'edit' 				=> $this->config->site_url('admin/staffs/edit/' . $result['staff_id'])
+				'edit' 				=> $this->config->site_url('admin/staffs/edit?id=' . $result['staff_id'])
 			);
 		}
 				
@@ -93,29 +88,21 @@ class Staffs extends CI_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		// check if POST, validate fields and add Staff to model
-		if ($this->input->post() && $this->_addStaff() === TRUE) {
-		
-			redirect('admin/staffs');
-		}
-
-		//check if POST update_deal then remove deal_id
 		if ($this->input->post('delete') && $this->_deleteStaff() === TRUE) {
 			
 			redirect('admin/staffs');  			
 		}	
 
-		//load home page content
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/staffs', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/staffs', $data);
 	}
 
 	public function edit() {
-		
-		if ( !file_exists(APPPATH .'/views/admin/staffs_edit.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
 		
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
@@ -132,58 +119,66 @@ class Staffs extends CI_Controller {
 		}
 
 		//check if customer_id is set in uri string
-		if ($this->uri->segment(4)) {
-			$staff_id = (int)$this->uri->segment(4);
+		if (is_numeric($this->input->get('id'))) {
+			$staff_id = (int)$this->input->get('id');
+			$data['action']	= $this->config->site_url('admin/staffs/edit?id='. $staff_id);
 		} else {
-		    redirect('admin/staffs');
+		    $staff_id = 0;
+			$data['action']	= $this->config->site_url('admin/staffs/edit');
 		}
 
 		$staff_info = $this->Staffs_model->getStaff($staff_id);
 		
-		if ($staff_info) {
-			$data['heading'] 			= 'Staffs';
-			$data['sub_menu_update'] 	= 'Update';
-			$data['sub_menu_back'] 		= $this->config->site_url('admin/staffs');
+		$data['heading'] 			= 'Staff - '. $staff_info['staff_name'];
+		$data['sub_menu_save'] 		= 'Save';
+		$data['sub_menu_back'] 		= $this->config->site_url('admin/staffs');
 
-			$data['staff_name'] 		= $staff_info['staff_name'];
-			$data['staff_email'] 		= $staff_info['staff_email'];
-			$data['staff_department'] 	= $staff_info['staff_department'];
-			$data['staff_location'] 	= $staff_info['staff_location'];
-			$data['staff_status'] 		= $staff_info['staff_status'];
+		$data['staff_name'] 		= $staff_info['staff_name'];
+		$data['staff_email'] 		= $staff_info['staff_email'];
+		$data['staff_department'] 	= $staff_info['staff_department'];
+		$data['staff_location'] 	= $staff_info['staff_location'];
+		$data['staff_status'] 		= $staff_info['staff_status'];
 
-			$result = $this->Staffs_model->getStaffUser($staff_id);
-			$data['username'] 			= $result['username'];
-			//$data['department'] 		= $result['department'];
+		$result = $this->Staffs_model->getStaffUser($staff_id);
+		$data['username'] 			= $result['username'];
+		//$data['department'] 		= $result['department'];
 
-			$data['departments'] = array();
-			$results = $this->Departments_model->getDepartments();
-			foreach ($results as $result) {					
-				$data['departments'][] = array(
-					'department_id'		=>	$result['department_id'],
-					'department_name'	=>	$result['department_name']
-				);
-			}
+		$data['departments'] = array();
+		$results = $this->Departments_model->getDepartments();
+		foreach ($results as $result) {					
+			$data['departments'][] = array(
+				'department_id'		=>	$result['department_id'],
+				'department_name'	=>	$result['department_name']
+			);
+		}
 
-			$data['locations'] = array();
-			$results = $this->Locations_model->getLocations();
-			foreach ($results as $result) {					
-				$data['locations'][] = array(
-					'location_id'	=>	$result['location_id'],
-					'location_name'	=>	$result['location_name'],
-				);
-			}
-		
-			if ($this->input->post() && $this->_updateStaff($staff_id, $data['staff_email'], $data['username']) === TRUE) {
-		
-				redirect('admin/staffs');
+		$data['locations'] = array();
+		$results = $this->Locations_model->getLocations();
+		foreach ($results as $result) {					
+			$data['locations'][] = array(
+				'location_id'	=>	$result['location_id'],
+				'location_name'	=>	$result['location_name'],
+			);
+		}
 	
-			}
+		if ($this->input->post() && $this->_addStaff() === TRUE) {
+		
+			redirect('admin/staffs');
+		}
+
+		if ($this->input->post() && $this->_updateStaff($data['staff_email'], $data['username']) === TRUE) {
+	
+			redirect('admin/staffs');
+
 		}
 		
-		//load customer_edit page content
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/staffs_edit', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/staffs_edit', $data);
 	}
 
 	public function _addStaff() {
@@ -193,7 +188,7 @@ class Staffs extends CI_Controller {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
   			return TRUE;
     	
-    	} else if ( ! $this->input->post('delete')) { 
+    	} else if ( ! $this->input->get('id')) { 
 
 			$add = array();
 
@@ -233,13 +228,13 @@ class Staffs extends CI_Controller {
 		}
 	}
 	
-	public function _updateStaff($staff_id, $staff_email, $username) {
+	public function _updateStaff($staff_email, $username) {
     	if (!$this->user->hasPermissions('modify', 'admin/staffs')) {
 		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
   			return TRUE;
     	
-    	} else if ( ! $this->input->post('delete')) { 
+    	} else if ($this->input->get('id')) { 
 								
 
 			$this->form_validation->set_rules('staff_name', 'Staff Name', 'trim|required|min_length[2]|max_length[128]');
@@ -262,7 +257,7 @@ class Staffs extends CI_Controller {
 				$update = array();
 				
 				//Sanitizing the POST values
-				$update['staff_id']		= $staff_id;
+				$update['staff_id']		= $this->input->get('id');
 				$update['staff_name']	= $this->input->post('staff_name');
 			
 				if ($staff_email !== $this->input->post('staff_email')) {

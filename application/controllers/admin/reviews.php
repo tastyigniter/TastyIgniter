@@ -10,10 +10,6 @@ class Reviews extends CI_Controller {
 
 	public function index() {
 			
-		if ( !file_exists(APPPATH .'/views/admin/reviews.php')) { //check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -35,20 +31,21 @@ class Reviews extends CI_Controller {
 			$filter['page'] = 1;
 		}
 		
-		if ($this->config->item('config_page_limit')) {
-			$filter['limit'] = $this->config->item('config_page_limit');
+		if ($this->config->item('page_limit')) {
+			$filter['limit'] = $this->config->item('page_limit');
 		}
 				
 		$data['heading'] 			= 'Reviews';
-		$data['sub_menu_add'] 		= 'Add';
+		$data['sub_menu_add'] 		= 'Add new review';
 		$data['sub_menu_delete'] 	= 'Delete';
-		$data['sub_menu_list'] 		= '<li><a id="menu-add">Add new review</a></li>';
+		$data['text_empty']			= 'There are no reviews available.';
 
 		$ratings = $this->config->item('ratings');
 		$data['ratings'] = $ratings;
 
 		$reviews = array();				
 		$reviews = $this->Reviews_model->getList($filter);
+		$data['reviews'] = array();
 		foreach ($reviews as $review) {
 			
 			if (isset($ratings[$review['rating_id']])) {
@@ -62,7 +59,7 @@ class Reviews extends CI_Controller {
 				'rating_name' 		=> $rating_name,
 				'date_added' 		=> mdate('%d-%m-%Y', strtotime($review['date_added'])),
 				'review_status' 	=> $review['review_status'],
-				'edit' 				=> $this->config->site_url('admin/reviews/edit/' . $review['review_id'])
+				'edit' 				=> $this->config->site_url('admin/reviews/edit?id=' . $review['review_id'])
 			);
 		}
 		
@@ -78,29 +75,22 @@ class Reviews extends CI_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		if ($this->input->post() && $this->_addReview() === TRUE) {
-			
-			redirect('admin/reviews');
-		}
-
 		if ($this->input->post('delete') && $this->_deleteReview() === TRUE) {
 
 			redirect('admin/reviews');  			
 		}	
 				
-		//load home page content
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/reviews', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/reviews', $data);
 	}
 
 	public function edit() {
 
-		if ( !file_exists(APPPATH .'/views/admin/reviews_edit.php')) { //check if file exists in views folder
-			// Whoops, show 404 error page!
-			show_404();
-		}
-		
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -110,10 +100,12 @@ class Reviews extends CI_Controller {
 		}
 		
 		//check if /category_id is set in uri string
-		if (is_numeric($this->uri->segment(4))) {
-			$review_id = (int)$this->uri->segment(4);
+		if (is_numeric($this->input->get('id'))) {
+			$review_id = $this->input->get('id');
+			$data['action']	= $this->config->site_url('admin/reviews/edit?id='. $review_id);
 		} else {
-		    redirect('admin/reviews');
+		    $review_id = $this->input->get('id');
+			$data['action']	= $this->config->site_url('admin/reviews/edit');
 		}
 
 		if ($this->session->flashdata('alert')) {
@@ -124,40 +116,40 @@ class Reviews extends CI_Controller {
 
 		$review_info = $this->Reviews_model->getReview($review_id);
 
-		if ($review_info) {
-			$data['heading'] 			= 'Reviews';
-			$data['sub_menu_update'] 	= 'Update';
-			$data['sub_menu_back'] 		= $this->config->site_url('admin/reviews');
-		
-			$data['review_id'] 		= $review_info['review_id'];
-			$data['customer_id'] 	= $review_info['customer_id'];
-			$data['author'] 		= $review_info['author'];
-			$data['menu_id'] 		= $review_info['menu_id'];
-			$data['menu_name'] 		= $review_info['menu_name'];
-			$data['rating_id'] 		= $review_info['rating_id'];
-			$data['review_text'] 	= $review_info['review_text'];
-			$data['date_added'] 	= $review_info['date_added'];
-			$data['review_status'] 	= $review_info['review_status'];
+		$data['heading'] 			= 'Reviews - '. $review_info['menu_name'];
+		$data['sub_menu_save'] 		= 'Save';
+		$data['sub_menu_back'] 		= $this->config->site_url('admin/reviews');
+	
+		$data['review_id'] 		= $review_info['review_id'];
+		$data['customer_id'] 	= $review_info['customer_id'];
+		$data['author'] 		= $review_info['author'];
+		$data['menu_id'] 		= $review_info['menu_id'];
+		$data['menu_name'] 		= $review_info['menu_name'];
+		$data['rating_id'] 		= $review_info['rating_id'];
+		$data['review_text'] 	= $review_info['review_text'];
+		$data['date_added'] 	= $review_info['date_added'];
+		$data['review_status'] 	= $review_info['review_status'];
 
-			//load ratings data into array
-			$data['ratings'] = $this->config->item('ratings');
+		//load ratings data into array
+		$data['ratings'] = $this->config->item('ratings');
 
-			if ($this->input->post() && $this->_updateReview($review_id) === TRUE) {
-						
-				redirect('admin/reviews');
-			}
-						
-			//Remove Menu
-			if ($this->input->post('delete') && $this->_deleteReview($review_id) === TRUE) {
+		if ($this->input->post() && $this->_addReview() === TRUE) {
+			
+			redirect('admin/reviews');
+		}
+
+		if ($this->input->post() && $this->_updateReview() === TRUE) {
 					
-				redirect('admin/reviews');
-			}
+			redirect('admin/reviews');
 		}
 		
-		//load home page content
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/reviews_edit', $data);
-		$this->load->view('admin/footer');
+		$regions = array(
+			'admin/header',
+			'admin/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('admin/reviews_edit', $data);
 	}
 
 	
@@ -168,7 +160,7 @@ class Reviews extends CI_Controller {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
   			return TRUE;
     	
-    	} else if ( ! $this->input->post('delete')) { 
+    	} else if ( ! $this->input->get('id')) { 
 			$date_format = '%Y-%m-%d';															// retrieve date format from config
 			$current_date_time = time();														// retrieve current timestamp
 
@@ -208,14 +200,14 @@ class Reviews extends CI_Controller {
 		}
 	}	
 
-	public function _updateReview($review_id) {
+	public function _updateReview() {
 									
     	if (!$this->user->hasPermissions('modify', 'admin/reviews')) {
 		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
   			return TRUE;
     	
-    	} else if ( ! $this->input->post('delete')) { 
+    	} else if ($this->input->get('id')) { 
 
 			//validate category value
 			$this->form_validation->set_rules('author', 'Author', 'trim|required|min_length[2]|max_length[64]');
@@ -229,7 +221,7 @@ class Reviews extends CI_Controller {
 			if ($this->form_validation->run() === TRUE) {
 				$update = array();
 				
-				$update['review_id'] 	= $review_id;
+				$update['review_id'] 	= $this->input->get('id');
 				$update['author'] 		= $this->input->post('author');
 				$update['customer_id'] 	= $this->input->post('customer_id');
 				$update['menu_id'] 		= $this->input->post('menu_id');
