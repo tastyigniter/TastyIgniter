@@ -51,10 +51,12 @@
 			<td><?php echo $writable['status']; ?></td>
 		</tr>
 		<?php } ?>  
-		<tr>
-			<td colspan="3"><input type="submit" name="submit" value="Continue" /></td>
-		</tr>
 	</table>
+	<br />
+
+	<div class="">
+		<input type="submit" name="submit" value="Continue" />
+	</div>
 	</form>
 	</div>
 </div>

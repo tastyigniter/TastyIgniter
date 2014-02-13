@@ -187,6 +187,9 @@ date_default_timezone_set('Europe/London');
 	// Name of the "system folder"
 	define('SYSDIR', trim(strrchr(trim(BASEPATH, '/'), '/'), '/'));
 
+	// Name of the "extensions folder"
+	define('EXTPATH', $application_folder .'/extensions');
+
 
 	// The path to the "application" folder
 	if (is_dir($application_folder))

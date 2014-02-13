@@ -5,14 +5,14 @@ class Setting {
 	public function __construct() {
 		$this->CI =& get_instance();
 		
-		if ($this->checkSetupFolder() === TRUE) {
+		if (file_exists(APPPATH .'/extensions/setup/')) {
 			if ($this->CI->uri->segment(1) !== 'setup') {
 				redirect('setup');
 			}
 		} else {
 			$this->setConfig();
 		}
-
+		
 		if ( ! $this->CI->input->is_ajax_request()) {
 			$this->CI->output->enable_profiler(TRUE);
 		}
@@ -33,17 +33,5 @@ class Setting {
 				}
 			}	
 		}
-	}
-	
-	public function checkSetupFolder() {
-		if (file_exists(APPPATH .'/extensions/setup/')) {
-			return TRUE;
-		}	
-
-		if ($this->CI->config->item('ti_setup') !== 'success') {
-			return TRUE;		
-		}
-		
-		return FALSE;
 	}
 }

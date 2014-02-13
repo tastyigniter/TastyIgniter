@@ -30,10 +30,12 @@
 			<td class="first">Password:</td>
 			<td><input type="text" name="db_pass" value="<?php echo $db_pass; ?>" /></td>
 		</tr>
-		<tr>
-			<td colspan="2"><input type="submit" name="submit" value="Continue" /></td>
-		</tr>
 	</table>
+	<br />
+	
+	<div>
+		<input type="submit" name="submit" value="Continue" />
+	</div>
 	</form>
 	</div>
 </div>

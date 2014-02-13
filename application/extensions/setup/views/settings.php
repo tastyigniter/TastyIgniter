@@ -41,10 +41,12 @@
 			<td><b>Confirm Password:</b></td>
 			<td><input type="password" name="confirm_password" value="" /></td>
 		</tr>
-		<tr>
-			<td colspan="2"><input type="submit" name="submit" value="Continue" /></td>
-		</tr>
 	</table>
+	<br />
+	
+	<div>
+		<input type="submit" name="submit" value="Continue" />
+	</div>
 	</form>
 	</div>
 </div>

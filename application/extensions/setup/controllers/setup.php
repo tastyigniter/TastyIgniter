@@ -19,13 +19,12 @@ class Setup extends CI_Controller {
 			
 		//check if file exists in views
 		if ( ! file_exists(APPPATH .'/extensions/setup/views/setup.php')) {
-			// Whoops, we don't have a page for that!
 			show_404();
 		}
-
+	
 		if ($this->config->item('ti_setup') === 'success') {
 			$this->session->set_flashdata('alert', '<p class="error">PLEASE REMEMBER TO COMPLETELY REMOVE THE SETUP FOLDER. <br />You will not be able to proceed beyond this point until the setup folder has been removed. This is a security feature of TastyIgniter!</p>');				
-			redirect('setup/success');					
+			redirect('setup/success');
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -258,7 +257,7 @@ class Setup extends CI_Controller {
 			}		
 		
 			$data['heading'] 			= 'TastyIgniter - Setup - Successful';
-			$data['complete_setup'] 	= '<a href="'. site_url('setup/complete') .'">Remove Setup Folder</a>';
+			$data['complete_setup'] 	= '<a href="'. site_url('admin') .'">Remove Setup Folder</a>';
 			
 			$this->session->unset_userdata('setup');
 
@@ -266,7 +265,7 @@ class Setup extends CI_Controller {
 		
 		} else {
 		
-			$this->session->set_flashdata('alert', '<p class="error">INSTALLATION WAS NOT SUCCESSFUL. <br />Please try again.</p>');				
+			//$this->session->set_flashdata('alert', '<p class="error">INSTALLATION WAS NOT SUCCESSFUL. <br />Please try again.</p>');				
 			redirect('setup');					
 		
 		}
@@ -319,16 +318,10 @@ class Setup extends CI_Controller {
        	 		
        	 		if ( ! write_file($db_path, $db_file)) {
 					$error = 1;
-				} else {
-					if ( ! $this->Setup_model->dbInstall()) {
-						$error = 2;
-					}
 				}
 				
        	 		if ($error === 1) {
  					$this->session->set_flashdata('alert', 'Unable to write database file!');
-       	 		} else if ($error === 2) {
- 					$this->session->set_flashdata('alert', 'Error installing database!');
        	 		} else if ($error === 0) {
 					$this->session->set_userdata('setup', 'step_2'); 		
        	 			return TRUE;
@@ -346,7 +339,7 @@ class Setup extends CI_Controller {
 		$this->form_validation->set_rules('site_name', 'Restaurant Name', 'trim|required|min_length[2]|max_length[128]');
 		$this->form_validation->set_rules('site_email', 'Restaurant Email', 'trim|required|valid_email');
 		$this->form_validation->set_rules('staff_name', 'Staff Name', 'trim|required|min_length[2]|max_length[128]');
-		$this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[2]|max_length[32]|is_unique[users.username]');
+		$this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[2]|max_length[32]');
 		$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[6]|max_length[128]|matches[confirm_password]');
 		$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'trim|required');
 		
@@ -362,28 +355,31 @@ class Setup extends CI_Controller {
 				'password' 			=> $this->input->post('password')
 			);
 			
-			$error = 0;
+			$success = 1;
 			
-			if ($this->Setup_model->addUser($add)) {
+			if ($this->Setup_model->dbInstall()) {
 				$config_path	= APPPATH .'config/config.php';
 				$config_file = read_file($config_path);
 	
-				$config_file = str_replace('$config[\'sess_use_database\'] = FALSE', '$config[\'sess_use_database\'] = TRUE', $config_file);
+				$config_file = str_replace('$config[\'sess_use_database\']	= FALSE', '$config[\'sess_use_database\'] 	= TRUE', $config_file);
 				$config_file = str_replace('$config[\'ti_setup\'] = \'\'', '$config[\'ti_setup\'] = \'success\'', $config_file);
 
 			
 				if ( ! write_file($config_path, $config_file)) {
-					$error = 2;
+					$success = 0;
+					$this->session->set_flashdata('alert', 'Unable to write config file!');
+				} else {
+					if ( ! $this->Setup_model->addUser($add)) {
+						$success = 0;
+						$this->session->set_flashdata('alert', 'Error installing user and site settings!');
+					}
 				}
 			} else {
-				$error = 1;
+				$success = 0;
+ 				$this->session->set_flashdata('alert', 'Error installing database!');
 			}
 
-			if ($error === 1) {
-				$this->session->set_flashdata('alert', 'Error installing user and site settings!');
-			} else if ($error === 2) {
-				$this->session->set_flashdata('alert', 'Unable to write config file!');
-			} else if ($error === 0) {
+			if ($success === 1) {
 				$this->session->set_userdata('setup', 'step_3'); 		
 				return TRUE;
 			}
