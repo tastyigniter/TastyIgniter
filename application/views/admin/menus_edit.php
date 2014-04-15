@@ -31,9 +31,9 @@
 					<option value=""> - please select - </option>
 				<?php foreach ($categories as $category) { ?>
 				<?php if ($menu_category === $category['category_id']) { ?>
-					<option value="<?php echo $category['category_id']; ?>" <?php echo set_select('menu_category', $category['category_id'], TRUE); ?> >- <?php echo $category['category_name']; ?> - </option>
+					<option value="<?php echo $category['category_id']; ?>" <?php echo set_select('menu_category', $category['category_id'], TRUE); ?> ><?php echo $category['category_name']; ?></option>
 				<?php } else { ?>
-					<option value="<?php echo $category['category_id']; ?>" <?php echo set_select('menu_category', $category['category_id']); ?> >- <?php echo $category['category_name']; ?> - </option>
+					<option value="<?php echo $category['category_id']; ?>" <?php echo set_select('menu_category', $category['category_id']); ?> ><?php echo $category['category_name']; ?></option>
 				<?php } ?>
 				<?php } ?>
 				</select></td>
@@ -41,18 +41,14 @@
 			</tr>
 			<tr>
 				<td><b>Photo:</b><br />
-				<font size="1" color="red">(select a file to update menu photo, otherwise leave blank)</font></td>
-				<td><div class="selectbox" style="height:100px">
-				<table width="390">
-					<tr>
-						<th><b>Existing</b></th>
-						<th><b>New</b></th>
-					</tr>
-					<tr>
-						<td><img src="<?php echo $menu_photo; ?>" width="80" height="70"></td>
-						<td><input type="file" name="menu_photo" value="" id="photo"/></td>
-					</tr>
-				</table>
+				<font size="1">Select a file to update menu photo, otherwise leave blank.</font></td>
+				<td><div class="imagebox" id="selectImage">
+					<div class="preview"><img src="<?php echo $menu_image_url; ?>" class="thumb" id="thumb"></div>
+					<div class="select">
+						<input type="hidden" name="menu_photo" value="<?php echo set_value('menu_photo', $menu_image); ?>" id="field" /><center class="name"><?php echo $image_name; ?></center><br />
+						<a class="button imagebox-btn" onclick="imageUpload('field');">Select Image</a>
+						<a class="button" onclick="$('#thumb').attr('src', '<?php echo $no_photo; ?>'); $('#field').attr('value', 'data/no_photo.png'); $(this).parent().parent().find('center').html('no_photo.png');">Remove Image</a>
+					</div>
 				</div></td>
 			</tr>
 			<tr>
@@ -60,7 +56,8 @@
 				<td><input type="text" name="stock_qty" value="<?php echo set_value('stock_qty', $stock_qty); ?>" id="stock" class="textfield" /></td>
 			</tr>
 			<tr>
-				<td><b>Minimum Quantity:</b></td>
+				<td><b>Minimum Quantity:</b><br />
+				<font size="1">The minimum quantity that can be ordered. Default is 1, unless set otherwise.</font></td>
 				<td><input type="text" name="minimum_qty" value="<?php echo set_value('minimum_qty', $minimum_qty); ?>" id="minimum" class="textfield" /></td>
 			</tr>
 			<tr>
@@ -116,18 +113,6 @@
 		<div id="specials" class="wrap_content" style="display:none;">
 			<table width="400" class="form">
 				<tr>
-					<td><b>Status</b></td>
-					<td><select name="menu_special">
-					<?php if ($start_date) { ?>
-						<option value="0" <?php echo set_select('menu_special', '0'); ?> >Disabled</option>
-						<option value="1" selected="selected" <?php echo set_select('menu_special', '1'); ?> >Enabled</option>
-					<?php } else { ?>
-						<option value="0" <?php echo set_select('menu_special', '0'); ?> >Disabled</option>
-						<option value="1" <?php echo set_select('menu_special', '1'); ?> >Enabled</option>
-					<?php } ?>
-					</select></td>
-				</tr>
-				<tr>
 					<td><b>Start Date</b></td>
 					<td><input type="text" name="start_date" id="start-date" value="<?php echo set_value('start_date', $start_date); ?>" class="textfield" /></td>
 				</tr>
@@ -139,15 +124,29 @@
 					<td><b>Special Price</b></td>
 					<td><input type="text" name="special_price" value="<?php echo set_value('special_price', $special_price); ?>" class="textfield" /></td>
 				</tr>
+				<tr>
+					<td><b>Special Status</b></td>
+					<td><select name="special_status">
+					<?php if ($special_status) { ?>
+						<option value="0" <?php echo set_select('special_status', '0'); ?> >Disabled</option>
+						<option value="1" selected="selected" <?php echo set_select('special_status', '1'); ?> >Enabled</option>
+					<?php } else { ?>
+						<option value="0" <?php echo set_select('special_status', '0'); ?> >Disabled</option>
+						<option value="1" <?php echo set_select('special_status', '1'); ?> >Enabled</option>
+					<?php } ?>
+					</select>
+					<input type="hidden" name="special_id" value="<?php echo set_value('special_id', $special_id); ?>" /></td>
+				</tr>
 			</table>
 		</div>
+	</form>
 	</div>
 </div>
 <script type="text/javascript" src="<?php echo base_url("assets/js/jquery-ui-timepicker-addon.js"); ?>"></script> 
 <script type="text/javascript"><!--
 $(document).ready(function() {
 	$('#start-date, #end-date').datepicker({
-		dateFormat: 'yy-mm-dd',
+		dateFormat: 'dd-mm-yy',
 	});
 });
 
@@ -182,4 +181,33 @@ $('input[name=\'menu_option\']').autocomplete({
       	return false;
    	}
 });
+//--></script>
+<script src="<?php echo base_url("assets/js/jquery.fancybox.js"); ?>"></script>
+<script type="text/javascript"><!--
+function imageUpload(field) {
+	$('#image-manager').remove();
+		
+	var iframe_url = js_site_url + 'admin/image_manager?popup=&field_id=' + encodeURIComponent(field);
+
+	$('#container').prepend('<div id="image-manager" style="padding: 3px 0px 0px 0px;"><iframe src="'+ iframe_url +'" width="780" height="550" frameborder="0"></iframe></div>');
+	
+	$('.imagebox-btn').fancybox({	
+		width: 900,
+		height: 600,
+ 		href:"#image-manager",
+		autoScale: false,
+		afterClose: function() {
+			if ($('#' + field).attr('value')) {
+				$.ajax({
+					url: js_site_url + 'admin/image_manager/resize?image=' + encodeURIComponent($('#' + field).attr('value')),
+					dataType: 'json',
+					success: function(json) {
+						var thumb = $('#' + field).parent().parent().find('.thumb');
+						$(thumb).replaceWith('<img src="' + json + '" alt="" class="thumb" />');
+					}
+				});
+			}
+		}
+	});
+};
 //--></script>

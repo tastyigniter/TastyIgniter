@@ -1,4 +1,3 @@
-<div id="review-box" style="display:none;"></div>
 </div>
 </div>
 </div>
@@ -14,21 +13,7 @@
 
   	<div class="copyright">
 		&copy; <?php echo date('Y'); ?> TastyIgniter. All Rights Reserved</p> <br />
-		Page rendered in <strong>{elapsed_time}</strong> seconds <br /><a id="profiler">View Profiler</a>
 	</div>
 </footer>
-<script type="text/javascript">
-$(document).ready(function() {
-  	$('#profiler').on('click', function(){
-  		if($('#codeigniter_profiler').is(':visible')){
-     		$('#codeigniter_profiler').fadeOut();
-		} else {
-   			$('#codeigniter_profiler').fadeIn();
-		}
-	});	
-
-     $('#codeigniter_profiler').fadeOut();
-});	
-</script>
 </body>
 </html>

@@ -19,7 +19,8 @@
 		<td></td>
     </tr>
 	<tr>
-		<td><b>Format:</b></td>
+		<td><b>Format:</b><br />
+		<font size="1">Address 1 = {address_1}<br />Address 2 = {address_2}<br />City = {city}<br />Postcode = {postcode}<br />State = {state}<br />Country = {country}</font></td>
     	<td><textarea name="format" cols="50" rows="7"><?php echo set_value('format', $format); ?></textarea></td>
 		<td></td>
     </tr>

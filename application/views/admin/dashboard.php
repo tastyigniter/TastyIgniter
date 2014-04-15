@@ -1,127 +1,148 @@
 <div class="box">
-	<div class="two_columns">
-		<div class="left border_all">
-		<h2>CURRENT STATUS</h2>
-		<table width="60%" align="" class="list">
-			<tr>
-				<td><b>Total Sales:</b></td>
-				<td><?php echo $total_sales; ?></td>
-			</tr>
-			<tr>
-				<td><b>Total Sales This Year:</b></td>
-				<td><?php echo $total_sales_by_year; ?></td>
-			</tr>
-			<tr>
-				<td><b>Total Lost Sales:</b></td>
-				<td><?php echo $total_lost_sales; ?></td>
-			</tr>
-			<tr>
-				<td><b>Total Customers:</b></td>
-				<td><?php echo $total_customers; ?></td>
-			</tr>
-			<tr>
-				<td><b>Total Orders Received:</b></td>
-				<td><?php echo $total_orders_received; ?></td>
-			</tr>
-			<tr>
-				<td><b>Total Orders Completed:</b></td>
-				<td><?php echo $total_orders_completed; ?></td>
-			</tr>
-			<tr>
-				<td><b>Total Orders Delivered:</b></td>  
-				<td><?php echo $total_orders_delivered; ?></td>
-			</tr>
-			<tr>
-				<td><b>Total Orders Picked Up:</b></td>  
-				<td><?php echo $total_orders_picked; ?></td>
-			</tr>
-			<tr>
-				<td><b>Total Table(s) Reserved:</b></td>
-				<td><?php echo $total_tables_reserved; ?></td>
-			</tr>
-		</table>
-		</div>
-	
-		<div class="right border_all">
-			<font size="5">GRAPH COMING SOON</font>
-		</div>
+	<div class="wrap_content">
+		<ul class="numbers">
+			<li>Total Sales<span><?php echo $total_sales; ?></span></li>
+			<li>Total Sales This Year<span><?php echo $total_sales_by_year; ?></span></li>
+			<li>Total Lost Sales<span><?php echo $total_lost_sales; ?></span></li>
+			<li>Total Customers<span><?php echo $total_customers; ?></span></li>
+			<li>Total Delivery Orders<span><?php echo $total_delivery_orders; ?></span></li>
+			<li>Total Collection Orders<span><?php echo $total_collection_orders; ?></span></li>
+			<li>Total Orders<span><?php echo $total_orders; ?></span></li>
+			<li>Total Orders Completed<span><?php echo $total_orders_completed; ?></span></li>
+			<li>Total Table(s) Reserved<span><?php echo $total_tables_reserved; ?></span></li>
+		</ul>
 	</div>
-
-    <h2>MENU REVIEWS (100%)</h2>
-	<?php echo form_open(current_url()) ?>
-	<table class="list">
-		<tr align="center">
-            <th class="select_menu"><select name="select_menu" onchange="this.form.submit();">
-	  			<option value=""> - please select - </option>  	
-				<?php foreach ($menus as $menu) { ?>
-				<?php if ($menu_name == $menu['menu_name']) { ?>
-  					<option value="<?php echo $menu['menu_id']; ?>" <?php echo set_select('menu', $menu['menu_id'], TRUE); ?> > - <?php echo $menu['menu_name']; ?> - </option>  	
-				<?php } else { ?>
-  					<option value="<?php echo $menu['menu_id']; ?>" <?php echo set_select('menu', $menu['menu_id']); ?> > - <?php echo $menu['menu_name']; ?> - </option>  	
-				<?php } ?>
-				<?php } ?>
-            </select></th>
-    		<th>Bad</th>
-    		<th>Worse</th>
-    		<th>Average</th>
-    		<th>Good</th>
-    		<th>Excellent</th>
-    	</tr>
-		<?php if ($ratings_results) { ?>
-    	<tr align="center">
-			<td><b><?php echo $menu_name; ?></b></td>
-			<td><?php echo $ratings_results['total']['1']; ?> (<?php echo $ratings_results['percent']['1']; ?>%)</td>
-			<td><?php echo $ratings_results['total']['2']; ?> (<?php echo $ratings_results['percent']['2']; ?>%)</td>
-			<td><?php echo $ratings_results['total']['3']; ?> (<?php echo $ratings_results['percent']['3']; ?>%)</td>
-			<td><?php echo $ratings_results['total']['4']; ?> (<?php echo $ratings_results['percent']['4']; ?>%)</td>
-			<td><?php echo $ratings_results['total']['5']; ?> (<?php echo $ratings_results['percent']['5']; ?>%)</td>
-    	</tr>
-		<?php } else { ?>
-    	<tr align="center">
-			<td><b><?php echo $menu_name; ?></b></td>
-			<td>0</td>
-			<td>0</td>
-			<td>0</td>
-			<td>0</td>
-			<td>0</td>
-    	</tr>
-		<?php } ?>
-    </table>
-	</form>
 	<br />
 	<br />
 	
-	<h2>10 LATEST ORDERS</h2>
-	<table border="0" align="center" class="list">
-	<tr>
-		<th>Order ID</th>
-		<th>Location</th>
-		<th>Customer Name</th>
-		<th>Status</th>
-		<th>Assigned Staff</th>
-		<th>Order Time</th>
-		<th class="center">Date Added</th>
-		<th class="right">Date Modified</th>
-		<th class="right">Action</th>
-	</tr>
+	<div class="chart wrap_content">
+		<div class="dashboard_heading">
+			<h2>Reports</h2>
+			<div class="search">
+				Period: 
+				<select name="range" onChange="getChart(this.value)">
+					<option value="today" checked="checked">Today</option>  	
+					<option value="yesterday">Yesterday</option>  	
+					<option value="week">This Week</option>
+					<option value="last_week">Last Week</option>
+					<option value="month">This Month</option>
+					<option value="year">This Year</option>
+				</select>&nbsp;&nbsp;&nbsp; - OR - &nbsp;&nbsp;&nbsp;
+				Monthly: 
+				<select name="monthly" onChange="getChart(this.value)">
+				<?php foreach ($months as $key => $value) { ?>
+					<option value="<?php echo $key; ?>" <?php echo set_select('monthly', $key); ?>><?php echo $value; ?></option>  	
+				<?php } ?>
+				</select>
+				<a class="add_button" onClick="getChart()">Go</a>
+			</div>
+		</div>
+		<div id="chart-holder" style="width:100%; height: 245px; margin: auto; padding: 0px; position: relative;"></div>
+	</div>
+	<br />
+	<br />
+	
 	<?php if ($orders) { ?>
-	<?php foreach ($orders as $order) { ?>
-	<tr>
-		<td class="id"><?php echo $order['order_id']; ?></td>
-		<td><?php echo $order['location_name']; ?></td>
-		<td><?php echo $order['first_name']; ?> <?php echo $order['last_name']; ?></td>
-		<td><?php echo $order['order_status']; ?></td>
-		<td><?php echo $order['staff_name'] ? $order['staff_name'] : 'NONE'; ?></td>
-		<td><?php echo $order['order_time']; ?></td>
-		<td class="center"><?php echo $order['date_added']; ?></td>
-		<td class="right"><?php echo $order['date_modified']; ?></td>
-		<td class="right"><a class="edit" title="Edit" href="<?php echo $order['edit']; ?>"></a></td>
-	</tr>
+	<div class="wrap_content">
+		<div class="dashboard_heading">
+			<h2>10 Latest Orders</h2>
+		</div>
+		<table border="0" align="center" class="list">
+		<tr>
+			<th>Order ID</th>
+			<th>Location</th>
+			<th>Customer Name</th>
+			<th class="center">Status</th>
+			<th class="center">Type</th>
+			<th class="center">Ready Time</th>
+			<th class="center">Date Added</th>
+			<th class="right">Action</th>
+		</tr>
+		<?php foreach ($orders as $order) { ?>
+		<tr>
+			<td class="id"><?php echo $order['order_id']; ?></td>
+			<td><?php echo $order['location_name']; ?></td>
+			<td><?php echo $order['first_name']; ?> <?php echo $order['last_name']; ?></td>
+			<td class="center"><?php echo $order['order_status']; ?></td>
+			<td class="center"><?php echo $order['order_type']; ?></td>
+			<td class="center"><?php echo $order['order_time']; ?></td>
+			<td class="center"><?php echo $order['date_added']; ?></td>
+			<td class="right"><a class="edit" title="Edit" href="<?php echo $order['edit']; ?>"></a></td>
+		</tr>
+		<?php } ?>
+		</table>
+	</div>
 	<?php } ?>
-	<?php } else { ?>
-	<tr>
-		<td colspan="9" align="center"><?php echo $text_empty; ?></td>
-	</tr>
-	<?php } ?>
-	</table>
 </div>
+<!--[if IE]>
+<script type="text/javascript" src="<?php echo base_url("assets/js/jquery.flot.excanvas.js"); ?>"></script>
+<![endif]--> 
+<script type="text/javascript" src="<?php echo base_url("assets/js/jquery.flot.js"); ?>"></script>
+<script type="text/javascript"><!--
+function getChart(range) {
+	if (range) {
+		var url = '<?php echo site_url("admin/dashboard/chart?range="); ?>' + range;
+	} else {
+		var url = '<?php echo site_url("admin/dashboard/chart?range="); ?>' + $('select[name="range"]').val();	
+	}
+
+	$.ajax({
+		type: 'GET',
+		url: url,
+		dataType: 'json',
+		async: false,
+		success: function(json) {
+			var option = {	
+				shadowSize: 0,
+				lines: { 
+					show: true,
+					fill: true,
+					lineWidth: 1
+				},
+				points: {
+					show: true 
+				},
+				grid: {
+					backgroundColor: '#FFFFFF',
+					borderWidth: 1,
+					borderColor: '#DDDDD',
+					hoverable: true,
+				},	
+				legend: {
+					position: 'nw'
+				},
+				xaxis: {
+            		ticks: json.xaxis,
+					font: {
+						size: 12,
+						lineHeight: 14,
+						weight: 'normal',
+						color: '#000'
+					}
+				},
+				yaxis: {
+					font: {
+						size: 12,
+						lineHeight: 14,
+						weight: 'normal',
+						color: '#000'
+					},
+					min: 0
+				}
+			}
+
+			$.plot($('#chart-holder'), [json.customers, json.orders, json.reservations], option);
+		}
+	});
+}
+
+getChart($('select[name="range"]').val());
+//--></script> 
+<script type="text/javascript" src="<?php echo base_url("assets/js/jquery-ui-timepicker-addon.js"); ?>"></script> 
+<script type="text/javascript"><!--
+$(document).ready(function() {
+	$('#from-range, #to-range').datepicker({
+		dateFormat: 'dd-mm-yy',
+	});
+});
+//--></script>

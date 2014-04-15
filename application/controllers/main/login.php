@@ -6,6 +6,10 @@ class Login extends MX_Controller {
 		$this->load->library('customer');
 		$this->lang->load('main/login_register');  												// loads language file
 
+		if (!file_exists(APPPATH .'views/main/login.php')) {
+			show_404();
+		}
+			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');
 		} else {

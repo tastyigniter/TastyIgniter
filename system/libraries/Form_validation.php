@@ -1034,6 +1034,38 @@ class CI_Form_validation {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Valid Time
+	 *
+	 * @access	public
+	 * @param	string
+	 * @return	bool
+	 */
+	public function valid_time($str)
+	{
+		return ( ! preg_match('/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/', $str)) ? FALSE : TRUE;
+	}
+
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Valid Date
+	 *
+	 * @access	public
+	 * @param	string
+	 * @return	bool
+	 */
+	public function valid_date($str)
+	{
+		if ($str != '0000-00-00' AND $str != '00-00-0000') 
+		{
+			return ( ! preg_match('/^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-[0-9]{4}$/', $str) AND ! preg_match('/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', $str)) ? FALSE : TRUE;
+		}
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
 	 * Valid Email
 	 *
 	 * @access	public

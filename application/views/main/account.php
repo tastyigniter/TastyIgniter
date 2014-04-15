@@ -1,9 +1,9 @@
 <div class="content">
+<div class="img_inner">
 	<div class="account_summary">
-  	<table align="left">
+  		<table align="left">
   		<tr>
-		<td><h3><?php echo $text_my_details; ?></h3></td>
-  		<td align="right"><a class="" href="<?php echo site_url('account/details'); ?>"><?php echo $text_edit; ?></a></td>
+			<td colspan="2"><h3><?php echo $text_my_details; ?></h3></td>
   		</tr>
   		<?php if ($customer_info) { ?>
   		<tr>
@@ -35,53 +35,50 @@
   			<td><?php echo $customer_info['security_answer']; ?></td>
   		</tr>
   		<?php } ?>
-  	</table>
+  		</table>
   	
-  	<table align="right">
+  		<table align="right">
   		<tr>
-			<td><h3><?php echo $text_default_address; ?></h3></td>
-  			<td align="right"><a class="" href="<?php echo site_url('account/address'); ?>"><?php echo $text_edit_add; ?></a></td>
+			<td colspan="2"><h3><?php echo $text_default_address; ?></h3></td>
   		</tr>
   		<?php if ($address_info) { ?>
   		<tr>
-  			<td><?php echo $address_info['address_1']; ?><br /> 
-  				<?php echo $address_info['address_2']; ?><br />
-  				<?php echo $address_info['city']; ?><br />
-  				<?php echo $address_info['postcode']; ?><br />
-  				<?php echo $address_info['country']; ?>
-  			</td>
+  			<td><?php echo $address_info; ?></td>
   		</tr>
   		<?php } else { ?>
   		<tr>
   			<td colspan="2"><?php echo $text_no_default_add; ?></td>
   		</tr>
   		<?php } ?>
-  	</table> 
+  		</table> 
 	</div>
 	
 	<div class="account_summary">  	
-  	<table align="left">
+  		<table align="left">
   		<tr>
-			<td><h3><?php echo $text_cart; ?></h3></td>
-  			<td align="right"><a class="button" href="<?php echo site_url('checkout'); ?>"><?php echo $text_checkout; ?></a></td>
+			<td colspan="3"><h3><?php echo $text_cart; ?></h3></td>
   		</tr>
   		<?php if ($cart_items != '0') { ?>
   		<tr>
-  			<td><b><?php echo $text_cart_items; ?> <?php echo $cart_items; ?></b></td>
-  			<td><b><?php echo $text_cart_total; ?> <?php echo $cart_total; ?></b></td>
+  			<th><b><?php echo $column_cart_items; ?></b></th>
+  			<th><b><?php echo $column_cart_total; ?></b></th>
+  			<th></th>
+  		</tr>
+  		<tr>
+  			<td><?php echo $cart_items; ?></td>
+  			<td><?php echo $cart_total; ?></td>
+  			<td><a class="button" href="<?php echo $button_checkout; ?>"><?php echo $text_checkout; ?></a></td>
   		</tr>
   		<?php } else { ?>
   		<tr>
-  			<td colspan="2"><?php echo $text_no_cart_items; ?></td>
+  			<td colspan="3"><?php echo $text_no_cart_items; ?></td>
   		</tr>
   		<?php } ?>
-  	</table>
+  		</table>
 
-  	<table align="right">
+  		<table align="right">
   		<tr>
-			<td><h3><?php echo $text_orders; ?></h3></td>
-			<td></td>
-  			<td align="right"><a class="" href="<?php echo site_url('orders'); ?>"><?php echo $text_view; ?></a></td>
+			<td colspan="3"><h3><?php echo $text_orders; ?></h3></td>
   		</tr>
   		<tr>
   			<th><b><?php echo $column_order_date; ?></b></th>
@@ -90,15 +87,13 @@
   		</tr>
   		<tr>
   		</tr>
-  	</table>
+  		</table>
 	</div>
 	
 	<div class="account_summary">  	
-  	<table align="left">
+  		<table align="left">
   		<tr>
-			<td><h3><?php echo $text_reservations; ?></h3></td>
-			<td></td>
-  			<td align="right"><a class="" href="<?php echo site_url('reservations'); ?>"><?php echo $text_view; ?></a></td>
+			<td colspan="3"><h3><?php echo $text_reservations; ?></h3></td>
   		</tr>
   		<tr>
   			<th><b><?php echo $column_resrv_date; ?></b></th>
@@ -107,13 +102,11 @@
   		</tr>
   		<tr>
   		</tr>
-  	</table>
+  		</table>
 
-  	<table align="right">
+  		<table align="right">
   		<tr>
-			<td><h3><?php echo $text_inbox; ?></h3></td>
-			<td></td>
-  			<td align="right"><a class="" href="<?php echo site_url('inbox'); ?>"><?php echo $text_view; ?></a></td>
+			<td colspan="3"><h3><?php echo $text_inbox; ?></h3></td>
   		</tr>
   		<tr>
   			<th><b><?php echo $column_inbox_date; ?></b></th>
@@ -122,6 +115,7 @@
   		</tr>
   		<tr>
   		</tr>
-  	</table>
+  		</table>
 	</div>
+</div>
 </div>

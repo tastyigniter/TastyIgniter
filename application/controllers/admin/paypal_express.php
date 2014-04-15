@@ -9,6 +9,10 @@ class Paypal_express extends CI_Controller {
 
 	public function index() {
 			
+		if (!file_exists(APPPATH .'views/admin/paypal_express.php')) {
+			show_404();
+		}
+			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -63,6 +67,12 @@ class Paypal_express extends CI_Controller {
 			$data['paypal_action'] = $this->config->item('paypal_action');
 		}				
 
+		if (isset($this->input->post['paypal_total'])) {
+			$data['paypal_total'] = $this->input->post['paypal_total'];
+		} else {
+			$data['paypal_total'] = $this->config->item('paypal_total');
+		}				
+
 		if (isset($this->input->post['paypal_order_status'])) {
 			$data['paypal_order_status'] = $this->input->post['paypal_order_status'];
 		} else {
@@ -96,41 +106,45 @@ class Paypal_express extends CI_Controller {
 						
     	if (!$this->user->hasPermissions('modify', 'admin/paypal_express')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
 			return TRUE;
     	
-    	} else if (!$this->input->post('delete')) { 
-		
-			$this->form_validation->set_rules('paypal_status', 'PayPal Status', 'trim|required|integer');
-			$this->form_validation->set_rules('paypal_mode', 'PayPal Mode', 'trim|required');
-			$this->form_validation->set_rules('paypal_user', 'PayPal Username', 'trim|required');
-			$this->form_validation->set_rules('paypal_pass', 'PayPal Password', 'trim|required');
-			$this->form_validation->set_rules('paypal_sign', 'PayPal Signature', 'trim|required');
-			$this->form_validation->set_rules('paypal_action', 'Payment Action', 'trim|required');
-			$this->form_validation->set_rules('paypal_order_status', 'Order Status', 'trim|required|integer');
+    	} else if (!$this->input->post('delete') AND $this->validateForm() === TRUE) { 
+			$update = array(
+				'paypal_status' 		=> $this->input->post('paypal_status'),
+				'paypal_mode' 			=> $this->input->post('paypal_mode'),
+				'paypal_user' 			=> $this->input->post('paypal_user'),
+				'paypal_pass' 			=> $this->input->post('paypal_pass'),
+				'paypal_sign' 			=> $this->input->post('paypal_sign'),
+				'paypal_action' 		=> $this->input->post('paypal_action'),
+				'paypal_total' 			=> $this->input->post('paypal_total'),
+				'paypal_order_status' 	=> $this->input->post('paypal_order_status')
+			);
 
-			if ($this->form_validation->run() === TRUE) {
-
-				$update = array(
-					'paypal_status' 		=> $this->input->post('paypal_status'),
-					'paypal_mode' 			=> $this->input->post('paypal_mode'),
-					'paypal_user' 			=> $this->input->post('paypal_user'),
-					'paypal_pass' 			=> $this->input->post('paypal_pass'),
-					'paypal_sign' 			=> $this->input->post('paypal_sign'),
-					'paypal_action' 		=> $this->input->post('paypal_action'),
-					'paypal_order_status' 	=> $this->input->post('paypal_order_status')
-				);
-	
-				if ($this->Settings_model->updateSettings('paypal_express', $update)) {
-			
-					$this->session->set_flashdata('alert', '<p class="success">PayPal Express Checkout Updated Sucessfully!</p>');
-				} else {
-			
-					$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
-				}
-			
-				return TRUE;
+			if ($this->Settings_model->updateSettings('paypal_express', $update)) {
+				$this->session->set_flashdata('alert', '<p class="success">PayPal Express Checkout Updated Sucessfully!</p>');
+			} else {
+				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
 			}
+		
+			return TRUE;
 		}
+	}
+
+	public function validateForm() {
+		$this->form_validation->set_rules('paypal_status', 'PayPal Status', 'trim|required|integer');
+		$this->form_validation->set_rules('paypal_mode', 'PayPal Mode', 'trim|required');
+		$this->form_validation->set_rules('paypal_user', 'PayPal Username', 'trim|required');
+		$this->form_validation->set_rules('paypal_pass', 'PayPal Password', 'trim|required');
+		$this->form_validation->set_rules('paypal_sign', 'PayPal Signature', 'trim|required');
+		$this->form_validation->set_rules('paypal_action', 'Payment Action', 'trim|required');
+		$this->form_validation->set_rules('paypal_total', 'Order Total', 'trim|required|numeric');
+		$this->form_validation->set_rules('paypal_order_status', 'Order Status', 'trim|required|integer');
+
+		if ($this->form_validation->run() === TRUE) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}		
 	}
 }

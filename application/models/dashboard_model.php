@@ -53,9 +53,173 @@ class Dashboard_model extends CI_Model {
 		}
 	}
 
-	public function getTotalOrdersReceived() {
+	public function getTodayChart($hour = FALSE) {
+		$result = array();
+		$result['customers'] = 0;
+		$result['orders'] = 0;
+		$result['reservations'] = 0;
+		
+		$this->db->where('DATE(date_added)', 'DATE(NOW())');
+		$this->db->order_by('date_added', 'ASC');		
+		$this->db->from('customers');
+		
+		$result['customers'] = $this->db->count_all_results();
+		
+		$this->db->where('status_id >', '0');
+		$this->db->where('DATE(date_added)', 'DATE(NOW())', FALSE);
+		$this->db->where('HOUR(order_time)', $hour);
+		$this->db->group_by('HOUR(order_time)'); 
+		$this->db->order_by('date_added', 'ASC');		
+		$this->db->from('orders');
+		
+		$result['orders'] = $this->db->count_all_results();
 
-		$this->db->where('status_id', $this->config->item('order_received'));
+		$this->db->where('status >', '0');
+		$this->db->where('DATE(reserve_date)', 'DATE(NOW())', FALSE);
+		$this->db->where('HOUR(reserve_time)', $hour);
+		$this->db->group_by('HOUR(reserve_time)'); 
+		$this->db->order_by('reserve_date', 'ASC');		
+		$this->db->from('reservations');
+		
+		$result['reservations'] = $this->db->count_all_results();
+
+		return $result;
+	}
+
+	public function getYesterdayChart($hour = FALSE) {
+		$result = array();
+		$result['customers'] = 0;
+		$result['orders'] = 0;
+		$result['reservations'] = 0;
+		
+		$this->db->where('DATE(date_added)', 'DATE(NOW())');
+		$this->db->order_by('date_added', 'ASC');		
+		$this->db->from('customers');
+		
+		$result['customers'] = $this->db->count_all_results();
+		
+		$this->db->where('status_id >', '0');
+		$this->db->where('DATE(date_added)', 'DATE(CURDATE() - 1)', FALSE);
+		$this->db->where('HOUR(order_time)', $hour);
+		$this->db->group_by('HOUR(order_time)'); 
+		$this->db->order_by('date_added', 'ASC');		
+		$this->db->from('orders');
+		
+		$result['orders'] = $this->db->count_all_results();
+
+		$this->db->where('status >', '0');
+		$this->db->where('DATE(reserve_date)', 'DATE(CURDATE() - 1)', FALSE);
+		$this->db->where('HOUR(reserve_time)', $hour);
+		$this->db->group_by('HOUR(reserve_time)'); 
+		$this->db->order_by('reserve_date', 'ASC');		
+		$this->db->from('reservations');
+		
+		$result['reservations'] = $this->db->count_all_results();
+
+		return $result;
+	}
+
+	public function getThisWeekChart($date = FALSE) {
+		$result = array();
+		$result['customers'] = 0;
+		$result['orders'] = 0;
+		$result['reservations'] = 0;
+		
+		$this->db->where('DATE(date_added)', $date);
+		$this->db->group_by('DATE(date_added)'); 
+		$this->db->from('customers');
+		
+		$result['customers'] = $this->db->count_all_results();
+
+		$this->db->where('status_id >', '0');
+		$this->db->where('DATE(date_added)', $date);
+		$this->db->group_by('DATE(date_added)'); 
+		$this->db->from('orders');
+		
+		$result['orders'] = $this->db->count_all_results();
+
+		$this->db->where('status >', '0');
+		$this->db->where('DATE(reserve_date)', $date);
+		$this->db->group_by('DATE(reserve_date)'); 
+		$this->db->from('reservations');
+		
+		$result['reservations'] = $this->db->count_all_results();
+
+		return $result;
+	}
+	
+	public function getMonthChart($date = FALSE) {
+		$result = array();
+		$result['customers'] = 0;
+		$result['orders'] = 0;
+		$result['reservations'] = 0;
+
+		$this->db->where('DATE(date_added)', $date);
+		$this->db->group_by('DAY(date_added)'); 
+		$this->db->from('customers');
+		
+		$result['customers'] = $this->db->count_all_results();
+
+		$this->db->where('status_id >', '0');
+		$this->db->where('DATE(date_added)', $date);
+		$this->db->group_by('DAY(date_added)'); 
+		$this->db->from('orders');
+		
+		$result['orders'] = $this->db->count_all_results();
+
+		$this->db->where('status >', '0');
+		$this->db->where('DATE(reserve_date)', $date);
+		$this->db->group_by('DAY(reserve_date)'); 
+		$this->db->from('reservations');
+		
+		$result['reservations'] = $this->db->count_all_results();
+
+		return $result;
+	}
+
+	public function getYearChart($year = FALSE, $month = FALSE) {
+		$result = array();
+		$result['customers'] = 0;
+		$result['orders'] = 0;
+		$result['reservations'] = 0;
+
+		$this->db->where('YEAR(date_added)', (int)$year);
+		$this->db->where('MONTH(date_added)', (int)$month);
+		$this->db->group_by('MONTH(date_added)'); 
+		$this->db->from('customers');
+		
+		$result['customers'] = $this->db->count_all_results();
+
+		$this->db->where('status_id >', '0');
+		$this->db->where('YEAR(date_added)', (int)$year);
+		$this->db->where('MONTH(date_added)', (int)$month);
+		$this->db->group_by('MONTH(date_added)'); 
+		$this->db->from('orders');
+		
+		$result['orders'] = $this->db->count_all_results();
+
+		$this->db->where('status >', '0');
+		$this->db->where('YEAR(reserve_date)', (int)$year);
+		$this->db->where('MONTH(reserve_date)', (int)$month);
+		$this->db->group_by('MONTH(reserve_date)'); 
+		$this->db->from('reservations');
+		
+		$result['reservations'] = $this->db->count_all_results();
+
+		return $result;
+	}
+
+	public function getReviewChart($rating_id, $menu_id) {
+		$total_ratings = 0;
+		$this->db->where('menu_id', $menu_id);
+		$this->db->where('rating_id', $rating_id);
+		$this->db->from('reviews');
+		$total_ratings = $this->db->count_all_results();
+		
+		return $total_ratings;
+	}
+
+	public function getTotalOrders() {
 		$this->db->from('orders');
 		
 		return $this->db->count_all_results();
@@ -63,13 +227,13 @@ class Dashboard_model extends CI_Model {
 
 	public function getTotalOrdersCompleted() {
 
-		$this->db->where('status_id', $this->config->item('order_completed'));
+		$this->db->where('status_id', $this->config->item('order_status_complete'));
 		$this->db->from('orders');
 		
 		return $this->db->count_all_results();
 	}
 
-	public function getTotalOrdersDelivered() {
+	public function getTotalDeliveryOrders() {
 
 		$this->db->where('order_type', '1');
 		$this->db->from('orders');
@@ -77,7 +241,7 @@ class Dashboard_model extends CI_Model {
 		return $this->db->count_all_results();
 	}
 
-	public function getTotalOrdersPickedUp() {
+	public function getTotalCollectionOrders() {
 
 		$this->db->where('order_type', '2');
 		$this->db->from('orders');
@@ -92,37 +256,9 @@ class Dashboard_model extends CI_Model {
 
 	public function getTotalTablesReserved() {
 
-		$this->db->where('status', $this->config->item('reserve_status'));
+		$this->db->where('status >', '0');
 		$this->db->from('reservations');
 		
 		return $this->db->count_all_results();
-	}
-
-	public function getTotalMenuReviews($menu_id) {
-		
-  		$rating_data = array();
-
-		$this->db->where('menu_id', $menu_id);
-		$this->db->from('reviews');
-		$total_reviews = $this->db->count_all_results();
-
-		if ($total_reviews > 0) {
-
-			$ratings = $this->config->item('ratings');
-			
-			foreach ($ratings as $rating_id => $rating) {
-				
-				$this->db->where('menu_id', $menu_id);
-				$this->db->where('rating_id', $rating_id);
-				$this->db->from('reviews');
-				$total_ratings = $this->db->count_all_results();
-
-        		$rating_data['total'][$rating_id] = $total_ratings;
-        		$rating_data['percent'][$rating_id] = ($total_ratings / $total_reviews) * 100;
-			
-			}
-		}
-		
-		return $rating_data;
 	}
 }

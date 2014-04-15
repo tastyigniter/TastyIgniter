@@ -9,6 +9,10 @@ class Currencies extends CI_Controller {
 
 	public function index() {
 
+		if (!file_exists(APPPATH .'views/admin/currencies.php')) {
+			show_404();
+		}
+			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -27,6 +31,8 @@ class Currencies extends CI_Controller {
 		$data['sub_menu_add'] 		= 'Add new currency';
 		$data['sub_menu_delete'] 	= 'Delete';
 		$data['text_empty'] 		= 'There are no currencies available.';
+
+		$data['currency_id'] = $this->config->item('currency_id');
 
 		$data['currencies'] = array();
 		$results = $this->Currencies_model->getList();
@@ -57,6 +63,10 @@ class Currencies extends CI_Controller {
 
 	public function edit() {
 
+		if (!file_exists(APPPATH .'views/admin/currencies_edit.php')) {
+			show_404();
+		}
+			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -114,35 +124,24 @@ class Currencies extends CI_Controller {
 									
     	if (!$this->user->hasPermissions('modify', 'admin/currencies')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
   			return TRUE;
     	
-    	} else if ( ! $this->input->get('id')) { 
-		
-			//validate category value
-			$this->form_validation->set_rules('currency_title', 'Currency Title', 'trim|required|min_length[2]|max_length[45]');
-			$this->form_validation->set_rules('currency_code', 'Currency Code', 'trim|required|exact_length[3]');
-			$this->form_validation->set_rules('currency_symbol', 'Currency Symbol', 'trim|required');
-			$this->form_validation->set_rules('currency_status', 'Currency Symbol', 'trim|required|integer');
+    	} else if ( ! $this->input->get('id') AND $this->validateForm() === TRUE) { 
+			$add = array();
+			
+			$add['currency_title'] 	= $this->input->post('currency_title');
+			$add['currency_code'] 	= $this->input->post('currency_code');
+			$add['currency_symbol'] = $this->input->post('currency_symbol');
+			$add['currency_status'] = $this->input->post('currency_status');
 
-			if ($this->form_validation->run() === TRUE) {
-				$add = array();
-				
-				$add['currency_title'] 	= $this->input->post('currency_title');
-				$add['currency_code'] 	= $this->input->post('currency_code');
-				$add['currency_symbol'] = $this->input->post('currency_symbol');
-				$add['currency_status'] = $this->input->post('currency_status');
-	
-				if ($this->Currencies_model->addCurrency($add)) {	
-				
-					$this->session->set_flashdata('alert', '<p class="success">Currency Added Sucessfully!</p>');
-				} else {
-			
-					$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
-				}
-			
-				return TRUE;
+			if ($this->Currencies_model->addCurrency($add)) {	
+				$this->session->set_flashdata('alert', '<p class="success">Currency Added Sucessfully!</p>');
+			} else {
+				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
 			}
+		
+			return TRUE;
 		}
 	}
 	
@@ -150,60 +149,57 @@ class Currencies extends CI_Controller {
     	
     	if (!$this->user->hasPermissions('modify', 'admin/currencies')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
   			return TRUE;
     	
-    	} else if ($this->input->get('id')) { 
-		
-			//validate category value
-			$this->form_validation->set_rules('currency_title', 'Currency Title', 'trim|required|min_length[2]|max_length[45]');
-			$this->form_validation->set_rules('currency_code', 'Currency Code', 'trim|required|exact_length[3]');
-			$this->form_validation->set_rules('currency_symbol', 'Currency Symbol', 'trim|required');
-			$this->form_validation->set_rules('currency_status', 'Currency Symbol', 'trim|required|integer');
+    	} else if ($this->input->get('id') AND $this->validateForm() === TRUE) { 
+			$update = array();
+			
+			$update['currency_id'] 		= $this->input->get('id');
+			$update['currency_title'] 	= $this->input->post('currency_title');
+			$update['currency_code'] 	= $this->input->post('currency_code');
+			$update['currency_symbol'] 	= $this->input->post('currency_symbol');
+			$update['currency_status'] 	= $this->input->post('currency_status');
 
-			if ($this->form_validation->run() === TRUE) {
-				$update = array();
-				
-				$update['currency_id'] 		= $this->input->get('id');
-				$update['currency_title'] 	= $this->input->post('currency_title');
-				$update['currency_code'] 	= $this->input->post('currency_code');
-				$update['currency_symbol'] 	= $this->input->post('currency_symbol');
-				$update['currency_status'] 	= $this->input->post('currency_status');
-	
-				if ($this->Currencies_model->updateCurrency($update)) {	
-				
-					$this->session->set_flashdata('alert', '<p class="success">Currency Updated Sucessfully!</p>');
-				} else {
-			
-					$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
-				}
-			
-				return TRUE;
+			if ($this->Currencies_model->updateCurrency($update)) {	
+				$this->session->set_flashdata('alert', '<p class="success">Currency Updated Sucessfully!</p>');
+			} else {
+				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
 			}
+		
+			return TRUE;
 		}		
 	}	
 	
 	public function _deleteCurrency() {
     	if (!$this->user->hasPermissions('modify', 'admin/currencies')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
     	
     	} else { 
-		
 			if (is_array($this->input->post('delete'))) {
-
-				//sorting the post[quantity] array to rowid and qty.
 				foreach ($this->input->post('delete') as $key => $value) {
 					$currency_id = $value;
-				
 					$this->Currencies_model->deleteCurrency($currency_id);
 				}			
 			
 				$this->session->set_flashdata('alert', '<p class="success">Currency(s) Deleted Sucessfully!</p>');
-
 			}
 		}
 				
 		return TRUE;
+	}
+
+	public function validateForm() {
+		$this->form_validation->set_rules('currency_title', 'Currency Title', 'trim|required|min_length[2]|max_length[45]');
+		$this->form_validation->set_rules('currency_code', 'Currency Code', 'trim|required|exact_length[3]');
+		$this->form_validation->set_rules('currency_symbol', 'Currency Symbol', 'trim|required');
+		$this->form_validation->set_rules('currency_status', 'Currency Symbol', 'trim|required|integer');
+
+		if ($this->form_validation->run() === TRUE) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}		
 	}
 }

@@ -11,41 +11,46 @@
 	<form accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
 	<div class="search-content" style="display: block;">
 		
-		<div id="selectedLocation" class="left" style="width:30%;">
+		<div id="selectedLocation" class="left" style="width:38%;">
+		<div class="img_inner">
+		<div class="container_24">
 			<h2><?php echo $text_local; ?></h2>	
-			<div id="restaurant-info">
-				<h4><?php echo $location_name; ?></h4>  	
-				<address><?php echo $location_address_1; ?>, <?php echo $location_city; ?>, <?php echo $location_postcode; ?></address> 	
-				<?php echo $location_telephone; ?><br /><br />
+			<dl id="restaurant-info">
+				<dt><h3>
+					<address><?php echo $location_name; ?> - <?php echo $location_address_1; ?>, <?php echo $location_city; ?>, <?php echo $location_postcode; ?><br />
+					<?php echo $location_telephone; ?></address>
+				</h3></dt>
 		
-				<span class="is-open"><?php echo $text_open_or_close; ?></span><br /><br />
-				<div class="review"><?php echo $text_reviews; ?></div><br />
-			</div>
+				<dd><?php echo $text_open_or_close; ?></span></dd>
+				<dd class="review"><?php echo $text_reviews; ?></dd>
+			</dl>
 
 			<?php if ($opening_hours) { ?>
-			<div class="opening-hour">
-			<b><?php echo $text_opening_hours; ?></b>
-			<table width="50%">
+			<dl class="opening-hour">
+			<dt><?php echo $text_opening_hours; ?></dt>
 			<?php foreach ($opening_hours as $opening_hour) { ?>
-				<tr>
-					<td><?php echo $opening_hour['day']; ?>:</td>
-					<?php if ($opening_hour['open'] !== '00:00' || $opening_hour['close'] !== '00:00') { ?>
-						<td><?php echo $opening_hour['open']; ?> - <?php echo $opening_hour['close']; ?></td>
+				<dd>
+					<span><?php echo $opening_hour['day']; ?>:</span>
+					<?php if ($opening_hour['open'] === '00:00' OR $opening_hour['close'] === '00:00') { ?>
+						<?php echo $text_open; ?>
 					<?php } else { ?>
-						<td><?php echo $text_close; ?></td>
+						<?php echo $opening_hour['open']; ?> - <?php echo $opening_hour['close']; ?>
 					<?php } ?>
-				</tr>
+				</dd>
 			<?php } ?>
-			</table>
-			</div>
+			</dl>
 			<?php } ?>
 		</div>
+		</div>
+		</div>
 		
-		<div id="contactForm" class="right" style="width:64%;">
+		<div id="contactForm" class="right" style="width:60%;height:100%;">
+		<div class="img_inner">
+		<div class="container_24">
 			<table class="form">
 			<tr>
-    			<td align="right"><label for="subject"><b><?php echo $entry_subject; ?></b></label></td>
-				<td><select name="subject">
+    			<td class="right"><label for="subject"><b><?php echo $entry_subject; ?></b></label></td>
+				<td class="left"><select name="subject">
 					<option value="">select a subject</option>
 					<?php foreach($subjects as $subject_id => $subject) { ?>
 						<option value="<?php echo $subject_id; ?>"><?php echo $subject; ?></option>
@@ -54,26 +59,28 @@
     			<?php echo form_error('subject', '<span class="error">', '</span>'); ?></td>
 			</tr>
 			<tr>
-    			<td align="right"><label for="full_name"><b><?php echo $entry_full_name; ?></b></label></td>
-				<td><input type="text" name="full_name" value="<?php echo set_value('full_name'); ?>" class="textfield" /><br />
+    			<td class="right"><label for="full_name"><b><?php echo $entry_full_name; ?></b></label></td>
+				<td class="left"><input type="text" name="full_name" value="<?php echo set_value('full_name'); ?>" class="textfield" /><br />
     			<?php echo form_error('full_name', '<span class="error">', '</span>'); ?></td>
 			</tr>
 			<tr>
-    			<td align="right"><label for="email"><b><?php echo $entry_email; ?></b></label></td>
-				<td><input type="text" name="email" value="<?php echo set_value('email'); ?>" class="textfield" /><br />
+    			<td class="right"><label for="email"><b><?php echo $entry_email; ?></b></label></td>
+				<td class="left"><input type="text" name="email" value="<?php echo set_value('email'); ?>" class="textfield" /><br />
     			<?php echo form_error('email', '<span class="error">', '</span>'); ?></td>
 			</tr>
 			<tr>
-    			<td align="right"><label for="telephone"><b><?php echo $entry_telephone; ?></b></label></td>
-				<td><input type="text" name="telephone" value="<?php echo set_value('telephone'); ?>" class="textfield" /><br />
+    			<td class="right"><label for="telephone"><b><?php echo $entry_telephone; ?></b></label></td>
+				<td class="left"><input type="text" name="telephone" value="<?php echo set_value('telephone'); ?>" class="textfield" /><br />
     			<?php echo form_error('telephone', '<span class="error">', '</span>'); ?></td>
 			</tr>
 			<tr>
-    			<td align="right"><label for="comment"><b><?php echo $entry_comment; ?></b></label></td>
-				<td><textarea name="comment" style="height:180px;width:360px;"><?php echo set_value('comment'); ?></textarea><br />
+    			<td class="right"><label for="comment"><b><?php echo $entry_comment; ?></b></label></td>
+				<td class="left"><textarea name="comment" style="height:180px;width:360px;"><?php echo set_value('comment'); ?></textarea><br />
     			<?php echo form_error('comment', '<span class="error">', '</span>'); ?></td>
 			</tr>
 			</table>
+		</div>   	
+		</div>   	
 		</div>   	
 	</div>
 	<div class="buttons">

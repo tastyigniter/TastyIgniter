@@ -1,9 +1,9 @@
 <div class="content">
-<div class="wrap">
+<div class="img_inner">
 	<form method="post" accept-charset="utf-8" action="<?php echo current_url(); ?>" id="checkout-form">
 	<div>
 	<!--<h3>Personal Details</h3>-->
-	<table border="0" cellpadding="2" width="100%" id="personal-details" class="form">
+		<table border="0" cellpadding="2" width="100%" id="personal-details" class="form">
 		<tr>
 			<td align="right"><b><?php echo $entry_first_name; ?></b></td>
 			<td><input type="text" name="first_name" value="<?php echo set_value('first_name', $first_name); ?>" /><br />
@@ -24,9 +24,9 @@
 			<td><input type="text" name="telephone" value="<?php echo set_value('telephone', $telephone); ?>" /><br />
     			<?php echo form_error('telephone', '<span class="error">', '</span>'); ?></td>
 		</tr>
-	</table>
+		</table>
 
-	<table border="0" cellpadding="2" width="100%" id="collection-time" class="form">
+		<table border="0" cellpadding="2" width="100%" id="collection-time" class="form">
 		<tr>
 			<td align="right"><b><?php echo $entry_order_type; ?></b></td>
 			<td>
@@ -55,33 +55,46 @@
 					<option value="<?php echo $delivery_time['24hr']; ?>"><?php echo $delivery_time['12hr']; ?></option>
 				<?php } ?>
 				<?php } ?>
-			</select><br />
+			</select><?php echo $asap_time; ?><br />
     		<?php echo form_error('order_time', '<span class="error">', '</span>'); ?></td>
 		</tr>
-	</table>
+		</table>
 
-	<div id="checkout-delivery">
-	<table border="0" cellpadding="2" width="100%" id="delivery-details" class="form">
+		<div id="checkout-delivery">
+		<table border="0" cellpadding="2" width="100%" id="delivery-details" class="form">
 		<?php if ($addresses) { ?>
 		<tr>
 			<td align="right"><b><?php echo $entry_use_address; ?></b></td>
 			<td>
-			<?php if ($new_address === '2') { ?>
-				<input type="radio" class="use-address" name="new_address" value="2" checked="checked" /> <?php echo $text_existing; ?>  
-			<?php } else { ?>
-				<input type="radio" class="use-address" name="new_address" value="2"  checked="checked" /> <?php echo $text_existing; ?>  
-			<?php } ?>
-
 			<?php if ($new_address === '1') { ?>
-				<input type="radio" class="use-address" name="new_address" value="1" checked="checked" /> <?php echo $text_new; ?><br />
-			<?php } else { ?>
+				<input type="radio" class="use-address" name="new_address" value="2" /> <?php echo $text_existing; ?>  
+				<input type="radio" class="use-address" name="new_address" value="1" checked="checked" /> <?php echo $text_new; ?>  
+			<?php } else if ($new_address === '2') { ?>
+				<input type="radio" class="use-address" name="new_address" value="2" checked="checked" /> <?php echo $text_existing; ?>  
+				<input type="radio" class="use-address" name="new_address" value="1"/> <?php echo $text_new; ?>  
+			<?php } else {?>
+				<input type="radio" class="use-address" name="new_address" value="2" checked="checked" /> <?php echo $text_existing; ?>  
 				<input type="radio" class="use-address" name="new_address" value="1" /> <?php echo $text_new; ?><br />
 			<?php } ?>
     		
     		<?php echo form_error('new_address', '<span class="error">', '</span>'); ?>
     		</td>
 		</tr>
-		<tr id="existing-address">
+		<?php } else { ?>
+		<tr>
+			<td align="right"><b><?php echo $entry_use_address; ?></b></td>
+			<td>
+				<input type="radio" class="use-address" name="new_address" value="1" checked="checked" /> <?php echo $text_new; ?>  
+	
+    			<?php echo form_error('new_address', '<span class="error">', '</span>'); ?>
+    		</td>
+		</tr>
+		<?php } ?>
+		</table>
+
+		<?php if ($addresses) { ?>
+		<table id="existing-address" class="form" border="0" cellpadding="2" width="100%">	
+		<tr>
 			<td align="right"><b><?php echo $entry_address; ?></b></td>
 			<td>
 			<?php foreach ($addresses as $address) { ?>
@@ -93,29 +106,10 @@
 			<?php } ?><br />
 			<?php echo form_error('existing_address', '<span class="error">', '</span>'); ?></td>
 		</tr>
-		<?php } else { ?>
-		<tr>
-			<td align="right"><b><?php echo $entry_use_address; ?></b></td>
-			<td>
-			<?php if ($new_address === '1') { ?>
-				<input type="radio" class="use-address" name="new_address" value="1" checked="checked" /> <?php echo $text_existing; ?>  
-			<?php } else { ?>
-				<input type="radio" class="use-address" name="new_address" value="1"  checked="checked" /> <?php echo $text_existing; ?>  
-			<?php } ?>
-
-			<?php if ($new_address === '2') { ?>
-				<input type="radio" class="use-address" name="new_address" value="2" checked="checked" /> <?php echo $text_new; ?><br />
-			<?php } else { ?>
-				<input type="radio" class="use-address" name="new_address" value="2" /> <?php echo $text_new; ?><br />
-			<?php } ?>
-    		
-    		<?php echo form_error('new_address', '<span class="error">', '</span>'); ?>
-    		</td>
-		</tr>
+		</table>
 		<?php } ?>
-	</table>
 
-	<table id="new-address" class="form" border="0" cellpadding="2" width="100%" style="display: <?php echo ($addresses ? 'none' : 'block'); ?>">	
+		<table id="new-address" class="form" border="0" cellpadding="2" width="100%" style="display: <?php echo ($addresses ? 'none' : 'block'); ?>">	
 		<tr>
 			<td align="right"><b><?php echo $entry_address_1; ?></b></td>
 			<td><input type="text" name="address[address_1]" value="<?php echo set_value('address[address_1]'); ?>" /><br />
@@ -149,16 +143,16 @@
 			</select><br />
     		<?php echo form_error('address[country]', '<span class="error">', '</span>'); ?></td>
 		</tr>
-	</table>
-	</div>
+		</table>
+		</div>
 
-	<table border="0" cellpadding="2" width="100%" id="comment" class="form">
+		<table border="0" cellpadding="2" width="100%" id="comment" class="form">
 		<tr>
 			<td align="right"><b><?php echo $entry_comments; ?></b></td>
 			<td><textarea name="comment" rows="5" cols="40"></textarea><br />
     			<?php echo form_error('comment', '<span class="error">', '</span>'); ?></td>
 		</tr>
-	</table>
+		</table>
 	</div>    
 	</form>
 </div>

@@ -23,9 +23,9 @@ class Setup_model extends CI_Model {
 					$sql .= $line;
   
 					if (preg_match('/;\s*$/', $line)) {
-						//$sql = str_replace("DROP TABLE IF EXISTS `oc_", "DROP TABLE IF EXISTS `" . $data['db_prefix'], $sql);
-						//$sql = str_replace("CREATE TABLE `oc_", "CREATE TABLE `" . $data['db_prefix'], $sql);
-						//$sql = str_replace("INSERT INTO `oc_", "INSERT INTO `" . $data['db_prefix'], $sql);
+						$sql = str_replace('DROP TABLE IF EXISTS ti_', 'DROP TABLE IF EXISTS '. $this->db->dbprefix, $sql);
+						$sql = str_replace('CREATE TABLE `ti_', 'CREATE TABLE `'. $this->db->dbprefix, $sql);
+						$sql = str_replace('INSERT INTO ti_', 'INSERT INTO '. $this->db->dbprefix, $sql);
 
 						$this->db->query($sql);
 
@@ -50,7 +50,7 @@ class Setup_model extends CI_Model {
 			$this->db->set('staff_email', strtolower($add['site_email']));
 		}
 
-		$this->db->set('staff_department', '11');
+		$this->db->set('staff_group_id', '11');
 		$this->db->set('staff_status', '1');
 
 		$this->db->set('date_added', mdate('%Y-%m-%d', time()));
@@ -79,15 +79,23 @@ class Setup_model extends CI_Model {
 
 	public function updateConfig($site_name, $site_email) {
  		
- 		if (!empty($add['site_name'])) {
-			$this->db->where('key', 'site_name')->delete('settings');
-			$this->db->set('sort', 'config')->set('key', 'site_name')->set('value', $site_name)->set('serialized', '0');
+ 		if (!empty($site_name)) {
+			$this->db->where('key', 'site_name');
+			$this->db->delete('settings');
+			$this->db->set('sort', 'config');
+			$this->db->set('key', 'site_name');
+			$this->db->set('value', $site_name);
+			$this->db->set('serialized', '0');
 			$this->db->insert('settings');
 		}
 
- 		if (!empty($add['site_email'])) {
-			$this->db->where('key', 'site_email')->delete('settings');
-			$this->db->set('sort', 'config')->set('key', 'site_email')->set('value', $site_email)->set('serialized', '0');
+ 		if (!empty($site_email)) {
+			$this->db->where('key', 'site_email');
+			$this->db->delete('settings');
+			$this->db->set('sort', 'config');
+			$this->db->set('key', 'site_email');
+			$this->db->set('value', $site_email);
+			$this->db->set('serialized', '0');
 			$this->db->insert('settings');
 		}
 	}

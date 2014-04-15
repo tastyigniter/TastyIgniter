@@ -8,6 +8,10 @@ class Ratings extends CI_Controller {
 
 	public function index() {
 			
+		if (!file_exists(APPPATH .'views/admin/ratings.php')) {
+			show_404();
+		}
+			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -23,25 +27,22 @@ class Ratings extends CI_Controller {
 		}
 
 		$data['heading'] 			= 'Ratings';
-		$data['sub_menu_save'] 	= 'Save';
+		$data['sub_menu_save'] 		= 'Save';
 		$data['text_empty'] 		= 'There are no ratings, please add!.';
-
-		//load ratings data into array
-		$data['ratings'] = array();
 		
-		if ($this->config->item('ratings')) {
-			$results = $this->config->item('ratings');
-		} else if ($this->input->post('ratings')) {
+		if ($this->input->post('ratings')) {
 			$results = $this->input->post('ratings');
+		} else if ($this->config->item('ratings')) {
+			$results = $this->config->item('ratings');
 		} else {
 			$results = '';
 		}
 		
+		//load ratings data into array
+		$data['ratings'] = array();
 		if (is_array($results)) {
 			foreach ($results as $key => $value) {					
-				$data['ratings'][] = array(
-					'name'	=>	$value
-				);
+				$data['ratings'][$key] = $value;
 			}
 		}
 
@@ -63,34 +64,35 @@ class Ratings extends CI_Controller {
 						
     	if (!$this->user->hasPermissions('modify', 'admin/ratings')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
 			return TRUE;
     	
-    	} else if ($this->input->post('ratings')) { 
+    	} else if ($this->input->post('ratings') AND $this->validateForm() === TRUE) { 
+			$this->load->model('Settings_model');
+			$update = array();
+			$update['ratings'] = $this->input->post('ratings');
 			
-			if ($this->input->post('ratings')) {
-				foreach ($this->input->post('ratings') as $key => $value) {
-					$this->form_validation->set_rules('ratings['.$key.']', 'Rating Name', 'trim|required|min_length[2]|max_length[32]');
-				}
+			if ($this->Settings_model->updateSettings('ratings', $update)) {						
+				$this->session->set_flashdata('alert', '<p class="success">Rating Updated Sucessfully!</p>');
+			} else {
+				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
 			}
-						
-			if ($this->form_validation->run() === TRUE) {
+		
+			return TRUE;
+		}
+	}
 
-				$update = array();
-			
-				$update['ratings'] = $this->input->post('ratings');
-
-				$this->load->model('Settings_model');
-				if ($this->Settings_model->updateSettings('ratings', $update)) {						
-			
-					$this->session->set_flashdata('alert', '<p class="success">Rating Updated Sucessfully!</p>');
-				} else {
-			
-					$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
-				}
-			
-				return TRUE;
+	public function validateForm() {
+		if ($this->input->post('ratings')) {
+			foreach ($this->input->post('ratings') as $key => $value) {
+				$this->form_validation->set_rules('ratings['.$key.']', 'Rating Name', 'trim|required|min_length[2]|max_length[32]');
 			}
+		}
+					
+		if ($this->form_validation->run() === TRUE) {
+			return TRUE;
+		} else {
+			return FALSE;
 		}
 	}
 }

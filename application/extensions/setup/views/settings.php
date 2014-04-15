@@ -7,10 +7,10 @@
 </head>
 <body>
 <div class="setup_box">
-	<h1>TastyIgniter</h1>
+	<h1>TastyIgniter - Setup</h1>
 	<div class="content">
 	<p>Please fill in the following information. You’ll be able to change the settings later.</p>
-	<?php echo validation_errors('<p class="error">', '</p>'); ?>
+	<div id="notification"><?php echo validation_errors('<span class="error">', '</span>'); ?></div>
 	<h2>Configuration</h2>
 	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" />
 	<table align=""class="form">

@@ -1,16 +1,18 @@
+<div class="img_inner">
 <div id="cart-box">
 	<h3><?php echo $text_your_order; ?></h3>
 	<div id="cart-alert"><?php echo $cart_alert; ?></div>
 
 	<div id="cart-info">
 	<?php if ($cart_items) {?>
-    <div>
+    <div style="display:none;">
     <table width="100%" height="auto" class="list">
         <tr>
-			<th class="menu_name"><?php echo $column_menu; ?></th>
-			<th><?php echo $column_price; ?></th>
-			<th><?php echo $column_qty; ?></th>
+			<th></th>
+			<th width="55%" class="left"><?php echo $column_menu; ?></th>
+			<!--<th><?php echo $column_price; ?></th>-->
 			<th><?php echo $column_total; ?></th>
+			<th></th>
         </tr>
     </table>
     </div>
@@ -18,36 +20,26 @@
     <div class="cart-info">
     <table width="100%" height="auto" class="list">
 		<?php foreach ($cart_items as $cart_item) { ?>
-		<tr id="<?php echo $cart_item['key']; ?>">
-			<td class="food_name"><?php echo $cart_item['name']; ?><br />
-			<?php if ($this->cart->has_options($cart_item['key']) == TRUE) { ?>
-				<?php foreach ($this->cart->product_options($cart_item['key']) as $option_name => $option_value) { ?>
-				<div><font size="1"><strong><?php echo $option_name; ?>:</strong> <?php echo $option_value; ?> </font></div>
-			<?php } ?>
+		<tr id="<?php echo $cart_item['rowid']; ?>">
+			<td width="1"><?php echo $cart_item['qty']; ?>x<br />
+			<td width="55%" class="left"><?php echo $cart_item['name']; ?><br />
+			<?php if (!empty($cart_item['options'])) { ?>
+				<div><font size="1">+ <?php echo $cart_item['options']['name']; ?> : <?php echo $cart_item['options']['price']; ?></font></div>
 			<?php } ?>
 			</td>
-			<td><?php echo $cart_item['price']; ?></td>
-			<td><select name="quantity[<?php echo $cart_item['key']; ?>]" onChange="updateCart('<?php echo $cart_item['menu_id']; ?>', '<?php echo $cart_item['key']; ?>');">
-				<?php foreach ($quantities as $key => $value) { ?>
-				<?php if ($value === $cart_item['qty']) { ?>
-					<option value="<?php echo $value; ?>" selected="selected"><?php echo $value; ?></option>
-				<?php } else { ?>
-					<option value="<?php echo $value; ?>"><?php echo $value; ?></option>
-				<?php } ?>
-				<?php } ?>
-			</select></td>
+			<!--<td><?php echo $cart_item['price']; ?></td>-->
 			<td><?php echo $cart_item['sub_total']; ?></td>
+			<td><img class="delete_cart" alt="Remove" src="<?php echo base_url('assets/img/delete-menu.png'); ?>" onClick="updateCart('<?php echo $cart_item['menu_id']; ?>', '<?php echo $cart_item['rowid']; ?>', '0');"/></td>
 		</tr>
 		<?php } ?>
     </table>
     </div>
    
     <div class="cart-coupon">
-    <p style="text-align:center;"><b><?php echo $text_apply_coupon; ?></b></p>
     <table width="100%" height="auto" class="list">
 		<tr>
-			<td class="right"><input type="text" name="coupon" value="<?php echo $coupon_code; ?>" size="" /></td>
-			<td><a class="button" onclick="applyCoupon();"><?php echo $button_coupon; ?></a></td>
+			<td class="right"><input type="text" name="coupon" value="<?php echo $coupon_code; ?>" placeholder="<?php echo $text_apply_coupon; ?>"/></td>
+			<td><a class="button2" onclick="applyCoupon();"><?php echo $button_coupon; ?></a></td>
 		</tr>
     </table>
     </div>
@@ -79,4 +71,5 @@
 		<p><?php echo $text_no_cart_items; ?></p>
 	<?php } ?>
     </div>
+</div>
 </div>

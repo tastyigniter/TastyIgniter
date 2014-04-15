@@ -28,13 +28,12 @@
 			<table>
 			<?php foreach ($menus as $menu) { ?>
 			<tr>
+			 	<td>x <?php echo $menu['quantity']; ?></td>
 				<td><?php echo $menu['name']; ?><br />
-				<?php if (!empty($menu['options'])) { ?>
-					<?php foreach ($menu['options'] as $option_name => $option_value) { ?>
-						<div><font size="1"><strong><?php echo $option_name; ?></strong></font></div>
-					<?php } ?>
-				<?php } ?></td>
-			 	<td>x <?php echo $menu['qty']; ?></td>
+					<?php if (!empty($menu['order_option_id'])) { ?>
+						<div><font size="1">+ <?php echo $menu['option_name']; ?>: <?php echo $menu['option_price']; ?> </font></div>
+					<?php } ?></td>
+				<td><?php echo $menu['price']; ?></td>
 			 </tr>		
 			<?php } ?>
 			</table
@@ -48,7 +47,7 @@
         <td><h4><?php echo $text_delivery_address; ?></h4></td>
    	</tr>
    	<tr>
-   		<td><address><?php echo $delivery_address['address_1']; ?>, <?php echo $delivery_address['address_2']; ?>, <?php echo $delivery_address['city']; ?>, <?php echo $delivery_address['postcode']; ?>, <?php echo $delivery_address['country_name']; ?></address></td>
+   		<td><address><?php echo $delivery_address['address_1']; ?>, <?php echo $delivery_address['address_2']; ?>, <?php echo $delivery_address['city']; ?>, <?php echo $delivery_address['postcode']; ?>, <?php echo $delivery_address['country']; ?></address></td>
    	</tr>
 	<?php } ?>
    	<tr>

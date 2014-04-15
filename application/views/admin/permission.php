@@ -1,5 +1,5 @@
 <div class="box">
 	<p align="center">&nbsp;</p>
-	<h4 align="center">You don't have the right permission to view this page.</h4>
+	<h4 align="center">You do not have the right permission to access.</h4>
 	<p align="center"></p>
 </div>

@@ -17,7 +17,8 @@ class Reviews_model extends CI_Model {
         if ($this->db->limit($filter['limit'], $filter['page'])) {	
 			$this->db->from('reviews');
 			//$this->db->join('customers', 'customers.customer_id = reviews.customer_id', 'left');
-			$this->db->join('menus', 'menus.menu_id = reviews.menu_id', 'left');
+			$this->db->join('locations', 'locations.location_id = reviews.location_id', 'left');
+			$this->db->order_by('reviews.date_added', 'DESC');
 
 			$query = $this->db->get();
 			$result = array();
@@ -30,32 +31,26 @@ class Reviews_model extends CI_Model {
 		}
 	}
 
-	public function getReviews() {
+	public function getMainReviews($customer_id) {
 		$this->db->from('reviews');
-		//$this->db->join('customers', 'customers.customer_id = reviews.customer_id', 'left');
-		$this->db->join('menus', 'menus.menu_id = reviews.menu_id', 'left');
+		$this->db->join('locations', 'locations.location_id = reviews.location_id', 'left');
 
-		if ($this->config->item('approve_reviews') === '1') {
-			$this->db->where('review_status', '1');
-		}
-	}
-		
-	public function getRatings() {
-		$this->db->from('ratings');
+		$this->db->where('review_status', '1');
+		$this->db->where('customer_id', $customer_id);
 
 		$query = $this->db->get();
 		$result = array();
-	
+
 		if ($query->num_rows() > 0) {
 			$result = $query->result_array();
 		}
-	
+
 		return $result;
 	}
-
+		
 	public function getReview($review_id) {
 		$this->db->from('reviews');
-		$this->db->join('menus', 'menus.menu_id = reviews.menu_id', 'left');
+		$this->db->join('locations', 'locations.location_id = reviews.location_id', 'left');
 
 		$this->db->where('review_id', $review_id);
 
@@ -66,36 +61,49 @@ class Reviews_model extends CI_Model {
 		}
 	}
 
-	public function getTotalReviews() {
-		$total_reviews = array();
-		
-		$this->db->select('menu_id, COUNT( menu_id ) AS total_reviews');
+	public function getMainReview($review_id, $customer_id) {
 		$this->db->from('reviews');
-		$this->db->group_by('menu_id');
-		$this->db->having('total_reviews >= 1');
-		$this->db->where('review_status', '1');
+		$this->db->join('locations', 'locations.location_id = reviews.location_id', 'left');
+
+		$this->db->where('review_id', $review_id);
+		$this->db->where('customer_id', $customer_id);
 
 		$query = $this->db->get();
-		
+
 		if ($query->num_rows() > 0) {
-			$total_reviews = $query->result_array();
+			return $query->row_array();
 		}
+	}
+
+	public function getTotalLocationReviews($location_id) {
+		$this->db->where('location_id', $location_id);
+		$this->db->where('review_status', '1');
+		$this->db->from('reviews');
+		$total_reviews = $this->db->count_all_results();
 
 		return $total_reviews;
 	}
 
-	public function checkReview($customer_id) {
-		$this->db->from('reviews');
+	public function checkCustomerReview($customer_id = '', $location_id = '', $order_id = '') {
+		$location_query = $this->db->get_where('locations', array('location_id' => $location_id));
+		$order_query = $this->db->get_where('orders', array('order_id' => $order_id, 'customer_id' => $customer_id));
+		
+		if ($location_query->num_rows() > 0 AND $order_query->num_rows() > 0) {
+			$this->db->from('reviews');
 
-		$this->db->where('menu_id', $menu_id);
-		$this->db->where('customer_id', $customer_id);
+			$this->db->where('customer_id', $customer_id);
+			$this->db->where('location_id', $location_id);
+			$this->db->where('order_id', $order_id);
 		
-		$query = $this->db->get();
+			$query = $this->db->get();
 		
-		if ($query->num_rows() > 0) {
-			return $query->row_array();		
+			if ($query->num_rows() > 0) {
+				return FALSE;		
+			}
+
+			return TRUE;
 		} else {
-		 	return FALSE;
+			return FALSE;
 		}
 	}
 		
@@ -129,28 +137,42 @@ class Reviews_model extends CI_Model {
 	}
 
 	public function updateReview($update = array()) {
+		if (!empty($update['order_id'])) {
+			$this->db->set('order_id', $update['order_id']);
+		}
+
+		if (!empty($update['location_id'])) {
+			$this->db->set('location_id', $update['location_id']);
+		}
+
 		if (!empty($update['customer_id'])) {
 			$this->db->set('customer_id', $update['customer_id']);
 		}
 
-		if (!empty($add['author'])) {
-			$this->db->set('author', $add['author']);
+		if (!empty($update['author'])) {
+			$this->db->set('author', $update['author']);
 		}
 
-		if (!empty($update['menu_id'])) {
-			$this->db->set('menu_id', $update['menu_id']);
+		if (!empty($update['quality'])) {
+			$this->db->set('quality', $update['quality']);
 		}
 
-		if (!empty($update['rating_id'])) {
-			$this->db->set('rating_id', $update['rating_id']);
+		if (!empty($update['delivery'])) {
+			$this->db->set('delivery', $update['delivery']);
+		}
+
+		if (!empty($update['service'])) {
+			$this->db->set('service', $update['service']);
 		}
 
 		if (!empty($update['review_text'])) {
 			$this->db->set('review_text', $update['review_text']);
 		}
 
-		if (!empty($update['review_status'])) {
-			$this->db->set('review_status', (int)$update['review_status']);
+		if ($update['review_status'] === '1') {
+			$this->db->set('review_status', '1');
+		} else {
+			$this->db->set('review_status', '0');
 		}
 
 		if (!empty($update['review_id'])) {
@@ -163,18 +185,15 @@ class Reviews_model extends CI_Model {
 		}
 	}
 	
-	public function updateRating($rating_id, $rating_name) {
-		$this->db->set('rating_name', $rating_name);
-
-		$this->db->where('rating_id', $rating_id);
-		$this->db->update('ratings'); 
-		
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
-		}
-	}
-	
 	public function addReview($add = array()) {
+		if (!empty($add['location_id'])) {
+			$this->db->set('location_id', $add['location_id']);
+		}
+
+		if (!empty($add['order_id'])) {
+			$this->db->set('order_id', $add['order_id']);
+		}
+
 		if (!empty($add['customer_id'])) {
 			$this->db->set('customer_id', $add['customer_id']);
 		}
@@ -183,25 +202,29 @@ class Reviews_model extends CI_Model {
 			$this->db->set('author', $add['author']);
 		}
 
-		if (!empty($add['menu_id'])) {
-			$this->db->set('menu_id', $add['menu_id']);
+		if (!empty($add['quality'])) {
+			$this->db->set('quality', $add['quality']);
 		}
 
-		if (!empty($add['rating_id'])) {
-			$this->db->set('rating_id', $add['rating_id']);
+		if (!empty($add['delivery'])) {
+			$this->db->set('delivery', $add['delivery']);
+		}
+
+		if (!empty($add['service'])) {
+			$this->db->set('service', $add['service']);
 		}
 
 		if (!empty($add['review_text'])) {
 			$this->db->set('review_text', $add['review_text']);
 		}
 
-		if (!empty($add['review_status'])) {
-			$this->db->set('review_status', $add['review_status']);
+		if ($add['review_status'] === '1') {
+			$this->db->set('review_status', '1');
+		} else {
+			$this->db->set('review_status', '0');
 		}
 
-		if (!empty($add['date_added'])) {
-			$this->db->set('date_added', $add['date_added']);
-		}
+		$this->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', time()));
 
 		$this->db->insert('reviews'); 
 
@@ -210,47 +233,9 @@ class Reviews_model extends CI_Model {
 		}
 	}
 	
-	public function addRating($rating_name) {
-		$insert_data = array();
-		
-		$insert_data['rating_name'] = $rating_name;
-			
-		return $this->db->insert('ratings', $insert_data);
-	}
-
-	public function deleteRating($rating_id) {
-		$this->db->where('rating_id', $rating_id);
-			
-		return $this->db->delete('ratings');
-	}
-
 	public function deleteReview($review_id) {
 		$this->db->where('review_id', $review_id);
 			
 		return $this->db->delete('reviews');
-	}
-	
-	public function foodReview($food_id, $customer_id, $rating_id) {
-	
-		$review_data = $this->checkReview($food_id, $customer_id);
-		
-		if ($review_data) {
- 					
-			$this->db->where('review_id', $review_data['review_id']);
-			$this->db->where('customer_id', $review_data['customer_id']);
-			$this->db->where('food_id', $review_data['food_id']);
-			return $this->db->update('reviews', $update = array('food_rating' => $rating_id));
-
-		}
-		
-		if ( ! $review_data && $customer_id !== FALSE) {
-			
-			$update['customer_id'] = $customer_id;
-			$update['food_id'] = $food_id;
-			$update['food_rating'] = $rating_id;
-
-			return $this->db->insert('reviews', $update);
-					
-		}
 	}
 }

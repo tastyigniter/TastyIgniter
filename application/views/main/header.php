@@ -4,35 +4,37 @@
 		<title><?php echo $text_heading ?></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-		<link rel="icon" href="images/favicon.ico">
-		<link rel="shortcut icon" href="images/favicon.ico" />
-		<script type="text/javascript">
-			var js_site_url = "<?php echo site_url(); ?>";
-			var js_base_url = "<?php echo base_url(); ?>";
-		</script>
+		<link rel="shortcut icon" href="<?php echo base_url('assets/img/favicon.ico'); ?>" />
+		<link href="<?php echo base_url('assets/js/themes/ui-lightness/jquery-ui-1.10.3.custom.min.css'); ?>" rel="stylesheet" type="text/css" />
+		<link href="<?php echo base_url('assets/css/user_styles.css'); ?>" rel="stylesheet" type="text/css" />
+		<link href="<?php echo base_url('assets/css/nivo-slider.css'); ?>" rel="stylesheet" type="text/css" />
+		<link href="<?php echo base_url('assets/css/jquery.fancybox.css'); ?>" rel="stylesheet" type="text/css" />
 		<script src="<?php echo base_url("assets/js/jquery-1.9.1.js"); ?>"></script>
 		<script src="<?php echo base_url("assets/js/jquery-ui-1.10.3.custom.js"); ?>"></script>
 		<script src="<?php echo base_url("assets/js/common.js"); ?>"></script>
-		<script src="<?php echo base_url("assets/js/jquery.bxslider.js"); ?>"></script>
-		<?php echo link_tag('assets/js/themes/ui-lightness/jquery-ui-1.10.3.custom.min.css'); ?>
-		<?php echo link_tag('assets/css/user_styles.css'); ?>
-		<?php echo link_tag('assets/css/jquery.bxslider.css'); ?>
+		<script type="text/javascript">
+			var js_site_url = "<?php echo site_url(); ?>/";
+			var js_base_url = "<?php echo base_url(); ?>";
+		</script>
 	</head>
 	<body>
 	<div id="opaclayer" onclick="closeReviewBox();"></div>
 	<div class="main">
 		<header> 
 			<div class="container_24">
-				<h1><a href="<?php echo site_url(); ?>"><img src="<?php echo base_url("assets/img/".$this->config->item('site_logo')); ?>"><?php echo $this->config->item('site_name'); ?></a></h1>
-
+				<h1><a href="<?php echo site_url(); ?>">
+				<?php if ($this->config->item('site_logo')) { ?>
+					<img src="<?php echo base_url("assets/img/".$this->config->item('site_logo')); ?>">
+				<?php } else { ?>
+					<?php echo $this->config->item('site_name'); ?>
+				<?php } ?>
+				</a></h1>
 				<div id="menu">
 				<nav>
 					<ul>
 						<li><a href="<?php echo site_url(); ?>">Home</a></li>
 						<li><a href="<?php echo site_url('menus'); ?>">View Menu</a></li>
-						<!--<li><a href="<?php echo site_url('specials'); ?>">Special Deals</a></li>-->
-						<!--<li><a href="<?php echo site_url('cart'); ?>">Shopping Cart</a></li>-->
-						<li><a href="<?php echo site_url('find/table'); ?>">Reserve A Table</a></li>
+						<li><a href="<?php echo site_url('reserve/table'); ?>">Reservation</a></li>
 						<li><a href="<?php echo site_url('account'); ?>">My Account</a></li>
 						<?php $this->load->library('customer'); ?>
 						<?php if ($this->customer->islogged()) { ?>

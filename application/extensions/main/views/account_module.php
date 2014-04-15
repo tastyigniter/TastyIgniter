@@ -1,5 +1,11 @@
+<div class="img_inner">
 	<ul id="sub_nav">
-		<li><h3><a href="<?php echo site_url('menus'); ?>"><?php echo $text_order_now; ?></a></h3></li>
+		<?php if ($page === 'account') { ?>
+			<li><a href="<?php echo site_url('account'); ?>" class="active"><?php echo $text_account; ?></a></li>
+		<?php } else { ?>
+			<li><a href="<?php echo site_url('account'); ?>"><?php echo $text_account; ?></a></li>
+		<?php } ?>
+
 		<?php if ($page === 'details') { ?>
 			<li><a href="<?php echo site_url('account/details'); ?>" class="active"><?php echo $text_edit_details; ?></a></li>
 		<?php } else { ?>
@@ -24,6 +30,12 @@
 			<li><a href="<?php echo site_url('account/reservations'); ?>"><?php echo $text_reservations; ?></a></li>
 		<?php } ?>
 
+		<?php if ($page === 'reviews') { ?>
+			<li><a href="<?php echo site_url('account/reviews'); ?>" class="active"><?php echo $text_reviews; ?></a></li>
+		<?php } else { ?>
+			<li><a href="<?php echo site_url('account/reviews'); ?>"><?php echo $text_reviews; ?></a></li>
+		<?php } ?>
+
 		<?php if ($page === 'inbox') { ?>
 			<li><a href="<?php echo site_url('account/inbox'); ?>" class="active"><?php echo $text_inbox; ?></a></li>
 		<?php } else { ?>
@@ -32,3 +44,4 @@
 
 		<li><a href="<?php echo site_url('account/logout'); ?>"><?php echo $text_logout; ?></a></li>
 	</ul>
+</div>

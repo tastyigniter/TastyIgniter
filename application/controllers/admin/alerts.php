@@ -5,11 +5,16 @@ class Alerts extends CI_Controller {
 		parent::__construct(); //  calls the constructor
 		$this->load->library('user');
 		$this->load->library('pagination');
+		$this->load->model('Alerts_model');
 		$this->load->model('Messages_model');
 		$this->load->model('Staffs_model');
 	}
 
 	public function index() {
+			
+		if (!file_exists(APPPATH .'views/admin/alerts.php')) {
+			show_404();
+		}
 			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
@@ -42,12 +47,11 @@ class Alerts extends CI_Controller {
 
 		//load ratings data into array
 		$data['alerts'] = array();
-		$results = $this->Messages_model->getAlertsList($filter);
+		$results = $this->Alerts_model->getList($filter);
 		foreach ($results as $result) {					
 			$data['alerts'][] = array(
 				'message_id'	=> $result['message_id'],
-				'date'			=> mdate('%d-%m-%Y', strtotime($result['date'])),
-				'time' 			=> mdate('%H:%i', strtotime($result['time'])),
+				'date'			=> mdate('%d %M %y - %H:%i', strtotime($result['date'])),
 				'sender'		=> $result['staff_name'],
 				'subject' 		=> $result['subject'],
 				'body' 			=> substr(strip_tags(html_entity_decode($result['body'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..',
@@ -56,7 +60,7 @@ class Alerts extends CI_Controller {
 		}
 		
 		$config['base_url'] 		= $this->config->site_url('admin/alerts');
-		$config['total_rows'] 		= $this->Messages_model->alerts_record_count($filter);
+		$config['total_rows'] 		= $this->Alerts_model->record_count($filter);
 		$config['per_page'] 		= $filter['limit'];
 		$config['num_links'] 		= round($config['total_rows'] / $config['per_page']);
 		
@@ -67,9 +71,7 @@ class Alerts extends CI_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		//check if POST submit then remove quantity_id
 		if ($this->input->post('delete') && $this->_deleteMessage() === TRUE) {
-			
 			redirect('admin/alerts');
 		}	
 
@@ -84,6 +86,10 @@ class Alerts extends CI_Controller {
 
 	public function view() {
 		
+		if (!file_exists(APPPATH .'views/admin/alerts_view.php')) {
+			show_404();
+		}
+			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -107,18 +113,17 @@ class Alerts extends CI_Controller {
 			$data['heading'] 		= 'Alerts';
 			$data['sub_menu_back'] 	= $this->config->site_url('admin/alerts');
 
-			if (!empty($message_info['to'])) {
-				$receiver = $this->Staffs_model->getStaff($message_info['to']);
-				$to = $receiver['staff_name'];
+			if (!empty($message_info['receiver'])) {
+				$receiver = $this->Staffs_model->getStaff($message_info['receiver']);
+				$receiver = $receiver['staff_name'];
 			} else {
-				$to = 'Customers';
+				$receiver = 'Customers';
 			}
 			
 			$data['message_id'] 	= $message_info['message_id'];
-			$data['date'] 			= mdate('%d-%m-%Y', strtotime($message_info['date']));
-			$data['time'] 			= mdate('%H:%i', strtotime($message_info['time']));
+			$data['date'] 			= mdate('%d %M %y - %H:%i', strtotime($message_info['date']));
 			$data['sender'] 		= $message_info['staff_name'];
-			$data['to'] 			= $to;
+			$data['receiver'] 		= $receiver;
 			$data['subject'] 		= $message_info['subject'];
 			$data['body'] 			= $message_info['body'];
 		}		
@@ -135,21 +140,16 @@ class Alerts extends CI_Controller {
 	public function _deleteMessage($menu_id = FALSE) {
     	if (!$this->user->hasPermissions('modify', 'admin/messages')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
     	
     	} else { 
-		
 			if (is_array($this->input->post('delete'))) {
-
-				//sorting the post[quantity] array to rowid and qty.
 				foreach ($this->input->post('delete') as $key => $value) {
 					$message_id = $value;
-				
 					$this->Messages_model->deleteMessage($message_id);
 				}			
 			
 				$this->session->set_flashdata('alert', '<p class="success">Message(s) Deleted Sucessfully!</p>');
-
 			}
 		}
 				

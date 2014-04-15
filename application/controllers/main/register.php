@@ -11,6 +11,10 @@ class Register extends MX_Controller {
 	public function index() {
 		$this->lang->load('main/login_register');  												// loads language file
 
+		if (!file_exists(APPPATH .'views/main/register.php')) {
+			show_404();
+		}
+			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {

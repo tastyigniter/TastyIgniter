@@ -1,4 +1,5 @@
 <div class="content">
+<div class="img_inner">
 	<form method="post" accept-charset="utf-8" action="<?php echo current_url(); ?>">
     <table border="0" cellpadding="2" width="" align="center" id="email-check">
      	<tr>
@@ -26,4 +27,5 @@
     	</tr>
     </table>
 	</form>
+</div>
 </div>

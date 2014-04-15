@@ -15,7 +15,11 @@
 		<?php foreach ($locations as $location) { ?>
 		<tr>
 			<td><input type="checkbox" value="<?php echo $location['location_id']; ?>" name="delete[]" /></td>
-			<td><?php echo $location['location_name']; ?></td>
+			<td><?php echo $location['location_name']; ?>
+				<?php if ($default_location_id === $location['location_id']) { ?>
+				<b>(Default)</b>
+				<?php } ?>
+			</td>
 			<td><?php echo $location['location_city']; ?></td>
 			<td><?php echo $location['location_postcode']; ?></td>
 			<td><?php echo $location['location_telephone']; ?></td>
@@ -37,41 +41,3 @@
 	</div>
 	</div>
 </div>
-<script type="text/javascript" src="<?php echo base_url("assets/js/jquery-ui-timepicker-addon.js"); ?>"></script> 
-<script type="text/javascript"><!--
-$(document).ready(function() {
-	$('.hours').timepicker({
-		timeFormat: 'HH:mm',
-	});
-});
-//--></script>
-<script type="text/javascript"><!--
-$('input[name=\'table\']').autocomplete({
-	delay: 0,
-	source: function(request, response) {
-		$.ajax({
-			url: '<?php echo site_url("admin/tables/autocomplete"); ?>?table_name=' +  encodeURIComponent(request.term),
-			dataType: 'json',
-			success: function(json) {		
-				response($.map(json, function(item) {
-					return {
-						value: item.table_id,
-						label: item.table_name,
-						min: item.min_capacity,
-						max: item.max_capacity
-					}
-				}));
-			}
-		});
-	},
-	select: function(event, ui) {
-		$('#table-box' + ui.item.value).remove();
-		$('#table-box table').append('<tr id="table-box' + ui.item.value + '"><td class="name">' + ui.item.label + '</td><td>' + ui.item.min + '</td><td>' + ui.item.max + '</td><td class="img">' + '<img src="<?php echo base_url('assets/img/delete.png'); ?>" onclick="$(this).parent().parent().remove();" />' + '<input type="hidden" name="tables[]" value="' + ui.item.value + '" /></td></tr>');
-
-		return false;
-	},
-	focus: function(event, ui) {
-      	return false;
-   	}
-});
-//--></script>

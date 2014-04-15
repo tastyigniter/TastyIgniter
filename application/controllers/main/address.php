@@ -13,6 +13,10 @@ class Address extends MX_Controller {
 	public function index() {
 		$this->lang->load('main/address');  													// loads language file
 		
+		if (!file_exists(APPPATH .'views/main/address.php')) {
+			show_404();
+		}
+			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
@@ -42,19 +46,16 @@ class Address extends MX_Controller {
 		$data['continue'] 				= $this->config->site_url('account/address/edit');
 		$data['back'] 					= $this->config->site_url('account');
 
-
-		$data['addresses'] = array();
+		$this->load->library('country');
+		$data['addresses'] = array();		
 		$results = $this->Customers_model->getCustomerAddresses($this->customer->getId());								// retrieve customer address data from getCustomerAddresses method in Customers model
 		if ($results) {
 			foreach ($results as $result) {														// loop through the customer address data
+
 				$data['addresses'][] = array(													// create array of customer address data to pass to view
 					'address_id'	=> $result['address_id'],
-					'address_1' 	=> $result['address_1'],
-					'address_2' 	=> $result['address_2'],
-					'city' 			=> $result['city'],
-					'postcode' 		=> $result['postcode'],
-					'country' 		=> $result['country'],		
-					'edit' 			=> $this->config->site_url('account/address/edit/' . $result['address_id'])
+					'address' 		=> $this->country->addressFormat($result),
+					'edit' 			=> $this->config->site_url('account/address/edit?id=' . $result['address_id'])
 				);
 			}
 		}
@@ -88,6 +89,14 @@ class Address extends MX_Controller {
 			$customer_id = $this->customer->getId();
 		}
 
+		if (is_numeric($this->input->get('id'))) {												// retrieve if available and check if fouth uri segment is numeric
+			$address_id = (int)$this->input->get('id');
+			$data['action']	= $this->config->site_url('account/address/edit?id='. $address_id);
+		} else {																				// else if customer is logged in retrieve customer id from customer library
+			$address_id = FALSE;
+			$data['action']	= $this->config->site_url('account/address/edit');
+		}
+
 		$this->load->model('Messages_model');													// load the customers model
 		$inbox_total = $this->Messages_model->getMainInboxTotal();					// retrieve total number of customer messages from getMainInboxTotal method in Messages model
 
@@ -112,21 +121,17 @@ class Address extends MX_Controller {
 		
 		$data['address'] = array();
 		
-		if (is_numeric($this->uri->segment(4))) {												// retrieve if available and check if fouth uri segment is numeric
-			$address_id = (int)$this->uri->segment(4);
-
-			$result = $this->Customers_model->getCustomerAddress($customer_id, $address_id);	// if uri segment is available and numeric, retrieve customer address based on uri segment and customer id
-			if ($result) {
-				$data['address'] = array(														// create array of customer address data to pass to view
-					'address_id'	=> $result['address_id'],
-					'address_1' 	=> $result['address_1'],
-					'address_2' 	=> $result['address_2'],
-					'city' 			=> $result['city'],
-					'postcode' 		=> $result['postcode'],
-					'country_id' 	=> $result['country_id']	
-				);
-			}		
-		}
+		$result = $this->Customers_model->getCustomerAddress($customer_id, $address_id);	// if uri segment is available and numeric, retrieve customer address based on uri segment and customer id
+		if ($result) {
+			$data['address'] = array(														// create array of customer address data to pass to view
+				'address_id'	=> $result['address_id'],
+				'address_1' 	=> $result['address_1'],
+				'address_2' 	=> $result['address_2'],
+				'city' 			=> $result['city'],
+				'postcode' 		=> $result['postcode'],
+				'country_id' 	=> $result['country_id']	
+			);
+		}		
 		
 		$data['countries'] = array();
 		$results = $this->Countries_model->getCountries();										// retrieve countries data from getCountries method in Locations model
@@ -137,69 +142,75 @@ class Address extends MX_Controller {
 			);
 		}
 		
-		// check if $_POST is set and if update address validation was successful then redirect
-		if ($this->input->post() && $this->_updateAddress() === TRUE) {
-						
+		if ($this->input->post() && $this->_updateAddress($address_id) === TRUE) {
 			redirect('account/address');
 		}
 						
 		// Delete Customer Address
-		if ($this->input->post() && $this->input->post('delete')) {
-				
+		if ($this->input->post() AND $this->input->post('delete')) {
 			$this->Customers_model->deleteAddress($customer_id, $address_id);
-				
 			$this->session->set_flashdata('alert', $this->lang->line('text_deleted_msg'));
 
 			redirect('account/address');
 		}
 
-		// pass array $data and load view files
-		$this->load->view('main/header', $data);
-		$this->load->view('main/content_left');
-		$this->load->view('main/address_edit', $data);
-		$this->load->view('main/footer');
+		$regions = array(
+			'main/header',
+			'main/content_left',
+			'main/footer'
+		);
+		
+		$this->template->regions($regions);
+		$this->template->load('main/address_edit', $data);
 	}
 	
-	public function _updateAddress() {
+	public function _updateAddress($address_id = FALSE) {
+		$this->load->library('location'); 														// load the customer library
 		
 		// START of form validation rules
 		$this->form_validation->set_rules('address[address_1]', 'Address 1', 'trim|required|min_length[3]|max_length[128]');
 		$this->form_validation->set_rules('address[address_2]', 'Address 2', 'trim|max_length[128]');
 		$this->form_validation->set_rules('address[city]', 'City', 'trim|required|min_length[2]|max_length[128]');
-		$this->form_validation->set_rules('address[postcode]', 'Postcode', 'trim|required|min_length[2]|max_length[10]');
+		$this->form_validation->set_rules('address[postcode]', 'Postcode', 'trim|required|min_length[2]|max_length[11]|callback_get_lat_lag');
 		$this->form_validation->set_rules('address[country]', 'Country', 'trim|required|integer');
 		// END of form validation rules
 
   		if ($this->form_validation->run() === TRUE) {											// checks if form validation routines ran successfully
 			$update = array();
 			
+			$customer_id = FALSE;
 			if ($this->customer->getId()) {  
-				$update['customer_id'] = $this->customer->getId();								// retrieve customer id from customer library and add to update array
-			}
-		
-			if (is_numeric($this->uri->segment(4))) {
-				$update['address_id'] = (int)$this->uri->segment(4);							// retrieve address id from fourth uri segment and add to update array
+				$customer_id = $this->customer->getId();								// retrieve customer id from customer library and add to update array
 			}
 
-			if ($address_data = $this->input->post('address')) {								// retrieve $_POST address value and add to update array
-				$update['address_1'] 	= $address_data['address_1'];
-				$update['address_2'] 	= $address_data['address_2'];
-				$update['city'] 		= $address_data['city'];
-				$update['postcode'] 	= $address_data['postcode'];
-				$update['country'] 		= $address_data['country'];
-			}
+			$address = $this->input->post('address');
 		
-			if ($this->Customers_model->updateAddress($update)) {								// check if address updated successfully then display success message else error message
-		
+			if ($this->Customers_model->updateCustomerAddress($customer_id, $address_id, $address)) {								// check if address updated successfully then display success message else error message
 				$this->session->set_flashdata('alert', $this->lang->line('text_added_msg'));
-		
 			} else {
-		
 				$this->session->set_flashdata('alert', $this->lang->line('text_nothing_msg'));				
-		
 			}
 		
 			return TRUE;
 		}
+	}
+
+	public function get_lat_lag() {
+		if (isset($_POST['address']) && is_array($_POST['address']) && !empty($_POST['address']['postcode'])) {			 
+			$address_string =  implode(", ", $_POST['address']);
+			$address = urlencode($address_string);
+			$geocode = file_get_contents('http://maps.googleapis.com/maps/api/geocode/json?address='. $address .'&sensor=false&region=GB');
+    		$output = json_decode($geocode);
+    		$status = $output->status;
+    		
+    		if ($status === 'OK') {
+				$_POST['address']['location_lat'] = $output->results[0]->geometry->location->lat;
+				$_POST['address']['location_lng'] = $output->results[0]->geometry->location->lng;
+			    return TRUE;
+    		} else {
+        		$this->form_validation->set_message('get_lat_lag', 'The Address you entered failed Geocoding, please enter a different address!');
+        		return FALSE;
+    		}
+        }
 	}
 }

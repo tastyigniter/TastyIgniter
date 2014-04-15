@@ -1,7 +1,8 @@
 <?php
 
 $lang['text_heading'] 			= 'Reserve A Table';
-$lang['text_find_heading'] 		= 'Find A Table';
+$lang['text_heading_find'] 		= 'Find A Table';
+$lang['text_heading_success'] 	= 'Reservation Confirmed';;
 $lang['text_opened'] 			= '<b>We are currently open</b>';
 $lang['text_closed'] 			= '<b>We are currently closed</b>';
 $lang['text_delivery_y'] 		= 'Delivery available';
@@ -37,9 +38,13 @@ $lang['entry_comments'] 		= 'Special Requests:';
 $lang['button_check_postcode'] 	= 'Check Postcode';
 $lang['button_reservation'] 	= 'Make Reservation!';
 $lang['button_find'] 			= 'Find Table!';
+$lang['button_time'] 			= 'Select Time!';
+$lang['button_back'] 			= 'Back!';
 $lang['button_find_again'] 		= 'Find Table Again!';
 
 
+$lang['warning_no_guest'] 		= '<p class="error">No tables available at the selected location, Please try again!</p>';
+$lang['warning_no_time'] 		= '<p class="error">No tables available for the selected date and time, Please try again!</p>';
 $lang['text_subject'] 			= 'Table Reserved - %s!';
 $lang['text_greetings'] 		= 'Hello %s,';
 $lang['text_success'] 			= 'Your reservation at %s has been booked for %s on %s at %s.<br />Thanks for reserving with us online!';

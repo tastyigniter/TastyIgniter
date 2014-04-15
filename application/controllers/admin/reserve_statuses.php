@@ -9,6 +9,10 @@ class Reserve_statuses extends CI_Controller {
 
 	public function index() {
 			
+		if (!file_exists(APPPATH .'views/admin/reserve_statuses.php')) {
+			show_404();
+		}
+			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -58,6 +62,10 @@ class Reserve_statuses extends CI_Controller {
 
 	public function edit() {
 		
+		if (!file_exists(APPPATH .'views/admin/reserve_statuses.php')) {
+			show_404();
+		}
+			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -115,33 +123,23 @@ class Reserve_statuses extends CI_Controller {
 									
     	if (!$this->user->hasPermissions('modify', 'admin/reserve_statuses')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
 			return TRUE;
     	
-    	} else if ( ! $this->input->get('id')) { 
+    	} else if ( ! $this->input->get('id') AND $this->validateForm() === TRUE) { 
+			$add = array();
 			
-			//validate category value
-			$this->form_validation->set_rules('status_name', 'Status Name', 'trim|required|min_length[2]|max_length[32]');
-			$this->form_validation->set_rules('status_comment', 'Status Comment', 'trim|min_length[2]|max_length[1028]');
-			$this->form_validation->set_rules('notify_customer', 'Notify Customer', 'trim|integer');
+			$add['status_name'] 		= $this->input->post('status_name');
+			$add['status_comment'] 		= $this->input->post('status_comment');
+			$add['notify_customer'] 	= $this->input->post('notify_customer');
 
-			if ($this->form_validation->run() === TRUE) {
-				$add = array();
-				
-				$add['status_name'] 		= $this->input->post('status_name');
-				$add['status_comment'] 		= $this->input->post('status_comment');
-				$add['notify_customer'] 	= $this->input->post('notify_customer');
-	
-				if ($this->Statuses_model->addStatus('reserve', $add)) {	
-				
-					$this->session->set_flashdata('alert', '<p class="success">Order Status Added Sucessfully!</p>');
-				} else {
-			
-					$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
-				}
-			
-				return TRUE;
+			if ($this->Statuses_model->addStatus('reserve', $add)) {	
+				$this->session->set_flashdata('alert', '<p class="success">Order Status Added Sucessfully!</p>');
+			} else {
+				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
 			}
+		
+			return TRUE;
 		}
 	}
 	
@@ -149,57 +147,56 @@ class Reserve_statuses extends CI_Controller {
     	
     	if (!$this->user->hasPermissions('modify', 'admin/reserve_statuses')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
 			return TRUE;
     	
-    	} else if ($this->input->get('id')) { 
-			
-			$this->form_validation->set_rules('status_name', 'Status Name', 'trim|required|min_length[2]|max_length[32]');
-			$this->form_validation->set_rules('status_comment', 'Status Comment', 'trim|max_length[1028]');
-			$this->form_validation->set_rules('notify_customer', 'Notify Customer', 'trim|integer');
+    	} else if ($this->input->get('id') AND $this->validateForm() === TRUE) { 
+			$update = array();
+		
+			//Sanitizing the POST values
+			$update['status_id'] 		= $this->input->get('id');
+			$update['status_name'] 		= $this->input->post('status_name');
+			$update['status_comment'] 	= $this->input->post('status_comment');
+			$update['notify_customer'] 	= $this->input->post('notify_customer');
 
-			if ($this->form_validation->run() === TRUE) {
-				$update = array();
-			
-				//Sanitizing the POST values
-				$update['status_id'] 		= $this->input->get('id');
-				$update['status_name'] 		= $this->input->post('status_name');
-				$update['status_comment'] 	= $this->input->post('status_comment');
-				$update['notify_customer'] 	= $this->input->post('notify_customer');
-
-				if ($this->Statuses_model->updateStatus('reserve', $update)) {	
-			
-					$this->session->set_flashdata('alert', '<p class="success">Order Status Updated Sucessfully!</p>');
-				} else {
-			
-					$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
-				}
-			
-				return TRUE;
-			}	
+			if ($this->Statuses_model->updateStatus('reserve', $update)) {	
+				$this->session->set_flashdata('alert', '<p class="success">Order Status Updated Sucessfully!</p>');
+			} else {
+				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
+			}
+		
+			return TRUE;
 		}
 	}	
 
 	public function _deleteStatus() {
     	if (!$this->user->hasPermissions('modify', 'admin/reserve_statuses')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
     	
     	} else { 
-		
 			if (is_array($this->input->post('delete'))) {
-
 				foreach ($this->input->post('delete') as $key => $value) {
 					$status_id = $value;
-			
 					$this->Statuses_model->deleteStatus($status_id);
 				}			
 		
 				$this->session->set_flashdata('alert', '<p class="success">Order Status(es) Deleted Sucessfully!</p>');
-
 			}
 		}
 				
 		return TRUE;
+	}
+
+	public function validateForm() {
+		$this->form_validation->set_rules('status_name', 'Status Name', 'trim|required|min_length[2]|max_length[32]');
+		$this->form_validation->set_rules('status_comment', 'Status Comment', 'trim|max_length[1028]');
+		$this->form_validation->set_rules('notify_customer', 'Notify Customer', 'trim|integer');
+
+		if ($this->form_validation->run() === TRUE) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}		
 	}
 }

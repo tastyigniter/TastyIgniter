@@ -1,4 +1,5 @@
 <?php
+
 class Setup extends CI_Controller {
 
 	public function __construct() {
@@ -6,13 +7,13 @@ class Setup extends CI_Controller {
 		//$this->load->library('user');
 		$this->load->model('Setup_model');	    
 		
-		$sess_admin_data = array(
+		/*$sess_admin_data = array(
 			'user_id' 			=> '',
 			'staff_department'	=> '',
 			'username' 			=> ''
 		);
 		
-		$this->session->unset_userdata($sess_admin_data);
+		$this->session->unset_userdata($sess_admin_data);*/
 	}
 
 	public function index() {
@@ -33,57 +34,68 @@ class Setup extends CI_Controller {
 			$data['alert'] = '';
 		}		
 
+		$error = 0;
+        
+        $php_required  = '5.4';
+        $php_installed = phpversion();
+
 		$data['heading'] 					= 'TastyIgniter - Setup';
-        $data['php_version'] 				= 'is version '. phpversion() .' supported?';
+        $data['php_version'] 				= 'is version '. $php_installed .' supported?';
 		$data['mysqli_installed'] 			= 'is MySQLi installed?';
 		$data['curl_installed'] 			= 'is cURL installed?';
+		$data['gd_installed'] 				= 'is GD/GD2 library installed?';
 		$data['register_globals_enabled'] 	= 'is Register Globals turned off?';
 		$data['magic_quotes_gpc_enabled'] 	= 'is Magic Quotes GPC turned off?';
 		$data['file_uploads_enabled'] 		= 'is File Uploads turned on?';
 		$data['is_writable'] 				= 'is writable?';
 				
-		$error = 0;
-        
-        $php_required  = '5.4';
-
-        if (phpversion() < $php_required) {
+        if ($php_installed < $php_required) {
 			$error = 1;
-			$data['php_status'] = '<span class="red">No</span>';
+			$data['php_status'] = '<i class="red"></i>';
         } else {
-			$data['php_status'] = '<span class="">Yes</span>';
+			$data['php_status'] = '<i class="green"></i>';
         }
 
         if (!extension_loaded('mysqli')) {
 			$error = 1;
-			$data['mysqli_status'] = '<span class="red">No</span>';
+			$data['mysqli_status'] = '<i class="red"></i>';
         } else {
-			$data['mysqli_status'] = '<span class="">Yes</span>';
+			$data['mysqli_status'] = '<i class="green"></i>';
         }
 
         if (!extension_loaded('curl')) {
 			$error = 1;
-			$data['curl_status'] = '<span class="red">No</span>';
+			$data['curl_status'] = '<i class="red"></i>';
         } else {
-			$data['curl_status'] = '<span class="">Yes</span>';
+			$data['curl_status'] = '<i class="green"></i>';
         }
 
-		if (!ini_get('register_globals')) {
-			$data['register_globals_status'] = '<span class="">Yes</span>';
+        if (!extension_loaded('gd')) {
+			$error = 1;
+			$data['gd_status'] = '<i class="red"></i>';
         } else {
-			$data['register_globals_status'] = '<span class="red">No</span>';
+			$data['gd_status'] = '<i class="green"></i>';
+        }
+
+		if (ini_get('register_globals')) {
+			$error = 1;
+			$data['register_globals_status'] = '<i class="red"></i>';
+        } else {
+			$data['register_globals_status'] = '<i class="green"></i>';
 		}
 		
-		if (!ini_get('magic_quotes_gpc')) {
-			$data['magic_quotes_gpc_status'] = '<span class="">Yes</span>';
+		if (ini_get('magic_quotes_gpc')) {
+			$error = 1;
+			$data['magic_quotes_gpc_status'] = '<i class="red"></i>';
         } else {
-			$data['magic_quotes_gpc_status'] = '<span class="red">No</span>';
+			$data['magic_quotes_gpc_status'] = '<i class="green"></i>';
 		}
 		
 		if (!ini_get('file_uploads')) {
 			$error = 1;
-			$data['file_uploads_status'] = '<span class="red">No</span>';
+			$data['file_uploads_status'] = '<i class="red"></i>';
         } else {
-			$data['file_uploads_status'] = '<span class="">Yes</span>';
+			$data['file_uploads_status'] = '<i class="green"></i>';
 		}
 						
 		$writables = array(
@@ -97,21 +109,17 @@ class Setup extends CI_Controller {
 
         foreach ($writables as $writable) {
             if (!is_writable($writable)) {
-               
 				$error = 1;
                 
                 $data['writables'][] = array(
                 	'file' => $writable,
-                    'status' => '<span class="red">No</span>'
+                    'status' => '<i class="red"></i>'
                 );
-
             } else {
-
                 $data['writables'][] = array(
                 	'file' => $writable,
-                    'status' => '<span class="">Yes</span>'
+                    'status' => '<i class="green"></i>'
                 );
-
             }
         }
 
@@ -121,9 +129,10 @@ class Setup extends CI_Controller {
 			
 			if ($error === 0) {
 				$this->session->set_userdata('setup', 'step_1');
+				redirect('setup/database');
 			}
-		
-			redirect('setup/database');
+			
+			$data['alert'] = '<p class="error">Please check below to make sure all server requirements are provided!</p>';
 		}
 		
 		$this->load->view('setup/setup', $data);
@@ -174,6 +183,12 @@ class Setup extends CI_Controller {
 			$data['db_pass'] = '';		
 		}
 		
+		if ($this->input->post('db_prefix')) {
+			$data['db_prefix'] = $this->input->post('db_prefix');		
+		} else {
+			$data['db_prefix'] = 'ti_';		
+		}
+		
 		if ($this->input->post() && $this->_checkDatabase() === TRUE) {
 						
 			redirect('setup/settings');
@@ -200,7 +215,7 @@ class Setup extends CI_Controller {
 			$data['alert'] = '';
 		}		
 
-		$data['heading'] 		= 'TastyIgniter - Setup - Settings';
+		$data['heading'] = 'TastyIgniter - Setup - Settings';
 
 		if ($this->input->post('site_name')) {
 			$data['site_name'] = $this->input->post('site_name');		
@@ -259,6 +274,8 @@ class Setup extends CI_Controller {
 			$data['heading'] 			= 'TastyIgniter - Setup - Successful';
 			$data['complete_setup'] 	= '<a href="'. site_url('admin') .'">Remove Setup Folder</a>';
 			
+			$this->load->library('user');
+			$this->user->logout();
 			$this->session->unset_userdata('setup');
 
 			$this->load->view('setup/success', $data);
@@ -294,6 +311,7 @@ class Setup extends CI_Controller {
 		$this->form_validation->set_rules('db_host', 'Hostname', 'trim|required|callback_handle_connect');
 		$this->form_validation->set_rules('db_user', 'Username', 'trim|required');
 		$this->form_validation->set_rules('db_pass', 'Password', 'trim|required');
+		$this->form_validation->set_rules('db_prefix', 'Prefix', 'trim|required');
 		
 		if ($this->form_validation->run() === TRUE) {
 	
@@ -303,6 +321,7 @@ class Setup extends CI_Controller {
 			$db_pass 	= $this->input->post('db_pass');
 			$db_host 	= $this->input->post('db_host');
 			$db_name	= $this->input->post('db_name');
+			$db_prefix	= $this->input->post('db_prefix');
 
 			if (is_readable($db_path)) {
 
@@ -312,7 +331,7 @@ class Setup extends CI_Controller {
 				$db_file = str_replace('$db[\'default\'][\'username\'] = \'\'', '$db[\'default\'][\'username\'] = \'' . $db_user . '\'', $db_file);
 				$db_file = str_replace('$db[\'default\'][\'password\'] = \'\'', '$db[\'default\'][\'password\'] = \'' . $db_pass . '\'', $db_file);
 				$db_file = str_replace('$db[\'default\'][\'database\'] = \'\'', '$db[\'default\'][\'database\'] = \'' . $db_name . '\'', $db_file);
-				//$db_file = str_replace('$db[\'default\'][\'db_debug\'] = FALSE', '$db[\'default\'][\'db_debug\'] = TRUE', $db_file);
+				$db_file = str_replace('$db[\'default\'][\'dbprefix\'] = \'\'', '$db[\'default\'][\'dbprefix\'] = \'' . $db_prefix . '\'', $db_file);
 
        	 		$error = 0;
        	 		
@@ -344,42 +363,41 @@ class Setup extends CI_Controller {
 		$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'trim|required');
 		
 		if ($this->form_validation->run() === TRUE) {
-			//$this->session->unset_userdata('setup');$config['sess_use_database']	= TRUE;
 
-
-			$add = array(
-				'site_name' 		=> $this->input->post('site_name'),
-				'site_email' 		=> $this->input->post('site_email'),
-				'staff_name' 		=> $this->input->post('staff_name'),
-				'username' 			=> $this->input->post('username'),
-				'password' 			=> $this->input->post('password')
-			);
-			
-			$success = 1;
+			$error = 1;
 			
 			if ($this->Setup_model->dbInstall()) {
-				$config_path	= APPPATH .'config/config.php';
+				$config_path = APPPATH .'config/config.php';
 				$config_file = read_file($config_path);
 	
-				$config_file = str_replace('$config[\'sess_use_database\']	= FALSE', '$config[\'sess_use_database\'] 	= TRUE', $config_file);
 				$config_file = str_replace('$config[\'ti_setup\'] = \'\'', '$config[\'ti_setup\'] = \'success\'', $config_file);
 
 			
 				if ( ! write_file($config_path, $config_file)) {
-					$success = 0;
+					$error = 1;
 					$this->session->set_flashdata('alert', 'Unable to write config file!');
 				} else {
-					if ( ! $this->Setup_model->addUser($add)) {
-						$success = 0;
+					$add = array(
+						'site_name' 	=> $this->input->post('site_name'),
+						'site_email' 	=> $this->input->post('site_email'),
+						'staff_name' 	=> $this->input->post('staff_name'),
+						'username' 		=> $this->input->post('username'),
+						'password' 		=> $this->input->post('password')
+					);
+			
+					if ($this->Setup_model->addUser($add)) {
+						$error = 0;
+					} else {
+						$error = 1;
 						$this->session->set_flashdata('alert', 'Error installing user and site settings!');
 					}
 				}
 			} else {
-				$success = 0;
+				$error = 1;
  				$this->session->set_flashdata('alert', 'Error installing database!');
 			}
 
-			if ($success === 1) {
+			if ($error === 0) {
 				$this->session->set_userdata('setup', 'step_3'); 		
 				return TRUE;
 			}

@@ -7,12 +7,11 @@
 			<th>ID</th>
 			<th>Location</th>
 			<th>Customer Name</th>
-			<th width="4" class="right">Guest(s)</th>
-			<th class="right">Table</th>
-			<th>Status</th>
-			<th>Assigned Staff</th>
-			<th class="center">Time</th>
-			<th class="center">Date</th>
+			<th class="center">Guest(s)</th>
+			<th class="center">Table</th>
+			<th class="center">Status</th>
+			<th class="center">Assigned Staff</th>
+			<th class="right">Reserve Time - Date</th>
 			<th class="right">Action</th>
 		</tr>
   	<?php if ($reservations) { ?>
@@ -22,18 +21,17 @@
 			<td><?php echo $reservation['reservation_id']; ?></td>
 			<td><?php echo $reservation['location_name']; ?></td>
 			<td><?php echo $reservation['first_name'] .' '. $reservation['last_name']; ?></td>
-			<td class="right"><?php echo $reservation['guest_num']; ?></td>
-			<td class="right"><?php echo $reservation['table_name']; ?></td>
-			<td><?php echo $reservation['status_name']; ?></td>
-			<td><?php echo $reservation['staff_name'] ? $reservation['staff_name'] : 'NONE'; ?></td>
-			<td class="center"><?php echo $reservation['reserve_time']; ?></td>
-			<td class="center"><?php echo $reservation['reserve_date']; ?></td>
+			<td class="center"><?php echo $reservation['guest_num']; ?></td>
+			<td class="center"><?php echo $reservation['table_name']; ?></td>
+			<td class="center"><?php echo $reservation['status_name']; ?></td>
+			<td class="center"><?php echo $reservation['staff_name'] ? $reservation['staff_name'] : 'NONE'; ?></td>
+			<td class="right"><?php echo $reservation['reserve_time']; ?> - <?php echo $reservation['reserve_date']; ?></td>
 			<td class="right"><a class="edit" title="Edit" href="<?php echo $reservation['edit']; ?>"></a></td>
 		</tr>
 		<?php } ?>
 		<?php } else { ?>
 		<tr>
-			<td colspan="11" align="center"><?php echo $text_empty; ?></td>
+			<td colspan="10" align="center"><?php echo $text_empty; ?></td>
 		</tr>
   	<?php } ?>
 	</table>

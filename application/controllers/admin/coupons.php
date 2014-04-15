@@ -10,6 +10,10 @@ class Coupons extends CI_Controller {
 
 	public function index() {
 
+		if (!file_exists(APPPATH .'views/admin/coupons.php')) {
+			show_404();
+		}
+			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -84,6 +88,10 @@ class Coupons extends CI_Controller {
 
 	public function edit() {
 
+		if (!file_exists(APPPATH .'views/admin/coupons_edit.php')) {
+			show_404();
+		}
+			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -148,48 +156,33 @@ class Coupons extends CI_Controller {
 									
     	if (!$this->user->hasPermissions('modify', 'admin/coupons')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
   			return TRUE;
     	
-    	} else if ( ! $this->input->get('id')) { 
+    	} else if ( ! $this->input->get('id') AND $this->validateForm() === TRUE) { 
 		
 			$time_format = '%h:%i';
 			$current_date_time = time();
-
-			$this->form_validation->set_rules('name', 'Coupon Name', 'trim|required|min_length[2]|max_length[128]');
-			$this->form_validation->set_rules('code', 'Coupon Code', 'trim|required|min_length[2]|max_length[10]');
-			$this->form_validation->set_rules('type', 'Coupon Type', 'trim|required|exact_length[1]');
-			$this->form_validation->set_rules('discount', 'Coupon Discount', 'trim|required|numeric');
-			$this->form_validation->set_rules('min_total', 'Minimum Total', 'trim|numeric');
-			$this->form_validation->set_rules('description', 'Coupon Description', 'trim|min_length[2]|max_length[1028]');
-			$this->form_validation->set_rules('start_date', 'Start Date', 'trim|callback_handle_date');
-			$this->form_validation->set_rules('end_date', 'End Date', 'trim|callback_handle_date');
-			$this->form_validation->set_rules('status', 'Status', 'trim|required|integer');
-
-			if ($this->form_validation->run() === TRUE) {
-				$add = array();
-				
-				$add['name'] 			= $this->input->post('name');
-				$add['code'] 			= $this->input->post('code');
-				$add['type'] 			= $this->input->post('type');
-				$add['discount'] 		= $this->input->post('discount');
-				$add['min_total'] 		= $this->input->post('min_total');
-				$add['description'] 	= $this->input->post('description');
-				$add['start_date'] 		= $this->input->post('start_date');
-				$add['end_date'] 		= $this->input->post('end_date');
-				$add['date_added'] 		= mdate($time_format, $current_date_time);
-				$add['status'] 			= $this->input->post('status');
-	
-				if ($this->Coupons_model->addCoupon($add)) {	
-				
-					$this->session->set_flashdata('alert', '<p class="success">Coupon Added Sucessfully!</p>');
-				} else {
+			$add = array();
 			
-					$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
-				}
-			
-				return TRUE;
+			$add['name'] 			= $this->input->post('name');
+			$add['code'] 			= $this->input->post('code');
+			$add['type'] 			= $this->input->post('type');
+			$add['discount'] 		= $this->input->post('discount');
+			$add['min_total'] 		= $this->input->post('min_total');
+			$add['description'] 	= $this->input->post('description');
+			$add['start_date'] 		= $this->input->post('start_date');
+			$add['end_date'] 		= $this->input->post('end_date');
+			$add['date_added'] 		= mdate($time_format, $current_date_time);
+			$add['status'] 			= $this->input->post('status');
+
+			if ($this->Coupons_model->addCoupon($add)) {	
+				$this->session->set_flashdata('alert', '<p class="success">Coupon Added Sucessfully!</p>');
+			} else {
+				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
 			}
+		
+			return TRUE;
 		}
 	}
 	
@@ -197,81 +190,67 @@ class Coupons extends CI_Controller {
     	
     	if (!$this->user->hasPermissions('modify', 'admin/coupons')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
   			return TRUE;
     	
-    	} else if ($this->input->get('id')) { 
-		
-			$this->form_validation->set_rules('name', 'Coupon Name', 'trim|required|min_length[2]|max_length[128]');
-			$this->form_validation->set_rules('code', 'Coupon Code', 'trim|required|min_length[2]|max_length[10]');
-			$this->form_validation->set_rules('type', 'Coupon Type', 'trim|required|exact_length[1]');
-			$this->form_validation->set_rules('discount', 'Coupon Discount', 'trim|required|numeric');
-			$this->form_validation->set_rules('min_total', 'Minimum Total', 'trim|numeric');
-			$this->form_validation->set_rules('description', 'Coupon Description', 'trim|min_length[2]|max_length[1028]');
-			$this->form_validation->set_rules('start_date', 'Start Date', 'trim|callback_handle_date');
-			$this->form_validation->set_rules('end_date', 'End Date', 'trim|callback_handle_date');
-			$this->form_validation->set_rules('status', 'Status', 'trim|required|integer');
+    	} else if ($this->input->get('id') AND $this->validateForm() === TRUE) { 
+			$update = array();
+			
+			$update['coupon_id'] 		= $this->input->get('id');
+			$update['name'] 			= $this->input->post('name');
+			$update['code'] 			= $this->input->post('code');
+			$update['type'] 			= $this->input->post('type');
+			$update['discount'] 		= $this->input->post('discount');
+			$update['min_total'] 		= $this->input->post('min_total');
+			$update['description'] 		= $this->input->post('description');
+			$update['start_date'] 		= $this->input->post('start_date');
+			$update['end_date'] 		= $this->input->post('end_date');
+			$update['status'] 			= $this->input->post('status');	
 
-			if ($this->form_validation->run() === TRUE) {
-				$update = array();
-				
-				$update['coupon_id'] 		= $this->input->get('id');
-				$update['name'] 			= $this->input->post('name');
-				$update['code'] 			= $this->input->post('code');
-				$update['type'] 			= $this->input->post('type');
-				$update['discount'] 		= $this->input->post('discount');
-				$update['min_total'] 		= $this->input->post('min_total');
-				$update['description'] 		= $this->input->post('description');
-				$update['start_date'] 		= $this->input->post('start_date');
-				$update['end_date'] 		= $this->input->post('end_date');
-				$update['status'] 			= $this->input->post('status');	
-	
-				if ($this->Coupons_model->updateCoupon($update)) {	
-				
-					$this->session->set_flashdata('alert', '<p class="success">Coupon Updated Sucessfully!</p>');
-				} else {
-			
-					$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
-				}
-			
-				return TRUE;
+			if ($this->Coupons_model->updateCoupon($update)) {	
+				$this->session->set_flashdata('alert', '<p class="success">Coupon Updated Sucessfully!</p>');
+			} else {
+				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
 			}
+		
+			return TRUE;
 		}		
 	}	
 	
 	public function _deleteCoupon() {
     	if (!$this->user->hasPermissions('modify', 'admin/coupons')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
     	
     	} else { 
-		
 			if (is_array($this->input->post('delete'))) {
-
-				//sorting the post[quantity] array to rowid and qty.
 				foreach ($this->input->post('delete') as $key => $value) {
 					$coupon_id = $value;
-				
 					$this->Coupons_model->deleteCoupon($coupon_id);
 				}			
 			
 				$this->session->set_flashdata('alert', '<p class="success">Coupon(s) Deleted Sucessfully!</p>');
-
 			}
 		}
 				
 		return TRUE;
 	}
 
- 	public function handle_date($date) {
-      		
-     	$human_to_unix = human_to_unix($date);
-		if ( ! isset($human_to_unix)) {
-        	$this->form_validation->set_message('handle_date', 'The %s field is not a valid date/time.');
-      		return FALSE;
-    	} else {
-        	return TRUE;        
-      	}
-    }
-	
+	public function validateForm() {
+		$this->form_validation->set_rules('name', 'Coupon Name', 'trim|required|min_length[2]|max_length[128]');
+		$this->form_validation->set_rules('code', 'Coupon Code', 'trim|required|min_length[2]|max_length[10]');
+		$this->form_validation->set_rules('type', 'Coupon Type', 'trim|required|exact_length[1]');
+		$this->form_validation->set_rules('discount', 'Coupon Discount', 'trim|required|numeric');
+		$this->form_validation->set_rules('min_total', 'Minimum Total', 'trim|numeric');
+		$this->form_validation->set_rules('description', 'Coupon Description', 'trim|min_length[2]|max_length[1028]');
+		$this->form_validation->set_rules('start_date', 'Start Date', 'trim|valid_date');
+		$this->form_validation->set_rules('end_date', 'End Date', 'trim|valid_date');
+		$this->form_validation->set_rules('status', 'Status', 'trim|required|integer');
+
+		if ($this->form_validation->run() === TRUE) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}		
+	}
 }

@@ -6,8 +6,10 @@ $lang['text_charges'] 			= '<b>Delivery Cost:</b> Free';
 $lang['text_reviews'] 			= 'User Reviews: (2 reviews)';
 $lang['text_opening_hours'] 	= 'Opening Hours:';
 $lang['text_distance'] 			= '<b>Distance:</b> %s Miles';
-$lang['text_close'] 			= 'CLOSED';
+$lang['text_open'] 				= 'OPEN';
 $lang['text_find'] 				= 'Find';
+$lang['text_opened'] 			= 'We are currently open.';
+$lang['text_closed'] 			= 'We are currently closed.';
 
 $lang['button_send'] 			= 'SEND';
 

@@ -88,6 +88,45 @@
 					<?php } ?>
 					</select></td>
 				</tr>    	
+				<tr>
+					<td><b>Notify Customer:</b></td>
+					<td><input type="checkbox" name="notify" value="1" /></td>
+				</tr>
+			</table>
+			<br /><br />
+			
+			<h2>History</h2>
+			<table height="auto" class="list" id="history">
+				<tr>
+					<th>Date/Time</th>
+					<th>Status</th>
+					<th>Staff</th>
+					<th>Staff Assigned To</th>
+					<th class="center">Customer Notified</th>
+					<th class="left" width="25%">Comment</th>
+				</tr>
+				<?php if ($status_history) { ?>
+				<?php foreach ($status_history as $history) { ?>
+				<tr>
+					<td><?php echo $history['date_time']; ?></td>
+					<td><?php echo $history['status_name']; ?></td>
+					<td><?php echo $history['staff_name']; ?></td>
+					<td>
+					<?php foreach ($staffs as $staff) { ?>
+					<?php if ($staff['staff_id'] === $history['assigned_id']) { ?>
+						<?php echo $staff['staff_name']; ?>
+					<?php } ?>
+					<?php } ?>
+					</td>
+					<td class="center"><?php echo ($history['notify'] === '1') ? 'Yes' : 'No'; ?></td>
+					<td class="left"><?php echo $history['comment']; ?></td>
+				</tr>
+				<?php } ?>
+				<?php } else { ?>
+				<tr>
+					<td colspan="5" align="center"><?php echo $text_empty; ?></td>
+				</tr>
+				<?php } ?>
 			</table>
 		</div>
 

@@ -1,7 +1,7 @@
 <?php
 
 $lang['text_heading'] 			= 'Address Book';
-$lang['text_edit_heading'] 		= 'Edit Address Book';
+$lang['text_edit_heading'] 		= 'Address Book Edit';
 $lang['text_no_address'] 		= 'You don\'t have any stored address(s)';
 $lang['text_edit_address'] 		= 'Fill in the form to edit your address';
 $lang['text_new_address'] 		= 'Fill in the form to add a new address';

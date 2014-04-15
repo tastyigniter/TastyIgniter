@@ -8,25 +8,33 @@ $lang['text_opening_hours'] 	= 'Opening Hours';
 $lang['text_distance'] 			= '<b>Distance</b>';
 $lang['text_miles'] 			= 'Miles';
 $lang['text_close'] 			= 'CLOSED';
-$lang['text_find'] 				= 'Find';
+$lang['text_find'] 				= 'Search';
 $lang['text_opened'] 			= '<b>We are currently open</b>';
 $lang['text_closed'] 			= '<b>We are currently closed</b>';
 $lang['text_delivery_y'] 		= 'Delivery available';
 $lang['text_delivery_n'] 		= 'Delivery not available';
+$lang['text_covered_area'] 		= '<b class="red">We do not deliver to your address</b>';
 $lang['text_collection_y'] 		= 'Collection available';
 $lang['text_collection_n'] 		= 'Collection not available';
 $lang['text_delivery_charge'] 	= 'Delivery Charge';
 $lang['text_min_total'] 		= 'Minimum Total';
 $lang['text_none'] 				= 'None';
 
-$lang['button_check_postcode'] 	= 'Search Restaurant';
+$lang['button_view_map'] 		= 'View Map';
+$lang['button_check_postcode'] 	= 'Search Again';
 $lang['button_view_menu'] 		= 'View Menu';
+$lang['text_user_rating'] 		= 'User Ratings';
+$lang['text_total_review'] 		= '%s Reviews';
 
-$lang['text_postcode'] 			= 'Enter your postcode to order(UK only):';
+$lang['entry_postcode'] 		= 'Enter your postcode to order:';
+$lang['entry_address'] 			= 'Enter your address/postcode to order:';
 
-$lang['text_no_restaurant'] 	= '<p class="error">Error: There are no restaurant near you.</p>';
-$lang['text_invalid_postcode'] 	= '<p class="error">Error: Postcode appears to be invalid.</p>';
-$lang['text_no_postcode'] 		= '<p class="error">Error: Please make sure you entered your postcode correctly.</p>';
+$lang['error_no_postcode'] 		= '<p class="error">Error: Please enter your postcode.</p>';
+$lang['error_no_address'] 		= '<p class="error">Error: Please enter your address/postcode.</p>';
+$lang['error_invalid_postcode'] = '<p class="error">Error: Please enter a valid postcode.</p>';
+$lang['error_no_setting'] 		= '<p class="error">System Error: Location Search By setting has not been specified.</p>';
+$lang['error_failed'] 			= '<p class="error">Error: We couldn\'t locate your address.</p>';
+$lang['error_no_restaurant'] 	= '<p class="error">Error: We do not have any local restaurant near you.</p>';
 
 
 /* End of file local_module.php */

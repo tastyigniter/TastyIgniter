@@ -17,24 +17,14 @@
 			<td></td>
 		</tr>
 		<tr>
-			<td><b>Password:</b></td>
-			<td><input type="password" name="password" value="" id="password" class="textfield" /></td>
-			<td></td>
-		</tr>
-		<tr>
-			<td><b>Password Confirm:</b></td>
-			<td><input type="password" name="password_confirm" id="password_confirm" class="textfield" /></td>
-			<td></td>
-		</tr>
-		<tr>
-    		<td><b>Department:</b></td>
-    		<td><select name="department">
+    		<td><b>Staff Group:</b></td>
+    		<td><select name="staff_group">
     		<option value="">- please select -</option>
-			<?php foreach ($departments as $department) { ?>
-     		<?php if ($department['department_id'] === $staff_department) { ?>
- 				<option value="<?php echo $department['department_id']; ?>" <?php echo set_select('department', $department['department_id'], TRUE); ?> ><?php echo $department['department_name']; ?></option>
+			<?php foreach ($staff_groups as $staff_group) { ?>
+     		<?php if ($staff_group['staff_group_id'] === $staff_group_id) { ?>
+ 				<option value="<?php echo $staff_group['staff_group_id']; ?>" <?php echo set_select('staff_group', $staff_group['staff_group_id'], TRUE); ?> ><?php echo $staff_group['staff_group_name']; ?></option>
 			<?php } else { ?>  
- 				<option value="<?php echo $department['department_id']; ?>" <?php echo set_select('department', $department['department_id']); ?> ><?php echo $department['department_name']; ?></option>
+ 				<option value="<?php echo $staff_group['staff_group_id']; ?>" <?php echo set_select('staff_group', $staff_group['staff_group_id']); ?> ><?php echo $staff_group['staff_group_name']; ?></option>
 			<?php } ?>  
 			<?php } ?>  
     		</select></td>
@@ -51,6 +41,17 @@
 			<?php } ?>  
 			<?php } ?>  
     		</select></td>
+		</tr>
+		<tr>
+			<td><b>Password:</b><br />
+			<font size="1">Leave blank to leave password unchanged</font></td>
+			<td><input type="password" name="password" value="" id="password" class="textfield" autocomplete="off" /></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td><b>Password Confirm:</b></td>
+			<td><input type="password" name="password_confirm" id="password_confirm" class="textfield" autocomplete="off" /></td>
+			<td></td>
 		</tr>
 		<tr>
     		<td><b>Status:</b></td>

@@ -9,6 +9,10 @@ class Payments extends CI_Controller {
 
 	public function index() {
 			
+		if (!file_exists(APPPATH .'views/admin/payments.php')) {
+			show_404();
+		}
+			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}

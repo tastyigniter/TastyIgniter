@@ -9,6 +9,10 @@ class Login extends CI_Controller {
 
 	public function index() {
 
+		if (!file_exists(APPPATH .'views/admin/login.php')) {
+			show_404();
+		}
+			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
 		} else {

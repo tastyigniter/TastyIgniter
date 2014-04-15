@@ -54,37 +54,6 @@ class Settings_model extends CI_Model {
 		return $this->db->delete('settings');
 	}
 
-	function getTimezones() {
-		$timezoneIdentifiers = DateTimeZone::listIdentifiers();
-		$utcTime = new DateTime('now', new DateTimeZone('UTC'));
- 
-		$tempTimezones = array();
-		foreach ($timezoneIdentifiers as $timezoneIdentifier) {
-			$currentTimezone = new DateTimeZone($timezoneIdentifier);
- 
-			$tempTimezones[] = array(
-				'offset' => (int)$currentTimezone->getOffset($utcTime),
-				'identifier' => $timezoneIdentifier
-			);
-		}
- 
-		// Sort the array by offset,identifier ascending
-		usort($tempTimezones, function($a, $b) {
-			return ($a['offset'] == $b['offset'])
-				? strcmp($a['identifier'], $b['identifier'])
-				: $a['offset'] - $b['offset'];
-		});
- 
-		$timezoneList = array();
-		foreach ($tempTimezones as $tz) {
-			$sign = ($tz['offset'] > 0) ? '+' : '-';
-			$offset = gmdate('H:i', abs($tz['offset']));
-			$timezoneList[$tz['identifier']] = '(UTC ' . $sign . $offset .') '. $tz['identifier'];
-		}
- 
-		return $timezoneList;
-	}
-
 	public function backupDatabase($tables = array()) {
 
 		if (!empty($tables)) {
@@ -110,28 +79,13 @@ class Settings_model extends CI_Model {
 		return FALSE;
 	}
 
-	public function restoreDatabase($sql) {
+	public function restoreDatabase($content) {
+		if ($content) {
+			foreach(explode(";\n", $content) as $sql) {
+				$sql = trim($sql);
 
-		$file = APPPATH .'/extensions/setup/tastyigniter.sql';
-
-		if (!file_exists($file)) { 
-			return FALSE; 
-		}
-
-		$lines = file($file);
-
-		if ($lines) {
-			$sql = '';
-
-			foreach($lines as $line) {
-				if ($line && (substr($line, 0, 1) != '#')) {
-					$sql .= $line;
-  
-					if (preg_match('/;\s*$/', $line)) {
-						$this->db->query($sql);
-
-						$sql = '';
-					}
+				if ($sql) {
+					$this->db->query($sql);
 				}
 			}
 			

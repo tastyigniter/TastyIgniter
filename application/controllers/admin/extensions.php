@@ -10,6 +10,10 @@ class Extensions extends CI_Controller {
 
 	public function index() {
 			
+		if (!file_exists(APPPATH .'views/admin/extensions.php')) {
+			show_404();
+		}
+			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -29,13 +33,13 @@ class Extensions extends CI_Controller {
 
 		$extensions = $this->Extensions_model->getList();
 		foreach ($extensions as $code => $name) {
-			if ( ! file_exists(APPPATH .'/extensions/admin/controllers/'. $code .'_module.php')) {
+			if ( ! file_exists(EXTPATH .'/admin/controllers/'. $code .'_module.php')) {
 				$this->Extensions_model->uninstall('module', $code);
 				$this->Settings_model->deleteSettings($code);	
 			}
 		}
 		
-		$files = glob(APPPATH .'/extensions/admin/controllers/*_module.php');
+		$files = glob(EXTPATH .'/admin/controllers/*_module.php');
 	
 		$data['extensions'] = array();
 		foreach ($files as $file) {
@@ -69,9 +73,8 @@ class Extensions extends CI_Controller {
 	
 	public function install() {
     	if ( ! $this->user->hasPermissions('modify', 'admin/extensions')) {
-		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
-			redirect('admin/extensions');
+
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
   	
     	} else if ($this->input->get('extension')) { 
     	
@@ -80,21 +83,20 @@ class Extensions extends CI_Controller {
     		
     		$this->Extensions_model->install($split[1], $split[0]);
     		
-			$this->load->model('Departments_model');
-    		$this->Departments_model->addPermission($this->user->getDepartmentId(), 'access', 'admin/'. $extension);
-    		$this->Departments_model->addPermission($this->user->getDepartmentId(), 'modify', 'admin/'. $extension);
+			$this->load->model('Staff_groups_model');
+    		$this->Staff_groups_model->addPermission($this->user->getDepartmentId(), 'access', 'admin/'. $extension);
+    		$this->Staff_groups_model->addPermission($this->user->getDepartmentId(), 'modify', 'admin/'. $extension);
 				
 			$this->session->set_flashdata('alert', '<p class="success">Extension Installed Sucessfully!</p>');
-				
-			redirect('admin/extensions');
 		}	
+
+		redirect('admin/extensions');
 	}
 	
 	public function uninstall() {
     	if ( ! $this->user->hasPermissions('modify', 'admin/extensions')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
-			redirect('admin/extensions');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
   	
     	} else if ($this->input->get('extension')) { 
     	
@@ -104,9 +106,9 @@ class Extensions extends CI_Controller {
     		$this->Extensions_model->uninstall($split[1], $split[0]);
 			$this->Settings_model->deleteSettings($split[0]);
 			
-			$this->session->set_flashdata('alert', '<p class="success">Extension Uninstalled Sucessfully!</p>');
-				
-			redirect('admin/extensions');
-		}	
+			$this->session->set_flashdata('alert', '<p class="success">Extension Uninstalled Sucessfully!</p>');				
+		}
+		
+		redirect('admin/extensions');
 	}	
 }

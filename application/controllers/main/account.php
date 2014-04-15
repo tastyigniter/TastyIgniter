@@ -14,6 +14,10 @@ class Account extends MX_Controller {
 		$this->load->library('currency'); 														// load the currency library
 		$this->lang->load('main/account');  													// loads language file
 			
+		if (!file_exists(APPPATH .'views/main/account.php')) {
+			show_404();
+		}
+			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
@@ -32,15 +36,10 @@ class Account extends MX_Controller {
 		$data['text_no_default_add'] 	= $this->lang->line('text_no_default_add');
 		$data['text_no_cart_items'] 	= $this->lang->line('text_no_cart_items');
 		$data['text_cart'] 				= $this->lang->line('text_cart');
-		$data['text_edit'] 				= $this->lang->line('text_edit');
-		$data['text_edit_add'] 			= $this->lang->line('text_edit_add');
 		$data['text_checkout'] 			= $this->lang->line('text_checkout');
-		$data['text_view'] 				= $this->lang->line('text_view');
 		$data['text_my_details'] 		= $this->lang->line('text_my_details');
-		$data['text_default_address'] 	= $this->lang->line('text_my_details');
+		$data['text_default_address'] 	= $this->lang->line('text_default_address');
 		$data['text_password'] 			= $this->lang->line('text_password');
-		$data['text_cart_items'] 		= $this->lang->line('text_cart_items');
-		$data['text_cart_total'] 		= $this->lang->line('text_cart_total');
 		$data['text_orders'] 			= $this->lang->line('text_orders');
 		$data['text_reservations'] 		= $this->lang->line('text_reservations');
 		$data['text_inbox'] 			= sprintf($this->lang->line('text_inbox'), $inbox_total);
@@ -52,6 +51,8 @@ class Account extends MX_Controller {
 		$data['entry_telephone'] 		= $this->lang->line('entry_telephone');
 		$data['entry_s_question'] 		= $this->lang->line('entry_s_question');
 		$data['entry_s_answer'] 		= $this->lang->line('entry_s_answer');
+		$data['column_cart_items'] 		= $this->lang->line('column_cart_items');
+		$data['column_cart_total'] 		= $this->lang->line('column_cart_total');
 		$data['column_order_date'] 		= $this->lang->line('column_order_date');
 		$data['column_order_id'] 		= $this->lang->line('column_order_id');
 		$data['column_order_status'] 	= $this->lang->line('column_order_status');
@@ -63,14 +64,14 @@ class Account extends MX_Controller {
 		$data['column_action'] 			= $this->lang->line('column_action');
 		// END of retrieving lines from language file to send to view.
 
+		$data['button_checkout'] 		= $this->config->site_url('checkout');
 		$data['cart_items'] 			= $this->cart->total_items();
-		$data['cart_total'] 			= $this->currency->format($this->cart->total());
+		$data['cart_total'] 			= $this->currency->format($this->cart->order_total());
 
 		$result = $this->Customers_model->getCustomer($this->customer->getId());				// retrieve customer data based on customer id from getCustomer method in Customers model
 
 		//store customer data in array
 		$data['customer_info'] = array();
-		$result = $this->Customers_model->getCustomer($this->customer->getId());
 
 		$question_result = $this->Security_questions_model->getQuestion($result['security_question_id']); // retrieve security questions based on security question id
 		
@@ -79,20 +80,16 @@ class Account extends MX_Controller {
 			'last_name' 		=> $result['last_name'],
 			'email' 			=> $result['email'],
 			'telephone' 		=> $result['telephone'],
-			'security_question' => $question_result['question_text'],
+			'security_question' => $question_result['text'],
 			'security_answer' 	=> $result['security_answer']
 		);
 
+		$this->load->library('country');
 		$data['address_info'] = array();
 		$result = $this->Customers_model->getCustomerAddress($this->customer->getId(), $this->customer->getAddressId());			// retrieve customer address data based on customer address id from getAddress method in Customers model
+
 		if ($result) {
-			$data['address_info'] = array(														// create array of customer address data to pass to view
-				'address_1' 	=> $result['address_1'],
-				'address_2' 	=> $result['address_2'],
-				'city' 			=> $result['city'],
-				'postcode' 		=> $result['postcode'],
-				'country' 		=> $result['country']		
-			);
+			$data['address_info'] = $this->country->addressFormat($result);
 		}
 
 		$regions = array(

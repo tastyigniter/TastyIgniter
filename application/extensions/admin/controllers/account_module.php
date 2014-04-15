@@ -1,4 +1,5 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
 class Account_module extends CI_Controller {
 
 	public function __construct() {
@@ -10,6 +11,10 @@ class Account_module extends CI_Controller {
 
 	public function index() {
 
+		if (!file_exists(EXTPATH .'admin/views/account_module.php')) {
+			show_404();
+		}
+			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -24,30 +29,34 @@ class Account_module extends CI_Controller {
 			$data['alert'] = '';
 		}		
 				
+		$extension = $this->Extensions_model->getExtension('module', 'account');
+		
 		$data['heading'] 			= 'Account';
-		$data['sub_menu_save'] 	= 'Save';
+		$data['sub_menu_save'] 		= 'Save';
 		$data['sub_menu_back'] 		= $this->config->site_url('admin/extensions');
+		$data['name'] 				= $extension['name'];
 
-		if ($this->input->post('modules')) {
-			$modules = $this->input->post('modules');
-		} else if ($this->config->item('account_module')) {
-			$modules = $this->config->item('account_module');
+		if ($this->config->item('account_module')) {
+			$result = $this->config->item('account_module');
 		} else {
-			$modules = array();
+			$result = array();
 		}
 		
-		$extension = $this->Extensions_model->getExtension('module', 'account');
-		$data['name'] = $extension['name'];
-		
+		if ($this->input->post('modules')) {
+			$result['modules'] = $this->input->post('modules');
+		}
+
 		$data['modules'] = array();
-		foreach ($modules as $module) {
+		if (!empty($result['modules'])) {
+			foreach ($result['modules'] as $module) {
 	
-			$data['modules'][] = array(
-				'layout_id'		=> $module['layout_id'],
-				'position' 		=> $module['position'],
-				'priority' 		=> $module['priority'],
-				'status' 		=> $module['status']
-			);
+				$data['modules'][] = array(
+					'layout_id'		=> $module['layout_id'],
+					'position' 		=> $module['position'],
+					'priority' 		=> $module['priority'],
+					'status' 		=> $module['status']
+				);
+			}
 		}
 
 		$data['layouts'] = array();
@@ -80,33 +89,35 @@ class Account_module extends CI_Controller {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
 			return TRUE;
     	
-    	} else { 
-			
- 			$this->form_validation->set_rules('name', 'Name', 'trim|required|min_length[2]|max_length[45]');
+    	} else if ($this->validateForm() === TRUE) { 
+			$update = array();
+		
+			$update['account_module']['modules'] = $this->input->post('modules');
 
-			foreach ($this->input->post('modules') as $key => $value) {
-				$this->form_validation->set_rules('modules['.$key.'][layout_id]', 'Layout', 'trim|required');
-				$this->form_validation->set_rules('modules['.$key.'][position]', 'Position', 'trim|required');
-				$this->form_validation->set_rules('modules['.$key.'][priority]', 'Priority', 'trim|integer');
-				$this->form_validation->set_rules('modules['.$key.'][status]', 'Status', 'trim|required|integer');
+			if ($this->Settings_model->updateSettings('account', $update)) {
+				$this->session->set_flashdata('alert', '<p class="success">Account Module Updated Sucessfully!</p>');
+			} else {
+				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
 			}
-			
-			//if validation is true
-			if ($this->form_validation->run() === TRUE) {
-				$update = array();
-			
-				$update['account_module'] = $this->input->post('modules');
+	
+			return TRUE;
+		}
+	}
 
-				if ($this->Settings_model->updateSettings('account', $update)) {
-		
-					$this->session->set_flashdata('alert', '<p class="success">Account Module Updated Sucessfully!</p>');
-				} else {
-		
-					$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
-				}
-		
-				return TRUE;
-			}
+ 	public function validateForm() {
+		$this->form_validation->set_rules('name', 'Name', 'trim|required|min_length[2]|max_length[45]');
+
+		foreach ($this->input->post('modules') as $key => $value) {
+			$this->form_validation->set_rules('modules['.$key.'][layout_id]', 'Layout', 'trim|required');
+			$this->form_validation->set_rules('modules['.$key.'][position]', 'Position', 'trim|required');
+			$this->form_validation->set_rules('modules['.$key.'][priority]', 'Priority', 'trim|integer');
+			$this->form_validation->set_rules('modules['.$key.'][status]', 'Status', 'trim|required|integer');
+		}
+
+		if ($this->form_validation->run() === TRUE) {
+			return TRUE;
+		} else {
+			return FALSE;
 		}
 	}
 }

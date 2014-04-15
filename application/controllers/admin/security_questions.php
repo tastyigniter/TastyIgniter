@@ -9,6 +9,10 @@ class Security_questions extends CI_Controller {
 
 	public function index() {
 			
+		if (!file_exists(APPPATH .'views/admin/security_questions.php')) {
+			show_404();
+		}
+			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -24,16 +28,22 @@ class Security_questions extends CI_Controller {
 		}
 
 		$data['heading'] 			= 'Security Questions';
-		$data['sub_menu_save'] 	= 'Save';
+		$data['sub_menu_save'] 		= 'Save';
 		$data['text_empty'] 		= 'There are no security questions, please add!.';
 
 		//load questions data into array
 		$data['questions'] = array();
-		$results = $this->Security_questions_model->getQuestions();
+		
+		if ($this->input->post('questions')) {
+			$results = $this->input->post('questions');
+		} else {
+			$results = $this->Security_questions_model->getQuestions();
+		}
+		
 		foreach ($results as $result) {
 			$data['questions'][] = array(
 				'question_id'	=> $result['question_id'],
-				'question_text'	=> $result['question_text']
+				'text'			=> $result['text']
 			);
 		}
 
@@ -55,32 +65,34 @@ class Security_questions extends CI_Controller {
 						
     	if (!$this->user->hasPermissions('modify', 'admin/security_questions')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
 			return TRUE;
     	
     	} else { 
-			
-			if ($this->input->post('questions')) {
-				foreach ($this->input->post('questions') as $key => $value) {
-					$this->form_validation->set_rules('questions['.$key.'][id]', 'Question Id', 'trim|required|integer');
-					$this->form_validation->set_rules('questions['.$key.'][text]', 'Security Question', 'trim|min_length[2]|max_length[128]');
-				}
+			$questions = $this->input->post('questions');
+
+			if ($this->Security_questions_model->updateQuestions($questions)) {
+				$this->session->set_flashdata('alert', '<p class="success">Security Question Updated Sucessfully!</p>');
+			} else {
+				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
 			}
-			
-			if ($this->form_validation->run() === TRUE) {
+	
+			return TRUE;
+		}
+	}
 
-				$questions = $this->input->post('questions');
-
-				if ($this->Security_questions_model->updateQuestions($questions)) {
-		
-					$this->session->set_flashdata('alert', '<p class="success">Security Question Updated Sucessfully!</p>');
-				} else {
-		
-					$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
-				}
-		
-				return TRUE;
+	public function validateForm() {
+		if ($this->input->post('questions')) {
+			foreach ($this->input->post('questions') as $key => $value) {
+				$this->form_validation->set_rules('questions['.$key.'][question_id]', 'Question Id', 'trim|integer');
+				$this->form_validation->set_rules('questions['.$key.'][text]', 'Security Question', 'trim|min_length[2]|max_length[128]');
 			}
 		}
+
+		if ($this->form_validation->run() === TRUE) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}		
 	}
 }

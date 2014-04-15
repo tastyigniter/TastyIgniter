@@ -10,7 +10,7 @@ class Categories_module extends MX_Controller {
 	public function index() {
 		$this->lang->load('main/categories_module');  														// loads language file
 		
-		if ( !file_exists(APPPATH .'/extensions/main/views/categories_module.php')) { 								//check if file exists in views folder
+		if ( !file_exists(EXTPATH .'main/views/categories_module.php')) { 								//check if file exists in views folder
 			show_404(); 																		// Whoops, show 404 error page!
 		}
 			
@@ -20,8 +20,8 @@ class Categories_module extends MX_Controller {
 			$data['alert'] = '';
 		}
 
-		if ($this->uri->segment(2) === 'category') {
-			$data['category_id'] = $this->uri->segment(3, FALSE); 	
+		if ($this->input->get('category')) {
+			$data['category_id'] = $this->input->get('category'); 	
 		} else {
 			$data['category_id'] = 0;			
 		}
@@ -38,7 +38,7 @@ class Categories_module extends MX_Controller {
 			$data['categories'][] = array( 														// create array of category data to pass to view
 				'category_id'	=>	$result['category_id'],
 				'category_name'	=>	$result['category_name'],
-				'href'			=>	$this->config->site_url('menus/category/' . $result['category_id'])
+				'href'			=>	$this->config->site_url('menus?category=' . $result['category_id'])
 			);
 		}
 		

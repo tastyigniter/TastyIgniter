@@ -8,6 +8,10 @@ class Error_logs extends CI_Controller {
 
 	public function index() {
 			
+		if (!file_exists(APPPATH .'views/admin/error_logs.php')) {
+			show_404();
+		}
+			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -59,7 +63,7 @@ class Error_logs extends CI_Controller {
 	public function _clearLog() {
     	if (!$this->user->hasPermissions('modify', 'admin/error_logs')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
     	
     	} else { 
 		

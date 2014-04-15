@@ -5,8 +5,8 @@
 		<tr>
 			<th width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
 			<th>Name</th>
-			<th>Minimum</th>
-			<th>Capacity</th>
+			<th class="center">Minimum</th>
+			<th class="center">Capacity</th>
 			<th>Status</th>
 			<th class="right">Action</th>
 		</tr>
@@ -15,8 +15,8 @@
 		<tr>
 			<td class="delete"><input type="checkbox" value="<?php echo $table['table_id']; ?>" name="delete[]" /></td>
 			<td><?php echo $table['table_name']; ?></td>
-			<td><?php echo $table['min_capacity']; ?></td>
-			<td><?php echo $table['max_capacity']; ?></td>
+			<td class="center"><?php echo $table['min_capacity']; ?></td>
+			<td class="center"><?php echo $table['max_capacity']; ?></td>
 			<td><?php echo $table['table_status']; ?></td>
 			<td class="right"><a class="edit" title="Edit" href="<?php echo $table['edit']; ?>"></a></td>
 		</tr>

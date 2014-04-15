@@ -12,14 +12,18 @@ class Find_table extends MX_Controller {
 
 	public function index() {
 		$this->lang->load('main/reserve_table');  // loads language file
-		
+
+		if (!file_exists(APPPATH .'views/main/find_table.php')) {
+			show_404();
+		}
+			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
 		} else {
 			$data['alert'] = '';
 		}
 
-		$data['text_heading'] 				= $this->lang->line('text_find_heading');
+		$data['text_heading'] 				= $this->lang->line('text_heading_find');
 		$data['text_local'] 				= $this->lang->line('text_local');
 		$data['text_postcode_warning'] 		= $this->lang->line('text_postcode_warning');
 		$data['text_delivery_charge'] 		= $this->lang->line('text_delivery_charge');
@@ -38,6 +42,8 @@ class Find_table extends MX_Controller {
 
 		$data['button_check_postcode'] 		= $this->lang->line('button_check_postcode');
 		$data['button_find'] 				= $this->lang->line('button_find');
+		$data['button_time'] 				= $this->lang->line('button_time');
+		$data['button_back'] 				= $this->lang->line('button_back');
 		
 		$data['locations'] = array();
 		$locations = $this->Locations_model->getLocations();
@@ -50,19 +56,6 @@ class Find_table extends MX_Controller {
 		
 		$data['guest_nums'] = array('2', '3', '4', '5','6', '7', '8', '9', '10');
 
-		$opening_time = '11:00';
-		$closing_time = '23:00';
-		$interval = '45';
-		
-		$data['reserve_times'] = array();
-		$reserve_times = $this->location->getHours($opening_time, $closing_time, $interval);
-		foreach ($reserve_times as $key => $value) {
-			$data['reserve_times'][] = array(
-				'24hr' 		=> $value,
-				'12hr'		=> mdate('%h:%i %a', strtotime($value))
-			);
-		}
-		
 		$data['occasions'] = array(
 			'0' => 'not applicable',
 			'1' => 'birthday',
@@ -71,59 +64,70 @@ class Find_table extends MX_Controller {
 			'4' => 'hen party',
 			'5' => 'stag party'
 		);
-	
-		$table_details = $this->session->userdata('table_details');
-		
-		if (!empty($table_details['location'])) {
-			$data['location_id'] 	= $table_details['location'];
+			
+		if ($this->input->get('location')) {
+			$data['location_id'] 	= $this->input->get('location');
 		} else {
 			$data['location_id'] 	= '';
 		}
 		
-		if (!empty($table_details['guest_num'])) {
-			$data['guest_num'] 	= $table_details['guest_num'];
+		if ($this->input->get('guest_num')) {
+			$data['guest_num'] 	= $this->input->get('guest_num');
 		} else {
 			$data['guest_num'] 	= '';
 		}
 		
-		if (!empty($table_details['reserve_date'])) {
-			$data['date'] 	= $table_details['reserve_date'];
+		if ($this->input->get('reserve_date')) {
+			$data['date'] 	= $this->input->get('reserve_date');
 		} else {
 			$data['date'] 	= '';
 		}
 		
-		if (!empty($table_details['reserve_time'])) {
-			$data['time'] 	= $table_details['reserve_time'];
-		} else {
-			$data['time'] 	= '';
-		}
-		
-		if (!empty($table_details['occasion'])) {
-			$data['occasion'] 	= $table_details['occasion'];
+		if ($this->input->get('occasion')) {
+			$data['occasion'] 	= $this->input->get('occasion');
 		} else {
 			$data['occasion'] 	= '';
 		}
 
-		if (!empty($table_details['available_times'])) {
-			$data['text_time_msg'] 	= 'AVAILABLE RESERVATIONS ON ' .mdate('%l, %F %j, %Y', strtotime($table_details['reserve_date'])). ' FOR ' .$table_details['guest_num'].' GUESTS:';
-			$data['select_times'] 	= $table_details['available_times'];
-		} else {
-			$data['text_time_msg'] 	= '';
-			$data['select_times'] 	= '';
+		if (!$this->input->post('reserve_time') AND $this->_findTable() === TRUE) {
+			
+			redirect('find/table');
 		}
 		
-		if ( ! $this->input->post('select_time') && $this->_findTable($reserve_times, $interval) === TRUE) {
-			
-			redirect('find/table');		
-		}	
-			
-		if ($this->input->post('select_time') && $this->_selectTime($table_details) === TRUE) {
-			
-			redirect('reserve/table');		
-		}	
-			
+		if ($this->session->userdata('show_times') === 'show') {
+			$data['show_times'] = TRUE;
+			$data['text_time_msg'] 	= 'AVAILABLE RESERVATIONS ON '. mdate('%l, %F %j, %Y', strtotime($data['date'])). ' FOR ' .$data['guest_num'].' GUESTS:';
+
+			if ($this->input->get('reserve_time')) {
+				$data['time'] 	= $this->input->get('reserve_time');
+			} else {
+				$data['time'] 	= '';
+			}
+		
+			$reserve_day = date('l', strtotime($data['date']));
+			$opening_hour = $this->Locations_model->getOpeningHourByDay($data['location_id'], $reserve_day);
+			$opening_time = $opening_hour['open'];
+			$closing_time = $opening_hour['close'];
+
+			$interval = $this->location->getReserveInterval();
+		
+			$data['reserve_times'] = array();
+			$reserve_times = $this->location->generateHours($opening_time, $closing_time, $interval);
+			foreach ($reserve_times as $key => $value) {
+				$data['reserve_times'][] = array(
+					'24hr' 		=> $value,
+					'12hr'		=> mdate('%h:%i %a', strtotime($value))
+				);
+			}
+		
+		} else {
+			$data['show_times'] = FALSE;
+			$data['text_time_msg'] 	= '';
+		}
+		
 		$regions = array(
 			'main/header',
+			'main/content_right',
 			'main/footer'
 		);
 		
@@ -132,72 +136,60 @@ class Find_table extends MX_Controller {
 	}
 
 
-	public function _findTable($reserve_times, $interval) {
+	public function _findTable() {
 
 		$time_format = '%h:%i %a';
 		$date_format = '%d-%m-%Y';
 		$current_date_time = time();
 	
-		$table_details = array();
-		//$this->session->unset_userdata('table_details');
+		$this->session->unset_userdata('show_times');
+		$this->session->unset_userdata('reservation');
+		$_POST=$_GET;
 		
 		$this->form_validation->set_rules('location', 'Location', 'trim|required|integer');
-		$this->form_validation->set_rules('guest_num', 'Guest Number', 'trim|required|integer|callback_validate_guest');
-		$this->form_validation->set_rules('reserve_date', 'Date', 'trim|required|callback_validate_date');
-		$this->form_validation->set_rules('reserve_time', 'Time', 'trim|required|callback_validate_time');
+		$this->form_validation->set_rules('guest_num', 'Guest Number', 'trim|required|integer');
+		$this->form_validation->set_rules('reserve_date', 'Date', 'trim|required|valid_date|callback_valid_date');
 		$this->form_validation->set_rules('occasion', 'Occasion', 'trim|required|integer');
 
   		if ($this->form_validation->run() === TRUE) {
 		
-			$table_details['location'] 		= $this->input->post('location');
-			$table_details['guest_num'] 	= $this->input->post('guest_num');
-		 	$table_details['reserve_date']	= mdate($date_format, strtotime($this->input->post('reserve_date')));
-		 	$table_details['reserve_time']	= $this->input->post('reserve_time');
-			$table_details['occasion'] 		= $this->input->post('occasion');
+			$check['location'] 			= $this->input->post('location');
+			$check['guest_num'] 		= $this->input->post('guest_num');
+		 	$check['reserve_date']		= mdate($date_format, strtotime($this->input->post('reserve_date')));
+		 	$check['reserve_time']		= $this->input->post('reserve_time');
+			$check['occasion'] 			= $this->input->post('occasion');
 			
-			$table_details['available_times'] = $this->location->getReserveTimes($reserve_times, $this->input->post('reserve_time'), $interval, '2');
-
-			if (!empty($table_details)) {
-				$this->session->set_userdata('table_details', $table_details);
-				return TRUE;
+			$result = $this->Reservations_model->checkAvailability($check);
+			
+			if ($result === 'NO_GUEST_TABLE') {
+        		$this->session->set_flashdata('alert', $this->lang->line('warning_no_guest'));
+			} else if ($result === 'NO_TABLE_AVAIL') {
+        		$this->session->set_flashdata('alert', $this->lang->line('warning_no_time'));
 			}
-		}
-	}
-
-	public function _selectTime($table_details) {
-		$time_format = '%h:%i %a';
-		
-		$this->form_validation->set_rules('select_time', 'Select Time', 'trim|required|callback_validate_time');
-
-  		if ($this->form_validation->run() === TRUE) {
-
-			$table_details['reserve_time'] = $this->input->post('select_time');
 			
-			$this->session->set_userdata('table_details', $table_details);
+			if (is_array($result) AND isset($result['tables']) AND empty($check['reserve_time'])) {
+				$location = $this->Locations_model->getLocation($check['location']);
+			
+				if ($location) {
+					$this->Locations_model->getLocalRestaurant($location['location_lat'], $location['location_lng']);
+				}
 
+				$this->session->set_userdata('show_times', 'show');
+				return FALSE;
+			} else if (is_array($result) AND isset($result['tables']) AND $this->validate_time($check['reserve_time']) === TRUE) {
+				$this->session->set_userdata('reservation', $check);
+				redirect('reserve/table');				
+			}
+			
 			return TRUE;
 		}
-			
-	}
-	
-	public function validate_date($str) {
-		
-		if ( ! strtotime($str)) {
-        	$this->form_validation->set_message('validate_date', 'The %s field must be valid.');
-			return FALSE;
-		} else if (strtotime($str) < strtotime($this->location->currentDate())) {
-        	$this->form_validation->set_message('validate_date', 'Date must be after today!');
-      		return FALSE;
-		} else {
-      		return TRUE;
-		}
 	}
 
-	public function validate_time($str) {
+	public function validate_date($str) {
 		
-		if ( ! preg_match('/^([01]?[0-9]|2[0-3]):[0-5][0-9]:00$/', $str) &&  ! strtotime($str)) {
-        	$this->form_validation->set_message('validate_time', 'The %s field must be valid.');
-			return FALSE;
+		if (strtotime($str) < strtotime($this->location->currentDate())) {
+        	$this->form_validation->set_message('validate_date', 'Date must be after today, you can only make future reservations!');
+      		return FALSE;
 		} else {
       		return TRUE;
 		}
@@ -205,13 +197,10 @@ class Find_table extends MX_Controller {
 
  	public function validate_guest($str) {
  	
- 		$result = $this->Reservations_model->checkTableSize($this->input->post('location'), $str);
-
-		if ($this->input->post('location') && $result === FALSE) {
+ 		$result = $this->Reservations_model->getTablesByGuestNum($this->input->post('location'), $str);
+		//$this->Reservations_model->getTotalSeats($this->input->post('location'));
+		if ($this->input->post('location') && !empty($result)) {
         	$this->form_validation->set_message('validate_guest', 'No tables available at the selected location!');
-      		return FALSE;
-		} else if ( ! $this->Reservations_model->checkAvailability($this->input->post())) {
-        	$this->form_validation->set_message('validate_guest', 'No tables available for the selected date and time!');
       		return FALSE;
  		} else {
       		return TRUE;

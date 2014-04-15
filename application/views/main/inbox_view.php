@@ -1,13 +1,15 @@
 <div class="content">
-	<div class="wrap">
+<div class="img_inner">
+	<h3><?php echo $text_heading; ?></h3>
+</div>  
+<div class="img_inner">
+	<?php if ($error) { ?>
+		<?php echo $error; ?>
+	<?php } else { ?>
 	<table width="100%" align="center">
 		<tr>
 			<td width="20%"><b><?php echo $column_date; ?>:</b></td>
 			<td><?php echo $date; ?></td>
-		</tr>
-		<tr>
-			<td><b><?php echo $column_time; ?>:</b></td>
-			<td><?php echo $time; ?></td>
 		</tr>
 		<tr>
 			<td><b><?php echo $column_subject; ?>:</b></td>
@@ -21,7 +23,8 @@
 			<td colspan="2"><div class="msg_body"><?php echo $body; ?></div></td>
 		</tr>
 	</table>
-	</div>
+	<?php } ?>
+</div>
 
 	<div class="separator"></div>
 	<div class="buttons">

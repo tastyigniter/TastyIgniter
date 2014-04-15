@@ -12,6 +12,10 @@ class Details extends MX_Controller {
 	public function index() {
 		$this->lang->load('main/details');  													// loads language file
 		
+		if (!file_exists(APPPATH .'views/main/details.php')) {
+			show_404();
+		}
+			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
@@ -59,8 +63,8 @@ class Details extends MX_Controller {
 		$results = $this->Security_questions_model->getQuestions();						// retrieve security questions from getQuestions in Security questions model
 		foreach ($results as $result) {
 			$data['questions'][] = array(														// create array of security questions to pass to view
-				'id'	=> $result['question_id'],
-				'text'	=> $result['question_text']
+				'question_id'	=> $result['question_id'],
+				'text'	=> $result['text']
 			);
 		}
 		

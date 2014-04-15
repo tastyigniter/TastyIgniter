@@ -7,7 +7,7 @@
 			<th>Location</th>
 			<th>Name</th>
 			<th>Email</th>
-			<th>Department</th>
+			<th>Staff Group</th>
 			<th>Status</th>
 			<th class="right">Date Added</th>
 			<th class="right">Action</th>
@@ -19,7 +19,7 @@
 			<td><?php echo $staff['staff_location']; ?></td>
 			<td><?php echo $staff['staff_name']; ?></td>
 			<td><?php echo $staff['staff_email']; ?></td>
-			<td><?php echo $staff['staff_department']; ?></td>
+			<td><?php echo $staff['staff_group_name']; ?></td>
 			<td><?php echo ($staff['staff_status'] === '1') ? 'Enabled' : 'Disabled'; ?></td>
 			<td class="right"><?php echo $staff['date_added']; ?></td>
 			<td class="right"><a class="edit" title="Edit" href="<?php echo $staff['edit']; ?>"></a></td>

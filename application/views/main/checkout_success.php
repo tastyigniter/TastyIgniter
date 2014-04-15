@@ -1,16 +1,17 @@
 <div class="content">
-<table width="80%" class="order_confirmation">
+<div class="img_inner">
+	<table width="80%" class="order_confirmation">
 	<tr>
     	<td><?php echo $message; ?></td>
     </tr>
     <tr>
-        <td><h4><?php echo $text_order_details; ?></h4></td>
+        <td><br /><h4><?php echo $text_order_details; ?></h4></td>
     </tr>
     <tr>
         <td><?php echo $order_details; ?></td>
     </tr>
    	<tr>
-        <td><h4><?php echo $text_order_items; ?></h4></td>
+        <td><br /><h4><?php echo $text_order_items; ?></h4></td>
    	</tr>
 	<?php if ($menus) { ?>
    	<tr>
@@ -18,32 +19,31 @@
 			<table>
 			<?php foreach ($menus as $menu) { ?>
 			<tr>
-				<td><?php echo $menu['name']; ?><br />
-				<?php if (!empty($menu['options'])) { ?>
-					<?php foreach ($menu['options'] as $option_name => $option_value) { ?>
-						<div><font size="1"><strong><?php echo $option_name; ?>:</strong> <?php echo $option_value; ?> </font></div>
-					<?php } ?>
-				<?php } ?></td>
 			 	<td>x <?php echo $menu['quantity']; ?></td>
+				<td><?php echo $menu['name']; ?><br />
+					<?php if (!empty($menu['order_option_id'])) { ?>
+						<div><font size="1">+ <?php echo $menu['option_name']; ?>: <?php echo $menu['option_price']; ?> </font></div>
+					<?php } ?></td>
+				<td><?php echo $menu['price']; ?></td>
 			 </tr>		
 			<?php } ?>
+			<tr>
+				<td colspan="3"><?php echo $order_total; ?></td>
+			</tr>
 			</table
    		</td>
    	</tr>
 	<?php } ?>
-   	<tr>
-   		<td><?php echo $order_total; ?></td>
-   	</tr>
 	<?php if ($delivery_address) { ?>
    	<tr>
-        <td><h4><?php echo $text_delivery_address; ?></h4></td>
+        <td><br /><h4><?php echo $text_delivery_address; ?></h4></td>
    	</tr>
    	<tr>
-   		<td><address><?php echo $delivery_address['address_1']; ?>, <?php echo $delivery_address['address_2']; ?>, <?php echo $delivery_address['city']; ?>, <?php echo $delivery_address['postcode']; ?>, <?php echo $delivery_address['country_name']; ?></address></td>
+   		<td><address><?php echo $delivery_address; ?></address></td>
    	</tr>
 	<?php } ?>
    	<tr>
-        <td><h4><?php echo $text_local; ?></h4></td>
+        <td><br /><h4><?php echo $text_local; ?></h4></td>
    	</tr>
    	<tr>
     	<td><font size="4"><?php echo $location_name; ?></font><br />
@@ -52,5 +52,6 @@
 	<tr>
 		<td><br /><br /><?php echo $text_thank_you; ?></td>
 	</tr>
-</table>
+	</table>
+</div>
 </div>

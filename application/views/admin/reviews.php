@@ -4,10 +4,11 @@
 	<table align="center" class="list">
 		<tr>
 			<th width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
+			<th>Restaurant</th>
 			<th>Author</th>
-			<th>Menu Name</th>
-			<th>Rating Name</th>
-			<th class="right">Status</th>
+			<th>Rating</th>
+			<th class="center">Order ID</th>
+			<th class="center">Status</th>
 			<th class="right">Date Added</th>
 			<th class="right">Action</th>			
 		</tr>
@@ -15,10 +16,15 @@
 		<?php foreach ($reviews as $review) { ?>
 		<tr>
 			<td class="delete"><input type="checkbox" name="delete[]" value="<?php echo $review['review_id']; ?>" /></td>  
+			<td><?php echo $review['location_name']; ?></td>
 			<td><?php echo $review['author']; ?></td>
-			<td><?php echo $review['menu_name']; ?></td>
-			<td><?php echo $review['rating_name']; ?></td>
-			<td class="right"><?php echo ($review['review_status'] === '1') ? 'Enabled' : 'Disabled'; ?></td>
+			<td>
+  				<b>Quality:</b> <?php echo ($review['quality'] != '0') ? $ratings[$review['quality']] : 'None'; ?><br />
+  				<b>Delivery:</b> <?php echo ($review['delivery'] != '0') ? $ratings[$review['delivery']] : 'None'; ?><br />
+  				<b>Service:</b> <?php echo ($review['service'] != '0') ? $ratings[$review['service']] : 'None'; ?>
+			</td>
+			<td class="center"><?php echo $review['order_id']; ?></td>
+			<td class="center"><?php echo ($review['review_status'] === '1') ? 'Approved' : 'Pending Review'; ?></td>
 			<td class="right"><?php echo $review['date_added']; ?></td>
 			<td class="right"><a class="edit" title="Edit" href="<?php echo $review['edit']; ?>"></a></td>
 		</tr>

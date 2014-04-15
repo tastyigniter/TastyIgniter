@@ -1,19 +1,20 @@
 <div class="content">
-	<div class="wrap">
-	<table width="100%" align="center" class="list">
+<div class="img_inner">
+	<h3><?php echo $text_heading; ?></h3>
+</div>  
+<div class="img_inner">
+	<table width="100%" class="list">
 		<tr>
-			<th><?php echo $column_date; ?></th>
-			<th><?php echo $column_time; ?></th>
-			<th><?php echo $column_subject; ?></th>
-			<th><?php echo $column_action; ?></th>
+			<th align="left"><?php echo $column_subject; ?></th>
+			<th align="center"><?php echo $column_date; ?></th>
+			<th align="right"><?php echo $column_action; ?></th>
 		</tr>
 		<?php if ($messages) {?>
 		<?php foreach ($messages as $message) { ?>
-		<tr align="center">
-			<td><?php echo $message['date']; ?></td>
-			<td><?php echo $message['time']; ?></td>
-			<td><?php echo $message['subject']; ?><br /><font size="1"><?php echo $message['body']; ?></font></td>
-			<td><a class="edit" href="<?php echo $message['edit']; ?>"><?php echo $text_view; ?></a></td>
+		<tr>
+			<td align="left"><?php echo $message['subject']; ?><br /><font size="1"><?php echo $message['body']; ?></font></td>
+			<td align="center"><?php echo $message['date']; ?></td>
+			<td align="right"><a class="edit" href="<?php echo $message['edit']; ?>"><?php echo $text_view; ?></a></td>
 		</tr>
 		<?php } ?>
 		<?php } else { ?>
@@ -22,7 +23,7 @@
 		</tr>
 		<?php } ?>
 	</table>
-	</div>
+</div>
 
 	<div class="separator"></div>
 	<div class="buttons">

@@ -11,16 +11,14 @@
 		<tr>
 			<td><?php echo $extension['name']; ?></td>
 			<td class="right" width="5%">
+			<?php if (isset($extension['edit'])) {?>
+				<a class="edit" title="Edit" href="<?php echo $extension['edit']; ?>"></a>
+			<?php } ?>&nbsp;&nbsp;&nbsp;
 			<?php if (isset($extension['uninstall'])) {?>
 				<a class="uninstall" title="Uninstall" href="<?php echo $extension['uninstall']; ?>"></a>
 			<?php } ?>
 			<?php if (isset($extension['install'])) {?>
 				<a class="install" title="Install" href="<?php echo $extension['install']; ?>"></a>
-			<?php } ?>
-			</td>
-			<td class="right" width="5%">
-			<?php if (isset($extension['edit'])) {?>
-				<a class="edit" title="Edit" href="<?php echo $extension['edit']; ?>"></a>
 			<?php } ?>
 			</td>
 		</tr>

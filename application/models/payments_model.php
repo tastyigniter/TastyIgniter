@@ -28,19 +28,6 @@ class Payments_model extends CI_Model {
 		return $query->row_array();
 	}
 
-	public function getPaypalDetails($order_id, $customer_id) {
-		$this->db->from('pp_payments');
-		$this->db->where('order_id', $order_id);
-		$this->db->where('customer_id', $customer_id);
-			
-		$query = $this->db->get();
-		if ($query->num_rows() > 0) {
-			$row = $query->row_array();
-			
-			return unserialize($row['serialized']);
-		}	
-	}
-	
 	public function updatePayment($update = array()) {
 		
 		if (!empty($update['payment_name'])) {
@@ -98,14 +85,12 @@ class Payments_model extends CI_Model {
 			
 			if ($this->cart->order_total() > 0) {
 				$nvp_data  = '&PAYMENTREQUEST_0_AMT='. urlencode($this->cart->order_total());
-			//} else {
-			//	$nvp_data  = '&PAYMENTREQUEST_0_AMT='. urlencode($this->cart->total());
 			}
 			
-			if (!empty($order_info['order_address_id']) OR !empty($order_info['order_customer_id'])) {
+			if (!empty($order_info['address_id']) OR !empty($order_info['customer_id'])) {
 				
 				$this->load->model('Customers_model');
-				$address = $this->Customers_model->getCustomerAddress($order_info['order_customer_id'], $order_info['order_address_id']);
+				$address = $this->Customers_model->getCustomerAddress($order_info['customer_id'], $order_info['address_id']);
 				
 				$nvp_data .= '&PAYMENTREQUEST_0_SHIPTONAME='. urlencode($order_info['first_name'] .' '. $order_info['last_name']);
 				$nvp_data .= '&PAYMENTREQUEST_0_SHIPTOSTREET='. urlencode($address['address_1']);
@@ -117,9 +102,7 @@ class Payments_model extends CI_Model {
 			}
 			
 			foreach (array_keys($cart_items) as $key => $rowid) {							// loop through cart items to create items name-value pairs data to be sent to paypal
-
 				foreach ($cart_items as $cart_item) {
-
 					if (!empty($cart_item['options']['With'])) {
 						$options = $cart_item['options']['With'];
 					} else {
@@ -148,21 +131,7 @@ class Payments_model extends CI_Model {
 			
 			$response = $this->Payments_model->sendPaypal('SetExpressCheckout', $nvp_data);
 			
-			if (strtoupper($response['ACK']) === 'SUCCESS' OR strtoupper($response['ACK']) === 'SUCCESSWITHWARNING') {
-			
-				if ($this->config->item('paypal_mode') === 'sandbox') {
-					$api_mode = '.sandbox';
-				} else {
-					$api_mode = '';
-				}
-				
-				redirect('https://www'. $api_mode .'.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token='. $response['TOKEN'] .'');
-
-			} else {
-				log_message('error', $response['L_ERRORCODE0'] .' --> '. $response['L_LONGMESSAGE0'] .' --> '. $response['CORRELATIONID']);			
-			}
-	
-			//return $response;
+			return $response;
 		}		
 	}
 
@@ -180,26 +149,59 @@ class Payments_model extends CI_Model {
 		$response = $this->Payments_model->sendPaypal('DoExpressCheckoutPayment', $nvp_data);
 
 		if (strtoupper($response['ACK']) === 'SUCCESS' OR strtoupper($response['ACK']) === 'SUCCESSWITHWARNING') {
-
 			return $response['PAYMENTINFO_0_TRANSACTIONID'];
-		
 		} else {
 			log_message('error', $response['L_ERRORCODE0'] .' --> '. $response['L_LONGMESSAGE0'] .' --> '. $response['CORRELATIONID']);			
 			return FALSE;
 		}
 	}
 	
-	public function saveTransactionDetails($transaction_id, $order_id, $customer_id) {
+	public function getTransactionDetails($transaction_id, $order_id, $customer_id) {
 	
 		$nvp_data = '&TRANSACTIONID='. urlencode($transaction_id);
 		
 		$response = $this->Payments_model->sendPaypal('GetTransactionDetails', $nvp_data);
 
 		if (strtoupper($response['ACK']) === 'SUCCESS' OR strtoupper($response['ACK']) === 'SUCCESSWITHWARNING') {
-
-			$this->addPaypalOrder($response['PAYMENTINFO_0_TRANSACTIONID'], $order_id, $customer_id, $response);
+			return $response; //$this->addPaypalOrder($response['PAYMENTINFO_0_TRANSACTIONID'], $order_id, $customer_id, $response);
 		} else {
 			log_message('error', $response['L_ERRORCODE0'] .' --> '. $response['L_LONGMESSAGE0'] .' --> '. $response['CORRELATIONID']);			
+		}
+	}
+	
+	public function getPaypalDetails($order_id, $customer_id) {
+		$this->db->from('pp_payments');
+		$this->db->where('order_id', $order_id);
+		$this->db->where('customer_id', $customer_id);
+			
+		$query = $this->db->get();
+		if ($query->num_rows() > 0) {
+			$row = $query->row_array();
+			
+			return unserialize($row['serialized']);
+		}	
+	}
+	
+	public function addPaypalOrder($transaction_id, $order_id, $customer_id, $response_data) {
+		if (!empty($order_id)) {
+			$this->db->set('order_id', $order_id);
+		}
+
+		if (!empty($customer_id)) {
+			$this->db->set('customer_id', $customer_id);
+		}
+		
+		if (!empty($response_data)) {
+			$this->db->set('serialized', serialize($response_data));
+		}
+		
+		if (!empty($transaction_id)) {
+			$this->db->set('transaction_id', $transaction_id);
+			$this->db->insert('pp_payments'); 
+		}
+
+		if ($this->db->affected_rows() > 0) {
+			return TRUE;
 		}
 	}
 	
@@ -220,7 +222,7 @@ class Payments_model extends CI_Model {
 		$nvp_string .= '&PWD='. urlencode($this->config->item('paypal_pass'));
 		$nvp_string .= '&SIGNATURE='. urlencode($this->config->item('paypal_sign'));
 		$nvp_string .= '&RETURNURL='. urlencode($this->config->site_url('payments/paypal'));
-		$nvp_string .= '&CANCELURL='. urlencode($this->config->site_url('payments/cancel'));	
+		$nvp_string .= '&CANCELURL='. urlencode($this->config->site_url('payments'));	
 
 		if ($this->config->item('paypal_action') === 'sale') {
 			$nvp_string .= '&PAYMENTREQUEST_0_PAYMENTACTION=SALE';
@@ -250,28 +252,5 @@ class Payments_model extends CI_Model {
 		$parse_str = parse_str($output, $result);
 		
 		return $result;
-	}
-	
-	public function addPaypalOrder($transaction_id, $order_id, $customer_id, $response_data) {
-		if (!empty($order_id)) {
-			$this->db->set('order_id', $order_id);
-		}
-
-		if (!empty($customer_id)) {
-			$this->db->set('customer_id', $customer_id);
-		}
-		
-		if (!empty($response_data)) {
-			$this->db->set('serialized', serialize($response_data));
-		}
-		
-		if (!empty($transaction_id)) {
-			$this->db->set('transaction_id', $transaction_id);
-			$this->db->insert('pp_payments'); 
-		}
-
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
-		}
 	}
 }

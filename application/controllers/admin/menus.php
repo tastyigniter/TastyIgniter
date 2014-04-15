@@ -13,6 +13,10 @@ class Menus extends CI_Controller {
 
 	public function index() {
 
+		if (!file_exists(APPPATH .'views/admin/menus.php')) {
+			show_404();
+		}
+			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -27,12 +31,6 @@ class Menus extends CI_Controller {
 			$data['alert'] = '';
 		}
 									
-		$this->breadcrumb->clear();
-		$this->breadcrumb->add_crumb('Home', $this->config->site_url('admin'));
-		$this->breadcrumb->add_crumb('Menus');
-
-  		$data['breadcrumb'] = $this->breadcrumb->output();
-		
 		$filter = array();
 		if ($this->input->get('page')) {
 			$filter['page'] = (int) $this->input->get('page');
@@ -44,6 +42,21 @@ class Menus extends CI_Controller {
 			$filter['limit'] = $this->config->item('page_limit');
 		}
 				
+		if ($this->input->get('filter_name')) {
+			$filter['filter_name'] = $this->input->get('filter_name');
+			$data['filter_name'] = $filter['filter_name'];
+		} else {
+			$data['filter_name'] = '';
+		}
+		
+		if (is_numeric($this->input->get('filter_price'))) {
+			$filter['filter_price'] = $this->input->get('filter_price');
+			$data['filter_price'] = $filter['filter_price'];
+		} else {
+			$filter['filter_price'] = ''; 
+			$data['filter_price'] = '';
+		}
+		
 		if ($this->input->get('filter_category')) {
 			$filter['category_id'] = (int) $this->input->get('filter_category');
 			$data['category_id'] = $this->input->get('filter_category');
@@ -51,19 +64,39 @@ class Menus extends CI_Controller {
 			$data['category_id'] = '';
 		}
 		
+		$filter_stock = $this->input->get('filter_stock');
+		if (is_numeric($filter_stock)) {
+			$filter['filter_stock'] = $filter_stock;
+			$data['filter_stock'] = $filter['filter_stock'];
+		} else {
+			$filter['filter_stock'] = '';
+			$data['filter_stock'] = '';
+		}
+		
+		$filter_status = $this->input->get('filter_status');
+		if (is_numeric($filter_status)) {
+			$filter['filter_status'] = $filter_status;
+			$data['filter_status'] = $filter['filter_status'];
+		} else {
+			$filter['filter_status'] = '';
+			$data['filter_status'] = '';
+		}
+		
 		$data['heading'] 			= 'Menus';
 		$data['sub_menu_add'] 		= 'Add new menu';
 		$data['sub_menu_delete'] 	= 'Delete';
 		$data['text_no_menus'] 		= 'There are no menus available.';
 		
+		$this->load->model('Image_tool_model');
+
 		$data['menus'] = array();		
 		$results = $this->Menus_model->getList($filter);
 		foreach ($results as $result) {
 			
 			if (!empty($result['menu_photo'])) {
-				$menu_photo_src = $this->config->base_url('assets/img/' . $result['menu_photo']);
+				$menu_photo_src = $this->Image_tool_model->resize($result['menu_photo'], 64, 64);
 			} else {
-				$menu_photo_src = $this->config->base_url('assets/img/no_menu_photo.png');
+				$menu_photo_src = $this->Image_tool_model->resize('data/no_photo.png', 64, 64);
 			}
 						
 			$data['menus'][] = array(
@@ -106,7 +139,7 @@ class Menus extends CI_Controller {
 		}
 
 		$config['base_url'] 		= $this->config->site_url('admin/menus');
-		$config['total_rows'] 		= $this->Menus_model->menus_record_count();
+		$config['total_rows'] 		= $this->Menus_model->menus_record_count($filter);
 		$config['per_page'] 		= $filter['limit'];
 		$config['num_links'] 		= round($config['total_rows'] / $config['per_page']);
 		
@@ -134,6 +167,10 @@ class Menus extends CI_Controller {
 
 	public function edit() {
 		
+		if (!file_exists(APPPATH .'views/admin/menus_edit.php')) {
+			show_404();
+		}
+			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -148,7 +185,6 @@ class Menus extends CI_Controller {
 			$data['alert'] = '';
 		}		
 		
-		//check if /menu_id is set in uri string
 		if (is_numeric($this->input->get('id'))) {
 			$menu_id = $this->input->get('id');
 			$data['action']	= $this->config->site_url('admin/menus/edit?id='. $menu_id);
@@ -163,10 +199,19 @@ class Menus extends CI_Controller {
 		$data['sub_menu_save'] 		= 'Save';
 		$data['sub_menu_back'] 		= $this->config->site_url('admin/menus');
 
-		if (!empty($menu_info['menu_photo'])) {
-			$data['menu_photo'] = $this->config->base_url('assets/img/' . $menu_info['menu_photo']);
+		$this->load->model('Image_tool_model');
+		if ($this->input->post('menu_photo')) {
+			$data['menu_image'] = $this->input->post('menu_photo');
+			$data['image_name'] = basename($this->input->post('menu_photo'));
+			$data['menu_image_url'] = $this->Image_tool_model->resize($this->input->post('menu_photo'), 120, 120);
+		} else if (!empty($menu_info['menu_photo'])) {
+			$data['menu_image'] = $menu_info['menu_photo'];
+			$data['image_name'] = basename($menu_info['menu_photo']);
+			$data['menu_image_url'] = $this->Image_tool_model->resize($menu_info['menu_photo'], 120, 120);
 		} else {
-			$data['menu_photo'] = $this->config->base_url('assets/img/no_menu_photo.png');
+			$data['menu_image'] = 'data/no_photo.png';
+			$data['image_name'] = 'no_photo.png';
+			$data['menu_image_url'] = $this->Image_tool_model->resize('data/no_photo.png', 120, 120);
 		}
 
 		$data['menu_id'] 			= $menu_info['menu_id'];
@@ -175,12 +220,15 @@ class Menus extends CI_Controller {
 		$data['menu_price'] 		= $menu_info['menu_price'];
 		$data['menu_category'] 		= $menu_info['category_id'];
 		$data['stock_qty'] 			= $menu_info['stock_qty'];
-		$data['minimum_qty'] 		= $menu_info['minimum_qty'];
-		$data['start_date'] 		= $menu_info['start_date'];
-		$data['end_date'] 			= $menu_info['end_date'];
+		$data['minimum_qty'] 		= (isset($menu_info['minimum_qty'])) ? $menu_info['minimum_qty'] : '1';
+		$data['special_id'] 		= $menu_info['special_id'];
+		$data['start_date'] 		= (isset($menu_info['start_date'])) ? mdate('%d-%m-%Y', strtotime($menu_info['start_date'])) : '';
+		$data['end_date'] 			= (isset($menu_info['end_date'])) ? mdate('%d-%m-%Y', strtotime($menu_info['end_date'])) : '';
 		$data['special_price'] 		= $menu_info['special_price'];
+		$data['special_status'] 	= $menu_info['special_status'];
 		$data['subtract_stock']		= $menu_info['subtract_stock'];
 		$data['menu_status'] 		= $menu_info['menu_status'];
+		$data['no_photo'] 			= $this->Image_tool_model->resize('data/no_photo.png', 120, 120);
 
 		$data['has_options'] 		= $this->Menus_model->hasMenuOptions($menu_id);
 
@@ -249,145 +297,86 @@ class Menus extends CI_Controller {
 	
 	public function _addMenu() {
     	if ( ! $this->user->hasPermissions('modify', 'admin/menus')) {
-		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
   			return TRUE;
-  	
-    	} else if ( ! $this->input->get('id')) { 
-    	
-    		//form validation
-			$this->form_validation->set_rules('menu_name', 'Menu Name', 'trim|required|min_length[2]|max_length[255]');
-			$this->form_validation->set_rules('menu_description', 'Menu Description', 'trim|min_length[2]|max_length[1028]');
-			$this->form_validation->set_rules('menu_price', 'Menu Price', 'trim|required|numeric');
-			$this->form_validation->set_rules('menu_category', 'Menu Category', 'trim|required|integer');
-			$this->form_validation->set_rules('menu_photo', 'Menu Photo', 'callback_handle_upload');
-			$this->form_validation->set_rules('stock_qty', 'Stock Quantity', 'trim|required|integer');
-			$this->form_validation->set_rules('minimum_qty', 'Minimum Quantity', 'trim|required|integer');
-			$this->form_validation->set_rules('subtract_stock', 'Subtract Stock', 'trim|requried|integer');
-			$this->form_validation->set_rules('menu_options[]', 'Menu Options', 'trim|integer');
-			$this->form_validation->set_rules('menu_special', 'Menu Special', 'trim|required|integer');
-			$this->form_validation->set_rules('start_date', 'Start Date', 'trim|callback_handle_date');
-			$this->form_validation->set_rules('end_date', 'End Date', 'trim|callback_handle_date');
-			$this->form_validation->set_rules('special_price', 'Special Price', 'trim|numeric');
-			$this->form_validation->set_rules('menu_status', 'Menu Status', 'trim|requried|integer');
-
-			//if validation is true
-  			if ($this->form_validation->run() === TRUE) {
-				$add = array();
-  		    	
-  		    	//Sanitizing the POST values
-				$add['menu_name'] 			= $this->input->post('menu_name');
-				$add['menu_description'] 	= $this->input->post('menu_description');
-				$add['menu_price'] 			= $this->input->post('menu_price');
-				$add['menu_category'] 		= $this->input->post('menu_category');
-				$add['menu_photo'] 			= $this->input->post('menu_photo');			
-				$add['stock_qty'] 			= $this->input->post('stock_qty');			
-				$add['minimum_qty'] 		= $this->input->post('minimum_qty');			
-				$add['subtract_stock'] 		= $this->input->post('subtract_stock');			
-				$add['menu_options'] 		= $this->input->post('menu_options');
-				$add['menu_special'] 		= $this->input->post('menu_special');
-				$add['start_date'] 			= $this->input->post('start_date');
-				$add['end_date'] 			= $this->input->post('end_date');
-				$add['special_price'] 		= $this->input->post('special_price');
-				$add['menu_status'] 		= $this->input->post('menu_status');
-				
-				if ($this->Menus_model->addMenu($add)) {
-				
-					$this->session->set_flashdata('alert', '<p class="success">Menu Added Sucessfully!</p>');
-				
-				} else {
-				
-					$this->session->set_flashdata('alert', '<p class="warning">Nothing Added!</p>');				
-				
-				}
-				
-				return TRUE;
+    	} else if ( ! $this->input->get('id') AND $this->validateForm() === TRUE) { 
+			$add = array();
+			
+			//Sanitizing the POST values
+			$add['menu_name'] 			= $this->input->post('menu_name');
+			$add['menu_description'] 	= $this->input->post('menu_description');
+			$add['menu_price'] 			= $this->input->post('menu_price');
+			$add['menu_category'] 		= $this->input->post('menu_category');
+			$add['menu_photo'] 			= $this->input->post('menu_photo');			
+			$add['stock_qty'] 			= $this->input->post('stock_qty');			
+			$add['minimum_qty'] 		= $this->input->post('minimum_qty');			
+			$add['subtract_stock'] 		= $this->input->post('subtract_stock');			
+			$add['menu_options'] 		= $this->input->post('menu_options');
+			$add['special_status'] 		= $this->input->post('special_status');
+			$add['start_date'] 			= $this->input->post('start_date');
+			$add['end_date'] 			= $this->input->post('end_date');
+			$add['special_price'] 		= $this->input->post('special_price');
+			$add['menu_status'] 		= $this->input->post('menu_status');
+			
+			if ($this->Menus_model->addMenu($add)) {
+				$this->session->set_flashdata('alert', '<p class="success">Menu Added Sucessfully!</p>');
+			} else {
+				$this->session->set_flashdata('alert', '<p class="warning">Nothing Added!</p>');				
 			}
+			
+			return TRUE;
 		}	
 	}
 
 	public function _updateMenu() {
     	if (!$this->user->hasPermissions('modify', 'admin/menus')) {
-		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
   			return TRUE;
-    	
-    	} else if ($this->input->get('id')) { 
-		
-			$this->form_validation->set_rules('menu_name', 'Menu Name', 'trim|required|min_length[2]|max_length[255]');
-			$this->form_validation->set_rules('menu_description', 'Menu Description', 'trim|min_length[2]|max_length[1028]');
-			$this->form_validation->set_rules('menu_price', 'Menu Price', 'trim|required|numeric');
-			$this->form_validation->set_rules('menu_category', 'Menu Category', 'trim|required|integer');
-			$this->form_validation->set_rules('menu_photo', 'Menu Photo', 'callback_handle_upload');
-			$this->form_validation->set_rules('stock_qty', 'Stock Quantity', 'trim|required|integer');
-			$this->form_validation->set_rules('minimum_qty', 'Minimum Quantity', 'trim|required|integer');
-			$this->form_validation->set_rules('subtract_stock', 'Subtract Stock', 'trim|requried|integer');
-			$this->form_validation->set_rules('menu_options[]', 'Menu Options', 'trim|integer');
-			$this->form_validation->set_rules('menu_special', 'Menu Special', 'trim|required|integer');
-			$this->form_validation->set_rules('start_date', 'Start Date', 'trim|callback_handle_date');
-			$this->form_validation->set_rules('end_date', 'End Date', 'trim|callback_handle_date');
-			$this->form_validation->set_rules('special_price', 'Special Price', 'trim|numeric');
-			$this->form_validation->set_rules('menu_status', 'Menu Status', 'trim|requried|integer');
+    	} else if ($this->input->get('id') AND $this->validateForm() === TRUE) { 
+			$update = array();
 
-			if ($this->form_validation->run() === TRUE) {
-				$update = array();
-
-				$update['menu_id'] 				= $this->input->get('id');
-				
-				//Sanitizing the POST values
-				$update['menu_name'] 			= $this->input->post('menu_name');
-				$update['menu_description'] 	= $this->input->post('menu_description');
-				$update['menu_price']			= $this->input->post('menu_price');
-				$update['menu_category'] 		= $this->input->post('menu_category');
-				$update['menu_photo'] 			= $this->input->post('menu_photo');					
-				$update['stock_qty'] 			= $this->input->post('stock_qty');			
-				$update['minimum_qty'] 			= $this->input->post('minimum_qty');			
-				$update['subtract_stock'] 		= $this->input->post('subtract_stock');			
-				$update['menu_options'] 		= $this->input->post('menu_options');
-				$update['menu_special'] 		= $this->input->post('menu_special');
-				$update['start_date'] 			= $this->input->post('start_date');
-				$update['end_date'] 			= $this->input->post('end_date');
-				$update['special_price'] 		= $this->input->post('special_price');
-				$update['menu_status'] 			= $this->input->post('menu_status');
+			$update['menu_id'] 				= $this->input->get('id');
+			
+			//Sanitizing the POST values
+			$update['menu_name'] 			= $this->input->post('menu_name');
+			$update['menu_description'] 	= $this->input->post('menu_description');
+			$update['menu_price']			= $this->input->post('menu_price');
+			$update['menu_category'] 		= $this->input->post('menu_category');
+			$update['menu_photo'] 			= $this->input->post('menu_photo');					
+			$update['stock_qty'] 			= $this->input->post('stock_qty');			
+			$update['minimum_qty'] 			= $this->input->post('minimum_qty');			
+			$update['subtract_stock'] 		= $this->input->post('subtract_stock');			
+			$update['menu_options'] 		= $this->input->post('menu_options');
+			$update['special_id'] 			= $this->input->post('special_id');
+			$update['start_date'] 			= $this->input->post('start_date');
+			$update['end_date'] 			= $this->input->post('end_date');
+			$update['special_status'] 		= $this->input->post('special_status');
+			$update['special_price'] 		= $this->input->post('special_price');
+			$update['menu_status'] 			= $this->input->post('menu_status');
 
 
-				if ($this->Menus_model->updateMenu($update)) {						
-				
-					$this->session->set_flashdata('alert', '<p class="success">Menu Updated Sucessfully!</p>');
-				
-				} else {
-				
-					$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
-				
-				}
-				
-				return TRUE;
+			if ($this->Menus_model->updateMenu($update)) {						
+				$this->session->set_flashdata('alert', '<p class="success">Menu Updated Sucessfully!</p>');
+			} else {
+				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
 			}
+			
+			return TRUE;
 		}
 	}
 
 	public function _deleteMenu($menu_id = FALSE) {
     	if (!$this->user->hasPermissions('modify', 'admin/menus')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
     	
     	} else { 
-		
-			if ($this->input->post('delete') === '1') {
-					
-				$this->Menus_model->deleteMenu($menu_id);
-					
-				$this->session->set_flashdata('alert', '<p class="success">Menu Deleted Sucessfully!</p>');
-
-			} else if (is_array($this->input->post('delete'))) {
-
-				//sorting the post[quantity] array to rowid and qty.
+			if (is_array($this->input->post('delete'))) {
 				foreach ($this->input->post('delete') as $key => $value) {
 					$menu_id = $value;
-				
 					$this->Menus_model->deleteMenu($menu_id);
 				}			
-			
+
 				$this->session->set_flashdata('alert', '<p class="success">Menu(s) Deleted Sucessfully!</p>');
 			}
 		}
@@ -395,48 +384,26 @@ class Menus extends CI_Controller {
 		return TRUE;
 	}
 	
- 	public function handle_upload() {
-		//loading upload library
-		$this->load->library('upload');
+ 	public function validateForm() {
+		$this->form_validation->set_rules('menu_name', 'Menu Name', 'trim|required|min_length[2]|max_length[255]');
+		$this->form_validation->set_rules('menu_description', 'Menu Description', 'trim|min_length[2]|max_length[1028]');
+		$this->form_validation->set_rules('menu_price', 'Menu Price', 'trim|required|numeric');
+		$this->form_validation->set_rules('menu_category', 'Menu Category', 'trim|required|integer');
+		$this->form_validation->set_rules('menu_photo', 'Menu Photo', 'trim|required');
+		$this->form_validation->set_rules('stock_qty', 'Stock Quantity', 'trim|required|integer');
+		$this->form_validation->set_rules('minimum_qty', 'Minimum Quantity', 'trim|required|integer');
+		$this->form_validation->set_rules('subtract_stock', 'Subtract Stock', 'trim|requried|integer');
+		$this->form_validation->set_rules('menu_status', 'Menu Status', 'trim|requried|integer');
+		$this->form_validation->set_rules('menu_options[]', 'Menu Options', 'trim|integer');
+		$this->form_validation->set_rules('special_status', 'Menu Special', 'trim|required|integer');
+		$this->form_validation->set_rules('start_date', 'Start Date', 'trim|valid_date');
+		$this->form_validation->set_rules('end_date', 'End Date', 'trim|valid_date');
+		$this->form_validation->set_rules('special_price', 'Special Price', 'trim|numeric');
 
-		//setting upload preference
-		$this->upload->set_upload_path($this->config->item('upload_path'));
-		$this->upload->set_allowed_types($this->config->item('allowed_types'));
-		$this->upload->set_max_filesize($this->config->item('max_size'));
-		$this->upload->set_max_width($this->config->item('max_width'));
-		$this->upload->set_max_height($this->config->item('max_height'));
-
-		if (isset($_FILES['menu_photo']) && !empty($_FILES['menu_photo']['name'])) {
-      		
-      		if ($this->upload->do_upload('menu_photo')) {
-
-        		// set a $_POST value for 'menu_photo' that we can use later
-        		if ($upload_data    = $this->upload->data('menu_photo')) {
-        			$_POST['menu_photo'] = $this->security->sanitize_filename($upload_data['file_name']);
-        		}
-        		return TRUE;        
-      		} else {
-        		
-        		// possibly do some clean up ... then throw an error
-        		$this->form_validation->set_message('handle_upload', $this->upload->display_errors());
-        		return FALSE;
-     		}
-    	} else {
-      	
-        	// set an empty $_POST value for 'menu_photo' to be used on database queries
-        	$_POST['menu_photo'] = '';
-      		//return TRUE;
-      	}
-    }
-
- 	public function handle_date($date) {
-      		
-     	$human_to_unix = human_to_unix($date);
-		if ( ! isset($human_to_unix)) {
-        	$this->form_validation->set_message('handle_date', 'The %s field is not a valid date/time.');
-      		return FALSE;
-    	} else {
-        	return TRUE;        
-      	}
-    }
+		if ($this->form_validation->run() === TRUE) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
 }

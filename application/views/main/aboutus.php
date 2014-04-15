@@ -1,3 +1,5 @@
 <div class="content">
-<?php echo $text_description; ?>
+<div class="img_inner">
+	<?php echo $text_description; ?>
+</div>
 </div>

@@ -37,6 +37,24 @@ class Customer {
 				$this->CI->security_question_id = $result['security_question_id'];
 				$this->CI->security_answer 		= $result['security_answer'];
 
+				$this->CI->db->from('customers_activity');	
+				$this->CI->db->where('customer_id', $result['customer_id']);
+				$this->CI->db->where('ip_address', $this->CI->input->ip_address());
+				$query = $this->CI->db->get();
+
+				if ($query->num_rows() < 1) {
+					$this->CI->load->library('user_agent');	    
+					$access_type = ($this->CI->agent->mobile()) ? 'mobile' : 'browser';
+					$ip_json = @file_get_contents('http://api.hostip.info/get_json.php?ip='. $this->CI->input->ip_address());
+					$ip_data = json_decode($ip_json);
+					$this->CI->db->set('customer_id', $result['customer_id']);
+					$this->CI->db->set('access_type', $access_type);
+					$this->CI->db->set('browser', $this->CI->agent->browser());
+					$this->CI->db->set('ip_address', $this->CI->input->ip_address());
+					$this->CI->db->set('country_name', trim($ip_data->country_name, '()'));
+					$this->CI->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', time()));
+					$this->CI->db->insert('customers_activity');
+				}
 			} else {
 				$this->logout();
 			}
@@ -45,24 +63,24 @@ class Customer {
 
 	public function login($email, $password) {
 
-		$this->CI->db->select('*');
 		$this->CI->db->from('customers');	
 		$this->CI->db->where('email', strtolower($email));
 		$this->CI->db->where('password', 'SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1("' . $password . '")))))', FALSE);
 		$this->CI->db->where('status', '1');
 		
 		$query = $this->CI->db->get();
-		//Login Successful 
 		if ($query->num_rows() === 1) {
-
 			$result = $query->row_array();
 			
-			//add customer id into session
 			$this->CI->session->set_userdata('customer_id', $result['customer_id']);
 			$this->CI->session->set_userdata('customer_email', $result['email']);
 			
 			$this->CI->customer_id = $result['customer_id'];
 			$this->CI->email = $result['email'];
+
+			$this->CI->db->set('ip_address', $this->CI->input->ip_address());
+			$this->CI->db->where('customer_id', $result['customer_id']);
+			$this->CI->db->update('customers');
 
 	  		return TRUE;
 		

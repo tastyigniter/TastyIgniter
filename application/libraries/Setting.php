@@ -13,7 +13,7 @@ class Setting {
 			$this->setConfig();
 		}
 		
-		if ( ! $this->CI->input->is_ajax_request()) {
+		if (ENVIRONMENT !== 'production' AND ! $this->CI->input->is_ajax_request()) {
 			$this->CI->output->enable_profiler(TRUE);
 		}
 	}
@@ -32,6 +32,11 @@ class Setting {
 					$this->CI->config->set_item($setting['key'], $setting['value']);
 				}
 			}	
+		}
+		
+		$timezone = $this->CI->config->item('timezone');
+		if ($timezone) {
+			date_default_timezone_set($timezone);
 		}
 	}
 }

@@ -11,6 +11,10 @@ class Menu_options extends CI_Controller {
 
 	public function index() {
 		
+		if (!file_exists(APPPATH .'views/admin/menu_options.php')) {
+			show_404();
+		}
+			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -80,6 +84,10 @@ class Menu_options extends CI_Controller {
 	
 	public function edit() {
 		
+		if (!file_exists(APPPATH .'views/admin/menu_options_edit.php')) {
+			show_404();
+		}
+			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -160,32 +168,25 @@ class Menu_options extends CI_Controller {
 
     	if (!$this->user->hasPermissions('modify', 'admin/menu_options')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
   			return TRUE;
     	
-    	} else if ( ! $this->input->get('id')) { 
+    	} else if ( ! $this->input->get('id') AND $this->validateForm() === TRUE) { 
+			$add = array();
+	
+			//Sanitizing the POST values
+			$add['option_name'] = $this->input->post('option_name');
+			$add['option_price'] = $this->input->post('option_price');	
+										
+			if ($this->Menus_model->addMenuOption($add)) {
 			
-			$this->form_validation->set_rules('option_name', 'Option Name', 'trim|required|min_length[2]|max_length[32]');
-			$this->form_validation->set_rules('option_price', 'Option Price', 'trim|required|numeric');
-
-			//if validation is true
-			if ($this->form_validation->run() === TRUE) {
-				$add = array();
-		
-				//Sanitizing the POST values
-				$add['option_name'] = $this->input->post('option_name');
-				$add['option_price'] = $this->input->post('option_price');	
-											
-				if ($this->Menus_model->addMenuOption($add)) {
-				
-					$this->session->set_flashdata('alert', '<p class="success">Menu Option Added Sucessfully!</p>');
-				} else {
-				
-					$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
-				}
-				
-				return TRUE;
+				$this->session->set_flashdata('alert', '<p class="success">Menu Option Added Sucessfully!</p>');
+			} else {
+			
+				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
 			}
+			
+			return TRUE;
 		}
 	}
 
@@ -193,56 +194,56 @@ class Menu_options extends CI_Controller {
 						
     	if (!$this->user->hasPermissions('modify', 'admin/menu_options')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
   			return TRUE;
     	
-    	} else if ($this->input->get('id')) { 
-			
-			$this->form_validation->set_rules('option_name', 'Option Name', 'trim|required|min_length[2]|max_length[32]');
-			$this->form_validation->set_rules('option_price', 'Option Price', 'trim|required|numeric');
+    	} else if ($this->input->get('id') AND $this->validateForm() === TRUE) { 
+			$update = array();
+		
+			//Sanitizing the POST values
+			$update['option_id'] 		= $this->input->get('id');
+			$update['option_name'] 		= $this->input->post('option_name');
+			$update['option_price'] 	= $this->input->post('option_price');	
 
-			if ($this->form_validation->run() === TRUE) {
-				$update = array();
-			
-				//Sanitizing the POST values
-				$update['option_id'] 		= $this->input->get('id');
-				$update['option_name'] 		= $this->input->post('option_name');
-				$update['option_price'] 	= $this->input->post('option_price');	
-
-				if ($this->Menus_model->updateMenuOption($update)) {						
-			
-					$this->session->set_flashdata('alert', '<p class="success">Menu Option Updated Sucessfully!</p>');
-				} else {
-			
-					$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
-				}
-			
-				return TRUE;
+			if ($this->Menus_model->updateMenuOption($update)) {						
+		
+				$this->session->set_flashdata('alert', '<p class="success">Menu Option Updated Sucessfully!</p>');
+			} else {
+		
+				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
 			}
+		
+			return TRUE;
 		}
 	}
 
 	public function _deleteMenuOption($option_id = FALSE) {
     	if (!$this->user->hasPermissions('modify', 'admin/menu_options')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
     	
     	} else { 
-		
 			if (is_array($this->input->post('delete'))) {
-
-				//sorting the post array to rowid and qty.
 				foreach ($this->input->post('delete') as $key => $value) {
 					$option_id = $value;
-				
 					$this->Menus_model->deleteMenuOption($option_id);
 				}			
 			
 				$this->session->set_flashdata('alert', '<p class="success">Menu Option(s) Deleted Sucessfully!</p>');
-
 			}
 		}
 				
 		return TRUE;
+	}
+	
+	public function validateForm() {
+		$this->form_validation->set_rules('option_name', 'Option Name', 'trim|required|min_length[2]|max_length[32]');
+		$this->form_validation->set_rules('option_price', 'Option Price', 'trim|required|numeric');
+
+		if ($this->form_validation->run() === TRUE) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
 	}
 }

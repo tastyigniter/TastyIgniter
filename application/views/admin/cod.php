@@ -4,7 +4,7 @@
 	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
 	<table align=""class="form">
 		<tr>
-    		<td><b>Minimum Total:</b></td>
+    		<td><b>Order Total:</b></td>
             <td><input type="text" name="cod_total" value="<?php echo $cod_total; ?>" /></td>
 		</tr>
 		<tr>

@@ -8,10 +8,15 @@ class Settings extends CI_Controller {
 		$this->load->model('Settings_model');
 		$this->load->model('Countries_model');
 		$this->load->model('Currencies_model');
-		$this->load->model('Statuses_model');	    
+		$this->load->model('Statuses_model');
+		$this->load->model('Menus_model');	    
 	}
 
 	public function index() {
+			
+		if (!file_exists(APPPATH .'views/admin/settings.php')) {
+			show_404();
+		}
 			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
@@ -48,18 +53,23 @@ class Settings extends CI_Controller {
 			$data['site_desc'] = $this->config->item('site_desc');
 		}
 				
-		if (isset($this->input->post['page_limit'])) {
-			$data['page_limit'] = $this->input->post['page_limit'];
-		} else {
-			$data['page_limit'] = $this->config->item('page_limit');
-		}
-				
+		$this->load->model('Image_tool_model');
 		if (isset($this->input->post['site_logo'])) {
-			$data['site_logo'] = $this->input->post['site_logo'];
+			$data['site_logo'] = $this->Image_tool_model->resize($this->input->post['site_logo'], 120, 120);
+			$data['logo_name'] = basename($this->input->post['site_logo']);
+			$data['logo_val'] = $this->input->post['site_logo'];			
+		} else if ($this->config->item('site_logo')) {
+			$data['site_logo'] = $this->Image_tool_model->resize($this->config->item('site_logo'), 120, 120);
+			$data['logo_name'] = basename($this->config->item('site_logo'));
+			$data['logo_val'] = $this->config->item('site_logo');			
 		} else {
-			$data['site_logo'] = $this->config->base_url('assets/img/' . $this->config->item('site_logo'));
+			$data['site_logo'] = $this->Image_tool_model->resize('data/no_photo.png', 120, 120);
+			$data['logo_name'] = 'no_photo.png';
+			$data['logo_val'] = 'data/no_photo.png';			
 		}
 				
+		$data['no_photo'] = $this->Image_tool_model->resize('data/no_photo.png', 120, 120);
+		
 		if (isset($this->input->post['country_id'])) {
 			$data['country_id'] = $this->input->post['country_id'];
 		} else {
@@ -78,10 +88,46 @@ class Settings extends CI_Controller {
 			$data['currency_id'] = $this->config->item('currency_id');
 		}
 				
-		if (isset($this->input->post['approve_reviews'])) {
-			$data['approve_reviews'] = $this->input->post['approve_reviews'];
+		if (isset($this->input->post['default_location_id'])) {
+			$data['default_location_id'] = $this->input->post['default_location_id'];
 		} else {
-			$data['approve_reviews'] = $this->config->item('approve_reviews');
+			$data['default_location_id'] = $this->config->item('default_location_id');
+		}
+				
+		if (isset($this->input->post['page_limit'])) {
+			$data['page_limit'] = $this->input->post['page_limit'];
+		} else {
+			$data['page_limit'] = $this->config->item('page_limit');
+		}
+				
+		if (isset($this->input->post['show_menu_images'])) {
+			$data['show_menu_images'] = $this->input->post['show_menu_images'];
+		} else {
+			$data['show_menu_images'] = $this->config->item('show_menu_images');
+		}
+				
+		if (isset($this->input->post['menu_images_h'])) {
+			$data['menu_images_h'] = $this->input->post['menu_images_h'];
+		} else {
+			$data['menu_images_h'] = $this->config->item('menu_images_h');
+		}
+				
+		if (isset($this->input->post['menu_images_w'])) {
+			$data['menu_images_w'] = $this->input->post['menu_images_w'];
+		} else {
+			$data['menu_images_w'] = $this->config->item('menu_images_w');
+		}
+				
+		if (isset($this->input->post['special_category_id'])) {
+			$data['special_category_id'] = $this->input->post['special_category_id'];
+		} else {
+			$data['special_category_id'] = $this->config->item('special_category_id');
+		}
+				
+		if (isset($this->input->post['maps_api_key'])) {
+			$data['maps_api_key'] = $this->input->post['maps_api_key'];
+		} else {
+			$data['maps_api_key'] = $this->config->item('maps_api_key');
 		}
 				
 		if (isset($this->input->post['search_by'])) {
@@ -96,22 +142,52 @@ class Settings extends CI_Controller {
 			$data['distance_unit'] = $this->config->item('distance_unit');
 		}
 				
-		if (isset($this->input->post['allow_order'])) {
-			$data['allow_order'] = $this->input->post['allow_order'];
+		if (isset($this->input->post['search_radius'])) {
+			$data['search_radius'] = $this->input->post['search_radius'];
 		} else {
-			$data['allow_order'] = $this->config->item('allow_order');
+			$data['search_radius'] = $this->config->item('search_radius');
 		}
 				
-		if (isset($this->input->post['order_received'])) {
-			$data['order_received'] = $this->input->post['order_received'];
+		if (isset($this->input->post['send_order_email'])) {
+			$data['send_order_email'] = $this->input->post['send_order_email'];
 		} else {
-			$data['order_received'] = $this->config->item('order_received');
+			$data['send_order_email'] = $this->config->item('send_order_email');
 		}
 				
-		if (isset($this->input->post['order_completed'])) {
-			$data['order_completed'] = $this->input->post['order_completed'];
+		if (isset($this->input->post['send_reserve_email'])) {
+			$data['send_reserve_email'] = $this->input->post['send_reserve_email'];
 		} else {
-			$data['order_completed'] = $this->config->item('order_completed');
+			$data['send_reserve_email'] = $this->config->item('send_reserve_email');
+		}
+				
+		if (isset($this->input->post['location_order'])) {
+			$data['location_order'] = $this->input->post['location_order'];
+		} else {
+			$data['location_order'] = $this->config->item('location_order');
+		}
+				
+		if (isset($this->input->post['approve_reviews'])) {
+			$data['approve_reviews'] = $this->input->post['approve_reviews'];
+		} else {
+			$data['approve_reviews'] = $this->config->item('approve_reviews');
+		}
+				
+		if (isset($this->input->post['order_status_new'])) {
+			$data['order_status_new'] = $this->input->post['order_status_new'];
+		} else {
+			$data['order_status_new'] = $this->config->item('order_status_new');
+		}
+				
+		if (isset($this->input->post['order_status_complete'])) {
+			$data['order_status_complete'] = $this->input->post['order_status_complete'];
+		} else {
+			$data['order_status_complete'] = $this->config->item('order_status_complete');
+		}
+				
+		if (isset($this->input->post['guest_order'])) {
+			$data['guest_order'] = $this->input->post['guest_order'];
+		} else {
+			$data['guest_order'] = $this->config->item('guest_order');
 		}
 				
 		if (isset($this->input->post['ready_time'])) {
@@ -120,58 +196,28 @@ class Settings extends CI_Controller {
 			$data['ready_time'] = $this->config->item('ready_time');
 		}
 				
-		if (isset($this->input->post['reserve_status'])) {
-			$data['reserve_status'] = $this->input->post['reserve_status'];
-		} else {
-			$data['reserve_status'] = $this->config->item('reserve_status');
-		}
-				
 		if (isset($this->input->post['reserve_prefix'])) {
 			$data['reserve_prefix'] = $this->input->post['reserve_prefix'];
 		} else {
 			$data['reserve_prefix'] = $this->config->item('reserve_prefix');
 		}
 				
-		if (isset($this->input->post['upload_path'])) {
-			$data['upload_path'] = $this->input->post['upload_path'];
+		if (isset($this->input->post['reserve_status'])) {
+			$data['reserve_status'] = $this->input->post['reserve_status'];
 		} else {
-			$data['upload_path'] = $this->config->item('upload_path');
+			$data['reserve_status'] = $this->config->item('reserve_status');
 		}
 				
-		if (isset($this->input->post['allowed_types'])) {
-			$data['allowed_types'] = $this->input->post['allowed_types'];
+		if (isset($this->input->post['reserve_interval'])) {
+			$data['reserve_interval'] = $this->input->post['reserve_interval'];
 		} else {
-			$data['allowed_types'] = $this->config->item('allowed_types');
+			$data['reserve_interval'] = $this->config->item('reserve_interval');
 		}
 				
-		if (isset($this->input->post['max_size'])) {
-			$data['max_size'] = $this->input->post['max_size'];
+		if (isset($this->input->post['reserve_turn'])) {
+			$data['reserve_turn'] = $this->input->post['reserve_turn'];
 		} else {
-			$data['max_size'] = $this->config->item('max_size');
-		}
-				
-		if (isset($this->input->post['max_height'])) {
-			$data['max_height'] = $this->input->post['max_height'];
-		} else {
-			$data['max_height'] = $this->config->item('max_height');
-		}
-				
-		if (isset($this->input->post['max_width'])) {
-			$data['max_width'] = $this->input->post['max_width'];
-		} else {
-			$data['max_width'] = $this->config->item('max_width');
-		}
-				
-		if (isset($this->input->post['menus_height'])) {
-			$data['menus_height'] = $this->input->post['menus_height'];
-		} else {
-			$data['menus_height'] = $this->config->item('menus_height');
-		}
-				
-		if (isset($this->input->post['menus_width'])) {
-			$data['menus_width'] = $this->input->post['menus_width'];
-		} else {
-			$data['menus_width'] = $this->config->item('menus_width');
+			$data['reserve_turn'] = $this->config->item('reserve_turn');
 		}
 				
 		if (isset($this->input->post['protocol'])) {
@@ -230,7 +276,10 @@ class Settings extends CI_Controller {
 
 		$data['page_limits'] = array('10', '20', '50', '75', '100');
 		
-		$data['timezones'] = $this->Settings_model->getTimezones();
+		$timezones = $this->getTimezones();
+		foreach ($timezones as $key => $value) {					
+			$data['timezones'][$key] = $value;
+		}
 
 		$data['countries'] = array();
 		$results = $this->Countries_model->getCountries();
@@ -251,7 +300,26 @@ class Settings extends CI_Controller {
 			);
 		}
 
-		$data['search_by'] = array('postcode' => 'Postcode Only', 'address' => 'Postcode & Address');
+		$this->load->model('Locations_model');	    
+		$data['locations'] = array();
+		$results = $this->Locations_model->getLocations();
+		foreach ($results as $result) {					
+			$data['locations'][] = array(
+				'location_id'	=>	$result['location_id'],
+				'location_name'	=>	$result['location_name'],
+			);
+		}
+	
+		$data['categories'] = array();
+		$categories = $this->Menus_model->getCategories();
+		foreach ($categories as $category) {					
+			$data['categories'][] = array(
+				'category_id'	=>	$category['category_id'],
+				'category_name'	=>	$category['category_name']
+			);
+		}
+		
+		$data['search_by_array'] = array('postcode' => 'Postcode Only', 'address' => 'Postcode & Address');
 
 		$data['statuses'] = array();
 		$results = $this->Statuses_model->getStatuses();
@@ -284,137 +352,142 @@ class Settings extends CI_Controller {
 	public function _updateSettings() {
     	if (!$this->user->hasPermissions('modify', 'admin/settings')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
   			return TRUE;
     	
-    	} else { 
+    	} else if ($this->validateForm() === TRUE) { 
+			$update = array(
+				'site_name' 			=> $this->input->post('site_name'),
+				'site_email' 			=> $this->input->post('site_email'),
+				'site_desc' 			=> $this->input->post('site_desc'),
+				'site_logo' 			=> ($this->input->post('site_logo')) ? $this->input->post('site_logo') : $this->config->item('site_logo'),
+				'country_id' 			=> $this->input->post('country_id'),
+				'timezone' 				=> $this->input->post('timezone'),
+				'currency_id' 			=> $this->input->post('currency_id'),
+				'default_location_id' 	=> $this->input->post('default_location_id'),
+				'page_limit' 			=> $this->input->post('page_limit'),
+				'show_menu_images' 		=> $this->input->post('show_menu_images'),
+				'menu_images_h' 		=> $this->input->post('menu_images_h'),
+				'menu_images_w' 		=> $this->input->post('menu_images_w'),
+				'special_category_id' 	=> $this->input->post('special_category_id'),
+				'maps_api_key'			=> $this->input->post('maps_api_key'),
+				'search_by'				=> $this->input->post('search_by'),
+				'distance_unit'			=> $this->input->post('distance_unit'),
+				'search_radius'			=> $this->input->post('search_radius'),
+				'location_order'			=> $this->input->post('location_order'),
+				'send_order_email'		=> $this->input->post('send_order_email'),
+				'send_reserve_email'	=> $this->input->post('send_reserve_email'),
+				'approve_reviews'		=> $this->input->post('approve_reviews'),
+				'order_status_new'		=> $this->input->post('order_status_new'),
+				'order_status_complete'	=> $this->input->post('order_status_complete'),
+				'guest_order'			=> $this->input->post('guest_order'),
+				'ready_time'			=> $this->input->post('ready_time'),
+				'reserve_prefix'		=> $this->input->post('reserve_prefix'),
+				'reserve_status'		=> $this->input->post('reserve_status'),
+				'reserve_interval'		=> $this->input->post('reserve_interval'),
+				'reserve_turn'			=> $this->input->post('reserve_turn'),
+				'protocol' 				=> strtolower($this->input->post('protocol')),
+				'mailtype' 				=> strtolower($this->input->post('mailtype')),
+				'smtp_host' 			=> $this->input->post('smtp_host'),
+				'smtp_port' 			=> $this->input->post('smtp_port'),
+				'smtp_user' 			=> $this->input->post('smtp_user'),
+				'smtp_pass' 			=> $this->input->post('smtp_pass'),
+				'log_threshold' 		=> $this->input->post('log_threshold'),
+				'log_path' 				=> $this->input->post('log_path'),
+				'encryption_key' 		=> $this->input->post('encryption_key')
+			);
 
-			// form validation
-			$this->form_validation->set_rules('site_name', 'Restaurant Name', 'trim|required|min_length[2]|max_length[128]');
-			$this->form_validation->set_rules('site_email', 'Restaurant Email', 'trim|required|valid_email');
-			$this->form_validation->set_rules('site_desc', 'Site Description', 'trim');
-			$this->form_validation->set_rules('page_limit', 'Default Page Limit', 'trim|required|integer');
-			$this->form_validation->set_rules('site_logo', 'Site Logo', 'trim|callback_handle_upload');
-			$this->form_validation->set_rules('country_id', 'Restaurant Country', 'trim|required|integer');
-			$this->form_validation->set_rules('timezone', 'Timezones', 'trim|required');
-			$this->form_validation->set_rules('currency_id', 'Default Currency', 'trim|required|integer');
-
-			$this->form_validation->set_rules('approve_reviews', 'Approve Reviews', 'trim|required|integer');
-			
-			$this->form_validation->set_rules('search_by', 'Search By', 'trim|required|alpha');
-			$this->form_validation->set_rules('distance_unit', 'Distance Unit', 'trim|required');
-			$this->form_validation->set_rules('allow_order', 'Allow Order', 'trim|required|integer');
-
-			$this->form_validation->set_rules('order_received', 'Received Status', 'trim|required|integer');
-			$this->form_validation->set_rules('order_completed', 'Completed Status', 'trim|required|integer');
-			$this->form_validation->set_rules('ready_time', 'Default Ready Time', 'trim|required|integer');
-			
-			$this->form_validation->set_rules('reserve_status', 'Reservation Status', 'trim|required|integer');
-			$this->form_validation->set_rules('reserve_prefix', 'Reservation Prefix', 'trim|required|integer');
-
-			$this->form_validation->set_rules('upload_path', 'Upload Path', 'trim|required|');
-			$this->form_validation->set_rules('allowed_types', 'Allowed Types', 'trim|required|');
-			$this->form_validation->set_rules('max_size', 'Max Size', 'trim|required|integer');
-			$this->form_validation->set_rules('max_height', 'Max Height', 'trim|required|integer');
-			$this->form_validation->set_rules('max_width', 'Max Width', 'trim|required|integer');
-			$this->form_validation->set_rules('menus_height', 'Menus Height', 'trim|required|integer');
-			$this->form_validation->set_rules('menus_width', 'Menus Width', 'trim|required|integer');
-			
-			$this->form_validation->set_rules('protocol', 'Mail Protocol', 'trim|required');
-			$this->form_validation->set_rules('mailtype', 'Mail Type Format', 'trim|required');
-			$this->form_validation->set_rules('smtp_host', 'SMTP Host', 'trim|required');
-			$this->form_validation->set_rules('smtp_port', 'SMTP Port', 'trim|required');
-			$this->form_validation->set_rules('smtp_user', 'SMTP Username', 'trim|required');
-			$this->form_validation->set_rules('smtp_pass', 'SMTP Password', 'trim|required');
-			
-			$this->form_validation->set_rules('log_threshold', 'Threshold Options', 'trim|required|integer');
-			$this->form_validation->set_rules('log_path', 'Log Path', '');
-
-			$this->form_validation->set_rules('encryption_key', 'Encryption Key', 'trim|required');
-
-			if ($this->form_validation->run() == TRUE){
-
-				$update = array(
-					'site_name' 			=> $this->input->post('site_name'),
-					'site_email' 			=> $this->input->post('site_email'),
-					'site_desc' 			=> $this->input->post('site_desc'),
-					'page_limit' 			=> $this->input->post('page_limit'),
-					'site_logo' 			=> $this->input->post('site_logo'),
-					'country_id' 			=> $this->input->post('country_id'),
-					'timezone' 				=> $this->input->post('timezone'),
-					'currency_id' 			=> $this->input->post('currency_id'),
-					'approve_reviews'		=> $this->input->post('approve_reviews'),
-					'search_by'				=> $this->input->post('search_by'),
-					'distance_unit'			=> $this->input->post('distance_unit'),
-					'allow_order'			=> $this->input->post('allow_order'),
-					'order_received'		=> $this->input->post('order_received'),
-					'order_completed'		=> $this->input->post('order_completed'),
-					'ready_time'			=> $this->input->post('ready_time'),
-					'reserve_status'		=> $this->input->post('reserve_status'),
-					'reserve_prefix'		=> $this->input->post('reserve_prefix'),
-					'upload_path' 			=> $this->input->post('upload_path'),
-					'allowed_types' 		=> $this->input->post('allowed_types'),
-					'max_size' 				=> $this->input->post('max_size'),
-					'max_height' 			=> $this->input->post('max_height'),
-					'max_width' 			=> $this->input->post('max_width'),
-					'menus_height' 			=> $this->input->post('menus_height'),
-					'menus_width' 			=> $this->input->post('menus_width'),
-					'protocol' 				=> strtolower($this->input->post('protocol')),
-					'mailtype' 				=> strtolower($this->input->post('mailtype')),
-					'smtp_host' 			=> $this->input->post('smtp_host'),
-					'smtp_port' 			=> $this->input->post('smtp_port'),
-					'smtp_user' 			=> $this->input->post('smtp_user'),
-					'smtp_pass' 			=> $this->input->post('smtp_pass'),
-					'log_threshold' 		=> $this->input->post('log_threshold'),
-					'log_path' 				=> $this->input->post('log_path'),
-					'encryption_key' 		=> $this->input->post('encryption_key')
-				);
-
-				if ($this->Settings_model->updateSettings('config', $update)) {
-				
-					$this->session->set_flashdata('alert', '<p class="success">Settings Updated Sucessfully!</p>');
-				} else {
-				
-					$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');
-				}
-				
-				return TRUE;
+			if ($this->Settings_model->updateSettings('config', $update)) {
+				$this->session->set_flashdata('alert', '<p class="success">Settings Updated Sucessfully!</p>');
+			} else {
+				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');
 			}
-
+			
+			return TRUE;
 		}
 	}
 
- 	public function handle_upload() {
-		//loading upload library
-		$this->load->library('upload');
+	public function validateForm() {
+		$this->form_validation->set_rules('site_name', 'Restaurant Name', 'trim|required|min_length[2]|max_length[128]');
+		$this->form_validation->set_rules('site_email', 'Restaurant Email', 'trim|required|valid_email');
+		$this->form_validation->set_rules('site_desc', 'Site Description', 'trim');
+		$this->form_validation->set_rules('site_logo', 'Site Logo', 'trim|required');
+		$this->form_validation->set_rules('country_id', 'Restaurant Country', 'trim|required|integer');
+		$this->form_validation->set_rules('timezone', 'Timezones', 'trim|required');
+		$this->form_validation->set_rules('currency_id', 'Restaurant Currency', 'trim|required|integer');
+		$this->form_validation->set_rules('default_location_id', 'Default Location', 'trim|required|integer');
+		$this->form_validation->set_rules('page_limit', 'Default Page Limit', 'trim|required|integer');
 
-		//setting upload preference
-		$this->upload->set_upload_path($this->config->item('upload_path'));
-		$this->upload->set_allowed_types($this->config->item('allowed_types'));
-		$this->upload->set_max_filesize($this->config->item('max_size'));
-		$this->upload->set_max_width($this->config->item('max_width'));
-		$this->upload->set_max_height($this->config->item('max_height'));
+		$this->form_validation->set_rules('show_menu_images', 'Show Menu Images', 'trim|required|integer');
+		$this->form_validation->set_rules('menu_images_h', 'Menu Images Height', 'trim|required|numeric');
+		$this->form_validation->set_rules('menu_images_w', 'Menu Images Width', 'trim|required|numeric');
+		$this->form_validation->set_rules('special_category_id', 'Specials Category', 'trim|required|numeric');
 
-		if (isset($_FILES['site_logo']) && !empty($_FILES['site_logo']['name'])) {
-      		
-      		if ($this->upload->do_upload('site_logo')) {
+		$this->form_validation->set_rules('maps_api_key', 'Google Maps API Key', 'trim');
+		$this->form_validation->set_rules('search_by', 'Search By', 'trim|required|alpha');
+		$this->form_validation->set_rules('distance_unit', 'Distance Unit', 'trim|required');
+		$this->form_validation->set_rules('search_radius', 'Search Radius', 'trim|integer');
+		$this->form_validation->set_rules('location_order', 'Allow Order', 'trim|required|integer');
+		$this->form_validation->set_rules('send_order_email', 'Send Order Email', 'trim|required|integer');
+		$this->form_validation->set_rules('send_reserve_email', 'Send Reservation Email', 'trim|required|integer');
 
-        		// set a $_POST value for 'menu_photo' that we can use later
-        		if ($upload_data = $this->upload->data()) {
-        			$_POST['site_logo'] = $this->security->sanitize_filename($upload_data['file_name']);
-        		}
-        		return TRUE;        
-      		} else {
-        		
-        		// possibly do some clean up ... then throw an error
-        		$this->form_validation->set_message('handle_upload', $this->upload->display_errors());
-        		return FALSE;
-     		}
-    	} else {
-      	
-        	// set an empty $_POST value for 'menu_photo' to be used on database queries
-        	$_POST['site_logo'] = '';
-      		//return TRUE;
-      	}
-    }
+		$this->form_validation->set_rules('approve_reviews', 'Approve Reviews', 'trim|required|integer');
+		
+		$this->form_validation->set_rules('order_status_new', 'New Order Status', 'trim|required|integer');
+		$this->form_validation->set_rules('order_status_complete', 'Complete Order Status', 'trim|required|integer');
+		$this->form_validation->set_rules('guest_order', 'Guest Order', 'trim|required|integer');
+		$this->form_validation->set_rules('ready_time', 'Ready Time', 'trim|required|integer');
+		
+		$this->form_validation->set_rules('reserve_prefix', 'Reservation Prefix', 'trim|required|integer');
+		$this->form_validation->set_rules('reserve_status', 'Reservation Status', 'trim|required|integer');
+		$this->form_validation->set_rules('reserve_interval', 'Reservation Interval', 'trim|required|integer');
+		$this->form_validation->set_rules('reserve_turn', 'Reservations Turn', 'trim|required|integer');
+
+		$this->form_validation->set_rules('protocol', 'Mail Protocol', 'trim|required');
+		$this->form_validation->set_rules('mailtype', 'Mail Type Format', 'trim|required');
+		$this->form_validation->set_rules('smtp_host', 'SMTP Host', 'trim|');
+		$this->form_validation->set_rules('smtp_port', 'SMTP Port', 'trim|');
+		$this->form_validation->set_rules('smtp_user', 'SMTP Username', 'trim|');
+		$this->form_validation->set_rules('smtp_pass', 'SMTP Password', 'trim|');
+		
+		$this->form_validation->set_rules('log_threshold', 'Threshold Options', 'trim|required|integer');
+		$this->form_validation->set_rules('log_path', 'Log Path', 'trim|');
+
+		$this->form_validation->set_rules('encryption_key', 'Encryption Key', 'trim|required');
+
+		if ($this->form_validation->run() == TRUE) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+
+	}
+
+	public function getTimezones() {
+		$timezone_identifiers = DateTimeZone::listIdentifiers();
+		$utc_time = new DateTime('now', new DateTimeZone('UTC'));
+ 
+		$temp_timezones = array();
+		foreach ($timezone_identifiers as $timezone_identifier) {
+			$current_timezone = new DateTimeZone($timezone_identifier);
+ 
+			$temp_timezones[] = array(
+				'offset' => (int)$current_timezone->getOffset($utc_time),
+				'identifier' => $timezone_identifier
+			);
+		}
+ 
+		usort($temp_timezones, function($a, $b) {
+			return ($a['offset'] == $b['offset']) ? strcmp($a['identifier'], $b['identifier']) : $a['offset'] - $b['offset'];
+		});
+ 
+		$timezoneList = array();
+		foreach ($temp_timezones as $tz) {
+			$sign = ($tz['offset'] > 0) ? '+' : '-';
+			$offset = gmdate('H:i', abs($tz['offset']));
+			$timezone_list[$tz['identifier']] = '(UTC ' . $sign . $offset .') '. $tz['identifier'];
+		}
+ 
+		return $timezone_list;
+	}
 }

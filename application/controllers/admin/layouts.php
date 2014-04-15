@@ -10,6 +10,10 @@ class Layouts extends CI_Controller {
 
 	public function index() {
 
+		if (!file_exists(APPPATH .'views/admin/layouts.php')) {
+			show_404();
+		}
+			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -44,7 +48,7 @@ class Layouts extends CI_Controller {
 		foreach ($results as $result) {					
 			$data['uri_routes'][] = array(
 				'uri_route_id'		=> $result['uri_route_id'],
-				'route'				=> $result['route']
+				'uri_route'			=> $result['uri_route']
 			);
 		}
 	
@@ -64,6 +68,10 @@ class Layouts extends CI_Controller {
 	
 	public function edit() {
 		
+		if (!file_exists(APPPATH .'views/admin/layouts_edit.php')) {
+			show_404();
+		}
+			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -94,14 +102,19 @@ class Layouts extends CI_Controller {
 
 		$data['layout_id'] 			= $result['layout_id'];
 		$data['name'] 				= $result['name'];
-		$data['routes'] 			= $this->Design_model->getLayoutRoutes($result['layout_id']);
+		
+		if ($this->input->post('routes')) {
+			$data['routes'] = $this->input->post('routes');
+		} else {
+			$data['routes'] = $this->Design_model->getLayoutRoutes($result['layout_id']);
+		}
 
 		$data['uri_routes'] = array();
 		$results = $this->Design_model->getRoutes(1);
 		foreach ($results as $result) {					
 			$data['uri_routes'][] = array(
 				'uri_route_id'		=> $result['uri_route_id'],
-				'route'				=> $result['route']
+				'uri_route'			=> $result['uri_route']
 			);
 		}
 	
@@ -127,94 +140,82 @@ class Layouts extends CI_Controller {
 	public function _addLayout() {
     	if ( ! $this->user->hasPermissions('modify', 'admin/layouts')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
   			return TRUE;
   	
-    	} else if ( ! $this->input->get('id')) { 
-    	
- 			$this->form_validation->set_rules('name', 'Name', 'trim|required|min_length[2]|max_length[45]');
-
-			if ($this->input->post('routes')) {
-				foreach ($this->input->post('routes') as $key => $value) {
-					$this->form_validation->set_rules('routes['.$key.'][uri_route_id]', 'Route', 'trim|integer');
-				}
+    	} else if ( ! $this->input->get('id') AND $this->validateForm() === TRUE) { 
+			$add = array();
+			
+			//Sanitizing the POST values
+			$add['name'] 		= $this->input->post('name');
+			$add['routes'] 		= $this->input->post('routes');
+			
+			if ($this->Design_model->addLayout($add)) {
+				$this->session->set_flashdata('alert', '<p class="success">Layout Added Sucessfully!</p>');
+			} else {
+				$this->session->set_flashdata('alert', '<p class="warning">Nothing Added!</p>');				
 			}
-
-			if ($this->form_validation->run() === TRUE) {
-				$add = array();
-				
-				//Sanitizing the POST values
-				$add['name'] 		= $this->input->post('name');
-				$add['routes'] 		= $this->input->post('routes');
-				
-				if ($this->Design_model->addLayout($add)) {
-					$this->session->set_flashdata('alert', '<p class="success">Layout Added Sucessfully!</p>');
-				} else {
-					$this->session->set_flashdata('alert', '<p class="warning">Nothing Added!</p>');				
-				}
-								
-				return TRUE;
-			}
+							
+			return TRUE;
 		}	
 	}
 	
 	public function _updateLayout() {
     	if ( ! $this->user->hasPermissions('modify', 'admin/layouts')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
   			return TRUE;
   	
-    	} else if ($this->input->get('id')) { 
-
-  			$this->form_validation->set_rules('name', 'Name', 'trim|required|min_length[2]|max_length[45]');
-
-			if ($this->input->post('routes')) {
-				foreach ($this->input->post('routes') as $key => $value) {
-					$this->form_validation->set_rules('routes['.$key.'][uri_route_id]', 'Route', 'trim|integer');
-				}
+    	} else if ($this->input->get('id') AND $this->validateForm() === TRUE) { 
+			$update = array();
+			
+			//Sanitizing the POST values
+			$update['layout_id'] 	= $this->input->get('id');
+			$update['name'] 		= $this->input->post('name');
+			$update['routes'] 		= $this->input->post('routes');
+			
+			if ($this->Design_model->updateLayout($update)) {
+				$this->session->set_flashdata('alert', '<p class="success">Layout Updated Sucessfully!</p>');
+			} else {
+				$this->session->set_flashdata('alert', '<p class="warning">Nothing Added!</p>');				
 			}
-
-			if ($this->form_validation->run() === TRUE) {
-				$update = array();
-				
-				//Sanitizing the POST values
-				$update['layout_id'] 	= $this->input->get('id');
-				$update['name'] 		= $this->input->post('name');
-				$update['routes'] 		= $this->input->post('routes');
-				
-				if ($this->Design_model->updateLayout($update)) {
-					$this->session->set_flashdata('alert', '<p class="success">Layout Updated Sucessfully!</p>');
-				} else {
-					$this->session->set_flashdata('alert', '<p class="warning">Nothing Added!</p>');				
-				}
-								
-				return TRUE;
-			}
+							
+			return TRUE;
 		}	
 	}	
 
 	public function _deleteLayout() {
     	if (!$this->user->hasPermissions('modify', 'admin/layouts')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
     	
     	} else { 
-		
 			if (is_array($this->input->post('delete'))) {
-
-				//sorting the post[quantity] array to rowid and qty.
 				foreach ($this->input->post('delete') as $key => $value) {
 					$layout_id = $value;
-				
 					$this->Design_model->deleteLayout($layout_id);
-			
 				}			
 			
 				$this->session->set_flashdata('alert', '<p class="success">Layout Deleted Sucessfully!</p>');
-
 			}
 		}
 				
 		return TRUE;
+	}
+	
+	public function validateForm() {
+		$this->form_validation->set_rules('name', 'Name', 'trim|required|min_length[2]|max_length[45]');
+
+		if ($this->input->post('routes')) {
+			foreach ($this->input->post('routes') as $key => $value) {
+				$this->form_validation->set_rules('routes['.$key.'][uri_route]', 'Route', 'trim|required');
+			}
+		}
+
+		if ($this->form_validation->run() === TRUE) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}		
 	}
 }

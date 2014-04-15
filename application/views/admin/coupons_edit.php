@@ -1,7 +1,7 @@
 <div class="box">
 	<div id="update-box" class="content">
 	<h2>Coupon Details</h2>
-	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
+	<form accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
 	<table class="form">
 		<tr>
 			<td><b>Coupon Name:</b></td>
@@ -64,7 +64,7 @@
 <script type="text/javascript"><!--
 $(document).ready(function() {
 	$('#start-date, #end-date').datepicker({
-		dateFormat: 'yy-mm-dd',
+		dateFormat: 'dd-mm-yy',
 	});
 });
 //--></script>

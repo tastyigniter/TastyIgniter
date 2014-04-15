@@ -1,8 +1,6 @@
 <div class="content">
-<!--<h2><?php echo $text_login_register; ?></h2>
-    <h3><?php echo $text_login; ?></h3>	-->
-
-<div class="wrap left">
+<div class="left">
+<div class="img_inner">
 	<form method="post" accept-charset="utf-8" action="<?php echo current_url(); ?>">
     <table border="0" cellpadding="2" width="400px" align="center">
         <tr>
@@ -27,8 +25,9 @@
     </table>
     </form>
 </div>
+</div>
 
-<div id="register" class="wrap right">
+<div id="register" class="right">
 </div>
 
 

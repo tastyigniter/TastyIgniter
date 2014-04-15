@@ -1,3 +1,4 @@
+<div class="img_inner">
 	<h3><?php echo $text_heading; ?></h3>
 	<ul id="sub_nav">
 	<?php foreach ($categories as $category) { ?>
@@ -8,3 +9,4 @@
 	<?php } ?>
 	<?php } ?>
 	</ul>
+</div>

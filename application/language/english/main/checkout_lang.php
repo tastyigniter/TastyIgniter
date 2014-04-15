@@ -10,7 +10,7 @@ $lang['text_ip_warning'] 		= '(Warning: Your IP Address has been logged for our 
 
 $lang['button_check_postcode'] 	= 'Check Postcode';
 $lang['button_back'] 			= 'Add Menus';
-$lang['button_continue'] 		= 'Make Payment';
+$lang['button_continue'] 		= 'Payment';
 
 $lang['text_postcode'] 			= 'Enter your postcode to order(UK only):';
 $lang['entry_delivery'] 		= 'Delivery';
@@ -34,6 +34,7 @@ $lang['entry_ip'] 				= 'IP Address:';
 
 $lang['warning_no_cart'] 		= '<p class="error">Please, add some menus before you checkout!</p>';
 $lang['warning_no_delivery'] 	= 'Delivery is unavailable at the selected restaurant!';
+$lang['warning_covered_area'] 	= 'Your local restaurant currently does not deliver to your address';
 $lang['warning_no_collection'] 	= 'Collection is unavailable at the selected restaurant!';
 $lang['warning_min_delivery'] 	= '<p class="error">Order total is below the minimum delivery total!</p>';
 $lang['warning_no_local'] 		= '<p class="error">Please select your local restaurant</p>';
@@ -52,7 +53,7 @@ $lang['text_thank_you'] 		= 'We hope to see you again soon';
 $lang['text_greetings'] 		= 'Hello %s,';
 $lang['text_success_message'] 	= 'Your order  %s has been received and will be with you shortly. <br /><a href="%s">Click here</a> to view your order progress. <br />Thanks for shopping with us online!';
 $lang['text_order_info'] 		= 'This is a %s order. <br /><br /><b>Order Date:</b> %s <br /><b>Delivery Time:</b> %s <br /><b>Payment Method:</b> %s ';
-$lang['text_order_total'] 		= '<br /><br />Order Total: <b>%s.</b>';
+$lang['text_order_total'] 		= '<br />Order Total: <b>%s.</b>';
 
 /* End of file checkout_lang.php */
 /* Location: ./application/language/english/main/checkout_lang.php */

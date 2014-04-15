@@ -1,7 +1,9 @@
 <div class="content">
-	<div class="wrap">
-  	<h2><?php echo $text_details; ?></h2>
+	<div class="img_inner">
+		<h3><?php echo $text_details; ?></h3>
+	</div>
 	<form method="post" accept-charset="utf-8" action="<?php echo current_url(); ?>">
+	<div class="img_inner">
   	<table class="form">
   		<tr>
     		<td align="right"><label for="first_name"><b><?php echo $entry_first_name; ?></b></label></td>
@@ -30,10 +32,10 @@
     		<td><select name="security_question">
     		<option value=""><?php echo $text_select; ?></option>
     		<?php foreach ($questions as $question) { ?>
-    		<?php if ($question['id'] === $security_question) { ?>
-    			<option value="<?php echo $question['id']; ?>" selected="selected"><?php echo $question['text']; ?></option>
+    		<?php if ($question['question_id'] === $security_question) { ?>
+    			<option value="<?php echo $question['question_id']; ?>" selected="selected"><?php echo $question['text']; ?></option>
     		<?php } else { ?>
-    			<option value="<?php echo $question['id']; ?>"><?php echo $question['text']; ?></option>
+    			<option value="<?php echo $question['question_id']; ?>"><?php echo $question['text']; ?></option>
     		<?php } ?>
     		<?php } ?>
     		</select><br />
@@ -47,10 +49,13 @@
     		</td>
   		</tr>
   	</table>
-  	</div>
+	</div>
 
-	<div class="wrap">
-	<h3><?php echo $text_password; ?></h3>
+	<div class="img_inner">
+		<h3><?php echo $text_password; ?></h3>
+	</div>
+	
+	<div class="img_inner">
   	<table class="form">
   		<tr>
     		<td align="right"><label for="old_password"><b><?php echo $entry_old_password; ?></b></label></td>
@@ -74,7 +79,7 @@
 			<td colspan="2" align="center"></td>
 		</tr>
   	</table>
-  	</div>
+	</div>
 
 	<div class="separator"></div>
 	<div class="buttons">
@@ -82,4 +87,5 @@
 		<div class="right"><input type="submit" name="submit" value="<?php echo $button_save; ?>" /></div>
 	</div>
 	</form>
+</div>
 </div>

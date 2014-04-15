@@ -20,21 +20,6 @@ $lang['column_action'] 			= 'Action(s)';
 
 $lang['button_continue'] 		= 'Checkout';
 $lang['button_add'] 			= 'Add';
-$lang['button_review'] 			= 'Menu Review';
-$lang['button_add_review'] 		= 'Add Review';
-
-$lang['text_review_heading'] 	= 'Menu Review';
-$lang['text_write_review'] 		= 'Write Review';
-$lang['entry_menu_name'] 		= 'Menu Name:';
-$lang['entry_customer_name'] 	= 'Customer Name:';
-$lang['entry_rating'] 			= 'Rating:';
-$lang['entry_rating_text'] 		= 'Rating Text:';
-
-$lang['text_pls_login'] 		= 'Error: Please login to rate menus';
-$lang['text_pls_write'] 		= 'Error: Rating text is required.';
-$lang['text_rate_success'] 		= 'Success: Menu rated successfully!';
-$lang['text_error'] 			= 'Error occurred, please try again later.';
-$lang['text_no_menu_selected'] 	= 'No menu selected';
 
 /* End of file home_lang.php */
 /* Location: ./application/language/english/main/home_lang.php */

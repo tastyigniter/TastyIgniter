@@ -11,52 +11,65 @@ class Local_module extends MX_Controller {
 	public function index() {
 		$this->lang->load('main/local_module');  														// loads language file
 		
-		if ( !file_exists(APPPATH .'/extensions/main/views/local_module.php')) { 								//check if file exists in views folder
+		if ( !file_exists(EXTPATH .'main/views/local_module.php')) { 								//check if file exists in views folder
 			show_404(); 																		// Whoops, show 404 error page!
 		}
 			
-		if ($this->session->flashdata('alert')) {
-			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
+		if ($this->session->flashdata('local_alert')) {
+			$data['local_alert'] = $this->session->flashdata('local_alert');  								// retrieve session flashdata variable if available
 		} else {
-			$data['alert'] = '';
+			$data['local_alert'] = '';
 		}
 
 		// START of retrieving lines from language file to pass to view.
 		$data['text_heading'] 			= $this->lang->line('text_heading');
 		$data['text_local'] 			= $this->lang->line('text_local');
 		$data['text_find'] 				= $this->lang->line('text_find');
-		$data['text_postcode'] 			= $this->lang->line('text_postcode');
+		$data['text_postcode'] 			= ($this->config->item('search_by') === 'postcode') ? $this->lang->line('entry_postcode') : $this->lang->line('entry_address');
 		$data['text_postcode_warning'] 	= $this->lang->line('text_postcode_warning');
 		$data['text_delivery_charge'] 	= $this->lang->line('text_delivery_charge');
 		$data['text_min_total'] 		= $this->lang->line('text_min_total');
 
+		$data['button_view_map'] 		= $this->lang->line('button_view_map');
 		$data['button_check_postcode'] 	= $this->lang->line('button_check_postcode');
 		// END of retrieving lines from language file to send to view.
 
 		$data['continue'] 			= $this->config->site_url('menus');
 		$data['checkout'] 			= $this->config->site_url('checkout');
 
-		if ($this->session->userdata('postcode')) {
-			$data['postcode'] = $this->session->userdata('postcode');
+		if ($this->config->item('maps_api_key')) {
+			$data['map_key'] = '&key='. $this->config->item('maps_api_key');
+		} else {
+			$data['map_key'] = '';
+		}
+
+		$local_info = $this->session->userdata('local_info');
+		if ($local_info['search_query']) {
+			$data['postcode'] = $local_info['search_query'];
 		} else {
 			$data['postcode'] = '';
 		}
 
-		$data['local_info'] = $this->location->local(); 									// retrieve local location data
+		$data['local_info'] = $this->location->local(); 										// retrieve local location data
 		
-		if ($this->location->isOpened()) { 														// check if local location is open
+		$data['distance'] = $this->location->distance(); //format diatance to 2 decimal place
+
+		if ($this->location->isOpened()) { 														// checks if local location is open
 			$data['text_open_or_close'] = $this->lang->line('text_opened');						// display we are open
 		} else {
 			$data['text_open_or_close'] = $this->lang->line('text_closed');						// display we are closed
 		}
-				
-		if ($this->location->offerDelivery()) { 														// checks if cart contents is empty  
-			$data['text_delivery'] = $this->lang->line('text_delivery_y');						// display we are open
-		} else {
+
+		$check_delivery = $this->location->checkDelivery();
+		if ($check_delivery === 'no') { 										// checks if local location is open 
 			$data['text_delivery'] = $this->lang->line('text_delivery_n');						// display we are closed
+		} else if ($check_delivery === 'outside') {		
+			$data['text_delivery'] = $this->lang->line('text_covered_area');		
+		} else if ($check_delivery === 'yes') {
+			$data['text_delivery'] = $this->lang->line('text_delivery_y');						// display we are open
 		}
 
-		if ($this->location->offerCollection()) { 														// checks if cart contents is empty  
+		if ($this->location->checkCollection()) { 														// checks if cart contents is empty  
 			$data['text_collection'] = $this->lang->line('text_collection_y');						// display we are open
 		} else {
 			$data['text_collection'] = $this->lang->line('text_collection_n');						// display we are closed
@@ -74,6 +87,10 @@ class Local_module extends MX_Controller {
 			$data['min_total'] = $this->lang->line('text_none');
 		}
 		
+		$this->load->model('Reviews_model');
+		$total_reviews = $this->Reviews_model->getTotalLocationReviews($this->location->getId());
+		$data['text_total_review'] = sprintf($this->lang->line('text_total_review'), $total_reviews);
+
 		// pass array $data and load view files
 		$this->load->view('main/local_module', $data);
 	}		
@@ -82,101 +99,54 @@ class Local_module extends MX_Controller {
 		$this->load->library('user_agent');
 		$this->lang->load('main/local_module');  														// loads home language file
 		$json = array();
-		
 		$error = 0;
-		$error_msg = '';
 		
-		$this->session->unset_userdata('local_info');										// unset local_location session userdata to set later
-
-		if ( ! $this->input->post('postcode')) {												// check if $_POST postcode is not available
+		$this->session->unset_userdata('local_info');
+		$output = $this->location->getLatLng($this->input->post('postcode'), TRUE);
+		
+		if ($output === 'NO_SEARCH_QUERY') {															// check if geocoding is not successful
 			$error = 1;
-		}
-		
-		$this->session->set_userdata('postcode', $this->input->post('postcode'));
-
-		if ($output = $this->getLatLng($this->input->post('postcode'))) {							// validate $_POST postcode data using getLatLng() method and return latitude and longitude if successful
-			$lat 	= $output['lat'];																// store the latitute from geocode data in variable
-			$lng 	= $output['lng'];																// store the longitude from geocode data in variable
-		} else {															// check if geocoding is not successful
+		} else if ($output === 'INVALID_POSTCODE') {															// check if geocoding is not successful
 			$error = 2;
+		} else if ($output === 'FAILED') {															// check if geocoding is not successful
+			$error = 3;
+		} else if (is_array($output)) {							// validate $_POST postcode data using getLatLng() method and return latitude and longitude if successful
+			$search_query	= $output['search_query'];
+			$lat 			= $output['lat'];																// store the latitute from geocode data in variable
+			$lng 			= $output['lng'];																// store the longitude from geocode data in variable
 		}
 
 		switch ($error) {
 		case 1:
-			$error_msg = $this->lang->line('text_no_postcode');
+			$json['error'] = $this->lang->line('error_no_postcode');
 			break;
 		case 2:
-			$error_msg = $this->lang->line('text_invalid_postcode');	// display error: invalid postcode
+			if ($this->config->item('search_by') === 'postcode') {
+				$json['error'] = $this->lang->line('error_invalid_postcode');	// display error: invalid postcode
+			} else {
+				$json['error'] = $this->lang->line('error_invalid_address');	// display error: invalid postcode
+			}
 			break;
-		case 0:
+		case 3:
+			$json['error'] = $this->lang->line('error_failed');				// display error: invalid postcode
+			break;
+		default:
 			if ( ! $json) {
-				if ( ! $this->Locations_model->getLocalRestaurant($lat, $lng)) {					// check if longitude and latitude doesnt have a nearest local restaurant from getLocalRestaurant() method in Locations model.
-					$error_msg = $this->lang->line('text_no_restaurant');	// display error: no available restaurant
+				$local_info = $this->Locations_model->getLocalRestaurant($lat, $lng, $search_query);
+				if ( ! $local_info) {					// check if longitude and latitude doesnt have a nearest local restaurant from getLocalRestaurant() method in Locations model.
+					$json['error'] = $this->lang->line('error_no_restaurant');	// display error: no available restaurant
+				} else {
+					$this->session->set_userdata('local_info', $local_info);
 				}
 			}
 			break;	
-		default:
-			$error_msg = site_url('home');
 		}
 		
 		if ($this->input->is_ajax_request()) {
-			$json['error'] = $error_msg;
 			$this->output->set_output(json_encode($json));											// encode the json array and set final out to be sent to jQuery AJAX
 		} else {
-			$this->session->set_flashdata('alert', $error_msg);
+			$this->session->set_flashdata('local_alert', $json['error']);
 			redirect($this->agent->referrer());
 		}
-	}
-	
-	function getLatLng($postcode) {																// method to perform regular expression match on postcode string and return latitude and longitude
-		
-		if ($this->config->item('search_by') === 'postcode') {
-	
-			$postcode_string = strtoupper(str_replace(' ', '', $postcode));								// strip spaces from postcode string and convert to uppercase
-
-			// checks if postcode string matches regular expression
-			if (preg_match("/^[A-Z]{1,2}[0-9]{2,3}[A-Z]{2}$/", $postcode_string) || 
-			preg_match("/^[A-Z]{1,2}[0-9]{1}[A-Z]{1}[0-9]{1}[A-Z]{2}$/", $postcode_string) || 
-			preg_match("/^GIR0[A-Z]{2}$/", $postcode_string)) {
-
-				$url  = 'http://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($postcode) .'&sensor=false&region=GB'; //encode $postcode string and construct the url query
-		
-				$geocode_data = file_get_contents($url);
-		
-			} else {
-				return FALSE;
-			}
-		
-		} else if ($this->config->item('search_by') === 'address') {
-		
-			$postcode_string = explode(' ', $postcode);								// strip spaces from postcode string and convert to uppercase
-
-			$address_string =  implode(", ", $postcode_string);
-			
-			$address = urlencode($address_string);
-
-			$url  = 'http://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($postcode) .'&sensor=false&region=GB'; //encode $postcode string and construct the url query
-	
-			$geocode_data = file_get_contents($url);
-		
-		} else {
-			return FALSE;
-		}
-
-
-		if (!empty($geocode_data)) {																// Get content of the url and return the geocode data as json object
-	
-			$output = json_decode($geocode_data);											// decode the geocode data
-			
-			if ($output->status === 'OK') {														// create variable for geocode data status
-				
-				return array( 
-					'lat' 		=> $output->results[0]->geometry->location->lat,
-					'lng' 		=> $output->results[0]->geometry->location->lng
-				);
-			}
-		}
-
-		return FALSE;
 	}
 }

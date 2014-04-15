@@ -6,8 +6,29 @@ class Menus_model extends CI_Model {
 		$this->load->database();
 	}
 
-    public function menus_record_count() {
-        return $this->db->count_all('menus');
+    public function menus_record_count($filter = array()) {
+		if (!empty($filter['filter_name'])) {
+			$this->db->like('menu_name', $filter['filter_name']);
+		}
+        
+		if (is_numeric($filter['filter_price'])) {
+			$this->db->like('menu_price', $filter['filter_price']);
+		}
+        
+		if (!empty($filter['category_id'])) {
+			$this->db->where('menu_category_id', $filter['category_id']);
+		}
+        
+		if (is_numeric($filter['filter_stock'])) {
+			$this->db->where('stock_qty', $filter['filter_stock']);
+		}
+		
+		if (is_numeric($filter['filter_status'])) {
+			$this->db->where('menu_status', $filter['filter_status']);
+		}
+		
+		$this->db->from('menus');
+		return $this->db->count_all_results();
     }
     
     public function options_record_count() {
@@ -27,8 +48,24 @@ class Menus_model extends CI_Model {
 			$this->db->join('categories', 'categories.category_id = menus.menu_category_id', 'left');
 			$this->db->order_by('menu_id', 'ASC');
 		
+			if (!empty($filter['filter_name'])) {
+				$this->db->like('menu_name', $filter['filter_name']);
+			}
+		
+			if (is_numeric($filter['filter_price'])) {
+				$this->db->like('menu_price', $filter['filter_price']);
+			}
+		
 			if (!empty($filter['category_id'])) {
 				$this->db->where('menu_category_id', $filter['category_id']);
+			}
+			
+			if (is_numeric($filter['filter_stock'])) {
+				$this->db->where('stock_qty', $filter['filter_stock']);
+			}
+			
+			if (is_numeric($filter['filter_status'])) {
+				$this->db->where('menu_status', $filter['filter_status']);
 			}
 			
 			$query = $this->db->get('menus');
@@ -84,7 +121,7 @@ class Menus_model extends CI_Model {
 
 	public function getAdminMenu($menu_id) {					
 		//$this->db->select('menus.menu_id, *');
-		$this->db->select('menus.menu_id, menu_name, menu_description, menu_price, menu_photo, menu_category_id, stock_qty, minimum_qty, subtract_stock, menu_status, category_id, category_name, category_description, category_special, special_id, start_date, end_date, special_price');
+		$this->db->select('menus.menu_id, menu_name, menu_description, menu_price, menu_photo, menu_category_id, stock_qty, minimum_qty, subtract_stock, menu_status, category_id, category_name, category_description, category_special, special_id, start_date, end_date, special_price, special_status');
 		$this->db->from('menus');
 		$this->db->join('categories', 'categories.category_id = menus.menu_category_id', 'left');
 		$this->db->join('menus_specials', 'menus_specials.menu_id = menus.menu_id', 'left');
@@ -216,7 +253,7 @@ class Menus_model extends CI_Model {
 	}
 
 	public function getAutoComplete($filter_data = array()) {
-		if (is_array($filter_data) && !empty($filter_data)) {
+		if (is_array($filter_data) AND !empty($filter_data)) {
 			//selecting all records from the menu and categories tables.
 			$this->db->from('menus');
 	
@@ -238,7 +275,7 @@ class Menus_model extends CI_Model {
 	}
 	
 	public function getOptionsAutoComplete($filter_data = array()) {
-		if (is_array($filter_data) && !empty($filter_data)) {
+		if (is_array($filter_data) AND !empty($filter_data)) {
 			//selecting all records from the menu and categories tables.
 			$this->db->from('menu_options');
 	
@@ -273,7 +310,9 @@ class Menus_model extends CI_Model {
 			$this->db->set('menu_price', $update['menu_price']);
 		}
 	
-		if (!empty($update['menu_category'])) {
+		if (!empty($update['menu_category']) AND $update['special_status'] === '1') {
+			$this->db->set('menu_category_id', (int)$this->config->item('special_category_id'));
+		} else if (!empty($update['menu_category'])) {
 			$this->db->set('menu_category_id', $update['menu_category']);
 		}
 	
@@ -329,19 +368,29 @@ class Menus_model extends CI_Model {
 			$query = TRUE;
 		}
 
-		$this->db->where('menu_id', $update['menu_id']);
-		$this->db->delete('menus_specials');
+		//$this->db->where('menu_id', $update['menu_id']);
+		//$this->db->delete('menus_specials');
 
-		if ($update['menu_special'] === '1') {
-			if (!empty($update['start_date']) && !empty($update['end_date']) && !empty($update['special_price'])) {
-				$this->db->set('menu_id', $update['menu_id']);
-				$this->db->set('start_date', $update['start_date']);
-				$this->db->set('end_date', $update['end_date']);
+		if ($update['special_status'] === '1') {
+			if (!empty($update['start_date']) AND !empty($update['end_date']) AND !empty($update['special_price'])) {
+				$this->db->set('start_date', mdate('%Y-%m-%d', strtotime($update['start_date'])));
+				$this->db->set('end_date', mdate('%Y-%m-%d', strtotime($update['end_date'])));
 				$this->db->set('special_price', $update['special_price']);
-				$this->db->insert('menus_specials');
+				$this->db->set('special_status', $update['special_status']);
 			}
+		} else {
+			$this->db->set('special_status', '0');
 		}
 				
+		if (!empty($update['special_id'])) {
+			$this->db->where('special_id', $update['special_id']);
+			$this->db->where('menu_id', $update['menu_id']);
+			$this->db->update('menus_specials');
+		} else {
+			$this->db->set('menu_id', $update['menu_id']);
+			$this->db->insert('menus_specials');
+		}
+
 		if ($this->db->affected_rows() > 0) {
 			$query = TRUE;
 		}
@@ -393,7 +442,9 @@ class Menus_model extends CI_Model {
 			$this->db->set('menu_price', $add['menu_price']);
 		}
 			
-		if (!empty($add['menu_category_id'])) {
+		if (!empty($add['menu_category']) AND $add['special_status'] === '1') {
+			$this->db->set('menu_category_id', (int)$this->config->item('special_category_id'));
+		} else if (!empty($add['menu_category'])) {
 			$this->db->set('menu_category_id', $add['menu_category']);
 		}
 			
@@ -427,7 +478,7 @@ class Menus_model extends CI_Model {
 		
 		$this->db->insert('menus');
 	
-		if ($this->db->affected_rows() > 0 && $this->db->insert_id()) {
+		if ($this->db->affected_rows() > 0 AND $this->db->insert_id()) {
 			$menu_id = $this->db->insert_id();
 
 			$this->db->where('menu_id', $menu_id);
@@ -444,12 +495,13 @@ class Menus_model extends CI_Model {
 			$this->db->where('menu_id', $menu_id);
 			$this->db->delete('menus_specials');
 
-			if (!empty($add['menu_special'])) {
-				if (!empty($update['start_date']) && !empty($add['end_date']) && !empty($add['special_price'])) {
+			if ($add['special_status'] === '1') {
+				if (!empty($update['start_date']) AND !empty($add['end_date']) AND !empty($add['special_price'])) {
 					$this->db->set('menu_id', $menu_id);
-					$this->db->set('start_date', $add['start_date']);
-					$this->db->set('end_date', $add['end_date']);
+					$this->db->set('start_date', mdate('%Y-%m-%d', strtotime($add['start_date'])));
+					$this->db->set('end_date', mdate('%Y-%m-%d', strtotime($add['end_date'])));
 					$this->db->set('special_price', $add['special_price']);
+					$this->db->set('special_status', $add['special_status']);
 					$this->db->insert('menus_specials');
 				}
 			}
@@ -489,8 +541,13 @@ class Menus_model extends CI_Model {
 	public function deleteMenu($menu_id) {
 
 		$this->db->where('menu_id', $menu_id);
-
 		$this->db->delete('menus');
+
+		$this->db->where('menu_id', $menu_id);
+		$this->db->delete('menus_specials');
+
+		$this->db->where('menu_id', $menu_id);
+		$this->db->delete('menus_to_options');
 
 		if ($this->db->affected_rows() > 0) {
 			return TRUE;

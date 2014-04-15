@@ -19,13 +19,9 @@ class Design_model extends CI_Model {
 		return $result;
 	}
 
-	public function getRoutes($status = 0) {
+	public function getRoutes() {
 		$this->db->from('uri_routes');
 		
-		if ($status === 1) {
-			$this->db->where('status', '1');
-		}
-
 		$this->db->order_by('priority', 'ASC');
 		
 		$query = $this->db->get();
@@ -66,50 +62,42 @@ class Design_model extends CI_Model {
 		return $result;
 	}
 
-	public function getLayoutRouteId($route = FALSE) {
-		if ($route !== FALSE) {
-			
-			$this->db->from('uri_routes');
-			$this->db->join('layout_routes', 'layout_routes.uri_route_id = uri_routes.uri_route_id', 'left');
-			
-			$this->db->where('route', $route);
-			
+	public function getRouteLayoutId($uri_route = array()) {
+		$result = array();
+		
+		if (is_array($uri_route)) {
+
+			$this->db->from('layout_routes');
+			//$this->db->join('layout_routes', 'layout_routes.uri_route_id = uri_routes.uri_route_id', 'left');
+		
+			$this->db->where_in('uri_route', $uri_route);
+		
 			$query = $this->db->get();
 			
 			if ($query->num_rows() > 0) {
-				$row = $query->row_array();
-				return $row['layout_id'];	
+				foreach ($query->result_array() as $row) {
+					$result[] = $row['layout_id'];
+				}
 			}
 		}
-		
-		return FALSE;
+
+		return $result;	
 	}
 	
 	public function updateRoutes($routes = array()) {
 		if (!empty($routes)) {
 			$this->db->truncate('uri_routes'); 
+			$priority = 1;
+			
+			foreach ($routes as $key => $value) {
 
-			foreach ($routes as $key => $route) {
-
-				if (!empty($route['route']) && !empty($route['controller'])) {
-					$this->db->set('route', $route['route']);
-					$this->db->set('controller', $route['controller']);
-					
-					if ($route['status'] === '1') {
-						$this->db->set('status', $route['status']);
-					} else {
-						$this->db->set('status', '0');
-					}
-					
-					if (!empty($route['uri_route_id'])) {
-						$this->db->set('uri_route_id', $route['uri_route_id']);
-					}
-
-					if (!empty($route['priority'])) {
-						$this->db->set('priority', $route['priority']);
-					}
+				if (!empty($value['uri_route']) && !empty($value['controller'])) {
+					$this->db->set('uri_route', $value['uri_route']);
+					$this->db->set('controller', $value['controller']);
+					$this->db->set('priority', $priority);
 					
 					$this->db->insert('uri_routes'); 
+					$priority++;
 				}
 			}
 					
@@ -121,39 +109,39 @@ class Design_model extends CI_Model {
 	}
 
 	public function writeRoutes() {
-        $routes = $this->getRoutes(1);
+		$status = 1;
+        $routes = $this->getRoutes($status);
 
         $data = array();
-
-        if (!empty($routes )) {
 			
-			$filepath = APPPATH . 'config/routes.php'; 
-			$data = '';   
-		
-			if ($fp = @fopen($filepath, FOPEN_READ_WRITE_CREATE_DESTRUCTIVE)) {
+		$filepath = APPPATH . 'config/routes.php'; 
+		$data = '';   
+	
+		if ($fp = @fopen($filepath, FOPEN_READ_WRITE_CREATE_DESTRUCTIVE)) {
 
-				$data .= "<"."?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');\n\n";
-				
-				$data .= "$"."route['default_controller'] = 'main/home';\n";
-				$data .= "$"."route['admin'] = 'admin/dashboard';\n";
+			$data .= "<"."?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');\n\n";
+			
+			$data .= "$"."route['default_controller'] = 'main/home';\n";
+			$data .= "$"."route['admin'] = 'admin/dashboard';\n";
 
+	        if (!empty($routes ) && is_array($routes)) {
 				foreach ($routes as $route) {
-					$data .= "$"."route['". $route['route'] ."'] = '". $route['controller'] ."';\n";
+					$data .= "$"."route['". $route['uri_route'] ."'] = '". $route['controller'] ."';\n";
 				}
+        	}
+		
+			$data .= "$"."route['404_override'] = '';\n\n";
 			
-				$data .= "$"."route['404_override'] = '';\n\n";
-				
-				$data .= "/* End of file routes.php */\n";
-				$data .= "/* Location: ./application/config/routes.php */";			
+			$data .= "/* End of file routes.php */\n";
+			$data .= "/* Location: ./application/config/routes.php */";			
 
-				flock($fp, LOCK_EX);
-				fwrite($fp, $data);
-				flock($fp, LOCK_UN);
-				fclose($fp);
+			flock($fp, LOCK_EX);
+			fwrite($fp, $data);
+			flock($fp, LOCK_UN);
+			fclose($fp);
 
-				@chmod($filepath, FILE_WRITE_MODE);
-			}
-        }
+			@chmod($filepath, FILE_WRITE_MODE);
+		}
 	}
 	
 	public function updateLayout($update = array()) {
@@ -178,7 +166,7 @@ class Design_model extends CI_Model {
 		if (is_array($update['routes'])) {
 			foreach ($update['routes'] as $route) {
 				$this->db->set('layout_id', $update['layout_id']);
-				$this->db->set('uri_route_id', $route['uri_route_id']);
+				$this->db->set('uri_route', $route['uri_route']);
 				$this->db->insert('layout_routes'); 
 			}
 		}
@@ -207,7 +195,7 @@ class Design_model extends CI_Model {
 			if (is_array($add['routes'])) {
 				foreach ($add['routes'] as $route) {
 					$this->db->set('layout_id', $layout_id);
-					$this->db->set('uri_route_id', $route['uri_route_id']);
+					$this->db->set('uri_route', $route['uri_route']);
 					$this->db->insert('layout_routes'); 
 				}
 			}

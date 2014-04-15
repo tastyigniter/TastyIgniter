@@ -6,7 +6,7 @@
 			<th width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
 			<th>Status Name</th>
 			<th>Status Comment</th>
-			<th>Notify Customer</th>
+			<th class="center">Notify Customer</th>
 			<th class="right">Action</th>
 		</tr>
 		<?php if ($statuses) {?>
@@ -15,7 +15,7 @@
 			<td class="delete"><input type="checkbox" value="<?php echo $status['status_id']; ?>" name="delete[]" /></td>
 			<td><?php echo $status['status_name']; ?></td>
 			<td><?php echo $status['status_comment']; ?></td>
-			<td><?php echo $status['notify_customer']; ?></td>
+			<td class="center"><?php echo $status['notify_customer']; ?></td>
 			<td class="right"><a class="edit" title="Edit" href="<?php echo $status['edit']; ?>"></a></td>
 		</tr>
 		<?php } ?>

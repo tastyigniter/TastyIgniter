@@ -2,6 +2,7 @@
 <!--<h2><?php echo $text_login_register; ?></h2>
     <h3><?php echo $text_register; ?></h3>	-->
 <div class="wrap">
+<div class="img_inner">
 	<form method="post" accept-charset="utf-8" action="<?php echo current_url(); ?>">
 	<table cellpadding="2" border="0" width="400px" align="">
     	<tr>
@@ -56,5 +57,6 @@
         </tr>
 	</table>
 	</form>
+</div>
 </div>
 </div>

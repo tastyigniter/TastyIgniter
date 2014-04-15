@@ -1,6 +1,3 @@
-<div class="breadcrumb">
-	<?php echo $breadcrumb; ?>
-</div>
 <div class="box">
 	<div id="list-box" class="content">
 	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
@@ -9,18 +6,18 @@
 			<th width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
 			<th class="center">Photo</th>
 			<th>Name</th>
-			<th>Price</th>
-			<th>Category</th>
-			<th>Stock Quantity</th>
-			<th class="right">Status</th>
+			<th class="right">Price</th>
+			<th class="center">Category</th>
+			<th class="center">Stock Quantity</th>
+			<th class="center">Status</th>
 			<th class="right">Action</th>
 		</tr>
-		<tr>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td><select name="filter_category">
+		<tr class="filter">
+			<th></th>
+			<th></th>
+			<th><input type="text" name="filter_name" value="<?php echo set_value('filter_name', $filter_name); ?>" class="textfield" size="30"/></th>
+			<th class="right"><input type="text" name="filter_price" value="<?php echo set_value('filter_price', $filter_price); ?>" class="textfield" size="5" style="text-align:right" /></th>
+			<th class="center"><select name="filter_category">
 				<option value=""></option>
 				<?php foreach ($categories as $category) { ?>
 				<?php if ($category['category_id'] === $category_id) { ?>				
@@ -30,27 +27,39 @@
 				<?php } ?>
 				<?php } ?>
 			</select>
-			</td>
-			<td></td>
-			<td></td>
-			<td class="right"><a onclick="filter_list();">Filter</a></td>
+			</th>
+			<th class="center"><input type="text" name="filter_stock" value="<?php echo set_value('filter_stock', $filter_stock); ?>" class="textfield" size="5" /></th>
+			<th class="center"><select name="filter_status">
+				<option value=""></option>
+			<?php if ($filter_status === '1') { ?>
+				<option value="0" <?php echo set_select('filter_status', '0'); ?> >Disabled</option>
+				<option value="1" <?php echo set_select('filter_status', '1', TRUE); ?> >Enabled</option>
+			<?php } else if ($filter_status === '0') { ?>  
+				<option value="0" <?php echo set_select('filter_status', '0', TRUE); ?> >Disabled</option>
+				<option value="1" <?php echo set_select('filter_status', '1'); ?> >Enabled</option>
+			<?php } else { ?>  
+				<option value="0" <?php echo set_select('filter_status', '0'); ?> >Disabled</option>
+				<option value="1" <?php echo set_select('filter_status', '1'); ?> >Enabled</option>
+			<?php } ?>  
+			</select></th>
+			<th class="right"><a class="button add_button" onclick="filterList();">Filter</a>  <img onclick="filterClear();" title="Clear Filter" src="<?php echo base_url('assets/img/delete.png'); ?>" /></th>
 		</tr>
 		<?php if ($menus) {?>
 		<?php foreach ($menus as $menu) { ?>
 		<tr id="<?php echo $menu['menu_id']; ?>">
 			<td><input type="checkbox" value="<?php echo $menu['menu_id']; ?>" name="delete[]" /></td>
-			<td class="center"><a href="" alt="click to view full image" target="_blank"><img src="<?php echo $menu['menu_photo']; ?>" width="80" height="70"></a></td>
+			<td class="center"><img src="<?php echo $menu['menu_photo']; ?>"></td>
 			<td class="menu_name"><?php echo $menu['menu_name']; ?></td>
-			<td><?php echo $menu['menu_price']; ?></td>
-			<td><?php echo $menu['category_name']; ?></td>
-			<td><?php echo ($menu['stock_qty'] < 1) ? '<span class="red">'.$menu['stock_qty'].'</span>' : $menu['stock_qty']; ?></td>
-			<td class="right"><?php echo $menu['menu_status']; ?></td>
+			<td class="right"><?php echo $menu['menu_price']; ?></td>
+			<td class="center"><?php echo $menu['category_name']; ?></td>
+			<td class="center"><?php echo ($menu['stock_qty'] < 1) ? '<span class="red">'.$menu['stock_qty'].'</span>' : $menu['stock_qty']; ?></td>
+			<td class="center"><?php echo $menu['menu_status']; ?></td>
 			<td class="right"><a class="edit" title="Edit" href="<?php echo $menu['edit']; ?>"></a></td>
 		</tr>
 		<?php } ?>
 		<?php } else { ?>
 		<tr>
-			<td colspan="8"><?php echo $text_no_menus; ?></td>
+			<td colspan="8" class="center"><?php echo $text_no_menus; ?></td>
 		</tr>
 		<?php } ?>
 	</table>
@@ -62,22 +71,6 @@
 	</div>
 	</div>	
 </div>
-<script type="text/javascript" src="<?php echo base_url("assets/js/jquery-ui-timepicker-addon.js"); ?>"></script> 
-<script type="text/javascript"><!--
-$(document).ready(function() {
-	$('#start-date, #end-date').datepicker({
-		dateFormat: 'yy-mm-dd',
-	});
-  	
-  	$('input[name=\'special\']').bind('change', function(){
-  		if($(this).is(':checked')){
-     		$('#special').fadeIn();
-		} else {
-   			$('#special').fadeOut();
-		}
-	});	
-});
-//--></script>
 <script type="text/javascript"><!--
 $('input[name=\'menu_option\']').autocomplete({
 	delay: 0,
@@ -113,19 +106,47 @@ $('#menu-option tr img').click(function() {
 //--></script>
 
 <script type="text/javascript"><!--
-function filter_list() {
+function filterList() {
 	url = '<?php echo current_url(); ?>';
 	
 	var filter_page = '<?php echo (isset($_GET["page"])) ? $_GET["page"] : FALSE; ?>';
+	var filter_name = $('input[name=\'filter_name\']').val();
+	var filter_price = $('input[name=\'filter_price\']').val();
 	var filter_category = $('select[name=\'filter_category\']').val();
+	var filter_stock = $('input[name=\'filter_stock\']').val();
+	var filter_status = $('select[name=\'filter_status\']').val();
 	
 	if (filter_page != '') {
 		url += '?page=' + encodeURIComponent(filter_page);
+	} else {
+		url += '?page=';
+	}
+	
+	if (filter_name != '') {
+		url += '&filter_name=' + encodeURIComponent(filter_name);
+	}
+	
+	if (filter_price != '') {
+		url += '&filter_price=' + encodeURIComponent(filter_price);
 	}
 	
 	if (filter_category != '') {
 		url += '&filter_category=' + encodeURIComponent(filter_category);
 	}
+	
+	if (filter_stock != '') {
+		url += '&filter_stock=' + encodeURIComponent(filter_stock);
+	}
+	
+	if (filter_status != '') {
+		url += '&filter_status=' + encodeURIComponent(filter_status);
+	}
+	
+	location = url;
+}
+
+function filterClear() {
+	url = '<?php echo current_url(); ?>';
 	
 	location = url;
 }

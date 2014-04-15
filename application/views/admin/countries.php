@@ -5,15 +5,19 @@
 		<tr>
 			<th width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
 			<th>Country</th>
-			<th>Status</th>
+			<th class="right">Status</th>
 			<th class="right">Action</th>
 		</tr>
 		<?php if ($countries) {?>
 		<?php foreach ($countries as $country) { ?>
 		<tr>
 			<td class="delete"><input type="checkbox" value="<?php echo $country['country_id']; ?>" name="delete[]" /></td>
-			<td><?php echo $country['name']; ?></td>
-			<td><?php echo ($country['status'] === '1') ? 'Enabled' : 'Disabled'; ?></td>
+			<td><?php echo $country['name']; ?>
+				<?php if ($country_id === $country['country_id']) { ?>
+				<b>(Default)</b>
+				<?php } ?>
+			</td>
+			<td class="right"><?php echo ($country['status'] === '1') ? 'Enabled' : 'Disabled'; ?></td>
 			<td class="right"><a class="edit" title="Edit" href="<?php echo $country['edit']; ?>"></a></td>
 		</tr>
 		<?php } ?>

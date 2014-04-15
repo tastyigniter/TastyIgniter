@@ -9,6 +9,10 @@ class Cod extends CI_Controller {
 
 	public function index() {
 			
+		if (!file_exists(APPPATH .'views/admin/cod.php')) {
+			show_404();
+		}
+			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -72,33 +76,35 @@ class Cod extends CI_Controller {
 						
     	if (!$this->user->hasPermissions('modify', 'admin/cod')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
 			return TRUE;
     	
-    	} else if (!$this->input->post('delete')) { 
-		
-			$this->form_validation->set_rules('cod_total', 'Minimum Total', 'trim|required|numeric');
-			$this->form_validation->set_rules('cod_order_status', 'Order Status', 'trim|required|integer');
-			$this->form_validation->set_rules('cod_status', 'Status', 'trim|required|integer');
+    	} else if (!$this->input->post('delete') AND $this->validateForm() === TRUE) { 
+			$update = array(
+				'cod_total' 		=> $this->input->post('cod_total'),
+				'cod_order_status' 	=> $this->input->post('cod_order_status'),
+				'cod_status' 		=> $this->input->post('cod_status')
+			);
 
-			if ($this->form_validation->run() === TRUE) {
-				
-				$update = array(
-					'cod_total' 		=> $this->input->post('cod_total'),
-					'cod_order_status' 	=> $this->input->post('cod_order_status'),
-					'cod_status' 		=> $this->input->post('cod_status')
-				);
-	
-				if ($this->Settings_model->updateSettings('cod', $update)) {
-			
-					$this->session->set_flashdata('alert', '<p class="success">COD Updated Sucessfully!</p>');
-				} else {
-			
-					$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
-				}
-			
-				return TRUE;
+			if ($this->Settings_model->updateSettings('cod', $update)) {
+				$this->session->set_flashdata('alert', '<p class="success">COD Updated Sucessfully!</p>');
+			} else {
+				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
 			}
+		
+			return TRUE;
 		}
+	}
+
+	public function validateForm() {
+		$this->form_validation->set_rules('cod_total', 'Minimum Total', 'trim|required|numeric');
+		$this->form_validation->set_rules('cod_order_status', 'Order Status', 'trim|required|integer');
+		$this->form_validation->set_rules('cod_status', 'Status', 'trim|required|integer');
+
+		if ($this->form_validation->run() === TRUE) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}		
 	}
 }

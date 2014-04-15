@@ -52,13 +52,70 @@ class Locations_model extends CI_Model {
 			
 			$this->db->where('location_id', $location_id);
 			$query = $this->db->get();
-		
+
 			if ($query->num_rows() > 0) {
 				return $query->row_array();
 			}
 		}
 	}
 
+	public function getLocationAddress($location_id) {
+		
+		if ($location_id !== 0) {
+			$this->db->from('locations');
+			$this->db->join('countries', 'countries.country_id = locations.location_country_id', 'left');
+			//$this->db->join('working_hours', 'working_hours.location_id = locations.location_id', 'left');
+			
+			$this->db->where('location_id', $location_id);
+			$query = $this->db->get();
+		
+			$address_data = array();
+
+			if ($query->num_rows() > 0) {
+				$row = $query->row_array();
+
+				$address_data = array(
+					'location_id'     	=> $row['location_id'],
+					'location_name'    	=> $row['location_name'],
+					'address_1'      => $row['location_address_1'],
+					'address_2'      => $row['location_address_2'],
+					'city'           => $row['location_city'],
+					'state'          => $row['location_state'],
+					'postcode'       => $row['location_postcode'],
+					'country_id'     => $row['location_country_id'],
+					'country'        => $row['country_name'],
+					'iso_code_2'     => $row['iso_code_2'],
+					'iso_code_3'     => $row['iso_code_3'],
+					'format'     	 => $row['format']	
+				);
+			}
+
+			return $address_data;
+		}
+	}
+	
+	public function getOpeningHourByDay($location_id = FALSE, $day = FALSE) {
+		$datestring = '%H:%i';
+		$weekdays = array('Monday' => 0, 'Tuesday' => 1, 'Wednesday' => 2, 'Thursday' => 3, 'Friday' => 4, 'Saturday' => 5, 'Sunday' => 6);
+		$hour = array();
+		$hour['open'] = '00:00';
+		$hour['close'] = '00:00';
+	
+		$this->db->from('working_hours');
+		$this->db->where('location_id', $location_id);
+		$this->db->where('weekday', $weekdays[$day]);
+			
+		$query = $this->db->get();
+	
+		if ($query->num_rows() > 0) {
+			$row = $query->row_array();
+			$hour['open']	= $row['opening_time'];
+			$hour['close']	= $row['closing_time'];
+		}
+		
+		return $hour;
+	}
+	
 	public function getOpeningHours($location_id = FALSE) {
 		$datestring = '%H:%i';
 		$weekdays = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
@@ -92,17 +149,17 @@ class Locations_model extends CI_Model {
 		return $hours;
 	}
 
-	public function getLocalRestaurant($lat = FALSE, $lng = FALSE) {
-		$this->session->unset_userdata('local_info');
-		
+	public function getLocalRestaurant($lat = FALSE, $lng = FALSE, $search_query = FALSE) {
 		if ($this->config->item('distance_unit') === 'km') {
 			$sql  = "SELECT *, ( 6371 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) *";
 		} else {
 			$sql  = "SELECT *, ( 3959 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) *";
 		}
 		
-		$sql .= "cos( radians( location_lng ) - radians(?) ) + sin( radians(?) ) * sin( radians( location_lat ) ) ) ) AS distance ";
-		$sql .= "FROM locations WHERE location_status = 1 HAVING distance < location_radius ORDER BY distance LIMIT 0 , 20";
+		$sql .= "cos( radians( location_lng ) - radians(?) ) + sin( radians(?) ) *";
+		$sql .= "sin( radians( location_lat ) ) ) ) AS distance ";
+		$sql .= "FROM {$this->db->dbprefix('locations')} WHERE location_status = 1 ";
+		$sql .= "ORDER BY distance LIMIT 0 , 20";
 		
 		if (!empty($lat) && !empty($lng)) {
 			$query = $this->db->query($sql, array($lat, $lng, $lat));
@@ -112,16 +169,23 @@ class Locations_model extends CI_Model {
 		
 		if ($query->num_rows() > 0) {
 			$result = $query->first_row('array');
-
-    		$local_info 	= array(
-    			'location_id' 		=> $result['location_id'], 
-    			'location_name' 	=> $result['location_name'],
-    			'distance' 			=> $result['distance']
-    		);
-	
-			$this->session->set_userdata('local_info', $local_info);
 			
-			return TRUE;
+			if (!empty($result['location_radius'])) {
+				$search_radius = $result['location_radius'];
+			} else {
+				$search_radius = (int)$this->config->item('search_radius');
+			}
+			
+			if ($result['distance'] <= $search_radius) {
+				$local_info = array(
+					'location_id' 		=> $result['location_id'], 
+					'location_name' 	=> $result['location_name'],
+					'distance' 			=> $result['distance'],
+					'search_query' 		=> $search_query
+				);
+	
+				return $local_info;
+			}
 		}
 		
 		return FALSE;
@@ -163,8 +227,12 @@ class Locations_model extends CI_Model {
 			$this->db->set('location_lng', $update['address']['location_lng']);
 		}
 		
-		if (!empty($update['address']['radius'])) {
-			$this->db->set('location_radius', $update['address']['radius']);
+		if (!empty($update['location_radius'])) {
+			$this->db->set('location_radius', $update['location_radius']);
+		}
+		
+		if (!empty($update['covered_area'])) {
+			$this->db->set('covered_area', $update['covered_area']);
 		}
 		
 		if (!empty($update['email'])) {
@@ -199,6 +267,14 @@ class Locations_model extends CI_Model {
 			$this->db->set('min_delivery_total', $update['min_delivery_total']);
 		}
 		
+		if (!empty($update['reserve_interval'])) {
+			$this->db->set('reserve_interval', $update['reserve_interval']);
+		}
+		
+		if (!empty($update['reserve_turn'])) {
+			$this->db->set('reserve_turn', $update['reserve_turn']);
+		}
+		
 		if ($update['location_status'] === '1') {
 			$this->db->set('location_status', $update['location_status']);
 		} else {
@@ -211,44 +287,9 @@ class Locations_model extends CI_Model {
 		}
 		
 		if ($this->db->affected_rows() > 0) {
-			$query = TRUE;
-		}
+			$this->addOpeningHours($update['location_id'], $update['hours']);
+			$this->addLocationTables($update['location_id'], $update['tables']);
 
-		$this->db->where('location_id', $update['location_id']);
-		$this->db->delete('working_hours');
-
-		if (is_array($update['hours']) && !empty($update['hours'])) {
-			foreach ($update['hours']['open'] as $weekday => $open) {
-
-				foreach ($update['hours']['close'] as $day => $close) {
-					if ($weekday === $day) {
-						$this->db->set('location_id', $update['location_id']);
-						$this->db->set('weekday', $weekday);
-						$this->db->set('opening_time', $open);
-						$this->db->set('closing_time', $close);
-						$this->db->insert('working_hours');
-					}
-				}
-			}
-		}
-
-		if ($this->db->affected_rows() > 0) {
-			$query = TRUE;
-		}
-
-		$this->db->where('location_id', $update['location_id']);
-		$this->db->delete('location_tables');
-
-		if (is_array($update['tables']) && !empty($update['tables'])) {
-			foreach ($update['tables'] as $key => $value) {
-
-				$this->db->set('location_id', $update['location_id']);
-				$this->db->set('table_id', $value);
-				$this->db->insert('location_tables');
-			}
-		}
-
-		if ($this->db->affected_rows() > 0) {
 			$query = TRUE;
 		}
 
@@ -289,10 +330,6 @@ class Locations_model extends CI_Model {
 			$this->db->set('location_lng', $add['address']['location_lng']);
 		}
 		
-		if (!empty($add['address']['radius'])) {
-			$this->db->set('location_radius', $add['address']['radius']);
-		}
-		
 		if (!empty($add['email'])) {
 			$this->db->set('location_email', $add['email']);
 		}
@@ -325,6 +362,14 @@ class Locations_model extends CI_Model {
 			$this->db->set('min_delivery_total', $add['min_delivery_total']);
 		}
 		
+		if (!empty($add['reserve_interval'])) {
+			$this->db->set('reserve_interval', $add['reserve_interval']);
+		}
+		
+		if (!empty($add['reserve_turn'])) {
+			$this->db->set('reserve_turn', $add['reserve_turn']);
+		}
+		
 		if ($add['location_status'] === '1') {
 			$this->db->set('location_status', $add['location_status']);
 		} else {
@@ -335,45 +380,65 @@ class Locations_model extends CI_Model {
 		
 		if ($this->db->affected_rows() > 0) {
 			$location_id = $this->db->insert_id();			
-
-			$this->db->where('location_id', $location_id);
-			$this->db->delete('working_hours');
-
-			if (is_array($add['hours']) && !empty($add['hours'])) {
-				foreach ($add['hours']['open'] as $weekday => $open) {
-
-					foreach ($add['hours']['close'] as $day => $close) {
-						if ($weekday === $day) {
-							$this->db->set('location_id', $location_id);
-							$this->db->set('weekday', $weekday);
-							$this->db->set('opening_time', $open);
-							$this->db->set('closing_time', $close);
-							$this->db->insert('working_hours');
-						}
-					}
-				}
-			}
-
-			$this->db->where('location_id', $location_id);
-			$this->db->delete('location_tables');
-
-			if (is_array($add['tables']) && !empty($add['tables'])) {
-				foreach ($add['tables'] as $key => $value) {
-
-					$this->db->set('location_id', $location_id);
-					$this->db->set('table_id', $value);
-					$this->db->insert('location_tables');
-				}
-			}
+			
+			$this->addOpeningHours($location_id, $add['hours']);
+			$this->addLocationTables($location_id, $add['tables']);
 
 			return TRUE;
 		}
 	}
 
+	public function addOpeningHours($location_id, $hours = array()) {
+		$this->db->where('location_id', $location_id);
+		$this->db->delete('working_hours');
+
+		if (is_array($hours) AND !empty($hours)) {
+			foreach ($hours['open'] as $weekday => $open) {
+
+				foreach ($hours['close'] as $day => $close) {
+					if ($weekday === $day) {
+						$this->db->set('location_id', $location_id);
+						$this->db->set('weekday', $weekday);
+						$this->db->set('opening_time', $open);
+						$this->db->set('closing_time', $close);
+						$this->db->insert('working_hours');
+					}
+				}
+			}
+		}
+
+		if ($this->db->affected_rows() > 0) {
+			return TRUE;
+		}
+	}
+	
+	public function addLocationTables($location_id, $tables = array()) {
+		$this->db->where('location_id', $location_id);
+		$this->db->delete('location_tables');
+
+		if (is_array($tables) && !empty($tables)) {
+			foreach ($tables as $key => $value) {
+
+				$this->db->set('location_id', $location_id);
+				$this->db->set('table_id', $value);
+				$this->db->insert('location_tables');
+			}
+		}
+
+		if ($this->db->affected_rows() > 0) {
+			return TRUE;
+		}
+	}
+	
 	public function deleteLocation($location_id) {
 		$this->db->where('location_id', $location_id);
-		
 		$this->db->delete('locations');
+
+		$this->db->where('location_id', $location_id);
+		$this->db->delete('location_tables');
+
+		$this->db->where('location_id', $location_id);
+		$this->db->delete('working_hours');
 
 		if ($this->db->affected_rows() > 0) {
 			return TRUE;

@@ -1,23 +1,14 @@
-<div class="slider-relative">
-    <div class="slider-block">
-		<ul class="bxslider">
-			<li><img src="<?php echo base_url("assets/img/slide.jpg"); ?>" /></li>
-			<li><img src="<?php echo base_url("assets/img/slide1.jpg"); ?>" /></li>
-			<li class="mb0"><img src="<?php echo base_url("assets/img/slide2.jpg"); ?>" /></li>
-		</ul>
-	</div>
-</div>
 <div class="content">
-	<div class="separator"></div>
-	<div id="search-location">
-	<form id="location-form" method="POST" action="<?php echo site_url('main/local_module/distance'); ?>">
-		<label for="postcode"><b><?php echo $text_postcode; ?></b></label><br />
-  		<input type="text" id="postcodeInput" name="postcode" size="20" value="<?php echo $postcode; ?>">
-    	<input type="button" id="search" onclick="$('#location-form').submit();"value="<?php echo $text_find; ?>"/>
-	</form>
+	<div class="img_inner home-fixed">
+		<div id="search-location">
+			<form id="location-form" method="POST" action="<?php echo site_url('main/local_module/distance'); ?>">
+				<label for="postcode"><b><?php echo $text_postcode; ?></b></label><br />
+				<input type="text" id="postcodeInput" name="postcode" size="20" value="<?php echo $postcode; ?>">
+				<input type="button" id="search" onclick="$('#location-form').submit();"value="<?php echo $text_find; ?>"/>
+			</form>
+		</div>
 	</div>
 
-	<div class="separator"></div>
 	<?php if ($local_location) { ?>
 	<div class="search-content" style="display: block;">
 	<div id="map" class="right"><div class="img_inner"><div id="map-holder" style="height:370px;"></div></div></div>   	
@@ -43,10 +34,10 @@
 					<dt><?php echo $text_opening_hours; ?>:</dt>
 					<?php foreach ($opening_hours as $opening_hour) { ?>
 						<dd><span><?php echo $opening_hour['day']; ?>:</span>
-						<?php if ($opening_hour['open'] !== '00:00' || $opening_hour['close'] !== '00:00') { ?>
-							<?php echo $opening_hour['open']; ?> - <?php echo $opening_hour['close']; ?>
+						<?php if ($opening_hour['open'] === '00:00' OR $opening_hour['close'] === '00:00') { ?>
+							<?php echo $text_open; ?>
 						<?php } else { ?>
-							<?php echo $text_close; ?>
+							<?php echo $opening_hour['open']; ?> - <?php echo $opening_hour['close']; ?>
 						<?php } ?>
 						</dd>
 					<?php } ?>
@@ -59,9 +50,8 @@
 	<?php } ?>
 </div>
 <?php if ($local_location) { ?>
-<script src="http://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyAVEN2XUak42rlf-nxgNuGQIO2ItMYRRjU&sensor=false&region=GB"></script>
-<script type="text/javascript">
-//<![CDATA[
+<script src="http://maps.googleapis.com/maps/api/js?v=3<?php echo $map_key; ?>&sensor=false&region=GB"></script>
+<script type="text/javascript">//<![CDATA[
 	var map;
 	var geocoder = null;
 	var bounds = null;
@@ -102,45 +92,5 @@
 	}
 
     google.maps.event.addDomListener(window, 'load', initializeMap);
- 
-	function showStores(latlng) {
-		infoWindow.close();
-		for (var i = 0; i < markers.length; i++) {
-			markers[i].setMap(null);
-		}
-		markers.length = 0;
- 
-  		bounds = new google.maps.LatLngBounds();
-
-		for (var i in json) {
-			createMarker(json);
-		}
-
-  		map.fitBounds(bounds);
-		map.setZoom(13);
-	}
- 
-	function createMarker(latlng) {
-    	var html = "<b>" + json['location_name'] + "</b> <br/>" + 
-    				json['location_address_1'] + "<br/>" + json['location_city'] + ", " + json['location_city'] + " " + json['location_postcode'] + "<br/>" + 
-    				json['location_telephone'] + "<br /><br /><b>Distance: </b>" + 
-    				parseFloat(json['distance']).toFixed(1) + " Miles";
-
-		var marker = new google.maps.Marker({
-						position: latlng,
-						map: map,
-					});
-	}
-//]]>
-</script>
+//]]></script>
 <?php } ?>
-<script type="text/javascript">
-$(document).ready(function(){
-  $('.bxslider').bxSlider({
-	adaptiveHeight: true,
-	auto: true,
-	autoControls: true,
-	slideWidth: 960
-});
-});
-</script>

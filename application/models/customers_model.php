@@ -16,6 +16,7 @@ class Customers_model extends CI_Model {
 		
         if ($this->db->limit($filter['limit'], $filter['page'])) {	
 			$this->db->from('customers');
+			$this->db->order_by('date_added', 'DESC');
 
 			$query = $this->db->get();
 			$result = array();
@@ -65,19 +66,6 @@ class Customers_model extends CI_Model {
 		}
 	}
 
-	public function getAddress($address_id) {
-		if ($address_id !== '0') {
-			$this->db->from('address');
-			$this->db->where('address_id', $address_id);
-
-			$query = $this->db->get();
-
-			if ($query->num_rows() > 0) {
-				return $query->row_array();
-			}
-		}
-	}
-
 	public function getCustomerAddresses($customer_id) {
 		$this->db->from('address');
 		$this->db->join('countries', 'countries.country_id = address.country_id', 'left');
@@ -96,11 +84,13 @@ class Customers_model extends CI_Model {
 					'address_1'      => $result['address_1'],
 					'address_2'      => $result['address_2'],
 					'city'           => $result['city'],
+					'state'          => $result['state'],
 					'postcode'       => $result['postcode'],
 					'country_id'     => $result['country_id'],
 					'country'        => $result['country_name'],
 					'iso_code_2'     => $result['iso_code_2'],
-					'iso_code_3'     => $result['iso_code_3']	
+					'iso_code_3'     => $result['iso_code_3'],
+					'format'		 => $result['format']	
 				);
 			}
 		}
@@ -109,7 +99,7 @@ class Customers_model extends CI_Model {
 	}
 
 	public function getCustomerAddress($customer_id, $address_id) {
-		if (($customer_id !== '0') && ($address_id !== '0')) {
+		if (($customer_id !== '0') AND ($address_id !== '0')) {
 			$this->db->from('address');
 			$this->db->join('countries', 'countries.country_id = address.country_id', 'left');
 			
@@ -128,11 +118,13 @@ class Customers_model extends CI_Model {
 					'address_1'      => $row['address_1'],
 					'address_2'      => $row['address_2'],
 					'city'           => $row['city'],
+					'state'          => $row['state'],
 					'postcode'       => $row['postcode'],
 					'country_id'     => $row['country_id'],
 					'country'        => $row['country_name'],
 					'iso_code_2'     => $row['iso_code_2'],
-					'iso_code_3'     => $row['iso_code_3']	
+					'iso_code_3'     => $row['iso_code_3'],
+					'format'     	 => $row['format']	
 				);
 			}
 
@@ -140,20 +132,6 @@ class Customers_model extends CI_Model {
 		}
 	}
 	
-	public function getAddresses($customer_id = FALSE) {
-		$this->db->from('address');
-		$this->db->where('customer_id', $customer_id);
-
-		$query = $this->db->get();
-		$result = array();
-	
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
-	
-		return $result;
-	}
-
 	public function getCustomerDefaultAddress($address_id, $customer_id) {
 		if (($address_id !== '0') && ($customer_id !== '0')) {
 			$this->db->from('address');
@@ -170,10 +148,23 @@ class Customers_model extends CI_Model {
 		}
 	}
 	
+	public function getCustomerActivities($customer_id) {
+		$this->db->from('customers_activity');
+		$this->db->order_by('date_added', 'DESC');
+
+		$this->db->where('customer_id', $customer_id);
+		$query = $this->db->get();
+		$result = array();
+		
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+		
+		return $result;
+	}
+
 	public function getAutoComplete($filter_data = array()) {
 		if (is_array($filter_data) && !empty($filter_data)) {
-			//selecting all records from the menu and categories tables.
-			//$this->db->select('customer_id, CONCAT(first_name, last_name) AS customer_name');
 			$this->db->from('customers');
 	
 			if (!empty($filter_data['customer_name'])) {
@@ -255,7 +246,6 @@ class Customers_model extends CI_Model {
 	}
 
 	public function updateCustomer($update = array()) {
-		
 		$query = FALSE;
 
 		if (!empty($update['first_name'])) {
@@ -302,19 +292,17 @@ class Customers_model extends CI_Model {
 			$this->db->update('customers');
 		}
 			
-		if ($this->db->affected_rows() > 0) {
-			if (!empty($update['address']) && !empty($update['customer_id'])) {
-				foreach ($update['address'] as $address) {
-					if (!empty($address['address_id'])) {
-						$address['customer_id'] = $update['customer_id'];
-						$this->updateAddress($address);
-					} else {
-						$address['customer_id'] = $update['customer_id'];
-						$this->addAddress($address);
-					}
+		if (!empty($update['address']) && !empty($update['customer_id'])) {
+			foreach ($update['address'] as $address) {
+				if (!empty($address['address_id'])) {
+					$this->updateCustomerAddress($update['customer_id'], $address['address_id'], $address);
+				} else {
+					$this->updateCustomerAddress($update['customer_id'], '', $address);
 				}
 			}
-			
+		}
+		
+		if ($this->db->affected_rows() > 0) {
 			$query = TRUE;
 		}
 		
@@ -366,12 +354,12 @@ class Customers_model extends CI_Model {
 		if ($this->db->affected_rows() > 0) {
 			$customer_id = $this->db->insert_id();
 			
-			if (!empty($add['address']) && $customer_id) {
+			if (!empty($add['address']) AND $customer_id) {
 				foreach ($add['address'] as $address) {
-					$address['customer_id'] = $customer_id;
-					$this->addAddress($address);
-					$query = TRUE;
+					$this->addCustomerAddress($customer_id, $address);
 				}
+
+				$query = TRUE;
 			}
 			
 			$this->lang->load('main/login_register');
@@ -388,39 +376,10 @@ class Customers_model extends CI_Model {
 		}
 	}
 
-	public function updateAddress($update = array()) {
-		if (!empty($update['address_1'])) {
-			$this->db->set('address_1', $update['address_1']);
+	public function updateCustomerAddress($customer_id = FALSE, $address_id = FALSE, $address = array()) {
+		if ($customer_id) {
+			$this->db->set('customer_id', $customer_id);
 		}
-
-		if (!empty($update['address_2'])) {
-			$this->db->set('address_2', $update['address_2']);
-		}
-
-		if (!empty($update['city'])) {
-			$this->db->set('city', $update['city']);
-		}
-
-		if (!empty($update['postcode'])) {
-			$this->db->set('postcode', $update['postcode']);
-		}
-
-		if (!empty($update['country_id'])) {
-			$this->db->set('country_id', $update['country_id']);
-		}
-
-		if (isset($update['address_id'], $update['customer_id'])) {
-			$this->db->where('address_id', $update['address_id']);
-			$this->db->where('customer_id', $update['customer_id']);
-			$this->db->update('address');
-		}
-				
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
-		}
-	}	
-
-	public function addAddress($address = array()) {
 
 		if (!empty($address['address_1'])) {
 			$this->db->set('address_1', $address['address_1']);
@@ -438,18 +397,22 @@ class Customers_model extends CI_Model {
 			$this->db->set('postcode', $address['postcode']);
 		}
 
-		if (!empty($address['country_id'])) {
-			$this->db->set('country_id', $address['country_id']);
+		if (!empty($address['country'])) {
+			$this->db->set('country_id', $address['country']);
 		}
 			
-		$this->db->insert('address');
-		
-		if ($this->db->affected_rows() > 0) {
-			$address_id = $this->db->insert_id();			
-			return $address_id;
+		if ($address_id) {
+			$this->db->where('address_id', $address_id);
+			$this->db->update('address');
+		} else {
+			$this->db->insert('address');
 		}
-	}	
 
+		if ($this->db->affected_rows() > 0) {
+			return TRUE;
+		}
+	}
+	
 	public function addCustomerAddress($customer_id, $address = array()) {
 
 		if ($customer_id) {
@@ -472,12 +435,12 @@ class Customers_model extends CI_Model {
 			$this->db->set('postcode', $address['postcode']);
 		}
 
-		if (!empty($address['country_id'])) {
-			$this->db->set('country_id', $address['country_id']);
+		if (!empty($address['country'])) {
+			$this->db->set('country_id', $address['country']);
 		}
 			
 		$this->db->insert('address');
-		
+
 		if ($this->db->affected_rows() > 0) {
 			$address_id = $this->db->insert_id();			
 			return $address_id;

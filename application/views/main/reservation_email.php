@@ -7,7 +7,7 @@
 <body>
 <div id="container">
 <div id="content">
-<table width="80%" class="password_reset">
+<table width="80%" class="confirmation">
 	<tr>
     	<td><?php echo $text_greetings; ?><br /><br /></td>
     </tr>

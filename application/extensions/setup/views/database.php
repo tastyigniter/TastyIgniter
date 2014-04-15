@@ -7,11 +7,11 @@
 </head>
 <body>
 <div class="setup_box">
-	<h1>TastyIgniter</h1>
+	<h1>TastyIgniter - Setup</h1>
 	<div class="content">
 	<h2>Database Settings</h2>
 	<p>Please enter your database connection details below.</p>
-	<?php echo validation_errors('<p class="error">', '</p>'); ?>
+	<div id="notification"><?php echo validation_errors('<span class="error">', '</span>'); ?></div>
 	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" />
 	<table align=""class="form">
 		<tr>
@@ -29,6 +29,10 @@
 		<tr>
 			<td class="first">Password:</td>
 			<td><input type="text" name="db_pass" value="<?php echo $db_pass; ?>" /></td>
+		</tr>
+		<tr>
+			<td class="first">Prefix:</td>
+			<td><input type="text" name="db_prefix" value="<?php echo $db_prefix; ?>" /></td>
 		</tr>
 	</table>
 	<br />

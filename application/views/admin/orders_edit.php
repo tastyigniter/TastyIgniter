@@ -4,9 +4,11 @@
 		<div class="wrap_heading">
 			<ul id="tabs">
 				<li><a rel="#general">Order</a></li>
-				<li><a rel="#status">Status & Assign</a></li>
+				<li><a rel="#status">Status</a></li>
 				<li><a rel="#restaurant">Restaurant</a></li>
-				<li><a rel="#customer">Customer</a></li>
+				<?php if ($check_order_type === '1') { ?>
+					<li><a rel="#delivery-address">Delivery Address</a></li>
+				<?php } ?>
 				<li><a rel="#payment">Payment</a></li>
 				<li><a rel="#menus">Menus (<?php echo $total_items; ?>)</a></li>
 			</ul>
@@ -19,6 +21,18 @@
 					<td>#<?php echo $order_id; ?></td>
 				</tr>
 				<tr>
+					<td><b>Name:</b></td>
+					<td><a href="<?php echo $customer_edit; ?>"><?php echo $first_name; ?> <?php echo $last_name; ?></a></td>
+				</tr>
+				<tr>
+					<td><b>Email:</b></td>
+					<td><?php echo $email; ?></td>
+				</tr>
+				<tr>
+					<td><b>Telephone:</b></td>
+					<td><?php echo $telephone; ?></td>
+				</tr>
+				<tr>
 					<td><b>Order Type:</b></td>
 					<td><?php echo $order_type; ?></td>
 				</tr>    	
@@ -27,25 +41,30 @@
 					<td><?php echo $order_time; ?></td>
 				</tr>    	
 				<tr>
+					<td><b>Order Date:</b></td>
+					<td><?php echo $date_added; ?></td>
+				</tr>    	
+				<tr>
 					<td><b>Total:</b></td>
 					<td><?php echo $order_total; ?></td>
 				</tr>    	
 				<tr>
-					<td><b>Date Added:</b></td>
-					<td><?php echo $date_added; ?></td>
-				</tr>    	
+					<td><b>Comment:</b></td>
+					<td><?php echo $comment; ?></td>
+				</tr>
 				<tr>
 					<td><b>Date Modified:</b></td>
 					<td><?php echo $date_modified; ?></td>
 				</tr>    	
 				<tr>
-					<td><b>Notify Customer:</b></td>
+					<td><b>Notified Customer:</b></td>
 					<td>
 					<?php if ($notify === '1') { ?>
-						Order Confirmation Email SENT
+						Email SENT
 					<?php } else { ?>
-						Order Confirmation Email not SENT
+						Email not SENT
 					<?php } ?>
+					</td>
 				</tr>
 				<tr>
 					<td><b>IP Address:</b></td>
@@ -73,18 +92,36 @@
 					</select></td>
 				</tr>    	
 				<tr>
-					<td><b>Assigned Staff:</b></td>
-					<td><select name="assigned_staff">
-					<option value=""> - please select - </option>
-					<?php foreach ($staffs as $staff) { ?>
-					<?php if ($staff['staff_id'] === $staff_id) { ?>
-						<option value="<?php echo $staff['staff_id']; ?>" <?php echo set_select('assigned_staff', $staff['staff_id'], TRUE); ?> ><?php echo $staff['staff_name']; ?></option>
-					<?php } else { ?>
-						<option value="<?php echo $staff['staff_id']; ?>" <?php echo set_select('assigned_staff', $staff['staff_id']); ?> ><?php echo $staff['staff_name']; ?></option>
-					<?php } ?>
-					<?php } ?>
-					</select></td>
-				</tr>    	
+					<td><b>Notify Customer:</b></td>
+					<td><input type="checkbox" name="notify" value="1" /></td>
+				</tr>
+			</table>
+			<br /><br />
+			
+			<h2>History</h2>
+			<table height="auto" class="list" id="history">
+				<tr>
+					<th>Date/Time</th>
+					<th>Status</th>
+					<th>Staff</th>
+					<th class="center">Customer Notified</th>
+					<th class="left" width="25%">Comment</th>
+				</tr>
+				<?php if ($status_history) { ?>
+				<?php foreach ($status_history as $history) { ?>
+				<tr>
+					<td><?php echo $history['date_time']; ?></td>
+					<td><?php echo $history['status_name']; ?></td>
+					<td><?php echo $history['staff_name']; ?></td>
+					<td class="center"><?php echo ($history['notify'] === '1') ? 'Yes' : 'No'; ?></td>
+					<td class="left"><?php echo $history['comment']; ?></td>
+				</tr>
+				<?php } ?>
+				<?php } else { ?>
+				<tr>
+					<td colspan="5" align="center"><?php echo $text_empty; ?></td>
+				</tr>
+				<?php } ?>
 			</table>
 		</div>
 
@@ -96,37 +133,21 @@
 				</tr>
 				<tr>
 					<td><b>Address:</b></td>
-					<td><address><?php echo $location_address_1; ?>, <?php echo $location_city; ?>, <?php echo $location_postcode; ?>, <?php echo $location_country; ?></address></td>
+					<td><address><?php echo $location_address; ?></address></td>
 				</tr>
 			</table>
 		</div>
 
-		<div id="customer" class="wrap_content" style="display:none;">
+		<?php if ($check_order_type === '1') { ?>
+		<div id="delivery-address" class="wrap_content" style="display:none;">
 			<table class="form">
 				<tr>
-					<td><b>Name:</b></td>
-					<td><?php echo $first_name; ?> <?php echo $last_name; ?></td>
-				</tr>
-				<tr>
-					<td><b>Email:</b></td>
-					<td><?php echo $email; ?></td>
-				</tr>
-				<tr>
-					<td><b>Telephone:</b></td>
-					<td><?php echo $telephone; ?></td>
-				</tr>
-				<?php if ($order_type === '1') { ?>
-				<tr>
 					<td><b>Address:</b></td>
-					<td><address><?php echo $address_1; ?>, <?php echo $address_2; ?>, <?php echo $city; ?> <?php echo $postcode; ?> <?php echo $country; ?></address></td>
+					<td><address><?php echo $customer_address; ?></address></td>
 				</tr>    	
-				<?php } ?>
-				<tr>
-					<td><b>Comment:</b></td>
-					<td><?php echo $comment; ?></td>
-				</tr>
 			</table>
 		</div>
+		<?php } ?>
 
 		<div id="payment" class="wrap_content" style="display:none;">
 			<table class="form">
@@ -134,15 +155,15 @@
 					<td><b>Payment Method:</b></td>
 					<td><?php echo $payment; ?>
 					<?php if ($paypal_details) { ?>
-					<a class="view_details">View Transaction Details</a><br />
-					<div class="paypal_details" style="display:none"><table>
-					<?php foreach ($paypal_details as $key => $value) { ?>
-					<tr>
-						<td><?php echo $key; ?></td>
-						<td><?php echo $value; ?></td>
-					</tr>
-					<?php } ?>
-					</table></div>
+						<a class="view_details">View Transaction Details</a><br />
+						<div class="paypal_details" style="display:none"><table>
+						<?php foreach ($paypal_details as $key => $value) { ?>
+							<tr>
+								<td><?php echo $key; ?></td>
+								<td><?php echo $value; ?></td>
+							</tr>
+						<?php } ?>
+						</table></div>
 					<?php } ?>
 					</td>
 				</tr>    	
@@ -152,29 +173,35 @@
 		<div id="menus" class="wrap_content" style="display:none;">
 			<table height="auto" class="list">
 				<tr>
+					<th width="1"></th>
 					<th class="food_name" width="25%">Name/Options</th>
-					<th width="25%">Price</th>
-					<th width="25%">Quantity</th>
-					<th width="25%">Sub Total</th>
+					<th class="center">Price</th>
+					<th width="25%">Total</th>
 				</tr>
 				<?php foreach ($cart_items as $cart_item) { ?>
 				<tr id="<?php echo $cart_item['id']; ?>">
+					<td width="1"><?php echo $cart_item['qty']; ?>x</td>
 					<td class="food_name"><?php echo $cart_item['name']; ?><br />
 					<?php if (!empty($cart_item['options'])) { ?>
-					<?php foreach ($cart_item['options'] as $option_name => $option_value) { ?>
-						<div><font size="1"><strong><?php echo $option_name; ?>:</strong> <?php echo $option_value; ?> </font></div>
-					<?php } ?>
+						<div><font size="1">+ <?php echo $cart_item['options']['name']; ?>: <?php echo $cart_item['options']['price']; ?> </font></div>
 					<?php } ?>
 					</td>
-					<td><?php echo $cart_item['price']; ?></td>
-					<td><?php echo $cart_item['qty']; ?></td>
+					<td class="center"><?php echo $cart_item['price']; ?></td>
 					<td><?php echo $cart_item['subtotal']; ?></td>
 				</tr>
 				<?php } ?>
+				<?php foreach ($totals as $total) { ?>
 				<tr>
-					<td><b>TOTAL</b></td>
+					<td width="1"></td>
 					<td></td>
+					<td class="center"><b><?php echo $total['title']; ?></b></td>
+					<td><b><?php echo $total['value']; ?></b></td>
+				</tr>    	
+				<?php } ?>
+				<tr>
+					<td width="1"></td>
 					<td></td>
+					<td class="center"><b>TOTAL</b></td>
 					<td><b><?php echo $order_total; ?></b></td>
 				</tr>    	
 			</table>

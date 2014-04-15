@@ -26,35 +26,6 @@ $.fn.tabs = function() {
 	$(this).first().click();
 };
 
-function searchLocal() {
-	
-	var postcode = $('input[name=\'postcode\']').val();
-
-	$.ajax({
-		url: js_site_url + 'main/local_module/distance',
-		type: 'post',
-		data: 'postcode=' + postcode,
-		dataType: 'json',
-		success: function(json) {
-			$('#notification p').remove();
-
-			if(json['redirect']) {
-				window.location.href = json['redirect'];
-			}
-					
-			if (json['error']) {
-				$('#notification').html(json['error']);
-			
-				$('.error').fadeIn('slow');
-							
-				$('html, body').animate({ scrollTop: 0 }, 'slow'); 
-			}
-		
-			$('#local-info').load(js_site_url + 'main/local_module #local-info > *');
-		}
-	});
-}
-
 function addToCart(menu_id) {
 	
 	var menu_options = $('#' + menu_id).find('input:checked').val();
@@ -77,7 +48,7 @@ function addToCart(menu_id) {
 			
 				$('.error').fadeIn('slow');
 							
-				$('html, body').animate({ scrollTop: 0 }, 'slow'); 
+				//$('html, body').animate({ scrollTop: 0 }, 'slow'); 
 			}
 		
 			if (json['success']) {
@@ -85,7 +56,7 @@ function addToCart(menu_id) {
 			
 				$('.success').fadeIn('slow');
 							
-				$('html, body').animate({ scrollTop: 0 }, 'slow'); 
+				//$('html, body').animate({ scrollTop: 0 }, 'slow'); 
 			}	
 
 			$('#cart-info').load(js_site_url + 'main/cart_module #cart-info > *');
@@ -93,9 +64,9 @@ function addToCart(menu_id) {
 	});
 }
 
-function updateCart(menu_id, row_id) {
+function updateCart(menu_id, row_id, quantity) {
 
-	var quantity = $('#' + row_id).find('select').val();
+	var quantity = '0';
 
 	$.ajax({
 		url: js_site_url + 'main/cart_module/update',
@@ -114,7 +85,7 @@ function updateCart(menu_id, row_id) {
 			
 				$('.error').fadeIn('slow');
 
-				$('html, body').animate({ scrollTop: 0 }, 'slow'); 
+				//$('html, body').animate({ scrollTop: 0 }, 'slow'); 
 			}
 		
 			if (json['success']) {
@@ -122,7 +93,7 @@ function updateCart(menu_id, row_id) {
 			
 				$('.success').fadeIn('slow');
 			
-				$('html, body').animate({ scrollTop: 0 }, 'slow'); 
+				//$('html, body').animate({ scrollTop: 0 }, 'slow'); 
 			}	
 
 			$('#cart-info').load(js_site_url + 'main/cart_module #cart-info > *');
@@ -218,49 +189,21 @@ function addReview(formID) {
 		data: 'menu_id=' + menu_id + '&customer_id=' + customer_id + '&customer_name=' + customer_name + '&rating_id=' + rating_id + '&review_text=' + review_text,
 		dataType: 'json',
 		success: function(json) {
-			//$(formID).remove('select');
-			//$('#review-notification .error, #review-notification .success').remove();
-
 
 			if (json['error']) {
 				$('#review-notification').html('<p class="error" style="display: none;">' + json['error'] + '</p>');
 			
 				$('.error').fadeIn('slow');
-			
-				$('html, body').animate({ scrollTop: 0 }, 'slow'); 
-
 			}
 			
 			if (json['success']) {
-				$('#review-box').html('<p class="success">' + json['success'] + '</p>');
-			
-				$('#review-box').fadeIn(1000).delay(3000).fadeOut(1500, function() {
-					$('#opaclayer').hide().css('opacity','1');
+				$('#review-notification').html('<p class="success" style="display: none;">' + json['success'] + '</p>');
+				$('#review-box table, #review-box .buttons').empty();
+				$('.success').fadeIn('slow').delay(3000).fadeOut(1500, function() {
+					//jQuery('#cboxClose').click();
+					$.colorbox.close();
 				});				
 			}	
 		}
-	});
-}
-
-function openReviewBox(menu_id) {
-	$('#review-box').load(js_site_url + 'menus/write_review?menu_id=' + menu_id + ' #write-review > *');
-	var opaclayerHeight = $(document).height();
-	var opaclayerWidth = $(window).width();
-	$('#opaclayer').css('height', opaclayerHeight);
-	$('#opaclayer').css('width', opaclayerWidth);
-	var winH = $(window).height();
-	var winW = $(window).width();
-	$('#review-box').css('top',  winH/2-$('#review-box').height()/2);
-	$('#review-box').css('left', winW/2-$('#review-box').width()/2);				
-	$('#opaclayer').fadeTo(500,0.8);
-	$('#review-box').fadeIn(500);
-}
-
-function closeReviewBox() {
-	$('#opaclayer').fadeOut(500, function() {
-		$('#opaclayer').hide().css('opacity','1');
-	});
-	$('#review-box').fadeOut(500, function() {
-		$('#review-box').hide();
 	});
 }

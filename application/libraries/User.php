@@ -6,8 +6,8 @@ class User {
 	private $staff_id;
 	private $permissions = array();
 	private $staff_name;
-	private $department;
-	private $department_id;
+	private $staff_group;
+	private $staff_group_id;
 	private $location_id;
 	private $location_name;
 	
@@ -23,7 +23,7 @@ class User {
 	
 			$this->CI->db->from('users');	
 			$this->CI->db->join('staffs', 'staffs.staff_id = users.staff_id', 'left');
-			$this->CI->db->join('departments', 'departments.department_id = staffs.staff_department', 'left');
+			$this->CI->db->join('staff_groups', 'staff_groups.staff_group_id = staffs.staff_group_id', 'left');
 			$this->CI->db->join('locations', 'locations.location_id = staffs.staff_location', 'left');
 
 			$this->CI->db->where('user_id', $this->CI->session->userdata('user_id'));
@@ -42,8 +42,8 @@ class User {
 				$this->CI->location_id 		= $row['location_id'];
 				$this->CI->location_name 	= $row['location_name'];
 
-				$this->CI->department_id 	= $row['department_id'];
-				$this->CI->department 		= $row['department_name'];
+				$this->CI->staff_group_id 	= $row['staff_group_id'];
+				$this->CI->staff_group 		= $row['staff_group_name'];
 			
 				if (!empty($row['permission'])) {
 					$permission = unserialize($row['permission']);
@@ -60,7 +60,7 @@ class User {
 			}
 		}
 		
-		if ($this->CI->session->userdata('staff_department')) { 
+		if ($this->CI->session->userdata('staff_group')) { 
 
 		
 		}
@@ -104,7 +104,7 @@ class User {
   	public function logout() {		
 		$sess_admin_data = array(
 			'user_id' 			=> '',
-			'staff_department'	=> '',
+			'staff_group'	=> '',
 			'username' 			=> ''
 		);
 		
@@ -142,12 +142,12 @@ class User {
     	return $this->CI->location_name;
   	}	
 
-  	public function department() {
-    	return $this->CI->department;
+  	public function staffGroup() {
+    	return $this->CI->staff_group;
   	}	
 
-  	public function getDepartmentId() {
-    	return $this->CI->department_id;
+  	public function getStaffGroupId() {
+    	return $this->CI->staff_group_id;
   	}	
 
   	public function getPaths() {

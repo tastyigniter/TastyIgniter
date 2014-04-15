@@ -1,22 +1,7 @@
-<div class="right-section">
-	<div id="table-box">
-	<h3>Your Reservation</h3>
-	<ul class="table_details">
-		<li><b>Location:</b> <?php echo $location; ?></li>
-		<li><b>Guest:</b> <?php echo $guest_num; ?></li>
-		<li><b>Date:</b> <?php echo $date; ?></li>
-		<li><b>Time:</b> <?php echo $time; ?></li>
-		<li><b>Occasion:</b> <?php echo $occasions[$occasion]; ?></li>
-	</ul>
-	</div>
-	<div class="buttons">
-		<div class="left"><a href="<?php echo site_url('find/table'); ?>"><?php echo $button_find_again; ?></a></div>
-	</div>
-</div>
 <div class="content">
-	<div class="wrap">
+<div class="img_inner">
 	<h3><?php echo $text_reservation_msg; ?></h3>
-	<form method="post" accept-charset="utf-8" action="<?php echo $action; ?>" id="reserve-form">
+	<form method="POST" accept-charset="utf-8" action="<?php echo current_url(); ?>" id="reserve-form">
     <table border="0" cellpadding="2" width="100%" id="personal-details">
   		<tr>
     		<td colspan="2"><?php echo $text_login_register; ?></td>
@@ -59,10 +44,7 @@
     	</tr>
 	</table>
 	</form>
-	</div>
-	<div class="buttons">
-		<div class="right"><a class="button" onclick="reserveTable(); return false"><?php echo $button_reservation; ?></a></div>
-	</div>	
+</div>
 </div>
 <script type="text/javascript" src="<?php echo base_url("assets/js/jquery-ui-timepicker-addon.js"); ?>"></script> 
 <script type="text/javascript"><!--

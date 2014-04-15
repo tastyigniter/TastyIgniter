@@ -10,6 +10,10 @@ class Categories extends CI_Controller {
 
 	public function index() {
 			
+		if (!file_exists(APPPATH .'views/admin/categories.php')) {
+			show_404();
+		}
+			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -79,6 +83,10 @@ class Categories extends CI_Controller {
 
 	public function edit() {
 
+		if (!file_exists(APPPATH .'views/admin/categories_edit.php')) {
+			show_404();
+		}
+			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -136,32 +144,20 @@ class Categories extends CI_Controller {
 									
     	if (!$this->user->hasPermissions('modify', 'admin/categories')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
   			return TRUE;
     	
-    	} else if ( ! $this->input->get('id')) { 
-
-			//validate category value
-			$this->form_validation->set_rules('category_name', 'Category Name', 'trim|required|min_length[2]|max_length[32]');
-			$this->form_validation->set_rules('category_description', 'Category Description', 'trim|min_length[2]|max_length[1028]');
-
-			if ($this->form_validation->run() === TRUE) {
-			
-				$category_name = $this->input->post('category_name');
-				$category_description = $this->input->post('category_description');
-					
-				if ($this->Menus_model->addCategory($category_name, $category_description)) {	
+    	} else if ( ! $this->input->get('id') AND $this->validateForm() === TRUE) { 
+			$category_name = $this->input->post('category_name');
+			$category_description = $this->input->post('category_description');
 				
-					$this->session->set_flashdata('alert', '<p class="success">Category Added Sucessfully!</p>');
-				
-				} else {
-
-					$this->session->set_flashdata('alert', '<p class="warning">Nothing Added!</p>');
-
-				}
-				
-				return TRUE;
+			if ($this->Menus_model->addCategory($category_name, $category_description)) {	
+				$this->session->set_flashdata('alert', '<p class="success">Category Added Sucessfully!</p>');
+			} else {
+				$this->session->set_flashdata('alert', '<p class="warning">Nothing Added!</p>');
 			}
+			
+			return TRUE;
 		}
 	}	
 	
@@ -169,55 +165,55 @@ class Categories extends CI_Controller {
 
     	if (!$this->user->hasPermissions('modify', 'admin/categories')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
   			return TRUE;
     	
-    	} else if ($this->input->get('id')) { 
-		
-			$this->form_validation->set_rules('category_name', 'Category Name', 'trim|required|min_length[2]|max_length[32]');
-			$this->form_validation->set_rules('category_description', 'Category Description', 'trim|min_length[2]|max_length[1028]');
+    	} else if ($this->input->get('id') AND $this->validateForm() === TRUE) { 
+			$category_id			= $this->input->get('id');
+			$category_name 			= $this->input->post('category_name');
+			$category_description 	= $this->input->post('category_description');
+			
+			if ($this->Menus_model->updateCategory($category_id, $category_name, $category_description)) {				
 
-	  		if ($this->form_validation->run() === TRUE) {
+				$this->session->set_flashdata('alert', '<p class="success">Category Updated Sucessfully!</p>');
+			} else {
 
-				$category_id			= $this->input->get('id');
-				$category_name 			= $this->input->post('category_name');
-				$category_description 	= $this->input->post('category_description');
-				
-				if ($this->Menus_model->updateCategory($category_id, $category_name, $category_description)) {				
+				$this->session->set_flashdata('alert', '<p class="warning">Nothing Added!</p>');
 
-					$this->session->set_flashdata('alert', '<p class="success">Category Updated Sucessfully!</p>');
-				} else {
-
-					$this->session->set_flashdata('alert', '<p class="warning">Nothing Added!</p>');
-
-				}
-				
-				return TRUE;
 			}
+			
+			return TRUE;
 		}
 	}
 
 	public function _deleteCategory() {
     	if (!$this->user->hasPermissions('modify', 'admin/categories')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
     	
     	} else { 
-		
 			if (is_array($this->input->post('delete'))) {
-
-				//sorting the post array to rowid and qty.
 				foreach ($this->input->post('delete') as $key => $value) {
 					$category_id = $value;
-				
 					$this->Menus_model->deleteCategory($category_id);
 				}			
 			
 				$this->session->set_flashdata('alert', '<p class="success">Category(s) Deleted Sucessfully!</p>');
-
 			}
 		}
 				
 		return TRUE;
+	}
+
+	public function validateForm() {
+		//validate category value
+		$this->form_validation->set_rules('category_name', 'Category Name', 'trim|required|min_length[2]|max_length[32]');
+		$this->form_validation->set_rules('category_description', 'Category Description', 'trim|min_length[2]|max_length[1028]');
+
+		if ($this->form_validation->run() === TRUE) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}		
 	}
 }

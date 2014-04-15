@@ -7,11 +7,11 @@
 </head>
 <body>
 <div class="setup_box">
-	<h1>TastyIgniter</h1>
+	<h1>TastyIgniter - Setup</h1>
 	<div class="content">
 	<h2>Server Requirements</h2>
-	<p>Welcome to TastyIgniter! Any question listed below must be resolved before the installation can continue.</p>
-	<?php echo $alert; ?>
+	<p>Welcome to TastyIgniter! <br />Any question listed below must be resolved before the installation can continue.</p>
+	<div id="notification"><?php echo $alert; ?></div><br />
 	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" />
 	<table align="" class="list">
 		<tr>
@@ -43,6 +43,11 @@
 			<td class="first">cURL:</td>
 			<td><?php echo $curl_installed; ?></td>
 			<td><?php echo $curl_status; ?></td>
+		</tr>
+		<tr>
+			<td class="first">GD/GD2:</td>
+			<td><?php echo $gd_installed; ?></td>
+			<td><?php echo $gd_status; ?></td>
 		</tr>
 		<?php foreach ($writables as $writable) { ?>
 		<tr>

@@ -11,6 +11,10 @@ class Tables extends CI_Controller {
 
 	public function index() {
 			
+		if (!file_exists(APPPATH .'views/admin/tables.php')) {
+			show_404();
+		}
+			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -83,6 +87,10 @@ class Tables extends CI_Controller {
 
 	public function edit() {
 		
+		if (!file_exists(APPPATH .'views/admin/tables_edit.php')) {
+			show_404();
+		}
+			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -168,39 +176,25 @@ class Tables extends CI_Controller {
 									
     	if (!$this->user->hasPermissions('modify', 'admin/tables')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
 			return TRUE;
     	
-    	} else if ( ! $this->input->get('id')) { 
-					
-			//form validation
-			$this->form_validation->set_rules('table_name', 'Table Name', 'trim|required');
-			$this->form_validation->set_rules('min_capacity', 'Table Minimum', 'trim|required|integer|greater_than[1]');
-			$this->form_validation->set_rules('max_capacity', 'Table Capacity', 'trim|required|integer');
-			$this->form_validation->set_rules('table_status', 'Table Status', 'trim|required|integer');
-
-			//if validation is true
-  			if ($this->form_validation->run() === TRUE) {
-  		    	$add = array();
-  		    	
-  		    	//Sanitizing the POST values
-				$add['table_name'] 	= $this->input->post('table_name');
-				$add['min_capacity'] 	= $this->input->post('min_capacity');
-				$add['max_capacity'] = $this->input->post('max_capacity');
-				$add['table_status'] 	= $this->input->post('table_status');
-				
-				if ($this->Tables_model->addTable($add)) {
-				
-					$this->session->set_flashdata('alert', '<p class="success">Table Added Sucessfully!</p>');
-				
-				} else {
-				
-					$this->session->set_flashdata('alert', '<p class="warning">Nothing Added!</p>');				
-				
-				}
-				
-				return TRUE;
+    	} else if ( ! $this->input->get('id') AND $this->validateForm() === TRUE) { 
+			$add = array();
+			
+			//Sanitizing the POST values
+			$add['table_name'] 	= $this->input->post('table_name');
+			$add['min_capacity'] 	= $this->input->post('min_capacity');
+			$add['max_capacity'] = $this->input->post('max_capacity');
+			$add['table_status'] 	= $this->input->post('table_status');
+			
+			if ($this->Tables_model->addTable($add)) {
+				$this->session->set_flashdata('alert', '<p class="success">Table Added Sucessfully!</p>');
+			} else {
+				$this->session->set_flashdata('alert', '<p class="warning">Nothing Added!</p>');				
 			}
+			
+			return TRUE;
 		}	
 	}
 
@@ -208,56 +202,38 @@ class Tables extends CI_Controller {
 						
     	if (!$this->user->hasPermissions('modify', 'admin/tables')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
 			return TRUE;
     	
-    	} else if ($this->input->get('id')) { 
+    	} else if ($this->input->get('id') AND $this->validateForm() === TRUE) { 
+			$update = array();
 			
-			$this->form_validation->set_rules('table_name', 'Table Name', 'trim|required');
-			$this->form_validation->set_rules('min_capacity', 'Table Minimum', 'trim|required|integer|greater_than[1]');
-			$this->form_validation->set_rules('max_capacity', 'Table Capacity', 'trim|required|integer');
-			$this->form_validation->set_rules('table_status', 'Table Status', 'trim|required|integer');
-
-			if ($this->form_validation->run() === TRUE) {
-  		    	$update = array();
-				
-				//Sanitizing the POST values
-				$update['table_id'] 		= $this->input->get('id');
-				$update['table_name'] 		= $this->input->post('table_name');
-				$update['min_capacity'] 	= $this->input->post('min_capacity');
-				$update['max_capacity'] 	= $this->input->post('max_capacity');
-				$update['table_status'] 	= $this->input->post('table_status');
-				
-				if ($this->Tables_model->updateTable($update)) {						
-				
-					$this->session->set_flashdata('alert', '<p class="success">Table Updated Sucessfully!</p>');
-				
-				} else {
-				
-					$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
-				
-				}
-				
-				return TRUE;
+			$update['table_id'] 		= $this->input->get('id');
+			$update['table_name'] 		= $this->input->post('table_name');
+			$update['min_capacity'] 	= $this->input->post('min_capacity');
+			$update['max_capacity'] 	= $this->input->post('max_capacity');
+			$update['table_status'] 	= $this->input->post('table_status');
+			
+			if ($this->Tables_model->updateTable($update)) {						
+				$this->session->set_flashdata('alert', '<p class="success">Table Updated Sucessfully!</p>');
+			} else {
+				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
 			}
+			
+			return TRUE;
 		}
 	}
 
 	public function _deleteTable() {
     	if (!$this->user->hasPermissions('modify', 'admin/tables')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to modify!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
     	
     	} else { 
-		
 			if (is_array($this->input->post('delete'))) {
-
-				//sorting the post[quantity] array to rowid and qty.
 				foreach ($this->input->post('delete') as $key => $value) {
 					$table_id = $value;
-				
 					$this->Tables_model->deleteTable($table_id);
-			
 				}			
 			
 				$this->session->set_flashdata('alert', '<p class="success">Table(s) Deleted Sucessfully!</p>');
@@ -265,5 +241,18 @@ class Tables extends CI_Controller {
 		}
 				
 		return TRUE;
+	}
+	
+	public function validateForm() {
+		$this->form_validation->set_rules('table_name', 'Table Name', 'trim|required');
+		$this->form_validation->set_rules('min_capacity', 'Table Minimum', 'trim|required|integer|greater_than[1]');
+		$this->form_validation->set_rules('max_capacity', 'Table Capacity', 'trim|required|integer');
+		$this->form_validation->set_rules('table_status', 'Table Status', 'trim|required|integer');
+
+		if ($this->form_validation->run() === TRUE) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
 	}
 }

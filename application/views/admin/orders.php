@@ -8,11 +8,9 @@
 			<th>Location</th>
 			<th>Customer Name</th>
 			<th>Status</th>
-			<th>Assigned Staff</th>
 			<th>Type</th>
 			<th class="center">Ready Time</th>
 			<th class="center">Date Added</th>
-			<th class="right">Date Modified</th>
 			<th class="right">Action</th>
 		</tr>
 		<?php if ($orders) { ?>
@@ -23,11 +21,9 @@
 			<td><?php echo $order['location_name']; ?></td>
 			<td><?php echo $order['first_name'] .' '. $order['last_name']; ?></td>
 			<td><?php echo $order['order_status']; ?></td>
-			<td><?php echo $order['staff_name'] ? $order['staff_name'] : 'NONE'; ?></td>
 			<td><?php echo $order['order_type']; ?></td>
 			<td class="center"><?php echo $order['order_time']; ?></td>
 			<td class="center"><?php echo $order['date_added']; ?></td>
-			<td class="right"><?php echo $order['date_modified']; ?></td>
 			<td class="right"><a class="edit" title="Edit" href="<?php echo $order['edit']; ?>"></a></td>
 		</tr>
 		<?php } ?>

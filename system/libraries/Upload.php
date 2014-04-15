@@ -140,7 +140,7 @@ class CI_Upload {
 	 *
 	 * @return	bool
 	 */
-	public function do_upload($field = 'userfile')
+	public function do_upload($field = 'file')
 	{
 
 	// Is $_FILES[$field] set? If not, no reason to continue.

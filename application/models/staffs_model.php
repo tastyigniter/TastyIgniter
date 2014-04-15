@@ -15,11 +15,12 @@ class Staffs_model extends CI_Model {
 		}
 		
         if ($this->db->limit($filter['limit'], $filter['page'])) {	
-			$this->db->select('staffs.staff_id, staff_name, staff_email, departments.department_name, locations.location_name, date_added, staff_status');
+			$this->db->select('staffs.staff_id, staff_name, staff_email, staff_groups.staff_group_name, locations.location_name, date_added, staff_status');
 			$this->db->from('staffs');
 			$this->db->join('users', 'users.staff_id = staffs.staff_id', 'left');
-			$this->db->join('departments', 'departments.department_id = staffs.staff_department', 'left');
+			$this->db->join('staff_groups', 'staff_groups.staff_group_id = staffs.staff_group_id', 'left');
 			$this->db->join('locations', 'locations.location_id = staffs.staff_location', 'left');
+			$this->db->order_by('staffs.date_added', 'DESC');
 
 			$query = $this->db->get();
 			$result = array();
@@ -35,7 +36,7 @@ class Staffs_model extends CI_Model {
 	public function getStaffs() {
 		$this->db->from('staffs');
 		$this->db->join('users', 'users.staff_id = staffs.staff_id', 'left');
-		$this->db->join('departments', 'departments.department_id = staffs.staff_department', 'left');
+		$this->db->join('staff_groups', 'staff_groups.staff_group_id = staffs.staff_group_id', 'left');
 		$this->db->join('locations', 'locations.location_id = staffs.staff_location', 'left');
 
 		$this->db->where('staff_status', '1');
@@ -86,8 +87,8 @@ class Staffs_model extends CI_Model {
 			$this->db->set('staff_email', strtolower($update['staff_email']));
 		}
 
-		if (!empty($update['staff_department'])) {
-			$this->db->set('staff_department', $update['staff_department']);
+		if (!empty($update['staff_group_id'])) {
+			$this->db->set('staff_group_id', $update['staff_group_id']);
 		}
 
 		if (!empty($update['staff_location'])) {
@@ -138,8 +139,8 @@ class Staffs_model extends CI_Model {
 			$this->db->set('staff_email', strtolower($add['staff_email']));
 		}
 
-		if (!empty($add['staff_department'])) {
-			$this->db->set('staff_department', $add['staff_department']);
+		if (!empty($add['staff_group_id'])) {
+			$this->db->set('staff_group_id', $add['staff_group_id']);
 		}
 
 		if (!empty($add['staff_location'])) {

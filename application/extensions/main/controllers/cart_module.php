@@ -13,14 +13,14 @@ class Cart_module extends MX_Controller {
 	public function index() {
 		$this->lang->load('main/cart_module');  														// loads language file
 		
-		if ( !file_exists(APPPATH .'/extensions/main/views/cart_module.php')) { 								//check if file exists in views folder
+		if ( !file_exists(EXTPATH .'main/views/cart_module.php')) { 								//check if file exists in views folder
 			show_404(); 																		// Whoops, show 404 error page!
 		}
 			
-		if ($this->session->flashdata('alert')) {
-			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
+		if ($this->session->flashdata('cart_alert')) {
+			$data['cart_alert'] = $this->session->flashdata('cart_alert');  								// retrieve session flashdata variable if available
 		} else {
-			$data['alert'] = '';
+			$data['cart_alert'] = '';
 		}
 
 		if ($this->session->userdata('cart_alert')) {
@@ -58,37 +58,42 @@ class Cart_module extends MX_Controller {
 
     	if ($this->cart->contents()) {															// checks if cart contents is not empty
 
-      		foreach ($this->cart->contents() as $cart_results) {								// loop through items in cart
-				$menu_data = $this->Cart_model->getMenu($cart_results['id']);				// get menu data based on cart item id from getMenu method in Menus model
+      		foreach ($this->cart->contents() as $cart_item) {								// loop through items in cart
+				$menu_data = $this->Cart_model->getMenu($cart_item['id']);				// get menu data based on cart item id from getMenu method in Menus model
  				
  				if (!$menu_data) {
 					$data['cart_alert'] = '<p class="error">Menu Unavailable, please try again.</p>';
  					$cart_status = FALSE; 				
  				} else if ($menu_data['stock_qty'] <= 0) {												// checks if stock quantity is less than or equal to zero
-					$data['cart_alert'] = '<p class="error">'. $cart_results['name'] .' is currently out of stock</p>';
+					$data['cart_alert'] = '<p class="error">'. $cart_item['name'] .' is currently out of stock</p>';
  					$cart_status = FALSE;
- 				} else if ($cart_results['qty'] < $menu_data['minimum_qty']) {									// checks if stock quantity is less than or equal to zero
-					$data['cart_alert'] = $cart_results['name'] .' minimum quantity is ' .$menu_data['minimum_qty'];							// display error		
+ 				} else if ($cart_item['qty'] < $menu_data['minimum_qty']) {									// checks if stock quantity is less than or equal to zero
+					$data['cart_alert'] = $cart_item['name'] .' minimum quantity is ' .$menu_data['minimum_qty'];							// display error		
  					$cart_status = FALSE;
- 				//} else if (($cart_results['price'] !== $menu_data['menu_price']) OR ($cart_results['price'] !== $menu_data['special_price'])) {								// checks if stock quantity is less than or equal to zero
-				//	$data['cart_alert'] = '<p class="error">Menu Unavailable, please try again.</p>';
- 				//	$cart_status = FALSE; 				
 				} else {				
  					$cart_status = TRUE;
 				}
 				
+				$cart_options = array();
+				if ($this->cart->has_options($cart_item['rowid']) == TRUE) {
+					$option = $this->cart->product_options($cart_item['rowid']);
+					$menu_option = $this->Cart_model->getMenuOption($option['option_id']);			// get menu option data based on menu option id from getMenuOption method in Menus model
+					$cart_options = array('name' => $menu_option['option_name'], 'price' => $this->currency->format($menu_option['option_price']));
+				}
+
 				if ($cart_status === TRUE) {
 					$data['cart_items'][] = array(													// load menu data into array
-						'key'				=> $cart_results['rowid'],
-						'menu_id' 			=> $cart_results['id'],
-						'name' 				=> $cart_results['name'],			
-						'price' 			=> $this->currency->format($cart_results['price']),		//add currency symbol and format item price to two decimal places
-						'qty' 				=> $cart_results['qty'],
-						'sub_total' 		=> $this->currency->format($cart_results['subtotal']) 	//add currency symbol and format item subtotal to two decimal places
+						'rowid'				=> $cart_item['rowid'],
+						'menu_id' 			=> $cart_item['id'],
+						'name' 				=> (strlen($cart_item['name']) > 20) ? substr($cart_item['name'], 0, 20) .'...' : $cart_item['name'],			
+						'price' 			=> $this->currency->format($cart_item['price']),		//add currency symbol and format item price to two decimal places
+						'qty' 				=> $cart_item['qty'],
+						'sub_total' 		=> $this->currency->format($cart_item['subtotal']), 	//add currency symbol and format item subtotal to two decimal places
+						'options' 			=> $cart_options
 					);
 				} else {
 
-					$this->cart->update(array('rowid' => $cart_results['rowid'], 'qty' => '0'));										// pass the cart_data array to add item to cart, if successful				
+					$this->cart->update(array('rowid' => $cart_item['rowid'], 'qty' => '0'));										// pass the cart_data array to add item to cart, if successful				
 				}
 			}
 			
@@ -101,7 +106,7 @@ class Cart_module extends MX_Controller {
 				$data['delivery'] = ($this->cart->delivery()) ? $this->currency->format($this->cart->delivery()) : FALSE;
 			}
 			
-			$data['coupon_code'] = (isset($this->session->userdata['coupon'])) ? $this->session->userdata('coupon') : '';
+			$data['coupon_code'] = ($this->session->userdata('coupon_code')) ? $this->session->userdata('coupon_code') : '';
 		
 			$this->load->model('Coupons_model'); 														// load the coupons model
 			$coupon = $this->Coupons_model->checkCoupon($data['coupon_code']);
@@ -132,32 +137,38 @@ class Cart_module extends MX_Controller {
 		if ( ! $this->input->is_ajax_request()) {
 			$error = 1;
 		}
-						
-		if ($this->input->post('menu_id')) {
+		
+		$quantity = 1;				
+		$update_cart = FALSE;
+		if ($this->input->post('menu_id') OR $this->input->post('menu_options')) {
 			$menu_id 			= $this->input->post('menu_id');									// retrieve $_POST menu_id value
 			$menu_option_id 	= $this->input->post('menu_options');								// retrieve $_POST menu_options value
 			$menu_data 			= $this->Cart_model->getMenu($menu_id);								// get menu data based on menu id from getMenu method in Menus model
 			$menu_option_data 	= $this->Cart_model->getMenuOption($menu_option_id);			// get menu option data based on menu option id from getMenuOption method in Menus model
+		
+			if ($this->cart->contents()) {
+				foreach ($this->cart->contents() as $cart_item) {								// loop through items in cart
+					$cart_option_id = (!empty($cart_item['options']['option_id'])) ? $cart_item['options']['option_id'] : '';					
+					$menu_option_id = ($menu_option_id === 'undefined') ? '' : $menu_option_id;					
+					if ($cart_item['id'] === $menu_id AND $cart_option_id === $menu_option_id) {
+						$row_id = $cart_item['rowid'];
+						$quantity = $cart_item['qty'] + 1;
+						$update_cart = TRUE;
+					}
+				}
+			}
 		} else {
 			$error = 2;
 		}
 		
-		if ( ! $this->location->local()) { 														// if local restaurant is not selected
+		if ( ! $this->location->local() AND $this->config->item('location_order') === '1') { 														// if local restaurant is not selected
 			$error = 3;
-		} else if ($this->config->item('allow_order') === '0' && ! $this->location->isOpened()) { 											// else if local restaurant is not open
+		} else if ( ! $this->location->isOpened()) { 											// else if local restaurant is not open
 			$error = 4;
 		}
-		
-		$quantity = $this->input->post('quantity');
-		
-		if ($menu_data && $quantity) {														// checks if json and menu data array is not empty
-			if ($quantity < $menu_data['minimum_qty']) {									// checks if stock quantity is less than or equal to zero
-				$error = 5;
-			}
-		
-			if ($menu_data['stock_qty'] <= 0) {												// checks if stock quantity is less than or equal to zero
-				$error = 6;
-			}
+	
+		if ($menu_data['stock_qty'] <= 0) {												// checks if stock quantity is less than or equal to zero
+			$error = 6;
 		}
 		
 		switch ($error) {
@@ -183,24 +194,29 @@ class Cart_module extends MX_Controller {
 			if ( ! $json) {															// checks if menu option data if available
 				$menu_options = array();
 				if ($menu_option_data) {															// checks if menu option data if available
-					$menu_options = array('With' => $menu_option_data['option_name'] . ': ' . $this->currency->format($menu_option_data['option_price']));
-					$menu_price = $menu_option_data['option_price']+$menu_data['menu_price'];
+					$menu_options = array('option_id' => $menu_option_data['option_id']); //array('name' => $menu_option_data['option_name'], 'price' => $this->currency->format($menu_option_data['option_price'])));
+					$menu_price = $menu_option_data['option_price'] + $menu_data['menu_price'];
 				} else if ($menu_data['is_special'] === '1') {											// else if special_price is empty			
 					$menu_price = $menu_data['special_price'];			
 				} else {
 					$menu_price = $menu_data['menu_price'];			
 				}
 		
-				$cart_data = array(																// create an array of item to be added to cart with id, name, qty, price and options as keys
-					'id'     		=> $menu_id,
-					'name'   		=> $menu_data['menu_name'],
-					'qty'    		=> ($quantity) ? $quantity : 1,
-					'price'  		=> $this->cart->format_number($menu_price),
-					'options' 		=> $menu_options
-				);
+				if ($update_cart === TRUE) {
+					$this->cart->update(array('rowid' => $row_id, 'qty' => $quantity));										// pass the cart_data array to add item to cart, if successful				
+					$json['success'] = 'Success: Cart Updated Successfully.';						// display success message
+				} else {
+					$cart_data = array(																// create an array of item to be added to cart with id, name, qty, price and options as keys
+						'id'     		=> $menu_id,
+						'name'   		=> $menu_data['menu_name'],
+						'qty'    		=> ($quantity) ? $quantity : $menu_data['minimum_qty'],
+						'price'  		=> $this->cart->format_number($menu_price),
+						'options' 		=> $menu_options
+					);
 			
-				$added_data = $this->cart->insert($cart_data);
-				$json['success'] = 'Success: Menu as been added to cart.';					// display success message
+					$added_data = $this->cart->insert($cart_data);
+					$json['success'] = 'Success: Menu as been added to cart.';					// display success message
+				}
 			}
 			break;
 		default:
@@ -243,6 +259,7 @@ class Cart_module extends MX_Controller {
 		$json = array();
 		
 		$code = $this->input->post('code');	
+		$this->session->unset_userdata('coupon_code');			
 
 		$this->load->model('Coupons_model'); 														// load the coupons model
 		$coupon = $this->Coupons_model->checkCoupon($code);
@@ -250,21 +267,15 @@ class Cart_module extends MX_Controller {
 		if ($coupon && !$json) {
 
 			if ($coupon['min_total'] > $this->cart->total()) {
-			
 				$json['error'] = 'Coupon can not be applied to orders below '. $coupon['min_total'];
-			
 			} else if ($this->cart->set_coupon($coupon['type'], $coupon['discount'])) {		
-				
-				$this->session->set_userdata('coupon', $code);
-		
+				$this->session->set_userdata('coupon_code', $code);
 				$json['success'] = 'Success: Coupon Applied Successfully.';							// display success message
 			} else {
 				$json['error'] = 'Error: Invalid or Expired Coupon Entered.';						// display success message		
-				$this->session->unset_userdata('coupon');			
 			}
 		} else {
 			$json['error'] = 'Error: Invalid or Expired Coupon Entered.';						// display success message		
-			$this->session->unset_userdata('coupon');
 		}
 
 		$this->output->set_output(json_encode($json));											// encode the json array and set final out to be sent to jQuery AJAX

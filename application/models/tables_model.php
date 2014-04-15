@@ -73,6 +73,27 @@ class Tables_model extends CI_Model {
 		return $location_tables;
 	}
 
+	public function getTotalSeatsByLocation($location_id = FALSE) {
+		$result = 0;
+
+		$this->db->select_sum('tables.max_capacity', 'total_seats');
+		
+		if (!empty($location_id)) {
+			$this->db->where('location_id', $location_id);
+		}
+
+		$this->db->from('location_tables');
+		$this->db->join('tables', 'tables.table_id = location_tables.table_id', 'left');
+	
+		$query = $this->db->get();
+		if ($query->num_rows() > 0) {
+			$row = $query->row_array();
+			$result = $row['total_seats'];
+		}
+	
+		return $result;
+	}
+	
 	public function getAutoComplete($filter_data = array()) {
 		if (is_array($filter_data) && !empty($filter_data)) {
 

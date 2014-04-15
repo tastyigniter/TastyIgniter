@@ -18,7 +18,7 @@
  * NOTE: If you change these, also change the error_reporting() code below
  *
  */
-	define('ENVIRONMENT', 'development');
+	define('ENVIRONMENT', 'production');
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING
@@ -115,7 +115,7 @@ if (defined('ENVIRONMENT'))
 |
 */
 
-date_default_timezone_set('Europe/London');
+//date_default_timezone_set('Europe/London');
 
 /*
  * -------------------------------------------------------------------
@@ -187,9 +187,11 @@ date_default_timezone_set('Europe/London');
 	// Name of the "system folder"
 	define('SYSDIR', trim(strrchr(trim(BASEPATH, '/'), '/'), '/'));
 
-	// Name of the "extensions folder"
-	define('EXTPATH', $application_folder .'/extensions');
+	// Path to the extensions folder
+	define('EXTPATH', $application_folder .'/extensions/');
 
+	// Path to the images folder"
+	define('IMAGEPATH', realpath('assets/img/') .'/');
 
 	// The path to the "application" folder
 	if (is_dir($application_folder))

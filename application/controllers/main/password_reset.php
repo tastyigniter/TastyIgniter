@@ -12,6 +12,10 @@ class Password_reset extends MX_Controller {
 	public function index() {
 		$this->lang->load('main/password_reset');  												// loads language file
 		
+		if (!file_exists(APPPATH .'views/main/password_reset.php')) {
+			show_404();
+		}
+			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
@@ -75,8 +79,8 @@ class Password_reset extends MX_Controller {
 
 		if ($this->input->server('REQUEST_METHOD') === 'POST') {
 			
-			if ($this->_resetPassword()) { 
-				
+			if ($this->_resetPassword() === TRUE) { 
+				redirect('account/login');
 			}
 				
 		}
@@ -130,7 +134,7 @@ class Password_reset extends MX_Controller {
 				
 				if ($reset_password) {													// checks if password reset was sucessful then display success message and delete customer_id_to_reset from session userdata
 					$this->session->set_flashdata('alert', $this->lang->line('text_reset_success'));
-					redirect('account/login');		
+					return TRUE;		
 				}		
 
 				redirect('main/password_reset');												// redirect to password reset page

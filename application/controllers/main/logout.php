@@ -6,6 +6,10 @@ class Logout extends MX_Controller {
 		$this->load->library('customer');
 		$this->lang->load('main/login_register');  												// loads language file
 
+		if (!file_exists(APPPATH .'views/main/logout.php')) {
+			show_404();
+		}
+			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
 		} else {
@@ -17,6 +21,12 @@ class Logout extends MX_Controller {
 
 		$this->customer->logout();
 		
+		$regions = array(
+			'main/header',
+			'main/footer'
+		);
+		
+		$this->template->regions($regions);
 		$this->template->load('main/logout', $data);
 	}
 }

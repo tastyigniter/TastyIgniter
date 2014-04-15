@@ -5,7 +5,7 @@ class Account_module extends MX_Controller {
 	public function index() {
 		$this->lang->load('main/account_module');  														// loads language file
 		
-		if ( !file_exists(APPPATH .'/extensions/main/views/account_module.php')) { 								//check if file exists in views folder
+		if ( !file_exists(EXTPATH .'main/views/account_module.php')) { 							//check if file exists in views folder
 			show_404(); 																		// Whoops, show 404 error page!
 		}
 			
@@ -25,11 +25,12 @@ class Account_module extends MX_Controller {
 		$inbox_total = $this->Messages_model->getMainInboxTotal();					// retrieve total number of customer messages from getMainInboxTotal method in Messages model
 
 		// START of retrieving lines from language file to pass to view.
-		$data['text_order_now'] 		= $this->lang->line('text_order_now');
+		$data['text_account'] 			= $this->lang->line('text_account');
 		$data['text_edit_details'] 		= $this->lang->line('text_edit_details');
 		$data['text_address'] 			= $this->lang->line('text_address');
 		$data['text_orders'] 			= $this->lang->line('text_orders');
 		$data['text_reservations'] 		= $this->lang->line('text_reservations');
+		$data['text_reviews'] 			= $this->lang->line('text_reviews');
 		$data['text_inbox'] 			= sprintf($this->lang->line('text_inbox'), $inbox_total);
 		$data['text_logout'] 			= $this->lang->line('text_logout');
 

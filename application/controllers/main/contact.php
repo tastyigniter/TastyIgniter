@@ -12,6 +12,10 @@ class Contact extends MX_Controller {
 	public function index() {
 		$this->lang->load('main/contact');  													// loads home language file
 					
+		if (!file_exists(APPPATH .'views/main/contact.php')) {
+			show_404();
+		}
+			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert'); 								// retrieve session flashdata variable if available
 		} else {
@@ -31,7 +35,7 @@ class Contact extends MX_Controller {
 		$data['text_find'] 				= $this->lang->line('text_find');
 		$data['text_reviews'] 			= $this->lang->line('text_reviews');
 		$data['text_opening_hours'] 	= $this->lang->line('text_opening_hours');
-		$data['text_close'] 			= $this->lang->line('text_close');
+		$data['text_open'] 				= $this->lang->line('text_open');
 		$data['entry_subject'] 			= $this->lang->line('entry_subject');
 		$data['entry_full_name'] 		= $this->lang->line('entry_full_name');
 		$data['entry_email'] 			= $this->lang->line('entry_email');
@@ -51,7 +55,7 @@ class Contact extends MX_Controller {
 			//$data['distance'] 			= number_format($this->location->distance(),2) .' '. $this->lang->line('text_miles'); //format diatance to 2 decimal place
 		}
 		
-		$data['opening_hours'] = $this->location->openingHours(); 								//retrieve local location opening hours from location library
+		$data['opening_hours'] = $this->location->getOpeningHours(); 								//retrieve local location opening hours from location library
 		
 		if ($this->location->isOpened()) { 														// check if local location is open
 			$data['text_open_or_close'] = $this->lang->line('text_opened');						// display we are open

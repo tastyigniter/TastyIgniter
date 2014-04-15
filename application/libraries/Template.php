@@ -8,11 +8,14 @@ class Template {
 		$this->CI =& get_instance();
 	}
     
+	public function regions($regions = array()) {
+		
+		if (is_array($regions)) {
+			$this->regions = $regions;
+		}
+	}
+	
     public function load($template_name, $vars = array(), $return = FALSE) {
-
-        //if (!file_exists('application/views/' . $template_name . '.php')) {
-        //	show_error('Error: Could not load view file '. $template_name .'!');
-        //}
 
 		$content = '';
 		
@@ -37,13 +40,6 @@ class Template {
         return $content;
     }
 
-	public function regions($regions = array()) {
-		
-		if (is_array($regions)) {
-			$this->regions = $regions;
-		}
-	}
-	
 	public function fetch($filename) {
 		$file = APPPATH .'controllers/'. $filename .'.php';
     

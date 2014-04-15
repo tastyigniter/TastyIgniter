@@ -46,6 +46,10 @@
     		</select></td>
 		</tr>
 		<tr>
+    		<td><b>Order Total:</b></td>
+            <td><input type="text" name="paypal_total" value="<?php echo $paypal_total; ?>" /></td>
+		</tr>
+		<tr>
     		<td><b>Order Status:</b><br />
     		<font size="1">Default order status when paypal is the payment method</font></td>
     		<td><select name="paypal_order_status">
