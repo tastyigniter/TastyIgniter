@@ -332,6 +332,7 @@ class Setup extends CI_Controller {
 				$db_file = str_replace('$db[\'default\'][\'password\'] = \'\'', '$db[\'default\'][\'password\'] = \'' . $db_pass . '\'', $db_file);
 				$db_file = str_replace('$db[\'default\'][\'database\'] = \'\'', '$db[\'default\'][\'database\'] = \'' . $db_name . '\'', $db_file);
 				$db_file = str_replace('$db[\'default\'][\'dbprefix\'] = \'\'', '$db[\'default\'][\'dbprefix\'] = \'' . $db_prefix . '\'', $db_file);
+				$db_file = str_replace('$db[\'default\'][\'db_debug\'] = \'FALSE\'', '$db[\'default\'][\'db_debug\'] = \'TRUE\'', $db_file);
 
        	 		$error = 0;
        	 		
