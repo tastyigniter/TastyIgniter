@@ -9,13 +9,10 @@ class Customers extends CI_Controller {
 		$this->load->model('Countries_model');
 		$this->load->model('Security_questions_model');
 		$this->load->model('Locations_model');
+		$this->load->model('Activity_model');
 	}
 
 	public function index() {
-			
-		if (!file_exists(APPPATH .'views/admin/customers.php')) {
-			show_404();
-		}
 			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
@@ -31,21 +28,73 @@ class Customers extends CI_Controller {
 			$data['alert'] = '';
 		}
 
+		$url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
 			$filter['page'] = (int) $this->input->get('page');
 		} else {
-			$filter['page'] = 1;
+			$filter['page'] = '';
 		}
 		
 		if ($this->config->item('page_limit')) {
 			$filter['limit'] = $this->config->item('page_limit');
 		}
 				
+		if ($this->input->get('filter_search')) {
+			$filter['filter_search'] = $this->input->get('filter_search');
+			$data['filter_search'] = $filter['filter_search'];
+			$url .= 'filter_search='.$filter['filter_search'].'&';
+		} else {
+			$data['filter_search'] = '';
+		}
+		
+		if ($this->input->get('filter_date')) {
+			$filter['filter_date'] = $this->input->get('filter_date');
+			$data['filter_date'] = $filter['filter_date'];
+			$url .= 'filter_date='.$filter['filter_date'].'&';
+		} else {
+			$filter['filter_date'] = '';
+			$data['filter_date'] = '';
+		}
+		
+		if (is_numeric($this->input->get('filter_status'))) {
+			$filter['filter_status'] = $this->input->get('filter_status');
+			$data['filter_status'] = $filter['filter_status'];
+			$url .= 'filter_status='.$filter['filter_status'].'&';
+		} else {
+			$filter['filter_status'] = '';
+			$data['filter_status'] = '';
+		}
+		
+		if ($this->input->get('sort_by')) {
+			$filter['sort_by'] = $this->input->get('sort_by');
+			$data['sort_by'] = $filter['sort_by'];
+		} else {
+			$filter['sort_by'] = '';
+			$data['sort_by'] = '';
+		}
+		
+		if ($this->input->get('order_by')) {
+			$filter['order_by'] = $this->input->get('order_by');
+			$data['order_by_active'] = strtolower($this->input->get('order_by')) .' active';
+			$data['order_by'] = strtolower($this->input->get('order_by'));
+		} else {
+			$filter['order_by'] = '';
+			$data['order_by_active'] = '';
+			$data['order_by'] = 'desc';
+		}
+		
 		$data['heading'] 			= 'Customers';
-		$data['sub_menu_add'] 		= 'Add new customer';
-		$data['sub_menu_delete'] 	= 'Delete';
+		$data['button_add'] 		= 'New';
+		$data['button_delete'] 		= 'Delete';
 		$data['text_empty'] 		= 'There are no customers available.';
+
+		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'DESC') ? 'ASC' : 'DESC';
+		$data['sort_first'] 		= site_url('admin/customers'.$url.'sort_by=first_name&order_by='.$order_by);
+		$data['sort_last'] 			= site_url('admin/customers'.$url.'sort_by=last_name&order_by='.$order_by);
+		$data['sort_email'] 		= site_url('admin/customers'.$url.'sort_by=email&order_by='.$order_by);
+		$data['sort_date'] 			= site_url('admin/customers'.$url.'sort_by=date_added&order_by='.$order_by);
+		$data['sort_id'] 			= site_url('admin/customers'.$url.'sort_by=customer_id&order_by='.$order_by);
 
 		$data['customers'] = array();
 		$results = $this->Customers_model->getList($filter);
@@ -59,7 +108,7 @@ class Customers extends CI_Controller {
 				'telephone' 		=> $result['telephone'],
 				'date_added' 		=> mdate('%d %M %y', strtotime($result['date_added'])),
 				'status' 			=> ($result['status'] === '1') ? 'Enabled' : 'Disabled',
-				'edit' 				=> $this->config->site_url('admin/customers/edit?id=' . $result['customer_id'])
+				'edit' 				=> site_url('admin/customers/edit?id=' . $result['customer_id'])
 			);
 		}
 
@@ -82,10 +131,22 @@ class Customers extends CI_Controller {
 			);
 		}
 
-		$config['base_url'] 		= $this->config->site_url('admin/customers');
-		$config['total_rows'] 		= $this->Customers_model->record_count();
+		$data['customer_dates'] = array();
+		$customer_dates = $this->Customers_model->getCustomerDates();
+		foreach ($customer_dates as $customer_date) {
+			$month_year = '';
+			$month_year = $customer_date['year'].'-'.$customer_date['month'];
+			$data['customer_dates'][$month_year] = mdate('%F %Y', strtotime($customer_date['date_added']));
+		}
+
+		if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+			$url .= 'sort_by='.$filter['sort_by'].'&';
+			$url .= 'order_by='.$filter['order_by'].'&';
+		}
+		
+		$config['base_url'] 		= site_url('admin/customers').$url;
+		$config['total_rows'] 		= $this->Customers_model->record_count($filter);
 		$config['per_page'] 		= $filter['limit'];
-		$config['num_links'] 		= round($config['total_rows'] / $config['per_page']);
 		
 		$this->pagination->initialize($config);
 		
@@ -99,22 +160,17 @@ class Customers extends CI_Controller {
 			redirect('admin/customers');  			
 		}	
 
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/customers', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'customers.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'customers', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'customers', $regions, $data);
+		}
 	}
 	
 	public function edit() {
 		$this->load->model('Orders_model');
 		
-		if (!file_exists(APPPATH .'views/admin/customers_edit.php')) {
-			show_404();
-		}
-			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -138,22 +194,25 @@ class Customers extends CI_Controller {
 		
 		if ($this->config->item('page_limit')) {
 			$orders_filter['limit'] = $this->config->item('page_limit');
+		} else {
+			$orders_filter['limit'] = '';
 		}
 				
 		if (is_numeric($this->input->get('id'))) {
 			$customer_id = $this->input->get('id');
-			$data['action']	= $this->config->site_url('admin/customers/edit?id='. $customer_id);
+			$data['action']	= site_url('admin/customers/edit?id='. $customer_id);
 			$orders_filter['customer_id'] = $this->input->get('id');
 		} else {
 		    $customer_id = 0;
-			$data['action']	= $this->config->site_url('admin/customers/edit');
-			$orders_filter['customer_id'] = '';
+			$data['action']	= site_url('admin/customers/edit');
+			$orders_filter['customer_id'] = 0;
 		}
 		
 		$customer_info = $this->Customers_model->getCustomer($customer_id);
 		$data['heading'] 			= 'Customers - '. $customer_info['first_name'] .' '. $customer_info['last_name'];
-		$data['sub_menu_save'] 		= 'Save';
-		$data['sub_menu_back'] 		= $this->config->site_url('admin/customers');
+		$data['button_save'] 		= 'Save';
+		$data['button_save_close'] 	= 'Save & Close';
+		$data['sub_menu_back'] 		= site_url('admin/customers');
 		$data['text_empty'] 		= 'There are no order available for this customer.';
 		$data['text_empty_activity'] = 'This customer has no recent activity.';
 	
@@ -171,6 +230,25 @@ class Customers extends CI_Controller {
 			$data['addresses'] 			= $this->Customers_model->getCustomerAddresses($customer_id);
 		}
 		
+		$data['questions'] = array();
+		$results = $this->Security_questions_model->getQuestions();
+		foreach ($results as $result) {
+			$data['questions'][] = array(
+				'id'	=> $result['question_id'],
+				'text'	=> $result['text']
+			);
+		}
+
+		$data['country_id'] = $this->config->item('country_id');
+		$data['countries'] = array();
+		$results = $this->Countries_model->getCountries(); 										// retrieve countries array from getCountries method in locations model
+		foreach ($results as $result) {															// loop through crountries array
+			$data['countries'][] = array( 														// create array of countries data to pass to view
+				'country_id'	=>	$result['country_id'],
+				'name'			=>	$result['country_name'],
+			);
+		}
+
 		$results = $this->Orders_model->getCustomerOrders($orders_filter);
 		$data['orders'] = array();
 		foreach ($results as $result) {					
@@ -192,14 +270,13 @@ class Customers extends CI_Controller {
 				'order_time'		=> mdate('%H:%i', strtotime($result['order_time'])),
 				'order_status'		=> $result['status_name'],
 				'date_added'		=> $date_added,
-				'edit' 				=> $this->config->site_url('admin/orders/edit?id=' . $result['order_id'])
+				'edit' 				=> site_url('admin/orders/edit?id=' . $result['order_id'])
 			);
 		}
 			
-		$config['base_url'] 		= $this->config->site_url('admin/customers/edit?id='. $customer_id);
+		$config['base_url'] 		= site_url('admin/customers/edit'.'?id='. $customer_id .'&');
 		$config['total_rows'] 		= $this->Orders_model->customer_record_count($orders_filter);
 		$config['per_page'] 		= $orders_filter['limit'];
-		$config['num_links'] 		= round($config['total_rows'] / $config['per_page']);
 		
 		$this->pagination->initialize($config);
 				
@@ -208,36 +285,19 @@ class Customers extends CI_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		$data['questions'] = array();
-		$results = $this->Security_questions_model->getQuestions();
-		foreach ($results as $result) {
-			$data['questions'][] = array(
-				'id'	=> $result['question_id'],
-				'text'	=> $result['text']
-			);
-		}
-
-		$data['country_id'] = $this->config->item('country_id');
-		$data['countries'] = array();
-		$results = $this->Countries_model->getCountries(); 										// retrieve countries array from getCountries method in locations model
-		foreach ($results as $result) {															// loop through crountries array
-			$data['countries'][] = array( 														// create array of countries data to pass to view
-				'country_id'	=>	$result['country_id'],
-				'name'			=>	$result['country_name'],
-			);
-		}
-
-		$activities = $this->Customers_model->getCustomerActivities($customer_id);
+		$activities = $this->Activity_model->getCustomerActivities($customer_id);
 		$data['activities'] = array();
-		foreach ($activities as $activity) {					
+		foreach ($activities as $activity) {
 			$data['activities'][] = array(
 				'activity_id'		=> $activity['activity_id'],
+				'ip_address' 		=> $activity['ip_address'],
+				'customer_name'		=> ($activity['customer_id']) ? $activity['first_name'] .' '. $activity['last_name'] : 'Guest',
 				'access_type'		=> ucwords($activity['access_type']),
 				'browser'			=> $activity['browser'],
-				'country_name'		=> $activity['country_name'],
-				'ip_address' 		=> $activity['ip_address'],
-				'date_time'			=> mdate('%d %M %y - %H:%i', strtotime($activity['date_added'])),
-				'blacklist' 		=> $this->config->site_url('admin/customers/blacklist?id=' . $activity['activity_id'])
+				'request_uri'		=> (!empty($activity['request_uri'])) ? $activity['request_uri'] : '--',
+				'referrer_uri'		=> (!empty($activity['referrer_uri'])) ? $activity['referrer_uri'] : '--',
+				'date_added'		=> mdate('%d %M %y - %H:%i', strtotime($activity['date_added'])),
+				'blacklist' 		=> site_url('admin/customers_activity/blacklist?ip=' . $activity['ip_address'])
 			);
 		}
 			
@@ -246,16 +306,19 @@ class Customers extends CI_Controller {
 		}
 
 		if ($this->input->post() && $this->_updateCustomer($data['email']) === TRUE) {
-			redirect('admin/customers');
+			if ($this->input->post('save_close') === '1') {
+				redirect('admin/customers');
+			}
+			
+			redirect('admin/customers/edit?id='. $customer_id);
 		}
 		
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/customers_edit', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'customers_edit.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'customers_edit', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'customers_edit', $regions, $data);
+		}
 	}
 
 	public function autocomplete() {
@@ -285,7 +348,7 @@ class Customers extends CI_Controller {
 	public function _addCustomer() {
 						
     	if ( ! $this->user->hasPermissions('modify', 'admin/customers')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add!</p>');
   			return TRUE;
     	} else if ( ! $this->input->get('id') AND $this->validateForm() === TRUE) {
 			$add = array();
@@ -316,7 +379,7 @@ class Customers extends CI_Controller {
 	public function _updateCustomer($customer_email) {
 						
     	if ( ! $this->user->hasPermissions('modify', 'admin/customers')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
   			return TRUE;
     	} else if ($this->input->get('id') AND $this->validateForm($customer_email) === TRUE) {
 			$update = array();
@@ -351,7 +414,7 @@ class Customers extends CI_Controller {
 	public function _deleteCustomer($customer_id = FALSE) {
     	if (!$this->user->hasPermissions('modify', 'admin/menus')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
     	
     	} else { 
 			if (is_array($this->input->post('delete'))) {
@@ -368,29 +431,29 @@ class Customers extends CI_Controller {
 	}
 	
 	public function validateForm($customer_email = FALSE) {
-		$this->form_validation->set_rules('first_name', 'First Name', 'trim|required|min_length[2]|max_length[12]');
-		$this->form_validation->set_rules('last_name', 'First Name', 'trim|required|min_length[2]|max_length[12]');
+		$this->form_validation->set_rules('first_name', 'First Name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
+		$this->form_validation->set_rules('last_name', 'First Name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
 
 		if ($customer_email !== $this->input->post('email')) {
-			$this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|max_length[96]|is_unique[customers.email]');
+			$this->form_validation->set_rules('email', 'Email', 'xss_clean|trim|required|valid_email|max_length[96]|is_unique[customers.email]');
 		}
 
 		if ($this->input->post('password')) {
-			$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[6]|max_length[32]|matches[confirm_password]');
-			$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'trim|required|md5');
+			$this->form_validation->set_rules('password', 'Password', 'xss_clean|trim|required|min_length[6]|max_length[32]|matches[confirm_password]');
+			$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'xss_clean|trim|required|md5');
 		}
 		
-		$this->form_validation->set_rules('telephone', 'Telephone', 'trim|required|integer');
-		$this->form_validation->set_rules('security_question', 'Security Question', 'required|integer');
-		$this->form_validation->set_rules('security_answer', 'Security Answer', 'required|min_length[2]');
-		$this->form_validation->set_rules('status', 'Status', 'trim|required|integer');
+		$this->form_validation->set_rules('telephone', 'Telephone', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('security_question', 'Security Question', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('security_answer', 'Security Answer', 'xss_clean|trim|required|min_length[2]');
+		$this->form_validation->set_rules('status', 'Status', 'xss_clean|trim|required|integer');
 
 		if ($this->input->post('address')) {
 			foreach ($this->input->post('address') as $key => $value) {
-				$this->form_validation->set_rules('address['.$key.'][address_1]', 'Address 1', 'trim|min_length[3]|max_length[128]');
-				$this->form_validation->set_rules('address['.$key.'][city]', 'City', 'trim|min_length[2]|max_length[128]');
-				$this->form_validation->set_rules('address['.$key.'][postcode]', 'Postcode', 'trim|min_length[2]|max_length[10]');
-				$this->form_validation->set_rules('address['.$key.'][country_id]', 'Country', 'trim|integer');
+				$this->form_validation->set_rules('address['.$key.'][address_1]', 'Address 1 ['.$key.']', 'xss_clean|trim|required|min_length[3]|max_length[128]');
+				$this->form_validation->set_rules('address['.$key.'][city]', 'City ['.$key.']', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+				$this->form_validation->set_rules('address['.$key.'][postcode]', 'Postcode ['.$key.']', 'xss_clean|trim|required|min_length[2]|max_length[10]');
+				$this->form_validation->set_rules('address['.$key.'][country_id]', 'Country ['.$key.']', 'xss_clean|trim|required|integer');
 			}
 		}
 
@@ -401,3 +464,6 @@ class Customers extends CI_Controller {
 		}		
 	}
 }
+
+/* End of file customers.php */
+/* Location: ./application/controllers/admin/customers.php */

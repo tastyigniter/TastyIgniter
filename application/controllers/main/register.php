@@ -11,10 +11,6 @@ class Register extends MX_Controller {
 	public function index() {
 		$this->lang->load('main/login_register');  												// loads language file
 
-		if (!file_exists(APPPATH .'views/main/register.php')) {
-			show_404();
-		}
-			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
@@ -43,7 +39,7 @@ class Register extends MX_Controller {
 		foreach ($results as $result) {															// loop through security questions array
 			$data['questions'][] = array(														// create an array of security questions to pass to view
 				'id'	=> $result['question_id'],
-				'text'	=> $result['question_text']
+				'text'	=> $result['text']
 			);
 		}
 
@@ -54,29 +50,16 @@ class Register extends MX_Controller {
 			redirect('account/login');
 		}
 		
-		$regions = array(
-			'main/header',
-			'main/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('main/register', $data);
+		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'register.php')) {
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'register', $regions, $data);
+		} else {
+			$this->template->render('themes/main/default/', 'register', $regions, $data);
+		}
 	}
 
 	public function _addCustomer() {
-						
-		// START of form validation rules
-		$this->form_validation->set_rules('first_name', 'First Name', 'trim|required|min_length[2]|max_length[12]');
-		$this->form_validation->set_rules('last_name', 'First Name', 'trim|required|min_length[2]|max_length[12]');
-		$this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email|is_unique[customers.email]');
-		$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[6]|max_length[32]|matches[password_confirm]');
-		$this->form_validation->set_rules('password_confirm', 'Password Confirm', 'trim|required');
-		$this->form_validation->set_rules('telephone', 'Telephone', 'trim|required|integer');
-		$this->form_validation->set_rules('security_question', 'Security Question', 'trim|required|integer');
-		$this->form_validation->set_rules('security_answer', 'Security Answer', 'trim|required|min_length[2]');
-		// END of form validation rules
-
-  		if ($this->form_validation->run() === TRUE) {											// checks if form validation routines ran successfully
+		if ($this->validateForm() === TRUE) {			
   			$add = array();
   			
   			// if successful CREATE an array with the following $_POST data values
@@ -92,9 +75,30 @@ class Register extends MX_Controller {
 
 			if (!empty($add)) {																	// checks if add array is not empty
 				$this->Customers_model->addCustomer($add);										// pass add array data to addCustomer method in Customers model then return TRUE
-  				
   				return TRUE;		
 			}
 		}
 	}
+
+	public function validateForm() {
+		// START of form validation rules
+		$this->form_validation->set_rules('first_name', 'First Name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
+		$this->form_validation->set_rules('last_name', 'First Name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
+		$this->form_validation->set_rules('email', 'Email Address', 'xss_clean|trim|required|valid_email|is_unique[customers.email]');
+		$this->form_validation->set_rules('password', 'Password', 'xss_clean|trim|required|min_length[6]|max_length[32]|matches[password_confirm]');
+		$this->form_validation->set_rules('password_confirm', 'Password Confirm', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('telephone', 'Telephone', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('security_question', 'Security Question', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('security_answer', 'Security Answer', 'xss_clean|trim|required|min_length[2]');
+		// END of form validation rules
+
+  		if ($this->form_validation->run() === TRUE) {											// checks if form validation routines ran successfully
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
 }
+
+/* End of file register.php */
+/* Location: ./application/controllers/main/register.php */

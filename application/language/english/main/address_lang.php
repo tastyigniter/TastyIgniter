@@ -23,5 +23,5 @@ $lang['text_deleted_msg'] 			= '<p class="success">Address Deleted Sucessfully!<
 $lang['text_added_msg'] 			= '<p class="success">Address Added/Updated Sucessfully!</p>';
 $lang['text_nothing_msg'] 			= '<p class="warning">Nothing Added/Updated!</p>';
 
-/* End of file home_lang.php */
-/* Location: ./application/language/english/main/home_lang.php */
+/* End of file address_lang.php */
+/* Location: ./application/language/english/main/address_lang.php */

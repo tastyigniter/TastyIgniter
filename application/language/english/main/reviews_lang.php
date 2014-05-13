@@ -3,8 +3,8 @@
 $lang['text_heading'] 			= 'Your previous reviews';
 $lang['text_empty'] 			= 'There are no added review(s).';
 $lang['text_view'] 				= 'View';
-$lang['text_review_heading'] 	= 'Add Review';
 $lang['text_write_review'] 		= 'Write Review';
+$lang['text_view_review'] 		= 'View Review';
 
 $lang['column_order_id'] 		= 'Order ID';
 $lang['column_restaurant'] 		= 'Restaurant';
@@ -28,5 +28,5 @@ $lang['text_rate_success'] 		= 'Success: Menu rated successfully!';
 $lang['text_error'] 			= 'Error occurred, please try again later.';
 $lang['text_no_menu_selected'] 	= 'No menu selected';
 
-/* End of file inbox_lang.php */
-/* Location: ./application/language/english/main/inbox_lang.php */
+/* End of file reviews_lang.php */
+/* Location: ./application/language/english/main/reviews_lang.php */

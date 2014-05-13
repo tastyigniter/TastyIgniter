@@ -13,10 +13,6 @@ class Address extends MX_Controller {
 	public function index() {
 		$this->lang->load('main/address');  													// loads language file
 		
-		if (!file_exists(APPPATH .'views/main/address.php')) {
-			show_404();
-		}
-			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
@@ -43,8 +39,8 @@ class Address extends MX_Controller {
 		$data['button_add'] 			= $this->lang->line('button_add');
 		// END of retrieving lines from language file to pass to view.
 		
-		$data['continue'] 				= $this->config->site_url('account/address/edit');
-		$data['back'] 					= $this->config->site_url('account');
+		$data['continue'] 				= site_url('main/address/edit');
+		$data['back'] 					= site_url('main/account');
 
 		$this->load->library('country');
 		$data['addresses'] = array();		
@@ -55,28 +51,22 @@ class Address extends MX_Controller {
 				$data['addresses'][] = array(													// create array of customer address data to pass to view
 					'address_id'	=> $result['address_id'],
 					'address' 		=> $this->country->addressFormat($result),
-					'edit' 			=> $this->config->site_url('account/address/edit?id=' . $result['address_id'])
+					'edit' 			=> site_url('main/address/edit/'. $result['address_id'])
 				);
 			}
 		}
 		
-		$regions = array(
-			'main/header',
-			'main/content_left',
-			'main/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('main/address', $data);
+		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'address.php')) {
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'address', $regions, $data);
+		} else {
+			$this->template->render('themes/main/default/', 'address', $regions, $data);
+		}
 	}
 
 	public function edit() {																	// method to edit customer address
 		$this->lang->load('main/address');  													// loads language file
 		
-		if ( !file_exists(APPPATH .'/views/main/address_edit.php')) { 						//check if file exists in views folder
-			show_404(); 																		// Whoops, show 404 error page!
-		}
-
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
@@ -89,12 +79,12 @@ class Address extends MX_Controller {
 			$customer_id = $this->customer->getId();
 		}
 
-		if (is_numeric($this->input->get('id'))) {												// retrieve if available and check if fouth uri segment is numeric
-			$address_id = (int)$this->input->get('id');
-			$data['action']	= $this->config->site_url('account/address/edit?id='. $address_id);
+		if (is_numeric($this->uri->segment(4))) {												// retrieve if available and check if fouth uri segment is numeric
+			$address_id = (int)$this->uri->segment(4);
+			$data['action']	= site_url('main/address/edit/'. $address_id);
 		} else {																				// else if customer is logged in retrieve customer id from customer library
 			$address_id = FALSE;
-			$data['action']	= $this->config->site_url('account/address/edit');
+			$data['action']	= site_url('main/address/edit');
 		}
 
 		$this->load->model('Messages_model');													// load the customers model
@@ -116,7 +106,7 @@ class Address extends MX_Controller {
 		$data['button_update'] 			= $this->lang->line('button_update');
 		// END of retrieving lines from language file to pass to view.
 
-		$data['back'] 					= $this->config->site_url('account/address');
+		$data['back'] 					= site_url('main/address');
 		$data['country_id'] 			= $this->config->item('country_id');
 		
 		$data['address'] = array();
@@ -154,28 +144,18 @@ class Address extends MX_Controller {
 			redirect('account/address');
 		}
 
-		$regions = array(
-			'main/header',
-			'main/content_left',
-			'main/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('main/address_edit', $data);
+		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'address_edit.php')) {
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'address_edit', $regions, $data);
+		} else {
+			$this->template->render('themes/main/default/', 'address_edit', $regions, $data);
+		}
 	}
 	
 	public function _updateAddress($address_id = FALSE) {
 		$this->load->library('location'); 														// load the customer library
-		
-		// START of form validation rules
-		$this->form_validation->set_rules('address[address_1]', 'Address 1', 'trim|required|min_length[3]|max_length[128]');
-		$this->form_validation->set_rules('address[address_2]', 'Address 2', 'trim|max_length[128]');
-		$this->form_validation->set_rules('address[city]', 'City', 'trim|required|min_length[2]|max_length[128]');
-		$this->form_validation->set_rules('address[postcode]', 'Postcode', 'trim|required|min_length[2]|max_length[11]|callback_get_lat_lag');
-		$this->form_validation->set_rules('address[country]', 'Country', 'trim|required|integer');
-		// END of form validation rules
 
-  		if ($this->form_validation->run() === TRUE) {											// checks if form validation routines ran successfully
+		if ($this->validateForm() === TRUE) {		
 			$update = array();
 			
 			$customer_id = FALSE;
@@ -195,6 +175,21 @@ class Address extends MX_Controller {
 		}
 	}
 
+	public function validateForm() {
+		// START of form validation rules
+		$this->form_validation->set_rules('address[address_1]', 'Address 1', 'xss_clean|trim|required|min_length[3]|max_length[128]');
+		$this->form_validation->set_rules('address[address_2]', 'Address 2', 'xss_clean|trim|max_length[128]');
+		$this->form_validation->set_rules('address[city]', 'City', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+		$this->form_validation->set_rules('address[postcode]', 'Postcode', 'xss_clean|trim|required|min_length[2]|max_length[11]|callback_get_lat_lag');
+		$this->form_validation->set_rules('address[country]', 'Country', 'xss_clean|trim|required|integer');
+		// END of form validation rules
+
+  		if ($this->form_validation->run() === TRUE) {											// checks if form validation routines ran successfully
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
 	public function get_lat_lag() {
 		if (isset($_POST['address']) && is_array($_POST['address']) && !empty($_POST['address']['postcode'])) {			 
 			$address_string =  implode(", ", $_POST['address']);
@@ -214,3 +209,6 @@ class Address extends MX_Controller {
         }
 	}
 }
+
+/* End of file address.php */
+/* Location: ./application/controllers/main/address.php */

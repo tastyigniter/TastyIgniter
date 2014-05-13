@@ -1,12 +1,22 @@
 <?php
 class Coupons_model extends CI_Model {
 
-	public function __construct() {
-		$this->load->database();
-	}
-	
-    public function record_count() {
-        return $this->db->count_all('coupons');
+    public function record_count($filter = array()) {
+		if (!empty($filter['filter_search'])) {
+			$this->db->like('name', $filter['filter_search']);
+			$this->db->or_like('code', $filter['filter_search']);
+		}
+
+		if (!empty($filter['filter_type'])) {
+			$this->db->where('type', $filter['filter_type']);
+		}
+
+		if (!empty($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
+			$this->db->where('status', $filter['filter_status']);
+		}
+
+		$this->db->from('coupons');
+		return $this->db->count_all_results();
     }
     
 	public function getList($filter = array()) {
@@ -17,6 +27,25 @@ class Coupons_model extends CI_Model {
 		if ($this->db->limit($filter['limit'], $filter['page'])) {
 			$this->db->from('coupons');
 			
+			if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+				$this->db->order_by($filter['sort_by'], $filter['order_by']);
+			} else {
+				$this->db->order_by('coupon_id', 'DESC');
+			}
+			
+			if (!empty($filter['filter_search'])) {
+				$this->db->like('name', $filter['filter_search']);
+				$this->db->or_like('code', $filter['filter_search']);
+			}
+
+			if (!empty($filter['filter_type'])) {
+				$this->db->where('type', $filter['filter_type']);
+			}
+	
+			if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
+				$this->db->where('status', $filter['filter_status']);
+			}
+	
 			$query = $this->db->get();
 			$result = array();
 		
@@ -44,9 +73,38 @@ class Coupons_model extends CI_Model {
 	public function getCoupon($coupon_id) {
 		$this->db->from('coupons');
 		$this->db->where('coupon_id', $coupon_id);
+		
+		$query = $this->db->get();
+
+		if ($query->num_rows() > 0) {
+			return $query->row_array();
+		}
+	}
+
+	public function getCouponByCode($code) {
+		$this->db->from('coupons');
+		$this->db->where('code', $code);
 			
 		$query = $this->db->get();
 		return $query->row_array();
+	}
+
+	public function getCouponHistories($coupon_id) {
+		$this->db->select('*, COUNT('. $this->db->dbprefix('coupons_history.order_id'). ') AS used');
+		$this->db->from('coupons_history');
+		$this->db->join('orders', 'orders.order_id = coupons_history.order_id', 'left');
+
+		$this->db->where('coupons_history.coupon_id', $coupon_id);
+		$this->db->group_by('coupons_history.customer_id'); 
+					
+		$query = $this->db->get();
+		$result = array();
+	
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+	
+		return $result;
 	}
 
 	public function checkCoupon($code) {
@@ -63,6 +121,25 @@ class Coupons_model extends CI_Model {
 			if ($query->num_rows() > 0) {
 				return $query->row_array();
 			}
+		}
+	}
+
+	public function checkCouponHistory($coupon_id) {
+		if (!empty($coupon_id)) {
+			$this->db->where('coupon_id', $coupon_id);
+			$this->db->from('coupons_history');
+		
+			return $this->db->count_all_results();
+		}
+	}
+
+	public function checkCustomerCouponHistory($coupon_id, $customer_id) {
+		if (!empty($coupon_id)) {
+			$this->db->where('coupon_id', $coupon_id);
+			$this->db->where('customer_id', $customer_id);
+			$this->db->from('coupons_history');
+		
+			return $this->db->count_all_results();
 		}
 	}
 
@@ -88,6 +165,18 @@ class Coupons_model extends CI_Model {
 			$this->db->set('min_total', $add['min_total']);
 		}
 		
+		if ($add['redemptions'] > 0) {
+			$this->db->set('redemptions', $add['redemptions']);
+		} else {
+			$this->db->set('redemptions', '0');
+		}
+
+		if ($add['customer_redemptions'] > 0) {
+			$this->db->set('customer_redemptions', $add['customer_redemptions']);
+		} else {
+			$this->db->set('customer_redemptions', '0');
+		}
+
 		if (!empty($add['description'])) {
 			$this->db->set('description', $add['description']);
 		}
@@ -139,6 +228,18 @@ class Coupons_model extends CI_Model {
 			$this->db->set('min_total', $update['min_total']);
 		}
 		
+		if ($update['redemptions'] > 0) {
+			$this->db->set('redemptions', $update['redemptions']);
+		} else {
+			$this->db->set('redemptions', '0');
+		}
+
+		if ($update['customer_redemptions'] > 0) {
+			$this->db->set('customer_redemptions', $update['customer_redemptions']);
+		} else {
+			$this->db->set('customer_redemptions', '0');
+		}
+
 		if (!empty($update['description'])) {
 			$this->db->set('description', $update['description']);
 		}
@@ -181,3 +282,6 @@ class Coupons_model extends CI_Model {
 		}
 	}
 }
+
+/* End of file coupons_model.php */
+/* Location: ./application/models/coupons_model.php */

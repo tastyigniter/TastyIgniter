@@ -15,22 +15,21 @@ class User {
 		$this->CI =& get_instance();
 		$this->CI->load->database();
 		
-		if ( ! $this->CI->session->userdata('user_id')) { 
-	
+		$user_info = $this->CI->session->userdata('user_info');
+
+		if ( ! isset($user_info['user_id']) AND  ! isset($user_info['username'])) { 
 			$this->logout();
-	
 		} else {
 	
 			$this->CI->db->from('users');	
 			$this->CI->db->join('staffs', 'staffs.staff_id = users.staff_id', 'left');
 			$this->CI->db->join('staff_groups', 'staff_groups.staff_group_id = staffs.staff_group_id', 'left');
-			$this->CI->db->join('locations', 'locations.location_id = staffs.staff_location', 'left');
+			$this->CI->db->join('locations', 'locations.location_id = staffs.staff_location_id', 'left');
 
-			$this->CI->db->where('user_id', $this->CI->session->userdata('user_id'));
-			$this->CI->db->where('username', $this->CI->session->userdata('username'));
+			$this->CI->db->where('user_id', $user_info['user_id']);
+			$this->CI->db->where('username', $user_info['username']);
 
 			$query = $this->CI->db->get();
-
 			$row = $query->row_array();
 			
 			if ($query->num_rows() === 1) {
@@ -59,11 +58,6 @@ class User {
 				$this->logout();
 			}
 		}
-		
-		if ($this->CI->session->userdata('staff_group')) { 
-
-		
-		}
 	}
 
 	public function login($user, $password) {
@@ -83,11 +77,12 @@ class User {
 		if ($query->num_rows() === 1) {
 
 			//add login into session
-			$admin_data = array(
+			$user_data = array(
 				'user_id'  			=> $row['user_id'],
 				'username'     		=> $row['username']
 			);
-			$this->CI->session->set_userdata($admin_data);
+			
+			$this->CI->session->set_userdata('user_info', $user_data);
 			
 			$this->CI->user_id 		= $row['user_id'];
 			$this->CI->username 	= $row['username'];
@@ -102,16 +97,16 @@ class User {
 	}
 
   	public function logout() {		
-		$sess_admin_data = array(
-			'user_id' 			=> '',
-			'staff_group'	=> '',
-			'username' 			=> ''
-		);
-		
-		$this->CI->session->unset_userdata($sess_admin_data);
+		$this->CI->session->unset_userdata('user_info');
 
 		$this->CI->user_id = '';
 		$this->CI->username = '';
+		$this->CI->staff_id = '';
+		$this->CI->staff_name = '';
+		$this->CI->staff_group = '';
+		$this->CI->staff_group_id = '';
+		$this->CI->location_id = '';
+		$this->CI->location_name = '';
 	}
 
   	public function isLogged() {
@@ -181,3 +176,8 @@ class User {
 		}
   	}
 }
+
+// END User Class
+
+/* End of file User.php */
+/* Location: ./application/libraries/User.php */

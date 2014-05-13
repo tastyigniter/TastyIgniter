@@ -12,14 +12,16 @@ class Home extends MX_Controller {
 	public function index() {
 		$this->lang->load('main/home');  														// loads home language file
 					
-		if (!file_exists(APPPATH .'views/main/home.php')) {
-			show_404();
-		}
-			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert'); 								// retrieve session flashdata variable if available
 		} else {
 			$data['alert'] = '';
+		}
+
+		if ($this->session->flashdata('local_alert')) {
+			$data['local_alert'] = $this->session->flashdata('local_alert'); 								// retrieve session flashdata variable if available
+		} else {
+			$data['local_alert'] = '';
 		}
 
 		// START of retrieving lines from language file to pass to view.
@@ -35,6 +37,9 @@ class Home extends MX_Controller {
 		$data['text_covered_area'] 		= $this->lang->line('text_covered_area');		
 		$data['button_view_menu'] 		= $this->lang->line('button_view_menu');
 		// END of retrieving lines from language file to send to view.
+
+		$data['local_action']			= site_url('main/local_module/distance');
+		$data['menus_url']				= site_url('main/menus');
 
 		if ($this->config->item('maps_api_key')) {
 			$data['map_key'] = '&key='. $this->config->item('maps_api_key');
@@ -84,42 +89,15 @@ class Home extends MX_Controller {
 			$data['text_collection'] = $this->lang->line('text_collection_n');						// display we are closed
 		}
 		
-		$regions = array(
-			'main/header',
-			'main/content_top',
-			'main/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('main/home', $data);
-	}
-	
-	public function aboutus() {
-		$this->lang->load('main/aboutus');  													// loads home language file
-		
-		if (!file_exists(APPPATH .'views/main/aboutus.php')) {
-			show_404();
-		}
-			
-		if ($this->session->flashdata('alert')) {
-			$data['alert'] = $this->session->flashdata('alert'); 								// retrieve session flashdata variable if available
+		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'home.php')) {
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'home', $regions, $data);
 		} else {
-			$data['alert'] = '';
+			$this->template->render('themes/main/default/', 'home', $regions, $data);
 		}
-
-		// START of retrieving lines from language file to pass to view.
-		$data['text_heading'] 		= $this->lang->line('text_heading');
-		$data['text_description'] 	= $this->lang->line('text_description');
-		// END of retrieving lines from language file to send to view.
-
-		$regions = array(
-			'main/header',
-			'main/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('main/aboutus', $data);
 	}
 }
 
-/* End of file myfile.php */
+
+/* End of file home.php */
+/* Location: ./application/controllers/main/home.php */

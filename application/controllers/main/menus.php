@@ -14,10 +14,6 @@ class Menus extends MX_Controller {
 
 		$this->lang->load('main/menus');  														// loads language file
 
-		if (!file_exists(APPPATH .'views/main/menus.php')) {
-			show_404();
-		}
-			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert'); 								// retrieve session flashdata variable if available
 		} else {
@@ -25,8 +21,8 @@ class Menus extends MX_Controller {
 		}
 
 		$filter = array();
-		if ($this->input->get('category')) {
-			$filter['category_id'] = $this->input->get('category'); 									// retrieve 3rd uri segment else set FALSE if unavailable.
+		if ($this->uri->segment(3)) {
+			$filter['category_id'] = $this->uri->segment(3); 									// retrieve 3rd uri segment else set FALSE if unavailable.
 			$data['category_id'] = $filter['category_id'];	
 		} else {
 			$data['category_id'] = 0;			
@@ -63,7 +59,6 @@ class Menus extends MX_Controller {
 		$data['menus'] = array();		
 		$results = $this->Menus_model->getMainMenus($filter);	 								// retrieve menus array based on category_id if available
 		foreach ($results as $result) {															// loop through menus array
-		
 			if (!empty($result['menu_photo'])) {
 				$menu_photo_src = $this->Image_tool_model->resize($result['menu_photo'], $menu_images_w, $menu_images_h);
 			} else {
@@ -109,10 +104,20 @@ class Menus extends MX_Controller {
 			);
 		}
 
-		$data['button_right'] = '<a class="button" href='. $this->config->site_url("checkout") .'>'. $this->lang->line('button_continue') .'</a>';
+		$data['button_right'] = '<a class="button" href='. site_url("main/checkout") .'>'. $this->lang->line('button_continue') .'</a>';
 
-		$regions = array('main/header', 'main/content_top', 'main/content_left', 'main/content_right', 'main/footer');
-		$this->template->regions($regions);
-		$this->template->load('main/menus', $data);
+		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'menus.php')) {
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'menus', $regions, $data);
+		} else {
+			$this->template->render('themes/main/default/', 'menus', $regions, $data);
+		}
+	}
+
+	public function category() {
+		$this->index();
 	}
 }
+
+/* End of file menus.php */
+/* Location: ./application/controllers/main/menus.php */

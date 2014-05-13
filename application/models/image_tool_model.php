@@ -1,12 +1,12 @@
 <?php
 class Image_tool_model extends CI_Model {
 
-	public function __construct() {
-		$this->load->database();
-	}
-
-	public function resize($img_path, $width, $height) {
+	public function resize($img_path, $width = '', $height = '') {
 		$setting = $this->config->item('image_tool');
+
+		$width = ($width === '') ? $setting['thumb_width'] : $width;
+		$height = ($height === '') ? $setting['thumb_height'] : $height;
+
 		if (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE) {
 			$root_folder = $setting['root_folder'] .'/';
 		} else {
@@ -45,3 +45,6 @@ class Image_tool_model extends CI_Model {
 		return base_url() .'assets/img/'. $new_image;
 	}
 }
+
+/* End of file image_tool_model.php */
+/* Location: ./application/models/image_tool_model.php */

@@ -14,10 +14,6 @@ class Reserve_table extends MX_Controller {
 		$this->load->library('location'); // load the location library
 		$this->lang->load('main/reserve_table');  // loads language file
 		
-		if (!file_exists(APPPATH .'views/main/reserve_table.php')) {
-			show_404();
-		}
-			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
 		} else {
@@ -31,7 +27,7 @@ class Reserve_table extends MX_Controller {
 		$data['text_no_table'] 				= $this->lang->line('text_no_table');
 		$data['text_no_opening'] 			= $this->lang->line('text_no_opening');
 		$data['text_reservation_msg'] 		= $this->lang->line('text_reservation_msg');
-		$data['text_login_register']		= $this->customer->isLogged() ? sprintf($this->lang->line('text_logout'), site_url('account/logout')) : sprintf($this->lang->line('text_login'), site_url('account/login'));
+		$data['text_login_register']		= $this->customer->isLogged() ? sprintf($this->lang->line('text_logout'), site_url('main/logout')) : sprintf($this->lang->line('text_login'), site_url('main/login'));
 		$data['entry_postcode'] 			= $this->lang->line('entry_postcode');
 		$data['entry_no_guest'] 			= $this->lang->line('entry_no_guest');
 		$data['entry_date'] 				= $this->lang->line('entry_date');
@@ -50,8 +46,8 @@ class Reserve_table extends MX_Controller {
 
 		$data['button_right'] 				= '<a class="button" onclick="$(\'#reserve-form\').submit();">'. $this->lang->line('button_reservation') .'</a>';
 
-		$data['action'] 					= $this->config->site_url('reserve/table');
-		$data['continue'] 					= $this->config->site_url('reserve/success');
+		$data['action'] 					= site_url('main/reserve_table');
+		$data['continue'] 					= site_url('main/reserve_table/success');
 		
 		$data['occasions'] = array(
 			'0' => 'not applicable',
@@ -104,24 +100,17 @@ class Reserve_table extends MX_Controller {
 			redirect('reserve/success');		
 		}
 			
-		$regions = array(
-			'main/header',
-			'main/content_right',
-			'main/content_left',
-			'main/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('main/reserve_table', $data);
+		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'reserve_table.php')) {
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'reserve_table', $regions, $data);
+		} else {
+			$this->template->render('themes/main/default/', 'reserve_table', $regions, $data);
+		}
 	}
 
 	public function success() {
 		$this->lang->load('main/reserve_table');  // loads language file
 		
-		if (!file_exists(APPPATH .'views/main/reserve_success.php')) {
-			show_404();
-		}
-			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
 		} else {
@@ -138,34 +127,26 @@ class Reserve_table extends MX_Controller {
 			$data['text_success'] 	= sprintf($this->lang->line('text_success'), $result['location_name'], $guest_num, mdate('%l, %F %j, %Y', strtotime($result['reserve_date'])), mdate('%h:%i %a', strtotime($result['reserve_time'])));
 			$data['text_greetings'] = sprintf($this->lang->line('text_greetings'), $result['first_name'] .' '. $result['last_name']);
 			$data['text_signature'] = sprintf($this->lang->line('text_signature'), $this->config->item('site_name'));
+			$this->session->unset_userdata('reservation');
 		} else {
 			redirect('find/table');
 		}		
 		
-		$regions = array(
-			'main/header',
-			'main/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('main/reserve_success', $data);
+		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'reserve_success.php')) {
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'reserve_success', $regions, $data);
+		} else {
+			$this->template->render('themes/main/default/', 'reserve_success', $regions, $data);
+		}
 	}
 	
 	public function _reserveTable() {
 		
 		$date_format = '%Y-%m-%d';
 		$time_format = '%h:%i';
-		$current_date_time = time();
+		$current_time = time();
 			
-		$this->form_validation->set_rules('first_name', 'First Name', 'trim|required|min_length[2]|max_length[32]');
-		$this->form_validation->set_rules('last_name', 'Last Name', 'trim|required|min_length[2]|max_length[32]');
-		$this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email');
-		$this->form_validation->set_rules('confirm_email', 'Confirm Email Address', 'trim|required|valid_email|matches[email]');
-		$this->form_validation->set_rules('telephone', 'Telephone', 'trim|required|integer');
-		$this->form_validation->set_rules('comment', 'Comment', 'trim|max_length[520]');
-		
-
-  		if ($this->form_validation->run() === TRUE) {
+		if ($this->validateForm() === TRUE) {
 			$data = array();
 		
 			$reservation = $this->session->userdata('reservation');
@@ -184,9 +165,9 @@ class Reserve_table extends MX_Controller {
 				}
 
 				if (strtotime($reservation['reserve_date']) > strtotime($this->location->currentDate())) {
-					$data['reserve_date'] = mdate($date_format, strtotime($reservation['reserve_date']));
-					$data['date_added'] = mdate($date_format, $current_date_time);
-					$data['date_modified'] = mdate($date_format, $current_date_time);
+					$data['reserve_date'] = mdate('%Y-%m-%d', strtotime($reservation['reserve_date']));
+					$data['date_added'] = mdate('%Y-%m-%d', $current_time);
+					$data['date_modified'] = mdate('%Y-%m-%d', $current_time);
 				}
 			
 				if (strtotime($reservation['reserve_time'])) {
@@ -214,7 +195,7 @@ class Reserve_table extends MX_Controller {
 		
 			if (!empty($data)) {
 				$reservation_id = $this->Reservations_model->addReservation($data);
-				$this->input->set_cookie('last_reserve_id', $reservation_id, 300);
+				$this->input->set_cookie('last_reserve_id', $reservation_id, 300, '.'.$_SERVER['HTTP_HOST']);
 				return TRUE;
 			} else {
 				$this->session->set_flashdata('alert', '<p class="warning">An error occured, please find a table again!</p>');
@@ -222,4 +203,22 @@ class Reserve_table extends MX_Controller {
 			}
 		}
 	}
+
+	public function validateForm() {
+		$this->form_validation->set_rules('first_name', 'First Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
+		$this->form_validation->set_rules('last_name', 'Last Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
+		$this->form_validation->set_rules('email', 'Email Address', 'xss_clean|trim|required|valid_email');
+		$this->form_validation->set_rules('confirm_email', 'Confirm Email Address', 'xss_clean|trim|required|valid_email|matches[email]');
+		$this->form_validation->set_rules('telephone', 'Telephone', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('comment', 'Comment', 'xss_clean|trim|max_length[520]');
+		
+  		if ($this->form_validation->run() === TRUE) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
 }
+
+/* End of file reserve_table.php */
+/* Location: ./application/controllers/main/reserve_table.php */

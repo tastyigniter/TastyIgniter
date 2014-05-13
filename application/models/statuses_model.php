@@ -1,14 +1,10 @@
 <?php
 class Statuses_model extends CI_Model {
 
-	public function __construct() {
-		$this->load->database();
-	}
-
 	public function getStatuses($for = FALSE) {
 		$this->db->from('statuses');
 		
-		if ($for !== FALSE) {
+		if (!empty($for)) {
 			$this->db->where('status_for', $for);		
 		}
 		
@@ -28,7 +24,7 @@ class Statuses_model extends CI_Model {
 		$this->db->join('statuses', 'statuses.status_id = status_history.status_id', 'left');
 		$this->db->join('staffs', 'staffs.staff_id = status_history.staff_id', 'left');
 		$this->db->where('order_id', $order_id);		
-		$this->db->where('for', $for);		
+		$this->db->where('status_for', $for);		
 		$this->db->order_by('status_history.date_added', 'DESC');
 
 		$query = $this->db->get();
@@ -68,6 +64,20 @@ class Statuses_model extends CI_Model {
 		}
 	}
 
+	public function getStatusComment($status_id = '') {
+		if ($status_id !== '') {
+			$this->db->from('statuses');
+		
+			$this->db->where('status_id', $status_id);
+			$query = $this->db->get();
+		
+			if ($this->db->affected_rows() > 0) {
+				$row = $query->row_array();
+				return $row['status_comment'];
+			}
+		}
+	}
+	
 	public function updateStatus($status_for = FALSE, $update = array()) {
 		if (!empty($update['status_name'])) {
 			$this->db->set('status_name', $update['status_name']);
@@ -172,3 +182,6 @@ class Statuses_model extends CI_Model {
 		return $this->db->delete('statuses');
 	}
 }
+
+/* End of file statuses_model.php */
+/* Location: ./application/models/statuses_model.php */

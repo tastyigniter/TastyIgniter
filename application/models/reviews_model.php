@@ -1,12 +1,26 @@
 <?php
 class Reviews_model extends CI_Model {
 
-	public function __construct() {
-		$this->load->database();
-	}
+    public function record_count($filter = array()) {
+		if (!empty($filter['filter_search'])) {
+			$this->db->like('author', $filter['filter_search']);
+			$this->db->or_like('location_name', $filter['filter_search']);
+			$this->db->or_like('order_id', $filter['filter_search']);
+		}
 
-    public function record_count() {
-        return $this->db->count_all('reviews');
+		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
+			$this->db->where('review_status', $filter['filter_status']);
+		}
+
+		if (!empty($filter['filter_date'])) {
+			$date = explode('-', $filter['filter_date']);
+			$this->db->where('YEAR(date_added)', $date[0]);
+			$this->db->where('MONTH(date_added)', $date[1]);
+		}
+
+		$this->db->from('reviews');
+		$this->db->join('locations', 'locations.location_id = reviews.location_id', 'left');
+		return $this->db->count_all_results();
     }
 	
 	public function getList($filter = array()) {
@@ -16,9 +30,29 @@ class Reviews_model extends CI_Model {
 		
         if ($this->db->limit($filter['limit'], $filter['page'])) {	
 			$this->db->from('reviews');
-			//$this->db->join('customers', 'customers.customer_id = reviews.customer_id', 'left');
 			$this->db->join('locations', 'locations.location_id = reviews.location_id', 'left');
-			$this->db->order_by('reviews.date_added', 'DESC');
+
+			if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+				$this->db->order_by($filter['sort_by'], $filter['order_by']);
+			} else {
+				$this->db->order_by('reviews.date_added', 'DESC');
+			}
+		
+			if (!empty($filter['filter_search'])) {
+				$this->db->like('author', $filter['filter_search']);
+				$this->db->or_like('location_name', $filter['filter_search']);
+				$this->db->or_like('order_id', $filter['filter_search']);
+			}
+
+			if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
+				$this->db->where('review_status', $filter['filter_status']);
+			}
+	
+			if (!empty($filter['filter_date'])) {
+				$date = explode('-', $filter['filter_date']);
+				$this->db->where('YEAR(date_added)', $date[0]);
+				$this->db->where('MONTH(date_added)', $date[1]);
+			}
 
 			$query = $this->db->get();
 			$result = array();
@@ -61,17 +95,36 @@ class Reviews_model extends CI_Model {
 		}
 	}
 
-	public function getMainReview($review_id, $customer_id) {
+	public function getReviewDates() {
+		$this->db->select('date_added, MONTH(date_added) as month, YEAR(date_added) as year');
 		$this->db->from('reviews');
-		$this->db->join('locations', 'locations.location_id = reviews.location_id', 'left');
-
-		$this->db->where('review_id', $review_id);
-		$this->db->where('customer_id', $customer_id);
-
+		$this->db->group_by('MONTH(date_added)');
+		$this->db->group_by('YEAR(date_added)');
 		$query = $this->db->get();
+		$result = array();
 
 		if ($query->num_rows() > 0) {
-			return $query->row_array();
+			$result = $query->result_array();
+		}
+
+		return $result;
+	}
+	
+	public function getCustomerReview($customer_id, $review_id, $order_id, $location_id) {
+		if (!empty($customer_id) AND !empty($review_id) AND !empty($order_id) AND !empty($location_id)) {
+			$this->db->from('reviews');
+			$this->db->join('locations', 'locations.location_id = reviews.location_id', 'left');
+
+			$this->db->where('customer_id', $customer_id);
+			$this->db->where('review_id', $review_id);
+			$this->db->where('order_id', $order_id);
+			$this->db->where('reviews.location_id', $location_id);
+
+			$query = $this->db->get();
+
+			if ($query->num_rows() > 0) {
+				return $query->row_array();
+			}
 		}
 	}
 
@@ -239,3 +292,6 @@ class Reviews_model extends CI_Model {
 		return $this->db->delete('reviews');
 	}
 }
+
+/* End of file reviews_model.php */
+/* Location: ./application/models/reviews_model.php */

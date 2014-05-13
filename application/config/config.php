@@ -234,7 +234,7 @@ $config['cookie_secure']	= FALSE;
 | COOKIE data is encountered
 |
 */
-$config['global_xss_filtering'] = TRUE;
+$config['global_xss_filtering'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -330,7 +330,7 @@ $config['modules_locations'] = array(APPPATH.'extensions/' => '../extensions/');
 |
 |
 */
-$config['ti_setup'] = '';
+$config['ti_setup'] = 'success';
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */

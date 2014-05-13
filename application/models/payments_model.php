@@ -1,10 +1,6 @@
 <?php
 class Payments_model extends CI_Model {
 
-	public function __construct() {
-		$this->load->database();
-	}
-
 	public function getPayments() {
 		$this->db->from('payments');
 		
@@ -76,18 +72,11 @@ class Payments_model extends CI_Model {
 		}
 	}
 	
-	public function setExpressCheckout() {
-		
-		$order_info = $this->session->userdata('order_details');
-		$cart_items = $this->cart->contents();
-		
+	public function setExpressCheckout($order_info, $cart_items) {
 		if ($cart_items) {
 			
-			if ($this->cart->order_total() > 0) {
-				$nvp_data  = '&PAYMENTREQUEST_0_AMT='. urlencode($this->cart->order_total());
-			}
-			
-			if (!empty($order_info['address_id']) OR !empty($order_info['customer_id'])) {
+			$nvp_data = '';
+			if ($order_info['order_type'] === '1' AND (!empty($order_info['address_id']) OR !empty($order_info['customer_id']))) {
 				
 				$this->load->model('Customers_model');
 				$address = $this->Customers_model->getCustomerAddress($order_info['customer_id'], $order_info['address_id']);
@@ -103,16 +92,16 @@ class Payments_model extends CI_Model {
 			
 			foreach (array_keys($cart_items) as $key => $rowid) {							// loop through cart items to create items name-value pairs data to be sent to paypal
 				foreach ($cart_items as $cart_item) {
-					if (!empty($cart_item['options']['With'])) {
-						$options = $cart_item['options']['With'];
-					} else {
-						$options = '';
-					}
+					if (isset($cart_item['rowid']) AND $rowid === $cart_item['rowid']) {
+						if (!empty($cart_item['options']['option_id'])) {
+							$cart_options = $cart_item['name'] .': '. $this->currency->format($cart_item['price']);
+						} else {
+							$cart_options = '';
+						}
 
-					if ($rowid === $cart_item['rowid']) {
 						$nvp_data .= '&L_PAYMENTREQUEST_0_NUMBER'. $key .'='. urlencode($cart_item['id']);
 						$nvp_data .= '&L_PAYMENTREQUEST_0_NAME'. $key .'='. urlencode($cart_item['name']);
-						$nvp_data .= '&L_PAYMENTREQUEST_0_DESC'. $key .'='. urlencode($options);
+						$nvp_data .= '&L_PAYMENTREQUEST_0_DESC'. $key .'='. urlencode($cart_options);
 						$nvp_data .= '&L_PAYMENTREQUEST_0_QTY'. $key .'='. urlencode($cart_item['qty']);
 						$nvp_data .= '&L_PAYMENTREQUEST_0_AMT'. $key .'='. urlencode($cart_item['price']);
 					}
@@ -121,12 +110,16 @@ class Payments_model extends CI_Model {
 
 			$nvp_data .= '&PAYMENTREQUEST_0_ITEMAMT='. urlencode($this->cart->total());
 			
-			if ($this->cart->delivery()) {
+			if (!empty($this->cart->delivery())) {
 				$nvp_data .= '&PAYMENTREQUEST_0_SHIPPINGAMT='. urlencode($this->cart->delivery());			
 			}
 			
-			if ($this->cart->coupon()) {
-				//$nvp_data .= '&PAYMENTREQUEST_0_SHIPDISCAMT='. urlencode($this->cart->coupon());			
+			if (!empty($this->cart->coupon())) {
+				$nvp_data .= '&PAYMENTREQUEST_0_SHIPDISCAMT='. urlencode('-'. $this->cart->coupon());			
+			}
+			
+			if ($this->cart->order_total() > 0) {
+				$nvp_data  .= '&PAYMENTREQUEST_0_AMT='. urlencode($this->cart->order_total());
 			}
 			
 			$response = $this->Payments_model->sendPaypal('SetExpressCheckout', $nvp_data);
@@ -139,13 +132,20 @@ class Payments_model extends CI_Model {
 			
 		$nvp_data  = '&TOKEN='. urlencode($token);
 		$nvp_data .= '&PAYERID='. urlencode($payer_id);
-		$nvp_data .= '&PAYMENTREQUEST_0_AMT='. urlencode($this->cart->order_total());
 		$nvp_data .= '&PAYMENTREQUEST_0_ITEMAMT='. urlencode($this->cart->total());
 
-		if ($this->cart->delivery()) {
+		if (!empty($this->cart->delivery())) {
 			$nvp_data .= '&PAYMENTREQUEST_0_SHIPPINGAMT='. urlencode($this->cart->delivery());			
 		}
 			
+		if (!empty($this->cart->coupon())) {
+			$nvp_data .= '&PAYMENTREQUEST_0_SHIPDISCAMT='. urlencode('-'. $this->cart->coupon());			
+		}
+		
+		if ($this->cart->order_total() > 0) {
+			$nvp_data  .= '&PAYMENTREQUEST_0_AMT='. urlencode($this->cart->order_total());
+		}
+
 		$response = $this->Payments_model->sendPaypal('DoExpressCheckoutPayment', $nvp_data);
 
 		if (strtoupper($response['ACK']) === 'SUCCESS' OR strtoupper($response['ACK']) === 'SUCCESSWITHWARNING') {
@@ -163,7 +163,7 @@ class Payments_model extends CI_Model {
 		$response = $this->Payments_model->sendPaypal('GetTransactionDetails', $nvp_data);
 
 		if (strtoupper($response['ACK']) === 'SUCCESS' OR strtoupper($response['ACK']) === 'SUCCESSWITHWARNING') {
-			return $response; //$this->addPaypalOrder($response['PAYMENTINFO_0_TRANSACTIONID'], $order_id, $customer_id, $response);
+			return $response;
 		} else {
 			log_message('error', $response['L_ERRORCODE0'] .' --> '. $response['L_LONGMESSAGE0'] .' --> '. $response['CORRELATIONID']);			
 		}
@@ -221,8 +221,8 @@ class Payments_model extends CI_Model {
 		$nvp_string .= '&USER='. urlencode($this->config->item('paypal_user'));
 		$nvp_string .= '&PWD='. urlencode($this->config->item('paypal_pass'));
 		$nvp_string .= '&SIGNATURE='. urlencode($this->config->item('paypal_sign'));
-		$nvp_string .= '&RETURNURL='. urlencode($this->config->site_url('payments/paypal'));
-		$nvp_string .= '&CANCELURL='. urlencode($this->config->site_url('payments'));	
+		$nvp_string .= '&RETURNURL='. urlencode(site_url('main/payments/paypal'));
+		$nvp_string .= '&CANCELURL='. urlencode(site_url('main/checkout'));	
 
 		if ($this->config->item('paypal_action') === 'sale') {
 			$nvp_string .= '&PAYMENTREQUEST_0_PAYMENTACTION=SALE';
@@ -254,3 +254,6 @@ class Payments_model extends CI_Model {
 		return $result;
 	}
 }
+
+/* End of file payments_model.php */
+/* Location: ./application/models/payments_model.php */

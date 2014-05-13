@@ -14,10 +14,6 @@ class Account extends MX_Controller {
 		$this->load->library('currency'); 														// load the currency library
 		$this->lang->load('main/account');  													// loads language file
 			
-		if (!file_exists(APPPATH .'views/main/account.php')) {
-			show_404();
-		}
-			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
@@ -64,7 +60,8 @@ class Account extends MX_Controller {
 		$data['column_action'] 			= $this->lang->line('column_action');
 		// END of retrieving lines from language file to send to view.
 
-		$data['button_checkout'] 		= $this->config->site_url('checkout');
+		$data['button_checkout'] 		= site_url('main/checkout');
+		$data['password_url'] 			= site_url('main/details');
 		$data['cart_items'] 			= $this->cart->total_items();
 		$data['cart_total'] 			= $this->currency->format($this->cart->order_total());
 
@@ -92,13 +89,14 @@ class Account extends MX_Controller {
 			$data['address_info'] = $this->country->addressFormat($result);
 		}
 
-		$regions = array(
-			'main/header',
-			'main/content_left',
-			'main/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('main/account', $data);
+		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'account.php')) {
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'account', $regions, $data);
+		} else {
+			$this->template->render('themes/main/default/', 'account', $regions, $data);
+		}
 	}
 }
+
+/* End of file account.php */
+/* Location: ./application/controllers/main/account.php */

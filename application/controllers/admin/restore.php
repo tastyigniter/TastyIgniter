@@ -8,10 +8,6 @@ class Restore extends CI_Controller {
 
 	public function index() {
 			
-		if (!file_exists(APPPATH .'views/admin/restore.php')) {
-			show_404();
-		}
-			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -27,45 +23,44 @@ class Restore extends CI_Controller {
 		}
 
 		$data['heading'] 			= 'Restore';
-		$data['sub_menu_save'] 		= 'Restore';
+		$data['button_save'] 		= 'Restore';
 		
-		if ($this->_restore() === TRUE) {
+		if (!empty($_FILES['restore']['name']) AND $this->_restore() === TRUE) {
 			redirect('admin/restore');
 		}
 		
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/restore', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'restore.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'restore', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'restore', $regions, $data);
+		}
 	}
 
 	public function _restore() {
-
     	if (!$this->user->hasPermissions('modify', 'admin/restore')) {
-		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
   			return TRUE;
-    	
-    	} else { 
-		
-			if (isset($_FILES['restore']) && !empty($_FILES['restore']['name'])) {
-				if (is_uploaded_file($_FILES['restore']['tmp_name'])) {
-					$content = file_get_contents($_FILES['restore']['tmp_name']);
+    	} else if (isset($_FILES['restore']) && !empty($_FILES['restore']['name'])) {
+			if (is_uploaded_file($_FILES['restore']['tmp_name'])) {
+				$content = file_get_contents($_FILES['restore']['tmp_name']);
+				$temp = explode('.', $_FILES['restore']['name']);
+				$extension = end($temp);			
+				if ($extension === 'sql') {
+					if ($this->Settings_model->restoreDatabase($content)) { // calls model to save data to SQL
+						$this->session->set_flashdata('alert', '<p class="success">Database Restored Sucessfully!</p>');
+					}
 				} else {
-					$content =  '';
+					$this->session->set_flashdata('alert', '<p class="warning">Nothing Restored!</p>');
 				}
-		
-				if ($this->Settings_model->restoreDatabase($content)) { // calls model to save data to SQL
-					$this->session->set_flashdata('alert', '<p class="success">Database Restored Sucessfully!</p>');
-				} else {
-					$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');
-				}
-	
-				return TRUE;
+			} else {
+				$content =  '';
 			}
+
+			return TRUE;
 		}
 	}	
 }
+
+/* End of file restore.php */
+/* Location: ./application/controllers/admin/restore.php */

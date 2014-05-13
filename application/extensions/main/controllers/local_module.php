@@ -14,7 +14,9 @@ class Local_module extends MX_Controller {
 		if ( !file_exists(EXTPATH .'main/views/local_module.php')) { 								//check if file exists in views folder
 			show_404(); 																		// Whoops, show 404 error page!
 		}
-			
+		
+		$data['local_page'] = ($this->uri->segment(1) === 'local') ? TRUE : FALSE;
+		
 		if ($this->session->flashdata('local_alert')) {
 			$data['local_alert'] = $this->session->flashdata('local_alert');  								// retrieve session flashdata variable if available
 		} else {
@@ -29,13 +31,14 @@ class Local_module extends MX_Controller {
 		$data['text_postcode_warning'] 	= $this->lang->line('text_postcode_warning');
 		$data['text_delivery_charge'] 	= $this->lang->line('text_delivery_charge');
 		$data['text_min_total'] 		= $this->lang->line('text_min_total');
+		$data['text_order_type'] 		= $this->lang->line('text_order_type');
 
 		$data['button_view_map'] 		= $this->lang->line('button_view_map');
 		$data['button_check_postcode'] 	= $this->lang->line('button_check_postcode');
 		// END of retrieving lines from language file to send to view.
 
-		$data['continue'] 			= $this->config->site_url('menus');
-		$data['checkout'] 			= $this->config->site_url('checkout');
+		$data['continue'] 			= site_url('main/menus');
+		$data['checkout'] 			= site_url('main/checkout');
 
 		if ($this->config->item('maps_api_key')) {
 			$data['map_key'] = '&key='. $this->config->item('maps_api_key');
@@ -48,6 +51,12 @@ class Local_module extends MX_Controller {
 			$data['postcode'] = $local_info['search_query'];
 		} else {
 			$data['postcode'] = '';
+		}
+
+		if ($local_info['order_type']) {
+			$data['order_type'] = $local_info['order_type'];
+		} else {
+			$data['order_type'] = '';
 		}
 
 		$data['local_info'] = $this->location->local(); 										// retrieve local location data
@@ -136,17 +145,32 @@ class Local_module extends MX_Controller {
 				if ( ! $local_info) {					// check if longitude and latitude doesnt have a nearest local restaurant from getLocalRestaurant() method in Locations model.
 					$json['error'] = $this->lang->line('error_no_restaurant');	// display error: no available restaurant
 				} else {
+					if (is_numeric($this->input->post('order_type'))) {
+						$local_info['order_type'] = $this->input->post('order_type');
+					} else {
+						$local_info['order_type'] = '1';
+					}
+
 					$this->session->set_userdata('local_info', $local_info);
 				}
 			}
 			break;	
 		}
 		
+		if ($this->agent->referrer() == site_url() OR $this->agent->referrer() == site_url('home')) {
+			$redirect = site_url('menus');
+		} else {
+			$redirect = $this->agent->referrer();
+		}
+		
 		if ($this->input->is_ajax_request()) {
 			$this->output->set_output(json_encode($json));											// encode the json array and set final out to be sent to jQuery AJAX
 		} else {
 			$this->session->set_flashdata('local_alert', $json['error']);
-			redirect($this->agent->referrer());
+			redirect($redirect);
 		}
 	}
 }
+
+/* End of file local_module.php */
+/* Location: ./application/extensions/main/controllers/local_module.php */

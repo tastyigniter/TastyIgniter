@@ -12,14 +12,16 @@ class Contact extends MX_Controller {
 	public function index() {
 		$this->lang->load('main/contact');  													// loads home language file
 					
-		if (!file_exists(APPPATH .'views/main/contact.php')) {
-			show_404();
-		}
-			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert'); 								// retrieve session flashdata variable if available
 		} else {
 			$data['alert'] = '';
+		}
+
+		if ($this->session->flashdata('local_alert')) {
+			$data['local_alert'] = $this->session->flashdata('local_alert'); 								// retrieve session flashdata variable if available
+		} else {
+			$data['local_alert'] = '';
 		}
 
 		if ($this->session->userdata('user_postcode')) {
@@ -44,6 +46,9 @@ class Contact extends MX_Controller {
 		$data['button_send'] 			= $this->lang->line('button_send');
 		// END of retrieving lines from language file to send to view.
 
+		$data['local_action'] 			= site_url('main/local_module/distance');
+		$data['action'] 				= site_url('main/contact');
+		
 		$data['local_location'] = $this->location->local(); 									//retrieve local location data from location library
 		
 		if ($data['local_location']) { 															//if local location data is available
@@ -72,28 +77,18 @@ class Contact extends MX_Controller {
 			redirect('contact');																// redirect to contact page
 		}
 		
-		$regions = array(
-			'main/header',
-			'main/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('main/contact', $data);
+		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'contact.php')) {
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'contact', $regions, $data);
+		} else {
+			$this->template->render('themes/main/default/', 'contact', $regions, $data);
+		}
 	}
 
 	// method to validate contact form fields and email contact details to store email
 	public function _sendContact() {
 		
-		// START of form validation rules
-		$this->form_validation->set_rules('subject', 'Subject', 'trim|required|integer');
-		$this->form_validation->set_rules('full_name', 'Full Name', 'trim|required|min_length[2]|max_length[32]');
-		$this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email|max_length[96]');
-		$this->form_validation->set_rules('telephone', 'Telephone', 'trim|required|numeric|max_length[20]');
-		$this->form_validation->set_rules('comment', 'Comment', 'htmlspecialchars|required|max_length[1028]');
-		// END of form validation rules
-
-  		if ($this->form_validation->run() === TRUE) {											// checks if form validation routines ran successfully
-
+		if ($this->validateForm() === TRUE) {
 			$this->load->library('email');														//loading upload library
 
 			//setting email preference
@@ -125,12 +120,27 @@ class Contact extends MX_Controller {
 			$this->email->message($message);
 
 			if ($this->email->send()) {															// checks if email was sent sucessfully and return TRUE
-		
 				return TRUE;
-		
 			}
+		}
+	}
+
+	public function validateForm() {
+		// START of form validation rules
+		$this->form_validation->set_rules('subject', 'Subject', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('full_name', 'Full Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
+		$this->form_validation->set_rules('email', 'Email Address', 'xss_clean|trim|required|valid_email|max_length[96]');
+		$this->form_validation->set_rules('telephone', 'Telephone', 'xss_clean|trim|required|numeric|max_length[20]');
+		$this->form_validation->set_rules('comment', 'Comment', 'htmlspecialchars|required|max_length[1028]');
+		// END of form validation rules
+
+  		if ($this->form_validation->run() === TRUE) {											// checks if form validation routines ran successfully
+			return TRUE;
+		} else {
+			return FALSE;
 		}
 	}
 }
 
-/* End of file myfile.php */
+/* End of file contact.php */
+/* Location: ./application/controllers/main/contact.php */

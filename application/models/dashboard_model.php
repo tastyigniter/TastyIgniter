@@ -1,10 +1,6 @@
 <?php
 class Dashboard_model extends CI_Model {
 
-	public function __construct() {
-		$this->load->database();
-	}
-
 	public function getTotalCustomers() {
 
 		return $this->db->count_all('customers');
@@ -53,159 +49,208 @@ class Dashboard_model extends CI_Model {
 		}
 	}
 
-	public function getTodayChart($hour = FALSE) {
+	public function getTodayChart($type = FALSE, $hour = FALSE) {
 		$result = array();
-		$result['customers'] = 0;
-		$result['orders'] = 0;
-		$result['reservations'] = 0;
+		$result['total'] = 0;
 		
-		$this->db->where('DATE(date_added)', 'DATE(NOW())');
-		$this->db->order_by('date_added', 'ASC');		
-		$this->db->from('customers');
+		if ($type === 'customers') {
+			$this->db->where('DATE(date_added)', 'DATE(NOW())');
+			$this->db->where('HOUR(date_added)', $hour);
+			$this->db->order_by('date_added', 'ASC');		
+			$this->db->from('customers');
 		
-		$result['customers'] = $this->db->count_all_results();
+			$result['total'] = $this->db->count_all_results();
 		
-		$this->db->where('status_id >', '0');
-		$this->db->where('DATE(date_added)', 'DATE(NOW())', FALSE);
-		$this->db->where('HOUR(order_time)', $hour);
-		$this->db->group_by('HOUR(order_time)'); 
-		$this->db->order_by('date_added', 'ASC');		
-		$this->db->from('orders');
+		} else if ($type === 'orders') {
+			$this->db->where('status_id >', '0');
+			$this->db->where('DATE(date_added)', 'DATE(NOW())', FALSE);
+			$this->db->where('HOUR(order_time)', $hour);
+			$this->db->group_by('HOUR(order_time)'); 
+			$this->db->order_by('date_added', 'ASC');		
+			$this->db->from('orders');
 		
-		$result['orders'] = $this->db->count_all_results();
+			$result['total'] = $this->db->count_all_results();
 
-		$this->db->where('status >', '0');
-		$this->db->where('DATE(reserve_date)', 'DATE(NOW())', FALSE);
-		$this->db->where('HOUR(reserve_time)', $hour);
-		$this->db->group_by('HOUR(reserve_time)'); 
-		$this->db->order_by('reserve_date', 'ASC');		
-		$this->db->from('reservations');
+		} else if ($type === 'reservations') {
+			$this->db->where('status >', '0');
+			$this->db->where('DATE(reserve_date)', 'DATE(NOW())', FALSE);
+			$this->db->where('HOUR(reserve_time)', $hour);
+			$this->db->group_by('HOUR(reserve_time)'); 
+			$this->db->order_by('reserve_date', 'ASC');		
+			$this->db->from('reservations');
 		
-		$result['reservations'] = $this->db->count_all_results();
-
+			$result['total'] = $this->db->count_all_results();
+		
+		} else if ($type === 'reviews') {
+			$this->db->where('DATE(date_added)', 'DATE(NOW())', FALSE);
+			$this->db->where('HOUR(date_added)', $hour);
+			$this->db->order_by('date_added', 'ASC');		
+			$this->db->from('reviews');
+		
+			$result['total'] = $this->db->count_all_results();
+		}
+		
 		return $result;
 	}
 
-	public function getYesterdayChart($hour = FALSE) {
+	public function getYesterdayChart($type = FALSE, $hour = FALSE) {
 		$result = array();
-		$result['customers'] = 0;
-		$result['orders'] = 0;
-		$result['reservations'] = 0;
+		$result['total'] = 0;
 		
-		$this->db->where('DATE(date_added)', 'DATE(NOW())');
-		$this->db->order_by('date_added', 'ASC');		
-		$this->db->from('customers');
+		if ($type === 'customers') {
+			$this->db->where('DATE(date_added)', 'DATE(NOW())');
+			$this->db->order_by('date_added', 'ASC');		
+			$this->db->from('customers');
 		
-		$result['customers'] = $this->db->count_all_results();
+			$result['total'] = $this->db->count_all_results();
 		
-		$this->db->where('status_id >', '0');
-		$this->db->where('DATE(date_added)', 'DATE(CURDATE() - 1)', FALSE);
-		$this->db->where('HOUR(order_time)', $hour);
-		$this->db->group_by('HOUR(order_time)'); 
-		$this->db->order_by('date_added', 'ASC');		
-		$this->db->from('orders');
+		} else if ($type === 'orders') {
+			$this->db->where('status_id >', '0');
+			$this->db->where('DATE(date_added)', 'DATE(CURDATE() - 1)', FALSE);
+			$this->db->where('HOUR(order_time)', $hour);
+			$this->db->group_by('HOUR(order_time)'); 
+			$this->db->order_by('date_added', 'ASC');		
+			$this->db->from('orders');
 		
-		$result['orders'] = $this->db->count_all_results();
+			$result['total'] = $this->db->count_all_results();
 
-		$this->db->where('status >', '0');
-		$this->db->where('DATE(reserve_date)', 'DATE(CURDATE() - 1)', FALSE);
-		$this->db->where('HOUR(reserve_time)', $hour);
-		$this->db->group_by('HOUR(reserve_time)'); 
-		$this->db->order_by('reserve_date', 'ASC');		
-		$this->db->from('reservations');
+		} else if ($type === 'reservations') {
+			$this->db->where('status >', '0');
+			$this->db->where('DATE(reserve_date)', 'DATE(CURDATE() - 1)', FALSE);
+			$this->db->where('HOUR(reserve_time)', $hour);
+			$this->db->group_by('HOUR(reserve_time)'); 
+			$this->db->order_by('reserve_date', 'ASC');		
+			$this->db->from('reservations');
 		
-		$result['reservations'] = $this->db->count_all_results();
-
+			$result['total'] = $this->db->count_all_results();
+		
+		} else if ($type === 'reviews') {
+			$this->db->where('DATE(date_added)', 'DATE(NOW())', FALSE);
+			$this->db->where('HOUR(date_added)', $hour);
+			$this->db->order_by('date_added', 'ASC');		
+			$this->db->from('reviews');
+		
+			$result['total'] = $this->db->count_all_results();
+		}
+		
 		return $result;
 	}
 
-	public function getThisWeekChart($date = FALSE) {
+	public function getThisWeekChart($type = FALSE, $date = FALSE) {
 		$result = array();
-		$result['customers'] = 0;
-		$result['orders'] = 0;
-		$result['reservations'] = 0;
+		$result['total'] = 0;
 		
-		$this->db->where('DATE(date_added)', $date);
-		$this->db->group_by('DATE(date_added)'); 
-		$this->db->from('customers');
+		if ($type === 'customers') {
+			$this->db->where('DATE(date_added)', $date);
+			$this->db->group_by('DATE(date_added)'); 
+			$this->db->from('customers');
 		
-		$result['customers'] = $this->db->count_all_results();
+			$result['total'] = $this->db->count_all_results();
 
-		$this->db->where('status_id >', '0');
-		$this->db->where('DATE(date_added)', $date);
-		$this->db->group_by('DATE(date_added)'); 
-		$this->db->from('orders');
+		} else if ($type === 'orders') {
+			$this->db->where('status_id >', '0');
+			$this->db->where('DATE(date_added)', $date);
+			$this->db->group_by('DATE(date_added)'); 
+			$this->db->from('orders');
 		
-		$result['orders'] = $this->db->count_all_results();
+			$result['total'] = $this->db->count_all_results();
 
-		$this->db->where('status >', '0');
-		$this->db->where('DATE(reserve_date)', $date);
-		$this->db->group_by('DATE(reserve_date)'); 
-		$this->db->from('reservations');
+		} else if ($type === 'reservations') {
+			$this->db->where('status >', '0');
+			$this->db->where('DATE(reserve_date)', $date);
+			$this->db->group_by('DATE(reserve_date)'); 
+			$this->db->from('reservations');
 		
-		$result['reservations'] = $this->db->count_all_results();
+			$result['total'] = $this->db->count_all_results();
 
+		} else if ($type === 'reviews') {
+			$this->db->where('DATE(date_added)', $date);
+			$this->db->group_by('DATE(date_added)'); 
+			$this->db->from('reviews');
+		
+			$result['total'] = $this->db->count_all_results();
+		}
+		
 		return $result;
 	}
 	
-	public function getMonthChart($date = FALSE) {
+	public function getMonthChart($type = FALSE, $date = FALSE) {
 		$result = array();
-		$result['customers'] = 0;
-		$result['orders'] = 0;
-		$result['reservations'] = 0;
+		$result['total'] = 0;
 
-		$this->db->where('DATE(date_added)', $date);
-		$this->db->group_by('DAY(date_added)'); 
-		$this->db->from('customers');
+		if ($type === 'customers') {
+			$this->db->where('DATE(date_added)', $date);
+			$this->db->group_by('DAY(date_added)'); 
+			$this->db->from('customers');
 		
-		$result['customers'] = $this->db->count_all_results();
+			$result['total'] = $this->db->count_all_results();
 
-		$this->db->where('status_id >', '0');
-		$this->db->where('DATE(date_added)', $date);
-		$this->db->group_by('DAY(date_added)'); 
-		$this->db->from('orders');
+		} else if ($type === 'orders') {
+			$this->db->where('status_id >', '0');
+			$this->db->where('DATE(date_added)', $date);
+			$this->db->group_by('DAY(date_added)'); 
+			$this->db->from('orders');
 		
-		$result['orders'] = $this->db->count_all_results();
+			$result['total'] = $this->db->count_all_results();
 
-		$this->db->where('status >', '0');
-		$this->db->where('DATE(reserve_date)', $date);
-		$this->db->group_by('DAY(reserve_date)'); 
-		$this->db->from('reservations');
+		} else if ($type === 'reservations') {
+			$this->db->where('status >', '0');
+			$this->db->where('DATE(reserve_date)', $date);
+			$this->db->group_by('DAY(reserve_date)'); 
+			$this->db->from('reservations');
 		
-		$result['reservations'] = $this->db->count_all_results();
+			$result['total'] = $this->db->count_all_results();
 
+		} else if ($type === 'reviews') {
+			$this->db->where('DATE(date_added)', $date);
+			$this->db->group_by('DAY(date_added)'); 
+			$this->db->from('reviews');
+		
+			$result['total'] = $this->db->count_all_results();
+		}
+		
 		return $result;
 	}
 
-	public function getYearChart($year = FALSE, $month = FALSE) {
+	public function getYearChart($type = FALSE, $year = FALSE, $month = FALSE) {
 		$result = array();
-		$result['customers'] = 0;
-		$result['orders'] = 0;
-		$result['reservations'] = 0;
+		$result['total'] = 0;
 
-		$this->db->where('YEAR(date_added)', (int)$year);
-		$this->db->where('MONTH(date_added)', (int)$month);
-		$this->db->group_by('MONTH(date_added)'); 
-		$this->db->from('customers');
+		if ($type === 'customers') {
+			$this->db->where('YEAR(date_added)', (int)$year);
+			$this->db->where('MONTH(date_added)', (int)$month);
+			$this->db->group_by('MONTH(date_added)'); 
+			$this->db->from('customers');
 		
-		$result['customers'] = $this->db->count_all_results();
+			$result['total'] = $this->db->count_all_results();
 
-		$this->db->where('status_id >', '0');
-		$this->db->where('YEAR(date_added)', (int)$year);
-		$this->db->where('MONTH(date_added)', (int)$month);
-		$this->db->group_by('MONTH(date_added)'); 
-		$this->db->from('orders');
+		} else if ($type === 'orders') {
+			$this->db->where('status_id >', '0');
+			$this->db->where('YEAR(date_added)', (int)$year);
+			$this->db->where('MONTH(date_added)', (int)$month);
+			$this->db->group_by('MONTH(date_added)'); 
+			$this->db->from('orders');
 		
-		$result['orders'] = $this->db->count_all_results();
+			$result['total'] = $this->db->count_all_results();
 
-		$this->db->where('status >', '0');
-		$this->db->where('YEAR(reserve_date)', (int)$year);
-		$this->db->where('MONTH(reserve_date)', (int)$month);
-		$this->db->group_by('MONTH(reserve_date)'); 
-		$this->db->from('reservations');
+		} else if ($type === 'reservations') {
+			$this->db->where('status >', '0');
+			$this->db->where('YEAR(reserve_date)', (int)$year);
+			$this->db->where('MONTH(reserve_date)', (int)$month);
+			$this->db->group_by('MONTH(reserve_date)'); 
+			$this->db->from('reservations');
 		
-		$result['reservations'] = $this->db->count_all_results();
+			$result['total'] = $this->db->count_all_results();
 
+		} else if ($type === 'reviews') {
+			$this->db->where('YEAR(date_added)', (int)$year);
+			$this->db->where('MONTH(date_added)', (int)$month);
+			$this->db->group_by('MONTH(date_added)'); 
+			$this->db->from('reviews');
+		
+			$result['total'] = $this->db->count_all_results();
+		}
+		
 		return $result;
 	}
 
@@ -262,3 +307,6 @@ class Dashboard_model extends CI_Model {
 		return $this->db->count_all_results();
 	}
 }
+
+/* End of file dashboard_model.php */
+/* Location: ./application/models/dashboard_model.php */

@@ -1,15 +1,16 @@
 <?php
 class Alerts_model extends CI_Model {
 
-	public function __construct() {
-		$this->load->database();
-	}
-
     public function record_count($filter = array()) {
 		if (!empty($filter['staff_id'])) {
 			$this->db->where('receiver', $filter['staff_id']);
 		}
 	
+		if (!empty($filter['filter_search'])) {
+			$this->db->like('sender', $filter['filter_search']);
+			$this->db->or_like('subject', $filter['filter_search']);
+		}
+
 		$this->db->where('label', 'alerts');
 		$this->db->from('messages');
 	
@@ -30,6 +31,11 @@ class Alerts_model extends CI_Model {
 				$this->db->where('receiver', $filter['staff_id']);
 			}
 		
+			if (!empty($filter['filter_search'])) {
+				$this->db->like('sender', $filter['filter_search']);
+				$this->db->or_like('subject', $filter['filter_search']);
+			}
+
 			$this->db->where('label', 'alerts');
 
 			$query = $this->db->get();
@@ -152,3 +158,6 @@ class Alerts_model extends CI_Model {
 		}
 	}
 }
+
+/* End of file alerts_model.php */
+/* Location: ./application/models/alerts_model.php */

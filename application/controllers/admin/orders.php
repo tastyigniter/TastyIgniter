@@ -18,10 +18,6 @@ class Orders extends CI_Controller {
 	}
 
 	public function index() {
-		
-		if (!file_exists(APPPATH .'views/admin/orders.php')) {
-			show_404();
-		}
 			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
@@ -37,24 +33,87 @@ class Orders extends CI_Controller {
 			$data['alert'] = '';
 		}
 		
+		$url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
 			$filter['page'] = (int) $this->input->get('page');
 		} else {
-			$filter['page'] = 1;
+			$filter['page'] = '';
 		}
 		
 		if ($this->config->item('page_limit')) {
 			$filter['limit'] = $this->config->item('page_limit');
 		}
 				
+		if ($this->input->get('filter_search')) {
+			$filter['filter_search'] = $this->input->get('filter_search');
+			$data['filter_search'] = $filter['filter_search'];
+			$url .= 'filter_search='.$filter['filter_search'].'&';
+		} else {
+			$data['filter_search'] = '';
+		}
+		
+		if (is_numeric($this->input->get('filter_type'))) {
+			$filter['filter_type'] = $this->input->get('filter_type');
+			$data['filter_type'] = $filter['filter_type'];
+			$url .= 'filter_type='.$filter['filter_type'].'&';
+		} else {
+			$filter['filter_type'] = '';
+			$data['filter_type'] = '';
+		}
+		
+		if ($this->input->get('filter_date')) {
+			$filter['filter_date'] = $this->input->get('filter_date');
+			$data['filter_date'] = $filter['filter_date'];
+			$url .= 'filter_date='.$filter['filter_date'].'&';
+		} else {
+			$filter['filter_date'] = '';
+			$data['filter_date'] = '';
+		}
+		
+		if (is_numeric($this->input->get('filter_status'))) {
+			$filter['filter_status'] = $this->input->get('filter_status');
+			$data['filter_status'] = $filter['filter_status'];
+			$url .= 'filter_status='.$filter['filter_status'].'&';
+		} else {
+			$filter['filter_status'] = '';
+			$data['filter_status'] = '';
+		}
+		
+		if ($this->input->get('sort_by')) {
+			$filter['sort_by'] = $this->input->get('sort_by');
+			$data['sort_by'] = $filter['sort_by'];
+		} else {
+			$filter['sort_by'] = '';
+			$data['sort_by'] = '';
+		}
+		
+		if ($this->input->get('order_by')) {
+			$filter['order_by'] = $this->input->get('order_by');
+			$data['order_by_active'] = strtolower($this->input->get('order_by')) .' active';
+			$data['order_by'] = strtolower($this->input->get('order_by'));
+		} else {
+			$filter['order_by'] = '';
+			$data['order_by_active'] = '';
+			$data['order_by'] = 'desc';
+		}
+		
 		$data['heading'] 			= 'Orders';
-		$data['sub_menu_delete'] 	= 'Delete';
+		$data['button_delete'] 		= 'Delete';
 		$data['text_empty'] 		= 'There are no orders available.';
 		
+		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'DESC') ? 'ASC' : 'DESC';
+		$data['sort_id'] 			= site_url('admin/orders'.$url.'sort_by=order_id&order_by='.$order_by);
+		$data['sort_location'] 		= site_url('admin/orders'.$url.'sort_by=location_name&order_by='.$order_by);
+		$data['sort_customer'] 		= site_url('admin/orders'.$url.'sort_by=first_name&order_by='.$order_by);
+		$data['sort_status'] 		= site_url('admin/orders'.$url.'sort_by=status_name&order_by='.$order_by);
+		$data['sort_type'] 			= site_url('admin/orders'.$url.'sort_by=order_type&order_by='.$order_by);
+		$data['sort_total'] 		= site_url('admin/orders'.$url.'sort_by=order_total&order_by='.$order_by);
+		$data['sort_time']			= site_url('admin/orders'.$url.'sort_by=order_time&order_by='.$order_by);
+		$data['sort_date'] 			= site_url('admin/orders'.$url.'sort_by=date_added&order_by='.$order_by);
+
 		$results = $this->Orders_model->getList($filter);
 		
-		//load category data into array
 		$data['orders'] = array();
 		foreach ($results as $result) {					
 			$current_date = mdate('%d-%m-%Y', time());
@@ -74,15 +133,37 @@ class Orders extends CI_Controller {
 				'order_type' 		=> ($result['order_type'] === '1') ? 'Delivery' : 'Collection',
 				'order_time'		=> mdate('%H:%i', strtotime($result['order_time'])),
 				'order_status'		=> $result['status_name'],
+				'order_total'		=> $result['order_total'],
 				'date_added'		=> $date_added,
-				'edit' 				=> $this->config->site_url('admin/orders/edit?id=' . $result['order_id'])
+				'edit' 				=> site_url('admin/orders/edit?id=' . $result['order_id'])
 			);
 		}
 			
-		$config['base_url'] 		= $this->config->site_url('admin/orders');
+		$data['statuses'] = array();
+		$statuses = $this->Statuses_model->getStatuses('order');
+		foreach ($statuses as $statuses) {
+			$data['statuses'][] = array(
+				'status_id'			=> $statuses['status_id'],
+				'status_name'		=> $statuses['status_name']
+			);
+		}
+
+		$data['order_dates'] = array();
+		$order_dates = $this->Orders_model->getOrderDates();
+		foreach ($order_dates as $order_date) {
+			$month_year = '';
+			$month_year = $order_date['year'].'-'.$order_date['month'];
+			$data['order_dates'][$month_year] = mdate('%F %Y', strtotime($order_date['date_added']));
+		}
+
+		if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+			$url .= 'sort_by='.$filter['sort_by'].'&';
+			$url .= 'order_by='.$filter['order_by'].'&';
+		}
+		
+		$config['base_url'] 		= site_url('admin/orders').$url;
 		$config['total_rows'] 		= $this->Orders_model->record_count($filter);
 		$config['per_page'] 		= $filter['limit'];
-		$config['num_links'] 		= round($config['total_rows'] / $config['per_page']);
 		
 		$this->pagination->initialize($config);
 				
@@ -95,20 +176,15 @@ class Orders extends CI_Controller {
 			redirect('admin/orders');
 		}	
 
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/orders', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'orders.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'orders', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'orders', $regions, $data);
+		}
 	}
 
 	public function edit() {
-		
-		if (!file_exists(APPPATH .'views/admin/orders_edit.php')) {
-			show_404();
-		}
 			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
@@ -127,23 +203,24 @@ class Orders extends CI_Controller {
 		//check if customer_id is set in uri string
 		if (is_numeric($this->input->get('id'))) {
 			$order_id = $this->input->get('id');
-			$data['action']	= $this->config->site_url('admin/orders/edit?id='. $order_id);
+			$data['action']	= site_url('admin/orders/edit?id='. $order_id);
 		} else {
 		    $order_id = 0;
-			//$data['action']	= $this->config->site_url('admin/orders/edit');
+			//$data['action']	= site_url('admin/orders/edit');
 			redirect('admin/orders');
 		}
 		
 		$order_info = $this->Orders_model->getAdminOrder($order_id);
 
 		$data['heading'] 			= 'Order - '. $order_info['order_id'];
-		$data['sub_menu_save'] 		= 'Save';
-		$data['sub_menu_back'] 		= $this->config->site_url('admin/orders');
+		$data['button_save'] 		= 'Save';
+		$data['button_save_close'] 	= 'Save & Close';
+		$data['sub_menu_back'] 		= site_url('admin/orders');
 		$data['text_empty'] 		= 'There are no status history for this order.';
 
 		$data['order_id'] 			= $order_info['order_id'];
 		$data['customer_id'] 		= $order_info['customer_id'];
-		$data['customer_edit'] 		= $this->config->site_url('admin/customers/edit?id=' . $order_info['customer_id']);
+		$data['customer_edit'] 		= site_url('admin/customers/edit?id=' . $order_info['customer_id']);
 		$data['first_name'] 		= $order_info['first_name'];
 		$data['last_name'] 			= $order_info['last_name'];
 		$data['email'] 				= $order_info['email'];
@@ -231,8 +308,8 @@ class Orders extends CI_Controller {
 		}
 
 		$data['totals'] = array();			
-		$order_total = $this->Orders_model->getOrderTotal($order_info['order_id']);
-		foreach ($order_total as $total) {
+		$order_totals = $this->Orders_model->getOrderTotals($order_info['order_id']);
+		foreach ($order_totals as $total) {
 			$data['totals'][] = array(
 				'title' 		=> $total['title'],
 				'value' 		=> $this->currency->format($total['value'])			
@@ -243,25 +320,25 @@ class Orders extends CI_Controller {
 		$data['total_items']		= $order_info['total_items'];
 					
 		if ($this->input->post() && $this->_updateOrder($order_info['status_id']) === TRUE) {
-			redirect('admin/orders');
+			if ($this->input->post('save_close') === '1') {
+				redirect('admin/orders');
+			}
+			
+			redirect('admin/orders/edit?id='. $order_id);
 		}
 				
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/orders_edit', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'orders_edit.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'orders_edit', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'orders_edit', $regions, $data);
+		}
 	}
 
 	public function _updateOrder($status_id = FALSE) {
-			
     	if (!$this->user->hasPermissions('modify', 'admin/orders')) {
-		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
 			return TRUE;
-    	
     	} else if ($this->input->get('id') AND $this->validateForm() === TRUE) { 
 			$update = array();
 			$history = array();
@@ -273,12 +350,11 @@ class Orders extends CI_Controller {
 			$update['date_modified'] =  mdate('%Y-%m-%d', $current_time);
 		
 			if ($status_id !== $this->input->post('order_status')) {
-				$status = $this->Statuses_model->getStatus($this->input->post('order_status'));
 				$history['staff_id']	= $this->user->getStaffId();
 				$history['order_id'] 	= $this->input->get('id');
 				$history['status_id']	= $this->input->post('order_status');
 				$history['notify']		= $this->input->post('notify');
-				$history['comment']		= $status['status_comment'];
+				$history['comment']		= $this->input->post('status_comment');
 				$history['date_added']	= mdate('%Y-%m-%d %H:%i:%s', $current_time);
 				
 				$this->Statuses_model->addStatusHistory('order', $history);
@@ -297,7 +373,7 @@ class Orders extends CI_Controller {
 	public function _deleteOrder() {
     	if (!$this->user->hasPermissions('modify', 'admin/orders')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
     	
     	} else { 
 			if (is_array($this->input->post('delete'))) {
@@ -314,8 +390,8 @@ class Orders extends CI_Controller {
 	}
 
 	public function validateForm() {
-		$this->form_validation->set_rules('order_status', 'Order Status', 'trim|required|integer');
-		$this->form_validation->set_rules('assigned_staff', 'Assign Staff', 'trim|integer');
+		$this->form_validation->set_rules('order_status', 'Order Status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('assigned_staff', 'Assign Staff', 'xss_clean|trim|integer');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;
@@ -324,3 +400,6 @@ class Orders extends CI_Controller {
 		}		
 	}
 }
+
+/* End of file orders.php */
+/* Location: ./application/controllers/admin/orders.php */

@@ -24,5 +24,5 @@ $lang['error_nothing'] 			= '<p class="warning">No Changes Made!</p>';
 $lang['error_email'] 			= 'The %s you entered already exist.';
 $lang['error_password'] 		= 'The %s you entered is invalid.';
 
-/* End of file home_lang.php */
-/* Location: ./application/language/english/main/home_lang.php */
+/* End of file details_lang.php */
+/* Location: ./application/language/english/main/details_lang.php */

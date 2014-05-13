@@ -1,15 +1,16 @@
 <?php
 class Messages_model extends CI_Model {
 
-	public function __construct() {
-		$this->load->database();
-	}
-
     public function record_count($filter = array()) {
-		if ($filter['label'] === 'sent') {
+		if (!empty($filter['filter_search'])) {
+			$this->db->like('sender', $filter['filter_search']);
+			$this->db->or_like('subject', $filter['filter_search']);
+		}
+
+		if ($filter['filter_label'] === 'sent') {
 			$this->db->where('label !=', 'alerts');
 		} else {
-			$this->db->where('label', $filter['label']);
+			$this->db->where('label', $filter['filter_label']);
 		}
 		
 		$this->db->from('messages');
@@ -26,10 +27,15 @@ class Messages_model extends CI_Model {
 			$this->db->join('staffs', 'staffs.staff_id = messages.sender', 'left');
 			$this->db->order_by('date', 'DESC');
 
-			if ($filter['label'] === 'sent') {
+			if (!empty($filter['filter_search'])) {
+				$this->db->like('sender', $filter['filter_search']);
+				$this->db->or_like('subject', $filter['filter_search']);
+			}
+
+			if ($filter['filter_label'] === 'sent') {
 				$this->db->where('label !=', 'alerts');
 			} else {
-				$this->db->where('label', $filter['label']);
+				$this->db->where('label', $filter['filter_label']);
 			}
 			
 			$query = $this->db->get();
@@ -134,3 +140,6 @@ class Messages_model extends CI_Model {
 		}
 	}
 }
+
+/* End of file messages_model.php */
+/* Location: ./application/models/messages_model.php */

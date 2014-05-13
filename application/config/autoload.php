@@ -108,7 +108,8 @@ $autoload['language'] = array('main/english', 'admin/english');
 |	$autoload['model'] = array('model1', 'model2');
 |
 */
-$autoload['model'] = array('settings_model');
+
+$autoload['model'] = array();
 
 
 /* End of file autoload.php */

@@ -2,10 +2,6 @@
 
 class Cart_model extends CI_Model {
 
-	public function __construct() {
-		$this->load->database();
-	}
-
 	public function getMenu($menu_id) {
 		if (!empty($menu_id)) {					
 			$this->db->select('menus.menu_id, menu_name, menu_description, menu_price, stock_qty, minimum_qty, special_price');
@@ -36,3 +32,6 @@ class Cart_model extends CI_Model {
 		}
 	}
 }
+
+/* End of file cart_model.php */
+/* Location: ./application/models/cart_model.php */

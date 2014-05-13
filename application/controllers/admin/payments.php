@@ -9,10 +9,6 @@ class Payments extends CI_Controller {
 
 	public function index() {
 			
-		if (!file_exists(APPPATH .'views/admin/payments.php')) {
-			show_404();
-		}
-			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -27,22 +23,32 @@ class Payments extends CI_Controller {
 			$data['alert'] = '';
 		}
 
-		$data['heading'] = 'Payment Methods';
+		$data['heading'] 		= 'Payment Methods';
+
+		$data['free_name'] 		= 'Free Checkout';
+		$data['free_status'] 	= 'Disabled';
+		$data['free_edit'] 		= site_url('admin/free_checkout');
 
 		$data['cod_name'] 		= 'Cash On Delivery';
 		$data['cod_status'] 	= 'Enabled';
-		$data['cod_edit'] 		= $this->config->site_url('admin/cod');
+		$data['cod_edit'] 		= site_url('admin/cod');
 
 		$data['paypal_name'] 	= 'PayPal Express Checkout';
 		$data['paypal_status'] 	= $this->config->item('paypal_status') ? 'Enabled' : 'Disabled';
-		$data['paypal_edit'] 	= $this->config->site_url('admin/paypal_express');
+		$data['paypal_edit'] 	= site_url('admin/paypal_express');
 
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/payments', $data);
+		$data['google_name'] 	= 'Google Checkout';
+		$data['google_status'] 	= 'Disabled';
+		$data['google_edit'] 	= site_url('admin/google_checkout');
+
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'payments.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'payments', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'payments', $regions, $data);
+		}
 	}
 }
+
+/* End of file payments.php */
+/* Location: ./application/controllers/admin/payments.php */

@@ -8,10 +8,6 @@ class Error_logs extends CI_Controller {
 
 	public function index() {
 			
-		if (!file_exists(APPPATH .'views/admin/error_logs.php')) {
-			show_404();
-		}
-			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -27,10 +23,10 @@ class Error_logs extends CI_Controller {
 		}
 
 		$data['heading'] 			= 'Error Logs';
-		$data['sub_menu_delete'] 	= 'Clear';
+		$data['button_delete'] 		= 'Clear';
 		
 		if ($this->config->item('log_path') === '') {
-			$log_path = 'application/logs/';
+			$log_path = APPPATH .'/logs/';
 		} else {
 			$log_path = $this->config->item('log_path');		
 		}
@@ -51,24 +47,18 @@ class Error_logs extends CI_Controller {
 			redirect('admin/error_logs');
 		}
 
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/error_logs', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'error_logs.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'error_logs', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'error_logs', $regions, $data);
+		}
 	}
 
 	public function _clearLog() {
     	if (!$this->user->hasPermissions('modify', 'admin/error_logs')) {
-		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
-    	
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
     	} else { 
-		
-			//$this->form_validation->set_rules('logs', '', 'trim|htmlspecialchars|prep_for_form');
-
 			if ($this->config->item('log_path') === '') {
 				$log_path = APPPATH .'/logs/';
 			} else {
@@ -88,3 +78,6 @@ class Error_logs extends CI_Controller {
 		return TRUE;
 	}
 }
+
+/* End of file error_logs.php */
+/* Location: ./application/controllers/admin/error_logs.php */

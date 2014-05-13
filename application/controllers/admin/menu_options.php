@@ -10,10 +10,6 @@ class Menu_options extends CI_Controller {
 	}
 
 	public function index() {
-		
-		if (!file_exists(APPPATH .'views/admin/menu_options.php')) {
-			show_404();
-		}
 			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
@@ -29,21 +25,53 @@ class Menu_options extends CI_Controller {
 			$data['alert'] = '';
 		}
 
+		$url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
 			$filter['page'] = (int) $this->input->get('page');
 		} else {
-			$filter['page'] = 1;
+			$filter['page'] = '';
 		}
 		
 		if ($this->config->item('page_limit')) {
 			$filter['limit'] = $this->config->item('page_limit');
 		}
 
+		if ($this->input->get('filter_search')) {
+			$filter['filter_search'] = $this->input->get('filter_search');
+			$data['filter_search'] = $filter['filter_search'];
+			$url .= 'filter_search='.$filter['filter_search'].'&';
+		} else {
+			$data['filter_search'] = '';
+		}
+		
+		if ($this->input->get('sort_by')) {
+			$filter['sort_by'] = $this->input->get('sort_by');
+			$data['sort_by'] = $filter['sort_by'];
+		} else {
+			$filter['sort_by'] = '';
+			$data['sort_by'] = '';
+		}
+		
+		if ($this->input->get('order_by')) {
+			$filter['order_by'] = $this->input->get('order_by');
+			$data['order_by_active'] = strtolower($this->input->get('order_by')) .' active';
+			$data['order_by'] = strtolower($this->input->get('order_by'));
+		} else {
+			$filter['order_by'] = '';
+			$data['order_by_active'] = '';
+			$data['order_by'] = 'desc';
+		}
+		
 		$data['heading'] 			= 'Menu Options';
-		$data['sub_menu_add'] 		= 'Add new menu option';
-		$data['sub_menu_delete'] 	= 'Delete';
+		$data['button_add'] 		= 'New';
+		$data['button_delete'] 		= 'Delete';
 		$data['text_empty'] 		= 'There are no menu options, please add!.';
+
+		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'DESC') ? 'ASC' : 'DESC';
+		$data['sort_name'] 			= site_url('admin/menu_options'.$url.'sort_by=option_name&order_by='.$order_by);
+		$data['sort_price'] 		= site_url('admin/menu_options'.$url.'sort_by=option_price&order_by='.$order_by);
+		$data['sort_id'] 			= site_url('admin/menu_options'.$url.'sort_by=option_id&order_by='.$order_by);
 
 		$data['menu_options'] = array();
 		$results = $this->Menus_model->getOptionsList($filter);
@@ -52,14 +80,18 @@ class Menu_options extends CI_Controller {
 				'option_id' 	=> $result['option_id'],
 				'option_name' 	=> $result['option_name'],
 				'option_price' 	=> $this->currency->format($result['option_price']),
-				'edit' 			=> $this->config->site_url('admin/menu_options/edit?id=' . $result['option_id'])
+				'edit' 			=> site_url('admin/menu_options/edit?id=' . $result['option_id'])
 			);
 		}
 
-		$config['base_url'] 		= $this->config->site_url('admin/menu_options');
-		$config['total_rows'] 		= $this->Menus_model->options_record_count();
+		if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+			$url .= 'sort_by='.$filter['sort_by'].'&';
+			$url .= 'order_by='.$filter['order_by'].'&';
+		}
+		
+		$config['base_url'] 		= site_url('admin/menu_options').$url;
+		$config['total_rows'] 		= $this->Menus_model->options_record_count($filter);
 		$config['per_page'] 		= $filter['limit'];
-		$config['num_links'] 		= round($config['total_rows'] / $config['per_page']);
 		
 		$this->pagination->initialize($config);
 
@@ -73,20 +105,15 @@ class Menu_options extends CI_Controller {
 			redirect('admin/menu_options');
 		}	
 
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/menu_options', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'menu_options.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'menu_options', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'menu_options', $regions, $data);
+		}
 	}
 	
 	public function edit() {
-		
-		if (!file_exists(APPPATH .'views/admin/menu_options_edit.php')) {
-			show_404();
-		}
 			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
@@ -104,21 +131,22 @@ class Menu_options extends CI_Controller {
 		
 		if (is_numeric($this->input->get('id'))) {
 			$option_id = $this->input->get('id');
-			$data['action']	= $this->config->site_url('admin/menu_options/edit?id='. $option_id);
+			$data['action']	= site_url('admin/menu_options/edit?id='. $option_id);
 		} else {
 			$option_id = 0;
-			$data['action']	= $this->config->site_url('admin/menu_options/edit');
+			$data['action']	= site_url('admin/menu_options/edit');
 		}
 		
 		$option_info = $this->Menus_model->getMenuOption($option_id);
 	
 		$data['heading'] 			= 'Menus Option - ' . $option_info['option_name'];
-		$data['sub_menu_save'] 		= 'Save';
-		$data['sub_menu_back'] 		= $this->config->site_url('admin/menu_options');
+		$data['button_save'] 		= 'Save';
+		$data['button_save_close'] 	= 'Save & Close';
+		$data['sub_menu_back'] 		= site_url('admin/menu_options');
 
-		$data['option_id'] 		= $option_info['option_id'];
-		$data['option_name'] 	= $option_info['option_name'];
-		$data['option_price'] 	= $option_info['option_price'];
+		$data['option_id'] 			= $option_info['option_id'];
+		$data['option_name'] 		= $option_info['option_name'];
+		$data['option_price'] 		= $option_info['option_price'];
 
 		if ( ! $this->input->get('id') && $this->input->post() && $this->_addMenuOpiton() === TRUE) {
 			
@@ -126,17 +154,19 @@ class Menu_options extends CI_Controller {
 		}
 
 		if ($this->input->get('id') && $this->input->post() && $this->_updateMenuOption() === TRUE){
-					
-			redirect('admin/menu_options');
+			if ($this->input->post('save_close') === '1') {
+				redirect('admin/menu_options');
+			}
+			
+			redirect('admin/menu_options/edit?id='. $option_id);
 		}
 					
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/menu_options_edit', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'menu_options_edit.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'menu_options_edit', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'menu_options_edit', $regions, $data);
+		}
 	}
 
 	public function autocomplete() {
@@ -168,7 +198,7 @@ class Menu_options extends CI_Controller {
 
     	if (!$this->user->hasPermissions('modify', 'admin/menu_options')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add!</p>');
   			return TRUE;
     	
     	} else if ( ! $this->input->get('id') AND $this->validateForm() === TRUE) { 
@@ -194,7 +224,7 @@ class Menu_options extends CI_Controller {
 						
     	if (!$this->user->hasPermissions('modify', 'admin/menu_options')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
   			return TRUE;
     	
     	} else if ($this->input->get('id') AND $this->validateForm() === TRUE) { 
@@ -219,9 +249,7 @@ class Menu_options extends CI_Controller {
 
 	public function _deleteMenuOption($option_id = FALSE) {
     	if (!$this->user->hasPermissions('modify', 'admin/menu_options')) {
-		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
-    	
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
     	} else { 
 			if (is_array($this->input->post('delete'))) {
 				foreach ($this->input->post('delete') as $key => $value) {
@@ -237,8 +265,8 @@ class Menu_options extends CI_Controller {
 	}
 	
 	public function validateForm() {
-		$this->form_validation->set_rules('option_name', 'Option Name', 'trim|required|min_length[2]|max_length[32]');
-		$this->form_validation->set_rules('option_price', 'Option Price', 'trim|required|numeric');
+		$this->form_validation->set_rules('option_name', 'Option Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
+		$this->form_validation->set_rules('option_price', 'Option Price', 'xss_clean|trim|required|numeric');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;
@@ -247,3 +275,6 @@ class Menu_options extends CI_Controller {
 		}
 	}
 }
+
+/* End of file menu_options.php */
+/* Location: ./application/controllers/admin/menu_options.php */

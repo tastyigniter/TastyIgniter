@@ -256,6 +256,8 @@ class CI_Config {
 			return $this->slash_item('base_url').$this->item('index_page');
 		}
 
+		$uri = $this->_reverse_routing($uri);
+		
 		if ($this->item('enable_query_strings') == FALSE)
 		{
 			$suffix = ($this->item('url_suffix') == FALSE) ? '' : $this->item('url_suffix');

@@ -1,10 +1,6 @@
 <?php
 class Design_model extends CI_Model {
 
-	public function __construct() {
-		$this->load->database();
-	}
-
 	public function getLayouts() {
 		$this->db->from('layouts');
 		
@@ -62,15 +58,17 @@ class Design_model extends CI_Model {
 		return $result;
 	}
 
-	public function getRouteLayoutId($uri_route = array()) {
+	public function getRouteLayoutId($uri_route = '') {
 		$result = array();
 		
-		if (is_array($uri_route)) {
-
+		if ($uri_route !== '') {
+			$route = explode('/', $uri_route);
 			$this->db->from('layout_routes');
-			//$this->db->join('layout_routes', 'layout_routes.uri_route_id = uri_routes.uri_route_id', 'left');
-		
-			$this->db->where_in('uri_route', $uri_route);
+			$this->db->where('uri_route', $route[0]);
+			
+			if (isset($route[1])) {
+				$this->db->or_where('uri_route', $route[0] .'/'. $route[1]);
+			}
 		
 			$query = $this->db->get();
 			
@@ -78,6 +76,24 @@ class Design_model extends CI_Model {
 				foreach ($query->result_array() as $row) {
 					$result[] = $row['layout_id'];
 				}
+			}
+		}
+
+		return $result;	
+	}
+	
+	public function getPageLayoutId($page_id = '') {
+		$result = array();
+		
+		if ($page_id !== '') {
+			$this->db->from('pages');
+			$this->db->where('page_id', $page_id);
+		
+			$query = $this->db->get();
+			
+			if ($query->num_rows() > 0) {
+				$row = $query->row_array();
+				$result[] = $row['layout_id'];
 			}
 		}
 
@@ -123,6 +139,7 @@ class Design_model extends CI_Model {
 			
 			$data .= "$"."route['default_controller'] = 'main/home';\n";
 			$data .= "$"."route['admin'] = 'admin/dashboard';\n";
+			$data .= "$"."route['maintenance'] = 'main/maintenance';\n";
 
 	        if (!empty($routes ) && is_array($routes)) {
 				foreach ($routes as $route) {
@@ -218,3 +235,6 @@ class Design_model extends CI_Model {
 		}
 	}
 }
+
+/* End of file design_model.php */
+/* Location: ./application/models/design_model.php */

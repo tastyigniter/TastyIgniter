@@ -1,12 +1,19 @@
 <?php
 class Locations_model extends CI_Model {
 
-	public function __construct() {
-		$this->load->database();
-	}
-	
-    public function record_count() {
-        return $this->db->count_all('locations');
+    public function record_count($filter = array()) {
+		if (!empty($filter['filter_search'])) {
+			$this->db->like('location_name', $filter['filter_search']);
+			$this->db->or_like('location_city', $filter['filter_search']);
+			$this->db->or_like('location_postcode', $filter['filter_search']);
+		}
+
+		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
+			$this->db->where('location_status', $filter['filter_status']);
+		}
+
+		$this->db->from('locations');
+		return $this->db->count_all_results();
     }
     
 	public function getList($filter = array()) {
@@ -17,6 +24,22 @@ class Locations_model extends CI_Model {
 		if ($this->db->limit($filter['limit'], $filter['page'])) {
 			$this->db->from('locations');
 			
+			if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+				$this->db->order_by($filter['sort_by'], $filter['order_by']);
+			} else {
+				$this->db->order_by('location_id', 'DESC');
+			}
+			
+			if (!empty($filter['filter_search'])) {
+				$this->db->like('location_name', $filter['filter_search']);
+				$this->db->or_like('location_city', $filter['filter_search']);
+				$this->db->or_like('location_postcode', $filter['filter_search']);
+			}
+
+			if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
+				$this->db->where('location_status', $filter['filter_status']);
+			}
+
 			$query = $this->db->get();
 			$result = array();
 		
@@ -127,23 +150,28 @@ class Locations_model extends CI_Model {
 		$query = $this->db->get();
 
 		if ($query->num_rows() > 0) {
-
 			foreach ($query->result_array() as $row) {
 				$weekday_num = $row['weekday'];
 				
 				$open_hr = mdate($datestring, strtotime($row['opening_time']));
 				$close_hr = mdate($datestring, strtotime($row['closing_time']));
 
-				$hours['day'][]		= $weekdays[$weekday_num];
-				$hours['open'][]	= $open_hr;
-				$hours['close'][]	= $close_hr;
-				
-				//$hours['day'][] = array('day' => $weekday_num, 'open' => $op_time, 'close' => $cl_time);
+				$hours[] = array(
+					'day'		=> $weekdays[$weekday_num],
+					'open'		=> $open_hr,
+					'close'		=> $close_hr
+				);				
 			}
 		} else {
-			$hours['day'] = $weekdays;
-			$hours['open'] = array('00:00', '00:00', '00:00', '00:00', '00:00', '00:00', '00:00');
-			$hours['close'] = array('00:00', '00:00', '00:00', '00:00', '00:00', '00:00', '00:00');				
+			$hours = array(
+				array('day' => 'Monday', 'open' => '00:00', 'close' => '00:00'),
+				array('day' => 'Tuesday', 'open' => '00:00', 'close' => '00:00'),
+				array('day' => 'Wednesday', 'open' => '00:00', 'close' => '00:00'),
+				array('day' => 'Thursday', 'open' => '00:00', 'close' => '00:00'),
+				array('day' => 'Friday', 'open' => '00:00', 'close' => '00:00'),
+				array('day' => 'Saturday', 'open' => '00:00', 'close' => '00:00'),
+				array('day' => 'Sunday', 'open' => '00:00', 'close' => '00:00')
+			);
 		}
 			
 		return $hours;
@@ -286,14 +314,14 @@ class Locations_model extends CI_Model {
 			$this->db->update('locations'); 
 		}
 		
-		if ($this->db->affected_rows() > 0) {
-			$this->addOpeningHours($update['location_id'], $update['hours']);
-			$this->addLocationTables($update['location_id'], $update['tables']);
+		$this->addOpeningHours($update['location_id'], $update['hours']);
+		$this->addLocationTables($update['location_id'], $update['tables']);
 
+		if ($this->db->affected_rows() > 0) {
 			$query = TRUE;
 		}
 
-		return $query;
+		return TRUE;
 	}
 
 	public function addLocation($add = array()) {
@@ -444,4 +472,22 @@ class Locations_model extends CI_Model {
 			return TRUE;
 		}
 	}
+
+	public function validateLocation($location_id) {
+		if (!empty($location_id)) {
+			$this->db->from('locations');		
+			$this->db->where('location_id', $location_id);
+		
+			$query = $this->db->get();
+
+			if ($query->num_rows() > 0) {
+				return TRUE;
+			}
+		}
+		
+		return FALSE;
+	}
 }
+
+/* End of file locations_model.php */
+/* Location: ./application/models/locations_model.php */

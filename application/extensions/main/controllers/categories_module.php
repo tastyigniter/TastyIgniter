@@ -20,8 +20,8 @@ class Categories_module extends MX_Controller {
 			$data['alert'] = '';
 		}
 
-		if ($this->input->get('category')) {
-			$data['category_id'] = $this->input->get('category'); 	
+		if ($this->uri->segment(3)) {
+			$data['category_id'] = $this->uri->segment(3); 	
 		} else {
 			$data['category_id'] = 0;			
 		}
@@ -38,7 +38,7 @@ class Categories_module extends MX_Controller {
 			$data['categories'][] = array( 														// create array of category data to pass to view
 				'category_id'	=>	$result['category_id'],
 				'category_name'	=>	$result['category_name'],
-				'href'			=>	$this->config->site_url('menus?category=' . $result['category_id'])
+				'href'			=>	site_url('main/menus/category/'. $result['category_id'])
 			);
 		}
 		
@@ -46,3 +46,6 @@ class Categories_module extends MX_Controller {
 		$this->load->view('main/categories_module', $data);
 	}		
 }
+
+/* End of file categories_module.php */
+/* Location: ./application/extensions/main/controllers/categories_module.php */

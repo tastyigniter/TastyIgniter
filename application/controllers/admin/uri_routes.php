@@ -9,10 +9,6 @@ class Uri_routes extends CI_Controller {
 
 	public function index() {
 			
-		if (!file_exists(APPPATH .'views/admin/uri_routes.php')) {
-			show_404();
-		}
-			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -28,7 +24,7 @@ class Uri_routes extends CI_Controller {
 		}		
 				
 		$data['heading'] 		= 'URI Routes';
-		$data['sub_menu_save'] 	= 'Save';
+		$data['button_save'] 	= 'Save';
 
 		if ($this->input->post('routes')) {
 			$routes = $this->input->post('routes');
@@ -46,26 +42,21 @@ class Uri_routes extends CI_Controller {
 		}
 
 		if ($this->input->post() && $this->_updateRoute() === TRUE){
-						
 			redirect('admin/uri_routes');
 		}
 		
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/uri_routes', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'uri_routes.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'uri_routes', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'uri_routes', $regions, $data);
+		}
 	}
 
 	public function _updateRoute() {
-						
     	if (!$this->user->hasPermissions('modify', 'admin/uri_routes')) {
-		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
 			return TRUE;
-    	
     	} else if ($this->input->post('routes') AND $this->validateForm() === TRUE) { 
 			$update = array();
 		
@@ -84,8 +75,8 @@ class Uri_routes extends CI_Controller {
 	public function validateForm() {
 		if ($this->input->post('routes')) {
 			foreach ($this->input->post('routes') as $key => $value) {
-				$this->form_validation->set_rules('routes['.$key.'][uri_route]', 'URI Route', 'trim|required');
-				$this->form_validation->set_rules('routes['.$key.'][controller]', 'Controller', 'trim|required');
+				$this->form_validation->set_rules('routes['.$key.'][uri_route]', 'URI Route', 'xss_clean|trim|required');
+				$this->form_validation->set_rules('routes['.$key.'][controller]', 'Controller', 'xss_clean|trim|required');
 			}
 		}
 
@@ -96,3 +87,6 @@ class Uri_routes extends CI_Controller {
 		}
 	}
 }
+
+/* End of file uri_routes.php */
+/* Location: ./application/controllers/admin/uri_routes.php */

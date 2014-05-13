@@ -6,10 +6,6 @@ class Logout extends MX_Controller {
 		$this->load->library('customer');
 		$this->lang->load('main/login_register');  												// loads language file
 
-		if (!file_exists(APPPATH .'views/main/logout.php')) {
-			show_404();
-		}
-			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
 		} else {
@@ -17,17 +13,16 @@ class Logout extends MX_Controller {
 		}
 
 		$data['text_heading'] 			= $this->lang->line('text_logout_heading');
-		$data['text_logout_msg'] 		= sprintf($this->lang->line('text_logout_msg'), $this->config->site_url('account/login'));
+		$data['text_logout_msg'] 		= sprintf($this->lang->line('text_logout_msg'), site_url('main/login'));
 
 		$this->customer->logout();
 		
-		$regions = array(
-			'main/header',
-			'main/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('main/logout', $data);
+		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'logout.php')) {
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'logout', $regions, $data);
+		} else {
+			$this->template->render('themes/main/default/', 'logout', $regions, $data);
+		}
 	}
 }
 

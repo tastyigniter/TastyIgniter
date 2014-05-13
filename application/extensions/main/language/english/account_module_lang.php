@@ -11,4 +11,4 @@ $lang['text_inbox'] 			= 'My Inbox(%s)';
 $lang['text_logout'] 			= 'Logout';
 
 /* End of file account_module_lang.php */
-/* Location: ./application/language/english/main/account_module_lang.php */
+/* Location: ./application/extensions/main/language/english/main/account_module_lang.php */

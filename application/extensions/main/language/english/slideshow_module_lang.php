@@ -2,5 +2,5 @@
 
 $lang['text_heading'] 			= 'Welcome To TastyIgniter!';
 
-/* End of file local_module.php */
-/* Location: ./application/language/english/main/local_module.php */
+/* End of file slideshow_module.php */
+/* Location: ./application/extensions/main/language/english/main/slideshow_module.php */

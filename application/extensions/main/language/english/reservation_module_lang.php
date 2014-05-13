@@ -45,5 +45,5 @@ $lang['text_greetings'] 		= 'Hello %s,';
 $lang['text_success'] 			= 'Your reservation at %s has been booked for %s on %s at %s.<br />Thanks for reserving with us online!';
 $lang['text_signature'] 		= 'Regards, <br />%s <br /><br />We hope to see you again soon.';
 
-/* End of file home_lang.php */
-/* Location: ./application/language/english/main/home_lang.php */
+/* End of file reservation_lang.php */
+/* Location: ./application/extensions/main/language/english/main/reservation_lang.php */

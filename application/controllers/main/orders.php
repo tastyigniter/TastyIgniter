@@ -12,10 +12,6 @@ class Orders extends MX_Controller {
 	public function index() {
 		$this->lang->load('main/orders');  														// loads language file
 		
-		if (!file_exists(APPPATH .'views/main/orders.php')) {
-			show_404();
-		}
-			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
@@ -31,6 +27,7 @@ class Orders extends MX_Controller {
 		$data['text_empty'] 			= $this->lang->line('text_empty');
 		$data['text_delivery'] 			= $this->lang->line('text_delivery');
 		$data['text_collection'] 		= $this->lang->line('text_collection');
+		$data['text_reorder'] 			= $this->lang->line('text_reorder');
 		$data['text_leave_review'] 		= $this->lang->line('text_leave_review');
 		$data['column_id'] 				= $this->lang->line('column_id');
 		$data['column_status'] 			= $this->lang->line('column_status');
@@ -43,7 +40,8 @@ class Orders extends MX_Controller {
 		$data['button_order'] 			= $this->lang->line('button_order');
 		// END of retrieving lines from language file to pass to view.
 
-		$data['back'] 					= $this->config->site_url('account');
+		$data['back'] 					= site_url('main/account');
+		$data['new_order_url'] 			= site_url('main/menus');
 
 		$data['orders'] = array();
 		$results = $this->Orders_model->getMainOrders($this->customer->getId());				// retrieve customer orders based on customer id from getMainOrders method in Orders model
@@ -64,23 +62,23 @@ class Orders extends MX_Controller {
 				'order_total' 			=> $this->currency->format($result['order_total']),		// add currency symbol and format order total to two decimal places
 				'order_type' 			=> ucwords(strtolower($order_type)),					// convert string to lower case and capitalize first letter
 				'status_name' 			=> $result['status_name'],
-				'view' 					=> $this->config->site_url('account/orders/view?order_id=' . $result['order_id']),
-				'leave_review' 			=> $this->config->site_url('account/reviews/add?order_id='. $result['order_id'] .'&location_id='. $result['location_id'])
+				'view' 					=> site_url('main/orders/view/' . $result['order_id']),
+				'reorder' 				=> site_url('main/orders/reorder/'. $result['order_id']),
+				'leave_review' 			=> site_url('main/reviews/add/'. $result['order_id'] .'/'. $result['location_id'])
 			);
 		}
 				
-		$regions = array('main/header', 'main/content_left', 'main/footer');
-		$this->template->regions($regions);
-		$this->template->load('main/orders', $data);
+		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'orders.php')) {
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'orders', $regions, $data);
+		} else {
+			$this->template->render('themes/main/default/', 'orders', $regions, $data);
+		}
 	}
 	
 	public function view() {
 		$this->lang->load('main/orders');  														// loads language file
 
-		if (!file_exists(APPPATH .'views/main/orders_view.php')) {
-			show_404();
-		}
-			
 		if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
   			redirect('account/login');
 		}
@@ -91,8 +89,8 @@ class Orders extends MX_Controller {
 			$data['alert'] = '';
 		}
 
-		if ($this->input->get('order_id')) {															// check if customer_id is set in uri string
-			$order_id = (int)$this->input->get('order_id');
+		if ($this->uri->segment(4)) {															// check if customer_id is set in uri string
+			$order_id = (int)$this->uri->segment(4);
 		} else {
   			redirect('account/orders');
 		}
@@ -108,7 +106,8 @@ class Orders extends MX_Controller {
 		$data['column_location'] 		= $this->lang->line('column_location');
 		$data['button_reorder'] 		= $this->lang->line('button_reorder');
 		// END of retrieving lines from language file to pass to view.
-
+		
+		$data['reorder_url'] 			= site_url('main/orders/reorder/'. $order_id);
 
 		if ($result) {
 			$data['error'] 			= '';
@@ -151,8 +150,8 @@ class Orders extends MX_Controller {
 			}
 
 			$data['totals'] = array();			
-			$order_total = $this->Orders_model->getOrderTotal($result['order_id']);
-			foreach ($order_total as $total) {
+			$order_totals = $this->Orders_model->getOrderTotals($result['order_id']);
+			foreach ($order_totals as $total) {
 				$data['totals'][] = array(
 					'title' 		=> $total['title'],
 					'value' 		=> $this->currency->format($total['value'])			
@@ -166,13 +165,71 @@ class Orders extends MX_Controller {
 		}
 		
 		$data['button_back'] 			= $this->lang->line('button_back');
-		$data['back'] 					= $this->config->site_url('account/inbox');
+		$data['back_url'] 				= site_url('main/orders');
 
-		$regions = array('main/header', 'main/content_left', 'main/footer');
-		$this->template->regions($regions);
-		$this->template->load('main/orders_view', $data);
+		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'orders_view.php')) {
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'orders_view', $regions, $data);
+		} else {
+			$this->template->render('themes/main/default/', 'orders_view', $regions, $data);
+		}
+	}
+
+	public function reorder() {
+		$this->load->library('cart'); 															// load the cart library
+		$this->lang->load('main/orders');  														// loads language file
+
+		if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
+  			redirect('account/login');
+		}
+
+		if ($this->uri->segment(4)) {															// check if customer_id is set in uri string
+			$order_id = (int)$this->uri->segment(4);
+		} else {
+  			redirect('account/orders');
+		}
+
+		$order_menus = $this->Orders_model->getOrderMenus($order_id);
+		if ($order_menus) {
+			foreach ($order_menus as $menu) {
+				$cart_data = array();
+				$update_cart = FALSE;
+				$options = array();
+				if (!empty($menu['order_option_id'])) {
+					$options = array('name' => $menu['option_name'], 'price' => $this->cart->format_number($menu['option_price']));
+				}
+
+				$quantity = $menu['quantity'];
+				foreach ($this->cart->contents() as $cart_item) {								// loop through items in cart
+					$cart_option_id = (empty($cart_item['option_id'])) ? '' : $cart_item['option_id'];					
+					$menu_option_id = (empty($menu['order_option_id'])) ? '' : $menu_option_id;					
+					if ($cart_item['id'] === $menu['menu_id'] AND $cart_option_id === $menu_option_id) {
+						$row_id = $cart_item['rowid'];
+						$quantity = $cart_item['qty'] + $menu['quantity'];
+						$update_cart = TRUE;
+					}
+				}
+
+				if ($update_cart === TRUE) {
+					$this->cart->update(array('rowid' => $row_id, 'qty' => $quantity));
+				} else {
+					$cart_data = array(
+						'id' 			=> $menu['menu_id'],
+						'name' 			=> $menu['name'],			
+						'qty' 			=> $quantity,
+						'price' 		=> $this->cart->format_number($menu['price']),
+						'options'		=> $options
+					);
+				
+					$added_data = $this->cart->insert($cart_data);
+				}
+			}
+			
+			$this->session->set_flashdata('alert', '<p class="success">You have successfully added the menus from order ID '. $order_id .' to your order!</p>');
+			redirect('main/menus');
+		}
 	}
 }
 
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */
+/* End of file orders.php */
+/* Location: ./application/controllers/orders.php */

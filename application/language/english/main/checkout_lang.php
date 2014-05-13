@@ -1,6 +1,7 @@
 <?php
 $lang['text_heading'] 			= 'Checkout';
 $lang['text_checkout'] 			= 'Almost there, Please confirm your details and proceed to payment.';
+$lang['text_payments'] 			= 'Please choose your payment method.';
 $lang['text_asap'] 				= 'ASAP';
 $lang['text_new'] 				= 'New';
 $lang['text_existing'] 			= 'Existing';
@@ -11,6 +12,7 @@ $lang['text_ip_warning'] 		= '(Warning: Your IP Address has been logged for our 
 $lang['button_check_postcode'] 	= 'Check Postcode';
 $lang['button_back'] 			= 'Add Menus';
 $lang['button_continue'] 		= 'Payment';
+$lang['button_confirm'] 		= 'Confirm';
 
 $lang['text_postcode'] 			= 'Enter your postcode to order(UK only):';
 $lang['entry_delivery'] 		= 'Delivery';

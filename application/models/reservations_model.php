@@ -1,20 +1,45 @@
 <?php
 class Reservations_model extends CI_Model {
 
-	public function __construct() {
-		$this->load->database();
-	}
-
     public function record_count($filter = array()) {
-		if (!empty($filter['location'])) {
-			$this->db->where('location_id', $filter['location']);
+		if (!empty($filter['filter_search'])) {
+			$this->db->like('reservation_id', $filter['filter_search']);
+			$this->db->or_like('LCASE(location_name)', strtolower($filter['filter_search']));
+			$this->db->or_like('LCASE(first_name)', strtolower($filter['filter_search']));
+			$this->db->or_like('LCASE(last_name)', strtolower($filter['filter_search']));
+			$this->db->or_like('LCASE(table_name)', strtolower($filter['filter_search']));
+			$this->db->or_like('LCASE(staff_name)', strtolower($filter['filter_search']));
 		}
-	
-		if (!empty($filter['reserve_date'])) {
-			$this->db->where('reserve_date', mdate('%Y-%m-%d', strtotime($filter['reserve_date'])));
+
+		if (!empty($filter['filter_status'])) {
+			$this->db->where('reservations.status', $filter['filter_status']);
 		}
-	
+
+		if (!empty($filter['filter_location'])) {
+			$this->db->where('reservations.location_id', $filter['filter_location']);
+		}
+
+		if (!empty($filter['filter_date'])) {
+			$date = explode('-', $filter['filter_date']);
+			$this->db->where('YEAR(reserve_date)', $date[0]);
+			$this->db->where('MONTH(reserve_date)', $date[1]);
+			
+			if (isset($date[2])) {
+				$this->db->where('DAY(reserve_date)', $date[2]);
+			}
+		} else if (!empty($filter['filter_year']) AND !empty($filter['filter_month']) AND !empty($filter['filter_day'])) {
+			$this->db->where('YEAR(reserve_date)', $filter['filter_year']);
+			$this->db->where('MONTH(reserve_date)', $filter['filter_month']);
+			$this->db->where('DAY(reserve_date)', $filter['filter_day']);
+		} else if (!empty($filter['filter_year']) AND !empty($filter['filter_month'])) {
+			$this->db->where('YEAR(reserve_date)', $filter['filter_year']);
+			$this->db->where('MONTH(reserve_date)', $filter['filter_month']);
+		}
+
  		$this->db->from('reservations');
+		$this->db->join('locations', 'locations.location_id = reservations.location_id', 'left');
+		$this->db->join('tables', 'tables.table_id = reservations.table_id', 'left');
+		$this->db->join('staffs', 'staffs.staff_id = reservations.staff_id', 'left');
 		return $this->db->count_all_results();
     }
     
@@ -29,20 +54,52 @@ class Reservations_model extends CI_Model {
 			$this->db->join('locations', 'locations.location_id = reservations.location_id', 'left');
 			$this->db->join('statuses', 'statuses.status_id = reservations.status', 'left');
 			$this->db->join('staffs', 'staffs.staff_id = reservations.staff_id', 'left');
-			$this->db->order_by('reservations.reserve_date', 'DESC');
+			
+			if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+				$this->db->order_by($filter['sort_by'], $filter['order_by']);
+			} else {
+				$this->db->order_by('reserve_date', 'DESC');
+			}
 		
-			if (!empty($filter['location'])) {
-				$this->db->where('reservations.location_id', $filter['location']);
+			if (!empty($filter['filter_search'])) {
+				$this->db->like('reservation_id', $filter['filter_search']);
+				$this->db->or_like('LCASE(location_name)', strtolower($filter['filter_search']));
+				$this->db->or_like('LCASE(first_name)', strtolower($filter['filter_search']));
+				$this->db->or_like('LCASE(last_name)', strtolower($filter['filter_search']));
+				$this->db->or_like('LCASE(table_name)', strtolower($filter['filter_search']));
+				$this->db->or_like('LCASE(staff_name)', strtolower($filter['filter_search']));
+			}
+
+			if (!empty($filter['filter_status'])) {
+				$this->db->where('reservations.status', $filter['filter_status']);
+			}
+	
+			if (!empty($filter['filter_location'])) {
+				$this->db->where('reservations.location_id', $filter['filter_location']);
+			}
+	
+			if (!empty($filter['filter_date'])) {
+				$date = explode('-', $filter['filter_date']);
+				$this->db->where('YEAR(reserve_date)', $date[0]);
+				$this->db->where('MONTH(reserve_date)', $date[1]);
+			
+				if (isset($date[2])) {
+					$this->db->where('DAY(reserve_date)', (int)$date[2]);
+				}
+
+			} else if (!empty($filter['filter_year']) AND !empty($filter['filter_month']) AND !empty($filter['filter_day'])) {
+				$this->db->where('YEAR(reserve_date)', $filter['filter_year']);
+				$this->db->where('MONTH(reserve_date)', $filter['filter_month']);
+				$this->db->where('DAY(reserve_date)', $filter['filter_day']);
+			} else if (!empty($filter['filter_year']) AND !empty($filter['filter_month'])) {
+				$this->db->where('YEAR(reserve_date)', $filter['filter_year']);
+				$this->db->where('MONTH(reserve_date)', $filter['filter_month']);
 			}
 	
 			if ($staff_id !== FALSE) {
 				$this->db->where('staff_id', $staff_id);
 			}
 
-			if (!empty($filter['reserve_date'])) {
-				$this->db->where('reserve_date', mdate('%Y-%m-%d', strtotime($filter['reserve_date'])));
-			}
-		
 			$query = $this->db->get();
 			$result = array();
 		
@@ -120,11 +177,48 @@ class Reservations_model extends CI_Model {
 		}
 	}
 
-	public function getTotalLocationGuests($location_id = FALSE, $date = FALSE) {
+	public function getReservationDates() {
+		$this->db->select('reserve_date, MONTH(reserve_date) as month, YEAR(reserve_date) as year');
+		$this->db->from('reservations');
+		$this->db->group_by('MONTH(reserve_date)');
+		$this->db->group_by('YEAR(reserve_date)');
+		$query = $this->db->get();
+		$result = array();
+
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+
+		return $result;
+	}
+	
+	public function getTotalCapacityByLocation($location_id = FALSE) {
+		$result = 0;
+
+		$this->db->select_sum('tables.max_capacity', 'total_seats');
+		
+		if (!empty($location_id)) {
+			$this->db->where('location_id', $location_id);
+		}
+
+		$this->db->from('location_tables');
+		$this->db->join('tables', 'tables.table_id = location_tables.table_id', 'left');
+	
+		$query = $this->db->get();
+		if ($query->num_rows() > 0) {
+			$row = $query->row_array();
+			$result = $row['total_seats'];
+		}
+	
+		return $result;
+	}
+	
+	public function getTotalGuestsByLocation($location_id = FALSE, $date = FALSE) {
 		$result = 0;
 
 		$this->db->select_sum('reservations.guest_num', 'total_guest');
 		$this->db->where('status', (int)$this->config->item('reserve_status'));
+		
 		if (!empty($location_id)) {
 			$this->db->where('location_id', $location_id);
 		}
@@ -325,10 +419,10 @@ class Reservations_model extends CI_Model {
 			$this->db->update('reservations');
 					
 			$this->load->model('Statuses_model');
-			$status = $this->Statuses_model->getStatus($status_id);
+			$status = $this->Statuses_model->getStatus($this->config->item('reserve_status'));
 			$reserve_history = array(
 				'order_id' 		=> $reservation_id, 
-				'status_id' 	=> $status_id, 
+				'status_id' 	=> $status['status_id'], 
 				'notify' 		=> $notify, 
 				'comment' 		=> $status['comment'], 
 				'date_added' 	=> mdate('%Y-%m-%d %H:%i:%s', time())
@@ -369,63 +463,66 @@ class Reservations_model extends CI_Model {
 		return $this->db->delete('reservations');
 	}
 
-	public function _sendMail($email) {
-		//loading upload library
+	public function getMailData($reservation_id) {
+		$data = array();
+	
+		$result = $this->getAdminReservation($reservation_id);
+		if ($result) {
+			$this->load->library('country');
+
+			$data['reserve_number'] 	= $result['reservation_id'];
+			$data['reserve_link'] 		= site_url('main/reservations?id='. $result['reservation_id']);
+			$data['reserve_time']		= mdate('%H:%i', strtotime($result['reserve_time']));
+			$data['reserve_date']		= mdate('%l, %F %j, %Y', strtotime($result['reserve_date']));
+			$data['reserve_guest'] 		= $result['guest_num'];
+			$data['first_name'] 		= $result['first_name'];
+			$data['last_name'] 			= $result['last_name'];
+			$data['email'] 				= $result['email'];
+			$data['signature'] 			= $this->config->item('site_name');
+			$data['location_name']		= $result['location_name'];
+		}
+		
+		return $data;
+	}
+	
+	public function _sendMail($reservation_id) {
 	   	$this->load->library('email');
-		$this->load->model('Customers_model');
-		$this->load->model('Locations_model');
-		$this->load->model('Tables_model');
-		$this->lang->load('main/reserve_table');
+		$this->load->library('mail_template'); 
+		
+		$notify = '0';
+		
+		$mail_data = $this->getMailData($reservation_id);
+		if ($mail_data) {
+			$this->email->set_protocol($this->config->item('protocol'));
+			$this->email->set_mailtype($this->config->item('mailtype'));
+			$this->email->set_smtp_host($this->config->item('smtp_host'));
+			$this->email->set_smtp_port($this->config->item('smtp_port'));
+			$this->email->set_smtp_user($this->config->item('smtp_user'));
+			$this->email->set_smtp_pass($this->config->item('smtp_pass'));
+			$this->email->set_newline("\r\n");
+			$this->email->initialize();
 
-		//setting upload preference
-		$this->email->set_protocol($this->config->item('protocol'));
-		$this->email->set_mailtype($this->config->item('mailtype'));
-		$this->email->set_smtp_host($this->config->item('smtp_host'));
-		$this->email->set_smtp_port($this->config->item('smtp_port'));
-		$this->email->set_smtp_user($this->config->item('smtp_user'));
-		$this->email->set_smtp_pass($this->config->item('smtp_pass'));
-		$this->email->set_newline("\r\n");
-		$this->email->initialize();
+			$this->email->from($this->config->item('site_email'), $this->config->item('site_name'));
+			
+			if ($this->config->item('send_reserve_email') === '1') {
+				$this->email->cc($this->location->getEmail());
+			}
 		
-		$location 		= $this->Locations_model->getLocation($email['location_id']);
-		$table 			= $this->Tables_model->getTable($email['table_id']);
-		
-		if ($this->config->item('reserve_prefix') === '1') {
-			$reservation_id = $table['table_name'] .'-'. $email['reservation_id'];
-		} else {
-			$reservation_id = $email['reservation_id'];
+			$message = $this->mail_template->parseTemplate('reservation', $mail_data);
+			$this->email->to(strtolower($mail_data['email']));
+			$this->email->subject($this->mail_template->getSubject());
+			$this->email->message($message);
+			
+			if ( ! $this->email->send()) {
+				$notify = '0';
+			} else {
+				$notify = '1';
+			}			
 		}
-
-		$customer_name 	= $email['customer_name'];
-		$guest_num 		= $email['guest_num'] .' person(s)';
-		$reserve_date 	= $email['reserve_date'];
-		$reserve_time 	= $email['reserve_time'];
-						
-		$data['text_success'] = sprintf($this->lang->line('text_success'), $location['location_name'], $guest_num, mdate('%l, %F %j, %Y', strtotime($reserve_date)), $reserve_time);
-		$data['text_greetings'] = sprintf($this->lang->line('text_greetings'), $customer_name);
-		$data['text_signature'] = sprintf($this->lang->line('text_signature'), $this->config->item('site_name'));
-		
-		$subject = sprintf($this->lang->line('text_subject'), $reservation_id);
-		$message = $this->load->view('main/reservation_email', $data, TRUE);
-
-		$this->email->from($this->config->item('site_email'), $this->config->item('site_name'));
-
-		if ($this->config->item('send_reserve_email') === '1') {
-			$this->email->cc($this->location->getEmail());
-		}
-		
-		$this->email->to(strtolower($email['email']));
-
-		$this->email->subject($subject);
-		$this->email->message($message);
-	   	//$this->email->message( $this->load->view( 'emails/message', $data, true ) );
-
-		if ( ! $this->email->send()) {
-			$notify = '0';
-		} else {
-			$notify = '1';
-		}			
 		
 		return $notify;
 	}
 }
+
+/* End of file reservations_model.php */
+/* Location: ./application/models/reservations_model.php */

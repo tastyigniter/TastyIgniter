@@ -143,7 +143,7 @@ class Reservation_module extends MX_Controller {
 			$data['time'] 		= mdate('%h:%i %a', strtotime($reservation['reserve_time']));
 			$data['occasion'] 	= $reservation['occasion'];
 
-			$data['find_again_url'] = $this->config->site_url('reserve/table?location='.$reservation['location'].'&guest_num='. $reservation['guest_num'].'&reserve_date='.urlencode($reservation['reserve_date']).'&occasion='.$data['occasion']);
+			$data['find_again_url'] = site_url('main/reserve_table?location='.$reservation['location'].'&guest_num='. $reservation['guest_num'].'&reserve_date='.urlencode($reservation['reserve_date']).'&occasion='.$data['occasion']);
 		}
 
 		$this->load->view('main/reservation_module', $data);
@@ -158,10 +158,10 @@ class Reservation_module extends MX_Controller {
 	
 		$_POST=$_GET;
 		
-		$this->form_validation->set_rules('location', 'Location', 'trim|required|integer');
-		$this->form_validation->set_rules('guest_num', 'Guest Number', 'trim|required|integer');
-		$this->form_validation->set_rules('reserve_date', 'Date', 'trim|required|valid_date|callback_valid_date');
-		$this->form_validation->set_rules('occasion', 'Occasion', 'trim|required|integer');
+		$this->form_validation->set_rules('location', 'Location', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('guest_num', 'Guest Number', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('reserve_date', 'Date', 'xss_clean|trim|required|valid_date|callback_valid_date');
+		$this->form_validation->set_rules('occasion', 'Occasion', 'xss_clean|trim|required|integer');
 
   		if ($this->form_validation->run() === TRUE) {
 		
@@ -220,3 +220,6 @@ class Reservation_module extends MX_Controller {
 		}
     }
 }
+
+/* End of file reservation_module.php */
+/* Location: ./application/extensions/main/controllers/reservation_module.php */

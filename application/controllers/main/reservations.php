@@ -23,5 +23,5 @@ class Welcome extends CI_Controller {
 	}
 }
 
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */
+/* End of file reservations.php */
+/* Location: ./application/controllers/reservations.php */

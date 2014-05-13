@@ -21,7 +21,7 @@ a {
 	font-weight: normal;
 }
 
-h1 {
+h1, h2 {
 	color: #444;
 	background-color: transparent;
 	border-bottom: 1px solid #D0D0D0;

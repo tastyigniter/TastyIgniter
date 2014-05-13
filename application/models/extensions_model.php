@@ -1,10 +1,6 @@
 <?php
 class Extensions_model extends CI_Model {
 
-	public function __construct() {
-		$this->load->database();
-	}
-
 	public function getList() {
 		$this->db->from('extensions');
 		
@@ -68,3 +64,6 @@ class Extensions_model extends CI_Model {
 		$this->db->delete('extensions');
 	}
 }
+
+/* End of file extensions_model.php */
+/* Location: ./application/models/extensions_model.php */

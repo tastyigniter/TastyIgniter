@@ -9,10 +9,6 @@ class Staff_groups extends CI_Controller {
 
 	public function index() {
 			
-		if (!file_exists(APPPATH .'views/admin/staff_groups.php')) {
-			show_404();
-		}
-			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -28,8 +24,8 @@ class Staff_groups extends CI_Controller {
 		}
 
 		$data['heading'] 			= 'Staff Groups';
-		$data['sub_menu_add'] 		= 'Add new staff group';
-		$data['sub_menu_delete'] 	= 'Delete';
+		$data['button_add'] 		= 'New';
+		$data['button_delete'] 		= 'Delete';
 		$data['text_empty'] 		= 'There is no staff group available.';
 
 		//load ratings data into array
@@ -39,7 +35,7 @@ class Staff_groups extends CI_Controller {
 			$data['staff_groups'][] = array(
 				'staff_group_id'		=>	$result['staff_group_id'],
 				'staff_group_name'		=>	$result['staff_group_name'],
-				'edit'					=> $this->config->site_url('admin/staff_groups/edit?id=' . $result['staff_group_id'])
+				'edit'					=> site_url('admin/staff_groups/edit?id=' . $result['staff_group_id'])
 			);
 		}
 		
@@ -50,7 +46,6 @@ class Staff_groups extends CI_Controller {
 			'common/forgotten'
 		);
 
-	
 		$files = glob(APPPATH .'/controllers/admin/*.php');
 		$extension_files = glob(APPPATH .'extensions/admin/controllers/*.php');
 	
@@ -70,20 +65,15 @@ class Staff_groups extends CI_Controller {
 		    redirect('admin/staff_groups');
 		}	
 
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/staff_groups', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'staff_groups.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'staff_groups', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'staff_groups', $regions, $data);
+		}
 	}
 
 	public function edit() {
-		
-		if (!file_exists(APPPATH .'views/admin/staff_groups_edit.php')) {
-			show_404();
-		}
 			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
@@ -99,20 +89,20 @@ class Staff_groups extends CI_Controller {
 			$data['alert'] = '';
 		}
 
-		//check if customer_id is set in uri string
 		if (is_numeric($this->input->get('id'))) {
 			$staff_group_id = (int)$this->input->get('id');
-			$data['action']	= $this->config->site_url('admin/staff_groups/edit?id='. $staff_group_id);
+			$data['action']	= site_url('admin/staff_groups/edit?id='. $staff_group_id);
 		} else {
 		    $staff_group_id = 0;
-			$data['action']	= $this->config->site_url('admin/staff_groups/edit');
+			$data['action']	= site_url('admin/staff_groups/edit');
 		}
 
 		$result = $this->Staff_groups_model->getStaffGroup($staff_group_id);
 		
 		$data['heading'] 			= 'Staff Group - '. $result['staff_group_name'];
-		$data['sub_menu_save'] 		= 'Save';
-		$data['sub_menu_back'] 		= $this->config->site_url('admin/staff_groups');
+		$data['button_save'] 		= 'Save';
+		$data['button_save_close'] 	= 'Save & Close';
+		$data['sub_menu_back'] 		= site_url('admin/staff_groups');
 
 		if (isset($this->input->post['staff_group_name'])) {
 			$data['staff_group_name'] = $this->input->post['staff_group_name'];
@@ -164,36 +154,32 @@ class Staff_groups extends CI_Controller {
 		$data['paths'] = $paths;
 
 		if ($this->input->post() && $this->_addStaffGroup() === TRUE) {
-		
 		    redirect('admin/staff_groups');
 		}
 
 		if ($this->input->post() && $this->_updateStaffGroup() === TRUE) {
-		
-			redirect('admin/staff_groups');
-
+			if ($this->input->post('save_close') === '1') {
+				redirect('admin/staff_groups');
+			}
+			
+			redirect('admin/staff_groups/edit?id='. $staff_group_id);
 		}
 		
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/staff_groups_edit', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'staff_groups_edit.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'staff_groups_edit', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'staff_groups_edit', $regions, $data);
+		}
 	}
 
 	public function _addStaffGroup() {
-
     	if (!$this->user->hasPermissions('modify', 'admin/staff_groups')) {
-		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add!</p>');
   			return TRUE;
-    	
     	} else if ( ! $this->input->get('id') AND $this->validateForm() === TRUE) { 
 			$add = array();
 
-			//Sanitizing the POST values
 			$add['staff_group_name']	= $this->input->post('staff_group_name');
 			
 			if ($this->input->post('permission')) {
@@ -214,14 +200,11 @@ class Staff_groups extends CI_Controller {
 
 	public function _updateStaffGroup() {
     	if (!$this->user->hasPermissions('modify', 'admin/staff_groups')) {
-		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
   			return TRUE;
-    	
     	} else if ($this->input->get('id') AND $this->validateForm() === TRUE) { 
 			$update = array();
 
-			//Sanitizing the POST values
 			$update['staff_group_id']		= $this->input->get('id');
 			$update['staff_group_name']		= $this->input->post('staff_group_name');
 		
@@ -243,9 +226,7 @@ class Staff_groups extends CI_Controller {
 
 	public function _deleteStaffGroup() {
     	if (!$this->user->hasPermissions('modify', 'admin/staff_groups')) {
-		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
-    	
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
     	} else { 
 			if (is_array($this->input->post('delete'))) {
 				foreach ($this->input->post('delete') as $key => $value) {
@@ -261,9 +242,9 @@ class Staff_groups extends CI_Controller {
 	}
 	
 	public function validateForm() {
-		$this->form_validation->set_rules('staff_group_name', 'Staff Group', 'trim|required|min_length[2]|max_length[32]');
-		$this->form_validation->set_rules('permission[access][]', 'Access Permission', 'trim');
-		$this->form_validation->set_rules('permission[modify][]', 'Modify Permission', 'trim');
+		$this->form_validation->set_rules('staff_group_name', 'Staff Group', 'xss_clean|trim|required|min_length[2]|max_length[32]');
+		$this->form_validation->set_rules('permission[access][]', 'Access Permission', 'xss_clean|trim');
+		$this->form_validation->set_rules('permission[modify][]', 'Modify Permission', 'xss_clean|trim');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;
@@ -272,3 +253,6 @@ class Staff_groups extends CI_Controller {
 		}		
 	}
 }
+
+/* End of file staff_groups.php */
+/* Location: ./application/controllers/admin/staff_groups.php */

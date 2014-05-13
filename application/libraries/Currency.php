@@ -42,3 +42,8 @@ class Currency {
 		return $this->CI->currency_symbol . number_format($num, 2, '.', ',');	
 	}
 }
+
+// END Currency Class
+
+/* End of file Currency.php */
+/* Location: ./application/libraries/Currency.php */

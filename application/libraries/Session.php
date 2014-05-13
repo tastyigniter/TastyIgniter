@@ -310,4 +310,8 @@ class  CI_Session {
         }
     }
 }
-?>
+
+// END Session Class
+
+/* End of file Session.php */
+/* Location: ./application/libraries/Session.php */

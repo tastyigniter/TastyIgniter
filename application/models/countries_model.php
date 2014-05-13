@@ -1,12 +1,17 @@
 <?php
 class Countries_model extends CI_Model {
 
-	public function __construct() {
-		$this->load->database();
-	}
-	
-    public function record_count() {
-        return $this->db->count_all('countries');
+    public function record_count($filter = array()) {
+		if (!empty($filter['filter_search'])) {
+			$this->db->like('country_name', $filter['filter_search']);
+		}
+
+		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
+			$this->db->where('status', $filter['filter_status']);
+		}
+
+		$this->db->from('countries');
+		return $this->db->count_all_results();
     }
     
 	public function getList($filter = array()) {
@@ -16,7 +21,20 @@ class Countries_model extends CI_Model {
 			
 		if ($this->db->limit($filter['limit'], $filter['page'])) {
 			$this->db->from('countries');
-			$this->db->order_by('country_name', 'ASC');
+			
+			if (!empty($filter['filter_search'])) {
+				$this->db->like('country_name', $filter['filter_search']);
+			}
+
+			if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
+				$this->db->where('status', $filter['filter_status']);
+			}
+
+			if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+				$this->db->order_by($filter['sort_by'], $filter['order_by']);
+			} else {
+				$this->db->order_by('country_name', 'ASC');
+			}
 			
 			$query = $this->db->get();
 			$result = array();
@@ -129,3 +147,6 @@ class Countries_model extends CI_Model {
 		}
 	}
 }
+
+/* End of file countries_model.php */
+/* Location: ./application/models/countries_model.php */

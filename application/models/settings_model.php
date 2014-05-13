@@ -1,10 +1,6 @@
 <?php
 class Settings_model extends CI_Model {
 
-	public function __construct() {
-		$this->load->database();
-	}
-
 	public function getAll() {
 		$this->db->from('settings');
 		
@@ -48,6 +44,24 @@ class Settings_model extends CI_Model {
 		}
  	}
 	
+	public function addSetting($sort, $key, $value, $serialized = '0') {
+		if (isset($sort, $key, $value, $serialized)) {
+			$this->db->where('sort', $sort);
+			$this->db->where('key', $key);
+			$this->db->delete('settings');
+
+			$this->db->set('sort', $sort);
+			$this->db->set('key', $key);
+			$this->db->set('value', $value);
+			$this->db->set('serialized', $serialized);
+			$this->db->insert('settings');
+		}
+
+		if ($this->db->affected_rows() > 0) {
+			return TRUE;
+		}
+	}
+	
 	public function deleteSettings($sort) {
 		$this->db->where('sort', $sort);
 			
@@ -55,7 +69,6 @@ class Settings_model extends CI_Model {
 	}
 
 	public function backupDatabase($tables = array()) {
-
 		if (!empty($tables)) {
 			$this->load->dbutil();
 			$this->load->helper('file');
@@ -95,3 +108,6 @@ class Settings_model extends CI_Model {
 		}
 	}
 }
+
+/* End of file settings_model.php */
+/* Location: ./application/models/settings_model.php */

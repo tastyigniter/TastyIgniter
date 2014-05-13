@@ -16,13 +16,22 @@ class Customer {
 	public function __construct() {
 		$this->CI =& get_instance();
 		$this->CI->load->database();
+		$this->CI->load->library('user_agent');	    
 		
-		if ( ! $this->CI->session->userdata('customer_id')) { 
+		$this->CI->load->library('activity');	    
+		$this->CI->activity->online();
+		
+		$this->initialize();
+	}
+
+	public function initialize() {
+		$cust_info = $this->CI->session->userdata('cust_info');
+		if ( ! isset($cust_info['customer_id']) AND  ! isset($cust_info['email'])) { 
 			$this->logout();
 		} else {
 			$this->CI->db->from('customers');	
-			$this->CI->db->where('customer_id', $this->CI->session->userdata('customer_id'));
-			$this->CI->db->where('email', $this->CI->session->userdata('customer_email'));
+			$this->CI->db->where('customer_id', $cust_info['customer_id']);
+			$this->CI->db->where('email', $cust_info['email']);
 			$query = $this->CI->db->get();
 			$result = $query->row_array();
 
@@ -37,24 +46,7 @@ class Customer {
 				$this->CI->security_question_id = $result['security_question_id'];
 				$this->CI->security_answer 		= $result['security_answer'];
 
-				$this->CI->db->from('customers_activity');	
-				$this->CI->db->where('customer_id', $result['customer_id']);
-				$this->CI->db->where('ip_address', $this->CI->input->ip_address());
-				$query = $this->CI->db->get();
-
-				if ($query->num_rows() < 1) {
-					$this->CI->load->library('user_agent');	    
-					$access_type = ($this->CI->agent->mobile()) ? 'mobile' : 'browser';
-					$ip_json = @file_get_contents('http://api.hostip.info/get_json.php?ip='. $this->CI->input->ip_address());
-					$ip_data = json_decode($ip_json);
-					$this->CI->db->set('customer_id', $result['customer_id']);
-					$this->CI->db->set('access_type', $access_type);
-					$this->CI->db->set('browser', $this->CI->agent->browser());
-					$this->CI->db->set('ip_address', $this->CI->input->ip_address());
-					$this->CI->db->set('country_name', trim($ip_data->country_name, '()'));
-					$this->CI->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', time()));
-					$this->CI->db->insert('customers_activity');
-				}
+				$this->CI->activity->customer($result['customer_id']);
 			} else {
 				$this->logout();
 			}
@@ -72,8 +64,12 @@ class Customer {
 		if ($query->num_rows() === 1) {
 			$result = $query->row_array();
 			
-			$this->CI->session->set_userdata('customer_id', $result['customer_id']);
-			$this->CI->session->set_userdata('customer_email', $result['email']);
+			$cust_info = array(
+				'customer_id' 	=> $result['customer_id'],
+				'email'			=> $result['email']
+			);
+			
+			$this->CI->session->set_userdata('cust_info', $cust_info);
 			
 			$this->CI->customer_id = $result['customer_id'];
 			$this->CI->email = $result['email'];
@@ -90,8 +86,7 @@ class Customer {
 	}
 
   	public function logout() {		
-		$this->CI->session->unset_userdata('customer_id');
-		$this->CI->session->unset_userdata('customer_email');
+		$this->CI->session->unset_userdata('cust_info');
 
 		$this->CI->customer_id = '';
 		$this->CI->firstname = '';
@@ -156,3 +151,8 @@ class Customer {
 	    return $this->CI->security_answer;
 	}
 }
+
+// END Customer Class
+
+/* End of file Customer.php */
+/* Location: ./application/libraries/Customer.php */

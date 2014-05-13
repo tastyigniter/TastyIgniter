@@ -8,10 +8,6 @@ class Logout extends CI_Controller {
 
 	public function index() {
 		
-		if (!file_exists(APPPATH .'views/admin/logout.php')) {
-			show_404();
-		}
-			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
 		} else {
@@ -22,12 +18,14 @@ class Logout extends CI_Controller {
 
 		$this->user->logout();
 		
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/logout', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'logout.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'logout', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'logout', $regions, $data);
+		}
 	}
 }
+
+/* End of file logout.php */
+/* Location: ./application/controllers/admin/logout.php */

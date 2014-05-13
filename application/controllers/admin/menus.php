@@ -12,10 +12,6 @@ class Menus extends CI_Controller {
 	}
 
 	public function index() {
-
-		if (!file_exists(APPPATH .'views/admin/menus.php')) {
-			show_404();
-		}
 			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
@@ -31,62 +27,73 @@ class Menus extends CI_Controller {
 			$data['alert'] = '';
 		}
 									
+		$url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
 			$filter['page'] = (int) $this->input->get('page');
 		} else {
-			$filter['page'] = 1;
+			$filter['page'] = '';
 		}
 		
 		if ($this->config->item('page_limit')) {
 			$filter['limit'] = $this->config->item('page_limit');
 		}
 				
-		if ($this->input->get('filter_name')) {
-			$filter['filter_name'] = $this->input->get('filter_name');
-			$data['filter_name'] = $filter['filter_name'];
+		if ($this->input->get('filter_search')) {
+			$filter['filter_search'] = $this->input->get('filter_search');
+			$data['filter_search'] = $filter['filter_search'];
+			$url .= 'filter_search='.$filter['filter_search'].'&';
 		} else {
-			$data['filter_name'] = '';
-		}
-		
-		if (is_numeric($this->input->get('filter_price'))) {
-			$filter['filter_price'] = $this->input->get('filter_price');
-			$data['filter_price'] = $filter['filter_price'];
-		} else {
-			$filter['filter_price'] = ''; 
-			$data['filter_price'] = '';
+			$data['filter_search'] = '';
 		}
 		
 		if ($this->input->get('filter_category')) {
-			$filter['category_id'] = (int) $this->input->get('filter_category');
+			$filter['filter_category'] = (int) $this->input->get('filter_category');
 			$data['category_id'] = $this->input->get('filter_category');
+			$url .= 'filter_category='.$filter['filter_category'].'&';
 		} else {
 			$data['category_id'] = '';
-		}
-		
-		$filter_stock = $this->input->get('filter_stock');
-		if (is_numeric($filter_stock)) {
-			$filter['filter_stock'] = $filter_stock;
-			$data['filter_stock'] = $filter['filter_stock'];
-		} else {
-			$filter['filter_stock'] = '';
-			$data['filter_stock'] = '';
 		}
 		
 		$filter_status = $this->input->get('filter_status');
 		if (is_numeric($filter_status)) {
 			$filter['filter_status'] = $filter_status;
 			$data['filter_status'] = $filter['filter_status'];
+			$url .= 'filter_status='.$filter['filter_status'].'&';
 		} else {
 			$filter['filter_status'] = '';
 			$data['filter_status'] = '';
 		}
 		
+		if ($this->input->get('sort_by')) {
+			$filter['sort_by'] = $this->input->get('sort_by');
+			$data['sort_by'] = $filter['sort_by'];
+		} else {
+			$filter['sort_by'] = '';
+			$data['sort_by'] = '';
+		}
+		
+		if ($this->input->get('order_by')) {
+			$filter['order_by'] = $this->input->get('order_by');
+			$data['order_by_active'] = strtolower($this->input->get('order_by')) .' active';
+			$data['order_by'] = strtolower($this->input->get('order_by'));
+		} else {
+			$filter['order_by'] = '';
+			$data['order_by_active'] = '';
+			$data['order_by'] = 'desc';
+		}
+		
 		$data['heading'] 			= 'Menus';
-		$data['sub_menu_add'] 		= 'Add new menu';
-		$data['sub_menu_delete'] 	= 'Delete';
+		$data['button_add'] 		= 'New';
+		$data['button_delete'] 		= 'Delete';
 		$data['text_no_menus'] 		= 'There are no menus available.';
 		
+		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'DESC') ? 'ASC' : 'DESC';
+		$data['sort_name'] 			= site_url('admin/menus'.$url.'sort_by=menu_name&order_by='.$order_by);
+		$data['sort_price'] 		= site_url('admin/menus'.$url.'sort_by=menu_price&order_by='.$order_by);
+		$data['sort_stock'] 		= site_url('admin/menus'.$url.'sort_by=stock_qty&order_by='.$order_by);
+		$data['sort_id'] 			= site_url('admin/menus'.$url.'sort_by=menu_id&order_by='.$order_by);
+
 		$this->load->model('Image_tool_model');
 
 		$data['menus'] = array();		
@@ -108,7 +115,7 @@ class Menus extends CI_Controller {
 				'menu_photo'		=> $menu_photo_src,
 				'stock_qty'			=> $result['stock_qty'],
 				'menu_status'		=> ($result['menu_status'] === '1') ? 'Enabled' : 'Disabled',
-				'edit' 				=> $this->config->site_url('admin/menus/edit?id='. $result['menu_id'])
+				'edit' 				=> site_url('admin/menus/edit?id='. $result['menu_id'])
 			);
 		}	
 
@@ -123,9 +130,7 @@ class Menus extends CI_Controller {
 		}
 		
 		$data['has_options'] = $this->Menus_model->hasMenuOptions();
-
-		$this->load->model('Specials_model');
-		$data['is_specials'] = $this->Specials_model->getIsSpecials();
+		$data['is_specials'] = $this->Menus_model->getIsSpecials();
 
 		//load food option data into array
 		$data['menu_options'] = array();
@@ -138,10 +143,14 @@ class Menus extends CI_Controller {
 			);
 		}
 
-		$config['base_url'] 		= $this->config->site_url('admin/menus');
+		if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+			$url .= 'sort_by='.$filter['sort_by'].'&';
+			$url .= 'order_by='.$filter['order_by'].'&';
+		}
+		
+		$config['base_url'] 		= site_url('admin/menus').$url;
 		$config['total_rows'] 		= $this->Menus_model->menus_record_count($filter);
 		$config['per_page'] 		= $filter['limit'];
-		$config['num_links'] 		= round($config['total_rows'] / $config['per_page']);
 		
 		$this->pagination->initialize($config);
 
@@ -150,26 +159,19 @@ class Menus extends CI_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		//check if POST update_food then remove menu_id
 		if ($this->input->post('delete') && $this->_deleteMenu() === TRUE) {
-
 			redirect('admin/menus');  			
 		}	
 
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/menus', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'menus.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'menus', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'menus', $regions, $data);
+		}
 	}
 
 	public function edit() {
-		
-		if (!file_exists(APPPATH .'views/admin/menus_edit.php')) {
-			show_404();
-		}
 			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
@@ -187,31 +189,32 @@ class Menus extends CI_Controller {
 		
 		if (is_numeric($this->input->get('id'))) {
 			$menu_id = $this->input->get('id');
-			$data['action']	= $this->config->site_url('admin/menus/edit?id='. $menu_id);
+			$data['action']	= site_url('admin/menus/edit?id='. $menu_id);
 		} else {
 			$menu_id = 0;
-			$data['action']	= $this->config->site_url('admin/menus/edit');
+			$data['action']	= site_url('admin/menus/edit');
 		}
 		
 		$menu_info = $this->Menus_model->getAdminMenu($menu_id);
 
 		$data['heading'] 			= 'Menu - '. $menu_info['menu_name'];
-		$data['sub_menu_save'] 		= 'Save';
-		$data['sub_menu_back'] 		= $this->config->site_url('admin/menus');
+		$data['button_save'] 		= 'Save';
+		$data['button_save_close'] 	= 'Save & Close';
+		$data['sub_menu_back'] 		= site_url('admin/menus');
 
 		$this->load->model('Image_tool_model');
 		if ($this->input->post('menu_photo')) {
 			$data['menu_image'] = $this->input->post('menu_photo');
 			$data['image_name'] = basename($this->input->post('menu_photo'));
-			$data['menu_image_url'] = $this->Image_tool_model->resize($this->input->post('menu_photo'), 120, 120);
+			$data['menu_image_url'] = $this->Image_tool_model->resize($this->input->post('menu_photo'));
 		} else if (!empty($menu_info['menu_photo'])) {
 			$data['menu_image'] = $menu_info['menu_photo'];
 			$data['image_name'] = basename($menu_info['menu_photo']);
-			$data['menu_image_url'] = $this->Image_tool_model->resize($menu_info['menu_photo'], 120, 120);
+			$data['menu_image_url'] = $this->Image_tool_model->resize($menu_info['menu_photo']);
 		} else {
 			$data['menu_image'] = 'data/no_photo.png';
 			$data['image_name'] = 'no_photo.png';
-			$data['menu_image_url'] = $this->Image_tool_model->resize('data/no_photo.png', 120, 120);
+			$data['menu_image_url'] = $this->Image_tool_model->resize('data/no_photo.png');
 		}
 
 		$data['menu_id'] 			= $menu_info['menu_id'];
@@ -221,14 +224,14 @@ class Menus extends CI_Controller {
 		$data['menu_category'] 		= $menu_info['category_id'];
 		$data['stock_qty'] 			= $menu_info['stock_qty'];
 		$data['minimum_qty'] 		= (isset($menu_info['minimum_qty'])) ? $menu_info['minimum_qty'] : '1';
+		$data['subtract_stock']		= $menu_info['subtract_stock'];
 		$data['special_id'] 		= $menu_info['special_id'];
-		$data['start_date'] 		= (isset($menu_info['start_date'])) ? mdate('%d-%m-%Y', strtotime($menu_info['start_date'])) : '';
-		$data['end_date'] 			= (isset($menu_info['end_date'])) ? mdate('%d-%m-%Y', strtotime($menu_info['end_date'])) : '';
+		$data['start_date'] 		= (isset($menu_info['start_date']) AND $menu_info['start_date'] !== '0000-00-00') ? mdate('%d-%m-%Y', strtotime($menu_info['start_date'])) : '';
+		$data['end_date'] 			= (isset($menu_info['end_date']) AND $menu_info['end_date'] !== '0000-00-00') ? mdate('%d-%m-%Y', strtotime($menu_info['end_date'])) : '';
 		$data['special_price'] 		= $menu_info['special_price'];
 		$data['special_status'] 	= $menu_info['special_status'];
-		$data['subtract_stock']		= $menu_info['subtract_stock'];
 		$data['menu_status'] 		= $menu_info['menu_status'];
-		$data['no_photo'] 			= $this->Image_tool_model->resize('data/no_photo.png', 120, 120);
+		$data['no_photo'] 			= $this->Image_tool_model->resize('data/no_photo.png');
 
 		$data['has_options'] 		= $this->Menus_model->hasMenuOptions($menu_id);
 
@@ -258,17 +261,19 @@ class Menus extends CI_Controller {
 		}
 
 		if ($this->input->get('id') && $this->input->post() && $this->_updateMenu() === TRUE) {
-					
-			redirect('admin/menus');
+			if ($this->input->post('save_close') === '1') {
+				redirect('admin/menus');
+			}
+			
+			redirect('admin/menus/edit?id='. $menu_id);
 		}
 							
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/menus_edit', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'menus_edit.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'menus_edit', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'menus_edit', $regions, $data);
+		}
 	}
 
 	public function autocomplete() {
@@ -297,7 +302,7 @@ class Menus extends CI_Controller {
 	
 	public function _addMenu() {
     	if ( ! $this->user->hasPermissions('modify', 'admin/menus')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add!</p>');
   			return TRUE;
     	} else if ( ! $this->input->get('id') AND $this->validateForm() === TRUE) { 
 			$add = array();
@@ -330,7 +335,7 @@ class Menus extends CI_Controller {
 
 	public function _updateMenu() {
     	if (!$this->user->hasPermissions('modify', 'admin/menus')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
   			return TRUE;
     	} else if ($this->input->get('id') AND $this->validateForm() === TRUE) { 
 			$update = array();
@@ -367,9 +372,7 @@ class Menus extends CI_Controller {
 
 	public function _deleteMenu($menu_id = FALSE) {
     	if (!$this->user->hasPermissions('modify', 'admin/menus')) {
-		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
-    	
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
     	} else { 
 			if (is_array($this->input->post('delete'))) {
 				foreach ($this->input->post('delete') as $key => $value) {
@@ -385,20 +388,20 @@ class Menus extends CI_Controller {
 	}
 	
  	public function validateForm() {
-		$this->form_validation->set_rules('menu_name', 'Menu Name', 'trim|required|min_length[2]|max_length[255]');
-		$this->form_validation->set_rules('menu_description', 'Menu Description', 'trim|min_length[2]|max_length[1028]');
-		$this->form_validation->set_rules('menu_price', 'Menu Price', 'trim|required|numeric');
-		$this->form_validation->set_rules('menu_category', 'Menu Category', 'trim|required|integer');
-		$this->form_validation->set_rules('menu_photo', 'Menu Photo', 'trim|required');
-		$this->form_validation->set_rules('stock_qty', 'Stock Quantity', 'trim|required|integer');
-		$this->form_validation->set_rules('minimum_qty', 'Minimum Quantity', 'trim|required|integer');
-		$this->form_validation->set_rules('subtract_stock', 'Subtract Stock', 'trim|requried|integer');
-		$this->form_validation->set_rules('menu_status', 'Menu Status', 'trim|requried|integer');
-		$this->form_validation->set_rules('menu_options[]', 'Menu Options', 'trim|integer');
-		$this->form_validation->set_rules('special_status', 'Menu Special', 'trim|required|integer');
-		$this->form_validation->set_rules('start_date', 'Start Date', 'trim|valid_date');
-		$this->form_validation->set_rules('end_date', 'End Date', 'trim|valid_date');
-		$this->form_validation->set_rules('special_price', 'Special Price', 'trim|numeric');
+		$this->form_validation->set_rules('menu_name', 'Menu Name', 'xss_clean|trim|required|min_length[2]|max_length[255]');
+		$this->form_validation->set_rules('menu_description', 'Menu Description', 'xss_clean|trim|min_length[2]|max_length[1028]');
+		$this->form_validation->set_rules('menu_price', 'Menu Price', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('menu_category', 'Menu Category', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('menu_photo', 'Menu Photo', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('stock_qty', 'Stock Quantity', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('minimum_qty', 'Minimum Quantity', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('subtract_stock', 'Subtract Stock', 'xss_clean|trim|requried|integer');
+		$this->form_validation->set_rules('menu_status', 'Menu Status', 'xss_clean|trim|requried|integer');
+		$this->form_validation->set_rules('menu_options[]', 'Menu Options', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('special_status', 'Menu Special', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('start_date', 'Start Date', 'xss_clean|trim|valid_date');
+		$this->form_validation->set_rules('end_date', 'End Date', 'xss_clean|trim|valid_date');
+		$this->form_validation->set_rules('special_price', 'Special Price', 'xss_clean|trim|numeric');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;
@@ -407,3 +410,6 @@ class Menus extends CI_Controller {
 		}
 	}
 }
+
+/* End of file menus.php */
+/* Location: ./application/controllers/admin/menus.php */

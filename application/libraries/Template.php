@@ -3,6 +3,7 @@
 class Template {
 	
 	private $regions = array();
+	private $template = array();
 	
 	public function __construct() {
 		$this->CI =& get_instance();
@@ -14,6 +15,10 @@ class Template {
 			$this->regions = $regions;
 		}
 	}
+
+	public function set_template($template) {
+		$this->template = $template;
+	}
 	
     public function load($template_name, $vars = array(), $return = FALSE) {
 
@@ -21,7 +26,7 @@ class Template {
 		
 		if (is_array($this->regions)) {
 			foreach ($this->regions as $key => $value) {
-				if ($value !== 'main/footer' && $value !== 'admin/footer') {
+				if ($value !== 'main/footer' AND $value !== 'admin/footer') {
 					$content  .= $this->CI->load->view($value, $vars, $return);
 				}
 			}
@@ -31,34 +36,54 @@ class Template {
 
 		if (in_array('main/footer', $this->regions)) {
 			$content .= $this->CI->load->view('main/footer', $vars, $return);
-		}
-		
-		if (in_array('admin/footer', $this->regions)) {
+		} else if (in_array('admin/footer', $this->regions)) {
 			$content .= $this->CI->load->view('admin/footer', $vars, $return);
         }
         
         return $content;
     }
 
-	public function fetch($filename) {
-		$file = APPPATH .'controllers/'. $filename .'.php';
-    
-		if (file_exists($file)) {
-			//extract($data);
+    public function render($template, $main_view, $regions = array(), $vars = array()) {
+
+		$this->set_template($template);
+		
+		$data = $this->get_regions($main_view, $regions, $vars);
+		
+		return $data;
+    }
+
+    public function get_regions($main_view, $regions = array(), $vars = array()) {
+		$content = '';
+
+		if (!empty($regions) AND is_array($regions)) {
+			if (in_array('header', $regions)) {
+				$content  .= $this->CI->load->view($this->template.'header', $vars, FALSE);
+			}
 			
-      		ob_start();
-      
-	  		include($file);
-      
-	  		$content = ob_get_contents();
+			if (in_array('content_top', $regions)) {
+				$content  .= $this->CI->load->view($this->template.'content_top', $vars, FALSE);
+			}
+			
+			if (in_array('content_left', $regions)) {
+				$content  .= $this->CI->load->view($this->template.'content_left', $vars, FALSE);
+			}
+			
+			if (in_array('content_right', $regions)) {
+				$content  .= $this->CI->load->view($this->template.'content_right', $vars, FALSE);
+			}
+			
+			$content  .= $this->CI->load->view($this->template.$main_view, $vars, FALSE);
+			
+			if (in_array('footer', $regions)) {
+				$content  .= $this->CI->load->view($this->template.'footer', $vars, FALSE);
+			}
+		}
 
-      		ob_end_clean();
-
-			//return $this->CI->load->view($filename, $content);
-      		return $content;
-    	} else {
-			show_error('Error: Could not load template '.$file.'!');
-			exit();				
-    	}	
+        return $content;
 	}
 }
+
+// END Template Class
+
+/* End of file Template.php */
+/* Location: ./application/libraries/Template.php */

@@ -1,12 +1,25 @@
 <?php
 class Customers_model extends CI_Model {
 
-	public function __construct() {
-		$this->load->database();
-	}
+    public function record_count($filter = array()) {
+		if (!empty($filter['filter_search'])) {
+			$this->db->like('first_name', $filter['filter_search']);
+			$this->db->or_like('last_name', $filter['filter_search']);
+			$this->db->or_like('email', $filter['filter_search']);
+		}
 
-    public function record_count() {
-        return $this->db->count_all('customers');
+		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
+			$this->db->where('status', $filter['filter_status']);
+		}
+
+		if (!empty($filter['filter_date'])) {
+			$date = explode('-', $filter['filter_date']);
+			$this->db->where('YEAR(date_added)', $date[0]);
+			$this->db->where('MONTH(date_added)', $date[1]);
+		}
+
+		$this->db->from('customers');
+		return $this->db->count_all_results();
     }
     
 	public function getList($filter = array()) {
@@ -16,7 +29,28 @@ class Customers_model extends CI_Model {
 		
         if ($this->db->limit($filter['limit'], $filter['page'])) {	
 			$this->db->from('customers');
-			$this->db->order_by('date_added', 'DESC');
+			
+			if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+				$this->db->order_by($filter['sort_by'], $filter['order_by']);
+			} else {
+				$this->db->order_by('date_added', 'DESC');
+			}
+
+			if (!empty($filter['filter_search'])) {
+				$this->db->like('first_name', $filter['filter_search']);
+				$this->db->or_like('last_name', $filter['filter_search']);
+				$this->db->or_like('email', $filter['filter_search']);
+			}
+
+			if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
+				$this->db->where('status', $filter['filter_status']);
+			}
+
+			if (!empty($filter['filter_date'])) {
+				$date = explode('-', $filter['filter_date']);
+				$this->db->where('YEAR(date_added)', $date[0]);
+				$this->db->where('MONTH(date_added)', $date[1]);
+			}
 
 			$query = $this->db->get();
 			$result = array();
@@ -53,6 +87,21 @@ class Customers_model extends CI_Model {
 		}
 	}
 
+	public function getCustomerDates() {
+		$this->db->select('date_added, MONTH(date_added) as month, YEAR(date_added) as year');
+		$this->db->from('customers');
+		$this->db->group_by('MONTH(date_added)');
+		$this->db->group_by('YEAR(date_added)');
+		$query = $this->db->get();
+		$result = array();
+
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+
+		return $result;
+	}
+	
 	public function getCustomerByEmail($email) {
 		$this->db->from('customers');		
 		$this->db->where('email', strtolower($email));
@@ -148,21 +197,6 @@ class Customers_model extends CI_Model {
 		}
 	}
 	
-	public function getCustomerActivities($customer_id) {
-		$this->db->from('customers_activity');
-		$this->db->order_by('date_added', 'DESC');
-
-		$this->db->where('customer_id', $customer_id);
-		$query = $this->db->get();
-		$result = array();
-		
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
-		
-		return $result;
-	}
-
 	public function getAutoComplete($filter_data = array()) {
 		if (is_array($filter_data) && !empty($filter_data)) {
 			$this->db->from('customers');
@@ -231,7 +265,7 @@ class Customers_model extends CI_Model {
 				if ($this->db->affected_rows() > 0) {
 					$this->lang->load('main/password_reset');
 				
-					$data['text_success_message'] = sprintf($this->lang->line('text_success_message'), $this->config->site_url('account/login'), $row['email'], $password);
+					$data['text_success_message'] = sprintf($this->lang->line('text_success_message'), site_url('main/login'), $row['email'], $password);
 				
 					$subject = $this->lang->line('text_subject');
 					$message = $this->load->view('main/password_reset_email', $data, TRUE);
@@ -413,6 +447,19 @@ class Customers_model extends CI_Model {
 		}
 	}
 	
+	public function updateCustomerDefaultAddress($customer_id = '', $address_id = '') {
+		if ($address_id !== '' AND $customer_id !== '') {
+			$this->db->set('address_id', $address_id);
+			$this->db->where('customer_id', $customer_id);
+		}
+
+		$this->db->update('customers');
+		
+		if ($this->db->affected_rows() > 0) {
+			return TRUE;
+		}
+	}
+	
 	public function addCustomerAddress($customer_id, $address = array()) {
 
 		if ($customer_id) {
@@ -448,10 +495,13 @@ class Customers_model extends CI_Model {
 	}	
 
 	public function deleteCustomer($customer_id) {
-
-		$this->db->where('customer_id', $customer_id);
+		if ($customer_id) {
+			$this->db->where('customer_id', $customer_id);
+			$this->db->delete('customers');
 		
-		$this->db->delete('customers');
+			$this->db->where('customer_id', $customer_id);
+			$this->db->delete('address');
+		}
 		
 		if ($this->db->affected_rows() > 0) {
 			return TRUE;
@@ -501,4 +551,22 @@ class Customers_model extends CI_Model {
 		
 		return $this->db->delete('customers', $delete_data);
 	}
+
+	public function validateCustomer($customer_id) {
+		if (!empty($customer_id)) {
+			$this->db->from('customers');		
+			$this->db->where('customer_id', $customer_id);
+		
+			$query = $this->db->get();
+
+			if ($query->num_rows() > 0) {
+				return TRUE;
+			}
+		}
+		
+		return FALSE;
+	}
 }
+
+/* End of file customers_model.php */
+/* Location: ./application/models/customers_model.php */

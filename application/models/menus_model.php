@@ -2,27 +2,17 @@
 
 class Menus_model extends CI_Model {
 
-	public function __construct() {
-		$this->load->database();
-	}
-
     public function menus_record_count($filter = array()) {
-		if (!empty($filter['filter_name'])) {
-			$this->db->like('menu_name', $filter['filter_name']);
+		if (!empty($filter['filter_search'])) {
+			$this->db->like('menu_name', $filter['filter_search']);
+			$this->db->or_like('menu_price', $filter['filter_search']);
+			$this->db->or_like('stock_qty', $filter['filter_search']);
 		}
         
-		if (is_numeric($filter['filter_price'])) {
-			$this->db->like('menu_price', $filter['filter_price']);
+		if (!empty($filter['filter_category'])) {
+			$this->db->where('menu_category_id', $filter['filter_category']);
 		}
         
-		if (!empty($filter['category_id'])) {
-			$this->db->where('menu_category_id', $filter['category_id']);
-		}
-        
-		if (is_numeric($filter['filter_stock'])) {
-			$this->db->where('stock_qty', $filter['filter_stock']);
-		}
-		
 		if (is_numeric($filter['filter_status'])) {
 			$this->db->where('menu_status', $filter['filter_status']);
 		}
@@ -31,12 +21,23 @@ class Menus_model extends CI_Model {
 		return $this->db->count_all_results();
     }
     
-    public function options_record_count() {
-        return $this->db->count_all('menu_options');
+    public function options_record_count($filter = array()) {
+		if (!empty($filter['filter_search'])) {
+			$this->db->like('option_name', $filter['filter_search']);
+			$this->db->or_like('option_price', $filter['filter_search']);
+		}
+
+		$this->db->from('menu_options');
+		return $this->db->count_all_results();
     }
     
-    public function categories_record_count() {
-        return $this->db->count_all('categories');
+    public function categories_record_count($filter = array()) {
+		if (!empty($filter['filter_search'])) {
+			$this->db->like('category_name', $filter['filter_search']);
+		}
+
+		$this->db->from('categories');
+		return $this->db->count_all_results();
     }
     
 	public function getList($filter = array()) {
@@ -46,22 +47,21 @@ class Menus_model extends CI_Model {
 		
         if ($this->db->limit($filter['limit'], $filter['page'])) {	
 			$this->db->join('categories', 'categories.category_id = menus.menu_category_id', 'left');
-			$this->db->order_by('menu_id', 'ASC');
-		
-			if (!empty($filter['filter_name'])) {
-				$this->db->like('menu_name', $filter['filter_name']);
-			}
-		
-			if (is_numeric($filter['filter_price'])) {
-				$this->db->like('menu_price', $filter['filter_price']);
-			}
-		
-			if (!empty($filter['category_id'])) {
-				$this->db->where('menu_category_id', $filter['category_id']);
-			}
 			
-			if (is_numeric($filter['filter_stock'])) {
-				$this->db->where('stock_qty', $filter['filter_stock']);
+			if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+				$this->db->order_by($filter['sort_by'], $filter['order_by']);
+			} else {
+				$this->db->order_by('menu_id', 'DESC');
+			}
+		
+			if (!empty($filter['filter_search'])) {
+				$this->db->like('menu_name', $filter['filter_search']);
+				$this->db->or_like('menu_price', $filter['filter_search']);
+				$this->db->or_like('stock_qty', $filter['filter_search']);
+			}
+		
+			if (!empty($filter['filter_category'])) {
+				$this->db->where('menu_category_id', $filter['filter_category']);
 			}
 			
 			if (is_numeric($filter['filter_status'])) {
@@ -142,6 +142,17 @@ class Menus_model extends CI_Model {
         if ($this->db->limit($filter['limit'], $filter['page'])) {	
 			$this->db->from('menu_options');
 		
+			if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+				$this->db->order_by($filter['sort_by'], $filter['order_by']);
+			} else {
+				$this->db->order_by('option_id', 'DESC');
+			}
+		
+			if (!empty($filter['filter_search'])) {
+				$this->db->like('option_name', $filter['filter_search']);
+				$this->db->or_like('option_price', $filter['filter_search']);
+			}
+		
 			$query = $this->db->get();
 			$result = array();
 		
@@ -206,6 +217,21 @@ class Menus_model extends CI_Model {
 		return $menu_options;
 	}
 	
+	public function getIsSpecials() {
+		$specials = array();
+		
+		$this->db->select('menu_id, special_id');
+		$this->db->from('menus_specials');
+		
+		$query = $this->db->get();
+		if ($query->num_rows() > 0) {
+			foreach ($query->result_array() as $row) {
+				$specials[] = $row['menu_id'];
+			}
+		}
+		return $specials;
+	}
+
 	public function getCategoriesList($filter = array()) {		
 		if ($filter['page'] !== 0) {
 			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
@@ -213,6 +239,16 @@ class Menus_model extends CI_Model {
 		
         if ($this->db->limit($filter['limit'], $filter['page'])) {	
 			$this->db->from('categories');
+		
+			if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+				$this->db->order_by($filter['sort_by'], $filter['order_by']);
+			} else {
+				$this->db->order_by('category_id', 'DESC');
+			}
+		
+			if (!empty($filter['filter_search'])) {
+				$this->db->like('category_name', $filter['filter_search']);
+			}
 		
 			$query = $this->db->get();
 			$result = array();
@@ -575,3 +611,6 @@ class Menus_model extends CI_Model {
 		}
 	}
 }
+
+/* End of file menus_model.php */
+/* Location: ./application/models/menus_model.php */

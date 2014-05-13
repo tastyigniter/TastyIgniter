@@ -9,10 +9,6 @@ class Paypal_express extends CI_Controller {
 
 	public function index() {
 			
-		if (!file_exists(APPPATH .'views/admin/paypal_express.php')) {
-			show_404();
-		}
-			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -28,8 +24,9 @@ class Paypal_express extends CI_Controller {
 		}		
 				
 		$data['heading'] 			= 'PayPal Express Checkout';
-		$data['sub_menu_save'] 		= 'Save';
-		$data['sub_menu_back'] 		= $this->config->site_url('admin/payments');
+		$data['button_save'] 		= 'Save';
+		$data['button_save_close'] 	= 'Save & Close';
+		$data['sub_menu_back'] 		= site_url('admin/payments');
 
 		if (isset($this->input->post['paypal_status'])) {
 			$data['paypal_status'] = $this->input->post['paypal_status'];
@@ -89,26 +86,25 @@ class Paypal_express extends CI_Controller {
 		}
 
 		if ($this->input->post() && $this->_updatePayPalExpress() === TRUE){
-						
-			redirect('admin/payments');
+			if ($this->input->post('save_close') === '1') {
+				redirect('admin/payments');
+			}
+			
+			redirect('admin/paypal_express');
 		}
 		
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/paypal_express', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'paypal_express.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'paypal_express', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'paypal_express', $regions, $data);
+		}
 	}
 
 	public function _updatePayPalExpress() {
-						
     	if (!$this->user->hasPermissions('modify', 'admin/paypal_express')) {
-		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
 			return TRUE;
-    	
     	} else if (!$this->input->post('delete') AND $this->validateForm() === TRUE) { 
 			$update = array(
 				'paypal_status' 		=> $this->input->post('paypal_status'),
@@ -132,14 +128,14 @@ class Paypal_express extends CI_Controller {
 	}
 
 	public function validateForm() {
-		$this->form_validation->set_rules('paypal_status', 'PayPal Status', 'trim|required|integer');
-		$this->form_validation->set_rules('paypal_mode', 'PayPal Mode', 'trim|required');
-		$this->form_validation->set_rules('paypal_user', 'PayPal Username', 'trim|required');
-		$this->form_validation->set_rules('paypal_pass', 'PayPal Password', 'trim|required');
-		$this->form_validation->set_rules('paypal_sign', 'PayPal Signature', 'trim|required');
-		$this->form_validation->set_rules('paypal_action', 'Payment Action', 'trim|required');
-		$this->form_validation->set_rules('paypal_total', 'Order Total', 'trim|required|numeric');
-		$this->form_validation->set_rules('paypal_order_status', 'Order Status', 'trim|required|integer');
+		$this->form_validation->set_rules('paypal_status', 'PayPal Status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('paypal_mode', 'PayPal Mode', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('paypal_user', 'PayPal Username', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('paypal_pass', 'PayPal Password', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('paypal_sign', 'PayPal Signature', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('paypal_action', 'Payment Action', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('paypal_total', 'Order Total', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('paypal_order_status', 'Order Status', 'xss_clean|trim|required|integer');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;
@@ -148,3 +144,6 @@ class Paypal_express extends CI_Controller {
 		}		
 	}
 }
+
+/* End of file paypal_express.php */
+/* Location: ./application/controllers/admin/paypal_express.php */

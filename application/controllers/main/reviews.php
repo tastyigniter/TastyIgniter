@@ -11,10 +11,6 @@ class Reviews extends MX_Controller {
 	public function index() {
 		$this->lang->load('main/reviews');  														// loads language file
 		
-		if (!file_exists(APPPATH .'views/main/reviews.php')) {
-			show_404();
-		}
-			
 		if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
   			redirect('account/login');
 		}
@@ -37,7 +33,7 @@ class Reviews extends MX_Controller {
 		$data['button_back'] 			= $this->lang->line('button_back');
 		// END of retrieving lines from language file to pass to view.
 
-		$data['back'] 					= $this->config->site_url('account');
+		$data['back'] 					= site_url('main/account');
 
 		$data['ratings'] = $this->config->item('ratings');
 		
@@ -51,22 +47,21 @@ class Reviews extends MX_Controller {
 				'delivery' 			=> $result['delivery'],
 				'service' 			=> $result['service'],
 				'date'				=> mdate('%H:%i - %d %M %y', strtotime($result['date_added'])),
-				'view' 				=> $this->config->site_url('account/reviews/view?order_id='. $result['order_id'] .'&location_id='. $result['location_id'] .'&review_id='. $result['review_id'])
+				'view' 				=> site_url('main/reviews/view/'. $result['review_id'] .'/'. $result['order_id'] .'/'. $result['location_id'])
 			);
 		}
 
-		$regions = array('main/header', 'main/content_left', 'main/footer');
-		$this->template->regions($regions);
-		$this->template->load('main/reviews', $data);
+		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'reviews.php')) {
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'reviews', $regions, $data);
+		} else {
+			$this->template->render('themes/main/default/', 'reviews', $regions, $data);
+		}
 	}
 
 	public function view() {
 		$this->lang->load('main/reviews');  														// loads language file
 
-		if (!file_exists(APPPATH .'views/main/review_view.php')) {
-			show_404();
-		}
-			
 		if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
   			redirect('account/login');
 		}
@@ -77,48 +72,55 @@ class Reviews extends MX_Controller {
 			$data['alert'] = '';
 		}
 
-		if ($this->uri->segment(4)) {															// check if customer_id is set in uri string
-			$review_id = (int)$this->uri->segment(4);
-		} else {
+		$review_id = (int)$this->uri->segment(4);
+		$order_id = (int)$this->uri->segment(5);
+		$location_id = (int)$this->uri->segment(6);
+
+		$result = $this->Reviews_model->getCustomerReview($this->customer->getId(), $review_id, $order_id, $location_id);								// retrieve specific customer message based on message id to be passed to view
+		if ( ! $result) {																		// check if customer_id is set in uri string
   			redirect('account/reviews');
 		}
 
 		// START of retrieving lines from language file to pass to view.
-		$data['text_heading'] 			= $this->lang->line('text_view_heading');
+		$data['text_heading'] 			= $this->lang->line('text_view_review');
 		$data['column_date'] 			= $this->lang->line('column_date');
 		$data['column_time'] 			= $this->lang->line('column_time');
 		$data['column_subject'] 		= $this->lang->line('column_subject');
 		$data['button_back'] 			= $this->lang->line('button_back');
 		// END of retrieving lines from language file to pass to view.
 
-		$data['back'] 					= $this->config->site_url('account/reviews');
+		$data['back'] 					= site_url('main/reviews');
 
-		$result = $this->Reviews_model->getMainReview($review_id, $this->customer->getId());								// retrieve specific customer message based on message id to be passed to view
-		$data['location_name'] 		= $result['location_name'];
-		$data['rating_name'] 		= $result['rating_name'];
-		$data['date'] 				= mdate('%H:%i - %d %M %y', strtotime($result['date_added']));
-		$data['review_text'] 		= $result['review_text'];
+		$ratings = $this->config->item('ratings');
+
+		$data['location_name'] 			= $result['location_name'];
+		$data['order_id'] 				= $result['order_id'];
+		$data['author'] 				= $result['author'];
+		$data['quality_rating'] 		= $ratings[$result['quality']];
+		$data['delivery_rating'] 		= $ratings[$result['delivery']];
+		$data['service_rating'] 		= $ratings[$result['service']];
+		$data['date'] 					= mdate('%H:%i - %d %M %y', strtotime($result['date_added']));
+		$data['review_text'] 			= $result['review_text'];
 		
-		$regions = array('main/header', 'main/content_left', 'main/footer');
-		$this->template->regions($regions);
-		$this->template->load('main/review_view', $data);
+		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'review_view.php')) {
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'review_view', $regions, $data);
+		} else {
+			$this->template->render('themes/main/default/', 'review_view', $regions, $data);
+		}
 	}
 
 	public function add() {
 		$this->lang->load('main/reviews');  														// loads language file
 	
-		if ( !file_exists(APPPATH .'/views/main/review_add.php')) { 						//check if file exists in views folder
-			show_404(); // Whoops, show 404 error page!
-		}
-
 		if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
   			redirect('account/login');
 		}
 		
-		$order_id = $this->input->get('order_id');
-		$location_id = $this->input->get('location_id');
+		$order_id = $this->uri->segment(4);
+		$location_id = $this->uri->segment(5);
 
-		$data['action']	= $this->config->site_url('account/reviews/add?order_id='. $order_id .'&location_id='. $location_id);
+		$data['action']	= site_url('main/reviews/add/'. $order_id .'/'. $location_id);
 		
 		if ( ! $this->Reviews_model->checkCustomerReview($this->customer->getId(), $location_id, $order_id)) {
 			$data['error'] = '<p class="error">Sorry. Either you\'ve already rated this order, or an error has occurred.</p>';
@@ -133,8 +135,7 @@ class Reviews extends MX_Controller {
 		}
 
 		// START of retrieving lines from language file to pass to view.
-		$data['text_heading'] 			= $this->lang->line('text_review_heading');
-		$data['text_write_review'] 		= $this->lang->line('text_write_review');
+		$data['text_heading'] 			= $this->lang->line('text_write_review');
 		$data['entry_customer_name'] 	= $this->lang->line('entry_customer_name');
 		$data['entry_restaurant'] 		= $this->lang->line('entry_restaurant');
 		$data['entry_quality'] 			= $this->lang->line('entry_quality');
@@ -145,7 +146,7 @@ class Reviews extends MX_Controller {
 		$data['button_review'] 			= $this->lang->line('button_review');
 		// END of retrieving lines from language file to send to view.
 
-		$data['back'] 					= $this->config->site_url('account/reviews');
+		$data['back'] 					= site_url('main/reviews');
 
 		$data['customer_id'] = $this->customer->getId();									// retriveve customer id from customer library
 		$data['customer_name'] = $this->customer->getFirstName() .' '. $this->customer->getLastName(); // retrieve and concatenate customer's first and last name from customer library
@@ -163,22 +164,19 @@ class Reviews extends MX_Controller {
 			redirect('account/reviews');
 		}	
 
-		$regions = array('main/header', 'main/content_left', 'main/footer');
-		$this->template->regions($regions);
-		$this->template->load('main/review_add', $data);
+		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'review_add.php')) {
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'review_add', $regions, $data);
+		} else {
+			$this->template->render('themes/main/default/', 'review_add', $regions, $data);
+		}
 	}
 
 	public function _addReview() {
-		//validate category value
-		$this->form_validation->set_rules('quality', 'Quality Rating', 'trim|required|integer');
-		$this->form_validation->set_rules('delivery', 'Delivery Rating', 'trim|required|integer');
-		$this->form_validation->set_rules('service', 'Service Rating', 'trim|required|integer');
-		$this->form_validation->set_rules('review_text', 'Rating Text', 'trim|required|min_length[2]|max_length[1028]');
-
-		if ($this->form_validation->run() === TRUE) {
 			$add = array();
-			$add['order_id'] 			= (int) $this->input->get('order_id');
-			$add['location_id'] 		= (int) $this->input->get('location_id');
+		if ($this->validateForm() === TRUE) {
+			$add['order_id'] 			= (int)$this->uri->segment(4);
+			$add['location_id'] 		= (int)$this->uri->segment(5);
 			$add['customer_id'] 		= $this->input->post('customer_id');
 			$add['author'] 				= $this->customer->getFirstName() .' '. $this->customer->getLastName();
 			$add['quality'] 			= $this->input->post('quality');
@@ -198,6 +196,19 @@ class Reviews extends MX_Controller {
 				$this->session->set_flashdata('alert', '<p class="warning">An error has occured, please try again!</p>');
 			}
 			
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
+
+	public function validateForm() {
+		$this->form_validation->set_rules('quality', 'Quality Rating', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('delivery', 'Delivery Rating', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('service', 'Service Rating', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('review_text', 'Rating Text', 'xss_clean|trim|required|min_length[2]|max_length[1028]');
+
+		if ($this->form_validation->run() === TRUE) {
 			return TRUE;
 		} else {
 			return FALSE;

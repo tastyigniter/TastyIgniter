@@ -410,19 +410,18 @@ class CI_Cart {
 	 */
 	function set_coupon($type = '', $amount = 0)
 	{
-
-		if ( ! is_numeric($amount) && $amount < 0) 
+		if ( ! is_numeric($amount) AND $amount < 0) 
 		{
 			$save_cart = FALSE;
 		}
 
 		$coupon = 0;
 		
-		if ($type === 'P' && $amount > 0) 
+		if ($type === 'P' AND $amount > 0) 
 		{
 			$coupon = $amount / 100 * $this->_cart_contents['cart_total'];
 		}
-		 else if ($type === 'F' && $amount > 0) 
+		else if ($type === 'F' AND $amount > 0) 
 		{
 			$coupon = $amount;
 		}
@@ -578,7 +577,7 @@ class CI_Cart {
 	 */
 	function coupon()
 	{
-		return $this->_cart_contents['coupon'];
+		return $this->format_number($this->_cart_contents['coupon']);
 	}
 
 	// --------------------------------------------------------------------
@@ -694,7 +693,8 @@ class CI_Cart {
 	}
 
 }
+
 // END Cart Class
 
 /* End of file Cart.php */
-/* Location: ./system/libraries/Cart.php */
+/* Location: ./application/libraries/Cart.php */

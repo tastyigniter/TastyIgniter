@@ -45,3 +45,6 @@ class Slideshow_module extends MX_Controller {
 		$this->load->view('main/slideshow_module', $data);
 	}		
 }
+
+/* End of file slideshow_module.php */
+/* Location: ./application/extensions/main/controllers/slideshow_module.php */

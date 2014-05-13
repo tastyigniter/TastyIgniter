@@ -12,10 +12,6 @@ class Password_reset extends MX_Controller {
 	public function index() {
 		$this->lang->load('main/password_reset');  												// loads language file
 		
-		if (!file_exists(APPPATH .'views/main/password_reset.php')) {
-			show_404();
-		}
-			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
@@ -40,7 +36,7 @@ class Password_reset extends MX_Controller {
 		foreach ($results as $result) {															// loop through security questions array
 			$data['questions'][] = array(														// create an array of security questions to pass to view
 				'id'	=> $result['question_id'],
-				'text'	=> $result['question_text']
+				'text'	=> $result['text']
 			);
 		}
 
@@ -85,13 +81,12 @@ class Password_reset extends MX_Controller {
 				
 		}
 		
-		$regions = array(
-			'main/header',
-			'main/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('main/password_reset', $data);
+		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'password_reset.php')) {
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'password_reset', $regions, $data);
+		} else {
+			$this->template->render('themes/main/default/', 'password_reset', $regions, $data);
+		}
 	}
 
 	public function _resetPassword() {															// method to validate password reset
@@ -99,12 +94,7 @@ class Password_reset extends MX_Controller {
 		
 		if ($this->input->post()) { 
 			
-			$this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email');	//validate form
-			$this->form_validation->set_rules('security_question', 'Security Question', 'trim|required|integer');
-			$this->form_validation->set_rules('security_answer', 'Security Answer', 'trim|required|min_length[2]');
-  		
-  			if ($this->form_validation->run() === TRUE) {										// checks if form validation routines ran successfully
-
+			if ($this->validateForm() === TRUE) {
 				$email 					= $this->input->post('email');
 				$security_question_id	= $this->input->post('security_question');
 				$security_answer 		= $this->input->post('security_answer');
@@ -112,24 +102,14 @@ class Password_reset extends MX_Controller {
 				$customer_data = $this->Customers_model->getCustomerByEmail($email); 			// retrieve customer data based on $_POST email value from getCustomerByEmail method in Customers model
 
 				if ($customer_data['email'] !== $email) {																// check if customer data is available send customer email and customer security question to view
-					
 					$this->session->set_flashdata('alert', $this->lang->line('text_no_email'));
-
 				} else if ($customer_data['security_question_id'] !== $security_question_id) {
-					
 					$this->session->set_flashdata('alert', $this->lang->line('text_no_s_question'));
-				
 				} else if ($customer_data['security_answer'] !== $security_answer) {
-					
 					$this->session->set_flashdata('alert', $this->lang->line('text_no_s_answer'));
-
 				} else {
-
-					$customer_id 			= $customer_data['customer_id'];
-					//$security_question_id 	= $customer_data['security_question_id'];
-		
+					$customer_id 		= $customer_data['customer_id'];
 					$reset_password = $this->Customers_model->resetPassword($customer_id, $email, $security_question_id, $security_answer); // invoke reset password method in Customers model using customer id, email and security answer
-				
 				}
 				
 				if ($reset_password) {													// checks if password reset was sucessful then display success message and delete customer_id_to_reset from session userdata
@@ -141,6 +121,17 @@ class Password_reset extends MX_Controller {
 			}
 		}
 	}
+		public function validateForm() {
+			$this->form_validation->set_rules('email', 'Email Address', 'xss_clean|trim|required|valid_email');	//validate form
+			$this->form_validation->set_rules('security_question', 'Security Question', 'xss_clean|trim|required|integer');
+			$this->form_validation->set_rules('security_answer', 'Security Answer', 'xss_clean|trim|required|min_length[2]');
+  		
+  			if ($this->form_validation->run() === TRUE) {										// checks if form validation routines ran successfully
+				return TRUE;
+			} else {
+				return FALSE;
+			}
+		}
 }
 
 /* End of file password_reset.php */

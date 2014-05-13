@@ -3,6 +3,7 @@
 class Location {
 	private $location_id;
 	private $location_email;
+	private $location_telephone;
 	private $local_info;
 	private $search_query;
 	private $distance;
@@ -36,6 +37,7 @@ class Location {
 	public function initialize($local_info) {
 		if ($local_info['location_id'] AND $local_info['location_name'] AND $local_info['distance'] AND $local_info['search_query']) { 
 			
+			//$this->CI->db->select('location_id, location_name');
 			$this->CI->db->where('location_id', $local_info['location_id']);
 			$this->CI->db->where('location_name', $local_info['location_name']);
 			$query = $this->CI->db->get('locations');
@@ -45,11 +47,14 @@ class Location {
 				
 				$this->location_id 			= $result['location_id'];
 				$this->location_email 		= $result['location_email'];
+				$this->location_telephone 	= $result['location_telephone'];
 				$this->local_info 			= $result;
 				$this->distance 			= $local_info['distance'];
 				$this->search_query 		= $local_info['search_query'];
 			
 				$this->_setOpeningHours();	
+			} else {
+				$this->clearLocal();
 			}
 		}
 	}
@@ -92,6 +97,10 @@ class Location {
 
 	public function getEmail() {
 		return strtolower($this->location_email);
+	}
+
+	public function getTelephone() {
+		return $this->location_telephone;
 	}
 
 	public function local() {
@@ -341,10 +350,21 @@ class Location {
 	
 	public function clearLocal() {
 		$this->location_id = '';
+		$this->location_email = '';
 		$this->local_info = '';
+		$this->search_query = '';
+		$this->distance = '';
 		$this->opening_hours = '';			
 		$this->opening_time = '';
 		$this->closing_time = '';
 		$this->opened = FALSE;			
+		$this->current_day = '';
+		$this->current_date = '';
+		$this->current_time = '';
 	}
 }
+
+// END Location Class
+
+/* End of file Location.php */
+/* Location: ./application/libraries/Location.php */

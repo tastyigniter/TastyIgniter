@@ -1,12 +1,17 @@
 <?php
 class Tables_model extends CI_Model {
 
-	public function __construct() {
-		$this->load->database();
-	}
+    public function record_count($filter) {
+		if (!empty($filter['filter_search'])) {
+			$this->db->like('table_name', $filter['filter_search']);
+		}
 
-    public function record_count() {
-        return $this->db->count_all('tables');
+		if (is_numeric($filter['filter_status'])) {
+			$this->db->where('table_status', $filter['filter_status']);
+		}
+	
+		$this->db->from('tables');
+		return $this->db->count_all_results();
     }
 	
 	public function getList($filter = array()) {
@@ -16,8 +21,21 @@ class Tables_model extends CI_Model {
 		
         if ($this->db->limit($filter['limit'], $filter['page'])) {	
 			$this->db->from('tables');
-			//$this->db->join('locations', 'locations.location_id = tables.location_id', 'left');
+			
+			if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+				$this->db->order_by($filter['sort_by'], $filter['order_by']);
+			} else {
+				$this->db->order_by('table_id', 'DESC');
+			}
 
+			if (!empty($filter['filter_search'])) {
+				$this->db->like('table_name', $filter['filter_search']);
+			}
+
+			if (is_numeric($filter['filter_status'])) {
+				$this->db->where('table_status', $filter['filter_status']);
+			}
+		
 			$query = $this->db->get();
 			$result = array();
 		
@@ -73,27 +91,6 @@ class Tables_model extends CI_Model {
 		return $location_tables;
 	}
 
-	public function getTotalSeatsByLocation($location_id = FALSE) {
-		$result = 0;
-
-		$this->db->select_sum('tables.max_capacity', 'total_seats');
-		
-		if (!empty($location_id)) {
-			$this->db->where('location_id', $location_id);
-		}
-
-		$this->db->from('location_tables');
-		$this->db->join('tables', 'tables.table_id = location_tables.table_id', 'left');
-	
-		$query = $this->db->get();
-		if ($query->num_rows() > 0) {
-			$row = $query->row_array();
-			$result = $row['total_seats'];
-		}
-	
-		return $result;
-	}
-	
 	public function getAutoComplete($filter_data = array()) {
 		if (is_array($filter_data) && !empty($filter_data)) {
 
@@ -182,3 +179,6 @@ class Tables_model extends CI_Model {
 		}
 	}
 }
+
+/* End of file tables_model.php */
+/* Location: ./application/models/tables_model.php */

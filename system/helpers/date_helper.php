@@ -87,7 +87,7 @@ if ( ! function_exists('mdate'))
 		if ($datestr == '')
 			return '';
 
-		if ($time == '')
+		if ($time == '' OR $time == '')
 			$time = now();
 
 		$datestr = str_replace('%\\', '', preg_replace("/([a-z]+?){1}/i", "\\\\\\1", $datestr));

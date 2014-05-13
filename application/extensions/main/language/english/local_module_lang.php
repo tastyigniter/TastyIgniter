@@ -9,6 +9,7 @@ $lang['text_distance'] 			= '<b>Distance</b>';
 $lang['text_miles'] 			= 'Miles';
 $lang['text_close'] 			= 'CLOSED';
 $lang['text_find'] 				= 'Search';
+$lang['text_order_type'] 		= '<b>Select order type</b>';
 $lang['text_opened'] 			= '<b>We are currently open</b>';
 $lang['text_closed'] 			= '<b>We are currently closed</b>';
 $lang['text_delivery_y'] 		= 'Delivery available';
@@ -24,7 +25,7 @@ $lang['button_view_map'] 		= 'View Map';
 $lang['button_check_postcode'] 	= 'Search Again';
 $lang['button_view_menu'] 		= 'View Menu';
 $lang['text_user_rating'] 		= 'User Ratings';
-$lang['text_total_review'] 		= '%s Reviews';
+$lang['text_total_review'] 		= '%s reviews';
 
 $lang['entry_postcode'] 		= 'Enter your postcode to order:';
 $lang['entry_address'] 			= 'Enter your address/postcode to order:';
@@ -38,4 +39,4 @@ $lang['error_no_restaurant'] 	= '<p class="error">Error: We do not have any loca
 
 
 /* End of file local_module.php */
-/* Location: ./application/language/english/main/local_module.php */
+/* Location: ./application/extensions/main/language/english/main/local_module.php */

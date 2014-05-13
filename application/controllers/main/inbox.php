@@ -11,10 +11,6 @@ class Inbox extends MX_Controller {
 	public function index() {
 		$this->lang->load('main/inbox');  														// loads language file
 		
-		if (!file_exists(APPPATH .'views/main/inbox.php')) {
-			show_404();
-		}
-			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
@@ -37,7 +33,7 @@ class Inbox extends MX_Controller {
 		$data['button_back'] 			= $this->lang->line('button_back');
 		// END of retrieving lines from language file to pass to view.
 
-		$data['back'] 					= $this->config->site_url('account');
+		$data['back'] 					= site_url('main/account');
 		
 		$data['messages'] = array();
 		$results = $this->Messages_model->getMainInbox();							// retrieve all customer messages from getMainInbox method in Messages model
@@ -46,22 +42,21 @@ class Inbox extends MX_Controller {
 				'date'		=> mdate('%d %M %y - %H:%i', strtotime($result['date'])),
 				'subject' 	=> $result['subject'],
 				'body' 		=> substr(strip_tags(html_entity_decode($result['body'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..',
-				'edit'		=> $this->config->site_url('account/inbox/view?message_id=' . $result['message_id'])
+				'edit'		=> site_url('main/inbox/view/'. $result['message_id'])
 			);
 		}
 
-		$regions = array('main/header', 'main/content_left', 'main/footer');
-		$this->template->regions($regions);
-		$this->template->load('main/inbox', $data);
+		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'inbox.php')) {
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'inbox', $regions, $data);
+		} else {
+			$this->template->render('themes/main/default/', 'inbox', $regions, $data);
+		}
 	}
 
 	public function view() {
 		$this->lang->load('main/inbox');  														// loads language file
 
-		if (!file_exists(APPPATH .'views/main/inbox_view.php')) {
-			show_404();
-		}
-			
 		if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
   			redirect('account/login');
 		}
@@ -72,8 +67,8 @@ class Inbox extends MX_Controller {
 			$data['alert'] = '';
 		}
 
-		if ($this->input->get('message_id')) {															// check if customer_id is set in uri string
-			$message_id = (int)$this->input->get('message_id');
+		if ($this->uri->segment(4)) {															// check if customer_id is set in uri string
+			$message_id = (int)$this->uri->segment(4);
 		} else {
   			redirect('account/inbox');
 		}
@@ -88,7 +83,7 @@ class Inbox extends MX_Controller {
 		$data['button_back'] 			= $this->lang->line('button_back');
 		// END of retrieving lines from language file to pass to view.
 
-		$data['back'] 					= $this->config->site_url('account/inbox');
+		$data['back'] 					= site_url('main/inbox');
 
 		if ($result) {
 			$data['error'] 			= '';
@@ -100,9 +95,12 @@ class Inbox extends MX_Controller {
 			$data['error'] = '<p class="error">Sorry, an error has occurred.</p>';
 		}
 
-		$regions = array('main/header', 'main/content_left', 'main/footer');
-		$this->template->regions($regions);
-		$this->template->load('main/inbox_view', $data);
+		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'inbox_view.php')) {
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'inbox_view', $regions, $data);
+		} else {
+			$this->template->render('themes/main/default/', 'inbox_view', $regions, $data);
+		}
 	}
 }
 

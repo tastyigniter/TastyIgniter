@@ -13,10 +13,6 @@ class Locations extends CI_Controller {
 
 	public function index() {
 		
-		if (!file_exists(APPPATH .'views/admin/locations.php')) {
-			show_404();
-		}
-			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -31,26 +27,67 @@ class Locations extends CI_Controller {
 			$data['alert'] = '';
 		}
 															
+		$url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
 			$filter['page'] = (int) $this->input->get('page');
 		} else {
-			$filter['page'] = 1;
+			$filter['page'] = '';
 		}
 		
 		if ($this->config->item('page_limit')) {
 			$filter['limit'] = $this->config->item('page_limit');
 		}
 				
+		if ($this->input->get('filter_search')) {
+			$filter['filter_search'] = $this->input->get('filter_search');
+			$data['filter_search'] = $filter['filter_search'];
+			$url .= 'filter_search='.$filter['filter_search'].'&';
+		} else {
+			$data['filter_search'] = '';
+		}
+		
+		if (is_numeric($this->input->get('filter_status'))) {
+			$filter['filter_status'] = $this->input->get('filter_status');
+			$data['filter_status'] = $filter['filter_status'];
+			$url .= 'filter_status='.$filter['filter_status'].'&';
+		} else {
+			$filter['filter_status'] = '';
+			$data['filter_status'] = '';
+		}
+		
+		if ($this->input->get('sort_by')) {
+			$filter['sort_by'] = $this->input->get('sort_by');
+			$data['sort_by'] = $filter['sort_by'];
+		} else {
+			$filter['sort_by'] = '';
+			$data['sort_by'] = '';
+		}
+		
+		if ($this->input->get('order_by')) {
+			$filter['order_by'] = $this->input->get('order_by');
+			$data['order_by_active'] = strtolower($this->input->get('order_by')) .' active';
+			$data['order_by'] = strtolower($this->input->get('order_by'));
+		} else {
+			$filter['order_by'] = '';
+			$data['order_by_active'] = '';
+			$data['order_by'] = 'desc';
+		}
+		
 		$data['heading'] 			= 'Locations';
-		$data['sub_menu_add'] 		= 'Add new location';
-		$data['sub_menu_delete'] 	= 'Delete';
+		$data['button_add'] 		= 'New';
+		$data['button_delete'] 		= 'Delete';
 		$data['text_empty'] 		= 'There are no locations available.';
+
+		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'DESC') ? 'ASC' : 'DESC';
+		$data['sort_name'] 			= site_url('admin/locations'.$url.'sort_by=location_name&order_by='.$order_by);
+		$data['sort_city'] 			= site_url('admin/locations'.$url.'sort_by=location_city&order_by='.$order_by);
+		$data['sort_postcode'] 		= site_url('admin/locations'.$url.'sort_by=location_postcode&order_by='.$order_by);
+		$data['sort_id'] 			= site_url('admin/locations'.$url.'sort_by=menu_id&location_id='.$order_by);
 
 		$data['country_id'] = $this->config->item('country_id');
 		$data['default_location_id'] = $this->config->item('default_location_id');
 		
-		//load category data into array
 		$data['locations'] = array();
 		$results = $this->Locations_model->getList($filter);
 		foreach ($results as $result) {					
@@ -64,7 +101,7 @@ class Locations extends CI_Controller {
 				'location_lat'			=> $result['location_lat'],
 				'location_lng'			=> $result['location_lng'],
 				'location_status'		=> $result['location_status'],
-				'edit' 					=> $this->config->site_url('admin/locations/edit?id=' . $result['location_id'])
+				'edit' 					=> site_url('admin/locations/edit?id=' . $result['location_id'])
 			);
 		}
 
@@ -89,13 +126,15 @@ class Locations extends CI_Controller {
 				'name'			=>	$result['country_name'],
 			);
 		}
-				
-		$data['hours'] = $this->Locations_model->getOpeningHours();
 
-		$config['base_url'] 		= $this->config->site_url('admin/locations');
-		$config['total_rows'] 		= $this->Locations_model->record_count();
+		if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+			$url .= 'sort_by='.$filter['sort_by'].'&';
+			$url .= 'order_by='.$filter['order_by'].'&';
+		}
+		
+		$config['base_url'] 		= site_url('admin/locations').$url;
+		$config['total_rows'] 		= $this->Locations_model->record_count($filter);
 		$config['per_page'] 		= $filter['limit'];
-		$config['num_links'] 		= round($config['total_rows'] / $config['per_page']);
 		
 		$this->pagination->initialize($config);
 
@@ -104,26 +143,21 @@ class Locations extends CI_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		if ($this->input->post('delete') && $this->_deleteLocation() === TRUE) {
+		if ($this->input->post('delete') AND $this->_deleteLocation() === TRUE) {
 			
 			redirect('admin/locations');  			
 		}	
 
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/locations', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'locations.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'locations', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'locations', $regions, $data);
+		}
 	}
 
 	public function edit() {
 		
-		if (!file_exists(APPPATH .'views/admin/locations_edit.php')) {
-			show_404();
-		}
-			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -141,17 +175,18 @@ class Locations extends CI_Controller {
 		//check if /location_id is set in uri string
 		if (is_numeric($this->input->get('id'))) {
 			$location_id = (int)$this->input->get('id');
-			$data['action']	= $this->config->site_url('admin/locations/edit?id='. $location_id);
+			$data['action']	= site_url('admin/locations/edit?id='. $location_id);
 		} else {
 		    $location_id = 0;
-			$data['action']	= $this->config->site_url('admin/locations/edit');
+			$data['action']	= site_url('admin/locations/edit');
 		}
 		
 		$result = $this->Locations_model->getLocation($location_id);
 		
 		$data['heading'] 				= 'Location - '. $result['location_name'];
-		$data['sub_menu_save'] 			= 'Save';
-		$data['sub_menu_back'] 			= $this->config->site_url('admin/locations');
+		$data['button_save'] 			= 'Save';
+		$data['button_save_close'] 		= 'Save & Close';
+		$data['sub_menu_back'] 			= site_url('admin/locations');
 
 		$data['location_id'] 			= $result['location_id'];
 		$data['location_name'] 			= $result['location_name'];
@@ -244,30 +279,32 @@ class Locations extends CI_Controller {
 			);
 		}
 
-		if ($this->input->post() && $this->_addLocation() === TRUE) {
+		if ($this->input->post() AND $this->_addLocation() === TRUE) {
 		
 			redirect('/admin/locations');
 		}
 
-		if ($this->input->post() && $this->_updateLocation() === TRUE) {
-					
-			redirect('admin/locations');
+		if ($this->input->post() AND $this->_updateLocation() === TRUE) {
+			if ($this->input->post('save_close') === '1') {
+				redirect('admin/locations');
+			}
+			
+			redirect('admin/locations/edit?id='. $location_id);
 		}
 		
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/locations_edit', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'locations_edit.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'locations_edit', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'locations_edit', $regions, $data);
+		}
 	}
 
 	public function _addLocation() {
 									
     	if (!$this->user->hasPermissions('modify', 'admin/locations')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add!</p>');
 			return TRUE;
     	
     	} else if (	! $this->input->get('id') AND $this->validateForm() === TRUE) { 
@@ -303,7 +340,7 @@ class Locations extends CI_Controller {
 									
     	if (!$this->user->hasPermissions('modify', 'admin/locations')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
 			return TRUE;
     	
     	} else if ($this->input->get('id') AND $this->validateForm() === TRUE) { 
@@ -340,30 +377,29 @@ class Locations extends CI_Controller {
 	}
 
 	public function validateForm() {
-		$this->form_validation->set_rules('location_name', 'Location Name', 'trim|required|min_length[2]|max_length[45]');
-		$this->form_validation->set_rules('address[address_1]', 'Location Address 1', 'trim|required|min_length[2]|max_length[128]');
-		$this->form_validation->set_rules('address[address_2]', 'Location Address 2', 'trim|max_length[128]');
-		$this->form_validation->set_rules('address[city]', 'Location City', 'trim|required|min_length[2]|max_length[128]');
-		$this->form_validation->set_rules('address[postcode]', 'Location Postcode', 'trim|required|min_length[2]|max_length[11]|callback_get_lat_lag');
-		$this->form_validation->set_rules('address[country]', 'Location Country', 'trim|required|integer');
-		$this->form_validation->set_rules('email', 'Location Email', 'trim|required|valid_email');
-		$this->form_validation->set_rules('telephone', 'Location Telephone', 'trim|required|min_length[2]|max_length[15]');
-		$this->form_validation->set_rules('hours[open]', 'Open Hour', 'trim|required|valid_time|callback_less_time[hours[close]]');
-		$this->form_validation->set_rules('hours[close]', 'Close Hour', 'trim|required|valid_time');
-		$this->form_validation->set_rules('offer_delivery', 'Offer Delivery', 'trim|required|integer');
-		$this->form_validation->set_rules('offer_collection', 'Offer Collection', 'trim|required|integer');
-		$this->form_validation->set_rules('ready_time', 'Ready Time', 'trim|integer');
-		$this->form_validation->set_rules('last_order_time', 'Last Order Time', 'trim|integer');
-		$this->form_validation->set_rules('delivery_charge', 'Delivery Charge', 'trim|numeric');
-		$this->form_validation->set_rules('min_delivery_total', 'Min Delivery Total', 'trim|numeric');
-		$this->form_validation->set_rules('tables[]', 'Tables', 'trim|integer');
-		$this->form_validation->set_rules('reserve_interval', 'Time Interval', 'trim|integer');
-		$this->form_validation->set_rules('reserve_turn', 'Turn Time', 'trim|integer');
-		$this->form_validation->set_rules('location_status', 'Location Status', 'trim|required|integer');
-		$this->form_validation->set_rules('location_radius', 'Location Radius', 'trim|integer');
-		$this->form_validation->set_rules('covered_area', 'Covered Area', '');
+		$this->form_validation->set_rules('location_name', 'Location Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
+		$this->form_validation->set_rules('address[address_1]', 'Location Address 1', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+		$this->form_validation->set_rules('address[address_2]', 'Location Address 2', 'xss_clean|trim|max_length[128]');
+		$this->form_validation->set_rules('address[city]', 'Location City', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+		$this->form_validation->set_rules('address[postcode]', 'Location Postcode', 'xss_clean|trim|required|min_length[2]|max_length[10]|callback_get_lat_lag');
+		$this->form_validation->set_rules('address[country]', 'Location Country', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('email', 'Location Email', 'xss_clean|trim|required|valid_email');
+		$this->form_validation->set_rules('telephone', 'Location Telephone', 'xss_clean|trim|required|min_length[2]|max_length[15]');
+		$this->form_validation->set_rules('hours[open]', 'Open Hour', 'xss_clean|trim|required|valid_time|callback_less_time[hours[close]]');
+		$this->form_validation->set_rules('hours[close]', 'Close Hour', 'xss_clean|trim|required|valid_time');
+		$this->form_validation->set_rules('offer_delivery', 'Offer Delivery', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('offer_collection', 'Offer Collection', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('ready_time', 'Ready Time', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('last_order_time', 'Last Order Time', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('delivery_charge', 'Delivery Charge', 'xss_clean|trim|numeric');
+		$this->form_validation->set_rules('min_delivery_total', 'Min Delivery Total', 'xss_clean|trim|numeric');
+		$this->form_validation->set_rules('tables[]', 'Tables', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('reserve_interval', 'Time Interval', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('reserve_turn', 'Turn Time', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('location_status', 'Location Status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('location_radius', 'Location Radius', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('covered_area', 'Covered Area', 'xss_clean');
 	
-		//if validation is true
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;
 		} else {
@@ -373,9 +409,7 @@ class Locations extends CI_Controller {
 	
 	public function _deleteLocation() {
     	if (!$this->user->hasPermissions('modify', 'admin/menus')) {
-		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
-    	
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
     	} else { 
 			if (is_array($this->input->post('delete'))) {
 				foreach ($this->input->post('delete') as $key => $value) {
@@ -391,7 +425,7 @@ class Locations extends CI_Controller {
 	}
 	
 	public function get_lat_lag() {
-		if (isset($_POST['address']) && is_array($_POST['address']) && !empty($_POST['address']['postcode'])) {			 
+		if (isset($_POST['address']) AND is_array($_POST['address']) AND !empty($_POST['address']['postcode'])) {			 
 			$address_string =  implode(", ", $_POST['address']);
 			$address = urlencode($address_string);
 			$geocode = file_get_contents('http://maps.googleapis.com/maps/api/geocode/json?address='. $address .'&sensor=false&region=GB');
@@ -410,15 +444,13 @@ class Locations extends CI_Controller {
 	}
 
 	public function less_time($str) {
-	
 		foreach ($_POST['hours']['open'] as $day => $human_open) {
-
 			foreach ($_POST['hours']['close'] as $day => $human_close) {
 				if ($day === $day) {
 					$unix_open = strtotime($human_open);
 					$unix_close = strtotime($human_close);
 					
-					if ($unix_open >= $unix_close && ($human_open !== "00:00" && $human_close !== "00:00")) {
+					if ($unix_open >= $unix_close AND ($human_open !== "00:00" AND $human_close !== "00:00")) {
 						$this->form_validation->set_message('less_time', 'The %s field must contain a number less than %s.');
 						return FALSE;
 					}
@@ -429,3 +461,6 @@ class Locations extends CI_Controller {
 		return TRUE;
 	}
 }
+
+/* End of file locations.php */
+/* Location: ./application/controllers/admin/locations.php */

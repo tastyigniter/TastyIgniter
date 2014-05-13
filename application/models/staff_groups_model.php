@@ -1,10 +1,6 @@
 <?php
 class Staff_groups_model extends CI_Model {
 
-	public function __construct() {
-		$this->load->database();
-	}
-
 	public function getStaffGroups() {
 		$this->db->from('staff_groups');
 
@@ -68,7 +64,7 @@ class Staff_groups_model extends CI_Model {
 
 			$permission[$type][] = $page;
 	
-			$this->db->set('permission', $permission);
+			$this->db->set('permission', serialize($permission));
 			$this->db->where('staff_group_id', $staff_group_id);
 			$this->db->update('staff_groups');
 		}
@@ -107,3 +103,6 @@ class Staff_groups_model extends CI_Model {
 		}
 	}
 }
+
+/* End of file staff_groups_model.php */
+/* Location: ./application/models/staff_groups_model.php */

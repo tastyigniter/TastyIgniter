@@ -51,7 +51,7 @@ class CI_Calendar {
 		{
 			$this->CI->lang->load('calendar');
 		}
-		$this->next_prev_url = $this->CI->config->site_url('admin/reservations/calendar');
+
 		$this->local_time = time();
 
 		if (count($config) > 0)
@@ -95,8 +95,10 @@ class CI_Calendar {
 	 * @param	array	the data to be shown in the calendar cells
 	 * @return	string
 	 */
-	function generate($year = '', $month = '', $data = array())
+	function generate($year = '', $month = '', $data = array(), $site_url, $url = '')
 	{
+		$this->next_prev_url = $site_url.$url;
+
 		// Set and validate the supplied month/year
 		if ($year == '')
 			$year  = date("Y", $this->local_time);
@@ -158,7 +160,7 @@ class CI_Calendar {
 		if ($this->show_next_prev == TRUE)
 		{
 			$adjusted_date = $this->adjust_date($month - 1, $year);
-			$out .= str_replace('{previous_url}', $this->next_prev_url .'?year='. $adjusted_date['year'].'&month='.$adjusted_date['month'], $this->temp['heading_previous_cell']);
+			$out .= str_replace('{previous_url}', $this->next_prev_url .'filter_year='. $adjusted_date['year'].'&filter_month='.$adjusted_date['month'], $this->temp['heading_previous_cell']);
 			$out .= "\n";
 		}
 
@@ -175,7 +177,7 @@ class CI_Calendar {
 		if ($this->show_next_prev == TRUE)
 		{
 			$adjusted_date = $this->adjust_date($month + 1, $year);
-			$out .= str_replace('{next_url}', $this->next_prev_url .'?year='. $adjusted_date['year'].'&month='.$adjusted_date['month'], $this->temp['heading_next_cell']);
+			$out .= str_replace('{next_url}', $this->next_prev_url .'filter_year='. $adjusted_date['year'].'&filter_month='.$adjusted_date['month'], $this->temp['heading_next_cell']);
 		}
 
 		$out .= "\n";
@@ -216,9 +218,10 @@ class CI_Calendar {
 						$fmt_day = (strlen($day) == 1) ? '0'.$day : $day;
 
 						// Cells with content
-						$day_id = $year.'-'. $month .'-'. $fmt_day;
+						$day_id = $year .'-'. $month .'-'. $fmt_day;
+						$day_url = $this->next_prev_url.'filter_year='.$year.'&filter_month='. $month .'&filter_day='. $fmt_day;
 						$temp = ($is_current_month == TRUE AND $day == $cur_day) ? $this->temp['cal_cell_content_today'] : $this->temp['cal_cell_content'];
-						$out .= str_replace('{day}', $day, str_replace('{day_id}', $day_id, str_replace('{state}', $data[$day], $temp)));
+						$out .= str_replace('{day}', $day, str_replace('{day_url}', $day_url, str_replace('{state}', $data[$day], str_replace('{day_id}', $day_id, $temp))));
 
 					}
 					else
@@ -408,9 +411,9 @@ class CI_Calendar {
 		return array (
 			'table_open'				=> '<table border="0" cellpadding="4" cellspacing="0" class="calendar">',
 			'heading_row_start'			=> '<tr>',
-			'heading_previous_cell'		=> '<th class="prev"><a class="calender_nav"href="{previous_url}"></a></th>',
+			'heading_previous_cell'		=> '<th class="prev"><a class="calender_nav" href="{previous_url}"></a></th>',
 			'heading_title_cell'		=> '<th class="title" colspan="{colspan}">{heading}</th>',
-			'heading_next_cell'			=> '<th class="next"><a class="calender_nav"href="{next_url}"></a></th>',
+			'heading_next_cell'			=> '<th class="next"><a class="calender_nav" href="{next_url}"></a></th>',
 			'heading_row_end'			=> '</tr>',
 			'week_row_start'			=> '<tr>',
 			'week_day_cell'				=> '<th class="week">{week_day}</th>',
@@ -419,9 +422,9 @@ class CI_Calendar {
 			'cal_cell_start'			=> '<td class="day">',
 			'cal_cell_start_today'		=> '<td class="today">',
 			'cal_cell_start_select'		=> '<td class="day">',
-			'cal_cell_content'			=> '<a href="#" id="{day_id}" class="{state}"><span>{day}</span></a>',
-			'cal_cell_content_today'	=> '<a href="#" id="{day_id}" class="{state}"><span>{day}</span></a>',
-			'cal_cell_content_select'	=> '<a href="#" id="{day_id}" class="{state} selected"><span>{day}</span></a>',
+			'cal_cell_content'			=> '<a href="{day_url}" id="{day_id}" class="{state}"><span>{day}</span></a>',
+			'cal_cell_content_today'	=> '<a href="{day_url}" id="{day_id}" class="{state}"><span>{day}</span></a>',
+			'cal_cell_content_select'	=> '<a href="{day_url}" id="{day_id}" class="{state} selected"><span>{day}</span></a>',
 			'cal_cell_no_content'		=> '<span>{day}</span>',
 			'cal_cell_no_content_today'	=> '<span>{day}</span>',
 			'cal_cell_no_content_select'	=> '<span>{day}</span>',
@@ -484,4 +487,4 @@ class CI_Calendar {
 // END CI_Calendar class
 
 /* End of file Calendar.php */
-/* Location: ./system/libraries/Calendar.php */
+/* Location: ./application/libraries/Calendar.php */

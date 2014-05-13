@@ -2,11 +2,6 @@
 
 class Country {
 
-	public function __construct() {
-		//$this->CI =& get_instance();
-		//$this->CI->load->database();
-	}
-	
 	public function addressFormat($address = array()) {
 
 		if (!empty($address['format'])) {
@@ -36,3 +31,7 @@ class Country {
 		return str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format))));
 	}
 }
+// END Country Class
+
+/* End of file Country.php */
+/* Location: ./application/libraries/Country.php */

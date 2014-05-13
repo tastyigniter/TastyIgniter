@@ -11,10 +11,6 @@ class Messages extends CI_Controller {
 
 	public function index() {
 			
-		if (!file_exists(APPPATH .'views/admin/messages.php')) {
-			show_404();
-		}
-			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -29,28 +25,38 @@ class Messages extends CI_Controller {
 			$data['alert'] = '';
 		}
 
+		$url = '?';
 		$filter = array();
-		if ($this->input->get('label')) {
-			$filter['label'] = $this->input->get('label');
-			$data['label'] = $filter['label'];
+		if ($this->input->get('filter_label')) {
+			$filter['filter_label'] = $this->input->get('filter_label');
+			$data['filter_label'] = $filter['filter_label'];
+			$url .= 'filter_label='.$filter['filter_label'].'&';
 		} else {
-			$filter['label'] = 'staffs';
-			$data['label'] = 'inbox';
+			$filter['filter_label'] = 'staffs';
+			$data['filter_label'] = '';
 		}
 		
 		if ($this->input->get('page')) {
 			$filter['page'] = (int) $this->input->get('page');
 		} else {
-			$filter['page'] = 1;
+			$filter['page'] = '';
 		}
 		
 		if ($this->config->item('page_limit')) {
 			$filter['limit'] = $this->config->item('page_limit');
 		}
 		
+		if ($this->input->get('filter_search')) {
+			$filter['filter_search'] = $this->input->get('filter_search');
+			$data['filter_search'] = $filter['filter_search'];
+			$url .= 'filter_search='.$filter['filter_search'].'&';
+		} else {
+			$data['filter_search'] = '';
+		}
+		
 		$data['heading'] 			= 'Messages';
-		$data['sub_menu_delete'] 	= 'Delete';
-		$data['sub_menu_add'] 		= 'Send Message';
+		$data['button_delete'] 		= 'Delete';
+		$data['button_add'] 		= 'Send Message';
 		$data['text_empty'] 		= 'There are no messages available.';
 
 		$data['messages'] = array();
@@ -62,20 +68,13 @@ class Messages extends CI_Controller {
 				'subject' 		=> $result['subject'],
 				'date'			=> mdate('%d %M %y - %H:%i', strtotime($result['date'])),
 				'body' 			=> substr(strip_tags(html_entity_decode($result['body'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..',
-				'view'			=> $this->config->site_url('admin/messages/view?id=' . $result['message_id'])
+				'view'			=> site_url('admin/messages/view?id=' . $result['message_id'])
 			);
 		}
-		
-		$data['labels'] = array(
-			'inbox' => $this->config->site_url('admin/messages'), 
-			'sent' => $this->config->site_url('admin/messages?label=sent'),
-			'draft' => $this->config->site_url('admin/messages?label=draft')
-		);
 
-		$config['base_url'] 		= $this->config->site_url('admin/messages');
+		$config['base_url'] 		= site_url('admin/messages').$url;
 		$config['total_rows'] 		= $this->Messages_model->record_count($filter);
 		$config['per_page'] 		= $filter['limit'];
-		$config['num_links'] 		= round($config['total_rows'] / $config['per_page']);
 		
 		$this->pagination->initialize($config);
 
@@ -88,20 +87,15 @@ class Messages extends CI_Controller {
 			redirect('admin/messages');
 		}	
 
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/messages', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'messages.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'messages', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'messages', $regions, $data);
+		}
 	}
 
 	public function view() {
-		
-		if (!file_exists(APPPATH .'views/admin/messages_view.php')) {
-			show_404();
-		}
 			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
@@ -121,7 +115,7 @@ class Messages extends CI_Controller {
 		}
 
 		$data['heading'] 		= 'Messages';
-		$data['sub_menu_back'] 	= $this->config->site_url('admin/messages');
+		$data['sub_menu_back'] 	= site_url('admin/messages');
 
 		$message_info = $this->Messages_model->viewAdminMessage($message_id);
 		
@@ -142,17 +136,16 @@ class Messages extends CI_Controller {
 			$data['body'] 			= $message_info['body'];
 		}		
 
-		$regions = array('admin/header', 'admin/footer');
-		$this->template->regions($regions);
-		$this->template->load('admin/messages_view', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'messages_view.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'messages_view', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'messages_view', $regions, $data);
+		}
 	}
 
 	public function edit() {
-		
-		if (!file_exists(APPPATH .'views/admin/messages_edit.php')) {
-			show_404();
-		}
-			
+
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -163,9 +156,9 @@ class Messages extends CI_Controller {
 			$data['alert'] = '';
 		}
 
-		$data['heading'] 			= 'Messages';
-		$data['sub_menu_save'] 		= 'Send';
-		$data['sub_menu_back'] 		= $this->config->site_url('admin/messages');
+		$data['heading'] 			= 'Messages - Send Message';
+		$data['button_save'] 		= 'Send';
+		$data['sub_menu_back'] 		= site_url('admin/messages');
 
 		$data['default_location_id'] = $this->config->item('default_location_id');
 
@@ -183,18 +176,17 @@ class Messages extends CI_Controller {
 			redirect('admin/messages');
 		}
 
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/messages_edit', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'messages_edit.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'messages_edit', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'messages_edit', $regions, $data);
+		}
 	}
 
 	public function _sendMessage() {
     	if (!$this->user->hasPermissions('modify', 'admin/messages')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to send message!</p>');
   			return TRUE;
     	} else if ($this->validateForm() === TRUE) { 
 			$send = array();
@@ -215,7 +207,7 @@ class Messages extends CI_Controller {
 
 	public function _deleteMessage($menu_id = FALSE) {
     	if (!$this->user->hasPermissions('modify', 'admin/messages')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
     	} else { 
 			if (is_array($this->input->post('delete'))) {
 				foreach ($this->input->post('delete') as $key => $value) {
@@ -231,9 +223,9 @@ class Messages extends CI_Controller {
 	}
 
 	public function validateForm() {
-		$this->form_validation->set_rules('receiver', 'To', 'trim|required|min_length[2]|max_length[128]');
-		$this->form_validation->set_rules('subject', 'Subject', 'trim|required|min_length[2]|max_length[128]');
-		$this->form_validation->set_rules('body', 'Body', 'encode_php_tags|prep_for_form|htmlspecialchars|required|min_length[3]');
+		$this->form_validation->set_rules('receiver', 'To', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+		$this->form_validation->set_rules('subject', 'Subject', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+		$this->form_validation->set_rules('body', 'Body', 'required|min_length[3]');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;
@@ -242,3 +234,6 @@ class Messages extends CI_Controller {
 		}		
 	}
 }
+
+/* End of file messages.php */
+/* Location: ./application/controllers/admin/messages.php */

@@ -38,7 +38,7 @@
     <div class="cart-coupon">
     <table width="100%" height="auto" class="list">
 		<tr>
-			<td class="right"><input type="text" name="coupon" value="<?php echo $coupon_code; ?>" placeholder="<?php echo $text_apply_coupon; ?>"/></td>
+			<td class="right"><input type="text" name="coupon" value="<?php echo $coupon_code; ?>" placeholder="<?php echo $text_apply_coupon; ?>" /></td>
 			<td><a class="button2" onclick="applyCoupon();"><?php echo $button_coupon; ?></a></td>
 		</tr>
     </table>
@@ -53,7 +53,7 @@
 		<?php } ?>
 		<?php if (!empty($coupon)) { ?>
 		<tr>
-			<td class="right"><img onclick="clearCoupon();" src="<?php echo base_url('assets/img/delete.png'); ?>" />
+			<td class="right"><img onclick="clearCoupon();" src="<?php echo base_url('assets/img/delete.svg'); ?>" />
 			<b><?php echo $text_coupon; ?>:</b> -<?php echo $coupon; ?></td>
 		</tr>
 		<?php } ?>

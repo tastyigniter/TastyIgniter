@@ -21,5 +21,5 @@ $lang['column_action'] 			= 'Action(s)';
 $lang['button_continue'] 		= 'Checkout';
 $lang['button_add'] 			= 'Add';
 
-/* End of file home_lang.php */
-/* Location: ./application/language/english/main/home_lang.php */
+/* End of file menus_lang.php */
+/* Location: ./application/language/english/main/menus_lang.php */

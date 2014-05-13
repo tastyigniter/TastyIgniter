@@ -35,5 +35,5 @@ $lang['column_menu'] 			= 'Menu';
 $lang['column_price'] 			= 'Price';
 $lang['column_action'] 			= 'Action(s)';
 
-/* End of file home_lang.php */
-/* Location: ./application/language/english/main/home_lang.php */
+/* End of file specials_lang.php */
+/* Location: ./application/language/english/main/specials_lang.php */

@@ -40,3 +40,6 @@ class Account_module extends MX_Controller {
 		$this->load->view('main/account_module', $data);
 	}		
 }
+
+/* End of file account_module.php */
+/* Location: ./application/extensions/main/controllers/account_module.php */

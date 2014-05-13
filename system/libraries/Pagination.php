@@ -32,29 +32,29 @@ class CI_Pagination {
 
 	var $total_rows			=  0; // Total number of items (database results)
 	var $per_page			= 20; // Max number of items you want shown per page
-	var $num_links			=  2; // Number of "digit" links to show before/after the currently viewed page
+	var $num_links			=  4; // Number of "digit" links to show before/after the currently viewed page
 	var $cur_page			=  1; // The current page being viewed
 	var $use_page_numbers	= TRUE; // Use page number for segment instead of offset
-	var $first_link			= '&lsaquo; First';
-	var $next_link			= '&gt;';
-	var $prev_link			= '&lt;';
-	var $last_link			= 'Last &rsaquo;';
+	var $first_link			= '<i class="icon icon-first"></i>';
+	var $next_link			= '<i class="icon icon-next"></i>';
+	var $prev_link			= '<i class="icon icon-prev"></i>';
+	var $last_link			= '<i class="icon icon-last"></i>';
 	var $uri_segment		= 3;
-	var $full_tag_open		= '';
-	var $full_tag_close		= '';
-	var $first_tag_open		= '';
-	var $first_tag_close	= '&nbsp;';
-	var $last_tag_open		= '&nbsp;';
-	var $last_tag_close		= '';
+	var $full_tag_open		= '<div class="links"><ul>';
+	var $full_tag_close		= '</ul></div>';
+	var $first_tag_open		= '<li>';
+	var $first_tag_close	= '</li>';
+	var $last_tag_open		= '<li>';
+	var $last_tag_close		= '</li>';
 	var $first_url			= ''; // Alternative URL for the First Page.
-	var $cur_tag_open		= '&nbsp;<span class="active">';
-	var $cur_tag_close		= '</span>';
-	var $next_tag_open		= '&nbsp;';
-	var $next_tag_close		= '&nbsp;';
-	var $prev_tag_open		= '&nbsp;';
-	var $prev_tag_close		= '';
-	var $num_tag_open		= '&nbsp;';
-	var $num_tag_close		= '';
+	var $cur_tag_open		= '<li><span class="active">';
+	var $cur_tag_close		= '</li>';
+	var $next_tag_open		= '<li>';
+	var $next_tag_close		= '</li>';
+	var $prev_tag_open		= '<li>';
+	var $prev_tag_close		= '</li>';
+	var $num_tag_open		= '<li>';
+	var $num_tag_close		= '</li>';
 	var $page_query_string	= TRUE;
 	var $query_string_segment = 'page';
 	var $display_pages		= TRUE;
@@ -214,7 +214,7 @@ class CI_Pagination {
 		// string. If post, add a trailing slash to the base URL if needed
 		if ($CI->config->item('enable_query_strings') === TRUE OR $this->page_query_string === TRUE)
 		{
-			$this->base_url = rtrim($this->base_url).'&#63;'.$this->query_string_segment.'=';
+			$this->base_url = rtrim($this->base_url).$this->query_string_segment.'='; // .'&#38;'
 		}
 		else
 		{
@@ -228,7 +228,7 @@ class CI_Pagination {
 		if  ($this->first_link !== FALSE AND $this->cur_page > ($this->num_links + 1))
 		{
 			$first_url = ($this->first_url == '') ? $this->base_url : $this->first_url;
-			$output .= $this->first_tag_open.'<a '.$this->anchor_class.'href="'.$first_url.'">'.$this->first_link.'</a>'.$this->first_tag_close;
+			$output .= $this->first_tag_open.'<a '.$this->anchor_class.'href="'.$this->prefix.$first_url.$this->suffix.'">'.$this->first_link.'</a>'.$this->first_tag_close;
 		}
 
 		// Render the "previous" link
@@ -278,7 +278,7 @@ class CI_Pagination {
 					}
 					else
 					{
-						$n = ($i == $base_page) ? '' : $i;
+						$n = ($i == $base_page) ? '' : $this->prefix.$i.$this->suffix;
 
 						if ($n == '' && $this->first_url != '')
 						{

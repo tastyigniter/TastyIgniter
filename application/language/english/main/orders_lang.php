@@ -5,6 +5,7 @@ $lang['text_view_heading'] 		= 'My Order View';
 $lang['text_empty'] 			= 'There are no order(s).';
 $lang['text_delivery'] 			= 'Delivery';
 $lang['text_collection'] 		= 'Collection';
+$lang['text_reorder'] 			= 'Re-order';
 $lang['text_leave_review'] 		= 'Leave review';
 
 $lang['column_id'] 				= 'Order ID';
@@ -20,5 +21,5 @@ $lang['button_order'] 			= 'Place New Order';
 $lang['button_reorder'] 		= 'Re-Order';
 $lang['button_back'] 			= 'Back';
 
-/* End of file home_lang.php */
-/* Location: ./application/language/english/main/home_lang.php */
+/* End of file orders_lang.php */
+/* Location: ./application/language/english/main/orders_lang.php */

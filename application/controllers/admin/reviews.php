@@ -9,11 +9,7 @@ class Reviews extends CI_Controller {
 	}
 
 	public function index() {
-			
-		if (!file_exists(APPPATH .'views/admin/reviews.php')) {
-			show_404();
-		}
-			
+						
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -28,22 +24,74 @@ class Reviews extends CI_Controller {
 			$data['alert'] = '';
 		}
 
+		$url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
 			$filter['page'] = (int) $this->input->get('page');
 		} else {
-			$filter['page'] = 1;
+			$filter['page'] = '';
 		}
 		
 		if ($this->config->item('page_limit')) {
 			$filter['limit'] = $this->config->item('page_limit');
 		}
 				
+		if ($this->input->get('filter_search')) {
+			$filter['filter_search'] = $this->input->get('filter_search');
+			$data['filter_search'] = $filter['filter_search'];
+			$url .= 'filter_search='.$filter['filter_search'].'&';
+		} else {
+			$data['filter_search'] = '';
+		}
+		
+		if ($this->input->get('filter_date')) {
+			$filter['filter_date'] = $this->input->get('filter_date');
+			$data['filter_date'] = $filter['filter_date'];
+			$url .= 'filter_date='.$filter['filter_date'].'&';
+		} else {
+			$filter['filter_date'] = '';
+			$data['filter_date'] = '';
+		}
+		
+		if (is_numeric($this->input->get('filter_status'))) {
+			$filter['filter_status'] = $this->input->get('filter_status');
+			$data['filter_status'] = $filter['filter_status'];
+			$url .= 'filter_status='.$filter['filter_status'].'&';
+		} else {
+			$filter['filter_status'] = '';
+			$data['filter_status'] = '';
+		}
+		
+		if ($this->input->get('sort_by')) {
+			$filter['sort_by'] = $this->input->get('sort_by');
+			$data['sort_by'] = $filter['sort_by'];
+		} else {
+			$filter['sort_by'] = '';
+			$data['sort_by'] = '';
+		}
+		
+		if ($this->input->get('order_by')) {
+			$filter['order_by'] = $this->input->get('order_by');
+			$data['order_by_active'] = strtolower($this->input->get('order_by')) .' active';
+			$data['order_by'] = strtolower($this->input->get('order_by'));
+		} else {
+			$filter['order_by'] = '';
+			$data['order_by_active'] = '';
+			$data['order_by'] = 'desc';
+		}
+		
 		$data['heading'] 			= 'Reviews';
-		$data['sub_menu_add'] 		= 'Add new review';
-		$data['sub_menu_delete'] 	= 'Delete';
+		$data['button_add'] 		= 'New';
+		$data['button_delete'] 		= 'Delete';
 		$data['text_empty']			= 'There are no reviews available.';
 
+		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'DESC') ? 'ASC' : 'DESC';
+		$data['sort_location'] 		= site_url('admin/reviews'.$url.'sort_by=location_name&order_by='.$order_by);
+		$data['sort_author'] 		= site_url('admin/reviews'.$url.'sort_by=author&order_by='.$order_by);
+		$data['sort_id'] 			= site_url('admin/reviews'.$url.'sort_by=order_id&order_by='.$order_by);
+		$data['sort_status']		= site_url('admin/reviews'.$url.'sort_by=review_status&order_by='.$order_by);
+		$data['sort_date'] 			= site_url('admin/reviews'.$url.'sort_by=date_added&order_by='.$order_by);
+		
 		$ratings = $this->config->item('ratings');
 		$data['ratings'] = $ratings;
 
@@ -61,14 +109,26 @@ class Reviews extends CI_Controller {
 				'order_id' 			=> $review['order_id'],
 				'date_added' 		=> mdate('%d %M %y', strtotime($review['date_added'])),
 				'review_status' 	=> $review['review_status'],
-				'edit' 				=> $this->config->site_url('admin/reviews/edit?id=' . $review['review_id'])
+				'edit' 				=> site_url('admin/reviews/edit?id=' . $review['review_id'])
 			);
 		}
 		
-		$config['base_url'] 		= $this->config->site_url('admin/reviews');
-		$config['total_rows'] 		= $this->Reviews_model->record_count();
+		$data['review_dates'] = array();
+		$review_dates = $this->Reviews_model->getReviewDates();
+		foreach ($review_dates as $review_date) {
+			$month_year = '';
+			$month_year = $review_date['year'].'-'.$review_date['month'];
+			$data['review_dates'][$month_year] = mdate('%F %Y', strtotime($review_date['date_added']));
+		}
+
+		if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+			$url .= 'sort_by='.$filter['sort_by'].'&';
+			$url .= 'order_by='.$filter['order_by'].'&';
+		}
+		
+		$config['base_url'] 		= site_url('admin/reviews').$url;
+		$config['total_rows'] 		= $this->Reviews_model->record_count($filter);
 		$config['per_page'] 		= $filter['limit'];
-		$config['num_links'] 		= round($config['total_rows'] / $config['per_page']);
 		
 		$this->pagination->initialize($config);
 
@@ -82,21 +142,16 @@ class Reviews extends CI_Controller {
 			redirect('admin/reviews');  			
 		}	
 				
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/reviews', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'reviews.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'reviews', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'reviews', $regions, $data);
+		}
 	}
 
 	public function edit() {
 
-		if (!file_exists(APPPATH .'views/admin/reviews_edit.php')) {
-			show_404();
-		}
-			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -108,10 +163,10 @@ class Reviews extends CI_Controller {
 		//check if /category_id is set in uri string
 		if (is_numeric($this->input->get('id'))) {
 			$review_id = $this->input->get('id');
-			$data['action']	= $this->config->site_url('admin/reviews/edit?id='. $review_id);
+			$data['action']	= site_url('admin/reviews/edit?id='. $review_id);
 		} else {
 		    $review_id = $this->input->get('id');
-			$data['action']	= $this->config->site_url('admin/reviews/edit');
+			$data['action']	= site_url('admin/reviews/edit');
 		}
 
 		if ($this->session->flashdata('alert')) {
@@ -123,8 +178,9 @@ class Reviews extends CI_Controller {
 		$review_info = $this->Reviews_model->getReview($review_id);
 
 		$data['heading'] 			= 'Reviews - '. $review_info['location_name'];
-		$data['sub_menu_save'] 		= 'Save';
-		$data['sub_menu_back'] 		= $this->config->site_url('admin/reviews');
+		$data['button_save'] 		= 'Save';
+		$data['button_save_close'] 	= 'Save & Close';
+		$data['sub_menu_back'] 		= site_url('admin/reviews');
 	
 		$data['review_id'] 			= $review_info['review_id'];
 		$data['location_id'] 		= $review_info['location_id'];
@@ -152,32 +208,30 @@ class Reviews extends CI_Controller {
 		}
 	
 		if ($this->input->post() && $this->_addReview() === TRUE) {
-			
 			redirect('admin/reviews');
 		}
 
 		if ($this->input->post() && $this->_updateReview() === TRUE) {
-					
-			redirect('admin/reviews');
+			if ($this->input->post('save_close') === '1') {
+				redirect('admin/reviews');
+			}
+			
+			redirect('admin/reviews/edit?id='. $review_id);
 		}
 		
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/reviews_edit', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'reviews_edit.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'reviews_edit', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'reviews_edit', $regions, $data);
+		}
 	}
-
 	
 	public function _addReview() {
 									
     	if (!$this->user->hasPermissions('modify', 'admin/reviews')) {
-		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add or change!</p>');
   			return TRUE;
-    	
     	} else if ( ! $this->input->get('id') AND $this->validateForm() === TRUE) { 
 			$add = array();
 			
@@ -202,16 +256,13 @@ class Reviews extends CI_Controller {
 	}	
 
 	public function _updateReview() {
-									
     	if (!$this->user->hasPermissions('modify', 'admin/reviews')) {
-		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
   			return TRUE;
-    	
     	} else if ($this->input->get('id') AND $this->validateForm() === TRUE) { 
 			$update = array();
 			
-			$update['review_id'] 	= $this->input->get('id');
+			$update['review_id'] 		= $this->input->get('id');
 			$update['order_id'] 		= $this->input->post('order_id');
 			$update['location_id'] 		= $this->input->post('location_id');
 			$update['customer_id'] 		= $this->input->post('customer_id');
@@ -234,9 +285,7 @@ class Reviews extends CI_Controller {
 
 	public function _deleteReview($review_id = FALSE) {
     	if (!$this->user->hasPermissions('modify', 'admin/reviews')) {
-		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
-    	
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
     	} else { 
 			if (is_array($this->input->post('delete'))) {
 				foreach ($this->input->post('delete') as $key => $value) {
@@ -252,17 +301,15 @@ class Reviews extends CI_Controller {
 	}
 	
 	public function validateForm() {
-
-		//validate category value
-		$this->form_validation->set_rules('order_id', 'Order ID', 'trim|required|integer');
-		$this->form_validation->set_rules('location_id', 'Location', 'trim|required|integer');
-		$this->form_validation->set_rules('customer_id', 'Customer', 'trim|required|integer');
-		$this->form_validation->set_rules('author', 'Author', 'trim|required|min_length[2]|max_length[64]');
-		$this->form_validation->set_rules('quality', 'Quality Rating', 'trim|required|integer');
-		$this->form_validation->set_rules('delivery', 'Delivery Rating', 'trim|required|integer');
-		$this->form_validation->set_rules('service', 'Service Rating', 'trim|required|integer');
-		$this->form_validation->set_rules('review_text', 'Rating Text', 'trim|required|min_length[2]|max_length[1028]');
-		$this->form_validation->set_rules('review_status', 'Rating Status', 'trim|required|integer');
+		$this->form_validation->set_rules('order_id', 'Order ID', 'xss_clean|trim|required|integer|callback_check_order');
+		$this->form_validation->set_rules('location_id', 'Location', 'xss_clean|trim|required|integer|callback_check_location');
+		$this->form_validation->set_rules('customer_id', 'Customer', 'xss_clean|trim|required|integer|callback_check_customer');
+		$this->form_validation->set_rules('author', 'Author', 'xss_clean|trim|required|min_length[2]|max_length[64]');
+		$this->form_validation->set_rules('quality', 'Quality Rating', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('delivery', 'Delivery Rating', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('service', 'Service Rating', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('review_text', 'Rating Text', 'xss_clean|trim|required|min_length[2]|max_length[1028]');
+		$this->form_validation->set_rules('review_status', 'Rating Status', 'xss_clean|trim|required|integer');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;
@@ -270,4 +317,38 @@ class Reviews extends CI_Controller {
 			return FALSE;
 		}
 	}
+
+	public function check_order($order_id) {
+		$this->load->model('Orders_model');
+		if ( ! $this->Orders_model->validateOrder($order_id)) {
+        	$this->form_validation->set_message('check_order', 'The %s entered can not be found');
+			return FALSE;
+		} else {
+			return TRUE;
+		}
+	}
+	
+	public function check_location($location_id) {
+		$this->load->model('Locations_model');
+		if ( ! $this->Locations_model->validateLocation($location_id)) {
+        	$this->form_validation->set_message('check_location', 'The %s entered can not be found');
+			return FALSE;
+		} else {
+			return TRUE;
+		}
+	}
+	
+	public function check_customer($customer_id) {
+		$this->load->model('Customers_model');
+		if ( ! $this->Customers_model->validateCustomer($customer_id)) {
+        	$this->form_validation->set_message('check_customer', 'The %s entered can not be found');
+			return FALSE;
+		} else {
+			return TRUE;
+		}
+	}
+	
 }
+
+/* End of file reviews.php */
+/* Location: ./application/controllers/admin/reviews.php */

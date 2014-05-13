@@ -9,10 +9,6 @@ class Cod extends CI_Controller {
 
 	public function index() {
 			
-		if (!file_exists(APPPATH .'views/admin/cod.php')) {
-			show_404();
-		}
-			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -27,9 +23,10 @@ class Cod extends CI_Controller {
 			$data['alert'] = '';
 		}		
 				
-		$data['heading'] 			= 'Cash On Delivery';
-		$data['sub_menu_save'] 		= 'Save';
-		$data['sub_menu_back'] 		= $this->config->site_url('admin/payments');
+		$data['heading'] 				= 'Cash On Delivery';
+		$data['button_save'] 			= 'Save';
+		$data['button_save_close'] 		= 'Save & Close';
+		$data['sub_menu_back'] 			= site_url('admin/payments');
 
 		if (isset($this->input->post['cod_total'])) {
 			$data['cod_total'] = $this->input->post['cod_total'];
@@ -59,24 +56,26 @@ class Cod extends CI_Controller {
 		}
 
 		if ($this->input->post() && $this->_updateCod() === TRUE){
-						
-			redirect('admin/payments');
+			if ($this->input->post('save_close') === '1') {
+				redirect('admin/payments');
+			}
+			
+			redirect('admin/cod');
 		}
 		
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/cod', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'cod.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'cod', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'cod', $regions, $data);
+		}
 	}
 
 	public function _updateCod() {
 						
     	if (!$this->user->hasPermissions('modify', 'admin/cod')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
 			return TRUE;
     	
     	} else if (!$this->input->post('delete') AND $this->validateForm() === TRUE) { 
@@ -97,9 +96,9 @@ class Cod extends CI_Controller {
 	}
 
 	public function validateForm() {
-		$this->form_validation->set_rules('cod_total', 'Minimum Total', 'trim|required|numeric');
-		$this->form_validation->set_rules('cod_order_status', 'Order Status', 'trim|required|integer');
-		$this->form_validation->set_rules('cod_status', 'Status', 'trim|required|integer');
+		$this->form_validation->set_rules('cod_total', 'Minimum Total', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('cod_order_status', 'Order Status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('cod_status', 'Status', 'xss_clean|trim|required|integer');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;
@@ -108,3 +107,6 @@ class Cod extends CI_Controller {
 		}		
 	}
 }
+
+/* End of file cod.php */
+/* Location: ./application/controllers/admin/cod.php */

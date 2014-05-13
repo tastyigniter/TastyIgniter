@@ -7,11 +7,7 @@ class Ratings extends CI_Controller {
 	}
 
 	public function index() {
-			
-		if (!file_exists(APPPATH .'views/admin/ratings.php')) {
-			show_404();
-		}
-			
+
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -27,7 +23,7 @@ class Ratings extends CI_Controller {
 		}
 
 		$data['heading'] 			= 'Ratings';
-		$data['sub_menu_save'] 		= 'Save';
+		$data['button_save'] 		= 'Save';
 		$data['text_empty'] 		= 'There are no ratings, please add!.';
 		
 		if ($this->input->post('ratings')) {
@@ -38,7 +34,6 @@ class Ratings extends CI_Controller {
 			$results = '';
 		}
 		
-		//load ratings data into array
 		$data['ratings'] = array();
 		if (is_array($results)) {
 			foreach ($results as $key => $value) {					
@@ -47,26 +42,21 @@ class Ratings extends CI_Controller {
 		}
 
 		if ($this->input->post() && $this->_updateRating() === TRUE) {
-		
 			redirect('admin/ratings');  			
 		}
 
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/ratings', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'ratings.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'ratings', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'ratings', $regions, $data);
+		}
 	}
 	
 	public function _updateRating() {
-						
     	if (!$this->user->hasPermissions('modify', 'admin/ratings')) {
-		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
 			return TRUE;
-    	
     	} else if ($this->input->post('ratings') AND $this->validateForm() === TRUE) { 
 			$this->load->model('Settings_model');
 			$update = array();
@@ -85,7 +75,7 @@ class Ratings extends CI_Controller {
 	public function validateForm() {
 		if ($this->input->post('ratings')) {
 			foreach ($this->input->post('ratings') as $key => $value) {
-				$this->form_validation->set_rules('ratings['.$key.']', 'Rating Name', 'trim|required|min_length[2]|max_length[32]');
+				$this->form_validation->set_rules('ratings['.$key.']', 'Rating Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 			}
 		}
 					
@@ -96,3 +86,6 @@ class Ratings extends CI_Controller {
 		}
 	}
 }
+
+/* End of file ratings.php */
+/* Location: ./application/controllers/admin/ratings.php */

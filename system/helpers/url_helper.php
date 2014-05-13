@@ -84,6 +84,26 @@ if ( ! function_exists('current_url'))
 	function current_url()
 	{
 		$CI =& get_instance();
+    	return $_SERVER['QUERY_STRING'] ? $CI->config->site_url($CI->uri->uri_string().'?'.$_SERVER['QUERY_STRING']) : $CI->config->site_url($CI->uri->uri_string());
+	}
+}
+
+// ------------------------------------------------------------------------
+
+/**
+ * Current URL
+ *
+ * Returns the full URL (including segments) of the page where this
+ * function is placed
+ *
+ * @access	public
+ * @return	string
+ */
+if ( ! function_exists('page_url'))
+{
+	function page_url()
+	{
+		$CI =& get_instance();
 		return $CI->config->site_url($CI->uri->uri_string());
 	}
 }

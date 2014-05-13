@@ -12,10 +12,6 @@ class Details extends MX_Controller {
 	public function index() {
 		$this->lang->load('main/details');  													// loads language file
 		
-		if (!file_exists(APPPATH .'views/main/details.php')) {
-			show_404();
-		}
-			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
@@ -47,7 +43,7 @@ class Details extends MX_Controller {
 		$data['button_save'] 			= $this->lang->line('button_save');
 		// END of retrieving lines from language file to pass to view.
 
-		$data['back'] 					= $this->config->site_url('account');
+		$data['back'] 					= site_url('main/account');
 
 		$result = $this->Customers_model->getCustomer($this->customer->getId());				// retrieve customer data based on customer id from getCustomer method in Customers model
 		if ($result) {		
@@ -71,37 +67,19 @@ class Details extends MX_Controller {
 
 		// check if $_POST is set and if update details validation was successful then redirect
 		if ($this->input->post() && $this->_updateDetails() === TRUE) {
-						
 			redirect('account');
 		}
 
-		$regions = array(
-			'main/header',
-			'main/content_left',
-			'main/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('main/details', $data);
+		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'details.php')) {
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'details', $regions, $data);
+		} else {
+			$this->template->render('themes/main/default/', 'details', $regions, $data);
+		}
 	}
 
 	public function _updateDetails() {															// method to validate update details form fields
-
-		// START of form validation rules
-		$this->form_validation->set_rules('first_name', 'First Name', 'trim|required|min_length[2]|max_length[12]');
-		$this->form_validation->set_rules('last_name', 'First Name', 'trim|required|min_length[2]|max_length[12]');
-		$this->form_validation->set_rules('telephone', 'Telephone', 'trim|required|integer');
-		$this->form_validation->set_rules('security_question', 'Security Question', 'required');
-		$this->form_validation->set_rules('security_answer', 'Security Answer', 'required');
-
-		if ($this->input->post('old_password')) {
-			$this->form_validation->set_rules('old_password', 'Old Password', 'trim|required|min_length[6]|max_length[32]|callback_check_old_password');
-			$this->form_validation->set_rules('new_password', 'New Password', 'trim|required|min_length[6]|max_length[32]|matches[confirm_new_password]');
-			$this->form_validation->set_rules('confirm_new_password', 'Confirm New Password', 'trim|required');
-		}
-		// END of form validation rules
-			
-  		if ($this->form_validation->run() === TRUE) {											// checks if form validation routines ran successfully
+		if ($this->validateForm() === TRUE) {
 			$update = array();
 				
 			if ($this->customer->getId()) {  
@@ -140,15 +118,35 @@ class Details extends MX_Controller {
 				}
 	
 				return TRUE;
-						
 			} else {																			// else nothing was updated so display warning message
 				$this->session->set_flashdata('alert', $this->lang->line('error_nothing'));
-	
 				return TRUE;
 			}
 		}
 	}
 
+	public function validateForm() {
+		// START of form validation rules
+		$this->form_validation->set_rules('first_name', 'First Name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
+		$this->form_validation->set_rules('last_name', 'First Name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
+		$this->form_validation->set_rules('telephone', 'Telephone', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('security_question', 'Security Question', 'required');
+		$this->form_validation->set_rules('security_answer', 'Security Answer', 'required');
+
+		if ($this->input->post('old_password')) {
+			$this->form_validation->set_rules('old_password', 'Old Password', 'xss_clean|trim|required|min_length[6]|max_length[32]|callback_check_old_password');
+			$this->form_validation->set_rules('new_password', 'New Password', 'xss_clean|trim|required|min_length[6]|max_length[32]|matches[confirm_new_password]');
+			$this->form_validation->set_rules('confirm_new_password', 'Confirm New Password', 'xss_clean|trim|required');
+		}
+		// END of form validation rules
+			
+  		if ($this->form_validation->run() === TRUE) {											// checks if form validation routines ran successfully
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
+	
  	public function validate_email($email) {													// validation callback function to check if email already exist in database
 		if ($this->Customers_model->getCustomerByEmail($email)) {
         	$this->form_validation->set_message('validate_email', $this->lang->line('error_email'));
@@ -168,3 +166,6 @@ class Details extends MX_Controller {
       	}
     }
 }
+
+/* End of file details.php */
+/* Location: ./application/controllers/main/details.php */

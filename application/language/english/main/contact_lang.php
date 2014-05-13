@@ -29,5 +29,5 @@ $lang['text_contact_sent'] 		= '<p class="success">Message Sent Sucessfully, we 
 $lang['text_contact_message'] 	= '<p>%s</p><p>%s<br />Telephone: %s';
 
 
-/* End of file home_lang.php */
-/* Location: ./application/language/english/main/home_lang.php */
+/* End of file contact_lang.php */
+/* Location: ./application/language/english/main/contact_lang.php */

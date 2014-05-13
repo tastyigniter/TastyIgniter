@@ -2,10 +2,6 @@
 
 class Security_questions_model extends CI_Model {
 
-	public function __construct() {
-		$this->load->database();
-	}
-
 	public function getQuestions() {
 		$this->db->from('security_questions');
 
@@ -68,3 +64,6 @@ class Security_questions_model extends CI_Model {
 		}
 	}
 }
+
+/* End of file security_questions_model.php */
+/* Location: ./application/models/security_questions_model.php */

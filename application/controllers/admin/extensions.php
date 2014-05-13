@@ -10,10 +10,6 @@ class Extensions extends CI_Controller {
 
 	public function index() {
 			
-		if (!file_exists(APPPATH .'views/admin/extensions.php')) {
-			show_404();
-		}
-			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -33,13 +29,13 @@ class Extensions extends CI_Controller {
 
 		$extensions = $this->Extensions_model->getList();
 		foreach ($extensions as $code => $name) {
-			if ( ! file_exists(EXTPATH .'/admin/controllers/'. $code .'_module.php')) {
+			if ( ! file_exists(APPPATH .'/controllers/admin/'. $code .'_module.php')) {
 				$this->Extensions_model->uninstall('module', $code);
 				$this->Settings_model->deleteSettings($code);	
 			}
 		}
 		
-		$files = glob(EXTPATH .'/admin/controllers/*_module.php');
+		$files = glob(APPPATH .'/controllers/admin/*_module.php');
 	
 		$data['extensions'] = array();
 		foreach ($files as $file) {
@@ -48,44 +44,40 @@ class Extensions extends CI_Controller {
 			if (array_key_exists($file_name, $extensions)) {
 				$data['extensions'][] = array(
 					'name' 		=> $extensions[$file_name],
-					'edit' 		=> $this->config->site_url('admin/'. $file_name .'_module'),
-					'uninstall'	=> $this->config->site_url('admin/extensions/uninstall?extension='. $file_name .'_module')
+					'edit' 		=> site_url('admin/'. $file_name .'_module'),
+					'uninstall'	=> site_url('admin/extensions/uninstall?extension='. $file_name .'_module')
 				);		
 
 			} else {
 				$data['extensions'][] = array(
 					'code' 		=> $file_name .'_module',
 					'name' 		=> ucwords($file_name),
-					'install'	=> $this->config->site_url('admin/extensions/install?extension='. $file_name .'_module')
+					'install'	=> site_url('admin/extensions/install?extension='. $file_name .'_module')
 				);		
 			
 			}
 		}
 
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/extensions', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'extensions.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'extensions', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'extensions', $regions, $data);
+		}
 	}
 	
 	public function install() {
     	if ( ! $this->user->hasPermissions('modify', 'admin/extensions')) {
-
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
-  	
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add!</p>');
     	} else if ($this->input->get('extension')) { 
-    	
     		$extension = $this->input->get('extension');
     		$split = explode('_', $extension);
     		
     		$this->Extensions_model->install($split[1], $split[0]);
     		
 			$this->load->model('Staff_groups_model');
-    		$this->Staff_groups_model->addPermission($this->user->getDepartmentId(), 'access', 'admin/'. $extension);
-    		$this->Staff_groups_model->addPermission($this->user->getDepartmentId(), 'modify', 'admin/'. $extension);
+    		$this->Staff_groups_model->addPermission($this->user->getStaffGroupId(), 'access', 'admin/'. $extension);
+    		$this->Staff_groups_model->addPermission($this->user->getStaffGroupId(), 'modify', 'admin/'. $extension);
 				
 			$this->session->set_flashdata('alert', '<p class="success">Extension Installed Sucessfully!</p>');
 		}	
@@ -95,11 +87,8 @@ class Extensions extends CI_Controller {
 	
 	public function uninstall() {
     	if ( ! $this->user->hasPermissions('modify', 'admin/extensions')) {
-		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
-  	
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
     	} else if ($this->input->get('extension')) { 
-    	
     		$extension = $this->input->get('extension');
     		$split = explode('_', $extension);
     		
@@ -112,3 +101,6 @@ class Extensions extends CI_Controller {
 		redirect('admin/extensions');
 	}	
 }
+
+/* End of file extensions.php */
+/* Location: ./application/controllers/admin/extensions.php */

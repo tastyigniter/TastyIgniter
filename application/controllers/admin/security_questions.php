@@ -9,10 +9,6 @@ class Security_questions extends CI_Controller {
 
 	public function index() {
 			
-		if (!file_exists(APPPATH .'views/admin/security_questions.php')) {
-			show_404();
-		}
-			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -28,7 +24,7 @@ class Security_questions extends CI_Controller {
 		}
 
 		$data['heading'] 			= 'Security Questions';
-		$data['sub_menu_save'] 		= 'Save';
+		$data['button_save'] 		= 'Save';
 		$data['text_empty'] 		= 'There are no security questions, please add!.';
 
 		//load questions data into array
@@ -48,26 +44,21 @@ class Security_questions extends CI_Controller {
 		}
 
 		if ($this->input->post() && $this->_updateSecurityQuestion() === TRUE){
-					
 			redirect('admin/security_questions');
 		}
 
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/security_questions', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'security_questions.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'security_questions', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'security_questions', $regions, $data);
+		}
 	}
 
 	public function _updateSecurityQuestion() {
-						
     	if (!$this->user->hasPermissions('modify', 'admin/security_questions')) {
-		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
 			return TRUE;
-    	
     	} else { 
 			$questions = $this->input->post('questions');
 
@@ -84,8 +75,8 @@ class Security_questions extends CI_Controller {
 	public function validateForm() {
 		if ($this->input->post('questions')) {
 			foreach ($this->input->post('questions') as $key => $value) {
-				$this->form_validation->set_rules('questions['.$key.'][question_id]', 'Question Id', 'trim|integer');
-				$this->form_validation->set_rules('questions['.$key.'][text]', 'Security Question', 'trim|min_length[2]|max_length[128]');
+				$this->form_validation->set_rules('questions['.$key.'][question_id]', 'Question Id', 'xss_clean|trim|integer');
+				$this->form_validation->set_rules('questions['.$key.'][text]', 'Security Question', 'xss_clean|trim|min_length[2]|max_length[128]');
 			}
 		}
 
@@ -96,3 +87,6 @@ class Security_questions extends CI_Controller {
 		}		
 	}
 }
+
+/* End of file security_questions.php */
+/* Location: ./application/controllers/admin/security_questions.php */

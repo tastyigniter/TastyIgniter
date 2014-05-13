@@ -10,10 +10,6 @@ class Categories extends CI_Controller {
 
 	public function index() {
 			
-		if (!file_exists(APPPATH .'views/admin/categories.php')) {
-			show_404();
-		}
-			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -28,37 +24,74 @@ class Categories extends CI_Controller {
 			$data['alert'] = '';
 		}
 
+		$url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
 			$filter['page'] = (int) $this->input->get('page');
 		} else {
-			$filter['page'] = 1;
+			$filter['page'] = '';
 		}
 		
 		if ($this->config->item('page_limit')) {
 			$filter['limit'] = $this->config->item('page_limit');
 		}
 				
+		if ($this->input->get('filter_search')) {
+			$filter['filter_search'] = $this->input->get('filter_search');
+			$data['filter_search'] = $filter['filter_search'];
+			$url .= 'filter_search='.$filter['filter_search'].'&';
+		} else {
+			$data['filter_search'] = '';
+		}
+		
+		if ($this->input->get('sort_by')) {
+			$filter['sort_by'] = $this->input->get('sort_by');
+			$data['sort_by'] = $filter['sort_by'];
+		} else {
+			$filter['sort_by'] = '';
+			$data['sort_by'] = '';
+		}
+		
+		if ($this->input->get('order_by')) {
+			$filter['order_by'] = $this->input->get('order_by');
+			$data['order_by_active'] = strtolower($this->input->get('order_by')) .' active';
+			$data['order_by'] = strtolower($this->input->get('order_by'));
+		} else {
+			$filter['order_by'] = '';
+			$data['order_by_active'] = '';
+			$data['order_by'] = 'desc';
+		}
+
 		$data['heading'] 			= 'Categories';
-		$data['sub_menu_add'] 		= 'Add new category';
-		$data['sub_menu_delete'] 	= 'Delete';
+		$data['button_add'] 		= 'New';
+		$data['button_delete'] 		= 'Delete';
+		$data['text_empty'] 		= 'There are no categories available.';
+		
+		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'DESC') ? 'ASC' : 'DESC';
+		$data['sort_name'] 			= site_url('admin/categories'.$url.'sort_by=category_name&order_by='.$order_by);
+		$data['sort_id'] 			= site_url('admin/categories'.$url.'sort_by=category_id&order_by='.$order_by);
 
 		$categories = array();				
 		$results = $this->Menus_model->getCategoriesList($filter);
+		$data['categories'] = array();
 		foreach ($results as $result) {
 			//load categories data into array
 			$data['categories'][] = array(
 				'category_id' 			=> $result['category_id'],
 				'category_name' 		=> $result['category_name'],
 				'category_description' 	=> substr(strip_tags(html_entity_decode($result['category_description'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..',
-				'edit' 					=> $this->config->site_url('admin/categories/edit?id=' . $result['category_id'])
+				'edit' 					=> site_url('admin/categories/edit?id=' . $result['category_id'])
 			);
 		}
 
-		$config['base_url'] 		= $this->config->site_url('admin/categories');
-		$config['total_rows'] 		= $this->Menus_model->categories_record_count();
+		if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+			$url .= 'sort_by='.$filter['sort_by'].'&';
+			$url .= 'order_by='.$filter['order_by'].'&';
+		}
+		
+		$config['base_url'] 		= site_url('admin/categories').$url;
+		$config['total_rows'] 		= $this->Menus_model->categories_record_count($filter);
 		$config['per_page'] 		= $filter['limit'];
-		$config['num_links'] 		= round($config['total_rows'] / $config['per_page']);
 		
 		$this->pagination->initialize($config);
 
@@ -72,21 +105,16 @@ class Categories extends CI_Controller {
 			redirect('admin/categories');  			
 		}	
 				
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/categories', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'categories.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'categories', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'categories', $regions, $data);
+		}
 	}
 
 	public function edit() {
 
-		if (!file_exists(APPPATH .'views/admin/categories_edit.php')) {
-			show_404();
-		}
-			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -98,10 +126,10 @@ class Categories extends CI_Controller {
 		//check if /category_id is set in uri string
 		if (is_numeric($this->input->get('id'))) {
 			$category_id = $this->input->get('id');
-			$data['action']	= $this->config->site_url('admin/categories/edit?id='. $category_id);
+			$data['action']	= site_url('admin/categories/edit?id='. $category_id);
 		} else {
 		    $category_id = 0;
-			$data['action']	= $this->config->site_url('admin/categories/edit');
+			$data['action']	= site_url('admin/categories/edit');
 		}
 
 		if ($this->session->flashdata('alert')) {
@@ -113,40 +141,39 @@ class Categories extends CI_Controller {
 		$category_info = $this->Menus_model->getCategory($category_id);
 
 		$data['heading'] 				= 'Categories - '. $category_info['category_name'];
-		$data['sub_menu_save'] 			= 'Save';
-		$data['sub_menu_back'] 			= $this->config->site_url('admin/categories');
+		$data['button_save'] 			= 'Save';
+		$data['button_save_close'] 		= 'Save & Close';
+		$data['sub_menu_back'] 			= site_url('admin/categories');
 	
 		$data['category_id'] 			= $category_info['category_id'];
 		$data['category_name'] 			= $category_info['category_name'];
 		$data['category_description'] 	= $category_info['category_description'];
 
 		if ( ! $this->input->get('id') & $this->input->post() && $this->_addCategory() === TRUE) {
-			
 			redirect('admin/categories');
 		}
 
 		if ($this->input->get('id') && $this->input->post() && $this->_updateCategory() === TRUE) {
-					
-			redirect('admin/categories');
+			if ($this->input->post('save_close') === '1') {
+				redirect('admin/categories');
+			}
+			
+			redirect('admin/categories/edit?id='. $category_id);
 		}
 	
-		$regions = array(
-			'admin/header',
-			'admin/footer'
-		);
-		
-		$this->template->regions($regions);
-		$this->template->load('admin/categories_edit', $data);
+		$regions = array('header', 'footer');
+		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'categories_edit.php')) {
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'categories_edit', $regions, $data);
+		} else {
+			$this->template->render('themes/admin/default/', 'categories_edit', $regions, $data);
+		}
 	}
 
 	
 	public function _addCategory() {
-									
     	if (!$this->user->hasPermissions('modify', 'admin/categories')) {
-		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add!</p>');
   			return TRUE;
-    	
     	} else if ( ! $this->input->get('id') AND $this->validateForm() === TRUE) { 
 			$category_name = $this->input->post('category_name');
 			$category_description = $this->input->post('category_description');
@@ -162,12 +189,9 @@ class Categories extends CI_Controller {
 	}	
 	
 	public function _updateCategory() {
-
     	if (!$this->user->hasPermissions('modify', 'admin/categories')) {
-		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
   			return TRUE;
-    	
     	} else if ($this->input->get('id') AND $this->validateForm() === TRUE) { 
 			$category_id			= $this->input->get('id');
 			$category_name 			= $this->input->post('category_name');
@@ -188,9 +212,7 @@ class Categories extends CI_Controller {
 
 	public function _deleteCategory() {
     	if (!$this->user->hasPermissions('modify', 'admin/categories')) {
-		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have the right permission to edit!</p>');
-    	
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
     	} else { 
 			if (is_array($this->input->post('delete'))) {
 				foreach ($this->input->post('delete') as $key => $value) {
@@ -206,9 +228,8 @@ class Categories extends CI_Controller {
 	}
 
 	public function validateForm() {
-		//validate category value
-		$this->form_validation->set_rules('category_name', 'Category Name', 'trim|required|min_length[2]|max_length[32]');
-		$this->form_validation->set_rules('category_description', 'Category Description', 'trim|min_length[2]|max_length[1028]');
+		$this->form_validation->set_rules('category_name', 'Category Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
+		$this->form_validation->set_rules('category_description', 'Category Description', 'xss_clean|trim|min_length[2]|max_length[1028]');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;
@@ -217,3 +238,6 @@ class Categories extends CI_Controller {
 		}		
 	}
 }
+
+/* End of file categories.php */
+/* Location: ./application/controllers/admin/categories.php */

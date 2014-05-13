@@ -16,5 +16,5 @@ $lang['text_no_s_question'] 	= '<p class="error">Security Question Does Not Matc
 $lang['text_subject'] 			= 'Password Reset!';
 $lang['text_success_message'] 	= 'You have successfully created a new password for your account. <br /><br /> You can <a href="%s">access</a> your account using the details below:<br /> <b>Email: </b> %s <br /><b>Password: </b> %s';
 
-/* End of file order_email_lang.php */
-/* Location: ./application/language/english/main/order_email_lang.php */
+/* End of file password_reset_lang.php */
+/* Location: ./application/language/english/main/password_reset_lang.php */

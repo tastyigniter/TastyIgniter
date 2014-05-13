@@ -34,6 +34,11 @@
 			$num_pages
 		);
 		
-		return ('<span>' . str_replace($find, $replace, $this->text) . '</span>');
+		return ('<div class="info"><span>' . str_replace($find, $replace, $this->text) . '</span></div>');
 	}
 }
+
+// END TI_Pagination Class
+
+/* End of file TI_Pagination.php */
+/* Location: ./application/libraries/TI_Pagination.php */

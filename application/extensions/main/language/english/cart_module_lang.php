@@ -25,5 +25,5 @@ $lang['column_price'] 			= 'Price';
 $lang['column_qty'] 			= 'Quantity';
 $lang['column_total'] 			= 'Total';
 
-/* End of file home_lang.php */
-/* Location: ./application/language/english/main/home_lang.php */
+/* End of file cart_lang.php */
+/* Location: ./application/extensions/main/language/english/main/cart_lang.php */
