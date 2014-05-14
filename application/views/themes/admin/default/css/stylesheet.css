@@ -1245,8 +1245,12 @@ padding: 5px 0;
 text-align: left;
 }
 .login-box {
+background: none repeat scroll 0 0 #FFFFFF;
 font-size: 16px;
 font-weight: normal;
+margin: 50px auto;
+min-height: 200px;
+width: 350px;
 }
 .chart .search {
 float: right;

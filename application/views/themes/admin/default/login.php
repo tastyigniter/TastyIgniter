@@ -1,5 +1,5 @@
 <div class="box login-box">
-	<h3 align="center"><center>Please enter your login details.</center></h3>
+	<h2><center>Please enter your login details.</center></h2>
 	<?php echo form_open(current_url()) ?>
 	<table width="300" border="0" align="center" cellpadding="2" cellspacing="0">
 		<tbody>
