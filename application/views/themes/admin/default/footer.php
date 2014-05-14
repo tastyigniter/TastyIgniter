@@ -18,15 +18,15 @@
   			&copy; <?php echo date('Y'); ?> TastyIgniter. All Rights Reserved v1.0-beta 
   		</div>
 		<div class="left">
-			<?php if ($this->user->islogged()) { ?>
+			<!--<?php if ($this->user->islogged()) { ?>
 				<a id="profiler">View Profiler</a>		
-			<?php } ?>
+			<?php } ?>-->
 		</div>	
   	</div>
 </div>
 </div>
 </div>
-<script type="text/javascript">
+<!--<script type="text/javascript">
 $(document).ready(function() {
 	if ($('#codeigniter_profiler').length) {
 		$('#profiler').on('click', function(){
@@ -42,6 +42,6 @@ $(document).ready(function() {
 		$('#profiler').hide();
 	}
 });	
-</script>
+</script>-->
 </body>
 </html>

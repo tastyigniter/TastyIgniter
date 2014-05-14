@@ -183,7 +183,7 @@ class Activity {
 	}
 }
 
-// END CI_Calendar class
+// END Activity class
 
-/* End of file Calendar.php */
-/* Location: ./application/libraries/Calendar.php */
+/* End of file Activity.php */
+/* Location: ./application/libraries/Activity.php */

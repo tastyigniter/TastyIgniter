@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title><?php echo $heading; ?></title>
-	<?php echo link_tag('assets/css/admin_styles.css'); ?>
+	<link href="<?php echo base_url(APPPATH .'views/themes/admin/default/css/stylesheet.css'); ?>" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <div class="setup_box">

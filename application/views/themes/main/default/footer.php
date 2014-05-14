@@ -2,7 +2,6 @@
 </div>
 </div>
 <footer>
-
     <div class="links">
 		<a href="<?php echo site_url(); ?>">Home</a>  |  
 		<a href="<?php echo site_url('main/pages/page/1'); ?>">About Us</a>  |  
@@ -13,10 +12,11 @@
 
   	<div class="copyright">
 		&copy; <?php echo date('Y'); ?> TastyIgniter. All Rights Reserved</p> <br />
-		Page rendered in <strong>{elapsed_time}</strong> seconds <br /><a id="profiler">View Profiler</a>
+		Page rendered in <strong>{elapsed_time}</strong> seconds <br />
+		<!--<a id="profiler">View Profiler</a>-->
 	</div>
 </footer>
-<script type="text/javascript">
+<!--<script type="text/javascript">
 $(document).ready(function() {
 	if ($('#codeigniter_profiler').length) {
 		$('#profiler').on('click', function(){
@@ -32,6 +32,6 @@ $(document).ready(function() {
 		$('#profiler').hide();
 	}
 });	
-</script>
+</script>-->
 </body>
 </html>

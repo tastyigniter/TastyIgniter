@@ -4,25 +4,11 @@ class Setup extends CI_Controller {
 
 	public function __construct() {
 		parent::__construct();
-		//$this->load->library('user');
 		$this->load->model('Setup_model');	    
-		
-		/*$sess_admin_data = array(
-			'user_id' 			=> '',
-			'staff_department'	=> '',
-			'username' 			=> ''
-		);
-		
-		$this->session->unset_userdata($sess_admin_data);*/
 	}
 
 	public function index() {
 			
-		//check if file exists in views
-		if ( ! file_exists(APPPATH .'/extensions/setup/views/setup.php')) {
-			show_404();
-		}
-	
 		if ($this->config->item('ti_setup') === 'success') {
 			$this->session->set_flashdata('alert', '<p class="error">PLEASE REMEMBER TO COMPLETELY REMOVE THE SETUP FOLDER. <br />You will not be able to proceed beyond this point until the setup folder has been removed. This is a security feature of TastyIgniter!</p>');				
 			redirect('setup/success');
@@ -135,17 +121,22 @@ class Setup extends CI_Controller {
 			$data['alert'] = '<p class="error">Please check below to make sure all server requirements are provided!</p>';
 		}
 		
-		$this->load->view('setup/setup', $data);
+		if ( ! file_exists(APPPATH .'/extensions/setup/views/setup.php')) {
+			show_404();
+		} else {
+			$this->load->view('setup/setup', $data);
+		}
 	}
 
 	public function database() {
 			
-		//check if file exists in views
-		if ( !file_exists(APPPATH .'/extensions/setup/views/database.php')) {
-			// Whoops, we don't have a page for that!
-			show_404();
+		if (is_file(APPPATH.'config/database.php')) {
+			include(APPPATH.'config/database.php');
 		}
 
+		$db_check = ( ! isset($db) OR ! is_array($db)) ? array() : $db;
+		unset($db);
+		
 		if ($this->session->userdata('setup') !== 'step_1') {
 			$this->session->set_flashdata('alert', '<p class="error">Please check below to make sure all server requirements are provided!</p>');				
 			redirect('setup/setup');			
@@ -161,50 +152,58 @@ class Setup extends CI_Controller {
 
 		if ($this->input->post('db_name')) {
 			$data['db_name'] = $this->input->post('db_name');		
+		} else if (isset($db_check['default']['database'])) {
+			$data['db_name'] = $db_check['default']['database'];
 		} else {
 			$data['db_name'] = '';		
 		}
 		
 		if ($this->input->post('db_host')) {
 			$data['db_host'] = $this->input->post('db_host');		
+		} else if (isset($db_check['default']['hostname'])) {
+			$data['db_host'] = $db_check['default']['hostname'];
 		} else {
 			$data['db_host'] = 'localhost';		
 		}
 		
 		if ($this->input->post('db_user')) {
 			$data['db_user'] = $this->input->post('db_user');		
+		} else if (isset($db_check['default']['username'])) {
+			$data['db_user'] = $db_check['default']['username'];
 		} else {
 			$data['db_user'] = '';		
 		}
 		
 		if ($this->input->post('db_pass')) {
 			$data['db_pass'] = $this->input->post('db_pass');		
+		} else if (isset($db_check['default']['password'])) {
+			$data['db_pass'] = $db_check['default']['password'];
 		} else {
 			$data['db_pass'] = '';		
 		}
 		
 		if ($this->input->post('db_prefix')) {
 			$data['db_prefix'] = $this->input->post('db_prefix');		
+		} else if (isset($db_check['default']['dbprefix'])) {
+			$data['db_prefix'] = $db_check['default']['dbprefix'];
 		} else {
 			$data['db_prefix'] = 'ti_';		
 		}
 		
-		if ($this->input->post() && $this->_checkDatabase() === TRUE) {
+		if ($this->input->post() AND $this->_checkDatabase() === TRUE) {
 						
 			redirect('setup/settings');
 		}
 		
-		$this->load->view('database', $data);
+		if ( ! file_exists(APPPATH .'/extensions/setup/views/database.php')) {
+			show_404();
+		} else {
+			$this->load->view('database', $data);
+		}
 	}
 
 	public function settings() {
 			
-		//check if file exists in views
-		if ( !file_exists(APPPATH .'/extensions/setup/views/settings.php')) {
-			// Whoops, we don't have a page for that!
-			show_404();
-		}
-		
 		if ($this->session->userdata('setup') !== 'step_2') {
 			redirect('setup/database');			
 		}
@@ -247,19 +246,20 @@ class Setup extends CI_Controller {
 			$data['password'] = '';		
 		}
 		
-		if ($this->input->post() && $this->_checkSettings() === TRUE){
-						
+		if ($this->input->post() AND $this->_checkSettings() === TRUE){
 			redirect('setup/success');
 		}
 		
-		$this->load->view('setup/settings', $data);
+		if ( !file_exists(APPPATH .'/extensions/setup/views/settings.php')) {
+			show_404();
+		} else {
+			$this->load->view('setup/settings', $data);
+		}
 	}
 
 	public function success() {
 			
-		//check if file exists in views
 		if ( !file_exists(APPPATH .'/extensions/setup/views/success.php')) {
-			// Whoops, we don't have a page for that!
 			show_404();
 		}
 
@@ -281,10 +281,7 @@ class Setup extends CI_Controller {
 			$this->load->view('setup/success', $data);
 		
 		} else {
-		
-			//$this->session->set_flashdata('alert', '<p class="error">INSTALLATION WAS NOT SUCCESSFUL. <br />Please try again.</p>');				
 			redirect('setup');					
-		
 		}
 		
 	}
@@ -316,38 +313,52 @@ class Setup extends CI_Controller {
 		if ($this->form_validation->run() === TRUE) {
 	
 			$db_path	= APPPATH .'config/database.php';
-			$db_driver 	= 'mysqli';
 			$db_user 	= $this->input->post('db_user');
 			$db_pass 	= $this->input->post('db_pass');
 			$db_host 	= $this->input->post('db_host');
 			$db_name	= $this->input->post('db_name');
 			$db_prefix	= $this->input->post('db_prefix');
 
-			if (is_readable($db_path)) {
+			if ( ! is_writable($db_path)) {
+				$this->session->set_flashdata('alert', 'Unable to write database file!');
+				redirect('setup/database');       	 		
+			} else {
+				if ($fp = @fopen($db_path, FOPEN_READ_WRITE_CREATE_DESTRUCTIVE)) {
 
-        		$db_file = read_file($db_path);
-		
-				$db_file = str_replace('$db[\'default\'][\'hostname\'] = \'localhost\'', '$db[\'default\'][\'hostname\'] = \'' . $db_host . '\'', $db_file);
-				$db_file = str_replace('$db[\'default\'][\'username\'] = \'\'', '$db[\'default\'][\'username\'] = \'' . $db_user . '\'', $db_file);
-				$db_file = str_replace('$db[\'default\'][\'password\'] = \'\'', '$db[\'default\'][\'password\'] = \'' . $db_pass . '\'', $db_file);
-				$db_file = str_replace('$db[\'default\'][\'database\'] = \'\'', '$db[\'default\'][\'database\'] = \'' . $db_name . '\'', $db_file);
-				$db_file = str_replace('$db[\'default\'][\'dbprefix\'] = \'\'', '$db[\'default\'][\'dbprefix\'] = \'' . $db_prefix . '\'', $db_file);
-				$db_file = str_replace('$db[\'default\'][\'db_debug\'] = \'FALSE\'', '$db[\'default\'][\'db_debug\'] = \'TRUE\'', $db_file);
+					$db_file = "<"."?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');\n\n";
+			
+					$db_file .= "$"."active_group = 'default';\n";
+					$db_file .= "$"."active_record = TRUE;\n\n";
 
-       	 		$error = 0;
-       	 		
-       	 		if ( ! write_file($db_path, $db_file)) {
-					$error = 1;
-				}
-				
-       	 		if ($error === 1) {
- 					$this->session->set_flashdata('alert', 'Unable to write database file!');
-       	 		} else if ($error === 0) {
+					$db_file .= "$"."db['default']['hostname'] = '". $db_host ."';\n";
+					$db_file .= "$"."db['default']['username'] = '". $db_user ."';\n";
+					$db_file .= "$"."db['default']['password'] = '". $db_pass ."';\n";
+					$db_file .= "$"."db['default']['database'] = '". $db_name ."';\n";
+					$db_file .= "$"."db['default']['dbdriver'] = 'mysqli';\n";
+					$db_file .= "$"."db['default']['dbprefix'] = '". $db_prefix ."';\n";
+					$db_file .= "$"."db['default']['pconnect'] = TRUE;\n";
+					$db_file .= "$"."db['default']['db_debug'] = FALSE;\n";
+					$db_file .= "$"."db['default']['cache_on'] = FALSE;\n";
+					$db_file .= "$"."db['default']['cachedir'] = '';\n";
+					$db_file .= "$"."db['default']['char_set'] = 'utf8';\n";
+					$db_file .= "$"."db['default']['dbcollat'] = 'utf8_general_ci';\n";
+					$db_file .= "$"."db['default']['swap_pre'] = '';\n";
+					$db_file .= "$"."db['default']['autoinit'] = TRUE;\n";
+					$db_file .= "$"."db['default']['stricton'] = FALSE;\n\n";
+
+					$db_file .= "/* End of file database.php */\n";
+					$db_file .= "/* Location: ./application/config/database.php */\n";
+
+					flock($fp, LOCK_EX);
+					fwrite($fp, $db_file);
+					flock($fp, LOCK_UN);
+					fclose($fp);
+
+					@chmod($db_path, FILE_WRITE_MODE);
+
 					$this->session->set_userdata('setup', 'step_2'); 		
-       	 			return TRUE;
-       	 		}
-
-		       	 redirect('setup/database');       	 		
+					return TRUE;
+				}
 			}
 		}
 	}

@@ -75,8 +75,8 @@ class Uri_routes extends CI_Controller {
 	public function validateForm() {
 		if ($this->input->post('routes')) {
 			foreach ($this->input->post('routes') as $key => $value) {
-				$this->form_validation->set_rules('routes['.$key.'][uri_route]', 'URI Route', 'xss_clean|trim|required');
-				$this->form_validation->set_rules('routes['.$key.'][controller]', 'Controller', 'xss_clean|trim|required');
+				$this->form_validation->set_rules('routes['.$key.'][uri_route]', 'URI Route', 'xss_clean|trim|required|min_length[2]|max_length[255]');
+				$this->form_validation->set_rules('routes['.$key.'][controller]', 'Controller', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 			}
 		}
 

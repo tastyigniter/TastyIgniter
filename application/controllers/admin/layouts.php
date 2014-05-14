@@ -198,7 +198,7 @@ class Layouts extends CI_Controller {
 	}
 	
 	public function validateForm() {
-		$this->form_validation->set_rules('name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
+		$this->form_validation->set_rules('name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 
 		if ($this->input->post('routes')) {
 			foreach ($this->input->post('routes') as $key => $value) {

@@ -26,6 +26,7 @@ border-radius:2px;
 padding: 5px 15px;
 color:#FFF;
 font-size: 16px;
+cursor:pointer;
 }
 input[type="submit"]:hover {
 background:#AAAAAA;
@@ -1154,6 +1155,7 @@ color: #656565;
 background:#F7F7F7;
 }
 .setup_box {
+background:#FFF;
 border: 1px solid #DDDDDD;
 border-radius: 3px;
 margin: 100px auto;
@@ -1174,14 +1176,14 @@ margin-bottom: 30px;
 border-bottom: 1px solid #DDDDDD;
 }
 .setup_box .green {
-background: url(../images/setup_yes.png) no-repeat center center;
+background: url(../images/setup-yes.svg) no-repeat center center;
 display: block;
 float: right;
 height: 20px;
 width: 20px;
 }
 .setup_box .red {
-background: url(../images/setup_no.png) no-repeat center center;
+background: url(../images/setup-no.svg) no-repeat center center;
 display: block;
 float: right;
 height: 20px;
