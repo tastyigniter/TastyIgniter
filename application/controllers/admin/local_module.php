@@ -27,11 +27,13 @@ class Local_module extends CI_Controller {
 				
 		$extension = $this->Extensions_model->getExtension('module', 'local');
 		
-		$data['heading'] 			= 'Local';
-		$data['button_save'] 		= 'Save';
-		$data['button_save_close'] 	= 'Save & Close';
-		$data['sub_menu_back'] 		= site_url('admin/extensions');
-		$data['name'] 				= $extension['name'];
+		$this->template->setTitle('Extension: Local Module');
+		$this->template->setHeading('Extension: Local Module');
+		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('back_button', site_url('admin/extensions'));
+
+		$data['name'] 				= 'Local Module';
 
 		if ($this->config->item('local_module')) {
 			$result = $this->config->item('local_module');
@@ -64,7 +66,7 @@ class Local_module extends CI_Controller {
 			);
 		}
 		
-		if ($this->input->post() && $this->_updateModule() === TRUE){
+		if ($this->input->post() AND $this->_updateModule() === TRUE){
 			if ($this->input->post('save_close') === '1') {
 				redirect('admin/extensions');
 			}
@@ -72,11 +74,11 @@ class Local_module extends CI_Controller {
 			redirect('admin/local_module');
 		}
 		
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'local_module.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'local_module', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'local_module', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'local_module', $regions, $data);
+			$this->template->render('themes/admin/default/', 'local_module', $data);
 		}
 	}
 
@@ -90,12 +92,12 @@ class Local_module extends CI_Controller {
     	} else if ($this->validateForm() === TRUE) { 
 			$update = array();
 		
-			$update['local_module']['modules'] = $this->input->post('modules');
+			$update['modules'] = $this->input->post('modules');
 
-			if ($this->Settings_model->updateSettings('local', $update)) {
-				$this->session->set_flashdata('alert', '<p class="success">Local Module Updated Sucessfully!</p>');
+			if ($this->Settings_model->addSetting('module', 'local_module', $update, '1')) {
+				$this->session->set_flashdata('alert', '<p class="success">Local Module updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');				
 			}
 	
 			return TRUE;

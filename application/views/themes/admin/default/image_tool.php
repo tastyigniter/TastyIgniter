@@ -1,4 +1,14 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div id="update-box">
 	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" >
 		<div class="wrap_heading">
@@ -212,6 +222,7 @@
 			</table>
 		</div>
 	</form>
+	</div>
 	</div>
 </div>
 <script type="text/javascript"><!--

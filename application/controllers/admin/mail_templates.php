@@ -24,21 +24,40 @@ class Mail_templates extends CI_Controller {
 			$data['alert'] = '';
 		}
 
-		$data['heading'] 			= 'Mail Templates';
-		$data['button_add'] 		= 'New';
-		$data['button_delete'] 		= 'Delete';
+		if ($this->input->get('default') === '1' AND $this->input->get('template_id')) {
+			$template_id = $this->input->get('template_id');
+		
+			if ($this->Settings_model->addSetting('themes', 'mail_template_id', $template_id, '0')) {
+				$this->session->set_flashdata('alert', '<p class="success">Mail Template set as default sucessfully!</p>');
+			}
+			
+			redirect('admin/mail_templates');
+		}
+
+		$this->template->setTitle('Mail Templates');
+		$this->template->setHeading('Mail Templates');
+		$this->template->setButton('+ New', array('class' => 'add_button', 'href' => page_url() .'/edit'));
+		$this->template->setButton('Delete', array('class' => 'delete_button', 'onclick' => '$(\'form:not(#filter-form)\').submit();'));
+
 		$data['text_empty'] 		= 'There are no mail templates available.';
 
 		$results = $this->Mail_templates_model->getList();
 
 		$data['templates'] = array();
 		foreach ($results as $result) {
+			if ($result['template_id'] !== $this->config->item('mail_template_id')) {
+				$default = site_url('admin/mail_templates?default=1&template_id='. $result['template_id']);
+			} else {
+				$default = '1';
+			}
+			
 			$data['templates'][] = array(
 				'template_id' 		=> $result['template_id'],
 				'name' 				=> $result['name'],
 				'date_added' 		=> mdate('%d %M %y - %H:%i', strtotime($result['date_added'])),
 				'date_updated' 		=> mdate('%d %M %y - %H:%i', strtotime($result['date_updated'])),
 				'status' 			=> ($result['status'] === '1') ? 'Enabled' : 'Disabled',
+				'default' 			=> $default,
 				'edit'				=> site_url('admin/mail_templates/edit?id='. $result['template_id'])
 			);		
 		}
@@ -47,11 +66,11 @@ class Mail_templates extends CI_Controller {
 			redirect('admin/mail_templates');  			
 		}	
 
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'mail_templates.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'mail_templates', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'mail_templates', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'mail_templates', $regions, $data);
+			$this->template->render('themes/admin/default/', 'mail_templates', $data);
 		}
 	}
 
@@ -72,7 +91,7 @@ class Mail_templates extends CI_Controller {
 		}		
 
 		if (is_numeric($this->input->get('id'))) {
-			$template_id = (int)$this->input->get('id');
+			$template_id = $this->input->get('id');
 			$data['action']	= site_url('admin/mail_templates/edit?id='. $template_id);
 		} else {
 		    $template_id = 0;
@@ -81,10 +100,13 @@ class Mail_templates extends CI_Controller {
 		
 		$result = $this->Mail_templates_model->getTemplate($template_id);
 		
-		$data['heading'] 			= 'Mail Templates - '. $result['name'];
-		$data['button_save'] 		= 'Save';
-		$data['button_save_close'] 	= 'Save & Close';
-		$data['sub_menu_back'] 		= site_url('admin/mail_templates');
+		$title = (isset($result['name'])) ? 'Edit - '. $result['name'] : 'New';	
+		$this->template->setTitle('Mail Template: '. $title);
+		$this->template->setHeading('Mail Template: '. $title);
+		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('back_button', site_url('admin/mail_templates'));
+
 		$data['text_empty'] 		= 'There is no template message available.';
 
 		$data['template_id'] 		= $result['template_id'];
@@ -131,7 +153,11 @@ class Mail_templates extends CI_Controller {
 		}
 
 		if ($this->input->post() AND $this->_addTemplate() === TRUE) {
-			redirect('/admin/mail_templates');
+			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {	
+				redirect('admin/mail_templates/edit?id='. $this->input->post('insert_id'));
+			} else {
+				redirect('admin/mail_templates');
+			}
 		}
 
 		if ($this->input->post() AND $this->_updateTemplate() === TRUE) {
@@ -142,11 +168,11 @@ class Mail_templates extends CI_Controller {
 			redirect('admin/mail_templates/edit?id='. $template_id);
 		}
 		
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'mail_templates_edit.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'mail_templates_edit', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'mail_templates_edit', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'mail_templates_edit', $regions, $data);
+			$this->template->render('themes/admin/default/', 'mail_templates_edit', $data);
 		}
 	}
 
@@ -166,6 +192,24 @@ class Mail_templates extends CI_Controller {
 			$data['alert'] = '';
 		}		
 
+		$result = $this->Mail_templates_model->getTemplateData((int) $this->input->get('id'), $this->input->get('message'));
+
+		if (!$result) {
+			redirect('admin/mail_templates');
+		}
+		
+		$template_id = $result['template_id'];
+
+		$title = (isset($result['name'])) ? 'Edit - '. $result['name'] : 'New';	
+		$this->template->setTitle('Mail Template: '. $title);
+		$this->template->setHeading('Mail Template: '. $title);
+		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('back_button', site_url('admin/mail_templates/edit?id='. $template_id));
+
+		$data['text_empty'] 		= 'There is no template message available.';
+		$data['action']				= site_url('admin/mail_templates/message?id='. $result['template_id'] .'&message='. $result['code']);
+
 		$titles = array(
 			'registration'			=> 'Registration Email',
 			'password_reset'		=> 'Password Reset Email',
@@ -176,22 +220,6 @@ class Mail_templates extends CI_Controller {
 			'order_alert'			=> 'Order Alert',
 			'reservation_alert'		=> 'Reservation Alert'
 		);
-
-		$result = $this->Mail_templates_model->getTemplateData((int)$this->input->get('id'), $this->input->get('message'));
-
-		if (!$result) {
-			redirect('admin/mail_templates');
-		}
-		
-		$template_id = $result['template_id'];
-
-		$data['heading'] 			= 'Mail Templates Message - '. $result['name'];
-		$data['button_save'] 		= 'Save';
-		$data['button_save_close'] 	= 'Save & Close';
-		$data['sub_menu_back'] 		= site_url('admin/mail_templates/edit?id='. $template_id);
-		$data['text_empty'] 		= 'There is no template message available.';
-
-		$data['action']				= site_url('admin/mail_templates/message?id='. $result['template_id'] .'&message='. $result['code']);
 
 		foreach ($titles as $key => $title) {					
 			if ($key === $result['code']) {
@@ -213,11 +241,11 @@ class Mail_templates extends CI_Controller {
 			redirect('admin/mail_templates/message?id='. $result['template_id'] .'&message='. $result['code']);
 		}
 		
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'mail_templates_message.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'mail_templates_message', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'mail_templates_message', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'mail_templates_message', $regions, $data);
+			$this->template->render('themes/admin/default/', 'mail_templates_message', $data);
 		}
 	}
 	
@@ -225,7 +253,7 @@ class Mail_templates extends CI_Controller {
     	if ( ! $this->user->hasPermissions('modify', 'admin/mail_templates')) {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add!</p>');
   			return TRUE;
-    	} else if ( ! $this->input->get('id') AND $this->validateForm() === TRUE) { 
+    	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$add = array();
 
 			$add['name'] 				= $this->input->post('name');
@@ -235,10 +263,10 @@ class Mail_templates extends CI_Controller {
 			$add['date_added'] 			= mdate('%Y-%m-%d %H:%i:%s', time());
 			$add['date_updated'] 		= mdate('%Y-%m-%d %H:%i:%s', time());
 			
-			if ($this->Mail_templates_model->addTemplate($add)) {
-				$this->session->set_flashdata('alert', '<p class="success">Mail Template Added Sucessfully!</p>');
+			if ($_POST['insert_id'] = $this->Mail_templates_model->addTemplate($add)) {
+				$this->session->set_flashdata('alert', '<p class="success">Mail Template added sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Added!</p>');				
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing added.</p>');				
 			}
 							
 			return TRUE;
@@ -251,7 +279,7 @@ class Mail_templates extends CI_Controller {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
   			return TRUE;
   	
-    	} else if ($this->input->get('id') AND $this->validateForm() === TRUE) { 
+    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$update = array();
 			
 			$update['template_id'] 		= $this->input->get('id');
@@ -261,9 +289,9 @@ class Mail_templates extends CI_Controller {
 			$update['date_updated'] 	= mdate('%Y-%m-%d %H:%i:%s', time());
 			
 			if ($this->Mail_templates_model->updateTemplate($update)) {
-				$this->session->set_flashdata('alert', '<p class="success">Mail Template Updated Sucessfully!</p>');
+				$this->session->set_flashdata('alert', '<p class="success">Mail Template updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Added!</p>');				
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing added.</p>');				
 			}
 							
 			return TRUE;
@@ -276,7 +304,7 @@ class Mail_templates extends CI_Controller {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
   			return TRUE;
   	
-    	} else if ($this->input->get('id') AND $this->input->get('message')) { 
+    	} else if (is_numeric($this->input->get('id')) AND $this->input->get('message')) { 
 			$this->form_validation->set_rules('subject', 'Subject', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 			$this->form_validation->set_rules('body', 'Body', 'required|min_length[3]');
 
@@ -290,9 +318,9 @@ class Mail_templates extends CI_Controller {
 				$update['date_updated'] 	= mdate('%Y-%m-%d %H:%i:%s', time());
 			
 				if ($this->Mail_templates_model->updateTemplateData($update)) {
-					$this->session->set_flashdata('alert', '<p class="success">Mail Template Message Updated Sucessfully!</p>');
+					$this->session->set_flashdata('alert', '<p class="success">Mail Template Message updated sucessfully.</p>');
 				} else {
-					$this->session->set_flashdata('alert', '<p class="warning">Nothing Added!</p>');				
+					$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing added.</p>');				
 				}
 				
 				return TRUE;
@@ -305,18 +333,15 @@ class Mail_templates extends CI_Controller {
 	public function _deleteTemplate() {
     	if (!$this->user->hasPermissions('modify', 'admin/mail_templates')) {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
-    	} else { 
-			if (is_array($this->input->post('delete'))) {
-				foreach ($this->input->post('delete') as $key => $value) {
-					$template_id = $value;
-					if ($template_id === '11') {
-						$this->session->set_flashdata('alert', '<p class="success">Default Mail Template can not be deleted!</p>');
-					} else {
-						$this->Mail_templates_model->deleteTemplate($template_id);
-						$this->session->set_flashdata('alert', '<p class="success">Mail Template Deleted Sucessfully!</p>');
-					}
-				}			
-			}
+    	} else if (is_array($this->input->post('delete'))) {
+			foreach ($this->input->post('delete') as $key => $value) {
+				if ($value === $this->config->item('mail_template_id')) {
+					$this->session->set_flashdata('alert', '<p class="success">Default Mail Template can not be deleted!</p>');
+				} else {
+					$this->Mail_templates_model->deleteTemplate($value);
+					$this->session->set_flashdata('alert', '<p class="success">Mail Template deleted sucessfully!</p>');
+				}
+			}			
 		}
 				
 		return TRUE;
@@ -324,7 +349,7 @@ class Mail_templates extends CI_Controller {
 	
 	public function validateForm() {
 		$this->form_validation->set_rules('name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
-		if (!$this->input->get('id')) {
+		if (!is_numeric($this->input->get('id')) AND $this->validateForm()) {
 			$this->form_validation->set_rules('clone_template_id', 'Clone Template', 'xss_clean|trim|required|integer');
 		}
 		$this->form_validation->set_rules('language_id', 'Language', 'xss_clean|trim|required|integer');

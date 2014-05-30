@@ -7,11 +7,11 @@ class Password_reset extends MX_Controller {
 		$this->load->library('customer'); 														// load the customer library
 		$this->load->model('Customers_model');													// load the customers model
 		$this->load->model('Security_questions_model');											// load the security questions model
+		$this->load->library('language');
+		$this->lang->load('main/password_reset', $this->language->folder());
 	}
 
 	public function index() {
-		$this->lang->load('main/password_reset');  												// loads language file
-		
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
@@ -23,7 +23,8 @@ class Password_reset extends MX_Controller {
 		}
 
 		// START of retrieving lines from language file to pass to view.
-		$data['text_heading'] 				= $this->lang->line('text_heading');
+		$this->template->setTitle($this->lang->line('text_heading'));
+		$this->template->setHeading($this->lang->line('text_heading'));
 		$data['entry_email'] 				= $this->lang->line('entry_email');
 		$data['entry_s_question'] 			= $this->lang->line('entry_s_question');
 		$data['entry_s_answer'] 			= $this->lang->line('entry_s_answer');
@@ -55,43 +56,34 @@ class Password_reset extends MX_Controller {
 		}
 
 		if ($this->input->post()) {																// checks if $_POST data is set
-			
 			$this->_resetPassword();															// invoke this _resetPassword method
-				
 		}
 				
-		// pass array $data and load view files
 		if ($this->session->flashdata('security_question_id')) {
-				
 			$security_question_id = $this->session->flashdata('security_question_id');
 			$question_data = $this->Customers_model->getQuestion($security_question_id);
 			
 			$data['security_question'] = $question_data['question_text'];
 			$data['customer_email'] = $this->session->flashdata('customer_email');
-		
 		} else {
 			$data['security_question'] = '';
 		}
 
 		if ($this->input->server('REQUEST_METHOD') === 'POST') {
-			
 			if ($this->_resetPassword() === TRUE) { 
 				redirect('account/login');
 			}
-				
 		}
 		
-		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'password_reset.php')) {
-			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'password_reset', $regions, $data);
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'password_reset', $data);
 		} else {
-			$this->template->render('themes/main/default/', 'password_reset', $regions, $data);
+			$this->template->render('themes/main/default/', 'password_reset', $data);
 		}
 	}
 
 	public function _resetPassword() {															// method to validate password reset
-		$this->lang->load('main/password_reset');  												// loads language file
-		
 		if ($this->input->post()) { 
 			
 			if ($this->validateForm() === TRUE) {
@@ -108,7 +100,7 @@ class Password_reset extends MX_Controller {
 				} else if ($customer_data['security_answer'] !== $security_answer) {
 					$this->session->set_flashdata('alert', $this->lang->line('text_no_s_answer'));
 				} else {
-					$customer_id 		= $customer_data['customer_id'];
+					$customer_id = $customer_data['customer_id'];
 					$reset_password = $this->Customers_model->resetPassword($customer_id, $email, $security_question_id, $security_answer); // invoke reset password method in Customers model using customer id, email and security answer
 				}
 				

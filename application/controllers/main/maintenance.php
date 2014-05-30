@@ -21,15 +21,15 @@ class Maintenance extends CI_Controller {
 			$this->load->model('Pages_model');
 			$page = $this->Pages_model->getPage($maintenance_page);      
 			
-			$data['title'] 			= $page['title'];
-			$data['text_heading'] 	= $page['heading'];
+			$this->template->setTitle($page['title']);
+			$this->template->setHeading($page['heading']);
 			$data['content'] 		= $page['content'];
 			
-			$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+			$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 			if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'maintenance.php')) {
-				$this->template->render('themes/main/'.$this->config->item('main_theme'), 'maintenance', $regions, $data);
+				$this->template->render('themes/main/'.$this->config->item('main_theme'), 'maintenance', $data);
 			} else {
-				$this->template->render('themes/main/default/', 'maintenance', $regions, $data);
+				$this->template->render('themes/main/default/', 'maintenance', $data);
 			}
 		} else {
 			redirect('main/menus');

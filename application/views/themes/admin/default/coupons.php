@@ -1,12 +1,22 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div id="list-box" class="content">
 		<form id="filter-form" accept-charset="utf-8" method="GET" action="<?php echo current_url(); ?>">
 		<div class="filter_heading">
-			<div class="left">
+			<div class="right">
 				<input type="text" name="filter_search" value="<?php echo $filter_search; ?>" placeholder="Search name or code." class="textfield" />&nbsp;&nbsp;&nbsp;
 				<a class="grey_icon" onclick="filterList();"><i class="icon icon-search"></i></a>
 			</div>
-			<div class="right">
+			<div class="left">
 				<select name="filter_type">
 					<option value="">View all types</option>
 				<?php if ($filter_type === 'F') { ?>
@@ -39,7 +49,7 @@
 		</div>
 		</form>
 		
-		<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
+		<form id="list-form" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
 			<table align="center" class="list list-height">
 				<thead>
 					<tr>
@@ -61,7 +71,7 @@
 						<td><?php echo $coupon['code']; ?></td>
 						<td><?php echo $coupon['type']; ?></td>
 						<td><?php echo $coupon['discount']; ?></td>
-						<td class="center"><?php echo ($coupon['status'] === '1') ? 'Enabled' : 'Disabled'; ?></td>
+						<td class="center"><?php echo $coupon['status']; ?></td>
 					</tr>
 					<?php } ?>
 					<?php } else { ?>
@@ -76,6 +86,7 @@
 		<div class="pagination">
 			<?php echo $pagination['links']; ?><?php echo $pagination['info']; ?>
 		</div>
+	</div>
 	</div>
 </div>
 <script type="text/javascript"><!--

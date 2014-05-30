@@ -18,20 +18,30 @@ class Extensions extends CI_Controller {
   			redirect('admin/permission');
 		}
 		
+		if ($this->input->get('install') AND $this->_install() === TRUE) { 
+			redirect('admin/extensions');
+		}
+		
+		if ($this->input->get('uninstall') AND $this->_uninstall() === TRUE) { 
+			redirect('admin/extensions');
+		}
+		
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');
 		} else {
 			$data['alert'] = '';
 		}
 
-		$data['heading'] 			= 'Extensions';
+		$this->template->setTitle('Extensions');
+		$this->template->setHeading('Extensions');
+
 		$data['text_empty'] 		= 'There are no extensions available.';
 
-		$extensions = $this->Extensions_model->getList();
-		foreach ($extensions as $code => $name) {
-			if ( ! file_exists(APPPATH .'/controllers/admin/'. $code .'_module.php')) {
+		$extensions = $this->Extensions_model->getList('module');
+		foreach ($extensions as $key => $code) {
+			if ( ! file_exists(APPPATH .'/controllers/admin/'. $code .'.php')) {
 				$this->Extensions_model->uninstall('module', $code);
-				$this->Settings_model->deleteSettings($code);	
+				$this->Settings_model->deleteSettings('module', $code);	
 			}
 		}
 		
@@ -39,66 +49,64 @@ class Extensions extends CI_Controller {
 	
 		$data['extensions'] = array();
 		foreach ($files as $file) {
-			$file_name = basename($file, '_module.php');
+			$file_name = basename($file, '.php');
 		
-			if (array_key_exists($file_name, $extensions)) {
+			if (in_array($file_name, $extensions)) {
 				$data['extensions'][] = array(
-					'name' 		=> $extensions[$file_name],
-					'edit' 		=> site_url('admin/'. $file_name .'_module'),
-					'uninstall'	=> site_url('admin/extensions/uninstall?extension='. $file_name .'_module')
+					'name' 		=> ucwords(str_replace('_', ' ', $file_name)),
+					'edit' 		=> site_url('admin/'. $file_name),
+					'uninstall'	=> site_url('admin/extensions?uninstall='. $file_name)
 				);		
 
 			} else {
 				$data['extensions'][] = array(
-					'code' 		=> $file_name .'_module',
-					'name' 		=> ucwords($file_name),
-					'install'	=> site_url('admin/extensions/install?extension='. $file_name .'_module')
+					'code' 		=> $file_name,
+					'name' 		=> $file_name,
+					'install'	=> site_url('admin/extensions?install='. $file_name)
 				);		
 			
 			}
 		}
 
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'extensions.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'extensions', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'extensions', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'extensions', $regions, $data);
+			$this->template->render('themes/admin/default/', 'extensions', $data);
 		}
 	}
 	
-	public function install() {
+	public function _install() {
     	if ( ! $this->user->hasPermissions('modify', 'admin/extensions')) {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add!</p>');
-    	} else if ($this->input->get('extension')) { 
-    		$extension = $this->input->get('extension');
-    		$split = explode('_', $extension);
+    	} else if ($this->input->get('install')) { 
+    		$extension = $this->input->get('install');
     		
-    		$this->Extensions_model->install($split[1], $split[0]);
+    		$this->Extensions_model->install('module', $extension);
     		
 			$this->load->model('Staff_groups_model');
     		$this->Staff_groups_model->addPermission($this->user->getStaffGroupId(), 'access', 'admin/'. $extension);
     		$this->Staff_groups_model->addPermission($this->user->getStaffGroupId(), 'modify', 'admin/'. $extension);
 				
 			$this->session->set_flashdata('alert', '<p class="success">Extension Installed Sucessfully!</p>');
-		}	
 
-		redirect('admin/extensions');
+			return TRUE;
+		}	
 	}
 	
-	public function uninstall() {
+	public function _uninstall() {
     	if ( ! $this->user->hasPermissions('modify', 'admin/extensions')) {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
-    	} else if ($this->input->get('extension')) { 
-    		$extension = $this->input->get('extension');
-    		$split = explode('_', $extension);
+    	} else if ($this->input->get('uninstall')) { 
+    		$extension = $this->input->get('uninstall');
     		
-    		$this->Extensions_model->uninstall($split[1], $split[0]);
-			$this->Settings_model->deleteSettings($split[0]);
+    		$this->Extensions_model->uninstall('module', $extension);
+			$this->Settings_model->deleteSettings('module', $extension);
 			
 			$this->session->set_flashdata('alert', '<p class="success">Extension Uninstalled Sucessfully!</p>');				
+
+			return TRUE;
 		}
-		
-		redirect('admin/extensions');
 	}	
 }
 

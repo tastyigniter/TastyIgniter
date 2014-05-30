@@ -7,13 +7,15 @@ class Account extends MX_Controller {
 		$this->load->library('customer'); 														// load the customer library
 		$this->load->model('Customers_model');													// load the customers model
 		$this->load->model('Security_questions_model');											// load the security questions model
+		$this->load->library('cart'); 															// load the cart library
+		$this->load->library('currency'); 														// load the currency library
+		$this->load->library('country');
+
+		$this->load->library('language');
+		$this->lang->load('main/account', $this->language->folder());
 	}
 
 	public function index() {
-		$this->load->library('cart'); 															// load the cart library
-		$this->load->library('currency'); 														// load the currency library
-		$this->lang->load('main/account');  													// loads language file
-			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
@@ -28,7 +30,8 @@ class Account extends MX_Controller {
 		$inbox_total = $this->Messages_model->getMainInboxTotal();					// retrieve total number of customer messages from getMainInboxTotal method in Messages model
 
 		// START of retrieving lines from language file to pass to view.
-		$data['text_heading'] 			= $this->lang->line('text_heading');
+		$this->template->setTitle($this->lang->line('text_heading'));
+		$this->template->setHeading($this->lang->line('text_heading'));
 		$data['text_no_default_add'] 	= $this->lang->line('text_no_default_add');
 		$data['text_no_cart_items'] 	= $this->lang->line('text_no_cart_items');
 		$data['text_cart'] 				= $this->lang->line('text_cart');
@@ -81,7 +84,6 @@ class Account extends MX_Controller {
 			'security_answer' 	=> $result['security_answer']
 		);
 
-		$this->load->library('country');
 		$data['address_info'] = array();
 		$result = $this->Customers_model->getCustomerAddress($this->customer->getId(), $this->customer->getAddressId());			// retrieve customer address data based on customer address id from getAddress method in Customers model
 
@@ -89,11 +91,11 @@ class Account extends MX_Controller {
 			$data['address_info'] = $this->country->addressFormat($result);
 		}
 
-		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'account.php')) {
-			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'account', $regions, $data);
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'account', $data);
 		} else {
-			$this->template->render('themes/main/default/', 'account', $regions, $data);
+			$this->template->render('themes/main/default/', 'account', $data);
 		}
 	}
 }

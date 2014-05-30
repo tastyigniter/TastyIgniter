@@ -24,9 +24,11 @@ class Layouts extends CI_Controller {
 			$data['alert'] = '';
 		}
 
-		$data['heading'] 			= 'Layouts';
-		$data['button_add'] 		= 'New';
-		$data['button_delete'] 		= 'Delete';
+		$this->template->setTitle('Layouts');
+		$this->template->setHeading('Layouts');
+		$this->template->setButton('+ New', array('class' => 'add_button', 'href' => page_url() .'/edit'));
+		$this->template->setButton('Delete', array('class' => 'delete_button', 'onclick' => '$(\'form:not(#filter-form)\').submit();'));
+
 		$data['text_empty'] 		= 'There are no layouts available.';
 
 		$data['layouts'] = array();
@@ -48,21 +50,20 @@ class Layouts extends CI_Controller {
 			);
 		}
 	
-		if ($this->input->post('delete') && $this->_deleteLayout() === TRUE) {
+		if ($this->input->post('delete') AND $this->_deleteLayout() === TRUE) {
 			
 			redirect('admin/layouts');  			
 		}	
 
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'layouts.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'layouts', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'layouts', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'layouts', $regions, $data);
+			$this->template->render('themes/admin/default/', 'layouts', $data);
 		}
 	}
 	
 	public function edit() {
-		
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -78,7 +79,7 @@ class Layouts extends CI_Controller {
 		}		
 
 		if (is_numeric($this->input->get('id'))) {
-			$layout_id = (int)$this->input->get('id');
+			$layout_id = $this->input->get('id');
 			$data['action']	= site_url('admin/layouts/edit?id='. $layout_id);
 		} else {
 		    $layout_id = 0;
@@ -87,10 +88,12 @@ class Layouts extends CI_Controller {
 		
 		$result = $this->Design_model->getLayout($layout_id);
 		
-		$data['heading'] 			= 'Layouts - '. $result['name'];
-		$data['button_save'] 		= 'Save';
-		$data['button_save_close'] 	= 'Save & Close';
-		$data['sub_menu_back'] 		= site_url('admin/layouts');
+		$title = (isset($result['name'])) ? 'Edit - '. $result['name'] : 'New';	
+		$this->template->setTitle('Layout: '. $title);
+		$this->template->setHeading('Layout: '. $title);
+		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('back_button', site_url('admin/layouts'));
 
 		$data['layout_id'] 			= $result['layout_id'];
 		$data['name'] 				= $result['name'];
@@ -110,12 +113,15 @@ class Layouts extends CI_Controller {
 			);
 		}
 	
-		if ($this->input->post() && $this->_addLayout() === TRUE) {
-		
-			redirect('/admin/layouts');
+		if ($this->input->post() AND $this->_addLayout() === TRUE) {
+			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {	
+				redirect('admin/layouts/edit?id='. $this->input->post('insert_id'));
+			} else {
+				redirect('admin/layouts');
+			}
 		}
 
-		if ($this->input->post() && $this->_updateLayout() === TRUE) {
+		if ($this->input->post() AND $this->_updateLayout() === TRUE) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('admin/layouts');
 			}
@@ -123,31 +129,28 @@ class Layouts extends CI_Controller {
 			redirect('admin/layouts/edit?id='. $layout_id);
 		}
 		
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'layouts_edit.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'layouts_edit', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'layouts_edit', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'layouts_edit', $regions, $data);
+			$this->template->render('themes/admin/default/', 'layouts_edit', $data);
 		}
 	}
 
 	public function _addLayout() {
     	if ( ! $this->user->hasPermissions('modify', 'admin/layouts')) {
-		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add!</p>');
   			return TRUE;
-  	
-    	} else if ( ! $this->input->get('id') AND $this->validateForm() === TRUE) { 
+    	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$add = array();
 			
-			//Sanitizing the POST values
 			$add['name'] 		= $this->input->post('name');
 			$add['routes'] 		= $this->input->post('routes');
 			
-			if ($this->Design_model->addLayout($add)) {
-				$this->session->set_flashdata('alert', '<p class="success">Layout Added Sucessfully!</p>');
+			if ($_POST['insert_id'] = $this->Design_model->addLayout($add)) {
+				$this->session->set_flashdata('alert', '<p class="success">Layout added sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Added!</p>');				
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing added.</p>');				
 			}
 							
 			return TRUE;
@@ -156,22 +159,19 @@ class Layouts extends CI_Controller {
 	
 	public function _updateLayout() {
     	if ( ! $this->user->hasPermissions('modify', 'admin/layouts')) {
-		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
   			return TRUE;
-  	
-    	} else if ($this->input->get('id') AND $this->validateForm() === TRUE) { 
+    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$update = array();
 			
-			//Sanitizing the POST values
 			$update['layout_id'] 	= $this->input->get('id');
 			$update['name'] 		= $this->input->post('name');
 			$update['routes'] 		= $this->input->post('routes');
 			
 			if ($this->Design_model->updateLayout($update)) {
-				$this->session->set_flashdata('alert', '<p class="success">Layout Updated Sucessfully!</p>');
+				$this->session->set_flashdata('alert', '<p class="success">Layout updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Added!</p>');				
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing added.</p>');				
 			}
 							
 			return TRUE;
@@ -180,18 +180,13 @@ class Layouts extends CI_Controller {
 
 	public function _deleteLayout() {
     	if (!$this->user->hasPermissions('modify', 'admin/layouts')) {
-		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
-    	
-    	} else { 
-			if (is_array($this->input->post('delete'))) {
-				foreach ($this->input->post('delete') as $key => $value) {
-					$layout_id = $value;
-					$this->Design_model->deleteLayout($layout_id);
-				}			
-			
-				$this->session->set_flashdata('alert', '<p class="success">Layout Deleted Sucessfully!</p>');
-			}
+    	} else if (is_array($this->input->post('delete'))) {
+			foreach ($this->input->post('delete') as $key => $value) {
+				$this->Design_model->deleteLayout($value);
+			}			
+		
+			$this->session->set_flashdata('alert', '<p class="success">Layout deleted sucessfully!</p>');
 		}
 				
 		return TRUE;

@@ -1,22 +1,23 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div id="list-box" class="content">
 		<form id="filter-form" accept-charset="utf-8" method="GET" action="<?php echo current_url(); ?>">
+		<input type="hidden" name="show_calendar" value="<?php echo $show_calendar; ?>" />
 		<div class="filter_heading">
-			<div class="left">
+			<div class="right">
 				<input type="text" name="filter_search" value="<?php echo $filter_search; ?>" placeholder="Search id, location, customer nameor table." class="textfield" />&nbsp;&nbsp;&nbsp;
 				<a class="grey_icon" onclick="filterList();"><i class="icon icon-search"></i></a>
 			</div>
-			<div class="right">
-				<select name="filter_status">
-					<option value="">View all status</option>
-					<?php foreach ($statuses as $status) { ?>
-					<?php if ($status['status_id'] === $filter_status) { ?>				
-						<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('filter_status', $status['status_id'], TRUE); ?> ><?php echo $status['status_name']; ?></option>
-					<?php } else { ?>
-						<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('filter_status', $status['status_id']); ?> ><?php echo $status['status_name']; ?></option>
-					<?php } ?>
-					<?php } ?>
-				</select>&nbsp;
+			<div class="left">
 				<select name="filter_location">
 					<option value="">View all locations</option>
 					<?php foreach ($locations as $location) { ?>
@@ -24,6 +25,16 @@
 						<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('filter_location', $location['location_id'], TRUE); ?> ><?php echo $location['location_name']; ?></option>
 					<?php } else { ?>
 						<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('filter_location', $location['location_id']); ?> ><?php echo $location['location_name']; ?></option>
+					<?php } ?>
+					<?php } ?>
+				</select>&nbsp;
+				<select name="filter_status">
+					<option value="">View all status</option>
+					<?php foreach ($statuses as $status) { ?>
+					<?php if ($status['status_id'] === $filter_status) { ?>				
+						<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('filter_status', $status['status_id'], TRUE); ?> ><?php echo $status['status_name']; ?></option>
+					<?php } else { ?>
+						<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('filter_status', $status['status_id']); ?> ><?php echo $status['status_name']; ?></option>
 					<?php } ?>
 					<?php } ?>
 				</select>&nbsp;
@@ -59,7 +70,6 @@
 						<?php } ?>
 						<?php } ?>
 					</select>&nbsp;&nbsp;&nbsp;
-					<input type="hidden" name="filter_day" value="<?php echo $filter_day; ?>" />
 				<?php } ?>
 				<a class="grey_icon" onclick="filterList();"><i class="icon icon-filter"></i></a>&nbsp;
 				<a class="grey_icon" href="<?php echo page_url(); ?>"><i class="icon icon-cancel"></i></a>
@@ -67,7 +77,7 @@
 		</div>
 		</form>
 		
-		<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
+		<form id="list-form" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
 			<?php if ($show_calendar) { ?>
 				<?php echo $calendar; ?>
 			<?php } ?>
@@ -121,6 +131,7 @@
 			<span class="no_booking"></span> No Bookings &nbsp;&nbsp;<span class="half_booked"></span> Half Booked &nbsp;&nbsp;<span class="booked"></span> Fully Booked
 		</div>
 		<?php } ?>
+	</div>
 	</div>
 </div>
 <script type="text/javascript"><!--

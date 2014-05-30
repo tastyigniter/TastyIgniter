@@ -1,4 +1,14 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div id="update-box" class="content">
 	<h2><?php echo $message_title; ?></h2>
 	<form accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
@@ -21,6 +31,7 @@
 							<li><span>{location_name}</span> -  The Location Name</li>
 							<li><span>{signature}</span> -  Email Signature</li>
 
+							<li><span>{full_name}</span> -  Customer Full name</li>
 							<li><span>{first_name}</span> -  Customer First Name</li>
 							<li><span>{last_name}</span> -  Customer Last Name</li>
 							<li><span>{email}</span> -  Customer Email Address</li>
@@ -50,7 +61,8 @@
 							<li><span>{price}</span> -  Ordered Menu Price</li>
 							<li><span>{subtotal}</span> -  Ordered Menu Subtotal</li>
 				
-							<li><span>{contact_name}</span> -  Contact full name</li>
+							<li><span>{contact_topic}</span> -  Contact topic</li>
+							<li><span>{contact_telephone}</span> -  Contact telephone</li>
 							<li><span>{contact_message}</span> -  Contact Message Body</li>
 						</ul>
 					</td>
@@ -58,7 +70,7 @@
 			</tbody>
   		</table>
 	</form>
-
+	</div>
 	</div>
 </div>
 <script src="<?php echo base_url("assets/js/ckeditor/ckeditor.js"); ?>"></script>

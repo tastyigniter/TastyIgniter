@@ -1,4 +1,14 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div id="update-box" class="content">
 	<form accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
 		<div class="wrap_heading">
@@ -32,7 +42,7 @@
 					<?php $table_row = 0; ?>
 					<?php foreach ($routes as $route) { ?>
 					<tr id="table-row<?php echo $table_row; ?>">
-						<td class="action action-one"><i onclick="$(this).parent().parent().remove();" class="icon icon-delete"></i></td>
+						<td class="action action-one"><a onclick="$(this).parent().parent().remove();"><i class="icon icon-delete"></i></a></td>
 						<td><input type="text" name="routes[<?php echo $table_row; ?>][uri_route]" value="<?php echo $route['uri_route']; ?>" size="50" /></td>
 						<td></td>
 					</tr>
@@ -50,13 +60,14 @@
 		</div>
 	</form>
 	</div>
+	</div>
 </div>
 <script type="text/javascript"><!--
 var table_row = <?php echo $table_row; ?>;
 
 function addRoute() {	
 	html  = '<tr id="table-row' + table_row + '">';
-	html += '	<td class="action action-one"><i onclick="$(this).parent().parent().remove();" class="icon icon-delete"></i></td>';
+	html += '	<td class="action action-one"><a onclick="$(this).parent().parent().remove();"><i class="icon icon-delete"></i></a></td>';
 	html += '	<td><input type="text" name="routes[' + table_row + '][uri_route]" value="<?php echo set_value("routes[' + table_row + '][uri_route]"); ?>" size="50" />';
 	html += '	<td></td>';
 	html += '</tr>';

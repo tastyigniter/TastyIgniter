@@ -38,46 +38,41 @@ class Currencies extends CI_Controller {
 		}
 				
 		if ($this->input->get('filter_search')) {
-			$filter['filter_search'] = $this->input->get('filter_search');
-			$data['filter_search'] = $filter['filter_search'];
+			$filter['filter_search'] = $data['filter_search'] = $this->input->get('filter_search');
 			$url .= 'filter_search='.$filter['filter_search'].'&';
 		} else {
 			$data['filter_search'] = '';
 		}
 		
 		if (is_numeric($this->input->get('filter_status'))) {
-			$filter['filter_status'] = $this->input->get('filter_status');
-			$data['filter_status'] = $filter['filter_status'];
+			$filter['filter_status'] = $data['filter_status'] = $this->input->get('filter_status');
 			$url .= 'filter_status='.$filter['filter_status'].'&';
 		} else {
-			$filter['filter_status'] = '';
-			$data['filter_status'] = '';
+			$filter['filter_status'] = $data['filter_status'] = '';
 		}
 		
 		if ($this->input->get('sort_by')) {
-			$filter['sort_by'] = $this->input->get('sort_by');
-			$data['sort_by'] = $filter['sort_by'];
+			$filter['sort_by'] = $data['sort_by'] = $this->input->get('sort_by');
 		} else {
-			$filter['sort_by'] = '';
-			$data['sort_by'] = '';
+			$filter['sort_by'] = $data['sort_by'] = 'currency_name';
 		}
 		
 		if ($this->input->get('order_by')) {
-			$filter['order_by'] = $this->input->get('order_by');
-			$data['order_by_active'] = strtolower($this->input->get('order_by')) .' active';
-			$data['order_by'] = strtolower($this->input->get('order_by'));
+			$filter['order_by'] = $data['order_by'] = $this->input->get('order_by');
+			$data['order_by_active'] = $this->input->get('order_by') .' active';
 		} else {
-			$filter['order_by'] = '';
+			$filter['order_by'] = $data['order_by'] = 'ASC';
 			$data['order_by_active'] = '';
-			$data['order_by'] = 'desc';
 		}
 		
-		$data['heading'] 			= 'Currencies';
-		$data['button_add'] 		= 'New';
-		$data['button_delete'] 		= 'Delete';
+		$this->template->setTitle('Currencies');
+		$this->template->setHeading('Currencies');
+		$this->template->setButton('+ New', array('class' => 'add_button', 'href' => page_url() .'/edit'));
+		$this->template->setButton('Delete', array('class' => 'delete_button', 'onclick' => '$(\'form:not(#filter-form)\').submit();'));
+
 		$data['text_empty'] 		= 'There are no currencies available.';
 
-		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'DESC') ? 'ASC' : 'DESC';
+		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_country'] 		= site_url('admin/currencies'.$url.'sort_by=country_name&order_by='.$order_by);
 		$data['sort_name'] 			= site_url('admin/currencies'.$url.'sort_by=currency_name&order_by='.$order_by);
 		$data['sort_code'] 			= site_url('admin/currencies'.$url.'sort_by=currency_code&order_by='.$order_by);
@@ -93,12 +88,12 @@ class Currencies extends CI_Controller {
 				'currency_code'		=> $result['currency_code'],
 				'currency_symbol'	=> $result['currency_symbol'],
 				'country_name'		=> $result['country_name'],
-				'currency_status'	=> $result['currency_status'],
+				'currency_status'	=> ($result['currency_status'] === '1') ? 'Enabled' : 'Disabled',
 				'edit' 				=> site_url('admin/currencies/edit?id=' . $result['currency_id'])
 			);
 		}
 
-		if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+		if ($this->input->get('sort_by') AND $this->input->get('order_by')) {
 			$url .= 'sort_by='.$filter['sort_by'].'&';
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
@@ -114,20 +109,19 @@ class Currencies extends CI_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		if ($this->input->post('delete') && $this->_deleteCurrency() === TRUE) {
+		if ($this->input->post('delete') AND $this->_deleteCurrency() === TRUE) {
 			redirect('admin/currencies');  			
 		}	
 
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'currencies.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'currencies', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'currencies', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'currencies', $regions, $data);
+			$this->template->render('themes/admin/default/', 'currencies', $data);
 		}
 	}
 
 	public function edit() {
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -142,7 +136,6 @@ class Currencies extends CI_Controller {
 			$data['alert'] = '';
 		}		
 		
-		//check if /rating_id is set in uri string
 		if (is_numeric($this->input->get('id'))) {
 			$currency_id = $this->input->get('id');
 			$data['action']	= site_url('admin/currencies/edit?id='. $currency_id);
@@ -151,21 +144,23 @@ class Currencies extends CI_Controller {
 			$data['action']	= site_url('admin/currencies/edit');
 		}
 		
-		$currency_info = $this->Currencies_model->getCurrency($currency_id);
+		$result = $this->Currencies_model->getCurrency($currency_id);
 		
-		$data['heading'] 			= 'Currencies - '. $currency_info['currency_name'];
-		$data['button_save'] 		= 'Save';
-		$data['button_save_close'] 	= 'Save & Close';
-		$data['sub_menu_back'] 		= site_url('admin/currencies');
+		$title = (isset($result['currency_name'])) ? 'Edit - '. $result['currency_name'] : 'New';	
+		$this->template->setTitle('Currency: '. $title);
+		$this->template->setHeading('Currency: '. $title);
+		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('back_button', site_url('admin/currencies'));
 
-		$data['currency_name'] 		= $currency_info['currency_name'];
-		$data['currency_code'] 		= $currency_info['currency_code'];
-		$data['currency_symbol'] 	= $currency_info['currency_symbol'];
-		$data['country_id'] 		= $currency_info['country_id'];
-		$data['iso_alpha2'] 		= $currency_info['iso_alpha2'];
-		$data['iso_alpha3'] 		= $currency_info['iso_alpha3'];
-		$data['iso_numeric'] 		= $currency_info['iso_numeric'];
-		$data['currency_status'] 	= $currency_info['currency_status'];
+		$data['currency_name'] 		= $result['currency_name'];
+		$data['currency_code'] 		= $result['currency_code'];
+		$data['currency_symbol'] 	= $result['currency_symbol'];
+		$data['country_id'] 		= $result['country_id'];
+		$data['iso_alpha2'] 		= $result['iso_alpha2'];
+		$data['iso_alpha3'] 		= $result['iso_alpha3'];
+		$data['iso_numeric'] 		= $result['iso_numeric'];
+		$data['currency_status'] 	= $result['currency_status'];
 
 		$data['countries'] = array();
 		$results = $this->Countries_model->getCountries(); 										// retrieve countries array from getCountries method in locations model
@@ -176,11 +171,15 @@ class Currencies extends CI_Controller {
 			);
 		}
 
-		if ($this->input->post() && $this->_addCurrency() === TRUE) {
-			redirect('admin/currencies');  			
+		if ($this->input->post() AND $this->_addCurrency() === TRUE) {
+			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {	
+				redirect('admin/currencies/edit?id='. $this->input->post('insert_id'));
+			} else {
+				redirect('admin/currencies');
+			}
 		}
 
-		if ($this->input->post() && $this->_updateCurrency() === TRUE) {
+		if ($this->input->post() AND $this->_updateCurrency() === TRUE) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('admin/currencies');
 			}
@@ -188,22 +187,19 @@ class Currencies extends CI_Controller {
 			redirect('admin/currencies/edit?id='. $currency_id);
 		}
 
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'currencies_edit.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'currencies_edit', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'currencies_edit', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'currencies_edit', $regions, $data);
+			$this->template->render('themes/admin/default/', 'currencies_edit', $data);
 		}
 	}
 
 	public function _addCurrency() {
-									
     	if (!$this->user->hasPermissions('modify', 'admin/currencies')) {
-		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add!</p>');
   			return TRUE;
-    	
-    	} else if ( ! $this->input->get('id') AND $this->validateForm() === TRUE) { 
+    	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$add = array();
 			
 			$add['currency_name'] 		= $this->input->post('currency_name');
@@ -215,10 +211,10 @@ class Currencies extends CI_Controller {
 			$add['iso_numeric'] 		= $this->input->post('iso_numeric');
 			$add['currency_status'] 	= $this->input->post('currency_status');
 
-			if ($this->Currencies_model->addCurrency($add)) {	
-				$this->session->set_flashdata('alert', '<p class="success">Currency Added Sucessfully!</p>');
+			if ($_POST['insert_id'] = $this->Currencies_model->addCurrency($add)) {	
+				$this->session->set_flashdata('alert', '<p class="success">Currency added sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');				
 			}
 		
 			return TRUE;
@@ -226,13 +222,10 @@ class Currencies extends CI_Controller {
 	}
 	
 	public function _updateCurrency() {
-    	
     	if (!$this->user->hasPermissions('modify', 'admin/currencies')) {
-		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
   			return TRUE;
-    	
-    	} else if ($this->input->get('id') AND $this->validateForm() === TRUE) { 
+    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$update = array();
 			
 			$update['currency_id'] 		= $this->input->get('id');
@@ -246,9 +239,9 @@ class Currencies extends CI_Controller {
 			$update['currency_status'] 	= $this->input->post('currency_status');
 
 			if ($this->Currencies_model->updateCurrency($update)) {	
-				$this->session->set_flashdata('alert', '<p class="success">Currency Updated Sucessfully!</p>');
+				$this->session->set_flashdata('alert', '<p class="success">Currency updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');				
 			}
 		
 			return TRUE;
@@ -257,18 +250,13 @@ class Currencies extends CI_Controller {
 	
 	public function _deleteCurrency() {
     	if (!$this->user->hasPermissions('modify', 'admin/currencies')) {
-		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
-    	
-    	} else { 
-			if (is_array($this->input->post('delete'))) {
-				foreach ($this->input->post('delete') as $key => $value) {
-					$currency_id = $value;
-					$this->Currencies_model->deleteCurrency($currency_id);
-				}			
-			
-				$this->session->set_flashdata('alert', '<p class="success">Currency(s) Deleted Sucessfully!</p>');
-			}
+    	} else if (is_array($this->input->post('delete'))) {
+			foreach ($this->input->post('delete') as $key => $value) {
+				$this->Currencies_model->deleteCurrency($value);
+			}			
+		
+			$this->session->set_flashdata('alert', '<p class="success">Currency(s) deleted sucessfully!</p>');
 		}
 				
 		return TRUE;

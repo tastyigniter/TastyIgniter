@@ -23,9 +23,11 @@ class Staff_groups extends CI_Controller {
 			$data['alert'] = '';
 		}
 
-		$data['heading'] 			= 'Staff Groups';
-		$data['button_add'] 		= 'New';
-		$data['button_delete'] 		= 'Delete';
+		$this->template->setTitle('Staff Groups');
+		$this->template->setHeading('Staff Groups');
+		$this->template->setButton('+ New', array('class' => 'add_button', 'href' => page_url() .'/edit'));
+		$this->template->setButton('Delete', array('class' => 'delete_button', 'onclick' => '$(\'form:not(#filter-form)\').submit();'));
+
 		$data['text_empty'] 		= 'There is no staff group available.';
 
 		//load ratings data into array
@@ -33,48 +35,25 @@ class Staff_groups extends CI_Controller {
 		$results = $this->Staff_groups_model->getStaffGroups();
 		foreach ($results as $result) {					
 			$data['staff_groups'][] = array(
-				'staff_group_id'		=>	$result['staff_group_id'],
-				'staff_group_name'		=>	$result['staff_group_name'],
+				'staff_group_id'		=> $result['staff_group_id'],
+				'staff_group_name'		=> $result['staff_group_name'],
 				'edit'					=> site_url('admin/staff_groups/edit?id=' . $result['staff_group_id'])
 			);
 		}
 		
-		$ignore_path = array(
-			'admin/login',
-			'admin/logout',
-			'admin/dashboard',
-			'common/forgotten'
-		);
-
-		$files = glob(APPPATH .'/controllers/admin/*.php');
-		$extension_files = glob(APPPATH .'extensions/admin/controllers/*.php');
-	
-		$paths = array();
-		foreach (array_merge($files, $extension_files) as $file) {
-			$file_name = 'admin/'. basename($file, '.php');
-
-			if (!in_array($file_name, $ignore_path)) {
-				$paths[] = $file_name;
-			}
-		}
-		
-		$data['paths'] = $paths;
-
-		if ($this->input->post('delete') && $this->_deleteStaffGroup() === TRUE) {
-			
+		if ($this->input->post('delete') AND $this->_deleteStaffGroup() === TRUE) {
 		    redirect('admin/staff_groups');
 		}	
 
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'staff_groups.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'staff_groups', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'staff_groups', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'staff_groups', $regions, $data);
+			$this->template->render('themes/admin/default/', 'staff_groups', $data);
 		}
 	}
 
 	public function edit() {
-			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -90,7 +69,7 @@ class Staff_groups extends CI_Controller {
 		}
 
 		if (is_numeric($this->input->get('id'))) {
-			$staff_group_id = (int)$this->input->get('id');
+			$staff_group_id = $this->input->get('id');
 			$data['action']	= site_url('admin/staff_groups/edit?id='. $staff_group_id);
 		} else {
 		    $staff_group_id = 0;
@@ -99,17 +78,27 @@ class Staff_groups extends CI_Controller {
 
 		$result = $this->Staff_groups_model->getStaffGroup($staff_group_id);
 		
-		$data['heading'] 			= 'Staff Group - '. $result['staff_group_name'];
-		$data['button_save'] 		= 'Save';
-		$data['button_save_close'] 	= 'Save & Close';
-		$data['sub_menu_back'] 		= site_url('admin/staff_groups');
+		$title = (isset($result['staff_group_name'])) ? 'Edit - '. $result['staff_group_name'] : 'New';	
+		$this->template->setTitle('Staff Group: '. $title);
+		$this->template->setHeading('Staff Group: '. $title);
+		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('back_button', site_url('admin/staff_groups'));
 
 		if (isset($this->input->post['staff_group_name'])) {
 			$data['staff_group_name'] = $this->input->post['staff_group_name'];
-		} elseif (isset($result['staff_group_name'])) {
+		} else if (isset($result['staff_group_name'])) {
 			$data['staff_group_name'] = $result['staff_group_name'];
 		} else { 
 			$data['staff_group_name'] = '';
+		}
+
+		if (isset($this->input->post['location_access'])) {
+			$data['location_access'] = $this->input->post['location_access'];
+		} else if (isset($result['location_access'])) {
+			$data['location_access'] = $result['location_access'];
+		} else { 
+			$data['location_access'] = '';
 		}
 
 		if ($this->input->post('permission')) {
@@ -130,34 +119,31 @@ class Staff_groups extends CI_Controller {
 			$data['modify'] = array();
 		}
 	
-		$ignore_path = array(
-			'admin/login',
-			'admin/logout',
-			'admin/permission',
-			'admin/dashboard',
-			'admin/alerts'
-		);
+		$ignore_path = array('login', 'logout', 'dashboard', 'permission', 'alerts');
 
 		$files = glob(APPPATH .'/controllers/admin/*.php');
-		$extension_files = glob(APPPATH .'extensions/admin/controllers/*.php');
-
-		$paths = array();
-		foreach (array_merge($files, $extension_files) as $file) {
-			$file_name = 'admin/'. basename($file, '.php');
-
+	
+		$data['paths'] = array();
+		foreach ($files as $file) {
+			$file_name = basename($file, '.php');
+			
 			if (!in_array($file_name, $ignore_path)) {
-				$paths[] = $file_name;
+				$data['paths'][] = array(
+					'name'				=> 'admin/'. $file_name,
+					'description'		=> 'Ability to access or modify '. str_replace('_', ' ', $file_name)
+				);
 			}
 		}
 		
-		sort($paths);
-		$data['paths'] = $paths;
-
-		if ($this->input->post() && $this->_addStaffGroup() === TRUE) {
-		    redirect('admin/staff_groups');
+		if ($this->input->post() AND $this->_addStaffGroup() === TRUE) {
+			if ($this->input->post('save_close') === '1') {
+				redirect('admin/staff_groups');
+			}
+			
+			redirect('admin/staff_groups/edit?id='. $this->input->post('id'));
 		}
 
-		if ($this->input->post() && $this->_updateStaffGroup() === TRUE) {
+		if ($this->input->post() AND $this->_updateStaffGroup() === TRUE) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('admin/staff_groups');
 			}
@@ -165,11 +151,11 @@ class Staff_groups extends CI_Controller {
 			redirect('admin/staff_groups/edit?id='. $staff_group_id);
 		}
 		
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'staff_groups_edit.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'staff_groups_edit', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'staff_groups_edit', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'staff_groups_edit', $regions, $data);
+			$this->template->render('themes/admin/default/', 'staff_groups_edit', $data);
 		}
 	}
 
@@ -177,10 +163,11 @@ class Staff_groups extends CI_Controller {
     	if (!$this->user->hasPermissions('modify', 'admin/staff_groups')) {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add!</p>');
   			return TRUE;
-    	} else if ( ! $this->input->get('id') AND $this->validateForm() === TRUE) { 
+    	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$add = array();
 
 			$add['staff_group_name']	= $this->input->post('staff_group_name');
+			$add['location_access']		= $this->input->post('location_access');
 			
 			if ($this->input->post('permission')) {
 				$add['permission'] = serialize($this->input->post('permission'));
@@ -188,10 +175,11 @@ class Staff_groups extends CI_Controller {
 				$add['permission'] = serialize(array('EMPTY'));
 			}
 
-			if ($this->Staff_groups_model->addStaffGroup($add)) { // calls model to save data to SQL
-				$this->session->set_flashdata('alert', '<p class="success">Staff Groups Added Sucessfully!</p>');
+			if ($id = $this->Staff_groups_model->addStaffGroup($add)) { // calls model to save data to SQL
+				$this->session->set_flashdata('alert', '<p class="success">Staff Groups added sucessfully.</p>');
+				$_POST['insert_id'] = $id;
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');
 			}
 		
 			return TRUE;
@@ -202,11 +190,12 @@ class Staff_groups extends CI_Controller {
     	if (!$this->user->hasPermissions('modify', 'admin/staff_groups')) {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
   			return TRUE;
-    	} else if ($this->input->get('id') AND $this->validateForm() === TRUE) { 
+    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$update = array();
 
 			$update['staff_group_id']		= $this->input->get('id');
 			$update['staff_group_name']		= $this->input->post('staff_group_name');
+			$update['location_access']		= $this->input->post('location_access');
 		
 			if ($this->input->post('permission')) {
 				$update['permission'] = serialize($this->input->post('permission'));
@@ -215,9 +204,9 @@ class Staff_groups extends CI_Controller {
 			}
 
 			if ($this->Staff_groups_model->updateStaffGroup($update)) { // calls model to save data to SQL
-				$this->session->set_flashdata('alert', '<p class="success">Staff Group Updated Sucessfully!</p>');
+				$this->session->set_flashdata('alert', '<p class="success">Staff Group updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');
 			}
 		
 			return TRUE;
@@ -227,15 +216,12 @@ class Staff_groups extends CI_Controller {
 	public function _deleteStaffGroup() {
     	if (!$this->user->hasPermissions('modify', 'admin/staff_groups')) {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
-    	} else { 
-			if (is_array($this->input->post('delete'))) {
-				foreach ($this->input->post('delete') as $key => $value) {
-					$staff_group_id = $value;
-					$this->Staff_groups_model->deleteStaffGroup($staff_group_id);
-				}			
-			
-				$this->session->set_flashdata('alert', '<p class="success">Staff Group(s) Deleted Sucessfully!</p>');
-			}
+    	} else if (is_array($this->input->post('delete'))) {
+			foreach ($this->input->post('delete') as $key => $staff_group_id) {
+				$this->Staff_groups_model->deleteStaffGroup($staff_group_id);
+			}			
+		
+			$this->session->set_flashdata('alert', '<p class="success">Staff Group(s) deleted sucessfully!</p>');
 		}
 				
 		return TRUE;

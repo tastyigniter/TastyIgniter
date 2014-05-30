@@ -27,11 +27,13 @@ class Cart_module extends CI_Controller {
 				
 		$extension = $this->Extensions_model->getExtension('module', 'cart');
 
-		$data['heading'] 			= 'Cart';
-		$data['button_save'] 		= 'Save';
-		$data['button_save_close'] 	= 'Save & Close';
-		$data['sub_menu_back'] 		= site_url('admin/extensions');
-		$data['name'] 				= $extension['name'];
+		$this->template->setTitle('Extension: Cart Module');
+		$this->template->setHeading('Extension: Cart Module');
+		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('back_button', site_url('admin/extensions'));
+
+		$data['name'] 				= 'Cart Module';
 		
 		if ($this->config->item('cart_module')) {
 			$result = $this->config->item('cart_module');
@@ -65,7 +67,7 @@ class Cart_module extends CI_Controller {
 			);
 		}
 		
-		if ($this->input->post() && $this->_updateModule() === TRUE){
+		if ($this->input->post() AND $this->_updateModule() === TRUE){
 			if ($this->input->post('save_close') === '1') {
 				redirect('admin/extensions');
 			}
@@ -73,11 +75,11 @@ class Cart_module extends CI_Controller {
 			redirect('admin/cart_module');
 		}
 		
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'cart_module.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'cart_module', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'cart_module', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'cart_module', $regions, $data);
+			$this->template->render('themes/admin/default/', 'cart_module', $data);
 		}
 	}
 
@@ -91,12 +93,12 @@ class Cart_module extends CI_Controller {
     	} else if ($this->validateForm() === TRUE) { 
 			$update = array();
 		
-			$update['cart_module']['modules'] = $this->input->post('modules');
+			$update['modules'] = $this->input->post('modules');
 
-			if ($this->Settings_model->updateSettings('cart', $update)) {
-				$this->session->set_flashdata('alert', '<p class="success">Cart Module Updated Sucessfully!</p>');
+			if ($this->Settings_model->addSetting('module', 'cart_module', $update, '1')) {
+				$this->session->set_flashdata('alert', '<p class="success">Cart Module updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');				
 			}
 	
 			return TRUE;

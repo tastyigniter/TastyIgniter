@@ -1,12 +1,22 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div id="list-box" class="content">
 		<form id="filter-form" accept-charset="utf-8" method="GET" action="<?php echo current_url(); ?>">
 		<div class="filter_heading">
-			<div class="left">
+			<div class="right">
 				<input type="text" name="filter_search" value="<?php echo $filter_search; ?>" placeholder="Search name or code." class="textfield" />&nbsp;&nbsp;&nbsp;
 				<a class="grey_icon" onclick="filterList();"><i class="icon icon-search"></i></a>
 			</div>
-			<div class="right">
+			<div class="left">
 				<select name="filter_status">
 					<option value="">View all status</option>
 				<?php if ($filter_status === '1') { ?>
@@ -26,12 +36,12 @@
 		</div>
 		</form>
 		
-		<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
+		<form id="list-form" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
 			<table align="center" class="list list-height">
 				<thead>
 					<tr>
 						<th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
-						<th><a href="<?php echo $sort_name; ?>">Title<i class="icon icon-sort-<?php echo ($sort_by == 'currency_name') ? $order_by_active : $order_by; ?>"></i></a></th>
+						<th><a href="<?php echo $sort_name; ?>">Name<i class="icon icon-sort-<?php echo ($sort_by == 'currency_name') ? $order_by_active : $order_by; ?>"></i></a></th>
 						<th><a href="<?php echo $sort_code; ?>">Code<i class="icon icon-sort-<?php echo ($sort_by == 'currency_code') ? $order_by_active : $order_by; ?>"></i></a></th>
 						<th><a href="<?php echo $sort_country; ?>">Country<i class="icon icon-sort-<?php echo ($sort_by == 'country_name') ? $order_by_active : $order_by; ?>"></i></a></th>
 						<th class="center">Symbol</th>
@@ -52,7 +62,7 @@
 						<td><?php echo $currency['currency_code']; ?></td>
 						<td><?php echo $currency['country_name']; ?></td>
 						<td class="center"><?php echo $currency['currency_symbol']; ?></td>
-						<td class="center"><?php echo ($currency['currency_status'] === '1') ? 'Enabled' : 'Disabled'; ?></td>
+						<td class="center"><?php echo $currency['currency_status']; ?></td>
 					</tr>
 					<?php } ?>
 					<?php } else { ?>
@@ -67,6 +77,7 @@
 		<div class="pagination">
 			<?php echo $pagination['links']; ?><?php echo $pagination['info']; ?>
 		</div>
+	</div>
 	</div>
 </div>
 <script type="text/javascript"><!--

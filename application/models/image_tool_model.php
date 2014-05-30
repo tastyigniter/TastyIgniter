@@ -7,7 +7,7 @@ class Image_tool_model extends CI_Model {
 		$width = ($width === '') ? $setting['thumb_width'] : $width;
 		$height = ($height === '') ? $setting['thumb_height'] : $height;
 
-		if (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE) {
+		if (isset($setting['root_folder']) AND (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE)) {
 			$root_folder = $setting['root_folder'] .'/';
 		} else {
 			$root_folder = 'data/';
@@ -17,7 +17,7 @@ class Image_tool_model extends CI_Model {
 			$img_path = str_replace($root_folder, '', $img_path);
 		}
 		
-		if (strpos($img_path, '/') === 0 OR ! file_exists(IMAGEPATH . $root_folder . $img_path) OR ! is_file(IMAGEPATH . $root_folder . $img_path)) {
+		if ( ! file_exists(IMAGEPATH . $root_folder . $img_path) OR ! is_file(IMAGEPATH . $root_folder . $img_path) OR strpos($img_path, '/') === 0) {
 			return;
 		}
 
@@ -27,7 +27,7 @@ class Image_tool_model extends CI_Model {
 		$old_image = $root_folder . $img_path;
 		$new_image = 'thumbs/'. substr($img_path, 0, strrpos($img_path, '.')) .'-'. $width .'x'. $height .'.'. $extension;
 		
-		if ( ! file_exists(IMAGEPATH . $new_image)) {
+		if (file_exists(IMAGEPATH . $old_image) AND ! file_exists(IMAGEPATH . $new_image)) {
 			$this->load->library('image_lib'); 
 			$this->image_lib->clear();
 			$config['image_library'] 	= 'gd2';

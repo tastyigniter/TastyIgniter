@@ -27,11 +27,13 @@ class Slideshow_module extends CI_Controller {
 				
 		$extension = $this->Extensions_model->getExtension('module', 'slideshow');
 
-		$data['heading'] 			= 'Slideshow';
-		$data['button_save'] 		= 'Save';
-		$data['button_save_close'] 	= 'Save & Close';
-		$data['sub_menu_back'] 		= site_url('admin/extensions');
-		$data['name'] 				= $extension['name'];
+		$this->template->setTitle('Extension: Slideshow');
+		$this->template->setHeading('Extension: Slideshow');
+		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('back_button', site_url('admin/extensions'));
+
+		$data['name'] 				= 'Slideshow Module';
 
 		if ($this->config->item('slideshow_module')) {
 			$result = $this->config->item('slideshow_module');
@@ -67,11 +69,12 @@ class Slideshow_module extends CI_Controller {
 			$result['images'] = $this->input->post('images');
 		}
 		
+		$this->load->model('Image_tool_model');
+
 		$data['images'] = array();
 		if (!empty($result['images'])) {
 			foreach ($result['images'] as $key => $value) {
 				if (!empty($value)) {
-					$this->load->model('Image_tool_model');
 					$data['images'][] = array(
 						'name'		=> basename($value),
 						'preview'	=> $this->Image_tool_model->resize($value),
@@ -117,7 +120,7 @@ class Slideshow_module extends CI_Controller {
 		
 		$data['effects'] = array('sliceDown', 'sliceDownLeft', 'sliceUp', 'sliceUpLeft', 'sliceUpDown', 'sliceUpDownLeft', 'fold', 'fade', 'random', 'slideInRight', 'slideInLeft', 'boxRandom', 'boxRain', 'boxRainReverse', 'boxRainGrow', 'boxRainGrowReverse');
 		
-		if ($this->input->post() && $this->_updateModule() === TRUE){
+		if ($this->input->post() AND $this->_updateModule() === TRUE){
 			if ($this->input->post('save_close') === '1') {
 				redirect('admin/extensions');
 			}
@@ -125,11 +128,11 @@ class Slideshow_module extends CI_Controller {
 			redirect('admin/slideshow_module');
 		}
 		
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'slideshow_module.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'slideshow_module', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'slideshow_module', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'slideshow_module', $regions, $data);
+			$this->template->render('themes/admin/default/', 'slideshow_module', $data);
 		}
 	}
 
@@ -143,17 +146,17 @@ class Slideshow_module extends CI_Controller {
     	} else if ($this->validateForm() === TRUE) { 
 			$update = array();
 		
-			$update['slideshow_module']['dimension_h'] 	= $this->input->post('dimension_h');
-			$update['slideshow_module']['dimension_w']	= $this->input->post('dimension_w');
-			$update['slideshow_module']['effect'] 		= ($this->input->post('effect')) ? $this->input->post('effect') : 'random';
-			$update['slideshow_module']['speed'] 		= ($this->input->post('speed')) ? $this->input->post('speed') : '500';
-			$update['slideshow_module']['modules'] 		= $this->input->post('modules');
-			$update['slideshow_module']['images'] 		= $this->input->post('images');
+			$update['dimension_h'] 	= $this->input->post('dimension_h');
+			$update['dimension_w']	= $this->input->post('dimension_w');
+			$update['effect'] 		= ($this->input->post('effect')) ? $this->input->post('effect') : 'random';
+			$update['speed'] 		= ($this->input->post('speed')) ? $this->input->post('speed') : '500';
+			$update['modules'] 		= $this->input->post('modules');
+			$update['images'] 		= $this->input->post('images');
 
-			if ($this->Settings_model->updateSettings('slideshow', $update)) {
-				$this->session->set_flashdata('alert', '<p class="success">Slideshow Module Updated Sucessfully!</p>');
+			if ($this->Settings_model->addSetting('module', 'slideshow_module', $update, '1')) {
+				$this->session->set_flashdata('alert', '<p class="success">Slideshow Module updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');				
 			}
 	
 			return TRUE;

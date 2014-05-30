@@ -1,4 +1,14 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div id ="update-box" class="border_all">
 	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" enctype="multipart/form-data" />
 		<div class="wrap_heading">
@@ -47,7 +57,7 @@
 							<option value="<?php echo $key; ?>"><?php echo $value; ?></option>
 						<?php } ?>  
 						<?php } ?>  
-						</select></td>
+						</select>&nbsp;&nbsp;Current UTC Time: <?php echo $current_time; ?></td>
 					</tr>
 					<tr>
 						<td><span class="red">*</span> <b>Currency:</b></td>
@@ -86,13 +96,26 @@
 						</select></td>
 					</tr>
 					<tr>
+						<td><span class="red">*</span> <b>Customer Group:</b></td>
+						<td><select name="customer_group_id">
+						<?php foreach ($customer_groups as $customer_group) { ?>
+						<?php if ($customer_group['customer_group_id'] === $customer_group_id) { ?>
+							<option value="<?php echo $customer_group['customer_group_id']; ?>" <?php echo set_select('customer_group_id', $customer_group['customer_group_id'], TRUE); ?> ><?php echo $customer_group['group_name']; ?></option>
+						<?php } else { ?>  
+							<option value="<?php echo $customer_group['customer_group_id']; ?>" <?php echo set_select('customer_group_id', $customer_group['customer_group_id']); ?> ><?php echo $customer_group['group_name']; ?></option>
+						<?php } ?>  
+						<?php } ?>  
+						</select></td>
+					</tr>
+					<tr>
 						<td><span class="red">*</span> <b>Logo:</b></td>
 						<td><div class="imagebox" id="selectImage">
-							<div class="preview"><img src="<?php echo $site_logo; ?>" class="thumb" id="thumb"></div>
+							<div class="preview"><img src="<?php echo $site_logo; ?>" class="thumb" id="thumb" /></div>
 							<div class="select">
-								<input type="hidden" name="site_logo" value="<?php echo set_value('site_logo', $logo_val); ?>" id="field" /><center class="name"><?php echo $logo_name; ?></center><br />
-								<a class="button imagebox-btn" onclick="imageUpload('field');">Select Image</a>
-								<a class="button" onclick="$('#thumb').attr('src', '<?php echo $no_photo; ?>'); $('#field').attr('value', 'data/no_photo.png'); $(this).parent().parent().find('center').html('no_photo.png');">Remove Image</a>
+								<input type="hidden" name="site_logo" value="<?php echo set_value('site_logo', $logo_val); ?>" id="field" />
+								<center class="name"><?php echo $logo_name; ?></center>
+								<a class="button select-image" onclick="imageUpload('field');">Select</a>
+								<a class="button remove-image" onclick="$('#thumb').attr('src', '<?php echo $no_photo; ?>'); $('#field').attr('value', 'data/no_photo.png'); $(this).parent().parent().find('center').html('no_photo.png');">Remove</a>
 							</div>
 						</div></td>
 					</tr>
@@ -509,9 +532,9 @@
 				</tbody>
 			</table>
 		</div>
-	
-	</div>
 	</form>
+	</div>
+	</div>
 </div>
 <script type="text/javascript" src="<?php echo base_url("assets/js/jquery-ui-timepicker-addon.js"); ?>"></script> 
 <script type="text/javascript"><!--
@@ -531,11 +554,9 @@ function imageUpload(field) {
 		
 	var iframe_url = js_site_url('admin/image_manager?popup=iframe&field_id=') + encodeURIComponent(field);
 
-	$('#container').prepend('<div id="image-manager" style="padding: 3px 0px 0px 0px;"><iframe src="'+ iframe_url +'" width="780" height="550" frameborder="0"></iframe></div>');
+	$('#container').prepend('<div id="image-manager" style="padding: 3px 0px 0px 0px;"><iframe src="'+ iframe_url +'" width="980" height="550" frameborder="0"></iframe></div>');
 	
-	$('.imagebox-btn').fancybox({	
-		width: 900,
-		height: 600,
+	$('.select-image').fancybox({	
  		href:"#image-manager",
 		autoScale: false,
 		afterClose: function() {
@@ -545,7 +566,7 @@ function imageUpload(field) {
 					dataType: 'json',
 					success: function(json) {
 						var thumb = $('#' + field).parent().parent().find('.thumb');
-						$(thumb).replaceWith('<img src="' + json + '" alt="" class="thumb" />');
+						$(thumb).replaceWith('<img src="' + json + '" alt="" class="thumb" id="thumb" />');
 					}
 				});
 			}

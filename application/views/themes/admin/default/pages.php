@@ -1,12 +1,22 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div id="list-box" class="content">
 		<form id="filter-form" accept-charset="utf-8" method="GET" action="<?php echo current_url(); ?>">
 		<div class="filter_heading">
-			<div class="left">
+			<div class="right">
 				<input type="text" name="filter_search" value="<?php echo $filter_search; ?>" placeholder="Search name." class="textfield" />&nbsp;&nbsp;&nbsp;
 				<a class="grey_icon" onclick="filterList();"><i class="icon icon-search"></i></a>
 			</div>
-			<div class="right">
+			<div class="left">
 				<select name="filter_status">
 					<option value="">View all status</option>
 					<?php if ($filter_status === '1') { ?>
@@ -26,7 +36,7 @@
 		</div>
 		</form>
 		
-		<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
+		<form id="list-form" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
 			<table align="center" class="list list-height">
 				<thead>
 					<tr>
@@ -42,8 +52,9 @@
 					<?php foreach ($pages as $page) { ?>
 					<tr>
 						<td class="action action-three"><input type="checkbox" value="<?php echo $page['page_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
-							<a class="view" title="Preview" target="_blank" href="<?php echo $page['preview']; ?>"></a>&nbsp;&nbsp;&nbsp;
-							<a class="edit" title="Edit" href="<?php echo $page['edit']; ?>"></a></td>
+							<a class="edit" title="Edit" href="<?php echo $page['edit']; ?>"></a>&nbsp;&nbsp;&nbsp;
+							<a class="view" title="Preview" target="_blank" href="<?php echo $page['preview']; ?>"></a>
+						</td>
 						<td width="40%"><?php echo $page['name']; ?></td>
 						<td class="center"><?php echo $page['language']; ?></td>
 						<td class="center"><?php echo $page['date_updated']; ?></td>
@@ -62,6 +73,7 @@
 		<div class="pagination">
 			<?php echo $pagination['links']; ?><?php echo $pagination['info']; ?>
 		</div>
+	</div>
 	</div>
 </div>
 <script type="text/javascript"><!--

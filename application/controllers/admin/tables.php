@@ -38,46 +38,41 @@ class Tables extends CI_Controller {
 		}
 				
 		if ($this->input->get('filter_search')) {
-			$filter['filter_search'] = $this->input->get('filter_search');
-			$data['filter_search'] = $filter['filter_search'];
+			$filter['filter_search'] = $data['filter_search'] = $this->input->get('filter_search');
 			$url .= 'filter_search='.$filter['filter_search'].'&';
 		} else {
 			$data['filter_search'] = '';
 		}
 		
 		if (is_numeric($this->input->get('filter_status'))) {
-			$filter['filter_status'] = $this->input->get('filter_status');
-			$data['filter_status'] = $filter['filter_status'];
+			$filter['filter_status'] = $data['filter_status'] = $this->input->get('filter_status');
 			$url .= 'filter_status='.$filter['filter_status'].'&';
 		} else {
-			$filter['filter_status'] = '';
-			$data['filter_status'] = '';
+			$filter['filter_status'] = $data['filter_status'] = '';
 		}
 
 		if ($this->input->get('sort_by')) {
-			$filter['sort_by'] = $this->input->get('sort_by');
-			$data['sort_by'] = $filter['sort_by'];
+			$filter['sort_by'] = $data['sort_by'] = $this->input->get('sort_by');
 		} else {
-			$filter['sort_by'] = '';
-			$data['sort_by'] = '';
+			$filter['sort_by'] = $data['sort_by'] = 'table_id';
 		}
 		
 		if ($this->input->get('order_by')) {
-			$filter['order_by'] = $this->input->get('order_by');
-			$data['order_by_active'] = strtolower($this->input->get('order_by')) .' active';
-			$data['order_by'] = strtolower($this->input->get('order_by'));
+			$filter['order_by'] = $data['order_by'] = $this->input->get('order_by');
+			$data['order_by_active'] = $this->input->get('order_by') .' active';
 		} else {
-			$filter['order_by'] = '';
-			$data['order_by_active'] = '';
-			$data['order_by'] = 'desc';
+			$filter['order_by'] = $data['order_by'] = 'DESC';
+			$data['order_by_active'] = 'DESC';
 		}
 		
-		$data['heading'] 			= 'Tables';
-		$data['button_add'] 		= 'New';
-		$data['button_delete'] 		= 'Delete';
+		$this->template->setTitle('Tables');
+		$this->template->setHeading('Tables');
+		$this->template->setButton('+ New', array('class' => 'add_button', 'href' => page_url() .'/edit'));
+		$this->template->setButton('Delete', array('class' => 'delete_button', 'onclick' => '$(\'form:not(#filter-form)\').submit();'));
+
 		$data['text_empty'] 		= 'There are no tables available.';
 
-		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'DESC') ? 'ASC' : 'DESC';
+		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_name'] 			= site_url('admin/tables'.$url.'sort_by=table_name&order_by='.$order_by);
 		$data['sort_min'] 			= site_url('admin/tables'.$url.'sort_by=min_capacity&order_by='.$order_by);
 		$data['sort_cap'] 			= site_url('admin/tables'.$url.'sort_by=max_capacity&order_by='.$order_by);
@@ -96,7 +91,7 @@ class Tables extends CI_Controller {
 			);
 		}
 
-		if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+		if ($this->input->get('sort_by') AND $this->input->get('order_by')) {
 			$url .= 'sort_by='.$filter['sort_by'].'&';
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
@@ -112,20 +107,19 @@ class Tables extends CI_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		if ($this->input->post('delete') && $this->_deleteTable() === TRUE) {
+		if ($this->input->post('delete') AND $this->_deleteTable() === TRUE) {
 			redirect('admin/tables');  			
 		}	
 
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'tables.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'tables', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'tables', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'tables', $regions, $data);
+			$this->template->render('themes/admin/default/', 'tables', $data);
 		}
 	}
 
 	public function edit() {
-			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -140,9 +134,8 @@ class Tables extends CI_Controller {
 			$data['alert'] = '';
 		}		
 
-		//check if /location_id is set in uri string
 		if (is_numeric($this->input->get('id'))) {
-			$table_id = (int)$this->input->get('id');
+			$table_id = $this->input->get('id');
 			$data['action']	= site_url('admin/tables/edit?id='. $table_id);
 		} else {
 		    $table_id = 0;
@@ -151,10 +144,12 @@ class Tables extends CI_Controller {
 		
 		$table_info = $this->Tables_model->getTable($table_id);
 
-		$data['heading'] 			= 'Table - '. $table_info['table_name'];
-		$data['button_save'] 		= 'Save';
-		$data['button_save_close'] 	= 'Save & Close';
-		$data['sub_menu_back'] 		= site_url('admin/tables');
+		$title = (isset($table_info['table_name'])) ? 'Edit - '. $table_info['table_name'] : 'New';	
+		$this->template->setTitle('Table: '. $title);
+		$this->template->setHeading('Table: '. $title);
+		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('back_button', site_url('admin/tables'));
 
 
 		$data['table_id'] 			= $table_info['table_id'];
@@ -163,12 +158,15 @@ class Tables extends CI_Controller {
 		$data['max_capacity'] 		= $table_info['max_capacity'];
 		$data['table_status'] 		= $table_info['table_status'];
 
-		if ($this->input->post() && $this->_addTable() === TRUE) {
-		
-			redirect('admin/tables');
+		if ($this->input->post() AND $this->_addTable() === TRUE) {
+			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {	
+				redirect('admin/tables/edit?id='. $this->input->post('insert_id'));
+			} else {
+				redirect('admin/tables');
+			}
 		}
 
-		if ($this->input->post() && $this->_updateTable() === TRUE) {
+		if ($this->input->post() AND $this->_updateTable() === TRUE) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('admin/tables');
 			}
@@ -176,11 +174,11 @@ class Tables extends CI_Controller {
 			redirect('admin/tables/edit?id='. $table_id);
 		}
 		
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'tables_edit.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'tables_edit', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'tables_edit', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'tables_edit', $regions, $data);
+			$this->template->render('themes/admin/default/', 'tables_edit', $data);
 		}
 	}
 
@@ -188,22 +186,21 @@ class Tables extends CI_Controller {
 		$json = array();
 		
 		if ($this->input->get('table_name')) {
-			$filter_data = array();
-			$filter_data = array(
+			$filter = array(
 				'table_name' => $this->input->get('table_name')
 			);
-		}
 		
-		$results = $this->Tables_model->getAutoComplete($filter_data);
+			$results = $this->Tables_model->getAutoComplete($filter);
 
-		if ($results) {
-			foreach ($results as $result) {
-				$json[] = array(
-					'table_id' 			=> $result['table_id'],
-					'table_name' 		=> $result['table_name'],
-					'min_capacity' 		=> $result['min_capacity'],
-					'max_capacity' 		=> $result['max_capacity']
-				);
+			if ($results) {
+				foreach ($results as $result) {
+					$json[] = array(
+						'table_id' 			=> $result['table_id'],
+						'table_name' 		=> $result['table_name'],
+						'min_capacity' 		=> $result['min_capacity'],
+						'max_capacity' 		=> $result['max_capacity']
+					);
+				}
 			}
 		}
 		
@@ -217,19 +214,18 @@ class Tables extends CI_Controller {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add!</p>');
 			return TRUE;
     	
-    	} else if ( ! $this->input->get('id') AND $this->validateForm() === TRUE) { 
+    	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$add = array();
 			
-			//Sanitizing the POST values
-			$add['table_name'] 	= $this->input->post('table_name');
+			$add['table_name'] 		= $this->input->post('table_name');
 			$add['min_capacity'] 	= $this->input->post('min_capacity');
-			$add['max_capacity'] = $this->input->post('max_capacity');
+			$add['max_capacity'] 	= $this->input->post('max_capacity');
 			$add['table_status'] 	= $this->input->post('table_status');
 			
-			if ($this->Tables_model->addTable($add)) {
-				$this->session->set_flashdata('alert', '<p class="success">Table Added Sucessfully!</p>');
+			if ($_POST['insert_id'] = $this->Tables_model->addTable($add)) {
+				$this->session->set_flashdata('alert', '<p class="success">Table added sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Added!</p>');				
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing added.</p>');				
 			}
 			
 			return TRUE;
@@ -240,7 +236,7 @@ class Tables extends CI_Controller {
     	if (!$this->user->hasPermissions('modify', 'admin/tables')) {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
 			return TRUE;
-    	} else if ($this->input->get('id') AND $this->validateForm() === TRUE) { 
+    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$update = array();
 			
 			$update['table_id'] 		= $this->input->get('id');
@@ -250,9 +246,9 @@ class Tables extends CI_Controller {
 			$update['table_status'] 	= $this->input->post('table_status');
 			
 			if ($this->Tables_model->updateTable($update)) {						
-				$this->session->set_flashdata('alert', '<p class="success">Table Updated Sucessfully!</p>');
+				$this->session->set_flashdata('alert', '<p class="success">Table updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');				
 			}
 			
 			return TRUE;
@@ -262,15 +258,12 @@ class Tables extends CI_Controller {
 	public function _deleteTable() {
     	if (!$this->user->hasPermissions('modify', 'admin/tables')) {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
-    	} else { 
-			if (is_array($this->input->post('delete'))) {
-				foreach ($this->input->post('delete') as $key => $value) {
-					$table_id = $value;
-					$this->Tables_model->deleteTable($table_id);
-				}			
-			
-				$this->session->set_flashdata('alert', '<p class="success">Table(s) Deleted Sucessfully!</p>');
-			}
+    	} else if (is_array($this->input->post('delete'))) {
+			foreach ($this->input->post('delete') as $key => $value) {
+				$this->Tables_model->deleteTable($value);
+			}			
+		
+			$this->session->set_flashdata('alert', '<p class="success">Table(s) deleted sucessfully!</p>');
 		}
 				
 		return TRUE;
@@ -279,7 +272,7 @@ class Tables extends CI_Controller {
 	public function validateForm() {
 		$this->form_validation->set_rules('table_name', 'Table Name', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('min_capacity', 'Table Minimum', 'xss_clean|trim|required|integer|greater_than[1]');
-		$this->form_validation->set_rules('max_capacity', 'Table Capacity', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('max_capacity', 'Table Capacity', 'xss_clean|trim|required|integer|greater_than[1]|callback_check_capacity');
 		$this->form_validation->set_rules('table_status', 'Table Status', 'xss_clean|trim|required|integer');
 
 		if ($this->form_validation->run() === TRUE) {
@@ -287,6 +280,15 @@ class Tables extends CI_Controller {
 		} else {
 			return FALSE;
 		}
+	}
+
+	public function check_capacity($str) {
+    	if ($str < $_POST['min_capacity']) {
+			$this->form_validation->set_message('check_capacity', 'The Maximum capacity value must be greater than minimum capacity value.');
+			return FALSE;
+		}
+				
+		return TRUE;
 	}
 }
 

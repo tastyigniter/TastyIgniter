@@ -27,13 +27,12 @@
 </div>
 </div>
 
-<div id="register" class="right">
-</div>
+<div id="register" class="right"></div>
 
 
 </div>
 <script type="text/javascript"><!--
 $(document).ready(function() {
-	$('#register').load('<?php echo site_url("main/register"); ?> .wrap > *');
+	$('#register').load('<?php echo site_url("main/register"); ?> .register-box > *');
 });
 //--></script> 

@@ -1,4 +1,14 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div id="update-box" class="content">
 	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
 		<div class="wrap_heading">
@@ -34,7 +44,7 @@
 					<?php $table_row = 0; ?>
 					<?php foreach ($modules as $module) { ?>
 					<tr id="module-row<?php echo $table_row; ?>">
-						<td class="action action-one"><i onclick="$(this).parent().parent().remove();" class="icon icon-delete"></i></td>
+						<td class="action action-one"><a onclick="$(this).parent().parent().remove();"><i class="icon icon-delete"></i></a></td>
 						<td><select name="modules[<?php echo $table_row; ?>][layout_id]">
 						<?php foreach ($layouts as $layout) { ?>
 						<?php if ($layout['layout_id'] === $module['layout_id']) { ?>
@@ -86,13 +96,14 @@
 		</div>
 	</form>
 	</div>
+	</div>
 </div>
 <script type="text/javascript"><!--
 var table_row = <?php echo $table_row; ?>;
 
 function addModule() {	
 	html  = '<tr id="module-row' + table_row + '">';
-	html += '	<td class="action action-one"><i onclick="$(this).parent().parent().remove();" class="icon icon-delete"></i></td>';
+	html += '	<td class="action action-one"><a onclick="$(this).parent().parent().remove();"><i class="icon icon-delete"></i></a></td>';
     html += '	<td><select name="modules[' + table_row + '][layout_id]">';
 		<?php foreach ($layouts as $layout) { ?>
 			html += '	<option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>';

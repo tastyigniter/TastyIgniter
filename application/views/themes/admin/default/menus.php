@@ -1,12 +1,22 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div id="list-box" class="content">
 		<form id="filter-form" accept-charset="utf-8" method="GET" action="<?php echo current_url(); ?>">
 		<div class="filter_heading">
-			<div class="left">
+			<div class="right">
 				<input type="text" name="filter_search" value="<?php echo set_value('filter_search', $filter_search); ?>" placeholder="Search name, price or stock qty." class="textfield" />&nbsp;&nbsp;&nbsp;
 				<a class="grey_icon" onclick="filterList();"><i class="icon icon-search"></i></a>
 			</div>
-			<div class="right">
+			<div class="left">
 				<select name="filter_category">
 					<option value="">View all categories</option>
 					<?php foreach ($categories as $category) { ?>
@@ -36,7 +46,7 @@
 		</div>
 		</form>
 		
-		<form accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
+		<form id="list-form" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
 		<table align="center" class="list">
 			<thead>
 				<tr>
@@ -78,40 +88,8 @@
 			<?php echo $pagination['links']; ?><?php echo $pagination['info']; ?> 
 		</div>
 	</div>	
+	</div>
 </div>
-<script type="text/javascript"><!--
-$('input[name=\'menu_option\']').autocomplete({
-	delay: 0,
-	source: function(request, response) {
-		$.ajax({
-			url: '<?php echo site_url("admin/menu_options/autocomplete"); ?>?option_name=' +  encodeURIComponent(request.term),
-			dataType: 'json',
-			success: function(json) {		
-				response($.map(json, function(item) {
-					return {
-						label: item.option_name,
-						value: item.option_id,
-						price: item.option_price
-					}
-				}));
-			}
-		});
-	},
-	select: function(event, ui) {
-		$('#menu-option' + ui.item.value).remove();
-		$('#menu-option table').append('<tr id="#menu-option' + ui.item.value + '"><td class="name">' + ui.item.label + '</td><td>' + ui.item.price + '</td><td class="img">' + '<i class="icon icon-delete" onclick="$(this).parent().parent().remove();"></i>' + '<input type="hidden" name="menu_options[]" value="' + ui.item.value + '" /></td></tr>');
-
-		return false;
-	},
-	focus: function(event, ui) {
-      	return false;
-   	}
-});
-
-$('#menu-option tr img').click(function() {
-	$(this).parent().parent().remove();
-}); 
-//--></script>
 <script type="text/javascript"><!--
 function filterList() {
 	$('#filter-form').submit();

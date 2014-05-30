@@ -3,7 +3,7 @@ class Alerts_model extends CI_Model {
 
     public function record_count($filter = array()) {
 		if (!empty($filter['staff_id'])) {
-			$this->db->where('receiver', $filter['staff_id']);
+			$this->db->where('recipient', $filter['staff_id']);
 		}
 	
 		if (!empty($filter['filter_search'])) {
@@ -28,7 +28,7 @@ class Alerts_model extends CI_Model {
 			$this->db->order_by('date', 'DESC');
 
 			if (!empty($filter['staff_id'])) {
-				$this->db->where('receiver', $filter['staff_id']);
+				$this->db->where('recipient', $filter['staff_id']);
 			}
 		
 			if (!empty($filter['filter_search'])) {
@@ -49,33 +49,6 @@ class Alerts_model extends CI_Model {
 		}
 	}
 	
-	public function getMainInbox() {
-		$this->db->from('messages');
-		
-		$this->db->order_by('date', 'DESC');
-
-		$this->db->where('receiver', '0');
-		$this->db->where('type', 'customers');
-
-		$query = $this->db->get();
-		$result = array();
-	
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
-	
-		return $result;
-	}
-	
-	public function getMainInboxTotal() {
-		$this->db->from('messages');
-		
-		$this->db->where('receiver', '0');
-		$this->db->where('type', 'customers');
-
-		return $this->db->count_all_results();
-	}
-	
 	public function getStaffAlerts($staff_id) {
 		$this->db->from('messages');
 		$this->db->join('staffs', 'staffs.staff_id = messages.sender', 'left');
@@ -83,7 +56,7 @@ class Alerts_model extends CI_Model {
 		$this->db->order_by('date', 'DESC');
 
 		if (isset($staff_id)) {
-			$this->db->where('receiver', $staff_id);
+			$this->db->where('recipient', $staff_id);
 			$this->db->where('type', 'alert');
 		}
 		
@@ -128,8 +101,8 @@ class Alerts_model extends CI_Model {
 			$this->db->set('sender', $send['sender']);
 		}
 			
-		if (!empty($send['receiver'])) {
-			$this->db->set('receiver', $send['receiver']);
+		if (!empty($send['recipient'])) {
+			$this->db->set('recipient', $send['recipient']);
 		}
 			
 		if (!empty($send['subject'])) {
@@ -148,13 +121,13 @@ class Alerts_model extends CI_Model {
 	}
 
 	public function deleteMessage($message_id) {
+		if (is_numeric($message_id)) {
+			$this->db->where('message_id', $message_id);
+			$this->db->delete('messages');
 
-		$this->db->where('message_id', $message_id);
-
-		$this->db->delete('messages');
-
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
+			if ($this->db->affected_rows() > 0) {
+				return TRUE;
+			}
 		}
 	}
 }

@@ -22,8 +22,10 @@ class Dashboard extends CI_Controller {
 			$data['alert'] = '';
 		}
 				
+		$this->template->setTitle('Dashboard');
+		$this->template->setHeading('Dashboard');
+
 		//Showing Summaries
-		$data['heading'] 				= 'Dashboard';
 		$data['total_sales'] 			= $this->currency->format($this->Dashboard_model->getTotalSales());
 		$data['total_sales_by_year'] 	= $this->currency->format($this->Dashboard_model->getTotalSalesByYear());
 		$data['total_lost_sales'] 		= $this->currency->format($this->Dashboard_model->getTotalLostSales());
@@ -59,6 +61,9 @@ class Dashboard extends CI_Controller {
 		$filter = array();
 		$filter['page'] = '';
 		$filter['limit'] = 10;
+		$filter['sort_by'] = 'orders.date_added';
+		$filter['order_by'] = 'DESC';
+		$data['order_by_active'] = 'DESC';
 		
 		$this->load->model('Orders_model');
 		$results = $this->Orders_model->getList($filter);
@@ -86,11 +91,11 @@ class Dashboard extends CI_Controller {
 			);
 		}
 				
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'dashboard.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'dashboard', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'dashboard', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'dashboard', $regions, $data);
+			$this->template->render('themes/admin/default/', 'dashboard', $data);
 		}
 	}
 	

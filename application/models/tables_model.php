@@ -24,8 +24,6 @@ class Tables_model extends CI_Model {
 			
 			if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
 				$this->db->order_by($filter['sort_by'], $filter['order_by']);
-			} else {
-				$this->db->order_by('table_id', 'DESC');
 			}
 
 			if (!empty($filter['filter_search'])) {
@@ -112,6 +110,7 @@ class Tables_model extends CI_Model {
 	}
 
 	public function updateTable($update = array()) {
+		$query = FALSE;
 
 		if (!empty($update['table_name'])) {
 			$this->db->set('table_name', $update['table_name']);
@@ -133,15 +132,14 @@ class Tables_model extends CI_Model {
 
 		if (!empty($update['table_id'])) {
 			$this->db->where('table_id', $update['table_id']);
-			$this->db->update('tables'); 
+			$query = $this->db->update('tables'); 
 		}
 		
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
-		}
+		return $query;
 	}
 
 	public function addTable($add = array()) {
+		$query = FALSE;
 		
 		if (!empty($add['table_name'])) {
 			$this->db->set('table_name', $add['table_name']);
@@ -161,21 +159,23 @@ class Tables_model extends CI_Model {
 			$this->db->set('table_status', '0');
 		}
 
-		$this->db->insert('tables');
-
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
+		if (!empty($add)) {
+			if ($this->db->insert('tables')) {
+				$query = $this->db->insert_id();
+			}
 		}
+
+		return $query;
 	}
 
 	public function deleteTable($table_id) {
+		if (is_numeric($table_id)) {
+			$this->db->where('table_id', $table_id);
+			$this->db->delete('tables');
 
-		$this->db->where('table_id', $table_id);
-
-		$this->db->delete('tables');
-
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
+			if ($this->db->affected_rows() > 0) {
+				return TRUE;
+			}
 		}
 	}
 }

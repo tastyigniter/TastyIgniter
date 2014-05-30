@@ -1,5 +1,9 @@
 <?php
 class Settings_model extends CI_Model {
+	public function __construct() {
+		parent::__construct();
+		$this->load->database();
+	}
 
 	public function getAll() {
 		$this->db->from('settings');
@@ -19,7 +23,6 @@ class Settings_model extends CI_Model {
 	}
 	
 	public function updateSettings($sort, $update = array()) {
- 
  		if (!empty($update) && !empty($sort)) {
 			$this->db->where('sort', $sort);
 			$this->db->delete('settings');
@@ -45,6 +48,8 @@ class Settings_model extends CI_Model {
  	}
 	
 	public function addSetting($sort, $key, $value, $serialized = '0') {
+		$query = FALSE;
+		
 		if (isset($sort, $key, $value, $serialized)) {
 			$this->db->where('sort', $sort);
 			$this->db->where('key', $key);
@@ -52,20 +57,32 @@ class Settings_model extends CI_Model {
 
 			$this->db->set('sort', $sort);
 			$this->db->set('key', $key);
-			$this->db->set('value', $value);
+			
+			if (is_array($value)) {
+				$this->db->set('value', serialize($value));
+			} else {
+				$this->db->set('value', $value);
+			}
+			
 			$this->db->set('serialized', $serialized);
-			$this->db->insert('settings');
+			if ($this->db->insert('settings')) {
+				$query = $this->db->insert_id();
+			}
 		}
 
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
-		}
+		return $query;
 	}
 	
-	public function deleteSettings($sort) {
-		$this->db->where('sort', $sort);
-			
-		return $this->db->delete('settings');
+	public function deleteSettings($sort, $key) {
+		if (!empty($sort) AND !empty($key)) {
+			$this->db->where('sort', $sort);
+			$this->db->where('key', $key);
+			$this->db->delete('settings');
+
+			if ($this->db->affected_rows() > 0) {
+				return TRUE;
+			}
+		}
 	}
 
 	public function backupDatabase($tables = array()) {

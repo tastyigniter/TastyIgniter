@@ -9,7 +9,7 @@
 	<table width="100%" align="center">
 		<tr>
 			<td width="20%"><b><?php echo $column_date; ?>:</b></td>
-			<td><?php echo $date; ?></td>
+			<td><?php echo $date_added; ?></td>
 		</tr>
 		<tr>
 			<td><b><?php echo $column_subject; ?>:</b></td>

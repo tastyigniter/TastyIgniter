@@ -1,6 +1,16 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div id="list-box" class="content">
-	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
+	<form id="list-form" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
 		<table class="list list-height">
 			<thead>
 				<tr>
@@ -27,5 +37,6 @@
 			</tbody>
 		</table>
 	</form>
+	</div>
 	</div>
 </div>

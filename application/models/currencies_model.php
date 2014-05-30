@@ -28,8 +28,6 @@ class Currencies_model extends CI_Model {
 			
 			if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
 				$this->db->order_by($filter['sort_by'], $filter['order_by']);
-			} else {
-				$this->db->order_by('currency_id', 'ASC');
 			}
 
 			if (!empty($filter['filter_search'])) {
@@ -81,6 +79,7 @@ class Currencies_model extends CI_Model {
 	}
 	
 	public function updateCurrency($update = array()) {
+		$query = FALSE;
 		
 		if (!empty($update['currency_name'])) {
 			$this->db->set('currency_name', $update['currency_name']);
@@ -119,15 +118,14 @@ class Currencies_model extends CI_Model {
 		
 		if (!empty($update['currency_id'])) {
 			$this->db->where('currency_id', $update['currency_id']);
-			$this->db->update('currencies');
+			$query = $this->db->update('currencies');
 		}		
 		
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
-		}
+		return $query;
 	}
 
 	public function addCurrency($add = array()) {
+		$query = FALSE;
 		
 		if (!empty($add['currency_name'])) {
 			$this->db->set('currency_name', $add['currency_name']);
@@ -163,20 +161,23 @@ class Currencies_model extends CI_Model {
 			$this->db->set('currency_status', '0');
 		}
 
-		$this->db->insert('currencies');
-		
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
+		if (!empty($add)) {
+			if ($this->db->insert('currencies')) {
+				$query = $this->db->insert_id();
+			}
 		}
+
+		return $query;
 	}
 
 	public function deleteCurrency($currency_id) {
-		$this->db->where('currency_id', $currency_id);
+		if (is_numeric($currency_id)) {
+			$this->db->where('currency_id', $currency_id);
+			$this->db->delete('currencies');
 
-		$this->db->delete('currencies');
-
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
+			if ($this->db->affected_rows() > 0) {
+				return TRUE;
+			}
 		}
 	}
 }

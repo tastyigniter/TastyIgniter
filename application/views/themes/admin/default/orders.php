@@ -1,12 +1,42 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div id="list-box" class="content">
 		<form id="filter-form" accept-charset="utf-8" method="GET" action="<?php echo current_url(); ?>">
 		<div class="filter_heading">
-			<div class="left">
+			<div class="right">
 				<input type="text" name="filter_search" value="<?php echo $filter_search; ?>" placeholder="Search order id, location or customer name." class="textfield" />&nbsp;&nbsp;&nbsp;
 				<a class="grey_icon" onclick="filterList();"><i class="icon icon-search"></i></a>
 			</div>
-			<div class="right">
+			<div class="left">
+				<select name="filter_location">
+					<option value="">View all locations</option>
+					<?php foreach ($locations as $location) { ?>
+					<?php if ($location['location_id'] === $filter_location) { ?>				
+						<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('filter_location', $location['location_id'], TRUE); ?> ><?php echo $location['location_name']; ?></option>
+					<?php } else { ?>
+						<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('filter_location', $location['location_id']); ?> ><?php echo $location['location_name']; ?></option>
+					<?php } ?>
+					<?php } ?>
+				</select>&nbsp;
+				<select name="filter_status">
+					<option value="">View all status</option>
+					<?php foreach ($statuses as $status) { ?>
+					<?php if ($status['status_id'] === $filter_status) { ?>				
+						<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('filter_status', $status['status_id'], TRUE); ?> ><?php echo $status['status_name']; ?></option>
+					<?php } else { ?>
+						<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('filter_status', $status['status_id']); ?> ><?php echo $status['status_name']; ?></option>
+					<?php } ?>
+					<?php } ?>
+				</select>&nbsp;
 				<select name="filter_type">
 					<option value="">View all order types</option>
 				<?php if ($filter_type === '1') { ?>
@@ -19,16 +49,6 @@
 					<option value="1" <?php echo set_select('filter_type', '1'); ?> >Delivery</option>
 					<option value="2" <?php echo set_select('filter_type', '2'); ?> >Collection</option>
 				<?php } ?>  
-				</select>&nbsp;
-				<select name="filter_status">
-					<option value="">View all status</option>
-					<?php foreach ($statuses as $status) { ?>
-					<?php if ($status['status_id'] === $filter_status) { ?>				
-						<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('filter_status', $status['status_id'], TRUE); ?> ><?php echo $status['status_name']; ?></option>
-					<?php } else { ?>
-						<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('filter_status', $status['status_id']); ?> ><?php echo $status['status_name']; ?></option>
-					<?php } ?>
-					<?php } ?>
 				</select>&nbsp;
 				<select name="filter_date">
 					<option value="">View all dates</option>
@@ -46,7 +66,7 @@
 		</div>
 		</form>
 		
-		<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
+		<form id="list-form" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
 			<table border="0" class="list list-height">
 				<thead>
 					<tr>
@@ -87,6 +107,7 @@
 		<div class="pagination">
 			<?php echo $pagination['links']; ?><?php echo $pagination['info']; ?>
 		</div>
+	</div>
 	</div>
 </div>
 <script type="text/javascript"><!--

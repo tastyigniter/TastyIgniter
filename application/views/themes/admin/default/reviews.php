@@ -1,12 +1,32 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div id="list-box" class="content">
 		<form id="filter-form" accept-charset="utf-8" method="GET" action="<?php echo current_url(); ?>">
 		<div class="filter_heading">
-			<div class="left">
+			<div class="right">
 				<input type="text" name="filter_search" value="<?php echo $filter_search; ?>" placeholder="Search author, restaurant, order id or rating." class="textfield" />&nbsp;&nbsp;&nbsp;
 				<a class="grey_icon" onclick="filterList();"><i class="icon icon-search"></i></a>
 			</div>
-			<div class="right">
+			<div class="left">
+				<select name="filter_location">
+					<option value="">View all locations</option>
+					<?php foreach ($locations as $location) { ?>
+					<?php if ($location['location_id'] === $filter_location) { ?>				
+						<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('filter_location', $location['location_id'], TRUE); ?> ><?php echo $location['location_name']; ?></option>
+					<?php } else { ?>
+						<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('filter_location', $location['location_id']); ?> ><?php echo $location['location_name']; ?></option>
+					<?php } ?>
+					<?php } ?>
+				</select>&nbsp;
 				<select name="filter_status">
 					<option value="">View all status</option>
 				<?php if ($filter_status === '1') { ?>
@@ -36,12 +56,12 @@
 		</div>
 		</form>
 		
-		<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
+		<form id="list-form" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
 			<table align="center" class="list list-height">
 				<thead>
 					<tr>
 						<th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
-						<th><a href="<?php echo $sort_location; ?>">Restaurant<i class="icon icon-sort-<?php echo ($sort_by == 'location_name') ? $order_by_active : $order_by; ?>"></i></a></th>
+						<th><a href="<?php echo $sort_location; ?>">Location<i class="icon icon-sort-<?php echo ($sort_by == 'location_name') ? $order_by_active : $order_by; ?>"></i></a></th>
 						<th><a href="<?php echo $sort_author; ?>">Author<i class="icon icon-sort-<?php echo ($sort_by == 'author') ? $order_by_active : $order_by; ?>"></i></a></th>
 						<th>Rating</th>
 						<th><a href="<?php echo $sort_id; ?>">Order ID<i class="icon icon-sort-<?php echo ($sort_by == 'order_id') ? $order_by_active : $order_by; ?>"></i></a></th>
@@ -80,6 +100,7 @@
 		<div class="pagination">
 			<?php echo $pagination['links']; ?><?php echo $pagination['info']; ?>
 		</div>
+	</div>
 	</div>
 </div>
 <script type="text/javascript"><!--

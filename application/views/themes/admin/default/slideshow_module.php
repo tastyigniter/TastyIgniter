@@ -1,4 +1,14 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div id="update-box" class="content">
 	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
 		<div class="wrap_heading">
@@ -44,33 +54,26 @@
 		</div>
 
 		<div id="images" class="wrap_content" style="display:none;">
-			<table align=""class="list sorted_table">
-				<tbody> 
-					<?php $image_row = 0; ?>
-					<?php foreach ($images as $image) { ?>
-					<tr id="image-row<?php $image_row; ?>">
-						<td class="action action-one"><i onclick="$(this).parent().parent().remove();" class="icon icon-delete"></i></td>
-						<td><div class="imagebox">
-							<div class="preview"><img src="<?php echo $image['preview']; ?>" class="thumb" id="thumb<?php echo $image_row; ?>"></div>
-							<div class="select">
-								<input type="hidden" name="images[<?php echo $image_row; ?>]" value="<?php echo $image['input']; ?>" id="field<?php echo $image_row; ?>" />
-								<center class="name"><?php echo $image['name']; ?></center><br />
-								<a class="button imagebox-btn" onclick="imageUpload('field<?php echo $image_row; ?>');">Select Image</a>
-								<a class="button" onclick="$('#thumb<?php echo $image_row; ?>').attr('src', '<?php echo $no_photo; ?>'); $('#field<?php echo $image_row; ?>').attr('value', 'data/no_photo.png'); $(this).parent().parent().find('center').html('no_photo.png');">Remove Image</a>
-							</div>
-						</div></td>
-						<td></td>
-					</tr>
-					<?php $image_row++; ?>
-					<?php } ?>  
-				</tbody> 
-				<tfoot> 
-					<tr id="image-tfoot">
-						<td class="action action-one"><i class="icon icon-add" onclick="addImage();"></i></td>
-						<td colspan="2"></td>
-					</tr>		 
-				</tfoot> 
-			</table>
+			<ul class="sorted_image">
+				<?php $image_row = 0; ?>
+				<?php foreach ($images as $image) { ?>
+				<li id="image-row<?php echo $image_row; ?>">
+					<div class="imagebox">
+						<div class="preview"><img src="<?php echo $image['preview']; ?>" class="thumb" id="thumb<?php echo $image_row; ?>"></div>
+						<div class="select">
+							<input type="hidden" name="images[<?php echo $image_row; ?>]" value="<?php echo $image['input']; ?>" id="field<?php echo $image_row; ?>" />
+							<center class="name"><?php echo $image['name']; ?></center>
+							<a class="button select-image" onclick="imageUpload('field<?php echo $image_row; ?>');">Select</a>
+							<a class="button remove-image"  onclick="$(this).parent().parent().parent().remove();">Remove</a>
+						</div>
+					</div>
+				</li>
+				<?php $image_row++; ?>
+				<?php } ?>  
+				<li id="add-image">
+					<a class="add-image" onclick="addImage();"><i class="icon icon-add"></i></a>
+				</li>		 
+			</ul>
 		</div>
 
 		<div id="layouts" class="wrap_content" style="display:none;">
@@ -88,7 +91,7 @@
 					<?php $table_row = 0; ?>
 					<?php foreach ($modules as $module) { ?>
 					<tr id="module-row<?php echo $table_row; ?>">
-						<td class="action action-one"><i onclick="$(this).parent().parent().remove();" class="icon icon-delete"></i></td>
+						<td class="action action-one"><a onclick="$(this).parent().parent().remove();"><i class="icon icon-delete"></i></a></td>
 						<td><select name="modules[<?php echo $table_row; ?>][layout_id]">
 						<?php foreach ($layouts as $layout) { ?>
 						<?php if ($layout['layout_id'] === $module['layout_id']) { ?>
@@ -129,21 +132,32 @@
 
 	</form>
 	</div>
+	</div>
 </div>
 <script src="<?php echo base_url("assets/js/jquery.fancybox.js"); ?>"></script>
 <script type="text/javascript"><!--
 function imageUpload(field) {
 	$('#image-manager').remove();
 		
-	var iframe_url = js_site_url('admin/image_manager?popup=&field_id=') + encodeURIComponent(field);
+	var iframe_url = js_site_url('admin/image_manager?popup=iframe&field_id=') + encodeURIComponent(field);
 
-	$('#container').prepend('<div id="image-manager" style="padding: 3px 0px 0px 0px;"><iframe src="'+ iframe_url +'" width="780" height="550" frameborder="0"></iframe></div>');
+	$('#container').prepend('<div id="image-manager" style="padding: 3px 0px 0px 0px;"><iframe src="'+ iframe_url +'" width="980" height="550" frameborder="0"></iframe></div>');
 	
-	$('.imagebox-btn').fancybox({	
-		width: 900,
-		height: 600,
+	$('.select-image').fancybox({	
  		href:"#image-manager",
-		autoScale: false
+		autoScale: false,
+		afterClose: function() {
+			if ($('#' + field).attr('value')) {
+				$.ajax({
+					url: js_site_url('admin/image_manager/resize?image=') + encodeURIComponent($('#' + field).attr('value')),
+					dataType: 'json',
+					success: function(json) {
+						var thumb = $('#' + field).parent().parent().find('.thumb');
+						$(thumb).replaceWith('<img src="' + json + '" alt="" class="thumb" />');
+					}
+				});
+			}
+		}
 	});
 };
 //--></script>
@@ -151,19 +165,19 @@ function imageUpload(field) {
 var image_row = <?php echo $image_row; ?>;
 
 function addImage() {	
-	html  = '<tr id="image-row' + image_row + '">';
-	html += '	<td class="action action-one"><i onclick="$(this).parent().parent().remove();" class="icon icon-delete"></i></td>';
-	html += '	<td><div class="imagebox"><div class="preview">';
+	html  = '<li id="image-row' + image_row + '">';
+	html += '	<div class="imagebox"><div class="preview">';
 	html += '		<img src="<?php echo $no_photo; ?>" class="thumb" id="thumb' + image_row + '" />';
-	html += '	</div><div class="select">';
-	html += '		<input type="hidden" name="images[' + image_row + ']" value="data/no_photo.png" id="field' + image_row + '" /><center class="name">no_photo.png</center><br />';
-	html += '		<a class="button imagebox-btn" onclick="imageUpload(\'field' + image_row + '\');">Select Image</a>';
-	html += '		<a class="button" onclick="$(\'#thumb' + image_row + '\').attr(\'src\', \'<?php echo $no_photo; ?>\'); $(\'#field' + image_row + '\').attr(\'value\', \'data/no_photo.png\'); $(this).parent().parent().find(\'center\').html(\'no_photo.png\');">Remove Image</a>';
-	html += '	</div></td>';
-	html += '	<td></td>';
-	html += '</tr>';
+	html += '	</div>';
+	html += '	<div class="select">';
+	html += '		<input type="hidden" name="images[' + image_row + ']" value="data/no_photo.png" id="field' + image_row + '" />';
+	html += '		<center class="name">no_photo.png</center>';
+	html += '		<a class="button select-image" onclick="imageUpload(\'field' + image_row + '\');">Select</a>';
+	html += '		<a class="button remove-image" onclick="$(this).parent().parent().parent().remove();">Remove</a>';
+	html += '	</div>';
+	html += '</li>';
 	
-	$('#image-tfoot').before(html);
+	$('.sorted_image #add-image').before(html);
 	
 	image_row++;
 }
@@ -173,7 +187,7 @@ var table_row = <?php echo $table_row; ?>;
 
 function addModule() {	
 	html  = '<tr id="module-row' + table_row + '">';
-	html += '	<td class="action action-one"><i onclick="$(this).parent().parent().remove();" class="icon icon-delete"></i></td>';
+	html += '	<td class="action action-one"><a onclick="$(this).parent().parent().remove();"><i class="icon icon-delete"></i></a></td>';
     html += '<td><select name="modules[' + table_row + '][layout_id]">';
 		<?php foreach ($layouts as $layout) { ?>
 			html += '<option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>';

@@ -7,11 +7,12 @@ class Contact extends MX_Controller {
 		$this->load->model('Locations_model'); 													// loads the location model
 		$this->load->library('location'); 														// load the location library
 		$this->load->library('currency'); 														// load the currency library
+
+		$this->load->library('language');
+		$this->lang->load('main/contact', $this->language->folder());
 	}
 
 	public function index() {
-		$this->lang->load('main/contact');  													// loads home language file
-					
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert'); 								// retrieve session flashdata variable if available
 		} else {
@@ -31,7 +32,8 @@ class Contact extends MX_Controller {
 		}
 		
 		// START of retrieving lines from language file to pass to view.
-		$data['text_heading'] 			= $this->lang->line('text_heading');
+		$this->template->setTitle($this->lang->line('text_heading'));
+		$this->template->setHeading($this->lang->line('text_heading'));
 		$data['text_local'] 			= $this->lang->line('text_local');
 		$data['text_postcode'] 			= $this->lang->line('text_postcode');
 		$data['text_find'] 				= $this->lang->line('text_find');
@@ -77,11 +79,11 @@ class Contact extends MX_Controller {
 			redirect('contact');																// redirect to contact page
 		}
 		
-		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'contact.php')) {
-			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'contact', $regions, $data);
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'contact', $data);
 		} else {
-			$this->template->render('themes/main/default/', 'contact', $regions, $data);
+			$this->template->render('themes/main/default/', 'contact', $data);
 		}
 	}
 
@@ -91,7 +93,6 @@ class Contact extends MX_Controller {
 		if ($this->validateForm() === TRUE) {
 			$this->load->library('email');														//loading upload library
 
-			//setting email preference
 			$this->email->set_protocol($this->config->item('protocol'));
 			$this->email->set_mailtype($this->config->item('mailtype'));
 			$this->email->set_smtp_host($this->config->item('smtp_host'));
@@ -101,25 +102,26 @@ class Contact extends MX_Controller {
 			$this->email->set_newline("\r\n");
 			$this->email->initialize();
 
-			$subjects = array('1' => 'General enquiry', '2' => 'Comment', '3' => 'Technical Issues');	// array of enquiry subject to pass to view
-
-			$subject	= $subjects[$this->input->post('subject')];								// retreive subject based on subjects key value
 			$full_name	= $this->input->post('full_name');
 			$email		= $this->input->post('email');
-			$telephone	= $this->input->post('telephone');
-			$comment	= nl2br($this->input->post('comment'));									// retrieve $_POST comment value to include HTML line breaks <br /> or <br>
+			$subjects 	= array('1' => 'General enquiry', '2' => 'Comment', '3' => 'Technical Issues');
 			
-			// create variable to hold email body message.
-			$message 	= sprintf($this->lang->line('text_contact_message'), $comment, $full_name, $telephone);
+			$mail_data['contact_topic'] 		= $subjects[$this->input->post('subject')];
+			$mail_data['full_name'] 			= $this->input->post('full_name');
+			$mail_data['contact_telephone'] 	= $this->input->post('telephone');
+			$mail_data['contact_message'] 		= nl2br($this->input->post('comment'));
+			$mail_data['site_name'] 			= $this->config->item('site_name');
+			$mail_data['signature'] 			= $this->config->item('site_name');
+						
+			$this->load->library('mail_template'); 
+			$message = $this->mail_template->parseTemplate('contact', $mail_data);
 
 			$this->email->from(strtolower($email), $full_name);
 			$this->email->to($this->location->getEmail());
-
-			$this->email->subject($subject);
-			
+			$this->email->subject($this->mail_template->getSubject());
 			$this->email->message($message);
 
-			if ($this->email->send()) {															// checks if email was sent sucessfully and return TRUE
+			if ($this->email->send()) {
 				return TRUE;
 			}
 		}

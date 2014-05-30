@@ -22,8 +22,10 @@ class Ratings extends CI_Controller {
 			$data['alert'] = '';
 		}
 
-		$data['heading'] 			= 'Ratings';
-		$data['button_save'] 		= 'Save';
+		$this->template->setTitle('Ratings');
+		$this->template->setHeading('Ratings');
+		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
+
 		$data['text_empty'] 		= 'There are no ratings, please add!.';
 		
 		if ($this->input->post('ratings')) {
@@ -33,23 +35,23 @@ class Ratings extends CI_Controller {
 		} else {
 			$results = '';
 		}
-		
+
 		$data['ratings'] = array();
 		if (is_array($results)) {
-			foreach ($results as $key => $value) {					
+			foreach ($results['ratings'] as $key => $value) {					
 				$data['ratings'][$key] = $value;
 			}
 		}
 
-		if ($this->input->post() && $this->_updateRating() === TRUE) {
+		if ($this->input->post() AND $this->_updateRating() === TRUE) {
 			redirect('admin/ratings');  			
 		}
 
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'ratings.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'ratings', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'ratings', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'ratings', $regions, $data);
+			$this->template->render('themes/admin/default/', 'ratings', $data);
 		}
 	}
 	
@@ -62,10 +64,10 @@ class Ratings extends CI_Controller {
 			$update = array();
 			$update['ratings'] = $this->input->post('ratings');
 			
-			if ($this->Settings_model->updateSettings('ratings', $update)) {						
-				$this->session->set_flashdata('alert', '<p class="success">Rating Updated Sucessfully!</p>');
+			if ($this->Settings_model->addSetting('ratings', 'ratings', $update, '1')) {
+				$this->session->set_flashdata('alert', '<p class="success">Rating updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');				
 			}
 		
 			return TRUE;

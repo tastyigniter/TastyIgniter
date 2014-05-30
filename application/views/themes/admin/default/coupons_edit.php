@@ -1,4 +1,14 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div id="update-box" class="content">
 	<form accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
 		<div class="wrap_heading">
@@ -102,11 +112,12 @@
 				<?php } ?>
 				<?php } else { ?>
 				<tr>
-					<td colspan="4" align="center"><?php echo $text_empty; ?></td>
+					<td colspan="6" align="center"><?php echo $text_empty; ?></td>
 				</tr>
 				<?php } ?>
 			</table>
 		</div>
+	</div>
 	</div>
 </div>
 <script type="text/javascript" src="<?php echo base_url("assets/js/jquery-ui-timepicker-addon.js"); ?>"></script> 

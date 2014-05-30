@@ -37,37 +37,34 @@ class Categories extends CI_Controller {
 		}
 				
 		if ($this->input->get('filter_search')) {
-			$filter['filter_search'] = $this->input->get('filter_search');
-			$data['filter_search'] = $filter['filter_search'];
+			$filter['filter_search'] = $data['filter_search'] = $this->input->get('filter_search');
 			$url .= 'filter_search='.$filter['filter_search'].'&';
 		} else {
 			$data['filter_search'] = '';
 		}
 		
 		if ($this->input->get('sort_by')) {
-			$filter['sort_by'] = $this->input->get('sort_by');
-			$data['sort_by'] = $filter['sort_by'];
+			$filter['sort_by'] = $data['sort_by'] = $this->input->get('sort_by');
 		} else {
-			$filter['sort_by'] = '';
-			$data['sort_by'] = '';
+			$filter['sort_by'] = $data['sort_by'] = 'category_id';
 		}
 		
 		if ($this->input->get('order_by')) {
-			$filter['order_by'] = $this->input->get('order_by');
-			$data['order_by_active'] = strtolower($this->input->get('order_by')) .' active';
-			$data['order_by'] = strtolower($this->input->get('order_by'));
+			$filter['order_by'] = $data['order_by'] = $this->input->get('order_by');
+			$data['order_by_active'] = $this->input->get('order_by') .' active';
 		} else {
-			$filter['order_by'] = '';
-			$data['order_by_active'] = '';
-			$data['order_by'] = 'desc';
+			$filter['order_by'] = $data['order_by'] = 'DESC';
+			$data['order_by_active'] = 'DESC';
 		}
 
-		$data['heading'] 			= 'Categories';
-		$data['button_add'] 		= 'New';
-		$data['button_delete'] 		= 'Delete';
+		$this->template->setTitle('Categories');
+		$this->template->setHeading('Categories');
+		$this->template->setButton('+ New', array('class' => 'add_button', 'href' => page_url() .'/edit'));
+		$this->template->setButton('Delete', array('class' => 'delete_button', 'onclick' => '$(\'form:not(#filter-form)\').submit();'));
+
 		$data['text_empty'] 		= 'There are no categories available.';
 		
-		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'DESC') ? 'ASC' : 'DESC';
+		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_name'] 			= site_url('admin/categories'.$url.'sort_by=category_name&order_by='.$order_by);
 		$data['sort_id'] 			= site_url('admin/categories'.$url.'sort_by=category_id&order_by='.$order_by);
 
@@ -84,7 +81,7 @@ class Categories extends CI_Controller {
 			);
 		}
 
-		if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+		if ($this->input->get('sort_by') AND $this->input->get('order_by')) {
 			$url .= 'sort_by='.$filter['sort_by'].'&';
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
@@ -100,16 +97,16 @@ class Categories extends CI_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		if ($this->input->post('delete') && $this->_deleteCategory() === TRUE) {
+		if ($this->input->post('delete') AND $this->_deleteCategory() === TRUE) {
 
 			redirect('admin/categories');  			
 		}	
 				
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'categories.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'categories', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'categories', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'categories', $regions, $data);
+			$this->template->render('themes/admin/default/', 'categories', $data);
 		}
 	}
 
@@ -123,7 +120,6 @@ class Categories extends CI_Controller {
   			redirect('admin/permission');
 		}
 		
-		//check if /category_id is set in uri string
 		if (is_numeric($this->input->get('id'))) {
 			$category_id = $this->input->get('id');
 			$data['action']	= site_url('admin/categories/edit?id='. $category_id);
@@ -140,20 +136,26 @@ class Categories extends CI_Controller {
 
 		$category_info = $this->Menus_model->getCategory($category_id);
 
-		$data['heading'] 				= 'Categories - '. $category_info['category_name'];
-		$data['button_save'] 			= 'Save';
-		$data['button_save_close'] 		= 'Save & Close';
-		$data['sub_menu_back'] 			= site_url('admin/categories');
+		$title = (isset($category_info['category_name'])) ? 'Edit - '. $category_info['category_name'] : 'New';	
+		$this->template->setTitle('Category: '. $title);
+		$this->template->setHeading('Category: '. $title);
+		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('back_button', site_url('admin/categories'));
 	
 		$data['category_id'] 			= $category_info['category_id'];
 		$data['category_name'] 			= $category_info['category_name'];
 		$data['category_description'] 	= $category_info['category_description'];
 
-		if ( ! $this->input->get('id') & $this->input->post() && $this->_addCategory() === TRUE) {
-			redirect('admin/categories');
+		if ($this->input->post() AND $this->_addCategory() === TRUE) {
+			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {	
+				redirect('admin/categories/edit?id='. $this->input->post('insert_id'));
+			} else {
+				redirect('admin/categories');
+			}
 		}
 
-		if ($this->input->get('id') && $this->input->post() && $this->_updateCategory() === TRUE) {
+		if ($this->input->post() AND $this->_updateCategory() === TRUE) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('admin/categories');
 			}
@@ -161,11 +163,11 @@ class Categories extends CI_Controller {
 			redirect('admin/categories/edit?id='. $category_id);
 		}
 	
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'categories_edit.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'categories_edit', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'categories_edit', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'categories_edit', $regions, $data);
+			$this->template->render('themes/admin/default/', 'categories_edit', $data);
 		}
 	}
 
@@ -174,14 +176,14 @@ class Categories extends CI_Controller {
     	if (!$this->user->hasPermissions('modify', 'admin/categories')) {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add!</p>');
   			return TRUE;
-    	} else if ( ! $this->input->get('id') AND $this->validateForm() === TRUE) { 
+    	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() AND $this->validateForm() === TRUE) { 
 			$category_name = $this->input->post('category_name');
 			$category_description = $this->input->post('category_description');
 				
-			if ($this->Menus_model->addCategory($category_name, $category_description)) {	
-				$this->session->set_flashdata('alert', '<p class="success">Category Added Sucessfully!</p>');
+			if ($_POST['insert_id'] = $this->Menus_model->addCategory($category_name, $category_description)) {	
+				$this->session->set_flashdata('alert', '<p class="success">Category added sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Added!</p>');
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing added.</p>');
 			}
 			
 			return TRUE;
@@ -192,17 +194,17 @@ class Categories extends CI_Controller {
     	if (!$this->user->hasPermissions('modify', 'admin/categories')) {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
   			return TRUE;
-    	} else if ($this->input->get('id') AND $this->validateForm() === TRUE) { 
+    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$category_id			= $this->input->get('id');
 			$category_name 			= $this->input->post('category_name');
 			$category_description 	= $this->input->post('category_description');
 			
 			if ($this->Menus_model->updateCategory($category_id, $category_name, $category_description)) {				
 
-				$this->session->set_flashdata('alert', '<p class="success">Category Updated Sucessfully!</p>');
+				$this->session->set_flashdata('alert', '<p class="success">Category updated sucessfully.</p>');
 			} else {
 
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Added!</p>');
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing added.</p>');
 
 			}
 			
@@ -213,15 +215,12 @@ class Categories extends CI_Controller {
 	public function _deleteCategory() {
     	if (!$this->user->hasPermissions('modify', 'admin/categories')) {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
-    	} else { 
-			if (is_array($this->input->post('delete'))) {
-				foreach ($this->input->post('delete') as $key => $value) {
-					$category_id = $value;
-					$this->Menus_model->deleteCategory($category_id);
-				}			
-			
-				$this->session->set_flashdata('alert', '<p class="success">Category(s) Deleted Sucessfully!</p>');
-			}
+    	} else if (is_array($this->input->post('delete'))) {
+			foreach ($this->input->post('delete') as $key => $value) {
+				$this->Menus_model->deleteCategory($value);
+			}			
+		
+			$this->session->set_flashdata('alert', '<p class="success">Category(s) deleted sucessfully!</p>');
 		}
 				
 		return TRUE;

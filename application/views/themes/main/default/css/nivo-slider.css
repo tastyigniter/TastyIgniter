@@ -97,7 +97,7 @@
 }
 .nivo-directionNav a {
 	-webkit-transition:all 200ms ease-in-out;
-	background-image:url(../img/arrows.png);
+	background-image:url(../images/arrows.png);
 	background-position:initial initial;
 	background-repeat:no-repeat no-repeat;
 	border:0;
@@ -122,7 +122,7 @@
 }
 .nivo-controlNav a {
 	cursor:pointer;
-	background-image:url(../img/bullets.png);
+	background-image:url(../images/bullets.png);
 	background-position:initial initial;
 	background-repeat:no-repeat no-repeat;
 	border:0;

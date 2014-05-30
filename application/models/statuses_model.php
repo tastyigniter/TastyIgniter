@@ -78,7 +78,9 @@ class Statuses_model extends CI_Model {
 		}
 	}
 	
-	public function updateStatus($status_for = FALSE, $update = array()) {
+	public function updateStatus($update = array()) {
+		$query = FALSE;
+
 		if (!empty($update['status_name'])) {
 			$this->db->set('status_name', $update['status_name']);
 		}
@@ -87,8 +89,8 @@ class Statuses_model extends CI_Model {
 			$this->db->set('status_comment', $update['status_comment']);
 		}
 
-		if ($status_for !== FALSE) {
-			$this->db->set('status_for', $status_for);
+		if (!empty($update['status_for'])) {
+			$this->db->set('status_for', $update['status_for']);
 		}
 
 		if ($update['notify_customer'] === '1') {
@@ -99,15 +101,15 @@ class Statuses_model extends CI_Model {
 
 		if (!empty($update['status_id'])) {
 			$this->db->where('status_id', $update['status_id']);
-			$this->db->update('statuses'); 
+			$query = $this->db->update('statuses'); 
 		}
 		
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
-		}
+		return $query;
 	}
 
-	public function addStatus($status_for = FALSE, $add = array()) {
+	public function addStatus($add = array()) {
+		$query = FALSE;
+
 		if (!empty($add['status_name'])) {
 			$this->db->set('status_name', $add['status_name']);
 		}
@@ -116,8 +118,8 @@ class Statuses_model extends CI_Model {
 			$this->db->set('status_comment', $add['status_comment']);
 		}
 
-		if ($status_for !== FALSE) {
-			$this->db->set('status_for', $status_for);
+		if (!empty($add['status_for'])) {
+			$this->db->set('status_for', $add['status_for']);
 		}
 
 		if ($add['notify_customer'] === '1') {
@@ -126,14 +128,18 @@ class Statuses_model extends CI_Model {
 			$this->db->set('notify_customer', '0');
 		}
 
-		$this->db->insert('statuses'); 
-		
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
+		if (!empty($add)) {
+			if ($this->db->insert('statuses')) {
+				$query = $this->db->insert_id();
+			}
 		}
+
+		return $query;
 	}
 
-	public function addStatusHistory($for = FALSE, $add = array()) {
+	public function addStatusHistory($for = '', $add = array()) {
+		$query = FALSE;
+
 		if (!empty($add['staff_id'])) {
 			$this->db->set('staff_id', $add['staff_id']);
 		}
@@ -150,7 +156,7 @@ class Statuses_model extends CI_Model {
 			$this->db->set('status_id', $add['status_id']);
 		}
 
-		if ($for !== FALSE) {
+		if ($for !== '') {
 			$this->db->set('for', $for);
 		}
 
@@ -168,18 +174,24 @@ class Statuses_model extends CI_Model {
 			$this->db->set('date_added', $add['date_added']);
 		}
 
-		$this->db->insert('status_history'); 
-		
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
+		if (!empty($add)) {
+			if ($this->db->insert('status_history')) {
+				$query = $this->db->insert_id();
+			}
 		}
+
+		return $query;
 	}
 
 	public function deleteStatus($status_id) {
+		if (is_numeric($status_id)) {
+			$this->db->where('status_id', $status_id);
+			$this->db->delete('statuses');
 
-		$this->db->where('status_id', $status_id);
-		
-		return $this->db->delete('statuses');
+			if ($this->db->affected_rows() > 0) {
+				return TRUE;
+			}
+		}
 	}
 }
 

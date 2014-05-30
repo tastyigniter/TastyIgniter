@@ -11,7 +11,7 @@
 	</div>
 </div>
 <?php if ($local_location) { ?>
-<script src="http://maps.googleapis.com/maps/api/js?v=3<?php echo $map_key; ?>&sensor=false&region=GB"></script>
+<script src="http://maps.googleapis.com/maps/api/js?v=3&key=<?php echo $map_key; ?>&sensor=false&region=GB"></script>
 <script type="text/javascript">//<![CDATA[
 	var map;
 	var geocoder = null;
@@ -35,7 +35,7 @@
 			mapTypeId: google.maps.MapTypeId.ROADMAP
 		}
 				
-		var map = new google.maps.Map(document.getElementById('map-holder'), mapOptions);
+		//var map = new google.maps.Map(document.getElementById('map-holder'), mapOptions);
 
 		var infowindow = new google.maps.InfoWindow({
 			content: html
@@ -52,6 +52,6 @@
 		});
 	}
 
-    google.maps.event.addDomListener(window, 'load', initializeMap);
+    //google.maps.event.addDomListener(window, 'load', initializeMap);
 //]]></script>
 <?php } ?>

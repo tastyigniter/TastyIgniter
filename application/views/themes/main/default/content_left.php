@@ -20,12 +20,12 @@
 	
 	$modules_data = array();
 	foreach ($extensions as $extension) {
-		if (file_exists(EXTPATH .'main/controllers/'. $extension['code'] .'_module.php')) {
-			$result = $this->config->item($extension['code'] .'_module');
+		if (file_exists(EXTPATH .'main/controllers/'. $extension['code'] .'.php')) {
+			$result = $this->config->item($extension['code']);
 
 			if (is_array($result['modules'])) {
 				foreach ($result['modules'] as $module) {
-					if (in_array($module['layout_id'], $layout_id) && $module['position'] === 'left' && $module['status'] === '1') {
+					if (in_array($module['layout_id'], $layout_id) AND $module['position'] === 'left' AND $module['status'] === '1') {
 						$modules_data[] = array(
 							'code' 		=> $extension['code'],
 							'priority' 	=> $module['priority']
@@ -48,7 +48,7 @@
 <?php if (!empty($modules_data)) { ?>
 	<div class="left-section">
 	<?php foreach ($modules_data as $key => $value) { ?>
-		<?php echo Modules::run('main/'. $value['code'] .'_module/index'); ?>
+		<?php echo Modules::run('main/'. $value['code'] .'/index'); ?>
 	<?php } ?>
 	</div>
 <?php } ?>

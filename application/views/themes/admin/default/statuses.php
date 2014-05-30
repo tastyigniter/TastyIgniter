@@ -1,8 +1,18 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div id="list-box" class="content">
 		<form id="filter-form" accept-charset="utf-8" method="GET" action="<?php echo current_url(); ?>">
 		<div class="filter_heading">
-			<div class="right">
+			<div class="left">
 				<select name="filter_type">
 					<option value="">View all status types</option>
 					<?php if ($filter_type === 'order') { ?>
@@ -22,7 +32,7 @@
 		</div>
 		</form>
 		
-		<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
+		<form id="list-form" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
 			<table align="center" class="list list-height">
 				<thead>
 					<tr>
@@ -53,6 +63,7 @@
 				</tbody>
 			</table>
 		</form>
+	</div>
 	</div>
 </div>
 <script type="text/javascript"><!--

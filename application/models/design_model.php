@@ -1,4 +1,5 @@
 <?php
+
 class Design_model extends CI_Model {
 
 	public function getLayouts() {
@@ -162,20 +163,16 @@ class Design_model extends CI_Model {
 	}
 	
 	public function updateLayout($update = array()) {
-
 		$query = FALSE;
+
 		if (!empty($update['name'])) {
 			$this->db->set('name', $update['name']);
 		}
 		
 		if (!empty($update['layout_id'])) {
 			$this->db->where('layout_id', $update['layout_id']);
-			$this->db->update('layouts');			
+			$query = $this->db->update('layouts');			
 		}		
-
-		if ($this->db->affected_rows() > 0) {
-			$query = TRUE;
-		}
 
 		$this->db->where('layout_id', $update['layout_id']);
 		$this->db->delete('layout_routes');
@@ -184,26 +181,21 @@ class Design_model extends CI_Model {
 			foreach ($update['routes'] as $route) {
 				$this->db->set('layout_id', $update['layout_id']);
 				$this->db->set('uri_route', $route['uri_route']);
-				$this->db->insert('layout_routes'); 
+				$query = $this->db->insert('layout_routes'); 
 			}
-		}
-
-		if ($this->db->affected_rows() > 0) {
-			$query = TRUE;
 		}
 
 		return $query;
 	}
 
 	public function addLayout($add = array()) {
+		$query = FALSE;
 
 		if (!empty($add['name'])) {
 			$this->db->set('name', $add['name']);
 		}
-		
-		$this->db->insert('layouts');			
 
-		if ($this->db->affected_rows() > 0) {
+		if ($this->db->insert('layouts')) {			
 			$layout_id = $this->db->insert_id();			
 
 			$this->db->where('layout_id', $layout_id);
@@ -213,14 +205,14 @@ class Design_model extends CI_Model {
 				foreach ($add['routes'] as $route) {
 					$this->db->set('layout_id', $layout_id);
 					$this->db->set('uri_route', $route['uri_route']);
-					$this->db->insert('layout_routes'); 
+					$query = $this->db->insert('layout_routes'); 
 				}
 			}
+
+			$query = $layout_id;			
 		}
 
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
-		}
+		return $query;
 	}
 
 	public function deleteLayout($layout_id) {

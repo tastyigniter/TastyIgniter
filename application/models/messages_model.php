@@ -3,17 +3,26 @@ class Messages_model extends CI_Model {
 
     public function record_count($filter = array()) {
 		if (!empty($filter['filter_search'])) {
-			$this->db->like('sender', $filter['filter_search']);
+			$this->db->like('staff_name', $filter['filter_search']);
 			$this->db->or_like('subject', $filter['filter_search']);
 		}
 
-		if ($filter['filter_label'] === 'sent') {
-			$this->db->where('label !=', 'alerts');
-		} else {
-			$this->db->where('label', $filter['filter_label']);
+		if ($filter['filter_label'] !== 'all') {
+			$this->db->join('message_recipients', 'message_recipients.message_id = messages.message_id', 'left');
+			$this->db->where('message_recipients.staff_id', $filter['filter_staff']);
+			
+			if ($filter['filter_label'] === 'inbox') {
+				$this->db->where('message_recipients.status', '1');
+			}
+			
+			if ($filter['filter_label'] === 'trash') {
+				$this->db->where('message_recipients.status', '0');
+			}
 		}
-		
+
 		$this->db->from('messages');
+		$this->db->join('staffs', 'staffs.staff_id = messages.staff_id_from', 'left');
+		$this->db->group_by('messages.message_id');
 		return $this->db->count_all_results();
     }
     
@@ -23,21 +32,41 @@ class Messages_model extends CI_Model {
 		}
 		
         if ($this->db->limit($filter['limit'], $filter['page'])) {	
+			$this->db->select('*, messages.date_added');
 			$this->db->from('messages');
-			$this->db->join('staffs', 'staffs.staff_id = messages.sender', 'left');
-			$this->db->order_by('date', 'DESC');
+			$this->db->join('staffs', 'staffs.staff_id = messages.staff_id_from', 'left');
+			$this->db->group_by('messages.message_id');
+			
+			if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+				$this->db->order_by($filter['sort_by'], $filter['order_by']);
+			}
+		
+			if ($filter['filter_label'] !== 'all') {
+				$this->db->join('message_recipients', 'message_recipients.message_id = messages.message_id', 'left');
+				$this->db->where('message_recipients.staff_id', $filter['filter_staff']);
+				
+				if ($filter['filter_label'] === 'inbox') {
+					$this->db->where('message_recipients.status', '1');
+				}
+				
+				if ($filter['filter_label'] === 'trash') {
+					$this->db->where('message_recipients.status', '0');
+				} 
+			}
 
 			if (!empty($filter['filter_search'])) {
-				$this->db->like('sender', $filter['filter_search']);
+				$this->db->like('staff_name', $filter['filter_search']);
 				$this->db->or_like('subject', $filter['filter_search']);
 			}
 
-			if ($filter['filter_label'] === 'sent') {
-				$this->db->where('label !=', 'alerts');
-			} else {
-				$this->db->where('label', $filter['filter_label']);
+			if (!empty($filter['filter_recipient'])) {
+				$this->db->where('recipient', $filter['filter_recipient']);
 			}
-			
+
+			if (!empty($filter['filter_type'])) {
+				$this->db->where('send_type', $filter['filter_type']);
+			}
+
 			$query = $this->db->get();
 			$result = array();
 		
@@ -49,94 +78,290 @@ class Messages_model extends CI_Model {
 		}
 	}
 	
-	public function getMainInbox() {
-		$this->db->from('messages');
+	public function getMainList($customer_id = '') {
+		if (is_numeric($customer_id)) {
+			$this->db->select('*, messages.date_added');
+			$this->db->from('messages');
+			$this->db->join('message_recipients', 'message_recipients.message_id = messages.message_id', 'left');
+			$this->db->join('customers', 'customers.customer_id = message_recipients.customer_id', 'left');
 		
-		$this->db->order_by('date', 'DESC');
+			$this->db->group_by('messages.message_id');
+			$this->db->order_by('messages.date_added', 'DESC');
 
-		$this->db->where('label', 'customers');
+			$this->db->where('message_recipients.customer_id', $customer_id);
+			$this->db->where('message_recipients.status', '1');
 
+			$query = $this->db->get();
+			$result = array();
+	
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+	
+			return $result;
+		}
+	}
+	
+	public function getMessage($message_id) {
+		if ($message_id) {
+			$this->db->from('messages');
+			$this->db->where('message_id', $message_id);
+
+			$query = $this->db->get();
+	
+			if ($query->num_rows() > 0) {
+				return $query->row_array();
+			}
+		}
+	}
+	
+	public function getMessageRecipients($message_id) {
+		if ($message_id) {
+			$this->db->select('*, message_recipients.staff_email, message_recipients.status');
+			$this->db->from('message_recipients');
+			$this->db->join('staffs', 'staffs.staff_id = message_recipients.staff_id', 'left');
+			$this->db->join('customers', 'customers.customer_id = message_recipients.customer_id', 'left');
+			$this->db->where('message_id', $message_id);
+
+			$query = $this->db->get();
+			$result = array();
+	
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+	
+			return $result;
+		}
+	}
+	
+	public function getMessageDates() {
+		$this->db->select('date_added, MONTH(date_added) as month, YEAR(date_added) as year');
+		$this->db->from('messages');
+		$this->db->group_by('MONTH(date_added)');
+		$this->db->group_by('YEAR(date_added)');
 		$query = $this->db->get();
 		$result = array();
-	
+
 		if ($query->num_rows() > 0) {
 			$result = $query->result_array();
 		}
-	
+
 		return $result;
 	}
 	
-	public function getMainInboxTotal() {
-		$this->db->from('messages');
-		
-		$this->db->where('label', 'customers');
+	public function viewAdminMessage($message_id, $staff_id = '') {
+		if (is_numeric($message_id)) {
+			$this->db->select('*, message_recipients.status, messages.date_added');
+			$this->db->from('messages');
+			$this->db->join('staffs', 'staffs.staff_id = messages.staff_id_from', 'left');
+			$this->db->join('message_recipients', 'message_recipients.message_id = messages.message_id', 'left');
+			$this->db->group_by('messages.message_id');
 
-		return $this->db->count_all_results();
+			if (is_numeric($staff_id)) {
+				$this->db->where('message_recipients.staff_id', $staff_id);
+				$this->db->where('message_recipients.message_id', $message_id);
+			} else {
+				$this->db->where('messages.message_id', $message_id);
+			}
+		
+			$query = $this->db->get();
+			return $query->row_array();
+		}
 	}
 	
-	public function viewAdminMessage($message_id) {
-		$this->db->from('messages');
-		$this->db->join('staffs', 'staffs.staff_id = messages.sender', 'left');
+	public function viewMainMessage($customer_id = '', $message_id) {
+		if (is_numeric($message_id) AND is_numeric($customer_id)) {
+			$this->db->select('*, message_recipients.status, messages.date_added');
+			$this->db->from('messages');
+			$this->db->join('message_recipients', 'message_recipients.message_id = messages.message_id', 'left');
+			$this->db->join('customers', 'customers.customer_id = message_recipients.customer_id', 'left');
 
-		$this->db->where('message_id', $message_id);
+			$this->db->where('messages.message_id', $message_id);
+			$this->db->where('messages.send_type', 'account');
+			$this->db->where('message_recipients.customer_id', $customer_id);
 		
-		$query = $this->db->get();
-		return $query->row_array();
+			$query = $this->db->get();
+			return $query->row_array();
+		}
 	}
 	
-	public function viewMessage($message_id) {
-		$this->db->from('messages');
+	public function getMainInboxTotal($customer_id = '') {
+		if (is_numeric($customer_id)) {
+			$this->db->from('messages');
+			$this->db->join('message_recipients', 'message_recipients.message_id = messages.message_id', 'left');
 
-		$this->db->where('message_id', $message_id);
-		
-		$query = $this->db->get();
-		return $query->row_array();
+			$this->db->where('message_recipients.customer_id', $customer_id);
+			$this->db->where('message_recipients.state', '0');
+			$this->db->where('message_recipients.status', '1');
+			$this->db->where('messages.send_type', 'account');
+
+			return $this->db->count_all_results();
+		}
 	}
 	
-	public function sendMessage($send_data = array()) {
+	public function updateMessageState($message_id, $staff_id, $state) {
+		$query = FALSE;
+
+		if (is_numeric($message_id) AND is_numeric($staff_id)) {
+			if ($state === 'trash') {
+				$this->db->set('status', '0');
+			} else if ($state === 'inbox') {
+				$this->db->set('status', '1');
+			} else if (is_numeric($state)) {
+				$this->db->set('state', $state);
+			}
+			
+			$this->db->where('message_id', $message_id);
+			$this->db->where('staff_id', $staff_id);
+			$query = $this->db->update('message_recipients');
+
+			return $query;
+		}
+	}
+
+	public function updateMainMessageState($message_id, $customer_id, $state) {
+		$query = FALSE;
 		
-		$current_time = time();
-		$this->db->set('date', mdate('%Y-%m-%d %H:%i:%s', $current_time));
+		if (is_numeric($message_id) AND is_numeric($customer_id)) {
+			if ($state === 'trash') {
+				$this->db->set('status', '0');
+			} else if ($state === 'inbox') {
+				$this->db->set('status', '1');
+			} else if (is_numeric($state)) {
+				$this->db->set('state', $state);
+			}
 			
-		if (!empty($send_data['sender'])) {
-			$this->db->set('sender', $send_data['sender']);
+			$this->db->where('message_id', $message_id);
+			$this->db->where('customer_id', $customer_id);
+
+			$query = $this->db->update('message_recipients');
+		}
+		
+		return $query;
+	}
+
+	public function addMessage($add = array(), $recipients = array()) {
+		$query = FALSE;
+		
+		if (!empty($add['staff_id_from'])) {
+			$this->db->set('staff_id_from', $add['staff_id_from']);
 		}
 			
-		if (!empty($send_data['staff_id'])) {
-			$this->db->set('staff_id', $send_data['staff_id']);
+		if (!empty($add['send_type'])) {
+			$this->db->set('send_type', $add['send_type']);
 		}
 			
-		if (!empty($send_data['receiver'])) {
-			$this->db->set('receiver', $send_data['receiver']);
+		if (!empty($add['recipient'])) {
+			$this->db->set('recipient', $add['recipient']);
 		}
 			
-		if (!empty($send_data['subject'])) {
-			$this->db->set('subject', $send_data['subject']);
+		if (!empty($add['subject'])) {
+			$this->db->set('subject', $add['subject']);
 		}
 			
-		if (!empty($send_data['label'])) {
-			$this->db->set('label', $send_data['label']);
+		if (!empty($add['body'])) {
+			$this->db->set('body', $add['body']);
 		}
 			
-		if (!empty($send_data['body'])) {
-			$this->db->set('body', $send_data['body']);
+		if (!empty($add['date_added'])) {
+			$this->db->set('date_added', $add['date_added']);
 		}
 			
-		$this->db->insert('messages');
+		$this->db->set('status', '1');
+		
+		if ($this->db->insert('messages')) {
+			$message_id = $this->db->insert_id();
+
+			$this->addMessageRecipients($message_id, $recipients, $add['send_type']);
 			
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
+			$query = $message_id;
+		}
+		
+		return $query;
+	}
+
+	public function addMessageRecipients($message_id, $recipients = array(), $send_type = 'account') {
+		if (is_numeric($message_id) AND !empty($recipients) AND is_array($recipients)) {
+			if (isset($recipients['customer_ids']) AND $send_type === 'account') {
+				foreach ($recipients['customer_ids'] as $customer_id) {
+					$this->db->set('customer_id', $customer_id);
+					$this->db->set('message_id', $message_id);
+					$this->db->set('status', '1');
+					$this->db->insert('message_recipients');
+				}
+			}
+			
+			if (isset($recipients['customer_emails']) AND $send_type === 'email') {
+				foreach ($recipients['customer_emails'] as $customer_email) {
+					$this->db->set('customer_email', $customer_email);
+					$this->db->set('message_id', $message_id);
+					$this->db->set('status', $this->_sendMail($message_id, $customer_email));
+					$this->db->insert('message_recipients');
+				}
+			}
+			
+			if (isset($recipients['staff_ids']) AND $send_type === 'account') {
+				foreach ($recipients['staff_ids'] as $staff_id) {
+					$this->db->set('staff_id', $staff_id);
+					$this->db->set('message_id', $message_id);
+					$this->db->set('status', '1');
+					$this->db->insert('message_recipients');
+				}
+			}
+			
+			if (isset($recipients['staff_emails']) AND $send_type === 'email') {
+				foreach ($recipients['staff_emails'] as $staff_email) {
+					$this->db->set('staff_email', $staff_email);
+					$this->db->set('message_id', $message_id);
+					$this->db->set('status', $this->_sendMail($message_id, $staff_email));
+					$this->db->insert('message_recipients');
+				}
+			}
 		}
 	}
 
 	public function deleteMessage($message_id) {
+		if (is_numeric($message_id)) {
+			$this->db->where('message_id', $message_id);
+			$this->db->delete('messages');
 
-		$this->db->where('message_id', $message_id);
+			if ($this->db->affected_rows() > 0) {
+				return TRUE;
+			}
+		}
+	}
 
-		$this->db->delete('messages');
+	public function _sendMail($message_id, $email) {
+		if (!empty($message_id) AND !empty($email)) {
+			$this->load->library('email');
+			$this->load->library('mail_template'); 
+		
+			$mail_data = $this->getMessage($message_id);
+			if ($mail_data) {
+				$this->email->set_protocol($this->config->item('protocol'));
+				$this->email->set_mailtype($this->config->item('mailtype'));
+				$this->email->set_smtp_host($this->config->item('smtp_host'));
+				$this->email->set_smtp_port($this->config->item('smtp_port'));
+				$this->email->set_smtp_user($this->config->item('smtp_user'));
+				$this->email->set_smtp_pass($this->config->item('smtp_pass'));
+				$this->email->set_newline("\r\n");
+				$this->email->initialize();
 
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
+				$this->email->from($this->config->item('site_email'), $this->config->item('site_name'));
+		
+				//$message = $this->mail_template->parseTemplate('order', $mail_data['body']);
+				$this->email->to(strtolower($email));
+				$this->email->subject($mail_data['subject']);
+				$this->email->message($mail_data['body']);
+			
+				if ( ! $this->email->send()) {
+					$notify = '0';
+				} else {
+					$notify = '1';
+				}			
+		
+				return $notify;
+			}
 		}
 	}
 }

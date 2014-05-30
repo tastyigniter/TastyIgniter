@@ -24,19 +24,36 @@ class Themes extends CI_Controller {
 			$data['alert'] = '';
 		}
 
-		$data['heading'] 			= 'Themes';
+		if ($this->input->get('name') AND $this->input->get('location') AND $this->input->get('default')) {
+			if (!file_exists(APPPATH .'views/themes/'.$this->input->get('location').'/'. $this->input->get('name'))) {
+				$this->session->set_flashdata('alert', '<p class="warning">Theme location can not be found!</p>');
+			}
+			
+			$theme_name = $this->input->get('name');
+			$theme_location = $this->input->get('location');
+		
+			if ($this->Settings_model->addSetting('themes', $theme_location.'_theme', $theme_name.'/', '0')) {
+				$this->session->set_flashdata('alert', '<p class="success">Theme set as default sucessfully!</p>');
+			}
+			
+			redirect('admin/themes');
+		}
+
+		$this->template->setTitle('Themes');
+		$this->template->setHeading('Themes');
+		
 		$data['text_empty'] 		= 'There are no themes available.';
 
 		$admin_default = $this->config->item('admin_theme');
 		$main_default = $this->config->item('main_theme');
 		
 		$themes = array();
-		$main_themes = glob(APPPATH .'/views/themes/main/*', GLOB_ONLYDIR);
+		$main_themes = glob(APPPATH .'views/themes/main/*', GLOB_ONLYDIR);
 		foreach ($main_themes as $theme) {
 			$themes[] = array('location' => 'main', 'name' => $theme);
 		}
 		
-		$admin_themes = glob(APPPATH .'/views/themes/admin/*', GLOB_ONLYDIR);
+		$admin_themes = glob(APPPATH .'views/themes/admin/*', GLOB_ONLYDIR);
 		foreach ($admin_themes as $theme) {
 			$themes[] = array('location' => 'admin', 'name' => $theme);
 		}
@@ -50,27 +67,26 @@ class Themes extends CI_Controller {
 			} else if ($theme_name === $main_default AND $theme['location'] === 'main') {
 				$default = '1';
 			} else {
-				$default = site_url('admin/themes/edit?name='). basename($theme['name']) .'&location='. $theme['location'] .'&default=1';
+				$default = site_url('admin/themes?default=1&name='. basename($theme['name']) .'&location='. $theme['location']);
 			}
 			
 			$data['themes'][] = array(
 				'name' 			=> ucwords(basename($theme['name'])),
-				'location' 		=> ucwords($theme['location']),
+				'location' 		=> ($theme['location'] === 'main') ? 'Front-End' : 'Administrator Panel',
 				'default'		=> $default,
 				'edit' 			=> site_url('admin/themes/edit?name='. basename($theme['name']) .'&location='. $theme['location'])
 			);		
 		}
 
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'themes.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'themes', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'themes', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'themes', $regions, $data);
+			$this->template->render('themes/admin/default/', 'themes', $data);
 		}
 	}
 
 	public function edit() {
-			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -94,27 +110,18 @@ class Themes extends CI_Controller {
 			$theme_name = $this->input->get('name');
 			$theme_location = $this->input->get('location');
 			$url .= 'name='. $theme_name .'&location='. $theme_location;
-			
-			if ($this->input->get('default') === '1') {
-				$this->Settings_model->addSetting('themes', $theme_location.'_theme', $theme_name.'/', '0');
-				$this->session->set_flashdata('alert', '<p class="success">Theme set as default sucessfully!</p>');
-				redirect('admin/themes');
-			}
-			
 		} else {
 			redirect('admin/themes');
 		}
 		
-		$data['heading'] 			= 'Themes - '. ucwords($theme_name);
-		$data['button_save'] 		= 'Save';
-		$data['button_save_close'] 	= 'Save & Close';
-		$data['sub_menu_back'] 		= site_url('admin/themes');
+		$this->template->setTitle('Theme: '. ucwords($theme_name));
+		$this->template->setHeading('Theme: '. ucwords($theme_name));
+		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('back_button', site_url('admin/themes'));
 
 		$data['name'] 				= ucwords($theme_name);
 		
-		$allowed_img = ($this->config->item('themes_allowed_img')) ? explode('|', $this->config->item('themes_allowed_img')) : array();
-		$allowed_file = ($this->config->item('themes_allowed_file')) ? explode('|', $this->config->item('themes_allowed_file')) : array();
-
 		$data['theme_files'] = array();
 		if (file_exists(APPPATH .'views/themes/'. $theme_location .'/'. $theme_name .'/')) {
 			$theme_path = $theme_folder = APPPATH .'views/themes/'. $theme_location .'/'. $theme_name .'/';
@@ -122,9 +129,10 @@ class Themes extends CI_Controller {
 			$data['theme_files'] = $this->themeTree($theme_path, $tree_link);
 		}
 		
-		
-		$data['text_file_heading'] = '';
-		$data['file_content'] = '';
+		$allowed_img = ($this->config->item('themes_allowed_img')) ? explode('|', $this->config->item('themes_allowed_img')) : array();
+		$allowed_file = ($this->config->item('themes_allowed_file')) ? explode('|', $this->config->item('themes_allowed_file')) : array();
+
+		$data['text_file_heading'] = $data['file_content'] = '';
 		if ($this->input->get('file')) {
 			$url .= '&file='. $this->input->get('file');
 			$file_path = APPPATH .'views/themes/'. $theme_location .'/'. $theme_name. $this->input->get('file');
@@ -161,17 +169,17 @@ class Themes extends CI_Controller {
 			redirect('admin/themes/edit'. $url);
 		}
 
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'themes_edit.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'themes_edit', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'themes_edit', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'themes_edit', $regions, $data);
+			$this->template->render('themes/admin/default/', 'themes_edit', $data);
 		}
 	}
 
 	public function themeTree($directory, $return_link) {
 		$code = '';
-		if ( substr($directory, -1) == "/" ) {
+		if (substr($directory, -1) == "/") {
 			$directory = substr($directory, 0, strlen($directory) - 1);
 		}
 		

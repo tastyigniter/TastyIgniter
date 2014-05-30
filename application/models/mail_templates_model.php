@@ -3,6 +3,7 @@ class Mail_templates_model extends CI_Model {
 
 	public function getList() {
 		$this->db->from('mail_templates');
+		$this->db->order_by('template_id', 'ASC');
 		
 		$query = $this->db->get();
 		$result = array();
@@ -33,6 +34,7 @@ class Mail_templates_model extends CI_Model {
 
 		if ($template_id) {
 			$this->db->from('mail_templates_data');
+			$this->db->order_by('template_data_id', 'ASC');
 			$this->db->where('template_id', $template_id);
 
 			$query = $this->db->get();
@@ -101,12 +103,8 @@ class Mail_templates_model extends CI_Model {
 		
 		if (!empty($update['template_id'])) {
 			$this->db->where('template_id', $update['template_id']);
-			$this->db->update('mail_templates');			
+			$query = $this->db->update('mail_templates');			
 		}		
-
-		if ($this->db->affected_rows() > 0) {
-			$query = TRUE;
-		}
 
 		return $query;
 	}
@@ -129,17 +127,14 @@ class Mail_templates_model extends CI_Model {
 		if (!empty($update['template_id']) AND !empty($update['code'])) {
 			$this->db->where('template_id', $update['template_id']);
 			$this->db->where('code', $update['code']);
-			$this->db->update('mail_templates_data');			
+			$query = $this->db->update('mail_templates_data');			
 		}		
-
-		if ($this->db->affected_rows() > 0) {
-			$query = TRUE;
-		}
 
 		return $query;
 	}
 
 	public function addTemplate($add = array()) {
+		$query = FALSE;
 
 		if (!empty($add['name'])) {
 			$this->db->set('name', $add['name']);
@@ -163,24 +158,26 @@ class Mail_templates_model extends CI_Model {
 			$this->db->set('status', '0');
 		}
 		
-		$this->db->insert('mail_templates');			
+		if (!empty($add)) {
+			if ($this->db->insert('mail_templates')) {			
+				$template_id = $this->db->insert_id();
+				$templates = $this->getAllTemplateData($add['clone_template_id']);
+				foreach ($templates as $template) {
+					$this->db->set('template_id', $template_id);
+					$this->db->set('code', $template['code']);
+					$this->db->set('subject', $template['subject']);
+					$this->db->set('body', $template['body']);
+					$this->db->set('date_added', $add['date_added']);
+					$this->db->set('date_updated', $add['date_updated']);
 
-		if ($this->db->affected_rows() > 0) {
-			$template_id = $this->db->insert_id();
-			$templates = $this->getAllTemplateData($add['clone_template_id']);
-			foreach ($templates as $template) {
-				$this->db->set('template_id', $template_id);
-				$this->db->set('code', $template['code']);
-				$this->db->set('subject', $template['subject']);
-				$this->db->set('body', $template['body']);
-				$this->db->set('date_added', $add['date_added']);
-				$this->db->set('date_updated', $add['date_updated']);
+					$query = $this->db->insert('mail_templates_data');			
+				}
 
-				$this->db->insert('mail_templates_data');			
+				$query = $template_id;
 			}
-			
-			return TRUE;
 		}
+		
+		return $query;
 	}
 
 	public function deleteTemplate($template_id) {

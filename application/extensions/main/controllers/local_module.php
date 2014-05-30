@@ -6,11 +6,11 @@ class Local_module extends MX_Controller {
 		parent::__construct(); 																	// calls the constructor
 		$this->load->library('location'); 														// load the location library
 		$this->load->library('currency'); 														// load the location library
+		$this->load->library('language');
+		$this->lang->load('main/local_module', $this->language->folder());
 	}
 
 	public function index() {
-		$this->lang->load('main/local_module');  														// loads language file
-		
 		if ( !file_exists(EXTPATH .'main/views/local_module.php')) { 								//check if file exists in views folder
 			show_404(); 																		// Whoops, show 404 error page!
 		}
@@ -106,7 +106,6 @@ class Local_module extends MX_Controller {
 
 	public function distance() {
 		$this->load->library('user_agent');
-		$this->lang->load('main/local_module');  														// loads home language file
 		$json = array();
 		$error = 0;
 		

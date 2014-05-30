@@ -23,8 +23,10 @@ class Security_questions extends CI_Controller {
 			$data['alert'] = '';
 		}
 
-		$data['heading'] 			= 'Security Questions';
-		$data['button_save'] 		= 'Save';
+		$this->template->setTitle('Security Questions');
+		$this->template->setHeading('Security Questions');
+		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
+
 		$data['text_empty'] 		= 'There are no security questions, please add!.';
 
 		//load questions data into array
@@ -43,15 +45,15 @@ class Security_questions extends CI_Controller {
 			);
 		}
 
-		if ($this->input->post() && $this->_updateSecurityQuestion() === TRUE){
+		if ($this->input->post() AND $this->_updateSecurityQuestion() === TRUE){
 			redirect('admin/security_questions');
 		}
 
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'security_questions.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'security_questions', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'security_questions', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'security_questions', $regions, $data);
+			$this->template->render('themes/admin/default/', 'security_questions', $data);
 		}
 	}
 
@@ -63,9 +65,9 @@ class Security_questions extends CI_Controller {
 			$questions = $this->input->post('questions');
 
 			if ($this->Security_questions_model->updateQuestions($questions)) {
-				$this->session->set_flashdata('alert', '<p class="success">Security Question Updated Sucessfully!</p>');
+				$this->session->set_flashdata('alert', '<p class="success">Security Question updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');				
 			}
 	
 			return TRUE;

@@ -128,7 +128,6 @@
 						</div>
 					</div>	
 				<?php } ?>
-				<?php echo $test_check; ?>
 				<div class="grid-box">	    
 					<?php if ($files_error) { ?>
 						<br/>
@@ -624,7 +623,8 @@
 			$('.form-content', dialog.data[0]).html('<input type="text" id="new-name" class="form-input" name="name" tabindex="1001" value="' + f_name + '" />');
 			$('#modalBox .form-ok').on('click', function(e) {
 				e.preventDefault();
-				var data_path = $.trim(figure.attr('data-path'));
+				var sub_folder = $.trim($('#sub_folder').val());
+				var file_name = $.trim(figure.attr('data-name'));
 				var new_name = $('#new-name').val();
 				new_name = fixFilename(new_name);
 				if (new_name !== null){
@@ -632,7 +632,7 @@
 						$.ajax({
 							type: 'POST',
 							url: js_site_url('admin/image_manager/rename'),
-							data: {data_path: data_path, name: new_name},
+							data: {sub_folder: sub_folder, file_name: file_name, new_name: new_name},
 							dataType: 'json',
 							success: function(json) { showSuccess(json) }
 						});
@@ -657,7 +657,7 @@
 						$('#notification').empty();
 					});
 					window.location.href = refresh_url;
-				}, 3000);
+				}, 2000);
 			}
 		}
 		//--></script>

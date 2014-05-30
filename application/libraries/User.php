@@ -10,6 +10,7 @@ class User {
 	private $staff_group_id;
 	private $location_id;
 	private $location_name;
+	private $location_access;
 	
 	public function __construct() {
 		$this->CI =& get_instance();
@@ -33,7 +34,6 @@ class User {
 			$row = $query->row_array();
 			
 			if ($query->num_rows() === 1) {
-
 				$this->CI->user_id 			= $row['user_id'];
 				$this->CI->username			= $row['username'];
 				$this->CI->staff_id 		= $row['staff_id'];
@@ -43,6 +43,7 @@ class User {
 
 				$this->CI->staff_group_id 	= $row['staff_group_id'];
 				$this->CI->staff_group 		= $row['staff_group_name'];
+				$this->CI->location_access 	= $row['location_access'];
 			
 				if (!empty($row['permission'])) {
 					$permission = unserialize($row['permission']);
@@ -53,7 +54,6 @@ class User {
 						}
 					}
 				}
-
 			} else {
 				$this->logout();
 			}
@@ -61,7 +61,6 @@ class User {
 	}
 
 	public function login($user, $password) {
-
 		$this->CI->db->from('users');	
 		$this->CI->db->join('staffs', 'staffs.staff_id = users.staff_id', 'left');
 		
@@ -71,12 +70,10 @@ class User {
 		
 		$query = $this->CI->db->get();
 		
-		$row = $query->row_array();
-		
 		//Login Successful 
 		if ($query->num_rows() === 1) {
+			$row = $query->row_array();
 
-			//add login into session
 			$user_data = array(
 				'user_id'  			=> $row['user_id'],
 				'username'     		=> $row['username']
@@ -90,8 +87,7 @@ class User {
 			$this->CI->staff_name 	= $row['staff_name'];
 
 	  		return TRUE;
-		//Login failed and field empty
-		}else {
+		} else {
       		return FALSE;
 		}
 	}
@@ -145,28 +141,9 @@ class User {
     	return $this->CI->staff_group_id;
   	}	
 
-  	public function getPaths() {
-		$ignore_path = array(
-			'admin/login',
-			'admin/logout',
-			'admin/dashboard',
-			'common/forgotten'
-		);
-	
-		$files = glob(APPPATH .'/controllers/admin/*.php');
-		$extension_files = glob(APPPATH .'extensions/admin/controllers/*.php');
-	
-		$paths = array();
-		foreach (array_merge($files, $extension_files) as $file) {
-			$file_name = 'admin/'. basename($file, '.php');
-
-			if (!in_array($file_name, $ignore_path)) {
-				$paths[] = $file_name;
-			}
-		}
-
-		return $paths;
-	}
+  	public function staffLocationAccess() {
+    	return $this->CI->location_access;
+  	}	
 
   	public function hasPermissions($key, $value) {
     	if (isset($this->CI->permissions[$key])) {

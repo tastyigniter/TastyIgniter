@@ -8,11 +8,11 @@ class Address extends MX_Controller {
 		$this->load->model('Customers_model');													// load the customers model
 		$this->load->model('Locations_model'); 													// load the locations model
 		$this->load->model('Countries_model');
+		$this->load->library('language');
+		$this->lang->load('main/address', $this->language->folder());
 	}
 
 	public function index() {
-		$this->lang->load('main/address');  													// loads language file
-		
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
@@ -24,6 +24,8 @@ class Address extends MX_Controller {
 		}
 
 		// START of retrieving lines from language file to pass to view.
+		$this->template->setTitle($this->lang->line('text_heading'));
+		$this->template->setHeading($this->lang->line('text_heading'));
 		$data['text_heading'] 			= $this->lang->line('text_heading');
 		$data['text_edit_address'] 		= $this->lang->line('text_edit_address');
 		$data['text_no_address'] 		= $this->lang->line('text_no_address');
@@ -56,17 +58,15 @@ class Address extends MX_Controller {
 			}
 		}
 		
-		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'address.php')) {
-			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'address', $regions, $data);
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'address', $data);
 		} else {
-			$this->template->render('themes/main/default/', 'address', $regions, $data);
+			$this->template->render('themes/main/default/', 'address', $data);
 		}
 	}
 
 	public function edit() {																	// method to edit customer address
-		$this->lang->load('main/address');  													// loads language file
-		
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
@@ -87,10 +87,9 @@ class Address extends MX_Controller {
 			$data['action']	= site_url('main/address/edit');
 		}
 
-		$this->load->model('Messages_model');													// load the customers model
-		$inbox_total = $this->Messages_model->getMainInboxTotal();					// retrieve total number of customer messages from getMainInboxTotal method in Messages model
-
 		// START of retrieving lines from language file to pass to view.
+		$this->template->setTitle($this->lang->line('text_edit_heading'));
+		$this->template->setHeading($this->lang->line('text_edit_heading'));
 		$data['text_heading'] 			= $this->lang->line('text_edit_heading');
 		$data['text_edit_address'] 		= $this->lang->line('text_edit_address');
 		$data['text_new_address'] 		= $this->lang->line('text_new_address');
@@ -144,11 +143,11 @@ class Address extends MX_Controller {
 			redirect('account/address');
 		}
 
-		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'address_edit.php')) {
-			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'address_edit', $regions, $data);
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'address_edit', $data);
 		} else {
-			$this->template->render('themes/main/default/', 'address_edit', $regions, $data);
+			$this->template->render('themes/main/default/', 'address_edit', $data);
 		}
 	}
 	

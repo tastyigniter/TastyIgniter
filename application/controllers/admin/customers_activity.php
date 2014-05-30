@@ -33,56 +33,45 @@ class Customers_activity extends CI_Controller {
 		}
 				
 		if ($this->input->get('filter_search')) {
-			$filter['filter_search'] = $this->input->get('filter_search');
-			$data['filter_search'] = $filter['filter_search'];
+			$filter['filter_search'] = $data['filter_search'] = $this->input->get('filter_search');
 		} else {
-			$filter['filter_search'] = '';
 			$data['filter_search'] = '';
 		}
 		
 		if ($this->input->get('filter_type')) {
-			$filter['filter_type'] = $this->input->get('filter_type');
-			$data['filter_type'] = $filter['filter_type'];
+			$filter['time_out'] = mdate('%Y-%m-%d %H:%i:%s', time() - 120);
+			$filter['filter_type'] = $data['filter_type'] = $this->input->get('filter_type');
 			$url .= 'filter_type='.$filter['filter_type'].'&';
 		} else {
-			$filter['filter_type'] = '';
-			$data['filter_type'] = '';
+			$filter['filter_type'] = $data['filter_type'] = '';
 		}
 		
 		if ($this->input->get('filter_access')) {
-			$filter['filter_access'] = $this->input->get('filter_access');
-			$data['filter_access'] = $filter['filter_access'];
+			$filter['filter_access'] = $data['filter_access'] = $this->input->get('filter_access');
 			$url .= 'filter_access='.$filter['filter_access'].'&';
 		} else {
-			$filter['filter_access'] = '';
-			$data['filter_access'] = '';
+			$filter['filter_access'] = $data['filter_access'] = '';
 		}
 		
 		if ($this->input->get('filter_date')) {
-			$filter['filter_date'] = $this->input->get('filter_date');
-			$data['filter_date'] = $filter['filter_date'];
+			$filter['filter_date'] = $data['filter_date'] = $this->input->get('filter_date');
 			$url .= 'filter_date='.$filter['filter_date'].'&';
 		} else {
-			$filter['filter_date'] = '';
-			$data['filter_date'] = '';
+			$filter['filter_date'] = $data['filter_date'] = '';
 		}
 		
 		if ($this->input->get('sort_by')) {
-			$filter['sort_by'] = $this->input->get('sort_by');
-			$data['sort_by'] = $filter['sort_by'];
+			$filter['sort_by'] = $data['sort_by'] = $this->input->get('sort_by');
 		} else {
-			$filter['sort_by'] = '';
-			$data['sort_by'] = '';
+			$filter['sort_by'] = $data['sort_by'] = '';
 		}
 		
 		if ($this->input->get('order_by')) {
-			$filter['order_by'] = $this->input->get('order_by');
-			$data['order_by_active'] = strtolower($this->input->get('order_by')) .' active';
-			$data['order_by'] = strtolower($this->input->get('order_by'));
+			$filter['order_by'] = $data['order_by'] = $this->input->get('order_by');
+			$data['order_by_active'] = $this->input->get('order_by') .' active';
 		} else {
-			$filter['order_by'] = '';
+			$filter['order_by'] = $data['order_by'] = 'DESC';
 			$data['order_by_active'] = '';
-			$data['order_by'] = 'desc';
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -91,17 +80,28 @@ class Customers_activity extends CI_Controller {
 			$data['alert'] = '';
 		}
 
-		$data['heading'] 			= 'Activities';
-		$data['text_empty'] 		= 'There are no customer activity available.';
-		
-		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'DESC') ? 'ASC' : 'DESC';
+		$this->template->setTitle('Activities');
+		$this->template->setHeading('Activities');
+		$this->template->setButton('Delete', array('class' => 'delete_button', 'onclick' => '$(\'form:not(#filter-form)\').submit();'));
+
+		if ($this->input->get('filter_type') === 'online') {
+			$data['text_empty'] 	= 'There are no online customer activity available.';
+		} else {
+			$data['text_empty'] 	= 'There are no customer activity available.';
+		}
+			
+		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_date'] 			= site_url('admin/customers_activity'.$url.'sort_by=date_added&order_by='.$order_by);
 
 		$activities = $this->Activity_model->getList($filter);
 		
 		$data['activities'] = array();
 		foreach ($activities as $activity) {
+			$country_code = ($activity['country_code']) ? strtolower($activity['country_code']) : 'nn';
+			$country_name = ($activity['country_name']) ? $activity['country_name'] : 'Private';
+			
 			$data['activities'][] = array(
+				'activity_id' 		=> $activity['activity_id'],
 				'ip_address' 		=> $activity['ip_address'],
 				'customer_name'		=> ($activity['customer_id']) ? $activity['first_name'] .' '. $activity['last_name'] : 'Guest',
 				'access_type'		=> ucwords($activity['access_type']),
@@ -109,6 +109,8 @@ class Customers_activity extends CI_Controller {
 				'request_uri'		=> (!empty($activity['request_uri'])) ? $activity['request_uri'] : '--',
 				'referrer_uri'		=> (!empty($activity['referrer_uri'])) ? $activity['referrer_uri'] : '--',
 				'date_added'		=> mdate('%d %M %y - %H:%i', strtotime($activity['date_added'])),
+				'country_code'		=> base_url('assets/img/flags/'. $country_code .'.png'),
+				'country_name'		=> $country_name,
 				'blacklist' 		=> site_url('admin/customers_activity/blacklist?ip=' . $activity['ip_address'])
 			);
 		}
@@ -121,7 +123,7 @@ class Customers_activity extends CI_Controller {
 			$data['activity_dates'][$month_year] = mdate('%F %Y', strtotime($date['date_added']));
 		}
 
-		if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+		if ($this->input->get('sort_by') AND $this->input->get('order_by')) {
 			$url .= 'sort_by='.$filter['sort_by'].'&';
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
@@ -137,11 +139,15 @@ class Customers_activity extends CI_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 			
-		$regions = array('header', 'footer');
+		if ($this->input->post('delete') AND $this->_deleteActivity() === TRUE) {
+			redirect('admin/customers_activity');  			
+		}	
+
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'customers_activity.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'customers_activity', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'customers_activity', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'customers_activity', $regions, $data);
+			$this->template->render('themes/admin/default/', 'customers_activity', $data);
 		}
 	}
 	
@@ -149,17 +155,26 @@ class Customers_activity extends CI_Controller {
     	if ( ! $this->user->hasPermissions('modify', 'admin/customers_activity')) {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
     	} else if ($this->input->get('extension')) { 
-    		$extension = $this->input->get('extension');
-    		$split = explode('_', $extension);
-    		
-    		//$this->Extensions_model->uninstall($split[1], $split[0]);
-			//$this->Settings_model->deleteSettings($split[0]);
 			
 			$this->session->set_flashdata('alert', '<p class="success">Extension Uninstalled Sucessfully!</p>');				
 		}
 		
 		redirect('admin/customers_activity');
 	}	
+	
+	public function _deleteActivity() {
+    	if (!$this->user->hasPermissions('modify', 'admin/customers_activity')) {
+			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
+    	} else if (is_array($this->input->post('delete'))) {
+			foreach ($this->input->post('delete') as $key => $activity_id) {
+				$this->Activity_model->deleteActivity($activity_id);
+			}			
+		
+			$this->session->set_flashdata('alert', '<p class="success">Activity(s) deleted sucessfully!</p>');
+		}
+				
+		return TRUE;
+	}
 }
 
 /* End of file customers_activity.php */

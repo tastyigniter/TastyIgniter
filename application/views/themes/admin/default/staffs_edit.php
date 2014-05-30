@@ -1,4 +1,14 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div id="update-box" class="content">
 	<form accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
 		<div class="wrap_heading">
@@ -21,7 +31,7 @@
 					</tr>
 					<tr>
 						<td><b>Username:</b></td>
-						<td><input type="text" name="username" value="<?php echo set_value('username', $username); ?>" id="username" class="textfield" /></td>
+						<td><input type="text" name="username" value="<?php echo set_value('username', $username); ?>" class="textfield" /></td>
 					</tr>
 					<tr>
 						<td><b>Password:</b><br />
@@ -50,6 +60,7 @@
 		<div id="basic-settings" class="wrap_content" style="display:none;">
 			<table class="form">
 				<tbody>
+					<?php if (!$staff_profile) { ?>
 					<tr>
 						<td><b>Staff Group:</b></td>
 						<td><select name="staff_group">
@@ -76,6 +87,7 @@
 						<?php } ?>  
 						</select></td>
 					</tr>
+					<?php } ?>  
 					<tr>
 						<td><b>Timezone:</b></td>
 						<td><select name="timezone">
@@ -106,6 +118,7 @@
 			</table>
 		</div>
 	</form>
+	</div>
 	</div>
 </div>
 <script type="text/javascript"><!--

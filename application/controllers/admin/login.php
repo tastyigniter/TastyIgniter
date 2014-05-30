@@ -15,19 +15,19 @@ class Login extends CI_Controller {
 			$data['alert'] = '';
 		}
 
-		$data['heading'] = 'Adminstrator Login'; 
-		
+		$this->template->setTitle('Login');
+
 		if ($this->user->islogged()) {  
   			redirect('admin/dashboard');
 		}
 
 		$this->validateForm();
 		
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'login.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'login', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'login', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'login', $regions, $data);
+			$this->template->render('themes/admin/default/', 'login', $data);
 		}
 	}
 

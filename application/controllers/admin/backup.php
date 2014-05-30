@@ -24,8 +24,9 @@ class Backup extends CI_Controller {
 			$data['alert'] = '';
 		}
 
-		$data['heading'] 			= 'Backup';
-		$data['button_save'] 		= 'Backup';
+		$this->template->setTitle('Backup');
+		$this->template->setHeading('Backup');
+		$this->template->setButton('Backup', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
 
 		$data['db_tables'] = $this->Settings_model->getdbTables();
 		
@@ -33,11 +34,11 @@ class Backup extends CI_Controller {
 			redirect('admin/backup');		
 		}
 		
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'backup.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'backup', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'backup', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'backup', $regions, $data);
+			$this->template->render('themes/admin/default/', 'backup', $data);
 		}
 	}
 

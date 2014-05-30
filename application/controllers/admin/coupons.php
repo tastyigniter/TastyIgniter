@@ -37,55 +37,48 @@ class Coupons extends CI_Controller {
 		}
 				
 		if ($this->input->get('filter_search')) {
-			$filter['filter_search'] = $this->input->get('filter_search');
-			$data['filter_search'] = $filter['filter_search'];
+			$filter['filter_search'] = $data['filter_search'] = $this->input->get('filter_search');
 			$url .= 'filter_search='.$filter['filter_search'].'&';
 		} else {
 			$data['filter_search'] = '';
 		}
 		
 		if ($this->input->get('filter_type')) {
-			$filter['filter_type'] = $this->input->get('filter_type');
-			$data['filter_type'] = $filter['filter_type'];
+			$filter['filter_type'] = $data['filter_type'] = $this->input->get('filter_type');
 			$url .= 'filter_type='.$filter['filter_type'].'&';
 		} else {
-			$filter['filter_type'] = '';
-			$data['filter_type'] = '';
+			$filter['filter_type'] = $data['filter_type'] = '';
 		}
 		
 		if (is_numeric($this->input->get('filter_status'))) {
-			$filter['filter_status'] = $this->input->get('filter_status');
-			$data['filter_status'] = $filter['filter_status'];
+			$filter['filter_status'] = $data['filter_status'] = $this->input->get('filter_status');
 			$url .= 'filter_status='.$filter['filter_status'].'&';
 		} else {
-			$filter['filter_status'] = '';
-			$data['filter_status'] = '';
+			$filter['filter_status'] = $data['filter_status'] = '';
 		}
 		
 		if ($this->input->get('sort_by')) {
-			$filter['sort_by'] = $this->input->get('sort_by');
-			$data['sort_by'] = $filter['sort_by'];
+			$filter['sort_by'] = $data['sort_by'] = $this->input->get('sort_by');
 		} else {
-			$filter['sort_by'] = '';
-			$data['sort_by'] = '';
+			$filter['sort_by'] = $data['sort_by'] = 'coupon_id';
 		}
 		
 		if ($this->input->get('order_by')) {
-			$filter['order_by'] = $this->input->get('order_by');
-			$data['order_by_active'] = strtolower($this->input->get('order_by')) .' active';
-			$data['order_by'] = strtolower($this->input->get('order_by'));
+			$filter['order_by'] = $data['order_by'] = $this->input->get('order_by');
+			$data['order_by_active'] = $this->input->get('order_by') .' active';
 		} else {
-			$filter['order_by'] = '';
-			$data['order_by_active'] = '';
-			$data['order_by'] = 'desc';
+			$filter['order_by'] = $data['order_by'] = 'DESC';
+			$data['order_by_active'] = 'DESC';
 		}
 		
-		$data['heading'] 			= 'Coupons';
-		$data['button_add'] 		= 'New';
-		$data['button_delete'] 		= 'Delete';
+		$this->template->setTitle('Coupons');
+		$this->template->setHeading('Coupons');
+		$this->template->setButton('+ New', array('class' => 'add_button', 'href' => page_url() .'/edit'));
+		$this->template->setButton('Delete', array('class' => 'delete_button', 'onclick' => '$(\'form:not(#filter-form)\').submit();'));
+
 		$data['text_empty'] 		= 'There are no coupons available.';
 
-		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'DESC') ? 'ASC' : 'DESC';
+		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_name'] 			= site_url('admin/coupons'.$url.'sort_by=name&order_by='.$order_by);
 		$data['sort_code'] 			= site_url('admin/coupons'.$url.'sort_by=code&order_by='.$order_by);
 		$data['sort_type'] 			= site_url('admin/coupons'.$url.'sort_by=type&order_by='.$order_by);
@@ -99,15 +92,15 @@ class Coupons extends CI_Controller {
 				'name'			=> $result['name'],
 				'code'			=> $result['code'],
 				'type'			=> ($result['type'] === 'P') ? 'Percentage' : 'Fixed Amount',
-				'discount'		=> $result['discount'],
+				'discount'		=> ($result['type'] === 'P') ? round($result['discount']) .'%' : $result['discount'],
 				'min_total'		=> $result['min_total'],
 				'description'	=> $result['description'],
-				'status'		=> $result['status'],
+				'status'		=> ($result['status'] === '1') ? 'Enabled' : 'Disabled',
 				'edit' 			=> site_url('admin/coupons/edit?id=' . $result['coupon_id'])
 			);
 		}
 
-		if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+		if ($this->input->get('sort_by') AND $this->input->get('order_by')) {
 			$url .= 'sort_by='.$filter['sort_by'].'&';
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
@@ -123,20 +116,19 @@ class Coupons extends CI_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		if ($this->input->post('delete') && $this->_deleteCoupon() === TRUE) {
+		if ($this->input->post('delete') AND $this->_deleteCoupon() === TRUE) {
 			redirect('admin/coupons');  			
 		}	
 
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'coupons.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'coupons', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'coupons', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'coupons', $regions, $data);
+			$this->template->render('themes/admin/default/', 'coupons', $data);
 		}
 	}
 
 	public function edit() {
-
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -151,7 +143,6 @@ class Coupons extends CI_Controller {
 			$data['alert'] = '';
 		}		
 		
-		//check if /rating_id is set in uri string
 		if (is_numeric($this->input->get('id'))) {
 			$coupon_id = $this->input->get('id');
 			$data['action']	= site_url('admin/coupons/edit?id='. $coupon_id);
@@ -162,10 +153,13 @@ class Coupons extends CI_Controller {
 		
 		$result = $this->Coupons_model->getCoupon($coupon_id);
 		
-		$data['heading'] 			= 'Coupon - '. $result['name'];
-		$data['button_save'] 		= 'Save';
-		$data['button_save_close'] 	= 'Save & Close';
-		$data['sub_menu_back'] 		= site_url('admin/coupons');
+		$title = (isset($result['name'])) ? 'Edit - '. $result['name'] : 'New';	
+		$this->template->setTitle('Coupon: '. $title);
+		$this->template->setHeading('Coupon: '. $title);
+		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('back_button', site_url('admin/coupons'));
+
 		$data['text_empty'] 		= 'There is no history available for this coupon.';
 
 		$data['coupon_id'] 			= $result['coupon_id'];
@@ -197,12 +191,15 @@ class Coupons extends CI_Controller {
 			);
 		}
 
-		if ($this->input->post() && $this->_addCoupon() === TRUE) {
-		
-			redirect('admin/coupons');  			
+		if ($this->input->post() AND $this->_addCoupon() === TRUE) {
+			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {	
+				redirect('admin/coupons/edit?id='. $this->input->post('insert_id'));
+			} else {
+				redirect('admin/coupons');
+			}
 		}
 
-		if ($this->input->post() && $this->_updateCoupon() === TRUE) {
+		if ($this->input->post() AND $this->_updateCoupon() === TRUE) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('admin/coupons');
 			}
@@ -210,11 +207,11 @@ class Coupons extends CI_Controller {
 			redirect('admin/coupons/edit?id='. $coupon_id);
 		}
 				
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'coupons_edit.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'coupons_edit', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'coupons_edit', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'coupons_edit', $regions, $data);
+			$this->template->render('themes/admin/default/', 'coupons_edit', $data);
 		}
 	}
 
@@ -222,9 +219,7 @@ class Coupons extends CI_Controller {
     	if (!$this->user->hasPermissions('modify', 'admin/coupons')) {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add!</p>');
   			return TRUE;
-    	} else if ( ! $this->input->get('id') AND $this->validateForm() === TRUE) { 
-			$time_format = '%h:%i';
-			$current_date_time = time();
+    	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$add = array();
 			
 			$add['name'] 			= $this->input->post('name');
@@ -237,13 +232,12 @@ class Coupons extends CI_Controller {
 			$add['description'] 	= $this->input->post('description');
 			$add['start_date'] 		= $this->input->post('start_date');
 			$add['end_date'] 		= $this->input->post('end_date');
-			$add['date_added'] 		= mdate($time_format, $current_date_time);
 			$add['status'] 			= $this->input->post('status');
 
-			if ($this->Coupons_model->addCoupon($add)) {	
-				$this->session->set_flashdata('alert', '<p class="success">Coupon Added Sucessfully!</p>');
+			if ($_POST['insert_id'] = $this->Coupons_model->addCoupon($add)) {	
+				$this->session->set_flashdata('alert', '<p class="success">Coupon added sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');				
 			}
 		
 			return TRUE;
@@ -254,7 +248,7 @@ class Coupons extends CI_Controller {
     	if (!$this->user->hasPermissions('modify', 'admin/coupons')) {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
   			return TRUE;
-    	} else if ($this->input->get('id') AND $this->validateForm() === TRUE) { 
+    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$update = array();
 			
 			$update['coupon_id'] 		= $this->input->get('id');
@@ -271,9 +265,9 @@ class Coupons extends CI_Controller {
 			$update['status'] 			= $this->input->post('status');	
 
 			if ($this->Coupons_model->updateCoupon($update)) {	
-				$this->session->set_flashdata('alert', '<p class="success">Coupon Updated Sucessfully!</p>');
+				$this->session->set_flashdata('alert', '<p class="success">Coupon updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');				
 			}
 		
 			return TRUE;
@@ -283,15 +277,12 @@ class Coupons extends CI_Controller {
 	public function _deleteCoupon() {
     	if (!$this->user->hasPermissions('modify', 'admin/coupons')) {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
-    	} else { 
-			if (is_array($this->input->post('delete'))) {
-				foreach ($this->input->post('delete') as $key => $value) {
-					$coupon_id = $value;
-					$this->Coupons_model->deleteCoupon($coupon_id);
-				}			
-			
-				$this->session->set_flashdata('alert', '<p class="success">Coupon(s) Deleted Sucessfully!</p>');
-			}
+    	} else if (is_array($this->input->post('delete'))) {
+			foreach ($this->input->post('delete') as $key => $value) {
+				$this->Coupons_model->deleteCoupon($value);
+			}			
+		
+			$this->session->set_flashdata('alert', '<p class="success">Coupon(s) deleted sucessfully!</p>');
 		}
 				
 		return TRUE;

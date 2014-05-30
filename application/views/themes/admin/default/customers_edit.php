@@ -1,4 +1,14 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div id="update-box" class="content">
 	<form accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
 		<div class="wrap_heading">
@@ -56,6 +66,29 @@
 						<td><input type="text" name="security_answer" value="<?php echo set_value('security_answer', $security_answer); ?>" class="textfield" /></td>
 					</tr>
 					<tr>
+						<td><b>Newsletter:</b></td>
+						<td><select name="newsletter">
+							<option value="0" <?php echo set_select('newsletter', '0'); ?> >Disabled</option>
+						<?php if ($newsletter === '1') { ?>
+							<option value="1" <?php echo set_select('newsletter', '1', TRUE); ?> >Enabled</option>
+						<?php } else { ?>  
+							<option value="1" <?php echo set_select('newsletter', '1'); ?> >Enabled</option>
+						<?php } ?>  
+						</select></td>
+					</tr>
+					<tr>
+						<td><b>Customer Group:</b></td>
+						<td><select name="customer_group_id">
+						<?php foreach ($customer_groups as $customer_group) { ?>
+						<?php if ($customer_group['customer_group_id'] === $customer_group_id) { ?>
+							<option value="<?php echo $customer_group['customer_group_id']; ?>" <?php echo set_select('customer_group_id', $customer_group['customer_group_id'], TRUE); ?> ><?php echo $customer_group['group_name']; ?></option>
+						<?php } else { ?>  
+							<option value="<?php echo $customer_group['customer_group_id']; ?>" <?php echo set_select('customer_group_id', $customer_group['customer_group_id']); ?> ><?php echo $customer_group['group_name']; ?></option>
+						<?php } ?>  
+						<?php } ?>  
+						</select></td>
+					</tr>
+					<tr>
 						<td><b>Status:</b></td>
 						<td><select name="status">
 							<option value="0" <?php echo set_select('status', '0'); ?> >Disabled</option>
@@ -74,10 +107,10 @@
 			<ul id="sub-tabs">
 				<?php $table_row = 1; ?>
 				<?php foreach ($addresses as $address) { ?>
-					<li><a rel="#address<?php echo $table_row; ?>">Address <?php echo $table_row; ?><i class="icon icon-delete" onclick="$('#sub-tabs a[rel=#address1]').trigger('click'); $('#address<?php echo $table_row; ?>').remove(); $(this).parent().parent().remove(); return false;"></i></a></li>
+					<li><a rel="#address<?php echo $table_row; ?>">Address <?php echo $table_row; ?>&nbsp;&nbsp;<i class="icon icon-delete" onclick="$('#sub-tabs a[rel=#address1]').trigger('click'); $('#address<?php echo $table_row; ?>').remove(); $(this).parent().parent().remove(); return false;"></i></a></li>
 					<?php $table_row++; ?>
 				<?php } ?>
-				<li class="add_address"><span onclick="addAddress();">Add Address<i class="icon icon-add"></i></span></li>
+				<li class="add_address"><span onclick="addAddress();"><i class="icon icon-add"></i></span></li>
 			</ul>
 
 			<?php $table_row = 1; ?>
@@ -206,6 +239,7 @@
 		</div>
 	</form>
 	</div>
+	</div>
 </div>
 <script type="text/javascript"><!--
 var table_row = <?php echo $table_row; ?>;
@@ -249,7 +283,7 @@ function addAddress() {
 	
 	$('#new-address').before(html);
 	
-	$('.add_address').before('<li><a rel="#address' + table_row + '">Address ' + table_row + '<i class="icon icon-delete" onclick="$(\'#sub-tabs a[rel=#address1]\').trigger(\'click\'); $(\'#address' + table_row + '\').remove(); $(this).parent().parent().remove(); return false;"></i></a></li>');
+	$('.add_address').before('<li><a rel="#address' + table_row + '">Address ' + table_row + '&nbsp;&nbsp;<i class="icon icon-delete" onclick="$(\'#sub-tabs a[rel=#address1]\').trigger(\'click\'); $(\'#address' + table_row + '\').remove(); $(this).parent().parent().remove(); return false;"></i></a></li>');
 	
 	$('#sub-tabs a').tabs();
 

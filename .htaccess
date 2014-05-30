@@ -1,12 +1,12 @@
 <IfModule mod_rewrite.c>
-	RewriteEngine On
 	# !IMPORTANT! Set your RewriteBase here and don't forget trailing and leading
 	#  slashes.
 	# If your page resides at
 	#  http://www.example.com/mypage/test1
 	# then use
 	# RewriteBase /mypage/test1/
-	RewriteBase /TastyIgniter/
+	RewriteEngine On
+	#RewriteBase /TastyIgniter/
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteCond $1 !^(index\.php|images|robots\.txt)

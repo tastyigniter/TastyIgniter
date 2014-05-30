@@ -1,4 +1,14 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div class="wrap_content">
 		<ul class="numbers">
 			<li><span><?php echo $total_sales; ?></span>Total Sales</li>
@@ -18,7 +28,7 @@
 			<h2>Reports Chart</h2>
 			<div class="search">
 				Period: 
-				<select name="range" onChange="getChart(this.value)">
+				<select name="range" onChange="getChart()">
 					<option value="today" checked="checked">Today</option>  	
 					<option value="yesterday">Yesterday</option>  	
 					<option value="week">This Week</option>
@@ -27,7 +37,7 @@
 					<option value="year">This Year</option>
 				</select>&nbsp;&nbsp;&nbsp; - OR - &nbsp;&nbsp;&nbsp;
 				Monthly: 
-				<select name="monthly" onChange="getChart(this.value)">
+				<select name="monthly" onChange="getChart()">
 					<option value="" checked="checked">select</option>  	
 					<?php foreach ($months as $key => $value) { ?>
 						<option value="<?php echo $key; ?>" <?php echo set_select('monthly', $key); ?>><?php echo $value; ?></option>  	
@@ -84,6 +94,7 @@
 		</table>
 	</div>
 	<?php } ?>
+	</div>
 </div>
 <!--[if IE]>
 <script type="text/javascript" src="<?php echo base_url("assets/js/jquery.flot.excanvas.js"); ?>"></script>
@@ -96,7 +107,7 @@ $(document).ready(function() {
 			$('#chart-picker li').removeClass('active');
 			$(this).parent().addClass('active');
 			$('input[name="type"]').val($(this).attr('rel'));
-			getChart($('select[name="range"]').val());
+			getChart();
 		}
 	});
 });
@@ -104,10 +115,13 @@ $(document).ready(function() {
 <script type="text/javascript"><!--
 function getChart(range) {
 	var type = $('input[name="type"]').val();
-	if (range) {
-		var url = '<?php echo site_url("admin/dashboard/chart?range="); ?>' + range + '&type=' + type;
+	var range = $('select[name="range"]').val();
+	var monthly = $('select[name="monthly"]').val();
+	
+	if (monthly) {
+		var url = '<?php echo site_url("admin/dashboard/chart?range="); ?>' + monthly + '&type=' + type;
 	} else {
-		var url = '<?php echo site_url("admin/dashboard/chart?range="); ?>' + $('select[name="range"]').val() + '&type=' + type;	
+		var url = '<?php echo site_url("admin/dashboard/chart?range="); ?>' + range + '&type=' + type;	
 	}
 
 	$.ajax({

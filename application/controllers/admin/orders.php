@@ -13,7 +13,7 @@ class Orders extends CI_Controller {
 		$this->load->model('Locations_model');
 		$this->load->model('Orders_model');
 		$this->load->model('Statuses_model');
-		$this->load->model('Payments_model');
+		$this->load->model('Paypal_model');
 		$this->load->model('Countries_model');
 	}
 
@@ -46,63 +46,64 @@ class Orders extends CI_Controller {
 		}
 				
 		if ($this->input->get('filter_search')) {
-			$filter['filter_search'] = $this->input->get('filter_search');
-			$data['filter_search'] = $filter['filter_search'];
+			$filter['filter_search'] = $data['filter_search'] = $this->input->get('filter_search');
 			$url .= 'filter_search='.$filter['filter_search'].'&';
 		} else {
 			$data['filter_search'] = '';
 		}
 		
-		if (is_numeric($this->input->get('filter_type'))) {
-			$filter['filter_type'] = $this->input->get('filter_type');
-			$data['filter_type'] = $filter['filter_type'];
-			$url .= 'filter_type='.$filter['filter_type'].'&';
+    	if ($this->user->staffLocationAccess()) {
+  			$filter['filter_location'] = $this->user->getLocationId();
+		} else if (is_numeric($this->input->get('filter_location'))) {
+			$filter['filter_location'] = $data['filter_location'] = $this->input->get('filter_location');
+			$url .= 'filter_location='.$filter['filter_location'].'&';
 		} else {
-			$filter['filter_type'] = '';
-			$data['filter_type'] = '';
-		}
-		
-		if ($this->input->get('filter_date')) {
-			$filter['filter_date'] = $this->input->get('filter_date');
-			$data['filter_date'] = $filter['filter_date'];
-			$url .= 'filter_date='.$filter['filter_date'].'&';
-		} else {
-			$filter['filter_date'] = '';
-			$data['filter_date'] = '';
+			$filter['filter_location'] = $data['filter_location'] = '';
 		}
 		
 		if (is_numeric($this->input->get('filter_status'))) {
-			$filter['filter_status'] = $this->input->get('filter_status');
-			$data['filter_status'] = $filter['filter_status'];
+			$filter['filter_status'] = $data['filter_status'] = $this->input->get('filter_status');
 			$url .= 'filter_status='.$filter['filter_status'].'&';
 		} else {
-			$filter['filter_status'] = '';
+			$filter['filter_status'] = $data['filter_status'] = '';
 			$data['filter_status'] = '';
 		}
 		
-		if ($this->input->get('sort_by')) {
-			$filter['sort_by'] = $this->input->get('sort_by');
-			$data['sort_by'] = $filter['sort_by'];
+		if (is_numeric($this->input->get('filter_type'))) {
+			$filter['filter_type'] = $data['filter_type'] = $this->input->get('filter_type');
+			$url .= 'filter_type='.$filter['filter_type'].'&';
 		} else {
-			$filter['sort_by'] = '';
-			$data['sort_by'] = '';
+			$filter['filter_type'] = $data['filter_type'] = '';
+		}
+		
+		if ($this->input->get('filter_date')) {
+			$filter['filter_date'] = $data['filter_date'] = $this->input->get('filter_date');
+			$url .= 'filter_date='.$filter['filter_date'].'&';
+		} else {
+			$filter['filter_date'] = $data['filter_date'] = '';
+		}
+		
+		if ($this->input->get('sort_by')) {
+			$filter['sort_by'] = $data['sort_by'] = $this->input->get('sort_by');
+		} else {
+			$filter['sort_by'] = $data['sort_by'] = 'date_added';
 		}
 		
 		if ($this->input->get('order_by')) {
-			$filter['order_by'] = $this->input->get('order_by');
-			$data['order_by_active'] = strtolower($this->input->get('order_by')) .' active';
-			$data['order_by'] = strtolower($this->input->get('order_by'));
+			$filter['order_by'] = $data['order_by'] = $this->input->get('order_by');
+			$data['order_by_active'] = $this->input->get('order_by') .' active';
 		} else {
-			$filter['order_by'] = '';
-			$data['order_by_active'] = '';
-			$data['order_by'] = 'desc';
+			$filter['order_by'] = $data['order_by'] = 'DESC';
+			$data['order_by_active'] = 'DESC';
 		}
 		
-		$data['heading'] 			= 'Orders';
-		$data['button_delete'] 		= 'Delete';
+		$this->template->setTitle('Orders');
+		$this->template->setHeading('Orders');
+		$this->template->setButton('Delete', array('class' => 'delete_button', 'onclick' => '$(\'form:not(#filter-form)\').submit();'));
+
 		$data['text_empty'] 		= 'There are no orders available.';
 		
-		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'DESC') ? 'ASC' : 'DESC';
+		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_id'] 			= site_url('admin/orders'.$url.'sort_by=order_id&order_by='.$order_by);
 		$data['sort_location'] 		= site_url('admin/orders'.$url.'sort_by=location_name&order_by='.$order_by);
 		$data['sort_customer'] 		= site_url('admin/orders'.$url.'sort_by=first_name&order_by='.$order_by);
@@ -133,12 +134,21 @@ class Orders extends CI_Controller {
 				'order_type' 		=> ($result['order_type'] === '1') ? 'Delivery' : 'Collection',
 				'order_time'		=> mdate('%H:%i', strtotime($result['order_time'])),
 				'order_status'		=> $result['status_name'],
-				'order_total'		=> $result['order_total'],
+				'order_total'		=> $this->currency->format($result['order_total']),
 				'date_added'		=> $date_added,
 				'edit' 				=> site_url('admin/orders/edit?id=' . $result['order_id'])
 			);
 		}
 			
+		$data['locations'] = array();
+		$results = $this->Locations_model->getLocations();
+		foreach ($results as $result) {					
+			$data['locations'][] = array(
+				'location_id'	=>	$result['location_id'],
+				'location_name'	=>	$result['location_name'],
+			);
+		}
+
 		$data['statuses'] = array();
 		$statuses = $this->Statuses_model->getStatuses('order');
 		foreach ($statuses as $statuses) {
@@ -156,7 +166,7 @@ class Orders extends CI_Controller {
 			$data['order_dates'][$month_year] = mdate('%F %Y', strtotime($order_date['date_added']));
 		}
 
-		if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+		if ($this->input->get('sort_by') AND $this->input->get('order_by')) {
 			$url .= 'sort_by='.$filter['sort_by'].'&';
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
@@ -172,15 +182,15 @@ class Orders extends CI_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		if ($this->input->post('delete') && $this->_deleteOrder() === TRUE) {
+		if ($this->input->post('delete') AND $this->_deleteOrder() === TRUE) {
 			redirect('admin/orders');
 		}	
 
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'orders.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'orders', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'orders', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'orders', $regions, $data);
+			$this->template->render('themes/admin/default/', 'orders', $data);
 		}
 	}
 
@@ -212,10 +222,13 @@ class Orders extends CI_Controller {
 		
 		$order_info = $this->Orders_model->getAdminOrder($order_id);
 
-		$data['heading'] 			= 'Order - '. $order_info['order_id'];
-		$data['button_save'] 		= 'Save';
-		$data['button_save_close'] 	= 'Save & Close';
-		$data['sub_menu_back'] 		= site_url('admin/orders');
+		$title = (isset($order_info['order_id'])) ? 'Edit - '. $order_info['order_id'] : 'New';	
+		$this->template->setTitle('Order: '. $title);
+		$this->template->setHeading('Order: '. $title);
+		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('back_button', site_url('admin/orders'));
+
 		$data['text_empty'] 		= 'There are no status history for this order.';
 
 		$data['order_id'] 			= $order_info['order_id'];
@@ -238,8 +251,7 @@ class Orders extends CI_Controller {
 
 		if ($order_info['payment'] === 'paypal') {
 			$data['payment'] = 'PayPal';
-			//$this->Payments_model->saveTransactionDetails($transaction_id, $order_id, $customer_id);
-			$data['paypal_details'] = $this->Payments_model->getPaypalDetails($order_info['order_id'], $order_info['customer_id']);
+			$data['paypal_details'] = $this->Paypal_model->getPaypalDetails($order_info['order_id'], $order_info['customer_id']);
 		} else if ($order_info['payment'] === 'cod') {
 			$data['payment'] = 'Cash On Delivery';
 			$data['paypal_details'] = array();
@@ -319,7 +331,7 @@ class Orders extends CI_Controller {
 		$data['order_total'] 		= $this->currency->format($order_info['order_total']);
 		$data['total_items']		= $order_info['total_items'];
 					
-		if ($this->input->post() && $this->_updateOrder($order_info['status_id']) === TRUE) {
+		if ($this->input->post() AND $this->_updateOrder($order_info['status_id']) === TRUE) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('admin/orders');
 			}
@@ -327,11 +339,11 @@ class Orders extends CI_Controller {
 			redirect('admin/orders/edit?id='. $order_id);
 		}
 				
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'orders_edit.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'orders_edit', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'orders_edit', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'orders_edit', $regions, $data);
+			$this->template->render('themes/admin/default/', 'orders_edit', $data);
 		}
 	}
 
@@ -339,13 +351,12 @@ class Orders extends CI_Controller {
     	if (!$this->user->hasPermissions('modify', 'admin/orders')) {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
 			return TRUE;
-    	} else if ($this->input->get('id') AND $this->validateForm() === TRUE) { 
+    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$update = array();
 			$history = array();
 			$current_time = time();														// retrieve current timestamp
 			
-			//Sanitizing the POST values
-			$update['order_id'] = (int)$this->input->get('id');
+			$update['order_id'] = $this->input->get('id');
 			$update['status_id'] = (int)$this->input->post('order_status');
 			$update['date_modified'] =  mdate('%Y-%m-%d', $current_time);
 		
@@ -361,9 +372,9 @@ class Orders extends CI_Controller {
 			}
 
 			if ($this->Orders_model->updateOrder($update)) {
-				$this->session->set_flashdata('alert', '<p class="success">Order Updated Sucessfully!</p>');
+				$this->session->set_flashdata('alert', '<p class="success">Order updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');
 			}
 	
 			return TRUE;
@@ -372,18 +383,13 @@ class Orders extends CI_Controller {
 
 	public function _deleteOrder() {
     	if (!$this->user->hasPermissions('modify', 'admin/orders')) {
-		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
-    	
-    	} else { 
-			if (is_array($this->input->post('delete'))) {
-				foreach ($this->input->post('delete') as $key => $value) {
-					$order_id = $value;            	
-					$this->Orders_model->deleteOrder($order_id);
-				}			
-			
-				$this->session->set_flashdata('alert', '<p class="success">Order Deleted Sucessfully!</p>');
-			}
+    	} else if (is_array($this->input->post('delete'))) {
+			foreach ($this->input->post('delete') as $key => $value) {
+				$this->Orders_model->deleteOrder($value);
+			}			
+		
+			$this->session->set_flashdata('alert', '<p class="success">Order deleted sucessfully!</p>');
 		}
 				
 		return TRUE;

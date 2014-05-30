@@ -8,19 +8,20 @@ class Reserve_table extends MX_Controller {
 		$this->load->model('Customers_model');
 		$this->load->model('Security_questions_model');
 		$this->load->model('Reservations_model');
+		$this->load->library('location'); // load the location library
+		$this->load->library('language');
+		$this->lang->load('main/reserve_table', $this->language->folder());
 	}
 
 	public function index() {
-		$this->load->library('location'); // load the location library
-		$this->lang->load('main/reserve_table');  // loads language file
-		
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
 		} else {
 			$data['alert'] = '';
 		}
 
-		$data['text_heading'] 				= $this->lang->line('text_heading');
+		$this->template->setTitle($this->lang->line('text_heading'));
+		$this->template->setHeading($this->lang->line('text_heading'));
 		$data['text_local'] 				= $this->lang->line('text_local');
 		$data['text_postcode'] 				= $this->lang->line('text_postcode');
 		$data['text_find'] 					= $this->lang->line('text_find');
@@ -100,17 +101,15 @@ class Reserve_table extends MX_Controller {
 			redirect('reserve/success');		
 		}
 			
-		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'reserve_table.php')) {
-			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'reserve_table', $regions, $data);
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'reserve_table', $data);
 		} else {
-			$this->template->render('themes/main/default/', 'reserve_table', $regions, $data);
+			$this->template->render('themes/main/default/', 'reserve_table', $data);
 		}
 	}
 
 	public function success() {
-		$this->lang->load('main/reserve_table');  // loads language file
-		
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
 		} else {
@@ -132,11 +131,11 @@ class Reserve_table extends MX_Controller {
 			redirect('find/table');
 		}		
 		
-		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'reserve_success.php')) {
-			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'reserve_success', $regions, $data);
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'reserve_success', $data);
 		} else {
-			$this->template->render('themes/main/default/', 'reserve_success', $regions, $data);
+			$this->template->render('themes/main/default/', 'reserve_success', $data);
 		}
 	}
 	

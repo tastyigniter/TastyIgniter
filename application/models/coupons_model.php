@@ -29,8 +29,6 @@ class Coupons_model extends CI_Model {
 			
 			if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
 				$this->db->order_by($filter['sort_by'], $filter['order_by']);
-			} else {
-				$this->db->order_by('coupon_id', 'DESC');
 			}
 			
 			if (!empty($filter['filter_search'])) {
@@ -143,70 +141,8 @@ class Coupons_model extends CI_Model {
 		}
 	}
 
-	public function addCoupon($add = array()) {
-
-		if (!empty($add['name'])) {
-			$this->db->set('name', $add['name']);
-		}
-				
-		if (!empty($add['code'])) {
-			$this->db->set('code', $add['code']);
-		}
-		
-		if (!empty($add['type'])) {
-			$this->db->set('type', $add['type']);
-		}
-		
-		if (!empty($add['discount'])) {
-			$this->db->set('discount', $add['discount']);
-		}
-		
-		if (!empty($add['min_total'])) {
-			$this->db->set('min_total', $add['min_total']);
-		}
-		
-		if ($add['redemptions'] > 0) {
-			$this->db->set('redemptions', $add['redemptions']);
-		} else {
-			$this->db->set('redemptions', '0');
-		}
-
-		if ($add['customer_redemptions'] > 0) {
-			$this->db->set('customer_redemptions', $add['customer_redemptions']);
-		} else {
-			$this->db->set('customer_redemptions', '0');
-		}
-
-		if (!empty($add['description'])) {
-			$this->db->set('description', $add['description']);
-		}
-		
-		if (!empty($add['start_date'])) {
-			$this->db->set('start_date', $add['start_date']);
-		}
-		
-		if (!empty($add['end_date'])) {
-			$this->db->set('end_date', $add['end_date']);
-		}
-		
-		if (!empty($add['date_added'])) {
-			$this->db->set('date_added', $add['date_added']);
-		}
-		
-		if ($add['status'] === '1') {
-			$this->db->set('status', $add['status']);
-		} else {
-			$this->db->set('status', '0');
-		}
-
-		$this->db->insert('coupons');
-		
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
-		}
-	}
-
 	public function updateCoupon($update = array()) {
+		$query = FALSE;
 
 		if (!empty($update['name'])) {
 			$this->db->set('name', $update['name']);
@@ -245,15 +181,11 @@ class Coupons_model extends CI_Model {
 		}
 		
 		if (!empty($update['start_date'])) {
-			$this->db->set('start_date', $update['start_date']);
+			$this->db->set('start_date', mdate('%Y-%m-%d', strtotime($update['start_date'])));
 		}
 		
 		if (!empty($update['end_date'])) {
-			$this->db->set('end_date', $update['end_date']);
-		}
-		
-		if (!empty($update['date_added'])) {
-			$this->db->set('date_added', $update['date_added']);
+			$this->db->set('end_date', mdate('%Y-%m-%d', strtotime($update['end_date'])));
 		}
 		
 		if ($update['status'] === '1') {
@@ -264,21 +196,84 @@ class Coupons_model extends CI_Model {
 
 		if (!empty($update['coupon_id'])) {
 			$this->db->where('coupon_id', $update['coupon_id']);
-			$this->db->update('coupons'); 
+			$query = $this->db->update('coupons'); 
 		}
 		
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
+		return $query;
+	}
+
+	public function addCoupon($add = array()) {
+		$query = FALSE;
+		
+		if (!empty($add['name'])) {
+			$this->db->set('name', $add['name']);
 		}
+				
+		if (!empty($add['code'])) {
+			$this->db->set('code', $add['code']);
+		}
+		
+		if (!empty($add['type'])) {
+			$this->db->set('type', $add['type']);
+		}
+		
+		if (!empty($add['discount'])) {
+			$this->db->set('discount', $add['discount']);
+		}
+		
+		if (!empty($add['min_total'])) {
+			$this->db->set('min_total', $add['min_total']);
+		}
+		
+		if ($add['redemptions'] > 0) {
+			$this->db->set('redemptions', $add['redemptions']);
+		} else {
+			$this->db->set('redemptions', '0');
+		}
+
+		if ($add['customer_redemptions'] > 0) {
+			$this->db->set('customer_redemptions', $add['customer_redemptions']);
+		} else {
+			$this->db->set('customer_redemptions', '0');
+		}
+
+		if (!empty($add['description'])) {
+			$this->db->set('description', $add['description']);
+		}
+		
+		if (!empty($add['start_date'])) {
+			$this->db->set('start_date', mdate('%Y-%m-%d', strtotime($add['start_date'])));
+		}
+		
+		if (!empty($add['end_date'])) {
+			$this->db->set('end_date', mdate('%Y-%m-%d', strtotime($add['end_date'])));
+		}
+		
+		if ($add['status'] === '1') {
+			$this->db->set('status', $add['status']);
+		} else {
+			$this->db->set('status', '0');
+		}
+
+		if (!empty($add)) {
+			$this->db->set('date_added', mdate('%Y-%m-%d', time()));
+
+			if ($this->db->insert('coupons')) {
+				$query = $this->db->insert_id();
+			}
+		}
+		
+		return $query;
 	}
 
 	public function deleteCoupon($coupon_id) {
-		$this->db->where('coupon_id', $coupon_id);
-		
-		$this->db->delete('coupons');
+		if (is_numeric($coupon_id)) {
+			$this->db->where('coupon_id', $coupon_id);
+			$this->db->delete('coupons');
 
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
+			if ($this->db->affected_rows() > 0) {
+				return TRUE;
+			}
 		}
 	}
 }

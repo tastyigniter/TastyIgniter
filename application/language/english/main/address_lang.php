@@ -19,8 +19,8 @@ $lang['entry_city'] 			= 'City:';
 $lang['entry_postcode'] 		= 'Postcode:';
 $lang['entry_country'] 			= 'Country:';
 
-$lang['text_deleted_msg'] 			= '<p class="success">Address Deleted Sucessfully!</p>';
-$lang['text_added_msg'] 			= '<p class="success">Address Added/Updated Sucessfully!</p>';
+$lang['text_deleted_msg'] 			= '<p class="success">Address deleted sucessfully!</p>';
+$lang['text_added_msg'] 			= '<p class="success">Address Added/updated sucessfully.</p>';
 $lang['text_nothing_msg'] 			= '<p class="warning">Nothing Added/Updated!</p>';
 
 /* End of file address_lang.php */

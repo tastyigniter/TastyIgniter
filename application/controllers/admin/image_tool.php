@@ -7,7 +7,6 @@ class Image_tool extends CI_Controller {
 	}
 
 	public function index() {
-			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -22,8 +21,9 @@ class Image_tool extends CI_Controller {
 			$data['alert'] = '';
 		}
 
-		$data['heading'] 			= 'Image Tool';
-		$data['button_save'] 		= 'Save';
+		$this->template->setTitle('Image Tool');
+		$this->template->setHeading('Image Tool');
+		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
 		
 		if (!empty($this->config->item('image_tool'))) {
 			$result = $this->config->item('image_tool');
@@ -52,15 +52,15 @@ class Image_tool extends CI_Controller {
 		$data['remember_days'] 		= (isset($result['remember_days'])) ? $result['remember_days'] : '';
 		$data['delete_thumbs']		= site_url('admin/image_tool/delete_thumbs');
 		
-		if ($this->input->post() && $this->_updateImageTool() === TRUE) {
+		if ($this->input->post() AND $this->_updateImageTool() === TRUE) {
 			redirect('admin/image_tool');
 		}
 
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'image_tool.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'image_tool', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'image_tool', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'image_tool', $regions, $data);
+			$this->template->render('themes/admin/default/', 'image_tool', $data);
 		}
 	}
 
@@ -78,7 +78,7 @@ class Image_tool extends CI_Controller {
     	} else { 
 			if (file_exists(IMAGEPATH . 'thumbs')) {
 				$this->_delete_thumbs(IMAGEPATH . 'thumbs');
-				$this->session->set_flashdata('alert', '<p class="success">Thumbs Deleted Sucessfully!</p>');
+				$this->session->set_flashdata('alert', '<p class="success">Thumbs deleted sucessfully!</p>');
 			}
 		}
 		
@@ -90,7 +90,7 @@ class Image_tool extends CI_Controller {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
 			return TRUE;
     	} else if ($this->validateForm() === TRUE) { 
-			$update['image_tool'] = array(
+			$update = array(
 				'root_folder' 		=> $this->security->sanitize_filename($this->input->post('root_folder'), TRUE),
 				'max_size' 			=> $this->input->post('max_size'),
 				'thumb_height' 		=> $this->input->post('thumb_height'),
@@ -112,10 +112,10 @@ class Image_tool extends CI_Controller {
 				'remember_days'		=> $this->input->post('remember_days')
 			);
 
-			if ($this->Settings_model->updateSettings('image_tool', $update)) {
-				$this->session->set_flashdata('alert', '<p class="success">Image Tool Updated Sucessfully!</p>');
+			if ($this->Settings_model->addSetting('module', 'image_tool', $update, '1')) {
+				$this->session->set_flashdata('alert', '<p class="success">Image Tool updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');
 			}
 
 			return TRUE;
@@ -151,8 +151,8 @@ class Image_tool extends CI_Controller {
 	}
 
 	public function validate_path($str) {
-		if (strpos($str, '/') === 0 OR strpos($str, './') !== FALSE) {
-			$this->form_validation->set_message('validate_path', 'Root Folder must have NO TRAILING SLASH!');
+		if (strpos($str, '/') !== FALSE OR strpos($str, './') !== FALSE) {
+			$this->form_validation->set_message('validate_path', 'Root Folder must have NO SLASH!');
 			return FALSE;
 		}
 

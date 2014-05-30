@@ -57,8 +57,6 @@ class Reservations_model extends CI_Model {
 			
 			if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
 				$this->db->order_by($filter['sort_by'], $filter['order_by']);
-			} else {
-				$this->db->order_by('reserve_date', 'DESC');
 			}
 		
 			if (!empty($filter['filter_search'])) {
@@ -327,6 +325,8 @@ class Reservations_model extends CI_Model {
 	}
 
 	public function addReservation($add = array()) {
+		$query = FALSE;
+
 		if (!empty($add['location_id'])) {
 			$this->db->set('location_id', $add['location_id']);
 		}
@@ -395,46 +395,40 @@ class Reservations_model extends CI_Model {
 			$this->db->set('ip_address', $add['ip_address']);
 		}
 
-		$this->db->insert('reservations');
+		if (!empty($add)) {
+			if ($this->db->insert('reservations')) {
+				$reservation_id = $this->db->insert_id();
 
-		if ($this->db->affected_rows() > 0) {
-			$reservation_id = $this->db->insert_id();
-
-			$email = array(
-				'reservation_id' => $reservation_id,
-				'location_id' 	=> $add['location_id'],
-				'customer_name' => $add['first_name'] .' '. $add['last_name'],
-				'table_id' 		=> $add['table_id'],
-				'guest_num' 	=> $add['guest_num'],
-				'reserve_date' 	=> $add['reserve_date'],
-				'reserve_time' 	=> $add['reserve_time'],
-				'email' 		=> $add['email']
-			);
-
-			$notify = $this->_sendMail($reservation_id);
-			$this->db->set('notify', $notify);
+				$notify = $this->_sendMail($reservation_id);
+				$this->db->set('notify', $notify);
 		
-			$this->db->set('status', $this->config->item('reserve_status'));
-			$this->db->where('reservation_id', $email['reservation_id']);
-			$this->db->update('reservations');
-					
-			$this->load->model('Statuses_model');
-			$status = $this->Statuses_model->getStatus($this->config->item('reserve_status'));
-			$reserve_history = array(
-				'order_id' 		=> $reservation_id, 
-				'status_id' 	=> $status['status_id'], 
-				'notify' 		=> $notify, 
-				'comment' 		=> $status['comment'], 
-				'date_added' 	=> mdate('%Y-%m-%d %H:%i:%s', time())
-			);
-			$this->Statuses_model->addStatusHistory('reserve', $reserve_history);
+				$this->db->set('status', $this->config->item('reserve_status'));
+				$this->db->where('reservation_id', $reservation_id);
+				
+				if ($this->db->update('reservations')) {
+					$this->load->model('Statuses_model');
+					$status = $this->Statuses_model->getStatus($this->config->item('reserve_status'));
+					$reserve_history = array(
+						'order_id' 		=> $reservation_id, 
+						'status_id' 	=> $status['status_id'], 
+						'notify' 		=> $notify, 
+						'comment' 		=> $status['comment'], 
+						'date_added' 	=> mdate('%Y-%m-%d %H:%i:%s', time())
+					);
 			
-			return $reservation_id;
+					$this->Statuses_model->addStatusHistory('reserve', $reserve_history);
+				}
+				
+				$query = $reservation_id;
+			}
 		}
+		
+		return $query;
 	}
 	
 	public function updateReservation($update = array()) {
-
+		$query = FALSE;
+		
 		if (!empty($update['status'])) {
 			$this->db->set('status', $update['status']);
 		}
@@ -449,18 +443,21 @@ class Reservations_model extends CI_Model {
 		
 		if (!empty($update['reservation_id'])) {
 			$this->db->where('reservation_id', $update['reservation_id']);
-			$this->db->update('reservations');
+			$query = $this->db->update('reservations');
 		}	
 
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
-		}
+		return $query;
 	}
 	
 	public function deleteReservation($reservation_id) {
-		$this->db->where('reservation_id', $reservation_id);
-			
-		return $this->db->delete('reservations');
+		if (is_numeric($reservation_id)) {
+			$this->db->where('reservation_id', $reservation_id);
+			$this->db->delete('reservations');
+
+			if ($this->db->affected_rows() > 0) {
+				return TRUE;
+			}
+		}
 	}
 
 	public function getMailData($reservation_id) {

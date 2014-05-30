@@ -32,8 +32,6 @@ class Customers_model extends CI_Model {
 			
 			if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
 				$this->db->order_by($filter['sort_by'], $filter['order_by']);
-			} else {
-				$this->db->order_by('date_added', 'DESC');
 			}
 
 			if (!empty($filter['filter_search'])) {
@@ -77,13 +75,15 @@ class Customers_model extends CI_Model {
 	}
 
 	public function getCustomer($customer_id) {
-		$this->db->from('customers');		
-		$this->db->where('customer_id', $customer_id);
+		if ($customer_id) {
+			$this->db->from('customers');		
+			$this->db->where('customer_id', $customer_id);
 		
-		$query = $this->db->get();
+			$query = $this->db->get();
 
-		if ($query->num_rows() > 0) {
-			return $query->row_array();
+			if ($query->num_rows() > 0) {
+				return $query->row_array();
+			}
 		}
 	}
 
@@ -113,6 +113,36 @@ class Customers_model extends CI_Model {
 			
 			return $row;
 		}
+	}
+
+	public function getCustomersByGroupId($customer_group_id) {
+		if ($customer_group_id) {
+			$this->db->from('customers');		
+			$this->db->where('customer_group_id', $customer_group_id);
+		
+			$query = $this->db->get();
+			$result = array();
+
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+
+			return $result;
+		}
+	}
+
+	public function getCustomersByNewsletter() {
+		$this->db->from('customers');		
+		$this->db->where('newsletter', '1');
+		
+		$query = $this->db->get();
+		$result = array();
+
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+
+		return $result;
 	}
 
 	public function getCustomerAddresses($customer_id) {
@@ -221,16 +251,11 @@ class Customers_model extends CI_Model {
 			$this->db->set('password', sha1($password));
 				
 			$this->db->where('customer_id', $customer_id);
-			$this->db->update('customers');
-			
-			if ($this->db->affected_rows() > 0) {
-				return TRUE;
-			}
+			return $this->db->update('customers');
 		}
 	}	
 
 	public function resetPassword($customer_id = FALSE, $email = FALSE, $security_question_id = FALSE, $security_answer = FALSE) {
-		
 		if ($customer_id != FALSE && $email != FALSE && $security_question_id != FALSE && $security_answer != FALSE) {
 
 			$this->db->from('customers');
@@ -263,12 +288,17 @@ class Customers_model extends CI_Model {
 				$this->db->update('customers');
 
 				if ($this->db->affected_rows() > 0) {
-					$this->lang->load('main/password_reset');
-				
-					$data['text_success_message'] = sprintf($this->lang->line('text_success_message'), site_url('main/login'), $row['email'], $password);
-				
-					$subject = $this->lang->line('text_subject');
-					$message = $this->load->view('main/password_reset_email', $data, TRUE);
+					$this->load->library('mail_template'); 
+
+					$mail_data['site_name'] 		= $this->config->item('site_name');
+					$mail_data['first_name'] 		= $row['first_name'];
+					$mail_data['last_name'] 		= $row['last_name'];
+					$mail_data['created_password'] 	= $password;
+					$mail_data['signature'] 		= $this->config->item('site_name');
+					$mail_data['login_link'] 		= site_url('main/login');
+			
+					$message = $this->mail_template->parseTemplate('password_reset', $mail_data);
+					$subject = $this->mail_template->getSubject();
 
 					$this->sendMail($email, $subject, $message);
 					return TRUE;
@@ -311,6 +341,16 @@ class Customers_model extends CI_Model {
 			$this->db->set('security_answer', $update['security_answer']);
 		}
 		
+		if ($update['newsletter'] === '1') {
+			$this->db->set('newsletter', $update['newsletter']);
+		} else {
+			$this->db->set('newsletter', '0');
+		}
+		
+		if (!empty($update['customer_group_id'])) {
+			$this->db->set('customer_group_id', $update['customer_group_id']);
+		}
+		
 		if (!empty($update['date_added'])) {
 			$this->db->set('date_added', $update['date_added']);
 		}
@@ -323,27 +363,78 @@ class Customers_model extends CI_Model {
 		
 		if (!empty($update['customer_id'])) {
 			$this->db->where('customer_id', $update['customer_id']);
-			$this->db->update('customers');
-		}
 			
-		if (!empty($update['address']) && !empty($update['customer_id'])) {
-			foreach ($update['address'] as $address) {
-				if (!empty($address['address_id'])) {
-					$this->updateCustomerAddress($update['customer_id'], $address['address_id'], $address);
-				} else {
-					$this->updateCustomerAddress($update['customer_id'], '', $address);
+			if ($query = $this->db->update('customers')) {
+				if (!empty($update['address']) AND !empty($update['customer_id'])) {
+					foreach ($update['address'] as $address) {
+						if (!empty($address['address_id'])) {
+							$this->updateCustomerAddress($update['customer_id'], $address['address_id'], $address);
+						} else {
+							$this->updateCustomerAddress($update['customer_id'], '', $address);
+						}
+					}
 				}
 			}
 		}
-		
-		if ($this->db->affected_rows() > 0) {
-			$query = TRUE;
-		}
-		
+				
 		return $query;
 	}	
 
+	public function updateCustomerAddress($customer_id = FALSE, $address_id = FALSE, $address = array()) {
+		$query = FALSE;
+
+		if ($customer_id) {
+			$this->db->set('customer_id', $customer_id);
+		}
+
+		if (!empty($address['address_1'])) {
+			$this->db->set('address_1', $address['address_1']);
+		}
+
+		if (!empty($address['address_2'])) {
+			$this->db->set('address_2', $address['address_2']);
+		}
+
+		if (!empty($address['city'])) {
+			$this->db->set('city', $address['city']);
+		}
+
+		if (!empty($address['postcode'])) {
+			$this->db->set('postcode', $address['postcode']);
+		}
+
+		if (!empty($address['country'])) {
+			$this->db->set('country_id', $address['country']);
+		}
+			
+		if ($address_id) {
+			$this->db->where('address_id', $address_id);
+			$query = $this->db->update('address');
+		} else {
+			if ($this->db->insert('address')) {
+				$query = $this->db->insert_id();
+			}
+		}
+
+		return $query;
+	}
+	
+	public function updateCustomerDefaultAddress($customer_id = '', $address_id = '') {
+		$query = FALSE;
+		
+		if ($address_id !== '' AND $customer_id !== '') {
+			$this->db->set('address_id', $address_id);
+			$this->db->where('customer_id', $customer_id);
+
+			$query = $this->db->update('customers');
+		}
+
+		return $query;
+	}
+	
 	public function addCustomer($add = array()) {
+		$query = FALSE;
+
 		if (!empty($add['first_name'])) {
 			$this->db->set('first_name', $add['first_name']);
 		}
@@ -373,6 +464,16 @@ class Customers_model extends CI_Model {
 			$this->db->set('security_answer', $add['security_answer']);
 		}
 		
+		if ($add['newsletter'] === '1') {
+			$this->db->set('newsletter', $add['newsletter']);
+		} else {
+			$this->db->set('newsletter', '0');
+		}
+		
+		if (!empty($add['customer_group_id'])) {
+			$this->db->set('customer_group_id', $add['customer_group_id']);
+		}
+		
 		if (!empty($add['date_added'])) {
 			$this->db->set('date_added', $add['date_added']);
 		}
@@ -383,84 +484,37 @@ class Customers_model extends CI_Model {
 			$this->db->set('status', '0');
 		}
 		
-		$this->db->insert('customers');
-
-		if ($this->db->affected_rows() > 0) {
-			$customer_id = $this->db->insert_id();
+		if (!empty($add)) {
+			if ($this->db->insert('customers')) {
+				$customer_id = $this->db->insert_id();
 			
-			if (!empty($add['address']) AND $customer_id) {
-				foreach ($add['address'] as $address) {
-					$this->addCustomerAddress($customer_id, $address);
+				if (!empty($add['address']) AND $customer_id) {
+					foreach ($add['address'] as $address) {
+						$this->addCustomerAddress($customer_id, $address);
+					}
 				}
 
-				$query = TRUE;
+				$mail_data['site_name'] 		= $this->config->item('site_name');
+				$mail_data['first_name'] 		= $add['first_name'];
+				$mail_data['last_name'] 		= $add['last_name'];
+				$mail_data['signature'] 		= $this->config->item('site_name');
+				$mail_data['login_link'] 		= site_url('main/login');
+						
+				$this->load->library('mail_template'); 
+				$message = $this->mail_template->parseTemplate('registration', $mail_data);
+				$subject = $this->mail_template->getSubject();
+
+				$this->sendMail($add['email'], $subject, $message);
+
+				$query = $customer_id;
 			}
-			
-			$this->lang->load('main/login_register');
-			
-			$data['text_success_message'] = $this->lang->line('text_success_message');
-			$data['text_signature'] = sprintf($this->lang->line('text_signature'), $this->config->item('site_name'));
-			
-			$subject = $this->lang->line('text_subject');
-			$message = $this->load->view('main/register_email', $data, TRUE);
-
-			$this->sendMail($add['email'], $subject, $message);
-			
-			return TRUE;
 		}
+				
+		return $query;
 	}
 
-	public function updateCustomerAddress($customer_id = FALSE, $address_id = FALSE, $address = array()) {
-		if ($customer_id) {
-			$this->db->set('customer_id', $customer_id);
-		}
-
-		if (!empty($address['address_1'])) {
-			$this->db->set('address_1', $address['address_1']);
-		}
-
-		if (!empty($address['address_2'])) {
-			$this->db->set('address_2', $address['address_2']);
-		}
-
-		if (!empty($address['city'])) {
-			$this->db->set('city', $address['city']);
-		}
-
-		if (!empty($address['postcode'])) {
-			$this->db->set('postcode', $address['postcode']);
-		}
-
-		if (!empty($address['country'])) {
-			$this->db->set('country_id', $address['country']);
-		}
-			
-		if ($address_id) {
-			$this->db->where('address_id', $address_id);
-			$this->db->update('address');
-		} else {
-			$this->db->insert('address');
-		}
-
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
-		}
-	}
-	
-	public function updateCustomerDefaultAddress($customer_id = '', $address_id = '') {
-		if ($address_id !== '' AND $customer_id !== '') {
-			$this->db->set('address_id', $address_id);
-			$this->db->where('customer_id', $customer_id);
-		}
-
-		$this->db->update('customers');
-		
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
-		}
-	}
-	
 	public function addCustomerAddress($customer_id, $address = array()) {
+		$query = FALSE;
 
 		if ($customer_id) {
 			$this->db->set('customer_id', $customer_id);
@@ -486,12 +540,11 @@ class Customers_model extends CI_Model {
 			$this->db->set('country_id', $address['country']);
 		}
 			
-		$this->db->insert('address');
-
-		if ($this->db->affected_rows() > 0) {
-			$address_id = $this->db->insert_id();			
-			return $address_id;
+		if ($this->db->insert('address')) {
+			$query = $this->db->insert_id();			
 		}
+		
+		return $query;
 	}	
 
 	public function deleteCustomer($customer_id) {
@@ -521,10 +574,8 @@ class Customers_model extends CI_Model {
 	}
 
 	public function sendMail($email, $subject, $message) {
-		//loading upload library
 	   	$this->load->library('email');
 
-		//setting upload preference
 		$this->email->set_protocol($this->config->item('protocol'));
 		$this->email->set_mailtype($this->config->item('mailtype'));
 		$this->email->set_smtp_host($this->config->item('smtp_host'));
@@ -539,21 +590,12 @@ class Customers_model extends CI_Model {
 
 		$this->email->subject($subject);
 		$this->email->message($message);
-	   	//$this->email->message( $this->load->view( 'emails/message', $data, true ) );
 
 		return $this->email->send();
-		
-		//return $this->email->print_debugger();
-        //$result = mysql_query("DELETE FROM food_details WHERE food_id='$id'")
-		$delete_data = array(
-			'customer_id' => $customer_id
-		);
-		
-		return $this->db->delete('customers', $delete_data);
 	}
 
 	public function validateCustomer($customer_id) {
-		if (!empty($customer_id)) {
+		if (is_numeric($customer_id)) {
 			$this->db->from('customers');		
 			$this->db->where('customer_id', $customer_id);
 		

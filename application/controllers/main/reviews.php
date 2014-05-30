@@ -6,11 +6,11 @@ class Reviews extends MX_Controller {
 		parent::__construct(); 																	//  calls the constructor
 		$this->load->library('customer'); 														// load the customer library
 		$this->load->model('Reviews_model');													// loads messages model
+		$this->load->library('language');
+		$this->lang->load('main/reviews', $this->language->folder());
 	}
 
 	public function index() {
-		$this->lang->load('main/reviews');  														// loads language file
-		
 		if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
   			redirect('account/login');
 		}
@@ -22,6 +22,8 @@ class Reviews extends MX_Controller {
 		}
 
 		// START of retrieving lines from language file to pass to view.
+		$this->template->setTitle($this->lang->line('text_heading'));
+		$this->template->setHeading($this->lang->line('text_heading'));
 		$data['text_heading'] 			= $this->lang->line('text_heading');
 		$data['text_view'] 				= $this->lang->line('text_view');
 		$data['text_empty'] 			= $this->lang->line('text_empty');
@@ -51,17 +53,15 @@ class Reviews extends MX_Controller {
 			);
 		}
 
-		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'reviews.php')) {
-			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'reviews', $regions, $data);
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'reviews', $data);
 		} else {
-			$this->template->render('themes/main/default/', 'reviews', $regions, $data);
+			$this->template->render('themes/main/default/', 'reviews', $data);
 		}
 	}
 
 	public function view() {
-		$this->lang->load('main/reviews');  														// loads language file
-
 		if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
   			redirect('account/login');
 		}
@@ -82,6 +82,8 @@ class Reviews extends MX_Controller {
 		}
 
 		// START of retrieving lines from language file to pass to view.
+		$this->template->setTitle($this->lang->line('text_view_review'));
+		$this->template->setHeading($this->lang->line('text_view_review'));
 		$data['text_heading'] 			= $this->lang->line('text_view_review');
 		$data['column_date'] 			= $this->lang->line('column_date');
 		$data['column_time'] 			= $this->lang->line('column_time');
@@ -102,17 +104,15 @@ class Reviews extends MX_Controller {
 		$data['date'] 					= mdate('%H:%i - %d %M %y', strtotime($result['date_added']));
 		$data['review_text'] 			= $result['review_text'];
 		
-		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'review_view.php')) {
-			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'review_view', $regions, $data);
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'review_view', $data);
 		} else {
-			$this->template->render('themes/main/default/', 'review_view', $regions, $data);
+			$this->template->render('themes/main/default/', 'review_view', $data);
 		}
 	}
 
 	public function add() {
-		$this->lang->load('main/reviews');  														// loads language file
-	
 		if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
   			redirect('account/login');
 		}
@@ -135,6 +135,8 @@ class Reviews extends MX_Controller {
 		}
 
 		// START of retrieving lines from language file to pass to view.
+		$this->template->setTitle($this->lang->line('text_write_review'));
+		$this->template->setHeading($this->lang->line('text_write_review'));
 		$data['text_heading'] 			= $this->lang->line('text_write_review');
 		$data['entry_customer_name'] 	= $this->lang->line('entry_customer_name');
 		$data['entry_restaurant'] 		= $this->lang->line('entry_restaurant');
@@ -164,11 +166,11 @@ class Reviews extends MX_Controller {
 			redirect('account/reviews');
 		}	
 
-		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'review_add.php')) {
-			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'review_add', $regions, $data);
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'review_add', $data);
 		} else {
-			$this->template->render('themes/main/default/', 'review_add', $regions, $data);
+			$this->template->render('themes/main/default/', 'review_add', $data);
 		}
 	}
 

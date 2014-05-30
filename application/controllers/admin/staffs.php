@@ -39,67 +39,67 @@ class Staffs extends CI_Controller {
 		}
 				
 		if ($this->input->get('filter_search')) {
-			$filter['filter_search'] = $this->input->get('filter_search');
-			$data['filter_search'] = $filter['filter_search'];
+			$filter['filter_search'] = $data['filter_search'] = $this->input->get('filter_search');
 			$url .= 'filter_search='.$filter['filter_search'].'&';
 		} else {
 			$data['filter_search'] = '';
 		}
 		
 		if ($this->input->get('filter_group')) {
-			$filter['filter_group'] = $this->input->get('filter_group');
-			$data['filter_group'] = $filter['filter_group'];
+			$filter['filter_group'] = $data['filter_group'] = $this->input->get('filter_group');
 			$url .= 'filter_group='.$filter['filter_group'].'&';
 		} else {
-			$filter['filter_group'] = '';
-			$data['filter_group'] = '';
+			$filter['filter_group'] = $data['filter_group'] = '';
 		}
 		
-		if (is_numeric($this->input->get('filter_status'))) {
-			$filter['filter_status'] = $this->input->get('filter_status');
-			$data['filter_status'] = $filter['filter_status'];
-			$url .= 'filter_status='.$filter['filter_status'].'&';
+    	if ($this->user->staffLocationAccess()) {
+  			$filter['filter_location'] = $this->user->getLocationId();
+		} else if (is_numeric($this->input->get('filter_location'))) {
+			$filter['filter_location'] = $data['filter_location'] = $this->input->get('filter_location');
+			$url .= 'filter_location='.$filter['filter_location'].'&';
 		} else {
-			$filter['filter_status'] = '';
-			$data['filter_status'] = '';
+			$filter['filter_location'] = $data['filter_location'] = '';
 		}
 		
 		if ($this->input->get('filter_date')) {
-			$filter['filter_date'] = $this->input->get('filter_date');
-			$data['filter_date'] = $filter['filter_date'];
+			$filter['filter_date'] = $data['filter_date'] = $this->input->get('filter_date');
 			$url .= 'filter_date='.$filter['filter_date'].'&';
 		} else {
-			$filter['filter_date'] = '';
-			$data['filter_date'] = '';
+			$filter['filter_date'] = $data['filter_date'] = '';
+		}
+		
+		if (is_numeric($this->input->get('filter_status'))) {
+			$filter['filter_status'] = $data['filter_status'] = $this->input->get('filter_status');
+			$url .= 'filter_status='.$filter['filter_status'].'&';
+		} else {
+			$filter['filter_status'] = $data['filter_status'] = '';
 		}
 		
 		if ($this->input->get('sort_by')) {
-			$filter['sort_by'] = $this->input->get('sort_by');
-			$data['sort_by'] = $filter['sort_by'];
+			$filter['sort_by'] = $data['sort_by'] = $this->input->get('sort_by');
 		} else {
-			$filter['sort_by'] = '';
-			$data['sort_by'] = '';
+			$filter['sort_by'] = $data['sort_by'] = 'staffs.date_added';
 		}
 		
 		if ($this->input->get('order_by')) {
-			$filter['order_by'] = $this->input->get('order_by');
-			$data['order_by_active'] = strtolower($this->input->get('order_by')) .' active';
-			$data['order_by'] = strtolower($this->input->get('order_by'));
+			$filter['order_by'] = $data['order_by'] = $this->input->get('order_by');
+			$data['order_by_active'] = $this->input->get('order_by') .' active';
 		} else {
-			$filter['order_by'] = '';
-			$data['order_by_active'] = '';
-			$data['order_by'] = 'desc';
+			$filter['order_by'] = $data['order_by'] = 'DESC';
+			$data['order_by_active'] = 'DESC';
 		}
 		
-		$data['heading'] 			= 'Staffs';
-		$data['button_add'] 		= 'New';
-		$data['button_delete'] 		= 'Delete';
+		$this->template->setTitle('Staffs');
+		$this->template->setHeading('Staffs');
+		$this->template->setButton('+ New', array('class' => 'add_button', 'href' => page_url() .'/edit'));
+		$this->template->setButton('Delete', array('class' => 'delete_button', 'onclick' => '$(\'form:not(#filter-form)\').submit();'));
+
 		$data['text_empty'] 		= 'There are no staffs available.';
 
-		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'DESC') ? 'ASC' : 'DESC';
+		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
+		$data['sort_name'] 			= site_url('admin/staffs'.$url.'sort_by=staff_name&order_by='.$order_by);
+		$data['sort_group']			= site_url('admin/staffs'.$url.'sort_by=staff_group_name&order_by='.$order_by);
 		$data['sort_location'] 		= site_url('admin/staffs'.$url.'sort_by=location_name&order_by='.$order_by);
-		$data['sort_name'] 		= site_url('admin/staffs'.$url.'sort_by=staff_name&order_by='.$order_by);
-		$data['sort_group']		= site_url('admin/staffs'.$url.'sort_by=staff_group_name&order_by='.$order_by);
 		$data['sort_date'] 			= site_url('admin/staffs'.$url.'sort_by=date_added&order_by='.$order_by);
 		$data['sort_id'] 			= site_url('admin/staffs'.$url.'sort_by=staff_id&order_by='.$order_by);
 		
@@ -128,6 +128,16 @@ class Staffs extends CI_Controller {
 			);
 		}
 
+		$this->load->model('Locations_model');
+		$data['locations'] = array();
+		$results = $this->Locations_model->getLocations();
+		foreach ($results as $result) {					
+			$data['locations'][] = array(
+				'location_id'	=>	$result['location_id'],
+				'location_name'	=>	$result['location_name'],
+			);
+		}
+	
 		$data['staff_dates'] = array();
 		$staff_dates = $this->Staffs_model->getStaffDates();
 		foreach ($staff_dates as $staff_date) {
@@ -136,7 +146,7 @@ class Staffs extends CI_Controller {
 			$data['staff_dates'][$month_year] = mdate('%F %Y', strtotime($staff_date['date_added']));
 		}
 
-		if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+		if ($this->input->get('sort_by') AND $this->input->get('order_by')) {
 			$url .= 'sort_by='.$filter['sort_by'].'&';
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
@@ -152,16 +162,15 @@ class Staffs extends CI_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		if ($this->input->post('delete') && $this->_deleteStaff() === TRUE) {
-			
+		if ($this->input->post('delete') AND $this->_deleteStaff() === TRUE) {
 			redirect('admin/staffs');  			
 		}	
 
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'staffs.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'staffs', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'staffs', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'staffs', $regions, $data);
+			$this->template->render('themes/admin/default/', 'staffs', $data);
 		}
 	}
 
@@ -182,7 +191,7 @@ class Staffs extends CI_Controller {
 		}
 
 		if (is_numeric($this->input->get('id'))) {
-			$staff_id = (int)$this->input->get('id');
+			$staff_id = $this->input->get('id');
 			$data['action']	= site_url('admin/staffs/edit?id='. $staff_id);
 		} else {
 		    $staff_id = 0;
@@ -191,11 +200,19 @@ class Staffs extends CI_Controller {
 
 		$staff_info = $this->Staffs_model->getStaff($staff_id);
 		
-		$data['heading'] 			= 'Staff - '. $staff_info['staff_name'];
-		$data['button_save'] 		= 'Save';
-		$data['button_save_close'] 	= 'Save & Close';
-		$data['sub_menu_back'] 		= site_url('admin/staffs');
+		$title = (isset($staff_info['staff_name'])) ? 'Edit - '. $staff_info['staff_name'] : 'New';	
+		$this->template->setTitle('Staff: '. $title);
+		$this->template->setHeading('Staff: '. $title);
+		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
+		$this->template->setBackButton('back_button', site_url('admin/staffs'));
 
+    	$data['staff_profile'] = FALSE;
+    	if ($this->input->get('id') === $this->user->getStaffId() AND !$this->user->hasPermissions('modify', 'admin/staffs')) {
+			$data['staff_profile'] = TRUE;
+		} else {
+			$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
+		}
+		
 		$data['staff_name'] 		= $staff_info['staff_name'];
 		$data['staff_email'] 		= $staff_info['staff_email'];
 		$data['staff_group_id'] 	= $staff_info['staff_group_id'];
@@ -243,11 +260,15 @@ class Staffs extends CI_Controller {
 			);
 		}
 	
-		if ($this->input->post() AND ! $this->input->get('id') AND $this->_addStaff() === TRUE) {
-			redirect('admin/staffs');
+		if ($this->input->post() AND $this->_addStaff() === TRUE) {
+			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {	
+				redirect('admin/staffs/edit?id='. $this->input->post('insert_id'));
+			} else {
+				redirect('admin/staffs');
+			}
 		}
 
-		if ($this->input->post() AND $this->input->get('id') AND $this->_updateStaff($data['staff_email'], $data['username']) === TRUE) {
+		if ($this->input->post() AND $this->_updateStaff($data['staff_email'], $data['username']) === TRUE) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('admin/staffs');
 			}
@@ -255,20 +276,43 @@ class Staffs extends CI_Controller {
 			redirect('admin/staffs/edit?id='. $staff_id);
 		}
 		
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'staffs_edit.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'staffs_edit', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'staffs_edit', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'staffs_edit', $regions, $data);
+			$this->template->render('themes/admin/default/', 'staffs_edit', $data);
 		}
 	}
 
+	public function autocomplete() {
+		$json = array();
+		
+		if ($this->input->get('staff_name')) {
+			$filter = array(
+				'staff_name' => urldecode($this->input->get('staff_name'))
+			);
+
+			$results = $this->Staffs_model->getAutoComplete($filter);
+		
+			if ($results) {
+				foreach ($results as $result) {
+					$json[] = array(
+						'staff_id' 		=> $result['staff_id'],
+						'staff_name' 	=> $result['staff_name']
+					);
+				}
+			}
+		}
+		
+		$this->output->set_output(json_encode($json));
+	}
+	
 	public function _addStaff() {
 									
     	if (!$this->user->hasPermissions('modify', 'admin/staffs')) {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add!</p>');
   			return TRUE;
-    	} else if ($this->validateForm() === TRUE) { 
+    	} else if (! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$add = array();
 
 			$add['staff_name']			= $this->input->post('staff_name');
@@ -279,10 +323,10 @@ class Staffs extends CI_Controller {
 			$add['staff_location_id']	= $this->input->post('staff_location_id');
 			$add['staff_status']		= $this->input->post('staff_status');
 			
-			if ($this->Staffs_model->addStaff($add)) {
-				$this->session->set_flashdata('alert', '<p class="success">Staff Added Sucessfully!</p>');
+			if ($_POST['insert_id'] = $this->Staffs_model->addStaff($add)) {
+				$this->session->set_flashdata('alert', '<p class="success">Staff added sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');				
 			}
 		
 			return TRUE;
@@ -293,7 +337,7 @@ class Staffs extends CI_Controller {
     	if ($this->input->get('id') !== $this->user->getStaffId() AND !$this->user->hasPermissions('modify', 'admin/staffs')) {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
   			return TRUE;
-    	} else if ($this->input->get('id') AND $this->validateForm($staff_email, $username) === TRUE) { 
+    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm($staff_email, $username) === TRUE) { 
 			$update = array();
 			
 			$update['staff_id']		= $this->input->get('id');
@@ -305,21 +349,15 @@ class Staffs extends CI_Controller {
 				$update['staff_email']	= $staff_email;
 			}
 		
-			if ($username !== $this->input->post('username')) {
-				$update['username']	= $this->input->post('username');
-			} else {
-				$update['username']	= $username;
-			}
-		
 			$update['password']				= $this->input->post('password');
 			$update['staff_group_id']		= $this->input->post('staff_group');
 			$update['staff_location_id']	= $this->input->post('staff_location_id');
 			$update['staff_status']			= $this->input->post('staff_status');
 			
 			if ($this->Staffs_model->updateStaff($update)) {
-				$this->session->set_flashdata('alert', '<p class="success">Staff Updated Sucessfully!</p>');
+				$this->session->set_flashdata('alert', '<p class="success">Staff updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');				
 			}
 		
 			return TRUE;
@@ -329,35 +367,32 @@ class Staffs extends CI_Controller {
 	public function _deleteStaff() {
     	if (!$this->user->hasPermissions('modify', 'admin/staffs')) {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
-    	} else { 
-			if (is_array($this->input->post('delete'))) {
-				foreach ($this->input->post('delete') as $key => $value) {
-					$staff_id = $value;
-					$this->Staffs_model->deleteStaff($staff_id);
-				}			
-			
-				$this->session->set_flashdata('alert', '<p class="success">Staff(s) Deleted Sucessfully!</p>');
-			}
+    	} else if (is_array($this->input->post('delete'))) {
+			foreach ($this->input->post('delete') as $key => $value) {
+				$this->Staffs_model->deleteStaff($value);
+			}			
+		
+			$this->session->set_flashdata('alert', '<p class="success">Staff(s) deleted sucessfully!</p>');
 		}
 				
 		return TRUE;
 	}
 
 	public function validateForm($staff_email = FALSE, $username = FALSE) {
-		$this->form_validation->set_rules('staff_name', 'Staff Name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+		$this->form_validation->set_rules('staff_name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 	
 		if ($staff_email !== $this->input->post('staff_email')) {
-			$this->form_validation->set_rules('staff_email', 'Staff Email', 'xss_clean|trim|required|valid_email|is_unique[staffs.staff_email]|max_length[96]');
+			$this->form_validation->set_rules('staff_email', 'Email', 'xss_clean|trim|required|valid_email|is_unique[staffs.staff_email]|max_length[96]');
 		}
 	
 		if ($username !== $this->input->post('username')) {
 			$this->form_validation->set_rules('username', 'Username', 'xss_clean|trim|required|is_unique[users.username]|min_length[2]|max_length[32]');
 		}
-	
+		
 		$this->form_validation->set_rules('password', 'Password', 'xss_clean|trim|min_length[6]|max_length[32]|matches[password_confirm]');
 		$this->form_validation->set_rules('password_confirm', 'Password Confirm', 'xss_clean|trim');
-		$this->form_validation->set_rules('staff_group', 'Staff Department', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('staff_location_id', 'Staff Location', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('staff_group', 'Department', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('staff_location_id', 'Location', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('staff_status', 'Status', 'xss_clean|trim|integer');
 
 		if ($this->form_validation->run() === TRUE) {

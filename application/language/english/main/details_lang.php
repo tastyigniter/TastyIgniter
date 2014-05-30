@@ -18,8 +18,8 @@ $lang['entry_telephone'] 		= 'Telephone:';
 $lang['entry_s_question'] 		= 'Security Question:';
 $lang['entry_s_answer'] 		= 'Security Answer:';
 
-$lang['success_updated'] 		= '<p class="success">Details Updated Sucessfully!</p>';
-$lang['success_password'] 		= '<p class="success">Password Updated Sucessfully!</p>';
+$lang['success_updated'] 		= '<p class="success">Details updated sucessfully.</p>';
+$lang['success_password'] 		= '<p class="success">Password updated sucessfully.</p>';
 $lang['error_nothing'] 			= '<p class="warning">No Changes Made!</p>';
 $lang['error_email'] 			= 'The %s you entered already exist.';
 $lang['error_password'] 		= 'The %s you entered is invalid.';

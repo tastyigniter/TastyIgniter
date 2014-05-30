@@ -27,11 +27,13 @@ class Reservation_module extends CI_Controller {
 				
 		$extension = $this->Extensions_model->getExtension('module', 'reservation');
 
-		$data['heading'] 			= 'Reservation';
-		$data['button_save'] 		= 'Save';
-		$data['button_save_close'] 	= 'Save & Close';
-		$data['sub_menu_back'] 		= site_url('admin/extensions');
-		$data['name'] 				= $extension['name'];
+		$this->template->setTitle('Extension: Reservation Module');
+		$this->template->setHeading('Extension: Reservation Module');
+		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('back_button', site_url('admin/extensions'));
+
+		$data['name'] 				= 'Reservation Module';
 
 		if ($this->config->item('reservation_module')) {
 			$result = $this->config->item('reservation_module');
@@ -71,7 +73,7 @@ class Reservation_module extends CI_Controller {
 			);
 		}
 		
-		if ($this->input->post() && $this->_updateModule() === TRUE){
+		if ($this->input->post() AND $this->_updateModule() === TRUE){
 			if ($this->input->post('save_close') === '1') {
 				redirect('admin/extensions');
 			}
@@ -79,11 +81,11 @@ class Reservation_module extends CI_Controller {
 			redirect('admin/reservation_module');
 		}
 		
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'reservation_module.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'reservation_module', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'reservation_module', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'reservation_module', $regions, $data);
+			$this->template->render('themes/admin/default/', 'reservation_module', $data);
 		}
 	}
 
@@ -97,13 +99,13 @@ class Reservation_module extends CI_Controller {
     	} else if ($this->validateForm() === TRUE) { 
 			$update = array();
 		
-			$update['reservation_module']['dimension_h'] 	= $this->input->post('dimension_h');
-			$update['reservation_module']['modules'] 		= $this->input->post('modules');
+			$update['dimension_h'] 	= $this->input->post('dimension_h');
+			$update['modules'] 		= $this->input->post('modules');
 
-			if ($this->Settings_model->updateSettings('reservation', $update)) {
-				$this->session->set_flashdata('alert', '<p class="success">Reservation Module Updated Sucessfully!</p>');
+			if ($this->Settings_model->addSetting('module', 'reservation_module', $update, '1')) {
+				$this->session->set_flashdata('alert', '<p class="success">Reservation Module updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');				
 			}
 	
 			return TRUE;

@@ -1,4 +1,14 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div id="update-box" class="content">
 	<form accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
 		<div class="wrap_heading">
@@ -31,7 +41,7 @@
 							<?php } ?>
 							<?php } ?>
 							</select>
-							<img id="flag" alt="<?php echo $image; ?>" src="<?php echo $image_url; ?>" width="24" height="12" />
+							<img id="flag" alt="<?php echo $image; ?>" src="<?php echo $image_url; ?>" style="margin-bottom: -6px;" />
 						</td>
 					</tr>
 					<tr>
@@ -56,11 +66,12 @@
 		</div>
 	</form>
 	</div>
+	</div>
 </div>
 <script type="text/javascript"><!--
 $('select[name="image"]').change(function() {
 	var value = $('select[name="image"]').val();
-	var html  = '<?php echo base_url(APPPATH. "views/themes/admin/default/images/flags"); ?>/' + value;
+	var html  = '<?php echo base_url("assets/img/flags"); ?>/' + value;
 	$('#flag').attr('src', html);
 });
 

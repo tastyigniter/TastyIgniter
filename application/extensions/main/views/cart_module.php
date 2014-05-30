@@ -29,7 +29,7 @@
 			</td>
 			<!--<td><?php echo $cart_item['price']; ?></td>-->
 			<td><?php echo $cart_item['sub_total']; ?></td>
-			<td><img class="delete_cart" alt="Remove" src="<?php echo base_url('assets/img/delete-menu.png'); ?>" onClick="updateCart('<?php echo $cart_item['menu_id']; ?>', '<?php echo $cart_item['rowid']; ?>', '0');"/></td>
+			<td><img class="delete_cart" alt="Remove" src="<?php echo base_url(APPPATH .'views/themes/main/default/images/delete.svg'); ?>" onClick="updateCart('<?php echo $cart_item['menu_id']; ?>', '<?php echo $cart_item['rowid']; ?>', '0');"/></td>
 		</tr>
 		<?php } ?>
     </table>
@@ -53,7 +53,7 @@
 		<?php } ?>
 		<?php if (!empty($coupon)) { ?>
 		<tr>
-			<td class="right"><img onclick="clearCoupon();" src="<?php echo base_url('assets/img/delete.svg'); ?>" />
+			<td class="right"><img onclick="clearCoupon();" src="<?php echo base_url(APPPATH .'views/themes/main/default/images/delete.svg'); ?>" />
 			<b><?php echo $text_coupon; ?>:</b> -<?php echo $coupon; ?></td>
 		</tr>
 		<?php } ?>

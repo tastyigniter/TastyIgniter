@@ -8,11 +8,11 @@ class Reservation_module extends MX_Controller {
 		$this->load->model('Reservations_model');
 		$this->load->model('Customers_model');
 		$this->load->model('Security_questions_model');
+		$this->load->library('language');
+		$this->lang->load('main/reservation_module', $this->language->folder());
 	}
 
 	public function index() {
-		$this->lang->load('main/reservation_module');  											// loads language file
-		
 		if ( !file_exists(EXTPATH .'main/views/reservation_module.php')) { 						//check if file exists in views folder
 			show_404(); 																		// Whoops, show 404 error page!
 		}

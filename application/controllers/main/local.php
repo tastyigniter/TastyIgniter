@@ -7,11 +7,12 @@ class Local extends MX_Controller {
 		$this->load->model('Locations_model'); 													// loads the location model
 		$this->load->library('location'); 														// load the location library
 		$this->load->library('currency'); 														// load the currency library
+
+		$this->load->library('language');
+		$this->lang->load('main/local', $this->language->folder());
 	}
 
 	public function index() {
-		$this->lang->load('main/local');  													// loads home language file
-					
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert'); 								// retrieve session flashdata variable if available
 		} else {
@@ -25,7 +26,8 @@ class Local extends MX_Controller {
 		}
 		
 		// START of retrieving lines from language file to pass to view.
-		$data['text_heading'] 			= $this->lang->line('text_heading');
+		$this->template->setTitle($this->lang->line('text_view_heading'));
+		$this->template->setHeading($this->lang->line('text_view_heading'));
 		$data['text_local'] 			= $this->lang->line('text_local');
 		$data['text_postcode'] 			= ($this->config->item('search_by') === 'postcode') ? $this->lang->line('entry_postcode') : $this->lang->line('entry_address');
 		$data['text_find'] 				= $this->lang->line('text_find');
@@ -101,11 +103,11 @@ class Local extends MX_Controller {
 		$total_reviews = $this->Reviews_model->getTotalLocationReviews($this->location->getId());
 		$data['text_total_review'] = sprintf($this->lang->line('text_total_review'), $total_reviews);
 
-		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'local.php')) {
-			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'local', $regions, $data);
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'local', $data);
 		} else {
-			$this->template->render('themes/main/default/', 'local', $regions, $data);
+			$this->template->render('themes/main/default/', 'local', $data);
 		}
 	}
 

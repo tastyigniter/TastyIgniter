@@ -1,4 +1,14 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div id="update-box" class="content">
 	<form accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
 		<div class="wrap_heading">
@@ -112,7 +122,7 @@
 						<th>Staff</th>
 						<th>Staff Assigned To</th>
 						<th class="center">Customer Notified</th>
-						<th class="left" width="25%">Comment</th>
+						<th class="left" width="45%">Comment</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -195,6 +205,7 @@
 
 	</form>
 	</div>
+	</div>
 </div>
 <script type="text/javascript">
 $(document).ready(function() {
@@ -215,7 +226,7 @@ $('#tabs a').tabs();
 function getStatusComment() {
 	if ($('select[name="status"]').val()) {
 		$.ajax({
-			url: js_site_url('admin/reserve_statuses/comment?status_id=') + encodeURIComponent($('select[name="status"]').val()),
+			url: js_site_url('admin/statuses/comment?status_id=') + encodeURIComponent($('select[name="status"]').val()),
 			dataType: 'json',
 			success: function(json) {
 				$('textarea[name="status_comment"]').html(json);

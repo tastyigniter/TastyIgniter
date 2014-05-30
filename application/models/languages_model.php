@@ -23,6 +23,10 @@ class Languages_model extends CI_Model {
 		if ($this->db->limit($filter['limit'], $filter['page'])) {
 			$this->db->from('languages');
 		
+			if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+				$this->db->order_by($filter['sort_by'], $filter['order_by']);
+			}
+			
 			if (!empty($filter['filter_search'])) {
 				$this->db->like('name', $filter['filter_search']);
 				$this->db->or_like('code', $filter['filter_search']);
@@ -61,17 +65,39 @@ class Languages_model extends CI_Model {
 	}
 
 	public function getLanguage($language_id) {
-		$this->db->from('languages');
+		if ($language_id !== '') {
+			$this->db->from('languages');
 
-		$this->db->where('language_id', $language_id);
+			$this->db->where('language_id', $language_id);
 
-		$query = $this->db->get();
+			$query = $this->db->get();
 		
-		if ($query->num_rows() > 0) {
-			return $query->row_array();
+			if ($query->num_rows() > 0) {
+				return $query->row_array();
+			}
 		}
 	}
 
+	public function getLanguageFolder($lang = '') {
+		if ($lang !== '') {
+			$this->db->from('languages');
+				
+			if (is_numeric($lang)) {
+				$this->db->where('language_id', $lang);
+			} else {
+				$this->db->where('code', $lang);
+			}
+			
+			$this->db->where('status', '1');
+			$query = $this->db->get();
+
+			if ($query->num_rows() > 0) {
+				$row = $query->row_array();
+				return $row['directory'];
+			}
+		}
+	}
+	
 	public function updateLanguage($update = array()) {
 		$query = FALSE;
 
@@ -99,17 +125,14 @@ class Languages_model extends CI_Model {
 		
 		if (!empty($update['language_id'])) {
 			$this->db->where('language_id', $update['language_id']);
-			$this->db->update('languages');			
+			$query = $this->db->update('languages');			
 		}		
-
-		if ($this->db->affected_rows() > 0) {
-			$query = TRUE;
-		}
 
 		return $query;
 	}
 
 	public function addLanguage($add = array()) {
+		$query = FALSE;
 
 		if (!empty($add['name'])) {
 			$this->db->set('name', $add['name']);
@@ -133,19 +156,23 @@ class Languages_model extends CI_Model {
 			$this->db->set('status', '0');
 		}
 		
-		$this->db->insert('languages');			
-
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
+		if (!empty($add)) {
+			if ($this->db->insert('languages')) {
+				$query = $this->db->insert_id();
+			}			
 		}
+		
+		return $query;
 	}
 
 	public function deleteLanguage($language_id) {
-		$this->db->where('language_id', $language_id);
-		$this->db->delete('languages');
+		if (is_numeric($language_id)) {
+			$this->db->where('language_id', $language_id);
+			$this->db->delete('languages');
 
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
+			if ($this->db->affected_rows() > 0) {
+				return TRUE;
+			}
 		}
 	}
 }

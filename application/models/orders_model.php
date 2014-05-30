@@ -1,4 +1,5 @@
 <?php
+
 class Orders_model extends CI_Model {
 
     public function record_count($filter = array()) {
@@ -7,6 +8,10 @@ class Orders_model extends CI_Model {
 			$this->db->or_like('location_name', $filter['filter_search']);
 			$this->db->or_like('first_name', $filter['filter_search']);
 			$this->db->or_like('last_name', $filter['filter_search']);
+		}
+
+		if (!empty($filter['filter_location'])) {
+			$this->db->where('orders.location_id', $filter['filter_location']);
 		}
 
 		if (isset($filter['filter_type']) AND is_numeric($filter['filter_type'])) {
@@ -51,10 +56,12 @@ class Orders_model extends CI_Model {
 			
 			if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
 				$this->db->order_by($filter['sort_by'], $filter['order_by']);
-			} else {
-				$this->db->order_by('date_added', 'DESC');
 			}
 		
+			if (!empty($filter['filter_location'])) {
+				$this->db->where('orders.location_id', $filter['filter_location']);
+			}
+
 			if (!empty($filter['filter_search'])) {
 				$this->db->like('order_id', $filter['filter_search']);
 				$this->db->or_like('location_name', $filter['filter_search']);
@@ -101,21 +108,6 @@ class Orders_model extends CI_Model {
 		}
 	}
 
-	public function getOrderDates() {
-		$this->db->select('date_added, MONTH(date_added) as month, YEAR(date_added) as year');
-		$this->db->from('orders');
-		$this->db->group_by('MONTH(date_added)');
-		$this->db->group_by('YEAR(date_added)');
-		$query = $this->db->get();
-		$result = array();
-
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
-
-		return $result;
-	}
-	
 	public function getMainOrders($customer_id = FALSE) {
 		if ($customer_id !== FALSE) {
 			$this->db->from('orders');
@@ -228,7 +220,23 @@ class Orders_model extends CI_Model {
 		return $result;
 	}
 
+	public function getOrderDates() {
+		$this->db->select('date_added, MONTH(date_added) as month, YEAR(date_added) as year');
+		$this->db->from('orders');
+		$this->db->group_by('MONTH(date_added)');
+		$this->db->group_by('YEAR(date_added)');
+		$query = $this->db->get();
+		$result = array();
+
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+
+		return $result;
+	}
+	
 	public function updateOrder($update = array()) {
+		$query = FALSE;
 		
 		if (!empty($update['status_id'])) {
 			$this->db->set('status_id', $update['status_id']);
@@ -240,16 +248,14 @@ class Orders_model extends CI_Model {
 		
 		if (!empty($update['order_id'])) {
 			$this->db->where('order_id', $update['order_id']);
-			$this->db->update('orders');
+			$query = $this->db->update('orders');
 		}	
 
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
-		}
+		return $query;
 	}
 
 	public function addOrder($order_info = array(), $cart_contents = array()) {
-
+		$query = FALSE;
 		$current_time = time();
 
 		if (!empty($order_info['location_id'])) {
@@ -312,30 +318,25 @@ class Orders_model extends CI_Model {
 		}
 
 		if (!empty($order_info)) {
-			$this->db->insert('orders');
-		
-			if ($this->db->affected_rows() > 0) {
+			if ($this->db->insert('orders')) {
 				$order_id = $this->db->insert_id();
-				
+			
 				$this->addDefaultAddress($order_info['customer_id'], $order_info['address_id']);
 				$this->addOrderMenus($order_id, $cart_contents);
-				
+			
 				$order_totals = array(
 					'cart_total' => array('title' => 'Sub Total', 'value' => $cart_contents['cart_total']),
 					'delivery' => array('title' => 'Delivery', 'value' => $cart_contents['delivery']),
 					'coupon' => array('title' => 'Coupon', 'value' => $cart_contents['coupon'])
 				);
-			
+		
 				$this->addOrderTotals($order_id, $order_totals);
-			
+		
 				if (!empty($order_info['coupon_code'])) {
 					$this->addOrderCoupon($order_id, $order_info['customer_id'], $cart_contents['coupon'], $order_info['coupon_code']);
 				}
-			
+		
 				return $order_id;
-			
-			} else {
-				return FALSE;
 			}
 		}
 	}	
@@ -344,12 +345,14 @@ class Orders_model extends CI_Model {
 		$current_time = time();
 
 		if ($order_id AND !empty($order_info)) {
-		
-			if ($order_info['payment'] === 'paypal' AND $this->config->item('paypal_order_status')) {
-				$status_id = (int)$this->config->item('paypal_order_status');
+			$paypal = $this->config->item('paypal_express_payment');
+			$cod = $this->config->item('cod_payment');
+			
+			if ($order_info['payment'] === 'paypal' AND is_numeric($paypal['paypal_order_status'])) {
+				$status_id = (int) $paypal['paypal_order_status'];
 				$this->db->set('status_id', $status_id);
-			} else if ($order_info['payment'] === 'cod' AND $this->config->item('cod_order_status')) {
-				$status_id = (int)$this->config->item('cod_order_status');
+			} else if ($order_info['payment'] === 'cod' AND is_numeric($cod['cod_order_status'])) {
+				$status_id = (int) $cod['cod_order_status'];
 				$this->db->set('status_id', $status_id);
 			} else {
 				$status_id = (int)$this->config->item('order_status_new');
@@ -358,24 +361,24 @@ class Orders_model extends CI_Model {
 
 			$notify = $this->_sendMail($order_id);
 			$this->db->set('notify', $notify);
-		
 			$this->db->where('order_id', $order_id);
-			$this->db->update('orders'); 
 			
-			$this->load->model('Statuses_model');
-			$status = $this->Statuses_model->getStatus($status_id);
-			$order_history = array(
-				'order_id' 		=> $order_id, 
-				'status_id' 	=> $status_id, 
-				'notify' 		=> $notify, 
-				'comment' 		=> $status['status_comment'], 
-				'date_added' 	=> mdate('%Y-%m-%d %H:%i:%s', $current_time)
-			);
+			if ($this->db->update('orders')) {
+				$this->load->model('Statuses_model');
+				$status = $this->Statuses_model->getStatus($status_id);
+				$order_history = array(
+					'order_id' 		=> $order_id, 
+					'status_id' 	=> $status_id, 
+					'notify' 		=> $notify, 
+					'comment' 		=> $status['status_comment'], 
+					'date_added' 	=> mdate('%Y-%m-%d %H:%i:%s', $current_time)
+				);
 			
-			$this->Statuses_model->addStatusHistory('order', $order_history);
+				$this->Statuses_model->addStatusHistory('order', $order_history);
 
-			$this->cart->destroy();
-			$this->session->unset_userdata('order_data');
+				$this->cart->destroy();
+				$this->session->unset_userdata('order_data');
+			}
 		}
 	}
 	
@@ -431,34 +434,31 @@ class Orders_model extends CI_Model {
 				$this->db->set('option_name', $option['name']);
 				$this->db->set('option_price', $option['price']);
 			}
-		}
 
-		$this->db->insert('order_options');
-
-		if ($this->db->affected_rows() > 0) {
-			$order_option_id = $this->db->insert_id();
-			return $order_option_id;
+			if ($this->db->insert('order_options')) {
+				return $this->db->insert_id();
+			}
 		}
 	}
 
 	public function addOrderTotals($order_id, $order_totals) {
-		foreach ($order_totals as $key => $value) {
-			if (is_numeric($value['value'])) {
-				$this->db->set('order_id', $order_id);
-				$this->db->set('code', $key);
-				$this->db->set('title', $value['title']);
+		if (is_numeric($order_id) AND !empty($order_totals)) {
+			foreach ($order_totals as $key => $value) {
+				if (is_numeric($value['value'])) {
+					$this->db->set('order_id', $order_id);
+					$this->db->set('code', $key);
+					$this->db->set('title', $value['title']);
 
-				if ($key === 'code') {
-					$this->db->set('value', '-'. $value['value']);
-				} else {
-					$this->db->set('value', $value['value']);
+					if ($key === 'code') {
+						$this->db->set('value', '-'. $value['value']);
+					} else {
+						$this->db->set('value', $value['value']);
+					}
+
+					$this->db->insert('order_totals'); 
 				}
-
-				$this->db->insert('order_totals'); 
 			}
-		}
 		
-		if ($this->db->affected_rows() > 0) {
 			return TRUE;
 		}
 	}
@@ -473,22 +473,43 @@ class Orders_model extends CI_Model {
 			$this->db->set('code', $coupon['code']);
 			$this->db->set('amount', '-'. $coupon_amt);
 			$this->db->set('date_used', mdate('%Y-%m-%d %H:%i:%s', time()));
-			$this->db->insert('coupons_history'); 
+			
+			if ($this->db->insert('coupons_history')) {
+				return $this->db->insert_id();
+			}
 		}
 	}
 	
 	public function addDefaultAddress($customer_id, $address_id) {
 		$this->db->set('address_id', $address_id);
 		$this->db->where('customer_id', $customer_id);
-		$this->db->update('customers'); 
+		
+		if ($this->db->update('customers')) {
+			return $this->db->insert_id();
+		}
 	}
 						
 	public function deleteOrder($order_id) {
-		$delete_data = array();
+		if (is_numeric($order_id)) {
+			$this->db->where('order_id', $order_id);
+			$this->db->delete('orders');
 
-		$delete_data['order_id'] = $order_id;
-			
-		return $this->db->delete('orders', $delete_data);
+			$this->db->where('order_id', $order_id);
+			$this->db->delete('order_menus');
+
+			$this->db->where('order_id', $order_id);
+			$this->db->delete('order_options');
+
+			$this->db->where('order_id', $order_id);
+			$this->db->delete('order_totals');
+
+			$this->db->where('order_id', $order_id);
+			$this->db->delete('coupons_history');
+
+			if ($this->db->affected_rows() > 0) {
+				return TRUE;
+			}
+		}
 	}
 
 	public function getMailData($order_id) {

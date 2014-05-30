@@ -1,4 +1,14 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div id="update-box" class="content">
 	<form enctype="multipart/form-data" accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
 		<div class="wrap_heading">
@@ -46,14 +56,16 @@
 						<td><div class="imagebox" id="selectImage">
 							<div class="preview"><img src="<?php echo $menu_image_url; ?>" class="thumb" id="thumb"></div>
 							<div class="select">
-								<input type="hidden" name="menu_photo" value="<?php echo set_value('menu_photo', $menu_image); ?>" id="field" /><center class="name"><?php echo $image_name; ?></center><br />
-								<a class="button imagebox-btn" onclick="imageUpload('field');">Select Image</a>
-								<a class="button" onclick="$('#thumb').attr('src', '<?php echo $no_photo; ?>'); $('#field').attr('value', 'data/no_photo.png'); $(this).parent().parent().find('center').html('no_photo.png');">Remove Image</a>
+								<input type="hidden" name="menu_photo" value="<?php echo set_value('menu_photo', $menu_image); ?>" id="field" />
+								<center class="name"><?php echo $image_name; ?></center>
+								<a class="button select-image" onclick="imageUpload('field');">Select</a>
+								<a class="button remove-image" onclick="$('#thumb').attr('src', '<?php echo $no_photo; ?>'); $('#field').attr('value', 'data/no_photo.png'); $(this).parent().parent().find('center').html('no_photo.png');">Remove</a>
 							</div>
 						</div></td>
 					</tr>
 					<tr>
-						<td><b>Stock Quantity:</b></td>
+						<td><b>Stock Quantity:</b><br />
+						<font size="1">Set to 0 for unlimited stock quantity.</font></td>
 						<td><input type="text" name="stock_qty" value="<?php echo set_value('stock_qty', $stock_qty); ?>" id="stock" class="textfield" /></td>
 					</tr>
 					<tr>
@@ -100,9 +112,9 @@
 							<table class="list">
 								<thead>
 									<tr>
-										<th><b>Option Name</b></th>
-										<th><b>Option Price</b></th>
-										<th><b>Remove</b></th>
+										<th>Option Name</th>
+										<th>Option Price</th>
+										<th>Remove</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -111,7 +123,7 @@
 									<tr id="menu-option<?php echo $menu_option['option_id']; ?>">
 										<td class="name"><?php echo $menu_option['option_name']; ?></td>
 										<td><?php echo $menu_option['option_price']; ?></td>
-										<td class="img"><i class="icon icon-delete" onclick="$(this).parent().parent().remove();"></i><input type="hidden" name="menu_options[]" value="<?php echo $menu_option['option_id']; ?>" /></td>
+										<td class="img"><a><i class="icon icon-delete" onclick="$(this).parent().parent().remove();"></i></a><input type="hidden" name="menu_options[]" value="<?php echo $menu_option['option_id']; ?>" /></td>
 									</tr>
 									<?php } ?>
 									<?php } ?>
@@ -156,6 +168,7 @@
 		</div>
 	</form>
 	</div>
+	</div>
 </div>
 <script type="text/javascript" src="<?php echo base_url("assets/js/jquery-ui-timepicker-addon.js"); ?>"></script> 
 <script type="text/javascript"><!--
@@ -188,7 +201,7 @@ $('input[name=\'menu_option\']').autocomplete({
 	},
 	select: function(event, ui) {
 		$('#menu-option' + ui.item.value).remove();
-		$('#menu-option table').append('<tr id="menu-option' + ui.item.value + '"><td class="name">' + ui.item.label + '</td><td>' + ui.item.price + '</td><td class="img">' + '<i class="icon icon-delete" onclick="$(this).parent().parent().remove();"></i>' + '<input type="hidden" name="menu_options[]" value="' + ui.item.value + '" /></td></tr>');
+		$('#menu-option table tbody').append('<tr id="menu-option' + ui.item.value + '"><td class="name">' + ui.item.label + '</td><td>' + ui.item.price + '</td><td class="img">' + '<a><i class="icon icon-delete" onclick="$(this).parent().parent().remove();"></i></a>' + '<input type="hidden" name="menu_options[]" value="' + ui.item.value + '" /></td></tr>');
 
 		return false;
 	},
@@ -204,11 +217,9 @@ function imageUpload(field) {
 		
 	var iframe_url = js_site_url('admin/image_manager?popup=iframe&field_id=') + encodeURIComponent(field);
 
-	$('#container').prepend('<div id="image-manager" style="padding: 3px 0px 0px 0px;"><iframe src="'+ iframe_url +'" width="780" height="550" frameborder="0"></iframe></div>');
+	$('#container').prepend('<div id="image-manager" style="padding: 3px 0px 0px 0px;"><iframe src="'+ iframe_url +'" width="980" height="550" frameborder="0"></iframe></div>');
 	
-	$('.imagebox-btn').fancybox({	
-		width: 950,
-		height: 600,
+	$('.select-image').fancybox({	
  		href:"#image-manager",
 		autoScale: false,
 		afterClose: function() {
@@ -218,7 +229,7 @@ function imageUpload(field) {
 					dataType: 'json',
 					success: function(json) {
 						var thumb = $('#' + field).parent().parent().find('.thumb');
-						$(thumb).replaceWith('<img src="' + json + '" alt="" class="thumb" />');
+						$(thumb).replaceWith('<img src="' + json + '" alt="" class="thumb" id="thumb" />');
 					}
 				});
 			}

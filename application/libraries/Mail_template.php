@@ -22,7 +22,7 @@ class Mail_template {
 	}
 
 	public function parseTemplate($code, $data) {
-		$template_id = '11';
+		$template_id = (int) $this->CI->config->item('mail_template_id');
 		$template = $this->setTemplate($template_id, $code);
 
 		$this->subject 	= $this->_parseTemplate($template['subject'], $data);

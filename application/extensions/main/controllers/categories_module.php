@@ -5,11 +5,11 @@ class Categories_module extends MX_Controller {
 	public function __construct() {
 		parent::__construct(); 																	// calls the constructor
 		$this->load->model('Menus_model'); 														// load the menus model
+		$this->load->library('language');
+		$this->lang->load('main/categories_module', $this->language->folder());
 	}
 
 	public function index() {
-		$this->lang->load('main/categories_module');  														// loads language file
-		
 		if ( !file_exists(EXTPATH .'main/views/categories_module.php')) { 								//check if file exists in views folder
 			show_404(); 																		// Whoops, show 404 error page!
 		}

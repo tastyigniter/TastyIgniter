@@ -11,7 +11,7 @@
 	$this->load->model('Extensions_model');
 	$this->load->model('Design_model');
 	
-	$extensions = $this->Extensions_model->getExtensions();		
+	$extensions = $this->Extensions_model->getExtensions('module');		
 	$layout_id = $this->Design_model->getRouteLayoutId($uri_route);
 	
 	if ($this->uri->segment(1) === 'pages') {
@@ -20,8 +20,8 @@
 	
 	$modules_data = array();
 	foreach ($extensions as $extension) {
-		if (file_exists(EXTPATH .'main/controllers/'. $extension['code'] .'_module.php')) {
-			$result = $this->config->item($extension['code'] .'_module');
+		if (file_exists(EXTPATH .'main/controllers/'. $extension['code'] .'.php')) {
+			$result = $this->config->item($extension['code']);
 
 			if (is_array($result['modules'])) {
 				foreach ($result['modules'] as $module) {
@@ -48,7 +48,7 @@
 <?php if (!empty($modules_data)) { ?>
 	<div class="top-section">
 	<?php foreach ($modules_data as $key => $value) { ?>
-		<?php echo Modules::run('main/'. $value['code'] .'_module/index'); ?>
+		<?php echo Modules::run('main/'. $value['code'] .'/index'); ?>
 	<?php } ?>
 	</div>
 <?php } ?>

@@ -43,94 +43,86 @@ class Reservations extends CI_Controller {
 		}
 				
 		if (is_numeric($this->input->get('show_calendar'))) {
-			$filter['show_calendar'] = $this->input->get('show_calendar');
-			$data['show_calendar'] = $filter['show_calendar'];
+			$filter['show_calendar'] = $data['show_calendar'] = $this->input->get('show_calendar');
 			$url .= 'show_calendar='.$filter['show_calendar'].'&';
 		} else {
 			$data['show_calendar'] = '';
 		}
 		
 		if ($this->input->get('filter_search')) {
-			$filter['filter_search'] = $this->input->get('filter_search');
-			$data['filter_search'] = $filter['filter_search'];
+			$filter['filter_search'] = $data['filter_search'] = $this->input->get('filter_search');
 			$url .= 'filter_search='.$filter['filter_search'].'&';
 		} else {
 			$data['filter_search'] = '';
 		}
 		
+    	if ($this->user->staffLocationAccess()) {
+  			$filter['filter_location'] = $this->user->getLocationId();
+		} else if (is_numeric($this->input->get('filter_location'))) {
+			$filter['filter_location'] = $data['filter_location'] = $this->input->get('filter_location');
+			$url .= 'filter_location='.$filter['filter_location'].'&';
+		} else {
+			$filter['filter_location'] = $data['filter_location'] = '';
+		}
+		
 		if (is_numeric($this->input->get('filter_status'))) {
-			$filter['filter_status'] = $this->input->get('filter_status');
-			$data['filter_status'] = $filter['filter_status'];
+			$filter['filter_status'] = $data['filter_status'] = $this->input->get('filter_status');
 			$url .= 'filter_status='.$filter['filter_status'].'&';
 		} else {
-			$filter['filter_status'] = '';
-			$data['filter_status'] = '';
+			$filter['filter_status'] = $data['filter_status'] = '';
 		}
 		
 		if ($this->input->get('filter_date')) {
-			$filter['filter_date'] = $this->input->get('filter_date');
-			$data['filter_date'] = $filter['filter_date'];
+			$filter['filter_date'] = $data['filter_date'] = $this->input->get('filter_date');
 			$url .= 'filter_date='.$filter['filter_date'].'&';
-		} else if ($this->input->get('filter_year') AND $this->input->get('filter_month') OR $this->input->get('filter_day')) {
-			$filter['filter_year'] = $this->input->get('filter_year');
-			$filter['filter_month'] = $this->input->get('filter_month');
-			$filter['filter_day'] = $this->input->get('filter_day');
-		    $data['filter_year'] = $filter['filter_year'];
-		    $data['filter_month'] = $filter['filter_month'];
-		    $data['filter_day'] = $filter['filter_day'];
 		} else {
-			$filter['filter_date'] = '';
-			$data['filter_date'] = '';
-		    $filter['filter_year'] = $filter['filter_month'] = $filter['filter_day'] = '';
-		    $data['filter_year'] = $data['filter_month'] = $data['filter_day'] = '';
+			$filter['filter_date'] = $data['filter_date'] = '';
 		}
 		
-		if (is_numeric($this->input->get('filter_location'))) {
-			$filter['filter_location'] = $this->input->get('filter_location');
-			$data['filter_location'] = $filter['filter_location'];
-			$url .= 'filter_location='.$filter['filter_location'].'&';
+		if (is_numeric($this->input->get('filter_year'))) {
+			$filter['filter_year'] = $data['filter_year'] = $this->input->get('filter_year');
 		} else {
-			$filter['filter_location'] = '';
-			$data['filter_location'] = '';
+			$filter['filter_year'] = $data['filter_year'] = '';
+		}
+		
+		if (is_numeric($this->input->get('filter_month'))) {
+			$filter['filter_month'] = $data['filter_month'] = $this->input->get('filter_month');
+		} else {
+			$filter['filter_month'] = $data['filter_month'] = '';
+		}
+		
+		if (is_numeric($this->input->get('filter_day'))) {
+			$filter['filter_day'] = $data['filter_day'] = $this->input->get('filter_day');
+		} else {
+			$filter['filter_day'] = $data['filter_day'] = '';
 		}
 		
 		if ($this->input->get('sort_by')) {
-			$filter['sort_by'] = $this->input->get('sort_by');
-			$data['sort_by'] = $filter['sort_by'];
+			$filter['sort_by'] = $data['sort_by'] = $this->input->get('sort_by');
 		} else {
-			$filter['sort_by'] = '';
-			$data['sort_by'] = '';
+			$filter['sort_by'] = $data['sort_by'] = 'reserve_date';
 		}
 		
 		if ($this->input->get('order_by')) {
-			$filter['order_by'] = $this->input->get('order_by');
-			$data['order_by_active'] = strtolower($this->input->get('order_by')) .' active';
-			$data['order_by'] = strtolower($this->input->get('order_by'));
+			$filter['order_by'] = $data['order_by'] = $this->input->get('order_by');
+			$data['order_by_active'] = $this->input->get('order_by') .' active';
 		} else {
-			$filter['order_by'] = '';
-			$data['order_by_active'] = '';
-			$data['order_by'] = 'desc';
+			$filter['order_by'] = $data['order_by'] = 'DESC';
+			$data['order_by_active'] = 'DESC';
 		}
 		
-		$data['heading'] 				= 'Reservations';
-		$data['button_delete'] 			= 'Delete';
+		$this->template->setTitle('Reservations');
+		$this->template->setHeading('Reservations');
+		$this->template->setButton('Delete', array('class' => 'delete_button', 'onclick' => '$(\'form:not(#filter-form)\').submit();'));
+
 		$data['text_empty'] 			= 'There are no reservations available.';
 		
-		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'DESC') ? 'ASC' : 'DESC';
-		$data['sort_id'] 			= site_url('admin/reservations'.$url.'sort_by=reservation_id&order_by='.$order_by);
-		$data['sort_location'] 		= site_url('admin/reservations'.$url.'sort_by=location_name&order_by='.$order_by);
-		$data['sort_customer'] 		= site_url('admin/reservations'.$url.'sort_by=first_name&order_by='.$order_by);
-		$data['sort_guest'] 		= site_url('admin/reservations'.$url.'sort_by=guest_num&order_by='.$order_by);
-		$data['sort_table'] 		= site_url('admin/reservations'.$url.'sort_by=table_name&order_by='.$order_by);
-		$data['sort_status']		= site_url('admin/reservations'.$url.'sort_by=status_name&order_by='.$order_by);
-		$data['sort_staff'] 		= site_url('admin/reservations'.$url.'sort_by=staff_name&order_by='.$order_by);
-		$data['sort_date'] 			= site_url('admin/reservations'.$url.'sort_by=reserve_date&order_by='.$order_by);
-		
 		if ($this->input->get('show_calendar') === '1') {
-			$data['button_list'] = '<a class="calendar_switch active" title="Switch to calender view" href="'.site_url('admin/reservations/') .'"><i class="icon-calendar"></i></a>';
 			$day = ($filter['filter_day'] === '') ? date('d', time()) : $filter['filter_day'];
 			$month = ($filter['filter_month'] === '') ? date('m', time()) : $filter['filter_month'];
 			$year = ($filter['filter_year'] === '') ? date('Y', time()) :  $filter['filter_year'];
+			$url .= 'filter_year='.$filter['filter_year'].'&filter_month='.$filter['filter_month'].'&filter_day='.$filter['filter_day'].'&';
+			
 			$data['days'] = $this->calendar->get_total_days($month, $year);
 			$data['months'] = array('01' => 'January', '02' => 'February', '03' => 'March', '04' => 'April', '05' => 'May', '06' => 'June', '07' => 'July', '08' => 'August', '09' => 'September', '10' => 'October', '11' => 'November', '12' => 'December');
 			$data['years'] = array('2011', '2012', '2013', '2014', '2015', '2016', '2017');
@@ -159,11 +151,22 @@ class Reservations extends CI_Controller {
 				}
 			}
 
+			$data['icon_list'] = '<a class="calendar_switch active" title="Switch to calender view" href="'.site_url('admin/reservations/') .'"><i class="icon-calendar"></i></a>';
 			$data['calendar'] = $this->calendar->generate($year, $month, $calendar_data, site_url('admin/reservations'), $url);
 		} else {
-			$data['button_list'] = '<a class="calendar_switch" title="Switch to calender view" href="'.site_url('admin/reservations?show_calendar=1') .'"><i class="icon-calendar"></i></a>';
+			$data['icon_list'] = '<a class="calendar_switch" title="Switch to calender view" href="'.site_url('admin/reservations?show_calendar=1') .'"><i class="icon-calendar"></i></a>';
 			$data['calendar'] = '';
 		}
+		
+		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
+		$data['sort_id'] 			= site_url('admin/reservations'.$url.'sort_by=reservation_id&order_by='.$order_by);
+		$data['sort_location'] 		= site_url('admin/reservations'.$url.'sort_by=location_name&order_by='.$order_by);
+		$data['sort_customer'] 		= site_url('admin/reservations'.$url.'sort_by=first_name&order_by='.$order_by);
+		$data['sort_guest'] 		= site_url('admin/reservations'.$url.'sort_by=guest_num&order_by='.$order_by);
+		$data['sort_table'] 		= site_url('admin/reservations'.$url.'sort_by=table_name&order_by='.$order_by);
+		$data['sort_status']		= site_url('admin/reservations'.$url.'sort_by=status_name&order_by='.$order_by);
+		$data['sort_staff'] 		= site_url('admin/reservations'.$url.'sort_by=staff_name&order_by='.$order_by);
+		$data['sort_date'] 			= site_url('admin/reservations'.$url.'sort_by=reserve_date&order_by='.$order_by);
 		
 		$data['reservations'] = array();
 		$results = $this->Reservations_model->getList($filter);
@@ -218,7 +221,7 @@ class Reservations extends CI_Controller {
 			$data['reserve_dates'][$month_year] = mdate('%F %Y', strtotime($reserve_date['reserve_date']));
 		}
 
-		if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+		if ($this->input->get('sort_by') AND $this->input->get('order_by')) {
 			$url .= 'sort_by='.$filter['sort_by'].'&';
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
@@ -234,15 +237,15 @@ class Reservations extends CI_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		if ($this->input->post('delete') && $this->_deleteReservation() === TRUE) {
+		if ($this->input->post('delete') AND $this->_deleteReservation() === TRUE) {
 			redirect('admin/reservations');
 		}	
 
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'reservations.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'reservations', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'reservations', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'reservations', $regions, $data);
+			$this->template->render('themes/admin/default/', 'reservations', $data);
 		}
 	}	
 
@@ -273,13 +276,17 @@ class Reservations extends CI_Controller {
 		
 		$result = $this->Reservations_model->getAdminReservation($reservation_id);
 
-		$data['heading'] 			= 'Reservation - '. $result['table_name'] .'-'.$result['reservation_id'];
-		$data['button_save'] 		= 'Save';
-		$data['button_save_close'] 	= 'Save & Close';
-		$data['sub_menu_back'] 		= site_url('admin/reservations');
+		$title = (isset($result['reservation_id'])) ? 'Edit - '. $result['reservation_id'] : 'New';	
+		$this->template->setTitle('Reservation: '. $title);
+		$this->template->setHeading('Reservation: '. $title);
+
+		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('back_button', site_url('admin/reservations'));
+
 		$data['text_empty'] 		= 'There are no status history for this reservation.';
 
-		$data['reservation_id'] 	= $result['table_name'] .'-'.$result['reservation_id'];
+		$data['reservation_id'] 	= $result['reservation_id'];
 		$data['location_name'] 		= $result['location_name'];
 		$data['location_address_1'] = $result['location_address_1'];
 		$data['location_address_2'] = $result['location_address_2'];
@@ -349,7 +356,7 @@ class Reservations extends CI_Controller {
 			);
 		}
 
-		if ($this->input->post() && $this->_updateReservation($data['status_id'], $data['staff_id']) === TRUE) {
+		if ($this->input->post() AND $this->_updateReservation($data['status_id'], $data['staff_id']) === TRUE) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('admin/reservations');
 			}
@@ -357,11 +364,11 @@ class Reservations extends CI_Controller {
 			redirect('admin/reservations/edit?id='. $reservation_id);
 		}
 				
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'reservations_edit.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'reservations_edit', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'reservations_edit', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'reservations_edit', $regions, $data);
+			$this->template->render('themes/admin/default/', 'reservations_edit', $data);
 		}
 	}
 	
@@ -369,7 +376,7 @@ class Reservations extends CI_Controller {
     	if (!$this->user->hasPermissions('modify', 'admin/reservations')) {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
 			return TRUE;
-    	} else if ( ! $this->input->post('delete') AND $this->validateForm() === TRUE) { 
+    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$update = array();
 			$history = array();
 			$current_time = time();
@@ -392,9 +399,9 @@ class Reservations extends CI_Controller {
 			}
 
 			if ($this->Reservations_model->updateReservation($update)) {
-				$this->session->set_flashdata('alert', '<p class="success">Reservation Updated Sucessfully!</p>');
+				$this->session->set_flashdata('alert', '<p class="success">Reservation updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');
 			}
 	
 			return TRUE;
@@ -403,18 +410,13 @@ class Reservations extends CI_Controller {
 
 	public function _deleteReservation($reservation_id = FALSE) {
     	if (!$this->user->hasPermissions('modify', 'admin/reservations')) {
-		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
-    	
-    	} else { 
-			if (is_array($this->input->post('delete'))) {
-				foreach ($this->input->post('delete') as $key => $value) {
-					$reservation_id = $value;            	
-					//$this->Reservations_model->deleteReservation($reservation_id);
-				}			
-			
-				$this->session->set_flashdata('alert', '<p class="success">Reservation Deleted Sucessfully!</p>');
-			}
+    	} else if (is_array($this->input->post('delete'))) {
+			foreach ($this->input->post('delete') as $key => $value) {
+				$this->Reservations_model->deleteReservation($value);
+			}			
+		
+			$this->session->set_flashdata('alert', '<p class="success">Reservation deleted sucessfully!</p>');
 		}
 				
 		return TRUE;

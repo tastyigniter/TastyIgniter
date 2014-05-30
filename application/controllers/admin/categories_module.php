@@ -27,11 +27,13 @@ class Categories_module extends CI_Controller {
 				
 		$extension = $this->Extensions_model->getExtension('module', 'categories');
 
-		$data['heading'] 			= 'Categories';
-		$data['button_save'] 		= 'Save';
-		$data['button_save_close'] 	= 'Save & Close';
-		$data['sub_menu_back'] 		= site_url('admin/extensions');
-		$data['name'] 				= $extension['name'];
+		$this->template->setTitle('Extension: Categories Module');
+		$this->template->setHeading('Extension: Categories Module');
+		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('back_button', site_url('admin/extensions'));
+
+		$data['name'] 				= 'Category Module';
 
 		if ($this->config->item('categories_module')) {
 			$result = $this->config->item('categories_module');
@@ -65,7 +67,7 @@ class Categories_module extends CI_Controller {
 			);
 		}
 		
-		if ($this->input->post() && $this->_updateModule() === TRUE){
+		if ($this->input->post() AND $this->_updateModule() === TRUE){
 			if ($this->input->post('save_close') === '1') {
 				redirect('admin/extensions');
 			}
@@ -73,11 +75,11 @@ class Categories_module extends CI_Controller {
 			redirect('admin/categories_module');
 		}
 		
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'categories_module.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'categories_module', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'categories_module', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'categories_module', $regions, $data);
+			$this->template->render('themes/admin/default/', 'categories_module', $data);
 		}
 	}
 
@@ -91,12 +93,12 @@ class Categories_module extends CI_Controller {
     	} else if ($this->validateForm() === TRUE) { 
 			$update = array();
 		
-			$update['categories_module']['modules'] = $this->input->post('modules');
+			$update['modules'] = $this->input->post('modules');
 
-			if ($this->Settings_model->updateSettings('categories', $update)) {
-				$this->session->set_flashdata('alert', '<p class="success">Categories Module Updated Sucessfully!</p>');
+			if ($this->Settings_model->addSetting('module', 'categories_module', $update, '1')) {
+				$this->session->set_flashdata('alert', '<p class="success">Categories Module updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');				
 			}
 	
 			return TRUE;

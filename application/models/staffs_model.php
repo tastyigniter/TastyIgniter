@@ -12,14 +12,18 @@ class Staffs_model extends CI_Model {
 			$this->db->where('staff_group_id', $filter['filter_group']);
 		}
 
-		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-			$this->db->where('staff_status', $filter['filter_status']);
+		if (!empty($filter['filter_location'])) {
+			$this->db->where('staffs.staff_location_id', $filter['filter_location']);
 		}
 
 		if (!empty($filter['filter_date'])) {
 			$date = explode('-', $filter['filter_date']);
 			$this->db->where('YEAR(date_added)', $date[0]);
 			$this->db->where('MONTH(date_added)', $date[1]);
+		}
+
+		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
+			$this->db->where('staff_status', $filter['filter_status']);
 		}
 
 		$this->db->from('staffs');
@@ -41,8 +45,6 @@ class Staffs_model extends CI_Model {
 
 			if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
 				$this->db->order_by($filter['sort_by'], $filter['order_by']);
-			} else {
-				$this->db->order_by('staffs.date_added', 'DESC');
 			}
 
 			if (!empty($filter['filter_search'])) {
@@ -55,14 +57,18 @@ class Staffs_model extends CI_Model {
 				$this->db->where('staffs.staff_group_id', $filter['filter_group']);
 			}
 
-			if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-				$this->db->where('staff_status', $filter['filter_status']);
+			if (!empty($filter['filter_location'])) {
+				$this->db->where('staffs.staff_location_id', $filter['filter_location']);
 			}
 
 			if (!empty($filter['filter_date'])) {
 				$date = explode('-', $filter['filter_date']);
 				$this->db->where('YEAR(date_added)', $date[0]);
 				$this->db->where('MONTH(date_added)', $date[1]);
+			}
+
+			if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
+				$this->db->where('staff_status', $filter['filter_status']);
 			}
 
 			$query = $this->db->get();
@@ -78,10 +84,6 @@ class Staffs_model extends CI_Model {
 
 	public function getStaffs() {
 		$this->db->from('staffs');
-		$this->db->join('users', 'users.staff_id = staffs.staff_id', 'left');
-		$this->db->join('staff_groups', 'staff_groups.staff_group_id = staffs.staff_group_id', 'left');
-		$this->db->join('locations', 'locations.location_id = staffs.staff_location_id', 'left');
-
 		$this->db->where('staff_status', '1');
 
 		$query = $this->db->get();
@@ -133,6 +135,41 @@ class Staffs_model extends CI_Model {
 		return $result;
 	}
 	
+	public function getStaffsByGroupId($staff_group_id = FALSE) {
+		if ($staff_group_id) {
+			$this->db->from('staffs');		
+			$this->db->where('staff_group_id', $staff_group_id);
+		
+			$query = $this->db->get();
+			$result = array();
+
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+
+			return $result;
+		}
+	}
+
+	public function getAutoComplete($filter = array()) {
+		if (is_array($filter) AND !empty($filter)) {
+			$this->db->from('staffs');
+	
+			if (!empty($filter['staff_name'])) {
+				$this->db->like('staff_name', $filter['staff_name']);		
+			}
+	
+			$query = $this->db->get();
+			$result = array();
+		
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+		
+			return $result;
+		}
+	}
+	
 	public function updateStaff($update = array()) {
 		$query = FALSE;
 
@@ -160,33 +197,30 @@ class Staffs_model extends CI_Model {
 
 		if (!empty($update['staff_id'])) {
 			$this->db->where('staff_id', $update['staff_id']);
-			$this->db->update('staffs');
+			
+			if ($query = $this->db->update('staffs')) {
+				if (!empty($update['password'])) {
+					$this->db->set('salt', $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9));
+					$this->db->set('password', sha1($salt . sha1($salt . sha1($update['password']))));
+				}
+
+				if (!empty($update['username'])) {
+					$this->db->set('username', strtolower($update['username']));
+				}
+		
+				if (!empty($update['staff_id'])) {
+					$this->db->where('staff_id', $update['staff_id']);
+					$this->db->update('users'); 
+				}
+			}
 		}
 			
-		if ($this->db->affected_rows() > 0) {
-			$query = TRUE;
-		}
-
-		if (!empty($update['password'])) {
-			$this->db->set('salt', $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9));
-			$this->db->set('password', sha1($salt . sha1($salt . sha1($update['password']))));
-		}
-
-		if (!empty($update['username'])) {
-			$this->db->set('username', strtolower($update['username']));
-
-			$this->db->where('staff_id', $update['staff_id']);
-			$this->db->update('users'); 
-		}
 			
-		if ($this->db->affected_rows() > 0) {
-			$query = TRUE;
-		}
-
 		return $query;
 	}	
 
 	public function addStaff($add = array()) {
+		$query = FALSE;
 
 		if (!empty($add['staff_name'])) {
 			$this->db->set('staff_name', $add['staff_name']);
@@ -210,39 +244,41 @@ class Staffs_model extends CI_Model {
 			$this->db->set('staff_status', '0');
 		}
 
-		$this->db->set('date_added', mdate('%Y-%m-%d', time()));
+		if (!empty($add)) {
+			$this->db->set('date_added', mdate('%Y-%m-%d', time()));
 			
-		$this->db->insert('staffs');
+			if ($this->db->insert('staffs')) {
+				$staff_id = $this->db->insert_id();
 
-		if ($this->db->affected_rows() > 0 && $this->db->insert_id()) {
-			$staff_id = $this->db->insert_id();
+				if (!empty($add['username'])) {
+					$this->db->set('username', $add['username']);
+					$this->db->set('staff_id', $staff_id);
+				}
 
-			if (!empty($add['username'])) {
-				$this->db->set('username', $add['username']);
-				$this->db->set('staff_id', $staff_id);
-			}
-
-			if (!empty($add['password'])) {
-				$this->db->set('salt', $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9));
-				$this->db->set('password', sha1($salt . sha1($salt . sha1($add['password']))));
-			}
+				if (!empty($add['password'])) {
+					$this->db->set('salt', $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9));
+					$this->db->set('password', sha1($salt . sha1($salt . sha1($add['password']))));
+				}
 		
-			$this->db->insert('users'); 
-
-			return TRUE;
+				$this->db->insert('users');
+				$query = $staff_id;
+			}
 		}
+
+		return $query;
 	}
 
 	public function deleteStaff($staff_id) {
+		if (is_numeric($staff_id)) {
+			$this->db->where('staff_id', $staff_id);
+			$this->db->delete('staffs');
 
-		$this->db->where('staff_id', $staff_id);
-		$this->db->delete('staffs');
+			$this->db->where('staff_id', $staff_id);
+			$this->db->delete('users'); 
 
-		$this->db->where('staff_id', $staff_id);
-		$this->db->delete('users'); 
-
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
+			if ($this->db->affected_rows() > 0) {
+				return TRUE;
+			}
 		}
 	}
 }

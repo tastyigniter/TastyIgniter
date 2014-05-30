@@ -7,11 +7,11 @@ class Orders extends MX_Controller {
 		$this->load->library('customer'); 														// load the customer library
 		$this->load->model('Orders_model');														// load orders model
 		$this->load->library('currency'); 														// load the currency library
+		$this->load->library('language');
+		$this->lang->load('main/orders', $this->language->folder());
 	}
 
 	public function index() {
-		$this->lang->load('main/orders');  														// loads language file
-		
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
@@ -23,6 +23,8 @@ class Orders extends MX_Controller {
 		}
 
 		// START of retrieving lines from language file to pass to view.
+		$this->template->setTitle($this->lang->line('text_heading'));
+		$this->template->setHeading($this->lang->line('text_heading'));
 		$data['text_heading'] 			= $this->lang->line('text_heading');
 		$data['text_empty'] 			= $this->lang->line('text_empty');
 		$data['text_delivery'] 			= $this->lang->line('text_delivery');
@@ -68,17 +70,15 @@ class Orders extends MX_Controller {
 			);
 		}
 				
-		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'orders.php')) {
-			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'orders', $regions, $data);
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'orders', $data);
 		} else {
-			$this->template->render('themes/main/default/', 'orders', $regions, $data);
+			$this->template->render('themes/main/default/', 'orders', $data);
 		}
 	}
 	
 	public function view() {
-		$this->lang->load('main/orders');  														// loads language file
-
 		if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
   			redirect('account/login');
 		}
@@ -95,9 +95,11 @@ class Orders extends MX_Controller {
   			redirect('account/orders');
 		}
 
-		$result = $this->Orders_model->getMainOrder($order_id, $this->customer->getId());					// retrieve total number of customer messages from getMainInboxTotal method in Messages model
+		$result = $this->Orders_model->getMainOrder($order_id, $this->customer->getId());
 
 		// START of retrieving lines from language file to pass to view.
+		$this->template->setTitle($this->lang->line('text_view_heading'));
+		$this->template->setHeading($this->lang->line('text_view_heading'));
 		$data['text_heading'] 			= $this->lang->line('text_view_heading');
 		$data['column_id'] 				= $this->lang->line('column_id');
 		$data['column_date'] 			= $this->lang->line('column_date');
@@ -167,18 +169,16 @@ class Orders extends MX_Controller {
 		$data['button_back'] 			= $this->lang->line('button_back');
 		$data['back_url'] 				= site_url('main/orders');
 
-		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'orders_view.php')) {
-			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'orders_view', $regions, $data);
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'orders_view', $data);
 		} else {
-			$this->template->render('themes/main/default/', 'orders_view', $regions, $data);
+			$this->template->render('themes/main/default/', 'orders_view', $data);
 		}
 	}
 
 	public function reorder() {
 		$this->load->library('cart'); 															// load the cart library
-		$this->lang->load('main/orders');  														// loads language file
-
 		if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
   			redirect('account/login');
 		}

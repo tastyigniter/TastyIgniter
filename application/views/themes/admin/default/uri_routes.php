@@ -1,4 +1,14 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<p>Typically there is a one-to-one relationship between a URI Route and its corresponding controller class/method.<br />
 	You can match literal values or you can use two wildcard types:<br />
 	<b>(:num)</b> will match a segment containing only numbers.<br />
@@ -19,7 +29,7 @@
 			<?php foreach ($routes as $route) { ?>
 			<tr id="table-row<?php echo $table_row; ?>">
 				<td class="action"><i class="handle"></i></td>
-				<td class="action action-one"><i onclick="$(this).parent().parent().remove();" class="icon icon-delete"></i></td>
+				<td class="action action-one"><a onclick="$(this).parent().parent().remove();"><i class="icon icon-delete"></i></a></td>
 				<td><input type="text" name="routes[<?php echo $table_row; ?>][uri_route]" value="<?php echo set_value('routes[$table_row][uri_route]', $route['uri_route']); ?>" size="50" /></td>
 				<td><input type="text" name="routes[<?php echo $table_row; ?>][controller]" value="<?php echo set_value('routes[$table_row][controller]', $route['controller']); ?>" size="50" /></td>
 			</tr>
@@ -36,6 +46,7 @@
 	</table>
 	</form>
 	</div>
+	</div>
 </div>
 <script type="text/javascript"><!--
 var table_row = <?php echo $table_row; ?>;
@@ -43,7 +54,7 @@ var table_row = <?php echo $table_row; ?>;
 function addRoute() {	
 	html  = '<tr id="table-row' + table_row + '">';
     html += '	<td><i class="handle"></i>';
-	html += '	<td class="action action-one"><i onclick="$(this).parent().parent().remove();" class="icon icon-delete"></i></td>';
+	html += '	<td class="action action-one"><a onclick="$(this).parent().parent().remove();"><i class="icon icon-delete"></i></a></td>';
 	html += '	<td><input type="text" name="routes[' + table_row + '][uri_route]" value="<?php echo set_value("routes[' + table_row + '][uri_route]"); ?>" size="50" /></td>';
 	html += '	<td><input type="text" name="routes[' + table_row + '][controller]" value="<?php echo set_value("routes[' + table_row + '][controller]"); ?>" size="50" /></td>';
 	html += '</tr>';

@@ -1,8 +1,9 @@
 <?php
 class Extensions_model extends CI_Model {
 
-	public function getList() {
+	public function getList($type = '') {
 		$this->db->from('extensions');
+		$this->db->where('type', $type);
 		
 		$query = $this->db->get();
 		
@@ -10,7 +11,7 @@ class Extensions_model extends CI_Model {
 		
 		if ($query->num_rows() > 0) {
 			foreach ($query->result_array() as $row) {
-				$extensions[$row['code']] = $row['name'];
+				$extensions[] = $row['code'];
 			}
 		}
 		
@@ -45,23 +46,20 @@ class Extensions_model extends CI_Model {
 		return FALSE;
 	}
 
-	public function install($module, $extension) {
-		$this->db->set('type', $module);
+	public function install($type, $extension) {
+		$this->db->set('type', $type);
 		$this->db->set('code', $extension);
-		$this->db->set('name', ucwords($extension));
 
-		$this->db->insert('extensions');
-
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
+		if ($this->db->insert('extensions')) {
+			return $this->db->insert_id();
 		}
 	}
 
-	public function uninstall($module, $extension) {
-		$this->db->where('type', $module);
+	public function uninstall($type, $extension) {
+		$this->db->where('type', $type);
 		$this->db->where('code', $extension);
 
-		$this->db->delete('extensions');
+		return $this->db->delete('extensions');
 	}
 }
 

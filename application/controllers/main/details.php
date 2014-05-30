@@ -7,11 +7,12 @@ class Details extends MX_Controller {
 		$this->load->library('customer'); 													// load the customer library
 		$this->load->model('Customers_model');													// load the customers model
 		$this->load->model('Security_questions_model');											// load the security questions model
+
+		$this->load->library('language');
+		$this->lang->load('main/details', $this->language->folder());
 	}
 
 	public function index() {
-		$this->lang->load('main/details');  													// loads language file
-		
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
@@ -22,11 +23,9 @@ class Details extends MX_Controller {
   			redirect('account/login');
 		}
 
-		$this->load->model('Messages_model');													// load the customers model
-		$inbox_total = $this->Messages_model->getMainInboxTotal();					// retrieve total number of customer messages from getMainInboxTotal method in Messages model
-
 		// START of retrieving lines from language file to pass to view.
-		$data['text_heading'] 			= $this->lang->line('text_heading');
+		$this->template->setTitle($this->lang->line('text_heading'));
+		$this->template->setHeading($this->lang->line('text_heading'));
 		$data['text_details'] 			= $this->lang->line('text_details');
 		$data['text_password'] 			= $this->lang->line('text_password');
 		$data['text_select'] 			= $this->lang->line('text_select');
@@ -70,11 +69,11 @@ class Details extends MX_Controller {
 			redirect('account');
 		}
 
-		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'details.php')) {
-			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'details', $regions, $data);
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'details', $data);
 		} else {
-			$this->template->render('themes/main/default/', 'details', $regions, $data);
+			$this->template->render('themes/main/default/', 'details', $data);
 		}
 	}
 

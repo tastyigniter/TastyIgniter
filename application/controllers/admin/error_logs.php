@@ -22,8 +22,9 @@ class Error_logs extends CI_Controller {
 			$data['alert'] = '';
 		}
 
-		$data['heading'] 			= 'Error Logs';
-		$data['button_delete'] 		= 'Clear';
+		$this->template->setTitle('Error Logs');
+		$this->template->setHeading('Error Logs');
+		$this->template->setButton('Clear', array('class' => 'delete_button', 'onclick' => '$(\'form:not(#filter-form)\').submit();'));
 		
 		if ($this->config->item('log_path') === '') {
 			$log_path = APPPATH .'/logs/';
@@ -42,16 +43,16 @@ class Error_logs extends CI_Controller {
 		}
 				
 		//Delete Error Log
-		if ($this->input->post() && $this->_clearLog() === TRUE) {
+		if ($this->input->post() AND $this->_clearLog() === TRUE) {
 				
 			redirect('admin/error_logs');
 		}
 
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'error_logs.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'error_logs', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'error_logs', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'error_logs', $regions, $data);
+			$this->template->render('themes/admin/default/', 'error_logs', $data);
 		}
 	}
 

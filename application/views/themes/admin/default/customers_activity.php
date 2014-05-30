@@ -1,12 +1,22 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div id="update-box" class="content">
 		<form id="filter-form" accept-charset="utf-8" method="GET" action="<?php echo current_url(); ?>">
 		<div class="filter_heading">
-			<div class="left">
+			<div class="right">
 				<input type="text" name="filter_search" value="<?php echo $filter_search; ?>" placeholder="Search ip, customer or browser." class="textfield" />&nbsp;&nbsp;&nbsp;
 				<a class="grey_icon" onclick="filterList();"><i class="icon icon-search"></i></a>
 			</div>
-			<div class="right">
+			<div class="left">
 				<select name="filter_type">
 					<option value="">View all types</option>
 				<?php if ($filter_type === 'all') { ?>
@@ -60,7 +70,7 @@
 		<table border="0" class="list list-height">
 			<thead>
 				<tr>
-					<th class="action action-one"></th>
+					<th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
 					<th>IP</th>
 					<th>Customer</th>
 					<th>Access</th>
@@ -74,8 +84,9 @@
 				<?php if ($activities) { ?>
 				<?php foreach ($activities as $activity) { ?>
 				<tr>
-					<td class="action action-one"><a class="blacklist" title="Blacklist" href="<?php echo $activity['blacklist']; ?>"></a></td>
-					<td><?php echo $activity['ip_address']; ?></td>
+					<td class="action"><input type="checkbox" value="<?php echo $activity['activity_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
+						<a class="blacklist" title="Blacklist" href="<?php echo $activity['blacklist']; ?>"></a></td>
+					<td><?php echo $activity['ip_address']; ?>&nbsp;&nbsp;<img class="flag" title="<?php echo $activity['country_name']; ?>" width="16" src="<?php echo $activity['country_code']; ?>" /></td>
 					<td><?php echo $activity['customer_name']; ?></td>
 					<td><?php echo $activity['access_type']; ?></td>
 					<td><?php echo $activity['browser']; ?></td>
@@ -96,6 +107,7 @@
 			<?php echo $pagination['links']; ?><?php echo $pagination['info']; ?>
 		</div>
 		</form>
+	</div>
 	</div>
 </div>
 <script type="text/javascript"><!--

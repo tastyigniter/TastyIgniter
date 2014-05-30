@@ -2,7 +2,7 @@
 <div class="img_inner">
 	<h3><?php echo $text_reservation_msg; ?></h3>
 	<form method="POST" accept-charset="utf-8" action="<?php echo current_url(); ?>" id="reserve-form">
-    <table border="0" cellpadding="2" width="100%" id="personal-details">
+    <table border="0" cellpadding="2" width="60%" id="personal-details">
   		<tr>
     		<td colspan="2"><?php echo $text_login_register; ?></td>
 		</tr>

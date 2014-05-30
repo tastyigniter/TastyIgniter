@@ -17,15 +17,14 @@ class Customer {
 		$this->CI =& get_instance();
 		$this->CI->load->database();
 		$this->CI->load->library('user_agent');	    
-		
 		$this->CI->load->library('activity');	    
-		$this->CI->activity->online();
-		
+
 		$this->initialize();
 	}
 
 	public function initialize() {
 		$cust_info = $this->CI->session->userdata('cust_info');
+
 		if ( ! isset($cust_info['customer_id']) AND  ! isset($cust_info['email'])) { 
 			$this->logout();
 		} else {
@@ -45,8 +44,6 @@ class Customer {
 				$this->CI->address_id 			= $result['address_id'];
 				$this->CI->security_question_id = $result['security_question_id'];
 				$this->CI->security_answer 		= $result['security_answer'];
-
-				$this->CI->activity->customer($result['customer_id']);
 			} else {
 				$this->logout();
 			}

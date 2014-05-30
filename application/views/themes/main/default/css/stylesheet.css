@@ -310,7 +310,7 @@ margin-bottom: 10px;
 .content {
 margin-left: 0;
 margin-right: 0;
-min-height: 300px;
+min-height: 100px;
 overflow: hidden;
 margin-top: 0;
 margin-bottom: 10px;
@@ -735,4 +735,7 @@ width: 750px;
 }
 .check-local input[type="button"] {
 float:right;
+}
+.unread {
+font-weight: bold;
 }

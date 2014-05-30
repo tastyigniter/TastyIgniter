@@ -1,7 +1,17 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div id="update-box" class="content">
 	<h2><?php echo $subject; ?></h2>
-	<table width="100%" align="form">
+	<table width="100%" class="form">
 		<tbody>
 			<tr>
 				<td width="10%"><b>From:</b></td>
@@ -9,7 +19,7 @@
 			</tr>
 			<tr>
 				<td><b>To:</b></td>
-				<td><?php echo $receiver; ?></td>
+				<td><?php echo $recipient; ?></td>
 			</tr>
 			<tr>
 				<td><b>Date:</b></td>
@@ -20,5 +30,6 @@
 			</tr>
 		</tbody>
 	</table>
+	</div>
 	</div>
 </div>

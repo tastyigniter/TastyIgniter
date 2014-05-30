@@ -1,4 +1,14 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div id="update-box" class="content">
 	<form accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
 		<div class="wrap_heading">
@@ -175,7 +185,7 @@
 									<td><?php echo $table['table_name']; ?></td>
 									<td><?php echo $table['min_capacity']; ?></td>
 									<td><?php echo $table['max_capacity']; ?></td>
-									<td class="img"><i class="icon icon-delete" onclick="$(this).parent().parent().remove();"></i><input type="hidden" name="tables[]" value="<?php echo $table['table_id']; ?>" /></td>
+									<td class="img"><a><i class="icon icon-delete" onclick="$(this).parent().parent().remove();"></i></a><input type="hidden" name="tables[]" value="<?php echo $table['table_id']; ?>" /></td>
 								</tr>
 								<?php } ?>
 								<?php } ?>
@@ -219,6 +229,7 @@
 
 	</form>
 	</div>
+	</div>
 </div>
 <script type="text/javascript" src="<?php echo base_url("assets/js/jquery-ui-timepicker-addon.js"); ?>"></script> 
 <script type="text/javascript"><!--
@@ -251,7 +262,7 @@ $('input[name=\'table\']').autocomplete({
 	},
 	select: function(event, ui) {
 		$('#table-box' + ui.item.value).remove();
-		$('#table-box table').append('<tr id="table-box' + ui.item.value + '"><td class="name">' + ui.item.label + '</td><td>' + ui.item.min + '</td><td>' + ui.item.max + '</td><td class="img">' + '<i class="icon icon-delete" onclick="$(this).parent().parent().remove();"></i>' + '<input type="hidden" name="tables[]" value="' + ui.item.value + '" /></td></tr>');
+		$('#table-box table tbody').append('<tr id="table-box' + ui.item.value + '"><td class="name">' + ui.item.label + '</td><td>' + ui.item.min + '</td><td>' + ui.item.max + '</td><td class="img">' + '<a><i class="icon icon-delete" onclick="$(this).parent().parent().remove();"></i></a>' + '<input type="hidden" name="tables[]" value="' + ui.item.value + '" /></td></tr>');
 
 		return false;
 	},

@@ -1,4 +1,14 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<div id="update-box" class="content">
 	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
 		<table class="list sorted_table">
@@ -13,12 +23,12 @@
 			<tbody>
 				<?php $table_row = 1; ?>
 				<?php foreach ($ratings as $key => $value) { ?>
-				<tr id="table-row<?php echo $table_row; ?>">
-					<td><i class="handle"></i></td>
-					<td class="action action-one"><i onclick="$(this).parent().parent().remove();" class="icon icon-delete"></i></td>
-					<td><input type="text" name="ratings[<?php echo $table_row; ?>]" value="<?php echo set_value('ratings[$table_row]', $value); ?>" class="textfield" size="40" /></td>
-					<td></td>
-				</tr>
+					<tr id="table-row<?php echo $table_row; ?>">
+						<td><i class="handle"></i></td>
+						<td class="action action-one"><a onclick="$(this).parent().parent().remove();"><i class="icon icon-delete"></i></a></td>
+						<td><input type="text" name="ratings[<?php echo $table_row; ?>]" value="<?php echo set_value('ratings[$table_row]', $value); ?>" class="textfield" size="40" /></td>
+						<td></td>
+					</tr>
 				<?php $table_row++; ?>
 				<?php } ?>  
 				<tr id="tfoot">
@@ -30,6 +40,7 @@
 		</table>
 	</form>
 	</div>
+	</div>
 </div>
 <script type="text/javascript"><!--
 var table_row = <?php echo $table_row; ?>;
@@ -37,7 +48,7 @@ var table_row = <?php echo $table_row; ?>;
 function addRating() {	
 	html  = '<tr id="table-row' + table_row + '">';
     html += '	<td><i class="handle"></i></td>';
-	html += '	<td class="action action-one"><i onclick="$(this).parent().parent().remove();" class="icon icon-delete"></i></td>';
+	html += '	<td class="action action-one"><a onclick="$(this).parent().parent().remove();"><i class="icon icon-delete"></i></a></td>';
 	html += '	<td><input type="text" name="ratings[' + table_row + ']" value="<?php echo set_value("ratings[' + table_row + ']"); ?>" class="textfield" size="40" /></td>';
 	html += '	<td></td>';
 	html += '</tr>';

@@ -8,6 +8,10 @@ class Reviews_model extends CI_Model {
 			$this->db->or_like('order_id', $filter['filter_search']);
 		}
 
+		if (!empty($filter['filter_location'])) {
+			$this->db->where('reviews.location_id', $filter['filter_location']);
+		}
+
 		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
 			$this->db->where('review_status', $filter['filter_status']);
 		}
@@ -34,10 +38,12 @@ class Reviews_model extends CI_Model {
 
 			if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
 				$this->db->order_by($filter['sort_by'], $filter['order_by']);
-			} else {
-				$this->db->order_by('reviews.date_added', 'DESC');
 			}
 		
+			if (!empty($filter['filter_location'])) {
+				$this->db->where('reviews.location_id', $filter['filter_location']);
+			}
+
 			if (!empty($filter['filter_search'])) {
 				$this->db->like('author', $filter['filter_search']);
 				$this->db->or_like('location_name', $filter['filter_search']);
@@ -159,37 +165,10 @@ class Reviews_model extends CI_Model {
 			return FALSE;
 		}
 	}
-		
-	public function reviewMenu($customer_id, $customer_name, $menu_id, $rating_id, $review_text, $date_added) {
-	
-		$this->load->model('Cart_model'); // load the menus model
-
-		//$review_data = $this->checkReview($menu_id, $customer_id);
-		
-		if ($this->Cart_model->getMenu($menu_id)) {
- 					
-			$this->db->set('customer_id', $customer_id);
-			$this->db->set('author', $customer_name);
-			$this->db->set('menu_id', $menu_id);
-			$this->db->set('rating_id', $rating_id);
-			$this->db->set('review_text', $review_text);
-			$this->db->set('date_added', $date_added);
-			
-			if ($this->config->item('approve_reviews') === '1') {
-				$this->db->set('review_status', '0');			
-			} else {
-				$this->db->set('review_status', '1');			
-			}			
-			
-			$this->db->insert('reviews');
-
-			if ($this->db->affected_rows() > 0) {
-				return TRUE;
-			}
-		}
-	}
 
 	public function updateReview($update = array()) {
+		$query = FALSE;
+
 		if (!empty($update['order_id'])) {
 			$this->db->set('order_id', $update['order_id']);
 		}
@@ -230,15 +209,15 @@ class Reviews_model extends CI_Model {
 
 		if (!empty($update['review_id'])) {
 			$this->db->where('review_id', $update['review_id']);
-			$this->db->update('reviews'); 
+			$query = $this->db->update('reviews'); 
 		}
 				
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
-		}
+		return $query;
 	}
 	
 	public function addReview($add = array()) {
+		$query = FALSE;
+
 		if (!empty($add['location_id'])) {
 			$this->db->set('location_id', $add['location_id']);
 		}
@@ -277,19 +256,25 @@ class Reviews_model extends CI_Model {
 			$this->db->set('review_status', '0');
 		}
 
-		$this->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', time()));
-
-		$this->db->insert('reviews'); 
-
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
+		if (!empty($add)) {
+			$this->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', time()));
+			if ($this->db->insert('reviews')) {
+				$query = $this->db->insert_id();
+			}
 		}
+		
+		return $query;
 	}
 	
 	public function deleteReview($review_id) {
-		$this->db->where('review_id', $review_id);
-			
-		return $this->db->delete('reviews');
+		if (is_numeric($review_id)) {
+			$this->db->where('review_id', $review_id);
+			$this->db->delete('reviews');
+
+			if ($this->db->affected_rows() > 0) {
+				return TRUE;
+			}
+		}
 	}
 }
 

@@ -31,12 +31,13 @@ class Statuses extends CI_Controller {
 			$data['filter_type'] = '';
 		}
 		
-		$data['heading'] 			= 'Statuses';
-		$data['button_add'] 		= 'New';
-		$data['button_delete'] 		= 'Delete';
+		$this->template->setTitle('Statuses');
+		$this->template->setHeading('Statuses');
+		$this->template->setButton('+ New', array('class' => 'add_button', 'href' => page_url() .'/edit'));
+		$this->template->setButton('Delete', array('class' => 'delete_button', 'onclick' => '$(\'form:not(#filter-form)\').submit();'));
+
 		$data['text_empty'] 		= 'There is no status available.';
 
-		//load ratings data into array
 		$data['statuses'] = array();
 		$results = $this->Statuses_model->getStatuses($filter_type);
 		foreach ($results as $result) {					
@@ -45,27 +46,25 @@ class Statuses extends CI_Controller {
 				'status_id'			=> $result['status_id'],
 				'status_name'		=> $result['status_name'],
 				'status_comment'	=> $result['status_comment'],
-				'status_for'		=> ucwords($result['status_for']),
+				'status_for'		=> ($result['status_for'] === 'reserve') ? 'Reservations' : ucwords($result['status_for']),
 				'notify_customer' 	=> ($result['notify_customer'] === '1') ? 'Yes' : 'No',
 				'edit' 				=> site_url('admin/statuses/edit?id=' . $result['status_id'])				
 			);
 		}
 
-		if ($this->input->post('delete') && $this->_deleteStatus() === TRUE) {
-			
+		if ($this->input->post('delete') AND $this->_deleteStatus() === TRUE) {
 			redirect('admin/statuses');  			
 		}	
 
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'statuses.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'statuses', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'statuses', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'statuses', $regions, $data);
+			$this->template->render('themes/admin/default/', 'statuses', $data);
 		}
 	}
 
 	public function edit() {
-			
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -80,7 +79,6 @@ class Statuses extends CI_Controller {
 			$data['alert'] = '';
 		}		
 		
-		//check if /rating_id is set in uri string
 		if (is_numeric($this->input->get('id'))) {
 			$status_id = $this->input->get('id');
 			$data['action']	= site_url('admin/statuses/edit?id='. $status_id);
@@ -91,10 +89,12 @@ class Statuses extends CI_Controller {
 		
 		$status_info = $this->Statuses_model->getStatus($status_id);
 		
-		$data['heading'] 			= 'Status - '. $status_info['status_name'];
-		$data['button_save'] 		= 'Save';
-		$data['button_save_close'] 	= 'Save & Close';
-		$data['sub_menu_back'] 		= site_url('admin/statuses');
+		$title = (isset($status_info['status_name'])) ? 'Edit - '. $status_info['status_name'] : 'New';	
+		$this->template->setTitle('Status:'. $title);
+		$this->template->setHeading('Status: '. $title);
+		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('back_button', site_url('admin/statuses'));
 
 		$data['status_id'] 			= $status_info['status_id'];
 		$data['status_name'] 		= $status_info['status_name'];
@@ -102,12 +102,15 @@ class Statuses extends CI_Controller {
 		$data['status_for'] 		= $status_info['status_for'];
 		$data['notify_customer'] 	= $status_info['notify_customer'];
 
-		if ($this->input->post() && $this->_addStatus() === TRUE) {
-		
-			redirect('admin/statuses');  			
+		if ($this->input->post() AND $this->_addStatus() === TRUE) {
+			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {	
+				redirect('admin/statuses/edit?id='. $this->input->post('insert_id'));
+			} else {
+				redirect('admin/statuses');
+			}
 		}
 
-		if ($this->input->post() && $this->_updateStatus() === TRUE) {
+		if ($this->input->post() AND $this->_updateStatus() === TRUE) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('admin/statuses');
 			}
@@ -115,11 +118,11 @@ class Statuses extends CI_Controller {
 			redirect('admin/statuses/edit?id='. $status_id);
 		}
 				
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'statuses_edit.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'statuses_edit', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'statuses_edit', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'statuses_edit', $regions, $data);
+			$this->template->render('themes/admin/default/', 'statuses_edit', $data);
 		}
 	}
 
@@ -131,23 +134,21 @@ class Statuses extends CI_Controller {
 	}
 	
 	public function _addStatus() {
-									
     	if (!$this->user->hasPermissions('modify', 'admin/statuses')) {
-		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add!</p>');
 			return TRUE;
-    	
-    	} else if ( ! $this->input->get('id') AND $this->validateForm() === TRUE) { 
+    	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$add = array();
 			
 			$add['status_name'] 		= $this->input->post('status_name');
 			$add['status_comment'] 		= $this->input->post('status_comment');
+			$add['status_for'] 			= $this->input->post('status_for');
 			$add['notify_customer'] 	= $this->input->post('notify_customer');
 
-			if ($this->Statuses_model->addStatus('order', $add)) {	
-				$this->session->set_flashdata('alert', '<p class="success">Order Status Added Sucessfully!</p>');
+			if ($_POST['insert_id'] = $this->Statuses_model->addStatus($add)) {	
+				$this->session->set_flashdata('alert', '<p class="success">Order Status added sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');				
 			}
 		
 			return TRUE;
@@ -155,25 +156,22 @@ class Statuses extends CI_Controller {
 	}
 	
 	public function _updateStatus() {
-    	
     	if (!$this->user->hasPermissions('modify', 'admin/statuses')) {
-		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
 			return TRUE;
-    	
-    	} else if ($this->input->get('id') AND $this->validateForm() === TRUE) { 
+    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$update = array();
 		
-			//Sanitizing the POST values
 			$update['status_id'] 		= $this->input->get('id');
 			$update['status_name'] 		= $this->input->post('status_name');
 			$update['status_comment'] 	= $this->input->post('status_comment');
+			$update['status_for'] 		= $this->input->post('status_for');
 			$update['notify_customer'] 	= $this->input->post('notify_customer');
 
-			if ($this->Statuses_model->updateStatus('order', $update)) {	
-				$this->session->set_flashdata('alert', '<p class="success">Order Status Updated Sucessfully!</p>');
+			if ($this->Statuses_model->updateStatus($update)) {	
+				$this->session->set_flashdata('alert', '<p class="success">Order Status updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');				
 			}
 		
 			return TRUE;
@@ -182,18 +180,13 @@ class Statuses extends CI_Controller {
 
 	public function _deleteStatus() {
     	if (!$this->user->hasPermissions('modify', 'admin/statuses')) {
-		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
-    	
-    	} else { 
-			if (is_array($this->input->post('delete'))) {
-				foreach ($this->input->post('delete') as $key => $value) {
-					$status_id = $value;
-					$this->Statuses_model->deleteStatus($status_id);
-				}			
-		
-				$this->session->set_flashdata('alert', '<p class="success">Order Status(es) Deleted Sucessfully!</p>');
-			}
+    	} else if (is_array($this->input->post('delete'))) {
+			foreach ($this->input->post('delete') as $key => $value) {
+				$this->Statuses_model->deleteStatus($value);
+			}			
+	
+			$this->session->set_flashdata('alert', '<p class="success">Order Status(es) deleted sucessfully!</p>');
 		}
 				
 		return TRUE;

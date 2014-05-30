@@ -71,6 +71,8 @@ class Pages_model extends CI_Model {
 	}
 	
 	public function updatePage($update = array()) {
+		$query = FALSE;
+
 		if (!empty($update['language_id'])) {
 			$this->db->set('language_id', $update['language_id']);
 		}
@@ -117,15 +119,15 @@ class Pages_model extends CI_Model {
 
 		if (!empty($update['page_id'])) {
 			$this->db->where('page_id', $update['page_id']);
-			$this->db->update('pages');
+			$query = $this->db->update('pages');
 		}		
 		
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
-		}
+		return $query;
 	}
 
 	public function addPage($add = array()) {
+		$query = FALSE;
+
 		if (!empty($add['language_id'])) {
 			$this->db->set('language_id', $add['language_id']);
 		}
@@ -172,20 +174,23 @@ class Pages_model extends CI_Model {
 			$this->db->set('status', '0');
 		}
 
-		$this->db->insert('pages');
-		
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
+		if (!empty($add)) {
+			if ($this->db->insert('pages')) {
+				$query = $this->db->insert_id();
+			}
 		}
+		
+		return $query;
 	}
 
-	public function deleteCurrency($page_id) {
-		$this->db->where('page_id', $page_id);
+	public function deletePage($page_id) {
+		if (is_numeric($page_id)) {
+			$this->db->where('page_id', $page_id);
+			$this->db->delete('pages');
 
-		$this->db->delete('pages');
-
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
+			if ($this->db->affected_rows() > 0) {
+				return TRUE;
+			}
 		}
 	}
 }

@@ -17,7 +17,8 @@ $lang['entry_password_confirm'] = 'Password Confirm:';
 $lang['entry_telephone'] 		= 'Telephone:';
 $lang['entry_s_question'] 		= 'Security Question:';
 $lang['entry_s_answer'] 		= 'Security Answer:';
-
+$lang['entry_newsletter'] 		= 'Keep me up-to-date with offers by email.';
+ 
 $lang['button_login'] 			= 'Login';
 $lang['button_register'] 		= 'Register';
 

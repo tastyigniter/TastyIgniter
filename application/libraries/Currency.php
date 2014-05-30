@@ -17,21 +17,19 @@ class Currency {
 			
 				$row = $query->row_array();
 								
-				$this->CI->currency_symbol 	= $row['currency_symbol'];
-				$this->CI->currency_code 	= $row['currency_code'];
+				$this->currency_symbol 	= $row['currency_symbol'];
+				$this->currency_code 	= $row['currency_code'];
 			
 			}
 
 		} else {
-			
-			$this->CI->currency_symbol = '';
-			$this->CI->currency_code = '';
-		
+			$this->currency_symbol = '£';
+			$this->currency_code = 'GBP';
 		}
 	}
 	
 	public function getCurrencyCode() {
-		return $this->CI->currency_code;
+		return $this->currency_code;
 	}
 	
 	public function format($num) {
@@ -39,7 +37,7 @@ class Currency {
 			$num = '0';	
 		}
 
-		return $this->CI->currency_symbol . number_format($num, 2, '.', ',');	
+		return $this->currency_symbol . number_format($num, 2, '.', ',');	
 	}
 }
 

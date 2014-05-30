@@ -1,4 +1,14 @@
-<div class="box">
+<div id="box-content">
+	<div id="notification">
+		<?php if (validation_errors()) { ?>
+			<?php echo validation_errors('<span class="error">', '</span>'); ?>
+		<?php } ?>
+		<?php if (!empty($alert)) { ?>
+			<?php echo $alert; ?>
+		<?php } ?>
+	</div>
+
+	<div class="box">
 	<form id="filter-form" accept-charset="utf-8" method="GET" action="<?php echo current_url(); ?>">
 	<div class="filter_heading">
 		<div class="left">
@@ -40,6 +50,7 @@
 
 	<div class="pagination">
 		<?php echo $pagination['links']; ?><?php echo $pagination['info']; ?>
+	</div>
 	</div>
 </div>
 <script type="text/javascript"><!--

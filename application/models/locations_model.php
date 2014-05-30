@@ -26,8 +26,6 @@ class Locations_model extends CI_Model {
 			
 			if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
 				$this->db->order_by($filter['sort_by'], $filter['order_by']);
-			} else {
-				$this->db->order_by('location_id', 'DESC');
 			}
 			
 			if (!empty($filter['filter_search'])) {
@@ -220,7 +218,6 @@ class Locations_model extends CI_Model {
 	}
 
 	public function updateLocation($update = array()) {
-	
 		$query = FALSE;
 
 		if (!empty($update['location_name'])) {
@@ -311,20 +308,18 @@ class Locations_model extends CI_Model {
 
 		if (!empty($update['location_id'])) {
 			$this->db->where('location_id', $update['location_id']);
-			$this->db->update('locations'); 
-		}
-		
-		$this->addOpeningHours($update['location_id'], $update['hours']);
-		$this->addLocationTables($update['location_id'], $update['tables']);
-
-		if ($this->db->affected_rows() > 0) {
-			$query = TRUE;
+			
+			if ($query = $this->db->update('locations')) {
+				$query = $this->addOpeningHours($update['location_id'], $update['hours']);
+				$query = $this->addLocationTables($update['location_id'], $update['tables']);
+			}
 		}
 
-		return TRUE;
+		return $query;
 	}
 
 	public function addLocation($add = array()) {
+		$query = FALSE;
 
 		if (!empty($add['location_name'])) {
 			$this->db->set('location_name', $add['location_name']);
@@ -404,16 +399,18 @@ class Locations_model extends CI_Model {
 			$this->db->set('location_status', '0');
 		}
 
-		$this->db->insert('locations');
-		
-		if ($this->db->affected_rows() > 0) {
-			$location_id = $this->db->insert_id();			
-			
-			$this->addOpeningHours($location_id, $add['hours']);
-			$this->addLocationTables($location_id, $add['tables']);
+		if (!empty($add)) {
+			if ($this->db->insert('locations')) {
+				$location_id = $this->db->insert_id();			
+				
+				$this->addOpeningHours($location_id, $add['hours']);
+				$this->addLocationTables($location_id, $add['tables']);
 
-			return TRUE;
+				$query = $location_id;			
+			}
 		}
+		
+		return $query;
 	}
 
 	public function addOpeningHours($location_id, $hours = array()) {
@@ -459,17 +456,19 @@ class Locations_model extends CI_Model {
 	}
 	
 	public function deleteLocation($location_id) {
-		$this->db->where('location_id', $location_id);
-		$this->db->delete('locations');
+		if (is_numeric($location_id)) {
+			$this->db->where('location_id', $location_id);
+			$this->db->delete('locations');
 
-		$this->db->where('location_id', $location_id);
-		$this->db->delete('location_tables');
+			$this->db->where('location_id', $location_id);
+			$this->db->delete('location_tables');
 
-		$this->db->where('location_id', $location_id);
-		$this->db->delete('working_hours');
+			$this->db->where('location_id', $location_id);
+			$this->db->delete('working_hours');
 
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
+			if ($this->db->affected_rows() > 0) {
+				return TRUE;
+			}
 		}
 	}
 

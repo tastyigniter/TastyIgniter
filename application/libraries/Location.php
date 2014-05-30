@@ -244,14 +244,16 @@ class Location {
 		$geocode_data = @file_get_contents($url);
 		$output = json_decode($geocode_data);											// decode the geocode data
 
-		if ($output->status === 'OK') {														// create variable for geocode data status
-			return array( 
-				'search_query'	=> $search_query,
-				'lat' 			=> $output->results[0]->geometry->location->lat,
-				'lng' 			=> $output->results[0]->geometry->location->lng
-			);
-		} else {
-			return "FAILED";
+		if ($output) {
+			if ($output->status === 'OK') {														// create variable for geocode data status
+				return array( 
+					'search_query'	=> $search_query,
+					'lat' 			=> $output->results[0]->geometry->location->lat,
+					'lng' 			=> $output->results[0]->geometry->location->lng
+				);
+			} else {
+				return "FAILED";
+			}
 		}
 	}
 

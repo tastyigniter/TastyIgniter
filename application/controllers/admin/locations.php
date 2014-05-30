@@ -40,50 +40,45 @@ class Locations extends CI_Controller {
 		}
 				
 		if ($this->input->get('filter_search')) {
-			$filter['filter_search'] = $this->input->get('filter_search');
-			$data['filter_search'] = $filter['filter_search'];
+			$filter['filter_search'] = $data['filter_search'] = $this->input->get('filter_search');
 			$url .= 'filter_search='.$filter['filter_search'].'&';
 		} else {
 			$data['filter_search'] = '';
 		}
 		
 		if (is_numeric($this->input->get('filter_status'))) {
-			$filter['filter_status'] = $this->input->get('filter_status');
-			$data['filter_status'] = $filter['filter_status'];
+			$filter['filter_status'] = $data['filter_status'] = $this->input->get('filter_status');
 			$url .= 'filter_status='.$filter['filter_status'].'&';
 		} else {
-			$filter['filter_status'] = '';
-			$data['filter_status'] = '';
+			$filter['filter_status'] = $data['filter_status'] = '';
 		}
 		
 		if ($this->input->get('sort_by')) {
-			$filter['sort_by'] = $this->input->get('sort_by');
-			$data['sort_by'] = $filter['sort_by'];
+			$filter['sort_by'] = $data['sort_by'] = $this->input->get('sort_by');
 		} else {
-			$filter['sort_by'] = '';
-			$data['sort_by'] = '';
+			$filter['sort_by'] = $data['sort_by'] = 'location_id';
 		}
 		
 		if ($this->input->get('order_by')) {
-			$filter['order_by'] = $this->input->get('order_by');
-			$data['order_by_active'] = strtolower($this->input->get('order_by')) .' active';
-			$data['order_by'] = strtolower($this->input->get('order_by'));
+			$filter['order_by'] = $data['order_by'] = $this->input->get('order_by');
+			$data['order_by_active'] = $this->input->get('order_by') .' active';
 		} else {
-			$filter['order_by'] = '';
-			$data['order_by_active'] = '';
-			$data['order_by'] = 'desc';
+			$filter['order_by'] = $data['order_by'] = 'DESC';
+			$data['order_by_active'] = 'DESC';
 		}
 		
-		$data['heading'] 			= 'Locations';
-		$data['button_add'] 		= 'New';
-		$data['button_delete'] 		= 'Delete';
+		$this->template->setTitle('Locations');
+		$this->template->setHeading('Locations');
+		$this->template->setButton('+ New', array('class' => 'add_button', 'href' => page_url() .'/edit'));
+		$this->template->setButton('Delete', array('class' => 'delete_button', 'onclick' => '$(\'form:not(#filter-form)\').submit();'));
+
 		$data['text_empty'] 		= 'There are no locations available.';
 
-		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'DESC') ? 'ASC' : 'DESC';
+		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_name'] 			= site_url('admin/locations'.$url.'sort_by=location_name&order_by='.$order_by);
 		$data['sort_city'] 			= site_url('admin/locations'.$url.'sort_by=location_city&order_by='.$order_by);
 		$data['sort_postcode'] 		= site_url('admin/locations'.$url.'sort_by=location_postcode&order_by='.$order_by);
-		$data['sort_id'] 			= site_url('admin/locations'.$url.'sort_by=menu_id&location_id='.$order_by);
+		$data['sort_id'] 			= site_url('admin/locations'.$url.'sort_by=location_id&order_by='.$order_by);
 
 		$data['country_id'] = $this->config->item('country_id');
 		$data['default_location_id'] = $this->config->item('default_location_id');
@@ -100,7 +95,7 @@ class Locations extends CI_Controller {
 				'location_telephone'	=> $result['location_telephone'],
 				'location_lat'			=> $result['location_lat'],
 				'location_lng'			=> $result['location_lng'],
-				'location_status'		=> $result['location_status'],
+				'location_status'		=> ($result['location_status'] === '1') ? 'Enabled' : 'Disabled',
 				'edit' 					=> site_url('admin/locations/edit?id=' . $result['location_id'])
 			);
 		}
@@ -127,7 +122,7 @@ class Locations extends CI_Controller {
 			);
 		}
 
-		if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+		if ($this->input->get('sort_by') AND $this->input->get('order_by')) {
 			$url .= 'sort_by='.$filter['sort_by'].'&';
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
@@ -148,16 +143,15 @@ class Locations extends CI_Controller {
 			redirect('admin/locations');  			
 		}	
 
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'locations.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'locations', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'locations', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'locations', $regions, $data);
+			$this->template->render('themes/admin/default/', 'locations', $data);
 		}
 	}
 
 	public function edit() {
-		
 		if (!$this->user->islogged()) {  
   			redirect('admin/login');
 		}
@@ -172,9 +166,8 @@ class Locations extends CI_Controller {
 			$data['alert'] = '';
 		}		
 
-		//check if /location_id is set in uri string
 		if (is_numeric($this->input->get('id'))) {
-			$location_id = (int)$this->input->get('id');
+			$location_id = $this->input->get('id');
 			$data['action']	= site_url('admin/locations/edit?id='. $location_id);
 		} else {
 		    $location_id = 0;
@@ -183,10 +176,12 @@ class Locations extends CI_Controller {
 		
 		$result = $this->Locations_model->getLocation($location_id);
 		
-		$data['heading'] 				= 'Location - '. $result['location_name'];
-		$data['button_save'] 			= 'Save';
-		$data['button_save_close'] 		= 'Save & Close';
-		$data['sub_menu_back'] 			= site_url('admin/locations');
+		$title = (isset($result['location_name'])) ? 'Edit - '. $result['location_name'] : 'New';	
+		$this->template->setTitle('Location: '. $title);
+		$this->template->setHeading('Location: '. $title);
+		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('back_button', site_url('admin/locations'));
 
 		$data['location_id'] 			= $result['location_id'];
 		$data['location_name'] 			= $result['location_name'];
@@ -280,8 +275,11 @@ class Locations extends CI_Controller {
 		}
 
 		if ($this->input->post() AND $this->_addLocation() === TRUE) {
-		
-			redirect('/admin/locations');
+			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {	
+				redirect('admin/locations/edit?id='. $this->input->post('insert_id'));
+			} else {
+				redirect('admin/locations');
+			}
 		}
 
 		if ($this->input->post() AND $this->_updateLocation() === TRUE) {
@@ -292,25 +290,21 @@ class Locations extends CI_Controller {
 			redirect('admin/locations/edit?id='. $location_id);
 		}
 		
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'locations_edit.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'locations_edit', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'locations_edit', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'locations_edit', $regions, $data);
+			$this->template->render('themes/admin/default/', 'locations_edit', $data);
 		}
 	}
 
 	public function _addLocation() {
-									
     	if (!$this->user->hasPermissions('modify', 'admin/locations')) {
-		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add!</p>');
 			return TRUE;
-    	
-    	} else if (	! $this->input->get('id') AND $this->validateForm() === TRUE) { 
+    	} else if (	! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$add = array();
 			
-			//Sanitizing the POST values
 			$add['location_name'] 		= $this->input->post('location_name');
 			$add['address'] 			= $this->input->post('address');
 			$add['email'] 				= $this->input->post('email');			
@@ -326,10 +320,10 @@ class Locations extends CI_Controller {
 			$add['location_status'] 	= $this->input->post('location_status');			
 			$add['location_radius'] 	= $this->input->post('location_radius');			
 			
-			if ($this->Locations_model->addLocation($add)) {
-				$this->session->set_flashdata('alert', '<p class="success">Location Added Sucessfully!</p>');
+			if ($_POST['insert_id'] = $this->Locations_model->addLocation($add)) {
+				$this->session->set_flashdata('alert', '<p class="success">Location added sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Added!</p>');				
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing added.</p>');				
 			}
 							
 			return TRUE;
@@ -337,13 +331,10 @@ class Locations extends CI_Controller {
 	}
 
 	public function _updateLocation() {
-									
     	if (!$this->user->hasPermissions('modify', 'admin/locations')) {
-		
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
 			return TRUE;
-    	
-    	} else if ($this->input->get('id') AND $this->validateForm() === TRUE) { 
+    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$update = array();
 			
 			//Sanitizing the POST values
@@ -367,9 +358,9 @@ class Locations extends CI_Controller {
 			$update['covered_area'] 		= serialize($this->input->post('covered_area'));			
 		
 			if ($this->Locations_model->updateLocation($update)) {
-				$this->session->set_flashdata('alert', '<p class="success">Location Updated Sucessfully!</p>');
+				$this->session->set_flashdata('alert', '<p class="success">Location updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');				
 			}
 				
 			return TRUE;
@@ -410,15 +401,12 @@ class Locations extends CI_Controller {
 	public function _deleteLocation() {
     	if (!$this->user->hasPermissions('modify', 'admin/menus')) {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
-    	} else { 
-			if (is_array($this->input->post('delete'))) {
-				foreach ($this->input->post('delete') as $key => $value) {
-					$location_id = $value;
-					$this->Locations_model->deleteLocation($location_id);
-				}			
-			
-				$this->session->set_flashdata('alert', '<p class="success">Location Deleted Sucessfully!</p>');
-			}
+    	} else if (is_array($this->input->post('delete'))) {
+			foreach ($this->input->post('delete') as $key => $value) {
+				$this->Locations_model->deleteLocation($value);
+			}			
+		
+			$this->session->set_flashdata('alert', '<p class="success">Location deleted sucessfully!</p>');
 		}
 				
 		return TRUE;

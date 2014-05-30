@@ -14,13 +14,14 @@ class Permission extends CI_Controller {
 			$data['alert'] = '';
 		}
 
-		$data['heading'] = 'Permission'; 
+		$this->template->setTitle('Permission');
+		$this->template->setHeading('Permission');
 
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'permission.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'permission', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'permission', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'permission', $regions, $data);
+			$this->template->render('themes/admin/default/', 'permission', $data);
 		}
 	}
 }

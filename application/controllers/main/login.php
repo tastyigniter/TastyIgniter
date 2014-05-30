@@ -4,7 +4,8 @@ class Login extends MX_Controller {
 
 	public function index() {
 		$this->load->library('customer');
-		$this->lang->load('main/login_register');  												// loads language file
+		$this->load->library('language');
+		$this->lang->load('main/login_register', $this->language->folder());
 
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');
@@ -17,6 +18,8 @@ class Login extends MX_Controller {
 		}
 
 		// START of retrieving lines from language file to pass to view.
+		$this->template->setTitle($this->lang->line('text_heading'));
+		$this->template->setHeading($this->lang->line('text_heading'));
 		$data['text_heading'] 			= $this->lang->line('text_heading');
 		$data['text_login'] 			= $this->lang->line('text_login');
 		$data['text_register'] 			= $this->lang->line('text_register');
@@ -24,13 +27,12 @@ class Login extends MX_Controller {
 		$data['entry_email'] 			= $this->lang->line('entry_email');
 		$data['entry_password'] 		= $this->lang->line('entry_password');
 		$data['button_login'] 			= $this->lang->line('button_login');
-		$data['text_login_register'] 		= $this->lang->line('text_login_register');
+		$data['text_login_register'] 	= $this->lang->line('text_login_register');
 		// END of retrieving lines from language file to send to view.
 
 		$data['reset_url'] 				= site_url('main/password_reset');
 
-		if ($this->input->post('submit') === 'Login') {																// checks if $_POST data is set 
-	
+		if ($this->input->post()) {																// checks if $_POST data is set 
 			if ($this->validateForm() === TRUE) {	
 				$email = $this->input->post('email');											// retrieves email value from $_POST data if set
 				$password = $this->input->post('password');										// retrieves password value from $_POST data if set
@@ -44,25 +46,26 @@ class Login extends MX_Controller {
     		}
 		}
 		
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'login.php')) {
-			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'login', $regions, $data);
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'login', $data);
 		} else {
-			$this->template->render('themes/main/default/', 'login', $regions, $data);
+			$this->template->render('themes/main/default/', 'login', $data);
 		}
 	}
-		public function validateForm() {
-			// START of form validation rules
-			$this->form_validation->set_rules('email', 'Email Address', 'xss_clean|trim|required|valid_email');
-			$this->form_validation->set_rules('password', 'Password', 'xss_clean|trim|required|min_length[6]|max_length[32]');
-			// END of form validation rules
 
-  			if ($this->form_validation->run() === TRUE) {										// checks if form validation routines ran successfully
-				return TRUE;
-			} else {
-				return FALSE;
-			}
+	public function validateForm() {
+		// START of form validation rules
+		$this->form_validation->set_rules('email', 'Email Address', 'xss_clean|trim|required|valid_email');
+		$this->form_validation->set_rules('password', 'Password', 'xss_clean|trim|required|min_length[6]|max_length[32]');
+		// END of form validation rules
+
+		if ($this->form_validation->run() === TRUE) {										// checks if form validation routines ran successfully
+			return TRUE;
+		} else {
+			return FALSE;
 		}
+	}
 }
 
 /* End of file login.php */

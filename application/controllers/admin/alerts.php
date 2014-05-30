@@ -35,8 +35,7 @@ class Alerts extends CI_Controller {
 		}
 				
 		if ($this->input->get('filter_search')) {
-			$filter['filter_search'] = $this->input->get('filter_search');
-			$data['filter_search'] = $filter['filter_search'];
+			$data['filter_search'] = $filter['filter_search'] = $this->input->get('filter_search');
 			$url .= 'filter_search='.$filter['filter_search'].'&';
 		} else {
 			$data['filter_search'] = '';
@@ -46,8 +45,10 @@ class Alerts extends CI_Controller {
 			$filter['staff_id'] = (int)$this->user->getStaffId();
 		}
 
-		$data['heading'] 			= 'Alerts';
-		$data['button_delete'] 		= 'Delete';
+		$this->template->setTitle('Alerts');
+		$this->template->setHeading('Alerts');
+		$this->template->setButton('Delete', array('class' => 'delete_button', 'onclick' => '$(\'form:not(#filter-form)\').submit();'));
+
 		$data['text_empty'] 		= 'There are no alerts available.';
 
 		//load ratings data into array
@@ -75,15 +76,15 @@ class Alerts extends CI_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		if ($this->input->post('delete') && $this->_deleteMessage() === TRUE) {
+		if ($this->input->post('delete') AND $this->_deleteMessage() === TRUE) {
 			redirect('admin/alerts');
 		}	
 
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'alerts.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'alerts', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'alerts', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'alerts', $regions, $data);
+			$this->template->render('themes/admin/default/', 'alerts', $data);
 		}
 	}
 
@@ -100,8 +101,8 @@ class Alerts extends CI_Controller {
 		}
 
 		//check if customer_id is set in uri string
-		if (is_numeric($this->input->get('id'))) {
-			$message_id = (int)$this->input->get('id');
+		if (is_numeric(is_numeric($this->input->get('id')) AND $this->validateForm())) {
+			$message_id = (int)is_numeric($this->input->get('id')) AND $this->validateForm();
 		} else {
 		    redirect('admin/alerts');
 		}
@@ -109,44 +110,41 @@ class Alerts extends CI_Controller {
 		$message_info = $this->Messages_model->viewAdminMessage($message_id);
 		
 		if ($message_info) {
-			$data['heading'] 		= 'Alerts';
-			$data['sub_menu_back'] 	= site_url('admin/alerts');
+			$this->template->setHeading('Alerts');
+			$this->template->setBackButton('back_button', site_url('admin/alerts'));
 
-			if (!empty($message_info['receiver'])) {
-				$receiver = $this->Staffs_model->getStaff($message_info['receiver']);
-				$receiver = $receiver['staff_name'];
+			if (!empty($message_info['recipient'])) {
+				$result = $this->Staffs_model->getStaff($message_info['recipient']);
+				$recipient = $result['staff_name'];
 			} else {
-				$receiver = 'Customers';
+				$recipient = 'Customers';
 			}
 			
 			$data['message_id'] 	= $message_info['message_id'];
 			$data['date'] 			= mdate('%d %M %y - %H:%i', strtotime($message_info['date']));
 			$data['sender'] 		= $message_info['staff_name'];
-			$data['receiver'] 		= $receiver;
+			$data['recipient'] 		= $recipient;
 			$data['subject'] 		= $message_info['subject'];
 			$data['body'] 			= $message_info['body'];
 		}		
 
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'alerts_view.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'alerts_view', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'alerts_view', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'alerts_view', $regions, $data);
+			$this->template->render('themes/admin/default/', 'alerts_view', $data);
 		}
 	}
 
 	public function _deleteMessage($menu_id = FALSE) {
     	if (!$this->user->hasPermissions('modify', 'admin/messages')) {
 			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
-    	} else { 
-			if (is_array($this->input->post('delete'))) {
-				foreach ($this->input->post('delete') as $key => $value) {
-					$message_id = $value;
-					$this->Messages_model->deleteMessage($message_id);
-				}			
-			
-				$this->session->set_flashdata('alert', '<p class="success">Message(s) Deleted Sucessfully!</p>');
-			}
+    	} else if (is_array($this->input->post('delete'))) {
+			foreach ($this->input->post('delete') as $key => $value) {
+				$this->Messages_model->deleteMessage($value);
+			}			
+		
+			$this->session->set_flashdata('alert', '<p class="success">Message(s) deleted sucessfully!</p>');
 		}
 				
 		return TRUE;

@@ -5,15 +5,14 @@ class Menus extends MX_Controller {
 		parent::__construct(); 																	// calls the constructor
 		$this->load->library('customer'); 														// load the customer library
 		$this->load->model('Menus_model'); 														// load the menus model
-	}
-
-	public function index() {
 		$this->load->library('location'); 														// load the location library
 		$this->load->library('currency'); 														// load the currency library
 		$this->load->model('Locations_model'); 													// load the locations model
+		$this->load->library('language');
+		$this->lang->load('main/menus', $this->language->folder());
+	}
 
-		$this->lang->load('main/menus');  														// loads language file
-
+	public function index() {
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert'); 								// retrieve session flashdata variable if available
 		} else {
@@ -22,8 +21,7 @@ class Menus extends MX_Controller {
 
 		$filter = array();
 		if ($this->uri->segment(3)) {
-			$filter['category_id'] = $this->uri->segment(3); 									// retrieve 3rd uri segment else set FALSE if unavailable.
-			$data['category_id'] = $filter['category_id'];	
+			$filter['category_id'] = $data['category_id'] = $this->uri->segment(3); 									// retrieve 3rd uri segment else set FALSE if unavailable.
 		} else {
 			$data['category_id'] = 0;			
 		}
@@ -33,7 +31,8 @@ class Menus extends MX_Controller {
 		}
 
 		// START of retrieving lines from language file to pass to view.
-		$data['text_heading'] 			= $this->lang->line('text_heading');
+		$this->template->setTitle($this->lang->line('text_heading'));
+		$this->template->setHeading($this->lang->line('text_heading'));
 		$data['text_empty'] 			= $this->lang->line('text_empty');
 		$data['text_category'] 			= $this->lang->line('text_category');
 		$data['text_specials'] 			= $this->lang->line('text_specials');
@@ -106,11 +105,11 @@ class Menus extends MX_Controller {
 
 		$data['button_right'] = '<a class="button" href='. site_url("main/checkout") .'>'. $this->lang->line('button_continue') .'</a>';
 
-		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'menus.php')) {
-			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'menus', $regions, $data);
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'menus', $data);
 		} else {
-			$this->template->render('themes/main/default/', 'menus', $regions, $data);
+			$this->template->render('themes/main/default/', 'menus', $data);
 		}
 	}
 

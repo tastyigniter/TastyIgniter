@@ -11,12 +11,12 @@
 			</tr>
 			<?php if ($messages) {?>
 			<?php foreach ($messages as $message) { ?>
-			<tr>
+			<tr class="<?php echo $message['state']; ?>">
 				<td align="left">
 					<a class="edit" href="<?php echo $message['edit']; ?>"><?php echo $message['subject']; ?></a><br />
 					<font size="1"><?php echo $message['body']; ?></font>
 				</td>
-				<td align="center"><?php echo $message['date']; ?></td>
+				<td align="center"><?php echo $message['date_added']; ?></td>
 			</tr>
 			<?php } ?>
 			<?php } else { ?>

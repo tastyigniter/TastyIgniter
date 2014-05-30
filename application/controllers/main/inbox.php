@@ -6,11 +6,12 @@ class Inbox extends MX_Controller {
 		parent::__construct(); 																	//  calls the constructor
 		$this->load->library('customer'); 														// load the customer library
 		$this->load->model('Messages_model');													// loads messages model
+
+		$this->load->library('language');
+		$this->lang->load('main/inbox', $this->language->folder());
 	}
 
 	public function index() {
-		$this->lang->load('main/inbox');  														// loads language file
-		
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
@@ -22,6 +23,8 @@ class Inbox extends MX_Controller {
 		}
 		
 		// START of retrieving lines from language file to pass to view.
+		$this->template->setTitle($this->lang->line('text_heading'));
+		$this->template->setHeading($this->lang->line('text_heading'));
 		$data['text_heading'] 			= $this->lang->line('text_heading');
 		$data['text_view'] 				= $this->lang->line('text_view');
 		$data['text_empty'] 			= $this->lang->line('text_empty');
@@ -36,27 +39,26 @@ class Inbox extends MX_Controller {
 		$data['back'] 					= site_url('main/account');
 		
 		$data['messages'] = array();
-		$results = $this->Messages_model->getMainInbox();							// retrieve all customer messages from getMainInbox method in Messages model
+		$results = $this->Messages_model->getMainList($this->customer->getId());							// retrieve all customer messages from getMainInbox method in Messages model
 		foreach ($results as $result) {					
 			$data['messages'][] = array(														// create array of customer messages to pass to view
-				'date'		=> mdate('%d %M %y - %H:%i', strtotime($result['date'])),
-				'subject' 	=> $result['subject'],
-				'body' 		=> substr(strip_tags(html_entity_decode($result['body'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..',
-				'edit'		=> site_url('main/inbox/view/'. $result['message_id'])
+				'date_added'	=> mdate('%d %M %y - %H:%i', strtotime($result['date_added'])),
+				'subject' 		=> $result['subject'],
+				'body' 			=> substr(strip_tags(html_entity_decode($result['body'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..',
+				'state'			=> ($result['state'] === '0') ? 'unread' : 'read',
+				'edit'			=> site_url('main/inbox/view/'. $result['message_id'])
 			);
 		}
 
-		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'inbox.php')) {
-			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'inbox', $regions, $data);
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'inbox', $data);
 		} else {
-			$this->template->render('themes/main/default/', 'inbox', $regions, $data);
+			$this->template->render('themes/main/default/', 'inbox', $data);
 		}
 	}
 
 	public function view() {
-		$this->lang->load('main/inbox');  														// loads language file
-
 		if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
   			redirect('account/login');
 		}
@@ -73,9 +75,11 @@ class Inbox extends MX_Controller {
   			redirect('account/inbox');
 		}
 
-		$result = $this->Messages_model->viewMessage($message_id);								// retrieve specific customer message based on message id to be passed to view
+		$result = $this->Messages_model->viewMainMessage($this->customer->getId(), $message_id);								// retrieve specific customer message based on message id to be passed to view
 
 		// START of retrieving lines from language file to pass to view.
+		$this->template->setTitle($this->lang->line('text_view_heading'));
+		$this->template->setHeading($this->lang->line('text_view_heading'));
 		$data['text_heading'] 			= $this->lang->line('text_view_heading');
 		$data['column_date'] 			= $this->lang->line('column_date');
 		$data['column_time'] 			= $this->lang->line('column_time');
@@ -84,22 +88,22 @@ class Inbox extends MX_Controller {
 		// END of retrieving lines from language file to pass to view.
 
 		$data['back'] 					= site_url('main/inbox');
-
 		if ($result) {
 			$data['error'] 			= '';
-			$data['message_id'] = $result['message_id'];
-			$data['date'] 		= mdate('%d %M %y - %H:%i', strtotime($result['date']));
-			$data['subject'] 	= $result['subject'];
-			$data['body'] 		= $result['body'];
+			$data['message_id'] 	= $result['message_id'];
+			$data['date_added'] 	= mdate('%d %M %y - %H:%i', strtotime($result['date_added']));
+			$data['subject'] 		= $result['subject'];
+			$data['body'] 			= $result['body'];
+			$this->Messages_model->updateMainMessageState($result['message_id'], $this->customer->getId(), '1');
 		} else {
 			$data['error'] = '<p class="error">Sorry, an error has occurred.</p>';
 		}
 
-		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'inbox_view.php')) {
-			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'inbox_view', $regions, $data);
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'inbox_view', $data);
 		} else {
-			$this->template->render('themes/main/default/', 'inbox_view', $regions, $data);
+			$this->template->render('themes/main/default/', 'inbox_view', $data);
 		}
 	}
 }

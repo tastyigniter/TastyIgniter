@@ -24,17 +24,17 @@ class Pages extends MX_Controller {
 
 		$result = $this->Pages_model->getPage($page_id);
 		
-		$data['text_title'] 		= $result['title'];
-		$data['text_heading'] 		= $result['heading'];
+		$this->template->setTitle($result['title']);
+		$this->template->setHeading($result['heading']);
 		$data['meta_description'] 	= $result['meta_description'];
 		$data['meta_keywords'] 		= $result['meta_keywords'];
 		$data['page_content'] 		= $result['content'];
 
-		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'pages.php')) {
-			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'pages', $regions, $data);
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'pages', $data);
 		} else {
-			$this->template->render('themes/main/default/', 'pages', $regions, $data);
+			$this->template->render('themes/main/default/', 'pages', $data);
 		}
 	}
 }

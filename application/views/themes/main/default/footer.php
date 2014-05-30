@@ -12,13 +12,12 @@
 
   	<div class="copyright">
 		&copy; <?php echo date('Y'); ?> TastyIgniter. All Rights Reserved</p> <br />
-		Page rendered in <strong>{elapsed_time}</strong> seconds <br />
-		<!--<a id="profiler">View Profiler</a>-->
 	</div>
 </footer>
-<!--<script type="text/javascript">
+<script type="text/javascript">
 $(document).ready(function() {
 	if ($('#codeigniter_profiler').length) {
+		$('.copyright').append('Page rendered in <strong>{elapsed_time}</strong> seconds <br /><a id="profiler">View Profiler</a>');
 		$('#profiler').on('click', function(){
 			if($('#codeigniter_profiler').is(':visible')) {
 				$('#codeigniter_profiler').fadeOut();
@@ -28,10 +27,8 @@ $(document).ready(function() {
 		});	
 
 		 $('#codeigniter_profiler').fadeOut();
-	} else {
-		$('#profiler').hide();
 	}
 });	
-</script>-->
+</script>
 </body>
 </html>

@@ -27,13 +27,12 @@ class Security_questions_model extends CI_Model {
 	}
 
 	public function updateQuestions($questions = array()) {
+		$query = FALSE;
 
 		if (!empty($questions)) {
-
 			$priority = 1;
-			foreach ($questions as $question) {
-
-				if (!empty($question['question_id']) && !empty($question['text'])) {
+			foreach ($questions as $result) {
+				if (!empty($question['question_id']) AND !empty($question['text'])) {
 					$this->db->set('text', $question['text']);
 					$this->db->set('priority', $priority);
 					$this->db->where('question_id', $question['question_id']);
@@ -43,25 +42,14 @@ class Security_questions_model extends CI_Model {
 					$this->db->set('priority', $priority);
 					$this->db->insert('security_questions'); 
 				}
-				
+			
 				$priority++;
 			}
 					
-			if ($this->db->affected_rows() > 0) {
-				return TRUE;
-			}
+			$query = TRUE;
 		}
-	}
-
-	public function deleteQuestion($question_id) {
-
-		$this->db->where('question_id', $question_id);
 		
-		$this->db->delete('security_questions');
-
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
-		}
+		return $query;
 	}
 }
 

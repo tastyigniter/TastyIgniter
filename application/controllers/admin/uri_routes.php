@@ -23,8 +23,9 @@ class Uri_routes extends CI_Controller {
 			$data['alert'] = '';
 		}		
 				
-		$data['heading'] 		= 'URI Routes';
-		$data['button_save'] 	= 'Save';
+		$this->template->setTitle('URI Routes');
+		$this->template->setHeading('URI Routes');
+		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
 
 		if ($this->input->post('routes')) {
 			$routes = $this->input->post('routes');
@@ -41,15 +42,15 @@ class Uri_routes extends CI_Controller {
 			);
 		}
 
-		if ($this->input->post() && $this->_updateRoute() === TRUE){
+		if ($this->input->post() AND $this->_updateRoute() === TRUE){
 			redirect('admin/uri_routes');
 		}
 		
-		$regions = array('header', 'footer');
+		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'uri_routes.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'uri_routes', $regions, $data);
+			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'uri_routes', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'uri_routes', $regions, $data);
+			$this->template->render('themes/admin/default/', 'uri_routes', $data);
 		}
 	}
 
@@ -63,9 +64,9 @@ class Uri_routes extends CI_Controller {
 			$update = $this->input->post('routes');
 
 			if ($this->Design_model->updateRoutes($update)) {
-				$this->session->set_flashdata('alert', '<p class="success">URI Routes Updated Sucessfully!</p>');
+				$this->session->set_flashdata('alert', '<p class="success">URI Routes updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Updated!</p>');				
+				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');				
 			}
 	
 			return TRUE;

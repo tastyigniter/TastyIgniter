@@ -330,7 +330,7 @@ $config['modules_locations'] = array(APPPATH.'extensions/' => '../extensions/');
 |
 |
 */
-$config['ti_setup'] = '';
+$config['ti_setup'] = 'success';
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */

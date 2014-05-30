@@ -11,15 +11,15 @@ class Checkout extends MX_Controller {
 		$this->load->model('Orders_model'); 													// load the orders model
 		$this->load->model('Locations_model'); 													// load the locations model
 		$this->load->model('Countries_model');
-		$this->load->model('Payments_model');
+		$this->load->model('Paypal_model');
+		$this->load->library('user_agent');
+		$this->load->library('language');
+		$this->lang->load('main/checkout', $this->language->folder());
 
         $this->form_validation->CI =& $this;
 	}
 
 	public function index() {
-		$this->load->library('user_agent');
-		$this->lang->load('main/checkout');  													// loads language file
-		
 		if (is_numeric($this->input->cookie('last_order_id'))) {
 			//redirect('checkout/success');														// redirect to checkout success page with returned order id
   		}
@@ -66,7 +66,8 @@ class Checkout extends MX_Controller {
 		}
 
 		// START of retrieving lines from language file to pass to view.
-		$data['text_heading'] 			= $this->lang->line('text_heading');
+		$this->template->setTitle($this->lang->line('text_heading'));
+		$this->template->setHeading($this->lang->line('text_heading'));
 		$data['text_checkout'] 			= $this->lang->line('text_checkout');
 		$data['text_asap']				= $this->lang->line('text_asap');
 		$data['text_new']				= $this->lang->line('text_new');
@@ -225,7 +226,7 @@ class Checkout extends MX_Controller {
 			$ready_time = $this->location->readyTime();
 		}
 		
-		$data['asap_time'] = mdate('%H:%i', strtotime($current_time) + 5 * 60);
+		$data['asap_time'] = mdate('%H:%i', strtotime($current_time) + $ready_time * 60);
 		$data['delivery_times'] = array();
 		$delivery_times = $this->location->generateHours($start_time, $end_time, $ready_time); 	// retrieve the location delivery times from location library
 		foreach ($delivery_times as $key => $value) {											// loop through delivery times
@@ -237,17 +238,20 @@ class Checkout extends MX_Controller {
 			}
 		}
 		
-		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		$paypal = $this->config->item('paypal_express_payment');
+		$cod = $this->config->item('cod_payment');
+		$data['paypal_status'] = $paypal['paypal_status'];
+		$data['cod_status'] = $cod['cod_status'];
+		
+		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'checkout.php')) {
-			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'checkout', $regions, $data);
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'checkout', $data);
 		} else {
-			$this->template->render('themes/main/default/', 'checkout', $regions, $data);
+			$this->template->render('themes/main/default/', 'checkout', $data);
 		}
 	}
 		
 	public function success() {
-		$this->lang->load('main/checkout');
-		
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
@@ -259,7 +263,8 @@ class Checkout extends MX_Controller {
 		}
 
 		// START of retrieving lines from language file to pass to view.
-		$data['text_heading'] 				= $this->lang->line('text_success_heading');
+		$this->template->setTitle($this->lang->line('text_success_heading'));
+		$this->template->setHeading($this->lang->line('text_success_heading'));
 		$data['text_order_details'] 		= $this->lang->line('text_order_details');
 		$data['text_order_items'] 			= $this->lang->line('text_order_items');
 		$data['text_delivery_address'] 		= $this->lang->line('text_delivery_address');
@@ -312,17 +317,15 @@ class Checkout extends MX_Controller {
 			redirect('home');
 		}
 				
-		$regions = array('header', 'content_top', 'content_left', 'content_right', 'footer');
+		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'checkout_success.php')) {
-			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'checkout_success', $regions, $data);
+			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'checkout_success', $data);
 		} else {
-			$this->template->render('themes/main/default/', 'checkout_success', $regions, $data);
+			$this->template->render('themes/main/default/', 'checkout_success', $data);
 		}
 	}
 	
 	public function _validateCheckout() {														// method to validate checkout form fields
-		$this->lang->load('main/checkout');  													// loads language file
-					
 		$order_data = array();
 		
 		if ($this->validateForm() === TRUE) {
@@ -399,7 +402,7 @@ class Checkout extends MX_Controller {
 					}
 	
 					if ($this->input->post('payment') === 'paypal') { 								// check if payment method is equal to paypal
-						$response = $this->Payments_model->setExpressCheckout($order_data, $this->cart->contents());
+						$response = $this->Paypal_model->setExpressCheckout($order_data, $this->cart->contents());
 			
 						if (strtoupper($response['ACK']) === 'SUCCESS' OR strtoupper($response['ACK']) === 'SUCCESSWITHWARNING') {
 							if ($this->config->item('paypal_mode') === 'sandbox') {

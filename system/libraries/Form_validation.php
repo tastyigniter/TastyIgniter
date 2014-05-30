@@ -1233,6 +1233,7 @@ class CI_Form_validation {
 		{
 			return FALSE;
 		}
+		
 		return $str > $min;
 	}
 

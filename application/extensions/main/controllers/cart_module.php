@@ -10,11 +10,11 @@ class Cart_module extends MX_Controller {
 		$this->load->library('location'); 														// load the location library
 		$this->load->model('Cart_model'); 														// load the menus model
 		$this->load->model('Coupons_model'); 														// load the coupons model
+		$this->load->library('language');
+		$this->lang->load('main/cart_module', $this->language->folder());
 	}
 
 	public function index() {
-		$this->lang->load('main/cart_module');  														// loads language file
-		
 		if ( !file_exists(EXTPATH .'main/views/cart_module.php')) { 								//check if file exists in views folder
 			show_404(); 																		// Whoops, show 404 error page!
 		}
@@ -144,6 +144,10 @@ class Cart_module extends MX_Controller {
 			$menu_option_id 	= $this->input->post('menu_options');								// retrieve $_POST menu_options value
 			$menu_data 			= $this->Cart_model->getMenu($menu_id);								// get menu data based on menu id from getMenu method in Menus model
 			$menu_option_data 	= $this->Cart_model->getMenuOption($menu_option_id);			// get menu option data based on menu option id from getMenuOption method in Menus model
+	
+			if ($menu_data['stock_qty'] <= 0) {												// checks if stock quantity is less than or equal to zero
+				$error = 6;
+			}
 		} else {
 			$error = 2;
 		}
@@ -152,10 +156,6 @@ class Cart_module extends MX_Controller {
 			$error = 3;
 		} else if ( ! $this->location->isOpened()) { 											// else if local restaurant is not open
 			$error = 4;
-		}
-	
-		if ($menu_data['stock_qty'] <= 0) {												// checks if stock quantity is less than or equal to zero
-			$error = 6;
 		}
 		
 		switch ($error) {
@@ -179,18 +179,17 @@ class Cart_module extends MX_Controller {
 			break;
 		case 0:
 			if ( ! $json) {															// checks if menu option data if available
-		
+				$menu_options = array();
+				if ($menu_option_data) {															// checks if menu option data if available
+					$menu_options = array('option_id' => $menu_option_data['option_id'], 'name' => $menu_option_data['option_name'], 'price' => $menu_option_data['option_price']);
+					$menu_price = $menu_option_data['option_price'] + $menu_data['menu_price'];
+				} else if ($menu_data['is_special'] === '1') {											// else if special_price is empty			
+					$menu_price = $menu_data['special_price'];			
+				} else {
+					$menu_price = $menu_data['menu_price'];			
+				}
+	
 				if ($this->cart->contents()) {
-					$menu_options = array();
-					if ($menu_option_data) {															// checks if menu option data if available
-						$menu_options = array('option_id' => $menu_option_data['option_id'], 'name' => $menu_option_data['option_name'], 'price' => $menu_option_data['option_price']);
-						$menu_price = $menu_option_data['option_price'] + $menu_data['menu_price'];
-					} else if ($menu_data['is_special'] === '1') {											// else if special_price is empty			
-						$menu_price = $menu_data['special_price'];			
-					} else {
-						$menu_price = $menu_data['menu_price'];			
-					}
-		
 					foreach ($this->cart->contents() as $cart_item) {								// loop through items in cart
 						$cart_option_id = (!empty($cart_item['options']['option_id'])) ? $cart_item['options']['option_id'] : '';					
 						$menu_option_id = ($menu_option_id === 'undefined') ? '' : $menu_option_id;					
@@ -200,22 +199,22 @@ class Cart_module extends MX_Controller {
 							$update_cart = TRUE;
 						}
 					}
+				}
 
-					if ($update_cart === TRUE) {
-						$this->cart->update(array('rowid' => $row_id, 'qty' => $quantity));										// pass the cart_data array to add item to cart, if successful				
-						$json['success'] = 'Success: Cart Updated Successfully.';						// display success message
-					} else {
-						$cart_data = array(																// create an array of item to be added to cart with id, name, qty, price and options as keys
-							'id'     		=> $menu_id,
-							'name'   		=> $menu_data['menu_name'],
-							'qty'    		=> ($quantity) ? $quantity : $menu_data['minimum_qty'],
-							'price'  		=> $this->cart->format_number($menu_price),
-							'options' 		=> $menu_options
-						);
-			
-						$added_data = $this->cart->insert($cart_data);
-						$json['success'] = 'Success: Menu as been added to cart.';					// display success message
-					}
+				if ($update_cart === TRUE) {
+					$this->cart->update(array('rowid' => $row_id, 'qty' => $quantity));										// pass the cart_data array to add item to cart, if successful				
+					$json['success'] = 'Success: Cart Updated Successfully.';						// display success message
+				} else {
+					$cart_data = array(																// create an array of item to be added to cart with id, name, qty, price and options as keys
+						'id'     		=> $menu_id,
+						'name'   		=> $menu_data['menu_name'],
+						'qty'    		=> ($quantity) ? $quantity : $menu_data['minimum_qty'],
+						'price'  		=> $this->cart->format_number($menu_price),
+						'options' 		=> $menu_options
+					);
+		
+					$added_data = $this->cart->insert($cart_data);
+					$json['success'] = 'Success: Menu as been added to cart.';					// display success message
 				}
 			}
 			break;

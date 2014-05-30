@@ -55,7 +55,9 @@ class  CI_Session {
         
         // switch back to the new session id and send the cookie
         session_id($new_session_id);
-        session_start();
+		if (!isset($_SESSION)) {
+        	session_start();
+        }
         
         // restore the old session data into the new session
         $_SESSION = $old_session_data;
@@ -171,7 +173,9 @@ class  CI_Session {
             }
         }
         
-        session_start();
+		if (!isset($_SESSION)) {
+        	session_start();
+        }
         
         // check if session id needs regeneration
         if ( $this->_session_id_expired() )
