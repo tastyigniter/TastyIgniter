@@ -15,8 +15,8 @@ Installation
 
 How to Contribute
 ============
-If you like this software and you'd like to help keep this project you can help by:
-1. Donating development time to help improve the source code at the GitHub repository.
+If you like this software and you'd like to help keep this project you can help by:<br />
+1. Donating development time to help improve the source code at the GitHub repository.<br />
 2. Spreading the word about TastyIgniter.
 
 License
