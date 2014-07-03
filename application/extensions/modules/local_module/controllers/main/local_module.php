@@ -47,13 +47,13 @@ class Local_module extends MX_Controller {
 		}
 
 		$local_info = $this->session->userdata('local_info');
-		if ($local_info['search_query']) {
+		if (isset($local_info['search_query'])) {
 			$data['postcode'] = $local_info['search_query'];
 		} else {
 			$data['postcode'] = '';
 		}
 
-		if ($local_info['order_type']) {
+		if (isset($local_info['order_type'])) {
 			$data['order_type'] = $local_info['order_type'];
 		} else {
 			$data['order_type'] = '';

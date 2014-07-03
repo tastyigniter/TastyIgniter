@@ -44,21 +44,21 @@ class Messages extends CI_Controller {
 			$data['filter_search'] = '';
 		}
 		
-		if (!empty($this->input->get('filter_label'))) {
+		if ($this->input->get('filter_label')) {
 			$filter['filter_label'] = $data['filter_label'] = $this->input->get('filter_label');
 			$url .= 'filter_label='.$filter['filter_label'].'&';
 		} else {
 			$filter['filter_label'] = $data['filter_label'] = 'inbox';
 		}
 
-		if (!empty($this->input->get('filter_recipient'))) {
+		if ($this->input->get('filter_recipient')) {
 			$filter['filter_recipient'] = $data['filter_recipient'] = $this->input->get('filter_recipient');
 			$url .= 'filter_recipient='.$filter['filter_recipient'].'&';
 		} else {
 			$filter['filter_recipient'] = $data['filter_recipient'] = '';
 		}
 
-		if (!empty($this->input->get('filter_type'))) {
+		if ($this->input->get('filter_type')) {
 			$filter['filter_type'] = $data['filter_type'] = $this->input->get('filter_type');
 			$url .= 'filter_type='.$filter['filter_type'].'&';
 		} else {

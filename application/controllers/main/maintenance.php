@@ -15,7 +15,7 @@ class Maintenance extends CI_Controller {
 			$data['alert'] = '';
 		}
 
-		if (!empty($this->config->item('maintenance_mode')) AND ($this->config->item('maintenance_mode') === '1') AND !$this->user->isLogged()) {  													// if customer is not logged in redirect to account login page
+		if ($this->config->item('maintenance_mode') === '1' AND !$this->user->isLogged()) {  													// if customer is not logged in redirect to account login page
 			$maintenance_page = ($this->config->item('maintenance_page')) ? $this->config->item('maintenance_page') : '';
 
 			$this->load->model('Pages_model');

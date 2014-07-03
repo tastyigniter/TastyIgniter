@@ -629,23 +629,23 @@ border-top: 1px solid #E7E7E7;
 vertical-align: middle;
 }
 table .action {
-width: 6% !important;
+width: 6.33% !important;
 padding:5px 0 7px 7px;
 }
 table .action-one {
-width: 3% !important;
+width: 3.33% !important;
 }
 table .action-three {
-width: 9% !important;
+width: 9.33% !important;
 }
 table .action .btn {
 display:inline-block;
 padding:0;
-width: 20px;
+width: 16px;
 }
 table .id, table .id .sort {
 color: #656565;
-width: 3% !important;
+width: 3.33% !important;
 }
 
 

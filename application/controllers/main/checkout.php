@@ -414,7 +414,7 @@ class Checkout extends MX_Controller {
 		$order_data = $this->session->userdata('order_data'); 						// retrieve order details from session userdata
 		$cart_contents = $this->session->userdata('cart_contents'); 												// retrieve cart contents
 
-		if (!empty($this->input->post('post_checkout'))) {
+		if (!empty($this->input->post['post_checkout'])) {
 			$order_data['payment'] = $this->input->post('payment');
 			
 			$order_id = (is_numeric($this->input->cookie('last_order_id'))) ? $this->input->cookie('last_order_id') : FALSE;

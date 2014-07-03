@@ -45,16 +45,7 @@ INSERT INTO `ti_customer_groups` (`customer_group_id`, `group_name`, `descriptio
 # TABLE STRUCTURE FOR: ti_customers
 #
 
-INSERT INTO `ti_customers` (`customer_id`, `first_name`, `last_name`, `email`, `password`, `salt`, `telephone`, `address_id`, `security_question_id`, `security_answer`, `newsletter`, `customer_group_id`, `ip_address`, `date_added`, `status`) VALUES ('39', 'Sam', 'Poyigi', 'temi@temi.com', 'a610f82a8ff7235182c8b5f5d65d783100611e7f', '69502ee1e', '100000000', '0', '11', 'Pike', '0', '11', '192.168.1.124', '2014-02-04 00:00:00', '1');
-
-
-#
-# TABLE STRUCTURE FOR: ti_customers_activity
-#
-
-INSERT INTO `ti_customers_activity` (`activity_id`, `customer_id`, `access_type`, `browser`, `ip_address`, `country_code`, `request_uri`, `referrer_uri`, `date_added`) VALUES ('17', '39', 'browser', 'Firefox', '192.168.1.124', '0', 'http://ptbs-macbook-pro.local/TastyIgniter/menus/seafoods', 'http://ptbs-macbook-pro.local/TastyIgniter/menus', '2014-06-21 17:43:52');
-INSERT INTO `ti_customers_activity` (`activity_id`, `customer_id`, `access_type`, `browser`, `ip_address`, `country_code`, `request_uri`, `referrer_uri`, `date_added`) VALUES ('21', '39', 'browser', 'Firefox', '192.168.1.145', '0', 'http://ptbs-macbook-pro.local/TastyIgniter/admin/customers/edit?id=41', 'http://ptbs-macbook-pro.local/TastyIgniter/admin/customers', '2014-06-10 21:18:09');
-INSERT INTO `ti_customers_activity` (`activity_id`, `customer_id`, `access_type`, `browser`, `ip_address`, `country_code`, `request_uri`, `referrer_uri`, `date_added`) VALUES ('20', '39', 'browser', 'Firefox', '127.0.0.1', '0', 'http://ptbs-macbook-pro.local/TastyIgniter/admin/reviews', 'http://ptbs-macbook-pro.local/TastyIgniter/admin/customers', '2014-06-10 20:10:42');
+INSERT INTO `ti_customers` (`customer_id`, `first_name`, `last_name`, `email`, `password`, `salt`, `telephone`, `address_id`, `security_question_id`, `security_answer`, `newsletter`, `customer_group_id`, `ip_address`, `date_added`, `status`) VALUES ('39', 'Sam', 'Poyigi', 'demo@demo.com', 'a610f82a8ff7235182c8b5f5d65d783100611e7f', '69502ee1e', '100000000', '0', '11', 'Pike', '0', '11', '192.168.1.124', '2014-02-04 00:00:00', '1');
 
 
 #

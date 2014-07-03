@@ -24,7 +24,7 @@
 	$script_tags 		= $this->template->getScriptTags();
 	$site_name 			= $this->config->item('site_name');
 	$title 				= $this->template->getTitle() .' ‹ Administrator Panel ‹ '. $site_name;
-	$site_url 			= site_url();
+	$site_url 			= rtrim(site_url(), '/').'/';
 	$base_url 			= base_url();
 	$active_menu 		= ($this->uri->segment(2)) ? $this->uri->segment(2) : ADMIN_URI;
 	$message_unread 	= $this->user->unreadMessageTotal();

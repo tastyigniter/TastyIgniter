@@ -28,7 +28,7 @@
 	$heading 			= $this->template->getHeading();
 	$site_logo 			= base_url('assets/img/' .$this->config->item('site_logo'));
 	$site_name 			= $this->config->item('site_name');
-	$site_url 			= site_url();
+	$site_url 			= rtrim(site_url(), '/').'/';
 	$base_url 			= base_url();
 	$islogged 			= $this->customer->islogged();
 

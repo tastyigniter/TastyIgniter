@@ -24,7 +24,7 @@
 							<a class="btn btn-grey input-sm" onclick="filterList();" title="Search"><i class="fa fa-search"></i></a>
 						</div>
 
-						<div class="col-md-8 pull-left">
+						<div class="col-md-9 pull-left">
 							<div class="form-group">
 								<select name="filter_location" class="form-control input-sm" class="form-control input-sm">
 									<option value="">View all locations</option>

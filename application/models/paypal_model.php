@@ -40,11 +40,11 @@ class Paypal_model extends CI_Model {
 
 			$nvp_data .= '&PAYMENTREQUEST_0_ITEMAMT='. urlencode($this->cart->total());
 			
-			if (!empty($this->cart->delivery())) {
+			if ($this->cart->delivery() > 0) {
 				$nvp_data .= '&PAYMENTREQUEST_0_SHIPPINGAMT='. urlencode($this->cart->delivery());			
 			}
 			
-			if (!empty($this->cart->coupon())) {
+			if ($this->cart->coupon() > 0) {
 				$nvp_data .= '&PAYMENTREQUEST_0_SHIPDISCAMT='. urlencode('-'. $this->cart->coupon());			
 			}
 			
@@ -64,11 +64,11 @@ class Paypal_model extends CI_Model {
 		$nvp_data .= '&PAYERID='. urlencode($payer_id);
 		$nvp_data .= '&PAYMENTREQUEST_0_ITEMAMT='. urlencode($this->cart->total());
 
-		if (!empty($this->cart->delivery())) {
+		if ($this->cart->delivery() > 0) {
 			$nvp_data .= '&PAYMENTREQUEST_0_SHIPPINGAMT='. urlencode($this->cart->delivery());			
 		}
 			
-		if (!empty($this->cart->coupon())) {
+		if ($this->cart->coupon() > 0) {
 			$nvp_data .= '&PAYMENTREQUEST_0_SHIPDISCAMT='. urlencode('-'. $this->cart->coupon());			
 		}
 		
@@ -195,5 +195,5 @@ class Paypal_model extends CI_Model {
 	}
 }
 
-/* End of file payments_model.php */
-/* Location: ./application/models/payments_model.php */
+/* End of file paypal_model.php */
+/* Location: ./application/models/paypal_model.php */
