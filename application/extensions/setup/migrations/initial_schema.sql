@@ -583,7 +583,7 @@ INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) 
 INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9271', 'config', 'maintenance_page', '3', '0');
 INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9270', 'config', 'maintenance_mode', '0', '0');
 INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9269', 'config', 'permalink', '1', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9268', 'config', 'index_file_url', '1', '0');
+INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9268', 'config', 'index_file_url', '0', '0');
 INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9267', 'config', 'encryption_key', 'muh6T37619LO09uJpk1679pCI06LHps4', '0');
 INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9266', 'config', 'activity_timeout', '1200', '0');
 INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9265', 'config', 'log_path', '', '0');

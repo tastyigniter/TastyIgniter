@@ -43,7 +43,7 @@ class Setting {
 			$this->setPermalinkQuery();
 		}
 		
-		if (!empty($this->CI->config->item('maintenance_mode')) AND ($this->CI->config->item('maintenance_mode') === '1') AND !$this->CI->user->isLogged()) {  													// if customer is not logged in redirect to account login page
+		if ($this->CI->config->item('maintenance_mode') === '1') {  													// if customer is not logged in redirect to account login page
 			$this->setMaintainance();
 		}
 
@@ -64,7 +64,7 @@ class Setting {
 	public function setMaintainance() {
 		$this->CI->load->library('user');
 	
-		if ($this->CI->uri->segment(1) !== ADMIN_URI AND $this->CI->uri->segment(1) !== 'maintenance') {		
+		if ($this->CI->uri->segment(1) !== ADMIN_URI AND $this->CI->uri->segment(1) !== 'maintenance' AND !$this->CI->user->isLogged()) {		
 			redirect('main/maintenance');
 		}
 	}

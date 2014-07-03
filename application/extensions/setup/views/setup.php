@@ -15,7 +15,7 @@
 			<div class="col-md-7 setup_box">
 				<div class="content">
 					<h4>Server Requirements</h4>
-					<p>Welcome to TastyIgniter! <br />Any question listed below must be resolved before the installation can continue.</p>
+					<p>Any question listed below must be resolved before the installation can continue.</p>
 					<div id="notification">
 						<?php if (!empty($alert)) { ?>
 							<?php echo $alert; ?>
