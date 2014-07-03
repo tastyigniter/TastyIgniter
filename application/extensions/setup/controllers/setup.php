@@ -5,8 +5,6 @@ class Setup extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('Setup_model');	    
-			
-		$this->output->enable_profiler(TRUE);
 	}
 
 	public function _remap($method) {
