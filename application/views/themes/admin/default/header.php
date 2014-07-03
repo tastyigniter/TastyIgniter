@@ -37,8 +37,8 @@
 
 	$menu_shortcuts = array(
 		array('class' => 'front-end', 'title' => 'Store Front', 'target' => '_blank', 'href' => site_url(), 'icon' => 'fa-share-square-o'),
-		array('class' => 'messages', 'title' => '<span class="badge">'. $message_unread .'</span>', 'target' => '', 'href' => site_url(ADMIN_URI.'/messages'), 'icon' => 'fa-envelope'),
-		array('class' => 'alerts', 'title' => '<span class="badge">7</span>', 'target' => '', 'href' => site_url(ADMIN_URI.'/alerts'), 'icon' => 'fa-bell')
+		array('class' => 'messages', 'title' => '<span class="badge">'. $message_unread .'</span>', 'target' => '', 'href' => site_url(ADMIN_URI.'/messages'), 'icon' => 'fa-envelope')
+		//array('class' => 'alerts', 'title' => '<span class="badge">7</span>', 'target' => '', 'href' => site_url(ADMIN_URI.'/alerts'), 'icon' => 'fa-bell')
 	);
 
 	$heading 			= $this->template->getHeading();
