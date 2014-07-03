@@ -1,7 +1,8 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Location {
 	private $location_id;
+	private $location_name;
 	private $location_email;
 	private $location_telephone;
 	private $local_info;
@@ -46,12 +47,13 @@ class Location {
 				$result = $query->row_array();
 				
 				$this->location_id 			= $result['location_id'];
+				$this->location_name 		= $result['location_name'];
 				$this->location_email 		= $result['location_email'];
 				$this->location_telephone 	= $result['location_telephone'];
 				$this->local_info 			= $result;
 				$this->distance 			= $local_info['distance'];
 				$this->search_query 		= $local_info['search_query'];
-			
+
 				$this->_setOpeningHours();	
 			} else {
 				$this->clearLocal();
@@ -95,12 +97,27 @@ class Location {
 		return $this->location_id;
 	}
 
+	public function getName() {
+		return $this->location_name;
+	}
+
 	public function getEmail() {
 		return strtolower($this->location_email);
 	}
 
 	public function getTelephone() {
 		return $this->location_telephone;
+	}
+
+	public function getDescription() {
+		return $this->local_info['description'];
+	}
+
+	public function getAddress() {
+		$this->CI->load->library('country');
+		$location_address = $this->CI->Locations_model->getLocationAddress($this->getId());
+		$address = $this->CI->country->addressFormat($location_address);
+		return $address;
 	}
 
 	public function local() {
@@ -144,51 +161,54 @@ class Location {
     	return (($this->opening_time <= $time AND $this->closing_time >= $time) OR ($this->opening_time === '00:00' OR $this->closing_time === '00:00'));    	
 	}
 	
-	public function readyTime() {
-		return (isset($this->local_info['ready_time'])) ? $this->local_info['ready_time'] : $this->CI->config->item('ready_time');	
-	}
-
-	public function lastOrderTime() {
-		return (isset($this->local_info['last_order_time']) AND $this->local_info['last_order_time'] !== '00:00:00') ? $this->local_info['last_order_time'] : $this->closing_time;	
-	}
-
-	public function checkDelivery($search_query = FALSE, $check_setting = FALSE) {
-		if ($search_query === FALSE) {
-			$search_query = $this->search_query;
-		}
-		
-		$check;
-		$is_covered = $this->_checkCoveredArea($search_query, $check_setting);		
-		
-		if (empty($this->local_info['offer_delivery'])) {
-			$check = 'no';
-		} else if ($is_covered === 'outside') {
-			$check = 'outside';
-		} else if ($this->local_info['offer_delivery'] === '1') {
-			$check = 'yes';
-		}
-
-    	return $check;    	
+	public function checkDelivery() {
+    	return (!empty($this->local_info['offer_delivery']) AND $this->local_info['offer_delivery'] === '1') ? TRUE : FALSE;    	
 	}
 	
 	public function checkCollection() {
-    	return (isset($this->local_info['offer_collection'])) ? $this->local_info['offer_collection'] : FALSE;    	
+    	return (!empty($this->local_info['offer_collection']) AND $this->local_info['offer_collection'] === '1') ? TRUE : FALSE;    	
 	}
 	
 	public function getDeliveryCharge() {
-    	return (isset($this->local_info['delivery_charge'])) ? $this->local_info['delivery_charge'] : FALSE;    	
+    	return (!empty($this->local_info['delivery_charge'])) ? $this->local_info['delivery_charge'] : FALSE;    	
 	}
 	
 	public function checkMinTotal($cart_total) {
-    	return (isset($this->local_info['min_delivery_total'])) ? ($this->local_info['min_delivery_total'] <= $cart_total) : TRUE;    	
+    	return (!empty($this->local_info['min_delivery_total'])) ? ($this->local_info['min_delivery_total'] <= $cart_total) : TRUE;    	
 	}
 	
 	public function getMinTotal() {
-    	return (isset($this->local_info['min_delivery_total'])) ? $this->local_info['min_delivery_total'] : FALSE;    	
+    	return (!empty($this->local_info['min_delivery_total'])) ? $this->local_info['min_delivery_total'] : FALSE;    	
 	}
 	
-	public function getReserveInterval() {
-    	return (isset($this->local_info['reserve_interval'])) ? $this->local_info['reserve_interval'] : $this->CI->config->item('reserve_interval');    	
+	public function getReservationInterval() {
+    	return (!empty($this->local_info['reservation_interval'])) ? $this->local_info['reservation_interval'] : $this->CI->config->item('reservation_interval');    	
+	}
+	
+	public function readyTime() {
+		return (!empty($this->local_info['ready_time'])) ? $this->local_info['ready_time'] : $this->CI->config->item('ready_time');	
+	}
+
+	public function lastOrderTime() {
+		return (!empty($this->local_info['last_order_time']) AND $this->local_info['last_order_time'] !== '00:00:00') ? $this->local_info['last_order_time'] : $this->closing_time;	
+	}
+
+	public function checkAddressCoverage($search_query) {
+		$is_covered = $this->_checkCoveredArea($search_query, FALSE);		
+		
+		if ($is_covered !== 'outside') {
+			return TRUE;
+		}
+		return FALSE;
+	}
+	
+	public function checkDeliveryCoverage() {
+		$is_covered = $this->_checkCoveredArea($this->search_query, TRUE);		
+		
+		if ($is_covered !== 'outside') {
+			return TRUE;
+		}
+		return FALSE;
 	}
 	
 	public function generateHours($start_hour, $end_hour, $interval) {
@@ -236,7 +256,7 @@ class Location {
 		if ($check_setting === TRUE) {
 			$search_by = $this->CI->config->item('search_by');
 			if ($search_by === 'postcode' AND $is_postcode === FALSE) {
-				return "INVALID_POSTCODE";			
+				return "ENTER_POSTCODE";			
 			}
 		}
 		

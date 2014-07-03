@@ -1,99 +1,181 @@
-<div id="box-content">
-	<div id="notification">
-		<?php if (validation_errors()) { ?>
-			<?php echo validation_errors('<span class="error">', '</span>'); ?>
-		<?php } ?>
+<?php echo $header; ?>
+<div class="row content dashboard">
+	<div class="col-md-12">
+		<div id="notification">
 		<?php if (!empty($alert)) { ?>
-			<?php echo $alert; ?>
+			<div class="alert alert-dismissable">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				<?php echo $alert; ?>
+			</div>
 		<?php } ?>
-	</div>
+		</div>
 
-	<div class="box">
-	<div class="wrap_content">
-		<ul class="numbers">
-			<li><span><?php echo $total_sales; ?></span>Total Sales</li>
-			<li><span><?php echo $total_sales_by_year; ?></span>Total Sales This Year</li>
-			<li><span><?php echo $total_lost_sales; ?></span>Total Lost Sales</li>
-			<li><span><?php echo $total_customers; ?></span>Total Customers</li>
-			<li><span><?php echo $total_delivery_orders; ?></span>Total Delivery Orders</li>
-			<li><span><?php echo $total_collection_orders; ?></span>Total Collection Orders</li>
-			<li><span><?php echo $total_orders; ?></span>Total Orders</li>
-			<li><span><?php echo $total_orders_completed; ?></span>Total Orders Completed</li>
-			<li><span><?php echo $total_tables_reserved; ?></span>Total Table(s) Reserved</li>
-		</ul>
-	</div>
-	
-	<div class="chart wrap_content">
-		<div class="dashboard_heading">
-			<h2>Reports Chart</h2>
-			<div class="search">
-				Period: 
-				<select name="range" onChange="getChart()">
-					<option value="today" checked="checked">Today</option>  	
-					<option value="yesterday">Yesterday</option>  	
-					<option value="week">This Week</option>
-					<option value="last_week">Last Week</option>
-					<option value="month">This Month</option>
-					<option value="year">This Year</option>
-				</select>&nbsp;&nbsp;&nbsp; - OR - &nbsp;&nbsp;&nbsp;
-				Monthly: 
-				<select name="monthly" onChange="getChart()">
-					<option value="" checked="checked">select</option>  	
-					<?php foreach ($months as $key => $value) { ?>
-						<option value="<?php echo $key; ?>" <?php echo set_select('monthly', $key); ?>><?php echo $value; ?></option>  	
-					<?php } ?>
-				</select>
+		<div class="statistics">
+			<div class="row">
+				<div class="col-md-4 wrap-all">
+					<div class="panel panel-info text-center">
+						<div class="panel-body">
+							<span><?php echo $total_sales; ?></span>
+						</div>
+						<div class="panel-footer">Total Sales</div>
+					</div>
+				</div>
+				<div class="col-md-4 wrap-all">
+					<div class="panel panel-success text-center">
+						<div class="panel-body">
+							<span><?php echo $total_sales_by_year; ?></span>
+						</div>
+						<div class="panel-footer">Total Sales This Year</div>
+					</div>
+				</div>
+				<div class="col-md-4 wrap-all">
+					<div class="panel panel-warning text-center">
+						<div class="panel-body">
+							<span><?php echo $total_lost_sales; ?></span>
+						</div>
+						<div class="panel-footer">Total Lost Sales</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4 wrap-all">
+					<div class="panel panel-warning text-center">
+						<div class="panel-body">
+							<span><?php echo $total_customers; ?></span>
+						</div>
+						<div class="panel-footer">Total Customers</div>
+					</div>
+				</div>
+				<div class="col-md-4 wrap-all">
+					<div class="panel panel-danger text-center">
+						<div class="panel-body">
+							<span><?php echo $total_delivery_orders; ?></span>
+						</div>
+						<div class="panel-footer">Total Delivery Orders</div>
+					</div>
+				</div>
+				<div class="col-md-4 wrap-all">
+					<div class="panel panel-info text-center">
+						<div class="panel-body">
+							<span><?php echo $total_collection_orders; ?></span>
+						</div>
+						<div class="panel-footer">Total Collection Orders</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4 wrap-all">
+					<div class="panel panel-success text-center">
+						<div class="panel-body">
+							<span><?php echo $total_orders; ?></span>
+						</div>
+						<div class="panel-footer">Total Orders</div>
+					</div>
+				</div>
+				<div class="col-md-4 wrap-all">
+					<div class="panel panel-info text-center">
+						<div class="panel-body">
+							<span><?php echo $total_orders_completed; ?></span>
+						</div>
+						<div class="panel-footer">Total Orders Completed</div>
+					</div>
+				</div>
+				<div class="col-md-4 wrap-all">
+					<div class="panel panel-warning text-center">
+						<div class="panel-body">
+							<span><?php echo $total_tables_reserved; ?></span>
+						</div>
+						<div class="panel-footer">Total Table(s) Reserved</div>
+					</div>
+				</div>
 			</div>
 		</div>
-		<div id="chart-picker">
-			<ul id="tabs">
-				<li class="customers"><a rel="customers">Customers</a></li>
-				<li class="orders active"><a rel="orders">Orders</a></li>
-				<li class="reservations"><a rel="reservations">Reservations</a></li>
-				<li class="reviews"><a rel="reviews">Reviews</a></li>
-			</ul>
-			<input type="hidden" name="type" value="" />
+		
+		<div class="panel panel-primary panel-chart">
+			<div class="panel-heading">
+				<div class="form-inline">
+					<div class="row">
+						<div class="col-md-2 pull-left">
+							<h3 class="panel-title"><i class="fa fa-bar-chart-o"></i>&nbsp;&nbsp;Reports Chart</h3>
+						</div>
+						
+						<div class="col-md-5 pull-left text-right">
+							<div class="btn-group btn-group-sm chart-picker">
+								<button type="button" class="btn btn-default" data-type="customers">Customers</button>
+								<button type="button" class="btn btn-default active" data-type="orders">Orders</button>
+								<button type="button" class="btn btn-default" data-type="reservations">Reservations</button>
+								<button type="button" class="btn btn-default" data-type="reviews">Reviews</button>
+								<input type="hidden" name="type" value="" />
+							</div>
+						</div>
+						
+						<div class="col-md-5 pull-right text-right">
+							<div class="form-group">
+								<select name="range" class="form-control input-sm" onChange="getChart()">
+									<option value="">Select Period</option>  	
+									<option value="today" checked="checked">Today</option>  	
+									<option value="yesterday">Yesterday</option>  	
+									<option value="week">This Week</option>
+									<option value="last_week">Last Week</option>
+									<option value="month">This Month</option>
+									<option value="year">This Year</option>
+								</select>
+							</div>
+							&nbsp;&nbsp;&nbsp; - OR - &nbsp;&nbsp;&nbsp;
+							<div class="form-group">
+								<select name="monthly" class="form-control input-sm" onChange="getChart()">
+									<option value="">Select Month</option>  	
+									<option value="" checked="checked">select</option>  	
+									<?php foreach ($months as $key => $value) { ?>
+										<option value="<?php echo $key; ?>" <?php echo set_select('monthly', $key); ?>><?php echo $value; ?></option>  	
+									<?php } ?>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="panel-body">
+				<div id="chart-holder" style="height: 295px; margin: auto; padding: 0px; position: relative;"></div>
+			</div>
 		</div>
-		<div id="chart-holder" style="width:1155px; height: 295px; margin: auto; padding: 0px; position: relative;"></div>
-	</div>
-	<br />
-	<br />
 	
-	<?php if ($orders) { ?>
-	<div class="wrap_content">
-		<div class="dashboard_heading">
-			<h2>10 Latest Orders</h2>
+		<?php if ($orders) { ?>
+		<div class="panel panel-primary panel-orders">
+			<div class="panel-heading"><h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;10 Latest Orders</h3></div>
+			<div class="table-responsive">
+				<table border="0" class="table table-striped table-border">
+					<thead>
+						<tr>
+							<th class="action action-one"></th>
+							<th>ID</th>
+							<th>Location</th>
+							<th>Customer Name</th>
+							<th class="text-center">Status</th>
+							<th class="text-center">Type</th>
+							<th class="text-center">Ready Time</th>
+							<th class="text-center">Date Added</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ($orders as $order) { ?>
+						<tr>
+							<td class="action action-one"><a class="btn btn-edit" title="Edit" href="<?php echo $order['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
+							<td><?php echo $order['order_id']; ?></td>
+							<td><?php echo $order['location_name']; ?></td>
+							<td><?php echo $order['first_name']; ?> <?php echo $order['last_name']; ?></td>
+							<td class="text-center"><?php echo $order['order_status']; ?></td>
+							<td class="text-center"><?php echo $order['order_type']; ?></td>
+							<td class="text-center"><?php echo $order['order_time']; ?></td>
+							<td class="text-center"><?php echo $order['date_added']; ?></td>
+						</tr>
+						<?php } ?>
+					</tbody>
+				</table>
+			</div>
 		</div>
-		<table border="0" align="center" class="list list-height">
-			<thead>
-				<tr>
-					<th class="action action-one"></th>
-					<th>ID</th>
-					<th>Location</th>
-					<th>Customer Name</th>
-					<th class="center">Status</th>
-					<th class="center">Type</th>
-					<th class="center">Ready Time</th>
-					<th class="center">Date Added</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php foreach ($orders as $order) { ?>
-				<tr>
-					<td class="action action-one"><a class="edit" title="Edit" href="<?php echo $order['edit']; ?>"></a></td>
-					<td><?php echo $order['order_id']; ?></td>
-					<td><?php echo $order['location_name']; ?></td>
-					<td><?php echo $order['first_name']; ?> <?php echo $order['last_name']; ?></td>
-					<td class="center"><?php echo $order['order_status']; ?></td>
-					<td class="center"><?php echo $order['order_type']; ?></td>
-					<td class="center"><?php echo $order['order_time']; ?></td>
-					<td class="center"><?php echo $order['date_added']; ?></td>
-				</tr>
-				<?php } ?>
-			</tbody>
-		</table>
-	</div>
-	<?php } ?>
+		<?php } ?>
 	</div>
 </div>
 <!--[if IE]>
@@ -102,11 +184,11 @@
 <script type="text/javascript" src="<?php echo base_url("assets/js/jquery.flot.js"); ?>"></script>
 <script type="text/javascript"><!--
 $(document).ready(function() {
-	$('#chart-picker').on('click', 'a', function() {
+	$('.chart-picker').on('click', 'button', function() {
 		if ($(this).is(':not(.active)')) {
-			$('#chart-picker li').removeClass('active');
-			$(this).parent().addClass('active');
-			$('input[name="type"]').val($(this).attr('rel'));
+			$('.chart-picker button').removeClass('active');
+			$(this).addClass('active');
+			$('input[name="type"]').val($(this).attr('data-type'));
 			getChart();
 		}
 	});
@@ -176,11 +258,13 @@ function getChart(range) {
 			$('<div id="chart-tooltip"></div>').css({
 				position: 'absolute',
 				display: 'none',
-				border: '1px solid #ddd',
+				border: '3px solid #ddd',
 				padding: '10px',
-				'background-color': '#eee',
+				'border-radius': '10px',
+				'background-color': '#FFFFFF',
 				opacity: 0.80,
-				'font-size': '12px'
+				'font-size': '12px',
+				'color': '#000000'
 			}).appendTo('body');
 
 			$('#chart-holder').bind('plothover', function (event, pos, item) {
@@ -194,7 +278,7 @@ function getChart(range) {
 					
 					var y_axis = item.datapoint[1];
 					
-					var html = '<span>' + x_axis + '</span>' + item.series.label + ': <b>' + y_axis + '</b>';
+					var html = '<b>' + x_axis + '</b><span>' + item.series.label + ': ' + y_axis + '</span>';
 					
 					$('#chart-tooltip').html(html)
 						.css({top: item.pageY+5, left: item.pageX+5})
@@ -209,3 +293,4 @@ function getChart(range) {
 
 getChart($('select[name="range"]').val());
 //--></script> 
+<?php echo $footer; ?>

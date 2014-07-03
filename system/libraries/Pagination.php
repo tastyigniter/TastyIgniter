@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH')) exit('No direct access allowed');
 /**
  * CodeIgniter
  *
@@ -35,19 +35,19 @@ class CI_Pagination {
 	var $num_links			=  4; // Number of "digit" links to show before/after the currently viewed page
 	var $cur_page			=  1; // The current page being viewed
 	var $use_page_numbers	= TRUE; // Use page number for segment instead of offset
-	var $first_link			= '<i class="icon icon-first"></i>';
-	var $next_link			= '<i class="icon icon-next"></i>';
-	var $prev_link			= '<i class="icon icon-prev"></i>';
-	var $last_link			= '<i class="icon icon-last"></i>';
+	var $first_link			= '<i class="fa fa-angle-left"></i>';
+	var $next_link			= '<i class="fa fa-angle-right"></i>';
+	var $prev_link			= '<i class="fa fa-angle-double-left"></i>';
+	var $last_link			= '<i class="fa fa-angle-double-right"></i>';
 	var $uri_segment		= 3;
-	var $full_tag_open		= '<div class="links"><ul>';
-	var $full_tag_close		= '</ul></div>';
+	var $full_tag_open		= '<ul class="pagination">';
+	var $full_tag_close		= '</ul>';
 	var $first_tag_open		= '<li>';
 	var $first_tag_close	= '</li>';
 	var $last_tag_open		= '<li>';
 	var $last_tag_close		= '</li>';
 	var $first_url			= ''; // Alternative URL for the First Page.
-	var $cur_tag_open		= '<li><span class="active">';
+	var $cur_tag_open		= '<li class="active"><span>';
 	var $cur_tag_close		= '</li>';
 	var $next_tag_open		= '<li>';
 	var $next_tag_close		= '</li>';

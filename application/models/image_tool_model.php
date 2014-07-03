@@ -1,7 +1,14 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Image_tool_model extends CI_Model {
 
 	public function resize($img_path, $width = '', $height = '') {
+		$thumbs_path = IMAGEPATH . 'thumbs';
+
+		if ( ! is_dir($thumbs_path)) {
+			$this->_createFolder($thumbs_path);
+		}
+
 		$setting = $this->config->item('image_tool');
 
 		$width = ($width === '') ? $setting['thumb_width'] : $width;
@@ -16,23 +23,25 @@ class Image_tool_model extends CI_Model {
 		if (strpos($img_path, $root_folder) === 0) {
 			$img_path = str_replace($root_folder, '', $img_path);
 		}
-		
+	
 		if ( ! file_exists(IMAGEPATH . $root_folder . $img_path) OR ! is_file(IMAGEPATH . $root_folder . $img_path) OR strpos($img_path, '/') === 0) {
 			return;
 		}
 
 		$info = pathinfo($img_path);
 		$extension = $info['extension'];
+		$img_name = $info['basename'];
 		
-		$old_image = $root_folder . $img_path;
+		$old_path = IMAGEPATH . $root_folder . $img_path;
+		$new_path = IMAGEPATH . 'thumbs/'. substr($img_path, 0, strrpos($img_path, '.')) .'-'. $width .'x'. $height .'.'. $extension;
 		$new_image = 'thumbs/'. substr($img_path, 0, strrpos($img_path, '.')) .'-'. $width .'x'. $height .'.'. $extension;
-		
-		if (file_exists(IMAGEPATH . $old_image) AND ! file_exists(IMAGEPATH . $new_image)) {
+
+		if (file_exists($old_path) AND ! file_exists($new_path)) {
 			$this->load->library('image_lib'); 
 			$this->image_lib->clear();
 			$config['image_library'] 	= 'gd2';
-			$config['source_image']		= IMAGEPATH . $old_image;
-			$config['new_image'] 		= IMAGEPATH . $new_image;
+			$config['source_image']		= $old_path;
+			$config['new_image'] 		= $new_path;
 			$config['width']	 		= $width;
 			$config['height']			= $height;
 
@@ -43,6 +52,16 @@ class Image_tool_model extends CI_Model {
 		}
 
 		return base_url() .'assets/img/'. $new_image;
+	}
+
+	public function _createFolder($thumb_path = FALSE) {
+		$oldumask = umask(0);
+		
+		if ($thumb_path AND !file_exists($thumb_path)) {
+			mkdir($thumb_path, 0777, TRUE);
+		}
+		
+		umask($oldumask);
 	}
 }
 

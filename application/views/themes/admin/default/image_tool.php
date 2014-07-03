@@ -1,228 +1,302 @@
-<div id="box-content">
-	<div id="notification">
-		<?php if (validation_errors()) { ?>
-			<?php echo validation_errors('<span class="error">', '</span>'); ?>
-		<?php } ?>
-		<?php if (!empty($alert)) { ?>
-			<?php echo $alert; ?>
-		<?php } ?>
-	</div>
-
-	<div class="box">
-	<div id="update-box">
-	<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" >
-		<div class="wrap_heading">
-			<ul id="tabs">
-				<li><a rel="#settings">Settings</a></li>
-				<li><a rel="#manager">Image Manager</a></li>
-			</ul>
-		</div>
-
-		<div id="manager" class="wrap_content" style="display:block;">
-			<div id="image-manager" style="padding: 3px 0px 0px 0px;">
-				<iframe src="<?php echo base_url('admin/image_manager?popup=iframe'); ?>" width="100%" height="550" frameborder="0"></iframe>
+<?php echo $header; ?>
+<div class="row content">
+	<div class="col-md-12">
+		<div id="notification">
+			<div class="alert alert-dismissable">
+				<?php if (!empty($alert)) { ?>
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+					<?php echo $alert; ?>
+				<?php } ?>
+				<?php if (validation_errors()) { ?>
+					<p class="alert-danger">Sorry but validation has failed, please check for errors.</p>
+				<?php } ?>
 			</div>
 		</div>
 
-		<div id="settings" class="wrap_content" style="display:none;">
-			<table class="form">
-				<tbody>
-					<tr>
-						<td><span class="red">*</span> <b>Root Folder:</b><br />
-						<font size="1">Image root folder name with NO TRAILING SLASH. Default: data</font></td>
-						<td><input type="text" name="root_folder" value="<?php echo set_value('root_folder', $root_folder); ?>" class="textfield" /></td>
-					</tr>
-					<tr>
-						<td><span class="red">*</span> <b>Maximum File Size:</b><br />
-						<font size="1">The maximum size (in kilobytes) limit for file when uploading.</font></td>
-						<td><input type="text" name="max_size" value="<?php echo set_value('max_size', $max_size); ?>" class="textfield" size="5" /></td>
-					</tr>
-					<tr>
-						<td><span class="red">*</span> <b>Thumbnail Size:</b><br />
-						<font size="1">(Height x Width)</font></td>
-						<td><input type="text" name="thumb_height" value="<?php echo set_value('thumb_height', $thumb_height); ?>" class="mini" size="5" /> x 
-							<input type="text" name="thumb_width" value="<?php echo set_value('thumb_width', $thumb_width); ?>" class="mini" size="5" /></td>
-					</tr>
-					<tr>
-						<td><span class="red">*</span> <b>Mini Thumbnail Size:</b><br />
-						<font size="1">(Height x Width)</font></td>
-						<td><input type="text" name="thumb_height_mini" value="<?php echo set_value('thumb_height_mini', $thumb_height_mini); ?>" class="mini" size="5" /> x 
-							<input type="text" name="thumb_width_mini" value="<?php echo set_value('thumb_width_mini', $thumb_width_mini); ?>" class="mini" size="5" /></td>
-					</tr>
-					<tr>
-						<td><b>Mini Thumbnail:</b><br />
-						<font size="1">Show mini thumbnail</font></td>
-						<td><select name="show_mini">
-						<?php if ($show_mini === '1') { ?>
-							<option value="1" selected="selected">Enabled</option>
-							<option value="0">Disabled</option>
-						<?php } else { ?>
-							<option value="1">Enabled</option>
-							<option value="0" selected="selected">Disabled</option>
-						<?php } ?>
-						</select></td>
-					</tr>
-					<tr>
-						<td><b>Show Extension:</b><br />
-						<font size="1">Show or hide file extension</font></td>
-						<td><select name="show_ext">
-						<?php if ($show_ext === '1') { ?>
-							<option value="1" selected="selected">Show</option>
-							<option value="0">Hide</option>
-						<?php } else { ?>
-							<option value="1">Show</option>
-							<option value="0" selected="selected">Hide</option>
-						<?php } ?>
-						</select></td>
-					</tr>
-					<tr>
-						<td><b>Uploads:</b><br />
-						<font size="1">Enable or disable file uploading</font></td>
-						<td><select name="uploads">
-						<?php if ($uploads === '1') { ?>
-							<option value="1" selected="selected">Enabled</option>
-							<option value="0">Disabled</option>
-						<?php } else { ?>
-							<option value="1">Enabled</option>
-							<option value="0" selected="selected">Disabled</option>
-						<?php } ?>
-						</select></td>
-					</tr>
-					<tr>
-						<td><b>New Folder:</b><br />
-						<font size="1">Enable or disable folder creation</font></td>
-						<td><select name="new_folder">
-						<?php if ($new_folder === '1') { ?>
-							<option value="1" selected="selected">Enabled</option>
-							<option value="0">Disabled</option>
-						<?php } else { ?>
-							<option value="1">Enabled</option>
-							<option value="0" selected="selected">Disabled</option>
-						<?php } ?>
-						</select></td>
-					</tr>
-					<tr>
-						<td><b>Copy:</b><br />
-						<font size="1">Enable or disable file/folder copy</font></td>
-						<td><select name="copy">
-						<?php if ($copy === '1') { ?>
-							<option value="1" selected="selected">Enabled</option>
-							<option value="0">Disabled</option>
-						<?php } else { ?>
-							<option value="1">Enabled</option>
-							<option value="0" selected="selected">Disabled</option>
-						<?php } ?>
-						</select></td>
-					</tr>
-					<tr>
-						<td><b>Move:</b><br />
-						<font size="1">Enable or disable moving file/folder</font></td>
-						<td><select name="move">
-						<?php if ($move === '1') { ?>
-							<option value="1" selected="selected">Enabled</option>
-							<option value="0">Disabled</option>
-						<?php } else { ?>
-							<option value="1">Enabled</option>
-							<option value="0" selected="selected">Disabled</option>
-						<?php } ?>
-						</select></td>
-					</tr>
-					<tr>
-						<td><b>Rename:</b><br />
-						<font size="1">Enable or disable file/folder rename</font></td>
-						<td><select name="rename">
-						<?php if ($rename === '1') { ?>
-							<option value="1" selected="selected">Enabled</option>
-							<option value="0">Disabled</option>
-						<?php } else { ?>
-							<option value="1">Enabled</option>
-							<option value="0" selected="selected">Disabled</option>
-						<?php } ?>
-						</select></td>
-					</tr>
-					<tr>
-						<td><b>Delete:</b><br />
-						<font size="1">Enable or disable deleting file/folder</font></td>
-						<td><select name="delete">
-						<?php if ($delete === '1') { ?>
-							<option value="1" selected="selected">Enabled</option>
-							<option value="0">Disabled</option>
-						<?php } else { ?>
-							<option value="1">Enabled</option>
-							<option value="0" selected="selected">Disabled</option>
-						<?php } ?>
-						</select></td>
-					</tr>
-					<tr>
-						<td><span class="red">*</span> <b>Allowed Extensions:</b><br />
-						<font size="1">List of extensions allowed to be uploaded separated with “|”. e.g png|jpg</font></td>
-						<td><textarea name="allowed_ext" cols="50" rows="5"><?php echo set_value('allowed_ext', $allowed_ext); ?></textarea></td>
-					</tr>
-					<tr>
-						<td><b>Hidden Files:</b><br />
-						<font size="1">List of files to hide separated with “|”. e.g file1.jpg|file2.txt</font></td>
-						<td><textarea name="hidden_files" cols="50" rows="5"><?php echo set_value('hidden_files', $hidden_files); ?></textarea></td>
-					</tr>
-					<tr>
-						<td><b>Hidden Folders:</b><br />
-						<font size="1">List of folders to hide separated with “|”. e.g folder1|folder2</font></td>
-						<td><textarea name="hidden_folders" cols="50" rows="5"><?php echo set_value('hidden_folders', $hidden_folders); ?></textarea></td>
-					</tr>
-					<tr>
-						<td><b>Transliteration:</b><br />
-						<font size="1">Enable or disable conversion of all unwanted characters</font></td>
-						<td><select name="transliteration">
-						<?php if ($transliteration === '1') { ?>
-							<option value="1" selected="selected">Enabled</option>
-							<option value="0">Disabled</option>
-						<?php } else { ?>
-							<option value="1">Enabled</option>
-							<option value="0" selected="selected">Disabled</option>
-						<?php } ?>
-						</select></td>
-					</tr>
-					<tr>
-						<td><b>Remember Last Folder:</b><br />
-						<font size="1">How long to save last opened folder in cookie.</font></td>
-						<td><select name="remember_days">
-						<?php if ($remember_days === '1') { ?>
-							<option value="1" selected="selected">24 Hours</option>
-							<option value="3">3 Days</option>
-							<option value="5">5 Days</option>
-							<option value="7">1 Week</option>
-						<?php } else if ($remember_days === '3') { ?>
-							<option value="1">24 Hours</option>
-							<option value="3" selected="selected">3 Days</option>
-							<option value="5">5 Days</option>
-							<option value="7">1 Week</option>
-						<?php } else if ($remember_days === '5') { ?>
-							<option value="1">24 Hours</option>
-							<option value="3">3 Days</option>
-							<option value="5" selected="selected">5 Days</option>
-							<option value="7">1 Week</option>
-						<?php } else if ($remember_days === '7') { ?>
-							<option value="1">24 Hours</option>
-							<option value="3">3 Days</option>
-							<option value="5">5 Days</option>
-							<option value="7" selected="selected">1 Week</option>
-						<?php } else { ?>
-							<option value="1">24 Hours</option>
-							<option value="3">3 Days</option>
-							<option value="5">5 Days</option>
-							<option value="7" selected="selected">1 Week</option>
-						<?php } ?>
-						</select></td>
-					</tr>
-					<tr>
-						<td><b>Thumbs:</b><br />
-						<font size="1">This will delete all created thumbs. Note thumbs are automatically created.</font></td>
-						<td><a id="" href="<?php echo $delete_thumbs; ?>">Delete thumbs</a></td>
-					</tr>
-				</tbody>
-			</table>
+		<div class="row wrap-vertical">
+			<ul id="nav-tabs" class="nav nav-tabs">
+				<li class="active"><a href="#settings" data-toggle="tab">Settings</a></li>
+			</ul>
 		</div>
-	</form>
-	</div>
+
+		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" >
+			<div class="tab-content">
+				<div id="settings" class="tab-pane row wrap-all active">
+					<div class="form-group">
+						<label for="input-root-folder" class="col-sm-2 control-label"><span class="red">*</span> Root Folder:
+							<span class="help-block">Image root folder name with NO TRAILING SLASH. Default: data</span>
+						</label>
+						<div class="col-sm-5">
+							<input type="text" name="root_folder" id="input-root-folder" class="form-control" value="<?php echo set_value('root_folder', $root_folder); ?>" />
+							<?php echo form_error('root_folder', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-max-size" class="col-sm-2 control-label"><span class="red">*</span> Maximum File Size:
+							<span class="help-block">The maximum size (in kilobytes) limit for file when uploading.</span>
+						</label>
+						<div class="col-sm-5">
+							<input type="text" name="max_size" id="input-max-size" class="form-control" value="<?php echo set_value('max_size', $max_size); ?>" size="5" />
+							<?php echo form_error('max_size', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label"><span class="red">*</span> Thumbnail Size:
+							<span class="help-block">(Height x Width)</span>
+						</label>
+						<div class="form-mini col-sm-5">
+							<div class="col-sm-2">
+								<input type="text" name="thumb_height" class="form-control" value="<?php echo set_value('thumb_height', $thumb_height); ?>" class="mini" size="5" />
+								<?php echo form_error('thumb_height', '<span class="text-danger">', '</span>'); ?>
+							</div>
+							<div class="col-sm-2">
+								<input type="text" name="thumb_width" class="form-control" value="<?php echo set_value('thumb_width', $thumb_width); ?>" class="mini" size="5" />
+								<?php echo form_error('thumb_width', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label"><span class="red">*</span> Mini Thumbnail Size:
+							<span class="help-block">(Height x Width)</span>
+						</label>
+						<div class="form-mini col-sm-5">
+							<div class="col-sm-2">
+								<input type="text" name="thumb_height_mini" class="form-control" value="<?php echo set_value('thumb_height_mini', $thumb_height_mini); ?>" class="mini" size="5" />
+								<?php echo form_error('thumb_height_mini', '<span class="text-danger">', '</span>'); ?>
+							</div>
+							<div class="col-sm-2">
+								<input type="text" name="thumb_width_mini" class="form-control" value="<?php echo set_value('thumb_width_mini', $thumb_width_mini); ?>" class="mini" size="5" />
+								<?php echo form_error('thumb_width_mini', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-show-mini" class="col-sm-2 control-label">Mini Thumbnail:
+							<span class="help-block">Show mini thumbnail</span>
+						</label>
+						<div class="col-sm-5">
+							<select name="show_mini" id="input-show-mini" class="form-control">
+								<?php if ($show_mini === '1') { ?>
+									<option value="1" selected="selected">Enabled</option>
+									<option value="0">Disabled</option>
+								<?php } else { ?>
+									<option value="1">Enabled</option>
+									<option value="0" selected="selected">Disabled</option>
+								<?php } ?>
+							</select>
+							<?php echo form_error('show_mini', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-show-ext" class="col-sm-2 control-label">Show Extension:
+							<span class="help-block">Show or hide file extension</span>
+						</label>
+						<div class="col-sm-5">
+							<select name="show_ext" id="input-show-ext" class="form-control">
+								<?php if ($show_ext === '1') { ?>
+									<option value="1" selected="selected">Show</option>
+									<option value="0">Hide</option>
+								<?php } else { ?>
+									<option value="1">Show</option>
+									<option value="0" selected="selected">Hide</option>
+								<?php } ?>
+							</select>
+							<?php echo form_error('show_ext', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-uploads" class="col-sm-2 control-label">Uploads:
+							<span class="help-block">Enable or disable file uploading</span>
+						</label>
+						<div class="col-sm-5">
+							<select name="uploads" id="" class="form-control">
+								<?php if ($uploads === '1') { ?>
+									<option value="1" selected="selected">Enabled</option>
+									<option value="0">Disabled</option>
+								<?php } else { ?>
+									<option value="1">Enabled</option>
+									<option value="0" selected="selected">Disabled</option>
+								<?php } ?>
+							</select>
+							<?php echo form_error('uploads', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-new-folder" class="col-sm-2 control-label">New Folder:
+							<span class="help-block">Enable or disable folder creation</span>
+						</label>
+						<div class="col-sm-5">
+							<select name="new_folder" id="input-new-folder" class="form-control">
+								<?php if ($new_folder === '1') { ?>
+									<option value="1" selected="selected">Enabled</option>
+									<option value="0">Disabled</option>
+								<?php } else { ?>
+									<option value="1">Enabled</option>
+									<option value="0" selected="selected">Disabled</option>
+								<?php } ?>
+							</select>
+							<?php echo form_error('new_folder', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-copy" class="col-sm-2 control-label">Copy:
+							<span class="help-block">Enable or disable file/folder copy</span>
+						</label>
+						<div class="col-sm-5">
+							<select name="copy" id="input-copy" class="form-control">
+								<?php if ($copy === '1') { ?>
+									<option value="1" selected="selected">Enabled</option>
+									<option value="0">Disabled</option>
+								<?php } else { ?>
+									<option value="1">Enabled</option>
+									<option value="0" selected="selected">Disabled</option>
+								<?php } ?>
+							</select>
+							<?php echo form_error('copy', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-move" class="col-sm-2 control-label">Move:
+							<span class="help-block">Enable or disable moving file/folder</span>
+						</label>
+						<div class="col-sm-5">
+							<select name="move" id="input-move" class="form-control">
+								<?php if ($move === '1') { ?>
+									<option value="1" selected="selected">Enabled</option>
+									<option value="0">Disabled</option>
+								<?php } else { ?>
+									<option value="1">Enabled</option>
+									<option value="0" selected="selected">Disabled</option>
+								<?php } ?>
+							</select>
+							<?php echo form_error('move', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-rename" class="col-sm-2 control-label">Rename:
+							<span class="help-block">Enable or disable file/folder rename</span>
+						</label>
+						<div class="col-sm-5">
+							<select name="rename" id="input-rename" class="form-control">
+								<?php if ($rename === '1') { ?>
+									<option value="1" selected="selected">Enabled</option>
+									<option value="0">Disabled</option>
+								<?php } else { ?>
+									<option value="1">Enabled</option>
+									<option value="0" selected="selected">Disabled</option>
+								<?php } ?>
+							</select>
+							<?php echo form_error('rename', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-delete" class="col-sm-2 control-label">Delete:
+							<span class="help-block">Enable or disable deleting file/folder</span>
+						</label>
+						<div class="col-sm-5">
+							<select name="delete" id="input-delete" class="form-control">
+								<?php if ($delete === '1') { ?>
+									<option value="1" selected="selected">Enabled</option>
+									<option value="0">Disabled</option>
+								<?php } else { ?>
+									<option value="1">Enabled</option>
+									<option value="0" selected="selected">Disabled</option>
+								<?php } ?>
+							</select>
+							<?php echo form_error('delete', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-allowed-ext" class="col-sm-2 control-label"><span class="red">*</span> Allowed Extensions:
+							<span class="help-block">List of extensions allowed to be uploaded separated with “|”. e.g png|jpg</span>
+						</label>
+						<div class="col-sm-5">
+							<textarea name="allowed_ext" id="input-allowed-ext" class="form-control" rows="5"><?php echo set_value('allowed_ext', $allowed_ext); ?></textarea>
+							<?php echo form_error('allowed_ext', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-hidden-files" class="col-sm-2 control-label">Hidden Files:
+							<span class="help-block">List of files to hide separated with “|”. e.g file1.jpg|file2.txt</span>
+						</label>
+						<div class="col-sm-5">
+							<textarea name="hidden_files" id="input-hidden-files" class="form-control" rows="5"><?php echo set_value('hidden_files', $hidden_files); ?></textarea>
+							<?php echo form_error('hidden_files', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-hidden-folders" class="col-sm-2 control-label">Hidden Folders:
+							<span class="help-block">List of folders to hide separated with “|”. e.g folder1|folder2</span>
+						</label>
+						<div class="col-sm-5">
+							<textarea name="hidden_folders" id="input-hidden-folders" class="form-control" rows="5"><?php echo set_value('hidden_folders', $hidden_folders); ?></textarea>
+							<?php echo form_error('hidden_folders', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-transliteration" class="col-sm-2 control-label">Transliteration:
+							<span class="help-block">Enable or disable conversion of all unwanted characters</span>
+						</label>
+						<div class="col-sm-5">
+							<select name="transliteration" id="" class="form-control">
+								<?php if ($transliteration === '1') { ?>
+									<option value="1" selected="selected">Enabled</option>
+									<option value="0">Disabled</option>
+								<?php } else { ?>
+									<option value="1">Enabled</option>
+									<option value="0" selected="selected">Disabled</option>
+								<?php } ?>
+							</select>
+							<?php echo form_error('transliteration', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-remember-days" class="col-sm-2 control-label">Remember Last Folder:
+							<span class="help-block">How long to save last opened folder in cookie.</span>
+						</label>
+						<div class="col-sm-5">
+							<select name="remember_days" id="input-remember-days" class="form-control">
+								<?php if ($remember_days === '1') { ?>
+									<option value="1" selected="selected">24 Hours</option>
+									<option value="3">3 Days</option>
+									<option value="5">5 Days</option>
+									<option value="7">1 Week</option>
+								<?php } else if ($remember_days === '3') { ?>
+									<option value="1">24 Hours</option>
+									<option value="3" selected="selected">3 Days</option>
+									<option value="5">5 Days</option>
+									<option value="7">1 Week</option>
+								<?php } else if ($remember_days === '5') { ?>
+									<option value="1">24 Hours</option>
+									<option value="3">3 Days</option>
+									<option value="5" selected="selected">5 Days</option>
+									<option value="7">1 Week</option>
+								<?php } else if ($remember_days === '7') { ?>
+									<option value="1">24 Hours</option>
+									<option value="3">3 Days</option>
+									<option value="5">5 Days</option>
+									<option value="7" selected="selected">1 Week</option>
+								<?php } else { ?>
+									<option value="1">24 Hours</option>
+									<option value="3">3 Days</option>
+									<option value="5">5 Days</option>
+									<option value="7" selected="selected">1 Week</option>
+								<?php } ?>
+							</select>
+							<?php echo form_error('remember_days', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label">Thumbs:
+							<span class="help-block">This will delete all created thumbs. Note thumbs are automatically created.</span>
+						</label>
+						<div class="col-sm-5">
+							<a class="text-danger" href="<?php echo $delete_thumbs; ?>">Delete thumbs</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
 	</div>
 </div>
 <script type="text/javascript"><!--
@@ -235,5 +309,5 @@ $(document).ready(function() {
 		}
 	});
 });
-$('#tabs a').tabs();
 //--></script>
+<?php echo $footer; ?>

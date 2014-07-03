@@ -1,32 +1,50 @@
-<div id="box-content" class="login-box">
-	<div id="notification">
-		<?php if (validation_errors()) { ?>
-			<?php echo validation_errors('<span class="error">', '</span>'); ?>
-		<?php } ?>
-		<?php if (!empty($alert)) { ?>
-			<?php echo $alert; ?>
-		<?php } ?>
-	</div>
+<?php echo $header; ?>
+<div class="row content">
+	<div class="col-md-12">
+		<div class="col-md-4 center-block float-none">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Please enter your login details.</h3>
+				</div>
+				<div class="panel-body">
+					<div id="notification">
+						<div class="alert alert-dismissable">
+							<?php if (!empty($alert)) { ?>
+								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+								<?php echo $alert; ?>
+							<?php } ?>
+							<?php if (validation_errors()) { ?>
+								<p class="alert-danger">Sorry but validation has failed, please check for errors.</p>
+							<?php } ?>
+						</div>
+					</div>
 
-	<div class="box">
-		<h2><center>Please enter your login details.</center></h2>
-		<form accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
-		<table width="300" border="0" align="center" cellpadding="2" cellspacing="0">
-			<tbody>
-				<tr>
-					<td width="112">Username<br /><br /></td>
-					<td width="188"><input name="user" type="text" class="textfield" id="user" /><br /><br /></td>
-				</tr>
-				<tr>
-					<td>Password</td>
-					<td><input name="password" type="password" class="textfield" id="password" /></td>
-				</tr>
-				<tr>
-					<td><br />&nbsp;</td>
-					<td><br /><input type="submit" name="Submit" value="Login" /></td>
-				</tr>
-			</tbody>
-		</table>
-		</form>
+					<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
+						<div class="form-group">
+							<label for="input-user" class="col-sm-3 control-label">Username</label>
+							<div class="col-sm-9">
+								<input name="user" type="text" id="input-user" class="form-control" /></td>
+								<?php echo form_error('user', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="input-password" class="col-sm-3 control-label">Password</label>
+							<div class="col-sm-9">
+								<input name="password" type="password" id="input-password" class="form-control" /></td>
+								<?php echo form_error('password', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-9">
+								<a href="">Forgot your password?</a>
+							</div>
+						</div>
+			
+						<button type="submit" class="btn btn-success">Login</button>
+					</form>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
+<?php echo $footer; ?>

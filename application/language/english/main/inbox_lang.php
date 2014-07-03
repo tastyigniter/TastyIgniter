@@ -1,4 +1,4 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 $lang['text_heading'] 			= 'My Inbox';
 $lang['text_view_heading'] 		= 'My Inbox Message';

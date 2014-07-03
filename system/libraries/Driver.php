@@ -24,7 +24,7 @@
  * @since		Version 1.0
  * @filesource
  */
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') OR exit('No direct access allowed');
 
 /**
  * CodeIgniter Driver Library Class

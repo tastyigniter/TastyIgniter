@@ -1,4 +1,4 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Details extends MX_Controller {
 
@@ -20,7 +20,7 @@ class Details extends MX_Controller {
 		}
 
 		if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
-  			redirect('account/login');
+  			redirect('main/login');
 		}
 
 		// START of retrieving lines from language file to pass to view.
@@ -65,8 +65,8 @@ class Details extends MX_Controller {
 		
 
 		// check if $_POST is set and if update details validation was successful then redirect
-		if ($this->input->post() && $this->_updateDetails() === TRUE) {
-			redirect('account');
+		if ($this->input->post() AND $this->_updateDetails() === TRUE) {
+			redirect('main/details');
 		}
 
 		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
@@ -80,45 +80,22 @@ class Details extends MX_Controller {
 	public function _updateDetails() {															// method to validate update details form fields
 		if ($this->validateForm() === TRUE) {
 			$update = array();
-				
-			if ($this->customer->getId()) {  
-				$update['customer_id'] = $this->customer->getId();										// retrieve customer id from customer library
-			}
- 			
+			$update['customer_id'] = $this->customer->getId();										// retrieve customer id from customer library
+
 			// START: retrieve $_POST data if $_POST data is not same as existing customer library data
- 			if ($this->input->post('first_name') !== $this->customer->getFirstName()) {
-				$update['first_name'] = $this->input->post('first_name');
-			}			 	
-
- 			if ($this->input->post('last_name') !== $this->customer->getLastName()) {
-				$update['last_name'] = $this->input->post('last_name');
-			}			 	
-					
- 			if ($this->input->post('telephone') !== $this->customer->getTelephone()) {
-				$update['telephone'] = $this->input->post('telephone');
-			}			 	
-
- 			if ($this->input->post('security_question') !== $this->customer->getSecurityQuestionId()) {
-				$update['security_question_id'] = $this->input->post('security_question');
-			}			 	
-
- 			if ($this->input->post('security_answer') !== $this->customer->getSecurityAnswer()) {
-				$update['security_answer'] = $this->input->post('security_answer');
-			}			 	
-
- 			if ($this->input->post('new_password') && !$this->customer->checkPassword($this->input->post('new_password'))) {
-				$update['password'] = $this->input->post('new_password');
-			}			 	
+			$update['first_name'] = $this->input->post('first_name');
+			$update['last_name'] = $this->input->post('last_name');
+			$update['telephone'] = $this->input->post('telephone');
+			$update['security_question_id'] = $this->input->post('security_question');
+			$update['security_answer'] = $this->input->post('security_answer');
+			$update['password'] = $this->input->post('new_password');
 			// END: retrieve $_POST data if $_POST data is not same as existing customer library data
 
 			if (!empty($update)) {																// if update array is not empty then update customer details and display success message
 				if ($this->Customers_model->updateCustomer($update)) {
-					$this->session->set_flashdata('alert', $this->lang->line('success_updated'));
+					$this->session->set_flashdata('alert', $this->lang->line('alert_updated'));
 				}
 	
-				return TRUE;
-			} else {																			// else nothing was updated so display warning message
-				$this->session->set_flashdata('alert', $this->lang->line('error_nothing'));
 				return TRUE;
 			}
 		}

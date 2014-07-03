@@ -1,4 +1,5 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Messages extends CI_Controller {
 
 	public function __construct() {
@@ -10,9 +11,8 @@ class Messages extends CI_Controller {
 	}
 
 	public function index() {
-			
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
 		if ($this->session->flashdata('alert')) {
@@ -65,8 +65,8 @@ class Messages extends CI_Controller {
 			$filter['filter_type'] = $data['filter_type'] = '';
 		}
 
-		if ($this->input->get('filter_label') === 'all' AND !$this->user->hasPermissions('access', 'admin/messages')) { 
-			$data['alert'] = '<p class="warning">Warning: You do not have permission to view all message!</p>';
+		if ($this->input->get('filter_label') === 'all' AND !$this->user->hasPermissions('access', ADMIN_URI.'/messages')) { 
+			$data['alert'] = '<p class="alert-warning">Warning: You do not have permission to view all message!</p>';
 			$filter['filter_label'] = 'inbox';
 			$data['filter_label'] = 'all';
 		}
@@ -97,13 +97,13 @@ class Messages extends CI_Controller {
 		
 		$this->template->setTitle('Messages');
 		$this->template->setHeading('Messages');
-		$this->template->setButton('+ New', array('class' => 'add_button', 'href' => page_url() .'/edit'));
+		$this->template->setButton('+ New', array('class' => 'btn btn-success', 'href' => page_url() .'/edit'));
 
 		$data['text_empty'] 		= 'There are no messages available.';
 
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
-		$data['sort_type'] 			= site_url('admin/messages'.$url.'sort_by=send_type&order_by='.$order_by);
-		$data['sort_date'] 			= site_url('admin/messages'.$url.'sort_by=messages.date_added&order_by='.$order_by);
+		$data['sort_type'] 			= site_url(ADMIN_URI.'/messages'.$url.'sort_by=send_type&order_by='.$order_by);
+		$data['sort_date'] 			= site_url(ADMIN_URI.'/messages'.$url.'sort_by=messages.date_added&order_by='.$order_by);
 
 		$data['messages'] = array();
 		$results = $this->Messages_model->getList($filter);
@@ -112,15 +112,23 @@ class Messages extends CI_Controller {
 				'message_id'	=> $result['message_id'],
 				'from'			=> $result['staff_name'],
 				'send_type'		=> $result['send_type'],
+				'type_icon'		=> (isset($result['send_type']) AND $result['send_type'] === 'account') ? 'user' : 'envelope',
 				'subject' 		=> $result['subject'],
 				'recipient' 	=> ucwords(str_replace('_', ' ', $result['recipient'])),
 				'date_added'	=> mdate('%H:%i - %d %M %y', strtotime($result['date_added'])),
 				'body' 			=> substr(strip_tags(html_entity_decode($result['body'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..',
 				'state'			=> (isset($result['state']) AND $result['state'] === '0') ? 'unread' : 'read',
-				'view'			=> site_url('admin/messages/view?id=' . $result['message_id'])
+				'view'			=> site_url(ADMIN_URI.'/messages/view?id=' . $result['message_id'])
 			);
 		}
 
+		$message_unread = $this->user->unreadMessageTotal();
+		$data['labels'] = array(
+			'inbox' => array('badge' => $message_unread, 'url' => site_url(ADMIN_URI.'/messages?filter_label=inbox')),
+			'all' 	=> array('badge' => '', 'url' => site_url(ADMIN_URI.'/messages?filter_label=all')),
+			'trash' => array('badge' => '', 'url' => site_url(ADMIN_URI.'/messages?filter_label=trash'))
+		);
+		
 		$data['message_dates'] = array();
 		$message_dates = $this->Messages_model->getMessageDates();
 		foreach ($message_dates as $message_date) {
@@ -134,8 +142,8 @@ class Messages extends CI_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 		
-		$config['base_url'] 		= site_url('admin/messages').$url;
-		$config['total_rows'] 		= $this->Messages_model->record_count($filter);
+		$config['base_url'] 		= site_url(ADMIN_URI.'/messages').$url;
+		$config['total_rows'] 		= $this->Messages_model->getAdminListCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 		
 		$this->pagination->initialize($config);
@@ -146,65 +154,64 @@ class Messages extends CI_Controller {
 		);
 
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'messages.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'messages', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'messages.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'messages', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'messages', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'messages', $data);
 		}
 	}
 
 	public function view() {
-			
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/messages')) {
+ 			$message_info = $this->Messages_model->viewAdminMessage((int) $this->input->get('id'), $this->user->getStaffId());
+ 			$data['label'] = 'inbox';
+ 		} else {
+ 			$message_info = $this->Messages_model->viewAdminMessage((int) $this->input->get('id'));
+ 			$data['label'] = 'all';
+		}
+		
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
 		} else {
 			$data['alert'] = '';
 		}
 
-		if (is_numeric($this->input->get('id'))) {
-			$message_id = $this->input->get('id');
+		if ($message_info) {
+			$message_id = $message_info['message_id'];
 		} else {
-		    redirect('admin/messages');
+		    redirect(ADMIN_URI.'/messages');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/messages')) {
- 			$message_info = $this->Messages_model->viewAdminMessage($message_id, $this->user->getStaffId());
- 			$data['label'] = 'inbox';
- 		} else {
- 			$message_info = $this->Messages_model->viewAdminMessage($message_id);
- 			$data['label'] = 'all';
-		}
-		
 		if (!$message_info) {
-		    redirect('admin/messages');
+		    redirect(ADMIN_URI.'/messages');
 		}
 		
 		if ($this->input->post('message_state')) {
 			$alert = $this->_updateMessageState($this->input->post('message_state'), $message_id, $this->user->getStaffId());
 			$this->session->set_flashdata('alert', $alert);
-		    redirect('admin/messages');
+		    redirect(ADMIN_URI.'/messages');
 		} else if ($message_info['state'] !== '1') {
 			$this->_updateMessageState('read', $message_id, $this->user->getStaffId());
 		}
 
 		$this->template->setTitle('Messages - View');
 		$this->template->setHeading('Messages - View');
-		$this->template->setBackButton('back_button', site_url('admin/messages'));
+		$this->template->setBackButton('btn-back', site_url(ADMIN_URI.'/messages'));
 
 		$data['text_empty'] 	= 'There are no recipients available.';
 		
 		if ($message_info['status'] === '0') {
-			$this->template->setButton('Resend', array('class' => 'white_button', 'onclick' => 'resendList()'));
-			$this->template->setButton('Mark As Unread', array('class' => 'white_button', 'onclick' => 'markAsUnread()'));
-			$this->template->setButton('Move To Inbox', array('class' => 'white_button', 'onclick' => 'moveToInbox()'));
+			$this->template->setButton('Resend', array('class' => 'btn btn-default', 'onclick' => 'resendList()'));
+			$this->template->setButton('Mark As Unread', array('class' => 'btn btn-default', 'onclick' => 'markAsUnread()'));
+			$this->template->setButton('Move To Inbox', array('class' => 'btn btn-default', 'onclick' => 'moveToInbox()'));
 		} else {
-			$this->template->setButton('Resend', array('class' => 'white_button', 'onclick' => 'resendList()'));
-			$this->template->setButton('Mark As Unread', array('class' => 'white_button', 'onclick' => 'markAsUnread()'));
-			$this->template->setButton('Move To Trash', array('class' => 'delete_button', 'onclick' => 'moveToTrash()'));
+			$this->template->setButton('Resend', array('class' => 'btn btn-default', 'onclick' => 'resendList()'));
+			$this->template->setButton('Mark As Unread', array('class' => 'btn btn-default', 'onclick' => 'markAsUnread()'));
+			$this->template->setButton('Move To Trash', array('class' => 'btn btn-default', 'onclick' => 'moveToTrash()'));
 		}
 		
 		$data['message_id'] 	= $message_info['message_id'];
@@ -224,27 +231,27 @@ class Messages extends CI_Controller {
 					'message_id'			=> $recipient['message_id'],
 					'recipient_name'		=> (isset($recipient['first_name']) AND isset($recipient['last_name'])) ? $recipient['first_name'] .' '. $recipient['last_name'] : $recipient['staff_name'] ,
 					'recipient_email'		=> (isset($recipient['customer_email'])) ? $recipient['customer_email'] : $recipient['staff_email'],
-					'status'				=> ($recipient['status'] === '1') ? '<span class="green">Sent</span>' : '<span class="red">Failed</span>'
+					'status'				=> ($recipient['status'] === '1') ? '<i class="fa fa-check-square green"></i>' : '<i class="fa fa-exclamation-circle red"></i>'
 				);
 			}
 		}
 		
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'messages_view.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'messages_view', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'messages_view.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'messages_view', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'messages_view', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'messages_view', $data);
 		}
 	}
 
 	public function edit() {
 
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/messages')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/messages')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -255,10 +262,10 @@ class Messages extends CI_Controller {
 
 		$this->template->setTitle('Message: Compose');
 		$this->template->setHeading('Message: Compose');
-		$this->template->setButton('Send', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
-		$this->template->setBackButton('back_button', site_url('admin/messages'));
+		$this->template->setButton('Send', array('class' => 'btn btn-success', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setBackButton('btn-back', site_url(ADMIN_URI.'/messages'));
 
-		$data['sub_menu_back'] 		= site_url('admin/messages');
+		$data['sub_menu_back'] 		= site_url(ADMIN_URI.'/messages');
 
 		$this->load->model('Customer_groups_model');
 		$data['customer_groups'] = array();
@@ -281,20 +288,20 @@ class Messages extends CI_Controller {
 		}
 
 		if ($this->input->post() AND $this->_sendMessage() === TRUE) {
-			redirect('admin/messages');
+			redirect(ADMIN_URI.'/messages');
 		}
 
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'messages_edit.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'messages_edit', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'messages_edit.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'messages_edit', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'messages_edit', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'messages_edit', $data);
 		}
 	}
 
 	public function _sendMessage() {
-    	if (!$this->user->hasPermissions('modify', 'admin/messages')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to send message!</p>');
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/messages')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to send message!</p>');
   			return TRUE;
     	} else if ($this->validateForm() === TRUE) { 
 			$this->load->model('Customers_model');
@@ -383,9 +390,9 @@ class Messages extends CI_Controller {
 			$add['date_added']		= mdate('%Y-%m-%d %H:%i:%s', time());
 
 			if ($this->Messages_model->addMessage($add, $recipients)) {
-				$this->session->set_flashdata('alert', '<p class="success">Message Sent Sucessfully!</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-success">Message Sent Sucessfully!</p>');
 			} else { 
-				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing added.</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-warning">An error occured, nothing added.</p>');
 			}
 
 			return TRUE;
@@ -409,8 +416,8 @@ class Messages extends CI_Controller {
 			}
 
 			if ($state !== '') {
+				$num = 0;
 				if (is_array($this->input->post('delete'))) {
-					$num = 0;
 					foreach ($this->input->post('delete') as $key => $id) {
 						$this->Messages_model->updateMessageState($id, $staff_id, $state);
 						$num++;
@@ -420,9 +427,10 @@ class Messages extends CI_Controller {
 					$num = 1;
 				}
 				
-				$num_message = ($num == 1) ? 'The message '.$alert : $num.' messages '.$alert;
-				
-				return '<p class="success">'. $num_message .'</p>';
+				if ($num > 0) {
+					$num_message = ($num == 1) ? 'The message '.$alert : $num.' messages '.$alert;
+					return '<p class="alert-success">'. $num_message .'</p>';
+				}				
 			}
 		}
 	}

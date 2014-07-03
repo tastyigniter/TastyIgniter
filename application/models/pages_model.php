@@ -1,7 +1,8 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Pages_model extends CI_Model {
 
-    public function record_count($filter = array()) {
+    public function getAdminListCount($filter = array()) {
 		if (!empty($filter['filter_search'])) {
 			$this->db->like('name', $filter['filter_search']);
 		}
@@ -107,6 +108,12 @@ class Pages_model extends CI_Model {
 			$this->db->set('layout_id', '0');
 		}
 		
+		if (!empty($update['menu_location'])) {
+			$this->db->set('menu_location', $update['menu_location']);
+		} else {
+			$this->db->set('menu_location', '0');
+		}
+		
 		if (!empty($update['date_updated'])) {
 			$this->db->set('date_updated', $update['date_updated']);
 		}
@@ -120,6 +127,11 @@ class Pages_model extends CI_Model {
 		if (!empty($update['page_id'])) {
 			$this->db->where('page_id', $update['page_id']);
 			$query = $this->db->update('pages');
+
+			if (!empty($update['permalink'])) {
+				$this->load->model('Permalinks_model');
+				$this->Permalinks_model->addPermalink(array('permalink' => $update['permalink'], 'query' => 'page_id='.$update['page_id']));
+			}
 		}		
 		
 		return $query;
@@ -160,6 +172,12 @@ class Pages_model extends CI_Model {
 			$this->db->set('layout_id', $add['layout_id']);
 		}
 		
+		if (!empty($add['menu_location'])) {
+			$this->db->set('menu_location', $add['menu_location']);
+		} else {
+			$this->db->set('menu_location', '0');
+		}
+		
 		if (!empty($add['date_added'])) {
 			$this->db->set('date_added', $add['date_added']);
 		}
@@ -177,6 +195,11 @@ class Pages_model extends CI_Model {
 		if (!empty($add)) {
 			if ($this->db->insert('pages')) {
 				$query = $this->db->insert_id();
+				
+				if (!empty($add['permalink'])) {
+					$this->load->model('Permalinks_model');
+					$this->Permalinks_model->addPermalink(array('permalink' => $add['permalink'], 'query' => 'page_id='.$query));
+				}
 			}
 		}
 		

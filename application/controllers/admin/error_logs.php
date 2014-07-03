@@ -1,4 +1,5 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Error_logs extends CI_Controller {
 
 	public function __construct() {
@@ -9,11 +10,11 @@ class Error_logs extends CI_Controller {
 	public function index() {
 			
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/error_logs')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/error_logs')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -24,7 +25,7 @@ class Error_logs extends CI_Controller {
 
 		$this->template->setTitle('Error Logs');
 		$this->template->setHeading('Error Logs');
-		$this->template->setButton('Clear', array('class' => 'delete_button', 'onclick' => '$(\'form:not(#filter-form)\').submit();'));
+		$this->template->setButton('Clear', array('class' => 'btn btn-default', 'onclick' => '$(\'#list-form\').submit();'));
 		
 		if ($this->config->item('log_path') === '') {
 			$log_path = APPPATH .'/logs/';
@@ -35,7 +36,7 @@ class Error_logs extends CI_Controller {
 		if ( file_exists($log_path .'logs.php')) {
 
 			$logs = file_get_contents($log_path .'logs.php');
-			$remove = "<"."?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?".">\n";
+			$remove = "<"."?php  if ( ! defined('BASEPATH')) exit('No direct access allowed'); ?".">\n";
 	
 			$data['logs'] = str_replace($remove, '', $logs);
 		} else { 
@@ -45,20 +46,20 @@ class Error_logs extends CI_Controller {
 		//Delete Error Log
 		if ($this->input->post() AND $this->_clearLog() === TRUE) {
 				
-			redirect('admin/error_logs');
+			redirect(ADMIN_URI.'/error_logs');
 		}
 
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'error_logs.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'error_logs', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'error_logs.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'error_logs', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'error_logs', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'error_logs', $data);
 		}
 	}
 
 	public function _clearLog() {
-    	if (!$this->user->hasPermissions('modify', 'admin/error_logs')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/error_logs')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to update!</p>');
     	} else { 
 			if ($this->config->item('log_path') === '') {
 				$log_path = APPPATH .'/logs/';
@@ -67,12 +68,12 @@ class Error_logs extends CI_Controller {
 			}
 			
 			if (is_readable($log_path .'logs.php')) {
-				$log = "<"."?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?".">\n\n";
+				$log = "<"."?php  if ( ! defined('BASEPATH')) exit('No direct access allowed'); ?".">\n\n";
 
 				$this->load->helper('file');
        	 		write_file($log_path .'logs.php', $log);
 
-				$this->session->set_flashdata('alert', '<p class="success">Logs Cleared Sucessfully!</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-success">Logs Cleared Sucessfully!</p>');
 			}
 		}
 				

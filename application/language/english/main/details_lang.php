@@ -1,4 +1,4 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 $lang['text_heading'] 			= 'My Details';
 $lang['text_details'] 			= 'Edit your details';
@@ -18,11 +18,10 @@ $lang['entry_telephone'] 		= 'Telephone:';
 $lang['entry_s_question'] 		= 'Security Question:';
 $lang['entry_s_answer'] 		= 'Security Answer:';
 
-$lang['success_updated'] 		= '<p class="success">Details updated sucessfully.</p>';
-$lang['success_password'] 		= '<p class="success">Password updated sucessfully.</p>';
-$lang['error_nothing'] 			= '<p class="warning">No Changes Made!</p>';
 $lang['error_email'] 			= 'The %s you entered already exist.';
 $lang['error_password'] 		= 'The %s you entered is invalid.';
+
+$lang['alert_updated'] 		= '<p class="alert-success">Details updated sucessfully.</p>';
 
 /* End of file details_lang.php */
 /* Location: ./application/language/english/main/details_lang.php */

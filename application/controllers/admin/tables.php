@@ -1,4 +1,5 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Tables extends CI_Controller {
 
 	public function __construct() {
@@ -10,13 +11,12 @@ class Tables extends CI_Controller {
 	}
 
 	public function index() {
-			
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/tables')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/tables')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -67,16 +67,16 @@ class Tables extends CI_Controller {
 		
 		$this->template->setTitle('Tables');
 		$this->template->setHeading('Tables');
-		$this->template->setButton('+ New', array('class' => 'add_button', 'href' => page_url() .'/edit'));
-		$this->template->setButton('Delete', array('class' => 'delete_button', 'onclick' => '$(\'form:not(#filter-form)\').submit();'));
+		$this->template->setButton('+ New', array('class' => 'btn btn-success', 'href' => page_url() .'/edit'));
+		$this->template->setButton('Delete', array('class' => 'btn btn-default', 'onclick' => '$(\'#list-form\').submit();'));
 
 		$data['text_empty'] 		= 'There are no tables available.';
 
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
-		$data['sort_name'] 			= site_url('admin/tables'.$url.'sort_by=table_name&order_by='.$order_by);
-		$data['sort_min'] 			= site_url('admin/tables'.$url.'sort_by=min_capacity&order_by='.$order_by);
-		$data['sort_cap'] 			= site_url('admin/tables'.$url.'sort_by=max_capacity&order_by='.$order_by);
-		$data['sort_id'] 			= site_url('admin/tables'.$url.'sort_by=table_id&order_by='.$order_by);
+		$data['sort_name'] 			= site_url(ADMIN_URI.'/tables'.$url.'sort_by=table_name&order_by='.$order_by);
+		$data['sort_min'] 			= site_url(ADMIN_URI.'/tables'.$url.'sort_by=min_capacity&order_by='.$order_by);
+		$data['sort_cap'] 			= site_url(ADMIN_URI.'/tables'.$url.'sort_by=max_capacity&order_by='.$order_by);
+		$data['sort_id'] 			= site_url(ADMIN_URI.'/tables'.$url.'sort_by=table_id&order_by='.$order_by);
 
 		$data['tables'] = array();
 		$results = $this->Tables_model->getList($filter);
@@ -87,7 +87,7 @@ class Tables extends CI_Controller {
 				'min_capacity'		=> $result['min_capacity'],
 				'max_capacity'		=> $result['max_capacity'],
 				'table_status'		=> ($result['table_status'] == '1') ? 'Enabled' : 'Disabled',
-				'edit'				=> site_url('admin/tables/edit?id=' . $result['table_id'])
+				'edit'				=> site_url(ADMIN_URI.'/tables/edit?id=' . $result['table_id'])
 			);
 		}
 
@@ -96,8 +96,8 @@ class Tables extends CI_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 		
-		$config['base_url'] 		= site_url('admin/tables').$url;
-		$config['total_rows'] 		= $this->Tables_model->record_count($filter);
+		$config['base_url'] 		= site_url(ADMIN_URI.'/tables').$url;
+		$config['total_rows'] 		= $this->Tables_model->getAdminListCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 		
 		$this->pagination->initialize($config);
@@ -108,24 +108,24 @@ class Tables extends CI_Controller {
 		);
 
 		if ($this->input->post('delete') AND $this->_deleteTable() === TRUE) {
-			redirect('admin/tables');  			
+			redirect(ADMIN_URI.'/tables');  			
 		}	
 
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'tables.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'tables', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'tables.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'tables', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'tables', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'tables', $data);
 		}
 	}
 
 	public function edit() {
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/tables')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/tables')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -134,22 +134,22 @@ class Tables extends CI_Controller {
 			$data['alert'] = '';
 		}		
 
-		if (is_numeric($this->input->get('id'))) {
-			$table_id = $this->input->get('id');
-			$data['action']	= site_url('admin/tables/edit?id='. $table_id);
+		$table_info = $this->Tables_model->getTable((int) $this->input->get('id'));
+
+		if ($table_info) {
+			$table_id = $table_info['table_id'];
+			$data['action']	= site_url(ADMIN_URI.'/tables/edit?id='. $table_id);
 		} else {
 		    $table_id = 0;
-			$data['action']	= site_url('admin/tables/edit');
+			$data['action']	= site_url(ADMIN_URI.'/tables/edit');
 		}
 		
-		$table_info = $this->Tables_model->getTable($table_id);
-
-		$title = (isset($table_info['table_name'])) ? 'Edit - '. $table_info['table_name'] : 'New';	
+		$title = (isset($table_info['table_name'])) ? $table_info['table_name'] : 'New';	
 		$this->template->setTitle('Table: '. $title);
 		$this->template->setHeading('Table: '. $title);
-		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
-		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
-		$this->template->setBackButton('back_button', site_url('admin/tables'));
+		$this->template->setButton('Save', array('class' => 'btn btn-success', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('btn-back', site_url(ADMIN_URI.'/tables'));
 
 
 		$data['table_id'] 			= $table_info['table_id'];
@@ -160,25 +160,25 @@ class Tables extends CI_Controller {
 
 		if ($this->input->post() AND $this->_addTable() === TRUE) {
 			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {	
-				redirect('admin/tables/edit?id='. $this->input->post('insert_id'));
+				redirect(ADMIN_URI.'/tables/edit?id='. $this->input->post('insert_id'));
 			} else {
-				redirect('admin/tables');
+				redirect(ADMIN_URI.'/tables');
 			}
 		}
 
 		if ($this->input->post() AND $this->_updateTable() === TRUE) {
 			if ($this->input->post('save_close') === '1') {
-				redirect('admin/tables');
+				redirect(ADMIN_URI.'/tables');
 			}
 			
-			redirect('admin/tables/edit?id='. $table_id);
+			redirect(ADMIN_URI.'/tables/edit?id='. $table_id);
 		}
 		
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'tables_edit.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'tables_edit', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'tables_edit.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'tables_edit', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'tables_edit', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'tables_edit', $data);
 		}
 	}
 
@@ -209,9 +209,9 @@ class Tables extends CI_Controller {
 	
 	public function _addTable() {
 									
-    	if (!$this->user->hasPermissions('modify', 'admin/tables')) {
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/tables')) {
 		
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add!</p>');
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to add!</p>');
 			return TRUE;
     	
     	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
@@ -223,9 +223,9 @@ class Tables extends CI_Controller {
 			$add['table_status'] 	= $this->input->post('table_status');
 			
 			if ($_POST['insert_id'] = $this->Tables_model->addTable($add)) {
-				$this->session->set_flashdata('alert', '<p class="success">Table added sucessfully.</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-success">Table added sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing added.</p>');				
+				$this->session->set_flashdata('alert', '<p class="alert-warning">An error occured, nothing added.</p>');				
 			}
 			
 			return TRUE;
@@ -233,8 +233,8 @@ class Tables extends CI_Controller {
 	}
 
 	public function _updateTable() {
-    	if (!$this->user->hasPermissions('modify', 'admin/tables')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/tables')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to update!</p>');
 			return TRUE;
     	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$update = array();
@@ -246,9 +246,9 @@ class Tables extends CI_Controller {
 			$update['table_status'] 	= $this->input->post('table_status');
 			
 			if ($this->Tables_model->updateTable($update)) {						
-				$this->session->set_flashdata('alert', '<p class="success">Table updated sucessfully.</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-success">Table updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');				
+				$this->session->set_flashdata('alert', '<p class="alert-warning">An error occured, nothing updated.</p>');				
 			}
 			
 			return TRUE;
@@ -256,24 +256,24 @@ class Tables extends CI_Controller {
 	}
 
 	public function _deleteTable() {
-    	if (!$this->user->hasPermissions('modify', 'admin/tables')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/tables')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to delete!</p>');
     	} else if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Tables_model->deleteTable($value);
 			}			
 		
-			$this->session->set_flashdata('alert', '<p class="success">Table(s) deleted sucessfully!</p>');
+			$this->session->set_flashdata('alert', '<p class="alert-success">Table(s) deleted sucessfully!</p>');
 		}
 				
 		return TRUE;
 	}
 	
 	public function validateForm() {
-		$this->form_validation->set_rules('table_name', 'Table Name', 'xss_clean|trim|required');
-		$this->form_validation->set_rules('min_capacity', 'Table Minimum', 'xss_clean|trim|required|integer|greater_than[1]');
-		$this->form_validation->set_rules('max_capacity', 'Table Capacity', 'xss_clean|trim|required|integer|greater_than[1]|callback_check_capacity');
-		$this->form_validation->set_rules('table_status', 'Table Status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('table_name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[255]');
+		$this->form_validation->set_rules('min_capacity', 'Minimum', 'xss_clean|trim|required|integer|greater_than[1]');
+		$this->form_validation->set_rules('max_capacity', 'Capacity', 'xss_clean|trim|required|integer|greater_than[1]|callback_check_capacity');
+		$this->form_validation->set_rules('table_status', 'Status', 'xss_clean|trim|required|integer');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;

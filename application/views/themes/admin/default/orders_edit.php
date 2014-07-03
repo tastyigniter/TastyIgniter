@@ -1,247 +1,274 @@
-<div id="box-content">
-	<div id="notification">
-		<?php if (validation_errors()) { ?>
-			<?php echo validation_errors('<span class="error">', '</span>'); ?>
-		<?php } ?>
-		<?php if (!empty($alert)) { ?>
-			<?php echo $alert; ?>
-		<?php } ?>
-	</div>
-
-	<div class="box">
-	<div id="update-box" class="content">
-	<form accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
-		<div class="wrap_heading">
-			<ul id="tabs">
-				<li><a rel="#general">Order</a></li>
-				<li><a rel="#status">Status</a></li>
-				<li><a rel="#restaurant">Restaurant</a></li>
-				<?php if ($check_order_type === '1') { ?>
-					<li><a rel="#delivery-address">Delivery Address</a></li>
+<?php echo $header; ?>
+<div class="row content">
+	<div class="col-md-12">
+		<div id="notification">
+			<div class="alert alert-dismissable">
+				<?php if (!empty($alert)) { ?>
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+					<?php echo $alert; ?>
 				<?php } ?>
-				<li><a rel="#payment">Payment</a></li>
-				<li><a rel="#menus">Menus (<?php echo $total_items; ?>)</a></li>
-			</ul>
-		</div>
-
-		<div id="general" class="wrap_content" style="display:block;">
-			<table class="form">
-				<tbody>
-					<tr>
-						<td><b>Order ID:</b></td>
-						<td>#<?php echo $order_id; ?></td>
-					</tr>
-					<tr>
-						<td><b>Name:</b></td>
-						<td><a href="<?php echo $customer_edit; ?>"><?php echo $first_name; ?> <?php echo $last_name; ?></a></td>
-					</tr>
-					<tr>
-						<td><b>Email:</b></td>
-						<td><?php echo $email; ?></td>
-					</tr>
-					<tr>
-						<td><b>Telephone:</b></td>
-						<td><?php echo $telephone; ?></td>
-					</tr>
-					<tr>
-						<td><b>Order Type:</b></td>
-						<td><?php echo $order_type; ?></td>
-					</tr>    	
-					<tr>
-						<td><b>Delivery/Collection Time:</b></td>
-						<td><?php echo $order_time; ?></td>
-					</tr>    	
-					<tr>
-						<td><b>Order Date:</b></td>
-						<td><?php echo $date_added; ?></td>
-					</tr>    	
-					<tr>
-						<td><b>Total:</b></td>
-						<td><?php echo $order_total; ?></td>
-					</tr>    	
-					<tr>
-						<td><b>Comment:</b></td>
-						<td><?php echo $comment; ?></td>
-					</tr>
-					<tr>
-						<td><b>Date Modified:</b></td>
-						<td><?php echo $date_modified; ?></td>
-					</tr>    	
-					<tr>
-						<td><b>Notified Customer:</b></td>
-						<td>
-						<?php if ($notify === '1') { ?>
-							Email SENT
-						<?php } else { ?>
-							Email not SENT
-						<?php } ?>
-						</td>
-					</tr>
-					<tr>
-						<td><b>IP Address:</b></td>
-						<td><?php echo $ip_address; ?></td>
-					</tr>    	
-					<tr>
-						<td><b>User Agent:</b></td>
-						<td><?php echo $user_agent; ?></td>
-					</tr>    	
-				</tbody>
-			</table>
-		</div>
-
-		<div id="status" class="wrap_content" style="display:none;">
-			<table class="form">
-				<tbody>
-					<tr>
-						<td><b>Order Status:</b></td>
-						<td><select name="order_status" onChange="getStatusComment();">
-						<?php foreach ($statuses as $status) { ?>
-						<?php if ($status['status_id'] === $status_id) { ?>
-							<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('order_status', $status['status_id'], TRUE); ?> ><?php echo $status['status_name']; ?></option>
-						<?php } else { ?>
-							<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('order_status', $status['status_id']); ?> ><?php echo $status['status_name']; ?></option>
-						<?php } ?>
-						<?php } ?>
-						</select></td>
-					</tr>    	
-					<tr>
-						<td><b>Status Comment:</b></td>
-						<td><textarea name="status_comment" rows="5" cols="45"><?php echo set_value('status_comment'); ?></textarea></td>
-					</tr>
-					<tr>
-						<td><b>Notify Customer:</b></td>
-						<td><input type="checkbox" name="notify" value="1" /></td>
-					</tr>
-				</tbody>
-			</table>
-			<br /><br />
-			
-			<h2>History</h2>
-			<table height="auto" class="list" id="history">
-				<thead>
-					<tr>
-						<th>Date/Time</th>
-						<th>Status</th>
-						<th>Staff</th>
-						<th class="center">Customer Notified</th>
-						<th class="left" width="25%">Comment</th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php if ($status_history) { ?>
-					<?php foreach ($status_history as $history) { ?>
-					<tr>
-						<td><?php echo $history['date_time']; ?></td>
-						<td><?php echo $history['status_name']; ?></td>
-						<td><?php echo $history['staff_name']; ?></td>
-						<td class="center"><?php echo ($history['notify'] === '1') ? 'Yes' : 'No'; ?></td>
-						<td class="left"><?php echo $history['comment']; ?></td>
-					</tr>
-					<?php } ?>
-					<?php } else { ?>
-					<tr>
-						<td colspan="5" align="center"><?php echo $text_empty; ?></td>
-					</tr>
-					<?php } ?>
-				</tbody>
-			</table>
-		</div>
-
-		<div id="restaurant" class="wrap_content" style="display:none;">
-			<table class="form">
-				<tbody>
-					<tr>
-						<td><b>Name:</b></td>
-						<td><?php echo $location_name; ?></td>
-					</tr>
-					<tr>
-						<td><b>Address:</b></td>
-						<td><address><?php echo $location_address; ?></address></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-
-		<?php if ($check_order_type === '1') { ?>
-		<div id="delivery-address" class="wrap_content" style="display:none;">
-			<table class="form">
-				<tbody>
-					<tr>
-						<td><b>Address:</b></td>
-						<td><address><?php echo $customer_address; ?></address></td>
-					</tr>    	
-				</tbody>
-			</table>
-		</div>
-		<?php } ?>
-
-		<div id="payment" class="wrap_content" style="display:none;">
-			<table class="form">
-				<tbody>
-					<tr>
-						<td><b>Payment Method:</b></td>
-						<td><?php echo $payment; ?>
-						<?php if ($paypal_details) { ?>
-							<a class="view_details">View Transaction Details</a><br />
-						<?php } ?>
-						</td>
-					</tr>    	
-				</tbody>
-			</table>
-			<div class="paypal_details" style="display:none">
-				<ul>
-				<?php foreach ($paypal_details as $key => $value) { ?>
-					<li>
-						<span><?php echo $key; ?></span> <?php echo $value; ?>
-					</li>
+				<?php if (validation_errors()) { ?>
+					<p class="alert-danger">Sorry but validation has failed, please check for errors.</p>
 				<?php } ?>
-				</ul>
 			</div>
 		</div>
 
-		<div id="menus" class="wrap_content" style="display:none;">
-			<table height="auto" class="list">
-				<thead>
-					<tr>
-						<th width="1"></th>
-						<th class="food_name" width="25%">Name/Options</th>
-						<th class="center">Price</th>
-						<th width="25%">Total</th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php foreach ($cart_items as $cart_item) { ?>
-					<tr id="<?php echo $cart_item['id']; ?>">
-						<td width="1"><?php echo $cart_item['qty']; ?>x</td>
-						<td class="food_name"><?php echo $cart_item['name']; ?><br />
-						<?php if (!empty($cart_item['options'])) { ?>
-							<div><font size="1">+ <?php echo $cart_item['options']['name']; ?>: <?php echo $cart_item['options']['price']; ?> </font></div>
-						<?php } ?>
-						</td>
-						<td class="center"><?php echo $cart_item['price']; ?></td>
-						<td><?php echo $cart_item['subtotal']; ?></td>
-					</tr>
-					<?php } ?>
-					<?php foreach ($totals as $total) { ?>
-					<tr>
-						<td width="1"></td>
-						<td></td>
-						<td class="center"><b><?php echo $total['title']; ?></b></td>
-						<td><b><?php echo $total['value']; ?></b></td>
-					</tr>    	
-					<?php } ?>
-					<tr>
-						<td width="1"></td>
-						<td></td>
-						<td class="center"><b>TOTAL</b></td>
-						<td><b><?php echo $order_total; ?></b></td>
-					</tr>    	
-				</tbody>
-			</table>
+		<div class="row wrap-vertical">
+			<ul id="nav-tabs" class="nav nav-tabs">
+				<li class="active"><a href="#general" data-toggle="tab">Order</a></li>
+				<li><a href="#status" data-toggle="tab">Status</a></li>
+				<li><a href="#restaurant" data-toggle="tab">Restaurant</a></li>
+				<?php if ($check_order_type === '1') { ?>
+					<li><a href="#delivery-address" data-toggle="tab">Delivery Address</a></li>
+				<?php } ?>
+				<li><a href="#payment" data-toggle="tab">Payment</a></li>
+				<li><a href="#menus" data-toggle="tab">Menus &nbsp;<span class="badge"><?php echo $total_items; ?></span></a></li>
+			</ul>
 		</div>
 
-	</form>
-	</div>
+		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
+			<div class="tab-content">
+				<div id="general" class="tab-pane row wrap-all active">
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label">Order ID:</label>
+						<div class="col-sm-5">
+							#<?php echo $order_id; ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-name" class="col-sm-2 control-label">Name:</label>
+						<div class="col-sm-5">
+							<?php if (!empty($customer_id)) { ?>
+								<a href="<?php echo $customer_edit; ?>"><?php echo $first_name; ?> <?php echo $last_name; ?></a>
+							<?php } else { ?>
+								<?php echo $first_name; ?> <?php echo $last_name; ?> <span class="badge">Guest Order</span>
+							<?php } ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-name" class="col-sm-2 control-label">Email:</label>
+						<div class="col-sm-5">
+							<?php echo $email; ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-name" class="col-sm-2 control-label">Telephone:</label>
+						<div class="col-sm-5">
+							<?php echo $telephone; ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-name" class="col-sm-2 control-label">Order Type:</label>
+						<div class="col-sm-5">
+							<?php echo $order_type; ?>
+						</div>
+					</div>    	
+					<div class="form-group">
+						<label for="input-name" class="col-sm-2 control-label">Delivery/Collection Time:</label>
+						<div class="col-sm-5">
+							<?php echo $order_time; ?>
+						</div>
+					</div>    	
+					<div class="form-group">
+						<label for="input-name" class="col-sm-2 control-label">Order Date:</label>
+						<div class="col-sm-5">
+							<?php echo $date_added; ?>
+						</div>
+					</div>    	
+					<div class="form-group">
+						<label for="input-name" class="col-sm-2 control-label">Total:</label>
+						<div class="col-sm-5">
+							<?php echo $order_total; ?>
+						</div>
+					</div>    	
+					<div class="form-group">
+						<label for="input-name" class="col-sm-2 control-label">Comment:</label>
+						<div class="col-sm-5">
+							<?php echo $comment; ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-name" class="col-sm-2 control-label">Date Modified:</label>
+						<div class="col-sm-5">
+							<?php echo $date_modified; ?>
+						</div>
+					</div>    	
+					<div class="form-group">
+						<label for="input-name" class="col-sm-2 control-label">Notified Customer:</label>
+						<div class="col-sm-5">
+							<?php if ($notify === '1') { ?>
+								Email SENT
+							<?php } else { ?>
+								Email not SENT
+							<?php } ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-name" class="col-sm-2 control-label">IP Address:</label>
+						<div class="col-sm-5">
+							<?php echo $ip_address; ?>
+						</div>
+					</div>    	
+					<div class="form-group">
+						<label for="input-name" class="col-sm-2 control-label">User Agent:</label>
+						<div class="col-sm-5">
+							<?php echo $user_agent; ?>
+						</div>
+					</div>    	
+				</div>
+
+				<div id="status" class="tab-pane row wrap-all">
+					<div class="form-group">
+						<label for="input-name" class="col-sm-2 control-label">Order Status:</label>
+						<div class="col-sm-5">
+							<select name="order_status" id="" class="form-control" onChange="getStatusComment();">
+							<?php foreach ($statuses as $status) { ?>
+							<?php if ($status['status_id'] === $status_id) { ?>
+								<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('order_status', $status['status_id'], TRUE); ?> ><?php echo $status['status_name']; ?></option>
+							<?php } else { ?>
+								<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('order_status', $status['status_id']); ?> ><?php echo $status['status_name']; ?></option>
+							<?php } ?>
+							<?php } ?>
+							</select>
+							<?php echo form_error('order_status', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>    	
+					<div class="form-group">
+						<label for="input-name" class="col-sm-2 control-label">Status Comment:</label>
+						<div class="col-sm-5">
+							<textarea name="status_comment" id="" class="form-control" rows="5" cols="45"><?php echo set_value('status_comment'); ?></textarea>
+							<?php echo form_error('status_comment', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Notify Customer:</label>
+						<div class="col-sm-5">
+							<input type="checkbox" name="notify" value="1" />
+							<?php echo form_error('notify', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<br />
+					
+					<h3>History</h3>
+					<table height="auto" class="table table-striped table-border" id="history">
+						<thead>
+							<tr>
+								<th>Date/Time</th>
+								<th>Status</th>
+								<th>Staff</th>
+								<th class="text-center">Customer Notified</th>
+								<th class="left" width="25%">Comment</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php if ($status_history) { ?>
+							<?php foreach ($status_history as $history) { ?>
+							<tr>
+								<td><?php echo $history['date_time']; ?></td>
+								<td><?php echo $history['status_name']; ?></td>
+								<td><?php echo $history['staff_name']; ?></td>
+								<td class="text-center"><?php echo ($history['notify'] === '1') ? 'Yes' : 'No'; ?></td>
+								<td class="left"><?php echo $history['comment']; ?></td>
+							</tr>
+							<?php } ?>
+							<?php } else { ?>
+							<tr>
+								<td colspan="5"><?php echo $text_empty; ?></td>
+							</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				</div>
+
+				<div id="restaurant" class="tab-pane row wrap-all">
+					<div class="form-group">
+						<label for="input-name" class="col-sm-2 control-label">Name:</label>
+						<div class="col-sm-5">
+							<?php echo $location_name; ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-name" class="col-sm-2 control-label">Address:</label>
+						<div class="col-sm-5">
+							<address><?php echo $location_address; ?></address>
+						</div>
+					</div>
+				</div>
+
+				<?php if ($check_order_type === '1') { ?>
+				<div id="delivery-address" class="tab-pane row wrap-all">
+					<div class="form-group">
+						<label for="input-name" class="col-sm-2 control-label">Address:</label>
+						<div class="col-sm-5">
+							<address><?php echo $customer_address; ?></address>
+						</div>    	
+					</div>    	
+				</div>
+				<?php } ?>
+
+				<div id="payment" class="tab-pane row wrap-all">
+					<div class="form-group">
+						<label for="input-name" class="col-sm-2 control-label">Payment Method:</label>
+						<div class="col-sm-5">
+							<?php echo $payment; ?>
+							<?php if ($paypal_details) { ?>
+								<a class="view_details">View Transaction Details</a><br />
+							<?php } ?>
+						</div>    	
+					</div>    	
+					<div class="paypal_details" style="display:none">
+						<ul>
+						<?php foreach ($paypal_details as $key => $value) { ?>
+							<li>
+								<span><?php echo $key; ?></span> <?php echo $value; ?>
+							</li>
+						<?php } ?>
+						</ul>
+					</div>
+				</div>
+
+				<div id="menus" class="tab-pane row wrap-all">
+					<table height="auto" class="table table-striped table-border">
+						<thead>
+							<tr>
+								<th></th>
+								<th width="25%">Name/Options</th>
+								<th class="text-center">Price</th>
+								<th>Total</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach ($cart_items as $cart_item) { ?>
+							<tr id="<?php echo $cart_item['id']; ?>">
+								<td><?php echo $cart_item['qty']; ?>x</td>
+								<td><?php echo $cart_item['name']; ?><br />
+								<?php if (!empty($cart_item['options'])) { ?>
+									<div><font size="1">+ <?php echo $cart_item['options']['name']; ?>: <?php echo $cart_item['options']['price']; ?> </font></div>
+								<?php } ?>
+								</td>
+								<td class="text-center"><?php echo $cart_item['price']; ?></td>
+								<td><?php echo $cart_item['subtotal']; ?></td>
+							</tr>
+							<?php } ?>
+							<?php foreach ($totals as $total) { ?>
+							<tr>
+								<td width="1"></td>
+								<td></td>
+								<td class="text-center"><b><?php echo $total['title']; ?></b></td>
+								<td><b><?php echo $total['value']; ?></b></td>
+							</tr>    	
+							<?php } ?>
+							<tr>
+								<td width="1"></td>
+								<td></td>
+								<td class="text-center"><b>TOTAL</b></td>
+								<td><b><?php echo $order_total; ?></b></td>
+							</tr>    	
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</form>
 	</div>
 </div>
 <script type="text/javascript">
@@ -256,8 +283,6 @@ $(document).ready(function() {
 		}
 	});	
 });	
-
-$('#tabs a').tabs();
 </script>
 <script type="text/javascript"><!--
 function getStatusComment() {
@@ -274,3 +299,4 @@ function getStatusComment() {
 
 $('select[name="order_status"]').trigger('change');
 //--></script>
+<?php echo $footer; ?>

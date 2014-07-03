@@ -1,8 +1,8 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Menus_model extends CI_Model {
 
-    public function menus_record_count($filter = array()) {
+    public function getAdminListCount($filter = array()) {
 		if (!empty($filter['filter_search'])) {
 			$this->db->like('menu_name', $filter['filter_search']);
 			$this->db->or_like('menu_price', $filter['filter_search']);
@@ -21,7 +21,7 @@ class Menus_model extends CI_Model {
 		return $this->db->count_all_results();
     }
     
-    public function options_record_count($filter = array()) {
+    public function getAdminOptionsListCount($filter = array()) {
 		if (!empty($filter['filter_search'])) {
 			$this->db->like('option_name', $filter['filter_search']);
 			$this->db->or_like('option_price', $filter['filter_search']);
@@ -31,9 +31,9 @@ class Menus_model extends CI_Model {
 		return $this->db->count_all_results();
     }
     
-    public function categories_record_count($filter = array()) {
+    public function getAdminCategoriesListCount($filter = array()) {
 		if (!empty($filter['filter_search'])) {
-			$this->db->like('category_name', $filter['filter_search']);
+			$this->db->like('name', $filter['filter_search']);
 		}
 
 		$this->db->from('categories');
@@ -46,7 +46,9 @@ class Menus_model extends CI_Model {
 		}
 		
         if ($this->db->limit($filter['limit'], $filter['page'])) {	
+			$this->db->select('*, menus.menu_id');
 			$this->db->join('categories', 'categories.category_id = menus.menu_category_id', 'left');
+			$this->db->join('menus_specials', 'menus_specials.menu_id = menus.menu_id', 'left');
 			
 			if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
 				$this->db->order_by($filter['sort_by'], $filter['order_by']);
@@ -93,8 +95,7 @@ class Menus_model extends CI_Model {
 	}
 	
 	public function getMainMenus($filter = array()) {
-
-		$this->db->select('menus.menu_id, menu_name, menu_description, menu_photo, menu_price, category_name, start_date, end_date, special_price');
+		$this->db->select('menus.menu_id, menu_name, menu_description, menu_photo, menu_price, categories.name, start_date, end_date, special_price');
 		$this->db->select('IF(start_date <= CURRENT_DATE(), IF(end_date >= CURRENT_DATE(), "1", "0"), "0") AS is_special', FALSE);
 		$this->db->from('menus');
 		$this->db->join('categories', 'categories.category_id = menus.menu_category_id', 'left'); // join categories based on category_id
@@ -119,7 +120,7 @@ class Menus_model extends CI_Model {
 
 	public function getAdminMenu($menu_id) {					
 		//$this->db->select('menus.menu_id, *');
-		$this->db->select('menus.menu_id, menu_name, menu_description, menu_price, menu_photo, menu_category_id, stock_qty, minimum_qty, subtract_stock, menu_status, category_id, category_name, category_description, special_id, start_date, end_date, special_price, special_status');
+		$this->db->select('menus.menu_id, menu_name, menu_description, menu_price, menu_photo, menu_category_id, stock_qty, minimum_qty, subtract_stock, menu_status, category_id, categories.name, description, special_id, start_date, end_date, special_price, special_status');
 		$this->db->from('menus');
 		$this->db->join('categories', 'categories.category_id = menus.menu_category_id', 'left');
 		$this->db->join('menus_specials', 'menus_specials.menu_id = menus.menu_id', 'left');
@@ -241,7 +242,7 @@ class Menus_model extends CI_Model {
 			}
 		
 			if (!empty($filter['filter_search'])) {
-				$this->db->like('category_name', $filter['filter_search']);
+				$this->db->like('name', $filter['filter_search']);
 			}
 		
 			$query = $this->db->get();
@@ -272,13 +273,15 @@ class Menus_model extends CI_Model {
 	}
 
 	public function getCategory($category_id) {		
-		$this->db->from('categories');
-		$this->db->where('category_id', $category_id);
+		if (is_numeric($category_id)) {
+			$this->db->from('categories');
+			$this->db->where('category_id', $category_id);
 		
-		$query = $this->db->get();
+			$query = $this->db->get();
 		
-		if ($query->num_rows() > 0) {
-			return $query->row_array();
+			if ($query->num_rows() > 0) {
+				return $query->row_array();
+			}
 		}
 	}
 
@@ -420,16 +423,6 @@ class Menus_model extends CI_Model {
 		return $query;
 	}
 
-	public function updateCategory($category_id, $category_name, $category_description) {
-		$this->db->set('category_name', $category_name);
-		$this->db->set('category_description', $category_description);
-		
-		$this->db->where('category_id', $category_id);
-		$query = $this->db->update('categories'); 
-
-		return $query;
-	}
-
 	public function updateMenuOption($update = array()) {
 		$query = FALSE;
 
@@ -534,15 +527,53 @@ class Menus_model extends CI_Model {
 		}
 	}
 
-	public function addCategory($category_name, $category_description) {
-		if ($category_name OR $category_description) {
-			$this->db->set('category_name', $category_name);
-			$this->db->set('category_description', $category_description);
-		
-			if ($this->db->insert('categories')) {
-				return $this->db->insert_id();
+	public function updateCategory($update = array()) {
+		$query = FALSE;
+
+		if (!empty($update['name'])) {
+			$this->db->set('name', $update['name']);
+		}
+			
+		if (!empty($update['description'])) {
+			$this->db->set('description', $update['description']);
+		}
+			
+		if (!empty($update['category_id'])) {
+			$this->db->where('category_id', $update['category_id']);
+			$query = $this->db->update('categories'); 
+
+			if (!empty($update['permalink'])) {
+				$this->load->model('Permalinks_model');
+				$this->Permalinks_model->addPermalink(array('permalink' => $update['permalink'], 'query' => 'category_id='.$update['category_id']));
 			}
 		}
+		
+		return $query;
+	}
+
+	public function addCategory($add = array()) {
+		$query = FALSE;
+
+		if (!empty($add['name'])) {
+			$this->db->set('name', $add['name']);
+		}
+			
+		if (!empty($add['description'])) {
+			$this->db->set('description', $add['description']);
+		}
+			
+		if (!empty($add)) {
+			if ($this->db->insert('categories')) {
+				$query = $this->db->insert_id();
+				
+				if (!empty($add['permalink'])) {
+					$this->load->model('Permalinks_model');
+					$this->Permalinks_model->addPermalink(array('permalink' => $add['permalink'], 'query' => 'category_id='.$query));
+				}
+			}
+		}
+		
+		return $query;
 	}
 
 	public function addMenuOption($add = array()) {
@@ -597,6 +628,9 @@ class Menus_model extends CI_Model {
 		if (is_numeric($category_id)) {
 			$this->db->where('category_id', $category_id);
 			$this->db->delete('categories');
+
+			$this->db->where('query', 'category_id='.$category_id);
+			$this->db->delete('permalinks');
 
 			if ($this->db->affected_rows() > 0) {
 				return TRUE;

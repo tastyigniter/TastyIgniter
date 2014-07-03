@@ -1,210 +1,253 @@
-<div id="box-content">
-	<div id="notification">
-		<?php if (validation_errors()) { ?>
-			<?php echo validation_errors('<span class="error">', '</span>'); ?>
-		<?php } ?>
-		<?php if (!empty($alert)) { ?>
-			<?php echo $alert; ?>
-		<?php } ?>
-	</div>
+<?php echo $header; ?>
+<div class="row content">
+	<div class="col-md-12">
+		<div id="notification">
+			<div class="alert alert-dismissable">
+				<?php if (!empty($alert)) { ?>
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+					<?php echo $alert; ?>
+				<?php } ?>
+				<?php if (validation_errors()) { ?>
+					<p class="alert-danger">Sorry but validation has failed, please check for errors.</p>
+				<?php } ?>
+			</div>
+		</div>
 
-	<div class="box">
-	<div id="update-box" class="content">
-	<form accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
-		<div class="wrap_heading">
-			<ul id="tabs">
-				<li><a rel="#general">Reservation</a></li>
-				<li><a rel="#status">Status & Assign</a></li>
-				<li><a rel="#table">Table</a></li>
-				<li><a rel="#restaurant">Restaurant</a></li>
-				<li><a rel="#customer">Customer</a></li>
+		<div class="row wrap-vertical">
+			<ul id="nav-tabs" class="nav nav-tabs">
+				<li class="active"><a href="#general" data-toggle="tab">Reservation</a></li>
+				<li><a href="#status" data-toggle="tab">Status & Assign</a></li>
+				<li><a href="#table" data-toggle="tab">Table</a></li>
+				<li><a href="#restaurant" data-toggle="tab">Restaurant</a></li>
+				<li><a href="#customer" data-toggle="tab">Customer</a></li>
 			</ul>
 		</div>
 
-		<div id="general" class="wrap_content" style="display:block;">
-			<table class="form">
-				<tbody>
-					<tr>
-						<td><b>Reservation ID:</b></td>
-						<td>#<?php echo $reservation_id; ?></td>
-					</tr>
-					<tr>
-						<td><b>Guest Number:</b></td>
-						<td><?php echo $guest_num; ?></td>
-					</tr>    	
-					<tr>
-						<td><b>Reservation Date:</b></td>
-						<td><?php echo $reserve_date; ?></td>
-					</tr>    	
-					<tr>
-						<td><b>Reservation Time:</b></td>
-						<td><?php echo $reserve_time; ?></td>
-					</tr>    	
-					<tr>
-						<td><b>Occasion:</b></td>
-						<td><?php echo $occasions[$occasion]; ?></td>
-					</tr>    	
-					<tr>
-						<td><b>Date Added:</b></td>
-						<td><?php echo $date_added; ?></td>
-					</tr>    	
-					<tr>
-						<td><b>Date Modified:</b></td>
-						<td><?php echo $date_modified; ?></td>
-					</tr>    	
-					<tr>
-						<td><b>Notify Customer:</b></td>
-						<td>
-						<?php if ($notify === '1') { ?>
-							Reservation Confirmation Email SENT
-						<?php } else { ?>
-							Reservation Confirmation Email not SENT
-						<?php } ?>
-					</tr>
-					<tr>
-						<td><b>Customer IP:</b></td>
-						<td><?php echo $ip_address; ?></td>
-					</tr>    	
-					<tr>
-						<td><b>Customer User Agent:</b></td>
-						<td><?php echo $user_agent; ?></td>
-					</tr>    	
-				</tbody>
-			</table>
-		</div>
+		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
+			<div class="tab-content">
+				<div id="general" class="tab-pane row wrap-all active">
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label">Reservation ID:</label>
+						<div class="col-sm-5">
+							#<?php echo $reservation_id; ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label">Guest Number:</label>
+						<div class="col-sm-5">
+							<?php echo $guest_num; ?>
+						</div>
+					</div>    	
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label">Reservation Date:</label>
+						<div class="col-sm-5">
+							<?php echo $reserve_date; ?>
+						</div>
+					</div>    	
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label">Reservation Time:</label>
+						<div class="col-sm-5">
+							<?php echo $reserve_time; ?>
+						</div>
+					</div>    	
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label">Occasion:</label>
+						<div class="col-sm-5">
+							<?php echo $occasions[$occasion]; ?>
+						</div>
+					</div>    	
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label">Date Added:</label>
+						<div class="col-sm-5">
+							<?php echo $date_added; ?>
+						</div>
+					</div>    	
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label">Date Modified:</label>
+						<div class="col-sm-5">
+							<?php echo $date_modified; ?>
+						</div>
+					</div>    	
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label">Notify Customer:</label>
+						<div class="col-sm-5">
+							<?php if ($notify === '1') { ?>
+								Reservation Confirmation Email SENT
+							<?php } else { ?>
+								Reservation Confirmation Email not SENT
+							<?php } ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label">Customer IP:</label>
+						<div class="col-sm-5">
+							<?php echo $ip_address; ?>
+						</div>
+					</div>    	
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label">Customer User Agent:</label>
+						<div class="col-sm-5">
+							<?php echo $user_agent; ?>
+						</div>
+					</div>    	
+				</div>
 
-		<div id="status" class="wrap_content" style="display:none;">
-			<table class="form">
-				<tbody>
-					<tr>
-						<td><b>Reservation Status:</b></td>
-						<td><select name="status" onChange="getStatusComment();">
-						<?php foreach ($statuses as $status) { ?>
-						<?php if ($status['status_id'] === $status_id) { ?>
-							<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('status', $status['status_id'], TRUE); ?> ><?php echo $status['status_name']; ?></option>
-						<?php } else { ?>
-							<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('status', $status['status_id']); ?> ><?php echo $status['status_name']; ?></option>
-						<?php } ?>
-						<?php } ?>
-						</select></td>
-					</tr>    	
-					<tr>
-						<td><b>Assigned Staff:</b></td>
-						<td><select name="assigned_staff">
-						<option value=""> - please select - </option>
-						<?php foreach ($staffs as $staff) { ?>
-						<?php if ($staff['staff_id'] === $staff_id) { ?>
-							<option value="<?php echo $staff['staff_id']; ?>" <?php echo set_select('assigned_staff', $staff['staff_id'], TRUE); ?> ><?php echo $staff['staff_name']; ?></option>
-						<?php } else { ?>
-							<option value="<?php echo $staff['staff_id']; ?>" <?php echo set_select('assigned_staff', $staff['staff_id']); ?> ><?php echo $staff['staff_name']; ?></option>
-						<?php } ?>
-						<?php } ?>
-						</select></td>
-					</tr>    	
-					<tr>
-						<td><b>Status Comment:</b></td>
-						<td><textarea name="status_comment" rows="5" cols="45"><?php echo set_value('status_comment'); ?></textarea></td>
-					</tr>
-					<tr>
-						<td><b>Notify Customer:</b></td>
-						<td><input type="checkbox" name="notify" value="1" /></td>
-					</tr>
-				</tbody>
-			</table>
-			<br /><br />
+				<div id="status" class="tab-pane row wrap-all">
+					<div class="form-group">
+						<label for="input-status" class="col-sm-2 control-label">Reservation Status:</label>
+						<div class="col-sm-5">
+							<select name="status" class="form-control" onChange="getStatusComment();">
+							<?php foreach ($statuses as $status) { ?>
+								<?php if ($status['status_id'] === $status_id) { ?>
+									<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('status', $status['status_id'], TRUE); ?> ><?php echo $status['status_name']; ?></option>
+								<?php } else { ?>
+									<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('status', $status['status_id']); ?> ><?php echo $status['status_name']; ?></option>
+								<?php } ?>
+							<?php } ?>
+							</select>
+							<?php echo form_error('status', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>    	
+					<div class="form-group">
+						<label for="input-assigned-staff" class="col-sm-2 control-label">Assigned Staff:</label>
+						<div class="col-sm-5">
+							<select name="assigned_staff" class="form-control">
+								<option value=""> - please select - </option>
+								<?php foreach ($staffs as $staff) { ?>
+									<?php if ($staff['staff_id'] === $staff_id) { ?>
+										<option value="<?php echo $staff['staff_id']; ?>" <?php echo set_select('assigned_staff', $staff['staff_id'], TRUE); ?> ><?php echo $staff['staff_name']; ?></option>
+									<?php } else { ?>
+										<option value="<?php echo $staff['staff_id']; ?>" <?php echo set_select('assigned_staff', $staff['staff_id']); ?> ><?php echo $staff['staff_name']; ?></option>
+									<?php } ?>
+								<?php } ?>
+							</select>
+							<?php echo form_error('assigned_staff', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>    	
+					<div class="form-group">
+						<label for="input-comment" class="col-sm-2 control-label">Status Comment:</label>
+						<div class="col-sm-5">
+							<textarea name="status_comment" rows="5" class="form-control"><?php echo set_value('status_comment'); ?></textarea>
+							<?php echo form_error('status_comment', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-notify" class="col-sm-2 control-label">Notify Customer:</label>
+						<div class="col-sm-5">
+							<input type="checkbox" name="notify" value="1" />
+							<?php echo form_error('notify', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<br />
 			
-			<h2>History</h2>
-			<table height="auto" class="list" id="history">
-				<thead>
-					<tr>
-						<th>Date/Time</th>
-						<th>Status</th>
-						<th>Staff</th>
-						<th>Staff Assigned To</th>
-						<th class="center">Customer Notified</th>
-						<th class="left" width="45%">Comment</th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php if ($status_history) { ?>
-					<?php foreach ($status_history as $history) { ?>
-					<tr>
-						<td><?php echo $history['date_time']; ?></td>
-						<td><?php echo $history['status_name']; ?></td>
-						<td><?php echo $history['staff_name']; ?></td>
-						<td>
-						<?php foreach ($staffs as $staff) { ?>
-						<?php if ($staff['staff_id'] === $history['assigned_id']) { ?>
-							<?php echo $staff['staff_name']; ?>
-						<?php } ?>
-						<?php } ?>
-						</td>
-						<td class="center"><?php echo ($history['notify'] === '1') ? 'Yes' : 'No'; ?></td>
-						<td class="left"><?php echo $history['comment']; ?></td>
-					</tr>
-					<?php } ?>
-					<?php } else { ?>
-					<tr>
-						<td colspan="6" align="center"><?php echo $text_empty; ?></td>
-					</tr>
-					<?php } ?>
-				</tbody>
-			</table>
-		</div>
+					<h3>History</h3>
+					<table height="auto" class="table table-striped table-border" id="history">
+						<thead>
+							<tr>
+								<th>Date/Time</th>
+								<th>Status</th>
+								<th>Staff</th>
+								<th>Staff Assigned To</th>
+								<th class="text-center">Customer Notified</th>
+								<th class="left" width="45%">Comment</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php if ($status_history) { ?>
+							<?php foreach ($status_history as $history) { ?>
+							<tr>
+								<td><?php echo $history['date_time']; ?></td>
+								<td><?php echo $history['status_name']; ?></td>
+								<td><?php echo $history['staff_name']; ?></td>
+								<td>
+								<?php foreach ($staffs as $staff) { ?>
+								<?php if ($staff['staff_id'] === $history['assigned_id']) { ?>
+									<?php echo $staff['staff_name']; ?>
+								<?php } ?>
+								<?php } ?>
+								</td>
+								<td class="text-center"><?php echo ($history['notify'] === '1') ? 'Yes' : 'No'; ?></td>
+								<td class="left"><?php echo $history['comment']; ?></td>
+							</tr>
+							<?php } ?>
+							<?php } else { ?>
+							<tr>
+								<td colspan="6"><?php echo $text_empty; ?></td>
+							</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				</div>
 
-		<div id="table" class="wrap_content" style="display:none;">
-			<table class="form">
-				<tr>
-					<td><b>Table Name:</b></td>
-					<td><?php echo $table_name; ?></td>
-				</tr>
-				<tr>
-					<td><b>Table Minimum:</b></td>
-					<td><?php echo $min_capacity; ?></td>
-				</tr>
-				<tr>
-					<td><b>Table Capacity:</b></td>
-					<td><?php echo $max_capacity; ?></td>
-				</tr>
-			</table>
-		</div>
+				<div id="table" class="tab-pane row wrap-all">
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label">Table Name:</label>
+						<div class="col-sm-5">
+							<?php echo $table_name; ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label">Table Minimum:</label>
+						<div class="col-sm-5">
+							<?php echo $min_capacity; ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label">Table Capacity:</label>
+						<div class="col-sm-5">
+							<?php echo $max_capacity; ?>
+						</div>
+					</div>
+				</div>
 	
-		<div id="restaurant" class="wrap_content" style="display:none;">
-			<table class="form">
-				<tr>
-					<td><b>Restaurant Name:</b></td>
-					<td><?php echo $location_name; ?></td>
-				</tr>
-				<tr>
-					<td><b>Restaurant Address:</b></td>
-					<td><address><?php echo $location_address_1; ?>, <?php echo $location_city; ?>, <?php echo $location_postcode; ?>, <?php echo $location_country; ?></address></td>
-				</tr>
-			</table>
-		</div>
+				<div id="restaurant" class="tab-pane row wrap-all">
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label">Restaurant Name:</label>
+						<div class="col-sm-5">
+							<?php echo $location_name; ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label">Restaurant Address:</label>
+						<div class="col-sm-5">
+							<address>
+								<?php echo $location_address_1; ?>, 
+								<?php echo $location_city; ?>, 
+								<?php echo $location_postcode; ?>, 
+								<?php echo $location_country; ?>
+							</address>
+						</div>
+					</div>
+				</div>
 	
-		<div id="customer" class="wrap_content" style="display:none;">
-			<table class="form">
-				<tr>
-					<td><b>Customer Name:</b></td>
-					<td><?php echo $first_name; ?> <?php echo $last_name; ?></td>
-				</tr>
-				<tr>
-					<td><b>Customer Email:</b></td>
-					<td><?php echo $email; ?></td>
-				</tr>
-				<tr>
-					<td><b>Customer Telephone:</b></td>
-					<td><?php echo $telephone; ?></td>
-				</tr>
-				<tr>
-					<td><b>Comment:</b></td>
-					<td><?php echo $comment; ?></td>
-				</tr>
-			</table>
-		</div>
-
-	</form>
-	</div>
+				<div id="customer" class="tab-pane row wrap-all">
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label">Customer Name:</label>
+						<div class="col-sm-5">
+							<?php echo $first_name; ?> <?php echo $last_name; ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label">Customer Email:</label>
+						<div class="col-sm-5">
+							<?php echo $email; ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label">Customer Telephone:</label>
+						<div class="col-sm-5">
+							<?php echo $telephone; ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label">Comment:</label>
+						<div class="col-sm-5">
+							<?php echo $comment; ?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
 	</div>
 </div>
 <script type="text/javascript">
@@ -219,8 +262,6 @@ $(document).ready(function() {
 		}
 	});	
 });	
-
-$('#tabs a').tabs();
 </script>
 <script type="text/javascript"><!--
 function getStatusComment() {
@@ -237,3 +278,4 @@ function getStatusComment() {
 
 $('select[name="status"]').trigger('change');
 //--></script>
+<?php echo $footer; ?>

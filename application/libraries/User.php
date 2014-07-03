@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class User {
 	private $user_id;
@@ -11,6 +11,7 @@ class User {
 	private $location_id;
 	private $location_name;
 	private $location_access;
+	private $unread;
 	
 	public function __construct() {
 		$this->CI =& get_instance();
@@ -152,6 +153,14 @@ class User {
 	  		return FALSE;
 		}
   	}
+
+  	public function unreadMessageTotal() {
+    	if (empty($this->unread)) {
+			$this->CI->load->model('Messages_model');
+    		$this->unread = $this->CI->Messages_model->getAdminMessageUnread($this->CI->staff_id);
+		}
+    	return $this->unread;
+  	}	
 }
 
 // END User Class

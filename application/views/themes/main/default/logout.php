@@ -1,6 +1,5 @@
-<div class="content">
-<div class="img_inner">
-	<p align="center">&nbsp;
-	<?php echo $text_logout_msg; ?></p>
+<?php echo $header; ?>
+<div class="row content img_inner">
+	<p class="text-center"><?php echo $text_logout_msg; ?></p>
 </div>
-</div>
+<?php echo $footer; ?>

@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 /*
 |--------------------------------------------------------------------------
@@ -321,16 +321,21 @@ $config['proxy_ips'] = '';
 | directory.
 |
 */
-$config['modules_locations'] = array(APPPATH.'extensions/' => '../extensions/');
+$config['modules_locations'] = array(
+	EXTPATH => '../extensions/',
+	EXTPATH.'modules/' => '../extensions/modules/',
+	EXTPATH.'payments/' => '../extensions/payments/'
+);
 
 /*
 |--------------------------------------------------------------------------
 | DO NOT REMOVE
 |--------------------------------------------------------------------------
-|
+| 
+| This indicates a fresh installation or upgrade. (BETA)
 |
 */
-$config['ti_setup'] = 'success';
+$config['ti_setup'] = '';
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */

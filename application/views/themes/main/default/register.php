@@ -1,66 +1,83 @@
-<div class="content">
-<!--<h2><?php echo $text_login_register; ?></h2>
-    <h3><?php echo $text_register; ?></h3>	-->
-<div class="wrap register-box">
-<div class="img_inner">
-	<form method="post" accept-charset="utf-8" action="<?php echo current_url(); ?>">
-	<table cellpadding="2" border="0" width="400px" align="">
-    	<tr>
-        	<td colspan="2" align="center"><font size="1" color="red"><?php echo $text_required; ?></font></td>
-        </tr>
-  		<tr>
-    		<td align="right"><label for="first_name"><?php echo $entry_first_name; ?></label></td>
-    		<td align="left"><input type="text" value="<?php echo set_value('first_name'); ?>" class="textfield" name="first_name"><br />
-    			<?php echo form_error('first_name', '<span class="error">', '</span>'); ?></td>
-		</tr>
-	  	<tr>
-    		<td align="right"><label for="last_name"><?php echo $entry_last_name; ?></label></td>
-    		<td align="left"><input type="text" value="<?php echo set_value('last_name'); ?>" class="textfield" name="last_name"><br />
-    			<?php echo form_error('last_name', '<span class="error">', '</span>'); ?></td>
-	 	</tr>
-  		<tr>
-    		<td align="right"><label for="email"><?php echo $entry_email; ?></label></td>
-    		<td align="left"><input type="text" value="<?php echo set_value('email'); ?>" class="textfield" name="email"><br />
-    			<?php echo form_error('email', '<span class="error">', '</span>'); ?></td>
-  		</tr>
-  		<tr>
-    		<td align="right"><label for="password"><?php echo $entry_password; ?></label></td>
-    		<td align="left"><input type="password" value="" class="textfield" name="password"><br />
-    			<?php echo form_error('password', '<span class="error">', '</span>'); ?></td>
-  		</tr>
-  		<tr>
-    		<td align="right"><label for="password_confirm"><?php echo $entry_password_confirm; ?></label></td>
-    		<td align="left"><input type="password" class="textfield" name="password_confirm" value=""><br />
-    			<?php echo form_error('password_confirm', '<span class="error">', '</span>'); ?></td>
-  		</tr>
-  		<tr>
-    		<td align="right"><label for="telephone"><?php echo $entry_telephone; ?></label></td>
-    		<td align="left"><input type="text" value="<?php echo set_value('telephone'); ?>" class="textfield" name="telephone"><br />
-    			<?php echo form_error('telephone', '<span class="error">', '</span>'); ?></td>
-	 	</tr>
-  		<tr>
-    		<td align="right"><label for="security_question"><?php echo $entry_s_question; ?></label></td>
-    		<td align="left"><select name="security_question">
-    		<?php foreach ($questions as $question) { ?>
-    			<option value="<?php echo $question['id']; ?>"><?php echo $question['text']; ?></option>
-    		<?php } ?>
-    		</select><br />
-    		<?php echo form_error('security_question', '<span class="error">', '</span>'); ?></td>
-	 	</tr>
-  		<tr>
-    		<td align="right"><label for="security_answer"><?php echo $entry_s_answer; ?></label></td>
-    		<td align="left"><input type="text" class="textfield" name="security_answer"><br />
-    			<?php echo form_error('security_answer', '<span class="error">', '</span>'); ?></td>
-	 	</tr>
-  		<tr>
-    		<td colspan="2" align="left"><br /><input type="checkbox" id="newsletter" name="newsletter" value="1"><label for="newsletter"><?php echo $entry_newsletter; ?></label><br />
-    			<?php echo form_error('newsletter', '<span class="error">', '</span>'); ?><br /></td>
-	 	</tr>
-        <tr>
-        	<td colspan="2" align="center"><input type="submit" name="submit" value="<?php echo $button_register; ?>" /></td>
-        </tr>
-	</table>
-	</form>
+<?php echo $header; ?>
+<div class="row page-heading"><h3><?php echo $text_register; ?></h3></div>
+
+<div id="notification" class="row">
+<?php if (!empty($alert)) { ?>
+	<div class="alert alert-dismissable">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<?php echo $alert; ?>
+	</div>
+<?php } ?>
 </div>
+<div class="row content">
+	<div class="wrap-all">
+		<p class="text-info well"><?php echo $text_login_register; ?></p>
+		<div class="register-box wrap-vertical">
+			<form method="post" accept-charset="utf-8" action="<?php echo current_url(); ?>" role="form" class="">
+				<div class="form-group">
+					<label for="first-name"><?php echo $entry_first_name; ?></label></td>
+					<input type="text" id="first-name" class="form-control" value="<?php echo set_value('first_name'); ?>" name="first_name">
+					<?php echo form_error('first_name', '<span class="error help-block">', '</span>'); ?>
+				</div>
+				<div class="form-group">
+					<label for="last-name"><?php echo $entry_last_name; ?></label>
+					<input type="text" id="last-name" class="form-control" value="<?php echo set_value('last_name'); ?>" name="last_name">
+					<?php echo form_error('last_name', '<span class="error help-block">', '</span>'); ?>
+				</div>
+				<div class="form-group">
+					<label for="email"><?php echo $entry_email; ?></label>
+					<input type="text" id="email" class="form-control" value="<?php echo set_value('email'); ?>" name="email">
+					<?php echo form_error('email', '<span class="error help-block">', '</span>'); ?>
+				</div>
+				<div class="form-group">
+					<label for="password"><?php echo $entry_password; ?></label>
+					<input type="password" id="password" class="form-control" value="" name="password">
+					<?php echo form_error('password', '<span class="error help-block">', '</span>'); ?>
+				</div>
+				<div class="form-group">
+					<label for="password-confirm"><?php echo $entry_password_confirm; ?></label>
+					<input type="password" id="password-confirm" class="form-control" name="password_confirm" value="">
+					<?php echo form_error('password_confirm', '<span class="error help-block">', '</span>'); ?>
+				</div>
+				<div class="form-group">
+					<label for="telephone"><?php echo $entry_telephone; ?></label>
+					<input type="text" id="telephone" class="form-control" value="<?php echo set_value('telephone'); ?>" name="telephone">
+					<?php echo form_error('telephone', '<span class="error help-block">', '</span>'); ?>
+				</div>
+				<div class="form-group">
+					<label for="security-question"><?php echo $entry_s_question; ?></label>
+					<select name="security_question" id="security-question" class="form-control">
+					<?php foreach ($questions as $question) { ?>
+						<option value="<?php echo $question['id']; ?>"><?php echo $question['text']; ?></option>
+					<?php } ?>
+					</select>
+					<?php echo form_error('security_question', '<span class="error help-block">', '</span>'); ?>
+				</div>
+				<div class="form-group">
+					<label for="security-answer"><?php echo $entry_s_answer; ?></label>
+					<input type="text" id="security-answer" class="form-control" name="security_answer">
+					<?php echo form_error('security_answer', '<span class="error help-block">', '</span>'); ?>
+				</div>
+				<div class="checkbox">
+					<label><?php echo $entry_newsletter; ?>
+						<input type="checkbox" name="newsletter" value="1">
+					</label>
+					<?php echo form_error('newsletter', '<span class="error help-block">', '</span>'); ?>
+				</div>
+			
+				<div class="form-group">
+					<?php echo $recaptcha; ?>
+				</div>
+
+				<div class="form-group">
+					<p class="text-danger small"><?php echo $text_required; ?></p>
+				</div>
+		
+				<div class="buttons">
+					<button type="submit" class="btn btn-success"><?php echo $button_register; ?></button>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
-</div>
+<?php echo $footer; ?>

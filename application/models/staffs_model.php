@@ -1,7 +1,8 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Staffs_model extends CI_Model {
 
-    public function record_count($filter = array()) {
+    public function getAdminListCount($filter = array()) {
 		if (!empty($filter['filter_search'])) {
 			$this->db->like('staff_name', $filter['filter_search']);
 			$this->db->or_like('location_name', $filter['filter_search']);
@@ -189,6 +190,18 @@ class Staffs_model extends CI_Model {
 			$this->db->set('staff_location_id', $update['staff_location_id']);
 		}
 
+		if (!empty($update['timezone'])) {
+			$this->db->set('timezone', $update['timezone']);
+		} else {
+			$this->db->set('timezone', '0');
+		}
+
+		if (!empty($update['language_id'])) {
+			$this->db->set('language_id', $update['language_id']);
+		} else {
+			$this->db->set('language_id', '0');
+		}
+
 		if ($update['staff_status'] === '1') {
 			$this->db->set('staff_status', $update['staff_status']);
 		} else {
@@ -197,24 +210,16 @@ class Staffs_model extends CI_Model {
 
 		if (!empty($update['staff_id'])) {
 			$this->db->where('staff_id', $update['staff_id']);
-			
-			if ($query = $this->db->update('staffs')) {
-				if (!empty($update['password'])) {
-					$this->db->set('salt', $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9));
-					$this->db->set('password', sha1($salt . sha1($salt . sha1($update['password']))));
-				}
-
-				if (!empty($update['username'])) {
-					$this->db->set('username', strtolower($update['username']));
-				}
-		
-				if (!empty($update['staff_id'])) {
-					$this->db->where('staff_id', $update['staff_id']);
-					$this->db->update('users'); 
-				}
-			}
+			$query = $this->db->update('staffs');
 		}
-			
+		
+		if (!empty($update['staff_id']) AND !empty($update['password'])) {
+			$this->db->set('salt', $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9));
+			$this->db->set('password', sha1($salt . sha1($salt . sha1($update['password']))));
+
+			$this->db->where('staff_id', $update['staff_id']);
+			$query = $this->db->update('users'); 
+		}
 			
 		return $query;
 	}	
@@ -238,6 +243,18 @@ class Staffs_model extends CI_Model {
 			$this->db->set('staff_location_id', $add['staff_location_id']);
 		}
 
+		if (!empty($add['timezone'])) {
+			$this->db->set('timezone', $add['timezone']);
+		} else {
+			$this->db->set('timezone', '0');
+		}
+
+		if (!empty($add['language_id'])) {
+			$this->db->set('language_id', $add['language_id']);
+		} else {
+			$this->db->set('language_id', '0');
+		}
+
 		if ($add['staff_status'] === '1') {
 			$this->db->set('staff_status', $add['staff_status']);
 		} else {
@@ -251,7 +268,7 @@ class Staffs_model extends CI_Model {
 				$staff_id = $this->db->insert_id();
 
 				if (!empty($add['username'])) {
-					$this->db->set('username', $add['username']);
+					$this->db->set('username', strtolower($add['username']));
 					$this->db->set('staff_id', $staff_id);
 				}
 

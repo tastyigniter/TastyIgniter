@@ -1,4 +1,5 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Themes extends CI_Controller {
 
 	public function __construct() {
@@ -6,16 +7,16 @@ class Themes extends CI_Controller {
 		$this->load->library('user');
 		$this->load->model('Extensions_model');
 		$this->load->model('Settings_model');
+		$this->load->model('Image_tool_model');
 	}
 
 	public function index() {
-			
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/themes')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/themes')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -26,22 +27,23 @@ class Themes extends CI_Controller {
 
 		if ($this->input->get('name') AND $this->input->get('location') AND $this->input->get('default')) {
 			if (!file_exists(APPPATH .'views/themes/'.$this->input->get('location').'/'. $this->input->get('name'))) {
-				$this->session->set_flashdata('alert', '<p class="warning">Theme location can not be found!</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-warning">Theme location can not be found!</p>');
 			}
 			
 			$theme_name = $this->input->get('name');
 			$theme_location = $this->input->get('location');
 		
 			if ($this->Settings_model->addSetting('themes', $theme_location.'_theme', $theme_name.'/', '0')) {
-				$this->session->set_flashdata('alert', '<p class="success">Theme set as default sucessfully!</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-success">Theme set as default sucessfully!</p>');
 			}
 			
-			redirect('admin/themes');
+			redirect(ADMIN_URI.'/themes');
 		}
 
 		$this->template->setTitle('Themes');
 		$this->template->setHeading('Themes');
-		
+		$this->template->setButton('Options', array('class' => 'btn btn-default pull-right', 'href' => site_url(ADMIN_URI.'/settings#themes')));
+
 		$data['text_empty'] 		= 'There are no themes available.';
 
 		$admin_default = $this->config->item('admin_theme');
@@ -53,7 +55,7 @@ class Themes extends CI_Controller {
 			$themes[] = array('location' => 'main', 'name' => $theme);
 		}
 		
-		$admin_themes = glob(APPPATH .'views/themes/admin/*', GLOB_ONLYDIR);
+		$admin_themes = glob(APPPATH .'views/themes/'.ADMIN_URI.'/*', GLOB_ONLYDIR);
 		foreach ($admin_themes as $theme) {
 			$themes[] = array('location' => 'admin', 'name' => $theme);
 		}
@@ -62,37 +64,39 @@ class Themes extends CI_Controller {
 		foreach ($themes as $theme) {
 			$theme_name = basename($theme['name']).'/';
 			
-			if ($theme_name === $admin_default AND $theme['location'] === 'admin') {
+			if ($theme_name === $admin_default AND $theme['location'] === ADMIN_URI) {
 				$default = '1';
 			} else if ($theme_name === $main_default AND $theme['location'] === 'main') {
 				$default = '1';
 			} else {
-				$default = site_url('admin/themes?default=1&name='. basename($theme['name']) .'&location='. $theme['location']);
+				$default = site_url(ADMIN_URI.'/themes?default=1&name='. basename($theme['name']) .'&location='. $theme['location']);
 			}
-			
+
 			$data['themes'][] = array(
 				'name' 			=> ucwords(basename($theme['name'])),
-				'location' 		=> ($theme['location'] === 'main') ? 'Front-End' : 'Administrator Panel',
+				'location' 		=> ($theme['location'] === 'main') ? 'Main' : 'Administrator Panel',
 				'default'		=> $default,
-				'edit' 			=> site_url('admin/themes/edit?name='. basename($theme['name']) .'&location='. $theme['location'])
+				'thumbnail'		=> base_url(APPPATH .'views/themes/'.$theme['location'].'/'.basename($theme['name']).'/images/theme_thumb.png'),
+				'preview'		=> base_url(APPPATH .'views/themes/'.$theme['location'].'/'.basename($theme['name']).'/images/theme_preview.png'),
+				'edit' 			=> site_url(ADMIN_URI.'/themes/edit?name='. basename($theme['name']) .'&location='. $theme['location'])
 			);		
 		}
 
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'themes.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'themes', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'themes.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'themes', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'themes', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'themes', $data);
 		}
 	}
 
 	public function edit() {
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/themes')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/themes')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -101,79 +105,102 @@ class Themes extends CI_Controller {
 			$data['alert'] = '';
 		}		
 		
-		$url = '?';
-		if ($this->input->get('name') AND $this->input->get('location')) {
-			if (!file_exists(APPPATH .'views/themes/'.$this->input->get('location').'/'. $this->input->get('name'))) {
-				redirect('admin/themes');
-			}
-			
-			$theme_name = $this->input->get('name');
-			$theme_location = $this->input->get('location');
-			$url .= 'name='. $theme_name .'&location='. $theme_location;
-		} else {
-			redirect('admin/themes');
-		}
-		
-		$this->template->setTitle('Theme: '. ucwords($theme_name));
-		$this->template->setHeading('Theme: '. ucwords($theme_name));
-		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
-		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
-		$this->template->setBackButton('back_button', site_url('admin/themes'));
-
-		$data['name'] 				= ucwords($theme_name);
-		
-		$data['theme_files'] = array();
-		if (file_exists(APPPATH .'views/themes/'. $theme_location .'/'. $theme_name .'/')) {
-			$theme_path = $theme_folder = APPPATH .'views/themes/'. $theme_location .'/'. $theme_name .'/';
-			$tree_link = site_url('admin/themes/edit?name='). $theme_name .'&location='. $theme_location .'&file={link}';
-			$data['theme_files'] = $this->themeTree($theme_path, $tree_link);
-		}
-		
 		$allowed_img = ($this->config->item('themes_allowed_img')) ? explode('|', $this->config->item('themes_allowed_img')) : array();
 		$allowed_file = ($this->config->item('themes_allowed_file')) ? explode('|', $this->config->item('themes_allowed_file')) : array();
 
-		$data['text_file_heading'] = $data['file_content'] = '';
+		$theme_name = $this->input->get('name');
+		$theme_location = $this->input->get('location');
+		$theme_folder = APPPATH .'views/themes/'. $theme_location .'/'. $theme_name .'/';
+
+		$url = '?';
+		if (file_exists($theme_folder)) {
+			$url .= 'name='. $theme_name .'&location='. $theme_location;
+			$tree_link = site_url(ADMIN_URI.'/themes/edit'. $url .'&file={link}');
+			$theme_file_tree = $this->themeTree($theme_folder, $tree_link);
+		} else {
+			redirect(ADMIN_URI.'/themes');
+		}
+		
+		if (!is_writeable($theme_folder)) {
+			$data['alert'] = '<p class="alert-warning">Warning: The theme directory is not writable. Directory must be writable to allow editing!</p>';
+		}
+		
+		if (file_exists($theme_folder . '/theme.xml')) {
+			$xml = simplexml_load_file($theme_folder . '/theme.xml');
+		}
+
+		$this->template->setTitle('Theme: '. ucwords($theme_name));
+		$this->template->setHeading('Theme: '. ucwords($theme_name));
+		$this->template->setButton('Save', array('class' => 'btn btn-success', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$this->template->setButton('Options', array('class' => 'btn btn-default pull-right', 'href' => site_url(ADMIN_URI.'/settings#themes')));
+		$this->template->setBackButton('btn-back', site_url(ADMIN_URI.'/themes'));
+
+		$data['name'] 				= ucwords($theme_name);
+		$data['theme_files'] 		= $theme_file_tree;
+		$data['text_file_heading'] 	= $data['file_content'] = '';
+
+
 		if ($this->input->get('file')) {
 			$url .= '&file='. $this->input->get('file');
-			$file_path = APPPATH .'views/themes/'. $theme_location .'/'. $theme_name. $this->input->get('file');
-			if (is_file($file_path) AND file_exists($file_path)) {
-				$file_name = basename($file_path);
-				$file_ext = substr(strrchr($file_path, '.'), 1);
-				$file_ext = strtolower($file_ext);
-				if (in_array($file_ext, $allowed_img)) {
-					$data['text_file_heading'] 	= 'Viewing image "'. $this->input->get('file') .'" in theme "'.$theme_name.'".';
-					$data['file_content'] = '<img alt="'. $file_name .'" src="'. base_url($file_path) .'" />';
-				} else if (in_array($file_ext, $allowed_file)) {
-					$file_content = file_get_contents($file_path);
-					$data['text_file_heading'] 	= 'Editing file "'. $this->input->get('file') .'" in theme "'.$theme_name.'".';
-					$data['file_content'] = '<textarea name="editor" id="editor" rows="30" cols="">'. htmlspecialchars($file_content) .'</textarea>';
-				} else {
-					$data['file_content'] = '<p>File is not supported</p>';
+			$theme_file_path = rtrim($theme_folder) . $this->input->get('file');
+			
+			if (is_file($theme_file_path) AND file_exists($theme_file_path)) {
+				if (!is_writeable($theme_file_path)) {
+					$data['alert'] = '<p class="alert-warning">Warning: The theme file is not writable. File must be writable to allow editing!</p>';
 				}
+		
+				$file_name = basename($theme_file_path);
+				$file_ext = strtolower(substr(strrchr($theme_file_path, '.'), 1));
+				$type = $heading = $content = '';
+				
+				if (in_array($file_ext, $allowed_img)) {
+					$type = 'img';
+					$heading = 'Viewing image "'. $this->input->get('file') .'" in theme "'.$theme_name.'".';
+					$content = base_url($theme_file_path);
+				} else if (in_array($file_ext, $allowed_file)) {
+					$type = 'file';
+					$heading = 'Editing file "'. $this->input->get('file') .'" in "'.$theme_name.'" theme.';
+					$content = htmlspecialchars(file_get_contents($theme_file_path));
+				} else {
+					$heading = 'File is not supported';
+				}
+
+				$data['file'] = array(
+					'heading'	=> $heading,
+					'name'		=> $file_name,
+					'ext'		=> $file_ext,
+					'type'		=> $type,
+					'content'	=> $content
+				);
 			}
 		}
 		
-		if (isset($file_path) AND !is_writeable($file_path)) {
-			$data['alert'] = '<p class="warning">Warning: The theme file is not writable. File must be writable to allow editing!</p>';
-		} else if (!is_writeable(APPPATH .'views/themes/'. $theme_location .'/'. $theme_name .'/')) {
-			$data['alert'] = '<p class="warning">Warning: The theme directory is not writable. Directory must be writable to allow editing!</p>';
+		$data['action']	= site_url(ADMIN_URI.'/themes/edit'. $url);
+		$data['mode'] = '';
+		if (!empty($data['file']['ext'])) {
+			if ($data['file']['ext'] === 'php') {
+				$data['mode'] = 'htmlmixed';
+			} else if ($data['file']['ext'] === 'css') {
+				$data['mode'] = 'css';
+			} else {
+				$data['mode'] = 'javascript';
+			}
 		}
 		
-		$data['action']	= site_url('admin/themes/edit'. $url);
-
 		if ($this->input->post() AND $this->_updateThemeFile() === TRUE) {
 			if ($this->input->post('save_close') === '1') {
-				redirect('admin/themes/edit'.'?name='. $theme_name .'&location='. $theme_location);
+				redirect(ADMIN_URI.'/themes/edit'.'?name='. $theme_name .'&location='. $theme_location);
 			}
 			
-			redirect('admin/themes/edit'. $url);
+			redirect(ADMIN_URI.'/themes/edit'. $url);
 		}
 
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'themes_edit.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'themes_edit', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'themes_edit.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'themes_edit', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'themes_edit', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'themes_edit', $data);
 		}
 	}
 
@@ -189,10 +216,10 @@ class Themes extends CI_Controller {
 
 	
 	public function _updateThemeFile() {
-    	if ( ! $this->user->hasPermissions('modify', 'admin/themes')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
+    	if ( ! $this->user->hasPermissions('modify', ADMIN_URI.'/themes')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to update!</p>');
 			return TRUE;
-    	} else if ($this->input->post('editor') AND $this->input->get('name') AND $this->input->get('location') AND $this->input->get('file')) { 
+    	} else if ($this->input->post('editor_area') AND $this->input->get('name') AND $this->input->get('location') AND $this->input->get('file')) { 
 			$theme_name = $this->input->get('name');
 			$theme_location = $this->input->get('location');
 			$theme_file = $this->input->get('file');
@@ -202,16 +229,16 @@ class Themes extends CI_Controller {
 				$this->session->set_flashdata('alert', '<p class="error">The theme file is not writeable!</p>');				
 			} else {		
 				if ($fp = @fopen($file_path, FOPEN_READ_WRITE_CREATE_DESTRUCTIVE)) {
-					$editor = $this->input->post('editor');
+					$editor_area = $this->input->post('editor_area');
 					flock($fp, LOCK_EX);
-					fwrite($fp, $editor);
+					fwrite($fp, $editor_area);
 					flock($fp, LOCK_UN);
 					fclose($fp);
 
 					@chmod($filepath, FILE_WRITE_MODE);
 				}
 
-				$this->session->set_flashdata('alert', '<p class="success">Theme File ('.basename($theme_file).') Saved Sucessfully!</p>');				
+				$this->session->set_flashdata('alert', '<p class="alert-success">Theme File ('.basename($theme_file).') Saved Sucessfully!</p>');				
 			}
 		
 			return TRUE;
@@ -244,10 +271,10 @@ class Themes extends CI_Controller {
 		$theme_tree = '<ul>';
 		
 		foreach ($theme_files as $file) {
+			$active = (in_array($file, $current_path)) ? ' active' : '';
 			if (is_dir($directory .'/'. $file)) {
 				$parent_dir = $parent.'/'.$file;
-				$active = (in_array($file, $current_path)) ? ' active' : '';
-				$theme_tree .= '<li class="directory'. $active .'"><a>'. htmlspecialchars($file) .'</a>';
+				$theme_tree .= '<li class="directory'. $active .'"><a><i class="fa fa-folder-open"></i>&nbsp;&nbsp;'. htmlspecialchars($file) .'</a>';
 				$theme_tree .= $this->_themeTree($directory .'/'. $file, $return_link, $parent_dir);
 				$theme_tree .= '</li>';
 			} else {
@@ -255,10 +282,10 @@ class Themes extends CI_Controller {
 				$file_ext = strtolower($file_ext);
 				if (in_array($file_ext, $allowed_img)) {
 					$link = str_replace('{link}', $parent .'/'. urlencode($file), $return_link);
-					$theme_tree .= '<li class="img"><a href="'. $link .'">'. htmlspecialchars($file) .'</a></li>';
+					$theme_tree .= '<li class="img'. $active .'"><a href="'. $link .'"><i class="fa fa-file-image-o"></i>&nbsp;&nbsp;'. htmlspecialchars($file) .'</a></li>';
 				} else if (in_array($file_ext, $allowed_file)) {
 					$link = str_replace('{link}', $parent .'/'. urlencode($file), $return_link);
-					$theme_tree .= '<li class="file"><a href="'. $link .'">'. htmlspecialchars($file) .'</a></li>';
+					$theme_tree .= '<li class="file'. $active .'"><a href="'. $link .'"><i class="fa fa-file-code-o"></i>&nbsp;&nbsp;'. htmlspecialchars($file) .'</a></li>';
 				}
 			}
 		}

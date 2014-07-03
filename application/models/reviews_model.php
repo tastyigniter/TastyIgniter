@@ -1,7 +1,8 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Reviews_model extends CI_Model {
 
-    public function record_count($filter = array()) {
+    public function getAdminListCount($filter = array()) {
 		if (!empty($filter['filter_search'])) {
 			$this->db->like('author', $filter['filter_search']);
 			$this->db->or_like('location_name', $filter['filter_search']);
@@ -25,6 +26,23 @@ class Reviews_model extends CI_Model {
 		$this->db->from('reviews');
 		$this->db->join('locations', 'locations.location_id = reviews.location_id', 'left');
 		return $this->db->count_all_results();
+    }
+    
+    public function getMainListCount($filter = array()) {
+		if ((!empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) OR (!empty($filter['location_id']) AND is_numeric($filter['location_id']))) {
+			if (!empty($filter['customer_id'])) {
+				$this->db->where('customer_id', $filter['customer_id']);
+			}
+
+			if (!empty($filter['location_id'])) {
+				$this->db->where('reviews.location_id', $filter['location_id']);
+			}
+
+			$this->db->where('review_status', '1');
+
+			$this->db->from('reviews');
+			return $this->db->count_all_results();
+		}
     }
 	
 	public function getList($filter = array()) {
@@ -71,21 +89,54 @@ class Reviews_model extends CI_Model {
 		}
 	}
 
-	public function getMainReviews($customer_id) {
-		$this->db->from('reviews');
-		$this->db->join('locations', 'locations.location_id = reviews.location_id', 'left');
-
-		$this->db->where('review_status', '1');
-		$this->db->where('customer_id', $customer_id);
-
-		$query = $this->db->get();
+	public function getMainList($filter = array()) {
 		$result = array();
+		if ((!empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) OR (!empty($filter['location_id']) AND is_numeric($filter['location_id']))) {
+			if ($filter['page'] !== 0) {
+				$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
+			}
+			
+			if ($this->db->limit($filter['limit'], $filter['page'])) {
+				$this->db->from('reviews');
+				$this->db->join('locations', 'locations.location_id = reviews.location_id', 'left');
 
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
+				$this->db->where('review_status', '1');
+
+				if (!empty($filter['customer_id'])) {
+					$this->db->where('customer_id', $filter['customer_id']);
+				}
+
+				if (!empty($filter['location_id'])) {
+					$this->db->where('reviews.location_id', $filter['location_id']);
+				}
+
+				$query = $this->db->get();
+				if ($query->num_rows() > 0) {
+					$result = $query->result_array();
+				}
+			}
 		}
 
 		return $result;
+	}
+		
+	public function getMainReviews($customer_id = FALSE) {
+		if ($customer_id !== FALSE) {
+			$this->db->from('reviews');
+			$this->db->join('locations', 'locations.location_id = reviews.location_id', 'left');
+
+			$this->db->where('review_status', '1');
+			$this->db->where('customer_id', $customer_id);
+
+			$query = $this->db->get();
+			$result = array();
+
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+
+			return $result;
+		}
 	}
 		
 	public function getReview($review_id) {

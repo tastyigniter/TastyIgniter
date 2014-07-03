@@ -1,8 +1,8 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Orders_model extends CI_Model {
 
-    public function record_count($filter = array()) {
+    public function getAdminListCount($filter = array()) {
 		if (!empty($filter['filter_search'])) {
 			$this->db->like('order_id', $filter['filter_search']);
 			$this->db->or_like('location_name', $filter['filter_search']);
@@ -33,9 +33,17 @@ class Orders_model extends CI_Model {
 		return $this->db->count_all_results();
     }
     
-    public function customer_record_count($filter = array()) {
-		if (!empty($filter['customer_id'])) {
+    public function getMainListCount($filter = array()) {
+		if (!empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
+			$this->db->where('customer_id', $filter['customer_id']);
 
+			$this->db->from('orders');
+			return $this->db->count_all_results();
+		}
+    }
+    
+    public function getAdminCustomerListCount($filter = array()) {
+		if (!empty($filter['customer_id'])) {
 			$this->db->where('orders.customer_id', $filter['customer_id']);
 
 			$this->db->from('orders');
@@ -94,6 +102,32 @@ class Orders_model extends CI_Model {
 		}
 	}
 	
+	public function getMainList($filter = array()) {
+		if (!empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
+			if ($filter['page'] !== 0) {
+				$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
+			}
+			
+			if ($this->db->limit($filter['limit'], $filter['page'])) {
+				$this->db->from('orders');
+				$this->db->join('statuses', 'statuses.status_id = orders.status_id', 'left');
+				$this->db->join('locations', 'locations.location_id = orders.location_id', 'left');
+				$this->db->order_by('order_id', 'DESC');
+
+				$this->db->where('customer_id', $filter['customer_id']);
+
+				$query = $this->db->get();
+				$result = array();
+		
+				if ($query->num_rows() > 0) {
+					$result = $query->result_array();
+				}
+		
+				return $result;
+			}
+		}
+	}
+	
 	public function getAdminOrder($order_id = FALSE) {
 		if ($order_id !== FALSE) {
 			$this->db->from('orders');
@@ -129,11 +163,14 @@ class Orders_model extends CI_Model {
 	}
 	
 	public function getMainOrder($order_id, $customer_id) {
-		if (isset($order_id, $customer_id)) {
+		if (!empty($order_id)) {
 			$this->db->from('orders');
 			$this->db->where('order_id', $order_id);
-			$this->db->where('customer_id', $customer_id);
-			
+
+			if (!empty($customer_id)) {
+				$this->db->where('customer_id', $customer_id);
+			}
+				
 			$query = $this->db->get();
 		
 			if ($query->num_rows() > 0) {
@@ -162,7 +199,7 @@ class Orders_model extends CI_Model {
 	}
 
 	public function getCustomerOrders($filter = array()) {
-		if ($filter['customer_id'] === '') {
+		if (empty($filter['customer_id'])) {
 			return array();
 		}
 
@@ -321,7 +358,8 @@ class Orders_model extends CI_Model {
 			if ($this->db->insert('orders')) {
 				$order_id = $this->db->insert_id();
 			
-				$this->addDefaultAddress($order_info['customer_id'], $order_info['address_id']);
+				$this->load->model('Addresses_model');
+				$this->Addresses_model->updateCustomerDefaultAddress($order_info['customer_id'], $order_info['address_id']);
 				$this->addOrderMenus($order_id, $cart_contents);
 			
 				$order_totals = array(
@@ -348,8 +386,8 @@ class Orders_model extends CI_Model {
 			$paypal = $this->config->item('paypal_express_payment');
 			$cod = $this->config->item('cod_payment');
 			
-			if ($order_info['payment'] === 'paypal' AND is_numeric($paypal['paypal_order_status'])) {
-				$status_id = (int) $paypal['paypal_order_status'];
+			if ($order_info['payment'] === 'paypal' AND is_numeric($paypal['order_status'])) {
+				$status_id = (int) $paypal['order_status'];
 				$this->db->set('status_id', $status_id);
 			} else if ($order_info['payment'] === 'cod' AND is_numeric($cod['cod_order_status'])) {
 				$status_id = (int) $cod['cod_order_status'];
@@ -532,8 +570,8 @@ class Orders_model extends CI_Model {
 
 			$data['order_address'] = 'This is a collection order';
 			if (!empty($result['address_id'])) {
-				$this->load->model('Customers_model');
-				$order_address = $this->Customers_model->getCustomerAddress($result['customer_id'], $result['address_id']);
+				$this->load->model('Addresses_model');
+				$order_address = $this->Addresses_model->getCustomerAddress($result['customer_id'], $result['address_id']);
 				$data['order_address'] = $this->country->addressFormat($order_address);
 			}
 			

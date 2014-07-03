@@ -1,12 +1,10 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Account extends MX_Controller {
 
 	public function __construct() {
 		parent::__construct(); 																	//  calls the constructor
 		$this->load->library('customer'); 														// load the customer library
-		$this->load->model('Customers_model');													// load the customers model
-		$this->load->model('Security_questions_model');											// load the security questions model
 		$this->load->library('cart'); 															// load the cart library
 		$this->load->library('currency'); 														// load the currency library
 		$this->load->library('country');
@@ -16,6 +14,13 @@ class Account extends MX_Controller {
 	}
 
 	public function index() {
+		$this->load->model('Customers_model');													// load the customers model
+		$this->load->model('Addresses_model');													// load the addresses model
+		$this->load->model('Security_questions_model');											// load the security questions model
+		$this->load->model('Messages_model');													// load the messages model
+		$this->load->model('Orders_model');														// load the orders model
+		$this->load->model('Reservations_model');												// load the reservations model
+
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
@@ -23,17 +28,20 @@ class Account extends MX_Controller {
 		}
 
 		if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
-  			redirect('account/login');
+  			redirect('main/login');
 		}
-		
-		$this->load->model('Messages_model');													// load the customers model
+
 		$inbox_total = $this->Messages_model->getMainInboxTotal();					// retrieve total number of customer messages from getMainInboxTotal method in Messages model
 
 		// START of retrieving lines from language file to pass to view.
 		$this->template->setTitle($this->lang->line('text_heading'));
 		$this->template->setHeading($this->lang->line('text_heading'));
+		$data['text_heading'] 			= $this->lang->line('text_heading');
 		$data['text_no_default_add'] 	= $this->lang->line('text_no_default_add');
 		$data['text_no_cart_items'] 	= $this->lang->line('text_no_cart_items');
+		$data['text_no_orders'] 		= $this->lang->line('text_no_orders');
+		$data['text_no_reservations'] 	= $this->lang->line('text_no_reservations');
+		$data['text_no_inbox'] 			= $this->lang->line('text_no_inbox');
 		$data['text_cart'] 				= $this->lang->line('text_cart');
 		$data['text_checkout'] 			= $this->lang->line('text_checkout');
 		$data['text_my_details'] 		= $this->lang->line('text_my_details');
@@ -52,15 +60,10 @@ class Account extends MX_Controller {
 		$data['entry_s_answer'] 		= $this->lang->line('entry_s_answer');
 		$data['column_cart_items'] 		= $this->lang->line('column_cart_items');
 		$data['column_cart_total'] 		= $this->lang->line('column_cart_total');
-		$data['column_order_date'] 		= $this->lang->line('column_order_date');
-		$data['column_order_id'] 		= $this->lang->line('column_order_id');
-		$data['column_order_status'] 	= $this->lang->line('column_order_status');
-		$data['column_resrv_date'] 		= $this->lang->line('column_resrv_date');
-		$data['column_resrv_id'] 		= $this->lang->line('column_resrv_id');
-		$data['column_resrv_status'] 	= $this->lang->line('column_resrv_status');
-		$data['column_inbox_date'] 		= $this->lang->line('column_inbox_date');
+		$data['column_date'] 			= $this->lang->line('column_date');
+		$data['column_id'] 				= $this->lang->line('column_id');
+		$data['column_status'] 			= $this->lang->line('column_status');
 		$data['column_subject'] 		= $this->lang->line('column_subject');
-		$data['column_action'] 			= $this->lang->line('column_action');
 		// END of retrieving lines from language file to send to view.
 
 		$data['button_checkout'] 		= site_url('main/checkout');
@@ -80,15 +83,53 @@ class Account extends MX_Controller {
 			'last_name' 		=> $result['last_name'],
 			'email' 			=> $result['email'],
 			'telephone' 		=> $result['telephone'],
-			'security_question' => $question_result['text'],
+			'security_question' => (isset($question_result['text'])) ? $question_result['text'] : '',
 			'security_answer' 	=> $result['security_answer']
 		);
 
 		$data['address_info'] = array();
-		$result = $this->Customers_model->getCustomerAddress($this->customer->getId(), $this->customer->getAddressId());			// retrieve customer address data based on customer address id from getAddress method in Customers model
+		$result = $this->Addresses_model->getCustomerAddress($this->customer->getId(), $this->customer->getAddressId());			// retrieve customer address data based on customer address id from getAddress method in Customers model
 
 		if ($result) {
 			$data['address_info'] = $this->country->addressFormat($result);
+		}
+		
+		$filter = array('customer_id' => $this->customer->getId(), 'limit' => '5', 'page' => '');
+		
+		$data['orders'] = array();
+		$results = $this->Orders_model->getMainList($filter);									// retrieve customer orders based on customer id from getMainOrders method in Orders model
+		foreach ($results as $result) {
+			$data['orders'][] = array(															// create array of customer orders to pass to view
+				'order_id' 				=> $result['order_id'],
+				'date_added' 			=> mdate('%d %M %y', strtotime($result['date_added'])),
+				'order_time'			=> mdate('%H:%i', strtotime($result['order_time'])),
+				'status_name' 			=> $result['status_name'],
+				'view' 					=> site_url('main/orders/view/' . $result['order_id'])
+			);
+		}
+
+		$data['reservations'] = array();
+		$results = $this->Reservations_model->getMainList($filter);								// retrieve customer reservations based on customer id from getMainReservations method in Reservations model
+		foreach ($results as $result) {
+			$data['reservations'][] = array(															// create array of customer reservations to pass to view
+				'reservation_id' 		=> $result['reservation_id'],
+				'status_name' 			=> $result['status_name'],
+				'reserve_date' 			=> mdate('%d %M %y', strtotime($result['reserve_date'])),
+				'reserve_time'			=> mdate('%H:%i', strtotime($result['reserve_time'])),
+				'view' 					=> site_url('main/reservations/view/' . $result['reservation_id'])
+			);
+		}
+		
+		$data['messages'] = array();
+		$results = $this->Messages_model->getMainList($filter);									// retrieve all customer messages from getMainInbox method in Messages model
+		foreach ($results as $result) {					
+			$data['messages'][] = array(														// create array of customer messages to pass to view
+				'date_added'	=> mdate('%d %M %y - %H:%i', strtotime($result['date_added'])),
+				'subject' 		=> $result['subject'],
+				'body' 			=> substr(strip_tags(html_entity_decode($result['body'], ENT_QUOTES, 'UTF-8')), 0, 50) . '..',
+				'state'			=> ($result['state'] === '0') ? 'unread' : 'read',
+				'view'			=> site_url('main/inbox/view/'. $result['message_id'])
+			);
 		}
 
 		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));

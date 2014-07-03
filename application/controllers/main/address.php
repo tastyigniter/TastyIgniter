@@ -1,4 +1,4 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Address extends MX_Controller {
 
@@ -8,6 +8,7 @@ class Address extends MX_Controller {
 		$this->load->model('Customers_model');													// load the customers model
 		$this->load->model('Locations_model'); 													// load the locations model
 		$this->load->model('Countries_model');
+		$this->load->model('Addresses_model');
 		$this->load->library('language');
 		$this->lang->load('main/address', $this->language->folder());
 	}
@@ -20,9 +21,23 @@ class Address extends MX_Controller {
 		}
 
 		if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
-  			redirect('account/login');
+  			redirect('main/login');
 		}
 
+		$url = '?';
+		$filter = array();
+		$filter['customer_id'] = (int) $this->customer->getId();
+
+		if ($this->input->get('page')) {
+			$filter['page'] = (int) $this->input->get('page');
+		} else {
+			$filter['page'] = '';
+		}
+		
+		if ($this->config->item('page_limit')) {
+			$filter['limit'] = $this->config->item('page_limit');
+		}
+		
 		// START of retrieving lines from language file to pass to view.
 		$this->template->setTitle($this->lang->line('text_heading'));
 		$this->template->setHeading($this->lang->line('text_heading'));
@@ -46,7 +61,7 @@ class Address extends MX_Controller {
 
 		$this->load->library('country');
 		$data['addresses'] = array();		
-		$results = $this->Customers_model->getCustomerAddresses($this->customer->getId());								// retrieve customer address data from getCustomerAddresses method in Customers model
+		$results = $this->Addresses_model->getMainAddressList($filter);								// retrieve customer address data from getCustomerAddresses method in Customers model
 		if ($results) {
 			foreach ($results as $result) {														// loop through the customer address data
 
@@ -57,6 +72,18 @@ class Address extends MX_Controller {
 				);
 			}
 		}
+		
+		$prefs['base_url'] 			= site_url('main/address').$url;
+		$prefs['total_rows'] 		= $this->Addresses_model->getMainAddressListCount($filter);
+		$prefs['per_page'] 			= $filter['limit'];
+		
+		$this->load->library('pagination');
+		$this->pagination->initialize($prefs);
+				
+		$data['pagination'] = array(
+			'info'		=> $this->pagination->create_infos(),
+			'links'		=> $this->pagination->create_links()
+		);
 		
 		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'address.php')) {
@@ -74,7 +101,7 @@ class Address extends MX_Controller {
 		}
 
 		if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
-  			redirect('account/login');
+  			redirect('main/login');
 		} else {																				// else if customer is logged in retrieve customer id from customer library
 			$customer_id = $this->customer->getId();
 		}
@@ -101,8 +128,7 @@ class Address extends MX_Controller {
 		$data['entry_postcode'] 		= $this->lang->line('entry_postcode');
 		$data['entry_country'] 			= $this->lang->line('entry_country');
 		
-		$data['button_address'] 		= $this->lang->line('button_address');
-		$data['button_update'] 			= $this->lang->line('button_update');
+		$data['button_back'] 			= $this->lang->line('button_back');
 		// END of retrieving lines from language file to pass to view.
 
 		$data['back'] 					= site_url('main/address');
@@ -110,7 +136,7 @@ class Address extends MX_Controller {
 		
 		$data['address'] = array();
 		
-		$result = $this->Customers_model->getCustomerAddress($customer_id, $address_id);	// if uri segment is available and numeric, retrieve customer address based on uri segment and customer id
+		$result = $this->Addresses_model->getCustomerAddress($customer_id, $address_id);	// if uri segment is available and numeric, retrieve customer address based on uri segment and customer id
 		if ($result) {
 			$data['address'] = array(														// create array of customer address data to pass to view
 				'address_id'	=> $result['address_id'],
@@ -120,6 +146,9 @@ class Address extends MX_Controller {
 				'postcode' 		=> $result['postcode'],
 				'country_id' 	=> $result['country_id']	
 			);
+			$data['button_update'] 			= $this->lang->line('button_update');
+		} else {
+			$data['button_update'] 			= $this->lang->line('button_add');
 		}		
 		
 		$data['countries'] = array();
@@ -132,15 +161,15 @@ class Address extends MX_Controller {
 		}
 		
 		if ($this->input->post() && $this->_updateAddress($address_id) === TRUE) {
-			redirect('account/address');
+			redirect('main/address');
 		}
 						
 		// Delete Customer Address
 		if ($this->input->post() AND $this->input->post('delete')) {
-			$this->Customers_model->deleteAddress($customer_id, $address_id);
+			$this->Addresses_model->deleteAddress($customer_id, $address_id);
 			$this->session->set_flashdata('alert', $this->lang->line('text_deleted_msg'));
 
-			redirect('account/address');
+			redirect('main/address');
 		}
 
 		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
@@ -164,10 +193,8 @@ class Address extends MX_Controller {
 
 			$address = $this->input->post('address');
 		
-			if ($this->Customers_model->updateCustomerAddress($customer_id, $address_id, $address)) {								// check if address updated successfully then display success message else error message
-				$this->session->set_flashdata('alert', $this->lang->line('text_added_msg'));
-			} else {
-				$this->session->set_flashdata('alert', $this->lang->line('text_nothing_msg'));				
+			if ($this->Addresses_model->updateCustomerAddress($customer_id, $address_id, $address)) {								// check if address updated successfully then display success message else error message
+				$this->session->set_flashdata('alert', $this->lang->line('alert_added'));
 			}
 		
 			return TRUE;

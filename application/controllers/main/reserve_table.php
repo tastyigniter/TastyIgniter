@@ -1,4 +1,4 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Reserve_table extends MX_Controller {
 
@@ -11,6 +11,11 @@ class Reserve_table extends MX_Controller {
 		$this->load->library('location'); // load the location library
 		$this->load->library('language');
 		$this->lang->load('main/reserve_table', $this->language->folder());
+	
+		if ($this->config->item('reservation_mode') !== '1') {
+			$this->session->set_flashdata('alert', $this->lang->line('alert_no_reservation'));
+			redirect('home');
+		}
 	}
 
 	public function index() {
@@ -22,6 +27,7 @@ class Reserve_table extends MX_Controller {
 
 		$this->template->setTitle($this->lang->line('text_heading'));
 		$this->template->setHeading($this->lang->line('text_heading'));
+		$data['text_heading'] 				= $this->lang->line('text_heading');
 		$data['text_local'] 				= $this->lang->line('text_local');
 		$data['text_postcode'] 				= $this->lang->line('text_postcode');
 		$data['text_find'] 					= $this->lang->line('text_find');
@@ -41,11 +47,6 @@ class Reserve_table extends MX_Controller {
 		$data['entry_confirm_email'] 		= $this->lang->line('entry_confirm_email');
 		$data['entry_telephone'] 			= $this->lang->line('entry_telephone');
 		$data['entry_comments'] 			= $this->lang->line('entry_comments');
-
-		$data['button_check_postcode'] 		= $this->lang->line('button_check_postcode');
-		$data['button_find_again'] 			= $this->lang->line('button_find_again');
-
-		$data['button_right'] 				= '<a class="button" onclick="$(\'#reserve-form\').submit();">'. $this->lang->line('button_reservation') .'</a>';
 
 		$data['action'] 					= site_url('main/reserve_table');
 		$data['continue'] 					= site_url('main/reserve_table/success');
@@ -97,8 +98,8 @@ class Reserve_table extends MX_Controller {
 			$data['comment'] = ''; 
 		}
 		
-		if ($this->input->post() && $this->_reserveTable() === TRUE) {
-			redirect('reserve/success');		
+		if ($this->input->post() AND $this->_reserveTable() === TRUE) {
+			redirect('main/reserve_table/success');		
 		}
 			
 		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
@@ -116,11 +117,14 @@ class Reserve_table extends MX_Controller {
 			$data['alert'] = '';
 		}
 
+		$this->template->setTitle($this->lang->line('text_heading_success'));
+		$this->template->setHeading($this->lang->line('text_heading_success'));
+		$data['text_heading'] 	= $this->lang->line('text_heading_success');
+
 		$reservation_id = $this->input->cookie('last_reserve_id');
-		$result = $this->Reservations_model->getMainReservation($reservation_id);
+		$result = $this->Reservations_model->getMainReservation($reservation_id, $this->customer->getId());
 		
 		if ($result) {
-			$data['text_heading'] 	= $this->lang->line('text_heading_success');
 			$guest_num = $result['guest_num'] .' person(s)';
 			
 			$data['text_success'] 	= sprintf($this->lang->line('text_success'), $result['location_name'], $guest_num, mdate('%l, %F %j, %Y', strtotime($result['reserve_date'])), mdate('%h:%i %a', strtotime($result['reserve_time'])));
@@ -128,7 +132,7 @@ class Reserve_table extends MX_Controller {
 			$data['text_signature'] = sprintf($this->lang->line('text_signature'), $this->config->item('site_name'));
 			$this->session->unset_userdata('reservation');
 		} else {
-			redirect('find/table');
+			redirect('main/reserve_table');
 		}		
 		
 		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
@@ -144,7 +148,12 @@ class Reserve_table extends MX_Controller {
 		$date_format = '%Y-%m-%d';
 		$time_format = '%h:%i';
 		$current_time = time();
-			
+		
+		//$this->load->module('main/reservation_module');
+		//if ($this->reservation_module->findTable() !== TRUE) {
+			//$this->session->set_flashdata('alert', $this->lang->line('alert_no_table'));
+			//redirect('reserve/table');
+		//} else 
 		if ($this->validateForm() === TRUE) {
 			$data = array();
 		
@@ -196,9 +205,6 @@ class Reserve_table extends MX_Controller {
 				$reservation_id = $this->Reservations_model->addReservation($data);
 				$this->input->set_cookie('last_reserve_id', $reservation_id, 300, '.'.$_SERVER['HTTP_HOST']);
 				return TRUE;
-			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">An error occured, please find a table again!</p>');
-				redirect('find/table');
 			}
 		}
 	}

@@ -1,4 +1,5 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Reservations extends CI_Controller {
 
 	private $error = array();
@@ -15,13 +16,12 @@ class Reservations extends CI_Controller {
 	}
 
 	public function index() {
-
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 		
-    	if (!$this->user->hasPermissions('access', 'admin/reservations')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/reservations')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -113,7 +113,7 @@ class Reservations extends CI_Controller {
 		
 		$this->template->setTitle('Reservations');
 		$this->template->setHeading('Reservations');
-		$this->template->setButton('Delete', array('class' => 'delete_button', 'onclick' => '$(\'form:not(#filter-form)\').submit();'));
+		$this->template->setButton('Delete', array('class' => 'btn btn-default', 'onclick' => '$(\'#list-form\').submit();'));
 
 		$data['text_empty'] 			= 'There are no reservations available.';
 		
@@ -151,22 +151,22 @@ class Reservations extends CI_Controller {
 				}
 			}
 
-			$data['icon_list'] = '<a class="calendar_switch active" title="Switch to calender view" href="'.site_url('admin/reservations/') .'"><i class="icon-calendar"></i></a>';
-			$data['calendar'] = $this->calendar->generate($year, $month, $calendar_data, site_url('admin/reservations'), $url);
+			$this->template->setIcon('<a class="btn btn-list active" title="Switch to list view" href="'.site_url(ADMIN_URI.'/reservations/') .'"><i class="fa fa-list"></i></a>');
+			$data['calendar'] = $this->calendar->generate($year, $month, $calendar_data, site_url(ADMIN_URI.'/reservations'), $url);
 		} else {
-			$data['icon_list'] = '<a class="calendar_switch" title="Switch to calender view" href="'.site_url('admin/reservations?show_calendar=1') .'"><i class="icon-calendar"></i></a>';
+			$this->template->setIcon('<a class="btn btn-calendar" title="Switch to calender view" href="'.site_url(ADMIN_URI.'/reservations?show_calendar=1') .'"><i class="fa fa-calendar"></i></a>');
 			$data['calendar'] = '';
 		}
 		
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
-		$data['sort_id'] 			= site_url('admin/reservations'.$url.'sort_by=reservation_id&order_by='.$order_by);
-		$data['sort_location'] 		= site_url('admin/reservations'.$url.'sort_by=location_name&order_by='.$order_by);
-		$data['sort_customer'] 		= site_url('admin/reservations'.$url.'sort_by=first_name&order_by='.$order_by);
-		$data['sort_guest'] 		= site_url('admin/reservations'.$url.'sort_by=guest_num&order_by='.$order_by);
-		$data['sort_table'] 		= site_url('admin/reservations'.$url.'sort_by=table_name&order_by='.$order_by);
-		$data['sort_status']		= site_url('admin/reservations'.$url.'sort_by=status_name&order_by='.$order_by);
-		$data['sort_staff'] 		= site_url('admin/reservations'.$url.'sort_by=staff_name&order_by='.$order_by);
-		$data['sort_date'] 			= site_url('admin/reservations'.$url.'sort_by=reserve_date&order_by='.$order_by);
+		$data['sort_id'] 			= site_url(ADMIN_URI.'/reservations'.$url.'sort_by=reservation_id&order_by='.$order_by);
+		$data['sort_location'] 		= site_url(ADMIN_URI.'/reservations'.$url.'sort_by=location_name&order_by='.$order_by);
+		$data['sort_customer'] 		= site_url(ADMIN_URI.'/reservations'.$url.'sort_by=first_name&order_by='.$order_by);
+		$data['sort_guest'] 		= site_url(ADMIN_URI.'/reservations'.$url.'sort_by=guest_num&order_by='.$order_by);
+		$data['sort_table'] 		= site_url(ADMIN_URI.'/reservations'.$url.'sort_by=table_name&order_by='.$order_by);
+		$data['sort_status']		= site_url(ADMIN_URI.'/reservations'.$url.'sort_by=status_name&order_by='.$order_by);
+		$data['sort_staff'] 		= site_url(ADMIN_URI.'/reservations'.$url.'sort_by=staff_name&order_by='.$order_by);
+		$data['sort_date'] 			= site_url(ADMIN_URI.'/reservations'.$url.'sort_by=reserve_date&order_by='.$order_by);
 		
 		$data['reservations'] = array();
 		$results = $this->Reservations_model->getList($filter);
@@ -191,7 +191,7 @@ class Reservations extends CI_Controller {
 				'staff_name'		=> $result['staff_name'],
 				'reserve_date'		=> $reserve_date,
 				'reserve_time'		=> mdate('%H:%i', strtotime($result['reserve_time'])),
-				'edit'				=> site_url('admin/reservations/edit?id=' . $result['reservation_id'])
+				'edit'				=> site_url(ADMIN_URI.'/reservations/edit?id=' . $result['reservation_id'])
 			);
 		}
 				
@@ -226,8 +226,8 @@ class Reservations extends CI_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 		
-		$config['base_url'] 		= site_url('admin/reservations').$url;
-		$config['total_rows'] 		= $this->Reservations_model->record_count($filter);
+		$config['base_url'] 		= site_url(ADMIN_URI.'/reservations').$url;
+		$config['total_rows'] 		= $this->Reservations_model->getAdminListCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 		
 		$this->pagination->initialize($config);
@@ -238,25 +238,24 @@ class Reservations extends CI_Controller {
 		);
 
 		if ($this->input->post('delete') AND $this->_deleteReservation() === TRUE) {
-			redirect('admin/reservations');
+			redirect(ADMIN_URI.'/reservations');
 		}	
 
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'reservations.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'reservations', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'reservations.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'reservations', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'reservations', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'reservations', $data);
 		}
 	}	
 
 	public function edit() {
-
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/reservations')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/reservations')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -265,54 +264,54 @@ class Reservations extends CI_Controller {
 			$data['alert'] = '';
 		}		
 
-		if (is_numeric($this->input->get('id'))) {
-			$reservation_id = $this->input->get('id');
-			$data['action']	= site_url('admin/reservations/edit?id='. $reservation_id);
+		$reservation_info = $this->Reservations_model->getAdminReservation((int) $this->input->get('id'));
+
+		if ($reservation_info) {
+			$reservation_id = $reservation_info['reservation_id'];
+			$data['action']	= site_url(ADMIN_URI.'/reservations/edit?id='. $reservation_id);
 		} else {
 		    $reservation_id = 0;
-			//$data['action']	= site_url('admin/reservations/edit');
-			redirect('admin/reservations');
+			//$data['action']	= site_url(ADMIN_URI.'/reservations/edit');
+			redirect(ADMIN_URI.'/reservations');
 		}
 		
-		$result = $this->Reservations_model->getAdminReservation($reservation_id);
-
-		$title = (isset($result['reservation_id'])) ? 'Edit - '. $result['reservation_id'] : 'New';	
+		$title = (isset($reservation_info['reservation_id'])) ? $reservation_info['reservation_id'] : 'New';	
 		$this->template->setTitle('Reservation: '. $title);
 		$this->template->setHeading('Reservation: '. $title);
 
-		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
-		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
-		$this->template->setBackButton('back_button', site_url('admin/reservations'));
+		$this->template->setButton('Save', array('class' => 'btn btn-success', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('btn-back', site_url(ADMIN_URI.'/reservations'));
 
 		$data['text_empty'] 		= 'There are no status history for this reservation.';
 
-		$data['reservation_id'] 	= $result['reservation_id'];
-		$data['location_name'] 		= $result['location_name'];
-		$data['location_address_1'] = $result['location_address_1'];
-		$data['location_address_2'] = $result['location_address_2'];
-		$data['location_city'] 		= $result['location_city'];
-		$data['location_postcode'] 	= $result['location_postcode'];
-		$data['location_country'] 	= $result['location_country_id'];
-		$data['table_name'] 		= $result['table_name'];
-		$data['min_capacity'] 		= $result['min_capacity'] .' person(s)';
-		$data['max_capacity'] 		= $result['max_capacity'] .' person(s)';
-		$data['guest_num'] 			= $result['guest_num'] .' person(s)';
-		$data['occasion'] 			= $result['occasion_id'];
-		$data['customer_id'] 		= $result['customer_id'];
-		$data['first_name'] 		= $result['first_name'];
-		$data['last_name'] 			= $result['last_name'];
-		$data['email'] 				= $result['email'];
-		$data['telephone'] 			= $result['telephone'];
-		$data['reserve_time'] 		= mdate('%H:%i', strtotime($result['reserve_time']));
-		$data['reserve_date'] 		= mdate('%d %M %y', strtotime($result['reserve_date']));
-		$data['date_added'] 		= mdate('%d %M %y', strtotime($result['date_added']));
-		$data['date_modified'] 		= mdate('%d %M %y', strtotime($result['date_modified']));
-		$data['status_id'] 			= $result['status'];
-		$data['staff_id'] 			= $result['staff_id'];
-		$data['comment'] 			= $result['comment'];
-		$data['notify'] 			= $result['notify'];
-		$data['ip_address'] 		= $result['ip_address'];
-		$data['user_agent'] 		= $result['user_agent'];
+		$data['reservation_id'] 	= $reservation_info['reservation_id'];
+		$data['location_name'] 		= $reservation_info['location_name'];
+		$data['location_address_1'] = $reservation_info['location_address_1'];
+		$data['location_address_2'] = $reservation_info['location_address_2'];
+		$data['location_city'] 		= $reservation_info['location_city'];
+		$data['location_postcode'] 	= $reservation_info['location_postcode'];
+		$data['location_country'] 	= $reservation_info['location_country_id'];
+		$data['table_name'] 		= $reservation_info['table_name'];
+		$data['min_capacity'] 		= $reservation_info['min_capacity'] .' person(s)';
+		$data['max_capacity'] 		= $reservation_info['max_capacity'] .' person(s)';
+		$data['guest_num'] 			= $reservation_info['guest_num'] .' person(s)';
+		$data['occasion'] 			= $reservation_info['occasion_id'];
+		$data['customer_id'] 		= $reservation_info['customer_id'];
+		$data['first_name'] 		= $reservation_info['first_name'];
+		$data['last_name'] 			= $reservation_info['last_name'];
+		$data['email'] 				= $reservation_info['email'];
+		$data['telephone'] 			= $reservation_info['telephone'];
+		$data['reserve_time'] 		= mdate('%H:%i', strtotime($reservation_info['reserve_time']));
+		$data['reserve_date'] 		= mdate('%d %M %y', strtotime($reservation_info['reserve_date']));
+		$data['date_added'] 		= mdate('%d %M %y', strtotime($reservation_info['date_added']));
+		$data['date_modified'] 		= mdate('%d %M %y', strtotime($reservation_info['date_modified']));
+		$data['status_id'] 			= $reservation_info['status'];
+		$data['staff_id'] 			= $reservation_info['staff_id'];
+		$data['comment'] 			= $reservation_info['comment'];
+		$data['notify'] 			= $reservation_info['notify'];
+		$data['ip_address'] 		= $reservation_info['ip_address'];
+		$data['user_agent'] 		= $reservation_info['user_agent'];
 		
 		$data['occasions'] = array(
 			'0' => 'not applicable',
@@ -358,23 +357,23 @@ class Reservations extends CI_Controller {
 
 		if ($this->input->post() AND $this->_updateReservation($data['status_id'], $data['staff_id']) === TRUE) {
 			if ($this->input->post('save_close') === '1') {
-				redirect('admin/reservations');
+				redirect(ADMIN_URI.'/reservations');
 			}
 			
-			redirect('admin/reservations/edit?id='. $reservation_id);
+			redirect(ADMIN_URI.'/reservations/edit?id='. $reservation_id);
 		}
 				
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'reservations_edit.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'reservations_edit', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'reservations_edit.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'reservations_edit', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'reservations_edit', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'reservations_edit', $data);
 		}
 	}
 	
 	public function _updateReservation($status_id = 0, $staff_id = 0) {
-    	if (!$this->user->hasPermissions('modify', 'admin/reservations')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/reservations')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to update!</p>');
 			return TRUE;
     	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$update = array();
@@ -399,9 +398,9 @@ class Reservations extends CI_Controller {
 			}
 
 			if ($this->Reservations_model->updateReservation($update)) {
-				$this->session->set_flashdata('alert', '<p class="success">Reservation updated sucessfully.</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-success">Reservation updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-warning">An error occured, nothing updated.</p>');
 			}
 	
 			return TRUE;
@@ -409,14 +408,14 @@ class Reservations extends CI_Controller {
 	}
 
 	public function _deleteReservation($reservation_id = FALSE) {
-    	if (!$this->user->hasPermissions('modify', 'admin/reservations')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/reservations')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to delete!</p>');
     	} else if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Reservations_model->deleteReservation($value);
 			}			
 		
-			$this->session->set_flashdata('alert', '<p class="success">Reservation deleted sucessfully!</p>');
+			$this->session->set_flashdata('alert', '<p class="alert-success">Reservation deleted sucessfully!</p>');
 		}
 				
 		return TRUE;

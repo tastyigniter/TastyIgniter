@@ -1,4 +1,4 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Login extends MX_Controller {
 
@@ -14,7 +14,7 @@ class Login extends MX_Controller {
 		}
 		
 		if ($this->customer->islogged()) { 														// checks if customer is logged in then redirect to account page.	
-  			redirect('account');
+  			redirect('main/account');
 		}
 
 		// START of retrieving lines from language file to pass to view.
@@ -38,10 +38,10 @@ class Login extends MX_Controller {
 				$password = $this->input->post('password');										// retrieves password value from $_POST data if set
 			
 				if ($this->customer->login($email, $password) === FALSE) {						// invoke login method in customer library with email and password $_POST data value then check if login was unsuccessful
-					$this->session->set_flashdata('alert', $this->lang->line('text_invalid_login'));	// display error message and redirect to account login page
+					$this->session->set_flashdata('alert', $this->lang->line('alert_invalid_login'));	// display error message and redirect to account login page
   					redirect('main/login');
     			} else {																		// else if login was successful redirect to account page
- 					redirect('account');
+ 					redirect('main/account');
   				}
     		}
 		}

@@ -1,4 +1,4 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 $lang['text_heading'] 			= 'My Orders';
 $lang['text_view_heading'] 		= 'My Order View';
@@ -20,6 +20,8 @@ $lang['column_total'] 			= 'Order Total';
 $lang['button_order'] 			= 'Place New Order';
 $lang['button_reorder'] 		= 'Re-Order';
 $lang['button_back'] 			= 'Back';
+
+$lang['alert_reorder'] 			= '<p class="alert-success">You have successfully added the menus from order ID %s to your order.</p>';
 
 /* End of file orders_lang.php */
 /* Location: ./application/language/english/main/orders_lang.php */

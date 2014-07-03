@@ -1,4 +1,4 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Password_reset extends MX_Controller {
 
@@ -12,19 +12,21 @@ class Password_reset extends MX_Controller {
 	}
 
 	public function index() {
+		if ($this->customer->islogged()) { 														// checks if customer is logged in then redirect to account page.	
+  			redirect('main/account');
+		}
+
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
 			$data['alert'] = '';
 		}
 		
-		if ($this->customer->islogged()) { 														// checks if customer is logged in then redirect to account page.	
-  			redirect('account');
-		}
-
 		// START of retrieving lines from language file to pass to view.
 		$this->template->setTitle($this->lang->line('text_heading'));
 		$this->template->setHeading($this->lang->line('text_heading'));
+		$data['text_heading'] 				= $this->lang->line('text_heading');
+		$data['text_summary'] 				= $this->lang->line('text_summary');
 		$data['entry_email'] 				= $this->lang->line('entry_email');
 		$data['entry_s_question'] 			= $this->lang->line('entry_s_question');
 		$data['entry_s_answer'] 			= $this->lang->line('entry_s_answer');
@@ -71,7 +73,7 @@ class Password_reset extends MX_Controller {
 
 		if ($this->input->server('REQUEST_METHOD') === 'POST') {
 			if ($this->_resetPassword() === TRUE) { 
-				redirect('account/login');
+				redirect('main/login');
 			}
 		}
 		
@@ -94,18 +96,18 @@ class Password_reset extends MX_Controller {
 				$customer_data = $this->Customers_model->getCustomerByEmail($email); 			// retrieve customer data based on $_POST email value from getCustomerByEmail method in Customers model
 
 				if ($customer_data['email'] !== $email) {																// check if customer data is available send customer email and customer security question to view
-					$this->session->set_flashdata('alert', $this->lang->line('text_no_email'));
+					$this->session->set_flashdata('alert', $this->lang->line('alert_no_email'));
 				} else if ($customer_data['security_question_id'] !== $security_question_id) {
-					$this->session->set_flashdata('alert', $this->lang->line('text_no_s_question'));
+					$this->session->set_flashdata('alert', $this->lang->line('alert_no_s_question'));
 				} else if ($customer_data['security_answer'] !== $security_answer) {
-					$this->session->set_flashdata('alert', $this->lang->line('text_no_s_answer'));
+					$this->session->set_flashdata('alert', $this->lang->line('alert_no_s_answer'));
 				} else {
 					$customer_id = $customer_data['customer_id'];
 					$reset_password = $this->Customers_model->resetPassword($customer_id, $email, $security_question_id, $security_answer); // invoke reset password method in Customers model using customer id, email and security answer
 				}
 				
 				if ($reset_password) {													// checks if password reset was sucessful then display success message and delete customer_id_to_reset from session userdata
-					$this->session->set_flashdata('alert', $this->lang->line('text_reset_success'));
+					$this->session->set_flashdata('alert', $this->lang->line('alert_reset_success'));
 					return TRUE;		
 				}		
 

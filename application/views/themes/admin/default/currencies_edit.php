@@ -1,75 +1,101 @@
-<div id="box-content">
-	<div id="notification">
-		<?php if (validation_errors()) { ?>
-			<?php echo validation_errors('<span class="error">', '</span>'); ?>
-		<?php } ?>
-		<?php if (!empty($alert)) { ?>
-			<?php echo $alert; ?>
-		<?php } ?>
-	</div>
+<?php echo $header; ?>
+<div class="row content">
+	<div class="col-md-12">
+		<div id="notification">
+			<div class="alert alert-dismissable">
+				<?php if (!empty($alert)) { ?>
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+					<?php echo $alert; ?>
+				<?php } ?>
+				<?php if (validation_errors()) { ?>
+					<p class="alert-danger">Sorry but validation has failed, please check for errors.</p>
+				<?php } ?>
+			</div>
+		</div>
 
-	<div class="box">
-	<div id="update-box" class="content">
-	<form accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
-		<div class="wrap_heading">
-			<ul id="tabs">
-				<li><a rel="#general" class="active">Details</a></li>
+		<div class="row wrap-vertical">
+			<ul id="nav-tabs" class="nav nav-tabs">
+				<li class="active"><a href="#general" data-toggle="tab">Details</a></li>
 			</ul>
 		</div>
 
-		<div id="general" class="wrap_content" style="display:block;">
-			<table class="form">
-				<tbody>
-					<tr>
-						<td><b>Title:</b></td>
-						<td><input type="text" name="currency_name" value="<?php echo set_value('currency_name', $currency_name); ?>" class="textfield" /></td>
-					</tr>
-					<tr>
-						<td><b>Country:</b></td>
-						<td><select name="country_id">
-						<?php foreach ($countries as $country) { ?>
-						<?php if ($country['country_id'] === $country_id) { ?>
-							<option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
-						<?php } else { ?>  
-							<option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
-						<?php } ?>  
-						<?php } ?>  
-						</select></td>
-					</tr>
-					<tr>
-						<td><b>Code:</b></td>
-						<td><input type="text" name="currency_code" value="<?php echo set_value('currency_code', $currency_code); ?>" class="textfield" /></td>
-					</tr>
-					<tr>
-						<td><b>Symbol:</b></td>
-						<td><input type="text" name="currency_symbol" value="<?php echo set_value('currency_symbol', $currency_symbol); ?>" class="textfield" /></td>
-					</tr>
-					<tr>
-						<td><b>ISO Alpha 2:</b></td>
-						<td><input type="text" name="iso_alpha2" value="<?php echo set_value('iso_alpha2', $iso_alpha2); ?>" class="textfield" /></td>
-					</tr>
-					<tr>
-						<td><b>ISO Alpha 3:</b></td>
-						<td><input type="text" name="iso_alpha3" value="<?php echo set_value('iso_alpha3', $iso_alpha3); ?>" class="textfield" /></td>
-					</tr>
-					<tr>
-						<td><b>ISO Numeric:</b></td>
-						<td><input type="text" name="iso_numeric" value="<?php echo set_value('iso_numeric', $iso_numeric); ?>" class="textfield" /></td>
-					</tr>
-					<tr>
-						<td><b>Status:</b></td>
-						<td><select name="currency_status">
-							<option value="0" <?php echo set_select('currency_status', '0'); ?> >Disabled</option>
-						<?php if ($currency_status === '1') { ?>
-							<option value="1" <?php echo set_select('currency_status', '1', TRUE); ?> >Enabled</option>
-						<?php } else { ?>  
-							<option value="1" <?php echo set_select('currency_status', '1'); ?> >Enabled</option>
-						<?php } ?>  
-						</select></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
+		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
+			<div class="tab-content">
+				<div id="general" class="tab-pane row wrap-all active">
+					<div class="form-group">
+						<label for="input-name" class="col-sm-2 control-label">Title:</label>
+						<div class="col-sm-5">
+							<input type="text" name="currency_name" id="input-name" class="form-control" value="<?php echo set_value('currency_name', $currency_name); ?>" />
+							<?php echo form_error('currency_name', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-country" class="col-sm-2 control-label">Country:</label>
+						<div class="col-sm-5">
+							<select name="country_id" id="input-country" class="form-control">
+								<?php foreach ($countries as $country) { ?>
+								<?php if ($country['country_id'] === $country_id) { ?>
+									<option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
+								<?php } else { ?>  
+									<option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
+								<?php } ?>  
+								<?php } ?>  
+							</select>
+							<?php echo form_error('country_id', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-code" class="col-sm-2 control-label">Code:</label>
+						<div class="col-sm-5">
+							<input type="text" name="currency_code" id="input-code" class="form-control" value="<?php echo set_value('currency_code', $currency_code); ?>" />
+							<?php echo form_error('currency_code', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-symbol" class="col-sm-2 control-label">Symbol:</label>
+						<div class="col-sm-5">
+							<input type="text" name="currency_symbol" id="input-symbol" class="form-control" value="<?php echo set_value('currency_symbol', $currency_symbol); ?>" />
+							<?php echo form_error('currency_symbol', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-name" class="col-sm-2 control-label">ISO Alpha 2:</label>
+						<div class="col-sm-5">
+							<input type="text" name="iso_alpha2" id="" class="form-control" value="<?php echo set_value('iso_alpha2', $iso_alpha2); ?>" />
+							<?php echo form_error('iso_alpha2', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-iso-alpha3" class="col-sm-2 control-label">ISO Alpha 3:</label>
+						<div class="col-sm-5">
+							<input type="text" name="iso_alpha3" id="input-iso-alpha3" class="form-control" value="<?php echo set_value('iso_alpha3', $iso_alpha3); ?>" />
+							<?php echo form_error('iso_alpha3', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-iso-numeric" class="col-sm-2 control-label">ISO Numeric:</label>
+						<div class="col-sm-5">
+							<input type="text" name="iso_numeric" id="input-iso-numeric" class="form-control" value="<?php echo set_value('iso_numeric', $iso_numeric); ?>" />
+							<?php echo form_error('iso_numeric', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-status" class="col-sm-2 control-label">Status:</label>
+						<div class="col-sm-5">
+							<select name="currency_status" id="input-status" class="form-control">
+								<option value="0" <?php echo set_select('currency_status', '0'); ?> >Disabled</option>
+								<?php if ($currency_status === '1') { ?>
+									<option value="1" <?php echo set_select('currency_status', '1', TRUE); ?> >Enabled</option>
+								<?php } else { ?>  
+									<option value="1" <?php echo set_select('currency_status', '1'); ?> >Enabled</option>
+								<?php } ?>  
+							</select>
+							<?php echo form_error('currency_status', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
 	</div>
 </div>
+<?php echo $footer; ?>

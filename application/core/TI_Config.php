@@ -1,4 +1,4 @@
-<?php (defined('BASEPATH')) OR exit('No direct script access allowed');
+<?php (defined('BASEPATH')) OR exit('No direct access allowed');
 
 /* load the MX_Router class */
 require APPPATH."third_party/MX/Config.php";
@@ -23,7 +23,8 @@ class TI_Config extends MX_Config {
 		
         // $uri is expected to be a string, in the form of controller/function/param1
         // trim leading and trailing slashes, just in case
-        $uri = trim($uri, '/');
+        $query = explode('?', $uri);
+        $uri = trim($query[0], '/');
 
 		// Is there a literal match?  If so we're done
 		if (isset($this->reverseRoutes[$uri]))
@@ -34,14 +35,14 @@ class TI_Config extends MX_Config {
 		{ 
 			foreach ($this->routes as $key => $val)
 			{                        
-				if(!$key or !$val) continue;
+				if (!$key or !$val) continue;
 			
 				preg_match_all('/\(.+?\)/', $key, $rules);
 				preg_match_all('/\$.+?/', $val, $references);
 			
-				if(empty($rules[0]) or empty($references[0])) continue;
+				if (empty($rules[0]) or empty($references[0])) continue;
 			
-				for($i = 0; $i < count($rules[0]); $i++)
+				for ($i = 0; $i < count($rules[0]); $i++)
 				{
 					$key = substr_replace($key, $references[0][$i], strpos($key, $rules[0][$i]), 6);
 					$val = substr_replace($val, $rules[0][$i], strpos($val, $references[0][$i]), 2);
@@ -57,6 +58,22 @@ class TI_Config extends MX_Config {
 			}
 		}
 		
+		$uri = str_replace('/(:any)', '', str_replace('/(:num)', '', $uri));
+		
+		if (isset($query[1])) {
+			$this->CI =& get_instance();
+
+			if ($this->CI->config->item('permalink') == '1') {
+				$this->CI->load->library('permalink');
+				
+				if ($permalink = $this->CI->permalink->setPermalink($query[1])) {
+					return $uri.'/'.$permalink;
+				}
+			}
+		
+			return $uri.'?'.$query[1];
+		}
+
         return $uri;
     }
 }

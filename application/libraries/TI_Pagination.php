@@ -1,4 +1,4 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
  class TI_Pagination extends CI_Pagination {
 
@@ -34,7 +34,7 @@
 			$num_pages
 		);
 		
-		return ('<div class="info"><span>' . str_replace($find, $replace, $this->text) . '</span></div>');
+		return ('<span>' . str_replace($find, $replace, $this->text) . '</span>');
 	}
 }
 

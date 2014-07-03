@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Activity {
 	public $ip;
@@ -23,6 +23,10 @@ class Activity {
 		$this->local_time = time();
 		$time_out = ($this->CI->config->item('activity_timeout') > 120) ? $this->CI->config->item('activity_timeout') : 120; 
 		$this->time_out = $this->local_time - $time_out;
+
+		$activity_delete = ($this->CI->config->item('activity_delete') > 0) ? $this->CI->config->item('activity_delete') : 0; 
+		$delete_time_out = 86400 * ($activity_delete * 30);
+		$this->delete_time_out = $this->local_time - $delete_time_out;
 		
 		$this->activities = $this->_getActivities();
 
@@ -41,6 +45,8 @@ class Activity {
 				if ($value['access_type'] === 'robot') {
 					$this->total_robots++;
 				}
+
+				$this->_deleteOldActivity($key);
 			}
 		}
 
@@ -149,6 +155,15 @@ class Activity {
 			$this->CI->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', $this->local_time));
 			$this->CI->db->set('ip_address', $this->ip);
 			$this->CI->db->insert('customers_activity');
+		}
+	}
+
+	public function _deleteOldActivity($ip) {
+		if (isset($this->activities[$this->ip]) AND strtotime($this->activities[$ip]['date_added']) <= $this->delete_time_out) {
+			$this->CI->db->where('activity_id', $this->activities[$ip]['activity_id']);
+			$this->CI->db->where('ip_address', $ip);
+			$this->CI->db->delete('customers_activity');
+			unset($this->activities[$this->ip]);
 		}
 	}
 

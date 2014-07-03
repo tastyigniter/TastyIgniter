@@ -1,4 +1,5 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Languages extends CI_Controller {
 
 	public function __construct() {
@@ -9,13 +10,12 @@ class Languages extends CI_Controller {
 	}
 
 	public function index() {
-
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/languages')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/languages')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -66,14 +66,14 @@ class Languages extends CI_Controller {
 		
 		$this->template->setTitle('Languages');
 		$this->template->setHeading('Languages');
-		$this->template->setButton('+ New', array('class' => 'add_button', 'href' => page_url() .'/edit'));
-		$this->template->setButton('Delete', array('class' => 'delete_button', 'onclick' => '$(\'form:not(#filter-form)\').submit();'));
+		$this->template->setButton('+ New', array('class' => 'btn btn-success', 'href' => page_url() .'/edit'));
+		$this->template->setButton('Delete', array('class' => 'btn btn-default', 'onclick' => '$(\'#list-form\').submit();'));
 
 		$data['text_empty'] 		= 'There are no languages available.';
 
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
-		$data['sort_name'] 			= site_url('admin/languages'.$url.'sort_by=name&order_by='.$order_by);
-		$data['sort_code'] 			= site_url('admin/languages'.$url.'sort_by=code&order_by='.$order_by);
+		$data['sort_name'] 			= site_url(ADMIN_URI.'/languages'.$url.'sort_by=name&order_by='.$order_by);
+		$data['sort_code'] 			= site_url(ADMIN_URI.'/languages'.$url.'sort_by=code&order_by='.$order_by);
 
 		$data['language_id'] = $this->config->item('language_id');
 
@@ -86,7 +86,7 @@ class Languages extends CI_Controller {
 				'code'				=> $result['code'],
 				'image'				=> base_url('assets/img/flags/'. $result['image']),
 				'status'			=> ($result['status'] === '1') ? 'Enabled' : 'Disabled',
-				'edit' 				=> site_url('admin/languages/edit?id=' . $result['language_id'])
+				'edit' 				=> site_url(ADMIN_URI.'/languages/edit?id=' . $result['language_id'])
 			);
 		}
 
@@ -95,8 +95,8 @@ class Languages extends CI_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 		
-		$config['base_url'] 		= site_url('admin/languages').$url;
-		$config['total_rows'] 		= $this->Languages_model->record_count($filter);
+		$config['base_url'] 		= site_url(ADMIN_URI.'/languages').$url;
+		$config['total_rows'] 		= $this->Languages_model->getAdminListCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 		
 		$this->pagination->initialize($config);
@@ -107,48 +107,24 @@ class Languages extends CI_Controller {
 		);
 
 		if ($this->input->post('delete') AND $this->_deleteLanguage() === TRUE) {
-			redirect('admin/languages');  			
+			redirect(ADMIN_URI.'/languages');  			
 		}	
 
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'languages.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'languages', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'languages.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'languages', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'languages', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'languages', $data);
 		}
 	}
 	
 	public function edit() {
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/languages')) {
-  			redirect('admin/permission');
-		}
-		
-		if (is_numeric($this->input->get('id'))) {
-			$language_id = $this->input->get('id');
-			$data['action']	= site_url('admin/languages/edit?id='. $language_id);
-		} else {
-		    $language_id = 0;
-			$data['action']	= site_url('admin/languages/edit');
-		}
-		
-		if ($this->input->post() AND $this->_addLanguage() === TRUE) {
-			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {	
-				redirect('admin/languages/edit?id='. $this->input->post('insert_id'));
-			} else {
-				redirect('admin/languages');
-			}
-		}
-
-		if ($this->input->post() AND $this->_updateLanguage() === TRUE) {
-			if ($this->input->post('save_close') === '1') {
-				redirect('admin/languages');
-			}
-			
-			redirect('admin/languages/edit?id='. $language_id);
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/languages')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -157,22 +133,46 @@ class Languages extends CI_Controller {
 			$data['alert'] = '';
 		}		
 
-		$result = $this->Languages_model->getLanguage($language_id);
+		$language_info = $this->Languages_model->getLanguage((int) $this->input->get('id'));
 		
-		$title = (isset($result['name'])) ? 'Edit - '. $result['name'] : 'New';	
-		$this->template->setTitle('Languages: '. $title);
-		$this->template->setHeading('Languages: '. $title);
-		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
-		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
-		$this->template->setBackButton('back_button', site_url('admin/languages'));
+		if ($language_info) {
+			$language_id = $language_info['language_id'];
+			$data['action']	= site_url(ADMIN_URI.'/languages/edit?id='. $language_id);
+		} else {
+		    $language_id = 0;
+			$data['action']	= site_url(ADMIN_URI.'/languages/edit');
+		}
+		
+		if ($this->input->post() AND $this->_addLanguage() === TRUE) {
+			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {	
+				redirect(ADMIN_URI.'/languages/edit?id='. $this->input->post('insert_id'));
+			} else {
+				redirect(ADMIN_URI.'/languages');
+			}
+		}
 
-		$data['language_id'] 		= $result['language_id'];
-		$data['name'] 				= $result['name'];
-		$data['code'] 				= $result['code'];
-		$data['image'] 				= $result['image'];
-		$data['image_url'] 			= base_url('assets/img/flags/'. $result['image']);
-		$data['directory'] 			= $result['directory'];
-		$data['status'] 			= $result['status'];
+		if ($this->input->post() AND $this->_updateLanguage() === TRUE) {
+			if ($this->input->post('save_close') === '1') {
+				redirect(ADMIN_URI.'/languages');
+			}
+			
+			redirect(ADMIN_URI.'/languages/edit?id='. $language_id);
+		}
+		
+		$title = (isset($language_info['name'])) ? $language_info['name'] : 'New';	
+		$this->template->setTitle('Language: '. $title);
+		$this->template->setHeading('Language: '. $title);
+		$this->template->setButton('Save', array('class' => 'btn btn-success', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('btn-back', site_url(ADMIN_URI.'/languages'));
+
+		$data['language_id'] 		= $language_info['language_id'];
+		$data['name'] 				= $language_info['name'];
+		$data['code'] 				= $language_info['code'];
+		$data['image'] 				= $language_info['image'];
+		$data['image_url'] 			= base_url('assets/img/flags/'. $language_info['image']);
+		$data['directory'] 			= $language_info['directory'];
+		$data['status'] 			= $language_info['status'];
 
 		$flags = glob(IMAGEPATH .'/flags/*.png');
 	
@@ -187,16 +187,16 @@ class Languages extends CI_Controller {
 		}
 
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'languages_edit.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'languages_edit', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'languages_edit.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'languages_edit', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'languages_edit', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'languages_edit', $data);
 		}
 	}
 
 	public function _addLanguage() {
-    	if ( ! $this->user->hasPermissions('modify', 'admin/languages')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add!</p>');
+    	if ( ! $this->user->hasPermissions('modify', ADMIN_URI.'/languages')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to add!</p>');
   			return TRUE;
     	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$add = array();
@@ -208,10 +208,10 @@ class Languages extends CI_Controller {
 			$add['status'] 		= $this->input->post('status');
 			
 			if ($_POST['insert_id'] = $this->Languages_model->addLanguage($add)) {
-				$this->session->set_flashdata('alert', '<p class="success">Language added sucessfully.</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-success">Language added sucessfully.</p>');
 				return TRUE;
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing added.</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-warning">An error occured, nothing added.</p>');
 				return FALSE
 				;
 			}
@@ -219,8 +219,8 @@ class Languages extends CI_Controller {
 	}
 	
 	public function _updateLanguage() {
-    	if ( ! $this->user->hasPermissions('modify', 'admin/languages')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
+    	if ( ! $this->user->hasPermissions('modify', ADMIN_URI.'/languages')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to update!</p>');
   			return TRUE;
     	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$update = array();
@@ -233,9 +233,9 @@ class Languages extends CI_Controller {
 			$update['status'] 		= $this->input->post('status');
 			
 			if ($this->Languages_model->updateLanguage($update)) {
-				$this->session->set_flashdata('alert', '<p class="success">Language updated sucessfully.</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-success">Language updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing added.</p>');				
+				$this->session->set_flashdata('alert', '<p class="alert-warning">An error occured, nothing added.</p>');				
 			}
 							
 			return TRUE;
@@ -243,14 +243,14 @@ class Languages extends CI_Controller {
 	}	
 
 	public function _deleteLanguage() {
-    	if (!$this->user->hasPermissions('modify', 'admin/languages')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/languages')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to delete!</p>');
     	} else if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Languages_model->deleteLanguage($value);
 			}			
 		
-			$this->session->set_flashdata('alert', '<p class="success">Language deleted sucessfully!</p>');
+			$this->session->set_flashdata('alert', '<p class="alert-success">Language deleted sucessfully!</p>');
 		}
 				
 		return TRUE;
@@ -258,9 +258,9 @@ class Languages extends CI_Controller {
 	
 	public function validateForm() {
 		$this->form_validation->set_rules('name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
-		$this->form_validation->set_rules('code', 'Code', 'xss_clean|trim|required|min_length[2]');
-		$this->form_validation->set_rules('image', 'Image', 'xss_clean|trim|required|min_length[2]|max_length[32]');
-		$this->form_validation->set_rules('directory', 'Directory', 'xss_clean|trim|required|min_length[2]|max_length[32]|callback_valid_dir');
+		$this->form_validation->set_rules('code', 'Language Code', 'xss_clean|trim|required|min_length[2]');
+		$this->form_validation->set_rules('image', 'Image Icon', 'xss_clean|trim|required|min_length[2]|max_length[32]');
+		$this->form_validation->set_rules('directory', 'Directory Name', 'xss_clean|trim|required|min_length[2]|max_length[32]|callback_valid_dir');
 		$this->form_validation->set_rules('status', 'Status', 'xss_clean|trim|required|integer');
 
 		if ($this->form_validation->run() === TRUE) {

@@ -1,7 +1,8 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Messages_model extends CI_Model {
 
-    public function record_count($filter = array()) {
+    public function getAdminListCount($filter = array()) {
 		if (!empty($filter['filter_search'])) {
 			$this->db->like('staff_name', $filter['filter_search']);
 			$this->db->or_like('subject', $filter['filter_search']);
@@ -22,8 +23,18 @@ class Messages_model extends CI_Model {
 
 		$this->db->from('messages');
 		$this->db->join('staffs', 'staffs.staff_id = messages.staff_id_from', 'left');
-		$this->db->group_by('messages.message_id');
 		return $this->db->count_all_results();
+    }
+    
+    public function getMainListCount($filter = array()) {
+		if (!empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
+			$this->db->where('message_recipients.customer_id', $filter['customer_id']);
+			$this->db->where('message_recipients.status', '1');
+
+			$this->db->join('message_recipients', 'message_recipients.message_id = messages.message_id', 'left');
+			$this->db->from('messages');
+			return $this->db->count_all_results();
+		}
     }
     
 	public function getList($filter = array()) {
@@ -78,27 +89,33 @@ class Messages_model extends CI_Model {
 		}
 	}
 	
-	public function getMainList($customer_id = '') {
-		if (is_numeric($customer_id)) {
-			$this->db->select('*, messages.date_added');
-			$this->db->from('messages');
-			$this->db->join('message_recipients', 'message_recipients.message_id = messages.message_id', 'left');
-			$this->db->join('customers', 'customers.customer_id = message_recipients.customer_id', 'left');
-		
-			$this->db->group_by('messages.message_id');
-			$this->db->order_by('messages.date_added', 'DESC');
-
-			$this->db->where('message_recipients.customer_id', $customer_id);
-			$this->db->where('message_recipients.status', '1');
-
-			$query = $this->db->get();
-			$result = array();
-	
-			if ($query->num_rows() > 0) {
-				$result = $query->result_array();
+	public function getMainList($filter = array()) {
+		if (!empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
+			if ($filter['page'] !== 0) {
+				$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
 			}
+			
+			if ($this->db->limit($filter['limit'], $filter['page'])) {
+				$this->db->select('*, messages.date_added');
+				$this->db->from('messages');
+				$this->db->join('message_recipients', 'message_recipients.message_id = messages.message_id', 'left');
+				$this->db->join('customers', 'customers.customer_id = message_recipients.customer_id', 'left');
+		
+				$this->db->group_by('messages.message_id');
+				$this->db->order_by('messages.date_added', 'DESC');
+
+				$this->db->where('message_recipients.customer_id', $filter['customer_id']);
+				$this->db->where('message_recipients.status', '1');
+
+				$query = $this->db->get();
+				$result = array();
 	
-			return $result;
+				if ($query->num_rows() > 0) {
+					$result = $query->result_array();
+				}
+	
+				return $result;
+			}
 		}
 	}
 	
@@ -185,6 +202,26 @@ class Messages_model extends CI_Model {
 		}
 	}
 	
+	public function getAdminMessageUnread($staff_id = '') {
+		if (is_numeric($staff_id)) {
+			$this->db->where('message_recipients.staff_id', $staff_id);
+			$this->db->where('message_recipients.state < ', '1');
+			$this->db->where('message_recipients.status', '1');
+			$this->db->where('messages.send_type', 'account');
+
+			$this->db->from('messages');
+			$this->db->join('message_recipients', 'message_recipients.message_id = messages.message_id', 'left');
+
+			$total = $this->db->count_all_results();
+			
+			if ($total < 1) {
+				$total = '';
+			}
+			
+			return $total;
+		}
+	}
+	
 	public function getMainInboxTotal($customer_id = '') {
 		if (is_numeric($customer_id)) {
 			$this->db->from('messages');
@@ -195,7 +232,13 @@ class Messages_model extends CI_Model {
 			$this->db->where('message_recipients.status', '1');
 			$this->db->where('messages.send_type', 'account');
 
-			return $this->db->count_all_results();
+			$total = $this->db->count_all_results();
+			
+			if ($total < 1) {
+				$total = '';
+			}
+			
+			return $total;
 		}
 	}
 	

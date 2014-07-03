@@ -1,4 +1,5 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Backup extends CI_Controller {
 
 	public function __construct() {
@@ -7,45 +8,43 @@ class Backup extends CI_Controller {
 	}
 
 	public function index() {
-			
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/backup')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/backup')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available			
 		} else if (file_exists('assets/download/tastyigniter.sql')) {
-			$data['alert'] = '<span class="success">Database Backup Sucessfully! <a href="'.site_url('admin/backup/download').'">Download</a></span>';
+			$data['alert'] = '<p class="alert-success">Database Backup Sucessfully! <a href="'.site_url(ADMIN_URI.'/backup/download').'">Download</a></p>';
 		} else {
 			$data['alert'] = '';
 		}
 
 		$this->template->setTitle('Backup');
 		$this->template->setHeading('Backup');
-		$this->template->setButton('Backup', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
+		$this->template->setButton('Backup', array('class' => 'btn btn-success', 'onclick' => '$(\'#edit-form\').submit();'));
 
 		$data['db_tables'] = $this->Settings_model->getdbTables();
 		
 		if ($this->input->post() AND $this->_backup() === TRUE) {
-			redirect('admin/backup');		
+			redirect(ADMIN_URI.'/backup');		
 		}
 		
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'backup.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'backup', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'backup.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'backup', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'backup', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'backup', $data);
 		}
 	}
 
 	public function download() {
-
-    	if (!$this->user->hasPermissions('modify', 'admin/backup')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to download!</p>');
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/backup')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to download!</p>');
     	} else if (file_exists('assets/download/tastyigniter.sql')) {
 			$name = 'tastyigniter.sql';
 			$backup = file_get_contents("assets/download/tastyigniter.sql");
@@ -54,14 +53,14 @@ class Backup extends CI_Controller {
 			$this->load->helper('download');
 			force_download($name, $backup); 
 		} else {
-		    redirect('admin/backup');
+		    redirect(ADMIN_URI.'/backup');
 		}
 	}
 	
 	public function _backup() {
-    	if (!$this->user->hasPermissions('modify', 'admin/backup')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to backup!</p>');
-			redirect('admin/backup');		
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/backup')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to backup!</p>');
+			redirect(ADMIN_URI.'/backup');		
     	} else if ($this->input->post('backup')) { 
 					
 			if ($this->validateForm() === TRUE) {

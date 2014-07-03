@@ -1,4 +1,5 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Reviews extends CI_Controller {
 
 	public function __construct() {
@@ -9,13 +10,12 @@ class Reviews extends CI_Controller {
 	}
 
 	public function index() {
-						
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/reviews')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/reviews')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -82,20 +82,20 @@ class Reviews extends CI_Controller {
 		
 		$this->template->setTitle('Reviews');
 		$this->template->setHeading('Reviews');
-		$this->template->setButton('+ New', array('class' => 'add_button', 'href' => page_url() .'/edit'));
-		$this->template->setButton('Delete', array('class' => 'delete_button', 'onclick' => '$(\'form:not(#filter-form)\').submit();'));
+		$this->template->setButton('+ New', array('class' => 'btn btn-success', 'href' => page_url() .'/edit'));
+		$this->template->setButton('Delete', array('class' => 'btn btn-default', 'onclick' => '$(\'#list-form\').submit();'));
 
 		$data['text_empty']			= 'There are no reviews available.';
 
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
-		$data['sort_location'] 		= site_url('admin/reviews'.$url.'sort_by=location_name&order_by='.$order_by);
-		$data['sort_author'] 		= site_url('admin/reviews'.$url.'sort_by=author&order_by='.$order_by);
-		$data['sort_id'] 			= site_url('admin/reviews'.$url.'sort_by=order_id&order_by='.$order_by);
-		$data['sort_status']		= site_url('admin/reviews'.$url.'sort_by=review_status&order_by='.$order_by);
-		$data['sort_date'] 			= site_url('admin/reviews'.$url.'sort_by=date_added&order_by='.$order_by);
+		$data['sort_location'] 		= site_url(ADMIN_URI.'/reviews'.$url.'sort_by=location_name&order_by='.$order_by);
+		$data['sort_author'] 		= site_url(ADMIN_URI.'/reviews'.$url.'sort_by=author&order_by='.$order_by);
+		$data['sort_id'] 			= site_url(ADMIN_URI.'/reviews'.$url.'sort_by=order_id&order_by='.$order_by);
+		$data['sort_status']		= site_url(ADMIN_URI.'/reviews'.$url.'sort_by=review_status&order_by='.$order_by);
+		$data['sort_date'] 			= site_url(ADMIN_URI.'/reviews'.$url.'sort_by=date_added&order_by='.$order_by);
 		
 		$ratings = $this->config->item('ratings');
-		$data['ratings'] = $ratings;
+		$data['ratings'] = $ratings['ratings'];
 
 		$reviews = array();				
 		$reviews = $this->Reviews_model->getList($filter);
@@ -105,13 +105,13 @@ class Reviews extends CI_Controller {
 				'review_id' 		=> $review['review_id'],
 				'location_name' 	=> $review['location_name'],
 				'author' 			=> $review['author'],
-				'quality' 			=> $review['quality'],
-				'delivery' 			=> $review['delivery'],
-				'service' 			=> $review['service'],
+				'quality' 			=> ($review['quality'] != '0') ? $ratings['ratings'][$review['quality']] : 'None',
+				'delivery' 			=> ($review['delivery'] != '0') ? $ratings['ratings'][$review['delivery']] : 'None',
+				'service' 			=> ($review['service'] != '0') ? $ratings['ratings'][$review['service']] : 'None',
 				'order_id' 			=> $review['order_id'],
 				'date_added' 		=> mdate('%d %M %y', strtotime($review['date_added'])),
 				'review_status' 	=> $review['review_status'],
-				'edit' 				=> site_url('admin/reviews/edit?id=' . $review['review_id'])
+				'edit' 				=> site_url(ADMIN_URI.'/reviews/edit?id=' . $review['review_id'])
 			);
 		}
 		
@@ -138,8 +138,8 @@ class Reviews extends CI_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 		
-		$config['base_url'] 		= site_url('admin/reviews').$url;
-		$config['total_rows'] 		= $this->Reviews_model->record_count($filter);
+		$config['base_url'] 		= site_url(ADMIN_URI.'/reviews').$url;
+		$config['total_rows'] 		= $this->Reviews_model->getAdminListCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 		
 		$this->pagination->initialize($config);
@@ -151,50 +151,49 @@ class Reviews extends CI_Controller {
 
 		if ($this->input->post('delete') AND $this->_deleteReview() === TRUE) {
 
-			redirect('admin/reviews');  			
+			redirect(ADMIN_URI.'/reviews');  			
 		}	
 				
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'reviews.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'reviews', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'reviews.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'reviews', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'reviews', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'reviews', $data);
 		}
 	}
 
 	public function edit() {
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/reviews')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/reviews')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
-		if (is_numeric($this->input->get('id'))) {
-			$review_id = $this->input->get('id');
-			$data['action']	= site_url('admin/reviews/edit?id='. $review_id);
-		} else {
-		    $review_id = is_numeric($this->input->get('id')) AND $this->validateForm();
-			$data['action']	= site_url('admin/reviews/edit');
-		}
-
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
 		} else {
 			$data['alert'] = '';
 		}
 
-		$review_info = $this->Reviews_model->getReview($review_id);
+		$review_info = $this->Reviews_model->getReview((int) $this->input->get('id'));
 
-		$title = (isset($review_info['location_name'])) ? 'Edit - '. $review_info['location_name'] : 'New';	
+		if ($review_info) {
+			$review_id = $review_info['review_id'];
+			$data['action']	= site_url(ADMIN_URI.'/reviews/edit?id='. $review_id);
+		} else {
+		    $review_id = is_numeric($this->input->get('id')) AND $this->validateForm();
+			$data['action']	= site_url(ADMIN_URI.'/reviews/edit');
+		}
+
+		$title = (isset($review_info['location_name'])) ? $review_info['location_name'] : 'New';	
 		$this->template->setTitle('Review: '. $title);
 		$this->template->setHeading('Review: '. $title);
-		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
-		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
-		$this->template->setBackButton('back_button', site_url('admin/reviews'));
+		$this->template->setButton('Save', array('class' => 'btn btn-success', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('btn-back', site_url(ADMIN_URI.'/reviews'));
 
-		$data['ratings'] 			= $this->config->item('ratings');
 		$data['review_id'] 			= $review_info['review_id'];
 		$data['location_id'] 		= $review_info['location_id'];
 		$data['order_id'] 			= $review_info['order_id'];
@@ -206,6 +205,9 @@ class Reviews extends CI_Controller {
 		$data['review_text'] 		= $review_info['review_text'];
 		$data['date_added'] 		= $review_info['date_added'];
 		$data['review_status'] 		= $review_info['review_status'];
+
+		$ratings = $this->config->item('ratings');
+		$data['ratings'] 			= $ratings['ratings'];
 
 		$this->load->model('Locations_model');
 		$data['locations'] = array();
@@ -219,31 +221,31 @@ class Reviews extends CI_Controller {
 	
 		if ($this->input->post() AND $this->_addReview() === TRUE) {
 			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {	
-				redirect('admin/reviews/edit?id='. $this->input->post('insert_id'));
+				redirect(ADMIN_URI.'/reviews/edit?id='. $this->input->post('insert_id'));
 			} else {
-				redirect('admin/reviews');
+				redirect(ADMIN_URI.'/reviews');
 			}
 		}
 
 		if ($this->input->post() AND $this->_updateReview() === TRUE) {
 			if ($this->input->post('save_close') === '1') {
-				redirect('admin/reviews');
+				redirect(ADMIN_URI.'/reviews');
 			}
 			
-			redirect('admin/reviews/edit?id='. $review_id);
+			redirect(ADMIN_URI.'/reviews/edit?id='. $review_id);
 		}
 		
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'reviews_edit.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'reviews_edit', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'reviews_edit.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'reviews_edit', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'reviews_edit', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'reviews_edit', $data);
 		}
 	}
 	
 	public function _addReview() {
-    	if ( ! $this->user->hasPermissions('modify', 'admin/reviews')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add or change!</p>');
+    	if ( ! $this->user->hasPermissions('modify', ADMIN_URI.'/reviews')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to add or change!</p>');
   			return TRUE;
     	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$add = array();
@@ -259,9 +261,9 @@ class Reviews extends CI_Controller {
 			$add['review_status'] 		= $this->input->post('review_status');
 
 			if ($_POST['insert_id'] = $this->Reviews_model->addReview($add)) {	
-				$this->session->set_flashdata('alert', '<p class="success">Review added sucessfully.</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-success">Review added sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">Nothing Addr!</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-warning">Nothing Addr!</p>');
 			}
 			
 			return TRUE;
@@ -269,8 +271,8 @@ class Reviews extends CI_Controller {
 	}	
 
 	public function _updateReview() {
-    	if ( ! $this->user->hasPermissions('modify', 'admin/reviews')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
+    	if ( ! $this->user->hasPermissions('modify', ADMIN_URI.'/reviews')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to update!</p>');
   			return TRUE;
     	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$update = array();
@@ -287,9 +289,9 @@ class Reviews extends CI_Controller {
 			$update['review_status'] 	= $this->input->post('review_status');
 
 			if ($this->Reviews_model->updateReview($update)) {	
-				$this->session->set_flashdata('alert', '<p class="success">Review updated sucessfully.</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-success">Review updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-warning">An error occured, nothing updated.</p>');
 			}
 			
 			return TRUE;
@@ -297,14 +299,14 @@ class Reviews extends CI_Controller {
 	}	
 
 	public function _deleteReview() {
-    	if (!$this->user->hasPermissions('modify', 'admin/reviews')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/reviews')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to delete!</p>');
     	} else if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Reviews_model->deleteReview($value);
 			}			
 		
-			$this->session->set_flashdata('alert', '<p class="success">Review(s) deleted sucessfully!</p>');
+			$this->session->set_flashdata('alert', '<p class="alert-success">Review(s) deleted sucessfully!</p>');
 		}
 				
 		return TRUE;

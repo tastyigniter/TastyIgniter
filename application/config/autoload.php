@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH')) exit('No direct access allowed');
 /*
 | -------------------------------------------------------------------
 | AUTO-LOADER
@@ -96,7 +96,7 @@ $autoload['config'] = array();
 |
 */
 
-$autoload['language'] = array('main/english', 'admin/english');
+$autoload['language'] = array('main/english', ADMIN_URI.'/english');
 
 
 /*

@@ -1,19 +1,20 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Image_manager extends CI_Controller {
 
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
 		$this->load->library('user');
+		$this->load->model('Extensions_model');	    
 	}
 
 	public function index() {
-
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/image_manager')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/image_manager')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -23,15 +24,26 @@ class Image_manager extends CI_Controller {
 		}
 
 		$data['title'] = 'Image Manager';
-		$setting = $this->config->item('image_tool');
+		$this->template->setTitle('Image Manager');
+		$this->template->setHeading('Image Manager');
+		$this->template->setButton('Options', array('class' => 'btn btn-default pull-right', 'href' => site_url(ADMIN_URI.'/image_tool')));
+
+		$extension = $this->Extensions_model->getExtension('tool', 'image_manager');
+		if (!empty($extension['data'])) {
+			$setting = unserialize($extension['data']);
+		} else {
+			$setting = array();
+		}
 
 		$data['uploads'] = (isset($setting['uploads']) AND $setting['uploads'] === '1') ? TRUE : FALSE;
 		$data['new_folder'] = (isset($setting['new_folder']) AND $setting['new_folder'] === '1') ? TRUE : FALSE;
+		$data['move'] = (isset($setting['move']) AND $setting['move'] === '1') ? TRUE : FALSE;
+		$data['copy'] = (isset($setting['copy']) AND $setting['copy'] === '1') ? TRUE : FALSE;
 		$data['rename'] = (isset($setting['rename']) AND $setting['rename'] === '1') ? TRUE : FALSE;
 		$data['delete'] = (isset($setting['delete']) AND $setting['delete'] === '1') ? TRUE : FALSE;		
 		$show_mini = (isset($setting['delete']) AND $setting['show_mini'] === '1') ? TRUE : FALSE;		
 
-		if (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE) {
+		if (isset($setting['root_folder']) AND (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE)) {
 			$root_folder = $this->security->sanitize_filename($setting['root_folder'], TRUE) .'/';
 		} else {
 			$root_folder = 'data/';
@@ -64,12 +76,13 @@ class Image_manager extends CI_Controller {
 		if ( ! is_dir($thumbs_path)) {
 			$this->_createFolder(FALSE, $thumbs_path);
 		}
-				
+
 		$popup = $data['popup'] = ($this->input->get('popup')) ? $this->_fixGetParams($this->input->get('popup')) : '';
 		$field_id = $data['field_id'] = ($this->input->get('field_id')) ? $this->_fixGetParams($this->input->get('field_id')) : '';
 		$filter = $data['filter'] = ($this->input->get('filter')) ? $this->_fixGetParams($this->input->get('filter')) : '';
 		$sort_by = $data['sort_by'] = ($this->input->get('sort_by')) ? $this->_fixGetParams($this->input->get('sort_by')) : 'name';
 		$sort_order = $data['sort_order'] = ($this->input->get('sort_order')) ? $this->_fixGetParams($this->input->get('sort_order')) : 'ascending';
+		$data['sort_icon'] = ($sort_order === 'ascending') ? '<i class="fa fa-caret-up"></i>' : '<i class="fa fa-caret-down"></i>';
 		
 		$get_params = http_build_query(array(
 			'popup'    		=> $popup,
@@ -110,15 +123,15 @@ class Image_manager extends CI_Controller {
 		}
 		
 		$data['files_error'] = '';
-		if (is_dir($image_path)) {
-			$files = $this->_files($image_path, array('by' => $sort_by, 'order' => $sort_order));
-			$data['folder_size'] = $this->_makeSize($this->_folderSize($image_path));
-			$data['total_files'] = count($files);
-		} else {
+		if (!is_dir($image_path)) {
 			$files = array();
 			$data['folder_size'] = '';
 			$data['total_files'] = 0;
 			$data['files_error'] = 'There was an error. Root folder can not be found.';
+		} else {
+			$files = $this->_files($image_path, array('by' => $sort_by, 'order' => $sort_order));
+			$data['folder_size'] = $this->_makeSize($this->_folderSize($image_path));
+			$data['total_files'] = count($files);
 		}
 		
 		$data['files'] = array();
@@ -146,7 +159,7 @@ class Image_manager extends CI_Controller {
 				$human_name = $file_name;
 				$thumb_type = 'dir';
 				$html_class = 'directory';
-				$thumb_url = base_url(APPPATH .'views/themes/admin/default/images/manager_ico/folder.svg');
+				$thumb_url = base_url(APPPATH .'views/themes/'.ADMIN_URI.'/default/images/manager_ico/folder.svg');
 				$src = $sub_folder . $file_name . '/';
 				$file_url = page_url() .'?'. $get_params . rawurlencode($src) .'&'. uniqid();
 				if ( ! is_dir($thumbs_path . $file_name)) {
@@ -181,7 +194,7 @@ class Image_manager extends CI_Controller {
 	
 				if ($thumb_url == '') {
 					$thumb_type = 'icon';
-					$thumb_url = base_url(APPPATH .'views/themes/admin/default/images/manager_ico/default.svg');
+					$thumb_url = base_url(APPPATH .'views/themes/'.ADMIN_URI.'/default/images/manager_ico/default.svg');
 				}
 			}
 		
@@ -200,8 +213,7 @@ class Image_manager extends CI_Controller {
 				'thumb_type'			=> $thumb_type,
 				'thumb_url'				=> $thumb_url,
 				'img_dimension'			=> $img_dimension,
-				'html_class'			=> $html_class,
-				'test_check'			=> ''
+				'html_class'			=> $html_class
 			);
 		}
 				
@@ -219,10 +231,14 @@ class Image_manager extends CI_Controller {
 
 		if ($popup == 'iframe') {
 			$this->output->enable_profiler(FALSE);
+		} else {
+			$this->template->regions(array('header', 'footer'));
 		}
 		
-		if (file_exists(APPPATH .'views/themes/admin/default/image_manager.php')) {
-			$this->load->view('themes/admin/default/image_manager', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'image_manager.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'image_manager', $data);
+		} else {
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'image_manager', $data);
 		}
 	}
 
@@ -230,7 +246,7 @@ class Image_manager extends CI_Controller {
 		$this->load->model('Image_tool_model');
 		
 		if ($this->input->get('image')) {
-			$image_url = $this->Image_tool_model->resize(html_entity_decode($this->input->get('image'), ENT_QUOTES, 'UTF-8'));
+			$image_url = $this->Image_tool_model->resize(html_entity_decode($this->input->get('image'), ENT_QUOTES, 'UTF-8'), 120, 120);
 			$this->output->set_output(json_encode($image_url));
 		}
 	}
@@ -238,18 +254,24 @@ class Image_manager extends CI_Controller {
 	public function new_folder() {
 		$json = array();
 
-    	if (!$this->user->hasPermissions('modify', 'admin/image_manager')) {
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/image_manager')) {
 			$json['alert'] = '<span class="error">Warning: You do not have permission to add or change!</span>';
 		}
 				
-		$setting = $this->config->item('image_tool');
 		if ($this->input->post('name')) {
+			$extension = $this->Extensions_model->getExtension('tool', 'image_manager');
+			if (!empty($extension['data'])) {
+				$setting = unserialize($extension['data']);
+			} else {
+				$setting = array();
+			}
+
 			if (isset($setting['new_folder']) AND $setting['new_folder'] !== '1') {
 				$json['alert'] = '<span class="error">Creating new folder is disabled, check administration settings.</span>';
 			}
 			
 			$root_folder = 'data/';
-			if (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE) {
+			if (isset($setting['root_folder']) AND (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE)) {
 				$root_folder = $setting['root_folder'] .'/';
 			}
 
@@ -287,18 +309,24 @@ class Image_manager extends CI_Controller {
 	public function copy() {
 		$json = array();
 		
-    	if (!$this->user->hasPermissions('modify', 'admin/image_manager')) {
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/image_manager')) {
 			$json['alert'] = '<span class="error">Warning: You do not have permission to add or change!</span>';
 		}
 				
-		$setting = $this->config->item('image_tool');
 		if ($this->input->post('to_folder') AND $this->input->post('copy_files')) {
+			$extension = $this->Extensions_model->getExtension('tool', 'image_manager');
+			if (!empty($extension['data'])) {
+				$setting = unserialize($extension['data']);
+			} else {
+				$setting = array();
+			}
+
 			if (isset($setting['copy']) AND $setting['copy'] !== '1') {
 				$json['alert'] = '<span class="error">Copying file/folder is disabled, check administration settings.</span>';
 			}
 			
 			$root_folder = 'data/';
-			if (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE) {
+			if (isset($setting['root_folder']) AND (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE)) {
 				$root_folder = $setting['root_folder'] .'/';
 			}
 
@@ -350,18 +378,24 @@ class Image_manager extends CI_Controller {
 	public function move() {
 		$json = array();
 		
-    	if (!$this->user->hasPermissions('modify', 'admin/image_manager')) {
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/image_manager')) {
 			$json['alert'] = '<span class="error">Warning: You do not have permission to add or change!</span>';
 		}
 				
-		$setting = $this->config->item('image_tool');
 		if ($this->input->post('to_folder') AND $this->input->post('move_files')) {
+			$extension = $this->Extensions_model->getExtension('tool', 'image_manager');
+			if (!empty($extension['data'])) {
+				$setting = unserialize($extension['data']);
+			} else {
+				$setting = array();
+			}
+
 			if (isset($setting['move']) AND $setting['move'] !== '1') {
 				$json['alert'] = '<span class="error">Moving file/folder is disabled, check administration settings.</span>';
 			}
 			
 			$root_folder = 'data/';
-			if (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE) {
+			if (isset($setting['root_folder']) AND (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE)) {
 				$root_folder = $setting['root_folder'] .'/';
 			}
 
@@ -413,18 +447,24 @@ class Image_manager extends CI_Controller {
 	public function rename() {
 		$json = array();
 		
-    	if (!$this->user->hasPermissions('modify', 'admin/image_manager')) {
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/image_manager')) {
 			$json['alert'] = '<span class="error">Warning: You do not have permission to add or change!</span>';
 		}
 				
-		$setting = $this->config->item('image_tool');
 		if ($this->input->post('file_name') AND $this->input->post('new_name')) {
+			$extension = $this->Extensions_model->getExtension('tool', 'image_manager');
+			if (!empty($extension['data'])) {
+				$setting = unserialize($extension['data']);
+			} else {
+				$setting = array();
+			}
+
 			if (isset($setting['rename']) AND $setting['rename'] !== '1') {
 				$json['alert'] = '<span class="error">Renaming file/folder is disabled, check administration settings.</span>';
 			}
 			
 			$root_folder = 'data/';
-			if (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE) {
+			if (isset($setting['root_folder']) AND (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE)) {
 				$root_folder = $setting['root_folder'] .'/';
 			}
 
@@ -472,18 +512,24 @@ class Image_manager extends CI_Controller {
 	public function delete() {
 		$json = array();
 		
-    	if (!$this->user->hasPermissions('modify', 'admin/image_manager')) {
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/image_manager')) {
 			$json['alert'] = '<span class="error">Warning: You do not have permission to add or change!</span>';
 		}
 				
-		$setting = $this->config->item('image_tool');
 		if ($this->input->post('delete_files') OR $this->input->post('delete_file')) {
+			$extension = $this->Extensions_model->getExtension('tool', 'image_manager');
+			if (!empty($extension['data'])) {
+				$setting = unserialize($extension['data']);
+			} else {
+				$setting = array();
+			}
+
 			if (isset($setting['delete']) AND $setting['delete'] !== '1') {
 				$json['alert'] = '<span class="error">Deleting file/folder is disabled, check administration settings.</span>';
 			}
 			
 			$root_folder = 'data/';
-			if (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE) {
+			if (isset($setting['root_folder']) AND (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE)) {
 				$root_folder = $setting['root_folder'] .'/';
 			}
 
@@ -522,17 +568,23 @@ class Image_manager extends CI_Controller {
 	public function upload() {
 		$json = array();
 
-    	if (!$this->user->hasPermissions('modify', 'admin/image_manager')) {
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/image_manager')) {
 			$json['error'] = '<span class="error">Warning: You do not have permission to add or change!</span>';
 		}
 				
-		$setting = $this->config->item('image_tool');
+		$extension = $this->Extensions_model->getExtension('tool', 'image_manager');
+		if (!empty($extension['data'])) {
+			$setting = unserialize($extension['data']);
+		} else {
+			$setting = array();
+		}
+
 		if (isset($setting['uploads']) AND $setting['uploads'] !== '1') {
 			$json['error'] = '<span class="error">Uploading is disabled</span>';
 		}
 	
 		$root_folder = 'data/';
-		if (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE) {
+		if (isset($setting['root_folder']) AND (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE)) {
 			$root_folder = $setting['root_folder'] .'/';
 		}
 
@@ -599,7 +651,13 @@ class Image_manager extends CI_Controller {
 	}
 
 	public function _files($image_path, $sort = array()) {
-		$setting = $this->config->item('image_tool');
+		$extension = $this->Extensions_model->getExtension('tool', 'image_manager');
+		if (!empty($extension['data'])) {
+			$setting = unserialize($extension['data']);
+		} else {
+			$setting = array();
+		}
+
 		$allowed_ext = (isset($setting['allowed_ext'])) ? explode('|', $setting['allowed_ext']) : array();
 		$hidden_files = (isset($setting['hidden_files'])) ? explode('|', $setting['hidden_files']) : array();
 		$hidden_folders = (isset($setting['hidden_folders'])) ? explode('|', $setting['hidden_folders']) : array();

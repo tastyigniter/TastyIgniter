@@ -1,4 +1,5 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Mail_templates_model extends CI_Model {
 
 	public function getList() {
@@ -181,7 +182,7 @@ class Mail_templates_model extends CI_Model {
 	}
 
 	public function deleteTemplate($template_id) {
-		if ($template_id !== '11') {
+		if ($template_id !== $this->config->item('mail_template_id')) {
 			$this->db->where('template_id', $template_id);
 			$this->db->delete('mail_templates');
 

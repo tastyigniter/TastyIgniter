@@ -1,4 +1,5 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Countries extends CI_Controller {
 
 	public function __construct() {
@@ -9,13 +10,12 @@ class Countries extends CI_Controller {
 	}
 
 	public function index() {
-
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/countries')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/countries')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -66,13 +66,13 @@ class Countries extends CI_Controller {
 
 		$this->template->setTitle('Countries');
 		$this->template->setHeading('Countries');
-		$this->template->setButton('+ New', array('class' => 'add_button', 'href' => page_url() .'/edit'));
-		$this->template->setButton('Delete', array('class' => 'delete_button', 'onclick' => '$(\'form:not(#filter-form)\').submit();'));
+		$this->template->setButton('+ New', array('class' => 'btn btn-success', 'href' => page_url() .'/edit'));
+		$this->template->setButton('Delete', array('class' => 'btn btn-default', 'onclick' => '$(\'#list-form\').submit();'));
 
 		$data['text_empty'] 		= 'There are no countries available.';
 
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
-		$data['sort_name'] 			= site_url('admin/countries').$url.'sort_by=country_name&order_by='.$order_by;
+		$data['sort_name'] 			= site_url(ADMIN_URI.'/countries').$url.'sort_by=country_name&order_by='.$order_by;
 
 		$data['country_id'] = $this->config->item('country_id');
 
@@ -83,7 +83,7 @@ class Countries extends CI_Controller {
 				'country_id'	=>	$result['country_id'],
 				'name'			=>	$result['country_name'],
 				'status'		=>	($result['status'] === '1') ? 'Enabled' : 'Disabled',
-				'edit' 			=> site_url('admin/countries/edit?id=' . $result['country_id'])
+				'edit' 			=> site_url(ADMIN_URI.'/countries/edit?id=' . $result['country_id'])
 			);
 		}
 
@@ -92,8 +92,8 @@ class Countries extends CI_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 		
-		$config['base_url'] 		= site_url('admin/countries').$url;
-		$config['total_rows'] 		= $this->Countries_model->record_count($filter);
+		$config['base_url'] 		= site_url(ADMIN_URI.'/countries').$url;
+		$config['total_rows'] 		= $this->Countries_model->getAdminListCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 		
 		$this->pagination->initialize($config);
@@ -105,25 +105,24 @@ class Countries extends CI_Controller {
 
 		if ($this->input->post('delete') AND $this->_deleteCountry() === TRUE) {
 			
-			redirect('admin/countries');  			
+			redirect(ADMIN_URI.'/countries');  			
 		}	
 
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'countries.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'countries', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'countries.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'countries', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'countries', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'countries', $data);
 		}
 	}
 
 	public function edit() {
-
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/countries')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/countries')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -132,56 +131,56 @@ class Countries extends CI_Controller {
 			$data['alert'] = '';
 		}		
 
-		if (is_numeric($this->input->get('id'))) {
-			$country_id = $this->input->get('id');
-			$data['action']	= site_url('admin/countries/edit?id='. $country_id);
+		$country_info = $this->Countries_model->getCountry((int) $this->input->get('id'));
+		
+		if ($country_info) {
+			$country_id = $country_info['country_id'];
+			$data['action']	= site_url(ADMIN_URI.'/countries/edit?id='. $country_id);
 		} else {
 		    $country_id = 0;
-			$data['action']	= site_url('admin/countries/edit');
+			$data['action']	= site_url(ADMIN_URI.'/countries/edit');
 		}
 		
-		$result = $this->Countries_model->getCountry($country_id);
-		
-		$title = (isset($result['country_name'])) ? 'Edit - '. $result['country_name'] : 'New';	
+		$title = (isset($country_info['country_name'])) ? $country_info['country_name'] : 'New';	
 		$this->template->setTitle('Country: '. $title);
 		$this->template->setHeading('Country: '. $title);
-		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
-		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
-		$this->template->setBackButton('back_button', site_url('admin/countries'));
+		$this->template->setButton('Save', array('class' => 'btn btn-success', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('btn-back', site_url(ADMIN_URI.'/countries'));
 
-		$data['country_name'] 		= $result['country_name'];
-		$data['iso_code_2'] 		= $result['iso_code_2'];
-		$data['iso_code_3'] 		= $result['iso_code_3'];
-		$data['format'] 			= $result['format'];
-		$data['status'] 			= $result['status'];
+		$data['country_name'] 		= $country_info['country_name'];
+		$data['iso_code_2'] 		= $country_info['iso_code_2'];
+		$data['iso_code_3'] 		= $country_info['iso_code_3'];
+		$data['format'] 			= $country_info['format'];
+		$data['status'] 			= $country_info['status'];
 
 		if ($this->input->post() AND $this->_addCountry() === TRUE) {
 			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {	
-				redirect('admin/countries/edit?id='. $this->input->post('insert_id'));
+				redirect(ADMIN_URI.'/countries/edit?id='. $this->input->post('insert_id'));
 			} else {
-				redirect('admin/countries');
+				redirect(ADMIN_URI.'/countries');
 			}
 		}
 
 		if ($this->input->post() AND $this->_updateCountry() === TRUE) {
 			if ($this->input->post('save_close') === '1') {
-				redirect('admin/countries');
+				redirect(ADMIN_URI.'/countries');
 			}
 			
-			redirect('admin/countries/edit?id='. $country_id);
+			redirect(ADMIN_URI.'/countries/edit?id='. $country_id);
 		}
 			
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'countries_edit.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'countries_edit', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'countries_edit.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'countries_edit', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'countries_edit', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'countries_edit', $data);
 		}
 	}
 
 	public function _addCountry() {
-    	if (!$this->user->hasPermissions('modify', 'admin/countries')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add!</p>');
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/countries')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to add!</p>');
   			return TRUE;
     	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$add = array();
@@ -193,9 +192,9 @@ class Countries extends CI_Controller {
 			$add['status'] 			= $this->input->post('status');
 
 			if ($_POST['insert_id'] = $this->Countries_model->addCountry($add)) {	
-				$this->session->set_flashdata('alert', '<p class="success">Country added sucessfully.</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-success">Country added sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');				
+				$this->session->set_flashdata('alert', '<p class="alert-warning">An error occured, nothing updated.</p>');				
 			}
 	
 			return TRUE;
@@ -203,8 +202,8 @@ class Countries extends CI_Controller {
 	}
 	
 	public function _updateCountry() {
-    	if (!$this->user->hasPermissions('modify', 'admin/countries')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/countries')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to update!</p>');
   			return TRUE;
     	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 		
@@ -219,9 +218,9 @@ class Countries extends CI_Controller {
 
 
 			if ($this->Countries_model->updateCountry($update)) {	
-				$this->session->set_flashdata('alert', '<p class="success">Country updated sucessfully.</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-success">Country updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');				
+				$this->session->set_flashdata('alert', '<p class="alert-warning">An error occured, nothing updated.</p>');				
 			}
 		
 			return TRUE;
@@ -229,14 +228,14 @@ class Countries extends CI_Controller {
 	}	
 	
 	public function _deleteCountry() {
-    	if (!$this->user->hasPermissions('modify', 'admin/countries')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/countries')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to delete!</p>');
     	} else if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Countries_model->deleteCountry($value);
 			}			
 		
-			$this->session->set_flashdata('alert', '<p class="success">Country(s) deleted sucessfully!</p>');
+			$this->session->set_flashdata('alert', '<p class="alert-success">Country(s) deleted sucessfully!</p>');
 		}
 				
 		return TRUE;
@@ -244,8 +243,8 @@ class Countries extends CI_Controller {
 
 	public function validateForm() {
 		$this->form_validation->set_rules('country_name', 'Country', 'xss_clean|trim|required|min_length[2]|max_length[128]');
-		$this->form_validation->set_rules('iso_code_2', 'ISO Code (2)', 'xss_clean|trim|required|exact_length[2]');
-		$this->form_validation->set_rules('iso_code_3', 'ISO Code (3)', 'xss_clean|trim|required|exact_length[3]');
+		$this->form_validation->set_rules('iso_code_2', 'ISO Code 2', 'xss_clean|trim|required|exact_length[2]');
+		$this->form_validation->set_rules('iso_code_3', 'ISO Code 3', 'xss_clean|trim|required|exact_length[3]');
 		$this->form_validation->set_rules('format', 'Format', 'xss_clean|trim|min_length[2]');
 		$this->form_validation->set_rules('status', 'Status', 'xss_clean|trim|required|integer');
 

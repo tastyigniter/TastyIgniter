@@ -1,126 +1,153 @@
-<div id="box-content">
-	<div id="notification">
-		<?php if (validation_errors()) { ?>
-			<?php echo validation_errors('<span class="error">', '</span>'); ?>
-		<?php } ?>
-		<?php if (!empty($alert)) { ?>
-			<?php echo $alert; ?>
-		<?php } ?>
-	</div>
+<?php echo $header; ?>
+<div class="row content">
+	<div class="col-md-12">
+		<div id="notification">
+			<div class="alert alert-dismissable">
+				<?php if (!empty($alert)) { ?>
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+					<?php echo $alert; ?>
+				<?php } ?>
+				<?php if (validation_errors()) { ?>
+					<p class="alert-danger">Sorry but validation has failed, please check for errors.</p>
+				<?php } ?>
+			</div>
+		</div>
 
-	<div class="box">
-	<div id="update-box" class="content">
-	<form accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
-		<div class="wrap_heading">
-			<ul id="tabs">
-				<li><a class="active" rel="#staff-details">Staff Details</a></li>
-				<li><a rel="#basic-settings">Basic Settings</a></li>
+		<div class="row wrap-vertical">
+			<ul id="nav-tabs" class="nav nav-tabs">
+				<li class="active"><a href="#staff-details" data-toggle="tab">Staff Details</a></li>
+				<li><a href="#basic-settings" data-toggle="tab">Basic Settings</a></li>
 			</ul>
 		</div>
 
-		<div id="staff-details" class="wrap_content" style="display:block;">
-			<table class="form">
-				<tbody>
-					<tr>
-						<td><b>Name:</b></td>
-						<td><input type="text" name="staff_name" value="<?php echo set_value('staff_name', $staff_name); ?>" class="textfield" /></td>
-					</tr>
-					<tr>
-						<td><b>Email:</b></td>
-						<td><input type="text" name="staff_email" value="<?php echo set_value('staff_email', $staff_email); ?>" class="textfield" /></td>
-					</tr>
-					<tr>
-						<td><b>Username:</b></td>
-						<td><input type="text" name="username" value="<?php echo set_value('username', $username); ?>" class="textfield" /></td>
-					</tr>
-					<tr>
-						<td><b>Password:</b><br />
-						<font size="1">Leave blank to leave password unchanged</font></td>
-						<td><input type="password" name="password" value="" id="password" class="textfield" autocomplete="off" /></td>
-					</tr>
-					<tr>
-						<td><b>Password Confirm:</b></td>
-						<td><input type="password" name="password_confirm" id="password_confirm" class="textfield" autocomplete="off" /></td>
-					</tr>
-					<tr>
-						<td><b>Status:</b></td>
-						<td><select name="staff_status">
-							<option value="0" <?php echo set_select('staff_status', '0'); ?> >Disabled</option>
-						<?php if ($staff_status === '1') { ?>
-							<option value="1" <?php echo set_select('staff_status', '1', TRUE); ?> >Enabled</option>
-						<?php } else { ?>  
-							<option value="1" <?php echo set_select('staff_status', '1'); ?> >Enabled</option>
-						<?php } ?>  
-						</select></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
+			<div class="tab-content">
+				<div id="staff-details" class="tab-pane row wrap-all active">
+					<div class="form-group">
+						<label for="input-name" class="col-sm-2 control-label">Name:</label>
+						<div class="col-sm-5">
+							<input type="text" name="staff_name" id="input-name" class="form-control" value="<?php echo set_value('staff_name', $staff_name); ?>" />
+							<?php echo form_error('staff_name', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-email" class="col-sm-2 control-label">Email:</label>
+						<div class="col-sm-5">
+							<input type="text" name="staff_email" id="input-email" class="form-control" value="<?php echo set_value('staff_email', $staff_email); ?>" />
+							<?php echo form_error('staff_email', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-username" class="col-sm-2 control-label">Username:
+							<span class="help-block">Username can not be changed.</span>
+						</label>
+						<div class="col-sm-5">
+							<input type="text" name="username" id="input-username" class="form-control" value="<?php echo set_value('username', $username); ?>" />
+							<?php echo form_error('username', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-password" class="col-sm-2 control-label">Password:
+							<span class="help-block">Leave blank to leave password unchanged.</span>
+						</label>
+						<div class="col-sm-5">
+							<input type="password" name="password" id="input-password" class="form-control" value="" id="password" autocomplete="off" />
+							<?php echo form_error('password', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-name" class="col-sm-2 control-label">Password Confirm:</label>
+						<div class="col-sm-5">
+							<input type="password" name="password_confirm" id="" class="form-control" id="password_confirm" autocomplete="off" />
+							<?php echo form_error('password_confirm', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-status" class="col-sm-2 control-label">Status:</label>
+						<div class="col-sm-5">
+							<select name="staff_status" id="input-status" class="form-control">
+								<option value="0" <?php echo set_select('staff_status', '0'); ?> >Disabled</option>
+								<?php if ($staff_status === '1') { ?>
+									<option value="1" <?php echo set_select('staff_status', '1', TRUE); ?> >Enabled</option>
+								<?php } else { ?>  
+									<option value="1" <?php echo set_select('staff_status', '1'); ?> >Enabled</option>
+								<?php } ?>  
+							</select>
+							<?php echo form_error('staff_status', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+				</div>
 
-		<div id="basic-settings" class="wrap_content" style="display:none;">
-			<table class="form">
-				<tbody>
+				<div id="basic-settings" class="tab-pane row wrap-all">
 					<?php if (!$staff_profile) { ?>
-					<tr>
-						<td><b>Staff Group:</b></td>
-						<td><select name="staff_group">
-						<option value="">- please select -</option>
-						<?php foreach ($staff_groups as $staff_group) { ?>
-						<?php if ($staff_group['staff_group_id'] === $staff_group_id) { ?>
-							<option value="<?php echo $staff_group['staff_group_id']; ?>" <?php echo set_select('staff_group', $staff_group['staff_group_id'], TRUE); ?> ><?php echo $staff_group['staff_group_name']; ?></option>
-						<?php } else { ?>  
-							<option value="<?php echo $staff_group['staff_group_id']; ?>" <?php echo set_select('staff_group', $staff_group['staff_group_id']); ?> ><?php echo $staff_group['staff_group_name']; ?></option>
-						<?php } ?>  
-						<?php } ?>  
-						</select></td>
-					</tr>
-					<tr>
-						<td><b>Location:</b></td>
-						<td><select name="staff_location_id">
-							<option value="0">Use Default</option>
-						<?php foreach ($locations as $location) { ?>
-						<?php if ($location['location_id'] === $staff_location_id) { ?>
-							<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('staff_location_id', $location['location_id'], TRUE); ?> ><?php echo $location['location_name']; ?></option>
-						<?php } else { ?>  
-							<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('staff_location_id', $location['location_id']); ?> ><?php echo $location['location_name']; ?></option>
-						<?php } ?>  
-						<?php } ?>  
-						</select></td>
-					</tr>
+						<div class="form-group">
+							<label for="input-group" class="col-sm-2 control-label">Staff Group:</label>
+							<div class="col-sm-5">
+								<select name="staff_group" id="input-group" class="form-control">
+								<option value="">— Select —</option>
+								<?php foreach ($staff_groups as $staff_group) { ?>
+									<?php if ($staff_group['staff_group_id'] === $staff_group_id) { ?>
+										<option value="<?php echo $staff_group['staff_group_id']; ?>" <?php echo set_select('staff_group', $staff_group['staff_group_id'], TRUE); ?> ><?php echo $staff_group['staff_group_name']; ?></option>
+									<?php } else { ?>  
+										<option value="<?php echo $staff_group['staff_group_id']; ?>" <?php echo set_select('staff_group', $staff_group['staff_group_id']); ?> ><?php echo $staff_group['staff_group_name']; ?></option>
+									<?php } ?>  
+								<?php } ?>  
+								</select>
+								<?php echo form_error('staff_group', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="input-location" class="col-sm-2 control-label">Location:</label>
+							<div class="col-sm-5">
+								<select name="staff_location_id" id="input-location" class="form-control">
+									<option value="0">Use Default</option>
+									<?php foreach ($locations as $location) { ?>
+									<?php if ($location['location_id'] === $staff_location_id) { ?>
+										<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('staff_location_id', $location['location_id'], TRUE); ?> ><?php echo $location['location_name']; ?></option>
+									<?php } else { ?>  
+										<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('staff_location_id', $location['location_id']); ?> ><?php echo $location['location_name']; ?></option>
+									<?php } ?>  
+									<?php } ?>  
+								</select>
+								<?php echo form_error('staff_location_id', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div>
 					<?php } ?>  
-					<tr>
-						<td><b>Timezone:</b></td>
-						<td><select name="timezone">
-							<option value="0">Use Default</option>
-						<?php foreach ($timezones as $key => $value) { ?>
-						<?php if ($key === $timezone) { ?>
-							<option value="<?php echo $key; ?>" selected="selected"><?php echo $value; ?></option>
-						<?php } else { ?>  
-							<option value="<?php echo $key; ?>"><?php echo $value; ?></option>
-						<?php } ?>  
-						<?php } ?>  
-						</select></td>
-					</tr>
-					<tr>
-						<td><b>Language:</b></td>
-						<td><select name="language_id">
-							<option value="0">Use Default</option>
-						<?php foreach ($languages as $language) { ?>
-						<?php if ($language['language_id'] === $language_id) { ?>
-							<option value="<?php echo $language['language_id']; ?>" selected="selected"><?php echo $language['name']; ?></option>
-						<?php } else { ?>  
-							<option value="<?php echo $language['language_id']; ?>"><?php echo $language['name']; ?></option>
-						<?php } ?>  
-						<?php } ?>  
-						</select></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</form>
-	</div>
+					<div class="form-group">
+						<label for="input-timezone" class="col-sm-2 control-label">Timezone:</label>
+						<div class="col-sm-5">
+							<select name="timezone" id="input-timezone" class="form-control">
+								<option value="0">Use Default</option>
+								<?php foreach ($timezones as $key => $value) { ?>
+									<?php if ($key === $timezone) { ?>
+										<option value="<?php echo $key; ?>" selected="selected"><?php echo $value; ?></option>
+									<?php } else { ?>  
+										<option value="<?php echo $key; ?>"><?php echo $value; ?></option>
+									<?php } ?>  
+								<?php } ?>  
+							</select>
+							<?php echo form_error('timezone', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-language" class="col-sm-2 control-label">Language:</label>
+						<div class="col-sm-5">
+							<select name="language_id" id="input-language" class="form-control">
+								<option value="0">Use Default</option>
+								<?php foreach ($languages as $language) { ?>
+									<?php if ($language['language_id'] === $language_id) { ?>
+										<option value="<?php echo $language['language_id']; ?>" selected="selected"><?php echo $language['name']; ?></option>
+									<?php } else { ?>  
+										<option value="<?php echo $language['language_id']; ?>"><?php echo $language['name']; ?></option>
+									<?php } ?>  
+								<?php } ?>  
+							</select>
+							<?php echo form_error('language_id', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
 	</div>
 </div>
-<script type="text/javascript"><!--
-$('#tabs a').tabs();
-//--></script> 
+<?php echo $footer; ?>

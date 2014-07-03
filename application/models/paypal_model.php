@@ -1,4 +1,5 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Paypal_model extends CI_Model {
 	
 	public function setExpressCheckout($order_info, $cart_items) {
@@ -7,8 +8,8 @@ class Paypal_model extends CI_Model {
 			$nvp_data = '';
 			if ($order_info['order_type'] === '1' AND (!empty($order_info['address_id']) OR !empty($order_info['customer_id']))) {
 				
-				$this->load->model('Customers_model');
-				$address = $this->Customers_model->getCustomerAddress($order_info['customer_id'], $order_info['address_id']);
+				$this->load->model('Addresses_model');
+				$address = $this->Addresses_model->getCustomerAddress($order_info['customer_id'], $order_info['address_id']);
 				
 				$nvp_data .= '&PAYMENTREQUEST_0_SHIPTONAME='. urlencode($order_info['first_name'] .' '. $order_info['last_name']);
 				$nvp_data .= '&PAYMENTREQUEST_0_SHIPTOSTREET='. urlencode($address['address_1']);
@@ -85,7 +86,7 @@ class Paypal_model extends CI_Model {
 		}
 	}
 	
-	public function getTransactionDetails($transaction_id, $order_id, $customer_id) {
+	public function getTransactionDetails($transaction_id) {
 	
 		$nvp_data = '&TRANSACTIONID='. urlencode($transaction_id);
 		
@@ -139,12 +140,14 @@ class Paypal_model extends CI_Model {
 	
 	public function sendPaypal($method, $nvp_data) {
 		$settings = $this->config->item('paypal_express_payment');
-		$paypal_user = (isset($settings['paypal_user'])) ? $settings['paypal_user'] : '';
-		$paypal_pass = (isset($settings['paypal_pass'])) ? $settings['paypal_pass'] : '';
-		$paypal_sign = (isset($settings['paypal_sign'])) ? $settings['paypal_sign'] : '';
-		$paypal_action = (isset($settings['paypal_action'])) ? $settings['paypal_action'] : '';
+		$api_user = (isset($settings['api_user'])) ? $settings['api_user'] : '';
+		$api_pass = (isset($settings['api_pass'])) ? $settings['api_pass'] : '';
+		$api_signature = (isset($settings['api_signature'])) ? $settings['api_signature'] : '';
+		$api_action = (isset($settings['api_action'])) ? $settings['api_action'] : '';
+		$return_uri = (isset($settings['return_uri'])) ? $settings['return_uri'] : '';
+		$cancel_uri = (isset($settings['cancel_uri'])) ? $settings['cancel_uri'] : '';
 		
-		if (isset($settings['paypal_mode']) AND $settings['paypal_mode'] === 'sandbox') {
+		if (isset($settings['api_mode']) AND $settings['api_mode'] === 'sandbox') {
 			$api_mode = '.sandbox';
 		} else {
 			$api_mode = '';
@@ -155,13 +158,13 @@ class Paypal_model extends CI_Model {
 		// Set the API operation, version, and API signature in the request.
 		$nvp_string  = 'VERSION=76.0';
 		$nvp_string .= '&METHOD='. urlencode($method);
-		$nvp_string .= '&USER='. urlencode($paypal_user);
-		$nvp_string .= '&PWD='. urlencode($paypal_pass);
-		$nvp_string .= '&SIGNATURE='. urlencode($paypal_sign);
-		$nvp_string .= '&RETURNURL='. urlencode(site_url('main/payments/paypal'));
-		$nvp_string .= '&CANCELURL='. urlencode(site_url('main/checkout'));	
+		$nvp_string .= '&USER='. urlencode($api_user);
+		$nvp_string .= '&PWD='. urlencode($api_pass);
+		$nvp_string .= '&SIGNATURE='. urlencode($api_signature);
+		$nvp_string .= '&RETURNURL='. urlencode(site_url($return_uri));
+		$nvp_string .= '&CANCELURL='. urlencode(site_url($cancel_uri));	
 
-		if ($paypal_action === 'sale') {
+		if ($api_action === 'sale') {
 			$nvp_string .= '&PAYMENTREQUEST_0_PAYMENTACTION=SALE';
 		} else {
 			$nvp_string .= '&PAYMENTREQUEST_0_PAYMENTACTION=AUTHORIZATION';		

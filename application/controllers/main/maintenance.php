@@ -1,4 +1,4 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Maintenance extends CI_Controller {
 
@@ -23,13 +23,13 @@ class Maintenance extends CI_Controller {
 			
 			$this->template->setTitle($page['title']);
 			$this->template->setHeading($page['heading']);
-			$data['content'] 		= $page['content'];
+			$data['text_heading'] 		= $page['heading'];
+			$data['content'] 			= $page['content'];
 			
-			$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 			if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'maintenance.php')) {
-				$this->template->render('themes/main/'.$this->config->item('main_theme'), 'maintenance', $data);
+				$this->load->view('themes/main/'.$this->config->item('main_theme').'maintenance', $data);
 			} else {
-				$this->template->render('themes/main/default/', 'maintenance', $data);
+				$this->load->view('themes/main/default/maintenance', $data);
 			}
 		} else {
 			redirect('main/menus');

@@ -1,4 +1,5 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Checkout extends MX_Controller {
 	
 	public function __construct() {
@@ -8,6 +9,7 @@ class Checkout extends MX_Controller {
 		$this->load->library('location'); 														// load the location library
 		$this->load->library('currency'); 														// load the currency library
 		$this->load->model('Customers_model'); 													// load the customers model
+		$this->load->model('Addresses_model'); 													// load the addresses model
 		$this->load->model('Orders_model'); 													// load the orders model
 		$this->load->model('Locations_model'); 													// load the locations model
 		$this->load->model('Countries_model');
@@ -20,33 +22,33 @@ class Checkout extends MX_Controller {
 	}
 
 	public function index() {
-		if (is_numeric($this->input->cookie('last_order_id'))) {
-			//redirect('checkout/success');														// redirect to checkout success page with returned order id
-  		}
-		
 		if ( ! $this->cart->contents()) { 														// checks if cart contents is empty  
-			$this->session->set_flashdata('alert', $this->lang->line('warning_no_cart'));
-  			redirect('menus');																	// redirect to menus page and display error
+			$this->session->set_flashdata('alert', $this->lang->line('alert_no_cart'));
+  			redirect('main/menus');																	// redirect to menus page and display error
 		}
 		
 		if ( ! $this->location->local() AND $this->config->item('location_order') === '1') { 														// else if local restaurant is not selected
-			$this->session->set_flashdata('alert', $this->lang->line('warning_no_local'));
-  			redirect('menus');																	// redirect to menus page and display error
+			$this->session->set_flashdata('alert', $this->lang->line('alert_no_local'));
+  			redirect('main/menus');																	// redirect to menus page and display error
 		}
 		
 		if ( ! $this->location->isOpened()) { 													// else if local restaurant is not open
-			$this->session->set_flashdata('alert', $this->lang->line('warning_is_closed'));
-  			redirect('menus');																	// redirect to menus page and display error
+			$this->session->set_flashdata('alert', $this->lang->line('alert_is_closed'));
+  			redirect('main/menus');																	// redirect to menus page and display error
+		}
+		
+		if (( ! $this->location->checkDelivery() AND ! $this->location->checkCollection()) AND $this->config->item('location_order') === '1') { 													// else if local restaurant is not open
+			$this->session->set_flashdata('alert', $this->lang->line('alert_no_order'));
+  			redirect('main/menus');																	// redirect to menus page and display error
 		}
 		
 		if ( ! $this->location->checkMinTotal($this->cart->total())) { 							// checks if cart contents is empty  
-			//$this->session->set_flashdata('alert', $this->lang->line('warning_min_delivery'));
-  			redirect('menus');																	// redirect to menus page and display error
+  			redirect('main/menus');																	// redirect to menus page and display error
 		}
 		
-		if ( ! $this->customer->islogged() AND $this->config->item('guest_order') === '0') { 											// else if customer is not logged in
-			//$this->session->set_flashdata('alert', $this->lang->line('warning_not_logged'));
-  			redirect('account/login');															// redirect to account register page and display error
+		if ( ! $this->customer->islogged() AND $this->config->item('guest_order') !== '1') { 											// else if customer is not logged in
+			$this->session->set_flashdata('alert', $this->lang->line('alert_not_logged'));
+  			redirect('main/login');															// redirect to account register page and display error
 		}
 
 		if ($this->session->flashdata('alert')) {
@@ -57,26 +59,25 @@ class Checkout extends MX_Controller {
 
 		$order_data = $this->session->userdata('order_data');
 		
-		if (isset($order_data['post_checkout']) AND $this->input->post('payment')) { 						// check if post data and validate checkout is successful
-			$this->_validatePayment();
-		}
-
 		if ($this->input->post() AND $this->_validateCheckout() === TRUE) { 						// check if post data and validate checkout is successful
-			redirect('checkout');
+			if (!$this->input->post('post_checkout')) {
+				redirect('checkout');
+			} else if ($this->input->post('payment')) {
+				$this->_validatePayment();
+			}
 		}
 
 		// START of retrieving lines from language file to pass to view.
 		$this->template->setTitle($this->lang->line('text_heading'));
 		$this->template->setHeading($this->lang->line('text_heading'));
+		$data['text_heading'] 			= $this->lang->line('text_heading');
 		$data['text_checkout'] 			= $this->lang->line('text_checkout');
+		$data['text_login_register']	= $this->customer->isLogged() ? sprintf($this->lang->line('text_logout'), $this->customer->getFirstName(), site_url('main/logout')) : sprintf($this->lang->line('text_registered'), site_url('main/login'));
 		$data['text_asap']				= $this->lang->line('text_asap');
 		$data['text_new']				= $this->lang->line('text_new');
 		$data['text_existing']			= $this->lang->line('text_existing');
 		$data['text_payments'] 			= $this->lang->line('text_payments');
-		$data['text_cod'] 				= $this->lang->line('text_cod');
-		$data['text_paypal'] 			= $this->lang->line('text_paypal');
 		$data['text_ip_warning'] 		= $this->lang->line('text_ip_warning');
-		$data['text_postcode'] 			= $this->lang->line('text_postcode');
 		$data['entry_first_name'] 		= $this->lang->line('entry_first_name');
 		$data['entry_last_name'] 		= $this->lang->line('entry_last_name');
 		$data['entry_email'] 			= $this->lang->line('entry_email');
@@ -86,7 +87,6 @@ class Checkout extends MX_Controller {
 		$data['entry_collection'] 		= $this->lang->line('entry_collection');
 		$data['entry_order_time'] 		= $this->lang->line('entry_order_time');
 		$data['entry_address'] 			= $this->lang->line('entry_address');
-		$data['entry_use_address'] 		= $this->lang->line('entry_use_address');
 		$data['entry_address_1'] 		= $this->lang->line('entry_address_1');
 		$data['entry_address_2'] 		= $this->lang->line('entry_address_2');
 		$data['entry_city'] 			= $this->lang->line('entry_city');
@@ -98,17 +98,21 @@ class Checkout extends MX_Controller {
 		$data['button_check_postcode'] 	= $this->lang->line('button_check_postcode');
 		// END of retrieving lines from language file to send to view.
 		
+		$data['action'] = site_url('main/checkout');
+		
 		if (isset($order_data['customer_id']) AND $order_data['customer_id'] !== $this->customer->getId()) {
+			$this->session->unset_userdata('order_data');
 			$order_data = array();
 		}
-		
-		if (isset($order_data['post_checkout'])) {
-			$data['post_checkout'] = $order_data['post_checkout']; 								// retrieve post_checkout from session data
-			$data['button_left'] 	= '<a class="button" onClick="$(\'#checkout\').fadeIn();$(\'#payment\').empty();$(this).fadeOut();$(\'.right-btn\').html(\'Payment\')">Back</a>';
-			$data['button_right'] 	= '<a class="button right-btn" onclick="$(\'#checkout-form\').submit();">'. $this->lang->line('button_confirm') .'</a>';
+
+		if ($this->input->post('post_checkout')) {
+			$data['post_checkout'] 		= $this->input->post('post_checkout'); 								// retrieve post_checkout from session data
+			$data['button_back'] 		= '<a class="btn btn-default" onClick="$(\'#checkout\').fadeIn();$(\'#payment\').empty();$(this).fadeOut();$(\'.right-btn\').html(\'Payment\')">'. $this->lang->line('button_back') .'</a>';
+			$data['button_continue'] 	= '<a class="btn btn-success right-btn" onclick="$(\'#checkout-form\').submit();">'. $this->lang->line('button_confirm') .'</a>';
 		} else {
-			$data['post_checkout'] = '';
-			$data['button_right'] 	= '<a class="button right-btn" onclick="$(\'#checkout-form\').submit();">'. $this->lang->line('button_continue') .'</a>';
+			$data['post_checkout'] 		= '';
+			$data['button_back'] 		= '<a class="btn btn-default" href="'. site_url('main/menus') .'">'. $this->lang->line('button_back') .'</a>';
+			$data['button_continue'] 	= '<a class="btn btn-success right-btn" onclick="$(\'#checkout-form\').submit();">'. $this->lang->line('button_continue') .'</a>';
 		}
 		
 		if (isset($order_data['first_name'])) {
@@ -141,6 +145,18 @@ class Checkout extends MX_Controller {
 			$data['telephone'] = $this->customer->getTelephone(); 								// retrieve customer telephone from customer library
 		} else {
 			$data['telephone'] = '';
+		}
+		
+		if ($this->input->post('comment')) {
+			$data['comment'] = $this->input->post('comment'); 							// retrieve comment value from $_POST data if set
+		} else if (isset($order_data['comment'])) {
+			$data['comment'] = $order_data['comment']; 									// retrieve comment from session data
+		} else {
+			$data['comment'] = '';
+		}
+						
+		if ($this->input->ip_address()) {
+			$data['ip_address'] = $this->input->ip_address(); 									// retrieve ip_address value if set
 		}
 		
 		$local_info = $this->session->userdata('local_info');
@@ -178,29 +194,21 @@ class Checkout extends MX_Controller {
 			$data['new_address'] = '';
 		}
 						
-		if ($this->input->post('comment')) {
-			$data['comment'] = $this->input->post('comment'); 							// retrieve comment value from $_POST data if set
-		} else if (isset($order_data['comment'])) {
-			$data['comment'] = $order_data['comment']; 									// retrieve comment from session data
+		if (isset($order_data['address_id'])) {
+			$addresses = $this->Addresses_model->getGuestAddress($order_data['address_id']);  							// retrieve customer addresses array from getCustomerAddresses method in Customers model
+		} else if ($this->customer->islogged()) {
+			$addresses = $this->Addresses_model->getCustomerAddresses($this->customer->getId());  							// retrieve customer addresses array from getCustomerAddresses method in Customers model
 		} else {
-			$data['comment'] = '';
-		}
-						
-		if ($this->input->ip_address()) {
-			$data['ip_address'] = $this->input->ip_address(); 									// retrieve ip_address value if set
+			$addresses = array();
 		}
 		
-     	$data['addresses'] = array();
-		$addresses = $this->Customers_model->getCustomerAddresses($this->customer->getId());  							// retrieve customer addresses array from getCustomerAddresses method in Customers model
+		$this->load->library('country');
+		$data['addresses'] = array();
 		if ($addresses) {
       		foreach ($addresses as $address) {													// loop through customer addresses arrary
 				$data['addresses'][] = array( 													// create array of address data to pass to view
 					'address_id'	=> $address['address_id'],
-					'address_1'		=> $address['address_1'],
-					'address_2' 	=> $address['address_2'],
-					'city' 			=> $address['city'],			
-					'postcode' 		=> $address['postcode'],	
-					'country' 		=> $address['country']
+					'address'		=> $this->country->addressFormat($address)
 				);
 			}
 		}
@@ -221,10 +229,7 @@ class Checkout extends MX_Controller {
 		$start_time = $this->location->openingTime();
 		$end_time = ($this->location->closingTime() === '00:00') ? '23:59' : $this->location->closingTime();											// retrieve location closing time from location library
 		$current_time = $this->location->currentTime(); 								// retrieve the location current time from location library
-		
-		if ($this->location->readyTime()) {
-			$ready_time = $this->location->readyTime();
-		}
+		$ready_time = $this->location->readyTime();
 		
 		$data['asap_time'] = mdate('%H:%i', strtotime($current_time) + $ready_time * 60);
 		$data['delivery_times'] = array();
@@ -240,8 +245,15 @@ class Checkout extends MX_Controller {
 		
 		$paypal = $this->config->item('paypal_express_payment');
 		$cod = $this->config->item('cod_payment');
-		$data['paypal_status'] = $paypal['paypal_status'];
-		$data['cod_status'] = $cod['cod_status'];
+		
+		$data['payments'] = array();
+		if ($cod['cod_status'] === '1') {
+			$data['payments'][] = array('name' => $this->lang->line('text_cod'), 'value' => 'cod', 'sort' => '1');
+		}
+		
+		if ($paypal['status'] === '1') {
+			$data['payments'][] = array('name' => $this->lang->line('text_paypal'), 'value' => 'paypal', 'sort' => '2');
+		}
 		
 		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'checkout.php')) {
@@ -251,6 +263,30 @@ class Checkout extends MX_Controller {
 		}
 	}
 		
+	public function paypal() {
+		if ($this->input->get('token') AND $this->input->get('PayerID')) { 						// check if token and PayerID is in $_GET data
+			$token = $this->input->get('token'); 												// retrieve token from $_GET data
+			$payer_id = $this->input->get('PayerID'); 											// retrieve PayerID from $_GET data
+			$order_data = $this->session->userdata('order_data'); 							// retrieve order details from session userdata
+
+			$customer_id = (!$this->customer->islogged()) ? '' : $this->customer->getId();
+			$order_id = (is_numeric($this->input->cookie('last_order_id'))) ? $this->input->cookie('last_order_id') : FALSE;
+			$order_info = $this->Orders_model->getMainOrder($order_id, $order_data['customer_id']);	// retrieve order details array from getMainOrder method in Orders model
+			$transaction_id = $this->Paypal_model->doExpressCheckout($token, $payer_id);
+
+			if ($transaction_id AND $order_info) {
+				$transaction_details = $this->Paypal_model->getTransactionDetails($transaction_id);
+				$this->Paypal_model->addPaypalOrder($transaction_id, $order_id, $customer_id, $transaction_details);
+				$this->Orders_model->completeOrder($order_id, $order_data);
+
+				redirect('main/checkout/success');
+			}
+		}
+
+		$this->session->set_flashdata('alert', $this->lang->line('alert_server_error'));
+		redirect('main/checkout');
+	}
+
 	public function success() {
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
@@ -260,11 +296,14 @@ class Checkout extends MX_Controller {
 
 		if ($this->customer->islogged()) {														// checks if customer is logged in
 			$customer_id = $this->customer->getId();											// retrieve customer id from customer library
+		} else {
+			$customer_id = '';
 		}
 
 		// START of retrieving lines from language file to pass to view.
 		$this->template->setTitle($this->lang->line('text_success_heading'));
 		$this->template->setHeading($this->lang->line('text_success_heading'));
+		$data['text_heading'] 				= $this->lang->line('text_success_heading');
 		$data['text_order_details'] 		= $this->lang->line('text_order_details');
 		$data['text_order_items'] 			= $this->lang->line('text_order_items');
 		$data['text_delivery_address'] 		= $this->lang->line('text_delivery_address');
@@ -279,7 +318,10 @@ class Checkout extends MX_Controller {
 			$order_info = array();
 		}
 
-		if ($order_info) {																	// checks if array is returned
+		if (!$order_info) {																	// checks if array is returned
+			$this->session->set_flashdata('alert', $this->lang->line('alert_server_error'));
+			redirect('menus');
+		} else {																				// else redirect to checkout
 			$data['message'] = sprintf($this->lang->line('text_success_message'), $order_info['order_id'], site_url('main/orders'));
 		
 			if ($order_info['order_type'] === 1) { 											// checks if order type is delivery or collection
@@ -302,19 +344,19 @@ class Checkout extends MX_Controller {
 		
 			if (!empty($order_info['address_id'])) {											// checks if address_id is set then retrieve delivery address
 				$this->load->library('country');
-				$delivery_address = $this->Customers_model->getCustomerAddress($customer_id, $order_info['address_id']);
+				$delivery_address = $this->Addresses_model->getCustomerAddress($customer_id, $order_info['address_id']);
 				$data['delivery_address'] = $this->country->addressFormat($delivery_address);
 			} else {
 				$data['delivery_address'] = FALSE;
 			}
 		
-			$this->load->library('country');
-			$location_address = $this->Locations_model->getLocationAddress($order_info['location_id']);
-			$data['location_name'] = $location_address['location_name'];
-			$data['location_address'] = $this->country->addressFormat($location_address);
-	
-		} else {																				// else redirect to checkout
-			redirect('home');
+			$data['location_name'] = $data['location_address'] = '';
+			if (!empty($order_info['location_id'])) {
+				$this->load->library('country');
+				$location_address = $this->Locations_model->getLocationAddress($order_info['location_id']);
+				$data['location_name'] = $location_address['location_name'];
+				$data['location_address'] = $this->country->addressFormat($location_address);
+			}
 		}
 				
 		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
@@ -333,10 +375,10 @@ class Checkout extends MX_Controller {
 				$order_data['location_id'] = $this->location->getId();					// retrieve location id from location library and add to order_data array
 			}
 			
-			if ($this->customer->getId()) {
+			if ($this->customer->islogged() AND $this->customer->getId()) {
 				$order_data['customer_id'] = $this->customer->getId();					// retrive customer id from customer library and add to order_data array
 			} else {
-				$order_data['customer_id'] = '0';
+				$order_data['customer_id'] = '';
 			}
 			
 			$order_data['first_name'] 	= $this->input->post('first_name');
@@ -346,29 +388,21 @@ class Checkout extends MX_Controller {
 			$order_data['order_time'] 	= $this->input->post('order_time');					// retrieve order_time value from $_POST data if set and add to order_data array
 		 	$order_data['order_type'] 	= $this->input->post('order_type');				// retrieve order_type value from $_POST data if set and convert to integer then add to order_data array			
 			$order_data['new_address'] 	= $this->input->post('new_address');
+	 		$order_data['comment'] 		= $this->input->post('comment');						// retrieve comment value from $_POST data if set and convert to integer then add to order_data array
 		
-			if ($this->input->post('order_type') === '1') {
-				if ($this->input->post('new_address') === '1') {								// checks if new-address $_POST data is set else use existing address $_POST data
-					$order_data['address_id'] = $this->Customers_model->addCustomerAddress($this->customer->getId(), $this->input->post('address')); 	// send new-address $_POST data and customer id to addCustomerAddress method in Customers model
-				}
-				
-				if ($this->input->post('new_address') === '2') {								// checks if new-address $_POST data is set else use existing address $_POST data
-					$order_data['address_id'] = (int)$this->input->post('existing_address');
-				}
-			
-				$this->Customers_model->updateCustomerDefaultAddress($order_data['customer_id'], $order_data['address_id']);
-			}
-			
-		 	if ($this->input->post('comment')) {
-	 			$order_data['comment'] = $this->input->post('comment');						// retrieve comment value from $_POST data if set and convert to integer then add to order_data array
-			}
-			
 			if ($this->session->userdata('coupon_code')) {
 				$order_data['coupon_code'] = $this->session->userdata('coupon_code');
-				//$this->session->unset_userdata('coupon_code');
 			}
 
-			$order_data['post_checkout'] = time();
+			if ($this->input->post('order_type') === '1') {
+				if ($this->input->post('new_address') === '1') {								// checks if new-address $_POST data is set else use existing address $_POST data
+					$order_data['address_id'] = $this->Addresses_model->addCustomerAddress($order_data['customer_id'], $this->input->post('address')); 	// send new-address $_POST data and customer id to addCustomerAddress method in Customers model
+				} else {																		// checks if new-address $_POST data is set else use existing address $_POST data
+					$order_data['address_id'] = (int)$this->input->post('existing_address');
+				}
+			}
+			
+			$_POST['post_checkout'] = time();
 			$this->session->set_userdata('order_data', $order_data);					// save order details to session and return TRUE
 			return TRUE;
 		} else {
@@ -377,44 +411,40 @@ class Checkout extends MX_Controller {
 	}
 
 	public function _validatePayment() {
-		$this->form_validation->set_rules('payment', 'Payment Method', 'xss_clean|trim|required');
-		
-		if ($this->form_validation->run() === TRUE AND $this->_validateCheckout() === TRUE) {
-			$order_data = $this->session->userdata('order_data'); 						// retrieve order details from session userdata
-			$cart_contents = $this->session->userdata('cart_contents'); 												// retrieve cart contents
+		$order_data = $this->session->userdata('order_data'); 						// retrieve order details from session userdata
+		$cart_contents = $this->session->userdata('cart_contents'); 												// retrieve cart contents
 
-			if (isset($order_data['post_checkout'])) {
-				$order_data['payment'] = $this->input->post('payment');
-				
-				$order_id = (is_numeric($this->input->cookie('last_order_id'))) ? $this->input->cookie('last_order_id') : FALSE;
-				$order_info = $this->Orders_model->getMainOrder($order_id, $order_data['customer_id']);	// retrieve order details array from getMainOrder method in Orders model
-				
-				if ((!$order_info AND empty($order_info['status_id'])) AND $this->input->post('payment')) {
-					$order_id = $this->Orders_model->addOrder($order_data, $cart_contents);
-					$this->input->set_cookie('last_order_id', $order_id, 300, '.'.$_SERVER['HTTP_HOST']);
+		if (!empty($this->input->post('post_checkout'))) {
+			$order_data['payment'] = $this->input->post('payment');
+			
+			$order_id = (is_numeric($this->input->cookie('last_order_id'))) ? $this->input->cookie('last_order_id') : FALSE;
+			$order_info = $this->Orders_model->getMainOrder($order_id, $order_data['customer_id']);	// retrieve order details array from getMainOrder method in Orders model
+			
+			if ((!$order_info AND empty($order_info['status_id'])) AND $this->input->post('payment')) {
+				$order_id = $this->Orders_model->addOrder($order_data, $cart_contents);
+				$this->input->set_cookie('last_order_id', $order_id, 300, '.'.$_SERVER['HTTP_HOST']);
+			}
+			
+			if ($order_id) {
+				if ($this->input->post('payment') === 'cod') { 											// else if payment method is cash on delivery
+					$this->Orders_model->completeOrder($order_id, $order_data);
+					redirect('main/checkout/success');									// redirect to checkout success page with returned order id
 				}
-				
-				if ($order_id) {
 
-					if ($this->input->post('payment') === 'cod') { 											// else if payment method is cash on delivery
-						$this->Orders_model->completeOrder($order_id, $order_data);
-						redirect('checkout/success');									// redirect to checkout success page with returned order id
-					}
-	
-					if ($this->input->post('payment') === 'paypal') { 								// check if payment method is equal to paypal
-						$response = $this->Paypal_model->setExpressCheckout($order_data, $this->cart->contents());
-			
-						if (strtoupper($response['ACK']) === 'SUCCESS' OR strtoupper($response['ACK']) === 'SUCCESSWITHWARNING') {
-							if ($this->config->item('paypal_mode') === 'sandbox') {
-								$api_mode = '.sandbox';
-							} else {
-								$api_mode = '';
-							}
-			
-							redirect('https://www'. $api_mode .'.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token='. $response['TOKEN'] .'');
+				if ($this->input->post('payment') === 'paypal') { 								// check if payment method is equal to paypal
+					$response = $this->Paypal_model->setExpressCheckout($order_data, $this->cart->contents());
+		  
+					if (strtoupper($response['ACK']) === 'SUCCESS' OR strtoupper($response['ACK']) === 'SUCCESSWITHWARNING') {
+						$paypal_config = $this->config->item('paypal_express_payment');
+						if (isset($paypal_config['api_mode']) AND $paypal_config['api_mode'] === 'sandbox') {
+							$api_mode = '.sandbox';
 						} else {
-							log_message('error', $response['L_ERRORCODE0'] .' --> '. $response['L_LONGMESSAGE0'] .' --> '. $response['CORRELATIONID']);			
+							$api_mode = '';
 						}
+		
+						redirect('https://www'. $api_mode .'.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token='. $response['TOKEN'] .'');
+					} else {
+						log_message('error', $response['L_ERRORCODE0'] .' --> '. $response['L_LONGMESSAGE0'] .' --> '. $response['CORRELATIONID']);			
 					}
 				}
 			}
@@ -425,9 +455,10 @@ class Checkout extends MX_Controller {
 		// START of form validation rules
 		$this->form_validation->set_rules('first_name', 'First Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		$this->form_validation->set_rules('last_name', 'Last Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
+		$this->form_validation->set_rules('email', 'Email', 'xss_clean|trim|required|valid_email|max_length[96]');
 		
-		if ($this->input->post('email') !== $this->customer->getEmail()) {
-			$this->form_validation->set_rules('email', 'Email', 'xss_clean|trim|required|valid_email|is_unique[customers.email]|max_length[96]');
+		if (strtolower($this->input->post('email')) !== $this->customer->getEmail()) {
+			$this->form_validation->set_rules('email', 'Email', 'is_unique[customers.email]');
 			$this->form_validation->set_message('is_unique', 'Warning: E-Mail Address is already registered!');
 		}
 
@@ -449,6 +480,11 @@ class Checkout extends MX_Controller {
 		}
 		
 		$this->form_validation->set_rules('comment', 'Comment', 'xss_clean|trim|max_length[520]'); 
+		
+		if ($this->input->post('post_checkout')) {
+			$this->form_validation->set_rules('payment', 'Payment Method', 'xss_clean|trim|required|alpha');
+		}
+		
 		// END of form validation rules
 
   		if ($this->form_validation->run() === TRUE) {											// checks if form validation routines ran successfully
@@ -459,7 +495,6 @@ class Checkout extends MX_Controller {
 	}
 	
 	public function validate_time($str) { 	// validation callback function to check if order_time $_POST data is a valid time, is less than the restaurant current time and is within the restaurant opening and closing hour
-		
 		if (strtotime($str) < strtotime($this->location->currentTime())) {
         	$this->form_validation->set_message('validate_time', $this->lang->line('error_less_time'));
       		return FALSE;
@@ -472,17 +507,17 @@ class Checkout extends MX_Controller {
 	}
 
 	public function order_type($type) {
-	
-		if (($type == '1') AND ($this->location->checkDelivery() === 'no')) { 					// checks if cart contents is empty  
-			$this->form_validation->set_message('order_type', $this->lang->line('warning_no_delivery'));
-			return FALSE;
-		} else if (($type == '2') AND ( ! $this->location->checkCollection())) { 				// checks if cart contents is empty  
-			$this->form_validation->set_message('order_type', $this->lang->line('warning_no_collection'));
-			return FALSE;
-		} else {																				// else validation is successful
-			return TRUE;
+		if ($this->config->item('location_order') === '1') {
+			if (($type == '1') AND ( ! $this->location->checkDelivery())) { 					// checks if cart contents is empty  
+				$this->form_validation->set_message('order_type', $this->lang->line('error_no_delivery'));
+				return FALSE;
+			} else if (($type == '2') AND ( ! $this->location->checkCollection())) { 				// checks if cart contents is empty  
+				$this->form_validation->set_message('order_type', $this->lang->line('error_no_collection'));
+				return FALSE;
+			} else {																				// else validation is successful
+				return TRUE;
+			}
 		}
-	
 	}
 
 	public function validate_address() {
@@ -491,12 +526,17 @@ class Checkout extends MX_Controller {
 		if (!empty($address['postcode'])) {
 			$search = $address['postcode'];
 		} else if ($this->input->post('existing_address')) {
-			$address = $this->Customers_model->getCustomerAddress($this->customer->getId(), $this->input->post('existing_address')); 	// send new-address $_POST data and customer id to addCustomerAddress method in Customers model
-			$search = $address['postcode'];
+			$address = $this->Addresses_model->getCustomerAddress($this->customer->getId(), $this->input->post('existing_address')); 	// send new-address $_POST data and customer id to addCustomerAddress method in Customers model
+			if (!$address) {
+				$this->form_validation->set_message('validate_address', $this->lang->line('error_no_address'));
+				return FALSE;
+			} else {
+				$search = $address['postcode'];
+			}
 		}
 		
-		if (($this->input->post('order_type') === '1') AND $this->location->checkDelivery($search) === 'outside') { 		// checks if cart contents is empty  
-			$this->form_validation->set_message('validate_address', $this->lang->line('warning_covered_area'));
+		if (($this->input->post('order_type') === '1') AND (!$this->location->checkAddressCoverage($search))) { 		// checks if cart contents is empty  
+			$this->form_validation->set_message('validate_address', $this->lang->line('error_covered_area'));
 			return FALSE;
 		} else {																				// else validation is successful
 			return TRUE;

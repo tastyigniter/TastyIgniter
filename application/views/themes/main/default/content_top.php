@@ -1,54 +1,12 @@
 <?php 
-	$uri_route = 'home';
-	if ($this->uri->segment(1)) {
-		$uri_route = $this->uri->segment(1);
-	}
-	
-	if ($this->uri->segment(2)) {
-		$uri_route = $this->uri->segment(1) .'/'. $this->uri->segment(2);
-	}
-
-	$this->load->model('Extensions_model');
-	$this->load->model('Design_model');
-	
-	$extensions = $this->Extensions_model->getExtensions('module');		
-	$layout_id = $this->Design_model->getRouteLayoutId($uri_route);
-	
-	if ($this->uri->segment(1) === 'pages') {
-		$layout_id = $this->Design_model->getPageLayoutId($this->uri->segment(3));
-	}
-	
-	$modules_data = array();
-	foreach ($extensions as $extension) {
-		if (file_exists(EXTPATH .'main/controllers/'. $extension['code'] .'.php')) {
-			$result = $this->config->item($extension['code']);
-
-			if (is_array($result['modules'])) {
-				foreach ($result['modules'] as $module) {
-					if (in_array($module['layout_id'], $layout_id) && $module['position'] === 'top' && $module['status'] === '1') {
-						$modules_data[] = array(
-							'code' 		=> $extension['code'],
-							'priority' 	=> $module['priority']
-						);
-					}
-				}
-			}
-		}
-	}
-
-	$sort_modules = array();
-	
-	foreach ($modules_data as $key => $value) {	
-		$sort_modules[$key] = $value['priority'];
-	}
-	
-	array_multisort($sort_modules, SORT_ASC, $modules_data);
+	$this->load->library('extension');
+	$modules = $this->extension->getModules('top');
 ?>
 
-<?php if (!empty($modules_data)) { ?>
-	<div class="top-section">
-	<?php foreach ($modules_data as $key => $value) { ?>
-		<?php echo Modules::run('main/'. $value['code'] .'/index'); ?>
-	<?php } ?>
+<?php if (!empty($modules)) { ?>
+	<div id="module-top" class="top-section">
+		<?php foreach ($modules as $module) { ?>
+			<?php echo Modules::run($module['name'] .'/main/'. $module['name'] .'/index', $module['setting']); ?>
+		<?php } ?>
 	</div>
 <?php } ?>

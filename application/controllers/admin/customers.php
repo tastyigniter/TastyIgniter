@@ -1,4 +1,5 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Customers extends CI_Controller {
 
 	public function __construct() {
@@ -6,20 +7,21 @@ class Customers extends CI_Controller {
 		$this->load->library('user');
 		$this->load->library('pagination');
 		$this->load->model('Customers_model');
+		$this->load->model('Addresses_model');
 		$this->load->model('Countries_model');
 		$this->load->model('Security_questions_model');
 		$this->load->model('Locations_model');
 		$this->load->model('Activity_model');
+		$this->load->model('Orders_model');
 	}
 
 	public function index() {
-			
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/customers')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/customers')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -77,17 +79,17 @@ class Customers extends CI_Controller {
 		
 		$this->template->setTitle('Customers');
 		$this->template->setHeading('Customers');
-		$this->template->setButton('+ New', array('class' => 'add_button', 'href' => page_url() .'/edit'));
-		$this->template->setButton('Delete', array('class' => 'delete_button', 'onclick' => '$(\'form:not(#filter-form)\').submit();'));
+		$this->template->setButton('+ New', array('class' => 'btn btn-success', 'href' => page_url() .'/edit'));
+		$this->template->setButton('Delete', array('class' => 'btn btn-default', 'onclick' => '$(\'#list-form\').submit();'));
 
 		$data['text_empty'] 		= 'There are no customers available.';
 
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
-		$data['sort_first'] 		= site_url('admin/customers'.$url.'sort_by=first_name&order_by='.$order_by);
-		$data['sort_last'] 			= site_url('admin/customers'.$url.'sort_by=last_name&order_by='.$order_by);
-		$data['sort_email'] 		= site_url('admin/customers'.$url.'sort_by=email&order_by='.$order_by);
-		$data['sort_date'] 			= site_url('admin/customers'.$url.'sort_by=date_added&order_by='.$order_by);
-		$data['sort_id'] 			= site_url('admin/customers'.$url.'sort_by=customer_id&order_by='.$order_by);
+		$data['sort_first'] 		= site_url(ADMIN_URI.'/customers'.$url.'sort_by=first_name&order_by='.$order_by);
+		$data['sort_last'] 			= site_url(ADMIN_URI.'/customers'.$url.'sort_by=last_name&order_by='.$order_by);
+		$data['sort_email'] 		= site_url(ADMIN_URI.'/customers'.$url.'sort_by=email&order_by='.$order_by);
+		$data['sort_date'] 			= site_url(ADMIN_URI.'/customers'.$url.'sort_by=date_added&order_by='.$order_by);
+		$data['sort_id'] 			= site_url(ADMIN_URI.'/customers'.$url.'sort_by=customer_id&order_by='.$order_by);
 
 		$data['customers'] = array();
 		$results = $this->Customers_model->getList($filter);
@@ -101,7 +103,7 @@ class Customers extends CI_Controller {
 				'telephone' 		=> $result['telephone'],
 				'date_added' 		=> mdate('%d %M %y', strtotime($result['date_added'])),
 				'status' 			=> ($result['status'] === '1') ? 'Enabled' : 'Disabled',
-				'edit' 				=> site_url('admin/customers/edit?id=' . $result['customer_id'])
+				'edit' 				=> site_url(ADMIN_URI.'/customers/edit?id=' . $result['customer_id'])
 			);
 		}
 
@@ -137,8 +139,8 @@ class Customers extends CI_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 		
-		$config['base_url'] 		= site_url('admin/customers').$url;
-		$config['total_rows'] 		= $this->Customers_model->record_count($filter);
+		$config['base_url'] 		= site_url(ADMIN_URI.'/customers').$url;
+		$config['total_rows'] 		= $this->Customers_model->getAdminListCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 		
 		$this->pagination->initialize($config);
@@ -150,28 +152,36 @@ class Customers extends CI_Controller {
 
 		if ($this->input->post('delete') AND $this->_deleteCustomer() === TRUE) {
 			
-			redirect('admin/customers');  			
+			redirect(ADMIN_URI.'/customers');  			
 		}	
 
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'customers.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'customers', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'customers.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'customers', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'customers', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'customers', $data);
 		}
 	}
 	
 	public function edit() {
-		$this->load->model('Orders_model');
-		
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/customers')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/customers')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
+		$customer_info = $this->Customers_model->getCustomer((int)$this->input->get('id'));
+		
+		if ($customer_info) {
+		    $customer_id = $customer_info['customer_id'];
+			$data['action']	= site_url(ADMIN_URI.'/customers/edit?id='. $customer_id);
+		} else {
+		    $customer_id = 0;
+			$data['action']	= site_url(ADMIN_URI.'/customers/edit');
+		}
+
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
 		} else {
@@ -179,24 +189,14 @@ class Customers extends CI_Controller {
 		}
 
 		$orders_filter = array();
-		if (is_numeric($this->input->get('id'))) {
-			$customer_id = $this->input->get('id');
-			$data['action']	= site_url('admin/customers/edit?id='. $customer_id);
-			$orders_filter['customer_id'] = $this->input->get('id');
-		} else {
-		    $customer_id = 0;
-			$data['action']	= site_url('admin/customers/edit');
-			$orders_filter['customer_id'] = 0;
-		}
-		
-		$customer_info = $this->Customers_model->getCustomer($customer_id);
+		$orders_filter['customer_id'] = $customer_id;
 
-		$title = (isset($customer_info['first_name']) AND isset($customer_info['last_name'])) ? 'Edit - '. $customer_info['first_name'] .' '. $customer_info['last_name'] : 'New';	
+		$title = (isset($customer_info['first_name']) AND isset($customer_info['last_name'])) ? $customer_info['first_name'] .' '. $customer_info['last_name'] : 'New';	
 		$this->template->setTitle('Customer: '. $title);
 		$this->template->setHeading('Customer: '. $title);
-		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
-		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
-		$this->template->setBackButton('back_button', site_url('admin/customers'));
+		$this->template->setButton('Save', array('class' => 'btn btn-success', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('btn-back', site_url(ADMIN_URI.'/customers'));
 
 		$data['text_empty'] 		= 'There are no order available for this customer.';
 		$data['text_empty_activity'] = 'This customer has no recent activity.';
@@ -214,7 +214,7 @@ class Customers extends CI_Controller {
 		if ($this->input->post('address')) {
 			$data['addresses'] 			= $this->input->post('address');
 		} else {
-			$data['addresses'] 			= $this->Customers_model->getCustomerAddresses($customer_id);
+			$data['addresses'] 			= $this->Addresses_model->getCustomerAddresses($customer_id);
 		}
 		
 		$data['questions'] = array();
@@ -279,12 +279,12 @@ class Customers extends CI_Controller {
 				'order_time'		=> mdate('%H:%i', strtotime($result['order_time'])),
 				'order_status'		=> $result['status_name'],
 				'date_added'		=> $date_added,
-				'edit' 				=> site_url('admin/orders/edit?id=' . $result['order_id'])
+				'edit' 				=> site_url(ADMIN_URI.'/orders/edit?id=' . $result['order_id'])
 			);
 		}
 			
-		$config['base_url'] 		= site_url('admin/customers/edit'.'?id='. $customer_id .'&');
-		$config['total_rows'] 		= $this->Orders_model->customer_record_count($orders_filter);
+		$config['base_url'] 		= site_url(ADMIN_URI.'/customers/edit'.'?id='. $customer_id .'&');
+		$config['total_rows'] 		= $this->Orders_model->getAdminCustomerListCount($orders_filter);
 		$config['per_page'] 		= $orders_filter['limit'];
 		
 		$this->pagination->initialize($config);
@@ -306,31 +306,31 @@ class Customers extends CI_Controller {
 				'request_uri'		=> (!empty($activity['request_uri'])) ? $activity['request_uri'] : '--',
 				'referrer_uri'		=> (!empty($activity['referrer_uri'])) ? $activity['referrer_uri'] : '--',
 				'date_added'		=> mdate('%d %M %y - %H:%i', strtotime($activity['date_added'])),
-				'blacklist' 		=> site_url('admin/customers_activity/blacklist?ip=' . $activity['ip_address'])
+				'blacklist' 		=> site_url(ADMIN_URI.'/customers_activity/blacklist?ip=' . $activity['ip_address'])
 			);
 		}
 			
 		if ($this->input->post() AND $this->_addCustomer() === TRUE) {
 			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {	
-				redirect('admin/customers/edit?id='. $this->input->post('insert_id'));
+				redirect(ADMIN_URI.'/customers/edit?id='. $this->input->post('insert_id'));
 			} else {
-				redirect('admin/customers');
+				redirect(ADMIN_URI.'/customers');
 			}
 		}
 
 		if ($this->input->post() AND $this->_updateCustomer($data['email']) === TRUE) {
 			if ($this->input->post('save_close') === '1') {
-				redirect('admin/customers');
+				redirect(ADMIN_URI.'/customers');
 			}
 			
-			redirect('admin/customers/edit?id='. $customer_id);
+			redirect(ADMIN_URI.'/customers/edit?id='. $customer_id);
 		}
 		
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'customers_edit.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'customers_edit', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'customers_edit.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'customers_edit', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'customers_edit', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'customers_edit', $data);
 		}
 	}
 
@@ -358,8 +358,8 @@ class Customers extends CI_Controller {
 	}
 	
 	public function _addCustomer() {
-    	if ( ! $this->user->hasPermissions('modify', 'admin/customers')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add!</p>');
+    	if ( ! $this->user->hasPermissions('modify', ADMIN_URI.'/customers')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to add!</p>');
   			return TRUE;
     	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$add = array();
@@ -378,9 +378,9 @@ class Customers extends CI_Controller {
 			$add['address']					= $this->input->post('address');
 
 			if ($_POST['insert_id'] = $this->Customers_model->addCustomer($add)) {	
-				$this->session->set_flashdata('alert', '<p class="success">Customer added sucessfully.</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-success">Customer added sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing added.</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-warning">An error occured, nothing added.</p>');
 			}
 			
 			return TRUE;		
@@ -388,8 +388,8 @@ class Customers extends CI_Controller {
 	}
 
 	public function _updateCustomer($customer_email) {
-    	if ( ! $this->user->hasPermissions('modify', 'admin/customers')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
+    	if ( ! $this->user->hasPermissions('modify', ADMIN_URI.'/customers')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to update!</p>');
   			return TRUE;
     	} else if (is_numeric($this->input->get('id')) AND $this->validateForm($customer_email) === TRUE) {
 			$update = array();
@@ -414,9 +414,9 @@ class Customers extends CI_Controller {
 			}
 
 			if ($this->Customers_model->updateCustomer($update)) {
-				$this->session->set_flashdata('alert', '<p class="success">Customer updated sucessfully.</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-success">Customer updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');	
+				$this->session->set_flashdata('alert', '<p class="alert-warning">An error occured, nothing updated.</p>');	
 			}
 			
 			return TRUE;
@@ -424,14 +424,14 @@ class Customers extends CI_Controller {
 	}
 
 	public function _deleteCustomer($customer_id = FALSE) {
-    	if (!$this->user->hasPermissions('modify', 'admin/menus')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/menus')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to delete!</p>');
     	} else if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Customers_model->deleteCustomer($value);
 			}			
 		
-			$this->session->set_flashdata('alert', '<p class="success">Customer(s) deleted sucessfully!</p>');
+			$this->session->set_flashdata('alert', '<p class="alert-success">Customer(s) deleted sucessfully!</p>');
 		}
 				
 		return TRUE;
@@ -449,7 +449,12 @@ class Customers extends CI_Controller {
 			$this->form_validation->set_rules('password', 'Password', 'xss_clean|trim|required|min_length[6]|max_length[32]|matches[confirm_password]');
 			$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'xss_clean|trim|required|md5');
 		}
-		
+				
+		if (!$this->input->get('id')) {
+			$this->form_validation->set_rules('password', 'Password', 'required');
+			$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'required');
+		}
+
 		$this->form_validation->set_rules('telephone', 'Telephone', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('security_question', 'Security Question', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('security_answer', 'Security Answer', 'xss_clean|trim|required|min_length[2]');
@@ -459,10 +464,10 @@ class Customers extends CI_Controller {
 
 		if ($this->input->post('address')) {
 			foreach ($this->input->post('address') as $key => $value) {
-				$this->form_validation->set_rules('address['.$key.'][address_1]', 'Address 1 ['.$key.']', 'xss_clean|trim|required|min_length[3]|max_length[128]');
-				$this->form_validation->set_rules('address['.$key.'][city]', 'City ['.$key.']', 'xss_clean|trim|required|min_length[2]|max_length[128]');
-				$this->form_validation->set_rules('address['.$key.'][postcode]', 'Postcode ['.$key.']', 'xss_clean|trim|required|min_length[2]|max_length[10]');
-				$this->form_validation->set_rules('address['.$key.'][country_id]', 'Country ['.$key.']', 'xss_clean|trim|required|integer');
+				$this->form_validation->set_rules('address['.$key.'][address_1]', '['.$key.'] Address 1', 'xss_clean|trim|required|min_length[3]|max_length[128]');
+				$this->form_validation->set_rules('address['.$key.'][city]', '['.$key.'] City', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+				$this->form_validation->set_rules('address['.$key.'][postcode]', '['.$key.'] Postcode', 'xss_clean|trim|required|min_length[2]|max_length[10]');
+				$this->form_validation->set_rules('address['.$key.'][country_id]', '['.$key.'] Country', 'xss_clean|trim|required|integer');
 			}
 		}
 

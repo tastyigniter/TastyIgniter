@@ -1,4 +1,4 @@
-<?php 
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Dashboard extends CI_Controller {
 
@@ -13,7 +13,7 @@ class Dashboard extends CI_Controller {
 	public function index() {
 			
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -87,15 +87,15 @@ class Dashboard extends CI_Controller {
 				'order_time'		=> mdate('%H:%i', strtotime($result['order_time'])),
 				'order_type' 		=> ($result['order_type'] === '1') ? 'Delivery' : 'Collection',
 				'date_added'		=> $date_added,
-				'edit' 				=> site_url('admin/orders/edit?id=' . $result['order_id'])
+				'edit' 				=> site_url(ADMIN_URI.'/orders/edit?id=' . $result['order_id'])
 			);
 		}
 				
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'dashboard.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'dashboard', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'dashboard.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'dashboard', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'dashboard', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'dashboard', $data);
 		}
 	}
 	

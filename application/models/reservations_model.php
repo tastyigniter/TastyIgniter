@@ -1,7 +1,8 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Reservations_model extends CI_Model {
 
-    public function record_count($filter = array()) {
+    public function getAdminListCount($filter = array()) {
 		if (!empty($filter['filter_search'])) {
 			$this->db->like('reservation_id', $filter['filter_search']);
 			$this->db->or_like('LCASE(location_name)', strtolower($filter['filter_search']));
@@ -41,6 +42,15 @@ class Reservations_model extends CI_Model {
 		$this->db->join('tables', 'tables.table_id = reservations.table_id', 'left');
 		$this->db->join('staffs', 'staffs.staff_id = reservations.staff_id', 'left');
 		return $this->db->count_all_results();
+    }
+    
+    public function getMainListCount($filter = array()) {
+		if (!empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
+			$this->db->where('customer_id', $filter['customer_id']);
+
+			$this->db->from('reservations');
+			return $this->db->count_all_results();
+		}
     }
     
 	public function getList($filter = array(), $staff_id = FALSE) {
@@ -109,6 +119,33 @@ class Reservations_model extends CI_Model {
 		}
 	}
 	
+	public function getMainList($filter = array()) {
+		if (!empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
+			if ($filter['page'] !== 0) {
+				$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
+			}
+			
+			if ($this->db->limit($filter['limit'], $filter['page'])) {
+				$this->db->from('reservations');
+				$this->db->join('tables', 'tables.table_id = reservations.table_id', 'left');
+				$this->db->join('statuses', 'statuses.status_id = reservations.status', 'left');
+				$this->db->join('locations', 'locations.location_id = reservations.location_id', 'left');
+				$this->db->order_by('reservation_id', 'DESC');
+
+				$this->db->where('customer_id', $filter['customer_id']);
+
+				$query = $this->db->get();
+				$result = array();
+		
+				if ($query->num_rows() > 0) {
+					$result = $query->result_array();
+				}
+		
+				return $result;
+			}
+		}
+	}
+
 	public function getReservations() {
 		$this->db->from('reservations');
 		$this->db->join('tables', 'tables.table_id = reservations.table_id', 'left');
@@ -148,9 +185,10 @@ class Reservations_model extends CI_Model {
 	public function getMainReservations($customer_id = FALSE) {
 		if ($customer_id !== FALSE) {
 			$this->db->from('reservations');
-			$this->db->join('statuses', 'statuses.status_id = orders.status_id', 'left');
-			$this->db->join('locations', 'locations.location_id = orders.location_id', 'left');
-			$this->db->order_by('order_id', 'ASC');
+			$this->db->join('tables', 'tables.table_id = reservations.table_id', 'left');
+			$this->db->join('statuses', 'statuses.status_id = reservations.status', 'left');
+			$this->db->join('locations', 'locations.location_id = reservations.location_id', 'left');
+			$this->db->order_by('reservation_id', 'ASC');
 
 			$query = $this->db->get();
 			$result = array();
@@ -162,16 +200,20 @@ class Reservations_model extends CI_Model {
 			return $result;
 		}
 	}
-	
-	public function getMainReservation($reservation_id) {
-		$this->db->from('reservations');
-		$this->db->join('locations', 'locations.location_id = reservations.location_id', 'left');
-		$this->db->where('reservations.reservation_id', $reservation_id);
-		$this->db->where('reservations.status >', '0');
+
+	public function getMainReservation($reservation_id = FALSE, $customer_id = FALSE) {
+		if ($reservation_id !== FALSE AND $customer_id !== FALSE) {
+			$this->db->from('reservations');
+			$this->db->join('tables', 'tables.table_id = reservations.table_id', 'left');
+			$this->db->join('statuses', 'statuses.status_id = reservations.status', 'left');
+			$this->db->join('locations', 'locations.location_id = reservations.location_id', 'left');
+			$this->db->where('reservations.reservation_id', $reservation_id);
+			$this->db->where('reservations.status >', '0');
 			
-		$query = $this->db->get();
-		if ($query->num_rows() > 0) {
-			return $query->row_array();
+			$query = $this->db->get();
+			if ($query->num_rows() > 0) {
+				return $query->row_array();
+			}
 		}
 	}
 
@@ -215,7 +257,7 @@ class Reservations_model extends CI_Model {
 		$result = 0;
 
 		$this->db->select_sum('reservations.guest_num', 'total_guest');
-		$this->db->where('status', (int)$this->config->item('reserve_status'));
+		//$this->db->where('status', (int)$this->config->item('reservation_status'));
 		
 		if (!empty($location_id)) {
 			$this->db->where('location_id', $location_id);
@@ -402,12 +444,12 @@ class Reservations_model extends CI_Model {
 				$notify = $this->_sendMail($reservation_id);
 				$this->db->set('notify', $notify);
 		
-				$this->db->set('status', $this->config->item('reserve_status'));
+				$this->db->set('status', $this->config->item('reservation_status'));
 				$this->db->where('reservation_id', $reservation_id);
 				
 				if ($this->db->update('reservations')) {
 					$this->load->model('Statuses_model');
-					$status = $this->Statuses_model->getStatus($this->config->item('reserve_status'));
+					$status = $this->Statuses_model->getStatus($this->config->item('reservation_status'));
 					$reserve_history = array(
 						'order_id' 		=> $reservation_id, 
 						'status_id' 	=> $status['status_id'], 

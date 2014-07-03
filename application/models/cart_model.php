@@ -1,4 +1,4 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Cart_model extends CI_Model {
 

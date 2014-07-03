@@ -1,4 +1,5 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Settings_model extends CI_Model {
 	public function __construct() {
 		parent::__construct();
@@ -27,16 +28,16 @@ class Settings_model extends CI_Model {
 			$this->db->where('sort', $sort);
 			$this->db->delete('settings');
 
-			foreach ($update as $key => $value) {
+			foreach ($update as $item => $value) {
 				if (is_array($value)) {
 					$this->db->set('sort', $sort);
-					$this->db->set('key', $key);
+					$this->db->set('item', $item);
 					$this->db->set('value', serialize($value));
 					$this->db->set('serialized', '1');
 					$this->db->insert('settings');
 				} else {
 					$this->db->set('sort', $sort);
-					$this->db->set('key', $key);
+					$this->db->set('item', $item);
 					$this->db->set('value', $value);
 					$this->db->set('serialized', '0');
 					$this->db->insert('settings');
@@ -47,16 +48,16 @@ class Settings_model extends CI_Model {
 		}
  	}
 	
-	public function addSetting($sort, $key, $value, $serialized = '0') {
+	public function addSetting($sort, $item, $value, $serialized = '0') {
 		$query = FALSE;
 		
-		if (isset($sort, $key, $value, $serialized)) {
+		if (isset($sort, $item, $value, $serialized)) {
 			$this->db->where('sort', $sort);
-			$this->db->where('key', $key);
+			$this->db->where('item', $item);
 			$this->db->delete('settings');
 
 			$this->db->set('sort', $sort);
-			$this->db->set('key', $key);
+			$this->db->set('item', $item);
 			
 			if (is_array($value)) {
 				$this->db->set('value', serialize($value));
@@ -73,10 +74,10 @@ class Settings_model extends CI_Model {
 		return $query;
 	}
 	
-	public function deleteSettings($sort, $key) {
-		if (!empty($sort) AND !empty($key)) {
+	public function deleteSettings($sort, $item) {
+		if (!empty($sort) AND !empty($item)) {
 			$this->db->where('sort', $sort);
-			$this->db->where('key', $key);
+			$this->db->where('item', $item);
 			$this->db->delete('settings');
 
 			if ($this->db->affected_rows() > 0) {

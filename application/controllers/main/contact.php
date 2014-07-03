@@ -1,4 +1,4 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Contact extends MX_Controller {
 
@@ -34,6 +34,7 @@ class Contact extends MX_Controller {
 		// START of retrieving lines from language file to pass to view.
 		$this->template->setTitle($this->lang->line('text_heading'));
 		$this->template->setHeading($this->lang->line('text_heading'));
+		$data['text_heading'] 			= $this->lang->line('text_heading');
 		$data['text_local'] 			= $this->lang->line('text_local');
 		$data['text_postcode'] 			= $this->lang->line('text_postcode');
 		$data['text_find'] 				= $this->lang->line('text_find');
@@ -48,19 +49,13 @@ class Contact extends MX_Controller {
 		$data['button_send'] 			= $this->lang->line('button_send');
 		// END of retrieving lines from language file to send to view.
 
-		$data['local_action'] 			= site_url('main/local_module/distance');
+		$data['local_action'] 			= site_url('local_module/main/local_module/distance');
 		$data['action'] 				= site_url('main/contact');
 		
-		$data['local_location'] = $this->location->local(); 									//retrieve local location data from location library
-		
-		if ($data['local_location']) { 															//if local location data is available
-			$data['location_name'] 			= $data['local_location']['location_name'];
-			$data['location_address_1'] 	= $data['local_location']['location_address_1'];
-			$data['location_city'] 			= $data['local_location']['location_city'];
-			$data['location_postcode'] 		= $data['local_location']['location_postcode'];
-			$data['location_telephone'] 	= $data['local_location']['location_telephone'];
-			//$data['distance'] 			= number_format($this->location->distance(),2) .' '. $this->lang->line('text_miles'); //format diatance to 2 decimal place
-		}
+		$data['local_location'] 		= $this->location->local(); 									//retrieve local location data from location library
+		$data['location_address'] 		= $this->location->getAddress();
+		$data['location_name'] 			= $this->location->getName();
+		$data['location_telephone'] 	= $this->location->getTelephone();
 		
 		$data['opening_hours'] = $this->location->getOpeningHours(); 								//retrieve local location opening hours from location library
 		
@@ -74,9 +69,9 @@ class Contact extends MX_Controller {
 			
 		if ($this->input->post() && $this->_sendContact() === TRUE) {							// checks if $_POST data is set and if contact form validation was successful
 
-			$this->session->set_flashdata('alert', $this->lang->line('text_contact_sent'));		// display success message and redirect to account login page
+			$this->session->set_flashdata('alert', $this->lang->line('alert_contact_sent'));		// display success message and redirect to account login page
 		
-			redirect('contact');																// redirect to contact page
+			redirect('main/contact');																// redirect to contact page
 		}
 		
 		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
@@ -87,7 +82,6 @@ class Contact extends MX_Controller {
 		}
 	}
 
-	// method to validate contact form fields and email contact details to store email
 	public function _sendContact() {
 		
 		if ($this->validateForm() === TRUE) {

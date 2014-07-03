@@ -1,9 +1,11 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Register extends MX_Controller {
-
+	var $recaptcha_error = '';
+	
 	public function __construct() {
 		parent::__construct(); 																	//  calls the constructor
+		$this->load->helper('recaptcha');
 		$this->load->library('language');
 		$this->lang->load('main/login_register', $this->language->folder());
 	}
@@ -15,10 +17,15 @@ class Register extends MX_Controller {
 			$data['alert'] = '';
 		}
 
+		if ($this->input->post() AND $this->_addCustomer() === TRUE) {							// checks if $_POST data is set and if registration validation was successful
+			$this->session->set_flashdata('alert', $this->lang->line('alert_account_created'));	// display success message and redirect to account login page
+			redirect('main/login');
+		}
+		
 		// START of retrieving lines from language file to pass to view.
 		$this->template->setTitle($this->lang->line('text_heading'));
 		$this->template->setHeading($this->lang->line('text_heading'));
-		$data['text_login_register'] 		= $this->lang->line('text_login_register');
+		$data['text_login_register']		= sprintf($this->lang->line('text_login_register'), site_url('main/login'));
 		$data['text_login'] 				= $this->lang->line('text_login');
 		$data['text_register'] 				= $this->lang->line('text_register');
 		$data['text_required'] 				= $this->lang->line('text_required');
@@ -44,10 +51,8 @@ class Register extends MX_Controller {
 			);
 		}
 
-		if ($this->input->post() AND $this->_addCustomer() === TRUE) {							// checks if $_POST data is set and if registration validation was successful
-			$this->session->set_flashdata('alert', $this->lang->line('text_account_created'));	// display success message and redirect to account login page
-			redirect('account/login');
-		}
+		$recaptcha_key = '6LfjCPYSAAAAAJ6DA0Rcc-0vqJuePwMqi0n96Xbc';
+		$data['recaptcha'] = create_captcha($recaptcha_key, $this->recaptcha_error);
 		
 		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'register.php')) {
@@ -59,9 +64,9 @@ class Register extends MX_Controller {
 
 	public function _addCustomer() {
 		if ($this->validateForm() === TRUE) {			
-  			$add = array();
-  			
-  			// if successful CREATE an array with the following $_POST data values
+ 			$add = array();
+ 			
+ 			// if successful CREATE an array with the following $_POST data values
 			$add['first_name'] 				= $this->input->post('first_name');
 			$add['last_name'] 				= $this->input->post('last_name');
 			$add['email'] 					= $this->input->post('email');
@@ -102,10 +107,28 @@ class Register extends MX_Controller {
 		$this->form_validation->set_rules('newsletter', 'Newsletter', 'xss_clean|trim|integer');
 		// END of form validation rules
 
+  		$this->recaptcha();
+  		
   		if ($this->form_validation->run() === TRUE) {											// checks if form validation routines ran successfully
 			return TRUE;
 		} else {
 			return FALSE;
+		}
+	}
+
+	public function recaptcha() {
+		$recaptcha = array(
+			'ip_address' 	=> $this->input->ip_address(),
+			'challenge' 	=> $this->input->post('recaptcha_challenge_field'),
+			'response' 		=> $this->input->post('recaptcha_response_field')
+		);
+
+		$recaptcha_key = '6LfjCPYSAAAAAB_ygI32LHU_VVMwHO6aGqcUpwRE';
+		if ($recaptcha_error = validate_captcha($recaptcha_key, $recaptcha)) {			
+        	$this->recaptcha_error = $recaptcha_error;
+        	$this->form_validation->set_message('recaptcha_response_field', $this->lang->line('error_recaptcha'));
+		} else {
+			return 'success';
 		}
 	}
 }

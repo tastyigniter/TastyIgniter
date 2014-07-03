@@ -1,7 +1,6 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-class Menus extends CI_Controller {
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-	private $error = array();
+class Menus extends CI_Controller {
 
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
@@ -12,13 +11,12 @@ class Menus extends CI_Controller {
 	}
 
 	public function index() {
-			
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/menus')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/menus')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -63,7 +61,7 @@ class Menus extends CI_Controller {
 		if ($this->input->get('sort_by')) {
 			$filter['sort_by'] = $data['sort_by'] = $this->input->get('sort_by');
 		} else {
-			$filter['sort_by'] = $data['sort_by'] = 'menu_id';
+			$filter['sort_by'] = $data['sort_by'] = 'menus.menu_id';
 		}
 		
 		if ($this->input->get('order_by')) {
@@ -76,16 +74,16 @@ class Menus extends CI_Controller {
 		
 		$this->template->setTitle('Menus');
 		$this->template->setHeading('Menus');
-		$this->template->setButton('+ New', array('class' => 'add_button', 'href' => page_url() .'/edit'));
-		$this->template->setButton('Delete', array('class' => 'delete_button', 'onclick' => '$(\'form:not(#filter-form)\').submit();'));
+		$this->template->setButton('+ New', array('class' => 'btn btn-success', 'href' => page_url() .'/edit'));
+		$this->template->setButton('Delete', array('class' => 'btn btn-default', 'onclick' => '$(\'#list-form\').submit();'));
 
 		$data['text_no_menus'] 		= 'There are no menus available.';
 		
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
-		$data['sort_name'] 			= site_url('admin/menus'.$url.'sort_by=menu_name&order_by='.$order_by);
-		$data['sort_price'] 		= site_url('admin/menus'.$url.'sort_by=menu_price&order_by='.$order_by);
-		$data['sort_stock'] 		= site_url('admin/menus'.$url.'sort_by=stock_qty&order_by='.$order_by);
-		$data['sort_id'] 			= site_url('admin/menus'.$url.'sort_by=menu_id&order_by='.$order_by);
+		$data['sort_name'] 			= site_url(ADMIN_URI.'/menus'.$url.'sort_by=menu_name&order_by='.$order_by);
+		$data['sort_price'] 		= site_url(ADMIN_URI.'/menus'.$url.'sort_by=menu_price&order_by='.$order_by);
+		$data['sort_stock'] 		= site_url(ADMIN_URI.'/menus'.$url.'sort_by=stock_qty&order_by='.$order_by);
+		$data['sort_id'] 			= site_url(ADMIN_URI.'/menus'.$url.'sort_by=menus.menu_id&order_by='.$order_by);
 
 		$this->load->model('Image_tool_model');
 
@@ -98,17 +96,27 @@ class Menus extends CI_Controller {
 			} else {
 				$menu_photo_src = $this->Image_tool_model->resize('data/no_photo.png', 64, 64);
 			}
-						
+			
+			$special = '';
+			if ((!empty($result['start_date']) AND $result['start_date'] !== '0000-00-00') AND (!empty($result['end_date']) AND $result['end_date'] !== '0000-00-00')) {
+				if (strtotime($result['start_date']) <= time() AND strtotime($result['end_date']) >= time()) {
+					$special = 'enabled';
+				} else {
+					$special = 'disabled';
+				}
+			}
+					
 			$data['menus'][] = array(
 				'menu_id'			=> $result['menu_id'],
 				'menu_name'			=> $result['menu_name'],
 				'menu_description'	=> $result['menu_description'],
-				'category_name'		=> $result['category_name'],
+				'special'			=> $special,
+				'category_name'		=> $result['name'],
 				'menu_price'		=> $this->currency->format($result['menu_price']),
 				'menu_photo'		=> $menu_photo_src,
 				'stock_qty'			=> $result['stock_qty'],
 				'menu_status'		=> ($result['menu_status'] === '1') ? 'Enabled' : 'Disabled',
-				'edit' 				=> site_url('admin/menus/edit?id='. $result['menu_id'])
+				'edit' 				=> site_url(ADMIN_URI.'/menus/edit?id='. $result['menu_id'])
 			);
 		}	
 
@@ -118,7 +126,7 @@ class Menus extends CI_Controller {
 		foreach ($categories as $category) {					
 			$data['categories'][] = array(
 				'category_id'	=>	$category['category_id'],
-				'category_name'	=>	$category['category_name']
+				'category_name'	=>	$category['name']
 			);
 		}
 		
@@ -141,8 +149,8 @@ class Menus extends CI_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 		
-		$config['base_url'] 		= site_url('admin/menus').$url;
-		$config['total_rows'] 		= $this->Menus_model->menus_record_count($filter);
+		$config['base_url'] 		= site_url(ADMIN_URI.'/menus').$url;
+		$config['total_rows'] 		= $this->Menus_model->getAdminListCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 		
 		$this->pagination->initialize($config);
@@ -153,50 +161,49 @@ class Menus extends CI_Controller {
 		);
 
 		if ($this->input->post('delete') AND $this->_deleteMenu() === TRUE) {
-			redirect('admin/menus');  			
+			redirect(ADMIN_URI.'/menus');  			
 		}	
 
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'menus.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'menus', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'menus.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'menus', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'menus', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'menus', $data);
 		}
 	}
 
 	public function edit() {
-			
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/menus')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/menus')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
+		$menu_info = $this->Menus_model->getAdminMenu((int) $this->input->get('id'));
+		
+		if ($menu_info) {
+			$menu_id = $this->input->get('id');
+			$data['action']	= site_url(ADMIN_URI.'/menus/edit?id='. $menu_id);
+		} else {
+			$menu_id = 0;
+			$data['action']	= site_url(ADMIN_URI.'/menus/edit');
+		}
+
+		$title = (isset($menu_info['menu_name'])) ? $menu_info['menu_name'] : 'New';	
+		$this->template->setTitle('Menu: '. $title);
+		$this->template->setHeading('Menu: '. $title);
+		$this->template->setButton('Save', array('class' => 'btn btn-success', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('btn-back', site_url(ADMIN_URI.'/menus'));
+
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
 		} else { 
 			$data['alert'] = '';
 		}		
 		
-		if (is_numeric($this->input->get('id'))) {
-			$menu_id = $this->input->get('id');
-			$data['action']	= site_url('admin/menus/edit?id='. $menu_id);
-		} else {
-			$menu_id = 0;
-			$data['action']	= site_url('admin/menus/edit');
-		}
-		
-		$menu_info = $this->Menus_model->getAdminMenu($menu_id);
-
-		$title = (isset($menu_info['menu_name'])) ? 'Edit - '. $menu_info['menu_name'] : 'New';	
-		$this->template->setTitle('Menu: '. $title);
-		$this->template->setHeading('Menu: '. $title);
-		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
-		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
-		$this->template->setBackButton('back_button', site_url('admin/menus'));
-
 		$this->load->model('Image_tool_model');
 		if ($this->input->post('menu_photo')) {
 			$data['menu_image'] = $this->input->post('menu_photo');
@@ -235,7 +242,7 @@ class Menus extends CI_Controller {
 		foreach ($results as $result) {					
 			$data['categories'][] = array(
 				'category_id'	=>	$result['category_id'],
-				'category_name'	=>	$result['category_name']
+				'category_name'	=>	$result['name']
 			);
 		}
 
@@ -251,25 +258,25 @@ class Menus extends CI_Controller {
 		
 		if ($this->input->post() AND $this->_addMenu() === TRUE) {
 			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {	
-				redirect('admin/menus/edit?id='. $this->input->post('insert_id'));
+				redirect(ADMIN_URI.'/menus/edit?id='. $this->input->post('insert_id'));
 			} else {
-				redirect('admin/menus');
+				redirect(ADMIN_URI.'/menus');
 			}
 		}
 
 		if ($this->input->post() AND $this->_updateMenu() === TRUE) {
 			if ($this->input->post('save_close') === '1') {
-				redirect('admin/menus');
+				redirect(ADMIN_URI.'/menus');
 			}
 			
-			redirect('admin/menus/edit?id='. $menu_id);
+			redirect(ADMIN_URI.'/menus/edit?id='. $menu_id);
 		}
 							
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'menus_edit.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'menus_edit', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'menus_edit.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'menus_edit', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'menus_edit', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'menus_edit', $data);
 		}
 	}
 
@@ -297,8 +304,8 @@ class Menus extends CI_Controller {
 	}
 	
 	public function _addMenu() {
-    	if ( ! $this->user->hasPermissions('modify', 'admin/menus')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add!</p>');
+    	if ( ! $this->user->hasPermissions('modify', ADMIN_URI.'/menus')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to add!</p>');
   			return TRUE;
     	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$add = array();
@@ -320,9 +327,9 @@ class Menus extends CI_Controller {
 			$add['menu_status'] 		= $this->input->post('menu_status');
 			
 			if ($_POST['insert_id'] = $this->Menus_model->addMenu($add)) {
-				$this->session->set_flashdata('alert', '<p class="success">Menu added sucessfully.</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-success">Menu added sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing added.</p>');				
+				$this->session->set_flashdata('alert', '<p class="alert-warning">An error occured, nothing added.</p>');				
 			}
 			
 			return TRUE;
@@ -330,8 +337,8 @@ class Menus extends CI_Controller {
 	}
 
 	public function _updateMenu() {
-    	if (!$this->user->hasPermissions('modify', 'admin/menus')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/menus')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to update!</p>');
   			return TRUE;
     	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$update = array();
@@ -355,9 +362,9 @@ class Menus extends CI_Controller {
 
 
 			if ($this->Menus_model->updateMenu($update)) {						
-				$this->session->set_flashdata('alert', '<p class="success">Menu updated sucessfully.</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-success">Menu updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');				
+				$this->session->set_flashdata('alert', '<p class="alert-warning">An error occured, nothing updated.</p>');				
 			}
 			
 			return TRUE;
@@ -365,15 +372,15 @@ class Menus extends CI_Controller {
 	}
 
 	public function _deleteMenu() {
-    	if (!$this->user->hasPermissions('modify', 'admin/menus')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/menus')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to delete!</p>');
     	} else if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$menu_id = $value;
 				$this->Menus_model->deleteMenu($menu_id);
 			}			
 
-			$this->session->set_flashdata('alert', '<p class="success">Menu(s) deleted sucessfully!</p>');
+			$this->session->set_flashdata('alert', '<p class="alert-success">Menu(s) deleted sucessfully!</p>');
 		}
 				
 		return TRUE;
@@ -394,6 +401,12 @@ class Menus extends CI_Controller {
 		$this->form_validation->set_rules('start_date', 'Start Date', 'xss_clean|trim|valid_date');
 		$this->form_validation->set_rules('end_date', 'End Date', 'xss_clean|trim|valid_date');
 		$this->form_validation->set_rules('special_price', 'Special Price', 'xss_clean|trim|numeric');
+		
+		if ($this->input->post('special_status') === '1') {
+			$this->form_validation->set_rules('start_date', 'Start Date', 'required');
+			$this->form_validation->set_rules('end_date', 'End Date', 'required');
+			$this->form_validation->set_rules('special_price', 'Special Price', 'required');
+		}
 		
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;

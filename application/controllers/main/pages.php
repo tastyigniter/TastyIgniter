@@ -1,4 +1,4 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Pages extends MX_Controller {
 
@@ -8,26 +8,26 @@ class Pages extends MX_Controller {
 		$this->load->model('Pages_model');
 	}
 
-	public function page($page_id = '') {
+	public function index() {
+		$page_id = (int) $this->input->get('page_id');	
+		$result = $this->Pages_model->getPage($page_id);
+		
+		if (!$result) {
+			show_404();
+		}
 			
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert'); 								// retrieve session flashdata variable if available
 		} else {
 			$data['alert'] = '';
 		}
-
-		if ($page_id !== '') {
-			$data['page_id'] = $page_id;	
-		} else {
-			//show_404();
-		}
-
-		$result = $this->Pages_model->getPage($page_id);
 		
 		$this->template->setTitle($result['title']);
 		$this->template->setHeading($result['heading']);
-		$data['meta_description'] 	= $result['meta_description'];
-		$data['meta_keywords'] 		= $result['meta_keywords'];
+		$this->template->setMeta(array('name' => 'description', 'content' => $result['meta_description']));
+		$this->template->setMeta(array('name' => 'description', 'content' => $result['meta_keywords']));
+		$data['page_id'] 			= $result['page_id'];
+		$data['text_heading'] 		= $result['heading'];
 		$data['page_content'] 		= $result['content'];
 
 		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));

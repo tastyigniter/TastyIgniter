@@ -1,51 +1,56 @@
-<div id="box-content">
-	<div id="notification">
-		<?php if (validation_errors()) { ?>
-			<?php echo validation_errors('<span class="error">', '</span>'); ?>
-		<?php } ?>
-		<?php if (!empty($alert)) { ?>
-			<?php echo $alert; ?>
-		<?php } ?>
-	</div>
+<?php echo $header; ?>
+<div class="row content">
+	<div class="col-md-12">
+		<div id="notification">
+			<div class="alert alert-dismissable">
+				<?php if (!empty($alert)) { ?>
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+					<?php echo $alert; ?>
+				<?php } ?>
+				<?php if (validation_errors()) { ?>
+					<p class="alert-danger">Sorry but validation has failed, please check for errors.</p>
+				<?php } ?>
+			</div>
+		</div>
 
-	<div class="box">
-	<div id="list-box" class="content">
-	<form id="list-form" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
-		<table border="0" align="center" class="list list-height">
-			<thead>
-				<tr>
-					<th class="action"></th>
-					<th>Name</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php if ($payments) { ?>
-				<?php foreach ($payments as $payment) { ?>
-				<tr>
-					<td class="action">
-					<?php if (isset($payment['edit'])) {?>
-						<a class="edit" title="Edit" href="<?php echo $payment['edit']; ?>"></a>
-					<?php } ?>&nbsp;&nbsp;
-					<?php if (isset($payment['uninstall'])) {?>
-						<a class="uninstall" title="Uninstall" href="<?php echo $payment['uninstall']; ?>"></a>
+		<form role="form" id="list-form" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
+			<table border="0" class="table table-striped table-border">
+				<thead>
+					<tr>
+						<th class="action action-one"></th>
+						<th class="action action-one text-center">Status</th>
+						<th>Name</th>
+						<th class="id">ID</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php if ($payments) { ?>
+					<?php foreach ($payments as $payment) { ?>
+					<tr>
+						<td class="action action-one text-center">
+							<?php if ($payment['action'] === 'uninstall') {?>
+								<a class="btn btn-edit" title="Edit" href="<?php echo $payment['edit']; ?>"><i class="fa fa-pencil"></i></a>
+							<?php } ?>
+						</td>
+						<td class="action action-one text-center">
+							<?php if ($payment['action'] === 'uninstall') {?>
+								<a class="btn btn-times" title="Uninstall" href="<?php echo $payment['manage']; ?>"><i class="fa fa-times"></i></a>
+							<?php } else if ($payment['action'] === 'install') {?>
+								<a class="btn btn-enable" title="Install" href="<?php echo $payment['manage']; ?>"><i class="fa fa-check"></i></a>
+							<?php } ?>
+						</td>
+						<td><?php echo $payment['name']; ?></td>
+						<td class="id"><?php echo $payment['extension_id']; ?></td>
+					</tr>
 					<?php } ?>
-					<?php if (isset($payment['install'])) {?>
-						<a class="install" title="Install" href="<?php echo $payment['install']; ?>"></a>
+					<?php } else {?>
+					<tr>
+						<td colspan="4"><?php echo $text_empty; ?></td>
+					</tr>
 					<?php } ?>
-					</td>
-					<td><?php echo $payment['name']; ?></td>
-					<td></td>
-				</tr>
-				<?php } ?>
-				<?php } else {?>
-				<tr>
-					<td colspan="3" align="center"><?php echo $text_empty; ?></td>
-				</tr>
-				<?php } ?>
-			</tbody>
-		</table>
-	</form>
-	</div>
+				</tbody>
+			</table>
+		</form>
 	</div>
 </div>
+<?php echo $footer; ?>

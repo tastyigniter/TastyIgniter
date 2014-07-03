@@ -1,4 +1,5 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Staff_groups_model extends CI_Model {
 
 	public function getStaffGroups() {

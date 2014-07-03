@@ -1,5 +1,8 @@
-<div class="content" style="text-align:center;">
-	<div class="img_inner">
+<html>
+<head>
+	<title><?php echo $text_heading; ?></title>
+</head>
+<body>
 		<?php echo $content; ?>
-	</div>
-</div>
+</body>
+</html>

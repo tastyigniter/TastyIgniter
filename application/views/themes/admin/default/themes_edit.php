@@ -1,34 +1,50 @@
-<div id="box-content">
-	<div id="notification">
-		<?php if (validation_errors()) { ?>
-			<?php echo validation_errors('<span class="error">', '</span>'); ?>
-		<?php } ?>
-		<?php if (!empty($alert)) { ?>
-			<?php echo $alert; ?>
-		<?php } ?>
-	</div>
+<?php echo $header; ?>
+<div class="row content">
+	<div class="col-md-12">
+		<div id="notification">
+			<div class="alert alert-dismissable">
+				<?php if (!empty($alert)) { ?>
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+					<?php echo $alert; ?>
+				<?php } ?>
+				<?php if (validation_errors()) { ?>
+					<p class="alert-danger">Sorry but validation has failed, please check for errors.</p>
+				<?php } ?>
+			</div>
+		</div>
 
-	<div class="box">
-	<div id="update-box" class="content">
-	<form accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
-		<div class="wrap_heading">
-			<ul id="tabs">
-				<li><a rel="#editor">Editor</a></li>
+		<div class="row wrap-vertical">
+			<ul id="nav-tabs" class="nav nav-tabs">
+				<li class="active"><a href="#editor" data-toggle="tab">Editor</a></li>
 			</ul>
 		</div>
 
-		<div id="editor" class="wrap_content theme-editor" style="display:block;">
-			<p><?php echo $text_file_heading; ?></p>
-			<div class="theme-tree-holder">
-				<?php echo $theme_files; ?>
+		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
+			<div class="tab-content">
+				<div id="editor" class="tab-pane row wrap-vertical theme-editor active">
+					<?php if (!empty($file['heading'])){ ?>
+						<h4 class="text-info editor-text"><?php echo $file['heading']; ?></h4>
+					<?php } ?>
+					
+					<div class="row wrap">
+						<div class="col-sm-3 wrap-none">
+							<div class="theme-tree-holder wrap-vertical">
+								<?php echo $theme_files; ?>
+							</div>
+						</div>
+						<div class="col-sm-9 wrap-none">
+							<div class="editor">
+								<?php if (!empty($file['type']) AND $file['type'] === 'file') { ?>
+									<textarea name="editor_area" id="editor-area" class="form-control" rows="28"><?php echo $file['content']; ?></textarea>
+								<?php } else if (!empty($file['type']) AND $file['type'] === 'img') { ?>
+									<img class="center-block wrap-horizontal" alt="<?php echo $file['name']; ?>" src="<?php echo $file['content']; ?>" />
+								<?php } ?>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
-			
-			<div class="editor">
-				<?php echo $file_content; ?>
-			</div>
-		</div>
-	</form>
-	</div>
+		</form>
 	</div>
 </div>
 <script type="text/javascript"><!--
@@ -45,7 +61,7 @@ $(document).ready(function() {
 
 });
 
-$(document).delegate('#editor', 'keydown', function(e) {
+$(document).delegate('#editor-area', 'keydown', function(e) {
   var keyCode = e.keyCode || e.which;
 
   if (keyCode == 9) {
@@ -63,6 +79,20 @@ $(document).delegate('#editor', 'keydown', function(e) {
     $(this).get(0).selectionEnd = start + 1;
   }
 });
-
-$('#tabs a').tabs();
 //--></script>
+<link type="text/css" rel="stylesheet" href="<?php echo base_url("assets/js/codemirror/codemirror.css"); ?>">
+<script src="<?php echo base_url("assets/js/codemirror/codemirror.js"); ?>"></script>
+<script src="<?php echo base_url("assets/js/codemirror/xml/xml.js"); ?>"></script>
+<script src="<?php echo base_url("assets/js/codemirror/css/css.js"); ?>"></script>
+<script src="<?php echo base_url("assets/js/codemirror/javascript/javascript.js"); ?>"></script>
+<script src="<?php echo base_url("assets/js/codemirror/php/php.js"); ?>"></script>
+<script src="<?php echo base_url("assets/js/codemirror/htmlmixed/htmlmixed.js"); ?>"></script>
+<script type="text/javascript"><!--
+if ($('#editor-area').val()) {
+	var myCodeMirror = CodeMirror.fromTextArea(document.getElementById('editor-area'), {
+    	lineNumbers: true,
+    	mode: "<?php echo $mode; ?>"
+  	});
+}
+//--></script>
+<?php echo $footer; ?>

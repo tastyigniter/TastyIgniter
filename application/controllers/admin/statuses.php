@@ -1,4 +1,5 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Statuses extends CI_Controller {
 
 	public function __construct() {
@@ -8,13 +9,12 @@ class Statuses extends CI_Controller {
 	}
 
 	public function index() {
-			
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/statuses')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/statuses')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -33,8 +33,8 @@ class Statuses extends CI_Controller {
 		
 		$this->template->setTitle('Statuses');
 		$this->template->setHeading('Statuses');
-		$this->template->setButton('+ New', array('class' => 'add_button', 'href' => page_url() .'/edit'));
-		$this->template->setButton('Delete', array('class' => 'delete_button', 'onclick' => '$(\'form:not(#filter-form)\').submit();'));
+		$this->template->setButton('+ New', array('class' => 'btn btn-success', 'href' => page_url() .'/edit'));
+		$this->template->setButton('Delete', array('class' => 'btn btn-default', 'onclick' => '$(\'#list-form\').submit();'));
 
 		$data['text_empty'] 		= 'There is no status available.';
 
@@ -48,29 +48,29 @@ class Statuses extends CI_Controller {
 				'status_comment'	=> $result['status_comment'],
 				'status_for'		=> ($result['status_for'] === 'reserve') ? 'Reservations' : ucwords($result['status_for']),
 				'notify_customer' 	=> ($result['notify_customer'] === '1') ? 'Yes' : 'No',
-				'edit' 				=> site_url('admin/statuses/edit?id=' . $result['status_id'])				
+				'edit' 				=> site_url(ADMIN_URI.'/statuses/edit?id=' . $result['status_id'])				
 			);
 		}
 
 		if ($this->input->post('delete') AND $this->_deleteStatus() === TRUE) {
-			redirect('admin/statuses');  			
+			redirect(ADMIN_URI.'/statuses');  			
 		}	
 
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'statuses.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'statuses', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'statuses.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'statuses', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'statuses', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'statuses', $data);
 		}
 	}
 
 	public function edit() {
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/statuses')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/statuses')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -79,22 +79,22 @@ class Statuses extends CI_Controller {
 			$data['alert'] = '';
 		}		
 		
-		if (is_numeric($this->input->get('id'))) {
-			$status_id = $this->input->get('id');
-			$data['action']	= site_url('admin/statuses/edit?id='. $status_id);
+		$status_info = $this->Statuses_model->getStatus((int) $this->input->get('id'));
+		
+		if ($status_info) {
+			$status_id = $status_info['status_id'];
+			$data['action']	= site_url(ADMIN_URI.'/statuses/edit?id='. $status_id);
 		} else {
 		    $status_id = 0;
-			$data['action']	= site_url('admin/statuses/edit');
+			$data['action']	= site_url(ADMIN_URI.'/statuses/edit');
 		}
 		
-		$status_info = $this->Statuses_model->getStatus($status_id);
-		
-		$title = (isset($status_info['status_name'])) ? 'Edit - '. $status_info['status_name'] : 'New';	
+		$title = (isset($status_info['status_name'])) ? $status_info['status_name'] : 'New';	
 		$this->template->setTitle('Status:'. $title);
 		$this->template->setHeading('Status: '. $title);
-		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
-		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
-		$this->template->setBackButton('back_button', site_url('admin/statuses'));
+		$this->template->setButton('Save', array('class' => 'btn btn-success', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('btn-back', site_url(ADMIN_URI.'/statuses'));
 
 		$data['status_id'] 			= $status_info['status_id'];
 		$data['status_name'] 		= $status_info['status_name'];
@@ -104,25 +104,25 @@ class Statuses extends CI_Controller {
 
 		if ($this->input->post() AND $this->_addStatus() === TRUE) {
 			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {	
-				redirect('admin/statuses/edit?id='. $this->input->post('insert_id'));
+				redirect(ADMIN_URI.'/statuses/edit?id='. $this->input->post('insert_id'));
 			} else {
-				redirect('admin/statuses');
+				redirect(ADMIN_URI.'/statuses');
 			}
 		}
 
 		if ($this->input->post() AND $this->_updateStatus() === TRUE) {
 			if ($this->input->post('save_close') === '1') {
-				redirect('admin/statuses');
+				redirect(ADMIN_URI.'/statuses');
 			}
 			
-			redirect('admin/statuses/edit?id='. $status_id);
+			redirect(ADMIN_URI.'/statuses/edit?id='. $status_id);
 		}
 				
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'statuses_edit.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'statuses_edit', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'statuses_edit.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'statuses_edit', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'statuses_edit', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'statuses_edit', $data);
 		}
 	}
 
@@ -134,8 +134,8 @@ class Statuses extends CI_Controller {
 	}
 	
 	public function _addStatus() {
-    	if (!$this->user->hasPermissions('modify', 'admin/statuses')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to add!</p>');
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/statuses')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to add!</p>');
 			return TRUE;
     	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$add = array();
@@ -146,9 +146,9 @@ class Statuses extends CI_Controller {
 			$add['notify_customer'] 	= $this->input->post('notify_customer');
 
 			if ($_POST['insert_id'] = $this->Statuses_model->addStatus($add)) {	
-				$this->session->set_flashdata('alert', '<p class="success">Order Status added sucessfully.</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-success">Order Status added sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');				
+				$this->session->set_flashdata('alert', '<p class="alert-warning">An error occured, nothing updated.</p>');				
 			}
 		
 			return TRUE;
@@ -156,8 +156,8 @@ class Statuses extends CI_Controller {
 	}
 	
 	public function _updateStatus() {
-    	if (!$this->user->hasPermissions('modify', 'admin/statuses')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/statuses')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to update!</p>');
 			return TRUE;
     	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$update = array();
@@ -169,9 +169,9 @@ class Statuses extends CI_Controller {
 			$update['notify_customer'] 	= $this->input->post('notify_customer');
 
 			if ($this->Statuses_model->updateStatus($update)) {	
-				$this->session->set_flashdata('alert', '<p class="success">Order Status updated sucessfully.</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-success">Order Status updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');				
+				$this->session->set_flashdata('alert', '<p class="alert-warning">An error occured, nothing updated.</p>');				
 			}
 		
 			return TRUE;
@@ -179,22 +179,23 @@ class Statuses extends CI_Controller {
 	}	
 
 	public function _deleteStatus() {
-    	if (!$this->user->hasPermissions('modify', 'admin/statuses')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/statuses')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to delete!</p>');
     	} else if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Statuses_model->deleteStatus($value);
 			}			
 	
-			$this->session->set_flashdata('alert', '<p class="success">Order Status(es) deleted sucessfully!</p>');
+			$this->session->set_flashdata('alert', '<p class="alert-success">Order Status(es) deleted sucessfully!</p>');
 		}
 				
 		return TRUE;
 	}
 
 	public function validateForm() {
-		$this->form_validation->set_rules('status_name', 'Status Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
-		$this->form_validation->set_rules('status_comment', 'Status Comment', 'xss_clean|trim|max_length[1028]');
+		$this->form_validation->set_rules('status_name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
+		$this->form_validation->set_rules('status_for', 'Status For', 'xss_clean|trim|required|aplha');
+		$this->form_validation->set_rules('status_comment', 'Comment', 'xss_clean|trim|max_length[1028]');
 		$this->form_validation->set_rules('notify_customer', 'Notify Customer', 'xss_clean|trim|integer');
 
 		if ($this->form_validation->run() === TRUE) {

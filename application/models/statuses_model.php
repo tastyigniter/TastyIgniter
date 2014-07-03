@@ -1,4 +1,5 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Statuses_model extends CI_Model {
 
 	public function getStatuses($for = FALSE) {
@@ -24,7 +25,7 @@ class Statuses_model extends CI_Model {
 		$this->db->join('statuses', 'statuses.status_id = status_history.status_id', 'left');
 		$this->db->join('staffs', 'staffs.staff_id = status_history.staff_id', 'left');
 		$this->db->where('order_id', $order_id);		
-		$this->db->where('status_for', $for);		
+		$this->db->where('status_history.status_for', $for);		
 		$this->db->order_by('status_history.date_added', 'DESC');
 
 		$query = $this->db->get();
@@ -40,7 +41,7 @@ class Statuses_model extends CI_Model {
 	public function getStatusHistory($for = FALSE, $order_id) {
 		$this->db->select('history_id, status_history.date_added, staffs.staff_name, statuses.status_name, status_history.notify, status_history.comment');
 		$this->db->from('status_history');
-		$this->db->where('for', $for);		
+		$this->db->where('status_for', $for);		
 		$this->db->order_by('status_history.date_added', 'DESC');
 		
 		$query = $this->db->get();
@@ -157,7 +158,7 @@ class Statuses_model extends CI_Model {
 		}
 
 		if ($for !== '') {
-			$this->db->set('for', $for);
+			$this->db->set('status_for', $for);
 		}
 
 		if ($add['notify'] === '1') {

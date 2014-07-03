@@ -1,4 +1,5 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Menus extends MX_Controller {
 
 	public function __construct() {
@@ -20,14 +21,21 @@ class Menus extends MX_Controller {
 		}
 
 		$filter = array();
-		if ($this->uri->segment(3)) {
-			$filter['category_id'] = $data['category_id'] = $this->uri->segment(3); 									// retrieve 3rd uri segment else set FALSE if unavailable.
+		if ($this->input->get('page')) {
+			$filter['page'] = (int) $this->input->get('page');
 		} else {
-			$data['category_id'] = 0;			
+			$filter['page'] = '';
 		}
-
-		if ($this->uri->segment(2) === 'specials') {
-			$filter['special'] = 1; 									// retrieve 3rd uri segment else set FALSE if unavailable.
+		
+		if ($this->config->item('page_limit')) {
+			$filter['limit'] = $this->config->item('page_limit');
+		}
+		
+		$filter['category_id'] = $data['category_id'] = (int) $this->input->get('category_id'); 									// retrieve 3rd uri segment else set FALSE if unavailable.
+		$categories = $this->Menus_model->getCategory($data['category_id']);
+		
+		if (!$categories AND $this->input->get('category_id')) {
+			show_404();
 		}
 
 		// START of retrieving lines from language file to pass to view.
@@ -38,7 +46,6 @@ class Menus extends MX_Controller {
 		$data['text_specials'] 			= $this->lang->line('text_specials');
 		$data['text_filter'] 			= $this->lang->line('text_filter');
 		$data['text_reviews'] 			= $this->lang->line('text_reviews');
-		$data['button_checkout'] 		= $this->lang->line('button_checkout');
 		$data['button_add'] 			= $this->lang->line('button_add');
 		$data['column_id']				= $this->lang->line('column_id');
 		$data['column_photo']	 		= $this->lang->line('column_photo');
@@ -47,6 +54,7 @@ class Menus extends MX_Controller {
 		$data['column_action'] 			= $this->lang->line('column_action');
 		// END of retrieving lines from language file to send to view.
 				
+		$data['button_order'] = '<a class="btn btn-success" href="'. site_url('main/checkout') .'">'. $this->lang->line('button_order') .'</a>';
 		$data['quantities'] = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10');
 		
 		$this->load->model('Image_tool_model');
@@ -68,8 +76,8 @@ class Menus extends MX_Controller {
 				$price = $result['special_price'];
 				$daydiff = floor((strtotime($result['end_date']) - strtotime($this->location->currentTime())) / 86400 );
 				$start_date = $result['start_date'];
-				$end_date = mdate('%d %M %y', strtotime($result['end_date']));
-				$end_days = ($daydiff < 0) ? sprintf($this->lang->line('text_end_today')) : sprintf($this->lang->line('text_end_days'), $daydiff);
+				$end_date = mdate('%d %M', strtotime($result['end_date']));
+				$end_days = ($daydiff < 0) ? sprintf($this->lang->line('text_end_today')) : sprintf($this->lang->line('text_end_days'), $end_date, $daydiff);
 			} else {
 				$price = $result['menu_price'];	
 				$start_date = '';
@@ -81,10 +89,9 @@ class Menus extends MX_Controller {
 				'menu_id'			=>	$result['menu_id'],
 				'menu_name'			=>	$result['menu_name'],
 				'menu_description'	=>	$result['menu_description'],
-				'category_name'		=>	$result['category_name'],
+				'category_name'		=>	$result['name'],
 				'is_special'		=>	$result['is_special'],
 				'start_date'		=>	$start_date,
-				'end_date'			=>	$end_date,
 				'end_days'			=>	$end_days,
 				'menu_price'		=>	$this->currency->format($price), 		//add currency symbol and format price to two decimal places
 				'menu_photo'		=>	$menu_photo_src
@@ -102,8 +109,6 @@ class Menus extends MX_Controller {
 				'option_price' 	=> $this->currency->format($result['option_price']) 			// add currency symbol and format price to two decimal places
 			);
 		}
-
-		$data['button_right'] = '<a class="button" href='. site_url("main/checkout") .'>'. $this->lang->line('button_continue') .'</a>';
 
 		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'menus.php')) {

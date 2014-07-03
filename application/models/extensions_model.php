@@ -1,21 +1,23 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Extensions_model extends CI_Model {
 
 	public function getList($type = '') {
 		$this->db->from('extensions');
-		$this->db->where('type', $type);
+		
+		if (!empty($type)) {
+			$this->db->where('type', $type);
+		}
 		
 		$query = $this->db->get();
 		
-		$extensions = array();
+		$results = array();
 		
 		if ($query->num_rows() > 0) {
-			foreach ($query->result_array() as $row) {
-				$extensions[] = $row['code'];
-			}
+			$results = $query->result_array();
 		}
 		
-		return $extensions;
+		return $results;
 	}
 
 	public function getExtensions() {
@@ -32,34 +34,89 @@ class Extensions_model extends CI_Model {
 		return $result;
 	}
 
-	public function getExtension($module, $extension) {
+	public function getModules() {
 		$this->db->from('extensions');
-		$this->db->where('type', $module);
-		$this->db->where('code', $extension);
+		$this->db->where('type', 'module');
 		
 		$query = $this->db->get();
-		
+	
+		$result = array();
+	
 		if ($query->num_rows() > 0) {
-			return $query->row_array();
+			$result = $query->result_array();
+		}
+	
+		return $result;
+	}
+
+	public function getExtension($type = '', $name = '') {
+		$result = array();
+
+		if (!empty($type) AND !empty($name)) {
+			$this->db->from('extensions');
+			$this->db->where('type', $type);
+			$this->db->where('name', $name);
+		
+			$query = $this->db->get();
+		
+			if ($query->num_rows() > 0) {
+				$result = $query->row_array();
+			}
 		}
 		
-		return FALSE;
+		return $result;
 	}
 
-	public function install($type, $extension) {
-		$this->db->set('type', $type);
-		$this->db->set('code', $extension);
+	public function updateExtension($update = array(), $serialized = '0') {
+		$query = FALSE;
+		
+		if (!empty($update['type']) AND !empty($update['name']) AND !empty($update['data'])) {
+			if (is_array($update['data']) AND $serialized === '1') {
+				$data = serialize($update['data']);
+			} else {
+				$data = $update['data'];
+			}
+			
 
-		if ($this->db->insert('extensions')) {
-			return $this->db->insert_id();
+			if (!empty($update['extension_id'])) {
+				$this->db->set('data', $data);
+				$this->db->set('serialized', $serialized);
+				$this->db->where('type', $update['type']);
+				$this->db->where('name', $update['name']);
+				$this->db->where('extension_id', $update['extension_id']);
+				$query = $this->db->update('extensions'); 
+			} else {
+				$this->uninstall($update['type'], $update['name']);
+				$this->db->set('data', $data);
+				$this->db->set('serialized', $serialized);
+				$this->db->set('type', $update['type']);
+				$this->db->set('name', $update['name']);
+				$query = $this->db->insert('extensions');
+			}
+		}
+		
+		return $query;
+	}
+
+
+	public function install($type = '', $name = '') {
+		if (!empty($type) AND !empty($name)) {
+			$this->db->set('type', $type);
+			$this->db->set('name', $name);
+
+			if ($this->db->insert('extensions')) {
+				return $this->db->insert_id();
+			}
 		}
 	}
 
-	public function uninstall($type, $extension) {
-		$this->db->where('type', $type);
-		$this->db->where('code', $extension);
+	public function uninstall($type = '', $name = '') {
+		if (!empty($type) AND !empty($name)) {
+			$this->db->where('type', $type);
+			$this->db->where('name', $name);
 
-		return $this->db->delete('extensions');
+			return $this->db->delete('extensions');
+		}
 	}
 }
 

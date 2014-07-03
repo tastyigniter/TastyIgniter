@@ -1,4 +1,5 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Permission extends CI_Controller {
 
 	public function __construct() {
@@ -7,7 +8,6 @@ class Permission extends CI_Controller {
 	}
 
 	public function index() {
-		
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
 		} else {
@@ -18,10 +18,10 @@ class Permission extends CI_Controller {
 		$this->template->setHeading('Permission');
 
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'permission.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'permission', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'permission.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'permission', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'permission', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'permission', $data);
 		}
 	}
 }

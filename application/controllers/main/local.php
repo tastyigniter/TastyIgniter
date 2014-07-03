@@ -1,4 +1,4 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Local extends MX_Controller {
 
@@ -19,6 +19,12 @@ class Local extends MX_Controller {
 			$data['alert'] = '';
 		}
 
+		if ($this->session->flashdata('local_alert')) {
+			$data['local_alert'] = $this->session->flashdata('local_alert'); 								// retrieve session flashdata variable if available
+		} else {
+			$data['local_alert'] = '';
+		}
+
 		if ($this->session->userdata('user_postcode')) {
 			$data['postcode'] = $this->session->userdata('user_postcode'); 						// retrieve session userdata variable if available
 		} else {
@@ -26,9 +32,11 @@ class Local extends MX_Controller {
 		}
 		
 		// START of retrieving lines from language file to pass to view.
-		$this->template->setTitle($this->lang->line('text_view_heading'));
-		$this->template->setHeading($this->lang->line('text_view_heading'));
-		$data['text_local'] 			= $this->lang->line('text_local');
+		$this->template->setTitle($this->lang->line('text_heading'));
+		$this->template->setHeading($this->lang->line('text_heading'));
+		$data['text_heading'] 			= $this->lang->line('text_heading');
+		$data['text_local'] 			= sprintf($this->lang->line('text_local'), $this->location->getName());
+		$data['text_review'] 			= sprintf($this->lang->line('text_review'), $this->location->getName());
 		$data['text_postcode'] 			= ($this->config->item('search_by') === 'postcode') ? $this->lang->line('entry_postcode') : $this->lang->line('entry_address');
 		$data['text_find'] 				= $this->lang->line('text_find');
 		$data['text_delivery_charge'] 	= $this->lang->line('text_delivery_charge');
@@ -38,7 +46,11 @@ class Local extends MX_Controller {
 		$data['text_distance'] 			= $this->lang->line('text_distance');		
 		$data['text_covered_area'] 		= $this->lang->line('text_covered_area');		
 		$data['button_view_menu'] 		= $this->lang->line('button_view_menu');
-		// END of retrieving lines from language file to send to view.
+		$data['text_from'] 				= $this->lang->line('text_from');
+		$data['text_on'] 				= $this->lang->line('text_on');
+		$data['text_avail'] 			= $this->lang->line('text_avail');
+		$data['text_empty'] 			= $this->lang->line('text_empty');
+		// END of retrieving lines from language file to pass to view.
 
 		$data['local_action']			= site_url('main/local_module/distance');
 		$data['menus_url']				= site_url('main/menus');
@@ -56,22 +68,19 @@ class Local extends MX_Controller {
 			$data['postcode'] = '';
 		}
 
+		$data['description'] 			= $this->location->getDescription();
+		$data['location_address'] 		= $this->location->getAddress();
+		$data['location_name'] 			= $this->location->getName();
+		$data['location_telephone'] 	= $this->location->getTelephone();
+		$data['distance'] 				= $this->location->distance();
+		$data['delivery_charge'] 		= $this->location->getDeliveryCharge();
+
 		$data['local_location'] = $this->location->local(); 									//retrieve local restaurant data from location library
 		
 		if ($data['local_location']) { 															//if local restaurant data is available
-			$data['location_name'] 			= $data['local_location']['location_name'];
-			$data['location_address_1'] 	= $data['local_location']['location_address_1'];
-			$data['location_city'] 			= $data['local_location']['location_city'];
-			$data['location_postcode'] 		= $data['local_location']['location_postcode'];
-			$data['location_telephone'] 	= $data['local_location']['location_telephone'];
-			$data['location_lat'] 			= $data['local_location']['location_lat'];
-			$data['location_lng'] 			= $data['local_location']['location_lng'];
-			$data['distance'] 				= $this->location->distance(); //format diatance to 2 decimal place
-			$data['delivery_charge']		= ($this->location->getDeliveryCharge() > 0) ? $this->currency->format($this->location->getDeliveryCharge()) : $this->lang->line('text_free');
-			$data['reviews']				= '2 reviews';
+			$data['location_lat'] 		= $data['local_location']['location_lat'];
+			$data['location_lng'] 		= $data['local_location']['location_lng'];
 		}
-		
-		$data['local_telephone'] = $this->location->getTelephone(); 
 
 		$this->load->library('country');
 		$location_address = $this->Locations_model->getLocationAddress($this->location->getId());
@@ -85,23 +94,68 @@ class Local extends MX_Controller {
 			$data['text_open_or_close'] = $this->lang->line('text_closed');						// display we are closed
 		}
 			
-		if ($this->location->checkDelivery() === 'no') { 														// checks if cart contents is empty  
-			$data['text_delivery'] = $this->lang->line('text_delivery_n');						// display we are closed
-		} else if ($this->location->checkDelivery() === 'outside') {		
-			$data['text_delivery'] = $this->lang->line('text_covered_area');		
-		} else {
-			$data['text_delivery'] = $this->lang->line('text_delivery_y');						// display we are open
+		$check_delivery = $this->location->checkDelivery();
+		$check_collection = $this->location->checkCollection();
+		
+		if (!$check_delivery AND !$check_collection) { 														// checks if cart contents is empty  
+			$data['text_delivery'] = $this->lang->line('text_no_types');
+		} else if (!$check_delivery AND $check_collection) { 														// checks if cart contents is empty  
+			$data['text_delivery'] = $this->lang->line('text_collection');
+		} else if ($check_delivery AND !$check_collection) {
+			$data['text_delivery'] = $this->lang->line('text_delivery');
+		} else if ($check_delivery AND $check_collection) {
+			$data['text_delivery'] = $this->lang->line('text_both_types');						// display we are open
+		}
+		
+		if ($check_delivery AND !$this->location->checkDeliveryCoverage()) {		
+			$data['text_covered'] = $this->lang->line('text_covered_area');		
 		}
 
-		if ($this->location->checkCollection()) { 														// checks if cart contents is empty  
-			$data['text_collection'] = $this->lang->line('text_collection_y');						// display we are open
+		$url = '?';
+		$filter = array();
+		$filter['location_id'] = (int) $this->location->getId();
+
+		if ($this->input->get('page')) {
+			$filter['page'] = (int) $this->input->get('page');
 		} else {
-			$data['text_collection'] = $this->lang->line('text_collection_n');						// display we are closed
+			$filter['page'] = '';
+		}
+		
+		if ($this->config->item('page_limit')) {
+			$filter['limit'] = $this->config->item('page_limit');
 		}
 		
 		$this->load->model('Reviews_model');
 		$total_reviews = $this->Reviews_model->getTotalLocationReviews($this->location->getId());
 		$data['text_total_review'] = sprintf($this->lang->line('text_total_review'), $total_reviews);
+
+		$ratings = $this->config->item('ratings');
+		
+		$data['reviews'] = array();
+		$results = $this->Reviews_model->getMainList($filter);									// retrieve all customer reviews from getMainList method in Reviews model
+		foreach ($results as $result) {					
+			$data['reviews'][] = array(															// create array of customer reviews to pass to view
+				'author'			=> $result['author'],
+				'city'				=> $result['location_city'],
+				'quality' 			=> $ratings['ratings'][$result['quality']],
+				'delivery' 			=> $ratings['ratings'][$result['delivery']],
+				'service' 			=> $ratings['ratings'][$result['service']],
+				'date'				=> mdate('%d %M %y', strtotime($result['date_added'])),
+				'text'				=> $result['review_text']
+			);
+		}
+		
+		$prefs['base_url'] 			= site_url('main/local').$url;
+		$prefs['total_rows'] 		= $this->Reviews_model->getMainListCount($filter);
+		$prefs['per_page'] 			= $filter['limit'];
+		
+		$this->load->library('pagination');
+		$this->pagination->initialize($prefs);
+				
+		$data['pagination'] = array(
+			'info'		=> $this->pagination->create_infos(),
+			'links'		=> $this->pagination->create_links()
+		);
 
 		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'local.php')) {

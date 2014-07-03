@@ -1,7 +1,8 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Tables_model extends CI_Model {
 
-    public function record_count($filter) {
+    public function getAdminListCount($filter) {
 		if (!empty($filter['filter_search'])) {
 			$this->db->like('table_name', $filter['filter_search']);
 		}

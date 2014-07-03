@@ -1,18 +1,20 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Image_tool extends CI_Controller {
 
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
 		$this->load->library('user');
+		$this->load->model('Extensions_model');	    
 	}
 
 	public function index() {
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/image_tool')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/image_tool')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -23,10 +25,13 @@ class Image_tool extends CI_Controller {
 
 		$this->template->setTitle('Image Tool');
 		$this->template->setHeading('Image Tool');
-		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
+		$this->template->setButton('Save', array('class' => 'btn btn-success', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton('Image Manager', array('class' => 'btn btn-default pull-right', 'href' => site_url(ADMIN_URI.'/image_manager')));
 		
-		if (!empty($this->config->item('image_tool'))) {
-			$result = $this->config->item('image_tool');
+		$extension = $this->Extensions_model->getExtension('tool', 'image_manager');
+		
+		if (!empty($extension['data'])) {
+			$result = unserialize($extension['data']);
 		} else {
 			$result = array();
 		}
@@ -50,47 +55,51 @@ class Image_tool extends CI_Controller {
 		$data['hidden_folders'] 	= (isset($result['hidden_folders'])) ? $result['hidden_folders'] : '';
 		$data['transliteration'] 	= (isset($result['transliteration'])) ? $result['transliteration'] : '';
 		$data['remember_days'] 		= (isset($result['remember_days'])) ? $result['remember_days'] : '';
-		$data['delete_thumbs']		= site_url('admin/image_tool/delete_thumbs');
+		$data['delete_thumbs']		= site_url(ADMIN_URI.'/image_tool/delete_thumbs');
 		
 		if ($this->input->post() AND $this->_updateImageTool() === TRUE) {
-			redirect('admin/image_tool');
+			redirect(ADMIN_URI.'/image_tool');
 		}
 
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'image_tool.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'image_tool', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'image_tool.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'image_tool', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'image_tool', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'image_tool', $data);
 		}
 	}
 
 	public function delete_thumbs() {
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/image_tool')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/image_tool')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
-    	if (!$this->user->hasPermissions('modify', 'admin/image_tool')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/image_tool')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to delete!</p>');
     	} else { 
 			if (file_exists(IMAGEPATH . 'thumbs')) {
 				$this->_delete_thumbs(IMAGEPATH . 'thumbs');
-				$this->session->set_flashdata('alert', '<p class="success">Thumbs deleted sucessfully!</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-success">Thumbs deleted sucessfully!</p>');
 			}
 		}
 		
-		redirect('admin/image_tool');
+		redirect(ADMIN_URI.'/image_tool');
 	}
 	
 	public function _updateImageTool() {
-    	if (!$this->user->hasPermissions('modify', 'admin/image_tool')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/image_tool')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to update!</p>');
 			return TRUE;
     	} else if ($this->validateForm() === TRUE) { 
-			$update = array(
+			$update = array();
+			
+			$update['type'] 			= 'tool';
+			$update['name'] 			= 'image_manager'; //$this->input->get('name');
+			$update['data'] 	= array(
 				'root_folder' 		=> $this->security->sanitize_filename($this->input->post('root_folder'), TRUE),
 				'max_size' 			=> $this->input->post('max_size'),
 				'thumb_height' 		=> $this->input->post('thumb_height'),
@@ -112,10 +121,10 @@ class Image_tool extends CI_Controller {
 				'remember_days'		=> $this->input->post('remember_days')
 			);
 
-			if ($this->Settings_model->addSetting('module', 'image_tool', $update, '1')) {
-				$this->session->set_flashdata('alert', '<p class="success">Image Tool updated sucessfully.</p>');
+			if ($this->Extensions_model->updateExtension($update, '1')) {
+				$this->session->set_flashdata('alert', '<p class="alert-success">Image Tool updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-warning">An error occured, nothing updated.</p>');
 			}
 
 			return TRUE;

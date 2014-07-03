@@ -1,7 +1,8 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+
 class Locations_model extends CI_Model {
 
-    public function record_count($filter = array()) {
+    public function getAdminListCount($filter = array()) {
 		if (!empty($filter['filter_search'])) {
 			$this->db->like('location_name', $filter['filter_search']);
 			$this->db->or_like('location_city', $filter['filter_search']);
@@ -81,23 +82,21 @@ class Locations_model extends CI_Model {
 	}
 
 	public function getLocationAddress($location_id) {
+		$address_data = array();
 		
 		if ($location_id !== 0) {
 			$this->db->from('locations');
 			$this->db->join('countries', 'countries.country_id = locations.location_country_id', 'left');
-			//$this->db->join('working_hours', 'working_hours.location_id = locations.location_id', 'left');
 			
 			$this->db->where('location_id', $location_id);
 			$query = $this->db->get();
 		
-			$address_data = array();
-
 			if ($query->num_rows() > 0) {
 				$row = $query->row_array();
 
 				$address_data = array(
-					'location_id'     	=> $row['location_id'],
-					'location_name'    	=> $row['location_name'],
+					'location_id'    => $row['location_id'],
+					'location_name'  => $row['location_name'],
 					'address_1'      => $row['location_address_1'],
 					'address_2'      => $row['location_address_2'],
 					'city'           => $row['location_city'],
@@ -110,17 +109,17 @@ class Locations_model extends CI_Model {
 					'format'     	 => $row['format']	
 				);
 			}
-
-			return $address_data;
 		}
+
+		return $address_data;
 	}
 	
 	public function getOpeningHourByDay($location_id = FALSE, $day = FALSE) {
 		$datestring = '%H:%i';
 		$weekdays = array('Monday' => 0, 'Tuesday' => 1, 'Wednesday' => 2, 'Thursday' => 3, 'Friday' => 4, 'Saturday' => 5, 'Sunday' => 6);
 		$hour = array();
-		$hour['open'] = '00:00';
-		$hour['close'] = '00:00';
+		$hour['open'] = '00:00:00';
+		$hour['close'] = '00:00:00';
 	
 		$this->db->from('working_hours');
 		$this->db->where('location_id', $location_id);
@@ -268,6 +267,10 @@ class Locations_model extends CI_Model {
 			$this->db->set('location_telephone', $update['telephone']);
 		}
 		
+		if (!empty($update['description'])) {
+			$this->db->set('description', $update['description']);
+		}
+		
 		if ($update['offer_delivery'] === '1') {
 			$this->db->set('offer_delivery', $update['offer_delivery']);
 		} else {
@@ -282,22 +285,38 @@ class Locations_model extends CI_Model {
 		
 		if (!empty($update['ready_time'])) {
 			$this->db->set('ready_time', $update['ready_time']);
+		} else {
+			$this->db->set('ready_time', '0');
 		}
 		
 		if (!empty($update['delivery_charge'])) {
 			$this->db->set('delivery_charge', $update['delivery_charge']);
+		} else {
+			$this->db->set('delivery_charge', '0');
 		}
 		
 		if (!empty($update['min_delivery_total'])) {
 			$this->db->set('min_delivery_total', $update['min_delivery_total']);
+		} else {
+			$this->db->set('min_delivery_total', '0');
 		}
 		
-		if (!empty($update['reserve_interval'])) {
-			$this->db->set('reserve_interval', $update['reserve_interval']);
+		if (!empty($update['last_order_time'])) {
+			$this->db->set('last_order_time', $update['last_order_time']);
+		} else {
+			$this->db->set('last_order_time', '0');
 		}
 		
-		if (!empty($update['reserve_turn'])) {
-			$this->db->set('reserve_turn', $update['reserve_turn']);
+		if (!empty($update['reservation_interval'])) {
+			$this->db->set('reservation_interval', $update['reservation_interval']);
+		} else {
+			$this->db->set('reservation_interval', '0');
+		}
+		
+		if (!empty($update['reservation_turn'])) {
+			$this->db->set('reservation_turn', $update['reservation_turn']);
+		} else {
+			$this->db->set('reservation_turn', '0');
 		}
 		
 		if ($update['location_status'] === '1') {
@@ -361,6 +380,10 @@ class Locations_model extends CI_Model {
 			$this->db->set('location_telephone', $add['telephone']);
 		}
 		
+		if (!empty($add['description'])) {
+			$this->db->set('description', $add['description']);
+		}
+		
 		if ($add['offer_delivery'] === '1') {
 			$this->db->set('offer_delivery', $add['offer_delivery']);
 		} else {
@@ -375,22 +398,38 @@ class Locations_model extends CI_Model {
 		
 		if (!empty($add['ready_time'])) {
 			$this->db->set('ready_time', $add['ready_time']);
+		} else {
+			$this->db->set('ready_time', '0');
 		}
 		
 		if (!empty($add['delivery_charge'])) {
 			$this->db->set('delivery_charge', $add['delivery_charge']);
+		} else {
+			$this->db->set('delivery_charge', '0');
 		}
 		
 		if (!empty($add['min_delivery_total'])) {
 			$this->db->set('min_delivery_total', $add['min_delivery_total']);
+		} else {
+			$this->db->set('min_delivery_total', '0');
 		}
 		
-		if (!empty($add['reserve_interval'])) {
-			$this->db->set('reserve_interval', $add['reserve_interval']);
+		if (!empty($add['last_order_time'])) {
+			$this->db->set('last_order_time', $add['last_order_time']);
+		} else {
+			$this->db->set('last_order_time', '0');
 		}
 		
-		if (!empty($add['reserve_turn'])) {
-			$this->db->set('reserve_turn', $add['reserve_turn']);
+		if (!empty($add['reservation_interval'])) {
+			$this->db->set('reservation_interval', $add['reservation_interval']);
+		} else {
+			$this->db->set('reservation_interval', '0');
+		}
+		
+		if (!empty($add['reservation_turn'])) {
+			$this->db->set('reservation_turn', $add['reservation_turn']);
+		} else {
+			$this->db->set('reservation_turn', '0');
 		}
 		
 		if ($add['location_status'] === '1') {

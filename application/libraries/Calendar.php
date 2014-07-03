@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH')) exit('No direct access allowed');
 /**
  * CodeIgniter
  *
@@ -409,11 +409,11 @@ class CI_Calendar {
 	function default_template()
 	{
 		return array (
-			'table_open'				=> '<table border="0" cellpadding="4" cellspacing="0" class="calendar">',
+			'table_open'				=> '<table border="0" cellpadding="4" cellspacing="0" class="table table-calendar">',
 			'heading_row_start'			=> '<tr>',
-			'heading_previous_cell'		=> '<th class="prev"><a class="calender_nav" href="{previous_url}"></a></th>',
+			'heading_previous_cell'		=> '<th class="prev"><a class="calender-nav" href="{previous_url}"></a></th>',
 			'heading_title_cell'		=> '<th class="title" colspan="{colspan}">{heading}</th>',
-			'heading_next_cell'			=> '<th class="next"><a class="calender_nav" href="{next_url}"></a></th>',
+			'heading_next_cell'			=> '<th class="next"><a class="calender-nav" href="{next_url}"></a></th>',
 			'heading_row_end'			=> '</tr>',
 			'week_row_start'			=> '<tr>',
 			'week_day_cell'				=> '<th class="week">{week_day}</th>',

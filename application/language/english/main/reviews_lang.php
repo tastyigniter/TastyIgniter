@@ -1,4 +1,4 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 $lang['text_heading'] 			= 'Your previous reviews';
 $lang['text_empty'] 			= 'There are no added review(s).';
@@ -24,9 +24,10 @@ $lang['entry_review'] 			= 'Review:';
 
 $lang['text_pls_login'] 		= 'Error: Please login to rate menus';
 $lang['text_pls_write'] 		= 'Error: Rating text is required.';
-$lang['text_rate_success'] 		= 'Success: Menu rated successfully!';
 $lang['text_error'] 			= 'Error occurred, please try again later.';
-$lang['text_no_menu_selected'] 	= 'No menu selected';
 
+$lang['alert_success'] 			= '<p class="alert-success">Review sent successfully, it will be visible once approved.</p>';
+$lang['alert_error'] 			= '<p class="alert-danger">An error has occured, please try again.</p>';
+$lang['alert_duplicate'] 		= '<p class="alert-danger">Sorry. Either you\'ve already rated this order, or an error has occurred.</p>';
 /* End of file reviews_lang.php */
 /* Location: ./application/language/english/main/reviews_lang.php */

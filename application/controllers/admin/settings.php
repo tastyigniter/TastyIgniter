@@ -1,4 +1,4 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Settings extends CI_Controller {
 
@@ -14,13 +14,12 @@ class Settings extends CI_Controller {
 	}
 
 	public function index() {
-			
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/settings')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/settings')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -31,7 +30,7 @@ class Settings extends CI_Controller {
 
 		$this->template->setTitle('Settings');
 		$this->template->setHeading('Settings');
-		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
+		$this->template->setButton('Save', array('class' => 'btn btn-success', 'onclick' => '$(\'#edit-form\').submit();'));
 
 		if ($this->input->post('site_name')) {
 			$data['site_name'] = $this->input->post('site_name');
@@ -207,28 +206,28 @@ class Settings extends CI_Controller {
 			$data['ready_time'] = $this->config->item('ready_time');
 		}
 				
-		if ($this->input->post('reserve_mode')) {
-			$data['reserve_mode'] = $this->input->post('reserve_mode');
+		if ($this->input->post('reservation_mode')) {
+			$data['reservation_mode'] = $this->input->post('reservation_mode');
 		} else {
-			$data['reserve_mode'] = $this->config->item('reserve_mode');
+			$data['reservation_mode'] = $this->config->item('reservation_mode');
 		}
 				
-		if ($this->input->post('reserve_status')) {
-			$data['reserve_status'] = $this->input->post('reserve_status');
+		if ($this->input->post('reservation_status')) {
+			$data['reservation_status'] = $this->input->post('reservation_status');
 		} else {
-			$data['reserve_status'] = $this->config->item('reserve_status');
+			$data['reservation_status'] = $this->config->item('reservation_status');
 		}
 				
-		if ($this->input->post('reserve_interval')) {
-			$data['reserve_interval'] = $this->input->post('reserve_interval');
+		if ($this->input->post('reservation_interval')) {
+			$data['reservation_interval'] = $this->input->post('reservation_interval');
 		} else {
-			$data['reserve_interval'] = $this->config->item('reserve_interval');
+			$data['reservation_interval'] = $this->config->item('reservation_interval');
 		}
 				
-		if ($this->input->post('reserve_turn')) {
-			$data['reserve_turn'] = $this->input->post('reserve_turn');
+		if ($this->input->post('reservation_turn')) {
+			$data['reservation_turn'] = $this->input->post('reservation_turn');
 		} else {
-			$data['reserve_turn'] = $this->config->item('reserve_turn');
+			$data['reservation_turn'] = $this->config->item('reservation_turn');
 		}
 				
 		if ($this->input->post('themes_allowed_img')) {
@@ -313,6 +312,18 @@ class Settings extends CI_Controller {
 			$data['activity_timeout'] = $this->input->post('activity_timeout');
 		} else {
 			$data['activity_timeout'] = $this->config->item('activity_timeout');
+		}				
+
+		if ($this->input->post('activity_delete')) {
+			$data['activity_delete'] = $this->input->post('activity_delete');
+		} else {
+			$data['activity_delete'] = $this->config->item('activity_delete');
+		}				
+
+		if ($this->input->post('permalink')) {
+			$data['permalink'] = $this->input->post('permalink');
+		} else {
+			$data['permalink'] = $this->config->item('permalink');
 		}				
 
 		if ($this->input->post('index_file_url')) {
@@ -406,7 +417,7 @@ class Settings extends CI_Controller {
 		foreach ($categories as $category) {					
 			$data['categories'][] = array(
 				'category_id'	=>	$category['category_id'],
-				'category_name'	=>	$category['category_name']
+				'category_name'	=>	$category['name']
 			);
 		}
 		
@@ -417,7 +428,8 @@ class Settings extends CI_Controller {
 		foreach ($results as $result) {					
 			$data['statuses'][] = array(
 				'status_id'		=> $result['status_id'],
-				'status_name'		=> $result['status_name']
+				'status_name'	=> $result['status_name'],
+				'status_for'	=> $result['status_for']
 			);
 		}
 
@@ -436,20 +448,20 @@ class Settings extends CI_Controller {
 		}
 	
 		if ($this->input->post() AND $this->_updateSettings() === TRUE) {
-			redirect('admin/settings');
+			redirect(ADMIN_URI.'/settings');
 		}
 						
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'settings.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'settings', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'settings.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'settings', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'settings', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'settings', $data);
 		}
 	}
 
 	public function _updateSettings() {
-    	if (!$this->user->hasPermissions('modify', 'admin/settings')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/settings')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to update!</p>');
   			return TRUE;
     	} else if ($this->validateForm() === TRUE) { 
 			$update = array(
@@ -480,10 +492,10 @@ class Settings extends CI_Controller {
 				'order_status_complete'	=> $this->input->post('order_status_complete'),
 				'guest_order'			=> $this->input->post('guest_order'),
 				'ready_time'			=> $this->input->post('ready_time'),
-				'reserve_mode'			=> $this->input->post('reserve_mode'),
-				'reserve_status'		=> $this->input->post('reserve_status'),
-				'reserve_interval'		=> $this->input->post('reserve_interval'),
-				'reserve_turn'			=> $this->input->post('reserve_turn'),
+				'reservation_mode'			=> $this->input->post('reservation_mode'),
+				'reservation_status'		=> $this->input->post('reservation_status'),
+				'reservation_interval'		=> $this->input->post('reservation_interval'),
+				'reservation_turn'			=> $this->input->post('reservation_turn'),
 				'themes_allowed_img'	=> $this->input->post('themes_allowed_img'),
 				'themes_allowed_file'	=> $this->input->post('themes_allowed_file'),
 				'themes_hidden_files'	=> $this->input->post('themes_hidden_files'),
@@ -497,8 +509,10 @@ class Settings extends CI_Controller {
 				'log_threshold' 		=> $this->input->post('log_threshold'),
 				'log_path' 				=> $this->input->post('log_path'),
 				'activity_timeout' 		=> $this->input->post('activity_timeout'),
+				'activity_delete' 		=> $this->input->post('activity_delete'),
 				'encryption_key' 		=> $this->input->post('encryption_key'),
 				'index_file_url' 		=> $this->input->post('index_file_url'),
+				'permalink' 			=> $this->input->post('permalink'),
 				'maintenance_mode' 		=> $this->input->post('maintenance_mode'),
 				'maintenance_page' 		=> $this->input->post('maintenance_page'),
 				'cache_mode' 			=> $this->input->post('cache_mode'),
@@ -506,9 +520,9 @@ class Settings extends CI_Controller {
 			);
 
 			if ($this->Settings_model->updateSettings('config', $update)) {
-				$this->session->set_flashdata('alert', '<p class="success">Settings updated sucessfully.</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-success">Settings updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-warning">An error occured, nothing updated.</p>');
 			}
 			
 			return TRUE;
@@ -543,10 +557,10 @@ class Settings extends CI_Controller {
 		$this->form_validation->set_rules('order_status_complete', 'Complete Order Status', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('guest_order', 'Guest Order', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('ready_time', 'Ready Time', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('reserve_mode', 'Reservation Mode', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('reserve_status', 'Reservation Status', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('reserve_interval', 'Reservation Interval', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('reserve_turn', 'Reservations Turn', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('reservation_mode', 'Reservation Mode', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('reservation_status', 'Reservation Status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('reservation_interval', 'Reservation Interval', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('reservation_turn', 'Reservations Turn', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('themes_allowed_img', 'Themes Allowed Images', 'xss_clean|trim');
 		$this->form_validation->set_rules('themes_allowed_file', 'Themes Allowed Files', 'xss_clean|trim');
 		$this->form_validation->set_rules('themes_hidden_files', 'Themes Hidden Files', 'xss_clean|trim');
@@ -561,7 +575,9 @@ class Settings extends CI_Controller {
 		$this->form_validation->set_rules('log_path', 'Log Path', 'xss_clean|trim|');
 		$this->form_validation->set_rules('encryption_key', 'Encryption Key', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('activity_timeout', 'Activity Timeout', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('activity_delete', 'Activity Delete', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('index_file_url', 'Index File', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('permalink', 'Permalink', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('maintenance_mode', 'Maintenance Mode', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('maintenance_page', 'Maintenance Page', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('cache_mode', 'Cache Mode', 'xss_clean|trim|required|integer');

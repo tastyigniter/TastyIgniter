@@ -1,38 +1,56 @@
-<div class="content">
-<div class="left">
-<div class="img_inner">
-	<form method="post" accept-charset="utf-8" action="<?php echo current_url(); ?>">
-    <table border="0" cellpadding="2" width="400px" align="center">
-        <tr>
-            <td align="right"><b><?php echo $entry_email; ?></b></td>
-            <td><input name="email" type="text" class="textfield" id="email" /><br />
-    			<?php echo form_error('email', '<span class="error">', '</span>'); ?>
-    		</td>
-    	</tr>
-        <tr>
-            <td align="right"><b><?php echo $entry_password; ?></b></td>
-            <td><input name="password" type="password" class="textfield" id="password" /><br />
-    			<?php echo form_error('password', '<span class="error">', '</span>'); ?>
-    		</td>
-        </tr>
-        <tr>
-            <td align="right"></td>
-            <td><a href="<?php echo $reset_url; ?>"><?php echo $text_forgot; ?></a></td>
-        </tr>
-        <tr>
-        	<td colspan="2" align="center"><input type="submit" name="submit" value="<?php echo $button_login; ?>" /></td>
-        </tr>
-    </table>
-    </form>
+<?php echo $header; ?>
+<div class="row page-heading"><h3><?php echo $text_heading; ?></h3></div>
+
+<div id="notification" class="row">
+<?php if (!empty($alert)) { ?>
+	<div class="alert alert-dismissable">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<?php echo $alert; ?>
+	</div>
+<?php } ?>
 </div>
-</div>
+<div class="row content">
+	<div class="col-md-8 wrap-all pull-left">
+		<div class="panel panel-default">
+			<div class="panel-heading"><h3 class="panel-title"><?php echo $text_register; ?></h3></div>
+			<div id="register" class="panel-body"></div>
+		</div>
+	</div>
 
-<div id="register" class="right"></div>
-
-
+	<div class="col-md-4 wrap-all pull-right">
+		<div class="panel panel-default">
+			<div class="panel-heading"><h3 class="panel-title"><?php echo $text_login; ?></h3></div>
+			<div class="panel-body">
+				<form method="post" accept-charset="utf-8" action="<?php echo current_url(); ?>" role="form">
+					<div class="form-group">
+						<label for="login-email"><?php echo $entry_email; ?></label>
+						<input type="text" name="email" id="login-email" class="form-control" />
+						<?php echo form_error('email', '<span class="error help-block">', '</span>'); ?>
+					</div>
+			
+					<div class="form-group">
+						<label for="login-password"><?php echo $entry_password; ?></label>
+						<input type="password" name="password" id="login-password" class="form-control" />
+						<?php echo form_error('password', '<span class="error help-block">', '</span>'); ?>
+					</div>
+			
+					<div class="form-group">
+						<a href="<?php echo $reset_url; ?>"><?php echo $text_forgot; ?></a>
+					</div>
+			
+					<div class="buttons">
+						<button type="submit" class="btn btn-success"><?php echo $button_login; ?></button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 </div>
 <script type="text/javascript"><!--
 $(document).ready(function() {
-	$('#register').load('<?php echo site_url("main/register"); ?> .register-box > *');
+	$('#register').load('<?php echo site_url("main/register"); ?> .register-box > *', function() {
+		$('select.form-control').selectpicker({iconBase:'fa', tickIcon:'fa-check'});
+	});
 });
-//--></script> 
+//--></script>
+<?php echo $footer; ?>

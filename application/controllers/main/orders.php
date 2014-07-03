@@ -1,4 +1,4 @@
-<?php 
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Orders extends MX_Controller {
 
@@ -6,22 +6,37 @@ class Orders extends MX_Controller {
 		parent::__construct(); 																	//  calls the constructor
 		$this->load->library('customer'); 														// load the customer library
 		$this->load->model('Orders_model');														// load orders model
+		$this->load->model('Addresses_model');														// load addresses model
 		$this->load->library('currency'); 														// load the currency library
 		$this->load->library('language');
 		$this->lang->load('main/orders', $this->language->folder());
 	}
 
 	public function index() {
+		if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
+  			redirect('main/login');
+		}
+
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
 		} else {
 			$data['alert'] = '';
 		}
 		
-		if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
-  			redirect('account/login');
+		$url = '?';
+		$filter = array();
+		$filter['customer_id'] = (int) $this->customer->getId();
+		
+		if ($this->input->get('page')) {
+			$filter['page'] = (int) $this->input->get('page');
+		} else {
+			$filter['page'] = '';
 		}
-
+		
+		if ($this->config->item('page_limit')) {
+			$filter['limit'] = $this->config->item('page_limit');
+		}
+		
 		// START of retrieving lines from language file to pass to view.
 		$this->template->setTitle($this->lang->line('text_heading'));
 		$this->template->setHeading($this->lang->line('text_heading'));
@@ -46,7 +61,7 @@ class Orders extends MX_Controller {
 		$data['new_order_url'] 			= site_url('main/menus');
 
 		$data['orders'] = array();
-		$results = $this->Orders_model->getMainOrders($this->customer->getId());				// retrieve customer orders based on customer id from getMainOrders method in Orders model
+		$results = $this->Orders_model->getMainList($filter);			// retrieve customer orders based on customer id from getMainOrders method in Orders model
 		foreach ($results as $result) {
 
 			if ($result['order_type'] === '1') {												// if order type is equal to 1, order type is delivery else collection
@@ -54,7 +69,7 @@ class Orders extends MX_Controller {
 			} else {
 				$order_type = $this->lang->line('text_collection');
 			}
-					
+				
 			$data['orders'][] = array(															// create array of customer orders to pass to view
 				'order_id' 				=> $result['order_id'],
 				'location_name' 		=> $result['location_name'],
@@ -69,7 +84,19 @@ class Orders extends MX_Controller {
 				'leave_review' 			=> site_url('main/reviews/add/'. $result['order_id'] .'/'. $result['location_id'])
 			);
 		}
+		
+		$prefs['base_url'] 			= site_url('main/orders').$url;
+		$prefs['total_rows'] 		= $this->Orders_model->getMainListCount($filter);
+		$prefs['per_page'] 			= $filter['limit'];
+		
+		$this->load->library('pagination');
+		$this->pagination->initialize($prefs);
 				
+		$data['pagination'] = array(
+			'info'		=> $this->pagination->create_infos(),
+			'links'		=> $this->pagination->create_links()
+		);
+
 		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'orders.php')) {
 			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'orders', $data);
@@ -80,7 +107,7 @@ class Orders extends MX_Controller {
 	
 	public function view() {
 		if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
-  			redirect('account/login');
+  			redirect('main/login');
 		}
 
 		if ($this->session->flashdata('alert')) {
@@ -92,7 +119,7 @@ class Orders extends MX_Controller {
 		if ($this->uri->segment(4)) {															// check if customer_id is set in uri string
 			$order_id = (int)$this->uri->segment(4);
 		} else {
-  			redirect('account/orders');
+  			redirect('main/orders');
 		}
 
 		$result = $this->Orders_model->getMainOrder($order_id, $this->customer->getId());
@@ -110,9 +137,10 @@ class Orders extends MX_Controller {
 		// END of retrieving lines from language file to pass to view.
 		
 		$data['reorder_url'] 			= site_url('main/orders/reorder/'. $order_id);
+		$data['button_back'] 			= $this->lang->line('button_back');
+		$data['back_url'] 				= site_url('main/orders');
 
 		if ($result) {
-			$data['error'] 			= '';
 			$data['order_id'] 		= $result['order_id'];
 			$data['date_added'] 	= mdate('%d %M %y', strtotime($result['date_added']));
 			$data['order_time'] 	= mdate('%H:%i', strtotime($result['order_time']));
@@ -130,7 +158,7 @@ class Orders extends MX_Controller {
 			$data['location_name'] = $location_address['location_name'];
 			$data['location_address'] = $this->country->addressFormat($location_address);
 		
-			$delivery_address = $this->Customers_model->getCustomerAddress($result['customer_id'], $result['address_id']);
+			$delivery_address = $this->Addresses_model->getCustomerAddress($result['customer_id'], $result['address_id']);
 			$data['delivery_address'] = $this->country->addressFormat($delivery_address);
 		
 			$data['menus'] = array();			
@@ -163,11 +191,8 @@ class Orders extends MX_Controller {
 			$data['order_total'] 		= $this->currency->format($result['order_total']);
 			$data['total_items']		= $result['total_items'];
 		} else {
-			$data['error'] = '<p class="error">Sorry, an error has occurred.</p>';
-		}
-		
-		$data['button_back'] 			= $this->lang->line('button_back');
-		$data['back_url'] 				= site_url('main/orders');
+			redirect('main/orders');
+		}	
 
 		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'orders_view.php')) {
@@ -180,17 +205,15 @@ class Orders extends MX_Controller {
 	public function reorder() {
 		$this->load->library('cart'); 															// load the cart library
 		if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
-  			redirect('account/login');
+  			redirect('main/login');
 		}
 
-		if ($this->uri->segment(4)) {															// check if customer_id is set in uri string
-			$order_id = (int)$this->uri->segment(4);
-		} else {
-  			redirect('account/orders');
-		}
-
+		$order_id = (int)$this->uri->segment(4);
 		$order_menus = $this->Orders_model->getOrderMenus($order_id);
-		if ($order_menus) {
+		
+		if (!$order_menus) {
+  			redirect('main/orders');
+		} else {
 			foreach ($order_menus as $menu) {
 				$cart_data = array();
 				$update_cart = FALSE;
@@ -225,7 +248,7 @@ class Orders extends MX_Controller {
 				}
 			}
 			
-			$this->session->set_flashdata('alert', '<p class="success">You have successfully added the menus from order ID '. $order_id .' to your order!</p>');
+			$this->session->set_flashdata('alert', sprintf($this->lang->line('alert_reorder'), $order_id));
 			redirect('main/menus');
 		}
 	}

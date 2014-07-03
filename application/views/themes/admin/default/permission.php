@@ -1,16 +1,16 @@
-<div id="box-content">
-	<div id="notification">
-		<?php if (validation_errors()) { ?>
-			<?php echo validation_errors('<span class="error">', '</span>'); ?>
-		<?php } ?>
-		<?php if (!empty($alert)) { ?>
-			<?php echo $alert; ?>
-		<?php } ?>
-	</div>
+<?php echo $header; ?>
+<div class="row content">
+	<div class="col-md-12">
+		<div id="notification">
+			<div class="alert alert-dismissable">
+				<p class="alert-danger">You do not have the right permission to access.</p>
 
-	<div class="box">
-		<p align="center">&nbsp;</p>
-		<h4 align="center">You do not have the right permission to access.</h4>
-		<p align="center"></p>
+				<?php if (!empty($alert)) { ?>
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+					<?php echo $alert; ?>
+				<?php } ?>
+			</div>
+		</div>
 	</div>
 </div>
+<?php echo $footer; ?>

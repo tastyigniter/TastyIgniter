@@ -1,4 +1,4 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Orders extends CI_Controller {
 
@@ -10,6 +10,7 @@ class Orders extends CI_Controller {
 		$this->load->library('pagination');
 		$this->load->library('currency'); // load the currency library
 		$this->load->model('Customers_model');
+		$this->load->model('Addresses_model');
 		$this->load->model('Locations_model');
 		$this->load->model('Orders_model');
 		$this->load->model('Statuses_model');
@@ -18,13 +19,12 @@ class Orders extends CI_Controller {
 	}
 
 	public function index() {
-			
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 		
-    	if (!$this->user->hasPermissions('access', 'admin/orders')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/orders')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -99,19 +99,19 @@ class Orders extends CI_Controller {
 		
 		$this->template->setTitle('Orders');
 		$this->template->setHeading('Orders');
-		$this->template->setButton('Delete', array('class' => 'delete_button', 'onclick' => '$(\'form:not(#filter-form)\').submit();'));
+		$this->template->setButton('Delete', array('class' => 'btn btn-default', 'onclick' => '$(\'#list-form\').submit();'));
 
 		$data['text_empty'] 		= 'There are no orders available.';
 		
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
-		$data['sort_id'] 			= site_url('admin/orders'.$url.'sort_by=order_id&order_by='.$order_by);
-		$data['sort_location'] 		= site_url('admin/orders'.$url.'sort_by=location_name&order_by='.$order_by);
-		$data['sort_customer'] 		= site_url('admin/orders'.$url.'sort_by=first_name&order_by='.$order_by);
-		$data['sort_status'] 		= site_url('admin/orders'.$url.'sort_by=status_name&order_by='.$order_by);
-		$data['sort_type'] 			= site_url('admin/orders'.$url.'sort_by=order_type&order_by='.$order_by);
-		$data['sort_total'] 		= site_url('admin/orders'.$url.'sort_by=order_total&order_by='.$order_by);
-		$data['sort_time']			= site_url('admin/orders'.$url.'sort_by=order_time&order_by='.$order_by);
-		$data['sort_date'] 			= site_url('admin/orders'.$url.'sort_by=date_added&order_by='.$order_by);
+		$data['sort_id'] 			= site_url(ADMIN_URI.'/orders'.$url.'sort_by=order_id&order_by='.$order_by);
+		$data['sort_location'] 		= site_url(ADMIN_URI.'/orders'.$url.'sort_by=location_name&order_by='.$order_by);
+		$data['sort_customer'] 		= site_url(ADMIN_URI.'/orders'.$url.'sort_by=first_name&order_by='.$order_by);
+		$data['sort_status'] 		= site_url(ADMIN_URI.'/orders'.$url.'sort_by=status_name&order_by='.$order_by);
+		$data['sort_type'] 			= site_url(ADMIN_URI.'/orders'.$url.'sort_by=order_type&order_by='.$order_by);
+		$data['sort_total'] 		= site_url(ADMIN_URI.'/orders'.$url.'sort_by=order_total&order_by='.$order_by);
+		$data['sort_time']			= site_url(ADMIN_URI.'/orders'.$url.'sort_by=order_time&order_by='.$order_by);
+		$data['sort_date'] 			= site_url(ADMIN_URI.'/orders'.$url.'sort_by=date_added&order_by='.$order_by);
 
 		$results = $this->Orders_model->getList($filter);
 		
@@ -136,7 +136,7 @@ class Orders extends CI_Controller {
 				'order_status'		=> $result['status_name'],
 				'order_total'		=> $this->currency->format($result['order_total']),
 				'date_added'		=> $date_added,
-				'edit' 				=> site_url('admin/orders/edit?id=' . $result['order_id'])
+				'edit' 				=> site_url(ADMIN_URI.'/orders/edit?id=' . $result['order_id'])
 			);
 		}
 			
@@ -171,8 +171,8 @@ class Orders extends CI_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 		
-		$config['base_url'] 		= site_url('admin/orders').$url;
-		$config['total_rows'] 		= $this->Orders_model->record_count($filter);
+		$config['base_url'] 		= site_url(ADMIN_URI.'/orders').$url;
+		$config['total_rows'] 		= $this->Orders_model->getAdminListCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 		
 		$this->pagination->initialize($config);
@@ -183,25 +183,24 @@ class Orders extends CI_Controller {
 		);
 
 		if ($this->input->post('delete') AND $this->_deleteOrder() === TRUE) {
-			redirect('admin/orders');
+			redirect(ADMIN_URI.'/orders');
 		}	
 
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'orders.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'orders', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'orders.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'orders', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'orders', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'orders', $data);
 		}
 	}
 
 	public function edit() {
-			
 		if (!$this->user->islogged()) {  
-  			redirect('admin/login');
+  			redirect(ADMIN_URI.'/login');
 		}
 
-    	if (!$this->user->hasPermissions('access', 'admin/orders')) {
-  			redirect('admin/permission');
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/orders')) {
+  			redirect(ADMIN_URI.'/permission');
 		}
 		
 		if ($this->session->flashdata('alert')) {
@@ -210,30 +209,29 @@ class Orders extends CI_Controller {
 			$data['alert'] = '';
 		}		
 
-		//check if customer_id is set in uri string
-		if (is_numeric($this->input->get('id'))) {
-			$order_id = $this->input->get('id');
-			$data['action']	= site_url('admin/orders/edit?id='. $order_id);
+		$order_info = $this->Orders_model->getAdminOrder((int) $this->input->get('id'));
+
+		if ($order_info) {
+			$order_id = $order_info['order_id'];
+			$data['action']	= site_url(ADMIN_URI.'/orders/edit?id='. $order_id);
 		} else {
 		    $order_id = 0;
-			//$data['action']	= site_url('admin/orders/edit');
-			redirect('admin/orders');
+			//$data['action']	= site_url(ADMIN_URI.'/orders/edit');
+			redirect(ADMIN_URI.'/orders');
 		}
 		
-		$order_info = $this->Orders_model->getAdminOrder($order_id);
-
-		$title = (isset($order_info['order_id'])) ? 'Edit - '. $order_info['order_id'] : 'New';	
+		$title = (isset($order_info['order_id'])) ? $order_info['order_id'] : 'New';	
 		$this->template->setTitle('Order: '. $title);
 		$this->template->setHeading('Order: '. $title);
-		$this->template->setButton('Save', array('class' => 'save_button', 'onclick' => '$(\'form\').submit();'));
-		$this->template->setButton('Save & Close', array('class' => 'save_close_button', 'onclick' => 'saveClose();'));
-		$this->template->setBackButton('back_button', site_url('admin/orders'));
+		$this->template->setButton('Save', array('class' => 'btn btn-success', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('btn-back', site_url(ADMIN_URI.'/orders'));
 
 		$data['text_empty'] 		= 'There are no status history for this order.';
 
 		$data['order_id'] 			= $order_info['order_id'];
 		$data['customer_id'] 		= $order_info['customer_id'];
-		$data['customer_edit'] 		= site_url('admin/customers/edit?id=' . $order_info['customer_id']);
+		$data['customer_edit'] 		= site_url(ADMIN_URI.'/customers/edit?id=' . $order_info['customer_id']);
 		$data['first_name'] 		= $order_info['first_name'];
 		$data['last_name'] 			= $order_info['last_name'];
 		$data['email'] 				= $order_info['email'];
@@ -294,12 +292,21 @@ class Orders extends CI_Controller {
 		}
 
 		$this->load->library('country');
-		$location_address = $this->Locations_model->getLocationAddress($order_info['location_id']);
-		$data['location_name'] = $location_address['location_name'];
-		$data['location_address'] = $this->country->addressFormat($location_address);
+		$data['location_name'] = $data['location_address'] = '';
+		if (!empty($order_info['location_id'])) {
+			$location_address = $this->Locations_model->getLocationAddress($order_info['location_id']);
+			$data['location_name'] = $location_address['location_name'];
+			$data['location_address'] = $this->country->addressFormat($location_address);
+		}
 		
-		$customer_address = $this->Customers_model->getCustomerAddress($order_info['customer_id'], $order_info['address_id']);
-		$data['customer_address'] = $this->country->addressFormat($customer_address);
+		$data['customer_address'] = '';
+		if (!empty($order_info['customer_id'])) {
+			$customer_address = $this->Addresses_model->getCustomerAddress($order_info['customer_id'], $order_info['address_id']);
+			$data['customer_address'] = $this->country->addressFormat($customer_address);
+		} else if (!empty($order_info['address_id'])) {
+			$customer_address = $this->Addresses_model->getGuestAddress($order_info['address_id']);
+			$data['customer_address'] = $this->country->addressFormat($customer_address);
+		}
 		
 		$data['cart_items'] = array();			
 		$cart_items = $this->Orders_model->getOrderMenus($order_info['order_id']);
@@ -333,23 +340,23 @@ class Orders extends CI_Controller {
 					
 		if ($this->input->post() AND $this->_updateOrder($order_info['status_id']) === TRUE) {
 			if ($this->input->post('save_close') === '1') {
-				redirect('admin/orders');
+				redirect(ADMIN_URI.'/orders');
 			}
 			
-			redirect('admin/orders/edit?id='. $order_id);
+			redirect(ADMIN_URI.'/orders/edit?id='. $order_id);
 		}
 				
 		$this->template->regions(array('header', 'footer'));
-		if (file_exists(APPPATH .'views/themes/admin/'.$this->config->item('admin_theme').'orders_edit.php')) {
-			$this->template->render('themes/admin/'.$this->config->item('admin_theme'), 'orders_edit', $data);
+		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'orders_edit.php')) {
+			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'orders_edit', $data);
 		} else {
-			$this->template->render('themes/admin/default/', 'orders_edit', $data);
+			$this->template->render('themes/'.ADMIN_URI.'/default/', 'orders_edit', $data);
 		}
 	}
 
 	public function _updateOrder($status_id = FALSE) {
-    	if (!$this->user->hasPermissions('modify', 'admin/orders')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to update!</p>');
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/orders')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to update!</p>');
 			return TRUE;
     	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$update = array();
@@ -372,9 +379,9 @@ class Orders extends CI_Controller {
 			}
 
 			if ($this->Orders_model->updateOrder($update)) {
-				$this->session->set_flashdata('alert', '<p class="success">Order updated sucessfully.</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-success">Order updated sucessfully.</p>');
 			} else {
-				$this->session->set_flashdata('alert', '<p class="warning">An error occured, nothing updated.</p>');
+				$this->session->set_flashdata('alert', '<p class="alert-warning">An error occured, nothing updated.</p>');
 			}
 	
 			return TRUE;
@@ -382,14 +389,14 @@ class Orders extends CI_Controller {
 	}
 
 	public function _deleteOrder() {
-    	if (!$this->user->hasPermissions('modify', 'admin/orders')) {
-			$this->session->set_flashdata('alert', '<p class="warning">Warning: You do not have permission to delete!</p>');
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/orders')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to delete!</p>');
     	} else if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Orders_model->deleteOrder($value);
 			}			
 		
-			$this->session->set_flashdata('alert', '<p class="success">Order deleted sucessfully!</p>');
+			$this->session->set_flashdata('alert', '<p class="alert-success">Order deleted sucessfully!</p>');
 		}
 				
 		return TRUE;
