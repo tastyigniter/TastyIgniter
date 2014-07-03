@@ -1,3 +1,6 @@
+AddType image/svg+xml svg
+AddType image/svg+xml svgz
+
 <IfModule mod_rewrite.c>
 	# !IMPORTANT! Set your RewriteBase here and don't forget trailing and leading
 	#  slashes.
@@ -11,8 +14,6 @@
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteCond $1 !^(index\.php|images|robots\.txt)
 	RewriteRule ^(.*)$ index.php?/$1 [L]
-	AddType image/svg+xml svg
-	AddType image/svg+xml svgz
 </IfModule>
 
 <IfModule !mod_rewrite.c>
