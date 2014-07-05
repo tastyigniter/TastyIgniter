@@ -19,7 +19,6 @@ AddType image/svg+xml svgz
 <IfModule !mod_rewrite.c>
 	# If we don't have mod_rewrite installed, all 404's
 	# can be sent to index.php, and everything works as normal.
-	# Submitted by: ElliotHaughin
 
 	ErrorDocument 404 /index.php
 </IfModule>

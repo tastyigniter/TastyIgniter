@@ -214,6 +214,12 @@ margin-left:100px;
 .form-group > label {
 display: block;
 }
+.input-group {
+width:70%;
+}
+.input-group-addon {
+border-radius:0;
+}
 a.list-group-item {
 color: #333;
 }

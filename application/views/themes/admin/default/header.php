@@ -104,11 +104,6 @@
 
 		$('.alert').alert();
 		$('.dropdown-toggle').dropdown();
-		/*$('ul.side-nav li.dropdown').hover(function() {
-			$(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
-		}, function() {
-			$(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
-		});*/
 	</script>
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

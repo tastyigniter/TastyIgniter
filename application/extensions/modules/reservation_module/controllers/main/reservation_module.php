@@ -120,7 +120,7 @@ class Reservation_module extends MX_Controller {
 				$data['guest_num'] 			= $reservation['guest_num'] .' person(s)';
 				$data['reserve_date'] 		= mdate('%l, %F %j, %Y', strtotime($reservation['reserve_date']));
 				$data['reserve_time'] 		= mdate('%h:%i %a', strtotime($reservation['reserve_time']));
-				$data['occasion'] 			= $occasions[$reservation['occasion']];
+				$data['occasion'] 			= (isset($reservation['occasion']) AND $reservation['occasion'] > 0) ? $occasions[$reservation['occasion']] : '';
 			}
 			
 			$data['time'] = mdate('%H:%i', strtotime(urldecode($this->input->get('reserve_time'))));

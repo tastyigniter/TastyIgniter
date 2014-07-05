@@ -21,19 +21,20 @@
 
 		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
 			<div class="tab-content">
-				<div id="editor" class="tab-pane row wrap-vertical theme-editor active">
+				<div id="editor" class="tab-pane row theme-editor active">
 					<?php if (!empty($file['heading'])){ ?>
 						<h4 class="text-info editor-text"><?php echo $file['heading']; ?></h4>
 					<?php } ?>
 					
-					<div class="row wrap">
+					<div class="row wrap-vertical">
 						<div class="col-sm-3 wrap-none">
 							<div class="theme-tree-holder wrap-vertical">
 								<?php echo $theme_files; ?>
 							</div>
 						</div>
 						<div class="col-sm-9 wrap-none">
-							<div class="editor">
+							<a class="theme-tree-toggle"><i class="fa fa-angle-double-left"></i></a>
+							<div class="theme-editor-holder">
 								<?php if (!empty($file['type']) AND $file['type'] === 'file') { ?>
 									<textarea name="editor_area" id="editor-area" class="form-control" rows="28"><?php echo $file['content']; ?></textarea>
 								<?php } else if (!empty($file['type']) AND $file['type'] === 'img') { ?>
@@ -58,26 +59,26 @@ $(document).ready(function() {
 			return false;
 		}
 	});
-
-});
-
-$(document).delegate('#editor-area', 'keydown', function(e) {
-  var keyCode = e.keyCode || e.which;
-
-  if (keyCode == 9) {
-    e.preventDefault();
-    var start = $(this).get(0).selectionStart;
-    var end = $(this).get(0).selectionEnd;
-
-    // set textarea value to: text before caret + tab + text after caret
-    $(this).val($(this).val().substring(0, start)
-                + "\t"
-                + $(this).val().substring(end));
-
-    // put caret at right position again
-    $(this).get(0).selectionStart =
-    $(this).get(0).selectionEnd = start + 1;
-  }
+	
+	$('.theme-tree-toggle').click(function() {
+		var theme_holder = $('.theme-tree-holder').parent();
+		var theme_editor = $('.theme-editor-holder').parent();
+		
+		theme_holder.toggle('slide', function() {
+			if (theme_holder.is(':visible')) {
+				$('#editor').removeClass('theme-editor-wide');
+				theme_editor.removeClass('col-sm-12').addClass('col-sm-9');
+				theme_editor.removeClass('wrap-vertical').addClass('wrap-none');
+				$('.theme-tree-toggle .fa').removeClass('fa-angle-double-right').addClass('fa-angle-double-left');
+			} else {
+				$('#editor').addClass('theme-editor-wide');
+				theme_editor.removeClass('col-sm-9').addClass('col-sm-12');
+				theme_editor.removeClass('wrap-none').addClass('wrap-vertical');
+				$('.theme-tree-toggle .fa').removeClass('fa-angle-double-left').addClass('fa-angle-double-right');
+			}
+		});
+		
+	});
 });
 //--></script>
 <link type="text/css" rel="stylesheet" href="<?php echo base_url("assets/js/codemirror/codemirror.css"); ?>">
