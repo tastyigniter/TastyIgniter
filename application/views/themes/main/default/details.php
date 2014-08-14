@@ -13,7 +13,7 @@
 <div class="row content">
 	<?php echo $content_left; ?><?php echo $content_right; ?>
 
-	<div class="col-xs-9">
+	<div class="col-md-8 page-content">
 	<form method="post" accept-charset="utf-8" action="<?php echo current_url(); ?>" role="form">
 		<div class="row wrap-all">
 			<div class="form-group">

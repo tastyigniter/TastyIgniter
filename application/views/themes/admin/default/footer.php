@@ -55,9 +55,57 @@ $(document).ready(function() {
 		 $('#codeigniter_profiler').fadeOut();
 	}
 
-	$('a').tooltip({placement: 'bottom'});
-	$('select.form-control').selectpicker({iconBase: 'fa', tickIcon: 'fa-check'});
+	//Delete Confirmation Box
+	$('#list-form').submit(function(){
+		//if ($('input[name=\'delete\']').attr("checked") == "checked") {
+			if (!confirm('This cannot be undone! Are you sure you want to do this?')) {
+				return false;
+			}
+		//}
+	});
+
+	//Uninstall Confirmation Box
+	$('a').click(function(){
+		if ($(this).attr('href') != null && $(this).attr('href').indexOf('uninstall', 1) != -1) {
+			if (!confirm('This cannot be undone! Are you sure you want to do this?')) {
+				return false;
+			}
+		}
+	});
+
+	if (document.location.toString().toLowerCase().indexOf(active_menu, 1) != -1) {
+		if ($('.' + active_menu).parent().parent().hasClass('parent') || $('.' + active_menu).hasClass('parent')) {
+			$('.' + active_menu).addClass('active_parent active');
+			$('.' + active_menu).parent().parent().addClass('active_parent active');
+		}
+
+		$('.' + active_menu).addClass('active');
+	}
+
+	if (window.location.hash) {
+		var hash = window.location.hash.substring(1); //Puts hash in variable, and removes the # character
+		$('#nav-tabs a[href="#'+hash+'"]').tab('show');
+	}
+	
+	$(document).on('change', '.btn-group-toggle input[type="radio"]', function() {
+		var btn = $(this).parent();
+		var parent = btn.parent();
+		
+		if (btn.attr('data-btn')) {
+			parent.find('.btn').removeClass('btn-primary btn-success btn-info btn-warning btn-danger');
+			btn.addClass(btn.attr('data-btn'));
+		} else {
+			btn.addClass('btn-success');
+		}
+	});
+	
+	$('.btn-group-toggle .active input[type="radio"]').trigger('change');
 });	
+
+function saveClose() {
+	$('#edit-form').append('<input type="hidden" name="save_close" value="1" />');
+	$('#edit-form').submit();
+}
 </script>
 </body>
 </html>

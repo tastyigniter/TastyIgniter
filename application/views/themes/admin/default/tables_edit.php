@@ -46,14 +46,15 @@
 					<div class="form-group">
 						<label for="input-status" class="col-sm-2 control-label">Status:</label>
 						<div class="col-sm-5">
-							<select name="table_status" id="input-status" class="form-control">
-								<option value="0" <?php echo set_select('table_status', '0'); ?> >Disabled</option>
-							<?php if ($table_status === '1') { ?>
-								<option value="1" <?php echo set_select('table_status', '1', TRUE); ?> >Enabled</option>
-							<?php } else { ?>  
-								<option value="1" <?php echo set_select('table_status', '1'); ?> >Enabled</option>
-							<?php } ?>  
-							</select>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($table_status == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="table_status" value="0" <?php echo set_radio('table_status', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="table_status" value="1" <?php echo set_radio('table_status', '1', TRUE); ?>>Enabled</label>
+								<?php } else { ?>  
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="table_status" value="0" <?php echo set_radio('table_status', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="table_status" value="1" <?php echo set_radio('table_status', '1'); ?>>Enabled</label>
+								<?php } ?>  
+							</div>
 							<?php echo form_error('table_status', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>

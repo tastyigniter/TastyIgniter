@@ -15,7 +15,7 @@
 <div class="row content">
 	<?php echo $content_left; ?><?php echo $content_right; ?>
 
-	<div class="col-xs-12">
+	<div class="col-xs-12 page-content">
 		<div class="row wrap-all text-center" style="display:<?php echo (!$local_location) ? 'block': 'none';?>">
 			<form method="POST" action="<?php echo $local_action; ?>">
 				<div class="form-group">

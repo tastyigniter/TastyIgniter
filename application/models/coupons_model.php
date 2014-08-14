@@ -89,7 +89,6 @@ class Coupons_model extends CI_Model {
 	}
 
 	public function getCouponHistories($coupon_id) {
-		$this->db->select('*, COUNT('. $this->db->dbprefix('coupons_history.order_id'). ') AS used');
 		$this->db->from('coupons_history');
 		$this->db->join('orders', 'orders.order_id = coupons_history.order_id', 'left');
 
@@ -104,42 +103,6 @@ class Coupons_model extends CI_Model {
 		}
 	
 		return $result;
-	}
-
-	public function checkCoupon($code) {
-		if (!empty($code)) {
-			$this->db->from('coupons');
-			$this->db->where('code', $code);
-			$this->db->where('((start_date <= CURRENT_DATE() OR start_date = 0000-00-00)');
-			$this->db->where('(end_date >= CURRENT_DATE() OR end_date = 0000-00-00))');
-
-			$this->db->where('status', '1');
-			
-			$query = $this->db->get();
-		
-			if ($query->num_rows() > 0) {
-				return $query->row_array();
-			}
-		}
-	}
-
-	public function checkCouponHistory($coupon_id) {
-		if (!empty($coupon_id)) {
-			$this->db->where('coupon_id', $coupon_id);
-			$this->db->from('coupons_history');
-		
-			return $this->db->count_all_results();
-		}
-	}
-
-	public function checkCustomerCouponHistory($coupon_id, $customer_id) {
-		if (!empty($coupon_id)) {
-			$this->db->where('coupon_id', $coupon_id);
-			$this->db->where('customer_id', $customer_id);
-			$this->db->from('coupons_history');
-		
-			return $this->db->count_all_results();
-		}
 	}
 
 	public function updateCoupon($update = array()) {
@@ -177,16 +140,46 @@ class Coupons_model extends CI_Model {
 			$this->db->set('customer_redemptions', '0');
 		}
 
+		if (!empty($update['validity'])) {
+			$this->db->set('validity', $update['validity']);
+
+			if ($update['validity'] == 'fixed') {
+				if (!empty($update['fixed_date'])) {
+					$this->db->set('fixed_date', mdate('%Y-%m-%d', strtotime($update['fixed_date'])));
+				}
+		
+				if (!empty($update['fixed_from_time'])) {
+					$this->db->set('fixed_from_time', mdate('%H:%i', strtotime($update['fixed_from_time'])));
+				}
+		
+				if (!empty($update['fixed_to_time'])) {
+					$this->db->set('fixed_to_time', mdate('%H:%i', strtotime($update['fixed_to_time'])));
+				}
+			} else if ($update['validity'] == 'period') {
+				if (!empty($update['period_start_date'])) {
+					$this->db->set('period_start_date', mdate('%Y-%m-%d', strtotime($update['period_start_date'])));
+				}
+	
+				if (!empty($update['period_end_date'])) {
+					$this->db->set('period_end_date', mdate('%Y-%m-%d', strtotime($update['period_end_date'])));
+				}
+			} else if ($update['validity'] == 'recurring') {
+				if (!empty($update['recurring_every'])) {
+					$this->db->set('recurring_every', implode(', ', $update['recurring_every']));
+				}
+	
+				if (!empty($update['recurring_from_time'])) {
+					$this->db->set('recurring_from_time', mdate('%H:%i', strtotime($update['recurring_from_time'])));
+				}
+	
+				if (!empty($update['recurring_to_time'])) {
+					$this->db->set('recurring_to_time', mdate('%H:%i', strtotime($update['recurring_to_time'])));
+				}
+			}
+		}
+		
 		if (!empty($update['description'])) {
 			$this->db->set('description', $update['description']);
-		}
-		
-		if (!empty($update['start_date'])) {
-			$this->db->set('start_date', mdate('%Y-%m-%d', strtotime($update['start_date'])));
-		}
-		
-		if (!empty($update['end_date'])) {
-			$this->db->set('end_date', mdate('%Y-%m-%d', strtotime($update['end_date'])));
 		}
 		
 		if ($update['status'] === '1') {
@@ -238,16 +231,46 @@ class Coupons_model extends CI_Model {
 			$this->db->set('customer_redemptions', '0');
 		}
 
+		if (!empty($add['validity'])) {
+			$this->db->set('validity', $add['validity']);
+
+			if ($add['validity'] == 'fixed') {
+				if (!empty($add['fixed_date'])) {
+					$this->db->set('fixed_date', mdate('%Y-%m-%d', strtotime($add['fixed_date'])));
+				}
+		
+				if (!empty($add['fixed_from_time'])) {
+					$this->db->set('fixed_from_time', mdate('%H:%i', strtotime($add['fixed_from_time'])));
+				}
+		
+				if (!empty($add['fixed_to_time'])) {
+					$this->db->set('fixed_to_time', mdate('%H:%i', strtotime($add['fixed_to_time'])));
+				}
+			} else if ($add['validity'] == 'period') {
+				if (!empty($add['period_start_date'])) {
+					$this->db->set('period_start_date', mdate('%Y-%m-%d', strtotime($add['period_start_date'])));
+				}
+		
+				if (!empty($add['period_end_date'])) {
+					$this->db->set('period_end_date', mdate('%Y-%m-%d', strtotime($add['period_end_date'])));
+				}
+			} else if ($add['validity'] == 'recurring') {
+				if (!empty($add['recurring_every'])) {
+					$this->db->set('recurring_every', implode(', ', $add['recurring_every']));
+				}
+		
+				if (!empty($add['recurring_from_time'])) {
+					$this->db->set('recurring_from_time', mdate('%H:%i', strtotime($add['recurring_from_time'])));
+				}
+		
+				if (!empty($add['recurring_to_time'])) {
+					$this->db->set('recurring_to_time', mdate('%H:%i', strtotime($add['recurring_to_time'])));
+				}
+			}
+		}
+		
 		if (!empty($add['description'])) {
 			$this->db->set('description', $add['description']);
-		}
-		
-		if (!empty($add['start_date'])) {
-			$this->db->set('start_date', mdate('%Y-%m-%d', strtotime($add['start_date'])));
-		}
-		
-		if (!empty($add['end_date'])) {
-			$this->db->set('end_date', mdate('%Y-%m-%d', strtotime($add['end_date'])));
 		}
 		
 		if ($add['status'] === '1') {

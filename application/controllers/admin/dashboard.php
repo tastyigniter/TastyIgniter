@@ -25,18 +25,7 @@ class Dashboard extends CI_Controller {
 		$this->template->setTitle('Dashboard');
 		$this->template->setHeading('Dashboard');
 
-		//Showing Summaries
-		$data['total_sales'] 			= $this->currency->format($this->Dashboard_model->getTotalSales());
-		$data['total_sales_by_year'] 	= $this->currency->format($this->Dashboard_model->getTotalSalesByYear());
-		$data['total_lost_sales'] 		= $this->currency->format($this->Dashboard_model->getTotalLostSales());
-		$data['total_customers'] 		= $this->Dashboard_model->getTotalCustomers();
-		$data['total_orders'] 			= $this->Dashboard_model->getTotalOrders();
-		$data['total_orders_completed'] = $this->Dashboard_model->getTotalOrdersCompleted();
-		$data['total_delivery_orders'] 	= $this->Dashboard_model->getTotalDeliveryOrders();
-		$data['total_collection_orders'] = $this->Dashboard_model->getTotalCollectionOrders();
-		$data['total_tables_reserved'] 	= $this->Dashboard_model->getTotalTablesReserved();
-		$data['total_menus'] 			= $this->Dashboard_model->getTotalMenus();
-
+		$data['menus'] 					= $this->Dashboard_model->getTotalMenus();
 		$data['current_month'] 			= mdate('%Y-%m', time());
 		
 		$data['months'] = array();
@@ -98,7 +87,29 @@ class Dashboard extends CI_Controller {
 			$this->template->render('themes/'.ADMIN_URI.'/default/', 'dashboard', $data);
 		}
 	}
-	
+
+	public function statistics() {
+		$json = array();
+		$results = array();
+		
+		$stat_range = 'today';
+		if ($this->input->get('stat_range')) {
+			$stat_range = $this->input->get('stat_range');
+		}
+		
+		$result = $this->Dashboard_model->getStatistics($stat_range);
+		$json['sales'] 				= (empty($result['sales'])) ? $this->currency->format('0.00') : $this->currency->format($result['sales']);
+		$json['lost_sales'] 		= (empty($result['lost_sales'])) ? $this->currency->format('0.00') : $this->currency->format($result['lost_sales']);
+		$json['customers'] 			= (empty($result['customers'])) ? '0' : $result['customers'];
+		$json['orders'] 			= (empty($result['orders'])) ? '0' : $result['orders'];
+		$json['orders_completed'] 	= (empty($result['orders_completed'])) ? '0' : $result['orders_completed'];
+		$json['delivery_orders'] 	= (empty($result['delivery_orders'])) ? '0' : $result['delivery_orders'];
+		$json['collection_orders'] 	= (empty($result['collection_orders'])) ? '0' : $result['collection_orders'];
+		$json['tables_reserved'] 	= (empty($result['tables_reserved'])) ? '0' : $result['tables_reserved'];
+
+		$this->output->set_output(json_encode($json));
+	}
+		
 	public function chart() {
 		$json = array();
 		

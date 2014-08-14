@@ -23,6 +23,31 @@
 							</div>
 							<a class="btn btn-grey input-sm" onclick="filterList();" title="Search"><i class="fa fa-search"></i></a>
 						</div>
+						
+						<div class="col-md-8 pull-left">
+							<div class="form-group">
+								<select name="filter_display_type" class="form-control input-sm">
+									<option value="">View all display types</option>
+									<?php if ($filter_display_type == 'radio') { ?>
+										<option value="radio" selected="selected" <?php echo set_select('filter_display_type', 'radio'); ?> >Radio</option>
+									<?php } else { ?>
+										<option value="radio" <?php echo set_select('filter_display_type', 'radio'); ?> >Radio</option>
+									<?php } ?>
+									<?php if ($filter_display_type == 'checkbox') { ?>
+										<option value="checkbox" selected="selected" <?php echo set_select('filter_display_type', 'checkbox'); ?> >Checkbox</option>
+									<?php } else { ?>
+										<option value="checkbox" <?php echo set_select('filter_display_type', 'checkbox'); ?> >Checkbox</option>
+									<?php } ?>
+									<?php if ($filter_display_type == 'select') { ?>
+										<option value="select" selected="selected" <?php echo set_select('filter_display_type', 'select'); ?> >Select</option>
+									<?php } else { ?>
+										<option value="select" <?php echo set_select('filter_display_type', 'select'); ?> >Select</option>
+									<?php } ?>
+								</select>&nbsp;
+							</div>
+							<a class="btn btn-grey input-sm" onclick="filterList();" title="Filter"><i class="fa fa-filter"></i></a>&nbsp;
+							<a class="btn btn-grey input-sm" href="<?php echo page_url(); ?>" title="Clear"><i class="fa fa-times"></i></a>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -34,7 +59,8 @@
 					<tr>
 						<th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
 						<th><a class="sort" href="<?php echo $sort_name; ?>">Name<i class="fa fa-sort-<?php echo ($sort_by == 'option_name') ? $order_by_active : $order_by; ?>"></i></a></th>
-						<th><a class="sort" href="<?php echo $sort_price; ?>">Price<i class="fa fa-sort-<?php echo ($sort_by == 'option_price') ? $order_by_active : $order_by; ?>"></i></a></th>
+						<th class="text-center"><a class="sort" href="<?php echo $sort_priority; ?>">Priority<i class="fa fa-sort-<?php echo ($sort_by == 'priority') ? $order_by_active : $order_by; ?>"></i></a></th>
+						<th class="text-center"><a class="sort" href="<?php echo $sort_display_type; ?>">Display Type<i class="fa fa-sort-<?php echo ($sort_by == 'display_type') ? $order_by_active : $order_by; ?>"></i></a></th>
 						<th class="id"><a class="sort" href="<?php echo $sort_id; ?>">ID<i class="fa fa-sort-<?php echo ($sort_by == 'option_id') ? $order_by_active : $order_by; ?>"></i></a></th>
 					</tr>
 				</thead>
@@ -45,7 +71,8 @@
 						<td class="action"><input type="checkbox" value="<?php echo $menu_option['option_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
 							<a class="btn btn-edit" title="Edit" href="<?php echo $menu_option['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
 						<td><?php echo $menu_option['option_name']; ?></td>
-						<td><?php echo $menu_option['option_price']; ?></td>
+						<td class="text-center"><?php echo $menu_option['priority']; ?></td>
+						<td class="text-center"><?php echo $menu_option['display_type']; ?></td>
 						<td class="id"><?php echo $menu_option['option_id']; ?></td>
 					</tr>
 					<?php } ?>

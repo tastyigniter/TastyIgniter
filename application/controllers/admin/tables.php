@@ -61,8 +61,8 @@ class Tables extends CI_Controller {
 			$filter['order_by'] = $data['order_by'] = $this->input->get('order_by');
 			$data['order_by_active'] = $this->input->get('order_by') .' active';
 		} else {
-			$filter['order_by'] = $data['order_by'] = 'DESC';
-			$data['order_by_active'] = 'DESC';
+			$filter['order_by'] = $data['order_by'] = 'ASC';
+			$data['order_by_active'] = 'ASC';
 		}
 		
 		$this->template->setTitle('Tables');
@@ -185,22 +185,24 @@ class Tables extends CI_Controller {
 	public function autocomplete() {
 		$json = array();
 		
-		if ($this->input->get('table_name')) {
+		if ($this->input->get('term')) {
 			$filter = array(
-				'table_name' => $this->input->get('table_name')
+				'table_name' => $this->input->get('term')
 			);
 		
 			$results = $this->Tables_model->getAutoComplete($filter);
 
 			if ($results) {
 				foreach ($results as $result) {
-					$json[] = array(
+					$json['results'][] = array(
 						'table_id' 			=> $result['table_id'],
-						'table_name' 		=> $result['table_name'],
+						'table_name' 		=> utf8_encode($result['table_name']),
 						'min_capacity' 		=> $result['min_capacity'],
 						'max_capacity' 		=> $result['max_capacity']
 					);
 				}
+			} else {
+				$json['results'] = array('id' => '0', 'text' => 'No Matches Found');
 			}
 		}
 		

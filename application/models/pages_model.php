@@ -108,10 +108,8 @@ class Pages_model extends CI_Model {
 			$this->db->set('layout_id', '0');
 		}
 		
-		if (!empty($update['menu_location'])) {
-			$this->db->set('menu_location', $update['menu_location']);
-		} else {
-			$this->db->set('menu_location', '0');
+		if (!empty($update['navigation'])) {
+			$this->db->set('navigation', serialize($update['navigation']));
 		}
 		
 		if (!empty($update['date_updated'])) {
@@ -172,10 +170,8 @@ class Pages_model extends CI_Model {
 			$this->db->set('layout_id', $add['layout_id']);
 		}
 		
-		if (!empty($add['menu_location'])) {
-			$this->db->set('menu_location', $add['menu_location']);
-		} else {
-			$this->db->set('menu_location', '0');
+		if (!empty($add['navigation'])) {
+			$this->db->set('navigation', serialize($add['navigation']));
 		}
 		
 		if (!empty($add['date_added'])) {

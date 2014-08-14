@@ -47,54 +47,27 @@
 					<div class="form-group">
 						<label for="input-author" class="col-sm-2 control-label">Author:</label>
 						<div class="col-sm-5">
-							<input type="text" name="author" id="input-author" class="form-control" value="<?php echo set_value('author', $author); ?>"/>
-							<input type="hidden" name="customer_id" value="<?php echo set_value('customer_id', $customer_id); ?>"/>
-							<?php echo form_error('author', '<span class="text-danger">', '</span>'); ?>
+							<input type="text" name="customer_id" id="input-author" class="form-control" value="<?php echo set_value('customer_id', $customer_id); ?>"/>
+							<?php echo form_error('customer_id', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-quality" class="col-sm-2 control-label">Quality Rating:</label>
+						<label for="input-rating" class="col-sm-2 control-label">Rating:</label>
 						<div class="col-sm-5">
-							<select name="quality" id="input-quality" class="form-control">
-								<?php foreach ($ratings as $key => $rating) { ?>
-								<?php if ($key == $quality) { ?>
-									<option value="<?php echo $key; ?>" selected="selected"><?php echo $rating; ?></option>
-								<?php } else { ?>
-									<option value="<?php echo $key; ?>"><?php echo $rating; ?></option>
-								<?php }?>
-								<?php }?>
-							</select>
-							<?php echo form_error('quality', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-delivery" class="col-sm-2 control-label">Delivery Rating:</label>
-						<div class="col-sm-5">
-							<select name="delivery" id="input-delivery" class="form-control">
-								<?php foreach ($ratings as $key => $rating) { ?>
-								<?php if ($key == $delivery) { ?>
-									<option value="<?php echo $key; ?>" selected="selected"><?php echo $rating; ?></option>
-								<?php } else { ?>
-									<option value="<?php echo $key; ?>"><?php echo $rating; ?></option>
-								<?php }?>
-								<?php }?>
-							</select>
-							<?php echo form_error('delivery', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-service" class="col-sm-2 control-label">Service Rating:</label>
-						<div class="col-sm-5">
-							<select name="service" id="input-service" class="form-control">
-								<?php foreach ($ratings as $key => $rating) { ?>
-								<?php if ($key == $service) { ?>
-									<option value="<?php echo $key; ?>" selected="selected"><?php echo $rating; ?></option>
-								<?php } else { ?>
-									<option value="<?php echo $key; ?>"><?php echo $rating; ?></option>
-								<?php }?>
-								<?php }?>
-							</select>
-							<?php echo form_error('service', '<span class="text-danger">', '</span>'); ?>
+							<ul class="list-inline rating-inline">
+								<li>Quality<br />
+									<div class="rating rating-star" data-score="<?php echo $quality; ?>" data-score-name="rating[quality]"></div>
+									<?php echo form_error('rating[quality]', '<span class="text-danger">', '</span>'); ?>
+								</li>
+								<li>Delivery<br />
+									<div class="rating rating-star" data-score="<?php echo $delivery; ?>" data-score-name="rating[delivery]"></div>
+									<?php echo form_error('rating[delivery]', '<span class="text-danger">', '</span>'); ?>
+								</li>
+								<li>Service<br />
+									<div class="rating rating-star" data-score="<?php echo $service; ?>" data-score-name="rating[service]"></div>
+									<?php echo form_error('rating[service]', '<span class="text-danger">', '</span>'); ?>
+								</li>
+							</ul>
 						</div>
 					</div>
 					<div class="form-group">
@@ -107,14 +80,15 @@
 					<div class="form-group">
 						<label for="input-status" class="col-sm-2 control-label">Review Status:</label>
 						<div class="col-sm-5">
-							<select name="review_status" id="input-status" class="form-control">
-								<option value="0" <?php echo set_select('review_status', '0'); ?> >Pending Review</option>
-								<?php if ($review_status === '1') { ?>
-									<option value="1" <?php echo set_select('review_status', '1', TRUE); ?> >Approved</option>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($review_status == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="review_status" value="0" <?php echo set_radio('review_status', '0'); ?>>Pending Review</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="review_status" value="1" <?php echo set_radio('review_status', '1', TRUE); ?>>Approved</label>
 								<?php } else { ?>  
-									<option value="1" <?php echo set_select('review_status', '1'); ?> >Approved</option>
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="review_status" value="0" <?php echo set_radio('review_status', '0', TRUE); ?>>Pending Review</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="review_status" value="1" <?php echo set_radio('review_status', '1'); ?>>Approved</label>
 								<?php } ?>  
-							</select>
+							</div>
 							<?php echo form_error('review_status', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
@@ -124,59 +98,34 @@
 	</div>
 </div>
 <script type="text/javascript"><!--
-$('input[name=\'menu\']').autocomplete({
-	delay: 0,
-	source: function(request, response) {
-		$.ajax({
-			url: '<?php echo site_url("admin/menus/autocomplete"); ?>?menu=' +  encodeURIComponent(request.term),
-			dataType: 'json',
-			success: function(json) {		
-				response($.map(json, function(item) {
-					return {
-						label: item.menu_name,
-						value: item.menu_id
-					}
-				}));
-			}
+$('input[name=\'customer_id\']').select2({
+	placeholder: 'Start typing...',
+	minimumInputLength: 2,
+	ajax: {
+		url: '<?php echo site_url(ADMIN_URI ."/customers/autocomplete"); ?>',
+		dataType: 'json',
+		quietMillis: 100,
+		data: function (term, page) {
+			return {
+				term: term, //search term
+				page_limit: 10 // page size
+			};
+		},
+		results: function (data, page, query) {
+			return { results: data.results };
+		}
+	},
+	initSelection: function(element, callback) {
+		return $.getJSON('<?php echo site_url(ADMIN_URI ."/customers/autocomplete?customer_id="); ?>' + (element.val()), null, function(json) {
+        	var data = {id: json.results[0].id, text: json.results[0].text};
+			return callback(data);
 		});
-	},
-	select: function(event, ui) {
-		$('input[name=\'menu\']').val(ui.item.label);
-		$('input[name=\'menu_id\']').val(ui.item.value);
-		
-		return false;
-	},
-	focus: function(event, ui) {
-      	return false;
-   	}
+	}
 });
-//--></script>
-<script type="text/javascript"><!--
-$('input[name=\'author\']').autocomplete({
-	delay: 0,
-	source: function(request, response) {
-		$.ajax({
-			url: '<?php echo site_url("admin/customers/autocomplete"); ?>?customer_name=' +  encodeURIComponent(request.term),
-			dataType: 'json',
-			success: function(json) {		
-				response($.map(json, function(item) {
-					return {
-						label: item.customer_name,
-						value: item.customer_id
-					}
-				}));
-			}
-		});
-	},
-	select: function(event, ui) {
-		$('input[name=\'author\']').val(ui.item.label);
-		$('input[name=\'customer_id\']').val(ui.item.value);
-		
-		return false;
-	},
-	focus: function(event, ui) {
-      	return false;
-   	}
+
+$('input[name=\'customer_id\']').on('select2-selecting', function(e) {
+	//$('input[name=\'author\']').val(e.choice.text);
+	$('input[name=\'customer_id\']').val(e.choice.id);
 });
 //--></script>
 <?php echo $footer; ?>

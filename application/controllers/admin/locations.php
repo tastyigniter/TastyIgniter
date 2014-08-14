@@ -10,6 +10,7 @@ class Locations extends CI_Controller {
 		$this->load->model('Locations_model'); // load the locations model
 		$this->load->model('Tables_model');
 		$this->load->model('Countries_model');
+		$this->load->model('Extensions_model');
 	}
 
 	public function index() {
@@ -198,38 +199,119 @@ class Locations extends CI_Controller {
 		$data['last_order_time'] 		= $location_info['last_order_time'];
 		$data['offer_delivery'] 		= $location_info['offer_delivery'];
 		$data['offer_collection'] 		= $location_info['offer_collection'];
-		$data['ready_time'] 			= $location_info['ready_time'];
-		$data['delivery_charge'] 		= $location_info['delivery_charge'];
-		$data['min_delivery_total'] 	= $location_info['min_delivery_total'];
+		$data['delivery_time'] 			= $location_info['delivery_time'];
+		$data['collection_time'] 		= $location_info['collection_time'];
 		$data['reservation_interval'] 	= $location_info['reservation_interval'];
 		$data['reservation_turn'] 		= $location_info['reservation_turn'];
-		$data['location_radius'] 		= $location_info['location_radius'];
 		
+		$this->load->model('Permalinks_model');
+		$data['permalink'] 				= $this->Permalinks_model->getPermalink('location_id='.$location_info['location_id']);
+
 		if ($location_info['location_country_id']) {
 			$data['country_id'] = $location_info['location_country_id'];
 		} else if ($this->config->item('country_id')) {
 			$data['country_id'] = $this->config->item('country_id');
 		}
 
+		$weekdays_abbr = array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun');
 		$weekdays = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
+		$data['weekdays_abbr'] = $weekdays_abbr;
+		$data['weekdays'] = $weekdays;
+		
+		$options = array();
+		if (!empty($location_info['options'])) {
+			$options = unserialize($location_info['options']);
+		}
+		
+		if ($this->input->post('opening_type')) {
+			$data['opening_type'] = $this->input->post('opening_type');
+		} else if (isset($options['opening_hours']['opening_type'])) {
+			$data['opening_type'] = $options['opening_hours']['opening_type'];
+		} else {
+			$data['opening_type'] = '24_7';
+		}
 
-		if ($this->input->post('hours')) {
-			$data['hours'] = array();
-			foreach ($this->input->post('hours') as $key => $value) {
-				$data['hours'][] = array(
-					'day'	=> $key,
-					'open'	=> $value['open'],
-					'close'	=> $value['close']
+		if ($this->input->post('daily_days')) {
+			$data['daily_days'] = $this->input->post('daily_days');
+		} else if (isset($options['opening_hours']['daily_days']) AND is_array($options['opening_hours']['daily_days'])) {
+			$data['daily_days'] = $options['opening_hours']['daily_days'];
+		} else {
+			$data['daily_days'] = array('0', '1', '2', '3', '4', '5', '6');
+		}
+
+		if ($this->input->post('daily_hours')) {
+			$data['daily_hours'] = $this->input->post('daily_hours');
+		} else if (isset($options['opening_hours']['daily_days']) AND is_array($options['opening_hours']['daily_days'])) {
+			$daily_hours = $options['opening_hours']['daily_hours'];
+			$data['daily_hours']['open'] 	= (empty($daily_hours['open']) OR $daily_hours['open'] === '00:00:00') ? '12:00 AM' : mdate('%h:%i %a', strtotime($daily_hours['open']));
+			$data['daily_hours']['close'] 	= (empty($daily_hours['close']) OR $daily_hours['close'] === '00:00:00') ? '11:59 PM' : mdate('%h:%i %a', strtotime($daily_hours['close']));
+			$data['daily_hours']['status'] 	= $daily_hours['status'];
+		} else {
+			$data['daily_hours'] = array('open' => '12:00 AM', 'close' => '11:59 PM', 'status' => '0');
+		}
+
+		if ($this->input->post('flexible_hours')) {
+			$flexible_hours = $this->input->post('flexible_hours');
+		} else if (isset($options['opening_hours']['flexible_hours']) AND is_array($options['opening_hours']['flexible_hours'])) {
+			$flexible_hours = $options['opening_hours']['flexible_hours'];
+			$data['flexible_hours'] = array();
+			foreach ($flexible_hours as $flexible_hour) {
+				$data['flexible_hours'][] = array(
+					'day'		=> $flexible_hour['day'],
+					'open'		=> (empty($flexible_hour['open']) OR $flexible_hour['open'] === '00:00:00') ? '12:00 AM' : mdate('%h:%i %a', strtotime($flexible_hour['open'])),
+					'close'		=> (empty($flexible_hour['close']) OR $flexible_hour['close'] === '00:00:00') ? '11:59 PM' : mdate('%h:%i %a', strtotime($flexible_hour['close'])),
+					'status'	=> $flexible_hour['status']
 				);
 			}
 		} else {
-			$data['hours'] = $this->Locations_model->getOpeningHours($location_id);
+			$flexible_hours = array(
+				array('day' => '0', 'open' => '12:00 AM', 'close' => '11:59 PM', 'status' => '0'),
+				array('day' => '1', 'open' => '12:00 AM', 'close' => '11:59 PM', 'status' => '0'),
+				array('day' => '2', 'open' => '12:00 AM', 'close' => '11:59 PM', 'status' => '0'),
+				array('day' => '3', 'open' => '12:00 AM', 'close' => '11:59 PM', 'status' => '0'),
+				array('day' => '4', 'open' => '12:00 AM', 'close' => '11:59 PM', 'status' => '0'),
+				array('day' => '5', 'open' => '12:00 AM', 'close' => '11:59 PM', 'status' => '0'),
+				array('day' => '6', 'open' => '12:00 AM', 'close' => '11:59 PM', 'status' => '0')
+			);
 		}
-					
+
+		if ($this->input->post('payments')) {
+			$data['payments'] = $this->input->post('payments');
+		} else if (isset($options['payments'])) {
+			$data['payments'] = $options['payments'];
+		} else {
+			$data['payments'] = array('cod', 'paypal_express');
+		}
+
 		if ($this->input->post('tables')) {
 			$data['location_tables'] = $this->input->post('tables');
 		} else {
 			$data['location_tables'] = $this->Tables_model->getTablesByLocation($location_id);
+		}
+		
+		$area_colors = array('#F16745', '#FFC65D', '#7BC8A4', '#4CC3D9', '#93648D', '#404040', '#F16745', '#FFC65D', '#7BC8A4', '#4CC3D9', '#93648D', '#404040', '#F16745', '#FFC65D', '#7BC8A4', '#4CC3D9', '#93648D', '#404040', '#F16745', '#FFC65D');
+		$data['area_colors'] = json_encode($area_colors);
+		
+		if ($this->input->post('delivery_areas')) {
+			$delivery_areas = $this->input->post('delivery_areas');
+		} else if (isset($options['delivery_areas']) AND is_array($options['delivery_areas'])) {
+			$delivery_areas = $options['delivery_areas'];
+		} else {
+			$delivery_areas = array();
+		}
+
+		$data['delivery_areas'] = array();
+		foreach ($delivery_areas as $key => $area) {
+			$data['delivery_areas'][] = array(
+				'shape'			=> (isset($area['shape'])) ? htmlspecialchars($area['shape']) : '',
+				'circle'		=> (isset($area['circle'])) ? htmlspecialchars($area['circle']) : '',
+				'vertices'		=> (isset($area['vertices'])) ? htmlspecialchars($area['vertices']) : '',
+				'name'			=> (isset($area['name'])) ? $area['name'] : '',
+				'type'			=> (isset($area['type'])) ? $area['type'] : 'shape',
+				'color'			=> (isset($area_colors[$key-1])) ? $area_colors[$key-1] : '#F16745',
+				'charge'		=> (isset($area['charge'])) ? str_replace('.00', '', $area['charge']) : '',
+				'min_amount'	=> (isset($area['min_amount'])) ? str_replace('.00', '', $area['min_amount']) : ''
+			);
 		}
 		
 		if ($this->config->item('maps_api_key')) {
@@ -239,24 +321,9 @@ class Locations extends CI_Controller {
 		}
 
 		if ($location_info['location_lat'] AND $location_info['location_lng']) {
-			$data['is_covered_area'] = TRUE;
+			$data['has_lat_lng'] = TRUE;
 		} else {
-			$data['is_covered_area'] = FALSE;
-		}
-				
-		$covered_area = unserialize($location_info['covered_area']);
-		$data['covered_area'] = array();
-		
-		if (!empty($covered_area['path'])) {
-			$data['covered_area']['path'] = $covered_area['path'];
-		} else {
-			$data['covered_area']['path'] = '';
-		}
-
-		if (!empty($covered_area['pathArray'])) {
-			$data['covered_area']['pathArray'] = $covered_area['pathArray'];
-		} else {
-			$data['covered_area']['pathArray'] = '';
+			$data['has_lat_lng'] = FALSE;
 		}
 
 		$data['tables'] = array();
@@ -281,6 +348,23 @@ class Locations extends CI_Controller {
 			);
 		}
 
+		$data['payment_list'] = array();
+		$payments = $this->Extensions_model->getList('payment');
+		foreach ($payments as $payment) {
+			if (!empty($payment['data'])) {
+				$payment_data = unserialize($payment['data']);
+				
+				if ($payment_data['status'] === '1') {
+					$data['payment_list'][] = array(
+						'name'		=> $payment_data['name'],
+						'code'		=> $payment['name'],
+						'priority'	=> $payment_data['priority'],
+						'status'	=> $payment_data['status']
+					);
+				}
+			}
+		}
+		
 		if ($this->input->post() AND $this->_addLocation() === TRUE) {
 			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {	
 				redirect(ADMIN_URI.'/locations/edit?id='. $this->input->post('insert_id'));
@@ -317,17 +401,28 @@ class Locations extends CI_Controller {
 			$add['email'] 				= $this->input->post('email');			
 			$add['telephone'] 			= $this->input->post('telephone');			
 			$add['description'] 		= $this->input->post('description');			
-			$add['hours'] 				= $this->input->post('hours');
-			$add['last_order_time'] 	= $this->input->post('last_order_time');
 			$add['offer_delivery'] 		= $this->input->post('offer_delivery');
 			$add['offer_collection'] 	= $this->input->post('offer_collection');
-			$add['ready_time'] 			= $this->input->post('ready_time');
-			$add['delivery_charge'] 	= $this->input->post('delivery_charge');
-			$add['min_delivery_total'] 	= $this->input->post('min_delivery_total');
+			$add['delivery_time'] 		= $this->input->post('delivery_time');
+			$add['collection_time'] 	= $this->input->post('collection_time');
+			$add['last_order_time'] 	= $this->input->post('last_order_time');
 			$add['tables'] 				= $this->input->post('tables');
+			$add['reservation_interval'] = $this->input->post('reservation_interval');
+			$add['reservation_turn'] 	= $this->input->post('reservation_turn');
 			$add['location_status'] 	= $this->input->post('location_status');			
-			$add['location_radius'] 	= $this->input->post('location_radius');			
+			$add['permalink'] 			= $this->input->post('permalink');
 			
+			$add['options'] = array(
+				'opening_hours' 		=> array(
+											'opening_type'		=> $this->input->post('opening_type'),
+											'daily_days'		=> $this->input->post('daily_days'),
+											'daily_hours'		=> $this->input->post('daily_hours'),
+											'flexible_hours'	=> $this->input->post('flexible_hours')
+										),
+				'payments'				=> $this->input->post('payments'),
+				'delivery_areas'		=> $this->input->post('delivery_areas')		
+			);
+		
 			if ($_POST['insert_id'] = $this->Locations_model->addLocation($add)) {
 				$this->session->set_flashdata('alert', '<p class="alert-success">Location added sucessfully.</p>');
 			} else {
@@ -351,19 +446,27 @@ class Locations extends CI_Controller {
 			$update['email'] 				= $this->input->post('email');			
 			$update['telephone'] 			= $this->input->post('telephone');			
 			$update['description'] 			= $this->input->post('description');			
-			$update['hours'] 				= $this->input->post('hours');
 			$update['offer_delivery'] 		= $this->input->post('offer_delivery');
 			$update['offer_collection'] 	= $this->input->post('offer_collection');
-			$update['ready_time'] 			= $this->input->post('ready_time');
+			$update['delivery_time'] 		= $this->input->post('delivery_time');
+			$update['collection_time'] 		= $this->input->post('collection_time');
 			$update['last_order_time'] 		= $this->input->post('last_order_time');
-			$update['delivery_charge'] 		= $this->input->post('delivery_charge');
-			$update['min_delivery_total'] 	= $this->input->post('min_delivery_total');
 			$update['tables'] 				= $this->input->post('tables');
-			$update['reservation_interval'] 	= $this->input->post('reservation_interval');
-			$update['reservation_turn'] 		= $this->input->post('reservation_turn');
+			$update['reservation_interval'] = $this->input->post('reservation_interval');
+			$update['reservation_turn'] 	= $this->input->post('reservation_turn');
 			$update['location_status'] 		= $this->input->post('location_status');			
-			$update['location_radius'] 		= $this->input->post('location_radius');			
-			$update['covered_area'] 		= serialize($this->input->post('covered_area'));			
+			$update['permalink'] 			= $this->input->post('permalink');
+			
+			$update['options'] = array(
+				'opening_hours' 		=> array(
+											'opening_type'		=> $this->input->post('opening_type'),
+											'daily_days'		=> $this->input->post('daily_days'),
+											'daily_hours'		=> $this->input->post('daily_hours'),
+											'flexible_hours'	=> $this->input->post('flexible_hours')
+										),
+				'payments'				=> $this->input->post('payments'),
+				'delivery_areas'		=> $this->input->post('delivery_areas')			
+			);
 		
 			if ($this->Locations_model->updateLocation($update)) {
 				$this->session->set_flashdata('alert', '<p class="alert-success">Location updated sucessfully.</p>');
@@ -389,19 +492,38 @@ class Locations extends CI_Controller {
 		$this->form_validation->set_rules('offer_collection', 'Offer Collection', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('ready_time', 'Ready Time', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('last_order_time', 'Last Order Time', 'xss_clean|trim|integer');
-		$this->form_validation->set_rules('delivery_charge', 'Delivery Charge', 'xss_clean|trim|numeric');
-		$this->form_validation->set_rules('min_delivery_total', 'Min Delivery Total', 'xss_clean|trim|numeric');
 		$this->form_validation->set_rules('tables[]', 'Tables', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('reservation_interval', 'Time Interval', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('reservation_turn', 'Turn Time', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('location_status', 'Status', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('location_radius', 'Radius', 'xss_clean|trim|integer');
-		$this->form_validation->set_rules('covered_area', 'Covered Area', 'xss_clean');
+		$this->form_validation->set_rules('permalink', 'Permalink', 'xss_clean|trim|alpha_dash|max_length[255]');
 	
-		if ($this->input->post('hours')) {
-			foreach ($this->input->post('hours') as $key => $value) {
-				$this->form_validation->set_rules('hours['.$key.'][open]', 'Open Hour', 'xss_clean|trim|required|valid_time|callback_less_time[hours['.$key.'][close]]');
-				$this->form_validation->set_rules('hours['.$key.'][close]', 'Close Hour', 'xss_clean|trim|required|valid_time');
+		$this->form_validation->set_rules('opening_type', 'Type', 'xss_clean|trim|required|alpha_dash|max_length[10]');
+		if ($this->input->post('opening_type') === 'daily' AND $this->input->post('daily_days')) {
+			$this->form_validation->set_rules('daily_days[]', 'Days', 'xss_clean|trim|required|integer');
+			$this->form_validation->set_rules('daily_hours[open]', 'Open hour', 'xss_clean|trim|required|valid_time|callback_less_time['.$_POST['daily_hours']['close'].']');
+			$this->form_validation->set_rules('daily_hours[close]', 'Close hour', 'xss_clean|trim|required|valid_time');
+			$this->form_validation->set_rules('daily_hours[status]', 'Status', 'xss_clean|trim|required|integer');
+		}
+		
+		if ($this->input->post('opening_type') === 'flexible' AND $this->input->post('flexible_hours')) {
+			foreach ($this->input->post('flexible_hours') as $key => $value) {
+				$this->form_validation->set_rules('flexible_hours['.$key.'][day]', 'Day', 'xss_clean|trim|required|numeric');
+				$this->form_validation->set_rules('flexible_hours['.$key.'][open]', 'Open hour', 'xss_clean|trim|required|valid_time|callback_less_time['.$_POST['flexible_hours'][$key]['close'].']');
+				$this->form_validation->set_rules('flexible_hours['.$key.'][close]', 'Close hour', 'xss_clean|trim|required|valid_time');
+				$this->form_validation->set_rules('flexible_hours['.$key.'][status]', 'Status', 'xss_clean|trim|required|integer');
+			}
+		}
+
+		if ($this->input->post('delivery_areas')) {
+			foreach ($this->input->post('delivery_areas') as $key => $value) {
+				$this->form_validation->set_rules('delivery_areas['.$key.'][shape]', 'Area 1 Shape', 'trim|required');
+				$this->form_validation->set_rules('delivery_areas['.$key.'][circle]', 'Area 1 Circle', 'trim|required');
+				$this->form_validation->set_rules('delivery_areas['.$key.'][vertices]', 'Area 1 Vertices', 'trim|required');
+				$this->form_validation->set_rules('delivery_areas['.$key.'][type]', 'Area 1 Type', 'xss_clean|trim|required');
+				$this->form_validation->set_rules('delivery_areas['.$key.'][name]', 'Area 1 Name', 'xss_clean|trim|required');
+				$this->form_validation->set_rules('delivery_areas['.$key.'][charge]', 'Area 1 Charge', 'xss_clean|trim|required|numeric');
+				$this->form_validation->set_rules('delivery_areas['.$key.'][min_amount]', 'Area 1 Min amount', 'xss_clean|trim|required|numeric');
 			}
 		}
 
@@ -445,17 +567,13 @@ class Locations extends CI_Controller {
         }
 	}
 
-	public function less_time($str) {
-		if ($this->input->post('hours')) {
-			foreach ($this->input->post('hours') as $key => $value) {
-				$unix_open = strtotime($value['open']);
-				$unix_close = strtotime($value['close']);
-				
-				if ($unix_open >= $unix_close AND ($value['open'] !== "00:00" AND $value['close'] !== "00:00")) {
-					$this->form_validation->set_message('less_time', 'The %s field must contain a number less than %s.');
-					return FALSE;
-				}
-			}
+	public function less_time($open, $close) {
+		$unix_open = strtotime($open);
+		$unix_close = strtotime($close);
+		
+		if ($unix_open >= $unix_close) {
+			$this->form_validation->set_message('less_time', 'The %s must be less than Close hour.');
+			return FALSE;
 		}
 		
 		return TRUE;

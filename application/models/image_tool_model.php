@@ -11,9 +11,6 @@ class Image_tool_model extends CI_Model {
 
 		$setting = $this->config->item('image_tool');
 
-		$width = ($width === '') ? $setting['thumb_width'] : $width;
-		$height = ($height === '') ? $setting['thumb_height'] : $height;
-
 		if (isset($setting['root_folder']) AND (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE)) {
 			$root_folder = $setting['root_folder'] .'/';
 		} else {
@@ -27,12 +24,20 @@ class Image_tool_model extends CI_Model {
 		if ( ! file_exists(IMAGEPATH . $root_folder . $img_path) OR ! is_file(IMAGEPATH . $root_folder . $img_path) OR strpos($img_path, '/') === 0) {
 			return;
 		}
-
+		
+		if ( ! is_dir($thumbs_path .'/'. $img_path)) {
+			$this->_createFolder($thumbs_path .'/'. $img_path);
+		}
+		
 		$info = pathinfo($img_path);
 		$extension = $info['extension'];
 		$img_name = $info['basename'];
 		
 		$old_path = IMAGEPATH . $root_folder . $img_path;
+		list ($img_width, $img_height, $img_type, $attr) = getimagesize($old_path);
+		$width = ($width === '') ? $img_width : $width;
+		$height = ($height === '') ? $img_height : $height;
+
 		$new_path = IMAGEPATH . 'thumbs/'. substr($img_path, 0, strrpos($img_path, '.')) .'-'. $width .'x'. $height .'.'. $extension;
 		$new_image = 'thumbs/'. substr($img_path, 0, strrpos($img_path, '.')) .'-'. $width .'x'. $height .'.'. $extension;
 

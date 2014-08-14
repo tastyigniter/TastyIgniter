@@ -543,7 +543,7 @@ class Reservations_model extends CI_Model {
 
 			$this->email->from($this->config->item('site_email'), $this->config->item('site_name'));
 			
-			if ($this->config->item('send_reserve_email') === '1') {
+			if ($this->config->item('location_reserve_email') === '1') {
 				$this->email->cc($this->location->getEmail());
 			}
 		

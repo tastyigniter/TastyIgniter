@@ -42,7 +42,7 @@ class Themes extends CI_Controller {
 
 		$this->template->setTitle('Themes');
 		$this->template->setHeading('Themes');
-		$this->template->setButton('Options', array('class' => 'btn btn-default pull-right', 'href' => site_url(ADMIN_URI.'/settings#themes')));
+		$this->template->setButton('Options', array('class' => 'btn btn-default pull-right', 'href' => site_url(ADMIN_URI.'/settings#theme')));
 
 		$data['text_empty'] 		= 'There are no themes available.';
 
@@ -133,7 +133,7 @@ class Themes extends CI_Controller {
 		$this->template->setHeading('Theme: '. ucwords($theme_name));
 		$this->template->setButton('Save', array('class' => 'btn btn-success', 'onclick' => '$(\'#edit-form\').submit();'));
 		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
-		$this->template->setButton('Options', array('class' => 'btn btn-default pull-right', 'href' => site_url(ADMIN_URI.'/settings#themes')));
+		$this->template->setButton('Options', array('class' => 'btn btn-default pull-right', 'href' => site_url(ADMIN_URI.'/settings#theme')));
 		$this->template->setBackButton('btn-back', site_url(ADMIN_URI.'/themes'));
 
 		$data['name'] 				= ucwords($theme_name);

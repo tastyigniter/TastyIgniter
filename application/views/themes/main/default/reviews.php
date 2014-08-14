@@ -13,7 +13,7 @@
 <div class="row content">
 	<?php echo $content_left; ?><?php echo $content_right; ?>
 
-	<div class="col-xs-9">
+	<div class="col-md-9 page-content">
 		<div class="row wrap-all">
 			<div class="table-responsive">
 				<table class="table table-hover">
@@ -32,9 +32,14 @@
 								<td><a href="<?php echo $review['view']; ?>"><?php echo $review['order_id']; ?></a></td>
 								<td><?php echo $review['location_name']; ?></td>
 								<td>
-									<b>Quality:</b> <?php echo $review['quality']; ?><br />
-									<b>Delivery:</b> <?php echo $review['delivery']; ?><br />
-									<b>Service:</b> <?php echo $review['service']; ?>
+									<dl class="dl-horizontal dl-horizontal-rating">
+										<dt><b>Quality:</b></dt> 
+										<dd><div class="rating rating-star" data-score="<?php echo $review['quality']; ?>" data-readonly="true"></div></dd>
+										<dt><b>Delivery:</b></dt>
+										<dd><div class="rating rating-star" data-score="<?php echo $review['delivery']; ?>" data-readonly="true"></div></dd>
+										<dt><b>Service:</b></dt>
+										<dd><div class="rating rating-star" data-score="<?php echo $review['service']; ?>" data-readonly="true"></div></dd>
+									</dl>
 								</td>
 								<td><?php echo $review['date']; ?></td>
 							</tr>

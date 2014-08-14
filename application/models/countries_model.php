@@ -86,6 +86,10 @@ class Countries_model extends CI_Model {
 			$this->db->set('iso_code_3', $update['iso_code_3']);
 		}
 		
+		if (!empty($update['flag'])) {
+			$this->db->set('flag', $update['flag']);
+		}
+		
 		if (!empty($update['format'])) {
 			$this->db->set('format', $update['format']);
 		}
@@ -117,6 +121,10 @@ class Countries_model extends CI_Model {
 		
 		if (!empty($add['iso_code_3'])) {
 			$this->db->set('iso_code_3', $add['iso_code_3']);
+		}
+		
+		if (!empty($add['flag'])) {
+			$this->db->set('flag', $add['flag']);
 		}
 		
 		if (!empty($add['format'])) {

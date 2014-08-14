@@ -16,6 +16,7 @@ $lang['text_success_heading'] 	= 'Order Confirmation';
 $lang['text_order_details'] 	= 'Order Details';
 $lang['text_order_items'] 		= 'What you\'ve ordered:';
 $lang['text_delivery_address'] 	= 'Your Delivery Address';
+$lang['text_local'] 			= 'Your local restaurant';
 $lang['text_thank_you'] 		= 'We hope to see you again soon';
 
 $lang['text_greetings'] 		= 'Hello %s,';
@@ -49,16 +50,15 @@ $lang['button_confirm'] 		= 'Confirm';
 $lang['error_no_delivery'] 		= 'Delivery is unavailable at the selected restaurant!';
 $lang['error_no_collection'] 	= 'Collection is unavailable at the selected restaurant!';
 $lang['error_no_address'] 		= 'Invalid delivery address selected, please provide a different address!';
-$lang['error_covered_area'] 	= 'Your local restaurant currently does not deliver to your address';
+$lang['error_covered_area'] 	= 'This restaurant currently does not deliver to your address';
 $lang['error_invalid_time'] 	= 'The %s field must be between 00:00 and 23:59.';
 $lang['error_less_time'] 		= 'The Delivery or Collection Time can not be less than current time!';
 $lang['error_no_time'] 			= 'The selected delivery time is outside our opening/closing hours';
 
-$lang['alert_no_cart'] 		= '<p class="alert-danger">Please, add some menus before you checkout!</p>';
+$lang['alert_no_cart'] 			= '<p class="alert-danger">Please, add some menus before you checkout!</p>';
 $lang['alert_min_delivery'] 	= '<p class="alert-danger">Order total is below the minimum delivery total!</p>';
 $lang['alert_no_local'] 		= '<p class="alert-danger">Please select your local restaurant</p>';
-$lang['alert_is_closed'] 		= '<p class="alert-danger">Sorry, you can\'t place an order now, we are currently closed,<br /> please come back later during our opening times.</p>';
-$lang['alert_not_logged'] 	= '<p class="alert-info">Almost there, Please login or register to complete checkout.</p>';
+$lang['alert_not_logged'] 		= '<p class="alert-info">Almost there, Please login or register to complete checkout.</p>';
 $lang['alert_no_order'] 		= '<p class="alert-danger">Niether delivery or collection is available at the selected restaurant.</p>';
 $lang['alert_server_error'] 	= '<p class="alert-danger">Sorry an error occured, please try again</p>';
 

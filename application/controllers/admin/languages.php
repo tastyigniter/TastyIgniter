@@ -7,6 +7,7 @@ class Languages extends CI_Controller {
 		$this->load->library('user');
 		$this->load->library('pagination');
 		$this->load->model('Languages_model');
+		$this->load->model('Image_tool_model');
 	}
 
 	public function index() {
@@ -84,7 +85,7 @@ class Languages extends CI_Controller {
 				'language_id'		=> $result['language_id'],
 				'name'				=> $result['name'],
 				'code'				=> $result['code'],
-				'image'				=> base_url('assets/img/flags/'. $result['image']),
+				'image'				=>	(!empty($result['image'])) ? $this->Image_tool_model->resize($result['image']) : $this->Image_tool_model->resize('data/flags/no_flag.png'),
 				'status'			=> ($result['status'] === '1') ? 'Enabled' : 'Disabled',
 				'edit' 				=> site_url(ADMIN_URI.'/languages/edit?id=' . $result['language_id'])
 			);
@@ -169,23 +170,24 @@ class Languages extends CI_Controller {
 		$data['language_id'] 		= $language_info['language_id'];
 		$data['name'] 				= $language_info['name'];
 		$data['code'] 				= $language_info['code'];
-		$data['image'] 				= $language_info['image'];
-		$data['image_url'] 			= base_url('assets/img/flags/'. $language_info['image']);
 		$data['directory'] 			= $language_info['directory'];
 		$data['status'] 			= $language_info['status'];
+		$data['no_photo'] 			= $this->Image_tool_model->resize('data/flags/no_flag.png');
 
-		$flags = glob(IMAGEPATH .'/flags/*.png');
-	
-		$data['flags'] = array();
-		foreach ($flags as $flag) {
-			$flag_name = basename($flag, '.png');
-
-			$data['flags'][] = array(
-				'name' 		=> strtoupper($flag_name),
-				'file' 		=> $flag_name .'.png'
-			);		
+		if ($this->input->post('image')) {
+			$data['image']['path'] = $this->Image_tool_model->resize($this->input->post('image'));
+			$data['image']['name'] = basename($this->input->post('image'));
+			$data['image']['input'] = $this->input->post('image');			
+		} else if (!empty($language_info['image'])) {
+			$data['image']['path'] = $this->Image_tool_model->resize($language_info['image']);
+			$data['image']['name'] = basename($language_info['image']);
+			$data['image']['input'] = $language_info['image'];			
+		} else {
+			$data['image']['path'] = $this->Image_tool_model->resize('data/flags/no_flag.png');
+			$data['image']['name'] = 'no_flag.png';
+			$data['image']['input'] = 'data/flags/no_flag.png';			
 		}
-
+				
 		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme').'languages_edit.php')) {
 			$this->template->render('themes/'.ADMIN_URI.'/'.$this->config->item('admin_theme'), 'languages_edit', $data);
@@ -228,7 +230,7 @@ class Languages extends CI_Controller {
 			$update['language_id'] 	= $this->input->get('id');
 			$update['name'] 		= $this->input->post('name');
 			$update['code'] 		= $this->input->post('code');
-			$update['image'] 		= $this->security->sanitize_filename($this->input->post('image'));
+			$update['image'] 		= $this->input->post('image');
 			$update['directory'] 	= $this->input->post('directory');
 			$update['status'] 		= $this->input->post('status');
 			

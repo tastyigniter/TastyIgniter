@@ -59,9 +59,9 @@ class Reviews extends MX_Controller {
 			$data['reviews'][] = array(															// create array of customer reviews to pass to view
 				'order_id'			=> $result['order_id'],
 				'location_name'		=> $result['location_name'],
-				'quality' 			=> $ratings['ratings'][$result['quality']],
-				'delivery' 			=> $ratings['ratings'][$result['delivery']],
-				'service' 			=> $ratings['ratings'][$result['service']],
+				'quality' 			=> $result['quality'],
+				'delivery' 			=> $result['delivery'],
+				'service' 			=> $result['service'],
 				'date'				=> mdate('%d %M %y', strtotime($result['date_added'])),
 				'view' 				=> site_url('main/reviews/view/'. $result['review_id'] .'/'. $result['order_id'] .'/'. $result['location_id'])
 			);
@@ -124,9 +124,9 @@ class Reviews extends MX_Controller {
 		$data['location_name'] 		= $result['location_name'];
 		$data['order_id'] 			= $result['order_id'];
 		$data['author'] 			= $result['author'];
-		$data['quality'] 			= $ratings['ratings'][$result['quality']];
-		$data['delivery'] 			= $ratings['ratings'][$result['delivery']];
-		$data['service'] 			= $ratings['ratings'][$result['service']];
+		$data['quality'] 			= $result['quality'];
+		$data['delivery'] 			= $result['delivery'];
+		$data['service'] 			= $result['service'];
 		$data['date'] 				= mdate('%H:%i - %d %M %y', strtotime($result['date_added']));
 		$data['review_text'] 		= $result['review_text'];
 		
@@ -187,6 +187,12 @@ class Reviews extends MX_Controller {
 		//create array of ratings data to pass to view
 		$ratings = $this->config->item('ratings');
 		$data['ratings'] = $ratings['ratings'];
+		
+		if ($this->input->post('rating')) {
+			$data['rating'] = $this->input->post('rating');
+		} else {
+			$data['rating'] = array('quality' => '0', 'delivery' => '0', 'service' => '0');
+		}
 		
 		if ($this->input->post() AND $this->_addReview() === TRUE) {
 			redirect('main/reviews');

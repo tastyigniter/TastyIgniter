@@ -182,7 +182,7 @@ class Reservation_module extends MX_Controller {
 				$location = $this->Locations_model->getLocation($check['location']);
 			
 				if ($location) {
-					$this->Locations_model->getLocalRestaurant($location['location_lat'], $location['location_lng']);
+					//$this->Locations_model->getLocalRestaurant($location['location_lat'], $location['location_lng']);
 				}
 
 				return TRUE;

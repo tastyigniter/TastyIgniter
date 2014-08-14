@@ -135,7 +135,7 @@ class Pages extends CI_Controller {
 		$data['meta_description'] 	= $page_info['meta_description'];
 		$data['meta_keywords'] 		= $page_info['meta_keywords'];
 		$data['layout_id'] 			= $page_info['layout_id'];
-		$data['menu_location'] 		= $page_info['menu_location'];
+		$data['navigation'] 		= (!empty($page_info['navigation'])) ? unserialize($page_info['navigation']) : array();
 		$data['status'] 			= $page_info['status'];
 
 		$this->load->model('Permalinks_model');
@@ -205,7 +205,7 @@ class Pages extends CI_Controller {
 			$add['layout_id'] 			= $this->input->post('layout_id');
 			$add['date_added'] 			= mdate('%Y-%m-%d %H:%i:%s', time());
 			$add['date_updated'] 		= mdate('%Y-%m-%d %H:%i:%s', time());
-			$add['menu_location'] 		= $this->input->post('menu_location');
+			$add['navigation'] 			= $this->input->post('navigation');
 			$add['status'] 				= $this->input->post('status');
 
 			if ($_POST['insert_id'] = $this->Pages_model->addPage($add)) {	
@@ -235,7 +235,7 @@ class Pages extends CI_Controller {
 			$update['layout_id'] 			= $this->input->post('layout_id');
 			$update['language_id'] 			= $this->input->post('language_id');
 			$update['permalink'] 			= $this->input->post('permalink');
-			$update['menu_location'] 		= $this->input->post('menu_location');
+			$update['navigation'] 			= $this->input->post('navigation');
 			$update['date_updated'] 		= mdate('%Y-%m-%d %H:%i:%s', time());
 			$update['status'] 				= $this->input->post('status');
 
@@ -273,7 +273,7 @@ class Pages extends CI_Controller {
 		$this->form_validation->set_rules('meta_description', 'Meta Description', 'xss_clean|trim|min_length[2]|max_length[255]');
 		$this->form_validation->set_rules('meta_keywords', 'Meta Keywords', 'xss_clean|trim|min_length[2]|max_length[255]');
 		$this->form_validation->set_rules('layout_id', 'Layout', 'xss_clean|trim|integer');
-		$this->form_validation->set_rules('menu_location', 'Menu Location', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('navigation[]', 'Navigation', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('status', 'Status', 'xss_clean|trim|required|integer');
 
 		if ($this->form_validation->run() === TRUE) {

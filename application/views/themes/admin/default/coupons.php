@@ -72,6 +72,7 @@
 						<th><a class="sort" href="<?php echo $sort_code; ?>">Code<i class="fa fa-sort-<?php echo ($sort_by == 'code') ? $order_by_active : $order_by; ?>"></i></a></th>
 						<th><a class="sort" href="<?php echo $sort_type; ?>">Type<i class="fa fa-sort-<?php echo ($sort_by == 'type') ? $order_by_active : $order_by; ?>"></i></a></th>
 						<th><a class="sort" href="<?php echo $sort_discount; ?>">Discount<i class="fa fa-sort-<?php echo ($sort_by == 'discount') ? $order_by_active : $order_by; ?>"></i></a></th>
+						<th><a class="sort" href="<?php echo $sort_validity; ?>">Validity<i class="fa fa-sort-<?php echo ($sort_by == 'validity') ? $order_by_active : $order_by; ?>"></i></a></th>
 						<th class="text-center">Status</th>
 					</tr>
 				</thead>
@@ -85,6 +86,7 @@
 						<td><?php echo $coupon['code']; ?></td>
 						<td><?php echo $coupon['type']; ?></td>
 						<td><?php echo $coupon['discount']; ?></td>
+						<td><?php echo $coupon['validity']; ?></td>
 						<td class="text-center"><?php echo $coupon['status']; ?></td>
 					</tr>
 					<?php } ?>

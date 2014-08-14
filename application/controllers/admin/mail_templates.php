@@ -348,7 +348,7 @@ class Mail_templates extends CI_Controller {
 	public function validateForm() {
 		$this->form_validation->set_rules('name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		
-		if ($this->input->get('id')) {
+		if (!$this->input->get('id')) {
 			$this->form_validation->set_rules('clone_template_id', 'Clone Template', 'xss_clean|trim|required|integer');
 		}
 		

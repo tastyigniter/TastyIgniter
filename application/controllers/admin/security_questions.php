@@ -46,7 +46,7 @@ class Security_questions extends CI_Controller {
 		}
 
 		if ($this->input->post() AND $this->_updateSecurityQuestion() === TRUE){
-			//redirect(ADMIN_URI.'/security_questions');
+			redirect(ADMIN_URI.'/security_questions');
 		}
 
 		$this->template->regions(array('header', 'footer'));

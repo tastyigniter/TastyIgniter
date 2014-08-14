@@ -145,7 +145,8 @@
 		<?php } ?>
 	</div>
 </div>
-<script type="text/javascript" src="<?php echo base_url("assets/js/jquery-ui-timepicker-addon.js"); ?>"></script> 
+<link type="text/css" rel="stylesheet" href="<?php echo base_url("assets/js/datepicker/datepicker.css"); ?>">
+<script type="text/javascript" src="<?php echo base_url("assets/js/datepicker/bootstrap-datepicker.js"); ?>"></script> 
 <script type="text/javascript"><!--
 $(document).ready(function() {
   	$('#check-postcode').on('click', function() {
@@ -154,7 +155,7 @@ $(document).ready(function() {
 	});	
 
 	$('#date').datepicker({
-		dateFormat: 'dd-mm-yy',
+		format: 'dd-mm-yy',
 	});
 });
 

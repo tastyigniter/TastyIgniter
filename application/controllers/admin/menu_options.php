@@ -45,18 +45,25 @@ class Menu_options extends CI_Controller {
 			$data['filter_search'] = '';
 		}
 		
+		if ($this->input->get('filter_display_type')) {
+			$filter['filter_display_type'] = $data['filter_display_type'] = $this->input->get('filter_display_type');
+			$url .= 'filter_display_type='.$filter['filter_display_type'].'&';
+		} else {
+			$filter['filter_display_type'] = $data['filter_display_type'] = '';
+		}
+		
 		if ($this->input->get('sort_by')) {
 			$filter['sort_by'] = $data['sort_by'] = $this->input->get('sort_by');
 		} else {
-			$filter['sort_by'] = $data['sort_by'] = 'option_id';
+			$filter['sort_by'] = $data['sort_by'] = 'priority';
 		}
 		
 		if ($this->input->get('order_by')) {
 			$filter['order_by'] = $data['order_by'] = $this->input->get('order_by');
 			$data['order_by_active'] = $this->input->get('order_by') .' active';
 		} else {
-			$filter['order_by'] = $data['order_by'] = 'DESC';
-			$data['order_by_active'] = 'DESC';
+			$filter['order_by'] = $data['order_by'] = 'ASC';
+			$data['order_by_active'] = 'ASC';
 		}
 		
 		$this->template->setTitle('Menu Options');
@@ -68,7 +75,8 @@ class Menu_options extends CI_Controller {
 
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_name'] 			= site_url(ADMIN_URI.'/menu_options'.$url.'sort_by=option_name&order_by='.$order_by);
-		$data['sort_price'] 		= site_url(ADMIN_URI.'/menu_options'.$url.'sort_by=option_price&order_by='.$order_by);
+		$data['sort_priority'] 		= site_url(ADMIN_URI.'/menu_options'.$url.'sort_by=priority&order_by='.$order_by);
+		$data['sort_display_type'] 	= site_url(ADMIN_URI.'/menu_options'.$url.'sort_by=display_type&order_by='.$order_by);
 		$data['sort_id'] 			= site_url(ADMIN_URI.'/menu_options'.$url.'sort_by=option_id&order_by='.$order_by);
 
 		$data['menu_options'] = array();
@@ -77,7 +85,8 @@ class Menu_options extends CI_Controller {
 			$data['menu_options'][] = array(
 				'option_id' 	=> $result['option_id'],
 				'option_name' 	=> $result['option_name'],
-				'option_price' 	=> $this->currency->format($result['option_price']),
+				'priority' 		=> $result['priority'],
+				'display_type' 	=> ucwords($result['display_type']),
 				'edit' 			=> site_url(ADMIN_URI.'/menu_options/edit?id=' . $result['option_id'])
 			);
 		}
@@ -126,7 +135,7 @@ class Menu_options extends CI_Controller {
 			$data['alert'] = '';
 		}		
 		
-		$option_info = $this->Menus_model->getMenuOption((int) $this->input->get('id'));
+		$option_info = $this->Menus_model->getAdminOption((int) $this->input->get('id'));
 		
 		if ($option_info) {
 			$option_id = $option_info['option_id'];
@@ -145,7 +154,23 @@ class Menu_options extends CI_Controller {
 
 		$data['option_id'] 			= $option_info['option_id'];
 		$data['option_name'] 		= $option_info['option_name'];
-		$data['option_price'] 		= $option_info['option_price'];
+		$data['display_type'] 		= $option_info['display_type'];
+		$data['priority'] 			= $option_info['priority'];
+
+		if ($this->input->post('values')) {
+			$values = $this->input->post('values');
+		} else {
+			$values = $this->Menus_model->getOptionValues($option_id);
+		}
+		
+		$data['values'] = array();
+		foreach ($values as $value) {					
+			$data['values'][] = array(
+				'option_value_id'	=> $value['option_value_id'],
+				'value'				=> $value['value'],
+				'price'				=> $value['price']
+			);
+		}
 
 		if ($this->input->post() AND $this->_addMenuOpiton() === TRUE) {
 			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {	
@@ -174,21 +199,24 @@ class Menu_options extends CI_Controller {
 	public function autocomplete() {
 		$json = array();
 		
-		if ($this->input->get('option_name')) {
+		if ($this->input->get('term')) {
 			$filter = array(
-				'option_name' => $this->input->get('option_name')
+				'option_name' => $this->input->get('term')
 			);
 
 			$results = $this->Menus_model->getOptionsAutoComplete($filter);
-
 			if ($results) {
 				foreach ($results as $result) {
-					$json[] = array(
-						'option_id' 	=> $result['option_id'],
-						'option_name' 	=> $result['option_name'],
-						'option_price' 	=> $result['option_price']
+					$json['results'][] = array(
+						'id' 				=> $result['option_id'],
+						'text' 				=> utf8_encode($result['option_name']),
+						'display_type' 		=> utf8_encode($result['display_type']),
+						'priority' 			=> $result['priority'],
+						'option_values' 	=> $result['option_values']
 					);
 				}
+			} else {
+				$json['results'] = array('id' => '0', 'text' => 'No Matches Found');
 			}
 		}
 		
@@ -202,10 +230,12 @@ class Menu_options extends CI_Controller {
     	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$add = array();
 	
-			$add['option_name'] = $this->input->post('option_name');
-			$add['option_price'] = $this->input->post('option_price');	
+			$add['option_name'] 	= $this->input->post('option_name');
+			$add['display_type'] 	= $this->input->post('display_type');	
+			$add['priority'] 		= $this->input->post('priority');	
+			$add['option_values'] 	= $this->input->post('values');	
 										
-			if ($_POST['insert_id'] = $this->Menus_model->addMenuOption($add)) {
+			if ($_POST['insert_id'] = $this->Menus_model->addOption($add)) {
 				$this->session->set_flashdata('alert', '<p class="alert-success">Menu option added sucessfully.</p>');
 			} else {
 				$this->session->set_flashdata('alert', '<p class="alert-warning">An error occured, nothing added.</p>');				
@@ -224,9 +254,11 @@ class Menu_options extends CI_Controller {
 		
 			$update['option_id'] 		= $this->input->get('id');
 			$update['option_name'] 		= $this->input->post('option_name');
-			$update['option_price'] 	= $this->input->post('option_price');	
+			$update['display_type'] 	= $this->input->post('display_type');	
+			$update['priority'] 		= $this->input->post('priority');	
+			$update['option_values'] 	= $this->input->post('values');	
 
-			if ($this->Menus_model->updateMenuOption($update)) {						
+			if ($this->Menus_model->updateOption($update)) {						
 				$this->session->set_flashdata('alert', '<p class="alert-success">Menu option updated sucessfully.</p>');
 			} else {
 				$this->session->set_flashdata('alert', '<p class="alert-warning">An error occured, nothing updated.</p>');				
@@ -252,8 +284,16 @@ class Menu_options extends CI_Controller {
 	
 	public function validateForm() {
 		$this->form_validation->set_rules('option_name', 'Option Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
-		$this->form_validation->set_rules('option_price', 'Option Price', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('display_type', 'Display Type', 'xss_clean|trim|required|alpha');
+		$this->form_validation->set_rules('priority', 'Priority', 'xss_clean|trim|required|integer');
 
+		if ($this->input->post('values')) {
+			foreach ($this->input->post('values') as $key => $value) {
+				$this->form_validation->set_rules('values['.$key.'][value]', 'Value', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+				$this->form_validation->set_rules('values['.$key.'][price]', 'Price', 'xss_clean|trim|required|numeric');
+			}
+		}
+					
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;
 		} else {

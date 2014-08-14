@@ -41,6 +41,7 @@
 			<script type="text/javascript" src="<?php echo base_url('assets/js/jquery.contextMenu.js'); ?>"></script>    
 			<script type="text/javascript" src="<?php echo base_url('assets/js/jquery.finderSelect.js'); ?>"></script>    
 			<script type="text/javascript" src="<?php echo base_url('assets/js/bootbox.js'); ?>"></script>    
+			<script type="text/javascript" src="<?php echo base_url("assets/js/tinymce/tinymce.js"); ?>"></script>
 			<script type="text/javascript">
 				var js_site_url = function(str) {
 					var strTmp = "<?php echo site_url('" + str + "'); ?>";
@@ -368,13 +369,24 @@
 					var thumb = field.parent().parent().find('.thumb');
 					var thumb_name = field.parent().parent().find('.name');
 		
-					field.attr('value', file_path);
-					//thumb.attr('src', file_src);
-					thumb_name.html(file_name);
+					if (typeof parent.$.fancybox == 'function') {
+						field.attr('value', file_path);
+						thumb_name.html(file_name);
 
-					if(typeof parent.$.fancybox == 'function') {
 						parent.$.fancybox.close();
 						parent.$('#image-manager').empty();
+					}
+
+					if (typeof top.tinymce != 'undefined') {
+						$.ajax({
+							url: js_site_url('admin/image_manager/resize?image=') + encodeURIComponent(file_path),
+							dataType: 'json',
+							success: function(url) {
+								var dialogArguments = top.tinymce.activeEditor.windowManager.getParams();
+								dialogArguments.updateInput(url);
+								top.tinymce.activeEditor.windowManager.close();
+							}
+						});
 					}
 				});
 

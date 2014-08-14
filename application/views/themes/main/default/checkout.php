@@ -13,12 +13,12 @@
 <div class="row content">
 	<?php echo $content_left; ?><?php echo $content_right; ?>
 
-	<div class="col-xs-9">
+	<div class="col-md-8 page-content">
 		<div class="row wrap-all">
 			<p class="text-info well"><?php echo $text_login_register; ?></p>
 
 			<form method="post" accept-charset="utf-8" action="<?php echo $action; ?>" id="checkout-form" role="form">
-				<div id="checkout" class="row" style="display: <?php echo ($post_checkout ? 'none' : 'block'); ?>">
+				<div id="checkout" class="row wrap-all" style="display: <?php echo ($post_checkout ? 'none' : 'block'); ?>">
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label for="first-name"><?php echo $entry_first_name; ?></label>
@@ -70,13 +70,13 @@
 						<div class="form-group">
 							<label for="order-time"><?php echo $entry_order_time; ?></label>
 							<select name="order_time" id="order-time" class="form-control">
-									<option value="<?php echo $asap_time; ?>"><?php echo $text_asap; ?></option>
+								<option value="<?php echo $asap_time; ?>"><?php echo $text_asap; ?></option>
 								<?php foreach ($delivery_times as $delivery_time) { ?>
-								<?php if ($delivery_time['24hr'] === $order_time) { ?>
-									<option value="<?php echo $delivery_time['24hr']; ?>" selected="selected"><?php echo $delivery_time['12hr']; ?></option>
-								<?php } else { ?>
-									<option value="<?php echo $delivery_time['24hr']; ?>"><?php echo $delivery_time['12hr']; ?></option>
-								<?php } ?>
+									<?php if ($delivery_time['24hr'] === $order_time) { ?>
+										<option value="<?php echo $delivery_time['24hr']; ?>" selected="selected"><?php echo $delivery_time['12hr']; ?></option>
+									<?php } else { ?>
+										<option value="<?php echo $delivery_time['24hr']; ?>"><?php echo $delivery_time['12hr']; ?></option>
+									<?php } ?>
 								<?php } ?>
 							</select>
 							<?php echo form_error('order_time', '<span class="error help-block">', '</span>'); ?>
@@ -183,7 +183,7 @@
 						<?php foreach ($payments as $payment) { ?>
 							<div class="radio">
 								<label>
-									<input type="radio" name="payment" class="payment_radio" value="<?php echo $payment['value']; ?>" <?php echo set_radio('payment', $payment['value']); ?> /><?php echo $payment['name']; ?>
+									<input type="radio" name="payment" class="payment_radio" value="<?php echo $payment['code']; ?>" <?php echo set_radio('payment', $payment['code']); ?> /><?php echo $payment['name']; ?>
 								</label>
 							</div>
 						<?php } ?>
@@ -196,17 +196,16 @@
 					</div>
 				</div>
 
-				<div class="row">
+				<div class="row wrap-vertical">
 					<div class="buttons col-xs-6 wrap">
 						<?php echo $button_back; ?>
-						<?php echo $button_continue; ?>
+						<!--<?php echo $button_continue; ?>-->
 					</div>
 				</div>
 			</form>
 		</div>
 	</div>
 </div>
-<script type="text/javascript" src="<?php echo base_url("assets/js/jquery-ui-timepicker-addon.js"); ?>"></script> 
 <script type="text/javascript"><!--
 $(document).ready(function() {
   	if ($('.order_type:checked').val() !== '1') {

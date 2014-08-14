@@ -4,7 +4,7 @@
 <div class="row content">
 	<?php echo $content_left; ?><?php echo $content_right; ?>
 
-	<div class="col-xs-9">
+	<div class="col-md-9 page-content">
 		<div class="reservations-lists row wrap-all">
 			<div class="table-responsive">
 				<table class="table table-hover">

@@ -42,18 +42,15 @@
 							<span class="help-block">Whether to subtract a fixed amount or percentage from order total.</span>
 						</label>
 						<div class="col-sm-5">
-							<select name="type" id="input-type" class="form-control">
-								<?php if ($type === 'F') { ?>
-									<option value="F" <?php echo set_select('type', 'F', TRUE); ?> >Fixed Amount</option>
-									<option value="P" <?php echo set_select('type', 'P'); ?> >Percentage</option>
-								<?php } else if ($type === 'P') { ?>
-									<option value="F" <?php echo set_select('type', 'F'); ?> >Fixed Amount</option>
-									<option value="P" <?php echo set_select('type', 'P', TRUE); ?> >Percentage</option>
+							<div id="coupon-type" class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($type === 'P') { ?>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="type" value="F" <?php echo set_radio('type', 'F'); ?>>Fixed Amount</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="type" value="P" <?php echo set_radio('type', 'P', TRUE); ?>>Percentage</label>
 								<?php } else { ?>  
-									<option value="F" <?php echo set_select('type', 'F'); ?> >Fixed Amount</option>
-									<option value="P" <?php echo set_select('type', 'P'); ?> >Percentage</option>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="type" value="F" <?php echo set_radio('type', 'F', TRUE); ?>>Fixed Amount</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="type" value="P" <?php echo set_radio('type', 'P'); ?>>Percentage</label>
 								<?php } ?>  
-							</select>
+							</div>
 							<?php echo form_error('type', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
@@ -88,8 +85,147 @@
 					<div class="form-group">
 						<label for="input-min-total" class="col-sm-2 control-label">Minimum Total:</label>
 						<div class="col-sm-5">
-							<input type="text" name="min_total" id="input-min-total" class="form-control" value="<?php echo set_value('min_total', $min_total); ?>" />
+							<div class="input-group">
+								<input type="text" name="min_total" id="input-min-total" class="form-control" value="<?php echo set_value('min_total', $min_total); ?>" />
+								<span class="input-group-addon">.00</span>
+							</div>
 							<?php echo form_error('min_total', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-validity" class="col-sm-2 control-label">Validity:</label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-toggle btn-group-4" data-toggle="buttons">
+								<?php if ($validity === 'forever') { ?>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="validity" value="forever" <?php echo set_radio('validity', 'forever', TRUE); ?>>Forever</label>
+								<?php } else { ?>  
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="validity" value="forever" <?php echo set_radio('validity', 'forever'); ?>>Forever</label>
+								<?php } ?>  
+								<?php if ($validity === 'fixed') { ?>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="validity" value="fixed" <?php echo set_radio('validity', 'fixed', TRUE); ?>>Fixed</label>
+								<?php } else { ?>  
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="validity" value="fixed" <?php echo set_radio('validity', 'fixed'); ?>>Fixed</label>
+								<?php } ?>  
+								<?php if ($validity === 'period') { ?>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="validity" value="period" <?php echo set_radio('validity', 'period', TRUE); ?>>Period</label>
+								<?php } else { ?>  
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="validity" value="period" <?php echo set_radio('validity', 'period'); ?>>Period</label>
+								<?php } ?>  
+								<?php if ($validity === 'recurring') { ?>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="validity" value="recurring" <?php echo set_radio('validity', 'recurring', TRUE); ?>>Recurring</label>
+								<?php } else { ?>  
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="validity" value="recurring" <?php echo set_radio('validity', 'recurring'); ?>>Recurring</label>
+								<?php } ?>  
+							</div>
+							<?php echo form_error('validity', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div id="validity-fixed">
+						<div class="form-group">
+							<label for="start-date" class="col-sm-2 control-label">Date:</label>
+							<div class="col-sm-5">
+								<div class="input-group date">
+									<input type="text" name="validity_times[fixed_date]" id="fixed-date" class="form-control" value="<?php echo set_value('validity_times[fixed_date]', $fixed_date); ?>" />
+									<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+								</div>
+								<?php echo form_error('validity_times[fixed_date]', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-2 control-label">Time:</label>
+							<div class="col-sm-10">
+								<div class="control-group control-group-3">
+									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+										<?php if ($fixed_time == '24hours') { ?>
+											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="fixed_time" value="24hours" checked="checked">24 Hours</label>
+											<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="fixed_time" value="custom">Custom</label>
+										<?php } else { ?>  
+											<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="fixed_time" value="24hours">24 Hours</label>
+											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="fixed_time" value="custom" checked="checked">Custom</label>
+										<?php } ?>  
+									</div>
+									<div class="input-group time">
+										<span class="input-group-addon"><b>From:</b></span>
+										<input type="text" name="validity_times[fixed_from_time]" id="fixed-from-time" class="form-control" value="<?php echo set_value('validity_times[fixed_from_time]', $fixed_from_time); ?>" />
+										<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+									</div>
+									<div class="input-group time">
+										<span class="input-group-addon"><b>To:</b></span>
+										<input type="text" name="validity_times[fixed_to_time]" id="fixed-to-time" class="form-control" value="<?php echo set_value('validity_times[fixed_to_time]', $fixed_to_time); ?>" />
+										<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+									</div>
+								</div>
+								<?php echo form_error('fixed_time', '<span class="text-danger">', '</span>'); ?>
+								<?php echo form_error('validity_times[fixed_from_time]', '<span class="text-danger">', '</span>'); ?>
+								<?php echo form_error('validity_times[fixed_to_time]', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div>
+					</div>
+					<div id="validity-period">
+						<div class="form-group">
+							<label for="" class="col-sm-2 control-label">Date:</label>
+							<div class="col-sm-7">
+								<div class="control-group control-group-2">
+									<div class="input-group date">
+										<span class="input-group-addon"><b>Start:</b></span>
+										<input type="text" name="validity_times[period_start_date]" id="period-start-date" class="form-control" value="<?php echo set_value('validity_times[period_start_date]', $period_start_date); ?>" />
+										<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+									</div>
+									<div class="input-group date">
+										<span class="input-group-addon"><b>End:</b></span>
+										<input type="text" name="validity_times[period_end_date]" id="period-end-date" class="form-control" value="<?php echo set_value('validity_times[period_end_date]', $period_end_date); ?>" />
+										<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+									</div>
+								</div>
+								<?php echo form_error('validity_times[period_start_date]', '<span class="text-danger">', '</span>'); ?>
+								<?php echo form_error('validity_times[period_end_date]', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div>
+					</div>
+					<div id="validity-recurring">
+						<div class="form-group">
+							<label for="start-date" class="col-sm-2 control-label">Every:</label>
+							<div class="col-sm-5">
+								<div class="btn-group btn-group-toggle btn-group-7" data-toggle="buttons">
+									<?php foreach ($weekdays as $key => $value) { ?>
+										<?php if (in_array($key, $recurring_every)) { ?>
+											<label class="btn btn-default active" data-btn="btn-success"><input type="checkbox" name="validity_times[recurring_every][]" value="<?php echo $key; ?>" checked="checked"><?php echo $value; ?></label>
+										<?php } else { ?>  
+											<label class="btn btn-default" data-btn="btn-success"><input type="checkbox" name="validity_times[recurring_every][]" value="<?php echo $key; ?>"><?php echo $value; ?></label>
+										<?php } ?>  
+									<?php } ?>  
+								</div>
+								<?php echo form_error('validity_times[recurring_every][]', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div><?php echo $recurring_from_time; ?>
+						<div class="form-group">
+							<label for="" class="col-sm-2 control-label">Time:</label>
+							<div class="col-sm-10">
+								<div class="control-group control-group-3">
+									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+										<?php if ($recurring_time == '24hours') { ?>
+											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="recurring_time" value="24hours" checked="checked">24 Hours</label>
+											<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="recurring_time" value="custom">Custom</label>
+										<?php } else { ?>  
+											<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="recurring_time" value="24hours">24 Hours</label>
+											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="recurring_time" value="custom" checked="checked">Custom</label>
+										<?php } ?>  
+									</div>
+									<div class="input-group time">
+										<span class="input-group-addon"><b>From:</b></span>
+										<input type="text" name="validity_times[recurring_from_time]" id="recurring-from-time" class="form-control" value="<?php echo set_value('validity_times[recurring_from_time]', $recurring_from_time); ?>" />
+										<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+									</div>
+									<div class="input-group time">
+										<span class="input-group-addon"><b>To:</b></span>
+										<input type="text" name="validity_times[recurring_to_time]" id="recurring-to-time" class="form-control" value="<?php echo set_value('validity_times[recurring_to_time]', $recurring_to_time); ?>" />
+										<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+									</div>
+								</div>
+								<?php echo form_error('recurring_time', '<span class="text-danger">', '</span>'); ?>
+								<?php echo form_error('validity_times[recurring_from_time]', '<span class="text-danger">', '</span>'); ?>
+								<?php echo form_error('validity_times[recurring_to_time]', '<span class="text-danger">', '</span>'); ?>
+							</div>
 						</div>
 					</div>
 					<div class="form-group">
@@ -100,36 +236,17 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="start-date" class="col-sm-2 control-label">Start Date:</label>
-						<div class="col-sm-5">
-							<div class="input-group">
-								<input type="text" name="start_date" id="start-date" class="form-control" value="<?php echo set_value('start_date', $start_date); ?>" />
-								<span id="discount-addon" class="input-group-addon"><i class="fa fa-calendar"></i></span>
-							</div>
-							<?php echo form_error('start_date', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="end-date" class="col-sm-2 control-label">End Date:</label>
-						<div class="col-sm-5">
-							<div class="input-group">
-								<input type="text" name="end_date" id="end-date" class="form-control" value="<?php echo set_value('end_date', $end_date); ?>" />
-								<span id="discount-addon" class="input-group-addon"><i class="fa fa-calendar"></i></span>
-							</div>
-							<?php echo form_error('end_date', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
 						<label for="input-status" class="col-sm-2 control-label">Status:</label>
 						<div class="col-sm-5">
-							<select name="status" id="input-status" class="form-control">
-								<option value="0" <?php echo set_select('status', '0'); ?> >Disabled</option>
-							<?php if ($status === '1') { ?>
-								<option value="1" <?php echo set_select('status', '1', TRUE); ?> >Enabled</option>
-							<?php } else { ?>  
-								<option value="1" <?php echo set_select('status', '1'); ?> >Enabled</option>
-							<?php } ?>  
-							</select>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($status == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1', TRUE); ?>>Enabled</label>
+								<?php } else { ?>  
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1'); ?>>Enabled</label>
+								<?php } ?>  
+							</div>
 							<?php echo form_error('status', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
@@ -140,20 +257,16 @@
 						<tr>
 							<th class="">Order ID</th>
 							<th width="55%">Customer</th>
-							<th class="text-center">Code</th>
 							<th class="text-center">Amount</th>
-							<th class="text-center">Used</th>
 							<th class="text-right">Date Used</th>
 						</tr>
 						<?php if ($coupon_histories) { ?>
-						<?php foreach ($coupon_histories as $coupon_history) { ?>
+						<?php foreach ($coupon_histories as $history) { ?>
 						<tr>
-							<td class=""><?php echo $coupon_history['order_id']; ?></td>
-							<td><?php echo $coupon_history['customer_name']; ?></td>
-							<td class="text-center"><?php echo $coupon_history['code']; ?></td>
-							<td class="text-center"><?php echo $coupon_history['amount']; ?></td>
-							<td class="text-center"><a href="<?php echo $coupon_history['used_url']; ?>"><?php echo $coupon_history['used']; ?></a></td>
-							<td class="text-right"><?php echo $coupon_history['date_used']; ?></td>
+							<td class=""><a href="<?php echo $history['view']; ?>"><?php echo $history['order_id']; ?></a></td>
+							<td><?php echo $history['customer_name']; ?></td>
+							<td class="text-center"><?php echo $history['amount']; ?></td>
+							<td class="text-right"><?php echo $history['date_used']; ?></td>
 						</tr>
 						<?php } ?>
 						<?php } else { ?>
@@ -167,14 +280,22 @@
 		</form>
 	</div>
 </div>
-<script type="text/javascript" src="<?php echo base_url("assets/js/jquery-ui-timepicker-addon.js"); ?>"></script> 
+<link type="text/css" rel="stylesheet" href="<?php echo base_url("assets/js/datepicker/datepicker.css"); ?>">
+<link type="text/css" rel="stylesheet" href="<?php echo base_url("assets/js/datepicker/bootstrap-timepicker.css"); ?>">
+<script type="text/javascript" src="<?php echo base_url("assets/js/datepicker/bootstrap-datepicker.js"); ?>"></script> 
+<script type="text/javascript" src="<?php echo base_url("assets/js/datepicker/bootstrap-timepicker.js"); ?>"></script> 
 <script type="text/javascript"><!--
 $(document).ready(function() {
-	$('#start-date, #end-date').datepicker({
-		dateFormat: 'dd-mm-yy',
+	
+	$('.date').datepicker({
+		format: 'dd-mm-yyyy'
 	});
 	
-	$('#input-type').on('change', function() {
+	$('#fixed-from-time, #fixed-to-time, #recurring-from-time, #recurring-to-time').timepicker({
+		defaultTime: '11:45 AM'
+	});
+	
+	$(document).on('change', '#coupon-type input[type="radio"]', function() {
 		if (this.value === 'P') {
 			$('#discount-addon').html('%');
 		} else {
@@ -182,7 +303,19 @@ $(document).ready(function() {
 		}
 	});
 
-	$('#input-type').trigger('change');
+	$(document).on('change', 'input[name="validity"]', function() {
+		$('#validity-fixed, #validity-period, #validity-recurring').fadeOut();
+		if (this.value == 'fixed' || this.value == 'period' || this.value == 'recurring') {
+			$('#validity-' + this.value).fadeIn();
+		}
+	});
+
+	$(document).on('change', 'input[name="fixed_time"], input[name="recurring_time"]', function() {
+		$(this).parent().parent().parent().find('.input-group').fadeOut();
+		if (this.value == 'custom') {
+			$(this).parent().parent().parent().find('.input-group').fadeIn();
+		}
+	});
 });
 //--></script>
 <?php echo $footer; ?>

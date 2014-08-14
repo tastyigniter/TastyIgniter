@@ -337,20 +337,21 @@ class Customers extends CI_Controller {
 	public function autocomplete() {
 		$json = array();
 		
-		if ($this->input->get('customer_name')) {
-			$filter = array(
-				'customer_name' => urldecode($this->input->get('customer_name'))
-			);
+		if ($this->input->get('term') OR $this->input->get('customer_id')) {
+			$filter['customer_name'] = $this->input->get('term');
+			$filter['customer_id'] = $this->input->get('customer_id');
 
 			$results = $this->Customers_model->getAutoComplete($filter);
 		
 			if ($results) {
 				foreach ($results as $result) {
-					$json[] = array(
-						'customer_id' 		=> $result['customer_id'],
-						'customer_name' 	=> $result['first_name'] .' '. $result['last_name']
+					$json['results'][] = array(
+						'id' 	=> $result['customer_id'],
+						'text' 	=> utf8_encode($result['first_name'] .' '. $result['last_name'])
 					);
 				}
+			} else {
+				$json['results'] = array('id' => '0', 'text' => 'No Matches Found');
 			}
 		}
 		
@@ -467,7 +468,7 @@ class Customers extends CI_Controller {
 				$this->form_validation->set_rules('address['.$key.'][address_1]', '['.$key.'] Address 1', 'xss_clean|trim|required|min_length[3]|max_length[128]');
 				$this->form_validation->set_rules('address['.$key.'][city]', '['.$key.'] City', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 				$this->form_validation->set_rules('address['.$key.'][postcode]', '['.$key.'] Postcode', 'xss_clean|trim|required|min_length[2]|max_length[10]');
-				$this->form_validation->set_rules('address['.$key.'][country_id]', '['.$key.'] Country', 'xss_clean|trim|required|integer');
+				$this->form_validation->set_rules('address['.$key.'][country]', '['.$key.'] Country', 'xss_clean|trim|required|integer');
 			}
 		}
 

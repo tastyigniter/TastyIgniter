@@ -52,9 +52,7 @@ class Orders extends CI_Controller {
 			$data['filter_search'] = '';
 		}
 		
-    	if ($this->user->staffLocationAccess()) {
-  			$filter['filter_location'] = $this->user->getLocationId();
-		} else if (is_numeric($this->input->get('filter_location'))) {
+    	if (is_numeric($this->input->get('filter_location'))) {
 			$filter['filter_location'] = $data['filter_location'] = $this->input->get('filter_location');
 			$url .= 'filter_location='.$filter['filter_location'].'&';
 		} else {
@@ -311,6 +309,14 @@ class Orders extends CI_Controller {
 		$data['cart_items'] = array();			
 		$cart_items = $this->Orders_model->getOrderMenus($order_info['order_id']);
 		foreach ($cart_items as $cart_item) {
+			$option_data = array();
+			$menu_options = $this->Orders_model->getOrderMenuOptions($order_info['order_id'], $cart_item['menu_id']);
+			if ($menu_options) {
+				foreach ($menu_options as $menu_option) {	
+					$option_data[] = $menu_option['order_option_name'];
+				}
+			}
+
 			$options = array();
 			if (!empty($cart_item['order_option_id'])) {
 				$options = array('name' => $cart_item['option_name'], 'price' => $cart_item['option_price']);
@@ -322,16 +328,26 @@ class Orders extends CI_Controller {
 				'qty' 			=> $cart_item['quantity'],
 				'price' 		=> $this->currency->format($cart_item['price']),
 				'subtotal' 		=> $this->currency->format($cart_item['subtotal']),
-				'options'		=> $options
+				'options'		=> implode(', ', $option_data)
 			);
 		}
 
 		$data['totals'] = array();			
 		$order_totals = $this->Orders_model->getOrderTotals($order_info['order_id']);
 		foreach ($order_totals as $total) {
+			$title = $total['title'];
+			$value = $this->currency->format($total['value']);
+			
+			if ($total['code'] == 'coupon') {
+				$coupon = $this->Orders_model->getOrderCoupon($order_info['order_id']);
+				$title = $total['title'] .'('. $coupon['code'] .')';
+				$value = $this->currency->format($coupon['amount']);
+			}
+			
 			$data['totals'][] = array(
-				'title' 		=> $total['title'],
-				'value' 		=> $this->currency->format($total['value'])			
+				'title' 		=> $title,
+				'code' 			=> $total['code'],
+				'value' 		=> $value
 			);
 		}
 

@@ -13,7 +13,7 @@
 <div class="row content">
 	<?php echo $content_left; ?><?php echo $content_right; ?>
 
-	<div class="col-xs-9">
+	<div class="col-md-8 page-content">
 		<div class="row">
 			<div class="col-xs-6 wrap-all">
 				<div class="page-header"><h4><?php echo $text_my_details; ?></h4></div>

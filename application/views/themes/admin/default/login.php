@@ -47,4 +47,9 @@
 		</div>
 	</div>
 </div>
+<script type="text/javascript"><!--
+$(document).ready(function() {
+	$('body').addClass('body-login');
+});
+//--></script> 
 <?php echo $footer; ?>

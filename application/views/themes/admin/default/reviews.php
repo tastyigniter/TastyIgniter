@@ -95,10 +95,16 @@
 						<td><?php echo $review['author']; ?></td>
 						<td><?php echo $review['order_id']; ?></td>
 						<td>
-							<ul class="list-inline text-sm">
-								<li><b>Quality:</b> <?php echo $review['quality']; ?></li>
-								<li><b>Delivery:</b> <?php echo $review['delivery']; ?></li>
-								<li><b>Service:</b> <?php echo $review['service']; ?></li>
+							<ul class="list-inline rating-inline">
+								<li>Quality:<br /> 
+									<div class="rating rating-star" data-score="<?php echo $review['quality']; ?>" data-readonly="true"></div>
+								</li>
+								<li>Delivery:<br />
+									<div class="rating rating-star" data-score="<?php echo $review['delivery']; ?>" data-readonly="true"></div>
+								</li>
+								<li>Service:<br />
+									<div class="rating rating-star" data-score="<?php echo $review['service']; ?>" data-readonly="true"></div>
+								</li>
 							</ul>
 						</td>
 						<td><?php echo ($review['review_status'] === '1') ? 'Approved' : 'Pending Review'; ?></td>
@@ -125,60 +131,5 @@
 function filterList() {
 	$('#filter-form').submit();
 }
-
-$('input[name=\'menu\']').autocomplete({
-	delay: 0,
-	source: function(request, response) {
-		$.ajax({
-			url: '<?php echo site_url("admin/menus/autocomplete"); ?>?menu=' +  encodeURIComponent(request.term),
-			dataType: 'json',
-			success: function(json) {		
-				response($.map(json, function(item) {
-					return {
-						label: item.menu_name,
-						value: item.menu_id
-					}
-				}));
-			}
-		});
-	},
-	select: function(event, ui) {
-		$('input[name=\'menu\']').val(ui.item.label);
-		$('input[name=\'menu_id\']').val(ui.item.value);
-		
-		return false;
-	},
-	focus: function(event, ui) {
-      	return false;
-   	}
-});
-//--></script>
-<script type="text/javascript"><!--
-$('input[name=\'author\']').autocomplete({
-	delay: 0,
-	source: function(request, response) {
-		$.ajax({
-			url: '<?php echo site_url("admin/customers/autocomplete"); ?>?customer_name=' +  encodeURIComponent(request.term),
-			dataType: 'json',
-			success: function(json) {		
-				response($.map(json, function(item) {
-					return {
-						label: item.customer_name,
-						value: item.customer_id
-					}
-				}));
-			}
-		});
-	},
-	select: function(event, ui) {
-		$('input[name=\'author\']').val(ui.item.label);
-		$('input[name=\'customer_id\']').val(ui.item.value);
-		
-		return false;
-	},
-	focus: function(event, ui) {
-      	return false;
-   	}
-});
 //--></script>
 <?php echo $footer; ?>

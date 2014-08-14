@@ -160,6 +160,10 @@ class Staffs_model extends CI_Model {
 				$this->db->like('staff_name', $filter['staff_name']);		
 			}
 	
+			if (!empty($filter_data['staff_id'])) {
+				$this->db->where('staff_id', $filter_data['staff_id']);		
+			}
+	
 			$query = $this->db->get();
 			$result = array();
 		

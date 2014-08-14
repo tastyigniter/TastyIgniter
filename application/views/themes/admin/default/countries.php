@@ -54,7 +54,8 @@
 					<tr>
 						<th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
 						<th><a class="sort" href="<?php echo $sort_name; ?>">Name<i class="fa fa-sort-<?php echo ($sort_by == 'country_name') ? $order_by_active : $order_by; ?>"></i></a></th>
-						<th class="left">Status</th>
+						<th class="text-center">Flag</th>
+						<th class="text-right">Status</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -68,12 +69,13 @@
 							<b>(Default)</b>
 							<?php } ?>
 						</td>
-						<td class="left"><?php echo $country['status']; ?></td>
+						<td class="text-center"><img atl="<?php echo $country['iso_code_2']; ?>" src="<?php echo $country['flag']; ?>" width="16" /></td>
+						<td class="text-right"><?php echo $country['status']; ?></td>
 					</tr>
 					<?php } ?>
 					<?php } else { ?>
 					<tr>
-						<td colspan="3"><?php echo $text_empty; ?></td>
+						<td colspan="4"><?php echo $text_empty; ?></td>
 					</tr>
 					<?php } ?>
 				</tbody>

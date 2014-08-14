@@ -8,17 +8,31 @@
 	</div>
 <?php } ?>
 </div>
-<div class="row content"><?php echo $content_right; ?>
-	<?php echo $content_left; ?>
 
-	<div class="col-md-7">
+<div class="row margin-top">
+	<ul class="nav nav-tabs menus-tabs text-sm" role="tablist">
+		<li class="active"><a href="<?php echo site_url('main/menus'); ?>">Menu</a></li>
+		<li><a href="<?php echo site_url('main/local'); ?>">Info</a></li>
+		<li><a href="<?php echo site_url('main/local/reviews'); ?>">Reviews</a></li>
+	</ul>
+</div>
+
+<div class="row content">
+	<?php echo $content_right; ?><?php echo $content_left; ?>
+
+	<div class="col-md-6 page-content">
 		<div class="wrap-horizontal">
+
 			<?php if ($menus) {?>
 			<div class="table-responsive">
 				<table class="table table-none table-hover menus-table">
 					<tbody>
 						<?php foreach ($menus as $menu) { ?>
-						<tr id="<?php echo $menu['menu_id']; ?>">
+						<?php if (isset($menu_options[$menu['menu_id']])) { ?>	
+							<tr id="menu<?php echo $menu['menu_id']; ?>" class="menu-item" onClick="openMenuOptions('<?php echo $menu['menu_id']; ?>');">
+						<?php } else { ?>
+							<tr id="menu<?php echo $menu['menu_id']; ?>" class="menu-item" onClick="addToCart('<?php echo $menu['menu_id']; ?>');">
+						<?php } ?>
 							<td><?php echo $menu['menu_id']; ?>.</td>
 							<?php if ($show_menu_images) { ?>
 								<td align="center">
@@ -30,29 +44,19 @@
 									<font size="1"><?php echo $menu['end_days']; ?></font><br />					
 								<?php }?>
 
-								<?php echo $menu['menu_name']; ?><br />
+								<span class="text-md text-muted"><b><?php echo $menu['menu_name']; ?></b></span><br />
 								<small><small>
 									<?php echo $menu['menu_description']; ?>
 									<!--<?php echo $text_category; ?>: <?php echo $menu['category_name']; ?>-->
 								</small></small>
 							</td>
-							<td width="32%">
-							<?php if (array_key_exists($menu['menu_id'], $has_options)) { ?>
-								<?php foreach ($menu_options as $menu_option) { ?>
-									<?php if (in_array($menu_option['option_id'], $has_options[$menu['menu_id']])) {?>
-										<div class="radio text-xs">
-											<label>	
-												<input type="radio" name="menu_options[<?php echo $menu['menu_id']; ?>]" value="<?php echo $menu_option['option_id']; ?>" />
-												<?php echo $menu_option['option_name']; ?>: <?php echo $menu_option['option_price']; ?>
-											</label>	
-										</div>
-									<?php }?>
-								<?php }?>
-							<?php }?>
-							</td>
-							<td><div class="price"><?php echo $menu['menu_price']; ?></div></td>
-							<td>
-								<a class="add_cart" title="Add to order" onClick="addToCart('<?php echo $menu['menu_id']; ?>');"><span class="icon-add-cart"></span></a>
+							<td class="text-center"><div class="price"><?php echo $menu['menu_price']; ?></div></td>
+							<td class="text-right">
+								<?php if (isset($menu_options[$menu['menu_id']])) { ?>	
+									<a class="btn btn-cart add_cart" title="Add to order" onClick="openMenuOptions('<?php echo $menu['menu_id']; ?>');">&plus;</a>
+								<?php } else { ?>
+									<a class="btn btn-cart add_cart" title="Add to order" onClick="addToCart('<?php echo $menu['menu_id']; ?>');">&plus;</a>
+								<?php } ?>
 							</td>
 						</tr>
 						<?php } ?>

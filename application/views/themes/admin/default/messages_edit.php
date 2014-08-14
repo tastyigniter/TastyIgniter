@@ -59,14 +59,14 @@
 				<div id="recipient-customers" class="recipient">
 					<div class="form-group">
 						<label for="input-customer" class="col-sm-2 control-label">Customers:</label>
-						<div class="col-sm-5">
+						<div class="col-sm-6">
 							<input type="text" name="customer" id="input-customer" class="form-control" value="" placeholder="Start typing customer name..." />
 							<?php echo form_error('customer', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div id="customers-box" class="form-group">
 						<label for="" class="col-sm-2 control-label"></label>
-						<div class="col-sm-5">
+						<div class="col-sm-6">
 							<div class="panel-selected">
 								<table class="table table-striped table-border">
 									<tbody></tbody>
@@ -78,14 +78,14 @@
 				<div id="recipient-staffs" class="recipient">
 					<div class="form-group">
 						<label for="input-staff" class="col-sm-2 control-label">Staffs:</label>
-						<div class="col-sm-5">
+						<div class="col-sm-6">
 							<input type="text" name="staff" id="input-staff" class="form-control" value="" placeholder="Start typing staff name..." />
 							<?php echo form_error('staff', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div id="staffs-box" class="form-group">
 						<label for="" class="col-sm-2 control-label"></label>
-						<div class="col-sm-5">
+						<div class="col-sm-6">
 							<div class="panel-selected">
 								<table class="table table-striped table-border">
 									<tbody></tbody>
@@ -98,10 +98,10 @@
 					<div class="form-group">
 						<label for="input-send-type" class="col-sm-2 control-label">Send Type:</label>
 						<div class="col-sm-5">
-							<select name="send_type" id="input-send-type" class="form-control">
-								<option value="account" <?php echo set_select('send_type', 'account'); ?> >Account</option>
-								<option value="email" <?php echo set_select('send_type', 'email'); ?> >Email</option>
-							</select>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="send_type" value="account" <?php echo set_radio('send_type', 'account', TRUE); ?>>Account</label>
+								<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="send_type" value="email" <?php echo set_radio('send_type', 'email'); ?>>Email</label>
+							</div>
 							<?php echo form_error('send_type', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
@@ -114,8 +114,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="input-body" class="col-sm-2 control-label">Body:</label>
-					<div class="col-sm-9">
+					<div class="col-sm-12">
 						<textarea name="body" id="input-body" class="form-control" style="height:300px;width:100%;"><?php echo set_value('body'); ?></textarea>
 						<?php echo form_error('body', '<span class="text-danger">', '</span>'); ?>
 					</div>
@@ -133,7 +132,10 @@ tinymce.init({
 	toolbar1: 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | formatselect | bullist numlist',
 	toolbar2: 'forecolor backcolor | outdent indent | undo redo | link unlink anchor image code | hr table | subscript superscript | charmap',
 	removed_menuitems: 'newdocument',
-	skin : 'tiskin'
+	skin : 'tiskin',
+	convert_urls : false,
+    file_browser_callback : imageManager
+
 });
 </script>
 <script type="text/javascript"><!--	
@@ -146,59 +148,63 @@ $('select[name="recipient"]').on('change', function() {
 $('select[name=\'recipient\']').trigger('change');
 //--></script> 
 <script type="text/javascript"><!--
-$('input[name=\'customer\']').autocomplete({
-	delay: 0,
-	source: function(request, response) {
-		$.ajax({
-			url: '<?php echo site_url("admin/customers/autocomplete"); ?>?customer_name=' +  encodeURIComponent(request.term),
-			dataType: 'json',
-			success: function(json) {		
-				response($.map(json, function(item) {
-					return {
-						label: item.customer_name,
-						value: item.customer_id
-					}
-				}));
-			}
+$('input[name=\'customer\']').select2({
+	minimumInputLength: 2,
+	ajax: {
+		url: '<?php echo site_url(ADMIN_URI ."/customers/autocomplete"); ?>',
+		dataType: 'json',
+		quietMillis: 100,
+		data: function (term, page) {
+			return {
+				term: term, //search term
+				page_limit: 10 // page size
+			};
+		},
+		results: function (data, page, query) {
+			return { results: data.results };
+		}
+	},
+	initSelection: function(element, callback) {
+		return $.getJSON('<?php echo site_url(ADMIN_URI ."/customers/autocomplete?customer_id="); ?>' + (element.val()), null, function(json) {
+        	var data = {id: json.results[0].id, text: json.results[0].text};
+			return callback(data);
 		});
-	},
-	select: function(event, ui) {
-		$('#customer' + ui.item.value).remove();
-		$('#customers-box table tbody').append('<tr id="customer' + ui.item.value + '"><td class="name">' + ui.item.label + '<td class="img">' + '<a><i class="icon icon-delete" onclick="$(this).parent().parent().remove();"></i></a>' + '<input type="hidden" name="customers[]" value="' + ui.item.value + '" /></tr>');
+	}
+});
 
-		return false;
-	},
-	focus: function(event, ui) {
-      	return false;
-   	}
+$('input[name=\'customer\']').on('select2-selecting', function(e) {
+	$('#customer' + e.choice.id).remove();
+	$('#customers-box table tbody').append('<tr id="customer' + e.choice.id + '"><td class="name">' + e.choice.text + '<td class="text-right">' + '<a class="btn btn-times" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a>' + '<input type="hidden" name="customers[]" value="' + e.choice.id + '" /></tr>');
 });
 //--></script>
 <script type="text/javascript"><!--
-$('input[name=\'staff\']').autocomplete({
-	delay: 0,
-	source: function(request, response) {
-		$.ajax({
-			url: '<?php echo site_url("admin/staffs/autocomplete"); ?>?staff_name=' +  encodeURIComponent(request.term),
-			dataType: 'json',
-			success: function(json) {		
-				response($.map(json, function(item) {
-					return {
-						label: item.staff_name,
-						value: item.staff_id
-					}
-				}));
-			}
+$('input[name=\'staff\']').select2({
+	minimumInputLength: 2,
+	ajax: {
+		url: '<?php echo site_url(ADMIN_URI ."/staffs/autocomplete"); ?>',
+		dataType: 'json',
+		quietMillis: 100,
+		data: function (term, page) {
+			return {
+				term: term, //search term
+				page_limit: 10 // page size
+			};
+		},
+		results: function (data, page, query) {
+			return { results: data.results };
+		}
+	},
+	initSelection: function(element, callback) {
+		return $.getJSON('<?php echo site_url(ADMIN_URI ."/staffs/autocomplete?staff_id="); ?>' + (element.val()), null, function(json) {
+        	var data = {id: json.results[0].id, text: json.results[0].text};
+			return callback(data);
 		});
-	},
-	select: function(event, ui) {
-		$('#staff' + ui.item.value).remove();
-		$('#staffs-box table tbody').append('<tr id="staff' + ui.item.value + '"><td class="name">' + ui.item.label + '<td class="img">' + '<a><i class="icon icon-delete" onclick="$(this).parent().parent().remove();"></i></a>' + '<input type="hidden" name="staffs[]" value="' + ui.item.value + '" /></tr>');
+	}
+});
 
-		return false;
-	},
-	focus: function(event, ui) {
-      	return false;
-   	}
+$('input[name=\'staff\']').on('select2-selecting', function(e) {
+	$('#staff' + e.choice.id).remove();
+	$('#staffs-box table tbody').append('<tr id="staff' + e.choice.id + '"><td class="name">' + e.choice.text + '<td class="text-right">' + '<a class="btn btn-times" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a>' + '<input type="hidden" name="staffs[]" value="' + e.choice.id + '" /></tr>');
 });
 //--></script>
 <?php echo $footer; ?>

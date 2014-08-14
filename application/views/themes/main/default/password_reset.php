@@ -9,7 +9,7 @@
 <?php } ?>
 </div>
 <div class="row content">
-	<div class="col-xs-4 wrap-all">
+	<div class="col-xs-4 page-content wrap-all">
 		<form method="post" accept-charset="utf-8" action="<?php echo current_url(); ?>" role="form">
 			<div class="form-group">
 				<label for="email">Email:</label>

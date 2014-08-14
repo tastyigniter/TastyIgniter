@@ -32,15 +32,23 @@
 					<div class="form-group">
 						<label for="input-type" class="col-sm-2 control-label">Type:</label>
 						<div class="col-sm-5">
-							<select name="type" id="input-type" class="form-control">
-								<?php foreach ($types as $key => $value) { ?>
-								<?php if ($key === $type) { ?>
-									<option value="<?php echo $key; ?>" selected="selected"><?php echo $value; ?></option>
+							<div class="btn-group btn-group-toggle btn-group-3" data-toggle="buttons">
+								<?php if ($type == 'image') { ?>
+									<label class="btn btn-default active" data-btn="btn-info"><input type="radio" name="type" value="image" <?php echo set_radio('type', 'image', TRUE); ?>>Image</label>
 								<?php } else { ?>  
-									<option value="<?php echo $key; ?>"><?php echo $value; ?></option>
+									<label class="btn btn-default" data-btn="btn-info"><input type="radio" name="type" value="image" <?php echo set_radio('type', 'image'); ?>>Image</label>
 								<?php } ?>  
-								<?php } ?>
-							</select>
+								<?php if ($type == 'carousel') { ?>
+									<label class="btn btn-default active" data-btn="btn-primary"><input type="radio" name="type" value="carousel" <?php echo set_radio('type', 'carousel', TRUE); ?>>Carousel</label>
+								<?php } else { ?>  
+									<label class="btn btn-default" data-btn="btn-primary"><input type="radio" name="type" value="carousel" <?php echo set_radio('type', 'carousel'); ?>>Carousel</label>
+								<?php } ?>  
+								<?php if ($type == 'custom') { ?>
+									<label class="btn btn-default active" data-btn="btn-warning"><input type="radio" name="type" value="custom" <?php echo set_radio('type', 'custom', TRUE); ?>>Custom</label>
+								<?php } else { ?>  
+									<label class="btn btn-default" data-btn="btn-warning"><input type="radio" name="type" value="custom" <?php echo set_radio('type', 'custom'); ?>>Custom</label>
+								<?php } ?>  
+							</div>
 							<?php echo form_error('type', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
@@ -104,15 +112,13 @@
 							<label for="" class="col-sm-2 control-label">Dimension:
 								<span class="help-block">(Height x Width)</span>
 							</label>
-							<div class="form-mini col-sm-5">
-								<div class="col-sm-2">
+							<div class="col-sm-5">
+								<div class="control-group control-group-2">
 									<input type="text" name="image_height" class="form-control" value="<?php echo $image_height; ?>" />
-									<?php echo form_error('image_height', '<span class="text-danger">', '</span>'); ?>
-								</div>
-								<div class="col-sm-2">
 									<input type="text" name="image_width" class="form-control" value="<?php echo $image_width; ?>" />
-									<?php echo form_error('image_width', '<span class="text-danger">', '</span>'); ?>
 								</div>
+								<?php echo form_error('image_height', '<span class="text-danger">', '</span>'); ?>
+								<?php echo form_error('image_width', '<span class="text-danger">', '</span>'); ?>
 							</div>
 						</div>
 						<div class="form-group">
@@ -158,14 +164,15 @@
 					<div class="form-group">
 						<label for="input-status" class="col-sm-2 control-label">Status:</label>
 						<div class="col-sm-5">
-							<select name="status" id="input-status" class="form-control">
-								<option value="0" <?php echo set_select('status', '0'); ?> >Disabled</option>
-								<?php if ($status === '1') { ?>
-									<option value="1" <?php echo set_select('status', '1', TRUE); ?> >Enabled</option>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($status == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1', TRUE); ?>>Enabled</label>
 								<?php } else { ?>  
-									<option value="1" <?php echo set_select('status', '1'); ?> >Enabled</option>
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1'); ?>>Enabled</label>
 								<?php } ?>  
-							</select>
+							</div>
 							<?php echo form_error('status', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
@@ -175,7 +182,7 @@
 	</div>
 </div>
 <script type="text/javascript"><!--	
-$('select[name="type"]').on('change', function() {
+$('input[name="type"]').on('change', function() {
 	$('.type').hide();
 	$('#' + $(this).val() + '-type').show();
 	
@@ -184,7 +191,7 @@ $('select[name="type"]').on('change', function() {
 	}
 });
 
-$('select[name=\'type\']').trigger('change');
+$('input[name=\'type\']').trigger('change');
 //--></script>
 <link type="text/css" rel="stylesheet" href="<?php echo base_url("assets/js/fancybox/jquery.fancybox.css"); ?>">
 <script src="<?php echo base_url("assets/js/fancybox/jquery.fancybox.js"); ?>"></script>
@@ -202,7 +209,7 @@ function imageUpload(field) {
 		afterClose: function() {
 			if ($('#' + field).attr('value')) {
 				$.ajax({
-					url: js_site_url('admin/image_manager/resize?image=') + encodeURIComponent($('#' + field).attr('value')),
+					url: js_site_url('admin/image_manager/resize?image=') + encodeURIComponent($('#' + field).attr('value')) + '&width=120&height=120',
 					dataType: 'json',
 					success: function(json) {
 						var thumb = $('#' + field).parent().parent().find('.thumb');

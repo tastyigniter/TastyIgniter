@@ -10,7 +10,7 @@
 <?php } ?>
 </div>
 <div class="row content">
-	<div class="wrap-all">
+	<div class="wrap-all page-content">
 		<p class="text-info well"><?php echo $text_login_register; ?></p>
 		<div class="register-box wrap-vertical">
 			<form method="post" accept-charset="utf-8" action="<?php echo current_url(); ?>" role="form" class="">

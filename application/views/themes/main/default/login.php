@@ -9,7 +9,7 @@
 	</div>
 <?php } ?>
 </div>
-<div class="row content">
+<div class="row content page-content">
 	<div class="col-md-8 wrap-all pull-left">
 		<div class="panel panel-default">
 			<div class="panel-heading"><h3 class="panel-title"><?php echo $text_register; ?></h3></div>
@@ -49,7 +49,7 @@
 <script type="text/javascript"><!--
 $(document).ready(function() {
 	$('#register').load('<?php echo site_url("main/register"); ?> .register-box > *', function() {
-		$('select.form-control').selectpicker({iconBase:'fa', tickIcon:'fa-check'});
+		$('select.form-control').selectpicker('refresh');
 	});
 });
 //--></script>

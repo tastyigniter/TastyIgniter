@@ -28,7 +28,7 @@
 								<select name="filter_category" class="form-control input-sm">
 									<option value="">View all categories</option>
 									<?php foreach ($categories as $category) { ?>
-									<?php if ($category['category_id'] === $category_id) { ?>				
+									<?php if ($category['category_id'] == $category_id) { ?>				
 										<option value="<?php echo $category['category_id']; ?>" <?php echo set_select('filter_category', $category['category_id'], TRUE); ?> ><?php echo $category['category_name']; ?></option>
 									<?php } else { ?>
 										<option value="<?php echo $category['category_id']; ?>" <?php echo set_select('filter_category', $category['category_id']); ?> ><?php echo $category['category_name']; ?></option>
@@ -64,13 +64,13 @@
 				<thead>
 					<tr>
 						<th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
-						<!--<th>Photo</th>-->
+						<th>Photo</th>
 						<th class="name"><a class="sort" href="<?php echo $sort_name; ?>">Name<i class="fa fa-sort-<?php echo ($sort_by == 'menu_name') ? $order_by_active : $order_by; ?>"></i></a></th>
 						<th><a class="sort" href="<?php echo $sort_price; ?>">Price<i class="fa fa-sort-<?php echo ($sort_by == 'menu_price') ? $order_by_active : $order_by; ?>"></i></a></th>
 						<th>Category</th>
 						<th><a class="sort" href="<?php echo $sort_stock; ?>">Stock Qty<i class="fa fa-sort-<?php echo ($sort_by == 'stock_qty') ? $order_by_active : $order_by; ?>"></i></a></th>
 						<th class="text-center">Status</th>
-						<th class="id"><a class="sort" href="<?php echo $sort_id; ?>">ID<i class="fa fa-sort-<?php echo ($sort_by == 'menu_id') ? $order_by_active : $order_by; ?>"></i></a></th>
+						<th class="id"><a class="sort" href="<?php echo $sort_id; ?>">ID<i class="fa fa-sort-<?php echo ($sort_by == 'menus.menu_id') ? $order_by_active : $order_by; ?>"></i></a></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -79,7 +79,7 @@
 					<tr id="<?php echo $menu['menu_id']; ?>">
 						<td class="action"><input type="checkbox" value="<?php echo $menu['menu_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
 							<a class="btn btn-edit" title="Edit" href="<?php echo $menu['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
-						<!--<td class="left"><img src="<?php echo $menu['menu_photo']; ?>"></td>-->
+						<td class="left"><img src="<?php echo $menu['menu_photo']; ?>"></td>
 						<td class="name"><?php echo $menu['menu_name']; ?></td>
 						<td class="left"><?php echo $menu['menu_price']; ?>&nbsp;&nbsp;
 							<?php if ($menu['special'] === 'enabled') { ?>

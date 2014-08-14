@@ -246,7 +246,10 @@ class Image_manager extends CI_Controller {
 		$this->load->model('Image_tool_model');
 		
 		if ($this->input->get('image')) {
-			$image_url = $this->Image_tool_model->resize(html_entity_decode($this->input->get('image'), ENT_QUOTES, 'UTF-8'), 120, 120);
+			$width = ($this->input->get('width')) ? (int) $this->input->get('width'): '';
+			$height = ($this->input->get('height')) ? (int) $this->input->get('height'): '';
+
+			$image_url = $this->Image_tool_model->resize(html_entity_decode($this->input->get('image'), ENT_QUOTES, 'UTF-8'), $width, $height);
 			$this->output->set_output(json_encode($image_url));
 		}
 	}
@@ -595,7 +598,7 @@ class Image_manager extends CI_Controller {
 
 		$upload_path = IMAGEPATH . $root_folder . $sub_folder;
 		if (!is_writable($upload_path)) {
-			$json['error'] = '<span class="error">Pemission denied</span>';
+			$json['error'] = '<span class="error">Pemission denied: File is not writable.</span>';
 		}
 		
 		if (!file_exists($upload_path)) {

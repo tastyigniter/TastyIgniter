@@ -8,6 +8,10 @@ class Permission extends CI_Controller {
 	}
 
 	public function index() {
+		if (!$this->user->islogged()) {  
+  			redirect(ADMIN_URI.'/login');
+		}
+
 		if ($this->session->flashdata('alert')) {
 			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
 		} else {

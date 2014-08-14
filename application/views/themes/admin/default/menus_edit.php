@@ -103,28 +103,30 @@
 					<div class="form-group">
 						<label for="input-subtract-stock" class="col-sm-2 control-label">Subtract Stock:</label>
 						<div class="col-sm-5">
-							<select name="subtract_stock" id="input-subtract-stock" class="form-control">
-								<option value="0" <?php echo set_select('subtract_stock', '0'); ?> >No</option>
-							<?php if ($subtract_stock === '1') { ?>
-								<option value="1" <?php echo set_select('subtract_stock', '1', TRUE); ?> >Yes</option>
-							<?php } else { ?>  
-								<option value="1" <?php echo set_select('subtract_stock', '1'); ?> >Yes</option>
-							<?php } ?>  
-							</select>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($subtract_stock == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="subtract_stock" value="0" <?php echo set_radio('subtract_stock', '0'); ?>>NO</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="subtract_stock" value="1" <?php echo set_radio('subtract_stock', '1', TRUE); ?>>YES</label>
+								<?php } else { ?>  
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="subtract_stock" value="0" <?php echo set_radio('subtract_stock', '0', TRUE); ?>>NO</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="subtract_stock" value="1" <?php echo set_radio('subtract_stock', '1'); ?>>YES</label>
+								<?php } ?>  
+							</div>
 							<?php echo form_error('subtract_stock', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="input-status" class="col-sm-2 control-label">Status:</label>
 						<div class="col-sm-5">
-							<select name="menu_status" id="input-status" class="form-control">
-								<option value="0" <?php echo set_select('menu_status', '0'); ?> >Disabled</option>
-							<?php if ($menu_status === '1') { ?>
-								<option value="1" <?php echo set_select('menu_status', '1', TRUE); ?> >Enabled</option>
-							<?php } else { ?>  
-								<option value="1" <?php echo set_select('menu_status', '1'); ?> >Enabled</option>
-							<?php } ?>  
-							</select>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($menu_status == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="menu_status" value="0" <?php echo set_radio('menu_status', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="menu_status" value="1" <?php echo set_radio('menu_status', '1', TRUE); ?>>Enabled</label>
+								<?php } else { ?>  
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="menu_status" value="0" <?php echo set_radio('menu_status', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="menu_status" value="1" <?php echo set_radio('menu_status', '1'); ?>>Enabled</label>
+								<?php } ?>  
+							</div>
 							<?php echo form_error('menu_status', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
@@ -138,80 +140,178 @@
 							<?php echo form_error('menu_option', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
-					<div class="form-group">
-						<label class="col-sm-2 control-label"></label>
-						<div id="menu-option" class="col-sm-5">
-							<div class="table-responsive panel-selected">
-								<table class="table table-striped table-border">
-									<thead>
-										<tr>
-											<th>Option Name</th>
-											<th>Option Price</th>
-											<th>Remove</th>
-										</tr>
-									</thead>
-									<tbody>
-									<?php foreach ($menu_options as $menu_option) { ?>
-										<?php if (in_array($menu_option['option_id'], $has_options)) { ?>
-										<tr id="menu-option<?php echo $menu_option['option_id']; ?>">
-											<td class="name"><?php echo $menu_option['option_name']; ?></td>
-											<td><?php echo $menu_option['option_price']; ?></td>
-											<td class="img">
-												<a class="btn-times" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a>
-												<input type="hidden" name="menu_options[]" value="<?php echo $menu_option['option_id']; ?>" />
-											</td>
-										</tr>
+					<br />
+					
+					<div id="menu-option" class="">
+						<ul id="sub-tabs" class="nav nav-tabs">
+							<?php $option_row = 1; ?>
+							<?php foreach ($menu_options as $menu_option) { ?>
+								<li><a href="#option<?php echo $option_row; ?>" data-toggle="tab"><?php echo $menu_option['option_name']; ?>&nbsp;&nbsp;<i class="fa fa-times-circle" onclick="$('#sub-tabs a[rel=#option1]').trigger('click'); $('#option<?php echo $option_row; ?>').remove(); $(this).parent().parent().remove(); return false;"></i></a></li>
+								<?php $option_row++; ?>
+							<?php } ?>
+							<li id="last-tab"></li>
+						</ul>
+
+						<div id="option-content" class="tab-content">
+						<?php $option_row = 1; ?>
+						<?php $option_value_row = 1; ?>
+						<?php if ($menu_options) { ?>
+							<?php foreach ($menu_options as $menu_option) { ?>
+								<div id="option<?php echo $option_row; ?>" class="tab-pane row wrap-all">
+									<input type="hidden" name="menu_options[<?php echo $option_row; ?>][menu_option_id]" value="<?php echo $menu_option['menu_option_id']; ?>" />
+									<input type="hidden" name="menu_options[<?php echo $option_row; ?>][option_id]" value="<?php echo $menu_option['option_id']; ?>" />
+									<input type="hidden" name="menu_options[<?php echo $option_row; ?>][option_name]" value="<?php echo $menu_option['option_name']; ?>" />
+									<input type="hidden" name="menu_options[<?php echo $option_row; ?>][display_type]" value="<?php echo $menu_option['display_type']; ?>" />
+									<input type="hidden" name="menu_options[<?php echo $option_row; ?>][priority]" value="<?php echo $menu_option['priority']; ?>" />
+									
+									<div class="form-group">
+										<label for="input-required" class="col-sm-2 control-label">Required:
+											<span class="help-block">Enable/Disable if customer must choose option.</span>
+										</label>
+										<div class="col-sm-5">
+											<div class="btn-group btn-group-toggle" data-toggle="buttons">
+												<?php if ($menu_option['required'] === '1') { ?>
+													<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="menu_options[<?php echo $option_row; ?>][required]" value="0" <?php echo set_radio('menu_options['.$option_row.'][required]', '0'); ?>>Disabled</label>
+													<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="menu_options[<?php echo $option_row; ?>][required]" value="1" <?php echo set_radio('menu_options['.$option_row.'][required]', '1', TRUE); ?>>Enabled</label>
+												<?php } else { ?>  
+													<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="menu_options[<?php echo $option_row; ?>][required]" value="0" <?php echo set_radio('menu_options['.$option_row.'][required]', '0', TRUE); ?>>Disabled</label>
+													<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="menu_options[<?php echo $option_row; ?>][required]" value="1" <?php echo set_radio('menu_options['.$option_row.'][required]', '1'); ?>>Enabled</label>
+												<?php } ?>  
+											</div>
+											<?php echo form_error('menu_options['.$option_row.'][required]', '<span class="text-danger">', '</span>'); ?>
+										</div>
+									</div>
+
+									<div class="table-responsive">
+										<table class="table table-striped table-border table-sortable">
+											<thead>
+												<tr>
+													<th class="action action-one"></th>
+													<th class="col-sm-4">Value</th>
+													<th>Price</th>
+													<th>Quantity</th>
+													<th class="col-sm-3">Subtract Stock</th>
+													<th class="id">ID</th>
+												</tr>
+											</thead>
+											<tbody>
+											<?php foreach ($menu_option['option_values'] as $value) { ?>
+												<tr id="option-value<?php echo $option_value_row; ?>">
+													<td class="action action-one"><a class="btn btn-times" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a></td>
+													<td>
+														<select name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][option_value_id]" class="form-control">
+														<?php if (isset($option_values[$menu_option['option_id']])) { ?>
+															<?php foreach($option_values[$menu_option['option_id']] as $option_value) { ?>
+																<?php if ($value['option_value_id'] == $option_value['option_value_id']) { ?>
+																	<option value="<?php echo $option_value['option_value_id']; ?>" selected="selected"><?php echo $option_value['value']; ?></option>
+																<?php } else { ?>
+																	<option value="<?php echo $option_value['option_value_id']; ?>"><?php echo $option_value['value']; ?></option>
+																<?php } ?>
+															<?php } ?>
+														<?php } ?>
+														</select>
+														<?php echo form_error('menu_options['.$option_row.'][option_values]['.$option_value_row.'][option_value_id]', '<span class="text-danger">', '</span>'); ?>
+													</td>
+													<td>
+														<input type="text" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][price]" class="form-control" value="<?php echo set_value('menu_options[$option_row][option_values][$option_value_row][price]', $value['price']); ?>" />
+														<?php echo form_error('menu_options['.$option_row.'][option_values]['.$option_value_row.'][price]', '<span class="text-danger">', '</span>'); ?>
+													</td>
+													<td>
+														<input type="text" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][quantity]" class="form-control" value="<?php echo set_value('menu_options[$option_row][option_values][$option_value_row][quantity]', $value['quantity']); ?>" />
+														<?php echo form_error('menu_options['.$option_row.'][option_values]['.$option_value_row.'][quantity]', '<span class="text-danger">', '</span>'); ?>
+													</td>
+													<td>
+														<div class="btn-group btn-group-toggle" data-toggle="buttons">
+															<?php if ($value['substract_stock'] === '1') { ?>
+																<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][substract_stock]" value="0">Disabled</label>
+																<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][substract_stock]" value="1" checked="checked">Enabled</label>
+															<?php } else { ?>  
+																<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][substract_stock]" value="0" checked="checked">Disabled</label>
+																<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][substract_stock]" value="1">Enabled</label>
+															<?php } ?>  
+														</div>
+														<?php echo form_error('menu_options['.$option_row.'][option_values]['.$option_value_row.'][substract_stock]', '<span class="text-danger">', '</span>'); ?>
+													</td>
+													<td class="id">
+														<input type="hidden" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][menu_option_value_id]" value="<?php echo $value['menu_option_value_id']; ?>" />
+														<?php echo $value['menu_option_value_id']; ?>
+													</td>
+												</tr>
+												<?php $option_value_row++; ?>
+											<?php } ?>
+											</tbody>
+											<tfoot>
+												<tr id="tfoot">
+													<td class="action action-one"><i class="fa fa-plus" onclick="addOptionValue(<?php echo $option_row; ?>);"></i></td>
+													<td colspan="5"></td>
+												</tr>		 
+											</tfoot>
+										</table>
+									</div>
+									<select id="option-values<?php echo $option_row; ?>" style="display:none;">
+									<?php if (isset($option_values[$menu_option['option_id']])) { ?>
+										<?php foreach($option_values[$menu_option['option_id']] as $option_value) { ?>
+											<option value="<?php echo $option_value['option_value_id']; ?>"><?php echo $option_value['value']; ?></option>
 										<?php } ?>
 									<?php } ?>
-									</tbody>
-								</table>
-							</div>
+									</select>
+								
+								</div>
+								<?php $option_row++; ?>
+							<?php } ?>
+						<?php } ?>
 						</div>
 					</div>
 				</div>
 
 				<div id="specials" class="tab-pane row wrap-all">
 					<div class="form-group">
-						<label for="start-date" class="col-sm-2 control-label">Start Date</label>
+						<label for="input-special-status" class="col-sm-2 control-label">Special</label>
 						<div class="col-sm-5">
-							<div class="input-group">
-								<input type="text" name="start_date" id="start-date" class="form-control" value="<?php echo set_value('start_date', $start_date); ?>" />
-								<span id="discount-addon" class="input-group-addon"><i class="fa fa-calendar"></i></span>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($special_status == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="special_status" value="0" <?php echo set_radio('special_status', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="special_status" value="1" <?php echo set_radio('special_status', '1', TRUE); ?>>Enabled</label>
+								<?php } else { ?>  
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="special_status" value="0" <?php echo set_radio('special_status', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="special_status" value="1" <?php echo set_radio('special_status', '1'); ?>>Enabled</label>
+								<?php } ?>  
 							</div>
-							<?php echo form_error('start_date', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="end-date" class="col-sm-2 control-label">End Date</label>
-						<div class="col-sm-5">
-							<div class="input-group">
-								<input type="text" name="end_date" id="end-date" class="form-control" value="<?php echo set_value('end_date', $end_date); ?>" />
-								<span id="discount-addon" class="input-group-addon"><i class="fa fa-calendar"></i></span>
-							</div>
-							<?php echo form_error('end_date', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-special-price" class="col-sm-2 control-label">Special Price</label>
-						<div class="col-sm-5">
-							<input type="text" name="special_price" id="input-special-price" class="form-control" value="<?php echo set_value('special_price', $special_price); ?>" />
-							<?php echo form_error('special_price', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-special-status" class="col-sm-2 control-label">Special Status</label>
-						<div class="col-sm-5">
-							<select name="special_status" id="input-special-status" class="form-control">
-							<?php if ($special_status) { ?>
-								<option value="0" <?php echo set_select('special_status', '0'); ?> >Disabled</option>
-								<option value="1" selected="selected" <?php echo set_select('special_status', '1'); ?> >Enabled</option>
-							<?php } else { ?>
-								<option value="0" <?php echo set_select('special_status', '0'); ?> >Disabled</option>
-								<option value="1" <?php echo set_select('special_status', '1'); ?> >Enabled</option>
-							<?php } ?>
-							</select>
 							<input type="hidden" name="special_id" value="<?php echo set_value('special_id', $special_id); ?>" />
 							<?php echo form_error('special_status', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div id="special-toggle">
+						<div class="form-group">
+							<label for="start-date" class="col-sm-2 control-label">Start Date</label>
+							<div class="col-sm-5">
+								<div class="input-group">
+									<input type="text" name="start_date" id="start-date" class="form-control" value="<?php echo set_value('start_date', $start_date); ?>" />
+									<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+								</div>
+								<?php echo form_error('start_date', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="end-date" class="col-sm-2 control-label">End Date</label>
+							<div class="col-sm-5">
+								<div class="input-group">
+									<input type="text" name="end_date" id="end-date" class="form-control" value="<?php echo set_value('end_date', $end_date); ?>" />
+									<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+								</div>
+								<?php echo form_error('end_date', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="input-special-price" class="col-sm-2 control-label">Special Price</label>
+							<div class="col-sm-5">
+								<div class="input-group">
+									<input type="text" name="special_price" id="input-special-price" class="form-control" value="<?php echo set_value('special_price', $special_price); ?>" />
+									<span class="input-group-addon">.00</span>
+									<span class="input-group-addon"><i class="fa fa-money"></i></span>
+								</div>
+								<?php echo form_error('special_price', '<span class="text-danger">', '</span>'); ?>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -219,42 +319,121 @@
 		</form>
 	</div>
 </div>
-<script type="text/javascript" src="<?php echo base_url("assets/js/jquery-ui-timepicker-addon.js"); ?>"></script> 
+<link type="text/css" rel="stylesheet" href="<?php echo base_url("assets/js/datepicker/datepicker.css"); ?>">
+<script type="text/javascript" src="<?php echo base_url("assets/js/datepicker/bootstrap-datepicker.js"); ?>"></script> 
 <script type="text/javascript"><!--
 $(document).ready(function() {
 	$('#start-date, #end-date').datepicker({
-		dateFormat: 'dd-mm-yy',
+		format: 'dd-mm-yyyy',
+	});
+
+	$('input[name="special_status"]').on('change', function() {
+		if (this.value == '1') {
+			$('#special-toggle').fadeIn();
+		} else {
+			$('#special-toggle').fadeOut();
+		}
 	});
 });
 //--></script>
 <script type="text/javascript"><!--
-$('input[name=\'menu_option\']').autocomplete({
-	delay: 0,
-	source: function(request, response) {
-		$.ajax({
-			url: '<?php echo site_url("admin/menu_options/autocomplete"); ?>?option_name=' +  encodeURIComponent(request.term),
-			dataType: 'json',
-			success: function(json) {		
-				response($.map(json, function(item) {
-					return {
-						label: item.option_name,
-						value: item.option_id,
-						price: item.option_price
-					}
-				}));
-			}
-		});
-	},
-	select: function(event, ui) {
-		$('#menu-option' + ui.item.value).remove();
-		$('#menu-option table tbody').append('<tr id="menu-option' + ui.item.value + '"><td class="name">' + ui.item.label + '</td><td>' + ui.item.price + '</td><td class="img">' + '<a class="btn-times" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a>' + '<input type="hidden" name="menu_options[]" value="' + ui.item.value + '" /></td></tr>');
-
-		return false;
-	},
-	focus: function(event, ui) {
-      	return false;
-   	}
+$('input[name=\'menu_option\']').select2({
+	placeholder: 'Start typing...',
+	minimumInputLength: 2,
+	ajax: {
+		url: '<?php echo site_url(ADMIN_URI ."/menu_options/autocomplete"); ?>',
+		dataType: 'json',
+		quietMillis: 100,
+		data: function (term, page) {
+			return {
+				term: term, //search term
+				page_limit: 10 // page size
+			};
+		},
+		results: function (data, page, query) {
+			return { results: data.results };
+		}
+	}
 });
+
+$('input[name=\'menu_option\']').on('select2-selecting', function(e) {
+	addOption(e.choice);
+});
+$('#sub-tabs a:first').tab('show');
+//--></script>
+<script type="text/javascript"><!--
+var option_row = <?php echo (int)$option_row; ?>;
+var option_value_row = <?php echo $option_value_row; ?>;
+
+function addOption(data) {
+	html  = '<div id="option' + option_row + '" class="tab-pane row wrap-all">';
+	html += '	<input type="hidden" name="menu_options[' + option_row + '][menu_option_id]" id="" value="" />';
+	html += '	<input type="hidden" name="menu_options[' + option_row + '][option_id]" id="" value="' + data.id + '" />';
+	html += '	<input type="hidden" name="menu_options[' + option_row + '][option_name]" id="" value="' + data.text + '" />';
+	html += '	<input type="hidden" name="menu_options[' + option_row + '][display_type]" id="" value="' + data.display + '" />';
+	html += '	<input type="hidden" name="menu_options[' + option_row + '][priority]" id="" value="' + data.priority + '" />';
+	html += '	<div class="form-group">';
+	html += '		<label for="input-required" class="col-sm-2 control-label">Required:';
+	html += '			<span class="help-block">Enable/Disable if customer must choose option.</span>';
+	html += '		</label>';
+	html += '		<div class="col-sm-5">';
+	html += '			<div class="btn-group btn-group-toggle" data-toggle="buttons">';
+	html += '				<label class="btn btn-default active btn-danger" data-btn="btn-danger"><input type="radio" name="menu_options[' + option_row + '][required]" checked="checked"value="0">Disabled</label>';
+	html += '				<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="menu_options[' + option_row + '][required]" value="1">Enabled</label>';
+	html += '			</div>';
+	html += '		</div>';
+	html += '	</div>';
+	html += '	<div class="table-responsive">';
+	html += '	<table class="table table-striped table-border table-sortable">';
+	html += '		<thead><tr>';
+	html += '			<th class="action action-one"></th>';
+	html += '			<th class="col-sm-4">Value</th>';
+	html += '			<th>Price</th>';
+	html += '			<th>Quantity</th>';
+	html += '			<th class="col-sm-4">Subtract Stock</th>';
+	html += '			<th>ID</th>';
+	html += '		</tr></thead>';
+	html += '		<tbody></tbody>';
+	html += '		<tfoot><tr id="tfoot">';
+	html += '			<td class="action action-one"><i class="fa fa-plus" onclick="addOptionValue(' + option_row + ');"></i></td>';
+	html += '			<td colspan="5"></td>';
+	html += '		</tr></tfoot>';
+	html += '	</table>';
+	html += '	</div>';
+	html += '  <select id="option-values' + option_row + '" style="display: none;">';
+		for (i = 0; i < data.option_values.length; i++) {
+			html += '  <option value="' + data.option_values[i]['option_value_id'] + '">' + data.option_values[i]['value'] + '</option>';
+		}
+	html += '  </select>';			
+	html += '</div>';			
+	
+	$('#option-content').append(html);
+	$('#last-tab').before('<li><a href="#option' + option_row + '" data-toggle="tab">' + data.text + '&nbsp;&nbsp;<i class="fa fa-times-circle" onclick="$(\'#sub-tabs a[rel=#option1]\').trigger(\'click\'); $(\'#option' + option_row + '\').remove(); $(this).parent().parent().remove(); return false;"></i></a></li>');
+	$('#sub-tabs a[href="#option' + option_row + '"]').tab('show');
+	
+	option_row++;
+}
+
+function addOptionValue(option_row) {	
+	html  = '<tr id="option-value' + option_value_row + '">';
+	html += '	<td class="action action-one"><a class="btn btn-times" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a></td>';
+	html += '	<td><select name="menu_options[' + option_row + '][option_values][' + option_value_row + '][option_value_id]" class="form-control">';
+	html += $('#option-values' + option_row).html();
+	html += '	</select></td>';
+	html += '	<td><input type="text" name="menu_options[' + option_row + '][option_values][' + option_value_row + '][price]" class="form-control" value="" /></td>';
+	html += '	<td><input type="text" name="menu_options[' + option_row + '][option_values][' + option_value_row + '][quantity]" class="form-control" value="" /></td>';
+	html += '	<td><div class="btn-group btn-group-toggle" data-toggle="buttons">';
+	html += '		<label class="btn btn-default active btn-danger" data-btn="btn-danger"><input type="radio" name="menu_options[' + option_row + '][option_values][' + option_value_row + '][subtract_stock]" checked="checked"value="0">Disabled</label>';
+	html += '		<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="menu_options[' + option_row + '][option_values][' + option_value_row + '][subtract_stock]" value="1">Enabled</label>';
+	html += '	</div></td>';
+	html += '	<td class="id"><input type="hidden" name="menu_options[' + option_row + '][option_values][' + option_value_row + '][menu_option_value_id]" class="form-control" value="" />-</td>';
+	html += '</tr>';
+	
+	$('#option' + option_row + ' .table-sortable tbody').append(html);
+	$('#option-value' + option_value_row + ' select.form-control').select2();
+	
+	option_value_row++;
+}
 //--></script>
 <link type="text/css" rel="stylesheet" href="<?php echo base_url("assets/js/fancybox/jquery.fancybox.css"); ?>">
 <script src="<?php echo base_url("assets/js/fancybox/jquery.fancybox.js"); ?>"></script>
@@ -272,7 +451,7 @@ function imageUpload(field) {
 		afterClose: function() {
 			if ($('#' + field).attr('value')) {
 				$.ajax({
-					url: js_site_url('admin/image_manager/resize?image=') + encodeURIComponent($('#' + field).attr('value')),
+					url: js_site_url('admin/image_manager/resize?image=') + encodeURIComponent($('#' + field).attr('value')) + '&width=120&height=120',
 					dataType: 'json',
 					success: function(json) {
 						var thumb = $('#' + field).parent().parent().find('.thumb');

@@ -93,20 +93,6 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-newsletter" class="col-sm-2 control-label">Newsletter:</label>
-						<div class="col-sm-5">
-							<select name="newsletter" id="input-newsletter" class="form-control">
-								<option value="0" <?php echo set_select('newsletter', '0'); ?> >Disabled</option>
-								<?php if ($newsletter === '1') { ?>
-									<option value="1" <?php echo set_select('newsletter', '1', TRUE); ?> >Enabled</option>
-								<?php } else { ?>  
-									<option value="1" <?php echo set_select('newsletter', '1'); ?> >Enabled</option>
-								<?php } ?>  
-							</select>
-							<?php echo form_error('newsletter', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
 						<label for="input-customer-group-id" class="col-sm-2 control-label">Customer Group:</label>
 						<div class="col-sm-5">
 							<select name="customer_group_id" id="input-customer-group-id" class="form-control">
@@ -122,16 +108,32 @@
 						</div>
 					</div>
 					<div class="form-group">
+						<label for="input-newsletter" class="col-sm-2 control-label">Newsletter:</label>
+						<div class="col-sm-5">
+							<div id="input-newsletter" class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($newsletter == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="newsletter" value="0" <?php echo set_radio('newsletter', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="newsletter" value="1" <?php echo set_radio('newsletter', '1', TRUE); ?>>Enabled</label>
+								<?php } else { ?>  
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="newsletter" value="0" <?php echo set_radio('newsletter', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="newsletter" value="1" <?php echo set_radio('newsletter', '1'); ?>>Enabled</label>
+								<?php } ?>  
+							</div>
+							<?php echo form_error('newsletter', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
 						<label for="input-status" class="col-sm-2 control-label">Status:</label>
 						<div class="col-sm-5">
-							<select name="status" id="input-status" class="form-control">
-								<option value="0" <?php echo set_select('status', '0'); ?> >Disabled</option>
-								<?php if ($status === '1') { ?>
-									<option value="1" <?php echo set_select('status', '1', TRUE); ?> >Enabled</option>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($status == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1', TRUE); ?>>Enabled</label>
 								<?php } else { ?>  
-									<option value="1" <?php echo set_select('status', '1'); ?> >Enabled</option>
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1'); ?>>Enabled</label>
 								<?php } ?>  
-							</select>
+							</div>
 							<?php echo form_error('status', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
@@ -184,7 +186,7 @@
 							<div class="form-group">
 								<label for="input-name" class="col-sm-2 control-label">Country:</label>
 								<div class="col-sm-5">
-									<select name="address[<?php echo $table_row; ?>][country_id]" id="" class="form-control">
+									<select name="address[<?php echo $table_row; ?>][country]" id="" class="form-control">
 									<?php foreach ($countries as $country) { ?>
 										<?php if ($country['country_id'] === $address['country_id']) { ?>
 											<option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
@@ -319,7 +321,7 @@ function addAddress() {
 	html += '<div class="form-group">';
 	html += '	<label for="input-name" class="col-sm-2 control-label">Country:</label>';
 	html += '	<div class="col-sm-5">';
-	html += '		<select name="address[' + table_row + '][country_id]" id="" class="form-control">';
+	html += '		<select name="address[' + table_row + '][country]" id="" class="form-control">';
 				<?php foreach ($countries as $country) { ?>
 				<?php if ($country['country_id'] === $country_id) { ?>
 	html += '			<option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo addslashes($country['name']); ?></option>';
@@ -337,7 +339,7 @@ function addAddress() {
 	$('.add_address').before('<li><a href="#address' + table_row + '" data-toggle="tab">Address ' + table_row + '&nbsp;&nbsp;<i class="fa fa-times-circle" onclick="$(\'#sub-tabs a[rel=#address1]\').trigger(\'click\'); $(\'#address' + table_row + '\').remove(); $(this).parent().parent().remove(); return false;"></i></a></li>');
 	
 	$('#sub-tabs a[href="#address' + table_row + '"]').tab('show');
-	$('select.form-control').selectpicker();
+	$('select.form-control').selectpicker('refresh');
 
 	table_row++;
 }

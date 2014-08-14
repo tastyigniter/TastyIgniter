@@ -20,12 +20,12 @@ class Country {
 			);
 
 			$replace = array(
-				'address_1' 	=> $address['address_1'],
-				'address_2' 	=> $address['address_2'],
-				'city'      	=> $address['city'],
-				'postcode'  	=> $address['postcode'],
-				'state'     	=> $address['state'],
-				'country' 		=> $address['country']  
+				'address_1' 	=> (isset($address['address_1'])) ? $address['address_1'] : '',
+				'address_2' 	=> (isset($address['address_2'])) ? $address['address_2'] : '',
+				'city'      	=> (isset($address['city'])) ? $address['city'] : '',
+				'postcode'  	=> (isset($address['postcode'])) ? $address['postcode'] : '',
+				'state'     	=> (isset($address['state'])) ? $address['state'] : '',
+				'country' 		=> (isset($address['country'])) ? $address['country'] : ''  
 			);
 
 			return str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format))));

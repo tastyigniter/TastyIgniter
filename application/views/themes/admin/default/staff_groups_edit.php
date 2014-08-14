@@ -52,16 +52,16 @@
 							<tr>
 								<th class="action action-one">Access</th>
 								<th class="action action-one">Modify</th>
-								<th></th>
-								<th></th>
-								<th></th>
+								<th>Pages</th>
+								<th>Description</th>
+								<th>Specific-location</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr>
 								<th class="action action-one"><input type="checkbox" onclick="$('input[name*=\'permission[access]\']').prop('checked', this.checked);"></th>
 								<th class="action action-one"><input type="checkbox" onclick="$('input[name*=\'permission[modify]\']').prop('checked', this.checked);"></th>
-								<th>Select/Unselect All</th>
+								<th></th>
 								<th></th>
 								<th></th>
 							</tr>

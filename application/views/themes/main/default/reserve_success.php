@@ -1,7 +1,7 @@
 <?php echo $header; ?>
 <div class="row page-heading"><h3><?php echo $text_heading; ?></h3></div>
 <div class="row content">
-	<div class="border-left wrap-all">
+	<div class="wrap-all page-content">
 		<div class="table-responsive">
 			<table class="table table-none confirmation">
 				<tr>

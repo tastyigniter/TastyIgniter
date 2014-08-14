@@ -68,8 +68,8 @@ class Menus extends CI_Controller {
 			$filter['order_by'] = $data['order_by'] = $this->input->get('order_by');
 			$data['order_by_active'] = $this->input->get('order_by') .' active';
 		} else {
-			$filter['order_by'] = $data['order_by'] = 'DESC';
-			$data['order_by_active'] = 'DESC';
+			$filter['order_by'] = $data['order_by'] = 'ASC';
+			$data['order_by_active'] = 'ASC active';
 		}
 		
 		$this->template->setTitle('Menus');
@@ -92,9 +92,9 @@ class Menus extends CI_Controller {
 		foreach ($results as $result) {
 			
 			if (!empty($result['menu_photo'])) {
-				$menu_photo_src = $this->Image_tool_model->resize($result['menu_photo'], 64, 64);
+				$menu_photo_src = $this->Image_tool_model->resize($result['menu_photo'], 40, 40);
 			} else {
-				$menu_photo_src = $this->Image_tool_model->resize('data/no_photo.png', 64, 64);
+				$menu_photo_src = $this->Image_tool_model->resize('data/no_photo.png', 40, 40);
 			}
 			
 			$special = '';
@@ -110,11 +110,11 @@ class Menus extends CI_Controller {
 				'menu_id'			=> $result['menu_id'],
 				'menu_name'			=> $result['menu_name'],
 				'menu_description'	=> $result['menu_description'],
-				'special'			=> $special,
 				'category_name'		=> $result['name'],
 				'menu_price'		=> $this->currency->format($result['menu_price']),
 				'menu_photo'		=> $menu_photo_src,
 				'stock_qty'			=> $result['stock_qty'],
+				'special'			=> $special,
 				'menu_status'		=> ($result['menu_status'] === '1') ? 'Enabled' : 'Disabled',
 				'edit' 				=> site_url(ADMIN_URI.'/menus/edit?id='. $result['menu_id'])
 			);
@@ -130,20 +130,6 @@ class Menus extends CI_Controller {
 			);
 		}
 		
-		$data['has_options'] = $this->Menus_model->hasMenuOptions();
-		$data['is_specials'] = $this->Menus_model->getIsSpecials();
-
-		//load food option data into array
-		$data['menu_options'] = array();
-		$menu_options = $this->Menus_model->getMenuOptions();
-		foreach ($menu_options as $food_option) {
-			$data['menu_options'][] = array(
-				'option_id' 	=> $food_option['option_id'],
-				'option_name' 	=> $food_option['option_name'],
-				'option_price' 	=> $food_option['option_price']
-			);
-		}
-
 		if ($this->input->get('sort_by') AND $this->input->get('order_by')) {
 			$url .= 'sort_by='.$filter['sort_by'].'&';
 			$url .= 'order_by='.$filter['order_by'].'&';
@@ -230,12 +216,10 @@ class Menus extends CI_Controller {
 		$data['special_id'] 		= $menu_info['special_id'];
 		$data['start_date'] 		= (isset($menu_info['start_date']) AND $menu_info['start_date'] !== '0000-00-00') ? mdate('%d-%m-%Y', strtotime($menu_info['start_date'])) : '';
 		$data['end_date'] 			= (isset($menu_info['end_date']) AND $menu_info['end_date'] !== '0000-00-00') ? mdate('%d-%m-%Y', strtotime($menu_info['end_date'])) : '';
-		$data['special_price'] 		= $menu_info['special_price'];
+		$data['special_price'] 		= (isset($menu_info['special_price']) AND $menu_info['special_price'] == '0.00') ? '' : $menu_info['special_price'];
 		$data['special_status'] 	= $menu_info['special_status'];
 		$data['menu_status'] 		= $menu_info['menu_status'];
 		$data['no_photo'] 			= $this->Image_tool_model->resize('data/no_photo.png');
-
-		$data['has_options'] 		= $this->Menus_model->hasMenuOptions($menu_id);
 
 		$data['categories'] = array();
 		$results = $this->Menus_model->getCategories();
@@ -246,14 +230,41 @@ class Menus extends CI_Controller {
 			);
 		}
 
+		if ($this->input->post('menu_options')) {
+			$menu_options = $this->input->post('menu_options');
+		} else {
+			$menu_options = $this->Menus_model->getAdminMenuOptions($menu_id);
+		}
+
 		$data['menu_options'] = array();
-		$results = $this->Menus_model->getMenuOptions();
-		foreach ($results as $result) {
+		foreach ($menu_options as $option) {					
+			$option_values = array();
+			foreach ($option['option_values'] as $value) {
+				$option_values[] = array(
+					'menu_option_value_id'	=> $value['menu_option_value_id'],
+					'option_value_id'		=> $value['option_value_id'],
+					'price'					=> (empty($value['new_price']) OR $value['new_price'] == '0.00') ? '' : $value['new_price'],
+					'quantity'				=> $value['quantity'],
+					'substract_stock'		=> $value['substract_stock']
+				);
+			}
+			
 			$data['menu_options'][] = array(
-				'option_id' 	=> $result['option_id'],
-				'option_name' 	=> $result['option_name'],
-				'option_price' 	=> $result['option_price']
+				'menu_option_id'	=> $option['menu_option_id'],
+				'option_id'			=> $option['option_id'],
+				'option_name'		=> $option['option_name'],
+				'display_type'		=> $option['display_type'],
+				'required'			=> $option['required'],
+				'priority'			=> $option['priority'],
+				'option_values'		=> $option_values
 			);
+		}
+		
+		$data['option_values'] = array();
+		foreach ($menu_options as $option) {					
+			if (!isset($data['option_values'][$option['option_id']])) {
+				$data['option_values'][$option['option_id']] = $this->Menus_model->getOptionValues($option['option_id']);
+			}
 		}
 		
 		if ($this->input->post() AND $this->_addMenu() === TRUE) {
@@ -283,20 +294,21 @@ class Menus extends CI_Controller {
 	public function autocomplete() {
 		$json = array();
 		
-		if ($this->input->get('menu')) {
+		if ($this->input->get('term')) {
 			$filter = array(
-				'menu_name' => $this->input->get('menu')
+				'menu_name' => $this->input->get('term')
 			);
 		
 			$results = $this->Menus_model->getAutoComplete($filter);
-
 			if ($results) {
 				foreach ($results as $result) {
-					$json[] = array(
-						'menu_id' 		=> $result['menu_id'],
-						'menu_name' 	=> $result['menu_name']
+					$json['results'][] = array(
+						'id' 		=> $result['menu_id'],
+						'text' 		=> utf8_encode($result['menu_name'])
 					);
 				}
+			} else {
+				$json['results'] = array('id' => '0', 'text' => 'No Matches Found');
 			}
 		}
 		
@@ -396,12 +408,22 @@ class Menus extends CI_Controller {
 		$this->form_validation->set_rules('minimum_qty', 'Minimum Quantity', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('subtract_stock', 'Subtract Stock', 'xss_clean|trim|requried|integer');
 		$this->form_validation->set_rules('menu_status', 'Status', 'xss_clean|trim|requried|integer');
-		$this->form_validation->set_rules('menu_options[]', 'Menu Options', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('special_status', 'Special Status', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('start_date', 'Start Date', 'xss_clean|trim|valid_date');
 		$this->form_validation->set_rules('end_date', 'End Date', 'xss_clean|trim|valid_date');
 		$this->form_validation->set_rules('special_price', 'Special Price', 'xss_clean|trim|numeric');
 		
+		if ($this->input->post('menu_options')) {
+			foreach ($this->input->post('menu_options') as $key => $value) {
+				$this->form_validation->set_rules('menu_options['.$key.'][option_id]', 'Option ID', 'xss_clean|trim|required|integer');
+
+				foreach ($value['option_values'] as $option => $option_value) {
+					$this->form_validation->set_rules('menu_options['.$key.'][option_values]['.$option.'][option_value_id]', 'Option Value', 'xss_clean|trim|required|integer');
+					//$this->form_validation->set_rules('menu_options['.$key.'][option_values]['.$option.'][price]', 'Option Price', 'xss_clean|trim|numeric');
+				}
+			}
+		}
+					
 		if ($this->input->post('special_status') === '1') {
 			$this->form_validation->set_rules('start_date', 'Start Date', 'required');
 			$this->form_validation->set_rules('end_date', 'End Date', 'required');

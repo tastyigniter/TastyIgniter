@@ -7,15 +7,18 @@
 	$this->template->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=edge', 'type' => 'equiv'));
 	$this->template->setMeta(array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1', 'type' => 'name'));
 	$this->template->setLinkTag('images/favicon.ico', 'shortcut icon', 'image/ico');
-	$this->template->setLinkTag('js/themes/custom-theme/jquery-ui-1.10.4.custom.css');
+	//$this->template->setLinkTag('js/themes/custom-theme/jquery-ui-1.10.4.custom.css');
 	$this->template->setLinkTag('css/bootstrap.css');
-	$this->template->setLinkTag('css/bootstrap-select.css');
+	$this->template->setLinkTag('css/select2.css');
+	$this->template->setLinkTag('css/select2-bootstrap.css');
 	$this->template->setLinkTag('css/font-awesome.css');
+	$this->template->setLinkTag('css/jquery.raty.css');
 	$this->template->setLinkTag('css/stylesheet.css');
 	$this->template->setScriptTag('js/jquery-1.10.2.js');
-	$this->template->setScriptTag('js/jquery-ui-1.10.4.custom.js');
+	//$this->template->setScriptTag('js/jquery-ui-1.10.4.custom.js');
 	$this->template->setScriptTag('js/bootstrap.js');
-	$this->template->setScriptTag('js/bootstrap-select.js');
+	$this->template->setScriptTag('js/select2.js');
+	$this->template->setScriptTag('js/jquery.raty.js');
 	$this->template->setScriptTag('js/common.js');
 	
 	$doctype			= $this->template->getDocType();
@@ -32,6 +35,7 @@
 	$username 			= $this->user->getUsername();
 	$staff_name 		= $this->user->getStaffName();
 	$staff_group 		= $this->user->staffGroup();
+	$staff_location		= $this->user->getLocationName();
 	$staff_edit 		= site_url(ADMIN_URI.'/staffs/edit?id='. $this->user->getStaffId());
 	$logout 			= site_url(ADMIN_URI.'/logout');
 
@@ -64,46 +68,32 @@
 			return strTmp;
 		}
 		
+		var active_menu = '<?php echo $active_menu; ?>';
 	</script>
 	<script type="text/javascript">
-		var active_menu = '<?php echo $active_menu; ?>';
-
 		$(document).ready(function() {
-			//Delete Confirmation Box
-			$('#list-form').submit(function(){
-				//if ($('input[name=\'delete\']').attr("checked") == "checked") {
-					if (!confirm('This cannot be undone! Are you sure you want to do this?')) {
-						return false;
-					}
-				//}
-			});
+			$('a, span').tooltip({placement: 'bottom'});
+			$('select.form-control').select2();
 
-			//Uninstall Confirmation Box
-			$('a').click(function(){
-				if ($(this).attr('href') != null && $(this).attr('href').indexOf('uninstall', 1) != -1) {
-					if (!confirm('This cannot be undone! Are you sure you want to do this?')) {
-						return false;
-					}
-				}
-			});
+			$('.alert').alert();
+			$('.dropdown-toggle').dropdown();
 
-			if (document.location.toString().toLowerCase().indexOf(active_menu, 1) != -1) {
-				if ($('.' + active_menu).parent().parent().hasClass('parent') || $('.' + active_menu).hasClass('parent')) {
-					$('.' + active_menu).addClass('active_parent active');
-					$('.' + active_menu).parent().parent().addClass('active_parent active');
-				}
-		
-				$('.' + active_menu).addClass('active');
-			}
+			$('.rating-star').raty({
+				score: function() {
+					return $(this).attr('data-score');
+				},
+				scoreName: function() {
+					return $(this).attr('data-score-name');
+				},
+				readOnly: function() {
+					return $(this).attr('data-readonly') == 'true';
+				},
+				hints: ['Bad', 'Worse', 'Good', 'Average', 'Excellent'],
+				starOff : 'fa fa-star-o',
+				starOn : 'fa fa-star',
+				cancel : false, half : false, starType : 'i' 
+			});
 		});	
-
-		function saveClose() {
-			$('#edit-form').append('<input type="hidden" name="save_close" value="1" />');
-			$('#edit-form').submit();
-		}
-
-		$('.alert').alert();
-		$('.dropdown-toggle').dropdown();
 	</script>
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -121,7 +111,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand"><span class="icon icon-logo"></span>Administrator Panel</a>
+				<a class="navbar-brand" href="<?php echo site_url(ADMIN_URI.'/dashboard'); ?>"><span class="icon icon-logo"></span>Administrator Panel</a>
 			</div>
 		
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -205,10 +195,11 @@
 						</a></li>
 					<?php } ?>
 					<li class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown"><?php echo $username; ?>&nbsp;&nbsp;<span class="fa fa-user"></span></a>
+						<a class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-user"></span>&nbsp;&nbsp;<?php echo $username; ?>&nbsp;&nbsp;<span class="fa fa-caret-down"></span></a>
 						<ul class="dropdown-menu">
 							<li><span><b>User:</b> <?php echo $staff_name; ?></span></li>
 							<li><span><b>Staff Group:</b> <?php echo $staff_group; ?></span></li>
+							<li><span><b>Location:</b> <?php echo $staff_location; ?></span></li>
 							<li class="divider"></li>
 							<li><a href="<?php echo $staff_edit; ?>"><i class="fa fa-user"></i>Edit Details</a></li>
 							<li><a href="<?php echo $logout; ?>"><i class="fa fa-power-off"></i>Logout</a></li>

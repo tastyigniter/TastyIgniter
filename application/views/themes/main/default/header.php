@@ -12,12 +12,13 @@
 	$this->template->setLinkTag('css/bootstrap.css');
 	$this->template->setLinkTag('css/bootstrap-select.css');
 	$this->template->setLinkTag('css/font-awesome.css');
+	$this->template->setLinkTag('css/jquery.raty.css');
 	$this->template->setLinkTag('css/stylesheet.css');
-	$this->template->setLinkTag('css/jquery.fancybox.css');
 	$this->template->setScriptTag('js/jquery-1.10.2.js');
 	$this->template->setScriptTag('js/jquery-ui-1.10.4.custom.js');
 	$this->template->setScriptTag('js/bootstrap.js');
 	$this->template->setScriptTag('js/bootstrap-select.js');
+	$this->template->setScriptTag('js/jquery.raty.js');
 	$this->template->setScriptTag('js/common.js');
 	
 	$doctype			= $this->template->getDocType();
@@ -72,6 +73,22 @@
 				
 				$('.alert').alert();
 				$('.dropdown-toggle').dropdown();
+				
+				$('.rating-star').raty({
+					score: function() {
+						return $(this).attr('data-score');
+					},
+					scoreName: function() {
+						return $(this).attr('data-score-name');
+					},
+					readOnly: function() {
+						return $(this).attr('data-readonly') == 'true';
+					},
+					hints: ['Bad', 'Worse', 'Good', 'Average', 'Excellent'],
+					starOff : 'fa fa-star-o',
+					starOn : 'fa fa-star',
+					cancel : false, half : false, starType : 'i' 
+				});
 			});
 		</script>
 		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -125,9 +142,12 @@
 							<li><a href="<?php echo site_url('main/login'); ?>">Login/Register</a></li>
 						<?php } ?>
 
-						<?php foreach ($pages as $page) { ?>
-							<?php if ($page['menu_location'] === '2' OR $page['menu_location'] === '1') { ?>
-								<li><a href="<?php echo site_url('main/pages?page_id='.$page['page_id']); ?>"><?php echo $page['name']; ?></a></li>
+						<?php //$this->template->navigationList('header'); ?>
+						<?php if ($pages) { ?>
+							<?php foreach ($pages as $page) { ?>
+								<?php if ($page['navigation'] === 'header') { ?>
+									<li><a href="<?php echo site_url('main/pages?page_id='.$page['page_id']); ?>"><?php echo $page['name']; ?></a></li>
+								<?php } ?>
 							<?php } ?>
 						<?php } ?>
 

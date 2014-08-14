@@ -71,7 +71,7 @@
 							<?php } ?>
 						</td>
 						<td><?php echo $language['code']; ?></td>
-						<td class="text-center"><img alt="<?php echo $language['code']; ?>" src="<?php echo $language['image']; ?>" width="24" height="12" /></td>
+						<td class="text-center"><img alt="<?php echo $language['code']; ?>" src="<?php echo $language['image']; ?>" height="12" /></td>
 						<td class="text-center"><?php echo $language['status']; ?></td>
 					</tr>
 					<?php } ?>

@@ -44,30 +44,26 @@
 						<label for="" class="col-sm-2 control-label"><span class="red">*</span> Thumbnail Size:
 							<span class="help-block">(Height x Width)</span>
 						</label>
-						<div class="form-mini col-sm-5">
-							<div class="col-sm-2">
+						<div class="col-sm-5">
+							<div class="control-group control-group-2">
 								<input type="text" name="thumb_height" class="form-control" value="<?php echo set_value('thumb_height', $thumb_height); ?>" class="mini" size="5" />
-								<?php echo form_error('thumb_height', '<span class="text-danger">', '</span>'); ?>
-							</div>
-							<div class="col-sm-2">
 								<input type="text" name="thumb_width" class="form-control" value="<?php echo set_value('thumb_width', $thumb_width); ?>" class="mini" size="5" />
-								<?php echo form_error('thumb_width', '<span class="text-danger">', '</span>'); ?>
 							</div>
+							<?php echo form_error('thumb_height', '<span class="text-danger">', '</span>'); ?>
+							<?php echo form_error('thumb_width', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="" class="col-sm-2 control-label"><span class="red">*</span> Mini Thumbnail Size:
 							<span class="help-block">(Height x Width)</span>
 						</label>
-						<div class="form-mini col-sm-5">
-							<div class="col-sm-2">
+						<div class="col-sm-5">
+							<div class="control-group control-group-2">
 								<input type="text" name="thumb_height_mini" class="form-control" value="<?php echo set_value('thumb_height_mini', $thumb_height_mini); ?>" class="mini" size="5" />
-								<?php echo form_error('thumb_height_mini', '<span class="text-danger">', '</span>'); ?>
-							</div>
-							<div class="col-sm-2">
 								<input type="text" name="thumb_width_mini" class="form-control" value="<?php echo set_value('thumb_width_mini', $thumb_width_mini); ?>" class="mini" size="5" />
-								<?php echo form_error('thumb_width_mini', '<span class="text-danger">', '</span>'); ?>
 							</div>
+							<?php echo form_error('thumb_height_mini', '<span class="text-danger">', '</span>'); ?>
+							<?php echo form_error('thumb_width_mini', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
@@ -75,15 +71,15 @@
 							<span class="help-block">Show mini thumbnail</span>
 						</label>
 						<div class="col-sm-5">
-							<select name="show_mini" id="input-show-mini" class="form-control">
-								<?php if ($show_mini === '1') { ?>
-									<option value="1" selected="selected">Enabled</option>
-									<option value="0">Disabled</option>
-								<?php } else { ?>
-									<option value="1">Enabled</option>
-									<option value="0" selected="selected">Disabled</option>
-								<?php } ?>
-							</select>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($show_mini == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="show_mini" value="0" <?php echo set_radio('show_mini', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="show_mini" value="1" <?php echo set_radio('show_mini', '1', TRUE); ?>>Enabled</label>
+								<?php } else { ?>  
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="show_mini" value="0" <?php echo set_radio('show_mini', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="show_mini" value="1" <?php echo set_radio('show_mini', '1'); ?>>Enabled</label>
+								<?php } ?>  
+							</div>
 							<?php echo form_error('show_mini', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
@@ -92,15 +88,15 @@
 							<span class="help-block">Show or hide file extension</span>
 						</label>
 						<div class="col-sm-5">
-							<select name="show_ext" id="input-show-ext" class="form-control">
-								<?php if ($show_ext === '1') { ?>
-									<option value="1" selected="selected">Show</option>
-									<option value="0">Hide</option>
-								<?php } else { ?>
-									<option value="1">Show</option>
-									<option value="0" selected="selected">Hide</option>
-								<?php } ?>
-							</select>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($show_ext == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="show_ext" value="0" <?php echo set_radio('show_ext', '0'); ?>>Hide</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="show_ext" value="1" <?php echo set_radio('show_ext', '1', TRUE); ?>>Show</label>
+								<?php } else { ?>  
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="show_ext" value="0" <?php echo set_radio('show_ext', '0', TRUE); ?>>Hide</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="show_ext" value="1" <?php echo set_radio('show_ext', '1'); ?>>Show</label>
+								<?php } ?>  
+							</div>
 							<?php echo form_error('show_ext', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
@@ -109,15 +105,15 @@
 							<span class="help-block">Enable or disable file uploading</span>
 						</label>
 						<div class="col-sm-5">
-							<select name="uploads" id="" class="form-control">
-								<?php if ($uploads === '1') { ?>
-									<option value="1" selected="selected">Enabled</option>
-									<option value="0">Disabled</option>
-								<?php } else { ?>
-									<option value="1">Enabled</option>
-									<option value="0" selected="selected">Disabled</option>
-								<?php } ?>
-							</select>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($uploads == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="uploads" value="0" <?php echo set_radio('uploads', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="uploads" value="1" <?php echo set_radio('uploads', '1', TRUE); ?>>Enabled</label>
+								<?php } else { ?>  
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="uploads" value="0" <?php echo set_radio('uploads', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="uploads" value="1" <?php echo set_radio('uploads', '1'); ?>>Enabled</label>
+								<?php } ?>  
+							</div>
 							<?php echo form_error('uploads', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
@@ -126,15 +122,15 @@
 							<span class="help-block">Enable or disable folder creation</span>
 						</label>
 						<div class="col-sm-5">
-							<select name="new_folder" id="input-new-folder" class="form-control">
-								<?php if ($new_folder === '1') { ?>
-									<option value="1" selected="selected">Enabled</option>
-									<option value="0">Disabled</option>
-								<?php } else { ?>
-									<option value="1">Enabled</option>
-									<option value="0" selected="selected">Disabled</option>
-								<?php } ?>
-							</select>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($new_folder == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="new_folder" value="0" <?php echo set_radio('new_folder', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="new_folder" value="1" <?php echo set_radio('new_folder', '1', TRUE); ?>>Enabled</label>
+								<?php } else { ?>  
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="new_folder" value="0" <?php echo set_radio('new_folder', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="new_folder" value="1" <?php echo set_radio('new_folder', '1'); ?>>Enabled</label>
+								<?php } ?>  
+							</div>
 							<?php echo form_error('new_folder', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
@@ -143,15 +139,15 @@
 							<span class="help-block">Enable or disable file/folder copy</span>
 						</label>
 						<div class="col-sm-5">
-							<select name="copy" id="input-copy" class="form-control">
-								<?php if ($copy === '1') { ?>
-									<option value="1" selected="selected">Enabled</option>
-									<option value="0">Disabled</option>
-								<?php } else { ?>
-									<option value="1">Enabled</option>
-									<option value="0" selected="selected">Disabled</option>
-								<?php } ?>
-							</select>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($copy == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="copy" value="0" <?php echo set_radio('copy', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="copy" value="1" <?php echo set_radio('copy', '1', TRUE); ?>>Enabled</label>
+								<?php } else { ?>  
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="copy" value="0" <?php echo set_radio('copy', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="copy" value="1" <?php echo set_radio('copy', '1'); ?>>Enabled</label>
+								<?php } ?>  
+							</div>
 							<?php echo form_error('copy', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
@@ -160,15 +156,15 @@
 							<span class="help-block">Enable or disable moving file/folder</span>
 						</label>
 						<div class="col-sm-5">
-							<select name="move" id="input-move" class="form-control">
-								<?php if ($move === '1') { ?>
-									<option value="1" selected="selected">Enabled</option>
-									<option value="0">Disabled</option>
-								<?php } else { ?>
-									<option value="1">Enabled</option>
-									<option value="0" selected="selected">Disabled</option>
-								<?php } ?>
-							</select>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($move == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="move" value="0" <?php echo set_radio('move', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="move" value="1" <?php echo set_radio('move', '1', TRUE); ?>>Enabled</label>
+								<?php } else { ?>  
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="move" value="0" <?php echo set_radio('move', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="move" value="1" <?php echo set_radio('move', '1'); ?>>Enabled</label>
+								<?php } ?>  
+							</div>
 							<?php echo form_error('move', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
@@ -177,15 +173,15 @@
 							<span class="help-block">Enable or disable file/folder rename</span>
 						</label>
 						<div class="col-sm-5">
-							<select name="rename" id="input-rename" class="form-control">
-								<?php if ($rename === '1') { ?>
-									<option value="1" selected="selected">Enabled</option>
-									<option value="0">Disabled</option>
-								<?php } else { ?>
-									<option value="1">Enabled</option>
-									<option value="0" selected="selected">Disabled</option>
-								<?php } ?>
-							</select>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($rename == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="rename" value="0" <?php echo set_radio('rename', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="rename" value="1" <?php echo set_radio('rename', '1', TRUE); ?>>Enabled</label>
+								<?php } else { ?>  
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="rename" value="0" <?php echo set_radio('rename', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="rename" value="1" <?php echo set_radio('rename', '1'); ?>>Enabled</label>
+								<?php } ?>  
+							</div>
 							<?php echo form_error('rename', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
@@ -194,15 +190,15 @@
 							<span class="help-block">Enable or disable deleting file/folder</span>
 						</label>
 						<div class="col-sm-5">
-							<select name="delete" id="input-delete" class="form-control">
-								<?php if ($delete === '1') { ?>
-									<option value="1" selected="selected">Enabled</option>
-									<option value="0">Disabled</option>
-								<?php } else { ?>
-									<option value="1">Enabled</option>
-									<option value="0" selected="selected">Disabled</option>
-								<?php } ?>
-							</select>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($delete == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="delete" value="0" <?php echo set_radio('delete', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="delete" value="1" <?php echo set_radio('delete', '1', TRUE); ?>>Enabled</label>
+								<?php } else { ?>  
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="delete" value="0" <?php echo set_radio('delete', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="delete" value="1" <?php echo set_radio('delete', '1'); ?>>Enabled</label>
+								<?php } ?>  
+							</div>
 							<?php echo form_error('delete', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
@@ -238,15 +234,15 @@
 							<span class="help-block">Enable or disable conversion of all unwanted characters</span>
 						</label>
 						<div class="col-sm-5">
-							<select name="transliteration" id="" class="form-control">
-								<?php if ($transliteration === '1') { ?>
-									<option value="1" selected="selected">Enabled</option>
-									<option value="0">Disabled</option>
-								<?php } else { ?>
-									<option value="1">Enabled</option>
-									<option value="0" selected="selected">Disabled</option>
-								<?php } ?>
-							</select>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($transliteration == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="transliteration" value="0" <?php echo set_radio('transliteration', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="transliteration" value="1" <?php echo set_radio('transliteration', '1', TRUE); ?>>Enabled</label>
+								<?php } else { ?>  
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="transliteration" value="0" <?php echo set_radio('transliteration', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="transliteration" value="1" <?php echo set_radio('transliteration', '1'); ?>>Enabled</label>
+								<?php } ?>  
+							</div>
 							<?php echo form_error('transliteration', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>

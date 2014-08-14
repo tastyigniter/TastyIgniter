@@ -8,6 +8,12 @@ class Cod extends MX_Controller {
 		$this->load->model('Statuses_model');	    
 	}
 
+	public function _remap() {
+		if (!$this->input->get('id') AND !$this->input->get('name') AND $this->input->get('action') !== 'edit') {
+			exit('No direct access allowed');
+		}
+	}
+	
 	public function index() {
 		if (!$this->user->islogged()) {  
   			redirect(ADMIN_URI.'/login');
@@ -24,11 +30,6 @@ class Cod extends MX_Controller {
 		}		
 				
 		$extension = $this->Extensions_model->getExtension('payment', 'cod');
-		
-		if (!$this->input->get('id') AND !$this->input->get('name') AND $this->input->get('action') !== 'edit') {
-			redirect(ADMIN_URI.'/extensions/edit?name=cod&action=edit&id='.$extension['extension_id']);
-		}
-
 		$data['name'] = ucwords(str_replace('_', ' ', $this->input->get('name')));
 
 		if (!empty($extension['data'])) {
@@ -37,12 +38,20 @@ class Cod extends MX_Controller {
 			$result = array();
 		}
 		
-		if (isset($this->input->post['total'])) {
-			$data['total'] = $this->input->post['total'];
-		} else if (isset($result['total'])) {
-			$data['total'] = $result['total'];
+		if (isset($this->input->post['name'])) {
+			$data['name'] = $this->input->post['name'];
+		} else if (isset($result['name'])) {
+			$data['name'] = $result['name'];
 		} else {
-			$data['total'] = '';
+			$data['name'] = '';
+		}				
+
+		if (isset($this->input->post['order_total'])) {
+			$data['order_total'] = $this->input->post['order_total'];
+		} else if (isset($result['order_total'])) {
+			$data['order_total'] = $result['order_total'];
+		} else {
+			$data['order_total'] = '';
 		}				
 
 		if (isset($this->input->post['order_status'])) {
@@ -51,6 +60,14 @@ class Cod extends MX_Controller {
 			$data['order_status'] = $result['order_status'];
 		} else {
 			$data['order_status'] = '';
+		}				
+
+		if (isset($this->input->post['priority'])) {
+			$data['priority'] = $this->input->post['priority'];
+		} else if (isset($result['priority'])) {
+			$data['priority'] = $result['priority'];
+		} else {
+			$data['priority'] = '';
 		}				
 
 		if (isset($this->input->post['status'])) {
@@ -95,8 +112,10 @@ class Cod extends MX_Controller {
 			$update['type'] 				= 'payment';
 			$update['name'] 				= $this->input->get('name');
 			$update['extension_id'] 		= (int) $this->input->get('id');
-			$update['data']['total'] 		= $this->input->post('total');
+			$update['data']['name'] 		= $this->input->post('name');
+			$update['data']['order_total'] 	= $this->input->post('order_total');
 			$update['data']['order_status'] = $this->input->post('order_status');
+			$update['data']['priority'] 	= $this->input->post('priority');
 			$update['data']['status'] 		= $this->input->post('status');
 
 			if ($this->Extensions_model->updateExtension($update, '1')) {
@@ -110,7 +129,7 @@ class Cod extends MX_Controller {
 	}
 
 	public function validateForm() {
-		$this->form_validation->set_rules('total', 'Minimum Total', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('order_total', 'Minimum Total', 'xss_clean|trim|required|numeric');
 		$this->form_validation->set_rules('order_status', 'Order Status', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('status', 'Status', 'xss_clean|trim|required|integer');
 

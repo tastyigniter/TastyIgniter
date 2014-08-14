@@ -1,7 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Extensions_model extends CI_Model {
-
 	public function getList($type = '') {
 		$this->db->from('extensions');
 		
@@ -56,11 +55,34 @@ class Extensions_model extends CI_Model {
 			$this->db->from('extensions');
 			$this->db->where('type', $type);
 			$this->db->where('name', $name);
+	
+			$query = $this->db->get();
+	
+			if ($query->num_rows() > 0) {
+				$result = $query->row_array();
+			}
+		}
+		
+		return $result;
+	}
+
+	public function getPayment($name = '') {
+		$result = array();
+
+		if (!empty($name)) {
+			$this->db->from('extensions');
+			$this->db->where('name', $name);
+			$this->db->where('type', 'payment');
 		
 			$query = $this->db->get();
 		
 			if ($query->num_rows() > 0) {
-				$result = $query->row_array();
+				$row = $query->row_array();
+				
+				$result = array(
+					'name'		=> $row['name'],
+					'data'		=> unserialize($row['data'])
+				);
 			}
 		}
 		

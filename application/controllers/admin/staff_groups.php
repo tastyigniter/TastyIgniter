@@ -120,6 +120,7 @@ class Staff_groups extends CI_Controller {
 		}
 	
 		$ignore_path = array('login', 'logout', 'dashboard', 'permission', 'alerts');
+		$location_path = array('login', 'logout', 'dashboard', 'permission', 'alerts');
 
 		$files = glob(APPPATH .'/controllers/'.ADMIN_URI.'/*.php');
 	

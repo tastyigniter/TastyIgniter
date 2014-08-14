@@ -164,9 +164,12 @@ class Orders extends MX_Controller {
 			$data['menus'] = array();			
 			$order_menus = $this->Orders_model->getOrderMenus($result['order_id']);
 			foreach ($order_menus as $order_menu) {
-				$options = array();
-				if (!empty($order_menu['order_option_id'])) {
-					$options = array('name' => $order_menu['option_name'], 'price' => $order_menu['option_price']);
+				$option_data = array();
+				$menu_options = $this->Orders_model->getOrderMenuOptions($result['order_id'], $order_menu['menu_id']);
+				if ($menu_options) {
+		 			foreach ($menu_options as $menu_option) {	
+						$option_data[] = $menu_option['order_option_name'];
+					}
 				}
 
 				$data['menus'][] = array(
@@ -175,7 +178,7 @@ class Orders extends MX_Controller {
 					'qty' 			=> $order_menu['quantity'],
 					'price' 		=> $this->currency->format($order_menu['price']),
 					'subtotal' 		=> $this->currency->format($order_menu['subtotal']),
-					'options'		=> $options
+					'options'		=> implode(', ', $option_data)
 				);
 			}
 
@@ -215,37 +218,20 @@ class Orders extends MX_Controller {
   			redirect('main/orders');
 		} else {
 			foreach ($order_menus as $menu) {
-				$cart_data = array();
-				$update_cart = FALSE;
 				$options = array();
 				if (!empty($menu['order_option_id'])) {
 					$options = array('name' => $menu['option_name'], 'price' => $this->cart->format_number($menu['option_price']));
 				}
 
-				$quantity = $menu['quantity'];
-				foreach ($this->cart->contents() as $cart_item) {								// loop through items in cart
-					$cart_option_id = (empty($cart_item['option_id'])) ? '' : $cart_item['option_id'];					
-					$menu_option_id = (empty($menu['order_option_id'])) ? '' : $menu_option_id;					
-					if ($cart_item['id'] === $menu['menu_id'] AND $cart_option_id === $menu_option_id) {
-						$row_id = $cart_item['rowid'];
-						$quantity = $cart_item['qty'] + $menu['quantity'];
-						$update_cart = TRUE;
-					}
-				}
-
-				if ($update_cart === TRUE) {
-					$this->cart->update(array('rowid' => $row_id, 'qty' => $quantity));
-				} else {
-					$cart_data = array(
-						'id' 			=> $menu['menu_id'],
-						'name' 			=> $menu['name'],			
-						'qty' 			=> $quantity,
-						'price' 		=> $this->cart->format_number($menu['price']),
-						'options'		=> $options
-					);
-				
-					$added_data = $this->cart->insert($cart_data);
-				}
+				$cart_data = array(
+					'id' 			=> $menu['menu_id'],
+					'name' 			=> $menu['name'],			
+					'qty' 			=> $menu['quantity'],
+					'price' 		=> $this->cart->format_number($menu['price']),
+					'options'		=> $options
+				);
+			
+				$added_data = $this->cart->insert($cart_data);
 			}
 			
 			$this->session->set_flashdata('alert', sprintf($this->lang->line('alert_reorder'), $order_id));

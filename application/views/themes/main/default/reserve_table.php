@@ -13,7 +13,7 @@
 <div class="row content">
 	<?php echo $content_left; ?><?php echo $content_right; ?>
 
-	<div class="col-md-9 wrap-all">
+	<div class="col-md-8 page-content wrap-all">
 		<p class="text-info well"><?php echo $text_login_register; ?></p>
 		
 		<form method="POST" accept-charset="utf-8" action="<?php echo current_url(); ?>" id="reserve-form" role="form">

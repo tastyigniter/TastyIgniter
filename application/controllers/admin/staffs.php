@@ -52,9 +52,7 @@ class Staffs extends CI_Controller {
 			$filter['filter_group'] = $data['filter_group'] = '';
 		}
 		
-    	if ($this->user->staffLocationAccess()) {
-  			$filter['filter_location'] = $this->user->getLocationId();
-		} else if (is_numeric($this->input->get('filter_location'))) {
+    	if (is_numeric($this->input->get('filter_location'))) {
 			$filter['filter_location'] = $data['filter_location'] = $this->input->get('filter_location');
 			$url .= 'filter_location='.$filter['filter_location'].'&';
 		} else {
@@ -285,20 +283,20 @@ class Staffs extends CI_Controller {
 	public function autocomplete() {
 		$json = array();
 		
-		if ($this->input->get('staff_name')) {
-			$filter = array(
-				'staff_name' => urldecode($this->input->get('staff_name'))
-			);
+		if ($this->input->get('term')) {
+			$filter['staff_name'] = $this->input->get('term');
+			$filter['staff_id'] = $this->input->get('staff_id');
 
 			$results = $this->Staffs_model->getAutoComplete($filter);
-		
 			if ($results) {
 				foreach ($results as $result) {
-					$json[] = array(
-						'staff_id' 		=> $result['staff_id'],
-						'staff_name' 	=> $result['staff_name']
+					$json['results'][] = array(
+						'id' 		=> $result['staff_id'],
+						'text' 		=> utf8_encode($result['staff_name'])
 					);
 				}
+			} else {
+				$json['results'] = array('id' => '0', 'text' => 'No Matches Found');
 			}
 		}
 		

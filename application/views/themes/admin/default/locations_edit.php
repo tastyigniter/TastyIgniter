@@ -16,14 +16,15 @@
 		<div class="row wrap-vertical">
 			<ul id="nav-tabs" class="nav nav-tabs">
 				<li class="active"><a href="#general" data-toggle="tab">Location</a></li>
-				<li><a href="#working-hours" data-toggle="tab">Working Hours</a></li>
+				<li><a href="#opening-hours" data-toggle="tab">Opening Hours</a></li>
 				<li><a href="#order" data-toggle="tab">Order</a></li>
 				<li><a href="#reservation" data-toggle="tab">Reservation</a></li>
-				<li><a id ="open-map" href="#covered-area" data-toggle="tab">Covered Area</a></li>
+				<li><a id="open-map" href="#delivery" data-toggle="tab">Delivery</a></li>
+				<li><a href="#options" data-toggle="tab">Options</a></li>
 			</ul>
 		</div>
 
-		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
+		<form role="form" id="edit-form" name="edit_form" class="form-horizontal" accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
 					<div class="form-group">
@@ -98,121 +99,233 @@
 						</div>
 					</div>
 					<div class="form-group">
+						<label for="input-permalink" class="col-sm-2 control-label">Permalink:
+							<span class="help-block">Use ONLY alpha-numeric characters, underscores or dashes and make sure it is unique GLOBALLY.</span>
+						</label>
+						<div class="col-sm-5">
+							<input type="text" name="permalink" id="input-permalink" class="form-control" value="<?php echo set_value('permalink', $permalink); ?>"/>
+							<?php echo form_error('permalink', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
 						<label for="input-status" class="col-sm-2 control-label">Status:</label>
 						<div class="col-sm-5">
-							<select name="location_status" id="input-status" class="form-control">
-								<option value="0" <?php echo set_select('location_status', '0'); ?> >Disabled</option>
-								<?php if ($location_status === '1') { ?>
-									<option value="1" <?php echo set_select('location_status', '1', TRUE); ?> >Enabled</option>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($location_status == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="location_status" value="0" <?php echo set_radio('location_status', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="location_status" value="1" <?php echo set_radio('location_status', '1', TRUE); ?>>Enabled</label>
 								<?php } else { ?>  
-									<option value="1" <?php echo set_select('location_status', '1'); ?> >Enabled</option>
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="location_status" value="0" <?php echo set_radio('location_status', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="location_status" value="1" <?php echo set_radio('location_status', '1'); ?>>Enabled</label>
 								<?php } ?>  
-							</select>
+							</div>
 							<?php echo form_error('location_status', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 				</div>
 		
-				<div id="working-hours" class="tab-pane row wrap-all">
-					<div class="form-group">
-						<label for="" class="col-sm-2 control-label">Day</label>
-						<div class="form-mini col-sm-5">
-							<div class="col-sm-2">
-								<b>Open Hour</b>
+				<div id="opening-hours" class="tab-pane row wrap-all">
+					<div id="opening-type" class="form-group">
+						<label for="" class="col-sm-2 control-label">Type:</label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-toggle btn-group-3" data-toggle="buttons">
+								<?php if ($opening_type == '24_7') { ?>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="opening_type" value="24_7" <?php echo set_radio('opening_type', '24_7', TRUE); ?>>24/7</label>
+								<?php } else { ?>  
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="opening_type" value="24_7" <?php echo set_radio('opening_type', '24_7'); ?>>24/7</label>
+								<?php } ?>  
+								<?php if ($opening_type == 'daily') { ?>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="opening_type" value="daily" <?php echo set_radio('opening_type', 'daily', TRUE); ?>>Daily</label>
+								<?php } else { ?>  
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="opening_type" value="daily" <?php echo set_radio('opening_type', 'daily'); ?>>Daily</label>
+								<?php } ?>  
+								<?php if ($opening_type == 'flexible') { ?>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="opening_type" value="flexible" <?php echo set_radio('opening_type', 'flexible', TRUE); ?>>Flexible</label>
+								<?php } else { ?>  
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="opening_type" value="flexible" <?php echo set_radio('opening_type', 'flexible'); ?>>Flexible</label>
+								<?php } ?>  
 							</div>
-							<div class="col-sm-2">
-								<b>Close Hour</b>
+							<?php echo form_error('opening_type', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<br />
+
+					<div id="opening-daily">
+						<div class="form-group">
+							<label for="input-opening-days" class="col-sm-2 control-label">Days:</label>
+							<div class="col-sm-5">
+								<div class="btn-group btn-group-toggle btn-group-7" data-toggle="buttons">
+									<?php foreach ($weekdays_abbr as $key => $value) { ?>
+										<?php if (in_array($key, $daily_days)) { ?>
+											<label class="btn btn-default active" data-btn="btn-success"><input type="checkbox" name="daily_days[]" value="<?php echo $key; ?>" <?php echo set_checkbox('daily_days[]', $key, TRUE); ?>><?php echo $value; ?></label>
+										<?php } else { ?>  
+											<label class="btn btn-default" data-btn="btn-success"><input type="checkbox" name="daily_days[]" value="<?php echo $key; ?>" <?php echo set_checkbox('daily_days[]', $key); ?>><?php echo $value; ?></label>
+										<?php } ?>  
+									<?php } ?>  
+								</div>
+								<?php echo form_error('daily_days[]', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="input-opening-hours" class="col-sm-2 control-label">Hours:</label>
+							<div class="col-sm-7">
+								<div class="control-group control-group-3">
+									<div class="input-group">
+										<input type="text" name="daily_hours[open]" class="form-control timepicker" value="<?php echo set_value('daily_hours[open]', $daily_hours['open']); ?>" />
+										<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+									</div>
+									<div class="input-group">
+										<input type="text" name="daily_hours[close]" class="form-control timepicker" value="<?php echo set_value('daily_hours[close]', $daily_hours['close']); ?>" />
+										<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+									</div>
+									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+										<?php if ($daily_hours['status'] == '1') { ?>
+											<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="daily_hours[status]" value="0" <?php echo set_radio('daily_hours[status]', '0'); ?>>OPEN</label>
+											<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="daily_hours[status]" value="1" <?php echo set_radio('daily_hours[status]', '1', TRUE); ?>>CLOSED</label>
+										<?php } else { ?>  
+											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="daily_hours[status]" value="0" <?php echo set_radio('daily_hours[status]', '0', TRUE); ?>>OPEN</label>
+											<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="daily_hours[status]" value="1" <?php echo set_radio('daily_hours[status]', '1'); ?>>CLOSED</label>
+										<?php } ?>  
+									</div>
+								</div>
+								<?php echo form_error('daily_hours[open]', '<span class="text-danger">', '</span>'); ?>
+								<?php echo form_error('daily_hours[close]', '<span class="text-danger">', '</span>'); ?>
+								<?php echo form_error('daily_hours[status]', '<span class="text-danger">', '</span>'); ?>
 							</div>
 						</div>
 					</div>
-					<?php foreach ($hours as $hour) { ?>
-					<div class="form-group">
-						<label for="input-status" class="col-sm-2 control-label"><?php echo $hour['day']; ?></label>
-						<div class="form-mini col-sm-5">
-							<div class="col-sm-2">
-								<div class="input-group">
-									<input type="text" name="hours[<?php echo $hour['day']; ?>][open]" id="" class="form-control hours" value="<?php echo set_value('hours[][open]', $hour['open']); ?>" />
-									<span id="discount-addon" class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+
+					<div id="opening-flexible">
+						<div class="form-group">
+							<label for="" class="col-sm-2 control-label"></label>
+							<div class="col-sm-5">
+								<div class="control-group control-group-2">
+									<div class="input-group">
+										<b>Open hour</b>
+									</div>
+									<div class="input-group">
+										<b>Close hour</b>
+									</div>
 								</div>
 							</div>
-							<div class="col-sm-2">
-								<div class="input-group">
-									<input type="text" name="hours[<?php echo $hour['day']; ?>][close]" id="" class="form-control hours" value="<?php echo set_value('hours[][close]', $hour['close']); ?>" />
-									<span id="discount-addon" class="input-group-addon"><i class="fa fa-clock-o"></i></span>
-								</div>
-							</div><br /><br />
-							<?php echo form_error('hours['.$hour['day'].'][open]', '<span class="text-danger">', '</span>'); ?>
-							<?php echo form_error('hours['.$hour['day'].'][close]', '<span class="text-danger">', '</span>'); ?>
 						</div>
+						<?php foreach ($flexible_hours as $hour) { ?>
+						<div class="form-group">
+							<label for="input-status" class="col-sm-2 control-label text-right">
+								<span class="text-right"><?php echo (isset($weekdays[$hour['day']])) ? $weekdays[$hour['day']] : $hour['day']; ?></span>
+								<input type="hidden" name="flexible_hours[<?php echo $hour['day']; ?>][day]" value="<?php echo set_value('flexible_hours['.$hour['day'].'][day]', $hour['day']); ?>" />
+							</label>
+							<div class="col-sm-7">
+								<div class="control-group control-group-3">
+									<div class="input-group">
+										<input type="text" name="flexible_hours[<?php echo $hour['day']; ?>][open]" class="form-control timepicker" value="<?php echo set_value('flexible_hours['.$hour['day'].'][open]', $hour['open']); ?>" />
+										<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+									</div>
+									<div class="input-group">
+										<input type="text" name="flexible_hours[<?php echo $hour['day']; ?>][close]" class="form-control timepicker" value="<?php echo set_value('flexible_hours['.$hour['day'].'][close]', $hour['close']); ?>" />
+										<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+									</div>
+									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+										<?php if ($hour['status'] == '1') { ?>
+											<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="flexible_hours[<?php echo $hour['day']; ?>][status]" value="0" <?php echo set_radio('flexible_hours['.$hour['day'].'][status]', '0'); ?>>OPEN</label>
+											<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="flexible_hours[<?php echo $hour['day']; ?>][status]" value="1" checked="checked" <?php echo set_radio('flexible_hours['.$hour['day'].'][status]', '1'); ?>>CLOSED</label>
+										<?php } else { ?>  
+											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="flexible_hours[<?php echo $hour['day']; ?>][status]" value="0" checked="checked" <?php echo set_radio('flexible_hours['.$hour['day'].'][status]', '0'); ?>>OPEN</label>
+											<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="flexible_hours[<?php echo $hour['day']; ?>][status]" value="1" <?php echo set_radio('flexible_hours['.$hour['day'].'][status]', '1'); ?>>CLOSED</label>
+										<?php } ?>  
+									</div>
+								</div>
+								<?php echo form_error('flexible_hours['.$hour['day'].'][open]', '<span class="text-danger">', '</span>'); ?>
+								<?php echo form_error('flexible_hours['.$hour['day'].'][close]', '<span class="text-danger">', '</span>'); ?>
+								<?php echo form_error('flexible_hours['.$hour['day'].'][status]', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div>
+						<?php } ?>
 					</div>
-					<?php } ?>
 				</div>
 
 				<div id="order" class="tab-pane row wrap-all">
 					<div class="form-group">
 						<label for="input-offer-delivery" class="col-sm-2 control-label">Offer Delivery:</label>
 						<div class="col-sm-5">
-							<select name="offer_delivery" id="input-offer-delivery" class="form-control">
-								<?php if ($offer_delivery === '1') { ?>
-									<option value="0" <?php echo set_select('offer_delivery', '0'); ?> >No</option>
-									<option value="1" <?php echo set_select('offer_delivery', '1', TRUE); ?> >Yes</option>
+							<div id="input-offer-delivery" class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($offer_delivery == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="offer_delivery" value="0" <?php echo set_radio('offer_delivery', '0'); ?>>No</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="offer_delivery" value="1" <?php echo set_radio('offer_delivery', '1', TRUE); ?>>Yes</label>
 								<?php } else { ?>  
-									<option value="0" <?php echo set_select('offer_delivery', '0', TRUE); ?> >No</option>
-									<option value="1" <?php echo set_select('offer_delivery', '1'); ?> >Yes</option>
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="offer_delivery" value="0" <?php echo set_radio('offer_delivery', '0', TRUE); ?>>No</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="offer_delivery" value="1" <?php echo set_radio('offer_delivery', '1'); ?>>Yes</label>
 								<?php } ?>  
-							</select>
+							</div>
 							<?php echo form_error('offer_delivery', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="input-offer-collection" class="col-sm-2 control-label">Offer Collection:</label>
 						<div class="col-sm-5">
-							<select name="offer_collection" id="input-offer-collection" class="form-control">
-								<?php if ($offer_collection === '1') { ?>
-									<option value="0" <?php echo set_select('offer_collection', '0'); ?> >No</option>
-									<option value="1" <?php echo set_select('offer_collection', '1', TRUE); ?> >Yes</option>
+							<div id="input-offer-collection" class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($offer_collection == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="offer_collection" value="0" <?php echo set_radio('offer_collection', '0'); ?>>No</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="offer_collection" value="1" <?php echo set_radio('offer_collection', '1', TRUE); ?>>Yes</label>
 								<?php } else { ?>  
-									<option value="0" <?php echo set_select('offer_collection', '0', TRUE); ?> >No</option>
-									<option value="1" <?php echo set_select('offer_collection', '1'); ?> >Yes</option>
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="offer_collection" value="0" <?php echo set_radio('offer_collection', '0', TRUE); ?>>No</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="offer_collection" value="1" <?php echo set_radio('offer_collection', '1'); ?>>Yes</label>
 								<?php } ?>  
-							</select>
+							</div>
 							<?php echo form_error('offer_collection', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-ready-time" class="col-sm-2 control-label">Ready Time:
-							<span class="help-block">Set in minutes when an order will be delivered/collected after being placed</span>
+						<label for="input-delivery-time" class="col-sm-2 control-label">Delivery Time:
+							<span class="help-block">Set number of minutes an order will be delivered after being placed</span>
 						</label>
 						<div class="col-sm-5">
-							<input type="text" name="ready_time" id="input-ready-time" class="form-control" value="<?php echo set_value('ready_time', $ready_time); ?>" size="5" />
-							<?php echo form_error('ready_time', '<span class="text-danger">', '</span>'); ?>
+							<div class="input-group">
+								<input type="text" name="delivery_time" id="input-delivery-time" class="form-control" value="<?php echo set_value('delivery_time', $delivery_time); ?>" />
+								<span class="input-group-addon">minutes</span>
+							</div>
+							<?php echo form_error('delivery_time', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-collection-time" class="col-sm-2 control-label">Collection Time:
+							<span class="help-block">Set number of minutes an order will be ready for collection after being placed</span>
+						</label>
+						<div class="col-sm-5">
+							<div class="input-group">
+								<input type="text" name="collection_time" id="input-collection-time" class="form-control" value="<?php echo set_value('collection_time', $collection_time); ?>" />
+								<span class="input-group-addon">minutes</span>
+							</div>
+							<?php echo form_error('collection_time', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="input-last-order-time" class="col-sm-2 control-label">Last Order Time:
-							<span class="help-block">Set the last order time in minutes before close hour, otherwise use close hour.</span>
+							<span class="help-block">Set number of minutes before closing time for last order. Leave blank to use closing hour.</span>
 						</label>
 						<div class="col-sm-5">
-							<input type="text" name="last_order_time" id="input-last-order-time" class="form-control" value="<?php echo set_value('last_order_time', $last_order_time); ?>" size="5" />
+							<div class="input-group">
+								<input type="text" name="last_order_time" id="input-last-order-time" class="form-control" value="<?php echo set_value('last_order_time', $last_order_time); ?>" />
+								<span class="input-group-addon">minutes</span>
+							</div>
 							<?php echo form_error('last_order_time', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-delivery-charge" class="col-sm-2 control-label">Delivery Charge:
-							<span class="help-block">Set to "0.00" for free delivery charge</span>
+						<label for="input-payments" class="col-sm-2 control-label">Payments:
+							<span class="help-block">Select the payment(s) available at this location. Do not select anything to use all enabled payments</span>
 						</label>
 						<div class="col-sm-5">
-							<input type="text" name="delivery_charge" id="input-delivery-charge" class="form-control" value="<?php echo set_value('delivery_charge', $delivery_charge); ?>" size="5" />
-							<?php echo form_error('delivery_charge', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-min-delivery-total" class="col-sm-2 control-label">Min Delivery Total:
-							<span class="help-block">Set to "0.00" for no minimum delivery charge</span>
-						</label>
-						<div class="col-sm-5">
-							<input type="text" name="min_delivery_total" id="input-min-delivery-total" class="form-control" value="<?php echo set_value('min_delivery_total', $min_delivery_total); ?>" size="5" />
-							<?php echo form_error('min_delivery_total', '<span class="text-danger">', '</span>'); ?>
+							<select name="payments[]" id="input-payments" class="form-control" multiple="multiple">
+								<?php foreach ($payment_list as $payment) { ?>
+								<?php if (in_array($payment['code'], $payments)) { ?>
+									<option value="<?php echo $payment['code']; ?>" selected="selected"><?php echo $payment['name']; ?></option>
+								<?php } else { ?>  
+									<option value="<?php echo $payment['code']; ?>"><?php echo $payment['name']; ?></option>
+								<?php } ?>  
+								<?php } ?>  
+							</select>
+							<?php echo form_error('payments[]', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<!--<div class="form-group">
@@ -271,7 +384,10 @@
 							<span class="help-block">Set in minutes the time between each reservation</span>
 						</label>
 						<div class="col-sm-5">
-							<input type="text" name="reservation_interval" id="input-reserve-interval" class="form-control" value="<?php echo set_value('reservation_interval', $reservation_interval); ?>" />
+							<div class="input-group">
+								<input type="text" name="reservation_interval" id="input-reserve-interval" class="form-control" value="<?php echo set_value('reservation_interval', $reservation_interval); ?>" />
+								<span class="input-group-addon">minutes</span>
+							</div>
 							<?php echo form_error('reservation_interval', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
@@ -280,39 +396,131 @@
 							<span class="help-block">Set in minutes the turn time for each reservation</span>
 						</label>
 						<div class="col-sm-5">
-							<input type="text" name="reservation_turn" id="input-reserve-turn" class="form-control" value="<?php echo set_value('reservation_turn', $reservation_turn); ?>" />
+							<div class="input-group">
+								<input type="text" name="reservation_turn" id="input-reserve-turn" class="form-control" value="<?php echo set_value('reservation_turn', $reservation_turn); ?>" />
+								<span class="input-group-addon">minutes</span>
+							</div>
 							<?php echo form_error('reservation_turn', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 				</div>
 	
-				<div id="covered-area" class="tab-pane row wrap-all">
-					<div class="form-group">
-						<label for="input-radius" class="col-sm-2 control-label">Radius:
-							<span class="help-block">Set the search radius in miles or kilometers, to overwrite the GLOBAL search radius value or leave blank to use GLOBAL search radius value.</span>
-						</label>
-						<div class="col-sm-5">
-							<input type="text" name="location_radius" id="input-radius" class="form-control" value="<?php echo set_value('location_radius', $location_radius); ?>" />
-							<?php echo form_error('location_radius', '<span class="text-danger">', '</span>'); ?>
+				<div id="delivery" class="tab-pane row wrap-none">
+					<?php if ($has_lat_lng) { ?>
+						<div class="col-md-8 wrap-none">
+							<div id="map-holder" style="height:550px;"></div>
 						</div>
-					</div>
-					<?php if ($is_covered_area) { ?>
-						<input type="hidden" name="covered_area[path]" value="<?php echo set_value('covered_area[path]', $covered_area['path']); ?>" />
-						<input type="hidden" name="covered_area[pathArray]" value="<?php echo set_value('covered_area[pathArray]', $covered_area['pathArray']); ?>" />
-						<div id="map" style="width:100%;height:470px;"><div id="map-holder" style="height:470px;"></div></div> 
+						<div class="col-md-4 wrap-none">
+							<div class="panel panel-default panel-delivery-areas border-left-3">
+								<div class="panel-heading"><h3 class="panel-title">Delivery Areas</h3></div>
+								<div id="delivery-areas" class="panel-body">
+									<?php $panel_row = 1; ?>
+									<?php foreach ($delivery_areas as $area) { ?>
+										<div id="delivery-area<?php echo $panel_row; ?>" class="panel panel-default">
+											<input type="hidden" name="delivery_areas[<?php echo $panel_row; ?>][shape]" value="<?php echo $area['shape']; ?>" />
+											<input type="hidden" name="delivery_areas[<?php echo $panel_row; ?>][vertices]" value="<?php echo $area['vertices']; ?>" />
+											<input type="hidden" name="delivery_areas[<?php echo $panel_row; ?>][circle]" value="<?php echo $area['circle']; ?>" />
+											<div class="panel-heading collapsed" data-toggle="collapse" data-parent="#delivery-areas" href="#delivery-area<?php echo $panel_row; ?> .collapse">
+												<div class="area-toggle"><i class="fa fa-angle-double-down up"></i><i class="fa fa-angle-double-up down"></i></div>
+												<div class="area-name">&nbsp;&nbsp;Area <?php echo $panel_row; ?></div>
+												<?php if ($area['type'] == 'circle') { ?>
+													<div class="area-color"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x fa-inverse"></i><i class="fa fa-circle fa-stack-1x" style="color:<?php echo $area['color']; ?>"></i></span></div>
+												<?php } else { ?>  
+													<div class="area-color"><span class="fa-stack"><i class="fa fa-stop fa-stack-2x fa-inverse"></i><i class="fa fa-stop fa-stack-1x" style="color:<?php echo $area['color']; ?>"></i></span></div>
+												<?php } ?>  
+												<div class="area-buttons pull-right hide"><a class="area-remove" title="Remove" onClick="$(this).parent().parent().parent().remove();"><i class="fa fa-times-circle"></i></a> &nbsp;&nbsp; <a title="Edit"><i class="fa fa-pencil"></i></a></div>
+											</div>
+											<div class="collapse">
+												<div class="panel-body">
+													<div class="form-group">
+														<div class="btn-group btn-group-toggle area-types wrap-vertical" data-toggle="buttons">
+															<?php if ($area['type'] == 'circle') { ?>
+																<label class="btn btn-default active area-type-circle" data-btn="btn-success"><input type="radio" name="delivery_areas[<?php echo $panel_row; ?>][type]" value="circle" checked="checked">Circle</label>
+																<label class="btn btn-default area-type-shape" data-btn="btn-success"><input type="radio" name="delivery_areas[<?php echo $panel_row; ?>][type]" value="shape">Shape</label>
+															<?php } else { ?>  
+																<label class="btn btn-default area-type-circle" data-btn="btn-success"><input type="radio" name="delivery_areas[<?php echo $panel_row; ?>][type]" value="circle">Circle</label>
+																<label class="btn btn-default active area-type-shape" data-btn="btn-success"><input type="radio" name="delivery_areas[<?php echo $panel_row; ?>][type]" value="shape" checked="checked">Shape</label>
+															<?php } ?>  
+														</div>
+														<?php echo form_error('delivery_areas['.$panel_row.'][type]', '<span class="text-danger">', '</span>'); ?>
+													</div>
+													<div class="form-group">
+														<label for="" class="col-sm-5 control-label">Name:</label>
+														<div class="col-sm-7 wrap-none wrap-right">
+															<input type="text" name="delivery_areas[<?php echo $panel_row; ?>][name]" id="" class="form-control" value="<?php echo $area['name']; ?>" />
+															<?php echo form_error('delivery_areas['.$panel_row.'][name]', '<span class="text-danger">', '</span>'); ?>
+														</div>
+													</div>
+													<div class="form-group">
+														<label for="" class="col-sm-5 control-label">Delivery charge:</label>
+														<div class="col-sm-7 wrap-none wrap-right">
+															<div class="input-group">
+																<input type="text" name="delivery_areas[<?php echo $panel_row; ?>][charge]" id="" class="form-control" value="<?php echo $area['charge']; ?>" />
+																<span class="input-group-addon">.00</span>
+															</div>
+															<?php echo form_error('delivery_areas['.$panel_row.'][charge]', '<span class="text-danger">', '</span>'); ?>
+														</div>
+													</div>
+													<div class="form-group">
+														<label for="" class="col-sm-5 control-label">Minimum order:</label>
+														<div class="col-sm-7 wrap-none wrap-right">
+															<div class="input-group">
+																<input type="text" name="delivery_areas[<?php echo $panel_row; ?>][min_amount]" id="" class="form-control" value="<?php echo $area['min_amount']; ?>" />
+																<span class="input-group-addon">.00</span>
+															</div>
+															<?php echo form_error('delivery_areas['.$panel_row.'][min_amount]', '<span class="text-danger">', '</span>'); ?>
+														</div>
+													</div>
+												</div>
+												<div class="panel-footer hide">
+													<div class="clearfix text-center">
+														<button type="button" class="btn btn-default pull-left area-cancel" onClick="$('#delivery-area<?php echo $panel_row; ?> .panel-heading').trigger('click');">Close</button>
+														<button type="button" class="btn btn-success pull-right area-save">Save</button>
+													</div>
+												</div>
+											</div>
+											</div>
+										<?php $panel_row++; ?>
+									<?php } ?>
+								</div>
+								<div class="panel-footer">
+									<div class="clearfix text-center">
+										<button type="button" class="btn btn-default area-new" onClick="addDeliveryArea();"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add new area</button>
+									</div>
+								</div>
+							</div>
+						</div>
 					<?php } else { ?>	
-						<p class="alert alert-info">Covered area map will be visible after location has been saved.</p>  	
+						<p class="alert text-danger">Delivery area map will be visible after location has been saved.</p>  	
 					<?php } ?>	
 				</div>
 			</div>
 		</form>
 	</div>
 </div>
-<script type="text/javascript" src="<?php echo base_url("assets/js/jquery-ui-timepicker-addon.js"); ?>"></script> 
+<link type="text/css" rel="stylesheet" href="<?php echo base_url("assets/js/datepicker/bootstrap-timepicker.css"); ?>">
+<script type="text/javascript" src="<?php echo base_url("assets/js/datepicker/bootstrap-timepicker.js"); ?>"></script> 
 <script type="text/javascript"><!--
 $(document).ready(function() {
-	$('.hours').timepicker({
-		timeFormat: 'HH:mm',
+	$('.timepicker').timepicker({
+		defaultTime: '11:45 AM'
+	});
+	
+	$('input[name="opening_type"]').on('change', function() {
+		if (this.value == '24_7') {
+			$('#opening-daily').fadeOut();
+			$('#opening-flexible').fadeOut();
+		}
+
+		if (this.value == 'daily') {
+			$('#opening-flexible').fadeOut();
+			$('#opening-daily').fadeIn();
+		}
+
+		if (this.value == 'flexible') {
+			$('#opening-daily').fadeOut();
+			$('#opening-flexible').fadeIn();
+		}
 	});
 });
 //--></script>
@@ -346,13 +554,24 @@ $('input[name=\'table\']').autocomplete({
    	}
 });
 //--></script>
-<?php if ($is_covered_area) { ?>
+<?php if ($has_lat_lng) { ?>
+<script type="text/javascript"><!--
+$(document).on('change', '.area-types input[type="radio"]', function () {
+	var color_icon = $(this).parent().parent().parent().parent().parent().parent().find('.panel-heading .area-color .fa');
+	if (this.value == 'shape') {
+		color_icon.removeClass('fa-circle').addClass('fa-stop');
+	} else {
+		color_icon.removeClass('fa-stop').addClass('fa-circle');
+	}
+});
+
+//--></script>
 <script src="http://maps.googleapis.com/maps/api/js?v=3<?php echo $map_key; ?>&sensor=false&region=GB&libraries=geometry"></script>
 <script type="text/javascript">//<![CDATA[
 var map = null,
-inputArea = $('input[name="covered_area[path]"]').val(),
-coveredAreas = [],
-setCoveredArea,
+panel_row = <?php echo $panel_row; ?>,
+colors = <?php echo $area_colors; ?>,
+deliveryAreas = [],
 centerLatLng = new google.maps.LatLng(
 	parseFloat(<?php echo json_encode($location_lat); ?>),
 	parseFloat(<?php echo json_encode($location_lng); ?>)
@@ -394,67 +613,314 @@ function initializeMap() {
 		map: map
 	});
 
-	$('#update-box form').on('submit', saveCoveredAreas);
-		
-	loadMap(inputArea);
-	setControlButtons(setCoveredArea);
+	$('#edit-form').on('submit', saveDeliveryAreas);
+
+	clearMapAreas();
+	createSavedArea(panel_row)
 }
 
+function defaultAreaOptions() {
+	return {
+		visible: false,
+		draggable: true,
+		strokeOpacity: 0.8,
+		strokeWeight: 3,
+		fillOpacity: 0.15
+	};
+}
 
-function saveCoveredAreas(){
-	var inputPath = $('input[name="covered_area[path]"]'),
-	inputPathArray = $('input[name="covered_area[pathArray]"]'),
-	serialized;
+function saveDeliveryAreas() {
 	try {
-		path = serializePath();
-		pathArray = serializePathArray();
+		serializeAreas();
 	} catch (ex) {
 		console.log(ex);
 		alert(ex);
-		// don't save
 		ex.preventDefault();
 		return false;
 	}
-	
-	inputPath.val(path);
-	inputPathArray.val(pathArray);
 }
 
-function addCoveredAreaToMap(coveredArea, map){
-	coveredAreas.push(coveredArea);
-	setCoveredArea = coveredArea;
-	coveredArea.setMap(map);
+function addMapArea(deliveryArea) {
+	deliveryArea.setMap(map);
+	deliveryAreas.push(deliveryArea);
+	setMapAreaEvents(deliveryArea);
 }
 
-function createCoveredArea(map){
-	var coveredArea;
-	coveredArea = createDefaultCoveredArea(map);
-	addCoveredAreaToMap(coveredArea, map);
-
-	//return coveredArea;
-}
-
-function loadMap(inputArea){
-	var serializedArea;
-	serializedArea = createSerializedArea(inputArea);
-	
-	if (!serializedArea) {
-		createCoveredArea(map);
+function deleteMapArea(deliveryArea) {
+	for (var i = deliveryAreas.length -1; i >= 0 ; i--) {
+		if (deliveryAreas[i].row == deliveryArea.row) {
+			toggleVisibleMapArea(deliveryArea);
+			deliveryAreas.splice(i, 1);
+		}
 	}
 }
 
-function setControlButtons(coveredArea) {
-	editButton = new editControlButton(coveredArea, map);
-	saveButton = new saveControlButton(coveredArea, map);
+function clearMapAreas() {
+	deliveryAreas.forEach(function(area) {
+		area.setMap(null);
+		deleteMapArea(area);
+	});
 }
 
-function createDefaultCoveredArea(map){
-	var coveredCircle, ne, sw, scale = 0.15, windowWidth, windowHeight,
-	widthMargin, heightMargin, top, bottom, left, right, areaCoords, options, coveredArea;
+function toggleMapArea(deliveryArea, type) {
+	deliveryAreas.forEach(function(area) {
+		area.setOptions({ strokeWeight: 3, zIndex: 2, editable: false });
+		if (area.row == deliveryArea.row) {
+			if (type != undefined && area.type == type) {
+				area.setOptions({ strokeWeight: 6, zIndex: 200, fillOpacity: 0.35, editable: true, visible: true });
+			}
+		}
+	});
+}
 
-	coveredCircle = new google.maps.Circle({center: centerLatLng, radius: 1000});
-	ne = coveredCircle.getBounds().getNorthEast();
-	sw = coveredCircle.getBounds().getSouthWest();
+function toggleMapAreaType(deliveryArea, type) {
+	deliveryAreas.forEach(function(area) {
+		area.setOptions({ strokeWeight: 3, zIndex: 2, editable: false });
+		if (area.row == deliveryArea.row) {
+			area.setOptions({ visible: false });
+			if (type != undefined && area.type == type) {
+				area.setOptions({ strokeWeight: 6, zIndex: 200, fillOpacity: 0.15, editable: true, visible: true });
+			}
+		}
+	});
+}
+
+function toggleVisibleMapArea(deliveryArea, type) {
+	deliveryAreas.forEach(function(area) {
+		if (area.row == deliveryArea.row) {
+			area.setOptions({ visible: false });
+			if (type != undefined && area.type == type) {
+				area.setOptions({ visible: true });
+			}
+		}
+	});
+}
+
+function toggleHoverMapArea(deliveryArea, type, event) {
+	deliveryAreas.forEach(function(area) {
+		if (area.row == deliveryArea.row) {
+			area.setOptions({ fillOpacity: 0.15 });
+			if (type != undefined && area.type == type && event == 'mouseover') {
+				area.setOptions({ fillOpacity: 0.35 });
+			}
+		}
+	});
+}
+
+function setMapAreaEvents(deliveryArea) {
+	google.maps.event.addDomListener(deliveryArea, 'click', function(event) {
+		type = $(deliveryArea.div + ' .area-types input[type="radio"]:checked').val();
+		$(deliveryArea.div + ' .panel-heading').trigger('click');
+		if (!$(deliveryArea.div + ' .panel-heading').hasClass('collapsed')) {
+   			toggleMapArea(deliveryArea, type);
+		} else {
+	   		toggleMapArea(deliveryArea);
+		}
+	});
+
+	google.maps.event.addDomListener(deliveryArea, 'mouseover', function(event) {
+		type = $(deliveryArea.div + ' .area-types input[type="radio"]:checked').val();
+   		toggleHoverMapArea(deliveryArea, type, 'mouseover');
+	});
+
+	google.maps.event.addDomListener(deliveryArea, 'mouseout', function(event) {
+		type = $(deliveryArea.div + ' .area-types input[type="radio"]:checked').val();
+   		toggleHoverMapArea(deliveryArea, type, 'mouseout');
+	});
+}
+
+function setDeliveryAreaEvents(deliveryArea) {
+	google.maps.event.addDomListener($(deliveryArea.div + ' .panel-heading')[0], 'click', function(event) {
+		type = $(deliveryArea.div + ' .area-types input[type="radio"]:checked').val();
+		if ($(deliveryArea.div + ' .panel-heading').hasClass('collapsed')) {
+   			toggleMapArea(deliveryArea, type);
+		} else {
+	   		toggleMapArea(deliveryArea);
+		}
+	});
+
+	google.maps.event.addDomListener($(deliveryArea.div + ' .area-type-shape')[0], 'click', function(event) {
+   		toggleMapAreaType(deliveryArea, 'shape');
+	});
+
+	google.maps.event.addDomListener($(deliveryArea.div + ' .area-type-circle')[0], 'click', function(event) {
+   		toggleMapAreaType(deliveryArea, 'circle');
+	});
+
+	google.maps.event.addDomListener($(deliveryArea.div + ' .panel-heading .area-remove')[0], 'click', function(event) {
+   		deleteMapArea(deliveryArea);
+	});
+
+	google.maps.event.addDomListener($(deliveryArea.div + ' .panel-heading')[0], 'mouseover', function(event) {
+		type = $(deliveryArea.div + ' .area-types input[type="radio"]:checked').val();
+   		toggleHoverMapArea(deliveryArea, type, 'mouseover');
+	});
+
+	google.maps.event.addDomListener($(deliveryArea.div + ' .panel-heading')[0], 'mouseout', function(event) {
+		type = $(deliveryArea.div + ' .area-types input[type="radio"]:checked').val();
+   		toggleHoverMapArea(deliveryArea, type, 'mouseout');
+	});
+}
+
+function resizeMap() {
+	var allAreasBounds;
+
+	if (!deliveryAreas.length){
+		return;
+	}
+
+	allAreasBounds = deliveryAreas[0].getBounds();
+	deliveryAreas.forEach(function(area) {
+		var bounds = area.getBounds();
+		allAreasBounds.union(bounds);
+	});
+
+	map.fitBounds(allAreasBounds);
+}
+
+function drawShapeArea(row, shape) {
+	var options, shapeArea,
+	color = (colors[row-1] == undefined) ? '#F16745' : colors[row-1];
+
+	options = defaultAreaOptions();
+	options.paths = shape;
+	options.strokeColor = color;
+	options.fillColor = color;
+	shapeArea = new google.maps.Polygon(options);
+	addMapArea(shapeArea);
+
+    shapeArea.div = '#delivery-area' + row;
+    shapeArea.row = row;
+    shapeArea.name = 'Area ' + row;
+    shapeArea.color = color;
+    shapeArea.type = 'shape';
+
+	return shapeArea;
+}
+
+function drawCircleArea(row, center, radius) {
+	var options, circleArea,
+	color = (colors[row-1] == undefined) ? '#F16745' : colors[row-1];
+
+	options = defaultAreaOptions();
+	options.strokeColor = color;
+	options.fillColor = color;
+	options.center = center;
+	options.radius = radius;
+	circleArea = new google.maps.Circle(options);
+	addMapArea(circleArea);
+
+    circleArea.div = '#delivery-area' + row;
+    circleArea.row = row;
+    circleArea.name = 'Area ' + row;
+    circleArea.color = color;
+    circleArea.type = 'circle';
+
+	return circleArea;
+}
+
+function serializeAreas() {
+	deliveryAreas.forEach(function(area) {
+		var outputPath = [],
+		outputVertices = [],
+		outputCircle = [],
+		shape, encodedPath;
+	
+		if (area.type == 'shape') {
+			var vertices = area.getPath();
+			shape = google.maps.geometry.encoding.encodePath(vertices);
+			encodedPath = shape.replace(/\\/g,',').replace(/\//g,'-');
+			outputPath.push({shape: encodedPath});
+
+			for (var i = 0; i < vertices.getLength(); i++) {
+				var xy = vertices.getAt(i);
+				outputVertices.push({
+					lat: xy.lat(),
+					lng: xy.lng()
+				});
+			}
+
+			outputPath = JSON.stringify(outputPath)
+			outputVertices = JSON.stringify(outputVertices)
+			$('input[name="delivery_areas[' + area.row + '][shape]"]').val(outputPath);
+			$('input[name="delivery_areas[' + area.row + '][vertices]"]').val(outputVertices);
+		}
+		
+		if (area.type == 'circle') {
+			outputCircle.push({center: area.getCenter()});
+			outputCircle.push({radius: area.getRadius()});
+		
+			outputCircle = JSON.stringify(outputCircle)
+			$('input[name="delivery_areas[' + area.row + '][circle]"]').val(outputCircle);
+		}
+	});
+}
+
+function unserializedAreas(row) {
+	var savedAreas = [];
+	
+	for (i = 1; i < row; i++) {
+		var shape = $('input[name="delivery_areas[' + i + '][shape]"]').val();
+		var circle = $('input[name="delivery_areas[' + i + '][circle]"]').val();
+		var type = $('input[name="delivery_areas[' + i + '][type]"]:checked').val();
+	
+		try {
+			shape = JSON.parse(shape);
+			circle = JSON.parse(circle);
+		} catch (e){
+			console.log(e);
+		}
+
+		savedAreas.push({
+			shape: shape[0].shape, 
+			center: circle[0].center, 
+			radius: circle[1].radius, 
+			type: type,
+			row: i
+		});
+	}
+	
+	return savedAreas;
+}
+
+function createSavedArea(row) {
+	var savedAreas = unserializedAreas(row);
+
+	savedAreas.forEach(function(area) {
+		var shapeArea, circleArea,
+		shape, decodedPath;
+
+		if (area.center != undefined && area.radius != undefined) {
+			center = new google.maps.LatLng(area.center.k, area.center.A)
+			circleArea = drawCircleArea(area.row, center, area.radius);
+		} 
+
+		if (area.shape != undefined) {
+			shape = area.shape.replace(/,/g,'\\').replace(/-/g,'\/');
+			decodedPath = google.maps.geometry.encoding.decodePath(shape);
+			
+			shapeArea = drawShapeArea(area.row, decodedPath);
+		}
+
+		if (area.type == 'circle') {
+	   		toggleVisibleMapArea(circleArea, 'circle');
+			setDeliveryAreaEvents(circleArea);
+		} else {
+	   		toggleVisibleMapArea(shapeArea, 'shape');
+			setDeliveryAreaEvents(shapeArea);
+		}
+	});
+
+    resizeMap();
+}
+
+function createDeliveryArea(row) {
+	var circleArea, shapeArea, radius = 1000 * (row / 2), ne, sw, scale = 0.15, windowWidth, windowHeight,
+	widthMargin, heightMargin, top, bottom, left, right;
+
+	circleArea = drawCircleArea(row, centerLatLng, radius);
+	ne = circleArea.getBounds().getNorthEast();
+	sw = circleArea.getBounds().getSouthWest();
 	scale = 0.15;
 	windowWidth = ne.lng() - sw.lng();
 	windowHeight = ne.lat() - sw.lat();
@@ -464,176 +930,80 @@ function createDefaultCoveredArea(map){
 	bottom = sw.lat() + heightMargin;
 	left = sw.lng() + widthMargin;
 	right = ne.lng() - widthMargin;
-	areaCoords = [
+	shape = [
 		new google.maps.LatLng(top, right),
 		new google.maps.LatLng(bottom, right),
 		new google.maps.LatLng(bottom, left),
 		new google.maps.LatLng(top, left)
 	];
 
-	options = defaultPolygonOptions();
-	//options.editable = editable;
-	options.paths = areaCoords;
-	coveredArea = new google.maps.Polygon(options);
-
-	return coveredArea;
-}
-
-function defaultPolygonOptions(){
-	return {
-		strokeColor: '#595959',
-		strokeOpacity: 0.8,
-		strokeWeight: 3,
-		fillColor: '#898989',
-		fillOpacity: 0.35
-	};
-}
-
-function controlButton(map, text, title, clickEvent) {
-
-	this.controlDiv = document.createElement('div');
-	var controlDiv = this.controlDiv;
-	controlDiv.index = 1;
-
-	controlDiv.style.padding = '5px';
-
-	var controlUI = document.createElement('div');
-	controlUI.style.backgroundColor = 'white';
-	controlUI.style.borderStyle = 'solid';
-	controlUI.style.borderWidth = '1px';
-	controlUI.style.cursor = 'pointer';
-	controlUI.style.textAlign = 'center';
-	controlUI.title = title;
-	controlDiv.appendChild(controlUI);
-
-	var controlText = document.createElement('div');
-	controlText.style.fontSize = '14px';
-	controlText.style.fontWeight = 'normal';
-	controlText.style.paddingLeft = '6px';
-	controlText.style.paddingRight = '6px';
-	controlText.innerHTML = text;
-	controlUI.appendChild(controlText);
-
-	google.maps.event.addDomListener(controlUI, 'click', clickEvent);
-	map.controls[google.maps.ControlPosition.TOP_RIGHT].push(controlDiv);
-}
-
-function saveControlButton(coveredArea, map) {
-	var control = new controlButton(map, '<b>Save</b>', 'Click to save the delivery area', function(event) {
-    	saveCoveredAreas();
-    	coveredArea.setEditable(false);
-	});
-	return control;
-}
-
-function editControlButton(coveredArea, map){
-	var control = new controlButton(map, '<b>Edit</b>', 'Click to edit the delivery area', function(event) {
-    	coveredArea.setEditable(true);
-	});
-	return control;
-}
-
-function resizeMap(map, coveredAreas){
-	var allAreasBounds;
-
-	if (!coveredAreas.length){
-		return;
-	}
-
-	allAreasBounds = coveredAreas[0].getBounds();
-	coveredAreas.forEach(function(coveredArea){
-		var bounds = coveredArea.getBounds();
-		allAreasBounds.union(bounds);
-	});
-
-	map.fitBounds(allAreasBounds);
-
-}
-
-function clearCoveredArea(){
-	coveredAreas.forEach(function(coveredArea){
-		coveredArea.setMap(null);
-	});
-}
-
-function serializePath() {
-	var output = [];
-
-	coveredAreas.forEach(function(coveredArea) {
-		var path, encodedPath;
-		path = google.maps.geometry.encoding.encodePath(coveredArea.getPath());
-		encodedPath = path.replace(/\\/g,',').replace(/\//g,'-');
-
-		output.push({path: encodedPath});
-	});
-	output = JSON.stringify(output)
-	return output;
-}
-
-function serializePathArray() {
-	var output = [];
-
-	coveredAreas.forEach(function(coveredArea) {
-		var vertices = coveredArea.getPath();
-		
-		for (var i =0; i < vertices.getLength(); i++) {
-			var xy = vertices.getAt(i);
-		
-			output.push({
-				lat: xy.lat(),
-				lng: xy.lng()
-			});
-		}
-	});
-	output = JSON.stringify(output)
-	return output;
-}
-
-function createSerializedArea(serializedJson) {
-	var coveredInput = [],
-	coveredArea;
+	shapeArea = drawShapeArea(row, shape);
+	toggleVisibleMapArea(shapeArea, 'shape');
 	
-	if (!serializedJson) {
-		return;
-	}
-	try {
-		coveredInput = JSON.parse(serializedJson);
-	} catch (e){
-		console.log(e);
-		alert('Invalid json format for serializedPaths');
-	}
+    resizeMap();
+	return shapeArea
+}
 
-	clearCoveredArea();
-	coveredInput.forEach(function(inputArea){
-		var options,
-		decodedPath;
-		
-		if (!inputArea.path){
-			return;
-		}
-		
-		var path, decodedPath;
-		path = inputArea.path.replace(/,/g,'\\').replace(/-/g,'\/');
-		decodedPath = google.maps.geometry.encoding.decodePath(path);
+function addDeliveryArea() {
+	deliveryArea = createDeliveryArea(panel_row);
 
-		options = defaultPolygonOptions();
-		options.path = decodedPath;
-		coveredArea = new google.maps.Polygon(options);
-		addCoveredAreaToMap(coveredArea, map);
-	});
+	html  = '<div id="delivery-area' + panel_row + '" class="panel panel-default">';
+	html += '	<input type="hidden" name="delivery_areas[' + panel_row + '][shape]" value="" />';
+	html += '	<input type="hidden" name="delivery_areas[' + panel_row + '][vertices]" value="" />';
+	html += '	<input type="hidden" name="delivery_areas[' + panel_row + '][circle]" value="" />';
+	html += '	<div class="panel-heading collapsed" data-toggle="collapse" data-target="#delivery-area' + panel_row + ' .collapse">';
+	html += '		<div class="area-toggle"><i class="fa fa-angle-double-down up"></i><i class="fa fa-angle-double-up down"></i></div>';
+	html += '		<div class="area-name">&nbsp;&nbsp; Area ' + panel_row + '</div>';
+	html += '		<div class="area-color"><span class="fa-stack"><i class="fa fa-stop fa-stack-2x fa-inverse"></i><i class="fa fa-stop fa-stack-1x" style="color:' + deliveryArea.color + ';"></i></span></div>';
+	html += '		<div class="area-buttons pull-right hide"><a class="area-remove" title="Remove" onClick="$(this).parent().parent().parent().remove();"><i class="fa fa-times-circle"></i></a> &nbsp;&nbsp; <a title="Edit"><i class="fa fa-pencil"></i></a></div>';
+	html += '	</div>';
+	html += '	<div class="collapse">';
+	html += '	<div class="panel-body">';
+	html += '		<div class="form-group">';
+	html += '			<div class="btn-group btn-group-toggle area-types wrap-vertical" data-toggle="buttons">';
+	html += '				<label class="btn btn-default area-type-circle" data-btn="btn-success"><input type="radio" name="delivery_areas[' + panel_row + '][type]" value="circle">Circle</label>';
+	html += '				<label class="btn btn-default active btn-success area-type-shape" data-btn="btn-success"><input type="radio" name="delivery_areas[' + panel_row + '][type]" value="shape" checked="checked">Shape</label>';
+	html += '			</div>';
+	html += '		</div>';
+	html += '		<div class="form-group">';
+	html += '			<label for="" class="col-sm-5 control-label">Name:</label>';
+	html += '			<div class="col-sm-7 wrap-none wrap-right">';
+	html += '				<input type="text" name="delivery_areas[' + panel_row + '][name]" id="" class="form-control" value="Area ' + panel_row + '" />';
+	html += '			</div>';
+	html += '		</div>';
+	html += '		<div class="form-group">';
+	html += '			<label for="" class="col-sm-5 control-label">Delivery charge:</label>';
+	html += '			<div class="col-sm-7 wrap-none wrap-right">';
+		html += '			<div class="input-group">';
+		html += '				<input type="text" name="delivery_areas[' + panel_row + '][charge]" id="" class="form-control" value="" />';
+		html += '				<span class="input-group-addon">.00</span>';
+		html += '			</div>';
+	html += '			</div>';
+	html += '		</div>';
+	html += '		<div class="form-group">';
+	html += '			<label for="" class="col-sm-5 control-label">Minimum order:</label>';
+	html += '			<div class="col-sm-7 wrap-none wrap-right">';
+		html += '			<div class="input-group">';
+		html += '				<input type="text" name="delivery_areas[' + panel_row + '][min_amount]" id="" class="form-control" value="" />';
+		html += '				<span class="input-group-addon">.00</span>';
+		html += '			</div>';
+	html += '			</div>';
+	html += '		</div>';
+	html += '	</div>';
+	html += '	<div class="panel-footer hide">';
+	html += '		<div class="clearfix text-center">';
+	html += '			<button type="button" class="btn btn-default pull-left area-cancel" onClick="$(\'#delivery-area' + panel_row + ' .panel-heading\').trigger(\'click\');">Close</button>';
+	html += '			<button type="button" class="btn btn-success pull-right area-save">Save</button>';
+	html += '		</div>';
+	html += '	</div>';
+	html += '	</div>';
+	html += '</div>';
 	
-    resizeMap(map, coveredAreas);
-
-	return coveredArea;
+	$('#delivery-areas').append(html);
+	
+	panel_row++;
+	setDeliveryAreaEvents(deliveryArea);
 }
 //]]></script>
 <?php } ?>
-<script type="text/javascript" src="<?php echo base_url("assets/js/jquery-ui-timepicker-addon.js"); ?>"></script> 
-<script type="text/javascript"><!--
-$(document).ready(function() {
-	$('.hours').timepicker({
-		timeFormat: 'HH:mm',
-	});
-});
-//--></script>
 <?php echo $footer; ?>

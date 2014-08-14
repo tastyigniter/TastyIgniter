@@ -4,7 +4,7 @@
 <div class="row content">
 	<?php echo $content_left; ?><?php echo $content_right; ?>
 
-	<div class="col-xs-9">
+	<div class="col-md-9 page-content">
 		<div class="order-lists row wrap-all">
 		<form method="post" accept-charset="utf-8" action="<?php echo current_url(); ?>">
 			<div class="table-responsive">

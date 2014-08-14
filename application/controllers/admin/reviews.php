@@ -43,9 +43,7 @@ class Reviews extends CI_Controller {
 			$data['filter_search'] = '';
 		}
 		
-    	if ($this->user->staffLocationAccess()) {
-  			$filter['filter_location'] = $this->user->getLocationId();
-		} else if (is_numeric($this->input->get('filter_location'))) {
+    	if (is_numeric($this->input->get('filter_location'))) {
 			$filter['filter_location'] = $data['filter_location'] = $this->input->get('filter_location');
 			$url .= 'filter_location='.$filter['filter_location'].'&';
 		} else {
@@ -105,9 +103,9 @@ class Reviews extends CI_Controller {
 				'review_id' 		=> $review['review_id'],
 				'location_name' 	=> $review['location_name'],
 				'author' 			=> $review['author'],
-				'quality' 			=> ($review['quality'] != '0') ? $ratings['ratings'][$review['quality']] : 'None',
-				'delivery' 			=> ($review['delivery'] != '0') ? $ratings['ratings'][$review['delivery']] : 'None',
-				'service' 			=> ($review['service'] != '0') ? $ratings['ratings'][$review['service']] : 'None',
+				'quality' 			=> $review['quality'],
+				'delivery' 			=> $review['delivery'],
+				'service' 			=> $review['service'],
 				'order_id' 			=> $review['order_id'],
 				'date_added' 		=> mdate('%d %M %y', strtotime($review['date_added'])),
 				'review_status' 	=> $review['review_status'],
@@ -253,10 +251,10 @@ class Reviews extends CI_Controller {
 			$add['order_id'] 			= $this->input->post('order_id');
 			$add['location_id'] 		= $this->input->post('location_id');
 			$add['customer_id'] 		= $this->input->post('customer_id');
-			$add['author'] 				= $this->input->post('author');
-			$add['quality'] 			= $this->input->post('quality');
-			$add['delivery'] 			= $this->input->post('delivery');
-			$add['service'] 			= $this->input->post('service');
+			$rating 					= $this->input->post('rating');
+			$add['quality'] 			= $rating['quality'];
+			$add['delivery'] 			= $rating['delivery'];
+			$add['service'] 			= $rating['service'];
 			$add['review_text'] 		= $this->input->post('review_text');
 			$add['review_status'] 		= $this->input->post('review_status');
 
@@ -281,10 +279,10 @@ class Reviews extends CI_Controller {
 			$update['order_id'] 		= $this->input->post('order_id');
 			$update['location_id'] 		= $this->input->post('location_id');
 			$update['customer_id'] 		= $this->input->post('customer_id');
-			$update['author'] 			= $this->input->post('author');
-			$update['quality'] 			= $this->input->post('quality');
-			$update['delivery'] 		= $this->input->post('delivery');
-			$update['service'] 			= $this->input->post('service');
+			$rating 					= $this->input->post('rating');
+			$update['quality'] 			= $rating['quality'];
+			$update['delivery'] 		= $rating['delivery'];
+			$update['service'] 			= $rating['service'];
 			$update['review_text'] 		= $this->input->post('review_text');
 			$update['review_status'] 	= $this->input->post('review_status');
 
@@ -316,10 +314,9 @@ class Reviews extends CI_Controller {
 		$this->form_validation->set_rules('order_id', 'Order ID', 'xss_clean|trim|required|integer|callback_check_order');
 		$this->form_validation->set_rules('location_id', 'Location', 'xss_clean|trim|required|integer|callback_check_location');
 		$this->form_validation->set_rules('customer_id', 'Customer', 'xss_clean|trim|required|integer|callback_check_customer');
-		$this->form_validation->set_rules('author', 'Author', 'xss_clean|trim|required|min_length[2]|max_length[64]');
-		$this->form_validation->set_rules('quality', 'Quality Rating', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('delivery', 'Delivery Rating', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('service', 'Service Rating', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('rating[quality]', 'Quality Rating', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('rating[delivery]', 'Delivery Rating', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('rating[service]', 'Service Rating', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('review_text', 'Rating Text', 'xss_clean|trim|required|min_length[2]|max_length[1028]');
 		$this->form_validation->set_rules('review_status', 'Rating Status', 'xss_clean|trim|required|integer');
 

@@ -33,12 +33,15 @@ class Pages_module extends MX_Controller {
 		$data['pages'] = array();
 		$results = $this->Pages_model->getPages(); 										// retrieve all menu categories from getCategories method in Menus model
 		foreach ($results as $result) {															// loop through menu categories array
-			$data['pages'][] = array( 														// create array of category data to pass to view
-				'page_id'		=>	$result['page_id'],
-				'name'			=>	$result['name'],
-				'menu_location'	=>	$result['menu_location'],
-				'href'			=>	site_url('main/pages?page_id='. $result['page_id'])
-			);
+			$navigation = (!empty($result['navigation'])) ? unserialize($result['navigation']) : array();
+			
+			if (in_array('module', $navigation)) {
+				$data['pages'][] = array( 														// create array of category data to pass to view
+					'page_id'		=>	$result['page_id'],
+					'name'			=>	$result['name'],
+					'href'			=>	site_url('main/pages?page_id='. $result['page_id'])
+				);
+			}
 		}
 		
 		// pass array $data and load view files

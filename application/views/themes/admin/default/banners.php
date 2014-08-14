@@ -31,7 +31,15 @@
 						<td class="action"><input type="checkbox" value="<?php echo $banner['banner_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
 							<a class="btn btn-edit" title="Edit" href="<?php echo $banner['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
 						<td><?php echo $banner['name']; ?></td>
-						<td><?php echo $banner['type']; ?></td>
+						<td>
+							<?php if ($banner['type'] === 'carousel') { ?>
+								<span class="fa fa-film" title="<?php echo $banner['type']; ?>"></span>
+							<?php } else if ($banner['type'] === 'image') { ?>
+								<span class="fa fa-image" title="<?php echo $banner['type']; ?>"></span>
+							<?php } else if ($banner['type'] === 'custom') { ?>
+								<span class="fa fa-file-code-o" title="<?php echo $banner['type']; ?>"></span>
+							<?php } ?>
+						</td>
 						<td><?php echo $banner['status']; ?></td>
 						<td class="id"><?php echo $banner['banner_id']; ?></td>
 					</tr>

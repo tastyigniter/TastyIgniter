@@ -34,14 +34,15 @@
 							<span class="help-block">New customers must be approved before they can login.</span>
 						</label>
 						<div class="col-sm-5">
-							<select name="approval" id="input-approval" class="form-control">
-								<option value="0" <?php echo set_select('approval', '0'); ?> >Disabled</option>
-								<?php if ($approval === '1') { ?>
-									<option value="1" <?php echo set_select('approval', '1', TRUE); ?> >Enabled</option>
+							<div id="input-approval" class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($approval == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="approval" value="0" <?php echo set_radio('approval', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="approval" value="1" <?php echo set_radio('approval', '1', TRUE); ?>>Enabled</label>
 								<?php } else { ?>  
-									<option value="1" <?php echo set_select('approval', '1'); ?> >Enabled</option>
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="approval" value="0" <?php echo set_radio('approval', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="approval" value="1" <?php echo set_radio('approval', '1'); ?>>Enabled</label>
 								<?php } ?>  
-							</select>
+							</div>
 							<?php echo form_error('approval', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>

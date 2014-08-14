@@ -1042,7 +1042,7 @@ class CI_Form_validation {
 	 */
 	public function valid_time($str)
 	{
-		return ( ! preg_match('/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/', $str)) ? FALSE : TRUE;
+		return ( ! preg_match('/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/', $str) AND ! preg_match('/^(1[012]|[1-9]):[0-5][0-9](\s)?(?i)(am|pm)$/', $str)) ? FALSE : TRUE;
 	}
 
 

@@ -43,6 +43,7 @@ class Payments extends MX_Controller {
 				$this->Extensions_model->uninstall('payment', $result['name']);
 			} else {
 				$payments[$result['name']] = $result;
+				$payment_data[$result['name']] = unserialize($result['data']);
 			}
 		}
 		
@@ -67,7 +68,7 @@ class Payments extends MX_Controller {
 
 			$data['payments'][] = array(
 				'extension_id' 	=> $extension_id,
-				'name' 			=> ucwords(str_replace('_', ' ', $name)),
+				'name' 			=> (isset($payment_data[$name]['name'])) ? $payment_data[$name]['name'] : ucwords(str_replace('_', ' ', $name)),
 				'edit' 			=> $edit,
 				'action' 		=> ($edit === '') ? 'install' : 'uninstall',
 				'manage'		=> $manage
@@ -98,18 +99,21 @@ class Payments extends MX_Controller {
 		}		
 
 		$extension_id = (int) $this->input->get('id');
-		$extension_name = $this->input->get('name');
+		$name = $this->input->get('name');
 		$action = $this->input->get('action');
 
-		if (file_exists(EXTPATH .'payments/'.$extension_name.'/controllers/admin/'.$extension_name.'.php') AND $action === 'edit') {
-			$title = ucwords(str_replace('_', ' ', $extension_name));	
+		if (file_exists(EXTPATH .'payments/'.$name.'/controllers/admin/'.$name.'.php') AND $action === 'edit') {
+			$result = $this->Extensions_model->getExtension('payment', $name);
+			$payment_data = unserialize($result['data']);
+
+			$title = (isset($payment_data['name'])) ? $payment_data['name'] : ucwords(str_replace('_', ' ', $name));	
 			$this->template->setTitle('Payment: '. $title);
 			$this->template->setHeading('Payment: '. $title);
 			$this->template->setButton('Save', array('class' => 'btn btn-success', 'onclick' => '$(\'#edit-form\').submit();'));
 			$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 			$this->template->setBackButton('btn-back', site_url(ADMIN_URI.'/payments'));
 
-			$data['module_path'] = $extension_name.'/admin/'.$extension_name.'/index';
+			$data['module_path'] = $name.'/admin/'.$name.'/index';
 		} else {
   			redirect(ADMIN_URI.'/payments');
 		}

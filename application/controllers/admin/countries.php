@@ -7,6 +7,7 @@ class Countries extends CI_Controller {
 		$this->load->library('user');
 		$this->load->library('pagination');
 		$this->load->model('Countries_model');
+		$this->load->model('Image_tool_model');
 	}
 
 	public function index() {
@@ -82,6 +83,8 @@ class Countries extends CI_Controller {
 			$data['countries'][] = array(
 				'country_id'	=>	$result['country_id'],
 				'name'			=>	$result['country_name'],
+				'iso_code_2'	=>	$result['iso_code_2'],
+				'flag'			=>	(!empty($result['flag'])) ? $this->Image_tool_model->resize($result['flag']) : $this->Image_tool_model->resize('data/flags/no_flag.png'),
 				'status'		=>	($result['status'] === '1') ? 'Enabled' : 'Disabled',
 				'edit' 			=> site_url(ADMIN_URI.'/countries/edit?id=' . $result['country_id'])
 			);
@@ -153,7 +156,22 @@ class Countries extends CI_Controller {
 		$data['iso_code_3'] 		= $country_info['iso_code_3'];
 		$data['format'] 			= $country_info['format'];
 		$data['status'] 			= $country_info['status'];
-
+		$data['no_photo'] 			= $this->Image_tool_model->resize('data/flags/no_flag.png');
+		
+		if ($this->input->post('flag')) {
+			$data['flag']['path'] = $this->Image_tool_model->resize($this->input->post('flag'));
+			$data['flag']['name'] = basename($this->input->post('flag'));
+			$data['flag']['input'] = $this->input->post('flag');			
+		} else if (!empty($country_info['flag'])) {
+			$data['flag']['path'] = $this->Image_tool_model->resize($country_info['flag']);
+			$data['flag']['name'] = basename($country_info['flag']);
+			$data['flag']['input'] = $country_info['flag'];			
+		} else {
+			$data['flag']['path'] = $this->Image_tool_model->resize('data/flags/no_flag.png');
+			$data['flag']['name'] = 'no_flag.png';
+			$data['flag']['input'] = 'data/flags/no_flag.png';			
+		}
+				
 		if ($this->input->post() AND $this->_addCountry() === TRUE) {
 			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {	
 				redirect(ADMIN_URI.'/countries/edit?id='. $this->input->post('insert_id'));
@@ -188,6 +206,7 @@ class Countries extends CI_Controller {
 			$add['country_name'] 	= $this->input->post('country_name');
 			$add['iso_code_2'] 		= $this->input->post('iso_code_2');
 			$add['iso_code_3'] 		= $this->input->post('iso_code_3');
+			$add['flag'] 			= $this->input->post('flag');
 			$add['format'] 			= $this->input->post('format');
 			$add['status'] 			= $this->input->post('status');
 
@@ -213,6 +232,7 @@ class Countries extends CI_Controller {
 			$update['country_name'] 	= $this->input->post('country_name');
 			$update['iso_code_2'] 		= $this->input->post('iso_code_2');
 			$update['iso_code_3'] 		= $this->input->post('iso_code_3');
+			$update['flag'] 			= $this->input->post('flag');
 			$update['format'] 			= $this->input->post('format');
 			$update['status'] 			= $this->input->post('status');
 
@@ -245,6 +265,7 @@ class Countries extends CI_Controller {
 		$this->form_validation->set_rules('country_name', 'Country', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 		$this->form_validation->set_rules('iso_code_2', 'ISO Code 2', 'xss_clean|trim|required|exact_length[2]');
 		$this->form_validation->set_rules('iso_code_3', 'ISO Code 3', 'xss_clean|trim|required|exact_length[3]');
+		$this->form_validation->set_rules('flag', 'Flag', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('format', 'Format', 'xss_clean|trim|min_length[2]');
 		$this->form_validation->set_rules('status', 'Status', 'xss_clean|trim|required|integer');
 

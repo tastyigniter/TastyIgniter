@@ -4,7 +4,7 @@
 <div class="row content">
 	<?php echo $content_left; ?><?php echo $content_right; ?>
 
-	<div class="col-xs-9 wrap-all">
+	<div class="col-md-8 page-content wrap-all">
 		<?php echo $page_content; ?>
 	</div>
 </div>

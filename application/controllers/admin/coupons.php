@@ -83,6 +83,7 @@ class Coupons extends CI_Controller {
 		$data['sort_code'] 			= site_url(ADMIN_URI.'/coupons'.$url.'sort_by=code&order_by='.$order_by);
 		$data['sort_type'] 			= site_url(ADMIN_URI.'/coupons'.$url.'sort_by=type&order_by='.$order_by);
 		$data['sort_discount'] 		= site_url(ADMIN_URI.'/coupons'.$url.'sort_by=discount&order_by='.$order_by);
+		$data['sort_validity'] 		= site_url(ADMIN_URI.'/coupons'.$url.'sort_by=validity&order_by='.$order_by);
 
 		$data['coupons'] = array();
 		$results = $this->Coupons_model->getList($filter);
@@ -94,6 +95,7 @@ class Coupons extends CI_Controller {
 				'type'			=> ($result['type'] === 'P') ? 'Percentage' : 'Fixed Amount',
 				'discount'		=> ($result['type'] === 'P') ? round($result['discount']) .'%' : $result['discount'],
 				'min_total'		=> $result['min_total'],
+				'validity'		=> ucwords($result['validity']),
 				'description'	=> $result['description'],
 				'status'		=> ($result['status'] === '1') ? 'Enabled' : 'Disabled',
 				'edit' 			=> site_url(ADMIN_URI.'/coupons/edit?id=' . $result['coupon_id'])
@@ -152,7 +154,15 @@ class Coupons extends CI_Controller {
 		    $coupon_id = 0;
 			$data['action']	= site_url(ADMIN_URI.'/coupons/edit');
 		}
-		
+	
+		if ($this->input->post('validity')) {
+			$validity = $this->input->post('validity');
+		} else if (!empty($coupon_info['validity'])) {
+			$validity = $coupon_info['validity'];
+		} else {
+			$validity = 'forever';
+		}
+			
 		$title = (isset($coupon_info['name'])) ? $coupon_info['name'] : 'New';	
 		$this->template->setTitle('Coupon: '. $title);
 		$this->template->setHeading('Coupon: '. $title);
@@ -167,14 +177,33 @@ class Coupons extends CI_Controller {
 		$data['code'] 				= $coupon_info['code'];
 		$data['type'] 				= $coupon_info['type'];
 		$data['discount'] 			= substr($coupon_info['discount'], 0, strripos($coupon_info['discount'], '.'));
-		$data['min_total'] 			= $coupon_info['min_total'];
+		$data['min_total'] 			= substr($coupon_info['min_total'], 0, strripos($coupon_info['min_total'], '.'));
 		$data['redemptions'] 		= $coupon_info['redemptions'];
 		$data['customer_redemptions'] = $coupon_info['customer_redemptions'];
 		$data['description'] 		= $coupon_info['description'];
-		$data['start_date'] 		= (isset($coupon_info['start_date']) AND $coupon_info['start_date'] !== '0000-00-00') ? mdate('%d-%m-%Y', strtotime($coupon_info['start_date'])) : '';
-		$data['end_date'] 			= (isset($coupon_info['end_date']) AND $coupon_info['end_date'] !== '0000-00-00') ? mdate('%d-%m-%Y', strtotime($coupon_info['end_date'])) : '';
+		$data['validity'] 			= $validity;
+		$data['fixed_date'] 		= (empty($coupon_info['fixed_date']) OR $coupon_info['fixed_date'] === '0000-00-00') ? '' : mdate('%d-%m-%Y', strtotime($coupon_info['fixed_date']));
+		$data['fixed_from_time'] 	= (empty($coupon_info['fixed_from_time']) OR $coupon_info['fixed_from_time'] === '00:00:00') ? '' : mdate('%h:%i %a', strtotime($coupon_info['fixed_from_time']));
+		$data['fixed_to_time'] 		= (empty($coupon_info['fixed_to_time']) OR $coupon_info['fixed_to_time'] === '00:00:00') ? '' : mdate('%h:%i %a', strtotime($coupon_info['fixed_to_time']));
+		$data['period_start_date'] 	= (empty($coupon_info['period_start_date']) OR $coupon_info['period_start_date'] === '0000-00-00') ? '' : mdate('%d-%m-%Y', strtotime($coupon_info['period_start_date']));
+		$data['period_end_date'] 	= (empty($coupon_info['period_end_date']) OR $coupon_info['period_end_date'] === '0000-00-00') ? '' : mdate('%d-%m-%Y', strtotime($coupon_info['period_end_date']));
+		$data['recurring_every'] 	= (empty($coupon_info['recurring_every'])) ? array() : explode(', ', $coupon_info['recurring_every']);
+		$data['recurring_from_time'] = (empty($coupon_info['recurring_from_time']) OR $coupon_info['recurring_from_time'] === '00:00:00') ? '' : mdate('%h:%i %a', strtotime($coupon_info['recurring_from_time']));
+		$data['recurring_to_time'] 	= (empty($coupon_info['recurring_to_time']) OR $coupon_info['recurring_to_time'] === '00:00:00') ? '' : mdate('%h:%i %a', strtotime($coupon_info['recurring_to_time']));
 		$data['date_added'] 		= $coupon_info['date_added'];
 		$data['status'] 			= $coupon_info['status'];
+
+		$data['weekdays'] = array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun');
+		
+		$data['fixed_time'] 		= '24hours';
+		if (isset($coupon_info['fixed_from_time'], $coupon_info['fixed_to_time']) AND ($coupon_info['fixed_from_time'] !== '00:00:00' AND $coupon_info['fixed_to_time'] !== '23:59:00')) {
+			$data['fixed_time'] 	= 'custom';
+		}
+
+		$data['recurring_time'] 		= '24hours';
+		if (isset($coupon_info['recurring_from_time'], $coupon_info['recurring_to_time']) AND ($coupon_info['recurring_from_time'] !== '00:00:00' AND $coupon_info['recurring_to_time'] !== '23:59:00')) {
+			$data['recurring_time'] 	= 'custom';
+		}
 
 		$data['coupon_histories'] = array();
 		$coupon_histories = $this->Coupons_model->getCouponHistories($coupon_id);
@@ -183,11 +212,9 @@ class Coupons extends CI_Controller {
 				'coupon_history_id'	=> $coupon_history['coupon_history_id'],
 				'order_id'			=> $coupon_history['order_id'],
 				'customer_name'		=> $coupon_history['first_name'] .' '. $coupon_history['last_name'],
-				'code'				=> $coupon_history['code'],
 				'amount'			=> $coupon_history['amount'],
-				'used'				=> $coupon_history['used'],
-				'used_url'			=> site_url(ADMIN_URI.'/coupons/edit?id='. $coupon_id .'&customer_id='. $coupon_history['customer_id']),
-				'date_used'			=> mdate('%d %M %y', strtotime($coupon_history['date_used']))
+				'date_used'			=> mdate('%d %M %y', strtotime($coupon_history['date_used'])),
+				'view'				=> site_url(ADMIN_URI.'/orders/edit?id='. $coupon_history['order_id'])
 			);
 		}
 
@@ -222,18 +249,38 @@ class Coupons extends CI_Controller {
     	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$add = array();
 			
-			$add['name'] 			= $this->input->post('name');
-			$add['code'] 			= str_replace(' ', '', $this->input->post('code'));
-			$add['type'] 			= $this->input->post('type');
-			$add['discount'] 		= $this->input->post('discount');
-			$add['min_total'] 		= $this->input->post('min_total');
-			$add['redemptions'] 	= $this->input->post('redemptions');
-			$add['customer_redemptions'] = $this->input->post('customer_redemptions');
-			$add['description'] 	= $this->input->post('description');
-			$add['start_date'] 		= $this->input->post('start_date');
-			$add['end_date'] 		= $this->input->post('end_date');
-			$add['status'] 			= $this->input->post('status');
+			$add['name'] 					= $this->input->post('name');
+			$add['code'] 					= str_replace(' ', '', $this->input->post('code'));
+			$add['type'] 					= $this->input->post('type');
+			$add['discount'] 				= $this->input->post('discount');
+			$add['min_total'] 				= $this->input->post('min_total');
+			$add['redemptions'] 			= $this->input->post('redemptions');
+			$add['customer_redemptions'] 	= $this->input->post('customer_redemptions');
+			$add['description'] 			= $this->input->post('description');
+			$add['validity'] 				= $this->input->post('validity');
+			$validity_times 				= $this->input->post('validity_times');
+			$add['fixed_date'] 				= $validity_times['fixed_date'];
+			$add['period_start_date'] 		= $validity_times['period_start_date'];
+			$add['period_end_date'] 		= $validity_times['period_end_date'];
+			$add['recurring_every'] 		= $validity_times['recurring_every'];
+			$add['status'] 					= $this->input->post('status');
 
+			if ($this->input->post('fixed_time') !== '24hours') {
+				$add['fixed_from_time'] 	= $validity_times['fixed_from_time'];
+				$add['fixed_to_time'] 		= $validity_times['fixed_to_time'];
+			} else {
+				$add['fixed_from_time'] 	= '12:00 AM';
+				$add['fixed_to_time'] 		= '11:59 PM';
+			}
+			
+			if ($this->input->post('recurring_time') !== '24hours') {
+				$add['recurring_from_time'] = $validity_times['recurring_from_time'];
+				$add['recurring_to_time'] 	= $validity_times['recurring_to_time'];
+			} else {
+				$add['recurring_from_time'] = '12:00 AM';
+				$add['recurring_to_time'] 	= '11:59 PM';
+			}
+			
 			if ($_POST['insert_id'] = $this->Coupons_model->addCoupon($add)) {	
 				$this->session->set_flashdata('alert', '<p class="alert-success">Coupon added sucessfully.</p>');
 			} else {
@@ -251,19 +298,39 @@ class Coupons extends CI_Controller {
     	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) { 
 			$update = array();
 			
-			$update['coupon_id'] 		= $this->input->get('id');
-			$update['name'] 			= $this->input->post('name');
-			$update['code'] 			= str_replace(' ', '', $this->input->post('code'));
-			$update['type'] 			= $this->input->post('type');
-			$update['discount'] 		= $this->input->post('discount');
-			$update['min_total'] 		= $this->input->post('min_total');
-			$update['redemptions'] 		= $this->input->post('redemptions');
+			$update['coupon_id'] 			= $this->input->get('id');
+			$update['name'] 				= $this->input->post('name');
+			$update['code'] 				= str_replace(' ', '', $this->input->post('code'));
+			$update['type'] 				= $this->input->post('type');
+			$update['discount'] 			= $this->input->post('discount');
+			$update['min_total'] 			= $this->input->post('min_total');
+			$update['redemptions'] 			= $this->input->post('redemptions');
 			$update['customer_redemptions'] = $this->input->post('customer_redemptions');
-			$update['description'] 		= $this->input->post('description');
-			$update['start_date'] 		= $this->input->post('start_date');
-			$update['end_date'] 		= $this->input->post('end_date');
-			$update['status'] 			= $this->input->post('status');	
+			$update['description'] 			= $this->input->post('description');
+			$update['validity'] 			= $this->input->post('validity');
+			$validity_times 				= $this->input->post('validity_times');
+			$update['fixed_date'] 			= $validity_times['fixed_date'];
+			$update['period_start_date'] 	= $validity_times['period_start_date'];
+			$update['period_end_date'] 		= $validity_times['period_end_date'];
+			$update['recurring_every'] 		= $validity_times['recurring_every'];
+			$update['status'] 				= $this->input->post('status');	
 
+			if ($this->input->post('fixed_time') !== '24hours') {
+				$update['fixed_from_time'] 		= $validity_times['fixed_from_time'];
+				$update['fixed_to_time'] 		= $validity_times['fixed_to_time'];
+			} else {
+				$update['fixed_from_time'] 		= '12:00 AM';
+				$update['fixed_to_time'] 		= '11:59 PM';
+			}
+			
+			if ($this->input->post('recurring_time') !== '24hours') {
+				$update['recurring_from_time'] 	= $validity_times['recurring_from_time'];
+				$update['recurring_to_time'] 	= $validity_times['recurring_to_time'];
+			} else {
+				$update['recurring_from_time'] 	= '12:00 AM';
+				$update['recurring_to_time'] 	= '11:59 PM';
+			}
+			
 			if ($this->Coupons_model->updateCoupon($update)) {	
 				$this->session->set_flashdata('alert', '<p class="alert-success">Coupon updated sucessfully.</p>');
 			} else {
@@ -302,8 +369,34 @@ class Coupons extends CI_Controller {
 		$this->form_validation->set_rules('redemptions', 'Redemptions', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('customer_redemptions', 'Customer Redemptions', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('description', 'Description', 'xss_clean|trim|min_length[2]|max_length[1028]');
-		$this->form_validation->set_rules('start_date', 'Start Date', 'xss_clean|trim|valid_date');
-		$this->form_validation->set_rules('end_date', 'End Date', 'xss_clean|trim|valid_date');
+		$this->form_validation->set_rules('validity', 'Validity', 'xss_clean|trim|required');
+		
+		if ($this->input->post('validity') === 'fixed') {
+			$this->form_validation->set_rules('validity_times[fixed_date]', 'Fixed date', 'xss_clean|trim|required|valid_date');
+			$this->form_validation->set_rules('fixed_time', 'Fixed time', 'xss_clean|trim|required');
+
+			if ($this->input->post('fixed_time') !== '24hours') {
+				$this->form_validation->set_rules('validity_times[fixed_from_time]', 'Fixed from time', 'xss_clean|trim|required|valid_time');
+				$this->form_validation->set_rules('validity_times[fixed_to_time]', 'Fixed to time', 'xss_clean|trim|required|valid_time');
+			}
+		} else if ($this->input->post('validity') === 'period') {
+			$this->form_validation->set_rules('validity_times[period_start_date]', 'Period start date', 'xss_clean|trim|required|valid_date');
+			$this->form_validation->set_rules('validity_times[period_end_date]', 'Period end date', 'xss_clean|trim|required|valid_date');
+		} else if ($this->input->post('validity') === 'recurring') {
+			$this->form_validation->set_rules('validity_times[recurring_every]', 'Recurring every', 'xss_clean|trim|required');
+			if (isset($_POST['validity_times']['recurring_every'])) {
+				foreach ($_POST['validity_times']['recurring_every'] as $key => $value) {
+					$this->form_validation->set_rules('validity_times[recurring_every]['.$key.']', 'Recurring every', 'xss_clean|required');
+				}
+			}
+
+			$this->form_validation->set_rules('recurring_time', 'Recurring time', 'xss_clean|trim|required');
+			if ($this->input->post('recurring_time') !== '24hours') {
+				$this->form_validation->set_rules('validity_times[recurring_from_time]', 'Recurring from time', 'xss_clean|trim|required|valid_time');
+				$this->form_validation->set_rules('validity_times[recurring_to_time]', 'Recurring to time', 'xss_clean|trim|required|valid_time');
+			}
+		}
+
 		$this->form_validation->set_rules('status', 'Status', 'xss_clean|trim|required|integer');
 
 		if ($this->form_validation->run() === TRUE) {

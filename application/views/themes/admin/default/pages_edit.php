@@ -99,31 +99,45 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-menu-location" class="col-sm-2 control-label">Menu Location:</label>
+						<label for="input-navigation" class="col-sm-2 control-label">Navigation:</label>
 						<div class="col-sm-5">
-							<select name="menu_location" id="input-menu-location" class="form-control">
-								<?php foreach ($menu_locations as $key => $value) { ?>
-								<?php if ($menu_location == $key) { ?>
-									<option value="<?php echo $key; ?>" <?php echo set_select('menu_location', '0', TRUE); ?> ><?php echo $value; ?></option>
+							<div class="btn-group btn-group-toggle btn-group-4" data-toggle="buttons">
+								<?php if (in_array('none', $navigation)) { ?>
+									<label class="btn btn-default active"><input type="checkbox" name="navigation[]" value="none" <?php echo set_checkbox('navigation', 'none', TRUE); ?>>None</label>
 								<?php } else { ?>  
-									<option value="<?php echo $key; ?>" <?php echo set_select('menu_location', '0'); ?> ><?php echo $value; ?></option>
+									<label class="btn btn-default"><input type="checkbox" name="navigation[]" value="none" <?php echo set_checkbox('navigation', 'none'); ?>>None</label>
 								<?php } ?>  
+								<?php if (in_array('header', $navigation)) { ?>
+									<label class="btn btn-default active"><input type="checkbox" name="navigation[]" value="header" <?php echo set_checkbox('navigation', 'header', TRUE); ?>>Header</label>
+								<?php } else { ?>  
+									<label class="btn btn-default"><input type="checkbox" name="navigation[]" value="header" <?php echo set_checkbox('navigation', 'header'); ?>>Header</label>
 								<?php } ?>  
-							</select>
-							<?php echo form_error('menu_location', '<span class="text-danger">', '</span>'); ?>
+								<?php if (in_array('module', $navigation)) { ?>
+									<label class="btn btn-default active"><input type="checkbox" name="navigation[]" value="module" <?php echo set_checkbox('navigation', 'module', TRUE); ?>>Side Bar</label>
+								<?php } else { ?>  
+									<label class="btn btn-default"><input type="checkbox" name="navigation[]" value="module" <?php echo set_checkbox('navigation', 'module'); ?>>Side Bar</label>
+								<?php } ?>  
+								<?php if (in_array('footer', $navigation)) { ?>
+									<label class="btn btn-default active"><input type="checkbox" name="navigation[]" value="footer" <?php echo set_checkbox('navigation', 'footer', TRUE); ?>>Footer</label>
+								<?php } else { ?>  
+									<label class="btn btn-default"><input type="checkbox" name="navigation[]" value="footer" <?php echo set_checkbox('navigation', 'footer'); ?>>Footer</label>
+								<?php } ?>  
+							</div>
+							<?php echo form_error('navigation[]', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="input-status" class="col-sm-2 control-label">Status:</label>
 						<div class="col-sm-5">
-							<select name="status" id="input-status" class="form-control">
-								<option value="0" <?php echo set_select('status', '0'); ?> >Disabled</option>
-								<?php if ($status === '1') { ?>
-									<option value="1" <?php echo set_select('status', '1', TRUE); ?> >Enabled</option>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($status == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1', TRUE); ?>>Enabled</label>
 								<?php } else { ?>  
-									<option value="1" <?php echo set_select('status', '1'); ?> >Enabled</option>
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1'); ?>>Enabled</label>
 								<?php } ?>  
-							</select>
+							</div>
 							<?php echo form_error('status', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
@@ -146,7 +160,9 @@ tinymce.init({
 	toolbar1: 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | formatselect | bullist numlist',
 	toolbar2: 'forecolor backcolor | outdent indent | undo redo | link unlink anchor image code | hr table | subscript superscript | charmap',
 	removed_menuitems: 'newdocument',
-	skin : 'tiskin'
+	skin : 'tiskin',
+	convert_urls : false,
+    file_browser_callback : imageManager
 });
 </script>
 <?php echo $footer; ?>

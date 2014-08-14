@@ -54,7 +54,7 @@ class Menus extends MX_Controller {
 		$data['column_action'] 			= $this->lang->line('column_action');
 		// END of retrieving lines from language file to send to view.
 				
-		$data['button_order'] = '<a class="btn btn-success" href="'. site_url('main/checkout') .'">'. $this->lang->line('button_order') .'</a>';
+		$data['button_order'] = '<a class="btn btn-success btn-checkout" href="'. site_url('main/checkout') .'">'. $this->lang->line('button_order') .'</a>';
 		$data['quantities'] = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10');
 		
 		$this->load->model('Image_tool_model');
@@ -64,52 +64,69 @@ class Menus extends MX_Controller {
 		$menu_images_w = (is_numeric($this->config->item('menu_images_w'))) ? $this->config->item('menu_images_w') : '50';
 
 		$data['menus'] = array();		
-		$results = $this->Menus_model->getMainMenus($filter);	 								// retrieve menus array based on category_id if available
-		foreach ($results as $result) {															// loop through menus array
-			if (!empty($result['menu_photo'])) {
-				$menu_photo_src = $this->Image_tool_model->resize($result['menu_photo'], $menu_images_w, $menu_images_h);
+		$menus = $this->Menus_model->getMainMenus($filter);	 								// retrieve menus array based on category_id if available
+		foreach ($menus as $menu) {															// loop through menus array
+			if (!empty($menu['menu_photo'])) {
+				$menu_photo_src = $this->Image_tool_model->resize($menu['menu_photo'], $menu_images_w, $menu_images_h);
 			} else {
 				$menu_photo_src = $this->Image_tool_model->resize('data/no_photo.png', $menu_images_w, $menu_images_h);
 			}
 						
-			if ($result['is_special'] === '1') {
-				$price = $result['special_price'];
-				$daydiff = floor((strtotime($result['end_date']) - strtotime($this->location->currentTime())) / 86400 );
-				$start_date = $result['start_date'];
-				$end_date = mdate('%d %M', strtotime($result['end_date']));
+			if ($menu['is_special'] === '1') {
+				$price = $menu['special_price'];
+				$daydiff = floor((strtotime($menu['end_date']) - strtotime($this->location->currentTime())) / 86400 );
+				$start_date = $menu['start_date'];
+				$end_date = mdate('%d %M', strtotime($menu['end_date']));
 				$end_days = ($daydiff < 0) ? sprintf($this->lang->line('text_end_today')) : sprintf($this->lang->line('text_end_days'), $end_date, $daydiff);
 			} else {
-				$price = $result['menu_price'];	
+				$price = $menu['menu_price'];	
 				$start_date = '';
 				$end_date = '';	
 				$end_days = '';					
 			}
 			
 			$data['menus'][] = array( 															// create array of menu data to be sent to view
-				'menu_id'			=>	$result['menu_id'],
-				'menu_name'			=>	$result['menu_name'],
-				'menu_description'	=>	$result['menu_description'],
-				'category_name'		=>	$result['name'],
-				'is_special'		=>	$result['is_special'],
-				'start_date'		=>	$start_date,
-				'end_days'			=>	$end_days,
-				'menu_price'		=>	$this->currency->format($price), 		//add currency symbol and format price to two decimal places
-				'menu_photo'		=>	$menu_photo_src
+				'menu_id'			=> $menu['menu_id'],
+				'menu_name' 		=> (strlen($menu['menu_name']) > 80) ? strtolower(substr($menu['menu_name'], 0, 80)) .'...' : strtolower($menu['menu_name']),			
+				'menu_description' 	=> (strlen($menu['menu_description']) > 120) ? substr($menu['menu_description'], 0, 120) .'...' : $menu['menu_description'],			
+				'category_name'		=> $menu['name'],
+				'is_special'		=> $menu['is_special'],
+				'start_date'		=> $start_date,
+				'end_days'			=> $end_days,
+				'menu_price'		=> $this->currency->format($price), 		//add currency symbol and format price to two decimal places
+				'menu_photo'		=> $menu_photo_src
 			);
 		}	
 		
-		$data['has_options'] = $this->Menus_model->hasMenuOptions(); 							// retrieve array of menu options id of available menus from hasMenuOptions method in Menus model
-		
 		$data['menu_options'] = array();
-		$results = $this->Menus_model->getMenuOptions(); 										// retrieve menu options array from getMenuOptions method in Menus model
-		foreach ($results as $result) {															// loop through menu options array
-			$data['menu_options'][] = array( 													// create array of menu options data to pass to view
-				'option_id' 	=> $result['option_id'],
-				'option_name' 	=> $result['option_name'],
-				'option_price' 	=> $this->currency->format($result['option_price']) 			// add currency symbol and format price to two decimal places
+		$menu_options = $this->Menus_model->getMainMenuOptions();
+		foreach ($menu_options as $menu_id => $option) {					
+			$option_values = array();
+			foreach ($option['option_values'] as $value) {
+				$option_values[] = array(
+					'option_value_id'	=> $value['option_value_id'],
+					'value'				=> $value['value'],
+					'price'				=> (empty($value['new_price']) OR $value['new_price'] == '0.00') ? $this->currency->format($value['price']) : $this->currency->format($value['new_price']),
+				);
+			}
+			
+			$data['menu_options'][$option['menu_id']][] = array(
+				'menu_option_id'	=> $option['menu_option_id'],
+				'option_id'			=> $option['option_id'],
+				'option_name'		=> $option['option_name'],
+				'display_type'		=> $option['display_type'],
+				'priority'			=> $option['priority'],
+				'option_values'		=> $option_values
 			);
 		}
-
+		
+		$data['option_values'] = array();
+		foreach ($menu_options as $option) {					
+			if (!isset($data['option_values'][$option['option_id']])) {
+				$data['option_values'][$option['option_id']] = $this->Menus_model->getOptionValues($option['option_id']);
+			}
+		}
+		
 		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'menus.php')) {
 			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'menus', $data);

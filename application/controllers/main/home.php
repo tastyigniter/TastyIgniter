@@ -31,7 +31,7 @@ class Home extends MX_Controller {
 		$data['text_find'] 				= $this->lang->line('text_find');
 		// END of retrieving lines from language file to send to view.
 
-		$data['local_action']			= site_url('local_module/main/local_module/distance');
+		$data['local_action']			= site_url('local_module/main/local_module/search');
 		$data['menus_url']				= site_url('main/menus');
 
 		$local_info = $this->session->userdata('local_info');

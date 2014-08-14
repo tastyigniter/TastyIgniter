@@ -4,7 +4,7 @@
 <div class="row content">
 	<?php echo $content_left; ?><?php echo $content_right; ?>
 
-	<div class="col-xs-9">
+	<div class="col-md-8 page-content">
 		<div class="row wrap-all">
 			<div class="table-responsive">
 				<table class="table table-none">
@@ -21,16 +21,20 @@
 						<td><?php echo $author; ?></td>
 					</tr>
 					<tr>
-						<td><b>Quality Rating:</b></td>
-						<td><?php echo $quality; ?></td>
-					</tr>
-					<tr>
-						<td><b>Delivery Rating:</b></td>
-						<td><?php echo $delivery; ?></td>
-					</tr>
-					<tr>
-						<td><b>Service Rating:</b></td>
-						<td><?php echo $service; ?></td>
+						<td><b>Rating:</b></td>
+						<td>
+							<ul class="list-inline rating-inline">
+								<li><b>Quality:</b><br /> 
+									<div class="rating rating-star" data-score="<?php echo $quality; ?>" data-readonly="true"></div>
+								</li>
+								<li><b>Delivery:</b><br />
+									<div class="rating rating-star" data-score="<?php echo $delivery; ?>" data-readonly="true"></div>
+								</li>
+								<li><b>Service:</b><br />
+									<div class="rating rating-star" data-score="<?php echo $service; ?>" data-readonly="true"></div>
+								</li>
+							</ul>
+						</td>
 					</tr>
 					<tr>
 						<td><b>Review Text:</b></td>

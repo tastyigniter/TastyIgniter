@@ -62,7 +62,6 @@ function addRoute() {
 	html += '</tr>';
 	
 	$('.table-sortable tbody').append(html);
-	$('select.form-control').selectpicker({iconBase:'fa', tickIcon:'fa-check'});
 	
 	table_row++;
 }

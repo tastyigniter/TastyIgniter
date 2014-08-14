@@ -154,6 +154,10 @@ class Customers_model extends CI_Model {
 				$this->db->like('CONCAT(first_name, last_name)', $filter_data['customer_name']);		
 			}
 	
+			if (!empty($filter_data['customer_id'])) {
+				$this->db->where('customer_id', $filter_data['customer_id']);		
+			}
+	
 			$query = $this->db->get();
 			$result = array();
 		
@@ -276,7 +280,7 @@ class Customers_model extends CI_Model {
 		
 		if ($update['status'] === '1') {
 			$this->db->set('status', $update['status']);
-		} else if ($update['status'] === '0') {
+		} else {
 			$this->db->set('status', '0');
 		}
 		
@@ -354,7 +358,7 @@ class Customers_model extends CI_Model {
 		}
 		
 		if (!empty($add)) {
-			if ($this->db->insert('customers')) {
+			if ($query = $this->db->insert('customers')) {
 				$customer_id = $this->db->insert_id();
 			
 				if (!empty($add['address']) AND $customer_id) {
@@ -376,8 +380,6 @@ class Customers_model extends CI_Model {
 				$subject = $this->mail_template->getSubject();
 
 				$this->sendMail($add['email'], $subject, $message);
-
-				$query = $customer_id;
 			}
 		}
 				

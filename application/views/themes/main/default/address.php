@@ -13,7 +13,7 @@
 <div class="row content">
 	<?php echo $content_left; ?><?php echo $content_right; ?>
 
-	<div class="col-xs-9">
+	<div class="col-md-8 page-content">
 		<div class="address-lists row wrap-all">
 		<?php if ($addresses) { ?>
 			<?php foreach ($addresses as $address) { ?>

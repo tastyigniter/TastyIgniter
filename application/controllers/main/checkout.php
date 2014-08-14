@@ -14,6 +14,7 @@ class Checkout extends MX_Controller {
 		$this->load->model('Locations_model'); 													// load the locations model
 		$this->load->model('Countries_model');
 		$this->load->model('Paypal_model');
+		$this->load->model('Extensions_model');
 		$this->load->library('user_agent');
 		$this->load->library('language');
 		$this->lang->load('main/checkout', $this->language->folder());
@@ -32,17 +33,16 @@ class Checkout extends MX_Controller {
   			redirect('main/menus');																	// redirect to menus page and display error
 		}
 		
-		if ( ! $this->location->isOpened()) { 													// else if local restaurant is not open
-			$this->session->set_flashdata('alert', $this->lang->line('alert_is_closed'));
+		if ( ! $this->location->isOpened() AND $this->config->item('future_orders') !== '1') { 													// else if local restaurant is not open
   			redirect('main/menus');																	// redirect to menus page and display error
 		}
 		
-		if (( ! $this->location->checkDelivery() AND ! $this->location->checkCollection()) AND $this->config->item('location_order') === '1') { 													// else if local restaurant is not open
+		if (( ! $this->location->hasDelivery() AND ! $this->location->hasCollection()) AND $this->config->item('location_order') === '1') { 													// else if local restaurant is not open
 			$this->session->set_flashdata('alert', $this->lang->line('alert_no_order'));
   			redirect('main/menus');																	// redirect to menus page and display error
 		}
 		
-		if ( ! $this->location->checkMinTotal($this->cart->total())) { 							// checks if cart contents is empty  
+		if ($this->location->orderType() === '1' AND ! $this->location->checkMinimumOrder($this->cart->total())) { 							// checks if cart contents is empty  
   			redirect('main/menus');																	// redirect to menus page and display error
 		}
 		
@@ -108,11 +108,11 @@ class Checkout extends MX_Controller {
 		if ($this->input->post('post_checkout')) {
 			$data['post_checkout'] 		= $this->input->post('post_checkout'); 								// retrieve post_checkout from session data
 			$data['button_back'] 		= '<a class="btn btn-default" onClick="$(\'#checkout\').fadeIn();$(\'#payment\').empty();$(this).fadeOut();$(\'.right-btn\').html(\'Payment\')">'. $this->lang->line('button_back') .'</a>';
-			$data['button_continue'] 	= '<a class="btn btn-success right-btn" onclick="$(\'#checkout-form\').submit();">'. $this->lang->line('button_confirm') .'</a>';
+			$data['button_order'] 		= '<a class="btn btn-success btn-checkout" onclick="$(\'#checkout-form\').submit();">'. $this->lang->line('button_confirm') .'</a>';
 		} else {
 			$data['post_checkout'] 		= '';
 			$data['button_back'] 		= '<a class="btn btn-default" href="'. site_url('main/menus') .'">'. $this->lang->line('button_back') .'</a>';
-			$data['button_continue'] 	= '<a class="btn btn-success right-btn" onclick="$(\'#checkout-form\').submit();">'. $this->lang->line('button_continue') .'</a>';
+			$data['button_order'] 		= '<a class="btn btn-success btn-checkout" onclick="$(\'#checkout-form\').submit();">'. $this->lang->line('button_continue') .'</a>';
 		}
 		
 		if (isset($order_data['first_name'])) {
@@ -194,10 +194,10 @@ class Checkout extends MX_Controller {
 			$data['new_address'] = '';
 		}
 						
-		if (isset($order_data['address_id'])) {
-			$addresses = $this->Addresses_model->getGuestAddress($order_data['address_id']);  							// retrieve customer addresses array from getCustomerAddresses method in Customers model
-		} else if ($this->customer->islogged()) {
+		if ($this->customer->islogged()) {
 			$addresses = $this->Addresses_model->getCustomerAddresses($this->customer->getId());  							// retrieve customer addresses array from getCustomerAddresses method in Customers model
+		} else if (isset($order_data['address_id'])) {
+			$addresses = $this->Addresses_model->getGuestAddress($order_data['address_id']);  							// retrieve customer addresses array from getCustomerAddresses method in Customers model
 		} else {
 			$addresses = array();
 		}
@@ -227,15 +227,15 @@ class Checkout extends MX_Controller {
 		}
 
 		$start_time = $this->location->openingTime();
-		$end_time = ($this->location->closingTime() === '00:00') ? '23:59' : $this->location->closingTime();											// retrieve location closing time from location library
+		$end_time = $this->location->lastOrderTime();											// retrieve location closing time from location library
 		$current_time = $this->location->currentTime(); 								// retrieve the location current time from location library
-		$ready_time = $this->location->readyTime();
+		$delivery_time = $this->location->deliveryTime();
 		
-		$data['asap_time'] = mdate('%H:%i', strtotime($current_time) + $ready_time * 60);
+		$data['asap_time'] = mdate('%H:%i', strtotime($current_time) + $delivery_time * 60);
 		$data['delivery_times'] = array();
-		$delivery_times = $this->location->generateHours($start_time, $end_time, $ready_time); 	// retrieve the location delivery times from location library
+		$delivery_times = $this->location->generateHours($start_time, $end_time, $delivery_time); 	// retrieve the location delivery times from location library
 		foreach ($delivery_times as $key => $value) {											// loop through delivery times
-			if (strtotime($value) > (strtotime($current_time) + $ready_time * 60)) {
+			if (strtotime($value) > (strtotime($current_time))) {
 				$data['delivery_times'][] = array( 													// create array of delivery_times data to pass to view
 					'12hr'		=> mdate('%h:%i %a', strtotime($value)),
 					'24hr'		=> $value
@@ -243,16 +243,21 @@ class Checkout extends MX_Controller {
 			}
 		}
 		
-		$paypal = $this->config->item('paypal_express_payment');
-		$cod = $this->config->item('cod_payment');
-		
 		$data['payments'] = array();
-		if ($cod['cod_status'] === '1') {
-			$data['payments'][] = array('name' => $this->lang->line('text_cod'), 'value' => 'cod', 'sort' => '1');
-		}
-		
-		if ($paypal['status'] === '1') {
-			$data['payments'][] = array('name' => $this->lang->line('text_paypal'), 'value' => 'paypal', 'sort' => '2');
+		$payments = $this->Extensions_model->getList('payment');
+		foreach ($payments as $payment) {
+			if (!empty($payment['data'])) {
+				$payment_data = unserialize($payment['data']);
+				
+				if ($payment_data['status'] === '1') {
+					$data['payments'][] = array(
+						'name'		=> $payment_data['name'],
+						'code'		=> $payment['name'],
+						'priority'	=> $payment_data['priority'],
+						'status'	=> $payment_data['status']
+					);
+				}
+			}
 		}
 		
 		$this->template->regions(array('header', 'content_top', 'content_left', 'content_right', 'footer'));
@@ -330,16 +335,36 @@ class Checkout extends MX_Controller {
 				$order_type = 'collection';
 			}
 		
-			if ($order_info['payment'] === 'paypal') { 										// checks if payment method is paypal or cod
-				$payment_method = 'PayPal';
-			} else if ($order_info['payment'] === 'cod'){
-				$payment_method = 'Cash On Delivery';
+			$payment = $this->Extensions_model->getPayment($order_info['payment']);
+			if (isset($payment['data']['name'])) { 										// checks if payment method is paypal or cod
+				$payment_method = $payment['data']['name'];
+			} else {
+				$payment_method = '';
 			}
 		
 			$data['order_details'] = sprintf($this->lang->line('text_order_info'), $order_type,  mdate('%d %M %y - %H:%i', strtotime($order_info['date_added'])), mdate('%d %M %y - %H:%i', strtotime($order_info['order_time'])), $payment_method);
 		
-			$data['menus'] = $this->Orders_model->getOrderMenus($order_info['order_id']);
-			
+			$data['menus'] = array();
+			$menus = $this->Orders_model->getOrderMenus($order_info['order_id']);
+ 			foreach ($menus as $menu) {	
+				$option_data = array();
+				$menu_options = $this->Orders_model->getOrderMenuOptions($order_info['order_id'], $menu['menu_id']);
+				if ($menu_options) {
+		 			foreach ($menu_options as $menu_option) {	
+						$option_data[] = $menu_option['order_option_name'];
+					}
+				}
+
+				$data['menus'][] = array(													// load menu data into array
+					'menu_id' 		=> $menu['menu_id'],
+					'name' 			=> (strlen($menu['name']) > 20) ? substr($menu['name'], 0, 20) .'...' : $menu['name'],			
+					'price' 		=> $this->currency->format($menu['price']),		//add currency symbol and format item price to two decimal places
+					'quantity' 		=> $menu['quantity'],
+					'subtotal' 		=> $this->currency->format($menu['subtotal']), 	//add currency symbol and format item subtotal to two decimal places
+					'options' 		=> implode(', ', $option_data)
+				);
+			}
+
 			$data['order_total'] = sprintf($this->lang->line('text_order_total'), $this->currency->format($order_info['order_total']));
 		
 			if (!empty($order_info['address_id'])) {											// checks if address_id is set then retrieve delivery address
@@ -390,8 +415,8 @@ class Checkout extends MX_Controller {
 			$order_data['new_address'] 	= $this->input->post('new_address');
 	 		$order_data['comment'] 		= $this->input->post('comment');						// retrieve comment value from $_POST data if set and convert to integer then add to order_data array
 		
-			if ($this->session->userdata('coupon_code')) {
-				$order_data['coupon_code'] = $this->session->userdata('coupon_code');
+			if ($this->session->userdata('coupon')) {
+				$order_data['coupon'] = $this->session->userdata('coupon');
 			}
 
 			if ($this->input->post('order_type') === '1') {
@@ -414,29 +439,29 @@ class Checkout extends MX_Controller {
 		$order_data = $this->session->userdata('order_data'); 						// retrieve order details from session userdata
 		$cart_contents = $this->session->userdata('cart_contents'); 												// retrieve cart contents
 
-		if (!empty($this->input->post['post_checkout'])) {
+		if (is_numeric($this->input->post('post_checkout'))) {
 			$order_data['payment'] = $this->input->post('payment');
 			
 			$order_id = (is_numeric($this->input->cookie('last_order_id'))) ? $this->input->cookie('last_order_id') : FALSE;
 			$order_info = $this->Orders_model->getMainOrder($order_id, $order_data['customer_id']);	// retrieve order details array from getMainOrder method in Orders model
 			
-			if ((!$order_info AND empty($order_info['status_id'])) AND $this->input->post('payment')) {
+			if ((!$order_info OR empty($order_info['status_id'])) AND $this->input->post('payment')) {
 				$order_id = $this->Orders_model->addOrder($order_data, $cart_contents);
 				$this->input->set_cookie('last_order_id', $order_id, 300, '.'.$_SERVER['HTTP_HOST']);
 			}
-			
-			if ($order_id) {
-				if ($this->input->post('payment') === 'cod') { 											// else if payment method is cash on delivery
+
+			$payment = $this->Extensions_model->getPayment($order_data['payment']);
+			if ($order_id AND $payment) {
+				if ($payment['name'] == 'cod') { 											// else if payment method is cash on delivery
 					$this->Orders_model->completeOrder($order_id, $order_data);
 					redirect('main/checkout/success');									// redirect to checkout success page with returned order id
 				}
 
-				if ($this->input->post('payment') === 'paypal') { 								// check if payment method is equal to paypal
+				if ($payment['name'] == 'paypal_express') { 								// check if payment method is equal to paypal
 					$response = $this->Paypal_model->setExpressCheckout($order_data, $this->cart->contents());
 		  
 					if (strtoupper($response['ACK']) === 'SUCCESS' OR strtoupper($response['ACK']) === 'SUCCESSWITHWARNING') {
-						$paypal_config = $this->config->item('paypal_express_payment');
-						if (isset($paypal_config['api_mode']) AND $paypal_config['api_mode'] === 'sandbox') {
+						if (isset($payment['data']['api_mode']) AND $payment['data']['api_mode'] === 'sandbox') {
 							$api_mode = '.sandbox';
 						} else {
 							$api_mode = '';
@@ -482,7 +507,7 @@ class Checkout extends MX_Controller {
 		$this->form_validation->set_rules('comment', 'Comment', 'xss_clean|trim|max_length[520]'); 
 		
 		if ($this->input->post('post_checkout')) {
-			$this->form_validation->set_rules('payment', 'Payment Method', 'xss_clean|trim|required|alpha');
+			$this->form_validation->set_rules('payment', 'Payment Method', 'xss_clean|trim|required|alpha_dash');
 		}
 		
 		// END of form validation rules
@@ -508,10 +533,10 @@ class Checkout extends MX_Controller {
 
 	public function order_type($type) {
 		if ($this->config->item('location_order') === '1') {
-			if (($type == '1') AND ( ! $this->location->checkDelivery())) { 					// checks if cart contents is empty  
+			if (($type == '1') AND ( ! $this->location->hasDelivery())) { 					// checks if cart contents is empty  
 				$this->form_validation->set_message('order_type', $this->lang->line('error_no_delivery'));
 				return FALSE;
-			} else if (($type == '2') AND ( ! $this->location->checkCollection())) { 				// checks if cart contents is empty  
+			} else if (($type == '2') AND ( ! $this->location->hasCollection())) { 				// checks if cart contents is empty  
 				$this->form_validation->set_message('order_type', $this->lang->line('error_no_collection'));
 				return FALSE;
 			} else {																				// else validation is successful

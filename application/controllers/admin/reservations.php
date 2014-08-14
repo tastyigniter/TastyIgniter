@@ -56,9 +56,7 @@ class Reservations extends CI_Controller {
 			$data['filter_search'] = '';
 		}
 		
-    	if ($this->user->staffLocationAccess()) {
-  			$filter['filter_location'] = $this->user->getLocationId();
-		} else if (is_numeric($this->input->get('filter_location'))) {
+    	if (is_numeric($this->input->get('filter_location'))) {
 			$filter['filter_location'] = $data['filter_location'] = $this->input->get('filter_location');
 			$url .= 'filter_location='.$filter['filter_location'].'&';
 		} else {

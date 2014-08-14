@@ -143,7 +143,15 @@
 					<div class="form-group">
 						<label class="col-sm-2 control-label">Notify Customer:</label>
 						<div class="col-sm-5">
-							<input type="checkbox" name="notify" value="1" />
+							<div id="input-notify" class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($notify == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="notify" value="0" <?php echo set_radio('notify', '0'); ?>>NO</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="notify" value="1" <?php echo set_radio('notify', '1', TRUE); ?>>YES</label>
+								<?php } else { ?>  
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="notify" value="0" <?php echo set_radio('notify', '0', TRUE); ?>>NO</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="notify" value="1" <?php echo set_radio('notify', '1'); ?>>YES</label>
+								<?php } ?>  
+							</div>
 							<?php echo form_error('notify', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
@@ -243,7 +251,7 @@
 								<td><?php echo $cart_item['qty']; ?>x</td>
 								<td><?php echo $cart_item['name']; ?><br />
 								<?php if (!empty($cart_item['options'])) { ?>
-									<div><font size="1">+ <?php echo $cart_item['options']['name']; ?>: <?php echo $cart_item['options']['price']; ?> </font></div>
+									<div><font size="1">+ <?php echo $cart_item['options']; ?></font></div>
 								<?php } ?>
 								</td>
 								<td class="text-center"><?php echo $cart_item['price']; ?></td>

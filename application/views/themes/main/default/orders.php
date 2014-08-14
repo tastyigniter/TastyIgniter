@@ -4,7 +4,7 @@
 <div class="row content">
 	<?php echo $content_left; ?><?php echo $content_right; ?>
 
-	<div class="col-xs-9">
+	<div class="col-md-9 page-content">
 		<div class="order-lists row wrap-all">
 			<div class="table-responsive">
 				<table class="table table-hover">
@@ -17,6 +17,7 @@
 							<th><?php echo $column_order; ?></th>
 							<th><?php echo $column_items; ?></th>
 							<th><?php echo $column_total; ?></th>
+							<th></th>
 							<th></th>
 						</tr>
 					</thead>
@@ -31,13 +32,13 @@
 							<td><?php echo $order['order_type']; ?></td>
 							<td><?php echo $order['total_items']; ?></td>
 							<td><?php echo $order['order_total']; ?></td>
-							<td><a href="<?php echo $order['reorder']; ?>"><?php echo $text_reorder; ?></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="<?php echo $order['leave_review']; ?>"><?php echo $text_leave_review; ?></a></td>
+							<td><a href="<?php echo $order['reorder']; ?>"><?php echo $text_reorder; ?></a></td>
+							<td><a href="<?php echo $order['leave_review']; ?>"><?php echo $text_leave_review; ?></a></td>
 						</tr>
 						<?php } ?>
 					<?php } else { ?>
 						<tr>
-							<td colspan="8"><?php echo $text_empty; ?></td>
+							<td colspan="9"><?php echo $text_empty; ?></td>
 						</tr>
 					<?php } ?>
 					</tbody>

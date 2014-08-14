@@ -34,16 +34,14 @@
 						<label for="" class="col-sm-2 control-label">Dimension:
 							<span class="help-block">(H x W)</span>
 						</label>
-						<div class="form-mini col-sm-5">
-							<div class="col-sm-2">
+						<div class="col-sm-5">
+							<div class="control-group control-group-2">
 								<input type="text" name="dimension_h" class="form-control" value="<?php echo $dimension_h; ?>" />
-							</div>
-							<div class="col-sm-2">
 								<input type="text" name="dimension_w" class="form-control" value="<?php echo $dimension_w; ?>" />
 							</div>
+							<?php echo form_error('dimension_h', '<span class="text-danger">', '</span>'); ?>
+							<?php echo form_error('dimension_w', '<span class="text-danger">', '</span>'); ?>
 						</div>
-						<?php echo form_error('dimension_h', '<span class="text-danger">', '</span>'); ?>
-						<?php echo form_error('dimension_w', '<span class="text-danger">', '</span>'); ?>
 					</div>
 					<div class="form-group">
 						<label for="input-effect" class="col-sm-2 control-label">Effect</label>
@@ -139,14 +137,16 @@
 								<td><input type="text" name="layouts[<?php echo $table_row; ?>][priority]" class="form-control" value="<?php echo $module['priority']; ?>" />
 									<?php echo form_error('layouts['.$table_row.'][priority]', '<span class="text-danger small">', '</span>'); ?>
 								</td>
-								<td class="text-center"><select name="layouts[<?php echo $table_row; ?>][status]" class="form-control">
-									<option value="0" >Disabled</option>
-									<?php if ($module['status'] === '1') { ?>
-										<option value="1" selected="selected">Enabled</option>
-									<?php } else { ?>  
-										<option value="1" >Enabled</option>
-									<?php } ?>  
-									</select>
+								<td>
+									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+										<?php if ($module['status'] === '1') { ?>
+											<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="layouts[<?php echo $table_row; ?>][status]" value="0" <?php echo set_radio('layouts['.$table_row.'][status]', '0'); ?>>Disabled</label>
+											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="layouts[<?php echo $table_row; ?>][status]" value="1" <?php echo set_radio('layouts['.$table_row.'][status]', '1', TRUE); ?>>Enabled</label>
+										<?php } else { ?>  
+											<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="layouts[<?php echo $table_row; ?>][status]" value="0" <?php echo set_radio('layouts['.$table_row.'][status]', '0', TRUE); ?>>Disabled</label>
+											<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="layouts[<?php echo $table_row; ?>][status]" value="1" <?php echo set_radio('layouts['.$table_row.'][status]', '1'); ?>>Enabled</label>
+										<?php } ?>  
+									</div>
 									<?php echo form_error('layouts['.$table_row.'][status]', '<span class="text-danger small">', '</span>'); ?>
 								</td>
 							</tr>
@@ -181,7 +181,7 @@ function imageUpload(field) {
 		afterClose: function() {
 			if ($('#' + field).attr('value')) {
 				$.ajax({
-					url: js_site_url('admin/image_manager/resize?image=') + encodeURIComponent($('#' + field).attr('value')),
+					url: js_site_url('admin/image_manager/resize?image=') + encodeURIComponent($('#' + field).attr('value')) + '&width=120&height=120',
 					dataType: 'json',
 					success: function(json) {
 						var thumb = $('#' + field).parent().parent().find('.thumb');
@@ -233,14 +233,15 @@ function addModule() {
 		html += '<option value="top">Top</option>';
     html += '</select></td>';    
 	html += '	<td><input type="text" name="layouts[' + table_row + '][priority]" class="form-control" value="" /></td>';
-	html += '   <td class="text-center"><select name="layouts[' + table_row + '][status]" class="form-control">';
-    html += '      <option value="1">Enabled</option>';
-    html += '      <option value="0">Disabled</option>';
-    html += '   </select></td>';
+	html += '   <td><div class="btn-group btn-group-toggle" data-toggle="buttons">';
+	html += '   	<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="layouts[' + table_row + '][status]" value="0" checked="checked">Disabled</label>';
+	html += '   	<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="layouts[' + table_row + '][status]" value="1">Enabled</label>';
+	html += '   </div></td>';
 	html += '</tr>';
 	
 	$('.table-sortable tbody').append(html);
-	$('select.form-control').selectpicker({iconBase:'fa', tickIcon:'fa-check'});
+	$('select.form-control').selectpicker('refresh');
+	$('.btn-group-toggle input[type="radio"]:checked').trigger('change');
 	
 	table_row++;
 }

@@ -17,6 +17,10 @@ class User {
 		$this->CI =& get_instance();
 		$this->CI->load->database();
 		
+		$this->initialize();
+	}
+	
+	public function initialize() {
 		$user_info = $this->CI->session->userdata('user_info');
 
 		if ( ! isset($user_info['user_id']) AND  ! isset($user_info['username'])) { 
@@ -30,30 +34,32 @@ class User {
 
 			$this->CI->db->where('user_id', $user_info['user_id']);
 			$this->CI->db->where('username', $user_info['username']);
-
 			$query = $this->CI->db->get();
-			$row = $query->row_array();
 			
 			if ($query->num_rows() === 1) {
-				$this->CI->user_id 			= $row['user_id'];
-				$this->CI->username			= $row['username'];
-				$this->CI->staff_id 		= $row['staff_id'];
-				$this->CI->staff_name 		= $row['staff_name'];
-				$this->CI->location_id 		= $row['location_id'];
-				$this->CI->location_name 	= $row['location_name'];
+				$row = $query->row_array();
 
-				$this->CI->staff_group_id 	= $row['staff_group_id'];
-				$this->CI->staff_group 		= $row['staff_group_name'];
-				$this->CI->location_access 	= $row['location_access'];
-			
+				$this->user_id 			= $row['user_id'];
+				$this->username			= $row['username'];
+				$this->staff_id 		= $row['staff_id'];
+				$this->staff_name 		= $row['staff_name'];
+				$this->staff_group_id 	= $row['staff_group_id'];
+				$this->staff_group 		= $row['staff_group_name'];
+				$this->location_id 		= $row['location_id'];
+				$this->location_name 	= $row['location_name'];
+
 				if (!empty($row['permission'])) {
 					$permission = unserialize($row['permission']);
 
 					if (is_array($permission)) {
 						foreach ($permission as $key => $value) {
-							$this->CI->permissions[$key] = $value;
+							$this->permissions[$key] = $value;
 						}
 					}
+				}
+				
+				if ($row['location_access'] == '1') {
+					$this->setLocationAccess();
 				}
 			} else {
 				$this->logout();
@@ -82,10 +88,10 @@ class User {
 			
 			$this->CI->session->set_userdata('user_info', $user_data);
 			
-			$this->CI->user_id 		= $row['user_id'];
-			$this->CI->username 	= $row['username'];
-			$this->CI->staff_id 	= $row['staff_id'];
-			$this->CI->staff_name 	= $row['staff_name'];
+			$this->user_id 		= $row['user_id'];
+			$this->username 	= $row['username'];
+			$this->staff_id 	= $row['staff_id'];
+			$this->staff_name 	= $row['staff_name'];
 
 	  		return TRUE;
 		} else {
@@ -93,62 +99,51 @@ class User {
 		}
 	}
 
-  	public function logout() {		
-		$this->CI->session->unset_userdata('user_info');
-
-		$this->CI->user_id = '';
-		$this->CI->username = '';
-		$this->CI->staff_id = '';
-		$this->CI->staff_name = '';
-		$this->CI->staff_group = '';
-		$this->CI->staff_group_id = '';
-		$this->CI->location_id = '';
-		$this->CI->location_name = '';
-	}
-
   	public function isLogged() {
-	    return $this->CI->user_id;
+	    return $this->user_id;
 	}
 
   	public function getId() {
-		return $this->CI->user_id;
+		return $this->user_id;
   	}
 
   	public function getUserName() {
-    	return $this->CI->username;
+    	return $this->username;
   	}	
 
   	public function getStaffId() {
-    	return $this->CI->staff_id;
+    	return $this->staff_id;
   	}	
 
   	public function getStaffName() {
-    	return $this->CI->staff_name;
+    	return $this->staff_name;
   	}	
 
   	public function getLocationId() {
-    	return $this->CI->location_id;
+    	return $this->location_id;
   	}	
 
   	public function getLocationName() {
-    	return $this->CI->location_name;
+    	return $this->location_name;
   	}	
 
   	public function staffGroup() {
-    	return $this->CI->staff_group;
+    	return $this->staff_group;
   	}	
 
   	public function getStaffGroupId() {
-    	return $this->CI->staff_group_id;
+    	return $this->staff_group_id;
   	}	
 
-  	public function staffLocationAccess() {
-    	return $this->CI->location_access;
+  	public function setLocationAccess() {
+    	//if (!isset($_GET['filter_location'])) {
+    		$_GET['filter_location'] = $this->location_id;
+    	//}
   	}	
 
   	public function hasPermissions($key, $value) {
-    	if (isset($this->CI->permissions[$key])) {
-	  		return in_array($value, $this->CI->permissions[$key]);
+    	if (isset($this->permissions[$key])) {
+	  		return in_array($value, $this->permissions[$key]);
 		} else {
 	  		return FALSE;
 		}
@@ -157,10 +152,23 @@ class User {
   	public function unreadMessageTotal() {
     	if (empty($this->unread)) {
 			$this->CI->load->model('Messages_model');
-    		$this->unread = $this->CI->Messages_model->getAdminMessageUnread($this->CI->staff_id);
+    		$this->unread = $this->CI->Messages_model->getAdminMessageUnread($this->staff_id);
 		}
     	return $this->unread;
   	}	
+
+  	public function logout() {		
+		$this->CI->session->unset_userdata('user_info');
+
+		$this->user_id = '';
+		$this->username = '';
+		$this->staff_id = '';
+		$this->staff_name = '';
+		$this->staff_group = '';
+		$this->staff_group_id = '';
+		$this->location_id = '';
+		$this->location_name = '';
+	}
 }
 
 // END User Class

@@ -5,13 +5,15 @@
 		<div class="links">
 			<a href="<?php echo site_url(); ?>">Home</a>  |  
 			<a href="<?php echo site_url('main/menus'); ?>">View Menu</a>  |  
-			<a href="<?php echo site_url('main/local'); ?>">Local</a>  |  
+			<a href="<?php echo site_url('main/local/locations'); ?>">Locations</a>  |  
 			<a href="<?php echo site_url('main/contact'); ?>">Contact Us</a>  |  
 			
 			<?php $pages = $this->Pages_model->getPages(); ?>
-			<?php foreach ($pages as $page) { ?>
-				<?php if ($page['menu_location'] === '3' OR $page['menu_location'] === '1') { ?>
-					<a href="<?php echo site_url('main/pages?page_id='.$page['page_id']); ?>"><?php echo $page['name']; ?></a>  |  
+			<?php if ($pages) { ?>
+				<?php foreach ($pages as $page) { ?>
+					<?php if ($page['navigation'] === '3' OR $page['navigation'] === '1') { ?>
+						<a href="<?php echo site_url('main/pages?page_id='.$page['page_id']); ?>"><?php echo $page['name']; ?></a>  |  
+					<?php } ?>
 				<?php } ?>
 			<?php } ?>
 
@@ -38,7 +40,7 @@ $(document).ready(function() {
 		 $('#codeigniter_profiler').fadeOut();
 	}
 
-	$('a').tooltip({placement: 'bottom'});
+	$('a, i').tooltip({placement: 'bottom'});
 	$('select.form-control').selectpicker({iconBase:'fa', tickIcon:'fa-check'});
 });	
 </script>

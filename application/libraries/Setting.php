@@ -14,28 +14,6 @@ class Setting {
 		}
 	}
 	
-	public function setConfig() {
-		$this->CI->load->database();
-		$this->CI->load->model('Settings_model');
-				
-      	$settings = $this->CI->Settings_model->getAll();      
-		
-		if ($settings) {
-			foreach ($settings as $setting) {
-		
-				if (!empty($setting['serialized'])) {
-					$this->CI->config->set_item($setting['item'], unserialize($setting['value']));
-				} else {
-					$this->CI->config->set_item($setting['item'], $setting['value']);
-				}
-			}	
-		}
-		
-		if ($this->CI->config->item('index_file_url') === '1') {
-			$this->CI->config->set_item('index_page', '');
-		}
-	}
-		
 	public function setSettings() {
 		$this->setConfig();
 
@@ -61,6 +39,28 @@ class Setting {
 		
 	}
 	
+	public function setConfig() {
+		$this->CI->load->database();
+		$this->CI->load->model('Settings_model');
+				
+      	$settings = $this->CI->Settings_model->getAll();      
+		
+		if ($settings) {
+			foreach ($settings as $setting) {
+		
+				if (!empty($setting['serialized'])) {
+					$this->CI->config->set_item($setting['item'], unserialize($setting['value']));
+				} else {
+					$this->CI->config->set_item($setting['item'], $setting['value']);
+				}
+			}	
+		}
+		
+		if ($this->CI->config->item('index_file_url') === '1') {
+			$this->CI->config->set_item('index_page', '');
+		}
+	}
+		
 	public function setMaintainance() {
 		$this->CI->load->library('user');
 	

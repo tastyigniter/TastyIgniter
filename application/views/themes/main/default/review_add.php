@@ -4,7 +4,7 @@
 <div class="row content">
 	<?php echo $content_left; ?><?php echo $content_right; ?>
 
-	<div class="col-xs-9">
+	<div class="col-md-8 page-content">
 		<form method="post" accept-charset="utf-8" action="<?php echo $action; ?>" role="form">
 		<div class="row wrap-all">
 			<div class="form-group">
@@ -17,32 +17,22 @@
 				<input type="text" id="customer" class="form-control" value="<?php echo $customer_name; ?>" disabled />
 				<input type="hidden" name="customer_id" value="<?php echo $customer_id; ?>" />
 			</div>
-			<div class="form-group">
-				<label for="quality"><?php echo $entry_quality; ?></label>
-				<select name="quality" id="quality" class="form-control">
-					<?php foreach ($ratings as $key => $value) { ?>
-						<option value="<?php echo $key; ?>" <?php echo set_select('quality', $key); ?>><?php echo $value; ?></option>
-					<?php }?>
-				</select>
-				<?php echo form_error('quality', '<span class="error help-block">', '</span>'); ?>
-			</div>
-			<div class="form-group">
-				<label for="delivery"><?php echo $entry_delivery; ?></label>
-				<select name="delivery" id="delivery" class="form-control">
-					<?php foreach ($ratings as $key => $value) { ?>
-						<option value="<?php echo $key; ?>" <?php echo set_select('delivery', $key); ?>><?php echo $value; ?></option>
-					<?php }?>
-				</select>
-				<?php echo form_error('delivery', '<span class="error help-block">', '</span>'); ?>
-			</div>
-			<div class="form-group">
-				<label for="service"><?php echo $entry_service; ?></label>
-				<select name="service" id="service" class="form-control">
-					<?php foreach ($ratings as $key => $value) { ?>
-						<option value="<?php echo $key; ?>" <?php echo set_select('service', $key); ?>><?php echo $value; ?></option>
-					<?php }?>
-				</select>
-				<?php echo form_error('service', '<span class="help-block error">', '</span>'); ?>
+			<div class="form-inline">
+				<div class="form-group wrap-horizontal wrap-right">
+					<label for="quality"><?php echo $entry_quality; ?></label>
+					<div class="rating rating-star" data-score="<?php echo $rating['quality']; ?>" data-score-name="rating[quality]"></div>
+					<?php echo form_error('rating[quality]', '<span class="error help-block">', '</span>'); ?>
+				</div>
+				<div class="form-group wrap-horizontal wrap-right">
+					<label for="delivery"><?php echo $entry_delivery; ?></label>
+					<div class="rating rating-star" data-score="<?php echo $rating['delivery']; ?>" data-score-name="rating[delivery]"></div>
+					<?php echo form_error('rating[delivery]', '<span class="error help-block">', '</span>'); ?>
+				</div>
+				<div class="form-group wrap-horizontal">
+					<label for="service"><?php echo $entry_service; ?></label>
+					<div class="rating rating-star" data-score="<?php echo $rating['service']; ?>" data-score-name="rating[service]"></div>
+					<?php echo form_error('rating[service]', '<span class="help-block error">', '</span>'); ?>
+				</div>
 			</div>
 			<div class="form-group">
 				<label for="review-text"><?php echo $entry_review; ?></label>

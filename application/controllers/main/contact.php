@@ -49,7 +49,7 @@ class Contact extends MX_Controller {
 		$data['button_send'] 			= $this->lang->line('button_send');
 		// END of retrieving lines from language file to send to view.
 
-		$data['local_action'] 			= site_url('local_module/main/local_module/distance');
+		$data['local_action'] 			= site_url('local_module/main/local_module/search');
 		$data['action'] 				= site_url('main/contact');
 		
 		$data['local_location'] 		= $this->location->local(); 									//retrieve local location data from location library
@@ -57,7 +57,7 @@ class Contact extends MX_Controller {
 		$data['location_name'] 			= $this->location->getName();
 		$data['location_telephone'] 	= $this->location->getTelephone();
 		
-		$data['opening_hours'] = $this->location->getOpeningHours(); 								//retrieve local location opening hours from location library
+		$data['opening_hours'] 			= $this->location->openingHours(); 								//retrieve local location opening hours from location library
 		
 		if ($this->location->isOpened()) { 														// check if local location is open
 			$data['text_open_or_close'] = $this->lang->line('text_opened');						// display we are open

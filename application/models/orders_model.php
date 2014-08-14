@@ -228,10 +228,8 @@ class Orders_model extends CI_Model {
 	}
 
 	public function getOrderMenus($order_id) {
-		$this->db->select('order_menus.order_menu_id, order_menus.order_id, order_menus.menu_id, order_menus.name, order_menus.quantity, order_menus.price, order_menus.subtotal, order_menus.order_option_id, option_name, option_price');
 		$this->db->from('order_menus');
-		$this->db->join('order_options', 'order_options.order_option_id = order_menus.order_option_id', 'left');
-		$this->db->where('order_menus.order_id', $order_id);
+		$this->db->where('order_id', $order_id);
 			
 		$query = $this->db->get();
 		$result = array();
@@ -240,6 +238,24 @@ class Orders_model extends CI_Model {
 			$result = $query->result_array();
 		}
 	
+		return $result;
+	}
+
+	public function getOrderMenuOptions($order_id, $menu_id) {
+		$result = array();
+
+		if (!empty($order_id) AND !empty($menu_id)) {
+			$this->db->from('order_options');
+			$this->db->where('order_id', $order_id);
+			$this->db->where('menu_id', $menu_id);
+			
+			$query = $this->db->get();
+	
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+		}
+		
 		return $result;
 	}
 
@@ -255,6 +271,17 @@ class Orders_model extends CI_Model {
 		}
 	
 		return $result;
+	}
+
+	public function getOrderCoupon($order_id) {
+		$this->db->from('coupons_history');
+		$this->db->where('order_id', $order_id);
+		
+		$query = $this->db->get();
+
+		if ($query->num_rows() > 0) {
+			return $query->row_array();
+		}
 	}
 
 	public function getOrderDates() {
@@ -358,8 +385,11 @@ class Orders_model extends CI_Model {
 			if ($this->db->insert('orders')) {
 				$order_id = $this->db->insert_id();
 			
-				$this->load->model('Addresses_model');
-				$this->Addresses_model->updateCustomerDefaultAddress($order_info['customer_id'], $order_info['address_id']);
+				if (isset($order_info['address_id'])) {
+					$this->load->model('Addresses_model');
+					$this->Addresses_model->updateCustomerDefaultAddress($order_info['customer_id'], $order_info['address_id']);
+				}
+				
 				$this->addOrderMenus($order_id, $cart_contents);
 			
 				$order_totals = array(
@@ -370,8 +400,8 @@ class Orders_model extends CI_Model {
 		
 				$this->addOrderTotals($order_id, $order_totals);
 		
-				if (!empty($order_info['coupon_code'])) {
-					$this->addOrderCoupon($order_id, $order_info['customer_id'], $cart_contents['coupon'], $order_info['coupon_code']);
+				if (!empty($order_info['coupon'])) {
+					$this->addOrderCoupon($order_id, $order_info['customer_id'], $cart_contents['coupon'], $order_info['coupon']['code']);
 				}
 		
 				return $order_id;
@@ -383,21 +413,15 @@ class Orders_model extends CI_Model {
 		$current_time = time();
 
 		if ($order_id AND !empty($order_info)) {
-			$paypal = $this->config->item('paypal_express_payment');
-			$cod = $this->config->item('cod_payment');
+			$notify = $this->_sendMail($order_id);
+			$payment = $this->Extensions_model->getPayment($order_info['payment']);
 			
-			if ($order_info['payment'] === 'paypal' AND is_numeric($paypal['order_status'])) {
-				$status_id = (int) $paypal['order_status'];
-				$this->db->set('status_id', $status_id);
-			} else if ($order_info['payment'] === 'cod' AND is_numeric($cod['cod_order_status'])) {
-				$status_id = (int) $cod['cod_order_status'];
-				$this->db->set('status_id', $status_id);
-			} else {
-				$status_id = (int)$this->config->item('order_status_new');
-				$this->db->set('status_id', $status_id);
+			$status_id = (int)$this->config->item('order_status_new');
+			if (isset($payment['order_status']) AND is_numeric($payment['order_status'])) {
+				$status_id = (int) $payment['order_status'];
 			}
 
-			$notify = $this->_sendMail($order_id);
+			$this->db->set('status_id', $status_id);
 			$this->db->set('notify', $notify);
 			$this->db->where('order_id', $order_id);
 			
@@ -421,35 +445,45 @@ class Orders_model extends CI_Model {
 	}
 	
 	public function addOrderMenus($order_id, $cart_contents = array()) {
-		if (is_array($cart_contents) AND !empty($cart_contents)) {
-			$order_option_id = 0;
+		if (is_array($cart_contents) AND !empty($cart_contents) AND $order_id) {
 			foreach ($cart_contents as $key => $item) {
 				if (is_array($item) AND $key === $item['rowid']) {			
-					if (!empty($item['options']['option_id'])) {
-						$order_option_id = $this->addOrderMenuOption($order_id, $item['id'], $item['options']); //$options = serialize($item['options']);
+
+					if (!empty($item['id'])) {
+						$this->db->set('menu_id', $item['id']);
+					}
+
+					if (!empty($item['name'])) {
+						$this->db->set('name', $item['name']);
+					}
+
+					if (!empty($item['qty'])) {
+						$this->db->set('quantity', $item['qty']);
+					}
+
+					if (!empty($item['price'])) {
+						$this->db->set('price', $item['price']);
+					}
+
+					if (!empty($item['subtotal'])) {
+						$this->db->set('subtotal', $item['subtotal']);
+					}
+				
+					if (!empty($item['options'])) {
+						$this->db->set('option_values', serialize($item['options']));
+					}
+				
+					$this->db->set('order_id', $order_id);
+					
+					if ($query = $this->db->insert('order_menus')) {
+						$order_menu_id = $this->db->insert_id();
+						$this->subtractStock($item['id'], $item['qty']);
+				
+						if (!empty($item['options'])) {
+							$this->addOrderMenuOptions($order_menu_id, $order_id, $item['id'], $item['options']);
+						}
 					}
 			
-					$order_menus = array (
-						'order_id' 		=> $order_id,
-						'menu_id' 		=> $item['id'],
-						'name' 			=> $item['name'],
-						'quantity' 		=> $item['qty'],
-						'price' 		=> $item['price'],
-						'subtotal' 		=> $item['subtotal'],
-						'order_option_id' => $order_option_id
-					);
-				
-					$this->db->insert('order_menus', $order_menus); 
-				
-					$this->load->model('Menus_model');
-					$menu_data = $this->Menus_model->getAdminMenu($item['id']);
-				
-					if ($menu_data['subtract_stock'] === '1') {
-						$this->db->set('stock_qty', 'stock_qty - '. $item['qty'], FALSE);
-				
-						$this->db->where('menu_id', $item['id']);
-						$this->db->update('menus'); 
-					}
 				}
 			}
 	
@@ -457,24 +491,35 @@ class Orders_model extends CI_Model {
 		}
 	}
 
-	public function addOrderMenuOption($order_id, $menu_id, $option) {
-		if (!empty($order_id)) {
-			$this->db->set('order_id', $order_id);
+	public function subtractStock($menu_id, $quantity) {
+		$this->load->model('Menus_model');
+		$menu_data = $this->Menus_model->getAdminMenu($menu_id);
+	
+		if ($menu_data['subtract_stock'] === '1' AND $quantity) {
+			$this->db->set('stock_qty', 'stock_qty - '. $quantity, FALSE);
+	
+			$this->db->where('menu_id', $menu_id);
+			$this->db->update('menus'); 
 		}
+	}
+						
+	public function addOrderMenuOptions($order_menu_id, $order_id, $menu_id, $menu_option) {
+		if (!empty($order_menu_id) AND !empty($order_id) AND !empty($menu_id) AND !empty($menu_option)) {
+			$menu_option_value_ids = (!empty($menu_option['menu_option_value_id'])) ? explode('|', $menu_option['menu_option_value_id']) : array();
+			$option_names = (!empty($menu_option['name'])) ? explode('|', $menu_option['name']) : array();
+			$option_prices = (!empty($menu_option['price'])) ? explode('|', $menu_option['price']) : array();
 
-		if (!empty($menu_id)) {
-			$this->db->set('menu_id', $menu_id);
-		}
-
-		if (!empty($option)) {
-			if ($menu_option) {
-				$this->db->set('option_id', $option['option_id']);
-				$this->db->set('option_name', $option['name']);
-				$this->db->set('option_price', $option['price']);
-			}
-
-			if ($this->db->insert('order_options')) {
-				return $this->db->insert_id();
+			if (count($menu_option_value_ids) > 0) {
+				foreach ($menu_option_value_ids as $key => $value) {
+					$this->db->set('order_menu_id', $order_menu_id);
+					$this->db->set('order_id', $order_id);
+					$this->db->set('menu_id', $menu_id);
+					$this->db->set('menu_option_value_id', $value);
+					$this->db->set('order_option_name', $option_names[$key]);
+					$this->db->set('order_option_price', $option_prices[$key]);
+					
+					$query = $this->db->insert('order_options');
+				}
 			}
 		}
 	}
@@ -518,15 +563,6 @@ class Orders_model extends CI_Model {
 		}
 	}
 	
-	public function addDefaultAddress($customer_id, $address_id) {
-		$this->db->set('address_id', $address_id);
-		$this->db->where('customer_id', $customer_id);
-		
-		if ($this->db->update('customers')) {
-			return $this->db->insert_id();
-		}
-	}
-						
 	public function deleteOrder($order_id) {
 		if (is_numeric($order_id)) {
 			$this->db->where('order_id', $order_id);
@@ -575,20 +611,24 @@ class Orders_model extends CI_Model {
 				$data['order_address'] = $this->country->addressFormat($order_address);
 			}
 			
+			$data['menus'] = array();
 			$menus = $this->getOrderMenus($result['order_id']);
 			if ($menus) {
-				$data['menus'] = $options = array();
 				foreach ($menus as $menu) {
-					if (!empty($menu['order_option_id'])) {
-						$options[] = array('option_name' => $menu['option_name'], 'option_price' => $menu['option_price']);
+					$option_data = array();
+					$options = $this->getOrderMenuOptions($result['order_id'], $menu['menu_id']);
+					if ($options) {
+						foreach ($options as $option) {
+							$option_data[] = $option['order_option_name'];
+						}
 					}
 					
 					$data['menus'][] = array(
-						'name' 			=> $menu['name'],
+						'name' 			=> (strlen($menu['name']) > 20) ? substr($menu['name'], 0, 20) .'...' : $menu['name'],			
 						'quantity' 		=> $menu['quantity'],
 						'price'			=> $this->currency->format($menu['price']),
 						'subtotal'		=> $this->currency->format($menu['subtotal']),
-						'options'		=> $options
+						'options'		=> explode(', ', $option_data)
 					);
 				}
 			}
@@ -632,7 +672,7 @@ class Orders_model extends CI_Model {
 			$this->email->initialize();
 
 			$this->email->from($this->config->item('site_email'), $this->config->item('site_name'));
-			if ($this->config->item('send_order_email') === '1') {
+			if ($this->config->item('location_order_email') === '1') {
 				$this->email->cc($this->location->getEmail());
 			}
 		

@@ -8,6 +8,12 @@ class Paypal_express extends MX_Controller {
 		$this->load->model('Statuses_model');	    
 	}
 
+	public function _remap() {
+		if (!$this->input->get('id') AND !$this->input->get('name') AND $this->input->get('action') !== 'edit') {
+			exit('No direct access allowed');
+		}
+	}
+	
 	public function index() {
 		if (!$this->user->islogged()) {  
   			redirect(ADMIN_URI.'/login');
@@ -24,11 +30,6 @@ class Paypal_express extends MX_Controller {
 		}		
 				
 		$extension = $this->Extensions_model->getExtension('payment', 'paypal_express');
-		
-		if (!$this->input->get('id') AND !$this->input->get('name') AND $this->input->get('action') !== 'edit') {
-			redirect(ADMIN_URI.'/extensions/edit?name=paypal_express&action=edit&id='.$extension['extension_id']);
-		}
-
 		$data['name'] = ucwords(str_replace('_', ' ', $this->input->get('name')));
 
 		if (!empty($extension['data'])) {
@@ -37,6 +38,12 @@ class Paypal_express extends MX_Controller {
 			$result = array();
 		}
 		
+		if (isset($result['name'])) {
+			$data['name'] = $result['name'];
+		} else {
+			$data['name'] = '';
+		}				
+
 		if (isset($result['api_user'])) {
 			$data['api_user'] = $result['api_user'];
 		} else {
@@ -97,6 +104,14 @@ class Paypal_express extends MX_Controller {
 			$data['cancel_uri'] = '';
 		}				
 
+		if (isset($this->input->post['priority'])) {
+			$data['priority'] = $this->input->post('priority');
+		} else if (isset($result['priority'])) {
+			$data['priority'] = $result['priority'];
+		} else {
+			$data['priority'] = '';
+		}		
+
 		if (isset($this->input->post['status'])) {
 			$data['status'] = $this->input->post('status');
 		} else if (isset($result['status'])) {
@@ -139,6 +154,8 @@ class Paypal_express extends MX_Controller {
 			$update['extension_id'] = (int) $this->input->get('id');
 			
 			$update['data'] = array(
+				'name' 				=> $this->input->post('name'),
+				'priority' 			=> $this->input->post('priority'),
 				'status' 			=> $this->input->post('status'),
 				'api_mode' 			=> $this->input->post('api_mode'),
 				'api_user' 			=> $this->input->post('api_user'),

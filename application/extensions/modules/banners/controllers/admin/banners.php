@@ -9,6 +9,12 @@ class Banners extends MX_Controller {
 		$this->load->model('Design_model');	    
 	}
 
+	public function _remap() {
+		if (!$this->input->get('id') AND !$this->input->get('name') AND $this->input->get('action') !== 'edit') {
+			exit('No direct access allowed');
+		}
+	}
+	
 	public function index() {
 		if (!$this->user->islogged()) {  
   			redirect(ADMIN_URI.'/login');
@@ -26,10 +32,6 @@ class Banners extends MX_Controller {
 				
 		$extension = $this->Extensions_model->getExtension('module', 'banners');
 		
-		if (!$this->input->get('id') AND !$this->input->get('name') AND $this->input->get('action') !== 'edit') {
-			redirect(ADMIN_URI.'/extensions/edit?name=banners&action=edit&id='.$extension['extension_id']);
-		}
-
 		$data['name'] = ucwords(str_replace('_module', '', $this->input->get('name')));
 
 		if (!empty($extension['data'])) {

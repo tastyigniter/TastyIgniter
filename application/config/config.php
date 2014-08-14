@@ -335,7 +335,7 @@ $config['modules_locations'] = array(
 | This indicates a fresh installation or upgrade. (BETA)
 |
 */
-$config['ti_setup'] = '';
+$config['ti_setup'] = 'installed';
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */

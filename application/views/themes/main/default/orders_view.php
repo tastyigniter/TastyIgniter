@@ -4,7 +4,7 @@
 <div class="row content">
 	<?php echo $content_left; ?><?php echo $content_right; ?>
 
-	<div class="col-xs-9">
+	<div class="col-md-9 page-content">
 		<div class="order-lists row wrap-all">
 		<form method="post" accept-charset="utf-8" action="<?php echo current_url(); ?>">
 			<div class="table-responsive">
@@ -46,7 +46,7 @@
 						<td width="1"><?php echo $menu['qty']; ?>x</td>
 						<td class="food_name"><?php echo $menu['name']; ?><br />
 						<?php if (!empty($menu['options'])) { ?>
-							<div><font size="1">+ <?php echo $menu['options']['name']; ?>: <?php echo $menu['options']['price']; ?> </font></div>
+							<div><font size="1">+ <?php echo $menu['options']; ?></font></div>
 						<?php } ?>
 						</td>
 						<td class="center"><?php echo $menu['price']; ?></td>

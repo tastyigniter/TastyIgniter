@@ -22,10 +22,17 @@
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="input-cod-total" class="col-sm-2 control-label">Minimum Total:</label>
+						<label for="input-name" class="col-sm-2 control-label">Name:</label>
 						<div class="col-sm-5">
-							<input type="text" name="total" id="input-cod-total" class="form-control" value="<?php echo $total; ?>" />
-							<?php echo form_error('total', '<span class="text-danger">', '</span>'); ?>
+							<input type="text" name="name" id="input-name" class="form-control" value="<?php echo set_value('name', $name); ?>" />
+							<?php echo form_error('name', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-order-total" class="col-sm-2 control-label">Minimum Total:</label>
+						<div class="col-sm-5">
+							<input type="text" name="order_total" id="input-order-total" class="form-control" value="<?php echo $order_total; ?>" />
+							<?php echo form_error('order_total', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
@@ -46,16 +53,24 @@
 						</div>
 					</div>
 					<div class="form-group">
+						<label for="input-priority" class="col-sm-2 control-label">Priority:</label>
+						<div class="col-sm-5">
+							<input type="text" name="priority" id="input-priority" class="form-control" value="<?php echo $priority; ?>" />
+							<?php echo form_error('priority', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
 						<label for="input-status" class="col-sm-2 control-label">Status:</label>
 						<div class="col-sm-5">
-							<select name="status" id="input-status" class="form-control">
-								<option value="0" <?php echo set_select('status', '0'); ?> >Disabled</option>
-								<?php if ($status === '1') { ?>
-									<option value="1" <?php echo set_select('status', '1', TRUE); ?> >Enabled</option>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($status == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1', TRUE); ?>>Enabled</label>
 								<?php } else { ?>  
-									<option value="1" <?php echo set_select('status', '1'); ?> >Enabled</option>
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1'); ?>>Enabled</label>
 								<?php } ?>  
-							</select>
+							</div>
 							<?php echo form_error('status', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>

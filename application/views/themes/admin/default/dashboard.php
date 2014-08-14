@@ -12,86 +12,41 @@
 
 		<div class="statistics">
 			<div class="row">
-				<div class="col-md-4 wrap-all">
-					<div class="panel panel-info text-center">
-						<div class="panel-body">
-							<span><?php echo $total_sales; ?></span>
+				<div class="col-md-6 wrap-all">
+					<div class="panel panel-default panel-statistics">
+						<div class="panel-heading">
+							<ul class="nav nav-tabs nav-tabs-statistics" role="tablist">
+								<li><a rel="today">Today</a></li>
+								<li><a rel="week">Week</a></li>
+								<li><a rel="month">Month</a></li>
+								<li><a rel="year">Year</a></li>
+							</ul>
 						</div>
-						<div class="panel-footer">Total Sales</div>
+						<div class="panel-body">
+							<div id="statistics">
+								<ul class="list-group">
+									<li class="list-group-item">Total Sales <span class="sales">0</span></li>
+									<li class="list-group-item">Total Lost Sales <span class="lost_sales">0</span></li>
+									<li class="list-group-item">Total Customers <span class="customers">0</span></li>
+									<li class="list-group-item">Total Orders <span class="orders">0</span></li>
+									<li class="list-group-item">Total Delivery Orders<span class="delivery_orders">0</span></li>
+									<li class="list-group-item">Total Collection Orders<span class="collection_orders">0</span></li>
+									<li class="list-group-item">Total Orders Completed<span class="orders_completed">0</span></li>
+									<li class="list-group-item">Total Table(s) Reserved<span class="tables_reserved">0</span></li>
+								</ul>
+							</div>
+  						</div>
 					</div>
 				</div>
-				<div class="col-md-4 wrap-all">
-					<div class="panel panel-success text-center">
-						<div class="panel-body">
-							<span><?php echo $total_sales_by_year; ?></span>
-						</div>
-						<div class="panel-footer">Total Sales This Year</div>
-					</div>
-				</div>
-				<div class="col-md-4 wrap-all">
-					<div class="panel panel-warning text-center">
-						<div class="panel-body">
-							<span><?php echo $total_lost_sales; ?></span>
-						</div>
-						<div class="panel-footer">Total Lost Sales</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-4 wrap-all">
-					<div class="panel panel-warning text-center">
-						<div class="panel-body">
-							<span><?php echo $total_customers; ?></span>
-						</div>
-						<div class="panel-footer">Total Customers</div>
-					</div>
-				</div>
-				<div class="col-md-4 wrap-all">
-					<div class="panel panel-danger text-center">
-						<div class="panel-body">
-							<span><?php echo $total_delivery_orders; ?></span>
-						</div>
-						<div class="panel-footer">Total Delivery Orders</div>
-					</div>
-				</div>
-				<div class="col-md-4 wrap-all">
-					<div class="panel panel-info text-center">
-						<div class="panel-body">
-							<span><?php echo $total_collection_orders; ?></span>
-						</div>
-						<div class="panel-footer">Total Collection Orders</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-4 wrap-all">
-					<div class="panel panel-success text-center">
-						<div class="panel-body">
-							<span><?php echo $total_orders; ?></span>
-						</div>
-						<div class="panel-footer">Total Orders</div>
-					</div>
-				</div>
-				<div class="col-md-4 wrap-all">
-					<div class="panel panel-info text-center">
-						<div class="panel-body">
-							<span><?php echo $total_orders_completed; ?></span>
-						</div>
-						<div class="panel-footer">Total Orders Completed</div>
-					</div>
-				</div>
-				<div class="col-md-4 wrap-all">
-					<div class="panel panel-warning text-center">
-						<div class="panel-body">
-							<span><?php echo $total_tables_reserved; ?></span>
-						</div>
-						<div class="panel-footer">Total Table(s) Reserved</div>
+				<div class="col-md-6 wrap-all">
+					<div class="panel panel-default">
+						<div class="panel-heading"><h3 class="panel-title">Set Up Steps</h3></div>
 					</div>
 				</div>
 			</div>
 		</div>
 		
-		<div class="panel panel-primary panel-chart">
+		<div class="panel panel-default panel-chart">
 			<div class="panel-heading">
 				<div class="form-inline">
 					<div class="row">
@@ -110,10 +65,10 @@
 						</div>
 						
 						<div class="col-md-5 pull-right text-right">
-							<div class="form-group">
+							<div class="form-group text-left">
 								<select name="range" class="form-control input-sm" onChange="getChart()">
 									<option value="">Select Period</option>  	
-									<option value="today" checked="checked">Today</option>  	
+									<option value="today" selected="selected">Today</option>  	
 									<option value="yesterday">Yesterday</option>  	
 									<option value="week">This Week</option>
 									<option value="last_week">Last Week</option>
@@ -122,10 +77,9 @@
 								</select>
 							</div>
 							&nbsp;&nbsp;&nbsp; - OR - &nbsp;&nbsp;&nbsp;
-							<div class="form-group">
+							<div class="form-group text-left">
 								<select name="monthly" class="form-control input-sm" onChange="getChart()">
 									<option value="">Select Month</option>  	
-									<option value="" checked="checked">select</option>  	
 									<?php foreach ($months as $key => $value) { ?>
 										<option value="<?php echo $key; ?>" <?php echo set_select('monthly', $key); ?>><?php echo $value; ?></option>  	
 									<?php } ?>
@@ -142,7 +96,7 @@
 		</div>
 	
 		<?php if ($orders) { ?>
-		<div class="panel panel-primary panel-orders">
+		<div class="panel panel-default panel-orders">
 			<div class="panel-heading"><h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;10 Latest Orders</h3></div>
 			<div class="table-responsive">
 				<table border="0" class="table table-striped table-border">
@@ -184,17 +138,49 @@
 <script type="text/javascript" src="<?php echo base_url("assets/js/jquery.flot.js"); ?>"></script>
 <script type="text/javascript"><!--
 $(document).ready(function() {
-	$('.chart-picker').on('click', 'button', function() {
-		if ($(this).is(':not(.active)')) {
-			$('.chart-picker button').removeClass('active');
-			$(this).addClass('active');
-			$('input[name="type"]').val($(this).attr('data-type'));
-			getChart();
-		}
-	});
+	$('.nav-tabs-statistics a[rel="today"]').trigger('click');
+});
+
+$(document).on('click', '.nav-tabs-statistics a', function() {
+	if ($(this).parent().is(':not(.active)')) {
+		$('.nav-tabs-statistics li').removeClass('active');
+		$(this).parent().addClass('active');
+		var stat_range = $(this).attr('rel');
+		getStatistics(stat_range);
+	}
+});
+
+$(document).on('click', '.chart-picker button', function() {
+	if ($(this).is(':not(.active)')) {
+		$('.chart-picker button').removeClass('active');
+		$(this).addClass('active');
+		$('input[name="type"]').val($(this).attr('data-type'));
+		getChart();
+	}
 });
 //--></script> 
 <script type="text/javascript"><!--
+function getStatistics(stat_range) {
+	$.ajax({
+		type: 'GET',
+		url: '<?php echo site_url("admin/dashboard/statistics?stat_range="); ?>' + stat_range,
+		dataType: 'json',
+		async: false,
+		success: function(json) {
+			if (json) {
+				$('#statistics .sales').html(json['sales']);
+				$('#statistics .lost_sales').html(json['lost_sales']);
+				$('#statistics .customers').html(json['customers']);
+				$('#statistics .orders').html(json['orders']);
+				$('#statistics .orders_completed').html(json['orders_completed']);
+				$('#statistics .delivery_orders').html(json['delivery_orders']);
+				$('#statistics .collection_orders').html(json['collection_orders']);
+				$('#statistics .tables_reserved').html(json['tables_reserved']);
+			}
+		}
+	});
+}
+
 function getChart(range) {
 	var type = $('input[name="type"]').val();
 	var range = $('select[name="range"]').val();
