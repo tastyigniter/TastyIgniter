@@ -80,7 +80,7 @@
 						<th><a class="sort" href="<?php echo $sort_location; ?>">Location<i class="fa fa-sort-<?php echo ($sort_by == 'location_name') ? $order_by_active : $order_by; ?>"></i></a></th>
 						<th><a class="sort" href="<?php echo $sort_author; ?>">Author<i class="fa fa-sort-<?php echo ($sort_by == 'author') ? $order_by_active : $order_by; ?>"></i></a></th>
 						<th><a class="sort" href="<?php echo $sort_id; ?>">Order ID<i class="fa fa-sort-<?php echo ($sort_by == 'order_id') ? $order_by_active : $order_by; ?>"></i></a></th>
-						<th>Rating</th>
+						<!--<th>Rating</th>-->
 						<th><a class="sort" href="<?php echo $sort_status; ?>">Status<i class="fa fa-sort-<?php echo ($sort_by == 'review_status') ? $order_by_active : $order_by; ?>"></i></a></th>
 						<th class="text-center"><a class="sort" href="<?php echo $sort_date; ?>">Date Added<i class="fa fa-sort-<?php echo ($sort_by == 'date_added') ? $order_by_active : $order_by; ?>"></i></a></th>
 					</tr>
@@ -94,7 +94,7 @@
 						<td><?php echo $review['location_name']; ?></td>
 						<td><?php echo $review['author']; ?></td>
 						<td><?php echo $review['order_id']; ?></td>
-						<td>
+						<!--<td>
 							<ul class="list-inline rating-inline">
 								<li>Quality:<br /> 
 									<div class="rating rating-star" data-score="<?php echo $review['quality']; ?>" data-readonly="true"></div>
@@ -106,7 +106,7 @@
 									<div class="rating rating-star" data-score="<?php echo $review['service']; ?>" data-readonly="true"></div>
 								</li>
 							</ul>
-						</td>
+						</td>-->
 						<td><?php echo ($review['review_status'] === '1') ? 'Approved' : 'Pending Review'; ?></td>
 						<td class="text-center"><?php echo $review['date_added']; ?></td>
 					</tr>

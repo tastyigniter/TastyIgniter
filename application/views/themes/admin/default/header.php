@@ -93,6 +93,8 @@
 				starOn : 'fa fa-star',
 				cancel : false, half : false, starType : 'i' 
 			});
+
+			$("#list-form td:contains('Disabled')").addClass('red');
 		});	
 	</script>
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -164,15 +166,14 @@
 							<li class="payments"><a href="<?php echo site_url(ADMIN_URI.'/payments'); ?>">Payments</a></li>
 							<li class="themes"><a href="<?php echo site_url(ADMIN_URI.'/themes'); ?>">Themes</a></li>
 							<li class="mail_templates"><a href="<?php echo site_url(ADMIN_URI.'/mail_templates'); ?>">Mail Templates</a></li>
-							<li class="image_manager"><a href="<?php echo site_url(ADMIN_URI.'/image_manager'); ?>">Image Manager</a></li>
 						</ul>
 					</li>
 					<li class="dropdown parent">
 						<a class=""><i class="fa fa-wrench"></i>Tools <i class="fa fa-caret-right"></i></a>
 						<ul class="sidenav-menu">
 							<li class="image_tool"><a href="<?php echo site_url(ADMIN_URI.'/image_tool'); ?>">Image</a></li>
-							<li class="backup"><a href="<?php echo site_url(ADMIN_URI.'/backup'); ?>">Backup</a></li>
-							<li class="restore"><a href="<?php echo site_url(ADMIN_URI.'/restore'); ?>">Restore</a></li>
+							<li class="database"><a href="<?php echo site_url(ADMIN_URI.'/database'); ?>">Database</a></li>
+							<li class="image_manager"><a href="<?php echo site_url(ADMIN_URI.'/image_manager'); ?>">Image Manager</a></li>
 						</ul>
 					</li>
 					<li class="dropdown parent">

@@ -64,7 +64,7 @@
 				<thead>
 					<tr>
 						<th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
-						<th>Photo</th>
+						<!--<th>Photo</th>-->
 						<th class="name"><a class="sort" href="<?php echo $sort_name; ?>">Name<i class="fa fa-sort-<?php echo ($sort_by == 'menu_name') ? $order_by_active : $order_by; ?>"></i></a></th>
 						<th><a class="sort" href="<?php echo $sort_price; ?>">Price<i class="fa fa-sort-<?php echo ($sort_by == 'menu_price') ? $order_by_active : $order_by; ?>"></i></a></th>
 						<th>Category</th>
@@ -79,7 +79,7 @@
 					<tr id="<?php echo $menu['menu_id']; ?>">
 						<td class="action"><input type="checkbox" value="<?php echo $menu['menu_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
 							<a class="btn btn-edit" title="Edit" href="<?php echo $menu['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
-						<td class="left"><img src="<?php echo $menu['menu_photo']; ?>"></td>
+						<!--<td class="left"><img src="<?php echo $menu['menu_photo']; ?>"></td>-->
 						<td class="name"><?php echo $menu['menu_name']; ?></td>
 						<td class="left"><?php echo $menu['menu_price']; ?>&nbsp;&nbsp;
 							<?php if ($menu['special'] === 'enabled') { ?>

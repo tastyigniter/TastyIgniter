@@ -54,14 +54,12 @@
 								<th class="action action-one">Modify</th>
 								<th>Pages</th>
 								<th>Description</th>
-								<th>Specific-location</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr>
 								<th class="action action-one"><input type="checkbox" onclick="$('input[name*=\'permission[access]\']').prop('checked', this.checked);"></th>
 								<th class="action action-one"><input type="checkbox" onclick="$('input[name*=\'permission[modify]\']').prop('checked', this.checked);"></th>
-								<th></th>
 								<th></th>
 								<th></th>
 							</tr>
@@ -80,14 +78,12 @@
 								<?php } ?>
 								<td><?php echo $path['name']; ?></td>
 								<td><?php echo $path['description']; ?></td>
-								<td></td>
 							</tr>
 							<?php } ?>
 							<tr>
 								<th class="action action-one"></th>
 								<th class="action action-one"></th>
 								<th>Extension: Modules</th>
-								<th></th>
 								<th></th>
 							</tr>
 							<?php foreach ($module_paths as $path) { ?>
@@ -105,14 +101,12 @@
 								<?php } ?>
 								<td><?php echo $path['name']; ?></td>
 								<td><?php echo $path['description']; ?></td>
-								<td></td>
 							</tr>
 							<?php } ?>
 							<tr>
 								<th class="action action-one"></th>
 								<th class="action action-one"></th>
 								<th>Extension: Payments</th>
-								<th></th>
 								<th></th>
 							</tr>
 							<?php foreach ($payment_paths as $path) { ?>
@@ -130,7 +124,6 @@
 								<?php } ?>
 								<td><?php echo $path['name']; ?></td>
 								<td><?php echo $path['description']; ?></td>
-								<td></td>
 							</tr>
 							<?php } ?>
 						</tbody>

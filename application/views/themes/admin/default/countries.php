@@ -54,7 +54,8 @@
 					<tr>
 						<th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
 						<th><a class="sort" href="<?php echo $sort_name; ?>">Name<i class="fa fa-sort-<?php echo ($sort_by == 'country_name') ? $order_by_active : $order_by; ?>"></i></a></th>
-						<th class="text-center">Flag</th>
+						<th><a class="sort" href="<?php echo $sort_iso_2; ?>">ISO Code 2<i class="fa fa-sort-<?php echo ($sort_by == 'iso_code_2') ? $order_by_active : $order_by; ?>"></i></a></th>
+						<th><a class="sort" href="<?php echo $sort_iso_3; ?>">ISO Code 3<i class="fa fa-sort-<?php echo ($sort_by == 'iso_code_3') ? $order_by_active : $order_by; ?>"></i></a></th>
 						<th class="text-right">Status</th>
 					</tr>
 				</thead>
@@ -64,18 +65,20 @@
 					<tr>
 						<td class="action"><input type="checkbox" value="<?php echo $country['country_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
 							<a class="btn btn-edit" title="Edit" href="<?php echo $country['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
-						<td><?php echo $country['name']; ?>
+						<td><img atl="<?php echo $country['iso_code_2']; ?>" src="<?php echo $country['flag']; ?>" width="16" />&nbsp;&nbsp;&nbsp;
+							<?php echo $country['name']; ?>
 							<?php if ($country_id === $country['country_id']) { ?>
 							<b>(Default)</b>
 							<?php } ?>
 						</td>
-						<td class="text-center"><img atl="<?php echo $country['iso_code_2']; ?>" src="<?php echo $country['flag']; ?>" width="16" /></td>
+						<td><?php echo $country['iso_code_2']; ?></td>
+						<td><?php echo $country['iso_code_3']; ?></td>
 						<td class="text-right"><?php echo $country['status']; ?></td>
 					</tr>
 					<?php } ?>
 					<?php } else { ?>
 					<tr>
-						<td colspan="4"><?php echo $text_empty; ?></td>
+						<td colspan="5"><?php echo $text_empty; ?></td>
 					</tr>
 					<?php } ?>
 				</tbody>

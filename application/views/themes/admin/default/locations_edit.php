@@ -354,7 +354,7 @@
 						<label for="" class="col-sm-2 control-label"></label>
 						<div id="table-box" class="col-sm-5">
 							<div class="table-responsive panel-selected">
-								<table class="table table-striped table-border">
+								<table class="table table-striped">
 									<thead>
 										<tr>
 											<th>Name</th>
@@ -525,33 +525,28 @@ $(document).ready(function() {
 });
 //--></script>
 <script type="text/javascript"><!--
-$('input[name=\'table\']').autocomplete({
-	delay: 0,
-	source: function(request, response) {
-		$.ajax({
-			url: '<?php echo site_url("admin/tables/autocomplete"); ?>?table_name=' +  encodeURIComponent(request.term),
-			dataType: 'json',
-			success: function(json) {		
-				response($.map(json, function(item) {
-					return {
-						value: item.table_id,
-						label: item.table_name,
-						min: item.min_capacity,
-						max: item.max_capacity
-					}
-				}));
-			}
-		});
-	},
-	select: function(event, ui) {
-		$('#table-box' + ui.item.value).remove();
-		$('#table-box table tbody').append('<tr id="table-box' + ui.item.value + '"><td class="name">' + ui.item.label + '</td><td>' + ui.item.min + '</td><td>' + ui.item.max + '</td><td class="img">' + '<a class="btn-times" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a>' + '<input type="hidden" name="tables[]" value="' + ui.item.value + '" /></td></tr>');
+$('input[name=\'table\']').select2({
+	placeholder: 'Start typing...',
+	minimumInputLength: 2,
+	ajax: {
+		url: '<?php echo site_url(ADMIN_URI ."/tables/autocomplete"); ?>',
+		dataType: 'json',
+		quietMillis: 100,
+		data: function (term, page) {
+			return {
+				term: term, //search term
+				page_limit: 10 // page size
+			};
+		},
+		results: function (data, page, query) {
+			return { results: data.results };
+		}
+	}
+});
 
-		return false;
-	},
-	focus: function(event, ui) {
-      	return false;
-   	}
+$('input[name=\'table\']').on('select2-selecting', function(e) {
+	$('#table-box' + e.choice.id).remove();
+	$('#table-box table tbody').append('<tr id="table-box' + e.choice.id + '"><td class="name">' + e.choice.text + '</td><td>' + e.choice.min + '</td><td>' + e.choice.max + '</td><td class="img">' + '<a class="btn-times" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a>' + '<input type="hidden" name="tables[]" value="' + e.choice.id + '" /></td></tr>');
 });
 //--></script>
 <?php if ($has_lat_lng) { ?>

@@ -74,6 +74,8 @@ class Countries extends CI_Controller {
 
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_name'] 			= site_url(ADMIN_URI.'/countries').$url.'sort_by=country_name&order_by='.$order_by;
+		$data['sort_iso_2'] 		= site_url(ADMIN_URI.'/countries').$url.'sort_by=iso_code_2&order_by='.$order_by;
+		$data['sort_iso_3'] 		= site_url(ADMIN_URI.'/countries').$url.'sort_by=iso_code_3&order_by='.$order_by;
 
 		$data['country_id'] = $this->config->item('country_id');
 
@@ -84,6 +86,7 @@ class Countries extends CI_Controller {
 				'country_id'	=>	$result['country_id'],
 				'name'			=>	$result['country_name'],
 				'iso_code_2'	=>	$result['iso_code_2'],
+				'iso_code_3'	=>	$result['iso_code_3'],
 				'flag'			=>	(!empty($result['flag'])) ? $this->Image_tool_model->resize($result['flag']) : $this->Image_tool_model->resize('data/flags/no_flag.png'),
 				'status'		=>	($result['status'] === '1') ? 'Enabled' : 'Disabled',
 				'edit' 			=> site_url(ADMIN_URI.'/countries/edit?id=' . $result['country_id'])

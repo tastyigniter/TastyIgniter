@@ -141,9 +141,9 @@
 tinymce.init({
     selector: 'textarea',
     menubar: false,
-	plugins : 'table link image code charmap autolink lists textcolor',
-	toolbar1: 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | formatselect | bullist numlist',
-	toolbar2: 'forecolor backcolor | outdent indent | undo redo | link unlink anchor image code | hr table | subscript superscript | charmap',
+	plugins : 'table link image code charmap autolink lists textcolor variable',
+	toolbar1: 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | formatselect | bullist numlist | table hr code',
+	toolbar2: 'forecolor backcolor | outdent indent | undo redo | link unlink anchor image | subscript superscript | charmap variable',
 	removed_menuitems: 'newdocument',
 	skin : 'tiskin',
 	convert_urls : false,

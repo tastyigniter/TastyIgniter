@@ -16,13 +16,13 @@
 		<div class="row wrap-vertical">
 			<ul id="nav-tabs" class="nav nav-tabs">
 				<li class="active"><a href="#general" data-toggle="tab">General</a></li>
-				<li><a href="#option" data-toggle="tab">Option</a></li>
+				<li><a href="#option" data-toggle="tab">Options</a></li>
 				<li><a href="#location" data-toggle="tab">Location</a></li>
 				<li><a href="#order" data-toggle="tab">Order</a></li>
 				<li><a href="#reservation" data-toggle="tab">Reservation</a></li>
-				<li><a href="#theme" data-toggle="tab">Theme</a></li>
+				<li><a href="#theme" data-toggle="tab">Themes</a></li>
 				<li><a href="#mail" data-toggle="tab">Mail</a></li>
-				<li><a href="#system" data-toggle="tab">System</a></li>
+				<li><a href="#system" data-toggle="tab">Server</a></li>
 			</ul>
 		</div>
 
@@ -705,7 +705,7 @@
 							<span class="help-block">List of files to hide separated with “|”. e.g file1.jpg|file2.txt</span>
 						</label>
 						<div class="col-sm-5">
-							<textarea name="themes_hidden_files" id="input-themes-hidden-files" class="form-control" rows="5"><?php echo set_value('themes_hidden_files', $themes_hidden_files); ?></textarea>
+							<textarea name="themes_hidden_files" id="input-themes-hidden-files" class="form-control" rows="3"><?php echo set_value('themes_hidden_files', $themes_hidden_files); ?></textarea>
 							<?php echo form_error('themes_hidden_files', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
@@ -714,7 +714,7 @@
 							<span class="help-block">List of folders to hide separated with “|”. e.g folder1|folder2</span>
 						</label>
 						<div class="col-sm-5">
-							<textarea name="themes_hidden_folders" id="input-themes-hidden-folders" class="form-control" rows="5"><?php echo set_value('themes_hidden_folders', $themes_hidden_folders); ?></textarea>
+							<textarea name="themes_hidden_folders" id="input-themes-hidden-folders" class="form-control" rows="3"><?php echo set_value('themes_hidden_folders', $themes_hidden_folders); ?></textarea>
 							<?php echo form_error('themes_hidden_folders', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
@@ -794,36 +794,35 @@
 
 				<div id="system" class="tab-pane row wrap-all">
 					<div class="form-group">
-						<label for="input-log-threshold" class="col-sm-2 control-label">Logging:</label>
+						<label for="input-maintenance-mode" class="col-sm-2 control-label">Maintenance Mode:
+							<span class="help-block">Enable if you want to display a maintenance page to customers except logged in admin.</span>
+						</label>
 						<div class="col-sm-5">
-							<select name="log_threshold" id="input-log-threshold" class="form-control">
-								<?php foreach ($thresholds as $key => $value) { ?>
-								<?php if ($key == $log_threshold) { ?>
-									<option value="<?php echo $key; ?>" selected="selected"><?php echo $value; ?></option>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($maintenance_mode == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="maintenance_mode" value="0" <?php echo set_radio('maintenance_mode', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="maintenance_mode" value="1" <?php echo set_radio('maintenance_mode', '1', TRUE); ?>>Enabled</label>
 								<?php } else { ?>  
-									<option value="<?php echo $key; ?>"><?php echo $value; ?></option>
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="maintenance_mode" value="0" <?php echo set_radio('maintenance_mode', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="maintenance_mode" value="1" <?php echo set_radio('maintenance_mode', '1'); ?>>Enabled</label>
 								<?php } ?>  
-								<?php } ?>  
+							</div>
+							<?php echo form_error('maintenance_mode', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-maintenance-page" class="col-sm-2 control-label">Maintenance Page:</label>
+						<div class="col-sm-5">
+							<select name="maintenance_page" id="input-maintenance-page" class="form-control">
+								<?php foreach ($pages as $page) { ?>
+								<?php if ($page['page_id'] === $maintenance_page) { ?>
+									<option value="<?php echo $page['page_id']; ?>" selected="selected"><?php echo $page['name']; ?></option>
+								<?php } else { ?>
+									<option value="<?php echo $page['page_id']; ?>"><?php echo $page['name']; ?></option>
+								<?php } ?>
+								<?php } ?>
 							</select>
-							<?php echo form_error('log_threshold', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-log-path" class="col-sm-2 control-label">Log Path:
-							<span class="help-block">Leave BLANK to use default "application/logs/". Use a full server path with trailing slash.</span>
-						</label>
-						<div class="col-sm-5">
-							<input type="text" name="log_path" id="input-log-path" class="form-control" value="<?php echo $log_path; ?>" />
-							<?php echo form_error('log_path', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-encryption-key" class="col-sm-2 control-label">Encryption Key:
-							<span class="help-block">Enter a secret key that will be used to encrypt data.</span>
-						</label>
-						<div class="col-sm-5">
-							<input type="text" name="encryption_key" id="input-encryption-key" class="form-control" value="<?php echo $encryption_key; ?>" />
-							<?php echo form_error('encryption_key', '<span class="text-danger">', '</span>'); ?>
+							<?php echo form_error('maintenance_page', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
@@ -912,35 +911,36 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-maintenance-mode" class="col-sm-2 control-label">Maintenance Mode:
-							<span class="help-block">Enable if you want to display a maintenance page to customers except logged in admin.</span>
-						</label>
+						<label for="input-log-threshold" class="col-sm-2 control-label">Logging:</label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
-								<?php if ($maintenance_mode == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="maintenance_mode" value="0" <?php echo set_radio('maintenance_mode', '0'); ?>>Disabled</label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="maintenance_mode" value="1" <?php echo set_radio('maintenance_mode', '1', TRUE); ?>>Enabled</label>
+							<select name="log_threshold" id="input-log-threshold" class="form-control">
+								<?php foreach ($thresholds as $key => $value) { ?>
+								<?php if ($key == $log_threshold) { ?>
+									<option value="<?php echo $key; ?>" selected="selected"><?php echo $value; ?></option>
 								<?php } else { ?>  
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="maintenance_mode" value="0" <?php echo set_radio('maintenance_mode', '0', TRUE); ?>>Disabled</label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="maintenance_mode" value="1" <?php echo set_radio('maintenance_mode', '1'); ?>>Enabled</label>
+									<option value="<?php echo $key; ?>"><?php echo $value; ?></option>
 								<?php } ?>  
-							</div>
-							<?php echo form_error('maintenance_mode', '<span class="text-danger">', '</span>'); ?>
+								<?php } ?>  
+							</select>
+							<?php echo form_error('log_threshold', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-maintenance-page" class="col-sm-2 control-label">Maintenance Page:</label>
+						<label for="input-log-path" class="col-sm-2 control-label">Log Path:
+							<span class="help-block">Leave BLANK to use default "application/logs/". Use a full server path with trailing slash.</span>
+						</label>
 						<div class="col-sm-5">
-							<select name="maintenance_page" id="input-maintenance-page" class="form-control">
-								<?php foreach ($pages as $page) { ?>
-								<?php if ($page['page_id'] === $maintenance_page) { ?>
-									<option value="<?php echo $page['page_id']; ?>" selected="selected"><?php echo $page['name']; ?></option>
-								<?php } else { ?>
-									<option value="<?php echo $page['page_id']; ?>"><?php echo $page['name']; ?></option>
-								<?php } ?>
-								<?php } ?>
-							</select>
-							<?php echo form_error('maintenance_page', '<span class="text-danger">', '</span>'); ?>
+							<input type="text" name="log_path" id="input-log-path" class="form-control" value="<?php echo $log_path; ?>" />
+							<?php echo form_error('log_path', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-encryption-key" class="col-sm-2 control-label">Encryption Key:
+							<span class="help-block">Enter a secret key that will be used to encrypt data.</span>
+						</label>
+						<div class="col-sm-5">
+							<input type="text" name="encryption_key" id="input-encryption-key" class="form-control" value="<?php echo $encryption_key; ?>" />
+							<?php echo form_error('encryption_key', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">

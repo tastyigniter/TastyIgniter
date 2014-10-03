@@ -25,22 +25,25 @@ class Settings_model extends CI_Model {
 	
 	public function updateSettings($sort, $update = array()) {
  		if (!empty($update) && !empty($sort)) {
-			$this->db->where('sort', $sort);
-			$this->db->delete('settings');
-
 			foreach ($update as $item => $value) {
-				if (is_array($value)) {
-					$this->db->set('sort', $sort);
-					$this->db->set('item', $item);
-					$this->db->set('value', serialize($value));
-					$this->db->set('serialized', '1');
-					$this->db->insert('settings');
-				} else {
-					$this->db->set('sort', $sort);
-					$this->db->set('item', $item);
-					$this->db->set('value', $value);
-					$this->db->set('serialized', '0');
-					$this->db->insert('settings');
+				if (!empty($item)) {
+					$this->db->where('sort', $sort);
+					$this->db->where('item', $item);
+					$this->db->delete('settings');
+
+					if (isset($value)) {
+						$serialized = '0'; 
+						if (is_array($value)) {
+							$value = serialize($value);
+							$serialized = '1'; 
+						}
+					
+						$this->db->set('sort', $sort);
+						$this->db->set('item', $item);
+						$this->db->set('value', $value);
+						$this->db->set('serialized', $serialized);
+						$this->db->insert('settings');
+					}
 				}
 			}
 		

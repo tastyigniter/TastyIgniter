@@ -412,8 +412,10 @@ class Settings extends CI_Controller {
 
 		if ($this->input->post('cache_time')) {
 			$data['cache_time'] = $this->input->post('cache_time');
-		} else {
+		} else if (isset($this->config->item['cache_time'])) {
 			$data['cache_time'] = $this->config->item('cache_time');
+		} else { 
+			$data['cache_time'] = '0';
 		}				
 
 		$data['page_limits'] = array('10', '20', '50', '75', '100');

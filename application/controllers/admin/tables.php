@@ -195,10 +195,10 @@ class Tables extends CI_Controller {
 			if ($results) {
 				foreach ($results as $result) {
 					$json['results'][] = array(
-						'table_id' 			=> $result['table_id'],
-						'table_name' 		=> utf8_encode($result['table_name']),
-						'min_capacity' 		=> $result['min_capacity'],
-						'max_capacity' 		=> $result['max_capacity']
+						'id' 		=> $result['table_id'],
+						'text' 		=> utf8_encode($result['table_name']),
+						'min' 		=> $result['min_capacity'],
+						'max' 		=> $result['max_capacity']
 					);
 				}
 			} else {

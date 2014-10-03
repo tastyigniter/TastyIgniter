@@ -99,7 +99,7 @@
 		<div class="panel panel-default panel-orders">
 			<div class="panel-heading"><h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;10 Latest Orders</h3></div>
 			<div class="table-responsive">
-				<table border="0" class="table table-striped table-border">
+				<table border="0" class="table table-striped">
 					<thead>
 						<tr>
 							<th class="action action-one"></th>
