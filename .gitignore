@@ -1,6 +1,5 @@
-# Image Thumb Files
-/assets/img/thumbs/*
-!/assets/img/thumbs/index.html
+#Mac OS X file
+.DS_Store
 
 # Log file
 /application/logs/logs.php
@@ -8,4 +7,6 @@
 # Database config file
 /application/config/database.php
 
-.DS_Store
+# Image Thumb Files
+/assets/img/thumbs/*
+!/assets/img/thumbs/index.html
