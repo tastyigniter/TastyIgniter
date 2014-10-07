@@ -15,12 +15,16 @@
 
 		<div class="row wrap-vertical">
 			<ul id="nav-tabs" class="nav nav-tabs">
+				<li><a href="#customize" data-toggle="tab">Customize</a></li>
 				<li class="active"><a href="#editor" data-toggle="tab">Editor</a></li>
 			</ul>
 		</div>
 
 		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
 			<div class="tab-content">
+				<div id="customize" class="tab-pane">
+					<p class="alert alert-info">Feature coming soon (in next release)</p>
+				</div>
 				<div id="editor" class="tab-pane row theme-editor active">
 					<?php if (!empty($file['heading'])){ ?>
 						<h4 class="text-info editor-text"><?php echo $file['heading']; ?></h4>
