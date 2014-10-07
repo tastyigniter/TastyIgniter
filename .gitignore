@@ -5,4 +5,7 @@
 # Log file
 /application/logs/logs.php
 
+# Database config file
+/application/config/database.php
+
 .DS_Store
