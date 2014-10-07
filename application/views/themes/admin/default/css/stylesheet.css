@@ -29,10 +29,21 @@ margin-top: 32px;
 font-size: 13px;
 }
 .body-login {
-background-color: #F8F8F8;
+background-color: #2E2E2E;
+color: #686868;
 }
-.body-login .panel-default > .panel-heading {
-background-color: #fff;
+.body-login .navbar, .body-login .navbar-brand, .body-login #footer {
+display: none;
+}
+.body-login .panel {
+border: 0 none;
+}
+.body-login .panel-login > .panel-heading {
+text-align:center;
+padding: 20px 15px;
+}
+.body-login .form-control {
+width: 100%;
 }
 a, a:hover, a:active {
 outline:0 none;
@@ -401,6 +412,9 @@ border-left: 0 solid #E7E7E7;
 border-right: 0 solid #E7E7E7;
 color: #333;
 font-weight:bold;
+}
+.tab-content {
+margin-top: 15px;
 }
 .tab-content > div {
 display:none;
@@ -1391,7 +1405,7 @@ height:574px;
 overflow: auto;
 }
 .theme-tree-holder a {
-font-size: 14px;
+font-size: 12px;
 cursor:pointer;
 color:#428BCA;
 }
