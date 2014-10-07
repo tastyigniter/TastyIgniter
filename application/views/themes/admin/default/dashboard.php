@@ -13,6 +13,21 @@
 		<div class="statistics">
 			<div class="row">
 				<div class="col-md-6 wrap-all">
+					<div class="panel panel-default">
+						<div class="panel-heading"><h3 class="panel-title">Set Up Steps</h3></div>
+						<div class="panel-body">
+							<b>Follow these steps to get your restaurant up &amp; running. </b><br /><br />
+							<div class="list-group">
+								<a href="#" class="list-group-item"><b>Initial Setup</b> - Set your prefered general settings, such as restuarant name and email.</a>
+								<a href="#" class="list-group-item"><b>Where is your restaurant located?</b> - Let your customers know where your restaurant is located.</a>
+								<a href="#" class="list-group-item"><b>When is your restaurant open?</b> - Let your customers know your opening times, delivery hours and preparation time. </a>
+								<a href="#" class="list-group-item"><b>Add Menus</b> - Add your menu using our simple editor. Display multiple menus like delivery &amp; eat-in, includes sizes and meal options</a>
+								<a href="#" class="list-group-item"><b>Design your website background</b> - Upload your own or choose a background image for your website from our gallery.</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6 wrap-all">
 					<div class="panel panel-default panel-statistics">
 						<div class="panel-heading">
 							<ul class="nav nav-tabs nav-tabs-statistics" role="tablist">
@@ -36,11 +51,6 @@
 								</ul>
 							</div>
   						</div>
-					</div>
-				</div>
-				<div class="col-md-6 wrap-all">
-					<div class="panel panel-default">
-						<div class="panel-heading"><h3 class="panel-title">Set Up Steps</h3></div>
 					</div>
 				</div>
 			</div>
