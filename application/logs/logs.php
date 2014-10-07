@@ -123,3 +123,6 @@ ERROR - 2014-10-07 12:23:24 --> Could not find the language line "text_find"
 ERROR - 2014-10-07 12:23:24 --> Severity: Warning  --> chmod(): Operation not permitted /Users/eezYboi/Dropbox/XAMPP/TastyIgniter/system/libraries/Log.php 106
 ERROR - 2014-10-07 12:23:24 --> Could not find the language line "text_order_type"
 ERROR - 2014-10-07 12:23:24 --> Severity: Warning  --> chmod(): Operation not permitted /Users/eezYboi/Dropbox/XAMPP/TastyIgniter/system/libraries/Log.php 106
+ERROR - 2014-10-07 15:03:26 --> Severity: Warning  --> imagepng(/Users/eezYboi/Dropbox/XAMPP/TastyIgniter/assets/img/thumbs/flags/gb-32x16.png): failed to open stream: No such file or directory /Users/eezYboi/Dropbox/XAMPP/TastyIgniter/system/libraries/Image_lib.php 1222
+ERROR - 2014-10-07 15:03:26 --> Unable to save the image.  Please make sure the image and file directory are writable.
+ERROR - 2014-10-07 15:03:26 --> Severity: Warning  --> chmod(): Operation not permitted /Users/eezYboi/Dropbox/XAMPP/TastyIgniter/system/libraries/Log.php 106

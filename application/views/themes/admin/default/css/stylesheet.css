@@ -125,9 +125,10 @@ font-weight:bold;
 }
 .page-header {
 background-color: #ECECEC;
-border: 0 none;
+border: 0 solid #D3D3D3;
 border-bottom: 1px solid #D3D3D3;
 border-radius: 0;
+box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
 padding: 3px 25px;
 min-height:35px;
 margin-top: 0;
@@ -146,7 +147,7 @@ font-weight:bold;
 line-height: 2.2;
 }
 .page-header h1 .pull-right {
-margin-top: 6px;
+margin-top: 9px;
 }
 
 
@@ -457,6 +458,7 @@ border-top: 1px solid #fff;
 	}
 	.navbar .side-nav {
 	overflow:visible !important;
+	box-shadow: -3px 0 8px -4px rgba(0, 0, 0, 0.07) inset;
 	}
 	.side-nav > li.active_parent > ul {
 	background: none repeat scroll 0 0 #4E4E4E;
@@ -518,7 +520,7 @@ outline-offset:-1px;
 }
 .page-header .btn-back {
 left: 0;
-padding: 9px 8px 6px;
+padding: 13px 8px 10px;
 position: absolute;
 top: 0;
 }

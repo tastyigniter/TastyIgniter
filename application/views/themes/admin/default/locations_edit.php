@@ -180,11 +180,11 @@
 									</div>
 									<div class="btn-group btn-group-toggle" data-toggle="buttons">
 										<?php if ($daily_hours['status'] == '1') { ?>
-											<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="daily_hours[status]" value="0" <?php echo set_radio('daily_hours[status]', '0'); ?>>OPEN</label>
-											<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="daily_hours[status]" value="1" <?php echo set_radio('daily_hours[status]', '1', TRUE); ?>>CLOSED</label>
+											<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="daily_hours[status]" value="0" <?php echo set_radio('daily_hours[status]', '0'); ?>>Open</label>
+											<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="daily_hours[status]" value="1" <?php echo set_radio('daily_hours[status]', '1', TRUE); ?>>Closed</label>
 										<?php } else { ?>  
-											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="daily_hours[status]" value="0" <?php echo set_radio('daily_hours[status]', '0', TRUE); ?>>OPEN</label>
-											<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="daily_hours[status]" value="1" <?php echo set_radio('daily_hours[status]', '1'); ?>>CLOSED</label>
+											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="daily_hours[status]" value="0" <?php echo set_radio('daily_hours[status]', '0', TRUE); ?>>Open</label>
+											<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="daily_hours[status]" value="1" <?php echo set_radio('daily_hours[status]', '1'); ?>>Closed</label>
 										<?php } ?>  
 									</div>
 								</div>
@@ -227,11 +227,11 @@
 									</div>
 									<div class="btn-group btn-group-toggle" data-toggle="buttons">
 										<?php if ($hour['status'] == '1') { ?>
-											<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="flexible_hours[<?php echo $hour['day']; ?>][status]" value="0" <?php echo set_radio('flexible_hours['.$hour['day'].'][status]', '0'); ?>>OPEN</label>
-											<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="flexible_hours[<?php echo $hour['day']; ?>][status]" value="1" checked="checked" <?php echo set_radio('flexible_hours['.$hour['day'].'][status]', '1'); ?>>CLOSED</label>
+											<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="flexible_hours[<?php echo $hour['day']; ?>][status]" value="0" <?php echo set_radio('flexible_hours['.$hour['day'].'][status]', '0'); ?>>Open</label>
+											<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="flexible_hours[<?php echo $hour['day']; ?>][status]" value="1" checked="checked" <?php echo set_radio('flexible_hours['.$hour['day'].'][status]', '1'); ?>>Closed</label>
 										<?php } else { ?>  
-											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="flexible_hours[<?php echo $hour['day']; ?>][status]" value="0" checked="checked" <?php echo set_radio('flexible_hours['.$hour['day'].'][status]', '0'); ?>>OPEN</label>
-											<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="flexible_hours[<?php echo $hour['day']; ?>][status]" value="1" <?php echo set_radio('flexible_hours['.$hour['day'].'][status]', '1'); ?>>CLOSED</label>
+											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="flexible_hours[<?php echo $hour['day']; ?>][status]" value="0" checked="checked" <?php echo set_radio('flexible_hours['.$hour['day'].'][status]', '0'); ?>>Open</label>
+											<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="flexible_hours[<?php echo $hour['day']; ?>][status]" value="1" <?php echo set_radio('flexible_hours['.$hour['day'].'][status]', '1'); ?>>Closed</label>
 										<?php } ?>  
 									</div>
 								</div>
