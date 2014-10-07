@@ -23,8 +23,8 @@
 		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="post" action="<?php echo site_url(ADMIN_URI.'/database'); ?>" enctype="multipart/form-data" id="database">
 			<div class="tab-content">
 				<div id="backup" class="tab-pane row wrap-all active">
-					<div class="table-responsive panel-selected">
-						<table class="table table-striped">
+					<div class="table-responsive">
+						<table class="table table-striped table-border">
 							<thead>
 								<tr>
 									<th width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'backup\']').prop('checked', this.checked);"></th>

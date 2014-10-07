@@ -702,6 +702,7 @@ border-radius:0;
 background: #FFF;
 background-color: #FFF;
 border-color:#DDDDDD;
+border-width: 0;
 }
 
 .statistics .panel-primary > .panel-body

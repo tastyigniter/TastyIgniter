@@ -282,8 +282,8 @@
 									var delete_files = $('.thumbnail-list .selected figure').map(function(){return $(this).attr('data-name');}).get();
 									if (delete_files != '') {
 										bootbox.confirm('Are you sure you want to delete the file/folder and it contents?', function(result) {
-											if (result === null) {
-												Notification.show('Nothing changed');
+											if (result === false) {
+												Notification.show('Action canceled');
 											} else {
 												var data = {sub_folder: sub_folder, delete_files: JSON.stringify(delete_files)};
 												modalAjax('delete', data);
@@ -423,7 +423,7 @@
 				$('.btn-new-folder').on('click', function() {
 					bootbox.prompt('New Folder', function(result) {
 						if (result === null) {
-							Notification.show('Modal dismissed');
+							Notification.show('Action canceled');
 						} else {
 							var new_name = $('.bootbox-input').val();
 							new_name = fixFilename(new_name);
@@ -443,7 +443,7 @@
 					var copy_files = $('.thumbnail-list .selected figure').map(function(){return $(this).attr('data-name');}).get();
 					if (copy_files != '') {
 						var title = 'Copy selected items to:';
-						var message = '<select id="folder-path" class="form-control">' + $('#folders_list').html() + '</select><span class="help-block small">Existing file/folder will NOT be copied</span>';
+						var message = '<select id="folder-path" class="form-control">' + $('#folders_list').html() + '</select><span class="help-block small">Existing file/folder will NOT be replaced</span>';
 						var main_callback = function() {
 							var to_folder = $('#folder-path').val();
 							var from_folder = $.trim($('#sub_folder').val());
@@ -464,7 +464,7 @@
 					var move_files = $('.thumbnail-list .selected figure').map(function(){return $(this).attr('data-name');}).get();
 					if (move_files != '') {
 						var title = 'Move selected items to:';
-						var message = '<select id="folder-path" class="form-control">' + $('#folders_list').html() + '</select><span class="help-block small">Existing file/folder will NOT be moved</span>';
+						var message = '<select id="folder-path" class="form-control">' + $('#folders_list').html() + '</select><span class="help-block small">Existing file/folder will NOT be replaced</span>';
 						var main_callback = function() {
 							var from_folder = $.trim($('#sub_folder').val());
 							var to_folder = $('#folder-path').val();
@@ -491,7 +491,7 @@
 							label: "Cancel",
 							className: "btn-default",
 							callback: function() {
-								Notification.show('Modal dismissed');
+								Notification.show('Action canceled');
 							}
 						},
 						main: {

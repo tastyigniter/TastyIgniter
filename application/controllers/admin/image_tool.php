@@ -82,12 +82,12 @@ class Image_tool extends CI_Controller {
 			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to delete!</p>');
     	} else { 
 			if (file_exists(IMAGEPATH . 'thumbs')) {
-				$this->_delete_thumbs(IMAGEPATH . 'thumbs');
+				$this->_delete_thumbs(IMAGEPATH . 'thumbs/*');
 				$this->session->set_flashdata('alert', '<p class="alert-success">Thumbs deleted sucessfully!</p>');
 			}
 		}
 		
-		redirect(ADMIN_URI.'/image_tool');
+		//redirect(ADMIN_URI.'/image_tool');
 	}
 	
 	public function _updateImageTool() {
@@ -168,23 +168,33 @@ class Image_tool extends CI_Controller {
 		return TRUE;
 	}
 
-	public function _delete_thumbs($path) {
-		if (file_exists($path) AND is_file($path)) {
-			return unlink($path);
-		}
+	public function _delete_thumbs($thumb_path) {
+		foreach (glob($thumb_path) as $path) {
+		var_dump($path);
+			
+			if (file_exists($path) AND is_file($path) AND basename($path) === "index.html") {
+				continue;
+			}
 
-		foreach (scandir($path) as $item) {
-			if ($item != '.' AND $item != '..') {
-				if ( ! is_dir($path .'/'. $item)) {
-					unlink($path .'/'. $item);
-				} else {
-					$this->_delete_thumbs($path .'/'. $item);
+			if (file_exists($path) AND is_file($path)) {
+				unlink($path);
+				continue;
+			}
+
+			foreach (scandir($path) as $item) {
+				if ($item != '.' AND $item != '..') {
+					if ( ! is_dir($path .'/'. $item)) {
+						unlink($path .'/'. $item);
+					} else {
+						$this->_delete_thumbs($path .'/'. $item);
+					}
 				}
 			}
-		}
 		
-		if (is_dir($path)) {
-			return rmdir($path);
+			if (is_dir($path)) {
+				rmdir($path);
+				continue;
+			}
 		}
 	}
 }

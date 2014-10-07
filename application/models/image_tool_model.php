@@ -25,7 +25,7 @@ class Image_tool_model extends CI_Model {
 			return;
 		}
 		
-		if ( ! is_dir($thumbs_path .'/'. $img_path)) {
+		if (is_dir(IMAGEPATH . $root_folder . $img_path) AND ! is_dir($thumbs_path .'/'. $img_path)) {
 			$this->_createFolder($thumbs_path .'/'. $img_path);
 		}
 		

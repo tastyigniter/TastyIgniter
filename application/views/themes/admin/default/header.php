@@ -171,9 +171,9 @@
 					<li class="dropdown parent">
 						<a class=""><i class="fa fa-wrench"></i>Tools <i class="fa fa-caret-right"></i></a>
 						<ul class="sidenav-menu">
-							<li class="image_tool"><a href="<?php echo site_url(ADMIN_URI.'/image_tool'); ?>">Image</a></li>
+							<li class="image_manager image_options"><a href="<?php echo site_url(ADMIN_URI.'/image_manager'); ?>">Image Manager</a></li>
 							<li class="database"><a href="<?php echo site_url(ADMIN_URI.'/database'); ?>">Database</a></li>
-							<li class="image_manager"><a href="<?php echo site_url(ADMIN_URI.'/image_manager'); ?>">Image Manager</a></li>
+							<!--<li class="image_tool"><a href="<?php echo site_url(ADMIN_URI.'/image_tool'); ?>">Image</a></li>-->
 						</ul>
 					</li>
 					<li class="dropdown parent">

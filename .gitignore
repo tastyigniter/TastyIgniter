@@ -1,1 +1,8 @@
+# Image Thumb Files
+/assets/img/thumbs/*
+!/assets/img/thumbs/index.html
+
+# Log file
+/application/logs/logs.php
+
 .DS_Store
