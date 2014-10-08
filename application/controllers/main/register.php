@@ -5,7 +5,6 @@ class Register extends MX_Controller {
 	
 	public function __construct() {
 		parent::__construct(); 																	//  calls the constructor
-		$this->load->helper('recaptcha');
 		$this->load->library('language');
 		$this->lang->load('main/login_register', $this->language->folder());
 	}
@@ -51,9 +50,6 @@ class Register extends MX_Controller {
 			);
 		}
 
-		$recaptcha_key = '6LfjCPYSAAAAAJ6DA0Rcc-0vqJuePwMqi0n96Xbc';
-		$data['recaptcha'] = create_captcha($recaptcha_key, $this->recaptcha_error);
-		
 		$this->template->regions(array('header', 'footer'));
 		if (file_exists(APPPATH .'views/themes/main/'.$this->config->item('main_theme').'register.php')) {
 			$this->template->render('themes/main/'.$this->config->item('main_theme'), 'register', $data);

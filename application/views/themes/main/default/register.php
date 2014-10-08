@@ -66,10 +66,6 @@
 				</div>
 			
 				<div class="form-group">
-					<?php echo $recaptcha; ?>
-				</div>
-
-				<div class="form-group">
 					<p class="text-danger small"><?php echo $text_required; ?></p>
 				</div>
 		
