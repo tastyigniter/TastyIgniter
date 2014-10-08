@@ -104,31 +104,34 @@ class Mail_templates_model extends CI_Model {
 		
 		if (!empty($update['template_id'])) {
 			$this->db->where('template_id', $update['template_id']);
-			$query = $this->db->update('mail_templates');			
+			$query = $this->db->update('mail_templates');
+			$query = $this->_updateTemplateData($update['template_id'], $update['templates']);		
 		}		
 
 		return $query;
 	}
 
-	public function updateTemplateData($update = array()) {
+	public function _updateTemplateData($template_id, $templates = array()) {
 		$query = FALSE;
 
-		if (!empty($update['subject'])) {
-			$this->db->set('subject', $update['subject']);
-		}
+		foreach ($templates as $template) {
+			if (!empty($template['subject'])) {
+				$this->db->set('subject', $template['subject']);
+			}
 		
-		if (!empty($update['body'])) {
-			$this->db->set('body', $update['body']);
-		}
+			if (!empty($template['body'])) {
+				$this->db->set('body', preg_replace('~>\s+<~m', '><', $template['body']));
+			}
 		
-		if (!empty($update['date_updated'])) {
-			$this->db->set('date_updated', $update['date_updated']);
-		}
+			if (!empty($template['date_updated'])) {
+				$this->db->set('date_updated', $template['date_updated']);
+			}
 		
-		if (!empty($update['template_id']) AND !empty($update['code'])) {
-			$this->db->where('template_id', $update['template_id']);
-			$this->db->where('code', $update['code']);
-			$query = $this->db->update('mail_templates_data');			
+			if (!empty($template_id) AND !empty($template['code'])) {
+				$this->db->where('template_id', $template_id);
+				$this->db->where('code', $template['code']);
+				$query = $this->db->update('mail_templates_data');			
+			}
 		}		
 
 		return $query;

@@ -33,7 +33,7 @@
 	"menuitem-preview-border-active": "#aaaaaa",
 	"checkbox-border": "#c5c5c5",
 	"checkbox-border-focus": "#59a5e1",
-	"panel-border": "#bbb",
+	"panel-border": "#ececec",
 	"panel-bg": "#ffffff",
 	"panel-bg-hlight": "#dddddd",
 	"textbox-bg": "#ffffff",

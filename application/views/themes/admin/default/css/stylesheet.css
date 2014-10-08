@@ -1386,16 +1386,40 @@ background: none repeat scroll 0 0 #FFFFFF;
 
 
 /*** MAIL TEMPLATE ***/
+.table-templates > tbody > tr > td {
+padding: 0;
+}
+.table-template {
+margin-bottom: 0;
+width:100%;
+}
+.template-heading {
+padding: 6px;
+}
+.template-heading tr .action .up,
+.template-heading tr.collapsed .action .down {
+display: block !important;
+}
+.template-heading tr.collapsed .action .up,
+.template-heading tr .action .down {
+display: none !important;
+}
+.table-templates .text-right,
+.table-template .text-right {
+width:20%;
+}
+.template-content {
+background-color: #FFF;
+border-top: 1px solid #E3E3E3;
+padding:25px;
+}
 .supported-var {
-height: 347px;
+margin: -10px 25px 10px;
 list-style: none outside none;
 overflow: scroll;
-margin-bottom: 0;
 }
 .supported-var span {
-display: block;
 font-weight: bold;
-width: 160px;
 }
 
 

@@ -23,6 +23,7 @@
 								<a href="#" class="list-group-item"><b>When is your restaurant open?</b> - Let your customers know your opening times, delivery hours and preparation time. </a>
 								<a href="#" class="list-group-item"><b>Add Menus</b> - Add your menu using our simple editor. Display multiple menus like delivery &amp; eat-in, includes sizes and meal options</a>
 								<a href="#" class="list-group-item"><b>Design your website background</b> - Upload your own or choose a background image for your website from our gallery.</a>
+								<a href="#" class="list-group-item"><b>Send test email</b> - Ensure order confirmation emails are sent to customers successfully.</a>
 							</div>
 						</div>
 					</div>

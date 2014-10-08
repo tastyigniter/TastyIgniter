@@ -16,7 +16,9 @@
 		<div class="row wrap-vertical">
 			<ul id="nav-tabs" class="nav nav-tabs">
 				<li class="active"><a href="#general" data-toggle="tab">General</a></li>
-				<li><a href="#messages" data-toggle="tab">Messages</a></li>
+				<?php if ($template_data) { ?>
+					<li><a href="#templates" data-toggle="tab">Templates</a></li>
+				<?php } ?>
 			</ul>
 		</div>
 
@@ -69,34 +71,87 @@
 					</div>
 				</div>
 
-				<div id="messages" class="tab-pane row wrap-all">
-					<table border="0" class="table table-striped table-border">
-						<tbody>
+				<?php if ($template_data) { ?>
+				<div id="templates" class="tab-pane row wrap-all">
+					<table border="0" class="table table-striped table-border table-templates">
+						<thead>
 							<tr>
 								<th class="action action-one"></th>
-								<th class="left" width="65%">Title</th>
-								<th class="text-center">Date Added</th>
-								<th class="text-center">Date Updated</th>
+								<th class="left">Title</th>
+								<th class="text-right">Date Updated</th>
+								<th class="text-right">Date Added</th>
 							</tr>
-							<?php if ($template_data) { ?>
+						</thead>
+						<tbody id="accordion">
+							<?php $template_row = 1; ?>
 							<?php foreach ($template_data as $tpl_data) { ?>
 							<tr>
-								<td class="action action-one"><a class="btn btn-edit" title="Edit" href="<?php echo $tpl_data['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
-								<td class="left"><?php echo $tpl_data['title']; ?></td>
-								<td class="text-center"><?php echo $tpl_data['date_added']; ?></td>
-								<td class="text-center"><?php echo $tpl_data['date_updated']; ?></td>
+  								<td colspan="4">
+    								<div class="template-heading">
+  										<table border="0" class="table-template">
+											<tr data-toggle="collapse" data-parent="#accordion" data-target="#template-row-<?php echo $tpl_data['template_data_id']; ?>">
+												<td class="action action-one">
+													<i class="fa fa-angle-double-up up"></i>
+													<i class="fa fa-angle-double-down down"></i>
+												</td>
+												<td class="left"><?php echo $tpl_data['title']; ?></td>
+												<td class="text-right"><?php echo $tpl_data['date_updated']; ?></td>
+												<td class="text-right"><?php echo $tpl_data['date_added']; ?></td>
+											</tr>
+										</table>
+    								</div>
+									<div id="template-row-<?php echo $tpl_data['template_data_id']; ?>" class="collapse">
+										<div class="template-content">
+											<div class="form-group">
+												<label for="input-subject" class="col-sm-2 control-label">Subject:</label>
+												<div class="col-sm-10">
+													<input type="hidden" name="templates[<?php echo $tpl_data['template_data_id']; ?>][code]" id="input-subject" class="form-control" value="<?php echo set_value('templates['.$tpl_data['template_data_id'].'][code]', $tpl_data['code']); ?>" />
+													<input type="text" name="templates[<?php echo $tpl_data['template_data_id']; ?>][subject]" id="input-subject" class="form-control" value="<?php echo set_value('templates['.$tpl_data['template_data_id'].'][subject]', $tpl_data['subject']); ?>" />
+													<?php echo form_error('subject', '<span class="text-danger">', '</span>'); ?>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<div id="input-body" class="col-md-12">
+													<textarea name="templates[<?php echo $tpl_data['template_data_id']; ?>][body]" style="height:300px;width:100%;" class="form-control"><?php echo set_value('templates['.$tpl_data['template_data_id'].'][body]', $tpl_data['body']); ?></textarea>
+												</div>
+											</div>
+										</div>
+									</div>
+								</td>
 							</tr>
-							<?php } ?>
-							<?php } else { ?>
-							<tr>
-								<td colspan="4" class="center"><?php echo $text_empty; ?></td>
-							</tr>
+							<?php $template_row++; ?>
 							<?php } ?>
 						</tbody>
 					</table>
 				</div>
+				<?php } ?>
 			</div>
 		</form>
 	</div>
 </div>
+<script type="text/javascript" src="<?php echo base_url("assets/js/tinymce/tinymce.js"); ?>"></script>
+<script type="text/javascript">
+tinymce.init({
+    selector: 'textarea',
+    menubar: false,
+	plugins : 'table link image code charmap autolink lists textcolor variable',
+	toolbar1: 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | formatselect | bullist numlist | table hr code',
+	toolbar2: 'forecolor backcolor | outdent indent | undo redo | link unlink anchor image | subscript superscript | charmap variable',
+	removed_menuitems: 'newdocument',
+	skin : 'tiskin',
+	convert_urls : false,
+    file_browser_callback : imageManager
+});
+
+$(document).on('click', '.show_hide', function() {
+	if ($('#supported-var').hasClass('hide')) {
+		$('#input-body').removeClass('col-md-12').addClass('col-md-9');
+		$('#supported-var').removeClass('hide');
+	} else {
+		$('#input-body').removeClass('col-md-9').addClass('col-md-12');
+		$('#supported-var').addClass('hide');
+	}
+});
+</script>
 <?php echo $footer; ?>
