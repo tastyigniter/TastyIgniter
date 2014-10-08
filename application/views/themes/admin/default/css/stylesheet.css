@@ -550,8 +550,8 @@ border-color: #009f69;
 color: #FFFFFF;
 }
 .page-header .btn-default {
-background-color: #fff;
-border-color: #fff;
+background-color: #FFF;
+border-color: #F7F7F7;
 color: #555;
 }
 .page-header .btn-default:hover, 

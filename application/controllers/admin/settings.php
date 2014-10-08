@@ -314,6 +314,37 @@ class Settings extends CI_Controller {
 			$data['themes_hidden_folders'] = strtolower($this->config->item('themes_hidden_folders'));
 		}
 				
+		if ($this->input->post('image_manager') AND is_array($this->input->post('image_manager'))) {
+			$image_manager = $this->input->post('image_manager');
+		} else if (is_array($this->config->item('image_manager'))) {
+			$image_manager = $this->config->item('image_manager');
+		} else {
+			$image_manager = array();
+		}
+				
+		$data['image_manager'] = array(
+			'root_folder' 			=> (isset($image_manager['root_folder'])) ? $image_manager['root_folder'] : '',
+			'max_size' 				=> (isset($image_manager['max_size'])) ? $image_manager['max_size'] : '',
+			'thumb_height' 			=> (isset($image_manager['thumb_height'])) ? $image_manager['thumb_height'] : '',
+			'thumb_width' 			=> (isset($image_manager['thumb_width'])) ? $image_manager['thumb_width'] : '',
+			'thumb_height_mini' 	=> (isset($image_manager['thumb_height_mini'])) ? $image_manager['thumb_height_mini'] : '',
+			'thumb_width_mini' 		=> (isset($image_manager['thumb_width_mini'])) ? $image_manager['thumb_width_mini'] : '',
+			'show_mini' 			=> (isset($image_manager['show_mini'])) ? $image_manager['show_mini'] : '',
+			'show_ext' 				=> (isset($image_manager['show_ext'])) ? $image_manager['show_ext'] : '',
+			'uploads' 				=> (isset($image_manager['uploads'])) ? $image_manager['uploads'] : '',
+			'new_folder' 			=> (isset($image_manager['new_folder'])) ? $image_manager['new_folder'] : '',
+			'copy' 					=> (isset($image_manager['copy'])) ? $image_manager['copy'] : '',
+			'move' 					=> (isset($image_manager['move'])) ? $image_manager['move'] : '',
+			'rename' 				=> (isset($image_manager['rename'])) ? $image_manager['rename'] : '',
+			'delete' 				=> (isset($image_manager['delete'])) ? $image_manager['delete'] : '',
+			'allowed_ext' 			=> (isset($image_manager['allowed_ext'])) ? $image_manager['allowed_ext'] : '',
+			'hidden_files' 			=> (isset($image_manager['hidden_files'])) ? $image_manager['hidden_files'] : '',
+			'hidden_folders' 		=> (isset($image_manager['hidden_folders'])) ? $image_manager['hidden_folders'] : '',
+			'transliteration' 		=> (isset($image_manager['transliteration'])) ? $image_manager['transliteration'] : '',
+			'remember_days' 		=> (isset($image_manager['remember_days'])) ? $image_manager['remember_days'] : '',
+			'delete_thumbs'			=> site_url(ADMIN_URI.'/settings/delete_thumbs'),
+		);
+				
 		if ($this->input->post('protocol')) {
 			$data['protocol'] = strtolower($this->input->post('protocol'));
 		} else {
@@ -521,6 +552,27 @@ class Settings extends CI_Controller {
 		}
 	}
 
+	public function delete_thumbs() {
+		if (!$this->user->islogged()) {  
+  			redirect(ADMIN_URI.'/login');
+		}
+
+    	if (!$this->user->hasPermissions('access', ADMIN_URI.'/settings')) {
+  			redirect(ADMIN_URI.'/permission');
+		}
+		
+    	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/settings')) {
+			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to delete!</p>');
+    	} else { 
+			if (file_exists(IMAGEPATH . 'thumbs')) {
+				$this->_delete_thumbs(IMAGEPATH . 'thumbs/*');
+				$this->session->set_flashdata('alert', '<p class="alert-success">Thumbs deleted sucessfully!</p>');
+			}
+		}
+		
+		redirect(ADMIN_URI.'/settings');
+	}
+	
 	public function _updateSettings() {
     	if (!$this->user->hasPermissions('modify', ADMIN_URI.'/settings')) {
 			$this->session->set_flashdata('alert', '<p class="alert-warning">Warning: You do not have permission to update!</p>');
@@ -572,6 +624,7 @@ class Settings extends CI_Controller {
 				'themes_allowed_file'		=> $this->input->post('themes_allowed_file'),
 				'themes_hidden_files'		=> $this->input->post('themes_hidden_files'),
 				'themes_hidden_folders'		=> $this->input->post('themes_hidden_folders'),
+				'image_manager'				=> $this->input->post('image_manager'),
 				'protocol'	 				=> strtolower($this->input->post('protocol')),
 				'mailtype' 					=> strtolower($this->input->post('mailtype')),
 				'smtp_host' 				=> $this->input->post('smtp_host'),
@@ -651,6 +704,25 @@ class Settings extends CI_Controller {
 		$this->form_validation->set_rules('themes_allowed_file', 'Themes Allowed Files', 'xss_clean|trim');
 		$this->form_validation->set_rules('themes_hidden_files', 'Themes Hidden Files', 'xss_clean|trim');
 		$this->form_validation->set_rules('themes_hidden_folders', 'Themes Hidden Folders', 'xss_clean|trim');
+		$this->form_validation->set_rules('image_manager[root_folder]', 'Root Folder', 'xss_clean|trim|required|callback_validate_path');
+		$this->form_validation->set_rules('image_manager[max_size]', 'Maximum File Size', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('image_manager[thumb_height]', 'Thumbnail Height', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('image_manager[thumb_width]', 'Thumbnail Width', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('image_manager[thumb_height_mini]', 'Mini Thumbnail Height', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('image_manager[thumb_width_mini]', 'Mini Thumbnail Width', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('image_manager[show_mini]', 'Mini Thumbnail', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('image_manager[show_ext]', 'Show Extension', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('image_manager[uploads]', 'Uploads', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('image_manager[new_folder]', 'New Folder', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('image_manager[copy]', 'Copy', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('image_manager[move]', 'Move', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('image_manager[rename]', 'Rename', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('image_manager[delete]', 'Delete', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('image_manager[allowed_ext]', 'Allowed Extension', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('image_manager[hidden_files]', 'Hidden Files', 'xss_clean|trim|');
+		$this->form_validation->set_rules('image_manager[hidden_folders]', 'Hidden Folders', 'xss_clean|trim|');
+		$this->form_validation->set_rules('image_manager[transliteration]', 'Transliteration', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('image_manager[remember_days]', 'Remember Last Folder', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('protocol', 'Mail Protocol', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('mailtype', 'Mail Type Format', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('smtp_host', 'SMTP Host', 'xss_clean|trim|');
@@ -703,6 +775,44 @@ class Settings extends CI_Controller {
 		}
  
 		return $timezone_list;
+	}
+
+	public function validate_path($str) {
+		if (strpos($str, '/') !== FALSE OR strpos($str, './') !== FALSE) {
+			$this->form_validation->set_message('validate_path', 'Root Folder must have NO SLASH!');
+			return FALSE;
+		}
+
+		return TRUE;
+	}
+
+	public function _delete_thumbs($thumb_path) {
+		foreach (glob($thumb_path) as $path) {
+			
+			if (file_exists($path) AND is_file($path) AND basename($path) === "index.html") {
+				continue;
+			}
+
+			if (file_exists($path) AND is_file($path)) {
+				unlink($path);
+				continue;
+			}
+
+			foreach (scandir($path) as $item) {
+				if ($item != '.' AND $item != '..') {
+					if ( ! is_dir($path .'/'. $item)) {
+						unlink($path .'/'. $item);
+					} else {
+						$this->_delete_thumbs($path .'/'. $item);
+					}
+				}
+			}
+		
+			if (is_dir($path)) {
+				rmdir($path);
+				continue;
+			}
+		}
 	}
 }
 

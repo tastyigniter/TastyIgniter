@@ -85,7 +85,7 @@
 
 					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 						<div class="btn-toolbar row" role="toolbar">
-							<div class="btn-group pull-left col-sm-1">
+							<div class="btn-group pull-left col-sm-1 wrap-none">
 								<a class="btn btn-default navbar-btn btn-back <?php echo $back; ?>" title="Back" href="<?php echo $back_url; ?>"><i class="fa fa-arrow-left"></i></a>
 							</div>
 							<div class="btn-group col-sm-4">
@@ -103,7 +103,7 @@
 								<?php } ?>
 								<a id="refresh" title="Refresh" class="btn btn-default navbar-btn btn-refresh" href="<?php echo $refresh_url; ?>"><i class="fa fa-refresh"></i></a>
 							</div>
-							<div class="btn-group col-sm-4 pull-right">
+							<div class="btn-group col-sm-4 pull-right wrap-none">
 								<div class="navbar-form input-group">
 									<span id="btn-clear" class="input-group-addon" title="Clear"><i id="filter-clear" class="fa fa-times"></i></span>
 									<input type="text" name="filter_search" id="filter-search" class="form-control" value="<?php echo $filter; ?>" placeholder="Search files and folders..." />

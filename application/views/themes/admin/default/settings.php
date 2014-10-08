@@ -20,6 +20,7 @@
 				<li><a href="#location" data-toggle="tab">Location</a></li>
 				<li><a href="#order" data-toggle="tab">Order</a></li>
 				<li><a href="#reservation" data-toggle="tab">Reservation</a></li>
+				<li><a href="#image-manager" data-toggle="tab">Image Manager</a></li>
 				<li><a href="#theme" data-toggle="tab">Themes</a></li>
 				<li><a href="#mail" data-toggle="tab">Mail</a></li>
 				<li><a href="#system" data-toggle="tab">Server</a></li>
@@ -677,6 +678,277 @@
 								<span class="input-group-addon">minutes</span>
 							</div>
 							<?php echo form_error('reservation_turn', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+				</div>
+
+				<div id="image-manager" class="tab-pane row wrap-all">
+					<div class="form-group">
+						<label for="input-root-folder" class="col-sm-2 control-label"><span class="red">*</span> Root Folder:
+							<span class="help-block">Image root folder name with NO TRAILING SLASH. Default: data</span>
+						</label>
+						<div class="col-sm-5">
+							<input type="text" name="image_manager[root_folder]" id="input-root-folder" class="form-control" value="<?php echo set_value('image_manager[root_folder]', $image_manager['root_folder']); ?>" />
+							<?php echo form_error('image_manager[root_folder]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-max-size" class="col-sm-2 control-label"><span class="red">*</span> Maximum File Size:
+							<span class="help-block">The maximum size (in kilobytes) limit for file when uploading.</span>
+						</label>
+						<div class="col-sm-5">
+							<input type="text" name="image_manager[max_size]" id="input-max-size" class="form-control" value="<?php echo set_value('image_manager[max_size]', $image_manager['max_size']); ?>" size="5" />
+							<?php echo form_error('image_manager[max_size]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label"><span class="red">*</span> Thumbnail Size:
+							<span class="help-block">(Height x Width)</span>
+						</label>
+						<div class="col-sm-5">
+							<div class="control-group control-group-2">
+								<input type="text" name="image_manager[thumb_height]" class="form-control" value="<?php echo set_value('image_manager[thumb_height]', $image_manager['thumb_height']); ?>" size="5" />
+								<input type="text" name="image_manager[thumb_width]" class="form-control" value="<?php echo set_value('image_manager[thumb_width]', $image_manager['thumb_width']); ?>" size="5" />
+							</div>
+							<?php echo form_error('image_manager[thumb_height]', '<span class="text-danger">', '</span>'); ?>
+							<?php echo form_error('image_manager[thumb_width]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label"><span class="red">*</span> Mini Thumbnail Size:
+							<span class="help-block">(Height x Width)</span>
+						</label>
+						<div class="col-sm-5">
+							<div class="control-group control-group-2">
+								<input type="text" name="image_manager[thumb_height_mini]" class="form-control" value="<?php echo set_value('image_manager[thumb_height_mini]', $image_manager['thumb_height_mini']); ?>" size="5" />
+								<input type="text" name="image_manager[thumb_width_mini]" class="form-control" value="<?php echo set_value('image_manager[thumb_width_mini]', $image_manager['thumb_width_mini']); ?>" size="5" />
+							</div>
+							<?php echo form_error('image_manager[thumb_height_mini]', '<span class="text-danger">', '</span>'); ?>
+							<?php echo form_error('image_manager[thumb_width_mini]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-show-mini" class="col-sm-2 control-label">Mini Thumbnail:
+							<span class="help-block">Show mini thumbnail</span>
+						</label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($image_manager['show_mini'] == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="image_manager[show_mini]" value="0" <?php echo set_radio('image_manager[show_mini]', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="image_manager[show_mini]" value="1" <?php echo set_radio('image_manager[show_mini]', '1', TRUE); ?>>Enabled</label>
+								<?php } else { ?>  
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="image_manager[show_mini]" value="0" <?php echo set_radio('image_manager[show_mini]', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="image_manager[show_mini]" value="1" <?php echo set_radio('image_manager[show_mini]', '1'); ?>>Enabled</label>
+								<?php } ?>  
+							</div>
+							<?php echo form_error('image_manager[show_mini]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-show-ext" class="col-sm-2 control-label">Show Extension:
+							<span class="help-block">Show or hide file extension</span>
+						</label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($image_manager['show_ext'] == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="image_manager[show_ext]" value="0" <?php echo set_radio('image_manager[show_ext]', '0'); ?>>Hide</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="image_manager[show_ext]" value="1" <?php echo set_radio('image_manager[show_ext]', '1', TRUE); ?>>Show</label>
+								<?php } else { ?>  
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="image_manager[show_ext]" value="0" <?php echo set_radio('image_manager[show_ext]', '0', TRUE); ?>>Hide</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="image_manager[show_ext]" value="1" <?php echo set_radio('image_manager[show_ext]', '1'); ?>>Show</label>
+								<?php } ?>  
+							</div>
+							<?php echo form_error('image_manager[show_ext]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-uploads" class="col-sm-2 control-label">Uploads:
+							<span class="help-block">Enable or disable file uploading</span>
+						</label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($image_manager['uploads'] == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="image_manager[uploads]" value="0" <?php echo set_radio('image_manager[uploads]', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="image_manager[uploads]" value="1" <?php echo set_radio('image_manager[uploads]', '1', TRUE); ?>>Enabled</label>
+								<?php } else { ?>  
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="image_manager[uploads]" value="0" <?php echo set_radio('image_manager[uploads]', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="image_manager[uploads]" value="1" <?php echo set_radio('image_manager[uploads]', '1'); ?>>Enabled</label>
+								<?php } ?>  
+							</div>
+							<?php echo form_error('image_manager[uploads]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-new-folder" class="col-sm-2 control-label">New Folder:
+							<span class="help-block">Enable or disable folder creation</span>
+						</label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($image_manager['new_folder'] == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="image_manager[new_folder]" value="0" <?php echo set_radio('image_manager[new_folder]', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="image_manager[new_folder]" value="1" <?php echo set_radio('image_manager[new_folder]', '1', TRUE); ?>>Enabled</label>
+								<?php } else { ?>  
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="image_manager[new_folder]" value="0" <?php echo set_radio('image_manager[new_folder]', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="image_manager[new_folder]" value="1" <?php echo set_radio('image_manager[new_folder]', '1'); ?>>Enabled</label>
+								<?php } ?>  
+							</div>
+							<?php echo form_error('image_manager[new_folder]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-copy" class="col-sm-2 control-label">Copy:
+							<span class="help-block">Enable or disable file/folder copy</span>
+						</label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($image_manager['copy'] == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="image_manager[copy]" value="0" <?php echo set_radio('image_manager[copy]', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="image_manager[copy]" value="1" <?php echo set_radio('image_manager[copy]', '1', TRUE); ?>>Enabled</label>
+								<?php } else { ?>  
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="image_manager[copy]" value="0" <?php echo set_radio('image_manager[copy]', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="image_manager[copy]" value="1" <?php echo set_radio('image_manager[copy]', '1'); ?>>Enabled</label>
+								<?php } ?>  
+							</div>
+							<?php echo form_error('image_manager[copy]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-move" class="col-sm-2 control-label">Move:
+							<span class="help-block">Enable or disable moving file/folder</span>
+						</label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($image_manager['move'] == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="image_manager[move]" value="0" <?php echo set_radio('image_manager[move]', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="image_manager[move]" value="1" <?php echo set_radio('image_manager[move]', '1', TRUE); ?>>Enabled</label>
+								<?php } else { ?>  
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="image_manager[move]" value="0" <?php echo set_radio('image_manager[move]', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="image_manager[move]" value="1" <?php echo set_radio('image_manager[move]', '1'); ?>>Enabled</label>
+								<?php } ?>  
+							</div>
+							<?php echo form_error('image_manager[move]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-rename" class="col-sm-2 control-label">Rename:
+							<span class="help-block">Enable or disable file/folder rename</span>
+						</label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($image_manager['rename'] == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="image_manager[rename]" value="0" <?php echo set_radio('image_manager[rename]', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="image_manager[rename]" value="1" <?php echo set_radio('image_manager[rename]', '1', TRUE); ?>>Enabled</label>
+								<?php } else { ?>  
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="image_manager[rename]" value="0" <?php echo set_radio('image_manager[rename]', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="image_manager[rename]" value="1" <?php echo set_radio('image_manager[rename]', '1'); ?>>Enabled</label>
+								<?php } ?>  
+							</div>
+							<?php echo form_error('image_manager[rename]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-delete" class="col-sm-2 control-label">Delete:
+							<span class="help-block">Enable or disable deleting file/folder</span>
+						</label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($image_manager['delete'] == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="image_manager[delete]" value="0" <?php echo set_radio('image_manager[delete]', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="image_manager[delete]" value="1" <?php echo set_radio('image_manager[delete]', '1', TRUE); ?>>Enabled</label>
+								<?php } else { ?>  
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="image_manager[delete]" value="0" <?php echo set_radio('image_manager[delete]', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="image_manager[delete]" value="1" <?php echo set_radio('image_manager[delete]]', '1'); ?>>Enabled</label>
+								<?php } ?>  
+							</div>
+							<?php echo form_error('image_manager[delete]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-allowed-ext" class="col-sm-2 control-label"><span class="red">*</span> Allowed Extensions:
+							<span class="help-block">List of extensions allowed to be uploaded separated with “|”. e.g png|jpg</span>
+						</label>
+						<div class="col-sm-5">
+							<textarea name="image_manager[allowed_ext]" id="input-allowed-ext" class="form-control" rows="5"><?php echo set_value('image_manager[image_manager[allowed_ext]', $image_manager['allowed_ext']); ?></textarea>
+							<?php echo form_error('image_manager[allowed_ext]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-hidden-files" class="col-sm-2 control-label">Hidden Files:
+							<span class="help-block">List of files to hide separated with “|”. e.g file1.jpg|file2.txt</span>
+						</label>
+						<div class="col-sm-5">
+							<textarea name="image_manager[hidden_files]" id="input-hidden-files" class="form-control" rows="5"><?php echo set_value('image_manager[image_manager[hidden_files]', $image_manager['hidden_files']); ?></textarea>
+							<?php echo form_error('image_manager[hidden_files]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-hidden-folders" class="col-sm-2 control-label">Hidden Folders:
+							<span class="help-block">List of folders to hide separated with “|”. e.g folder1|folder2</span>
+						</label>
+						<div class="col-sm-5">
+							<textarea name="image_manager[hidden_folders]" id="input-hidden-folders" class="form-control" rows="5"><?php echo set_value('image_manager[image_manager[hidden_folders]', $image_manager['hidden_folders']); ?></textarea>
+							<?php echo form_error('image_manager[hidden_folders]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-transliteration" class="col-sm-2 control-label">Transliteration:
+							<span class="help-block">Enable or disable conversion of all unwanted characters</span>
+						</label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($image_manager['transliteration'] == '1') { ?>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="image_manager[transliteration]" value="0" <?php echo set_radio('image_manager[transliteration]', '0'); ?>>Disabled</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="image_manager[transliteration]" value="1" <?php echo set_radio('image_manager[transliteration]', '1', TRUE); ?>>Enabled</label>
+								<?php } else { ?>  
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="image_manager[transliteration]" value="0" <?php echo set_radio('image_manager[transliteration]', '0', TRUE); ?>>Disabled</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="image_manager[transliteration]" value="1" <?php echo set_radio('image_manager[transliteration]', '1'); ?>>Enabled</label>
+								<?php } ?>  
+							</div>
+							<?php echo form_error('image_manager[transliteration]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-remember-days" class="col-sm-2 control-label">Remember Last Folder:
+							<span class="help-block">How long to save last opened folder in cookie.</span>
+						</label>
+						<div class="col-sm-5">
+							<select name="image_manager[remember_days]" id="input-remember-days" class="form-control">
+								<?php if ($image_manager['remember_days'] === '1') { ?>
+									<option value="1" selected="selected">24 Hours</option>
+									<option value="3">3 Days</option>
+									<option value="5">5 Days</option>
+									<option value="7">1 Week</option>
+								<?php } else if ($image_manager['remember_days'] === '3') { ?>
+									<option value="1">24 Hours</option>
+									<option value="3" selected="selected">3 Days</option>
+									<option value="5">5 Days</option>
+									<option value="7">1 Week</option>
+								<?php } else if ($image_manager['remember_days'] === '5') { ?>
+									<option value="1">24 Hours</option>
+									<option value="3">3 Days</option>
+									<option value="5" selected="selected">5 Days</option>
+									<option value="7">1 Week</option>
+								<?php } else if ($image_manager['remember_days'] === '7') { ?>
+									<option value="1">24 Hours</option>
+									<option value="3">3 Days</option>
+									<option value="5">5 Days</option>
+									<option value="7" selected="selected">1 Week</option>
+								<?php } else { ?>
+									<option value="1">24 Hours</option>
+									<option value="3">3 Days</option>
+									<option value="5">5 Days</option>
+									<option value="7" selected="selected">1 Week</option>
+								<?php } ?>
+							</select>
+							<?php echo form_error('image_manager[remember_days]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="" class="col-sm-2 control-label">Thumbs:
+							<span class="help-block">This will delete all created thumbs. Note thumbs are automatically created.</span>
+						</label>
+						<div class="col-sm-5">
+							<a class="text-danger" href="<?php echo $image_manager['delete_thumbs']; ?>">Delete thumbs</a>
 						</div>
 					</div>
 				</div>
