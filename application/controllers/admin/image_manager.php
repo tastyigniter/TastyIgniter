@@ -26,7 +26,7 @@ class Image_manager extends CI_Controller {
 		$data['title'] = 'Image Manager';
 		$this->template->setTitle('Image Manager');
 		$this->template->setHeading('Image Manager');
-		$this->template->setButton('Options', array('class' => 'btn btn-default pull-right', 'href' => site_url(ADMIN_URI.'/image_tool')));
+		$this->template->setButton('Options', array('class' => 'btn btn-default pull-right', 'href' => site_url(ADMIN_URI.'/settings#image-manager')));
 
 		$extension = $this->Extensions_model->getExtension('tool', 'image_manager');
 		if (!empty($extension['data'])) {

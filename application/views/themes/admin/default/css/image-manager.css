@@ -7,7 +7,7 @@ font-family: 'Oxygen', Arial, sans-serif;
 body {
 padding-top:0;
 font-weight:200;
-background:#E9E9E9;
+background-color:#F7F7F7;
 border: 0 solid #dedede;
 overflow:-moz-scrollbars-vertical;
 margin-top: 68px;
@@ -18,10 +18,13 @@ color: #2a6496;
 text-decoration: none;
 }
 
+.wrap-none {
+    padding: 0;
+}
 
 /*** NAVBAR TOP ***/
 .navbar-menu {
-background-color: #ECECEC;
+background-color: #F7F7F7;
 border-top: 0 solid #dedede;
 border-right: 0 solid #dedede;
 border-left: 0 solid #dedede;
@@ -100,7 +103,7 @@ margin: 0;
 .row-fluid .uploader-box, .row-fluid .grid-box {
 }
 .navbar-statusbar {
-background-color: #e9e9e9;
+background-color: #F7F7F7;
 border-color: #dedede;
 border-width: 0;
 min-height: 38px;
