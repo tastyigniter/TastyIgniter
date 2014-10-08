@@ -115,17 +115,18 @@ class Password_reset extends MX_Controller {
 			}
 		}
 	}
-		public function validateForm() {
-			$this->form_validation->set_rules('email', 'Email Address', 'xss_clean|trim|required|valid_email');	//validate form
-			$this->form_validation->set_rules('security_question', 'Security Question', 'xss_clean|trim|required|integer');
-			$this->form_validation->set_rules('security_answer', 'Security Answer', 'xss_clean|trim|required|min_length[2]');
-  		
-  			if ($this->form_validation->run() === TRUE) {										// checks if form validation routines ran successfully
-				return TRUE;
-			} else {
-				return FALSE;
-			}
+
+	public function validateForm() {
+		$this->form_validation->set_rules('email', 'Email Address', 'xss_clean|trim|required|valid_email');	//validate form
+		$this->form_validation->set_rules('security_question', 'Security Question', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('security_answer', 'Security Answer', 'xss_clean|trim|required|min_length[2]');
+	
+		if ($this->form_validation->run() === TRUE) {										// checks if form validation routines ran successfully
+			return TRUE;
+		} else {
+			return FALSE;
 		}
+	}
 }
 
 /* End of file password_reset.php */

@@ -289,6 +289,47 @@ class Staffs_model extends CI_Model {
 		return $query;
 	}
 
+	public function resetPassword($user_email) {
+		if (!empty($user_email)) {
+			$this->db->select('staffs.staff_id, staffs.staff_email, users.username');
+			$this->db->from('staffs');
+			$this->db->join('users', 'users.staff_id = staffs.staff_id', 'left');
+			$this->db->where('staffs.staff_email', $user_email);
+			$this->db->or_where('users.username', $user_email);
+
+			$query = $this->db->get();
+	
+			if ($query->num_rows() > 0) {
+				$row = $query->row_array();
+				//Randome Password
+				$alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
+				$pass = array();
+				for ($i = 0; $i < 8; $i++) {
+					$n = rand(0, strlen($alphabet)-1);
+					$pass[$i] = $alphabet[$n];
+				}
+		
+				$password = implode('',$pass);
+				$this->db->set('salt', $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9));
+				$this->db->set('password', sha1($salt . sha1($salt . sha1($password))));
+				$this->db->where('staff_id', $row['staff_id']);
+				$query = $this->db->update('users'); 
+
+				$message  = 'Someone requested that the password be reset for the following account:\r\n\r\n';
+				$message .= 'If this was a mistake, just ignore this email and nothing will happen.\r\n\r\n';
+				$message .= 'Username: $row[\'username\'] \r\n\r\n';
+				$message .= 'Password: $password \r\n\r\n';
+				$message .= 'Please don\'t forget to change your password after you login.\r\n\r\n';
+
+				if (mail($row['staff_email'], 'Password Reset', $message)) {
+					return TRUE;
+				}
+			}
+		}
+		
+		return FALSE;
+	}
+
 	public function deleteStaff($staff_id) {
 		if (is_numeric($staff_id)) {
 			$this->db->where('staff_id', $staff_id);
