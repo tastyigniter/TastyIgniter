@@ -16,3 +16,6 @@
 */cache/*
 */cache/!index.html
 */cache/!.htaccess
+
+# Setup Folder
+*/extensions/setup_
