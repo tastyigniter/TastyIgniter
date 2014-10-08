@@ -4,6 +4,7 @@ min-height: 100%;
 position: relative;
 }
 body {
+background-color:#184f75;
 font-family:'Oxygen',Arial,sans-serif;
 margin-bottom:55px;
 }
@@ -33,6 +34,7 @@ border-bottom: 0 solid #eee;
 }
 .page-header h1 {
 text-align: center;
+color:#d3d3d3;
 }
 
 
@@ -93,7 +95,8 @@ margin-top:45px;
 
 /** SETUP ***/
 .setup_box {
-border: 1px solid #DDDDDD;
+background-color: #E7E7E7;
+border: 1px solid #E7E7E7;
 float:none;
 margin: 0 auto;
 padding:25px;

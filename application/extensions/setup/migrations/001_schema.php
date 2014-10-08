@@ -52,11 +52,11 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function down() {
-		$this->load->dbforge();
+		/*$this->load->dbforge();
 		$this->dbforge->drop_column('menu_options', 'display_type');
 		$this->dbforge->drop_column('menu_options', 'priority');
 		$this->dbforge->add_column('menu_options', array('option_price DECIMAL(15,2) NOT NULL'));
-		$this->dbforge->drop_table('menu_option_values');
+		$this->dbforge->drop_table('menu_option_values');*/
 	}
 
 	public function _addresses() {

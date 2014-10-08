@@ -401,8 +401,9 @@ class Setup extends CI_Controller {
 		if ($this->migration->current()) {
 			return TRUE;
 		} else {
-			$this->session->set_flashdata('alert', '<p class="alert alert-danger">Error installing database.</p>');
-			redirect('setup/database');       	 		
+			show_error($this->migration->error_string());
+			//$this->session->set_flashdata('alert', '<p class="alert alert-danger">Error installing database.</p>');
+			//redirect('setup/database');       	 		
 		}
 	}
 		

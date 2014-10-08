@@ -2,11 +2,17 @@
 .DS_Store
 
 # Log file
-/application/logs/logs.php
+*/logs/log.php
+*/logs/!index.html
 
 # Database config file
-/application/config/database.php
+*/config/database.php
 
 # Image Thumb Files
 /assets/img/thumbs/*
 !/assets/img/thumbs/index.html
+
+# Cache Files
+*/cache/*
+*/cache/!index.html
+*/cache/!.htaccess

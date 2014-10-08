@@ -14,13 +14,13 @@
 		<div class="row">
 			<div class="col-md-7 setup_box">
 				<div class="content">
+					<h4>Installation Successful!</h4>
 					<div id="notification">
 						<?php if (!empty($alert)) { ?>
 							<?php echo $alert; ?>
 						<?php } ?>
 					</div>
 				
-					<h4>Installation Successful!</h4>
 					<p class="well">TastyIgniter has been installed sucessfully.<br /><br />
 					<b>Next Step:</b><br /> <?php echo $complete_setup; ?></p>
 				</div>
