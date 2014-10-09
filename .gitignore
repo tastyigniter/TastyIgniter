@@ -1,21 +1,13 @@
 #Mac OS X file
 .DS_Store
 
-# Log file
-*/logs/log.php
-*/logs/!index.html
-
-# Database config file
-*/config/database.php
-
-# Image Thumb Files
-/assets/img/thumbs/*
-!/assets/img/thumbs/index.html
-
 # Cache Files
 */cache/*
 */cache/!index.html
 */cache/!.htaccess
+
+# Database config file
+*/config/database.php
 
 # Setup Folder
 <<<<<<< HEAD
@@ -23,3 +15,11 @@
 =======
 */extensions/setup_
 >>>>>>> FETCH_HEAD
+
+# Log file
+*/logs/log.php
+*/logs/!index.html
+
+# Image Thumb Files
+/assets/img/thumbs/*
+!/assets/img/thumbs/index.html
