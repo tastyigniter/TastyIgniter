@@ -18,4 +18,8 @@
 */cache/!.htaccess
 
 # Setup Folder
+<<<<<<< HEAD
 */extensions/setup_
+=======
+*/extensions/setup_
+>>>>>>> FETCH_HEAD
