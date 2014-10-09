@@ -3,7 +3,7 @@
 class System {
 	
 	public function setupHook() {
-		if (is_dir(EXTPATH .'setup/') AND file_exists(EXTPATH .'setup/')) {
+		if (ENVIRONMENT === 'production' AND is_dir(EXTPATH .'setup/') AND file_exists(EXTPATH .'setup/')) {
 			$db_data = array();
 			if (!is_file(APPPATH.'config/database.php')) {
 				show_error('Unable to read database configuration file: rename application/config/database-sample.php to application/config/database.php');
