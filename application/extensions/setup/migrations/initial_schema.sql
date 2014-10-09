@@ -2,247 +2,248 @@
 # TABLE STRUCTURE FOR: ti_countries
 #
 
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('1', 'Afghanistan', 'AF', 'AFG', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('2', 'Albania', 'AL', 'ALB', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('3', 'Algeria', 'DZ', 'DZA', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('4', 'American Samoa', 'AS', 'ASM', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('5', 'Andorra', 'AD', 'AND', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('6', 'Angola', 'AO', 'AGO', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('7', 'Anguilla', 'AI', 'AIA', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('8', 'Antarctica', 'AQ', 'ATA', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('9', 'Antigua and Barbuda', 'AG', 'ATG', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('10', 'Argentina', 'AR', 'ARG', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('11', 'Armenia', 'AM', 'ARM', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('12', 'Aruba', 'AW', 'ABW', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('13', 'Australia', 'AU', 'AUS', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('14', 'Austria', 'AT', 'AUT', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('15', 'Azerbaijan', 'AZ', 'AZE', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('16', 'Bahamas', 'BS', 'BHS', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('17', 'Bahrain', 'BH', 'BHR', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('18', 'Bangladesh', 'BD', 'BGD', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('19', 'Barbados', 'BB', 'BRB', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('20', 'Belarus', 'BY', 'BLR', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('21', 'Belgium', 'BE', 'BEL', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('22', 'Belize', 'BZ', 'BLZ', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('23', 'Benin', 'BJ', 'BEN', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('24', 'Bermuda', 'BM', 'BMU', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('25', 'Bhutan', 'BT', 'BTN', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('26', 'Bolivia', 'BO', 'BOL', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('27', 'Bosnia and Herzegowina', 'BA', 'BIH', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('28', 'Botswana', 'BW', 'BWA', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('29', 'Bouvet Island', 'BV', 'BVT', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('30', 'Brazil', 'BR', 'BRA', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('31', 'British Indian Ocean Territory', 'IO', 'IOT', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('32', 'Brunei Darussalam', 'BN', 'BRN', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('33', 'Bulgaria', 'BG', 'BGR', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('34', 'Burkina Faso', 'BF', 'BFA', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('35', 'Burundi', 'BI', 'BDI', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('36', 'Cambodia', 'KH', 'KHM', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('37', 'Cameroon', 'CM', 'CMR', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('38', 'Canada', 'CA', 'CAN', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('39', 'Cape Verde', 'CV', 'CPV', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('40', 'Cayman Islands', 'KY', 'CYM', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('41', 'Central African Republic', 'CF', 'CAF', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('42', 'Chad', 'TD', 'TCD', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('43', 'Chile', 'CL', 'CHL', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('44', 'China', 'CN', 'CHN', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('45', 'Christmas Island', 'CX', 'CXR', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('46', 'Cocos (Keeling) Islands', 'CC', 'CCK', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('47', 'Colombia', 'CO', 'COL', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('48', 'Comoros', 'KM', 'COM', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('49', 'Congo', 'CG', 'COG', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('50', 'Cook Islands', 'CK', 'COK', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('51', 'Costa Rica', 'CR', 'CRI', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('52', 'Cote D\'Ivoire', 'CI', 'CIV', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('53', 'Croatia', 'HR', 'HRV', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('54', 'Cuba', 'CU', 'CUB', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('55', 'Cyprus', 'CY', 'CYP', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('56', 'Czech Republic', 'CZ', 'CZE', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('57', 'Denmark', 'DK', 'DNK', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('58', 'Djibouti', 'DJ', 'DJI', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('59', 'Dominica', 'DM', 'DMA', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('60', 'Dominican Republic', 'DO', 'DOM', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('61', 'East Timor', 'TP', 'TMP', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('62', 'Ecuador', 'EC', 'ECU', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('63', 'Egypt', 'EG', 'EGY', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('64', 'El Salvador', 'SV', 'SLV', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('65', 'Equatorial Guinea', 'GQ', 'GNQ', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('66', 'Eritrea', 'ER', 'ERI', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('67', 'Estonia', 'EE', 'EST', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('68', 'Ethiopia', 'ET', 'ETH', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('69', 'Falkland Islands (Malvinas)', 'FK', 'FLK', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('70', 'Faroe Islands', 'FO', 'FRO', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('71', 'Fiji', 'FJ', 'FJI', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('72', 'Finland', 'FI', 'FIN', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('73', 'France', 'FR', 'FRA', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('74', 'France, Metropolitan', 'FX', 'FXX', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('75', 'French Guiana', 'GF', 'GUF', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('76', 'French Polynesia', 'PF', 'PYF', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('77', 'French Southern Territories', 'TF', 'ATF', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('78', 'Gabon', 'GA', 'GAB', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('79', 'Gambia', 'GM', 'GMB', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('80', 'Georgia', 'GE', 'GEO', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('81', 'Germany', 'DE', 'DEU', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('82', 'Ghana', 'GH', 'GHA', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('83', 'Gibraltar', 'GI', 'GIB', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('84', 'Greece', 'GR', 'GRC', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('85', 'Greenland', 'GL', 'GRL', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('86', 'Grenada', 'GD', 'GRD', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('87', 'Guadeloupe', 'GP', 'GLP', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('88', 'Guam', 'GU', 'GUM', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('89', 'Guatemala', 'GT', 'GTM', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('90', 'Guinea', 'GN', 'GIN', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('91', 'Guinea-bissau', 'GW', 'GNB', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('92', 'Guyana', 'GY', 'GUY', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('93', 'Haiti', 'HT', 'HTI', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('94', 'Heard and Mc Donald Islands', 'HM', 'HMD', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('95', 'Honduras', 'HN', 'HND', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('96', 'Hong Kong', 'HK', 'HKG', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('97', 'Hungary', 'HU', 'HUN', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('98', 'Iceland', 'IS', 'ISL', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('99', 'India', 'IN', 'IND', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('100', 'Indonesia', 'ID', 'IDN', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('101', 'Iran (Islamic Republic of)', 'IR', 'IRN', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('102', 'Iraq', 'IQ', 'IRQ', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('103', 'Ireland', 'IE', 'IRL', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('104', 'Israel', 'IL', 'ISR', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('105', 'Italy', 'IT', 'ITA', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('106', 'Jamaica', 'JM', 'JAM', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('107', 'Japan', 'JP', 'JPN', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('108', 'Jordan', 'JO', 'JOR', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('109', 'Kazakhstan', 'KZ', 'KAZ', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('110', 'Kenya', 'KE', 'KEN', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('111', 'Kiribati', 'KI', 'KIR', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('112', 'North Korea', 'KP', 'PRK', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('113', 'Korea, Republic of', 'KR', 'KOR', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('114', 'Kuwait', 'KW', 'KWT', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('115', 'Kyrgyzstan', 'KG', 'KGZ', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('116', 'Lao People\'s Democratic Republic', 'LA', 'LAO', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('117', 'Latvia', 'LV', 'LVA', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('118', 'Lebanon', 'LB', 'LBN', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('119', 'Lesotho', 'LS', 'LSO', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('120', 'Liberia', 'LR', 'LBR', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('121', 'Libyan Arab Jamahiriya', 'LY', 'LBY', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('122', 'Liechtenstein', 'LI', 'LIE', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('123', 'Lithuania', 'LT', 'LTU', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('124', 'Luxembourg', 'LU', 'LUX', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('125', 'Macau', 'MO', 'MAC', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('126', 'FYROM', 'MK', 'MKD', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('127', 'Madagascar', 'MG', 'MDG', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('128', 'Malawi', 'MW', 'MWI', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('129', 'Malaysia', 'MY', 'MYS', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('130', 'Maldives', 'MV', 'MDV', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('131', 'Mali', 'ML', 'MLI', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('132', 'Malta', 'MT', 'MLT', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('133', 'Marshall Islands', 'MH', 'MHL', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('134', 'Martinique', 'MQ', 'MTQ', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('135', 'Mauritania', 'MR', 'MRT', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('136', 'Mauritius', 'MU', 'MUS', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('137', 'Mayotte', 'YT', 'MYT', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('138', 'Mexico', 'MX', 'MEX', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('139', 'Micronesia, Federated States of', 'FM', 'FSM', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('140', 'Moldova, Republic of', 'MD', 'MDA', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('141', 'Monaco', 'MC', 'MCO', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('142', 'Mongolia', 'MN', 'MNG', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('143', 'Montserrat', 'MS', 'MSR', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('144', 'Morocco', 'MA', 'MAR', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('145', 'Mozambique', 'MZ', 'MOZ', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('146', 'Myanmar', 'MM', 'MMR', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('147', 'Namibia', 'NA', 'NAM', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('148', 'Nauru', 'NR', 'NRU', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('149', 'Nepal', 'NP', 'NPL', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('150', 'Netherlands', 'NL', 'NLD', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('151', 'Netherlands Antilles', 'AN', 'ANT', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('152', 'New Caledonia', 'NC', 'NCL', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('153', 'New Zealand', 'NZ', 'NZL', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('154', 'Nicaragua', 'NI', 'NIC', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('155', 'Niger', 'NE', 'NER', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('156', 'Nigeria', 'NG', 'NGA', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('157', 'Niue', 'NU', 'NIU', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('158', 'Norfolk Island', 'NF', 'NFK', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('159', 'Northern Mariana Islands', 'MP', 'MNP', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('160', 'Norway', 'NO', 'NOR', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('161', 'Oman', 'OM', 'OMN', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('162', 'Pakistan', 'PK', 'PAK', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('163', 'Palau', 'PW', 'PLW', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('164', 'Panama', 'PA', 'PAN', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('165', 'Papua New Guinea', 'PG', 'PNG', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('166', 'Paraguay', 'PY', 'PRY', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('167', 'Peru', 'PE', 'PER', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('168', 'Philippines', 'PH', 'PHL', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('169', 'Pitcairn', 'PN', 'PCN', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('170', 'Poland', 'PL', 'POL', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('171', 'Portugal', 'PT', 'PRT', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('172', 'Puerto Rico', 'PR', 'PRI', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('173', 'Qatar', 'QA', 'QAT', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('174', 'Reunion', 'RE', 'REU', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('175', 'Romania', 'RO', 'ROM', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('176', 'Russian Federation', 'RU', 'RUS', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('177', 'Rwanda', 'RW', 'RWA', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('178', 'Saint Kitts and Nevis', 'KN', 'KNA', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('179', 'Saint Lucia', 'LC', 'LCA', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('180', 'Saint Vincent and the Grenadines', 'VC', 'VCT', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('181', 'Samoa', 'WS', 'WSM', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('182', 'San Marino', 'SM', 'SMR', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('183', 'Sao Tome and Principe', 'ST', 'STP', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('184', 'Saudi Arabia', 'SA', 'SAU', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('185', 'Senegal', 'SN', 'SEN', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('186', 'Seychelles', 'SC', 'SYC', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('187', 'Sierra Leone', 'SL', 'SLE', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('188', 'Singapore', 'SG', 'SGP', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('189', 'Slovak Republic', 'SK', 'SVK', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('190', 'Slovenia', 'SI', 'SVN', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('191', 'Solomon Islands', 'SB', 'SLB', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('192', 'Somalia', 'SO', 'SOM', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('193', 'South Africa', 'ZA', 'ZAF', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('194', 'South Georgia &amp; South Sandwich Islands', 'GS', 'SGS', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('195', 'Spain', 'ES', 'ESP', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('196', 'Sri Lanka', 'LK', 'LKA', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('197', 'St. Helena', 'SH', 'SHN', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('198', 'St. Pierre and Miquelon', 'PM', 'SPM', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('199', 'Sudan', 'SD', 'SDN', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('200', 'Suriname', 'SR', 'SUR', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('201', 'Svalbard and Jan Mayen Islands', 'SJ', 'SJM', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('202', 'Swaziland', 'SZ', 'SWZ', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('203', 'Sweden', 'SE', 'SWE', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('204', 'Switzerland', 'CH', 'CHE', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('205', 'Syrian Arab Republic', 'SY', 'SYR', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('206', 'Taiwan', 'TW', 'TWN', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('207', 'Tajikistan', 'TJ', 'TJK', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('208', 'Tanzania, United Republic of', 'TZ', 'TZA', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('209', 'Thailand', 'TH', 'THA', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('210', 'Togo', 'TG', 'TGO', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('211', 'Tokelau', 'TK', 'TKL', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('212', 'Tonga', 'TO', 'TON', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('213', 'Trinidad and Tobago', 'TT', 'TTO', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('214', 'Tunisia', 'TN', 'TUN', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('215', 'Turkey', 'TR', 'TUR', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('216', 'Turkmenistan', 'TM', 'TKM', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('217', 'Turks and Caicos Islands', 'TC', 'TCA', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('218', 'Tuvalu', 'TV', 'TUV', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('219', 'Uganda', 'UG', 'UGA', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('220', 'Ukraine', 'UA', 'UKR', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('221', 'United Arab Emirates', 'AE', 'ARE', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('222', 'United Kingdom', 'GB', 'GBR', '{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('223', 'United States', 'US', 'USA', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('224', 'United States Minor Outlying Islands', 'UM', 'UMI', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('225', 'Uruguay', 'UY', 'URY', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('226', 'Uzbekistan', 'UZ', 'UZB', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('227', 'Vanuatu', 'VU', 'VUT', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('228', 'Vatican City State (Holy See)', 'VA', 'VAT', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('229', 'Venezuela', 'VE', 'VEN', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('230', 'Viet Nam', 'VN', 'VNM', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('231', 'Virgin Islands (British)', 'VG', 'VGB', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('232', 'Virgin Islands (U.S.)', 'VI', 'VIR', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('233', 'Wallis and Futuna Islands', 'WF', 'WLF', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('234', 'Western Sahara', 'EH', 'ESH', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('235', 'Yemen', 'YE', 'YEM', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('236', 'Yugoslavia', 'YU', 'YUG', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('237', 'Democratic Republic of Congo', 'CD', 'COD', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('238', 'Zambia', 'ZM', 'ZMB', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('239', 'Zimbabwe', 'ZW', 'ZWE', '', '1');
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `format`, `status`) VALUES ('241', 'Iana Island', 'SA', 'GAA', '', '1');
-
+INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `flag`, `format`, `status`) VALUES
+(1, 'Afghanistan', 'AF', 'AFG', 'data/flags/af.png', '', 1),
+(2, 'Albania', 'AL', 'ALB', 'data/flags/al.png', '', 1),
+(3, 'Algeria', 'DZ', 'DZA', 'data/flags/dz.png', '', 1),
+(4, 'American Samoa', 'AS', 'ASM', 'data/flags/as.png', '', 1),
+(5, 'Andorra', 'AD', 'AND', 'data/flags/ad.png', '', 1),
+(6, 'Angola', 'AO', 'AGO', 'data/flags/ao.png', '', 1),
+(7, 'Anguilla', 'AI', 'AIA', 'data/flags/ai.png', '', 1),
+(8, 'Antarctica', 'AQ', 'ATA', 'data/flags/aq.png', '', 1),
+(9, 'Antigua and Barbuda', 'AG', 'ATG', 'data/flags/ag.png', '', 1),
+(10, 'Argentina', 'AR', 'ARG', 'data/flags/ar.png', '', 1),
+(11, 'Armenia', 'AM', 'ARM', 'data/flags/am.png', '', 1),
+(12, 'Aruba', 'AW', 'ABW', 'data/flags/aw.png', '', 1),
+(13, 'Australia', 'AU', 'AUS', 'data/flags/au.png', '', 1),
+(14, 'Austria', 'AT', 'AUT', 'data/flags/at.png', '', 1),
+(15, 'Azerbaijan', 'AZ', 'AZE', 'data/flags/az.png', '', 1),
+(16, 'Bahamas', 'BS', 'BHS', 'data/flags/bs.png', '', 1),
+(17, 'Bahrain', 'BH', 'BHR', 'data/flags/bh.png', '', 1),
+(18, 'Bangladesh', 'BD', 'BGD', 'data/flags/bd.png', '', 1),
+(19, 'Barbados', 'BB', 'BRB', 'data/flags/bb.png', '', 1),
+(20, 'Belarus', 'BY', 'BLR', 'data/flags/by.png', '', 1),
+(21, 'Belgium', 'BE', 'BEL', 'data/flags/be.png', '', 1),
+(22, 'Belize', 'BZ', 'BLZ', 'data/flags/bz.png', '', 1),
+(23, 'Benin', 'BJ', 'BEN', 'data/flags/bj.png', '', 1),
+(24, 'Bermuda', 'BM', 'BMU', 'data/flags/bm.png', '', 1),
+(25, 'Bhutan', 'BT', 'BTN', 'data/flags/bt.png', '', 1),
+(26, 'Bolivia', 'BO', 'BOL', 'data/flags/bo.png', '', 1),
+(27, 'Bosnia and Herzegowina', 'BA', 'BIH', 'data/flags/ba.png', '', 1),
+(28, 'Botswana', 'BW', 'BWA', 'data/flags/bw.png', '', 1),
+(29, 'Bouvet Island', 'BV', 'BVT', 'data/flags/bv.png', '', 1),
+(30, 'Brazil', 'BR', 'BRA', 'data/flags/br.png', '', 1),
+(31, 'British Indian Ocean Territory', 'IO', 'IOT', 'data/flags/io.png', '', 1),
+(32, 'Brunei Darussalam', 'BN', 'BRN', 'data/flags/bn.png', '', 1),
+(33, 'Bulgaria', 'BG', 'BGR', 'data/flags/bg.png', '', 1),
+(34, 'Burkina Faso', 'BF', 'BFA', 'data/flags/bf.png', '', 1),
+(35, 'Burundi', 'BI', 'BDI', 'data/flags/bi.png', '', 1),
+(36, 'Cambodia', 'KH', 'KHM', 'data/flags/kh.png', '', 1),
+(37, 'Cameroon', 'CM', 'CMR', 'data/flags/cm.png', '', 1),
+(38, 'Canada', 'CA', 'CAN', 'data/flags/ca.png', '', 1),
+(39, 'Cape Verde', 'CV', 'CPV', 'data/flags/cv.png', '', 1),
+(40, 'Cayman Islands', 'KY', 'CYM', 'data/flags/ky.png', '', 1),
+(41, 'Central African Republic', 'CF', 'CAF', 'data/flags/cf.png', '', 1),
+(42, 'Chad', 'TD', 'TCD', 'data/flags/td.png', '', 1),
+(43, 'Chile', 'CL', 'CHL', 'data/flags/cl.png', '', 1),
+(44, 'China', 'CN', 'CHN', 'data/flags/cn.png', '', 1),
+(45, 'Christmas Island', 'CX', 'CXR', 'data/flags/cx.png', '', 1),
+(46, 'Cocos (Keeling) Islands', 'CC', 'CCK', 'data/flags/cc.png', '', 1),
+(47, 'Colombia', 'CO', 'COL', 'data/flags/co.png', '', 1),
+(48, 'Comoros', 'KM', 'COM', 'data/flags/km.png', '', 1),
+(49, 'Congo', 'CG', 'COG', 'data/flags/cg.png', '', 1),
+(50, 'Cook Islands', 'CK', 'COK', 'data/flags/ck.png', '', 1),
+(51, 'Costa Rica', 'CR', 'CRI', 'data/flags/cr.png', '', 1),
+(52, 'Cote D''Ivoire', 'CI', 'CIV', 'data/flags/ci.png', '', 1),
+(53, 'Croatia', 'HR', 'HRV', 'data/flags/hr.png', '', 1),
+(54, 'Cuba', 'CU', 'CUB', 'data/flags/cu.png', '', 1),
+(55, 'Cyprus', 'CY', 'CYP', 'data/flags/cy.png', '', 1),
+(56, 'Czech Republic', 'CZ', 'CZE', 'data/flags/cz.png', '', 1),
+(57, 'Denmark', 'DK', 'DNK', 'data/flags/dk.png', '', 1),
+(58, 'Djibouti', 'DJ', 'DJI', 'data/flags/dj.png', '', 1),
+(59, 'Dominica', 'DM', 'DMA', 'data/flags/dm.png', '', 1),
+(60, 'Dominican Republic', 'DO', 'DOM', 'data/flags/do.png', '', 1),
+(61, 'East Timor', 'TP', 'TMP', 'data/flags/tp.png', '', 1),
+(62, 'Ecuador', 'EC', 'ECU', 'data/flags/ec.png', '', 1),
+(63, 'Egypt', 'EG', 'EGY', 'data/flags/eg.png', '', 1),
+(64, 'El Salvador', 'SV', 'SLV', 'data/flags/sv.png', '', 1),
+(65, 'Equatorial Guinea', 'GQ', 'GNQ', 'data/flags/gq.png', '', 1),
+(66, 'Eritrea', 'ER', 'ERI', 'data/flags/er.png', '', 1),
+(67, 'Estonia', 'EE', 'EST', 'data/flags/ee.png', '', 1),
+(68, 'Ethiopia', 'ET', 'ETH', 'data/flags/et.png', '', 1),
+(69, 'Falkland Islands (Malvinas)', 'FK', 'FLK', 'data/flags/fk.png', '', 1),
+(70, 'Faroe Islands', 'FO', 'FRO', 'data/flags/fo.png', '', 1),
+(71, 'Fiji', 'FJ', 'FJI', 'data/flags/fj.png', '', 1),
+(72, 'Finland', 'FI', 'FIN', 'data/flags/fi.png', '', 1),
+(73, 'France', 'FR', 'FRA', 'data/flags/fr.png', '', 1),
+(74, 'France, Metropolitan', 'FX', 'FXX', 'data/flags/fx.png', '', 1),
+(75, 'French Guiana', 'GF', 'GUF', 'data/flags/gf.png', '', 1),
+(76, 'French Polynesia', 'PF', 'PYF', 'data/flags/pf.png', '', 1),
+(77, 'French Southern Territories', 'TF', 'ATF', 'data/flags/tf.png', '', 1),
+(78, 'Gabon', 'GA', 'GAB', 'data/flags/ga.png', '', 1),
+(79, 'Gambia', 'GM', 'GMB', 'data/flags/gm.png', '', 1),
+(80, 'Georgia', 'GE', 'GEO', 'data/flags/ge.png', '', 1),
+(81, 'Germany', 'DE', 'DEU', 'data/flags/de.png', '', 1),
+(82, 'Ghana', 'GH', 'GHA', 'data/flags/gh.png', '', 1),
+(83, 'Gibraltar', 'GI', 'GIB', 'data/flags/gi.png', '', 1),
+(84, 'Greece', 'GR', 'GRC', 'data/flags/gr.png', '', 1),
+(85, 'Greenland', 'GL', 'GRL', 'data/flags/gl.png', '', 1),
+(86, 'Grenada', 'GD', 'GRD', 'data/flags/gd.png', '', 1),
+(87, 'Guadeloupe', 'GP', 'GLP', 'data/flags/gp.png', '', 1),
+(88, 'Guam', 'GU', 'GUM', 'data/flags/gu.png', '', 1),
+(89, 'Guatemala', 'GT', 'GTM', 'data/flags/gt.png', '', 1),
+(90, 'Guinea', 'GN', 'GIN', 'data/flags/gn.png', '', 1),
+(91, 'Guinea-bissau', 'GW', 'GNB', 'data/flags/gw.png', '', 1),
+(92, 'Guyana', 'GY', 'GUY', 'data/flags/gy.png', '', 1),
+(93, 'Haiti', 'HT', 'HTI', 'data/flags/ht.png', '', 1),
+(94, 'Heard and Mc Donald Islands', 'HM', 'HMD', 'data/flags/hm.png', '', 1),
+(95, 'Honduras', 'HN', 'HND', 'data/flags/hn.png', '', 1),
+(96, 'Hong Kong', 'HK', 'HKG', 'data/flags/hk.png', '', 1),
+(97, 'Hungary', 'HU', 'HUN', 'data/flags/hu.png', '', 1),
+(98, 'Iceland', 'IS', 'ISL', 'data/flags/is.png', '', 1),
+(99, 'India', 'IN', 'IND', 'data/flags/in.png', '', 1),
+(100, 'Indonesia', 'ID', 'IDN', 'data/flags/id.png', '', 1),
+(101, 'Iran (Islamic Republic of)', 'IR', 'IRN', 'data/flags/ir.png', '', 1),
+(102, 'Iraq', 'IQ', 'IRQ', 'data/flags/iq.png', '', 1),
+(103, 'Ireland', 'IE', 'IRL', 'data/flags/ie.png', '', 1),
+(104, 'Israel', 'IL', 'ISR', 'data/flags/il.png', '', 1),
+(105, 'Italy', 'IT', 'ITA', 'data/flags/it.png', '', 1),
+(106, 'Jamaica', 'JM', 'JAM', 'data/flags/jm.png', '', 1),
+(107, 'Japan', 'JP', 'JPN', 'data/flags/jp.png', '', 1),
+(108, 'Jordan', 'JO', 'JOR', 'data/flags/jo.png', '', 1),
+(109, 'Kazakhstan', 'KZ', 'KAZ', 'data/flags/kz.png', '', 1),
+(110, 'Kenya', 'KE', 'KEN', 'data/flags/ke.png', '', 1),
+(111, 'Kiribati', 'KI', 'KIR', 'data/flags/ki.png', '', 1),
+(112, 'North Korea', 'KP', 'PRK', 'data/flags/kp.png', '', 1),
+(113, 'Korea, Republic of', 'KR', 'KOR', 'data/flags/kr.png', '', 1),
+(114, 'Kuwait', 'KW', 'KWT', 'data/flags/kw.png', '', 1),
+(115, 'Kyrgyzstan', 'KG', 'KGZ', 'data/flags/kg.png', '', 1),
+(116, 'Lao People''s Democratic Republic', 'LA', 'LAO', 'data/flags/la.png', '', 1),
+(117, 'Latvia', 'LV', 'LVA', 'data/flags/lv.png', '', 1),
+(118, 'Lebanon', 'LB', 'LBN', 'data/flags/lb.png', '', 1),
+(119, 'Lesotho', 'LS', 'LSO', 'data/flags/ls.png', '', 1),
+(120, 'Liberia', 'LR', 'LBR', 'data/flags/lr.png', '', 1),
+(121, 'Libyan Arab Jamahiriya', 'LY', 'LBY', 'data/flags/ly.png', '', 1),
+(122, 'Liechtenstein', 'LI', 'LIE', 'data/flags/li.png', '', 1),
+(123, 'Lithuania', 'LT', 'LTU', 'data/flags/lt.png', '', 1),
+(124, 'Luxembourg', 'LU', 'LUX', 'data/flags/lu.png', '', 1),
+(125, 'Macau', 'MO', 'MAC', 'data/flags/mo.png', '', 1),
+(126, 'FYROM', 'MK', 'MKD', 'data/flags/mk.png', '', 1),
+(127, 'Madagascar', 'MG', 'MDG', 'data/flags/mg.png', '', 1),
+(128, 'Malawi', 'MW', 'MWI', 'data/flags/mw.png', '', 1),
+(129, 'Malaysia', 'MY', 'MYS', 'data/flags/my.png', '', 1),
+(130, 'Maldives', 'MV', 'MDV', 'data/flags/mv.png', '', 1),
+(131, 'Mali', 'ML', 'MLI', 'data/flags/ml.png', '', 1),
+(132, 'Malta', 'MT', 'MLT', 'data/flags/mt.png', '', 1),
+(133, 'Marshall Islands', 'MH', 'MHL', 'data/flags/mh.png', '', 1),
+(134, 'Martinique', 'MQ', 'MTQ', 'data/flags/mq.png', '', 1),
+(135, 'Mauritania', 'MR', 'MRT', 'data/flags/mr.png', '', 1),
+(136, 'Mauritius', 'MU', 'MUS', 'data/flags/mu.png', '', 1),
+(137, 'Mayotte', 'YT', 'MYT', 'data/flags/yt.png', '', 1),
+(138, 'Mexico', 'MX', 'MEX', 'data/flags/mx.png', '', 1),
+(139, 'Micronesia, Federated States of', 'FM', 'FSM', 'data/flags/fm.png', '', 1),
+(140, 'Moldova, Republic of', 'MD', 'MDA', 'data/flags/md.png', '', 1),
+(141, 'Monaco', 'MC', 'MCO', 'data/flags/mc.png', '', 1),
+(142, 'Mongolia', 'MN', 'MNG', 'data/flags/mn.png', '', 1),
+(143, 'Montserrat', 'MS', 'MSR', 'data/flags/ms.png', '', 1),
+(144, 'Morocco', 'MA', 'MAR', 'data/flags/ma.png', '', 1),
+(145, 'Mozambique', 'MZ', 'MOZ', 'data/flags/mz.png', '', 1),
+(146, 'Myanmar', 'MM', 'MMR', 'data/flags/mm.png', '', 1),
+(147, 'Namibia', 'NA', 'NAM', 'data/flags/na.png', '', 1),
+(148, 'Nauru', 'NR', 'NRU', 'data/flags/nr.png', '', 1),
+(149, 'Nepal', 'NP', 'NPL', 'data/flags/np.png', '', 1),
+(150, 'Netherlands', 'NL', 'NLD', 'data/flags/nl.png', '', 1),
+(151, 'Netherlands Antilles', 'AN', 'ANT', 'data/flags/an.png', '', 1),
+(152, 'New Caledonia', 'NC', 'NCL', 'data/flags/nc.png', '', 1),
+(153, 'New Zealand', 'NZ', 'NZL', 'data/flags/nz.png', '', 1),
+(154, 'Nicaragua', 'NI', 'NIC', 'data/flags/ni.png', '', 1),
+(155, 'Niger', 'NE', 'NER', 'data/flags/ne.png', '', 1),
+(156, 'Nigeria', 'NG', 'NGA', 'data/flags/ng.png', '', 1),
+(157, 'Niue', 'NU', 'NIU', 'data/flags/nu.png', '', 1),
+(158, 'Norfolk Island', 'NF', 'NFK', 'data/flags/nf.png', '', 1),
+(159, 'Northern Mariana Islands', 'MP', 'MNP', 'data/flags/mp.png', '', 1),
+(160, 'Norway', 'NO', 'NOR', 'data/flags/no.png', '', 1),
+(161, 'Oman', 'OM', 'OMN', 'data/flags/om.png', '', 1),
+(162, 'Pakistan', 'PK', 'PAK', 'data/flags/pk.png', '', 1),
+(163, 'Palau', 'PW', 'PLW', 'data/flags/pw.png', '', 1),
+(164, 'Panama', 'PA', 'PAN', 'data/flags/pa.png', '', 1),
+(165, 'Papua New Guinea', 'PG', 'PNG', 'data/flags/pg.png', '', 1),
+(166, 'Paraguay', 'PY', 'PRY', 'data/flags/py.png', '', 1),
+(167, 'Peru', 'PE', 'PER', 'data/flags/pe.png', '', 1),
+(168, 'Philippines', 'PH', 'PHL', 'data/flags/ph.png', '', 1),
+(169, 'Pitcairn', 'PN', 'PCN', 'data/flags/pn.png', '', 1),
+(170, 'Poland', 'PL', 'POL', 'data/flags/pl.png', '', 1),
+(171, 'Portugal', 'PT', 'PRT', 'data/flags/pt.png', '', 1),
+(172, 'Puerto Rico', 'PR', 'PRI', 'data/flags/pr.png', '', 1),
+(173, 'Qatar', 'QA', 'QAT', 'data/flags/qa.png', '', 1),
+(174, 'Reunion', 'RE', 'REU', 'data/flags/re.png', '', 1),
+(175, 'Romania', 'RO', 'ROM', 'data/flags/ro.png', '', 1),
+(176, 'Russian Federation', 'RU', 'RUS', 'data/flags/ru.png', '', 1),
+(177, 'Rwanda', 'RW', 'RWA', 'data/flags/rw.png', '', 1),
+(178, 'Saint Kitts and Nevis', 'KN', 'KNA', 'data/flags/kn.png', '', 1),
+(179, 'Saint Lucia', 'LC', 'LCA', 'data/flags/lc.png', '', 1),
+(180, 'Saint Vincent and the Grenadines', 'VC', 'VCT', 'data/flags/vc.png', '', 1),
+(181, 'Samoa', 'WS', 'WSM', 'data/flags/ws.png', '', 1),
+(182, 'San Marino', 'SM', 'SMR', 'data/flags/sm.png', '', 1),
+(183, 'Sao Tome and Principe', 'ST', 'STP', 'data/flags/st.png', '', 1),
+(184, 'Saudi Arabia', 'SA', 'SAU', 'data/flags/sa.png', '', 1),
+(185, 'Senegal', 'SN', 'SEN', 'data/flags/sn.png', '', 1),
+(186, 'Seychelles', 'SC', 'SYC', 'data/flags/sc.png', '', 1),
+(187, 'Sierra Leone', 'SL', 'SLE', 'data/flags/sl.png', '', 1),
+(188, 'Singapore', 'SG', 'SGP', 'data/flags/sg.png', '', 1),
+(189, 'Slovak Republic', 'SK', 'SVK', 'data/flags/sk.png', '', 1),
+(190, 'Slovenia', 'SI', 'SVN', 'data/flags/si.png', '', 1),
+(191, 'Solomon Islands', 'SB', 'SLB', 'data/flags/sb.png', '', 1),
+(192, 'Somalia', 'SO', 'SOM', 'data/flags/so.png', '', 1),
+(193, 'South Africa', 'ZA', 'ZAF', 'data/flags/za.png', '', 1),
+(194, 'South Georgia &amp; South Sandwich Islands', 'GS', 'SGS', 'data/flags/gs.png', '', 1),
+(195, 'Spain', 'ES', 'ESP', 'data/flags/es.png', '', 1),
+(196, 'Sri Lanka', 'LK', 'LKA', 'data/flags/lk.png', '', 1),
+(197, 'St. Helena', 'SH', 'SHN', 'data/flags/sh.png', '', 1),
+(198, 'St. Pierre and Miquelon', 'PM', 'SPM', 'data/flags/pm.png', '', 1),
+(199, 'Sudan', 'SD', 'SDN', 'data/flags/sd.png', '', 1),
+(200, 'Suriname', 'SR', 'SUR', 'data/flags/sr.png', '', 1),
+(201, 'Svalbard and Jan Mayen Islands', 'SJ', 'SJM', 'data/flags/sj.png', '', 1),
+(202, 'Swaziland', 'SZ', 'SWZ', 'data/flags/sz.png', '', 1),
+(203, 'Sweden', 'SE', 'SWE', 'data/flags/se.png', '', 1),
+(204, 'Switzerland', 'CH', 'CHE', 'data/flags/ch.png', '', 1),
+(205, 'Syrian Arab Republic', 'SY', 'SYR', 'data/flags/sy.png', '', 1),
+(206, 'Taiwan', 'TW', 'TWN', 'data/flags/tw.png', '', 1),
+(207, 'Tajikistan', 'TJ', 'TJK', 'data/flags/tj.png', '', 1),
+(208, 'Tanzania, United Republic of', 'TZ', 'TZA', 'data/flags/tz.png', '', 1),
+(209, 'Thailand', 'TH', 'THA', 'data/flags/th.png', '', 1),
+(210, 'Togo', 'TG', 'TGO', 'data/flags/tg.png', '', 1),
+(211, 'Tokelau', 'TK', 'TKL', 'data/flags/tk.png', '', 1),
+(212, 'Tonga', 'TO', 'TON', 'data/flags/to.png', '', 1),
+(213, 'Trinidad and Tobago', 'TT', 'TTO', 'data/flags/tt.png', '', 1),
+(214, 'Tunisia', 'TN', 'TUN', 'data/flags/tn.png', '', 1),
+(215, 'Turkey', 'TR', 'TUR', 'data/flags/tr.png', '', 1),
+(216, 'Turkmenistan', 'TM', 'TKM', 'data/flags/tm.png', '', 1),
+(217, 'Turks and Caicos Islands', 'TC', 'TCA', 'data/flags/tc.png', '', 1),
+(218, 'Tuvalu', 'TV', 'TUV', 'data/flags/tv.png', '', 1),
+(219, 'Uganda', 'UG', 'UGA', 'data/flags/ug.png', '', 1),
+(220, 'Ukraine', 'UA', 'UKR', 'data/flags/ua.png', '', 1),
+(221, 'United Arab Emirates', 'AE', 'ARE', 'data/flags/ae.png', '', 1),
+(222, 'United Kingdom', 'GB', 'GBR', 'data/flags/gb.png', '{address_1}\n{address_2}\n{city} {postcode} {state}\n{country}', 1),
+(223, 'United States', 'US', 'USA', 'data/flags/us.png', '', 1),
+(224, 'United States Minor Outlying Islands', 'UM', 'UMI', 'data/flags/um.png', '', 1),
+(225, 'Uruguay', 'UY', 'URY', 'data/flags/uy.png', '', 1),
+(226, 'Uzbekistan', 'UZ', 'UZB', 'data/flags/uz.png', '', 1),
+(227, 'Vanuatu', 'VU', 'VUT', 'data/flags/vu.png', '', 1),
+(228, 'Vatican City State (Holy See)', 'VA', 'VAT', 'data/flags/va.png', '', 1),
+(229, 'Venezuela', 'VE', 'VEN', 'data/flags/ve.png', '', 1),
+(230, 'Viet Nam', 'VN', 'VNM', 'data/flags/vn.png', '', 1),
+(231, 'Virgin Islands (British)', 'VG', 'VGB', 'data/flags/vg.png', '', 1),
+(232, 'Virgin Islands (U.S.)', 'VI', 'VIR', 'data/flags/vi.png', '', 1),
+(233, 'Wallis and Futuna Islands', 'WF', 'WLF', 'data/flags/wf.png', '', 1),
+(234, 'Western Sahara', 'EH', 'ESH', 'data/flags/eh.png', '', 1),
+(235, 'Yemen', 'YE', 'YEM', 'data/flags/ye.png', '', 1),
+(236, 'Yugoslavia', 'YU', 'YUG', 'data/flags/yu.png', '', 1),
+(237, 'Democratic Republic of Congo', 'CD', 'COD', 'data/flags/cd.png', '', 1),
+(238, 'Zambia', 'ZM', 'ZMB', 'data/flags/zm.png', '', 1),
+(239, 'Zimbabwe', 'ZW', 'ZWE', 'data/flags/zw.png', '', 1),
+(241, 'Iana Island', 'SA', 'GAA', 'data/flags/sa.png', '', 1);
+ 
 
 #
 # TABLE STRUCTURE FOR: ti_currencies
@@ -490,45 +491,55 @@ INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `curr
 
 
 #
+# TABLE STRUCTURE FOR: ti_customer_groups
+#
+ 
+INSERT INTO `ti_customer_groups` (`customer_group_id`, `group_name`, `description`, `approval`) VALUES
+(11, 'Default', '', 0);
+
+
+#
 # TABLE STRUCTURE FOR: ti_extensions
 #
 
-INSERT INTO `ti_extensions` (`extension_id`, `type`, `name`, `data`, `serialized`) VALUES ('11', 'module', 'account_module', 'a:1:{s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"11\";s:8:\"position\";s:4:\"left\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}}', '1');
-INSERT INTO `ti_extensions` (`extension_id`, `type`, `name`, `data`, `serialized`) VALUES ('12', 'module', 'local_module', 'a:1:{s:7:\"layouts\";a:3:{i:0;a:4:{s:9:\"layout_id\";s:2:\"12\";s:8:\"position\";s:3:\"top\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}i:1;a:4:{s:9:\"layout_id\";s:2:\"13\";s:8:\"position\";s:3:\"top\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}i:2;a:4:{s:9:\"layout_id\";s:2:\"14\";s:8:\"position\";s:3:\"top\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}}', '1');
-INSERT INTO `ti_extensions` (`extension_id`, `type`, `name`, `data`, `serialized`) VALUES ('13', 'module', 'categories_module', 'a:1:{s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"12\";s:8:\"position\";s:4:\"left\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}}', '1');
-INSERT INTO `ti_extensions` (`extension_id`, `type`, `name`, `data`, `serialized`) VALUES ('14', 'module', 'cart_module', 'a:1:{s:7:\"layouts\";a:3:{i:0;a:4:{s:9:\"layout_id\";s:2:\"12\";s:8:\"position\";s:5:\"right\";s:8:\"priority\";s:1:\"2\";s:6:\"status\";s:1:\"1\";}i:1;a:4:{s:9:\"layout_id\";s:2:\"13\";s:8:\"position\";s:5:\"right\";s:8:\"priority\";s:1:\"2\";s:6:\"status\";s:1:\"1\";}i:2;a:4:{s:9:\"layout_id\";s:2:\"14\";s:8:\"position\";s:5:\"right\";s:8:\"priority\";s:1:\"2\";s:6:\"status\";s:1:\"1\";}}}', '1');
-INSERT INTO `ti_extensions` (`extension_id`, `type`, `name`, `data`, `serialized`) VALUES ('15', 'module', 'reservation_module', 'a:1:{s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"16\";s:8:\"position\";s:5:\"right\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}}', '1');
-INSERT INTO `ti_extensions` (`extension_id`, `type`, `name`, `data`, `serialized`) VALUES ('16', 'module', 'slideshow_module', 'a:6:{s:11:\"dimension_h\";s:3:\"420\";s:11:\"dimension_w\";s:4:\"1170\";s:6:\"effect\";s:4:\"fade\";s:5:\"speed\";s:3:\"500\";s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"15\";s:8:\"position\";s:3:\"top\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}s:6:\"images\";a:3:{i:0;s:14:\"data/slide.jpg\";i:1;s:15:\"data/slide1.jpg\";i:2;s:15:\"data/slide2.jpg\";}}', '1');
-INSERT INTO `ti_extensions` (`extension_id`, `type`, `name`, `data`, `serialized`) VALUES ('20', 'module', 'pages_module', 'a:1:{s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"17\";s:8:\"position\";s:5:\"right\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}}', '1');
-INSERT INTO `ti_extensions` (`extension_id`, `type`, `name`, `data`, `serialized`) VALUES ('18', 'payment', 'cod', 'a:3:{s:5:\"total\";s:1:\"0\";s:12:\"order_status\";s:2:\"11\";s:6:\"status\";s:1:\"1\";}', '1');
-INSERT INTO `ti_extensions` (`extension_id`, `type`, `name`, `data`, `serialized`) VALUES ('19', 'payment', 'paypal_express', 'a:10:{s:6:\"status\";s:1:\"1\";s:8:\"api_mode\";s:7:\"sandbox\";s:8:\"api_user\";s:39:\"\";s:8:\"api_pass\";s:10:\"\";s:13:\"api_signature\";s:56:\"\";s:10:\"api_action\";s:4:\"sale\";s:10:\"return_uri\";s:20:\"main/checkout/paypal\";s:10:\"cancel_uri\";s:13:\"main/checkout\";s:11:\"order_total\";s:4:\"0.00\";s:12:\"order_status\";s:2:\"11\";}', '1');
-INSERT INTO `ti_extensions` (`extension_id`, `type`, `name`, `data`, `serialized`) VALUES ('31', 'tool', 'image_manager', 'a:19:{s:11:\"root_folder\";s:4:\"data\";s:8:\"max_size\";s:3:\"300\";s:12:\"thumb_height\";s:3:\"120\";s:11:\"thumb_width\";s:3:\"120\";s:17:\"thumb_height_mini\";s:2:\"64\";s:16:\"thumb_width_mini\";s:2:\"64\";s:9:\"show_mini\";s:1:\"1\";s:8:\"show_ext\";s:1:\"1\";s:7:\"uploads\";s:1:\"1\";s:10:\"new_folder\";s:1:\"1\";s:4:\"copy\";s:1:\"1\";s:4:\"move\";s:1:\"1\";s:6:\"rename\";s:1:\"1\";s:6:\"delete\";s:1:\"1\";s:11:\"allowed_ext\";s:33:\"jpg|jpeg|png|gif|bmp|tiff|svg|ico\";s:12:\"hidden_files\";s:10:\"index.html\";s:14:\"hidden_folders\";s:0:\"\";s:15:\"transliteration\";s:1:\"1\";s:13:\"remember_days\";s:1:\"7\";}', '1');
+INSERT INTO `ti_extensions` (`extension_id`, `type`, `name`, `data`, `serialized`) VALUES
+(11, 'module', 'account_module', 'a:1:{s:7:"layouts";a:1:{i:0;a:4:{s:9:"layout_id";s:2:"11";s:8:"position";s:4:"left";s:8:"priority";s:1:"1";s:6:"status";s:1:"1";}}}', 1),
+(12, 'module', 'local_module', 'a:1:{s:7:"layouts";a:4:{i:0;a:4:{s:9:"layout_id";s:2:"12";s:8:"position";s:3:"top";s:8:"priority";s:1:"1";s:6:"status";s:1:"1";}i:1;a:4:{s:9:"layout_id";s:2:"13";s:8:"position";s:3:"top";s:8:"priority";s:1:"1";s:6:"status";s:1:"1";}i:2;a:4:{s:9:"layout_id";s:2:"14";s:8:"position";s:3:"top";s:8:"priority";s:1:"1";s:6:"status";s:1:"1";}i:3;a:4:{s:9:"layout_id";s:2:"18";s:8:"position";s:3:"top";s:8:"priority";s:1:"1";s:6:"status";s:1:"1";}}}', 1),
+(13, 'module', 'categories_module', 'a:1:{s:7:"layouts";a:1:{i:0;a:4:{s:9:"layout_id";s:2:"12";s:8:"position";s:4:"left";s:8:"priority";s:1:"1";s:6:"status";s:1:"1";}}}', 1),
+(14, 'module', 'cart_module', 'a:1:{s:7:"layouts";a:3:{i:0;a:4:{s:9:"layout_id";s:2:"12";s:8:"position";s:5:"right";s:8:"priority";s:1:"2";s:6:"status";s:1:"1";}i:1;a:4:{s:9:"layout_id";s:2:"13";s:8:"position";s:5:"right";s:8:"priority";s:1:"2";s:6:"status";s:1:"1";}i:2;a:4:{s:9:"layout_id";s:2:"14";s:8:"position";s:5:"right";s:8:"priority";s:1:"2";s:6:"status";s:1:"1";}}}', 1),
+(15, 'module', 'reservation_module', 'a:1:{s:7:"layouts";a:1:{i:0;a:4:{s:9:"layout_id";s:2:"16";s:8:"position";s:5:"right";s:8:"priority";s:1:"1";s:6:"status";s:1:"1";}}}', 1),
+(16, 'module', 'slideshow_module', 'a:6:{s:11:"dimension_h";s:3:"420";s:11:"dimension_w";s:4:"1170";s:6:"effect";s:4:"fade";s:5:"speed";s:3:"500";s:7:"layouts";a:1:{i:0;a:4:{s:9:"layout_id";s:2:"15";s:8:"position";s:3:"top";s:8:"priority";s:1:"1";s:6:"status";s:1:"1";}}s:6:"images";a:3:{i:0;s:14:"data/slide.jpg";i:1;s:15:"data/slide1.jpg";i:2;s:15:"data/slide2.jpg";}}', 1),
+(18, 'payment', 'cod', 'a:5:{s:4:"name";s:16:"Cash On Delivery";s:11:"order_total";s:4:"0.00";s:12:"order_status";s:2:"11";s:8:"priority";s:1:"1";s:6:"status";s:1:"1";}', 1),
+(20, 'module', 'pages_module', 'a:1:{s:7:"layouts";a:1:{i:0;a:4:{s:9:"layout_id";s:2:"17";s:8:"position";s:5:"right";s:8:"priority";s:1:"1";s:6:"status";s:1:"1";}}}', 1),
+(21, 'payment', 'paypal_express', 'a:12:{s:4:"name";s:14:"PayPal Express";s:8:"priority";s:0:"";s:6:"status";s:1:"0";s:8:"api_mode";s:7:"sandbox";s:8:"api_user";s:0:"";s:8:"api_pass";s:0:"";s:13:"api_signature";s:0:"";s:10:"api_action";s:4:"sale";s:10:"return_uri";s:20:"main/checkout/paypal";s:10:"cancel_uri";s:13:"main/checkout";s:11:"order_total";s:0:"";s:12:"order_status";s:2:"11";}', 1);
 
 
 #
 # TABLE STRUCTURE FOR: ti_languages
 #
 
-INSERT INTO `ti_languages` (`language_id`, `code`, `name`, `image`, `directory`, `status`) VALUES ('11', 'en', 'English', 'gb.png', 'english', '1');
+INSERT INTO `ti_languages` (`language_id`, `code`, `name`, `image`, `directory`, `status`) VALUES ('11', 'en', 'English', 'data/flags/gb.png', 'english', '1');
 
 
 #
 # TABLE STRUCTURE FOR: ti_layout_routes
 #
 
-INSERT INTO `ti_layout_routes` (`layout_route_id`, `layout_id`, `uri_route`) VALUES ('11', '18', 'local');
-INSERT INTO `ti_layout_routes` (`layout_route_id`, `layout_id`, `uri_route`) VALUES ('12', '11', 'account/inbox');
-INSERT INTO `ti_layout_routes` (`layout_route_id`, `layout_id`, `uri_route`) VALUES ('13', '11', 'account/orders');
-INSERT INTO `ti_layout_routes` (`layout_route_id`, `layout_id`, `uri_route`) VALUES ('14', '11', 'account/address');
-INSERT INTO `ti_layout_routes` (`layout_route_id`, `layout_id`, `uri_route`) VALUES ('15', '11', 'account/details');
-INSERT INTO `ti_layout_routes` (`layout_route_id`, `layout_id`, `uri_route`) VALUES ('16', '11', 'account');
-INSERT INTO `ti_layout_routes` (`layout_route_id`, `layout_id`, `uri_route`) VALUES ('17', '12', 'menus');
-INSERT INTO `ti_layout_routes` (`layout_route_id`, `layout_id`, `uri_route`) VALUES ('18', '14', 'payments');
-INSERT INTO `ti_layout_routes` (`layout_route_id`, `layout_id`, `uri_route`) VALUES ('19', '13', 'checkout');
-INSERT INTO `ti_layout_routes` (`layout_route_id`, `layout_id`, `uri_route`) VALUES ('20', '15', 'home');
-INSERT INTO `ti_layout_routes` (`layout_route_id`, `layout_id`, `uri_route`) VALUES ('21', '16', 'reserve/table');
-INSERT INTO `ti_layout_routes` (`layout_route_id`, `layout_id`, `uri_route`) VALUES ('22', '17', 'pages/page/(:num)');
-
+INSERT INTO `ti_layout_routes` (`layout_route_id`, `layout_id`, `uri_route`) VALUES
+(12, 11, 'account/inbox'),
+(13, 11, 'account/orders'),
+(14, 11, 'account/address'),
+(15, 11, 'account/details'),
+(16, 11, 'account'),
+(17, 12, 'menus'),
+(18, 14, 'payments'),
+(19, 13, 'checkout'),
+(20, 15, 'home'),
+(21, 16, 'reserve/table'),
+(22, 17, 'pages/page/(:num)'),
+(23, 17, 'pages'),
+(29, 18, 'local'),
+(30, 18, 'local/reviews');
 
 #
 # TABLE STRUCTURE FOR: ti_layouts
@@ -555,15 +566,35 @@ INSERT INTO `ti_mail_templates` (`template_id`, `name`, `language_id`, `date_add
 # TABLE STRUCTURE FOR: ti_mail_templates_data
 #
 
-INSERT INTO `ti_mail_templates_data` (`template_data_id`, `template_id`, `code`, `subject`, `body`, `date_added`, `date_updated`) VALUES ('11', '11', 'registration', 'Account Created at {site_name}', '<p>Hello {first_name} {last_name},</p><p>Your account has now been created and you can log in using your email address and password by visiting our website or at the following URL: <a href=\"{login_link}\">Click Here</a></p><p>Thank you for using.<br />\n{signature}</p>\n', '2014-04-16 00:56:00', '2014-05-15 15:24:56');
-INSERT INTO `ti_mail_templates_data` (`template_data_id`, `template_id`, `code`, `subject`, `body`, `date_added`, `date_updated`) VALUES ('12', '11', 'password_reset', 'Password Reset at {site_name}', '<p>Dear {first_name} {last_name},</p><p>Your password has been reset successfull! Please <a href=\"{login_link}\" target=\"_blank\">login</a> using your new password: {created_password}.</p><p>Thank you for using.<br />\n{signature}</p>\n', '2014-04-16 00:56:00', '2014-05-15 15:46:30');
-INSERT INTO `ti_mail_templates_data` (`template_data_id`, `template_id`, `code`, `subject`, `body`, `date_added`, `date_updated`) VALUES ('13', '11', 'order', 'Order Successful - {order_number}', '<div><div class=\"text-align\"><p>Hello {first_name} {last_name},</p><p>Your order has been received and will be with you shortly.<br /><a href=\"{order_link}\">Click here</a> to view your order progress.<br />\nThanks for shopping with us online! &nbsp;</p><h3>Order Details</h3><p>Your order number is {order_number}<br />\nThis is a {order_type} order.<br /><strong>Order Date:</strong> {order_date}<br /><strong>Delivery Time</strong> {order_time}</p><h3>What you\'ve ordered:</h3></div></div><table border=\"1\" cellpadding=\"1\" cellspacing=\"1\"><tbody><tr><td><div><div class=\"text-align\">{menus}</div></div></td><td><div><div class=\"text-align\">&nbsp;</div></div></td><td><div><div class=\"text-align\">&nbsp;</div></div></td><td><div><div class=\"text-align\">&nbsp;</div></div></td></tr><tr><td><div><div class=\"text-align\">{quantity}x</div></div></td><td><div><div class=\"text-align\"><p>{name}</p><p>{options}{option_name} {option_price}{/options}</p></div></div></td><td><div><div class=\"text-align\">{price}</div></div></td><td><div><div class=\"text-align\">{subtotal}</div></div></td></tr><tr><td><div><div class=\"text-align\">{/menus}</div></div></td><td><div><div class=\"text-align\">&nbsp;</div></div></td><td><div><div class=\"text-align\">&nbsp;</div></div></td><td><div><div class=\"text-align\">&nbsp;</div></div></td></tr></tbody></table><div><div class=\"text-align\"><p>&nbsp;</p><p>{order_totals}<br /><strong>{title}:</strong> {value}<br />\n{/order_totals}</p><p>Your delivery address {order_address}</p><p>Your local restaurant {location_name}</p><p>We hope to see you again soon.</p><p>{signature}</p></div></div>\n', '2014-04-16 00:56:00', '2014-04-18 13:37:34');
-INSERT INTO `ti_mail_templates_data` (`template_data_id`, `template_id`, `code`, `subject`, `body`, `date_added`, `date_updated`) VALUES ('14', '11', 'reservation', 'Table Reserved - {reserve_number}', '<p>Hello {first_name} {last_name},<br /><br />\nYour reservation at {location_name} has been booked for {reserve_guest} person(s) on {reserve_date} at {reserve_time}.</p><p>Thanks for reserving with us online!<br /><br />\nWe hope to see you again soon.<br />\n{signature}</p>\n', '2014-04-16 00:56:00', '2014-04-16 19:59:02');
-INSERT INTO `ti_mail_templates_data` (`template_data_id`, `template_id`, `code`, `subject`, `body`, `date_added`, `date_updated`) VALUES ('16', '11', 'internal', '', '', '2014-04-16 00:56:00', '2014-04-16 00:59:00');
-INSERT INTO `ti_mail_templates_data` (`template_data_id`, `template_id`, `code`, `subject`, `body`, `date_added`, `date_updated`) VALUES ('15', '11', 'contact', 'Thanks for contacting us', '<h3><strong>Dear {full_name},</strong></h3><div><div>Topic: {contact_topic}.</div><div>Telephone: {contact_telephone}.</div></div><p>{contact_message}</p><p>Your {site_name} Team,</p><div>{signature}</div>\n', '2014-04-16 00:56:00', '2014-05-15 18:00:57');
-INSERT INTO `ti_mail_templates_data` (`template_data_id`, `template_id`, `code`, `subject`, `body`, `date_added`, `date_updated`) VALUES ('17', '11', 'order_alert', '', '', '2014-04-16 00:56:00', '2014-04-16 00:59:00');
-INSERT INTO `ti_mail_templates_data` (`template_data_id`, `template_id`, `code`, `subject`, `body`, `date_added`, `date_updated`) VALUES ('18', '11', 'reservation_alert', '', '', '2014-04-16 00:56:00', '2014-04-16 00:59:00');
+INSERT INTO `ti_mail_templates_data` (`template_data_id`, `template_id`, `code`, `subject`, `body`, `date_added`, `date_updated`) VALUES
+(11, 11, 'registration', 'Account Created at {site_name}', '<p>Hello {first_name} {last_name},</p><p>Your account has now been created and you can log in using your email address and password by visiting our website or at the following URL: <a href="{login_link}">Click Here</a></p><p>Thank you for using.<br /> {signature}</p>', '2014-04-16 00:56:00', '2014-05-15 15:24:56'),
+(12, 11, 'password_reset', 'Password Reset at {site_name}', '<p>Dear {first_name} {last_name},</p><p>Your password has been reset successfull! Please <a href="{login_link}" target="_blank">login</a> using your new password: {created_password}.</p><p>Thank you for using.<br /> {signature}</p>', '2014-04-16 00:56:00', '2014-05-15 15:46:30'),
+(13, 11, 'order', 'Order Successful - {order_number}', '<div><div class="text-align"><p>Hello {first_name} {last_name},</p><p>Your order has been received and will be with you shortly.<br /><a href="{order_link}">Click here</a> to view your order progress.<br /> Thanks for shopping with us online! &nbsp;</p><h3>Order Details</h3><p>Your order number is {order_number}<br /> This is a {order_type} order.<br /><strong>Order Date:</strong> {order_date}<br /><strong>Delivery Time</strong> {order_time}</p><h3>What you''ve ordered:</h3></div></div><table border="1" cellspacing="1" cellpadding="1"><tbody><tr><td><div><div class="text-align">{menus}</div></div></td><td><div><div class="text-align">&nbsp;</div></div></td><td><div><div class="text-align">&nbsp;</div></div></td><td><div><div class="text-align">&nbsp;</div></div></td></tr><tr><td><div><div class="text-align">{quantity}x</div></div></td><td><div><div class="text-align"><p>{name}</p><p>{options}</p></div></div></td><td><div><div class="text-align">{price}</div></div></td><td><div><div class="text-align">{subtotal}</div></div></td></tr><tr><td><div><div class="text-align">{/menus}</div></div></td><td><div><div class="text-align">&nbsp;</div></div></td><td><div><div class="text-align">&nbsp;</div></div></td><td><div><div class="text-align">&nbsp;</div></div></td></tr></tbody></table><div><div class="text-align"><p>&nbsp;</p><p>{order_totals}<br /><strong>{title}:</strong> {value}<br /> {/order_totals}</p><p>Your delivery address {order_address}</p><p>Your local restaurant {location_name}</p><p>We hope to see you again soon.</p><p>{signature}</p></div></div>', '2014-04-16 00:56:00', '2014-07-20 14:29:55'),
+(14, 11, 'reservation', 'Table Reserved - {reserve_number}', '<p>Hello {first_name} {last_name},<br /><br /> Your reservation at {location_name} has been booked for {reserve_guest} person(s) on {reserve_date} at {reserve_time}.</p><p>Thanks for reserving with us online!<br /><br /> We hope to see you again soon.<br /> {signature}</p>', '2014-04-16 00:56:00', '2014-07-22 20:13:48'),
+(15, 11, 'contact', 'Thanks for contacting us', '<h3><strong>Dear {full_name},</strong></h3><div><div>Topic: {contact_topic}.</div><div>Telephone: {contact_telephone}.</div></div><p>{contact_message}</p><p>Your {site_name} Team,</p><div>{signature}</div>', '2014-04-16 00:56:00', '2014-05-15 18:00:57'),
+(16, 11, 'internal', 'Subject here', '<p>Body here</p>', '2014-04-16 00:56:00', '2014-04-16 00:59:00'),
+(17, 11, 'order_alert', 'Subject here', '<p>Body here</p>', '2014-04-16 00:56:00', '2014-04-16 00:59:00'),
+(18, 11, 'reservation_alert', 'Subject here', '<p>Body here</p>', '2014-04-16 00:56:00', '2014-04-16 00:59:00');
 
+
+#
+# TABLE STRUCTURE FOR: ti_pages
+#
+ 
+INSERT INTO `ti_pages` (`page_id`, `language_id`, `name`, `title`, `heading`, `content`, `meta_description`, `meta_keywords`, `layout_id`, `navigation`, `date_added`, `date_updated`, `status`) VALUES
+(11, 11, 'About Us', 'About Us', 'About Us', '<h3 style="text-align: center;"><span style="color: #993300;">Aim</span></h3>\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In venenatis massa ac magna sagittis, sit amet gravida metus gravida. Aenean dictum pellentesque erat, vitae adipiscing libero semper sit amet. Vestibulum nec nunc lorem. Duis vitae libero a libero hendrerit tincidunt in eu tellus. Aliquam consequat ultrices felis ut dictum. Nulla euismod felis a sem mattis ornare. Aliquam ut diam sit amet dolor iaculis molestie ac id nisl. Maecenas hendrerit convallis mi feugiat gravida. Quisque tincidunt, leo a posuere imperdiet, metus leo vestibulum orci, vel volutpat justo ligula id quam. Cras placerat tincidunt lorem eu interdum.</p>\n<h3 style="text-align: center;"><span style="color: #993300;">Mission</span></h3>\n<p>Ut eu pretium urna. In sed consectetur neque. In ornare odio erat, id ornare arcu euismod a. Ut dapibus sit amet erat commodo vestibulum. Praesent vitae lacus faucibus, rhoncus tortor et, bibendum justo. Etiam pharetra congue orci, eget aliquam orci. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eleifend justo eros, sit amet fermentum tellus ullamcorper quis. Cras cursus mi at imperdiet faucibus. Proin iaculis, felis vitae luctus venenatis, ante tortor porta nisi, et ornare magna metus sit amet enim. Phasellus et turpis nec metus aliquet adipiscing. Etiam at augue nec odio lacinia tincidunt. Suspendisse commodo commodo ipsum ac sollicitudin. Nunc nec consequat lacus. Donec gravida rhoncus justo sed elementum.</p>\n<h3 style="text-align: center;"><span style="color: #a52a2a;">Vision</span></h3>\n<p>Praesent erat massa, consequat a nulla et, eleifend facilisis risus. Nullam libero mi, bibendum id eleifend vitae, imperdiet a nulla. Fusce congue porta ultricies. Vivamus felis lectus, egestas at pretium vitae, posuere a nibh. Mauris lobortis urna nec rhoncus consectetur. Fusce sed placerat sem. Nulla venenatis elit risus, non auctor arcu lobortis eleifend. Ut aliquet vitae velit a faucibus. Suspendisse quis risus sit amet arcu varius malesuada. Vestibulum vitae massa consequat, euismod lorem a, euismod lacus. Duis sagittis dolor risus, ac vehicula mauris lacinia quis. Nulla facilisi. Duis tristique ipsum nec egestas auctor. Nullam in felis vel ligula dictum tincidunt nec a neque. Praesent in egestas elit.</p>', '', '', 17, 'a:2:{i:0;s:6:"module";i:1;s:6:"footer";}', '2014-04-19 16:57:21', '2014-07-28 00:49:12', 1),
+(12, 11, 'Policy', 'Policy', 'Policy', '<div id="lipsum">\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ligula eros, semper a lorem et, venenatis volutpat dolor. Pellentesque hendrerit lectus feugiat nulla cursus, quis dapibus dolor porttitor. Donec velit enim, adipiscing ac orci id, congue tincidunt arcu. Proin egestas nulla eget leo scelerisque, et semper diam ornare. Suspendisse potenti. Suspendisse vitae bibendum enim. Duis eu ligula hendrerit, lacinia felis in, mollis nisi. Sed gravida arcu in laoreet dictum. Nulla faucibus lectus a mollis dapibus. Fusce vehicula convallis urna, et congue nulla ultricies in. Nulla magna velit, bibendum eu odio et, euismod rhoncus sem. Nullam quis magna fermentum, ultricies neque nec, blandit neque. Etiam nec congue arcu. Curabitur sed tellus quam. Cras adipiscing odio odio, et porttitor dui suscipit eget. Aliquam non est commodo, elementum turpis at, pellentesque lorem.</p>\n<p>Duis nec diam diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vulputate est et lorem sagittis, et mollis libero ultricies. Nunc ultrices tortor vel convallis varius. In dolor dolor, scelerisque ac faucibus ut, aliquet ac sem. Praesent consectetur lacus quis tristique posuere. Nulla sed ultricies odio. Cras tristique vulputate facilisis.</p>\n<p>Mauris at metus in magna condimentum gravida eu tincidunt urna. Praesent sodales vel mi eu condimentum. Suspendisse in luctus purus. Vestibulum dignissim, metus non luctus accumsan, odio ligula pharetra massa, in eleifend turpis risus in diam. Sed non lorem nibh. Nam at feugiat urna. Curabitur interdum, diam sit amet pulvinar blandit, mauris ante scelerisque nisi, sit amet placerat mi nunc eget orci. Nulla eget quam sit amet risus rhoncus lacinia a ut eros. Praesent non libero nisi. Mauris tincidunt at purus sit amet adipiscing. Donec interdum, velit nec dignissim vehicula, libero ipsum imperdiet ligula, lacinia mattis augue dui ac lacus. Aenean molestie sed nunc at pulvinar. Fusce ornare lacus non venenatis rhoncus.</p>\n<p>Aenean at enim luctus ante commodo consequat nec ut mi. Sed porta adipiscing tempus. Aliquam sit amet ullamcorper ipsum, id adipiscing quam. Fusce iaculis odio ut nisi convallis hendrerit. Morbi auctor adipiscing ligula, sit amet aliquet ante consectetur at. Donec vulputate neque eleifend libero pellentesque, vitae lacinia enim ornare. Vestibulum fermentum erat blandit, ultricies felis ac, facilisis augue. Nulla facilisis mi porttitor, interdum diam in, lobortis ipsum. In molestie quam nisl, lacinia convallis tellus fermentum ac. Nulla quis velit augue. Fusce accumsan, lacus et lobortis blandit, neque magna gravida enim, dignissim ultricies tortor dui in dolor. Vestibulum vel convallis justo, quis venenatis elit. Aliquam erat volutpat. Nunc quis iaculis ligula. Suspendisse dictum sodales neque vitae faucibus. Fusce id tellus pretium, varius nunc et, placerat metus.</p>\n<p>Pellentesque quis facilisis mauris. Phasellus porta, metus a dignissim viverra, est elit luctus erat, nec ultricies ligula lorem eget sapien. Pellentesque ac justo velit. Maecenas semper accumsan nulla eget rhoncus. Aliquam vel urna sed nibh dignissim auctor. Integer volutpat lacus ac purus convallis, at lobortis nisi tincidunt. Vestibulum condimentum elit ac sapien placerat, at ornare libero hendrerit. Cras tincidunt nunc sit amet ante bibendum tempor. Fusce quam orci, suscipit sed eros quis, vulputate molestie metus. Nam hendrerit vitae felis et porttitor. Proin et commodo velit, id porta erat. Donec eu consectetur odio. Fusce porta odio risus. Aliquam vel erat feugiat, vestibulum elit eget, ornare sapien. Sed sed nulla justo. Sed a dolor eu justo lacinia blandit.</p>\n</div>', '', '', 17, 'a:1:{i:0;s:6:"module";}', '2014-04-19 17:21:23', '2014-07-28 00:43:01', 1),
+(13, 11, 'Maintenance', 'Maintenance', 'Maintenance', '<h4><span style="color: #b22222;">Site is under maintenance. Please check back later.</span></h4>', '', '', 0, 'a:1:{i:0;s:4:"none";}', '2014-04-21 16:30:37', '2014-07-28 00:47:24', 1);
+ 
+ 
+#
+# TABLE STRUCTURE FOR: ti_permalinks
+#
+ 
+INSERT INTO `ti_permalinks` (`permalink_id`, `permalink`, `query`) VALUES
+(36, 'maintenance', 'page_id=13'),
+(37, 'about-us', 'page_id=11');
+  
 
 #
 # TABLE STRUCTURE FOR: ti_security_questions
@@ -581,59 +612,78 @@ INSERT INTO `ti_security_questions` (`question_id`, `text`, `priority`) VALUES (
 # TABLE STRUCTURE FOR: ti_settings
 #
 
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('8500', 'ratings', 'ratings', 'a:1:{s:7:\"ratings\";a:5:{i:1;s:3:\"Bad\";i:2;s:5:\"Worse\";i:3;s:4:\"Good\";i:4;s:7:\"Average\";i:5;s:9:\"Excellent\";}}', '1');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9273', 'config', 'cache_time', '', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9272', 'config', 'cache_mode', '0', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9271', 'config', 'maintenance_page', '3', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9270', 'config', 'maintenance_mode', '0', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9269', 'config', 'permalink', '1', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9268', 'config', 'index_file_url', '0', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9267', 'config', 'encryption_key', 'muh6T37619LO09uJpk1679pCI06LHps4', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9266', 'config', 'activity_timeout', '1200', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9265', 'config', 'log_path', '', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9264', 'config', 'log_threshold', '1', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9263', 'config', 'smtp_pass', '', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9262', 'config', 'smtp_user', '', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9261', 'config', 'smtp_port', '', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9260', 'config', 'smtp_host', '', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9259', 'config', 'mailtype', 'html', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9258', 'config', 'protocol', 'mail', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9257', 'config', 'themes_hidden_folders', '', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9256', 'config', 'themes_hidden_files', '', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9255', 'config', 'themes_allowed_file', 'txt|xml|js|php|css', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9254', 'config', 'themes_allowed_img', 'jpg|jpeg|png|gif|bmp|tiff|svg', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9252', 'config', 'reservation_interval', '45', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9253', 'config', 'reservation_turn', '60', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9251', 'config', 'reservation_status', '11', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9250', 'config', 'reservation_mode', '1', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9249', 'config', 'ready_time', '45', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9248', 'config', 'guest_order', '1', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9247', 'config', 'order_status_complete', '15', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9246', 'config', 'order_status_new', '11', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9245', 'config', 'approve_reviews', '1', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9244', 'config', 'location_reserve_email', '0', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9243', 'config', 'location_order_email', '0', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9242', 'config', 'location_order', '1', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9241', 'config', 'search_radius', '20', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9240', 'config', 'distance_unit', 'mi', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9239', 'config', 'search_by', 'address', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9238', 'config', 'maps_api_key', '', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9237', 'config', 'special_category_id', '24', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9236', 'config', 'menu_images_w', '95', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9235', 'config', 'menu_images_h', '80', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9234', 'config', 'show_menu_images', '1', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9233', 'config', 'page_limit', '20', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9232', 'config', 'customer_group_id', '11', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9231', 'config', 'language_id', '11', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9230', 'config', 'default_location_id', '117', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9229', 'config', 'currency_id', '226', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9228', 'config', 'timezone', 'Europe/London', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9227', 'config', 'country_id', '222', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9226', 'config', 'site_logo', 'data/logo.png', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('9225', 'config', 'site_desc', '', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('8503', 'themes', 'main_theme', 'default/', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('8486', 'themes', 'admin_theme', 'default/', '0');
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES ('7870', 'themes', 'mail_template_id', '11', '0');
+INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES
+(7870, 'prefs', 'mail_template_id', '11', 0),
+(8486, 'prefs', 'admin_theme', 'default/', 0),
+(8500, 'ratings', 'ratings', 'a:1:{s:7:"ratings";a:5:{i:1;s:3:"Bad";i:2;s:5:"Worse";i:3;s:4:"Good";i:4;s:7:"Average";i:5;s:9:"Excellent";}}', 1),
+(8503, 'prefs', 'main_theme', 'default/', 0),
+(8504, 'prefs', 'ti_version', 'v1.2', 0),
+(9225, 'config', 'site_desc', '', 0),
+(9230, 'config', 'default_location_id', '117', 0),
+(9241, 'config', 'search_radius', '20', 0),
+(9249, 'config', 'ready_time', '45', 0),
+(10836, 'prefs', 'default_location_id', '1', 0),
+(10839, 'config', 'site_logo', 'data/no_photo.png', 0),
+(10840, 'config', 'country_id', '222', 0),
+(10841, 'config', 'timezone', 'Europe/London', 0),
+(10842, 'config', 'currency_id', '226', 0),
+(10843, 'config', 'language_id', '11', 0),
+(10844, 'config', 'customer_group_id', '11', 0),
+(10845, 'config', 'page_limit', '20', 0),
+(10846, 'config', 'meta_description', '', 0),
+(10847, 'config', 'meta_keywords', '', 0),
+(10848, 'config', 'menus_page_limit', '20', 0),
+(10849, 'config', 'show_menu_images', '1', 0),
+(10850, 'config', 'menu_images_h', '80', 0),
+(10851, 'config', 'menu_images_w', '95', 0),
+(10852, 'config', 'special_category_id', '0', 0),
+(10853, 'config', 'registration_terms', '1', 0),
+(10854, 'config', 'checkout_terms', '0', 0),
+(10855, 'config', 'stock_warning', '0', 0),
+(10856, 'config', 'stock_qty_warning', '0', 0),
+(10857, 'config', 'registration_email', '0', 0),
+(10858, 'config', 'customer_order_email', '0', 0),
+(10859, 'config', 'customer_reserve_email', '0', 0),
+(10860, 'config', 'main_address', 'a:6:{s:9:"address_1";s:0:"";s:9:"address_2";s:0:"";s:4:"city";s:0:"";s:8:"postcode";s:0:"";s:11:"location_id";s:0:"";s:10:"country_id";s:1:"1";}', 1),
+(10861, 'config', 'maps_api_key', '', 0),
+(10862, 'config', 'search_by', 'address', 0),
+(10863, 'config', 'distance_unit', 'mi', 0),
+(10864, 'config', 'future_orders', '0', 0),
+(10865, 'config', 'location_order', '1', 0),
+(10866, 'config', 'location_order_email', '0', 0),
+(10867, 'config', 'location_reserve_email', '0', 0),
+(10868, 'config', 'approve_reviews', '1', 0),
+(10869, 'config', 'order_status_new', '11', 0),
+(10870, 'config', 'order_status_complete', '15', 0),
+(10871, 'config', 'guest_order', '1', 0),
+(10872, 'config', 'delivery_time', '45', 0),
+(10873, 'config', 'collection_time', '15', 0),
+(10874, 'config', 'reservation_mode', '1', 0),
+(10875, 'config', 'reservation_status', '11', 0),
+(10876, 'config', 'reservation_interval', '45', 0),
+(10877, 'config', 'reservation_turn', '60', 0),
+(10878, 'config', 'themes_allowed_img', 'jpg|jpeg|png|gif|bmp|tiff|svg', 0),
+(10879, 'config', 'themes_allowed_file', 'txt|xml|js|php|css', 0),
+(10880, 'config', 'themes_hidden_files', '', 0),
+(10881, 'config', 'themes_hidden_folders', '', 0),
+(10882, 'config', 'image_manager', 'a:19:{s:11:"root_folder";s:4:"data";s:8:"max_size";s:3:"300";s:12:"thumb_height";s:3:"120";s:11:"thumb_width";s:3:"120";s:17:"thumb_height_mini";s:2:"64";s:16:"thumb_width_mini";s:2:"64";s:9:"show_mini";s:1:"1";s:8:"show_ext";s:1:"1";s:7:"uploads";s:1:"1";s:10:"new_folder";s:1:"1";s:4:"copy";s:1:"1";s:4:"move";s:1:"1";s:6:"rename";s:1:"1";s:6:"delete";s:1:"1";s:11:"allowed_ext";s:33:"jpg|jpeg|png|gif|bmp|tiff|svg|ico";s:12:"hidden_files";s:10:"index.html";s:14:"hidden_folders";s:0:"";s:15:"transliteration";s:1:"1";s:13:"remember_days";s:1:"7";}', 1),
+(10883, 'config', 'protocol', 'mail', 0),
+(10884, 'config', 'mailtype', 'html', 0),
+(10885, 'config', 'smtp_host', '', 0),
+(10886, 'config', 'smtp_port', '', 0),
+(10887, 'config', 'smtp_user', '', 0),
+(10888, 'config', 'smtp_pass', '', 0),
+(10889, 'config', 'log_threshold', '1', 0),
+(10890, 'config', 'log_path', '', 0),
+(10891, 'config', 'activity_timeout', '1200', 0),
+(10892, 'config', 'activity_delete', '0', 0),
+(10893, 'config', 'encryption_key', 'muh6T37619LO09uJpk1679pCI06LHps4', 0),
+(10894, 'config', 'index_file_url', '0', 0),
+(10895, 'config', 'permalink', '1', 0),
+(10896, 'config', 'maintenance_mode', '0', 0),
+(10897, 'config', 'maintenance_page', '11', 0),
+(10898, 'config', 'cache_mode', '0', 0),
+(10899, 'config', 'cache_time', '0', 0);
 
 
 #
@@ -661,33 +711,37 @@ INSERT INTO `ti_statuses` (`status_id`, `status_name`, `status_comment`, `notify
 # TABLE STRUCTURE FOR: ti_uri_routes
 #
 
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('1', 'home', 'main/home', '1');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('2', 'contact', 'main/contact', '2');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('3', 'local', 'main/local', '3');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('4', 'menus/(:any)', 'main/menus', '4');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('5', 'menus', 'main/menus', '5');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('6', 'checkout', 'main/checkout', '6');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('7', 'checkout/success', 'main/checkout/success', '7');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('8', 'account', 'main/account', '8');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('9', 'account/login', 'main/login', '9');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('10', 'account/logout', 'main/logout', '10');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('11', 'account/register', 'main/register', '11');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('12', 'account/password/reset', 'main/password_reset', '12');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('13', 'account/details', 'main/details', '13');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('14', 'account/address', 'main/address', '14');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('15', 'account/address/edit', 'main/address/edit', '15');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('16', 'account/address/edit/(:num)', 'main/address/edit/$1', '16');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('17', 'account/orders', 'main/orders', '17');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('18', 'account/orders/view/(:num)', 'main/orders/view/$1', '18');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('19', 'account/orders/reorder/(:num)', 'main/orders/reorder/$1', '19');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('20', 'account/reservations', 'main/reservations', '20');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('21', 'account/reservations/view/(:num)', 'main/reservations/view/$1', '21');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('22', 'account/reviews', 'main/reviews', '22');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('23', 'account/reviews/add/(:num)/(:num)', 'main/reviews/add/$1/$2', '23');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('24', 'account/reviews/view/(:num)/(:num)/(:num)', 'main/reviews/view/$1/$2/$3', '24');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('25', 'account/inbox', 'main/inbox', '25');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('26', 'account/inbox/view/(:num)', 'main/inbox/view/$1', '26');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('27', 'reserve/table', 'main/reserve_table', '27');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('28', 'reserve/success', 'main/reserve_table/success', '28');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('29', 'pages/(:any)', 'main/pages/$1', '29');
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES ('30', 'pages', 'main/pages', '30');
+INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES
+(1, 'home', 'main/home', 1),
+(2, 'contact', 'main/contact', 2),
+(3, 'menus/(:any)', 'main/menus', 3),
+(4, 'menus', 'main/menus', 4),
+(5, 'locations', 'main/local/locations', 5),
+(6, 'local/(:any)', 'main/local', 6),
+(7, 'local', 'main/local', 7),
+(8, 'local/reviews', 'main/local/reviews', 8),
+(9, 'checkout', 'main/checkout', 9),
+(10, 'checkout/success', 'main/checkout/success', 10),
+(11, 'account', 'main/account', 11),
+(12, 'account/login', 'main/login', 12),
+(13, 'account/logout', 'main/logout', 13),
+(14, 'account/register', 'main/register', 14),
+(15, 'account/password/reset', 'main/password_reset', 15),
+(16, 'account/details', 'main/details', 16),
+(17, 'account/address', 'main/address', 17),
+(18, 'account/address/edit', 'main/address/edit', 18),
+(19, 'account/address/edit/(:num)', 'main/address/edit/$1', 19),
+(20, 'account/orders', 'main/orders', 20),
+(21, 'account/orders/view/(:num)', 'main/orders/view/$1', 21),
+(22, 'account/orders/reorder/(:num)', 'main/orders/reorder/$1', 22),
+(23, 'account/reservations', 'main/reservations', 23),
+(24, 'account/reservations/view/(:num)', 'main/reservations/view/$1', 24),
+(25, 'account/reviews', 'main/reviews', 25),
+(26, 'account/reviews/add/(:num)/(:num)', 'main/reviews/add/$1/$2', 26),
+(27, 'account/reviews/view/(:num)/(:num)/(:num)', 'main/reviews/view/$1/$2/$3', 27),
+(28, 'account/inbox', 'main/inbox', 28),
+(29, 'account/inbox/view/(:num)', 'main/inbox/view/$1', 29),
+(30, 'reserve/table', 'main/reserve_table', 30),
+(31, 'reserve/success', 'main/reserve_table/success', 31),
+(32, 'pages/(:any)', 'main/pages', 32),
+(33, 'pages', 'main/pages', 33);

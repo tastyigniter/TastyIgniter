@@ -4,7 +4,6 @@ class Migration_Schema extends CI_Migration {
 
 	public function up() {
 		$this->load->database();
-		$this->load->dbforge();
 		
 		$this->_addresses();
 		$this->_banners();
@@ -52,16 +51,52 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function down() {
-		/*$this->load->dbforge();
-		$this->dbforge->drop_column('menu_options', 'display_type');
-		$this->dbforge->drop_column('menu_options', 'priority');
-		$this->dbforge->add_column('menu_options', array('option_price DECIMAL(15,2) NOT NULL'));
-		$this->dbforge->drop_table('menu_option_values');*/
+		$this->dbforge->drop_table('addresses');
+		$this->dbforge->drop_table('banners');
+		$this->dbforge->drop_table('categories');
+		$this->dbforge->drop_table('countries');
+		$this->dbforge->drop_table('coupons');
+		$this->dbforge->drop_table('coupons_history');
+		$this->dbforge->drop_table('currencies');
+		$this->dbforge->drop_table('customer_groups');
+		$this->dbforge->drop_table('customers');
+		$this->dbforge->drop_table('customers_activity');
+		$this->dbforge->drop_table('extensions');
+		$this->dbforge->drop_table('languages');
+		$this->dbforge->drop_table('layout_routes');
+		$this->dbforge->drop_table('layouts');
+		$this->dbforge->drop_table('location_tables');
+		$this->dbforge->drop_table('locations');
+		$this->dbforge->drop_table('mail_templates');
+		$this->dbforge->drop_table('mail_templates_data');
+		$this->dbforge->drop_table('menu_options');
+		$this->dbforge->drop_table('menus');
+		$this->dbforge->drop_table('menus_specials');
+		$this->dbforge->drop_table('menus_to_options');
+		$this->dbforge->drop_table('messages');
+		$this->dbforge->drop_table('message_recipients');
+		$this->dbforge->drop_table('orders');
+		$this->dbforge->drop_table('order_menus');
+		$this->dbforge->drop_table('order_options');
+		$this->dbforge->drop_table('order_totals');
+		$this->dbforge->drop_table('pages');
+		$this->dbforge->drop_table('permalinks');
+		$this->dbforge->drop_table('pp_payments');
+		$this->dbforge->drop_table('reservations');
+		$this->dbforge->drop_table('reviews');
+		$this->dbforge->drop_table('security_questions');
+		$this->dbforge->drop_table('settings');
+		$this->dbforge->drop_table('staff_groups');
+		$this->dbforge->drop_table('staffs');
+		$this->dbforge->drop_table('status_history');
+		$this->dbforge->drop_table('statuses');
+		$this->dbforge->drop_table('tables');
+		$this->dbforge->drop_table('uri_routes');
+		$this->dbforge->drop_table('users');
+		$this->dbforge->drop_table('working_hours');
 	}
 
 	public function _addresses() {
-		$this->dbforge->drop_table('addresses');
-		
 		$fields = array(
 			'address_id INT(11) NOT NULL AUTO_INCREMENT',
 			'customer_id INT(15) NOT NULL',
@@ -76,13 +111,10 @@ class Migration_Schema extends CI_Migration {
 		$this->dbforge->add_field($fields);
 		$this->dbforge->add_key('address_id', TRUE);
 		$this->dbforge->create_table('addresses');
-
 		$this->db->query('ALTER TABLE '.$this->db->dbprefix('addresses').' AUTO_INCREMENT 11');
 	}
 
 	public function _banners() {
-		$this->dbforge->drop_table('banners');
-		
 		$fields = array(
 			'banner_id INT(11) NOT NULL AUTO_INCREMENT',
 			'name VARCHAR(255) NOT NULL',
@@ -103,8 +135,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _categories() {
-		$this->dbforge->drop_table('categories');
-
 		$fields = array(
 			'category_id INT(11) NOT NULL AUTO_INCREMENT',
 			'name VARCHAR(32) NOT NULL',
@@ -114,11 +144,10 @@ class Migration_Schema extends CI_Migration {
 		$this->dbforge->add_field($fields);
 		$this->dbforge->add_key('category_id', TRUE);
 		$this->dbforge->create_table('categories');
+		$this->db->query('ALTER TABLE '.$this->db->dbprefix('categories').' AUTO_INCREMENT 11');
 	}
 
 	public function _countries() {
-		$this->dbforge->drop_table('countries');
-
 		$fields = array(
 			'country_id INT(11) NOT NULL AUTO_INCREMENT',
 			'country_name VARCHAR(128) NOT NULL',
@@ -134,8 +163,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _coupons() {
-		$this->dbforge->drop_table('coupons');
-
 		$fields = array(
 			'coupon_id INT(11) NOT NULL AUTO_INCREMENT',
 			'name VARCHAR(128) NOT NULL',
@@ -160,8 +187,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _coupons_history() {
-		$this->dbforge->drop_table('coupons_history');
-
 		$fields = array(
 			'coupon_history_id INT(11) NOT NULL AUTO_INCREMENT',
 			'coupon_id INT(11) NOT NULL',
@@ -181,8 +206,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _currencies() {
-		$this->dbforge->drop_table('currencies');
-
 		$fields = array(
 			'currency_id INT(11) NOT NULL AUTO_INCREMENT',
 			'country_id INT(11) NOT NULL',
@@ -202,8 +225,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _customer_groups() {
-		$this->dbforge->drop_table('customer_groups');
-
 		$fields = array(
 			'customer_group_id INT(11) NOT NULL AUTO_INCREMENT',
 			'group_name VARCHAR(32) NOT NULL',
@@ -217,8 +238,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _customers() {
-		$this->dbforge->drop_table('customers');
-
 		$fields = array(
 			'customer_id INT(11) unsigned NOT NULL AUTO_INCREMENT',
 			'first_name VARCHAR(32) NOT NULL',
@@ -246,8 +265,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _customers_activity() {
-		$this->dbforge->drop_table('customers_activity');
-
 		$fields = array(
 			'activity_id INT(11) NOT NULL AUTO_INCREMENT',
 			'customer_id INT(11) NOT NULL',
@@ -269,8 +286,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _extensions() {
-		$this->dbforge->drop_table('extensions');
-
 		$fields = array(
 			'extension_id INT(11) NOT NULL AUTO_INCREMENT',
 			'type VARCHAR(32) NOT NULL',
@@ -287,8 +302,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _languages() {
-		$this->dbforge->drop_table('languages');
-
 		$fields = array(
 			'language_id INT(11) NOT NULL AUTO_INCREMENT',
 			'code VARCHAR(7) NOT NULL',
@@ -304,8 +317,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _layout_routes() {
-		$this->dbforge->drop_table('layout_routes');
-
 		$fields = array(
 			'layout_route_id INT(11) NOT NULL AUTO_INCREMENT',
 			'layout_id INT(11) NOT NULL',
@@ -318,8 +329,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _layouts() {
-		$this->dbforge->drop_table('layouts');
-
 		$fields = array(
 			'layout_id INT(11) NOT NULL AUTO_INCREMENT',
 			'name VARCHAR(45) NOT NULL'
@@ -331,8 +340,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _location_tables() {
-		$this->dbforge->drop_table('location_tables');
-
 		$fields = array(
 			'location_id INT(11) NOT NULL',
 			'table_id INT(11) NOT NULL'
@@ -346,8 +353,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _locations() {
-		$this->dbforge->drop_table('locations');
-
 		$fields = array(
 			'location_id INT(11) NOT NULL AUTO_INCREMENT',
 			'location_name VARCHAR(32) NOT NULL',
@@ -381,8 +386,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _mail_templates() {
-		$this->dbforge->drop_table('mail_templates');
-
 		$fields = array(
 			'template_id INT(11) NOT NULL AUTO_INCREMENT',
 			'name VARCHAR(32) NOT NULL',
@@ -398,8 +401,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _mail_templates_data() {
-		$this->dbforge->drop_table('mail_templates_data');
-
 		$fields = array(
 			'template_data_id INT(11) NOT NULL AUTO_INCREMENT',
 			'template_id INT(11) NOT NULL',
@@ -418,8 +419,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _menu_options() {
-		$this->dbforge->drop_table('menu_options');
-
 		$fields = array(
 			'option_id INT(11) NOT NULL AUTO_INCREMENT',
 			'option_name VARCHAR(32) NOT NULL',
@@ -432,8 +431,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _menus() {
-		$this->dbforge->drop_table('menus');
-
 		$fields = array(
 			'menu_id INT(11) NOT NULL AUTO_INCREMENT',
 			'menu_name VARCHAR(255) NOT NULL',
@@ -450,11 +447,10 @@ class Migration_Schema extends CI_Migration {
 		$this->dbforge->add_field($fields);
 		$this->dbforge->add_key('menu_id', TRUE);
 		$this->dbforge->create_table('menus');
+		$this->db->query('ALTER TABLE '.$this->db->dbprefix('menus').' AUTO_INCREMENT 11');
 	}
 
 	public function _menus_specials() {
-		$this->dbforge->drop_table('menus_specials');
-
 		$fields = array(
 			'special_id INT(11) NOT NULL AUTO_INCREMENT',
 			'menu_id INT(11) NOT NULL DEFAULT "0"',
@@ -473,7 +469,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _menus_to_options() {
-		$this->dbforge->drop_table('menus_to_options');
 
 		$fields = array(
 			'menu_id INT(11) NOT NULL',
@@ -487,8 +482,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _messages() {
-		$this->dbforge->drop_table('messages');
-
 		$fields = array(
 			'message_id INT(15) NOT NULL AUTO_INCREMENT',
 			'location_id INT(11) NOT NULL',
@@ -510,8 +503,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _message_recipients() {
-		$this->dbforge->drop_table('message_recipients');
-
 		$fields = array(
 			'message_recipient_id int(11) NOT NULL AUTO_INCREMENT',
 			'message_id int(11) NOT NULL',
@@ -531,8 +522,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _orders() {
-		$this->dbforge->drop_table('orders');
-
 		$fields = array(
 			'order_id int(11) NOT NULL AUTO_INCREMENT',
 			'customer_id int(11) NOT NULL',
@@ -561,12 +550,10 @@ class Migration_Schema extends CI_Migration {
 		$this->dbforge->add_key('order_id', TRUE);
 		$this->dbforge->create_table('orders');
 
-		$this->db->query('ALTER TABLE '.$this->db->dbprefix('orders').' AUTO_INCREMENT 20011');
+		$this->db->query('ALTER TABLE '.$this->db->dbprefix('orders').' AUTO_INCREMENT 20001');
 	}
 
 	public function _order_menus() {
-		$this->dbforge->drop_table('order_menus');
-
 		$fields = array(
 			'order_menu_id INT(11) NOT NULL AUTO_INCREMENT',
 			'order_id INT(11) NOT NULL',
@@ -586,8 +573,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _order_options() {
-		$this->dbforge->drop_table('order_options');
-
 		$fields = array(
 			'order_option_id INT(11) NOT NULL AUTO_INCREMENT',
 			'order_id INT(11) NOT NULL',
@@ -605,8 +590,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _order_totals() {
-		$this->dbforge->drop_table('order_totals');
-
 		$fields = array(
 			'order_total_id INT(11) NOT NULL AUTO_INCREMENT',
 			'order_id INT(11) NOT NULL',
@@ -625,8 +608,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _pages() {
-		$this->dbforge->drop_table('pages');
-
 		$fields = array(
 			'page_id INT(11) NOT NULL AUTO_INCREMENT',
 			'language_id INT(11) NOT NULL',
@@ -649,8 +630,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _permalinks() {
-		$this->dbforge->drop_table('permalinks');
-
 		$fields = array(
 			'permalink_id INT(11) NOT NULL AUTO_INCREMENT',
 			'permalink VARCHAR(255) NOT NULL',
@@ -660,11 +639,10 @@ class Migration_Schema extends CI_Migration {
 		$this->dbforge->add_field($fields);
 		$this->dbforge->add_key('permalink_id', TRUE);
 		$this->dbforge->create_table('permalinks');
+		$this->db->query('ALTER TABLE '.$this->db->dbprefix('permalinks').' AUTO_INCREMENT 11');
 	}
 
 	public function _pp_payments() {
-		$this->dbforge->drop_table('pp_payments');
-
 		$fields = array(
 			'transaction_id VARCHAR(19) NOT NULL',
 			'order_id INT(11) NOT NULL',
@@ -680,8 +658,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _reservations() {
-		$this->dbforge->drop_table('reservations');
-
 		$fields = array(
 			'reservation_id INT(32) NOT NULL AUTO_INCREMENT',
 			'location_id INT(11) NOT NULL',
@@ -715,8 +691,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _reviews() {
-		$this->dbforge->drop_table('reviews');
-
 		$fields = array(
 			'review_id INT(11) NOT NULL AUTO_INCREMENT',
 			'customer_id INT(11) NOT NULL',
@@ -740,8 +714,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _security_questions() {
-		$this->dbforge->drop_table('security_questions');
-
 		$fields = array(
 			'question_id INT(11) NOT NULL AUTO_INCREMENT',
 			'text TEXT NOT NULL',
@@ -754,8 +726,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _settings() {
-		$this->dbforge->drop_table('settings');
-
 		$fields = array(
 			'setting_id INT(11) NOT NULL AUTO_INCREMENT',
 			'sort VARCHAR(45) NOT NULL',
@@ -771,8 +741,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _staff_groups() {
-		$this->dbforge->drop_table('staff_groups');
-
 		$fields = array(
 			'staff_group_id INT(11) NOT NULL AUTO_INCREMENT',
 			'staff_group_name VARCHAR(32) NOT NULL',
@@ -786,8 +754,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _staffs() {
-		$this->dbforge->drop_table('staffs');
-
 		$fields = array(
 			'staff_id INT(11) NOT NULL AUTO_INCREMENT',
 			'staff_name VARCHAR(32) NOT NULL',
@@ -808,8 +774,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _status_history() {
-		$this->dbforge->drop_table('status_history');
-
 		$fields = array(
 			'status_history_id INT(11) NOT NULL AUTO_INCREMENT',
 			'order_id INT(11) NOT NULL',
@@ -830,8 +794,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _statuses() {
-		$this->dbforge->drop_table('statuses');
-
 		$fields = array(
 			'status_id INT(15) NOT NULL AUTO_INCREMENT',
 			'status_name VARCHAR(45) NOT NULL',
@@ -846,8 +808,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _tables() {
-		$this->dbforge->drop_table('tables');
-
 		$fields = array(
 			'table_id INT(11) NOT NULL AUTO_INCREMENT',
 			'table_name VARCHAR(32) NOT NULL',
@@ -864,8 +824,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _uri_routes() {
-		$this->dbforge->drop_table('uri_routes');
-
 		$fields = array(
 			'uri_route_id INT(11) NOT NULL AUTO_INCREMENT',
 			'uri_route VARCHAR(255) NOT NULL',
@@ -880,8 +838,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _users() {
-		$this->dbforge->drop_table('users');
-
 		$fields = array(
 			'user_id INT(11) NOT NULL AUTO_INCREMENT',
 			'staff_id INT(11) NOT NULL',
@@ -900,8 +856,6 @@ class Migration_Schema extends CI_Migration {
 	}
 
 	public function _working_hours() {
-		$this->dbforge->drop_table('working_hours');
-
 		$fields = array(
 			'location_id INT(11) NOT NULL',
 			'weekday INT(11) NOT NULL',

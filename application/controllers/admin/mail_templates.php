@@ -27,7 +27,7 @@ class Mail_templates extends CI_Controller {
 		if ($this->input->get('default') === '1' AND $this->input->get('template_id')) {
 			$template_id = $this->input->get('template_id');
 		
-			if ($this->Settings_model->addSetting('themes', 'mail_template_id', $template_id, '0')) {
+			if ($this->Settings_model->addSetting('prefs', 'mail_template_id', $template_id, '0')) {
 				$this->session->set_flashdata('alert', '<p class="alert-success">Mail Template set as default sucessfully!</p>');
 			}
 			

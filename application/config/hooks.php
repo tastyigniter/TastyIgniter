@@ -10,5 +10,12 @@
 |
 */
 
+$hook['pre_system'][] = array(
+	'class'    => 'System',
+	'function' => 'setupHook',
+	'filename' => 'System.php',
+	'filepath' => 'core'
+);
+
 /* End of file hooks.php */
 /* Location: ./application/config/hooks.php */

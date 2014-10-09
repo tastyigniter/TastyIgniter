@@ -6,6 +6,7 @@ position: relative;
 body {
 background-color:#184f75;
 font-family:'Oxygen',Arial,sans-serif;
+font-size:12px;
 margin-bottom:55px;
 }
 a, a:hover, a:active {
@@ -100,6 +101,7 @@ border: 1px solid #E7E7E7;
 float:none;
 margin: 0 auto;
 padding:25px;
+width: 41.6667%;
 }
 .setup_box p, .setup_box h2 {
 }
@@ -109,4 +111,7 @@ margin-bottom: 30px;
 }
 .setup_box h2 {
 border-bottom: 1px solid #DDDDDD;
+}
+h4, .h4 {
+font-size: 24px;
 }

@@ -104,7 +104,7 @@ class Payments extends MX_Controller {
 
 		if (file_exists(EXTPATH .'payments/'.$name.'/controllers/admin/'.$name.'.php') AND $action === 'edit') {
 			$result = $this->Extensions_model->getExtension('payment', $name);
-			$payment_data = unserialize($result['data']);
+			$payment_data = (!empty($result['data'])) ? unserialize($result['data']) : array();
 
 			$title = (isset($payment_data['name'])) ? $payment_data['name'] : ucwords(str_replace('_', ' ', $name));	
 			$this->template->setTitle('Payment: '. $title);

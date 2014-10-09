@@ -208,10 +208,6 @@ if (defined('ENVIRONMENT'))
 		define('APPPATH', BASEPATH.$application_folder.'/');
 	}
 
-	if (is_dir(EXTPATH .'setup/') AND file_exists(EXTPATH .'setup/')) {
-		define('TI_SETUP', TRUE);
-	}
-
 /*
  * --------------------------------------------------------------------
  * LOAD THE BOOTSTRAP FILE

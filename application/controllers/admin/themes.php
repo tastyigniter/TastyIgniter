@@ -33,7 +33,7 @@ class Themes extends CI_Controller {
 			$theme_name = $this->input->get('name');
 			$theme_location = $this->input->get('location');
 		
-			if ($this->Settings_model->addSetting('themes', $theme_location.'_theme', $theme_name.'/', '0')) {
+			if ($this->Settings_model->addSetting('prefs', $theme_location.'_theme', $theme_name.'/', '0')) {
 				$this->session->set_flashdata('alert', '<p class="alert-success">Theme set as default sucessfully!</p>');
 			}
 			

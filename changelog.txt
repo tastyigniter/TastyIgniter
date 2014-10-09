@@ -1,0 +1,41 @@
+TastyIgniter BETA release 1.2.0
+
+ADDED: 
+1. Administrator password reset 
+3. Coupon Validity Periods
+4. Frontend Location info/reviews page added.
+5. Locations list page added to frontend
+6. Hooks enabled
+
+
+CHANGES: 
+1. Improved Administrator Panel GUI
+2. Removed admin/image_tool
+3. Added image manager options to admin/settings
+4. Improved TastyIgniter Setup 
+5. Improved menu options with customisable price/quantity per menu and quantity stock control (BETA mode)
+6. Improved pages
+7. Default/main location 'address' fields can now be edited from admin/settings or admin/locations
+8. Modification of 'ti_version' in application/config/config.php by extensions/setup deprecated.
+9. Configuration item: 'ti_version' is now set with initial_schema after migration is successful.
+10. Moved settings library from autoload to pre_controller hook
+
+
+FIXED:
+1. Fresh installation will include database-sample.php instead of database.php
+
+
+MIGRATIONS:
+2. initial_schema.sql - countries, coupons,
+3. 001 - menus table auto increment from 11 instead of 1
+3. 001 - permalinks table auto increment from 11 instead of 1
+3. 002 - flag column added to countries table
+4. 002 - validity period, recurring .... added to coupons table
+5. Removed database tables: menu_to_options
+6. Added Database tables: options, option_values
+7. Modified Database tables: menu_options, menu_option_values
+8. Renamed column order_option_id to option_values in order_menus table
+9. Modified order_options table: removed option_id, renamed option_name, option_price to order_option_name, order_option_price
+10: Modified pages table: renamed menu_location to navigation
+11. Moved pages insert data from demo_schema to initial_schema with corresponding permalinks insert data
+15. Added one customer group data in initial_schema as default

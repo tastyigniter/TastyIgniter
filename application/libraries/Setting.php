@@ -4,43 +4,37 @@ class Setting {
 	
 	public function __construct() {
 		$this->CI =& get_instance();
-
-		if (defined('TI_SETUP') AND TI_SETUP === TRUE) {
-			if ($this->CI->uri->segment(1) !== 'setup') {
-				redirect('setup');
-			}
-		} else {
-			$this->setSettings();
-		}
+		$this->setSettings();
 	}
 	
 	public function setSettings() {
-		$this->setConfig();
+		if (defined('TI_SETUP') AND TI_SETUP === 'installed') {
+			$this->CI->load->database();
+			$this->setConfig();
 
-		if ($this->CI->config->item('permalink') == '1') {
-			$this->setPermalinkQuery();
-		}
+			if ($this->CI->config->item('permalink') == '1') {
+				$this->setPermalinkQuery();
+			}
 		
-		if ($this->CI->config->item('maintenance_mode') === '1') {  													// if customer is not logged in redirect to account login page
-			$this->setMaintainance();
-		}
+			if ($this->CI->config->item('maintenance_mode') === '1') {  													// if customer is not logged in redirect to account login page
+				$this->setMaintainance();
+			}
 
-		if (defined('ENVIRONMENT') AND ENVIRONMENT !== 'production' AND ! $this->CI->input->is_ajax_request()) {
-			$this->CI->output->enable_profiler(TRUE);
-		}
+			if (defined('ENVIRONMENT') AND ENVIRONMENT !== 'production' AND ! $this->CI->input->is_ajax_request()) {
+				$this->CI->output->enable_profiler(TRUE);
+			}
 
-		if ($this->CI->config->item('timezone')) {
-			date_default_timezone_set($this->CI->config->item('timezone'));
-		}
+			if ($this->CI->config->item('timezone')) {
+				date_default_timezone_set($this->CI->config->item('timezone'));
+			}
 		
-		if ($this->CI->config->item('cache_mode') == '1') {
-			$this->CI->output->cache($this->CI->config->item('cache_time'));
+			if ($this->CI->config->item('cache_mode') == '1') {
+				$this->CI->output->cache($this->CI->config->item('cache_time'));
+			}
 		}
-		
 	}
 	
 	public function setConfig() {
-		$this->CI->load->database();
 		$this->CI->load->model('Settings_model');
 				
       	$settings = $this->CI->Settings_model->getAll();      

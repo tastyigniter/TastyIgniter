@@ -90,7 +90,7 @@ $config['charset'] = 'UTF-8';
 | setting this variable to TRUE (boolean).  See the user guide for details.
 |
 */
-$config['enable_hooks'] = FALSE;
+$config['enable_hooks'] = TRUE;
 
 
 /*
@@ -335,7 +335,7 @@ $config['modules_locations'] = array(
 | This indicates a fresh installation or upgrade. (BETA)
 |
 */
-$config['ti_setup'] = '';
+//$config['ti_version'] = ''; (moved to initial_schema)
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */

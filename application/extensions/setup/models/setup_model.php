@@ -33,6 +33,10 @@ class Setup_model extends CI_Model {
 			$query = TRUE;
 		}
 
+		if ($this->addUser($add)) {
+			$query = TRUE;
+		}
+
 		if (isset($add['demo_data']) AND $add['demo_data'] === '1') {
 			$file = APPPATH .'/extensions/setup/migrations/demo_schema.sql';
 			if (!file_exists($file)) { 
@@ -56,12 +60,6 @@ class Setup_model extends CI_Model {
 				}
 			
 				$query = TRUE;
-			}
-		}
-		
-		if ($query) {
-			if ( ! $this->addUser($add)) {
-				$query = FALSE;
 			}
 		}
 		
@@ -90,6 +88,9 @@ class Setup_model extends CI_Model {
 			$staff_id = $this->db->insert_id();
 
 			if (!empty($add['username'])) {
+				$this->db->where('username', $add['username']);
+				$this->db->delete('users'); 
+				
 				$this->db->set('username', $add['username']);
 				$this->db->set('staff_id', $staff_id);
 			}

@@ -4,11 +4,11 @@ class Setup extends CI_Controller {
 
 	public function __construct() {
 		parent::__construct();
-		$this->load->model('Setup_model');	    
+				$this->output->enable_profiler(TRUE);
 	}
 
 	public function _remap($method) {
-		if ($this->config->item('ti_setup') === 'installed') {
+		if ($this->session->userdata('setup') === 'step_3' OR $this->config->item('ti_version') === 'v1.2') {
 			$this->success();
 		} else {
 			$this->$method();
@@ -202,6 +202,7 @@ class Setup extends CI_Controller {
 	}
 
 	public function settings() {
+		$this->load->library('migration');
 			
 		if ($this->session->userdata('setup') !== 'step_2') {
 			redirect('setup/database');			
@@ -267,15 +268,11 @@ class Setup extends CI_Controller {
 			show_404();
 		}
 
-		if ($this->config->item('ti_setup') === 'installed') {
-			if ($this->session->flashdata('alert')) {
-				$data['alert'] = $this->session->flashdata('alert');
-			} else if (defined('TI_SETUP') AND TI_SETUP === TRUE) {
+		if ($this->session->userdata('setup') === 'step_3' OR $this->config->item('ti_version') === 'v1.2') {
+			if (defined('TI_SETUP') AND TI_SETUP === 'directory_found') {
 				$data['alert'] = '<p class="alert alert-danger">PLEASE REMEMBER TO COMPLETELY REMOVE THE SETUP FOLDER. <br />You will not be able to proceed beyond this point until the setup folder has been removed. <br />This is a security feature of TastyIgniter!</p>';
-			} else { 
-				$data['alert'] = '';
-			}		
-		
+			}
+			
 			$data['heading'] 			= 'TastyIgniter - Setup - Successful';
 			$data['complete_setup'] 	= '<a href="'. site_url(ADMIN_URI) .'">Login to Administrator Panel</a>';
 			
@@ -313,7 +310,7 @@ class Setup extends CI_Controller {
 				$this->session->set_flashdata('alert', '<p class="alert alert-danger">Unable to write database file.</p>');
 				redirect('setup/database');       	 		
 			} else {
-				if ($fp = @fopen($db_path, FOPEN_READ_WRITE_CREATE_DESTRUCTIVE)) {
+				if ($fp = @fopen(APPPATH .'config/database.php', FOPEN_READ_WRITE_CREATE_DESTRUCTIVE)) {
 
 					$db_file = "<"."?php  if ( ! defined('BASEPATH')) exit('No direct access allowed');\n\n";
 			
@@ -327,7 +324,7 @@ class Setup extends CI_Controller {
 					$db_file .= "$"."db['default']['dbdriver'] = 'mysqli';\n";
 					$db_file .= "$"."db['default']['dbprefix'] = '". $db_prefix ."';\n";
 					$db_file .= "$"."db['default']['pconnect'] = TRUE;\n";
-					$db_file .= "$"."db['default']['db_debug'] = FALSE;\n";
+					$db_file .= "$"."db['default']['db_debug'] = TRUE;\n";
 					$db_file .= "$"."db['default']['cache_on'] = FALSE;\n";
 					$db_file .= "$"."db['default']['cachedir'] = '';\n";
 					$db_file .= "$"."db['default']['char_set'] = 'utf8';\n";
@@ -354,6 +351,7 @@ class Setup extends CI_Controller {
 	}
 	
 	public function _checkSettings() {
+		$this->load->model('Setup_model');	    
 		$this->load->helper('file');
 
 		$this->form_validation->set_rules('site_name', 'Restaurant name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
@@ -375,17 +373,17 @@ class Setup extends CI_Controller {
 	
 			if ($this->_doMigration()) {
 				if ($this->Setup_model->addData($add)) {
-					$config_path = APPPATH .'config/config.php';
-					$config_file = read_file($config_path);
+					$this->session->set_userdata('setup', 'step_3'); 		
+					return TRUE;
+				} else {
+					$this->session->set_flashdata('alert', '<p class="alert alert-danger">Error installing user and site settings.</p>');
+				}
+			}
 
-					$config_file = str_replace('$config[\'ti_setup\'] = \'\'', '$config[\'ti_setup\'] = \'installed\'', $config_file);
-
-					if ( ! write_file($config_path, $config_file)) {
-						$this->session->set_flashdata('alert', '<p class="alert alert-danger">Unable to write config file.</p>');
-					} else {
-						$this->session->set_userdata('setup', 'step_3'); 		
-						return TRUE;
-					}
+			if ($this->_doMigration()) {
+				if ($this->Setup_model->addData($add)) {
+					$this->session->set_userdata('setup', 'step_3'); 		
+					return TRUE;
 				} else {
 					$this->session->set_flashdata('alert', '<p class="alert alert-danger">Error installing user and site settings.</p>');
 				}
@@ -396,14 +394,11 @@ class Setup extends CI_Controller {
 	}
 
 	public function _doMigration() {
-		$this->load->library('migration');
-
 		if ($this->migration->current()) {
 			return TRUE;
 		} else {
 			show_error($this->migration->error_string());
-			//$this->session->set_flashdata('alert', '<p class="alert alert-danger">Error installing database.</p>');
-			//redirect('setup/database');       	 		
+			return FALSE;    	 		
 		}
 	}
 		
