@@ -16,8 +16,8 @@
 		<div class="row wrap-vertical">
 			<ul id="nav-tabs" class="nav nav-tabs">
 				<li class="active"><a href="#general" data-toggle="tab">General</a></li>
-				<li><a href="#option" data-toggle="tab">Options</a></li>
 				<li><a href="#location" data-toggle="tab">Location</a></li>
+				<li><a href="#option" data-toggle="tab">Options</a></li>
 				<li><a href="#order" data-toggle="tab">Order</a></li>
 				<li><a href="#reservation" data-toggle="tab">Reservation</a></li>
 				<li><a href="#image-manager" data-toggle="tab">Image Manager</a></li>
@@ -42,25 +42,6 @@
 						<div class="col-sm-5">
 							<input type="text" name="site_email" id="input-site-email" class="form-control" value="<?php echo $site_email; ?>" autocomplete="off" />
 							<?php echo form_error('site_email', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Logo:</label>
-						<div class="col-sm-5">
-							<div class="thumbnail imagebox" id="selectImage">
-								<div class="preview">
-									<img src="<?php echo $site_logo; ?>" class="thumb img-responsive" id="thumb" />
-								</div>
-								<div class="caption">
-									<center class="name"><?php echo $logo_name; ?></center>
-									<input type="hidden" name="site_logo" value="<?php echo set_value('site_logo', $logo_val); ?>" id="field" />
-									<p>
-										<a id="select-image" class="btn btn-select-image" onclick="imageUpload('field');"><i class="fa fa-picture-o"></i>&nbsp;&nbsp;Select</a>
-										<a class="btn btn-times" onclick="$('#thumb').attr('src', '<?php echo $no_photo; ?>'); $('#field').attr('value', 'data/no_photo.png'); $(this).parent().parent().find('center').html('no_photo.png');"><i class="fa fa-times-circle"></i>&nbsp;&nbsp;Remove</a>
-									</p>
-								</div>
-							</div>
-							<?php echo form_error('site_logo', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
@@ -125,21 +106,6 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-default-location" class="col-sm-2 control-label">Default Location:</label>
-						<div class="col-sm-5">
-							<select name="default_location_id" id="input-default-location" class="form-control">
-								<?php foreach ($locations as $location) { ?>
-								<?php if ($location['location_id'] === $default_location_id) { ?>
-									<option value="<?php echo $location['location_id']; ?>" selected="selected"><?php echo $location['location_name']; ?></option>
-								<?php } else { ?>  
-									<option value="<?php echo $location['location_id']; ?>"><?php echo $location['location_name']; ?></option>
-								<?php } ?>  
-								<?php } ?>  
-							</select>
-							<?php echo form_error('default_location_id', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
 						<label for="input-customer-group" class="col-sm-2 control-label">Customer Group:</label>
 						<div class="col-sm-5">
 							<select name="customer_group_id" id="input-customer-group" class="form-control">
@@ -155,20 +121,22 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-page-limit" class="col-sm-2 control-label">Items Per Page:
-							<span class="help-block">Limit how many items are shown per page</span>
-						</label>
+						<label for="input-name" class="col-sm-2 control-label">Logo:</label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle btn-group-5" data-toggle="buttons">
-							<?php foreach ($page_limits as $key => $value) { ?>
-								<?php if ($value === $page_limit) { ?>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="page_limit" value="<?php echo $value; ?>" <?php echo set_radio('page_limit', $value, TRUE); ?>><?php echo $value; ?></label>
-								<?php } else { ?>  
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="page_limit" value="<?php echo $value; ?>" <?php echo set_radio('page_limit', $value); ?>><?php echo $value; ?></label>
-								<?php } ?>  
-							<?php } ?>  
+							<div class="thumbnail imagebox" id="selectImage">
+								<div class="preview">
+									<img src="<?php echo $site_logo; ?>" class="thumb img-responsive" id="thumb" />
+								</div>
+								<div class="caption">
+									<center class="name"><?php echo $logo_name; ?></center>
+									<input type="hidden" name="site_logo" value="<?php echo set_value('site_logo', $logo_val); ?>" id="field" />
+									<p>
+										<a id="select-image" class="btn btn-select-image" onclick="imageUpload('field');"><i class="fa fa-picture-o"></i>&nbsp;&nbsp;Select</a>
+										<a class="btn btn-times" onclick="$('#thumb').attr('src', '<?php echo $no_photo; ?>'); $('#field').attr('value', 'data/no_photo.png'); $(this).parent().parent().find('center').html('no_photo.png');"><i class="fa fa-times-circle"></i>&nbsp;&nbsp;Remove</a>
+									</p>
+								</div>
 							</div>
-							<?php echo form_error('page_limit', '<span class="text-danger">', '</span>'); ?>
+							<?php echo form_error('site_logo', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
@@ -188,6 +156,23 @@
 				</div>	
 
 				<div id="option" class="tab-pane row wrap-all">
+					<div class="form-group">
+						<label for="input-page-limit" class="col-sm-2 control-label">Items Per Page:
+							<span class="help-block">Limit how many items are shown per page</span>
+						</label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-toggle btn-group-5" data-toggle="buttons">
+							<?php foreach ($page_limits as $key => $value) { ?>
+								<?php if ($value === $page_limit) { ?>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="page_limit" value="<?php echo $value; ?>" <?php echo set_radio('page_limit', $value, TRUE); ?>><?php echo $value; ?></label>
+								<?php } else { ?>  
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="page_limit" value="<?php echo $value; ?>" <?php echo set_radio('page_limit', $value); ?>><?php echo $value; ?></label>
+								<?php } ?>  
+							<?php } ?>  
+							</div>
+							<?php echo form_error('page_limit', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
 					<div class="form-group">
 						<label for="input-menus-page-limit" class="col-sm-2 control-label">Menus Per Page:
 							<span class="help-block">Limit how many menus are shown per page</span>
@@ -374,6 +359,52 @@
 				</div>
 
 				<div id="location" class="tab-pane row wrap-all">
+					<div class="form-group">
+						<label for="input-address-1" class="col-sm-2 control-label">Address 1:
+							<span class="help-block">This will be your default location address, it will be added automatically to Locations, if it doesn't already exist.</span>
+						</label>
+						<div class="col-sm-5">
+							<input type="text" name="main_address[address_1]" id="input-address-1" class="form-control" value="<?php echo set_value('main_address[address_1]', $main_address['address_1']); ?>" />
+							<?php echo form_error('main_address[address_1]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-address-2" class="col-sm-2 control-label">Address 2:</label>
+						<div class="col-sm-5">
+							<input type="text" name="main_address[address_2]" id="input-address-2" class="form-control" value="<?php echo set_value('main_address[address_2]', $main_address['address_2']); ?>" />
+							<?php echo form_error('main_address[address_2]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-city" class="col-sm-2 control-label">City:</label>
+						<div class="col-sm-5">
+							<input type="text" name="main_address[city]" id="input-city" class="form-control" value="<?php echo set_value('main_address[city]', $main_address['city']); ?>" />
+							<?php echo form_error('main_address[city]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-postcode" class="col-sm-2 control-label">Postcode:</label>
+						<div class="col-sm-5">
+							<input type="text" name="main_address[postcode]" id="input-postcode" class="form-control" value="<?php echo set_value('main_address[postcode]', $main_address['postcode']); ?>" />
+							<input type="hidden" name="main_address[location_id]" value="<?php echo set_value('main_address[location_id]', $main_address['location_id']); ?>" />
+							<?php echo form_error('main_address[postcode]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-country" class="col-sm-2 control-label">Country:</label>
+						<div class="col-sm-5">
+							<select name="main_address[country_id]" id="input-country" class="form-control">
+								<?php foreach ($countries as $country) { ?>
+								<?php if ($country['country_id'] === $main_address['country_id']) { ?>
+									<option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
+								<?php } else { ?>  
+									<option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
+								<?php } ?>  
+								<?php } ?>  
+							</select>
+							<?php echo form_error('main_address[country_id]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
 					<div class="form-group">
 						<label for="input-maps-api-key" class="col-sm-2 control-label">Google Maps API Key</label>
 						<div class="col-sm-5">

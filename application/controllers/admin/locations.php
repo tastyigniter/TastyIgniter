@@ -28,6 +28,16 @@ class Locations extends CI_Controller {
 			$data['alert'] = '';
 		}
 															
+		if ($this->input->get('default') === '1' AND $this->input->get('location_id')) {
+			$location_id = $this->input->get('location_id');
+		
+			if ($this->Locations_model->updateDefault($this->Locations_model->getLocationAddress($location_id))) {
+				$this->session->set_flashdata('alert', '<p class="alert-success">Location set as default sucessfully!</p>');
+			}
+			
+			redirect(ADMIN_URI.'/locations');
+		}
+
 		$url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
@@ -87,6 +97,12 @@ class Locations extends CI_Controller {
 		$data['locations'] = array();
 		$results = $this->Locations_model->getList($filter);
 		foreach ($results as $result) {					
+			if ($result['location_id'] !== $this->config->item('default_location_id')) {
+				$default = site_url(ADMIN_URI.'/locations?default=1&location_id='. $result['location_id']);
+			} else {
+				$default = '1';
+			}
+			
 			$data['locations'][] = array(
 				'location_id'			=> $result['location_id'],
 				'location_name'			=> $result['location_name'],
@@ -97,6 +113,7 @@ class Locations extends CI_Controller {
 				'location_lat'			=> $result['location_lat'],
 				'location_lng'			=> $result['location_lng'],
 				'location_status'		=> ($result['location_status'] === '1') ? 'Enabled' : 'Disabled',
+				'default'				=> $default,
 				'edit' 					=> site_url(ADMIN_URI.'/locations/edit?id=' . $result['location_id'])
 			);
 		}
@@ -470,6 +487,10 @@ class Locations extends CI_Controller {
 		
 			if ($this->Locations_model->updateLocation($update)) {
 				$this->session->set_flashdata('alert', '<p class="alert-success">Location updated sucessfully.</p>');
+				
+				if ($update['location_id'] === $this->config->item('default_location_id')) {
+					$this->Settings_model->addSetting('config', 'main_address', $this->Locations_model->getLocationAddress($update['location_id']), '1');
+				}
 			} else {
 				$this->session->set_flashdata('alert', '<p class="alert-warning">An error occured, nothing updated.</p>');				
 			}

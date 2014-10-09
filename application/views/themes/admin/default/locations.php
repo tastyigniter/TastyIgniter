@@ -65,8 +65,14 @@
 					<?php if ($locations) { ?>
 					<?php foreach ($locations as $location) { ?>
 					<tr>
-						<td class="action"><input type="checkbox" value="<?php echo $location['location_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
-							<a class="btn btn-edit" title="Edit" href="<?php echo $location['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
+						<td class="action action-three"><input type="checkbox" value="<?php echo $location['location_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
+							<a class="btn btn-edit" title="Edit" href="<?php echo $location['edit']; ?>"><i class="fa fa-pencil"></i></a>
+							<?php if ($location['default'] === '1') { ?>
+								<a class="btn btn-favorite" title="Default"><i class="fa fa-star"></i></a>
+							<?php } else {?>
+								<a class="btn btn-favorite-o" title="Set Default" href="<?php echo $location['default']; ?>"><i class="fa fa-star-o"></i></a>
+							<?php } ?>
+						</td>
 						<td><?php echo $location['location_name']; ?>
 							<?php if ($default_location_id === $location['location_id']) { ?>
 							<b>(Default)</b>

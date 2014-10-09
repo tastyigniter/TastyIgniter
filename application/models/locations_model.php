@@ -227,6 +227,59 @@ class Locations_model extends CI_Model {
 		return FALSE;
 	}
 
+	public function updateDefault($address = array()) {
+		$query = FALSE;
+
+		if (empty($address) AND !is_array($address)) {
+			return $query;
+		}
+		
+		if (!empty($address['address_1'])) {
+			$this->db->set('location_address_1', $address['address_1']);
+		}
+		
+		if (!empty($address['address_2'])) {
+			$this->db->set('location_address_2', $address['address_2']);
+		}
+		
+		if (!empty($address['city'])) {
+			$this->db->set('location_city', $address['city']);
+		}
+		
+		if (!empty($address['postcode'])) {
+			$this->db->set('location_postcode', $address['postcode']);
+		}
+		
+		if (!empty($address['country_id'])) {
+			$this->db->set('location_country_id', $address['country_id']);
+		}
+		
+		if (!empty($address['location_lat'])) {
+			$this->db->set('location_lat', $address['location_lat']);
+		}
+		
+		if (!empty($address['location_lng'])) {
+			$this->db->set('location_lng', $address['location_lng']);
+		}
+		
+		$this->db->set('location_status', '1');
+		
+		$location_id = 0;
+		if (!empty($address['location_id']) AND is_numeric($address['location_id'])) {
+			$location_id = (int) $address['location_id'];
+			$this->db->where('location_id', $location_id);
+			$query = $this->db->update('locations');
+		} else {
+			if ($this->db->insert('locations')) {
+				$location_id = (int) $this->db->insert_id();
+			}			
+		}
+		
+		$this->Settings_model->addSetting('config', 'main_address', $this->getLocationAddress($location_id), '1');
+		$this->Settings_model->addSetting('prefs', 'default_location_id', $location_id, '0');
+		return $query;
+	}	
+	
 	public function updateLocation($update = array()) {
 		$query = FALSE;
 

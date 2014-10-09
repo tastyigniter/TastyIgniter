@@ -92,12 +92,6 @@ class Settings extends CI_Controller {
 			$data['currency_id'] = $this->config->item('currency_id');
 		}
 				
-		if ($this->input->post('default_location_id')) {
-			$data['default_location_id'] = $this->input->post('default_location_id');
-		} else {
-			$data['default_location_id'] = $this->config->item('default_location_id');
-		}
-				
 		if ($this->input->post('language_id')) {
 			$data['language_id'] = $this->input->post('language_id');
 		} else {
@@ -187,6 +181,23 @@ class Settings extends CI_Controller {
 		} else {
 			$data['customer_reserve_email'] = $this->config->item('customer_reserve_email');
 		}
+				
+		if ($this->input->post('main_address') AND is_array($this->input->post('main_address'))) {
+			$main_address = $this->input->post('main_address');
+		} else if (is_array($this->config->item('main_address'))) {
+			$main_address = $this->config->item('main_address');
+		} else {
+			$main_address = array();
+		}
+				
+		$data['main_address'] = array(
+			'location_id' 	=> (isset($main_address['location_id'])) ? $main_address['location_id'] : '',
+			'address_1' 	=> (isset($main_address['address_1'])) ? $main_address['address_1'] : '',
+			'address_2' 	=> (isset($main_address['address_2'])) ? $main_address['address_2'] : '',
+			'city' 			=> (isset($main_address['city'])) ? $main_address['city'] : '',
+			'postcode' 		=> (isset($main_address['postcode'])) ? $main_address['postcode'] : '',
+			'country_id' 	=> (isset($main_address['country_id'])) ? $main_address['country_id'] : ''
+		);
 				
 		if ($this->input->post('maps_api_key')) {
 			$data['maps_api_key'] = $this->input->post('maps_api_key');
@@ -475,16 +486,6 @@ class Settings extends CI_Controller {
 			);
 		}
 
-		$this->load->model('Locations_model');	    
-		$data['locations'] = array();
-		$results = $this->Locations_model->getLocations();
-		foreach ($results as $result) {					
-			$data['locations'][] = array(
-				'location_id'	=>	$result['location_id'],
-				'location_name'	=>	$result['location_name'],
-			);
-		}
-	
 		$this->load->model('Languages_model');	    
 		$data['languages'] = array();
 		$results = $this->Languages_model->getLanguages();
@@ -585,7 +586,6 @@ class Settings extends CI_Controller {
 				'country_id' 				=> $this->input->post('country_id'),
 				'timezone' 					=> $this->input->post('timezone'),
 				'currency_id' 				=> $this->input->post('currency_id'),
-				'default_location_id' 		=> $this->input->post('default_location_id'),
 				'language_id' 				=> $this->input->post('language_id'),
 				'customer_group_id' 		=> $this->input->post('customer_group_id'),
 				'page_limit' 				=> $this->input->post('page_limit'),
@@ -603,6 +603,7 @@ class Settings extends CI_Controller {
 				'registration_email'		=> $this->input->post('registration_email'),
 				'customer_order_email'		=> $this->input->post('customer_order_email'),
 				'customer_reserve_email'	=> $this->input->post('customer_reserve_email'),
+				'main_address'				=> $this->input->post('main_address'),
 				'maps_api_key'				=> $this->input->post('maps_api_key'),
 				'search_by'					=> $this->input->post('search_by'),
 				'distance_unit'				=> $this->input->post('distance_unit'),
@@ -643,6 +644,12 @@ class Settings extends CI_Controller {
 				'cache_mode' 				=> $this->input->post('cache_mode'),
 				'cache_time' 				=> $this->input->post('cache_time')
 			);
+				
+			
+			if (!empty($update['main_address']) AND is_array($update['main_address'])) {
+				$this->load->model('Locations_model');
+				$this->Locations_model->updateDefault($update['main_address']);
+			}
 
 			if ($this->Settings_model->updateSettings('config', $update)) {
 				$this->session->set_flashdata('alert', '<p class="alert-success">Settings updated sucessfully.</p>');
@@ -661,7 +668,6 @@ class Settings extends CI_Controller {
 		$this->form_validation->set_rules('country_id', 'Restaurant Country', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('timezone', 'Timezones', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('currency_id', 'Restaurant Currency', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('default_location_id', 'Default Location', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('language_id', 'Default Language', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('customer_group_id', 'Customer Group', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('page_limit', 'Items Per Page', 'xss_clean|trim|required|integer');
@@ -675,7 +681,7 @@ class Settings extends CI_Controller {
 			$this->form_validation->set_rules('menu_images_w', 'Menu Images Width', 'xss_clean|trim|required|numeric');
 		}
 		
-		$this->form_validation->set_rules('special_category_id', 'Specials Category', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('special_category_id', 'Specials Category', 'xss_clean|trim|numeric');
 		$this->form_validation->set_rules('registration_terms', 'Registration Terms', 'xss_clean|trim|required|numeric');
 		$this->form_validation->set_rules('checkout_terms', 'Checkout Terms', 'xss_clean|trim|required|numeric');
 		$this->form_validation->set_rules('stock_warning', 'Stock Warning', 'xss_clean|trim|required|numeric');
@@ -725,10 +731,10 @@ class Settings extends CI_Controller {
 		$this->form_validation->set_rules('image_manager[remember_days]', 'Remember Last Folder', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('protocol', 'Mail Protocol', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('mailtype', 'Mail Type Format', 'xss_clean|trim|required');
-		$this->form_validation->set_rules('smtp_host', 'SMTP Host', 'xss_clean|trim|');
-		$this->form_validation->set_rules('smtp_port', 'SMTP Port', 'xss_clean|trim|');
-		$this->form_validation->set_rules('smtp_user', 'SMTP Username', 'xss_clean|trim|');
-		$this->form_validation->set_rules('smtp_pass', 'SMTP Password', 'xss_clean|trim|');
+		$this->form_validation->set_rules('smtp_host', 'SMTP Host', 'xss_clean|trim');
+		$this->form_validation->set_rules('smtp_port', 'SMTP Port', 'xss_clean|trim');
+		$this->form_validation->set_rules('smtp_user', 'SMTP Username', 'xss_clean|trim');
+		$this->form_validation->set_rules('smtp_pass', 'SMTP Password', 'xss_clean|trim');
 		$this->form_validation->set_rules('log_threshold', 'Threshold Options', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('log_path', 'Log Path', 'xss_clean|trim|');
 		$this->form_validation->set_rules('encryption_key', 'Encryption Key', 'xss_clean|trim|required');
@@ -737,7 +743,7 @@ class Settings extends CI_Controller {
 		$this->form_validation->set_rules('index_file_url', 'Index File', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('permalink', 'Permalink', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('maintenance_mode', 'Maintenance Mode', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('maintenance_page', 'Maintenance Page', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('maintenance_page', 'Maintenance Page', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('cache_mode', 'Cache Mode', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('cache_time', 'Cache Time', 'xss_clean|trim|integer');
 
@@ -775,6 +781,25 @@ class Settings extends CI_Controller {
 		}
  
 		return $timezone_list;
+	}
+	
+	public function get_lat_lag() {
+		if (isset($_POST['main_address']) AND is_array($_POST['main_address']) AND !empty($_POST['main_address']['postcode'])) {			 
+			$address_string =  implode(", ", $_POST['main_address']);
+			$address = urlencode($address_string);
+			$geocode = file_get_contents('http://maps.googleapis.com/maps/api/geocode/json?address='. $address .'&sensor=false&region=GB');
+    		$output = json_decode($geocode);
+    		$status = $output->status;
+    		
+    		if ($status === 'OK') {
+				$_POST['main_address']['location_lat'] = $output->results[0]->geometry->location->lat;
+				$_POST['main_address']['location_lng'] = $output->results[0]->geometry->location->lng;
+			    return TRUE;
+    		} else {
+        		$this->form_validation->set_message('get_lat_lag', 'The Address you entered failed Geocoding, please enter a different address!');
+        		return FALSE;
+    		}
+        }
 	}
 
 	public function validate_path($str) {
