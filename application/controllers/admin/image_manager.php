@@ -28,9 +28,8 @@ class Image_manager extends CI_Controller {
 		$this->template->setHeading('Image Manager');
 		$this->template->setButton('Options', array('class' => 'btn btn-default pull-right', 'href' => site_url(ADMIN_URI.'/settings#image-manager')));
 
-		$extension = $this->Extensions_model->getExtension('tool', 'image_manager');
-		if (!empty($extension['data'])) {
-			$setting = unserialize($extension['data']);
+		if (!empty($this->config->item('image_manager')) AND is_array($this->config->item('image_manager'))) {
+			$setting = $this->config->item('image_manager');
 		} else {
 			$setting = array();
 		}
@@ -262,9 +261,8 @@ class Image_manager extends CI_Controller {
 		}
 				
 		if ($this->input->post('name')) {
-			$extension = $this->Extensions_model->getExtension('tool', 'image_manager');
-			if (!empty($extension['data'])) {
-				$setting = unserialize($extension['data']);
+			if (!empty($this->config->item('image_manager')) AND is_array($this->config->item('image_manager'))) {
+				$setting = $this->config->item('image_manager');
 			} else {
 				$setting = array();
 			}
@@ -317,9 +315,8 @@ class Image_manager extends CI_Controller {
 		}
 				
 		if ($this->input->post('to_folder') AND $this->input->post('copy_files')) {
-			$extension = $this->Extensions_model->getExtension('tool', 'image_manager');
-			if (!empty($extension['data'])) {
-				$setting = unserialize($extension['data']);
+			if (!empty($this->config->item('image_manager')) AND is_array($this->config->item('image_manager'))) {
+				$setting = $this->config->item('image_manager');
 			} else {
 				$setting = array();
 			}
@@ -386,9 +383,8 @@ class Image_manager extends CI_Controller {
 		}
 				
 		if ($this->input->post('to_folder') AND $this->input->post('move_files')) {
-			$extension = $this->Extensions_model->getExtension('tool', 'image_manager');
-			if (!empty($extension['data'])) {
-				$setting = unserialize($extension['data']);
+			if (!empty($this->config->item('image_manager')) AND is_array($this->config->item('image_manager'))) {
+				$setting = $this->config->item('image_manager');
 			} else {
 				$setting = array();
 			}
@@ -455,9 +451,8 @@ class Image_manager extends CI_Controller {
 		}
 				
 		if ($this->input->post('file_name') AND $this->input->post('new_name')) {
-			$extension = $this->Extensions_model->getExtension('tool', 'image_manager');
-			if (!empty($extension['data'])) {
-				$setting = unserialize($extension['data']);
+			if (!empty($this->config->item('image_manager')) AND is_array($this->config->item('image_manager'))) {
+				$setting = $this->config->item('image_manager');
 			} else {
 				$setting = array();
 			}
@@ -520,9 +515,8 @@ class Image_manager extends CI_Controller {
 		}
 				
 		if ($this->input->post('delete_files') OR $this->input->post('delete_file')) {
-			$extension = $this->Extensions_model->getExtension('tool', 'image_manager');
-			if (!empty($extension['data'])) {
-				$setting = unserialize($extension['data']);
+			if (!empty($this->config->item('image_manager')) AND is_array($this->config->item('image_manager'))) {
+				$setting = $this->config->item('image_manager');
 			} else {
 				$setting = array();
 			}
@@ -575,9 +569,8 @@ class Image_manager extends CI_Controller {
 			$json['error'] = '<span class="error">Warning: You do not have permission to add or change!</span>';
 		}
 				
-		$extension = $this->Extensions_model->getExtension('tool', 'image_manager');
-		if (!empty($extension['data'])) {
-			$setting = unserialize($extension['data']);
+		if (!empty($this->config->item('image_manager')) AND is_array($this->config->item('image_manager'))) {
+			$setting = $this->config->item('image_manager');
 		} else {
 			$setting = array();
 		}
@@ -654,9 +647,8 @@ class Image_manager extends CI_Controller {
 	}
 
 	public function _files($image_path, $sort = array()) {
-		$extension = $this->Extensions_model->getExtension('tool', 'image_manager');
-		if (!empty($extension['data'])) {
-			$setting = unserialize($extension['data']);
+		if (!empty($this->config->item('image_manager')) AND is_array($this->config->item('image_manager'))) {
+			$setting = $this->config->item('image_manager');
 		} else {
 			$setting = array();
 		}
