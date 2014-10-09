@@ -380,15 +380,6 @@ class Setup extends CI_Controller {
 				}
 			}
 
-			if ($this->_doMigration()) {
-				if ($this->Setup_model->addData($add)) {
-					$this->session->set_userdata('setup', 'step_3'); 		
-					return TRUE;
-				} else {
-					$this->session->set_flashdata('alert', '<p class="alert alert-danger">Error installing user and site settings.</p>');
-				}
-			}
-
 			redirect('setup/settings');       	 		
 		}
 	}
