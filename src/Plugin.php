@@ -44,7 +44,7 @@ use Composer\Script\ScriptEvents;
  * {
  *    "require": {
  *        "wikimedia/composer-merge-plugin": "dev-master"
- *    }
+ *    },
  *     "extra": {
  *         "merge-patterns": [
  *             "composer.local.json"
