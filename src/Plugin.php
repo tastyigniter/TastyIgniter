@@ -136,37 +136,45 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     {
         $root = $this->composer->getPackage();
         $patterns = is_array($patterns) ? $patterns : array($patterns);
-        foreach (
-            array_reduce(
-                array_map('glob', $patterns), 'array_merge', array()
-            ) as $path)
-        {
+        foreach (array_reduce(
+            array_map('glob', $patterns),
+            'array_merge',
+            array()
+        ) as $path) {
             $file = new JsonFile($path);
             $config = $file->read();
-             if (!isset($config['name'])) {
-                 $config['name'] = strtr(DIRECTORY_SEPARATOR, '-', $path);
-             }
+            if (!isset($config['name'])) {
+                $config['name'] = strtr(DIRECTORY_SEPARATOR, '-', $path);
+            }
             if (!isset($config['version'])) {
                 $config['version'] = '1.0.0';
             }
             $package = $this->loader->load($config);
 
             $root->setRequires($this->mergeLinks(
-                $root->getRequires(), $package->getRequires(),
-                $this->duplicateLinks['require']));
+                $root->getRequires(),
+                $package->getRequires(),
+                $this->duplicateLinks['require']
+            ));
 
             $root->setDevRequires($this->mergeLinks(
-                $root->getDevRequires(), $package->getDevRequires(),
-                $this->duplicateLinks['require-dev']));
+                $root->getDevRequires(),
+                $package->getDevRequires(),
+                $this->duplicateLinks['require-dev']
+            ));
 
             if ($package->getRepositories()) {
                 $root->setRepositories(array_merge(
-                    $package->getRepositories(), $root->getRepositories()));
+                    $package->getRepositories(),
+                    $root->getRepositories()
+                ));
             }
 
             if ($package->getSuggests()) {
                 $root->setSuggests(array_merge(
-                    $pakcage->getSuggests(), $root->getRepositories()));
+                    $package->getSuggests(),
+                    $root->getRepositories()
+                ));
             }
         }
     }
@@ -213,6 +221,5 @@ class Plugin implements PluginInterface, EventSubscriberInterface
             }
         }
     }
-
 }
 // vim:sw=4:ts=4:sts=4:et:

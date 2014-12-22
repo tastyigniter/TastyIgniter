@@ -12,7 +12,8 @@
     "require-dev": {
         "composer/composer": "1.0.*@dev",
         "phpunit/phpunit": "~4.0",
-        "jakub-onderka/php-parallel-lint": "~0.8"
+        "jakub-onderka/php-parallel-lint": "~0.8",
+        "squizlabs/php_codesniffer": "~2.1.0"
     },
     "autoload": {
         "psr-4": {
@@ -28,7 +29,8 @@
     "scripts": {
       "test": [
         "parallel-lint --exclude vendor --exclude example/vendor .",
-        "phpunit"
+        "phpunit",
+        "phpcs --standard=PSR2 src/*"
       ]
     }
 }
