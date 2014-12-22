@@ -1,0 +1,6 @@
+{
+    "require": {
+        "wikimedia/cdb": "~1.0.0",
+        "monolog/monolog": "1.10.0"
+    }
+}
