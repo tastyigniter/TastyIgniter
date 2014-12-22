@@ -1,0 +1,5 @@
+{
+    "extra": {
+        "merge-patterns": "composer.local.json"
+    }
+}
