@@ -17,11 +17,11 @@
     },
     "autoload": {
         "psr-4": {
-            "Wikimedia\\Composer\\Merge\\": "src/"
+            "Wikimedia\\Composer\\": "src/"
         }
     },
     "extra": {
-        "class": "Wikimedia\\Composer\\Merge\\Plugin"
+        "class": "Wikimedia\\Composer\\MergePlugin"
     },
     "config": {
         "optimize-autoloader": true

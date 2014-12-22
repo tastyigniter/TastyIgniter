@@ -8,7 +8,7 @@
  * license. See the LICENSE file for details.
  */
 
-namespace Wikimedia\Composer\Merge;
+namespace Wikimedia\Composer;
 
 use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
@@ -55,7 +55,7 @@ use Composer\Script\ScriptEvents;
  *
  * @author Bryan Davis <bd808@bd808.com>
  */
-class Plugin implements PluginInterface, EventSubscriberInterface
+class MergePlugin implements PluginInterface, EventSubscriberInterface
 {
 
     /**
