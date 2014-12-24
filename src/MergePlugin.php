@@ -173,7 +173,7 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
             if ($package->getSuggests()) {
                 $root->setSuggests(array_merge(
                     $package->getSuggests(),
-                    $root->getRepositories()
+                    $root->getSuggests()
                 ));
             }
         }
