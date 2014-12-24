@@ -59,9 +59,10 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
      *   and a composer.local.json with one require
      * When the plugin is run
      * Then the root package should inherit the require
-     *   and no modifications should be made by the pre-merge hook.
+     *   and no modifications should be made by the pre-dependency hook.
      */
-    public function testOneMergeNoConflicts() {
+    public function testOneMergeNoConflicts()
+    {
         $that = $this;
         $dir = $this->fixtureDir(__FUNCTION__);
 
@@ -82,9 +83,63 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
             }
         );
 
+        $root->getRepositories()->shouldNotBeCalled();
+        $root->setRepositories()->shouldNotBeCalled();
+
+        $root->getSuggests()->shouldNotBeCalled();
+        $root->setSuggests()->shouldNotBeCalled();
+
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
 
         $this->assertEquals(0, count($extraInstalls));
+    }
+
+    /**
+     * Given a root package with requires
+     *   and a composer.local.json with requires
+     *   and the same package is listed in multiple files
+     * When the plugin is run
+     * Then the root package should inherit the non-conflicting requires
+     *   and extra installs should be proposed by the pre-dependency hook.
+     */
+    public function testOneMergeWithConflicts()
+    {
+        $that = $this;
+        $dir = $this->fixtureDir(__FUNCTION__);
+
+        $root = $this->rootFromJson("{$dir}/composer.json");
+
+        $root->setRequires(Argument::type('array'))->will(
+            function ($args) use ($that) {
+                $requires = $args[0];
+                $that->assertEquals(2, count($requires));
+                $that->assertArrayHasKey(
+                    'wikimedia/composer-merge-plugin',
+                    $requires
+                );
+                $that->assertArrayHasKey('monolog/monolog', $requires);
+            }
+        );
+
+        $root->setDevRequires(Argument::type('array'))->will(
+            function ($args) use ($that) {
+                $requires = $args[0];
+                $that->assertEquals(2, count($requires));
+                $that->assertArrayHasKey('foo', $requires);
+                $that->assertArrayHasKey('xyzzy', $requires);
+            }
+        );
+
+        $root->getRepositories()->shouldNotBeCalled();
+        $root->setRepositories()->shouldNotBeCalled();
+
+        $root->getSuggests()->shouldNotBeCalled();
+        $root->setSuggests()->shouldNotBeCalled();
+
+        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
+
+        $this->assertEquals(1, count($extraInstalls));
+        $this->assertEquals('monolog/monolog', $extraInstalls[0][0]);
     }
 
     /**
@@ -109,8 +164,8 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
 
         $requestInstalls = array();
         $request = $this->prophesize('Composer\DependencyResolver\Request');
-        $request->install(Argument::any())->will(
-            function ($args) use ($requestInstalls) {
+        $request->install(Argument::any(), Argument::any())->will(
+            function ($args) use (&$requestInstalls) {
                 $requestInstalls[] = $args;
             }
         );
@@ -150,7 +205,7 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
             array(
                 'repositories' => array(),
                 'require' => array(),
-                'dev-require' => array(),
+                'require-dev' => array(),
                 'suggest' => array(),
                 'extra' => array(),
             ),
@@ -158,14 +213,13 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
         );
 
         $root = $this->prophesize('Composer\Package\RootPackage');
-        $root->getRequires()->willReturn($data['require']);
-        $root->getDevRequires()->willReturn($data['dev-require']);
+        $root->getRequires()->willReturn($data['require'])->shouldBeCalled();
+        $root->getDevRequires()->willReturn($data['require-dev'])->shouldBeCalled();
         $root->getRepositories()->willReturn($data['repositories']);
         $root->getSuggests()->willReturn($data['suggest']);
-        $root->getExtra()->willReturn($data['extra']);
+        $root->getExtra()->willReturn($data['extra'])->shouldBeCalled();
 
         return $root;
     }
-
 }
 // vim:sw=4:ts=4:sts=4:et:

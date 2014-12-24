@@ -1,0 +1,8 @@
+{
+    "require": {
+        "monolog/monolog": "1.10.0"
+    },
+    "require-dev": {
+        "xyzzy": "dev-master"
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "require": {
+        "wikimedia/cdb": "~1.0.0",
+        "monolog/monolog": "1.10.0"
+    },
+    "dev-require": {
+        "foo": "1.0.0"
+    }
+}
