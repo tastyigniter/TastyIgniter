@@ -10,3 +10,9 @@ before_script:
   - composer install
 script:
   - composer test
+notifications:
+  irc:
+    channels:
+      - "chat.freenode.net#wikimedia-dev"
+    template:
+      - "%{repository}#%{build_number} (%{branch} - %{commit} %{author}): %{message} - %{build_url}"
