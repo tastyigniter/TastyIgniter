@@ -28,10 +28,11 @@
         "optimize-autoloader": true
     },
     "scripts": {
-      "test": [
-        "parallel-lint --exclude vendor --exclude example/vendor .",
-        "phpunit",
-        "phpcs --standard=PSR2 src/*"
-      ]
+        "test": [
+            "composer validate --no-interaction",
+            "parallel-lint src tests",
+            "phpunit --testdox --log-junit=reports/unitreport.xml --coverage-text --coverage-html=reports/coverage --coverage-clover=reports/coverage.xml",
+            "phpcs --encoding=utf-8 --standard=PSR2 --report-checkstyle=reports/checkstyle-phpcs.xml --report-full --extensions=php src/* tests/phpunit/*"
+        ]
     }
 }
