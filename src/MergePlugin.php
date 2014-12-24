@@ -141,6 +141,7 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
             'array_merge',
             array()
         ) as $path) {
+            $this->debug("Loading <comment>{$path}</comment>...");
             $file = new JsonFile($path);
             $config = $file->read();
             if (!isset($config['name'])) {
@@ -192,9 +193,11 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     {
         foreach ($merge as $name => $link) {
             if (!isset($origin[$name])) {
+                $this->debug("Merging <comment>{$name}</comment>");
                 $origin[$name] = $link;
             } else {
                 // Defer to solver.
+                $this->debug("Deferring duplicate <comment>{$name}</comment>");
                 $dups[] = $link;
             }
         }
@@ -213,12 +216,29 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     {
         $request = $event->getRequest();
         foreach ($this->duplicateLinks['require'] as $link) {
+            $this->debug("Adding dependency <comment>{$link}</comment>");
             $request->install($link->getTarget(), $link->getConstraint());
         }
         if ($this->devMode) {
             foreach ($this->duplicateLinks['require-dev'] as $link) {
+                $this->debug("Adding dev dependency <comment>{$link}</comment>");
                 $request->install($link->getTarget(), $link->getConstraint());
             }
+        }
+    }
+
+    /**
+     * Log a debug message
+     *
+     * Messages will be output at the "verbose" logging level (eg `-v` needed
+     * on the Composer command).
+     *
+     * @param string $message
+     */
+    protected function debug($message)
+    {
+        if ($this->inputOutput->isVerbose()) {
+            $this->inputOutput->write("  <info>[merge]</info> {$message}");
         }
     }
 }
