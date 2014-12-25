@@ -12,9 +12,11 @@
         "preferred-install": "source"
     },
     "extra": {
-        "merge-patterns": [
-            "composer.local.json",
-            "extensions/*/composer.json"
-        ]
+        "merge-plugin": {
+            "include": [
+                "composer.local.json",
+                "extensions/*/composer.json"
+            ]
+        }
     }
 }

@@ -1,5 +1,7 @@
 {
     "extra": {
-        "merge-patterns": "composer.local.json"
+        "merge-plugin": {
+            "include": "composer.local.json"
+        }
     }
 }
