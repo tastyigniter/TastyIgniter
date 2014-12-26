@@ -16,6 +16,7 @@ use Composer\Installer\InstallerEvent;
 use Composer\Installer\InstallerEvents;
 use Composer\IO\IOInterface;
 use Composer\Json\JsonFile;
+use Composer\Package\Package;
 use Composer\Package\LinkConstraint\SpecificConstraint;
 use Composer\Package\Loader\ArrayLoader;
 use Composer\Plugin\PluginInterface;
@@ -42,13 +43,15 @@ use Composer\Script\ScriptEvents;
  *
  * @code
  * {
- *    "require": {
- *        "wikimedia/composer-merge-plugin": "dev-master"
- *    },
+ *     "require": {
+ *         "wikimedia/composer-merge-plugin": "dev-master"
+ *     },
  *     "extra": {
- *         "merge-patterns": [
- *             "composer.local.json"
- *         ]
+ *         "merge-plugin": {
+ *             "include": [
+ *                 "composer.local.json"
+ *             ]
+ *         }
  *     }
  * }
  * @endcode
@@ -113,43 +116,61 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
      */
     public function onInstallOrUpdate(CommandEvent $event)
     {
-        $package = $this->composer->getPackage();
-        $extra = $package->getExtra();
-        if (isset($extra['merge-patterns'])) {
+        $config = $this->readConfig($this->composer->getPackage());
+        if ($config['include']) {
             $this->loader = new ArrayLoader();
             $this->duplicateLinks = array(
                 'require' => array(),
                 'require-dev' => array(),
             );
             $this->devMode = $event->isDevMode();
-            $this->mergePackages($extra['merge-patterns']);
+            $this->mergePackages($config);
         }
     }
 
     /**
-     * Find configuration files matching the given glob patterns and merge
-     * their contents with the master package.
-     *
-     * @param array $patterns Glob-style file patterns
+     * @param Package $package
+     * @return array
      */
-    protected function mergePackages($patterns)
+    protected function readConfig(Package $package)
+    {
+        $config = array(
+            'include' => array(),
+        );
+        $extra = $package->getExtra();
+        if (isset($extra['merge-plugin'])) {
+            $config = array_merge($config, $extra['merge-plugin']);
+            if (!is_array($config['include'])) {
+                $config['include'] = array($config['include']);
+            }
+        }
+        return $config;
+    }
+
+    /**
+     * Find configuration files matching the configured glob patterns and
+     * merge their contents with the master package.
+     *
+     * @param array $config
+     */
+    protected function mergePackages(array $config)
     {
         $root = $this->composer->getPackage();
-        $patterns = is_array($patterns) ? $patterns : array($patterns);
         foreach (array_reduce(
-            array_map('glob', $patterns),
+            array_map('glob', $config['include']),
             'array_merge',
             array()
         ) as $path) {
+            $this->debug("Loading <comment>{$path}</comment>...");
             $file = new JsonFile($path);
-            $config = $file->read();
-            if (!isset($config['name'])) {
-                $config['name'] = strtr(DIRECTORY_SEPARATOR, '-', $path);
+            $json = $file->read();
+            if (!isset($json['name'])) {
+                $json['name'] = strtr(DIRECTORY_SEPARATOR, '-', $path);
             }
-            if (!isset($config['version'])) {
-                $config['version'] = '1.0.0';
+            if (!isset($json['version'])) {
+                $json['version'] = '1.0.0';
             }
-            $package = $this->loader->load($config);
+            $package = $this->loader->load($json);
 
             $root->setRequires($this->mergeLinks(
                 $root->getRequires(),
@@ -165,15 +186,15 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
 
             if ($package->getRepositories()) {
                 $root->setRepositories(array_merge(
-                    $package->getRepositories(),
-                    $root->getRepositories()
+                    $root->getRepositories(),
+                    $package->getRepositories()
                 ));
             }
 
             if ($package->getSuggests()) {
                 $root->setSuggests(array_merge(
-                    $package->getSuggests(),
-                    $root->getSuggests()
+                    $root->getSuggests(),
+                    $package->getSuggests()
                 ));
             }
         }
@@ -192,9 +213,11 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     {
         foreach ($merge as $name => $link) {
             if (!isset($origin[$name])) {
+                $this->debug("Merging <comment>{$name}</comment>");
                 $origin[$name] = $link;
             } else {
                 // Defer to solver.
+                $this->debug("Deferring duplicate <comment>{$name}</comment>");
                 $dups[] = $link;
             }
         }
@@ -211,14 +234,35 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
      */
     public function onDependencySolve(InstallerEvent $event)
     {
+        if (!$this->duplicateLinks) {
+            return;
+        }
+
         $request = $event->getRequest();
         foreach ($this->duplicateLinks['require'] as $link) {
+            $this->debug("Adding dependency <comment>{$link}</comment>");
             $request->install($link->getTarget(), $link->getConstraint());
         }
         if ($this->devMode) {
             foreach ($this->duplicateLinks['require-dev'] as $link) {
+                $this->debug("Adding dev dependency <comment>{$link}</comment>");
                 $request->install($link->getTarget(), $link->getConstraint());
             }
+        }
+    }
+
+    /**
+     * Log a debug message
+     *
+     * Messages will be output at the "verbose" logging level (eg `-v` needed
+     * on the Composer command).
+     *
+     * @param string $message
+     */
+    protected function debug($message)
+    {
+        if ($this->inputOutput->isVerbose()) {
+            $this->inputOutput->write("  <info>[merge]</info> {$message}");
         }
     }
 }
