@@ -11,14 +11,16 @@
 namespace Wikimedia\Composer;
 
 use Composer\Composer;
+use Composer\Config;
 use Composer\EventDispatcher\EventSubscriberInterface;
+use Composer\Factory;
 use Composer\Installer\InstallerEvent;
 use Composer\Installer\InstallerEvents;
 use Composer\IO\IOInterface;
 use Composer\Json\JsonFile;
-use Composer\Package\Package;
 use Composer\Package\LinkConstraint\SpecificConstraint;
 use Composer\Package\Loader\ArrayLoader;
+use Composer\Package\Package;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\CommandEvent;
 use Composer\Script\ScriptEvents;
@@ -184,10 +186,23 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
                 $this->duplicateLinks['require-dev']
             ));
 
-            if ($package->getRepositories()) {
+            if (isset($json['repositories'])) {
+                $repoManager = $this->composer->getRepositoryManager();
+                $newRepos = array();
+
+                foreach ($json['repositories'] as $repoJson) {
+                    $this->debug("Adding {$repoJson['type']} repository");
+                    $repo = $repoManager->createRepository(
+                        $repoJson['type'],
+                        $repoJson
+                    );
+                    $repoManager->addRepository($repo);
+                    $newRepos[] = $repo;
+                }
+
                 $root->setRepositories(array_merge(
-                    $root->getRepositories(),
-                    $package->getRepositories()
+                    $newRepos,
+                    $root->getRepositories()
                 ));
             }
 
