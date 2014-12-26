@@ -54,6 +54,18 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
         );
     }
 
+    public function testSubscribedEvents()
+    {
+        $subscriptions = MergePlugin::getSubscribedEvents();
+        $this->assertEquals(3, count($subscriptions));
+        $this->assertArrayHasKey(
+            InstallerEvents::PRE_DEPENDENCIES_SOLVING,
+            $subscriptions
+        );
+        $this->assertArrayHasKey(ScriptEvents::PRE_INSTALL_CMD, $subscriptions);
+        $this->assertArrayHasKey(ScriptEvents::PRE_UPDATE_CMD, $subscriptions);
+    }
+
     /**
      * Given a root package with no requires
      *   and a composer.local.json with one require
@@ -140,6 +152,88 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
 
         $this->assertEquals(1, count($extraInstalls));
         $this->assertEquals('monolog/monolog', $extraInstalls[0][0]);
+    }
+
+    /**
+     * Given a root package
+     *   and a composer.local.json with a repository
+     * When the plugin is run
+     * Then the root package should inherit the repository
+     */
+    public function testMergedRepositories()
+    {
+        $that = $this;
+        $io = $this->io;
+        $dir = $this->fixtureDir(__FUNCTION__);
+
+        $repoManager = $this->prophesize(
+            'Composer\Repository\RepositoryManager'
+        );
+        $repoManager->createRepository(
+            Argument::type('string'),
+            Argument::type('array')
+        )->will(
+            function ($args) use ($that, $io) {
+                $that->assertEquals('vcs', $args[0]);
+                $that->assertEquals(
+                    'https://github.com/bd808/composer-merge-plugin.git',
+                    $args[1]['url']
+                );
+
+                return new \Composer\Repository\VcsRepository(
+                    $args[1],
+                    $io->reveal(),
+                    new \Composer\Config()
+                );
+            }
+        );
+        $repoManager->addRepository(Argument::any())->will(
+            function ($args) use ($that) {
+                $that->assertInstanceOf(
+                    'Composer\Repository\VcsRepository',
+                    $args[0]
+                );
+            }
+        );
+        $this->composer->getRepositoryManager()->will(
+            function () use ($repoManager) {
+                return $repoManager->reveal();
+            }
+        );
+
+        $root = $this->rootFromJson("{$dir}/composer.json");
+
+        $root->setRequires(Argument::type('array'))->will(
+            function ($args) use ($that) {
+                $requires = $args[0];
+                $that->assertEquals(1, count($requires));
+                $that->assertArrayHasKey(
+                    'wikimedia/composer-merge-plugin',
+                    $requires
+                );
+            }
+        );
+
+        $root->setDevRequires(Argument::type('array'))->will(
+            function ($args) use ($that) {
+                $requires = $args[0];
+                $that->assertEquals(0, count($requires));
+            }
+        );
+
+        $root->setRepositories(Argument::type('array'))->will(
+            function ($args) use ($that) {
+                $repos = $args[0];
+                $that->assertEquals(1, count($repos));
+            }
+        );
+
+        $root->getSuggests()->shouldNotBeCalled();
+        $root->setSuggests()->shouldNotBeCalled();
+
+        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
+
+        $this->assertEquals(0, count($extraInstalls));
     }
 
     /**
