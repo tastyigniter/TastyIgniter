@@ -54,6 +54,18 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
         );
     }
 
+    public function testSubscribedEvents()
+    {
+        $subscriptions = MergePlugin::getSubscribedEvents();
+        $this->assertEquals(3, count($subscriptions));
+        $this->assertArrayHasKey(
+            InstallerEvents::PRE_DEPENDENCIES_SOLVING,
+            $subscriptions
+        );
+        $this->assertArrayHasKey(ScriptEvents::PRE_INSTALL_CMD, $subscriptions);
+        $this->assertArrayHasKey(ScriptEvents::PRE_UPDATE_CMD, $subscriptions);
+    }
+
     /**
      * Given a root package with no requires
      *   and a composer.local.json with one require
