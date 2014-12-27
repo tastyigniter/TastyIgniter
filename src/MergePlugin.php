@@ -18,9 +18,12 @@ use Composer\Installer\InstallerEvent;
 use Composer\Installer\InstallerEvents;
 use Composer\IO\IOInterface;
 use Composer\Json\JsonFile;
+use Composer\Package\BasePackage;
+use Composer\Package\CompletePackage;
 use Composer\Package\LinkConstraint\SpecificConstraint;
 use Composer\Package\Loader\ArrayLoader;
 use Composer\Package\RootPackageInterface;
+use Composer\Package\Version\VersionParser;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\CommandEvent;
 use Composer\Script\ScriptEvents;
@@ -167,17 +170,8 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
             $json = $this->readPackageJson($path);
             $package = $this->loader->load($json);
 
-            $root->setRequires($this->mergeLinks(
-                $root->getRequires(),
-                $package->getRequires(),
-                $this->duplicateLinks['require']
-            ));
-
-            $root->setDevRequires($this->mergeLinks(
-                $root->getDevRequires(),
-                $package->getDevRequires(),
-                $this->duplicateLinks['require-dev']
-            ));
+            $this->mergeRequires($root, $package);
+            $this->mergeDevRequires($root, $package);
 
             if (isset($json['repositories'])) {
                 $this->addRepositories($json['repositories'], $root);
@@ -208,12 +202,78 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
         $file = new JsonFile($path);
         $json = $file->read();
         if (!isset($json['name'])) {
-            $json['name'] = strtr(DIRECTORY_SEPARATOR, '-', $path);
+            $json['name'] = 'merge-plugin/' .
+                strtr($path, DIRECTORY_SEPARATOR, '-');
         }
         if (!isset($json['version'])) {
             $json['version'] = '1.0.0';
         }
         return $json;
+    }
+
+    /**
+     * @param RootPackageInterface $root
+     * @param CompletePackage $package
+     */
+    protected function mergeRequires(
+        RootPackageInterface $root,
+        CompletePackage $package
+    ) {
+        $requires = $package->getRequires();
+        if (!$requires) {
+            return;
+        }
+
+        $this->mergeStabilityFlags($root, $requires);
+
+        $root->setRequires($this->mergeLinks(
+            $root->getRequires(),
+            $requires,
+            $this->duplicateLinks['require']
+        ));
+    }
+
+    /**
+     * @param RootPackageInterface $root
+     * @param CompletePackage $package
+     */
+    protected function mergeDevRequires(
+        RootPackageInterface $root,
+        CompletePackage $package
+    ) {
+        $requires = $package->getDevRequires();
+        if (!$requires) {
+            return;
+        }
+
+        $this->mergeStabilityFlags($root, $requires);
+
+        $root->setDevRequires($this->mergeLinks(
+            $root->getDevRequires(),
+            $requires,
+            $this->duplicateLinks['require-dev']
+        ));
+    }
+
+    /**
+     * Extract and merge stability flags from the given collection of
+     * requires.
+     *
+     * @param RootPackageInterface $root
+     * @param array $requires
+     */
+    protected function mergeStabilityFlags(
+        RootPackageInterface $root,
+        array $requires
+    ) {
+        $flags = $root->getStabilityFlags();
+        foreach ($requires as $name => $link) {
+            $name = strtolower($name);
+            $version = $link->getPrettyConstraint();
+            $stability = VersionParser::parseStability($version);
+            $flags[$name] = BasePackage::$stabilities[$stability];
+        }
+        $root->setStabilityFlags($flags);
     }
 
     /**

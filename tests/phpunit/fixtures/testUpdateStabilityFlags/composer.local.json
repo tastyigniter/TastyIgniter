@@ -1,0 +1,8 @@
+{
+    "require": {
+        "test/foo": "dev-master",
+        "test/bar": "~1.0@beta",
+        "test/baz": "0.1@alpha",
+        "test/xyzzy": "1.0.0-rc1"
+    }
+}

@@ -14,6 +14,7 @@ use Composer\Composer;
 use Composer\Installer\InstallerEvent;
 use Composer\Installer\InstallerEvents;
 use Composer\IO\IOInterface;
+use Composer\Package\BasePackage;
 use Composer\Package\PackageInterface;
 use Composer\Package\RootPackage;
 use Composer\Script\CommandEvent;
@@ -88,18 +89,9 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
             }
         );
 
-        $root->setDevRequires(Argument::type('array'))->will(
-            function ($args) use ($that) {
-                $requires = $args[0];
-                $that->assertEquals(0, count($requires));
-            }
-        );
-
+        $root->getDevRequires()->shouldNotBeCalled();
         $root->getRepositories()->shouldNotBeCalled();
-        $root->setRepositories()->shouldNotBeCalled();
-
         $root->getSuggests()->shouldNotBeCalled();
-        $root->setSuggests()->shouldNotBeCalled();
 
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
 
@@ -133,6 +125,7 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
             }
         );
 
+        $root->getDevRequires()->shouldBeCalled();
         $root->setDevRequires(Argument::type('array'))->will(
             function ($args) use ($that) {
                 $requires = $args[0];
@@ -143,10 +136,7 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
         );
 
         $root->getRepositories()->shouldNotBeCalled();
-        $root->setRepositories()->shouldNotBeCalled();
-
         $root->getSuggests()->shouldNotBeCalled();
-        $root->setSuggests()->shouldNotBeCalled();
 
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
 
@@ -214,12 +204,8 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
             }
         );
 
-        $root->setDevRequires(Argument::type('array'))->will(
-            function ($args) use ($that) {
-                $requires = $args[0];
-                $that->assertEquals(0, count($requires));
-            }
-        );
+        $root->getDevRequires()->shouldNotBeCalled();
+        $root->setDevRequires()->shouldNotBeCalled();
 
         $root->setRepositories(Argument::type('array'))->will(
             function ($args) use ($that) {
@@ -229,7 +215,43 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
         );
 
         $root->getSuggests()->shouldNotBeCalled();
-        $root->setSuggests()->shouldNotBeCalled();
+
+        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
+
+        $this->assertEquals(0, count($extraInstalls));
+    }
+
+    /**
+     * Given a root package
+     *   and a composer.local.json with required packages
+     * When the plugin is run
+     * Then the root package should be updated with stability flags.
+     */
+    public function testUpdateStabilityFlags()
+    {
+        $that = $this;
+        $dir = $this->fixtureDir(__FUNCTION__);
+        $root = $this->rootFromJson("{$dir}/composer.json");
+
+        $root->setRequires(Argument::type('array'))->will(
+            function ($args) use ($that) {
+                $requires = $args[0];
+                $that->assertEquals(4, count($requires));
+                $that->assertArrayHasKey('test/foo', $requires);
+                $that->assertArrayHasKey('test/bar', $requires);
+                $that->assertArrayHasKey('test/baz', $requires);
+                $that->assertArrayHasKey('test/xyzzy', $requires);
+            }
+        );
+
+        $root->getDevRequires()->shouldNotBeCalled();
+        $root->setDevRequires(Argument::any())->shouldNotBeCalled();
+
+        $root->getRepositories()->shouldNotBeCalled();
+        $root->setRepositories(Argument::any())->shouldNotBeCalled();
+
+        $root->getSuggests()->shouldNotBeCalled();
+        $root->setSuggests(Argument::any())->shouldNotBeCalled();
 
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
 
@@ -250,7 +272,7 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
             ScriptEvents::PRE_INSTALL_CMD,
             $this->composer->reveal(),
             $this->io->reveal(),
-            false, //dev mode
+            true, //dev mode
             array(),
             array()
         );
@@ -294,6 +316,7 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
      */
     protected function rootFromJson($file)
     {
+        $that = $this;
         $json = json_decode(file_get_contents($file), true);
         $data = array_merge(
             array(
@@ -308,10 +331,19 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
 
         $root = $this->prophesize('Composer\Package\RootPackage');
         $root->getRequires()->willReturn($data['require'])->shouldBeCalled();
-        $root->getDevRequires()->willReturn($data['require-dev'])->shouldBeCalled();
+        $root->getDevRequires()->willReturn($data['require-dev']);
         $root->getRepositories()->willReturn($data['repositories']);
         $root->getSuggests()->willReturn($data['suggest']);
         $root->getExtra()->willReturn($data['extra'])->shouldBeCalled();
+
+        $root->getStabilityFlags()->willReturn(array());
+        $root->setStabilityFlags(Argument::type('array'))->will(
+            function ($args) use ($that) {
+                foreach ($args[0] as $key => $value) {
+                    $that->assertContains($value, BasePackage::$stabilities);
+                }
+            }
+        );
 
         return $root;
     }
