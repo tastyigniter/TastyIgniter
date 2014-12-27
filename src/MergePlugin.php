@@ -20,7 +20,7 @@ use Composer\IO\IOInterface;
 use Composer\Json\JsonFile;
 use Composer\Package\LinkConstraint\SpecificConstraint;
 use Composer\Package\Loader\ArrayLoader;
-use Composer\Package\Package;
+use Composer\Package\RootPackageInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\CommandEvent;
 use Composer\Script\ScriptEvents;
@@ -131,10 +131,10 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     }
 
     /**
-     * @param Package $package
+     * @param RootPackageInterface $package
      * @return array
      */
-    protected function readConfig(Package $package)
+    protected function readConfig(RootPackageInterface $package)
     {
         $config = array(
             'include' => array(),
@@ -164,14 +164,7 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
             array()
         ) as $path) {
             $this->debug("Loading <comment>{$path}</comment>...");
-            $file = new JsonFile($path);
-            $json = $file->read();
-            if (!isset($json['name'])) {
-                $json['name'] = strtr(DIRECTORY_SEPARATOR, '-', $path);
-            }
-            if (!isset($json['version'])) {
-                $json['version'] = '1.0.0';
-            }
+            $json = $this->readPackageJson($path);
             $package = $this->loader->load($json);
 
             $root->setRequires($this->mergeLinks(
@@ -187,23 +180,7 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
             ));
 
             if (isset($json['repositories'])) {
-                $repoManager = $this->composer->getRepositoryManager();
-                $newRepos = array();
-
-                foreach ($json['repositories'] as $repoJson) {
-                    $this->debug("Adding {$repoJson['type']} repository");
-                    $repo = $repoManager->createRepository(
-                        $repoJson['type'],
-                        $repoJson
-                    );
-                    $repoManager->addRepository($repo);
-                    $newRepos[] = $repo;
-                }
-
-                $root->setRepositories(array_merge(
-                    $newRepos,
-                    $root->getRepositories()
-                ));
+                $this->addRepositories($json['repositories'], $root);
             }
 
             if ($package->getSuggests()) {
@@ -213,6 +190,60 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
                 ));
             }
         }
+    }
+
+    /**
+     * Read the contents of a composer.json style file into an array.
+     *
+     * The package contents are fixed up to be usable to create a Package
+     * object by providing dummy "name" and "version" values if they have not
+     * been provided in the file. This is consistent with the default root
+     * package loading behavior of Composer.
+     *
+     * @param string $path
+     * @return array
+     */
+    protected function readPackageJson($path)
+    {
+        $file = new JsonFile($path);
+        $json = $file->read();
+        if (!isset($json['name'])) {
+            $json['name'] = strtr(DIRECTORY_SEPARATOR, '-', $path);
+        }
+        if (!isset($json['version'])) {
+            $json['version'] = '1.0.0';
+        }
+        return $json;
+    }
+
+    /**
+     * Add a collection of repositories described by the given configuration
+     * to the given package and the global repository manager.
+     *
+     * @param array $repositories
+     * @param RootPackageInterface $root
+     */
+    protected function addRepositories(
+        array $repositories,
+        RootPackageInterface $root
+    ) {
+        $repoManager = $this->composer->getRepositoryManager();
+        $newRepos = array();
+
+        foreach ($repositories as $repoJson) {
+            $this->debug("Adding {$repoJson['type']} repository");
+            $repo = $repoManager->createRepository(
+                $repoJson['type'],
+                $repoJson
+            );
+            $repoManager->addRepository($repo);
+            $newRepos[] = $repo;
+        }
+
+        $root->setRepositories(array_merge(
+            $newRepos,
+            $root->getRepositories()
+        ));
     }
 
     /**
