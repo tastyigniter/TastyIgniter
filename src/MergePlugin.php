@@ -161,11 +161,11 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     protected function mergePackages(array $config)
     {
         $root = $this->composer->getPackage();
-        foreach (array_reduce(
+        foreach (array_unique(array_reduce(
             array_map('glob', $config['include']),
             'array_merge',
             array()
-        ) as $path) {
+        )) as $path) {
             $this->debug("Loading <comment>{$path}</comment>...");
             $json = $this->readPackageJson($path);
             $package = $this->loader->load($json);
