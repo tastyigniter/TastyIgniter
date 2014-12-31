@@ -15,7 +15,6 @@ use Composer\Installer\InstallerEvent;
 use Composer\Installer\InstallerEvents;
 use Composer\IO\IOInterface;
 use Composer\Package\BasePackage;
-use Composer\Package\PackageInterface;
 use Composer\Package\RootPackage;
 use Composer\Script\CommandEvent;
 use Composer\Script\ScriptEvents;
