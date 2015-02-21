@@ -35,7 +35,10 @@ Usage
 The `include` key can specify either a single value or an array of values.
 Each value is treated as a glob() pattern identifying additional composer.json
 style configuration files to merge into the configuration for the current
-Composer execution.
+Composer execution. By default the merge plugin is recursive, if an included
+file also has a "merge-plugin" section it will also be processed. This 
+functionality can be disabled by setting `"recurse": false` inside the 
+"merge-plugin" section.
 
 The "require", "require-dev", "repositories" and "suggest" sections of the
 found configuration files will be merged into the root package configuration

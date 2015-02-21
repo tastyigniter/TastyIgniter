@@ -90,6 +90,13 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     protected $devMode;
 
     /**
+     * Whether to recursively include dependencies
+     *
+     * @var bool $recurse
+     */
+    protected $recurse = true;
+
+    /**
      * Files that have already been processed
      *
      * @var string[] $loadedFiles
@@ -127,6 +134,9 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     public function onInstallOrUpdate(CommandEvent $event)
     {
         $config = $this->readConfig($this->composer->getPackage());
+        if (isset($config['recurse'])) {
+            $this->recurse = (bool)$config['recurse'];
+        }
         if ($config['include']) {
             $this->loader = new ArrayLoader();
             $this->duplicateLinks = array(
@@ -207,7 +217,7 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
             ));
         }
 
-        if (isset($json['extra']['merge-plugin'])) {
+        if ($this->recurse && isset($json['extra']['merge-plugin'])) {
             $this->mergePackages($json['extra']['merge-plugin']);
         }
     }
