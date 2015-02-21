@@ -131,6 +131,41 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
         $this->assertEquals(0, count($extraInstalls));
     }
 
+    /**
+     * Given a root package with no requires that disables recursion
+     *   and a composer.local.json with one require, which includes a composer.local.2.json
+     *   and a composer.local.2.json with one additional require
+     * When the plugin is run
+     * Then the root package should inherit the first require
+     *   and no modifications should be made by the pre-dependency hook.
+     */
+    public function testRecursiveIncludesDisabled()
+    {
+        $dir = $this->fixtureDir(__FUNCTION__);
+
+        $root = $this->rootFromJson("{$dir}/composer.json");
+
+        $packages = array();
+        $root->setRequires(Argument::type('array'))->will(
+            function ($args) use (&$packages) {
+                $packages = array_merge($packages, $args[0]);
+            }
+        );
+
+
+        $root->getDevRequires()->shouldNotBeCalled();
+        $root->getRepositories()->shouldNotBeCalled();
+        $root->getSuggests()->shouldNotBeCalled();
+
+        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
+
+        $this->assertArrayHasKey('foo', $packages);
+        $this->assertArrayNotHasKey('monolog/monolog', $packages);
+
+        $this->assertEquals(0, count($extraInstalls));
+    }
+
+
 
     /**
      * Given a root package with requires
