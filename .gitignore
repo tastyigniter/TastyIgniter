@@ -1,4 +1,5 @@
 .DS_Store
+.idea
 
 system/tastyigniter/cache/*
 !system/tastyigniter/cache/index.html
@@ -11,4 +12,5 @@ system/tastyigniter/logs/*
 assets/images/thumbs/*
 
 assets/images/data/*
+!assets/images/data/index.html
 !assets/images/data/flags
