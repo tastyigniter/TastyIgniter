@@ -23,7 +23,7 @@ tinymce.PluginManager.add('pagebreak', function(editor) {
 	// Register commands
 	editor.addCommand('mcePageBreak', function() {
 		if (editor.settings.pagebreak_split_block) {
-			editor.insertContent('<p>' + pageBreakPlaceHolderHtml + '</p>');
+			editor.insertContent('<p>' + pageBreakPlaceHolderHtml + '');
 		} else {
 			editor.insertContent(pageBreakPlaceHolderHtml);
 		}

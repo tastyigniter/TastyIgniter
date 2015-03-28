@@ -259,7 +259,7 @@ define("tinymce/Editor", [
 		 * @type tinymce.dom.DomQuery
 		 * @example
 		 * tinymce.activeEditor.$('p').css('color', 'red');
-		 * tinymce.activeEditor.$().append('<p>new</p>');
+		 * tinymce.activeEditor.$().append('<p>new');
 		 */
 		self.$ = DomQuery.overrideDefaults(function() {
 			return {
