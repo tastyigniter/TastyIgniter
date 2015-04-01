@@ -327,6 +327,9 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
         $newRepos = array();
 
         foreach ($repositories as $repoJson) {
+            if (!isset($repoJson['type'])) {
+                continue;
+            }
             $this->debug("Adding {$repoJson['type']} repository");
             $repo = $repoManager->createRepository(
                 $repoJson['type'],
