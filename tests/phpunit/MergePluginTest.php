@@ -359,6 +359,7 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
             InstallerEvents::PRE_DEPENDENCIES_SOLVING,
             $this->composer->reveal(),
             $this->io->reveal(),
+            true, //dev mode
             $this->prophesize('Composer\DependencyResolver\PolicyInterface')->reveal(),
             $this->prophesize('Composer\DependencyResolver\Pool')->reveal(),
             $this->prophesize('Composer\Repository\CompositeRepository')->reveal(),
