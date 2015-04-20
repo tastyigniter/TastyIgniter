@@ -404,7 +404,14 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     protected function debug($message)
     {
         if ($this->inputOutput->isVerbose()) {
-            $this->inputOutput->write("  <info>[merge]</info> {$message}");
+            $message = "  <info>[merge]</info> {$message}";
+
+            if (method_exists($this->inputOutput, 'writeError')) {
+                $this->inputOutput->writeError($message);
+            } else {
+                // Backwards compatiblity for Composer before cb336a5
+                $this->inputOutput->write($message);
+            }
         }
     }
 }
