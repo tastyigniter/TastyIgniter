@@ -23,7 +23,7 @@ use Composer\Package\Loader\ArrayLoader;
 use Composer\Package\RootPackageInterface;
 use Composer\Package\Version\VersionParser;
 use Composer\Plugin\PluginInterface;
-use Composer\Script\CommandEvent;
+use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
 
 /**
@@ -129,9 +129,9 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
      * for "merge-patterns" in the "extra" data and merging package contents
      * if found.
      *
-     * @param CommandEvent $event
+     * @param Event $event
      */
-    public function onInstallOrUpdate(CommandEvent $event)
+    public function onInstallOrUpdate(Event $event)
     {
         $config = $this->readConfig($this->composer->getPackage());
         if (isset($config['recurse'])) {
