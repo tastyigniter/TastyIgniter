@@ -5,9 +5,9 @@ $active_record = TRUE;
 
 $db['default']['dsn'] = '';
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'workbench';
-$db['default']['password'] = '9HPTnqu3pLFchdWd';
-$db['default']['database'] = 'tastyigniter_1_3';
+$db['default']['username'] = '';
+$db['default']['password'] = '';
+$db['default']['database'] = '';
 $db['default']['dbdriver'] = 'mysqli';
 $db['default']['dbprefix'] = 'ti_';
 $db['default']['pconnect'] = TRUE;
