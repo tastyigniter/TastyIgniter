@@ -1,0 +1,12 @@
+{
+	"autoload": {
+		"psr-4": {
+			"Kittens\\": "everywhere/"
+		}
+	},
+	"extra": {
+		"merge-plugin": {
+			"include": "extensions/*/composer.json"
+		}
+	}
+}

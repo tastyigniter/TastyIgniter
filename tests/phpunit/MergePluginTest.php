@@ -57,13 +57,14 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
     public function testSubscribedEvents()
     {
         $subscriptions = MergePlugin::getSubscribedEvents();
-        $this->assertEquals(3, count($subscriptions));
+        $this->assertEquals(4, count($subscriptions));
         $this->assertArrayHasKey(
             InstallerEvents::PRE_DEPENDENCIES_SOLVING,
             $subscriptions
         );
         $this->assertArrayHasKey(ScriptEvents::PRE_INSTALL_CMD, $subscriptions);
         $this->assertArrayHasKey(ScriptEvents::PRE_UPDATE_CMD, $subscriptions);
+        $this->assertArrayHasKey(ScriptEvents::PRE_AUTOLOAD_DUMP, $subscriptions);
     }
 
     /**
@@ -327,6 +328,39 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
         $this->assertEquals(0, count($extraInstalls));
     }
 
+    public function testMergedAutoload()
+    {
+        $that = $this;
+        $dir = $this->fixtureDir(__FUNCTION__);
+        $root = $this->rootFromJson("{$dir}/composer.json");
+
+        $root->getAutoload()->shouldBeCalled();
+        $root->getRequires()->shouldNotBeCalled();
+        $root->setAutoload(Argument::type('array'))->will(
+            function ($args) use ($that) {
+                $that->assertEquals(
+                    array(
+                        'psr-4' => array(
+                            'Kittens\\' => array( 'everywhere/', 'extensions/Foo/a/', 'extensions/Foo/b/' ),
+                            'Cats\\' => 'extensions/Foo/src/'
+                        ),
+                        'psr-0' => array(
+                            'UniqueGlobalClass' => 'extensions/Foo/',
+                            '' => 'extensions/Foo/fallback/'
+                        ),
+                        'files' => array( 'extensions/Foo/SemanticMediaWiki.php' ),
+                        'classmap' => array( 'extensions/Foo/SemanticMediaWiki.hooks.php', 'extensions/Foo/includes/' ),
+                    ),
+                    $args[0]
+                );
+            }
+        );
+
+        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
+
+        $this->assertEquals(0, count($extraInstalls));
+    }
+
     /**
      * @param RootPackage $package
      * @param string $directory Working directory for composer run
@@ -395,6 +429,7 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
                 'require-dev' => array(),
                 'suggest' => array(),
                 'extra' => array(),
+                'autoload' => array(),
             ),
             $json
         );
@@ -405,6 +440,7 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
         $root->getRepositories()->willReturn($data['repositories']);
         $root->getSuggests()->willReturn($data['suggest']);
         $root->getExtra()->willReturn($data['extra'])->shouldBeCalled();
+        $root->getAutoload()->willReturn($data['autoload']);
 
         $root->getStabilityFlags()->willReturn(array());
         $root->setStabilityFlags(Argument::type('array'))->will(
