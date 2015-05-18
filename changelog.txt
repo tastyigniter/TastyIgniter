@@ -2,12 +2,14 @@ ADDED:
 Session library now using 'CI' PHP native session
 root_url() method to return site root url
 Themes customization:
-	New method to template libary to load theme configuration file
+	New method to template library to load theme configuration file
 	theme_config.php configuration file is now required in theme root directory to install/customize themes.
-	New admin_helper methods (createFields() and createTable()) to create HTML fields and table from theme configuration file.
-	admin_helper method validateFields to validate post fields against set rules from theme configuration file.
+	'customize' key required in $theme configuration array, in other to enable/load customization.
+	Section array items ('title', 'desc', 'icon', 'fields')
+	fields array items ('id', 'type') ('type' => 'hidden|text|password|textarea|group|color|media|checkbox|radio|dropdown|upload')
+    admin_theme_helper methods moved to Customizer class
 
-****Menu Category hierarchy: with parent and as many child levels
+Menu Category hierarchy: with parent and as many child levels
 Ext_Controller
 Extensions::options to load extensions admin options page
 New column 'status' added to extensions table, to indicate whether extension is installed/uninstalled and to keep extension data in database after uninstallation.
@@ -18,15 +20,20 @@ Permalinks:
 	added controller attribute to improve routing
 Notifications System:
 	New database table schema for notifications
-
+Added order and reservation status color
+Activity:
+    page views count per ip/customer
 
 
 
 CHANGES:
-Admin, Main and Setup now seperated and shares one system components
-Both admin and main application controllers now extends Admin_Controller and Main_Controller respectively instead of CI_Controller
+Admin, Main and Setup now separated and shares one system components
+    CI_Controller now has subclass Base_Controller
+    Base_Controller has subclasses Admin_Controller and Ext_Controller, Main_Controller
+    Both admin and main application controllers now extends Admin_Controller and Main_Controller respectively instead of CI_Controller
 ***Application controllers now organized in folder, (this affects URI routing)
 Move encryption_key config item from database to config file.
+Move log_path config item from database to config file.
 ***modules_locations config item now set from index.php instead of config file
 Settings library now sets config items from database only if settings database table exists
 Base controller now checks if session database table exists before using database with session
@@ -35,6 +42,7 @@ Flash alerts and info now uses this->alert->success/danger/error to add alert me
 Renamed assets/download to assets/downloads (notice the downloads)
 Improved informative database backup with number of rows and displayed
 Renamed template library method regions() to setPartials()
+Rename template library setLinkTag() to setStyleTag()
 Default admin_theme and main_theme config items now grouped into default_themes array()
 Extensions root folder moved to root folder
 Extensions sub-folders structure re-arranged:
@@ -46,17 +54,39 @@ Extension class methods moved to Extension_model class
 Extension class now extensible to load admin backend module option page
 Extension admin options class must extend Extension class
 Extensions class now extends Ext_Controller instead of MX_Controller and Admin_options extends Extension
+
 Renamed permalink to USER-friendly slug also column in permalinks table
 Reviews can now be added on reservations and orders. column order_id changed to sale_id and new column sale_type added to differentiate order reviews from reservations reviews.
 Status History:
 	changed status_history database table column from assigned_id to assignee_id
 	changed reservations database table column from staff_id to assignee_id
 	added assignee_id column to orders database table
+Activity:
+    activity timeout changed to activity online timeout on settings page
+    activity archive changed to activity archive timeout on settings page
+    IP blacklist removed, to be added back in next version
 
-
+Moved admin login auth and permission check from controllers to admin base controllers
+Added referrer_url to ti_url_helper, which will return the user referral url.
+Changed config('maintenance_page') to config('maintenance_message') and use show_error() instead of loading controller.
+Improved banners and banners_module.... move dimension from banners and banners_module.
 
 
 TO-DO:
-Improve Template library, themes, regions/partials
 Improve site_url and redirect() uri re-routing
-Improve image manager styles responsiveness
+Improve image manager styles responsiveness and remove irrelevant options
+Customer Activity IP blacklist
+add functionality to add multiple banners in module (jst like layout tables.)
+Improve admin controllers to remove duplicate methods
+
+Fancy checkbox bootstrap plugin
+
+
+UPDATE SQL FILE:
+update extensions table
+update uri_routes table, if possible remove completely.
+
+
+
+GitHub done:
+Remove duplicate model classes
