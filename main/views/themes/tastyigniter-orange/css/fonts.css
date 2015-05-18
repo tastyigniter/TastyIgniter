@@ -1,0 +1,76 @@
+@font-face {
+    font-family: 'OpenSans-Regular';
+    src: url('../fonts/Open_Sans/OpenSans-Regular.eot');
+    src: url('../fonts/Open_Sans/OpenSans-Regular.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/Open_Sans/OpenSans-Regular.woff') format('woff'),
+    url('../fonts/Open_Sans/OpenSans-Regular.ttf') format('truetype'),
+    url('../fonts/Open_Sans/OpenSans-Regular.svg#open_sansregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'OpenSans-Bold';
+    src: url('../fonts/Open_Sans/OpenSans-Bold.eot');
+    src: url('../fonts/Open_Sans/OpenSans-Bold.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/Open_Sans/OpenSans-Bold.woff') format('woff'),
+    url('../fonts/Open_Sans/OpenSans-Bold.ttf') format('truetype'),
+    url('../fonts/Open_Sans/OpenSans-Bold.svg#OpenSans-Bold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'OpenSans-Light';
+    src: url('../fonts/Open_Sans/OpenSans-Light.eot');
+    src: url('../fonts/Open_Sans/OpenSans-Light.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/Open_Sans/OpenSans-Light.woff') format('woff'),
+    url('../fonts/Open_Sans/OpenSans-Light.ttf') format('truetype'),
+    url('../fonts/Open_Sans/OpenSans-Light.svg#OpenSans-Light') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'OpenSans-Semibold';
+    src: url('../fonts/Open_Sans/OpenSans-Semibold.eot');
+    src: url('../fonts/Open_Sans/OpenSans-Semibold.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Open_Sans/OpenSans-Semibold.woff') format('woff'),
+         url('../fonts/Open_Sans/OpenSans-Semibold.ttf') format('truetype'),
+         url('../fonts/Open_Sans/OpenSans-Semibold.svg#herr_von_muellerhoffregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Oxygen-Regular';
+    src: url('../fonts/Oxygen/Oxygen-Regular.eot');
+    src: url('../fonts/Oxygen/Oxygen-Regular.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/Oxygen/Oxygen-Regular.woff') format('woff'),
+    url('../fonts/Oxygen/Oxygen-Regular.ttf') format('truetype'),
+    url('../fonts/Oxygen/Oxygen-Regular.svg#Oxygen-Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Oxygen-Bold';
+    src: url('../fonts/Oxygen/Oxygen-Bold.eot');
+    src: url('../fonts/Oxygen/Oxygen-Bold.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/Oxygen/Oxygen-Bold.woff') format('woff'),
+    url('../fonts/Oxygen/Oxygen-Bold.ttf') format('truetype'),
+    url('../fonts/Oxygen/Oxygen-Bold.svg#Oxygen-Bold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Oxygen-Light';
+    src: url('../fonts/Oxygen/Oxygen-Light.eot');
+    src: url('../fonts/Oxygen/Oxygen-Light.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/Oxygen/Oxygen-Light.woff') format('woff'),
+    url('../fonts/Oxygen/Oxygen-Light.ttf') format('truetype'),
+    url('../fonts/Oxygen/Oxygen-Light.svg#Oxygen-Light') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}

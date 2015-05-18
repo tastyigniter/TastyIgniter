@@ -25,7 +25,7 @@
 define("tinymce/html/Schema", [
 	"tinymce/util/Tools"
 ], function(Tools) {
-	var mapCache = {};
+	var mapCache = {}, dummyObj = {};
 	var makeMap = Tools.makeMap, each = Tools.each, extend = Tools.extend, explode = Tools.explode, inArray = Tools.inArray;
 
 	function split(items, delim) {
@@ -46,11 +46,11 @@ define("tinymce/html/Schema", [
 		function add(name, attributes, children) {
 			var ni, i, attributesOrder, args = arguments;
 
-			function arrayToMap(array) {
+			function arrayToMap(array, obj) {
 				var map = {}, i, l;
 
 				for (i = 0, l = array.length; i < l; i++) {
-					map[array[i]] = {};
+					map[array[i]] = obj || {};
 				}
 
 				return map;
@@ -59,13 +59,13 @@ define("tinymce/html/Schema", [
 			children = children || [];
 			attributes = attributes || "";
 
-			if (typeof(children) === "string") {
+			if (typeof children === "string") {
 				children = split(children);
 			}
 
 			// Split string children
 			for (i = 3; i < args.length; i++) {
-				if (typeof(args[i]) === "string") {
+				if (typeof args[i] === "string") {
 					args[i] = split(args[i]);
 				}
 
@@ -79,7 +79,7 @@ define("tinymce/html/Schema", [
 				schema[name[ni]] = {
 					attributes: arrayToMap(attributesOrder),
 					attributesOrder: attributesOrder,
-					children: arrayToMap(children)
+					children: arrayToMap(children, dummyObj)
 				};
 			}
 		}
@@ -185,7 +185,7 @@ define("tinymce/html/Schema", [
 		add("a", "href target rel media hreflang type", phrasingContent);
 		add("q", "cite", phrasingContent);
 		add("ins del", "cite datetime", flowContent);
-		add("img", "src alt usemap ismap width height");
+		add("img", "src sizes srcset alt usemap ismap width height");
 		add("iframe", "src name width height", flowContent);
 		add("embed", "src type width height");
 		add("object", "data type typemustmatch name usemap form width height", flowContent, "param");
@@ -224,7 +224,8 @@ define("tinymce/html/Schema", [
 			add("video", "src crossorigin poster preload autoplay mediagroup loop " +
 				"muted controls width height buffered", flowContent, "track source");
 			add("audio", "src crossorigin preload autoplay mediagroup loop muted controls buffered volume", flowContent, "track source");
-			add("source", "src type media");
+			add("picture", "", "img source");
+			add("source", "src srcset type media sizes");
 			add("track", "kind src srclang label default");
 			add("datalist", "", phrasingContent, "option");
 			add("article section nav aside header footer", "", flowContent);
@@ -328,7 +329,7 @@ define("tinymce/html/Schema", [
 
 			// Convert styles into a rule list
 			each(value, function(value, key) {
-				styles[key] = mode == 'map' ? makeMap(value, /[, ]/) : explode(value, /[, ]/);
+				styles[key] = styles[key.toUpperCase()] = mode == 'map' ? makeMap(value, /[, ]/) : explode(value, /[, ]/);
 			});
 		}
 
@@ -345,7 +346,7 @@ define("tinymce/html/Schema", [
 	return function(settings) {
 		var self = this, elements = {}, children = {}, patternElements = [], validStyles, invalidStyles, schemaItems;
 		var whiteSpaceElementsMap, selfClosingElementsMap, shortEndedElementsMap, boolAttrMap, validClasses;
-		var blockElementsMap, nonEmptyElementsMap, textBlockElementsMap, textInlineElementsMap;
+		var blockElementsMap, nonEmptyElementsMap, moveCaretBeforeOnEnterElementsMap, textBlockElementsMap, textInlineElementsMap;
 		var customElementsMap = {}, specialElements = {};
 
 		// Creates an lookup table map object for the specified option or the default value
@@ -390,6 +391,7 @@ define("tinymce/html/Schema", [
 		boolAttrMap = createLookupTable('boolean_attributes', 'checked compact declare defer disabled ismap multiple nohref noresize ' +
 			'noshade nowrap readonly selected autoplay loop controls');
 		nonEmptyElementsMap = createLookupTable('non_empty_elements', 'td th iframe video audio object script', shortEndedElementsMap);
+		moveCaretBeforeOnEnterElementsMap = createLookupTable('move_caret_before_on_enter_elements', 'table', nonEmptyElementsMap);
 		textBlockElementsMap = createLookupTable('text_block_elements', 'h1 h2 h3 h4 h5 h6 p div address pre form ' +
 						'blockquote center dir fieldset header footer article section hgroup aside nav figure');
 		blockElementsMap = createLookupTable('block_elements', 'hr table tbody thead tfoot ' +
@@ -409,16 +411,16 @@ define("tinymce/html/Schema", [
 
 		// Parses the specified valid_elements string and adds to the current rules
 		// This function is a bit hard to read since it's heavily optimized for speed
-		function addValidElements(valid_elements) {
+		function addValidElements(validElements) {
 			var ei, el, ai, al, matches, element, attr, attrData, elementName, attrName, attrType, attributes, attributesOrder,
 				prefix, outputName, globalAttributes, globalAttributesOrder, key, value,
 				elementRuleRegExp = /^([#+\-])?([^\[!\/]+)(?:\/([^\[!]+))?(?:(!?)\[([^\]]+)\])?$/,
 				attrRuleRegExp = /^([!\-])?(\w+::\w+|[^=:<]+)?(?:([=:<])(.*))?$/,
 				hasPatternsRegExp = /[*?+]/;
 
-			if (valid_elements) {
+			if (validElements) {
 				// Split valid elements into an array with rules
-				valid_elements = split(valid_elements, ',');
+				validElements = split(validElements, ',');
 
 				if (elements['@']) {
 					globalAttributes = elements['@'].attributes;
@@ -426,9 +428,9 @@ define("tinymce/html/Schema", [
 				}
 
 				// Loop all rules
-				for (ei = 0, el = valid_elements.length; ei < el; ei++) {
+				for (ei = 0, el = validElements.length; ei < el; ei++) {
 					// Parse element rule
-					matches = elementRuleRegExp.exec(valid_elements[ei]);
+					matches = elementRuleRegExp.exec(validElements[ei]);
 					if (matches) {
 						// Setup local names for matches
 						prefix = matches[1];
@@ -558,11 +560,11 @@ define("tinymce/html/Schema", [
 			}
 		}
 
-		function setValidElements(valid_elements) {
+		function setValidElements(validElements) {
 			elements = {};
 			patternElements = [];
 
-			addValidElements(valid_elements);
+			addValidElements(validElements);
 
 			each(schemaItems, function(element, name) {
 				children[name] = element.children;
@@ -570,14 +572,14 @@ define("tinymce/html/Schema", [
 		}
 
 		// Adds custom non HTML elements to the schema
-		function addCustomElements(custom_elements) {
+		function addCustomElements(customElements) {
 			var customElementRegExp = /^(~)?(.+)$/;
 
-			if (custom_elements) {
+			if (customElements) {
 				// Flush cached items since we are altering the default maps
 				mapCache.text_block_elements = mapCache.block_elements = null;
 
-				each(split(custom_elements, ','), function(rule) {
+				each(split(customElements, ','), function(rule) {
 					var matches = customElementRegExp.exec(rule),
 						inline = matches[1] === '~',
 						cloneName = inline ? 'span' : 'div',
@@ -615,11 +617,11 @@ define("tinymce/html/Schema", [
 		}
 
 		// Adds valid children to the schema object
-		function addValidChildren(valid_children) {
+		function addValidChildren(validChildren) {
 			var childRuleRegExp = /^([+\-]?)(\w+)\[([^\]]+)\]$/;
 
-			if (valid_children) {
-				each(split(valid_children, ','), function(rule) {
+			if (validChildren) {
+				each(split(validChildren, ','), function(rule) {
 					var matches = childRuleRegExp.exec(rule), parent, prefix;
 
 					if (matches) {
@@ -849,6 +851,17 @@ define("tinymce/html/Schema", [
 		 */
 		self.getNonEmptyElements = function() {
 			return nonEmptyElementsMap;
+		};
+
+		/**
+		 * Returns a map with elements that the caret should be moved in front of after enter is
+		 * pressed
+		 *
+		 * @method getMoveCaretBeforeOnEnterElements
+		 * @return {Object} Name/value lookup map for elements to place the caret in front of.
+		 */
+		self.getMoveCaretBeforeOnEnterElements = function() {
+			return moveCaretBeforeOnEnterElementsMap;
 		};
 
 		/**

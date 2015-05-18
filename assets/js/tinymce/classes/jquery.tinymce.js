@@ -13,11 +13,12 @@
 (function($) {
 	var undef,
 		lazyLoading,
+		patchApplied,
 		delayedInits = [],
 		win = window;
 
 	$.fn.tinymce = function(settings) {
-		var self = this, url, base, lang, suffix = "", patchApplied;
+		var self = this, url, base, lang, suffix = "";
 
 		// No match then just ignore the call
 		if (!self.length) {
@@ -69,7 +70,7 @@
 					if (oninit) {
 						// Fire the oninit event ones each editor instance is initialized
 						if (++initCount == editors.length) {
-							if (typeof(func) === "string") {
+							if (typeof func === "string") {
 								scope = (func.indexOf(".") === -1) ? null : tinymce.resolve(func.replace(/\.\w+$/, ""));
 								func = tinymce.resolve(func);
 							}
@@ -183,7 +184,17 @@
 	// it's now possible to use things like $('*:tinymce') to get all TinyMCE bound elements.
 	$.extend($.expr[":"], {
 		tinymce: function(e) {
-			return !!(e.id && "tinymce" in window && tinymce.get(e.id));
+			var editor;
+
+			if (e.id && "tinymce" in window) {
+				editor = tinymce.get(e.id);
+
+				if (editor && editor.editorManager === tinymce) {
+					return true;
+				}
+			}
+
+			return false;
 		}
 	});
 
@@ -309,13 +320,15 @@
 				}
 
 				if (value !== undef) {
-					self.filter(":tinymce").each(function(i, node) {
-						var ed = tinyMCEInstance(node);
+					if (typeof value === "string") {
+						self.filter(":tinymce").each(function(i, node) {
+							var ed = tinyMCEInstance(node);
 
-						if (ed) {
-							ed.setContent(prepend ? value + ed.getContent() : ed.getContent() + value);
-						}
-					});
+							if (ed) {
+								ed.setContent(prepend ? value + ed.getContent() : ed.getContent() + value);
+							}
+						});
+					}
 
 					origFn.apply(self.not(":tinymce"), arguments);
 

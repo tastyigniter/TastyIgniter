@@ -239,9 +239,10 @@ define("tinymce/dom/Selection", [
 		 * node the parent element will be returned.
 		 *
 		 * @method getStart
+		 * @param {Boolean} real Optional state to get the real parent when the selection is collapsed not the closest element.
 		 * @return {Element} Start element of selection range.
 		 */
-		getStart: function() {
+		getStart: function(real) {
 			var self = this, rng = self.getRng(), startElement, parentElement, checkRng, node;
 
 			if (rng.duplicate || rng.item) {
@@ -273,7 +274,9 @@ define("tinymce/dom/Selection", [
 				startElement = rng.startContainer;
 
 				if (startElement.nodeType == 1 && startElement.hasChildNodes()) {
-					startElement = startElement.childNodes[Math.min(startElement.childNodes.length - 1, rng.startOffset)];
+					if (!real || !rng.collapsed) {
+						startElement = startElement.childNodes[Math.min(startElement.childNodes.length - 1, rng.startOffset)];
+					}
 				}
 
 				if (startElement && startElement.nodeType == 3) {
@@ -289,9 +292,10 @@ define("tinymce/dom/Selection", [
 		 * node the parent element will be returned.
 		 *
 		 * @method getEnd
+		 * @param {Boolean} real Optional state to get the real parent when the selection is collapsed not the closest element.
 		 * @return {Element} End element of selection range.
 		 */
-		getEnd: function() {
+		getEnd: function(real) {
 			var self = this, rng = self.getRng(), endElement, endOffset;
 
 			if (rng.duplicate || rng.item) {
@@ -316,7 +320,9 @@ define("tinymce/dom/Selection", [
 				endOffset = rng.endOffset;
 
 				if (endElement.nodeType == 1 && endElement.hasChildNodes()) {
-					endElement = endElement.childNodes[endOffset > 0 ? endOffset - 1 : endOffset];
+					if (!real || !rng.collapsed) {
+						endElement = endElement.childNodes[endOffset > 0 ? endOffset - 1 : endOffset];
+					}
 				}
 
 				if (endElement && endElement.nodeType == 3) {
@@ -430,9 +436,9 @@ define("tinymce/dom/Selection", [
 		 * Collapse the selection to start or end of range.
 		 *
 		 * @method collapse
-		 * @param {Boolean} to_start Optional boolean state if to collapse to end or not. Defaults to start.
+		 * @param {Boolean} toStart Optional boolean state if to collapse to end or not. Defaults to start.
 		 */
-		collapse: function(to_start) {
+		collapse: function(toStart) {
 			var self = this, rng = self.getRng(), node;
 
 			// Control range on IE
@@ -442,7 +448,7 @@ define("tinymce/dom/Selection", [
 				rng.moveToElementText(node);
 			}
 
-			rng.collapse(!!to_start);
+			rng.collapse(!!toStart);
 			self.setRng(rng);
 		},
 
@@ -470,7 +476,7 @@ define("tinymce/dom/Selection", [
 		getRng: function(w3c) {
 			var self = this, selection, rng, elm, doc = self.win.document, ieRng;
 
-			function tryCompareBounderyPoints(how, sourceRange, destinationRange) {
+			function tryCompareBoundaryPoints(how, sourceRange, destinationRange) {
 				try {
 					return sourceRange.compareBoundaryPoints(how, destinationRange);
 				} catch (ex) {
@@ -550,8 +556,8 @@ define("tinymce/dom/Selection", [
 			}
 
 			if (self.selectedRange && self.explicitRange) {
-				if (tryCompareBounderyPoints(rng.START_TO_START, rng, self.selectedRange) === 0 &&
-					tryCompareBounderyPoints(rng.END_TO_END, rng, self.selectedRange) === 0) {
+				if (tryCompareBoundaryPoints(rng.START_TO_START, rng, self.selectedRange) === 0 &&
+					tryCompareBoundaryPoints(rng.END_TO_END, rng, self.selectedRange) === 0) {
 					// Safari, Opera and Chrome only ever select text which causes the range to change.
 					// This lets us use the originally set range if the selection hasn't been changed by the user.
 					rng = self.explicitRange;
@@ -572,6 +578,10 @@ define("tinymce/dom/Selection", [
 		 */
 		setRng: function(rng, forward) {
 			var self = this, sel;
+
+			if (!rng) {
+				return;
+			}
 
 			// Is IE specific range
 			if (rng.select) {
@@ -772,7 +782,7 @@ define("tinymce/dom/Selection", [
 		normalize: function() {
 			var self = this, rng = self.getRng();
 
-			if (!isIE && new RangeUtils(self.dom).normalize(rng)) {
+			if (Env.range && new RangeUtils(self.dom).normalize(rng)) {
 				self.setRng(rng, self.isForward());
 			}
 
@@ -892,6 +902,30 @@ define("tinymce/dom/Selection", [
 			}
 		},
 
+		placeCaretAt: function(clientX, clientY) {
+			var doc = this.editor.getDoc(), rng, point;
+
+			if (doc.caretPositionFromPoint) {
+				point = doc.caretPositionFromPoint(clientX, clientY);
+				rng = doc.createRange();
+				rng.setStart(point.offsetNode, point.offset);
+				rng.collapse(true);
+			} else if (doc.caretRangeFromPoint) {
+				rng = doc.caretRangeFromPoint(clientX, clientY);
+			} else if (doc.body.createTextRange) {
+				rng = doc.body.createTextRange();
+
+				try {
+					rng.moveToPoint(clientX, clientY);
+					rng.collapse(true);
+				} catch (ex) {
+					rng.collapse(clientY < doc.body.clientHeight);
+				}
+			}
+
+			this.setRng(rng);
+		},
+
 		_moveEndPoint: function(rng, node, start) {
 			var root = node, walker = new TreeWalker(node, root);
 			var nonEmptyElementsMap = this.dom.schema.getNonEmptyElements();
@@ -908,8 +942,8 @@ define("tinymce/dom/Selection", [
 					return;
 				}
 
-				// BR/IMG/INPUT elements
-				if (nonEmptyElementsMap[node.nodeName]) {
+				// BR/IMG/INPUT elements but not table cells
+				if (nonEmptyElementsMap[node.nodeName] && !/^(TD|TH)$/.test(node.nodeName)) {
 					if (start) {
 						rng.setStartBefore(node);
 					} else {

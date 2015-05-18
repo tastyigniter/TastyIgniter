@@ -58,16 +58,14 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			'Spanish=es,Swedish=sv';
 
 		languageMenuItems = buildMenuItems('Language',
-			Tools.map(languagesString.split(','),
-				function(lang_pair) {
-					var lang = lang_pair.split('=');
+			Tools.map(languagesString.split(','), function(langPair) {
+				langPair = langPair.split('=');
 
-					return {
-						name: lang[0],
-						value: lang[1]
-					};
-				}
-			)
+				return {
+					name: langPair[0],
+					value: langPair[1]
+				};
+			})
 		);
 
 		function isEmpty(obj) {
@@ -109,9 +107,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 
 				{text: 'Ignore all', onclick: function() {
 					ignoreWord(word, spans, true);
-				}},
-
-				{text: 'Finish', onclick: finish}
+				}}
 			]);
 
 			// Render menu
@@ -159,7 +155,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			return editor.getParam('spellchecker_wordchar_pattern') || new RegExp("[^" +
 				"\\s!\"#$%&()*+,-./:;<=>?@[\\]^_{|}`" +
 				"\u00a7\u00a9\u00ab\u00ae\u00b1\u00b6\u00b7\u00b8\u00bb" +
-				"\u00bc\u00bd\u00be\u00bf\u00d7\u00f7\u00a4\u201d\u201c\u201e" +
+				"\u00bc\u00bd\u00be\u00bf\u00d7\u00f7\u00a4\u201d\u201c\u201e\u00a0\u2002\u2003\u2009" +
 			"]+", "g");
 		}
 
@@ -218,42 +214,6 @@ define("tinymce/spellcheckerplugin/Plugin", [
 				finish();
 			}
 
-			started = true;
-
-			function doneCallback(data) {
-				var suggestions;
-
-				if (data.words) {
-					hasDictionarySupport = !!data.dictionary;
-					suggestions = data.words;
-				} else {
-					// Fallback to old format
-					suggestions = data;
-				}
-
-				editor.setProgressState(false);
-
-				if (isEmpty(suggestions)) {
-					editor.windowManager.alert('No misspellings found');
-					started = false;
-					return;
-				}
-
-				lastSuggestions = suggestions;
-
-				getTextMatcher().find(getWordCharPattern()).filter(function(match) {
-					return !!suggestions[match.text];
-				}).wrap(function(match) {
-					return editor.dom.create('span', {
-						"class": 'mce-spellchecker-word',
-						"data-mce-bogus": 1,
-						"data-mce-word": match.text
-					});
-				});
-
-				editor.fire('SpellcheckStart');
-			}
-
 			function errorCallback(message) {
 				editor.windowManager.alert(message);
 				editor.setProgressState(false);
@@ -261,7 +221,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			}
 
 			editor.setProgressState(true);
-			sendRpcCall("spellcheck", getTextMatcher().text, doneCallback, errorCallback);
+			sendRpcCall("spellcheck", getTextMatcher().text, markErrors, errorCallback);
 			editor.focus();
 		}
 
@@ -313,7 +273,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 		function getElmIndex(elm) {
 			var value = elm.getAttribute('data-mce-index');
 
-			if (typeof(value) == "number") {
+			if (typeof value == "number") {
 				return "" + value;
 			}
 
@@ -367,6 +327,8 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			onPostRender: function() {
 				var self = this;
 
+				self.active(started);
+
 				editor.on('SpellcheckStart SpellcheckEnd', function() {
 					self.active(started);
 				});
@@ -379,6 +341,53 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			e.control.items().each(function(ctrl) {
 				ctrl.active(ctrl.settings.data === selectedLanguage);
 			});
+		}
+
+		/**
+		 * Find the specified words and marks them. It will also show suggestions for those words.
+		 *
+		 * @example
+		 * editor.plugins.spellchecker.markErrors({
+		 *     dictionary: true,
+		 *     words: {
+		 *         "word1": ["suggestion 1", "Suggestion 2"]
+		 *     }
+		 * });
+		 * @param {Object} data Data object containing the words with suggestions.
+		 */
+		function markErrors(data) {
+			var suggestions;
+
+			if (data.words) {
+				hasDictionarySupport = !!data.dictionary;
+				suggestions = data.words;
+			} else {
+				// Fallback to old format
+				suggestions = data;
+			}
+
+			editor.setProgressState(false);
+
+			if (isEmpty(suggestions)) {
+				editor.windowManager.alert('No misspellings found');
+				started = false;
+				return;
+			}
+
+			lastSuggestions = suggestions;
+
+			getTextMatcher().find(getWordCharPattern()).filter(function(match) {
+				return !!suggestions[match.text];
+			}).wrap(function(match) {
+				return editor.dom.create('span', {
+					"class": 'mce-spellchecker-word',
+					"data-mce-bogus": 1,
+					"data-mce-word": match.text
+				});
+			});
+
+			started = true;
+			editor.fire('SpellcheckStart');
 		}
 
 		var buttonArgs = {
@@ -416,6 +425,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 
 		this.getTextMatcher = getTextMatcher;
 		this.getWordCharPattern = getWordCharPattern;
+		this.markErrors = markErrors;
 		this.getLanguage = function() {
 			return settings.spellchecker_language;
 		};

@@ -32,7 +32,10 @@ define("tinymce/ui/ColorBox", [
 			var self = this;
 
 			settings.spellcheck = false;
-			settings.icon = 'none';
+
+			if (settings.onaction) {
+				settings.icon = 'none';
+			}
 
 			self._super(settings);
 
@@ -43,7 +46,15 @@ define("tinymce/ui/ColorBox", [
 		},
 
 		repaintColor: function(value) {
-			this.getEl().getElementsByTagName('i')[0].style.background = value;
+			var elm = this.getEl().getElementsByTagName('i')[0];
+
+			if (elm) {
+				try {
+					elm.style.background = value;
+				} catch (ex) {
+					// Ignore
+				}
+			}
 		},
 
 		value: function(value) {

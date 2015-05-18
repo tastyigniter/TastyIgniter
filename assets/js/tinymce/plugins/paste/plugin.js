@@ -95,8 +95,7 @@
 /**
  * This class contails various utility functions for the paste plugin.
  *
- * @class tinymce.pasteplugin.Clipboard
- * @private
+ * @class tinymce.pasteplugin.Utils
  */
 define("tinymce/pasteplugin/Utils", [
 	"tinymce/util/Tools",
@@ -170,6 +169,10 @@ define("tinymce/pasteplugin/Utils", [
 			}
 		}
 
+		html = filter(html, [
+			/<!\[[^\]]+\]>/g // Conditional comments
+		]);
+
 		walk(domParser.parse(html));
 
 		return text;
@@ -182,10 +185,20 @@ define("tinymce/pasteplugin/Utils", [
 	 * @return {String} Html contents that got trimmed.
 	 */
 	function trimHtml(html) {
+		function trimSpaces(all, s1, s2) {
+			// WebKit &nbsp; meant to preserve multiple spaces but instead inserted around all inline tags,
+			// including the spans with inline styles created on paste
+			if (!s1 && !s2) {
+				return ' ';
+			}
+
+			return '\u00a0';
+		}
+
 		html = filter(html, [
 			/^[\s\S]*<body[^>]*>\s*|\s*<\/body[^>]*>[\s\S]*$/g, // Remove anything but the contents within the BODY element
 			/<!--StartFragment-->|<!--EndFragment-->/g, // Inner fragments (tables from excel on mac)
-			[/<span class="Apple-converted-space">\u00a0<\/span>/g, '\u00a0'], // WebKit &nbsp;
+			[/( ?)<span class="Apple-converted-space">\u00a0<\/span>( ?)/g, trimSpaces],
 			/<br>$/i // Trailing BR elements
 		]);
 
@@ -232,12 +245,14 @@ define("tinymce/pasteplugin/Utils", [
  */
 define("tinymce/pasteplugin/Clipboard", [
 	"tinymce/Env",
+	"tinymce/dom/RangeUtils",
 	"tinymce/util/VK",
 	"tinymce/pasteplugin/Utils"
-], function(Env, VK, Utils) {
+], function(Env, RangeUtils, VK, Utils) {
 	return function(editor) {
-		var self = this, pasteBinElm, lastRng, keyboardPasteTimeStamp = 0;
+		var self = this, pasteBinElm, lastRng, keyboardPasteTimeStamp = 0, draggingInternally = false;
 		var pasteBinDefaultContent = '%MCEPASTEBIN%', keyboardPastePlainTextState;
+		var mceInternalUrlPrefix = 'data:text/mce-internal,';
 
 		/**
 		 * Pastes the specified HTML. This means that the HTML is filtered and then
@@ -331,15 +346,63 @@ define("tinymce/pasteplugin/Clipboard", [
 				}
 			}
 
+			/**
+			 * Returns the rect of the current caret if the caret is in an empty block before a
+			 * BR we insert a temporary invisible character that we get the rect this way we always get a proper rect.
+			 *
+			 * TODO: This might be useful in core.
+			 */
+			function getCaretRect(rng) {
+				var rects, textNode, node, container = rng.startContainer;
+
+				rects = rng.getClientRects();
+				if (rects.length) {
+					return rects[0];
+				}
+
+				if (!rng.collapsed || container.nodeType != 1) {
+					return;
+				}
+
+				node = container.childNodes[lastRng.startOffset];
+
+				// Skip empty whitespace nodes
+				while (node && node.nodeType == 3 && !node.data.length) {
+					node = node.nextSibling;
+				}
+
+				if (!node) {
+					return;
+				}
+
+				// Check if the location is |<br>
+				// TODO: Might need to expand this to say |<table>
+				if (node.tagName == 'BR') {
+					textNode = dom.doc.createTextNode('\uFEFF');
+					node.parentNode.insertBefore(textNode, node);
+
+					rng = dom.createRng();
+					rng.setStartBefore(textNode);
+					rng.setEndAfter(textNode);
+
+					rects = rng.getClientRects();
+					dom.remove(textNode);
+				}
+
+				if (rects.length) {
+					return rects[0];
+				}
+			}
+
 			// Calculate top cordinate this is needed to avoid scrolling to top of document
 			// We want the paste bin to be as close to the caret as possible to avoid scrolling
 			if (lastRng.getClientRects) {
-				var rects = lastRng.getClientRects();
+				var rect = getCaretRect(lastRng);
 
-				if (rects.length) {
+				if (rect) {
 					// Client rects gets us closes to the actual
 					// caret location in for example a wrapped paragraph block
-					top = scrollTop + (rects[0].top - dom.getPos(body).y);
+					top = scrollTop + (rect.top - dom.getPos(body).y);
 				} else {
 					top = scrollTop;
 
@@ -409,22 +472,23 @@ define("tinymce/pasteplugin/Clipboard", [
 		 * @return {String} Get the contents of the paste bin.
 		 */
 		function getPasteBinHtml() {
-			var html = pasteBinDefaultContent, pasteBinClones, i;
+			var html = '', pasteBinClones, i, clone, cloneHtml;
 
 			// Since WebKit/Chrome might clone the paste bin when pasting
 			// for example: <img style="float: right"> we need to check if any of them contains some useful html.
 			// TODO: Man o man is this ugly. WebKit is the new IE! Remove this if they ever fix it!
 			pasteBinClones = editor.dom.select('div[id=mcepastebin]');
-			i = pasteBinClones.length;
-			while (i--) {
-				var cloneHtml = pasteBinClones[i].innerHTML;
+			for (i = 0; i < pasteBinClones.length; i++) {
+				clone = pasteBinClones[i];
 
-				if (html == pasteBinDefaultContent) {
-					html = '';
+				// Pasting plain text produces pastebins in pastebinds makes sence right!?
+				if (clone.firstChild && clone.firstChild.id == 'mcepastebin') {
+					clone = clone.firstChild;
 				}
 
-				if (cloneHtml.length > html.length) {
-					html = cloneHtml;
+				cloneHtml = clone.innerHTML;
+				if (html != pasteBinDefaultContent) {
+					html += cloneHtml;
 				}
 			}
 
@@ -440,16 +504,22 @@ define("tinymce/pasteplugin/Clipboard", [
 		function getDataTransferItems(dataTransfer) {
 			var data = {};
 
-			if (dataTransfer && dataTransfer.types) {
-				// Use old WebKit API
-				var legacyText = dataTransfer.getData('Text');
-				if (legacyText && legacyText.length > 0) {
-					data['text/plain'] = legacyText;
+			if (dataTransfer) {
+				// Use old WebKit/IE API
+				if (dataTransfer.getData) {
+					var legacyText = dataTransfer.getData('Text');
+					if (legacyText && legacyText.length > 0) {
+						if (legacyText.indexOf(mceInternalUrlPrefix) == -1) {
+							data['text/plain'] = legacyText;
+						}
+					}
 				}
 
-				for (var i = 0; i < dataTransfer.types.length; i++) {
-					var contentType = dataTransfer.types[i];
-					data[contentType] = dataTransfer.getData(contentType);
+				if (dataTransfer.types) {
+					for (var i = 0; i < dataTransfer.types.length; i++) {
+						var contentType = dataTransfer.types[i];
+						data[contentType] = dataTransfer.getData(contentType);
+					}
 				}
 			}
 
@@ -479,9 +549,9 @@ define("tinymce/pasteplugin/Clipboard", [
 			var dataTransfer = e.clipboardData || e.dataTransfer;
 
 			function processItems(items) {
-				var i, item, reader;
+				var i, item, reader, hadImage = false;
 
-				function pasteImage() {
+				function pasteImage(reader) {
 					if (rng) {
 						editor.selection.setRng(rng);
 						rng = null;
@@ -494,16 +564,18 @@ define("tinymce/pasteplugin/Clipboard", [
 					for (i = 0; i < items.length; i++) {
 						item = items[i];
 
-						if (/^image\/(jpeg|png|gif)$/.test(item.type)) {
+						if (/^image\/(jpeg|png|gif|bmp)$/.test(item.type)) {
 							reader = new FileReader();
-							reader.onload = pasteImage;
+							reader.onload = pasteImage.bind(null, reader);
 							reader.readAsDataURL(item.getAsFile ? item.getAsFile() : item);
 
 							e.preventDefault();
-							return true;
+							hadImage = true;
 						}
 					}
 				}
+
+				return hadImage;
 			}
 
 			if (editor.settings.paste_data_images && dataTransfer) {
@@ -512,30 +584,19 @@ define("tinymce/pasteplugin/Clipboard", [
 		}
 
 		/**
-		 * Chrome on Andoid doesn't support proper clipboard access so we have no choice but to allow the browser default behavior.
+		 * Chrome on Android doesn't support proper clipboard access so we have no choice but to allow the browser default behavior.
 		 *
 		 * @param {Event} e Paste event object to check if it contains any data.
 		 * @return {Boolean} true/false if the clipboard is empty or not.
 		 */
-		function isBrokenAndoidClipboardEvent(e) {
+		function isBrokenAndroidClipboardEvent(e) {
 			var clipboardData = e.clipboardData;
 
 			return navigator.userAgent.indexOf('Android') != -1 && clipboardData && clipboardData.items && clipboardData.items.length === 0;
 		}
 
 		function getCaretRangeFromEvent(e) {
-			var doc = editor.getDoc(), rng;
-
-			if (doc.caretPositionFromPoint) {
-				var point = doc.caretPositionFromPoint(e.clientX, e.clientY);
-				rng = doc.createRange();
-				rng.setStart(point.offsetNode, point.offset);
-				rng.collapse(true);
-			} else if (doc.caretRangeFromPoint) {
-				rng = doc.caretRangeFromPoint(e.clientX, e.clientY);
-			}
-
-			return rng;
+			return RangeUtils.getCaretRangeFromPoint(e.clientX, e.clientY, editor.getDoc());
 		}
 
 		function hasContentType(clipboardContent, mimeType) {
@@ -591,13 +652,17 @@ define("tinymce/pasteplugin/Clipboard", [
 			});
 
 			editor.on('paste', function(e) {
+				// Getting content from the Clipboard can take some time
+				var clipboardTimer = new Date().getTime();
 				var clipboardContent = getClipboardContent(e);
-				var isKeyBoardPaste = new Date().getTime() - keyboardPasteTimeStamp < 1000;
+				var clipboardDelay = new Date().getTime() - clipboardTimer;
+
+				var isKeyBoardPaste = (new Date().getTime() - keyboardPasteTimeStamp - clipboardDelay) < 1000;
 				var plainTextMode = self.pasteFormat == "text" || keyboardPastePlainTextState;
 
 				keyboardPastePlainTextState = false;
 
-				if (e.isDefaultPrevented() || isBrokenAndoidClipboardEvent(e)) {
+				if (e.isDefaultPrevented() || isBrokenAndroidClipboardEvent(e)) {
 					removePasteBin();
 					return;
 				}
@@ -640,7 +705,7 @@ define("tinymce/pasteplugin/Clipboard", [
 						}
 					}
 
-					content = Utils.trimHtml(getPasteBinHtml());
+					content = Utils.trimHtml(content);
 
 					// WebKit has a nice bug where it clones the paste bin if you paste from for example notepad
 					// so we need to force plain text mode in this case
@@ -649,6 +714,11 @@ define("tinymce/pasteplugin/Clipboard", [
 					}
 
 					removePasteBin();
+
+					// If we got nothing from clipboard API and pastebin then we could try the last resort: plain/text
+					if (!content.length) {
+						plainTextMode = true;
+					}
 
 					// Grab plain text from Clipboard API or convert existing HTML to plain text
 					if (plainTextMode) {
@@ -679,20 +749,14 @@ define("tinymce/pasteplugin/Clipboard", [
 				}, 0);
 			});
 
-			editor.on('dragstart', function(e) {
-				if (e.dataTransfer.types) {
-					try {
-						e.dataTransfer.setData('mce-internal', editor.selection.getContent());
-					} catch (ex) {
-						// IE 10 throws an error since it doesn't support custom data items
-					}
-				}
+			editor.on('dragstart dragend', function(e) {
+				draggingInternally = e.type == 'dragstart';
 			});
 
 			editor.on('drop', function(e) {
 				var rng = getCaretRangeFromEvent(e);
 
-				if (e.isDefaultPrevented()) {
+				if (e.isDefaultPrevented() || draggingInternally) {
 					return;
 				}
 
@@ -700,7 +764,7 @@ define("tinymce/pasteplugin/Clipboard", [
 					return;
 				}
 
-				if (rng) {
+				if (rng && editor.settings.paste_filter_drop !== false) {
 					var dropContent = getDataTransferItems(e.dataTransfer);
 					var content = dropContent['mce-internal'] || dropContent['text/html'] || dropContent['text/plain'];
 
@@ -714,6 +778,8 @@ define("tinymce/pasteplugin/Clipboard", [
 
 							editor.selection.setRng(rng);
 
+							content = Utils.trimHtml(content);
+
 							if (!dropContent['text/html']) {
 								pasteText(content);
 							} else {
@@ -725,16 +791,8 @@ define("tinymce/pasteplugin/Clipboard", [
 			});
 
 			editor.on('dragover dragend', function(e) {
-				var i, dataTransfer = e.dataTransfer;
-
-				if (editor.settings.paste_data_images && dataTransfer) {
-					for (i = 0; i < dataTransfer.types.length; i++) {
-						// Prevent default if we have files dragged into the editor since the pasteImageData handles that
-						if (dataTransfer.types[i] == "Files") {
-							e.preventDefault();
-							return false;
-						}
-					}
+				if (editor.settings.paste_data_images) {
+					e.preventDefault();
 				}
 			});
 		}
@@ -783,7 +841,7 @@ define("tinymce/pasteplugin/Clipboard", [
 /**
  * This class parses word HTML into proper TinyMCE markup.
  *
- * @class tinymce.pasteplugin.Quirks
+ * @class tinymce.pasteplugin.WordFilter
  * @private
  */
 define("tinymce/pasteplugin/WordFilter", [
@@ -805,11 +863,47 @@ define("tinymce/pasteplugin/WordFilter", [
 		);
 	}
 
+	/**
+	 * Checks if the specified text starts with "1. " or "a. " etc.
+	 */
+	function isNumericList(text) {
+		var found, patterns;
+
+		patterns = [
+			/^[IVXLMCD]{1,2}\.[ \u00a0]/,  // Roman upper case
+			/^[ivxlmcd]{1,2}\.[ \u00a0]/,  // Roman lower case
+			/^[a-z]{1,2}[\.\)][ \u00a0]/,  // Alphabetical a-z
+			/^[A-Z]{1,2}[\.\)][ \u00a0]/,  // Alphabetical A-Z
+			/^[0-9]+\.[ \u00a0]/,          // Numeric lists
+			/^[\u3007\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d]+\.[ \u00a0]/, // Japanese
+			/^[\u58f1\u5f10\u53c2\u56db\u4f0d\u516d\u4e03\u516b\u4e5d\u62fe]+\.[ \u00a0]/  // Chinese
+		];
+
+		text = text.replace(/^[\u00a0 ]+/, '');
+
+		Tools.each(patterns, function(pattern) {
+			if (pattern.test(text)) {
+				found = true;
+				return false;
+			}
+		});
+
+		return found;
+	}
+
+	function isBulletList(text) {
+		return /^[\s\u00a0]*[\u2022\u00b7\u00a7\u25CF]\s*/.test(text);
+	}
+
 	function WordFilter(editor) {
 		var settings = editor.settings;
 
 		editor.on('BeforePastePreProcess', function(e) {
 			var content = e.content, retainStyleProperties, validStyles;
+
+			// Remove google docs internal guid markers
+			content = content.replace(/<b[^>]+id="?docs-internal-[^>]*>/gi, '');
+			content = content.replace(/<br class="?Apple-interchange-newline"?>/gi, '');
 
 			retainStyleProperties = settings.paste_retain_style_properties;
 			if (retainStyleProperties) {
@@ -824,7 +918,55 @@ define("tinymce/pasteplugin/WordFilter", [
 			function convertFakeListsToProperLists(node) {
 				var currentListNode, prevListNode, lastLevel = 1;
 
-				function convertParagraphToLi(paragraphNode, listStartTextNode, listName, start) {
+				function getText(node) {
+					var txt = '';
+
+					if (node.type === 3) {
+						return node.value;
+					}
+
+					if ((node = node.firstChild)) {
+						do {
+							txt += getText(node);
+						} while ((node = node.next));
+					}
+
+					return txt;
+				}
+
+				function trimListStart(node, regExp) {
+					if (node.type === 3) {
+						if (regExp.test(node.value)) {
+							node.value = node.value.replace(regExp, '');
+							return false;
+						}
+					}
+
+					if ((node = node.firstChild)) {
+						do {
+							if (!trimListStart(node, regExp)) {
+								return false;
+							}
+						} while ((node = node.next));
+					}
+
+					return true;
+				}
+
+				function removeIgnoredNodes(node) {
+					if (node._listIgnore) {
+						node.remove();
+						return;
+					}
+
+					if ((node = node.firstChild)) {
+						do {
+							removeIgnoredNodes(node);
+						} while ((node = node.next));
+					}
+				}
+
+				function convertParagraphToLi(paragraphNode, listName, start) {
 					var level = paragraphNode._listLevel || lastLevel;
 
 					// Handle list nesting
@@ -855,12 +997,6 @@ define("tinymce/pasteplugin/WordFilter", [
 					}
 
 					paragraphNode.name = 'li';
-					listStartTextNode.value = '';
-
-					var nextNode = listStartTextNode.next;
-					if (nextNode && nextNode.type == 3) {
-						nextNode.value = nextNode.value.replace(/^\u00a0+/, '');
-					}
 
 					// Append list to previous list if it exists
 					if (level > lastLevel && prevListNode) {
@@ -868,66 +1004,94 @@ define("tinymce/pasteplugin/WordFilter", [
 					}
 
 					lastLevel = level;
+
+					// Remove start of list item "1. " or "&middot; " etc
+					removeIgnoredNodes(paragraphNode);
+					trimListStart(paragraphNode, /^\u00a0+/);
+					trimListStart(paragraphNode, /^\s*([\u2022\u00b7\u00a7\u25CF]|\w+\.)/);
+					trimListStart(paragraphNode, /^\u00a0+/);
 				}
 
-				var paragraphs = node.getAll('p');
+				// Build a list of all root level elements before we start
+				// altering them in the loop below.
+				var elements = [], child = node.firstChild;
+				while (typeof child !== 'undefined' && child !== null) {
+					elements.push(child);
 
-				for (var i = 0; i < paragraphs.length; i++) {
-					node = paragraphs[i];
+					child = child.walk();
+					if (child !== null) {
+						while (typeof child !== 'undefined' && child.parent !== node) {
+							child = child.walk();
+						}
+					}
+				}
+
+				for (var i = 0; i < elements.length; i++) {
+					node = elements[i];
 
 					if (node.name == 'p' && node.firstChild) {
 						// Find first text node in paragraph
-						var nodeText = '';
-						var listStartTextNode = node.firstChild;
-
-						while (listStartTextNode) {
-							nodeText = listStartTextNode.value;
-							if (nodeText) {
-								break;
-							}
-
-							listStartTextNode = listStartTextNode.firstChild;
-						}
+						var nodeText = getText(node);
 
 						// Detect unordered lists look for bullets
-						if (/^\s*[\u2022\u00b7\u00a7\u00d8\u25CF]\s*$/.test(nodeText)) {
-							convertParagraphToLi(node, listStartTextNode, 'ul');
+						if (isBulletList(nodeText)) {
+							convertParagraphToLi(node, 'ul');
 							continue;
 						}
 
 						// Detect ordered lists 1., a. or ixv.
-						if (/^\s*\w+\.$/.test(nodeText)) {
+						if (isNumericList(nodeText)) {
 							// Parse OL start number
-							var matches = /([0-9])\./.exec(nodeText);
+							var matches = /([0-9]+)\./.exec(nodeText);
 							var start = 1;
 							if (matches) {
 								start = parseInt(matches[1], 10);
 							}
 
-							convertParagraphToLi(node, listStartTextNode, 'ol', start);
+							convertParagraphToLi(node, 'ol', start);
 							continue;
 						}
 
+						// Convert paragraphs marked as lists but doesn't look like anything
+						if (node._listLevel) {
+							convertParagraphToLi(node, 'ul', 1);
+							continue;
+						}
+
+						currentListNode = null;
+					} else {
+						// If the root level element isn't a p tag which can be
+						// processed by convertParagraphToLi, it interrupts the
+						// lists, causing a new list to start instead of having
+						// elements from the next list inserted above this tag.
+						prevListNode = currentListNode;
 						currentListNode = null;
 					}
 				}
 			}
 
 			function filterStyles(node, styleValue) {
-				var outputStyles = {}, styles = editor.dom.parseStyle(styleValue);
-
-				// Parse out list indent level for lists
-				if (node.name === 'p') {
-					var matches = /mso-list:\w+ \w+([0-9]+)/.exec(styleValue);
-
-					if (matches) {
-						node._listLevel = parseInt(matches[1], 10);
-					}
-				}
+				var outputStyles = {}, matches, styles = editor.dom.parseStyle(styleValue);
 
 				Tools.each(styles, function(value, name) {
 					// Convert various MS styles to W3C styles
 					switch (name) {
+						case 'mso-list':
+							// Parse out list indent level for lists
+							matches = /\w+ \w+([0-9]+)/i.exec(styleValue);
+							if (matches) {
+								node._listLevel = parseInt(matches[1], 10);
+							}
+
+							// Remove these nodes <span style="mso-list:Ignore">o</span>
+							// Since the span gets removed we mark the text node and the span
+							if (/Ignore/i.test(value) && node.firstChild) {
+								node._listIgnore = true;
+								node.firstChild._listIgnore = true;
+							}
+
+							break;
+
 						case "horiz-align":
 							name = "text-align";
 							break;
@@ -1035,8 +1199,11 @@ define("tinymce/pasteplugin/WordFilter", [
 
 				var validElements = settings.paste_word_valid_elements;
 				if (!validElements) {
-					validElements = '-strong/b,-em/i,-span,-p,-ol,-ul,-li,-h1,-h2,-h3,-h4,-h5,-h6,-p/div,' +
-						'-table[width],-tr,-td[colspan|rowspan|width],-th,-thead,-tfoot,-tbody,-a[href|name],sub,sup,strike,br,del';
+					validElements = (
+						'-strong/b,-em/i,-u,-span,-p,-ol,-ul,-li,-h1,-h2,-h3,-h4,-h5,-h6,' +
+						'-p/div,-a[href|name],sub,sup,strike,br,del,table[width],tr,' +
+						'td[colspan|rowspan|width],th[colspan|rowspan|width],thead,tfoot,tbody'
+					);
 				}
 
 				// Setup strict schema
@@ -1048,6 +1215,7 @@ define("tinymce/pasteplugin/WordFilter", [
 				// Add style/class attribute to all element rules since the user might have removed them from
 				// paste_word_valid_elements config option and we need to check them for properties
 				Tools.each(schema.elements, function(rule) {
+					/*eslint dot-notation:0*/
 					if (!rule.attributes["class"]) {
 						rule.attributes["class"] = {};
 						rule.attributesOrder.push("class");
@@ -1144,7 +1312,9 @@ define("tinymce/pasteplugin/WordFilter", [
 				var rootNode = domParser.parse(content);
 
 				// Process DOM
-				convertFakeListsToProperLists(rootNode);
+				if (settings.paste_convert_word_fake_lists !== false) {
+					convertFakeListsToProperLists(rootNode);
+				}
 
 				// Serialize DOM back to HTML
 				e.content = new Serializer({}, schema).serialize(rootNode);
@@ -1293,7 +1463,7 @@ define("tinymce/pasteplugin/Quirks", [
 						return before + ' style="' + outputStyles + '"' + after;
 					}
 
-					return '';
+					return before + after;
 				});
 			} else {
 				// Remove all external styles
@@ -1432,5 +1602,5 @@ define("tinymce/pasteplugin/Plugin", [
 	});
 });
 
-expose(["tinymce/pasteplugin/Utils","tinymce/pasteplugin/WordFilter"]);
+expose(["tinymce/pasteplugin/Utils"]);
 })(this);

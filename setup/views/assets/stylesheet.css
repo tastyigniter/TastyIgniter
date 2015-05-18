@@ -1,0 +1,188 @@
+@import "http://fonts.googleapis.com/css?family=Oxygen:400,300,700";
+html {
+min-height: 100%;
+position: relative;
+}
+body {
+background-color:#184f75;
+font-family:'Oxygen',Arial,sans-serif;
+font-size:12px;
+margin-bottom:55px;
+}
+a, a:hover, a:active {
+outline:0 none;
+}
+
+
+
+/** WRAPPER **/
+#wrapper, #footer {
+padding-left: 0;
+}
+#page-wrapper {
+width: 100%;
+}
+.container-fluid {
+}
+
+
+/** HEADER **/
+.header {
+border-bottom: 0 solid #DDDBDB;
+}
+.page-header {
+border-bottom: 0 solid #eee;
+}
+.page-header h1 {
+text-align: center;
+color:#d3d3d3;
+}
+
+
+/** ALERT **/
+#notification .alert {
+    border: 0 none;
+    border-radius: 0;
+    padding:0;
+    margin-bottom:0;
+}
+#notification .alert-dismissable .close {
+    right: -26px;
+    top: -5px;
+    display: none;
+}
+#notification p,
+#notification .alert-success,
+#notification .alert-warning,
+#notification .alert-danger {
+    padding: 8px 35px 8px 15px;
+    margin-bottom:20px;
+}
+.success{
+    background:#00B87A;
+    border-left: 5px solid #00B87A;
+    border-top: 1px solid #00B87A;
+}
+.error {
+    background:#C96862;
+    border-left: 5px solid #C96862;
+}
+.warning {
+    background:#FFA74E;
+    border-left: 5px solid #FFA74E;
+    border-top: 1px solid #FFA74E;
+}
+.list-group-alert {
+    list-style: none outside none;
+    padding: 0;
+}
+.list-group-alert li + li {
+    margin-top: 10px;
+}
+.list-group-alert .alert-hide {
+    font-size: 12px;
+    font-style: italic;
+    margin-top: 5px;
+    display: none;
+}
+.alert-collapsible .btn-dropdown {
+    color: inherit;
+    position: relative;
+    left: -7px;
+    top: 2px;
+}
+button.btn-dropdown {
+    background: none repeat scroll 0 0 transparent;
+    border: 0 none;
+    cursor: pointer;
+    display: none;
+    padding: 0;
+}
+.btn-dropdown {
+    float: left;
+}
+.btn-dropdown i {
+    color: inherit;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1;
+    opacity: 0.5;
+    text-shadow: 0 1px 0 #fff;
+}
+
+/** FORMS **/
+.form-control {
+width: 80%;
+border-radius: 0;
+color:#333;
+}
+.form-horizontal .control-label {
+text-align: left;
+}
+.control-label .help-block {
+font-size: 85%;
+font-weight: normal;
+}
+
+/** BUTTONS **/
+.btn {
+border-radius: 0;
+outline: 0 none;
+}
+.btn-success {
+background-color: #00B87A;
+border-color: #00B87A;
+}
+.btn-success:hover, .btn-success:focus, .btn-success:active, .btn-success.active, .open .dropdown-toggle.btn-success {
+background-color: #009f69;
+border-color: #009f69;
+color: #FFFFFF;
+}
+
+/** ICONS **/
+.fa {
+font-size:16px;
+}
+
+.red {
+color:#C96862;
+}
+.green {
+color:#00B87A;
+}
+.error_php {
+border:1px solid #990000;
+padding-left:20px;
+margin:0 20px 10px 180px;
+}
+.error_php:first-child {
+margin-top:45px;
+}
+
+
+/** SETUP ***/
+.setup_box {
+background-color: #E7E7E7;
+border: 1px solid #E7E7E7;
+float:none;
+margin: 0 auto;
+padding:25px;
+width: 41.6667%;
+}
+.setup_box p, .setup_box h2 {
+}
+.setup_box h1 {
+font-size: 30px;
+margin-bottom: 30px;
+}
+.setup_box h2 {
+border-bottom: 1px solid #DDDDDD;
+}
+h4, .h4 {
+font-size: 24px;
+}
+
+.list-group-alert {
+list-style: none outside none;
+padding: 0;
+}

@@ -6,9 +6,6 @@
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
- *
- * Some of this logic is based on jQuery code that is released under
- * MIT license that grants us to sublicense it under LGPL.
  */
 
 /**
@@ -21,7 +18,6 @@
  * - Event binding
  *
  * This is not currently implemented:
- * - Offset
  * - Dimension
  * - Ajax
  * - Animation
@@ -51,6 +47,10 @@ define("tinymce/dom/DomQuery", [
 		return typeof obj === 'string';
 	}
 
+	function isWindow(obj) {
+		return obj && obj == obj.window;
+	}
+
 	function createFragment(html, fragDoc) {
 		var frag, node, container;
 
@@ -70,8 +70,10 @@ define("tinymce/dom/DomQuery", [
 		var i;
 
 		if (isString(sourceItem)) {
-			sourceItem = createFragment(sourceItem);
+			sourceItem = createFragment(sourceItem, getElementDocument(targetNodes[0]));
 		} else if (sourceItem.length && !sourceItem.nodeType) {
+			sourceItem = DomQuery.makeArray(sourceItem);
+
 			if (reverse) {
 				for (i = sourceItem.length - 1; i >= 0; i--) {
 					domManipulate(targetNodes, sourceItem[i], callback, reverse);
@@ -85,9 +87,11 @@ define("tinymce/dom/DomQuery", [
 			return targetNodes;
 		}
 
-		i = targetNodes.length;
-		while (i--) {
-			callback.call(targetNodes[i], sourceItem.parentNode ? sourceItem : sourceItem);
+		if (sourceItem.nodeType) {
+			i = targetNodes.length;
+			while (i--) {
+				callback.call(targetNodes[i], sourceItem);
+			}
 		}
 
 		return targetNodes;
@@ -125,62 +129,11 @@ define("tinymce/dom/DomQuery", [
 		'class': 'className',
 		'readonly': 'readOnly'
 	};
+	var cssFix = {
+		'float': 'cssFloat'
+	};
 
-	var attrGetHooks = {}, attrSetHooks = {};
-
-	function appendHooks(target, hooks) {
-		each(hooks, function(key, value) {
-			each(key.split(' '), function() {
-				target[this] = value;
-			});
-		});
-	}
-
-	if (Env.ie && Env.ie <= 7) {
-		appendHooks(attrGetHooks, {
-			maxlength: function(elm, value) {
-				value = elm.maxLength;
-
-				if (value === 0x7fffffff) {
-					return undef;
-				}
-
-				return value;
-			},
-
-			size: function(elm, value) {
-				value = elm.size;
-
-				if (value === 20) {
-					return undef;
-				}
-
-				return value;
-			},
-
-			'class': function(elm) {
-				return elm.className;
-			},
-
-			style: function(elm) {
-				if (elm.style.cssText.length === 0) {
-					return undef;
-				}
-
-				return elm.style.cssText;
-			}
-		});
-
-		appendHooks(attrSetHooks, {
-			'class': function(elm, value) {
-				elm.className = value;
-			},
-
-			style: function(elm, value) {
-				elm.style.cssText = value;
-			}
-		});
-	}
+	var attrHooks = {}, cssHooks = {};
 
 	function DomQuery(selector, context) {
 		/*eslint new-cap:0 */
@@ -238,6 +191,30 @@ define("tinymce/dom/DomQuery", [
 		}
 
 		return obj;
+	}
+
+	function grep(array, callback) {
+		var out = [];
+
+		each(array, function(i, item) {
+			if (callback(item, i)) {
+				out.push(item);
+			}
+		});
+
+		return out;
+	}
+
+	function getElementDocument(element) {
+		if (!element) {
+			return doc;
+		}
+
+		if (element.nodeType == 9) {
+			return element;
+		}
+
+		return element.ownerDocument;
 	}
 
 	DomQuery.fn = DomQuery.prototype = {
@@ -310,14 +287,18 @@ define("tinymce/dom/DomQuery", [
 
 				if (match) {
 					if (match[1]) {
-						node = createFragment(selector, context).firstChild;
+						node = createFragment(selector, getElementDocument(context)).firstChild;
 
 						while (node) {
 							push.call(self, node);
 							node = node.nextSibling;
 						}
 					} else {
-						node = doc.getElementById(match[2]);
+						node = getElementDocument(context).getElementById(match[2]);
+
+						if (!node) {
+							return self;
+						}
 
 						if (node.id !== match[2]) {
 							return self.find(selector);
@@ -360,10 +341,6 @@ define("tinymce/dom/DomQuery", [
 				return self.add(DomQuery(items));
 			}
 
-			if (items.nodeType) {
-				return self.add([items]);
-			}
-
 			if (sort !== false) {
 				nodes = DomQuery.unique(self.toArray().concat(DomQuery.makeArray(items)));
 				self.length = nodes.length;
@@ -397,9 +374,10 @@ define("tinymce/dom/DomQuery", [
 					var hook;
 
 					if (this.nodeType === 1) {
-						hook = attrSetHooks[name];
-						if (hook) {
-							hook(this, value, name);
+						hook = attrHooks[name];
+						if (hook && hook.set) {
+							hook.set(this, value);
+							return;
 						}
 
 						if (value === null) {
@@ -411,16 +389,16 @@ define("tinymce/dom/DomQuery", [
 				});
 			} else {
 				if (self[0] && self[0].nodeType === 1) {
+					hook = attrHooks[name];
+					if (hook && hook.get) {
+						return hook.get(self[0], name);
+					}
+
 					if (booleanMap[name]) {
 						return self.prop(name) ? name : undef;
 					}
 
 					value = self[0].getAttribute(name, 2);
-
-					hook = attrGetHooks[name];
-					if (hook) {
-						return hook(self[0], value, name);
-					}
 
 					if (value === null) {
 						value = undef;
@@ -487,52 +465,72 @@ define("tinymce/dom/DomQuery", [
 		 * @return {tinymce.dom.DomQuery/String} Current set or the specified style when only the name is specified.
 		 */
 		css: function(name, value) {
-			var self = this;
+			var self = this, elm, hook;
+
+			function camel(name) {
+				return name.replace(/-(\D)/g, function(a, b) {
+					return b.toUpperCase();
+				});
+			}
+
+			function dashed(name) {
+				return name.replace(/[A-Z]/g, function(a) {
+					return '-' + a;
+				});
+			}
 
 			if (typeof name === "object") {
 				each(name, function(name, value) {
 					self.css(name, value);
 				});
 			} else {
-				// Camelcase it, if needed
-				name = name.replace(/-(\D)/g, function(a, b) {
-					return b.toUpperCase();
-				});
-
 				if (isDefined(value)) {
+					name = camel(name);
+
 					// Default px suffix on these
-					if (typeof(value) === 'number' && !numericCssMap[name]) {
+					if (typeof value === 'number' && !numericCssMap[name]) {
 						value += 'px';
 					}
 
 					self.each(function() {
 						var style = this.style;
 
-						// IE specific opacity
-						if (name === "opacity" && this.runtimeStyle && typeof(this.runtimeStyle.opacity) === "undefined") {
-							style.filter = value === '' ? '' : "alpha(opacity=" + (value * 100) + ")";
+						hook = cssHooks[name];
+						if (hook && hook.set) {
+							hook.set(this, value);
+							return;
 						}
 
 						try {
-							style[name] = value;
+							this.style[cssFix[name] || name] = value;
 						} catch (ex) {
 							// Ignore
 						}
+
+						if (value === null || value === '') {
+							if (style.removeProperty) {
+								style.removeProperty(dashed(name));
+							} else {
+								style.removeAttribute(name);
+							}
+						}
 					});
 				} else {
-					if (self.context.defaultView) {
-						// Remove camelcase
-						name = name.replace(/[A-Z]/g, function(a) {
-							return '-' + a;
-						});
+					elm = self[0];
 
+					hook = cssHooks[name];
+					if (hook && hook.get) {
+						return hook.get(elm);
+					}
+
+					if (elm.ownerDocument.defaultView) {
 						try {
-							return self.context.defaultView.getComputedStyle(self[0], null).getPropertyValue(name);
+							return elm.ownerDocument.defaultView.getComputedStyle(elm, null).getPropertyValue(dashed(name));
 						} catch (ex) {
 							return undef;
 						}
-					} else if (self[0].currentStyle) {
-						return self[0].currentStyle[name];
+					} else if (elm.currentStyle) {
+						return elm.currentStyle[camel(name)];
 					}
 				}
 			}
@@ -598,7 +596,7 @@ define("tinymce/dom/DomQuery", [
 						self[i].innerHTML = value;
 					}
 				} catch (ex) {
-					// Workaround for "Unkown runtime error" when DIV is added to P on IE
+					// Workaround for "Unknown runtime error" when DIV is added to P on IE
 					DomQuery(self[i]).empty().append(value);
 				}
 
@@ -784,10 +782,8 @@ define("tinymce/dom/DomQuery", [
 		 * @return {tinymce.dom.DomQuery} Set with unwrapped nodes.
 		 */
 		unwrap: function() {
-			return this.each(function() {
-				var parentNode = DomQuery(this.parentNode);
-				parentNode.before(parentNode.contents());
-				parentNode.remove();
+			return this.parent().each(function() {
+				DomQuery(this).replaceWith(this.childNodes);
 			});
 		},
 
@@ -1021,10 +1017,16 @@ define("tinymce/dom/DomQuery", [
 		 * Filters the current set with the specified selector.
 		 *
 		 * @method filter
-		 * @param {String} selector Selector to filter elements by.
+		 * @param {String/function} selector Selector to filter elements by.
 		 * @return {tinymce.dom.DomQuery} Set with filtered elements.
 		 */
 		filter: function(selector) {
+			if (typeof selector == 'function') {
+				return DomQuery(grep(this.toArray(), function(item, i) {
+					return selector(i, item);
+				}));
+			}
+
 			return DomQuery(DomQuery.filter(selector, this.toArray()));
 		},
 
@@ -1032,15 +1034,22 @@ define("tinymce/dom/DomQuery", [
 		 * Gets the current node or any partent matching the specified selector.
 		 *
 		 * @method closest
-		 * @param {String} selector Selector to get element by.
+		 * @param {String/Element/tinymce.dom.DomQuery} selector Selector or element to find.
 		 * @return {tinymce.dom.DomQuery} Set with closest elements.
 		 */
 		closest: function(selector) {
 			var result = [];
 
+			if (selector instanceof DomQuery) {
+				selector = selector[0];
+			}
+
 			this.each(function(i, node) {
 				while (node) {
-					if (selector.nodeType && node == selector || DomQuery(node).is(selector)) {
+					if (typeof selector == 'string' && DomQuery(node).is(selector)) {
+						result.push(node);
+						break;
+					} else if (node == selector) {
 						result.push(node);
 						break;
 					}
@@ -1050,6 +1059,40 @@ define("tinymce/dom/DomQuery", [
 			});
 
 			return DomQuery(result);
+		},
+
+		/**
+		 * Returns the offset of the first element in set or sets the top/left css properties of all elements in set.
+		 *
+		 * @method offset
+		 * @param {Object} offset Optional offset object to set on each item.
+		 * @return {Object/tinymce.dom.DomQuery} Returns the first element offset or the current set if you specified an offset.
+		 */
+		offset: function(offset) {
+			var elm, doc, docElm;
+			var x = 0, y = 0, pos;
+
+			if (!offset) {
+				elm = this[0];
+
+				if (elm) {
+					doc = elm.ownerDocument;
+					docElm = doc.documentElement;
+
+					if (elm.getBoundingClientRect) {
+						pos = elm.getBoundingClientRect();
+						x = pos.left + (docElm.scrollLeft || doc.body.scrollLeft) - docElm.clientLeft;
+						y = pos.top + (docElm.scrollTop || doc.body.scrollTop) - docElm.clientTop;
+					}
+				}
+
+				return {
+					left: x,
+					top: y
+				};
+			}
+
+			return this.css(offset);
 		},
 
 		push: push,
@@ -1078,7 +1121,13 @@ define("tinymce/dom/DomQuery", [
 		 * @param {Object} object Object to convert to array.
 		 * @return {Arrau} Array produced from object.
 		 */
-		makeArray: Tools.toArray,
+		makeArray: function(array) {
+			if (isWindow(array) || array.nodeType) {
+				return [array];
+			}
+
+			return Tools.toArray(array);
+		},
 
 		/**
 		 * Returns the index of the specified item inside the array.
@@ -1122,6 +1171,21 @@ define("tinymce/dom/DomQuery", [
 		 */
 		trim: trim,
 
+		/**
+		 * Filters out items from the input array by calling the specified function for each item.
+		 * If the function returns false the item will be excluded if it returns true it will be included.
+		 *
+		 * @static
+		 * @method grep
+		 * @param {Array} array Array of items to loop though.
+		 * @param {function} callback Function to call for each item. Include/exclude depends on it's return value.
+		 * @return {Array} New array with values imported and filtered based in input.
+		 * @example
+		 * // Filter out some items, this will return an array with 4 and 5
+		 * var items = DomQuery.grep([1, 2, 3, 4, 5], function(v) {return v > 3;});
+		 */
+		grep: grep,
+
 		// Sizzle
 		find: Sizzle,
 		expr: Sizzle.selectors,
@@ -1129,8 +1193,16 @@ define("tinymce/dom/DomQuery", [
 		text: Sizzle.getText,
 		contains: Sizzle.contains,
 		filter: function(expr, elems, not) {
+			var i = elems.length;
+
 			if (not) {
 				expr = ":not(" + expr + ")";
+			}
+
+			while (i--) {
+				if (elems[i].nodeType != 1) {
+					elems.splice(i, 1);
+				}
 			}
 
 			if (elems.length === 1) {
@@ -1146,7 +1218,21 @@ define("tinymce/dom/DomQuery", [
 	function dir(el, prop, until) {
 		var matched = [], cur = el[prop];
 
-		while (cur && cur.nodeType !== 9 && (until === undefined || cur.nodeType !== 1 || !DomQuery(cur).is(until))) {
+		if (typeof until != 'string' && until instanceof DomQuery) {
+			until = until[0];
+		}
+
+		while (cur && cur.nodeType !== 9) {
+			if (until !== undefined) {
+				if (cur === until) {
+					break;
+				}
+
+				if (typeof until == 'string' && DomQuery(cur).is(until)) {
+					break;
+				}
+			}
+
 			if (cur.nodeType === 1) {
 				matched.push(cur);
 			}
@@ -1160,13 +1246,23 @@ define("tinymce/dom/DomQuery", [
 	function sibling(node, siblingName, nodeType, until) {
 		var result = [];
 
+		if (until instanceof DomQuery) {
+			until = until[0];
+		}
+
 		for (; node; node = node[siblingName]) {
 			if (nodeType && node.nodeType !== nodeType) {
 				continue;
 			}
 
-			if (until && ((until.nodeType && node === until) || (DomQuery(node).is(until)))) {
-				break;
+			if (until !== undefined) {
+				if (node === until) {
+					break;
+				}
+
+				if (typeof until == 'string' && DomQuery(node).is(until)) {
+					break;
+				}
 			}
 
 			result.push(node);
@@ -1211,18 +1307,6 @@ define("tinymce/dom/DomQuery", [
 		},
 
 		/**
-		 * Returns a new collection with the all the parents until the matching selector/element
-		 * of each item in current collection matching the optional selector.
-		 *
-		 * @method parentsUntil
-		 * @param {String/Element} until Until the matching selector or element.
-		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching parents.
-		 */
-		parentsUntil: function(node, until) {
-			return dir(node, "parentNode", until);
-		},
-
-		/**
 		 * Returns a new collection with next sibling of each item in current collection matching the optional selector.
 		 *
 		 * @method next
@@ -1242,28 +1326,6 @@ define("tinymce/dom/DomQuery", [
 		 */
 		prev: function(node) {
 			return firstSibling(node, 'previousSibling', 1);
-		},
-
-		/**
-		 * Returns a new collection with all next siblings of each item in current collection matching the optional selector.
-		 *
-		 * @method nextUntil
-		 * @param {String/Element} until Until the matching selector or element.
-		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
-		 */
-		nextUntil: function(node, selector) {
-			return sibling(node, 'nextSibling', 1, selector).slice(1);
-		},
-
-		/**
-		 * Returns a new collection with all previous siblings of each item in current collection matching the optional selector.
-		 *
-		 * @method prevUntil
-		 * @param {String/Element} until Until the matching selector or element.
-		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
-		 */
-		prevUntil: function(node, selector) {
-			return sibling(node, 'previousSibling', 1, selector).slice(1);
 		},
 
 		/**
@@ -1302,16 +1364,88 @@ define("tinymce/dom/DomQuery", [
 				}
 			});
 
-			result = DomQuery.unique(result);
+			// If traversing on multiple elements we might get the same elements twice
+			if (this.length > 1) {
+				result = DomQuery.unique(result);
 
-			if (name.indexOf('parents') === 0 || name === 'prevUntil') {
-				result = result.reverse();
+				if (name.indexOf('parents') === 0) {
+					result = result.reverse();
+				}
 			}
 
 			result = DomQuery(result);
 
-			if (selector && name.indexOf("Until") == -1) {
+			if (selector) {
 				return result.filter(selector);
+			}
+
+			return result;
+		};
+	});
+
+	each({
+		/**
+		 * Returns a new collection with the all the parents until the matching selector/element
+		 * of each item in current collection matching the optional selector.
+		 *
+		 * @method parentsUntil
+		 * @param {String/Element/tinymce.dom.DomQuery} until Until the matching selector or element.
+		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching parents.
+		 */
+		parentsUntil: function(node, until) {
+			return dir(node, "parentNode", until);
+		},
+
+		/**
+		 * Returns a new collection with all next siblings of each item in current collection matching the optional selector.
+		 *
+		 * @method nextUntil
+		 * @param {String/Element/tinymce.dom.DomQuery} until Until the matching selector or element.
+		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
+		 */
+		nextUntil: function(node, until) {
+			return sibling(node, 'nextSibling', 1, until).slice(1);
+		},
+
+		/**
+		 * Returns a new collection with all previous siblings of each item in current collection matching the optional selector.
+		 *
+		 * @method prevUntil
+		 * @param {String/Element/tinymce.dom.DomQuery} until Until the matching selector or element.
+		 * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.
+		 */
+		prevUntil: function(node, until) {
+			return sibling(node, 'previousSibling', 1, until).slice(1);
+		}
+	}, function(name, fn) {
+		DomQuery.fn[name] = function(selector, filter) {
+			var self = this, result = [];
+
+			self.each(function() {
+				var nodes = fn.call(result, this, selector, result);
+
+				if (nodes) {
+					if (DomQuery.isArray(nodes)) {
+						result.push.apply(result, nodes);
+					} else {
+						result.push(nodes);
+					}
+				}
+			});
+
+			// If traversing on multiple elements we might get the same elements twice
+			if (this.length > 1) {
+				result = DomQuery.unique(result);
+
+				if (name.indexOf('parents') === 0 || name === 'prevUntil') {
+					result = result.reverse();
+				}
+			}
+
+			result = DomQuery(result);
+
+			if (filter) {
+				return result.filter(filter);
 			}
 
 			return result;
@@ -1334,15 +1468,101 @@ define("tinymce/dom/DomQuery", [
 	DomQuery.overrideDefaults = function(callback) {
 		var defaults;
 
-		function jQuerySub(selector, context) {
+		function sub(selector, context) {
 			defaults = defaults || callback();
-			return new jQuerySub.fn.init(selector || defaults.element, context || defaults.context);
+
+			if (arguments.length === 0) {
+				selector = defaults.element;
+			}
+
+			if (!context) {
+				context = defaults.context;
+			}
+
+			return new sub.fn.init(selector, context);
 		}
 
-		DomQuery.extend(jQuerySub, this);
+		DomQuery.extend(sub, this);
 
-		return jQuerySub;
+		return sub;
 	};
+
+	function appendHooks(targetHooks, prop, hooks) {
+		each(hooks, function(name, func) {
+			targetHooks[name] = targetHooks[name] || {};
+			targetHooks[name][prop] = func;
+		});
+	}
+
+	if (Env.ie && Env.ie < 8) {
+		appendHooks(attrHooks, 'get', {
+			maxlength: function(elm) {
+				var value = elm.maxLength;
+
+				if (value === 0x7fffffff) {
+					return undef;
+				}
+
+				return value;
+			},
+
+			size: function(elm) {
+				var value = elm.size;
+
+				if (value === 20) {
+					return undef;
+				}
+
+				return value;
+			},
+
+			'class': function(elm) {
+				return elm.className;
+			},
+
+			style: function(elm) {
+				var value = elm.style.cssText;
+
+				if (value.length === 0) {
+					return undef;
+				}
+
+				return value;
+			}
+		});
+
+		appendHooks(attrHooks, 'set', {
+			'class': function(elm, value) {
+				elm.className = value;
+			},
+
+			style: function(elm, value) {
+				elm.style.cssText = value;
+			}
+		});
+	}
+
+	if (Env.ie && Env.ie < 9) {
+		/*jshint sub:true */
+		/*eslint dot-notation: 0*/
+		cssFix['float'] = 'styleFloat';
+
+		appendHooks(cssHooks, 'set', {
+			opacity: function(elm, value) {
+				var style = elm.style;
+
+				if (value === null || value === '') {
+					style.removeAttribute('filter');
+				} else {
+					style.zoom = 1;
+					style.filter = 'alpha(opacity=' + (value * 100) + ')';
+				}
+			}
+		});
+	}
+
+	DomQuery.attrHooks = attrHooks;
+	DomQuery.cssHooks = cssHooks;
 
 	return DomQuery;
 });

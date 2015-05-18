@@ -1,41 +1,92 @@
-TastyIgniter BETA release 1.2.0
+ADDED:
+Session library now using 'CI' PHP native session
+root_url() method to return site root url
+Themes customization:
+	New method to template library to load theme configuration file
+	theme_config.php configuration file is now required in theme root directory to install/customize themes.
+	'customize' key required in $theme configuration array, in other to enable/load customization.
+	Section array items ('title', 'desc', 'icon', 'fields')
+	fields array items ('id', 'type') ('type' => 'hidden|text|password|textarea|group|color|media|checkbox|radio|dropdown|upload')
+    admin_theme_helper methods moved to Customizer class
 
-ADDED: 
-1. Administrator password reset 
-3. Coupon Validity Periods
-4. Frontend Location info/reviews page added.
-5. Locations list page added to frontend
-6. Hooks enabled
+Menu Category hierarchy: with parent and as many child levels
+Ext_Controller
+Extensions::options to load extensions admin options page
+New column 'status' added to extensions table, to indicate whether extension is installed/uninstalled and to keep extension data in database after uninstallation.
+Cart Module: option to show or hide menu images and set sizes
+Migrations schemas:
+	create trigger (duplicatePermalink) to avoid duplicate permalink value in permalinks table
+Permalinks:
+	added controller attribute to improve routing
+Notifications System:
+	New database table schema for notifications
+Added order and reservation status color
+Activity:
+    page views count per ip/customer
 
 
-CHANGES: 
-1. Improved Administrator Panel GUI
-2. Removed admin/image_tool
-3. Added image manager options to admin/settings
-4. Improved TastyIgniter Setup 
-5. Improved menu options with customisable price/quantity per menu and quantity stock control (BETA mode)
-6. Improved pages
-7. Default/main location 'address' fields can now be edited from admin/settings or admin/locations
-8. Modification of 'ti_version' in application/config/config.php by extensions/setup deprecated.
-9. Configuration item: 'ti_version' is now set with initial_schema after migration is successful.
-10. Moved settings library from autoload to pre_controller hook
+
+CHANGES:
+Admin, Main and Setup now separated and shares one system components
+    CI_Controller now has subclass Base_Controller
+    Base_Controller has subclasses Admin_Controller and Ext_Controller, Main_Controller
+    Both admin and main application controllers now extends Admin_Controller and Main_Controller respectively instead of CI_Controller
+***Application controllers now organized in folder, (this affects URI routing)
+Move encryption_key config item from database to config file.
+Move log_path config item from database to config file.
+***modules_locations config item now set from index.php instead of config file
+Settings library now sets config items from database only if settings database table exists
+Base controller now checks if session database table exists before using database with session
+Migration schemas: table indexes now added in $fields array instead of the dbforge->add_key function
+Flash alerts and info now uses this->alert->success/danger/error to add alert message and this->alert->display to display
+Renamed assets/download to assets/downloads (notice the downloads)
+Improved informative database backup with number of rows and displayed
+Renamed template library method regions() to setPartials()
+Rename template library setLinkTag() to setStyleTag()
+Default admin_theme and main_theme config items now grouped into default_themes array()
+Extensions root folder moved to root folder
+Extensions sub-folders structure re-arranged:
+	controllers/admin and controllers/main merged into controllers/
+	languages/admin and languages/main merged into languages/
+	views/admin and views/main merged into views/
+
+Extension class methods moved to Extension_model class
+Extension class now extensible to load admin backend module option page
+Extension admin options class must extend Extension class
+Extensions class now extends Ext_Controller instead of MX_Controller and Admin_options extends Extension
+
+Renamed permalink to USER-friendly slug also column in permalinks table
+Reviews can now be added on reservations and orders. column order_id changed to sale_id and new column sale_type added to differentiate order reviews from reservations reviews.
+Status History:
+	changed status_history database table column from assigned_id to assignee_id
+	changed reservations database table column from staff_id to assignee_id
+	added assignee_id column to orders database table
+Activity:
+    activity timeout changed to activity online timeout on settings page
+    activity archive changed to activity archive timeout on settings page
+    IP blacklist removed, to be added back in next version
+
+Moved admin login auth and permission check from controllers to admin base controllers
+Added referrer_url to ti_url_helper, which will return the user referral url.
+Changed config('maintenance_page') to config('maintenance_message') and use show_error() instead of loading controller.
+Improved banners and banners_module.... move dimension from banners and banners_module.
 
 
-FIXED:
-1. Fresh installation will include database-sample.php instead of database.php
+TO-DO:
+Improve site_url and redirect() uri re-routing
+Improve image manager styles responsiveness and remove irrelevant options
+Customer Activity IP blacklist
+add functionality to add multiple banners in module (jst like layout tables.)
+Improve admin controllers to remove duplicate methods
+
+Fancy checkbox bootstrap plugin
 
 
-MIGRATIONS:
-2. initial_schema.sql - countries, coupons,
-3. 001 - menus table auto increment from 11 instead of 1
-3. 001 - permalinks table auto increment from 11 instead of 1
-3. 002 - flag column added to countries table
-4. 002 - validity period, recurring .... added to coupons table
-5. Removed database tables: menu_to_options
-6. Added Database tables: options, option_values
-7. Modified Database tables: menu_options, menu_option_values
-8. Renamed column order_option_id to option_values in order_menus table
-9. Modified order_options table: removed option_id, renamed option_name, option_price to order_option_name, order_option_price
-10: Modified pages table: renamed menu_location to navigation
-11. Moved pages insert data from demo_schema to initial_schema with corresponding permalinks insert data
-15. Added one customer group data in initial_schema as default
+UPDATE SQL FILE:
+update extensions table
+update uri_routes table, if possible remove completely.
+
+
+
+GitHub done:
+Remove duplicate model classes

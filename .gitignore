@@ -1,25 +1,17 @@
-#Mac OS X file
 .DS_Store
+.idea
 
-# Index file
-/index.php
+system/tastyigniter/cache/*
+!system/tastyigniter/cache/index.html
+!system/tastyigniter/cache/.htaccess
 
-# Cache Files
-/application/cache/*
-/application/cache/!index.html
-/application/cache/!.htaccess
+system/tastyigniter/logs/*
+!system/tastyigniter/logs/index.html
+!system/tastyigniter/logs/.htaccess
 
-# Database config file
-/application/config/database.php
+assets/images/thumbs/*
+!assets/images/thumbs/index.html
 
-# Setup Folder
-/application/extensions/setup
-/application/extensions/setup_
-
-# Log file
-/application/logs/log.php
-/application/logs/!index.html
-
-# Image Thumb Files
-/assets/img/thumbs/*
-!/assets/img/thumbs/index.html
+assets/images/data/*
+!assets/images/data/index.html
+!assets/images/data/flags

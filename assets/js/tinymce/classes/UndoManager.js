@@ -14,10 +14,11 @@
  * @class tinymce.UndoManager
  */
 define("tinymce/UndoManager", [
+	"tinymce/util/VK",
 	"tinymce/Env",
 	"tinymce/util/Tools",
 	"tinymce/html/SaxParser"
-], function(Env, Tools, SaxParser) {
+], function(VK, Env, Tools, SaxParser) {
 	var trim = Tools.trim, trimContentRegExp;
 
 	trimContentRegExp = new RegExp([
@@ -39,7 +40,7 @@ define("tinymce/UndoManager", [
 		 * @return {String} HTML contents of the editor excluding some internal bogus elements.
 		 */
 		function getContent() {
-			var content = trim(editor.getContent({format: 'raw', no_events: 1}));
+			var content = editor.getContent({format: 'raw', no_events: 1});
 			var bogusAllRegExp = /<(\w+) [^>]*data-mce-bogus="all"[^>]*>/g;
 			var endTagIndex, index, matchLength, matches, shortEndedElements, schema = editor.schema;
 
@@ -61,7 +62,7 @@ define("tinymce/UndoManager", [
 				bogusAllRegExp.lastIndex = index - matchLength;
 			}
 
-			return content;
+			return trim(content);
 		}
 
 		function addNonTypingUndoLevel(e) {
@@ -142,7 +143,8 @@ define("tinymce/UndoManager", [
 			}
 
 			// If key isn't shift,ctrl,alt,capslock,metakey
-			if ((keyCode < 16 || keyCode > 20) && keyCode != 224 && keyCode != 91 && !self.typing) {
+			var modKey = VK.modifierPressed(e);
+			if ((keyCode < 16 || keyCode > 20) && keyCode != 224 && keyCode != 91 && !self.typing && !modKey) {
 				self.beforeChange();
 				self.typing = true;
 				self.add({}, e);
@@ -157,46 +159,14 @@ define("tinymce/UndoManager", [
 		});
 
 		// Add keyboard shortcuts for undo/redo keys
-		editor.addShortcut('ctrl+z', '', 'Undo');
-		editor.addShortcut('ctrl+y,ctrl+shift+z', '', 'Redo');
+		editor.addShortcut('meta+z', '', 'Undo');
+		editor.addShortcut('meta+y,meta+shift+z', '', 'Redo');
 
 		editor.on('AddUndo Undo Redo ClearUndos', function(e) {
 			if (!e.isDefaultPrevented()) {
 				editor.nodeChanged();
 			}
 		});
-
-		// Selection range isn't updated until after the click events default handler is executed
-		// so we need to wait for the selection to update on Gecko/WebKit it happens right away.
-		// On IE it might take a while so we listen for the SelectionChange event.
-		//
-		// We can't use the SelectionChange on all browsers event since Gecko doesn't support that.
-		if (Env.ie) {
-			editor.on('MouseUp', function(e) {
-				if (!e.isDefaultPrevented()) {
-					editor.once('SelectionChange', function() {
-						// Selection change might fire when focus is lost
-						if (editor.dom.isChildOf(editor.selection.getStart(), editor.getBody())) {
-							editor.nodeChanged();
-						}
-					});
-
-					editor.nodeChanged();
-				}
-			});
-		} else {
-			editor.on('MouseUp', function() {
-				editor.nodeChanged();
-			});
-
-			editor.on('Click', function(e) {
-				if (!e.isDefaultPrevented()) {
-					setTimeout(function() {
-						editor.nodeChanged();
-					}, 0);
-				}
-			});
-		}
 
 		self = {
 			// Explose for debugging reasons

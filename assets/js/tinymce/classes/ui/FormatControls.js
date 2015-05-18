@@ -271,7 +271,6 @@ define("tinymce/ui/FormatControls", [
 			paste: ['Paste', 'Paste'],
 			help: ['Help', 'mceHelp'],
 			selectall: ['Select all', 'SelectAll'],
-			hr: ['Insert horizontal rule', 'InsertHorizontalRule'],
 			removeformat: ['Clear formatting', 'RemoveFormat'],
 			visualaid: ['Visual aids', 'mceToggleVisualAid'],
 			newdocument: ['New document', 'mceNewDocument']
@@ -357,7 +356,6 @@ define("tinymce/ui/FormatControls", [
 
 		editor.addMenuItem('newdocument', {
 			text: 'New document',
-			shortcut: 'Ctrl+N',
 			icon: 'newdocument',
 			cmd: 'mceNewDocument'
 		});
@@ -365,7 +363,7 @@ define("tinymce/ui/FormatControls", [
 		editor.addMenuItem('undo', {
 			text: 'Undo',
 			icon: 'undo',
-			shortcut: 'Ctrl+Z',
+			shortcut: 'Meta+Z',
 			onPostRender: toggleUndoRedoState('undo'),
 			cmd: 'undo'
 		});
@@ -373,7 +371,7 @@ define("tinymce/ui/FormatControls", [
 		editor.addMenuItem('redo', {
 			text: 'Redo',
 			icon: 'redo',
-			shortcut: 'Ctrl+Y',
+			shortcut: 'Meta+Y',
 			onPostRender: toggleUndoRedoState('redo'),
 			cmd: 'redo'
 		});
@@ -386,12 +384,12 @@ define("tinymce/ui/FormatControls", [
 		});
 
 		each({
-			cut: ['Cut', 'Cut', 'Ctrl+X'],
-			copy: ['Copy', 'Copy', 'Ctrl+C'],
-			paste: ['Paste', 'Paste', 'Ctrl+V'],
-			selectall: ['Select all', 'SelectAll', 'Ctrl+A'],
-			bold: ['Bold', 'Bold', 'Ctrl+B'],
-			italic: ['Italic', 'Italic', 'Ctrl+I'],
+			cut: ['Cut', 'Cut', 'Meta+X'],
+			copy: ['Copy', 'Copy', 'Meta+C'],
+			paste: ['Paste', 'Paste', 'Meta+V'],
+			selectall: ['Select all', 'SelectAll', 'Meta+A'],
+			bold: ['Bold', 'Bold', 'Meta+B'],
+			italic: ['Italic', 'Italic', 'Meta+I'],
 			underline: ['Underline', 'Underline'],
 			strikethrough: ['Strikethrough', 'Strikethrough'],
 			subscript: ['Subscript', 'Subscript'],
@@ -429,14 +427,13 @@ define("tinymce/ui/FormatControls", [
 		editor.addButton('formatselect', function() {
 			var items = [], blocks = createFormats(editor.settings.block_formats ||
 				'Paragraph=p;' +
-				'Address=address;' +
-				'Pre=pre;' +
 				'Heading 1=h1;' +
 				'Heading 2=h2;' +
 				'Heading 3=h3;' +
 				'Heading 4=h4;' +
 				'Heading 5=h5;' +
-				'Heading 6=h6'
+				'Heading 6=h6;' +
+				'Preformatted=pre'
 			);
 
 			each(blocks, function(block) {
@@ -461,21 +458,21 @@ define("tinymce/ui/FormatControls", [
 
 		editor.addButton('fontselect', function() {
 			var defaultFontsFormats =
-				'Andale Mono=andale mono,times;' +
+				'Andale Mono=andale mono,monospace;' +
 				'Arial=arial,helvetica,sans-serif;' +
-				'Arial Black=arial black,avant garde;' +
-				'Book Antiqua=book antiqua,palatino;' +
+				'Arial Black=arial black,sans-serif;' +
+				'Book Antiqua=book antiqua,palatino,serif;' +
 				'Comic Sans MS=comic sans ms,sans-serif;' +
-				'Courier New=courier new,courier;' +
-				'Georgia=georgia,palatino;' +
-				'Helvetica=helvetica;' +
-				'Impact=impact,chicago;' +
+				'Courier New=courier new,courier,monospace;' +
+				'Georgia=georgia,palatino,serif;' +
+				'Helvetica=helvetica,arial,sans-serif;' +
+				'Impact=impact,sans-serif;' +
 				'Symbol=symbol;' +
 				'Tahoma=tahoma,arial,helvetica,sans-serif;' +
-				'Terminal=terminal,monaco;' +
-				'Times New Roman=times new roman,times;' +
-				'Trebuchet MS=trebuchet ms,geneva;' +
-				'Verdana=verdana,geneva;' +
+				'Terminal=terminal,monaco,monospace;' +
+				'Times New Roman=times new roman,times,serif;' +
+				'Trebuchet MS=trebuchet ms,geneva,sans-serif;' +
+				'Verdana=verdana,geneva,sans-serif;' +
 				'Webdings=webdings;' +
 				'Wingdings=wingdings,zapf dingbats';
 

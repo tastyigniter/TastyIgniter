@@ -99,7 +99,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 						' role="option"' +
 						' tabIndex="-1"' +
 						' style="' + (color ? 'background-color: ' + color : '') + '"' +
-						' title="' + title + '">' +
+						' title="' + tinymce.translate(title) + '">' +
 						(isNoColor ? '&#215;' : '') +
 					'</div>' +
 				'</td>'
@@ -108,7 +108,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 
 		colors = mapColors();
 		colors.push({
-			text: "No color",
+			text: tinymce.translate("No color"),
 			color: "transparent"
 		});
 
@@ -138,7 +138,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 					'<td colspan="' + cols + '" class="mce-custom-color-btn">' +
 						'<div id="' + id + '-c" class="mce-widget mce-btn mce-btn-small mce-btn-flat" ' +
 							'role="button" tabindex="-1" aria-labelledby="' + id + '-c" style="width: 100%">' +
-							'<button type="button" role="presentation" tabindex="-1">Custom...</button>' +
+							'<button type="button" role="presentation" tabindex="-1">' + tinymce.translate('Custom...') + '</button>' +
 						'</div>' +
 					'</td>' +
 				'</tr>'
@@ -159,15 +159,19 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 	}
 
 	function applyFormat(format, value) {
-		editor.focus();
-		editor.formatter.apply(format, {value: value});
-		editor.nodeChanged();
+		editor.undoManager.transact(function() {
+			editor.focus();
+			editor.formatter.apply(format, {value: value});
+			editor.nodeChanged();
+		});
 	}
 
 	function removeFormat(format) {
-		editor.focus();
-		editor.formatter.remove(format, {value: null}, null, true);
-		editor.nodeChanged();
+		editor.undoManager.transact(function() {
+			editor.focus();
+			editor.formatter.remove(format, {value: null}, null, true);
+			editor.nodeChanged();
+		});
 	}
 
 	function onPanelClick(e) {
@@ -177,6 +181,12 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 			buttonCtrl.hidePanel();
 			buttonCtrl.color(value);
 			applyFormat(buttonCtrl.settings.format, value);
+		}
+
+		function resetColor() {
+			buttonCtrl.hidePanel();
+			buttonCtrl.resetColor();
+			removeFormat(buttonCtrl.settings.format);
 		}
 
 		function setDivColor(div, value) {
@@ -225,12 +235,10 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 			this.lastId = e.target.id;
 
 			if (value == 'transparent') {
-				removeFormat(buttonCtrl.settings.format);
-				buttonCtrl.hidePanel();
-				return;
+				resetColor();
+			} else {
+				selectColor(value);
 			}
-
-			selectColor(value);
 		} else if (value !== null) {
 			buttonCtrl.hidePanel();
 		}
@@ -241,6 +249,8 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 
 		if (self._color) {
 			applyFormat(self.settings.format, self._color);
+		} else {
+			removeFormat(self.settings.format);
 		}
 	}
 

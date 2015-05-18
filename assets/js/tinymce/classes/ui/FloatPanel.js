@@ -88,8 +88,15 @@ define("tinymce/ui/FloatPanel", [
 
 	function bindWindowResizeHandler() {
 		if (!windowResizeHandler) {
+			var docElm = document.documentElement, clientWidth = docElm.clientWidth, clientHeight = docElm.clientHeight;
+
 			windowResizeHandler = function() {
-				FloatPanel.hideAll();
+				// Workaround for #7065 IE 7 fires resize events event though the window wasn't resized
+				if (!document.all || clientWidth != docElm.clientWidth || clientHeight != docElm.clientHeight) {
+					clientWidth = docElm.clientWidth;
+					clientHeight = docElm.clientHeight;
+					FloatPanel.hideAll();
+				}
 			};
 
 			DomUtils.on(window, 'resize', windowResizeHandler);
@@ -136,6 +143,46 @@ define("tinymce/ui/FloatPanel", [
 		}
 	}
 
+	function addRemove(add, ctrl) {
+		var i, zIndex = FloatPanel.zIndex || 0xFFFF, topModal;
+
+		if (add) {
+			zOrder.push(ctrl);
+		} else {
+			i = zOrder.length;
+
+			while (i--) {
+				if (zOrder[i] === ctrl) {
+					zOrder.splice(i, 1);
+				}
+			}
+		}
+
+		if (zOrder.length) {
+			for (i = 0; i < zOrder.length; i++) {
+				if (zOrder[i].modal) {
+					zIndex++;
+					topModal = zOrder[i];
+				}
+
+				zOrder[i].getEl().style.zIndex = zIndex;
+				zOrder[i].zIndex = zIndex;
+				zIndex++;
+			}
+		}
+
+		var modalBlockEl = document.getElementById(ctrl.classPrefix + 'modal-block');
+
+		if (topModal) {
+			DomUtils.css(modalBlockEl, 'z-index', topModal.zIndex - 1);
+		} else if (modalBlockEl) {
+			modalBlockEl.parentNode.removeChild(modalBlockEl);
+			hasModal = false;
+		}
+
+		FloatPanel.currentZIndex = zIndex;
+	}
+
 	var FloatPanel = Panel.extend({
 		Mixins: [Movable, Resizable],
 
@@ -148,34 +195,6 @@ define("tinymce/ui/FloatPanel", [
 		 */
 		init: function(settings) {
 			var self = this;
-
-			function reorder() {
-				var i, zIndex = FloatPanel.zIndex || 0xFFFF, topModal;
-
-				if (zOrder.length) {
-					for (i = 0; i < zOrder.length; i++) {
-						if (zOrder[i].modal) {
-							zIndex++;
-							topModal = zOrder[i];
-						}
-
-						zOrder[i].getEl().style.zIndex = zIndex;
-						zOrder[i].zIndex = zIndex;
-						zIndex++;
-					}
-				}
-
-				var modalBlockEl = document.getElementById(self.classPrefix + 'modal-block');
-
-				if (topModal) {
-					DomUtils.css(modalBlockEl, 'z-index', topModal.zIndex - 1);
-				} else if (modalBlockEl) {
-					modalBlockEl.parentNode.removeChild(modalBlockEl);
-					hasModal = false;
-				}
-
-				FloatPanel.currentZIndex = zIndex;
-			}
 
 			self._super(settings);
 			self._eventsRoot = self;
@@ -216,22 +235,7 @@ define("tinymce/ui/FloatPanel", [
 						hasModal = true;
 					}
 
-					zOrder.push(self);
-					reorder();
-				}
-			});
-
-			self.on('close hide', function(e) {
-				if (e.control == self) {
-					var i = zOrder.length;
-
-					while (i--) {
-						if (zOrder[i] === self) {
-							zOrder.splice(i, 1);
-						}
-					}
-
-					reorder();
+					addRemove(true, self);
 				}
 			});
 
@@ -302,6 +306,8 @@ define("tinymce/ui/FloatPanel", [
 		 */
 		hide: function() {
 			removeVisiblePanel(this);
+			addRemove(false, this);
+
 			return this._super();
 		},
 
@@ -323,9 +329,12 @@ define("tinymce/ui/FloatPanel", [
 		close: function() {
 			var self = this;
 
-			self.fire('close');
+			if (!self.fire('close').isDefaultPrevented()) {
+				self.remove();
+				addRemove(false, self);
+			}
 
-			return self.remove();
+			return self;
 		},
 
 		/**

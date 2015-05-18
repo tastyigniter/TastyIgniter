@@ -20,7 +20,7 @@ tinymce.PluginManager.add('variable', function(editor) {
             // Open window
             editor.windowManager.open({
                 title: 'Email Variables',
-				url: js_site_url('admin/mail_templates/variables'),
+				url: js_site_url('mail_templates/variables'),
 				width: 700,
 				height: 550,
                 //body: [

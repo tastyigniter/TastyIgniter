@@ -10,8 +10,8 @@ Installation
 3. Upload the TastyIgniter folders and files to your server. Normally the index.php file will be at your root.
 4. Run the TastyIgniter installation script by accessing the URL in a web browser. This should be the URL where you uploaded the TasyIgniter files. Example, http://example.com/ or http://example.com/folder
 5. Follow all onscreen informations and make sure all installation requirements are checked.
-6. After successful install, delete the /setup/ directory from ftp.
-7. That's it! TastyIgniter should now be installed.
+6. After successful install, delete the /install/ directory from ftp.
+7. That's it! WordPress should now be installed.
 
 How to Contribute
 ============

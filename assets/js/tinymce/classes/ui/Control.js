@@ -25,7 +25,6 @@ define("tinymce/ui/Control", [
 ], function(Class, Tools, EventDispatcher, Collection, DomUtils) {
 	"use strict";
 
-	var elementIdCache = {};
 	var hasMouseWheelEventSupport = "onmousewheel" in document;
 	var hasWheelEventSupport = false;
 	var classPrefix = "mce-";
@@ -55,7 +54,6 @@ define("tinymce/ui/Control", [
 
 	var Control = Class.extend({
 		Statics: {
-			elementIdCache: elementIdCache,
 			classPrefix: classPrefix
 		},
 
@@ -98,6 +96,7 @@ define("tinymce/ui/Control", [
 			self._text = self._name = '';
 			self._width = self._height = 0;
 			self._aria = {role: settings.role};
+			this._elmCache = {};
 
 			// Setup classes
 			classes = settings.classes;
@@ -206,7 +205,7 @@ define("tinymce/ui/Control", [
 				return;
 			}
 
-			if (typeof(value) === "number") {
+			if (typeof value === "number") {
 				value = value || 0;
 
 				return {
@@ -306,7 +305,7 @@ define("tinymce/ui/Control", [
 			width = settings.width;
 			height = settings.height;
 			autoResize = settings.autoResize;
-			autoResize = typeof(autoResize) != "undefined" ? autoResize : !width && !height;
+			autoResize = typeof autoResize != "undefined" ? autoResize : !width && !height;
 
 			width = width || minWidth;
 			height = height || minHeight;
@@ -531,7 +530,7 @@ define("tinymce/ui/Control", [
 			function resolveCallbackName(name) {
 				var callback, scope;
 
-				if (typeof(name) != 'string') {
+				if (typeof name != 'string') {
 					return name;
 				}
 
@@ -839,15 +838,16 @@ define("tinymce/ui/Control", [
 		 *
 		 * @method getEl
 		 * @param {String} [suffix] Suffix to get element by.
-		 * @param {Boolean} [dropCache] True if the cache for the element should be dropped.
 		 * @return {Element} HTML DOM element for the current control or it's children.
 		 */
-		getEl: function(suffix, dropCache) {
-			var elm, id = suffix ? this._id + '-' + suffix : this._id;
+		getEl: function(suffix) {
+			var id = suffix ? this._id + '-' + suffix : this._id;
 
-			elm = elementIdCache[id] = (dropCache === true ? null : elementIdCache[id]) || DomUtils.get(id);
+			if (!this._elmCache[id]) {
+				this._elmCache[id] = DomUtils.get(id);
+			}
 
-			return elm;
+			return this._elmCache[id];
 		},
 
 		/**
@@ -860,7 +860,7 @@ define("tinymce/ui/Control", [
 		visible: function(state) {
 			var self = this, parentCtrl;
 
-			if (typeof(state) !== "undefined") {
+			if (typeof state !== "undefined") {
 				if (self._visible !== state) {
 					if (self._rendered) {
 						self.getEl().style.display = state ? '' : 'none';
@@ -942,7 +942,7 @@ define("tinymce/ui/Control", [
 		aria: function(name, value) {
 			var self = this, elm = self.getEl(self.ariaTarget);
 
-			if (typeof(value) === "undefined") {
+			if (typeof value === "undefined") {
 				return self._aria[name];
 			} else {
 				self._aria[name] = value;
@@ -1058,16 +1058,7 @@ define("tinymce/ui/Control", [
 				delete lookup[self._id];
 			}
 
-			delete elementIdCache[self._id];
-
 			if (elm && elm.parentNode) {
-				var nodes = elm.getElementsByTagName('*');
-
-				i = nodes.length;
-				while (i--) {
-					delete elementIdCache[nodes[i].id];
-				}
-
 				elm.parentNode.removeChild(elm);
 			}
 
@@ -1275,7 +1266,7 @@ define("tinymce/ui/Control", [
 						for (i = lastParents.length - 1; i >= idx; i--) {
 							lastCtrl = lastParents[i];
 							lastCtrl.fire("mouseleave", {
-								target : lastCtrl.getEl()
+								target: lastCtrl.getEl()
 							});
 						}
 					}
@@ -1283,7 +1274,7 @@ define("tinymce/ui/Control", [
 					for (i = idx; i < parents.length; i++) {
 						ctrl = parents[i];
 						ctrl.fire("mouseenter", {
-							target : ctrl.getEl()
+							target: ctrl.getEl()
 						});
 					}
 				}
