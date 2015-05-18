@@ -14,16 +14,14 @@ class Ext_Controller extends Base_Controller {
 	{
         parent::__construct();
 
-		log_message('debug', 'Extensions Controller Class Initialized');
+		log_message('info', 'Extensions Controller Class Initialized');
 
-		/*$this->load->library('customer');
+        $this->load->library('template');
 
-		$this->load->library('template');
-		$this->template->setTheme($this->config->item('main', 'default_themes'), MAINDIR);
+        if (class_exists('admin_'.$this->router->fetch_module(), FALSE)) {
+            $this->load->library('user');
+        }
 
-		$this->load->library('extension');*/
-
-		$this->load->library('extension');
 		$this->load->model('Extensions_model');
 	}
 }

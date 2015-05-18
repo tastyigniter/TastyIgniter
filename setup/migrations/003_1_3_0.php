@@ -7,7 +7,8 @@ class Migration_1_3_0 extends CI_Migration {
         $this->dbforge->add_column('extensions', array('title VARCHAR(255) NOT NULL'));
 
         $this->dbforge->add_column('working_hours', array('status TINYINT(1) NOT NULL'));
-		$this->dbforge->add_column('categories', array('parent_id INT(11) NOT NULL'));
+        $this->dbforge->add_column('categories', array('parent_id INT(11) NOT NULL'));
+        $this->dbforge->add_column('categories', array('image VARCHAR(255) NOT NULL'));
 
 		$this->db->query("INSERT INTO ".$this->db->dbprefix('settings')." (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES (10971, 'prefs', 'default_themes', 'a:2:{s:5:\"admin\";s:18:\"tastyigniter-blue/\";s:4:\"main\";s:20:\"tastyigniter-orange/\";}', 1);");
 
@@ -17,12 +18,24 @@ class Migration_1_3_0 extends CI_Migration {
 		$this->db->query("ALTER TABLE ".$this->db->dbprefix('reviews')." ADD `sale_type` VARCHAR(32)  NULL  DEFAULT NULL  AFTER `sale_id`;");
 		$this->db->query("ALTER TABLE ".$this->db->dbprefix('reviews')." DROP PRIMARY KEY, ADD PRIMARY KEY (`review_id`, `sale_type`, `sale_id`);");
 
-		$this->notifications();
+        // Drop covered areas column, now using options column
+        $this->dbforge->drop_column('locations', 'covered_areas');
 
+        $this->dbforge->add_column('statuses', array('status_color VARCHAR(32) NOT NULL'));
+
+        $this->dbforge->add_column('orders', array('assignee_id INT(11) NOT NULL'));
+
+        $this->dbforge->add_column('customer_activity', array('page_views INT(11) NOT NULL'));
+
+        $this->_notifications();
 	}
 
 	public function down() {
-		$this->dbforge->drop_column('categories', 'parent_id');
+        $this->dbforge->drop_column('extensions', 'status');
+        $this->dbforge->drop_column('extensions', 'title');
+
+        $this->dbforge->drop_column('categories', 'parent_id');
+        $this->dbforge->drop_column('categories', 'image');
 		$this->db->where('sort', 'prefs')->where('item', 'default_themes')->delete('settings');
 
 		$this->db->query("ALTER TABLE ".$this->db->dbprefix('permalinks')." DROP INDEX `uniqueSlug`;");
@@ -30,19 +43,29 @@ class Migration_1_3_0 extends CI_Migration {
 		$this->db->query("ALTER TABLE ".$this->db->dbprefix('reviews')." CHANGE `sale_id` `order_id` INT(11)  NOT NULL;");
 		$this->db->query("ALTER TABLE ".$this->db->dbprefix('reviews')." DROP PRIMARY KEY, ADD PRIMARY KEY (`review_id`, `order_id`);");
 
+        // Roll back and add covered areas column
+        $this->dbforge->add_column('locations', array('covered_areas TEXT NOT NULL'));
+
+        $this->dbforge->drop_column('statuses', 'status_color');
+
+        $this->dbforge->drop_column('orders', 'assignee_id');
+
+        $this->dbforge->drop_column('customer_activity', 'page_views');
+
         $this->dbforge->drop_table('notifications');
 	}
 
-	private function notifications() {
+	private function _notifications() {
 		$fields = array(
-			'notification_id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY',
-			'menu_option_id INT(11) NOT NULL',
-			'menu_id INT(11) NOT NULL',
-			'option_id INT(11) NOT NULL',
-			'option_value_id INT(11) NOT NULL',
-			'new_price DECIMAL(15,2) NOT NULL',
-			'quantity INT(11) NOT NULL',
-			'substract_stock TINYINT(4) NOT NULL',
+            'notification_id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY',
+			'action VARCHAR(255) NOT NULL',
+			'object VARCHAR(255) NOT NULL',
+			'suffix VARCHAR(255) NOT NULL',
+			'object_id INT(11) NOT NULL',
+			'actor_id INT(11) NOT NULL',
+			'subject_id INT(11) NOT NULL',
+			'status TINYINT(4) NOT NULL',
+			'date_added DATETIME NOT NULL',
   		);
 
 		$this->dbforge->add_field($fields);

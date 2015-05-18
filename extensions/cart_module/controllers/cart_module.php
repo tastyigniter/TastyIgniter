@@ -13,7 +13,7 @@ class Cart_module extends Ext_Controller {
 		$this->lang->load('cart_module/cart_module');
 	}
 
-	public function index() {
+	public function index($ext_data = array()) {
 		if ( ! file_exists(EXTPATH .'cart_module/views/cart_module.php')) { 								//check if file exists in views folder
 			show_404(); 																		// Whoops, show 404 error page!
 		}
@@ -22,11 +22,10 @@ class Cart_module extends Ext_Controller {
 			$data['cart_alert'] = $this->session->flashdata('cart_alert');  								// retrieve session flashdata variable if available
 		} else {
 			$data['cart_alert'] = '';
-		}
+        }
 
-		$ext_data = $this->Extensions_model->getModuleData('cart_module');
-
-		// START of retrieving lines from language file to pass to view.
+        $data['cart_alert'] = '';
+        // START of retrieving lines from language file to pass to view.
 		$data['text_heading'] 		= $this->lang->line('text_heading');
 		$data['text_no_cart_items'] = $this->lang->line('text_no_cart_items');
 		$data['text_my_order'] 		= $this->lang->line('text_my_order');
@@ -68,9 +67,9 @@ class Cart_module extends Ext_Controller {
 		if (!$this->location->searchQuery()) {
 			$data['alert_no_postcode'] = $this->lang->line('alert_no_postcode');
 			if (($this->config->item('search_by') === 'postcode')) {
-				$this->alert->set('custom_now', $this->lang->line('alert_no_postcode'));
+				$this->alert->set('custom', $this->lang->line('alert_no_postcode'));
 			} else {
-				$this->alert->set('custom_now', $this->lang->line('alert_no_address'));
+				$this->alert->set('custom', $this->lang->line('alert_no_address'));
 			}
 		}
 
@@ -87,13 +86,13 @@ class Cart_module extends Ext_Controller {
 				$menu_data = isset($menus[$cart_item['id']]) ? $menus[$cart_item['id']] : FALSE;				// get menu data based on cart item id from getMenu method in Menus model
 
  				if (!$menu_data) {
-					$this->alert->set('custom_now', $this->lang->line('alert_menu'));
+					$this->alert->set('custom', $this->lang->line('alert_menu'));
  					$cart_status = FALSE;
  				} else if ($menu_data['subtract_stock'] === '1' AND $menu_data['stock_qty'] <= 0) {												// checks if stock quantity is less than or equal to zero
-					$this->alert->set('custom_now', sprintf($this->lang->line('alert_stock'), $cart_item['name']));
+					$this->alert->set('custom', sprintf($this->lang->line('alert_stock'), $cart_item['name']));
  					$cart_status = FALSE;
  				} else if ($cart_item['qty'] < $menu_data['minimum_qty']) {									// checks if stock quantity is less than or equal to zero
-					$this->alert->set('custom_now', sprintf($this->lang->line('alert_min_qty'), $cart_item['name'], $menu_data['minimum_qty']));
+					$this->alert->set('custom', sprintf($this->lang->line('alert_min_qty'), $cart_item['name'], $menu_data['minimum_qty']));
  					$cart_status = FALSE;
 				} else {
  					$cart_status = TRUE;
@@ -142,11 +141,12 @@ class Cart_module extends Ext_Controller {
 			}
 
 			$data['coupon'] = array();
-			if ($coupon = $this->cart->coupon()) {
+            $coupon = $this->cart->coupon();
+			if (!empty($coupon['code'])) {
 				$response = $this->validateCoupon($coupon['code']);
 
 				if (!is_array($response)) {
-					$this->alert->set('custom_now', $response);
+					$this->alert->set('custom', $response);
 				} else {
 					$data['sub_total'] 	= $this->currency->format($this->cart->total());
 					$data['coupon'] = array(
@@ -417,7 +417,7 @@ class Cart_module extends Ext_Controller {
 						$json['error'] = $this->lang->line('alert_no_delivery');
 					} else if ($this->location->hasDelivery() AND !$this->location->checkDeliveryCoverage()) {
 						$json['error'] = $this->lang->line('alert_delivery_coverage');
-					} else if ( ! $this->location->checkMinimumOrder($this->cart->total())) { 							// checks if cart contents is empty
+					} else if ($this->cart->contents() AND ! $this->location->checkMinimumOrder($this->cart->total())) { 							// checks if cart contents is empty
 						$json['error'] = $this->lang->line('alert_min_total');
 					}
 
@@ -443,7 +443,7 @@ class Cart_module extends Ext_Controller {
 			$error = $this->lang->line('alert_coupon_invalid');						// display error message
 		}
 
-		if (!$coupon) {
+		if (!$coupon AND !$error) {
 			$error = $this->lang->line('alert_coupon_expired');								// display error message
 		} else {
 			if ($coupon['min_total'] > $this->cart->total()) {

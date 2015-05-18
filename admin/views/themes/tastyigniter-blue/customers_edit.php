@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
@@ -14,35 +14,35 @@
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="input-first-name" class="col-sm-2 control-label">First Name:</label>
+						<label for="input-first-name" class="col-sm-3 control-label">First Name:</label>
 						<div class="col-sm-5">
 							<input type="text" name="first_name" id="input-first-name" class="form-control" value="<?php echo set_value('first_name', $first_name); ?>" />
 							<?php echo form_error('first_name', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-last-name" class="col-sm-2 control-label">Last Name:</label>
+						<label for="input-last-name" class="col-sm-3 control-label">Last Name:</label>
 						<div class="col-sm-5">
 							<input type="text" name="last_name" id="input-last-name" class="form-control" value="<?php echo set_value('last_name', $last_name); ?>" />
 							<?php echo form_error('last_name', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-email" class="col-sm-2 control-label">Email:</label>
+						<label for="input-email" class="col-sm-3 control-label">Email:</label>
 						<div class="col-sm-5">
 							<input type="text" name="email" id="input-email" class="form-control" value="<?php echo set_value('email', $email); ?>" />
 							<?php echo form_error('email', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-telephone" class="col-sm-2 control-label">Telephone:</label>
+						<label for="input-telephone" class="col-sm-3 control-label">Telephone:</label>
 						<div class="col-sm-5">
 							<input type="text" name="telephone" id="input-telephone" class="form-control" value="<?php echo set_value('telephone', $telephone); ?>" />
 							<?php echo form_error('telephone', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-password" class="col-sm-2 control-label">Password:
+						<label for="input-password" class="col-sm-3 control-label">Password:
 							<span class="help-block">Leave blank to leave password unchanged</span>
 						</label>
 						<div class="col-sm-5">
@@ -51,14 +51,14 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-confirm-password" class="col-sm-2 control-label">Confirm Password:</label>
+						<label for="input-confirm-password" class="col-sm-3 control-label">Confirm Password:</label>
 						<div class="col-sm-5">
 							<input type="password" name="confirm_password" id="input-confirm-password" class="form-control" value="" />
 							<?php echo form_error('confirm_password', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-security-question" class="col-sm-2 control-label">Security Question:</label>
+						<label for="input-security-question" class="col-sm-3 control-label">Security Question:</label>
 						<div class="col-sm-5">
 							<select name="security_question" id="input-security-question" class="form-control">
 								<option value="">— Select —</option>
@@ -74,14 +74,14 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-security-answer" class="col-sm-2 control-label">Security Answer:</label>
+						<label for="input-security-answer" class="col-sm-3 control-label">Security Answer:</label>
 						<div class="col-sm-5">
 							<input type="text" name="security_answer" id="input-security-answer" class="form-control" value="<?php echo set_value('security_answer', $security_answer); ?>" />
 							<?php echo form_error('security_answer', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-customer-group-id" class="col-sm-2 control-label">Customer Group:</label>
+						<label for="input-customer-group-id" class="col-sm-3 control-label">Customer Group:</label>
 						<div class="col-sm-5">
 							<select name="customer_group_id" id="input-customer-group-id" class="form-control">
 							<?php foreach ($customer_groups as $customer_group) { ?>
@@ -96,7 +96,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-newsletter" class="col-sm-2 control-label">Newsletter:</label>
+						<label for="input-newsletter" class="col-sm-3 control-label">Newsletter:</label>
 						<div class="col-sm-5">
 							<div id="input-newsletter" class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($newsletter == '1') { ?>
@@ -111,7 +111,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-status" class="col-sm-2 control-label">Status:</label>
+						<label for="input-status" class="col-sm-3 control-label">Status:</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($status == '1') { ?>
@@ -127,7 +127,7 @@
 					</div>
 				</div>
 
-				<div id="addresses" class="row wrap-all">
+				<div id="addresses" class="tab-pane row wrap-all">
 					<ul id="sub-tabs" class="nav nav-tabs">
 						<?php $table_row = 1; ?>
 						<?php foreach ($addresses as $address) { ?>
@@ -144,35 +144,35 @@
 						<div id="address<?php echo $table_row; ?>" class="tab-pane row wrap-all">
 							<input type="hidden" name="address[<?php echo $table_row; ?>][address_id]" value="<?php echo set_value('address[<?php echo $table_row; ?>][address_id]', $address['address_id']); ?>" />
 							<div class="form-group">
-								<label for="input-name" class="col-sm-2 control-label">Address 1:</label>
+								<label for="input-name" class="col-sm-3 control-label">Address 1:</label>
 								<div class="col-sm-5">
 									<input type="text" name="address[<?php echo $table_row; ?>][address_1]" id="" class="form-control" value="<?php echo set_value('address[<?php echo $table_row; ?>][address_1]', $address['address_1']); ?>" />
 									<?php echo form_error('address['.$table_row.'][address_1]', '<span class="text-danger">', '</span>'); ?>
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="" class="col-sm-2 control-label">Address 2:</label>
+								<label for="" class="col-sm-3 control-label">Address 2:</label>
 								<div class="col-sm-5">
 									<input type="text" name="address[<?php echo $table_row; ?>][address_2]" id="" class="form-control" value="<?php echo set_value('address[<?php echo $table_row; ?>][address_2]', $address['address_2']); ?>" />
 									<?php echo form_error('address['.$table_row.'][address_2]', '<span class="text-danger">', '</span>'); ?>
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="" class="col-sm-2 control-label">City:</label>
+								<label for="" class="col-sm-3 control-label">City:</label>
 								<div class="col-sm-5">
 									<input type="text" name="address[<?php echo $table_row; ?>][city]" id="" class="form-control" value="<?php echo set_value('address[<?php echo $table_row; ?>][city]', $address['city']); ?>" />
 									<?php echo form_error('address['.$table_row.'][city]', '<span class="text-danger">', '</span>'); ?>
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="input-name" class="col-sm-2 control-label">Postcode:</label>
+								<label for="input-name" class="col-sm-3 control-label">Postcode:</label>
 								<div class="col-sm-5">
 									<input type="text" name="address[<?php echo $table_row; ?>][postcode]" id="" class="form-control" value="<?php echo set_value('address[<?php echo $table_row; ?>][postcode]', $address['postcode']); ?>" />
 									<?php echo form_error('address['.$table_row.'][postcode]', '<span class="text-danger">', '</span>'); ?>
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="input-name" class="col-sm-2 control-label">Country:</label>
+								<label for="input-name" class="col-sm-3 control-label">Country:</label>
 								<div class="col-sm-5">
 									<select name="address[<?php echo $table_row; ?>][country_id]" id="" class="form-control">
 									<?php foreach ($countries as $country) { ?>
@@ -291,31 +291,31 @@ function addAddress() {
 	html  = '<div id="address' + table_row + '" class="tab-pane row wrap-all">';
 	html += '<input type="hidden" name="address[' + table_row + '][address_id]" id="" class="form-control" value="<?php echo set_value("address[' + table_row + '][address_id]"); ?>" />';
 	html += '<div class="form-group">';
-	html += '	<label for="input-name" class="col-sm-2 control-label">Address 1:</label>';
+	html += '	<label for="input-name" class="col-sm-3 control-label">Address 1:</label>';
 	html += '	<div class="col-sm-5">';
 	html += '		<input type="text" name="address[' + table_row + '][address_1]" id="" class="form-control" value="<?php echo set_value("address[' + table_row + '][address_1]"); ?>" />';
 	html += '	</div>';
 	html += '</div>';
 	html += '<div class="form-group">';
-	html += '	<label for="input-name" class="col-sm-2 control-label">Address 2:</label>';
+	html += '	<label for="input-name" class="col-sm-3 control-label">Address 2:</label>';
 	html += '	<div class="col-sm-5">';
 	html += '		<input type="text" name="address[' + table_row + '][address_2]" id="" class="form-control" value="<?php echo set_value("address[' + table_row + '][address_2]"); ?>" />';
 	html += '	</div>';
 	html += '</div>';
 	html += '<div class="form-group">';
-	html += '	<label for="input-name" class="col-sm-2 control-label">City:</label>';
+	html += '	<label for="input-name" class="col-sm-3 control-label">City:</label>';
 	html += '	<div class="col-sm-5">';
 	html += '		<input type="text" name="address[' + table_row + '][city]" id="" class="form-control" value="<?php echo set_value("address[' + table_row + '][city]"); ?>" />';
 	html += '	</div>';
 	html += '</div>';
 	html += '<div class="form-group">';
-	html += '	<label for="input-name" class="col-sm-2 control-label">Postcode:</label>';
+	html += '	<label for="input-name" class="col-sm-3 control-label">Postcode:</label>';
 	html += '	<div class="col-sm-5">';
 	html += '		<input type="text" name="address[' + table_row + '][postcode]" id="" class="form-control" value="<?php echo set_value("address[' + table_row + '][postcode]"); ?>" />';
 	html += '	</div>';
 	html += '</div>';
 	html += '<div class="form-group">';
-	html += '	<label for="input-name" class="col-sm-2 control-label">Country:</label>';
+	html += '	<label for="input-name" class="col-sm-3 control-label">Country:</label>';
 	html += '	<div class="col-sm-5">';
 	html += '		<select name="address[' + table_row + '][country_id]" id="" class="form-control">';
 				<?php foreach ($countries as $country) { ?>
@@ -342,4 +342,4 @@ function addAddress() {
 
 $('#sub-tabs a:first').tab('show');
 //--></script>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

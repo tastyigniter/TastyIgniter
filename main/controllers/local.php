@@ -36,7 +36,7 @@ class Local extends Main_Controller {
 
 		// START of retrieving lines from language file to pass to view.
 		$this->template->setTitle($this->lang->line('text_heading'));
-		$this->template->setHeading($this->lang->line('text_heading'));
+//		$this->template->setHeading($this->lang->line('text_heading'));
 		$data['text_heading'] 			= $this->lang->line('text_heading');
 		$data['text_local'] 			= sprintf($this->lang->line('text_local'), $this->location->getName());
 		$data['text_opening_hours'] 	= $this->lang->line('text_opening_hours');
@@ -100,7 +100,21 @@ class Local extends Main_Controller {
 		$data['delivery_time'] 		= $this->location->deliveryTime();
 		$data['collection_time'] 	= $this->location->collectionTime();
 		$data['last_order_time'] 	= $this->location->lastOrderTime();
-		$data['payments'] 			= $this->location->paymentsList();
+
+        $payment_list = array();
+        $local_payments = $this->location->payments();
+        $payments = $this->Extensions_model->getPayments();
+
+        $data['payments'] 	= '';
+        foreach ($payments as $payment) {
+            if (!empty($local_payments) AND !in_array($payment['name'], $local_payments)) {
+                continue;
+            }
+
+            $payment_list[] = $payment['title'];
+        }
+
+        $data['payments'] 	= implode($payment_list, ', ');
 
 		if ($data['local_location']) { 															//if local restaurant data is available
 			$data['location_lat'] 		= $data['local_location']['location_lat'];
@@ -147,16 +161,14 @@ class Local extends Main_Controller {
 
 		$data['locations'] = array();
 		$locations = $this->location->getLocations();	 										// retrieve menus array based on category_id if available
-		$opening_hours = $this->location->getLocations();	 										// retrieve menus array based on category_id if available
 		if ($locations) {
 			foreach ($locations as $location) {															// loop through menus array
-				$hour = $opening_time = $closing_time = '';
 				$total_reviews = sprintf($this->lang->line('text_total_review'), site_url('local/reviews'), 1);
 
 				if ($location['offer_delivery'] !== '1' AND $location['offer_collection'] === '1') { 														// checks if cart contents is empty
-					$offers = $this->lang->line('text_collection');
+					$offers = $this->lang->line('text_collection') . $this->lang->line('text_available');
 				} else if ($location['offer_delivery'] === '1' AND $location['offer_collection'] !== '1') {
-					$offers = $this->lang->line('text_delivery');
+					$offers = $this->lang->line('text_delivery') . $this->lang->line('text_available');
 				} else if ($location['offer_delivery'] === '1' AND $location['offer_collection'] === '1') {
 					$offers = $this->lang->line('text_both_types');						// display we are open
 				} else {
@@ -166,22 +178,24 @@ class Local extends Main_Controller {
 				$hour = $this->location->openingHours($location['location_id'], date('l'));
 				$opening_time = (!isset($hour['open'])) ? '00:00' : mdate('%H:%i', strtotime($hour['open']));
 				$closing_time = (!isset($hour['close'])) ? '00:00' : mdate('%H:%i', strtotime($hour['close']));
-				$opening_status = $hour['close'];
+				$opening_status = (!isset($hour['status'])) ? '' : $hour['status'];
 
-				if (($opening_time <= $current_time AND $closing_time >= $current_time) OR ($opening_time === '00:00' OR $closing_time === '00:00')) {
+				if ($opening_status !== '1' AND ($opening_time <= $current_time AND $closing_time >= $current_time) OR ($opening_time === '00:00' OR $closing_time === '00:00')) {
 					$open_or_closed = $this->lang->line('text_opened');
 				} else {
 					$open_or_closed = $this->lang->line('text_closed');
 				}
 
-				$location_address = array(
+                $delivery_time = (!empty($location['delivery_time'])) ? $location['delivery_time'] : $this->config->item('delivery_time');
+                $collection_time = (!empty($location['collection_time'])) ? $location['collection_time'] : $this->config->item('collection_time');
+
+                $address = $this->country->addressFormat(array(
 					'address_1'      => $location['location_address_1'],
 					'address_2'      => $location['location_address_2'],
 					'city'           => $location['location_city'],
 					'state'          => $location['location_state'],
 					'postcode'       => $location['location_postcode']
-				);
-				$address = $this->country->addressFormat($location_address);
+				));
 
 				$data['locations'][] = array( 															// create array of menu data to be sent to view
 					'location_id'			=> $location['location_id'],
@@ -197,8 +211,8 @@ class Local extends Main_Controller {
 					'offers'				=> $offers,
 					'min_total' 			=> (isset($location['min_total']) AND $location['min_total'] > 0) ? $this->currency->format($location['min_total']) : 'None',
 					'delivery_charge' 		=> (isset($location['delivery_charge']) AND $location['delivery_charge'] > 0) ? sprintf($this->lang->line('text_delivery_charge'), $this->currency->format($location['delivery_charge'])) : $this->lang->line('text_free_delivery'),
-					'delivery_time' 		=> ($location['delivery_time'] === '0') ? $this->lang->line('text_asap') : $location['delivery_time'] . $this->lang->line('text_minutes'),
-					'collection_time' 		=> ($location['collection_time'] === '0') ? $this->lang->line('text_asap') : $location['collection_time'] . $this->lang->line('text_minutes'),
+					'delivery_time' 		=> ($delivery_time === '0') ? $this->lang->line('text_asap') : $delivery_time . $this->lang->line('text_minutes'),
+					'collection_time' 		=> ($collection_time === '0') ? $this->lang->line('text_asap') : $collection_time . $this->lang->line('text_minutes'),
 					'href'					=> site_url('local?location_id='. $location['location_id'])
 				);
 			}
@@ -226,6 +240,8 @@ class Local extends Main_Controller {
 		if ($this->config->item('page_limit')) {
 			$filter['limit'] = $this->config->item('page_limit');
 		}
+
+        $filter['filter_status'] = '1';
 
 		$this->template->setBreadcrumb('<i class="fa fa-home"></i>', '/');
 		$this->template->setBreadcrumb($this->lang->line('text_heading'), 'local');

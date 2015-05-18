@@ -8,10 +8,6 @@ class Permission extends Admin_Controller {
 	}
 
 	public function index() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
 		if (!$this->alert->get()) {
 			$this->alert->warning_now('You do not have the right permission to access.');
 		}

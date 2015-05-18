@@ -13,7 +13,8 @@ class Login extends Admin_Controller {
 		}
 
 		$this->template->setTitle('Login');
-		$data['reset_url'] = site_url('login/reset');
+        $data['site_name']  = $this->config->item('site_name');
+        $data['reset_url'] = site_url('login/reset');
 
 		if ($this->input->post() AND $this->validateLoginForm() === TRUE) {
 			redirect('dashboard');
@@ -61,7 +62,7 @@ class Login extends Admin_Controller {
 
 		if ($this->form_validation->run() === TRUE) {										// checks if form validation routines ran successfully
 			if ($this->Staffs_model->resetPassword($this->input->post('user_email'))) {		// checks if form validation routines ran successfully
-				$this->alert->set('danger', 'A new password will be e-mailed to you.');
+				$this->alert->set('success', 'A new password will be e-mailed to you.');
 				return TRUE;
 			} else {
 				$this->alert->set('danger', 'The e-mail could not be sent. Possible reason: your host may have disabled the mail() function.');

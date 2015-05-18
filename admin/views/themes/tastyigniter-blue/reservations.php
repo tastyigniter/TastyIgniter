@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
 		<div class="panel panel-default panel-table">
@@ -127,8 +127,8 @@
 								<td><?php echo $reservation['first_name'] .' '. $reservation['last_name']; ?></td>
 								<td><?php echo $reservation['guest_num']; ?></td>
 								<td><?php echo $reservation['table_name']; ?></td>
-								<td><?php echo $reservation['status_name']; ?></td>
-								<td><?php echo $reservation['staff_name'] ? $reservation['staff_name'] : 'NONE'; ?></td>
+                                <td><span class="label label-default" style="background-color: <?php echo $reservation['status_color']; ?>;"><?php echo $reservation['status_name']; ?></span></td>
+                                <td><?php echo $reservation['staff_name'] ? $reservation['staff_name'] : 'NONE'; ?></td>
 								<td class="text-center"><?php echo $reservation['reserve_time']; ?> - <?php echo $reservation['reserve_date']; ?></td>
 							</tr>
 							<?php } ?>
@@ -164,4 +164,4 @@ function filterList() {
 	$('#filter-form').submit();
 }
 //--></script>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

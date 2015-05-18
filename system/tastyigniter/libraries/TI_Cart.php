@@ -1,66 +1,43 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 /**
- * Shopping Cart Class
- *
- * @package		CodeIgniter
- * @subpackage	Libraries
- * @category	Shopping Cart
- * @author		ExpressionEngine Dev Team
- * @link		http://codeigniter.com/user_guide/libraries/cart.html
+ * TI Shopping Cart Extension Class
  */
 class TI_Cart extends CI_Cart {
 
-	// Private variables.  Do not change!
-	var $CI;
-	var $_cart_contents	= array();
-
+    private $coupon = array('code' => '', 'discount' => '');
 
 	public function __construct($params = array()) {
 		parent::__construct();
-		// Set the super object to a local variable for use later
 		$this->CI =& get_instance();
 
-		// Are any config settings being passed manually?  If so, set them
-		$config = array();
-		if (count($params) > 0) {
-			foreach ($params as $key => $val) {
-				$config[$key] = $val;
-			}
-		}
-
-		// Load the Sessions class
-		//$this->CI->load->library('session', $config);
-
-		// Grab the shopping cart array from the session table, if it exists
-		$this->_cart_contents = $this->CI->session->userdata('cart_contents');
-		if ($this->_cart_contents === NULL) {
-			// No cart exists so we'll set some base values
-			$this->_cart_contents = array('order_total' => 0, 'delivery' => 0, 'coupon' => 0);
+		if (!isset($this->_cart_contents['order_total'])) {
+			$this->_cart_contents['order_total'] = 0;
 		}
 
 		if (!isset($this->_cart_contents['delivery'])) {
 			$this->_cart_contents['delivery'] = 0;
 		}
 
-		if (!isset($this->_cart_contents['coupon']) AND !is_array($this->_cart_contents['coupon'])) {
-			$this->_cart_contents['coupon'] = array();
+		if (!isset($this->_cart_contents['coupon'])) {
+			$this->_cart_contents['coupon'] = $this->coupon;
 		}
 
-		log_message('debug', "Cart Class Initialized");
+		log_message('info', "Cart Class Initialized");
 	}
 
 	// --------------------------------------------------------------------
 
 
-	/**
-	 * Set Delivery Charge *** TASTYIGNITER
-	 *
-	 * This function permits calculates the delivery charge.
-	 *
-	 * @access	private
-	 * @return	bool
-	 */
+    /**
+     * Set Delivery Charge *** TASTYIGNITER
+     *
+     * This function permits calculates the delivery charge.
+     *
+     * @access    private
+     * @param int $charge
+     * @return bool
+     */
 	public function set_delivery($charge = 0) {
 		if (is_numeric($charge) OR $charge <= 0) {
 			$save_cart = FALSE;
@@ -83,14 +60,15 @@ class TI_Cart extends CI_Cart {
 
 	// --------------------------------------------------------------------
 
-	/**
-	 * Add Coupon *** TASTYIGNITER
-	 *
-	 * This function permits calculates the coupon coupon from code.
-	 *
-	 * @access	private
-	 * @return	bool
-	 */
+    /**
+     * Add Coupon *** TASTYIGNITER
+     *
+     * This function permits calculates the coupon coupon from code.
+     *
+     * @access    private
+     * @param array $coupon
+     * @return bool
+     */
 	public function add_coupon($coupon = array()) {
 		$save_cart = FALSE;
 
@@ -116,18 +94,19 @@ class TI_Cart extends CI_Cart {
 
 	// --------------------------------------------------------------------
 
-	/**
-	 * Remove Coupon *** TASTYIGNITER
-	 *
-	 * This function removes coupon from cart.
-	 *
-	 * @access	private
-	 * @return	bool
-	 */
+    /**
+     * Remove Coupon *** TASTYIGNITER
+     *
+     * This function removes coupon from cart.
+     *
+     * @access    private
+     * @param string $coupon_code
+     * @return bool
+     */
 	public function remove_coupon($coupon_code = '') {
 		if (isset($this->_cart_contents['coupon'])) {
 			if ($coupon_code !== '' AND $this->_cart_contents['coupon']['code'] === $coupon_code) {
-				$this->_cart_contents['coupon'] = array();
+				$this->_cart_contents['coupon'] = $this->coupon;
 				$this->_save_cart();
 			}
 		}
@@ -163,7 +142,7 @@ class TI_Cart extends CI_Cart {
 		$this->_cart_contents['order_total'] = $total;
 
 		// Is our cart empty? If so we delete it from the session
-		if (count($this->_cart_contents) <= 2) {
+		if (count($this->_cart_contents) <= 5) {
 			$this->CI->session->unset_userdata('cart_contents');
 
 			// Nothing more to do... coffee time!
@@ -195,12 +174,13 @@ class TI_Cart extends CI_Cart {
 
 	// --------------------------------------------------------------------
 
-	/**
-	 * Cart Contents *** TASTYIGNITER
-	 *
-	 * @access	public
-	 * @return	integer
-	 */
+    /**
+     * Cart Contents *** TASTYIGNITER
+     *
+     * @access    public
+     * @param bool $newest_first
+     * @return int
+     */
 	public function contents($newest_first = FALSE) {
 		// do we want the newest first?
 		$cart = ($newest_first) ? array_reverse($this->_cart_contents) : $this->_cart_contents;
@@ -276,7 +256,7 @@ class TI_Cart extends CI_Cart {
 	 * @return	integer
 	 */
 	public function coupon() {
-		return is_array($this->_cart_contents['coupon']) ? $this->_cart_contents['coupon'] : array();
+		return is_array($this->_cart_contents['coupon']) ? $this->_cart_contents['coupon'] : $this->coupon;
 	}
 }
 

@@ -6,7 +6,8 @@ $lang['text_payments'] 			= 'Please choose your payment method.';
 $lang['text_registered'] 		= 'Already have an account? <a href="%s">Login Here</a>';
 $lang['text_logout'] 			= 'Welcome Back %s, Not You? <a href="%s">Logout</a>';
 $lang['text_asap'] 				= 'ASAP';
-$lang['text_new'] 				= 'New';
+$lang['text_closed'] 			= 'Sorry, but we\'re closed, come back during opening hours';
+$lang['text_edit'] 				= 'Edit';
 $lang['text_existing'] 			= 'Existing';
 $lang['text_cod'] 				= 'Cash On Delivery';
 $lang['text_paypal'] 			= 'PayPal';
@@ -40,6 +41,7 @@ $lang['entry_order_type'] 		= 'Delivery or Collection:';
 $lang['entry_order_time'] 		= 'Delivery or Collection Time:';
 $lang['entry_address'] 			= 'Delivery Address:';
 $lang['entry_payment_method'] 	= 'Payment Method:';
+$lang['entry_terms'] 			= 'By clicking <strong class="label label-success">Confirm</strong>, you agree to the <a href="#" data-toggle="modal" data-target="#terms-modal">Terms and Conditions</a> set out by this site, including our Cookie Use.';
 $lang['entry_comments'] 		= 'Add Comments:';
 $lang['entry_ip'] 				= 'IP Address:';
 
@@ -55,13 +57,15 @@ $lang['error_covered_area'] 	= 'This restaurant currently does not deliver to yo
 $lang['error_invalid_time'] 	= 'The %s field must be between 00:00 and 23:59.';
 $lang['error_less_time'] 		= 'The Delivery or Collection Time can not be less than current time!';
 $lang['error_no_time'] 			= 'The selected delivery time is outside our opening/closing hours';
+$lang['error_local_payment'] 	= 'The selected payment is invalid, please contact us';
 
 $lang['alert_no_cart'] 			= '<p class="alert-danger">Please, add some menus before you checkout!</p>';
 $lang['alert_min_delivery'] 	= '<p class="alert-danger">Order total is below the minimum delivery total!</p>';
 $lang['alert_no_local'] 		= '<p class="alert-danger">Please select your local restaurant</p>';
 $lang['alert_not_logged'] 		= '<p class="alert-info">Almost there, Please login or register to complete checkout.</p>';
 $lang['alert_no_order'] 		= '<p class="alert-danger">Niether delivery or collection is available at the selected restaurant.</p>';
-$lang['alert_server_error'] 	= '<p class="alert-danger">Sorry an error occured, please try again</p>';
+$lang['alert_server_error'] 	= '<p class="alert-danger">Sorry an error occurred, please try again</p>';
+$lang['alert_closed'] 			= '<p class="alert-danger">Sorry, you can\'t place an order now, we are currently closed,<br /> please come back later during our opening times.</p>';
 
 /* End of file checkout_lang.php */
 /* Location: ./main/language/english/main/checkout_lang.php */

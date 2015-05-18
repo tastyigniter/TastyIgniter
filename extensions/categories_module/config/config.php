@@ -28,4 +28,4 @@ $config['ext_type']	= 'module';
 | setting this variable to TRUE (boolean).
 |
 */
-$config['admin_options']	= TRUE;
+$config['admin_options'] = TRUE;

@@ -8,20 +8,11 @@ class Error_logs extends Admin_Controller {
 	}
 
 	public function index() {
-
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'error_logs')) {
-  			redirect('permission');
-		}
-
 		$this->template->setTitle('Error Logs');
 		$this->template->setHeading('Error Logs');
 		$this->template->setButton('Clear', array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
-		$log_path = IGNITEPATH .'/logs/';
+		$log_path = $this->config->item('log_path');
 
 		if ( file_exists($log_path .'logs.php')) {
 
@@ -44,20 +35,16 @@ class Error_logs extends Admin_Controller {
 	}
 
 	public function _clearLog() {
-    	if (!$this->user->hasPermissions('modify', 'error_logs')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to update!');
-    	} else {
-			$log_path = IGNITEPATH .'/logs/';
+        $log_path = IGNITEPATH .'/logs/';
 
-			if (is_readable($log_path .'logs.php')) {
-				$log = "<"."?php  if ( ! defined('BASEPATH')) exit('No direct access allowed'); ?".">\n\n";
+        if (is_readable($log_path .'logs.php')) {
+            $log = "<"."?php  if ( ! defined('BASEPATH')) exit('No direct access allowed'); ?".">\n\n";
 
-				$this->load->helper('file');
-       	 		write_file($log_path .'logs.php', $log);
+            $this->load->helper('file');
+            write_file($log_path .'logs.php', $log);
 
-				$this->alert->set('success', 'Logs Cleared Sucessfully!');
-			}
-		}
+            $this->alert->set('success', 'Logs Cleared successfully!');
+        }
 
 		return TRUE;
 	}

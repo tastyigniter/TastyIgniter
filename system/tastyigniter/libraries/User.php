@@ -1,71 +1,65 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class User {
-	private $user_id;
-	private $username;
-	private $staff_id;
-	private $permissions = array();
-	private $staff_name;
-	private $staff_group;
-	private $staff_group_id;
-	private $location_id;
-	private $location_name;
-	private $location_access;
+    private $is_logged = FALSE;
+    private $user_id;
+    private $username;
+    private $staff_id;
+    private $permissions = array();
+    private $staff_name;
+    private $staff_group_name;
+    private $staff_group_id;
+    private $location_id;
+    private $location_name;
+    private $location_access;
 	private $unread;
+    private $uri_segment;
+    private $ignore_uri;
 
-	public function __construct() {
+    public function __construct() {
 		$this->CI =& get_instance();
 		$this->CI->load->database();
+        $this->uri_segment = $this->CI->uri->rsegment(1);
 
 		$this->initialize();
-	}
+    }
 
 	public function initialize() {
-		$user_info = $this->CI->session->userdata('user_info');
+        $this->ignore_uri = array('login', 'logout', 'dashboard', 'permission', 'notifications');
+        $this->uri_segment = $this->CI->uri->rsegment(1);
 
-		if ( ! isset($user_info['user_id']) AND  ! isset($user_info['username'])) {
-			$this->logout();
-		} else {
+        $user_info = $this->CI->session->userdata('user_info');
 
-			$this->CI->db->from('users');
-			$this->CI->db->join('staffs', 'staffs.staff_id = users.staff_id', 'left');
-			$this->CI->db->join('staff_groups', 'staff_groups.staff_group_id = staffs.staff_group_id', 'left');
-			$this->CI->db->join('locations', 'locations.location_id = staffs.staff_location_id', 'left');
+        if ( !empty($user_info['user_id']) AND !empty($user_info['username']) AND !empty($user_info['email'])) {
+            $this->CI->db->from('users');
+            $this->CI->db->join('staffs', 'staffs.staff_id = users.staff_id', 'left');
+            $this->CI->db->join('staff_groups', 'staff_groups.staff_group_id = staffs.staff_group_id', 'left');
+            $this->CI->db->join('locations', 'locations.location_id = staffs.staff_location_id', 'left');
 
-			$this->CI->db->where('user_id', $user_info['user_id']);
-			$this->CI->db->where('username', $user_info['username']);
-			$query = $this->CI->db->get();
+            $this->CI->db->where('user_id', $user_info['user_id']);
+            $this->CI->db->where('username', $user_info['username']);
+            $this->CI->db->where('staff_email', $user_info['email']);
+            $this->CI->db->where('staff_status', '1');
+            $query = $this->CI->db->get();
 
-			if ($query->num_rows() === 1) {
-				$row = $query->row_array();
+            if ($query->num_rows() === 1) {
+                $row = $query->row_array();
 
-				$this->user_id 			= $row['user_id'];
-				$this->username			= $row['username'];
-				$this->staff_id 		= $row['staff_id'];
-				$this->staff_name 		= $row['staff_name'];
-				$this->staff_group_id 	= $row['staff_group_id'];
-				$this->staff_group 		= $row['staff_group_name'];
-				$this->location_id 		= $row['location_id'];
-				$this->location_name 	= $row['location_name'];
+                foreach ($query->row_array() as $key => $value) {
+                    if (property_exists($this, $key)) {
+                        $this->$key = $value;
+                    }
+                }
 
-				if (!empty($row['permission'])) {
-					$permission = unserialize($row['permission']);
+                $this->setPermissions($row['permission']);
+                $this->setLocationAccess($row['location_access']);
 
-					if (is_array($permission)) {
-						foreach ($permission as $key => $value) {
-							$this->permissions[$key] = $value;
-						}
-					}
-				}
+                $this->is_logged = TRUE;
+            }
+        }
 
-				if ($row['location_access'] == '1') {
-					$this->setLocationAccess();
-				}
-			} else {
-				$this->logout();
-			}
-		}
-	}
+        if (!$this->is_logged) $this->logout();
+    }
 
 	public function login($user, $password) {
 		$this->CI->db->from('users');
@@ -83,7 +77,8 @@ class User {
 
 			$user_data = array(
 				'user_id'  			=> $row['user_id'],
-				'username'     		=> $row['username']
+				'username'     		=> $row['username'],
+				'email'     		=> $row['staff_email']
 			);
 
 			$this->CI->session->set_userdata('user_info', $user_data);
@@ -100,7 +95,7 @@ class User {
 	}
 
   	public function isLogged() {
-	    return $this->user_id;
+        return $this->is_logged;
 	}
 
   	public function getId() {
@@ -128,45 +123,86 @@ class User {
   	}
 
   	public function staffGroup() {
-    	return $this->staff_group;
+    	return $this->staff_group_name;
   	}
 
   	public function getStaffGroupId() {
     	return $this->staff_group_id;
   	}
 
-  	public function setLocationAccess() {
-    	//if (!isset($_GET['filter_location'])) {
-    		$_GET['filter_location'] = $this->location_id;
-    	//}
+  	public function setLocationAccess($location_access =  '0') {
+        if ($location_access == '1') {
+            if (!isset($_GET['filter_location'])) {
+                $_GET['filter_location'] = $this->location_id;
+            }
+    	}
   	}
 
-  	public function hasPermissions($key, $value) {
-    	if (isset($this->permissions[$key])) {
-	  		return in_array($value, $this->permissions[$key]);
-		} else if (isset($this->permissions['ADMINDIR'.$key])) { // For backward compatibility
-			return TRUE;
-		} else {
-	  		return FALSE;
-		}
-  	}
+    private function setPermissions($permission) {
+        if (!empty($permission)) {
+            $permission = unserialize($permission);
+            if (is_array($permission)) {
+                foreach ($permission as $key => $value) {
+                    $this->permissions[$key] = $value;
+                }
+            }
+        }
+    }
 
-  	public function unreadMessageTotal() {
+    public function hasPermissions($type = '', $uri_segment = '', $is_logged_staff = TRUE) {
+        $type = !empty($type) ? $type : 'access';
+
+        $uri_segment = ($uri_segment === '') ? $this->uri_segment : $uri_segment;
+
+        if (method_exists( $this->CI->router, 'fetch_module' ) AND $this->CI->router->fetch_module()) {
+            $uri_segment = $this->CI->router->fetch_module();
+        }
+
+        $has_permission = 'access';
+
+        if ($type === 'modify' AND $this->CI->input->post()) {
+            $has_permission = $this->checkPermission('modify', $uri_segment);
+        } else if ($type === 'access') {
+            $has_permission = $this->checkPermission('access', $uri_segment);
+        }
+
+        if ($has_permission === FALSE AND $uri_segment === 'staffs') {
+            $has_permission = $is_logged_staff === FALSE ? $has_permission : ($this->CI->input->get('id') === $this->getStaffId());
+        }
+
+        return $has_permission;
+    }
+
+    public function checkPermission($type, $uri_segment = '') {
+        if (in_array($uri_segment, $this->ignore_uri)) {
+            return TRUE;
+        } else if (isset($this->permissions[$type])) {
+            return in_array($uri_segment, $this->permissions[$type]);
+        } else if (isset($this->permissions['ADMINDIR'.$type])) { // For backward compatibility
+            return TRUE;
+        }
+
+        return FALSE;
+    }
+
+    public function unreadMessageTotal() {
     	if (empty($this->unread)) {
 			$this->CI->load->model('Messages_model');
     		$this->unread = $this->CI->Messages_model->getUnreadCount($this->staff_id);
 		}
+
     	return $this->unread;
   	}
 
-  	public function logout() {
+    public function logout() {
 		$this->CI->session->unset_userdata('user_info');
 
+		$this->is_logged = FALSE;
 		$this->user_id = '';
 		$this->username = '';
 		$this->staff_id = '';
 		$this->staff_name = '';
-		$this->staff_group = '';
+		$this->staff_group_name = '';
 		$this->staff_group_id = '';
 		$this->location_id = '';
 		$this->location_name = '';

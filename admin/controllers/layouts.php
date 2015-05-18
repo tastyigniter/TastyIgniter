@@ -6,17 +6,10 @@ class Layouts extends Admin_Controller {
 		parent::__construct();
 		$this->load->library('user');
 		$this->load->model('Design_model');
+		$this->load->model('Extensions_model');
 	}
 
 	public function index() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'layouts')) {
-  			redirect('permission');
-		}
-
 		$this->template->setTitle('Layouts');
 		$this->template->setHeading('Layouts');
 		$this->template->setButton('+ New', array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
@@ -53,14 +46,6 @@ class Layouts extends Admin_Controller {
 	}
 
 	public function edit() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'layouts')) {
-  			redirect('permission');
-		}
-
 		$layout_info = $this->Design_model->getLayout((int) $this->input->get('id'));
 
 		if ($layout_info) {
@@ -81,18 +66,46 @@ class Layouts extends Admin_Controller {
 		$data['layout_id'] 			= $layout_info['layout_id'];
 		$data['name'] 				= $layout_info['name'];
 
-		if ($this->input->post('routes')) {
-			$data['routes'] = $this->input->post('routes');
-		} else {
-			$data['routes'] = $this->Design_model->getLayoutRoutes($layout_info['layout_id']);
-		}
+        $data['layout_positions'] = array('top' => 'Content Top', 'left' => 'Content Left', 'right' => 'Content Right', 'bottom' => 'Content Bottom');
 
-		$data['uri_routes'] = array();
+        if ($this->input->post('modules')) {
+            $layout_modules = $this->input->post('modules');
+        } else {
+            $layout_modules = $this->Design_model->getLayoutModules($layout_id);
+        }
+
+        $data['layout_modules'] = array();
+        foreach ($layout_modules as $priority => $module) {
+            $data['layout_modules'][] = array(
+                'module_code'       => $module['module_code'],
+                'position' 		    => $module['position'],
+                'priority' 		    => !empty($module['priority']) ? $module['priority'] : $priority,
+                'status' 		    => $module['status']
+            );
+        }
+
+        if ($this->input->post('routes')) {
+            $data['layout_routes'] = $this->input->post('routes');
+        } else {
+            $data['layout_routes'] = $this->Design_model->getLayoutRoutes($layout_id);
+        }
+
+        $data['modules'] = array();
+        $results = $this->Extensions_model->getModules();
+        foreach ($results as $result) {
+            $data['modules'][] = array(
+                'extension_id'	=> $result['extension_id'],
+                'module_code'	=> $result['name'],
+                'title'			=> $result['title']
+            );
+        }
+
+        $data['routes'] = array();
 		$results = $this->Design_model->getRoutes(1);
 		foreach ($results as $result) {
-			$data['uri_routes'][] = array(
-				'uri_route_id'		=> $result['uri_route_id'],
-				'uri_route'			=> $result['uri_route']
+			$data['routes'][] = array(
+				'route_id'		=> $result['uri_route_id'],
+				'route'			=> $result['uri_route']
 			);
 		}
 
@@ -117,19 +130,17 @@ class Layouts extends Admin_Controller {
 	}
 
 	public function _addLayout() {
-    	if ( ! $this->user->hasPermissions('modify', 'layouts')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to add!');
-  			return TRUE;
-    	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$add = array();
 
 			$add['name'] 		= $this->input->post('name');
 			$add['routes'] 		= $this->input->post('routes');
+            $add['modules'] 	= $this->input->post('modules');
 
 			if ($_POST['insert_id'] = $this->Design_model->addLayout($add)) {
-				$this->alert->set('success', 'Layout added sucessfully.');
+				$this->alert->set('success', 'Layout added successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing added.');
+				$this->alert->set('warning', 'An error occurred, nothing added.');
 			}
 
 			return TRUE;
@@ -137,20 +148,18 @@ class Layouts extends Admin_Controller {
 	}
 
 	public function _updateLayout() {
-    	if ( ! $this->user->hasPermissions('modify', 'layouts')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to update!');
-  			return TRUE;
-    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$update = array();
 
 			$update['layout_id'] 	= $this->input->get('id');
 			$update['name'] 		= $this->input->post('name');
 			$update['routes'] 		= $this->input->post('routes');
+            $update['modules'] 	    = $this->input->post('modules');
 
 			if ($this->Design_model->updateLayout($update)) {
-				$this->alert->set('success', 'Layout updated sucessfully.');
+				$this->alert->set('success', 'Layout updated successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing added.');
+				$this->alert->set('warning', 'An error occurred, nothing added.');
 			}
 
 			return TRUE;
@@ -158,14 +167,12 @@ class Layouts extends Admin_Controller {
 	}
 
 	public function _deleteLayout() {
-    	if (!$this->user->hasPermissions('modify', 'layouts')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to delete!');
-    	} else if (is_array($this->input->post('delete'))) {
+    	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Design_model->deleteLayout($value);
 			}
 
-			$this->alert->set('success', 'Layout deleted sucessfully!');
+			$this->alert->set('success', 'Layout deleted successfully!');
 		}
 
 		return TRUE;
@@ -174,13 +181,22 @@ class Layouts extends Admin_Controller {
 	public function validateForm() {
 		$this->form_validation->set_rules('name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 
-		if ($this->input->post('routes')) {
-			foreach ($this->input->post('routes') as $key => $value) {
-				$this->form_validation->set_rules('routes['.$key.'][uri_route]', 'Route', 'xss_clean|trim|required');
-			}
-		}
+        if ($this->input->post('routes')) {
+            foreach ($this->input->post('routes') as $key => $value) {
+                $this->form_validation->set_rules('routes['.$key.'][uri_route]', 'Route', 'xss_clean|trim|required');
+            }
+        }
 
-		if ($this->form_validation->run() === TRUE) {
+        if ($this->input->post('modules')) {
+            foreach ($this->input->post('modules') as $key => $value) {
+                $this->form_validation->set_rules('modules['.$key.'][module_code]', 'Module ['.$key.'] code', 'xss_clean|trim|required|alpha_dash');
+                $this->form_validation->set_rules('modules['.$key.'][position]', 'Module ['.$key.'] position', 'xss_clean|trim|required|alpha');
+                $this->form_validation->set_rules('modules['.$key.'][priority]', 'Module ['.$key.'] priority', 'xss_clean|trim|required|integer');
+                $this->form_validation->set_rules('modules['.$key.'][status]', 'Module ['.$key.'] status', 'xss_clean|trim|required|integer');
+            }
+        }
+
+        if ($this->form_validation->run() === TRUE) {
 			return TRUE;
 		} else {
 			return FALSE;

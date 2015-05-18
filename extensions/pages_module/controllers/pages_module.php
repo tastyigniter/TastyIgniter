@@ -13,12 +13,6 @@ class Pages_module extends Ext_Controller {
 			show_404(); 																		// Whoops, show 404 error page!
 		}
 
-		if ($this->session->flashdata('alert')) {
-			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
-		} else {
-			$data['alert'] = '';
-		}
-
 		if (is_numeric($this->input->get('page_id'))) {
 			$data['page_id'] = $this->input->get('page_id');
 		} else {
@@ -43,7 +37,7 @@ class Pages_module extends Ext_Controller {
 		}
 
 		// pass array $data and load view files
-		$this->load->view('pages_module/pages_module', $data);
+		return $this->load->view('pages_module/pages_module', $data, TRUE);
 	}
 }
 

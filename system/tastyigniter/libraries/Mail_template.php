@@ -2,12 +2,12 @@
 
 class Mail_template {
 
-	var $left_delim = '{';
-	var $right_delim = '}';
-	var $header = '';
-	var $subject = '';
-	var $body = '';
-	var $footer = '';
+	private $left_delim = '{';
+	private $right_delim = '}';
+	private $header = '';
+	private $subject = '';
+	private $body = '';
+	private $footer = '';
 
 	public function __construct() {
 		$this->CI =& get_instance();

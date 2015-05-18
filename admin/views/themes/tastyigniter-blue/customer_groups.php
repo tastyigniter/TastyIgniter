@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
 		<div class="panel panel-default panel-table">
@@ -46,4 +46,4 @@
 		</div>
 	</div>
 </div>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

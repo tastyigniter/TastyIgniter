@@ -10,14 +10,6 @@ class Customers_activity extends Admin_Controller {
 	}
 
 	public function index() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'customers_activity')) {
-  			redirect('permission');
-		}
-
 		$url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
@@ -38,8 +30,8 @@ class Customers_activity extends Admin_Controller {
 			$data['filter_search'] = '';
 		}
 
-		$time_out = ($this->config->item('activity_timeout') > 120) ? $this->config->item('activity_timeout') : 120;
-		$filter['time_out'] = mdate('%Y-%m-%d %H:%i:%s', time() - $time_out);
+		$online_time_out = ($this->config->item('activity_online_time_out') > 120) ? $this->config->item('activity_online_time_out') : 120;
+		$filter['time_out'] = mdate('%Y-%m-%d %H:%i:%s', time() - $online_time_out);
 		if ($this->input->get('filter_type')) {
 			$filter['filter_type'] = $data['filter_type'] = $this->input->get('filter_type');
 			$url .= 'filter_type='.$filter['filter_type'].'&';
@@ -101,10 +93,11 @@ class Customers_activity extends Admin_Controller {
 				'customer_name'		=> ($activity['customer_id']) ? $activity['first_name'] .' '. $activity['last_name'] : 'Guest',
 				'access_type'		=> ucwords($activity['access_type']),
 				'browser'			=> $activity['browser'],
+				'page_views'		=> $activity['page_views'],
 				'request_uri'		=> (!empty($activity['request_uri'])) ? $activity['request_uri'] : '--',
 				'referrer_uri'		=> (!empty($activity['referrer_uri'])) ? $activity['referrer_uri'] : '--',
-				'date_added'		=> mdate('%d %M %y - %H:%i', strtotime($activity['date_added'])),
-				'country_code'		=> base_url('assets/img/flags/'. $country_code .'.png'),
+				'date_added'		=> time_elapsed($activity['date_added']),
+				'country_code'		=> image_url('flags/'. $country_code .'.png'),
 				'country_name'		=> $country_name,
 				'blacklist' 		=> site_url('customers_activity/blacklist?ip=' . $activity['ip_address'])
 			);
@@ -148,28 +141,11 @@ class Customers_activity extends Admin_Controller {
 	}
 
 	public function blacklist() {
-    	if ( ! $this->user->hasPermissions('modify', 'customers_activity')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to update!');
-    	} else if ($this->input->get('extension')) {
-
-			$this->alert->set('success', 'Extension Uninstalled Sucessfully!');
+    	if ($this->input->get('ip')) {
+			$this->alert->set('success', 'Activity IP added to blacklist successfully!');
 		}
 
 		redirect('customers_activity');
-	}
-
-	public function _deleteActivity() {
-    	if (!$this->user->hasPermissions('modify', 'customers_activity')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to delete!');
-    	} else if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $activity_id) {
-				$this->Activity_model->deleteActivity($activity_id);
-			}
-
-			$this->alert->set('success', 'Activity(s) deleted sucessfully!');
-		}
-
-		return TRUE;
 	}
 }
 

@@ -15,6 +15,11 @@ class Reservation_module extends Ext_Controller {
 			show_404(); 																		// Whoops, show 404 error page!
 		}
 
+        if ($this->config->item('reservation_mode') !== '1') {
+            $this->alert->set('alert', $this->lang->line('alert_no_reservation'));
+            redirect('home');
+        }
+
 		if ($this->session->flashdata('reservation_alert')) {
 			$data['reservation_alert'] = $this->session->flashdata('reservation_alert');  								// retrieve session flashdata variable if available
 		} else if ($this->reservation_alert) {
@@ -48,7 +53,7 @@ class Reservation_module extends Ext_Controller {
 		$data['button_time'] 				= $this->lang->line('button_time');
 		$data['button_back'] 				= $this->lang->line('button_back');
 		$data['button_reset'] 				= $this->lang->line('button_reset');
-		$data['back'] 						= site_url('reserve_table');
+		$data['back'] 						= site_url('reserve');
 
 		$data['locations'] = array();
 		$locations = $this->Locations_model->getLocations();
@@ -139,7 +144,7 @@ class Reservation_module extends Ext_Controller {
 
 		$data['reservation_alert'] = $this->reservation_alert;
 
-		$this->load->view('reservation_module/reservation_module', $data);
+		return $this->load->view('reservation_module/reservation_module', $data, TRUE);
 	}
 
 

@@ -30,14 +30,14 @@ define("tinymce/dom/ControlSelection", [
 		// Details about each resize handle how to scale etc
 		resizeHandles = {
 			// Name: x multiplier, y multiplier, delta size x, delta size y
-			n:  [0.5,   0,     0,   -1],
-			e:  [1,    0.5,    1,    0],
-			s:  [0.5,   1,     0,    1],
-			w:  [0,    0.5,   -1,    0],
-			nw: [0,     0,    -1,   -1],
-			ne: [1,     0,     1,   -1],
-			se: [1,     1,     1,    1],
-			sw: [0,     1,    -1,    1]
+			n: [0.5, 0, 0, -1],
+			e: [1, 0.5, 1, 0],
+			s: [0.5, 1, 0, 1],
+			w: [0, 0.5, -1, 0],
+			nw: [0, 0, -1, -1],
+			ne: [1, 0, 1, -1],
+			se: [1, 1, 1, 1],
+			sw: [0, 1, -1, 1]
 		};
 
 		// Add CSS for resize handles, cloned element and selected
@@ -66,8 +66,8 @@ define("tinymce/dom/ControlSelection", [
 				'z-index: 10000' +
 			'}' +
 			rootClass + ' .mce-resize-helper {' +
-				'background-color: #555;' +
-				'background-color: rgba(0,0,0,0.75);' +
+				'background: #555;' +
+				'background: rgba(0,0,0,0.75);' +
 				'border-radius: 3px;' +
 				'border: 1px;' +
 				'color: white;' +
@@ -217,6 +217,7 @@ define("tinymce/dom/ControlSelection", [
 			}
 
 			editor.fire('ObjectResized', {target: selectedElm, width: width, height: height});
+			dom.setAttrib(selectedElm, 'style', dom.getAttrib(selectedElm, 'style'));
 			editor.nodeChanged();
 		}
 
@@ -255,7 +256,11 @@ define("tinymce/dom/ControlSelection", [
 						ratio = startH / startW;
 						selectedHandle = handle;
 
-						handle.startPos = dom.getPos(handle.elm, rootElement);
+						handle.startPos = {
+							x: targetWidth * handle[0] + selectedElmX,
+							y: targetHeight * handle[1] + selectedElmY
+						};
+
 						startScrollWidth = rootElement.scrollWidth;
 						startScrollHeight = rootElement.scrollHeight;
 
@@ -360,7 +365,7 @@ define("tinymce/dom/ControlSelection", [
 		}
 
 		function updateResizeRect(e) {
-			var controlElm;
+			var startElm, controlElm;
 
 			function isChildOrEqual(node, parent) {
 				if (node) {
@@ -372,19 +377,25 @@ define("tinymce/dom/ControlSelection", [
 				}
 			}
 
+			// Ignore all events while resizing
+			if (resizeStarted) {
+				return;
+			}
+
 			// Remove data-mce-selected from all elements since they might have been copied using Ctrl+c/v
 			each(dom.select('img[data-mce-selected],hr[data-mce-selected]'), function(img) {
 				img.removeAttribute('data-mce-selected');
 			});
 
 			controlElm = e.type == 'mousedown' ? e.target : selection.getNode();
-			controlElm = dom.getParent(controlElm, isIE ? 'table' : 'table,img,hr');
+			controlElm = dom.$(controlElm).closest(isIE ? 'table' : 'table,img,hr')[0];
 
 			if (isChildOrEqual(controlElm, rootElement)) {
 				disableGeckoResize();
+				startElm = selection.getStart(true);
 
-				if (isChildOrEqual(selection.getStart(), controlElm) && isChildOrEqual(selection.getEnd(), controlElm)) {
-					if (!isIE || (controlElm != selection.getStart() && selection.getStart().nodeName !== 'IMG')) {
+				if (isChildOrEqual(startElm, controlElm) && isChildOrEqual(selection.getEnd(true), controlElm)) {
+					if (!isIE || (controlElm != startElm && startElm.nodeName !== 'IMG')) {
 						showResizeRect(controlElm);
 						return;
 					}
@@ -428,6 +439,11 @@ define("tinymce/dom/ControlSelection", [
 
 			// Remove native selection and let the magic begin
 			resizeStarted = true;
+			editor.fire('ObjectResizeStart', {
+				target: selectedElm,
+				width: selectedElm.clientWidth,
+				height: selectedElm.clientHeight
+			});
 			editor.getDoc().selection.empty();
 			showResizeRect(target, name, lastMouseDownEvent);
 		}
@@ -436,6 +452,7 @@ define("tinymce/dom/ControlSelection", [
 			var target = e.srcElement;
 
 			if (target != selectedElm) {
+				editor.fire('ObjectSelected', {target: target});
 				detachResizeStartListener();
 
 				if (target.id.indexOf('mceResizeHandle') === 0) {
@@ -516,7 +533,7 @@ define("tinymce/dom/ControlSelection", [
 					editor.on('mouseup', function(e) {
 						var nodeName = e.target.nodeName;
 
-						if (/^(TABLE|IMG|HR)$/.test(nodeName)) {
+						if (!resizeStarted && /^(TABLE|IMG|HR)$/.test(nodeName)) {
 							editor.selection.select(e.target, nodeName == 'TABLE');
 							editor.nodeChanged();
 						}
@@ -538,7 +555,7 @@ define("tinymce/dom/ControlSelection", [
 				}
 			}
 
-			editor.on('nodechange mousedown mouseup ResizeEditor', updateResizeRect);
+			editor.on('nodechange ResizeEditor', updateResizeRect);
 
 			// Update resize rect while typing in a table
 			editor.on('keydown keyup', function(e) {

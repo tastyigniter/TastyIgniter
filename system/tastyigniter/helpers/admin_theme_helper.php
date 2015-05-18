@@ -181,10 +181,10 @@ if ( ! function_exists('_createInput')) {
 
 		if (isset($input['media']) AND $input['media'] === TRUE) {
 			$open = '<div class="input-group">';
-			$no_photo = root_url('assets/images/no_photo.png');
+			$no_photo = image_url('no_photo.png');
 			$remove_event = 'onclick="$(\'#'.$input_id.'-thumb\').attr(\'src\', \''.$no_photo.'\'); $(\'#'.$input_id.'\').attr(\'value\', \'\');"';
 			$left_addon = '<span class="input-group-addon lg-addon"><i><img id="'.$input_id.'-thumb" class="thumb img-responsive" width="28px" src="'.$no_photo.'" /></i></span>';
-			$right_addon = '<span class="input-group-btn"><button type="button" class="btn btn-primary" onclick="imageUpload(\''.$input_id.'\');"><i class="fa fa-picture-o"></i></button><button type="button" class="btn btn-danger" '.$remove_event.'><i class="fa fa-times-circle"></i></button></span>';
+			$right_addon = '<span class="input-group-btn"><button type="button" class="btn btn-primary" onclick="mediaManager(\''.$input_id.'\');"><i class="fa fa-picture-o"></i></button><button type="button" class="btn btn-danger" '.$remove_event.'><i class="fa fa-times-circle"></i></button></span>';
 		}
 
 		if (isset($input['group_addon'])) {
@@ -232,8 +232,8 @@ if ( ! function_exists('getThemeOptionValue')) {
 	function getThemeOptionValue($input_name = '', $default_value = '') {
 //		$CI =& get_instance();
 		//$CI->config->item();
-//		$CI->load->model('Design_model');
-//		$theme_config = $CI->Design_model->getThemeConfigValue($CI->input->get('name'), $input_name);
+//		$CI->load->model('Themes_model');
+//		$theme_config = $CI->Themes_model->getConfig($CI->input->get('name'), $input_name);
 //var_dump($theme_config['customization']);
 		/*if (empty($default_value) OR !isset($textarea['type']) OR $textarea['type'] !== 'textarea') {
 			return FALSE;

@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
@@ -13,28 +13,31 @@
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Name:</label>
+						<label for="input-name" class="col-sm-3 control-label">Name:</label>
 						<div class="col-sm-5">
 							<input type="text" name="menu_name" id="input-name" class="form-control" value="<?php echo set_value('menu_name', $menu_name); ?>" />
 							<?php echo form_error('menu_name', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-description" class="col-sm-2 control-label">Description:</label>
+						<label for="input-description" class="col-sm-3 control-label">Description:</label>
 						<div class="col-sm-5">
 							<textarea name="menu_description" id="input-description" class="form-control" rows="5"><?php echo set_value('menu_description', $menu_description); ?></textarea>
 							<?php echo form_error('menu_description', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-price" class="col-sm-2 control-label">Price:</label>
+						<label for="input-price" class="col-sm-3 control-label">Price:</label>
 						<div class="col-sm-5">
-							<input type="text" name="menu_price" id="input-price" class="form-control" value="<?php echo set_value('menu_price', $menu_price); ?>" />
-							<?php echo form_error('menu_price', '<span class="text-danger">', '</span>'); ?>
+                            <div class="input-group">
+                                <input type="text" name="menu_price" id="input-price" class="form-control" value="<?php echo set_value('menu_price', $menu_price); ?>" />
+                                <span class="input-group-addon"><i class="fa fa-money"></i></span>
+                            </div>
+                            <?php echo form_error('menu_price', '<span class="text-danger">', '</span>'); ?>
 						</div>
-					</div>
+                    </div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Category:</label>
+						<label for="input-name" class="col-sm-3 control-label">Category:</label>
 						<div class="col-sm-5">
 							<select name="menu_category" id="category" class="form-control">
 								<option value="">Select category</option>
@@ -50,7 +53,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="" class="col-sm-2 control-label">Photo:
+						<label for="" class="col-sm-3 control-label">Photo:
 							<span class="help-block">Select a file to update menu photo, otherwise leave blank.</span>
 						</label>
 						<div class="col-sm-5">
@@ -59,11 +62,11 @@
 									<img src="<?php echo $menu_image_url; ?>" class="thumb img-responsive" id="thumb">
 								</div>
 								<div class="caption">
-									<center class="name"><?php echo $image_name; ?></center>
+									<span class="name text-center"><?php echo $image_name; ?></span>
 									<input type="hidden" name="menu_photo" value="<?php echo set_value('menu_photo', $menu_image); ?>" id="field" />
 									<p>
-										<a id="select-image" class="btn btn-primary" onclick="imageUpload('field');"><i class="fa fa-picture-o"></i>&nbsp;&nbsp;Select</a>
-										<a class="btn btn-danger" onclick="$('#thumb').attr('src', '<?php echo $no_photo; ?>'); $('#field').attr('value', 'data/no_photo.png'); $(this).parent().parent().find('center').html('no_photo.png');"><i class="fa fa-times-circle"></i>&nbsp;&nbsp;Remove</a>
+										<a id="select-image" class="btn btn-primary" onclick="mediaManager('field');"><i class="fa fa-picture-o"></i>&nbsp;&nbsp;Select</a>
+										<a class="btn btn-danger" onclick="$('#thumb').attr('src', '<?php echo $no_photo; ?>'); $('#field').attr('value', 'data/no_photo.png'); $(this).parent().parent().find('.name').html('no_photo.png');"><i class="fa fa-times-circle"></i>&nbsp;&nbsp;Remove</a>
 									</p>
 								</div>
 							</div>
@@ -71,7 +74,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-stock" class="col-sm-2 control-label">Stock Quantity:
+						<label for="input-stock" class="col-sm-3 control-label">Stock Quantity:
 							<span class="help-block">Set to 0 for unlimited stock quantity.</span>
 						</label>
 						<div class="col-sm-5">
@@ -80,7 +83,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-minimum" class="col-sm-2 control-label">Minimum Quantity:
+						<label for="input-minimum" class="col-sm-3 control-label">Minimum Quantity:
 							<span class="help-block">The minimum quantity that can be ordered. Default is 1, unless set otherwise.</span>
 						</label>
 						<div class="col-sm-5">
@@ -89,7 +92,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-subtract-stock" class="col-sm-2 control-label">Subtract Stock:</label>
+						<label for="input-subtract-stock" class="col-sm-3 control-label">Subtract Stock:</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($subtract_stock == '1') { ?>
@@ -104,7 +107,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-status" class="col-sm-2 control-label">Status:</label>
+						<label for="input-status" class="col-sm-3 control-label">Status:</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($menu_status == '1') { ?>
@@ -122,7 +125,7 @@
 
 				<div id="menu-options" class="tab-pane row wrap-all">
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Menu Options:</label>
+						<label for="input-name" class="col-sm-3 control-label">Menu Options:</label>
 						<div class="col-sm-5">
 							<input type="text" name="menu_option" id="input-status" class="form-control" value="" />
 							<?php echo form_error('menu_option', '<span class="text-danger">', '</span>'); ?>
@@ -130,7 +133,7 @@
 					</div>
 					<br />
 
-					<div id="menu-option" class="">
+					<div id="menu-option" class="<?php echo (!$menu_options) ? 'hide' : ''; ?>">
 						<ul id="sub-tabs" class="nav nav-tabs">
 							<?php $option_row = 1; ?>
 							<?php foreach ($menu_options as $menu_option) { ?>
@@ -153,7 +156,7 @@
 									<input type="hidden" name="menu_options[<?php echo $option_row; ?>][priority]" value="<?php echo $menu_option['priority']; ?>" />
 
 									<div class="form-group">
-										<label for="input-required" class="col-sm-2 control-label">Required:
+										<label for="input-required" class="col-sm-3 control-label">Required:
 											<span class="help-block">Enable/Disable if customer must choose option.</span>
 										</label>
 										<div class="col-sm-5">
@@ -256,7 +259,7 @@
 
 				<div id="specials" class="tab-pane row wrap-all">
 					<div class="form-group">
-						<label for="input-special-status" class="col-sm-2 control-label">Special</label>
+						<label for="input-special-status" class="col-sm-3 control-label">Special</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($special_status == '1') { ?>
@@ -273,7 +276,7 @@
 					</div>
 					<div id="special-toggle">
 						<div class="form-group">
-							<label for="start-date" class="col-sm-2 control-label">Start Date</label>
+							<label for="start-date" class="col-sm-3 control-label">Start Date</label>
 							<div class="col-sm-5">
 								<div class="input-group">
 									<input type="text" name="start_date" id="start-date" class="form-control" value="<?php echo set_value('start_date', $start_date); ?>" />
@@ -283,7 +286,7 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="end-date" class="col-sm-2 control-label">End Date</label>
+							<label for="end-date" class="col-sm-3 control-label">End Date</label>
 							<div class="col-sm-5">
 								<div class="input-group">
 									<input type="text" name="end_date" id="end-date" class="form-control" value="<?php echo set_value('end_date', $end_date); ?>" />
@@ -293,7 +296,7 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="input-special-price" class="col-sm-2 control-label">Special Price</label>
+							<label for="input-special-price" class="col-sm-3 control-label">Special Price</label>
 							<div class="col-sm-5">
 								<div class="input-group">
 									<input type="text" name="special_price" id="input-special-price" class="form-control" value="<?php echo set_value('special_price', $special_price); ?>" />
@@ -347,7 +350,10 @@ $('input[name=\'menu_option\']').select2({
 });
 
 $('input[name=\'menu_option\']').on('select2-selecting', function(e) {
-	addOption(e.choice);
+	if ($('#menu-option').hasClass('hide')) {
+        $('#menu-option').removeClass('hide');
+    }
+    addOption(e.choice);
 });
 $('#sub-tabs a:first').tab('show');
 //--></script>
@@ -363,7 +369,7 @@ function addOption(data) {
 	html += '	<input type="hidden" name="menu_options[' + option_row + '][display_type]" id="" value="' + data.display + '" />';
 	html += '	<input type="hidden" name="menu_options[' + option_row + '][priority]" id="" value="' + data.priority + '" />';
 	html += '	<div class="form-group">';
-	html += '		<label for="input-required" class="col-sm-2 control-label">Required:';
+	html += '		<label for="input-required" class="col-sm-3 control-label">Required:';
 	html += '			<span class="help-block">Enable/Disable if customer must choose option.</span>';
 	html += '		</label>';
 	html += '		<div class="col-sm-5">';
@@ -426,32 +432,4 @@ function addOptionValue(option_row) {
 	option_value_row++;
 }
 //--></script>
-<link type="text/css" rel="stylesheet" href="<?php echo root_url("assets/js/fancybox/jquery.fancybox.css"); ?>">
-<script src="<?php echo root_url("assets/js/fancybox/jquery.fancybox.js"); ?>"></script>
-<script type="text/javascript"><!--
-function imageUpload(field) {
-	$('#image-manager').remove();
-
-	var iframe_url = js_site_url('image_manager?popup=iframe&field_id=') + encodeURIComponent(field);
-
-	$('body').prepend('<div id="image-manager" style="padding: 3px 0px 0px 0px;"><iframe src="'+ iframe_url +'" width="980" height="550" frameborder="0"></iframe></div>');
-
-	$.fancybox({
- 		href:"#image-manager",
-		autoScale: false,
-		afterClose: function() {
-			if ($('#' + field).attr('value')) {
-				$.ajax({
-					url: js_site_url('image_manager/resize?image=') + encodeURIComponent($('#' + field).attr('value')) + '&width=120&height=120',
-					dataType: 'json',
-					success: function(json) {
-						var thumb = $('#' + field).parent().parent().find('.thumb');
-						$(thumb).replaceWith('<img src="' + json + '" alt="" class="thumb" id="thumb" />');
-					}
-				});
-			}
-		}
-	});
-};
-//--></script>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

@@ -1,5 +1,5 @@
-<?php echo $header; ?>
-<?php echo $content_top; ?>
+<?php echo get_header(); ?>
+<?php echo get_partial('content_top'); ?>
 <div id="page-content">
 	<div class="container">
 		<div class="row">
@@ -14,14 +14,14 @@
 		</div>
 
 		<div class="row">
-			<?php echo $content_left; ?>
+			<?php echo get_partial('content_left'); ?>
 			<?php
-				if (!empty($content_left) AND !empty($content_right)) {
+				if (partial_exists('content_left') AND partial_exists('content_right')) {
 					$class = "col-sm-6 col-md-6";
-				} else if (!empty($content_left) OR !empty($content_right)) {
+				} else if (partial_exists('content_left') OR partial_exists('content_right')) {
 					$class = "col-sm-9 col-md-9";
 				} else {
-					$class = "col-md-12";
+					$class = "col-md-10 center-block";
 				}
 			?>
 
@@ -84,8 +84,6 @@
 				<?php } else { ?>
 					<div class="row">
 						<div class="col-sm-6">
-							<p><?php echo $description; ?></p><br/>
-
 							<?php if ($opening_hours) { ?>
 								<div class="panel panel-local-hours">
 								<?php if (!empty($opening_type) AND $opening_type == '24_7') { ?>
@@ -142,8 +140,7 @@
 										<?php } ?>
 									</dl>
 
-									<h4 class="text-center"><?php echo $text_delivery_areas; ?></h4>
-									<span class="under-heading"></span>
+									<h4><?php echo $text_delivery_areas; ?></h4>
 
 									<div class="row">
 										<div class="col-sm-5"><b>Name</b></div>
@@ -160,8 +157,8 @@
 								</div>
 								<div class="collection-info wrap-horizontal" style="display:none;">
 									<dl>
-										<dd><span class=""><?php echo $collection_time; ?></span></dd>
-										<dd><span class=""><?php echo $last_order_time; ?></span></dd>
+										<dd><span class=""><?php echo $text_collection_time; ?><?php echo $collection_time; ?></span></dd>
+										<dd><span class=""><?php echo $text_last_order_time; ?><?php echo $last_order_time; ?></span></dd>
 									<dl>
 								</div>
 							</div>
@@ -174,7 +171,18 @@
 						</div>
 					</div>
 
-					<script src="http://maps.googleapis.com/maps/api/js?v=3<?php echo $map_key; ?>&sensor=false&region=GB"></script>
+                    <?php if ($description) { ?>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h4 class="text-center">About Local</h4>
+                                <span class="under-heading"></span>
+
+                                <p><?php echo $description; ?></p>
+                            </div>
+                        </div>
+                    <?php } ?>
+
+                    <script src="http://maps.googleapis.com/maps/api/js?v=3<?php echo $map_key; ?>&sensor=false&region=GB"></script>
 					<script type="text/javascript">//<![CDATA[
 						var map;
 						var geocoder = null;
@@ -238,9 +246,9 @@
 					//--></script>
 				<?php } ?>
 			</div>
-			<?php echo $content_right; ?>
-			<?php echo $content_bottom; ?>
+			<?php echo get_partial('content_right'); ?>
+			<?php echo get_partial('content_bottom'); ?>
 		</div>
 	</div>
 </div>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

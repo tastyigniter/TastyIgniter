@@ -11,7 +11,9 @@ body {
 font-family:'Oxygen',Arial,sans-serif;
 }
 
-
+.content-area {
+padding-bottom: 80px;
+}
 
 
 /*** WRAPPER ***/
@@ -348,6 +350,7 @@ margin-top: 20px;
 border-radius: 0;
 }
 #notification .alert-danger,
+#notification .alert-info,
 #notification .alert-success,
 #notification .alert-warning {
 margin-bottom: 0;
@@ -449,6 +452,10 @@ background-color: #ed561a;
 border: 1px solid #ed561a;
 border-radius: 0;
 color: #fff;
+}
+.input-group .button-checkbox {
+padding: 0;
+border: 0 none;
 }
 label {
 color: #686868;
@@ -1364,7 +1371,6 @@ margin-top: 25px;
 footer {
 background-color: #f3f3f3;
 border-top: 4px solid #ed561a;
-margin-top: 80px;
 }
 .main-footer {
 margin-top: 20px;

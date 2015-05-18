@@ -5,19 +5,12 @@ class Pages extends Admin_Controller {
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
 		$this->load->library('user');
+        $this->load->library('permalink');
 		$this->load->library('pagination');
 		$this->load->model('Pages_model');
 	}
 
 	public function index() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'pages')) {
-  			redirect('permission');
-		}
-
 		$url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
@@ -85,20 +78,6 @@ class Pages extends Admin_Controller {
 	}
 
 	public function edit() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'pages')) {
-  			redirect('permission');
-		}
-
-		if ($this->session->flashdata('alert')) {
-			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
-		} else {
-			$data['alert'] = '';
-		}
-
 		$page_info = $this->Pages_model->getPage((int) $this->input->get('id'));
 
 		if ($page_info) {
@@ -115,6 +94,7 @@ class Pages extends Admin_Controller {
 		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setBackButton('btn btn-back', site_url('pages'));
+        $this->template->setScriptTag(root_url('assets/js/tinymce/tinymce.min.js'), 'tinymce-js', '111');
 
 		$data['page_id'] 			= $page_info['page_id'];
 		$data['language_id'] 		= $page_info['language_id'];
@@ -135,10 +115,10 @@ class Pages extends Admin_Controller {
 			$data['navigation'] =  array();
 		}
 
-		$this->load->model('Permalinks_model');
-		$data['permalink'] 			= $this->Permalinks_model->getPermalink('page_id='.$page_info['page_id']);
+		$data['permalink'] = $this->permalink->getPermalink('page_id='.$page_info['page_id']);
+        $data['permalink']['url'] = root_url();
 
-		$this->load->model('Design_model');
+        $this->load->model('Design_model');
 		$data['layouts'] = array();
 		$results = $this->Design_model->getLayouts();
 		foreach ($results as $result) {
@@ -181,10 +161,7 @@ class Pages extends Admin_Controller {
 	}
 
 	public function _addPage() {
-    	if (!$this->user->hasPermissions('modify', 'pages')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to add!');
-  			return TRUE;
-    	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$add = array();
 
 			$add['name'] 				= $this->input->post('name');
@@ -202,9 +179,9 @@ class Pages extends Admin_Controller {
 			$add['status'] 				= $this->input->post('status');
 
 			if ($_POST['insert_id'] = $this->Pages_model->addPage($add)) {
-				$this->alert->set('success', 'Page added sucessfully.');
+				$this->alert->set('success', 'Page added successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing updated.');
 			}
 
 			return TRUE;
@@ -212,10 +189,7 @@ class Pages extends Admin_Controller {
 	}
 
 	public function _updatePage() {
-    	if (!$this->user->hasPermissions('modify', 'pages')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to update!');
-  			return TRUE;
-    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$update = array();
 
 			$update['page_id'] 				= $this->input->get('id');
@@ -233,9 +207,9 @@ class Pages extends Admin_Controller {
 			$update['status'] 				= $this->input->post('status');
 
 			if ($this->Pages_model->updatePage($update)) {
-				$this->alert->set('success', 'Page updated sucessfully.');
+				$this->alert->set('success', 'Page updated successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing updated.');
 			}
 
 			return TRUE;
@@ -243,14 +217,12 @@ class Pages extends Admin_Controller {
 	}
 
 	public function _deletePage() {
-    	if (!$this->user->hasPermissions('modify', 'pages')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to delete!');
-    	} else if (is_array($this->input->post('delete'))) {
+    	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Pages_model->deletePage($value);
 			}
 
-			$this->alert->set('success', 'Page(s) deleted sucessfully!');
+			$this->alert->set('success', 'Page(s) deleted successfully!');
 		}
 
 		return TRUE;

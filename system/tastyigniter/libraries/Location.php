@@ -190,7 +190,7 @@ class Location {
 	}
 
 	public function isOpened() {
-		return ($this->opening_status !== '1' AND ($this->opening_time <= $this->current_time AND $this->closing_time >= $this->current_time) OR ($this->opening_time === '00:00' OR $this->closing_time === '00:00'));
+		return ($this->opening_status !== '1' AND ($this->opening_time <= $this->current_time AND $this->closing_time >= $this->current_time) OR ($this->opening_time === '00:00' AND $this->closing_time === '00:00'));
 	}
 
 	public function hasDelivery() {
@@ -237,13 +237,15 @@ class Location {
 		return (is_numeric($this->local_info['last_order_time']) AND $this->local_info['last_order_time'] > 0) ? mdate($this->timestring, strtotime($this->closing_time) - ($this->local_info['last_order_time'] * 60)) : $this->closing_time;
 	}
 
-	public function paymentsList() {
-		return (!empty($this->local_options['payments'])) ? implode($this->local_options['payments'], ', ') : '';
+	public function payments($implode = FALSE) {
+		$payments = (!empty($this->local_options['payments'])) ? $this->local_options['payments'] : NULL;
+
+        return ($payments AND $implode) ? implode($payments, $implode) : $payments;
 	}
 
 	public function checkDeliveryTime($time) {
 		$time = mdate($this->timestring, strtotime($time));
-    	return ($this->opening_status !== '1' AND ($this->opening_time <= $time AND $this->closing_time >= $time) OR ($this->opening_time === '00:00' OR $this->closing_time === '00:00'));
+    	return (($this->opening_status !== '1' AND $this->opening_time <= $time AND $this->closing_time >= $time) OR ($this->opening_time === '00:00' AND $this->closing_time === '00:00'));
 	}
 
 	public function setLocation($location_id) {
@@ -296,19 +298,9 @@ class Location {
 		return ($cart_total >= $this->minimumOrder());
 	}
 
-	public function checkAddressCoverage($search_query) {
-		$coords = $this->getLatLng($search_query, FALSE);
-		$delivery_area = $this->checkDeliveryArea($coords);
-
-		if ($delivery_area !== 'outside' AND $delivery_area['location_id'] == $this->location_id) {
-			return $delivery_area;
-		}
-
-		return FALSE;
-	}
-
-	public function checkDeliveryCoverage() {
-		$coords = $this->getLatLng($this->search_query, TRUE);
+	public function checkDeliveryCoverage($search_query = FALSE) {
+        $search_query = ($search_query === FALSE) ? $this->search_query : $search_query;
+        $coords = $this->getLatLng($search_query, TRUE);
 		$delivery_area = $this->checkDeliveryArea($coords);
 
 		if ($delivery_area !== 'outside' AND $delivery_area['location_id'] == $this->location_id) {
@@ -556,14 +548,14 @@ class Location {
 			$search_query = $address_string;
 		}
 
-		if ($check_setting === TRUE) {
-			$search_by = $this->CI->config->item('search_by');
-			if ($search_by === 'postcode' AND $is_postcode === FALSE) {
-				return "ENTER_POSTCODE";
-			}
-		}
+        if ($check_setting === TRUE) {
+            $search_by = $this->CI->config->item('search_by');
+            if ($search_by === 'postcode' AND $is_postcode === FALSE) {
+                return "ENTER_POSTCODE";
+            }
+        }
 
-		$url  = 'http://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($search_query) .'&sensor=false&region=GB'; //encode $postcode string and construct the url query
+        $url  = 'http://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($search_query) .'&sensor=false'; //encode $postcode string and construct the url query
 		$geocode_data = @file_get_contents($url);
 		$output = json_decode($geocode_data);											// decode the geocode data
 

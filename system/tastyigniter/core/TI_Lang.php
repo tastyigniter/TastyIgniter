@@ -4,17 +4,19 @@ class TI_Lang extends MX_Lang {
 
 	protected $directory = '';
 
-	/**
-	 * Load a language file
-	 *
-	 * @param	mixed	$langfile	Language file name
-	 * @param	string	lang		Language name (english, etc.)
-	 * @param	bool	$return		Whether to return the loaded array of translations
-	 * @param 	bool	$add_suffix	Whether to add suffix to $langfile
-	 * @param 	string	$alt_path	Alternative path to look for the language file
-	 *
-	 * @return	void|string[]	Array containing translations, if $return is set to TRUE
-	 */
+    /**
+     * Load a language file
+     *
+     * @param    mixed $langfile Language file name
+     * @param string $lang
+     * @param    bool $return Whether to return the loaded array of translations
+     * @param    bool $add_suffix Whether to add suffix to $langfile
+     * @param    string $alt_path Alternative path to look for the language file
+     *
+     * @param string $_module
+     * @return string[]|void Array containing translations, if $return is set to TRUE
+     * @internal param lang $string Language name (english, etc.)
+     */
 
 	public function load($langfile = array(), $lang = '', $return = FALSE, $add_suffix = TRUE, $alt_path = '', $_module = '')	{
 		$this->CI =& get_instance();
@@ -22,14 +24,14 @@ class TI_Lang extends MX_Lang {
 		$this->CI->load->library('user_agent');
 		$http_lang = $this->CI->agent->languages();
 
-		if (APPDIR === 'main' AND $lang === '') {
+		if (APPDIR === MAINDIR AND $lang === '') {
 			if (!$this->CI->agent->accept_lang($http_lang[0]) AND !($lang = $this->getLangDirectory($http_lang[0]))) {
 				$lang = $this->getLangDirectory($this->CI->config->item('language_id'));
 			}
 		}
 
-		parent::load($langfile, $lang, $return, $add_suffix, $alt_path, $_module);
-	}
+        parent::load($langfile, $lang, $return, $add_suffix, $alt_path, $_module);
+    }
 
 	public function getLangDirectory($language) {
 		if ($this->directory === '' AND $language !== '' AND isset($this->CI->db)) {

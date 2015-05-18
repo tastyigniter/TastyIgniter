@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
 		<form role="form" id="list-form" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
@@ -8,4 +8,4 @@
 		</form>
 	</div>
 </div>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

@@ -14,9 +14,10 @@ class Main_Controller extends Base_Controller {
 	{
         parent::__construct();
 
-		log_message('debug', 'Main Controller Class Initialized');
+		log_message('info', 'Main Controller Class Initialized');
 
-		$this->load->library('permalink');
+        // Load permalink
+        $this->load->library('permalink');
 
 		$this->load->library('customer');
 
@@ -24,7 +25,11 @@ class Main_Controller extends Base_Controller {
 
 		$this->load->library('template');
 
-		$this->load->library('extension');
+        // Set default theme
+        if ($default_theme = $this->config->item(MAINDIR, 'default_themes')) {
+            $this->template->setTheme($default_theme);
+        }
+
 		$this->load->model('Extensions_model');
 
 		$this->load->model('Pages_model');

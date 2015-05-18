@@ -9,22 +9,6 @@ class Database extends Admin_Controller {
 	}
 
 	public function index() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'database')) {
-  			redirect('permission');
-		}
-
-		if ($this->session->flashdata('alert')) {
-			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
-		} else if (file_exists('assets/download/tastyigniter.sql')) {
-			$data['alert'] = '<p class="alert-success">Database Backup Sucessfully! <a href="'.site_url('database/download').'">Download</a></p>';
-		} else {
-			$data['alert'] = '';
-		}
-
 		$this->template->setTitle('Database');
 		$this->template->setHeading('Database');
 		$this->template->setButton('Backup', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
@@ -34,16 +18,28 @@ class Database extends Admin_Controller {
 		$db_tables = $this->Settings_model->getdbTables();
 		foreach ($db_tables as $db_table) {
 			$data['db_tables'][] = array(
-				'name'		=> $db_table['name'],
-				'num_rows'	=> $db_table['num_rows']
+				'table_name'	=> $db_table['table_name'],
+				'table_rows'	=> $db_table['table_rows']
 			);
 		}
 
-		if ($this->input->post() AND $this->_backup() === TRUE) {
-			redirect('database');
-		}
+        $data['backup_files'] = array();
+        $backup_files = glob(ROOTPATH.'assets/downloads/*.sql');
+        if (count($backup_files) > 0) {
+            foreach ($backup_files as $backup_file) {
+                $basename = basename($backup_file);
+                $data['backup_files'][] = array(
+                    'filename'      => $basename,
+                    'size'          => filesize($backup_file),
+                    'download'      => site_url('database/backup?download='. $basename),
+                    'delete'        => site_url('database/backup?delete='. $basename)
+                );
+            }
+        }
 
-		if (!empty($_FILES['restore']['name']) AND $this->_restore() === TRUE) {
+        if ($this->input->post() AND $this->_backup() === TRUE) {
+			redirect('database');
+		} else if (!empty($_FILES['restore']['name']) AND $this->_restore() === TRUE) {
 			redirect('database');
 		}
 
@@ -51,32 +47,45 @@ class Database extends Admin_Controller {
 		$this->template->render('database', $data);
 	}
 
-	public function download() {
-    	if (!$this->user->hasPermissions('modify', 'database')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to download!');
-    	} else if (file_exists('assets/download/tastyigniter.sql')) {
-			$name = 'tastyigniter.sql';
-			$backup_sql = file_get_contents("assets/download/tastyigniter.sql");
-			unlink('assets/download/tastyigniter.sql');
+	public function backup() {
+        if (!$this->user->hasPermissions('modify', 'database')) {
+            $this->alert->set('warning', 'Warning: You do not have permission to rename file!');
+        } else {
+            if ($this->input->get('download')) {
+                $download = pathinfo($this->input->get('download'));
+                $file_path = ROOTPATH . "assets/downloads/" . $download['filename'] . ".sql";
 
-			$this->load->helper('download');
-			force_download($name, $backup_sql);
-		} else {
-		    redirect('database');
-		}
+                if ($download['extension'] === 'sql' AND file_exists($file_path)) {
+                    $file_data = file_get_contents($file_path);
+                    $this->load->helper('download');
+                    force_download($download['basename'], $file_data);
+                }
+
+            } else if ($this->input->get('delete')) {
+                $delete = pathinfo($this->input->get('delete'));
+                $file_path = ROOTPATH . "assets/downloads/" . $delete['filename'] . ".sql";
+
+                if ($delete['extension'] === 'sql' AND file_exists($file_path)) {
+                    unlink($file_path);
+                    $this->alert->set('success', 'Database Backup deleted successfully!');
+                }
+
+                redirect('database');
+            } else {
+                redirect('database');
+            }
+        }
 	}
 
 	public function _backup() {
-    	if (!$this->user->hasPermissions('modify', 'database')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to backup!');
-			return TRUE;
-    	} else if ($this->input->post('backup')) {
+    	if ($this->input->post('backup')) {
+            $this->form_validation->set_rules('backup[]', 'Backup', 'xss_clean|trim|required|alpha_dash');
 
-			$this->form_validation->set_rules('backup[]', 'Backup', 'xss_clean|trim|required|alpha_dash');
-
-			if ($this->form_validation->run() === TRUE) {
-				$this->Settings_model->backupDatabase($this->input->post('backup'));
-				return TRUE;
+            if ($this->form_validation->run() === TRUE) {
+				if ($this->Settings_model->backupDatabase($this->input->post('backup'))) {
+                    $this->alert->set('success', 'Database backed up successfully!');
+                    return TRUE;
+                }
 			} else {
 				return FALSE;
 			}
@@ -84,17 +93,14 @@ class Database extends Admin_Controller {
 	}
 
 	public function _restore() {
-    	if (!$this->user->hasPermissions('modify', 'database')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to restore!');
-  			return TRUE;
-    	} else if (isset($_FILES['restore']) AND !empty($_FILES['restore']['name'])) {
+    	if (isset($_FILES['restore']) AND !empty($_FILES['restore']['name'])) {
 			if (is_uploaded_file($_FILES['restore']['tmp_name'])) {
 				$content = file_get_contents($_FILES['restore']['tmp_name']);
 				$temp = explode('.', $_FILES['restore']['name']);
 				$extension = end($temp);
 				if ($extension === 'sql') {
 					if ($this->Settings_model->restoreDatabase($content)) { // calls model to save data to SQL
-						$this->alert->set('success', 'Database Restored Sucessfully!');
+						$this->alert->set('success', 'Database Restored successfully!');
 					}
 				} else {
 					$this->alert->set('warning', 'Nothing Restored!');

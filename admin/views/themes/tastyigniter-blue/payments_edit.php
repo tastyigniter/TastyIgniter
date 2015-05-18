@@ -1,7 +1,7 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <?php
-	if (!empty($payment_name)) {
-		echo $this->extension->options($payment_name, $payments_options);
+	if (!empty($payment)) {
+		echo $payment;
 	}
 ?>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

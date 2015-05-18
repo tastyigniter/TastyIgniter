@@ -61,7 +61,6 @@ class CI_Controller {
 	/**
 	 * Class constructor
 	 *
-	 * @return	void
 	 */
 	public function __construct()
 	{

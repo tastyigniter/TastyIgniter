@@ -11,12 +11,11 @@ class Messages extends Admin_Controller {
 	}
 
 	public function index() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
 		if ($this->input->post('message_state')) {
-			$data['alert'] = $this->_updateMessageState($this->input->post('message_state'), '', $this->user->getStaffId());
+			if ($alert_msg = $this->_updateMessageState($this->input->post('message_state'), '', $this->user->getStaffId())) {
+                $this->alert->set('success', $alert_msg);
+                redirect(current_url());
+            }
 		}
 
 		$url = '?';
@@ -38,11 +37,11 @@ class Messages extends Admin_Controller {
 			$data['filter_search'] = '';
 		}
 
-		if ($this->input->get('filter_label')) {
-			$filter['filter_label'] = $data['filter_label'] = $this->input->get('filter_label');
-			$url .= 'filter_label='.$filter['filter_label'].'&';
+		if ($this->input->get('filter_folder')) {
+			$filter['filter_folder'] = $data['filter_folder'] = $this->input->get('filter_folder');
+			$url .= 'filter_folder='.$filter['filter_folder'].'&';
 		} else {
-			$filter['filter_label'] = $data['filter_label'] = 'inbox';
+			$filter['filter_folder'] = $data['filter_folder'] = 'inbox';
 		}
 
 		if ($this->input->get('filter_recipient')) {
@@ -59,10 +58,10 @@ class Messages extends Admin_Controller {
 			$filter['filter_type'] = $data['filter_type'] = '';
 		}
 
-		if ($this->input->get('filter_label') === 'all' AND !$this->user->hasPermissions('access', 'messages')) {
+		if ($this->input->get('filter_folder') === 'all' AND !$this->user->hasPermissions('access', 'messages')) {
 			$data['alert'] = '<p class="alert-warning">Warning: You do not have permission to view all message!</p>';
-			$filter['filter_label'] = 'inbox';
-			$data['filter_label'] = 'all';
+			$filter['filter_folder'] = 'inbox';
+			$data['filter_folder'] = 'all';
 		}
 
 		$filter['filter_staff'] = $this->user->getStaffId();
@@ -91,7 +90,7 @@ class Messages extends Admin_Controller {
 
 		$this->template->setTitle('Messages');
 		$this->template->setHeading('Messages');
-		$this->template->setButton('+ New', array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
+		$this->template->setButton('+ Compose', array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
 
 		$data['text_empty'] 		= 'There are no messages available.';
 
@@ -107,20 +106,22 @@ class Messages extends Admin_Controller {
 				'from'			=> $result['staff_name'],
 				'send_type'		=> $result['send_type'],
 				'type_icon'		=> (isset($result['send_type']) AND $result['send_type'] === 'account') ? 'user' : 'envelope',
-				'subject' 		=> $result['subject'],
-				'recipient' 	=> ucwords(str_replace('_', ' ', $result['recipient'])),
-				'date_added'	=> mdate('%H:%i - %d %M %y', strtotime($result['date_added'])),
-				'body' 			=> substr(strip_tags(html_entity_decode($result['body'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..',
-				'state'			=> (isset($result['state']) AND $result['state'] === '0') ? 'message-unread' : 'message-read',
+                'subject' 	    => (strlen($result['subject']) > 30) ? substr(strip_tags(html_entity_decode($result['subject'], ENT_QUOTES, 'UTF-8')), 0, 30) . '..' : strip_tags(html_entity_decode($result['subject'], ENT_QUOTES, 'UTF-8')),
+                'recipient' 	=> ucwords(str_replace('_', ' ', $result['recipient'])),
+				'date_added'	=> day_elapsed($result['date_added']),
+				'body' 			=> (strlen($result['body']) > 40) ? substr(strip_tags(html_entity_decode($result['body'], ENT_QUOTES, 'UTF-8')), 0, 40) . '..' : strip_tags(html_entity_decode($result['body'], ENT_QUOTES, 'UTF-8')),
+				'state'			=> (isset($result['state']) AND $result['state'] === '1') ? 'message-read' : 'message-unread',
 				'view'			=> site_url('messages/view?id=' . $result['message_id'])
 			);
 		}
 
 		$message_unread = $this->user->unreadMessageTotal();
-		$data['labels'] = array(
-			'inbox' => array('badge' => $message_unread, 'url' => site_url('messages?filter_label=inbox')),
-			'all' 	=> array('badge' => '', 'url' => site_url('messages?filter_label=all')),
-			'trash' => array('badge' => '', 'url' => site_url('messages?filter_label=trash'))
+		$data['folders'] = array(
+			'inbox' => array('icon' => 'fa-inbox', 'badge' => $message_unread, 'url' => site_url('messages?filter_folder=inbox')),
+			'draft' => array('icon' => 'fa-file-text-o', 'badge' => '', 'url' => site_url('messages?filter_folder=draft')),
+			'sent' => array('icon' => 'fa-paper-plane-o', 'badge' => '', 'url' => site_url('messages?filter_folder=sent')),
+			'all' 	=> array('icon' => 'fa-briefcase', 'badge' => '', 'url' => site_url('messages?filter_folder=all')),
+            'trash' => array('icon' => 'fa-trash-o', 'badge' => '', 'url' => site_url('messages?filter_folder=trash'))
 		);
 
 		$data['message_dates'] = array();
@@ -152,10 +153,6 @@ class Messages extends Admin_Controller {
 	}
 
 	public function view() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
     	if (!$this->user->hasPermissions('access', 'messages')) {
  			$message_info = $this->Messages_model->viewMessage((int) $this->input->get('id'), $this->user->getStaffId());
  			$data['label'] = 'inbox';
@@ -175,14 +172,24 @@ class Messages extends Admin_Controller {
 		}
 
 		if ($this->input->post('message_state')) {
-			$alert = $this->_updateMessageState($this->input->post('message_state'), $message_id, $this->user->getStaffId());
-			$this->session->set_flashdata('alert', $alert);
-		    redirect('messages');
+			if ($alert_msg = $this->_updateMessageState($this->input->post('message_state'), $message_id, $this->user->getStaffId())) {
+                $this->alert->set('success', $alert_msg);
+                redirect(current_url());
+            }
 		} else if ($message_info['state'] !== '1') {
 			$this->_updateMessageState('read', $message_id, $this->user->getStaffId());
 		}
 
-		$this->template->setTitle('Messages - View');
+        $message_unread = $this->user->unreadMessageTotal();
+        $data['folders'] = array(
+            'inbox' => array('icon' => 'fa-inbox', 'badge' => $message_unread, 'url' => site_url('messages?filter_folder=inbox')),
+            'draft' => array('icon' => 'fa-file-text-o', 'badge' => '', 'url' => site_url('messages?filter_folder=draft')),
+            'sent' => array('icon' => 'fa-paper-plane-o', 'badge' => '', 'url' => site_url('messages?filter_folder=sent')),
+            'all' 	=> array('icon' => 'fa-briefcase', 'badge' => '', 'url' => site_url('messages?filter_folder=all')),
+            'trash' => array('icon' => 'fa-trash-o', 'badge' => '', 'url' => site_url('messages?filter_folder=trash'))
+        );
+
+        $this->template->setTitle('Messages - View');
 		$this->template->setHeading('Messages - View');
 		$this->template->setBackButton('btn btn-back', site_url('messages'));
 
@@ -199,25 +206,29 @@ class Messages extends Admin_Controller {
 		}
 
 		$data['message_id'] 	= $message_info['message_id'];
-		$data['date_added'] 	= mdate('%d %M %y - %H:%i', strtotime($message_info['date_added']));
+		$data['date_added'] 	= mdate('%H:%i - %d %M %y', strtotime($message_info['date_added']));
 		$data['send_type'] 		= ucwords($message_info['send_type']);
 		$data['from'] 			= $message_info['staff_name'];
 		$data['recipient'] 		= ucwords(str_replace('_', ' ', $message_info['recipient']));
 		$data['subject'] 		= $message_info['subject'];
-		$data['body'] 			= $message_info['body'];
+        $data['body'] 			= $message_info['body'];
+        $data['message_deleted'] = ($message_info['status'] === '0') ? TRUE : FALSE;
 
 		if ($data['label']) {
 			$data['recipients'] = array();
 			$recipients = $this->Messages_model->getRecipients($message_id);
-			foreach ($recipients as $recipient) {
-				$data['recipients'][] = array(
-					'message_recipient_id'	=> $recipient['message_recipient_id'],
-					'message_id'			=> $recipient['message_id'],
-					'recipient_name'		=> (isset($recipient['first_name']) AND isset($recipient['last_name'])) ? $recipient['first_name'] .' '. $recipient['last_name'] : $recipient['staff_name'] ,
-					'recipient_email'		=> (isset($recipient['customer_email'])) ? $recipient['customer_email'] : $recipient['staff_email'],
-					'status'				=> ($recipient['status'] === '1') ? '<i class="fa fa-check-square green"></i>' : '<i class="fa fa-exclamation-circle red"></i>'
-				);
-			}
+                if ($recipients) {
+                    foreach ($recipients as $recipient) {
+                        $data['recipients'][] = array(
+                            'message_recipient_id'	=> $recipient['message_recipient_id'],
+                            'message_id'			=> $recipient['message_id'],
+                            'recipient_name'		=> (isset($recipient['first_name']) AND isset($recipient['last_name'])) ? $recipient['first_name'] .' '. $recipient['last_name'] : $recipient['staff_name'] ,
+                            'recipient_email'		=> (isset($recipient['customer_email'])) ? $recipient['customer_email'] : $recipient['staff_email'],
+                            'status'				=> ($recipient['status'] === '1') ? '<i class="fa fa-check-square green"></i>' : '<i class="fa fa-exclamation-circle red"></i>'
+                        );
+                    }
+                }
+
 		}
 
 		$this->template->setPartials(array('header', 'footer'));
@@ -225,19 +236,12 @@ class Messages extends Admin_Controller {
 	}
 
 	public function edit() {
-
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'messages')) {
-  			redirect('permission');
-		}
-
 		$this->template->setTitle('Message: Compose');
 		$this->template->setHeading('Message: Compose');
 		$this->template->setButton('Send', array('class' => 'btn btn-success', 'onclick' => '$(\'#edit-form\').submit();'));
 		$this->template->setBackButton('btn btn-back', site_url('messages'));
+
+        $this->template->setScriptTag(root_url('assets/js/tinymce/tinymce.min.js'), 'tinymce-js', '111');
 
 		$data['sub_menu_back'] 		= site_url('messages');
 
@@ -261,7 +265,16 @@ class Messages extends Admin_Controller {
 			);
 		}
 
-		if ($this->input->post() AND $this->_sendMessage() === TRUE) {
+        $message_unread = $this->user->unreadMessageTotal();
+        $data['folders'] = array(
+            'inbox' => array('icon' => 'fa-inbox', 'badge' => $message_unread, 'url' => site_url('messages?filter_folder=inbox')),
+            'draft' => array('icon' => 'fa-file-text-o', 'badge' => '', 'url' => site_url('messages?filter_folder=draft')),
+            'sent' => array('icon' => 'fa-paper-plane-o', 'badge' => '', 'url' => site_url('messages?filter_folder=sent')),
+            'all' 	=> array('icon' => 'fa-briefcase', 'badge' => '', 'url' => site_url('messages?filter_folder=all')),
+            'trash' => array('icon' => 'fa-trash-o', 'badge' => '', 'url' => site_url('messages?filter_folder=trash'))
+        );
+
+        if ($this->input->post() AND $this->_sendMessage() === TRUE) {
 			redirect('messages');
 		}
 
@@ -270,10 +283,7 @@ class Messages extends Admin_Controller {
 	}
 
 	public function _sendMessage() {
-    	if (!$this->user->hasPermissions('modify', 'messages')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to send message!');
-  			return TRUE;
-    	} else if ($this->validateForm() === TRUE) {
+    	if ($this->validateForm() === TRUE) {
 			$this->load->model('Customers_model');
 			$add = array();
 			$recipients = array();
@@ -360,9 +370,9 @@ class Messages extends Admin_Controller {
 			$add['date_added']		= mdate('%Y-%m-%d %H:%i:%s', time());
 
 			if ($this->Messages_model->addMessage($add, $recipients)) {
-				$this->alert->set('success', 'Message Sent Sucessfully!');
+				$this->alert->set('success', 'Message Sent successfully!');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing added.');
+				$this->alert->set('warning', 'An error occurred, nothing added.');
 			}
 
 			return TRUE;
@@ -388,21 +398,23 @@ class Messages extends Admin_Controller {
 			if ($state !== '') {
 				$num = 0;
 				if (is_array($this->input->post('delete'))) {
-					foreach ($this->input->post('delete') as $key => $id) {
-						$this->Messages_model->updateMessageState($id, $staff_id, $state);
+                    foreach ($this->input->post('delete') as $key => $id) {
+						$this->Messages_model->updateState($id, $staff_id, $state);
 						$num++;
 					}
 				} else if (is_numeric($message_id)) {
-					$this->Messages_model->updateMessageState($message_id, $staff_id, $state);
-					$num = 1;
-				}
+                    $this->Messages_model->updateState($message_id, $staff_id, $state);
+                    $num = 1;
+                }
 
-				if ($num > 0) {
+                if ($num > 0) {
 					$num_message = ($num == 1) ? 'The message '.$alert : $num.' messages '.$alert;
-					return '<p class="alert-success">'. $num_message .'</p>';
+                    return $num_message;
 				}
 			}
 		}
+
+        return FALSE;
 	}
 
 	public function validateForm() {

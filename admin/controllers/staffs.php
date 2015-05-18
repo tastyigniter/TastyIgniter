@@ -12,14 +12,6 @@ class Staffs extends Admin_Controller {
 	}
 
 	public function index() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'staffs')) {
-  			redirect('permission');
-		}
-
 		$url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
@@ -163,14 +155,6 @@ class Staffs extends Admin_Controller {
 	}
 
 	public function edit() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if ($this->input->get('id') !== $this->user->getStaffId() AND !$this->user->hasPermissions('access', 'staffs')) {
-  			redirect('permission');
-		}
-
 		$staff_info = $this->Staffs_model->getStaff((int) $this->input->get('id'));
 
 		if ($staff_info) {
@@ -187,14 +171,17 @@ class Staffs extends Admin_Controller {
 		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 		$this->template->setBackButton('btn btn-back', site_url('staffs'));
 
-    	$data['staff_profile'] = FALSE;
-    	if ($this->input->get('id') === $this->user->getStaffId() AND !$this->user->hasPermissions('modify', 'staffs')) {
-			$data['staff_profile'] = TRUE;
-		} else {
-			$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
-		}
+        if ($this->user->hasPermissions('modify', 'staffs', TRUE) AND $staff_id !== $this->user->getStaffId()) {
+            $this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+        }
 
-		$data['staff_name'] 		= $staff_info['staff_name'];
+        $data['display_staff_group'] = TRUE;
+        if ($this->user->hasPermissions('modify', 'staffs', TRUE) AND $staff_id === $this->user->getStaffId()) {
+            $data['display_staff_group'] = FALSE;
+        }
+
+
+        $data['staff_name'] 		= $staff_info['staff_name'];
 		$data['staff_email'] 		= $staff_info['staff_email'];
 		$data['staff_group_id'] 	= $staff_info['staff_group_id'];
 		$data['staff_location_id'] 	= $staff_info['staff_location_id'];
@@ -284,10 +271,7 @@ class Staffs extends Admin_Controller {
 	}
 
 	public function _addStaff() {
-    	if (!$this->user->hasPermissions('modify', 'staffs')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to add!');
-  			return TRUE;
-    	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$add = array();
 
 			$add['staff_name']			= $this->input->post('staff_name');
@@ -301,9 +285,9 @@ class Staffs extends Admin_Controller {
 			$add['staff_status']		= $this->input->post('staff_status');
 
 			if ($_POST['insert_id'] = $this->Staffs_model->addStaff($add)) {
-				$this->alert->set('success', 'Staff added sucessfully.');
+				$this->alert->set('success', 'Staff added successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing added.');
+				$this->alert->set('warning', 'An error occurred, nothing added.');
 			}
 
 			return TRUE;
@@ -311,10 +295,7 @@ class Staffs extends Admin_Controller {
 	}
 
 	public function _updateStaff($staff_email, $username) {
-    	if ($this->input->get('id') !== $this->user->getStaffId() AND !$this->user->hasPermissions('modify', 'staffs')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to update!');
-  			return TRUE;
-    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm($staff_email, $username) === TRUE) {
+        if (is_numeric($this->input->get('id')) AND $this->validateForm($staff_email, $username) === TRUE) {
 			$update = array();
 
 			$update['staff_id']		= $this->input->get('id');
@@ -334,9 +315,9 @@ class Staffs extends Admin_Controller {
 			$update['staff_status']			= $this->input->post('staff_status');
 
 			if ($this->Staffs_model->updateStaff($update)) {
-				$this->alert->set('success', 'Staff updated sucessfully.');
+				$this->alert->set('success', 'Staff updated successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing updated.');
 			}
 
 			return TRUE;
@@ -344,14 +325,12 @@ class Staffs extends Admin_Controller {
 	}
 
 	public function _deleteStaff() {
-    	if (!$this->user->hasPermissions('modify', 'staffs')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to delete!');
-    	} else if (is_array($this->input->post('delete'))) {
+    	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Staffs_model->deleteStaff($value);
 			}
 
-			$this->alert->set('success', 'Staff(s) deleted sucessfully!');
+			$this->alert->set('success', 'Staff(s) deleted successfully!');
 		}
 
 		return TRUE;
@@ -372,11 +351,11 @@ class Staffs extends Admin_Controller {
 		$this->form_validation->set_rules('password_confirm', 'Password Confirm', 'xss_clean|trim');
 
 		if (!$this->input->get('id')) {
-			$this->form_validation->set_rules('password', 'Password', 'required');
-			$this->form_validation->set_rules('password_confirm', 'Confirm Password', 'required');
+			$this->form_validation->set_rules('password', 'Password', 'xss_clean|trim|required|min_length[6]|max_length[32]|matches[password_confirm]');
+			$this->form_validation->set_rules('password_confirm', 'Confirm Password', 'xss_clean|trim|required');
 		}
 
-		if ( ! ($this->input->get('id') === $this->user->getStaffId() AND !$this->user->hasPermissions('modify', 'staffs'))) {
+		if ($this->user->hasPermissions('modify', 'staffs', FALSE)) {
 			$this->form_validation->set_rules('staff_group', 'Department', 'xss_clean|trim|required|integer');
 			$this->form_validation->set_rules('staff_location_id', 'Location', 'xss_clean|trim|integer');
 		}
@@ -414,10 +393,10 @@ class Staffs extends Admin_Controller {
 		foreach ($temp_timezones as $tz) {
 			$sign = ($tz['offset'] > 0) ? '+' : '-';
 			$offset = gmdate('H:i', abs($tz['offset']));
-			$timezone_list[$tz['identifier']] = '(UTC ' . $sign . $offset .') '. $tz['identifier'];
+            $timezoneList[$tz['identifier']] = '(UTC ' . $sign . $offset .') '. $tz['identifier'];
 		}
 
-		return $timezone_list;
+		return $timezoneList;
 	}
 }
 

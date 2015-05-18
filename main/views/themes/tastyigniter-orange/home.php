@@ -1,5 +1,5 @@
-<?php echo $header; ?>
-<?php echo $content_top; ?>
+<?php echo get_header(); ?>
+<?php echo get_partial('content_top'); ?>
 <div id="page-content">
 	<div class="container">
 		<div class="row">
@@ -142,4 +142,4 @@
 
 	</div>
 </div>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

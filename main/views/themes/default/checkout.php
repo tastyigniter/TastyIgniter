@@ -1,12 +1,12 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row page-heading"><h3><?php echo $text_heading; ?></h3></div>
-<?php echo $content_top; ?>
+<?php echo get_partial('content_top'); ?>
 
 <div id="notification" class="row">
 	<?php echo $this->alert->display(); ?>
 </div>
 <div class="row">
-	<?php echo $content_left; ?><?php echo $content_right; ?>
+	<?php echo get_partial('content_left'); ?><?php echo get_partial('content_right'); ?>
 
 	<div class="col-md-8">
 		<div class="row wrap-all">
@@ -231,4 +231,4 @@ $(document).ready(function() {
 	});
 });
 //--></script>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

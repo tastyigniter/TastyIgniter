@@ -1,5 +1,5 @@
-<?php echo $header; ?>
-<?php echo $content_top; ?>
+<?php echo get_header(); ?>
+<?php echo get_partial('content_top'); ?>
 <?php if (!$local_location) { ?>
 	<div class="row page-heading"><h3><?php echo $text_heading; ?></h3></div>
 <?php } ?>
@@ -80,7 +80,7 @@
 </div>
 
 <div class="row content wrap-horizontal">
-	<?php echo $content_left; ?><?php echo $content_right; ?>
+	<?php echo get_partial('content_left'); ?><?php echo get_partial('content_right'); ?>
 
 	<div class="col-md-8">
 		<div class="row wrap-vertical wrap-bottom" style="display: block;">
@@ -241,4 +241,4 @@ $(document).ready(function() {
 });
 //--></script>
 <?php } ?>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

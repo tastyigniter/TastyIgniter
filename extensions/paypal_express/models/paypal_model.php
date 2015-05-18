@@ -1,6 +1,15 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-class Paypal_model extends CI_Model {
+class Paypal_model extends TI_Model {
+
+    private $error_prefix = 'PayPal Express Error -->';
+
+    public function __construct() {
+        parent::__construct();
+
+        $this->load->library('cart');
+        $this->load->library('currency');
+    }
 
 	public function setExpressCheckout($order_info, $cart_items) {
 		if ($cart_items) {
@@ -9,7 +18,7 @@ class Paypal_model extends CI_Model {
 			if ($order_info['order_type'] === '1' AND (!empty($order_info['address_id']) OR !empty($order_info['customer_id']))) {
 
 				$this->load->model('Addresses_model');
-				$address = $this->Addresses_model->getCustomerAddress($order_info['customer_id'], $order_info['address_id']);
+				$address = $this->Addresses_model->getAddress($order_info['customer_id'], $order_info['address_id']);
 
 				$nvp_data .= '&PAYMENTREQUEST_0_SHIPTONAME='. urlencode($order_info['first_name'] .' '. $order_info['last_name']);
 				$nvp_data .= '&PAYMENTREQUEST_0_SHIPTOSTREET='. urlencode($address['address_1']);
@@ -44,15 +53,16 @@ class Paypal_model extends CI_Model {
 				$nvp_data .= '&PAYMENTREQUEST_0_SHIPPINGAMT='. urlencode($this->cart->delivery());
 			}
 
-			if ($this->cart->coupon() > 0) {
-				$nvp_data .= '&PAYMENTREQUEST_0_SHIPDISCAMT='. urlencode('-'. $this->cart->coupon());
+			$coupon = $this->cart->coupon();
+            if ($coupon['discount'] > 0) {
+				$nvp_data .= '&PAYMENTREQUEST_0_SHIPDISCAMT='. urlencode('-'. $coupon['discount']);
 			}
 
 			if ($this->cart->order_total() > 0) {
 				$nvp_data  .= '&PAYMENTREQUEST_0_AMT='. urlencode($this->cart->order_total());
 			}
 
-			$response = $this->sendPaypal('SetExpressCheckout', $nvp_data);
+			$response = $this->callPayPal('SetExpressCheckout', $nvp_data);
 
 			return $response;
 		}
@@ -68,20 +78,21 @@ class Paypal_model extends CI_Model {
 			$nvp_data .= '&PAYMENTREQUEST_0_SHIPPINGAMT='. urlencode($this->cart->delivery());
 		}
 
-		if ($this->cart->coupon() > 0) {
-			$nvp_data .= '&PAYMENTREQUEST_0_SHIPDISCAMT='. urlencode('-'. $this->cart->coupon());
+        $coupon = $this->cart->coupon();
+        if ($coupon['discount'] > 0) {
+			$nvp_data .= '&PAYMENTREQUEST_0_SHIPDISCAMT='. urlencode('-'. $coupon['discount']);
 		}
 
 		if ($this->cart->order_total() > 0) {
 			$nvp_data  .= '&PAYMENTREQUEST_0_AMT='. urlencode($this->cart->order_total());
 		}
 
-		$response = $this->sendPaypal('DoExpressCheckoutPayment', $nvp_data);
+		$response = $this->callPayPal('DoExpressCheckoutPayment', $nvp_data);
 
 		if (strtoupper($response['ACK']) === 'SUCCESS' OR strtoupper($response['ACK']) === 'SUCCESSWITHWARNING') {
 			return $response['PAYMENTINFO_0_TRANSACTIONID'];
 		} else {
-			log_message('error', $response['L_ERRORCODE0'] .' --> '. $response['L_LONGMESSAGE0'] .' --> '. $response['CORRELATIONID']);
+			log_message('error', $this->error_prefix . $response['L_ERRORCODE0'] .' --> '. $response['L_LONGMESSAGE0'] .' --> '. $response['CORRELATIONID']);
 			return FALSE;
 		}
 	}
@@ -90,25 +101,12 @@ class Paypal_model extends CI_Model {
 
 		$nvp_data = '&TRANSACTIONID='. urlencode($transaction_id);
 
-		$response = $this->sendPaypal('GetTransactionDetails', $nvp_data);
+		$response = $this->callPayPal('GetTransactionDetails', $nvp_data);
 
 		if (strtoupper($response['ACK']) === 'SUCCESS' OR strtoupper($response['ACK']) === 'SUCCESSWITHWARNING') {
 			return $response;
 		} else {
-			log_message('error', $response['L_ERRORCODE0'] .' --> '. $response['L_LONGMESSAGE0'] .' --> '. $response['CORRELATIONID']);
-		}
-	}
-
-	public function getPaypalDetails($order_id, $customer_id) {
-		$this->db->from('pp_payments');
-		$this->db->where('order_id', $order_id);
-		$this->db->where('customer_id', $customer_id);
-
-		$query = $this->db->get();
-		if ($query->num_rows() > 0) {
-			$row = $query->row_array();
-
-			return unserialize($row['serialized']);
+			log_message('error', $this->error_prefix . $response['L_ERRORCODE0'] .' --> '. $response['L_LONGMESSAGE0'] .' --> '. $response['CORRELATIONID']);
 		}
 	}
 
@@ -138,9 +136,9 @@ class Paypal_model extends CI_Model {
 		return $query;
 	}
 
-	public function sendPaypal($method, $nvp_data) {
+	public function callPayPal($method, $nvp_data) {
 		$payment = $this->Extensions_model->getPayment('paypal_express');
-		$settings = $payment['data'];
+		$settings = $payment['ext_data'];
 		$api_user = (isset($settings['api_user'])) ? $settings['api_user'] : '';
 		$api_pass = (isset($settings['api_pass'])) ? $settings['api_pass'] : '';
 		$api_signature = (isset($settings['api_signature'])) ? $settings['api_signature'] : '';

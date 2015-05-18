@@ -1,10 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-class Setup_model extends CI_Model {
-
-	public function __construct() {
-		$this->load->database();
-	}
+class Setup_model extends TI_Model {
 
 	public function addData() {
 		$query = FALSE;

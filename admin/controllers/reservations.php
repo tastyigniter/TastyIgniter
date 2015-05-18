@@ -17,14 +17,6 @@ class Reservations extends Admin_Controller {
 	}
 
 	public function index() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'reservations')) {
-  			redirect('permission');
-		}
-
 		$url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
@@ -144,8 +136,10 @@ class Reservations extends Admin_Controller {
 				}
 			}
 
+            $calendar_data['url'] = site_url('reservations');
+            $calendar_data['url_suffix'] = $url;
 			$this->template->setIcon('<a class="btn btn-default" title="Switch to list view" href="'.site_url('reservations/') .'"><i class="fa fa-list"></i></a>');
-			$data['calendar'] = $this->calendar->generate($year, $month, $calendar_data, site_url('reservations'), $url);
+			$data['calendar'] = $this->calendar->generate($year, $month, $calendar_data);
 		} else {
 			$this->template->setIcon('<a class="btn btn-default" title="Switch to calender view" href="'.site_url('reservations?show_calendar=1') .'"><i class="fa fa-calendar"></i></a>');
 			$data['calendar'] = '';
@@ -180,7 +174,8 @@ class Reservations extends Admin_Controller {
 				'last_name'			=> $result['last_name'],
 				'guest_num'			=> $result['guest_num'],
 				'table_name'		=> $result['table_name'],
-				'status_name'		=> $result['status_name'],
+                'status_name'		=> $result['status_name'],
+                'status_color'		=> $result['status_color'],
 				'staff_name'		=> $result['staff_name'],
 				'reserve_date'		=> $reserve_date,
 				'reserve_time'		=> mdate('%H:%i', strtotime($result['reserve_time'])),
@@ -239,14 +234,6 @@ class Reservations extends Admin_Controller {
 	}
 
 	public function edit() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'reservations')) {
-  			redirect('permission');
-		}
-
 		$reservation_info = $this->Reservations_model->getReservation((int) $this->input->get('id'));
 
 		if ($reservation_info) {
@@ -350,10 +337,7 @@ class Reservations extends Admin_Controller {
 	}
 
 	public function _updateReservation($status_id = 0, $assignee_id = 0) {
-    	if (!$this->user->hasPermissions('modify', 'reservations')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to update!');
-			return TRUE;
-    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$update = array();
 			$history = array();
 			$current_time = time();
@@ -372,9 +356,9 @@ class Reservations extends Admin_Controller {
 			$update['date_added']		= mdate('%Y-%m-%d %H:%i:%s', $current_time);
 
 			if ($this->Reservations_model->updateReservation($update, $status_id)) {
-				$this->alert->set('success', 'Reservation updated sucessfully.');
+				$this->alert->set('success', 'Reservation updated successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing updated.');
 			}
 
 			return TRUE;
@@ -382,14 +366,12 @@ class Reservations extends Admin_Controller {
 	}
 
 	public function _deleteReservation($reservation_id = FALSE) {
-    	if (!$this->user->hasPermissions('modify', 'reservations')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to delete!');
-    	} else if (is_array($this->input->post('delete'))) {
+    	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Reservations_model->deleteReservation($value);
 			}
 
-			$this->alert->set('success', 'Reservation deleted sucessfully!');
+			$this->alert->set('success', 'Reservation deleted successfully!');
 		}
 
 		return TRUE;

@@ -9,7 +9,7 @@ class Maintenance extends Main_Controller {
 
 	public function index() {
 
-		if ($this->config->item('maintenance_mode') === '1' AND !$this->user->isLogged()) {  													// if customer is not logged in redirect to account login page
+		if ($this->config->item('maintenance_mode') !== '1' AND $this->user->isLogged()) {  													// if customer is not logged in redirect to account login page
 			$maintenance_page = ($this->config->item('maintenance_page')) ? $this->config->item('maintenance_page') : '';
 
 			$this->load->model('Pages_model');
@@ -20,8 +20,8 @@ class Maintenance extends Main_Controller {
 			$data['text_heading'] 		= $page['heading'];
 			$data['content'] 			= $page['content'];
 
-			if (file_exists(VIEWPATH .'themes/'.$this->config->item('main', 'default_themes').'maintenance.php')) {
-				$this->load->view('themes/'.$this->config->item('main', 'default_themes').'maintenance', $data);
+			if (file_exists(THEMEPATH . $this->config->item(MAINDIR, 'default_themes').'maintenance.php')) {
+                $this->load->view($this->config->item(MAINDIR, 'default_themes').'maintenance', $data);
 			} else {
 				$this->load->view('maintenance', $data);
 			}

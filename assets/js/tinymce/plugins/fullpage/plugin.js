@@ -194,7 +194,7 @@ tinymce.PluginManager.add('fullpage', function(editor) {
 			}
 
 			elm.attr('content', 'text/html; charset=' + data.docencoding);
-		} else {
+		} else if (elm) {
 			elm.remove();
 		}
 
@@ -280,11 +280,11 @@ tinymce.PluginManager.add('fullpage', function(editor) {
 
 			// Update iframe body as well
 			dom.setAttribs(editor.getBody(), {
-				style : data.style,
-				dir : data.dir,
-				vLink : data.visited_color,
-				link : data.link_color,
-				aLink : data.active_color
+				style: data.style,
+				dir: data.dir,
+				vLink: data.visited_color,
+				link: data.link_color,
+				aLink: data.active_color
 			});
 		}
 
@@ -304,7 +304,7 @@ tinymce.PluginManager.add('fullpage', function(editor) {
 		html = new tinymce.html.Serializer({
 			validate: false,
 			indent: true,
-			apply_source_formatting : true,
+			apply_source_formatting: true,
 			indent_before: 'head,html,body,meta,title,script,link,style',
 			indent_after: 'head,html,body,meta,title,script,link,style'
 		}).serialize(headerFragment);
@@ -340,6 +340,11 @@ tinymce.PluginManager.add('fullpage', function(editor) {
 
 		if (evt.source_view && editor.getParam('fullpage_hide_in_source_view')) {
 			return;
+		}
+
+		// Fixed so new document/setContent('') doesn't remove existing header/footer except when it's in source code view
+		if (content.length === 0 && !evt.source_view) {
+			content = tinymce.trim(head) + '\n' + tinymce.trim(content) + '\n' + tinymce.trim(foot);
 		}
 
 		// Parse out head, body and footer
@@ -387,7 +392,7 @@ tinymce.PluginManager.add('fullpage', function(editor) {
 
 		if (styles) {
 			dom.add(headElm, 'style', {
-				id : 'fullpage_styles'
+				id: 'fullpage_styles'
 			}, styles);
 
 			// Needed for IE 6/7
@@ -471,12 +476,12 @@ tinymce.PluginManager.add('fullpage', function(editor) {
 
 	editor.addButton('fullpage', {
 		title: 'Document properties',
-		cmd : 'mceFullPageProperties'
+		cmd: 'mceFullPageProperties'
 	});
 
 	editor.addMenuItem('fullpage', {
 		text: 'Document properties',
-		cmd : 'mceFullPageProperties',
+		cmd: 'mceFullPageProperties',
 		context: 'file'
 	});
 

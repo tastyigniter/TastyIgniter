@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
@@ -11,28 +11,28 @@
 			<div class="tab-content">
 				<div id="table-details" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Name:</label>
+						<label for="input-name" class="col-sm-3 control-label">Name:</label>
 						<div class="col-sm-5">
 							<input type="text" name="table_name" id="input-name" class="form-control" value="<?php echo set_value('table_name', $table_name); ?>" />
 							<?php echo form_error('table_name', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-min-capacity" class="col-sm-2 control-label">Minimum:</label>
+						<label for="input-min-capacity" class="col-sm-3 control-label">Minimum:</label>
 						<div class="col-sm-5">
 							<input type="text" name="min_capacity" id="input-min-capacity" class="form-control" value="<?php echo set_value('min_capacity', $min_capacity); ?>" />
 							<?php echo form_error('min_capacity', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-max-capacity" class="col-sm-2 control-label">Capacity:</label>
+						<label for="input-max-capacity" class="col-sm-3 control-label">Capacity:</label>
 						<div class="col-sm-5">
 							<input type="text" name="max_capacity" id="input-max-capacity" class="form-control" value="<?php echo set_value('max_capacity', $max_capacity); ?>" />
 							<?php echo form_error('max_capacity', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-status" class="col-sm-2 control-label">Status:</label>
+						<label for="input-status" class="col-sm-3 control-label">Status:</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($table_status == '1') { ?>
@@ -51,4 +51,4 @@
 		</form>
 	</div>
 </div>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

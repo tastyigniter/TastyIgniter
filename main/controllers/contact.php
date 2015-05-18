@@ -77,16 +77,16 @@ class Contact extends Main_Controller {
 
 		$data['subjects'] = array('1' => 'General enquiry', '2' => 'Comment', '3' => 'Technical Issues');	// array of enquiry subject to pass to view
 
-		$data['captcha_image'] = $this->createCaptcha();
+        if ($this->input->post() && $this->_sendContact() === TRUE) {							// checks if $_POST data is set and if contact form validation was successful
 
-		if ($this->input->post() && $this->_sendContact() === TRUE) {							// checks if $_POST data is set and if contact form validation was successful
+            $this->alert->set('alert', $this->lang->line('alert_contact_sent'));		// display success message and redirect to account login page
 
-			$this->alert->set('alert', $this->lang->line('alert_contact_sent'));		// display success message and redirect to account login page
+            redirect('contact');																// redirect to contact page
+        }
 
-			redirect('contact');																// redirect to contact page
-		}
+        $data['captcha_image'] = $this->createCaptcha();
 
-		$this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
+        $this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
 		$this->template->render('contact', $data);
 	}
 
@@ -95,13 +95,6 @@ class Contact extends Main_Controller {
 		if ($this->validateForm() === TRUE) {
 			$this->load->library('email');														//loading upload library
 
-			$this->email->set_protocol($this->config->item('protocol'));
-			$this->email->set_mailtype($this->config->item('mailtype'));
-			$this->email->set_smtp_host($this->config->item('smtp_host'));
-			$this->email->set_smtp_port($this->config->item('smtp_port'));
-			$this->email->set_smtp_user($this->config->item('smtp_user'));
-			$this->email->set_smtp_pass($this->config->item('smtp_pass'));
-			$this->email->set_newline("\r\n");
 			$this->email->initialize();
 
 			$full_name	= $this->input->post('full_name');
@@ -118,15 +111,17 @@ class Contact extends Main_Controller {
 			$this->load->library('mail_template');
 			$message = $this->mail_template->parseTemplate('contact', $mail_data);
 
-			$this->email->from(strtolower($email), $full_name);
-			$this->email->to($this->location->getEmail());
+			$this->email->from(strtolower($email), ucwords($full_name));
+			$this->email->to($this->location->getEmail() ? $this->location->getEmail() : $this->config->item('site_email'));
 			$this->email->subject($this->mail_template->getSubject());
 			$this->email->message($message);
 
 			if ($this->email->send()) {
-				return TRUE;
-			}
-		}
+                return TRUE;
+            } else {
+                log_message('debug', $this->email->print_debugger(array('headers')));
+            }
+        }
 	}
 
 	public function validateForm() {
@@ -149,7 +144,7 @@ class Contact extends Main_Controller {
     public function validate_captcha($word) {
 		$session_caption = $this->session->tempdata('captcha');
 
-        if (empty($word) OR $word !== $session_caption['word']) {
+        if (strtolower($word) !== strtolower($session_caption['word'])) {
             $this->form_validation->set_message('validate_captcha', 'The letters you entered does not match the image.');
             return FALSE;
         } else {
@@ -161,8 +156,8 @@ class Contact extends Main_Controller {
         $this->load->helper('captcha');
 
 		$prefs = array(
-            'img_path' 		=> './assets/images/captcha/',
-            'img_url' 		=> root_url() . '/assets/images/captcha/',
+            'img_path' 		=> './assets/images/thumbs/',
+            'img_url' 		=> root_url() . '/assets/images/thumbs/',
 			'font_path'     => './system/fonts/texb.ttf',
 			'img_width'     => '150',
 			'img_height'    => 30,
@@ -180,7 +175,8 @@ class Contact extends Main_Controller {
 		);
 
         $captcha = create_captcha($prefs);
-        $this->session->set_tempdata('captcha', array('word' => $captcha['word'], 'image' => $captcha['time'].'.jpg')); //set data to session for compare
+        $this->session->set_tempdata('captcha', array('word' => $captcha['word'], 'image' => $captcha['image']), '300'); //set data to session for compare
+
         return $captcha['image'];
     }
 }

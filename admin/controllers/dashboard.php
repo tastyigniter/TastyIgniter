@@ -11,11 +11,6 @@ class Dashboard extends Admin_Controller {
 	}
 
 	public function index() {
-
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
 		$this->template->setTitle('Dashboard');
 		$this->template->setHeading('Dashboard');
 
@@ -65,7 +60,8 @@ class Dashboard extends Admin_Controller {
 				'location_name'		=> $result['location_name'],
 				'first_name'		=> $result['first_name'],
 				'last_name'			=> $result['last_name'],
-				'order_status'		=> $result['status_name'],
+                'order_status'		=> $result['status_name'],
+                'status_color'		=> $result['status_color'],
 				'order_time'		=> mdate('%H:%i', strtotime($result['order_time'])),
 				'order_type' 		=> ($result['order_type'] === '1') ? 'Delivery' : 'Collection',
 				'date_added'		=> $date_added,
@@ -79,7 +75,6 @@ class Dashboard extends Admin_Controller {
 
 	public function statistics() {
 		$json = array();
-		$results = array();
 
 		$stat_range = 'today';
 		if ($this->input->get('stat_range')) {
@@ -101,105 +96,64 @@ class Dashboard extends Admin_Controller {
 
 	public function chart() {
 		$json = array();
-
 		$results = array();
-		$json['totals'] = array();
-		$json['xaxis'] = array();
 
-		$range = 'month';
-		if ($this->input->get('range')) {
-			$range = $this->input->get('range');
-		}
+        $json['labels'] = array();
+        $json['customers'] = array('label' => 'Total Customers', 'color' => '99, 173, 208');
+        $json['orders'] = array('label' => 'Total Orders', 'color' => '255, 184, 0');
+        $json['reservations'] = array('label' => 'Total Reservations', 'color' => '255, 104, 64');
+        $json['reviews'] = array('label' => 'Total Reviews', 'color' => '0, 174, 104');
 
-		$type = 'orders';
-		if ($this->input->get('type')) {
-			$type = $this->input->get('type');
-		}
+        $dateRanges = '1';
+        if ($this->input->get('start_date') AND $this->input->get('start_date') !== 'undefined') {
+            if ($this->input->get('end_date') AND $this->input->get('end_date') !== 'undefined') {
+                $dateRanges = $this->getDatesFromRange($this->input->get('start_date'), $this->input->get('end_date'));
+            }
+        }
 
-		if ($type === 'customers') {
-			$json['totals']['label'] = 'Total Customers';
-			$json['totals']['color'] = '#63add0';
-		} else if ($type === 'orders') {
-			$json['totals']['label'] = 'Total Orders';
-			$json['totals']['color'] = '#ffb800';
-		} else if ($type === 'reservations') {
-			$json['totals']['label'] = 'Total Reservations';
-			$json['totals']['color'] = '#ff6840';
-		} else if ($type === 'reviews') {
-			$json['totals']['label'] = 'Total Reviews';
-			$json['totals']['color'] = '#00ae68';
-		}
-
-		if ($range) {
-			switch ($range) {
-			case 'today':
-				for ($i = 0; $i < 24; $i++) {
-					$results[] = $this->Dashboard_model->getTodayChart($type, $i);
-					$json['xaxis'][] = array($i, mdate('%Hhr', mktime($i, 0, 0, date('n'), date('j'), date('Y'))));
-				}
-				break;
-			case 'yesterday':
-				for ($i = 0; $i < 24; $i++) {
-					$results[] = $this->Dashboard_model->getYesterdayChart($type, $i);
-					$json['xaxis'][] = array($i, mdate('%Hhr', mktime($i, 0, 0, date('n'), date('j'), date('Y'))));
-				}
-				break;
-			case 'week':
-				$date_start = strtotime('-' . date('w') . ' days');
-
-				for ($i = 0; $i < 7; $i++) {
-					$date = mdate('%Y-%m-%d', $date_start + ($i * 86400));
-					$results[$i] = $this->Dashboard_model->getThisWeekChart($type, $date);
-					$json['xaxis'][] = array($i, mdate('%d %D', strtotime($date)));
-				}
-				break;
-			case 'last_week':
-				$date_start = strtotime('last week');
-
-				for ($i = 0; $i < 7; $i++) {
-					$date = mdate('%Y-%m-%d', $date_start - (-$i * 86400));
-					$results[$i] = $this->Dashboard_model->getThisWeekChart($type, $date);
-					$json['xaxis'][] = array($i, mdate('%d %D', strtotime($date)));
-				}
-				break;
-			case 'month':
-				for ($i = 1; $i <= date('t'); $i++) {
-					$date = date('Y') . '-' . date('m') . '-' . $i;
-					$results[$i] = $this->Dashboard_model->getMonthChart($type, $date);
-					$json['xaxis'][] = array($i, mdate('%d %D', strtotime($date)));
-				}
-				break;
-			case 'year':
-				for ($i = 1; $i <= 12; $i++) {
-					$results[$i] = $this->Dashboard_model->getYearChart($type, date('Y'), $i);
-					$json['xaxis'][] = array($i, mdate('%M %Y', mktime(0, 0, 0, $i, 1, date('Y'))));
-				}
-				break;
-			default:
-				$year_month = $range;
-				for ($i = 1; $i <= date('t', strtotime($year_month)); $i++) {
-					$date = $year_month . '-' . $i;
-					$results[$i] = $this->Dashboard_model->getMonthChart($type, $date);
-					$json['xaxis'][] = array($i, mdate('%d %D', strtotime($date)));
-				}
-				break;
-			}
-		}
+		if (count($dateRanges) <= 1) {
+            for ($i = 0; $i < 24; $i++) {
+                $results[] = $this->Dashboard_model->getTodayChart($i);
+                $json['labels'][] = mdate('%Hhr', mktime($i, 0, 0, date('n'), date('j'), date('Y')));
+            }
+        } else {
+            for ($i = 0; $i < count($dateRanges); $i++) {
+                $results[] = $this->Dashboard_model->getDateChart($dateRanges[$i]);
+                $json['labels'][] = mdate('%d %M', strtotime($dateRanges[$i]));
+            }
+        }
 
 		if (!empty($results)) {
-			foreach ($results as $key => $result) {
-				if ($result['total'] > 0) {
-					$json['totals']['data'][] = array($key, (int)$result['total']);
-				} else {
-					$json['totals']['data'][] = array($key, 0);
-				}
+            foreach ($results as $result) {
+                foreach ($result as $key => $value) {
+                    $json[$key]['data'][] = $value;
+                }
 			}
-		}
+        }
 
 		$this->output->set_output(json_encode($json));
 	}
 
-	public function admin() {
+    public function getDatesFromRange($start, $end) {
+        $interval = new DateInterval('P1D');
+
+        $realEnd = new DateTime($end);
+        $realEnd->add($interval);
+
+        $period = new DatePeriod(
+            new DateTime($start),
+            $interval,
+            $realEnd
+        );
+
+        foreach($period as $date) {
+            $array[] = $date->format('Y-m-d');
+        }
+
+        return $array;
+    }
+
+    public function admin() {
 		$this->index();
 	}
 }

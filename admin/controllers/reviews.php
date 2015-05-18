@@ -10,14 +10,6 @@ class Reviews extends Admin_Controller {
 	}
 
 	public function index() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'reviews')) {
-  			redirect('permission');
-		}
-
 		$url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
@@ -152,14 +144,6 @@ class Reviews extends Admin_Controller {
 	}
 
 	public function edit() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'reviews')) {
-  			redirect('permission');
-		}
-
 		$review_info = $this->Reviews_model->getReview((int) $this->input->get('id'));
 
 		if ($review_info) {
@@ -224,10 +208,7 @@ class Reviews extends Admin_Controller {
 	}
 
 	public function _addReview() {
-    	if ( ! $this->user->hasPermissions('modify', 'reviews')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to add or change!');
-  			return TRUE;
-    	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$add = array();
 
 			$add['sale_type'] 			= $this->input->post('sale_type');
@@ -240,7 +221,7 @@ class Reviews extends Admin_Controller {
 			$add['review_status'] 		= $this->input->post('review_status');
 
 			if ($_POST['insert_id'] = $this->Reviews_model->addReview($add)) {
-				$this->alert->set('success', 'Review added sucessfully.');
+				$this->alert->set('success', 'Review added successfully.');
 			} else {
 				$this->alert->set('warning', 'Nothing Added!');
 			}
@@ -250,10 +231,7 @@ class Reviews extends Admin_Controller {
 	}
 
 	public function _updateReview() {
-    	if ( ! $this->user->hasPermissions('modify', 'reviews')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to update!');
-  			return TRUE;
-    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$update = array();
 
 			$update['review_id'] 		= $this->input->get('id');
@@ -267,9 +245,9 @@ class Reviews extends Admin_Controller {
 			$update['review_status'] 	= $this->input->post('review_status');
 
 			if ($this->Reviews_model->updateReview($update)) {
-				$this->alert->set('success', 'Review updated sucessfully.');
+				$this->alert->set('success', 'Review updated successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing updated.');
 			}
 
 			return TRUE;
@@ -277,14 +255,12 @@ class Reviews extends Admin_Controller {
 	}
 
 	public function _deleteReview() {
-    	if (!$this->user->hasPermissions('modify', 'reviews')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to delete!');
-    	} else if (is_array($this->input->post('delete'))) {
+    	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Reviews_model->deleteReview($value);
 			}
 
-			$this->alert->set('success', 'Review(s) deleted sucessfully!');
+			$this->alert->set('success', 'Review(s) deleted successfully!');
 		}
 
 		return TRUE;

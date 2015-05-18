@@ -2,21 +2,34 @@
 
 class Image_manager extends Admin_Controller {
 
-	public function __construct() {
+    private $_uploads = FALSE;
+    private $_new_folder = FALSE;
+    private $_move = FALSE;
+    private $_copy = FALSE;
+    private $_rename = FALSE;
+    private $_delete = FALSE;
+    private $_remember_days;
+    private $_allowed_ext = array('jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'svg', 'ico');
+
+    public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
-	}
+		$this->load->library('media_manager', $this->config->item('image_manager'));
+
+        $setting = $this->media_manager->getOptions();
+        foreach ($setting as $key => $value) {
+            $this->{'_' . $key} = ($value === '0') ? FALSE : $value;
+        }
+    }
 
 	public function index() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
+        $data['uploads'] = $this->_uploads;
+        $data['new_folder'] = $this->_new_folder;
+        $data['move'] = $this->_move;
+        $data['copy'] = $this->_copy;
+        $data['rename'] = $this->_rename;
+        $data['delete'] = $this->_delete;
 
-    	if (!$this->user->hasPermissions('access', 'image_manager')) {
-  			redirect('permission');
-		}
-
-		$popup = $data['popup'] = ($this->input->get('popup')) ? $this->_fixGetParams($this->input->get('popup')) : '';
+        $popup = $data['popup'] = ($this->input->get('popup')) ? $this->_fixGetParams($this->input->get('popup')) : '';
 		$field_id = $data['field_id'] = ($this->input->get('field_id')) ? $this->_fixGetParams($this->input->get('field_id')) : '';
 		$filter = $data['filter'] = ($this->input->get('filter')) ? $this->_fixGetParams($this->input->get('filter')) : '';
 		$sort_by = $data['sort_by'] = ($this->input->get('sort_by')) ? $this->_fixGetParams($this->input->get('sort_by')) : 'name';
@@ -29,90 +42,38 @@ class Image_manager extends Admin_Controller {
 			'sub_folder'	=> ''
 		));
 
-		if ($popup == 'iframe') {
-			$this->template->setDocType('html5');
-			$this->template->setMeta(array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'));
-			$this->template->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=edge,chrome=1', 'type' => 'equiv'));
-			$this->template->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=9; IE=8; IE=7', 'type' => 'equiv'));
-			$this->template->setMeta(array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1', 'type' => 'name'));
-			$this->template->setMeta(array('name' => 'robots', 'content' => 'noindex,nofollow', 'type' => 'name'));
+        $root_folder = $this->media_manager->getRootFolder();
+        $open_file = '';
 
-			$this->template->setLinkTag('images/favicon.ico', 'shortcut icon', 'image/ico');
-			$this->template->setLinkTag('css/bootstrap.min.css');
-			$this->template->setLinkTag('css/font-awesome.min.css');
-			$this->template->setLinkTag('css/metisMenu.min.css');
-			$this->template->setLinkTag('css/select2.css');
-			$this->template->setLinkTag('css/select2-bootstrap.css');
-			$this->template->setLinkTag('css/dropzone.css');
-			$this->template->setLinkTag('css/jquery.contextMenu.css');
-			$this->template->setLinkTag('css/image-manager.css');
+        if ($this->input->get('sub_folder') AND strpos($this->input->get('sub_folder'), '../') === FALSE AND strpos($this->input->get('sub_folder'), './') === FALSE) {
+            $sub_folder = $this->input->get('sub_folder');
 
-			$this->template->setScriptTag('js/jquery-1.11.2.min.js');
-			$this->template->setScriptTag('js/bootstrap.min.js');
-			$this->template->setScriptTag('js/metisMenu.min.js');
-			$this->template->setScriptTag('js/bootbox.min.js');
-			$this->template->setScriptTag('js/select2.js');
-			$this->template->setScriptTag('js/dropzone.js');
-			$this->template->setScriptTag('js/jquery.ui.position.js');
-			$this->template->setScriptTag('js/jquery.contextMenu.js');
-			$this->template->setScriptTag('js/jquery.finderSelect.js');
-			$this->template->setScriptTag('js/common.js');
-		}
+            if ($pathinfo = pathinfo($sub_folder) AND !empty($pathinfo['extension'])) {
+                $sub_folder = isset($pathinfo['dirname']) ? $pathinfo['dirname'].'/' : '';
+                $open_file = isset($pathinfo['basename']) ? $pathinfo['basename'] : '';
 
-		$data['title'] = 'Image Manager';
-		$this->template->setTitle('Image Manager');
-		$this->template->setHeading('Image Manager');
-		$this->template->setButton('Options', array('class' => 'btn btn-default pull-right', 'href' => site_url('settings#image-manager')));
+                if (strpos($sub_folder, $root_folder) !== FALSE) {
+                    $sub_folder = str_replace($root_folder, '', $sub_folder);
+                }
+            } else {
+                $sub_folder = urldecode(trim(strip_tags($sub_folder), '/') .'/');
+            }
 
-		if (!empty($this->config->item('image_manager')) AND is_array($this->config->item('image_manager'))) {
-			$setting = $this->config->item('image_manager');
-		} else {
-			$setting = array();
-		}
+            $this->session->set_tempdata('last_sub_folder', $sub_folder, 86400 * (int)$this->_remember_days);
+        } else if ($this->session->tempdata('last_sub_folder')) {
+            $sub_folder = $this->security->sanitize_filename($this->session->tempdata('last_sub_folder'), TRUE);
+        } else {
+            $sub_folder = '';
+        }
 
-		$data['uploads'] = (isset($setting['uploads']) AND $setting['uploads'] === '1') ? TRUE : FALSE;
-		$data['new_folder'] = (isset($setting['new_folder']) AND $setting['new_folder'] === '1') ? TRUE : FALSE;
-		$data['move'] = (isset($setting['move']) AND $setting['move'] === '1') ? TRUE : FALSE;
-		$data['copy'] = (isset($setting['copy']) AND $setting['copy'] === '1') ? TRUE : FALSE;
-		$data['rename'] = (isset($setting['rename']) AND $setting['rename'] === '1') ? TRUE : FALSE;
-		$data['delete'] = (isset($setting['delete']) AND $setting['delete'] === '1') ? TRUE : FALSE;
-		$show_mini = (isset($setting['delete']) AND $setting['show_mini'] === '1') ? TRUE : FALSE;
+        $sub_folder = ($sub_folder === "/") ? '' : $sub_folder;
 
-		if (isset($setting['root_folder']) AND (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE)) {
-			$root_folder = $this->security->sanitize_filename($setting['root_folder'], TRUE) .'/';
-		} else {
-			$root_folder = 'data/';
-		}
+        $this->setTemplateTags($popup);
 
-		if ($this->input->get('sub_folder') AND strpos($this->input->get('sub_folder'),'../') === FALSE AND strpos($this->input->get('sub_folder'),'./') === FALSE) {
-			$sub_folder = urldecode(trim(strip_tags($this->input->get('sub_folder')), '/') .'/');
-			$remember_days = $setting['remember_days'];
-			$this->session->set_tempdata('last_sub_folder', $sub_folder, 86400 * (int)$remember_days);
-		} else {
-			$sub_folder = '';
-		}
+        $data['title']              = 'Image Manager';
+        $data['files_empty']        = 'No files found.';
+        $data['back']               = 'disabled';
 
-		if ($sub_folder === '') {
-		 	if ($this->session->tempdata('last_sub_folder')) {
-				$sub_folder = $this->security->sanitize_filename($this->session->tempdata('last_sub_folder'), TRUE);
-			}
-		}
-
-		if ($sub_folder === "/") {
-			$sub_folder = '';
-		}
-
-		$image_path 		= IMAGEPATH . $root_folder . $sub_folder;
-		$image_base 		= root_url() .'assets/images/'. $root_folder;
-		$thumbs_path 		= IMAGEPATH . 'thumbs/' . $sub_folder;
-		$thumbs_base 		= root_url() .'assets/images/thumbs/';
-		$parent 			= $sub_folder;
-
-		if ( ! is_dir($thumbs_path)) {
-			$this->_createFolder(FALSE, $thumbs_path);
-		}
-
-		$data['back'] = 'disabled';
 		$data['back_url'] = '';
 		if (trim($sub_folder) != '') {
 			$src = explode('/', $sub_folder);
@@ -122,115 +83,92 @@ class Image_manager extends Admin_Controller {
 				$src = '/';
 			}
 
-			$data['back'] = '';
-			$data['back_url'] = page_url() .'?'. $get_params . rawurlencode($src) .'&'. uniqid();;
+			$data['back']       = '';
+			$data['back_url']   = page_url() .'?'. $get_params . rawurlencode($src) .'&'. uniqid();;
 		}
 
-		$data['current_url'] = current_url();
-		$data['refresh_url'] = page_url() .'?'. $get_params . $sub_folder .'&'. uniqid();
-		$data['link'] = page_url() .'?'. $get_params;
+		$data['current_url']    = current_url();
+		$data['refresh_url']    = page_url() .'?'. $get_params . $sub_folder .'&'. uniqid();
+		$data['link']           = page_url() .'?'. $get_params;
+        $data['new_folder']     = TRUE;
+        $data['delete_folder']  = FALSE;
+        $data['rename_folder']  = FALSE;
+        $data['current_folder'] = '';
 
-		$sub_folder_array = explode('/', $sub_folder);
-
-		$data['breadcrumbs'] = array();
-		if (!empty($sub_folder_array)) {
-			$tmp_path = '';
-			$data['breadcrumbs'][] = array('name' => 'root', 'link' => $data['link'] .'/');
+        $data['breadcrumbs'] = array();
+		if ($sub_folder_array = explode('/', $sub_folder)) {
+            $tmp_path = '';
+			$data['breadcrumbs'][] = array('name' => '<i class="fa fa-home"></i>', 'link' => $data['link'] .'/');
 			foreach ($sub_folder_array as $key => $p_dir) {
 				$tmp_path .= $p_dir .'/';
 				if ($p_dir != '') {
-					$data['breadcrumbs'][] = array('name' => $p_dir, 'link' => $data['link'] . $tmp_path);
-				}
-			}
-		}
+                    $data['breadcrumbs'][] = array('name' => $p_dir, 'link' => $data['link'] . $tmp_path);
 
-		$data['files_error'] = '';
-		if (!is_dir($image_path)) {
-			$files = array();
-			$data['folder_size'] = '';
-			$data['total_files'] = 0;
-			$data['files_error'] = 'There was an error. Root folder can not be found.';
-		} else {
-			$files = $this->_files($image_path, array('by' => $sort_by, 'order' => $sort_order));
-			$data['folder_size'] = $this->_makeSize($this->_folderSize($image_path));
-			$data['total_files'] = count($files);
-		}
+                    if (in_array($p_dir, array('flags', 'gallery'))) {
+                        $data['new_folder'] = FALSE;
+                        $data['delete_folder'] = FALSE;
+                        $data['rename_folder'] = FALSE;
+                    } else {
+                        $data['delete_folder'] = TRUE;
+                        $data['rename_folder'] = TRUE;
+                    }
 
-		$data['files'] = array();
-		foreach($files as $k => $file) {
-			if (($file['name'] == '..' AND $sub_folder == '') OR ($filter !== '' AND strpos(strtolower($file['name']), strtolower($filter)) === FALSE)) {
-				continue;
-			}
+                    $data['current_folder']  = $p_dir;
+                }
+            }
 
-			$file_name = $file['name'];
-			$file_type = $file['type'];
+            if ($data['current_folder'] === 'gallery') {
+                $data['new_folder'] = TRUE;
+            }
 
-			$file_date = (!empty($file['date'])) ? mdate('%d %M %y', $file['date']) : '';
-			$file_size = (!empty($file['size'])) ? $this->_makeSize($file['size']) : '0 B';
-			$file_ext = (!empty($file['ext'])) ? $file['ext'] : '';
-			$file_perms = substr(substr(sprintf('%o', fileperms($image_path . $file_name)), -4), 0, 2);
+            $dirname = dirname($sub_folder);
+            $data['parent_folder']  = ($dirname === '.') ? '' : $dirname . '/';
+        }
 
-			$new_name = $this->_fixFileName($file_name);
-			$human_name = $file_url = '';
+        $data['total_files'] = $total_size = 0;
 
-			if ($file_name != '..' AND $file_name != $new_name) {
-				$file_name = $new_name;
-			}
+        $data['files'] = array();
+        $files = $this->media_manager->fetchFiles($sub_folder, array('by' => $sort_by, 'order' => $sort_order, 'filter' => $filter));
+        foreach($files as $k => $file) {
 
-			if ($file_type === 'dir') {
-				$human_name = $file_name;
-				$thumb_type = 'dir';
-				$html_class = 'directory';
-				$thumb_url = base_url('views/themes/default/images/manager_ico/folder.svg');
-				$src = $sub_folder . $file_name . '/';
-				$file_url = page_url() .'?'. $get_params . rawurlencode($src) .'&'. uniqid();
-				if ( ! is_dir($thumbs_path . $file_name)) {
-					$this->_createFolder(FALSE, $thumbs_path . $file_name);
-				}
-			}
+            $file_ext = (!empty($file['ext'])) ? $file['ext'] : '';
 
-			$img_dimension = $img_url = '';
-			if ($file_type === 'img' OR $file_type === 'file') {
-				$human_name = (isset($setting['show_ext'])) ? $file_name : substr($file_name, 0, '-' . (strlen($file_ext) + 1));
-				$img_url = $image_base . $sub_folder . $file_name;
-				$html_class = 'ff-item-type-1 file';
-				$thumb_url = '';
+            $new_name = $this->media_manager->fixFileName($file['name']);
+            $file_name = ($file['name'] != '..' AND $file['name'] != $new_name) ? $new_name : $file['name'];
+            $human_name = ($file['type'] === 'img' OR $file['type'] === 'file') ? substr($file_name, 0, '-' . (strlen($file_ext) + 1)) : $file_name;
+            $html_class = ($file['type'] === 'img') ? 'ff-item-type-2 file' : 'ff-item-type-1 file';
 
-				if ($file_type === 'img') {
-					$html_class = 'ff-item-type-2 file';
-					list($img_width, $img_height, $img_type, $attr) = getimagesize($image_path . $file_name);
-					$img_dimension = $img_width .' x '. $img_height;
-					$thumb_width = ($show_mini AND isset($setting['thumb_width_mini'])) ? $setting['thumb_width_mini'] : $setting['thumb_width'];
-					$thumb_height = ($show_mini AND isset($setting['thumb_height_mini'])) ? $setting['thumb_height_mini'] : $setting['thumb_height'];
+            if ($open_file === $file['name']) {
+                $html_class .= ' selected-on-open';
+            }
 
-					if ($img_width < $thumb_width AND $img_height < $thumb_height) {
-						$thumb_type = 'original';
-						$thumb_url = $image_base . $sub_folder . $file_name;
-					} else {
-						$img_path = $sub_folder . $file_name;
-						$thumb_type = 'thumb';
-						$this->load->model('Image_tool_model');
-						$thumb_url = $this->Image_tool_model->resize($img_path, $thumb_width, $thumb_height);
-					}
-				}
+            $img_dimension = $img_url = $thumb_url = '';
 
-				if ($thumb_url == '') {
-					$thumb_type = 'icon';
-					$thumb_url = base_url('views/themes/default/images/manager_ico/default.svg');
-				}
-			}
+            $img_url = image_url($root_folder . $sub_folder . $file_name);
+
+            if ($file['type'] === 'img') {
+                $thumb_type = 'thumb';
+                $thumbnail = $this->media_manager->getThumbnail($file_name, $sub_folder);
+                $img_dimension = $thumbnail['dimension'];
+                $thumb_url = $thumbnail['url'];
+            }
+
+            if ($thumb_url == '') {
+                $thumb_type = 'icon';
+                $thumb_url = image_url('manager_ico/default.svg');
+            }
+
+            $total_size += $file['size'];
 
 			$data['files'][] = array(
 				'name'					=> $file_name,
 				'human_name'			=> $human_name,
-				'type'					=> $file_type,
-				'date'					=> $file_date,
-				'size'					=> $file_size,
-				'url'					=> $file_url,
+				'type'					=> $file['type'],
+				'date'					=> $file['date'],
+				'size'					=> $this->_makeSize($file['size']),
 				'ext'					=> $file_ext,
-				'perms'					=> $file_perms,
-				'path'					=> '/'. $sub_folder,
-				'data_path'				=> $sub_folder . $file_name,
+				'perms'					=> $file['perms'],
+				'path'				    => $sub_folder . $file_name,
 				'img_url'				=> $img_url,
 				'thumb_type'			=> $thumb_type,
 				'thumb_url'				=> $thumb_url,
@@ -239,21 +177,20 @@ class Image_manager extends Admin_Controller {
 			);
 		}
 
-		$folders_list = $this->_recursiveFolders(IMAGEPATH . $root_folder);
-		$data['folders_list'] = array();
-		$data['folders_list'][] = $root_folder;
-		foreach($folders_list as $key => $value) {
-			$data['folders_list'][] = substr($value, strpos($value, $root_folder)) .'/';
-		}
+        $data['galleries']       = $this->media_manager->fetchGalleries();
 
-		$data['root_folder'] = $setting['root_folder'];
-		$data['sub_folder'] = $sub_folder;
-		$data['max_size_upload'] = $setting['max_size'];
-		$data['allowed_ext'] = $setting['allowed_ext'];
+        $tree_link = page_url() .'?'. $get_params .'{link}&'. uniqid();
+        $data['folder_tree']        = $this->media_manager->folderTree($sub_folder, $tree_link);
 
-		if ($popup == 'iframe') {
-			$this->output->enable_profiler(FALSE);
-		} else {
+        $data['total_files']        = count($files);
+        $data['root_folder']        = $root_folder;
+        $data['sub_folder']         = $sub_folder;
+        $data['folders_list']       = $this->media_manager->recursiveFolders();
+        $data['folder_size']        = $this->_makeSize($total_size);
+        $data['max_size_upload']    = $this->media_manager->getUploadMaxSize();
+		$data['allowed_ext']        = $this->media_manager->getAllowedExt();
+
+		if ($popup !== 'iframe') {
 			$this->template->setPartials(array('header', 'footer'));
 		}
 
@@ -276,251 +213,140 @@ class Image_manager extends Admin_Controller {
 		$json = array();
 
     	if (!$this->user->hasPermissions('modify', 'image_manager')) {
-			$json['alert'] = '<span class="error">Warning: You do not have permission to add or change!</span>';
-		}
+			$json['alert'] = '<span class="error">Warning: You do not have permission to create new folder!</span>';
+		} else if (!$this->input->post('name')) {
+            $json['alert'] = '<span class="error">Please enter your new folder name.</span>';
+        } else if (!$this->_new_folder) {
+            $json['alert'] = '<span class="error">Creating new folder is disabled, check administration settings.</span>';
+        } else {
 
-		if ($this->input->post('name')) {
-			if (!empty($this->config->item('image_manager')) AND is_array($this->config->item('image_manager'))) {
-				$setting = $this->config->item('image_manager');
-			} else {
-				$setting = array();
-			}
+            $sub_folder = $this->security->sanitize_filename($this->input->post('sub_folder'), TRUE);
+            $folder_name = $this->media_manager->fixFileName($this->input->post('name'));
 
-			if (isset($setting['new_folder']) AND $setting['new_folder'] !== '1') {
-				$json['alert'] = '<span class="error">Creating new folder is disabled, check administration settings.</span>';
-			}
-
-			$root_folder = 'data/';
-			if (isset($setting['root_folder']) AND (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE)) {
-				$root_folder = $setting['root_folder'] .'/';
-			}
-
-			$sub_folder = $this->security->sanitize_filename($this->input->post('sub_folder'), TRUE);
-			if (strpos($this->input->post('sub_folder'), '/') === 0 OR strpos($this->input->post('sub_folder'), './') !== FALSE) {
-				$sub_folder = '';
-			}
-
-			$folder_name = $this->_fixFileName($this->input->post('name'));
-			if (strpos($this->input->post('name'), '/') !== FALSE) {
+            if (strpos($this->input->post('sub_folder'), '/') === 0 OR strpos($this->input->post('sub_folder'), './') !== FALSE OR strpos($folder_name, '/') !== FALSE) {
 				$json['alert'] = '<span class="error">Invalid file/folder name</span>';
-			}
-
-			if (!is_writable(IMAGEPATH . $root_folder . $sub_folder)) {
-				$json['alert'] = '<span class="error">Pemission denied</span>';
-			}
-
-			$file_path = IMAGEPATH . $root_folder . $sub_folder . $folder_name;
-			$thumb_path = IMAGEPATH . 'thumbs/' . $sub_folder . $folder_name;
-			if (file_exists($file_path)) {
-				$json['alert'] = '<span class="success">Folder already exists</span>';
-			}
-		} else {
-			$json['alert'] = '<span class="error">Please enter your new folder name.</span>';
-		}
-
-		if (!isset($json['alert'])) {
-			$this->_createFolder($file_path, $thumb_path);
-			$json['alert'] = '<span class="success">Folder created sucessfully</span>';
+			} else if ($this->media_manager->fileExists($sub_folder . $folder_name)) {
+				$json['alert'] = '<span class="success">Gallery already exists</span>';
+			} else {
+                if (!isset($json['alert'])) {
+                    $this->media_manager->newFolder($sub_folder . $folder_name);
+                    $json['alert'] = '<span class="success">Folder created successfully</span>';
+                }
+            }
 		}
 
 		$this->output->set_output(json_encode($json));
 	}
 
-	public function copy() {
+    public function rename() {
+        $json = array();
+
+        if (!$this->user->hasPermissions('modify', 'image_manager')) {
+            $json['alert'] = '<span class="error">Warning: You do not have permission to rename file!</span>';
+        } else if (!$this->input->post('file_path') AND !$this->input->post('file_name') AND !$this->input->post('new_name')) {
+            $json['alert'] = '<span class="error">Please enter your new folder name.</span>';
+        } else if (!$this->_rename) {
+            $json['alert'] = '<span class="error">Renaming file/folder is disabled, check administration settings.</span>';
+        } else {
+
+            $file_path = $this->security->sanitize_filename($this->input->post('file_path'), TRUE);
+            $file_name = $this->media_manager->fixFileName($this->input->post('file_name'));
+            $new_name = $this->media_manager->fixFileName($this->input->post('new_name'));
+
+            if (strpos($file_path . $file_name, '/') === 0 OR strpos($file_path . $file_name, './') !== FALSE OR strpos($file_name, '/') !== FALSE) {
+                $json['alert'] = '<span class="error">Invalid file/folder name</span>';
+            } else if (strpos($new_name, '/') !== FALSE) {
+                $json['alert'] = '<span class="error">Invalid new file/folder name</span>';
+            } else {
+                $info = pathinfo($new_name);
+                if (isset($info['extension']) AND !in_array($info['extension'], $this->_allowed_ext)) {
+                    $json['alert'] = '<span class="error">File extension is not allowed.</span>';
+                } else if (!$this->media_manager->isWritable(dirname($file_path . $file_name)) OR !$this->media_manager->isWritable($file_path . $file_name)) {
+                    $json['alert'] = '<span class="error">Pemission denied or file not found</span>';
+                } else {
+                    if (!isset($json['alert'])) {
+                        if ($this->media_manager->rename($file_path . $file_name, $new_name)) {
+                            $json['alert'] = '<span class="success">File/Folder renamed successfully</span>';
+                        } else {
+                            $json['alert'] = '<span class="error">File/Folder already exists</span>';
+                        }
+                    }
+                }
+            }
+        }
+
+        $this->output->set_output(json_encode($json));
+    }
+
+    public function copy() {
 		$json = array();
 
     	if (!$this->user->hasPermissions('modify', 'image_manager')) {
-			$json['alert'] = '<span class="error">Warning: You do not have permission to add or change!</span>';
-		}
-
-		if ($this->input->post('to_folder') AND $this->input->post('copy_files')) {
-			if (!empty($this->config->item('image_manager')) AND is_array($this->config->item('image_manager'))) {
-				$setting = $this->config->item('image_manager');
-			} else {
-				$setting = array();
-			}
-
-			if (isset($setting['copy']) AND $setting['copy'] !== '1') {
-				$json['alert'] = '<span class="error">Copying file/folder is disabled, check administration settings.</span>';
-			}
-
-			$root_folder = 'data/';
-			if (isset($setting['root_folder']) AND (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE)) {
-				$root_folder = $setting['root_folder'] .'/';
-			}
+			$json['alert'] = '<span class="error">Warning: You do not have permission to copy file!</span>';
+		} else if (!$this->input->post('to_folder') AND !$this->input->post('copy_files')) {
+            $json['alert'] = '<span class="error">Please select the destination, the source and the file/folder you wants to move.</span>';
+        } else if (!$this->_copy) {
+            $json['alert'] = '<span class="error">Copying file/folder is disabled, check administration settings.</span>';
+        } else {
 
 			$to_folder = $this->security->sanitize_filename($this->input->post('to_folder'), TRUE);
-			if (strpos($this->input->post('to_folder'), $root_folder) === 0) {
-				$to_folder = str_replace($root_folder, '', $this->input->post('to_folder'));
-			}
-
 			$from_folder = $this->security->sanitize_filename($this->input->post('from_folder'), TRUE);
-			if (strpos($this->input->post('from_folder'), $root_folder) === 0) {
-				$from_folder = str_replace($root_folder, '', $this->input->post('from_folder'));
-			}
-
-			$from_path = IMAGEPATH . $root_folder . $from_folder;
-			$to_path = IMAGEPATH . $root_folder . $to_folder;
-			if (strpos($this->input->post('from_folder'), '/') === 0 OR strpos($this->input->post('from_folder'), './') !== FALSE
-			OR strpos($this->input->post('to_folder'), '/') === 0 OR strpos($this->input->post('to_folder'), './') !== FALSE) {
-				$from_path = '';
-				$to_path = '';
-			}
-
 			$copy_files = json_decode($this->input->post('copy_files'));
+
 			if (!is_array($copy_files) AND empty($copy_files)) {
 				$json['alert'] = '<span class="error">Please select the file/folder you want to move.</span>';
-			}
-
-			if (!is_writable($to_path)) {
+			} else if (!$this->media_manager->isWritable($to_folder)) {
 				$json['alert'] = '<span class="error">Pemission denied</span>';
-			}
-		} else {
-			$json['alert'] = '<span class="error">Please select the destination, the source and the file/folder you wants to move.</span>';
-		}
+			} else {
+                if (!isset($json['alert'])) {
+                    foreach ($copy_files as $copy_file) {
+                        $copy_file = $this->media_manager->fixFileName($copy_file);
 
-		if (!isset($json['alert'])) {
-			foreach ($copy_files as $copy_file) {
-				$copy_file = $this->_fixFileName($copy_file);
-				if (file_exists($to_path . $copy_file)) {
-					$json['alert'] = '<span class="success">File/Folder already exist in destination folder</span>';
-				} else {
-					$this->_copy($from_path . $copy_file, $to_path . $copy_file);
-					$json['alert'] = '<span class="success">File/Folder copied sucessfully</span>';
-				}
-			}
+                        if (!$this->media_manager->copy($from_folder . $copy_file, $to_folder . $copy_file)) {
+                            $json['alert'] = '<span class="success">File/Folder already exist in destination folder</span>';
+                        } else {
+                            $json['alert'] = '<span class="success">File/Folder copied successfully</span>';
+                        }
+                    }
+                }
+            }
 		}
 
 		$this->output->set_output(json_encode($json));
 	}
 
-	public function move() {
+    public function move() {
 		$json = array();
 
     	if (!$this->user->hasPermissions('modify', 'image_manager')) {
-			$json['alert'] = '<span class="error">Warning: You do not have permission to add or change!</span>';
-		}
-
-		if ($this->input->post('to_folder') AND $this->input->post('move_files')) {
-			if (!empty($this->config->item('image_manager')) AND is_array($this->config->item('image_manager'))) {
-				$setting = $this->config->item('image_manager');
-			} else {
-				$setting = array();
-			}
-
-			if (isset($setting['move']) AND $setting['move'] !== '1') {
-				$json['alert'] = '<span class="error">Moving file/folder is disabled, check administration settings.</span>';
-			}
-
-			$root_folder = 'data/';
-			if (isset($setting['root_folder']) AND (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE)) {
-				$root_folder = $setting['root_folder'] .'/';
-			}
+			$json['alert'] = '<span class="error">Warning: You do not have permission to move file!</span>';
+		} else if (!$this->input->post('to_folder') AND !$this->input->post('move_files')) {
+            $json['alert'] = '<span class="error">Please select the destination, the source and the file/folder you wants to move.</span>';
+        } else if (!$this->_move) {
+            $json['alert'] = '<span class="error">Moving file/folder is disabled, check administration settings.</span>';
+        } else {
 
 			$to_folder = $this->security->sanitize_filename($this->input->post('to_folder'), TRUE);
-			if (strpos($this->input->post('to_folder'), $root_folder) === 0) {
-				$to_folder = str_replace($root_folder, '', $this->input->post('to_folder'));
-			}
-
 			$from_folder = $this->security->sanitize_filename($this->input->post('from_folder'), TRUE);
-			if (strpos($this->input->post('from_folder'), $root_folder) === 0) {
-				$from_folder = str_replace($root_folder, '', $this->input->post('from_folder'));
-			}
-
-			$from_path = IMAGEPATH . $root_folder . $from_folder;
-			$to_path = IMAGEPATH . $root_folder . $to_folder;
-			if (strpos($this->input->post('from_folder'), '/') === 0 OR strpos($this->input->post('from_folder'), './') !== FALSE
-			OR strpos($this->input->post('to_folder'), '/') === 0 OR strpos($this->input->post('to_folder'), './') !== FALSE) {
-				$from_path = '';
-				$to_path = '';
-			}
-
 			$move_files = json_decode($this->input->post('move_files'));
-			if (!is_array($move_files) AND empty($move_files)) {
+
+            if (!is_array($move_files) AND empty($move_files)) {
 				$json['alert'] = '<span class="error">Please select the file/folder you want to move.</span>';
-			}
-
-			if (!is_writable($to_path)) {
-				$json['alert'] = '<span class="error">Pemission denied</span>';
-			}
-		} else {
-			$json['alert'] = '<span class="error">Please select the destination, the source and the file/folder you wants to move.</span>';
-		}
-
-		if (!isset($json['alert'])) {
-			foreach ($move_files as $move_file) {
-				$move_file = $this->_fixFileName($move_file);
-				if (file_exists($to_path . $move_file)) {
-					$json['alert'] = '<span class="success">File/Folder already exist in destination folder</span>';
-				} else if (file_exists($from_path . $move_file)) {
-					rename($from_path . $move_file, $to_path . $move_file);
-					$json['alert'] = '<span class="success">File/Folder moved sucessfully</span>';
-				}
-			}
-		}
-
-		$this->output->set_output(json_encode($json));
-	}
-
-	public function rename() {
-		$json = array();
-
-    	if (!$this->user->hasPermissions('modify', 'image_manager')) {
-			$json['alert'] = '<span class="error">Warning: You do not have permission to add or change!</span>';
-		}
-
-		if ($this->input->post('file_name') AND $this->input->post('new_name')) {
-			if (!empty($this->config->item('image_manager')) AND is_array($this->config->item('image_manager'))) {
-				$setting = $this->config->item('image_manager');
+			} else if (!$this->media_manager->isWritable($to_folder)) {
+				$json['alert'] = '<span class="error">Pemission denied or does not exist.</span>';
 			} else {
-				$setting = array();
-			}
+                if (!isset($json['alert'])) {
+                    foreach ($move_files as $move_file) {
+                        $move_file = $this->media_manager->fixFileName($move_file);
 
-			if (isset($setting['rename']) AND $setting['rename'] !== '1') {
-				$json['alert'] = '<span class="error">Renaming file/folder is disabled, check administration settings.</span>';
-			}
-
-			$root_folder = 'data/';
-			if (isset($setting['root_folder']) AND (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE)) {
-				$root_folder = $setting['root_folder'] .'/';
-			}
-
-			$sub_folder = $this->security->sanitize_filename($this->input->post('sub_folder'), TRUE);
-			if (strpos($this->input->post('sub_folder'), '/') === 0 OR strpos($this->input->post('sub_folder'), './') !== FALSE) {
-				$sub_folder = '';
-			}
-
-			$file_name = $this->_fixFileName($this->input->post('file_name'));
-			if (strpos($this->input->post('file_name'), '/') !== FALSE) {
-				$json['alert'] = '<span class="error">Invalid file/folder name</span>';
-			}
-
-			$new_name = $this->_fixFileName($this->input->post('new_name'));
-			if (strpos($this->input->post('new_name'), '/') !== FALSE) {
-				$json['alert'] = '<span class="error">Invalid new file/folder name</span>';
-			}
-
-			if (!is_writable(dirname(IMAGEPATH . $root_folder . $sub_folder . $file_name)) OR !is_writable(IMAGEPATH . $root_folder . $sub_folder . $file_name)) {
-				$json['alert'] = '<span class="error">Pemission denied</span>';
-			}
-
-			$allowed_ext = (isset($setting['allowed_ext'])) ? explode('|', $setting['allowed_ext']) : array();
-			$info = pathinfo($new_name);
-			if (isset($info['extension']) AND !in_array($info['extension'], $allowed_ext)) {
-				$json['alert'] = '<span class="error">File extension is not allowed.</span>';
-			}
-		} else {
-			$json['alert'] = '<span class="error">Please enter your new folder name.</span>';
-		}
-
-		if (!isset($json['alert'])) {
-			$file_path = IMAGEPATH . $root_folder . $sub_folder . $file_name;
-
-			if ($this->_rename($file_path, $new_name)) {
-				$json['alert'] = '<span class="success">File/Folder renamed sucessfully</span>';
-			} else {
-				$json['alert'] = '<span class="error">File/Folder already exists</span>';
-			}
+                        if (!$this->media_manager->move($from_folder . $move_file, $to_folder . $move_file)) {
+                            $json['alert'] = '<span class="success">File/Folder already exist in destination folder</span>';
+                        } else {
+                            $json['alert'] = '<span class="success">File/Folder moved successfully</span>';
+                        }
+                    }
+                }
+            }
 		}
 
 		$this->output->set_output(json_encode($json));
@@ -530,55 +356,38 @@ class Image_manager extends Admin_Controller {
 		$json = array();
 
     	if (!$this->user->hasPermissions('modify', 'image_manager')) {
-			$json['alert'] = '<span class="error">Warning: You do not have permission to add or change!</span>';
-		}
+			$json['alert'] = '<span class="error">Warning: You do not have permission to delete file!</span>';
+		} else if (!$this->input->post('file_path') AND !($this->input->post('file_name') OR $this->input->post('file_names'))) {
+            $json['alert'] = '<span class="error">Please select the file/folder you wish to delete.</span>';
+        } else if (!$this->_delete) {
+            $json['alert'] = '<span class="error">Deleting file/folder is disabled, check administration settings.</span>';
+        } else {
 
-		if ($this->input->post('delete_files') OR $this->input->post('delete_file')) {
-			if (!empty($this->config->item('image_manager')) AND is_array($this->config->item('image_manager'))) {
-				$setting = $this->config->item('image_manager');
-			} else {
-				$setting = array();
+			$file_path = $this->security->sanitize_filename($this->input->post('file_path'), TRUE);
+            $file_names = json_decode($this->input->post('file_names'));
+            $file_name = $this->input->post('file_name');
+
+            if (strpos($file_path, '/') === 0 OR strpos($file_path, './') !== FALSE OR strpos($file_name, '/') !== FALSE) {
+                $json['alert'] = '<span class="error">Invalid file/folder path</span>';
+            }
+
+			if ($file_name AND empty($file_names)) {
+                $file_names = array($file_name);
 			}
 
-			if (isset($setting['delete']) AND $setting['delete'] !== '1') {
-				$json['alert'] = '<span class="error">Deleting file/folder is disabled, check administration settings.</span>';
-			}
+            if (!isset($json['alert'])) {
+                foreach ($file_names as $file_name) {
+                    $file_name = $this->media_manager->fixFileName($file_name);
 
-			$root_folder = 'data/';
-			if (isset($setting['root_folder']) AND (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE)) {
-				$root_folder = $setting['root_folder'] .'/';
-			}
-
-			$sub_folder = $this->security->sanitize_filename($this->input->post('sub_folder'), TRUE);
-			if (strpos($this->input->post('sub_folder'), '/') === 0 OR strpos($this->input->post('sub_folder'), './') !== FALSE) {
-				$sub_folder = '';
-			}
-
-			$delete_files = json_decode($this->input->post('delete_files'));
-			if (!is_array($delete_files) AND empty($delete_files) AND !$this->input->post('delete_file')) {
-				$json['alert'] = '<span class="error">Please select the file/folder you want to delete.</span>';
-			}
-
-			if ($this->input->post('delete_file')) {
-				$delete_files = array($this->input->post('delete_file'));
-			}
-
-			if (!is_writable(IMAGEPATH . $root_folder . $sub_folder)) {
-				$json['alert'] = '<span class="error">Pemission denied</span>';
-			}
-		} else {
-			$json['alert'] = '<span class="error">Please select the file/folder you wish to delete.</span>';
-		}
-
-		if (!isset($json['alert'])) {
-			foreach ($delete_files as $delete_file) {
-				if (file_exists(IMAGEPATH . $root_folder . $sub_folder . $delete_file)) {
-					$delete_file = $this->_fixFileName($delete_file);
-					$this->_delete(IMAGEPATH . $root_folder . $sub_folder . $delete_file);
-					$json['alert'] = '<span class="success">File/Folder deleted sucessfully</span>';
-				}
-			}
-		}
+                    if (!$this->media_manager->isWritable($file_path . $file_name)) {
+                        $json['alert'] = '<span class="error">Pemission denied or does not exist.</span>';
+                        break;
+                    } else if ($this->media_manager->delete($file_path . $file_name)) {
+                        $json['alert'] = '<span class="success">File (s) deleted successfully</span>';
+                    }
+                }
+            }
+        }
 
 		$this->output->set_output(json_encode($json));
 	}
@@ -587,290 +396,108 @@ class Image_manager extends Admin_Controller {
 		$json = array();
 
     	if (!$this->user->hasPermissions('modify', 'image_manager')) {
-			$json['error'] = '<span class="error">Warning: You do not have permission to add or change!</span>';
-		}
-
-		if (!empty($this->config->item('image_manager')) AND is_array($this->config->item('image_manager'))) {
-			$setting = $this->config->item('image_manager');
-		} else {
-			$setting = array();
-		}
-
-		if (isset($setting['uploads']) AND $setting['uploads'] !== '1') {
+			$json['error'] = '<span class="error">Warning: You do not have permission to upload file!</span>';
+		} else if (!$this->_uploads) {
 			$json['error'] = '<span class="error">Uploading is disabled</span>';
-		}
-
-		$root_folder = 'data/';
-		if (isset($setting['root_folder']) AND (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE)) {
-			$root_folder = $setting['root_folder'] .'/';
-		}
-
-		$sub_folder = $this->security->sanitize_filename($this->input->post('sub_folder'), TRUE);
-		if (strpos($this->input->post('sub_folder'), '/') === 0 OR strpos($this->input->post('sub_folder'), './') !== FALSE) {
-			$sub_folder = '';
-		}
-
-		$upload_path = IMAGEPATH . $root_folder . $sub_folder;
-		if (!is_writable($upload_path)) {
-			$json['error'] = '<span class="error">Pemission denied: File is not writable.</span>';
-		}
-
-		if (!file_exists($upload_path)) {
-			$json['error'] = '<span class="error">Invalid upload path specified</span>';
-		}
-
-		if (!isset($json['error'])) {
-			$allowed_ext = (isset($setting['allowed_ext'])) ? $setting['allowed_ext'] : '';
-
-			$this->load->library('upload');
-			$this->upload->set_upload_path($upload_path);
-			$this->upload->set_allowed_types($allowed_ext);
-			$this->upload->set_max_filesize($setting['max_size']);
-
-			if ( ! $this->upload->do_upload('file')) {
-				$json['error'] = $this->upload->display_errors('', '');
-			} else {
-				$data = $this->upload->data();
-				if (!$data) {
-					unlink($data['full_path']);
-					$json['error'] = '<span class="error">Something went wrong when saving the file, please try again.</span>';
-				} else {
-					$json['success'] = '<span class="error">Uploaded Successfully</span>';
-				}
-			}@unlink($_FILES[$field_name]);
-		}
-
-		$response = '';
-		if (isset($json['error'])) {
-			$this->output->set_status_header('401');
-			$response = $json['error'];
-		}
-
-		if (isset($json['success'])) {
-			$response = $json['success'];
-		}
-		$this->output->set_output($response);
-	}
-
-	public function _recursiveFolders($image_path) {
-		$folder_paths = array();
-		foreach (glob($image_path .'*', GLOB_ONLYDIR) as $filename) {
-			$folder_paths[] = $filename;
-			$child = glob($filename .'/*', GLOB_ONLYDIR);
-			if (is_array($child)) {
-				$children = $this->_recursiveFolders($filename .'/*');
-				foreach ($children as $childname) {
-					$folder_paths[] = $childname;
-				}
-			}
-		}
-		return $folder_paths;
-	}
-
-	public function _files($image_path, $sort = array()) {
-		if (!empty($this->config->item('image_manager')) AND is_array($this->config->item('image_manager'))) {
-			$setting = $this->config->item('image_manager');
 		} else {
-			$setting = array();
-		}
+            $sub_folder = $this->security->sanitize_filename($this->input->post('sub_folder'), TRUE);
+            if (strpos($this->input->post('sub_folder'), '/') === 0 OR strpos($this->input->post('sub_folder'), './') !== FALSE) {
+                $sub_folder = '';
+            }
 
-		$allowed_ext = (isset($setting['allowed_ext'])) ? explode('|', $setting['allowed_ext']) : array();
-		$hidden_files = (isset($setting['hidden_files'])) ? explode('|', $setting['hidden_files']) : array();
-		$hidden_folders = (isset($setting['hidden_folders'])) ? explode('|', $setting['hidden_folders']) : array();
+            if (!$this->media_manager->isWritable($sub_folder)) {
+                $json['error'] = '<span class="error">Pemission denied: File is not writable.</span>';
+            } else if (!$this->media_manager->fileExists($sub_folder)) {
+                $json['error'] = '<span class="error">Invalid upload path specified</span>';
+            } else {
+                if (!isset($json['error'])) {
+                    if (!$this->media_manager->upload($sub_folder)) {
+                        $json['error'] = '<span class="error">Something went wrong when saving the file, please try again.</span>';
+                    } else {
+                        $json['success'] = '<span class="error">Uploaded Successfully</span>';
+                    }
+                }
+            }
+        }
 
-		$u_folders = $u_files = array();
+        $response = '';
+        if (isset($json['error'])) {
+            $this->output->set_status_header('401');
+            $response = $json['error'];
+        }
 
-		$files = glob($image_path . '*');
-		foreach ($files as $key => $file_path) {
-			$file_name = basename($file_path);
+        if (isset($json['success'])) {
+            $response = $json['success'];
+        }
 
-			if (is_dir($file_path) AND !in_array($file_name, $hidden_folders)) {
-				$date = filemtime($file_path);
-				$size = $this->_folderSize($file_path);
-				$u_folders[] = array('name' => $file_name, 'type' => 'dir', 'date' => $date, 'size' => $size, 'ext' => 'dir');
-			} else if (is_file($file_path) AND !in_array($file_name, $hidden_files)) {
-				$date = filemtime($file_path);
-				$size = filesize($file_path);
-				$file_ext = substr(strrchr($file_name, '.'), 1);
-				$ext_name = $this->_fixFileName($file_ext);
-				$ext_lower = strtolower($ext_name);
-				$file_type = (in_array($ext_lower, $allowed_ext)) ? 'img' : 'file';
-				$u_files[] = array('name' => $file_name, 'type' => $file_type, 'date' => $date, 'size' => $size, 'ext' => $file_ext);
-			}
-		}
-
-		switch ($sort['by']) {
-		case 'name':
-			usort($u_folders, function($x, $y) {
-				return $x['name'] >  $y['name'];
-			});
-
-			usort($u_files, function($x, $y) {
-				return $x['name'] >  $y['name'];
-			});
-			break;
-		case 'date':
-			usort($u_folders, function($x, $y) {
-				return $x['date'] >  $y['date'];
-			});
-
-			usort($u_files, function($x, $y) {
-				return $x['date'] >  $y['date'];
-			});
-			break;
-		case 'size':
-			usort($u_folders, function($x, $y) {
-				return $x['size'] -  $y['size'];
-			});
-
-			usort($u_files, function($x, $y) {
-				return $x['size'] -  $y['size'];
-			});
-			break;
-		case 'extension':
-			usort($u_folders, function($x, $y) {
-				return $x['ext'] >  $y['ext'];
-			});
-
-			usort($u_files, function($x, $y) {
-				return $x['ext'] >  $y['ext'];
-			});
-			break;
-		}
-
-		if (isset($sort['by']) AND isset($sort['order']) AND $sort['order'] === 'descending') {
-			$u_folders = array_reverse($u_folders);
-			$u_files = array_reverse($u_files);
-		}
-
-		return array_merge($u_folders, $u_files);
+        $this->output->set_output($response);
 	}
 
-	public function _copy($from_path, $to_path) {
-		if (is_file($from_path)) {
-			return copy($from_path, $to_path);
-		}
+    public function _makeSize($size) {
+        if (empty($size)) return '0 B';
 
-		if (is_dir($from_path)) {
-			$this->_createFolder($to_path, FALSE);
-			foreach (scandir($from_path) as $item) {
-				if ($item != '.' AND $item != '..') {
-					if ( ! is_dir($from_path .'/'. $item)) {
-						copy($from_path .'/'. $item, $to_path .'/'. $item);
-					} else {
-						$this->_copy($from_path .'/'. $item, $to_path .'/'. $item);
-					}
-				}
-			}
-		}
-	}
+        $units = array('B', 'KB', 'MB', 'GB', 'TB');
 
-	public function _rename($file_path, $new_name) {
-		$new_name = $this->_fixFileName($new_name);
+        $u = 0;
+        while ((round($size / 1024) > 0) AND ($u < 4)) {
+            $size = $size / 1024;
+            $u++;
+        }
 
-		if (file_exists($file_path)) {
-			$info = pathinfo($file_path);
-			$new_path = $info['dirname'] .'/'. $new_name;
+        return (number_format($size, 0) . " " . $units[$u]);
+    }
 
-			if (isset($info['dirname']) AND ! file_exists($new_path)) {
-				return rename($file_path, $new_path);
-			}
-		}
-
-		return FALSE;
-	}
-
-	public function _delete($path) {
-		if (!file_exists($path)) {
-			return FALSE;
-		}
-
-		if (file_exists($path) AND is_file($path)) {
-			return unlink($path);
-		}
-
-		foreach (scandir($path) as $item) {
-			if ($item != '.' AND $item != '..') {
-				if ( ! is_dir($path .'/'. $item)) {
-					unlink($path .'/'. $item);
-				} else {
-					$this->_delete($path .'/'. $item);
-				}
-			}
-		}
-
-		if (is_dir($path)) {
-			return rmdir($path);
-		}
-	}
-
-	public function _makeSize($size) {
-	   $units = array('B', 'KB', 'MB', 'GB', 'TB');
-	   $u = 0;
-		while ((round($size / 1024) > 0) AND ($u < 4)) {
-			$size = $size / 1024;
-		 	$u++;
-	   }
-	   return (number_format($size, 0) . " " . $units[$u]);
-	}
-
-	public function _folderSize($path) {
-		$total_size = 0;
-		$files = scandir($path);
-		$cleanPath = rtrim($path, '/'). '/';
-		foreach($files as $file) {
-			if ($file != "." AND $file != "..") {
-				$currentFile = $cleanPath . $file;
-				if (is_dir($currentFile)) {
-					$size = $this->_folderSize($currentFile);
-					$total_size += $size;
-				} else {
-					$size = filesize($currentFile);
-					$total_size += $size;
-				}
-			}
-		}
-		return $total_size;
-	}
-
-	public function _createFolder($file_path = FALSE, $thumb_path = FALSE) {
-		$oldumask = umask(0);
-
-		if ($file_path AND !file_exists($file_path)) {
-			mkdir($file_path, 0777, TRUE);
-		}
-
-		if ($thumb_path AND !file_exists($thumb_path)) {
-			mkdir($thumb_path, 0777, TRUE);
-		}
-
-		umask($oldumask);
-	}
-
-	public function _fixGetParams($str) {
+    public function _fixGetParams($str) {
 		return strip_tags(preg_replace( "/[^a-zA-Z0-9\.\[\]_| -]/", '', $str));
-	}
-
-	public function _fixFileName($str, $transliteration = FALSE) {
-		$str = html_entity_decode($str, ENT_QUOTES, 'UTF-8');
-
-		if ($transliteration) {
-			$str = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $str);
-		}
-
-		$str = str_replace(array('"', "'", "/", "\\"), "", $str);
-		$str = strip_tags($str);
-
-		if (strpos($str, '.') === 0) {
-		   $str = 'temp_name'. $str;
-		}
-
-		return $this->security->sanitize_filename(trim($str));
 	}
 
 	public function _fixDirName($str){
 		return str_replace('~',' ',dirname(str_replace(' ','~',$str)));
 	}
+
+    /**
+     * @param $popup
+     */
+    private function setTemplateTags($popup) {
+        if ($popup == 'iframe') {
+            $this->template->setDocType('html5');
+            $this->template->setMeta(array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'));
+            $this->template->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=edge,chrome=1', 'type' => 'equiv'));
+            $this->template->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=9; IE=8; IE=7', 'type' => 'equiv'));
+            $this->template->setMeta(array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1', 'type' => 'name'));
+            $this->template->setMeta(array('name' => 'robots', 'content' => 'noindex,nofollow', 'type' => 'name'));
+
+            $this->template->setFavIcon('images/favicon.ico', 'shortcut icon', 'image/ico');
+
+            $this->template->setStyleTag('css/bootstrap.min.css', 'bootstrap-css', '10');
+            $this->template->setStyleTag('css/font-awesome.min.css', 'font-awesome-css', '11');
+            $this->template->setStyleTag('css/metisMenu.min.css', 'metis-menu-css', '12');
+            $this->template->setStyleTag('css/select2.css', 'select2-css', '13');
+            $this->template->setStyleTag('css/select2-bootstrap.css', 'select2-bootstrap-css', '14');
+            $this->template->setStyleTag('css/dropzone.min.css', 'dropzone-css', '15');
+            $this->template->setStyleTag('css/jquery.contextMenu.css', 'jquery-contextMenu-css', '16');
+            $this->template->setStyleTag('css/image-manager.css', 'image-manager-css', '100');
+
+            $this->template->setScriptTag('js/jquery-1.11.2.min.js', 'jquery-js', '1');
+            $this->template->setScriptTag('js/bootstrap.min.js', 'bootstrap-js', '10');
+            $this->template->setScriptTag('js/metisMenu.min.js', 'metis-menu-js', '11');
+            $this->template->setScriptTag('js/bootbox.min.js', 'bootbox-js', '12');
+            $this->template->setScriptTag('js/select2.js', 'select-2-js', '13');
+            $this->template->setScriptTag('js/dropzone.min.js', 'dropzone-js', '14');
+            $this->template->setScriptTag('js/jquery.ui.position.js', 'jquery-ui-position-js', '15');
+            $this->template->setScriptTag('js/jquery.contextMenu.js', 'jquery-contextMenu-js', '16');
+//            $this->template->setScriptTag('js/jquery.finderSelect.min.js', 'jquery-finderSelect-js', '17');
+            $this->template->setScriptTag('js/selectonic.min.js', 'selectonic-js', '17');
+            $this->template->setScriptTag('js/common.js', 'common-js');
+        }
+
+        $this->template->setTitle('Image Manager');
+        $this->template->setHeading('Image Manager');
+        $this->template->setButton('Options', array('class' => 'btn btn-default pull-right', 'href' => site_url('settings#image-manager')));
+
+        $this->template->setStyleTag(root_url('assets/js/fancybox/jquery.fancybox.css'), 'jquery-fancybox-css');
+        $this->template->setScriptTag(root_url("assets/js/fancybox/jquery.fancybox.js"), 'jquery-fancybox-js');
+    }
 }
 
 /* End of file image_manager.php */

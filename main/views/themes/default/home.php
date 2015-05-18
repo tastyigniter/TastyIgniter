@@ -1,8 +1,8 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div id="notification" class="row">
 	<?php echo $this->alert->display(); ?>
 </div>
-<?php echo $content_top; ?>
+<?php echo get_partial('content_top'); ?>
 <div class="row">
 	<div class="home-fixed text-center">
 		<div id="local-alert"><?php echo $local_alert; ?></div>
@@ -21,4 +21,4 @@
 		</div>
 	</div>
 </div>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

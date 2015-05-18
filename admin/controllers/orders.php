@@ -15,19 +15,11 @@ class Orders extends Admin_Controller {
 		$this->load->model('Orders_model');
 		$this->load->model('Statuses_model');
 		$this->load->model('Staffs_model');
-		$this->load->model('Paypal_model');
+		$this->load->model('Payment_model');
 		$this->load->model('Countries_model');
 	}
 
 	public function index() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'orders')) {
-  			redirect('permission');
-		}
-
 		$url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
@@ -110,15 +102,6 @@ class Orders extends Admin_Controller {
 
 		$data['orders'] = array();
 		foreach ($results as $result) {
-			$current_date = mdate('%d-%m-%Y', time());
-			$date_added = mdate('%d-%m-%Y', strtotime($result['date_added']));
-
-			if ($current_date === $date_added) {
-				$date_added = 'Today';
-			} else {
-				$date_added = mdate('%d %M %y', strtotime($date_added));
-			}
-
 			$data['orders'][] = array(
 				'order_id'			=> $result['order_id'],
 				'location_name'		=> $result['location_name'],
@@ -126,9 +109,10 @@ class Orders extends Admin_Controller {
 				'last_name'			=> $result['last_name'],
 				'order_type' 		=> ($result['order_type'] === '1') ? 'Delivery' : 'Collection',
 				'order_time'		=> mdate('%H:%i', strtotime($result['order_time'])),
-				'order_status'		=> $result['status_name'],
+                'order_status'		=> $result['status_name'],
+                'status_color'		=> $result['status_color'],
 				'order_total'		=> $this->currency->format($result['order_total']),
-				'date_added'		=> $date_added,
+				'date_added'		=> day_elapsed($result['date_added']),
 				'edit' 				=> site_url('orders/edit?id=' . $result['order_id'])
 			);
 		}
@@ -184,14 +168,6 @@ class Orders extends Admin_Controller {
 	}
 
 	public function edit() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'orders')) {
-  			redirect('permission');
-		}
-
 		$order_info = $this->Orders_model->getOrder((int) $this->input->get('id'));
 
 		if ($order_info) {
@@ -233,7 +209,7 @@ class Orders extends Admin_Controller {
 
 		if ($order_info['payment'] === 'paypal_express') {
 			$data['payment'] = 'PayPal';
-			$data['paypal_details'] = $this->Paypal_model->getPaypalDetails($order_info['order_id'], $order_info['customer_id']);
+			$data['paypal_details'] = $this->Payment_model->getPaypalDetails($order_info['order_id'], $order_info['customer_id']);
 		} else if ($order_info['payment'] === 'cod') {
 			$data['payment'] = 'Cash On Delivery';
 			$data['paypal_details'] = array();
@@ -297,7 +273,7 @@ class Orders extends Admin_Controller {
 
 		$data['customer_address'] = '';
 		if (!empty($order_info['customer_id'])) {
-			$customer_address = $this->Addresses_model->getCustomerAddress($order_info['customer_id'], $order_info['address_id']);
+			$customer_address = $this->Addresses_model->getAddress($order_info['customer_id'], $order_info['address_id']);
 			$data['customer_address'] = $this->country->addressFormat($customer_address);
 		} else if (!empty($order_info['address_id'])) {
 			$customer_address = $this->Addresses_model->getGuestAddress($order_info['address_id']);
@@ -306,11 +282,12 @@ class Orders extends Admin_Controller {
 
 		$data['cart_items'] = array();
 		$cart_items = $this->Orders_model->getOrderMenus($order_info['order_id']);
+        $menu_options = $this->Orders_model->getOrderMenuOptions($order_info['order_id']);
 		foreach ($cart_items as $cart_item) {
 			$option_data = array();
-			$menu_options = $this->Orders_model->getOrderMenuOptions($order_info['order_id'], $cart_item['menu_id']);
-			if ($menu_options) {
-				foreach ($menu_options as $menu_option) {
+
+			if (!empty($menu_options[$cart_item['menu_id']])) {
+				foreach ($menu_options[$cart_item['menu_id']] as $menu_option) {
 					$option_data[] = $menu_option['order_option_name'];
 				}
 			}
@@ -365,10 +342,7 @@ class Orders extends Admin_Controller {
 	}
 
 	public function _updateOrder($status_id = FALSE, $assignee_id = 0) {
-    	if (!$this->user->hasPermissions('modify', 'orders')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to update!');
-			return TRUE;
-    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$update = array();
 			$history = array();
 			$current_time = time();														// retrieve current timestamp
@@ -386,9 +360,9 @@ class Orders extends Admin_Controller {
 			$update['date_added']		= mdate('%Y-%m-%d %H:%i:%s', $current_time);
 
 			if ($this->Orders_model->updateOrder($update, $status_id)) {
-				$this->alert->set('success', 'Order updated sucessfully.');
+				$this->alert->set('success', 'Order updated successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing updated.');
 			}
 
 			return TRUE;
@@ -396,14 +370,12 @@ class Orders extends Admin_Controller {
 	}
 
 	public function _deleteOrder() {
-    	if (!$this->user->hasPermissions('modify', 'orders')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to delete!');
-    	} else if (is_array($this->input->post('delete'))) {
+    	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Orders_model->deleteOrder($value);
 			}
 
-			$this->alert->set('success', 'Order deleted sucessfully!');
+			$this->alert->set('success', 'Order deleted successfully!');
 		}
 
 		return TRUE;

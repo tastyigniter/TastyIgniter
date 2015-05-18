@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
 		<div class="panel panel-default panel-table">
@@ -32,7 +32,8 @@
 						<tr>
 							<th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
 							<th class="name sorter"><a class="sort" href="<?php echo $sort_name; ?>">Name<i class="fa fa-sort-<?php echo ($sort_by === 'category_name') ? $order_by_active : $order_by; ?>"></i></a></th>
-							<th>Description</th>
+                            <th>Description</th>
+                            <th>Parent</th>
 							<th class="id"><a class="sort" href="<?php echo $sort_id; ?>">ID<i class="fa fa-sort-<?php echo ($sort_by === 'category_id') ? $order_by_active : $order_by; ?>"></i></a></th>
 						</tr>
 					</thead>
@@ -43,7 +44,14 @@
 							<td class="action"><input type="checkbox" name="delete[]" value="<?php echo $category['category_id']; ?>" />&nbsp;&nbsp;&nbsp;
 								<a class="btn btn-edit" title="Edit" href="<?php echo $category['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
 							<td><?php echo $category['name']; ?></td>
-							<td><?php echo $category['description']; ?></td>
+                            <td><?php echo $category['description']; ?></td>
+                            <td>
+                                <?php foreach ($categories as $cat) { ?>
+                                    <?php if ($category['parent_id'] === $cat['category_id']) { ?>
+                                        <?php echo $cat['name']; ?>
+                                    <?php } ?>
+                                <?php } ?>
+                            </td>
 							<td class="id"><?php echo $category['category_id']; ?></td>
 						</tr>
 
@@ -70,4 +78,4 @@ function filterList() {
 	$('#filter-form').submit();
 }
 //--></script>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

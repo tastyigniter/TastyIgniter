@@ -11,14 +11,6 @@ class Menus extends Admin_Controller {
 	}
 
 	public function index() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'menus')) {
-  			redirect('permission');
-		}
-
 		$url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
@@ -71,7 +63,7 @@ class Menus extends Admin_Controller {
 		$this->template->setButton('+ New', array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
 		$this->template->setButton('Delete', array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
-		$data['text_no_menus'] 		= 'There are no menus available.';
+        $data['text_no_menus'] 		= 'There are no menus available.';
 
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_name'] 			= site_url('menus'.$url.'sort_by=menu_name&order_by='.$order_by);
@@ -149,14 +141,6 @@ class Menus extends Admin_Controller {
 	}
 
 	public function edit() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'menus')) {
-  			redirect('permission');
-		}
-
 		$menu_info = $this->Menus_model->getMenu((int) $this->input->get('id'));
 
 		if ($menu_info) {
@@ -174,7 +158,10 @@ class Menus extends Admin_Controller {
 		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setBackButton('btn btn-back', site_url('menus'));
 
-		$this->load->model('Image_tool_model');
+        $this->template->setStyleTag(root_url('assets/js/fancybox/jquery.fancybox.css'), 'jquery-fancybox-css');
+        $this->template->setScriptTag(root_url("assets/js/fancybox/jquery.fancybox.js"), 'jquery-fancybox-js');
+
+        $this->load->model('Image_tool_model');
 		if ($this->input->post('menu_photo')) {
 			$data['menu_image'] = $this->input->post('menu_photo');
 			$data['image_name'] = basename($this->input->post('menu_photo'));
@@ -296,10 +283,7 @@ class Menus extends Admin_Controller {
 	}
 
 	public function _addMenu() {
-    	if ( ! $this->user->hasPermissions('modify', 'menus')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to add!');
-  			return TRUE;
-    	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$add = array();
 
 			//Sanitizing the POST values
@@ -319,9 +303,9 @@ class Menus extends Admin_Controller {
 			$add['menu_status'] 		= $this->input->post('menu_status');
 
 			if ($_POST['insert_id'] = $this->Menus_model->addMenu($add)) {
-				$this->alert->set('success', 'Menu added sucessfully.');
+				$this->alert->set('success', 'Menu added successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing added.');
+				$this->alert->set('warning', 'An error occurred, nothing added.');
 			}
 
 			return TRUE;
@@ -329,10 +313,7 @@ class Menus extends Admin_Controller {
 	}
 
 	public function _updateMenu() {
-    	if (!$this->user->hasPermissions('modify', 'menus')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to update!');
-  			return TRUE;
-    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$update = array();
 
 			$update['menu_id'] 				= $this->input->get('id');
@@ -354,9 +335,9 @@ class Menus extends Admin_Controller {
 
 
 			if ($this->Menus_model->updateMenu($update)) {
-				$this->alert->set('success', 'Menu updated sucessfully.');
+				$this->alert->set('success', 'Menu updated successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing updated.');
 			}
 
 			return TRUE;
@@ -364,15 +345,13 @@ class Menus extends Admin_Controller {
 	}
 
 	public function _deleteMenu() {
-    	if (!$this->user->hasPermissions('modify', 'menus')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to delete!');
-    	} else if (is_array($this->input->post('delete'))) {
+    	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$menu_id = $value;
 				$this->Menus_model->deleteMenu($menu_id);
 			}
 
-			$this->alert->set('success', 'Menu(s) deleted sucessfully!');
+			$this->alert->set('success', 'Menu(s) deleted successfully!');
 		}
 
 		return TRUE;

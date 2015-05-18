@@ -1,10 +1,11 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
 			<ul id="nav-tabs" class="nav nav-tabs">
 				<li class="active"><a href="#backup" data-toggle="tab">Backup</a></li>
-				<li><a href="#restore" data-toggle="tab">Restore</a></li>
+                <li><a href="#restore" data-toggle="tab">Restore</a></li>
+                <li><a href="#download-backup" data-toggle="tab">Download Backup</a></li>
 			</ul>
 		</div>
 
@@ -12,9 +13,6 @@
 			<div class="tab-content">
 				<div id="backup" class="tab-pane row wrap-all active">
 					<div class="panel panel-default panel-table">
-						<div class="panel-heading">
-							<h3 class="panel-title">Database Table List</h3>
-						</div>
 						<div class="table-responsive">
 							<table class="table table-striped table-border">
 								<thead>
@@ -27,9 +25,9 @@
 								<tbody>
 									<?php foreach ($db_tables as $key => $db_table) { ?>
 									<tr>
-										<td><input type="checkbox" name="backup[]" id="input-table-<?php echo $key; ?>" value="<?php echo $db_table['name']; ?>" <?php echo set_checkbox('backup[]', $db_table['name']); ?> /></td>
-										<td><i><?php echo $db_table['name']; ?></i></td>
-										<td class="action id"><i><?php echo $db_table['num_rows']; ?></i></td>
+										<td><input type="checkbox" name="backup[]" id="input-table-<?php echo $key; ?>" value="<?php echo $db_table['table_name']; ?>" <?php echo set_checkbox('backup[]', $db_table['table_name']); ?> /></td>
+										<td><i><?php echo $db_table['table_name']; ?></i></td>
+										<td class="action id"><i><?php echo $db_table['table_rows']; ?></i></td>
 									</tr>
 									<?php } ?>
 								</tbody>
@@ -39,21 +37,38 @@
 				</div>
 
 				<div id="restore" class="tab-pane row wrap-all">
-					<table class="table table-striped table-border">
-						<thead>
-							<tr>
-								<th>Upload SQL restore file.</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td><input type="file" name="restore" value="" id="" /></td>
-							</tr>
-						</tbody>
-					</table>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-border">
+                            <thead>
+                                <tr>
+                                    <th>Upload SQL restore file.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="file" name="restore" value="" id="" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 				</div>
+
+                <div id="download-backup" class="tab-pane row wrap-all">
+                    <ul class="list-group">
+                        <?php if ($backup_files) { ?>
+                            <?php foreach ($backup_files as $backup_file) { ?>
+                                <li class="list-group-item">
+                                    <a href="<?php echo $backup_file['download']; ?>"><i class="fa fa-download"></i>&nbsp;&nbsp;<?php echo $backup_file['filename']; ?></a>
+                                    <a href="<?php echo $backup_file['delete']; ?>" class="btn btn-danger pull-right"><i class="fa fa-times-circle"></i></a>
+                                </li>
+                            <?php } ?>
+                        <?php } else { ?>
+                            <li class="list-group-item">No database backup available.</li>
+                        <?php } ?>
+                    </ul>
+                </div>
 			</div>
 		</form>
 	</div>
 </div>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

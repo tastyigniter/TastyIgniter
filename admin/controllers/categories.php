@@ -5,20 +5,13 @@ class Categories extends Admin_Controller {
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
 		$this->load->library('user');
-		$this->load->library('pagination');
+        $this->load->library('permalink');
+        $this->load->library('pagination');
 		$this->load->model('Menus_model'); // load the menus model
 		$this->load->model('Image_tool_model');
 	}
 
 	public function index() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'categories')) {
-  			redirect('permission');
-		}
-
 		$url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
@@ -63,14 +56,14 @@ class Categories extends Admin_Controller {
 		$data['sort_name'] 			= site_url('categories'.$url.'sort_by=name&order_by='.$order_by);
 		$data['sort_id'] 			= site_url('categories'.$url.'sort_by=category_id&order_by='.$order_by);
 
-		$categories = array();
 		$results = $this->Menus_model->getCategoriesList($filter);
 		$data['categories'] = array();
 		foreach ($results as $result) {
 			//load categories data into array
 			$data['categories'][] = array(
 				'category_id' 			=> $result['category_id'],
-				'name' 					=> $result['name'],
+                'name' 					=> $result['name'],
+                'parent_id' 			=> $result['parent_id'],
 				'description' 			=> substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..',
 				'edit' 					=> site_url('categories/edit?id=' . $result['category_id'])
 			);
@@ -102,20 +95,6 @@ class Categories extends Admin_Controller {
 	}
 
 	public function edit() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'categories')) {
-  			redirect('permission');
-		}
-
-		if ($this->session->flashdata('alert')) {
-			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
-		} else {
-			$data['alert'] = '';
-		}
-
 		$category_info = $this->Menus_model->getCategory((int) $this->input->get('id'));
 
 		if ($category_info) {
@@ -133,16 +112,19 @@ class Categories extends Admin_Controller {
 		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setBackButton('btn btn-back', site_url('categories'));
 
-		$data['category_id'] 		= $category_info['category_id'];
+        $this->template->setStyleTag(root_url('assets/js/fancybox/jquery.fancybox.css'), 'jquery-fancybox-css');
+        $this->template->setScriptTag(root_url("assets/js/fancybox/jquery.fancybox.js"), 'jquery-fancybox-js');
+
+        $data['category_id'] 		= $category_info['category_id'];
 		$data['name'] 				= $category_info['name'];
 		$data['parent_id'] 			= $category_info['parent_id'];
 		$data['description'] 		= $category_info['description'];
 		$data['no_image'] 			= $this->Image_tool_model->resize('data/no_photo.png');
 
-		$this->load->model('Permalinks_model');
-		$data['permalink'] 				= $this->Permalinks_model->getPermalink('category_id='.$category_info['category_id']);
+		$data['permalink'] = $this->permalink->getPermalink('category_id='.$category_info['category_id']);
+        $data['permalink']['url'] = root_url('menus').'/';
 
-		if ($this->input->post('image')) {
+        if ($this->input->post('image')) {
 			$data['image'] = $this->input->post('image');
 			$data['image_name'] = basename($this->input->post('image'));
 			$data['image_url'] = $this->Image_tool_model->resize($this->input->post('image'));
@@ -187,10 +169,7 @@ class Categories extends Admin_Controller {
 
 
 	public function _addCategory() {
-    	if (!$this->user->hasPermissions('modify', 'categories')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to add!');
-  			return TRUE;
-    	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$add = array();
 
 			$add['name'] 			= $this->input->post('name');
@@ -200,9 +179,9 @@ class Categories extends Admin_Controller {
 			$add['image'] 			= $this->input->post('image');
 
 			if ($_POST['insert_id'] = $this->Menus_model->addCategory($add)) {
-				$this->alert->set('success', 'Category added sucessfully.');
+				$this->alert->set('success', 'Category added successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing added.');
+				$this->alert->set('warning', 'An error occurred, nothing added.');
 			}
 
 			return TRUE;
@@ -210,10 +189,7 @@ class Categories extends Admin_Controller {
 	}
 
 	public function _updateCategory() {
-    	if (!$this->user->hasPermissions('modify', 'categories')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to update!');
-  			return TRUE;
-    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$update = array();
 
 			$update['category_id'] 	= $this->input->get('id');
@@ -224,9 +200,9 @@ class Categories extends Admin_Controller {
 			$update['image'] 		= $this->input->post('image');
 
 			if ($this->Menus_model->updateCategory($update)) {
-				$this->alert->set('success', 'Category updated sucessfully.');
+				$this->alert->set('success', 'Category updated successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing updated.');
 			}
 
 			return TRUE;
@@ -234,14 +210,12 @@ class Categories extends Admin_Controller {
 	}
 
 	public function _deleteCategory() {
-    	if (!$this->user->hasPermissions('modify', 'categories')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to delete!');
-    	} else if (is_array($this->input->post('delete'))) {
+    	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Menus_model->deleteCategory($value);
 			}
 
-			$this->alert->set('success', 'Category(s) deleted sucessfully!');
+			$this->alert->set('success', 'Category(s) deleted successfully!');
 		}
 
 		return TRUE;

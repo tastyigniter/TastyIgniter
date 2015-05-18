@@ -6,20 +6,11 @@ class Menu_options extends Admin_Controller {
 		parent::__construct(); //  calls the constructor
 		$this->load->library('user');
 		$this->load->library('pagination');
+		$this->load->library('currency'); // load the currency library
 		$this->load->model('Menus_model'); // load the menus model
 	}
 
 	public function index() {
-		$this->load->library('currency'); // load the currency library
-
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'menu_options')) {
-  			redirect('permission');
-		}
-
 		$url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
@@ -111,14 +102,6 @@ class Menu_options extends Admin_Controller {
 	}
 
 	public function edit() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'menu_options')) {
-  			redirect('permission');
-		}
-
 		$option_info = $this->Menus_model->getOption((int) $this->input->get('id'));
 
 		if ($option_info) {
@@ -204,10 +187,7 @@ class Menu_options extends Admin_Controller {
 	}
 
 	public function _addMenuOpiton() {
-    	if (!$this->user->hasPermissions('modify', 'menu_options')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to add!');
-  			return TRUE;
-    	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$add = array();
 
 			$add['option_name'] 	= $this->input->post('option_name');
@@ -216,9 +196,9 @@ class Menu_options extends Admin_Controller {
 			$add['option_values'] 	= $this->input->post('values');
 
 			if ($_POST['insert_id'] = $this->Menus_model->addOption($add)) {
-				$this->alert->set('success', 'Menu option added sucessfully.');
+				$this->alert->set('success', 'Menu option added successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing added.');
+				$this->alert->set('warning', 'An error occurred, nothing added.');
 			}
 
 			return TRUE;
@@ -226,10 +206,7 @@ class Menu_options extends Admin_Controller {
 	}
 
 	public function _updateMenuOption() {
-    	if (!$this->user->hasPermissions('modify', 'menu_options')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to update!');
-  			return TRUE;
-    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$update = array();
 
 			$update['option_id'] 		= $this->input->get('id');
@@ -239,9 +216,9 @@ class Menu_options extends Admin_Controller {
 			$update['option_values'] 	= $this->input->post('values');
 
 			if ($this->Menus_model->updateOption($update)) {
-				$this->alert->set('success', 'Menu option updated sucessfully.');
+				$this->alert->set('success', 'Menu option updated successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing updated.');
 			}
 
 			return TRUE;
@@ -249,14 +226,12 @@ class Menu_options extends Admin_Controller {
 	}
 
 	public function _deleteMenuOption() {
-    	if (!$this->user->hasPermissions('modify', 'menu_options')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to delete!');
-    	} else if (is_array($this->input->post('delete'))) {
+    	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Menus_model->deleteMenuOption($value);
 			}
 
-			$this->alert->set('success', 'Menu option(s) deleted sucessfully!');
+			$this->alert->set('success', 'Menu option(s) deleted successfully!');
 		}
 
 		return TRUE;

@@ -11,14 +11,6 @@ class Currencies extends Admin_Controller {
 	}
 
 	public function index() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'currencies')) {
-  			redirect('permission');
-		}
-
 		$url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
@@ -112,20 +104,6 @@ class Currencies extends Admin_Controller {
 	}
 
 	public function edit() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'currencies')) {
-  			redirect('permission');
-		}
-
-		if ($this->session->flashdata('alert')) {
-			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
-		} else {
-			$data['alert'] = '';
-		}
-
 		$currency_info = $this->Currencies_model->getCurrency((int) $this->input->get('id'));
 
 		if ($currency_info) {
@@ -182,10 +160,7 @@ class Currencies extends Admin_Controller {
 	}
 
 	public function _addCurrency() {
-    	if (!$this->user->hasPermissions('modify', 'currencies')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to add!');
-  			return TRUE;
-    	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$add = array();
 
 			$add['currency_name'] 		= $this->input->post('currency_name');
@@ -198,9 +173,9 @@ class Currencies extends Admin_Controller {
 			$add['currency_status'] 	= $this->input->post('currency_status');
 
 			if ($_POST['insert_id'] = $this->Currencies_model->addCurrency($add)) {
-				$this->alert->set('success', 'Currency added sucessfully.');
+				$this->alert->set('success', 'Currency added successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing updated.');
 			}
 
 			return TRUE;
@@ -208,10 +183,7 @@ class Currencies extends Admin_Controller {
 	}
 
 	public function _updateCurrency() {
-    	if (!$this->user->hasPermissions('modify', 'currencies')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to update!');
-  			return TRUE;
-    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$update = array();
 
 			$update['currency_id'] 		= $this->input->get('id');
@@ -225,9 +197,9 @@ class Currencies extends Admin_Controller {
 			$update['currency_status'] 	= $this->input->post('currency_status');
 
 			if ($this->Currencies_model->updateCurrency($update)) {
-				$this->alert->set('success', 'Currency updated sucessfully.');
+				$this->alert->set('success', 'Currency updated successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing updated.');
 			}
 
 			return TRUE;
@@ -235,14 +207,12 @@ class Currencies extends Admin_Controller {
 	}
 
 	public function _deleteCurrency() {
-    	if (!$this->user->hasPermissions('modify', 'currencies')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to delete!');
-    	} else if (is_array($this->input->post('delete'))) {
+    	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Currencies_model->deleteCurrency($value);
 			}
 
-			$this->alert->set('success', 'Currency(s) deleted sucessfully!');
+			$this->alert->set('success', 'Currency(s) deleted successfully!');
 		}
 
 		return TRUE;

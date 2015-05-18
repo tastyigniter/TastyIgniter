@@ -11,14 +11,6 @@ class Languages extends Admin_Controller {
 	}
 
 	public function index() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'languages')) {
-  			redirect('permission');
-		}
-
 		$url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
@@ -110,20 +102,6 @@ class Languages extends Admin_Controller {
 	}
 
 	public function edit() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'languages')) {
-  			redirect('permission');
-		}
-
-		if ($this->session->flashdata('alert')) {
-			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
-		} else {
-			$data['alert'] = '';
-		}
-
 		$language_info = $this->Languages_model->getLanguage((int) $this->input->get('id'));
 
 		if ($language_info) {
@@ -157,7 +135,10 @@ class Languages extends Admin_Controller {
 		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setBackButton('btn btn-back', site_url('languages'));
 
-		$data['language_id'] 		= $language_info['language_id'];
+        $this->template->setStyleTag(root_url('assets/js/fancybox/jquery.fancybox.css'), 'jquery-fancybox-css');
+        $this->template->setScriptTag(root_url("assets/js/fancybox/jquery.fancybox.js"), 'jquery-fancybox-js');
+
+        $data['language_id'] 		= $language_info['language_id'];
 		$data['name'] 				= $language_info['name'];
 		$data['code'] 				= $language_info['code'];
 		$data['directory'] 			= $language_info['directory'];
@@ -183,10 +164,7 @@ class Languages extends Admin_Controller {
 	}
 
 	public function _addLanguage() {
-    	if ( ! $this->user->hasPermissions('modify', 'languages')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to add!');
-  			return TRUE;
-    	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$add = array();
 
 			$add['name'] 		= $this->input->post('name');
@@ -196,10 +174,10 @@ class Languages extends Admin_Controller {
 			$add['status'] 		= $this->input->post('status');
 
 			if ($_POST['insert_id'] = $this->Languages_model->addLanguage($add)) {
-				$this->alert->set('success', 'Language added sucessfully.');
+				$this->alert->set('success', 'Language added successfully.');
 				return TRUE;
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing added.');
+				$this->alert->set('warning', 'An error occurred, nothing added.');
 				return FALSE
 				;
 			}
@@ -207,10 +185,7 @@ class Languages extends Admin_Controller {
 	}
 
 	public function _updateLanguage() {
-    	if ( ! $this->user->hasPermissions('modify', 'languages')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to update!');
-  			return TRUE;
-    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$update = array();
 
 			$update['language_id'] 	= $this->input->get('id');
@@ -221,9 +196,9 @@ class Languages extends Admin_Controller {
 			$update['status'] 		= $this->input->post('status');
 
 			if ($this->Languages_model->updateLanguage($update)) {
-				$this->alert->set('success', 'Language updated sucessfully.');
+				$this->alert->set('success', 'Language updated successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing added.');
+				$this->alert->set('warning', 'An error occurred, nothing added.');
 			}
 
 			return TRUE;
@@ -231,17 +206,15 @@ class Languages extends Admin_Controller {
 	}
 
 	public function _deleteLanguage() {
-    	if (!$this->user->hasPermissions('modify', 'languages')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to delete!');
-    	} else if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $value) {
-				$this->Languages_model->deleteLanguage($value);
-			}
+        if (is_array($this->input->post('delete'))) {
+            foreach ($this->input->post('delete') as $key => $value) {
+                $this->Languages_model->deleteLanguage($value);
+            }
 
-			$this->alert->set('success', 'Language deleted sucessfully!');
-		}
+            $this->alert->set('success', 'Language deleted successfully!');
+        }
 
-		return TRUE;
+        return TRUE;
 	}
 
 	public function validateForm() {

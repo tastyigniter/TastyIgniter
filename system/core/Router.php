@@ -201,14 +201,14 @@ class CI_Router {
 		}
 
 		// Load the routes.php file.
-		if (file_exists(IGNITEPATH.'config/routes.php'))
+		if (file_exists(APPPATH.'config/routes.php'))
 		{
-			include(IGNITEPATH.'config/routes.php');
+			include(APPPATH.'config/routes.php');
 		}
 
-		if (file_exists(IGNITEPATH.'config/'.ENVIRONMENT.'/routes.php'))
+		if (file_exists(APPPATH.'config/'.ENVIRONMENT.'/routes.php'))
 		{
-			include(IGNITEPATH.'config/'.ENVIRONMENT.'/routes.php');
+			include(APPPATH.'config/'.ENVIRONMENT.'/routes.php');
 		}
 
 		// Validate & get reserved routes
@@ -245,8 +245,8 @@ class CI_Router {
 	 */
 	protected function _set_request($segments = array())
 	{
-		$segments = $this->_validate_request($segments);
-		// If we don't have any segments left - try the default controller;
+        $segments = $this->_validate_request($segments);
+        // If we don't have any segments left - try the default controller;
 		// WARNING: Directories get shifted out of the segments array!
 		if (empty($segments))
 		{
@@ -329,16 +329,16 @@ class CI_Router {
 	 */
 	protected function _validate_request($segments)
 	{
-		$c = count($segments);
-		// Loop through our segments and return as soon as a controller
-		// is found or when such a directory doesn't exist
-		while ($c-- > 0)
-		{
-			$test = $this->directory
+        $c = count($segments);
+        // Loop through our segments and return as soon as a controller
+        // is found or when such a directory doesn't exist
+        while ($c-- > 0)
+        {
+            $test = $this->directory
 				.ucfirst($this->translate_uri_dashes === TRUE ? str_replace('-', '_', $segments[0]) : $segments[0]);
 
-			if ( ! file_exists(APPPATH.'controllers/'.$test.'.php') && is_dir(APPPATH.'controllers/'.$this->directory.$segments[0]))
-			{
+            if ( ! file_exists(APPPATH.'controllers/'.$test.'.php') && is_dir(APPPATH.'controllers/'.$this->directory.$segments[0]))
+            {
 				$this->set_directory(array_shift($segments), TRUE);
 				continue;
 			}
@@ -374,7 +374,7 @@ class CI_Router {
 			// Check default routes format
 			if (is_string($this->routes[$uri]))
 			{
-				$this->_set_request(explode('/', $this->routes[$uri]));
+                $this->_set_request(explode('/', $this->routes[$uri]));
 				return;
 			}
 			// Is there a matching http verb?

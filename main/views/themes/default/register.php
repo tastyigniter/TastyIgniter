@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row page-heading"><h3><?php echo $text_register; ?></h3></div>
 
 <div id="notification" class="row">
@@ -71,4 +71,4 @@
 		</div>
 	</div>
 </div>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

@@ -13,7 +13,7 @@ class Menus extends Main_Controller {
 	}
 
 	public function index() {
-		$url = '?';
+        $url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
 			$filter['page'] = (int) $this->input->get('page');
@@ -25,7 +25,11 @@ class Menus extends Main_Controller {
 			$filter['limit'] = $this->config->item('menus_page_limit');
 		}
 
-		$filter['category_id'] = $data['category_id'] = (int) $this->input->get('category_id'); 									// retrieve 3rd uri segment else set FALSE if unavailable.
+        $filter['sort_by'] = 'menus.menu_id';
+        $filter['order_by'] = 'ASC';
+        $filter['filter_status'] = '1';
+
+        $filter['filter_category'] = $data['category_id'] = (int) $this->input->get('category_id'); 									// retrieve 3rd uri segment else set FALSE if unavailable.
 		$categories = $this->Menus_model->getCategory($data['category_id']);
 
 		if (!$categories AND $this->input->get('category_id')) {
@@ -42,7 +46,7 @@ class Menus extends Main_Controller {
 
 		// START of retrieving lines from language file to pass to view.
 		$this->template->setTitle($this->lang->line('text_heading'));
-		$this->template->setHeading($this->lang->line('text_heading'));
+//		$this->template->setHeading($this->lang->line('text_heading'));
 		$data['text_empty'] 			= $this->lang->line('text_empty');
 		$data['text_category'] 			= $this->lang->line('text_category');
 		$data['text_specials'] 			= $this->lang->line('text_specials');

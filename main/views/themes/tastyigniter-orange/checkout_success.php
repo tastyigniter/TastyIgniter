@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div id="page-content">
 	<div class="container">
 		<div class="row">
@@ -117,4 +117,4 @@
 </div>
 	</div>
 </div>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

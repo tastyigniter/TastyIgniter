@@ -9,14 +9,6 @@ class Statuses extends Admin_Controller {
 	}
 
 	public function index() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'statuses')) {
-  			redirect('permission');
-		}
-
 		if ($this->input->get('filter_type')) {
 			$filter_type = $this->input->get('filter_type');
 			$data['filter_type'] = $filter_type;
@@ -55,20 +47,6 @@ class Statuses extends Admin_Controller {
 	}
 
 	public function edit() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'statuses')) {
-  			redirect('permission');
-		}
-
-		if ($this->session->flashdata('alert')) {
-			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
-		} else {
-			$data['alert'] = '';
-		}
-
 		$status_info = $this->Statuses_model->getStatus((int) $this->input->get('id'));
 
 		if ($status_info) {
@@ -88,8 +66,9 @@ class Statuses extends Admin_Controller {
 
 		$data['status_id'] 			= $status_info['status_id'];
 		$data['status_name'] 		= $status_info['status_name'];
+        $data['status_color'] 		= $status_info['status_color'];
 		$data['status_comment'] 	= $status_info['status_comment'];
-		$data['status_for'] 		= $status_info['status_for'];
+        $data['status_for'] 		= $status_info['status_for'];
 		$data['notify_customer'] 	= $status_info['notify_customer'];
 
 		if ($this->input->post() AND $this->_addStatus() === TRUE) {
@@ -120,21 +99,19 @@ class Statuses extends Admin_Controller {
 	}
 
 	public function _addStatus() {
-    	if (!$this->user->hasPermissions('modify', 'statuses')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to add!');
-			return TRUE;
-    	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$add = array();
 
 			$add['status_name'] 		= $this->input->post('status_name');
-			$add['status_comment'] 		= $this->input->post('status_comment');
+            $add['status_color'] 		= $this->input->post('status_color');
+            $add['status_comment'] 		= $this->input->post('status_comment');
 			$add['status_for'] 			= $this->input->post('status_for');
 			$add['notify_customer'] 	= $this->input->post('notify_customer');
 
 			if ($_POST['insert_id'] = $this->Statuses_model->addStatus($add)) {
-				$this->alert->set('success', 'Order Status added sucessfully.');
+				$this->alert->set('success', 'Order Status added successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing updated.');
 			}
 
 			return TRUE;
@@ -142,22 +119,20 @@ class Statuses extends Admin_Controller {
 	}
 
 	public function _updateStatus() {
-    	if (!$this->user->hasPermissions('modify', 'statuses')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to update!');
-			return TRUE;
-    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$update = array();
 
 			$update['status_id'] 		= $this->input->get('id');
 			$update['status_name'] 		= $this->input->post('status_name');
-			$update['status_comment'] 	= $this->input->post('status_comment');
+            $update['status_color'] 	= $this->input->post('status_color');
+            $update['status_comment'] 	= $this->input->post('status_comment');
 			$update['status_for'] 		= $this->input->post('status_for');
 			$update['notify_customer'] 	= $this->input->post('notify_customer');
 
 			if ($this->Statuses_model->updateStatus($update)) {
-				$this->alert->set('success', 'Order Status updated sucessfully.');
+				$this->alert->set('success', 'Order Status updated successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing updated.');
 			}
 
 			return TRUE;
@@ -165,14 +140,12 @@ class Statuses extends Admin_Controller {
 	}
 
 	public function _deleteStatus() {
-    	if (!$this->user->hasPermissions('modify', 'statuses')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to delete!');
-    	} else if (is_array($this->input->post('delete'))) {
+    	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Statuses_model->deleteStatus($value);
 			}
 
-			$this->alert->set('success', 'Order Status(es) deleted sucessfully!');
+			$this->alert->set('success', 'Order Status(es) deleted successfully!');
 		}
 
 		return TRUE;
@@ -180,8 +153,9 @@ class Statuses extends Admin_Controller {
 
 	public function validateForm() {
 		$this->form_validation->set_rules('status_name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
-		$this->form_validation->set_rules('status_for', 'Status For', 'xss_clean|trim|required|aplha');
-		$this->form_validation->set_rules('status_comment', 'Comment', 'xss_clean|trim|max_length[1028]');
+		$this->form_validation->set_rules('status_for', 'Status For', 'xss_clean|trim|required|alpha');
+        $this->form_validation->set_rules('status_color', 'Color', 'xss_clean|trim|required|max_length[7]');
+        $this->form_validation->set_rules('status_comment', 'Comment', 'xss_clean|trim|max_length[1028]');
 		$this->form_validation->set_rules('notify_customer', 'Notify Customer', 'xss_clean|trim|integer');
 
 		if ($this->form_validation->run() === TRUE) {

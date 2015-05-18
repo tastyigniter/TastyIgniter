@@ -5,7 +5,10 @@ require IGNITEPATH . 'third_party/MX/Router.php';
 
 class TI_Router extends MX_Router {
 
-	/**
+//    private $routes =	array();
+    private $reverseRoutes =	array();
+
+    /**
 	 * Set route mapping
 	 *
 	 * Determines what should be served based on the URI request,
@@ -53,17 +56,15 @@ class TI_Router extends MX_Router {
 			return;
 		}
 
-		$route_file = APPDIR === 'admin' ? 'admin_routes' : 'routes';
-
 		// Load the routes.php file.
-		if (file_exists(IGNITEPATH.'config/'.$route_file.'.php'))
+		if (file_exists(IGNITEPATH.'config/routes.php'))
 		{
-			include(IGNITEPATH.'config/'.$route_file.'.php');
+			include(IGNITEPATH.'config/routes.php');
 		}
 
-		if (file_exists(IGNITEPATH.'config/'.ENVIRONMENT.'/'.$route_file.'.php'))
+		if (file_exists(IGNITEPATH.'config/'.ENVIRONMENT.'/routes.php'))
 		{
-			include(IGNITEPATH.'config/'.ENVIRONMENT.'/'.$route_file.'.php');
+			include(IGNITEPATH.'config/'.ENVIRONMENT.'/routes.php');
 		}
 
 		// Validate & get reserved routes
@@ -87,6 +88,72 @@ class TI_Router extends MX_Router {
 	}
 
 	// --------------------------------------------------------------------
+
+    public function _reverse_routing($uri = '')
+    {
+        $this->reverseRoutes = array_flip($this->routes);
+
+        // $uri is expected to be a string, in the form of controller/function/param1
+        // trim leading and trailing slashes, just in case
+        $query = explode('?', $uri);
+        $uri = trim($query[0], '/');
+
+        // Is there a literal match?  If so we're done
+        if ( $uri !== '' AND $uri !== 'home' AND $uri !== 'pages')
+        {
+            if (isset($this->reverseRoutes[$uri]))
+            {
+                $uri = $this->reverseRoutes[$uri];
+            } else
+            {
+                foreach ($this->routes as $key => $val)
+                {
+                    if (!$key OR !$val OR $val === '$1') continue;
+
+                    preg_match_all('/\(.+?\)/', $key, $rules);
+                    preg_match_all('/\$.+?/', $val, $references);
+
+                    if (empty($rules[0]) OR empty($references[0])) continue;
+
+                    for ($i = 0; $i < count($rules[0]); $i ++)
+                    {
+                        $key = substr_replace($key, $references[0][$i], strpos($key, $rules[0][$i]), 6);
+                        $val = substr_replace($val, $rules[0][$i], strpos($val, $references[0][$i]), 2);
+                    }
+
+                    $val = str_replace('(:any)', '(.+)', str_replace('(:num)', '([0-9]+)', $val));
+
+                    // Does the RegEx match?
+                    if (preg_match('#^' . $val . '$#', $uri))
+                    {
+                        $uri = preg_replace('#^' . $val . '$#', $key, $uri);
+                    }
+                }
+            }
+        }
+
+        $uri = str_replace('/(:any)', '', str_replace('/(:num)', '', $uri));
+
+        if (isset($query[1])) {
+            $this->CI =& get_instance();
+
+            if ($this->config->item('permalink') == '1') {
+                $this->CI->load->library('permalink');
+
+                if ($slug = $this->CI->permalink->getQuerySlug($query[1])) {
+                    $uri = ($uri === 'pages') ? str_replace('pages', '', $uri) : $uri.'/';
+                    return $uri.$slug;
+                }
+            }
+
+            return $uri.'?'.$query[1];
+        }
+
+        return $uri;
+    }
+
+    // --------------------------------------------------------------------
+
 }
 
 /* End of file TI_Router.php */

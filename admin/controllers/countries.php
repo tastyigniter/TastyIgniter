@@ -11,14 +11,6 @@ class Countries extends Admin_Controller {
 	}
 
 	public function index() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'countries')) {
-  			redirect('permission');
-		}
-
 		$url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
@@ -113,14 +105,6 @@ class Countries extends Admin_Controller {
 	}
 
 	public function edit() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'countries')) {
-  			redirect('permission');
-		}
-
 		$country_info = $this->Countries_model->getCountry((int) $this->input->get('id'));
 
 		if ($country_info) {
@@ -138,7 +122,10 @@ class Countries extends Admin_Controller {
 		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setBackButton('btn btn-back', site_url('countries'));
 
-		$data['country_name'] 		= $country_info['country_name'];
+        $this->template->setStyleTag(root_url('assets/js/fancybox/jquery.fancybox.css'), 'jquery-fancybox-css');
+        $this->template->setScriptTag(root_url("assets/js/fancybox/jquery.fancybox.js"), 'jquery-fancybox-js');
+
+        $data['country_name'] 		= $country_info['country_name'];
 		$data['iso_code_2'] 		= $country_info['iso_code_2'];
 		$data['iso_code_3'] 		= $country_info['iso_code_3'];
 		$data['format'] 			= $country_info['format'];
@@ -180,10 +167,7 @@ class Countries extends Admin_Controller {
 	}
 
 	public function _addCountry() {
-    	if (!$this->user->hasPermissions('modify', 'countries')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to add!');
-  			return TRUE;
-    	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$add = array();
 
 			$add['country_name'] 	= $this->input->post('country_name');
@@ -194,9 +178,9 @@ class Countries extends Admin_Controller {
 			$add['status'] 			= $this->input->post('status');
 
 			if ($_POST['insert_id'] = $this->Countries_model->addCountry($add)) {
-				$this->alert->set('success', 'Country added sucessfully.');
+				$this->alert->set('success', 'Country added successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing updated.');
 			}
 
 			return TRUE;
@@ -204,10 +188,7 @@ class Countries extends Admin_Controller {
 	}
 
 	public function _updateCountry() {
-    	if (!$this->user->hasPermissions('modify', 'countries')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to update!');
-  			return TRUE;
-    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 
 			$update = array();
 
@@ -221,9 +202,9 @@ class Countries extends Admin_Controller {
 
 
 			if ($this->Countries_model->updateCountry($update)) {
-				$this->alert->set('success', 'Country updated sucessfully.');
+				$this->alert->set('success', 'Country updated successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing updated.');
 			}
 
 			return TRUE;
@@ -231,14 +212,12 @@ class Countries extends Admin_Controller {
 	}
 
 	public function _deleteCountry() {
-    	if (!$this->user->hasPermissions('modify', 'countries')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to delete!');
-    	} else if (is_array($this->input->post('delete'))) {
+    	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Countries_model->deleteCountry($value);
 			}
 
-			$this->alert->set('success', 'Country(s) deleted sucessfully!');
+			$this->alert->set('success', 'Country(s) deleted successfully!');
 		}
 
 		return TRUE;

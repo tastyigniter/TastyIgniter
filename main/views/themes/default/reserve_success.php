@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row page-heading"><h3><?php echo $text_heading; ?></h3></div>
 <div class="row">
 	<div class="wrap-all">
@@ -17,4 +17,4 @@
 		</div>
 	</div>
 </div>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

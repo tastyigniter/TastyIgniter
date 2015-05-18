@@ -2,59 +2,44 @@
 
 class Template {
 
-	private $_module = '';
-	private $_controller = '';
-	private $_method = '';
+    private $_module = '';
+    private $_controller = '';
+    private $_method = '';
+    private $_theme = NULL;
+    private $_theme_path = NULL;
+    private $_theme_shortpath = NULL;
+    private $_theme_locations = array();
+    private $_partials = array();
+    private $_modules = array();
+    private $_title_separator = ' | ';
+    private $_data = array();
+    private $_head_tags = array();
+    private $_active_styles = '';
+    private $_breadcrumbs = array();
+    private $_breadcrumb_divider = '';
+    private $_breadcrumb_tag_open = '';
+    private $_breadcrumb_tag_close = '';
+    private $_breadcrumb_link_open = '';
+    private $_breadcrumb_link_close = '';
 
-	private $_theme = NULL;
-	private $_theme_path = NULL;
-	private $_theme_locations = array();
-	private $_theme_shortpath = NULL;
-	private $_partials = array();
+    private $CI;
 
-	private $_parser_enabled = TRUE;
-	private $_parser_body_enabled = TRUE;
-
-	private $doctype = '';
-	private $title = '';
-	private $heading = '';
-	private $breadcrumbs = array();
-	private $_breadcrumb_divider = '';
-	private $_breadcrumb_tag_open = '';
-	private $_breadcrumb_tag_close = '';
-	private $_breadcrumb_link_open = '';
-	private $_breadcrumb_link_close = '';
-
-	private $_title_separator = ' | ';
-	private $metas = array();
-	private $link_tags = array();
-	private $script_tags = array();
-	private $back_button = '';
-	private $button_list = array();
-	private $icon_list = array();
-    private $is_loaded = array();
-
-    private $error_string = '';
-
-
-	private $CI;
-
-	private $_data = array();
-
-	/**
-	 * Constructor - Sets Preferences
-	 *
-	 * The constructor can be passed an array of config values
-	 */
+    /**
+     * Constructor - Sets Preferences
+     *
+     * The constructor can be passed an array of config values
+     * @param array $config
+     */
 	public function __construct($config = array()) {
 		$this->CI =& get_instance();
 		$this->CI->load->helper('html');
+        $this->CI->load->helper('string');
 
 		if ( ! empty($config)) {
 			$this->initialize($config);
 		}
 
-		log_message('debug', 'Template Class Initialized');
+		log_message('info', 'Template Class Initialized');
 	}
 
 	public function initialize($config = array()) {
@@ -68,17 +53,7 @@ class Template {
 		// No locations set in config?
 		if ($this->_theme_locations === array()) {
 			// Let's use this obvious default
-			$this->_theme_locations = array(VIEWPATH . 'themes/');
-		}
-
-		// Theme was set
-		if ($default_theme = $this->CI->config->item(APPDIR, 'default_themes')) {
-			$this->setTheme($default_theme);
-		}
-
-		// If the parse is going to be used, best make sure it's loaded
-		if ($this->_parser_enabled === TRUE) {
-			$this->CI->load->library('parser');
+			$this->_theme_locations = array(THEMEPATH);
 		}
 
 		// Modular Separation / Modular Extensions has been detected
@@ -92,25 +67,9 @@ class Template {
 
 		// Load user agent library if not loaded
 		$this->CI->load->library('user_agent');
-
-		// We'll want to know this later
-		$this->_is_mobile	= $this->CI->agent->is_mobile();
 	}
 
     public function render($view, $data = array(), $return = FALSE) {
-
-		if ($this->_theme === '') {
-			show_error('Unable to find the requested theme configuration:');
-		}
-
-		if (!file_exists(VIEWPATH .'themes/'.$this->_theme.'/')) {
-			show_error('Unable to locate the requested theme folder');
-		}
-
-		if (!file_exists(VIEWPATH .'themes/'.$this->_theme.'/'.$view.'.php')) {
-			show_error('Unable to load the requested file: '.$view.'.php');
-		}
-
 		// Set whatever values are given. These will be available to all view files
 		is_array($data) OR $data = (array) $data;
 
@@ -120,108 +79,118 @@ class Template {
 		// We don't need you any more buddy
 		unset($data);
 
-		// Output template variables to the template
-		$template['breadcrumbs'] 	= $this->breadcrumbs; //*** future reference
+        $this->CI->load->model('Themes_model');
+        $theme_config = $this->CI->Themes_model->getConfig($this->_theme_shortpath);
 
-		foreach ($this->_partials as $partial) {
-			$template[$partial] = $this->_loadPartials($partial, $this->_data);
+         if (!empty($theme_config['head_tags'])) {
+            $this->setHeadTags($theme_config['head_tags']);
+        }
+
+        // Output template variables to the template
+		$template['title'] 	        = $this->_head_tags['title'];
+		$template['breadcrumbs'] 	= $this->_breadcrumbs; //*** future reference
+        $template['partials']	    = array();
+
+        // Set the modules for this layout using the current URI segments
+        $this->_modules = $this->_getLayoutModules();
+
+		foreach ($this->_partials as $name => $partial) {
+			$template['partials'][$name] = $this->_loadPartial($partial);
 		}
 
-		if ($this->CI->config->item('cache_mode') == '1') {
+        // Assign by reference, as all loaded views will need access to partials
+        $this->_data['template'] =& $template;
+
+        if ($this->CI->config->item('cache_mode') == '1') {
 			$this->CI->output->cache($this->CI->config->item('cache_time'));
 		}
-		// Want it returned or output to browser?
-		//if ( ! $return) {
 
-			//$this->CI->output->set_output($this->_data);
-		//}
-
-		$this->CI->load->view('themes/'.$this->_theme.'/'.$view, $this->_data + $template, $return);
-	   	//return $this->getViews($this->_partials, $view, $data);
+ 		// Want it returned or output to browser?
+		if ( ! $return) {
+            $this->CI->load->view('themes/'.$this->_theme.'/'.$view, $this->_data, FALSE);
+        } else {
+            return self::_load_view('themes/'.$this->_theme.'/'.$view, $this->_data, NULL);
+        }
     }
 
-	public function setTheme($theme = '') {
+    public function setPartials($partials = array()) {
+        foreach ($partials as $name => $data) {
+            if (is_string($data)) {
+                $name = $data;
+                $data = array();
+            }
+
+            $this->_partials[$name] = array('view' => $name, 'data' => $data);
+        }
+
+        return $this;
+    }
+
+    public function getPartials($partial = '') {
+        $partials = !empty($this->_data['template']['partials']) ? $this->_data['template']['partials'] : array();
+        return ($partial !== '' AND !empty($partials[$partial])) ? $partials[$partial] : '';
+    }
+
+    public function setTheme($theme = '') {
 		$this->_theme = trim($theme, '/');
 
-		foreach ($this->_theme_locations as $location) {
-			if ($this->_theme AND file_exists($location.$this->_theme)) {
-				$this->_theme_path = rtrim($location.$this->_theme.'/');
-				$this->_theme_shortpath = APPDIR.'/views/themes/'.$this->_theme;
-				break;
-			}
-		}
-
-		return $this;
+        if ($theme_location = $this->getThemeLocation($this->_theme)) {
+            $this->_theme_path = rtrim($theme_location . $this->_theme);
+            $this->_theme_shortpath = APPDIR . '/views/themes/' . $this->_theme;
+        }
 	}
 
-	public function setPartials($partials = array()) {
-		foreach ($partials as $partial) {
-			if (!file_exists($this->_theme_path.$partial.'.php')) {
-				show_error('Unable to load the requested partial file: '.$partial.'.php');
-			}
-		}
+    private function setHeadTags($head_tags = array()) {
+        if (!empty($head_tags)) {
+            foreach ($head_tags as $type => $value) {
+                if ($type) {
+                    $this->setHeadTag($type, $value);
+                }
+            }
+        }
+    }
 
-		$this->_partials = $partials;
-		return $this;
+    public function getDocType() {
+		return isset($this->_head_tags['doctype']) ? $this->_head_tags['doctype'] : '';
 	}
 
-	public function getDocType() {
-		return doctype($this->doctype);
+    public function getFavIcon() {
+        return isset($this->_head_tags['favicon']) ? $this->_head_tags['favicon'] : '';
 	}
 
-	public function getTitle() {
-		return $this->title;
+    public function getMetas() {
+        return is_array($this->_head_tags['meta']) ? implode("\t\t", $this->_head_tags['meta']) : '';
+    }
+
+    public function getTitle() {
+        return isset($this->_head_tags['title']) ? $this->_head_tags['title'] : '';
+    }
+
+    public function getHeading() {
+        return isset($this->_head_tags['heading']) ? $this->_head_tags['heading'] : '';
+    }
+
+    public function getBackButton() {
+        return isset($this->_head_tags['back_button']) ? $this->_head_tags['back_button'] : '';
+    }
+
+    public function getButtonList() {
+        return is_array($this->_head_tags['buttons']) ? implode("\n\t\t", $this->_head_tags['buttons']) : '';
+    }
+
+    public function getIconList() {
+        return is_array($this->_head_tags['icons']) ? implode("\n\t\t", $this->_head_tags['icons']) : '';
+    }
+
+    public function getStyleTags() {
+        return is_array($this->_head_tags['style']) ? implode("\t\t", $this->_head_tags['style']) : '';
 	}
 
-	public function getHeading() {
-		return $this->heading;
+    public function getScriptTags() {
+        return is_array($this->_head_tags['script']) ? implode("\n\t\t", $this->_head_tags['script']) : '';
 	}
 
-	public function getMetas() {
-		return meta($this->metas);
-	}
-
-	public function getLinkTags() {
-		$tags = '';
-		foreach ($this->link_tags as $link_tag) {
-			$tags .= $link_tag;
-		}
-		return $tags;
-	}
-
-	public function getCustomStyle($custom_path = '') {
-		//return $this->_customStyle($custom_path);
-	}
-
-	public function getScriptTags() {
-		$tags = '';
-		foreach ($this->script_tags as $script_tag) {
-			$tags .= $script_tag;
-		}
-		return $tags;
-	}
-
-	public function getBackButton() {
-		return $this->back_button;
-	}
-
-	public function getButtonList() {
-		$list = '';
-		foreach ($this->button_list as $button) {
-			$list .= $button;
-		}
-		return $list;
-	}
-
-	public function getIconList() {
-		$list = '';
-		foreach ($this->icon_list as $icon) {
-			$list .= $icon;
-		}
-		return $list;
-	}
-
-	public function getBreadcrumb() {
+    public function getBreadcrumb() {
 		$out = $this->_breadcrumb_tag_open;
 
 		foreach ($this->_breadcrumbs as $crumb) {
@@ -235,114 +204,311 @@ class Template {
 		return $out;
 	}
 
-	public function setDocType($doctype = '') {
-		$this->doctype = $doctype;
+    public function getActiveStyle() {
+        // Compile the customizer styles
+        $this->_active_styles = $this->_compileActiveStyle();
+
+        return $this->_active_styles . "\n\t\t";
+    }
+
+    public function setHeadTag($type = '', $tag = '') {
+        if ($type) switch ($type) {
+            case 'doctype':
+                $this->setDocType($tag);
+                break;
+            case 'favicon':
+                $this->setFavIcon($tag);
+                break;
+            case 'meta':
+                $this->setMeta($tag);
+                break;
+            case 'style':
+                $this->setStyleTag($tag);
+                break;
+            case 'script':
+                $this->setScriptTag($tag);
+                break;
+            default :
+                $this->_head_tags[$type] = $tag;
+        }
+    }
+
+    public function setDocType($doctype = '') {
+		$this->_head_tags['doctype'] = doctype($doctype). PHP_EOL;
 	}
 
-	public function setMeta($metas) {
-		$this->metas[] = $metas;
+    public function setFavIcon($href = '') {
+        if ($href != '' AND is_string($href)) {
+            $this->_head_tags['favicon'] = link_tag($this->prepUrl($href), 'shortcut icon', 'image/ico');
+        }
+    }
+
+    public function setMeta($metas = array()) {
+		$metas = meta($metas);
+        array_unshift($this->_head_tags['meta'], $metas);
 	}
 
-	public function setLinkTag($href = '', $rel = 'stylesheet', $type = 'text/css') {
-		if ($href != '') {
-			$href = $this->_theme_shortpath .'/'. $href;
-			$this->link_tags[] = link_tag(root_url($href), $rel, $type);
-		}
+    public function setTitle() {
+        if (func_num_args() >= 1) {
+            $this->_head_tags['title'] = implode($this->_title_separator, func_get_args());
+        }
+    }
+
+    public function setHeading($heading = '') {
+        $this->_head_tags['heading'] = $heading;
+    }
+
+    public function setBackButton($class, $href) {
+        $this->_head_tags['back_button'] = '<a class="'.$class.'" href="'. $this->prepUrl($href) .'"><b class="fa fa-caret-left"></b></a>';
+    }
+
+    public function setButton($name, $attributes = array()) {
+        $attr = '';
+        foreach ($attributes as $key => $value) {
+            $attr .= ' '. $key .'="'. $value .'"';
+        }
+
+        $this->_head_tags['buttons'][] = '<a'.$attr.'>'.$name.'</a>';
+    }
+
+    public function setIcon($icon) {
+        $this->_head_tags['icons'][] = $icon;
+    }
+
+    public function setStyleTag($href = '', $name = '', $priority = NULL) {
+        if ( ! is_array($href)) {
+            $href = array($priority => array('href' => $href, 'name' => $name, 'rel' => 'stylesheet', 'type' => 'text/css'));
+        } else if (isset($href[0]) AND is_string($href[0])) {
+            $name = (isset($href[1])) ? $href[1] : '';
+            $priority = (isset($href[2])) ? $href[2] : '';
+
+            $href = array($priority => array('href' => $href[0], 'name' => $name, 'rel' => 'stylesheet', 'type' => 'text/css'));
+        } else if (isset($href['href'])) {
+            $priority = (isset($href['priority'])) ? $href['priority'] : '';
+            unset($href['priority']);
+            $href = array($priority => $href);
+        }
+
+        foreach ($href as $priority => $tag) {
+            if (isset($tag['href'])) {
+                $tag['href'] = $this->prepUrl($tag['href']);
+                if (!empty($tag['name'])) {
+                    $tag['id'] = $tag['name'];
+                }
+
+                unset($tag['name']);
+                $priority = (empty($priority)) ? random_string('numeric', 4) : $priority;
+                $this->_head_tags['style'][$priority] = link_tag($tag);
+                ksort($this->_head_tags['style']);
+            } else {
+                $this->setStyleTag($tag);
+            }
+        }
+    }
+
+    public function setScriptTag($href = '', $name = '', $priority = NULL) {
+        $charset = strtolower($this->CI->config->item('charset'));
+        if ( ! is_array($href)) {
+            $href = array($priority => array('src' => $href, 'name' => $name, 'charset' => $charset, 'type' => 'text/javascript'));
+        } else if (isset($href[0]) AND is_string($href[0])) {
+            $href[1] = (isset($href[1])) ? $href[1] : '';
+            $priority = (isset($href[2])) ? $href[2] : '';
+
+            $href = array($priority => array('src' => $href[0], 'name' => $href[1], 'charset' => $charset, 'type' => 'text/javascript'));
+        } else if (isset($href['src'])) {
+            $priority = (isset($href['priority'])) ? $href['priority'] : '';
+            unset($href['priority']);
+            $href = array($priority => $href);
+        }
+
+        foreach ($href as $priority => $tag) {
+            if (isset($tag['src'])) {
+                $tag['src'] = $this->prepUrl($tag['src']);
+
+                if (!empty($tag['name'])) {
+                    $tag['id'] = $tag['name'];
+                }
+                unset($tag['name']);
+
+                $script_tag = '';
+                foreach ($tag as $k => $v) {
+                    $script_tag .= $k.'="'.$v.'" ';
+                }
+
+                $priority = (empty($priority)) ? random_string('numeric', 4) : $priority;
+                $this->_head_tags['script'][$priority] = '<script ' . $script_tag . '></script>';
+                ksort($this->_head_tags['script']);
+            } else {
+                $this->setScriptTag($tag);
+            }
+        }
 	}
 
-	public function setScriptTag($href = '') {
-		if ($href != '') {
-			$href = $this->_theme_shortpath .'/'. $href;
-			$script_tag = '<script type="text/javascript" charset="'.strtolower($this->CI->config->item('charset')).'"';
-			$script_tag .= ($href == '') ? '>' : ' src="'.root_url($href).'">';
-			$script_tag .= '</script>';
-			$this->script_tags[] = $script_tag;
-		}
-	}
-
-	public function setTitle($title) {
-		$this->title = $title;
-	}
-
-	public function setHeading($heading) {
-		$this->heading = $heading;
-	}
-
-	public function setBackButton($class, $href) {
-		$this->back_button = '<a class="'.$class.'" href="'.$href.'"><b class="fa fa-caret-left"></b></a>';
-	}
-
-	public function setButton($name, $attributes = array()) {
-		$attr = '';
-		foreach ($attributes as $key => $value) {
-			$attr .= ' '. $key .'="'. $value .'"';
-		}
-
-		$this->button_list[] = '<a'.$attr.'>'.$name.'</a>';
-	}
-
-	public function setIcon($icon) {
-		$this->icon_list[] = $icon;
-	}
-
-	/**
-	 * Helps build breadcrumb links
-	 *
-	 * @access	public
-	 * @param	string	$name		What will appear as the link text
-	 * @param	string	$url_ref	The URL segment
-	 * @return	void
-	 */
 	public function setBreadcrumb($name, $uri = '') {
 		$this->_breadcrumbs[] = array('name' => $name, 'uri' => $uri );
 		return $this;
 	}
 
-	private function _loadPartials($view, $data = array()) {
+    public function getThemeLocation($theme = NULL) {
+        $theme OR $theme = $this->_theme;
+
+        foreach ($this->_theme_locations as $location) {
+            if (is_dir($location . $theme)) {
+                return $location;
+            }
+        }
+
+        return FALSE;
+    }
+
+    private function _loadPartial($partial = array()) {
 		$partial_contents = array('content_top', 'content_bottom', 'content_right', 'content_left');
-		if ( ! empty($this->_theme)) {
-			$modules = array();
+		if (isset($partial['view'])) {
+            // We can only work with data arrays
+            is_array($partial['data']) OR $partial['data'] = (array) $partial['data'];
 
-			foreach ($this->_theme_locations as $location) {
-				$theme_view = 'themes/' . $this->_theme .'/'. $view;
+            if (in_array($partial['view'], $partial_contents)) {
+                $position = explode('_', $partial['view']);
+                $partial['data']['module_position'] = $position = isset($position[1]) ? $position[1] : '';
 
-				if (file_exists($location . $this->_theme .'/'. $view . '.php')) {
-					if (in_array($view, $partial_contents)) {
-						$this->CI->load->library('extension');
+                // We stop here if no module was found.
+                if (empty($this->_modules[$position])) return NULL;
 
-						$partial = explode('_', $view);
-						$data['module_position'] = $position = isset($partial[1]) ? $partial[1] : '';
+                foreach ($this->_modules[$position] as $module) {
+                    $partial['data'][$position.'_modules'][] = Modules::run($module['name'] .'/'. $module['name'] .'/index', $this->_data + $module['data']);
+                }
+            }
 
-						$modules = $this->CI->Extensions_model->getModulesByPosition($position, $this->CI->uri->segment_array());
-
-						if (!empty($modules)) {
-							foreach ($modules as $module) {
-								$data[$position.'_modules'][] = Modules::run($module['name'] .'/'. $module['name'] .'/index', $data + $module['ext_data']);
-							}
-						} else {
-							return NULL;
-						}
-					}
-
-					return $this->CI->load->view($theme_view, $data, TRUE);
-				}
-			}
+            return $this->_find_view($partial['view'], $partial['data']);
 		}
 	}
 
-	private function _customStyle($custom_path = '') {
-		$href = $this->_theme_shortpath .'/'. $custom_path;
+    private function _getLayoutModules() {
+        $this->CI->load->model('Design_model');
+        $this->CI->load->model('Extensions_model');
 
-		if (file_exists($href) AND is_file($href)) {
-			$active_style = (strtolower(APPDIR) === 'main') ? $this->CI->config->item('main_active_style') : $this->CI->config->item('admin_active_style');
+        $layout_id = $this->_getLayout();
 
-			if (!empty($active_style) and is_array($active_style)) {
-				//include($href);
-				$custom_style_path = 'themes/' . $this->_theme .'/'. $custom_path;
-				return $this->CI->load->view($custom_style_path, $active_style, TRUE);
-			}
-		}
+        $layout_modules = $this->CI->Design_model->getLayoutModules($layout_id);
+        $modules = $this->CI->Extensions_model->getModules();
+
+        $_modules = array();
+        foreach ($layout_modules as $layout_module) {
+            if (isset($layout_module['module_code']) AND !empty($modules[$layout_module['module_code']])) {
+                $module = $modules[$layout_module['module_code']];
+
+                // layouts key not needed anymore.
+                unset($module['ext_data']['layouts']);
+
+                if ($module['name'] === $layout_module['module_code'] AND $layout_module['status'] === '1') {
+                    $_modules[$layout_module['position']][] = array(
+                        'name'			=> $module['name'],
+                        'title'			=> $module['title'],
+                        'layout_id'		=> $layout_module['layout_id'],
+                        'position'		=> $layout_module['position'],
+                        'priority'		=> $layout_module['priority'],
+                        'data'		    => $module['ext_data'],
+                    );
+                }
+
+            }
+        }
+
+        return $_modules;
+    }
+
+    private function _find_view($view, array $data) {
+        if ( ! empty($this->_theme)) {
+            $view_path = NULL;
+            foreach ($this->_theme_locations as $location) {
+                $theme_views = array(
+                    $this->_theme . '/layouts/' . $view,
+                    $this->_theme . '/partials/' . $view,
+                    $this->_theme . '/modules/' . $this->_module . '/' . $view,
+                    $this->_theme . '/' . $view
+                );
+                foreach ($theme_views as $theme_view) {
+                    if (file_exists($location . $theme_view . '.php')) {
+                        return self::_load_view($theme_view, $this->_data + $data, $location);
+                    }
+                }
+
+            }
+        }
+
+        if ( empty($this->_theme)) {
+            show_error('Unable to load the requested theme file: '. $view);
+        }
+
+        // Not found it yet? Just load, its either in the module or root view
+        return self::_load_view($view, $this->_data + $data);
+    }
+
+    private function _load_view($view, array $data, $override_view_path = NULL) {
+        if ($override_view_path !== NULL) {
+            $this->CI->load->vars($data);
+
+            // Load it directly, bypassing $this->load->view() as ME resets _ci_view
+            $content = $this->CI->load->file($override_view_path . $view . '.php', TRUE);
+
+        } else {// Can just run as usual
+            // Grab the content of the view
+            $content = $this->CI->load->view($view, $data, TRUE);
+        }
+
+        return $content;
+    }
+
+    private function _compileActiveStyle($content = '') {
+        $active_styles = (strtolower(APPDIR) === MAINDIR) ? $this->CI->config->item(MAINDIR, 'customizer_active_style') : $this->CI->config->item(ADMINDIR, 'customizer_active_style');
+        if (!empty($active_styles) and is_array($active_styles)) {
+            if (isset($active_styles[0]) AND $active_styles[0] === $this->_theme) {
+                $data = (isset($active_styles[1]) AND is_array($active_styles[1])) ? $active_styles[1] : array();
+                $content = $this->_find_view('stylesheet', $data);
+            }
+        }
+
+        return $content;
 	}
+
+    private function prepUrl($href) {
+        if (!preg_match('#^(\w+:)?//#i', $href)) {
+            $href = root_url($this->_theme_shortpath . '/' . $href);
+        }
+
+        return $href;
+    }
+
+    public function __get($name) {
+        return isset($this->_data[$name]) ? $this->_data[$name] : NULL;
+    }
+
+    private function _getLayout() {
+        $segments = array_merge($this->CI->uri->segment_array(), array('end'), $this->CI->uri->rsegment_array());
+
+        if (APPDIR === ADMINDIR OR empty($segments) OR !is_array($segments)) return;
+
+        $uri_route = $layout_id = '';
+        foreach ($segments as $segment) {
+            if ($segment === 'end') $uri_route = '';
+
+            if ($segment === 'index' OR $segment === 'end') continue;
+
+            $uri_route = ($uri_route === '') ? $segment : $uri_route.'/'.$segment;
+
+            if ($segment === 'pages') {
+                $layout_id = $this->CI->Design_model->getPageLayoutId((int)$this->CI->input->get('page_id'));
+            } else if ($uri_route !== '') {
+                $layout_id = $this->CI->Design_model->getRouteLayoutId($uri_route);
+            }
+
+            // Lets break the look if a layout was found.
+            if (!empty($layout_id)) return $layout_id;
+        }
+
+        // We return null if no layout was found.
+        return NULL;
+    }
 }
 
 // END Template Class

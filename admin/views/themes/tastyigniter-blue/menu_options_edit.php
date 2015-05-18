@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
@@ -12,14 +12,14 @@
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Name:</label>
+						<label for="input-name" class="col-sm-3 control-label">Name:</label>
 						<div class="col-sm-5">
 							<input type="text" name="option_name" id="input-name" class="form-control" value="<?php echo set_value('option_name', $option_name); ?>" />
 							<?php echo form_error('option_name', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-display-type" class="col-sm-2 control-label">Display Type:</label>
+						<label for="input-display-type" class="col-sm-3 control-label">Display Type:</label>
 						<div class="col-sm-5">
 							<select name="display_type" id="input-display-type" class="form-control">
 								<?php if ($display_type == 'radio') { ?>
@@ -42,7 +42,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-priority" class="col-sm-2 control-label">Priority:</label>
+						<label for="input-priority" class="col-sm-3 control-label">Priority:</label>
 						<div class="col-sm-5">
 							<input type="text" name="priority" id="input-priority" class="form-control" value="<?php echo set_value('priority', $priority); ?>" />
 							<?php echo form_error('priority', '<span class="text-danger">', '</span>'); ?>
@@ -135,4 +135,4 @@ $(function () {
 	})
 })
 //--></script>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

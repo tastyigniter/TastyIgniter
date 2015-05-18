@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
 		<div class="panel panel-default panel-table">
@@ -105,7 +105,7 @@
 							<td><?php echo $order['order_id']; ?></td>
 							<td><?php echo $order['location_name']; ?></td>
 							<td><?php echo $order['first_name'] .' '. $order['last_name']; ?></td>
-							<td><?php echo $order['order_status']; ?></td>
+                            <td><span class="label label-default" style="background-color: <?php echo $order['status_color']; ?>;"><?php echo $order['order_status']; ?></span></td>
 							<td><?php echo $order['order_type']; ?></td>
 							<td><?php echo $order['order_total']; ?></td>
 							<td class="text-center"><?php echo $order['date_added']; ?> - <?php echo $order['order_time']; ?></td>
@@ -133,4 +133,4 @@ function filterList() {
 	$('#filter-form').submit();
 }
 //--></script>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

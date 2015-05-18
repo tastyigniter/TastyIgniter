@@ -9,14 +9,6 @@ class Security_questions extends Admin_Controller {
 	}
 
 	public function index() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'security_questions')) {
-  			redirect('permission');
-		}
-
 		$this->template->setTitle('Security Questions');
 		$this->template->setHeading('Security Questions');
 		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
@@ -48,16 +40,13 @@ class Security_questions extends Admin_Controller {
 	}
 
 	public function _updateSecurityQuestion() {
-    	if (!$this->user->hasPermissions('modify', 'security_questions')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to update!');
-			return TRUE;
-    	} else if ($this->input->post('questions') AND $this->validateForm() === TRUE) {
+    	if ($this->input->post('questions') AND $this->validateForm() === TRUE) {
 			$questions = $this->input->post('questions');
 
 			if ($this->Security_questions_model->updateQuestions($questions)) {
-				$this->alert->set('success', 'Security Question updated sucessfully.');
+				$this->alert->set('success', 'Security Question updated successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing updated.');
 			}
 
 			return TRUE;

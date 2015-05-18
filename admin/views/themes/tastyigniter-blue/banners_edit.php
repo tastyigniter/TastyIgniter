@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
@@ -11,14 +11,14 @@
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Name:</label>
+						<label for="input-name" class="col-sm-3 control-label">Name:</label>
 						<div class="col-sm-5">
 							<input type="text" name="name" id="input-name" class="form-control" value="<?php echo set_value('name', $name); ?>" />
 							<?php echo form_error('name', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-type" class="col-sm-2 control-label">Type:</label>
+						<label for="input-type" class="col-sm-3 control-label">Type:</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle btn-group-3" data-toggle="buttons">
 								<?php if ($type == 'image') { ?>
@@ -42,16 +42,16 @@
 					</div>
 					<div id="image-type" class="type">
 						<div class="form-group">
-							<label for="" class="col-sm-2 control-label">Image:</label>
+							<label for="" class="col-sm-3 control-label">Image:</label>
 							<div class="col-sm-5">
 								<div class="thumbnail imagebox" id="selectImage">
 									<div class="preview"><img src="<?php echo $image['url']; ?>" class="thumb img-responsive" id="thumb"></div>
 									<div class="caption">
-										<center class="name"><?php echo $image['name']; ?></center>
+										<span class="name text-center"><?php echo $image['name']; ?></span>
 										<input type="hidden" name="image_path" value="<?php echo set_value('image_path', $image['path']); ?>" id="field" />
 										<p>
-											<a id="select-image" class="btn btn-primary" onclick="imageUpload('field');"><i class="fa fa-picture-o"></i>&nbsp;&nbsp;Select</a>
-											<a class="btn btn-danger" onclick="$('#thumb').attr('src', '<?php echo $no_photo; ?>'); $('#field').attr('value', 'data/no_photo.png'); $(this).parent().parent().find('center').html('no_photo.png');"><i class="fa fa-times-circle"></i>&nbsp;&nbsp;Remove</a>
+											<a id="select-image" class="btn btn-primary" onclick="mediaManager('field');"><i class="fa fa-picture-o"></i>&nbsp;&nbsp;Select</a>
+											<a class="btn btn-danger" onclick="$('#thumb').attr('src', '<?php echo $no_photo; ?>'); $('#field').attr('value', 'data/no_photo.png'); $(this).parent().parent().find('.name').html('no_photo.png');"><i class="fa fa-times-circle"></i>&nbsp;&nbsp;Remove</a>
 										</p>
 									</div>
 								</div>
@@ -61,7 +61,7 @@
 					</div>
 					<div id="carousel-type" class="type">
 						<div class="form-group">
-							<label for="" class="col-sm-2 control-label">Images:</label>
+							<label for="" class="col-sm-3 control-label">Images:</label>
 							<div class="col-sm-7">
 								<ul class="thumbnail-list">
 								<?php $image_row = 0; ?>
@@ -73,10 +73,10 @@
 													<img src="<?php echo $carousel['url']; ?>" class="thumb img-responsive" id="thumb<?php echo $image_row; ?>" />
 												</div>
 												<div class="caption">
-													<center class="name"><?php echo $carousel['name']; ?></center>
+													<span class="name text-center"><?php echo $carousel['name']; ?></span>
 													<input type="hidden" name="carousels[<?php echo $image_row; ?>]" value="<?php echo $carousel['path']; ?>" id="field<?php echo $image_row; ?>" />
 													<p>
-														<a id="select-image" class="btn btn-primary" onclick="imageUpload('field<?php echo $image_row; ?>');"><i class="fa fa-picture-o"></i>&nbsp;&nbsp;Select</a>
+														<a id="select-image" class="btn btn-primary" onclick="mediaManager('field<?php echo $image_row; ?>');"><i class="fa fa-picture-o"></i>&nbsp;&nbsp;Select</a>
 														<a class="btn btn-danger" onclick="$(this).parent().parent().parent().remove();"><i class="fa fa-times-circle"></i>&nbsp;&nbsp;Remove</a>
 													</p>
 												</div>
@@ -97,20 +97,7 @@
 					</div>
 					<div id="image-type-extra" class="type">
 						<div class="form-group">
-							<label for="" class="col-sm-2 control-label">Dimension:
-								<span class="help-block">(Height x Width)</span>
-							</label>
-							<div class="col-sm-5">
-								<div class="control-group control-group-2">
-									<input type="text" name="image_height" class="form-control" value="<?php echo $image_height; ?>" />
-									<input type="text" name="image_width" class="form-control" value="<?php echo $image_width; ?>" />
-								</div>
-								<?php echo form_error('image_height', '<span class="text-danger">', '</span>'); ?>
-								<?php echo form_error('image_width', '<span class="text-danger">', '</span>'); ?>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="input-alt-text" class="col-sm-2 control-label">Alternative Text:</label>
+							<label for="input-alt-text" class="col-sm-3 control-label">Alternative Text:</label>
 							<div class="col-sm-5">
 								<input type="text" name="alt_text" id="input-alt-text" class="form-control" value="<?php echo set_value('alt_text', $alt_text); ?>" />
 								<?php echo form_error('alt_text', '<span class="text-danger">', '</span>'); ?>
@@ -119,7 +106,7 @@
 					</div>
 					<div id="custom-type" class="type">
 						<div class="form-group">
-							<label for="input-custom-code" class="col-sm-2 control-label">Custom Code:</label>
+							<label for="input-custom-code" class="col-sm-3 control-label">Custom Code:</label>
 							<div class="col-sm-5">
 								<textarea name="custom_code" id="input-custom-code" class="form-control" rows="7"><?php echo set_value('custom_code', $custom_code); ?></textarea>
 								<?php echo form_error('custom_code', '<span class="text-danger">', '</span>'); ?>
@@ -128,14 +115,14 @@
 					</div>
 					<div class="clearfix"></div>
 					<div class="form-group">
-						<label for="input-click-url" class="col-sm-2 control-label">Click URL:</label>
+						<label for="input-click-url" class="col-sm-3 control-label">Click URL:</label>
 						<div class="col-sm-5">
 							<input type="text" name="click_url" id="input-click-url" class="form-control" value="<?php echo set_value('click_url', $click_url); ?>" />
 							<?php echo form_error('click_url', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Language:</label>
+						<label for="input-name" class="col-sm-3 control-label">Language:</label>
 						<div class="col-sm-5">
 							<select name="language_id" id="input-language" class="form-control">
 								<?php foreach ($languages as $language) { ?>
@@ -150,7 +137,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-status" class="col-sm-2 control-label">Status:</label>
+						<label for="input-status" class="col-sm-3 control-label">Status:</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($status == '1') { ?>
@@ -181,34 +168,6 @@ $('input[name="type"]').on('change', function() {
 
 $('input[name=\'type\']').trigger('change');
 //--></script>
-<link type="text/css" rel="stylesheet" href="<?php echo root_url("assets/js/fancybox/jquery.fancybox.css"); ?>">
-<script src="<?php echo root_url("assets/js/fancybox/jquery.fancybox.js"); ?>"></script>
-<script type="text/javascript"><!--
-function imageUpload(field) {
-	$('#image-manager').remove();
-
-	var iframe_url = js_site_url('image_manager?popup=iframe&field_id=') + encodeURIComponent(field);
-
-	$('body').append('<div id="image-manager" style="padding: 3px 0px 0px 0px;"><iframe src="'+ iframe_url +'" width="980" height="550" frameborder="0"></iframe></div>');
-
-	$.fancybox({
- 		href:"#image-manager",
-		autoScale: false,
-		afterClose: function() {
-			if ($('#' + field).attr('value')) {
-				$.ajax({
-					url: js_site_url('image_manager/resize?image=') + encodeURIComponent($('#' + field).attr('value')) + '&width=120&height=120',
-					dataType: 'json',
-					success: function(json) {
-						var thumb = $('#' + field).parent().parent().find('.thumb');
-						$(thumb).replaceWith('<img src="' + json + '" alt="" class="thumb img-responsive" />');
-					}
-				});
-			}
-		}
-	});
-};
-//--></script>
 <script type="text/javascript"><!--
 var image_row = <?php echo $image_row; ?>;
 
@@ -219,9 +178,9 @@ function addImage() {
 	html += '	</div>';
 	html += '	<div class="caption">';
 	html += '		<input type="hidden" name="carousels[' + image_row + ']" value="data/no_photo.png" id="field' + image_row + '" />';
-	html += '		<center class="name">no_photo.png</center>';
+	html += '		<span class="name text-center">no_photo.png</span>';
 	html += '		<p>';
-	html += '			<a id="select-image" class="btn btn-primary" onclick="imageUpload(\'field' + image_row + '\');"><i class="fa fa-picture-o"></i>&nbsp;&nbsp;Select</a>';
+	html += '			<a id="select-image" class="btn btn-primary" onclick="mediaManager(\'field' + image_row + '\');"><i class="fa fa-picture-o"></i>&nbsp;&nbsp;Select</a>';
 	html += '			<a class="btn btn-danger" onclick="$(this).parent().parent().parent().remove();"><i class="fa fa-times-circle"></i>&nbsp;&nbsp;Remove</a>';
 	html += '		</p>';
 	html += '	</div>';
@@ -232,4 +191,4 @@ function addImage() {
 	image_row++;
 }
 //--></script>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

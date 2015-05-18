@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
 		<div class="col-md-4 center-block float-none">
@@ -37,4 +37,4 @@ $(document).ready(function() {
 	$('body').addClass('body-login');
 });
 //--></script>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

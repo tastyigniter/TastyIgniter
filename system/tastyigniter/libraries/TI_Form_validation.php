@@ -56,16 +56,15 @@ class TI_Form_validation extends CI_Form_validation
     // --------------------------------------------------------------------
 
     /**
-     * Is Numeric
+     * XSS Clean
      *
-     * @access  public
-     * @param   string
-     * @return  bool
+     * @param	string
+     * @return	string
      */
-    /*public function is_numeric($str)
+    public function xss_clean($str)
     {
-        return ( ! is_numeric($str)) ? FALSE : TRUE;
-    }*/
+        return $this->CI->security->xss_clean($str);
+    }
 
     // --------------------------------------------------------------------
 

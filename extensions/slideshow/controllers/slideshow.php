@@ -12,12 +12,6 @@ class Slideshow extends Ext_Controller {
 			show_404(); 																		// Whoops, show 404 error page!
 		}
 
-		if ($this->session->flashdata('alert')) {
-			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
-		} else {
-			$data['alert'] = '';
-		}
-
 		if (!empty($ext_data)) {
 			$result = $ext_data;
 		} else {
@@ -47,7 +41,7 @@ class Slideshow extends Ext_Controller {
 		}
 
 		// pass array $data and load view files
-		$this->load->view('slideshow/slideshow', $data);
+		return $this->load->view('slideshow/slideshow', $data, TRUE);
 	}
 }
 

@@ -70,7 +70,7 @@ class CI_Config {
 	 * @used-by	CI_Loader
 	 * @var		array
 	 */
-	public $_config_paths =	array(IGNITEPATH);
+    public $_config_paths = array(APPPATH);
 
 	/**
 	 * Class constructor

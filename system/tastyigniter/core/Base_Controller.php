@@ -14,22 +14,24 @@ class Base_Controller extends MX_Controller {
     {
         parent::__construct();
 
-        log_message('debug', 'Base Controller Class Initialized');
+        log_message('info', 'Base Controller Class Initialized');
 
         $this->load->library('alert');
+
+        $this->config->load_db_config();
 
         // Load system settings
         $this->load->library('setting');
 
         // Load session
-        $this->load->driver('session');
+//        $this->load->driver('session');
+        $this->load->library('session');
 
-        if ($this->config->item('ti_version') !== 'v1.3-beta' AND APPDIR !== 'setup') {
-            redirect(root_url('setup/'));
-        }
 
-        if ($this->config->item('maintenance_mode') === '1') {  													// if customer is not logged in redirect to account login page
-            $this->setting->setMaintainance();
+//        $this->load->library('extension');
+        if (method_exists( $this->router, 'fetch_module' ) AND $this->router->fetch_module()) {
+//            var_dump('is_module');var_dump($this->router->fetch_module());
+//            $this->setting->setModule($this->router->fetch_module());
         }
 
         $this->form_validation->CI =& $this;

@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
@@ -18,13 +18,13 @@
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="" class="col-sm-2 control-label">Order ID:</label>
+						<label for="" class="col-sm-3 control-label">Order ID:</label>
 						<div class="col-sm-5">
 							#<?php echo $order_id; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Name:</label>
+						<label for="input-name" class="col-sm-3 control-label">Name:</label>
 						<div class="col-sm-5">
 							<?php if (!empty($customer_id)) { ?>
 								<a href="<?php echo $customer_edit; ?>"><?php echo $first_name; ?> <?php echo $last_name; ?></a>
@@ -34,55 +34,55 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Email:</label>
+						<label for="input-name" class="col-sm-3 control-label">Email:</label>
 						<div class="col-sm-5">
 							<?php echo $email; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Telephone:</label>
+						<label for="input-name" class="col-sm-3 control-label">Telephone:</label>
 						<div class="col-sm-5">
 							<?php echo $telephone; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Order Type:</label>
+						<label for="input-name" class="col-sm-3 control-label">Order Type:</label>
 						<div class="col-sm-5">
 							<?php echo $order_type; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Delivery/Collection Time:</label>
+						<label for="input-name" class="col-sm-3 control-label">Delivery/Collection Time:</label>
 						<div class="col-sm-5">
 							<?php echo $order_time; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Order Date:</label>
+						<label for="input-name" class="col-sm-3 control-label">Order Date:</label>
 						<div class="col-sm-5">
 							<?php echo $date_added; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Total:</label>
+						<label for="input-name" class="col-sm-3 control-label">Total:</label>
 						<div class="col-sm-5">
 							<?php echo $order_total; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Comment:</label>
+						<label for="input-name" class="col-sm-3 control-label">Comment:</label>
 						<div class="col-sm-5">
 							<?php echo $comment; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Date Modified:</label>
+						<label for="input-name" class="col-sm-3 control-label">Date Modified:</label>
 						<div class="col-sm-5">
 							<?php echo $date_modified; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Notified Customer:</label>
+						<label for="input-name" class="col-sm-3 control-label">Notified Customer:</label>
 						<div class="col-sm-5">
 							<?php if ($notify === '1') { ?>
 								Email SENT
@@ -92,13 +92,13 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">IP Address:</label>
+						<label for="input-name" class="col-sm-3 control-label">IP Address:</label>
 						<div class="col-sm-5">
 							<?php echo $ip_address; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">User Agent:</label>
+						<label for="input-name" class="col-sm-3 control-label">User Agent:</label>
 						<div class="col-sm-5">
 							<?php echo $user_agent; ?>
 						</div>
@@ -107,7 +107,7 @@
 
 				<div id="status" class="tab-pane row wrap-all">
 					<div class="form-group">
-						<label for="input-assign-staff" class="col-sm-2 control-label">Assign Staff:</label>
+						<label for="input-assign-staff" class="col-sm-3 control-label">Assign Staff:</label>
 						<div class="col-sm-5">
 							<select name="assignee_id" class="form-control">
 								<option value=""> - please select - </option>
@@ -123,7 +123,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Order Status:</label>
+						<label for="input-name" class="col-sm-3 control-label">Order Status:</label>
 						<div class="col-sm-5">
 							<select name="order_status" id="" class="form-control" onChange="getStatusComment();">
 							<?php foreach ($statuses as $status) { ?>
@@ -138,14 +138,14 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Status Comment:</label>
+						<label for="input-name" class="col-sm-3 control-label">Status Comment:</label>
 						<div class="col-sm-5">
 							<textarea name="status_comment" id="" class="form-control" rows="5" cols="45"><?php echo set_value('status_comment'); ?></textarea>
 							<?php echo form_error('status_comment', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label">Notify Customer:</label>
+						<label class="col-sm-3 control-label">Notify Customer:</label>
 						<div class="col-sm-5">
 							<div id="input-notify" class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($notify == '1') { ?>
@@ -206,13 +206,13 @@
 
 				<div id="restaurant" class="tab-pane row wrap-all">
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Name:</label>
+						<label for="input-name" class="col-sm-3 control-label">Name:</label>
 						<div class="col-sm-5">
 							<?php echo $location_name; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Address:</label>
+						<label for="input-name" class="col-sm-3 control-label">Address:</label>
 						<div class="col-sm-5">
 							<address><?php echo $location_address; ?></address>
 						</div>
@@ -222,7 +222,7 @@
 				<?php if ($check_order_type === '1') { ?>
 				<div id="delivery-address" class="tab-pane row wrap-all">
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Address:</label>
+						<label for="input-name" class="col-sm-3 control-label">Address:</label>
 						<div class="col-sm-5">
 							<address><?php echo $customer_address; ?></address>
 						</div>
@@ -232,7 +232,7 @@
 
 				<div id="payment" class="tab-pane row wrap-all">
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Payment Method:</label>
+						<label for="input-name" class="col-sm-3 control-label">Payment Method:</label>
 						<div class="col-sm-5">
 							<?php echo $payment; ?>
 							<?php if ($paypal_details) { ?>
@@ -327,4 +327,4 @@ function getStatusComment() {
 
 $('select[name="order_status"]').trigger('change');
 //--></script>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

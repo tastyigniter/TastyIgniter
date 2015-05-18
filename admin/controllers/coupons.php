@@ -10,14 +10,6 @@ class Coupons extends Admin_Controller {
 	}
 
 	public function index() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'coupons')) {
-  			redirect('permission');
-		}
-
 		$url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
@@ -121,20 +113,6 @@ class Coupons extends Admin_Controller {
 	}
 
 	public function edit() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'coupons')) {
-  			redirect('permission');
-		}
-
-		if ($this->session->flashdata('alert')) {
-			$data['alert'] = $this->session->flashdata('alert');  // retrieve session flashdata variable if available
-		} else {
-			$data['alert'] = '';
-		}
-
 		$coupon_info = $this->Coupons_model->getCoupon((int) $this->input->get('id'));
 
 		if ($coupon_info) {
@@ -229,10 +207,7 @@ class Coupons extends Admin_Controller {
 	}
 
 	public function _addCoupon() {
-    	if (!$this->user->hasPermissions('modify', 'coupons')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to add!');
-  			return TRUE;
-    	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$add = array();
 
 			$add['name'] 					= $this->input->post('name');
@@ -268,9 +243,9 @@ class Coupons extends Admin_Controller {
 			}
 
 			if ($_POST['insert_id'] = $this->Coupons_model->addCoupon($add)) {
-				$this->alert->set('success', 'Coupon added sucessfully.');
+				$this->alert->set('success', 'Coupon added successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing updated.');
 			}
 
 			return TRUE;
@@ -278,10 +253,7 @@ class Coupons extends Admin_Controller {
 	}
 
 	public function _updateCoupon() {
-    	if (!$this->user->hasPermissions('modify', 'coupons')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to update!');
-  			return TRUE;
-    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$update = array();
 
 			$update['coupon_id'] 			= $this->input->get('id');
@@ -295,10 +267,10 @@ class Coupons extends Admin_Controller {
 			$update['description'] 			= $this->input->post('description');
 			$update['validity'] 			= $this->input->post('validity');
 			$validity_times 				= $this->input->post('validity_times');
-			$update['fixed_date'] 			= $validity_times['fixed_date'];
-			$update['period_start_date'] 	= $validity_times['period_start_date'];
-			$update['period_end_date'] 		= $validity_times['period_end_date'];
-			$update['recurring_every'] 		= $validity_times['recurring_every'];
+			$update['fixed_date'] 			= isset($validity_times['fixed_date']) ? $validity_times['fixed_date'] : '';
+			$update['period_start_date'] 	= isset($validity_times['period_start_date']) ? $validity_times['period_start_date'] : '';
+			$update['period_end_date'] 		= isset($validity_times['period_end_date']) ? $validity_times['period_end_date'] : '';
+			$update['recurring_every'] 		= isset($validity_times['recurring_every']) ? $validity_times['recurring_every'] : '';
 			$update['status'] 				= $this->input->post('status');
 
 			if ($this->input->post('fixed_time') !== '24hours') {
@@ -318,9 +290,9 @@ class Coupons extends Admin_Controller {
 			}
 
 			if ($this->Coupons_model->updateCoupon($update)) {
-				$this->alert->set('success', 'Coupon updated sucessfully.');
+				$this->alert->set('success', 'Coupon updated successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing updated.');
 			}
 
 			return TRUE;
@@ -328,14 +300,12 @@ class Coupons extends Admin_Controller {
 	}
 
 	public function _deleteCoupon() {
-    	if (!$this->user->hasPermissions('modify', 'coupons')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to delete!');
-    	} else if (is_array($this->input->post('delete'))) {
+    	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Coupons_model->deleteCoupon($value);
 			}
 
-			$this->alert->set('success', 'Coupon(s) deleted sucessfully!');
+			$this->alert->set('success', 'Coupon(s) deleted successfully!');
 		}
 
 		return TRUE;

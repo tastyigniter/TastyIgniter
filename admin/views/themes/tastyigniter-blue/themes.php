@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
 		<div class="panel panel-default panel-table">
@@ -13,7 +13,6 @@
 								<th></th>
 								<th>Name</th>
 								<th class="text-center"></th>
-								<th class="text-right">Location</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -23,7 +22,8 @@
 								<td><a class="preview-thumb" title="Click to enlarge." href="<?php echo $theme['preview']; ?>">
 									<img class="img-responsive img-thumbnail" alt="" src="<?php echo $theme['thumbnail']; ?>" style="height:150px !important" /></td>
 								<td><?php echo $theme['title']; ?><br />
-									<i><?php echo $theme['desc']; ?></i>
+									<i><?php echo $theme['description']; ?></i><br />
+                                    <span class="text-mute text-sm"><b>Location:</b> <?php echo $theme['location']; ?></span>
 								</td>
 								<td class="text-center">
 									<?php if ($theme['active'] === '1') { ?>
@@ -36,7 +36,6 @@
 										<a class="btn btn-info preview-thumb" title="Preview" href="<?php echo $theme['preview']; ?>" title="Default"><i class="fa fa-eye"></i></a>
 									<?php } ?>
 								</td>
-								<td class="text-right"><?php echo $theme['location']; ?></td>
 							</tr>
 							<?php } ?>
 							<?php } else {?>
@@ -58,4 +57,4 @@ $(document).ready(function() {
 	$('.preview-thumb').fancybox();
 });
 </script>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

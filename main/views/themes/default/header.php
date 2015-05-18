@@ -3,13 +3,13 @@
 	$this->template->setMeta(array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'));
 	$this->template->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=edge', 'type' => 'equiv'));
 	$this->template->setMeta(array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1', 'type' => 'name'));
-	$this->template->setLinkTag('images/favicon.ico', 'shortcut icon', 'image/ico');
-	$this->template->setLinkTag('js/themes/custom-theme/jquery-ui-1.10.4.custom.css');
-	$this->template->setLinkTag('css/bootstrap.css');
-	$this->template->setLinkTag('css/bootstrap-select.css');
-	$this->template->setLinkTag('css/font-awesome.css');
-	$this->template->setLinkTag('css/jquery.raty.css');
-	$this->template->setLinkTag('css/stylesheet.css');
+	$this->template->setFavIcon('images/favicon.ico', 'shortcut icon', 'image/ico');
+	$this->template->setStyleTag('js/themes/custom-theme/jquery-ui-1.10.4.custom.css');
+	$this->template->setStyleTag('css/bootstrap.css');
+	$this->template->setStyleTag('css/bootstrap-select.css');
+	$this->template->setStyleTag('css/font-awesome.css');
+	$this->template->setStyleTag('css/jquery.raty.css');
+	$this->template->setStyleTag('css/stylesheet.css');
 	$this->template->setScriptTag('js/jquery-1.10.2.js');
 	$this->template->setScriptTag('js/jquery-ui-1.10.4.custom.js');
 	$this->template->setScriptTag('js/bootstrap.js');
@@ -17,13 +17,13 @@
 	$this->template->setScriptTag('js/jquery.raty.js');
 	$this->template->setScriptTag('js/common.js');
 
-	$doctype			= $this->template->getDocType();
-	$metas				= $this->template->getMetas();
-	$link_tags 			= $this->template->getLinkTags();
-	$script_tags 		= $this->template->getScriptTags();
-	$title 				= $this->template->getTitle();
-	$heading 			= $this->template->getHeading();
-	$site_logo 			= root_url('assets/images/' .$this->config->item('site_logo'));
+	$doctype			= get_doctype();
+	$metas				= get_metas();
+	$link_tags 			= get_style_tags();
+	$script_tags 		= get_script_tags();
+	$title 				= get_title();
+	$heading 			= get_heading();
+	$site_logo 			= image_url($this->config->item('site_logo'));
 	$site_name 			= $this->config->item('site_name');
 	$site_url 			= rtrim(site_url(), '/').'/';
 	$base_url 			= base_url();
@@ -115,27 +115,27 @@
 						<li><a href="<?php echo site_url('menus'); ?>">View Menu</a></li>
 
 						<?php if ($this->config->item('reservation_mode') === '1') { ?>
-							<li><a href="<?php echo site_url('reserve_table'); ?>">Reservation</a></li>
+							<li><a href="<?php echo site_url('reserve'); ?>">Reservation</a></li>
 						<?php } ?>
 
 						<?php if ($islogged) { ?>
 							<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" id="dropdownLabel1">My Account <span class="caret"></span></a>
 								<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownLabel1">
 									<li class="dropdown-header">Links</li>
-									<li><a role="presentation" href="<?php echo site_url('account'); ?>">Main</a></li>
-									<li><a role="presentation" href="<?php echo site_url('details'); ?>">Details</a></li>
-									<li><a role="presentation" href="<?php echo site_url('address'); ?>">Address</a></li>
-									<li><a role="presentation" href="<?php echo site_url('orders'); ?>">Orders</a></li>
+									<li><a role="presentation" href="<?php echo site_url('account/account'); ?>">Main</a></li>
+									<li><a role="presentation" href="<?php echo site_url('account/details'); ?>">Details</a></li>
+									<li><a role="presentation" href="<?php echo site_url('account/address'); ?>">Address</a></li>
+									<li><a role="presentation" href="<?php echo site_url('account/orders'); ?>">Orders</a></li>
 
 									<?php if ($this->config->item('reservation_mode') === '1') { ?>
-										<li><a role="presentation" href="<?php echo site_url('reservations'); ?>">Reservation</a></li>
+										<li><a role="presentation" href="<?php echo site_url('account/reservations'); ?>">Reservation</a></li>
 									<?php } ?>
 
-									<li><a role="presentation" href="<?php echo site_url('logout'); ?>" >Logout</a></li>
+									<li><a role="presentation" href="<?php echo site_url('account/logout'); ?>" >Logout</a></li>
 								</ul>
 							</li>
 						<?php } else { ?>
-							<li><a href="<?php echo site_url('login'); ?>">Login/Register</a></li>
+							<li><a href="<?php echo site_url('account/login'); ?>">Login/Register</a></li>
 						<?php } ?>
 
 						<?php //$this->template->navigationList('header'); ?>

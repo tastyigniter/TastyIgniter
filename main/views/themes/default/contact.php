@@ -1,5 +1,5 @@
-<?php echo $header; ?>
-<?php echo $content_top; ?>
+<?php echo get_header(); ?>
+<?php echo get_partial('content_top'); ?>
 <div class="row page-heading"><h3><?php echo $text_heading; ?></h3></div>
 <div id="notification" class="row">
 	<?php echo $this->alert->display(); ?>
@@ -11,7 +11,7 @@
 	<?php } ?>
 </div>
 <div class="row">
-	<?php echo $content_left; ?><?php echo $content_right; ?>
+	<?php echo get_partial('content_left'); ?><?php echo get_partial('content_right'); ?>
 
 	<div class="col-xs-12">
 		<div class="row wrap-all text-center" style="display:<?php echo (!$local_location) ? 'block': 'none';?>">
@@ -104,4 +104,4 @@
 		<?php } ?>
 	</div>
 </div>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

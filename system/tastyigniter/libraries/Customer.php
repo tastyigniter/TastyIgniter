@@ -16,6 +16,7 @@ class Customer {
 	public function __construct() {
 		$this->CI =& get_instance();
 		$this->CI->load->database();
+        $this->CI->load->driver('session');
 		$this->CI->load->library('user_agent');
 
 		$this->initialize();

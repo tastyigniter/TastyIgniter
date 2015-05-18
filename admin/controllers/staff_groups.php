@@ -9,14 +9,6 @@ class Staff_groups extends Admin_Controller {
 	}
 
 	public function index() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'staff_groups')) {
-  			redirect('permission');
-		}
-
 		$this->template->setTitle('Staff Groups');
 		$this->template->setHeading('Staff Groups');
 		$this->template->setButton('+ New', array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
@@ -44,14 +36,6 @@ class Staff_groups extends Admin_Controller {
 	}
 
 	public function edit() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'staff_groups')) {
-  			redirect('permission');
-		}
-
 		$group_info = $this->Staff_groups_model->getStaffGroup((int) $this->input->get('id'));
 
 		if ($group_info) {
@@ -137,7 +121,7 @@ class Staff_groups extends Admin_Controller {
 				redirect('staff_groups');
 			}
 
-			redirect('staff_groups/edit?id='. $this->input->post('id'));
+			redirect('staff_groups/edit?id='. $this->input->post('insert_id'));
 		}
 
 		if ($this->input->post() AND $this->_updateStaffGroup() === TRUE) {
@@ -153,10 +137,7 @@ class Staff_groups extends Admin_Controller {
 	}
 
 	public function _addStaffGroup() {
-    	if (!$this->user->hasPermissions('modify', 'staff_groups')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to add!');
-  			return TRUE;
-    	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$add = array();
 
 			$add['staff_group_name']	= $this->input->post('staff_group_name');
@@ -169,10 +150,10 @@ class Staff_groups extends Admin_Controller {
 			}
 
 			if ($id = $this->Staff_groups_model->addStaffGroup($add)) { // calls model to save data to SQL
-				$this->alert->set('success', 'Staff Groups added sucessfully.');
+				$this->alert->set('success', 'Staff Groups added successfully.');
 				$_POST['insert_id'] = $id;
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing updated.');
 			}
 
 			return TRUE;
@@ -180,10 +161,7 @@ class Staff_groups extends Admin_Controller {
 	}
 
 	public function _updateStaffGroup() {
-    	if (!$this->user->hasPermissions('modify', 'staff_groups')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to update!');
-  			return TRUE;
-    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$update = array();
 
 			$update['staff_group_id']		= $this->input->get('id');
@@ -197,9 +175,9 @@ class Staff_groups extends Admin_Controller {
 			}
 
 			if ($this->Staff_groups_model->updateStaffGroup($update)) { // calls model to save data to SQL
-				$this->alert->set('success', 'Staff Group updated sucessfully.');
+				$this->alert->set('success', 'Staff Group updated successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing updated.');
 			}
 
 			return TRUE;
@@ -207,14 +185,12 @@ class Staff_groups extends Admin_Controller {
 	}
 
 	public function _deleteStaffGroup() {
-    	if (!$this->user->hasPermissions('modify', 'staff_groups')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to delete!');
-    	} else if (is_array($this->input->post('delete'))) {
+    	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $staff_group_id) {
 				$this->Staff_groups_model->deleteStaffGroup($staff_group_id);
 			}
 
-			$this->alert->set('success', 'Staff Group(s) deleted sucessfully!');
+			$this->alert->set('success', 'Staff Group(s) deleted successfully!');
 		}
 
 		return TRUE;

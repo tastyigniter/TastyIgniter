@@ -87,7 +87,7 @@ $(document).ready(function() {
 		$('#nav-tabs a[href="#'+hash+'"]').tab('show');
 	}
 
-	$(document).on('change', '.btn-group-toggle input[type="radio"]', function() {
+	$(document).on('change', '.btn-group-toggle input[type="radio"], .btn-group input[type="radio"]', function() {
 		var btn = $(this).parent();
 		var parent = btn.parent();
 
@@ -99,7 +99,7 @@ $(document).ready(function() {
 		}
 	});
 
-	$('.btn-group-toggle .active input[type="radio"]').trigger('change');
+	$('.btn-group-toggle .active input[type="radio"], .btn-group .active input[type="radio"]').trigger('change');
 
 	/*if ($('.form-group .text-danger').length > 0) {
 		$('.form-group .text-danger').parents('.form-group').addClass('has-error');

@@ -9,12 +9,12 @@ class Local_module extends Ext_Controller {
 		$this->lang->load('local_module/local_module');
 	}
 
-	public function index($args = array()) {
+	public function index($ext_data = array()) {
 		if ( ! file_exists(EXTPATH .'local_module/views/local_module.php')) { 								//check if file exists in views folder
 			show_404(); 																		// Whoops, show 404 error page!
 		}
 
-		$data['local_page'] = ($this->uri->rsegment(1) === 'local') ? TRUE : FALSE;
+		$data['local_page'] = ($this->uri->rsegment(1) === 'local' AND $this->uri->rsegment(2) === 'locations') ? TRUE : FALSE;
 
 		if ($this->session->flashdata('local_alert')) {
 			$data['local_alert'] = $this->session->flashdata('local_alert');  								// retrieve session flashdata variable if available
@@ -22,7 +22,7 @@ class Local_module extends Ext_Controller {
 			$data['local_alert'] = '';
 		}
 
-		// START of retrieving lines from language file to pass to view.
+        // START of retrieving lines from language file to pass to view.
 		$data['text_heading'] 			= $this->lang->line('text_heading');
 		$data['text_local'] 			= $this->lang->line('text_local');
 		$data['text_postcode'] 			= ($this->config->item('search_by') === 'postcode') ? $this->lang->line('entry_postcode') : $this->lang->line('entry_address');
@@ -83,7 +83,7 @@ class Local_module extends Ext_Controller {
 		$total_reviews = $this->Reviews_model->getTotalLocationReviews($this->location->getId());
 		$data['text_total_review'] = sprintf($this->lang->line('text_total_review'), site_url('local/reviews'), $total_reviews);
 
-		$data['module_position'] 			= isset($args['module_position']) ? $args['module_position'] : '';
+		$data['module_position'] 			= isset($ext_data['module_position']) ? $ext_data['module_position'] : '';
 
 		// pass array $data and load view files
 		$this->load->view('local_module/local_module', $data);
@@ -124,7 +124,7 @@ class Local_module extends Ext_Controller {
 		if ($this->input->is_ajax_request()) {
 			$this->output->set_output(json_encode($json));											// encode the json array and set final out to be sent to jQuery AJAX
 		} else {
-			$this->alert->set('custom', $json['error']);
+			if (isset($json['error'])) $this->alert->set('custom', $json['error']);
 			redirect($redirect);
 		}
 	}

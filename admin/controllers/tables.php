@@ -10,14 +10,6 @@ class Tables extends Admin_Controller {
 	}
 
 	public function index() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'tables')) {
-  			redirect('permission');
-		}
-
 		$url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
@@ -109,14 +101,6 @@ class Tables extends Admin_Controller {
 	}
 
 	public function edit() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'tables')) {
-  			redirect('permission');
-		}
-
 		$table_info = $this->Tables_model->getTable((int) $this->input->get('id'));
 
 		if ($table_info) {
@@ -189,13 +173,7 @@ class Tables extends Admin_Controller {
 	}
 
 	public function _addTable() {
-
-    	if (!$this->user->hasPermissions('modify', 'tables')) {
-
-			$this->alert->set('warning', 'Warning: You do not have permission to add!');
-			return TRUE;
-
-    	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+        if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$add = array();
 
 			$add['table_name'] 		= $this->input->post('table_name');
@@ -204,9 +182,9 @@ class Tables extends Admin_Controller {
 			$add['table_status'] 	= $this->input->post('table_status');
 
 			if ($_POST['insert_id'] = $this->Tables_model->addTable($add)) {
-				$this->alert->set('success', 'Table added sucessfully.');
+				$this->alert->set('success', 'Table added successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing added.');
+				$this->alert->set('warning', 'An error occurred, nothing added.');
 			}
 
 			return TRUE;
@@ -214,10 +192,7 @@ class Tables extends Admin_Controller {
 	}
 
 	public function _updateTable() {
-    	if (!$this->user->hasPermissions('modify', 'tables')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to update!');
-			return TRUE;
-    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$update = array();
 
 			$update['table_id'] 		= $this->input->get('id');
@@ -227,9 +202,9 @@ class Tables extends Admin_Controller {
 			$update['table_status'] 	= $this->input->post('table_status');
 
 			if ($this->Tables_model->updateTable($update)) {
-				$this->alert->set('success', 'Table updated sucessfully.');
+				$this->alert->set('success', 'Table updated successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing updated.');
 			}
 
 			return TRUE;
@@ -237,14 +212,12 @@ class Tables extends Admin_Controller {
 	}
 
 	public function _deleteTable() {
-    	if (!$this->user->hasPermissions('modify', 'tables')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to delete!');
-    	} else if (is_array($this->input->post('delete'))) {
+    	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Tables_model->deleteTable($value);
 			}
 
-			$this->alert->set('success', 'Table(s) deleted sucessfully!');
+			$this->alert->set('success', 'Table(s) deleted successfully!');
 		}
 
 		return TRUE;

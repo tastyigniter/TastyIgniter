@@ -51,6 +51,38 @@ define('MAINDIR', 'main');
 
 /*
 |--------------------------------------------------------------------------
+| Theme directory for admin and front-end
+|--------------------------------------------------------------------------
+|
+| Where should we expect to see themes?
+|
+|	Default: VIEWPATH.'themes/' in the views/themes folder
+|
+*/
+
+define('THEMEPATH', VIEWPATH.'themes/');
+
+/*
+ *---------------------------------------------------------------
+ * APPLICATION ENVIRONMENT
+ *---------------------------------------------------------------
+ *
+ * You can load different configurations depending on your
+ * current environment. Setting the environment also influences
+ * things like logging and error reporting.
+ *
+ * This can be set to anything, but default usage is:
+ *
+ *     development
+ *     testing
+ *     production
+ *
+ * NOTE: If you change these, also change the error_reporting() code below
+ */
+define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
+
+/*
+|--------------------------------------------------------------------------
 | Display Debug backtrace
 |--------------------------------------------------------------------------
 |

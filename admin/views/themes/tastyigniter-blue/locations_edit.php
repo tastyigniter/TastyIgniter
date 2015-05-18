@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
@@ -16,42 +16,42 @@
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Name:</label>
+						<label for="input-name" class="col-sm-3 control-label">Name:</label>
 						<div class="col-sm-5">
 							<input type="text" name="location_name" id="input-name" class="form-control" value="<?php echo set_value('location_name', $location_name); ?>" />
 							<?php echo form_error('location_name', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-address-1" class="col-sm-2 control-label">Address 1:</label>
+						<label for="input-address-1" class="col-sm-3 control-label">Address 1:</label>
 						<div class="col-sm-5">
 							<input type="text" name="address[address_1]" id="input-address-1" class="form-control" value="<?php echo set_value('address[address_1]', $location_address_1); ?>" />
 							<?php echo form_error('address[address_1]', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-address-2" class="col-sm-2 control-label">Address 2:</label>
+						<label for="input-address-2" class="col-sm-3 control-label">Address 2:</label>
 						<div class="col-sm-5">
 							<input type="text" name="address[address_2]" id="input-address-2" class="form-control" value="<?php echo set_value('address[address_2]', $location_address_2); ?>" />
 							<?php echo form_error('address[address_2]', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-city" class="col-sm-2 control-label">City:</label>
+						<label for="input-city" class="col-sm-3 control-label">City:</label>
 						<div class="col-sm-5">
 							<input type="text" name="address[city]" id="input-city" class="form-control" value="<?php echo set_value('address[city]', $location_city); ?>" />
 							<?php echo form_error('address[city]', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-postcode" class="col-sm-2 control-label">Postcode:</label>
+						<label for="input-postcode" class="col-sm-3 control-label">Postcode:</label>
 						<div class="col-sm-5">
 							<input type="text" name="address[postcode]" id="input-postcode" class="form-control" value="<?php echo set_value('address[postcode]', $location_postcode); ?>" />
 							<?php echo form_error('address[postcode]', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-country" class="col-sm-2 control-label">Country:</label>
+						<label for="input-country" class="col-sm-3 control-label">Country:</label>
 						<div class="col-sm-5">
 							<select name="address[country]" id="input-country" class="form-control">
 								<?php foreach ($countries as $country) { ?>
@@ -66,39 +66,42 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-email" class="col-sm-2 control-label">Email:</label>
+						<label for="input-email" class="col-sm-3 control-label">Email:</label>
 						<div class="col-sm-5">
 							<input type="text" name="email" id="input-email" class="form-control" value="<?php echo set_value('email', $location_email); ?>" />
 							<?php echo form_error('email', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-telephone" class="col-sm-2 control-label">Telephone:</label>
+						<label for="input-telephone" class="col-sm-3 control-label">Telephone:</label>
 						<div class="col-sm-5">
 							<input type="text" name="telephone" id="input-telephone" class="form-control" value="<?php echo set_value('telephone', $location_telephone); ?>" />
 							<?php echo form_error('telephone', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-description" class="col-sm-2 control-label">Description:</label>
+						<label for="input-description" class="col-sm-3 control-label">Description:</label>
 						<div class="col-sm-5">
 							<textarea name="description" id="input-description" class="form-control" rows="5"><?php echo set_value('description', $description); ?></textarea>
 							<?php echo form_error('description', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-slug" class="col-sm-2 control-label">Slug:
+						<label for="input-slug" class="col-sm-3 control-label">Slug:
 							<span class="help-block">Use ONLY alpha-numeric lowercase characters, underscores or dashes and make sure it is unique GLOBALLY.</span>
 						</label>
 						<div class="col-sm-5">
-							<input type="hidden" name="permalink[permalink_id]" value="<?php echo set_value('permalink[permalink_id]', $permalink['permalink_id']); ?>"/>
-							<input type="text" name="permalink[slug]" id="input-slug" class="form-control" value="<?php echo set_value('permalink[slug]', $permalink['slug']); ?>"/>
-							<?php echo form_error('permalink[permalink_id]', '<span class="text-danger">', '</span>'); ?>
-							<?php echo form_error('permalink[slug]', '<span class="text-danger">', '</span>'); ?>
+                            <div class="input-group">
+                                <span class="input-group-addon"><?php echo $permalink['url']; ?></span>
+                                <input type="hidden" name="permalink[permalink_id]" value="<?php echo set_value('permalink[permalink_id]', $permalink['permalink_id']); ?>"/>
+                                <input type="text" name="permalink[slug]" id="input-slug" class="form-control" value="<?php echo set_value('permalink[slug]', $permalink['slug']); ?>"/>
+                            </div>
+                            <?php echo form_error('permalink[permalink_id]', '<span class="text-danger">', '</span>'); ?>
+                            <?php echo form_error('permalink[slug]', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-status" class="col-sm-2 control-label">Status:</label>
+						<label for="input-status" class="col-sm-3 control-label">Status:</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($location_status == '1') { ?>
@@ -116,7 +119,7 @@
 
 				<div id="opening-hours" class="tab-pane row wrap-all">
 					<div id="opening-type" class="form-group">
-						<label for="" class="col-sm-2 control-label">Type:</label>
+						<label for="" class="col-sm-3 control-label">Type:</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle btn-group-3" data-toggle="buttons">
 								<?php if ($opening_type == '24_7') { ?>
@@ -142,7 +145,7 @@
 
 					<div id="opening-daily">
 						<div class="form-group">
-							<label for="input-opening-days" class="col-sm-2 control-label">Days:</label>
+							<label for="input-opening-days" class="col-sm-3 control-label">Days:</label>
 							<div class="col-sm-5">
 								<div class="btn-group btn-group-toggle btn-group-7" data-toggle="buttons">
 									<?php foreach ($weekdays_abbr as $key => $value) { ?>
@@ -157,7 +160,7 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="input-opening-hours" class="col-sm-2 control-label">Hours:</label>
+							<label for="input-opening-hours" class="col-sm-3 control-label">Hours:</label>
 							<div class="col-sm-5">
 								<div class="control-group control-group-2">
 									<div class="input-group">
@@ -177,7 +180,7 @@
 
 					<div id="opening-flexible">
 						<div class="form-group">
-							<label for="" class="col-sm-2 control-label"></label>
+							<label for="" class="col-sm-3 control-label"></label>
 							<div class="col-sm-5">
 								<div class="control-group control-group-2">
 									<div class="input-group">
@@ -191,7 +194,7 @@
 						</div>
 						<?php foreach ($flexible_hours as $hour) { ?>
 						<div class="form-group">
-							<label for="input-status" class="col-sm-2 control-label text-right">
+							<label for="input-status" class="col-sm-3 control-label text-right">
 								<span class="text-right"><?php echo (isset($weekdays[$hour['day']])) ? $weekdays[$hour['day']] : $hour['day']; ?></span>
 								<input type="hidden" name="flexible_hours[<?php echo $hour['day']; ?>][day]" value="<?php echo set_value('flexible_hours['.$hour['day'].'][day]', $hour['day']); ?>" />
 							</label>
@@ -226,7 +229,7 @@
 
 				<div id="order" class="tab-pane row wrap-all">
 					<div class="form-group">
-						<label for="input-offer-delivery" class="col-sm-2 control-label">Offer Delivery:</label>
+						<label for="input-offer-delivery" class="col-sm-3 control-label">Offer Delivery:</label>
 						<div class="col-sm-5">
 							<div id="input-offer-delivery" class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($offer_delivery == '1') { ?>
@@ -241,7 +244,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-offer-collection" class="col-sm-2 control-label">Offer Collection:</label>
+						<label for="input-offer-collection" class="col-sm-3 control-label">Offer Collection:</label>
 						<div class="col-sm-5">
 							<div id="input-offer-collection" class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($offer_collection == '1') { ?>
@@ -256,8 +259,8 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-delivery-time" class="col-sm-2 control-label">Delivery Time:
-							<span class="help-block">Set number of minutes an order will be delivered after being placed</span>
+						<label for="input-delivery-time" class="col-sm-3 control-label">Delivery Time:
+							<span class="help-block">Set number of minutes after an order will be delivered after being placed</span>
 						</label>
 						<div class="col-sm-5">
 							<div class="input-group">
@@ -268,8 +271,8 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-collection-time" class="col-sm-2 control-label">Collection Time:
-							<span class="help-block">Set number of minutes an order will be ready for collection after being placed</span>
+						<label for="input-collection-time" class="col-sm-3 control-label">Collection Time:
+							<span class="help-block">Set number of minutes after an order will be ready for collection after being placed</span>
 						</label>
 						<div class="col-sm-5">
 							<div class="input-group">
@@ -280,7 +283,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-last-order-time" class="col-sm-2 control-label">Last Order Time:
+						<label for="input-last-order-time" class="col-sm-3 control-label">Last Order Time:
 							<span class="help-block">Set number of minutes before closing time for last order. Leave blank to use closing hour.</span>
 						</label>
 						<div class="col-sm-5">
@@ -292,8 +295,8 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-payments" class="col-sm-2 control-label">Payments:
-							<span class="help-block">Select the payment(s) available at this location. Do not select anything to use all enabled payments</span>
+						<label for="input-payments" class="col-sm-3 control-label">Payments:
+							<span class="help-block">Select the payment(s) available at this location. Leave blank to use all enabled payments</span>
 						</label>
 						<div class="col-sm-5">
 							<select name="payments[]" id="input-payments" class="form-control" multiple="multiple">
@@ -309,13 +312,13 @@
 						</div>
 					</div>
 					<!--<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Latitude:</label>
+						<label for="input-name" class="col-sm-3 control-label">Latitude:</label>
 						<div class="col-sm-5">
 							<?php echo $location_lat; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Longitude:</label>
+						<label for="input-name" class="col-sm-3 control-label">Longitude:</label>
 						<div class="col-sm-5">
 							<?php echo $location_lng; ?>
 						</div>
@@ -324,14 +327,14 @@
 
 				<div id="reservation" class="tab-pane row wrap-all">
 					<div class="form-group">
-						<label for="input-table" class="col-sm-2 control-label">Tables:</label>
+						<label for="input-table" class="col-sm-3 control-label">Tables:</label>
 						<div class="col-sm-5">
 							<input type="text" name="table" value="" id="input-table" class="form-control" />
 							<?php echo form_error('table', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="" class="col-sm-2 control-label"></label>
+						<label for="" class="col-sm-3 control-label"></label>
 						<div id="table-box" class="col-sm-5">
 							<div class="table-responsive panel-selected">
 								<table class="table table-striped">
@@ -360,7 +363,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-reserve-interval" class="col-sm-2 control-label">Time Interval:
+						<label for="input-reserve-interval" class="col-sm-3 control-label">Time Interval:
 							<span class="help-block">Set in minutes the time between each reservation</span>
 						</label>
 						<div class="col-sm-5">
@@ -372,7 +375,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-reserve-turn" class="col-sm-2 control-label">Turn Time:
+						<label for="input-reserve-turn" class="col-sm-3 control-label">Turn Time:
 							<span class="help-block">Set in minutes the turn time for each reservation</span>
 						</label>
 						<div class="col-sm-5">
@@ -459,7 +462,7 @@
 													</div>
 												</div>
 											</div>
-											</div>
+										</div>
 										<?php $panel_row++; ?>
 									<?php } ?>
 								</div>
@@ -981,4 +984,4 @@ function addDeliveryArea() {
 }
 //]]></script>
 <?php } ?>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

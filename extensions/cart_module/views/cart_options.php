@@ -36,12 +36,12 @@
 											<?php if (in_array($option_value['menu_option_value_id'], $menu_option_value_ids)) { ?>
 												<div class="radio"><label>
 													<input type="radio" name="menu_options[<?php echo $key; ?>][option_values][]" value="<?php echo $option_value['option_value_id']; ?>" checked="checked" />
-													<h5><?php echo $option_value['value']; ?> <span class="price small"><?php echo $option_value['price']; ?></span></h5>
+													<?php echo $option_value['value']; ?> <span class="price small"><?php echo $option_value['price']; ?></span>
 												</label></div>
 											<?php } else { ?>
 												<div class="radio"><label>
 													<input type="radio" name="menu_options[<?php echo $key; ?>][option_values][]" value="<?php echo $option_value['option_value_id']; ?>" />
-													<h5><?php echo $option_value['value']; ?> <span class="price small"><?php echo $option_value['price']; ?></span></h5>
+													<?php echo $option_value['value']; ?> <span class="price small"><?php echo $option_value['price']; ?></span>
 												</label></div>
 											<?php } ?>
 										<?php } ?>
@@ -61,12 +61,12 @@
 											<?php if (in_array($option_value['menu_option_value_id'], $menu_option_value_ids)) { ?>
 												<div class="checkbox"><label>
 													<input type="checkbox" name="menu_options[<?php echo $key; ?>][option_values][]" value="<?php echo $option_value['option_value_id']; ?>" checked="checked" />
-													<h5><?php echo $option_value['value']; ?> <span class="price small"><?php echo $option_value['price']; ?></span></h5>
+													<?php echo $option_value['value']; ?> <span class="price small"><?php echo $option_value['price']; ?></span>
 												</label></div>
 											<?php } else { ?>
 												<div class="checkbox"><label>
 													<input type="checkbox" name="menu_options[<?php echo $key; ?>][option_values][]" value="<?php echo $option_value['option_value_id']; ?>" />
-													<h5><?php echo $option_value['value']; ?> <span class="price small"><?php echo $option_value['price']; ?></span></h5>
+													<?php echo $option_value['value']; ?> <span class="price small"><?php echo $option_value['price']; ?></span>
 												</label></div>
 											<?php } ?>
 										<?php } ?>
@@ -160,20 +160,4 @@ $(document).ready(function() {
 		$button.parent().parent().find('#quantity').val(newVal);
 	});
 });
-/*$(document).on('click', '.quantity-control button', function () {
-	var btn = $(this),
-		oldValue = btn.closest('.quantity-control').find('input').val().trim(),
-		newVal = 0;
-
-	if (btn.attr('data-dir') == 'up') {
-		newVal = parseInt(oldValue) + 1;
-	} else {
-		if (oldValue > 1) {
-			newVal = parseInt(oldValue) - 1;
-		} else {
-			newVal = 1;
-		}
-	}
-	btn.closest('.quantity-control').find('input').val(newVal);
-});*/
 //--></script>

@@ -8,15 +8,9 @@ class Categories_module extends Ext_Controller {
 		$this->lang->load('categories_module/categories_module');
 	}
 
-	public function index($args = array()) {
-		if ( ! file_exists(EXTPATH .'categories_module/views/categories_module.php')) { 								//check if file exists in views folder
+	public function index() {
+		if ( ! file_exists(EXTPATH .'categories_module/views/categories_module.php')) { 		//check if file exists in views folder
 			show_404(); 																		// Whoops, show 404 error page!
-		}
-
-		if ($this->session->flashdata('alert')) {
-			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
-		} else {
-			$data['alert'] = '';
 		}
 
 		if (is_numeric($this->input->get('category_id'))) {
@@ -43,7 +37,7 @@ class Categories_module extends Ext_Controller {
 		}
 
 		// pass array $data and load view files
-		$this->load->view('categories_module/categories_module', $data);
+		return $this->load->view('categories_module/categories_module', $data, TRUE);
 	}
 }
 

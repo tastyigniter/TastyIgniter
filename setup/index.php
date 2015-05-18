@@ -1,52 +1,6 @@
 <?php
 /*
  *---------------------------------------------------------------
- * APPLICATION ENVIRONMENT
- *---------------------------------------------------------------
- *
- * You can load different configurations depending on your
- * current environment. Setting the environment also influences
- * things like logging and error reporting.
- *
- * This can be set to anything, but default usage is:
- *
- *     development
- *     testing
- *     production
- *
- * NOTE: If you change these, also change the error_reporting() code below
- */
-	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'setup');
-
-/*
- *---------------------------------------------------------------
- * ERROR REPORTING
- *---------------------------------------------------------------
- *
- * Different environments will require different levels of error reporting.
- * By default development will show errors but testing and live will hide them.
- */
-switch (ENVIRONMENT)
-{
-	case 'setup':
-		error_reporting(-1);
-		ini_set('display_errors', 1);
-	break;
-
-	case 'testing':
-	case 'production':
-		error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT);
-		ini_set('display_errors', 0);
-	break;
-
-	default:
-		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
-		echo 'The application environment is not set correctly.';
-		exit(1); // EXIT_ERROR
-}
-
-/*
- *---------------------------------------------------------------
  * SYSTEM FOLDER NAME
  *---------------------------------------------------------------
  *
@@ -108,13 +62,13 @@ switch (ENVIRONMENT)
  */
 	// The directory name, relative to the "controllers" folder.  Leave blank
 	// if your controller is not in a sub-folder within the "controllers" folder
-	$routing['directory'] = '';
+//	$routing['directory'] = '';
 
 	// The controller class file name.  Example:  mycontroller
-	$routing['controller'] = 'setup';
+//	$routing['controller'] = '';
 
 	// The controller function you wish to be called.
-	$routing['function']	= '';
+//	$routing['function']	= '';
 
 
 /*
@@ -187,11 +141,11 @@ switch (ENVIRONMENT)
 	// Name of the "system folder"
 	define('SYSDIR', trim(strrchr(trim(BASEPATH, '/'), '/'), '/'));
 
-	// Path to the extensions folder
-	define('EXTPATH', $application_folder .'/extensions/');
+//	// Path to the extensions folder
+    define('EXTPATH', 'extensions/');
 
 	// Path to the images folder"
-	define('IMAGEPATH', realpath('assets/img/') .'/');
+	define('IMAGEPATH', realpath('assets/images/') .'/');
 
 	// Name of the "application folder"
 	define('APPDIR', trim(strrchr(trim(FCPATH, '/'), '/'), '/'));

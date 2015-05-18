@@ -8,7 +8,10 @@ class Activity {
 	public $total_guests = 0;
 	public $total_robots = 0;
 	public $country_code = '';
-	protected $geoip;
+    public $local_time;
+    public $online_time_out;
+    public $archive_time_out;
+    protected $geoip;
 
 	public function __construct() {
 		$this->CI =& get_instance();
@@ -21,37 +24,32 @@ class Activity {
 		$this->country_code = $this->_getCountry($this->ip);
 
 		$this->local_time = time();
-		$time_out = ($this->CI->config->item('activity_timeout') > 120) ? $this->CI->config->item('activity_timeout') : 120;
-		$this->time_out = $this->local_time - $time_out;
+		$this->online_time_out = $this->_getTimeout();
 
-		$activity_delete = ($this->CI->config->item('activity_delete') > 0) ? $this->CI->config->item('activity_delete') : 0;
-		$delete_time_out = 86400 * ($activity_delete * 30);
-		$this->delete_time_out = $this->local_time - $delete_time_out;
+		$this->archive_time_out = $this->_getArchiveTimeout();
 
 		$this->activities = $this->_getActivities();
 
 		if (!empty($this->activities) AND is_array($this->activities)) {
-			foreach ($this->activities as $key => $value) {
+			foreach ($this->activities as $key => $activity) {
 				$this->total++;
 
-				if ($value['customer_id'] > 0) {
+				if ($activity['customer_id'] > 0) {
 					$this->total_customers++;
-				}
-
-				if ($value['customer_id'] === 0) {
+				} else {
 					$this->total_guests++;
 				}
 
-				if ($value['access_type'] === 'robot') {
+				if ($activity['access_type'] === 'robot') {
 					$this->total_robots++;
 				}
 
-				$this->_deleteOldActivity($key);
+				//$this->_deleteActivityArchive($key);
 			}
 		}
 
 		if ($this->CI->input->valid_ip($this->ip)) {
-			$this->_setActivity();
+			$this->_saveActivity();
 		}
 	}
 
@@ -75,7 +73,36 @@ class Activity {
 	  return $this->activities;
 	}
 
-	public function _getActivities() {
+    public function _getTimeout() {
+        $online_time_out = ($this->CI->config->item('activity_online_time_out') > 120) ? $this->CI->config->item('activity_online_time_out') : 120;
+        return $this->local_time - $online_time_out;
+    }
+
+    public function _getArchiveTimeout() {
+        $activity_archive_time_out = ($this->CI->config->item('activity_archive_time_out') > 0) ? $this->CI->config->item('activity_archive_time_out') : 0;
+        $archive_time_out = 86400 * ($activity_archive_time_out * 30);
+        return $this->local_time - $archive_time_out;
+    }
+
+    public function _getUserAgent() {
+        $this->CI->load->library('user_agent');
+        $user_agent = array();
+
+        if ($this->CI->agent->is_mobile()) {
+            $user_agent['type'] = 'mobile';
+            $user_agent['browser'] = $this->CI->agent->mobile();
+        } else if ($this->CI->agent->is_robot()) {
+            $user_agent['type'] = 'robot';
+            $user_agent['browser'] = $this->CI->agent->robot();
+        } else if ($this->CI->agent->is_browser()) {
+            $user_agent['type'] = 'browser';
+            $user_agent['browser'] = $this->CI->agent->browser();
+        }
+
+        return $user_agent;
+    }
+
+    public function _getActivities() {
 		$this->CI->load->database();
 		$this->CI->db->from('customers_activity');
 		$query = $this->CI->db->get();
@@ -88,6 +115,7 @@ class Activity {
 					'customer_id' 	=> $result['customer_id'],
 					'access_type' 	=> $result['access_type'],
 					'browser' 		=> $result['browser'],
+					'page_views' 	=> $result['page_views'],
 					'request_uri' 	=> $result['request_uri'],
 					'referrer_uri' 	=> $result['referrer_uri'],
 					'date_added' 	=> $result['date_added']
@@ -98,39 +126,32 @@ class Activity {
 		return $activities;
 	}
 
-	public function _setActivity() {
-		$this->CI->load->library('user_agent');
-
-		if ($this->CI->agent->is_mobile()) {
-			$access_type = 'mobile';
-			$browser = $this->CI->agent->mobile();
-		} else if ($this->CI->agent->is_robot()) {
-			$access_type = 'robot';
-			$browser = $this->CI->agent->robot();
-		} else if ($this->CI->agent->is_browser()) {
-			$access_type = 'browser';
-			$browser = $this->CI->agent->browser();
-		}
+	public function _saveActivity() {
+        $user_agent = $this->_getUserAgent();
 
 		if (isset($this->activities[$this->ip])) {
-			$this->_updateActivity($this->ip, $access_type, $browser);
+			$this->_updateActivity($this->ip, $user_agent);
 		} else {
-			$this->_addActivity($this->ip, $access_type, $browser);
+			$this->_addActivity($this->ip, $user_agent);
 		}
 	}
 
-	public function _updateActivity($ip, $access_type = '', $browser = '') {
+	public function _updateActivity($ip, $user_agent = array()) {
 		$cust_info = $this->CI->session->userdata('cust_info');
 		$customer_id = (isset($cust_info['customer_id']) AND isset($cust_info['email'])) ? $cust_info['customer_id'] : '0';
-		$referrer = (isset($_SERVER['HTTP_REFERER'])) ? $_SERVER['HTTP_REFERER'] : '';
+		$referrer = (isset($_SERVER['HTTP_REFERER'])) ? str_replace(site_url(), '', $_SERVER['HTTP_REFERER']) : '';
 		$country_code = (!empty($this->country_code)) ? $this->country_code : '0';
 
-		if (isset($this->activities[$this->ip]) AND strtotime($this->activities[$ip]['date_added']) <= $this->time_out) {
-			$this->CI->db->set('customer_id', $customer_id);
-			$this->CI->db->set('access_type', $access_type);
-			$this->CI->db->set('browser', $browser);
+		//if (isset($this->activities[$this->ip]) AND strtotime($this->activities[$ip]['date_added']) <= $this->time_out) {
+		if (isset($this->activities[$this->ip])) {
+			$page_views = ($this->activities[$ip]['page_views'] > 0) ? $this->activities[$ip]['page_views'] : '1';
+
+            $this->CI->db->set('customer_id', $customer_id);
+			$this->CI->db->set('access_type', $user_agent['type']);
+			$this->CI->db->set('browser', $user_agent['browser']);
+			$this->CI->db->set('page_views', $page_views + 1);
 			$this->CI->db->set('country_code', $country_code);
-			$this->CI->db->set('request_uri', current_url());
+			$this->CI->db->set('request_uri', uri_string());
 			$this->CI->db->set('referrer_uri', $referrer);
 			$this->CI->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', $this->local_time));
 			$this->CI->db->where('activity_id', $this->activities[$ip]['activity_id']);
@@ -139,18 +160,19 @@ class Activity {
 		}
 	}
 
-	public function _addActivity($ip, $access_type = '', $browser = '') {
+	public function _addActivity($ip, $user_agent = array()) {
 		$cust_info = $this->CI->session->userdata('cust_info');
 		$customer_id = (isset($cust_info['customer_id']) AND isset($cust_info['email'])) ? $cust_info['customer_id'] : '0';
-		$referrer = (isset($_SERVER['HTTP_REFERER'])) ? $_SERVER['HTTP_REFERER'] : '';
+        $referrer = (isset($_SERVER['HTTP_REFERER'])) ? str_replace(site_url(), '', $_SERVER['HTTP_REFERER']) : '';
 		$country_code = (!empty($this->country_code)) ? $this->country_code : '0';
 
 		if (!isset($this->activities[$this->ip])) {
 			$this->CI->db->set('customer_id', $customer_id);
-			$this->CI->db->set('access_type', $access_type);
-			$this->CI->db->set('browser', $browser);
+			$this->CI->db->set('access_type', $user_agent['type']);
+			$this->CI->db->set('browser', $user_agent['browser']);
+			$this->CI->db->set('page_views', '1');
 			$this->CI->db->set('country_code', $country_code);
-			$this->CI->db->set('request_uri', current_url());
+			$this->CI->db->set('request_uri', uri_string());
 			$this->CI->db->set('referrer_uri', $referrer);
 			$this->CI->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', $this->local_time));
 			$this->CI->db->set('ip_address', $this->ip);
@@ -158,12 +180,15 @@ class Activity {
 		}
 	}
 
-	public function _deleteOldActivity($ip) {
-		if (isset($this->activities[$this->ip]) AND strtotime($this->activities[$ip]['date_added']) <= $this->delete_time_out) {
-			$this->CI->db->where('activity_id', $this->activities[$ip]['activity_id']);
-			$this->CI->db->where('ip_address', $ip);
-			$this->CI->db->delete('customers_activity');
-			unset($this->activities[$this->ip]);
+	public function _deleteActivityArchive($ip) {
+        if ($this->CI->config->item('activity_archive_time_out') > 0 AND isset($this->activities[$this->ip])) {
+
+            if (strtotime($this->activities[$ip]['date_added']) <= $this->archive_time_out) {
+                $this->CI->db->where('activity_id', $this->activities[$ip]['activity_id']);
+                $this->CI->db->where('ip_address', $ip);
+                $this->CI->db->delete('customers_activity');
+                unset($this->activities[$this->ip]);
+            }
 		}
 	}
 

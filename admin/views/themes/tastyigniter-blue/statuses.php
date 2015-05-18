@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
 		<div class="panel panel-default panel-table">
@@ -40,35 +40,36 @@
 
 			<form role="form" id="list-form" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
 				<div class="table-responsive">
-				<table class="table table-striped table-border">
-					<thead>
-						<tr>
-							<th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
-							<th>Status Name</th>
-							<th>Status Comment</th>
-							<th>Status Type</th>
-							<th class="text-center">Notify Customer</th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php if ($statuses) {?>
-						<?php foreach ($statuses as $status) { ?>
-						<tr>
-							<td class="action"><input type="checkbox" value="<?php echo $status['status_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
-								<a class="btn btn-edit" title="Edit" href="<?php echo $status['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
-							<td><?php echo $status['status_name']; ?></td>
-							<td><?php echo $status['status_comment']; ?></td>
-							<td><?php echo $status['status_for']; ?></td>
-							<td class="text-center"><?php echo $status['notify_customer']; ?></td>
-						</tr>
-						<?php } ?>
-						<?php } else { ?>
-						<tr>
-							<td colspan="5"><?php echo $text_empty; ?></td>
-						</tr>
-						<?php } ?>
-					</tbody>
-				</table>
+                    <table class="table table-striped table-border">
+                        <thead>
+                            <tr>
+                                <th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
+                                <th>Status Name</th>
+                                <th>Status Comment</th>
+                                <th>Status Type</th>
+                                <th class="text-center">Notify Customer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if ($statuses) {?>
+                            <?php foreach ($statuses as $status) { ?>
+                            <tr>
+                                <td class="action"><input type="checkbox" value="<?php echo $status['status_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
+                                    <a class="btn btn-edit" title="Edit" href="<?php echo $status['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
+                                <td><?php echo $status['status_name']; ?></td>
+                                <td><?php echo $status['status_comment']; ?></td>
+                                <td><?php echo $status['status_for']; ?></td>
+                                <td class="text-center"><?php echo $status['notify_customer']; ?></td>
+                            </tr>
+                            <?php } ?>
+                            <?php } else { ?>
+                            <tr>
+                                <td colspan="5"><?php echo $text_empty; ?></td>
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+				    </table>
+                </div>
 			</form>
 		</div>
 	</div>
@@ -78,4 +79,4 @@ function filterList() {
 	$('#filter-form').submit();
 }
 //--></script>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

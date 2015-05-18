@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
@@ -14,14 +14,14 @@
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Name:</label>
+						<label for="input-name" class="col-sm-3 control-label">Name:</label>
 						<div class="col-sm-5">
 							<input type="text" name="name" id="input-name" class="form-control" value="<?php echo set_value('name', $name); ?>" />
 							<?php echo form_error('name', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-language" class="col-sm-2 control-label">Language:</label>
+						<label for="input-language" class="col-sm-3 control-label">Language:</label>
 						<div class="col-sm-5">
 							<select name="language_id" id="input-language" class="form-control">
 								<option value="1" <?php echo set_select('language_id', '1'); ?> >English</option>
@@ -31,7 +31,7 @@
 					</div>
 					<?php if (empty($template_id)) { ?>
 					<div class="form-group">
-						<label for="input-clone_template" class="col-sm-2 control-label">Clone Template:</label>
+						<label for="input-clone_template" class="col-sm-3 control-label">Clone Template:</label>
 						<div class="col-sm-5">
 							<select name="clone_template_id" id="input-clone_template" class="form-control">
 								<?php foreach ($templates as $template) { ?>
@@ -43,7 +43,7 @@
 					</div>
 					<?php } ?>
 					<div class="form-group">
-						<label for="input-status" class="col-sm-2 control-label">Status:</label>
+						<label for="input-status" class="col-sm-3 control-label">Status:</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($status == '1') { ?>
@@ -62,9 +62,6 @@
 				<?php if ($template_data) { ?>
 				<div id="templates" class="tab-pane row wrap-all">
 					<div class="panel panel-default panel-table">
-						<div class="panel-heading">
-							<h3 class="panel-title">Template List</h3>
-						</div>
 						<div class="table-responsive">
 							<table border="0" class="table table-striped table-border table-templates">
 								<thead>
@@ -98,19 +95,21 @@
 											<div id="template-row-<?php echo $tpl_data['template_data_id']; ?>" class="collapse">
 												<div class="template-content">
 													<div class="form-group">
-														<label for="input-subject" class="col-sm-2 control-label">Subject:</label>
-														<div class="col-sm-8">
+														<div class="col-sm-3">
+                                                            <label for="input-subject" class="control-label">Subject:</label>
+                                                        </div>
+                                                        <div class="col-sm-7">
 															<input type="hidden" name="templates[<?php echo $tpl_data['template_data_id']; ?>][code]" id="input-subject" class="form-control" value="<?php echo set_value('templates['.$tpl_data['template_data_id'].'][code]', $tpl_data['code']); ?>" />
 															<input type="text" name="templates[<?php echo $tpl_data['template_data_id']; ?>][subject]" id="input-subject" class="form-control" value="<?php echo set_value('templates['.$tpl_data['template_data_id'].'][subject]', $tpl_data['subject']); ?>" />
 															<?php echo form_error('subject', '<span class="text-danger">', '</span>'); ?>
 														</div>
 														<div class="col-sm-2">
-															<a class="btn btn-info btn-block" data-toggle="modal" data-target=".mail-variable-container #mail-variables">Variables</a>
+															<a class="btn btn-info btn-block" data-toggle="modal" data-target=".mail-variable-container #mail-variables">Variables &nbsp;&nbsp; <i class="fa fa-info-circle"></i></a>
 														</div>
 													</div>
 
 													<div class="form-group">
-														<div id="input-body" class="col-md-12">
+														<div id="input-wysiwyg" class="col-md-12">
 															<textarea name="templates[<?php echo $tpl_data['template_data_id']; ?>][body]" style="height:300px;width:100%;" class="form-control"><?php echo set_value('templates['.$tpl_data['template_data_id'].'][body]', $tpl_data['body']); ?></textarea>
 														</div>
 													</div>
@@ -132,7 +131,6 @@
 		<div class="mail-variable-container"></div>
 	</div>
 </div>
-<script type="text/javascript" src="<?php echo root_url("assets/js/tinymce/tinymce.js"); ?>"></script>
 <script type="text/javascript">
 tinymce.init({
     selector: 'textarea',
@@ -141,6 +139,7 @@ tinymce.init({
 	toolbar1: 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | formatselect | bullist numlist | table hr code',
 	toolbar2: 'forecolor backcolor | outdent indent | undo redo | link unlink anchor image | subscript superscript | charmap variable',
 	removed_menuitems: 'newdocument',
+    theme: 'modern',
 	skin : 'tiskin',
 	convert_urls : false,
     file_browser_callback : imageManager
@@ -162,4 +161,4 @@ $(document).on('click', '.show_hide', function() {
 	}
 });
 </script>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

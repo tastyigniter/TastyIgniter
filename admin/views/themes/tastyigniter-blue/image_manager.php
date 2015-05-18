@@ -1,5 +1,5 @@
 <?php if ($popup !== 'iframe') { ?>
-	<?php echo $header; ?>
+	<?php echo get_header(); ?>
 		<div class="row content">
 			<div class="col-md-12">
 				<div id="image-manager" style="padding: 3px 0px 0px 0px;">
@@ -7,14 +7,14 @@
 				</div>
 			</div>
 		</div>
-	<?php echo $footer; ?>
+	<?php echo get_footer(); ?>
 <?php } else { ?>
 	<?php echo $this->template->getDocType() ?>
 	<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 		<head>
 			<?php echo $this->template->getMetas() ?>
 			<title><?php echo $title ?></title>
-			<?php echo $this->template->getLinkTags() ?>
+			<?php echo $this->template->getStyleTags() ?>
 			<?php echo $this->template->getScriptTags() ?>
 			<script type="text/javascript">
 				var js_site_url = function(str) {
@@ -26,7 +26,7 @@
 					var strTmp = "<?php echo base_url('" + str + "'); ?>";
 					return strTmp;
 				}
-				<?php $allowed_ext = explode("|", $allowed_ext); ?>
+
 				var allowed_ext = new Array('<?php echo implode("','", $allowed_ext); ?>');
 				var maxSizeUpload = <?php echo round($max_size_upload / 1024, 2); ?>;
 			</script>
@@ -34,20 +34,24 @@
 		<body>
 			<div class="notification alert alert-info" style="display:none;"><span></span></div>
 			<input type="hidden" id="current_url" value="<?php echo $current_url; ?>" />
-			<input type="hidden" id="insert_folder_name" value="New Folder" />
-			<input type="hidden" id="new_folder" value="New Folder" />
+			<input type="hidden" id="new_gallery" value="New Folder" />
 			<input type="hidden" id="total_files" value="<?php echo $total_files; ?>" />
+			<input type="hidden" id="total_selected" value="" />
 			<input type="hidden" id="field_id" value="<?php echo $field_id; ?>" />
 			<input type="hidden" id="sub_folder" value="<?php echo $sub_folder; ?>"/>
+			<input type="hidden" id="current_folder" value="<?php echo $current_folder; ?>"/>
 			<input type="hidden" id="sort_order" value="<?php echo $sort_order; ?>" />
-			<select id="folders_list" style="display:none;">
-			<?php foreach ($folders_list as $key => $value) { ?>
-				<option value="<?php echo $value; ?>"><?php echo $value; ?></option>
-			<?php } ?>
-			</select>
+            <div id="folders_list" style="display:none;">
+                <select class="form-control">
+                    <?php foreach ($folders_list as $key => $value) { ?>
+                        <option value="<?php echo $value; ?>"><?php echo $value; ?></option>
+                    <?php } ?>
+                </select>
+                <span class="help-block small">Existing file/folder will NOT be replaced</span>
+            </div>
 
-			<nav class="navbar navbar-default navbar-menu navbar-fixed-top" role="navigation">
-				<div class="container-fluid">
+			<nav class="navbar navbar-default navbar-menu" role="navigation">
+				<div class="container-fluid navbar-fixed-top">
 					<div class="navbar-header">
 						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
 							<span class="sr-only">Toggle navigation</span>
@@ -59,29 +63,20 @@
 
 					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 						<div class="btn-toolbar" role="toolbar">
-							<div class="col-xs-2 col-sm-1 wrap-none">
+							<div class="col-xs-12 col-sm-2 wrap-none">
 								<div class="btn-group">
 									<a class="btn btn-default navbar-btn btn-back <?php echo $back; ?>" title="Back" href="<?php echo $back_url; ?>"><i class="fa fa-arrow-left"></i></a>
-								</div>
+                                    <a id="refresh" title="Refresh" class="btn btn-default navbar-btn btn-refresh" href="<?php echo $refresh_url; ?>"><i class="fa fa-refresh"></i></a>
+                                </div>
 							</div>
-							<div class="col-xs-10 col-sm-6 wrap-none">
+							<div class="col-xs-12 col-sm-5 wrap-none">
 								<div class="btn-group">
 									<?php if ($uploads) { ?>
-										<button type="button" class="btn btn-default navbar-btn btn-upload" title="Upload"><i class="fa fa-upload"></i></button>
+										<button type="button" class="btn btn-default navbar-btn btn-upload"><i class="fa fa-upload"></i>&nbsp;&nbsp;<small>Upload</small></button>
 									<?php } ?>
-									<?php if ($new_folder) { ?>
-										<button type="button" class="btn btn-default navbar-btn btn-new-folder" title="New Folder"><i class="fa fa-folder"></i></button>
-									<?php } ?>
-									<?php if ($move) { ?>
-										<button type="button" class="btn btn-default navbar-btn btn-move" title="Move"><i class="fa fa-folder-open"></i></button>
-									<?php } ?>
-									<?php if ($copy) { ?>
-										<button type="button" class="btn btn-default navbar-btn btn-copy" title="Copy"><i class="fa fa-clipboard"></i></button>
-									<?php } ?>
-									<a id="refresh" title="Refresh" class="btn btn-default navbar-btn btn-refresh" href="<?php echo $refresh_url; ?>"><i class="fa fa-refresh"></i></a>
 								</div>
-							</div>
-							<div class="col-xs-3 col-sm-1 wrap-none">
+                            </div>
+							<div class="col-xs-4 col-sm-1 wrap-none">
 								<div class="btn-group">
 									<div class="dropdown">
 										<a class="btn btn-default navbar-btn btn-sort dropdown-toggle" data-toggle="dropdown" title="Sort">
@@ -113,21 +108,39 @@
 							</div>
 						</div>
 					</div>
+
+                    <ol class="breadcrumb">
+                        <li id="folderPopover">
+                            <button type="button" class="btn btn-folders" data-container="body" data-placement="bottom" data-toggle="popover">
+                                <i class="fa fa-ellipsis-h"></i>
+                            </button>
+                        </li>
+                        <?php foreach ($breadcrumbs as $key => $breadcrumb) { ?>
+                            <?php if ($key == count($breadcrumbs) - 1) { ?>
+                                <li class="active"><?php echo $breadcrumb['name']; ?></li>
+                            <?php } else { ?>
+                                <li><a href="<?php echo $breadcrumb['link']; ?>"><?php echo $breadcrumb['name']; ?></a></li>
+                            <?php } ?>
+                        <?php } ?>
+                        <li>
+                            <?php if ($new_folder) { ?>
+                                <a class="btn btn-new-folder" title="New Folder" href="#"><i class="fa fa-folder"></i></a>&nbsp;&nbsp;&nbsp;
+                            <?php } ?>
+                            <?php if ($rename AND $rename_folder) { ?>
+                                <a class="btn btn-rename" title="Rename Folder" data-name="<?php echo $current_folder; ?>" data-path="<?php echo $parent_folder; ?>" href="#"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;
+                            <?php } ?>
+                            <?php if ($delete AND $delete_folder) { ?>
+                                <a class="btn btn-delete" title="Delete Folder" data-name="<?php echo $current_folder; ?>" data-path="<?php echo $parent_folder; ?>" href="#"><i class="fa fa-trash"></i></a>
+                            <?php } ?>
+                        </li>
+                    </ol>
 				</div>
 			</nav>
 
-			<div class="container-fluid">
+			<div class="media-content container-fluid">
 				<div class="row-fluid">
-					<ol class="breadcrumb">
-						<?php foreach ($breadcrumbs as $key => $breadcrumb) { ?>
-							<?php if ($key == count($breadcrumbs) - 1) { ?>
-								<li class="active"><?php echo $breadcrumb['name']; ?></li>
-							<?php } else { ?>
-								<li><a href="<?php echo $breadcrumb['link']; ?>"><?php echo $breadcrumb['name']; ?></a></li>
-							<?php } ?>
-						<?php } ?>
-					</ol>
 					<div id="notification"></div>
+
 					<?php if ($uploads) { ?>
 						<div class="uploader-box">
 							<div class="tabbable upload-tabbable"> <!-- Only required for left/right tabs -->
@@ -143,168 +156,158 @@
 					<?php } ?>
 
 					<div class="grid-box">
-					<?php if ($files_error) { ?>
-						<p class="alert-danger"><?php echo $files_error; ?></p>
+					<?php if (empty($total_files)) { ?>
+						<p class="alert"><?php echo $files_empty; ?></p>
 					<?php } else { ?>
-						<div id="selectable" class="thumbnail-list row">
-							<?php foreach ($files as $file) { ?>
-							<div class="thumbnail-each col-xs-6 col-sm-2 <?php echo $file['html_class']; ?>">
-								<figure class="thumbnail" data-name="<?php echo $file['name']; ?>" data-type="<?php echo $file['type']; ?>" data-path="<?php echo $file['data_path']; ?>">
-									<a class="select-disable link" <?php echo ($file['type'] === 'dir') ? 'href="'. $file['url'] .'"' : ''; ?> title="<?php echo $file['size']; ?>">
-										<div class="img-container select-disable <?php echo ($file['type'] === 'dir') ? 'directory':''; ?>">
-											<?php if ($file['thumb_type'] === 'dir') { ?>
-												<i class="fa fa-folder-open select-disable directory-img"></i>
-											<?php } else if ($file['thumb_type'] === 'thumb') { ?>
-												<img alt="<?php echo $file['name']; ?>" class="img-responsive select-disable thumb" src="<?php echo $file['thumb_url']; ?>" />
-											<?php } else if ($file['thumb_type'] === 'icon') { ?>
-												<span class="select-disable"><?php echo $file['ext']; ?></span>
-												<i class="fa fa-file select-disable icon"></i>
-											<?php } else if ($file['thumb_type'] === 'original') { ?>
-												<img title="<?php echo $file['name']; ?>" class="img-responsive select-disable original" src="<?php echo $file['thumb_url']; ?>" />
-											<?php } ?>
-										</div>
-										<figcaption class="caption">
-											<h4 class="ellipsis">
-												<span class="select-disable"><?php echo $file['human_name']; ?></span>
-											</h4>
-										</figcaption>
-									</a>
-									<div class="info">
-										<ul class="get_info select-disable">
-											<li class="file-name select-disable"><span>Name :</span> <?php echo $file['name']; ?></li>
-											<li class="file-size select-disable"><span>Size :</span> <?php echo $file['size']; ?></li>
-											<li class="file-path select-disable"><span>Path :</span> <?php echo $file['path']; ?></li>
-											<?php if ($file['type'] === 'img') { ?>
-												<li class="file-url select-disable"><span>URL :</span> <a class="preview" target="_blank" href="<?php echo $file['img_url']; ?>">Open in new window</a></li>
-												<li class="img-dimension select-disable"><span>Dimension :</span> <?php echo $file['img_dimension']; ?></li>
-											<?php } ?>
-											<li class="file-date select-disable"><span>Modified Date :</span> <?php echo $file['date']; ?></li>
-											<li class="file-extension select-disable" style="display:none"><?php echo $file['ext']; ?></li>
-											<li class="file-permission select-disable"><span>Permission :</span>
-												<?php if ($file['perms'] === '04' OR $file['perms'] === '05') { ?>
-													Read Only
-												<?php } else if ($file['perms'] === '06' OR $file['perms'] === '07') { ?>
-													Read & Write
-												<?php } else { ?>
-													No Access
-												<?php } ?>
-											</li>
-										</ul>
-									</div>
-								</figure>
-							</div>
-							<?php } ?>
-						</div>
+                        <div id="selectable" class="col-xs-9 wrap-none">
+                            <div class="media-preview row"></div>
+                            <div class="media-list row">
+                                <?php foreach ($files as $file) { ?>
+                                    <div class="thumbnail-each col-xs-6 col-sm-4 <?php echo $file['html_class']; ?>">
+                                        <figure class="thumbnail" data-type="<?php echo $file['type']; ?>" data-name="<?php echo $file['name']; ?>" data-path="<?php echo $file['path']; ?>">
+                                            <a class="link" title="<?php echo $file['size']; ?>">
+                                                <div class="img-container">
+                                                    <?php if ($file['thumb_type'] === 'thumb') { ?>
+                                                        <img alt="<?php echo $file['name']; ?>" class="img-responsive thumb" src="<?php echo $file['thumb_url']; ?>" />
+                                                    <?php } else if ($file['thumb_type'] === 'icon') { ?>
+                                                        <span class=""><?php echo $file['ext']; ?></span>
+                                                        <i class="fa fa-file icon"></i>
+                                                    <?php } ?>
+                                                </div>
+                                                <figcaption class="caption">
+                                                    <h4 class="ellipsis">
+                                                        <span class=""><?php echo $file['human_name']; ?></span>
+                                                    </h4>
+                                                </figcaption>
+                                            </a>
+                                            <div class="info">
+                                                <div class="btn-group">
+                                                    <?php if ($file['type'] === 'img') { ?>
+                                                        <button type="button" class="btn btn-default btn-preview" data-url="<?php echo $file['img_url']; ?>"><i class="fa fa-eye"></i></button>
+                                                    <?php } else { ?>
+                                                        <button type="button" class="btn btn-default btn-preview" disabled="disabled" data-url="<?php echo $file['img_url']; ?>"><i class="fa fa-eye"></i></button>
+                                                    <?php } ?>
+                                                    <?php if ($rename) { ?>
+                                                        <button type="button" class="btn btn-default btn-rename" data-name="<?php echo $file['name']; ?>" data-path="<?php echo $sub_folder; ?>"><i class="fa fa-pencil"></i></button>
+                                                    <?php } ?>
+                                                    <?php if ($move) { ?>
+                                                        <button type="button" class="btn btn-default btn-move"><i class="fa fa-folder-open"></i></button>
+                                                    <?php } ?>
+                                                    <?php if ($copy) { ?>
+                                                        <button type="button" class="btn btn-default btn-copy"><i class="fa fa-clipboard"></i></button>
+                                                    <?php } ?>
+                                                    <?php if ($delete) { ?>
+                                                        <button type="button" class="btn btn-default btn-delete"><i class="fa fa-trash"></i></button>
+                                                    <?php } ?>
+                                                </div>
+                                                <ul class="get_info">
+                                                    <li class="file-name">
+                                                        <span>Name :</span><?php echo $file['name']; ?>
+                                                    </li>
+                                                    <li class="file-size"><span>Size :</span> <?php echo $file['size']; ?></li>
+                                                    <li class="file-path"><span>Path :</span> <?php echo '/'.$sub_folder; ?></li>
+                                                    <?php if ($file['type'] === 'img') { ?>
+                                                        <li class="file-url"><span>URL :</span> <input type="text" class="form-control url-control" readonly="readonly" value="<?php echo $file['img_url']; ?>"/></li>
+                                                        <li class="img-dimension"><span>Dimension :</span> <?php echo $file['img_dimension']; ?></li>
+                                                    <?php } ?>
+                                                    <li class="file-date"><span>Modified Date :</span> <?php echo $file['date']; ?></li>
+                                                    <li class="file-extension"><span>Extension :</span><em class="text-uppercase"><?php echo $file['ext']; ?></em></li>
+                                                    <li class="file-permission"><span>Permission :</span>
+                                                        <?php if ($file['perms'] === '04' OR $file['perms'] === '05') { ?>
+                                                            Read Only
+                                                        <?php } else if ($file['perms'] === '06' OR $file['perms'] === '07') { ?>
+                                                            Read & Write
+                                                        <?php } else { ?>
+                                                            No Access
+                                                        <?php } ?>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </figure>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        </div>
+
+                        <div class="media-sidebar col-xs-3">
+                            <div id="media-details"></div>
+                        </div>
 					<?php } ?>
 					</div>
 				</div>
 			</div>
 
 			<nav class="navbar navbar-default navbar-statusbar navbar-fixed-bottom" role="navigation">
-				<div class="container">
-					<p class="navbar-text"><?php echo $total_files; ?> items, <?php echo $folder_size; ?></p>
+				<div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                            <p class="navbar-text"><span class="total-selected">0</span><span class="total-selected-text"> of </span><?php echo $total_files; ?> items selected, <?php echo $folder_size; ?></p>
+                        </div>
+                        <div class="col-sm-4 text-right">
+                            <?php if ($field_id) { ?>
+                                <a class="btn btn-primary btn-choose disabled">Choose</a>
+                            <?php } ?>
+                        </div>
+                    </div>
 				</div>
 			</nav>
 
 			<div id="previewBox" style="display:none;"></div>
-			<link type="text/css" rel="stylesheet" href="<?php echo root_url("assets/js/fancybox/jquery.fancybox.css"); ?>">
-			<script src="<?php echo root_url("assets/js/fancybox/jquery.fancybox.js"); ?>"></script>
 			<script type="text/javascript"><!--
-			$(document).ready(function(){
-				$('a, button, span').tooltip({container:'body', placement: 'bottom'});
+            $(document).ready(function(){
+                $('a, button, span').tooltip({container:'body', placement: 'bottom'});
 
-				$('#selectable').finderSelect({children:'.thumbnail-each:not(.back)'});
+                var folder_tree = '<?php echo $folder_tree; ?>';
+                $('#folderPopover .btn-folders').popover({
+                    container: '#folderPopover',
+                    html: true,
+                    title: 'Folders',
+                    content: '<span class="help-block">Double click to go</span>' + folder_tree
+                });
 
-				$.contextMenu({
-					selector:'.selected figure:not(.back)',
-					trigger: 'right',
-					autoHide: false,
-					zIndex: 9999,
-					build: function($trigger) {
-						var figure = $trigger;
-						//figure.parent().addClass('selected');
-						var options = {
-							callback: function(key, options) {
-								switch (key) {
-								case 'preview':
-									var image_url = decodeURIComponent(figure.find('a.preview').attr('href'));
-									if (image_url != '') {
-										$('#previewBox').empty();
-										$('#previewBox').html('<img src="'+ image_url +'" />');
-										$.fancybox({
-											href:"#previewBox",
-											autoScale: false,
-										});
-									}
-									break;
-								case 'copy':
-									$('.btn-copy').click();
-									break;
-								case 'move':
-									$('.btn-move').click();
-									break;
-								case 'rename':
-									var file_name = $.trim(figure.attr('data-name'));
-									var title = 'Rename:';
-									var message = '<input type="text" id="new-name" class="form-control" value="' + file_name + '" />';
-									var main_callback = function() {
-										var sub_folder = $.trim($('#sub_folder').val());
-										var new_name = $('#new-name').val();
-										new_name = fixFilename(new_name);
-										if (new_name !== null && new_name != file_name) {
-											var data = {sub_folder: sub_folder, file_name: file_name, new_name: new_name};
-											modalAjax('rename', data);
-										}
-									}
+                $('#folderPopover').on('shown.bs.popover', function () {
+                    $('.metisFolder').metisMenu({
+                        toggle: false,
+                        doubleTapToGo: true
+                    });
+                });
 
-									customModal(message, title, main_callback);
-									break;
-								case 'delete':
-									var sub_folder = $.trim($('#sub_folder').val());
-									var delete_files = $('.thumbnail-list .selected figure').map(function(){return $(this).attr('data-name');}).get();
-									if (delete_files != '') {
-										bootbox.confirm('Are you sure you want to delete the file/folder and it contents?', function(result) {
-											if (result === false) {
-												Notification.show('Action canceled');
-											} else {
-												var data = {sub_folder: sub_folder, delete_files: JSON.stringify(delete_files)};
-												modalAjax('delete', data);
-											}
-										});
-									} else {
-										Notification.show('Please select the file(s) to delete');
-									}
-									break;
-								case 'info':
-									bootbox.alert(figure.find('.info').html());
-									break;
-								}
-							},
-							items: {}
-						};
+                $('.media-list').on('click', function() {
+                    $('#folderPopover .btn-folders').popover('hide');
+                });
 
-						if (figure.attr('data-type') == 'img') {
-							options.items.preview = {name: 'Preview', icon: 'eye', disabled: false};
-						} else {
-							options.items.preview = {name: 'Preview', icon: 'eye', disabled: true};
-						}
-						options.items.copy = {name: 'Copy', icon: 'clipboard', disabled: false};
-						options.items.move = {name: 'Move', icon: 'folder-open', disabled: false};
-						options.items.rename = {name: 'Rename', icon: 'pencil', disabled: false};
-						options.items.delete = {name: 'Delete', icon: 'trash-o', disabled: false};
-						options.items.sep = '----';
-						options.items.info = {name: 'Get Info', icon: 'info-circle', disabled: false};
+                var mediaList = $('.media-list');
+                mediaList.selectonic({
+                    listClass: 'selectable',
+                    selectedClass: 'selected',
+                    focusClass: 'focused',
+                    disabledClass: 'disabled',
+                    keyboard: true,
+                    select: function(event, ui) {
+                        $('#media-details').html($(ui.target).find('.info').html());
+                        $('.btn-copy, .btn-move, .btn-choose').removeClass('disabled');
+                    },
+                    unselect: function(event, ui) {
+                        $('#media-details').html('');
+                    },
+                    unselectAll: function(event, ui) {
+                        $('#media-details').html('');
+                        $('.btn-copy, .btn-move, .btn-choose').addClass('disabled');
+                    },
+                    stop: function() {
+                        var totalSelected = mediaList.selectonic('getSelected').length;
+                        $('.total-selected').html(totalSelected);
+                    }
+                });
 
-						return options;
-					},
-					events: {
-						hide: function(opt){
-							//$('figure').removeClass('selected');
-						}
-					}
-				});
+                if ($(".selected-on-open")[0]) {
+                    mediaList.selectonic('select', $(".selected-on-open"));
+                    mediaList.selectonic('focus', $(".selected-on-open"));
+                    mediaList.selectonic('scroll');
+                }
 
-				$('#btn-search').on('click', function() {
+                $('#btn-search').on('click', function() {
 					if ($('#filter-search').val().length > 1) {
 						var input = fixFilename($('#filter-search').val());
 						window.location.href = $('#refresh').attr('href') + '&filter=' + input;
@@ -324,147 +327,198 @@
 					window.location.href = $('#refresh').attr('href');
 				});
 
-				$('.thumbnail-list').on('contextmenu', function(e) {
-					if (!$(e.target).is("figure")) {
-						e.preventDefault();
-					}
-				});
+				$('.media-list .file').on('dblclick', '.link', function() {
+                    chooseSelected($(this).parent());
+                });
 
-				$('.thumbnail-list a:not(.link)').on('click', function(e) {
-					$('#selectable li').removeClass('selected');
-				});
+                $(document).on('click', '.btn-choose', function() {
+                    var selected = mediaList.selectonic('getSelected');
+                    if (selected.length == 1) {
+                        chooseSelected($(selected).find('figure'));
+                    }
+                });
+            });
 
-				$('.thumbnail-list .directory').on('click', '.link', function(e) {
-					e.preventDefault();
-				});
+            //upload open
+            $(document).on('click', '.btn-upload', function() {
+                if ($(this).hasClass('active')) {
+                    $('.uploader-box').slideUp();
+                    $('.btn-upload').removeClass('active');
+                    window.location.href = $('#refresh').attr('href') + '&' + new Date().getTime();
+                } else {
+                    $('.uploader-box').slideDown();
+                    $('.btn-upload').addClass('active');
+                    $('.btn-toolbar .btn:not(.btn-upload)').addClass('disabled');
+                }
+            });
 
-				$('.thumbnail-list .directory').on('dblclick', '.link', function(e) {
-					window.location.replace($(this).attr('href'));
-				});
+            //sort by
+            $(document).on('click', '.sorter', function() {
+                var _this = $(this);
+                $('.dropdown-toggle').trigger('click');
+                var sortOrder = $('#sort_order').val();
 
-				$('.thumbnail-list .file').on('dblclick', '.link', function() {
-					var field = parent.$('#' + $('#field_id').val());
-					var figure = $(this).parent();
-					var file_path = 'data/' + figure.attr('data-path');
-					var file_name = figure.attr('data-name');
-					var file_src = figure.find('.img-container img').attr('src');
-					var thumb = field.parent().parent().find('.thumb');
-					var thumb_name = field.parent().parent().find('.name');
+                if (sortOrder == 'ascending') {
+                    sortOrder = 'descending';
+                } else {
+                    sortOrder = 'ascending';
+                }
 
-					if (typeof parent.$.fancybox == 'function') {
-						field.attr('value', file_path);
-						thumb_name.html(file_name);
+                window.location.href = $('#refresh').attr('href') + "&sort_by=" + _this.attr('data-sort') + "&sort_order=" + sortOrder;
+            });
 
-						parent.$.fancybox.close();
-						parent.$('#image-manager').empty();
-					}
+            //new folder
+            $(document).on('click', '.btn-new-folder', function() {
+                bootbox.prompt('New Folder', function(result) {
+                    if (result === null) {
+                        Notification.show('Action canceled');
+                    } else {
+                        var new_name = $('.bootbox-input').val();
+                        new_name = fixFilename(new_name);
+                        var sub_folder = $.trim($('#sub_folder').val());
+                        if (new_name != '') {
+                            var data = {name: new_name, sub_folder: sub_folder};
+                            modalAjax('new_folder', data);
+                        } else {
+                            Notification.show('Folder name can not be blank');
+                        }
+                    }
+                });
+            });
 
-					if (typeof top.tinymce != 'undefined') {
-						$.ajax({
-							url: js_site_url('image_manager/resize?image=') + encodeURIComponent(file_path),
-							dataType: 'json',
-							success: function(url) {
-								var dialogArguments = top.tinymce.activeEditor.windowManager.getParams();
-								dialogArguments.updateInput(url);
-								top.tinymce.activeEditor.windowManager.close();
-							}
-						});
-					}
-				});
+            //preview
+            $(document).on('click', '.btn-preview', function() {
+                var image_url = decodeURIComponent($(this).attr('data-url'));
+                if (image_url != '') {
+                    $('#previewBox').empty();
+                    $('#previewBox').html('<img src="'+ image_url +'" />');
+                    $.fancybox({
+                        padding : 0,
+                        href:"#previewBox",
+                        autoScale: false,
+                        parent: ".media-preview"
+                    });
+                }
+            });
 
-				//upload open
-				$('.btn-upload').on('click', function() {
-					if ($(this).hasClass('active')) {
-						$('.uploader-box').fadeOut();
-						$('.grid-box').slideDown(500);
-						$('.btn-upload').removeClass('active');
-						window.location.href = $('#refresh').attr('href') + '&' + new Date().getTime();
-					} else {
-						$('.grid-box').fadeOut();
-						$('.uploader-box').slideDown(500);
-						$('.btn-upload').addClass('active');
-					}
-				});
+            //rename
+            $(document).on('click', '.btn-rename', function() {
+                var file_name = $.trim($(this).attr('data-name'));
+                var file_path = $.trim($(this).attr('data-path'));
+                var title = 'Rename:';
+                var message = '<input type="text" id="new-name" class="form-control" value="' + file_name + '" />';
+                var main_callback = function() {
+                    var new_name = $('#new-name').val();
+                    new_name = fixFilename(new_name);
+                    if (new_name !== null && new_name != file_name) {
+                        var data = {file_path: file_path, file_name: file_name, new_name: new_name};
+                        modalAjax('rename', data);
+                    }
+                }
 
-				//sort by
-				$('.sorter').on('click', function() {
-					_this = $(this);
-					$('.dropdown-toggle').trigger('click');
-					var sortOrder = $('#sort_order').val();
+                customModal(message, title, main_callback);
+            });
 
-					if (sortOrder == 'ascending') {
-						sortOrder = 'descending';
-					} else {
-						sortOrder = 'ascending';
-					}
+            // copy
+            $(document).on('click', '.btn-copy', function() {
+                var copy_files = $('.media-list .selected figure').map(function(){return $(this).attr('data-name');}).get();
+                if (copy_files != '') {
+                    var title = 'Copy selected items to:';
+                    var message = '<div id="folder-path">' + $('#folders_list').html() + '</div>';
+                    var main_callback = function() {
+                        var to_folder = $('#folder-path select').val();
+                        var from_folder = $.trim($('#sub_folder').val());
+                        if (to_folder !== null && to_folder != from_folder) {
+                            var data = {from_folder: from_folder, to_folder: to_folder, copy_files: JSON.stringify(copy_files)};
+                            modalAjax('copy', data);
+                        }
+                    }
 
-					window.location.href = $('#refresh').attr('href') + "&sort_by=" + _this.attr('data-sort') + "&sort_order=" + sortOrder;
-				});
+                    customModal(message, title, main_callback);
+                } else {
+                    Notification.show('Please select the file(s) to copy');
+                }
+            });
 
-				//new folder
-				$('.btn-new-folder').on('click', function() {
-					bootbox.prompt('New Folder', function(result) {
-						if (result === null) {
-							Notification.show('Action canceled');
-						} else {
-							var new_name = $('.bootbox-input').val();
-							new_name = fixFilename(new_name);
-							var sub_folder = $.trim($('#sub_folder').val());
-							if (new_name != '') {
-								var data = {sub_folder: sub_folder, name: new_name};
-								modalAjax('new_folder', data);
-							} else {
-								Notification.show('Folder name can not be blank');
-							}
-						}
-					});
-				});
+            // move
+            $(document).on('click', '.btn-move', function() {
+                var move_files = $('.media-list .selected figure').map(function(){return $(this).attr('data-name');}).get();
+                if (move_files != '') {
+                    var title = 'Move selected items to:';
+                    var message = '<div id="folder-path">' + $('#folders_list').html() + '</div>';
+                    var main_callback = function() {
+                        var from_folder = $.trim($('#sub_folder').val());
+                        var to_folder = $('#folder-path select').val();
+                        if (to_folder !== null && to_folder != from_folder) {
+                            var data = {from_folder: from_folder, to_folder: to_folder, move_files: JSON.stringify(move_files)};
+                            modalAjax('move', data);
+                        }
+                    }
 
-				// copy
-				$('.btn-copy').on('click', function() {
-					var copy_files = $('.thumbnail-list .selected figure').map(function(){return $(this).attr('data-name');}).get();
-					if (copy_files != '') {
-						var title = 'Copy selected items to:';
-						var message = '<select id="folder-path" class="form-control">' + $('#folders_list').html() + '</select><span class="help-block small">Existing file/folder will NOT be replaced</span>';
-						var main_callback = function() {
-							var to_folder = $('#folder-path').val();
-							var from_folder = $.trim($('#sub_folder').val());
-							if (to_folder !== null && to_folder != from_folder) {
-								var data = {from_folder: from_folder, to_folder: to_folder, copy_files: JSON.stringify(copy_files)};
-								modalAjax('copy', data);
-							}
-						}
+                    customModal(message, title, main_callback);
+                } else {
+                    Notification.show('Please select the file(s) to move');
+                }
+            });
 
-						customModal(message, title, main_callback);
-					} else {
-						Notification.show('Please select the file(s) to copy');
-					}
-				});
+            //delete
+            $(document).on('click', '.btn-delete', function() {
+                var sub_folder = $.trim($('#sub_folder').val());
+                var file_path = $.trim($(this).attr('data-path'));
+                var file_name = $.trim($(this).attr('data-name'));
+                var delete_files = $('.media-list .selected figure').map(function(){return $(this).attr('data-name');}).get();
 
-				// move
-				$('.btn-move').on('click', function() {
-					var move_files = $('.thumbnail-list .selected figure').map(function(){return $(this).attr('data-name');}).get();
-					if (move_files != '') {
-						var title = 'Move selected items to:';
-						var message = '<select id="folder-path" class="form-control">' + $('#folders_list').html() + '</select><span class="help-block small">Existing file/folder will NOT be replaced</span>';
-						var main_callback = function() {
-							var from_folder = $.trim($('#sub_folder').val());
-							var to_folder = $('#folder-path').val();
-							if (to_folder !== null && to_folder != from_folder) {
-								var data = {from_folder: from_folder, to_folder: to_folder, move_files: JSON.stringify(move_files)};
-								modalAjax('move', data);
-							}
-						}
+                if (delete_files == '' && file_name != '' && file_path != '/') {
+                    bootbox.confirm('Are you sure you want to delete the opened folder and its contents?', function(result) {
+                        if (result === false) {
+                            Notification.show('Action canceled');
+                        } else {
+                            var data = {file_path: file_path, file_name: file_name};
+                            modalAjax('delete', data);
+                        }
+                    });
+                } else if (delete_files != '') {
+                    bootbox.confirm('Are you sure you want to delete the selected file (s)?', function(result) {
+                        if (result === false) {
+                            Notification.show('Action canceled');
+                        } else {
+                            var data = {file_path: sub_folder, file_names: JSON.stringify(delete_files)};
+                            modalAjax('delete', data);
+                        }
+                    });
+                } else {
+                    Notification.show('Please select the file(s) to delete');
+                }
+            });
 
-						customModal(message, title, main_callback);
-					} else {
-						Notification.show('Please select the file(s) to move');
-					}
-				});
+            function chooseSelected(figure) {
+                var field = parent.$('#' + $('#field_id').val());
+                var file_path = 'data/' + figure.attr('data-path');
+                var file_name = figure.attr('data-name');
+                var thumb_name = field.parent().parent().find('.name');
 
-			});
+                if (typeof parent.$.fancybox == 'function') {
+                    field.attr('value', file_path);
+                    thumb_name.html(file_name);
 
-			function customModal(message, title, main_callback) {
+                    parent.$.fancybox.close();
+                    parent.$('#image-manager').empty();
+                }
+
+                if (typeof top.tinymce != 'undefined') {
+                    $.ajax({
+                        url: js_site_url('image_manager/resize?image=' + encodeURIComponent(file_path)),
+                        dataType: 'json',
+                        success: function (url) {
+                            var dialogArguments = top.tinymce.activeEditor.windowManager.getParams();
+                            dialogArguments.updateInput(url);
+                            top.tinymce.activeEditor.windowManager.close();
+                        }
+                    });
+                }
+            }
+
+            function customModal(message, title, main_callback) {
 				bootbox.dialog({
 					message: message,
 					title: title,
@@ -485,25 +539,46 @@
 				});
 			}
 
-			function modalAjax(action, data) {
+            function modalAjax(action, data) {
+                var redirect = '';
+
+                if (action === 'new_folder') {
+                    redirect = data.sub_folder + data.name + '/';
+                } else if (action === 'create_gallery') {
+                    redirect = 'gallery/' + data.name + '/';
+                } else if (action === 'delete') {
+                    redirect = data.file_path;
+                } else if (action === 'rename') {
+                    redirect = data.file_path + data.new_name;
+                } else if (action === 'copy' || action === 'move') {
+                    redirect = data.to_folder;
+                }
+
 				$.ajax({
 					type: 'POST',
 					url: js_site_url('image_manager/' + action),
 					data: data,
 					dataType: 'json',
-					success: function(json) { showSuccess(json) }
+					success: function(json) { showSuccess(json, redirect) }
 				});
 			}
 
-			function showSuccess(json) {
-				var refresh_url = $('#refresh').attr('href');
+            function showSuccess(json, redirect) {
 				$('.error, .success').remove();
+
+                var refresh_url = $('#refresh').attr('href');
+                var cpos = refresh_url.indexOf("&sub_folder=") + "&sub_folder=".length,
+                    spos = refresh_url.indexOf("/&");
+                if (typeof redirect != 'undefined' && redirect != '' && cpos > -1 && spos > cpos)
+                    var refreshUrl = refresh_url.substr(0, cpos) + redirect + refresh_url.substr(spos + 1);
+
+                if (typeof refreshUrl == 'undefined') refreshUrl = refresh_url;
 
 				if (json['alert']) {
 					var message = json['alert'];
 					Notification.show(message);
 					setTimeout(function() {
-						window.location.href = refresh_url;
+                        window.location.href = refreshUrl;
 					}, 2000);
 				}
 			}
@@ -545,7 +620,7 @@
 								$.ajax({
 									type: 'POST',
 									url: js_site_url('image_manager/delete'),
-									data: {sub_folder: sub_folder, delete_file: delete_file},
+									data: {file_path: sub_folder, file_name: delete_file},
 									dataType: 'json',
 									success: function(json) {
 										showSuccess(json);

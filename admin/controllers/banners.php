@@ -11,14 +11,6 @@ class Banners extends Admin_Controller {
 	}
 
 	public function index() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'banners')) {
-  			redirect('permission');
-		}
-
 		$this->template->setTitle('Banners');
 		$this->template->setHeading('Banners');
 		$this->template->setButton('+ New', array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
@@ -48,14 +40,6 @@ class Banners extends Admin_Controller {
 	}
 
 	public function edit() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'banners')) {
-  			redirect('permission');
-		}
-
 		$banner_info = $this->Design_model->getBanner((int) $this->input->get('id'));
 
 		if ($banner_info) {
@@ -73,7 +57,10 @@ class Banners extends Admin_Controller {
 		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setBackButton('btn btn-back', site_url('banners'));
 
-		$data['banner_id'] 			= $banner_info['banner_id'];
+        $this->template->setStyleTag(root_url('assets/js/fancybox/jquery.fancybox.css'), 'jquery-fancybox-css');
+        $this->template->setScriptTag(root_url("assets/js/fancybox/jquery.fancybox.js"), 'jquery-fancybox-js');
+
+        $data['banner_id'] 			= $banner_info['banner_id'];
 		$data['name'] 				= $banner_info['name'];
 		$data['type'] 				= ($this->input->post('type')) ? $this->input->post('type') : $banner_info['type'];
 		$data['click_url'] 			= $banner_info['click_url'];
@@ -83,7 +70,6 @@ class Banners extends Admin_Controller {
 		$data['status'] 			= $banner_info['status'];
 		$data['no_photo'] 			= $this->Image_tool_model->resize('data/no_photo.png');
 
-		$data['image_height'] = $data['image_width'] = $data['carousel_height'] = $data['carousel_width'] = '';
 		$data['image'] = array('name' => 'no_photo.png', 'path' => 'data/no_photo.png', 'url' => $data['no_photo']);
 		$data['carousels'] = array();
 
@@ -110,9 +96,6 @@ class Banners extends Admin_Controller {
 					}
 				}
 			}
-
-			$data['image_height'] 	= $image['height'];
-			$data['image_width'] 	= $image['width'];
 		}
 
 		$data['types'] = array(
@@ -152,10 +135,7 @@ class Banners extends Admin_Controller {
 	}
 
 	public function _addBanner() {
-    	if ( ! $this->user->hasPermissions('modify', 'banners')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to add!');
-  			return TRUE;
-    	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$add = array();
 
 			$add['name'] 			= $this->input->post('name');
@@ -168,8 +148,6 @@ class Banners extends Admin_Controller {
 
 			if ($this->input->post('type') !== 'custom') {
 				$add['image_code'] = array();
-				$add['image_code']['height'] = $this->input->post('image_height');
-				$add['image_code']['width'] = $this->input->post('image_width');
 
 				if ($this->input->post('image_path') AND $this->input->post('type') === 'image') {
 					$add['image_code']['path'] = $this->input->post('image_path');
@@ -183,9 +161,9 @@ class Banners extends Admin_Controller {
 			}
 
 			if ($_POST['insert_id'] = $this->Design_model->addBanner($add)) {
-				$this->alert->set('success', 'Banner added sucessfully.');
+				$this->alert->set('success', 'Banner added successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing added.');
+				$this->alert->set('warning', 'An error occurred, nothing added.');
 			}
 
 			return TRUE;
@@ -193,10 +171,7 @@ class Banners extends Admin_Controller {
 	}
 
 	public function _updateBanner() {
-    	if ( ! $this->user->hasPermissions('modify', 'banners')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to update!');
-  			return TRUE;
-    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$update = array();
 
 			$update['banner_id'] 	= $this->input->get('id');
@@ -207,28 +182,25 @@ class Banners extends Admin_Controller {
 			$update['alt_text'] 	= $this->input->post('alt_text');
 			$update['status'] 		= $this->input->post('status');
 
-			if ($this->input->post('type') !== 'custom') {
-				$update['image_code'] = array();
-				$update['image_code']['height'] = $this->input->post('image_height');
-				$update['image_code']['width'] = $this->input->post('image_width');
+			if ($this->input->post('type') === 'custom') {
+                $update['custom_code'] 	= $this->input->post('custom_code');
+            } else {
 
-				if ($this->input->post('image_path') AND $this->input->post('type') === 'image') {
-					$update['image_code']['path'] = $this->input->post('image_path');
-				}
+                if ($this->input->post('image_path') AND $this->input->post('type') === 'image') {
+                    $update['image_code']['path'] = $this->input->post('image_path');
+                }
 
-				if ($this->input->post('carousels') AND $this->input->post('type') === 'carousel') {
-					foreach ($this->input->post('carousels') as $key => $value) {
-						$update['image_code']['paths'][] = $value;
-					}
-				}
+                if ($this->input->post('carousels') AND $this->input->post('type') === 'carousel') {
+                    foreach ($this->input->post('carousels') as $key => $value) {
+                        $update['image_code']['paths'][] = $value;
+                    }
+                }
+            }
+
+            if ($this->Design_model->updateBanner($update)) {
+				$this->alert->set('success', 'Banner updated successfully.');
 			} else {
-				$update['custom_code'] 	= $this->input->post('custom_code');
-			}
-
-			if ($this->Design_model->updateBanner($update)) {
-				$this->alert->set('success', 'Banner updated sucessfully.');
-			} else {
-				$this->alert->set('warning', 'An error occured, nothing added.');
+				$this->alert->set('warning', 'An error occurred, nothing added.');
 			}
 
 			return TRUE;
@@ -236,14 +208,12 @@ class Banners extends Admin_Controller {
 	}
 
 	public function _deleteBanner() {
-    	if ( ! $this->user->hasPermissions('modify', 'banners')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to delete!');
-    	} else if (is_array($this->input->post('delete'))) {
+    	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Design_model->deleteBanner($value);
 			}
 
-			$this->alert->set('success', 'Banner deleted sucessfully!');
+			$this->alert->set('success', 'Banner deleted successfully!');
 		}
 
 		return TRUE;
@@ -251,7 +221,7 @@ class Banners extends Admin_Controller {
 
 	public function validateForm() {
 		$this->form_validation->set_rules('name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[255]');
-		$this->form_validation->set_rules('type', 'Type', 'xss_clean|trim|required|aplha|max_length[8]');
+		$this->form_validation->set_rules('type', 'Type', 'xss_clean|trim|required|alpha|max_length[8]');
 		$this->form_validation->set_rules('click_url', 'Click URL', 'xss_clean|trim|required|min_length[2]|max_length[255]');
 		$this->form_validation->set_rules('language_id', 'Language', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('alt_text', 'Alternative Text', 'xss_clean|trim|required|min_length[2]|max_length[255]');
@@ -265,11 +235,6 @@ class Banners extends Admin_Controller {
 			foreach ($this->input->post('carousels') as $key => $value) {
 				$this->form_validation->set_rules('carousels['.$key.']', 'Images', 'xss_clean|trim|required');
 			}
-		}
-
-		if ($this->input->post('type') !== 'custom') {
-			$this->form_validation->set_rules('image_height', 'Dimension height', 'xss_clean|trim|required|integer');
-			$this->form_validation->set_rules('image_width', 'Dimension width', 'xss_clean|trim|required|integer');
 		}
 
 		if ($this->input->post('type') === 'custom') {

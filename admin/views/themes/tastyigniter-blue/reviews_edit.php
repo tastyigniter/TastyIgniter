@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
@@ -11,7 +11,7 @@
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="input-location" class="col-sm-2 control-label">Restaurant:</label>
+						<label for="input-location" class="col-sm-3 control-label">Restaurant:</label>
 						<div class="col-sm-5">
 							<select name="location_id" id="input-location" class="form-control">
 								<?php foreach ($locations as $location) { ?>
@@ -26,7 +26,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-show-menu-images" class="col-sm-2 control-label">Sale Type:</label>
+						<label for="input-show-menu-images" class="col-sm-3 control-label">Sale Type:</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($sale_type == 'reservation') { ?>
@@ -41,14 +41,14 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-order" class="col-sm-2 control-label">Sale ID:</label>
+						<label for="input-order" class="col-sm-3 control-label">Sale ID:</label>
 						<div class="col-sm-5">
 							<input type="text" name="sale_id" id="input-order" class="form-control" value="<?php echo set_value('sale_id', $sale_id); ?>"/>
 							<?php echo form_error('sale_id', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-author" class="col-sm-2 control-label">Author:</label>
+						<label for="input-author" class="col-sm-3 control-label">Author:</label>
 						<div class="col-sm-5">
 							<input type="text" name="customer_id" id="input-author" class="form-control" value="<?php echo set_value('customer_id', $customer_id); ?>"/>
 							<input type="hidden" name="author" value="<?php echo set_value('author', $author); ?>"/>
@@ -56,33 +56,33 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-rating" class="col-sm-2 control-label">Rating:</label>
+						<label for="input-rating" class="col-sm-3 control-label">Rating:</label>
 						<div class="col-sm-5">
 							<ul class="list-inline rating-inline">
 								<li>Quality<br />
 									<div class="rating rating-star" data-score="<?php echo $quality; ?>" data-score-name="rating[quality]"></div>
-									<?php echo form_error('rating[quality]', '<span class="text-danger">', '</span>'); ?>
 								</li>
 								<li>Delivery<br />
 									<div class="rating rating-star" data-score="<?php echo $delivery; ?>" data-score-name="rating[delivery]"></div>
-									<?php echo form_error('rating[delivery]', '<span class="text-danger">', '</span>'); ?>
 								</li>
 								<li>Service<br />
 									<div class="rating rating-star" data-score="<?php echo $service; ?>" data-score-name="rating[service]"></div>
-									<?php echo form_error('rating[service]', '<span class="text-danger">', '</span>'); ?>
 								</li>
+                                <?php echo form_error('rating[quality]', '<span class="text-danger">', '</span>'); ?>
+                                <?php echo form_error('rating[delivery]', '<span class="text-danger">', '</span>'); ?>
+                                <?php echo form_error('rating[service]', '<span class="text-danger">', '</span>'); ?>
 							</ul>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-review-text" class="col-sm-2 control-label">Review Text:</label>
+						<label for="input-review-text" class="col-sm-3 control-label">Review Text:</label>
 						<div class="col-sm-5">
 							<textarea name="review_text" id="input-review-text" class="form-control" rows="7"><?php echo set_value('review_text', $review_text); ?></textarea>
 							<?php echo form_error('review_text', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-status" class="col-sm-2 control-label">Review Status:</label>
+						<label for="input-status" class="col-sm-3 control-label">Review Status:</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($review_status == '1') { ?>
@@ -132,4 +132,4 @@ $('input[name=\'customer_id\']').on('select2-selecting', function(e) {
 	$('input[name=\'customer_id\']').val(e.choice.id);
 });
 //--></script>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

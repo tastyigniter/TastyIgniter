@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
@@ -12,21 +12,21 @@
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Coupon Name:</label>
+						<label for="input-name" class="col-sm-3 control-label">Coupon Name:</label>
 						<div class="col-sm-5">
 							<input type="text" name="name" id="input-name" class="form-control" value="<?php echo set_value('name', $name); ?>" />
 							<?php echo form_error('name', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-code" class="col-sm-2 control-label">Code:</label>
+						<label for="input-code" class="col-sm-3 control-label">Code:</label>
 						<div class="col-sm-5">
 							<input type="text" name="code" id="input-code" class="form-control" value="<?php echo set_value('code', $code); ?>" />
 							<?php echo form_error('code', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-type" class="col-sm-2 control-label">Type:
+						<label for="input-type" class="col-sm-3 control-label">Type:
 							<span class="help-block">Whether to subtract a fixed amount or percentage from order total.</span>
 						</label>
 						<div class="col-sm-5">
@@ -43,7 +43,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-discount" class="col-sm-2 control-label">Discount:</label>
+						<label for="input-discount" class="col-sm-3 control-label">Discount:</label>
 						<div class="col-sm-5">
 							<div class="input-group">
 								<input type="text" name="discount" id="input-discount" class="form-control" value="<?php echo set_value('discount', $discount); ?>" />
@@ -53,7 +53,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-redemptions" class="col-sm-2 control-label">Redemptions:
+						<label for="input-redemptions" class="col-sm-3 control-label">Redemptions:
 							<span class="help-block">The total number of times this coupon can be redeem. Enter 0 for unlimited redemptions.</span>
 						</label>
 						<div class="col-sm-5">
@@ -62,7 +62,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-customer-redemptions" class="col-sm-2 control-label">Customer Redemptions:
+						<label for="input-customer-redemptions" class="col-sm-3 control-label">Customer Redemptions:
 							<span class="help-block">The number of times a specific customer can redeem this coupon. Enter 0 for unlimited redemptions.</span>
 						</label>
 						<div class="col-sm-5">
@@ -71,7 +71,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-min-total" class="col-sm-2 control-label">Minimum Total:</label>
+						<label for="input-min-total" class="col-sm-3 control-label">Minimum Total:</label>
 						<div class="col-sm-5">
 							<div class="input-group">
 								<input type="text" name="min_total" id="input-min-total" class="form-control" value="<?php echo set_value('min_total', $min_total); ?>" />
@@ -81,7 +81,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-validity" class="col-sm-2 control-label">Validity:</label>
+						<label for="input-validity" class="col-sm-3 control-label">Validity:</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle btn-group-4" data-toggle="buttons">
 								<?php if ($validity === 'forever') { ?>
@@ -110,7 +110,7 @@
 					</div>
 					<div id="validity-fixed">
 						<div class="form-group">
-							<label for="start-date" class="col-sm-2 control-label">Date:</label>
+							<label for="start-date" class="col-sm-3 control-label">Date:</label>
 							<div class="col-sm-5">
 								<div class="input-group date">
 									<input type="text" name="validity_times[fixed_date]" id="fixed-date" class="form-control" value="<?php echo set_value('validity_times[fixed_date]', $fixed_date); ?>" />
@@ -120,8 +120,8 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="" class="col-sm-2 control-label">Time:</label>
-							<div class="col-sm-10">
+							<label for="" class="col-sm-3 control-label">Time:</label>
+							<div class="col-sm-7">
 								<div class="control-group control-group-3">
 									<div class="btn-group btn-group-toggle" data-toggle="buttons">
 										<?php if ($fixed_time == '24hours') { ?>
@@ -151,8 +151,8 @@
 					</div>
 					<div id="validity-period">
 						<div class="form-group">
-							<label for="" class="col-sm-2 control-label">Date:</label>
-							<div class="col-sm-7">
+							<label for="" class="col-sm-3 control-label">Date:</label>
+							<div class="col-sm-5">
 								<div class="control-group control-group-2">
 									<div class="input-group date">
 										<span class="input-group-addon"><b>Start:</b></span>
@@ -172,7 +172,7 @@
 					</div>
 					<div id="validity-recurring">
 						<div class="form-group">
-							<label for="start-date" class="col-sm-2 control-label">Every:</label>
+							<label for="start-date" class="col-sm-3 control-label">Every:</label>
 							<div class="col-sm-5">
 								<div class="btn-group btn-group-toggle btn-group-7" data-toggle="buttons">
 									<?php foreach ($weekdays as $key => $value) { ?>
@@ -187,8 +187,8 @@
 							</div>
 						</div><?php echo $recurring_from_time; ?>
 						<div class="form-group">
-							<label for="" class="col-sm-2 control-label">Time:</label>
-							<div class="col-sm-10">
+							<label for="" class="col-sm-3 control-label">Time:</label>
+							<div class="col-sm-7">
 								<div class="control-group control-group-3">
 									<div class="btn-group btn-group-toggle" data-toggle="buttons">
 										<?php if ($recurring_time == '24hours') { ?>
@@ -217,14 +217,14 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-description" class="col-sm-2 control-label">Description:</label>
+						<label for="input-description" class="col-sm-3 control-label">Description:</label>
 						<div class="col-sm-5">
 							<textarea name="description" id="input-description" class="form-control" rows="7"><?php echo set_value('description', $description); ?></textarea>
 							<?php echo form_error('description', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-status" class="col-sm-2 control-label">Status:</label>
+						<label for="input-status" class="col-sm-3 control-label">Status:</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($status == '1') { ?>
@@ -240,33 +240,35 @@
 					</div>
 				</div>
 
-				<div id="coupon-history" class="tab-pane row wrap-all">
-					<div class="panel panel-default panel-table">
-						<div class="table-responsive">
-							<table height="auto" class="table table-striped table-border" id="history">
-								<tr>
-									<th class="">Order ID</th>
-									<th width="55%">Customer</th>
-									<th class="text-center">Amount</th>
-									<th class="text-right">Date Used</th>
-								</tr>
-								<?php if ($coupon_histories) { ?>
-								<?php foreach ($coupon_histories as $history) { ?>
-								<tr>
-									<td class=""><a href="<?php echo $history['view']; ?>"><?php echo $history['order_id']; ?></a></td>
-									<td><?php echo $history['customer_name']; ?></td>
-									<td class="text-center"><?php echo $history['amount']; ?></td>
-									<td class="text-right"><?php echo $history['date_used']; ?></td>
-								</tr>
-								<?php } ?>
-								<?php } else { ?>
-								<tr>
-									<td colspan="6"><?php echo $text_empty; ?></td>
-								</tr>
-								<?php } ?>
-							</table>
-						</div>
-					</div>
+				<div id="coupon-history" class="tab-pane row wrap-left wrap-right">
+                    <div class="table-responsive">
+                        <table height="auto" class="table table-striped table-border" id="history">
+                            <thead>
+                                <tr>
+                                    <th class="">Order ID</th>
+                                    <th width="55%">Customer</th>
+                                    <th class="text-center">Amount</th>
+                                    <th class="text-right">Date Used</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if ($coupon_histories) { ?>
+                                <?php foreach ($coupon_histories as $history) { ?>
+                                <tr>
+                                    <td class=""><a href="<?php echo $history['view']; ?>"><?php echo $history['order_id']; ?></a></td>
+                                    <td><?php echo $history['customer_name']; ?></td>
+                                    <td class="text-center"><?php echo $history['amount']; ?></td>
+                                    <td class="text-right"><?php echo $history['date_used']; ?></td>
+                                </tr>
+                                <?php } ?>
+                                <?php } else { ?>
+                                <tr>
+                                    <td colspan="6"><?php echo $text_empty; ?></td>
+                                </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
 				</div>
 			</div>
 		</form>
@@ -310,4 +312,4 @@ $(document).ready(function() {
 	});
 });
 //--></script>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

@@ -81,19 +81,19 @@ class Modules
 
 		(is_array($module)) ? list($module, $params) = each($module) : $params = NULL;
 
-		/* get the requested controller class name */
-		$alias = strtolower(basename($module));
+        /* get the requested controller class name */
+        $alias = strtolower(basename($module));
 
-		/* create or return an existing controller from the registry */
-		if ( ! isset(self::$registry[$alias])) {
+        /* create or return an existing controller from the registry */
+        if ( ! isset(self::$registry[$alias])) {
 
-			/* find the controller */
-			list($class) = CI::$APP->router->locate(explode('/', $module));
+            /* find the controller */
+            list($class) = CI::$APP->router->locate(explode('/', $module));
 
-			/* controller cannot be located */
-			if (empty($class)) return;
+            /* controller cannot be located */
+            if (empty($class)) return;
 
-			/* set the module directory */
+            /* set the module directory */
 			$path = APPPATH.'controllers/'.CI::$APP->router->fetch_directory();
 
 			/* load the controller class */

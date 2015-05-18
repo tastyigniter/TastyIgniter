@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
 		<div class="panel panel-default panel-table">
@@ -10,7 +10,6 @@
 					<table border="0" class="table table-striped table-border">
 						<thead>
 							<tr>
-								<th class="action action-one"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
 								<th class="action action-three"></th>
 								<th>Name</th>
 								<th class="id">ID</th>
@@ -20,27 +19,26 @@
 							<?php if ($extensions) { ?>
 							<?php foreach ($extensions as $extension) { ?>
 							<tr>
-								<td class="action action-one"><input type="checkbox" value="<?php echo $extension['extension_id']; ?>" name="delete[]" /></td>
 								<td class="action action-three">
+                                    <?php if ($extension['options'] === TRUE) {?>
+                                        <a class="btn btn-edit" title="Edit" href="<?php echo $extension['edit']; ?>"><i class="fa fa-pencil"></i></a>
+                                    <?php } else { ?>
+                                        <a class="btn btn-edit" title="Edit" disabled="disabled"><i class="fa fa-pencil"></i></a>
+                                    <?php } ?>
+                                    &nbsp;&nbsp;&nbsp;
 									<?php if ($extension['installed'] === TRUE) {?>
-										<a class="btn btn-danger" title="Uninstall" href="<?php echo $extension['manage']; ?>"><i class="fa fa-times"></i></a>
+										<a class="btn btn-danger" title="Uninstall" href="<?php echo $extension['manage']; ?>"><i class="fa fa-stop"></i></a>
 									<?php } else { ?>
-										<a class="btn btn-info" title="Install" href="<?php echo $extension['manage']; ?>"><i class="fa fa-plus"></i></a>
-									<?php } ?>
-									&nbsp;&nbsp;&nbsp;
-									<?php if ($extension['options'] === TRUE) {?>
-										<a class="btn btn-edit" title="Edit" href="<?php echo $extension['edit']; ?>"><i class="fa fa-pencil"></i></a>
-									<?php } else { ?>
-										<a class="btn btn-edit" title="Edit" disabled="disabled"><i class="fa fa-pencil"></i></a>
-									<?php } ?>
+										<a class="btn btn-info" title="Install" href="<?php echo $extension['manage']; ?>"><i class="fa fa-play"></i></a>
+                                    <?php } ?>
 								</td>
-								<td><?php echo $extension['name']; ?></td>
+								<td><?php echo $extension['title']; ?></td>
 								<td class="id"><?php echo $extension['extension_id']; ?></td>
 							</tr>
 							<?php } ?>
 							<?php } else {?>
 							<tr>
-								<td colspan="4"><?php echo $text_empty; ?></td>
+								<td colspan="3"><?php echo $text_empty; ?></td>
 							</tr>
 							<?php } ?>
 						</tbody>
@@ -50,4 +48,4 @@
 		</div>
 	</div>
 </div>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

@@ -2,7 +2,7 @@
 
 /*
 | -------------------------------------------------------------------
-| Breadcrum Config
+| Breadcrumb Config
 | -------------------------------------------------------------------
 | This will contain some breadcrumbs settings.
 |
@@ -19,37 +19,6 @@ $config['breadcrumb_tag_close'] 	= '</div>';
 $config['breadcrumb_link_open'] 	= '<a href="{link}" class="btn btn-default">';
 $config['breadcrumb_link_close'] 	= '</a>';
 
-
-/*
-|--------------------------------------------------------------------------
-| Parser Enabled
-|--------------------------------------------------------------------------
-|
-| Should the Parser library be used for the entire page?
-|
-| Can be overridden with $this->template->enable_parser(TRUE/FALSE);
-|
-|   Default: TRUE
-|
-*/
-
-$config['parser_enabled'] = TRUE;
-
-/*
-|--------------------------------------------------------------------------
-| Parser Enabled for Body
-|--------------------------------------------------------------------------
-|
-| If the parser is enabled, do you want it to parse the body or not?
-|
-| Can be overridden with $this->template->enable_parser(TRUE/FALSE);
-|
-|   Default: FALSE
-|
-*/
-
-$config['parser_body_enabled'] = FALSE;
-
 /*
 |--------------------------------------------------------------------------
 | Title Separator
@@ -65,21 +34,6 @@ $config['title_separator'] = ' - ';
 
 /*
 |--------------------------------------------------------------------------
-| Layout
-|--------------------------------------------------------------------------
-|
-| Which layout file should be used? When combined with theme it will be a layout file in that theme
-|
-| Change to 'main' to get /application/views/layouts/main.php
-|
-|   Default: 'default'
-|
-*/
-
-$config['layout'] = 'default';
-
-/*
-|--------------------------------------------------------------------------
 | Theme
 |--------------------------------------------------------------------------
 |
@@ -89,9 +43,31 @@ $config['layout'] = 'default';
 |
 |   Default: ''
 |
+*/
 
 $config['theme'] = '';
+
+/*
+|--------------------------------------------------------------------------
+| Default template head tags
+|--------------------------------------------------------------------------
+|
+| Which template head tag is allowed by default?
+|
+|
+|
 */
+
+$config['head_tags']['doctype'] = 'html5';
+$config['head_tags']['favicon'] = '';
+$config['head_tags']['meta'] = array();
+$config['head_tags']['title'] = '';
+$config['head_tags']['style'] = array();
+$config['head_tags']['script'] = array();
+$config['head_tags']['heading'] = '';
+$config['head_tags']['buttons'] = array();
+$config['head_tags']['icons'] = array();
+$config['head_tags']['back_button'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -100,10 +76,10 @@ $config['theme'] = '';
 |
 | Where should we expect to see themes?
 |
-|	Default: array(VIEWPATH.'themes/' => '../themes/')
+|	Default: array(VIEWPATH.'themes/') in the views folder
 |
 */
 
 $config['theme_locations'] = array(
-	VIEWPATH.'themes/'
+    THEMEPATH,
 );

@@ -632,7 +632,7 @@ class Migration_Schema extends CI_Migration {
 			'reserve_date DATE NOT NULL',
 			'date_added DATE NOT NULL',
 			'date_modified DATE NOT NULL',
-			'staff_id INT(11) NOT NULL',
+			'assignee_id INT(11) NOT NULL',
 			'notify TINYINT(1) NOT NULL',
 			'ip_address VARCHAR(40) NOT NULL',
 			'user_agent VARCHAR(255) NOT NULL',
@@ -724,9 +724,9 @@ class Migration_Schema extends CI_Migration {
 	public function _status_history() {
 		$fields = array(
 			'status_history_id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY',
-			'order_id INT(11) NOT NULL',
-			'staff_id INT(11) NOT NULL',
-			'assigned_id INT(11) NOT NULL',
+			'object_id INT(11) NOT NULL',
+            'staff_id INT(11) NOT NULL',
+            'assignee_id INT(11) NOT NULL',
 			'status_id INT(11) NOT NULL',
 			'notify TINYINT(1) NOT NULL',
 			'status_for VARCHAR(32) NOT NULL',

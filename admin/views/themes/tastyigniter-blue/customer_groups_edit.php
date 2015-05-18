@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
@@ -11,14 +11,14 @@
 			<div class="tab-content">
 				<div id="customer-group" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Name:</label>
+						<label for="input-name" class="col-sm-3 control-label">Name:</label>
 						<div class="col-sm-5">
 							<input type="text" name="group_name" id="input-name" class="form-control" value="<?php echo set_value('group_name', $group_name); ?>" />
 							<?php echo form_error('group_name', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-approval" class="col-sm-2 control-label">Approval:
+						<label for="input-approval" class="col-sm-3 control-label">Approval:
 							<span class="help-block">New customers must be approved before they can login.</span>
 						</label>
 						<div class="col-sm-5">
@@ -35,7 +35,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-description" class="col-sm-2 control-label">Description:</label>
+						<label for="input-description" class="col-sm-3 control-label">Description:</label>
 						<div class="col-sm-5">
 							<textarea name="description" id="input-description" class="form-control" rows="5"><?php echo set_value('description', $description); ?></textarea>
 							<?php echo form_error('description', '<span class="text-danger">', '</span>'); ?>
@@ -46,4 +46,4 @@
 		</form>
 	</div>
 </div>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

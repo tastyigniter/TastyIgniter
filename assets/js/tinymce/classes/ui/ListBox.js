@@ -51,9 +51,7 @@ define("tinymce/ui/ListBox", [
 
 			self._values = values = settings.values;
 			if (values) {
-				if (typeof settings.value != "undefined") {
-					setSelected(values);
-				}
+				setSelected(values);
 
 				// Default with first item
 				if (!selected && values.length > 0) {
@@ -128,7 +126,7 @@ define("tinymce/ui/ListBox", [
 				}
 			}
 
-			if (typeof(value) != "undefined") {
+			if (typeof value != "undefined") {
 				if (self.menu) {
 					activateByValue(self.menu, value);
 				} else {

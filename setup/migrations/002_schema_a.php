@@ -52,7 +52,16 @@ class Migration_Schema_a extends CI_Migration {
 		$this->dbforge->drop_table('options');
 		$this->dbforge->drop_table('option_values');
 
-		$this->db->query('ALTER TABLE '.$this->db->dbprefix('order_menus').' CHANGE `option_values` `order_option_id` INT(11) NOT NULL');
+        $fields = array(
+            'menu_id INT(11) NOT NULL',
+            'option_id INT(11) NOT NULL',
+            'PRIMARY KEY (menu_id, option_id)'
+        );
+
+        $this->dbforge->add_field($fields);
+        $this->dbforge->create_table('menus_to_options');
+
+        $this->db->query('ALTER TABLE '.$this->db->dbprefix('order_menus').' CHANGE `option_values` `order_option_id` INT(11) NOT NULL');
 
 		$this->dbforge->add_column('order_options', array('option_id  INT(11) NOT NULL'));
 		$this->db->query('ALTER TABLE '.$this->db->dbprefix('order_options').' CHANGE `order_option_name` `option_name` VARCHAR(32) NOT NULL');
@@ -90,6 +99,8 @@ class Migration_Schema_a extends CI_Migration {
 	}
 
 	public function _menu_options() {
+        $this->dbforge->drop_table('menus_to_options');
+
 		$this->db->query('ALTER TABLE '.$this->db->dbprefix('menu_options').' CHANGE `option_id` `menu_option_id` INT(11) NOT NULL AUTO_INCREMENT');
 		$this->dbforge->drop_column('menu_options', 'option_name');
 		$this->dbforge->drop_column('menu_options', 'option_price');

@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
@@ -12,21 +12,21 @@
 			<div class="tab-content">
 				<div id="staff-details" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Name:</label>
+						<label for="input-name" class="col-sm-3 control-label">Name:</label>
 						<div class="col-sm-5">
 							<input type="text" name="staff_name" id="input-name" class="form-control" value="<?php echo set_value('staff_name', $staff_name); ?>" />
 							<?php echo form_error('staff_name', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-email" class="col-sm-2 control-label">Email:</label>
+						<label for="input-email" class="col-sm-3 control-label">Email:</label>
 						<div class="col-sm-5">
 							<input type="text" name="staff_email" id="input-email" class="form-control" value="<?php echo set_value('staff_email', $staff_email); ?>" />
 							<?php echo form_error('staff_email', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-username" class="col-sm-2 control-label">Username:
+						<label for="input-username" class="col-sm-3 control-label">Username:
 							<span class="help-block">Username can not be changed.</span>
 						</label>
 						<div class="col-sm-5">
@@ -35,7 +35,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-password" class="col-sm-2 control-label">Password:
+						<label for="input-password" class="col-sm-3 control-label">Password:
 							<span class="help-block">Leave blank to leave password unchanged.</span>
 						</label>
 						<div class="col-sm-5">
@@ -44,14 +44,14 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-2 control-label">Password Confirm:</label>
+						<label for="input-name" class="col-sm-3 control-label">Password Confirm:</label>
 						<div class="col-sm-5">
 							<input type="password" name="password_confirm" id="" class="form-control" id="password_confirm" autocomplete="off" />
 							<?php echo form_error('password_confirm', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-status" class="col-sm-2 control-label">Status:</label>
+						<label for="input-status" class="col-sm-3 control-label">Status:</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($staff_status == '1') { ?>
@@ -68,9 +68,9 @@
 				</div>
 
 				<div id="basic-settings" class="tab-pane row wrap-all">
-					<?php if (!$staff_profile) { ?>
+					<?php if ($display_staff_group) { ?>
 						<div class="form-group">
-							<label for="input-group" class="col-sm-2 control-label">Staff Group:</label>
+							<label for="input-group" class="col-sm-3 control-label">Staff Group:</label>
 							<div class="col-sm-5">
 								<select name="staff_group" id="input-group" class="form-control">
 								<option value="">— Select —</option>
@@ -86,7 +86,7 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="input-location" class="col-sm-2 control-label">Location:</label>
+							<label for="input-location" class="col-sm-3 control-label">Location:</label>
 							<div class="col-sm-5">
 								<select name="staff_location_id" id="input-location" class="form-control">
 									<option value="0">Use Default</option>
@@ -103,7 +103,7 @@
 						</div>
 					<?php } ?>
 					<div class="form-group">
-						<label for="input-timezone" class="col-sm-2 control-label">Timezone:</label>
+						<label for="input-timezone" class="col-sm-3 control-label">Timezone:</label>
 						<div class="col-sm-5">
 							<select name="timezone" id="input-timezone" class="form-control">
 								<option value="0">Use Default</option>
@@ -119,7 +119,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-language" class="col-sm-2 control-label">Language:</label>
+						<label for="input-language" class="col-sm-3 control-label">Language:</label>
 						<div class="col-sm-5">
 							<select name="language_id" id="input-language" class="form-control">
 								<option value="0">Use Default</option>
@@ -139,4 +139,4 @@
 		</form>
 	</div>
 </div>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

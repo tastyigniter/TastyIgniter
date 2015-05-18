@@ -10,24 +10,6 @@ class Mail_templates extends Admin_Controller {
 	}
 
 	public function index() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'mail_templates')) {
-  			redirect('permission');
-		}
-
-		if ($this->input->get('default') === '1' AND $this->input->get('template_id')) {
-			$template_id = $this->input->get('template_id');
-
-			if ($this->Settings_model->addSetting('prefs', 'mail_template_id', $template_id, '0')) {
-				$this->alert->set('success', 'Mail Template set as default sucessfully!');
-			}
-
-			redirect('mail_templates');
-		}
-
 		$this->template->setTitle('Mail Templates');
 		$this->template->setHeading('Mail Templates');
 		$this->template->setButton('+ New', array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
@@ -56,7 +38,17 @@ class Mail_templates extends Admin_Controller {
 			);
 		}
 
-		if ($this->input->post('delete') AND $this->_deleteTemplate() === TRUE) {
+        if ($this->input->get('default') === '1' AND $this->input->get('template_id')) {
+            $template_id = $this->input->get('template_id');
+
+            if ($this->Settings_model->addSetting('prefs', 'mail_template_id', $template_id, '0')) {
+                $this->alert->set('success', 'Mail Template set as default successfully!');
+            }
+
+            redirect('mail_templates');
+        }
+
+        if ($this->input->post('delete') AND $this->_deleteTemplate() === TRUE) {
 			redirect('mail_templates');
 		}
 
@@ -65,14 +57,6 @@ class Mail_templates extends Admin_Controller {
 	}
 
 	public function edit() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'mail_templates')) {
-  			redirect('permission');
-		}
-
 		$template_info = $this->Mail_templates_model->getTemplate((int) $this->input->get('id'));
 
 		if ($template_info) {
@@ -90,7 +74,9 @@ class Mail_templates extends Admin_Controller {
 		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setBackButton('btn btn-back', site_url('mail_templates'));
 
-		$data['text_empty'] 		= 'There is no template message available.';
+        $this->template->setScriptTag(root_url('assets/js/tinymce/tinymce.min.js'), 'tinymce-js', '111');
+
+        $data['text_empty'] 		= 'There is no template message available.';
 
 		$data['template_id'] 		= $template_id;
 		$data['name'] 				= $template_info['name'];
@@ -157,14 +143,6 @@ class Mail_templates extends Admin_Controller {
 	}
 
 	public function variables() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'mail_templates')) {
-  			redirect('permission');
-		}
-
 		$this->template->setTitle('Mail Templates - Variables');
 		$this->template->setHeading('Mail Templates - Variables');
 
@@ -175,10 +153,7 @@ class Mail_templates extends Admin_Controller {
 	}
 
 	public function _addTemplate() {
-    	if ( ! $this->user->hasPermissions('modify', 'mail_templates')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to add!');
-  			return TRUE;
-    	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$add = array();
 
 			$add['name'] 				= $this->input->post('name');
@@ -189,9 +164,9 @@ class Mail_templates extends Admin_Controller {
 			$add['date_updated'] 		= mdate('%Y-%m-%d %H:%i:%s', time());
 
 			if ($_POST['insert_id'] = $this->Mail_templates_model->addTemplate($add)) {
-				$this->alert->set('success', 'Mail Template added sucessfully.');
+				$this->alert->set('success', 'Mail Template added successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing added.');
+				$this->alert->set('warning', 'An error occurred, nothing added.');
 			}
 
 			return TRUE;
@@ -199,12 +174,7 @@ class Mail_templates extends Admin_Controller {
 	}
 
 	public function _updateTemplate() {
-    	if ( ! $this->user->hasPermissions('modify', 'mail_templates')) {
-
-			$this->alert->set('warning', 'Warning: You do not have permission to update!');
-  			return TRUE;
-
-    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$update = array();
 
 			$update['template_id'] 		= $this->input->get('id');
@@ -215,9 +185,9 @@ class Mail_templates extends Admin_Controller {
 			$update['date_updated'] 	= mdate('%Y-%m-%d %H:%i:%s', time());
 
 			if ($this->Mail_templates_model->updateTemplate($update)) {
-				$this->alert->set('success', 'Mail Template updated sucessfully.');
+				$this->alert->set('success', 'Mail Template updated successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing added.');
+				$this->alert->set('warning', 'An error occurred, nothing added.');
 			}
 
 			return TRUE;
@@ -225,15 +195,13 @@ class Mail_templates extends Admin_Controller {
 	}
 
 	public function _deleteTemplate() {
-    	if (!$this->user->hasPermissions('modify', 'mail_templates')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to delete!');
-    	} else if (is_array($this->input->post('delete'))) {
+    	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				if ($value === $this->config->item('mail_template_id')) {
 					$this->alert->set('success', 'Default Mail Template can not be deleted!');
 				} else {
 					$this->Mail_templates_model->deleteTemplate($value);
-					$this->alert->set('success', 'Mail Template deleted sucessfully!');
+					$this->alert->set('success', 'Mail Template deleted successfully!');
 				}
 			}
 		}

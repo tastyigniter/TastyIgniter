@@ -10,14 +10,6 @@ class Customer_groups extends Admin_Controller {
 	}
 
 	public function index() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'customer_groups')) {
-  			redirect('permission');
-		}
-
 		$url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
@@ -92,14 +84,6 @@ class Customer_groups extends Admin_Controller {
 	}
 
 	public function edit() {
-		if (!$this->user->islogged()) {
-  			redirect('login');
-		}
-
-    	if (!$this->user->hasPermissions('access', 'customer_groups')) {
-  			redirect('permission');
-		}
-
 		$group_info = $this->Customer_groups_model->getCustomerGroup((int) $this->input->get('id'));
 
 		if ($group_info) {
@@ -143,10 +127,7 @@ class Customer_groups extends Admin_Controller {
 	}
 
 	public function _addCustomerGroup() {
-    	if (!$this->user->hasPermissions('modify', 'customer_groups')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to add!');
-  			return TRUE;
-    	} else if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$add = array();
 
 			$add['group_name']	= $this->input->post('group_name');
@@ -154,9 +135,9 @@ class Customer_groups extends Admin_Controller {
 			$add['description']	= $this->input->post('description');
 
 			if ($_POST['insert_id'] = $this->Customer_groups_model->addCustomerGroup($add)) {
-				$this->alert->set('success', 'Customer Groups added sucessfully.');
+				$this->alert->set('success', 'Customer Groups added successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing updated.');
 			}
 
 			return TRUE;
@@ -164,10 +145,7 @@ class Customer_groups extends Admin_Controller {
 	}
 
 	public function _updateCustomerGroup() {
-    	if (!$this->user->hasPermissions('modify', 'customer_groups')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to update!');
-  			return TRUE;
-    	} else if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
+    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$update = array();
 
 			$update['customer_group_id']	= $this->input->get('id');
@@ -176,9 +154,9 @@ class Customer_groups extends Admin_Controller {
 			$update['description']			= $this->input->post('description');
 
 			if ($this->Customer_groups_model->updateCustomerGroup($update)) {
-				$this->alert->set('success', 'Customer Group updated sucessfully.');
+				$this->alert->set('success', 'Customer Group updated successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occured, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing updated.');
 			}
 
 			return TRUE;
@@ -186,14 +164,12 @@ class Customer_groups extends Admin_Controller {
 	}
 
 	public function _deleteCustomerGroup() {
-    	if (!$this->user->hasPermissions('modify', 'customer_groups')) {
-			$this->alert->set('warning', 'Warning: You do not have permission to delete!');
-    	} else if (is_array($this->input->post('delete'))) {
+    	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Customer_groups_model->deleteCustomerGroup($value);
 			}
 
-			$this->alert->set('success', 'Customer Group(s) deleted sucessfully!');
+			$this->alert->set('success', 'Customer Group(s) deleted successfully!');
 		}
 
 		return TRUE;

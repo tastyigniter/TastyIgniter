@@ -13,12 +13,6 @@ class Account_module extends Ext_Controller {
 			show_404(); 																		// Whoops, show 404 error page!
 		}
 
-		if ($this->session->flashdata('alert')) {
-			$data['alert'] = $this->session->flashdata('alert');  								// retrieve session flashdata variable if available
-		} else {
-			$data['alert'] = '';
-		}
-
 		if ($this->uri->rsegment(1)) {
 			$data['page'] = $this->uri->rsegment(1, FALSE);
 		} else {
@@ -26,7 +20,7 @@ class Account_module extends Ext_Controller {
 		}
 
 		$this->load->model('Messages_model');													// load the customers model
-		$inbox_total = $this->Messages_model->getInboxTotal($this->customer->getId());					// retrieve total number of customer messages from getInboxTotal method in Messages model
+		$inbox_total = $this->Messages_model->getUnreadCount($this->customer->getId());					// retrieve total number of customer messages from getUnreadCount method in Messages model
 
 		// START of retrieving lines from language file to pass to view.
 		$data['text_heading'] 			= $this->lang->line('text_heading');
@@ -42,7 +36,7 @@ class Account_module extends Ext_Controller {
 		// END of retrieving lines from language file to send to view.
 
 		// pass array $data and load view files
-		$this->load->view('account_module/account_module', $data);
+		return $this->load->view('account_module/account_module', $data, TRUE);
 	}
 }
 

@@ -13,13 +13,7 @@ class Pages extends Main_Controller {
 		$result = $this->Pages_model->getPage($page_id);
 
 		if (!$result) {
-			show_404();
-		}
-
-		if ($this->session->flashdata('alert')) {
-			$data['alert'] = $this->session->flashdata('alert'); 								// retrieve session flashdata variable if available
-		} else {
-			$data['alert'] = '';
+//			show_404();
 		}
 
 		$this->template->setBreadcrumb('<i class="fa fa-home"></i>', '/');

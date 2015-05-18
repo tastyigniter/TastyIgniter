@@ -24,7 +24,7 @@ $lang['entry_captcha'] 			= 'Type the code shown';
 
 $lang['button_send'] 			= 'SEND';
 
-$lang['alert_contact_sent'] 	= '<p class="alert-success">Message Sent Sucessfully, we will get back to you shortly!</p>';
+$lang['alert_contact_sent'] 	= '<p class="alert-success">Message Sent successfully, we will get back to you shortly!</p>';
 
 
 

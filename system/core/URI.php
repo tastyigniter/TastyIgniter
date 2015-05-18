@@ -113,15 +113,15 @@ class CI_URI {
 			}
 			elseif ($protocol === 'AUTO')
 			{
-				// Is there a PATH_INFO variable? This should be the easiest solution.
-				if (isset($_SERVER['PATH_INFO']))
-				{
-					$this->_set_uri_string($_SERVER['PATH_INFO']);
-				}
-				// No PATH_INFO? Let's try REQUST_URI or QUERY_STRING then
-				elseif (($uri = $this->_parse_request_uri()) !== '' OR ($uri = $this->_parse_query_string()) !== '')
-				{
-					$this->_set_uri_string($uri);
+                // Is there a PATH_INFO variable? This should be the easiest solution.
+                if (isset($_SERVER['PATH_INFO']))
+                {
+                    $this->_set_uri_string($_SERVER['PATH_INFO']);
+                }
+                // No PATH_INFO? Let's try REQUST_URI or QUERY_STRING then
+                elseif (($uri = $this->_parse_request_uri()) !== '' OR ($uri = $this->_parse_query_string()) !== '')
+                {
+                    $this->_set_uri_string($uri);
 				}
 				// As a last ditch effor, let's try using the $_GET array
 				elseif (is_array($_GET) && count($_GET) === 1 && trim(key($_GET), '/') !== '')
@@ -207,13 +207,13 @@ class CI_URI {
 		$query = isset($uri['query']) ? $uri['query'] : '';
 		$uri = isset($uri['path']) ? rawurldecode($uri['path']) : '';
 
-		if (strpos($uri, $_SERVER['SCRIPT_NAME']) === 0)
-		{
-			$uri = (string) substr($uri, strlen($_SERVER['SCRIPT_NAME']));
-		}
-		elseif (strpos($uri, dirname($_SERVER['SCRIPT_NAME'])) === 0)
-		{
-			$uri = (string) substr($uri, strlen(dirname($_SERVER['SCRIPT_NAME'])));
+        if (strpos($uri, $_SERVER['SCRIPT_NAME']) === 0)
+        {
+            $uri = (string) substr($uri, strlen($_SERVER['SCRIPT_NAME']));
+        }
+        elseif (strpos($uri, dirname($_SERVER['SCRIPT_NAME'])) === 0)
+        {
+            $uri = (string) substr($uri, strlen(dirname($_SERVER['SCRIPT_NAME'])));
 		}
 
 		// This section ensures that even on servers that require the URI to be in the query string (Nginx) a correct

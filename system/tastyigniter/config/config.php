@@ -93,7 +93,7 @@ $config['charset'] = 'UTF-8';
 | setting this variable to TRUE (boolean).  See the user guide for details.
 |
 */
-$config['enable_hooks'] = TRUE;
+$config['enable_hooks'] = FALSE;
 
 
 /*
@@ -201,7 +201,7 @@ $config['log_threshold'] = 1;
 |
 | DO NOT EDIT - for reference purpose only
 */
-$config['log_path'] = '';
+$config['log_path'] = IGNITEPATH .'logs/';
 
 /*
 |--------------------------------------------------------------------------
@@ -274,40 +274,49 @@ $config['cache_path'] = '';
 | http://codeigniter.com/user_guide/libraries/sessions.html
 |
 */
-$config['encryption_key'] = 'ab9O630xrA4uJiJ4UGY5R3WuV4xqe6S0';
+$config['encryption_key'] = 'muh6T37619LO09uJpk1679pCI06LHps4';
 
 /*
 |--------------------------------------------------------------------------
 | Session Variables
 |--------------------------------------------------------------------------
 |
-| 'sess_driver'				= the driver to load: cookie (Classic), native (PHP sessions),
-|	or your custom driver name
-| 'sess_valid_drivers'		= additional valid drivers which may be loaded
-| 'sess_cookie_name'		= the name you want for the cookie, must contain only [0-9a-z_-] characters
-| 'sess_expiration'			= the number of SECONDS you want the session to last.
-|   by default sessions last 7200 seconds (two hours).  Set to zero for no expiration.
-| 'sess_expire_on_close'	= Whether to cause the session to expire automatically
-|   when the browser window is closed
-| 'sess_encrypt_cookie'		= Whether to encrypt the cookie
-| 'sess_use_database'		= Whether to save the session data to a database
-| 'sess_table_name'			= The name of the session database table
-| 'sess_match_ip'			= Whether to match the user's IP address when reading the session data
-| 'sess_match_useragent'	= Whether to match the User Agent when reading the session data
-| 'sess_time_to_update'		= how many seconds between CI refreshing Session Information
+| 'sess_driver' => The storage driver to use: files, database, redis, memcached
+|
+| 'sess_cookie_name' => The session cookie name, must contain only [0-9a-z_-] characters
+|
+| 'sess_expiration' => The number of SECONDS you want the session to last.
+|	Setting to 0 (zero) means expire when the browser is closed.
+|
+| 'sess_save_path' => The location to save sessions to, driver dependant.
+|
+|	For the 'files' driver, it's a path to a writable directory.
+|	WARNING: Only absolute paths are supported!
+|
+|	For the 'database' driver, it's a table name.
+|	Please read up the manual for the format with other session drivers.
+|
+|	IMPORTANT: You are REQUIRED to set a valid save path!
+|
+| 'sess_match_ip' => Whether to match the user's IP address when reading the session data.
+|
+| 'sess_time_to_update' => How many seconds between CI regenerating the session ID.
+|
+| 'sess_regenerate_destroy' => Whether to destroy session data associated with the old session ID
+|	when auto-regenerating the session ID. When set to FALSE, the data
+|	will be later deleted by the garbage collector.
+|
+| Other session cookie settings are shared with the rest of the application,
+| except for 'cookie_prefix' and 'cookie_httponly', which are ignored here.
 |
 */
-$config['sess_driver']			= 'native';
-$config['sess_valid_drivers']	= array();
-$config['sess_cookie_name']		= 'session';
-$config['sess_expiration']		= 0;
-$config['sess_expire_on_close']	= FALSE;
-$config['sess_encrypt_cookie']	= FALSE;
-$config['sess_use_database']	= FALSE;
-$config['sess_table_name']		= 'sessions';
-$config['sess_match_ip']		= FALSE;
-$config['sess_match_useragent']	= TRUE;
-$config['sess_time_to_update']	= 300;
+$config['sess_driver'] = 'files';
+$config['sess_cookie_name'] = 'ti_session';
+$config['sess_expiration'] = 0;
+$config['sess_save_path'] = IGNITEPATH . 'session';
+$config['sess_match_ip'] = FALSE;
+$config['sess_time_to_update'] = 300;
+$config['sess_regenerate_destroy'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -325,7 +334,7 @@ $config['cookie_prefix']	= 'ti_';
 $config['cookie_domain']	= '';
 $config['cookie_path']		= '/';
 $config['cookie_secure']	= FALSE;
-$config['cookie_httponly'] 	= FALSE;
+$config['cookie_httponly'] 	= TRUE;
 
 /*
 |--------------------------------------------------------------------------
@@ -465,35 +474,8 @@ $config['proxy_ips'] = '';
 */
 
 $config['modules_locations'] = array(
-    EXTPATH	 => '../../extensions/',
+    ROOTPATH . EXTPATH	 => '../../'.EXTPATH,
 );
-
-
-/*
-| -------------------------------------------------------------------
-|  Native Auto-load
-| -------------------------------------------------------------------
-|
-| Nothing to do with cnfig/autoload.php, this allows PHP autoload to work
-| for base controllers and some third-party libraries.
-|
-
-function __autoload($class)
-{
- 	if(strpos($class, 'CI_') !== 0)
- 	{
-  		if (file_exists(IGNITEPATH . 'core/'. $class . '.php')) {
-  			include_once(IGNITEPATH . 'core/'. $class . '.php');
-  		} else if (file_exists(BASEPATH . 'core/igniter/MX/'. $class . '.php')) {
-  			//include_once(BASEPATH . 'core/igniter/MX/'. $class . '.php');
-  		} else {
-			log_message('error', 'Unable to load the requested class: '.$class);
-			show_error('Unable to load the requested class: '.$class);
-  		}
- 	}
-}
-*/
-
 
 
 /* End of file config.php */

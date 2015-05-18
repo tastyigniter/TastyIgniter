@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
@@ -15,49 +15,49 @@
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="" class="col-sm-2 control-label">Reservation ID:</label>
+						<label for="" class="col-sm-3 control-label">Reservation ID:</label>
 						<div class="col-sm-5">
 							#<?php echo $reservation_id; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="" class="col-sm-2 control-label">Guest Number:</label>
+						<label for="" class="col-sm-3 control-label">Guest Number:</label>
 						<div class="col-sm-5">
 							<?php echo $guest_num; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="" class="col-sm-2 control-label">Reservation Date:</label>
+						<label for="" class="col-sm-3 control-label">Reservation Date:</label>
 						<div class="col-sm-5">
 							<?php echo $reserve_date; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="" class="col-sm-2 control-label">Reservation Time:</label>
+						<label for="" class="col-sm-3 control-label">Reservation Time:</label>
 						<div class="col-sm-5">
 							<?php echo $reserve_time; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="" class="col-sm-2 control-label">Occasion:</label>
+						<label for="" class="col-sm-3 control-label">Occasion:</label>
 						<div class="col-sm-5">
 							<?php echo $occasions[$occasion]; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="" class="col-sm-2 control-label">Date Added:</label>
+						<label for="" class="col-sm-3 control-label">Date Added:</label>
 						<div class="col-sm-5">
 							<?php echo $date_added; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="" class="col-sm-2 control-label">Date Modified:</label>
+						<label for="" class="col-sm-3 control-label">Date Modified:</label>
 						<div class="col-sm-5">
 							<?php echo $date_modified; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="" class="col-sm-2 control-label">Notify Customer:</label>
+						<label for="" class="col-sm-3 control-label">Notify Customer:</label>
 						<div class="col-sm-5">
 							<?php if ($notify === '1') { ?>
 								Reservation Confirmation Email SENT
@@ -67,13 +67,13 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="" class="col-sm-2 control-label">Customer IP:</label>
+						<label for="" class="col-sm-3 control-label">Customer IP:</label>
 						<div class="col-sm-5">
 							<?php echo $ip_address; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="" class="col-sm-2 control-label">Customer User Agent:</label>
+						<label for="" class="col-sm-3 control-label">Customer User Agent:</label>
 						<div class="col-sm-5">
 							<?php echo $user_agent; ?>
 						</div>
@@ -82,7 +82,7 @@
 
 				<div id="status" class="tab-pane row wrap-all">
 					<div class="form-group">
-						<label for="input-assign-staff" class="col-sm-2 control-label">Assign Staff:</label>
+						<label for="input-assign-staff" class="col-sm-3 control-label">Assign Staff:</label>
 						<div class="col-sm-5">
 							<select name="assignee_id" class="form-control">
 								<option value=""> - please select - </option>
@@ -98,7 +98,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-status" class="col-sm-2 control-label">Reservation Status:</label>
+						<label for="input-status" class="col-sm-3 control-label">Reservation Status:</label>
 						<div class="col-sm-5">
 							<select name="status" class="form-control" onChange="getStatusComment();">
 							<?php foreach ($statuses as $status) { ?>
@@ -113,14 +113,14 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-comment" class="col-sm-2 control-label">Status Comment:</label>
+						<label for="input-comment" class="col-sm-3 control-label">Status Comment:</label>
 						<div class="col-sm-5">
 							<textarea name="status_comment" rows="5" class="form-control"><?php echo set_value('status_comment'); ?></textarea>
 							<?php echo form_error('status_comment', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-notify" class="col-sm-2 control-label">Notify Customer:</label>
+						<label for="input-notify" class="col-sm-3 control-label">Notify Customer:</label>
 						<div class="col-sm-5">
 							<div id="input-notify" class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($notify == '1') { ?>
@@ -177,19 +177,19 @@
 
 				<div id="table" class="tab-pane row wrap-all">
 					<div class="form-group">
-						<label for="" class="col-sm-2 control-label">Table Name:</label>
+						<label for="" class="col-sm-3 control-label">Table Name:</label>
 						<div class="col-sm-5">
 							<?php echo $table_name; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="" class="col-sm-2 control-label">Table Minimum:</label>
+						<label for="" class="col-sm-3 control-label">Table Minimum:</label>
 						<div class="col-sm-5">
 							<?php echo $min_capacity; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="" class="col-sm-2 control-label">Table Capacity:</label>
+						<label for="" class="col-sm-3 control-label">Table Capacity:</label>
 						<div class="col-sm-5">
 							<?php echo $max_capacity; ?>
 						</div>
@@ -198,13 +198,13 @@
 
 				<div id="restaurant" class="tab-pane row wrap-all">
 					<div class="form-group">
-						<label for="" class="col-sm-2 control-label">Restaurant Name:</label>
+						<label for="" class="col-sm-3 control-label">Restaurant Name:</label>
 						<div class="col-sm-5">
 							<?php echo $location_name; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="" class="col-sm-2 control-label">Restaurant Address:</label>
+						<label for="" class="col-sm-3 control-label">Restaurant Address:</label>
 						<div class="col-sm-5">
 							<address>
 								<?php echo $location_address_1; ?>,
@@ -218,25 +218,25 @@
 
 				<div id="customer" class="tab-pane row wrap-all">
 					<div class="form-group">
-						<label for="" class="col-sm-2 control-label">Customer Name:</label>
+						<label for="" class="col-sm-3 control-label">Customer Name:</label>
 						<div class="col-sm-5">
 							<?php echo $first_name; ?> <?php echo $last_name; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="" class="col-sm-2 control-label">Customer Email:</label>
+						<label for="" class="col-sm-3 control-label">Customer Email:</label>
 						<div class="col-sm-5">
 							<?php echo $email; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="" class="col-sm-2 control-label">Customer Telephone:</label>
+						<label for="" class="col-sm-3 control-label">Customer Telephone:</label>
 						<div class="col-sm-5">
 							<?php echo $telephone; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="" class="col-sm-2 control-label">Comment:</label>
+						<label for="" class="col-sm-3 control-label">Comment:</label>
 						<div class="col-sm-5">
 							<?php echo $comment; ?>
 						</div>
@@ -274,4 +274,4 @@ function getStatusComment() {
 
 $('select[name="status"]').trigger('change');
 //--></script>
-<?php echo $footer; ?>
+<?php echo get_footer(); ?>

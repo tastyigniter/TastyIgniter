@@ -47,14 +47,14 @@ class MX_Router extends CI_Router
 
 		if (count($segments) == 0) return $segments;
 
-		/* locate module controller */
-		if ($located = $this->locate($segments)) return $located;
+        /* locate module controller */
+        if ($located = $this->locate($segments)) return $located;
 
-		/* use a default 404_override controller */
-		if (isset($this->routes['404_override']) AND $this->routes['404_override']) {
-			$segments = explode('/', $this->routes['404_override']);
-			if ($located = $this->locate($segments)) return $located;
-		}
+        /* use a default 404_override controller */
+        if (isset($this->routes['404_override']) AND $this->routes['404_override']) {
+            $segments = explode('/', $this->routes['404_override']);
+            if ($located = $this->locate($segments)) return $located;
+        }
 
 		/* no controller found */
 		show_404(implode('/', $segments));
@@ -78,13 +78,13 @@ class MX_Router extends CI_Router
 		/* check modules */
 		foreach (Modules::$locations as $location => $offset) {
 
-			/* module exists? */
-			if (is_dir($source = $location.$module.'/controllers/')) {
+            /* module exists? */
+            if (is_dir($source = $location.$module.'/controllers/')) {
 
-				$this->module = $module;
+                $this->module = $module;
 				$this->directory = $offset.$module.'/controllers/';
 
-				/* module sub-controller exists? */
+                /* module sub-controller exists? */
 				if($directory AND is_file($source.$directory.$ext)) {
 					return array_slice($segments, 1);
 				}
@@ -113,8 +113,8 @@ class MX_Router extends CI_Router
 			}
 		}
 
-		/* application controller exists? */
-		if (is_file(APPPATH.'controllers/'.$module.$ext)) {
+        /* application controller exists? */
+        if (is_file(APPPATH.'controllers/'.$module.$ext)) {
 			return $segments;
 		}
 
@@ -129,7 +129,7 @@ class MX_Router extends CI_Router
 			$this->directory = $module.'/';
 			return array($this->default_controller);
 		}
-	}
+    }
 
 	public function set_class($class) {
 		$this->class = $class.$this->config->item('controller_suffix');

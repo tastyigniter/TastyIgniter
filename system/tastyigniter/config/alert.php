@@ -68,7 +68,7 @@ $config['alert']['close_button'] = array('<button type="button" class="close" da
 |
 */
 
-$config['alert']['form_error_msg'] = array('Sorry but validation has failed, please check for errors.');
+$config['alert']['form_error_msg'] = array('Sorry but form validation has failed, please check for errors.');
 
 
 
