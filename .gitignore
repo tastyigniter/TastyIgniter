@@ -1,13 +1,16 @@
 .DS_Store
 .idea
 
-system/tastyigniter/cache/*
-!system/tastyigniter/cache/index.html
-!system/tastyigniter/cache/.htaccess
+main/cache/*
+!main/cache/index.html
+!main/cache/.htaccess
+
+admin/cache/*
+!admin/cache/index.html
+!admin/cache/.htaccess
 
 system/tastyigniter/logs/*
 !system/tastyigniter/logs/index.html
-!system/tastyigniter/logs/.htaccess
 
 assets/images/thumbs/*
 !assets/images/thumbs/index.html
