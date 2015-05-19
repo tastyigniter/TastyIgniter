@@ -9,7 +9,7 @@ class Database extends Base_Controller {
         $this->load->helper('file');
         $this->load->model('Setup_model');
 
-        if ($this->session->userdata('setup') === 'step_3' AND $this->config->item('ti_version')) {
+        if ($this->session->userdata('setup') === 'step_3' OR $this->config->item('ti_version')) {
             redirect('success');
         }
 
