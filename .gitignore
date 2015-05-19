@@ -15,6 +15,9 @@ system/tastyigniter/logs/*
 system/tastyigniter/session/*
 !system/tastyigniter/session/index.html
 
+assets/images/captcha/*
+!assets/images/captcha/index.html
+
 assets/images/thumbs/*
 !assets/images/thumbs/index.html
 
