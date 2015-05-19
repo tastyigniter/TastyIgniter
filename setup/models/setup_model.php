@@ -5,29 +5,31 @@ class Setup_model extends TI_Model {
 	public function addData() {
 		$query = FALSE;
 
-		$file = APPPATH .'/migrations/initial_schema.sql';
-		if (!file_exists($file)) {
-			return FALSE;
-		}
+        if ($this->db->count_all('countries') <= 0) {
+            $file = APPPATH . '/migrations/initial_schema.sql';
+            if (!file_exists($file)) {
+                return FALSE;
+            }
 
-		$lines = file($file);
-		if ($lines) {
-			$sql = '';
+            $lines = file($file);
+            if ($lines) {
+                $sql = '';
 
-			foreach($lines as $line) {
-				if ($line && (substr($line, 0, 1) != '#')) {
-					$sql .= $line;
+                foreach ($lines as $line) {
+                    if ($line && (substr($line, 0, 1) != '#')) {
+                        $sql .= $line;
 
-					if (preg_match('/;\s*$/', $line)) {
-						$sql = str_replace('INSERT INTO ti_', 'INSERT INTO '. $this->db->dbprefix, $sql);
-						$this->db->query($sql);
-						$sql = '';
-					}
-				}
-			}
+                        if (preg_match('/;\s*$/', $line)) {
+                            $sql = str_replace('INSERT INTO ti_', 'INSERT INTO ' . $this->db->dbprefix, $sql);
+                            $this->db->query($sql);
+                            $sql = '';
+                        }
+                    }
+                }
 
-			$query = TRUE;
-		}
+                $query = TRUE;
+            }
+        }
 
 		return $query;
 	}
@@ -35,7 +37,7 @@ class Setup_model extends TI_Model {
 	public function addDemoData($demo_data) {
 		$query = TRUE;
 
-		if (isset($demo_data) AND $demo_data === '1') {
+		if (isset($demo_data) AND $demo_data === '1' AND $this->db->count_all('coupons') <= 0) {
 			$file = APPPATH .'/migrations/demo_schema.sql';
 			if (!file_exists($file)) {
 				return FALSE;

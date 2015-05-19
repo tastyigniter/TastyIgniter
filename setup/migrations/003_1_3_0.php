@@ -19,13 +19,13 @@ class Migration_1_3_0 extends CI_Migration {
 		$this->db->query("ALTER TABLE ".$this->db->dbprefix('reviews')." DROP PRIMARY KEY, ADD PRIMARY KEY (`review_id`, `sale_type`, `sale_id`);");
 
         // Drop covered areas column, now using options column
-        $this->dbforge->drop_column('locations', 'covered_areas');
+        $this->dbforge->drop_column('locations', 'covered_area');
 
         $this->dbforge->add_column('statuses', array('status_color VARCHAR(32) NOT NULL'));
 
         $this->dbforge->add_column('orders', array('assignee_id INT(11) NOT NULL'));
 
-        $this->dbforge->add_column('customer_activity', array('page_views INT(11) NOT NULL'));
+        $this->dbforge->add_column('customers_activity', array('page_views INT(11) NOT NULL'));
 
         $this->_notifications();
 	}
@@ -44,13 +44,13 @@ class Migration_1_3_0 extends CI_Migration {
 		$this->db->query("ALTER TABLE ".$this->db->dbprefix('reviews')." DROP PRIMARY KEY, ADD PRIMARY KEY (`review_id`, `order_id`);");
 
         // Roll back and add covered areas column
-        $this->dbforge->add_column('locations', array('covered_areas TEXT NOT NULL'));
+        $this->dbforge->add_column('locations', array('covered_area TEXT NOT NULL'));
 
         $this->dbforge->drop_column('statuses', 'status_color');
 
         $this->dbforge->drop_column('orders', 'assignee_id');
 
-        $this->dbforge->drop_column('customer_activity', 'page_views');
+        $this->dbforge->drop_column('customers_activity', 'page_views');
 
         $this->dbforge->drop_table('notifications');
 	}

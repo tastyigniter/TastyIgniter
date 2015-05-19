@@ -13,7 +13,7 @@ class Setting {
 			$this->CI->output->enable_profiler(TRUE);
 		}
 
-        if ($this->CI->config->item('ti_version') !== 'v1.3-beta' AND APPDIR !== 'setup') {
+        if (APPDIR !== 'setup' AND !$this->CI->config->item('ti_version')) {
             redirect(root_url('setup/'));
         }
 

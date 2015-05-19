@@ -6,6 +6,9 @@ class Uri_routes extends Admin_Controller {
 		parent::__construct();
 		$this->load->library('user');
 		$this->load->model('Design_model');
+
+        $this->alert->set('info', 'URI Routes Page disabled for improvement in next release');
+        redirect('dashboard');
 	}
 
 	public function index() {

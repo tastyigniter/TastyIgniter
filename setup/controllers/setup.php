@@ -7,7 +7,7 @@ class Setup extends Base_Controller {
 		$this->load->helper('file');
 		$this->load->model('Setup_model');
 
-        if ($this->session->tempdata('setup') === 'step_3' AND $this->config->item('ti_version') === 'v1.3-beta') {
+        if ($this->session->tempdata('setup') === 'step_3' AND $this->config->item('ti_version')) {
             $this->success;
         }
 	}

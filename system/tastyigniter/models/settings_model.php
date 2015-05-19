@@ -1,7 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Settings_model extends TI_Model {
-	public function getAll() {
+
+    public function getAll() {
         if ($this->db->table_exists($this->db->dbprefix('settings'))) {
             $this->db->from('settings');
 

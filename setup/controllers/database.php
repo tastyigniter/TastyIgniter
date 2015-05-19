@@ -9,7 +9,7 @@ class Database extends Base_Controller {
         $this->load->helper('file');
         $this->load->model('Setup_model');
 
-        if ($this->session->userdata('setup') === 'step_3' AND $this->config->item('ti_version') === 'v1.3-beta') {
+        if ($this->session->userdata('setup') === 'step_3' AND $this->config->item('ti_version')) {
             redirect('success');
         }
 
@@ -162,7 +162,6 @@ class Database extends Base_Controller {
         $row = $this->db->select('version')->get('migrations')->row();
         $old_version = !empty($row) ? $row->version : '0';
 
-        $current_version = FALSE;
         if (($current_version = $this->migration->current()) === FALSE) {
             show_error($this->migration->error_string());
         }

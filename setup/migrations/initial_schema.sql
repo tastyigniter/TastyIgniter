@@ -241,8 +241,7 @@ INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_cod
 (236, 'Yugoslavia', 'YU', 'YUG', 'data/flags/yu.png', '', 1),
 (237, 'Democratic Republic of Congo', 'CD', 'COD', 'data/flags/cd.png', '', 1),
 (238, 'Zambia', 'ZM', 'ZMB', 'data/flags/zm.png', '', 1),
-(239, 'Zimbabwe', 'ZW', 'ZWE', 'data/flags/zw.png', '', 1),
-(241, 'Iana Island', 'SA', 'GAA', 'data/flags/sa.png', '', 1);
+(239, 'Zimbabwe', 'ZW', 'ZWE', 'data/flags/zw.png', '', 1);
 
 
 #
@@ -502,23 +501,46 @@ INSERT INTO `ti_customer_groups` (`customer_group_id`, `group_name`, `descriptio
 # TABLE STRUCTURE FOR: ti_extensions
 #
 
-INSERT INTO `ti_extensions` (`extension_id`, `type`, `name`, `data`, `status`, `serialized`, `title`) VALUES
-(11, 'module', 'account_module', 'a:1:{s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"11\";s:8:\"position\";s:4:\"left\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}}', 1, 1, 'Account'),
-(12, 'module', 'local_module', 'a:1:{s:7:\"layouts\";a:4:{i:0;a:4:{s:9:\"layout_id\";s:2:\"12\";s:8:\"position\";s:3:\"top\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}i:1;a:4:{s:9:\"layout_id\";s:2:\"13\";s:8:\"position\";s:3:\"top\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}i:2;a:4:{s:9:\"layout_id\";s:2:\"14\";s:8:\"position\";s:3:\"top\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}i:3;a:4:{s:9:\"layout_id\";s:2:\"18\";s:8:\"position\";s:3:\"top\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}}', 1, 1, 'Local'),
-(13, 'module', 'categories_module', 'a:1:{s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"12\";s:8:\"position\";s:4:\"left\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}}', 1, 1, 'Categories'),
-(14, 'module', 'cart_module', 'a:4:{s:7:\"layouts\";a:3:{i:0;a:4:{s:9:\"layout_id\";s:2:\"12\";s:8:\"position\";s:5:\"right\";s:8:\"priority\";s:1:\"2\";s:6:\"status\";s:1:\"1\";}i:1;a:4:{s:9:\"layout_id\";s:2:\"13\";s:8:\"position\";s:5:\"right\";s:8:\"priority\";s:1:\"2\";s:6:\"status\";s:1:\"1\";}i:2;a:4:{s:9:\"layout_id\";s:2:\"14\";s:8:\"position\";s:5:\"right\";s:8:\"priority\";s:1:\"2\";s:6:\"status\";s:1:\"1\";}}s:16:\"show_cart_images\";s:1:\"0\";s:13:\"cart_images_h\";s:0:\"\";s:13:\"cart_images_w\";s:0:\"\";}', 1, 1, 'Cart'),
-(15, 'module', 'reservation_module', 'a:1:{s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"16\";s:8:\"position\";s:5:\"right\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}}', 1, 1, 'Reservation'),
-(16, 'module', 'slideshow', 'a:6:{s:11:\"dimension_h\";s:3:\"420\";s:11:\"dimension_w\";s:4:\"1170\";s:6:\"effect\";s:4:\"fade\";s:5:\"speed\";s:3:\"500\";s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"15\";s:8:\"position\";s:3:\"top\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}s:6:\"slides\";a:3:{i:0;a:3:{s:4:\"name\";s:9:\"slide.png\";s:9:\"image_src\";s:14:\"data/slide.jpg\";s:7:\"caption\";s:0:\"\";}i:1;a:3:{s:4:\"name\";s:10:\"slide1.png\";s:9:\"image_src\";s:15:\"data/slide1.jpg\";s:7:\"caption\";s:0:\"\";}i:2;a:3:{s:4:\"name\";s:10:\"slide2.png\";s:9:\"image_src\";s:15:\"data/slide2.jpg\";s:7:\"caption\";s:0:\"\";}}}', 1, 1, 'Slideshow'),
-(18, 'payment', 'cod', 'a:5:{s:4:\"name\";N;s:11:\"order_total\";s:4:\"0.00\";s:12:\"order_status\";s:2:\"11\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}', 1, 1, 'Cash On Delivery'),
-(20, 'module', 'pages_module', 'a:1:{s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"17\";s:8:\"position\";s:5:\"right\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}}', 1, 1, 'Pages'),
-(21, 'payment', 'paypal_express', 'a:11:{s:8:\"priority\";s:0:\"\";s:6:\"status\";s:1:\"0\";s:8:\"api_mode\";s:7:\"sandbox\";s:8:\"api_user\";s:0:\"\";s:8:\"api_pass\";s:0:\"\";s:13:\"api_signature\";s:0:\"\";s:10:\"api_action\";s:4:\"sale\";s:10:\"return_uri\";s:20:\"main/checkout/paypal\";s:10:\"cancel_uri\";s:13:\"main/checkout\";s:11:\"order_total\";s:4:\"0.00\";s:12:\"order_status\";s:2:\"11\";}', 1, 1, 'PayPal Express'),
-(22, 'module', 'banners', 'a:1:{s:7:\"layouts\";N;}', 1, 1, 'Banners');
+INSERT INTO `ti_extensions` (`extension_id`, `type`, `name`, `data`, `serialized`, `status`, `title`)
+VALUES
+	(11, 'module', 'account_module', 'a:1:{s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"11\";s:8:\"position\";s:4:\"left\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}}', 1, 1, 'Account'),
+	(12, 'module', 'local_module', 'a:1:{s:7:\"layouts\";N;}', 1, 1, 'Local'),
+	(13, 'module', 'categories_module', 'a:1:{s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"12\";s:8:\"position\";s:4:\"left\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}}', 1, 1, 'Categories'),
+	(14, 'module', 'cart_module', 'a:3:{s:16:\"show_cart_images\";s:1:\"0\";s:13:\"cart_images_h\";s:0:\"\";s:13:\"cart_images_w\";s:0:\"\";}', 1, 1, 'Cart'),
+	(15, 'module', 'reservation_module', 'a:1:{s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"16\";s:8:\"position\";s:4:\"left\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}}', 1, 1, 'Reservation'),
+	(16, 'module', 'slideshow', 'a:6:{s:11:\"dimension_h\";s:3:\"420\";s:11:\"dimension_w\";s:4:\"1170\";s:6:\"effect\";s:4:\"fade\";s:5:\"speed\";s:3:\"500\";s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"15\";s:8:\"position\";s:3:\"top\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}s:6:\"slides\";a:3:{i:0;a:3:{s:4:\"name\";s:9:\"slide.png\";s:9:\"image_src\";s:14:\"data/slide.jpg\";s:7:\"caption\";s:0:\"\";}i:1;a:3:{s:4:\"name\";s:10:\"slide1.png\";s:9:\"image_src\";s:15:\"data/slide1.jpg\";s:7:\"caption\";s:0:\"\";}i:2;a:3:{s:4:\"name\";s:10:\"slide2.png\";s:9:\"image_src\";s:15:\"data/slide2.jpg\";s:7:\"caption\";s:0:\"\";}}}', 1, 1, 'Slideshow'),
+	(18, 'payment', 'cod', 'a:5:{s:4:\"name\";N;s:11:\"order_total\";s:7:\"1000.00\";s:12:\"order_status\";s:2:\"11\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}', 1, 1, 'Cash On Delivery'),
+	(20, 'module', 'pages_module', 'a:1:{s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"17\";s:8:\"position\";s:5:\"right\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}}', 1, 1, 'Pages'),
+	(21, 'payment', 'paypal_express', 'a:11:{s:8:\"priority\";s:1:\"2\";s:6:\"status\";s:1:\"1\";s:8:\"api_mode\";s:7:\"sandbox\";s:8:\"api_user\";s:39:\"samadepoyigi-facilitator_api1.gmail.com\";s:8:\"api_pass\";s:10:\"1381080165\";s:13:\"api_signature\";s:56:\"AFcWxV21C7fd0v3bYYYRCpSSRl31AYzY6RzJVWuquyjw.VYZbV7LatXv\";s:10:\"api_action\";s:4:\"sale\";s:10:\"return_uri\";s:24:\"paypal_express/authorize\";s:10:\"cancel_uri\";s:21:\"paypal_express/cancel\";s:11:\"order_total\";s:4:\"0.00\";s:12:\"order_status\";s:2:\"11\";}', 1, 1, 'PayPal Express'),
+	(23, 'theme', 'tastyigniter-orange', 'a:13:{s:11:\"logo_height\";s:2:\"40\";s:16:\"logo_padding_top\";s:2:\"25\";s:19:\"logo_padding_bottom\";s:2:\"25\";s:11:\"font_family\";s:25:\"\"Oxygen\",Arial,sans-serif\";s:11:\"font_weight\";s:6:\"normal\";s:9:\"font_size\";s:2:\"13\";s:10:\"font_color\";s:7:\"#333333\";s:4:\"body\";a:2:{s:10:\"background\";s:7:\"#ffffff\";s:5:\"image\";s:0:\"\";}s:6:\"header\";a:3:{s:10:\"background\";s:7:\"#fdeae2\";s:5:\"image\";s:0:\"\";s:5:\"color\";s:7:\"#333333\";}s:7:\"sidebar\";a:4:{s:10:\"background\";s:7:\"#ffffff\";s:5:\"image\";s:0:\"\";s:4:\"font\";s:7:\"#484848\";s:6:\"border\";s:7:\"#ffffff\";}s:4:\"link\";a:2:{s:5:\"color\";s:7:\"#428bca\";s:5:\"hover\";s:7:\"#2a6496\";}s:6:\"button\";a:4:{s:7:\"default\";a:2:{s:10:\"background\";s:7:\"#ffffff\";s:6:\"border\";s:7:\"#cccccc\";}s:7:\"primary\";a:2:{s:10:\"background\";s:7:\"#428bca\";s:6:\"border\";s:7:\"#357ebd\";}s:7:\"success\";a:2:{s:10:\"background\";s:7:\"#5cb85c\";s:6:\"border\";s:7:\"#4cae4c\";}s:6:\"danger\";a:2:{s:10:\"background\";s:7:\"#d9534f\";s:6:\"border\";s:7:\"#d43f3a\";}}s:10:\"custom_css\";s:0:\"\";}', 1, 1, 'TastyIgniter Orange'),
+	(24, 'theme', 'tastyigniter-blue', '', 1, 0, 'TastyIgniter Blue'),
+	(25, 'module', 'banners_module', 'a:1:{s:7:\"banners\";a:1:{i:1;a:3:{s:9:\"banner_id\";s:1:\"1\";s:5:\"width\";s:0:\"\";s:6:\"height\";s:0:\"\";}}}', 1, 1, 'Banners');
+
 
 #
 # TABLE STRUCTURE FOR: ti_languages
 #
 
 INSERT INTO `ti_languages` (`language_id`, `code`, `name`, `image`, `directory`, `status`) VALUES ('11', 'en', 'English', 'data/flags/gb.png', 'english', '1');
+
+
+#
+# TABLE STRUCTURE FOR: ti_layout_modules
+#
+
+INSERT INTO `ti_layout_modules` (`layout_module_id`, `layout_id`, `module_code`, `position`, `priority`, `status`)
+VALUES
+	(9, 13, 'local_module', 'top', 0, 1),
+	(10, 13, 'cart_module', 'right', 1, 1),
+	(11, 15, 'slideshow', 'top', 0, 1),
+	(14, 18, 'local_module', 'top', 0, 1),
+	(15, 16, 'reservation_module', 'left', 0, 1),
+	(19, 17, 'pages_module', 'right', 1, 1),
+	(20, 12, 'local_module', 'top', 1, 1),
+	(21, 12, 'categories_module', 'left', 1, 1),
+	(22, 12, 'cart_module', 'right', 2, 1),
+	(23, 12, 'banners_module', 'left', 2, 1),
+	(24, 11, 'account_module', 'left', 1, 1);
 
 
 #
@@ -581,10 +603,11 @@ INSERT INTO `ti_mail_templates_data` (`template_data_id`, `template_id`, `code`,
 # TABLE STRUCTURE FOR: ti_pages
 #
 
-INSERT INTO `ti_pages` (`page_id`, `language_id`, `name`, `title`, `heading`, `content`, `meta_description`, `meta_keywords`, `layout_id`, `navigation`, `date_added`, `date_updated`, `status`) VALUES
-(11, 11, 'About Us', 'About Us', 'About Us', '<h3 style="text-align: center;"><span style="color: #993300;">Aim</span></h3>\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In venenatis massa ac magna sagittis, sit amet gravida metus gravida. Aenean dictum pellentesque erat, vitae adipiscing libero semper sit amet. Vestibulum nec nunc lorem. Duis vitae libero a libero hendrerit tincidunt in eu tellus. Aliquam consequat ultrices felis ut dictum. Nulla euismod felis a sem mattis ornare. Aliquam ut diam sit amet dolor iaculis molestie ac id nisl. Maecenas hendrerit convallis mi feugiat gravida. Quisque tincidunt, leo a posuere imperdiet, metus leo vestibulum orci, vel volutpat justo ligula id quam. Cras placerat tincidunt lorem eu interdum.</p>\n<h3 style="text-align: center;"><span style="color: #993300;">Mission</span></h3>\n<p>Ut eu pretium urna. In sed consectetur neque. In ornare odio erat, id ornare arcu euismod a. Ut dapibus sit amet erat commodo vestibulum. Praesent vitae lacus faucibus, rhoncus tortor et, bibendum justo. Etiam pharetra congue orci, eget aliquam orci. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eleifend justo eros, sit amet fermentum tellus ullamcorper quis. Cras cursus mi at imperdiet faucibus. Proin iaculis, felis vitae luctus venenatis, ante tortor porta nisi, et ornare magna metus sit amet enim. Phasellus et turpis nec metus aliquet adipiscing. Etiam at augue nec odio lacinia tincidunt. Suspendisse commodo commodo ipsum ac sollicitudin. Nunc nec consequat lacus. Donec gravida rhoncus justo sed elementum.</p>\n<h3 style="text-align: center;"><span style="color: #a52a2a;">Vision</span></h3>\n<p>Praesent erat massa, consequat a nulla et, eleifend facilisis risus. Nullam libero mi, bibendum id eleifend vitae, imperdiet a nulla. Fusce congue porta ultricies. Vivamus felis lectus, egestas at pretium vitae, posuere a nibh. Mauris lobortis urna nec rhoncus consectetur. Fusce sed placerat sem. Nulla venenatis elit risus, non auctor arcu lobortis eleifend. Ut aliquet vitae velit a faucibus. Suspendisse quis risus sit amet arcu varius malesuada. Vestibulum vitae massa consequat, euismod lorem a, euismod lacus. Duis sagittis dolor risus, ac vehicula mauris lacinia quis. Nulla facilisi. Duis tristique ipsum nec egestas auctor. Nullam in felis vel ligula dictum tincidunt nec a neque. Praesent in egestas elit.</p>', '', '', 17, 'a:2:{i:0;s:6:"module";i:1;s:6:"footer";}', '2014-04-19 16:57:21', '2014-07-28 00:49:12', 1),
-(12, 11, 'Policy', 'Policy', 'Policy', '<div id="lipsum">\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ligula eros, semper a lorem et, venenatis volutpat dolor. Pellentesque hendrerit lectus feugiat nulla cursus, quis dapibus dolor porttitor. Donec velit enim, adipiscing ac orci id, congue tincidunt arcu. Proin egestas nulla eget leo scelerisque, et semper diam ornare. Suspendisse potenti. Suspendisse vitae bibendum enim. Duis eu ligula hendrerit, lacinia felis in, mollis nisi. Sed gravida arcu in laoreet dictum. Nulla faucibus lectus a mollis dapibus. Fusce vehicula convallis urna, et congue nulla ultricies in. Nulla magna velit, bibendum eu odio et, euismod rhoncus sem. Nullam quis magna fermentum, ultricies neque nec, blandit neque. Etiam nec congue arcu. Curabitur sed tellus quam. Cras adipiscing odio odio, et porttitor dui suscipit eget. Aliquam non est commodo, elementum turpis at, pellentesque lorem.</p>\n<p>Duis nec diam diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vulputate est et lorem sagittis, et mollis libero ultricies. Nunc ultrices tortor vel convallis varius. In dolor dolor, scelerisque ac faucibus ut, aliquet ac sem. Praesent consectetur lacus quis tristique posuere. Nulla sed ultricies odio. Cras tristique vulputate facilisis.</p>\n<p>Mauris at metus in magna condimentum gravida eu tincidunt urna. Praesent sodales vel mi eu condimentum. Suspendisse in luctus purus. Vestibulum dignissim, metus non luctus accumsan, odio ligula pharetra massa, in eleifend turpis risus in diam. Sed non lorem nibh. Nam at feugiat urna. Curabitur interdum, diam sit amet pulvinar blandit, mauris ante scelerisque nisi, sit amet placerat mi nunc eget orci. Nulla eget quam sit amet risus rhoncus lacinia a ut eros. Praesent non libero nisi. Mauris tincidunt at purus sit amet adipiscing. Donec interdum, velit nec dignissim vehicula, libero ipsum imperdiet ligula, lacinia mattis augue dui ac lacus. Aenean molestie sed nunc at pulvinar. Fusce ornare lacus non venenatis rhoncus.</p>\n<p>Aenean at enim luctus ante commodo consequat nec ut mi. Sed porta adipiscing tempus. Aliquam sit amet ullamcorper ipsum, id adipiscing quam. Fusce iaculis odio ut nisi convallis hendrerit. Morbi auctor adipiscing ligula, sit amet aliquet ante consectetur at. Donec vulputate neque eleifend libero pellentesque, vitae lacinia enim ornare. Vestibulum fermentum erat blandit, ultricies felis ac, facilisis augue. Nulla facilisis mi porttitor, interdum diam in, lobortis ipsum. In molestie quam nisl, lacinia convallis tellus fermentum ac. Nulla quis velit augue. Fusce accumsan, lacus et lobortis blandit, neque magna gravida enim, dignissim ultricies tortor dui in dolor. Vestibulum vel convallis justo, quis venenatis elit. Aliquam erat volutpat. Nunc quis iaculis ligula. Suspendisse dictum sodales neque vitae faucibus. Fusce id tellus pretium, varius nunc et, placerat metus.</p>\n<p>Pellentesque quis facilisis mauris. Phasellus porta, metus a dignissim viverra, est elit luctus erat, nec ultricies ligula lorem eget sapien. Pellentesque ac justo velit. Maecenas semper accumsan nulla eget rhoncus. Aliquam vel urna sed nibh dignissim auctor. Integer volutpat lacus ac purus convallis, at lobortis nisi tincidunt. Vestibulum condimentum elit ac sapien placerat, at ornare libero hendrerit. Cras tincidunt nunc sit amet ante bibendum tempor. Fusce quam orci, suscipit sed eros quis, vulputate molestie metus. Nam hendrerit vitae felis et porttitor. Proin et commodo velit, id porta erat. Donec eu consectetur odio. Fusce porta odio risus. Aliquam vel erat feugiat, vestibulum elit eget, ornare sapien. Sed sed nulla justo. Sed a dolor eu justo lacinia blandit.</p>\n</div>', '', '', 17, 'a:1:{i:0;s:6:"module";}', '2014-04-19 17:21:23', '2014-07-28 00:43:01', 1),
-(13, 11, 'Maintenance', 'Maintenance', 'Maintenance', '<h4><span style="color: #b22222;">Site is under maintenance. Please check back later.</span></h4>', '', '', 0, 'a:1:{i:0;s:4:"none";}', '2014-04-21 16:30:37', '2014-07-28 00:47:24', 1);
+INSERT INTO `ti_pages` (`page_id`, `language_id`, `name`, `title`, `heading`, `content`, `meta_description`, `meta_keywords`, `layout_id`, `navigation`, `date_added`, `date_updated`, `status`)
+VALUES
+	(11, 11, 'About Us', 'About Us', 'About Us', '<h3 style=\"text-align: center;\"><span style=\"color: #993300;\">Aim</span></h3>\r\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In venenatis massa ac magna sagittis, sit amet gravida metus gravida. Aenean dictum pellentesque erat, vitae adipiscing libero semper sit amet. Vestibulum nec nunc lorem. Duis vitae libero a libero hendrerit tincidunt in eu tellus. Aliquam consequat ultrices felis ut dictum. Nulla euismod felis a sem mattis ornare. Aliquam ut diam sit amet dolor iaculis molestie ac id nisl. Maecenas hendrerit convallis mi feugiat gravida. Quisque tincidunt, leo a posuere imperdiet, metus leo vestibulum orci, vel volutpat justo ligula id quam. Cras placerat tincidunt lorem eu interdum.</p>\r\n<h3 style=\"text-align: center;\"><span style=\"color: #993300;\">Mission</span></h3>\r\n<p>Ut eu pretium urna. In sed consectetur neque. In ornare odio erat, id ornare arcu euismod a. Ut dapibus sit amet erat commodo vestibulum. Praesent vitae lacus faucibus, rhoncus tortor et, bibendum justo. Etiam pharetra congue orci, eget aliquam orci. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eleifend justo eros, sit amet fermentum tellus ullamcorper quis. Cras cursus mi at imperdiet faucibus. Proin iaculis, felis vitae luctus venenatis, ante tortor porta nisi, et ornare magna metus sit amet enim. Phasellus et turpis nec metus aliquet adipiscing. Etiam at augue nec odio lacinia tincidunt. Suspendisse commodo commodo ipsum ac sollicitudin. Nunc nec consequat lacus. Donec gravida rhoncus justo sed elementum.</p>\r\n<h3 style=\"text-align: center;\"><span style=\"color: #a52a2a;\">Vision</span></h3>\r\n<p>Praesent erat massa, consequat a nulla et, eleifend facilisis risus. Nullam libero mi, bibendum id eleifend vitae, imperdiet a nulla. Fusce congue porta ultricies. Vivamus felis lectus, egestas at pretium vitae, posuere a nibh. Mauris lobortis urna nec rhoncus consectetur. Fusce sed placerat sem. Nulla venenatis elit risus, non auctor arcu lobortis eleifend. Ut aliquet vitae velit a faucibus. Suspendisse quis risus sit amet arcu varius malesuada. Vestibulum vitae massa consequat, euismod lorem a, euismod lacus. Duis sagittis dolor risus, ac vehicula mauris lacinia quis. Nulla facilisi. Duis tristique ipsum nec egestas auctor. Nullam in felis vel ligula dictum tincidunt nec a neque. Praesent in egestas elit.</p>', '', '', 17, 'a:2:{i:0;s:8:\"side_bar\";i:1;s:6:\"footer\";}', '2014-04-19 16:57:21', '2015-05-07 12:39:52', 1),
+	(12, 11, 'Policy', 'Policy', 'Policy', '<div id=\"lipsum\">\r\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ligula eros, semper a lorem et, venenatis volutpat dolor. Pellentesque hendrerit lectus feugiat nulla cursus, quis dapibus dolor porttitor. Donec velit enim, adipiscing ac orci id, congue tincidunt arcu. Proin egestas nulla eget leo scelerisque, et semper diam ornare. Suspendisse potenti. Suspendisse vitae bibendum enim. Duis eu ligula hendrerit, lacinia felis in, mollis nisi. Sed gravida arcu in laoreet dictum. Nulla faucibus lectus a mollis dapibus. Fusce vehicula convallis urna, et congue nulla ultricies in. Nulla magna velit, bibendum eu odio et, euismod rhoncus sem. Nullam quis magna fermentum, ultricies neque nec, blandit neque. Etiam nec congue arcu. Curabitur sed tellus quam. Cras adipiscing odio odio, et porttitor dui suscipit eget. Aliquam non est commodo, elementum turpis at, pellentesque lorem.</p>\r\n<p>Duis nec diam diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vulputate est et lorem sagittis, et mollis libero ultricies. Nunc ultrices tortor vel convallis varius. In dolor dolor, scelerisque ac faucibus ut, aliquet ac sem. Praesent consectetur lacus quis tristique posuere. Nulla sed ultricies odio. Cras tristique vulputate facilisis.</p>\r\n<p>Mauris at metus in magna condimentum gravida eu tincidunt urna. Praesent sodales vel mi eu condimentum. Suspendisse in luctus purus. Vestibulum dignissim, metus non luctus accumsan, odio ligula pharetra massa, in eleifend turpis risus in diam. Sed non lorem nibh. Nam at feugiat urna. Curabitur interdum, diam sit amet pulvinar blandit, mauris ante scelerisque nisi, sit amet placerat mi nunc eget orci. Nulla eget quam sit amet risus rhoncus lacinia a ut eros. Praesent non libero nisi. Mauris tincidunt at purus sit amet adipiscing. Donec interdum, velit nec dignissim vehicula, libero ipsum imperdiet ligula, lacinia mattis augue dui ac lacus. Aenean molestie sed nunc at pulvinar. Fusce ornare lacus non venenatis rhoncus.</p>\r\n<p>Aenean at enim luctus ante commodo consequat nec ut mi. Sed porta adipiscing tempus. Aliquam sit amet ullamcorper ipsum, id adipiscing quam. Fusce iaculis odio ut nisi convallis hendrerit. Morbi auctor adipiscing ligula, sit amet aliquet ante consectetur at. Donec vulputate neque eleifend libero pellentesque, vitae lacinia enim ornare. Vestibulum fermentum erat blandit, ultricies felis ac, facilisis augue. Nulla facilisis mi porttitor, interdum diam in, lobortis ipsum. In molestie quam nisl, lacinia convallis tellus fermentum ac. Nulla quis velit augue. Fusce accumsan, lacus et lobortis blandit, neque magna gravida enim, dignissim ultricies tortor dui in dolor. Vestibulum vel convallis justo, quis venenatis elit. Aliquam erat volutpat. Nunc quis iaculis ligula. Suspendisse dictum sodales neque vitae faucibus. Fusce id tellus pretium, varius nunc et, placerat metus.</p>\r\n<p>Pellentesque quis facilisis mauris. Phasellus porta, metus a dignissim viverra, est elit luctus erat, nec ultricies ligula lorem eget sapien. Pellentesque ac justo velit. Maecenas semper accumsan nulla eget rhoncus. Aliquam vel urna sed nibh dignissim auctor. Integer volutpat lacus ac purus convallis, at lobortis nisi tincidunt. Vestibulum condimentum elit ac sapien placerat, at ornare libero hendrerit. Cras tincidunt nunc sit amet ante bibendum tempor. Fusce quam orci, suscipit sed eros quis, vulputate molestie metus. Nam hendrerit vitae felis et porttitor. Proin et commodo velit, id porta erat. Donec eu consectetur odio. Fusce porta odio risus. Aliquam vel erat feugiat, vestibulum elit eget, ornare sapien. Sed sed nulla justo. Sed a dolor eu justo lacinia blandit</p>\r\n</div>', '', '', 17, 'a:2:{i:0;s:8:\"side_bar\";i:1;s:6:\"footer\";}', '2014-04-19 17:21:23', '2015-05-16 09:18:39', 1),
+	(13, 11, 'Maintenance', 'Maintenance', 'Maintenance', '<h4><span style=\"color: #b22222;\">Site is under maintenance. Please check back later.</span></h4>', '', '', 0, 'a:1:{i:0;s:4:\"none\";}', '2014-04-21 16:30:37', '2014-07-28 00:47:24', 1);
 
 
 #
@@ -658,11 +681,7 @@ INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) 
 (10875, 'config', 'reservation_status', '11', 0),
 (10876, 'config', 'reservation_interval', '45', 0),
 (10877, 'config', 'reservation_turn', '60', 0),
-(10878, 'config', 'themes_allowed_img', 'jpg|jpeg|png|gif|bmp|tiff|svg', 0),
-(10879, 'config', 'themes_allowed_file', 'txt|xml|js|php|css', 0),
-(10880, 'config', 'themes_hidden_files', '', 0),
-(10881, 'config', 'themes_hidden_folders', '', 0),
-(10882, 'config', 'image_manager', 'a:19:{s:11:"root_folder";s:4:"data";s:8:"max_size";s:3:"300";s:12:"thumb_height";s:3:"120";s:11:"thumb_width";s:3:"120";s:17:"thumb_height_mini";s:2:"64";s:16:"thumb_width_mini";s:2:"64";s:9:"show_mini";s:1:"1";s:8:"show_ext";s:1:"1";s:7:"uploads";s:1:"1";s:10:"new_folder";s:1:"1";s:4:"copy";s:1:"1";s:4:"move";s:1:"1";s:6:"rename";s:1:"1";s:6:"delete";s:1:"1";s:11:"allowed_ext";s:33:"jpg|jpeg|png|gif|bmp|tiff|svg|ico";s:12:"hidden_files";s:10:"index.html";s:14:"hidden_folders";s:0:"";s:15:"transliteration";s:1:"1";s:13:"remember_days";s:1:"7";}', 1),
+(13626, 'config', 'image_manager', 'a:11:{s:8:\"max_size\";s:3:\"300\";s:11:\"thumb_width\";s:3:\"320\";s:12:\"thumb_height\";s:3:\"220\";s:7:\"uploads\";s:1:\"1\";s:10:\"new_folder\";s:1:\"1\";s:4:\"copy\";s:1:\"1\";s:4:\"move\";s:1:\"1\";s:6:\"rename\";s:1:\"1\";s:6:\"delete\";s:1:\"1\";s:15:\"transliteration\";s:1:\"0\";s:13:\"remember_days\";s:1:\"7\";}', 1),
 (10883, 'config', 'protocol', 'mail', 0),
 (10884, 'config', 'mailtype', 'html', 0),
 (10885, 'config', 'smtp_host', '', 0),
@@ -675,7 +694,7 @@ INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) 
 (10894, 'config', 'index_file_url', '0', 0),
 (10895, 'config', 'permalink', '1', 0),
 (10896, 'config', 'maintenance_mode', '0', 0),
-(10897, 'config', 'maintenance_page', '11', 0),
+(10897, 'config', 'maintenance_message', 'Site is under maintenance. Please check back later.', 0),
 (10898, 'config', 'cache_mode', '0', 0),
 (10899, 'config', 'cache_time', '0', 0);
 
@@ -684,59 +703,34 @@ INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) 
 # TABLE STRUCTURE FOR: ti_staff_groups
 #
 
-INSERT INTO `ti_staff_groups` (`staff_group_id`, `staff_group_name`, `location_access`, `permission`) VALUES
-(11, 'Super Staff', 0, 'a:2:{s:6:\"access\";a:43:{i:0;s:7:\"banners\";i:1;s:10:\"categories\";i:2;s:9:\"countries\";i:3;s:7:\"coupons\";i:4;s:10:\"currencies\";i:5;s:15:\"customer_groups\";i:6;s:9:\"customers\";i:7;s:18:\"customers_activity\";i:8;s:8:\"database\";i:9;s:10:\"error_logs\";i:10;s:10:\"extensions\";i:11;s:13:\"image_manager\";i:12;s:9:\"languages\";i:13;s:7:\"layouts\";i:14;s:9:\"locations\";i:15;s:14:\"mail_templates\";i:16;s:12:\"menu_options\";i:17;s:5:\"menus\";i:18;s:8:\"messages\";i:19;s:6:\"orders\";i:20;s:5:\"pages\";i:21;s:8:\"payments\";i:22;s:7:\"ratings\";i:23;s:12:\"reservations\";i:24;s:7:\"reviews\";i:25;s:18:\"security_questions\";i:26;s:8:\"settings\";i:27;s:12:\"staff_groups\";i:28;s:6:\"staffs\";i:29;s:8:\"statuses\";i:30;s:6:\"tables\";i:31;s:6:\"themes\";i:32;s:10:\"uri_routes\";i:33;s:14:\"account_module\";i:34;s:7:\"banners\";i:35;s:11:\"cart_module\";i:36;s:17:\"categories_module\";i:37;s:12:\"local_module\";i:38;s:12:\"pages_module\";i:39;s:18:\"reservation_module\";i:40;s:9:\"slideshow\";i:41;s:3:\"cod\";i:42;s:14:\"paypal_express\";}s:6:\"modify\";a:43:{i:0;s:7:\"banners\";i:1;s:10:\"categories\";i:2;s:9:\"countries\";i:3;s:7:\"coupons\";i:4;s:10:\"currencies\";i:5;s:15:\"customer_groups\";i:6;s:9:\"customers\";i:7;s:18:\"customers_activity\";i:8;s:8:\"database\";i:9;s:10:\"error_logs\";i:10;s:10:\"extensions\";i:11;s:13:\"image_manager\";i:12;s:9:\"languages\";i:13;s:7:\"layouts\";i:14;s:9:\"locations\";i:15;s:14:\"mail_templates\";i:16;s:12:\"menu_options\";i:17;s:5:\"menus\";i:18;s:8:\"messages\";i:19;s:6:\"orders\";i:20;s:5:\"pages\";i:21;s:8:\"payments\";i:22;s:7:\"ratings\";i:23;s:12:\"reservations\";i:24;s:7:\"reviews\";i:25;s:18:\"security_questions\";i:26;s:8:\"settings\";i:27;s:12:\"staff_groups\";i:28;s:6:\"staffs\";i:29;s:8:\"statuses\";i:30;s:6:\"tables\";i:31;s:6:\"themes\";i:32;s:10:\"uri_routes\";i:33;s:14:\"account_module\";i:34;s:7:\"banners\";i:35;s:11:\"cart_module\";i:36;s:17:\"categories_module\";i:37;s:12:\"local_module\";i:38;s:12:\"pages_module\";i:39;s:18:\"reservation_module\";i:40;s:9:\"slideshow\";i:41;s:3:\"cod\";i:42;s:14:\"paypal_express\";}}');
+INSERT INTO `ti_staff_groups` (`staff_group_id`, `staff_group_name`, `location_access`, `permission`)
+VALUES
+	(11, 'Super Staff', 0, 'a:2:{s:6:\"access\";a:43:{i:0;s:7:\"banners\";i:1;s:10:\"categories\";i:2;s:9:\"countries\";i:3;s:7:\"coupons\";i:4;s:10:\"currencies\";i:5;s:15:\"customer_groups\";i:6;s:9:\"customers\";i:7;s:18:\"customers_activity\";i:8;s:8:\"database\";i:9;s:10:\"error_logs\";i:10;s:10:\"extensions\";i:11;s:13:\"image_manager\";i:12;s:9:\"languages\";i:13;s:7:\"layouts\";i:14;s:9:\"locations\";i:15;s:14:\"mail_templates\";i:16;s:12:\"menu_options\";i:17;s:5:\"menus\";i:18;s:8:\"messages\";i:19;s:6:\"orders\";i:20;s:5:\"pages\";i:21;s:8:\"payments\";i:22;s:7:\"ratings\";i:23;s:12:\"reservations\";i:24;s:7:\"reviews\";i:25;s:18:\"security_questions\";i:26;s:8:\"settings\";i:27;s:12:\"staff_groups\";i:28;s:6:\"staffs\";i:29;s:8:\"statuses\";i:30;s:6:\"tables\";i:31;s:6:\"themes\";i:32;s:10:\"uri_routes\";i:33;s:14:\"account_module\";i:34;s:14:\"banners_module\";i:35;s:11:\"cart_module\";i:36;s:17:\"categories_module\";i:37;s:12:\"local_module\";i:38;s:12:\"pages_module\";i:39;s:18:\"reservation_module\";i:40;s:9:\"slideshow\";i:41;s:3:\"cod\";i:42;s:14:\"paypal_express\";}s:6:\"modify\";a:43:{i:0;s:7:\"banners\";i:1;s:10:\"categories\";i:2;s:9:\"countries\";i:3;s:7:\"coupons\";i:4;s:10:\"currencies\";i:5;s:15:\"customer_groups\";i:6;s:9:\"customers\";i:7;s:18:\"customers_activity\";i:8;s:8:\"database\";i:9;s:10:\"error_logs\";i:10;s:10:\"extensions\";i:11;s:13:\"image_manager\";i:12;s:9:\"languages\";i:13;s:7:\"layouts\";i:14;s:9:\"locations\";i:15;s:14:\"mail_templates\";i:16;s:12:\"menu_options\";i:17;s:5:\"menus\";i:18;s:8:\"messages\";i:19;s:6:\"orders\";i:20;s:5:\"pages\";i:21;s:8:\"payments\";i:22;s:7:\"ratings\";i:23;s:12:\"reservations\";i:24;s:7:\"reviews\";i:25;s:18:\"security_questions\";i:26;s:8:\"settings\";i:27;s:12:\"staff_groups\";i:28;s:6:\"staffs\";i:29;s:8:\"statuses\";i:30;s:6:\"tables\";i:31;s:6:\"themes\";i:32;s:10:\"uri_routes\";i:33;s:14:\"account_module\";i:34;s:14:\"banners_module\";i:35;s:11:\"cart_module\";i:36;s:17:\"categories_module\";i:37;s:12:\"local_module\";i:38;s:12:\"pages_module\";i:39;s:18:\"reservation_module\";i:40;s:9:\"slideshow\";i:41;s:3:\"cod\";i:42;s:14:\"paypal_express\";}}');
 
 
 #
 # TABLE STRUCTURE FOR: ti_statuses
 #
 
-INSERT INTO `ti_statuses` (`status_id`, `status_name`, `status_comment`, `notify_customer`, `status_for`) VALUES ('11', 'Received', 'Your order has been received.', '1', 'order');
-INSERT INTO `ti_statuses` (`status_id`, `status_name`, `status_comment`, `notify_customer`, `status_for`) VALUES ('12', 'Pending', 'Your order is pending', '1', 'order');
-INSERT INTO `ti_statuses` (`status_id`, `status_name`, `status_comment`, `notify_customer`, `status_for`) VALUES ('13', 'Preparation', 'Your order is in the kitchen', '1', 'order');
-INSERT INTO `ti_statuses` (`status_id`, `status_name`, `status_comment`, `notify_customer`, `status_for`) VALUES ('14', 'Delivery', 'Your order will be with you shortly.', '0', 'order');
-INSERT INTO `ti_statuses` (`status_id`, `status_name`, `status_comment`, `notify_customer`, `status_for`) VALUES ('15', 'Completed', '', '0', 'order');
-INSERT INTO `ti_statuses` (`status_id`, `status_name`, `status_comment`, `notify_customer`, `status_for`) VALUES ('16', 'Confirmed', 'Your table reservation has been confirmed.', '0', 'reserve');
-INSERT INTO `ti_statuses` (`status_id`, `status_name`, `status_comment`, `notify_customer`, `status_for`) VALUES ('17', 'Canceled', 'Your table reservation has been canceled.', '0', 'reserve');
-INSERT INTO `ti_statuses` (`status_id`, `status_name`, `status_comment`, `notify_customer`, `status_for`) VALUES ('18', 'Pending', 'Your table reservation is pending.', '0', 'reserve');
+INSERT INTO `ti_statuses` (`status_id`, `status_name`, `status_comment`, `notify_customer`, `status_for`, `status_color`)
+VALUES
+	(11, 'Received', 'Your order has been received.', 1, 'order', '#686663'),
+	(12, 'Pending', 'Your order is pending', 1, 'order', '#f0ad4e'),
+	(13, 'Preparation', 'Your order is in the kitchen', 1, 'order', '#00c0ef'),
+	(14, 'Delivery', 'Your order will be with you shortly.', 0, 'order', '#00a65a'),
+	(15, 'Completed', '', 0, 'order', '#00a65a'),
+	(16, 'Confirmed', 'Your table reservation has been confirmed.', 0, 'reserve', '#00a65a'),
+	(17, 'Canceled', 'Your table reservation has been canceled.', 0, 'reserve', '#dd4b39'),
+	(18, 'Pending', 'Your table reservation is pending.', 0, 'reserve', ''),
+	(19, 'Canceled', '', 0, 'order', '#ea0b29');
 
 
 #
 # TABLE STRUCTURE FOR: ti_uri_routes
 #
 
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`) VALUES
-(1, 'home', 'main/home', 1),
-(2, 'contact', 'main/contact', 2),
-(3, 'menus/(:any)', 'main/menus', 3),
-(4, 'menus', 'main/menus', 4),
-(5, 'locations', 'main/local/locations', 5),
-(6, 'local/(:any)', 'main/local', 6),
-(7, 'local', 'main/local', 7),
-(8, 'local/reviews', 'main/local/reviews', 8),
-(9, 'checkout', 'main/checkout', 9),
-(10, 'checkout/success', 'main/checkout/success', 10),
-(11, 'account', 'main/account', 11),
-(12, 'account/login', 'main/login', 12),
-(13, 'account/logout', 'main/logout', 13),
-(14, 'account/register', 'main/register', 14),
-(15, 'account/password/reset', 'main/password_reset', 15),
-(16, 'account/details', 'main/details', 16),
-(17, 'account/address', 'main/address', 17),
-(18, 'account/address/edit', 'main/address/edit', 18),
-(19, 'account/address/edit/(:num)', 'main/address/edit/$1', 19),
-(20, 'account/orders', 'main/orders', 20),
-(21, 'account/orders/view/(:num)', 'main/orders/view/$1', 21),
-(22, 'account/orders/reorder/(:num)', 'main/orders/reorder/$1', 22),
-(23, 'account/reservations', 'main/reservations', 23),
-(24, 'account/reservations/view/(:num)', 'main/reservations/view/$1', 24),
-(25, 'account/reviews', 'main/reviews', 25),
-(26, 'account/reviews/add/(:num)/(:num)', 'main/reviews/add/$1/$2', 26),
-(27, 'account/reviews/view/(:num)/(:num)/(:num)', 'main/reviews/view/$1/$2/$3', 27),
-(28, 'account/inbox', 'main/inbox', 28),
-(29, 'account/inbox/view/(:num)', 'main/inbox/view/$1', 29),
-(30, 'reserve/table', 'main/reserve_table', 30),
-(31, 'reserve/success', 'main/reserve_table/success', 31),
-(32, 'pages/(:any)', 'main/pages', 32),
-(33, 'pages', 'main/pages', 33);
+INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`)
+VALUES
+	(1, 'locations', 'local/locations', 1),
+	(2, 'account', 'account/account', 2),
+	(3, '(:any)', 'pages', 3);
