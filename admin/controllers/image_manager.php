@@ -90,7 +90,6 @@ class Image_manager extends Admin_Controller {
 		$data['current_url']    = current_url();
 		$data['refresh_url']    = page_url() .'?'. $get_params . $sub_folder .'&'. uniqid();
 		$data['link']           = page_url() .'?'. $get_params;
-        $data['new_folder']     = TRUE;
         $data['delete_folder']  = FALSE;
         $data['rename_folder']  = FALSE;
         $data['current_folder'] = '';
@@ -103,15 +102,6 @@ class Image_manager extends Admin_Controller {
 				$tmp_path .= $p_dir .'/';
 				if ($p_dir != '') {
                     $data['breadcrumbs'][] = array('name' => $p_dir, 'link' => $data['link'] . $tmp_path);
-
-                    if (in_array($p_dir, array('flags', 'gallery'))) {
-                        $data['new_folder'] = FALSE;
-                        $data['delete_folder'] = FALSE;
-                        $data['rename_folder'] = FALSE;
-                    } else {
-                        $data['delete_folder'] = TRUE;
-                        $data['rename_folder'] = TRUE;
-                    }
 
                     $data['current_folder']  = $p_dir;
                 }
