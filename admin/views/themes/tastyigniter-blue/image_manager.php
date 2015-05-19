@@ -126,10 +126,10 @@
                             <?php if ($new_folder) { ?>
                                 <a class="btn btn-new-folder" title="New Folder" href="#"><i class="fa fa-folder"></i></a>&nbsp;&nbsp;&nbsp;
                             <?php } ?>
-                            <?php if ($rename AND $rename_folder) { ?>
+                            <?php if ($rename) { ?>
                                 <a class="btn btn-rename" title="Rename Folder" data-name="<?php echo $current_folder; ?>" data-path="<?php echo $parent_folder; ?>" href="#"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;
                             <?php } ?>
-                            <?php if ($delete AND $delete_folder) { ?>
+                            <?php if ($delete) { ?>
                                 <a class="btn btn-delete" title="Delete Folder" data-name="<?php echo $current_folder; ?>" data-path="<?php echo $parent_folder; ?>" href="#"><i class="fa fa-trash"></i></a>
                             <?php } ?>
                         </li>
