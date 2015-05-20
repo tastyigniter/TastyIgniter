@@ -70,15 +70,15 @@
 											<td class="action action-one"><i class="fa fa-sort handle"></i></td>
 											<td class="action action-one"><a class="btn btn-danger" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a></td>
 											<td>
-												<input type="text" name="values[<?php echo $table_row; ?>][value]" class="form-control" value="<?php echo set_value('values[$table_row][value]', $value['value']); ?>" />
-												<?php echo form_error('values['.$table_row.'][value]', '<span class="text-danger">', '</span>'); ?>
+												<input type="text" name="option_values[<?php echo $table_row; ?>][value]" class="form-control" value="<?php echo set_value('option_values[$table_row][value]', $value['value']); ?>" />
+												<?php echo form_error('option_values['.$table_row.'][value]', '<span class="text-danger">', '</span>'); ?>
 											</td>
 											<td>
-												<input type="text" name="values[<?php echo $table_row; ?>][price]" class="form-control" value="<?php echo set_value('values[$table_row][price]', $value['price']); ?>" />
-												<?php echo form_error('values['.$table_row.'][price]', '<span class="text-danger">', '</span>'); ?>
+												<input type="text" name="option_values[<?php echo $table_row; ?>][price]" class="form-control" value="<?php echo set_value('option_values[$table_row][price]', $value['price']); ?>" />
+												<?php echo form_error('option_values['.$table_row.'][price]', '<span class="text-danger">', '</span>'); ?>
 											</td>
 											<td class="id">
-												<input type="hidden" name="values[<?php echo $table_row; ?>][option_value_id]" class="form-control" value="<?php echo set_value('values[$table_row][option_value_id]', $value['option_value_id']); ?>" />
+												<input type="hidden" name="option_values[<?php echo $table_row; ?>][option_value_id]" class="form-control" value="<?php echo set_value('option_values[$table_row][option_value_id]', $value['option_value_id']); ?>" />
 												<?php echo $value['option_value_id']; ?>
 											</td>
 										</tr>
@@ -110,11 +110,11 @@ function addValue() {
     html += '	<td class="action action-one"><i class="fa fa-sort handle"></i></td>';
 	html += '	<td class="action action-one"><a class="btn btn-danger" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a></td>';
 	html += '	<td>';
-	html += '		<input type="text" name="values[' + table_row + '][value]" class="form-control" value="<?php echo set_value("values[' + table_row + '][value]"); ?>" />';
+	html += '		<input type="text" name="option_values[' + table_row + '][value]" class="form-control" value="<?php echo set_value("option_values[' + table_row + '][value]"); ?>" />';
 	html += '	</td>';
-	html += '	<td><input type="text" name="values[' + table_row + '][price]" class="form-control" value="<?php echo set_value("values[' + table_row + '][price]"); ?>" /></td>';
+	html += '	<td><input type="text" name="option_values[' + table_row + '][price]" class="form-control" value="<?php echo set_value("option_values[' + table_row + '][price]"); ?>" /></td>';
 	html += '	<td class="id">';
-	html += '		<input type="hidden" name="values[' + table_row + '][option_value_id]" class="form-control" value="<?php echo set_value("values[' + table_row + '][option_value_id]"); ?>" />';
+	html += '		<input type="hidden" name="option_values[' + table_row + '][option_value_id]" class="form-control" value="<?php echo set_value("option_values[' + table_row + '][option_value_id]"); ?>" />';
 	html += '	-</td>';
 	html += '</tr>';
 

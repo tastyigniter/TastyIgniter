@@ -8,6 +8,8 @@ class Menus extends Main_Controller {
 		$this->load->library('location'); 														// load the location library
 		$this->load->library('currency'); 														// load the currency library
 		$this->load->model('Menus_model'); 														// load the menus model
+		$this->load->model('Categories_model'); 														// load the menus model
+		$this->load->model('Menu_options_model'); 														// load the menus model
 		$this->load->model('Pages_model');
 		$this->lang->load('menus');
 	}
@@ -30,7 +32,7 @@ class Menus extends Main_Controller {
         $filter['filter_status'] = '1';
 
         $filter['filter_category'] = $data['category_id'] = (int) $this->input->get('category_id'); 									// retrieve 3rd uri segment else set FALSE if unavailable.
-		$categories = $this->Menus_model->getCategory($data['category_id']);
+		$categories = $this->Categories_model->getCategory($data['category_id']);
 
 		if (!$categories AND $this->input->get('category_id')) {
 			show_404();
@@ -106,7 +108,7 @@ class Menus extends Main_Controller {
 		}
 
 		$data['menu_options'] = array();
-		$menu_options = $this->Menus_model->getMenuOptions();
+		$menu_options = $this->Menu_options_model->getMenuOptions();
 		foreach ($menu_options as $menu_id => $option) {
 			$option_values = array();
 
@@ -131,7 +133,7 @@ class Menus extends Main_Controller {
 		$data['option_values'] = array();
 		foreach ($menu_options as $option) {
 			if (!isset($data['option_values'][$option['option_id']])) {
-				$data['option_values'][$option['option_id']] = $this->Menus_model->getOptionValues($option['option_id']);
+				$data['option_values'][$option['option_id']] = $this->Menu_options_model->getOptionValues($option['option_id']);
 			}
 		}
 

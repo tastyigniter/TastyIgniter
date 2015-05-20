@@ -7,7 +7,7 @@ class Menu_options extends Admin_Controller {
 		$this->load->library('user');
 		$this->load->library('pagination');
 		$this->load->library('currency'); // load the currency library
-		$this->load->model('Menus_model'); // load the menus model
+		$this->load->model('Menu_options_model'); // load the menus model
 	}
 
 	public function index() {
@@ -65,7 +65,7 @@ class Menu_options extends Admin_Controller {
 		$data['sort_id'] 			= site_url('menu_options'.$url.'sort_by=option_id&order_by='.$order_by);
 
 		$data['menu_options'] = array();
-		$results = $this->Menus_model->getOptionsList($filter);
+		$results = $this->Menu_options_model->getList($filter);
 		foreach ($results as $result) {
 			$data['menu_options'][] = array(
 				'option_id' 	=> $result['option_id'],
@@ -82,7 +82,7 @@ class Menu_options extends Admin_Controller {
 		}
 
 		$config['base_url'] 		= site_url('menu_options').$url;
-		$config['total_rows'] 		= $this->Menus_model->getOptionsCount($filter);
+		$config['total_rows'] 		= $this->Menu_options_model->getCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 
 		$this->pagination->initialize($config);
@@ -102,7 +102,7 @@ class Menu_options extends Admin_Controller {
 	}
 
 	public function edit() {
-		$option_info = $this->Menus_model->getOption((int) $this->input->get('id'));
+		$option_info = $this->Menu_options_model->getOption((int) $this->input->get('id'));
 
 		if ($option_info) {
 			$option_id = $option_info['option_id'];
@@ -124,10 +124,10 @@ class Menu_options extends Admin_Controller {
 		$data['display_type'] 		= $option_info['display_type'];
 		$data['priority'] 			= $option_info['priority'];
 
-		if ($this->input->post('values')) {
-			$values = $this->input->post('values');
+		if ($this->input->post('option_values')) {
+			$values = $this->input->post('option_values');
 		} else {
-			$values = $this->Menus_model->getOptionValues($option_id);
+			$values = $this->Menu_options_model->getOptionValues($option_id);
 		}
 
 		$data['values'] = array();
@@ -139,15 +139,7 @@ class Menu_options extends Admin_Controller {
 			);
 		}
 
-		if ($this->input->post() AND $this->_addMenuOpiton() === TRUE) {
-			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {
-				redirect('menu_options/edit?id='. $this->input->post('insert_id'));
-			} else {
-				redirect('menu_options');
-			}
-		}
-
-		if ($this->input->post() AND $this->_updateMenuOption() === TRUE){
+		if ($this->input->post() AND $option_id = $this->_saveOption()){
 			if ($this->input->post('save_close') === '1') {
 				redirect('menu_options');
 			}
@@ -167,7 +159,7 @@ class Menu_options extends Admin_Controller {
 				'option_name' => $this->input->get('term')
 			);
 
-			$results = $this->Menus_model->getOptionsAutoComplete($filter);
+			$results = $this->Menu_options_model->getAutoComplete($filter);
 			if ($results) {
 				foreach ($results as $result) {
 					$json['results'][] = array(
@@ -186,49 +178,24 @@ class Menu_options extends Admin_Controller {
 		$this->output->set_output(json_encode($json));
 	}
 
-	public function _addMenuOpiton() {
-    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$add = array();
+	public function _saveOption() {
+    	if ($this->validateForm() === TRUE) {
+            $save_type = (! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-			$add['option_name'] 	= $this->input->post('option_name');
-			$add['display_type'] 	= $this->input->post('display_type');
-			$add['priority'] 		= $this->input->post('priority');
-			$add['option_values'] 	= $this->input->post('values');
-
-			if ($_POST['insert_id'] = $this->Menus_model->addOption($add)) {
-				$this->alert->set('success', 'Menu option added successfully.');
+			if ($option_id = $this->Menu_options_model->saveOption($this->input->post())) {
+				$this->alert->set('success', 'Menu option ' . $save_type . ' successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occurred, nothing added.');
+				$this->alert->set('warning', 'An error occurred, ' . $save_type . ' updated.');
 			}
 
-			return TRUE;
-		}
-	}
-
-	public function _updateMenuOption() {
-    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$update = array();
-
-			$update['option_id'] 		= $this->input->get('id');
-			$update['option_name'] 		= $this->input->post('option_name');
-			$update['display_type'] 	= $this->input->post('display_type');
-			$update['priority'] 		= $this->input->post('priority');
-			$update['option_values'] 	= $this->input->post('values');
-
-			if ($this->Menus_model->updateOption($update)) {
-				$this->alert->set('success', 'Menu option updated successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
-			}
-
-			return TRUE;
+			return $option_id;
 		}
 	}
 
 	public function _deleteMenuOption() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
-				$this->Menus_model->deleteMenuOption($value);
+				$this->Menu_options_model->deleteMenuOption($value);
 			}
 
 			$this->alert->set('success', 'Menu option(s) deleted successfully!');
@@ -242,10 +209,10 @@ class Menu_options extends Admin_Controller {
 		$this->form_validation->set_rules('display_type', 'Display Type', 'xss_clean|trim|required|alpha');
 		$this->form_validation->set_rules('priority', 'Priority', 'xss_clean|trim|required|integer');
 
-		if ($this->input->post('values')) {
-			foreach ($this->input->post('values') as $key => $value) {
-				$this->form_validation->set_rules('values['.$key.'][value]', 'Value', 'xss_clean|trim|required|min_length[2]|max_length[128]');
-				$this->form_validation->set_rules('values['.$key.'][price]', 'Price', 'xss_clean|trim|required|numeric');
+		if ($this->input->post('option_values')) {
+			foreach ($this->input->post('option_values') as $key => $value) {
+				$this->form_validation->set_rules('option_values['.$key.'][value]', 'Value', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+				$this->form_validation->set_rules('option_values['.$key.'][price]', 'Price', 'xss_clean|trim|required|numeric');
 			}
 		}
 

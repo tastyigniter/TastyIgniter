@@ -7,7 +7,9 @@ class Menus extends Admin_Controller {
 		$this->load->library('user');
 		$this->load->library('pagination');
 		$this->load->library('currency'); // load the currency library
-		$this->load->model('Menus_model'); // load the menus model
+        $this->load->model('Menus_model'); // load the menus model
+        $this->load->model('Categories_model'); // load the categories model
+        $this->load->model('Menu_options_model'); // load the menu options model
 	}
 
 	public function index() {
@@ -108,7 +110,7 @@ class Menus extends Admin_Controller {
 
 		//load category data into array
 		$data['categories'] = array();
-		$categories = $this->Menus_model->getCategories();
+		$categories = $this->Categories_model->getCategories();
 		foreach ($categories as $category) {
 			$data['categories'][] = array(
 				'category_id'	=>	$category['category_id'],
@@ -193,7 +195,7 @@ class Menus extends Admin_Controller {
 		$data['no_photo'] 			= $this->Image_tool_model->resize('data/no_photo.png');
 
 		$data['categories'] = array();
-		$results = $this->Menus_model->getCategories();
+		$results = $this->Categories_model->getCategories();
 		foreach ($results as $result) {
 			$data['categories'][] = array(
 				'category_id'	=>	$result['category_id'],
@@ -204,7 +206,7 @@ class Menus extends Admin_Controller {
 		if ($this->input->post('menu_options')) {
 			$menu_options = $this->input->post('menu_options');
 		} else {
-			$menu_options = $this->Menus_model->getMenuOptions($menu_id);
+			$menu_options = $this->Menu_options_model->getMenuOptions($menu_id);
 		}
 
 		$data['menu_options'] = array();
@@ -216,7 +218,7 @@ class Menus extends Admin_Controller {
 					'option_value_id'		=> $value['option_value_id'],
 					'price'					=> (empty($value['new_price']) OR $value['new_price'] == '0.00') ? '' : $value['new_price'],
 					'quantity'				=> $value['quantity'],
-					'substract_stock'		=> $value['substract_stock']
+					'subtract_stock'		=> $value['subtract_stock']
 				);
 			}
 
@@ -234,19 +236,11 @@ class Menus extends Admin_Controller {
 		$data['option_values'] = array();
 		foreach ($menu_options as $option) {
 			if (!isset($data['option_values'][$option['option_id']])) {
-				$data['option_values'][$option['option_id']] = $this->Menus_model->getOptionValues($option['option_id']);
+				$data['option_values'][$option['option_id']] = $this->Menu_options_model->getOptionValues($option['option_id']);
 			}
 		}
 
-		if ($this->input->post() AND $this->_addMenu() === TRUE) {
-			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {
-				redirect('menus/edit?id='. $this->input->post('insert_id'));
-			} else {
-				redirect('menus');
-			}
-		}
-
-		if ($this->input->post() AND $this->_updateMenu() === TRUE) {
+		if ($this->input->post() AND $menu_id = $this->_saveMenu()) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('menus');
 			}
@@ -282,72 +276,23 @@ class Menus extends Admin_Controller {
 		$this->output->set_output(json_encode($json));
 	}
 
-	public function _addMenu() {
-    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$add = array();
+	public function _saveMenu() {
+    	if ($this->validateForm() === TRUE) {
+            $save_type = (! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-			//Sanitizing the POST values
-			$add['menu_name'] 			= $this->input->post('menu_name');
-			$add['menu_description'] 	= $this->input->post('menu_description');
-			$add['menu_price'] 			= $this->input->post('menu_price');
-			$add['menu_category'] 		= $this->input->post('menu_category');
-			$add['menu_photo'] 			= $this->input->post('menu_photo');
-			$add['stock_qty'] 			= $this->input->post('stock_qty');
-			$add['minimum_qty'] 		= $this->input->post('minimum_qty');
-			$add['subtract_stock'] 		= $this->input->post('subtract_stock');
-			$add['menu_options'] 		= $this->input->post('menu_options');
-			$add['special_status'] 		= $this->input->post('special_status');
-			$add['start_date'] 			= $this->input->post('start_date');
-			$add['end_date'] 			= $this->input->post('end_date');
-			$add['special_price'] 		= $this->input->post('special_price');
-			$add['menu_status'] 		= $this->input->post('menu_status');
-
-			if ($_POST['insert_id'] = $this->Menus_model->addMenu($add)) {
-				$this->alert->set('success', 'Menu added successfully.');
+			if ($menu_id = $this->Menus_model->saveMenu($this->input->post())) {
+				$this->alert->set('success', 'Menu ' . $save_type . ' successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occurred, nothing added.');
+				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
 			}
 
-			return TRUE;
-		}
-	}
-
-	public function _updateMenu() {
-    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$update = array();
-
-			$update['menu_id'] 				= $this->input->get('id');
-			$update['menu_name'] 			= $this->input->post('menu_name');
-			$update['menu_description'] 	= $this->input->post('menu_description');
-			$update['menu_price']			= $this->input->post('menu_price');
-			$update['menu_category'] 		= $this->input->post('menu_category');
-			$update['menu_photo'] 			= $this->input->post('menu_photo');
-			$update['stock_qty'] 			= $this->input->post('stock_qty');
-			$update['minimum_qty'] 			= $this->input->post('minimum_qty');
-			$update['subtract_stock'] 		= $this->input->post('subtract_stock');
-			$update['menu_options'] 		= $this->input->post('menu_options');
-			$update['special_id'] 			= $this->input->post('special_id');
-			$update['start_date'] 			= $this->input->post('start_date');
-			$update['end_date'] 			= $this->input->post('end_date');
-			$update['special_status'] 		= $this->input->post('special_status');
-			$update['special_price'] 		= $this->input->post('special_price');
-			$update['menu_status'] 			= $this->input->post('menu_status');
-
-
-			if ($this->Menus_model->updateMenu($update)) {
-				$this->alert->set('success', 'Menu updated successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
-			}
-
-			return TRUE;
+			return $menu_id;
 		}
 	}
 
 	public function _deleteMenu() {
     	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $value) {
-				$menu_id = $value;
+			foreach ($this->input->post('delete') as $key => $menu_id) {
 				$this->Menus_model->deleteMenu($menu_id);
 			}
 
@@ -372,10 +317,14 @@ class Menus extends Admin_Controller {
 		if ($this->input->post('menu_options')) {
 			foreach ($this->input->post('menu_options') as $key => $value) {
 				$this->form_validation->set_rules('menu_options['.$key.'][option_id]', 'Option ID', 'xss_clean|trim|required|integer');
+				$this->form_validation->set_rules('menu_options['.$key.'][required]', 'Menu Option Required', 'xss_clean|trim|required|integer');
 
 				foreach ($value['option_values'] as $option => $option_value) {
 					$this->form_validation->set_rules('menu_options['.$key.'][option_values]['.$option.'][option_value_id]', 'Option Value', 'xss_clean|trim|required|integer');
-					//$this->form_validation->set_rules('menu_options['.$key.'][option_values]['.$option.'][price]', 'Option Price', 'xss_clean|trim|numeric');
+					$this->form_validation->set_rules('menu_options['.$key.'][option_values]['.$option.'][price]', 'Option Price', 'xss_clean|trim|numeric');
+					$this->form_validation->set_rules('menu_options['.$key.'][option_values]['.$option.'][quantity]', 'Option Quantity', 'xss_clean|trim|numeric');
+					$this->form_validation->set_rules('menu_options['.$key.'][option_values]['.$option.'][subtract_stock]', 'Option Subtract Stock', 'xss_clean|trim|numeric');
+					$this->form_validation->set_rules('menu_options['.$key.'][option_values]['.$option.'][menu_option_value_id]', 'Menu Option Value ID', 'xss_clean|trim|numeric');
 				}
 			}
 		}

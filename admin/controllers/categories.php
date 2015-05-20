@@ -7,7 +7,7 @@ class Categories extends Admin_Controller {
 		$this->load->library('user');
         $this->load->library('permalink');
         $this->load->library('pagination');
-		$this->load->model('Menus_model'); // load the menus model
+		$this->load->model('Categories_model'); // load the menus model
 		$this->load->model('Image_tool_model');
 	}
 
@@ -56,7 +56,7 @@ class Categories extends Admin_Controller {
 		$data['sort_name'] 			= site_url('categories'.$url.'sort_by=name&order_by='.$order_by);
 		$data['sort_id'] 			= site_url('categories'.$url.'sort_by=category_id&order_by='.$order_by);
 
-		$results = $this->Menus_model->getCategoriesList($filter);
+		$results = $this->Categories_model->getList($filter);
 		$data['categories'] = array();
 		foreach ($results as $result) {
 			//load categories data into array
@@ -75,7 +75,7 @@ class Categories extends Admin_Controller {
 		}
 
 		$config['base_url'] 		= site_url('categories').$url;
-		$config['total_rows'] 		= $this->Menus_model->getCategoriesCount($filter);
+		$config['total_rows'] 		= $this->Categories_model->getCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 
 		$this->pagination->initialize($config);
@@ -95,7 +95,7 @@ class Categories extends Admin_Controller {
 	}
 
 	public function edit() {
-		$category_info = $this->Menus_model->getCategory((int) $this->input->get('id'));
+		$category_info = $this->Categories_model->getCategory((int) $this->input->get('id'));
 
 		if ($category_info) {
 			$category_id = $category_info['category_id'];
@@ -139,7 +139,7 @@ class Categories extends Admin_Controller {
 		}
 
 		$data['categories'] = array();
-		$results = $this->Menus_model->getCategories();
+		$results = $this->Categories_model->getCategories();
 		foreach ($results as $result) {
 			$data['categories'][] = array(
 				'category_id'	=>	$result['category_id'],
@@ -147,15 +147,7 @@ class Categories extends Admin_Controller {
 			);
 		}
 
-		if ($this->input->post() AND $this->_addCategory() === TRUE) {
-			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {
-				redirect('categories/edit?id='. $this->input->post('insert_id'));
-			} else {
-				redirect('categories');
-			}
-		}
-
-		if ($this->input->post() AND $this->_updateCategory() === TRUE) {
+		if ($this->input->post() AND $category_id = $this->_saveCategory()) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('categories');
 			}
@@ -168,51 +160,24 @@ class Categories extends Admin_Controller {
 	}
 
 
-	public function _addCategory() {
-    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$add = array();
+	public function _saveCategory() {
+    	if ($this->validateForm() === TRUE) {
+            $save_type = (! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-			$add['name'] 			= $this->input->post('name');
-			$add['permalink'] 		= $this->input->post('permalink');
-			$add['parent_id'] 		= $this->input->post('parent_id');
-			$add['description'] 	= $this->input->post('description');
-			$add['image'] 			= $this->input->post('image');
-
-			if ($_POST['insert_id'] = $this->Menus_model->addCategory($add)) {
-				$this->alert->set('success', 'Category added successfully.');
+			if ($category_id = $this->Categories_model->saveCategory($this->input->post())) {
+				$this->alert->set('success', 'Category ' . $save_type . ' successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occurred, nothing added.');
+				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
 			}
 
-			return TRUE;
-		}
-	}
-
-	public function _updateCategory() {
-    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$update = array();
-
-			$update['category_id'] 	= $this->input->get('id');
-			$update['name'] 		= $this->input->post('name');
-			$update['permalink'] 	= $this->input->post('permalink');
-			$update['parent_id'] 	= $this->input->post('parent_id');
-			$update['description'] 	= $this->input->post('description');
-			$update['image'] 		= $this->input->post('image');
-
-			if ($this->Menus_model->updateCategory($update)) {
-				$this->alert->set('success', 'Category updated successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
-			}
-
-			return TRUE;
+			return $category_id;
 		}
 	}
 
 	public function _deleteCategory() {
     	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $value) {
-				$this->Menus_model->deleteCategory($value);
+			foreach ($this->input->post('delete') as $key => $category_id) {
+				$this->Categories_model->deleteCategory($category_id);
 			}
 
 			$this->alert->set('success', 'Category(s) deleted successfully!');

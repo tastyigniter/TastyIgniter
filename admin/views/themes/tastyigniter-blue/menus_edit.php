@@ -214,15 +214,15 @@
 														</td>
 														<td class="text-center">
 															<div class="btn-group btn-group-toggle" data-toggle="buttons">
-																<?php if ($value['substract_stock'] === '1') { ?>
-																	<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][substract_stock]" value="0">Disabled</label>
-																	<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][substract_stock]" value="1" checked="checked">Enabled</label>
+																<?php if ($value['subtract_stock'] === '1') { ?>
+																	<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="0">Disabled</label>
+																	<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="1" checked="checked">Enabled</label>
 																<?php } else { ?>
-																	<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][substract_stock]" value="0" checked="checked">Disabled</label>
-																	<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][substract_stock]" value="1">Enabled</label>
+																	<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="0" checked="checked">Disabled</label>
+																	<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="1">Enabled</label>
 																<?php } ?>
 															</div>
-															<?php echo form_error('menu_options['.$option_row.'][option_values]['.$option_value_row.'][substract_stock]', '<span class="text-danger">', '</span>'); ?>
+															<?php echo form_error('menu_options['.$option_row.'][option_values]['.$option_value_row.'][subtract_stock]', '<span class="text-danger">', '</span>'); ?>
 														</td>
 														<td class="id">
 															<input type="hidden" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][menu_option_value_id]" value="<?php echo $value['menu_option_value_id']; ?>" />
