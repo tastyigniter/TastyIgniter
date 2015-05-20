@@ -1,28 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-class Design_model extends TI_Model {
-
-    private $layouts = array();
+class Layouts_model extends TI_Model {
 
 	public function getLayouts() {
 		$this->db->from('layouts');
-
-		$query = $this->db->get();
-
-		$result = array();
-
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
-
-		return $result;
-	}
-
-    /**
-     * @return array
-     */
-    public function getBanners() {
-		$this->db->from('banners');
 
 		$query = $this->db->get();
 
@@ -93,18 +74,6 @@ class Design_model extends TI_Model {
 
 		return $result;
 	}
-
-    public function getBanner($banner_id) {
-        $this->db->from('banners');
-
-        $this->db->where('banner_id', $banner_id);
-
-        $query = $this->db->get();
-
-        if ($query->num_rows() > 0) {
-            return $query->row_array();
-        }
-    }
 
     public function getRouteLayoutId($uri_route = '') {
         $layout_id = NULL;
@@ -205,95 +174,33 @@ class Design_model extends TI_Model {
 		}
 	}
 
-	public function updateLayout($update = array()) {
-		$query = FALSE;
+	public function saveLayout($save = array()) {
+        if (empty($save)) return FALSE;
 
-		if (!empty($update['name'])) {
-			$this->db->set('name', $update['name']);
+		if (!empty($save['name'])) {
+			$this->db->set('name', $save['name']);
 		}
 
-		if (!empty($update['layout_id'])) {
-			$this->db->where('layout_id', $update['layout_id']);
-			$query = $this->db->update('layouts');
-
-            if (!empty($update['routes'])) {
-                $query = $this->addLayoutRoutes($update['layout_id'], $update['routes']);
-            }
-
-            if (!empty($update['modules'])) {
-                $query = $this->addLayoutModules($update['layout_id'], $update['modules']);
-            }
+        if (is_numeric($this->input->get('id')) AND $layout_id = $this->input->get('id')) {
+            $this->db->where('layout_id', $layout_id);
+            $query = $this->db->update('layouts');
+        } else {
+            $query = $this->db->insert('layouts');
+            $layout_id = $this->db->insert_id();
         }
 
-		return $query;
-	}
-
-	public function updateBanner($update = array()) {
-		$query = FALSE;
-
-		if (!empty($update['name'])) {
-			$this->db->set('name', $update['name']);
-		}
-
-		if (!empty($update['type'])) {
-			$this->db->set('type', $update['type']);
-		}
-
-		if (!empty($update['click_url'])) {
-			$this->db->set('click_url', $update['click_url']);
-		}
-
-		if (!empty($update['language_id'])) {
-			$this->db->set('language_id', $update['language_id']);
-		}
-
-		if (!empty($update['alt_text'])) {
-			$this->db->set('alt_text', $update['alt_text']);
-		}
-
-		if (!empty($update['custom_code'])) {
-			$this->db->set('custom_code', $update['custom_code']);
-		}
-
-		if (!empty($update['image_code'])) {
-			$this->db->set('image_code', serialize($update['image_code']));
-		}
-
-		if (!empty($update['status'])) {
-			$this->db->set('status', $update['status']);
-		}
-
-		if (!empty($update['banner_id'])) {
-			$this->db->where('banner_id', $update['banner_id']);
-			$query = $this->db->update('banners');
-		}
-
-		return $query;
-	}
-
-    public function addLayout($add = array()) {
-		$query = FALSE;
-
-		if (!empty($add['name'])) {
-			$this->db->set('name', $add['name']);
-		}
-
-		if ($this->db->insert('layouts')) {
-			$layout_id = $this->db->insert_id();
-
-            if (!empty($add['routes'])) {
-                $this->addLayoutRoutes($layout_id, $add['routes']);
+		if (!empty($query) AND !empty($layout_id)) {
+            if (!empty($save['routes'])) {
+                $this->addLayoutRoutes($layout_id, $save['routes']);
             }
 
-            if (!empty($add['modules'])) {
-                $this->addLayoutModules($layout_id, $add['modules']);
+            if (!empty($save['modules'])) {
+                $this->addLayoutModules($layout_id, $save['modules']);
             }
 
-			$query = $layout_id;
-		}
-
-		return $query;
-	}
+            return $layout_id;
+        }
+    }
 
     private function addLayoutRoutes($layout_id, $routes = array()) {
         $query = FALSE;
@@ -336,49 +243,6 @@ class Design_model extends TI_Model {
         return $query;
     }
 
-    public function addBanner($add = array()) {
-		$query = FALSE;
-
-		if (!empty($add['name'])) {
-			$this->db->set('name', $add['name']);
-		}
-
-		if (!empty($add['type'])) {
-			$this->db->set('type', $add['type']);
-		}
-
-		if (!empty($add['click_url'])) {
-			$this->db->set('click_url', $add['click_url']);
-		}
-
-		if (!empty($add['language_id'])) {
-			$this->db->set('language_id', $add['language_id']);
-		}
-
-		if (!empty($add['alt_text'])) {
-			$this->db->set('alt_text', $add['alt_text']);
-		}
-
-		if (!empty($add['custom_code'])) {
-			$this->db->set('custom_code', $add['custom_code']);
-		}
-
-		if (!empty($add['image_code'])) {
-			$this->db->set('image_code', serialize($add['image_code']));
-		}
-
-		if (!empty($add['status'])) {
-			$this->db->set('status', $add['status']);
-		}
-		if ($this->db->insert('banners')) {
-			$banner_id = $this->db->insert_id();
-
-			$query = $banner_id;
-		}
-
-		return $query;
-	}
-
     public function deleteLayout($layout_id) {
 		$this->db->where('layout_id', $layout_id);
 		$this->db->delete('layouts');
@@ -386,14 +250,8 @@ class Design_model extends TI_Model {
 		$this->db->where('layout_id', $layout_id);
 		$this->db->delete('layout_routes');
 
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
-		}
-	}
-
-    public function deleteBanner($banner_id) {
-		$this->db->where('banner_id', $banner_id);
-		$this->db->delete('banners');
+		$this->db->where('layout_id', $layout_id);
+		$this->db->delete('layout_modules');
 
 		if ($this->db->affected_rows() > 0) {
 			return TRUE;
@@ -401,5 +259,5 @@ class Design_model extends TI_Model {
 	}
 }
 
-/* End of file design_model.php */
-/* Location: ./system/tastyigniter/models/design_model.php */
+/* End of file layouts_model.php */
+/* Location: ./system/tastyigniter/models/layouts_model.php */

@@ -384,12 +384,12 @@ class Template {
 	}
 
     private function _getLayoutModules() {
-        $this->CI->load->model('Design_model');
+        $this->CI->load->model('Layouts_model');
         $this->CI->load->model('Extensions_model');
 
         $layout_id = $this->_getLayout();
 
-        $layout_modules = $this->CI->Design_model->getLayoutModules($layout_id);
+        $layout_modules = $this->CI->Layouts_model->getLayoutModules($layout_id);
         $modules = $this->CI->Extensions_model->getModules();
 
         $_modules = array();
@@ -497,9 +497,9 @@ class Template {
             $uri_route = ($uri_route === '') ? $segment : $uri_route.'/'.$segment;
 
             if ($segment === 'pages') {
-                $layout_id = $this->CI->Design_model->getPageLayoutId((int)$this->CI->input->get('page_id'));
+                $layout_id = $this->CI->Layouts_model->getPageLayoutId((int)$this->CI->input->get('page_id'));
             } else if ($uri_route !== '') {
-                $layout_id = $this->CI->Design_model->getRouteLayoutId($uri_route);
+                $layout_id = $this->CI->Layouts_model->getRouteLayoutId($uri_route);
             }
 
             // Lets break the look if a layout was found.

@@ -5,7 +5,7 @@ class Layouts extends Admin_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->library('user');
-		$this->load->model('Design_model');
+		$this->load->model('Layouts_model');
 		$this->load->model('Extensions_model');
 	}
 
@@ -18,7 +18,7 @@ class Layouts extends Admin_Controller {
 		$data['text_empty'] 		= 'There are no layouts available.';
 
 		$data['layouts'] = array();
-		$results = $this->Design_model->getLayouts();
+		$results = $this->Layouts_model->getLayouts();
 		foreach ($results as $result) {
 			$data['layouts'][] = array(
 				'layout_id'		=> $result['layout_id'],
@@ -28,7 +28,7 @@ class Layouts extends Admin_Controller {
 		}
 
 		$data['uri_routes'] = array();
-		$results = $this->Design_model->getRoutes(1);
+		$results = $this->Layouts_model->getRoutes(1);
 		foreach ($results as $result) {
 			$data['uri_routes'][] = array(
 				'uri_route_id'		=> $result['uri_route_id'],
@@ -46,7 +46,7 @@ class Layouts extends Admin_Controller {
 	}
 
 	public function edit() {
-		$layout_info = $this->Design_model->getLayout((int) $this->input->get('id'));
+		$layout_info = $this->Layouts_model->getLayout((int) $this->input->get('id'));
 
 		if ($layout_info) {
 			$layout_id = $layout_info['layout_id'];
@@ -71,7 +71,7 @@ class Layouts extends Admin_Controller {
         if ($this->input->post('modules')) {
             $layout_modules = $this->input->post('modules');
         } else {
-            $layout_modules = $this->Design_model->getLayoutModules($layout_id);
+            $layout_modules = $this->Layouts_model->getLayoutModules($layout_id);
         }
 
         $data['layout_modules'] = array();
@@ -87,7 +87,7 @@ class Layouts extends Admin_Controller {
         if ($this->input->post('routes')) {
             $data['layout_routes'] = $this->input->post('routes');
         } else {
-            $data['layout_routes'] = $this->Design_model->getLayoutRoutes($layout_id);
+            $data['layout_routes'] = $this->Layouts_model->getLayoutRoutes($layout_id);
         }
 
         $data['modules'] = array();
@@ -101,7 +101,7 @@ class Layouts extends Admin_Controller {
         }
 
         $data['routes'] = array();
-		$results = $this->Design_model->getRoutes(1);
+		$results = $this->Layouts_model->getRoutes(1);
 		foreach ($results as $result) {
 			$data['routes'][] = array(
 				'route_id'		=> $result['uri_route_id'],
@@ -117,7 +117,7 @@ class Layouts extends Admin_Controller {
 			}
 		}
 
-		if ($this->input->post() AND $this->_updateLayout() === TRUE) {
+		if ($this->input->post() AND $layout_id = $this->_saveLayout()) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('layouts');
 			}
@@ -129,47 +129,24 @@ class Layouts extends Admin_Controller {
 		$this->template->render('layouts_edit', $data);
 	}
 
-	public function _addLayout() {
-    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$add = array();
+	public function _saveLayout() {
+    	if ($this->validateForm() === TRUE) {
+            $save_type = (! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-			$add['name'] 		= $this->input->post('name');
-			$add['routes'] 		= $this->input->post('routes');
-            $add['modules'] 	= $this->input->post('modules');
-
-			if ($_POST['insert_id'] = $this->Design_model->addLayout($add)) {
-				$this->alert->set('success', 'Layout added successfully.');
+			if ($layout_id = $this->Layouts_model->saveLayout($this->input->post())) {
+				$this->alert->set('success', 'Layout ' . $save_type . ' successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occurred, nothing added.');
+				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
 			}
 
-			return TRUE;
-		}
-	}
-
-	public function _updateLayout() {
-    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$update = array();
-
-			$update['layout_id'] 	= $this->input->get('id');
-			$update['name'] 		= $this->input->post('name');
-			$update['routes'] 		= $this->input->post('routes');
-            $update['modules'] 	    = $this->input->post('modules');
-
-			if ($this->Design_model->updateLayout($update)) {
-				$this->alert->set('success', 'Layout updated successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing added.');
-			}
-
-			return TRUE;
+			return $layout_id;
 		}
 	}
 
 	public function _deleteLayout() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
-				$this->Design_model->deleteLayout($value);
+				$this->Layouts_model->deleteLayout($value);
 			}
 
 			$this->alert->set('success', 'Layout deleted successfully!');

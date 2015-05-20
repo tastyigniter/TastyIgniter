@@ -5,7 +5,7 @@ class Uri_routes extends Admin_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->library('user');
-		$this->load->model('Design_model');
+		$this->load->model('Layouts_model');
 
         $this->alert->set('warning', 'URI Routes Page disabled for improvement in next release');
         redirect('dashboard');
@@ -19,7 +19,7 @@ class Uri_routes extends Admin_Controller {
 		if ($this->input->post('routes')) {
 			$routes = $this->input->post('routes');
 		} else {
-			$routes = $this->Design_model->getRoutes();
+			$routes = $this->Layouts_model->getRoutes();
 		}
 
 		$data['routes'] = array();
@@ -45,7 +45,7 @@ class Uri_routes extends Admin_Controller {
 
 			$update = $this->input->post('routes');
 
-			if ($this->Design_model->updateRoutes($update)) {
+			if ($this->Layouts_model->updateRoutes($update)) {
 				$this->alert->set('success', 'URI Routes updated successfully.');
 			} else {
 				$this->alert->set('warning', 'An error occurred, nothing updated.');

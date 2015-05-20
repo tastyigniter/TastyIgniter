@@ -10,7 +10,7 @@ class Settings extends Admin_Controller {
 		$this->load->model('Countries_model');
 		$this->load->model('Currencies_model');
 		$this->load->model('Statuses_model');
-		$this->load->model('Menus_model');
+		$this->load->model('Categories_model');
 	}
 
 	public function index() {
@@ -147,7 +147,7 @@ class Settings extends Admin_Controller {
 		}
 
 		$data['categories'] = array();
-		$categories = $this->Menus_model->getCategories();
+		$categories = $this->Categories_model->getCategories();
 		foreach ($categories as $category) {
 			$data['categories'][] = array(
 				'category_id'	=>	$category['category_id'],

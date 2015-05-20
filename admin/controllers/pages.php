@@ -118,9 +118,9 @@ class Pages extends Admin_Controller {
 		$data['permalink'] = $this->permalink->getPermalink('page_id='.$page_info['page_id']);
         $data['permalink']['url'] = root_url();
 
-        $this->load->model('Design_model');
+        $this->load->model('Layouts_model');
 		$data['layouts'] = array();
-		$results = $this->Design_model->getLayouts();
+		$results = $this->Layouts_model->getLayouts();
 		foreach ($results as $result) {
 			$data['layouts'][] = array(
 				'layout_id'		=> $result['layout_id'],

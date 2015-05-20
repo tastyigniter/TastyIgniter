@@ -4,7 +4,8 @@ class Banners_module extends Ext_Controller {
 
 	public function __construct() {
 		parent::__construct(); 																	// calls the constructor
-		$this->load->model('Design_model'); 													// load the menus model
+		$this->load->model('Layouts_model'); 													// load the menus model
+		$this->load->model('Banners_model'); 													// load the menus model
 		$this->load->model('Image_tool_model'); 													// load the menus model
 		$this->lang->load('banners_module/banners_module');
 	}
@@ -20,7 +21,7 @@ class Banners_module extends Ext_Controller {
         $image_width = (!empty($data['banners'][1]['width'])) ? $data['banners'][1]['width'] : 250 ;
         $image_height = (!empty($data['banners'][1]['height'])) ? $data['banners'][1]['height'] : 250 ;
 
-        $banner_info = $this->Design_model->getBanner($banner_id); 										// retrieve all menu categories from getCategories method in Menus model
+        $banner_info = $this->Banners_model->getBanner($banner_id);
 
         // START of retrieving lines from language file to pass to view.
         $data['text_heading'] 			= (isset($banner_info['name'])) ? $banner_info['name'] : $this->lang->line('text_heading');

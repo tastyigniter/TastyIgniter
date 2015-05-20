@@ -4,7 +4,7 @@ class Admin_banners_module extends Ext_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('Design_model');
+        $this->load->model('Layouts_model');
     }
 
 	public function index($data = array()) {
@@ -40,7 +40,7 @@ class Admin_banners_module extends Ext_Controller {
             }
 
             $data['banners'] = array();
-            $results = $this->Design_model->getBanners();
+            $results = $this->Banners_model->getBanners();
             foreach ($results as $result) {
                 $data['banners'][] = array(
                     'banner_id'       => $result['banner_id'],
