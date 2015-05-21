@@ -75,10 +75,11 @@ Extracted categories, menu_options associated methods into separate models from 
 Extracted banners associated methods into separate models from design_model and rename to layout_model
 Improved admin user has permission functionality, the permission rule action can be set as controller class property.
 Removed duplicate admin controllers methods and models methods
-
+All controller methods visibility are accurately set
 
 
 TO-DO:
+move get_lat_lag form validation callback from controllers to library
 prefix all form validation callback methods with _ to avoid being called through the browser
 Improve site_url and redirect() uri re-routing
 Improve image manager styles responsiveness and remove irrelevant options
@@ -89,3 +90,7 @@ show filter box on document load when filter is active in admin
 Fancy checkbox bootstrap plugin
 validate from and to dates
 Fix model delete methods to accept array of ids
+
+
+
+CURRENT TASK:
