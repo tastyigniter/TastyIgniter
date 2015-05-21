@@ -344,7 +344,9 @@ class Checkout extends Main_Controller {
             $addresses = $this->Addresses_model->getAddresses($this->customer->getId());                            // retrieve customer addresses array from getAddresses method in Customers model
         } else if (!empty($order_data['address_id'])) {
             $addresses = array($this->Addresses_model->getGuestAddress($order_data['address_id']));                            // retrieve customer addresses array from getAddresses method in Customers model
-        } else {
+        }
+
+        if (empty($addresses)) {
             $addresses = array(array('address_id' => '', 'address_1' => '', 'address_2' => '', 'city' => '', 'postcode' => '', 'country_id' => $country_id));
         }
 
@@ -423,7 +425,7 @@ class Checkout extends Main_Controller {
 
                     !empty($address['address_id']) OR $address['address_id'] = NULL;
 
-                    $address['address_id'] = $this->Addresses_model->updateAddress($order_data['customer_id'], $address['address_id'], $address);    // send new-address $_POST data and customer id to addAddress method in Customers model
+                    $address['address_id'] = $this->Addresses_model->saveAddress($order_data['customer_id'], $address['address_id'], $address);    // send new-address $_POST data and customer id to saveAddress method in Customers model
 
                     if (empty($order_data['address_id']) OR $address['address_id'] === $order_data['address_id']) {
                         $order_data['address_id'] = $address['address_id'];

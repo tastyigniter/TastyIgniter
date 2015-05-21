@@ -549,7 +549,10 @@ padding: 4px 12px;
 .input-group-addon img {
 width: 24px !important;
 }
-
+.input-group-addon i {
+width: 24px;
+display: block;
+}
 
 /** FORM GROUP **/
 .form-group .text-danger {

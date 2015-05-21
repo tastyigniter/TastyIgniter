@@ -578,6 +578,14 @@
 					var message = json['alert'];
 					Notification.show(message);
 					setTimeout(function() {
+                        window.location.href = refresh_url;
+					}, 2000);
+				}
+
+				if (json['success']) {
+					var message = json['success'];
+					Notification.show(message);
+					setTimeout(function() {
                         window.location.href = refreshUrl;
 					}, 2000);
 				}

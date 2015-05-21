@@ -23,6 +23,7 @@ Notifications System:
 Added order and reservation status color
 Activity:
     page views count per ip/customer
+Admin base controller property _permission_rules added
 
 
 
@@ -70,23 +71,21 @@ Moved admin login auth and permission check from controllers to admin base contr
 Added referrer_url to ti_url_helper, which will return the user referral url.
 Changed config('maintenance_page') to config('maintenance_message') and use show_error() instead of loading controller.
 Improved banners and banners_module.... move dimension from banners and banners_module.
+Extracted categories, menu_options associated methods into separate models from menus_model
+Extracted banners associated methods into separate models from design_model and rename to layout_model
+Improved admin user has permission functionality, the permission rule action can be set as controller class property.
+Removed duplicate admin controllers methods and models methods
+
 
 
 TO-DO:
+prefix all form validation callback methods with _ to avoid being called through the browser
 Improve site_url and redirect() uri re-routing
 Improve image manager styles responsiveness and remove irrelevant options
 Customer Activity IP blacklist
 add functionality to add multiple banners in module (jst like layout tables.)
 Improve admin controllers to remove duplicate methods
-
+show filter box on document load when filter is active in admin
 Fancy checkbox bootstrap plugin
-
-
-UPDATE SQL FILE:
-update extensions table
-update uri_routes table, if possible remove completely.
-
-
-
-GitHub done:
-Remove duplicate model classes
+validate from and to dates
+Fix model delete methods to accept array of ids

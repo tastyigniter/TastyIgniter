@@ -286,7 +286,7 @@ $(document).ready(function() {
 	});
 
 	$('#fixed-from-time, #fixed-to-time, #recurring-from-time, #recurring-to-time').timepicker({
-		defaultTime: '11:45 AM'
+		defaultTime: ''
 	});
 
 	$(document).on('change', '#coupon-type input[type="radio"]', function() {

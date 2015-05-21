@@ -5,6 +5,7 @@ class Admin_banners_module extends Ext_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('Layouts_model');
+        $this->load->model('Banners_model');
     }
 
 	public function index($data = array()) {

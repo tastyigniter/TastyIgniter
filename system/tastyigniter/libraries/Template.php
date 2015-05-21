@@ -70,6 +70,7 @@ class Template {
 	}
 
     public function render($view, $data = array(), $return = FALSE) {
+
 		// Set whatever values are given. These will be available to all view files
 		is_array($data) OR $data = (array) $data;
 
@@ -137,6 +138,8 @@ class Template {
         if ($theme_location = $this->getThemeLocation($this->_theme)) {
             $this->_theme_path = rtrim($theme_location . $this->_theme);
             $this->_theme_shortpath = APPDIR . '/views/themes/' . $this->_theme;
+        } else {
+            show_error('Unable to locate the active theme: '.APPDIR . '/views/themes/' . $this->_theme);
         }
 	}
 
@@ -427,6 +430,7 @@ class Template {
                     $this->_theme . '/modules/' . $this->_module . '/' . $view,
                     $this->_theme . '/' . $view
                 );
+
                 foreach ($theme_views as $theme_view) {
                     if (file_exists($location . $theme_view . '.php')) {
                         return self::_load_view($theme_view, $this->_data + $data, $location);
@@ -434,10 +438,6 @@ class Template {
                 }
 
             }
-        }
-
-        if ( empty($this->_theme)) {
-            show_error('Unable to load the requested theme file: '. $view);
         }
 
         // Not found it yet? Just load, its either in the module or root view

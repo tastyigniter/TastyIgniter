@@ -61,6 +61,9 @@ class Register extends Main_Controller {
 
 	public function _addCustomer() {
 		if ($this->validateForm() === TRUE) {
+            $this->load->model('Customers_model');													// load the customers model
+            $this->load->model('Customer_groups_model');
+
  			$add = array();
 
  			// if successful CREATE an array with the following $_POST data values
@@ -76,8 +79,6 @@ class Register extends Main_Controller {
 			$add['customer_group_id'] 		= $this->config->item('customer_group_id');
 			$add['date_added'] 				= mdate('%Y-%m-%d', time());
 
-			$this->load->model('Customers_model');													// load the customers model
-			$this->load->model('Customer_groups_model');
 			$result = $this->Customer_groups_model->getCustomerGroup($this->config->item('customer_group_id'));
 			if ($result['approval'] === '1') {
 				$add['status'] = '0';
@@ -85,7 +86,7 @@ class Register extends Main_Controller {
 				$add['status'] = '1';
 			}
 
-			if (!empty($add) AND $this->Customers_model->addCustomer($add)) {								// pass add array data to addCustomer method in Customers model then return TRUE
+			if (!empty($add) AND $this->Customers_model->saveCustomer(NULL, $add)) {								// pass add array data to saveCustomer method in Customers model then return TRUE
   				return TRUE;
 			}
 		}

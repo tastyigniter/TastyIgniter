@@ -180,7 +180,7 @@ class Address extends Main_Controller {
 
 			$address = $this->input->post('address');
 
-			if ($this->Addresses_model->updateAddress($customer_id, $address_id, $address)) {								// check if address updated successfully then display success message else error message
+			if ($this->Addresses_model->saveAddress($customer_id, $address_id, $address)) {								// check if address updated successfully then display success message else error message
 				$this->alert->set('alert', $this->lang->line('alert_added'));
 			}
 

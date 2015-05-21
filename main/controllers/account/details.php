@@ -74,7 +74,6 @@ class Details extends Main_Controller {
 	public function _updateDetails() {															// method to validate update details form fields
 		if ($this->validateForm() === TRUE) {
 			$update = array();
-			$update['customer_id'] = $this->customer->getId();										// retrieve customer id from customer library
 
 			// START: retrieve $_POST data if $_POST data is not same as existing customer library data
 			$update['first_name'] 				= $this->input->post('first_name');
@@ -88,7 +87,7 @@ class Details extends Main_Controller {
 			// END: retrieve $_POST data if $_POST data is not same as existing customer library data
 
 			if (!empty($update)) {																// if update array is not empty then update customer details and display success message
-				if ($this->Customers_model->updateCustomer($update)) {
+				if ($this->Customers_model->updateCustomer($this->customer->getId(), $update)) {
 					$this->alert->set('alert', $this->lang->line('alert_updated'));
 				}
 
@@ -102,7 +101,7 @@ class Details extends Main_Controller {
 		$this->form_validation->set_rules('first_name', 'First Name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
 		$this->form_validation->set_rules('last_name', 'First Name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
 		$this->form_validation->set_rules('telephone', 'Telephone', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('security_question', 'Security Question', 'required');
+		$this->form_validation->set_rules('security_question_id', 'Security Question', 'required');
 		$this->form_validation->set_rules('security_answer', 'Security Answer', 'required');
 
 		if ($this->input->post('old_password')) {

@@ -149,36 +149,20 @@ class User {
         }
     }
 
-    public function hasPermissions($type = '', $uri_segment = '', $is_logged_staff = TRUE) {
+    public function hasPermissions($type, $uri_segment = '') {
         $type = !empty($type) ? $type : 'access';
 
-        $uri_segment = ($uri_segment === '') ? $this->uri_segment : $uri_segment;
-
-        if (method_exists( $this->CI->router, 'fetch_module' ) AND $this->CI->router->fetch_module()) {
-            $uri_segment = $this->CI->router->fetch_module();
+        if ($uri_segment === '') {
+            $uri_segment = $this->uri_segment;
         }
 
-        $has_permission = 'access';
-
-        if ($type === 'modify' AND $this->CI->input->post()) {
-            $has_permission = $this->checkPermission('modify', $uri_segment);
-        } else if ($type === 'access') {
-            $has_permission = $this->checkPermission('access', $uri_segment);
-        }
-
-        if ($has_permission === FALSE AND $uri_segment === 'staffs') {
-            $has_permission = $is_logged_staff === FALSE ? $has_permission : ($this->CI->input->get('id') === $this->getStaffId());
-        }
-
-        return $has_permission;
+        return $this->checkPermission($type, $uri_segment);
     }
 
     public function checkPermission($type, $uri_segment = '') {
         if (in_array($uri_segment, $this->ignore_uri)) {
             return TRUE;
-        } else if (isset($this->permissions[$type])) {
-            return in_array($uri_segment, $this->permissions[$type]);
-        } else if (isset($this->permissions['ADMINDIR'.$type])) { // For backward compatibility
+        } else if (isset($this->permissions[$type]) AND in_array($uri_segment, $this->permissions[$type])) {
             return TRUE;
         }
 
