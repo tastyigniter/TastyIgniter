@@ -8,7 +8,7 @@ class Cart_module extends Ext_Controller {
 		$this->load->library('customer');
 		$this->load->library('currency'); 														// load the currency library
 		$this->load->library('location'); 														// load the location library
-		$this->load->model('Cart_model'); 														// load the menus model
+		$this->load->model('Cart_model'); 														// load the cart model
 		$this->load->model('Image_tool_model'); 														// load the Image tool model
 		$this->lang->load('cart_module/cart_module');
 	}

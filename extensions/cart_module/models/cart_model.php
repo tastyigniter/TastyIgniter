@@ -187,4 +187,4 @@ class Cart_model extends TI_Model {
 }
 
 /* End of file cart_model.php */
-/* Location: ./system/tastyigniter/models/cart_model.php */
+/* Location: ./extensions/cart_module/models/cart_model.php */

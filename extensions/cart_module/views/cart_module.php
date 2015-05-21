@@ -84,7 +84,7 @@
 										<?php } ?>
 									</a>
 									<span class="quantity small">
-										<?php echo $cart_item['qty']; ?> ×
+										 × <?php echo $cart_item['qty']; ?> =
 										<span class="amount"><?php echo $cart_item['sub_total']; ?></span>
 									</span>
 								</li>
