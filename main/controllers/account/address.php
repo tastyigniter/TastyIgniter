@@ -190,10 +190,10 @@ class Address extends Main_Controller {
 
 	private function validateForm() {
 		// START of form validation rules
-		$this->form_validation->set_rules('address[address_1]', 'Address 1', 'xss_clean|trim|required|min_length[3]|max_length[128]');
+		$this->form_validation->set_rules('address[address_1]', 'Address 1', 'xss_clean|trim|required|min_length[3]|max_length[128]|get_lat_lag[address]');
 		$this->form_validation->set_rules('address[address_2]', 'Address 2', 'xss_clean|trim|max_length[128]');
 		$this->form_validation->set_rules('address[city]', 'City', 'xss_clean|trim|required|min_length[2]|max_length[128]');
-		$this->form_validation->set_rules('address[postcode]', 'Postcode', 'xss_clean|trim|required|min_length[2]|max_length[11]|callback__get_lat_lag');
+		$this->form_validation->set_rules('address[postcode]', 'Postcode', 'xss_clean|trim|required|min_length[2]|max_length[11]');
 		$this->form_validation->set_rules('address[country]', 'Country', 'xss_clean|trim|required|integer');
 		// END of form validation rules
 
@@ -202,24 +202,6 @@ class Address extends Main_Controller {
 		} else {
 			return FALSE;
 		}
-	}
-	public function _get_lat_lag() {
-		if (isset($_POST['address']) && is_array($_POST['address']) && !empty($_POST['address']['postcode'])) {
-			$address_string =  implode(", ", $_POST['address']);
-			$address = urlencode($address_string);
-			$geocode = file_get_contents('http://maps.googleapis.com/maps/api/geocode/json?address='. $address .'&sensor=false&region=GB');
-    		$output = json_decode($geocode);
-    		$status = $output->status;
-
-    		if ($status === 'OK') {
-				$_POST['address']['location_lat'] = $output->results[0]->geometry->location->lat;
-				$_POST['address']['location_lng'] = $output->results[0]->geometry->location->lng;
-			    return TRUE;
-    		} else {
-        		$this->form_validation->set_message('_get_lat_lag', 'The Address you entered failed Geocoding, please enter a different address!');
-        		return FALSE;
-    		}
-        }
 	}
 }
 

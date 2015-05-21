@@ -4,7 +4,7 @@
 			<h3 class="panel-title"><?php echo $text_heading; ?></h3>
 		</div>
 		<div class="list-group list-group-responsive">
-			<?php if (!empty($menu_total) AND $menu_total < 150) { ?>
+			<?php if (!empty($menu_total) AND $menu_total > 150) { ?>
 				<a href="<?php echo site_url('menus'); ?>" class="list-group-item"><i class="fa fa-angle-right"></i>&nbsp;&nbsp;Show All</a>
 
 				<?php foreach ($categories as $category) { ?>

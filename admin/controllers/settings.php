@@ -299,10 +299,10 @@ class Settings extends Admin_Controller {
 		$this->form_validation->set_rules('customer_order_email', 'Customer Order Email', 'xss_clean|trim|required|numeric');
 		$this->form_validation->set_rules('customer_reserve_email', 'Customer Reservation Email', 'xss_clean|trim|required|numeric');
 
-		$this->form_validation->set_rules('main_address[address_1]', 'Address 1', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+		$this->form_validation->set_rules('main_address[address_1]', 'Address 1', 'xss_clean|trim|required|min_length[2]|max_length[128]|get_lat_lag[main_address]');
 		$this->form_validation->set_rules('main_address[address_2]', 'Address 2', 'xss_clean|trim|max_length[128]');
 		$this->form_validation->set_rules('main_address[city]', 'City', 'xss_clean|trim|required|min_length[2]|max_length[128]');
-		$this->form_validation->set_rules('main_address[postcode]', 'Postcode', 'xss_clean|trim|required|min_length[2]|max_length[10]|callback__get_lat_lag');
+		$this->form_validation->set_rules('main_address[postcode]', 'Postcode', 'xss_clean|trim|required|min_length[2]|max_length[10]');
 		$this->form_validation->set_rules('main_address[country_id]', 'Country', 'xss_clean|trim|required|integer');
 
 		$this->form_validation->set_rules('maps_api_key', 'Google Maps API Key', 'xss_clean|trim');
@@ -386,25 +386,6 @@ class Settings extends Admin_Controller {
 		}
 
 		return $timezone_list;
-	}
-
-	public function _get_lat_lag() {
-		if (isset($_POST['main_address']) AND is_array($_POST['main_address']) AND !empty($_POST['main_address']['postcode'])) {
-			$address_string =  implode(", ", $_POST['main_address']);
-			$address = urlencode($address_string);
-			$geocode = file_get_contents('http://maps.googleapis.com/maps/api/geocode/json?address='. $address .'&sensor=false&region=GB');
-    		$output = json_decode($geocode);
-    		$status = $output->status;
-
-    		if ($status === 'OK') {
-				$_POST['main_address']['location_lat'] = $output->results[0]->geometry->location->lat;
-				$_POST['main_address']['location_lng'] = $output->results[0]->geometry->location->lng;
-			    return TRUE;
-    		} else {
-        		$this->form_validation->set_message('_get_lat_lag', 'The Address you entered failed Geocoding, please enter a different address!');
-        		return FALSE;
-    		}
-        }
 	}
 
 	private function _delete_thumbs($thumb_path) {
