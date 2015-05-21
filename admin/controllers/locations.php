@@ -2,9 +2,10 @@
 
 class Locations extends Admin_Controller {
 
-	public function __construct() {
+    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
+
+    public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 		$this->load->library('location'); // load the location library
         $this->load->library('permalink');
 		$this->load->library('pagination');
@@ -349,15 +350,7 @@ class Locations extends Admin_Controller {
 			}
 		}
 
-		if ($this->input->post() AND $this->_addLocation() === TRUE) {
-			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {
-				redirect('locations/edit?id='. $this->input->post('insert_id'));
-			} else {
-				redirect('locations');
-			}
-		}
-
-		if ($this->input->post() AND $this->_updateLocation() === TRUE) {
+		if ($this->input->post() AND $location_id = $this->_saveLocation()) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('locations');
 			}
@@ -369,99 +362,26 @@ class Locations extends Admin_Controller {
 		$this->template->render('locations_edit', $data);
 	}
 
-	public function _addLocation() {
-    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$add = array();
+	private function _saveLocation() {
+    	if ($this->validateForm() === TRUE) {
+            $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-			$add['location_name'] 		= $this->input->post('location_name');
-			$add['address'] 			= $this->input->post('address');
-			$add['email'] 				= $this->input->post('email');
-			$add['telephone'] 			= $this->input->post('telephone');
-			$add['description'] 		= $this->input->post('description');
-			$add['offer_delivery'] 		= $this->input->post('offer_delivery');
-			$add['offer_collection'] 	= $this->input->post('offer_collection');
-			$add['delivery_time'] 		= $this->input->post('delivery_time');
-			$add['collection_time'] 	= $this->input->post('collection_time');
-			$add['last_order_time'] 	= $this->input->post('last_order_time');
-			$add['tables'] 				= $this->input->post('tables');
-			$add['reservation_interval'] = $this->input->post('reservation_interval');
-			$add['reservation_turn'] 	= $this->input->post('reservation_turn');
-			$add['location_status'] 	= $this->input->post('location_status');
-			$add['permalink'] 			= $this->input->post('permalink');
-
-			$add['options'] = array(
-				'opening_hours' 		=> array(
-											'opening_type'		=> $this->input->post('opening_type'),
-											'daily_days'		=> $this->input->post('daily_days'),
-											'daily_hours'		=> $this->input->post('daily_hours'),
-											'flexible_hours'	=> $this->input->post('flexible_hours')
-										),
-				'payments'				=> $this->input->post('payments'),
-				'delivery_areas'		=> $this->input->post('delivery_areas')
-			);
-
-			if ($_POST['insert_id'] = $this->Locations_model->addLocation($add)) {
-				$this->alert->set('success', 'Location added successfully.');
+			if ($location_id = $this->Locations_model->saveLocation($this->input->get('id'), $this->input->post())) {
+				$this->alert->set('success', 'Location ' . $save_type . ' successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occurred, nothing added.');
+				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
 			}
 
-			return TRUE;
+			return $location_id;
 		}
 	}
 
-	public function _updateLocation() {
-    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$update = array();
-
-			$update['location_id'] 			= $this->input->get('id');
-			$update['location_name'] 		= $this->input->post('location_name');
-			$update['address'] 				= $this->input->post('address');
-			$update['email'] 				= $this->input->post('email');
-			$update['telephone'] 			= $this->input->post('telephone');
-			$update['description'] 			= $this->input->post('description');
-			$update['offer_delivery'] 		= $this->input->post('offer_delivery');
-			$update['offer_collection'] 	= $this->input->post('offer_collection');
-			$update['delivery_time'] 		= $this->input->post('delivery_time');
-			$update['collection_time'] 		= $this->input->post('collection_time');
-			$update['last_order_time'] 		= $this->input->post('last_order_time');
-			$update['tables'] 				= $this->input->post('tables');
-			$update['reservation_interval'] = $this->input->post('reservation_interval');
-			$update['reservation_turn'] 	= $this->input->post('reservation_turn');
-			$update['location_status'] 		= $this->input->post('location_status');
-			$update['permalink'] 			= $this->input->post('permalink');
-
-			$update['options'] = array(
-				'opening_hours' 		=> array(
-											'opening_type'		=> $this->input->post('opening_type'),
-											'daily_days'		=> $this->input->post('daily_days'),
-											'daily_hours'		=> $this->input->post('daily_hours'),
-											'flexible_hours'	=> $this->input->post('flexible_hours')
-										),
-				'payments'				=> $this->input->post('payments'),
-				'delivery_areas'		=> $this->input->post('delivery_areas')
-			);
-
-			if ($this->Locations_model->updateLocation($update)) {
-				$this->alert->set('success', 'Location updated successfully.');
-
-				if ($update['location_id'] === $this->config->item('default_location_id')) {
-					$this->Settings_model->addSetting('config', 'main_address', $this->Locations_model->getAddress($update['location_id']), '1');
-				}
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
-			}
-
-			return TRUE;
-		}
-	}
-
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('location_name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		$this->form_validation->set_rules('address[address_1]', 'Address 1', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 		$this->form_validation->set_rules('address[address_2]', 'Address 2', 'xss_clean|trim|max_length[128]');
 		$this->form_validation->set_rules('address[city]', 'City', 'xss_clean|trim|required|min_length[2]|max_length[128]');
-		$this->form_validation->set_rules('address[postcode]', 'Postcode', 'xss_clean|trim|required|min_length[2]|max_length[10]|callback_get_lat_lag');
+		$this->form_validation->set_rules('address[postcode]', 'Postcode', 'xss_clean|trim|required|min_length[2]|max_length[10]|callback__get_lat_lag');
 		$this->form_validation->set_rules('address[country]', 'Country', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('email', 'Email', 'xss_clean|trim|required|valid_email');
 		$this->form_validation->set_rules('telephone', 'Telephone', 'xss_clean|trim|required|min_length[2]|max_length[15]');
@@ -481,7 +401,7 @@ class Locations extends Admin_Controller {
 		$this->form_validation->set_rules('opening_type', 'Type', 'xss_clean|trim|required|alpha_dash|max_length[10]');
 		if ($this->input->post('opening_type') === 'daily' AND $this->input->post('daily_days')) {
 			$this->form_validation->set_rules('daily_days[]', 'Days', 'xss_clean|trim|required|integer');
-			$this->form_validation->set_rules('daily_hours[open]', 'Open hour', 'xss_clean|trim|required|valid_time|callback_less_time['.$_POST['daily_hours']['close'].']');
+			$this->form_validation->set_rules('daily_hours[open]', 'Open hour', 'xss_clean|trim|required|valid_time|callback__less_time['.$_POST['daily_hours']['close'].']');
 			$this->form_validation->set_rules('daily_hours[close]', 'Close hour', 'xss_clean|trim|required|valid_time');
 			//$this->form_validation->set_rules('daily_hours[status]', 'Status', 'xss_clean|trim|required|integer');
 		}
@@ -489,7 +409,7 @@ class Locations extends Admin_Controller {
 		if ($this->input->post('opening_type') === 'flexible' AND $this->input->post('flexible_hours')) {
 			foreach ($this->input->post('flexible_hours') as $key => $value) {
 				$this->form_validation->set_rules('flexible_hours['.$key.'][day]', 'Day', 'xss_clean|trim|required|numeric');
-				$this->form_validation->set_rules('flexible_hours['.$key.'][open]', 'Open hour', 'xss_clean|trim|required|valid_time|callback_less_time['.$_POST['flexible_hours'][$key]['close'].']');
+				$this->form_validation->set_rules('flexible_hours['.$key.'][open]', 'Open hour', 'xss_clean|trim|required|valid_time|callback__less_time['.$_POST['flexible_hours'][$key]['close'].']');
 				$this->form_validation->set_rules('flexible_hours['.$key.'][close]', 'Close hour', 'xss_clean|trim|required|valid_time');
 				$this->form_validation->set_rules('flexible_hours['.$key.'][status]', 'Status', 'xss_clean|trim|required|integer');
 			}
@@ -514,7 +434,7 @@ class Locations extends Admin_Controller {
 		}
 	}
 
-	public function _deleteLocation() {
+	private function _deleteLocation() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Locations_model->deleteLocation($value);
@@ -526,7 +446,7 @@ class Locations extends Admin_Controller {
 		return TRUE;
 	}
 
-	public function get_lat_lag() {
+	public function _get_lat_lag() {
 		if (isset($_POST['address']) AND is_array($_POST['address']) AND !empty($_POST['address']['postcode'])) {
 			$address_string =  implode(", ", $_POST['address']);
 			$address = urlencode($address_string);
@@ -539,18 +459,18 @@ class Locations extends Admin_Controller {
 				$_POST['address']['location_lng'] = $output->results[0]->geometry->location->lng;
 			    return TRUE;
     		} else {
-        		$this->form_validation->set_message('get_lat_lag', 'The Address you entered failed Geocoding, please enter a different address!');
+        		$this->form_validation->set_message('_get_lat_lag', 'The Address you entered failed Geocoding, please enter a different address!');
         		return FALSE;
     		}
         }
 	}
 
-	public function less_time($open, $close) {
+	public function _less_time($open, $close) {
 		$unix_open = strtotime($open);
 		$unix_close = strtotime($close);
 
 		if ($unix_open >= $unix_close) {
-			$this->form_validation->set_message('less_time', 'The %s must be less than Close hour.');
+			$this->form_validation->set_message('_less_time', 'The %s must be less than Close hour.');
 			return FALSE;
 		}
 

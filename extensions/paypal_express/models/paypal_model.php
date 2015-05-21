@@ -195,4 +195,4 @@ class Paypal_model extends TI_Model {
 }
 
 /* End of file paypal_model.php */
-/* Location: ./extensions/payments/paypal_model/models/paypal_model.php */
+/* Location: ./extensions/paypal_model/models/paypal_model.php */

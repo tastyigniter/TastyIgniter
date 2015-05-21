@@ -60,7 +60,7 @@
 					<div class="form-group">
 						<label for="input-security-question" class="col-sm-3 control-label">Security Question:</label>
 						<div class="col-sm-5">
-							<select name="security_question" id="input-security-question" class="form-control">
+							<select name="security_question_id" id="input-security-question" class="form-control">
 								<option value="">— Select —</option>
 								<?php foreach ($questions as $question) { ?>
 									<?php if ($question['id'] === $security_question) { ?>
@@ -70,7 +70,7 @@
 									<?php } ?>
 								<?php } ?>
 							</select>
-							<?php echo form_error('security_question', '<span class="text-danger">', '</span>'); ?>
+							<?php echo form_error('security_question_id', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">

@@ -70,6 +70,7 @@ class Template {
 	}
 
     public function render($view, $data = array(), $return = FALSE) {
+
 		// Set whatever values are given. These will be available to all view files
 		is_array($data) OR $data = (array) $data;
 
@@ -137,6 +138,8 @@ class Template {
         if ($theme_location = $this->getThemeLocation($this->_theme)) {
             $this->_theme_path = rtrim($theme_location . $this->_theme);
             $this->_theme_shortpath = APPDIR . '/views/themes/' . $this->_theme;
+        } else {
+            show_error('Unable to locate the active theme: '.APPDIR . '/views/themes/' . $this->_theme);
         }
 	}
 
@@ -384,12 +387,12 @@ class Template {
 	}
 
     private function _getLayoutModules() {
-        $this->CI->load->model('Design_model');
+        $this->CI->load->model('Layouts_model');
         $this->CI->load->model('Extensions_model');
 
         $layout_id = $this->_getLayout();
 
-        $layout_modules = $this->CI->Design_model->getLayoutModules($layout_id);
+        $layout_modules = $this->CI->Layouts_model->getLayoutModules($layout_id);
         $modules = $this->CI->Extensions_model->getModules();
 
         $_modules = array();
@@ -427,6 +430,7 @@ class Template {
                     $this->_theme . '/modules/' . $this->_module . '/' . $view,
                     $this->_theme . '/' . $view
                 );
+
                 foreach ($theme_views as $theme_view) {
                     if (file_exists($location . $theme_view . '.php')) {
                         return self::_load_view($theme_view, $this->_data + $data, $location);
@@ -434,10 +438,6 @@ class Template {
                 }
 
             }
-        }
-
-        if ( empty($this->_theme)) {
-            show_error('Unable to load the requested theme file: '. $view);
         }
 
         // Not found it yet? Just load, its either in the module or root view
@@ -497,9 +497,9 @@ class Template {
             $uri_route = ($uri_route === '') ? $segment : $uri_route.'/'.$segment;
 
             if ($segment === 'pages') {
-                $layout_id = $this->CI->Design_model->getPageLayoutId((int)$this->CI->input->get('page_id'));
+                $layout_id = $this->CI->Layouts_model->getPageLayoutId((int)$this->CI->input->get('page_id'));
             } else if ($uri_route !== '') {
-                $layout_id = $this->CI->Design_model->getRouteLayoutId($uri_route);
+                $layout_id = $this->CI->Layouts_model->getRouteLayoutId($uri_route);
             }
 
             // Lets break the look if a layout was found.

@@ -125,7 +125,7 @@ class Migration_Schema_a extends CI_Migration {
 			'option_value_id INT(11) NOT NULL',
 			'new_price DECIMAL(15,2) NOT NULL',
 			'quantity INT(11) NOT NULL',
-			'substract_stock TINYINT(4) NOT NULL',
+			'subtract_stock TINYINT(4) NOT NULL',
   		);
 
 		$this->dbforge->add_field($fields);

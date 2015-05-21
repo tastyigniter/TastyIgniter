@@ -82,7 +82,7 @@ class Admin_slideshow extends Ext_Controller {
         return $this->load->view('slideshow/admin_slideshow', $data, TRUE);
 	}
 
-	public function _updateModule() {
+	private function _updateModule() {
     	if ($this->validateForm() === TRUE) {
 			$update = array();
 
@@ -106,7 +106,7 @@ class Admin_slideshow extends Ext_Controller {
 		}
 	}
 
- 	public function validateForm() {
+ 	private function validateForm() {
 		$this->form_validation->set_rules('title', 'Title', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 		$this->form_validation->set_rules('dimension_h', 'Dimension Height', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('dimension_w', 'Dimension Width', 'xss_clean|trim|required|integer');

@@ -49,7 +49,7 @@ class Login extends Main_Controller {
 		$this->template->render('account/login', $data);
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		// START of form validation rules
 		$this->form_validation->set_rules('email', 'Email Address', 'xss_clean|trim|required|valid_email');
 		$this->form_validation->set_rules('password', 'Password', 'xss_clean|trim|required|min_length[6]|max_length[32]');

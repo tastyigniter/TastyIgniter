@@ -2,9 +2,10 @@
 
 class Mail_templates extends Admin_Controller {
 
-	public function __construct() {
+    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
+
+    public function __construct() {
 		parent::__construct();
-		$this->load->library('user');
 		$this->load->model('Mail_templates_model');
 		$this->load->model('Settings_model');
 	}
@@ -122,15 +123,7 @@ class Mail_templates extends Admin_Controller {
 			);
 		}
 
-		if ($this->input->post() AND $this->_addTemplate() === TRUE) {
-			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {
-				redirect('mail_templates/edit?id='. $this->input->post('insert_id'));
-			} else {
-				redirect('mail_templates');
-			}
-		}
-
-		if ($this->input->post() AND $this->_updateTemplate() === TRUE) {
+		if ($this->input->post() AND $template_id = $this->_saveTemplate()) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('mail_templates');
 			}
@@ -152,49 +145,21 @@ class Mail_templates extends Admin_Controller {
 		$this->template->render('mail_templates_variables', $data);
 	}
 
-	public function _addTemplate() {
-    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$add = array();
+	private function _saveTemplate() {
+    	if ($this->validateForm() === TRUE) {
+            $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-			$add['name'] 				= $this->input->post('name');
-			$add['status'] 				= $this->input->post('status');
-			$add['language_id'] 		= $this->input->post('language_id');
-			$add['clone_template_id'] 	= $this->input->post('clone_template_id');
-			$add['date_added'] 			= mdate('%Y-%m-%d %H:%i:%s', time());
-			$add['date_updated'] 		= mdate('%Y-%m-%d %H:%i:%s', time());
-
-			if ($_POST['insert_id'] = $this->Mail_templates_model->addTemplate($add)) {
-				$this->alert->set('success', 'Mail Template added successfully.');
+			if ($template_id = $this->Mail_templates_model->saveTemplate($this->input->get('id'), $this->input->post())) {
+				$this->alert->set('success', 'Mail Template ' . $save_type . ' successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occurred, nothing added.');
+				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
 			}
 
-			return TRUE;
+			return $template_id;
 		}
 	}
 
-	public function _updateTemplate() {
-    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$update = array();
-
-			$update['template_id'] 		= $this->input->get('id');
-			$update['name'] 			= $this->input->post('name');
-			$update['status'] 			= $this->input->post('status');
-			$update['language_id'] 		= $this->input->post('language_id');
-			$update['templates'] 		= $this->input->post('templates');
-			$update['date_updated'] 	= mdate('%Y-%m-%d %H:%i:%s', time());
-
-			if ($this->Mail_templates_model->updateTemplate($update)) {
-				$this->alert->set('success', 'Mail Template updated successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing added.');
-			}
-
-			return TRUE;
-		}
-	}
-
-	public function _deleteTemplate() {
+	private function _deleteTemplate() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				if ($value === $this->config->item('mail_template_id')) {
@@ -209,7 +174,7 @@ class Mail_templates extends Admin_Controller {
 		return TRUE;
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 
 		if (!$this->input->get('id')) {
@@ -219,11 +184,13 @@ class Mail_templates extends Admin_Controller {
 		$this->form_validation->set_rules('language_id', 'Language', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('status', 'Status', 'xss_clean|trim|required|integer');
 
-		foreach ($this->input->post('templates') as $key => $value) {
-			$this->form_validation->set_rules('templates['.$key.'][code]', 'Code', 'xss_clean|trim|required');
-			$this->form_validation->set_rules('templates['.$key.'][subject]', 'Subject', 'xss_clean|trim|required|min_length[2]|max_length[128]');
-			$this->form_validation->set_rules('templates['.$key.'][body]', 'Body', 'required|min_length[3]');
-		}
+        if ($this->input->post('templates')) {
+            foreach ($this->input->post('templates') as $key => $value) {
+                $this->form_validation->set_rules('templates[' . $key . '][code]', 'Code', 'xss_clean|trim|required');
+                $this->form_validation->set_rules('templates[' . $key . '][subject]', 'Subject', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+                $this->form_validation->set_rules('templates[' . $key . '][body]', 'Body', 'required|min_length[3]');
+            }
+        }
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;

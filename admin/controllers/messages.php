@@ -2,9 +2,10 @@
 
 class Messages extends Admin_Controller {
 
-	public function __construct() {
+    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
+
+    public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 		$this->load->library('pagination');
 		$this->load->model('Messages_model');
 		$this->load->model('Staffs_model');
@@ -282,7 +283,7 @@ class Messages extends Admin_Controller {
 		$this->template->render('messages_edit', $data);
 	}
 
-	public function _sendMessage() {
+	private function _sendMessage() {
     	if ($this->validateForm() === TRUE) {
 			$this->load->model('Customers_model');
 			$add = array();
@@ -369,7 +370,7 @@ class Messages extends Admin_Controller {
 			$add['body']			= $this->input->post('body');
 			$add['date_added']		= mdate('%Y-%m-%d %H:%i:%s', time());
 
-			if ($this->Messages_model->addMessage($add, $recipients)) {
+			if ($this->Messages_model->sendMessage($add, $recipients)) {
 				$this->alert->set('success', 'Message Sent successfully!');
 			} else {
 				$this->alert->set('warning', 'An error occurred, nothing added.');
@@ -379,7 +380,7 @@ class Messages extends Admin_Controller {
 		}
 	}
 
-	public function _updateMessageState($state = '', $message_id = '', $staff_id = '') {
+	private function _updateMessageState($state = '', $message_id = '', $staff_id = '') {
     	if (is_numeric($staff_id)) {
 			if ($state === 'unread') {
 				$state = '0';
@@ -417,7 +418,7 @@ class Messages extends Admin_Controller {
         return FALSE;
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('recipient', 'To', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 		$this->form_validation->set_rules('subject', 'Subject', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 		$this->form_validation->set_rules('body', 'Body', 'required|min_length[3]');

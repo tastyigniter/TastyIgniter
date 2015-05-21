@@ -128,7 +128,7 @@ class Reserve extends Main_Controller {
 		$this->template->render('reserve_success', $data);
 	}
 
-	public function _reserveTable() {
+	private function _reserveTable() {
 
 		$date_format = '%Y-%m-%d';
 		$time_format = '%h:%i';
@@ -194,14 +194,14 @@ class Reserve extends Main_Controller {
 		}
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('first_name', 'First Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		$this->form_validation->set_rules('last_name', 'Last Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		$this->form_validation->set_rules('email', 'Email Address', 'xss_clean|trim|required|valid_email');
 		$this->form_validation->set_rules('confirm_email', 'Confirm Email Address', 'xss_clean|trim|required|valid_email|matches[email]');
 		$this->form_validation->set_rules('telephone', 'Telephone', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('comment', 'Comment', 'xss_clean|trim|max_length[520]');
-		$this->form_validation->set_rules('captcha', 'Captcha', 'xss_clean|trim|required|callback_validate_captcha');
+		$this->form_validation->set_rules('captcha', 'Captcha', 'xss_clean|trim|required|callback__validate_captcha');
 
   		if ($this->form_validation->run() === TRUE) {
 			return TRUE;
@@ -210,18 +210,18 @@ class Reserve extends Main_Controller {
 		}
 	}
 
-    public function validate_captcha($word) {
+    public function _validate_captcha($word) {
 		$session_caption = $this->session->tempdata('captcha');
 
         if (empty($word) OR $word !== $session_caption['word']) {
-            $this->form_validation->set_message('validate_captcha', 'The letters you entered does not match the image.');
+            $this->form_validation->set_message('_validate_captcha', 'The letters you entered does not match the image.');
             return FALSE;
         } else {
             return TRUE;
         }
     }
 
-	public function createCaptcha() {
+	private function createCaptcha() {
         $this->load->helper('captcha');
 
 		$prefs = array(

@@ -1,7 +1,7 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * Extensions Controller Class
+ * Base Controller Class
  *
  */
 class Base_Controller extends MX_Controller {
@@ -18,25 +18,21 @@ class Base_Controller extends MX_Controller {
 
         $this->load->library('alert');
 
-        $this->config->load_db_config();
+        // Load database and system configuration from database
+        $this->load->database();
+        if (!empty($this->db->username)) {
+            $this->config->load_db_config();
+        }
 
         // Load system settings
         $this->load->library('setting');
 
         // Load session
-//        $this->load->driver('session');
         $this->load->library('session');
-
-
-//        $this->load->library('extension');
-        if (method_exists( $this->router, 'fetch_module' ) AND $this->router->fetch_module()) {
-//            var_dump('is_module');var_dump($this->router->fetch_module());
-//            $this->setting->setModule($this->router->fetch_module());
-        }
 
         $this->form_validation->CI =& $this;
     }
 }
 
-/* End of file Ext_Controller.php */
-/* Location: ./system/tastyigniter/core/Ext_Controller.php */
+/* End of file Base_Controller.php */
+/* Location: ./system/tastyigniter/core/Base_Controller.php */

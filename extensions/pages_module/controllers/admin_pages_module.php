@@ -24,7 +24,7 @@ class Admin_pages_module extends Ext_Controller {
         }
 	}
 
-	public function _updateModule() {
+	private function _updateModule() {
     	if ($this->validateForm() === TRUE) {
 			$update = array();
 
@@ -44,7 +44,7 @@ class Admin_pages_module extends Ext_Controller {
 		}
 	}
 
- 	public function validateForm() {
+ 	private function validateForm() {
 		$this->form_validation->set_rules('title', 'Title', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 
 		foreach ($this->input->post('layouts') as $key => $value) {

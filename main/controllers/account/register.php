@@ -59,8 +59,11 @@ class Register extends Main_Controller {
 		$this->template->render('account/register', $data);
 	}
 
-	public function _addCustomer() {
+	private function _addCustomer() {
 		if ($this->validateForm() === TRUE) {
+            $this->load->model('Customers_model');													// load the customers model
+            $this->load->model('Customer_groups_model');
+
  			$add = array();
 
  			// if successful CREATE an array with the following $_POST data values
@@ -76,8 +79,6 @@ class Register extends Main_Controller {
 			$add['customer_group_id'] 		= $this->config->item('customer_group_id');
 			$add['date_added'] 				= mdate('%Y-%m-%d', time());
 
-			$this->load->model('Customers_model');													// load the customers model
-			$this->load->model('Customer_groups_model');
 			$result = $this->Customer_groups_model->getCustomerGroup($this->config->item('customer_group_id'));
 			if ($result['approval'] === '1') {
 				$add['status'] = '0';
@@ -85,13 +86,13 @@ class Register extends Main_Controller {
 				$add['status'] = '1';
 			}
 
-			if (!empty($add) AND $this->Customers_model->addCustomer($add)) {								// pass add array data to addCustomer method in Customers model then return TRUE
+			if (!empty($add) AND $this->Customers_model->saveCustomer(NULL, $add)) {								// pass add array data to saveCustomer method in Customers model then return TRUE
   				return TRUE;
 			}
 		}
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		// START of form validation rules
 		$this->form_validation->set_rules('first_name', 'First Name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
 		$this->form_validation->set_rules('last_name', 'First Name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
@@ -102,7 +103,7 @@ class Register extends Main_Controller {
 		$this->form_validation->set_rules('security_question', 'Security Question', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('security_answer', 'Security Answer', 'xss_clean|trim|required|min_length[2]');
 		$this->form_validation->set_rules('newsletter', 'Newsletter', 'xss_clean|trim|integer');
-		$this->form_validation->set_rules('captcha', 'Captcha', 'xss_clean|trim|required|callback_validate_captcha');
+		$this->form_validation->set_rules('captcha', 'Captcha', 'xss_clean|trim|required|callback__validate_captcha');
 
 		if ($this->config->item('registration_terms') === '1') {
 			$this->form_validation->set_rules('terms_condition', 'Terms & Condition', 'xss_clean|trim|integer');
@@ -116,18 +117,18 @@ class Register extends Main_Controller {
 		}
 	}
 
-    public function validate_captcha($word) {
+    public function _validate_captcha($word) {
 		$session_caption = $this->session->tempdata('captcha');
 
         if (empty($word) OR strtolower($word) !== strtolower($session_caption['word'])) {
-            $this->form_validation->set_message('validate_captcha', 'The letters you entered does not match the image.');
+            $this->form_validation->set_message('_validate_captcha', 'The letters you entered does not match the image.');
             return FALSE;
         } else {
             return TRUE;
         }
     }
 
-	public function createCaptcha() {
+	private function createCaptcha() {
         $this->load->helper('captcha');
 
 		$prefs = array(

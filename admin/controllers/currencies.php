@@ -2,9 +2,10 @@
 
 class Currencies extends Admin_Controller {
 
+    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
+
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 		$this->load->library('pagination');
 		$this->load->model('Currencies_model');
 		$this->load->model('Countries_model');
@@ -139,15 +140,7 @@ class Currencies extends Admin_Controller {
 			);
 		}
 
-		if ($this->input->post() AND $this->_addCurrency() === TRUE) {
-			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {
-				redirect('currencies/edit?id='. $this->input->post('insert_id'));
-			} else {
-				redirect('currencies');
-			}
-		}
-
-		if ($this->input->post() AND $this->_updateCurrency() === TRUE) {
+		if ($this->input->post() AND $currency_id = $this->_saveCurrency()) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('currencies');
 			}
@@ -159,54 +152,21 @@ class Currencies extends Admin_Controller {
 		$this->template->render('currencies_edit', $data);
 	}
 
-	public function _addCurrency() {
-    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$add = array();
+	private function _saveCurrency() {
+    	if ($this->validateForm() === TRUE) {
+            $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-			$add['currency_name'] 		= $this->input->post('currency_name');
-			$add['currency_code'] 		= $this->input->post('currency_code');
-			$add['currency_symbol'] 	= $this->input->post('currency_symbol');
-			$add['country_id'] 			= $this->input->post('country_id');
-			$add['iso_alpha2'] 			= $this->input->post('iso_alpha2');
-			$add['iso_alpha3']			= $this->input->post('iso_alpha3');
-			$add['iso_numeric'] 		= $this->input->post('iso_numeric');
-			$add['currency_status'] 	= $this->input->post('currency_status');
-
-			if ($_POST['insert_id'] = $this->Currencies_model->addCurrency($add)) {
-				$this->alert->set('success', 'Currency added successfully.');
+			if ($currency_id = $this->Currencies_model->addCurrency($this->input->get('id'), $this->input->post())) {
+				$this->alert->set('success', 'Currency ' . $save_type . ' successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
 			}
 
-			return TRUE;
+			return $currency_id;
 		}
 	}
 
-	public function _updateCurrency() {
-    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$update = array();
-
-			$update['currency_id'] 		= $this->input->get('id');
-			$update['currency_name'] 	= $this->input->post('currency_name');
-			$update['currency_code'] 	= $this->input->post('currency_code');
-			$update['currency_symbol'] 	= $this->input->post('currency_symbol');
-			$update['country_id'] 		= $this->input->post('country_id');
-			$update['iso_alpha2'] 		= $this->input->post('iso_alpha2');
-			$update['iso_alpha3']		= $this->input->post('iso_alpha3');
-			$update['iso_numeric'] 		= $this->input->post('iso_numeric');
-			$update['currency_status'] 	= $this->input->post('currency_status');
-
-			if ($this->Currencies_model->updateCurrency($update)) {
-				$this->alert->set('success', 'Currency updated successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
-			}
-
-			return TRUE;
-		}
-	}
-
-	public function _deleteCurrency() {
+	private function _deleteCurrency() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Currencies_model->deleteCurrency($value);
@@ -218,7 +178,7 @@ class Currencies extends Admin_Controller {
 		return TRUE;
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('currency_name', 'Title', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		$this->form_validation->set_rules('currency_code', 'Code', 'xss_clean|trim|required|exact_length[3]');
 		$this->form_validation->set_rules('currency_symbol', 'Symbol', 'xss_clean|trim|required');

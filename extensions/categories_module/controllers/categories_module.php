@@ -5,6 +5,7 @@ class Categories_module extends Ext_Controller {
 	public function __construct() {
 		parent::__construct(); 																	// calls the constructor
 		$this->load->model('Menus_model'); 														// load the menus model
+		$this->load->model('Categories_model'); 														// load the menus model
 		$this->lang->load('categories_module/categories_module');
 	}
 
@@ -27,7 +28,7 @@ class Categories_module extends Ext_Controller {
 		// END of retrieving lines from language file to send to view.
 
 		$data['categories'] = array();
-		$results = $this->Menus_model->getCategories(); 										// retrieve all menu categories from getCategories method in Menus model
+		$results = $this->Categories_model->getCategories(); 										// retrieve all menu categories from getCategories method in Menus model
 		foreach ($results as $result) {															// loop through menu categories array
 			$data['categories'][] = array( 														// create array of category data to pass to view
 				'category_id'	=>	$result['category_id'],

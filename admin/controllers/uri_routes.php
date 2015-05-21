@@ -2,10 +2,14 @@
 
 class Uri_routes extends Admin_Controller {
 
-	public function __construct() {
+    public $_permission_rules = 'access';
+
+    public function __construct() {
 		parent::__construct();
-		$this->load->library('user');
-		$this->load->model('Design_model');
+		$this->load->model('Layouts_model');
+
+        $this->alert->set('warning', 'URI Routes Page disabled for improvement in next release');
+        redirect('dashboard');
 	}
 
 	public function index() {
@@ -16,7 +20,7 @@ class Uri_routes extends Admin_Controller {
 		if ($this->input->post('routes')) {
 			$routes = $this->input->post('routes');
 		} else {
-			$routes = $this->Design_model->getRoutes();
+			$routes = $this->Layouts_model->getRoutes();
 		}
 
 		$data['routes'] = array();
@@ -36,13 +40,13 @@ class Uri_routes extends Admin_Controller {
 		$this->template->render('uri_routes', $data);
 	}
 
-	public function _updateRoute() {
+	private function _updateRoute() {
     	if ($this->input->post('routes') AND $this->validateForm() === TRUE) {
 			$update = array();
 
 			$update = $this->input->post('routes');
 
-			if ($this->Design_model->updateRoutes($update)) {
+			if ($this->Layouts_model->updateRoutes($update)) {
 				$this->alert->set('success', 'URI Routes updated successfully.');
 			} else {
 				$this->alert->set('warning', 'An error occurred, nothing updated.');
@@ -52,7 +56,7 @@ class Uri_routes extends Admin_Controller {
 		}
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		if ($this->input->post('routes')) {
 			foreach ($this->input->post('routes') as $key => $value) {
 				$this->form_validation->set_rules('routes['.$key.'][uri_route]', 'URI Route', 'xss_clean|trim|required|min_length[2]|max_length[255]');

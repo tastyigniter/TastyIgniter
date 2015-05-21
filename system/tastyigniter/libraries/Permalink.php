@@ -61,12 +61,12 @@ class Permalink {
         }
     }
 
-    public function updatePermalink($controller, $permalink = array(), $query = '') {
-        return $this->CI->Permalink_model->updatePermalink($controller, $permalink, $query);
+    public function savePermalink($controller, $permalink = array(), $query = '') {
+        return $this->CI->Permalink_model->savePermalink($controller, $permalink, $query);
     }
 
-    public function addPermalink($controller, $permalink = array(), $query = '') {
-        return $this->CI->Permalink_model->addPermalink($controller, $permalink, $query);
+    public function deletePermalink($controller, $query = '') {
+        return $this->CI->Permalink_model->deletePermalinkByQuery($controller, $query);
     }
 
     private function _setRequestQuery() {

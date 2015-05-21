@@ -90,7 +90,7 @@ class Contact extends Main_Controller {
 		$this->template->render('contact', $data);
 	}
 
-	public function _sendContact() {
+	private function _sendContact() {
 
 		if ($this->validateForm() === TRUE) {
 			$this->load->library('email');														//loading upload library
@@ -124,14 +124,14 @@ class Contact extends Main_Controller {
         }
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		// START of form validation rules
 		$this->form_validation->set_rules('subject', 'Subject', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('full_name', 'Full Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		$this->form_validation->set_rules('email', 'Email Address', 'xss_clean|trim|required|valid_email|max_length[96]');
 		$this->form_validation->set_rules('telephone', 'Telephone', 'xss_clean|trim|required|numeric|max_length[20]');
 		$this->form_validation->set_rules('comment', 'Comment', 'htmlspecialchars|required|max_length[1028]');
-		$this->form_validation->set_rules('captcha', 'Captcha', 'xss_clean|trim|required|callback_validate_captcha');
+		$this->form_validation->set_rules('captcha', 'Captcha', 'xss_clean|trim|required|callback__validate_captcha');
 		// END of form validation rules
 
   		if ($this->form_validation->run() === TRUE) {											// checks if form validation routines ran successfully
@@ -141,18 +141,18 @@ class Contact extends Main_Controller {
 		}
 	}
 
-    public function validate_captcha($word) {
+    public function _validate_captcha($word) {
 		$session_caption = $this->session->tempdata('captcha');
 
         if (strtolower($word) !== strtolower($session_caption['word'])) {
-            $this->form_validation->set_message('validate_captcha', 'The letters you entered does not match the image.');
+            $this->form_validation->set_message('_validate_captcha', 'The letters you entered does not match the image.');
             return FALSE;
         } else {
             return TRUE;
         }
     }
 
-	public function createCaptcha() {
+	private function createCaptcha() {
         $this->load->helper('captcha');
 
 		$prefs = array(

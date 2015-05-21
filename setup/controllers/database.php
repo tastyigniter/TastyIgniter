@@ -9,7 +9,7 @@ class Database extends Base_Controller {
         $this->load->helper('file');
         $this->load->model('Setup_model');
 
-        if ($this->session->userdata('setup') === 'step_3' AND $this->config->item('ti_version') === 'v1.3-beta') {
+        if ($this->session->userdata('setup') === 'step_3' OR $this->config->item('ti_version')) {
             redirect('success');
         }
 
@@ -90,9 +90,9 @@ class Database extends Base_Controller {
         }
     }
 
-    public function _checkDatabase() {
+    private function _checkDatabase() {
         $this->form_validation->set_rules('db_name', 'Database Name', 'xss_clean|trim|required');
-        $this->form_validation->set_rules('db_host', 'Hostname', 'xss_clean|trim|required|callback_handle_connect');
+        $this->form_validation->set_rules('db_host', 'Hostname', 'xss_clean|trim|required|callback__handle_connect');
         $this->form_validation->set_rules('db_user', 'Username', 'xss_clean|trim|required');
         $this->form_validation->set_rules('db_pass', 'Password', 'xss_clean|trim|required');
         $this->form_validation->set_rules('db_prefix', 'Prefix', 'xss_clean|trim|required');
@@ -162,7 +162,6 @@ class Database extends Base_Controller {
         $row = $this->db->select('version')->get('migrations')->row();
         $old_version = !empty($row) ? $row->version : '0';
 
-        $current_version = FALSE;
         if (($current_version = $this->migration->current()) === FALSE) {
             show_error($this->migration->error_string());
         }
@@ -182,7 +181,7 @@ class Database extends Base_Controller {
         return $current_version;
     }
 
-    public function handle_connect() {
+    public function _handle_connect() {
         $db_user 	= $this->input->post('db_user');
         $db_pass 	= $this->input->post('db_pass');
         $db_host 	= $this->input->post('db_host');
@@ -191,7 +190,7 @@ class Database extends Base_Controller {
         $db_check = @mysqli_connect($db_host, $db_user, $db_pass, $db_name);
 
         if (mysqli_connect_error()) {
-            $this->form_validation->set_message('handle_connect', '<p class="alert alert-danger">Database connection was unsuccessful, please make sure the database server, username and password is correct.');
+            $this->form_validation->set_message('_handle_connect', '<p class="alert alert-danger">Database connection was unsuccessful, please make sure the database server, username and password is correct.');
             return FALSE;
         } else {
             mysqli_close($db_check);

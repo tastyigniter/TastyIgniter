@@ -4,7 +4,6 @@ class Login extends Admin_Controller {
 
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 	}
 
 	public function index() {
@@ -41,7 +40,7 @@ class Login extends Admin_Controller {
 		$this->template->render('login_reset', $data);
 	}
 
-	public function validateLoginForm() {
+	private function validateLoginForm() {
 		// START of form validation rules
 		$this->form_validation->set_rules('user', 'Username', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('password', 'Password', 'xss_clean|trim|required|min_length[6]|max_length[32]');
@@ -57,8 +56,8 @@ class Login extends Admin_Controller {
 		}
 	}
 
-	public function validateResetForm() {
-		$this->form_validation->set_rules('user_email', 'Username or Email', 'xss_clean|trim|required|callback_check_user');	//validate form
+	private function validateResetForm() {
+		$this->form_validation->set_rules('user_email', 'Username or Email', 'xss_clean|trim|required|callback__check_user');	//validate form
 
 		if ($this->form_validation->run() === TRUE) {										// checks if form validation routines ran successfully
 			if ($this->Staffs_model->resetPassword($this->input->post('user_email'))) {		// checks if form validation routines ran successfully
@@ -73,12 +72,12 @@ class Login extends Admin_Controller {
 		}
 	}
 
-	public function check_user($str) {
+	public function _check_user($str) {
 		if (empty($str)) {
-			$this->form_validation->set_message('check_user', 'Enter a username or email address.');
+			$this->form_validation->set_message('_check_user', 'Enter a username or email address.');
 			return FALSE;
 		} else if (!$this->Staffs_model->resetPassword($str)) {
-			$this->form_validation->set_message('check_user', 'There is no user registered with that email address.');
+			$this->form_validation->set_message('_check_user', 'There is no user registered with that email address.');
 			return FALSE;
 		}
 

@@ -72,17 +72,17 @@
 						<div class="form-group">
 							<label for="input-group" class="col-sm-3 control-label">Staff Group:</label>
 							<div class="col-sm-5">
-								<select name="staff_group" id="input-group" class="form-control">
+								<select name="staff_group_id" id="input-group" class="form-control">
 								<option value="">— Select —</option>
 								<?php foreach ($staff_groups as $staff_group) { ?>
 									<?php if ($staff_group['staff_group_id'] === $staff_group_id) { ?>
-										<option value="<?php echo $staff_group['staff_group_id']; ?>" <?php echo set_select('staff_group', $staff_group['staff_group_id'], TRUE); ?> ><?php echo $staff_group['staff_group_name']; ?></option>
+										<option value="<?php echo $staff_group['staff_group_id']; ?>" <?php echo set_select('staff_group_id', $staff_group['staff_group_id'], TRUE); ?> ><?php echo $staff_group['staff_group_name']; ?></option>
 									<?php } else { ?>
-										<option value="<?php echo $staff_group['staff_group_id']; ?>" <?php echo set_select('staff_group', $staff_group['staff_group_id']); ?> ><?php echo $staff_group['staff_group_name']; ?></option>
+										<option value="<?php echo $staff_group['staff_group_id']; ?>" <?php echo set_select('staff_group_id', $staff_group['staff_group_id']); ?> ><?php echo $staff_group['staff_group_name']; ?></option>
 									<?php } ?>
 								<?php } ?>
 								</select>
-								<?php echo form_error('staff_group', '<span class="text-danger">', '</span>'); ?>
+								<?php echo form_error('staff_group_id', '<span class="text-danger">', '</span>'); ?>
 							</div>
 						</div>
 						<div class="form-group">

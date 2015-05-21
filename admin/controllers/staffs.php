@@ -2,9 +2,10 @@
 
 class Staffs extends Admin_Controller {
 
-	public function __construct() {
+    public $_permission_rules = array('access', 'modify');
+
+    public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 		$this->load->library('pagination');
 		$this->load->model('Staffs_model');
 		$this->load->model('Locations_model'); // load the locations model
@@ -155,7 +156,11 @@ class Staffs extends Admin_Controller {
 	}
 
 	public function edit() {
-		$staff_info = $this->Staffs_model->getStaff((int) $this->input->get('id'));
+        if (!$this->user->hasPermissions('access', 'staffs') AND $this->user->getStaffId() !== $this->input->get('id')) {
+            redirect(root_url('admin/permission'));
+        }
+
+        $staff_info = $this->Staffs_model->getStaff((int) $this->input->get('id'));
 
 		if ($staff_info) {
 			$staff_id = $staff_info['staff_id'];
@@ -171,13 +176,13 @@ class Staffs extends Admin_Controller {
 		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 		$this->template->setBackButton('btn btn-back', site_url('staffs'));
 
-        if ($this->user->hasPermissions('modify', 'staffs', TRUE) AND $staff_id !== $this->user->getStaffId()) {
+        if ($this->user->hasPermissions('modify', 'staffs')) {
             $this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
         }
 
-        $data['display_staff_group'] = TRUE;
-        if ($this->user->hasPermissions('modify', 'staffs', TRUE) AND $staff_id === $this->user->getStaffId()) {
-            $data['display_staff_group'] = FALSE;
+        $data['display_staff_group'] = FALSE;
+        if ($this->user->hasPermissions('modify', 'staff_groups')) {
+            $data['display_staff_group'] = TRUE;
         }
 
 
@@ -227,15 +232,7 @@ class Staffs extends Admin_Controller {
 			);
 		}
 
-		if ($this->input->post() AND !$this->input->get('id') AND $this->_addStaff() === TRUE) {
-			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {
-				redirect('staffs/edit?id='. $this->input->post('insert_id'));
-			} else {
-				redirect('staffs');
-			}
-		}
-
-		if ($this->input->post() AND $this->input->get('id') AND $this->_updateStaff($data['staff_email'], $data['username']) === TRUE) {
+		if ($this->input->post() AND $staff_id = $this->_saveStaff($data['staff_email'], $data['username'])) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('staffs');
 			}
@@ -270,61 +267,26 @@ class Staffs extends Admin_Controller {
 		$this->output->set_output(json_encode($json));
 	}
 
-	public function _addStaff() {
-    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$add = array();
+	private function _saveStaff($staff_email, $username) {
+        if (!$this->user->hasPermissions('modify', 'staffs') AND $this->user->getStaffId() !== $this->input->get('id')) {
+            $this->alert->set('warning', 'Warning: You do not have permission to modify!');
+            redirect(referrer_url());
+        }
 
-			$add['staff_name']			= $this->input->post('staff_name');
-			$add['staff_email']			= $this->input->post('staff_email');
-			$add['username']			= $this->input->post('username');
-			$add['password']			= $this->input->post('password');
-			$add['staff_group_id']		= $this->input->post('staff_group');
-			$add['staff_location_id']	= $this->input->post('staff_location_id');
-			$add['timezone']			= $this->input->post('timezone');
-			$add['language_id']			= $this->input->post('language_id');
-			$add['staff_status']		= $this->input->post('staff_status');
+        if ($this->validateForm($staff_email, $username) === TRUE) {
+            $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-			if ($_POST['insert_id'] = $this->Staffs_model->addStaff($add)) {
-				$this->alert->set('success', 'Staff added successfully.');
+			if ($staff_id = $this->Staffs_model->saveStaff($this->input->get('id'), $this->input->post())) {
+				$this->alert->set('success', 'Staff ' . $save_type . ' successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occurred, nothing added.');
+				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
 			}
 
-			return TRUE;
+			return $staff_id;
 		}
 	}
 
-	public function _updateStaff($staff_email, $username) {
-        if (is_numeric($this->input->get('id')) AND $this->validateForm($staff_email, $username) === TRUE) {
-			$update = array();
-
-			$update['staff_id']		= $this->input->get('id');
-			$update['staff_name']	= $this->input->post('staff_name');
-
-			if ($staff_email !== $this->input->post('staff_email')) {
-				$update['staff_email']	= $this->input->post('staff_email');
-			} else {
-				$update['staff_email']	= $staff_email;
-			}
-
-			$update['password']				= $this->input->post('password');
-			$update['staff_group_id']		= $this->input->post('staff_group');
-			$update['staff_location_id']	= $this->input->post('staff_location_id');
-			$update['timezone']				= $this->input->post('timezone');
-			$update['language_id']			= $this->input->post('language_id');
-			$update['staff_status']			= $this->input->post('staff_status');
-
-			if ($this->Staffs_model->updateStaff($update)) {
-				$this->alert->set('success', 'Staff updated successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
-			}
-
-			return TRUE;
-		}
-	}
-
-	public function _deleteStaff() {
+	private function _deleteStaff() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Staffs_model->deleteStaff($value);
@@ -336,7 +298,7 @@ class Staffs extends Admin_Controller {
 		return TRUE;
 	}
 
-	public function validateForm($staff_email = FALSE, $username = FALSE) {
+	private function validateForm($staff_email = FALSE, $username = FALSE) {
 		$this->form_validation->set_rules('staff_name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 
 		if ($staff_email !== $this->input->post('staff_email')) {
@@ -355,8 +317,8 @@ class Staffs extends Admin_Controller {
 			$this->form_validation->set_rules('password_confirm', 'Confirm Password', 'xss_clean|trim|required');
 		}
 
-		if ($this->user->hasPermissions('modify', 'staffs', FALSE)) {
-			$this->form_validation->set_rules('staff_group', 'Department', 'xss_clean|trim|required|integer');
+		if ($this->user->hasPermissions('modify', 'staff_groups')) {
+			$this->form_validation->set_rules('staff_group_id', 'Department', 'xss_clean|trim|required|integer');
 			$this->form_validation->set_rules('staff_location_id', 'Location', 'xss_clean|trim|integer');
 		}
 
@@ -371,7 +333,7 @@ class Staffs extends Admin_Controller {
 		}
 	}
 
-	public function getTimezones() {
+	private function getTimezones() {
 		$timezone_identifiers = DateTimeZone::listIdentifiers();
 		$utc_time = new DateTime('now', new DateTimeZone('UTC'));
 

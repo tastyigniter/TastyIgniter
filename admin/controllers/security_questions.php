@@ -2,9 +2,10 @@
 
 class Security_questions extends Admin_Controller {
 
-	public function __construct() {
+    public $_permission_rules = array('access', 'modify');
+
+    public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 		$this->load->model('Security_questions_model');
 	}
 
@@ -26,7 +27,7 @@ class Security_questions extends Admin_Controller {
 
 		foreach ($results as $result) {
 			$data['questions'][] = array(
-				'question_id'	=> ($result['question_id'] > 0) ? $result['question_id'] : '-',
+				'question_id'	=> ($result['question_id'] > 0) ? $result['question_id'] : '0',
 				'text'			=> $result['text']
 			);
 		}
@@ -39,7 +40,7 @@ class Security_questions extends Admin_Controller {
 		$this->template->render('security_questions', $data);
 	}
 
-	public function _updateSecurityQuestion() {
+	private function _updateSecurityQuestion() {
     	if ($this->input->post('questions') AND $this->validateForm() === TRUE) {
 			$questions = $this->input->post('questions');
 
@@ -53,7 +54,7 @@ class Security_questions extends Admin_Controller {
 		}
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		if ($this->input->post('questions')) {
 			foreach ($this->input->post('questions') as $key => $value) {
 				$this->form_validation->set_rules('questions['.$key.'][question_id]', 'Question Id', 'xss_clean|trim|required|integer');

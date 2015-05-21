@@ -79,71 +79,40 @@ class Statuses_model extends TI_Model {
 		}
 	}
 
-	public function updateStatus($update = array()) {
-		$query = FALSE;
+	public function saveStatus($status_id, $save = array()) {
+        if (empty($save)) return FALSE;
 
-		if (!empty($update['status_name'])) {
-			$this->db->set('status_name', $update['status_name']);
+		if (!empty($save['status_name'])) {
+			$this->db->set('status_name', $save['status_name']);
 		}
 
-        if (!empty($update['status_color'])) {
-            $this->db->set('status_color', $update['status_color']);
+        if (!empty($save['status_color'])) {
+            $this->db->set('status_color', $save['status_color']);
         }
 
-        if (!empty($update['status_comment'])) {
-            $this->db->set('status_comment', $update['status_comment']);
+        if (!empty($save['status_comment'])) {
+            $this->db->set('status_comment', $save['status_comment']);
         }
 
-        if (!empty($update['status_for'])) {
-			$this->db->set('status_for', $update['status_for']);
+        if (!empty($save['status_for'])) {
+			$this->db->set('status_for', $save['status_for']);
 		}
 
-		if ($update['notify_customer'] === '1') {
-			$this->db->set('notify_customer', $update['notify_customer']);
+		if ($save['notify_customer'] === '1') {
+			$this->db->set('notify_customer', $save['notify_customer']);
 		} else {
 			$this->db->set('notify_customer', '0');
 		}
 
-		if (!empty($update['status_id'])) {
-			$this->db->where('status_id', $update['status_id']);
+		if (is_numeric($status_id)) {
+			$this->db->where('status_id', $save['status_id']);
 			$query = $this->db->update('statuses');
-		}
-
-		return $query;
-	}
-
-	public function addStatus($add = array()) {
-		$query = FALSE;
-
-		if (!empty($add['status_name'])) {
-			$this->db->set('status_name', $add['status_name']);
-		}
-
-        if (!empty($add['status_color'])) {
-            $this->db->set('status_color', $add['status_color']);
-        }
-
-        if (!empty($add['status_comment'])) {
-            $this->db->set('status_comment', $add['status_comment']);
-        }
-
-		if (!empty($add['status_for'])) {
-			$this->db->set('status_for', $add['status_for']);
-		}
-
-		if ($add['notify_customer'] === '1') {
-			$this->db->set('notify_customer', $add['notify_customer']);
 		} else {
-			$this->db->set('notify_customer', '0');
-		}
+            $query = $this->db->insert('statuses');
+            $status_id = $this->db->insert_id();
+        }
 
-		if (!empty($add)) {
-			if ($this->db->insert('statuses')) {
-				$query = $this->db->insert_id();
-			}
-		}
-
-		return $query;
+        return ($query === TRUE AND is_numeric($status_id)) ? $status_id : FALSE;
 	}
 
 	public function addStatusHistory($for = '', $add = array()) {

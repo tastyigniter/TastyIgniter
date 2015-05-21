@@ -181,8 +181,11 @@ class Addresses_model extends TI_Model {
 		return $query;
 	}
 
-    public function updateAddress($customer_id = FALSE, $address_id = FALSE, $address = array()) {
-        $query = FALSE;
+    public function saveAddress($customer_id = FALSE, $address_id = FALSE, $address = array()) {
+
+        if (is_array($address_id)) $address = $address_id;
+
+        if (empty($address)) return FALSE;
 
         if ($customer_id) {
             $this->db->set('customer_id', $customer_id);
@@ -208,50 +211,16 @@ class Addresses_model extends TI_Model {
             $this->db->set('country_id', $address['country']);
         }
 
-        if ($address_id) {
+        if (is_numeric($address_id)) {
             $this->db->where('address_id', $address_id);
-            if ($this->db->update('addresses')) $query = $address_id;
-
+            $query = $this->db->update('addresses');
         } else {
-            if ($this->db->insert('addresses')) $query = $this->db->insert_id();
+            $query = $this->db->insert('addresses');
+            $address_id = $this->db->insert_id();
         }
 
-        return $query;
+        return ($query === TRUE AND is_numeric($address_id)) ? $address_id : FALSE;
     }
-
-    public function addAddress($customer_id, $address = array()) {
-		$query = FALSE;
-
-		if ($customer_id) {
-			$this->db->set('customer_id', $customer_id);
-		}
-
-		if (!empty($address['address_1'])) {
-			$this->db->set('address_1', $address['address_1']);
-		}
-
-		if (!empty($address['address_2'])) {
-			$this->db->set('address_2', $address['address_2']);
-		}
-
-		if (!empty($address['city'])) {
-			$this->db->set('city', $address['city']);
-		}
-
-		if (!empty($address['postcode'])) {
-			$this->db->set('postcode', $address['postcode']);
-		}
-
-		if (!empty($address['country'])) {
-			$this->db->set('country_id', $address['country']);
-		}
-
-		if ($this->db->insert('addresses')) {
-			$query = $this->db->insert_id();
-		}
-
-		return $query;
-	}
 
 	public function deleteAddress($customer_id, $address_id) {
 

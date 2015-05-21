@@ -6,7 +6,7 @@ class Settings extends Base_Controller {
         parent::__construct();
         $this->load->model('Setup_model');
 
-        if ($this->session->tempdata('setup') === 'step_3' AND $this->config->item('ti_version') === 'v1.3-beta') {
+        if ($this->session->tempdata('setup') === 'step_3' OR $this->config->item('ti_version')) {
             redirect('success');
         }
     }
@@ -67,7 +67,7 @@ class Settings extends Base_Controller {
         }
     }
 
-    public function _checkSettings() {
+    private function _checkSettings() {
         $this->form_validation->set_rules('site_name', 'Restaurant name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
         $this->form_validation->set_rules('site_email', 'Restaurant email', 'xss_clean|trim|required|valid_email');
         $this->form_validation->set_rules('staff_name', 'Staff name', 'xss_clean|trim|required|min_length[2]|max_length[128]');

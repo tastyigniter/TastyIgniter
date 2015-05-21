@@ -114,7 +114,7 @@ class Admin_paypal_express extends Ext_Controller {
         return $this->load->view('paypal_express/admin_paypal_express', $data, TRUE);
 	}
 
-	public function _updatePayPalExpress() {
+	private function _updatePayPalExpress() {
     	if ($this->input->post() AND $this->validateForm() === TRUE) {
 			$update['type'] 		= 'payment';
 			$update['name'] 		= $this->input->get('name');
@@ -145,7 +145,7 @@ class Admin_paypal_express extends Ext_Controller {
 		}
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('title', 'Title', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 		$this->form_validation->set_rules('api_user', 'API Username', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('api_pass', 'API Password', 'xss_clean|trim|required');

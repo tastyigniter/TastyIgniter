@@ -2,9 +2,10 @@
 
 class Notifications extends Admin_Controller {
 
-	public function __construct() {
+    public $_permission_rules = 'access';
+
+    public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 		$this->load->library('pagination');
 		$this->load->model('Notifications_model');
 	}

@@ -2,9 +2,10 @@
 
 class Statuses extends Admin_Controller {
 
-	public function __construct() {
+    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
+
+    public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 		$this->load->model('Statuses_model');
 	}
 
@@ -71,15 +72,7 @@ class Statuses extends Admin_Controller {
         $data['status_for'] 		= $status_info['status_for'];
 		$data['notify_customer'] 	= $status_info['notify_customer'];
 
-		if ($this->input->post() AND $this->_addStatus() === TRUE) {
-			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {
-				redirect('statuses/edit?id='. $this->input->post('insert_id'));
-			} else {
-				redirect('statuses');
-			}
-		}
-
-		if ($this->input->post() AND $this->_updateStatus() === TRUE) {
+		if ($this->input->post() AND $status_id = $this->_saveStatus()) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('statuses');
 			}
@@ -98,48 +91,21 @@ class Statuses extends Admin_Controller {
 		}
 	}
 
-	public function _addStatus() {
-    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$add = array();
+	private function _saveStatus() {
+    	if ($this->validateForm() === TRUE) {
+            $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-			$add['status_name'] 		= $this->input->post('status_name');
-            $add['status_color'] 		= $this->input->post('status_color');
-            $add['status_comment'] 		= $this->input->post('status_comment');
-			$add['status_for'] 			= $this->input->post('status_for');
-			$add['notify_customer'] 	= $this->input->post('notify_customer');
-
-			if ($_POST['insert_id'] = $this->Statuses_model->addStatus($add)) {
-				$this->alert->set('success', 'Order Status added successfully.');
+			if ($status_id = $this->Statuses_model->saveStatus($this->input->get('id'), $this->input->post())) {
+				$this->alert->set('success', 'Status ' . $save_type . ' successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
 			}
 
-			return TRUE;
+			return $status_id;
 		}
 	}
 
-	public function _updateStatus() {
-    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$update = array();
-
-			$update['status_id'] 		= $this->input->get('id');
-			$update['status_name'] 		= $this->input->post('status_name');
-            $update['status_color'] 	= $this->input->post('status_color');
-            $update['status_comment'] 	= $this->input->post('status_comment');
-			$update['status_for'] 		= $this->input->post('status_for');
-			$update['notify_customer'] 	= $this->input->post('notify_customer');
-
-			if ($this->Statuses_model->updateStatus($update)) {
-				$this->alert->set('success', 'Order Status updated successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
-			}
-
-			return TRUE;
-		}
-	}
-
-	public function _deleteStatus() {
+	private function _deleteStatus() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Statuses_model->deleteStatus($value);
@@ -151,7 +117,7 @@ class Statuses extends Admin_Controller {
 		return TRUE;
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('status_name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		$this->form_validation->set_rules('status_for', 'Status For', 'xss_clean|trim|required|alpha');
         $this->form_validation->set_rules('status_color', 'Color', 'xss_clean|trim|required|max_length[7]');

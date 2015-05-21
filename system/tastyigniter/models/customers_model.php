@@ -224,156 +224,92 @@ class Customers_model extends TI_Model {
 		}
 	}
 
-	public function updateCustomer($update = array()) {
-		$query = FALSE;
+	public function saveCustomer($customer_id, $save = array()) {
+        if (empty($save)) return FALSE;
 
-		if (!empty($update['first_name'])) {
-			$this->db->set('first_name', $update['first_name']);
+		if (!empty($save['first_name'])) {
+			$this->db->set('first_name', $save['first_name']);
 		}
 
-		if (!empty($update['last_name'])) {
-			$this->db->set('last_name', $update['last_name']);
+		if (!empty($save['last_name'])) {
+			$this->db->set('last_name', $save['last_name']);
 		}
 
-		if (!empty($update['email'])) {
-			$this->db->set('email', strtolower($update['email']));
+		if (!empty($save['email'])) {
+			$this->db->set('email', strtolower($save['email']));
 		}
 
-		if (!empty($update['password'])) {
+		if (!empty($save['password'])) {
 			$this->db->set('salt', $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9));
-			$this->db->set('password', sha1($salt . sha1($salt . sha1($update['password']))));
+			$this->db->set('password', sha1($salt . sha1($salt . sha1($save['password']))));
 		}
 
-		if (!empty($update['telephone'])) {
-			$this->db->set('telephone', $update['telephone']);
+		if (!empty($save['telephone'])) {
+			$this->db->set('telephone', $save['telephone']);
 		}
 
-		if (!empty($update['security_question_id'])) {
-			$this->db->set('security_question_id', $update['security_question_id']);
+		if (!empty($save['security_question_id'])) {
+			$this->db->set('security_question_id', $save['security_question_id']);
 		}
 
-		if (!empty($update['security_answer'])) {
-			$this->db->set('security_answer', $update['security_answer']);
+		if (!empty($save['security_answer'])) {
+			$this->db->set('security_answer', $save['security_answer']);
 		}
 
-        if (isset($update['newsletter']) AND $update['newsletter'] === '1') {
-			$this->db->set('newsletter', $update['newsletter']);
+        if (isset($save['newsletter']) AND $save['newsletter'] === '1') {
+			$this->db->set('newsletter', $save['newsletter']);
 		} else {
 			$this->db->set('newsletter', '0');
 		}
 
-		if (!empty($update['customer_group_id'])) {
-			$this->db->set('customer_group_id', $update['customer_group_id']);
+		if (!empty($save['customer_group_id'])) {
+			$this->db->set('customer_group_id', $save['customer_group_id']);
 		}
 
-		if (!empty($update['date_added'])) {
-			$this->db->set('date_added', $update['date_added']);
+		if (!empty($save['date_added'])) {
+            $add['date_added'] 				= mdate('%Y-%m-%d', time());
+            $this->db->set('date_added', $save['date_added']);
 		}
 
-		if (isset($update['status']) AND $update['status'] === '1') {
-			$this->db->set('status', $update['status']);
+		if (isset($save['status']) AND $save['status'] === '1') {
+			$this->db->set('status', $save['status']);
 		} else {
 			$this->db->set('status', '0');
 		}
 
-		if (!empty($update['customer_id'])) {
-			$this->db->where('customer_id', $update['customer_id']);
+		if (is_numeric($customer_id)) {
+            $notification_action = 'updated';
+            $this->db->where('customer_id', $customer_id);
+            $query = $this->db->update('customers');
+        } else {
+            $notification_action = 'added';
+            $this->db->set('date_added', mdate('%Y-%m-%d', time()));
+            $query = $this->db->insert('customers');
+            $customer_id = $this->db->insert_id();
+        }
 
-			if ($query = $this->db->update('customers')) {
-				$this->load->model('Notifications_model');
-				$this->Notifications_model->addNotification(array('action' => 'updated', 'object' => 'customer', 'object_id' => $update['customer_id']));
+        if ($query === TRUE AND is_numeric($customer_id)) {
+            $this->load->model('Notifications_model');
+            $this->Notifications_model->addNotification(array('action' => $notification_action, 'object' => 'customer', 'object_id' => $customer_id));
 
-				if (!empty($update['address'])) {
-					$this->load->model('Addresses_model');
+            if (!empty($save['address'])) {
+                $this->load->model('Addresses_model');
 
-					foreach ($update['address'] as $address) {
-						if (!empty($address['address_id'])) {
-							$this->Addresses_model->updateAddress($update['customer_id'], $address['address_id'], $address);
-						} else {
-							$this->Addresses_model->updateAddress($update['customer_id'], '', $address);
-						}
-					}
-				}
-			}
-		}
-
-		return $query;
-	}
-
-	public function addCustomer($add = array()) {
-		$query = FALSE;
-
-		if (!empty($add['first_name'])) {
-			$this->db->set('first_name', $add['first_name']);
-		}
-
-		if (!empty($add['last_name'])) {
-			$this->db->set('last_name', $add['last_name']);
-		}
-
-		if (!empty($add['email'])) {
-			$this->db->set('email', strtolower($add['email']));
-		}
-
- 		if (!empty($add['password'])) {
-			$this->db->set('salt', $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9));
-			$this->db->set('password', sha1($salt . sha1($salt . sha1($add['password']))));
-		}
-
-		if (!empty($add['telephone'])) {
-			$this->db->set('telephone', $add['telephone']);
-		}
-
-		if (!empty($add['security_question_id'])) {
-			$this->db->set('security_question_id', $add['security_question_id']);
-		}
-
-		if (!empty($add['security_answer'])) {
-			$this->db->set('security_answer', $add['security_answer']);
-		}
-
-        if (isset($add['newsletter']) AND $add['newsletter'] === '1') {
-			$this->db->set('newsletter', $add['newsletter']);
-		} else {
-			$this->db->set('newsletter', '0');
-		}
-
-		if (!empty($add['customer_group_id'])) {
-			$this->db->set('customer_group_id', $add['customer_group_id']);
-		}
-
-		if (!empty($add['date_added'])) {
-			$this->db->set('date_added', $add['date_added']);
-		}
-
-		if (isset($add['status']) AND $add['status'] === '1') {
-			$this->db->set('status', $add['status']);
-		} else {
-			$this->db->set('status', '0');
-		}
-
-		if (!empty($add)) {
-			if ($query = $this->db->insert('customers')) {
-				$customer_id = $this->db->insert_id();
-
-				$this->load->model('Notifications_model');
-				$this->Notifications_model->addNotification(array('action' => 'added', 'object' => 'customer', 'object_id' => $customer_id));
-
-				if (!empty($add['address']) AND $customer_id) {
-					$this->load->model('Addresses_model');
-
-					foreach ($add['address'] as $address) {
-						$this->Addresses_model->addAddress($customer_id, $address);
-					}
-				}
-
-                if ($this->config->item('registration_email') === '1') {
-                    $this->sendMail($add);
+                foreach ($save['address'] as $address) {
+                    if (!empty($address['address_id'])) {
+                        $this->Addresses_model->saveAddress($customer_id, $address['address_id'], $address);
+                    } else {
+                        $this->Addresses_model->saveAddress($customer_id, '', $address);
+                    }
                 }
-			}
-		}
+            }
 
-		return $query;
+            if ($notification_action === 'added' AND $this->config->item('registration_email') === '1') {
+                $this->sendMail($save);
+            }
+
+            return $customer_id;
+        }
 	}
 
 	public function deleteCustomer($customer_id) {

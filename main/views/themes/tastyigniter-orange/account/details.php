@@ -48,7 +48,7 @@
 								<?php echo form_error('telephone', '<span class="text-danger">', '</span>'); ?>
 							</div>
 							<div class="form-group">
-								<select name="security_question" id="security-question" class="form-control" placeholder="<?php echo $entry_s_question; ?>">
+								<select name="security_question_id" id="security-question" class="form-control" placeholder="<?php echo $entry_s_question; ?>">
 									<?php foreach ($questions as $question) { ?>
 										<?php if ($question['question_id'] === $security_question) { ?>
 											<option value="<?php echo $question['question_id']; ?>" selected="selected"><?php echo $question['text']; ?></option>
@@ -57,7 +57,7 @@
 										<?php } ?>
 									<?php } ?>
 								</select>
-								<?php echo form_error('security_question', '<span class="text-danger">', '</span>'); ?>
+								<?php echo form_error('security_question_id', '<span class="text-danger">', '</span>'); ?>
 							</div>
 							<div class="form-group">
 								<input type="text" id="security-answer" class="form-control" name="security_answer" value="<?php echo set_value('security_answer', $security_answer); ?>" placeholder="<?php echo $entry_s_answer; ?>">

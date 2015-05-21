@@ -5,15 +5,11 @@ class Setting {
 	public function __construct() {
 		$this->CI =& get_instance();
 
-		if (is_dir(ROOTPATH.'setup') AND file_exists(APPPATH) AND $this->CI->config->item('ti_version') === 'v1.3-beta') {
-//			$this->CI->alert->danger_now('PLEASE REMEMBER TO COMPLETELY REMOVE THE SETUP FOLDER. <br />You will not be able to proceed beyond this point until the setup folder has been removed. <br />This is a security feature of TastyIgniter!', 'danger');
-		}
-
-		if (defined('ENVIRONMENT') AND ENVIRONMENT !== 'production' AND ! $this->CI->input->is_ajax_request()) {
+		if (ENVIRONMENT !== 'production' AND ! $this->CI->input->is_ajax_request()) {
 			$this->CI->output->enable_profiler(TRUE);
 		}
 
-        if ($this->CI->config->item('ti_version') !== 'v1.3-beta' AND APPDIR !== 'setup') {
+        if (APPDIR !== 'setup' AND !$this->CI->config->item('ti_version')) {
             redirect(root_url('setup/'));
         }
 

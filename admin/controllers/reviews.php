@@ -2,9 +2,10 @@
 
 class Reviews extends Admin_Controller {
 
-	public function __construct() {
+    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
+
+    public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 		$this->load->library('pagination');
 		$this->load->model('Reviews_model'); // load the reviews model
 	}
@@ -187,15 +188,7 @@ class Reviews extends Admin_Controller {
 			);
 		}
 
-		if ($this->input->post() AND $this->_addReview() === TRUE) {
-			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {
-				redirect('reviews/edit?id='. $this->input->post('insert_id'));
-			} else {
-				redirect('reviews');
-			}
-		}
-
-		if ($this->input->post() AND $this->_updateReview() === TRUE) {
+		if ($this->input->post() AND $review_id = $this->_saveReview()) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('reviews');
 			}
@@ -207,54 +200,21 @@ class Reviews extends Admin_Controller {
 		$this->template->render('reviews_edit', $data);
 	}
 
-	public function _addReview() {
-    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$add = array();
+	private function _saveReview() {
+    	if ($this->validateForm() === TRUE) {
+            $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-			$add['sale_type'] 			= $this->input->post('sale_type');
-			$add['sale_id'] 			= $this->input->post('sale_id');
-			$add['location_id'] 		= $this->input->post('location_id');
-			$add['customer_id'] 		= $this->input->post('customer_id');
-			$add['author'] 				= $this->input->post('author');
-			$add['rating'] 				= $this->input->post('rating');
-			$add['review_text'] 		= $this->input->post('review_text');
-			$add['review_status'] 		= $this->input->post('review_status');
-
-			if ($_POST['insert_id'] = $this->Reviews_model->addReview($add)) {
-				$this->alert->set('success', 'Review added successfully.');
+			if ($review_id = $this->Reviews_model->saveReview($this->input->get('id'), $this->input->post())) {
+				$this->alert->set('success', 'Review ' . $save_type . ' successfully.');
 			} else {
-				$this->alert->set('warning', 'Nothing Added!');
+                $this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
 			}
 
-			return TRUE;
+			return $review_id;
 		}
 	}
 
-	public function _updateReview() {
-    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$update = array();
-
-			$update['review_id'] 		= $this->input->get('id');
-			$update['sale_type'] 		= $this->input->post('sale_type');
-			$update['sale_id'] 			= $this->input->post('sale_id');
-			$update['location_id'] 		= $this->input->post('location_id');
-			$update['customer_id'] 		= $this->input->post('customer_id');
-			$update['author'] 			= $this->input->post('author');
-			$update['rating'] 			= $this->input->post('rating');
-			$update['review_text'] 		= $this->input->post('review_text');
-			$update['review_status'] 	= $this->input->post('review_status');
-
-			if ($this->Reviews_model->updateReview($update)) {
-				$this->alert->set('success', 'Review updated successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
-			}
-
-			return TRUE;
-		}
-	}
-
-	public function _deleteReview() {
+	private function _deleteReview() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Reviews_model->deleteReview($value);
@@ -266,11 +226,11 @@ class Reviews extends Admin_Controller {
 		return TRUE;
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('sale_type', 'Sale Type', 'xss_clean|trim|required|alpha');
-		$this->form_validation->set_rules('sale_id', 'Sale ID', 'xss_clean|trim|required|integer|callback_check_sale_id');
-		$this->form_validation->set_rules('location_id', 'Location', 'xss_clean|trim|required|integer|callback_check_location');
-		$this->form_validation->set_rules('customer_id', 'Customer', 'xss_clean|trim|required|integer|callback_check_customer');
+		$this->form_validation->set_rules('sale_id', 'Sale ID', 'xss_clean|trim|required|integer|callback__check_sale_id');
+		$this->form_validation->set_rules('location_id', 'Location', 'xss_clean|trim|required|integer|callback__check_location');
+		$this->form_validation->set_rules('customer_id', 'Customer', 'xss_clean|trim|required|integer|callback__check_customer');
 		$this->form_validation->set_rules('author', 'Author', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('rating[quality]', 'Quality Rating', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('rating[delivery]', 'Delivery Rating', 'xss_clean|trim|required|integer');
@@ -285,11 +245,11 @@ class Reviews extends Admin_Controller {
 		}
 	}
 
-	public function check_sale_id($sale_id) {
+	public function _check_sale_id($sale_id) {
 		if ($this->input->post('sale_type') === 'order') {
 			$this->load->model('Orders_model');
 			if ( ! $this->Orders_model->validateOrder($sale_id)) {
-	        	$this->form_validation->set_message('check_sale_id', 'The %s entered can not be found in orders');
+	        	$this->form_validation->set_message('_check_sale_id', 'The %s entered can not be found in orders');
 				return FALSE;
 			} else {
 				return TRUE;
@@ -297,7 +257,7 @@ class Reviews extends Admin_Controller {
 		} else if ($this->input->post('sale_type') === 'reservation') {
 			$this->load->model('Reservations_model');
 			if ( ! $this->Reservations_model->validateReservation($sale_id)) {
-	        	$this->form_validation->set_message('check_sale_id', 'The %s entered can not be found in reservations');
+	        	$this->form_validation->set_message('_check_sale_id', 'The %s entered can not be found in reservations');
 				return FALSE;
 			} else {
 				return TRUE;
@@ -305,20 +265,20 @@ class Reviews extends Admin_Controller {
 		}
 	}
 
-	public function check_location($location_id) {
+	public function _check_location($location_id) {
 		$this->load->model('Locations_model');
 		if ( ! $this->Locations_model->validateLocation($location_id)) {
-        	$this->form_validation->set_message('check_location', 'The %s entered can not be found');
+        	$this->form_validation->set_message('_check_location', 'The %s entered can not be found');
 			return FALSE;
 		} else {
 			return TRUE;
 		}
 	}
 
-	public function check_customer($customer_id) {
+	public function _check_customer($customer_id) {
 		$this->load->model('Customers_model');
 		if ( ! $this->Customers_model->validateCustomer($customer_id)) {
-        	$this->form_validation->set_message('check_customer', 'The %s entered can not be found');
+        	$this->form_validation->set_message('_check_customer', 'The %s entered can not be found');
 			return FALSE;
 		} else {
 			return TRUE;

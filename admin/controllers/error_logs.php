@@ -2,9 +2,10 @@
 
 class Error_logs extends Admin_Controller {
 
+    public $_permission_rules = array('access', 'modify');
+
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 	}
 
 	public function index() {
@@ -34,7 +35,7 @@ class Error_logs extends Admin_Controller {
 		$this->template->render('error_logs', $data);
 	}
 
-	public function _clearLog() {
+	private function _clearLog() {
         $log_path = IGNITEPATH .'/logs/';
 
         if (is_readable($log_path .'logs.php')) {

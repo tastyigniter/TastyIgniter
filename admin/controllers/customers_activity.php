@@ -2,9 +2,10 @@
 
 class Customers_activity extends Admin_Controller {
 
+    public $_permission_rules = array('access[index|blacklist]', 'modify[index|blacklist]');
+
 	public function __construct() {
 		parent::__construct();
-		$this->load->library('user');
 		$this->load->library('pagination');
 		$this->load->model('Activity_model');
 	}

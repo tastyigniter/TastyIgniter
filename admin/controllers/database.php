@@ -2,9 +2,10 @@
 
 class Database extends Admin_Controller {
 
+    public $_permission_rules = array('access[index|backup]', 'modify[index]');
+
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 		$this->load->model('Settings_model');
 	}
 
@@ -49,7 +50,8 @@ class Database extends Admin_Controller {
 
 	public function backup() {
         if (!$this->user->hasPermissions('modify', 'database')) {
-            $this->alert->set('warning', 'Warning: You do not have permission to rename file!');
+            $this->alert->set('warning', 'Warning: You do not have permission to backup or restore database!');
+            redirect('database');
         } else {
             if ($this->input->get('download')) {
                 $download = pathinfo($this->input->get('download'));
@@ -77,7 +79,7 @@ class Database extends Admin_Controller {
         }
 	}
 
-	public function _backup() {
+	private function _backup() {
     	if ($this->input->post('backup')) {
             $this->form_validation->set_rules('backup[]', 'Backup', 'xss_clean|trim|required|alpha_dash');
 
@@ -92,7 +94,7 @@ class Database extends Admin_Controller {
 		}
 	}
 
-	public function _restore() {
+	private function _restore() {
     	if (isset($_FILES['restore']) AND !empty($_FILES['restore']['name'])) {
 			if (is_uploaded_file($_FILES['restore']['tmp_name'])) {
 				$content = file_get_contents($_FILES['restore']['tmp_name']);
@@ -113,7 +115,7 @@ class Database extends Admin_Controller {
 		}
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('backup[]', 'Backup', 'xss_clean|trim|required|alpha_dash');
 
 		if ($this->form_validation->run() === TRUE) {

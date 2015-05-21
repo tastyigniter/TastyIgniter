@@ -71,10 +71,9 @@ class Details extends Main_Controller {
 		$this->template->render('account/details', $data);
 	}
 
-	public function _updateDetails() {															// method to validate update details form fields
+	private function _updateDetails() {															// method to validate update details form fields
 		if ($this->validateForm() === TRUE) {
 			$update = array();
-			$update['customer_id'] = $this->customer->getId();										// retrieve customer id from customer library
 
 			// START: retrieve $_POST data if $_POST data is not same as existing customer library data
 			$update['first_name'] 				= $this->input->post('first_name');
@@ -88,7 +87,7 @@ class Details extends Main_Controller {
 			// END: retrieve $_POST data if $_POST data is not same as existing customer library data
 
 			if (!empty($update)) {																// if update array is not empty then update customer details and display success message
-				if ($this->Customers_model->updateCustomer($update)) {
+				if ($this->Customers_model->updateCustomer($this->customer->getId(), $update)) {
 					$this->alert->set('alert', $this->lang->line('alert_updated'));
 				}
 
@@ -97,16 +96,16 @@ class Details extends Main_Controller {
 		}
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		// START of form validation rules
 		$this->form_validation->set_rules('first_name', 'First Name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
 		$this->form_validation->set_rules('last_name', 'First Name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
 		$this->form_validation->set_rules('telephone', 'Telephone', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('security_question', 'Security Question', 'required');
+		$this->form_validation->set_rules('security_question_id', 'Security Question', 'required');
 		$this->form_validation->set_rules('security_answer', 'Security Answer', 'required');
 
 		if ($this->input->post('old_password')) {
-			$this->form_validation->set_rules('old_password', 'Old Password', 'xss_clean|trim|required|min_length[6]|max_length[32]|callback_check_old_password');
+			$this->form_validation->set_rules('old_password', 'Old Password', 'xss_clean|trim|required|min_length[6]|max_length[32]|callback__check_old_password');
 			$this->form_validation->set_rules('new_password', 'New Password', 'xss_clean|trim|required|min_length[6]|max_length[32]|matches[confirm_new_password]');
 			$this->form_validation->set_rules('confirm_new_password', 'Confirm New Password', 'xss_clean|trim|required');
 		}
@@ -119,19 +118,10 @@ class Details extends Main_Controller {
 		}
 	}
 
- 	public function validate_email($email) {													// validation callback function to check if email already exist in database
-		if ($this->Customers_model->getCustomerByEmail($email)) {
-        	$this->form_validation->set_message('validate_email', $this->lang->line('error_email'));
-      		return FALSE;
-    	} else {
-        	return TRUE;
-      	}
-	}
-
- 	public function check_old_password($pwd) {													// validation callback function to check if old password is valid
+ 	public function _check_old_password($pwd) {													// validation callback function to check if old password is valid
 
 		if (!$this->customer->checkPassword($pwd)) {
-        	$this->form_validation->set_message('check_old_password', $this->lang->line('error_password'));
+        	$this->form_validation->set_message('_check_old_password', $this->lang->line('error_password'));
       		return FALSE;
     	} else {
         	return TRUE;

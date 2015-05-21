@@ -2,11 +2,11 @@
 
 class Banners extends Admin_Controller {
 
+    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
+
 	public function __construct() {
 		parent::__construct();
-		$this->load->library('user');
-		$this->load->model('Design_model');
-		$this->load->model('Settings_model');
+        $this->load->model('Banners_model');
 		$this->load->model('Image_tool_model');
 	}
 
@@ -20,7 +20,7 @@ class Banners extends Admin_Controller {
 		$data['text_empty'] 		= 'There are no banners available.';
 
 		$data['banners'] = array();
-		$results = $this->Design_model->getBanners();
+		$results = $this->Banners_model->getBanners();
 		foreach ($results as $result) {
 			$data['banners'][] = array(
 				'banner_id'		=> $result['banner_id'],
@@ -40,7 +40,7 @@ class Banners extends Admin_Controller {
 	}
 
 	public function edit() {
-		$banner_info = $this->Design_model->getBanner((int) $this->input->get('id'));
+		$banner_info = $this->Banners_model->getBanner((int) $this->input->get('id'));
 
 		if ($banner_info) {
 			$banner_id = $banner_info['banner_id'];
@@ -114,15 +114,7 @@ class Banners extends Admin_Controller {
 			);
 		}
 
-		if ($this->input->post() AND $this->_addBanner() === TRUE) {
-			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {
-				redirect('banners/edit?id='. $this->input->post('insert_id'));
-			} else {
-				redirect('banners');
-			}
-		}
-
-		if ($this->input->post() AND $this->_updateBanner() === TRUE) {
+		if ($this->input->post() AND $banner_id = $this->_saveBanner()) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('banners');
 			}
@@ -134,47 +126,8 @@ class Banners extends Admin_Controller {
 		$this->template->render('banners_edit', $data);
 	}
 
-	public function _addBanner() {
-    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$add = array();
-
-			$add['name'] 			= $this->input->post('name');
-			$add['type'] 			= $this->input->post('type');
-			$add['click_url'] 		= $this->input->post('click_url');
-			$add['language_id'] 	= $this->input->post('language_id');
-			$add['alt_text'] 		= $this->input->post('alt_text');
-			$add['custom_code'] 	= $this->input->post('custom_code');
-			$add['status'] 			= $this->input->post('status');
-
-			if ($this->input->post('type') !== 'custom') {
-				$add['image_code'] = array();
-
-				if ($this->input->post('image_path') AND $this->input->post('type') === 'image') {
-					$add['image_code']['path'] = $this->input->post('image_path');
-				}
-
-				if ($this->input->post('carousels') AND $this->input->post('type') === 'carousel') {
-					foreach ($this->input->post('carousels') as $key => $value) {
-						$add['image_code']['paths'][] = $value;
-					}
-				}
-			}
-
-			if ($_POST['insert_id'] = $this->Design_model->addBanner($add)) {
-				$this->alert->set('success', 'Banner added successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing added.');
-			}
-
-			return TRUE;
-		}
-	}
-
-	public function _updateBanner() {
-    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$update = array();
-
-			$update['banner_id'] 	= $this->input->get('id');
+    private function _saveBanner() {
+    	if ($this->validateForm() === TRUE) {
 			$update['name'] 		= $this->input->post('name');
 			$update['type'] 		= $this->input->post('type');
 			$update['click_url'] 	= $this->input->post('click_url');
@@ -197,20 +150,22 @@ class Banners extends Admin_Controller {
                 }
             }
 
-            if ($this->Design_model->updateBanner($update)) {
-				$this->alert->set('success', 'Banner updated successfully.');
+            $save_type = (! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
+
+            if ($banner_id = $this->Banners_model->saveBanner($this->input->get('id'), $update)) {
+				$this->alert->set('success', 'Banner ' . $save_type . ' successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occurred, nothing added.');
+				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
 			}
 
-			return TRUE;
+			return $banner_id;
 		}
 	}
 
-	public function _deleteBanner() {
+    private function _deleteBanner() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
-				$this->Design_model->deleteBanner($value);
+				$this->Banners_model->deleteBanner($value);
 			}
 
 			$this->alert->set('success', 'Banner deleted successfully!');
@@ -219,7 +174,7 @@ class Banners extends Admin_Controller {
 		return TRUE;
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[255]');
 		$this->form_validation->set_rules('type', 'Type', 'xss_clean|trim|required|alpha|max_length[8]');
 		$this->form_validation->set_rules('click_url', 'Click URL', 'xss_clean|trim|required|min_length[2]|max_length[255]');

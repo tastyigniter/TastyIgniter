@@ -179,48 +179,48 @@ class Reviews_model extends TI_Model {
         return FALSE;
     }
 
-    public function updateReview($update = array()) {
-		$query = FALSE;
+    public function saveReview($review_id, $save = array()) {
+        if (empty($save)) return FALSE;
 
-		if (!empty($update['sale_type'])) {
-			$this->db->set('sale_type', $update['sale_type']);
+		if (!empty($save['sale_type'])) {
+			$this->db->set('sale_type', $save['sale_type']);
 		}
 
-		if (!empty($update['sale_id'])) {
-			$this->db->set('sale_id', $update['sale_id']);
+		if (!empty($save['sale_id'])) {
+			$this->db->set('sale_id', $save['sale_id']);
 		}
 
-		if (!empty($update['location_id'])) {
-			$this->db->set('location_id', $update['location_id']);
+		if (!empty($save['location_id'])) {
+			$this->db->set('location_id', $save['location_id']);
 		}
 
-		if (!empty($update['customer_id'])) {
-			$this->db->set('customer_id', $update['customer_id']);
+		if (!empty($save['customer_id'])) {
+			$this->db->set('customer_id', $save['customer_id']);
 		}
 
-		if (!empty($update['author'])) {
-			$this->db->set('author', $update['author']);
+		if (!empty($save['author'])) {
+			$this->db->set('author', $save['author']);
 		}
 
-		if (!empty($update['rating'])) {
-			if (isset($update['rating']['quality'])) {
-				$this->db->set('quality', $update['rating']['quality']);
+		if (!empty($save['rating'])) {
+			if (isset($save['rating']['quality'])) {
+				$this->db->set('quality', $save['rating']['quality']);
 			}
 
-			if (isset($update['rating']['delivery'])) {
-				$this->db->set('delivery', $update['rating']['delivery']);
+			if (isset($save['rating']['delivery'])) {
+				$this->db->set('delivery', $save['rating']['delivery']);
 			}
 
-			if (isset($update['rating']['service'])) {
-				$this->db->set('service', $update['rating']['service']);
+			if (isset($save['rating']['service'])) {
+				$this->db->set('service', $save['rating']['service']);
 			}
 		}
 
-		if (!empty($update['review_text'])) {
-			$this->db->set('review_text', $update['review_text']);
+		if (!empty($save['review_text'])) {
+			$this->db->set('review_text', $save['review_text']);
 		}
 
-		if (APPDIR === ADMINDIR AND $update['review_status'] === '1') {
+		if (APPDIR === ADMINDIR AND $save['review_status'] === '1') {
 			$this->db->set('review_status', '1');
         } else if ($this->config->item('approve_reviews') !== '1') {
             $this->db->set('review_status', '1');
@@ -228,80 +228,25 @@ class Reviews_model extends TI_Model {
 			$this->db->set('review_status', '0');
 		}
 
-		if (!empty($update['review_id'])) {
-			$this->db->where('review_id', $update['review_id']);
+		if (is_numeric($review_id)) {
+            $notification_action = 'updated';
+            $this->db->where('review_id', $review_id);
 			$query = $this->db->update('reviews');
+        } else {
+            $notification_action = 'added';
+            $this->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', time()));
+            $query = $this->db->insert('reviews');
+            $review_id = $this->db->insert_id();
 
-			if ($update['review_status'] === '1') {
-				$this->load->model('Notifications_model');
-				$this->Notifications_model->addNotification(array('action' => 'approved', 'object' => 'review', 'object_id' => $update['review_id'], 'subject_id' => $update['customer_id']));
-			} else {
-				$this->load->model('Notifications_model');
-				$this->Notifications_model->addNotification(array('action' => 'updated', 'object' => 'review', 'object_id' => $update['review_id']));
-			}
-		}
+        }
 
-		return $query;
-	}
+        if ($query === TRUE AND is_numeric($review_id)) {
+            $this->load->model('Notifications_model');
+            $customer_id = !empty($save['customer_id']) ? $save['customer_id'] : '0';
+            $this->Notifications_model->addNotification(array('action' => $notification_action, 'object' => 'review', 'object_id' => $review_id, 'subject_id' => $customer_id));
 
-	public function addReview($add = array()) {
-		$query = FALSE;
-
-		if (!empty($add['location_id'])) {
-			$this->db->set('location_id', $add['location_id']);
-		}
-
-		if (!empty($add['sale_type'])) {
-			$this->db->set('sale_type', $add['sale_type']);
-		}
-
-		if (!empty($add['sale_id'])) {
-			$this->db->set('sale_id', $add['sale_id']);
-		}
-
-		if (!empty($add['customer_id'])) {
-			$this->db->set('customer_id', $add['customer_id']);
-		}
-
-		if (!empty($add['author'])) {
-			$this->db->set('author', $add['author']);
-		}
-
-		if (!empty($add['rating'])) {
-			if (isset($add['rating']['quality'])) {
-				$this->db->set('quality', $add['rating']['quality']);
-			}
-
-			if (isset($add['rating']['delivery'])) {
-				$this->db->set('delivery', $add['rating']['delivery']);
-			}
-
-			if (isset($add['rating']['service'])) {
-				$this->db->set('service', $add['rating']['service']);
-			}
-		}
-
-		if (!empty($add['review_text'])) {
-			$this->db->set('review_text', $add['review_text']);
-		}
-
-		if ($add['review_status'] === '1') {
-			$this->db->set('review_status', '1');
-		} else {
-			$this->db->set('review_status', '0');
-		}
-
-		if (!empty($add)) {
-			$this->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', time()));
-			if ($this->db->insert('reviews')) {
-				$query = $this->db->insert_id();
-
-				$this->load->model('Notifications_model');
-				$this->Notifications_model->addNotification(array('action' => 'added', 'object' => 'review', 'object_id' => $query));
-			}
-		}
-
-		return $query;
+            return $review_id;
+        }
 	}
 
 	public function deleteReview($review_id) {

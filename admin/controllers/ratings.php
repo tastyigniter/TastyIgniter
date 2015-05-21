@@ -2,10 +2,7 @@
 
 class Ratings extends Admin_Controller {
 
-	public function __construct() {
-		parent::__construct();
-		$this->load->library('user');
-	}
+    public $_permission_rules = array('access', 'modify');
 
 	public function index() {
 		$this->template->setTitle('Ratings');
@@ -38,7 +35,7 @@ class Ratings extends Admin_Controller {
 		$this->template->render('ratings', $data);
 	}
 
-	public function _updateRating() {
+	private function _updateRating() {
     	if ($this->input->post('ratings') AND $this->validateForm() === TRUE) {
 			$this->load->model('Settings_model');
 			$update = array();
@@ -54,7 +51,7 @@ class Ratings extends Admin_Controller {
 		}
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		if ($this->input->post('ratings')) {
 			foreach ($this->input->post('ratings') as $key => $value) {
 				$this->form_validation->set_rules('ratings['.$key.']', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');

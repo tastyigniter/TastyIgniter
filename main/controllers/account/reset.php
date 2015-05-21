@@ -80,7 +80,7 @@ class Reset extends Main_Controller {
 		$this->template->render('reset', $data);
 	}
 
-	public function _resetPassword() {															// method to validate password reset
+	private function _resetPassword() {															// method to validate password reset
 		if ($this->input->post()) {
 
 			if ($this->validateForm() === TRUE) {
@@ -111,7 +111,7 @@ class Reset extends Main_Controller {
 		}
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('email', 'Email Address', 'xss_clean|trim|required|valid_email');	//validate form
 		$this->form_validation->set_rules('security_question', 'Security Question', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('security_answer', 'Security Answer', 'xss_clean|trim|required|min_length[2]');

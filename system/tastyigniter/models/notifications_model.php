@@ -4,9 +4,6 @@ class Notifications_model extends TI_Model {
 
 	/**
 	 * The permitted objects for alteration.
-	 *
-	 * @var array
-	 * @access private
 	 */
 	private $_valid_objects = array('coupon', 'customer', 'extension', 'location', 'menu',
 		'order', 'reservation', 'review', 'staff', 'table');

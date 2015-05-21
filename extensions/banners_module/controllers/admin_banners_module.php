@@ -4,7 +4,8 @@ class Admin_banners_module extends Ext_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('Design_model');
+        $this->load->model('Layouts_model');
+        $this->load->model('Banners_model');
     }
 
 	public function index($data = array()) {
@@ -40,7 +41,7 @@ class Admin_banners_module extends Ext_Controller {
             }
 
             $data['banners'] = array();
-            $results = $this->Design_model->getBanners();
+            $results = $this->Banners_model->getBanners();
             foreach ($results as $result) {
                 $data['banners'][] = array(
                     'banner_id'       => $result['banner_id'],
@@ -60,7 +61,7 @@ class Admin_banners_module extends Ext_Controller {
         }
 	}
 
-	public function _updateModule() {
+	private function _updateModule() {
     	if ($this->validateForm() === TRUE) {
 			$update = array();
 
@@ -80,7 +81,7 @@ class Admin_banners_module extends Ext_Controller {
 		}
 	}
 
- 	public function validateForm() {
+ 	private function validateForm() {
         $this->form_validation->set_rules('title', 'Title', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 
 		if ($this->form_validation->run() === TRUE) {

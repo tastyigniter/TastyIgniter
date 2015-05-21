@@ -15,10 +15,7 @@ class Extension {
         $this->CI->load->model('Extensions_model');
     }
 
-    public function setModule($extension = array()) {
-        var_dump($extension);
-
-    }
+    public function setModule($extension = array()) {}
 
     function options($name) {
 

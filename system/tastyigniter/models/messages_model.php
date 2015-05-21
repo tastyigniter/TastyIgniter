@@ -222,7 +222,7 @@ class Messages_model extends TI_Model {
         return $query;
     }
 
-	public function addMessage($add = array(), $recipients = array()) {
+	public function sendMessage($add = array(), $recipients = array()) {
 		$query = FALSE;
 
 		if (!empty($add['staff_id_from'])) {
@@ -264,7 +264,10 @@ class Messages_model extends TI_Model {
 
 	public function addRecipients($message_id, $recipients = array(), $send_type = 'account') {
 		if (is_numeric($message_id) AND !empty($recipients) AND is_array($recipients)) {
-			if (isset($recipients['customer_ids']) AND $send_type === 'account') {
+            $this->db->where('message_id', $message_id);
+            $this->db->delete('message_recipients');
+
+            if (isset($recipients['customer_ids']) AND $send_type === 'account') {
 				foreach ($recipients['customer_ids'] as $customer_id) {
 					$this->db->set('customer_id', $customer_id);
 					$this->db->set('message_id', $message_id);
@@ -307,7 +310,10 @@ class Messages_model extends TI_Model {
 			$this->db->where('message_id', $message_id);
 			$this->db->delete('messages');
 
-			if ($this->db->affected_rows() > 0) {
+            $this->db->where('message_id', $message_id);
+            $this->db->delete('message_recipients');
+
+            if ($this->db->affected_rows() > 0) {
 				return TRUE;
 			}
 		}
