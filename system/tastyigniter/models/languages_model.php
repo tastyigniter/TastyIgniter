@@ -79,71 +79,40 @@ class Languages_model extends TI_Model {
 		}
 	}
 
-	public function updateLanguage($update = array()) {
-		$query = FALSE;
+	public function saveLanguage($language_id, $save = array()) {
+        if (empty($save)) return FALSE;
 
-		if (!empty($update['name'])) {
-			$this->db->set('name', $update['name']);
+		if (!empty($save['name'])) {
+			$this->db->set('name', $save['name']);
 		}
 
-		if (!empty($update['code'])) {
-			$this->db->set('code', $update['code']);
+		if (!empty($save['code'])) {
+			$this->db->set('code', $save['code']);
 		}
 
-		if (!empty($update['image'])) {
-			$this->db->set('image', $update['image']);
+		if (!empty($save['image'])) {
+			$this->db->set('image', $save['image']);
 		}
 
-		if (!empty($update['directory'])) {
-			$this->db->set('directory', $update['directory']);
+		if (!empty($save['directory'])) {
+			$this->db->set('directory', $save['directory']);
 		}
 
-		if ($update['status'] === '1') {
+		if ($save['status'] === '1') {
 			$this->db->set('status', '1');
 		} else {
 			$this->db->set('status', '0');
 		}
 
-		if (!empty($update['language_id'])) {
-			$this->db->where('language_id', $update['language_id']);
-			$query = $this->db->update('languages');
-		}
+		if (is_numeric($language_id)) {
+            $this->db->where('language_id', $language_id);
+            $query = $this->db->update('languages');
+        } else {
+            $query = $this->db->insert('languages');
+            $language_id = $this->db->insert_id();
+        }
 
-		return $query;
-	}
-
-	public function addLanguage($add = array()) {
-		$query = FALSE;
-
-		if (!empty($add['name'])) {
-			$this->db->set('name', $add['name']);
-		}
-
-		if (!empty($add['code'])) {
-			$this->db->set('code', $add['code']);
-		}
-
-		if (!empty($add['image'])) {
-			$this->db->set('image', $add['image']);
-		}
-
-		if (!empty($add['directory'])) {
-			$this->db->set('directory', $add['directory']);
-		}
-
-		if ($add['status'] === '1') {
-			$this->db->set('status', '1');
-		} else {
-			$this->db->set('status', '0');
-		}
-
-		if (!empty($add)) {
-			if ($this->db->insert('languages')) {
-				$query = $this->db->insert_id();
-			}
-		}
-
-		return $query;
+        return ($query === TRUE AND is_numeric($language_id)) ? $language_id : FALSE;
 	}
 
 	public function deleteLanguage($language_id) {

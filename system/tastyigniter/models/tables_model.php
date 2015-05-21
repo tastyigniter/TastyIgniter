@@ -110,69 +110,43 @@ class Tables_model extends TI_Model {
 		}
 	}
 
-	public function updateTable($update = array()) {
-		$query = FALSE;
+	public function saveTable($table_id, $save = array()) {
+        if (empty($save)) return FALSE;
 
-		if (!empty($update['table_name'])) {
-			$this->db->set('table_name', $update['table_name']);
+		if (!empty($save['table_name'])) {
+			$this->db->set('table_name', $save['table_name']);
 		}
 
-		if (!empty($update['min_capacity'])) {
-			$this->db->set('min_capacity', $update['min_capacity']);
+		if (!empty($save['min_capacity'])) {
+			$this->db->set('min_capacity', $save['min_capacity']);
 		}
 
-		if (!empty($update['max_capacity'])) {
-			$this->db->set('max_capacity', $update['max_capacity']);
+		if (!empty($save['max_capacity'])) {
+			$this->db->set('max_capacity', $save['max_capacity']);
 		}
 
-		if ($update['table_status'] === '1') {
-			$this->db->set('table_status', $update['table_status']);
+		if ($save['table_status'] === '1') {
+			$this->db->set('table_status', $save['table_status']);
 		} else {
 			$this->db->set('table_status', '0');
 		}
 
-		if (!empty($update['table_id'])) {
-			$this->db->where('table_id', $update['table_id']);
-			$query = $this->db->update('tables');
+		if (is_numeric($table_id)) {
+            $notification_action = 'updated';
+            $this->db->where('table_id', $table_id);
+            $query = $this->db->update('tables');
+        } else {
+            $notification_action = 'added';
+            $query = $this->db->insert('tables');
+            $table_id = $this->db->insert_id();
+        }
 
-			$this->load->model('Notifications_model');
-			$this->Notifications_model->addNotification(array('action' => 'updated', 'object' => 'table', 'object_id' => $update['table_id']));
-		}
+        if ($query === TRUE AND is_numeric($table_id)) {
+            $this->load->model('Notifications_model');
+            $this->Notifications_model->addNotification(array('action' => $notification_action, 'object' => 'table', 'object_id' => $table_id));
 
-		return $query;
-	}
-
-	public function addTable($add = array()) {
-		$query = FALSE;
-
-		if (!empty($add['table_name'])) {
-			$this->db->set('table_name', $add['table_name']);
-		}
-
-		if (!empty($add['min_capacity'])) {
-			$this->db->set('min_capacity', $add['min_capacity']);
-		}
-
-		if (!empty($add['max_capacity'])) {
-			$this->db->set('max_capacity', $add['max_capacity']);
-		}
-
-		if ($add['table_status'] === '1') {
-			$this->db->set('table_status', $add['table_status']);
-		} else {
-			$this->db->set('table_status', '0');
-		}
-
-		if (!empty($add)) {
-			if ($this->db->insert('tables')) {
-				$query = $this->db->insert_id();
-
-				$this->load->model('Notifications_model');
-				$this->Notifications_model->addNotification(array('action' => 'added', 'object' => 'table', 'object_id' => $query));
-			}
-		}
-
-		return $query;
+            return $table_id;
+        }
 	}
 
 	public function deleteTable($table_id) {

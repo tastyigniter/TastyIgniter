@@ -67,7 +67,7 @@ class Categories_model extends TI_Model {
         }
     }
 
-    public function saveCategory($save = array()) {
+    public function saveCategory($category_id, $save = array()) {
         if (empty($save)) return FALSE;
 
         if (!empty($save['name'])) {
@@ -86,7 +86,7 @@ class Categories_model extends TI_Model {
             $this->db->set('image', $save['image']);
         }
 
-        if (is_numeric($this->input->get('id')) AND $category_id = $this->input->get('id')) {
+        if (is_numeric($category_id)) {
             $this->db->where('category_id', $category_id);
             $query = $this->db->update('categories');
         } else {
@@ -94,9 +94,9 @@ class Categories_model extends TI_Model {
             $category_id = $this->db->insert_id();
         }
 
-        if (!empty($query) AND !empty($category_id)) {
+        if ($query === TRUE AND is_numeric($category_id)) {
             if (!empty($save['permalink'])) {
-                $this->permalink->updatePermalink('menus', $save['permalink'], 'category_id=' . $category_id);
+                $this->permalink->savePermalink('menus', $save['permalink'], 'category_id=' . $category_id);
             }
 
             return $category_id;
@@ -108,8 +108,7 @@ class Categories_model extends TI_Model {
             $this->db->where('category_id', $category_id);
             $this->db->delete('categories');
 
-            $this->db->where('query', 'category_id='.$category_id);
-            $this->db->delete('permalinks');
+            $this->permalink->deletePermalink('menus', 'category_id=' . $category_id);
 
             if ($this->db->affected_rows() > 0) {
                 return TRUE;

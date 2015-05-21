@@ -28,7 +28,7 @@ class Banners_model extends TI_Model {
         }
     }
 
-    public function saveBanner($save = array()) {
+    public function saveBanner($banner_id, $save = array()) {
         if (empty($save)) return FALSE;
 
         if (!empty($save['name'])) {
@@ -65,7 +65,7 @@ class Banners_model extends TI_Model {
             $this->db->set('status', '0');
         }
 
-        if (is_numeric($this->input->get('id')) AND $banner_id = $this->input->get('id')) {
+        if (is_numeric($banner_id)) {
             $this->db->where('banner_id', $banner_id);
             $query = $this->db->update('banners');
         } else {
@@ -73,7 +73,7 @@ class Banners_model extends TI_Model {
             $banner_id = $this->db->insert_id();
         }
 
-        return (!empty($query) AND !empty($banner_id)) ? $banner_id : FALSE;
+        return ($query === TRUE AND is_numeric($banner_id)) ? $banner_id : FALSE;
     }
 
     public function deleteBanner($banner_id) {

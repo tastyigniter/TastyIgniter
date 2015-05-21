@@ -175,124 +175,74 @@ class Staffs_model extends TI_Model {
 		}
 	}
 
-	public function updateStaff($update = array()) {
-		$query = FALSE;
+	public function saveStaff($staff_id, $save = array()) {
+        if (empty($save)) return FALSE;
 
-		if (!empty($update['staff_name'])) {
-			$this->db->set('staff_name', $update['staff_name']);
+		if (!empty($save['staff_name'])) {
+			$this->db->set('staff_name', $save['staff_name']);
 		}
 
-		if (!empty($update['staff_email'])) {
-			$this->db->set('staff_email', strtolower($update['staff_email']));
+		if (!empty($save['staff_email'])) {
+			$this->db->set('staff_email', strtolower($save['staff_email']));
 		}
 
-		if (!empty($update['staff_group_id'])) {
-			$this->db->set('staff_group_id', $update['staff_group_id']);
+		if (!empty($save['staff_group_id'])) {
+			$this->db->set('staff_group_id', $save['staff_group_id']);
 		}
 
-		if (!empty($update['staff_location_id'])) {
-			$this->db->set('staff_location_id', $update['staff_location_id']);
+		if (!empty($save['staff_location_id'])) {
+			$this->db->set('staff_location_id', $save['staff_location_id']);
 		}
 
-		if (!empty($update['timezone'])) {
-			$this->db->set('timezone', $update['timezone']);
+		if (!empty($save['timezone'])) {
+			$this->db->set('timezone', $save['timezone']);
 		} else {
 			$this->db->set('timezone', '0');
 		}
 
-		if (!empty($update['language_id'])) {
-			$this->db->set('language_id', $update['language_id']);
+		if (!empty($save['language_id'])) {
+			$this->db->set('language_id', $save['language_id']);
 		} else {
 			$this->db->set('language_id', '0');
 		}
 
-		if ($update['staff_status'] === '1') {
-			$this->db->set('staff_status', $update['staff_status']);
+		if ($save['staff_status'] === '1') {
+			$this->db->set('staff_status', $save['staff_status']);
 		} else {
 			$this->db->set('staff_status', '0');
 		}
 
-		if (!empty($update['staff_id'])) {
-			$this->db->where('staff_id', $update['staff_id']);
-			$query = $this->db->update('staffs');
+		if (is_numeric($staff_id)) {
+            $notification_action = 'updated';
+            $this->db->where('staff_id', $staff_id);
+            $query = $this->db->update('staffs');
+        } else {
+            $notification_action = 'added';
+            $this->db->set('date_added', mdate('%Y-%m-%d', time()));
+            $query = $this->db->insert('staffs');
+            $staff_id = $this->db->insert_id();
+        }
 
-			$this->load->model('Notifications_model');
-			$this->Notifications_model->addNotification(array('action' => 'updated', 'object' => 'staff', 'object_id' => $update['staff_id']));
-		}
+        if ($query === TRUE AND is_numeric($staff_id)) {
+            if (!empty($save['password'])) {
+                $this->db->set('salt', $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9));
+                $this->db->set('password', sha1($salt . sha1($salt . sha1($save['password']))));
 
-		if (!empty($update['staff_id']) AND !empty($update['password'])) {
-			$this->db->set('salt', $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9));
-			$this->db->set('password', sha1($salt . sha1($salt . sha1($update['password']))));
+                if ($notification_action === 'added' AND !empty($save['username'])) {
+                    $this->db->set('username', strtolower($save['username']));
+                    $this->db->set('staff_id', $staff_id);
+                    $query = $this->db->insert('users');
+                } else {
+                    $this->db->where('staff_id', $staff_id);
+                    $query = $this->db->update('users');
+                }
+            }
 
-			$this->db->where('staff_id', $update['staff_id']);
-			$query = $this->db->update('users');
-		}
+            $this->load->model('Notifications_model');
+            $this->Notifications_model->addNotification(array('action' => $notification_action, 'object' => 'staff', 'object_id' => $staff_id));
 
-		return $query;
-	}
-
-	public function addStaff($add = array()) {
-		$query = FALSE;
-
-		if (!empty($add['staff_name'])) {
-			$this->db->set('staff_name', $add['staff_name']);
-		}
-
-		if (!empty($add['staff_email'])) {
-			$this->db->set('staff_email', strtolower($add['staff_email']));
-		}
-
-		if (!empty($add['staff_group_id'])) {
-			$this->db->set('staff_group_id', $add['staff_group_id']);
-		}
-
-		if (!empty($add['staff_location_id'])) {
-			$this->db->set('staff_location_id', $add['staff_location_id']);
-		}
-
-		if (!empty($add['timezone'])) {
-			$this->db->set('timezone', $add['timezone']);
-		} else {
-			$this->db->set('timezone', '0');
-		}
-
-		if (!empty($add['language_id'])) {
-			$this->db->set('language_id', $add['language_id']);
-		} else {
-			$this->db->set('language_id', '0');
-		}
-
-		if ($add['staff_status'] === '1') {
-			$this->db->set('staff_status', $add['staff_status']);
-		} else {
-			$this->db->set('staff_status', '0');
-		}
-
-		if (!empty($add)) {
-			$this->db->set('date_added', mdate('%Y-%m-%d', time()));
-
-			if ($this->db->insert('staffs')) {
-				$staff_id = $this->db->insert_id();
-
-				$this->load->model('Notifications_model');
-				$this->Notifications_model->addNotification(array('action' => 'added', 'object' => 'staff', 'object_id' => $staff_id));
-
-				if (!empty($add['username'])) {
-					$this->db->set('username', strtolower($add['username']));
-					$this->db->set('staff_id', $staff_id);
-				}
-
-				if (!empty($add['password'])) {
-					$this->db->set('salt', $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9));
-					$this->db->set('password', sha1($salt . sha1($salt . sha1($add['password']))));
-				}
-
-				$this->db->insert('users');
-				$query = $staff_id;
-			}
-		}
-
-		return $query;
+            return ($query === TRUE AND is_numeric($staff_id)) ? $staff_id : FALSE;
+        }
 	}
 
 	public function resetPassword($user_email) {

@@ -79,96 +79,53 @@ class Currencies_model extends TI_Model {
 		}
 	}
 
-	public function updateCurrency($update = array()) {
-		$query = FALSE;
+	public function saveCurrency($currency_id, $save = array()) {
+        if (empty($save)) return FALSE;
 
-		if (!empty($update['currency_name'])) {
-			$this->db->set('currency_name', $update['currency_name']);
+		if (!empty($save['currency_name'])) {
+			$this->db->set('currency_name', $save['currency_name']);
 		}
 
-		if (!empty($update['currency_code'])) {
-			$this->db->set('currency_code', $update['currency_code']);
+		if (!empty($save['currency_code'])) {
+			$this->db->set('currency_code', $save['currency_code']);
 		}
 
-		if (!empty($update['currency_symbol'])) {
-			$this->db->set('currency_symbol', $update['currency_symbol']);
+		if (!empty($save['currency_symbol'])) {
+			$this->db->set('currency_symbol', $save['currency_symbol']);
 		}
 
-		if (!empty($update['country_id'])) {
-			$this->db->set('country_id', $update['country_id']);
+		if (!empty($save['country_id'])) {
+			$this->db->set('country_id', $save['country_id']);
 		}
 
-		if (!empty($update['iso_alpha2'])) {
-			$this->db->set('iso_alpha2', $update['iso_alpha2']);
+		if (!empty($save['iso_alpha2'])) {
+			$this->db->set('iso_alpha2', $save['iso_alpha2']);
 		}
 
-		if (!empty($update['iso_alpha3'])) {
-			$this->db->set('iso_alpha3', $update['iso_alpha3']);
+		if (!empty($save['iso_alpha3'])) {
+			$this->db->set('iso_alpha3', $save['iso_alpha3']);
 		}
 
-		if (!empty($update['iso_numeric'])) {
-			$this->db->set('iso_numeric', $update['iso_numeric']);
+		if (!empty($save['iso_numeric'])) {
+			$this->db->set('iso_numeric', $save['iso_numeric']);
 		}
 
-		if ($update['currency_status'] === '1') {
-			$this->db->set('currency_status', $update['currency_status']);
+		if ($save['currency_status'] === '1') {
+			$this->db->set('currency_status', $save['currency_status']);
 		} else {
 			$this->db->set('currency_status', '0');
 		}
 
 
-		if (!empty($update['currency_id'])) {
-			$this->db->where('currency_id', $update['currency_id']);
+		if (is_numeric($currency_id)) {
+			$this->db->where('currency_id', $currency_id);
 			$query = $this->db->update('currencies');
-		}
-
-		return $query;
-	}
-
-	public function addCurrency($add = array()) {
-		$query = FALSE;
-
-		if (!empty($add['currency_name'])) {
-			$this->db->set('currency_name', $add['currency_name']);
-		}
-
-		if (!empty($add['currency_code'])) {
-			$this->db->set('currency_code', $add['currency_code']);
-		}
-
-		if (!empty($add['currency_symbol'])) {
-			$this->db->set('currency_symbol', $add['currency_symbol']);
-		}
-
-		if (!empty($add['country_id'])) {
-			$this->db->set('country_id', $add['country_id']);
-		}
-
-		if (!empty($add['iso_alpha2'])) {
-			$this->db->set('iso_alpha2', $add['iso_alpha2']);
-		}
-
-		if (!empty($add['iso_alpha3'])) {
-			$this->db->set('iso_alpha3', $add['iso_alpha3']);
-		}
-
-		if (!empty($add['iso_numeric'])) {
-			$this->db->set('iso_numeric', $add['iso_numeric']);
-		}
-
-		if ($add['currency_status'] === '1') {
-			$this->db->set('currency_status', $add['currency_status']);
 		} else {
-			$this->db->set('currency_status', '0');
-		}
+            $query = $this->db->insert('currencies');
+            $currency_id = $this->db->insert_id();
+        }
 
-		if (!empty($add)) {
-			if ($this->db->insert('currencies')) {
-				$query = $this->db->insert_id();
-			}
-		}
-
-		return $query;
+		return ($query === TRUE AND is_numeric($currency_id)) ? $currency_id : FALSE;
 	}
 
 	public function deleteCurrency($currency_id) {

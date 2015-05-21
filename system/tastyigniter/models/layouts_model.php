@@ -174,14 +174,14 @@ class Layouts_model extends TI_Model {
 		}
 	}
 
-	public function saveLayout($save = array()) {
+	public function saveLayout($layout_id, $save = array()) {
         if (empty($save)) return FALSE;
 
 		if (!empty($save['name'])) {
 			$this->db->set('name', $save['name']);
 		}
 
-        if (is_numeric($this->input->get('id')) AND $layout_id = $this->input->get('id')) {
+        if (is_numeric($layout_id)) {
             $this->db->where('layout_id', $layout_id);
             $query = $this->db->update('layouts');
         } else {
@@ -189,7 +189,7 @@ class Layouts_model extends TI_Model {
             $layout_id = $this->db->insert_id();
         }
 
-		if (!empty($query) AND !empty($layout_id)) {
+		if ($query === TRUE AND is_numeric($layout_id)) {
             if (!empty($save['routes'])) {
                 $this->addLayoutRoutes($layout_id, $save['routes']);
             }
@@ -251,7 +251,7 @@ class Layouts_model extends TI_Model {
 		$this->db->delete('layout_routes');
 
 		$this->db->where('layout_id', $layout_id);
-		$this->db->delete('layout_modules');
+		$this->db->delete('layout_routes');
 
 		if ($this->db->affected_rows() > 0) {
 			return TRUE;

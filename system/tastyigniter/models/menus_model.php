@@ -105,85 +105,87 @@ class Menus_model extends TI_Model {
 		}
 	}
 
-	public function saveMenu($update = array()) {
-        if (empty($update) AND !is_array($update)) return FALSE;
+	public function saveMenu($menu_id, $save = array()) {
+        if (empty($save) AND !is_array($save)) return FALSE;
 
-		if (!empty($update['menu_name'])) {
-			$this->db->set('menu_name', $update['menu_name']);
+		if (!empty($save['menu_name'])) {
+			$this->db->set('menu_name', $save['menu_name']);
 		}
 
-		if (!empty($update['menu_description'])) {
-			$this->db->set('menu_description', $update['menu_description']);
+		if (!empty($save['menu_description'])) {
+			$this->db->set('menu_description', $save['menu_description']);
 		}
 
-		if (!empty($update['menu_price'])) {
-			$this->db->set('menu_price', $update['menu_price']);
+		if (!empty($save['menu_price'])) {
+			$this->db->set('menu_price', $save['menu_price']);
 		}
 
-		if (!empty($update['menu_category']) AND $update['special_status'] === '1') {
+		if (!empty($save['menu_category']) AND $save['special_status'] === '1') {
 			$this->db->set('menu_category_id', (int)$this->config->item('special_category_id'));
-		} else if (!empty($update['menu_category'])) {
-			$this->db->set('menu_category_id', $update['menu_category']);
+		} else if (!empty($save['menu_category'])) {
+			$this->db->set('menu_category_id', $save['menu_category']);
 		}
 
-		if (!empty($update['menu_photo'])) {
-			$this->db->set('menu_photo', $update['menu_photo']);
+		if (!empty($save['menu_photo'])) {
+			$this->db->set('menu_photo', $save['menu_photo']);
 		}
 
-		if ($update['stock_qty'] > 0) {
-			$this->db->set('stock_qty', $update['stock_qty']);
+		if ($save['stock_qty'] > 0) {
+			$this->db->set('stock_qty', $save['stock_qty']);
 		} else {
 			$this->db->set('stock_qty', '0');
 		}
 
-		if ($update['minimum_qty'] > 0) {
-			$this->db->set('minimum_qty', $update['minimum_qty']);
+		if ($save['minimum_qty'] > 0) {
+			$this->db->set('minimum_qty', $save['minimum_qty']);
 		} else {
 			$this->db->set('minimum_qty', '1');
 		}
 
-		if ($update['subtract_stock'] === '1') {
-			$this->db->set('subtract_stock', $update['subtract_stock']);
+		if ($save['subtract_stock'] === '1') {
+			$this->db->set('subtract_stock', $save['subtract_stock']);
 		} else {
 			$this->db->set('subtract_stock', '0');
 		}
 
-		if ($update['menu_status'] === '1') {
-			$this->db->set('menu_status', $update['menu_status']);
+		if ($save['menu_status'] === '1') {
+			$this->db->set('menu_status', $save['menu_status']);
 		} else {
 			$this->db->set('menu_status', '0');
 		}
 
-		if (is_numeric($this->input->get('id')) AND $menu_id = $this->input->get('id')) {
-            $this->db->where('menu_id', $menu_id);
+		if (is_numeric($menu_id)) {
+            $notification_action = 'updated';
+            $this->db->where('menu_id', (int) $menu_id);
             $query = $this->db->update('menus');
         } else {
+            $notification_action = 'added';
             $query = $this->db->insert('menus');
             $menu_id = $this->db->insert_id();
         }
 
-        if (!empty($menu_id) AND !empty($query)) {
+        if ($query === TRUE AND is_numeric($menu_id)) {
             $this->load->model('Notifications_model');
-            $this->Notifications_model->addNotification(array('action' => 'updated', 'object' => 'menu', 'object_id' => $menu_id));
+            $this->Notifications_model->addNotification(array('action' => $notification_action, 'object' => 'menu', 'object_id' => $menu_id));
 
-            if (!empty($update['menu_options'])) {
+            if (!empty($save['menu_options'])) {
                 $this->load->model('Menu_options_model');
-                $this->Menu_options_model->addMenuOption($menu_id, $update['menu_options']);
+                $this->Menu_options_model->addMenuOption($menu_id, $save['menu_options']);
             }
 
-            if (!empty($update['start_date']) AND !empty($update['end_date']) AND !empty($update['special_price'])) {
-                $this->db->set('start_date', mdate('%Y-%m-%d', strtotime($update['start_date'])));
-                $this->db->set('end_date', mdate('%Y-%m-%d', strtotime($update['end_date'])));
-                $this->db->set('special_price', $update['special_price']);
+            if (!empty($save['start_date']) AND !empty($save['end_date']) AND !empty($save['special_price'])) {
+                $this->db->set('start_date', mdate('%Y-%m-%d', strtotime($save['start_date'])));
+                $this->db->set('end_date', mdate('%Y-%m-%d', strtotime($save['end_date'])));
+                $this->db->set('special_price', $save['special_price']);
 
-                if ($update['special_status'] === '1') {
+                if ($save['special_status'] === '1') {
                     $this->db->set('special_status', '1');
                 } else {
                     $this->db->set('special_status', '0');
                 }
 
-                if (!empty($update['special_id'])) {
-                    $this->db->where('special_id', $update['special_id']);
+                if (!empty($save['special_id'])) {
+                    $this->db->where('special_id', $save['special_id']);
                     $this->db->where('menu_id', $menu_id);
                     $this->db->update('menus_specials');
                 } else {

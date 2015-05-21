@@ -77,42 +77,57 @@ class Mail_templates_model extends TI_Model {
 		}
 	}
 
-	public function updateTemplate($update = array()) {
-		$query = FALSE;
+	public function saveTemplate($template_id, $save = array()) {
+        if (empty($save)) return FALSE;
 
-		if (!empty($update['name'])) {
-			$this->db->set('name', $update['name']);
+		if (!empty($save['name'])) {
+			$this->db->set('name', $save['name']);
 		}
 
-		if (!empty($update['language_id'])) {
-			$this->db->set('language_id', $update['language_id']);
+		if (!empty($save['language_id'])) {
+			$this->db->set('language_id', $save['language_id']);
 		}
 
-		if (!empty($update['date_added'])) {
-			$this->db->set('date_added', $update['date_added']);
+		if (!empty($save['date_added'])) {
+			$this->db->set('date_added', $save['date_added']);
 		}
 
-		if (!empty($update['date_updated'])) {
-			$this->db->set('date_updated', $update['date_updated']);
+		if (!empty($save['date_updated'])) {
+			$this->db->set('date_updated', $save['date_updated']);
 		}
 
-		if ($update['status'] === '1') {
+		if ($save['status'] === '1') {
 			$this->db->set('status', '1');
 		} else {
 			$this->db->set('status', '0');
 		}
 
-		if (!empty($update['template_id'])) {
-			$this->db->where('template_id', $update['template_id']);
+		if (is_numeric($template_id)) {
+            $this->db->set('date_updated', mdate('%Y-%m-%d %H:%i:%s', time()));
+            $this->db->where('template_id', $template_id);
 			$query = $this->db->update('mail_templates');
-			$query = $this->_updateTemplateData($update['template_id'], $update['templates']);
-		}
+        } else {
+            $this->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', time()));
+            $query = $this->db->insert('mail_templates');
+            $template_id = $this->db->insert_id();
+        }
 
-		return $query;
+        if ($query === TRUE AND is_numeric($template_id)) {
+            if (!empty($save['clone_template_id'])) {
+                $templates = $this->getAllTemplateData($save['clone_template_id']);
+                $this->updateTemplateData($template_id, $templates, $save['clone_template_id']);
+            } else if (!empty($save['templates'])) {
+                $this->updateTemplateData($template_id, $save['templates']);
+            }
+
+            return $template_id;
+        }
 	}
 
-	public function _updateTemplateData($template_id, $templates = array()) {
+    public function updateTemplateData($template_id, $templates = array(), $clone_template_id = FALSE) {
 		$query = FALSE;
+
+        if (empty($templates)) return FALSE;
 
 		foreach ($templates as $template) {
 			if (!empty($template['subject'])) {
@@ -127,65 +142,27 @@ class Mail_templates_model extends TI_Model {
 				$this->db->set('date_updated', $template['date_updated']);
 			}
 
-			if (!empty($template_id) AND !empty($template['code'])) {
-				$this->db->where('template_id', $template_id);
-				$this->db->where('code', $template['code']);
-				$query = $this->db->update('mail_templates_data');
-			}
-		}
+            if (!empty($template_id)) {
+                if (!$clone_template_id AND !empty($template['code'])) {
+                    $this->db->set('date_updated', mdate('%Y-%m-%d %H:%i:%s', time()));
+                    $this->db->where('template_id', $template_id);
+                    $this->db->where('code', $template['code']);
+                    $query = $this->db->update('mail_templates_data');
+                } else if (!empty($template['code'])) {
+                    $this->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', time()));
+                    $this->db->set('date_updated', mdate('%Y-%m-%d %H:%i:%s', time()));
+                    $this->db->set('template_id', $template_id);
+                    $this->db->set('code', $template['code']);
+                    $query = $this->db->insert('mail_templates_data');
+                }
+            }
+        }
 
-		return $query;
-	}
+        return $query;
+    }
 
-	public function addTemplate($add = array()) {
-		$query = FALSE;
-
-		if (!empty($add['name'])) {
-			$this->db->set('name', $add['name']);
-		}
-
-		if (!empty($add['language_id'])) {
-			$this->db->set('language_id', $add['language_id']);
-		}
-
-		if (!empty($add['date_added'])) {
-			$this->db->set('date_added', $add['date_added']);
-		}
-
-		if (!empty($add['date_updated'])) {
-			$this->db->set('date_updated', $add['date_updated']);
-		}
-
-		if ($add['status'] === '1') {
-			$this->db->set('status', '1');
-		} else {
-			$this->db->set('status', '0');
-		}
-
-		if (!empty($add)) {
-			if ($this->db->insert('mail_templates')) {
-				$template_id = $this->db->insert_id();
-				$templates = $this->getAllTemplateData($add['clone_template_id']);
-				foreach ($templates as $template) {
-					$this->db->set('template_id', $template_id);
-					$this->db->set('code', $template['code']);
-					$this->db->set('subject', $template['subject']);
-					$this->db->set('body', $template['body']);
-					$this->db->set('date_added', $add['date_added']);
-					$this->db->set('date_updated', $add['date_updated']);
-
-					$query = $this->db->insert('mail_templates_data');
-				}
-
-				$query = $template_id;
-			}
-		}
-
-		return $query;
-	}
-
-	public function deleteTemplate($template_id) {
-		if ($template_id !== $this->config->item('mail_template_id')) {
+    public function deleteTemplate($template_id) {
+        if ($template_id !== $this->config->item('mail_template_id')) {
 			$this->db->where('template_id', $template_id);
 			$this->db->delete('mail_templates');
 

@@ -231,243 +231,160 @@ class Locations_model extends TI_Model {
 		return $query;
 	}
 
-	public function updateLocation($update = array()) {
-		$query = FALSE;
+	public function saveLocation($location_id, $save = array()) {
+        if (empty($save)) return FALSE;
 
-		if (!empty($update['location_name'])) {
-			$this->db->set('location_name', $update['location_name']);
+		if (!empty($save['location_name'])) {
+			$this->db->set('location_name', $save['location_name']);
 		}
 
-		if (!empty($update['address']['address_1'])) {
-			$this->db->set('location_address_1', $update['address']['address_1']);
+		if (!empty($save['address']['address_1'])) {
+			$this->db->set('location_address_1', $save['address']['address_1']);
 		}
 
-		if (!empty($update['address']['address_2'])) {
-			$this->db->set('location_address_2', $update['address']['address_2']);
+		if (!empty($save['address']['address_2'])) {
+			$this->db->set('location_address_2', $save['address']['address_2']);
 		}
 
-		if (!empty($update['address']['city'])) {
-			$this->db->set('location_city', $update['address']['city']);
+		if (!empty($save['address']['city'])) {
+			$this->db->set('location_city', $save['address']['city']);
 		}
 
-		if (!empty($update['address']['postcode'])) {
-			$this->db->set('location_postcode', $update['address']['postcode']);
+		if (!empty($save['address']['postcode'])) {
+			$this->db->set('location_postcode', $save['address']['postcode']);
 		}
 
-		if (!empty($update['address']['country'])) {
-			$this->db->set('location_country_id', $update['address']['country']);
+		if (!empty($save['address']['country'])) {
+			$this->db->set('location_country_id', $save['address']['country']);
 		}
 
-		if (!empty($update['address']['location_lat'])) {
-			$this->db->set('location_lat', $update['address']['location_lat']);
+		if (!empty($save['address']['location_lat'])) {
+			$this->db->set('location_lat', $save['address']['location_lat']);
 		}
 
-		if (!empty($update['address']['location_lng'])) {
-			$this->db->set('location_lng', $update['address']['location_lng']);
+		if (!empty($save['address']['location_lng'])) {
+			$this->db->set('location_lng', $save['address']['location_lng']);
 		}
 
-		if (!empty($update['email'])) {
-			$this->db->set('location_email', $update['email']);
+		if (!empty($save['email'])) {
+			$this->db->set('location_email', $save['email']);
 		}
 
-		if (!empty($update['telephone'])) {
-			$this->db->set('location_telephone', $update['telephone']);
+		if (!empty($save['telephone'])) {
+			$this->db->set('location_telephone', $save['telephone']);
 		}
 
-		if (isset($update['description'])) {
-			$this->db->set('description', $update['description']);
+		if (isset($save['description'])) {
+			$this->db->set('description', $save['description']);
 		}
 
-		if ($update['offer_delivery'] === '1') {
-			$this->db->set('offer_delivery', $update['offer_delivery']);
+		if ($save['offer_delivery'] === '1') {
+			$this->db->set('offer_delivery', $save['offer_delivery']);
 		} else {
 			$this->db->set('offer_delivery', '0');
 		}
 
-		if ($update['offer_collection'] === '1') {
-			$this->db->set('offer_collection', $update['offer_collection']);
+		if ($save['offer_collection'] === '1') {
+			$this->db->set('offer_collection', $save['offer_collection']);
 		} else {
 			$this->db->set('offer_collection', '0');
 		}
 
-		if (!empty($update['delivery_time'])) {
-			$this->db->set('delivery_time', $update['delivery_time']);
+		if (!empty($save['delivery_time'])) {
+			$this->db->set('delivery_time', $save['delivery_time']);
 		} else {
 			$this->db->set('delivery_time', '0');
 		}
 
-		if (!empty($update['collection_time'])) {
-			$this->db->set('collection_time', $update['collection_time']);
+		if (!empty($save['collection_time'])) {
+			$this->db->set('collection_time', $save['collection_time']);
 		} else {
 			$this->db->set('collection_time', '0');
 		}
 
-		if (!empty($update['last_order_time'])) {
-			$this->db->set('last_order_time', $update['last_order_time']);
+		if (!empty($save['last_order_time'])) {
+			$this->db->set('last_order_time', $save['last_order_time']);
 		} else {
 			$this->db->set('last_order_time', '0');
 		}
 
-		if (!empty($update['reservation_interval'])) {
-			$this->db->set('reservation_interval', $update['reservation_interval']);
+		if (!empty($save['reservation_interval'])) {
+			$this->db->set('reservation_interval', $save['reservation_interval']);
 		} else {
 			$this->db->set('reservation_interval', '0');
 		}
 
-		if (!empty($update['reservation_turn'])) {
-			$this->db->set('reservation_turn', $update['reservation_turn']);
+		if (!empty($save['reservation_turn'])) {
+			$this->db->set('reservation_turn', $save['reservation_turn']);
 		} else {
 			$this->db->set('reservation_turn', '0');
 		}
 
-		if (!empty($update['options'])) {
-			$this->db->set('options', serialize($update['options']));
-		}
+        $options = array();
+        if (!empty($save['opening_type'])) {
+            $options['opening_hours']['opening_type'] = $save['opening_type'];
+        }
 
-		if ($update['location_status'] === '1') {
-			$this->db->set('location_status', $update['location_status']);
+        if (!empty($save['daily_days'])) {
+            $options['opening_hours']['daily_days'] = $save['daily_days'];
+        }
+
+        if (!empty($save['daily_hours'])) {
+            $options['opening_hours']['daily_hours'] = $save['daily_hours'];
+        }
+
+        if (!empty($save['flexible_hours'])) {
+            $options['opening_hours']['flexible_hours'] = $save['flexible_hours'];
+        }
+
+        if (!empty($save['payments'])) {
+            $options['payments'] = $save['payments'];
+        }
+
+        if (!empty($save['delivery_areas'])) {
+            $options['delivery_areas'] = $save['delivery_areas'];
+        }
+
+        $this->db->set('options', serialize($options));
+
+        if ($save['location_status'] === '1') {
+			$this->db->set('location_status', $save['location_status']);
 		} else {
 			$this->db->set('location_status', '0');
 		}
 
-		if (!empty($update['location_id'])) {
-			$this->db->where('location_id', $update['location_id']);
-
+		if (is_numeric($location_id)) {
+            $notification_action = 'updated';
+            $this->db->where('location_id', $location_id);
             $query = $this->db->update('locations');
+        } else {
+            $notification_action = 'added';
+            $query = $this->db->insert('locations');
+            $location_id = $this->db->insert_id();
+        }
+
+        if ($query === TRUE AND is_numeric($location_id)) {
+            if ($location_id === $this->config->item('default_location_id')) {
+                $this->Settings_model->addSetting('config', 'main_address', $this->getAddress($location_id), '1');
+            }
+
+            if (!empty($options['opening_hours'])) {
+                $this->addOpeningHours($location_id, $options['opening_hours']);
+            }
+
+            if (!empty($save['tables'])) {
+                $this->addLocationTables($location_id, $save['tables']);
+            }
+
+            if (!empty($save['permalink'])) {
+                $this->permalink->savePermalink('local', $save['permalink'], 'location_id=' . $location_id);
+            }
 
             $this->load->model('Notifications_model');
-            $this->Notifications_model->addNotification(array('action' => 'updated', 'object' => 'location', 'object_id' => $update['location_id']));
+            $this->Notifications_model->addNotification(array('action' => $notification_action, 'object' => 'location', 'object_id' => $location_id));
 
-            $this->addOpeningHours($update['location_id'], $update['options']['opening_hours']);
-            $this->addLocationTables($update['location_id'], $update['tables']);
-
-			if (!empty($update['permalink'])) {
-                $this->permalink->updatePermalink('local', $update['permalink'], 'location_id='.$update['location_id']);
-			}
-		}
-
-		return $query;
-	}
-
-	public function addLocation($add = array()) {
-		$query = FALSE;
-
-		if (!empty($add['location_name'])) {
-			$this->db->set('location_name', $add['location_name']);
-		}
-
-		if (!empty($add['address']['address_1'])) {
-			$this->db->set('location_address_1', $add['address']['address_1']);
-		}
-
-		if (!empty($add['address']['address_2'])) {
-			$this->db->set('location_address_2', $add['address']['address_2']);
-		}
-
-		if (!empty($add['address']['city'])) {
-			$this->db->set('location_city', $add['address']['city']);
-		}
-
-		if (!empty($add['address']['postcode'])) {
-			$this->db->set('location_postcode', $add['address']['postcode']);
-		}
-
-		if (!empty($add['address']['country'])) {
-			$this->db->set('location_country_id', $add['address']['country']);
-		}
-
-		if (!empty($add['address']['location_lat'])) {
-			$this->db->set('location_lat', $add['address']['location_lat']);
-		}
-
-		if (!empty($add['address']['location_lng'])) {
-			$this->db->set('location_lng', $add['address']['location_lng']);
-		}
-
-		if (!empty($add['email'])) {
-			$this->db->set('location_email', $add['email']);
-		}
-
-		if (!empty($add['telephone'])) {
-			$this->db->set('location_telephone', $add['telephone']);
-		}
-
-		if (isset($add['description'])) {
-			$this->db->set('description', $add['description']);
-		}
-
-		if ($add['offer_delivery'] === '1') {
-			$this->db->set('offer_delivery', $add['offer_delivery']);
-		} else {
-			$this->db->set('offer_delivery', '0');
-		}
-
-		if ($add['offer_collection'] === '1') {
-			$this->db->set('offer_collection', $add['offer_collection']);
-		} else {
-			$this->db->set('offer_collection', '0');
-		}
-
-		if (!empty($add['delivery_time'])) {
-			$this->db->set('delivery_time', $add['delivery_time']);
-		} else {
-			$this->db->set('delivery_time', '0');
-		}
-
-		if (!empty($add['collection_time'])) {
-			$this->db->set('collection_time', $add['collection_time']);
-		} else {
-			$this->db->set('collection_time', '0');
-		}
-
-		if (!empty($add['last_order_time'])) {
-			$this->db->set('last_order_time', $add['last_order_time']);
-		} else {
-			$this->db->set('last_order_time', '0');
-		}
-
-		if (!empty($add['reservation_interval'])) {
-			$this->db->set('reservation_interval', $add['reservation_interval']);
-		} else {
-			$this->db->set('reservation_interval', '0');
-		}
-
-		if (!empty($add['reservation_turn'])) {
-			$this->db->set('reservation_turn', $add['reservation_turn']);
-		} else {
-			$this->db->set('reservation_turn', '0');
-		}
-
-		if (!empty($add['options'])) {
-			$this->db->set('options', serialize($add['options']));
-		}
-
-		if ($add['location_status'] === '1') {
-			$this->db->set('location_status', $add['location_status']);
-		} else {
-			$this->db->set('location_status', '0');
-		}
-
-		if (!empty($add)) {
-			if ($this->db->insert('locations')) {
-				$location_id = $this->db->insert_id();
-
-				$this->load->model('Notifications_model');
-				$this->Notifications_model->addNotification(array('action' => 'added', 'object' => 'location', 'object_id' => $location_id));
-
-				$this->addOpeningHours($location_id, $add['options']['opening_hours']);
-				$this->addLocationTables($location_id, $add['tables']);
-
-
-				if (!empty($add['permalink'])) {
-                     $this->permalink->addPermalink('local', $add['permalink'], 'location_id='.$location_id);
-				}
-
-				$query = $location_id;
-			}
-		}
-
-		return $query;
+            return $location_id;
+        }
 	}
 
 	public function addOpeningHours($location_id, $data = array()) {
@@ -538,6 +455,8 @@ class Locations_model extends TI_Model {
 
 			$this->db->where('location_id', $location_id);
 			$this->db->delete('working_hours');
+
+            $this->permalink->deletePermalink('local', 'location_id=' . $location_id);
 
 			if ($this->db->affected_rows() > 0) {
 				return TRUE;

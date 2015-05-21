@@ -55,55 +55,32 @@ class Customer_groups_model extends TI_Model {
 		}
 	}
 
-	public function updateCustomerGroup($update = array()) {
-		$query = FALSE;
+	public function saveCustomerGroup($customer_group_id, $save = array()) {
+        if (empty($save)) return FALSE;
 
-		if (!empty($update['group_name'])) {
-			$this->db->set('group_name', $update['group_name']);
+		if (!empty($save['group_name'])) {
+			$this->db->set('group_name', $save['group_name']);
 		}
 
-		if (!empty($update['description'])) {
-			$this->db->set('description', $update['description']);
+		if (!empty($save['description'])) {
+			$this->db->set('description', $save['description']);
 		}
 
-		if ($update['approval'] === '1') {
-			$this->db->set('approval', $update['approval']);
+		if ($save['approval'] === '1') {
+			$this->db->set('approval', $save['approval']);
 		} else {
 			$this->db->set('approval', '0');
 		}
 
-		if (!empty($update['customer_group_id'])) {
-			$this->db->where('customer_group_id', $update['customer_group_id']);
+		if (is_numeric($customer_group_id)) {
+			$this->db->where('customer_group_id', $customer_group_id);
 			$query = $this->db->update('customer_groups');
-		}
-
-		return $query;
-	}
-
-	public function addCustomerGroup($add = array()) {
-		$query = FALSE;
-
-		if (!empty($add['group_name'])) {
-			$this->db->set('group_name', $add['group_name']);
-		}
-
-		if (!empty($add['description'])) {
-			$this->db->set('description', $add['description']);
-		}
-
-		if ($add['approval'] === '1') {
-			$this->db->set('approval', $add['approval']);
 		} else {
-			$this->db->set('approval', '0');
-		}
+            $query = $this->db->insert('customer_groups');
+            $customer_group_id = $this->db->insert_id();
+        }
 
-		if (!empty($add)) {
-			if ($this->db->insert('customer_groups')) {
-				$query = $this->db->insert_id();
-			}
-		}
-
-		return $query;
+        return ($query === TRUE AND is_numeric($customer_group_id)) ? $customer_group_id : FALSE;
 	}
 
 	public function deleteCustomerGroup($customer_group_id) {

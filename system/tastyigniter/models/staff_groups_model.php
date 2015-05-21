@@ -34,56 +34,34 @@ class Staff_groups_model extends TI_Model {
 		}
 	}
 
-	public function updateStaffGroup($update = array()) {
-		$query = FALSE;
+	public function saveStaffGroup($staff_group_id, $save = array()) {
+        if (empty($save)) return FALSE;
 
-		if (!empty($update['staff_group_name'])) {
-			$this->db->set('staff_group_name', $update['staff_group_name']);
+		if (!empty($save['staff_group_name'])) {
+			$this->db->set('staff_group_name', $save['staff_group_name']);
 		}
 
-		if ($update['location_access'] === '1') {
-			$this->db->set('location_access', $update['location_access']);
+		if ($save['location_access'] === '1') {
+			$this->db->set('location_access', $save['location_access']);
 		} else {
 			$this->db->set('location_access', '0');
 		}
 
-
-		if (!empty($update['permission'])) {
-			$this->db->set('permission', $update['permission']);
+		if (!empty($save['permission'])) {
+            $this->db->set('permission', serialize($save['permission']));
+        } else {
+			$this->db->set('permission', serialize(array()));
 		}
 
-		if (!empty($update['staff_group_id'])) {
-			$this->db->where('staff_group_id', $update['staff_group_id']);
+		if (is_numeric($staff_group_id)) {
+			$this->db->where('staff_group_id', $staff_group_id);
 			$query = $this->db->update('staff_groups');
-		}
-
-		return $query;
-	}
-
-	public function addStaffGroup($add = array()) {
-		$query = FALSE;
-
-		if (!empty($add['staff_group_name'])) {
-			$this->db->set('staff_group_name', $add['staff_group_name']);
-		}
-
-		if ($add['location_access'] === '1') {
-			$this->db->set('location_access', $add['location_access']);
 		} else {
-			$this->db->set('location_access', '0');
-		}
+            $query = $this->db->insert('staff_groups');
+            $staff_group_id = $this->db->insert_id();
+        }
 
-		if (!empty($add['permission'])) {
-			$this->db->set('permission', $add['permission']);
-		}
-
-		if (!empty($add)) {
-			if ($this->db->insert('staff_groups')) {
-				$query = $this->db->insert_id();
-			}
-		}
-
-		return $query;
+        return ($query === TRUE AND is_numeric($staff_group_id)) ? $staff_group_id : FALSE;
 	}
 
 	public function addPermission($staff_group_id, $type, $page) {

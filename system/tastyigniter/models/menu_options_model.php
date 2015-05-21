@@ -5,7 +5,6 @@ class Menu_options_model extends TI_Model {
     public function getCount($filter = array()) {
         if (!empty($filter['filter_search'])) {
             $this->db->like('option_name', $filter['filter_search']);
-            $this->db->or_like('option_price', $filter['filter_search']);
         }
 
         $this->db->from('options');
@@ -26,7 +25,6 @@ class Menu_options_model extends TI_Model {
 
             if (!empty($filter['filter_search'])) {
                 $this->db->like('option_name', $filter['filter_search']);
-                $this->db->or_like('option_price', $filter['filter_search']);
             }
 
             if (!empty($filter['filter_display_type'])) {
@@ -154,7 +152,7 @@ class Menu_options_model extends TI_Model {
         }
     }
 
-    public function saveOption($save = array()) {
+    public function saveOption($option_id, $save = array()) {
         if (empty($save)) return FALSE;
 
         if (!empty($save['option_name'])) {
@@ -169,7 +167,7 @@ class Menu_options_model extends TI_Model {
             $this->db->set('priority', $save['priority']);
         }
 
-        if (is_numeric($this->input->get('id')) AND $option_id = $this->input->get('id')) {
+        if (is_numeric($option_id)) {
             $this->db->where('option_id', $option_id);
             $query = $this->db->update('options');
         } else {
@@ -177,8 +175,8 @@ class Menu_options_model extends TI_Model {
             $option_id = $this->db->insert_id();
         }
 
-        if (!empty($query) AND !empty($option_id)) {
-            $this->addOptionValues($save['option_id'], $save['option_values']);
+        if ($query === TRUE AND is_numeric($option_id)) {
+            $this->addOptionValues($option_id, $save['option_values']);
 
             return $option_id;
         }
@@ -257,6 +255,8 @@ class Menu_options_model extends TI_Model {
                 $this->db->set('option_id', $option_id);
                 $this->db->set('option_value_id', $value['option_value_id']);
                 $this->db->set('new_price', $value['price']);
+                $this->db->set('quantity', $value['quantity']);
+                $this->db->set('subtract_stock', $value['subtract_stock']);
 
                 if (!empty($value['menu_option_value_id'])) {
                     $this->db->set('menu_option_value_id', $value['menu_option_value_id']);
@@ -274,6 +274,12 @@ class Menu_options_model extends TI_Model {
 
             $this->db->where('option_id', $option_id);
             $this->db->delete('option_values');
+
+            $this->db->where('option_id', $option_id);
+            $this->db->delete('menu_options');
+
+            $this->db->where('option_id', $option_id);
+            $this->db->delete('menu_option_values');
 
             if ($this->db->affected_rows() > 0) {
                 return TRUE;
