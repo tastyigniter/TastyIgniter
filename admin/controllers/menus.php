@@ -277,7 +277,7 @@ class Menus extends Admin_Controller {
 		$this->output->set_output(json_encode($json));
 	}
 
-	public function _saveMenu() {
+	private function _saveMenu() {
     	if ($this->validateForm() === TRUE) {
             $save_type = (! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
@@ -291,7 +291,7 @@ class Menus extends Admin_Controller {
 		}
 	}
 
-	public function _deleteMenu() {
+	private function _deleteMenu() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $menu_id) {
 				$this->Menus_model->deleteMenu($menu_id);
@@ -303,7 +303,7 @@ class Menus extends Admin_Controller {
 		return TRUE;
 	}
 
- 	public function validateForm() {
+ 	private function validateForm() {
 		$this->form_validation->set_rules('menu_name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[255]');
 		$this->form_validation->set_rules('menu_description', 'Description', 'xss_clean|trim|min_length[2]|max_length[1028]');
 		$this->form_validation->set_rules('menu_price', 'Price', 'xss_clean|trim|required|numeric');

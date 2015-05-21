@@ -79,7 +79,7 @@ class Database extends Admin_Controller {
         }
 	}
 
-	public function _backup() {
+	private function _backup() {
     	if ($this->input->post('backup')) {
             $this->form_validation->set_rules('backup[]', 'Backup', 'xss_clean|trim|required|alpha_dash');
 
@@ -94,7 +94,7 @@ class Database extends Admin_Controller {
 		}
 	}
 
-	public function _restore() {
+	private function _restore() {
     	if (isset($_FILES['restore']) AND !empty($_FILES['restore']['name'])) {
 			if (is_uploaded_file($_FILES['restore']['tmp_name'])) {
 				$content = file_get_contents($_FILES['restore']['tmp_name']);
@@ -115,7 +115,7 @@ class Database extends Admin_Controller {
 		}
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('backup[]', 'Backup', 'xss_clean|trim|required|alpha_dash');
 
 		if ($this->form_validation->run() === TRUE) {

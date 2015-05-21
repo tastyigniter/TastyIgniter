@@ -122,7 +122,7 @@ class Layouts extends Admin_Controller {
 		$this->template->render('layouts_edit', $data);
 	}
 
-	public function _saveLayout() {
+	private function _saveLayout() {
     	if ($this->validateForm() === TRUE) {
             $save_type = (! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
@@ -136,7 +136,7 @@ class Layouts extends Admin_Controller {
 		}
 	}
 
-	public function _deleteLayout() {
+	private function _deleteLayout() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Layouts_model->deleteLayout($value);
@@ -148,7 +148,7 @@ class Layouts extends Admin_Controller {
 		return TRUE;
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 
         if ($this->input->post('routes')) {

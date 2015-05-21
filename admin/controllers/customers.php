@@ -314,7 +314,7 @@ class Customers extends Admin_Controller {
 		$this->output->set_output(json_encode($json));
 	}
 
-	public function _saveCustomer($customer_email) {
+	private function _saveCustomer($customer_email) {
     	if ($this->validateForm($customer_email) === TRUE) {
             $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
@@ -328,7 +328,7 @@ class Customers extends Admin_Controller {
 		}
 	}
 
-	public function _deleteCustomer() {
+	private function _deleteCustomer() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $customer_id) {
 				$this->Customers_model->deleteCustomer($customer_id);
@@ -340,7 +340,7 @@ class Customers extends Admin_Controller {
 		return TRUE;
 	}
 
-	public function validateForm($customer_email = FALSE) {
+	private function validateForm($customer_email = FALSE) {
 		$this->form_validation->set_rules('first_name', 'First Name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
 		$this->form_validation->set_rules('last_name', 'Last Name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
 

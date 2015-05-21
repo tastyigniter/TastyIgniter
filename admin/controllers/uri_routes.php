@@ -40,7 +40,7 @@ class Uri_routes extends Admin_Controller {
 		$this->template->render('uri_routes', $data);
 	}
 
-	public function _updateRoute() {
+	private function _updateRoute() {
     	if ($this->input->post('routes') AND $this->validateForm() === TRUE) {
 			$update = array();
 
@@ -56,7 +56,7 @@ class Uri_routes extends Admin_Controller {
 		}
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		if ($this->input->post('routes')) {
 			foreach ($this->input->post('routes') as $key => $value) {
 				$this->form_validation->set_rules('routes['.$key.'][uri_route]', 'URI Route', 'xss_clean|trim|required|min_length[2]|max_length[255]');

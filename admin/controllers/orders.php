@@ -340,7 +340,7 @@ class Orders extends Admin_Controller {
 		$this->template->render('orders_edit', $data);
 	}
 
-	public function _updateOrder($status_id = FALSE, $assignee_id = 0) {
+	private function _updateOrder($status_id = FALSE, $assignee_id = 0) {
     	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$update = array();
 			$history = array();
@@ -368,7 +368,7 @@ class Orders extends Admin_Controller {
 		}
 	}
 
-	public function _deleteOrder() {
+	private function _deleteOrder() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Orders_model->deleteOrder($value);
@@ -380,7 +380,7 @@ class Orders extends Admin_Controller {
 		return TRUE;
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('order_status', 'Order Status', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('assigned_staff', 'Assign Staff', 'xss_clean|trim|integer');
 

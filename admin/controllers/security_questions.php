@@ -40,7 +40,7 @@ class Security_questions extends Admin_Controller {
 		$this->template->render('security_questions', $data);
 	}
 
-	public function _updateSecurityQuestion() {
+	private function _updateSecurityQuestion() {
     	if ($this->input->post('questions') AND $this->validateForm() === TRUE) {
 			$questions = $this->input->post('questions');
 
@@ -54,7 +54,7 @@ class Security_questions extends Admin_Controller {
 		}
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		if ($this->input->post('questions')) {
 			foreach ($this->input->post('questions') as $key => $value) {
 				$this->form_validation->set_rules('questions['.$key.'][question_id]', 'Question Id', 'xss_clean|trim|required|integer');

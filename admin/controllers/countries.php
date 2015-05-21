@@ -159,7 +159,7 @@ class Countries extends Admin_Controller {
 		$this->template->render('countries_edit', $data);
 	}
 
-	public function _saveCountry() {
+    private function _saveCountry() {
     	if ($this->validateForm() === TRUE) {
             $save_type = (! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
@@ -173,7 +173,7 @@ class Countries extends Admin_Controller {
 		}
 	}
 
-	public function _deleteCountry() {
+    private function _deleteCountry() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Countries_model->deleteCountry($value);
@@ -185,7 +185,7 @@ class Countries extends Admin_Controller {
 		return TRUE;
 	}
 
-	public function validateForm() {
+    private function validateForm() {
 		$this->form_validation->set_rules('country_name', 'Country', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 		$this->form_validation->set_rules('iso_code_2', 'ISO Code 2', 'xss_clean|trim|required|exact_length[2]');
 		$this->form_validation->set_rules('iso_code_3', 'ISO Code 3', 'xss_clean|trim|required|exact_length[3]');

@@ -267,7 +267,7 @@ class Staffs extends Admin_Controller {
 		$this->output->set_output(json_encode($json));
 	}
 
-	public function _saveStaff($staff_email, $username) {
+	private function _saveStaff($staff_email, $username) {
         if (!$this->user->hasPermissions('modify', 'staffs') AND $this->user->getStaffId() !== $this->input->get('id')) {
             $this->alert->set('warning', 'Warning: You do not have permission to modify!');
             redirect(referrer_url());
@@ -286,7 +286,7 @@ class Staffs extends Admin_Controller {
 		}
 	}
 
-	public function _deleteStaff() {
+	private function _deleteStaff() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Staffs_model->deleteStaff($value);
@@ -298,7 +298,7 @@ class Staffs extends Admin_Controller {
 		return TRUE;
 	}
 
-	public function validateForm($staff_email = FALSE, $username = FALSE) {
+	private function validateForm($staff_email = FALSE, $username = FALSE) {
 		$this->form_validation->set_rules('staff_name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 
 		if ($staff_email !== $this->input->post('staff_email')) {
@@ -333,7 +333,7 @@ class Staffs extends Admin_Controller {
 		}
 	}
 
-	public function getTimezones() {
+	private function getTimezones() {
 		$timezone_identifiers = DateTimeZone::listIdentifiers();
 		$utc_time = new DateTime('now', new DateTimeZone('UTC'));
 

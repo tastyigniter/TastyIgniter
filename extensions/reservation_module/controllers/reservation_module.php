@@ -148,7 +148,7 @@ class Reservation_module extends Ext_Controller {
 	}
 
 
-	public function findTable() {
+	private function findTable() {
 		$time_format = '%h:%i %a';
 		$date_format = '%d-%m-%Y';
 		$current_date_time = time();
@@ -157,7 +157,7 @@ class Reservation_module extends Ext_Controller {
 
 		$this->form_validation->set_rules('location', 'Location', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('guest_num', 'Guest Number', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('reserve_date', 'Date', 'xss_clean|trim|required|valid_date|callback_validate_date');
+		$this->form_validation->set_rules('reserve_date', 'Date', 'xss_clean|trim|required|valid_date|callback__validate_date');
 		$this->form_validation->set_rules('occasion', 'Occasion', 'xss_clean|trim|required|integer');
 
   		if ($this->form_validation->run() === TRUE) {
@@ -193,27 +193,15 @@ class Reservation_module extends Ext_Controller {
 		}
 	}
 
-	public function validate_date($str) {
+	public function _validate_date($str) {
 
 		if (strtotime($str) < strtotime($this->location->currentDate())) {
-        	$this->form_validation->set_message('validate_date', 'Date must be after today, you can only make future reservations!');
+        	$this->form_validation->set_message('_validate_date', 'Date must be after today, you can only make future reservations!');
       		return FALSE;
 		} else {
       		return TRUE;
 		}
 	}
-
- 	/*public function validate_guest($str) {
-
- 		$result = $this->Reservations_model->getTablesByGuestNum($this->input->post('location'), $str);
-		//$this->Reservations_model->getTotalSeats($this->input->post('location'));
-		if ($this->input->post('location') && !empty($result)) {
-        	$this->form_validation->set_message('validate_guest', 'No tables available at the selected location!');
-      		return FALSE;
- 		} else {
-      		return TRUE;
-		}
-    }*/
 }
 
 /* End of file reservation_module.php */

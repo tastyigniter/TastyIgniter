@@ -199,7 +199,7 @@ class Coupons extends Admin_Controller {
 		$this->template->render('coupons_edit', $data);
 	}
 
-	public function _saveCoupon() {
+    private function _saveCoupon() {
     	if ($this->validateForm() === TRUE) {
             $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
@@ -213,7 +213,7 @@ class Coupons extends Admin_Controller {
 		}
 	}
 
-	public function _deleteCoupon() {
+    private function _deleteCoupon() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Coupons_model->deleteCoupon($value);
@@ -225,7 +225,7 @@ class Coupons extends Admin_Controller {
 		return TRUE;
 	}
 
-	public function validateForm() {
+    private function validateForm() {
 		$this->form_validation->set_rules('name', 'Coupon Name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 		$this->form_validation->set_rules('code', 'Code', 'xss_clean|trim|required|min_length[2]|max_length[15]');
 		$this->form_validation->set_rules('type', 'Type', 'xss_clean|trim|required|exact_length[1]');

@@ -126,7 +126,7 @@ class Banners extends Admin_Controller {
 		$this->template->render('banners_edit', $data);
 	}
 
-	public function _saveBanner() {
+    private function _saveBanner() {
     	if ($this->validateForm() === TRUE) {
 			$update['name'] 		= $this->input->post('name');
 			$update['type'] 		= $this->input->post('type');
@@ -162,7 +162,7 @@ class Banners extends Admin_Controller {
 		}
 	}
 
-	public function _deleteBanner() {
+    private function _deleteBanner() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Banners_model->deleteBanner($value);
@@ -174,7 +174,7 @@ class Banners extends Admin_Controller {
 		return TRUE;
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[255]');
 		$this->form_validation->set_rules('type', 'Type', 'xss_clean|trim|required|alpha|max_length[8]');
 		$this->form_validation->set_rules('click_url', 'Click URL', 'xss_clean|trim|required|min_length[2]|max_length[255]');

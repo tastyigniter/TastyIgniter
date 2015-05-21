@@ -160,7 +160,7 @@ class Categories extends Admin_Controller {
 		$this->template->render('categories_edit', $data);
 	}
 
-	public function _saveCategory() {
+	private function _saveCategory() {
     	if ($this->validateForm() === TRUE) {
             $save_type = (! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
@@ -174,7 +174,7 @@ class Categories extends Admin_Controller {
 		}
 	}
 
-	public function _deleteCategory() {
+    private function _deleteCategory() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $category_id) {
 				$this->Categories_model->deleteCategory($category_id);
@@ -186,7 +186,7 @@ class Categories extends Admin_Controller {
 		return TRUE;
 	}
 
-	public function validateForm() {
+    private function validateForm() {
 		$this->form_validation->set_rules('name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		$this->form_validation->set_rules('description', 'Description', 'xss_clean|trim|min_length[2]|max_length[1028]');
 		$this->form_validation->set_rules('permalink[permalink_id]', 'Permalink ID', 'xss_clean|trim|integer');

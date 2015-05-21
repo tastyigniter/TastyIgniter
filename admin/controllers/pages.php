@@ -153,7 +153,7 @@ class Pages extends Admin_Controller {
 		$this->template->render('pages_edit', $data);
 	}
 
-	public function _savePage() {
+	private function _savePage() {
     	if ($this->validateForm() === TRUE) {
             $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
@@ -167,7 +167,7 @@ class Pages extends Admin_Controller {
 		}
 	}
 
-	public function _deletePage() {
+	private function _deletePage() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $page_id) {
 				$this->Pages_model->deletePage($page_id);
@@ -179,7 +179,7 @@ class Pages extends Admin_Controller {
 		return TRUE;
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('language_id', 'Language', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		$this->form_validation->set_rules('title', 'Title', 'xss_clean|trim|required|min_length[2]|max_length[255]');

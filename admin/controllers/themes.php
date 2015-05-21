@@ -150,7 +150,7 @@ class Themes extends Admin_Controller {
 		$this->template->render('themes_edit', $data);
 	}
 
-    public function _themeTree($directory, $return_link, $parent = '') {
+    private function _themeTree($directory, $return_link, $parent = '') {
         $current_path = ($this->input->get('file')) ? explode('/', $this->input->get('file')) : array();
 
         $theme_tree = '';
@@ -184,7 +184,7 @@ class Themes extends Admin_Controller {
         return $theme_tree;
     }
 
-	public function _activateTheme() {
+	private function _activateTheme() {
         if ($this->input->get('action') === 'activate' AND $this->input->get('name') AND $this->input->get('location')) {
             $theme_name = $this->input->get('name');
             $theme_location = $this->input->get('location');
@@ -197,7 +197,7 @@ class Themes extends Admin_Controller {
         return TRUE;
 	}
 
-	public function _updateTheme($theme = array()) {
+	private function _updateTheme($theme = array()) {
         if ($this->input->get('name') AND $this->input->get('location') AND $this->validateForm($theme['customize']) === TRUE) {
             if ($this->input->post('editor_area') AND $this->input->get('file')) {
                 $theme_file = $this->input->get('file');
@@ -227,7 +227,7 @@ class Themes extends Admin_Controller {
         }
 	}
 
-	public function validateForm($is_customizable = FALSE) {
+	private function validateForm($is_customizable = FALSE) {
         $this->form_validation->set_rules('editor_area', 'Editor area');
 
         if ($is_customizable) {

@@ -152,7 +152,7 @@ class Currencies extends Admin_Controller {
 		$this->template->render('currencies_edit', $data);
 	}
 
-	public function _saveCurrency() {
+	private function _saveCurrency() {
     	if ($this->validateForm() === TRUE) {
             $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
@@ -166,7 +166,7 @@ class Currencies extends Admin_Controller {
 		}
 	}
 
-	public function _deleteCurrency() {
+	private function _deleteCurrency() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Currencies_model->deleteCurrency($value);
@@ -178,7 +178,7 @@ class Currencies extends Admin_Controller {
 		return TRUE;
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('currency_name', 'Title', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		$this->form_validation->set_rules('currency_code', 'Code', 'xss_clean|trim|required|exact_length[3]');
 		$this->form_validation->set_rules('currency_symbol', 'Symbol', 'xss_clean|trim|required');

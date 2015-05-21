@@ -425,7 +425,7 @@ class Image_manager extends Admin_Controller {
         $this->output->set_output($response);
 	}
 
-    public function _makeSize($size) {
+    private function _makeSize($size) {
         if (empty($size)) return '0 B';
 
         $units = array('B', 'KB', 'MB', 'GB', 'TB');
@@ -439,11 +439,11 @@ class Image_manager extends Admin_Controller {
         return (number_format($size, 0) . " " . $units[$u]);
     }
 
-    public function _fixGetParams($str) {
+    private function _fixGetParams($str) {
 		return strip_tags(preg_replace( "/[^a-zA-Z0-9\.\[\]_| -]/", '', $str));
 	}
 
-	public function _fixDirName($str){
+	private function _fixDirName($str){
 		return str_replace('~',' ',dirname(str_replace(' ','~',$str)));
 	}
 

@@ -133,7 +133,7 @@ class Dashboard extends Admin_Controller {
 		$this->output->set_output(json_encode($json));
 	}
 
-    public function getDatesFromRange($start, $end) {
+    private function getDatesFromRange($start, $end) {
         $interval = new DateInterval('P1D');
 
         $realEnd = new DateTime($end);

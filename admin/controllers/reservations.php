@@ -335,7 +335,7 @@ class Reservations extends Admin_Controller {
 		$this->template->render('reservations_edit', $data);
 	}
 
-	public function _updateReservation($status_id = 0, $assignee_id = 0) {
+	private function _updateReservation($status_id = 0, $assignee_id = 0) {
     	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 			$update = array();
 			$history = array();
@@ -364,7 +364,7 @@ class Reservations extends Admin_Controller {
 		}
 	}
 
-	public function _deleteReservation($reservation_id = FALSE) {
+	private function _deleteReservation($reservation_id = FALSE) {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Reservations_model->deleteReservation($value);
@@ -376,7 +376,7 @@ class Reservations extends Admin_Controller {
 		return TRUE;
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('status', 'Reservation Status', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('assigned_staff', 'Assign Staff', 'xss_clean|trim|integer');
 

@@ -200,7 +200,7 @@ class Reviews extends Admin_Controller {
 		$this->template->render('reviews_edit', $data);
 	}
 
-	public function _saveReview() {
+	private function _saveReview() {
     	if ($this->validateForm() === TRUE) {
             $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
@@ -214,7 +214,7 @@ class Reviews extends Admin_Controller {
 		}
 	}
 
-	public function _deleteReview() {
+	private function _deleteReview() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Reviews_model->deleteReview($value);
@@ -226,11 +226,11 @@ class Reviews extends Admin_Controller {
 		return TRUE;
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('sale_type', 'Sale Type', 'xss_clean|trim|required|alpha');
-		$this->form_validation->set_rules('sale_id', 'Sale ID', 'xss_clean|trim|required|integer|callback_check_sale_id');
-		$this->form_validation->set_rules('location_id', 'Location', 'xss_clean|trim|required|integer|callback_check_location');
-		$this->form_validation->set_rules('customer_id', 'Customer', 'xss_clean|trim|required|integer|callback_check_customer');
+		$this->form_validation->set_rules('sale_id', 'Sale ID', 'xss_clean|trim|required|integer|callback__check_sale_id');
+		$this->form_validation->set_rules('location_id', 'Location', 'xss_clean|trim|required|integer|callback__check_location');
+		$this->form_validation->set_rules('customer_id', 'Customer', 'xss_clean|trim|required|integer|callback__check_customer');
 		$this->form_validation->set_rules('author', 'Author', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('rating[quality]', 'Quality Rating', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('rating[delivery]', 'Delivery Rating', 'xss_clean|trim|required|integer');
@@ -245,11 +245,11 @@ class Reviews extends Admin_Controller {
 		}
 	}
 
-	public function check_sale_id($sale_id) {
+	public function _check_sale_id($sale_id) {
 		if ($this->input->post('sale_type') === 'order') {
 			$this->load->model('Orders_model');
 			if ( ! $this->Orders_model->validateOrder($sale_id)) {
-	        	$this->form_validation->set_message('check_sale_id', 'The %s entered can not be found in orders');
+	        	$this->form_validation->set_message('_check_sale_id', 'The %s entered can not be found in orders');
 				return FALSE;
 			} else {
 				return TRUE;
@@ -257,7 +257,7 @@ class Reviews extends Admin_Controller {
 		} else if ($this->input->post('sale_type') === 'reservation') {
 			$this->load->model('Reservations_model');
 			if ( ! $this->Reservations_model->validateReservation($sale_id)) {
-	        	$this->form_validation->set_message('check_sale_id', 'The %s entered can not be found in reservations');
+	        	$this->form_validation->set_message('_check_sale_id', 'The %s entered can not be found in reservations');
 				return FALSE;
 			} else {
 				return TRUE;
@@ -265,20 +265,20 @@ class Reviews extends Admin_Controller {
 		}
 	}
 
-	public function check_location($location_id) {
+	public function _check_location($location_id) {
 		$this->load->model('Locations_model');
 		if ( ! $this->Locations_model->validateLocation($location_id)) {
-        	$this->form_validation->set_message('check_location', 'The %s entered can not be found');
+        	$this->form_validation->set_message('_check_location', 'The %s entered can not be found');
 			return FALSE;
 		} else {
 			return TRUE;
 		}
 	}
 
-	public function check_customer($customer_id) {
+	public function _check_customer($customer_id) {
 		$this->load->model('Customers_model');
 		if ( ! $this->Customers_model->validateCustomer($customer_id)) {
-        	$this->form_validation->set_message('check_customer', 'The %s entered can not be found');
+        	$this->form_validation->set_message('_check_customer', 'The %s entered can not be found');
 			return FALSE;
 		} else {
 			return TRUE;

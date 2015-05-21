@@ -434,7 +434,7 @@ class Cart_module extends Ext_Controller {
 		$this->output->set_output(json_encode($json));	// encode the json array and set final out to be sent to jQuery AJAX
 	}
 
-	public function validateCoupon($code = '') {
+	private function validateCoupon($code = '') {
 		$error = '';
 
 		if (!empty($code)) {

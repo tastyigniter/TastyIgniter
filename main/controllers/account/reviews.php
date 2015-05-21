@@ -190,7 +190,7 @@ class Reviews extends Main_Controller {
 		$this->template->render('account/review_add', $data);
 	}
 
-	public function _addReview() {
+	private function _addReview() {
 			$add = array();
 		if ($this->validateForm() === TRUE) {
 			$add['sale_type'] 			= $this->uri->rsegment(3);
@@ -213,7 +213,7 @@ class Reviews extends Main_Controller {
 		}
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('location_id', 'Location', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('customer_id', 'Author', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('rating[quality]', 'Quality Rating', 'xss_clean|trim|required|integer');

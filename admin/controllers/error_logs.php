@@ -35,7 +35,7 @@ class Error_logs extends Admin_Controller {
 		$this->template->render('error_logs', $data);
 	}
 
-	public function _clearLog() {
+	private function _clearLog() {
         $log_path = IGNITEPATH .'/logs/';
 
         if (is_readable($log_path .'logs.php')) {

@@ -156,7 +156,7 @@ class Languages extends Admin_Controller {
 		$this->template->render('languages_edit', $data);
 	}
 
-	public function _saveLanguage() {
+	private function _saveLanguage() {
     	if ($this->validateForm() === TRUE) {
             $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
@@ -170,7 +170,7 @@ class Languages extends Admin_Controller {
 		}
 	}
 
-	public function _deleteLanguage() {
+	private function _deleteLanguage() {
         if (is_array($this->input->post('delete'))) {
             foreach ($this->input->post('delete') as $key => $language_id) {
                 $this->Languages_model->deleteLanguage($language_id);
@@ -182,7 +182,7 @@ class Languages extends Admin_Controller {
         return TRUE;
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		$this->form_validation->set_rules('code', 'Language Code', 'xss_clean|trim|required|min_length[2]');
 		$this->form_validation->set_rules('image', 'Image Icon', 'xss_clean|trim|required|min_length[2]|max_length[32]');

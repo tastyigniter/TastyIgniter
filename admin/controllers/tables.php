@@ -165,7 +165,7 @@ class Tables extends Admin_Controller {
 		$this->output->set_output(json_encode($json));
 	}
 
-	public function _saveTable() {
+	private function _saveTable() {
     	if ($this->validateForm() === TRUE) {
             $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
@@ -179,7 +179,7 @@ class Tables extends Admin_Controller {
 		}
 	}
 
-	public function _deleteTable() {
+	private function _deleteTable() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $table_id) {
 				$this->Tables_model->deleteTable($table_id);
@@ -191,10 +191,10 @@ class Tables extends Admin_Controller {
 		return TRUE;
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('table_name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[255]');
 		$this->form_validation->set_rules('min_capacity', 'Minimum', 'xss_clean|trim|required|integer|greater_than[1]');
-		$this->form_validation->set_rules('max_capacity', 'Capacity', 'xss_clean|trim|required|integer|greater_than[1]|callback_check_capacity');
+		$this->form_validation->set_rules('max_capacity', 'Capacity', 'xss_clean|trim|required|integer|greater_than[1]|callback__check_capacity');
 		$this->form_validation->set_rules('table_status', 'Status', 'xss_clean|trim|required|integer');
 
 		if ($this->form_validation->run() === TRUE) {
@@ -204,9 +204,9 @@ class Tables extends Admin_Controller {
 		}
 	}
 
-	public function check_capacity($str) {
+	public function _check_capacity($str) {
     	if ($str < $_POST['min_capacity']) {
-			$this->form_validation->set_message('check_capacity', 'The Maximum capacity value must be greater than minimum capacity value.');
+			$this->form_validation->set_message('_check_capacity', 'The Maximum capacity value must be greater than minimum capacity value.');
 			return FALSE;
 		}
 

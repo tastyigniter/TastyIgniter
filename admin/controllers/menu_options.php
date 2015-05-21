@@ -179,7 +179,7 @@ class Menu_options extends Admin_Controller {
 		$this->output->set_output(json_encode($json));
 	}
 
-	public function _saveOption() {
+	private function _saveOption() {
     	if ($this->validateForm() === TRUE) {
             $save_type = (! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
@@ -193,7 +193,7 @@ class Menu_options extends Admin_Controller {
 		}
 	}
 
-	public function _deleteMenuOption() {
+	private function _deleteMenuOption() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $option_id) {
 				$this->Menu_options_model->deleteOption($option_id);
@@ -205,7 +205,7 @@ class Menu_options extends Admin_Controller {
 		return TRUE;
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('option_name', 'Option Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		$this->form_validation->set_rules('display_type', 'Display Type', 'xss_clean|trim|required|alpha');
 		$this->form_validation->set_rules('priority', 'Priority', 'xss_clean|trim|required|integer');

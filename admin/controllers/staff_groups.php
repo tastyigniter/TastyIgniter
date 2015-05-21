@@ -129,7 +129,7 @@ class Staff_groups extends Admin_Controller {
 		$this->template->render('staff_groups_edit', $data);
 	}
 
-	public function _saveStaffGroup() {
+	private function _saveStaffGroup() {
     	if ($this->validateForm() === TRUE) {
             $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
@@ -143,7 +143,7 @@ class Staff_groups extends Admin_Controller {
 		}
 	}
 
-	public function _deleteStaffGroup() {
+	private function _deleteStaffGroup() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $staff_group_id) {
 				$this->Staff_groups_model->deleteStaffGroup($staff_group_id);
@@ -155,7 +155,7 @@ class Staff_groups extends Admin_Controller {
 		return TRUE;
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('staff_group_name', 'Group Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		$this->form_validation->set_rules('location_access', 'Location Access', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('permission[access][]', 'Access Permission', 'xss_clean|trim');

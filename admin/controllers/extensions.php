@@ -118,7 +118,7 @@ class Extensions extends Admin_Controller {
 		$this->template->render('extensions_add', $data);
 	}
 
-	public function _uploadExtension() {
+	private function _uploadExtension() {
     	if (isset($_FILES['extension_zip']) AND $this->validateUpload() === TRUE) {
             if ($this->Extensions_model->upload('module', $_FILES['extension_zip'])) {
                 $this->alert->set('success', 'Module extension uploaded successfully');
@@ -131,7 +131,7 @@ class Extensions extends Admin_Controller {
 		return FALSE;
 	}
 
-	public function _installExtension() {
+	private function _installExtension() {
     	if ($this->input->get('action') === 'install') {
  			if ($this->Extensions_model->extensionExists($this->input->get('name'))) {
 	    		if ($this->Extensions_model->install('module', $this->input->get('name'))) {
@@ -146,7 +146,7 @@ class Extensions extends Admin_Controller {
         return FALSE;
 	}
 
-	public function _uninstallExtension() {
+	private function _uninstallExtension() {
     	if ($this->input->get('action') === 'uninstall') {
             if ($this->Extensions_model->uninstall('module', $this->input->get('name'))) {
                 $this->alert->set('success', 'Extension Uninstalled successfully!');

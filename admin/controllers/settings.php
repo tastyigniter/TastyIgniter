@@ -193,7 +193,7 @@ class Settings extends Admin_Controller {
 		redirect('settings');
 	}
 
-	public function _updateSettings() {
+	private function _updateSettings() {
     	if ($this->validateForm() === TRUE) {
 			$update = array(
                 'site_name' 				=> $this->input->post('site_name'),
@@ -272,7 +272,7 @@ class Settings extends Admin_Controller {
 		}
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('site_name', 'Restaurant Name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 		$this->form_validation->set_rules('site_email', 'Restaurant Email', 'xss_clean|trim|required|valid_email');
 		$this->form_validation->set_rules('site_logo', 'Site Logo', 'xss_clean|trim|required');
@@ -302,7 +302,7 @@ class Settings extends Admin_Controller {
 		$this->form_validation->set_rules('main_address[address_1]', 'Address 1', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 		$this->form_validation->set_rules('main_address[address_2]', 'Address 2', 'xss_clean|trim|max_length[128]');
 		$this->form_validation->set_rules('main_address[city]', 'City', 'xss_clean|trim|required|min_length[2]|max_length[128]');
-		$this->form_validation->set_rules('main_address[postcode]', 'Postcode', 'xss_clean|trim|required|min_length[2]|max_length[10]|callback_get_lat_lag');
+		$this->form_validation->set_rules('main_address[postcode]', 'Postcode', 'xss_clean|trim|required|min_length[2]|max_length[10]|callback__get_lat_lag');
 		$this->form_validation->set_rules('main_address[country_id]', 'Country', 'xss_clean|trim|required|integer');
 
 		$this->form_validation->set_rules('maps_api_key', 'Google Maps API Key', 'xss_clean|trim');
@@ -327,7 +327,6 @@ class Settings extends Admin_Controller {
 		$this->form_validation->set_rules('themes_allowed_file', 'Themes Allowed Files', 'xss_clean|trim');
 		$this->form_validation->set_rules('themes_hidden_files', 'Themes Hidden Files', 'xss_clean|trim');
 		$this->form_validation->set_rules('themes_hidden_folders', 'Themes Hidden Folders', 'xss_clean|trim');
-//		$this->form_validation->set_rules('image_manager[root_folder]', 'Root Folder', 'xss_clean|trim|required|callback_validate_path');
 		$this->form_validation->set_rules('image_manager[max_size]', 'Maximum File Size', 'xss_clean|trim|required|numeric');
 		$this->form_validation->set_rules('image_manager[thumb_height]', 'Thumbnail Height', 'xss_clean|trim|required|numeric');
 		$this->form_validation->set_rules('image_manager[thumb_width]', 'Thumbnail Width', 'xss_clean|trim|required|numeric');
@@ -337,9 +336,6 @@ class Settings extends Admin_Controller {
 		$this->form_validation->set_rules('image_manager[move]', 'Move', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('image_manager[rename]', 'Rename', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('image_manager[delete]', 'Delete', 'xss_clean|trim|integer');
-//		$this->form_validation->set_rules('image_manager[allowed_ext]', 'Allowed Extension', 'xss_clean|trim|required');
-//		$this->form_validation->set_rules('image_manager[hidden_files]', 'Hidden Files', 'xss_clean|trim');
-//		$this->form_validation->set_rules('image_manager[hidden_folders]', 'Hidden Folders', 'xss_clean|trim');
 		$this->form_validation->set_rules('image_manager[transliteration]', 'Transliteration', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('image_manager[remember_days]', 'Remember Last Folder', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('protocol', 'Mail Protocol', 'xss_clean|trim|required');
@@ -364,7 +360,7 @@ class Settings extends Admin_Controller {
 
 	}
 
-	public function getTimezones() {
+	private function getTimezones() {
 		$timezone_identifiers = DateTimeZone::listIdentifiers();
 		$utc_time = new DateTime('now', new DateTimeZone('UTC'));
 
@@ -392,7 +388,7 @@ class Settings extends Admin_Controller {
 		return $timezone_list;
 	}
 
-	public function get_lat_lag() {
+	public function _get_lat_lag() {
 		if (isset($_POST['main_address']) AND is_array($_POST['main_address']) AND !empty($_POST['main_address']['postcode'])) {
 			$address_string =  implode(", ", $_POST['main_address']);
 			$address = urlencode($address_string);
@@ -405,22 +401,13 @@ class Settings extends Admin_Controller {
 				$_POST['main_address']['location_lng'] = $output->results[0]->geometry->location->lng;
 			    return TRUE;
     		} else {
-        		$this->form_validation->set_message('get_lat_lag', 'The Address you entered failed Geocoding, please enter a different address!');
+        		$this->form_validation->set_message('_get_lat_lag', 'The Address you entered failed Geocoding, please enter a different address!');
         		return FALSE;
     		}
         }
 	}
 
-	public function validate_path($str) {
-		if (strpos($str, '/') !== FALSE OR strpos($str, './') !== FALSE) {
-			$this->form_validation->set_message('validate_path', 'Root Folder must have NO SLASH!');
-			return FALSE;
-		}
-
-		return TRUE;
-	}
-
-	public function _delete_thumbs($thumb_path) {
+	private function _delete_thumbs($thumb_path) {
 		foreach (glob($thumb_path) as $path) {
 
 			if (file_exists($path) AND is_file($path) AND basename($path) === "index.html") {

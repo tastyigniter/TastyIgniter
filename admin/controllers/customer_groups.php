@@ -119,7 +119,7 @@ class Customer_groups extends Admin_Controller {
 		$this->template->render('customer_groups_edit', $data);
 	}
 
-	public function _saveCustomerGroup() {
+	private function _saveCustomerGroup() {
     	if ($this->validateForm() === TRUE) {
             $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
@@ -133,7 +133,7 @@ class Customer_groups extends Admin_Controller {
 		}
 	}
 
-	public function _deleteCustomerGroup() {
+	private function _deleteCustomerGroup() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				$this->Customer_groups_model->deleteCustomerGroup($value);
@@ -145,7 +145,7 @@ class Customer_groups extends Admin_Controller {
 		return TRUE;
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('group_name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		$this->form_validation->set_rules('approval', 'Approval', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('description', 'Description', 'xss_clean|trim|min_length[2]|max_length[1028]');

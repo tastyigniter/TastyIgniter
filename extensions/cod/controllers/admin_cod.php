@@ -80,7 +80,7 @@ class Admin_cod extends Ext_Controller {
         }
 	}
 
-	public function _updateCod() {
+	private function _updateCod() {
     	if (!$this->input->post('delete') AND $this->validateForm() === TRUE) {
 			$update = array();
 
@@ -104,7 +104,7 @@ class Admin_cod extends Ext_Controller {
 		}
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('order_total', 'Minimum Total', 'xss_clean|trim|required|numeric');
 		$this->form_validation->set_rules('order_status', 'Order Status', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('status', 'Status', 'xss_clean|trim|required|integer');

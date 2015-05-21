@@ -167,7 +167,7 @@ class Address extends Main_Controller {
 		$this->template->render('account/address_edit', $data);
 	}
 
-	public function _updateAddress($address_id = FALSE) {
+	private function _updateAddress($address_id = FALSE) {
 		$this->load->library('location'); 														// load the customer library
 
 		if ($this->validateForm() === TRUE AND $this->uri->rsegment(3) == $address_id) {
@@ -188,12 +188,12 @@ class Address extends Main_Controller {
 		}
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		// START of form validation rules
 		$this->form_validation->set_rules('address[address_1]', 'Address 1', 'xss_clean|trim|required|min_length[3]|max_length[128]');
 		$this->form_validation->set_rules('address[address_2]', 'Address 2', 'xss_clean|trim|max_length[128]');
 		$this->form_validation->set_rules('address[city]', 'City', 'xss_clean|trim|required|min_length[2]|max_length[128]');
-		$this->form_validation->set_rules('address[postcode]', 'Postcode', 'xss_clean|trim|required|min_length[2]|max_length[11]|callback_get_lat_lag');
+		$this->form_validation->set_rules('address[postcode]', 'Postcode', 'xss_clean|trim|required|min_length[2]|max_length[11]|callback__get_lat_lag');
 		$this->form_validation->set_rules('address[country]', 'Country', 'xss_clean|trim|required|integer');
 		// END of form validation rules
 
@@ -203,7 +203,7 @@ class Address extends Main_Controller {
 			return FALSE;
 		}
 	}
-	public function get_lat_lag() {
+	public function _get_lat_lag() {
 		if (isset($_POST['address']) && is_array($_POST['address']) && !empty($_POST['address']['postcode'])) {
 			$address_string =  implode(", ", $_POST['address']);
 			$address = urlencode($address_string);
@@ -216,7 +216,7 @@ class Address extends Main_Controller {
 				$_POST['address']['location_lng'] = $output->results[0]->geometry->location->lng;
 			    return TRUE;
     		} else {
-        		$this->form_validation->set_message('get_lat_lag', 'The Address you entered failed Geocoding, please enter a different address!');
+        		$this->form_validation->set_message('_get_lat_lag', 'The Address you entered failed Geocoding, please enter a different address!');
         		return FALSE;
     		}
         }

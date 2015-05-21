@@ -283,7 +283,7 @@ class Messages extends Admin_Controller {
 		$this->template->render('messages_edit', $data);
 	}
 
-	public function _sendMessage() {
+	private function _sendMessage() {
     	if ($this->validateForm() === TRUE) {
 			$this->load->model('Customers_model');
 			$add = array();
@@ -380,7 +380,7 @@ class Messages extends Admin_Controller {
 		}
 	}
 
-	public function _updateMessageState($state = '', $message_id = '', $staff_id = '') {
+	private function _updateMessageState($state = '', $message_id = '', $staff_id = '') {
     	if (is_numeric($staff_id)) {
 			if ($state === 'unread') {
 				$state = '0';
@@ -418,7 +418,7 @@ class Messages extends Admin_Controller {
         return FALSE;
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('recipient', 'To', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 		$this->form_validation->set_rules('subject', 'Subject', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 		$this->form_validation->set_rules('body', 'Body', 'required|min_length[3]');

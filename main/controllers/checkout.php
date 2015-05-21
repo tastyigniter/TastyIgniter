@@ -395,7 +395,7 @@ class Checkout extends Main_Controller {
         return $data;
     }
 
-	public function _validateCheckout() {														// method to validate checkout form fields
+	private function _validateCheckout() {														// method to validate checkout form fields
         if ($this->input->post() AND $this->validateForm() === TRUE) {
             $order_data = $this->session->userdata('order_data');
 
@@ -458,7 +458,7 @@ class Checkout extends Main_Controller {
 
     }
 
-	public function _confirmPayment($order_data, $cart_contents) {
+	private function _confirmPayment($order_data, $cart_contents) {
 
         if (!empty($order_data) AND !empty($cart_contents) AND $this->input->post('payment')) {
 
@@ -484,7 +484,7 @@ class Checkout extends Main_Controller {
 		}
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		// START of form validation rules
 		$this->form_validation->set_rules('first_name', 'First Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		$this->form_validation->set_rules('last_name', 'Last Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
@@ -496,11 +496,11 @@ class Checkout extends Main_Controller {
 		}
 
 		$this->form_validation->set_rules('telephone', 'Telephone', 'xss_clean|trim|required|numeric|max_length[20]');
-		$this->form_validation->set_rules('order_type', 'Order Type', 'xss_clean|trim|required|integer|callback_order_type');
-		$this->form_validation->set_rules('order_time', 'Delivery or Collection Time', 'xss_clean|trim|required|valid_time|callback_validate_time');
+		$this->form_validation->set_rules('order_type', 'Order Type', 'xss_clean|trim|required|integer|callback__order_type');
+		$this->form_validation->set_rules('order_time', 'Delivery or Collection Time', 'xss_clean|trim|required|valid_time|callback__validate_time');
 
         if ($this->input->post('order_type') === '1' AND $this->input->post('address')) {
-            $this->form_validation->set_rules('address_id', 'Address', 'xss_clean|trim|integer|callback_validate_address');
+            $this->form_validation->set_rules('address_id', 'Address', 'xss_clean|trim|integer|callback__validate_address');
 
             foreach ($this->input->post('address') as $key => $address) {
 				$this->form_validation->set_rules('address['.$key.'][address_id]', 'Address', 'xss_clean|trim');
@@ -514,7 +514,7 @@ class Checkout extends Main_Controller {
 		$this->form_validation->set_rules('comment', 'Comment', 'xss_clean|trim|max_length[520]');
 
 		if ($this->input->post('checkout_step') === 'two') {
-			$this->form_validation->set_rules('payment', 'Payment Method', 'xss_clean|trim|required|alpha_dash|callback_validate_payment');
+			$this->form_validation->set_rules('payment', 'Payment Method', 'xss_clean|trim|required|alpha_dash|callback__validate_payment');
 
             if ($this->config->item('checkout_terms') === '1') {
                 $this->form_validation->set_rules('terms_condition', 'Terms & Condition', 'xss_clean|trim|required|integer');
@@ -530,25 +530,25 @@ class Checkout extends Main_Controller {
 		}
 	}
 
-	public function validate_time($str) { 	// validation callback function to check if order_time $_POST data is a valid time, is less than the restaurant current time and is within the restaurant opening and closing hour
+	public function _validate_time($str) { 	// validation callback function to check if order_time $_POST data is a valid time, is less than the restaurant current time and is within the restaurant opening and closing hour
 		if (strtotime($str) < strtotime($this->location->currentTime())) {
-        	$this->form_validation->set_message('validate_time', $this->lang->line('error_less_time'));
+        	$this->form_validation->set_message('_validate_time', $this->lang->line('error_less_time'));
       		return FALSE;
     	} else if ( ! $this->location->checkDeliveryTime($str)) {
-        	$this->form_validation->set_message('validate_time', $this->lang->line('error_no_time'));
+        	$this->form_validation->set_message('_validate_time', $this->lang->line('error_no_time'));
       		return FALSE;
 		} else {																				// else validation is successful
 			return TRUE;
 		}
 	}
 
-	public function order_type($type) {
+	public function _order_type($type) {
 		if ($this->config->item('location_order') === '1') {
 			if (($type == '1') AND ( ! $this->location->hasDelivery())) { 					// checks if cart contents is empty
-				$this->form_validation->set_message('order_type', $this->lang->line('error_no_delivery'));
+				$this->form_validation->set_message('_order_type', $this->lang->line('error_no_delivery'));
 				return FALSE;
 			} else if (($type == '2') AND ( ! $this->location->hasCollection())) { 				// checks if cart contents is empty
-				$this->form_validation->set_message('order_type', $this->lang->line('error_no_collection'));
+				$this->form_validation->set_message('_order_type', $this->lang->line('error_no_collection'));
 				return FALSE;
 			} else {																				// else validation is successful
 				return TRUE;
@@ -556,8 +556,8 @@ class Checkout extends Main_Controller {
 		}
 	}
 
-	public function validate_address($address_id) {
-        if ($this->input->post('order_type') === '1' AND $this->input->post('address')) {
+	public function _validate_address($address_id) {
+        if ($this->input->post('_order_type') === '1' AND $this->input->post('address')) {
             foreach ($this->input->post('address') as $address) {
                 if (empty($address_id) OR $address['address_id'] === $address_id) {
                     $country = $this->Countries_model->getCountry($address['country_id']);
@@ -570,15 +570,15 @@ class Checkout extends Main_Controller {
                 }
             }
 
-            $this->form_validation->set_message('validate_address', $this->lang->line('error_covered_area'));
+            $this->form_validation->set_message('_validate_address', $this->lang->line('error_covered_area'));
             return FALSE;
 		}
 	}
 
-	public function validate_payment($payment) {
+	public function _validate_payment($payment) {
         $local_payments = $this->location->payments();
         if (is_array($local_payments) AND !in_array($payment, $local_payments)) {
-            $this->form_validation->set_message('validate_payment', $this->lang->line('error_local_payment'));
+            $this->form_validation->set_message('_validate_payment', $this->lang->line('error_local_payment'));
             return FALSE;
         }
 

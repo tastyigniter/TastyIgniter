@@ -67,7 +67,7 @@ class Settings extends Base_Controller {
         }
     }
 
-    public function _checkSettings() {
+    private function _checkSettings() {
         $this->form_validation->set_rules('site_name', 'Restaurant name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
         $this->form_validation->set_rules('site_email', 'Restaurant email', 'xss_clean|trim|required|valid_email');
         $this->form_validation->set_rules('staff_name', 'Staff name', 'xss_clean|trim|required|min_length[2]|max_length[128]');

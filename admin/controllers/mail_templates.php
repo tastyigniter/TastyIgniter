@@ -145,7 +145,7 @@ class Mail_templates extends Admin_Controller {
 		$this->template->render('mail_templates_variables', $data);
 	}
 
-	public function _saveTemplate() {
+	private function _saveTemplate() {
     	if ($this->validateForm() === TRUE) {
             $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
@@ -159,7 +159,7 @@ class Mail_templates extends Admin_Controller {
 		}
 	}
 
-	public function _deleteTemplate() {
+	private function _deleteTemplate() {
     	if (is_array($this->input->post('delete'))) {
 			foreach ($this->input->post('delete') as $key => $value) {
 				if ($value === $this->config->item('mail_template_id')) {
@@ -174,7 +174,7 @@ class Mail_templates extends Admin_Controller {
 		return TRUE;
 	}
 
-	public function validateForm() {
+	private function validateForm() {
 		$this->form_validation->set_rules('name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 
 		if (!$this->input->get('id')) {
