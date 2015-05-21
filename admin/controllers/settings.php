@@ -2,9 +2,10 @@
 
 class Settings extends Admin_Controller {
 
-	public function __construct() {
+    public $_permission_rules = array('access', 'modify[index|delete_thumbs]');
+
+    public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 		$this->load->model('Locations_model');
 		$this->load->model('Settings_model');
 		$this->load->model('Countries_model');

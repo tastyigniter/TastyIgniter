@@ -2,9 +2,10 @@
 
 class Error_logs extends Admin_Controller {
 
+    public $_permission_rules = array('access', 'modify');
+
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 	}
 
 	public function index() {

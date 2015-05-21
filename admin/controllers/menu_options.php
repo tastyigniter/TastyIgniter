@@ -2,9 +2,10 @@
 
 class Menu_options extends Admin_Controller {
 
-	public function __construct() {
+    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
+
+    public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 		$this->load->library('pagination');
 		$this->load->library('currency'); // load the currency library
 		$this->load->model('Menu_options_model'); // load the menus model
@@ -182,7 +183,7 @@ class Menu_options extends Admin_Controller {
     	if ($this->validateForm() === TRUE) {
             $save_type = (! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-			if ($option_id = $this->Menu_options_model->saveOption($this->input->post())) {
+			if ($option_id = $this->Menu_options_model->saveOption($this->input->get('id'), $this->input->post())) {
 				$this->alert->set('success', 'Menu option ' . $save_type . ' successfully.');
 			} else {
 				$this->alert->set('warning', 'An error occurred, ' . $save_type . ' updated.');
@@ -194,8 +195,8 @@ class Menu_options extends Admin_Controller {
 
 	public function _deleteMenuOption() {
     	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $value) {
-				$this->Menu_options_model->deleteMenuOption($value);
+			foreach ($this->input->post('delete') as $key => $option_id) {
+				$this->Menu_options_model->deleteOption($option_id);
 			}
 
 			$this->alert->set('success', 'Menu option(s) deleted successfully!');

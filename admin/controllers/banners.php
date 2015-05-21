@@ -2,10 +2,11 @@
 
 class Banners extends Admin_Controller {
 
+    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
+
 	public function __construct() {
 		parent::__construct();
-		$this->load->library('user');
-		$this->load->model('Banners_model');
+        $this->load->model('Banners_model');
 		$this->load->model('Image_tool_model');
 	}
 
@@ -151,7 +152,7 @@ class Banners extends Admin_Controller {
 
             $save_type = (! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-            if ($banner_id = $this->Banners_model->saveBanner($update)) {
+            if ($banner_id = $this->Banners_model->saveBanner($this->input->get('id'), $update)) {
 				$this->alert->set('success', 'Banner ' . $save_type . ' successfully.');
 			} else {
 				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');

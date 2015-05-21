@@ -2,9 +2,10 @@
 
 class Countries extends Admin_Controller {
 
+    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
+
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 		$this->load->library('pagination');
 		$this->load->model('Countries_model');
 		$this->load->model('Image_tool_model');
@@ -146,15 +147,7 @@ class Countries extends Admin_Controller {
 			$data['flag']['input'] = 'data/flags/no_flag.png';
 		}
 
-		if ($this->input->post() AND $this->_addCountry() === TRUE) {
-			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {
-				redirect('countries/edit?id='. $this->input->post('insert_id'));
-			} else {
-				redirect('countries');
-			}
-		}
-
-		if ($this->input->post() AND $this->_updateCountry() === TRUE) {
+		if ($this->input->post() AND $country_id = $this->_saveCountry()) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('countries');
 			}
@@ -166,48 +159,17 @@ class Countries extends Admin_Controller {
 		$this->template->render('countries_edit', $data);
 	}
 
-	public function _addCountry() {
-    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$add = array();
+	public function _saveCountry() {
+    	if ($this->validateForm() === TRUE) {
+            $save_type = (! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-			$add['country_name'] 	= $this->input->post('country_name');
-			$add['iso_code_2'] 		= $this->input->post('iso_code_2');
-			$add['iso_code_3'] 		= $this->input->post('iso_code_3');
-			$add['flag'] 			= $this->input->post('flag');
-			$add['format'] 			= $this->input->post('format');
-			$add['status'] 			= $this->input->post('status');
-
-			if ($_POST['insert_id'] = $this->Countries_model->addCountry($add)) {
-				$this->alert->set('success', 'Country added successfully.');
+			if ($country_id = $this->Countries_model->saveCountry($this->input->get('id'), $this->input->post())) {
+				$this->alert->set('success', 'Country ' . $save_type . ' successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, ' . $save_type . ' updated.');
 			}
 
-			return TRUE;
-		}
-	}
-
-	public function _updateCountry() {
-    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-
-			$update = array();
-
-			$update['country_id'] 		= $this->input->get('id');
-			$update['country_name'] 	= $this->input->post('country_name');
-			$update['iso_code_2'] 		= $this->input->post('iso_code_2');
-			$update['iso_code_3'] 		= $this->input->post('iso_code_3');
-			$update['flag'] 			= $this->input->post('flag');
-			$update['format'] 			= $this->input->post('format');
-			$update['status'] 			= $this->input->post('status');
-
-
-			if ($this->Countries_model->updateCountry($update)) {
-				$this->alert->set('success', 'Country updated successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
-			}
-
-			return TRUE;
+			return $country_id;
 		}
 	}
 

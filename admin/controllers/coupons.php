@@ -2,9 +2,10 @@
 
 class Coupons extends Admin_Controller {
 
+    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
+
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 		$this->load->library('pagination');
 		$this->load->model('Coupons_model');
 	}
@@ -164,12 +165,12 @@ class Coupons extends Admin_Controller {
 		$data['weekdays'] = array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun');
 
 		$data['fixed_time'] 		= '24hours';
-		if (isset($coupon_info['fixed_from_time'], $coupon_info['fixed_to_time']) AND ($coupon_info['fixed_from_time'] !== '00:00:00' AND $coupon_info['fixed_to_time'] !== '23:59:00')) {
+		if (isset($coupon_info['fixed_from_time'], $coupon_info['fixed_to_time']) AND ($coupon_info['fixed_from_time'] !== '00:00:00' OR $coupon_info['fixed_to_time'] !== '23:59:00')) {
 			$data['fixed_time'] 	= 'custom';
 		}
 
 		$data['recurring_time'] 		= '24hours';
-		if (isset($coupon_info['recurring_from_time'], $coupon_info['recurring_to_time']) AND ($coupon_info['recurring_from_time'] !== '00:00:00' AND $coupon_info['recurring_to_time'] !== '23:59:00')) {
+		if (isset($coupon_info['recurring_from_time'], $coupon_info['recurring_to_time']) AND ($coupon_info['recurring_from_time'] !== '00:00:00' OR $coupon_info['recurring_to_time'] !== '23:59:00')) {
 			$data['recurring_time'] 	= 'custom';
 		}
 
@@ -186,15 +187,7 @@ class Coupons extends Admin_Controller {
 			);
 		}
 
-		if ($this->input->post() AND $this->_addCoupon() === TRUE) {
-			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {
-				redirect('coupons/edit?id='. $this->input->post('insert_id'));
-			} else {
-				redirect('coupons');
-			}
-		}
-
-		if ($this->input->post() AND $this->_updateCoupon() === TRUE) {
+		if ($this->input->post() AND $coupon_id = $this->_saveCoupon()) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('coupons');
 			}
@@ -206,96 +199,17 @@ class Coupons extends Admin_Controller {
 		$this->template->render('coupons_edit', $data);
 	}
 
-	public function _addCoupon() {
-    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$add = array();
+	public function _saveCoupon() {
+    	if ($this->validateForm() === TRUE) {
+            $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-			$add['name'] 					= $this->input->post('name');
-			$add['code'] 					= str_replace(' ', '', $this->input->post('code'));
-			$add['type'] 					= $this->input->post('type');
-			$add['discount'] 				= $this->input->post('discount');
-			$add['min_total'] 				= $this->input->post('min_total');
-			$add['redemptions'] 			= $this->input->post('redemptions');
-			$add['customer_redemptions'] 	= $this->input->post('customer_redemptions');
-			$add['description'] 			= $this->input->post('description');
-			$add['validity'] 				= $this->input->post('validity');
-			$validity_times 				= $this->input->post('validity_times');
-			$add['fixed_date'] 				= $validity_times['fixed_date'];
-			$add['period_start_date'] 		= $validity_times['period_start_date'];
-			$add['period_end_date'] 		= $validity_times['period_end_date'];
-			$add['recurring_every'] 		= $validity_times['recurring_every'];
-			$add['status'] 					= $this->input->post('status');
-
-			if ($this->input->post('fixed_time') !== '24hours') {
-				$add['fixed_from_time'] 	= $validity_times['fixed_from_time'];
-				$add['fixed_to_time'] 		= $validity_times['fixed_to_time'];
+			if ($coupon_id = $this->Coupons_model->saveCoupon($this->input->get('id'), $this->input->post())) {
+				$this->alert->set('success', 'Coupon ' . $save_type . ' successfully.');
 			} else {
-				$add['fixed_from_time'] 	= '12:00 AM';
-				$add['fixed_to_time'] 		= '11:59 PM';
+				$this->alert->set('warning', 'An error occurred, ' . $save_type . ' updated.');
 			}
 
-			if ($this->input->post('recurring_time') !== '24hours') {
-				$add['recurring_from_time'] = $validity_times['recurring_from_time'];
-				$add['recurring_to_time'] 	= $validity_times['recurring_to_time'];
-			} else {
-				$add['recurring_from_time'] = '12:00 AM';
-				$add['recurring_to_time'] 	= '11:59 PM';
-			}
-
-			if ($_POST['insert_id'] = $this->Coupons_model->addCoupon($add)) {
-				$this->alert->set('success', 'Coupon added successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
-			}
-
-			return TRUE;
-		}
-	}
-
-	public function _updateCoupon() {
-    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$update = array();
-
-			$update['coupon_id'] 			= $this->input->get('id');
-			$update['name'] 				= $this->input->post('name');
-			$update['code'] 				= str_replace(' ', '', $this->input->post('code'));
-			$update['type'] 				= $this->input->post('type');
-			$update['discount'] 			= $this->input->post('discount');
-			$update['min_total'] 			= $this->input->post('min_total');
-			$update['redemptions'] 			= $this->input->post('redemptions');
-			$update['customer_redemptions'] = $this->input->post('customer_redemptions');
-			$update['description'] 			= $this->input->post('description');
-			$update['validity'] 			= $this->input->post('validity');
-			$validity_times 				= $this->input->post('validity_times');
-			$update['fixed_date'] 			= isset($validity_times['fixed_date']) ? $validity_times['fixed_date'] : '';
-			$update['period_start_date'] 	= isset($validity_times['period_start_date']) ? $validity_times['period_start_date'] : '';
-			$update['period_end_date'] 		= isset($validity_times['period_end_date']) ? $validity_times['period_end_date'] : '';
-			$update['recurring_every'] 		= isset($validity_times['recurring_every']) ? $validity_times['recurring_every'] : '';
-			$update['status'] 				= $this->input->post('status');
-
-			if ($this->input->post('fixed_time') !== '24hours') {
-				$update['fixed_from_time'] 		= $validity_times['fixed_from_time'];
-				$update['fixed_to_time'] 		= $validity_times['fixed_to_time'];
-			} else {
-				$update['fixed_from_time'] 		= '12:00 AM';
-				$update['fixed_to_time'] 		= '11:59 PM';
-			}
-
-			if ($this->input->post('recurring_time') !== '24hours') {
-				$update['recurring_from_time'] 	= $validity_times['recurring_from_time'];
-				$update['recurring_to_time'] 	= $validity_times['recurring_to_time'];
-			} else {
-				$update['recurring_from_time'] 	= '12:00 AM';
-				$update['recurring_to_time'] 	= '11:59 PM';
-			}
-
-			if ($this->Coupons_model->updateCoupon($update)) {
-				$this->alert->set('success', 'Coupon updated successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
-			}
-
-			return TRUE;
+			return $coupon_id;
 		}
 	}
 

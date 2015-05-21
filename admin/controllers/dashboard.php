@@ -4,7 +4,6 @@ class Dashboard extends Admin_Controller {
 
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 		$this->load->library('currency'); // load the currency library
 		$this->load->model('Dashboard_model');
 		$this->load->model('Locations_model'); // load the menus model

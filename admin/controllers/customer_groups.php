@@ -2,9 +2,10 @@
 
 class Customer_groups extends Admin_Controller {
 
+    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
+
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 		$this->load->library('pagination');
 		$this->load->model('Customer_groups_model');
 	}
@@ -106,15 +107,7 @@ class Customer_groups extends Admin_Controller {
 		$data['approval'] 			= $group_info['approval'];
 		$data['description'] 		= $group_info['description'];
 
-		if ($this->input->post() AND $this->_addCustomerGroup() === TRUE) {
-			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {
-				redirect('customer_groups/edit?id='. $this->input->post('insert_id'));
-			} else {
-				redirect('customer_groups');
-			}
-		}
-
-		if ($this->input->post() AND $this->_updateCustomerGroup() === TRUE) {
+		if ($this->input->post() AND $customer_group_id = $this->_saveCustomerGroup()) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('customer_groups');
 			}
@@ -126,40 +119,17 @@ class Customer_groups extends Admin_Controller {
 		$this->template->render('customer_groups_edit', $data);
 	}
 
-	public function _addCustomerGroup() {
-    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$add = array();
+	public function _saveCustomerGroup() {
+    	if ($this->validateForm() === TRUE) {
+            $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-			$add['group_name']	= $this->input->post('group_name');
-			$add['approval']	= $this->input->post('approval');
-			$add['description']	= $this->input->post('description');
-
-			if ($_POST['insert_id'] = $this->Customer_groups_model->addCustomerGroup($add)) {
-				$this->alert->set('success', 'Customer Groups added successfully.');
+			if ($customer_group_id = $this->Customer_groups_model->saveCustomerGroup($this->input->get('id'), $this->input->post())) {
+				$this->alert->set('success', 'Customer Groups ' . $save_type . ' successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, ' . $save_type . ' updated.');
 			}
 
-			return TRUE;
-		}
-	}
-
-	public function _updateCustomerGroup() {
-    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$update = array();
-
-			$update['customer_group_id']	= $this->input->get('id');
-			$update['group_name']			= $this->input->post('group_name');
-			$update['approval']				= $this->input->post('approval');
-			$update['description']			= $this->input->post('description');
-
-			if ($this->Customer_groups_model->updateCustomerGroup($update)) {
-				$this->alert->set('success', 'Customer Group updated successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
-			}
-
-			return TRUE;
+			return $customer_group_id;
 		}
 	}
 

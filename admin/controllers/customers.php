@@ -2,9 +2,10 @@
 
 class Customers extends Admin_Controller {
 
+    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
+
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 		$this->load->library('pagination');
 		$this->load->model('Customers_model');
 		$this->load->model('Addresses_model');
@@ -277,15 +278,7 @@ class Customers extends Admin_Controller {
 			);
 		}
 
-		if ($this->input->post() AND $this->_addCustomer() === TRUE) {
-			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {
-				redirect('customers/edit?id='. $this->input->post('insert_id'));
-			} else {
-				redirect('customers');
-			}
-		}
-
-		if ($this->input->post() AND $this->_updateCustomer($data['email']) === TRUE) {
+		if ($this->input->post() AND $customer_id = $this->_saveCustomer($data['email'])) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('customers');
 			}
@@ -321,70 +314,24 @@ class Customers extends Admin_Controller {
 		$this->output->set_output(json_encode($json));
 	}
 
-	public function _addCustomer() {
-    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$add = array();
+	public function _saveCustomer($customer_email) {
+    	if ($this->validateForm($customer_email) === TRUE) {
+            $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-			$add['first_name'] 				= $this->input->post('first_name');
-			$add['last_name'] 				= $this->input->post('last_name');
-			$add['email'] 					= $this->input->post('email');
-			$add['password'] 				= $this->input->post('password');
-			$add['telephone'] 				= $this->input->post('telephone');
-			$add['security_question_id'] 	= $this->input->post('security_question');
-			$add['security_answer'] 		= $this->input->post('security_answer');
-			$add['newsletter'] 				= $this->input->post('newsletter');
-			$add['customer_group_id'] 		= $this->input->post('customer_group_id');
-			$add['date_added'] 				= mdate('%Y-%m-%d', time());
-			$add['status']					= $this->input->post('status');
-			$add['address']					= $this->input->post('address');
-
-			if ($_POST['insert_id'] = $this->Customers_model->addCustomer($add)) {
-				$this->alert->set('success', 'Customer added successfully.');
+			if ($customer_id = $this->Customers_model->saveCustomer($this->input->get('id'), $this->input->post())) {
+				$this->alert->set('success', 'Customer ' . $save_type . ' successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occurred, nothing added.');
+				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
 			}
 
-			return TRUE;
+			return $customer_id;
 		}
 	}
 
-	public function _updateCustomer($customer_email) {
-    	if (is_numeric($this->input->get('id')) AND $this->validateForm($customer_email) === TRUE) {
-			$update = array();
-
-			$update['customer_id'] 			= $this->input->get('id');
-			$update['first_name'] 			= $this->input->post('first_name');
-			$update['last_name'] 			= $this->input->post('last_name');
-			$update['telephone'] 			= $this->input->post('telephone');
-			$update['security_question_id'] = $this->input->post('security_question');
-			$update['security_answer']		= $this->input->post('security_answer');
-			$update['newsletter'] 			= $this->input->post('newsletter');
-			$update['customer_group_id'] 	= $this->input->post('customer_group_id');
-			$update['status']				= $this->input->post('status');
-			$update['address']				= $this->input->post('address');
-
-			if ($customer_email !== $this->input->post('email')) {
-				$update['email']	= $this->input->post('email');
-			}
-
-			if ($this->input->post('password')) {
-				$update['password'] = $this->input->post('password');
-			}
-
-			if ($this->Customers_model->updateCustomer($update)) {
-				$this->alert->set('success', 'Customer updated successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
-			}
-
-			return TRUE;
-		}
-	}
-
-	public function _deleteCustomer($customer_id = FALSE) {
+	public function _deleteCustomer() {
     	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $value) {
-				$this->Customers_model->deleteCustomer($value);
+			foreach ($this->input->post('delete') as $key => $customer_id) {
+				$this->Customers_model->deleteCustomer($customer_id);
 			}
 
 			$this->alert->set('success', 'Customer(s) deleted successfully!');
@@ -395,7 +342,7 @@ class Customers extends Admin_Controller {
 
 	public function validateForm($customer_email = FALSE) {
 		$this->form_validation->set_rules('first_name', 'First Name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
-		$this->form_validation->set_rules('last_name', 'First Name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
+		$this->form_validation->set_rules('last_name', 'Last Name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
 
 		if ($customer_email !== $this->input->post('email')) {
 			$this->form_validation->set_rules('email', 'Email', 'xss_clean|trim|required|valid_email|max_length[96]|is_unique[customers.email]');
@@ -412,7 +359,7 @@ class Customers extends Admin_Controller {
 		}
 
 		$this->form_validation->set_rules('telephone', 'Telephone', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('security_question', 'Security Question', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('security_question_id', 'Security Question', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('security_answer', 'Security Answer', 'xss_clean|trim|required|min_length[2]');
 		$this->form_validation->set_rules('newsletter', 'Newsletter', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('customer_group_id', 'Customer Group', 'xss_clean|trim|required|integer');

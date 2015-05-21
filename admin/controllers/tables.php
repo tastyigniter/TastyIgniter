@@ -2,9 +2,10 @@
 
 class Tables extends Admin_Controller {
 
-	public function __construct() {
+    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
+
+    public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 		$this->load->library('pagination');
 		$this->load->model('Tables_model');
 	}
@@ -125,15 +126,7 @@ class Tables extends Admin_Controller {
 		$data['max_capacity'] 		= $table_info['max_capacity'];
 		$data['table_status'] 		= $table_info['table_status'];
 
-		if ($this->input->post() AND $this->_addTable() === TRUE) {
-			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {
-				redirect('tables/edit?id='. $this->input->post('insert_id'));
-			} else {
-				redirect('tables');
-			}
-		}
-
-		if ($this->input->post() AND $this->_updateTable() === TRUE) {
+		if ($this->input->post() AND $table_id = $this->_saveTable()) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('tables');
 			}
@@ -172,49 +165,24 @@ class Tables extends Admin_Controller {
 		$this->output->set_output(json_encode($json));
 	}
 
-	public function _addTable() {
-        if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$add = array();
+	public function _saveTable() {
+    	if ($this->validateForm() === TRUE) {
+            $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-			$add['table_name'] 		= $this->input->post('table_name');
-			$add['min_capacity'] 	= $this->input->post('min_capacity');
-			$add['max_capacity'] 	= $this->input->post('max_capacity');
-			$add['table_status'] 	= $this->input->post('table_status');
-
-			if ($_POST['insert_id'] = $this->Tables_model->addTable($add)) {
-				$this->alert->set('success', 'Table added successfully.');
+			if ($table_id = $this->Tables_model->saveTable($this->input->get('id'), $this->input->post())) {
+				$this->alert->set('success', 'Table ' . $save_type . ' successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occurred, nothing added.');
+				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
 			}
 
-			return TRUE;
-		}
-	}
-
-	public function _updateTable() {
-    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$update = array();
-
-			$update['table_id'] 		= $this->input->get('id');
-			$update['table_name'] 		= $this->input->post('table_name');
-			$update['min_capacity'] 	= $this->input->post('min_capacity');
-			$update['max_capacity'] 	= $this->input->post('max_capacity');
-			$update['table_status'] 	= $this->input->post('table_status');
-
-			if ($this->Tables_model->updateTable($update)) {
-				$this->alert->set('success', 'Table updated successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
-			}
-
-			return TRUE;
+			return $table_id;
 		}
 	}
 
 	public function _deleteTable() {
     	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $value) {
-				$this->Tables_model->deleteTable($value);
+			foreach ($this->input->post('delete') as $key => $table_id) {
+				$this->Tables_model->deleteTable($table_id);
 			}
 
 			$this->alert->set('success', 'Table(s) deleted successfully!');

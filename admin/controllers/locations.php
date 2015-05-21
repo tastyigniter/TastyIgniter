@@ -2,9 +2,10 @@
 
 class Locations extends Admin_Controller {
 
-	public function __construct() {
+    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
+
+    public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 		$this->load->library('location'); // load the location library
         $this->load->library('permalink');
 		$this->load->library('pagination');
@@ -349,15 +350,7 @@ class Locations extends Admin_Controller {
 			}
 		}
 
-		if ($this->input->post() AND $this->_addLocation() === TRUE) {
-			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {
-				redirect('locations/edit?id='. $this->input->post('insert_id'));
-			} else {
-				redirect('locations');
-			}
-		}
-
-		if ($this->input->post() AND $this->_updateLocation() === TRUE) {
+		if ($this->input->post() AND $location_id = $this->_saveLocation()) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('locations');
 			}
@@ -369,90 +362,17 @@ class Locations extends Admin_Controller {
 		$this->template->render('locations_edit', $data);
 	}
 
-	public function _addLocation() {
-    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$add = array();
+	public function _saveLocation() {
+    	if ($this->validateForm() === TRUE) {
+            $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-			$add['location_name'] 		= $this->input->post('location_name');
-			$add['address'] 			= $this->input->post('address');
-			$add['email'] 				= $this->input->post('email');
-			$add['telephone'] 			= $this->input->post('telephone');
-			$add['description'] 		= $this->input->post('description');
-			$add['offer_delivery'] 		= $this->input->post('offer_delivery');
-			$add['offer_collection'] 	= $this->input->post('offer_collection');
-			$add['delivery_time'] 		= $this->input->post('delivery_time');
-			$add['collection_time'] 	= $this->input->post('collection_time');
-			$add['last_order_time'] 	= $this->input->post('last_order_time');
-			$add['tables'] 				= $this->input->post('tables');
-			$add['reservation_interval'] = $this->input->post('reservation_interval');
-			$add['reservation_turn'] 	= $this->input->post('reservation_turn');
-			$add['location_status'] 	= $this->input->post('location_status');
-			$add['permalink'] 			= $this->input->post('permalink');
-
-			$add['options'] = array(
-				'opening_hours' 		=> array(
-											'opening_type'		=> $this->input->post('opening_type'),
-											'daily_days'		=> $this->input->post('daily_days'),
-											'daily_hours'		=> $this->input->post('daily_hours'),
-											'flexible_hours'	=> $this->input->post('flexible_hours')
-										),
-				'payments'				=> $this->input->post('payments'),
-				'delivery_areas'		=> $this->input->post('delivery_areas')
-			);
-
-			if ($_POST['insert_id'] = $this->Locations_model->addLocation($add)) {
-				$this->alert->set('success', 'Location added successfully.');
+			if ($location_id = $this->Locations_model->saveLocation($this->input->get('id'), $this->input->post())) {
+				$this->alert->set('success', 'Location ' . $save_type . ' successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occurred, nothing added.');
+				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
 			}
 
-			return TRUE;
-		}
-	}
-
-	public function _updateLocation() {
-    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$update = array();
-
-			$update['location_id'] 			= $this->input->get('id');
-			$update['location_name'] 		= $this->input->post('location_name');
-			$update['address'] 				= $this->input->post('address');
-			$update['email'] 				= $this->input->post('email');
-			$update['telephone'] 			= $this->input->post('telephone');
-			$update['description'] 			= $this->input->post('description');
-			$update['offer_delivery'] 		= $this->input->post('offer_delivery');
-			$update['offer_collection'] 	= $this->input->post('offer_collection');
-			$update['delivery_time'] 		= $this->input->post('delivery_time');
-			$update['collection_time'] 		= $this->input->post('collection_time');
-			$update['last_order_time'] 		= $this->input->post('last_order_time');
-			$update['tables'] 				= $this->input->post('tables');
-			$update['reservation_interval'] = $this->input->post('reservation_interval');
-			$update['reservation_turn'] 	= $this->input->post('reservation_turn');
-			$update['location_status'] 		= $this->input->post('location_status');
-			$update['permalink'] 			= $this->input->post('permalink');
-
-			$update['options'] = array(
-				'opening_hours' 		=> array(
-											'opening_type'		=> $this->input->post('opening_type'),
-											'daily_days'		=> $this->input->post('daily_days'),
-											'daily_hours'		=> $this->input->post('daily_hours'),
-											'flexible_hours'	=> $this->input->post('flexible_hours')
-										),
-				'payments'				=> $this->input->post('payments'),
-				'delivery_areas'		=> $this->input->post('delivery_areas')
-			);
-
-			if ($this->Locations_model->updateLocation($update)) {
-				$this->alert->set('success', 'Location updated successfully.');
-
-				if ($update['location_id'] === $this->config->item('default_location_id')) {
-					$this->Settings_model->addSetting('config', 'main_address', $this->Locations_model->getAddress($update['location_id']), '1');
-				}
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
-			}
-
-			return TRUE;
+			return $location_id;
 		}
 	}
 

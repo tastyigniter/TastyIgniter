@@ -2,9 +2,10 @@
 
 class Themes extends Admin_Controller {
 
-	public function __construct() {
+    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
+
+    public function __construct() {
 		parent::__construct();
-		$this->load->library('user');
 		$this->load->model('Themes_model');
 		$this->load->model('Settings_model');
 		$this->load->model('Image_tool_model');

@@ -2,9 +2,10 @@
 
 class Layouts extends Admin_Controller {
 
-	public function __construct() {
+    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
+
+    public function __construct() {
 		parent::__construct();
-		$this->load->library('user');
 		$this->load->model('Layouts_model');
 		$this->load->model('Extensions_model');
 	}
@@ -109,14 +110,6 @@ class Layouts extends Admin_Controller {
 			);
 		}
 
-		if ($this->input->post() AND $this->_addLayout() === TRUE) {
-			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {
-				redirect('layouts/edit?id='. $this->input->post('insert_id'));
-			} else {
-				redirect('layouts');
-			}
-		}
-
 		if ($this->input->post() AND $layout_id = $this->_saveLayout()) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('layouts');
@@ -133,7 +126,7 @@ class Layouts extends Admin_Controller {
     	if ($this->validateForm() === TRUE) {
             $save_type = (! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-			if ($layout_id = $this->Layouts_model->saveLayout($this->input->post())) {
+			if ($layout_id = $this->Layouts_model->saveLayout($this->input->get('id'), $this->input->post())) {
 				$this->alert->set('success', 'Layout ' . $save_type . ' successfully.');
 			} else {
 				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');

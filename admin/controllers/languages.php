@@ -2,9 +2,10 @@
 
 class Languages extends Admin_Controller {
 
+    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
+
 	public function __construct() {
 		parent::__construct();
-		$this->load->library('user');
 		$this->load->library('pagination');
 		$this->load->model('Languages_model');
 		$this->load->model('Image_tool_model');
@@ -112,15 +113,7 @@ class Languages extends Admin_Controller {
 			$data['action']	= site_url('languages/edit');
 		}
 
-		if ($this->input->post() AND $this->_addLanguage() === TRUE) {
-			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {
-				redirect('languages/edit?id='. $this->input->post('insert_id'));
-			} else {
-				redirect('languages');
-			}
-		}
-
-		if ($this->input->post() AND $this->_updateLanguage() === TRUE) {
+		if ($this->input->post() AND $language_id = $this->_saveLanguage()) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('languages');
 			}
@@ -163,52 +156,24 @@ class Languages extends Admin_Controller {
 		$this->template->render('languages_edit', $data);
 	}
 
-	public function _addLanguage() {
-    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$add = array();
+	public function _saveLanguage() {
+    	if ($this->validateForm() === TRUE) {
+            $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-			$add['name'] 		= $this->input->post('name');
-			$add['code'] 		= $this->input->post('code');
-			$add['image'] 		= $this->input->post('image');
-			$add['directory'] 	= $this->input->post('directory');
-			$add['status'] 		= $this->input->post('status');
-
-			if ($_POST['insert_id'] = $this->Languages_model->addLanguage($add)) {
-				$this->alert->set('success', 'Language added successfully.');
-				return TRUE;
+			if ($language_id = $this->Languages_model->saveLanguage($this->input->get('id'), $this->input->post())) {
+				$this->alert->set('success', 'Language ' . $save_type . ' successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occurred, nothing added.');
-				return FALSE
-				;
-			}
-		}
-	}
-
-	public function _updateLanguage() {
-    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$update = array();
-
-			$update['language_id'] 	= $this->input->get('id');
-			$update['name'] 		= $this->input->post('name');
-			$update['code'] 		= $this->input->post('code');
-			$update['image'] 		= $this->input->post('image');
-			$update['directory'] 	= $this->input->post('directory');
-			$update['status'] 		= $this->input->post('status');
-
-			if ($this->Languages_model->updateLanguage($update)) {
-				$this->alert->set('success', 'Language updated successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing added.');
+				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
 			}
 
-			return TRUE;
+            return $language_id;
 		}
 	}
 
 	public function _deleteLanguage() {
         if (is_array($this->input->post('delete'))) {
-            foreach ($this->input->post('delete') as $key => $value) {
-                $this->Languages_model->deleteLanguage($value);
+            foreach ($this->input->post('delete') as $key => $language_id) {
+                $this->Languages_model->deleteLanguage($language_id);
             }
 
             $this->alert->set('success', 'Language deleted successfully!');
@@ -221,7 +186,7 @@ class Languages extends Admin_Controller {
 		$this->form_validation->set_rules('name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		$this->form_validation->set_rules('code', 'Language Code', 'xss_clean|trim|required|min_length[2]');
 		$this->form_validation->set_rules('image', 'Image Icon', 'xss_clean|trim|required|min_length[2]|max_length[32]');
-		$this->form_validation->set_rules('directory', 'Directory Name', 'xss_clean|trim|required|min_length[2]|max_length[32]|callback_valid_dir');
+		$this->form_validation->set_rules('directory', 'Directory Name', 'xss_clean|trim|required|min_length[2]|max_length[32]|callback__valid_directory');
 		$this->form_validation->set_rules('status', 'Status', 'xss_clean|trim|required|integer');
 
 		if ($this->form_validation->run() === TRUE) {
@@ -231,9 +196,9 @@ class Languages extends Admin_Controller {
 		}
 	}
 
-	public function valid_dir($str) {
+	public function _valid_directory($str) {
 		if (!file_exists(APPPATH .'language/'. $str)) {
-			$this->form_validation->set_message('valid_dir', 'The specified directory name does not exist in the language folder');
+			$this->form_validation->set_message('_valid_directory', 'The specified directory name does not exist in the language folder');
 			return FALSE;
 		} else {																				// else validation is successful
 			return TRUE;

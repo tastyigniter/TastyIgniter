@@ -4,7 +4,6 @@ class Permission extends Admin_Controller {
 
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 	}
 
 	public function index() {

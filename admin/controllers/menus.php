@@ -2,9 +2,10 @@
 
 class Menus extends Admin_Controller {
 
-	public function __construct() {
+    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
+
+    public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 		$this->load->library('pagination');
 		$this->load->library('currency'); // load the currency library
         $this->load->model('Menus_model'); // load the menus model
@@ -280,7 +281,7 @@ class Menus extends Admin_Controller {
     	if ($this->validateForm() === TRUE) {
             $save_type = (! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-			if ($menu_id = $this->Menus_model->saveMenu($this->input->post())) {
+			if ($menu_id = $this->Menus_model->saveMenu($this->input->get('id'), $this->input->post())) {
 				$this->alert->set('success', 'Menu ' . $save_type . ' successfully.');
 			} else {
 				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');

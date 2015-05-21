@@ -2,9 +2,10 @@
 
 class Pages extends Admin_Controller {
 
-	public function __construct() {
+    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
+
+    public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
         $this->load->library('permalink');
 		$this->load->library('pagination');
 		$this->load->model('Pages_model');
@@ -140,15 +141,7 @@ class Pages extends Admin_Controller {
 
 		$data['menu_locations'] = array('Hide', 'All', 'Header', 'Footer', 'Module');
 
-		if ($this->input->post() AND $this->_addPage() === TRUE) {
-			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {
-				redirect('pages/edit?id='. $this->input->post('insert_id'));
-			} else {
-				redirect('pages');
-			}
-		}
-
-		if ($this->input->post() AND $this->_updatePage() === TRUE) {
+		if ($this->input->post() AND $page_id = $this->_savePage()) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('pages');
 			}
@@ -160,66 +153,24 @@ class Pages extends Admin_Controller {
 		$this->template->render('pages_edit', $data);
 	}
 
-	public function _addPage() {
-    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$add = array();
+	public function _savePage() {
+    	if ($this->validateForm() === TRUE) {
+            $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-			$add['name'] 				= $this->input->post('name');
-			$add['title'] 				= $this->input->post('title');
-			$add['heading'] 			= $this->input->post('heading');
-			$add['content'] 			= $this->input->post('content');
-			$add['permalink'] 			= $this->input->post('permalink');
-			$add['meta_description'] 	= $this->input->post('meta_description');
-			$add['meta_keywords'] 		= $this->input->post('meta_keywords');
-			$add['language_id'] 		= $this->input->post('language_id');
-			$add['layout_id'] 			= $this->input->post('layout_id');
-			$add['date_added'] 			= mdate('%Y-%m-%d %H:%i:%s', time());
-			$add['date_updated'] 		= mdate('%Y-%m-%d %H:%i:%s', time());
-			$add['navigation'] 			= $this->input->post('navigation');
-			$add['status'] 				= $this->input->post('status');
-
-			if ($_POST['insert_id'] = $this->Pages_model->addPage($add)) {
-				$this->alert->set('success', 'Page added successfully.');
+			if ($page_id = $this->Pages_model->savePage($this->input->get('id'), $this->input->post())) {
+				$this->alert->set('success', 'Page ' . $save_type . ' successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
+				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
 			}
 
-			return TRUE;
-		}
-	}
-
-	public function _updatePage() {
-    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$update = array();
-
-			$update['page_id'] 				= $this->input->get('id');
-			$update['name'] 				= $this->input->post('name');
-			$update['title'] 				= $this->input->post('title');
-			$update['heading'] 				= $this->input->post('heading');
-			$update['content'] 				= $this->input->post('content');
-			$update['meta_description'] 	= $this->input->post('meta_description');
-			$update['meta_keywords'] 		= $this->input->post('meta_keywords');
-			$update['layout_id'] 			= $this->input->post('layout_id');
-			$update['language_id'] 			= $this->input->post('language_id');
-			$update['permalink'] 			= $this->input->post('permalink');
-			$update['navigation'] 			= $this->input->post('navigation');
-			$update['date_updated'] 		= mdate('%Y-%m-%d %H:%i:%s', time());
-			$update['status'] 				= $this->input->post('status');
-
-			if ($this->Pages_model->updatePage($update)) {
-				$this->alert->set('success', 'Page updated successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
-			}
-
-			return TRUE;
+			return $page_id;
 		}
 	}
 
 	public function _deletePage() {
     	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $value) {
-				$this->Pages_model->deletePage($value);
+			foreach ($this->input->post('delete') as $key => $page_id) {
+				$this->Pages_model->deletePage($page_id);
 			}
 
 			$this->alert->set('success', 'Page(s) deleted successfully!');

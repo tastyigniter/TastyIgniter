@@ -2,9 +2,10 @@
 
 class Extensions extends Admin_Controller {
 
+    public $_permission_rules = array('access[index|edit|add]', 'modify[index|edit|add]');
+
    	public function __construct() {
 		parent::__construct();
-		$this->load->library('user');
 		$this->load->model('Extensions_model');
 	}
 
@@ -70,10 +71,10 @@ class Extensions extends Admin_Controller {
                     $error_msg = 'An error occurred, module extension admin options disabled';
                 } else if ($extension['installed'] === FALSE) {
                     $error_msg = 'An error occurred, module extension is not installed properly';
-//                } else if (!$this->user->hasPermissions('access', $extension_name)) {
-//                    $error_msg = 'You do not have the right permission to access';
-//                } else if ($this->input->post() AND !$this->user->hasPermissions('modify', $extension_name)) {
-//                    $error_msg = 'You do not have the right permission to modify';
+                } else if (!$this->user->hasPermissions('access', $extension_name)) {
+                    $error_msg = 'You do not have the right permission to access this module';
+                } else if ($this->input->post() AND !$this->user->hasPermissions('modify', $extension_name)) {
+                    $error_msg = 'You do not have the right permission to modify this module';
                 } else {
                     $_GET['extension_id'] = isset($extension['extension_id']) ? $extension['extension_id'] : 0;
                     $this->load->module($ext_controller);
@@ -89,7 +90,7 @@ class Extensions extends Admin_Controller {
 
         if (!$loaded OR $error_msg) {
             $this->alert->set('warning', $error_msg);
-            redirect('extensions');
+            redirect(referrer_url());
         }
 
 		$this->template->setPartials(array('header', 'footer'));

@@ -2,6 +2,8 @@
 
 class Image_manager extends Admin_Controller {
 
+    public $_permission_rules = 'access';
+
     private $_uploads = FALSE;
     private $_new_folder = FALSE;
     private $_move = FALSE;
@@ -13,7 +15,7 @@ class Image_manager extends Admin_Controller {
 
     public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('media_manager', $this->config->item('image_manager'));
+        $this->load->library('media_manager', $this->config->item('image_manager'));
 
         $setting = $this->media_manager->getOptions();
         foreach ($setting as $key => $value) {
@@ -203,24 +205,24 @@ class Image_manager extends Admin_Controller {
 		$json = array();
 
     	if (!$this->user->hasPermissions('modify', 'image_manager')) {
-			$json['alert'] = '<span class="error">Warning: You do not have permission to create new folder!</span>';
+			$json['alert'] = '<span class="alert-warning">Warning: You do not have permission to create new folder!</span>';
 		} else if (!$this->input->post('name')) {
-            $json['alert'] = '<span class="error">Please enter your new folder name.</span>';
+            $json['alert'] = '<span class="alert-danger">Please enter your new folder name.</span>';
         } else if (!$this->_new_folder) {
-            $json['alert'] = '<span class="error">Creating new folder is disabled, check administration settings.</span>';
+            $json['alert'] = '<span class="alert-warning">Creating new folder is disabled, check administration settings.</span>';
         } else {
 
             $sub_folder = $this->security->sanitize_filename($this->input->post('sub_folder'), TRUE);
             $folder_name = $this->media_manager->fixFileName($this->input->post('name'));
 
             if (strpos($this->input->post('sub_folder'), '/') === 0 OR strpos($this->input->post('sub_folder'), './') !== FALSE OR strpos($folder_name, '/') !== FALSE) {
-				$json['alert'] = '<span class="error">Invalid file/folder name</span>';
+				$json['alert'] = '<span class="alert-danger">Invalid file/folder name</span>';
 			} else if ($this->media_manager->fileExists($sub_folder . $folder_name)) {
-				$json['alert'] = '<span class="success">Gallery already exists</span>';
+				$json['alert'] = '<span class="alert-danger">Gallery already exists</span>';
 			} else {
                 if (!isset($json['alert'])) {
                     $this->media_manager->newFolder($sub_folder . $folder_name);
-                    $json['alert'] = '<span class="success">Folder created successfully</span>';
+                    $json['success'] = '<span class="alert-success">Folder created successfully</span>';
                 }
             }
 		}
@@ -232,11 +234,11 @@ class Image_manager extends Admin_Controller {
         $json = array();
 
         if (!$this->user->hasPermissions('modify', 'image_manager')) {
-            $json['alert'] = '<span class="error">Warning: You do not have permission to rename file!</span>';
+            $json['alert'] = '<span class="alert-warning">Warning: You do not have permission to rename file!</span>';
         } else if (!$this->input->post('file_path') AND !$this->input->post('file_name') AND !$this->input->post('new_name')) {
-            $json['alert'] = '<span class="error">Please enter your new folder name.</span>';
+            $json['alert'] = '<span class="alert-danger">Please enter your new folder name.</span>';
         } else if (!$this->_rename) {
-            $json['alert'] = '<span class="error">Renaming file/folder is disabled, check administration settings.</span>';
+            $json['alert'] = '<span class="alert-warning">Renaming file/folder is disabled, check administration settings.</span>';
         } else {
 
             $file_path = $this->security->sanitize_filename($this->input->post('file_path'), TRUE);
@@ -244,21 +246,21 @@ class Image_manager extends Admin_Controller {
             $new_name = $this->media_manager->fixFileName($this->input->post('new_name'));
 
             if (strpos($file_path . $file_name, '/') === 0 OR strpos($file_path . $file_name, './') !== FALSE OR strpos($file_name, '/') !== FALSE) {
-                $json['alert'] = '<span class="error">Invalid file/folder name</span>';
+                $json['alert'] = '<span class="alert-danger">Invalid file/folder name</span>';
             } else if (strpos($new_name, '/') !== FALSE) {
-                $json['alert'] = '<span class="error">Invalid new file/folder name</span>';
+                $json['alert'] = '<span class="alert-danger">Invalid new file/folder name</span>';
             } else {
                 $info = pathinfo($new_name);
                 if (isset($info['extension']) AND !in_array($info['extension'], $this->_allowed_ext)) {
-                    $json['alert'] = '<span class="error">File extension is not allowed.</span>';
+                    $json['alert'] = '<span class="alert-danger">File extension is not allowed.</span>';
                 } else if (!$this->media_manager->isWritable(dirname($file_path . $file_name)) OR !$this->media_manager->isWritable($file_path . $file_name)) {
-                    $json['alert'] = '<span class="error">Pemission denied or file not found</span>';
+                    $json['alert'] = '<span class="alert-danger">Pemission denied or file not found</span>';
                 } else {
                     if (!isset($json['alert'])) {
                         if ($this->media_manager->rename($file_path . $file_name, $new_name)) {
-                            $json['alert'] = '<span class="success">File/Folder renamed successfully</span>';
+                            $json['success'] = '<span class="alert-success">File/Folder renamed successfully</span>';
                         } else {
-                            $json['alert'] = '<span class="error">File/Folder already exists</span>';
+                            $json['alert'] = '<span class="alert-danger">File/Folder already exists</span>';
                         }
                     }
                 }
@@ -272,11 +274,11 @@ class Image_manager extends Admin_Controller {
 		$json = array();
 
     	if (!$this->user->hasPermissions('modify', 'image_manager')) {
-			$json['alert'] = '<span class="error">Warning: You do not have permission to copy file!</span>';
+			$json['alert'] = '<span class="alert-warning">Warning: You do not have permission to copy file!</span>';
 		} else if (!$this->input->post('to_folder') AND !$this->input->post('copy_files')) {
-            $json['alert'] = '<span class="error">Please select the destination, the source and the file/folder you wants to move.</span>';
+            $json['alert'] = '<span class="alert-danger">Please select the destination, the source and the file/folder you wants to move.</span>';
         } else if (!$this->_copy) {
-            $json['alert'] = '<span class="error">Copying file/folder is disabled, check administration settings.</span>';
+            $json['alert'] = '<span class="alert-warning">Copying file/folder is disabled, check administration settings.</span>';
         } else {
 
 			$to_folder = $this->security->sanitize_filename($this->input->post('to_folder'), TRUE);
@@ -284,18 +286,18 @@ class Image_manager extends Admin_Controller {
 			$copy_files = json_decode($this->input->post('copy_files'));
 
 			if (!is_array($copy_files) AND empty($copy_files)) {
-				$json['alert'] = '<span class="error">Please select the file/folder you want to move.</span>';
+				$json['alert'] = '<span class="alert-danger">Please select the file/folder you want to move.</span>';
 			} else if (!$this->media_manager->isWritable($to_folder)) {
-				$json['alert'] = '<span class="error">Pemission denied</span>';
+				$json['alert'] = '<span class="alert-danger">Pemission denied</span>';
 			} else {
                 if (!isset($json['alert'])) {
                     foreach ($copy_files as $copy_file) {
                         $copy_file = $this->media_manager->fixFileName($copy_file);
 
                         if (!$this->media_manager->copy($from_folder . $copy_file, $to_folder . $copy_file)) {
-                            $json['alert'] = '<span class="success">File/Folder already exist in destination folder</span>';
+                            $json['alert'] = '<span class="alert-danger">File/Folder already exist in destination folder</span>';
                         } else {
-                            $json['alert'] = '<span class="success">File/Folder copied successfully</span>';
+                            $json['success'] = '<span class="alert-success">File/Folder copied successfully</span>';
                         }
                     }
                 }
@@ -309,11 +311,11 @@ class Image_manager extends Admin_Controller {
 		$json = array();
 
     	if (!$this->user->hasPermissions('modify', 'image_manager')) {
-			$json['alert'] = '<span class="error">Warning: You do not have permission to move file!</span>';
+			$json['alert'] = '<span class="alert-warning">Warning: You do not have permission to move file!</span>';
 		} else if (!$this->input->post('to_folder') AND !$this->input->post('move_files')) {
-            $json['alert'] = '<span class="error">Please select the destination, the source and the file/folder you wants to move.</span>';
+            $json['alert'] = '<span class="alert-danger">Please select the destination, the source and the file/folder you wants to move.</span>';
         } else if (!$this->_move) {
-            $json['alert'] = '<span class="error">Moving file/folder is disabled, check administration settings.</span>';
+            $json['alert'] = '<span class="alert-warning">Moving file/folder is disabled, check administration settings.</span>';
         } else {
 
 			$to_folder = $this->security->sanitize_filename($this->input->post('to_folder'), TRUE);
@@ -321,18 +323,18 @@ class Image_manager extends Admin_Controller {
 			$move_files = json_decode($this->input->post('move_files'));
 
             if (!is_array($move_files) AND empty($move_files)) {
-				$json['alert'] = '<span class="error">Please select the file/folder you want to move.</span>';
+				$json['alert'] = '<span class="alert-danger">Please select the file/folder you want to move.</span>';
 			} else if (!$this->media_manager->isWritable($to_folder)) {
-				$json['alert'] = '<span class="error">Pemission denied or does not exist.</span>';
+				$json['alert'] = '<span class="alert-danger">Pemission denied or does not exist.</span>';
 			} else {
                 if (!isset($json['alert'])) {
                     foreach ($move_files as $move_file) {
                         $move_file = $this->media_manager->fixFileName($move_file);
 
                         if (!$this->media_manager->move($from_folder . $move_file, $to_folder . $move_file)) {
-                            $json['alert'] = '<span class="success">File/Folder already exist in destination folder</span>';
+                            $json['alert'] = '<span class="alert-danger">File/Folder already exist in destination folder</span>';
                         } else {
-                            $json['alert'] = '<span class="success">File/Folder moved successfully</span>';
+                            $json['success'] = '<span class="alert-success">File/Folder moved successfully</span>';
                         }
                     }
                 }
@@ -346,11 +348,11 @@ class Image_manager extends Admin_Controller {
 		$json = array();
 
     	if (!$this->user->hasPermissions('modify', 'image_manager')) {
-			$json['alert'] = '<span class="error">Warning: You do not have permission to delete file!</span>';
+			$json['alert'] = '<span class="alert-warning">Warning: You do not have permission to delete file!</span>';
 		} else if (!$this->input->post('file_path') AND !($this->input->post('file_name') OR $this->input->post('file_names'))) {
-            $json['alert'] = '<span class="error">Please select the file/folder you wish to delete.</span>';
+            $json['alert'] = '<span class="alert-danger">Please select the file/folder you wish to delete.</span>';
         } else if (!$this->_delete) {
-            $json['alert'] = '<span class="error">Deleting file/folder is disabled, check administration settings.</span>';
+            $json['alert'] = '<span class="alert-warning">Deleting file/folder is disabled, check administration settings.</span>';
         } else {
 
 			$file_path = $this->security->sanitize_filename($this->input->post('file_path'), TRUE);
@@ -358,7 +360,7 @@ class Image_manager extends Admin_Controller {
             $file_name = $this->input->post('file_name');
 
             if (strpos($file_path, '/') === 0 OR strpos($file_path, './') !== FALSE OR strpos($file_name, '/') !== FALSE) {
-                $json['alert'] = '<span class="error">Invalid file/folder path</span>';
+                $json['alert'] = '<span class="alert-danger">Invalid file/folder path</span>';
             }
 
 			if ($file_name AND empty($file_names)) {
@@ -370,10 +372,10 @@ class Image_manager extends Admin_Controller {
                     $file_name = $this->media_manager->fixFileName($file_name);
 
                     if (!$this->media_manager->isWritable($file_path . $file_name)) {
-                        $json['alert'] = '<span class="error">Pemission denied or does not exist.</span>';
+                        $json['alert'] = '<span class="alert-danger">Pemission denied or does not exist.</span>';
                         break;
                     } else if ($this->media_manager->delete($file_path . $file_name)) {
-                        $json['alert'] = '<span class="success">File (s) deleted successfully</span>';
+                        $json['success'] = '<span class="alert-success">File (s) deleted successfully</span>';
                     }
                 }
             }
@@ -386,9 +388,9 @@ class Image_manager extends Admin_Controller {
 		$json = array();
 
     	if (!$this->user->hasPermissions('modify', 'image_manager')) {
-			$json['error'] = '<span class="error">Warning: You do not have permission to upload file!</span>';
+			$json['error'] = '<span class="alert-warning">Warning: You do not have permission to upload file!</span>';
 		} else if (!$this->_uploads) {
-			$json['error'] = '<span class="error">Uploading is disabled</span>';
+			$json['error'] = '<span class="alert-warning">Uploading is disabled</span>';
 		} else {
             $sub_folder = $this->security->sanitize_filename($this->input->post('sub_folder'), TRUE);
             if (strpos($this->input->post('sub_folder'), '/') === 0 OR strpos($this->input->post('sub_folder'), './') !== FALSE) {
@@ -396,15 +398,15 @@ class Image_manager extends Admin_Controller {
             }
 
             if (!$this->media_manager->isWritable($sub_folder)) {
-                $json['error'] = '<span class="error">Pemission denied: File is not writable.</span>';
+                $json['error'] = '<span class="alert-danger">Pemission denied: File is not writable.</span>';
             } else if (!$this->media_manager->fileExists($sub_folder)) {
-                $json['error'] = '<span class="error">Invalid upload path specified</span>';
+                $json['error'] = '<span class="alert-danger">Invalid upload path specified</span>';
             } else {
                 if (!isset($json['error'])) {
                     if (!$this->media_manager->upload($sub_folder)) {
-                        $json['error'] = '<span class="error">Something went wrong when saving the file, please try again.</span>';
+                        $json['error'] = '<span class="alert-danger">Something went wrong when saving the file, please try again.</span>';
                     } else {
-                        $json['success'] = '<span class="error">Uploaded Successfully</span>';
+                        $json['success'] = '<span class="alert-success">Uploaded Successfully</span>';
                     }
                 }
             }

@@ -2,9 +2,10 @@
 
 class Messages extends Admin_Controller {
 
-	public function __construct() {
+    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
+
+    public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 		$this->load->library('pagination');
 		$this->load->model('Messages_model');
 		$this->load->model('Staffs_model');
@@ -369,7 +370,7 @@ class Messages extends Admin_Controller {
 			$add['body']			= $this->input->post('body');
 			$add['date_added']		= mdate('%Y-%m-%d %H:%i:%s', time());
 
-			if ($this->Messages_model->addMessage($add, $recipients)) {
+			if ($this->Messages_model->sendMessage($add, $recipients)) {
 				$this->alert->set('success', 'Message Sent successfully!');
 			} else {
 				$this->alert->set('warning', 'An error occurred, nothing added.');

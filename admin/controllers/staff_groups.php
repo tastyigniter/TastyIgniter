@@ -2,9 +2,10 @@
 
 class Staff_groups extends Admin_Controller {
 
-	public function __construct() {
+    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
+
+    public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 		$this->load->model('Staff_groups_model');
 	}
 
@@ -116,15 +117,7 @@ class Staff_groups extends Admin_Controller {
 			}
 		}
 
-		if ($this->input->post() AND $this->_addStaffGroup() === TRUE) {
-			if ($this->input->post('save_close') === '1') {
-				redirect('staff_groups');
-			}
-
-			redirect('staff_groups/edit?id='. $this->input->post('insert_id'));
-		}
-
-		if ($this->input->post() AND $this->_updateStaffGroup() === TRUE) {
+		if ($this->input->post() AND $staff_group_id = $this->_saveStaffGroup()) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('staff_groups');
 			}
@@ -136,51 +129,17 @@ class Staff_groups extends Admin_Controller {
 		$this->template->render('staff_groups_edit', $data);
 	}
 
-	public function _addStaffGroup() {
-    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$add = array();
+	public function _saveStaffGroup() {
+    	if ($this->validateForm() === TRUE) {
+            $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-			$add['staff_group_name']	= $this->input->post('staff_group_name');
-			$add['location_access']		= $this->input->post('location_access');
-
-			if ($this->input->post('permission')) {
-				$add['permission'] = serialize($this->input->post('permission'));
+			if ($staff_group_id = $this->Staff_groups_model->saveStaffGroup($this->input->get('id'), $this->input->post())) { // calls model to save data to SQL
+				$this->alert->set('success', 'Staff Groups ' . $save_type . ' successfully.');
 			} else {
-				$add['permission'] = serialize(array('EMPTY'));
+				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
 			}
 
-			if ($id = $this->Staff_groups_model->addStaffGroup($add)) { // calls model to save data to SQL
-				$this->alert->set('success', 'Staff Groups added successfully.');
-				$_POST['insert_id'] = $id;
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
-			}
-
-			return TRUE;
-		}
-	}
-
-	public function _updateStaffGroup() {
-    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$update = array();
-
-			$update['staff_group_id']		= $this->input->get('id');
-			$update['staff_group_name']		= $this->input->post('staff_group_name');
-			$update['location_access']		= $this->input->post('location_access');
-
-			if ($this->input->post('permission')) {
-				$update['permission'] = serialize($this->input->post('permission'));
-			} else {
-				$update['permission'] = serialize(array());
-			}
-
-			if ($this->Staff_groups_model->updateStaffGroup($update)) { // calls model to save data to SQL
-				$this->alert->set('success', 'Staff Group updated successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
-			}
-
-			return TRUE;
+			return $staff_group_id;
 		}
 	}
 

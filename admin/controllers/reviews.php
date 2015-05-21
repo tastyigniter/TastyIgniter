@@ -2,9 +2,10 @@
 
 class Reviews extends Admin_Controller {
 
-	public function __construct() {
+    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
+
+    public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 		$this->load->library('pagination');
 		$this->load->model('Reviews_model'); // load the reviews model
 	}
@@ -187,15 +188,7 @@ class Reviews extends Admin_Controller {
 			);
 		}
 
-		if ($this->input->post() AND $this->_addReview() === TRUE) {
-			if ($this->input->post('save_close') !== '1' AND is_numeric($this->input->post('insert_id'))) {
-				redirect('reviews/edit?id='. $this->input->post('insert_id'));
-			} else {
-				redirect('reviews');
-			}
-		}
-
-		if ($this->input->post() AND $this->_updateReview() === TRUE) {
+		if ($this->input->post() AND $review_id = $this->_saveReview()) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('reviews');
 			}
@@ -207,50 +200,17 @@ class Reviews extends Admin_Controller {
 		$this->template->render('reviews_edit', $data);
 	}
 
-	public function _addReview() {
-    	if ( ! is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$add = array();
+	public function _saveReview() {
+    	if ($this->validateForm() === TRUE) {
+            $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-			$add['sale_type'] 			= $this->input->post('sale_type');
-			$add['sale_id'] 			= $this->input->post('sale_id');
-			$add['location_id'] 		= $this->input->post('location_id');
-			$add['customer_id'] 		= $this->input->post('customer_id');
-			$add['author'] 				= $this->input->post('author');
-			$add['rating'] 				= $this->input->post('rating');
-			$add['review_text'] 		= $this->input->post('review_text');
-			$add['review_status'] 		= $this->input->post('review_status');
-
-			if ($_POST['insert_id'] = $this->Reviews_model->addReview($add)) {
-				$this->alert->set('success', 'Review added successfully.');
+			if ($review_id = $this->Reviews_model->saveReview($this->input->get('id'), $this->input->post())) {
+				$this->alert->set('success', 'Review ' . $save_type . ' successfully.');
 			} else {
-				$this->alert->set('warning', 'Nothing Added!');
+                $this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
 			}
 
-			return TRUE;
-		}
-	}
-
-	public function _updateReview() {
-    	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$update = array();
-
-			$update['review_id'] 		= $this->input->get('id');
-			$update['sale_type'] 		= $this->input->post('sale_type');
-			$update['sale_id'] 			= $this->input->post('sale_id');
-			$update['location_id'] 		= $this->input->post('location_id');
-			$update['customer_id'] 		= $this->input->post('customer_id');
-			$update['author'] 			= $this->input->post('author');
-			$update['rating'] 			= $this->input->post('rating');
-			$update['review_text'] 		= $this->input->post('review_text');
-			$update['review_status'] 	= $this->input->post('review_status');
-
-			if ($this->Reviews_model->updateReview($update)) {
-				$this->alert->set('success', 'Review updated successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
-			}
-
-			return TRUE;
+			return $review_id;
 		}
 	}
 

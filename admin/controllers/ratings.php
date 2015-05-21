@@ -2,10 +2,7 @@
 
 class Ratings extends Admin_Controller {
 
-	public function __construct() {
-		parent::__construct();
-		$this->load->library('user');
-	}
+    public $_permission_rules = array('access', 'modify');
 
 	public function index() {
 		$this->template->setTitle('Ratings');

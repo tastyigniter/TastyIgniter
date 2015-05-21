@@ -2,9 +2,10 @@
 
 class Categories extends Admin_Controller {
 
+    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
+
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
         $this->load->library('permalink');
         $this->load->library('pagination');
 		$this->load->model('Categories_model'); // load the menus model
@@ -159,12 +160,11 @@ class Categories extends Admin_Controller {
 		$this->template->render('categories_edit', $data);
 	}
 
-
 	public function _saveCategory() {
     	if ($this->validateForm() === TRUE) {
             $save_type = (! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-			if ($category_id = $this->Categories_model->saveCategory($this->input->post())) {
+			if ($category_id = $this->Categories_model->saveCategory($this->input->get('id'), $this->input->post())) {
 				$this->alert->set('success', 'Category ' . $save_type . ' successfully.');
 			} else {
 				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');

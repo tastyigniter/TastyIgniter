@@ -2,11 +2,10 @@
 
 class Orders extends Admin_Controller {
 
-	private $error = array();
+    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
 
-	public function __construct() {
+    public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('user');
 		$this->load->library('pagination');
 		$this->load->library('currency'); // load the currency library
 		$this->load->model('Customers_model');
