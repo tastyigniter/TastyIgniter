@@ -30,11 +30,11 @@
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($sale_type == 'reservation') { ?>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="sale_type" value="order" <?php echo set_radio('show_menu_images', 'order'); ?>>Order</label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="sale_type" value="reservation" <?php echo set_radio('show_menu_images', 'reservation', TRUE); ?>>Reservation</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="sale_type" value="order" <?php echo set_radio('sale_type', 'order'); ?>>Order</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="sale_type" value="reservation" <?php echo set_radio('sale_type', 'reservation', TRUE); ?>>Reservation</label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="sale_type" value="order" <?php echo set_radio('show_menu_images', 'order', TRUE); ?>>Order</label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="sale_type" value="reservation" <?php echo set_radio('show_menu_images', 'reservation'); ?>>Reservation</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="sale_type" value="order" <?php echo set_radio('sale_type', 'order', TRUE); ?>>Order</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="sale_type" value="reservation" <?php echo set_radio('sale_type', 'reservation'); ?>>Reservation</label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('sale_type', '<span class="text-danger">', '</span>'); ?>
