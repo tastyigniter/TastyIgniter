@@ -129,7 +129,7 @@ class Reservation_module extends Ext_Controller {
 			$opening_time = ($working_hour['open'] === '00:00:00') ? '01:00' : $working_hour['open'];
 			$closing_time = ($working_hour['close'] === '00:00:00') ? '23:59' : $working_hour['close'];
 
-			$reserve_times = $this->location->generateHours($opening_time, $closing_time, 45);
+			$reserve_times = $this->location->generateHours($opening_time, $closing_time, $interval);
 			if ($reserve_times) {
 				foreach ($reserve_times as $key => $value) {
 					$data['reserve_times'][] = array(

@@ -24,6 +24,13 @@ class Cart_module extends Ext_Controller {
 			$data['cart_alert'] = '';
         }
 
+        if (empty($ext_data)) {
+            $extension = $this->extension->getModule('cart_module');
+            if (!empty($extension['ext_data'])) {
+                $ext_data = $extension['ext_data'];
+            };
+        }
+
         $data['cart_alert'] = '';
         // START of retrieving lines from language file to pass to view.
 		$data['text_heading'] 		= $this->lang->line('text_heading');

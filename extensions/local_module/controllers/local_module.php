@@ -83,7 +83,7 @@ class Local_module extends Ext_Controller {
 		$total_reviews = $this->Reviews_model->getTotalLocationReviews($this->location->getId());
 		$data['text_total_review'] = sprintf($this->lang->line('text_total_review'), site_url('local/reviews'), $total_reviews);
 
-		$data['module_position'] 			= isset($ext_data['module_position']) ? $ext_data['module_position'] : '';
+		$data['module_position'] = isset($ext_data['module_position']) ? $ext_data['module_position'] : '';
 
 		// pass array $data and load view files
 		$this->load->view('local_module/local_module', $data);

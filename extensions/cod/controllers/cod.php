@@ -9,8 +9,7 @@ class Cod extends Ext_Controller {
             show_404(); 																		// Whoops, show 404 error page!
         }
 
-        $this->load->model('Extensions_model');
-        $payment = $this->Extensions_model->getPayment('cod');
+        $payment = $this->extension->getPayment('cod');
 
         // START of retrieving lines from language file to pass to view.
         $data['code'] 			= $payment['name'];
@@ -30,7 +29,7 @@ class Cod extends Ext_Controller {
         $order_data = $this->session->userdata('order_data'); 						// retrieve order details from session userdata
         $cart_contents = $this->session->userdata('cart_contents'); 												// retrieve cart contents
 
-        if (empty($order_data) OR empty($cart_contents)) {
+        if (empty($order_data) AND empty($cart_contents)) {
             return FALSE;
         }
 
