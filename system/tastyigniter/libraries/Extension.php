@@ -3,68 +3,55 @@
 /**
  * Class Extension
  *
- * Global Variables
- * module_name
- * data
  */
 class Extension {
-	private static $name;
+
+    private $extensions = array();
 
     public function __construct() {
         $this->CI =& get_instance();
         $this->CI->load->model('Extensions_model');
+
+        !empty($this->extensions) OR $this->extensions = $this->CI->Extensions_model->getExtensions();
     }
 
-    public function setModule($extension = array()) {}
+    public function getExtensions($type = NULL) {
+        if (!empty($type)) {
+            if (!empty($this->extensions[$type]) AND is_array($this->extensions[$type])) {
+                return $this->extensions[$type];
+            }
+        }
 
-    function options($name) {
-
-		self::$name = $name;
-
-		$args = func_get_args();
-
-		$ext_path = ROOTPATH.EXTPATH.$name.'/controllers/admin_options.php';
-
-		if (file_exists($ext_path)) {
-			require_once $ext_path;
-			$class = 'Admin_options';
-
-			//set GET extension_id value
-			if (isset($args[1]['extension_id'])) {
-				$_GET['extension_id'] = $args[1]['extension_id'];
-			}
-
-			$admin_options = new $class();
-			return call_user_func_array(array($admin_options, 'options'), array_slice($args, 1));
-		}
-	}
-
-	function render($data = array()) {
-
-		extract($data);
-		$ext_path = ROOTPATH.EXTPATH.self::$name.'/views/admin_options.php';
-
-		if (file_exists($ext_path)) {
-			include $ext_path;
-		}
-	}
-
-	function load($object) {
-
-		$this->$object =& load_class(ucfirst($object));
-	}
-
-
-    public function __get($name) {
-        return isset($this->{$name}) ? $this->{$name} : NULL;
+        return $this->extensions;
     }
 
-//	function __get($var) {
-//
-//		static $ci;
-//		isset($ci) OR $ci = get_instance();
-//		return $ci->$var;
-//	}
+    public function getModules() {
+        return $this->getExtensions('module');
+    }
+
+    public function getModule($name) {
+        if (!empty($name)) {
+            if (!empty($this->extensions['module'][$name]) AND is_array($this->extensions['module'][$name])) {
+                return $this->extensions['module'][$name];
+            }
+        }
+    }
+
+    public function getPayments() {
+        return $this->getExtensions('payment');
+    }
+
+    public function getPayment($name) {
+        if (!empty($name)) {
+            if (!empty($this->extensions['payment'][$name]) AND is_array($this->extensions['payment'][$name])) {
+                return $this->extensions['payment'][$name];
+            }
+        }
+    }
+
+    public function getConfig($ext_name = '', $item = '', $fail_gracefully = FALSE) {
+        return $this->CI->Extensions_model->getConfig($ext_name, $item, $fail_gracefully);
+    }
 }
 
 // END Extension Class

@@ -20,7 +20,8 @@ class Extensions_model extends TI_Model {
 
                 foreach (glob($location . '*', GLOB_ONLYDIR) as $ext_path) {
                     $extension_id = 0;
-                    $ext_type = $ext_data = '';
+                    $ext_data = '';
+                    $ext_type = 'module';
                     $options = $config = $installed = FALSE;
 
                     $basename = basename($ext_path);
@@ -139,44 +140,16 @@ class Extensions_model extends TI_Model {
         return $result;
 	}
 
-    public function getConfig($ext_name = '', $item = '') {
-		$loaded = $installed = FALSE;
+    public function getConfig($ext_name = '', $item = '', $fail_gracefully = TRUE) {
+        $this->config->load($ext_name.'/'.$ext_name, TRUE, $fail_gracefully);
 
-		$config_path = ROOTPATH . EXTPATH.$ext_name.'/config/';
-
-		if ( ! file_exists($config_path . 'config.php')) {
-            log_message('debug', 'The Extension ['.$ext_name.'] Config file does not exist.');
-			return FALSE;
-		}
-
-		if (array_key_exists($ext_name, $this->loaded_config)) {
-			$loaded = TRUE;
-			log_message('debug', 'The Extension ['.$ext_name.'] Config file has already been loaded. Second attempt aborted.');
-		}
-
-		if ($loaded === FALSE) {
-			include($config_path . 'config.php');
-
-			if ( ! isset($config) OR ! is_array($config)) {
-                log_message('debug', 'The Extension ['.$ext_name.'] Config file does not appear to contain a valid array.');
-				return FALSE;
-			}
-
-			$this->loaded_config[$ext_name] = $config;
-			unset($config);
-			$loaded = TRUE;
-			log_message('debug', 'The Extension ['.$ext_name.'] Config file loaded.');
-		}
-
-		if ($loaded === TRUE) {
+		if ($config = $this->config->item($ext_name)) {
 			if ($item !== '') {
-				return $this->loaded_config[$ext_name][$item];
+				return $config[$item];
 			}
-
-			return $this->loaded_config[$ext_name];
 		}
 
-		return FALSE;
+        return $config;
 	}
 
     public function updateExtension($update = array(), $serialized = '0') {
