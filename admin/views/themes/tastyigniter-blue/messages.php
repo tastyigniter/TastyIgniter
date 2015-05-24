@@ -37,7 +37,7 @@
                     <div class="panel-heading">
                         <h3 class="panel-title"><?php echo ucwords($filter_folder); ?></h3>
                         <div class="pull-right">
-                            <button class="btn btn-default btn-xs btn-filter"><i class="fa fa-filter"></i></button>
+                            <button class="btn btn-filter btn-xs"><i class="fa fa-filter"></i></button>
                         </div>
                     </div>
                     <div class="panel-body panel-filter">

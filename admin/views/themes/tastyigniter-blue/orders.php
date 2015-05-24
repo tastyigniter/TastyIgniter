@@ -5,7 +5,7 @@
 			<div class="panel-heading">
 				<h3 class="panel-title">Order List</h3>
 				<div class="pull-right">
-					<button class="btn btn-default btn-xs btn-filter"><i class="fa fa-filter"></i></button>
+					<button class="btn btn-filter btn-xs"><i class="fa fa-filter"></i></button>
 				</div>
 			</div>
 			<div class="panel-body panel-filter">
@@ -108,7 +108,7 @@
                             <td><span class="label label-default" style="background-color: <?php echo $order['status_color']; ?>;"><?php echo $order['order_status']; ?></span></td>
 							<td><?php echo $order['order_type']; ?></td>
 							<td><?php echo $order['order_total']; ?></td>
-							<td class="text-center"><?php echo $order['date_added']; ?> - <?php echo $order['order_time']; ?></td>
+							<td class="text-center"><?php echo $order['order_time']; ?> - <?php echo $order['date_added']; ?></td>
 						</tr>
 						<?php } ?>
 						<?php } else { ?>

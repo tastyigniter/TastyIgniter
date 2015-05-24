@@ -5,7 +5,7 @@
 			<div class="panel-heading">
 				<h3 class="panel-title">Static Page List</h3>
 				<div class="pull-right">
-					<button class="btn btn-default btn-xs btn-filter"><i class="fa fa-filter"></i></button>
+					<button class="btn btn-filter btn-xs"><i class="fa fa-filter"></i></button>
 				</div>
 			</div>
 			<div class="panel-body panel-filter">

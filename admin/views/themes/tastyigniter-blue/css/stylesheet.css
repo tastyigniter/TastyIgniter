@@ -7,6 +7,7 @@ position: relative;
 body {
 background-color: #f9fafc;
 font-family:'Oxygen',Arial,sans-serif;
+font-weight: 200;
 margin-bottom:0;
 /*margin-top: 45px;*/
 font-size: 13px;
@@ -159,6 +160,10 @@ font-size: 18px;
 height: 47px;
 padding: 10px 15px;
 }
+.navbar-top .navbar-brand:hover,
+.navbar-top .navbar-brand:focus {
+    color: #fff;
+}
 @media(min-width:768px) {
 	.navbar-top .navbar-header {
 	background-color: rgba(0, 0, 0, 0.1);
@@ -289,7 +294,7 @@ border-bottom: 0 solid #e7e7e7;
 .sidebar .nav > li > a {
 color: #c5d2e0;
 cursor:pointer;
-font-weight: 200;
+font-weight: normal;
 transition: all 0.4s ease-in-out 0s;
 }
 .sidebar .nav > li > a:hover,
@@ -527,6 +532,8 @@ height: 38px;
 background-color: transparent;
 border: 1px solid #d2dce7;
 border-radius:0;
+font-weight: 200;
+font-size: 13px;
 }
 .input-group-more {
 background-color:#EEEEEE;
@@ -671,6 +678,7 @@ border: 0px solid transparent;
 border-radius:  0;
 padding:12px 15px;
 color:#444;
+font-weight: 200;
 margin-right: 4px;
 }
 .nav-tabs li a, .nav-tabs li span {
@@ -684,7 +692,7 @@ outline: 0 none;
     border-right: 1px solid #dfe6ee;
     border-left: 1px solid #dfe6ee;
     color: #333;
-    font-weight:bold;
+    font-weight:400;
 }
 .nav-tabs > li:first-child.active > a,
 .nav-tabs > li:first-child.active > a:hover,
@@ -774,6 +782,8 @@ margin-right: 0;
 .btn {
 border-radius: 0;
 outline: 0 none;
+font-weight: 200;
+font-size: 12px;
 }
 .btn:focus, .btn:active:focus, .btn.active:focus {
 outline-offset:-1px;
@@ -1000,6 +1010,7 @@ padding: 12px 15px;
 font-size: 18px;
 line-height: 18px;
 color:#484848;
+font-weight: 200;
 }
 .panel-heading, .panel-footer {
 border-radius:0;
@@ -1196,6 +1207,7 @@ padding: 5px;
 margin-top: -21px;
 }
 .panel-table .panel-heading .btn-filter {
+background-color: transparent;
 margin-left:5px;
 }
 .panel-table .panel-heading .btn-filter > .fa {
@@ -1338,6 +1350,7 @@ line-height: 2.1;
 }
 .table > thead > tr > th {
 border-bottom: 2px solid #ecf0f5;
+font-weight: 400;
 }
 .table-striped > tbody > tr:nth-child(2n+1) > td,
 .table-striped > tbody > tr:nth-child(2n+1) > th {

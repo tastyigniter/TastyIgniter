@@ -225,6 +225,23 @@
 						</div>
 					</div>
                     <div class="form-group">
+                        <label for="input-approve-reviews" class="col-sm-3 control-label">Approve Reviews:
+                            <span class="help-block">Approve new review entry automatically or manually</span>
+                        </label>
+                        <div class="col-sm-5">
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <?php if ($approve_reviews == '1') { ?>
+                                    <label class="btn btn-default"><input type="radio" name="approve_reviews" value="0" <?php echo set_radio('approve_reviews', '0'); ?>>Auto</label>
+                                    <label class="btn btn-default active"><input type="radio" name="approve_reviews" value="1" <?php echo set_radio('approve_reviews', '1', TRUE); ?>>Manual</label>
+                                <?php } else { ?>
+                                    <label class="btn btn-default active"><input type="radio" name="approve_reviews" value="0" <?php echo set_radio('approve_reviews', '0', TRUE); ?>>Auto</label>
+                                    <label class="btn btn-default"><input type="radio" name="approve_reviews" value="1" <?php echo set_radio('approve_reviews', '1'); ?>>Manual</label>
+                                <?php } ?>
+                            </div>
+                            <?php echo form_error('approve_reviews', '<span class="text-danger">', '</span>'); ?>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="input-checkout-terms" class="col-sm-3 control-label">Checkout Terms:
                             <span class="help-block">Require customers to agree to terms before checkout</span>
                         </label>
@@ -344,57 +361,6 @@
 							<?php echo form_error('distance_unit', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
-					<div class="form-group">
-						<label for="input-approve-reviews" class="col-sm-3 control-label">Approve Reviews:
-							<span class="help-block">Approve new review entry automatically or manually</span>
-						</label>
-						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
-								<?php if ($approve_reviews == '1') { ?>
-									<label class="btn btn-default"><input type="radio" name="approve_reviews" value="0" <?php echo set_radio('approve_reviews', '0'); ?>>Auto</label>
-									<label class="btn btn-default active"><input type="radio" name="approve_reviews" value="1" <?php echo set_radio('approve_reviews', '1', TRUE); ?>>Manual</label>
-								<?php } else { ?>
-									<label class="btn btn-default active"><input type="radio" name="approve_reviews" value="0" <?php echo set_radio('approve_reviews', '0', TRUE); ?>>Auto</label>
-									<label class="btn btn-default"><input type="radio" name="approve_reviews" value="1" <?php echo set_radio('approve_reviews', '1'); ?>>Manual</label>
-								<?php } ?>
-							</div>
-							<?php echo form_error('approve_reviews', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-send-order-email" class="col-sm-3 control-label">Location Order Email:
-							<span class="help-block">Send a confirmation email to the location email when a new order is received</span>
-						</label>
-						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
-								<?php if ($location_order_email == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="location_order_email" value="0" <?php echo set_radio('location_order_email', '0'); ?>>Disabled</label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="location_order_email" value="1" <?php echo set_radio('location_order_email', '1', TRUE); ?>>Enabled</label>
-								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="location_order_email" value="0" <?php echo set_radio('location_order_email', '0', TRUE); ?>>Disabled</label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="location_order_email" value="1" <?php echo set_radio('location_order_email', '1'); ?>>Enabled</label>
-								<?php } ?>
-							</div>
-							<?php echo form_error('location_order_email', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-send-reserve-email" class="col-sm-3 control-label">Location Reservation Email:
-							<span class="help-block">Send a confirmation email to the location email when a new reservation is received</span>
-						</label>
-						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
-								<?php if ($location_reserve_email == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="location_reserve_email" value="0" <?php echo set_radio('location_reserve_email', '0'); ?>>Disabled</label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="location_reserve_email" value="1" <?php echo set_radio('location_reserve_email', '1', TRUE); ?>>Enabled</label>
-								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="location_reserve_email" value="0" <?php echo set_radio('location_reserve_email', '0', TRUE); ?>>Disabled</label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="location_reserve_email" value="1" <?php echo set_radio('location_reserve_email', '1'); ?>>Enabled</label>
-								<?php } ?>
-							</div>
-							<?php echo form_error('location_reserve_email', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
 				</div>
 
 				<div id="order" class="tab-pane row wrap-all">
@@ -403,22 +369,11 @@
 							<span class="help-block">Order status when a new order is received</span>
 						</label>
 						<div class="col-sm-5">
-							<select name="order_status_new" id="input-order-status-new" class="form-control">
+							<select name="new_order_status" id="input-order-status-new" class="form-control">
 								<optgroup label="Orders">
 									<?php foreach ($statuses as $status) { ?>
 									<?php if ($status['status_for'] === 'order') { ?>
-										<?php if ($status['status_id'] === $order_status_new) { ?>
-											<option value="<?php echo $status['status_id']; ?>" selected="selected"><?php echo $status['status_name']; ?></option>
-										<?php } else { ?>
-											<option value="<?php echo $status['status_id']; ?>"><?php echo $status['status_name']; ?></option>
-										<?php } ?>
-									<?php } ?>
-									<?php } ?>
-								</optgroup>
-								<optgroup label="Reservations">
-									<?php foreach ($statuses as $status) { ?>
-									<?php if ($status['status_for'] === 'reserve') { ?>
-										<?php if ($status['status_id'] === $order_status_new) { ?>
+										<?php if ($status['status_id'] === $new_order_status) { ?>
 											<option value="<?php echo $status['status_id']; ?>" selected="selected"><?php echo $status['status_name']; ?></option>
 										<?php } else { ?>
 											<option value="<?php echo $status['status_id']; ?>"><?php echo $status['status_name']; ?></option>
@@ -427,7 +382,7 @@
 									<?php } ?>
 								</optgroup>
 							</select>
-							<?php echo form_error('order_status_new', '<span class="text-danger">', '</span>'); ?>
+							<?php echo form_error('new_order_status', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
@@ -435,22 +390,11 @@
 							<span class="help-block">Order status when an order is completed</span>
 						</label>
 						<div class="col-sm-5">
-							<select name="order_status_complete" id="input-order-status-complete" class="form-control">
+							<select name="complete_order_status" id="input-order-status-complete" class="form-control">
 								<optgroup label="Orders">
 									<?php foreach ($statuses as $status) { ?>
 									<?php if ($status['status_for'] === 'order') { ?>
-										<?php if ($status['status_id'] === $order_status_complete) { ?>
-											<option value="<?php echo $status['status_id']; ?>" selected="selected"><?php echo $status['status_name']; ?></option>
-										<?php } else { ?>
-											<option value="<?php echo $status['status_id']; ?>"><?php echo $status['status_name']; ?></option>
-										<?php } ?>
-									<?php } ?>
-									<?php } ?>
-								</optgroup>
-								<optgroup label="Reservations">
-									<?php foreach ($statuses as $status) { ?>
-									<?php if ($status['status_for'] === 'reserve') { ?>
-										<?php if ($status['status_id'] === $order_status_complete) { ?>
+										<?php if ($status['status_id'] === $complete_order_status) { ?>
 											<option value="<?php echo $status['status_id']; ?>" selected="selected"><?php echo $status['status_name']; ?></option>
 										<?php } else { ?>
 											<option value="<?php echo $status['status_id']; ?>"><?php echo $status['status_name']; ?></option>
@@ -459,7 +403,7 @@
 									<?php } ?>
 								</optgroup>
 							</select>
-							<?php echo form_error('order_status_complete', '<span class="text-danger">', '</span>'); ?>
+							<?php echo form_error('complete_order_status', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
@@ -467,22 +411,11 @@
 							<span class="help-block">Order status when an order is canceled</span>
 						</label>
 						<div class="col-sm-5">
-							<select name="order_status_cancel" id="input-order-status-cancel" class="form-control">
+							<select name="canceled_order_status" id="input-order-status-cancel" class="form-control">
 								<optgroup label="Orders">
 									<?php foreach ($statuses as $status) { ?>
 									<?php if ($status['status_for'] === 'order') { ?>
-										<?php if ($status['status_id'] === $order_status_cancel) { ?>
-											<option value="<?php echo $status['status_id']; ?>" selected="selected"><?php echo $status['status_name']; ?></option>
-										<?php } else { ?>
-											<option value="<?php echo $status['status_id']; ?>"><?php echo $status['status_name']; ?></option>
-										<?php } ?>
-									<?php } ?>
-									<?php } ?>
-								</optgroup>
-								<optgroup label="Reservations">
-									<?php foreach ($statuses as $status) { ?>
-									<?php if ($status['status_for'] === 'reserve') { ?>
-										<?php if ($status['status_id'] === $order_status_cancel) { ?>
+										<?php if ($status['status_id'] === $canceled_order_status) { ?>
 											<option value="<?php echo $status['status_id']; ?>" selected="selected"><?php echo $status['status_name']; ?></option>
 										<?php } else { ?>
 											<option value="<?php echo $status['status_id']; ?>"><?php echo $status['status_name']; ?></option>
@@ -491,7 +424,7 @@
 									<?php } ?>
 								</optgroup>
 							</select>
-							<?php echo form_error('order_status_cancel', '<span class="text-danger">', '</span>'); ?>
+							<?php echo form_error('canceled_order_status', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
@@ -590,26 +523,15 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-reserve-status" class="col-sm-3 control-label">New Reservation Status:
+						<label for="input-new-reserve-status" class="col-sm-3 control-label">New Reservation Status:
 							<span class="help-block">Reservation status when a new reservation is received</span>
 						</label>
 						<div class="col-sm-5">
-							<select name="reservation_status" id="input-reserve-status" class="form-control">
-								<optgroup label="Orders">
-									<?php foreach ($statuses as $status) { ?>
-									<?php if ($status['status_for'] === 'order') { ?>
-										<?php if ($status['status_id'] === $reservation_status) { ?>
-											<option value="<?php echo $status['status_id']; ?>" selected="selected"><?php echo $status['status_name']; ?></option>
-										<?php } else { ?>
-											<option value="<?php echo $status['status_id']; ?>"><?php echo $status['status_name']; ?></option>
-										<?php } ?>
-									<?php } ?>
-									<?php } ?>
-								</optgroup>
+							<select name="new_reservation_status" id="input-new-reserve-status" class="form-control">
 								<optgroup label="Reservations">
 									<?php foreach ($statuses as $status) { ?>
 									<?php if ($status['status_for'] === 'reserve') { ?>
-										<?php if ($status['status_id'] === $reservation_status) { ?>
+										<?php if ($status['status_id'] === $new_reservation_status) { ?>
 											<option value="<?php echo $status['status_id']; ?>" selected="selected"><?php echo $status['status_name']; ?></option>
 										<?php } else { ?>
 											<option value="<?php echo $status['status_id']; ?>"><?php echo $status['status_name']; ?></option>
@@ -618,7 +540,49 @@
 									<?php } ?>
 								</optgroup>
 							</select>
-							<?php echo form_error('reservation_status', '<span class="text-danger">', '</span>'); ?>
+							<?php echo form_error('new_reservation_status', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-confirmed-reserve-status" class="col-sm-3 control-label">Confirmed Reservation Status:
+							<span class="help-block">Reservation status when a reservation is confirmed</span>
+						</label>
+						<div class="col-sm-5">
+							<select name="confirmed_reservation_status" id="input-confirmed-reserve-status" class="form-control">
+								<optgroup label="Reservations">
+									<?php foreach ($statuses as $status) { ?>
+									<?php if ($status['status_for'] === 'reserve') { ?>
+										<?php if ($status['status_id'] === $confirmed_reservation_status) { ?>
+											<option value="<?php echo $status['status_id']; ?>" selected="selected"><?php echo $status['status_name']; ?></option>
+										<?php } else { ?>
+											<option value="<?php echo $status['status_id']; ?>"><?php echo $status['status_name']; ?></option>
+										<?php } ?>
+									<?php } ?>
+									<?php } ?>
+								</optgroup>
+							</select>
+							<?php echo form_error('confirmed_reservation_status', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-canceled-reserve-status" class="col-sm-3 control-label">Cancellation Reservation Status:
+							<span class="help-block">Reservation status when a reservation is canceled</span>
+						</label>
+						<div class="col-sm-5">
+							<select name="canceled_reservation_status" id="input-canceled-reserve-status" class="form-control">
+								<optgroup label="Reservations">
+									<?php foreach ($statuses as $status) { ?>
+									<?php if ($status['status_for'] === 'reserve') { ?>
+										<?php if ($status['status_id'] === $canceled_reservation_status) { ?>
+											<option value="<?php echo $status['status_id']; ?>" selected="selected"><?php echo $status['status_name']; ?></option>
+										<?php } else { ?>
+											<option value="<?php echo $status['status_id']; ?>"><?php echo $status['status_name']; ?></option>
+										<?php } ?>
+									<?php } ?>
+									<?php } ?>
+								</optgroup>
+							</select>
+							<?php echo form_error('canceled_reservation_status', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
@@ -837,74 +801,23 @@
 
 				<div id="mail" class="tab-pane row wrap-all">
                     <div class="form-group">
-                        <label for="input-registration-email" class="col-sm-3 control-label">Registration Email:
-                            <span class="help-block">Send a confirmation email to the customer after successfully account registration</span>
-                        </label>
+                        <label for="input-mailtype" class="col-sm-3 control-label">Mail Type Format:</label>
                         <div class="col-sm-5">
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                <?php if ($registration_email == '1') { ?>
-                                    <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="registration_email" value="0" <?php echo set_radio('registration_email', '0'); ?>>Disabled</label>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="registration_email" value="1" <?php echo set_radio('registration_email', '1', TRUE); ?>>Enabled</label>
+                                <?php if ($mailtype == 'text') { ?>
+                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="mailtype" value="text" <?php echo set_radio('mailtype', 'text', TRUE); ?>>TEXT</label>
                                 <?php } else { ?>
-                                    <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="registration_email" value="0" <?php echo set_radio('registration_email', '0', TRUE); ?>>Disabled</label>
-                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="registration_email" value="1" <?php echo set_radio('registration_email', '1'); ?>>Enabled</label>
+                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="mailtype" value="text" <?php echo set_radio('mailtype', 'text'); ?>>TEXT</label>
+                                <?php } ?>
+                                <?php if ($mailtype == 'html') { ?>
+                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="mailtype" value="html" <?php echo set_radio('mailtype', 'html', TRUE); ?>>HTML</label>
+                                <?php } else { ?>
+                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="mailtype" value="html" <?php echo set_radio('mailtype', 'html'); ?>>HTML</label>
                                 <?php } ?>
                             </div>
-                            <?php echo form_error('registration_email', '<span class="text-danger">', '</span>'); ?>
+                            <?php echo form_error('mailtype', '<span class="text-danger">', '</span>'); ?>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="input-customer-order-email" class="col-sm-3 control-label">Customer Order Email:
-                            <span class="help-block">Send a confirmation email to the customer after an order has been placed</span>
-                        </label>
-                        <div class="col-sm-5">
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                <?php if ($customer_order_email == '1') { ?>
-                                    <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="customer_order_email" value="0" <?php echo set_radio('customer_order_email', '0'); ?>>Disabled</label>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="customer_order_email" value="1" <?php echo set_radio('customer_order_email', '1', TRUE); ?>>Enabled</label>
-                                <?php } else { ?>
-                                    <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="customer_order_email" value="0" <?php echo set_radio('customer_order_email', '0', TRUE); ?>>Disabled</label>
-                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="customer_order_email" value="1" <?php echo set_radio('customer_order_email', '1'); ?>>Enabled</label>
-                                <?php } ?>
-                            </div>
-                            <?php echo form_error('customer_order_email', '<span class="text-danger">', '</span>'); ?>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="input-customer-reserve-email" class="col-sm-3 control-label">Customer Reservation Email:
-                            <span class="help-block">Send a confirmation email to the customer after a table has been reserved</span>
-                        </label>
-                        <div class="col-sm-5">
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                <?php if ($customer_reserve_email == '1') { ?>
-                                    <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="customer_reserve_email" value="0" <?php echo set_radio('customer_reserve_email', '0'); ?>>Disabled</label>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="customer_reserve_email" value="1" <?php echo set_radio('customer_reserve_email', '1', TRUE); ?>>Enabled</label>
-                                <?php } else { ?>
-                                    <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="customer_reserve_email" value="0" <?php echo set_radio('customer_reserve_email', '0', TRUE); ?>>Disabled</label>
-                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="customer_reserve_email" value="1" <?php echo set_radio('customer_reserve_email', '1'); ?>>Enabled</label>
-                                <?php } ?>
-                            </div>
-                            <?php echo form_error('customer_reserve_email', '<span class="text-danger">', '</span>'); ?>
-                        </div>
-                    </div>
-					<div class="form-group">
-						<label for="input-mailtype" class="col-sm-3 control-label">Mail Type Format:</label>
-						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
-								<?php if ($mailtype == 'text') { ?>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="mailtype" value="text" <?php echo set_radio('mailtype', 'text', TRUE); ?>>TEXT</label>
-								<?php } else { ?>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="mailtype" value="text" <?php echo set_radio('mailtype', 'text'); ?>>TEXT</label>
-								<?php } ?>
-								<?php if ($mailtype == 'html') { ?>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="mailtype" value="html" <?php echo set_radio('mailtype', 'html', TRUE); ?>>HTML</label>
-								<?php } else { ?>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="mailtype" value="html" <?php echo set_radio('mailtype', 'html'); ?>>HTML</label>
-								<?php } ?>
-							</div>
-							<?php echo form_error('mailtype', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
                     <div class="form-group">
                         <label for="input-protocol" class="col-sm-3 control-label">Mail Protocol:</label>
                         <div class="col-sm-5">
@@ -959,12 +872,97 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="input-registration-email" class="col-sm-3 control-label">Registration Email:
+                            <span class="help-block">Send a confirmation email to the customer after successfully account registration</span>
+                        </label>
+                        <div class="col-sm-5">
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <?php if ($registration_email == '1') { ?>
+                                    <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="registration_email" value="0" <?php echo set_radio('registration_email', '0'); ?>>Disabled</label>
+                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="registration_email" value="1" <?php echo set_radio('registration_email', '1', TRUE); ?>>Enabled</label>
+                                <?php } else { ?>
+                                    <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="registration_email" value="0" <?php echo set_radio('registration_email', '0', TRUE); ?>>Disabled</label>
+                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="registration_email" value="1" <?php echo set_radio('registration_email', '1'); ?>>Enabled</label>
+                                <?php } ?>
+                            </div>
+                            <?php echo form_error('registration_email', '<span class="text-danger">', '</span>'); ?>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-customer-order-email" class="col-sm-3 control-label">Customer Order Email:
+                            <span class="help-block">Send a confirmation email to the customer after an order has been placed</span>
+                        </label>
+                        <div class="col-sm-5">
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <?php if ($customer_order_email == '1') { ?>
+                                    <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="customer_order_email" value="0" <?php echo set_radio('customer_order_email', '0'); ?>>Disabled</label>
+                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="customer_order_email" value="1" <?php echo set_radio('customer_order_email', '1', TRUE); ?>>Enabled</label>
+                                <?php } else { ?>
+                                    <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="customer_order_email" value="0" <?php echo set_radio('customer_order_email', '0', TRUE); ?>>Disabled</label>
+                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="customer_order_email" value="1" <?php echo set_radio('customer_order_email', '1'); ?>>Enabled</label>
+                                <?php } ?>
+                            </div>
+                            <?php echo form_error('customer_order_email', '<span class="text-danger">', '</span>'); ?>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-customer-reserve-email" class="col-sm-3 control-label">Customer Reservation Email:
+                            <span class="help-block">Send a confirmation email to the customer after a table has been reserved</span>
+                        </label>
+                        <div class="col-sm-5">
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <?php if ($customer_reserve_email == '1') { ?>
+                                    <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="customer_reserve_email" value="0" <?php echo set_radio('customer_reserve_email', '0'); ?>>Disabled</label>
+                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="customer_reserve_email" value="1" <?php echo set_radio('customer_reserve_email', '1', TRUE); ?>>Enabled</label>
+                                <?php } else { ?>
+                                    <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="customer_reserve_email" value="0" <?php echo set_radio('customer_reserve_email', '0', TRUE); ?>>Disabled</label>
+                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="customer_reserve_email" value="1" <?php echo set_radio('customer_reserve_email', '1'); ?>>Enabled</label>
+                                <?php } ?>
+                            </div>
+                            <?php echo form_error('customer_reserve_email', '<span class="text-danger">', '</span>'); ?>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-send-order-email" class="col-sm-3 control-label">Location Order Email:
+                            <span class="help-block">Send a confirmation email to the location email when a new order is received</span>
+                        </label>
+                        <div class="col-sm-5">
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <?php if ($location_order_email == '1') { ?>
+                                    <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="location_order_email" value="0" <?php echo set_radio('location_order_email', '0'); ?>>Disabled</label>
+                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="location_order_email" value="1" <?php echo set_radio('location_order_email', '1', TRUE); ?>>Enabled</label>
+                                <?php } else { ?>
+                                    <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="location_order_email" value="0" <?php echo set_radio('location_order_email', '0', TRUE); ?>>Disabled</label>
+                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="location_order_email" value="1" <?php echo set_radio('location_order_email', '1'); ?>>Enabled</label>
+                                <?php } ?>
+                            </div>
+                            <?php echo form_error('location_order_email', '<span class="text-danger">', '</span>'); ?>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-send-reserve-email" class="col-sm-3 control-label">Location Reservation Email:
+                            <span class="help-block">Send a confirmation email to the location email when a new reservation is received</span>
+                        </label>
+                        <div class="col-sm-5">
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <?php if ($location_reserve_email == '1') { ?>
+                                    <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="location_reserve_email" value="0" <?php echo set_radio('location_reserve_email', '0'); ?>>Disabled</label>
+                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="location_reserve_email" value="1" <?php echo set_radio('location_reserve_email', '1', TRUE); ?>>Enabled</label>
+                                <?php } else { ?>
+                                    <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="location_reserve_email" value="0" <?php echo set_radio('location_reserve_email', '0', TRUE); ?>>Disabled</label>
+                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="location_reserve_email" value="1" <?php echo set_radio('location_reserve_email', '1'); ?>>Enabled</label>
+                                <?php } ?>
+                            </div>
+                            <?php echo form_error('location_reserve_email', '<span class="text-danger">', '</span>'); ?>
+                        </div>
+                    </div>
                 </div>
 
 				<div id="system" class="tab-pane row wrap-all">
 					<div class="form-group">
 						<label for="input-maintenance-mode" class="col-sm-3 control-label">Maintenance Mode:
-							<span class="help-block">Enable if you want to display a maintenance page to customers except logged in admin.</span>
+							<span class="help-block">Enable to prevent customers from viewing your store. The maintenance message will be displayed to customers except logged admin.</span>
 						</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
@@ -987,7 +985,9 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-permalink" class="col-sm-3 control-label">Permalink:</label>
+						<label for="input-permalink" class="col-sm-3 control-label">Permalink:
+                            <span class="help-block">To use SEO URLs, apache module mod-rewrite must be installed.</span>
+                        </label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($permalink == '1') { ?>
@@ -1002,42 +1002,42 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-activity-online-time-out" class="col-sm-3 control-label">Activity Online Timeout:
-							<span class="help-block">The number of seconds a customer activity will appear online. Seconds must be more than 120 seconds</span>
+						<label for="input-customer-online-time-out" class="col-sm-3 control-label">Customer Online Timeout:
+							<span class="help-block">The number of seconds a customer will appear online. Seconds must be more than 120 seconds</span>
 						</label>
 						<div class="col-sm-5">
 							<div class="input-group">
-								<input type="text" name="activity_online_time_out" id="input-activity-online-time-out" class="form-control" value="<?php echo $activity_online_time_out; ?>" />
+								<input type="text" name="customer_online_time_out" id="input-customer-online-time-out" class="form-control" value="<?php echo $customer_online_time_out; ?>" />
 								<span class="input-group-addon">seconds</span>
 							</div>
-							<?php echo form_error('activity_online_time_out', '<span class="text-danger">', '</span>'); ?>
+							<?php echo form_error('customer_online_time_out', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-activity-archive-time-out" class="col-sm-3 control-label">Activity Archive Timeout:
-							<span class="help-block">Delete all activities older than</span>
+						<label for="input-customer-online-archive-time-out" class="col-sm-3 control-label">Customer Online Archive Timeout:
+							<span class="help-block">Delete all customer online report older than</span>
 						</label>
 						<div class="col-sm-5">
-							<select name="activity_archive_time_out" id="input-activity-archive-time-out" class="form-control">
-								<?php if ($activity_archive_time_out === '1') { ?>
+							<select name="customer_online_archive_time_out" id="input-customer-online-archive-time-out" class="form-control">
+								<?php if ($customer_online_archive_time_out === '1') { ?>
 									<option value="0">Never delete</option>
 									<option value="1" selected="selected">1 month</option>
 									<option value="3">3 months</option>
 									<option value="6">6 months</option>
 									<option value="12">12 months</option>
-								<?php } else if ($activity_archive_time_out === '3') { ?>
+								<?php } else if ($customer_online_archive_time_out === '3') { ?>
 									<option value="0">Never delete</option>
 									<option value="1">1 month</option>
 									<option value="3" selected="selected">3 months</option>
 									<option value="6">6 months</option>
 									<option value="12">12 months</option>
-								<?php } else if ($activity_archive_time_out === '6') { ?>
+								<?php } else if ($customer_online_archive_time_out === '6') { ?>
 									<option value="0">Never delete</option>
 									<option value="1">1 month</option>
 									<option value="3">3 months</option>
 									<option value="6" selected="selected">6 months</option>
 									<option value="12">12 months</option>
-								<?php } else if ($activity_archive_time_out === '12') { ?>
+								<?php } else if ($customer_online_archive_time_out === '12') { ?>
 									<option value="0">Never delete</option>
 									<option value="1">1 month</option>
 									<option value="3">3 months</option>
@@ -1051,7 +1051,7 @@
 									<option value="12">12 months</option>
 								<?php } ?>
 							</select>
-							<?php echo form_error('activity_archive_time_out', '<span class="text-danger">', '</span>'); ?>
+							<?php echo form_error('customer_online_archive_time_out', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">

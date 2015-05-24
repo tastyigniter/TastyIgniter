@@ -28,33 +28,33 @@
                 <?php } ?>
 
 				<div id="edit-source" class="tab-pane row theme-editor <?php echo ($is_customizable) ? '' : 'active'; ?>">
-					<?php if (!empty($file['heading'])){ ?>
+					<?php if (!empty($file['heading'])) { ?>
 						<h4 class="text-info editor-text"><?php echo $file['heading']; ?></h4>
 					<?php } ?>
 
-					<div class="">
-						<div class="col-sm-9 wrap-none wrap-left">
-							<!--<a class="theme-tree-toggle"><i class="fa fa-angle-double-left"></i></a>-->
-							<div class="theme-editor-holder">
-								<?php if (!empty($file['type']) AND $file['type'] === 'file') { ?>
-									<textarea name="editor_area" id="editor-area" class="form-control" rows="28"><?php echo $file['content']; ?></textarea>
-								<?php } else if (!empty($file['type']) AND $file['type'] === 'img') { ?>
-									<img class="center-block wrap-horizontal" alt="<?php echo $file['name']; ?>" src="<?php echo $file['content']; ?>" />
-								<?php } else { ?>
-									<div class="jumbotron">
-										<h4>Select a File!</h4>
-										<p>You can select from a number of options to alter the look of your theme. The Theme Editor supports Source files, image files and font files.</p>
-									</div>
-								<?php } ?>
-							</div>
-						</div>
-						<div class="col-sm-3 wrap-none wrap-right">
-							<div class="metisHolder">
-								<?php echo $theme_files; ?>
-							</div>
-						</div>
-					</div>
-				</div>
+                    <div class="">
+                        <div class="col-sm-9 wrap-none wrap-left">
+                            <!--<a class="theme-tree-toggle"><i class="fa fa-angle-double-left"></i></a>-->
+                            <div class="theme-editor-holder">
+                                <?php if (!empty($file['type']) AND $file['type'] === 'file') { ?>
+                                    <textarea name="editor_area" id="editor-area" class="form-control" rows="28"><?php echo $file['content']; ?></textarea>
+                                <?php } else if (!empty($file['type']) AND $file['type'] === 'img') { ?>
+                                    <img class="center-block wrap-horizontal" alt="<?php echo $file['name']; ?>" src="<?php echo $file['content']; ?>" />
+                                <?php } else { ?>
+                                    <div class="jumbotron">
+                                        <h4>Select a File!</h4>
+                                        <p>You can select from a number of options to alter the look of your theme. The Theme Editor supports Source files, image files and font files.</p>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 wrap-none wrap-right">
+                            <div class="metisHolder">
+                                <?php echo $theme_files; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 			</div>
 		</form>
 	</div>

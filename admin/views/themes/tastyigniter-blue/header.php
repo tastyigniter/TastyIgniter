@@ -290,7 +290,7 @@
 								<li><a class="staffs" href="<?php echo site_url('staffs'); ?>"><i class="fa fa-square-o fa-fw"></i>Staffs</a>
 								<li><a class="customer_groups" href="<?php echo site_url('customer_groups'); ?>"><i class="fa fa-square-o fa-fw"></i>Customer Groups</a></li>
 								<li><a class="staff_groups" href="<?php echo site_url('staff_groups'); ?>"><i class="fa fa-square-o fa-fw"></i>Staff Groups</a></li>
-								<li><a class="customers_activity" href="<?php echo site_url('customers_activity'); ?>"><i class="fa fa-square-o fa-fw"></i>Activities</a></li>
+								<li><a class="customers_online" href="<?php echo site_url('customers_online'); ?>"><i class="fa fa-square-o fa-fw"></i>Customers Online</a></li>
 							</ul>
 						</li>
 						<li>

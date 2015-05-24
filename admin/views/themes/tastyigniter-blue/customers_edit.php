@@ -5,8 +5,6 @@
 			<ul id="nav-tabs" class="nav nav-tabs">
 				<li class="active"><a href="#general" data-toggle="tab">Customer</a></li>
 				<li><a href="#addresses" data-toggle="tab">Address</a></li>
-				<li><a href="#orders" data-toggle="tab">Orders</a></li>
-				<li><a href="#recent-activity" data-toggle="tab">Recent Activity</a></li>
 			</ul>
 		</div>
 
@@ -190,94 +188,6 @@
 						<?php $table_row++; ?>
 						<?php } ?>
 					<?php } ?>
-					</div>
-				</div>
-
-				<div id="orders" class="tab-pane row wrap-all">
-					<div class="panel panel-default panel-table">
-						<div class="table-responsive">
-							<table border="0" class="table table-striped table-border">
-								<thead>
-									<tr>
-										<th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
-										<th>ID</th>
-										<th>Location</th>
-										<th>Customer Name</th>
-										<th>Status</th>
-										<th>Type</th>
-										<th class="text-center">Ready Time</th>
-										<th class="text-center">Date Added</th>
-									</tr>
-								</thead>
-								<tbody>
-									<?php if ($orders) { ?>
-									<?php foreach ($orders as $order) { ?>
-									<tr>
-										<td class="action"><input type="checkbox" value="<?php echo $order['order_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
-											<a class="btn btn-edit" title="Edit" href="<?php echo $order['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
-										<td class="id"><?php echo $order['order_id']; ?></td>
-										<td><?php echo $order['location_name']; ?></td>
-										<td><?php echo $order['first_name'] .' '. $order['last_name']; ?></td>
-										<td><?php echo $order['order_status']; ?></td>
-										<td><?php echo $order['order_type']; ?></td>
-										<td class="text-center"><?php echo $order['order_time']; ?></td>
-										<td class="text-center"><?php echo $order['date_added']; ?></td>
-									</tr>
-									<?php } ?>
-									<?php } else { ?>
-									<tr>
-										<td colspan="8"><?php echo $text_empty; ?></td>
-									</tr>
-									<?php } ?>
-								</tbody>
-							</table>
-						</div>
-
-						<div class="pagination-bar clearfix">
-							<div class="links"><?php echo $pagination['links']; ?></div>
-							<div class="info"><?php echo $pagination['info']; ?></div>
-						</div>
-					</div>
-				</div>
-
-				<div id="recent-activity" class="tab-pane row wrap-all">
-					<div class="panel panel-default panel-table">
-						<div class="table-responsive">
-							<table border="0" class="table table-striped table-border">
-								<thead>
-									<tr>
-										<th class="action action-one"></th>
-										<th>Last Activity</th>
-										<th>IP</th>
-										<th>Customer</th>
-										<th>Access</th>
-										<th>Browser</th>
-										<th style="width:22%;">Request URL</th>
-										<th style="width:22%;">Referrer URL</th>
-									</tr>
-								</thead>
-								<tbody>
-									<?php if ($activities) { ?>
-									<?php foreach ($activities as $activity) { ?>
-									<tr>
-										<td class="action action-one"><a class="blacklist" title="Blacklist" href="<?php echo $activity['blacklist']; ?>"></a></td>
-										<td><?php echo $activity['date_added']; ?></td>
-										<td><?php echo $activity['ip_address']; ?></td>
-										<td><?php echo $activity['customer_name']; ?></td>
-										<td><?php echo $activity['access_type']; ?></td>
-										<td><?php echo $activity['browser']; ?></td>
-										<td><?php echo $activity['request_uri']; ?></td>
-										<td><?php echo $activity['referrer_uri']; ?></td>
-									</tr>
-									<?php } ?>
-									<?php } else { ?>
-									<tr>
-										<td colspan="8"><?php echo $text_empty_activity; ?></td>
-									</tr>
-									<?php } ?>
-								</tbody>
-							</table>
-						</div>
 					</div>
 				</div>
 			</div>
