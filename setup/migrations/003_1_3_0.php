@@ -25,7 +25,8 @@ class Migration_1_3_0 extends CI_Migration {
 
         $this->dbforge->add_column('orders', array('assignee_id INT(11) NOT NULL'));
 
-        $this->dbforge->add_column('customers_activity', array('page_views INT(11) NOT NULL'));
+        $this->db->query("ALTER TABLE ".$this->db->dbprefix('customers_activity')." RENAME ".$this->db->dbprefix('customers_online').";");
+        $this->dbforge->add_column('customers_online', array('user_agent TEXT NOT NULL'));
 
         $this->_notifications();
 	}
@@ -50,7 +51,8 @@ class Migration_1_3_0 extends CI_Migration {
 
         $this->dbforge->drop_column('orders', 'assignee_id');
 
-        $this->dbforge->drop_column('customers_activity', 'page_views');
+        $this->db->query("ALTER TABLE ".$this->db->dbprefix('customers_online')." RENAME ".$this->db->dbprefix('customers_activity').";");
+        $this->dbforge->drop_column('customers_activity', 'user_agent');
 
         $this->dbforge->drop_table('notifications');
 	}

@@ -47,7 +47,7 @@ INSERT INTO `ti_menu_options` (`menu_option_id`, `menu_id`, `option_id`, `requir
 # TABLE STRUCTURE FOR: ti_menu_option_values
 #
 
-INSERT INTO `ti_menu_option_values` (`menu_option_value_id`, `menu_option_id`, `menu_id`, `option_id`, `option_value_id`, `new_price`, `quantity`, `substract_stock`) VALUES
+INSERT INTO `ti_menu_option_values` (`menu_option_value_id`, `menu_option_id`, `menu_id`, `option_id`, `option_value_id`, `new_price`, `quantity`, `subtract_stock`) VALUES
 (52, 25, 84, 22, 8, '0.00', 0, 0),
 (53, 25, 84, 22, 9, '0.00', 0, 0),
 (54, 25, 84, 22, 11, '0.00', 0, 0),

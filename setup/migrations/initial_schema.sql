@@ -511,10 +511,10 @@ VALUES
 	(16, 'module', 'slideshow', 'a:6:{s:11:\"dimension_h\";s:3:\"420\";s:11:\"dimension_w\";s:4:\"1170\";s:6:\"effect\";s:4:\"fade\";s:5:\"speed\";s:3:\"500\";s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"15\";s:8:\"position\";s:3:\"top\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}s:6:\"slides\";a:3:{i:0;a:3:{s:4:\"name\";s:9:\"slide.png\";s:9:\"image_src\";s:14:\"data/slide.jpg\";s:7:\"caption\";s:0:\"\";}i:1;a:3:{s:4:\"name\";s:10:\"slide1.png\";s:9:\"image_src\";s:15:\"data/slide1.jpg\";s:7:\"caption\";s:0:\"\";}i:2;a:3:{s:4:\"name\";s:10:\"slide2.png\";s:9:\"image_src\";s:15:\"data/slide2.jpg\";s:7:\"caption\";s:0:\"\";}}}', 1, 1, 'Slideshow'),
 	(18, 'payment', 'cod', 'a:5:{s:4:\"name\";N;s:11:\"order_total\";s:7:\"1000.00\";s:12:\"order_status\";s:2:\"11\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}', 1, 1, 'Cash On Delivery'),
 	(20, 'module', 'pages_module', 'a:1:{s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"17\";s:8:\"position\";s:5:\"right\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}}', 1, 1, 'Pages'),
-	(21, 'payment', 'paypal_express', 'a:11:{s:8:\"priority\";s:1:\"2\";s:6:\"status\";s:1:\"1\";s:8:\"api_mode\";s:7:\"sandbox\";s:8:\"api_user\";s:39:\"samadepoyigi-facilitator_api1.gmail.com\";s:8:\"api_pass\";s:10:\"1381080165\";s:13:\"api_signature\";s:56:\"AFcWxV21C7fd0v3bYYYRCpSSRl31AYzY6RzJVWuquyjw.VYZbV7LatXv\";s:10:\"api_action\";s:4:\"sale\";s:10:\"return_uri\";s:24:\"paypal_express/authorize\";s:10:\"cancel_uri\";s:21:\"paypal_express/cancel\";s:11:\"order_total\";s:4:\"0.00\";s:12:\"order_status\";s:2:\"11\";}', 1, 1, 'PayPal Express'),
+  (21, 'payment', 'paypal_express', 'a:11:{s:8:\"priority\";s:0:\"\";s:6:\"status\";s:1:\"0\";s:8:\"api_mode\";s:7:\"sandbox\";s:8:\"api_user\";s:0:\"\";s:8:\"api_pass\";s:0:\"\";s:13:\"api_signature\";s:0:\"\";s:10:\"api_action\";s:4:\"sale\";s:10:\"return_uri\";s:20:\"main/checkout/paypal\";s:10:\"cancel_uri\";s:13:\"main/checkout\";s:11:\"order_total\";s:4:\"0.00\";s:12:\"order_status\";s:2:\"11\";}', 1, 1, 'PayPal Express'),
 	(23, 'theme', 'tastyigniter-orange', 'a:13:{s:11:\"logo_height\";s:2:\"40\";s:16:\"logo_padding_top\";s:2:\"25\";s:19:\"logo_padding_bottom\";s:2:\"25\";s:11:\"font_family\";s:25:\"\"Oxygen\",Arial,sans-serif\";s:11:\"font_weight\";s:6:\"normal\";s:9:\"font_size\";s:2:\"13\";s:10:\"font_color\";s:7:\"#333333\";s:4:\"body\";a:2:{s:10:\"background\";s:7:\"#ffffff\";s:5:\"image\";s:0:\"\";}s:6:\"header\";a:3:{s:10:\"background\";s:7:\"#fdeae2\";s:5:\"image\";s:0:\"\";s:5:\"color\";s:7:\"#333333\";}s:7:\"sidebar\";a:4:{s:10:\"background\";s:7:\"#ffffff\";s:5:\"image\";s:0:\"\";s:4:\"font\";s:7:\"#484848\";s:6:\"border\";s:7:\"#ffffff\";}s:4:\"link\";a:2:{s:5:\"color\";s:7:\"#428bca\";s:5:\"hover\";s:7:\"#2a6496\";}s:6:\"button\";a:4:{s:7:\"default\";a:2:{s:10:\"background\";s:7:\"#ffffff\";s:6:\"border\";s:7:\"#cccccc\";}s:7:\"primary\";a:2:{s:10:\"background\";s:7:\"#428bca\";s:6:\"border\";s:7:\"#357ebd\";}s:7:\"success\";a:2:{s:10:\"background\";s:7:\"#5cb85c\";s:6:\"border\";s:7:\"#4cae4c\";}s:6:\"danger\";a:2:{s:10:\"background\";s:7:\"#d9534f\";s:6:\"border\";s:7:\"#d43f3a\";}}s:10:\"custom_css\";s:0:\"\";}', 1, 1, 'TastyIgniter Orange'),
 	(24, 'theme', 'tastyigniter-blue', '', 1, 0, 'TastyIgniter Blue'),
-	(25, 'module', 'banners_module', 'a:1:{s:7:\"banners\";a:1:{i:1;a:3:{s:9:\"banner_id\";s:1:\"1\";s:5:\"width\";s:0:\"\";s:6:\"height\";s:0:\"\";}}}', 1, 1, 'Banners');
+	(25, 'module', 'banners_module', 'a:1:{s:7:\"banners\";a:1:{i:1;a:3:{s:9:\"banner_id\";s:1:\"1\";s:5:\"width\";s:0:\"\";s:6:\"height\";s:0:\"\";}}}', 1, 0, 'Banners');
 
 
 #
@@ -539,7 +539,6 @@ VALUES
 	(20, 12, 'local_module', 'top', 1, 1),
 	(21, 12, 'categories_module', 'left', 1, 1),
 	(22, 12, 'cart_module', 'right', 2, 1),
-	(23, 12, 'banners_module', 'left', 2, 1),
 	(24, 11, 'account_module', 'left', 1, 1);
 
 
@@ -548,20 +547,21 @@ VALUES
 #
 
 INSERT INTO `ti_layout_routes` (`layout_route_id`, `layout_id`, `uri_route`) VALUES
-(12, 11, 'account/inbox'),
-(13, 11, 'account/orders'),
-(14, 11, 'account/address'),
-(15, 11, 'account/details'),
-(16, 11, 'account'),
-(17, 12, 'menus'),
-(18, 14, 'payments'),
-(19, 13, 'checkout'),
-(20, 15, 'home'),
-(21, 16, 'reserve/table'),
-(22, 17, 'pages/page/(:num)'),
-(23, 17, 'pages'),
-(29, 18, 'local'),
-(30, 18, 'local/reviews');
+	(17, 12, 'menus'),
+	(18, 14, 'payments'),
+	(19, 13, 'checkout'),
+	(20, 15, 'home'),
+	(22, 17, 'pages/page/(:num)'),
+	(23, 17, 'pages'),
+	(29, 18, 'local'),
+	(30, 18, 'local/reviews'),
+	(36, 11, 'account/inbox'),
+	(37, 11, 'account/orders'),
+	(38, 11, 'account/address'),
+	(39, 11, 'account/details'),
+	(40, 11, 'account'),
+	(41, 16, 'reserve');
+
 
 #
 # TABLE STRUCTURE FOR: ti_layouts
@@ -672,13 +672,16 @@ INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) 
 (10866, 'config', 'location_order_email', '0', 0),
 (10867, 'config', 'location_reserve_email', '0', 0),
 (10868, 'config', 'approve_reviews', '1', 0),
-(10869, 'config', 'order_status_new', '11', 0),
-(10870, 'config', 'order_status_complete', '15', 0),
+(14349, 'config', 'new_order_status', '11', 0),
+(14350, 'config', 'complete_order_status', '15', 0),
+(14351, 'config', 'canceled_order_status', '12', 0),
 (10871, 'config', 'guest_order', '1', 0),
 (10872, 'config', 'delivery_time', '45', 0),
 (10873, 'config', 'collection_time', '15', 0),
 (10874, 'config', 'reservation_mode', '1', 0),
-(10875, 'config', 'reservation_status', '11', 0),
+(14356,	'config',	'new_reservation_status',	'18',	0),
+(14397,	'config',	'	confirmed_reservation_status',	'16',	0),
+(14357,	'config',	'	canceled_reservation_status',	'17',	0),
 (10876, 'config', 'reservation_interval', '45', 0),
 (10877, 'config', 'reservation_turn', '60', 0),
 (13626, 'config', 'image_manager', 'a:11:{s:8:\"max_size\";s:3:\"300\";s:11:\"thumb_width\";s:3:\"320\";s:12:\"thumb_height\";s:3:\"220\";s:7:\"uploads\";s:1:\"1\";s:10:\"new_folder\";s:1:\"1\";s:4:\"copy\";s:1:\"1\";s:4:\"move\";s:1:\"1\";s:6:\"rename\";s:1:\"1\";s:6:\"delete\";s:1:\"1\";s:15:\"transliteration\";s:1:\"0\";s:13:\"remember_days\";s:1:\"7\";}', 1),
@@ -689,8 +692,8 @@ INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) 
 (10887, 'config', 'smtp_user', '', 0),
 (10888, 'config', 'smtp_pass', '', 0),
 (10889, 'config', 'log_threshold', '1', 0),
-(10891, 'config', 'activity_online_time_out', '1200', 0),
-(10892, 'config', 'activity_archive_time_out', '0', 0),
+(10891, 'config', 'customer_online_time_out', '120', 0),
+(10892, 'config', 'customer_online_archive_time_out', '0', 0),
 (10894, 'config', 'index_file_url', '0', 0),
 (10895, 'config', 'permalink', '1', 0),
 (10896, 'config', 'maintenance_mode', '0', 0),
@@ -703,9 +706,8 @@ INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) 
 # TABLE STRUCTURE FOR: ti_staff_groups
 #
 
-INSERT INTO `ti_staff_groups` (`staff_group_id`, `staff_group_name`, `location_access`, `permission`)
-VALUES
-	(11, 'Super Staff', 0, 'a:2:{s:6:\"access\";a:43:{i:0;s:7:\"banners\";i:1;s:10:\"categories\";i:2;s:9:\"countries\";i:3;s:7:\"coupons\";i:4;s:10:\"currencies\";i:5;s:15:\"customer_groups\";i:6;s:9:\"customers\";i:7;s:18:\"customers_activity\";i:8;s:8:\"database\";i:9;s:10:\"error_logs\";i:10;s:10:\"extensions\";i:11;s:13:\"image_manager\";i:12;s:9:\"languages\";i:13;s:7:\"layouts\";i:14;s:9:\"locations\";i:15;s:14:\"mail_templates\";i:16;s:12:\"menu_options\";i:17;s:5:\"menus\";i:18;s:8:\"messages\";i:19;s:6:\"orders\";i:20;s:5:\"pages\";i:21;s:8:\"payments\";i:22;s:7:\"ratings\";i:23;s:12:\"reservations\";i:24;s:7:\"reviews\";i:25;s:18:\"security_questions\";i:26;s:8:\"settings\";i:27;s:12:\"staff_groups\";i:28;s:6:\"staffs\";i:29;s:8:\"statuses\";i:30;s:6:\"tables\";i:31;s:6:\"themes\";i:32;s:10:\"uri_routes\";i:33;s:14:\"account_module\";i:34;s:14:\"banners_module\";i:35;s:11:\"cart_module\";i:36;s:17:\"categories_module\";i:37;s:12:\"local_module\";i:38;s:12:\"pages_module\";i:39;s:18:\"reservation_module\";i:40;s:9:\"slideshow\";i:41;s:3:\"cod\";i:42;s:14:\"paypal_express\";}s:6:\"modify\";a:43:{i:0;s:7:\"banners\";i:1;s:10:\"categories\";i:2;s:9:\"countries\";i:3;s:7:\"coupons\";i:4;s:10:\"currencies\";i:5;s:15:\"customer_groups\";i:6;s:9:\"customers\";i:7;s:18:\"customers_activity\";i:8;s:8:\"database\";i:9;s:10:\"error_logs\";i:10;s:10:\"extensions\";i:11;s:13:\"image_manager\";i:12;s:9:\"languages\";i:13;s:7:\"layouts\";i:14;s:9:\"locations\";i:15;s:14:\"mail_templates\";i:16;s:12:\"menu_options\";i:17;s:5:\"menus\";i:18;s:8:\"messages\";i:19;s:6:\"orders\";i:20;s:5:\"pages\";i:21;s:8:\"payments\";i:22;s:7:\"ratings\";i:23;s:12:\"reservations\";i:24;s:7:\"reviews\";i:25;s:18:\"security_questions\";i:26;s:8:\"settings\";i:27;s:12:\"staff_groups\";i:28;s:6:\"staffs\";i:29;s:8:\"statuses\";i:30;s:6:\"tables\";i:31;s:6:\"themes\";i:32;s:10:\"uri_routes\";i:33;s:14:\"account_module\";i:34;s:14:\"banners_module\";i:35;s:11:\"cart_module\";i:36;s:17:\"categories_module\";i:37;s:12:\"local_module\";i:38;s:12:\"pages_module\";i:39;s:18:\"reservation_module\";i:40;s:9:\"slideshow\";i:41;s:3:\"cod\";i:42;s:14:\"paypal_express\";}}');
+INSERT INTO `ti_staff_groups` (`staff_group_id`, `staff_group_name`, `location_access`, `permission`) VALUES
+(11, 'Super Staff', 0, 'a:2:{s:6:\"access\";a:43:{i:0;s:7:\"banners\";i:1;s:10:\"categories\";i:2;s:9:\"countries\";i:3;s:7:\"coupons\";i:4;s:10:\"currencies\";i:5;s:15:\"customer_groups\";i:6;s:9:\"customers\";i:7;s:16:\"customers_online\";i:8;s:8:\"database\";i:9;s:10:\"error_logs\";i:10;s:10:\"extensions\";i:11;s:13:\"image_manager\";i:12;s:9:\"languages\";i:13;s:7:\"layouts\";i:14;s:9:\"locations\";i:15;s:14:\"mail_templates\";i:16;s:12:\"menu_options\";i:17;s:5:\"menus\";i:18;s:8:\"messages\";i:19;s:6:\"orders\";i:20;s:5:\"pages\";i:21;s:8:\"payments\";i:22;s:7:\"ratings\";i:23;s:12:\"reservations\";i:24;s:7:\"reviews\";i:25;s:18:\"security_questions\";i:26;s:8:\"settings\";i:27;s:12:\"staff_groups\";i:28;s:6:\"staffs\";i:29;s:8:\"statuses\";i:30;s:6:\"tables\";i:31;s:6:\"themes\";i:32;s:10:\"uri_routes\";i:33;s:14:\"account_module\";i:34;s:14:\"banners_module\";i:35;s:11:\"cart_module\";i:36;s:17:\"categories_module\";i:37;s:12:\"local_module\";i:38;s:12:\"pages_module\";i:39;s:18:\"reservation_module\";i:40;s:9:\"slideshow\";i:41;s:3:\"cod\";i:42;s:14:\"paypal_express\";}s:6:\"modify\";a:43:{i:0;s:7:\"banners\";i:1;s:10:\"categories\";i:2;s:9:\"countries\";i:3;s:7:\"coupons\";i:4;s:10:\"currencies\";i:5;s:15:\"customer_groups\";i:6;s:9:\"customers\";i:7;s:16:\"customers_online\";i:8;s:8:\"database\";i:9;s:10:\"error_logs\";i:10;s:10:\"extensions\";i:11;s:13:\"image_manager\";i:12;s:9:\"languages\";i:13;s:7:\"layouts\";i:14;s:9:\"locations\";i:15;s:14:\"mail_templates\";i:16;s:12:\"menu_options\";i:17;s:5:\"menus\";i:18;s:8:\"messages\";i:19;s:6:\"orders\";i:20;s:5:\"pages\";i:21;s:8:\"payments\";i:22;s:7:\"ratings\";i:23;s:12:\"reservations\";i:24;s:7:\"reviews\";i:25;s:18:\"security_questions\";i:26;s:8:\"settings\";i:27;s:12:\"staff_groups\";i:28;s:6:\"staffs\";i:29;s:8:\"statuses\";i:30;s:6:\"tables\";i:31;s:6:\"themes\";i:32;s:10:\"uri_routes\";i:33;s:14:\"account_module\";i:34;s:14:\"banners_module\";i:35;s:11:\"cart_module\";i:36;s:17:\"categories_module\";i:37;s:12:\"local_module\";i:38;s:12:\"pages_module\";i:39;s:18:\"reservation_module\";i:40;s:9:\"slideshow\";i:41;s:3:\"cod\";i:42;s:14:\"paypal_express\";}}');
 
 
 #
