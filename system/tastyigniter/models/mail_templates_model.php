@@ -162,17 +162,25 @@ class Mail_templates_model extends TI_Model {
     }
 
     public function deleteTemplate($template_id) {
-        if ($template_id !== $this->config->item('mail_template_id')) {
-			$this->db->where('template_id', $template_id);
-			$this->db->delete('mail_templates');
+        if (is_numeric($template_id)) $template_id = array($template_id);
 
-			$this->db->where('template_id', $template_id);
-			$this->db->delete('mail_templates_data');
-		}
+        foreach ($template_id as $key => $value) {
+            if ($value === $this->config->item('mail_template_id')) {
+                unset($template_id[$key]);
+            }
+        }
 
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
-		}
+        if (!empty($template_id) AND ctype_digit(implode('', $template_id))) {
+            $this->db->where_in('template_id', $template_id);
+            $this->db->delete('mail_templates');
+
+            if (($affected_rows = $this->db->affected_rows()) > 0) {
+                $this->db->where_in('template_id', $template_id);
+                $this->db->delete('mail_templates_data');
+
+                return $affected_rows;
+            }
+        }
 	}
 }
 

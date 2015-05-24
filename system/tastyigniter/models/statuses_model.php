@@ -162,14 +162,14 @@ class Statuses_model extends TI_Model {
 	}
 
 	public function deleteStatus($status_id) {
-		if (is_numeric($status_id)) {
-			$this->db->where('status_id', $status_id);
-			$this->db->delete('statuses');
+        if (is_numeric($status_id)) $status_id = array($status_id);
 
-			if ($this->db->affected_rows() > 0) {
-				return TRUE;
-			}
-		}
+        if (!empty($status_id) AND ctype_digit(implode('', $status_id))) {
+            $this->db->where_in('status_id', $status_id);
+            $this->db->delete('statuses');
+
+            return $this->db->affected_rows();
+        }
 	}
 }
 

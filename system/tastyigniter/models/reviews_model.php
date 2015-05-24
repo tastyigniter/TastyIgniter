@@ -250,14 +250,14 @@ class Reviews_model extends TI_Model {
 	}
 
 	public function deleteReview($review_id) {
-		if (is_numeric($review_id)) {
-			$this->db->where('review_id', $review_id);
-			$this->db->delete('reviews');
+        if (is_numeric($review_id)) $review_id = array($review_id);
 
-			if ($this->db->affected_rows() > 0) {
-				return TRUE;
-			}
-		}
+        if (!empty($review_id) AND ctype_digit(implode('', $review_id))) {
+            $this->db->where_in('review_id', $review_id);
+            $this->db->delete('reviews');
+
+            return $this->db->affected_rows();
+        }
 	}
 }
 

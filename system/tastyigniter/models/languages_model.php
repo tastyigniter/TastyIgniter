@@ -116,14 +116,14 @@ class Languages_model extends TI_Model {
 	}
 
 	public function deleteLanguage($language_id) {
-		if (is_numeric($language_id)) {
-			$this->db->where('language_id', $language_id);
-			$this->db->delete('languages');
+        if (is_numeric($language_id)) $language_id = array($language_id);
 
-			if ($this->db->affected_rows() > 0) {
-				return TRUE;
-			}
-		}
+        if (!empty($language_id) AND ctype_digit(implode('', $language_id))) {
+            $this->db->where_in('language_id', $language_id);
+            $this->db->delete('languages');
+
+            return $this->db->affected_rows();
+        }
 	}
 }
 

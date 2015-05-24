@@ -217,14 +217,14 @@ class Coupons_model extends TI_Model {
 	}
 
 	public function deleteCoupon($coupon_id) {
-		if (is_numeric($coupon_id)) {
-			$this->db->where('coupon_id', $coupon_id);
-			$this->db->delete('coupons');
+        if (is_numeric($coupon_id)) $coupon_id = array($coupon_id);
 
-			if ($this->db->affected_rows() > 0) {
-				return TRUE;
-			}
-		}
+        if (!empty($coupon_id) AND ctype_digit(implode('', $coupon_id))) {
+            $this->db->where_in('coupon_id', $coupon_id);
+            $this->db->delete('coupons');
+
+            return $this->db->affected_rows();
+        }
 	}
 }
 

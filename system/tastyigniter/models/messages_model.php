@@ -306,17 +306,19 @@ class Messages_model extends TI_Model {
 	}
 
 	public function deleteMessage($message_id) {
-		if (is_numeric($message_id)) {
-			$this->db->where('message_id', $message_id);
-			$this->db->delete('messages');
+        if (is_numeric($message_id)) $message_id = array($message_id);
 
-            $this->db->where('message_id', $message_id);
-            $this->db->delete('message_recipients');
+        if (!empty($message_id) AND ctype_digit(implode('', $message_id))) {
+            $this->db->where_in('message_id', $message_id);
+            $this->db->delete('messages');
 
-            if ($this->db->affected_rows() > 0) {
-				return TRUE;
-			}
-		}
+            if (($affected_rows = $this->db->affected_rows()) > 0) {
+                $this->db->where_in('message_id', $message_id);
+                $this->db->delete('message_recipients');
+
+                return $affected_rows;
+            }
+        }
 	}
 
 	public function _sendMail($message_id, $email) {

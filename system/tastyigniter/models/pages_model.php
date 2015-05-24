@@ -149,16 +149,20 @@ class Pages_model extends TI_Model {
 	}
 
 	public function deletePage($page_id) {
-		if (is_numeric($page_id)) {
-			$this->db->where('page_id', $page_id);
-			$this->db->delete('pages');
+        if (is_numeric($page_id)) $page_id = array($page_id);
 
-            $this->permalink->deletePermalink('pages', 'page_id=' . $page_id);
+        if (!empty($page_id) AND ctype_digit(implode('', $page_id))) {
+            $this->db->where_in('page_id', $page_id);
+            $this->db->delete('pages');
 
-            if ($this->db->affected_rows() > 0) {
-				return TRUE;
-			}
-		}
+            if (($affected_rows = $this->db->affected_rows()) > 0) {
+                foreach ($page_id as $id) {
+                    $this->permalink->deletePermalink('pages', 'page_id=' . $id);
+                }
+
+                return $affected_rows;
+            }
+        }
 	}
 }
 

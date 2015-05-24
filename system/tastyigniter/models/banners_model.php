@@ -77,11 +77,13 @@ class Banners_model extends TI_Model {
     }
 
     public function deleteBanner($banner_id) {
-        $this->db->where('banner_id', $banner_id);
-        $this->db->delete('banners');
+        if (is_numeric($banner_id)) $banner_id = array($banner_id);
 
-        if ($this->db->affected_rows() > 0) {
-            return TRUE;
+        if (!empty($banner_id) AND ctype_digit(implode('', $banner_id))) {
+            $this->db->where_in('banner_id', $banner_id);
+            $this->db->delete('banners');
+
+            return $this->db->affected_rows();
         }
     }
 }

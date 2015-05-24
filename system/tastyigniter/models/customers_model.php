@@ -147,22 +147,24 @@ class Customers_model extends TI_Model {
         }
     }
 
-    public function resetPassword($customer_id = FALSE, $email = FALSE, $security_question_id = FALSE, $security_answer = FALSE) {
-        if ($customer_id != FALSE && $email != FALSE && $security_question_id != FALSE && $security_answer != FALSE) {
+    public function resetPassword($customer_id, $reset = array()) {
+        if (is_numeric($customer_id) AND !empty($reset)) {
 
             $this->db->from('customers');
             $this->db->where('customer_id', $customer_id);
-            $this->db->where('email', strtolower($email));
-            $this->db->where('security_question_id', $security_question_id);
-            $this->db->where('security_answer', $security_answer);
+            $this->db->where('email', strtolower($reset['email']));
+
+            if (!empty($reset['security_question_id']) AND !empty($reset['security_answer'])) {
+                $this->db->where('security_question_id', $reset['security_question_id']);
+                $this->db->where('security_answer', $reset['security_answer']);
+            }
+
             $this->db->where('status', '1');
-
             $query = $this->db->get();
-
             if ($query->num_rows() === 1) {
                 $row = $query->row_array();
 
-                //Randome Password
+                //Random Password
                 $alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
                 $pass = array();
                 for ($i = 0; $i < 8; $i++) {
@@ -177,22 +179,19 @@ class Customers_model extends TI_Model {
                 $this->db->where('customer_id', $row['customer_id']);
                 $this->db->where('email', $row['email']);
 
-                $this->db->update('customers');
-
-                if ($this->db->affected_rows() > 0) {
-                    $this->load->library('mail_template');
-
+                if ($this->db->update('customers') AND $this->db->affected_rows() > 0) {
                     $mail_data['site_name']         = $this->config->item('site_name');
                     $mail_data['first_name']        = $row['first_name'];
                     $mail_data['last_name']         = $row['last_name'];
                     $mail_data['created_password']  = $password;
                     $mail_data['signature']         = $this->config->item('site_name');
-                    $mail_data['login_link']        = root_url('main/login');
+                    $mail_data['login_link']        = root_url('account/login');
 
+                    $this->load->library('mail_template');
                     $message = $this->mail_template->parseTemplate('password_reset', $mail_data);
                     $subject = $this->mail_template->getSubject();
 
-                    $this->sendMail($email, $subject, $message);
+                    $this->sendMail($row['email'], $subject, $message);
                     return TRUE;
                 }
             }
@@ -305,7 +304,16 @@ class Customers_model extends TI_Model {
             }
 
             if ($notification_action === 'added' AND $this->config->item('registration_email') === '1') {
-                $this->sendMail($save);
+                $mail_data['site_name'] 		= $this->config->item('site_name');
+                $mail_data['first_name'] 		= $save['first_name'];
+                $mail_data['last_name'] 		= $save['last_name'];
+                $mail_data['signature'] 		= $this->config->item('site_name');
+                $mail_data['login_link'] 		= root_url('account/login');
+
+                $this->load->library('mail_template');
+                $message = $this->mail_template->parseTemplate('registration', $mail_data);
+                $subject = $this->mail_template->getSubject();
+                $this->sendMail($save['email'], $subject, $message);
             }
 
             return $customer_id;
@@ -313,38 +321,28 @@ class Customers_model extends TI_Model {
 	}
 
 	public function deleteCustomer($customer_id) {
-		if ($customer_id) {
-			$this->db->where('customer_id', $customer_id);
-			$this->db->delete('customers');
+        if (is_numeric($customer_id)) $customer_id = array($customer_id);
 
-			$this->db->where('customer_id', $customer_id);
-			$this->db->delete('addresses');
-		}
+        if (!empty($customer_id) AND ctype_digit(implode('', $customer_id))) {
+            $this->db->where_in('customer_id', $customer_id);
+            $this->db->delete('customers');
 
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
-		}
+            if (($affected_rows = $this->db->affected_rows()) > 0) {
+                $this->db->where_in('customer_id', $customer_id);
+                $this->db->delete('addresses');
+
+                return $affected_rows;
+            }
+        }
 	}
 
-	public function sendMail($data) {
-
-        $mail_data['site_name'] 		= $this->config->item('site_name');
-        $mail_data['first_name'] 		= $data['first_name'];
-        $mail_data['last_name'] 		= $data['last_name'];
-        $mail_data['signature'] 		= $this->config->item('site_name');
-        $mail_data['login_link'] 		= root_url('account/login');
-
+	public function sendMail($email, $subject, $message) {
 	   	$this->load->library('email');
-
 		$this->email->initialize();
 
 		$this->email->from($this->config->item('site_email'), $this->config->item('site_name'));
-		$this->email->to(strtolower($data['email']));
-
-        $this->load->library('mail_template');
-        $message = $this->mail_template->parseTemplate('registration', $mail_data);
-
-        $this->email->subject($this->mail_template->getSubject());
+		$this->email->to(strtolower($email));
+        $this->email->subject($subject);
 		$this->email->message($message);
 
         if ($this->email->send()) {

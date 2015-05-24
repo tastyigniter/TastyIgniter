@@ -446,22 +446,26 @@ class Locations_model extends TI_Model {
 	}
 
 	public function deleteLocation($location_id) {
-		if (is_numeric($location_id)) {
-			$this->db->where('location_id', $location_id);
-			$this->db->delete('locations');
+        if (is_numeric($location_id)) $location_id = array($location_id);
 
-			$this->db->where('location_id', $location_id);
-			$this->db->delete('location_tables');
+        if (!empty($location_id) AND ctype_digit(implode('', $location_id))) {
+            $this->db->where_in('location_id', $location_id);
+            $this->db->delete('locations');
 
-			$this->db->where('location_id', $location_id);
-			$this->db->delete('working_hours');
+            if (($affected_rows = $this->db->affected_rows()) > 0) {
+                $this->db->where_in('location_id', $location_id);
+                $this->db->delete('location_tables');
 
-            $this->permalink->deletePermalink('local', 'location_id=' . $location_id);
+                $this->db->where_in('location_id', $location_id);
+                $this->db->delete('working_hours');
 
-			if ($this->db->affected_rows() > 0) {
-				return TRUE;
-			}
-		}
+                foreach ($location_id as $id) {
+                    $this->permalink->deletePermalink('local', 'location_id=' . $id);
+                }
+
+                return $affected_rows;
+            }
+        }
 	}
 
 	public function validateLocation($location_id) {

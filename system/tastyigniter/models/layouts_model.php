@@ -244,18 +244,22 @@ class Layouts_model extends TI_Model {
     }
 
     public function deleteLayout($layout_id) {
-		$this->db->where('layout_id', $layout_id);
-		$this->db->delete('layouts');
+        if (is_numeric($layout_id)) $layout_id = array($layout_id);
 
-		$this->db->where('layout_id', $layout_id);
-		$this->db->delete('layout_routes');
+        if (!empty($layout_id) AND ctype_digit(implode('', $layout_id))) {
+            $this->db->where_in('layout_id', $layout_id);
+            $this->db->delete('layouts');
 
-		$this->db->where('layout_id', $layout_id);
-		$this->db->delete('layout_routes');
+            if (($affected_rows = $this->db->affected_rows()) > 0) {
+                $this->db->where_in('layout_id', $layout_id);
+                $this->db->delete('layout_routes');
 
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
-		}
+                $this->db->where_in('layout_id', $layout_id);
+                $this->db->delete('layout_modules');
+
+                return $affected_rows;
+            }
+        }
 	}
 }
 

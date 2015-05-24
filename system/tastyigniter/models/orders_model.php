@@ -39,15 +39,6 @@ class Orders_model extends TI_Model {
 		return $this->db->count_all_results();
     }
 
-    public function getCustomerCount($filter = array()) {
-		if (!empty($filter['customer_id'])) {
-			$this->db->where('orders.customer_id', $filter['customer_id']);
-
-			$this->db->from('orders');
-			return $this->db->count_all_results();
-		}
-    }
-
 	public function getList($filter = array()) {
 		if (!empty($filter['page']) AND $filter['page'] !== 0) {
 			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
@@ -145,35 +136,6 @@ class Orders_model extends TI_Model {
 
         return FALSE;
     }
-
-    public function getCustomerOrders($filter = array()) {
-		if (empty($filter['customer_id'])) {
-			return array();
-		}
-
-		if (!empty($filter['page']) AND $filter['page'] !== 0) {
-			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
-		}
-
-		if ($this->db->limit($filter['limit'], $filter['page'])) {
-			$this->db->select('order_id, location_name, customer_id, first_name, last_name, order_type, order_time, status_name, orders.date_added, orders.date_modified');
-			$this->db->from('orders');
-			$this->db->join('statuses', 'statuses.status_id = orders.status_id', 'left');
-			$this->db->join('locations', 'locations.location_id = orders.location_id', 'left');
-			$this->db->order_by('order_id', 'DESC');
-
-			$this->db->where('orders.customer_id', $filter['customer_id']);
-
-			$query = $this->db->get();
-			$result = array();
-
-			if ($query->num_rows() > 0) {
-				$result = $query->result_array();
-			}
-
-			return $result;
-		}
-	}
 
 	public function getOrderMenus($order_id) {
 		$this->db->from('order_menus');
@@ -394,7 +356,7 @@ class Orders_model extends TI_Model {
 
             $notify = $this->_sendMail($order_id);
 
-            $status_id = !empty($order_info['status_id']) ? (int) $order_info['status_id'] : (int)$this->config->item('order_status_new');
+            $status_id = !empty($order_info['status_id']) ? (int) $order_info['status_id'] : (int)$this->config->item('new_order_status');
 
             $this->db->set('status_id', $status_id);
             $this->db->set('notify', $notify);
@@ -621,7 +583,6 @@ class Orders_model extends TI_Model {
 
     public function _sendMail($order_id) {
         $this->load->library('email');
-        $this->load->library('mail_template');
 
         $notify = $send_mail = '0';
 
@@ -631,7 +592,7 @@ class Orders_model extends TI_Model {
 
             $this->email->from($this->config->item('site_email'), $this->config->item('site_name'));
 
-            if ($this->config->item('customer_order_email') === 1 AND $this->config->item('location_order_email') === '1') {
+            if ($this->config->item('customer_order_email') === '1' AND $this->config->item('location_order_email') === '1') {
                 $this->email->to(strtolower($mail_data['email']));
 
                 if ($this->location->getEmail()) {
@@ -639,15 +600,16 @@ class Orders_model extends TI_Model {
                 }
 
                 $send_mail = '1';
-            } else if ($this->config->item('customer_order_email') === 1 AND $this->config->item('location_order_email') !== '1') {
+            } else if ($this->config->item('customer_order_email') === '1' AND $this->config->item('location_order_email') !== '1') {
                 $this->email->to(strtolower($mail_data['email']));
                 $send_mail = '1';
-            } else if ($this->config->item('customer_order_email') !== 1 AND $this->config->item('location_order_email') === '1' AND $this->location->getEmail()) {
+            } else if ($this->config->item('customer_order_email') !== '1' AND $this->config->item('location_order_email') === '1' AND $this->location->getEmail()) {
                 $this->email->to(strtolower($this->location->getEmail()));
                 $send_mail = '1';
             }
 
             if ($send_mail === '1') {
+                $this->load->library('mail_template');
                 $message = $this->mail_template->parseTemplate('order', $mail_data);
                 $this->email->subject($this->mail_template->getSubject());
                 $this->email->message($message);
@@ -680,26 +642,28 @@ class Orders_model extends TI_Model {
 	}
 
 	public function deleteOrder($order_id) {
-		if (is_numeric($order_id)) {
-			$this->db->where('order_id', $order_id);
-			$this->db->delete('orders');
+        if (is_numeric($order_id)) $order_id = array($order_id);
 
-			$this->db->where('order_id', $order_id);
-			$this->db->delete('order_menus');
+        if (!empty($order_id) AND ctype_digit(implode('', $order_id))) {
+            $this->db->where_in('order_id', $order_id);
+            $this->db->delete('orders');
 
-			$this->db->where('order_id', $order_id);
-			$this->db->delete('order_options');
+            if (($affected_rows = $this->db->affected_rows()) > 0) {
+                $this->db->where_in('order_id', $order_id);
+                $this->db->delete('order_menus');
 
-			$this->db->where('order_id', $order_id);
-			$this->db->delete('order_totals');
+                $this->db->where_in('order_id', $order_id);
+                $this->db->delete('order_options');
 
-			$this->db->where('order_id', $order_id);
-			$this->db->delete('coupons_history');
+                $this->db->where_in('order_id', $order_id);
+                $this->db->delete('order_totals');
 
-			if ($this->db->affected_rows() > 0) {
-				return TRUE;
-			}
-		}
+                $this->db->where_in('order_id', $order_id);
+                $this->db->delete('coupons_history');
+
+                return $affected_rows;
+            }
+        }
 	}
 }
 

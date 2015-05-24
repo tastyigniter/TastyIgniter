@@ -199,20 +199,22 @@ class Menus_model extends TI_Model {
 	}
 
 	public function deleteMenu($menu_id) {
-		if (is_numeric($menu_id)) {
-			$this->db->where('menu_id', $menu_id);
-			$this->db->delete('menus');
+        if (is_numeric($menu_id)) $menu_id = array($menu_id);
 
-            $this->load->model('Menu_options_model');
-            $this->Menu_options_model->deleteMenuOption($menu_id);
+        if (!empty($menu_id) AND ctype_digit(implode('', $menu_id))) {
+            $this->db->where_in('menu_id', $menu_id);
+            $this->db->delete('menus');
 
-			$this->db->where('menu_id', $menu_id);
-			$this->db->delete('menus_specials');
+            if (($affected_rows = $this->db->affected_rows()) > 0) {
+                $this->load->model('Menu_options_model');
+                $this->Menu_options_model->deleteMenuOption($menu_id);
 
-			if ($this->db->affected_rows() > 0) {
-				return TRUE;
-			}
-		}
+                $this->db->where_in('menu_id', $menu_id);
+                $this->db->delete('menus_specials');
+
+                return $affected_rows;
+            }
+        }
 	}
 }
 

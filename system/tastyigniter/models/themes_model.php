@@ -3,7 +3,7 @@
 class Themes_model extends TI_Model {
 
     private $_allowed_image_ext = array('jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'svg');
-    private $_allowed_file_ext = array('txt', 'xml', 'js', 'php', 'css');
+    private $_allowed_file_ext = array('html', 'txt', 'xml', 'js', 'php', 'css');
     private $_hidden_files = array();
     private $_hidden_folders = array();
 
@@ -137,8 +137,6 @@ class Themes_model extends TI_Model {
 
         $theme_file_path = $location . '/views/themes/'. $name . $file;
         if (is_file(ROOTPATH . $theme_file_path)) {
-            $this->_allowed_file_ext = ($this->config->item('themes_allowed_file')) ? explode('|', $this->config->item('themes_allowed_file')) : array();
-
             $file_name = basename($theme_file_path);
             $file_ext = strtolower(substr(strrchr($theme_file_path, '.'), 1));
             $type = $content = '';

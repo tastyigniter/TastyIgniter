@@ -268,35 +268,39 @@ class Menu_options_model extends TI_Model {
     }
 
     public function deleteOption($option_id) {
-        if (is_numeric($option_id)) {
-            $this->db->where('option_id', $option_id);
+        if (is_numeric($option_id)) $option_id = array($option_id);
+
+        if (!empty($option_id) AND ctype_digit(implode('', $option_id))) {
+            $this->db->where_in('option_id', $option_id);
             $this->db->delete('options');
 
-            $this->db->where('option_id', $option_id);
-            $this->db->delete('option_values');
+            if (($affected_rows = $this->db->affected_rows()) > 0) {
+                $this->db->where_in('option_id', $option_id);
+                $this->db->delete('option_values');
 
-            $this->db->where('option_id', $option_id);
-            $this->db->delete('menu_options');
+                $this->db->where_in('option_id', $option_id);
+                $this->db->delete('menu_options');
 
-            $this->db->where('option_id', $option_id);
-            $this->db->delete('menu_option_values');
+                $this->db->where_in('option_id', $option_id);
+                $this->db->delete('menu_option_values');
 
-            if ($this->db->affected_rows() > 0) {
-                return TRUE;
+                return $affected_rows;
             }
         }
     }
 
     public function deleteMenuOption($menu_id) {
-        if (is_numeric($menu_id)) {
-            $this->db->where('menu_id', $menu_id);
+        if (is_numeric($menu_id)) $menu_id = array($menu_id);
+
+        if (!empty($menu_id) AND ctype_digit(implode('', $menu_id))) {
+            $this->db->where_in('menu_id', $menu_id);
             $this->db->delete('menu_options');
 
-            $this->db->where('menu_id', $menu_id);
-            $this->db->delete('menu_option_values');
+            if (($affected_rows = $this->db->affected_rows()) > 0) {
+                $this->db->where_in('menu_id', $menu_id);
+                $this->db->delete('menu_option_values');
 
-            if ($this->db->affected_rows() > 0) {
-                return TRUE;
+                return $affected_rows;
             }
         }
     }

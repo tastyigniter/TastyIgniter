@@ -87,14 +87,14 @@ class Staff_groups_model extends TI_Model {
 	}
 
 	public function deleteStaffGroup($staff_group_id) {
-		if (is_numeric($staff_group_id)) {
-			$this->db->where('staff_group_id', $staff_group_id);
-			$this->db->delete('staff_groups');
+        if (is_numeric($staff_group_id)) $staff_group_id = array($staff_group_id);
 
-			if ($this->db->affected_rows() > 0) {
-				return TRUE;
-			}
-		}
+        if (!empty($staff_group_id) AND ctype_digit(implode('', $staff_group_id))) {
+            $this->db->where_in('staff_group_id', $staff_group_id);
+            $this->db->delete('staff_groups');
+
+            return $this->db->affected_rows();
+        }
 	}
 }
 

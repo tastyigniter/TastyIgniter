@@ -289,17 +289,19 @@ class Staffs_model extends TI_Model {
 	}
 
 	public function deleteStaff($staff_id) {
-		if (is_numeric($staff_id)) {
-			$this->db->where('staff_id', $staff_id);
-			$this->db->delete('staffs');
+        if (is_numeric($staff_id)) $staff_id = array($staff_id);
 
-			$this->db->where('staff_id', $staff_id);
-			$this->db->delete('users');
+        if (!empty($staff_id) AND ctype_digit(implode('', $staff_id))) {
+            $this->db->where_in('staff_id', $staff_id);
+            $this->db->delete('staffs');
 
-			if ($this->db->affected_rows() > 0) {
-				return TRUE;
-			}
-		}
+            if (($affected_rows = $this->db->affected_rows()) > 0) {
+                $this->db->where('staff_id', $staff_id);
+                $this->db->delete('users');
+
+                return $affected_rows;
+            }
+        }
 	}
 }
 

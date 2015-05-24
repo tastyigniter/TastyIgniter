@@ -38,20 +38,17 @@ class Categories_model extends TI_Model {
         }
     }
 
-    public function getCategories($category_id = FALSE) {
-        if ($category_id === FALSE) {
+    public function getCategories() {
+        $this->db->from('categories');
 
-            $this->db->from('categories');
+        $query = $this->db->get();
+        $result = array();
 
-            $query = $this->db->get();
-            $result = array();
-
-            if ($query->num_rows() > 0) {
-                $result = $query->result_array();
-            }
-
-            return $result;
+        if ($query->num_rows() > 0) {
+            $result = $query->result_array();
         }
+
+        return $result;
     }
 
     public function getCategory($category_id) {
@@ -104,14 +101,18 @@ class Categories_model extends TI_Model {
     }
 
     public function deleteCategory($category_id) {
-        if (is_numeric($category_id)) {
-            $this->db->where('category_id', $category_id);
+        if (is_numeric($category_id)) $category_id = array($category_id);
+
+        if (!empty($category_id) AND ctype_digit(implode('', $category_id))) {
+            $this->db->where_in('category_id', $category_id);
             $this->db->delete('categories');
 
-            $this->permalink->deletePermalink('menus', 'category_id=' . $category_id);
+            if (($affected_rows = $this->db->affected_rows()) > 0) {
+                foreach ($category_id as $id) {
+                    $this->permalink->deletePermalink('menus', 'category_id=' . $id);
+                }
 
-            if ($this->db->affected_rows() > 0) {
-                return TRUE;
+                return $affected_rows;
             }
         }
     }

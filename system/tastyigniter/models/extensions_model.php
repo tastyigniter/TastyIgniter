@@ -3,7 +3,6 @@
 class Extensions_model extends TI_Model {
 
     private $extensions = array();
-    private $loaded_config = array();
 
 	public function getList($type = '') {
         return $this->getExtensions($type);
@@ -27,8 +26,6 @@ class Extensions_model extends TI_Model {
                     $basename = basename($ext_path);
                     $title = ucwords(str_replace('_module', '', $basename));
 
-                    $config_items = $this->getConfig($basename);
-
                     if (isset($db_extensions[$basename]) AND $db_extension = $db_extensions[$basename]) {
                         $ext_data = $db_extension['data'];
 
@@ -42,7 +39,9 @@ class Extensions_model extends TI_Model {
                     }
 
                     // skip loop if not installed and $is_installed is set TRUE
-                    if ($is_installed AND $installed === FALSE) continue;
+                    if ($is_installed === TRUE AND $installed === FALSE) continue;
+
+                    $config_items = $this->getConfig($basename);
 
                     if ($config_items AND is_array($config_items)) {
                         $config = TRUE;

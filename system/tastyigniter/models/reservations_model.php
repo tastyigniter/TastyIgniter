@@ -49,7 +49,7 @@ class Reservations_model extends TI_Model {
 		return $this->db->count_all_results();
     }
 
-	public function getList($filter = array()) {
+    public function getList($filter = array()) {
 		if (!empty($filter['page']) AND $filter['page'] !== 0) {
 			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
 		}
@@ -116,23 +116,21 @@ class Reservations_model extends TI_Model {
 		}
 	}
 
-    public function getReservations($customer_id = FALSE) {
-        if ($customer_id !== FALSE) {
-            $this->db->from('reservations');
-            $this->db->join('tables', 'tables.table_id = reservations.table_id', 'left');
-            $this->db->join('statuses', 'statuses.status_id = reservations.status', 'left');
-            $this->db->join('locations', 'locations.location_id = reservations.location_id', 'left');
-            $this->db->order_by('reservation_id', 'ASC');
+    public function getReservations() {
+        $this->db->from('reservations');
+        $this->db->join('tables', 'tables.table_id = reservations.table_id', 'left');
+        $this->db->join('statuses', 'statuses.status_id = reservations.status', 'left');
+        $this->db->join('locations', 'locations.location_id = reservations.location_id', 'left');
+        $this->db->order_by('reservation_id', 'ASC');
 
-            $query = $this->db->get();
-            $result = array();
+        $query = $this->db->get();
+        $result = array();
 
-            if ($query->num_rows() > 0) {
-                $result = $query->result_array();
-            }
-
-            return $result;
+        if ($query->num_rows() > 0) {
+            $result = $query->result_array();
         }
+
+        return $result;
     }
 
     public function getReservation($reservation_id = FALSE, $customer_id = FALSE) {
@@ -167,7 +165,7 @@ class Reservations_model extends TI_Model {
 		}
 	}
 
-	public function getReservationDates() {
+    public function getReservationDates() {
 		$this->db->select('reserve_date, MONTH(reserve_date) as month, YEAR(reserve_date) as year');
 		$this->db->from('reservations');
 		$this->db->group_by('MONTH(reserve_date)');
@@ -207,7 +205,7 @@ class Reservations_model extends TI_Model {
 		$result = 0;
 
 		$this->db->select_sum('reservations.guest_num', 'total_guest');
-		//$this->db->where('status', (int)$this->config->item('reservation_status'));
+		//$this->db->where('status', (int)$this->config->item('new_reservation_status'));
 
 		if (!empty($location_id)) {
 			$this->db->where('location_id', $location_id);
@@ -433,12 +431,12 @@ class Reservations_model extends TI_Model {
 				$notify = $this->_sendMail($reservation_id);
 				$this->db->set('notify', $notify);
 
-				$this->db->set('status', $this->config->item('reservation_status'));
+				$this->db->set('status', $this->config->item('new_reservation_status'));
 				$this->db->where('reservation_id', $reservation_id);
 
 				if ($this->db->update('reservations')) {
 					$this->load->model('Statuses_model');
-					$status = $this->Statuses_model->getStatus($this->config->item('reservation_status'));
+					$status = $this->Statuses_model->getStatus($this->config->item('new_reservation_status'));
 					$reserve_history = array(
 						'object_id' 	=> $reservation_id,
 						'status_id' 	=> $status['status_id'],
@@ -543,14 +541,14 @@ class Reservations_model extends TI_Model {
 	}
 
 	public function deleteReservation($reservation_id) {
-		if (is_numeric($reservation_id)) {
-			$this->db->where('reservation_id', $reservation_id);
-			$this->db->delete('reservations');
+        if (is_numeric($reservation_id)) $reservation_id = array($reservation_id);
 
-			if ($this->db->affected_rows() > 0) {
-				return TRUE;
-			}
-		}
+        if (!empty($reservation_id) AND ctype_digit(implode('', $reservation_id))) {
+            $this->db->where_in('reservation_id', $reservation_id);
+            $this->db->delete('reservations');
+
+            return $this->db->affected_rows();
+        }
 	}
 }
 

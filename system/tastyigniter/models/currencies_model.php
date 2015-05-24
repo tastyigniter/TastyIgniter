@@ -129,14 +129,14 @@ class Currencies_model extends TI_Model {
 	}
 
 	public function deleteCurrency($currency_id) {
-		if (is_numeric($currency_id)) {
-			$this->db->where('currency_id', $currency_id);
-			$this->db->delete('currencies');
+        if (is_numeric($currency_id)) $currency_id = array($currency_id);
 
-			if ($this->db->affected_rows() > 0) {
-				return TRUE;
-			}
-		}
+        if (!empty($currency_id) AND ctype_digit(implode('', $currency_id))) {
+            $this->db->where_in('currency_id', $currency_id);
+            $this->db->delete('currencies');
+
+            return $this->db->affected_rows();
+        }
 	}
 }
 

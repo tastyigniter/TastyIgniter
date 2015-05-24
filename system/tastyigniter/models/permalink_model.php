@@ -92,21 +92,10 @@ class Permalink_model extends TI_Model {
         }
     }
 
-    public function deletePermalinkByQuery($controller, $query) {
+    public function deletePermalink($controller, $query) {
         if (is_string($controller) AND is_string($query)) {
             $this->db->where('query', $query);
             $this->db->where('controller', $controller);
-            $this->db->delete('permalinks');
-
-            if ($this->db->affected_rows() > 0) {
-                return TRUE;
-            }
-        }
-    }
-
-    public function deletePermalink($permalink_id) {
-        if (is_numeric($permalink_id)) {
-            $this->db->where('permalink_id', $permalink_id);
             $this->db->delete('permalinks');
 
             if ($this->db->affected_rows() > 0) {
