@@ -163,15 +163,18 @@ class Banners extends Admin_Controller {
 	}
 
     private function _deleteBanner() {
-    	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $value) {
-				$this->Banners_model->deleteBanner($value);
-			}
+        if ($this->input->post('delete')) {
+            $deleted_rows = $this->Banners_model->deleteBanner($this->input->post('delete'));
 
-			$this->alert->set('success', 'Banner deleted successfully!');
-		}
+            if ($deleted_rows > 0) {
+                $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Banners': 'Banner';
+                $this->alert->set('success', $prefix.' deleted successfully.');
+            } else {
+                $this->alert->set('warning', 'An error occurred, nothing deleted.');
+            }
 
-		return TRUE;
+            return TRUE;
+        }
 	}
 
 	private function validateForm() {

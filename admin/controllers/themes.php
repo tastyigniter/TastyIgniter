@@ -18,7 +18,6 @@ class Themes extends Admin_Controller {
 
 		$this->template->setTitle('Themes');
 		$this->template->setHeading('Themes');
-		$this->template->setButton('Options', array('class' => 'btn btn-default pull-right', 'href' => site_url('settings#theme')));
 
 		$data['text_empty'] 		= 'There are no themes available.';
 
@@ -79,7 +78,6 @@ class Themes extends Admin_Controller {
         $this->template->setHeading('Theme: '. $theme['title']);
         $this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
         $this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
-        $this->template->setButton('Options', array('class' => 'btn btn-default pull-right', 'href' => site_url('settings#theme')));
         $this->template->setBackButton('btn btn-back', site_url('themes'));
 
         $this->template->setStyleTag(root_url('assets/js/colorpicker/css/bootstrap-colorpicker.min.css'), 'bootstrap-colorpicker-css');
@@ -92,6 +90,7 @@ class Themes extends Admin_Controller {
         $this->template->setScriptTag(root_url('assets/js/codemirror/javascript/javascript.js'), 'codemirror-javascript-js', '303');
         $this->template->setScriptTag(root_url('assets/js/codemirror/php/php.js'), 'codemirror-php-js', '304');
         $this->template->setScriptTag(root_url('assets/js/codemirror/htmlmixed/htmlmixed.js'), 'codemirror-htmlmixed-js', '305');
+        $this->template->setScriptTag(root_url('assets/js/codemirror/clike/clike.js'), 'codemirror-clike-js', '306');
         $this->template->setScriptTag(root_url('assets/js/jquery-sortable.js'), 'jquery-sortable-js');
         $this->template->setScriptTag(root_url("assets/js/fancybox/jquery.fancybox.js"), 'jquery-fancybox-js');
 
@@ -100,11 +99,13 @@ class Themes extends Admin_Controller {
             $url .= '&file='. $this->input->get('file');
 
             if ($theme_file = $this->Themes_model->readFile($theme_name, $theme_location, $this->input->get('file'))) {
-                $theme_file['heading'] = 'File is not supported';
+
                 if (isset($theme_file['type']) AND $theme_file['type'] === 'img') {
                     $theme_file['heading'] = 'Viewing image "'. $this->input->get('file') .'" in theme "'.$theme_name.'".';
                 } else if (isset($theme_file['type']) AND $theme_file['type'] === 'file') {
                     $theme_file['heading'] = 'Editing file "'. $this->input->get('file') .'" in theme "'.$theme_name.'".';
+                } else {
+                    $this->alert->set('danger', 'Selected file is not supported');
                 }
 
                 $data['file'] = $theme_file;
@@ -138,7 +139,7 @@ class Themes extends Admin_Controller {
 		$data['mode'] = '';
 		if (!empty($data['file']['ext'])) {
 			if ($data['file']['ext'] === 'php') {
-				$data['mode'] = 'htmlmixed';
+				$data['mode'] = 'application/x-httpd-php';
 			} else if ($data['file']['ext'] === 'css') {
 				$data['mode'] = 'css';
 			} else {
@@ -190,7 +191,7 @@ class Themes extends Admin_Controller {
             $theme_location = $this->input->get('location');
 
             if ($theme_name = $this->Themes_model->activateTheme($theme_name, $theme_location)) {
-                $this->alert->set('success', 'Theme ['.$theme_name.'] set as default successfully!');
+                $this->alert->set('success', 'Theme ['.$theme_name.'] set as default successfully.');
             }
         }
 
@@ -202,7 +203,7 @@ class Themes extends Admin_Controller {
             if ($this->input->post('editor_area') AND $this->input->get('file')) {
                 $theme_file = $this->input->get('file');
                 if ($this->Themes_model->writeFile($theme['name'], $theme['location'], $theme_file, $this->input->post('editor_area'))) {
-                    $this->alert->set('success', 'Theme File (' . $theme_file . ') saved successfully!');
+                    $this->alert->set('success', 'Theme File (' . $theme_file . ') saved successfully.');
                 } else {
                     $this->alert->set('danger', 'The theme file (' . $theme_file . ') is not writeable!');
                 }
@@ -218,7 +219,7 @@ class Themes extends Admin_Controller {
             }
 
             if ($this->Themes_model->updateTheme($update)) {
-                $this->alert->set('success', 'Theme updated successfully!');
+                $this->alert->set('success', 'Theme updated successfully.');
             } else {
                 $this->alert->set('warning', 'An error occurred, nothing updated.');
             }

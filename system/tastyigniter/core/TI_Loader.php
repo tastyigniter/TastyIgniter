@@ -98,9 +98,6 @@ class TI_Loader extends MX_Loader {
 
             // Load all other libraries
             $this->library($autoload['libraries']);
-
-
-
         }
 
         // Autoload models

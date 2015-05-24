@@ -167,15 +167,18 @@ class Currencies extends Admin_Controller {
 	}
 
 	private function _deleteCurrency() {
-    	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $value) {
-				$this->Currencies_model->deleteCurrency($value);
-			}
+        if ($this->input->post('delete')) {
+            $deleted_rows = $this->Currencies_model->deleteCurrency($this->input->post('delete'));
 
-			$this->alert->set('success', 'Currency(s) deleted successfully!');
-		}
+            if ($deleted_rows > 0) {
+                $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Currencies': 'Currency';
+                $this->alert->set('success', $prefix.' deleted successfully.');
+            } else {
+                $this->alert->set('warning', 'An error occurred, nothing deleted.');
+            }
 
-		return TRUE;
+            return TRUE;
+        }
 	}
 
 	private function validateForm() {

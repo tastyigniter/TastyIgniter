@@ -87,7 +87,7 @@ class Details extends Main_Controller {
 			// END: retrieve $_POST data if $_POST data is not same as existing customer library data
 
 			if (!empty($update)) {																// if update array is not empty then update customer details and display success message
-				if ($this->Customers_model->updateCustomer($this->customer->getId(), $update)) {
+				if ($this->Customers_model->saveCustomer($this->customer->getId(), $update)) {
 					$this->alert->set('alert', $this->lang->line('alert_updated'));
 				}
 

@@ -30,7 +30,8 @@ class Main_Controller extends Base_Controller {
             $this->template->setTheme($default_theme);
         }
 
-		$this->load->model('Extensions_model');
+//		$this->load->model('Extensions_model');
+        $this->load->library('extension');
 
 		$this->load->model('Pages_model');
 

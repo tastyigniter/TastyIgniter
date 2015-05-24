@@ -135,7 +135,7 @@ class Extensions extends Admin_Controller {
     	if ($this->input->get('action') === 'install') {
  			if ($this->Extensions_model->extensionExists($this->input->get('name'))) {
 	    		if ($this->Extensions_model->install('module', $this->input->get('name'))) {
-					$this->alert->set('success', 'Extension Installed successfully!');
+					$this->alert->set('success', 'Extension Installed successfully.');
 					return TRUE;
 	    		}
 	    	}
@@ -149,7 +149,7 @@ class Extensions extends Admin_Controller {
 	private function _uninstallExtension() {
     	if ($this->input->get('action') === 'uninstall') {
             if ($this->Extensions_model->uninstall('module', $this->input->get('name'))) {
-                $this->alert->set('success', 'Extension Uninstalled successfully!');
+                $this->alert->set('success', 'Extension Uninstalled successfully.');
                 return TRUE;
             }
 		}

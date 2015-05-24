@@ -166,7 +166,7 @@ class Countries extends Admin_Controller {
 			if ($country_id = $this->Countries_model->saveCountry($this->input->get('id'), $this->input->post())) {
 				$this->alert->set('success', 'Country ' . $save_type . ' successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occurred, ' . $save_type . ' updated.');
+				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
 			}
 
 			return $country_id;
@@ -174,15 +174,18 @@ class Countries extends Admin_Controller {
 	}
 
     private function _deleteCountry() {
-    	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $value) {
-				$this->Countries_model->deleteCountry($value);
-			}
+    	if ($this->input->post('delete')) {
+            $deleted_rows = $this->Countries_model->deleteCountry($this->input->post('delete'));
 
-			$this->alert->set('success', 'Country(s) deleted successfully!');
-		}
+            if ($deleted_rows > 0) {
+                $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Countries': 'Country';
+                $this->alert->set('success', $prefix.' deleted successfully.');
+            } else {
+                $this->alert->set('warning', 'An error occurred, nothing deleted.');
+            }
 
-		return TRUE;
+            return TRUE;
+        }
 	}
 
     private function validateForm() {

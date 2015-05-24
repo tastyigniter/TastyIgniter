@@ -100,7 +100,7 @@ class Payments extends Admin_Controller {
         if ($this->input->get('action') === 'install') {
             if ($this->Extensions_model->extensionExists($this->input->get('name'))) {
                 if ($this->Extensions_model->install('payment', $this->input->get('name'))) {
-                    $this->alert->set('success', 'Payment Installed successfully!');
+                    $this->alert->set('success', 'Payment Installed successfully.');
                     return TRUE;
                 }
             }
@@ -114,7 +114,7 @@ class Payments extends Admin_Controller {
 	private function _uninstall() {
         if ($this->input->get('action') === 'uninstall') {
             if ($this->Extensions_model->uninstall('payment', $this->input->get('name'))) {
-                $this->alert->set('success', 'Payment Uninstalled successfully!');
+                $this->alert->set('success', 'Payment Uninstalled successfully.');
                 return TRUE;
             }
         }

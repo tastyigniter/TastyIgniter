@@ -85,8 +85,6 @@ class Reserve extends Main_Controller {
 			$data['comment'] = '';
 		}
 
-		$data['captcha_image'] = $this->createCaptcha();
-
         $data['show_reserve'] = FALSE;
         $sess_reservation = $this->session->userdata('reservation');
 		if (!empty($sess_reservation) AND $this->input->get('reserve_time')) {
@@ -97,7 +95,9 @@ class Reserve extends Main_Controller {
 			redirect('reserve/success');
 		}
 
-		$this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
+        $data['captcha_image'] = $this->createCaptcha();
+
+        $this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
 		$this->template->render('reserve', $data);
 	}
 

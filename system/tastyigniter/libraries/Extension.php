@@ -12,7 +12,7 @@ class Extension {
         $this->CI =& get_instance();
         $this->CI->load->model('Extensions_model');
 
-        !empty($this->extensions) OR $this->extensions = $this->CI->Extensions_model->getExtensions();
+        !empty($this->extensions) OR $this->extensions = $this->CI->Extensions_model->getExtensions('', TRUE);
     }
 
     public function getExtensions($type = NULL) {

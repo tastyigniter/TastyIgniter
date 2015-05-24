@@ -9,6 +9,8 @@ class Template {
     private $_theme_path = NULL;
     private $_theme_shortpath = NULL;
     private $_theme_locations = array();
+    private $_load_partial = FALSE;
+    private $_partial_views = array('content_top', 'content_bottom', 'content_right', 'content_left');
     private $_partials = array();
     private $_modules = array();
     private $_title_separator = ' | ';
@@ -20,8 +22,8 @@ class Template {
     private $_breadcrumb_tag_open = '';
     private $_breadcrumb_tag_close = '';
     private $_breadcrumb_link_open = '';
-    private $_breadcrumb_link_close = '';
 
+    private $_breadcrumb_link_close = '';
     private $CI;
 
     /**
@@ -89,11 +91,13 @@ class Template {
 
         // Output template variables to the template
 		$template['title'] 	        = $this->_head_tags['title'];
-		$template['breadcrumbs'] 	= $this->_breadcrumbs; //*** future reference
+		$template['breadcrumbs'] 	= $this->_breadcrumbs;              //*** future reference
         $template['partials']	    = array();
 
         // Set the modules for this layout using the current URI segments
-        $this->_modules = $this->_getLayoutModules();
+        if ($this->_load_partial === TRUE) {
+            $this->_modules = $this->_getLayoutModules();
+        }
 
 		foreach ($this->_partials as $name => $partial) {
 			$template['partials'][$name] = $this->_loadPartial($partial);
@@ -120,6 +124,8 @@ class Template {
                 $name = $data;
                 $data = array();
             }
+
+            if (in_array($name, $this->_partial_views)) $this->_load_partial = TRUE;
 
             $this->_partials[$name] = array('view' => $name, 'data' => $data);
         }
@@ -365,18 +371,18 @@ class Template {
     }
 
     private function _loadPartial($partial = array()) {
-		$partial_contents = array('content_top', 'content_bottom', 'content_right', 'content_left');
 		if (isset($partial['view'])) {
             // We can only work with data arrays
             is_array($partial['data']) OR $partial['data'] = (array) $partial['data'];
 
-            if (in_array($partial['view'], $partial_contents)) {
+            if (in_array($partial['view'], $this->_partial_views)) {
                 $position = explode('_', $partial['view']);
                 $partial['data']['module_position'] = $position = isset($position[1]) ? $position[1] : '';
 
                 // We stop here if no module was found.
                 if (empty($this->_modules[$position])) return NULL;
 
+                $this->sortModules($position);
                 foreach ($this->_modules[$position] as $module) {
                     $partial['data'][$position.'_modules'][] = Modules::run($module['name'] .'/'. $module['name'] .'/index', $this->_data + $module['data']);
                 }
@@ -388,12 +394,11 @@ class Template {
 
     private function _getLayoutModules() {
         $this->CI->load->model('Layouts_model');
-        $this->CI->load->model('Extensions_model');
 
         $layout_id = $this->_getLayout();
 
         $layout_modules = $this->CI->Layouts_model->getLayoutModules($layout_id);
-        $modules = $this->CI->Extensions_model->getModules();
+        $modules = $this->CI->extension->getModules();
 
         $_modules = array();
         foreach ($layout_modules as $layout_module) {
@@ -508,6 +513,16 @@ class Template {
 
         // We return null if no layout was found.
         return NULL;
+    }
+
+    private function sortModules($position) {
+        if (!empty($position)) {
+            foreach ($this->_modules[$position] as $key => $module) {
+                $modules[$key] = $module['priority'];
+            }
+
+            array_multisort($modules, SORT_ASC, $this->_modules[$position]);
+        }
     }
 }
 

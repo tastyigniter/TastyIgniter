@@ -145,7 +145,8 @@
                                                     <?php } ?>
                                                     <?php $address_row++; ?>
                                                 <?php } ?>
-
+                                            </div>
+                                            <div class="col-xs-12">
                                                 <?php echo form_error('address_id', '<span class="text-danger">', '</span>'); ?>
                                             </div>
                                         </div>
@@ -288,7 +289,7 @@ $(document).ready(function() {
         }
 	});
 
-    $('input[name="order_type"]:checked').trigger('change');
+//    $('input[name="order_type"]:checked').trigger('change');
 });
 //--></script>
 <?php echo get_footer(); ?>

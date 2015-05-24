@@ -157,15 +157,6 @@ class Reservations extends Admin_Controller {
 		$data['reservations'] = array();
 		$results = $this->Reservations_model->getList($filter);
 		foreach ($results as $result) {
-			$current_date = mdate('%d-%m-%Y', time());
-			$reserve_date = mdate('%d-%m-%Y', strtotime($result['reserve_date']));
-
-			if ($current_date === $reserve_date) {
-				$reserve_date = 'Today';
-			} else {
-				$reserve_date = mdate('%d %M %y', strtotime($reserve_date));
-			}
-
 			$data['reservations'][] = array(
 				'reservation_id'	=> $result['reservation_id'],
 				'location_name'		=> $result['location_name'],
@@ -176,7 +167,7 @@ class Reservations extends Admin_Controller {
                 'status_name'		=> $result['status_name'],
                 'status_color'		=> $result['status_color'],
 				'staff_name'		=> $result['staff_name'],
-				'reserve_date'		=> $reserve_date,
+				'reserve_date'		=> day_elapsed($result['reserve_date']),
 				'reserve_time'		=> mdate('%H:%i', strtotime($result['reserve_time'])),
 				'edit'				=> site_url('reservations/edit?id=' . $result['reservation_id'])
 			);
@@ -364,16 +355,19 @@ class Reservations extends Admin_Controller {
 		}
 	}
 
-	private function _deleteReservation($reservation_id = FALSE) {
-    	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $value) {
-				$this->Reservations_model->deleteReservation($value);
-			}
+	private function _deleteReservation() {
+        if ($this->input->post('delete')) {
+            $deleted_rows = $this->Reservations_model->deleteReservation($this->input->post('delete'));
 
-			$this->alert->set('success', 'Reservation deleted successfully!');
-		}
+            if ($deleted_rows > 0) {
+                $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Reservations': 'Reservation';
+                $this->alert->set('success', $prefix.' deleted successfully.');
+            } else {
+                $this->alert->set('warning', 'An error occurred, nothing deleted.');
+            }
 
-		return TRUE;
+            return TRUE;
+        }
 	}
 
 	private function validateForm() {

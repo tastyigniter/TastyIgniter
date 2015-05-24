@@ -186,7 +186,7 @@ class Menu_options extends Admin_Controller {
 			if ($option_id = $this->Menu_options_model->saveOption($this->input->get('id'), $this->input->post())) {
 				$this->alert->set('success', 'Menu option ' . $save_type . ' successfully.');
 			} else {
-				$this->alert->set('warning', 'An error occurred, ' . $save_type . ' updated.');
+                $this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
 			}
 
 			return $option_id;
@@ -194,15 +194,18 @@ class Menu_options extends Admin_Controller {
 	}
 
 	private function _deleteMenuOption() {
-    	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $option_id) {
-				$this->Menu_options_model->deleteOption($option_id);
-			}
+        if ($this->input->post('delete')) {
+            $deleted_rows = $this->Menu_options_model->deleteOption($this->input->post('delete'));
 
-			$this->alert->set('success', 'Menu option(s) deleted successfully!');
-		}
+            if ($deleted_rows > 0) {
+                $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Menu options': 'Menu option';
+                $this->alert->set('success', $prefix.' deleted successfully.');
+            } else {
+                $this->alert->set('warning', 'An error occurred, nothing deleted.');
+            }
 
-		return TRUE;
+            return TRUE;
+        }
 	}
 
 	private function validateForm() {

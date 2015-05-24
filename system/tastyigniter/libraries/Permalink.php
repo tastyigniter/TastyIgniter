@@ -66,7 +66,7 @@ class Permalink {
     }
 
     public function deletePermalink($controller, $query = '') {
-        return $this->CI->Permalink_model->deletePermalinkByQuery($controller, $query);
+        return $this->CI->Permalink_model->deletePermalink($controller, $query);
     }
 
     private function _setRequestQuery() {

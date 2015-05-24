@@ -354,7 +354,7 @@ class Customizer {
     private function createMediaInput($field = array()) {
         if (empty($field['type']) AND $field['type'] !== 'media') return FALSE;
 
-        $no_photo = image_url('no_photo.png');
+        $no_photo = image_url('data/no_photo.png');
         $remove_event = 'onclick="$(\'#'.$field['id'].'-thumb\').attr(\'src\', \''.$no_photo.'\'); $(\'#'.$field['id'].'\').attr(\'value\', \'\');"';
         $field['l_addon'] = $this->_styles['media_l_addon'][0] . '<i><img id="'.$field['id'].'-thumb" class="thumb img-responsive" width="28px" src="'.$no_photo.'" /></i>' . $this->_styles['media_l_addon'][1];
         $field['r_addon'] = $this->_styles['media_r_addon'][0] . '<button type="button" class="btn btn-primary" onclick="mediaManager(\''.$field['id'].'\');"><i class="fa fa-picture-o"></i></button><button type="button" class="btn btn-danger" '.$remove_event.'><i class="fa fa-times-circle"></i></button>' . $this->_styles['media_r_addon'][1];

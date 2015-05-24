@@ -69,7 +69,7 @@ class Database extends Admin_Controller {
 
                 if ($delete['extension'] === 'sql' AND file_exists($file_path)) {
                     unlink($file_path);
-                    $this->alert->set('success', 'Database Backup deleted successfully!');
+                    $this->alert->set('success', 'Database Backup deleted successfully.');
                 }
 
                 redirect('database');
@@ -85,7 +85,7 @@ class Database extends Admin_Controller {
 
             if ($this->form_validation->run() === TRUE) {
 				if ($this->Settings_model->backupDatabase($this->input->post('backup'))) {
-                    $this->alert->set('success', 'Database backed up successfully!');
+                    $this->alert->set('success', 'Database backed up successfully.');
                     return TRUE;
                 }
 			} else {
@@ -102,7 +102,7 @@ class Database extends Admin_Controller {
 				$extension = end($temp);
 				if ($extension === 'sql') {
 					if ($this->Settings_model->restoreDatabase($content)) { // calls model to save data to SQL
-						$this->alert->set('success', 'Database Restored successfully!');
+						$this->alert->set('success', 'Database Restored successfully.');
 					}
 				} else {
 					$this->alert->set('warning', 'Nothing Restored!');

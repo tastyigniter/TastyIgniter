@@ -68,18 +68,21 @@ class Menus extends Main_Controller {
 
 		$this->load->model('Image_tool_model');
 
-		$data['show_menu_images'] = $this->config->item('show_menu_images');
+		$data['show_menu_images'] = $show_menu_images = $this->config->item('show_menu_images');
 		$menu_images_h = (is_numeric($this->config->item('menu_images_h'))) ? $this->config->item('menu_images_h') : '50';
 		$menu_images_w = (is_numeric($this->config->item('menu_images_w'))) ? $this->config->item('menu_images_w') : '50';
 
 		$data['menus'] = array();
 		$menus = $this->Menus_model->getList($filter);	 								// retrieve menus array based on category_id if available
 		foreach ($menus as $menu) {															// loop through menus array
-			if (!empty($menu['menu_photo'])) {
-				$menu_photo_src = $this->Image_tool_model->resize($menu['menu_photo'], $menu_images_w, $menu_images_h);
-			} else {
-				$menu_photo_src = $this->Image_tool_model->resize('data/no_photo.png', $menu_images_w, $menu_images_h);
-			}
+            $menu_photo_src = '';
+            if ($show_menu_images === '1') {
+                if (!empty($menu['menu_photo'])) {
+                    $menu_photo_src = $this->Image_tool_model->resize($menu['menu_photo'], $menu_images_w, $menu_images_h);
+                } else {
+                    $menu_photo_src = $this->Image_tool_model->resize('data/no_photo.png', $menu_images_w, $menu_images_h);
+                }
+            }
 
 			if ($menu['is_special'] === '1') {
 				$price = $menu['special_price'];

@@ -103,7 +103,7 @@ class Local extends Main_Controller {
 
         $payment_list = array();
         $local_payments = $this->location->payments();
-        $payments = $this->Extensions_model->getPayments();
+        $payments = $this->extensions->getPayments();
 
         $data['payments'] 	= '';
         foreach ($payments as $payment) {

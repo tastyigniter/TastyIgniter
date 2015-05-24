@@ -144,15 +144,18 @@ class Staff_groups extends Admin_Controller {
 	}
 
 	private function _deleteStaffGroup() {
-    	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $staff_group_id) {
-				$this->Staff_groups_model->deleteStaffGroup($staff_group_id);
-			}
+        if ($this->input->post('delete')) {
+            $deleted_rows = $this->Staff_groups_model->deleteStaffGroup($this->input->post('delete'));
 
-			$this->alert->set('success', 'Staff Group(s) deleted successfully!');
-		}
+            if ($deleted_rows > 0) {
+                $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Staff Groups': 'Staff Group';
+                $this->alert->set('success', $prefix.' deleted successfully.');
+            } else {
+                $this->alert->set('warning', 'An error occurred, nothing deleted.');
+            }
 
-		return TRUE;
+            return TRUE;
+        }
 	}
 
 	private function validateForm() {

@@ -168,15 +168,18 @@ class Pages extends Admin_Controller {
 	}
 
 	private function _deletePage() {
-    	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $page_id) {
-				$this->Pages_model->deletePage($page_id);
-			}
+        if ($this->input->post('delete')) {
+            $deleted_rows = $this->Pages_model->deletePage($this->input->post('delete'));
 
-			$this->alert->set('success', 'Page(s) deleted successfully!');
-		}
+            if ($deleted_rows > 0) {
+                $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Pages': 'Page';
+                $this->alert->set('success', $prefix.' deleted successfully.');
+            } else {
+                $this->alert->set('warning', 'An error occurred, nothing deleted.');
+            }
 
-		return TRUE;
+            return TRUE;
+        }
 	}
 
 	private function validateForm() {

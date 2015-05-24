@@ -39,7 +39,7 @@
 							<div id="menu<?php echo $menu['menu_id']; ?>" class="col-sm-3 mix menu-item <?php echo strtolower(str_replace(' ', '-', $menu['category_name'])); ?>">
 
 								<div class="menu-item-wrapper">
-									<?php if ($show_menu_images) { ?>
+									<?php if ($show_menu_images === '1') { ?>
 										<div class="menu-thumb">
 											<img class="img-responsive img-thumbnail" alt="<?php echo $menu['menu_name']; ?>" src="<?php echo $menu['menu_photo']; ?>">
 										</div>

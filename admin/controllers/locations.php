@@ -139,7 +139,7 @@ class Locations extends Admin_Controller {
             $location_id = $this->input->get('location_id');
 
             if ($this->Locations_model->updateDefault($this->Locations_model->getAddress($location_id))) {
-                $this->alert->set('success', 'Location set as default successfully!');
+                $this->alert->set('success', 'Location set as default successfully.');
             }
 
             redirect('locations');
@@ -435,15 +435,18 @@ class Locations extends Admin_Controller {
 	}
 
 	private function _deleteLocation() {
-    	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $value) {
-				$this->Locations_model->deleteLocation($value);
-			}
+        if ($this->input->post('delete')) {
+            $deleted_rows = $this->Locations_model->deleteLocation($this->input->post('delete'));
 
-			$this->alert->set('success', 'Location deleted successfully!');
-		}
+            if ($deleted_rows > 0) {
+                $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Locations': 'Location';
+                $this->alert->set('success', $prefix.' deleted successfully.');
+            } else {
+                $this->alert->set('warning', 'An error occurred, nothing deleted.');
+            }
 
-		return TRUE;
+            return TRUE;
+        }
 	}
 
 	public function _less_time($open, $close) {

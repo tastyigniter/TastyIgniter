@@ -134,7 +134,7 @@ class Modules
 	}
 
 	/** Load a module file **/
-	public static function load_file($file, $path, $type = 'other', $result = TRUE)	{
+	public static function load_file($file, $path, $type = 'other', $result = FALSE)	{
 
 		$file = str_replace(EXT, '', $file);
 		$location = $path.$file.EXT;
@@ -150,8 +150,13 @@ class Modules
 			/* load config or language array */
 			include $location;
 
-			if ( ! isset($$type) OR ! is_array($$type))
-				show_error("{$location} does not contain a valid {$type} array");
+			if ( ! isset($$type) OR ! is_array($$type)) {
+                if ($result === TRUE)
+                {
+                    return FALSE;
+                }
+                show_error("{$location} does not contain a valid {$type} array");
+            }
 
 			$result = $$type;
 		}

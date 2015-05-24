@@ -19,7 +19,7 @@ $lang['entry_city'] 			= 'City:';
 $lang['entry_postcode'] 		= 'Postcode:';
 $lang['entry_country'] 			= 'Country:';
 
-$lang['alert_deleted'] 			= '<p class="alert-success">Address deleted successfully!</p>';
+$lang['alert_deleted'] 			= '<p class="alert-success">Address deleted successfully.</p>';
 $lang['alert_added'] 			= '<p class="alert-success">Address added/updated successfully.</p>';
 
 /* End of file address_lang.php */

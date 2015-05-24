@@ -28,7 +28,7 @@ class Login extends Main_Controller {
 		$data['text_login_register'] 	= $this->lang->line('text_login_register');
 		// END of retrieving lines from language file to send to view.
 
-		$data['reset_url'] 				= site_url('reset');
+		$data['reset_url'] 				= site_url('account/reset');
 		$data['register_url'] 			= site_url('account/register');
 
 		if ($this->input->post()) {																// checks if $_POST data is set

@@ -371,7 +371,7 @@ class Messages extends Admin_Controller {
 			$add['date_added']		= mdate('%Y-%m-%d %H:%i:%s', time());
 
 			if ($this->Messages_model->sendMessage($add, $recipients)) {
-				$this->alert->set('success', 'Message Sent successfully!');
+				$this->alert->set('success', 'Message Sent successfully.');
 			} else {
 				$this->alert->set('warning', 'An error occurred, nothing added.');
 			}

@@ -98,7 +98,7 @@ class Staffs extends Admin_Controller {
 				'staff_email' 			=> $result['staff_email'],
 				'staff_group_name' 		=> $result['staff_group_name'],
 				'location_name' 		=> $result['location_name'],
-				'date_added' 			=> mdate('%d %M %y', strtotime($result['date_added'])),
+				'date_added' 			=> day_elapsed($result['date_added']),
 				'staff_status' 			=> ($result['staff_status'] === '1') ? 'Enabled' : 'Disabled',
 				'edit' 					=> site_url('staffs/edit?id=' . $result['staff_id'])
 			);
@@ -287,15 +287,18 @@ class Staffs extends Admin_Controller {
 	}
 
 	private function _deleteStaff() {
-    	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $value) {
-				$this->Staffs_model->deleteStaff($value);
-			}
+        if ($this->input->post('delete')) {
+            $deleted_rows = $this->Staffs_model->deleteStaff($this->input->post('delete'));
 
-			$this->alert->set('success', 'Staff(s) deleted successfully!');
-		}
+            if ($deleted_rows > 0) {
+                $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Staffs': 'Staff';
+                $this->alert->set('success', $prefix.' deleted successfully.');
+            } else {
+                $this->alert->set('warning', 'An error occurred, nothing deleted.');
+            }
 
-		return TRUE;
+            return TRUE;
+        }
 	}
 
 	private function validateForm($staff_email = FALSE, $username = FALSE) {

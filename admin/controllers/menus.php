@@ -292,15 +292,18 @@ class Menus extends Admin_Controller {
 	}
 
 	private function _deleteMenu() {
-    	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $menu_id) {
-				$this->Menus_model->deleteMenu($menu_id);
-			}
+        if ($this->input->post('delete')) {
+            $deleted_rows = $this->Menus_model->deleteMenu($this->input->post('delete'));
 
-			$this->alert->set('success', 'Menu(s) deleted successfully!');
-		}
+            if ($deleted_rows > 0) {
+                $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Menus': 'Menu';
+                $this->alert->set('success', $prefix.' deleted successfully.');
+            } else {
+                $this->alert->set('warning', 'An error occurred, nothing deleted.');
+            }
 
-		return TRUE;
+            return TRUE;
+        }
 	}
 
  	private function validateForm() {

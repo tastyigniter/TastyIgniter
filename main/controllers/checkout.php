@@ -127,7 +127,7 @@ class Checkout extends Main_Controller {
 		}
 
         $data['payments'] = array();
-        $payments = $this->Extensions_model->getPayments();
+        $payments = $this->extension->getPayments();
         $local_payments = $this->location->payments();
         foreach ($payments as $payment) {
             if (!empty($local_payments) AND !in_array($payment['name'], $local_payments)) continue;
@@ -420,7 +420,7 @@ class Checkout extends Main_Controller {
             $order_data['comment'] 		= $this->input->post('comment');						// retrieve comment value from $_POST data if set and convert to integer then add to order_data array
 
             if ($this->input->post('order_type') === '1') {
-                foreach ($this->input->post('address') as $key => $address) {
+                foreach ($this->input->post('address') as $key => &$address) {
                     $address['country'] = $address['country_id'];
 
                     !empty($address['address_id']) OR $address['address_id'] = NULL;
@@ -440,7 +440,7 @@ class Checkout extends Main_Controller {
 
             if ($this->input->post('checkout_step') === 'two' AND $this->input->post('payment')) {
                 $order_data['payment'] = $this->input->post('payment');
-                $order_data['ext_payment'] = $this->Extensions_model->getPayment($order_data['payment']);
+                $order_data['ext_payment'] = $this->extension->getPayment($order_data['payment']);
 
                 if ($this->config->item('checkout_terms') === '1') {
                     $order_data['terms_condition'] = $this->input->post('terms_condition');
@@ -557,7 +557,7 @@ class Checkout extends Main_Controller {
 	}
 
 	public function _validate_address($address_id) {
-        if ($this->input->post('_order_type') === '1' AND $this->input->post('address')) {
+        if ($this->input->post('order_type') === '1' AND $this->input->post('address')) {
             foreach ($this->input->post('address') as $address) {
                 if (empty($address_id) OR $address['address_id'] === $address_id) {
                     $country = $this->Countries_model->getCountry($address['country_id']);

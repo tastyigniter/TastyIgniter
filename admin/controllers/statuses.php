@@ -106,15 +106,18 @@ class Statuses extends Admin_Controller {
 	}
 
 	private function _deleteStatus() {
-    	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $value) {
-				$this->Statuses_model->deleteStatus($value);
-			}
+        if ($this->input->post('delete')) {
+            $deleted_rows = $this->Statuses_model->deleteStatus($this->input->post('delete'));
 
-			$this->alert->set('success', 'Order Status(es) deleted successfully!');
-		}
+            if ($deleted_rows > 0) {
+                $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Order Statuses': 'Order Status';
+                $this->alert->set('success', $prefix.' deleted successfully.');
+            } else {
+                $this->alert->set('warning', 'An error occurred, nothing deleted.');
+            }
 
-		return TRUE;
+            return TRUE;
+        }
 	}
 
 	private function validateForm() {

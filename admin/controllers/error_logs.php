@@ -44,7 +44,7 @@ class Error_logs extends Admin_Controller {
             $this->load->helper('file');
             write_file($log_path .'logs.php', $log);
 
-            $this->alert->set('success', 'Logs Cleared successfully!');
+            $this->alert->set('success', 'Logs Cleared successfully.');
         }
 
 		return TRUE;

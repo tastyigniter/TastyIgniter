@@ -43,7 +43,7 @@ class Mail_templates extends Admin_Controller {
             $template_id = $this->input->get('template_id');
 
             if ($this->Settings_model->addSetting('prefs', 'mail_template_id', $template_id, '0')) {
-                $this->alert->set('success', 'Mail Template set as default successfully!');
+                $this->alert->set('success', 'Mail Template set as default successfully.');
             }
 
             redirect('mail_templates');
@@ -160,18 +160,18 @@ class Mail_templates extends Admin_Controller {
 	}
 
 	private function _deleteTemplate() {
-    	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $value) {
-				if ($value === $this->config->item('mail_template_id')) {
-					$this->alert->set('success', 'Default Mail Template can not be deleted!');
-				} else {
-					$this->Mail_templates_model->deleteTemplate($value);
-					$this->alert->set('success', 'Mail Template deleted successfully!');
-				}
-			}
-		}
+        if ($this->input->post('delete')) {
+            $deleted_rows = $this->Mail_templates_model->deleteTemplate($this->input->post('delete'));
 
-		return TRUE;
+            if ($deleted_rows > 0) {
+                $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Mail Templates': 'Mail Template';
+                $this->alert->set('success', $prefix.' deleted successfully.');
+            } else {
+                $this->alert->set('warning', 'An error occurred, nothing deleted.');
+            }
+
+            return TRUE;
+        }
 	}
 
 	private function validateForm() {

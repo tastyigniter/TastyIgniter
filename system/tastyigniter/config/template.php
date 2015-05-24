@@ -76,7 +76,7 @@ $config['head_tags']['back_button'] = '';
 |
 | Where should we expect to see themes?
 |
-|	Default: array(VIEWPATH.'themes/') in the views folder
+|	Default: array(THEMEPATH.'themes/') in the views folder
 |
 */
 

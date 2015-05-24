@@ -87,8 +87,8 @@ class Settings extends Admin_Controller {
             'delete_thumbs'			=> site_url('settings/delete_thumbs'),
         );
 
-        if (empty($data['activity_online_time_out'])) {
-            $data['activity_online_time_out'] = '120';
+        if (empty($data['customer_online_time_out'])) {
+            $data['customer_online_time_out'] = '120';
         }
 
         if (empty($data['cache_time'])) {
@@ -187,7 +187,7 @@ class Settings extends Admin_Controller {
 	public function delete_thumbs() {
         if (file_exists(IMAGEPATH . 'thumbs')) {
             $this->_delete_thumbs(IMAGEPATH . 'thumbs/*');
-            $this->alert->set('success', 'Thumbs deleted successfully!');
+            $this->alert->set('success', 'Thumbs deleted successfully.');
         }
 
 		redirect('settings');
@@ -226,14 +226,16 @@ class Settings extends Admin_Controller {
 				'location_order_email'		=> $this->input->post('location_order_email'),
 				'location_reserve_email'	=> $this->input->post('location_reserve_email'),
 				'approve_reviews'			=> $this->input->post('approve_reviews'),
-				'order_status_new'			=> $this->input->post('order_status_new'),
-				'order_status_complete'		=> $this->input->post('order_status_complete'),
-				'order_status_cancel'		=> $this->input->post('order_status_cancel'),
+				'new_order_status'			=> $this->input->post('new_order_status'),
+				'complete_order_status'		=> $this->input->post('complete_order_status'),
+				'canceled_order_status'		=> $this->input->post('canceled_order_status'),
 				'guest_order'				=> $this->input->post('guest_order'),
 				'delivery_time'				=> $this->input->post('delivery_time'),
 				'collection_time'			=> $this->input->post('collection_time'),
 				'reservation_mode'			=> $this->input->post('reservation_mode'),
-				'reservation_status'		=> $this->input->post('reservation_status'),
+				'new_reservation_status'	=> $this->input->post('new_reservation_status'),
+				'confirmed_reservation_status'	=> $this->input->post('confirmed_reservation_status'),
+				'canceled_reservation_status'	=> $this->input->post('canceled_reservation_status'),
 				'reservation_interval'		=> $this->input->post('reservation_interval'),
 				'reservation_turn'			=> $this->input->post('reservation_turn'),
 				'themes_allowed_img'		=> $this->input->post('themes_allowed_img'),
@@ -247,8 +249,8 @@ class Settings extends Admin_Controller {
 				'smtp_port' 				=> $this->input->post('smtp_port'),
 				'smtp_user' 				=> $this->input->post('smtp_user'),
 				'smtp_pass' 				=> $this->input->post('smtp_pass'),
-				'activity_online_time_out' 	=> $this->input->post('activity_online_time_out'),
-				'activity_archive_time_out' => $this->input->post('activity_archive_time_out'),
+				'customer_online_time_out' 	=> $this->input->post('customer_online_time_out'),
+				'customer_online_archive_time_out' => $this->input->post('customer_online_archive_time_out'),
 				'permalink' 				=> $this->input->post('permalink'),
 				'maintenance_mode' 			=> $this->input->post('maintenance_mode'),
 				'maintenance_message' 		=> $this->input->post('maintenance_message'),
@@ -313,14 +315,16 @@ class Settings extends Admin_Controller {
 		$this->form_validation->set_rules('location_order_email', 'Send Order Email', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('location_reserve_email', 'Send Reservation Email', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('approve_reviews', 'Approve Reviews', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('order_status_new', 'New Order Status', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('order_status_complete', 'Complete Order Status', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('order_status_cancel', 'Cancellation Order Status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('new_order_status', 'New Order Status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('complete_order_status', 'Complete Order Status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('canceled_order_status', 'Cancellation Order Status', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('guest_order', 'Guest Order', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('delivery_time', 'Delivery Time', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('collection_time', 'Collection Time', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('reservation_mode', 'Reservation Mode', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('reservation_status', 'Reservation Status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('new_reservation_status', 'New Reservation Status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('confirmed_reservation_status', 'Confirmed Reservation Status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('canceled_reservation_status', 'Canceled Reservation Status', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('reservation_interval', 'Reservation Interval', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('reservation_turn', 'Reservations Turn', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('themes_allowed_img', 'Themes Allowed Images', 'xss_clean|trim');
@@ -344,8 +348,8 @@ class Settings extends Admin_Controller {
 		$this->form_validation->set_rules('smtp_port', 'SMTP Port', 'xss_clean|trim');
 		$this->form_validation->set_rules('smtp_user', 'SMTP Username', 'xss_clean|trim');
 		$this->form_validation->set_rules('smtp_pass', 'SMTP Password', 'xss_clean|trim');
-		$this->form_validation->set_rules('activity_online_time_out', 'Activity Online Timeout', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('activity_archive_time_out', 'Activity Archive Timeout', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('customer_online_time_out', 'Customer Online Timeout', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('customer_online_archive_time_out', 'Customer Online Archive Timeout', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('permalink', 'Permalink', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('maintenance_mode', 'Maintenance Mode', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('maintenance_message', 'Maintenance Message', 'xss_clean|trim');
@@ -378,7 +382,7 @@ class Settings extends Admin_Controller {
 			return ($a['offset'] == $b['offset']) ? strcmp($a['identifier'], $b['identifier']) : $a['offset'] - $b['offset'];
 		});
 
-		$timezoneList = array();
+        $timezone_list = array();
 		foreach ($temp_timezones as $tz) {
 			$sign = ($tz['offset'] > 0) ? '+' : '-';
 			$offset = gmdate('H:i', abs($tz['offset']));

@@ -137,15 +137,18 @@ class Layouts extends Admin_Controller {
 	}
 
 	private function _deleteLayout() {
-    	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $value) {
-				$this->Layouts_model->deleteLayout($value);
-			}
+        if ($this->input->post('delete')) {
+            $deleted_rows = $this->Layouts_model->deleteLayout($this->input->post('delete'));
 
-			$this->alert->set('success', 'Layout deleted successfully!');
-		}
+            if ($deleted_rows > 0) {
+                $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Layouts': 'Layout';
+                $this->alert->set('success', $prefix.' deleted successfully.');
+            } else {
+                $this->alert->set('warning', 'An error occurred, nothing deleted.');
+            }
 
-		return TRUE;
+            return TRUE;
+        }
 	}
 
 	private function validateForm() {

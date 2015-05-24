@@ -8,7 +8,7 @@ class Permission extends Admin_Controller {
 
 	public function index() {
 		if (!$this->alert->get()) {
-			$this->alert->warning_now('You do not have the right permission to access.');
+			$this->alert->warning_now('You do not have the right permission to access, please refer to your system administrator.');
 		}
 
 		$this->template->setTitle('Permission');

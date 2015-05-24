@@ -72,15 +72,15 @@ class TI_Cart extends CI_Cart {
 	public function add_coupon($coupon = array()) {
 		$save_cart = FALSE;
 
-		if ($coupon['type'] !== 'P' OR $coupon['type'] !== 'F') {
-			$coupon['type'] = 'F';
-		}
+        if (!isset($coupon['type'])) {
+            $coupon['type'] = 'F';
+        }
 
-		if ($coupon['type'] === 'P' AND is_numeric($coupon['discount']) AND $coupon['discount'] > 0) {
-			$coupon['discount'] = ($coupon['discount'] / 100) * $this->_cart_contents['cart_total'];
-		}
+        if ($coupon['type'] === 'P' AND is_numeric($coupon['discount']) AND $coupon['discount'] > 0) {
+            $coupon['discount'] = ($coupon['discount'] / 100) * $this->_cart_contents['cart_total'];
+        }
 
-		if ($coupon['discount'] > 0) {
+        if ($coupon['discount'] > 0) {
 			$this->_cart_contents['coupon'] = array('code' => $coupon['code'], 'discount' => $coupon['discount']); //$coupon['discount'];
 			$save_cart = TRUE;
 		}

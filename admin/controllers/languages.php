@@ -171,15 +171,18 @@ class Languages extends Admin_Controller {
 	}
 
 	private function _deleteLanguage() {
-        if (is_array($this->input->post('delete'))) {
-            foreach ($this->input->post('delete') as $key => $language_id) {
-                $this->Languages_model->deleteLanguage($language_id);
+        if ($this->input->post('delete')) {
+            $deleted_rows = $this->Languages_model->deleteLanguage($this->input->post('delete'));
+
+            if ($deleted_rows > 0) {
+                $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Languages': 'Language';
+                $this->alert->set('success', $prefix.' deleted successfully.');
+            } else {
+                $this->alert->set('warning', 'An error occurred, nothing deleted.');
             }
 
-            $this->alert->set('success', 'Language deleted successfully!');
+            return TRUE;
         }
-
-        return TRUE;
 	}
 
 	private function validateForm() {

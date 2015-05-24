@@ -11,10 +11,11 @@ $lang['button_continue'] 		= 'Continue';
 $lang['button_login'] 			= 'Login';
 $lang['button_reset_password'] 	= 'Reset Password';
 
-$lang['alert_no_email'] 		= '<p class="alert-danger">No matching email address</p>';
 $lang['alert_reset_success'] 	= '<p class="alert-success">Password reset successfully, please check your email for your new password.</p>';
-$lang['alert_no_s_answer'] 		= '<p class="alert-danger">Security answer does not match</p>';
-$lang['alert_no_s_question'] 	= '<p class="alert-danger">Security question does not match</p>';
+$lang['alert_reset_error'] 	    = '<p class="alert-error">Password reset unsuccessful, email not found or incorrect details entered.</p>';
+$lang['alert_no_email'] 		= 'No matching email address';
+$lang['alert_no_s_answer'] 		= 'Security answer does not match';
+$lang['alert_no_s_question'] 	= 'Security question does not match';
 
 /* End of file reset_lang.php */
 /* Location: ./main/language/english/main/reset_lang.php */
