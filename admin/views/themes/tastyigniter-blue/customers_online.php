@@ -13,7 +13,7 @@
                     <?php } ?>
                 </ul>
                 <div class="pull-right">
-                    <button class="btn btn-default btn-xs btn-filter"><i class="fa fa-filter"></i></button>
+                    <button class="btn btn-filter btn-xs"><i class="fa fa-filter"></i></button>
                 </div>
             </div>
 
@@ -55,8 +55,8 @@
                                     </div>
                                     <div class="form-group">
                                         <select name="filter_date" class="form-control input-sm">
-                                            <option value="">View all activities</option>
-                                            <?php foreach ($activity_dates as $key => $value) { ?>
+                                            <option value="">View by date</option>
+                                            <?php foreach ($online_dates as $key => $value) { ?>
                                                 <?php if ($key === $filter_date) { ?>
                                                     <option value="<?php echo $key; ?>" <?php echo set_select('filter_date', $key, TRUE); ?> ><?php echo $value; ?></option>
                                                 <?php } else { ?>
@@ -84,25 +84,25 @@
                             <th>Customer</th>
                             <th>Access</th>
                             <th>Browser</th>
-                            <th class="text-center">Page Views</th>
+<!--                            <th class="text-center">User Agent</th>-->
                             <th style="width:22%;">Last Request URL</th>
                             <th style="width:22%;">Last Referrer URL</th>
                             <th><a class="sort" href="<?php echo $sort_date; ?>">Last Activity<i class="fa fa-sort-<?php echo ($sort_by == 'date_added') ? $order_by_active : $order_by; ?>"></i></a></th>
                         </tr>
                         </thead>
                         <tbody>
-                        <?php if ($activities) { ?>
-                            <?php foreach ($activities as $activity) { ?>
+                        <?php if ($customers_online) { ?>
+                            <?php foreach ($customers_online as $online) { ?>
                                 <tr>
-                                    <!--<td class="action action-one"><a class="btn btn-danger" title="Blacklist IP" href="<?php //echo $activity['blacklist']; ?>"><i class="fa fa-ban"></i></a></td>-->
-                                    <td><?php echo $activity['ip_address']; ?>&nbsp;&nbsp;<img class="flag" title="<?php echo $activity['country_name']; ?>" width="16" src="<?php echo $activity['country_code']; ?>" /></td>
-                                    <td><?php echo $activity['customer_name']; ?></td>
-                                    <td><?php echo $activity['access_type']; ?></td>
-                                    <td><?php echo $activity['browser']; ?></td>
-                                    <td class="text-center"><span class="label label-info"><?php echo $activity['page_views']; ?></span></td>
-                                    <td><?php echo $activity['request_uri']; ?></td>
-                                    <td><?php echo $activity['referrer_uri']; ?></td>
-                                    <td><?php echo $activity['date_added']; ?></td>
+                                    <!--<td class="action action-one"><a class="btn btn-danger" title="Blacklist IP" href="<?php //echo $online['blacklist']; ?>"><i class="fa fa-ban"></i></a></td>-->
+                                    <td><?php echo $online['ip_address']; ?>&nbsp;&nbsp;<img class="flag" title="<?php echo $online['country_name']; ?>" width="16" src="<?php echo $online['country_code']; ?>" /></td>
+                                    <td><?php echo $online['customer_name']; ?></td>
+                                    <td><?php echo $online['access_type']; ?></td>
+                                    <td><?php echo $online['browser']; ?></td>
+<!--                                    <td class="text-center">--><?php //echo $online['user_agent']; ?><!--</td>-->
+                                    <td><a href="<?php echo $online['request_url']; ?>"><?php echo $online['request_uri']; ?></a></td>
+                                    <td><a href="<?php echo $online['referrer_url']; ?>"><?php echo $online['referrer_uri']; ?></a></td>
+                                    <td><?php echo $online['date_added']; ?></td>
                                 </tr>
                             <?php } ?>
                         <?php } else { ?>

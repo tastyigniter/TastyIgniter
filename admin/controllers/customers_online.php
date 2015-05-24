@@ -1,13 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-class Customers_activity extends Admin_Controller {
+class Customers_online extends Admin_Controller {
 
     public $_permission_rules = array('access[index|blacklist]', 'modify[index|blacklist]');
 
 	public function __construct() {
 		parent::__construct();
 		$this->load->library('pagination');
-		$this->load->model('Activity_model');
+		$this->load->model('Customer_online_model');
 	}
 
 	public function index() {
@@ -31,7 +31,7 @@ class Customers_activity extends Admin_Controller {
 			$data['filter_search'] = '';
 		}
 
-		$online_time_out = ($this->config->item('activity_online_time_out') > 120) ? $this->config->item('activity_online_time_out') : 120;
+		$online_time_out = ($this->config->item('customer_online_time_out') > 120) ? $this->config->item('customer_online_time_out') : 120;
 		$filter['time_out'] = mdate('%Y-%m-%d %H:%i:%s', time() - $online_time_out);
 		if ($this->input->get('filter_type')) {
 			$filter['filter_type'] = $data['filter_type'] = $this->input->get('filter_type');
@@ -68,53 +68,53 @@ class Customers_activity extends Admin_Controller {
 			$data['order_by_active'] = '';
 		}
 
-		$this->template->setTitle('Customer Activities');
-		$this->template->setHeading('Customer Activities');
+		$this->template->setTitle('Customers Online');
+		$this->template->setHeading('Customers Online');
 		$this->template->setButton('Options', array('class' => 'btn btn-default pull-right', 'href' => site_url('settings#system')));
 
-		if ($this->input->get('filter_type') === 'online') {
-			$data['text_empty'] 	= 'There are no online customer activity available.';
+		if ($filter['filter_type'] === 'online') {
+			$data['text_empty'] 	= 'There is no customer online.';
 		} else {
-			$data['text_empty'] 	= 'There are no customer activity available.';
+			$data['text_empty'] 	= 'There are no customer online report available.';
 		}
 
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
-		$data['sort_date'] 			= site_url('customers_activity'.$url.'sort_by=date_added&order_by='.$order_by);
+		$data['sort_date'] 			= site_url('customers_online'.$url.'sort_by=date_added&order_by='.$order_by);
 
-		$activities = $this->Activity_model->getList($filter);
+		$customers_online = $this->Customer_online_model->getList($filter);
 
-		$data['activities'] = array();
-		foreach ($activities as $activity) {
-			$country_code = ($activity['country_code']) ? strtolower($activity['country_code']) : 'nn';
-			$country_name = ($activity['country_name']) ? $activity['country_name'] : 'Private';
+		$data['customers_online'] = array();
+		foreach ($customers_online as $online) {
+			$country_code = ($online['country_code']) ? strtolower($online['country_code']) : 'no_flag';
 
-			$data['activities'][] = array(
-				'activity_id' 		=> $activity['activity_id'],
-				'ip_address' 		=> $activity['ip_address'],
-				'customer_name'		=> ($activity['customer_id']) ? $activity['first_name'] .' '. $activity['last_name'] : 'Guest',
-				'access_type'		=> ucwords($activity['access_type']),
-				'browser'			=> $activity['browser'],
-				'page_views'		=> $activity['page_views'],
-				'request_uri'		=> (!empty($activity['request_uri'])) ? $activity['request_uri'] : '--',
-				'referrer_uri'		=> (!empty($activity['referrer_uri'])) ? $activity['referrer_uri'] : '--',
-				'date_added'		=> time_elapsed($activity['date_added']),
-				'country_code'		=> image_url('flags/'. $country_code .'.png'),
-				'country_name'		=> $country_name,
-				'blacklist' 		=> site_url('customers_activity/blacklist?ip=' . $activity['ip_address'])
+			$data['customers_online'][] = array(
+				'activity_id' 		=> $online['activity_id'],
+				'ip_address' 		=> $online['ip_address'],
+				'customer_name'		=> ($online['customer_id']) ? $online['first_name'] .' '. $online['last_name'] : 'Guest',
+				'access_type'		=> ucwords($online['access_type']),
+				'browser'			=> $online['browser'],
+				'user_agent'		=> $online['user_agent'],
+				'request_uri'		=> (!empty($online['request_uri'])) ? $online['request_uri'] : '--',
+				'referrer_uri'		=> (!empty($online['referrer_uri'])) ? $online['referrer_uri'] : '--',
+				'request_url'		=> (!empty($online['request_uri'])) ? root_url($online['request_uri']) : '#',
+				'referrer_url'		=> (!empty($online['referrer_uri'])) ? root_url($online['referrer_uri']) : '#',
+				'date_added'		=> time_elapsed($online['date_added']),
+				'country_code'		=> image_url('data/flags/'. $country_code .'.png'),
+				'country_name'		=> ($online['country_name']) ? $online['country_name'] : 'Private',
+				'blacklist' 		=> site_url('customers_online/blacklist?ip=' . $online['ip_address'])
 			);
 		}
 
 		$data['types'] = array(
-			'online' 	=> array('badge' => '', 'url' => site_url('customers_activity?filter_type=online')),
-			'all' 		=> array('badge' => '', 'url' => site_url('customers_activity?filter_type=all'))
+			'online' 	=> array('badge' => '', 'url' => site_url('customers_online?filter_type=online')),
+			'all' 		=> array('badge' => '', 'url' => site_url('customers_online?filter_type=all'))
 		);
 
-		$data['activity_dates'] = array();
-		$activity_dates = $this->Activity_model->getActivityDates($filter);
-		foreach ($activity_dates as $date) {
-			$month_year = '';
+		$data['online_dates'] = array();
+		$online_dates = $this->Customer_online_model->getOnlineDates($filter);
+		foreach ($online_dates as $date) {
 			$month_year = mdate('%Y-%m', strtotime($date['year'].'-'.$date['month']));
-			$data['activity_dates'][$month_year] = mdate('%F %Y', strtotime($date['date_added']));
+			$data['online_dates'][$month_year] = mdate('%F %Y', strtotime($date['date_added']));
 		}
 
 		if ($this->input->get('sort_by') AND $this->input->get('order_by')) {
@@ -122,8 +122,8 @@ class Customers_activity extends Admin_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 
-		$config['base_url'] 		= site_url('customers_activity'. $url);
-		$config['total_rows'] 		= $this->Activity_model->getCount($filter);
+		$config['base_url'] 		= site_url('customers_online'. $url);
+		$config['total_rows'] 		= $this->Customer_online_model->getCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 
 		$this->pagination->initialize($config);
@@ -134,21 +134,21 @@ class Customers_activity extends Admin_Controller {
 		);
 
 		if ($this->input->post('delete') AND $this->_deleteActivity() === TRUE) {
-			redirect('customers_activity');
+			redirect('customers_online');
 		}
 
 		$this->template->setPartials(array('header', 'footer'));
-		$this->template->render('customers_activity', $data);
+		$this->template->render('customers_online', $data);
 	}
 
 	public function blacklist() {
     	if ($this->input->get('ip')) {
-			$this->alert->set('success', 'Activity IP added to blacklist successfully!');
+			$this->alert->set('success', 'Activity IP added to blacklist successfully.');
 		}
 
-		redirect('customers_activity');
+		redirect('customers_online');
 	}
 }
 
-/* End of file customers_activity.php */
-/* Location: ./admin/controllers/customers_activity.php */
+/* End of file customers_online.php */
+/* Location: ./admin/controllers/customers_online.php */
