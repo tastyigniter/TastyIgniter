@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-class Activity {
+class Customer_online {
 
     public $auto_track = TRUE;
     protected $geoip;
@@ -125,7 +125,7 @@ class Activity {
 	}
 }
 
-// END Activity class
+// END Customer_online class
 
-/* End of file Activity.php */
-/* Location: ./system/tastyigniter/libraries/Activity.php */
+/* End of file Customer_online.php */
+/* Location: ./system/tastyigniter/libraries/Customer_online.php */

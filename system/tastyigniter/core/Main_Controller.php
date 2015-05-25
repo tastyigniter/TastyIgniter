@@ -21,7 +21,7 @@ class Main_Controller extends Base_Controller {
 
 		$this->load->library('customer');
 
-		$this->load->library('activity');
+		$this->load->library('customer_online');
 
 		$this->load->library('template');
 
