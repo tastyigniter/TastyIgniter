@@ -70,7 +70,7 @@ class Address extends Main_Controller {
 			}
 		}
 
-		$prefs['base_url'] 			= site_url('account/address').$url;
+		$prefs['base_url'] 			= site_url('account/address'.$url);
 		$prefs['total_rows'] 		= $this->Addresses_model->getCount($filter);
 		$prefs['per_page'] 			= $filter['limit'];
 

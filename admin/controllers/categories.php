@@ -75,7 +75,7 @@ class Categories extends Admin_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 
-		$config['base_url'] 		= site_url('categories').$url;
+		$config['base_url'] 		= site_url('categories'.$url);
 		$config['total_rows'] 		= $this->Categories_model->getCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 

@@ -124,7 +124,7 @@ class Menus extends Admin_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 
-		$config['base_url'] 		= site_url('menus').$url;
+		$config['base_url'] 		= site_url('menus'.$url);
 		$config['total_rows'] 		= $this->Menus_model->getCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 

@@ -75,7 +75,7 @@ class Reservations extends Main_Controller {
 			);
 		}
 
-		$prefs['base_url'] 			= site_url('account/reservations').$url;
+		$prefs['base_url'] 			= site_url('account/reservations'.$url);
 		$prefs['total_rows'] 		= $this->Reservations_model->getCount($filter);
 		$prefs['per_page'] 			= $filter['limit'];
 

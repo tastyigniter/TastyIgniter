@@ -67,7 +67,7 @@ class Reviews extends Main_Controller {
 			);
 		}
 
-		$prefs['base_url'] 			= site_url('account/reviews').$url;
+		$prefs['base_url'] 			= site_url('account/reviews'.$url);
 		$prefs['total_rows'] 		= $this->Reviews_model->getCount($filter);
 		$prefs['per_page'] 			= $filter['limit'];
 

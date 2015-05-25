@@ -60,9 +60,9 @@ class Countries extends Admin_Controller {
 		$data['text_empty'] 		= 'There are no countries available.';
 
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
-		$data['sort_name'] 			= site_url('countries').$url.'sort_by=country_name&order_by='.$order_by;
-		$data['sort_iso_2'] 		= site_url('countries').$url.'sort_by=iso_code_2&order_by='.$order_by;
-		$data['sort_iso_3'] 		= site_url('countries').$url.'sort_by=iso_code_3&order_by='.$order_by;
+		$data['sort_name'] 			= site_url('countries'.$url.'sort_by=country_name&order_by='.$order_by);
+		$data['sort_iso_2'] 		= site_url('countries'.$url.'sort_by=iso_code_2&order_by='.$order_by);
+		$data['sort_iso_3'] 		= site_url('countries'.$url.'sort_by=iso_code_3&order_by='.$order_by);
 
 		$data['country_id'] = $this->config->item('country_id');
 
@@ -85,7 +85,7 @@ class Countries extends Admin_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 
-		$config['base_url'] 		= site_url('countries').$url;
+		$config['base_url'] 		= site_url('countries'.$url);
 		$config['total_rows'] 		= $this->Countries_model->getCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 

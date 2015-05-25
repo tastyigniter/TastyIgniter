@@ -83,7 +83,7 @@ class Languages extends Admin_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 
-		$config['base_url'] 		= site_url('languages').$url;
+		$config['base_url'] 		= site_url('languages'.$url);
 		$config['total_rows'] 		= $this->Languages_model->getCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 

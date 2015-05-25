@@ -143,7 +143,7 @@ class Menus extends Main_Controller {
 		if ($this->input->get('category_id')) {
 			$prefs['base_url'] = site_url('menus?category_id='. $this->input->get('category_id')).$url;
 		} else {
-			$prefs['base_url'] = site_url('menus').$url;
+			$prefs['base_url'] = site_url('menus'.$url);
 		}
 
 		$prefs['total_rows'] 		= $this->Menus_model->getCount($filter);

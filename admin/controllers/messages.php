@@ -138,7 +138,7 @@ class Messages extends Admin_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 
-		$config['base_url'] 		= site_url('messages').$url;
+		$config['base_url'] 		= site_url('messages'.$url);
 		$config['total_rows'] 		= $this->Messages_model->getCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 

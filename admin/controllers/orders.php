@@ -147,7 +147,7 @@ class Orders extends Admin_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 
-		$config['base_url'] 		= site_url('orders').$url;
+		$config['base_url'] 		= site_url('orders'.$url);
 		$config['total_rows'] 		= $this->Orders_model->getCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 

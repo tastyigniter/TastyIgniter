@@ -8,6 +8,47 @@ class TI_Pagination extends CI_Pagination {
 
     protected $text = '';
 
+    /**
+     * Initialize Preferences
+     *
+     * @param	array	$params	Initialization parameters
+     * @return	TI_Pagination
+     */
+    public function initialize(array $params = array())
+    {
+        if (isset($params['attributes']) && is_array($params['attributes']))
+        {
+            $this->_parse_attributes($params['attributes']);
+            unset($params['attributes']);
+        }
+
+        // Deprecated legacy support for the anchor_class option
+        // Should be removed in CI 3.1+
+        if (isset($params['anchor_class']))
+        {
+            empty($params['anchor_class']) OR $attributes['class'] = $params['anchor_class'];
+            unset($params['anchor_class']);
+        }
+
+        foreach ($params as $key => $val)
+        {
+            if (property_exists($this, $key))
+            {
+                $this->$key = $val;
+            }
+        }
+
+        if ($this->CI->config->item('enable_query_strings') === TRUE)
+        {
+            $this->page_query_string = TRUE;
+        }
+
+        $this->base_url = rtrim($this->base_url, "?");
+
+        return $this;
+    }
+
+    // --------------------------------------------------------------------
 	/**
 	 * Generate the pagination info
 	 *

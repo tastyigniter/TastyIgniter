@@ -204,7 +204,7 @@ class Reservations extends Admin_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 
-		$config['base_url'] 		= site_url('reservations').$url;
+		$config['base_url'] 		= site_url('reservations'.$url);
 		$config['total_rows'] 		= $this->Reservations_model->getCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 

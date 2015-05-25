@@ -85,7 +85,7 @@ class Currencies extends Admin_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 
-		$config['base_url'] 		= site_url('currencies').$url;
+		$config['base_url'] 		= site_url('currencies'.$url);
 		$config['total_rows'] 		= $this->Currencies_model->getCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 

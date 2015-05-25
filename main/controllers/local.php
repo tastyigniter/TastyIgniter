@@ -103,7 +103,7 @@ class Local extends Main_Controller {
 
         $payment_list = array();
         $local_payments = $this->location->payments();
-        $payments = $this->extensions->getPayments();
+        $payments = $this->extension->getPayments();
 
         $data['payments'] 	= '';
         foreach ($payments as $payment) {
@@ -277,7 +277,7 @@ class Local extends Main_Controller {
 			);
 		}
 
-		$prefs['base_url'] 			= site_url('local').$url;
+		$prefs['base_url'] 			= site_url('local'.$url);
 		$prefs['total_rows'] 		= $this->Reviews_model->getCount($filter);
 		$prefs['per_page'] 			= $filter['limit'];
 

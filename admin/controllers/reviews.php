@@ -124,7 +124,7 @@ class Reviews extends Admin_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 
-		$config['base_url'] 		= site_url('reviews').$url;
+		$config['base_url'] 		= site_url('reviews'.$url);
 		$config['total_rows'] 		= $this->Reviews_model->getCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 

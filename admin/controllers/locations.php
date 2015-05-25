@@ -124,7 +124,7 @@ class Locations extends Admin_Controller {
             $url .= 'order_by='.$filter['order_by'].'&';
         }
 
-        $config['base_url'] 		= site_url('locations').$url;
+        $config['base_url'] 		= site_url('locations'.$url);
         $config['total_rows'] 		= $this->Locations_model->getCount($filter);
         $config['per_page'] 		= $filter['limit'];
 

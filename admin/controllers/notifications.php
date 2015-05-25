@@ -48,7 +48,7 @@ class Notifications extends Admin_Controller {
             $data['notifications'][$date_added][] = $notification;
         }
 
-        $config['base_url'] 		= site_url('notifications').$url;
+        $config['base_url'] 		= site_url('notifications'.$url);
 		$config['total_rows'] 		= $this->Notifications_model->getCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 

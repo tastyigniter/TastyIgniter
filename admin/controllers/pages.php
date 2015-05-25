@@ -59,7 +59,7 @@ class Pages extends Admin_Controller {
 			);
 		}
 
-		$config['base_url'] 		= site_url('pages').$url;
+		$config['base_url'] 		= site_url('pages'.$url);
 		$config['total_rows'] 		= $this->Pages_model->getCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 

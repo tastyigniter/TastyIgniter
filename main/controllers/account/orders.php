@@ -84,7 +84,7 @@ class Orders extends Main_Controller {
 			);
 		}
 
-		$prefs['base_url'] 			= site_url('account/orders').$url;
+		$prefs['base_url'] 			= site_url('account/orders'.$url);
 		$prefs['total_rows'] 		= $this->Orders_model->getCount($filter);
 		$prefs['per_page'] 			= $filter['limit'];
 

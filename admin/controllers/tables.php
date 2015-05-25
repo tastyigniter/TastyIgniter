@@ -82,7 +82,7 @@ class Tables extends Admin_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 
-		$config['base_url'] 		= site_url('tables').$url;
+		$config['base_url'] 		= site_url('tables'.$url);
 		$config['total_rows'] 		= $this->Tables_model->getCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 
