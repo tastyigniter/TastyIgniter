@@ -128,6 +128,10 @@ class Alert {
 				$this->{$config_key} = $config_value;
 			}
 		}
+
+        //Lock alert session flashdata to specific app
+        if (APPDIR === ADMINDIR)
+            $this->session_name = 'admin_alert';
 	}
 
 	/**
