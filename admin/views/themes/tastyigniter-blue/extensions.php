@@ -33,7 +33,13 @@
                                     <?php } ?>
 								</td>
 								<td><?php echo $extension['title']; ?></td>
-								<td class="id"><?php echo $extension['extension_id']; ?></td>
+								<td class="id">
+                                    <?php if (!is_numeric($extension['extension_id'])) { ?>
+                                        <a class="btn btn-danger" title="Delete" href="<?php echo $extension['delete']; ?>"><i class="fa fa-times"></i></a>
+                                    <?php } else { ?>
+                                        <?php echo $extension['extension_id']; ?>
+                                    <?php } ?>
+                                </td>
 							</tr>
 							<?php } ?>
 							<?php } else {?>

@@ -35,6 +35,7 @@ class Extensions extends Admin_Controller {
 				'type' 			=> $result['type'],
 				'options' 		=> $result['options'],
 				'edit' 			=> site_url('extensions/edit?action=edit&name='.$result['name']),
+				'delete' 		=> site_url('extensions/delete?name='.$result['name']),
 				'manage'		=> $manage
 			);
         }
@@ -59,11 +60,10 @@ class Extensions extends Admin_Controller {
 		$loaded = FALSE;
         $error_msg = FALSE;
 
-        if ($extension = $this->Extensions_model->getExtension('module', $extension_name)) {
+        if ($extension = $this->Extensions_model->getExtension('module', $extension_name, FALSE)) {
             $data['extension_name'] = $extension['name'];
             $ext_controller = $extension['name'] . '/admin_' . $extension['name'];
             $ext_class = strtolower('admin_'.$extension['name']);
-
             if (isset($extension['installed'], $extension['config'], $extension['options']) AND $action === 'edit') {
                 if ($extension['config'] === FALSE) {
                     $error_msg = 'An error occurred, module extension config file failed to load';
@@ -116,6 +116,20 @@ class Extensions extends Admin_Controller {
 
 		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('extensions_add', $data);
+	}
+
+	public function delete() {
+        if ($this->input->get('name')) {
+            if ($this->Extensions_model->extensionExists($this->input->get('name'))) {
+                if ($this->Extensions_model->delete('module', $this->input->get('name'))) {
+                    $this->alert->set('success', 'Extension deleted successfully.');
+                }
+            }
+
+            $this->alert->danger_now('An error occurred, please try again.');
+        }
+
+        redirect('extensions');
 	}
 
 	private function _uploadExtension() {

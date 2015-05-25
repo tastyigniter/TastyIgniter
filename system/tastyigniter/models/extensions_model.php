@@ -107,11 +107,11 @@ class Extensions_model extends TI_Model {
         return $this->getExtensions('payment', TRUE);
     }
 
-    public function getExtension($type = '', $name = '') {
+    public function getExtension($type = '', $name = '', $is_installed = TRUE) {
 		$result = array();
 
 		if (!empty($type) AND !empty($name)) {
-			$extensions = $this->getExtensions($type, TRUE);
+			$extensions = $this->getExtensions($type, $is_installed);
 
 			if ($extensions AND is_array($extensions)) {
 				if (isset($extensions[$name]) AND is_array($extensions[$name])) {
@@ -275,34 +275,60 @@ class Extensions_model extends TI_Model {
     public function uninstall($type = '', $name = '') {
         $query = FALSE;
 
-        if (!empty($type) AND !empty($name)) {
+        if (!empty($type) AND $this->extensionExists($name)) {
 
             $this->db->set('status', '0');
             $this->db->where('type', $type);
             $this->db->where('name', $name);
 
             if (preg_match('/\s/', $name) > 0) {
-                $this->db->delete('extensions');
-                if ($this->db->affected_rows() > 0) $query = 'removed';
+                $query = $this->delete($name);
             } else {
                 $this->db->update('extensions');
-                if ($this->db->affected_rows() > 0) $query = 'uninstalled';
+                if ($this->db->affected_rows() > 0) {
+                    $this->load->model('Notifications_model');
+                    $this->Notifications_model->addNotification(array('action' => 'uninstalled', 'object' => 'extension', 'object_id' => $name));
+                    $query = TRUE;
+                }
+            }
+        }
+
+        return $query;
+    }
+
+    public function delete($type = '', $name = '') {
+        $query = FALSE;
+
+        if (!empty($type) AND $this->extensionExists($name)) {
+
+            $this->db->where('status', '0');
+            $this->db->where('type', $type);
+            $this->db->where('name', $name);
+
+            $this->db->delete('extensions');
+            if ($this->db->affected_rows() > 0) {
+                $query = TRUE;
             }
 
-            if ($query === 'removed' OR $query === 'uninstalled') {
+            $query = $this->db->where('status', '1')->where('type', $type)->where('name', $name)->get('extensions');
+            if ($query->num_rows() <= 0) {
+                $this->load->helper('file');
+                delete_files(ROOTPATH . EXTPATH . $name, TRUE);
+                rmdir(ROOTPATH . EXTPATH . $name);
+
+                $query = TRUE;
                 $this->load->model('Notifications_model');
-                $this->Notifications_model->addNotification(array('action' => $query, 'object' => 'extension', 'object_id' => $name));
-                return TRUE;
+                $this->Notifications_model->addNotification(array('action' => 'deleted', 'object' => 'extension', 'object_id' => $name));
             }
+        }
 
-			return FALSE;
-		}
-	}
+        return $query;
+    }
 
-    public function extensionExists($extension_name = '') {
+    public function extensionExists($extension_name) {
         $extension_path = ROOTPATH . EXTPATH .$extension_name;
 
-        if (file_exists($extension_path)) {
+        if (!empty($extension_name) AND file_exists($extension_path)) {
             return TRUE;
         }
 
