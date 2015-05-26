@@ -217,6 +217,9 @@ display: block;
 .navbar-top-links .dropdown-menu li:last-child {
 margin-right: 0;
 }
+.navbar-top-links .dropdown-menu .menu > .divider:last-child {
+    margin: 0;
+}
 .navbar-top-links .dropdown-menu li a {
 padding: 3px 20px;
 min-height: 0;
@@ -958,7 +961,7 @@ background-color: #dfe6ee;
 .dropdown-menu > li .menu {
 list-style: outside none none;
 margin: 0;
-max-height: 200px;
+max-height: 225px;
 overflow-x: hidden;
 padding: 0;
 }

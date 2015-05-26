@@ -107,7 +107,13 @@
 									</li>
 								</ul>
 							</td>-->
-							<td><?php echo ($review['review_status'] === '1') ? 'Approved' : 'Pending Review'; ?></td>
+							<td>
+                                <?php if ($review['review_status'] === '1') { ?>
+                                    <label class="label label-success">Approved</label>
+                                <?php } else { ?>
+                                    <label class="label label-danger">Pending Review</label>
+                                <?php } ?>
+                            </td>
 							<td class="text-center"><?php echo $review['date_added']; ?></td>
 						</tr>
 
