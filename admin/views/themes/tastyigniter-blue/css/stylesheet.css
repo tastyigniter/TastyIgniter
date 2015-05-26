@@ -1467,14 +1467,15 @@ content: "\f0de";
 
 
 /** MESSAGES **/
-.message-folders .list-group-item.active, .message-folders .list-group-item.active:focus,
-.message-folders .list-group-item.active:hover {
-    background-color: transparent;
-    border-color: #337ab7;
-    border-width: 0 0 0 5px;
-    color: #333;
-    font-weight: bold;
-    z-index: 2;
+.list-group-hover .list-group-item.active,
+.list-group-hover .list-group-item.active:focus,
+.list-group-hover .list-group-item.active:hover {
+background-color: transparent;
+border-color: #337ab7;
+border-width: 0 0 0 5px;
+color: #333;
+font-weight: bold;
+z-index: 2;
 }
 .message-controls, .message-view-controls {
 padding: 5px;
@@ -1501,16 +1502,25 @@ border-top: 1px solid #ecf0f5;
 background-color: #fff;
 padding: 15px;
 }
-.message-unread .message-subject {
+.message-list .message {
+font-weight: 400;
+}
+.message-list .message-unread .message-subject {
 font-weight: bold;
+}
+.message-list .message-read .message-subject {
+font-weight: 200;
+}
+.message-list .message-read .fa {
+color: #AAA;
 }
 .message-controls .btn {
 margin-right: 5px;
 }
-.message-controls .btn-group {
+.message-controls .btn-group, .message-view-controls .btn-group {
 width: auto;
 }
-.message-controls .btn-group > .btn {
+.message-controls .btn-group > .btn, .message-view-controls .btn-group > .btn {
 width: 100%;
 }
 

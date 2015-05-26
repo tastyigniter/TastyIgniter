@@ -136,16 +136,53 @@ class Staffs_model extends TI_Model {
 		return $result;
 	}
 
-	public function getStaffsByGroupId($staff_group_id = FALSE) {
-		if ($staff_group_id) {
-			$this->db->from('staffs');
+    public function getStaffsForMessages($type) {
+        $this->db->select('staff_id, staff_email, staff_status');
+        $this->db->from('staffs');
+        $this->db->where('staff_status', '1');
+
+        $query = $this->db->get();
+        $result = array();
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row)
+                $result[] = ($type === 'email') ? $row['staff_email'] : $row['staff_id'];
+        }
+
+        return $result;
+    }
+
+    public function getStaffForMessages($type, $staff_id = FALSE) {
+        if (!empty($staff_id) AND is_array($staff_id)) {
+            $this->db->select('staff_id, staff_email, staff_status');
+            $this->db->from('staffs');
+            $this->db->where_in('staff_id', $staff_id);
+            $this->db->where('staff_status', '1');
+
+            $query = $this->db->get();
+
+            if ($query->num_rows() > 0) {
+                foreach ($query->result_array() as $row)
+                    $result[] = ($type === 'email') ? $row['staff_email'] : $row['staff_id'];
+            }
+
+            return $result;
+        }
+    }
+
+    public function getStaffsByGroupIdForMessages($type, $staff_group_id = FALSE) {
+        if (is_numeric($staff_group_id)) {
+            $this->db->select('staff_id, staff_email, staff_group_id, staff_status');
+            $this->db->from('staffs');
 			$this->db->where('staff_group_id', $staff_group_id);
+            $this->db->where('staff_status', '1');
 
 			$query = $this->db->get();
 			$result = array();
 
 			if ($query->num_rows() > 0) {
-				$result = $query->result_array();
+                foreach ($query->result_array() as $row)
+                    $result[] = ($type === 'email') ? $row['staff_email'] : $row['staff_id'];
 			}
 
 			return $result;

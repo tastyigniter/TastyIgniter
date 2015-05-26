@@ -8,7 +8,7 @@
                         <h3 class="panel-title">Folders</h3>
                     </div>
                     <div class="panel-body wrap-none">
-                        <div class="list-group message-folders">
+                        <div class="list-group list-group-hover">
                             <?php foreach ($folders as $key => $folder) { ?>
                                 <?php if ($key === $filter_folder) { ?>
                                     <a class="list-group-item active" href="<?php echo $folder['url']; ?>"><i class="fa <?php echo $folder['icon']; ?>"></i>&nbsp;&nbsp;<?php echo ucwords($key); ?>&nbsp;&nbsp;<span class="label label-primary pull-right"><?php echo $folder['badge']; ?></span></a>
@@ -24,9 +24,14 @@
                         <h3 class="panel-title">Labels/Types</h3>
                     </div>
                     <div class="panel-body wrap-none">
-                        <div class="list-group">
-                            <a class="list-group-item" href="#"><i class="fa fa-circle-o text-primary"></i>&nbsp;&nbsp;Account</a>
-                            <a class="list-group-item" href="#"><i class="fa fa-circle-o text-danger"></i>&nbsp;&nbsp;Email</a>
+                        <div class="list-group list-group-hover">
+                            <?php foreach ($labels as $key => $label) { ?>
+                                <?php if ($key === $filter_type) { ?>
+                                    <a class="list-group-item active" href="<?php echo $label['url']; ?>"><i class="fa <?php echo $label['icon']; ?>"></i>&nbsp;&nbsp;<?php echo ucwords($key); ?></a>
+                                <?php } else { ?>
+                                    <a class="list-group-item" href="<?php echo $label['url']; ?>"><i class="fa <?php echo $label['icon']; ?>"></i>&nbsp;&nbsp;<?php echo ucwords($key); ?></a>
+                                <?php } ?>
+                            <?php } ?>
                         </div>
                     </div>
                 </div>
@@ -53,8 +58,7 @@
                                         </div>
 
                                         <div class="col-md-8 pull-left">
-                                            <input type="hidden" name="filter_folder" value="<?php echo $filter_folder; ?>" />
-                                            <?php if ($filter_folder === 'all') { ?>
+                                            <?php if ($filter_folder === 'all' OR $filter_folder === 'sent') { ?>
                                                 <div class="form-group">
                                                     <select name="filter_recipient" class="form-control input-sm">
                                                         <option value="">View all recipients</option>
@@ -68,21 +72,6 @@
                                                     </select>
                                                 </div>
                                             <?php } ?>
-<!--                                            <div class="form-group">-->
-<!--                                                <select name="filter_type" class="form-control input-sm">-->
-<!--                                                    <option value="">View all send types</option>-->
-<!--                                                    --><?php //if ($filter_type === 'account') { ?>
-<!--                                                        <option value="account" --><?php //echo set_select('filter_type', 'account', TRUE); ?><!-- >Account</option>-->
-<!--                                                        <option value="email" --><?php //echo set_select('filter_type', 'email'); ?><!-- >Email</option>-->
-<!--                                                    --><?php //} else if ($filter_type === 'email') { ?>
-<!--                                                        <option value="account" --><?php //echo set_select('filter_type', 'account'); ?><!-- >Account</option>-->
-<!--                                                        <option value="email" --><?php //echo set_select('filter_type', 'email', TRUE); ?><!-- >Email</option>-->
-<!--                                                    --><?php //} else { ?>
-<!--                                                        <option value="account" --><?php //echo set_select('filter_type', 'account'); ?><!-- >Account</option>-->
-<!--                                                        <option value="email" --><?php //echo set_select('filter_type', 'email'); ?><!-- >Email</option>-->
-<!--                                                    --><?php //} ?>
-<!--                                                </select>&nbsp;&nbsp;-->
-<!--                                            </div>-->
                                             <div class="form-group">
                                                 <select name="filter_date" class="form-control input-sm">
                                                     <option value="">View all dates</option>
@@ -129,7 +118,7 @@
                         </div>
 
                         <div class="table-responsive wrap-none">
-                            <table border="0" class="table table-striped table-border">
+                            <table border="0" class="table table-striped table-border message-list">
                                 <tbody>
                                     <?php if ($messages) {?>
                                         <?php foreach ($messages as $message) { ?>

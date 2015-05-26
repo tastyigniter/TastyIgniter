@@ -125,69 +125,7 @@
 						</a>
 						<ul class="dropdown-menu dropdown-messages">
                             <li class="menu-header"><b>You have <?php echo $message_unread; ?> messages</b></li>
-                            <li>
-                                <ul class="menu">
-                                    <li>
-                                        <a href="#">
-                                            <div>
-                                                <strong>John Smith</strong>
-                                                <span class="pull-right text-muted">
-                                                    <em>Yesterday</em>
-                                                </span>
-                                            </div>
-                                            <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
-                                        </a>
-                                    </li>
-                                    <li class="divider"></li>
-                                    <li>
-                                        <a href="#">
-                                            <div>
-                                                <strong>John Smith</strong>
-                                                <span class="pull-right text-muted">
-                                                    <em>Yesterday</em>
-                                                </span>
-                                            </div>
-                                            <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
-                                        </a>
-                                    </li>
-                                    <li class="divider"></li>
-                                    <li>
-                                        <a href="#">
-                                            <div>
-                                                <strong>John Smith</strong>
-                                                <span class="pull-right text-muted">
-                                                    <em>Yesterday</em>
-                                                </span>
-                                            </div>
-                                            <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
-                                        </a>
-                                    </li>
-                                    <li class="divider"></li>
-                                    <li>
-                                        <a href="#">
-                                            <div>
-                                                <strong>John Smith</strong>
-                                                <span class="pull-right text-muted">
-                                                    <em>Yesterday</em>
-                                                </span>
-                                            </div>
-                                            <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
-                                        </a>
-                                    </li>
-                                    <li class="divider"></li>
-                                    <li>
-                                        <a href="#">
-                                            <div>
-                                                <strong>John Smith</strong>
-                                                <span class="pull-right text-muted">
-                                                    <em>Yesterday</em>
-                                                </span>
-                                            </div>
-                                            <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
+                            <li class="menu-body"></li>
                             <li class="menu-footer">
                                 <a class="text-center" href="<?php echo site_url('messages'); ?>">Read All Messages</a>
                             </li>

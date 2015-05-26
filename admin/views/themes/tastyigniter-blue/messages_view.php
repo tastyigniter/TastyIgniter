@@ -9,7 +9,7 @@
                         <h3 class="panel-title">Folders</h3>
                     </div>
                     <div class="panel-body wrap-none">
-                        <div class="list-group message-folders">
+                        <div class="list-group list-group-hover">
                             <?php foreach ($folders as $key => $folder) { ?>
                                 <a class="list-group-item" href="<?php echo $folder['url']; ?>"><i class="fa <?php echo $folder['icon']; ?>"></i>&nbsp;&nbsp;<?php echo ucwords($key); ?>&nbsp;&nbsp;<span class="label label-primary pull-right"><?php echo $folder['badge']; ?></span></a>
                             <?php } ?>
@@ -22,8 +22,9 @@
                     </div>
                     <div class="panel-body wrap-none">
                         <div class="list-group">
-                            <a class="list-group-item" href="#"><i class="fa fa-circle-o text-primary"></i>&nbsp;&nbsp;Account</a>
-                            <a class="list-group-item" href="#"><i class="fa fa-circle-o text-danger"></i>&nbsp;&nbsp;Email</a>
+                            <?php foreach ($labels as $key => $label) { ?>
+                                <a class="list-group-item" href="<?php echo $label['url']; ?>"><i class="fa <?php echo $label['icon']; ?>"></i>&nbsp;&nbsp;<?php echo ucwords($key); ?></a>
+                            <?php } ?>
                         </div>
                     </div>
                 </div>
@@ -45,14 +46,12 @@
                             </h6>
                         </div>
                         <div class="message-view-controls text-center">
-                            <div class="btn-group">
-                                <?php if ($message_deleted) { ?>
-                                    <button class="btn btn-default btn-sm" title="Move to Inbox" onclick="moveToInbox()"><i class="fa fa-inbox"></i></button>
-                                <?php } else { ?>
-                                    <button class="btn btn-default btn-sm" title="Delete" onclick="moveToTrash()"><i class="fa fa-trash-o"></i></button>
-                                <?php } ?>
-                                <button class="btn btn-default btn-sm" title="Resend" onclick="resendList()"><i class="fa fa-share"></i></button>
-                            </div>
+                            <?php if ($message_deleted) { ?>
+                                <button class="btn btn-default btn-sm" title="Move to Inbox" onclick="moveToInbox()"><i class="fa fa-inbox"></i></button>
+                            <?php } else { ?>
+                                <button class="btn btn-default btn-sm" title="Delete" onclick="moveToTrash()"><i class="fa fa-trash-o"></i></button>
+                            <?php } ?>
+                            <button class="btn btn-default btn-sm" title="Resend" onclick="resendList()"><i class="fa fa-share"></i></button>
                             <div class="btn-group">
                                 <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" aria-expanded="true">
                                     <i class="fa fa-ellipsis-h"></i> &nbsp;<i class="caret"></i>
@@ -68,56 +67,12 @@
                         </form>
                     </div>
 
-                    <?php if ($label === 'all') { ?>
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Recipients List</h3>
-                        </div>
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Recipients List</h3>
+                    </div>
 
-                        <div class="panel-body">
-                            <div id="recipients" class="table-responsive" style="display:none">
-                                <table class="table table-striped table-border">
-                                    <?php if ($recipients) { ?>
-                                        <thead>
-                                        <tr>
-                                            <th class="action action-one"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
-                                            <th><?php echo ($send_type === 'Email') ? 'Email' : 'Recipient'; ?></th>
-                                            <th class="text-center">Status</th>
-                                            <th class="id">ID</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php foreach ($recipients as $recipient) { ?>
-                                            <tr>
-                                                <?php if ($send_type === 'Email') { ?>
-                                                    <td class="action action-one"><input type="checkbox" value="<?php echo $recipient['message_recipient_id']; ?>" name="delete[]" /></td>
-                                                    <td><?php echo $recipient['recipient_email']; ?></td>
-                                                    <td class="text-center"><?php echo $recipient['status']; ?></td>
-                                                    <td class="id"><?php echo $recipient['message_recipient_id']; ?></td>
-                                                <?php } ?>
-                                                <?php if ($send_type === 'Account') { ?>
-                                                    <td class="action action-one"><input type="checkbox" value="<?php echo $recipient['message_recipient_id']; ?>" name="delete[]" /></td>
-                                                    <td><?php echo $recipient['recipient_name']; ?></td>
-                                                    <td class="text-center"><?php echo $recipient['status']; ?></td>
-                                                    <td class="id"><?php echo $recipient['message_recipient_id']; ?></td>
-                                                <?php } ?>
-                                            </tr>
-                                        <?php } ?>
-                                        </tbody>
-                                    <?php } else { ?>
-                                        <tbody>
-                                        <tr>
-                                            <td><?php echo $text_empty; ?></td>
-                                        </tr>
-                                        </tbody>
-                                    <?php } ?>
-                                </table>
-                            </div>
-                        </div>
-                    <?php } ?>
-
-                    <?php if ($label === 'all') { ?>
+                    <div class="panel-body">
                         <div id="recipients" class="table-responsive" style="display:none">
-                            <h3>Recipients List</h3>
                             <table class="table table-striped table-border">
                                 <?php if ($recipients) { ?>
                                     <thead>
@@ -155,8 +110,7 @@
                                 <?php } ?>
                             </table>
                         </div>
-                    <?php } ?>
-
+                    </div>
                 </div>
             </div>
         </div>

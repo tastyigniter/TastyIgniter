@@ -8,7 +8,7 @@
                         <h3 class="panel-title">Folders</h3>
                     </div>
                     <div class="panel-body wrap-none">
-                        <div class="list-group message-folders">
+                        <div class="list-group list-group-hover">
                             <?php foreach ($folders as $key => $folder) { ?>
                                 <a class="list-group-item" href="<?php echo $folder['url']; ?>"><i class="fa <?php echo $folder['icon']; ?>"></i>&nbsp;&nbsp;<?php echo ucwords($key); ?>&nbsp;&nbsp;<span class="label label-primary pull-right"><?php echo $folder['badge']; ?></span></a>
                             <?php } ?>
@@ -21,8 +21,9 @@
                     </div>
                     <div class="panel-body wrap-none">
                         <div class="list-group">
-                            <a class="list-group-item" href="#"><i class="fa fa-circle-o text-primary"></i>&nbsp;&nbsp;Account</a>
-                            <a class="list-group-item" href="#"><i class="fa fa-circle-o text-danger"></i>&nbsp;&nbsp;Email</a>
+                            <?php foreach ($labels as $key => $label) { ?>
+                                <a class="list-group-item" href="<?php echo $label['url']; ?>"><i class="fa <?php echo $label['icon']; ?>"></i>&nbsp;&nbsp;<?php echo ucwords($key); ?></a>
+                            <?php } ?>
                         </div>
                     </div>
                 </div>
@@ -32,7 +33,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading"><h3 class="panel-title">Compose New Message</h3></div>
                     <div class="panel-body">
-                        <form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
+                        <form role="form" id="compose-form" class="form-horizontal" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
                             <div class="form-group">
                                 <label for="input-recipient" class="col-sm-3 control-label">To:</label>
                                 <div class="col-sm-9">
@@ -127,13 +128,13 @@
                             <div class="form-group">
                                 <label for="input-subject" class="col-sm-3 control-label">Subject:</label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="subject" id="input-subject" class="form-control" value="<?php echo set_value('subject'); ?>" size="40" />
+                                    <input type="text" name="subject" id="input-subject" class="form-control" value="<?php echo set_value('subject', $subject); ?>" size="40" />
                                     <?php echo form_error('subject', '<span class="text-danger">', '</span>'); ?>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-12 wrap-none">
-                                    <textarea name="body" id="input-wysiwyg" class="form-control" style="height:300px;width:100%;"><?php echo set_value('body'); ?></textarea>
+                                    <textarea name="body" id="input-wysiwyg" class="form-control" style="height:300px;width:100%;"><?php echo set_value('body', $body); ?></textarea>
                                     <?php echo form_error('body', '<span class="text-danger">', '</span>'); ?>
                                 </div>
                             </div>
@@ -159,6 +160,12 @@ tinymce.init({
 });
 </script>
 <script type="text/javascript"><!--
+
+function saveAsDraft() {
+    $('#compose-form').append('<input type="hidden" name="save_as_draft" value="1" />');
+    $('#compose-form').submit();
+}
+
 $('select[name="recipient"]').on('change', function() {
 	$('.recipient').hide();
 

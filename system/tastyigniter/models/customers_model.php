@@ -103,31 +103,71 @@ class Customers_model extends TI_Model {
 		return $result;
 	}
 
-	public function getCustomersByGroupId($customer_group_id) {
-		if ($customer_group_id) {
-			$this->db->from('customers');
+    public function getCustomersForMessages($type) {
+        $this->db->select('customer_id, email, status');
+        $this->db->from('customers');
+        $this->db->where('status', '1');
+
+        $query = $this->db->get();
+        $result = array();
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row)
+                $result[] = ($type === 'email') ? $row['email'] : $row['customer_id'];
+        }
+
+        return $result;
+    }
+
+    public function getCustomerForMessages($type, $customer_id) {
+        if (!empty($customer_id) AND is_array($customer_id)) {
+            $this->db->select('customer_id, email, status');
+            $this->db->from('customers');
+            $this->db->where('status', '1');
+            $this->db->where_in('customer_id', $customer_id);
+
+            $query = $this->db->get();
+
+            if ($query->num_rows() > 0) {
+                foreach ($query->result_array() as $row)
+                    $result[] = ($type === 'email') ? $row['email'] : $row['customer_id'];
+            }
+
+            return $result;
+        }
+    }
+
+    public function getCustomersByGroupIdForMessages($type, $customer_group_id) {
+        if (is_numeric($customer_group_id)) {
+            $this->db->select('customer_id, email, customer_group_id, status');
+            $this->db->from('customers');
 			$this->db->where('customer_group_id', $customer_group_id);
+            $this->db->where('status', '1');
 
 			$query = $this->db->get();
 			$result = array();
 
 			if ($query->num_rows() > 0) {
-				$result = $query->result_array();
+                foreach ($query->result_array() as $row)
+                    $result[] = ($type === 'email') ? $row['email'] : $row['customer_id'];
 			}
 
 			return $result;
 		}
 	}
 
-	public function getCustomersByNewsletter() {
-		$this->db->from('customers');
+	public function getCustomersByNewsletterForMessages($type) {
+        $this->db->select('customer_id, email, newsletter, status');
+        $this->db->from('customers');
 		$this->db->where('newsletter', '1');
+        $this->db->where('status', '1');
 
 		$query = $this->db->get();
 		$result = array();
 
 		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
+            foreach ($query->result_array() as $row)
+                $result[] = ($type === 'email') ? $row['email'] : $row['customer_id'];
 		}
 
 		return $result;
