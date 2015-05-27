@@ -435,11 +435,13 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     protected function getRootPackage()
     {
         $root = $this->composer->getPackage();
+        // @codeCoverageIgnoreStart
         if (!$root instanceof RootPackage) {
             throw new UnexpectedValueException(
                 'Expected instance of RootPackage, got ' . get_class($root)
             );
         }
+        // @codeCoverageIgnoreEnd
         return $root;
     }
 
@@ -449,12 +451,14 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     protected function jsonToPackage($json)
     {
         $package = $this->loader->load($json);
+        // @codeCoverageIgnoreStart
         if (!$package instanceof CompletePackage) {
             throw new UnexpectedValueException(
                 'Expected instance of CompletePackage, got ' .
                 get_class($package)
             );
         }
+        // @codeCoverageIgnoreEnd
         return $package;
     }
 
@@ -468,6 +472,7 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
      */
     protected function debug($message)
     {
+        // @codeCoverageIgnoreStart
         if ($this->inputOutput->isVerbose()) {
             $message = "  <info>[merge]</info> {$message}";
 
@@ -478,6 +483,7 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
                 $this->inputOutput->write($message);
             }
         }
+        // @codeCoverageIgnoreEnd
     }
 }
 // vim:sw=4:ts=4:sts=4:et:
