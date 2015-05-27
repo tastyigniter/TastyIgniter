@@ -203,7 +203,7 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
         }
         $this->debug("Loading <comment>{$path}</comment>...");
         $json = $this->readPackageJson($path);
-        $package = $this->loader->load($json);
+        $package = $this->jsonToPackage($json);
 
         $this->mergeRequires($root, $package);
         $this->mergeDevRequires($root, $package);
@@ -441,6 +441,21 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
             );
         }
         return $root;
+    }
+
+    /**
+     * @return CompletePackage
+     */
+    protected function jsonToPackage($json)
+    {
+        $package = $this->loader->load($json);
+        if (!$package instanceof CompletePackage) {
+            throw new UnexpectedValueException(
+                'Expected instance of CompletePackage, got ' .
+                get_class($package)
+            );
+        }
+        return $package;
     }
 
     /**
