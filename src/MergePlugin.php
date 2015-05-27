@@ -259,7 +259,7 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
         CompletePackage $package
     ) {
         $requires = $package->getRequires();
-        if (!$requires) {
+        if (empty($requires)) {
             return;
         }
 
@@ -281,7 +281,7 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
         CompletePackage $package
     ) {
         $requires = $package->getDevRequires();
-        if (!$requires) {
+        if (empty($requires)) {
             return;
         }
 
@@ -305,8 +305,7 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
         $path
     ) {
         $autoload = $package->getAutoload();
-
-        if (!$autoload) {
+        if (empty($autoload)) {
             return;
         }
 
@@ -413,7 +412,7 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
      */
     public function onDependencySolve(InstallerEvent $event)
     {
-        if (!$this->duplicateLinks) {
+        if (empty($this->duplicateLinks)) {
             return;
         }
 
