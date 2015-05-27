@@ -1,0 +1,19 @@
+{
+	"autoload": {
+		"psr-4": {
+			"Kittens\\": [ "a/", "b/" ],
+			"Cats\\": "src/"
+		},
+		"psr-0": {
+			"UniqueGlobalClass": "",
+			"": "fallback/"
+		},
+		"files" : [
+			"SemanticMediaWiki.php"
+		],
+		"classmap": [
+			"SemanticMediaWiki.hooks.php",
+			"includes/"
+		]
+	}
+}

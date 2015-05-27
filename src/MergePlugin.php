@@ -121,6 +121,7 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
             InstallerEvents::PRE_DEPENDENCIES_SOLVING => 'onDependencySolve',
             ScriptEvents::PRE_INSTALL_CMD => 'onInstallOrUpdate',
             ScriptEvents::PRE_UPDATE_CMD => 'onInstallOrUpdate',
+            ScriptEvents::PRE_AUTOLOAD_DUMP => 'onInstallOrUpdate',
         );
     }
 
@@ -205,6 +206,7 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
 
         $this->mergeRequires($root, $package);
         $this->mergeDevRequires($root, $package);
+        $this->mergeAutoload($root, $package, $path);
 
         if (isset($json['repositories'])) {
             $this->addRepositories($json['repositories'], $root);
@@ -288,6 +290,37 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
             $root->getDevRequires(),
             $requires,
             $this->duplicateLinks['require-dev']
+        ));
+    }
+
+    /**
+     * @param RootPackageInterface $root
+     * @param CompletePackage $package
+     * @param string $path
+     */
+    protected function mergeAutoload(
+        RootPackageInterface $root,
+        CompletePackage $package,
+        $path
+    ) {
+        $autoload = $package->getAutoload();
+
+        if (!$autoload) {
+            return;
+        }
+
+        $packagePath = substr($path, 0, strrpos($path, '/') + 1);
+
+        array_walk_recursive(
+            $autoload,
+            function(&$path) use ($packagePath) {
+                $path = $packagePath . $path;
+            }
+        );
+
+        $root->setAutoload(array_merge_recursive(
+            $root->getAutoload(),
+            $autoload
         ));
     }
 
