@@ -177,7 +177,7 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
      */
     protected function mergePackages(array $config)
     {
-        $root = $this->composer->getPackage();
+        $root = $this->getRootPackage();
         foreach (array_reduce(
             array_map('glob', $config['include']),
             'array_merge',
