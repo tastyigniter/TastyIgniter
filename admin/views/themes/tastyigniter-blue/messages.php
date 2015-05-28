@@ -96,10 +96,10 @@
                     <form role="form" id="message-form" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
                         <div class="message-controls">
                             <input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);">&nbsp;&nbsp;
-                            <?php if ($filter_folder === 'trash') { ?>
+                            <?php if ($filter_folder === 'archive') { ?>
                                 <button class="btn btn-default" title="Move to Inbox" onclick="moveToInbox()"><i class="fa fa-inbox"></i></button>
                             <?php } else { ?>
-                                <button class="btn btn-default" title="Move to Trash" onclick="moveToTrash()"><i class="fa fa-trash-o"></i></button>
+                                <button class="btn btn-default" title="Move to Archive" onclick="moveToArchive()"><i class="fa fa-archive"></i></button>
                             <?php } ?>
 <!--                        <button class="btn btn-default" title="Reply"><i class="fa fa-reply"></i></button>-->
                             <button class="btn btn-default" title="Refresh"><i class="fa fa-refresh"></i></button>
@@ -179,9 +179,9 @@ function moveToInbox() {
 	}
 }
 
-function moveToTrash() {
+function moveToArchive() {
 	if (confirm('Are you sure you want to do this?')) {
-		$('#message-form').append('<input type="hidden" name="message_state" value="trash" />');
+		$('#message-form').append('<input type="hidden" name="message_state" value="archive" />');
 		$('#message-form').submit();
 	} else {
 		return false;

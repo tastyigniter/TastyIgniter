@@ -1179,8 +1179,8 @@ margin-left: 10px;
 .panel-selected {
 border: 1px solid #dce4ec !important;
 overflow: auto;
-height: 250px;
-min-height: 250px;
+height: 150px;
+min-height: 150px;
 }
 .panel-selected .img img {
 cursor:pointer;

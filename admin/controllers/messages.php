@@ -36,6 +36,7 @@ class Messages extends Admin_Controller {
         $this->template->setTitle('Messages');
         $this->template->setHeading('Messages: All');
         $this->template->setButton('+ Compose', array('class' => 'btn btn-primary', 'href' => site_url('messages/compose')));
+        $this->template->setButton('Delete', array('class' => 'btn btn-danger', 'onclick' => '$(\'#message-form\').submit();'));
 
         $data['text_empty'] 		= 'There are no messages available.';
 
@@ -79,13 +80,13 @@ class Messages extends Admin_Controller {
         $this->template->render('messages', $data);
 	}
 
-    public function trash() {
+    public function archive() {
         $filter = array();
-        $filter['filter_folder'] = $data['filter_folder'] = 'trash';
+        $filter['filter_folder'] = $data['filter_folder'] = 'archive';
         $data['page_uri'] = 'messages/sent';
 
         $this->template->setTitle('Messages');
-        $this->template->setHeading('Messages: Trash');
+        $this->template->setHeading('Messages: Archive');
         $this->template->setButton('+ Compose', array('class' => 'btn btn-primary', 'href' => site_url('messages/compose')));
 
         $data['text_empty'] 		= 'There are no messages available.';
@@ -124,7 +125,7 @@ class Messages extends Admin_Controller {
             'draft' => array('icon' => 'fa-file-text-o', 'badge' => '', 'url' => site_url('messages/draft')),
             'sent' => array('icon' => 'fa-paper-plane-o', 'badge' => '', 'url' => site_url('messages/sent')),
             'all' 	=> array('icon' => 'fa-briefcase', 'badge' => '', 'url' => site_url('messages/all')),
-            'trash' 	=> array('icon' => 'fa-trash', 'badge' => '', 'url' => site_url('messages/trash')),
+            'archive' 	=> array('icon' => 'fa-archive', 'badge' => '', 'url' => site_url('messages/archive')),
         );
 
         $data['labels'] = array(
@@ -137,16 +138,6 @@ class Messages extends Admin_Controller {
 		$this->template->setBackButton('btn btn-back', site_url('messages'));
 
 		$data['text_empty'] 	= 'There are no recipients available.';
-
-		if ($message_info['status'] === '0') {
-			$this->template->setButton('Resend', array('class' => 'btn btn-default', 'onclick' => 'resendList()'));
-			$this->template->setButton('Mark As Unread', array('class' => 'btn btn-default', 'onclick' => 'markAsUnread()'));
-			$this->template->setButton('Move To Inbox', array('class' => 'btn btn-default', 'onclick' => 'moveToInbox()'));
-		} else {
-			$this->template->setButton('Resend', array('class' => 'btn btn-default', 'onclick' => 'resendList()'));
-			$this->template->setButton('Mark As Unread', array('class' => 'btn btn-default', 'onclick' => 'markAsUnread()'));
-			$this->template->setButton('Move To Trash', array('class' => 'btn btn-default', 'onclick' => 'moveToTrash()'));
-		}
 
 		$data['message_id'] 	= $message_info['message_id'];
 		$data['date_added'] 	= mdate('%H:%i - %d %M %y', strtotime($message_info['date_added']));
@@ -200,10 +191,29 @@ class Messages extends Admin_Controller {
 
 		$data['sub_menu_back'] 		= site_url('messages');
 
-        $data['send_type'] 		    = $message_info['send_type'];
-        $data['recipient'] 			= $message_info['recipient'];
+        if ($this->input->post('recipient')) {
+            $data['recipient'] = $this->input->post('recipient');
+        } else {
+            $data['recipient'] = $message_info['recipient'];
+        }
+
+        if ($this->input->post('send_type')) {
+            $data['send_type'] = $this->input->post('send_type');
+        } else {
+            $data['send_type'] = $message_info['send_type'];
+        }
+
         $data['subject'] 			= $message_info['subject'];
         $data['body'] 			    = $message_info['body'];
+
+        $data['recipients']     = array(
+            'all_newsletters'   =>  'All Customers',
+            'customer_group'    =>  'Customer Group',
+            'customers'         =>  'Customers',
+            'all_staffs'        =>  'All Staffs',
+            'staff_group'       =>  'Staff Group',
+            'staffs'            =>  'Staffs'
+        );
 
 		$this->load->model('Customer_groups_model');
 		$data['customer_groups'] = array();
@@ -231,7 +241,7 @@ class Messages extends Admin_Controller {
             'draft' => array('icon' => 'fa-file-text-o', 'badge' => '', 'url' => site_url('messages/draft')),
             'sent' => array('icon' => 'fa-paper-plane-o', 'badge' => '', 'url' => site_url('messages/sent')),
             'all' 	=> array('icon' => 'fa-briefcase', 'badge' => '', 'url' => site_url('messages/all')),
-            'trash' 	=> array('icon' => 'fa-trash', 'badge' => '', 'url' => site_url('messages/trash')),
+            'archive' 	=> array('icon' => 'fa-archive', 'badge' => '', 'url' => site_url('messages/archive')),
         );
 
         $data['labels'] = array(
@@ -286,8 +296,8 @@ class Messages extends Admin_Controller {
 				$alert = 'has been marked as read.';
 			} else if ($state === 'inbox') {
 				$alert = 'has been moved to inbox.';
-			} else if ($state === 'trash') {
-				$alert = 'has been moved to trash.';
+			} else if ($state === 'archive') {
+				$alert = 'has been moved to archive.';
 			}
 
 			if ($state !== '') {
@@ -303,7 +313,7 @@ class Messages extends Admin_Controller {
                 }
 
                 if ($num > 0) {
-					$num_message = ($num == 1) ? 'The message '.$alert : $num.' messages '.$alert;
+					$num_message = ($num == 1) ? 'Message '.$alert : $num.' messages '.$alert;
                     return $num_message;
 				}
 			}
@@ -418,7 +428,7 @@ class Messages extends Admin_Controller {
             'draft' => array('icon' => 'fa-file-text-o', 'badge' => '', 'url' => site_url('messages/draft')),
             'sent' => array('icon' => 'fa-paper-plane-o', 'badge' => '', 'url' => site_url('messages/sent')),
             'all' 	=> array('icon' => 'fa-briefcase', 'badge' => '', 'url' => site_url('messages/all')),
-            'trash' 	=> array('icon' => 'fa-trash', 'badge' => '', 'url' => site_url('messages/trash')),
+            'archive' 	=> array('icon' => 'fa-archive', 'badge' => '', 'url' => site_url('messages/archive')),
         );
 
         $data['labels'] = array(

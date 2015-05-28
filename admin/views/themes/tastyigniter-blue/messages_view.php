@@ -3,7 +3,7 @@
 	<div class="col-md-12">
         <div class="row">
             <div class="col-sm-12 col-md-3">
-                <a href="<?php echo site_url('messages/edit'); ?>" class="btn btn-primary btn-block">+ Compose</a><br />
+                <a href="<?php echo site_url('messages/compose'); ?>" class="btn btn-primary btn-block">+ Compose</a><br />
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Folders</h3>
@@ -12,18 +12,6 @@
                         <div class="list-group list-group-hover">
                             <?php foreach ($folders as $key => $folder) { ?>
                                 <a class="list-group-item" href="<?php echo $folder['url']; ?>"><i class="fa <?php echo $folder['icon']; ?>"></i>&nbsp;&nbsp;<?php echo ucwords($key); ?>&nbsp;&nbsp;<span class="label label-primary pull-right"><?php echo $folder['badge']; ?></span></a>
-                            <?php } ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Labels/Types</h3>
-                    </div>
-                    <div class="panel-body wrap-none">
-                        <div class="list-group">
-                            <?php foreach ($labels as $key => $label) { ?>
-                                <a class="list-group-item" href="<?php echo $label['url']; ?>"><i class="fa <?php echo $label['icon']; ?>"></i>&nbsp;&nbsp;<?php echo ucwords($key); ?></a>
                             <?php } ?>
                         </div>
                     </div>
@@ -46,10 +34,10 @@
                             </h6>
                         </div>
                         <div class="message-view-controls text-center">
-                            <?php if ($message_deleted) { ?>
+                            <?php if ($message_Archived) { ?>
                                 <button class="btn btn-default btn-sm" title="Move to Inbox" onclick="moveToInbox()"><i class="fa fa-inbox"></i></button>
                             <?php } else { ?>
-                                <button class="btn btn-default btn-sm" title="Delete" onclick="moveToTrash()"><i class="fa fa-trash-o"></i></button>
+                                <button class="btn btn-default btn-sm" title="Archive" onclick="moveToArchive()"><i class="fa fa-archive"></i></button>
                             <?php } ?>
                             <button class="btn btn-default btn-sm" title="Resend" onclick="resendList()"><i class="fa fa-share"></i></button>
                             <div class="btn-group">
@@ -140,9 +128,9 @@ function moveToInbox() {
 	$('#message-form').submit();
 }
 
-function moveToTrash() {
+function moveToArchive() {
 	if (confirm('Are you sure you want to do this?')) {
-		$('#message-form').append('<input type="hidden" name="message_state" value="trash" />');
+		$('#message-form').append('<input type="hidden" name="message_state" value="archive" />');
 		$('#message-form').submit();
 	} else {
 		return false;

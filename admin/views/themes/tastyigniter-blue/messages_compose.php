@@ -15,18 +15,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Labels/Types</h3>
-                    </div>
-                    <div class="panel-body wrap-none">
-                        <div class="list-group">
-                            <?php foreach ($labels as $key => $label) { ?>
-                                <a class="list-group-item" href="<?php echo $label['url']; ?>"><i class="fa <?php echo $label['icon']; ?>"></i>&nbsp;&nbsp;<?php echo ucwords($key); ?></a>
-                            <?php } ?>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <div class="col-sm-12 col-md-9">
@@ -38,7 +26,13 @@
                                 <label for="input-recipient" class="col-sm-3 control-label">To:</label>
                                 <div class="col-sm-9">
                                     <select name="recipient" id="input-recipient" class="form-control">
-                                        <option value="all_newsletters">All Newsletter Subscribers</option>
+                                        <?php foreach ($recipients as $key => $value) { ?>
+                                            <?php if ($key === $recipient) { ?>
+                                                <option value="<?php echo $key; ?>" selected="selected"><?php echo $value; ?></option>
+                                            <?php } else { ?>
+                                                <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                                            <?php } ?>
+                                        <?php } ?>
                                         <option value="all_customers">All Customers</option>
                                         <option value="customer_group">Customer Group</option>
                                         <option value="customers">Customers</option>
@@ -118,8 +112,16 @@
                                     <label for="input-send-type" class="col-sm-3 control-label">Send Type:</label>
                                     <div class="col-sm-9">
                                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                            <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="send_type" value="account" <?php echo set_radio('send_type', 'account', TRUE); ?>>Account</label>
-                                            <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="send_type" value="email" <?php echo set_radio('send_type', 'email'); ?>>Email</label>
+                                            <?php if ($send_type === 'account') { ?>
+                                                <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="send_type" value="account" checked="checked">Account</label>
+                                                <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="send_type" value="email">Email</label>
+                                            <?php } else if ($send_type === 'email') { ?>
+                                                <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="send_type" value="account">Account</label>
+                                                <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="send_type" value="email" checked="checked">Email</label>
+                                            <?php } else { ?>
+                                                <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="send_type" value="account" checked="checked">Account</label>
+                                                <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="send_type" value="email">Email</label>
+                                            <?php } ?>
                                         </div>
                                         <?php echo form_error('send_type', '<span class="text-danger">', '</span>'); ?>
                                     </div>
@@ -201,7 +203,7 @@ $('input[name=\'customer\']').select2({
 
 $('input[name=\'customer\']').on('select2-selecting', function(e) {
 	$('#customer' + e.choice.id).remove();
-	$('#customers-box table tbody').append('<tr id="customer' + e.choice.id + '"><td class="name">' + e.choice.text + '<td class="text-right">' + '<a class="btn btn-danger" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a>' + '<input type="hidden" name="customers[]" value="' + e.choice.id + '" /></tr>');
+	$('#customers-box table tbody').append('<tr id="customer' + e.choice.id + '"><td class="name">' + e.choice.text + '<td class="text-right">' + '<a class="btn btn-danger btn-xs" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a>' + '<input type="hidden" name="customers[]" value="' + e.choice.id + '" /></tr>');
 });
 //--></script>
 <script type="text/javascript"><!--
@@ -231,7 +233,7 @@ $('input[name=\'staff\']').select2({
 
 $('input[name=\'staff\']').on('select2-selecting', function(e) {
 	$('#staff' + e.choice.id).remove();
-	$('#staffs-box table tbody').append('<tr id="staff' + e.choice.id + '"><td class="name">' + e.choice.text + '<td class="text-right">' + '<a class="btn btn-danger" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a>' + '<input type="hidden" name="staffs[]" value="' + e.choice.id + '" /></tr>');
+	$('#staffs-box table tbody').append('<tr id="staff' + e.choice.id + '"><td class="name">' + e.choice.text + '<td class="text-right">' + '<a class="btn btn-danger btn-xs" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a>' + '<input type="hidden" name="staffs[]" value="' + e.choice.id + '" /></tr>');
 });
 //--></script>
 <?php echo get_footer(); ?>

@@ -57,7 +57,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	if ($('#codeigniter_profiler').length) {
-		$('.bottom-footer .container').append('Page rendered in <strong>{elapsed_time}</strong> seconds <br /><a id="profiler">View Profiler</a>');
+		$('.bottom-footer .container').append('<a id="profiler">View Profiler</a>');
 		$('#profiler').on('click', function(){
 			if($('#codeigniter_profiler').is(':visible')) {
 				$('#codeigniter_profiler').fadeOut();
