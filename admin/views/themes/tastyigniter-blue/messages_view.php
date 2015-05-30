@@ -34,7 +34,7 @@
                             </h6>
                         </div>
                         <div class="message-view-controls text-center">
-                            <?php if ($message_Archived) { ?>
+                            <?php if ($message_deleted) { ?>
                                 <button class="btn btn-default btn-sm" title="Move to Inbox" onclick="moveToInbox()"><i class="fa fa-inbox"></i></button>
                             <?php } else { ?>
                                 <button class="btn btn-default btn-sm" title="Archive" onclick="moveToArchive()"><i class="fa fa-archive"></i></button>
