@@ -43,7 +43,7 @@
 				<?php if ($main_local) { ?>
 					<div class="search-content row" style="display: block;">
 						<div id="contactForm" class="col-md-7">
-							<form accept-charset="utf-8" method="POST" action="<?php echo $action; ?>" role="form">
+							<form accept-charset="utf-8" method="POST" action="<?php echo $_action; ?>" role="form">
 								<div class="row">
 									<div class="col-sm-6 col-md-6">
 										<div class="form-group">

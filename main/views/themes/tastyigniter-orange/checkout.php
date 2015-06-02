@@ -50,7 +50,7 @@
 				<div class="row">
 					<div class="col-md-12">
 
-						<form method="post" accept-charset="utf-8" action="<?php echo $action; ?>" id="checkout-form" role="form">
+						<form method="POST" accept-charset="utf-8" action="<?php echo $_action; ?>" id="checkout-form" role="form">
                             <input type="hidden" name="checkout_step" class="checkout_step" value="<?php echo set_value('checkout_step', $checkout_step); ?>">
 
 							<div id="checkout" style="display: <?php echo ($checkout_step === 'one') ? 'block' : 'none'; ?>">

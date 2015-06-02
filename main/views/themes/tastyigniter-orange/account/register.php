@@ -13,7 +13,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div id="register-form" class="col-sm-6 center-block wrap-none">
-					<form method="post" accept-charset="utf-8" action="<?php echo current_url(); ?>" role="form" class="">
+					<form method="POST" accept-charset="utf-8" action="<?php echo current_url(); ?>" role="form" class="">
 						<div class="row">
 							<div class="col-xs-12 col-sm-6 col-md-6">
 								<div class="form-group">

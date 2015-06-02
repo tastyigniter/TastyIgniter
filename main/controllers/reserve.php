@@ -35,7 +35,7 @@ class Reserve extends Main_Controller {
 		$data['entry_captcha'] 				= $this->lang->line('entry_captcha');
 
 		$data['button_reservation'] 		= $this->lang->line('button_reservation');
-		$data['action'] 					= site_url('reserve');
+		$data['_action'] 					= site_url('reserve');
 		$data['continue'] 					= site_url('reserve/success');
 
 		$data['occasions'] = array(

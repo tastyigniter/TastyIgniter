@@ -13,7 +13,7 @@
 		<div class="row">
 			<div class="col-md-6 center-block">
 				<p><?php echo $text_summary; ?></p>
-				<form method="post" accept-charset="utf-8" action="<?php echo current_url(); ?>" role="form">
+				<form method="POST" accept-charset="utf-8" action="<?php echo current_url(); ?>" role="form">
 					<div class="form-group">
 						<input name="email" type="text" id="email" class="form-control input-lg" value="<?php echo set_value('email'); ?>" placeholder="<?php echo $entry_email; ?>" />
 		    			<?php echo form_error('email', '<span class="text-danger">', '</span>'); ?></td>

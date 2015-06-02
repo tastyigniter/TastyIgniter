@@ -49,7 +49,7 @@ class Contact extends Main_Controller {
 		// END of retrieving lines from language file to send to view.
 
 		$data['local_action'] 			= site_url('local_module/main/local_module/search');
-		$data['action'] 				= site_url('contact');
+		$data['_action'] 				= site_url('contact');
 
 		$main_local 	= $this->location->getMainLocal();
 		if ($main_local) {

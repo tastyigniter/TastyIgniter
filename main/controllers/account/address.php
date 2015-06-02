@@ -95,10 +95,10 @@ class Address extends Main_Controller {
 
 		if (is_numeric($this->uri->rsegment(3))) {												// retrieve if available and check if fouth uri segment is numeric
 			$address_id = (int)$this->uri->rsegment(3);
-			$data['action']	= site_url('account/address/edit/'. $address_id);
+			$data['_action']	= site_url('account/address/edit/'. $address_id);
 		} else {																				// else if customer is logged in retrieve customer id from customer library
 			$address_id = FALSE;
-			$data['action']	= site_url('account/address/edit');
+			$data['_action']	= site_url('account/address/edit');
 		}
 
 		$this->template->setBreadcrumb('<i class="fa fa-home"></i>', '/');

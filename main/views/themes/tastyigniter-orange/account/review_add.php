@@ -23,7 +23,7 @@
 
 			<div class="<?php echo $class; ?>">
 				<div class="row">
-					<form method="post" accept-charset="utf-8" action="<?php echo $action; ?>" role="form">
+					<form method="POST" accept-charset="utf-8" action="<?php echo $_action; ?>" role="form">
 						<div class="col-md-12">
 							<div class="form-group">
 								<label for="location"><?php echo $entry_restaurant; ?></label>

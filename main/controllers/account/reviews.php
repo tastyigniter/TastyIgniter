@@ -136,7 +136,7 @@ class Reviews extends Main_Controller {
 		$sale_id 		= $this->uri->rsegment(4);
 		$location_id 	= $this->uri->rsegment(5);
 
-		$data['action']	= site_url('account/reviews/add/'. $sale_type .'/'. $sale_id .'/'. $location_id);
+		$data['_action']	= site_url('account/reviews/add/'. $sale_type .'/'. $sale_id .'/'. $location_id);
 
 		if ($this->Reviews_model->checkReviewed($sale_type, $sale_id, $this->customer->getId())) {
 			$this->alert->set('alert', $this->lang->line('alert_duplicate'));

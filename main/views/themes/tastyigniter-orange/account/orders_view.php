@@ -23,7 +23,7 @@
 
 			<div class="<?php echo $class; ?>">
 				<div class="order-lists row">
-				<form method="post" accept-charset="utf-8" action="<?php echo current_url(); ?>">
+				<form method="POST" accept-charset="utf-8" action="<?php echo current_url(); ?>">
 					<div class="col-md-12">
 						<div class="table-responsive">
 							<table class="table table-none">
