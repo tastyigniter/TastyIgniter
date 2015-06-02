@@ -1,4 +1,4 @@
-<form role="form" class="form-horizontal" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" >
+<form role="form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>" >
 	<div class="form-group">
 		<label for="input-site-name" class="col-sm-4 control-label">Restaurant name:</label>
 		<div class="col-sm-8">

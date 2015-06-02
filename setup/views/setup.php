@@ -1,4 +1,4 @@
-<form accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>" />
+<form accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>" />
 	<input type="hidden" name="requirements" value="" />
 	<table class="table table-bordered">
 		<tr>
