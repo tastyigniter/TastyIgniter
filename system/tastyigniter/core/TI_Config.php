@@ -5,7 +5,7 @@ require IGNITEPATH."third_party/MX/Config.php";
 
 class TI_Config extends MX_Config {
 
-    public $_config_paths =	array(IGNITEPATH);
+    public $_config_paths =	array(IGNITEPATH, APPPATH);
 
     private $settings =	array();
 
