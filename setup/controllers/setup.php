@@ -7,7 +7,7 @@ class Setup extends Base_Controller {
 		$this->load->helper('file');
 		$this->load->model('Setup_model');
 
-        if ($this->session->tempdata('setup') === 'step_3' OR $this->config->item('ti_version')) {
+        if (($this->session->tempdata('setup') === 'step_3' OR $this->config->item('ti_setup')) AND ENVIRONMENT === 'production') {
             redirect('success');
         }
 	}
@@ -81,15 +81,16 @@ class Setup extends Base_Controller {
 		}
 
 		$writables = array(
-			'/system/tastyigniter/config/database.php',
-			'/system/tastyigniter/config/routes.php',
+            '/admin/cache/',
+            '/main/cache/',
+            '/system/tastyigniter/config/database.php',
 			'/system/tastyigniter/logs/',
 			'/assets/downloads/',
 			'/assets/images/'
 		);
 
         foreach ($writables as $writable) {
-            if (!is_writable(ROOTPATH . $writable)) {
+            if (!is_really_writable(ROOTPATH . $writable)) {
 				$error = 1;
                 $status = '<i class="fa fa-exclamation-triangle red"></i>';
             } else {
