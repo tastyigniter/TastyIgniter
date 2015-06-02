@@ -306,7 +306,7 @@ class Media_manager {
     }
 
     public function isWritable($file_path) {
-        return is_writable($this->_image_path . $this->_root_folder . $file_path);
+        return is_really_writable($this->_image_path . $this->_root_folder . $file_path);
     }
 
     public function _recursiveFolders($path, $first_call = TRUE) {
