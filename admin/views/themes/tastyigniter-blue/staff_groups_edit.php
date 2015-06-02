@@ -8,7 +8,7 @@
 			</ul>
 		</div>
 
-		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
+		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo $_action; ?>">
 			<div class="tab-content">
 				<div id="staff-group" class="tab-pane row wrap-all active">
 					<div class="form-group">
@@ -38,95 +38,58 @@
 					<div class="panel panel-default panel-table">
 						<div class="table-responsive">
 							<table class="table table-striped table-border">
-								<thead>
-									<tr>
-										<th class="action action-one">Access</th>
-										<th class="action action-one">Modify</th>
-										<th>Pages</th>
-										<th>Description</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<th class="action action-one"><input type="checkbox" onclick="$('input[name*=\'permission[access]\']').prop('checked', this.checked);"></th>
-										<th class="action action-one"><input type="checkbox" onclick="$('input[name*=\'permission[modify]\']').prop('checked', this.checked);"></th>
-										<th></th>
-										<th></th>
-									</tr>
-									<tr>
-                                        <td colspan="4" class="wrap-none">
-                                            <div class="panel-selected">
-                                                <table class="table table-striped table-border">
-                                                    <?php foreach ($paths as $path) { ?>
-                                                        <tr>
-                                                            <?php if (in_array($path['name'], $access)) { ?>
-                                                                <td class="action action-one"><input type="checkbox" name="permission[access][]" value="<?php echo $path['name']; ?>" checked="checked" /></td>
-                                                            <?php } else { ?>
-                                                                <td class="action action-one"><input type="checkbox" name="permission[access][]" value="<?php echo $path['name']; ?>" /></td>
-                                                            <?php } ?>
-
-                                                            <?php if (in_array($path['name'], $modify)) { ?>
-                                                                <td class="action action-one"><input type="checkbox" name="permission[modify][]" value="<?php echo $path['name']; ?>" checked="checked" /></td>
-                                                            <?php } else { ?>
-                                                                <td class="action action-one"><input type="checkbox" name="permission[modify][]" value="<?php echo $path['name']; ?>" /></td>
-                                                            <?php } ?>
-                                                            <td><?php echo $path['name']; ?></td>
-                                                            <td><?php echo $path['description']; ?></td>
-
-                                                        </tr>
-                                                    <?php } ?>
-                                                </table>
-                                            </div>
-                                        </td>
-									</tr>
-									<tr>
-										<th class="action action-one"></th>
-										<th class="action action-one"></th>
-										<th>Extension: Modules</th>
-										<th></th>
-									</tr>
-									<?php foreach ($module_paths as $path) { ?>
-									<tr>
-										<?php if (in_array($path['name'], $access)) { ?>
-											<td class="action action-one"><input type="checkbox" name="permission[access][]" value="<?php echo $path['name']; ?>" checked="checked" /></td>
-										<?php } else { ?>
-											<td class="action action-one"><input type="checkbox" name="permission[access][]" value="<?php echo $path['name']; ?>" /></td>
-										<?php } ?>
-
-										<?php if (in_array($path['name'], $modify)) { ?>
-											<td class="action action-one"><input type="checkbox" name="permission[modify][]" value="<?php echo $path['name']; ?>" checked="checked" /></td>
-										<?php } else { ?>
-											<td class="action action-one"><input type="checkbox" name="permission[modify][]" value="<?php echo $path['name']; ?>" /></td>
-										<?php } ?>
-										<td><?php echo $path['name']; ?></td>
-										<td><?php echo $path['description']; ?></td>
-									</tr>
-									<?php } ?>
-									<tr>
-										<th class="action action-one"></th>
-										<th class="action action-one"></th>
-										<th>Extension: Payments</th>
-										<th></th>
-									</tr>
-									<?php foreach ($payment_paths as $path) { ?>
-									<tr>
-										<?php if (in_array($path['name'], $access)) { ?>
-											<td class="action action-one"><input type="checkbox" name="permission[access][]" value="<?php echo $path['name']; ?>" checked="checked" /></td>
-										<?php } else { ?>
-											<td class="action action-one"><input type="checkbox" name="permission[access][]" value="<?php echo $path['name']; ?>" /></td>
-										<?php } ?>
-
-										<?php if (in_array($path['name'], $modify)) { ?>
-											<td class="action action-one"><input type="checkbox" name="permission[modify][]" value="<?php echo $path['name']; ?>" checked="checked" /></td>
-										<?php } else { ?>
-											<td class="action action-one"><input type="checkbox" name="permission[modify][]" value="<?php echo $path['name']; ?>" /></td>
-										<?php } ?>
-										<td><?php echo $path['name']; ?></td>
-										<td><?php echo $path['description']; ?></td>
-									</tr>
-									<?php } ?>
-								</tbody>
-							</table>
+                                <?php foreach ($permissions_list as $key => $permissions) { ?>
+                                    <thead>
+                                        <tr>
+                                            <th><b><?php echo $key; ?></b></th>
+                                            <th class="action text-center"><a class="clickable" onclick="var $checkbox = $('input[value*=\'access\']');$checkbox.prop('checked', !$checkbox[0].checked);">Access</a></th>
+                                            <th class="action text-center"><a class="clickable" onclick="var $checkbox = $('input[value*=\'manage\']');$checkbox.prop('checked', !$checkbox[0].checked);">Manage</a></th>
+                                            <th class="action text-center"><a class="clickable" onclick="var $checkbox = $('input[value*=\'add\']');$checkbox.prop('checked', !$checkbox[0].checked);">Add</a></th>
+                                            <th class="action text-center"><a class="clickable" onclick="var $checkbox = $('input[value*=\'delete\']');$checkbox.prop('checked', !$checkbox[0].checked);">Delete</a></th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($permissions as $permission) { ?>
+                                            <tr>
+                                                <td><a class="clickable" onclick="var $checkbox = $(this).parent().parent().find(':checkbox');$checkbox.prop('checked', !$checkbox[0].checked);">
+                                                        <?php echo $permission['name']; ?>
+                                                    </a>
+                                                </td>
+                                                <?php if (!in_array('access', $permission['action'])) { ?>
+                                                    <td class="action text-center"><span class="small text-muted">--</span></td>
+                                                <?php } else if (in_array('access', $permission['group_permissions'])) { ?>
+                                                    <td class="action text-center"><input type="checkbox" name="permissions[<?php echo $permission['permission_id']; ?>][]" value="access" checked="checked" /></td>
+                                                <?php } else { ?>
+                                                    <td class="action text-center"><input type="checkbox" name="permissions[<?php echo $permission['permission_id']; ?>][]" value="access" /></td>
+                                                <?php } ?>
+                                                <?php if (!in_array('manage', $permission['action'])) { ?>
+                                                    <td class="action text-center"><span class="small text-muted">--</span></td>
+                                                <?php } else if (in_array('manage', $permission['group_permissions'])) { ?>
+                                                    <td class="action text-center"><input type="checkbox" name="permissions[<?php echo $permission['permission_id']; ?>][]" value="manage" checked="checked" /></td>
+                                                <?php } else { ?>
+                                                    <td class="action text-center"><input type="checkbox" name="permissions[<?php echo $permission['permission_id']; ?>][]" value="manage" /></td>
+                                                <?php } ?>
+                                                <?php if (!in_array('add', $permission['action'])) { ?>
+                                                    <td class="action text-center"><span class="small text-muted">--</span></td>
+                                                <?php } else if (in_array('add', $permission['group_permissions'])) { ?>
+                                                    <td class="action text-center"><input type="checkbox" name="permissions[<?php echo $permission['permission_id']; ?>][]" value="add" checked="checked" /></td>
+                                                <?php } else { ?>
+                                                    <td class="action text-center"><input type="checkbox" name="permissions[<?php echo $permission['permission_id']; ?>][]" value="add" /></td>
+                                                <?php } ?>
+                                                <?php if (!in_array('delete', $permission['action'])) { ?>
+                                                <td class="action text-center"><span class="small text-muted">--</span></td>
+                                                <?php } else if (in_array('delete', $permission['group_permissions'])) { ?>
+                                                    <td class="action text-center"><input type="checkbox" name="permissions[<?php echo $permission['permission_id']; ?>][]" value="delete" checked="checked" /></td>
+                                                <?php } else { ?>
+                                                    <td class="action text-center"><input type="checkbox" name="permissions[<?php echo $permission['permission_id']; ?>][]" value="delete" /></td>
+                                                <?php } ?>
+                                                <td><?php echo $permission['description']; ?></td>
+                                            </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                <?php } ?>
+                            </table>
 						</div>
 					</div>
 				</div>
@@ -134,4 +97,10 @@
 		</form>
 	</div>
 </div>
+<script type="text/javascript"><!--
+$(document).ready(function() {
+    $(".checkbox-toggle").on("click", function () {});
+});
+//--></script>
+
 <?php echo get_footer(); ?>

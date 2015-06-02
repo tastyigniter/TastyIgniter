@@ -12,7 +12,7 @@
 				<b>(:any)</b> will match a segment containing any character.</p>
 			</div>
 
-			<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
+			<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
 				<div class="table-responsive">
 					<table border="0" class="table table-striped table-border table-sortable">
 						<thead>

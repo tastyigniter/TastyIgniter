@@ -94,7 +94,7 @@
 				</form>
 			</div>
 
-			<form role="form" id="list-form" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
+			<form role="form" id="list-form" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
 				<?php if ($show_calendar) { ?>
 					<div class="table-responsive">
 						<?php echo $calendar; ?>

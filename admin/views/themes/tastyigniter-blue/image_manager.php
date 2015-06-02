@@ -144,7 +144,7 @@
 					<?php if ($uploads) { ?>
 						<div class="uploader-box">
 							<div class="tabbable upload-tabbable"> <!-- Only required for left/right tabs -->
-								<form role="form" method="post" enctype="multipart/form-data" id="my-awesome-dropzone" class="dropzone">
+								<form role="form" method="POST" enctype="multipart/form-data" id="my-awesome-dropzone" class="dropzone">
 									<input type="hidden" name="sub_folder" value="<?php echo $sub_folder; ?>"/>
 									<div class="fallback">
 										Upload:<br/>

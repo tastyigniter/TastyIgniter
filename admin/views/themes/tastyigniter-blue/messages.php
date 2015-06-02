@@ -93,7 +93,7 @@
                         </form>
                     </div>
 
-                    <form role="form" id="message-form" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
+                    <form role="form" id="message-form" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
                         <div class="message-controls">
                             <input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);">&nbsp;&nbsp;
                             <?php if ($filter_folder === 'archive') { ?>

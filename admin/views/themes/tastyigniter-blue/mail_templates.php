@@ -5,7 +5,7 @@
 			<div class="panel-heading">
 				<h3 class="panel-title">Mail Template List</h3>
 			</div>
-			<form role="form" id="list-form" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
+			<form role="form" id="list-form" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
 				<div class="table-responsive">
 					<table border="0" class="table table-striped table-border">
 						<thead>

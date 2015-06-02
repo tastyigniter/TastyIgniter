@@ -2,12 +2,11 @@
 
 class Extensions extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit|add]', 'modify[index|edit|add]');
-
    	public function __construct() {
 		parent::__construct();
-		$this->load->model('Extensions_model');
-	}
+        $this->user->restrict('Admin.Modules');
+        $this->load->model('Extensions_model');
+    }
 
 	public function index() {
         $this->template->setTitle('Modules');
@@ -71,10 +70,6 @@ class Extensions extends Admin_Controller {
                     $error_msg = 'An error occurred, module extension admin options disabled';
                 } else if ($extension['installed'] === FALSE) {
                     $error_msg = 'An error occurred, module extension is not installed properly';
-                } else if (!$this->user->hasPermissions('access', $extension_name)) {
-                    $error_msg = 'You do not have the right permission to access this module';
-                } else if ($this->input->post() AND !$this->user->hasPermissions('modify', $extension_name)) {
-                    $error_msg = 'You do not have the right permission to modify this module';
                 } else {
                     $_GET['extension_id'] = isset($extension['extension_id']) ? $extension['extension_id'] : 0;
                     $this->load->module($ext_controller);
@@ -98,13 +93,13 @@ class Extensions extends Admin_Controller {
 	}
 
 	public function add() {
-        $this->template->setTitle('Module: Install');
-        $this->template->setHeading('Module: Install');
+        $this->template->setTitle('Module');
+        $this->template->setHeading('Module: Upload');
         $this->template->setButton('Upload', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
         $this->template->setButton('Upload & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
         $this->template->setBackButton('btn btn-back', site_url('extensions'));
 
-        $data['action']	= site_url('extensions/add');
+        $data['_action']	= site_url('extensions/add');
 
         if ($this->_uploadExtension() === TRUE) {
             if ($this->input->post('save_close') === '1') {

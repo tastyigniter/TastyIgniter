@@ -2,11 +2,10 @@
 
 class Menus extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
     public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('pagination');
+        $this->user->restrict('Admin.Menus');
+        $this->load->library('pagination');
 		$this->load->library('currency'); // load the currency library
         $this->load->model('Menus_model'); // load the menus model
         $this->load->model('Categories_model'); // load the categories model
@@ -148,10 +147,10 @@ class Menus extends Admin_Controller {
 
 		if ($menu_info) {
 			$menu_id = $this->input->get('id');
-			$data['action']	= site_url('menus/edit?id='. $menu_id);
+			$data['_action']	= site_url('menus/edit?id='. $menu_id);
 		} else {
 			$menu_id = 0;
-			$data['action']	= site_url('menus/edit');
+			$data['_action']	= site_url('menus/edit');
 		}
 
 		$title = (isset($menu_info['menu_name'])) ? $menu_info['menu_name'] : 'New';

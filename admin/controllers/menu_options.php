@@ -2,11 +2,10 @@
 
 class Menu_options extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
     public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('pagination');
+        $this->user->restrict('Admin.MenuOptions');
+        $this->load->library('pagination');
 		$this->load->library('currency'); // load the currency library
 		$this->load->model('Menu_options_model'); // load the menus model
 	}
@@ -107,10 +106,10 @@ class Menu_options extends Admin_Controller {
 
 		if ($option_info) {
 			$option_id = $option_info['option_id'];
-			$data['action']	= site_url('menu_options/edit?id='. $option_id);
+			$data['_action']	= site_url('menu_options/edit?id='. $option_id);
 		} else {
 			$option_id = 0;
-			$data['action']	= site_url('menu_options/edit');
+			$data['_action']	= site_url('menu_options/edit');
 		}
 
 		$title = (isset($option_info['option_name'])) ? $option_info['option_name'] : 'New';

@@ -1,7 +1,7 @@
 <?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
-        <form role="form" id="list-form" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
+        <form role="form" id="list-form" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
             <?php if ($notifications) { ?>
                 <ul class="timeline notifications-list-group">
                     <?php foreach ($notifications as $date_added => $notification_list) { ?>

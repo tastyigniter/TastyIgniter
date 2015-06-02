@@ -2,11 +2,10 @@
 
 class Countries extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('pagination');
+        $this->user->restrict('Site.Countries');
+        $this->load->library('pagination');
 		$this->load->model('Countries_model');
 		$this->load->model('Image_tool_model');
 	}
@@ -110,10 +109,10 @@ class Countries extends Admin_Controller {
 
 		if ($country_info) {
 			$country_id = $country_info['country_id'];
-			$data['action']	= site_url('countries/edit?id='. $country_id);
+			$data['_action']	= site_url('countries/edit?id='. $country_id);
 		} else {
 		    $country_id = 0;
-			$data['action']	= site_url('countries/edit');
+			$data['_action']	= site_url('countries/edit');
 		}
 
 		$title = (isset($country_info['country_name'])) ? $country_info['country_name'] : 'New';

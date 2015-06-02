@@ -44,10 +44,10 @@
                         <thead>
                             <tr>
                                 <th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
-                                <th>Status Name</th>
+                                <th><a class="sort" href="<?php echo $sort_name; ?>">Name<i class="fa fa-sort-<?php echo ($sort_by == 'status_name') ? $order_by_active : $order_by; ?>"></i></a></th>
                                 <th>Status Comment</th>
-                                <th>Status Type</th>
-                                <th class="text-center">Notify Customer</th>
+                                <th><a class="sort" href="<?php echo $sort_type; ?>">Status Type<i class="fa fa-sort-<?php echo ($sort_by == 'status_for') ? $order_by_active : $order_by; ?>"></i></a></th>
+                                <th class="text-center"><a class="sort" href="<?php echo $sort_notify; ?>">Notify<i class="fa fa-sort-<?php echo ($sort_by == 'notify_customer') ? $order_by_active : $order_by; ?>"></i></a></th>
                             </tr>
                         </thead>
                         <tbody>

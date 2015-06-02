@@ -2,10 +2,9 @@
 
 class Banners extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
 	public function __construct() {
 		parent::__construct();
+        $this->user->restrict('Admin.Banners');
         $this->load->model('Banners_model');
 		$this->load->model('Image_tool_model');
 	}
@@ -44,10 +43,10 @@ class Banners extends Admin_Controller {
 
 		if ($banner_info) {
 			$banner_id = $banner_info['banner_id'];
-			$data['action']	= site_url('banners/edit?id='. $banner_id);
+			$data['_action']	= site_url('banners/edit?id='. $banner_id);
 		} else {
 		    $banner_id = 0;
-			$data['action']	= site_url('banners/edit');
+			$data['_action']	= site_url('banners/edit');
 		}
 
 		$title = (isset($banner_info['name'])) ? $banner_info['name'] : 'New';

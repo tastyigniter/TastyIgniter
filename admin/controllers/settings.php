@@ -1,12 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Settings extends Admin_Controller {
-
-    public $_permission_rules = array('access', 'modify[index|delete_thumbs]');
-
+    
     public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->model('Locations_model');
+        $this->user->restrict('Site.Settings');
+        $this->load->model('Locations_model');
 		$this->load->model('Settings_model');
 		$this->load->model('Countries_model');
 		$this->load->model('Currencies_model');
@@ -79,9 +78,6 @@ class Settings extends Admin_Controller {
             'move' 					=> (isset($image_manager['move'])) ? $image_manager['move'] : '',
             'rename' 				=> (isset($image_manager['rename'])) ? $image_manager['rename'] : '',
             'delete' 				=> (isset($image_manager['delete'])) ? $image_manager['delete'] : '',
-//            'allowed_ext' 			=> (isset($image_manager['allowed_ext'])) ? $image_manager['allowed_ext'] : '',
-//            'hidden_files' 			=> (isset($image_manager['hidden_files'])) ? $image_manager['hidden_files'] : '',
-//            'hidden_folders' 		=> (isset($image_manager['hidden_folders'])) ? $image_manager['hidden_folders'] : '',
             'transliteration' 		=> (isset($image_manager['transliteration'])) ? $image_manager['transliteration'] : '',
             'remember_days' 		=> (isset($image_manager['remember_days'])) ? $image_manager['remember_days'] : '',
             'delete_thumbs'			=> site_url('settings/delete_thumbs'),

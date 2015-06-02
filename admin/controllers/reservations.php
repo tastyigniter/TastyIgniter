@@ -2,11 +2,10 @@
 
 class Reservations extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
     public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('pagination');
+        $this->user->restrict('Admin.Reservations');
+        $this->load->library('pagination');
 		$this->load->library('calendar');
 		$this->load->model('Reservations_model');
 		$this->load->model('Locations_model');
@@ -228,10 +227,10 @@ class Reservations extends Admin_Controller {
 
 		if ($reservation_info) {
 			$reservation_id = $reservation_info['reservation_id'];
-			$data['action']	= site_url('reservations/edit?id='. $reservation_id);
+			$data['_action']	= site_url('reservations/edit?id='. $reservation_id);
 		} else {
 		    $reservation_id = 0;
-			//$data['action']	= site_url('reservations/edit');
+			//$data['_action']	= site_url('reservations/edit');
 			redirect('reservations');
 		}
 

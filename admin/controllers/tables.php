@@ -2,11 +2,10 @@
 
 class Tables extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
     public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('pagination');
+        $this->user->restrict('Admin.Tables');
+        $this->load->library('pagination');
 		$this->load->model('Tables_model');
 	}
 
@@ -106,10 +105,10 @@ class Tables extends Admin_Controller {
 
 		if ($table_info) {
 			$table_id = $table_info['table_id'];
-			$data['action']	= site_url('tables/edit?id='. $table_id);
+			$data['_action']	= site_url('tables/edit?id='. $table_id);
 		} else {
 		    $table_id = 0;
-			$data['action']	= site_url('tables/edit');
+			$data['_action']	= site_url('tables/edit');
 		}
 
 		$title = (isset($table_info['table_name'])) ? $table_info['table_name'] : 'New';

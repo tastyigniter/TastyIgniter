@@ -2,14 +2,15 @@
 
 class Database extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|backup]', 'modify[index]');
-
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->model('Settings_model');
+        $this->user->restrict('Admin.Database');
+        $this->load->model('Settings_model');
 	}
 
 	public function index() {
+        $this->load->helper('number');
+
 		$this->template->setTitle('Database');
 		$this->template->setHeading('Database');
 		$this->template->setButton('Backup', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
@@ -19,8 +20,12 @@ class Database extends Admin_Controller {
 		$db_tables = $this->Settings_model->getdbTables();
 		foreach ($db_tables as $db_table) {
 			$data['db_tables'][] = array(
-				'table_name'	=> $db_table['table_name'],
-				'table_rows'	=> $db_table['table_rows']
+				'name'	        => $db_table['table_name'],
+				'records'	    => $db_table['table_rows'],
+				'data_length'	=> byte_format($db_table['data_length']),
+				'index_length'	=> byte_format($db_table['index_length']),
+				'data_free'	    => byte_format($db_table['data_free']),
+				'engine'	    => $db_table['engine'],
 			);
 		}
 
@@ -49,7 +54,7 @@ class Database extends Admin_Controller {
 	}
 
 	public function backup() {
-        if (!$this->user->hasPermissions('modify', 'database')) {
+        if (!$this->user->hasPermission('Admin.Database.Manage')) {
             $this->alert->set('warning', 'Warning: You do not have permission to backup or restore database!');
             redirect('database');
         } else {

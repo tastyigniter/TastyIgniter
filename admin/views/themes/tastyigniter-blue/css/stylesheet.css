@@ -159,6 +159,7 @@ color:#e7e7e7;
 font-size: 18px;
 height: 47px;
 padding: 10px 15px;
+cursor: pointer;
 }
 .navbar-top .navbar-brand:hover,
 .navbar-top .navbar-brand:focus {
@@ -358,6 +359,17 @@ padding-left: 42px;
 	.sidebar .sidebar-nav.navbar-collapse {
 	border-width: 0px;
 	}
+}
+.hide-menu .sidebar {
+    width: 46px;
+}
+.hide-menu .sidebar .nav > li > a > .content, .hide-menu .sidebar .nav > li > a > span {
+    display: none;
+}
+.hide-menu .sidebar .collapse {
+    margin: -39px 0 0 46px;
+    position: absolute;
+    width: 200px;
 }
 
 /** HEADER **/

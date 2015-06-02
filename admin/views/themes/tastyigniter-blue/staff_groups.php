@@ -12,7 +12,7 @@
 							<tr>
 								<th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
 								<th>Name</th>
-								<th></th>
+								<th class="text-center"># Users</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -22,7 +22,7 @@
 								<td class="action"><input type="checkbox" value="<?php echo $staff_group['staff_group_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
 									<a class="btn btn-edit" title="Edit" href="<?php echo $staff_group['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
 								<td><?php echo $staff_group['staff_group_name']; ?></td>
-								<td></td>
+								<td class="text-center"><?php echo $staff_group['users_count']; ?></td>
 							</tr>
 							<?php } ?>
 							<?php } else {?>

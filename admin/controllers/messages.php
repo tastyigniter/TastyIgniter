@@ -2,11 +2,9 @@
 
 class Messages extends Admin_Controller {
 
-    public $_permission_rules = array('access[all|compose]', 'modify[compose]');
-
     public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('pagination');
+        $this->load->library('pagination');
 		$this->load->model('Messages_model');
 		$this->load->model('Staffs_model');
 	}
@@ -29,6 +27,8 @@ class Messages extends Admin_Controller {
 	}
 
     public function all() {
+        $this->user->restrict('Admin.Messages');
+
         $filter = array();
         $filter['filter_folder'] = $data['filter_folder'] = 'all';
         $data['page_uri'] = 'messages/all';
@@ -47,6 +47,8 @@ class Messages extends Admin_Controller {
 	}
 
     public function draft() {
+        $this->user->restrict('Admin.Messages');
+
         $filter = array();
         $filter['filter_folder'] = $data['filter_folder'] = 'draft';
         $data['page_uri'] = 'messages/draft';
@@ -98,7 +100,7 @@ class Messages extends Admin_Controller {
 	}
 
     public function view() {
-    	if (!$this->user->hasPermissions('access', 'messages')) {
+    	if (!$this->user->hasPermission('Admin.Messages.Access')) {
  			$message_info = $this->Messages_model->viewMessage((int) $this->input->get('id'), $this->user->getStaffId());
  		} else {
  			$message_info = $this->Messages_model->viewMessage((int) $this->input->get('id'));
@@ -133,8 +135,8 @@ class Messages extends Admin_Controller {
             'email' => array('icon' => 'fa-circle-o text-danger', 'url' => page_url().'?filter_type=email'),
         );
 
-        $this->template->setTitle('Messages - View');
-		$this->template->setHeading('Messages - View');
+        $this->template->setTitle('Messages');
+		$this->template->setHeading('Messages: View');
 		$this->template->setBackButton('btn btn-back', site_url('messages'));
 
 		$data['text_empty'] 	= 'There are no recipients available.';
@@ -167,14 +169,16 @@ class Messages extends Admin_Controller {
 	}
 
 	public function compose() {
+        $this->user->restrict('Admin.Messages');
+
         $message_info = $this->Messages_model->getDraftMessage((int)$this->input->get('id'));
 
         if ($message_info) {
             $message_id = $message_info['message_id'];
-            $data['action']	= site_url('messages/compose?id='. $message_id);
+            $data['_action']	= site_url('messages/compose?id='. $message_id);
         } else {
             $message_id = 0;
-            $data['action']	= site_url('messages/compose');
+            $data['_action']	= site_url('messages/compose');
         }
 
         if ($this->input->get('id') AND !$message_info) {

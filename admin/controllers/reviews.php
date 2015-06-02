@@ -2,11 +2,10 @@
 
 class Reviews extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
     public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('pagination');
+        $this->user->restrict('Admin.Reviews');
+        $this->load->library('pagination');
 		$this->load->model('Reviews_model'); // load the reviews model
 	}
 
@@ -149,10 +148,10 @@ class Reviews extends Admin_Controller {
 
 		if ($review_info) {
 			$review_id = $review_info['review_id'];
-			$data['action']	= site_url('reviews/edit?id='. $review_id);
+			$data['_action']	= site_url('reviews/edit?id='. $review_id);
 		} else {
 		    $review_id = is_numeric($this->input->get('id')) AND $this->validateForm();
-			$data['action']	= site_url('reviews/edit');
+			$data['_action']	= site_url('reviews/edit');
 		}
 
 		$title = (isset($review_info['location_name'])) ? $review_info['location_name'] : 'New';

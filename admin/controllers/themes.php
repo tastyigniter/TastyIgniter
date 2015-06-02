@@ -2,11 +2,10 @@
 
 class Themes extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
     public function __construct() {
 		parent::__construct();
-		$this->load->model('Themes_model');
+        $this->user->restrict('Site.Themes');
+        $this->load->model('Themes_model');
 		$this->load->model('Settings_model');
 		$this->load->model('Image_tool_model');
 	}
@@ -135,7 +134,7 @@ class Themes extends Admin_Controller {
 			}
 		}
 
-		$data['action']	= site_url('themes/edit'. $url);
+		$data['_action']	= site_url('themes/edit'. $url);
 		$data['mode'] = '';
 		if (!empty($data['file']['ext'])) {
 			if ($data['file']['ext'] === 'php') {

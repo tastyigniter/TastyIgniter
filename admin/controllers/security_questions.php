@@ -2,11 +2,10 @@
 
 class Security_questions extends Admin_Controller {
 
-    public $_permission_rules = array('access', 'modify');
-
     public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->model('Security_questions_model');
+        $this->user->restrict('Admin.SecurityQuestions');
+        $this->load->model('Security_questions_model');
 	}
 
 	public function index() {

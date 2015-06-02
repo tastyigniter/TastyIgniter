@@ -50,7 +50,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <form role="form" id="message-form" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
+                        <form role="form" id="message-form" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
                             <div class="message-body"><?php echo $body; ?></div>
                         </form>
                     </div>

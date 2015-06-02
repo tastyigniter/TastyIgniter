@@ -2,11 +2,10 @@
 
 class Customers extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('pagination');
+        $this->user->restrict('Admin.Customers');
+        $this->load->library('pagination');
 		$this->load->model('Customers_model');
 		$this->load->model('Addresses_model');
 		$this->load->model('Countries_model');
@@ -150,10 +149,10 @@ class Customers extends Admin_Controller {
 
 		if ($customer_info) {
 		    $customer_id = $customer_info['customer_id'];
-			$data['action']	= site_url('customers/edit?id='. $customer_id);
+			$data['_action']	= site_url('customers/edit?id='. $customer_id);
 		} else {
 		    $customer_id = 0;
-			$data['action']	= site_url('customers/edit');
+			$data['_action']	= site_url('customers/edit');
 		}
 
 		$title = (isset($customer_info['first_name']) AND isset($customer_info['last_name'])) ? $customer_info['first_name'] .' '. $customer_info['last_name'] : 'New';

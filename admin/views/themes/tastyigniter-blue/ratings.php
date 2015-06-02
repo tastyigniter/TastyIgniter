@@ -5,7 +5,7 @@
 			<div class="panel-heading">
 				<h3 class="panel-title">Rating List</h3>
 			</div>
-			<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
+			<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
 				<table class="table table-striped table-border table-sortable">
 					<thead>
 						<tr>

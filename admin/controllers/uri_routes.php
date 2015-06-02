@@ -2,11 +2,10 @@
 
 class Uri_routes extends Admin_Controller {
 
-    public $_permission_rules = 'access';
-
     public function __construct() {
 		parent::__construct();
-		$this->load->model('Layouts_model');
+        $this->user->restrict('Admin.UriRoutes');
+        $this->load->model('Layouts_model');
 
         $this->alert->set('warning', 'URI Routes Page disabled for improvement in next release');
         redirect('dashboard');

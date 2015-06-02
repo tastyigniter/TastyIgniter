@@ -2,11 +2,10 @@
 
 class Locations extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
     public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('location'); // load the location library
+        $this->user->restrict('Admin.Locations');
+        $this->load->library('location'); // load the location library
         $this->load->library('permalink');
 		$this->load->library('pagination');
 		$this->load->model('Settings_model'); // load the settings model
@@ -159,10 +158,10 @@ class Locations extends Admin_Controller {
 
 		if ($location_info) {
 			$location_id = $location_info['location_id'];
-			$data['action']	= site_url('locations/edit?id='. $location_id);
+			$data['_action']	= site_url('locations/edit?id='. $location_id);
 		} else {
 		    $location_id = 0;
-			$data['action']	= site_url('locations/edit');
+			$data['_action']	= site_url('locations/edit');
 		}
 
 		$title = (isset($location_info['location_name'])) ? $location_info['location_name'] : 'New';

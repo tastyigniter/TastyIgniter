@@ -9,7 +9,7 @@
 			</ul>
 		</div>
 
-		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="post" action="<?php echo site_url('database'); ?>" enctype="multipart/form-data" id="database">
+		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo site_url('database'); ?>" enctype="multipart/form-data" id="database">
 			<div class="tab-content">
 				<div id="backup" class="tab-pane row wrap-all active">
 					<div class="panel panel-default panel-table">
@@ -19,15 +19,23 @@
 									<tr>
 										<th width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'backup\']').prop('checked', this.checked);"></th>
 										<th>Select tables to backup</th>
-										<th class="action id">Rows</th>
+										<th># Records</th>
+										<th>Data Size</th>
+										<th>Index Size</th>
+										<th>Data Free</th>
+										<th>Engine</th>
 									</tr>
 								</thead>
 								<tbody>
 									<?php foreach ($db_tables as $key => $db_table) { ?>
 									<tr>
-										<td><input type="checkbox" name="backup[]" id="input-table-<?php echo $key; ?>" value="<?php echo $db_table['table_name']; ?>" <?php echo set_checkbox('backup[]', $db_table['table_name']); ?> /></td>
-										<td><i><?php echo $db_table['table_name']; ?></i></td>
-										<td class="action id"><i><?php echo $db_table['table_rows']; ?></i></td>
+										<td><input type="checkbox" name="backup[]" id="input-table-<?php echo $key; ?>" value="<?php echo $db_table['name']; ?>" <?php echo set_checkbox('backup[]', $db_table['name']); ?> /></td>
+										<td><i><?php echo $db_table['name']; ?></i></td>
+										<td><i><?php echo $db_table['records']; ?></i></td>
+										<td><?php echo $db_table['data_length']; ?></td>
+										<td><?php echo $db_table['index_length']; ?></td>
+										<td><?php echo $db_table['data_free']; ?></td>
+										<td><?php echo $db_table['engine']; ?></td>
 									</tr>
 									<?php } ?>
 								</tbody>

@@ -37,7 +37,7 @@ class Messages_model extends TI_Model {
         } else if (!empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
             $this->db->join('message_recipients', 'message_recipients.message_id = messages.message_id', 'left');
             $this->db->where('message_recipients.key', 'customer_id');
-            $this->db->where('message_recipients.customer_id', $filter['customer_id']);
+            $this->db->where('message_recipients.value', $filter['customer_id']);
             $this->db->where('message_recipients.status', '1');
             $this->db->where('messages.send_type', 'account');
         }

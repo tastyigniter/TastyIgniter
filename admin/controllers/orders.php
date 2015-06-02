@@ -2,11 +2,10 @@
 
 class Orders extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
     public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('pagination');
+        $this->user->restrict('Admin.Orders');
+        $this->load->library('pagination');
 		$this->load->library('currency'); // load the currency library
 		$this->load->model('Customers_model');
 		$this->load->model('Addresses_model');
@@ -171,10 +170,10 @@ class Orders extends Admin_Controller {
 
 		if ($order_info) {
 			$order_id = $order_info['order_id'];
-			$data['action']	= site_url('orders/edit?id='. $order_id);
+			$data['_action']	= site_url('orders/edit?id='. $order_id);
 		} else {
 		    $order_id = 0;
-			//$data['action']	= site_url('orders/edit');
+			//$data['_action']	= site_url('orders/edit');
 			redirect('orders');
 		}
 

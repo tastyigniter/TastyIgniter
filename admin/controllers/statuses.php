@@ -2,21 +2,47 @@
 
 class Statuses extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
     public function __construct() {
 		parent::__construct(); //  calls the constructor
+        $this->user->restrict('Admin.Statuses');
+        $this->load->library('pagination');
 		$this->load->model('Statuses_model');
 	}
 
 	public function index() {
-		if ($this->input->get('filter_type')) {
-			$filter_type = $this->input->get('filter_type');
-			$data['filter_type'] = $filter_type;
-		} else {
-			$filter_type = '';
-			$data['filter_type'] = '';
-		}
+        $url = '?';
+        $filter = array();
+        if ($this->input->get('page')) {
+            $filter['page'] = (int) $this->input->get('page');
+        } else {
+            $filter['page'] = '';
+        }
+
+        if ($this->config->item('page_limit')) {
+            $filter['limit'] = $this->config->item('page_limit');
+        }
+
+        if ($this->input->get('filter_type')) {
+            $filter['filter_type'] = $data['filter_type'] = $this->input->get('filter_type');
+            $url .= 'filter_type='.$filter['filter_type'].'&';
+        } else {
+            $filter['filter_type'] = '';
+            $data['filter_type'] = '';
+        }
+
+        if ($this->input->get('sort_by')) {
+            $filter['sort_by'] = $data['sort_by'] = $this->input->get('sort_by');
+        } else {
+            $filter['sort_by'] = $data['sort_by'] = 'status_for';
+        }
+
+        if ($this->input->get('order_by')) {
+            $filter['order_by'] = $data['order_by'] = $this->input->get('order_by');
+            $data['order_by_active'] = $this->input->get('order_by') .' active';
+        } else {
+            $filter['order_by'] = $data['order_by'] = 'ASC';
+            $data['order_by_active'] = '';
+        }
 
 		$this->template->setTitle('Statuses');
 		$this->template->setHeading('Statuses');
@@ -25,8 +51,14 @@ class Statuses extends Admin_Controller {
 
 		$data['text_empty'] 		= 'There is no status available.';
 
+        $order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
+        $data['sort_id'] 		    = site_url('statuses'.$url.'sort_by=status_id&order_by='.$order_by);
+        $data['sort_name'] 			= site_url('statuses'.$url.'sort_by=status_name&order_by='.$order_by);
+        $data['sort_type'] 			= site_url('statuses'.$url.'sort_by=status_for&order_by='.$order_by);
+        $data['sort_notify'] 		= site_url('statuses'.$url.'sort_by=notify_customer&order_by='.$order_by);
+
 		$data['statuses'] = array();
-		$results = $this->Statuses_model->getStatuses($filter_type);
+		$results = $this->Statuses_model->getList($filter);
 		foreach ($results as $result) {
 
 			$data['statuses'][] = array(
@@ -38,6 +70,17 @@ class Statuses extends Admin_Controller {
 				'edit' 				=> site_url('statuses/edit?id=' . $result['status_id'])
 			);
 		}
+
+        $config['base_url'] 		= site_url('statuses'.$url);
+        $config['total_rows'] 		= $this->Statuses_model->getCount($filter);
+        $config['per_page'] 		= $filter['limit'];
+
+        $this->pagination->initialize($config);
+
+        $data['pagination'] = array(
+            'info'		=> $this->pagination->create_infos(),
+            'links'		=> $this->pagination->create_links()
+        );
 
 		if ($this->input->post('delete') AND $this->_deleteStatus() === TRUE) {
 			redirect('statuses');
@@ -52,10 +95,10 @@ class Statuses extends Admin_Controller {
 
 		if ($status_info) {
 			$status_id = $status_info['status_id'];
-			$data['action']	= site_url('statuses/edit?id='. $status_id);
+			$data['_action']	= site_url('statuses/edit?id='. $status_id);
 		} else {
 		    $status_id = 0;
-			$data['action']	= site_url('statuses/edit');
+			$data['_action']	= site_url('statuses/edit');
 		}
 
 		$title = (isset($status_info['status_name'])) ? $status_info['status_name'] : 'New';

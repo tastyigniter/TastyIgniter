@@ -2,11 +2,10 @@
 
 class Layouts extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
     public function __construct() {
 		parent::__construct();
-		$this->load->model('Layouts_model');
+        $this->user->restrict('Site.Layouts');
+        $this->load->model('Layouts_model');
 		$this->load->model('Extensions_model');
 	}
 
@@ -51,10 +50,10 @@ class Layouts extends Admin_Controller {
 
 		if ($layout_info) {
 			$layout_id = $layout_info['layout_id'];
-			$data['action']	= site_url('layouts/edit?id='. $layout_id);
+			$data['_action']	= site_url('layouts/edit?id='. $layout_id);
 		} else {
 		    $layout_id = 0;
-			$data['action']	= site_url('layouts/edit');
+			$data['_action']	= site_url('layouts/edit');
 		}
 
 		$title = (isset($layout_info['name'])) ? $layout_info['name'] : 'New';

@@ -21,7 +21,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading"><h3 class="panel-title">Compose New Message</h3></div>
                     <div class="panel-body">
-                        <form role="form" id="compose-form" class="form-horizontal" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
+                        <form role="form" id="compose-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
                             <div class="form-group">
                                 <label for="input-recipient" class="col-sm-3 control-label">To:</label>
                                 <div class="col-sm-9">

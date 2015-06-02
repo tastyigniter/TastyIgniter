@@ -2,11 +2,10 @@
 
 class Error_logs extends Admin_Controller {
 
-    public $_permission_rules = array('access', 'modify');
-
 	public function __construct() {
-		parent::__construct(); //  calls the constructor
-	}
+        parent::__construct(); //  calls the constructor
+        $this->user->restrict('Admin.ErrorLogs');
+    }
 
 	public function index() {
 		$this->template->setTitle('Error Logs');

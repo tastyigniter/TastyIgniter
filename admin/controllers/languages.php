@@ -2,11 +2,10 @@
 
 class Languages extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
 	public function __construct() {
 		parent::__construct();
-		$this->load->library('pagination');
+        $this->user->restrict('Site.Languages');
+        $this->load->library('pagination');
 		$this->load->model('Languages_model');
 		$this->load->model('Image_tool_model');
 	}
@@ -107,10 +106,10 @@ class Languages extends Admin_Controller {
 
 		if ($language_info) {
 			$language_id = $language_info['language_id'];
-			$data['action']	= site_url('languages/edit?id='. $language_id);
+			$data['_action']	= site_url('languages/edit?id='. $language_id);
 		} else {
 		    $language_id = 0;
-			$data['action']	= site_url('languages/edit');
+			$data['_action']	= site_url('languages/edit');
 		}
 
 		if ($this->input->post() AND $language_id = $this->_saveLanguage()) {

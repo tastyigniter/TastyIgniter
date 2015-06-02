@@ -2,11 +2,10 @@
 
 class Currencies extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('pagination');
+        $this->user->restrict('Site.Currencies');
+        $this->load->library('pagination');
 		$this->load->model('Currencies_model');
 		$this->load->model('Countries_model');
 	}
@@ -109,10 +108,10 @@ class Currencies extends Admin_Controller {
 
 		if ($currency_info) {
 			$currency_id = $currency_info['currency_id'];
-			$data['action']	= site_url('currencies/edit?id='. $currency_id);
+			$data['_action']	= site_url('currencies/edit?id='. $currency_id);
 		} else {
 		    $currency_id = 0;
-			$data['action']	= site_url('currencies/edit');
+			$data['_action']	= site_url('currencies/edit');
 		}
 
 		$title = (isset($currency_info['currency_name'])) ? $currency_info['currency_name'] : 'New';

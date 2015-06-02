@@ -2,11 +2,10 @@
 
 class Payments extends Admin_Controller {
 
-    public $_permission_rules = 'access';
-
     public function __construct() {
 		parent::__construct();
-		$this->load->model('Extensions_model');
+        $this->user->restrict('Admin.Payments');
+        $this->load->model('Extensions_model');
 	}
 
 	public function index() {
@@ -70,10 +69,6 @@ class Payments extends Admin_Controller {
                     $error_msg = 'An error occurred, payment extension admin options disabled';
                 } else if ($payment['installed'] === FALSE) {
                     $error_msg = 'An error occurred, payment extension is not installed properly';
-                } else if (!$this->user->hasPermissions('access', $extension_name)) {
-                    $error_msg = 'You do not have the right permission to access this payment';
-                } else if ($this->input->post() AND !$this->user->hasPermissions('modify', $extension_name)) {
-                    $error_msg = 'You do not have the right permission to modify this payment';
                 } else {
                     $_GET['extension_id'] = $payment['extension_id'] ? $payment['extension_id'] : 0;
                     $this->load->module($ext_controller);

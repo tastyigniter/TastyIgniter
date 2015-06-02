@@ -3,7 +3,7 @@
 	<div class="col-md-12">
 		<div class="panel panel-default panel-table">
 			<div class="panel-heading">
-				<h3 class="panel-title">Location List</h3>
+				<h3 class="panel-title">Permission List</h3>
 				<div class="pull-right">
 					<button class="btn btn-filter btn-xs"><i class="fa fa-filter"></i></button>
 				</div>
@@ -15,7 +15,7 @@
 							<div class="row">
 								<div class="col-md-3 pull-right text-right">
 									<div class="form-group">
-										<input type="text" name="filter_search" class="form-control input-sm" value="<?php echo $filter_search; ?>" placeholder="Search name, city or postcode." />&nbsp;&nbsp;&nbsp;
+										<input type="text" name="filter_search" class="form-control input-sm" value="<?php echo $filter_search; ?>" placeholder="Search permission name." />&nbsp;&nbsp;&nbsp;
 									</div>
 									<a class="btn btn-grey" onclick="filterList();" title="Search"><i class="fa fa-search"></i></a>
 								</div>
@@ -47,46 +47,34 @@
 
 			<form role="form" id="list-form" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
 				<div class="table-responsive">
-				<table border="0" class="table table-striped table-border">
+				<table class="table table-striped table-border">
 					<thead>
 						<tr>
 							<th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
-							<th><a class="sort" href="<?php echo $sort_name; ?>">Name<i class="fa fa-sort-<?php echo ($sort_by == 'location_name') ? $order_by_active : $order_by; ?>"></i></a></th>
-							<th><a class="sort" href="<?php echo $sort_city; ?>">City<i class="fa fa-sort-<?php echo ($sort_by == 'location_city') ? $order_by_active : $order_by; ?>"></i></a></th>
-							<th><a class="sort" href="<?php echo $sort_postcode; ?>">Postcode<i class="fa fa-sort-<?php echo ($sort_by == 'location_postcode') ? $order_by_active : $order_by; ?>"></i></a></th>
-							<th>Telephone</th>
-							<th class="text-center">Status</th>
-							<th class="id"><a class="sort" href="<?php echo $sort_id; ?>">ID<i class="fa fa-sort-<?php echo ($sort_by == 'location_id') ? $order_by_active : $order_by; ?>"></i></a></th>
+							<th class="sorter"><a class="sort" href="<?php echo $sort_name; ?>">Name<i class="fa fa-sort-<?php echo ($sort_by == 'name') ? $order_by_active : $order_by; ?>"></i></a></th>
+                            <th>Action</th>
+                            <th>Description</th>
+							<th class="sorter"><a class="sort" href="<?php echo $sort_status; ?>">Status<i class="fa fa-sort-<?php echo ($sort_by == 'status') ? $order_by_active : $order_by; ?>"></i></a></th>
+							<th class="id"><a class="sort" href="<?php echo $sort_id; ?>">ID<i class="fa fa-sort-<?php echo ($sort_by == 'permission_id') ? $order_by_active : $order_by; ?>"></i></a></th>
 						</tr>
 					</thead>
 					<tbody>
-						<?php if ($locations) { ?>
-						<?php foreach ($locations as $location) { ?>
-						<tr>
-							<td class="action action-three"><input type="checkbox" value="<?php echo $location['location_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
-								<a class="btn btn-edit" title="Edit" href="<?php echo $location['edit']; ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;
-								<?php if ($location['default'] === '1') { ?>
-									<a class="btn btn-warning" disabled="disabled" title="Default"><i class="fa fa-star"></i></a>
-								<?php } else {?>
-									<a class="btn btn-warning" title="Set Default" href="<?php echo $location['default']; ?>"><i class="fa fa-star-o"></i></a>
-								<?php } ?>
-							</td>
-							<td><?php echo $location['location_name']; ?>
-								<?php if ($default_location_id === $location['location_id']) { ?>
-								<b>(Default)</b>
-								<?php } ?>
-							</td>
-							<td><?php echo $location['location_city']; ?></td>
-							<td><?php echo $location['location_postcode']; ?></td>
-							<td><?php echo $location['location_telephone']; ?></td>
-							<td class="text-center"><?php echo $location['location_status']; ?></td>
-							<td class="id"><?php echo $location['location_id']; ?></td>
-						</tr>
-						<?php } ?>
+						<?php if ($permissions) {?>
+                            <?php foreach ($permissions as $permission) { ?>
+                                <tr>
+                                    <td class="action"><input type="checkbox" value="<?php echo $permission['permission_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
+                                        <a class="btn btn-edit" title="Edit" href="<?php echo $permission['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
+                                    <td class="sorter"><?php echo $permission['name']; ?></td>
+                                    <td><?php echo $permission['action']; ?></td>
+                                    <td><?php echo $permission['description']; ?></td>
+                                    <td class="sorter"><?php echo $permission['status']; ?></td>
+                                    <td class="id"><?php echo $permission['permission_id']; ?></td>
+                                </tr>
+                            <?php } ?>
 						<?php } else { ?>
-						<tr>
-							<td colspan="7"><?php echo $text_empty; ?></td>
-						</tr>
+                            <tr>
+                                <td colspan="5"><?php echo $text_empty; ?></td>
+                            </tr>
 						<?php } ?>
 					</tbody>
 				</table>

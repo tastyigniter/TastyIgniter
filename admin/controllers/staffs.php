@@ -2,17 +2,17 @@
 
 class Staffs extends Admin_Controller {
 
-    public $_permission_rules = array('access', 'modify');
-
     public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('pagination');
+        $this->load->library('pagination');
 		$this->load->model('Staffs_model');
 		$this->load->model('Locations_model'); // load the locations model
 		$this->load->model('Staff_groups_model');
 	}
 
 	public function index() {
+        $this->user->restrict('Admin.Staffs');
+
 		$url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
@@ -156,18 +156,18 @@ class Staffs extends Admin_Controller {
 	}
 
 	public function edit() {
-        if (!$this->user->hasPermissions('access', 'staffs') AND $this->user->getStaffId() !== $this->input->get('id')) {
-            redirect(root_url('admin/permission'));
+        if ($this->user->hasPermission('Admin.Staffs.Access') === FALSE AND $this->user->getStaffId() !== $this->input->get('id')) {
+            redirect(site_url());
         }
 
         $staff_info = $this->Staffs_model->getStaff((int) $this->input->get('id'));
 
 		if ($staff_info) {
 			$staff_id = $staff_info['staff_id'];
-			$data['action']	= site_url('staffs/edit?id='. $staff_id);
+			$data['_action']	= site_url('staffs/edit?id='. $staff_id);
 		} else {
 		    $staff_id = 0;
-			$data['action']	= site_url('staffs/edit');
+			$data['_action']	= site_url('staffs/edit');
 		}
 
 		$title = (isset($staff_info['staff_name'])) ? $staff_info['staff_name'] : 'New';
@@ -176,12 +176,12 @@ class Staffs extends Admin_Controller {
 		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 		$this->template->setBackButton('btn btn-back', site_url('staffs'));
 
-        if ($this->user->hasPermissions('modify', 'staffs')) {
+        if ($this->user->hasPermission('Admin.Staffs.Access')) {
             $this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
         }
 
         $data['display_staff_group'] = FALSE;
-        if ($this->user->hasPermissions('modify', 'staff_groups')) {
+        if ($this->user->hasPermission('Admin.StaffGroups.Manage')) {
             $data['display_staff_group'] = TRUE;
         }
 
@@ -268,8 +268,8 @@ class Staffs extends Admin_Controller {
 	}
 
 	private function _saveStaff($staff_email, $username) {
-        if (!$this->user->hasPermissions('modify', 'staffs') AND $this->user->getStaffId() !== $this->input->get('id')) {
-            $this->alert->set('warning', 'Warning: You do not have permission to modify!');
+        if (!$this->user->hasPermission('Admin.Staffs.Manage') AND $this->user->getStaffId() !== $this->input->get('id')) {
+            $this->alert->set('warning', 'Warning: You do not have permission to manage!');
             redirect(referrer_url());
         }
 
@@ -320,7 +320,7 @@ class Staffs extends Admin_Controller {
 			$this->form_validation->set_rules('password_confirm', 'Confirm Password', 'xss_clean|trim|required');
 		}
 
-		if ($this->user->hasPermissions('modify', 'staff_groups')) {
+		if ($this->user->hasPermission('Admin.StaffGroups.Manage')) {
 			$this->form_validation->set_rules('staff_group_id', 'Department', 'xss_clean|trim|required|integer');
 			$this->form_validation->set_rules('staff_location_id', 'Location', 'xss_clean|trim|integer');
 		}

@@ -2,10 +2,9 @@
 
 class Categories extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
+        $this->user->restrict('Admin.Categories');
         $this->load->library('permalink');
         $this->load->library('pagination');
 		$this->load->model('Categories_model'); // load the menus model
@@ -100,10 +99,10 @@ class Categories extends Admin_Controller {
 
 		if ($category_info) {
 			$category_id = $category_info['category_id'];
-			$data['action']	= site_url('categories/edit?id='. $category_id);
+			$data['_action']	= site_url('categories/edit?id='. $category_id);
 		} else {
 		    $category_id = 0;
-			$data['action']	= site_url('categories/edit');
+			$data['_action']	= site_url('categories/edit');
 		}
 
 		$title = (isset($category_info['name'])) ? $category_info['name'] : 'New';

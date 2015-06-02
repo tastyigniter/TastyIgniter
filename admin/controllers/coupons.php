@@ -2,11 +2,10 @@
 
 class Coupons extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('pagination');
+        $this->user->restrict('Admin.Coupons');
+        $this->load->library('pagination');
 		$this->load->model('Coupons_model');
 	}
 
@@ -118,10 +117,10 @@ class Coupons extends Admin_Controller {
 
 		if ($coupon_info) {
 			$coupon_id = $coupon_info['coupon_id'];
-			$data['action']	= site_url('coupons/edit?id='. $coupon_id);
+			$data['_action']	= site_url('coupons/edit?id='. $coupon_id);
 		} else {
 		    $coupon_id = 0;
-			$data['action']	= site_url('coupons/edit');
+			$data['_action']	= site_url('coupons/edit');
 		}
 
 		if ($this->input->post('validity')) {

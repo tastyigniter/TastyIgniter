@@ -2,10 +2,9 @@
 
 class Pages extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
     public function __construct() {
 		parent::__construct(); //  calls the constructor
+        $this->user->restrict('Site.Pages');
         $this->load->library('permalink');
 		$this->load->library('pagination');
 		$this->load->model('Pages_model');
@@ -83,10 +82,10 @@ class Pages extends Admin_Controller {
 
 		if ($page_info) {
 			$page_id = $page_info['page_id'];
-			$data['action']	= site_url('pages/edit?id='. $page_id);
+			$data['_action']	= site_url('pages/edit?id='. $page_id);
 		} else {
 		    $page_id = 0;
-			$data['action']	= site_url('pages/edit');
+			$data['_action']	= site_url('pages/edit');
 		}
 
 		$title = (isset($page_info['name'])) ? $page_info['name'] : 'New';

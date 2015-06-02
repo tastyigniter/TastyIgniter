@@ -2,10 +2,11 @@
 
 class Ratings extends Admin_Controller {
 
-    public $_permission_rules = array('access', 'modify');
 
 	public function index() {
-		$this->template->setTitle('Ratings');
+        $this->user->restrict('Admin.Ratings');
+
+        $this->template->setTitle('Ratings');
 		$this->template->setHeading('Ratings');
 		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 

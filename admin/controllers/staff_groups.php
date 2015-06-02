@@ -2,15 +2,15 @@
 
 class Staff_groups extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
     public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->model('Staff_groups_model');
-	}
+        $this->user->restrict('Admin.StaffGroups');
+        $this->load->model('Staff_groups_model');
+        $this->load->model('Permissions_model');
+    }
 
 	public function index() {
-		$this->template->setTitle('Staff Groups');
+        $this->template->setTitle('Staff Groups');
 		$this->template->setHeading('Staff Groups');
 		$this->template->setButton('+ New', array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
 		$this->template->setButton('Delete', array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
@@ -19,11 +19,12 @@ class Staff_groups extends Admin_Controller {
 
 		//load ratings data into array
 		$data['staff_groups'] = array();
-		$results = $this->Staff_groups_model->getStaffGroups();
+		$results = $this->Staff_groups_model->getList();
 		foreach ($results as $result) {
 			$data['staff_groups'][] = array(
 				'staff_group_id'		=> $result['staff_group_id'],
 				'staff_group_name'		=> $result['staff_group_name'],
+				'users_count'		    => $this->Staff_groups_model->getUsersCount($result['staff_group_id']),
 				'edit'					=> site_url('staff_groups/edit?id=' . $result['staff_group_id'])
 			);
 		}
@@ -41,10 +42,10 @@ class Staff_groups extends Admin_Controller {
 
 		if ($group_info) {
 			$staff_group_id = $group_info['staff_group_id'];
-			$data['action']	= site_url('staff_groups/edit?id='. $staff_group_id);
+			$data['_action']	= site_url('staff_groups/edit?id='. $staff_group_id);
 		} else {
 		    $staff_group_id = 0;
-			$data['action']	= site_url('staff_groups/edit');
+			$data['_action']	= site_url('staff_groups/edit');
 		}
 
 		$title = (isset($group_info['staff_group_name'])) ? $group_info['staff_group_name'] : 'New';
@@ -70,52 +71,56 @@ class Staff_groups extends Admin_Controller {
 			$data['location_access'] = '';
 		}
 
-		if ($this->input->post('permission')) {
-			$permission = $this->input->post('permission');
-		} else if (isset($group_info['permission'])) {
-			$permission = unserialize($group_info['permission']);
-		}
+        if ($this->input->post('permissions')) {
+            $group_permissions = $this->input->post('permissions');
+        } else if (isset($group_info['permissions'])) {
+            $group_permissions =  unserialize($group_info['permissions']);
+        }
 
-		if (isset($permission['access'])) {
-			$data['access'] = $permission['access'];
-		} else {
-			$data['access'] = array();
-		}
+        $data['permissions_list'] = array();
+        $results = $this->Permissions_model->getPermissions();
+        foreach ($results as $domain => $permissions) {
 
-		if (isset($permission['modify'])) {
-			$data['modify'] = $permission['modify'];
-		} else {
-			$data['modify'] = array();
-		}
+            foreach ($permissions as $permission) {
 
-		$ignore_path = array('login', 'logout', 'dashboard', 'permission', 'notifications');
+                $data['permissions_list'][$domain][] = array(
+                    'permission_id'     => $permission['permission_id'],
+                    'name'              => $permission['name'],
+                    'domain'            => $permission['domain'],
+                    'controller'        => $permission['controller'],
+                    'description'       => $permission['description'],
+                    'action'            => $permission['action'],
+                    'group_permissions' => (!empty($group_permissions[$permission['permission_id']])) ? $group_permissions[$permission['permission_id']] : array(),
+                    'status'            => $permission['status']
+                );
+            }
+        }
 
-		$files = glob(APPPATH .'/controllers/'.'*.php');
-
-		$data['paths'] = array();
-		foreach ($files as $file) {
-			$file_name = basename($file, '.php');
-			if (!in_array($file_name, $ignore_path)) {
-				$data['paths'][] = array(
-					'name'				=> ''. $file_name,
-					'description'		=> 'Ability to access or modify '. str_replace('_', ' ', $file_name)
-				);
-			}
-		}
-
-		$this->load->model('Extensions_model');
-		$extensions = $this->Extensions_model->getList();
-		$data['module_paths'] = $data['payment_paths'] = array();
-		foreach ($extensions as $key => $modules) {
-			foreach ($modules as $module) {
-				if (!in_array($module['name'], $ignore_path)) {
-					$data[$key.'_paths'][] = array(
-						'name'				=> ''. $module['name'],
-						'description'		=> 'Ability to access or modify '. str_replace('_', ' ', $module['name'])
-					);
-				}
-			}
-		}
+//		if (isset($permission['access'])) {
+//			$data['access'] = $permission['access'];
+//		} else {
+//			$data['access'] = array();
+//		}
+//
+//		if (isset($permission['modify'])) {
+//			$data['manage'] = $permission['modify'];
+//		} else if (isset($permission['manage'])) {
+//			$data['manage'] = $permission['manage'];
+//		} else {
+//			$data['manage'] = array();
+//		}
+//
+//		if (isset($permission['add'])) {
+//			$data['add'] = $permission['add'];
+//		} else {
+//			$data['add'] = array();
+//		}
+//
+//		if (isset($permission['delete'])) {
+//			$data['delete'] = $permission['delete'];
+//		} else {
+//			$data['delete'] = array();
+//		}
 
 		if ($this->input->post() AND $staff_group_id = $this->_saveStaffGroup()) {
 			if ($this->input->post('save_close') === '1') {
@@ -161,8 +166,16 @@ class Staff_groups extends Admin_Controller {
 	private function validateForm() {
 		$this->form_validation->set_rules('staff_group_name', 'Group Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		$this->form_validation->set_rules('location_access', 'Location Access', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('permission[access][]', 'Access Permission', 'xss_clean|trim');
-		$this->form_validation->set_rules('permission[modify][]', 'Modify Permission', 'xss_clean|trim');
+        if ($this->input->post('permissions')) {
+            foreach ($this->input->post('permissions') as $key => $permissions) {
+                foreach ($permissions as $k => $permission) {
+                    $this->form_validation->set_rules('permissions[' . $key . '][' . $k . ']', ucfirst($permission) . ' Permission', 'xss_clean|trim|alpha|max_length[6]');
+                }
+                //            $this->form_validation->set_rules('permission['.$key.'][]', 'Manage Permission', 'xss_clean|trim|alpha|max_length[6]');
+                //            $this->form_validation->set_rules('permission['.$key.'][]', 'Add Permission', 'xss_clean|trim|alpha|max_length[6]');
+                //            $this->form_validation->set_rules('permission['.$key.'][]', 'Delete Permission', 'xss_clean|trim|alpha|max_length[6]');
+            }
+        }
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;

@@ -2,11 +2,10 @@
 
 class Mail_templates extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
     public function __construct() {
 		parent::__construct();
-		$this->load->model('Mail_templates_model');
+        $this->user->restrict('Admin.MailTemplates');
+        $this->load->model('Mail_templates_model');
 		$this->load->model('Settings_model');
 	}
 
@@ -62,10 +61,10 @@ class Mail_templates extends Admin_Controller {
 
 		if ($template_info) {
 			$template_id = $template_info['template_id'];
-			$data['action']	= site_url('mail_templates/edit?id='. $template_id);
+			$data['_action']	= site_url('mail_templates/edit?id='. $template_id);
 		} else {
 		    $template_id = 0;
-			$data['action']	= site_url('mail_templates/edit');
+			$data['_action']	= site_url('mail_templates/edit');
 		}
 
 		$title = (isset($template_info['name'])) ? $template_info['name'] : 'New';

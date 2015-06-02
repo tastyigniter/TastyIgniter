@@ -103,16 +103,13 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-			</div>
+                <a class="navbar-brand hidden-xs sidebar-toggle">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
 
 			<?php if ($islogged) { ?>
-                <a role="button" class="sidebar-toggle" data-toggle="offcanvas">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</a>
-				<ul class="nav navbar-top-links navbar-right">
+ 				<ul class="nav navbar-top-links navbar-right">
 					<li class="dropdown">
 						<a class="front-end" href="<?php echo root_url(); ?>" target="_blank">
 							<i class="fa fa-share-square-o"></i>
@@ -199,10 +196,10 @@
 			<!--<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav side-nav">-->
 						<li>
-							<a class="dashboard admin" href="<?php echo site_url('dashboard'); ?>"><i class="fa fa-dashboard fa-fw"></i>Dashboard</a>
+							<a class="dashboard admin" href="<?php echo site_url('dashboard'); ?>"><i class="fa fa-dashboard fa-fw"></i><span class="content">Dashboard</span></a>
 						</li>
 						<li>
-							<a class="kitchen"><i class="fa fa-cutlery fa-fw"></i>Kitchen <span class="fa arrow"></span></a>
+							<a class="kitchen"><i class="fa fa-cutlery fa-fw"></i><span class="content">Kitchen</span><span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
 								<li><a class="menus" href="<?php echo site_url('menus'); ?>"><i class="fa fa-square-o fa-fw"></i>Menus</a></li>
 								<li><a class="menu_options" href="<?php echo site_url('menu_options'); ?>"><i class="fa fa-square-o fa-fw"></i>Options</a></li>
@@ -210,10 +207,10 @@
 							</ul>
 						</li>
 						<li>
-							<a class="tables" href="<?php echo site_url('tables'); ?>"><i class="fa fa-table fa-fw"></i>Tables</a>
+							<a class="tables" href="<?php echo site_url('tables'); ?>"><i class="fa fa-table fa-fw"></i><span class="content">Tables</span></a>
 						</li>
 						<li>
-							<a class="sales"><i class="fa fa-bar-chart-o fa-fw"></i>Sales <span class="fa arrow"></span></a>
+							<a class="sales"><i class="fa fa-bar-chart-o fa-fw"></i><span class="content">Sales </span><span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
 								<li><a class="orders" href="<?php echo site_url('orders'); ?>"><i class="fa fa-square-o fa-fw"></i>Orders</a></li>
 								<li><a class="reservations" href="<?php echo site_url('reservations'); ?>"><i class="fa fa-square-o fa-fw"></i>Reservations</a></li>
@@ -222,7 +219,7 @@
 							</ul>
 						</li>
 						<li>
-							<a class="users"><i class="fa fa-user fa-fw"></i>Users <span class="fa arrow"></span></a>
+							<a class="users"><i class="fa fa-user fa-fw"></i><span class="content">Users </span><span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
 								<li><a class="customers" href="<?php echo site_url('customers'); ?>"><i class="fa fa-square-o fa-fw"></i>Customers</a></li>
 								<li><a class="staffs" href="<?php echo site_url('staffs'); ?>"><i class="fa fa-square-o fa-fw"></i>Staffs</a>
@@ -232,10 +229,10 @@
 							</ul>
 						</li>
 						<li>
-							<a class="locations" href="<?php echo site_url('locations'); ?>"><i class="fa fa-map-marker fa-fw"></i>Locations</a>
+							<a class="locations" href="<?php echo site_url('locations'); ?>"><i class="fa fa-map-marker fa-fw"></i><span class="content">Locations</span></a>
 						</li>
 						<li>
-							<a class="localisation"><i class="fa fa-globe fa-fw"></i>Localisation <span class="fa arrow"></span></a>
+							<a class="localisation"><i class="fa fa-globe fa-fw"></i><span class="content">Localisation </span><span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
 								<li><a class="languages" href="<?php echo site_url('languages'); ?>"><i class="fa fa-square-o fa-fw"></i>Languages</a></li>
 								<li><a class="currencies" href="<?php echo site_url('currencies'); ?>"><i class="fa fa-square-o fa-fw"></i>Currencies</a></li>
@@ -246,14 +243,14 @@
 							</ul>
 						</li>
 						<li>
-							<a class="extensions"><i class="fa fa-puzzle-piece fa-fw"></i>Extensions <span class="fa arrow"></span></a>
+							<a class="extensions"><i class="fa fa-puzzle-piece fa-fw"></i><span class="content">Extensions </span><span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
 								<li><a class="modules extensions" href="<?php echo site_url('extensions'); ?>"><i class="fa fa-square-o fa-fw"></i>Modules</a></li>
 								<li><a class="payments" href="<?php echo site_url('payments'); ?>"><i class="fa fa-square-o fa-fw"></i>Payments</a></li>
 							</ul>
 						</li>
 						<li>
-							<a class="themes"><i class="fa fa-paint-brush fa-fw"></i>Design <span class="fa arrow"></span></a>
+							<a class="themes"><i class="fa fa-paint-brush fa-fw"></i><span class="content">Design </span><span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li><a class="layouts" href="<?php echo site_url('layouts'); ?>"><i class="fa fa-square-o fa-fw"></i>Layouts</a></li>
                                 <li><a class="themes" href="<?php echo site_url('themes'); ?>"><i class="fa fa-square-o fa-fw"></i>Themes</a></li>
@@ -263,17 +260,18 @@
 							</ul>
 						</li>
 						<li>
-							<a class="tools"><i class="fa fa-wrench fa-fw"></i>Tools <span class="fa arrow"></span></a>
+							<a class="tools"><i class="fa fa-wrench fa-fw"></i><span class="content">Tools </span><span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
 								<li><a class="image_manager image_options" href="<?php echo site_url('image_manager'); ?>"><i class="fa fa-square-o fa-fw"></i>Image Manager</a></li>
 								<li><a class="database" href="<?php echo site_url('database'); ?>"><i class="fa fa-square-o fa-fw"></i>Database</a></li>
 							</ul>
 						</li>
 						<li>
-							<a class="system"><i class="fa fa-cog fa-fw"></i>System <span class="fa arrow"></span></a>
+							<a class="system"><i class="fa fa-cog fa-fw"></i><span class="content">System</span> <span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
 								<li><a class="pages" href="<?php echo site_url('pages'); ?>"><i class="fa fa-square-o fa-fw"></i>Pages</a></li>
-								<li><a class="uri_routes" href="<?php echo site_url('uri_routes'); ?>"><i class="fa fa-square-o fa-fw"></i>URI Routes</a></li>
+                                <li><a class="permissions" href="<?php echo site_url('permissions'); ?>"><i class="fa fa-square-o fa-fw"></i>Permissions</a></li>
+                                <li><a class="uri_routes" href="<?php echo site_url('uri_routes'); ?>"><i class="fa fa-square-o fa-fw"></i>URI Routes</a></li>
 								<li><a class="error_logs" href="<?php echo site_url('error_logs'); ?>"><i class="fa fa-square-o fa-fw"></i>Error Logs</a></li>
 								<li><a class="settings" href="<?php echo site_url('settings'); ?>"><i class="fa fa-square-o fa-fw"></i>Settings</a></li>
 							</ul>

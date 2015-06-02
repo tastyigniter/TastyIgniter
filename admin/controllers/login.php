@@ -16,7 +16,12 @@ class Login extends Admin_Controller {
         $data['reset_url'] = site_url('login/reset');
 
 		if ($this->input->post() AND $this->validateLoginForm() === TRUE) {
-			redirect('dashboard');
+			if ($previous_url = $this->session->tempdata('previous_url')) {
+                $this->session->unset_tempdata('previous_url');
+                redirect($previous_url);
+            }
+
+            redirect(referrer_url());
 		}
 
 		$this->template->setPartials(array('header', 'footer'));

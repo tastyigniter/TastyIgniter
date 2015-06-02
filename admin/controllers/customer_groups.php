@@ -2,11 +2,10 @@
 
 class Customer_groups extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('pagination');
+        $this->user->restrict('Admin.CustomerGroups');
+        $this->load->library('pagination');
 		$this->load->model('Customer_groups_model');
 	}
 
@@ -89,10 +88,10 @@ class Customer_groups extends Admin_Controller {
 
 		if ($group_info) {
 			$customer_group_id = $group_info['customer_group_id'];
-			$data['action']	= site_url('customer_groups/edit?id='. $customer_group_id);
+			$data['_action']	= site_url('customer_groups/edit?id='. $customer_group_id);
 		} else {
 		    $customer_group_id = 0;
-			$data['action']	= site_url('customer_groups/edit');
+			$data['_action']	= site_url('customer_groups/edit');
 		}
 
 		$title = (isset($group_info['group_name'])) ? $group_info['group_name'] : 'New';

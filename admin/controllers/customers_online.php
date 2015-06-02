@@ -2,11 +2,10 @@
 
 class Customers_online extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|blacklist]', 'modify[index|blacklist]');
-
 	public function __construct() {
 		parent::__construct();
-		$this->load->library('pagination');
+        $this->user->restrict('Admin.CustomersOnline');
+        $this->load->library('pagination');
 		$this->load->model('Customer_online_model');
 	}
 

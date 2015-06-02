@@ -58,7 +58,12 @@ class Template {
 			$this->_theme_locations = array(THEMEPATH);
 		}
 
-		// Modular Separation / Modular Extensions has been detected
+        // Set default theme
+        if ($default_theme = $this->CI->config->item(APPDIR, 'default_themes')) {
+            $this->setTheme($default_theme);
+        }
+
+        // Modular Separation / Modular Extensions has been detected
 		if (method_exists( $this->CI->router, 'fetch_module' )) {
 			$this->_module 	= $this->CI->router->fetch_module();
 		}
@@ -72,7 +77,6 @@ class Template {
 	}
 
     public function render($view, $data = array(), $return = FALSE) {
-
 		// Set whatever values are given. These will be available to all view files
 		is_array($data) OR $data = (array) $data;
 
