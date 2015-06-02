@@ -674,7 +674,7 @@ INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) 
 (10868, 'config', 'approve_reviews', '1', 0),
 (14349, 'config', 'new_order_status', '11', 0),
 (14350, 'config', 'complete_order_status', '15', 0),
-(14351, 'config', 'canceled_order_status', '12', 0),
+(14351, 'config', 'canceled_order_status', '19', 0),
 (10871, 'config', 'guest_order', '1', 0),
 (10872, 'config', 'delivery_time', '45', 0),
 (10873, 'config', 'collection_time', '15', 0),
