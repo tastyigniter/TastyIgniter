@@ -130,8 +130,7 @@ class Alert {
 		}
 
         //Lock alert session flashdata to specific app
-        if (APPDIR === ADMINDIR)
-            $this->session_name = 'admin_alert';
+        $this->session_name = APPDIR.'_alert';
 	}
 
 	/**
