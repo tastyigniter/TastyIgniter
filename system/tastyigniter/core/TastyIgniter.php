@@ -344,10 +344,7 @@ if ( ! is_php('5.4'))
 		require_once IGNITEPATH.'core/Main_Controller.php';
     }
 
-    // Load the extensions base controller class
-    require_once IGNITEPATH.'core/Ext_Controller.php';
-
-// Set a mark point for benchmarking
+    // Set a mark point for benchmarking
 	$BM->mark('loading_time:_base_classes_end');
 
 /*
