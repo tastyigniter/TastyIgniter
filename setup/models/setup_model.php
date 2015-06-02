@@ -2,7 +2,7 @@
 
 class Setup_model extends TI_Model {
 
-	public function addData() {
+	public function loadInitialSchema($setup_version) {
 		$query = FALSE;
 
         if ($this->db->count_all('countries') <= 0) {
@@ -31,10 +31,13 @@ class Setup_model extends TI_Model {
             }
         }
 
+        $this->db->where('sort', 'prefs')->where('item', 'ti_setup')->delete('settings');
+        $this->db->set('sort', 'prefs')->set('item', 'ti_setup')->set('value', $setup_version)->set('serialized', '0')->insert('settings');
+
 		return $query;
 	}
 
-	public function addDemoData($demo_data) {
+	public function loadDemoSchema($demo_data) {
 		$query = TRUE;
 
 		if (isset($demo_data) AND $demo_data === '1' AND $this->db->count_all('coupons') <= 0) {
@@ -114,22 +117,16 @@ class Setup_model extends TI_Model {
 	public function updateSettings($site_name, $site_email) {
  		if (!empty($site_name)) {
 			$this->db->where('sort', 'config')->where('item', 'site_name')->delete('settings');
-
-			$this->db->set('sort', 'config')->set('item', 'site_name')->set('value', $site_name)->set('serialized', '0');
-			$this->db->insert('settings');
+			$this->db->set('sort', 'config')->set('item', 'site_name')->set('value', $site_name)->set('serialized', '0')->insert('settings');
 		}
 
  		if (!empty($site_email)) {
 			$this->db->where('sort', 'config')->where('item', 'site_email')->delete('settings');
-
-			$this->db->set('sort', 'config')->set('item', 'site_email')->set('value', $site_email)->set('serialized', '0');
-			$this->db->insert('settings');
+			$this->db->set('sort', 'config')->set('item', 'site_email')->set('value', $site_email)->set('serialized', '0')->insert('settings');
 		}
 
 		$this->db->where('sort', 'prefs')->where('item', 'ti_version')->delete('settings');
-
-		$this->db->set('sort', 'prefs')->set('item', 'ti_version')->set('value', 'v1.3-beta')->set('serialized', '0');
-		$this->db->insert('settings');
+		$this->db->set('sort', 'prefs')->set('item', 'ti_version')->set('value', 'v1.3-beta')->set('serialized', '0')->insert('settings');
 	}
 }
 
