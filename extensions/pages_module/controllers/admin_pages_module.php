@@ -1,8 +1,10 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-class Admin_pages_module extends Ext_Controller {
+class Admin_pages_module extends Admin_Controller {
 
 	public function index($data = array()) {
+        $this->user->restrict('Module.PagesModule');
+
         if (!empty($data)) {
             $data['title'] = (isset($data['title'])) ? $data['title'] : 'Pages Module';
 

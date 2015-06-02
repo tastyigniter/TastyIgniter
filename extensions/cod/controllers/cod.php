@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-class Cod extends Ext_Controller {
+class Cod extends Main_Controller {
 
     public function index() {
         $this->lang->load('cod/cod');

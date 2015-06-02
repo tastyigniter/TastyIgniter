@@ -1,9 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-class Admin_paypal_express extends Ext_Controller {
+class Admin_paypal_express extends Admin_Controller {
 
 	public function index($data = array()) {
-		$this->load->model('Statuses_model');
+        $this->user->restrict('Payment.PaypalExpress');
+
+        $this->load->model('Statuses_model');
 
         $data['title'] = (isset($data['title'])) ? $data['title'] : 'PayPal Express';
 

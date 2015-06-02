@@ -1,8 +1,10 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-class Admin_slideshow extends Ext_Controller {
+class Admin_slideshow extends Admin_Controller {
 
 	public function index($data = array()) {
+        $this->user->restrict('Module.Slideshow');
+
         if (empty($data)) return;
 
         $data['title'] = (isset($data['title'])) ? $data['title'] : 'Slideshow Module';

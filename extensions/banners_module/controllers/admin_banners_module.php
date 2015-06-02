@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-class Admin_banners_module extends Ext_Controller {
+class Admin_banners_module extends Admin_Controller {
 
     public function __construct() {
         parent::__construct();
@@ -9,6 +9,8 @@ class Admin_banners_module extends Ext_Controller {
     }
 
 	public function index($data = array()) {
+        $this->user->restrict('Module.BannersModule');
+
         if (!empty($data)) {
             $data['title'] = (isset($data['title'])) ? $data['title'] : 'Banner Module';
 

@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-class Pages_module extends Ext_Controller {
+class Pages_module extends Main_Controller {
 
 	public function __construct() {
 		parent::__construct(); 																	// calls the constructor

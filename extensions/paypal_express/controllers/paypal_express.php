@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-class Paypal_express extends Ext_Controller {
+class Paypal_express extends Main_Controller {
 
     public function __construct() {
         parent::__construct();

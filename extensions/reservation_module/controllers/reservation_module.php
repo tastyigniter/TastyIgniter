@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-class Reservation_module extends Ext_Controller {
+class Reservation_module extends Main_Controller {
 	public $reservation_alert;
 
 	public function __construct() {
