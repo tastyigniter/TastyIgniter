@@ -20,7 +20,7 @@ class Settings_model extends TI_Model {
 	public function getdbTables() {
 		$result = array();
 
-        $sql = "SELECT table_name, table_rows FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ? ";
+        $sql = "SELECT table_name, table_rows, engine, data_free, index_length, data_length FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ? ";
         $query = $this->db->query($sql, $this->db->database);
 
         if ($query->num_rows() > 0) {
