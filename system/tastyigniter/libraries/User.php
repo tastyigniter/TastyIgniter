@@ -117,10 +117,8 @@ class User {
             $uri = site_url();
         }
 
-        if ($has_permission === FALSE) {
-            if (!$this->CI->input->is_ajax_request()) {  // remove later
-                redirect($uri);
-            }
+        if (!$this->CI->input->is_ajax_request()) {  // remove later
+            redirect($uri);
         }
     }
 
@@ -175,10 +173,6 @@ class User {
         }
 
         return $this->unread;
-    }
-
-    public function getPermittedActions($permission) {
-        return (!empty($this->permissions[$permission]) AND !empty($this->permissions[$permission]['permitted_actions'])) ? $this->permissions[$permission]['permitted_actions'] : array();
     }
 
     public function hasPermission($permission) {
@@ -251,7 +245,7 @@ class User {
         $action = strtolower($action);
 
         // Fail if action is not permitted but is available.
-        if ($permitted === FALSE OR !in_array($action, $this->permitted_actions[$perm]) AND in_array($action, $this->available_actions[$perm])) {
+        if ($permitted === FALSE OR (!in_array($action, $this->permitted_actions[$perm]) AND in_array($action, $this->available_actions[$perm]))) {
             $perm = explode('.', $perm);
             $context = isset($perm[1]) ? $perm[1] : '';
             if ($display_error) {
