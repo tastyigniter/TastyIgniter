@@ -56,7 +56,7 @@ class Admin_cart_module extends Admin_Controller {
 			$update['type'] 			= 'module';
 			$update['name'] 			= $this->input->get('name');
 			$update['title'] 			= $this->input->post('title');
-			$update['extension_id'] 	= (int) $this->input->get('extension_id');
+			$update['extension_id'] 	= (int) $this->input->get('id');
 			$update['data']['show_cart_images'] 	= $this->input->post('show_cart_images');
 			$update['data']['cart_images_h'] 		= $this->input->post('cart_images_h');
 			$update['data']['cart_images_w'] 		= $this->input->post('cart_images_w');

@@ -89,7 +89,7 @@ class Admin_cod extends Admin_Controller {
 			$update['type'] 				= 'payment';
 			$update['name'] 				= $this->input->get('name');
 			$update['title'] 				= $this->input->post('title');
-			$update['extension_id'] 		= (int) $this->input->get('extension_id');
+			$update['extension_id'] 		= (int) $this->input->get('id');
 			$update['data']['name'] 		= $this->input->post('name');
 			$update['data']['order_total'] 	= $this->input->post('order_total');
 			$update['data']['order_status'] = $this->input->post('order_status');

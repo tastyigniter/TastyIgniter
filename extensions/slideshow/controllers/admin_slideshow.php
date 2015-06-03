@@ -91,7 +91,7 @@ class Admin_slideshow extends Admin_Controller {
 			$update['type'] 				= 'module';
 			$update['name'] 				= $this->input->get('name');
 			$update['title'] 				= $this->input->post('title');
-			$update['extension_id'] 		= (int) $this->input->get('extension_id');
+			$update['extension_id'] 		= (int) $this->input->get('id');
 			$update['data']['dimension_h'] 	= $this->input->post('dimension_h');
 			$update['data']['dimension_w']	= $this->input->post('dimension_w');
 			$update['data']['effect'] 		= ($this->input->post('effect')) ? $this->input->post('effect') : 'random';

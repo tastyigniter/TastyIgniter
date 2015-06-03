@@ -70,7 +70,7 @@ class Admin_banners_module extends Admin_Controller {
 			$update['type'] 			= 'module';
 			$update['name'] 			= $this->input->get('name');
 			$update['title'] 			= $this->input->post('title');
-			$update['extension_id'] 	= (int) $this->input->get('extension_id');
+			$update['extension_id'] 	= (int) $this->input->get('id');
 			$update['data']['banners'] 	= $this->input->post('banners');
 
 			if ($this->Extensions_model->updateExtension($update, '1')) {

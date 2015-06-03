@@ -33,7 +33,7 @@ class Admin_local_module extends Admin_Controller {
 			$update['type'] 			= 'module';
 			$update['name'] 			= $this->input->get('name');
 			$update['title'] 			= $this->input->post('title');
-			$update['extension_id'] 	= (int) $this->input->get('extension_id');
+			$update['extension_id'] 	= (int) $this->input->get('id');
 
 			if ($this->Extensions_model->updateExtension($update, '1')) {
 				$this->alert->set('success', 'Local Module updated successfully.');

@@ -121,7 +121,7 @@ class Admin_paypal_express extends Admin_Controller {
 			$update['type'] 		= 'payment';
 			$update['name'] 		= $this->input->get('name');
 			$update['title'] 		= $this->input->post('title');
-			$update['extension_id'] = (int) $this->input->get('extension_id');
+			$update['extension_id'] = (int) $this->input->get('id');
 
 			$update['data'] = array(
 				'priority' 			=> $this->input->post('priority'),
