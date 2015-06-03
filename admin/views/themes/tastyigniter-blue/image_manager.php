@@ -574,22 +574,22 @@
 
                 if (typeof refreshUrl == 'undefined') refreshUrl = refresh_url;
 
-				if (json['alert']) {
-					var message = json['alert'];
-					Notification.show(message);
-					setTimeout(function() {
-                        window.location.href = refresh_url;
-					}, 2000);
+                var message = '';
+                if (json['alert']) {
+					message = json['alert'];
 				}
 
 				if (json['success']) {
-					var message = json['success'];
-					Notification.show(message);
-					setTimeout(function() {
-                        window.location.href = refreshUrl;
-					}, 2000);
+					message = json['success'];
 				}
-			}
+
+                if (message != '') {
+                    Notification.show(message);
+                    setTimeout(function () {
+                        window.location.href = refreshUrl;
+                    }, 2000);
+                }
+            }
 
 			function fixFilename(stri) {
 				if (stri != null) {

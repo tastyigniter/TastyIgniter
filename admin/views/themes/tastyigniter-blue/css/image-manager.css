@@ -341,6 +341,10 @@ position: fixed;
 left: 0;
 z-index: 2000;
 }
+.notification span {
+    color: inherit;
+    background-color: inherit;
+}
 
 
 
