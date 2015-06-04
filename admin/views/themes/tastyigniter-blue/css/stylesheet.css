@@ -185,6 +185,12 @@ background-color: #f8fafb;
 .navbar-top .navbar-toggle:active {
 background-color: rgba(0, 0, 0, 0.1);
 }
+.navbar-top-links .dropdown-menu {
+border-top-left-radius: 0;
+border-top-right-radius: 0;
+min-width: 0;
+margin-top: 0;
+}
 .navbar-top-links > li > a {
 color: #ecf0f5;
 }
@@ -237,15 +243,6 @@ right: 3px;
 text-align: center;
 top: 7px;
 }
-.navbar-top-links .dropdown-messages,
-.navbar-top-links .dropdown-settings,
-.navbar-top-links .dropdown-alerts,
-.navbar-top-links .dropdown-user {
-border-top-left-radius: 0;
-border-top-right-radius: 0;
-min-width: 0;
-margin-top: 0;
-}
 .navbar-top-links .dropdown-messages {
 margin-left: 0;
 width: 220px;
@@ -254,7 +251,7 @@ width: 220px;
 margin-left: -12px;
 width: 125px;
 }
-.navbar-top-links .dropdown-alerts {
+.navbar-top-links .dropdown-notifications {
 margin-left: -100px;
 width: 310px;
 }
@@ -263,10 +260,7 @@ margin-left: -135px;
 width: 250px;
 }
 @media(min-width:768px) {
-	.navbar-top-links .dropdown-messages,
-	.navbar-top-links .dropdown-settings,
-	.navbar-top-links .dropdown-alerts,
-	.navbar-top-links .dropdown-user {
+	.navbar-top-links .dropdown-menu {
 	margin-left: auto;
 	}
     .navbar-top-links .dropdown-messages {
@@ -1359,9 +1353,11 @@ font-size: 13px;
 background-color:#FFF;
 border: 0 solid #E7E7E7;
 }
-#list-form .table td {
+.table-striped td {
 height: 50px;
-line-height: 2.1;
+}
+.table-no-spacing td {
+height: auto;
 }
 .table > thead > tr > th {
 border-bottom: 2px solid #ecf0f5;
