@@ -4,14 +4,15 @@ class Themes extends Admin_Controller {
 
     public function __construct() {
 		parent::__construct();
-        $this->user->restrict('Site.Themes');
         $this->load->model('Themes_model');
 		$this->load->model('Settings_model');
 		$this->load->model('Image_tool_model');
 	}
 
 	public function index() {
-		if ($this->input->get('action') === 'activate' AND $this->_activateTheme()) {
+        $this->user->restrict('Site.Themes.Access');
+
+        if ($this->input->get('action') === 'activate' AND $this->_activateTheme()) {
 			redirect('themes');
 		}
 
@@ -47,7 +48,9 @@ class Themes extends Admin_Controller {
 	}
 
 	public function edit() {
-		$theme_name = $this->input->get('name');
+        $this->user->restrict('Site.Themes.Access');
+
+        $theme_name = $this->input->get('name');
 		$theme_location = $this->input->get('location');
 		$theme_folder = $theme_location .'/views/themes/'. $theme_name .'/';
 
@@ -185,6 +188,8 @@ class Themes extends Admin_Controller {
     }
 
 	private function _activateTheme() {
+        $this->user->restrict('Site.Themes.Manage');
+
         if ($this->input->get('action') === 'activate' AND $this->input->get('name') AND $this->input->get('location')) {
             $theme_name = $this->input->get('name');
             $theme_location = $this->input->get('location');
@@ -198,6 +203,8 @@ class Themes extends Admin_Controller {
 	}
 
 	private function _updateTheme($theme = array()) {
+        $this->user->restrict('Site.Themes.Manage');
+
         if ($this->input->get('name') AND $this->input->get('location') AND $this->validateForm($theme['customize']) === TRUE) {
             if ($this->input->post('editor_area') AND $this->input->get('file')) {
                 $theme_file = $this->input->get('file');

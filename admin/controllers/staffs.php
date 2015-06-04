@@ -156,8 +156,8 @@ class Staffs extends Admin_Controller {
 	}
 
 	public function edit() {
-        if ($this->user->hasPermission('Admin.Staffs.Access') === FALSE AND $this->user->getStaffId() !== $this->input->get('id')) {
-            redirect(site_url());
+        if ($this->user->getStaffId() !== $this->input->get('id')) {
+            $this->user->restrict('Admin.Staffs');
         }
 
         $staff_info = $this->Staffs_model->getStaff((int) $this->input->get('id'));
@@ -268,16 +268,11 @@ class Staffs extends Admin_Controller {
 	}
 
 	private function _saveStaff($staff_email, $username) {
-        if (!$this->user->hasPermission('Admin.Staffs.Manage') AND $this->user->getStaffId() !== $this->input->get('id')) {
-            $this->alert->set('warning', 'Warning: You do not have permission to manage!');
-            redirect(referrer_url());
-        }
-
         if ($this->validateForm($staff_email, $username) === TRUE) {
             $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
-			if ($staff_id = $this->Staffs_model->saveStaff($this->input->get('id'), $this->input->post())) {
-				$this->alert->set('success', 'Staff ' . $save_type . ' successfully.');
+            if ($staff_id = $this->Staffs_model->saveStaff($this->input->get('id'), $this->input->post())) {
+                $this->alert->set('success', 'Staff ' . $save_type . ' successfully.');
 			} else {
 				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
 			}
