@@ -22,7 +22,7 @@
 							<tr>
 								<td class="action action-one"><input type="checkbox" value="<?php echo $payment['extension_id']; ?>" name="delete[]" /></td>
 								<td class="action action-three">
-                                    <?php if ($payment['options'] === TRUE) {?>
+                                    <?php if ($payment['options'] === TRUE AND $payment['installed'] === TRUE) {?>
                                         <a class="btn btn-edit" title="Edit" href="<?php echo $payment['edit']; ?>"><i class="fa fa-pencil"></i></a>
                                     <?php } else { ?>
                                         <a class="btn btn-edit" title="Edit" disabled="disabled"><i class="fa fa-pencil"></i></a>

@@ -9,30 +9,20 @@ class Payments extends Admin_Controller {
 	}
 
 	public function index() {
-		if ($this->input->get('name') AND $this->input->get('action')) {
-			if ($this->input->get('action') === 'install' AND $this->_install() === TRUE) {
-				redirect('payments');
-			}
-
-			if ($this->input->get('action') === 'uninstall' AND $this->_uninstall() === TRUE) {
-				redirect('payments');
-			}
-		}
-
 		$this->template->setTitle('Payments');
 		$this->template->setHeading('Payments');
 
 		$data['text_empty'] 		= 'There are no extensions available.';
 
 		$data['payments'] = array();
-		$results = $this->Extensions_model->getList('payment');
+		$results = $this->Extensions_model->getList(array('type' => 'payment'));
 		foreach ($results as $result) {
 			if ($result['installed'] === TRUE) {
 				$extension_id = $result['extension_id'];
-				$manage = site_url('payments?action=uninstall&name='.$result['name']);
+				$manage = site_url('payments/edit?action=uninstall&name='.$result['name'].'&id='.$extension_id);
 			} else {
 				$extension_id = '-';
-				$manage = site_url('payments?action=install&name='.$result['name']);
+				$manage = site_url('payments/edit?action=install&name='.$result['name'].'&id='.$extension_id);
 			}
 
 			$data['payments'][] = array(
@@ -41,7 +31,7 @@ class Payments extends Admin_Controller {
 				'installed' 	=> $result['installed'],
 				'type' 			=> $result['type'],
 				'options' 		=> $result['options'],
-				'edit' 			=> site_url('payments/edit?action=edit&name='.$result['name']),
+				'edit' 			=> site_url('payments/edit?action=edit&name='.$result['name'].'&id='.$extension_id),
 				'manage'		=> $manage
 			);
 		}
@@ -56,8 +46,7 @@ class Payments extends Admin_Controller {
 		$loaded = FALSE;
         $error_msg = FALSE;
 
-        if ($payment = $this->Extensions_model->getExtension('payment', $extension_name)) {
-
+        if ($payment = $this->Extensions_model->getExtension('payment', $extension_name, FALSE)) {
             $data['payment_name'] = $payment['name'];
             $ext_controller = $payment['name'] . '/admin_' . $payment['name'];
             $ext_class = strtolower('admin_'.$payment['name']);
@@ -70,7 +59,6 @@ class Payments extends Admin_Controller {
                 } else if ($payment['installed'] === FALSE) {
                     $error_msg = 'An error occurred, payment extension is not installed properly';
                 } else {
-                    $_GET['extension_id'] = $payment['extension_id'] ? $payment['extension_id'] : 0;
                     $this->load->module($ext_controller);
                     if (class_exists($ext_class, FALSE)) {
                         $data['payment'] = $this->{$ext_class}->index($payment);
@@ -79,6 +67,16 @@ class Payments extends Admin_Controller {
                         $error_msg = 'An error occurred, module extension class failed to load: admin_'.$extension_name;
                     }
                 }
+            }
+        }
+
+        if ($this->input->get('name') AND $this->input->get('action') AND $action !== 'edit') {
+            if ($this->input->get('action') === 'install' AND $this->_install() === TRUE) {
+                redirect('payments');
+            }
+
+            if ($this->input->get('action') === 'uninstall' AND $this->_uninstall() === TRUE) {
+                redirect('payments');
             }
         }
 
