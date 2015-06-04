@@ -2,84 +2,86 @@
 
 class Extensions_model extends TI_Model {
 
-    private $extensions = array();
+	public function getList($filter = array()) {
+        $results = array();
 
-	public function getList($type = '') {
-        return $this->getExtensions($type);
+        $extensions = $this->getExtensions();
+
+        foreach ($this->fetchExtensionsPath() as $extension_path) {
+            $options = $installed = FALSE;
+
+            $basename = basename($extension_path);
+            $title = ucwords(str_replace('_module', '', $basename));
+
+            if (isset($extensions[$basename]) AND $extension = $extensions[$basename]) {
+                if (isset($extension['status']) AND $extension['status'] === '1') {
+                    $installed = TRUE;
+                }
+            }
+
+            // skip loop if not installed and $is_installed is set TRUE
+            if (!empty($filter['status']) AND $filter['status'] === TRUE AND $installed === FALSE) continue;
+
+            $config_items = $this->getConfig($basename);
+
+            $config = (!empty($config_items) AND is_array($config_items)) ? TRUE : FALSE;
+
+            $ext_type = (isset($config_items['ext_type'])) ? $config_items['ext_type'] : 'module';
+
+            if (isset($config_items['admin_options']) AND $config_items['admin_options'] === TRUE) {
+                $options = file_exists($extension_path.'/controllers/admin_' . $basename . '.php') ? TRUE : FALSE;
+            }
+
+            $results[$ext_type][$basename] = array(
+                'extension_id' => isset($extension['extension_id']) ? $extension['extension_id'] : 0,
+                'name'         => $basename,
+                'title'        => (!empty($extension['title'])) ? $extension['title'] : $title,
+                'type'         => $ext_type,
+                'ext_data'     => (isset($extension['data'])) ? $extension['data'] : '',
+                'options'      => $options,
+                'config'       => $config,
+                'installed'    => $installed
+            );
+        }
+
+        if (!empty($filter['type'])) {
+            return $results[$filter['type']];
+        }
+
+        return $results;
     }
 
-	public function getExtensions($type = '', $is_installed = FALSE) {
-        $modules_locations = $this->config->item('modules_locations');
+    public function getExtension($type = '', $name = '', $is_installed = TRUE) {
+        $result = array();
 
-        if (empty($this->extensions) AND $modules_locations) {
-            !empty($db_extensions) OR $db_extensions = $this->fetchExtensions();
+        if (!empty($type) AND !empty($name)) {
+            $extensions = $this->getList(array('type' => $type, 'status' => $is_installed));
 
-            foreach ($modules_locations as $location => $offset) {
-                if (!is_dir($location)) return FALSE;
-
-                foreach (glob($location . '*', GLOB_ONLYDIR) as $ext_path) {
-                    $extension_id = 0;
-                    $ext_data = '';
-                    $ext_type = 'module';
-                    $options = $config = $installed = FALSE;
-
-                    $basename = basename($ext_path);
-                    $title = ucwords(str_replace('_module', '', $basename));
-
-                    if (isset($db_extensions[$basename]) AND $db_extension = $db_extensions[$basename]) {
-                        $ext_data = $db_extension['data'];
-
-                        $title = (!empty($db_extension['title'])) ? $db_extension['title'] : $title;
-
-                        if (isset($db_extension['status']) AND $db_extension['status'] === '1') {
-                            $installed = TRUE;
-                        }
-
-                        $extension_id = $db_extension['extension_id'];
-                    }
-
-                    // skip loop if not installed and $is_installed is set TRUE
-                    if ($is_installed === TRUE AND $installed === FALSE) continue;
-
-                    $config_items = $this->getConfig($basename);
-
-                    if ($config_items AND is_array($config_items)) {
-                        $config = TRUE;
-
-                        if (isset($config_items['ext_type'])) {
-                            $ext_type = $config_items['ext_type'];
-                        }
-
-                        if (isset($config_items['admin_options'])) {
-                            $options = ($config_items['admin_options'] === TRUE AND file_exists($ext_path.'/controllers/admin_' . $basename . '.php')) ? TRUE : FALSE;
-                        }
-                    }
-
-                    $this->extensions[$ext_type][$basename] = array(
-                        'extension_id' => $extension_id,
-                        'name'         => $basename,
-                        'title'        => $title,
-                        'type'         => $ext_type,
-                        'ext_data'     => $ext_data,
-                        'options'      => $options,
-                        'config'       => $config,
-                        'installed'    => $installed
-                    );
+            if ($extensions AND is_array($extensions)) {
+                if (isset($extensions[$name]) AND is_array($extensions[$name])) {
+                    $result = $extensions[$name];
                 }
             }
         }
 
-        if ($type !== '' AND isset($this->extensions[$type])) {
-			return $this->extensions[$type];
-		} else {
-			return $this->extensions;
-		}
-	}
+        return $result;
+    }
 
-	public function fetchExtensions() {
+    public function getExtensions($type = '', $filter_installed = FALSE) {
+
         $this->db->from('extensions');
-        $this->db->where('type', 'module');
-        $this->db->or_where('type', 'payment');
+
+        if ($type === '') {
+            $this->db->where('type', 'module');
+            $this->db->or_where('type', 'payment');
+        } else {
+            $this->db->where('type', $type);
+        }
+
+        if ($filter_installed === TRUE) {
+            $this->db->where('status', '1');
+        }
+
         $query = $this->db->get();
 
         $result = array();
@@ -91,12 +93,30 @@ class Extensions_model extends TI_Model {
                     continue;
                 }
 
-                $row['data'] = ($row['serialized'] === '1' AND !empty($row['data'])) ? unserialize($row['data']) : array();
+                $row['ext_data'] = ($row['serialized'] === '1' AND !empty($row['data'])) ? unserialize($row['data']) : array();
+                unset($row['data']);
                 $result[$row['name']] = $row;
             }
         }
 
         return $result;
+	}
+
+    private function fetchExtensionsPath() {
+        $results = array();
+
+        if ($modules_locations = $this->config->item('modules_locations')) {
+            foreach ($modules_locations as $location => $offset) {
+                foreach (glob($location . '*', GLOB_ONLYDIR) as $extension_path) {
+                    if (is_file($extension_path.'/config/'.basename($extension_path).'.php')) {
+                        $results[] = $extension_path;
+                    }
+                }
+            }
+
+        }
+
+        return $results;
 	}
 
     public function getModules() {
@@ -106,22 +126,6 @@ class Extensions_model extends TI_Model {
     public function getPayments() {
         return $this->getExtensions('payment', TRUE);
     }
-
-    public function getExtension($type = '', $name = '', $is_installed = TRUE) {
-		$result = array();
-
-		if (!empty($type) AND !empty($name)) {
-			$extensions = $this->getExtensions($type, $is_installed);
-
-			if ($extensions AND is_array($extensions)) {
-				if (isset($extensions[$name]) AND is_array($extensions[$name])) {
-					$result = $extensions[$name];
-				}
-			}
-		}
-
-		return $result;
-	}
 
 	public function getPayment($name = '') {
         $result = array();
@@ -236,18 +240,18 @@ class Extensions_model extends TI_Model {
         return FALSE;
     }
 
-    public function install($type = '', $name = '', $extension_id = FALSE) {
+    public function install($type = '', $name = '', $extension_id = '0') {
 
 		if (!empty($type) AND !empty($name)) {
             $name = url_title(strtolower($name), '-');
 
             if ($this->extensionExists($name)) {
-                if (!empty($extension) AND $extension['extension_id'] !== 0) {
+                if ($extension_id !== '0' AND is_numeric($extension_id)) {
                     $this->db->set('status', '1');
                     $this->db->where('type', $type);
                     $this->db->where('name', $name);
-                    $this->db->where('extension_id', $extension['extension_id']);
-                    if ($this->db->update('extensions')) $extension_id = $extension['extension_id'];
+                    $this->db->where('extension_id', $extension_id);
+                    $this->db->update('extensions');
                 } else {
                     $this->db->set('status', '1');
                     $this->db->set('type', $type);
@@ -256,10 +260,6 @@ class Extensions_model extends TI_Model {
                 }
 
                 if ($extension_id AND is_numeric($extension_id)) {
-                    $this->load->model('Staff_groups_model');
-                    $this->Staff_groups_model->addPermission($this->user->getStaffGroupId(), 'access', $name);
-                    $this->Staff_groups_model->addPermission($this->user->getStaffGroupId(), 'modify', $name);
-
                     $this->load->model('Notifications_model');
                     $this->Notifications_model->addNotification(array('action' => 'installed', 'object' => 'extension', 'object_id' => $name));
                 }
@@ -272,7 +272,7 @@ class Extensions_model extends TI_Model {
         return FALSE;
 	}
 
-    public function uninstall($type = '', $name = '') {
+    public function uninstall($type = '', $name = '', $extension_id = '0') {
         $query = FALSE;
 
         if (!empty($type) AND $this->extensionExists($name)) {
@@ -280,6 +280,10 @@ class Extensions_model extends TI_Model {
             $this->db->set('status', '0');
             $this->db->where('type', $type);
             $this->db->where('name', $name);
+
+            if ($extension_id !== '0' AND is_numeric($extension_id)) {
+                $this->db->where('extension_id', $extension_id);
+            }
 
             if (preg_match('/\s/', $name) > 0) {
                 $query = $this->delete($name);
@@ -296,7 +300,7 @@ class Extensions_model extends TI_Model {
         return $query;
     }
 
-    public function delete($type = '', $name = '') {
+    public function delete($type = '', $name = '', $extension_id = '0') {
         $query = FALSE;
 
         if (!empty($type) AND $this->extensionExists($name)) {
@@ -304,6 +308,10 @@ class Extensions_model extends TI_Model {
             $this->db->where('status', '0');
             $this->db->where('type', $type);
             $this->db->where('name', $name);
+
+            if ($extension_id !== '0' AND is_numeric($extension_id)) {
+                $this->db->where('extension_id', $extension_id);
+            }
 
             $this->db->delete('extensions');
             if ($this->db->affected_rows() > 0) {

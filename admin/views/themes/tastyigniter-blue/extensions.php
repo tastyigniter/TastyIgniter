@@ -20,7 +20,7 @@
 							<?php foreach ($extensions as $extension) { ?>
 							<tr>
 								<td class="action action-three">
-                                    <?php if ($extension['options'] === TRUE) {?>
+                                    <?php if ($extension['options'] === TRUE AND $extension['installed'] === TRUE) {?>
                                         <a class="btn btn-edit" title="Edit" href="<?php echo $extension['edit']; ?>"><i class="fa fa-pencil"></i></a>
                                     <?php } else { ?>
                                         <a class="btn btn-edit" title="Edit" disabled="disabled"><i class="fa fa-pencil"></i></a>

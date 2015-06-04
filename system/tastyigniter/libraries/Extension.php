@@ -11,11 +11,11 @@ class Extension {
     public function __construct() {
         $this->CI =& get_instance();
         $this->CI->load->model('Extensions_model');
-
-        !empty($this->extensions) OR $this->extensions = $this->CI->Extensions_model->getExtensions('', TRUE);
     }
 
     public function getExtensions($type = NULL) {
+        !empty($this->extensions) OR $this->extensions = $this->CI->Extensions_model->getExtensions('', TRUE);
+
         if (!empty($type)) {
             if (!empty($this->extensions[$type]) AND is_array($this->extensions[$type])) {
                 return $this->extensions[$type];
@@ -30,10 +30,10 @@ class Extension {
     }
 
     public function getModule($name) {
-        if (!empty($name)) {
-            if (!empty($this->extensions['module'][$name]) AND is_array($this->extensions['module'][$name])) {
-                return $this->extensions['module'][$name];
-            }
+        $modules = $this->getExtensions('module');
+
+        if (!empty($modules[$name]) AND is_array($modules[$name])) {
+            return $modules[$name];
         }
     }
 
@@ -42,10 +42,10 @@ class Extension {
     }
 
     public function getPayment($name) {
-        if (!empty($name)) {
-            if (!empty($this->extensions['payment'][$name]) AND is_array($this->extensions['payment'][$name])) {
-                return $this->extensions['payment'][$name];
-            }
+        $payments = $this->getExtensions('payment');
+
+        if (!empty($payments[$name]) AND is_array($payments[$name])) {
+            return $payments[$name];
         }
     }
 
