@@ -3,7 +3,7 @@
 	<div class="col-md-12">
 		<div class="panel panel-default panel-table">
 			<div class="panel-heading">
-				<h3 class="panel-title">Static Page List</h3>
+				<h3 class="panel-title">Site Page List</h3>
 				<div class="pull-right">
 					<button class="btn btn-filter btn-xs"><i class="fa fa-filter"></i></button>
 				</div>

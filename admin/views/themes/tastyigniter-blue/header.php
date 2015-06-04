@@ -132,8 +132,8 @@
 						<a class="dropdown-toggle alerts" data-toggle="dropdown" href="<?php echo site_url('alerts'); ?>">
 							<i class="fa fa-bell"></i>
 						</a>
-                        <ul class="dropdown-menu  dropdown-alerts">
-                            <li class="menu-header"><b>You have 4 alerts</b></li>
+                        <ul class="dropdown-menu  dropdown-notifications">
+                            <li class="menu-header"><b>You have 4 notifications</b></li>
                             <li>
                                 <ul class="menu">
                                     <li>
@@ -155,7 +155,7 @@
                                     </li>
                                     <li class="divider"></li>
                                     <li class="menu-footer">
-                                        <a class="text-center" href="<?php echo site_url('notifications'); ?>">See All Notifications</a>
+                                        <a class="text-center" href="<?php echo site_url('activities'); ?>">See All Activities</a>
                                     </li>
                                 </ul>
                             </li>
@@ -263,7 +263,7 @@
 							<a class="tools"><i class="fa fa-wrench fa-fw"></i><span class="content">Tools </span><span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
 								<li><a class="image_manager image_options" href="<?php echo site_url('image_manager'); ?>"><i class="fa fa-square-o fa-fw"></i>Image Manager</a></li>
-								<li><a class="database" href="<?php echo site_url('database'); ?>"><i class="fa fa-square-o fa-fw"></i>Database</a></li>
+								<li><a class="maintenance" href="<?php echo site_url('maintenance'); ?>"><i class="fa fa-square-o fa-fw"></i>Maintenance</a></li>
 							</ul>
 						</li>
 						<li>

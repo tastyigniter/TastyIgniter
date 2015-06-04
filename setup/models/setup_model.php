@@ -6,7 +6,7 @@ class Setup_model extends TI_Model {
 		$query = FALSE;
 
         if ($this->db->count_all('countries') <= 0) {
-            $file = APPPATH . '/migrations/initial_schema.sql';
+            $file = IGNITEPATH . '/migrations/initial_schema.sql';
             if (!file_exists($file)) {
                 return FALSE;
             }
@@ -41,7 +41,7 @@ class Setup_model extends TI_Model {
 		$query = TRUE;
 
 		if (isset($demo_data) AND $demo_data === '1' AND $this->db->count_all('coupons') <= 0) {
-			$file = APPPATH .'/migrations/demo_schema.sql';
+			$file = IGNITEPATH .'/migrations/demo_schema.sql';
 			if (!file_exists($file)) {
 				return FALSE;
 			}
