@@ -22,7 +22,7 @@ class Maintenance extends Admin_Controller {
 
         $this->template->setTitle('Database Maintenance');
         $this->template->setHeading('Database Maintenance');
-        $this->template->setButton('Backup', array('class' => 'btn btn-primary', 'onclick' => '$(\'#list-form\').submit();'));
+        $this->template->setButton('Backup', array('class' => 'btn btn-primary', 'onclick' => '$(\'#tables-form\').submit();'));
         $this->template->setButton('Migrate', array('class' => 'btn btn-success', 'onclick' => '$(\'#migrate-form\').submit();'));
 
         $data['backup_tables'] = FALSE;
