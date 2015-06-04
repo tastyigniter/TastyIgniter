@@ -19,6 +19,7 @@ class Admin_Controller extends Base_Controller {
 		$this->load->library('user');
 
         if (!$this->user->isLogged() AND $this->uri->rsegment(1) !== 'login') {
+            $this->alert->set('danger', 'You must be logged in to access that page.');
             $this->session->set_tempdata('previous_url', current_url());
             redirect(root_url(ADMINDIR.'/login'));
         }

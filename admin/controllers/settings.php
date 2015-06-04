@@ -4,7 +4,7 @@ class Settings extends Admin_Controller {
     
     public function __construct() {
 		parent::__construct(); //  calls the constructor
-        $this->user->restrict('Site.Settings');
+        $this->user->restrict('Site.Settings.Manage');
         $this->load->model('Locations_model');
 		$this->load->model('Settings_model');
 		$this->load->model('Countries_model');
@@ -68,7 +68,6 @@ class Settings extends Admin_Controller {
         }
 
         $data['image_manager'] = array(
-//            'root_folder' 			=> (isset($image_manager['root_folder'])) ? $image_manager['root_folder'] : '',
             'max_size' 				=> (isset($image_manager['max_size'])) ? $image_manager['max_size'] : '',
             'thumb_height' 			=> (isset($image_manager['thumb_height'])) ? $image_manager['thumb_height'] : '',
             'thumb_width' 			=> (isset($image_manager['thumb_width'])) ? $image_manager['thumb_width'] : '',
@@ -190,7 +189,7 @@ class Settings extends Admin_Controller {
 	}
 
 	private function _updateSettings() {
-    	if ($this->validateForm() === TRUE) {
+        if ($this->validateForm() === TRUE) {
 			$update = array(
                 'site_name' 				=> $this->input->post('site_name'),
 				'site_email' 				=> $this->input->post('site_email'),

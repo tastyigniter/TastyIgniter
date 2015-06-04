@@ -88,7 +88,7 @@ class User {
 		}
 	}
 
-    public function restrict($permission) {
+    public function restrict($permission, $uri = '') {
         // If user isn't logged in, redirect to the login page.
         if ( ! $this->is_logged AND $this->uri->rsegment(1) !== 'login') redirect(root_url(ADMINDIR.'/login'));
 
@@ -108,13 +108,14 @@ class User {
         // Check whether the user has the proper permissions action.
         if (($has_permission = $this->checkPermittedActions($permission, $action, TRUE)) === TRUE) return TRUE;
 
-        // get the previous page from the session.
-        $uri = referrer_url();
+        if ($uri === '') { // get the previous page from the session.
+            $uri = referrer_url();
 
-        // If previous page and current page are the same, but the user no longer
-        // has permission, redirect to site URL to prevent an infinite loop.
-        if ($uri === current_url() AND !$this->CI->input->post()) {
-            $uri = site_url();
+            // If previous page and current page are the same, but the user no longer
+            // has permission, redirect to site URL to prevent an infinite loop.
+            if ($uri === current_url() AND !$this->CI->input->post()) {
+                $uri = site_url();
+            }
         }
 
         if (!$this->CI->input->is_ajax_request()) {  // remove later
@@ -219,10 +220,6 @@ class User {
             return TRUE;
         }
 
-        $permitted = TRUE;
-        // Fail if the staff group permision has available actions and no permitted actions.
-        if (empty($this->permitted_actions[$perm]) AND !empty($this->available_actions[$perm])) $permitted = FALSE;
-
         // Success if the permission has no available actions
         if (empty($this->available_actions[$perm])) return TRUE;
 
@@ -244,18 +241,21 @@ class User {
         // Ensure the action string is in lowercase
         $action = strtolower($action);
 
+        // Success if the action is not found in staff group permision available actions.
+        if (!in_array($action, $this->available_actions[$perm])) return TRUE;
+
         // Fail if action is not permitted but is available.
-        if ($permitted === FALSE OR (!in_array($action, $this->permitted_actions[$perm]) AND in_array($action, $this->available_actions[$perm]))) {
+        if (!isset($this->permitted_actions[$perm]) OR (!in_array($action, $this->permitted_actions[$perm]) AND in_array($action, $this->available_actions[$perm]))) {
             $perm = explode('.', $perm);
             $context = isset($perm[1]) ? $perm[1] : '';
             if ($display_error) {
-                $this->CI->alert->set('warning', 'Warning: You do not have the right permission to '.$action.' context ['.$context.'], please contact system administrator.');
+                $this->CI->alert->set('warning', 'Warning: You do not have the right permission to <b>'.$action.'</b> ['.$context.'] context, please contact system administrator.');
             }
 
             return FALSE;
         }
 
-        return $permitted;
+        return TRUE;
     }
 
     public function logout() {
