@@ -2,13 +2,10 @@
 
 class Error_logs extends Admin_Controller {
 
-	public function __construct() {
-        parent::__construct(); //  calls the constructor
-        $this->user->restrict('Admin.ErrorLogs');
-    }
-
 	public function index() {
-		$this->template->setTitle('Error Logs');
+        $this->user->restrict('Admin.ErrorLogs.Access');
+
+        $this->template->setTitle('Error Logs');
 		$this->template->setHeading('Error Logs');
 		$this->template->setButton('Clear', array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
@@ -35,6 +32,8 @@ class Error_logs extends Admin_Controller {
 	}
 
 	private function _clearLog() {
+        $this->user->restrict('Admin.ErrorLogs.Delete');
+
         $log_path = IGNITEPATH .'/logs/';
 
         if (is_readable($log_path .'logs.php')) {
