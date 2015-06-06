@@ -282,6 +282,9 @@ width: 24%;
 .navbar-top-links .dropdown-activities .menu .activity-body .fa {
 margin-left: -20px;
 }
+.navbar-top-links .dropdown-activities .menu .activity-body b {
+font-weight: 500;
+}
 @media(min-width:768px) {
 	.navbar-top-links .dropdown-menu {
 	margin-left: auto;

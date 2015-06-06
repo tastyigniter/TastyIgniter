@@ -87,7 +87,7 @@ $autoload['drivers'] = array();
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('url', 'html', 'form', 'date', 'template');
+$autoload['helper'] = array('tastyigniter', 'url', 'html', 'form', 'date', 'template');
 
 
 /*

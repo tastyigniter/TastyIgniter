@@ -124,7 +124,7 @@
                             <li class="menu-header"><b>You have <?php echo $message_unread; ?> messages</b></li>
                             <li class="menu-body"></li>
                             <li class="menu-footer">
-                                <a class="text-center" href="<?php echo site_url('messages'); ?>">Read All Messages</a>
+                                <a class="text-center" href="<?php echo site_url('messages'); ?>">See All Messages</a>
                             </li>
                         </ul>
                     </li>
