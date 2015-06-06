@@ -61,7 +61,7 @@
 
                     <div class="panel-body">
                         <div id="recipients" class="table-responsive" style="display:none">
-                            <table class="table table-striped table-border">
+                            <table class="table table-striped table-border table-no-spacing">
                                 <?php if ($recipients) { ?>
                                     <thead>
                                     <tr>

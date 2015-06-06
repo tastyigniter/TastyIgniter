@@ -101,7 +101,6 @@
                             <?php } else { ?>
                                 <button class="btn btn-default" title="Move to Archive" onclick="moveToArchive()"><i class="fa fa-archive"></i></button>
                             <?php } ?>
-<!--                        <button class="btn btn-default" title="Reply"><i class="fa fa-reply"></i></button>-->
                             <button class="btn btn-default" title="Refresh"><i class="fa fa-refresh"></i></button>
                             <div class="btn-group">
                                 <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" aria-expanded="true"><i class="fa fa-ellipsis-h"></i> &nbsp;<i class="caret"></i></button>
@@ -118,7 +117,7 @@
                         </div>
 
                         <div class="table-responsive wrap-none">
-                            <table border="0" class="table table-striped table-border message-list">
+                            <table border="0" class="table table-striped table-border message-list table-no-spacing">
                                 <tbody>
                                     <?php if ($messages) {?>
                                         <?php foreach ($messages as $message) { ?>
