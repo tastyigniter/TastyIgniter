@@ -132,21 +132,14 @@ class Tables_model extends TI_Model {
 		}
 
 		if (is_numeric($table_id)) {
-            $notification_action = 'updated';
             $this->db->where('table_id', $table_id);
             $query = $this->db->update('tables');
         } else {
-            $notification_action = 'added';
             $query = $this->db->insert('tables');
             $table_id = $this->db->insert_id();
         }
 
-        if ($query === TRUE AND is_numeric($table_id)) {
-            $this->load->model('Notifications_model');
-            $this->Notifications_model->addNotification(array('action' => $notification_action, 'object' => 'table', 'object_id' => $table_id));
-
-            return $table_id;
-        }
+        return $table_id;
 	}
 
 	public function deleteTable($table_id) {

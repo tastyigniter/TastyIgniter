@@ -17,6 +17,8 @@ class Extensions_model extends TI_Model {
                 if (isset($extension['status']) AND $extension['status'] === '1') {
                     $installed = TRUE;
                 }
+            } else {
+                $extension = array();
             }
 
             // skip loop if not installed and $is_installed is set TRUE
@@ -108,7 +110,7 @@ class Extensions_model extends TI_Model {
         if ($modules_locations = $this->config->item('modules_locations')) {
             foreach ($modules_locations as $location => $offset) {
                 foreach (glob($location . '*', GLOB_ONLYDIR) as $extension_path) {
-                    if (is_file($extension_path.'/config/'.basename($extension_path).'.php')) {
+                    if (is_dir($extension_path) OR is_file($extension_path.'/config/'.basename($extension_path).'.php')) {
                         $results[] = $extension_path;
                     }
                 }
@@ -187,8 +189,10 @@ class Extensions_model extends TI_Model {
                     $this->db->where('extension_id', $update['extension_id']);
                     $query = $this->db->update('extensions');
 
-                    $this->load->model('Notifications_model');
-                    $this->Notifications_model->addNotification(array('action' => 'updated', 'object' => 'extension', 'object_id' => $update['extension_id']));
+                    log_activity($this->user->getStaffId(), 'updated', 'extensions', get_activity_message('activity_custom_no_link',
+                        array('{staff}', '{action}', '{context}', '{item}'),
+                        array($this->user->getStaffName(), 'updated', 'extension '.$update['type'], $update['title'])
+                    ));
                 }
             }
 		}
@@ -259,11 +263,6 @@ class Extensions_model extends TI_Model {
                     if ($this->db->insert('extensions')) $extension_id = $this->db->insert_id();
                 }
 
-                if ($extension_id AND is_numeric($extension_id)) {
-                    $this->load->model('Notifications_model');
-                    $this->Notifications_model->addNotification(array('action' => 'installed', 'object' => 'extension', 'object_id' => $name));
-                }
-
                 return $extension_id;
             }
         }
@@ -290,8 +289,6 @@ class Extensions_model extends TI_Model {
             } else {
                 $this->db->update('extensions');
                 if ($this->db->affected_rows() > 0) {
-                    $this->load->model('Notifications_model');
-                    $this->Notifications_model->addNotification(array('action' => 'uninstalled', 'object' => 'extension', 'object_id' => $name));
                     $query = TRUE;
                 }
             }
@@ -325,8 +322,6 @@ class Extensions_model extends TI_Model {
                 rmdir(ROOTPATH . EXTPATH . $name);
 
                 $query = TRUE;
-                $this->load->model('Notifications_model');
-                $this->Notifications_model->addNotification(array('action' => 'deleted', 'object' => 'extension', 'object_id' => $name));
             }
         }
 

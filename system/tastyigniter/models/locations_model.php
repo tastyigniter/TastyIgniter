@@ -380,9 +380,6 @@ class Locations_model extends TI_Model {
                 $this->permalink->savePermalink('local', $save['permalink'], 'location_id=' . $location_id);
             }
 
-            $this->load->model('Notifications_model');
-            $this->Notifications_model->addNotification(array('action' => $notification_action, 'object' => 'location', 'object_id' => $location_id));
-
             return $location_id;
         }
 	}

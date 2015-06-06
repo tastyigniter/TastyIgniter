@@ -125,21 +125,14 @@ class Permissions_model extends TI_Model {
 		}
 
 		if (is_numeric($permission_id)) {
-            $notification_action = 'updated';
             $this->db->where('permission_id', $permission_id);
             $query = $this->db->update('permissions');
         } else {
-            $notification_action = 'added';
             $query = $this->db->insert('permissions');
             $permission_id = $this->db->insert_id();
         }
 
-        if ($query === TRUE AND is_numeric($permission_id)) {
-            $this->load->model('Notifications_model');
-            $this->Notifications_model->addNotification(array('action' => $notification_action, 'object' => 'permission', 'object_id' => $permission_id));
-
-            return $permission_id;
-        }
+        return $permission_id;
 	}
 
 	public function deletePermission($permission_id) {

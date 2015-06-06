@@ -198,23 +198,16 @@ class Coupons_model extends TI_Model {
 		}
 
 		if (is_numeric($coupon_id)) {
-            $notification_action = 'updated';
             $this->db->where('coupon_id', $coupon_id);
             $query = $this->db->update('coupons');
         } else {
-            $notification_action = 'added';
             $this->db->set('date_added', mdate('%Y-%m-%d', time()));
             $query = $this->db->insert('coupons');
             $coupon_id = $this->db->insert_id();
         }
 
-        if ($query === TRUE AND $coupon_id) {
-            $this->load->model('Notifications_model');
-            $this->Notifications_model->addNotification(array('action' => $notification_action, 'object' => 'coupon', 'object_id' => $coupon_id));
-
-            return $coupon_id;
-        }
-	}
+        return $coupon_id;
+    }
 
 	public function deleteCoupon($coupon_id) {
         if (is_numeric($coupon_id)) $coupon_id = array($coupon_id);

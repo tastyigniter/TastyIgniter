@@ -83,8 +83,8 @@ class Maintenance_model extends TI_Model {
         return FALSE;
     }
 
-    public function restoreDatabase($content) {
-        if ($content) {
+    public function restoreDatabase($restore_path) {
+        if ($content = file_get_contents($restore_path)) {
             foreach(explode(";\n", $content) as $sql) {
                 $sql = trim($sql);
 

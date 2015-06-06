@@ -229,22 +229,8 @@ class Orders_model extends TI_Model {
 			$this->db->where('order_id', $update['order_id']);
 			$query = $this->db->update('orders');
 
-			$this->load->model('Notifications_model');
-			$notification = array('object' => 'order', 'object_id' => $update['order_id'],
-				'actor_id' => $update['staff_id'], 'subject_id' => $update['status_id'],
-			);
-
 			if ($query AND (int) $status_id !== (int) $update['status_id']) {
 				$this->Statuses_model->addStatusHistory('order', $update);
-
-				$notification['action'] = 'changed';
-				$this->Notifications_model->addNotification($notification);
-			}
-
-			if ($query AND $update['old_assignee_id'] !== $update['assignee_id']) {
-				$notification['action'] = 'assigned';
-				$notification['subject_id'] = $update['assignee_id'];
-				$this->Notifications_model->addNotification($notification);
 			}
 		}
 
@@ -316,10 +302,12 @@ class Orders_model extends TI_Model {
 
         if (!empty($order_info)) {
             if (isset($order_info['order_id'])) {
+                $_action = 'updated';
                 $this->db->where('order_id', $order_info['order_id']);
                 $query = $this->db->update('orders');
                 $order_id = $order_info['order_id'];
             } else {
+                $_action = 'added';
                 $query = $this->db->insert('orders');
                 $order_id = $this->db->insert_id();
             }
@@ -328,6 +316,13 @@ class Orders_model extends TI_Model {
                 if (isset($order_info['address_id'])) {
                     $this->load->model('Addresses_model');
                     $this->Addresses_model->updateDefault($order_info['customer_id'], $order_info['address_id']);
+                }
+
+                if ($_action === 'added' AND APPDIR === MAINDIR) {
+                    log_activity($order_info['customer_id'], 'created', 'orders', get_activity_message('activity_created_order',
+                        array('{customer}', '{link}', '{order_id}'),
+                        array($order_info['first_name'].' '.$order_info['last_name'], admin_url('orders/edit?id='.$order_id), $order_id)
+                    ));
                 }
 
                 return $order_id;

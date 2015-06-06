@@ -229,24 +229,16 @@ class Reviews_model extends TI_Model {
 		}
 
 		if (is_numeric($review_id)) {
-            $notification_action = 'updated';
             $this->db->where('review_id', $review_id);
 			$query = $this->db->update('reviews');
         } else {
-            $notification_action = 'added';
             $this->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', time()));
             $query = $this->db->insert('reviews');
             $review_id = $this->db->insert_id();
 
         }
 
-        if ($query === TRUE AND is_numeric($review_id)) {
-            $this->load->model('Notifications_model');
-            $customer_id = !empty($save['customer_id']) ? $save['customer_id'] : '0';
-            $this->Notifications_model->addNotification(array('action' => $notification_action, 'object' => 'review', 'object_id' => $review_id, 'subject_id' => $customer_id));
-
-            return $review_id;
-        }
+        return $review_id;
 	}
 
 	public function deleteReview($review_id) {

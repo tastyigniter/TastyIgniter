@@ -317,20 +317,17 @@ class Customers_model extends TI_Model {
 		}
 
 		if (is_numeric($customer_id)) {
-            $notification_action = 'updated';
+            $action = 'updated';
             $this->db->where('customer_id', $customer_id);
             $query = $this->db->update('customers');
         } else {
-            $notification_action = 'added';
+            $action = 'added';
             $this->db->set('date_added', mdate('%Y-%m-%d', time()));
             $query = $this->db->insert('customers');
             $customer_id = $this->db->insert_id();
         }
 
         if ($query === TRUE AND is_numeric($customer_id)) {
-            $this->load->model('Notifications_model');
-            $this->Notifications_model->addNotification(array('action' => $notification_action, 'object' => 'customer', 'object_id' => $customer_id));
-
             if (!empty($save['address'])) {
                 $this->load->model('Addresses_model');
 
@@ -343,7 +340,7 @@ class Customers_model extends TI_Model {
                 }
             }
 
-            if ($notification_action === 'added' AND $this->config->item('registration_email') === '1') {
+            if ($action === 'added' AND $this->config->item('registration_email') === '1') {
                 $mail_data['site_name'] 		= $this->config->item('site_name');
                 $mail_data['first_name'] 		= $save['first_name'];
                 $mail_data['last_name'] 		= $save['last_name'];

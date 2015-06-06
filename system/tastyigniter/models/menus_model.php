@@ -155,19 +155,14 @@ class Menus_model extends TI_Model {
 		}
 
 		if (is_numeric($menu_id)) {
-            $notification_action = 'updated';
             $this->db->where('menu_id', (int) $menu_id);
             $query = $this->db->update('menus');
         } else {
-            $notification_action = 'added';
             $query = $this->db->insert('menus');
             $menu_id = $this->db->insert_id();
         }
 
         if ($query === TRUE AND is_numeric($menu_id)) {
-            $this->load->model('Notifications_model');
-            $this->Notifications_model->addNotification(array('action' => $notification_action, 'object' => 'menu', 'object_id' => $menu_id));
-
             if (!empty($save['menu_options'])) {
                 $this->load->model('Menu_options_model');
                 $this->Menu_options_model->addMenuOption($menu_id, $save['menu_options']);

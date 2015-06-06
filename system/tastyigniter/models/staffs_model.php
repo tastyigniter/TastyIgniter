@@ -250,11 +250,11 @@ class Staffs_model extends TI_Model {
 		}
 
 		if (is_numeric($staff_id)) {
-            $notification_action = 'updated';
+            $_action = 'updated';
             $this->db->where('staff_id', $staff_id);
             $query = $this->db->update('staffs');
         } else {
-            $notification_action = 'added';
+            $_action = 'added';
             $this->db->set('date_added', mdate('%Y-%m-%d', time()));
             $query = $this->db->insert('staffs');
             $staff_id = $this->db->insert_id();
@@ -265,7 +265,7 @@ class Staffs_model extends TI_Model {
                 $this->db->set('salt', $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9));
                 $this->db->set('password', sha1($salt . sha1($salt . sha1($save['password']))));
 
-                if ($notification_action === 'added' AND !empty($save['username'])) {
+                if ($_action === 'added' AND !empty($save['username'])) {
                     $this->db->set('username', strtolower($save['username']));
                     $this->db->set('staff_id', $staff_id);
                     $query = $this->db->insert('users');
@@ -274,9 +274,6 @@ class Staffs_model extends TI_Model {
                     $query = $this->db->update('users');
                 }
             }
-
-            $this->load->model('Notifications_model');
-            $this->Notifications_model->addNotification(array('action' => $notification_action, 'object' => 'staff', 'object_id' => $staff_id));
 
             return ($query === TRUE AND is_numeric($staff_id)) ? $staff_id : FALSE;
         }

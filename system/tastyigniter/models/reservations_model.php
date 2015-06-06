@@ -331,22 +331,8 @@ class Reservations_model extends TI_Model {
 			$this->db->where('reservation_id', $update['reservation_id']);
 			$query = $this->db->update('reservations');
 
-			$this->load->model('Notifications_model');
-			$notification = array('object' => 'reservation', 'object_id' => $update['reservation_id'],
-				'actor_id' => $update['staff_id'], 'subject_id' => $update['status_id'],
-			);
-
 			if ((int) $status_id !== (int) $update['status_id']) {
-				$notification['action'] = 'changed';
 				$this->Statuses_model->addStatusHistory('reserve', $update);
-				$this->Notifications_model->addNotification($notification);
-			}
-
-			if ($update['old_assignee_id'] !== $update['assignee_id']) {
-				$this->load->model('Notifications_model');
-				$notification['action'] = 'assigned';
-				$notification['subject_id'] = $update['assignee_id'];
-				$this->Notifications_model->addNotification($notification);
 			}
 		}
 
@@ -428,7 +414,14 @@ class Reservations_model extends TI_Model {
 			if ($this->db->insert('reservations')) {
 				$reservation_id = $this->db->insert_id();
 
-				$notify = $this->_sendMail($reservation_id);
+                if (APPDIR === MAINDIR) {
+                    log_activity($add['customer_id'], 'reserved', 'reservations', get_activity_message('activity_reserved_table',
+                        array('{customer}', '{link}', '{reservation_id}'),
+                        array($add['first_name'].' '.$add['last_name'], admin_url('reservations/edit?id='.$reservation_id), $reservation_id)
+                    ));
+                }
+
+                $notify = $this->_sendMail($reservation_id);
 				$this->db->set('notify', $notify);
 
 				$this->db->set('status', $this->config->item('new_reservation_status'));
