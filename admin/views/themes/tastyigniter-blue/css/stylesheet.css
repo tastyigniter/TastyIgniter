@@ -274,6 +274,10 @@ width: 250px;
 }
 .navbar-top-links .dropdown-activities .menu .activity-body {
 width: 74%;
+padding-left: 20px;
+}
+.navbar-top-links .dropdown-activities .menu .activity-time {
+width: 24%;
 }
 .navbar-top-links .dropdown-activities .menu .activity-body .fa {
 margin-left: -20px;
