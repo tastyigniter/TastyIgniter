@@ -2,12 +2,12 @@
 
 class Maintenance extends Admin_Controller {
 
-	public function __construct() {
-		parent::__construct(); //  calls the constructor
+    public function __construct() {
+        parent::__construct(); //  calls the constructor
         $this->load->model('Maintenance_model');
-	}
+    }
 
-	public function index() {
+    public function index() {
         $this->load->helper('number');
         $this->user->restrict('Admin.Maintenance.Access');
 
@@ -50,7 +50,7 @@ class Maintenance extends Admin_Controller {
                     'size'     => filesize($backup_file),
                     'download' => site_url('maintenance/backup?download=' . $basename),
                     'restore'  => site_url('maintenance/backup?restore=' . $basename),
-                    'delete'        => site_url('maintenance/backup?delete='. $basename)
+                    'delete'   => site_url('maintenance/backup?delete=' . $basename)
                 );
             }
         }
@@ -69,8 +69,8 @@ class Maintenance extends Admin_Controller {
         }
 
         $this->template->setPartials(array('header', 'footer'));
-		$this->template->render('maintenance', $data);
-	}
+        $this->template->render('maintenance', $data);
+    }
 
     public function backup() {
         $this->user->restrict('Admin.Maintenance.Manage');
@@ -84,7 +84,7 @@ class Maintenance extends Admin_Controller {
         }
 
         $checked_tables = ($this->session->flashdata('tables')) ? $this->session->flashdata('tables') : $this->input->post('tables');
-        if (!$this->Maintenance_model->checkTables($checked_tables)) {
+        if ( ! $this->Maintenance_model->checkTables($checked_tables)) {
             redirect('maintenance');
         } else if ($this->input->post('tables') AND $this->input->post('compression') AND $this->_backup() === TRUE) {
             redirect('maintenance');
@@ -103,7 +103,7 @@ class Maintenance extends Admin_Controller {
         if ($this->input->post('file_name')) {
             $data['file_name'] = $this->input->post('file_name');
         } else {
-            $data['file_name'] = 'tastyigniter-'.$timestamp;
+            $data['file_name'] = 'tastyigniter-' . $timestamp;
         }
 
         if ($this->input->post('drop_tables')) {
@@ -164,9 +164,9 @@ class Maintenance extends Admin_Controller {
         $this->template->setBackButton('btn btn-back', site_url('maintenance'));
 
         $data['text_empty'] = 'There are no rows available for this table.';
-        $data['sql_query'] = 'SELECT * FROM ('.$filter['table']. ')';
+        $data['sql_query'] = 'SELECT * FROM (' . $filter['table'] . ')';
 
-        if (!empty($table_info['query'])) {
+        if ( ! empty($table_info['query'])) {
             $this->load->library('table');
             $template = array('table_open' => '<table class="table table-striped table-border">');
             $this->table->set_template($template);
@@ -175,16 +175,16 @@ class Maintenance extends Admin_Controller {
             $data['query_table'] = '';
         }
 
-        $config['base_url'] 		= site_url('maintenance/browse_table/'.$filter['table']);
-        $config['total_rows'] 		= !empty($table_info['total_rows']) ? $table_info['total_rows'] : '0';
-        $config['per_page'] 		= $filter['limit'];
+        $config['base_url'] = site_url('maintenance/browse_table/' . $filter['table']);
+        $config['total_rows'] = ! empty($table_info['total_rows']) ? $table_info['total_rows'] : '0';
+        $config['per_page'] = $filter['limit'];
 
         $this->load->library('pagination');
         $this->pagination->initialize($config);
 
         $data['pagination'] = array(
-            'info'		=> $this->pagination->create_infos(),
-            'links'		=> $this->pagination->create_links()
+            'info'  => $this->pagination->create_infos(),
+            'links' => $this->pagination->create_links()
         );
 
         $this->template->setPartials(array('header', 'footer'));
@@ -192,24 +192,7 @@ class Maintenance extends Admin_Controller {
 
     }
 
-    private function _migrate() {
-        $this->user->restrict('Admin.Maintenance.Manage');
-
-        if ($this->input->post('migrate') AND is_numeric($this->input->post('migrate'))) {
-            $this->load->library('migration');
-            $migrate = (int) $this->migration->get_migration_number($this->input->post('migrate'));
-
-            if ($this->migration->version($migrate)) {
-                $this->alert->set('success', 'Database migrated successfully.');
-            } else {
-                $this->alert->set('danger', 'An error occurred, '.$this->migration->error_string());
-            }
-        }
-
-        return TRUE;
-    }
-
-	private function _backup() {
+    private function _backup() {
         if ($this->input->post('tables') AND $this->validateForm() === TRUE) {
 
             if ($this->Maintenance_model->backupDatabase($this->input->post())) {
@@ -218,9 +201,9 @@ class Maintenance extends Admin_Controller {
 
             return TRUE;
         }
-	}
+    }
 
-	private function _restore() {
+    private function _restore() {
         $this->user->restrict('Admin.Maintenance.Add');
 
         if ($this->input->get('restore')) {
@@ -233,11 +216,11 @@ class Maintenance extends Admin_Controller {
                 }
             } else {
                 $this->alert->set('warning', 'An error occurred, nothing restored!');
-			}
+            }
 
-			return TRUE;
-		}
-	}
+            return TRUE;
+        }
+    }
 
     private function _download() {
         $this->user->restrict('Admin.Maintenance.Manage');
@@ -271,14 +254,31 @@ class Maintenance extends Admin_Controller {
         }
     }
 
-	private function validateForm() {
-		$this->form_validation->set_rules('file_name', 'File Name', 'xss_clean|trim|required');
-		$this->form_validation->set_rules('drop_tables', 'Drop Tables', 'xss_clean|trim|required|alpha_dash');
-		$this->form_validation->set_rules('add_inserts', 'Insert Data', 'xss_clean|trim|required|alpha_dash');
-		$this->form_validation->set_rules('compression', 'Compression Format', 'xss_clean|trim|required|alpha_dash');
-		$this->form_validation->set_rules('tables[]', 'Backup', 'xss_clean|trim|required|alpha_dash');
+    private function _migrate() {
+        $this->user->restrict('Admin.Maintenance.Manage');
 
-        if (!empty($_POST['file_name'])) {
+        if ($this->input->post('migrate') AND is_numeric($this->input->post('migrate'))) {
+            $this->load->library('migration');
+            $migrate = (int) $this->migration->get_migration_number($this->input->post('migrate'));
+
+            if ($this->migration->version($migrate)) {
+                $this->alert->set('success', 'Database migrated successfully.');
+            } else {
+                $this->alert->set('danger', 'An error occurred, ' . $this->migration->error_string());
+            }
+        }
+
+        return TRUE;
+    }
+
+    private function validateForm() {
+        $this->form_validation->set_rules('file_name', 'File Name', 'xss_clean|trim|required');
+        $this->form_validation->set_rules('drop_tables', 'Drop Tables', 'xss_clean|trim|required|alpha_dash');
+        $this->form_validation->set_rules('add_inserts', 'Insert Data', 'xss_clean|trim|required|alpha_dash');
+        $this->form_validation->set_rules('compression', 'Compression Format', 'xss_clean|trim|required|alpha_dash');
+        $this->form_validation->set_rules('tables[]', 'Backup', 'xss_clean|trim|required|alpha_dash');
+
+        if ( ! empty($_POST['file_name'])) {
             $_POST['file_name'] = html_entity_decode($_POST['file_name'], ENT_QUOTES, 'UTF-8');
             $_POST['file_name'] = str_replace(array('"', "'", "/", "\\"), "", $_POST['file_name']);
             $filename = $this->security->sanitize_filename($_POST['file_name']);
@@ -286,11 +286,11 @@ class Maintenance extends Admin_Controller {
         }
 
         if ($this->form_validation->run() === TRUE) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
-	}
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
 }
 
 /* End of file maintenance.php */
