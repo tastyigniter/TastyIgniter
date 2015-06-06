@@ -129,8 +129,12 @@ class Alert {
 			}
 		}
 
+        if (method_exists( $this->_ci->router, 'fetch_module' )) {
+            $this->_module 	= $this->_ci->router->fetch_module();
+        }
+
         //Lock alert session flashdata to specific app
-        $this->session_name = APPDIR.'_alert';
+        $this->session_name = (!empty($this->_module)) ? 'module_alert' : APPDIR.'_alert';
 	}
 
 	/**
