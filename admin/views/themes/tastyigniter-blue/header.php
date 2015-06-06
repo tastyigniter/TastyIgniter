@@ -132,34 +132,12 @@
 						<a class="dropdown-toggle alerts" data-toggle="dropdown" href="<?php echo site_url('alerts'); ?>">
 							<i class="fa fa-bell"></i>
 						</a>
-                        <ul class="dropdown-menu  dropdown-notifications">
-                            <li class="menu-header"><b>You have 4 notifications</b></li>
-                            <li>
-                                <ul class="menu">
-                                    <li>
-                                        <a href="#">
-                                            <div>
-                                                <i class="fa fa-tasks fa-fw"></i> New Task
-                                                <span class="pull-right text-muted small">4 minutes ago</span>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="divider"></li>
-                                    <li>
-                                        <a href="#">
-                                            <div>
-                                                <i class="fa fa-upload fa-fw"></i> Server Rebooted
-                                                <span class="pull-right text-muted small">4 minutes ago</span>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="divider"></li>
-                                    <li class="menu-footer">
-                                        <a class="text-center" href="<?php echo site_url('activities'); ?>">See All Activities</a>
-                                    </li>
-                                </ul>
+                        <ul class="dropdown-menu dropdown-activities">
+                            <li class="menu-header"><b>There are 4 unread activities</b></li>
+                            <li class="menu-body"></li>
+                            <li class="menu-footer">
+                                <a class="text-center" href="<?php echo site_url('activities'); ?>">See All Activities</a>
                             </li>
-                            <li class="menu-footer"></li>
                         </ul>
                     </li>
 					<li class="dropdown">
