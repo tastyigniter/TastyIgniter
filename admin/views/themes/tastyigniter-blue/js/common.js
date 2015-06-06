@@ -126,6 +126,7 @@ $(function(){
     //$('#page-wrapper .panel-table .btn-filter').trigger('click');
 
     $('.dropdown-messages .menu-body').load(js_site_url('messages/latest'));
+    $('.dropdown-activities .menu-body').load(js_site_url('activities/latest'));
 })
 
 
