@@ -251,8 +251,15 @@ class Customers extends Admin_Controller {
             $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
 			if ($customer_id = $this->Customers_model->saveCustomer($this->input->get('id'), $this->input->post())) {
-				$this->alert->set('success', 'Customer ' . $save_type . ' successfully.');
-			} else {
+                $customer_name = $this->input->post('first_name').' '.$this->input->post('last_name');
+
+                log_activity($this->user->getStaffId(), $save_type, 'customers', get_activity_message('activity_custom',
+                    array('{staff}', '{action}', '{context}', '{link}', '{item}'),
+                    array($this->user->getStaffName(), $save_type, 'customer', site_url('customers/edit?id='.$customer_id), $customer_name)
+                ));
+
+                $this->alert->set('success', 'Customer ' . $save_type . ' successfully.');
+            } else {
 				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
 			}
 

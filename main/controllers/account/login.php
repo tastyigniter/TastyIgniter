@@ -40,7 +40,12 @@ class Login extends Main_Controller {
 					$this->alert->set('alert', $this->lang->line('alert_invalid_login'));	// display error message and redirect to account login page
   					redirect('account/login');
     			} else {																		// else if login was successful redirect to account page
- 					redirect('account/account');
+                    log_activity($this->customer->getId(), 'logged in', 'customers', get_activity_message('activity_logged_in',
+                        array('{customer}', '{link}'),
+                        array($this->customer->getName(), admin_url('customers/edit?id='.$this->customer->getId()))
+                    ));
+
+                    redirect('account/account');
   				}
     		}
 		}

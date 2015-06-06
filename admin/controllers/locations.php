@@ -366,7 +366,12 @@ class Locations extends Admin_Controller {
             $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
 			if ($location_id = $this->Locations_model->saveLocation($this->input->get('id'), $this->input->post())) {
-				$this->alert->set('success', 'Location ' . $save_type . ' successfully.');
+                log_activity($this->user->getStaffId(), $save_type, 'locations', get_activity_message('activity_custom',
+                    array('{staff}', '{action}', '{context}', '{link}', '{item}'),
+                    array($this->user->getStaffName(), $save_type, 'location', site_url('locations/edit?id='.$location_id), $this->input->post('location_name'))
+                ));
+
+                $this->alert->set('success', 'Location ' . $save_type . ' successfully.');
 			} else {
 				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
 			}

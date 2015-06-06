@@ -18,21 +18,19 @@ class Payments extends Admin_Controller {
 		$results = $this->Extensions_model->getList(array('type' => 'payment'));
 		foreach ($results as $result) {
 			if ($result['installed'] === TRUE) {
-				$extension_id = $result['extension_id'];
-				$manage = site_url('payments/edit?action=uninstall&name='.$result['name'].'&id='.$extension_id);
-			} else {
-				$extension_id = '-';
-				$manage = site_url('payments/edit?action=install&name='.$result['name'].'&id='.$extension_id);
+                $manage = 'uninstall';
+            } else {
+                $manage = 'install';
 			}
 
 			$data['payments'][] = array(
-				'extension_id' 	=> $extension_id,
+				'extension_id' 	=> $result['extension_id'],
 				'name' 			=> $result['title'],
 				'installed' 	=> $result['installed'],
 				'type' 			=> $result['type'],
 				'options' 		=> $result['options'],
-				'edit' 			=> site_url('payments/edit?action=edit&name='.$result['name'].'&id='.$extension_id),
-				'manage'		=> $manage
+				'edit' 			=> site_url('payments/edit?action=edit&name='.$result['name'].'&id='.$result['extension_id']),
+                'manage'		=> site_url('payments/edit?action='.$manage.'&name='.$result['name'].'&id='.$result['extension_id'])
 			);
 		}
 
@@ -92,7 +90,12 @@ class Payments extends Admin_Controller {
 	private function _install() {
         if ($this->input->get('action') === 'install') {
             if ($this->Extensions_model->extensionExists($this->input->get('name'))) {
-                if ($this->Extensions_model->install('payment', $this->input->get('name'))) {
+                if ($this->Extensions_model->install('payment', $this->input->get('name'), $this->input->get('id'))) {
+                    log_activity($this->user->getStaffId(), 'installed', 'extensions', get_activity_message('activity_custom_no_link',
+                        array('{staff}', '{action}', '{context}', '{item}'),
+                        array($this->user->getStaffName(), 'installed', 'extension payment', $this->input->get('name'))
+                    ));
+
                     $this->alert->set('success', 'Payment Installed successfully.');
                     return TRUE;
                 }
@@ -106,10 +109,17 @@ class Payments extends Admin_Controller {
 
 	private function _uninstall() {
         if ($this->input->get('action') === 'uninstall') {
-            if ($this->Extensions_model->uninstall('payment', $this->input->get('name'))) {
+            if ($this->Extensions_model->uninstall('payment', $this->input->get('name'), $this->input->get('id'))) {
+                log_activity($this->user->getStaffId(), 'uninstalled', 'extensions', get_activity_message('activity_custom_no_link',
+                    array('{staff}', '{action}', '{context}', '{item}'),
+                    array($this->user->getStaffName(), 'uninstalled', 'extension payment', $this->input->get('name'))
+                ));
+
                 $this->alert->set('success', 'Payment Uninstalled successfully.');
                 return TRUE;
             }
+
+            $this->alert->danger_now('An error occurred, please try again.');
         }
 
         return FALSE;

@@ -203,6 +203,11 @@ class Coupons extends Admin_Controller {
             $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
 			if ($coupon_id = $this->Coupons_model->saveCoupon($this->input->get('id'), $this->input->post())) {
+                log_activity($this->user->getStaffId(), $save_type, 'coupons', get_activity_message('activity_custom',
+                    array('{staff}', '{action}', '{context}', '{link}', '{item}'),
+                    array($this->user->getStaffName(), $save_type, 'coupon', site_url('coupons/edit?id='.$coupon_id), $this->input->post('name'))
+                ));
+
                 $this->alert->set('success', 'Coupon ' . $save_type . ' successfully.');
             } else {
                 $this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');

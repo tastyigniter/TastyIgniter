@@ -345,7 +345,19 @@ class Reservations extends Admin_Controller {
 			$update['date_added']		= mdate('%Y-%m-%d %H:%i:%s', $current_time);
 
 			if ($this->Reservations_model->updateReservation($update, $status_id)) {
-				$this->alert->set('success', 'Reservation updated successfully.');
+                log_activity($this->user->getStaffId(), 'updated', 'reservations', get_activity_message('activity_custom',
+                    array('{staff}', '{action}', '{context}', '{link}', '{item}'),
+                    array($this->user->getStaffName(), 'updated', 'reservation', current_url(), $update['reservation_id'])
+                ));
+
+                if ($update['old_assignee_id'] !== $update['assignee_id']) {
+                    log_activity($this->user->getStaffId(), 'assigned', 'reservations', get_activity_message('activity_assigned',
+                        array('{staff}', '{action}', '{context}', '{link}', '{item}', '{assignee}'),
+                        array($this->user->getStaffName(), 'assigned', 'reservation', current_url(), $update['reservation_id'], $update['assignee_id'])
+                    ));
+                }
+
+                $this->alert->set('success', 'Reservation updated successfully.');
 			} else {
 				$this->alert->set('warning', 'An error occurred, nothing updated.');
 			}

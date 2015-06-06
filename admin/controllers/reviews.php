@@ -204,7 +204,12 @@ class Reviews extends Admin_Controller {
             $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
 			if ($review_id = $this->Reviews_model->saveReview($this->input->get('id'), $this->input->post())) {
-				$this->alert->set('success', 'Review ' . $save_type . ' successfully.');
+                log_activity($this->user->getStaffId(), $save_type, 'reviews', get_activity_message('activity_custom',
+                    array('{staff}', '{action}', '{context}', '{link}', '{item}'),
+                    array($this->user->getStaffName(), $save_type, 'review', current_url(), $this->input->get('id'))
+                ));
+
+                $this->alert->set('success', 'Review ' . $save_type . ' successfully.');
 			} else {
                 $this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
 			}

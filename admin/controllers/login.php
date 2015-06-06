@@ -2,10 +2,6 @@
 
 class Login extends Admin_Controller {
 
-	public function __construct() {
-		parent::__construct(); //  calls the constructor
-	}
-
 	public function index() {
 		if ($this->user->islogged()) {
   			redirect('dashboard');
@@ -16,13 +12,23 @@ class Login extends Admin_Controller {
         $data['reset_url'] = site_url('login/reset');
 
 		if ($this->input->post() AND $this->validateLoginForm() === TRUE) {
-			if ($previous_url = $this->session->tempdata('previous_url')) {
-                $this->session->unset_tempdata('previous_url');
-                redirect($previous_url);
-            }
+            if (!$this->user->login($this->input->post('user'), $this->input->post('password'))) {										// checks if form validation routines ran successfully
+                $this->alert->set('danger', 'Username and Password not found!');
+                redirect('login');
+            } else {
+                log_activity($this->user->getStaffId(), 'logged in', 'staffs', get_activity_message('activity_logged_in',
+                    array('{staff}', '{link}'),
+                    array($this->user->getStaffName(), admin_url('staffs/edit?id='.$this->user->getStaffId()))
+                ));
 
-            redirect(referrer_url());
-		}
+                if ($previous_url = $this->session->tempdata('previous_url')) {
+                    $this->session->unset_tempdata('previous_url');
+                    redirect($previous_url);
+                }
+
+                redirect(referrer_url());
+            }
+        }
 
 		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('login', $data);
@@ -52,13 +58,10 @@ class Login extends Admin_Controller {
 		// END of form validation rules
 
 		if ($this->form_validation->run() === TRUE) {
-			if (!$this->user->login($this->input->post('user'), $this->input->post('password'))) {										// checks if form validation routines ran successfully
-				$this->alert->set('danger', 'Username and Password not found!');
-				redirect('login');
-			} else {
-				return TRUE;
-			}
-		}
+            return TRUE;
+        } else {
+            return FALSE;
+        }
 	}
 
 	private function validateResetForm() {

@@ -349,7 +349,6 @@ class Orders extends Admin_Controller {
 			$update['status_id'] = (int)$this->input->post('order_status');
 			$update['date_modified'] =  mdate('%Y-%m-%d', $current_time);
 
-			$update['object_id'] 		= $update['order_id'];
 			$update['staff_id']			= $this->user->getStaffId();
 			$update['old_assignee_id']	= (int)$assignee_id;
 			$update['assignee_id']		= (int)$this->input->post('assignee_id');
@@ -358,7 +357,19 @@ class Orders extends Admin_Controller {
 			$update['date_added']		= mdate('%Y-%m-%d %H:%i:%s', $current_time);
 
 			if ($this->Orders_model->updateOrder($update, $status_id)) {
-				$this->alert->set('success', 'Order updated successfully.');
+                log_activity($this->user->getStaffId(), 'updated', 'orders', get_activity_message('activity_custom',
+                    array('{staff}', '{action}', '{context}', '{link}', '{item}'),
+                    array($this->user->getStaffName(), 'updated', 'order', current_url(), '#'.$update['order_id'])
+                ));
+
+                if ($update['old_assignee_id'] !== $update['assignee_id']) {
+                    log_activity($this->user->getStaffId(), 'assigned', 'orders', get_activity_message('activity_assigned',
+                        array('{staff}', '{action}', '{context}', '{link}', '{item}', '{assignee}'),
+                        array($this->user->getStaffName(), 'assigned', 'order', current_url(), '#'.$update['order_id'], $update['assignee_id'])
+                    ));
+                }
+
+                $this->alert->set('success', 'Order updated successfully.');
 			} else {
 				$this->alert->set('warning', 'An error occurred, nothing updated.');
 			}

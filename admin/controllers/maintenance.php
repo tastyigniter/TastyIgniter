@@ -228,9 +228,7 @@ class Maintenance extends Admin_Controller {
             $restore_path = ROOTPATH . "assets/downloads/" . $restore['filename'] . ".sql";
 
             if ($restore['extension'] === 'sql' AND is_file($restore_path)) {
-				$content = file_get_contents($restore_path);
-
-                if ($this->Maintenance_model->restoreDatabase($content)) { // calls model to save data to SQL
+                if ($this->Maintenance_model->restoreDatabase($restore_path)) { // calls model to save data to SQL
                     $this->alert->set('success', 'Database restored successfully.');
                 }
             } else {

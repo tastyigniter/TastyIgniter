@@ -281,7 +281,12 @@ class Menus extends Admin_Controller {
             $save_type = (! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
 			if ($menu_id = $this->Menus_model->saveMenu($this->input->get('id'), $this->input->post())) {
-				$this->alert->set('success', 'Menu ' . $save_type . ' successfully.');
+                log_activity($this->user->getStaffId(), $save_type, 'menus', get_activity_message('activity_custom',
+                    array('{staff}', '{action}', '{context}', '{link}', '{item}'),
+                    array($this->user->getStaffName(), $save_type, 'menu item', site_url('menus/edit?id='.$menu_id), $this->input->post('menu_name'))
+                ));
+
+                $this->alert->set('success', 'Menu ' . $save_type . ' successfully.');
 			} else {
 				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
 			}

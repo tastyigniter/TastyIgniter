@@ -88,7 +88,19 @@ class Details extends Main_Controller {
 
 			if (!empty($update)) {																// if update array is not empty then update customer details and display success message
 				if ($this->Customers_model->saveCustomer($this->customer->getId(), $update)) {
-					$this->alert->set('alert', $this->lang->line('alert_updated'));
+                    log_activity($this->customer->getId(), 'updated', 'customers', get_activity_message('activity_updated_account',
+                        array('{customer}', '{link}'),
+                        array($this->customer->getName(), admin_url('customers/edit?id='.$this->customer->getId()))
+                    ));
+
+                    if (!empty($update['password'])) {
+                        log_activity($this->customer->getId(), 'updated', 'customers', get_activity_message('activity_changed_password',
+                            array('{customer}', '{link}'),
+                            array($this->customer->getName(), admin_url('customers/edit?id=' . $this->customer->getId()))
+                        ));
+                    }
+
+                    $this->alert->set('alert', $this->lang->line('alert_updated'));
 				}
 
 				return TRUE;

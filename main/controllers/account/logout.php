@@ -4,7 +4,7 @@ class Logout extends Main_Controller {
 
 	public function index() {
 		$this->load->library('customer');
-				$this->load->model('Pages_model');
+        $this->load->model('Pages_model');
 		$this->lang->load('account/login_register');
 
 		$this->template->setBreadcrumb('<i class="fa fa-home"></i>', '/');
@@ -14,9 +14,14 @@ class Logout extends Main_Controller {
 		//$this->template->setHeading($this->lang->line('text_logout_heading'));
 		$data['text_logout_msg'] 		= sprintf($this->lang->line('text_logout_msg'), site_url('account/login'));
 
-		$this->customer->logout();
+        log_activity($this->customer->getId(), 'logged out', 'customers', get_activity_message('activity_logged_out',
+            array('{customer}', '{link}'),
+            array($this->customer->getName(), admin_url('customers/edit?id='.$this->customer->getId()))
+        ));
 
-		$this->template->setPartials(array('header', 'footer'));
+        $this->customer->logout();
+
+        $this->template->setPartials(array('header', 'footer'));
 		$this->template->render('account/logout', $data);
 	}
 }

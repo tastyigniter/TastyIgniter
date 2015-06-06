@@ -20,23 +20,21 @@ class Extensions extends Admin_Controller {
         $results = $this->Extensions_model->getList(array('type' => 'module'));
         foreach ($results as $result) {
             if ($result['installed'] === TRUE) {
-                $extension_id = $result['extension_id'];
-                $manage = site_url('extensions/edit?action=uninstall&name='.$result['name'].'&id='.$extension_id);
+                $manage = 'uninstall';
             } else {
-                $extension_id = '-';
-                $manage = site_url('extensions/edit?action=install&name='.$result['name'].'&id='.$extension_id);
+                $manage = 'install';
             }
 
             $data['extensions'][] = array(
-				'extension_id' 	=> $extension_id,
+				'extension_id' 	=> $result['extension_id'],
 				'name' 			=> $result['name'],
 				'title' 		=> $result['title'],
 				'installed' 	=> $result['installed'],
 				'type' 			=> $result['type'],
 				'options' 		=> $result['options'],
-				'edit' 			=> site_url('extensions/edit?action=edit&name='.$result['name'].'&id='.$extension_id),
-				'delete' 		=> site_url('extensions/edit?action=delete&name='.$result['name'].'&id='.$extension_id),
-				'manage'		=> $manage
+				'edit' 			=> site_url('extensions/edit?action=edit&name='.$result['name'].'&id='.$result['extension_id']),
+				'delete' 		=> site_url('extensions/edit?action=delete&name='.$result['name'].'&id='.$result['extension_id']),
+				'manage'		=> site_url('extensions/edit?action='.$manage.'&name='.$result['name'].'&id='.$result['extension_id'])
 			);
         }
 
@@ -126,9 +124,9 @@ class Extensions extends Admin_Controller {
 	}
 
     private function _delete() {
-        if ($this->input->get('action') === 'delete') {
-            $this->user->restrict('Admin.Modules.Delete');
+        $this->user->restrict('Admin.Modules.Delete');
 
+        if ($this->input->get('action') === 'delete') {
             if ($this->Extensions_model->extensionExists($this->input->get('name'))) {
                 if ($this->Extensions_model->delete('module', $this->input->get('name'), $this->input->get('id'))) {
                     $this->alert->set('success', 'Extension deleted successfully.');
@@ -142,12 +140,17 @@ class Extensions extends Admin_Controller {
 	}
 
     private function _install() {
-    	if ($this->input->get('action') === 'install') {
-            $this->user->restrict('Admin.Modules.Manage');
+        $this->user->restrict('Admin.Modules.Manage');
 
+        if ($this->input->get('action') === 'install') {
             if ($this->Extensions_model->extensionExists($this->input->get('name'))) {
 	    		if ($this->Extensions_model->install('module', $this->input->get('name'), $this->input->get('id'))) {
-					$this->alert->set('success', 'Extension Installed successfully.');
+                    log_activity($this->user->getStaffId(), 'installed', 'extensions', get_activity_message('activity_custom_no_link',
+                        array('{staff}', '{action}', '{context}', '{item}'),
+                        array($this->user->getStaffName(), 'installed', 'extension module', $this->input->get('name'))
+                    ));
+
+                    $this->alert->set('success', 'Extension Installed successfully.');
 					return TRUE;
 	    		}
 	    	}
@@ -159,10 +162,15 @@ class Extensions extends Admin_Controller {
 	}
 
     private function _uninstall() {
-    	if ($this->input->get('action') === 'uninstall') {
-            $this->user->restrict('Admin.Modules.Manage');
+        $this->user->restrict('Admin.Modules.Manage');
 
+        if ($this->input->get('action') === 'uninstall') {
             if ($this->Extensions_model->uninstall('module', $this->input->get('name'), $this->input->get('id'))) {
+                log_activity($this->user->getStaffId(), 'uninstalled', 'extensions', get_activity_message('activity_custom_no_link',
+                    array('{staff}', '{action}', '{context}', '{item}'),
+                    array($this->user->getStaffName(), 'uninstalled', 'extension module', $this->input->get('name'))
+                ));
+
                 $this->alert->set('success', 'Extension Uninstalled successfully.');
                 return TRUE;
             }
@@ -172,13 +180,17 @@ class Extensions extends Admin_Controller {
 	}
 
     private function _uploadExtension() {
-        if (isset($_FILES['extension_zip'])) {
-            $this->user->restrict('Admin.Modules.Add', site_url('extensions/add'));
+        $this->user->restrict('Admin.Modules.Add', site_url('extensions/add'));
 
+        if (isset($_FILES['extension_zip'])) {
             if ($this->validateUpload() === TRUE) {
                 if ($this->Extensions_model->upload('module', $_FILES['extension_zip'])) {
-                    $this->alert->set('success', 'Module extension uploaded successfully');
+                    log_activity($this->user->getStaffId(), 'uploaded', 'extensions', get_activity_message('activity_custom_no_link',
+                        array('{staff}', '{action}', '{context}', '{item}'),
+                        array($this->user->getStaffName(), 'uploaded', 'extension', $_FILES['extension_zip']['name'])
+                    ));
 
+                    $this->alert->set('success', 'Module extension uploaded successfully');
                     return TRUE;
                 }
 

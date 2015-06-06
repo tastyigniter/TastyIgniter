@@ -86,8 +86,13 @@ class Register extends Main_Controller {
 				$add['status'] = '1';
 			}
 
-			if (!empty($add) AND $this->Customers_model->saveCustomer(NULL, $add)) {								// pass add array data to saveCustomer method in Customers model then return TRUE
-  				return TRUE;
+			if (!empty($add) AND $customer_id = $this->Customers_model->saveCustomer(NULL, $add)) {								// pass add array data to saveCustomer method in Customers model then return TRUE
+                log_activity($customer_id, 'registered', 'customers', get_activity_message('activity_registered_account',
+                    array('{customer}', '{link}'),
+                    array($this->input->post('first_name').' '.$this->input->post('last_name'), admin_url('customers/edit?id='.$customer_id))
+                ));
+
+                return TRUE;
 			}
 		}
 	}

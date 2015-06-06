@@ -169,7 +169,12 @@ class Tables extends Admin_Controller {
             $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
 			if ($table_id = $this->Tables_model->saveTable($this->input->get('id'), $this->input->post())) {
-				$this->alert->set('success', 'Table ' . $save_type . ' successfully.');
+                log_activity($this->user->getStaffId(), $save_type, 'tables', get_activity_message('activity_custom',
+                    array('{staff}', '{action}', '{context}', '{link}', '{item}'),
+                    array($this->user->getStaffName(), $save_type, 'table', current_url(), $this->input->post('table_name'))
+                ));
+
+                $this->alert->set('success', 'Table ' . $save_type . ' successfully.');
 			} else {
 				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
 			}

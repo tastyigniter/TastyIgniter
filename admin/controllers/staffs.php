@@ -272,6 +272,15 @@ class Staffs extends Admin_Controller {
             $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
 
             if ($staff_id = $this->Staffs_model->saveStaff($this->input->get('id'), $this->input->post())) {
+                $action = ($this->input->get('id') === $this->user->getStaffId()) ? $save_type.' their' : $save_type;
+                $message_lang = ($this->input->get('id') === $this->user->getStaffId()) ? 'activity_custom_no_link' : 'activity_custom';
+                $item = ($this->input->get('id') === $this->user->getStaffId()) ? 'details' : ucwords($username);
+
+                log_activity($this->user->getStaffId(), $action, 'staffs', get_activity_message($message_lang,
+                    array('{staff}', '{action}', '{context}', '{link}', '{item}'),
+                    array($this->user->getStaffName(), $action, 'staff', current_url(), $item)
+                ));
+
                 $this->alert->set('success', 'Staff ' . $save_type . ' successfully.');
 			} else {
 				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
