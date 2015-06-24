@@ -13,8 +13,12 @@ namespace Wikimedia\Composer;
 use Composer\Composer;
 use Composer\Config;
 use Composer\EventDispatcher\EventSubscriberInterface;
+use Composer\Factory;
+use Composer\Installer;
 use Composer\Installer\InstallerEvent;
 use Composer\Installer\InstallerEvents;
+use Composer\Installer\PackageEvent;
+use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
 use Composer\Json\JsonFile;
 use Composer\Package\BasePackage;
@@ -66,6 +70,11 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
 {
 
     /**
+     * Offical package name
+     */
+    const PACKAGE_NAME = 'wikimedia/composer-merge-plugin';
+
+    /**
      * @var Composer $composer
      */
     protected $composer;
@@ -105,12 +114,18 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     protected $loadedFiles = array();
 
     /**
+     * @var bool $pluginFirstInstall
+     */
+    protected $pluginFirstInstall;
+
+    /**
      * {@inheritdoc}
      */
     public function activate(Composer $composer, IOInterface $io)
     {
         $this->composer = $composer;
         $this->inputOutput = $io;
+        $this->pluginFirstInstall = false;
     }
 
     /**
@@ -123,6 +138,9 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
             ScriptEvents::PRE_INSTALL_CMD => 'onInstallOrUpdate',
             ScriptEvents::PRE_UPDATE_CMD => 'onInstallOrUpdate',
             ScriptEvents::PRE_AUTOLOAD_DUMP => 'onInstallOrUpdate',
+            PackageEvents::POST_PACKAGE_INSTALL => 'onPostPackageInstall',
+            ScriptEvents::POST_INSTALL_CMD => 'onPostInstallOrUpdate',
+            ScriptEvents::POST_UPDATE_CMD => 'onPostInstallOrUpdate',
         );
     }
 
@@ -426,6 +444,66 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
                 $this->debug("Adding dev dependency <comment>{$link}</comment>");
                 $request->install($link->getTarget(), $link->getConstraint());
             }
+        }
+    }
+
+    /**
+     * Handle an event callback following installation of a new package by
+     * checking to see if the package that was installed was our plugin.
+     *
+     * @param PackageEvent $event
+     */
+    public function onPostPackageInstall(PackageEvent $event)
+    {
+        $package = $event->getOperation()->getPackage()->getName();
+        if ($package === self::PACKAGE_NAME) {
+            $this->debug('composer-merge-plugin installed');
+            $this->pluginFirstInstall = true;
+        }
+    }
+
+    /**
+     * Is this the first time that the plugin has been installed?
+     *
+     * @return bool
+     */
+    public function isFirstInstall()
+    {
+        return $this->pluginFirstInstall;
+    }
+
+    /**
+     * Handle an event callback following an install or update command. If our
+     * plugin was installed during the run then trigger an update command to
+     * process any merge-patterns in the current config.
+     *
+     * @param Event $event
+     */
+    public function onPostInstallOrUpdate(Event $event)
+    {
+        if ($this->pluginFirstInstall) {
+            $this->pluginFirstInstall = false;
+            $this->debug(
+                '<comment>' .
+                'Running additional update to apply merge settings' .
+                '</comment>'
+            );
+
+            $installer = Installer::create(
+                $event->getIO(),
+                // Create a new Composer instance to ensure full processing of
+                // the merged files.
+                Factory::create($event->getIO(), null, false)
+            );
+
+            // Force update mode so that new packages are processed rather
+            // than just telling the user that composer.json and composer.lock
+            // don't match.
+            $installer->setUpdate(true);
+            $installer->setDevMode($event->isDevMode());
+            // TODO: can we set more flags to match the current run?
+
+            $installer->run();
         }
     }
 

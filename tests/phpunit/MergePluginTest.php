@@ -11,10 +11,13 @@
 namespace Wikimedia\Composer;
 
 use Composer\Composer;
+use Composer\DependencyResolver\Operation\InstallOperation;
 use Composer\Installer\InstallerEvent;
 use Composer\Installer\InstallerEvents;
+use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
 use Composer\Package\BasePackage;
+use Composer\Package\Package;
 use Composer\Package\RootPackage;
 use Composer\Script\CommandEvent;
 use Composer\Script\ScriptEvents;
@@ -57,7 +60,7 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
     public function testSubscribedEvents()
     {
         $subscriptions = MergePlugin::getSubscribedEvents();
-        $this->assertEquals(4, count($subscriptions));
+        $this->assertEquals(7, count($subscriptions));
         $this->assertArrayHasKey(
             InstallerEvents::PRE_DEPENDENCIES_SOLVING,
             $subscriptions
@@ -65,6 +68,9 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
         $this->assertArrayHasKey(ScriptEvents::PRE_INSTALL_CMD, $subscriptions);
         $this->assertArrayHasKey(ScriptEvents::PRE_UPDATE_CMD, $subscriptions);
         $this->assertArrayHasKey(ScriptEvents::PRE_AUTOLOAD_DUMP, $subscriptions);
+        $this->assertArrayHasKey(PackageEvents::POST_PACKAGE_INSTALL, $subscriptions);
+        $this->assertArrayHasKey(ScriptEvents::POST_INSTALL_CMD, $subscriptions);
+        $this->assertArrayHasKey(ScriptEvents::POST_UPDATE_CMD, $subscriptions);
     }
 
     /**
@@ -165,8 +171,6 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
 
         $this->assertEquals(0, count($extraInstalls));
     }
-
-
 
     /**
      * Given a root package with requires
@@ -359,6 +363,28 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
 
         $this->assertEquals(0, count($extraInstalls));
+    }
+
+    /**
+     * @dataProvider provideOnPostPackageInstall
+     */
+    public function testOnPostPackageInstall($package, $first)
+    {
+        $operation = new InstallOperation(
+            new Package($package, '1.2.3.4', '1.2.3')
+        );
+        $event = $this->prophesize('Composer\Installer\PackageEvent');
+        $event->getOperation()->willReturn($operation)->shouldBeCalled();
+        $this->fixture->onPostPackageInstall($event->reveal());
+        $this->assertEquals($first, $this->fixture->isFirstInstall());
+    }
+
+    public function provideOnPostPackageInstall()
+    {
+        return array(
+            array(MergePlugin::PACKAGE_NAME, true),
+            array('foo/bar', false),
+        );
     }
 
     /**
