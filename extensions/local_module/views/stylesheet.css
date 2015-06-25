@@ -1,0 +1,161 @@
+.local-box-fluid {
+background-color: rgba(237, 86, 26, 0.9);
+border-radius: 35px;
+left: 10%;
+margin: 0 auto;
+padding-bottom: 20px;
+position: absolute;
+top: 45%;
+width: 80%;
+z-index: 999;
+}
+.local-box-fluid .container {
+width: 100%;
+}
+.local-box-fluid h2 {
+color: #fff;
+font-size: 42px;
+font-weight: 600;
+margin: 25px 0;
+}
+.local-box-fluid .form-control {
+border: 0 none;
+border-bottom-left-radius: 3px;
+border-top-left-radius: 3px;
+}
+.local-box-fluid .input-group-addon {
+border: 0 none;
+border-bottom-right-radius: 3px;
+border-top-right-radius: 3px;
+}
+.postcode-control:focus {
+box-shadow: none;
+}
+
+/*** Location Search ***/
+.location-search {
+background-color: #ed561a;
+padding: 15px 15px 20px;
+}
+.location-search .heading-section {
+padding: 0;
+}
+.location-search .heading-section h2 {
+color: #f0f0f0;
+font-size: 48px;
+}
+.location-search .under-heading {
+height: 20px;
+}
+.location-search .search-label {
+color: #FFF;
+}
+.postcode-group {
+width: 100%;
+}
+.postcode-group .input-group-addon {
+background-color: #11a2dc;
+border-color: #11a2dc;
+border-radius:0;
+color:#FFF;
+}
+.postcode-group .input-group-addon:hover {
+background-color: #0f91c4;
+border-color: #0f91c4;
+}
+.postcode-group .postcode-control {
+border-radius:0;
+/*width: 70%;*/
+}
+.location-search .postcode-group .postcode-control {
+width: 100%;
+}
+.close-search {
+float: right;
+font-size: 32px;
+line-height: 24px;
+position: absolute;
+right: -45%;
+top: -22%;
+}
+/*** Location Search ***/
+
+/*** Location Bar ***/
+.panel-local {
+background-color: transparent;
+border: 0 solid #eee;
+border-radius: 0;
+box-shadow: none;
+margin-bottom: 0;
+}
+.panel-local .panel-heading {
+border-color: #eee;
+overflow: hidden;
+padding: 0;
+}
+.panel-local .panel-body h2 {
+margin: 25px 0;
+}
+.panel-local h4 {
+margin-top: 0;
+margin-bottom: 5px;
+font-weight: normal;
+font-size: 24px;
+}
+.panel-local .panel-heading, .panel-local .panel-body, .panel-local .panel-body > div {
+padding-left: 0;
+padding-right: 0;
+}
+.panel-local dl {
+color: #666;
+margin-bottom: 0;
+}
+.panel-local b, .panel-local strong {
+font-weight: 400;
+}
+.panel-local .panel-heading > div {
+line-height: 2.1;
+padding: 10px 0;
+}
+.side-bar .panel-local .panel-body > div {
+width: 100%;
+}
+.side-bar .panel-local{
+margin-bottom: 0;
+}
+.side-bar .container-fluid {
+padding-right: 0;
+padding-left: 0;
+}
+.side-bar .panel-local .box-one, .side-bar .panel-local .box-two {
+margin-bottom: 20px;
+}
+
+.panel-local .box-one dl {
+margin-left: 95px;
+}
+.side-bar .panel-local .box-one img {
+display: none;
+}
+.panel-local-hours {
+color: #444;
+}
+.opening-hour dd {
+margin-left: 110px;
+}
+.opening-hour dt {
+width: 100px;
+text-align: left;
+}
+
+
+/*** End Location Bar ***/
+
+#local-alert .alert > p {
+padding: 10px;
+}
+#local-alert .alert {
+margin-bottom: 0;
+padding: 0;
+border: 0 none;
+}

@@ -14,7 +14,6 @@ class Location {
 	private $polygons = array();
 	private $delivery_areas = array();
 	private $opening_hours = array();
-	private $opening_hour = array();
 	private $opening_time = '00:00';
 	private $closing_time = '23:59';
 	private $opening_status;
@@ -24,8 +23,9 @@ class Location {
 	private $current_day;
 	private $current_date;
 	private $current_time;
+    private $permalink;
 
-	public function __construct() {
+    public function __construct() {
 		$this->CI =& get_instance();
 		$this->CI->load->database();
 		$this->CI->load->helper('date');
@@ -59,7 +59,11 @@ class Location {
 			$this->area_id 				= (empty($local_info['area_id'])) ? '' : $local_info['area_id'];
 			$this->order_type 			= (isset($local_info['order_type'])) ? $local_info['order_type'] : '1';
 
-			$this->setLocationOpeningHours();
+            if (!empty($this->CI->permalink)) {
+                $this->permalink = $this->CI->permalink->getPermalink('location_id=' . $result['location_id']);
+            }
+
+            $this->setLocationOpeningHours();
 			$this->setDeliveryAreas();
 		} else {
 			$this->clearLocal();
@@ -94,6 +98,27 @@ class Location {
 		return $this->local_info['description'];
 	}
 
+	public function getSlug() {
+		return $this->permalink['slug'];
+	}
+
+	public function getCity() {
+		return $this->local_info['location_city'];
+	}
+
+	public function getState() {
+		return $this->local_info['location_state'];
+	}
+
+	public function getImage() {
+        $this->CI->load->model('Image_tool_model');
+        if (!empty($this->local_info['location_image'])) {
+            return $this->CI->Image_tool_model->resize($this->local_info['location_image'], '80', '80');
+        }
+
+        return $this->CI->Image_tool_model->resize('data/no_photo.png', '80', '80');
+	}
+
 	public function getAddress($format = TRUE) {
 		$location_address = array(
 			'address_1'      => $this->local_info['location_address_1'],
@@ -112,7 +137,7 @@ class Location {
 		return $address;
 	}
 
-	public function getMainLocal() {
+	public function getDefaultLocal() {
 		$main_address = $this->CI->config->item('main_address');
 
 		if (!empty($main_address) AND is_array($main_address)) {
@@ -126,7 +151,7 @@ class Location {
 		}
 	}
 
-	public function getFormatAddress($address = array(), $format = TRUE) {
+	public function formatAddress($address = array(), $format = TRUE) {
 		if (!empty($address) AND is_array($address)) {
 			$location_address = array(
 				'address_1'      => $address['location_address_1'],
@@ -190,7 +215,7 @@ class Location {
 	}
 
 	public function isOpened() {
-		return ($this->opening_status !== '1' AND ($this->opening_time <= $this->current_time AND $this->closing_time >= $this->current_time) OR ($this->opening_time === '00:00' AND $this->closing_time === '00:00'));
+		return ($this->opening_status === '1' AND ($this->opening_time <= $this->current_time AND $this->closing_time >= $this->current_time));
 	}
 
 	public function hasDelivery() {
@@ -209,6 +234,10 @@ class Location {
 		return $this->search_query;
 	}
 
+	public function hasSearchQuery() {
+		return (empty($this->search_query)) ? FALSE : TRUE;
+	}
+
 	public function deliveryAreas() {
 		return $this->delivery_areas;
 	}
@@ -222,7 +251,7 @@ class Location {
 	}
 
 	public function getReservationInterval() {
-    	return (!empty($this->local_info['reservation_interval'])) ? $this->local_info['reservation_interval'] : $this->CI->config->item('reservation_interval');
+    	return (!empty($this->local_info['reservation_time_interval'])) ? $this->local_info['reservation_time_interval'] : $this->CI->config->item('reservation_time_interval');
 	}
 
 	public function deliveryTime() {
@@ -237,10 +266,10 @@ class Location {
 		return (is_numeric($this->local_info['last_order_time']) AND $this->local_info['last_order_time'] > 0) ? mdate($this->timestring, strtotime($this->closing_time) - ($this->local_info['last_order_time'] * 60)) : $this->closing_time;
 	}
 
-	public function payments($implode = FALSE) {
+	public function payments($split = '') {
 		$payments = (!empty($this->local_options['payments'])) ? $this->local_options['payments'] : NULL;
 
-        return ($payments AND $implode) ? implode($payments, $implode) : $payments;
+        return ($payments AND $split !== '') ? implode($payments, $split) : $payments;
 	}
 
 	public function checkDeliveryTime($time) {
@@ -250,11 +279,10 @@ class Location {
 
 	public function setLocation($location_id) {
 		if (is_numeric($location_id)) {
-			$local_info = $this->CI->session->userdata('local_info');
-			if (is_array($local_info) AND !empty($local_info)) {
-				$local_info['location_id'] = $location_id;
-				$this->CI->session->set_userdata('local_info', $local_info);
-			}
+            $local_info = $this->CI->session->userdata('local_info');
+            $local_info['location_id'] = $location_id;
+            $this->CI->session->set_userdata('local_info', $local_info);
+            $this->initialize($local_info);
 		}
 	}
 
@@ -268,7 +296,9 @@ class Location {
 					'min_amount'	=> $area['min_amount']
 				);
 			}
-		}
+		} else {
+            $this->delivery_areas = array();
+        }
 	}
 
 	public function setOrderType($order_type) {
@@ -281,7 +311,7 @@ class Location {
 		}
 	}
 
-	public function setLocationOpeningHours() {
+    public function setLocationOpeningHours() {
 		if (isset($this->opening_hours[$this->location_id]) AND is_array($this->opening_hours[$this->location_id])) {
 
 			foreach ($this->opening_hours[$this->location_id] as $hour) {
@@ -294,13 +324,30 @@ class Location {
 		}
 	}
 
-	public function checkMinimumOrder($cart_total) {
+    public function searchRestaurant($search_query = FALSE) {																// method to perform regular expression match on postcode string and return latitude and longitude
+        $output = $this->getLatLng($search_query);
+
+        if (is_string($output)) {
+            return $output;
+        }
+
+        $delivery_area = $this->checkDeliveryArea($output);
+        if ($delivery_area !== FALSE AND count($delivery_area) == 2) {
+            $local_info = array('location_id' => $delivery_area['location_id'], 'area_id' => $delivery_area['area_id'], 'search_query' => $output['search_query']);
+            $this->CI->session->set_userdata('local_info', $local_info);
+            $this->initialize($local_info);
+        }
+
+        return $delivery_area;
+    }
+
+    public function checkMinimumOrder($cart_total) {
 		return ($cart_total >= $this->minimumOrder());
 	}
 
-	public function checkDeliveryCoverage($search_query = FALSE) {
+    public function checkDeliveryCoverage($search_query = FALSE) {
         $search_query = ($search_query === FALSE) ? $this->search_query : $search_query;
-        $coords = $this->getLatLng($search_query, TRUE);
+        $coords = $this->getLatLng($search_query);
 		$delivery_area = $this->checkDeliveryArea($coords);
 
 		if ($delivery_area !== 'outside' AND $delivery_area['location_id'] == $this->location_id) {
@@ -308,23 +355,6 @@ class Location {
 		}
 
 		return FALSE;
-	}
-
-	public function searchRestaurant($search_query = FALSE) {																// method to perform regular expression match on postcode string and return latitude and longitude
-		$this->CI->session->unset_userdata('local_info');
-
-		$output = $this->getLatLng($search_query, TRUE);
-		if ($output === 'NO_SEARCH_QUERY' OR $output === 'ENTER_POSTCODE' OR $output === 'FAILED') {
-			return $output;
-		}
-
-		$delivery_area = $this->checkDeliveryArea($output);
-		if ($delivery_area !== FALSE AND count($delivery_area) == 2) {
-			$local_info = array('location_id' => $delivery_area['location_id'], 'area_id' => $delivery_area['area_id'], 'search_query' => $output['search_query']);
-			$this->CI->session->set_userdata('local_info', $local_info);
-		}
-
-		return $delivery_area;
 	}
 
 	public function checkDeliveryArea($coords) {
@@ -475,6 +505,25 @@ class Location {
 		return $this->opening_hours;
 	}
 
+    public function getOpeningHourByDay($day = FALSE) {
+        $opening_hours = $this->getOpeningHours();
+        $weekdays = array('Monday' => 0, 'Tuesday' => 1, 'Wednesday' => 2, 'Thursday' => 3, 'Friday' => 4, 'Saturday' => 5, 'Sunday' => 6);
+
+        $day = (!isset($weekdays[$day])) ? date('l', strtotime($day)) : $day;
+
+        $hour = array('open' => '00:00:00', 'close' => '00:00:00');
+
+        if (isset($opening_hours[$this->location_id])) {
+            foreach ($opening_hours[$this->location_id] as $hour) {
+                if ($hour['day'] === $day) {
+                    return $hour;
+                }
+            }
+        }
+
+        return $hour;
+    }
+
     public function getPolygons() {
 		if (empty($this->polygons)) {
 			$polygons = array();
@@ -506,69 +555,43 @@ class Location {
     	return $this->polygons;
     }
 
-	public function generateHours($start_hour, $end_hour, $interval) {
-		$hours = array();
-		$start_formatted = strtotime($start_hour);
-		$end_formatted = strtotime($end_hour);
-		$interval = $interval * 60;
-
-		if ($start_formatted < $end_formatted) {
-
-			for ($i = ($start_formatted + $interval); $i <= ($end_formatted); $i += $interval) {
-				$hr24 = mdate($this->timestring, $i);
-				$hours[] = $hr24;
-			}
-  		}
-
-  		$hours[] = mdate($this->timestring, $end_formatted);
-  		return $hours;
-	}
-
-	public function getLatLng($search_query = FALSE, $check_setting = FALSE) {																// method to perform regular expression match on postcode string and return latitude and longitude
+	public function getLatLng($search_query = FALSE) {																// method to perform regular expression match on postcode string and return latitude and longitude
 		if (empty($search_query)) {
 			return "NO_SEARCH_QUERY";
 		}
 
-		if (is_string($search_query)) {
-			$postcode = strtoupper(str_replace(' ', '', $search_query));								// strip spaces from postcode string and convert to uppercase
+        $temp_query = $search_query;
+
+		if (is_string($temp_query)) {
+			$postcode = strtoupper(str_replace(' ', '', $temp_query));								// strip spaces from postcode string and convert to uppercase
 
 			if (preg_match("/^[A-Z]{1,2}[0-9]{2,3}[A-Z]{2}$/", $postcode) OR
 			preg_match("/^[A-Z]{1,2}[0-9]{1}[A-Z]{1}[0-9]{1}[A-Z]{2}$/", $postcode) OR
 			preg_match("/^GIR0[A-Z]{2}$/", $postcode)) {
-				$search_query = $postcode;
-				$is_postcode = TRUE;
+				$temp_query = $postcode;
 			} else {
-				$search_query = explode(' ', $search_query);
-				$is_postcode = FALSE;
+				$temp_query = explode(' ', $temp_query);
 			}
 		}
 
-		if (is_array($search_query)) {
-			$address_string =  implode(', ', $search_query);
-			$search_query = $address_string;
-		}
+        $temp_query = (is_array($temp_query)) ? implode(', ', $temp_query) : $temp_query;
 
-        if ($check_setting === TRUE) {
-            $search_by = $this->CI->config->item('search_by');
-            if ($search_by === 'postcode' AND $is_postcode === FALSE) {
-                return "ENTER_POSTCODE";
-            }
-        }
-
-        $url  = 'http://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($search_query) .'&sensor=false'; //encode $postcode string and construct the url query
+        $url  = 'http://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($temp_query) .'&sensor=false'; //encode $postcode string and construct the url query
 		$geocode_data = @file_get_contents($url);
 		$output = json_decode($geocode_data);											// decode the geocode data
 
-		if ($output AND $output->status === 'OK') {														// create variable for geocode data status
-			return array(
-				'search_query'	=> $search_query,
-				'lat' 			=> $output->results[0]->geometry->location->lat,
-				'lng' 			=> $output->results[0]->geometry->location->lng
-			);
-		} else {
-			return "FAILED";
-		}
-	}
+		if ($output) {
+            if ($output->status === 'OK') {														// create variable for geocode data status
+                return array(
+                    'search_query'	=> $search_query,
+                    'lat' 			=> $output->results[0]->geometry->location->lat,
+                    'lng' 			=> $output->results[0]->geometry->location->lng
+                );
+		    }
+
+            return "INVALID_SEARCH_QUERY";
+        }
+    }
 
 	public function clearLocal() {
 		$this->location_id = '';
