@@ -21,6 +21,7 @@ use Composer\Installer\PackageEvent;
 use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
 use Composer\Json\JsonFile;
+use Composer\Package\AliasPackage;
 use Composer\Package\BasePackage;
 use Composer\Package\CompletePackage;
 use Composer\Package\Loader\ArrayLoader;
@@ -211,7 +212,7 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
      * @param RootPackage $root
      * @param string $path
      */
-    protected function loadFile($root, $path)
+    protected function loadFile(RootPackage $root, $path)
     {
         if (in_array($path, $this->loadedFiles)) {
             $this->debug("Skipping duplicate <comment>$path</comment>...");
@@ -513,6 +514,9 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     protected function getRootPackage()
     {
         $root = $this->composer->getPackage();
+        if ($root instanceof AliasPackage) {
+            $root = $root->getAliasOf();
+        }
         // @codeCoverageIgnoreStart
         if (!$root instanceof RootPackage) {
             throw new UnexpectedValueException(
