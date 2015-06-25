@@ -17,10 +17,10 @@ class Dashboard extends Admin_Controller {
 		$this->template->setTitle($this->lang->line('text_title'));
 		$this->template->setHeading($this->lang->line('text_heading'));
 
-        $this->template->setStyleTag(root_url('assets/js/daterange/daterangepicker-bs3.css'), 'daterangepicker-css');
-        $this->template->setScriptTag(root_url('assets/js/daterange/moment.min.js'), 'daterange-moment-js');
-        $this->template->setScriptTag(root_url('assets/js/daterange/daterangepicker.js'), 'daterangepicker-js');
-        $this->template->setScriptTag(root_url('assets/js/Chart.min.js'), 'chart-min-js');
+        $this->template->setStyleTag(root_url('assets/js/daterange/daterangepicker-bs3.css'), 'daterangepicker-css', '100400');
+        $this->template->setScriptTag(root_url('assets/js/daterange/moment.min.js'), 'daterange-moment-js', '1000451');
+        $this->template->setScriptTag(root_url('assets/js/daterange/daterangepicker.js'), 'daterangepicker-js', '1000452');
+        $this->template->setScriptTag(root_url('assets/js/Chart.min.js'), 'chart-min-js', '1000453');
 
 		$data['menus'] 					= $this->Dashboard_model->getTotalMenus();
 		$data['current_month'] 			= mdate('%Y-%m', time());
@@ -55,7 +55,8 @@ class Dashboard extends Admin_Controller {
                 'activity_id'	    => $result['activity_id'],
                 'icon'			    => 'fa fa-tasks',
                 'message'			=> $result['message'],
-                'time'		        => time_elapsed($result['date_added']),
+                'time'		        => mdate('%h:%i %A', strtotime($result['date_added'])),
+                'time_elapsed'		=> time_elapsed($result['date_added']),
                 'state'			    => $result['status'] === '1' ? 'read' : 'unread',
             );
         }
