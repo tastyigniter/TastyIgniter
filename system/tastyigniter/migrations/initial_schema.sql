@@ -521,25 +521,28 @@ VALUES
 # TABLE STRUCTURE FOR: ti_languages
 #
 
-INSERT INTO `ti_languages` (`language_id`, `code`, `name`, `image`, `directory`, `status`) VALUES ('11', 'en', 'English', 'data/flags/gb.png', 'english', '1');
+INSERT INTO `ti_languages` (`language_id`, `code`, `name`, `image`, `idiom`, `status`) VALUES
+	(11, 'en', 'English', 'data/flags/gb.png', 'english', 1);
 
 
 #
 # TABLE STRUCTURE FOR: ti_layout_modules
 #
 
-INSERT INTO `ti_layout_modules` (`layout_module_id`, `layout_id`, `module_code`, `position`, `priority`, `status`)
-VALUES
-	(9, 13, 'local_module', 'top', 0, 1),
-	(10, 13, 'cart_module', 'right', 1, 1),
-	(11, 15, 'slideshow', 'top', 0, 1),
-	(14, 18, 'local_module', 'top', 0, 1),
-	(15, 16, 'reservation_module', 'left', 0, 1),
-	(19, 17, 'pages_module', 'right', 1, 1),
-	(20, 12, 'local_module', 'top', 1, 1),
-	(21, 12, 'categories_module', 'left', 1, 1),
-	(22, 12, 'cart_module', 'right', 2, 1),
-	(24, 11, 'account_module', 'left', 1, 1);
+INSERT INTO `ti_layout_modules` (`layout_module_id`, `layout_id`, `module_code`, `position`, `priority`, `status`) VALUES
+	(60, 17, 'pages_module', 'right', 1, 1),
+	(65, 11, 'slideshow', 'top', 1, 1),
+	(66, 11, 'local_module', 'top', 2, 1),
+	(67, 15, 'account_module', 'left', 1, 1),
+	(68, 12, 'local_module', 'top', 1, 1),
+	(69, 12, 'categories_module', 'left', 1, 1),
+	(70, 12, 'cart_module', 'right', 1, 1),
+	(71, 13, 'local_module', 'top', 1, 1),
+	(72, 13, 'cart_module', 'right', 1, 1),
+	(73, 16, 'reservation_module', 'left', 1, 1),
+	(74, 18, 'local_module', 'top', 1, 1),
+	(75, 18, 'categories_module', 'left', 1, 1),
+	(76, 18, 'cart_module', 'right', 1, 1);
 
 
 #
@@ -547,34 +550,35 @@ VALUES
 #
 
 INSERT INTO `ti_layout_routes` (`layout_route_id`, `layout_id`, `uri_route`) VALUES
-	(17, 12, 'menus'),
-	(18, 14, 'payments'),
 	(19, 13, 'checkout'),
-	(20, 15, 'home'),
-	(22, 17, 'pages/page/(:num)'),
-	(23, 17, 'pages'),
-	(29, 18, 'local'),
-	(30, 18, 'local/reviews'),
-	(36, 11, 'account/inbox'),
-	(37, 11, 'account/orders'),
-	(38, 11, 'account/address'),
-	(39, 11, 'account/details'),
-	(40, 11, 'account'),
-	(41, 16, 'reserve');
+	(41, 16, 'reservation'),
+	(44, 12, 'menus'),
+	(59, 11, 'home'),
+	(70, 18, 'local'),
+	(71, 19, 'locations'),
+	(72, 17, 'pages'),
+	(100, 15, 'account/account'),
+	(101, 15, 'account/details'),
+	(102, 15, 'account/address'),
+	(103, 15, 'account/orders'),
+	(104, 15, 'account/reservations'),
+	(105, 15, 'account/inbox'),
+	(106, 15, 'account/reviews');
 
 
 #
 # TABLE STRUCTURE FOR: ti_layouts
 #
 
-INSERT INTO `ti_layouts` (`layout_id`, `name`) VALUES ('11', 'Account');
-INSERT INTO `ti_layouts` (`layout_id`, `name`) VALUES ('12', 'Menus');
-INSERT INTO `ti_layouts` (`layout_id`, `name`) VALUES ('13', 'Checkout');
-INSERT INTO `ti_layouts` (`layout_id`, `name`) VALUES ('14', 'Payments');
-INSERT INTO `ti_layouts` (`layout_id`, `name`) VALUES ('15', 'Home');
-INSERT INTO `ti_layouts` (`layout_id`, `name`) VALUES ('16', 'Reservation');
-INSERT INTO `ti_layouts` (`layout_id`, `name`) VALUES ('17', 'Page');
-INSERT INTO `ti_layouts` (`layout_id`, `name`) VALUES ('18', 'Local');
+INSERT INTO `ti_layouts` (`layout_id`, `name`) VALUES
+	(11, 'Home'),
+	(12, 'Menus'),
+	(13, 'Checkout'),
+	(15, 'Account'),
+	(16, 'Reservation'),
+	(17, 'Page'),
+	(18, 'Local'),
+	(19, 'Locations');
 
 
 #
@@ -606,8 +610,7 @@ INSERT INTO `ti_mail_templates_data` (`template_data_id`, `template_id`, `code`,
 INSERT INTO `ti_pages` (`page_id`, `language_id`, `name`, `title`, `heading`, `content`, `meta_description`, `meta_keywords`, `layout_id`, `navigation`, `date_added`, `date_updated`, `status`)
 VALUES
 	(11, 11, 'About Us', 'About Us', 'About Us', '<h3 style=\"text-align: center;\"><span style=\"color: #993300;\">Aim</span></h3>\r\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In venenatis massa ac magna sagittis, sit amet gravida metus gravida. Aenean dictum pellentesque erat, vitae adipiscing libero semper sit amet. Vestibulum nec nunc lorem. Duis vitae libero a libero hendrerit tincidunt in eu tellus. Aliquam consequat ultrices felis ut dictum. Nulla euismod felis a sem mattis ornare. Aliquam ut diam sit amet dolor iaculis molestie ac id nisl. Maecenas hendrerit convallis mi feugiat gravida. Quisque tincidunt, leo a posuere imperdiet, metus leo vestibulum orci, vel volutpat justo ligula id quam. Cras placerat tincidunt lorem eu interdum.</p>\r\n<h3 style=\"text-align: center;\"><span style=\"color: #993300;\">Mission</span></h3>\r\n<p>Ut eu pretium urna. In sed consectetur neque. In ornare odio erat, id ornare arcu euismod a. Ut dapibus sit amet erat commodo vestibulum. Praesent vitae lacus faucibus, rhoncus tortor et, bibendum justo. Etiam pharetra congue orci, eget aliquam orci. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eleifend justo eros, sit amet fermentum tellus ullamcorper quis. Cras cursus mi at imperdiet faucibus. Proin iaculis, felis vitae luctus venenatis, ante tortor porta nisi, et ornare magna metus sit amet enim. Phasellus et turpis nec metus aliquet adipiscing. Etiam at augue nec odio lacinia tincidunt. Suspendisse commodo commodo ipsum ac sollicitudin. Nunc nec consequat lacus. Donec gravida rhoncus justo sed elementum.</p>\r\n<h3 style=\"text-align: center;\"><span style=\"color: #a52a2a;\">Vision</span></h3>\r\n<p>Praesent erat massa, consequat a nulla et, eleifend facilisis risus. Nullam libero mi, bibendum id eleifend vitae, imperdiet a nulla. Fusce congue porta ultricies. Vivamus felis lectus, egestas at pretium vitae, posuere a nibh. Mauris lobortis urna nec rhoncus consectetur. Fusce sed placerat sem. Nulla venenatis elit risus, non auctor arcu lobortis eleifend. Ut aliquet vitae velit a faucibus. Suspendisse quis risus sit amet arcu varius malesuada. Vestibulum vitae massa consequat, euismod lorem a, euismod lacus. Duis sagittis dolor risus, ac vehicula mauris lacinia quis. Nulla facilisi. Duis tristique ipsum nec egestas auctor. Nullam in felis vel ligula dictum tincidunt nec a neque. Praesent in egestas elit.</p>', '', '', 17, 'a:2:{i:0;s:8:\"side_bar\";i:1;s:6:\"footer\";}', '2014-04-19 16:57:21', '2015-05-07 12:39:52', 1),
-	(12, 11, 'Policy', 'Policy', 'Policy', '<div id=\"lipsum\">\r\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ligula eros, semper a lorem et, venenatis volutpat dolor. Pellentesque hendrerit lectus feugiat nulla cursus, quis dapibus dolor porttitor. Donec velit enim, adipiscing ac orci id, congue tincidunt arcu. Proin egestas nulla eget leo scelerisque, et semper diam ornare. Suspendisse potenti. Suspendisse vitae bibendum enim. Duis eu ligula hendrerit, lacinia felis in, mollis nisi. Sed gravida arcu in laoreet dictum. Nulla faucibus lectus a mollis dapibus. Fusce vehicula convallis urna, et congue nulla ultricies in. Nulla magna velit, bibendum eu odio et, euismod rhoncus sem. Nullam quis magna fermentum, ultricies neque nec, blandit neque. Etiam nec congue arcu. Curabitur sed tellus quam. Cras adipiscing odio odio, et porttitor dui suscipit eget. Aliquam non est commodo, elementum turpis at, pellentesque lorem.</p>\r\n<p>Duis nec diam diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vulputate est et lorem sagittis, et mollis libero ultricies. Nunc ultrices tortor vel convallis varius. In dolor dolor, scelerisque ac faucibus ut, aliquet ac sem. Praesent consectetur lacus quis tristique posuere. Nulla sed ultricies odio. Cras tristique vulputate facilisis.</p>\r\n<p>Mauris at metus in magna condimentum gravida eu tincidunt urna. Praesent sodales vel mi eu condimentum. Suspendisse in luctus purus. Vestibulum dignissim, metus non luctus accumsan, odio ligula pharetra massa, in eleifend turpis risus in diam. Sed non lorem nibh. Nam at feugiat urna. Curabitur interdum, diam sit amet pulvinar blandit, mauris ante scelerisque nisi, sit amet placerat mi nunc eget orci. Nulla eget quam sit amet risus rhoncus lacinia a ut eros. Praesent non libero nisi. Mauris tincidunt at purus sit amet adipiscing. Donec interdum, velit nec dignissim vehicula, libero ipsum imperdiet ligula, lacinia mattis augue dui ac lacus. Aenean molestie sed nunc at pulvinar. Fusce ornare lacus non venenatis rhoncus.</p>\r\n<p>Aenean at enim luctus ante commodo consequat nec ut mi. Sed porta adipiscing tempus. Aliquam sit amet ullamcorper ipsum, id adipiscing quam. Fusce iaculis odio ut nisi convallis hendrerit. Morbi auctor adipiscing ligula, sit amet aliquet ante consectetur at. Donec vulputate neque eleifend libero pellentesque, vitae lacinia enim ornare. Vestibulum fermentum erat blandit, ultricies felis ac, facilisis augue. Nulla facilisis mi porttitor, interdum diam in, lobortis ipsum. In molestie quam nisl, lacinia convallis tellus fermentum ac. Nulla quis velit augue. Fusce accumsan, lacus et lobortis blandit, neque magna gravida enim, dignissim ultricies tortor dui in dolor. Vestibulum vel convallis justo, quis venenatis elit. Aliquam erat volutpat. Nunc quis iaculis ligula. Suspendisse dictum sodales neque vitae faucibus. Fusce id tellus pretium, varius nunc et, placerat metus.</p>\r\n<p>Pellentesque quis facilisis mauris. Phasellus porta, metus a dignissim viverra, est elit luctus erat, nec ultricies ligula lorem eget sapien. Pellentesque ac justo velit. Maecenas semper accumsan nulla eget rhoncus. Aliquam vel urna sed nibh dignissim auctor. Integer volutpat lacus ac purus convallis, at lobortis nisi tincidunt. Vestibulum condimentum elit ac sapien placerat, at ornare libero hendrerit. Cras tincidunt nunc sit amet ante bibendum tempor. Fusce quam orci, suscipit sed eros quis, vulputate molestie metus. Nam hendrerit vitae felis et porttitor. Proin et commodo velit, id porta erat. Donec eu consectetur odio. Fusce porta odio risus. Aliquam vel erat feugiat, vestibulum elit eget, ornare sapien. Sed sed nulla justo. Sed a dolor eu justo lacinia blandit</p>\r\n</div>', '', '', 17, 'a:2:{i:0;s:8:\"side_bar\";i:1;s:6:\"footer\";}', '2014-04-19 17:21:23', '2015-05-16 09:18:39', 1),
-	(13, 11, 'Maintenance', 'Maintenance', 'Maintenance', '<h4><span style=\"color: #b22222;\">Site is under maintenance. Please check back later.</span></h4>', '', '', 0, 'a:1:{i:0;s:4:\"none\";}', '2014-04-21 16:30:37', '2014-07-28 00:47:24', 1);
+	(12, 11, 'Policy', 'Policy', 'Policy', '<div id=\"lipsum\">\r\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ligula eros, semper a lorem et, venenatis volutpat dolor. Pellentesque hendrerit lectus feugiat nulla cursus, quis dapibus dolor porttitor. Donec velit enim, adipiscing ac orci id, congue tincidunt arcu. Proin egestas nulla eget leo scelerisque, et semper diam ornare. Suspendisse potenti. Suspendisse vitae bibendum enim. Duis eu ligula hendrerit, lacinia felis in, mollis nisi. Sed gravida arcu in laoreet dictum. Nulla faucibus lectus a mollis dapibus. Fusce vehicula convallis urna, et congue nulla ultricies in. Nulla magna velit, bibendum eu odio et, euismod rhoncus sem. Nullam quis magna fermentum, ultricies neque nec, blandit neque. Etiam nec congue arcu. Curabitur sed tellus quam. Cras adipiscing odio odio, et porttitor dui suscipit eget. Aliquam non est commodo, elementum turpis at, pellentesque lorem.</p>\r\n<p>Duis nec diam diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vulputate est et lorem sagittis, et mollis libero ultricies. Nunc ultrices tortor vel convallis varius. In dolor dolor, scelerisque ac faucibus ut, aliquet ac sem. Praesent consectetur lacus quis tristique posuere. Nulla sed ultricies odio. Cras tristique vulputate facilisis.</p>\r\n<p>Mauris at metus in magna condimentum gravida eu tincidunt urna. Praesent sodales vel mi eu condimentum. Suspendisse in luctus purus. Vestibulum dignissim, metus non luctus accumsan, odio ligula pharetra massa, in eleifend turpis risus in diam. Sed non lorem nibh. Nam at feugiat urna. Curabitur interdum, diam sit amet pulvinar blandit, mauris ante scelerisque nisi, sit amet placerat mi nunc eget orci. Nulla eget quam sit amet risus rhoncus lacinia a ut eros. Praesent non libero nisi. Mauris tincidunt at purus sit amet adipiscing. Donec interdum, velit nec dignissim vehicula, libero ipsum imperdiet ligula, lacinia mattis augue dui ac lacus. Aenean molestie sed nunc at pulvinar. Fusce ornare lacus non venenatis rhoncus.</p>\r\n<p>Aenean at enim luctus ante commodo consequat nec ut mi. Sed porta adipiscing tempus. Aliquam sit amet ullamcorper ipsum, id adipiscing quam. Fusce iaculis odio ut nisi convallis hendrerit. Morbi auctor adipiscing ligula, sit amet aliquet ante consectetur at. Donec vulputate neque eleifend libero pellentesque, vitae lacinia enim ornare. Vestibulum fermentum erat blandit, ultricies felis ac, facilisis augue. Nulla facilisis mi porttitor, interdum diam in, lobortis ipsum. In molestie quam nisl, lacinia convallis tellus fermentum ac. Nulla quis velit augue. Fusce accumsan, lacus et lobortis blandit, neque magna gravida enim, dignissim ultricies tortor dui in dolor. Vestibulum vel convallis justo, quis venenatis elit. Aliquam erat volutpat. Nunc quis iaculis ligula. Suspendisse dictum sodales neque vitae faucibus. Fusce id tellus pretium, varius nunc et, placerat metus.</p>\r\n<p>Pellentesque quis facilisis mauris. Phasellus porta, metus a dignissim viverra, est elit luctus erat, nec ultricies ligula lorem eget sapien. Pellentesque ac justo velit. Maecenas semper accumsan nulla eget rhoncus. Aliquam vel urna sed nibh dignissim auctor. Integer volutpat lacus ac purus convallis, at lobortis nisi tincidunt. Vestibulum condimentum elit ac sapien placerat, at ornare libero hendrerit. Cras tincidunt nunc sit amet ante bibendum tempor. Fusce quam orci, suscipit sed eros quis, vulputate molestie metus. Nam hendrerit vitae felis et porttitor. Proin et commodo velit, id porta erat. Donec eu consectetur odio. Fusce porta odio risus. Aliquam vel erat feugiat, vestibulum elit eget, ornare sapien. Sed sed nulla justo. Sed a dolor eu justo lacinia blandit</p>\r\n</div>', '', '', 17, 'a:2:{i:0;s:8:\"side_bar\";i:1;s:6:\"footer\";}', '2014-04-19 17:21:23', '2015-05-16 09:18:39', 1);
 
 
 #
@@ -615,8 +618,7 @@ VALUES
 #
 
 INSERT INTO `ti_permalinks` (`permalink_id`, `slug`, `controller`, `query`) VALUES
-(36, 'maintenance', 'pages', 'page_id=13'),
-(37, 'about-us', 'pages', 'page_id=11');
+(11, 'about-us', 'pages', 'page_id=11');
 
 
 #
@@ -665,7 +667,6 @@ INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) 
 (10859, 'config', 'customer_reserve_email', '1', 0),
 (10860, 'config', 'main_address', 'a:6:{s:9:"address_1";s:0:"";s:9:"address_2";s:0:"";s:4:"city";s:0:"";s:8:"postcode";s:0:"";s:11:"location_id";s:0:"";s:10:"country_id";s:1:"1";}', 1),
 (10861, 'config', 'maps_api_key', '', 0),
-(10862, 'config', 'search_by', 'address', 0),
 (10863, 'config', 'distance_unit', 'mi', 0),
 (10864, 'config', 'future_orders', '0', 0),
 (10865, 'config', 'location_order', '1', 0),
@@ -682,8 +683,8 @@ INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) 
 (14356,	'config',	'new_reservation_status',	'18',	0),
 (14397,	'config',	'confirmed_reservation_status',	'16',	0),
 (14357,	'config',	'canceled_reservation_status',	'17',	0),
-(10876, 'config', 'reservation_interval', '45', 0),
-(10877, 'config', 'reservation_turn', '60', 0),
+(10876, 'config', 'reservation_time_interval', '45', 0),
+(10877, 'config', 'reservation_stay_time', '60', 0),
 (13626, 'config', 'image_manager', 'a:11:{s:8:\"max_size\";s:3:\"300\";s:11:\"thumb_width\";s:3:\"320\";s:12:\"thumb_height\";s:3:\"220\";s:7:\"uploads\";s:1:\"1\";s:10:\"new_folder\";s:1:\"1\";s:4:\"copy\";s:1:\"1\";s:4:\"move\";s:1:\"1\";s:6:\"rename\";s:1:\"1\";s:6:\"delete\";s:1:\"1\";s:15:\"transliteration\";s:1:\"0\";s:13:\"remember_days\";s:1:\"7\";}', 1),
 (10883, 'config', 'protocol', 'mail', 0),
 (10884, 'config', 'mailtype', 'html', 0),
