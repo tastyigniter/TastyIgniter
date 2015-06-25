@@ -1,13 +1,15 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Reservation_module extends Main_Controller {
-	public $reservation_alert;
 
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('location'); // load the location library
-		$this->load->model('Reservations_model');
-		$this->lang->load('reservation_module/reservation_module');
+
+        $this->load->model('Reservations_model');
+
+        $this->load->library('location'); // load the location library
+
+        $this->lang->load('reservation_module/reservation_module');
 	}
 
 	public function index() {
@@ -15,47 +17,33 @@ class Reservation_module extends Main_Controller {
 			show_404(); 																		// Whoops, show 404 error page!
 		}
 
+        $this->template->setStyleTag(extension_url('reservation_module/views/stylesheet.css'), 'reservation-module-css', '154000');
+        $this->template->setStyleTag(base_url('assets/js/datepicker/datepicker.css'), 'datepicker-css', '124000');
+        $this->template->setScriptTag(base_url("assets/js/datepicker/bootstrap-datepicker.js"), 'bootstrap-datepicker-js', '12000');
+        $this->template->setStyleTag(base_url('assets/js/datepicker/bootstrap-timepicker.css'), 'bootstrap-timepicker-css', '124440');
+        $this->template->setScriptTag(base_url("assets/js/datepicker/bootstrap-timepicker.js"), 'bootstrap-timepicker-js', '12550');
+
         if ($this->config->item('reservation_mode') !== '1') {
-            $this->alert->set('alert', $this->lang->line('alert_no_reservation'));
+            $this->alert->set('alert', $this->lang->line('alert_reservation_disabled'));
             redirect('home');
         }
 
-		if ($this->session->flashdata('reservation_alert')) {
-			$data['reservation_alert'] = $this->session->flashdata('reservation_alert');  								// retrieve session flashdata variable if available
-		} else if ($this->reservation_alert) {
-			$data['reservation_alert'] = $this->reservation_alert;
-		} else {
-			$data['reservation_alert'] = '';
-		}
+		$data['current_url'] 			= page_url().'?action=find_table&';
+		$data['reset_url'] 				= site_url('reservation');
 
-		$data['text_heading'] 				= $this->lang->line('text_heading');
-		$data['text_heading_time'] 			= $this->lang->line('text_heading_time');
-		$data['text_reservation'] 			= $this->lang->line('text_reservation');
-		$data['text_local'] 				= $this->lang->line('text_local');
-		$data['text_postcode_warning'] 		= $this->lang->line('text_postcode_warning');
-		$data['text_delivery_charge'] 		= $this->lang->line('text_delivery_charge');
-		$data['text_find'] 					= $this->lang->line('text_find');
-		$data['text_find_msg'] 				= $this->lang->line('text_find_msg');
-		$data['alert_no_times'] 			= $this->lang->line('alert_no_times');
-		$data['text_no_table'] 				= $this->lang->line('text_no_table');
-		$data['text_no_opening'] 			= $this->lang->line('text_no_opening');
-		$data['entry_location'] 			= $this->lang->line('entry_location');
-		$data['entry_postcode'] 			= $this->lang->line('entry_postcode');
-		$data['entry_guest_num'] 			= $this->lang->line('entry_guest_num');
-		$data['entry_date'] 				= $this->lang->line('entry_date');
-		$data['entry_time'] 				= $this->lang->line('entry_time');
-		$data['entry_select'] 				= $this->lang->line('entry_select');
-		$data['entry_occassion'] 			= $this->lang->line('entry_occassion');
+        $data['find_table_action'] = 'find_table';
 
-		$data['button_check_postcode'] 		= $this->lang->line('button_check_postcode');
-		$data['button_find'] 				= $this->lang->line('button_find');
-		$data['button_find_again'] 			= $this->lang->line('button_find_again');
-		$data['button_time'] 				= $this->lang->line('button_time');
-		$data['button_back'] 				= $this->lang->line('button_back');
-		$data['button_reset'] 				= $this->lang->line('button_reset');
-		$data['back'] 						= site_url('reserve');
+        if ($this->input->get() AND ($response = $this->findTable()) !== FALSE) {
+            if ($this->input->get('action') === 'select_time' AND $this->input->get('selected_time')) {
+                $data['find_table_action'] = 'view_summary';
+                $data['current_url'] = page_url().'?action=select_time&';
+            } else {
+                $data['find_table_action'] = 'select_time';
+                $data['current_url'] = page_url().'?action=select_time&';
+            }
+        }
 
-		$data['locations'] = array();
+        $data['locations'] = array();
 		$locations = $this->Locations_model->getLocations();
 		foreach ($locations as $location) {
 			$data['locations'][] = array(
@@ -64,142 +52,145 @@ class Reservation_module extends Main_Controller {
 			);
 		}
 
-		$data['guest_nums'] = array('2', '3', '4', '5','6', '7', '8', '9', '10');
+		$data['guest_numbers'] = array('2', '3', '4', '5','6', '7', '8', '9', '10');
 
-		$occasions = array(
-			'1' => 'birthday',
-			'2' => 'anniversary',
-			'3' => 'general celebration',
-			'4' => 'hen party',
-			'5' => 'stag party',
-			'6' => 'not applicable'
-		);
+        $data['location_image'] = $this->location->getImage();
 
-		if ($this->input->get('location')) {
+        if ($this->input->get('location')) {
 			$data['location_id'] 	= $this->input->get('location');
+            $data['current_url'] .= 'location='. $data['location_id'] .'&';
 		} else {
 			$data['location_id'] 	= '';
 		}
 
 		if ($this->input->get('guest_num')) {
 			$data['guest_num'] 	= $this->input->get('guest_num');
-		} else {
+            $data['current_url'] .= 'guest_num='. $data['guest_num'] .'&';
+        } else {
 			$data['guest_num'] 	= '';
 		}
 
 		if ($this->input->get('reserve_date')) {
 			$data['date'] 	= $this->input->get('reserve_date');
-		} else {
+            $data['current_url'] .= 'reserve_date='. urlencode($data['date']) .'&';
+        } else {
 			$data['date'] 	= '';
 		}
 
-		if ($this->input->get('occasion')) {
-			$data['occasion'] 	= $this->input->get('occasion');
-		} else {
-			$data['occasion'] 	= '1';
+		if ($this->input->get('selected_time')) {
+            $data['time'] 	= mdate('%g:%i %A', strtotime($this->input->get('selected_time')));
+            $data['current_url'] .= 'reserve_time='. urlencode($data['time']) .'&';
+        } else if ($this->input->get('reserve_time')) {
+			$data['time'] 	= mdate('%g:%i %A', strtotime($this->input->get('reserve_time')));
+            $data['current_url'] .= 'reserve_time='. urlencode($data['time']) .'&';
+        } else {
+			$data['time'] 	= '';
 		}
 
-		$data['text_time_msg'] 	= 'AVAILABLE RESERVATIONS ON '. mdate('%l, %F %j %Y', strtotime($data['date'])). ' FOR ' .$data['guest_num'].' GUESTS:';
-		$data['show_times'] = $data['show_reserve'] = FALSE;
-		$data['reserve_times'] = array();
+        $data['time_slots'] = array();
+        if (!empty($response['time_slots'])) {
+            for ($i = 0; $i < 5; $i++) {
+                if (isset($response['time_slots'][$i])) {
+                    $time = mdate('%g:%i %A', strtotime($response['time_slots'][$i]));
+                    $data['time_slots'][$i]['state'] = '';
+                    $data['time_slots'][$i]['time'] = $time;
+                } else {
+                    $data['time_slots'][$i]['state']    = 'disabled';
+                    $data['time_slots'][$i]['time']     = '--';
+                }
+            }
+        }
 
-		if ($this->input->get() AND $this->findTable() === TRUE) {
+        $data['reservation_alert'] = $this->alert->display('reservation_module');
 
-			if ( ! $this->input->get('reserve_time')) {
-				$data['show_times'] = TRUE;
-			}
-
-			$reservation = $this->session->userdata('reservation');
-			if (!empty($reservation) AND $this->input->get('reserve_time')) {
-				$data['show_reserve'] = TRUE;
-
-				$location = $this->Locations_model->getLocation($reservation['location']);
-
-				$data['location_name'] 		= $location['location_name'];
-				$data['guest_num'] 			= $reservation['guest_num'] .' person(s)';
-				$data['reserve_date'] 		= mdate('%l, %F %j, %Y', strtotime($reservation['reserve_date']));
-				$data['reserve_time'] 		= mdate('%h:%i %a', strtotime($reservation['reserve_time']));
-				$data['occasion'] 			= (isset($reservation['occasion']) AND $reservation['occasion'] > 0) ? $occasions[$reservation['occasion']] : '';
-			}
-
-			$data['time'] = mdate('%H:%i', strtotime(urldecode($this->input->get('reserve_time'))));
-			$interval = $this->location->getReservationInterval();
-			$reserve_day = date('l', strtotime(urldecode($this->input->get('reserve_date'))));
-			$working_hour = $this->Locations_model->getOpeningHourByDay(urldecode($this->input->get('location')), $reserve_day);
-			$opening_time = ($working_hour['open'] === '00:00:00') ? '01:00' : $working_hour['open'];
-			$closing_time = ($working_hour['close'] === '00:00:00') ? '23:59' : $working_hour['close'];
-
-			$reserve_times = $this->location->generateHours($opening_time, $closing_time, $interval);
-			if ($reserve_times) {
-				foreach ($reserve_times as $key => $value) {
-					$data['reserve_times'][] = array(
-						'24hr' 		=> $value,
-						'12hr'		=> mdate('%h:%i %a', strtotime($value))
-					);
-				}
-			} else {
-				$this->reservation_alert = $this->lang->line('alert_no_times');
-			}
-		}
-
-		$data['reservation_alert'] = $this->reservation_alert;
-
-		return $this->load->view('reservation_module/reservation_module', $data, TRUE);
+		$this->load->view('reservation_module/reservation_module', $data);
 	}
 
 
 	private function findTable() {
-		$time_format = '%h:%i %a';
-		$date_format = '%d-%m-%Y';
-		$current_date_time = time();
+        if ($this->validateForm() === TRUE) {
 
-		$this->form_validation->set_data($_GET);
+            $this->location->setLocation($this->input->get('location'));
 
-		$this->form_validation->set_rules('location', 'Location', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('guest_num', 'Guest Number', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('reserve_date', 'Date', 'xss_clean|trim|required|valid_date|callback__validate_date');
-		$this->form_validation->set_rules('occasion', 'Occasion', 'xss_clean|trim|required|integer');
+            $find['location'] 			    = $this->input->get('location');
+			$find['guest_num'] 		        = $this->input->get('guest_num');
+		 	$find['reserve_date']		    = mdate('%d-%m-%Y', strtotime($this->input->get('reserve_date')));
+		 	$find['reserve_time']		    = mdate('%H:%i', strtotime($this->input->get('reserve_time')));
+		 	$find['selected_time']		    = mdate('%H:%i', strtotime($this->input->get('selected_time')));
+		 	$find['time_interval']		    = $this->location->getReservationInterval();
 
-  		if ($this->form_validation->run() === TRUE) {
-			$this->session->unset_userdata('reservation');
+			$response = $this->Reservations_model->findATable($find);
 
-			$check['location'] 			= $this->input->get('location');
-			$check['guest_num'] 		= $this->input->get('guest_num');
-		 	$check['reserve_date']		= mdate($date_format, strtotime($this->input->get('reserve_date')));
-		 	$check['reserve_time']		= $this->input->get('reserve_time');
-			$check['occasion'] 			= $this->input->get('occasion');
+            if ($response === 'NO_ARGUMENTS') {
+                log_message('debug', 'Reservations_model -> checkAvailability() failed -> '.$response);
+            } else if ($response === 'NO_TABLE') {
+        		$this->alert->set('alert_now', $this->lang->line('alert_no_table_available'), 'reservation_module');
+			} else if ($response === 'FULLY_BOOKED') {
+                $this->alert->set('alert_now', $this->lang->line('alert_fully_booked'), 'reservation_module');
+			} else if (is_array($response)) {
 
-			$result = $this->Reservations_model->checkAvailability($check);
+                if ($this->input->get('selected_time') AND isset($response['time_slots'])) {
+                    $selected_time = mdate('%H:%i', strtotime($this->input->get('reserve_date') .' '. $this->input->get('selected_time')));
 
-			if ($result === 'NO_GUEST_TABLE') {
-        		$this->reservation_alert = $this->lang->line('alert_no_guest');
-			} else if ($result === 'NO_TABLE_AVAIL') {
-        		$this->reservation_alert = $this->lang->line('alert_no_time');
+                    if (in_array($selected_time, $response['time_slots'])) {
+                        $response['table_found'] = array_shift($response['table_found']);
+                        $this->session->set_tempdata('reservation_data', array_merge($find, $response), 300);
+                    } else {
+                        $this->alert->set('alert_now', $this->lang->line('alert_fully_booked'), 'reservation_module');
+                        return FALSE;
+                    }
+                }
+
+				return $response;
 			}
+        }
 
-			if (is_array($result) AND isset($result['tables'])) {
-				if ($this->form_validation->valid_time($check['reserve_time']) === TRUE) {
-					$this->session->set_userdata('reservation', $check);
-				}
+        return FALSE;
+    }
 
-				if (empty($check['reserve_time'])) {
-					$this->location->setLocation($check['location']);
-				}
+    private function validateForm() {
+        $this->form_validation->reset_validation();
+        $this->form_validation->set_data($_GET);
 
-				return TRUE;
-			}
+        $this->form_validation->set_rules('location', 'lang:label_location', 'xss_clean|trim|required|integer');
+        $this->form_validation->set_rules('guest_num', 'lang:label_guest_num', 'xss_clean|trim|required|integer');
+        $this->form_validation->set_rules('reserve_date', 'lang:label_date', 'xss_clean|trim|required|valid_date|callback__validate_date');
+        $this->form_validation->set_rules('reserve_time', 'lang:label_time', 'xss_clean|trim|required|valid_time|callback__validate_time');
 
-			return FALSE;
-		}
-	}
+        if ($this->input->get('selected_time')) {
+            $this->form_validation->set_rules('selected_time', 'lang:label_time', 'xss_clean|trim|required|valid_time|callback__validate_time');
+        }
 
-	public function _validate_date($str) {
+        if ($this->form_validation->run() === TRUE) {											// checks if form validation routines ran successfully
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
 
-		if (strtotime($str) < strtotime($this->location->currentDate())) {
+    public function _validate_date($str) {
+		if (strtotime($str) < time()) {
         	$this->form_validation->set_message('_validate_date', 'Date must be after today, you can only make future reservations!');
       		return FALSE;
 		} else {
       		return TRUE;
+		}
+	}
+
+    public function _validate_time($str) {
+
+        if (!empty($str)) {
+
+            $reserve_time = strtotime(urldecode($str));
+
+            if ($hour = $this->Locations_model->getOpeningHourByDay(urldecode($this->input->get('location')), $this->input->get('reserve_date'))) {
+                if ($hour['status'] === '1' AND (strtotime($hour['open']) <= $reserve_time AND strtotime($hour['close']) >= $reserve_time)) {
+                    return TRUE;
+                }
+            }
+
+            $this->form_validation->set_message('_validate_time', 'Time must be between restaurant opening time!');
+            return FALSE;
 		}
 	}
 }

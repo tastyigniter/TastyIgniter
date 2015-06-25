@@ -4,15 +4,20 @@ class Reservations extends Admin_Controller {
 
     public function __construct() {
 		parent::__construct(); //  calls the constructor
+
         $this->user->restrict('Admin.Reservations');
+
+        $this->load->model('Reservations_model');
+        $this->load->model('Locations_model');
+        $this->load->model('Statuses_model');
+        $this->load->model('Tables_model');
+        $this->load->model('Staffs_model');
+
         $this->load->library('pagination');
-		$this->load->library('calendar');
-		$this->load->model('Reservations_model');
-		$this->load->model('Locations_model');
-		$this->load->model('Statuses_model');
-		$this->load->model('Tables_model');
-		$this->load->model('Staffs_model');
-	}
+        $this->load->library('calendar');
+
+        $this->lang->load('reservations');
+    }
 
 	public function index() {
 		$url = '?';
@@ -90,15 +95,13 @@ class Reservations extends Admin_Controller {
 			$filter['order_by'] = $data['order_by'] = $this->input->get('order_by');
 			$data['order_by_active'] = $this->input->get('order_by') .' active';
 		} else {
-			$filter['order_by'] = $data['order_by'] = 'DESC';
-			$data['order_by_active'] = 'DESC';
+			$filter['order_by'] = $data['order_by'] = 'ASC';
+			$data['order_by_active'] = 'ASC';
 		}
 
-		$this->template->setTitle('Reservations');
-		$this->template->setHeading('Reservations');
-		$this->template->setButton('Delete', array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
-
-		$data['text_empty'] 			= 'There are no reservations available.';
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading($this->lang->line('text_heading'));
+		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
 		if ($this->input->get('show_calendar') === '1') {
 			$day = ($filter['filter_day'] === '') ? date('d', time()) : $filter['filter_day'];
@@ -136,10 +139,10 @@ class Reservations extends Admin_Controller {
 
             $calendar_data['url'] = site_url('reservations');
             $calendar_data['url_suffix'] = $url;
-			$this->template->setIcon('<a class="btn btn-default" title="Switch to list view" href="'.site_url('reservations/') .'"><i class="fa fa-list"></i></a>');
+			$this->template->setIcon('<a class="btn btn-default" title="'.$this->lang->line('text_switch_to_list').'" href="'.site_url('reservations/') .'"><i class="fa fa-list"></i></a>');
 			$data['calendar'] = $this->calendar->generate($year, $month, $calendar_data);
 		} else {
-			$this->template->setIcon('<a class="btn btn-default" title="Switch to calender view" href="'.site_url('reservations?show_calendar=1') .'"><i class="fa fa-calendar"></i></a>');
+			$this->template->setIcon('<a class="btn btn-default" title="'.$this->lang->line('text_switch_to_calendar').'" href="'.site_url('reservations?show_calendar=1') .'"><i class="fa fa-calendar"></i></a>');
 			$data['calendar'] = '';
 		}
 
@@ -193,7 +196,6 @@ class Reservations extends Admin_Controller {
 		$data['reserve_dates'] = array();
 		$reserve_dates = $this->Reservations_model->getReservationDates();
 		foreach ($reserve_dates as $reserve_date) {
-			$month_year = '';
 			$month_year = $reserve_date['year'].'-'.$reserve_date['month'];
 			$data['reserve_dates'][$month_year] = mdate('%F %Y', strtotime($reserve_date['reserve_date']));
 		}
@@ -234,15 +236,13 @@ class Reservations extends Admin_Controller {
 			redirect('reservations');
 		}
 
-		$title = (isset($reservation_info['reservation_id'])) ? $reservation_info['reservation_id'] : 'New';
-		$this->template->setTitle('Reservation: '. $title);
-		$this->template->setHeading('Reservation: '. $title);
+		$title = (isset($reservation_info['reservation_id'])) ? $reservation_info['reservation_id'] : $this->lang->line('text_new');
+        $this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $title));
+        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
 
-		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setBackButton('btn btn-back', site_url('reservations'));
-
-		$data['text_empty'] 		= 'There are no status history for this reservation.';
 
 		$data['reservation_id'] 	= $reservation_info['reservation_id'];
 		$data['location_name'] 		= $reservation_info['location_name'];
@@ -313,7 +313,7 @@ class Reservations extends Admin_Controller {
 			);
 		}
 
-		if ($this->input->post() AND $this->_updateReservation($data['status_id'], $data['assignee_id']) === TRUE) {
+		if ($this->input->post() AND $this->_updateReservation() === TRUE) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('reservations');
 			}
@@ -325,41 +325,24 @@ class Reservations extends Admin_Controller {
 		$this->template->render('reservations_edit', $data);
 	}
 
-	private function _updateReservation($status_id = 0, $assignee_id = 0) {
+	private function _updateReservation() {
     	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$update = array();
-			$history = array();
-			$current_time = time();
-
-			$update['reservation_id'] 	= (int)$this->input->get('id');
-			$update['status'] 			= (int)$this->input->post('status');
-			$update['date_modified'] 	=  mdate('%Y-%m-%d', $current_time);
-
-			$update['object_id'] 		= $update['reservation_id'];
-			$update['staff_id']			= $this->user->getStaffId();
-			$update['old_assignee_id']	= (int)$assignee_id;
-			$update['assignee_id']		= (int)$this->input->post('assignee_id');
-			$update['status_id']		= (int)$this->input->post('status');
-			$update['notify']			= (int)$this->input->post('notify');
-			$update['comment']			= $this->input->post('status_comment');
-			$update['date_added']		= mdate('%Y-%m-%d %H:%i:%s', $current_time);
-
-			if ($this->Reservations_model->updateReservation($update, $status_id)) {
+			if ($this->Reservations_model->updateReservation($this->input->get('id'), $this->input->post())) {
                 log_activity($this->user->getStaffId(), 'updated', 'reservations', get_activity_message('activity_custom',
                     array('{staff}', '{action}', '{context}', '{link}', '{item}'),
-                    array($this->user->getStaffName(), 'updated', 'reservation', current_url(), $update['reservation_id'])
+                    array($this->user->getStaffName(), 'updated', 'reservation', current_url(), $this->input->get('id'))
                 ));
 
-                if ($update['old_assignee_id'] !== $update['assignee_id']) {
+                if ($this->input->post('old_assignee_id') !== $this->input->post('assignee_id')) {
                     log_activity($this->user->getStaffId(), 'assigned', 'reservations', get_activity_message('activity_assigned',
                         array('{staff}', '{action}', '{context}', '{link}', '{item}', '{assignee}'),
-                        array($this->user->getStaffName(), 'assigned', 'reservation', current_url(), $update['reservation_id'], $update['assignee_id'])
+                        array($this->user->getStaffName(), 'assigned', 'reservation', current_url(), $this->input->get('id'), $this->input->post('assignee_id'))
                     ));
                 }
 
-                $this->alert->set('success', 'Reservation updated successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Reservation updated'));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), 'updated'));
 			}
 
 			return TRUE;
@@ -372,9 +355,9 @@ class Reservations extends Admin_Controller {
 
             if ($deleted_rows > 0) {
                 $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Reservations': 'Reservation';
-                $this->alert->set('success', $prefix.' deleted successfully.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), $prefix.' '.$this->lang->line('text_deleted')));
             } else {
-                $this->alert->set('warning', 'An error occurred, nothing deleted.');
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted')));
             }
 
             return TRUE;
@@ -382,8 +365,8 @@ class Reservations extends Admin_Controller {
 	}
 
 	private function validateForm() {
-		$this->form_validation->set_rules('status', 'Reservation Status', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('assigned_staff', 'Assign Staff', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('status', 'lang:label_status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('assigned_staff', 'lang:label_assign_staff', 'xss_clean|trim|integer');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;
