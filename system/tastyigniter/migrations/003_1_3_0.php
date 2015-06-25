@@ -8,6 +8,7 @@ class Migration_1_3_0 extends CI_Migration {
 
         $this->dbforge->add_column('working_hours', array('status TINYINT(1) NOT NULL'));
         $this->dbforge->add_column('categories', array('parent_id INT(11) NOT NULL'));
+        $this->dbforge->add_column('categories', array('priority INT(11) NOT NULL'));
         $this->dbforge->add_column('categories', array('image VARCHAR(255) NOT NULL'));
 
 		$this->db->query("INSERT INTO ".$this->db->dbprefix('settings')." (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES (10971, 'prefs', 'default_themes', 'a:2:{s:5:\"admin\";s:18:\"tastyigniter-blue/\";s:4:\"main\";s:20:\"tastyigniter-orange/\";}', 1);");
@@ -36,6 +37,7 @@ class Migration_1_3_0 extends CI_Migration {
         $this->dbforge->drop_column('extensions', 'title');
 
         $this->dbforge->drop_column('categories', 'parent_id');
+        $this->dbforge->drop_column('categories', 'priority');
         $this->dbforge->drop_column('categories', 'image');
 		$this->db->where('sort', 'prefs')->where('item', 'default_themes')->delete('settings');
 

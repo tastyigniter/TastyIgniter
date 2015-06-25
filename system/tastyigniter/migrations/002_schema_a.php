@@ -170,6 +170,7 @@ class Migration_Schema_a extends CI_Migration {
 		$this->db->query('ALTER TABLE '.$this->db->dbprefix('order_options').' CHANGE `option_price` `order_option_price` DECIMAL(15,2) NOT NULL');
 		$fields = array(
   			'order_menu_id INT(11) NOT NULL',
+  			'order_menu_option_id INT(11) NOT NULL',
   			'menu_option_value_id INT(11) NOT NULL'
   		);
 
