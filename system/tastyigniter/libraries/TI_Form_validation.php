@@ -3,6 +3,10 @@
 class TI_Form_validation extends CI_Form_validation
 {
     public $CI;
+    protected $_old_field_data = array();
+    protected $_old_error_array = array();
+    protected $_old_error_messages = array();
+    protected $old_error_string = '';
 
 	/**
 	 * Is Unique
@@ -97,6 +101,78 @@ class TI_Form_validation extends CI_Form_validation
     }
 
     // --------------------------------------------------------------------
+
+    /**
+     * Translate a field name
+     *
+     * @param	string	the field name
+     * @return	string
+     */
+    protected function _translate_fieldname($fieldname)
+    {
+        // Do we need to translate the field name?
+        // We look for the prefix lang: to determine this
+        if (sscanf($fieldname, 'lang:%s', $line) === 1)
+        {
+            // Were we able to translate the field name?  If not we use $line
+            if (FALSE === ($fieldname = $this->CI->lang->line('form_validation_'.$line, FALSE))
+                // added DEPRECATED support for non-prefixed keys to be used within TI
+                && FALSE === ($fieldname = $this->CI->lang->line($line, FALSE)))
+            {
+                return $line;
+            }
+        }
+
+        return $fieldname;
+    }
+
+    // --------------------------------------------------------------------
+
+    public function error($field, $prefix = '', $suffix = '')
+    {
+        if (!empty($this->_old_field_data[$field]['error']))
+        {
+            if ($prefix === '')
+            {
+                $prefix = $this->_error_prefix;
+            }
+
+            if ($suffix === '')
+            {
+                $suffix = $this->_error_suffix;
+            }
+
+            return $prefix.$this->_old_field_data[$field]['error'].$suffix;
+        }
+
+        return parent::error($field, $prefix, $suffix);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Reset validation vars
+     *
+     * Prevents subsequent validation routines from being affected by the
+     * results of any previous validation routine due to the CI singleton.
+     *
+     * @return	CI_Form_validation
+     */
+    public function reset_validation()
+    {
+        $this->_old_field_data = $this->_field_data;
+        $this->_old_error_array = $this->_error_array;
+        $this->_old_error_messages = $this->_error_messages;
+        $this->old_error_string = $this->error_string;
+
+        $this->_field_data = array();
+        $this->_config_rules = array();
+        $this->_error_array = array();
+        $this->_error_messages = array();
+        $this->error_string = '';
+
+        return $this;
+    }
 
 }
 
