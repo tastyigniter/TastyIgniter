@@ -107,6 +107,29 @@ class Reviews_model extends TI_Model {
         }
     }
 
+    public function getTotalsbyId($location_id = FALSE) {
+        $this->db->select('location_id, COUNT(location_id) as review_total');
+        $this->db->from('reviews');
+        $this->db->group_by('location_id');
+        $this->db->order_by('review_total');
+        $this->db->where('review_status', '1');
+
+        if ($location_id !== FALSE) {
+            $this->db->where('location_id', $location_id);
+        }
+
+        $query = $this->db->get();
+        $result = array();
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $result[$row['location_id']] = $row['review_total'];
+            }
+        }
+
+        return $result;
+    }
+
     public function getReview($review_id, $customer_id = FALSE, $sale_type = FALSE) {
         if (!empty($review_id)) {
             $this->db->from('reviews');

@@ -4,9 +4,14 @@ class Reviews extends Admin_Controller {
 
     public function __construct() {
 		parent::__construct(); //  calls the constructor
+
         $this->user->restrict('Admin.Reviews');
+
+        $this->load->model('Reviews_model'); // load the reviews model
+
         $this->load->library('pagination');
-		$this->load->model('Reviews_model'); // load the reviews model
+
+        $this->lang->load('reviews');
 	}
 
 	public function index() {
@@ -64,12 +69,10 @@ class Reviews extends Admin_Controller {
 			$data['order_by_active'] = 'DESC';
 		}
 
-		$this->template->setTitle('Reviews');
-		$this->template->setHeading('Reviews');
-		$this->template->setButton('+ New', array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
-		$this->template->setButton('Delete', array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
-
-		$data['text_empty']			= 'There are no reviews available.';
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading($this->lang->line('text_heading'));
+		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
+		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_location'] 		= site_url('reviews'.$url.'sort_by=location_name&order_by='.$order_by);
@@ -81,7 +84,6 @@ class Reviews extends Admin_Controller {
 		$ratings = $this->config->item('ratings');
 		$data['ratings'] = $ratings['ratings'];
 
-		$reviews = array();
 		$reviews = $this->Reviews_model->getList($filter);
 		$data['reviews'] = array();
 		foreach ($reviews as $review) {
@@ -113,7 +115,6 @@ class Reviews extends Admin_Controller {
 		$data['review_dates'] = array();
 		$review_dates = $this->Reviews_model->getReviewDates();
 		foreach ($review_dates as $review_date) {
-			$month_year = '';
 			$month_year = $review_date['year'].'-'.$review_date['month'];
 			$data['review_dates'][$month_year] = mdate('%F %Y', strtotime($review_date['date_added']));
 		}
@@ -154,11 +155,11 @@ class Reviews extends Admin_Controller {
 			$data['_action']	= site_url('reviews/edit');
 		}
 
-		$title = (isset($review_info['location_name'])) ? $review_info['location_name'] : 'New';
-		$this->template->setTitle('Review: '. $title);
-		$this->template->setHeading('Review: '. $title);
-		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$title = (isset($review_info['location_name'])) ? $review_info['location_name'] : $this->lang->line('text_new');
+        $this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $title));
+        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
+		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setBackButton('btn btn-back', site_url('reviews'));
 
 		$data['review_id'] 			= $review_info['review_id'];
@@ -201,7 +202,7 @@ class Reviews extends Admin_Controller {
 
 	private function _saveReview() {
     	if ($this->validateForm() === TRUE) {
-            $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
+            $save_type = ( ! is_numeric($this->input->get('id'))) ? $this->lang->line('text_added') : $this->lang->line('text_updated');
 
 			if ($review_id = $this->Reviews_model->saveReview($this->input->get('id'), $this->input->post())) {
                 log_activity($this->user->getStaffId(), $save_type, 'reviews', get_activity_message('activity_custom',
@@ -209,9 +210,9 @@ class Reviews extends Admin_Controller {
                     array($this->user->getStaffName(), $save_type, 'review', current_url(), $this->input->get('id'))
                 ));
 
-                $this->alert->set('success', 'Review ' . $save_type . ' successfully.');
-			} else {
-                $this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Review '.$save_type));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $save_type));
 			}
 
 			return $review_id;
@@ -224,9 +225,9 @@ class Reviews extends Admin_Controller {
 
             if ($deleted_rows > 0) {
                 $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Reviews': 'Review';
-                $this->alert->set('success', $prefix.' deleted successfully.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), $prefix.' '.$this->lang->line('text_deleted')));
             } else {
-                $this->alert->set('warning', 'An error occurred, nothing deleted.');
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted')));
             }
 
             return TRUE;
@@ -234,16 +235,16 @@ class Reviews extends Admin_Controller {
 	}
 
 	private function validateForm() {
-		$this->form_validation->set_rules('sale_type', 'Sale Type', 'xss_clean|trim|required|alpha');
-		$this->form_validation->set_rules('sale_id', 'Sale ID', 'xss_clean|trim|required|integer|callback__check_sale_id');
-		$this->form_validation->set_rules('location_id', 'Location', 'xss_clean|trim|required|integer|callback__check_location');
-		$this->form_validation->set_rules('customer_id', 'Customer', 'xss_clean|trim|required|integer|callback__check_customer');
-		$this->form_validation->set_rules('author', 'Author', 'xss_clean|trim|required');
-		$this->form_validation->set_rules('rating[quality]', 'Quality Rating', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('rating[delivery]', 'Delivery Rating', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('rating[service]', 'Service Rating', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('review_text', 'Rating Text', 'xss_clean|trim|required|min_length[2]|max_length[1028]');
-		$this->form_validation->set_rules('review_status', 'Rating Status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('sale_type', 'lang:label_sale_type', 'xss_clean|trim|required|alpha');
+		$this->form_validation->set_rules('sale_id', 'lang:label_sale_id', 'xss_clean|trim|required|integer|callback__check_sale_id');
+		$this->form_validation->set_rules('location_id', 'lang:label_location', 'xss_clean|trim|required|integer|callback__check_location');
+		$this->form_validation->set_rules('customer_id', 'lang:label_customer', 'xss_clean|trim|required|integer|callback__check_customer');
+		$this->form_validation->set_rules('author', 'lang:label_author', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('rating[quality]', 'lang:label_quality', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('rating[delivery]', 'lang:label_delivery', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('rating[service]', 'lang:label_service', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('review_text', 'lang:label_text', 'xss_clean|trim|required|min_length[2]|max_length[1028]');
+		$this->form_validation->set_rules('review_status', 'lang:label_status', 'xss_clean|trim|required|integer');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;
@@ -256,7 +257,7 @@ class Reviews extends Admin_Controller {
 		if ($this->input->post('sale_type') === 'order') {
 			$this->load->model('Orders_model');
 			if ( ! $this->Orders_model->validateOrder($sale_id)) {
-	        	$this->form_validation->set_message('_check_sale_id', 'The %s entered can not be found in orders');
+	        	$this->form_validation->set_message('_check_sale_id', $this->lang->line('error_not_found_in_order'));
 				return FALSE;
 			} else {
 				return TRUE;
@@ -264,7 +265,7 @@ class Reviews extends Admin_Controller {
 		} else if ($this->input->post('sale_type') === 'reservation') {
 			$this->load->model('Reservations_model');
 			if ( ! $this->Reservations_model->validateReservation($sale_id)) {
-	        	$this->form_validation->set_message('_check_sale_id', 'The %s entered can not be found in reservations');
+	        	$this->form_validation->set_message('_check_sale_id', $this->lang->line('error_not_found_in_reservation'));
 				return FALSE;
 			} else {
 				return TRUE;
@@ -275,7 +276,7 @@ class Reviews extends Admin_Controller {
 	public function _check_location($location_id) {
 		$this->load->model('Locations_model');
 		if ( ! $this->Locations_model->validateLocation($location_id)) {
-        	$this->form_validation->set_message('_check_location', 'The %s entered can not be found');
+        	$this->form_validation->set_message('_check_location', $this->lang->line('error_not_found'));
 			return FALSE;
 		} else {
 			return TRUE;
@@ -285,7 +286,7 @@ class Reviews extends Admin_Controller {
 	public function _check_customer($customer_id) {
 		$this->load->model('Customers_model');
 		if ( ! $this->Customers_model->validateCustomer($customer_id)) {
-        	$this->form_validation->set_message('_check_customer', 'The %s entered can not be found');
+        	$this->form_validation->set_message('_check_customer', $this->lang->line('error_not_found'));
 			return FALSE;
 		} else {
 			return TRUE;

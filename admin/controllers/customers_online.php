@@ -4,15 +4,20 @@ class Customers_online extends Admin_Controller {
 
 	public function __construct() {
 		parent::__construct();
+
         $this->user->restrict('Admin.CustomersOnline');
+
+        $this->load->model('Customer_online_model');
+
         $this->load->library('pagination');
-		$this->load->model('Customer_online_model');
+
+        $this->lang->load('customer_online');
 	}
 
 	public function index() {
-        $this->template->setTitle('Customers Online');
-        $this->template->setHeading('Customers Online');
-        $this->template->setButton('Options', array('class' => 'btn btn-default pull-right', 'href' => site_url('settings#system')));
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading($this->lang->line('text_heading'));
+        $this->template->setButton($this->lang->line('button_option'), array('class' => 'btn btn-default pull-right', 'href' => site_url('settings#system')));
 
         $filter = array();
         $online_time_out = ($this->config->item('customer_online_time_out') > 120) ? $this->config->item('customer_online_time_out') : 120;
@@ -26,9 +31,9 @@ class Customers_online extends Admin_Controller {
 	}
 
 	public function all() {
-        $this->template->setTitle('Customers Online');
-        $this->template->setHeading('Customers Online: All');
-        $this->template->setButton('Options', array('class' => 'btn btn-default pull-right', 'href' => site_url('settings#system')));
+        $this->template->setTitle($this->lang->line('text_all_heading'));
+        $this->template->setHeading($this->lang->line('text_all_heading'));
+        $this->template->setButton($this->lang->line('button_option'), array('class' => 'btn btn-default pull-right', 'href' => site_url('settings#system')));
 
         $filter = array();
         $filter['filter_type'] = $data['filter_type'] = 'all';
@@ -88,9 +93,9 @@ class Customers_online extends Admin_Controller {
         }
 
         if ($filter['filter_type'] === 'online') {
-            $data['text_empty'] = 'There is no customer online.';
+            $data['text_empty'] = $this->lang->line('text_empty');
         } else {
-            $data['text_empty'] = 'There are no customer online report available.';
+            $data['text_empty'] = $this->lang->line('text_empty_report');
         }
 
         $order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
@@ -105,7 +110,7 @@ class Customers_online extends Admin_Controller {
             $data['customers_online'][] = array(
                 'activity_id'   => $online['activity_id'],
                 'ip_address'    => $online['ip_address'],
-                'customer_name' => ($online['customer_id']) ? $online['first_name'] . ' ' . $online['last_name'] : 'Guest',
+                'customer_name' => ($online['customer_id']) ? $online['first_name'] . ' ' . $online['last_name'] : $this->lang->line('text_guest'),
                 'access_type'   => ucwords($online['access_type']),
                 'browser'       => $online['browser'],
                 'user_agent'    => $online['user_agent'],
@@ -115,13 +120,13 @@ class Customers_online extends Admin_Controller {
                 'referrer_url'  => (!empty($online['referrer_uri'])) ? root_url($online['referrer_uri']) : '#',
                 'date_added'    => time_elapsed($online['date_added']),
                 'country_code'  => image_url('data/flags/' . $country_code . '.png'),
-                'country_name'  => ($online['country_name']) ? $online['country_name'] : 'Private'
+                'country_name'  => ($online['country_name']) ? $online['country_name'] : $this->lang->line('text_private')
             );
         }
 
         $data['types'] = array(
-            'online' => array('badge' => '', 'url' => site_url('customers_online')),
-            'all'    => array('badge' => '', 'url' => site_url('customers_online/all'))
+            'online' => array('badge' => '', 'url' => site_url('customers_online'), 'title' => $this->lang->line('text_online')),
+            'all'    => array('badge' => '', 'url' => site_url('customers_online/all'), 'title' => $this->lang->line('text_all'))
         );
 
         $data['online_dates'] = array();
@@ -136,7 +141,7 @@ class Customers_online extends Admin_Controller {
             $url .= 'order_by=' . $filter['order_by'] . '&';
         }
 
-        $config['base_url'] = site_url('customers_online' . $url);
+        $config['base_url'] = page_url() . $url;
         $config['total_rows'] = $this->Customer_online_model->getCount($filter);
         $config['per_page'] = $filter['limit'];
 

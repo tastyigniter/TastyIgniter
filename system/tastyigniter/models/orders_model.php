@@ -162,7 +162,7 @@ class Orders_model extends TI_Model {
 
 			if ($query->num_rows() > 0) {
                 foreach ($query->result_array() as $row) {
-                    $result[$row['menu_id']][] = $row;
+                    $result[] = $row;
                 }
 			}
 		}
@@ -210,11 +210,11 @@ class Orders_model extends TI_Model {
 		return $result;
 	}
 
-	public function updateOrder($update = array(), $status_id = '') {
+	public function updateOrder($order_id = NULL, $update = array()) {
 		$query = FALSE;
 
-		if (!empty($update['status_id'])) {
-			$this->db->set('status_id', $update['status_id']);
+		if (!empty($update['order_status'])) {
+			$this->db->set('status_id', $update['order_status']);
 		}
 
 		if (!empty($update['assignee_id'])) {
@@ -222,19 +222,25 @@ class Orders_model extends TI_Model {
 		}
 
 		if (!empty($update['date_modified'])) {
-			$this->db->set('date_modified', $update['date_modified']);
+			$this->db->set('date_modified', mdate('%Y-%m-%d', time()));
 		}
 
-		if (!empty($update['order_id'])) {
-			$this->db->where('order_id', $update['order_id']);
+		if (is_numeric($order_id)) {
+			$this->db->where('order_id', $order_id);
 			$query = $this->db->update('orders');
 
-			if ($query AND (int) $status_id !== (int) $update['status_id']) {
-				$this->Statuses_model->addStatusHistory('order', $update);
+			if ($query AND (int) $update['old_status_id'] !== (int) $update['order_status']) {
+                $update['staff_id']	        = $this->user->getStaffId();
+                $update['object_id']		= (int)$order_id;
+                $update['status_id']        = (int)$update['order_status'];
+                $update['comment']			= $update['status_comment'];
+                $update['date_added']		= mdate('%Y-%m-%d %H:%i:%s', time());
+
+                $this->Statuses_model->addStatusHistory('order', $update);
 			}
 		}
 
-		return $query;
+        return $query;
 	}
 
     public function addOrder($order_info = array(), $cart_contents = array()) {
@@ -339,6 +345,7 @@ class Orders_model extends TI_Model {
 
             $order_totals = array(
                 'cart_total' => array('title' => 'Sub Total', 'value' => (isset($cart_contents['cart_total'])) ? $cart_contents['cart_total'] : ''),
+                'order_total' => array('title' => 'Order Total', 'value' => (isset($cart_contents['order_total'])) ? $cart_contents['order_total'] : ''),
                 'delivery' => array('title' => 'Delivery', 'value' => (isset($cart_contents['delivery'])) ? $cart_contents['delivery'] : ''),
                 'coupon' => array('title' => 'Coupon ('.$cart_contents['coupon']['code'].') ', 'value' => $cart_contents['coupon']['discount'])
             );
@@ -377,9 +384,6 @@ class Orders_model extends TI_Model {
 
     public function addOrderMenus($order_id, $cart_contents = array()) {
         if (is_array($cart_contents) AND !empty($cart_contents) AND $order_id) {
-            $this->db->where('order_id', $order_id);
-            $this->db->delete('order_menus');
-
             foreach ($cart_contents as $key => $item) {
                 if (is_array($item) AND isset($item['rowid']) AND $key === $item['rowid']) {
 
@@ -437,25 +441,20 @@ class Orders_model extends TI_Model {
         }
     }
 
-    public function addOrderMenuOptions($order_menu_id, $order_id, $menu_id, $menu_option) {
-        if (!empty($order_menu_id) AND !empty($order_id) AND !empty($menu_id) AND !empty($menu_option)) {
-            $this->db->where('order_id', $order_id);
-            $this->db->delete('order_options');
+    public function addOrderMenuOptions($order_menu_id, $order_id, $menu_id, $menu_options) {
+        if (!empty($order_id) AND !empty($menu_id) AND !empty($menu_options)) {
 
-            $menu_option_value_ids = (!empty($menu_option['menu_option_value_id'])) ? explode('|', $menu_option['menu_option_value_id']) : array();
-            $option_names = (!empty($menu_option['name'])) ? explode('|', $menu_option['name']) : array();
-            $option_prices = (!empty($menu_option['price'])) ? explode('|', $menu_option['price']) : array();
-
-            if (count($menu_option_value_ids) > 0) {
-                foreach ($menu_option_value_ids as $key => $value) {
+            foreach ($menu_options as $menu_option_id => $options) {
+                foreach ($options as $option) {
+                    $this->db->set('order_menu_option_id', $menu_option_id);
                     $this->db->set('order_menu_id', $order_menu_id);
                     $this->db->set('order_id', $order_id);
                     $this->db->set('menu_id', $menu_id);
-                    $this->db->set('menu_option_value_id', $value);
-                    $this->db->set('order_option_name', $option_names[$key]);
-                    $this->db->set('order_option_price', $option_prices[$key]);
+                    $this->db->set('menu_option_value_id', $option['value_id']);
+                    $this->db->set('order_option_name', $option['value_name']);
+                    $this->db->set('order_option_price', $option['value_price']);
 
-                    $query = $this->db->insert('order_options');
+                    $this->db->insert('order_options');
                 }
             }
         }
@@ -472,7 +471,7 @@ class Orders_model extends TI_Model {
                     $this->db->set('code', $key);
                     $this->db->set('title', $value['title']);
 
-                    if ($key === 'code') {
+                    if ($key === 'coupon') {
                         $this->db->set('value', '-'. $value['value']);
                     } else {
                         $this->db->set('value', $value['value']);

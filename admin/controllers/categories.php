@@ -4,11 +4,16 @@ class Categories extends Admin_Controller {
 
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
+
         $this->user->restrict('Admin.Categories');
+
+        $this->load->model('Categories_model'); // load the menus model
+        $this->load->model('Image_tool_model');
+
         $this->load->library('permalink');
         $this->load->library('pagination');
-		$this->load->model('Categories_model'); // load the menus model
-		$this->load->model('Image_tool_model');
+
+        $this->lang->load('categories');
 	}
 
 	public function index() {
@@ -45,15 +50,15 @@ class Categories extends Admin_Controller {
 			$data['order_by_active'] = 'ASC';
 		}
 
-		$this->template->setTitle('Categories');
-		$this->template->setHeading('Categories');
-		$this->template->setButton('+ New', array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
-		$this->template->setButton('Delete', array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
+		$this->template->setTitle($this->lang->line('text_title'));
+		$this->template->setHeading($this->lang->line('text_heading'));
 
-		$data['text_empty'] 		= 'There are no categories available.';
+        $this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
+		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_name'] 			= site_url('categories'.$url.'sort_by=name&order_by='.$order_by);
+		$data['sort_priority'] 		= site_url('categories'.$url.'sort_by=priority&order_by='.$order_by);
 		$data['sort_id'] 			= site_url('categories'.$url.'sort_by=category_id&order_by='.$order_by);
 
 		$results = $this->Categories_model->getList($filter);
@@ -64,6 +69,7 @@ class Categories extends Admin_Controller {
 				'category_id' 			=> $result['category_id'],
                 'name' 					=> $result['name'],
                 'parent_id' 			=> $result['parent_id'],
+                'priority' 			    => $result['priority'],
 				'description' 			=> substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..',
 				'edit' 					=> site_url('categories/edit?id=' . $result['category_id'])
 			);
@@ -105,11 +111,12 @@ class Categories extends Admin_Controller {
 			$data['_action']	= site_url('categories/edit');
 		}
 
-		$title = (isset($category_info['name'])) ? $category_info['name'] : 'New';
-		$this->template->setTitle('Category: '. $title);
-		$this->template->setHeading('Category: '. $title);
-		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+        $title = (isset($category_info['name'])) ? $category_info['name'] : $this->lang->line('text_new');
+        $this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $title));
+        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
+
+        $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setBackButton('btn btn-back', site_url('categories'));
 
         $this->template->setStyleTag(root_url('assets/js/fancybox/jquery.fancybox.css'), 'jquery-fancybox-css');
@@ -119,6 +126,7 @@ class Categories extends Admin_Controller {
 		$data['name'] 				= $category_info['name'];
 		$data['parent_id'] 			= $category_info['parent_id'];
 		$data['description'] 		= $category_info['description'];
+		$data['priority'] 		    = $category_info['priority'];
 		$data['no_image'] 			= $this->Image_tool_model->resize('data/no_photo.png');
 
 		$data['permalink'] = $this->permalink->getPermalink('category_id='.$category_info['category_id']);
@@ -161,12 +169,12 @@ class Categories extends Admin_Controller {
 
 	private function _saveCategory() {
     	if ($this->validateForm() === TRUE) {
-            $save_type = (! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
+            $save_type = (! is_numeric($this->input->get('id'))) ? $this->lang->line('text_added') : $this->lang->line('text_updated');
 
 			if ($category_id = $this->Categories_model->saveCategory($this->input->get('id'), $this->input->post())) {
-				$this->alert->set('success', 'Category ' . $save_type . ' successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Category '.$save_type));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $save_type));
 			}
 
 			return $category_id;
@@ -179,9 +187,9 @@ class Categories extends Admin_Controller {
 
             if ($deleted_rows > 0) {
                 $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Categories': 'Category';
-                $this->alert->set('success', $prefix.' deleted successfully.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), $prefix.' '.$this->lang->line('text_deleted')));
             } else {
-                $this->alert->set('warning', 'An error occurred, nothing deleted.');
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted')));
             }
 
             return TRUE;
@@ -189,12 +197,13 @@ class Categories extends Admin_Controller {
 	}
 
     private function validateForm() {
-		$this->form_validation->set_rules('name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
-		$this->form_validation->set_rules('description', 'Description', 'xss_clean|trim|min_length[2]|max_length[1028]');
-		$this->form_validation->set_rules('permalink[permalink_id]', 'Permalink ID', 'xss_clean|trim|integer');
-		$this->form_validation->set_rules('permalink[slug]', 'Permalink Slug', 'xss_clean|trim|alpha_dash|max_length[255]');
-		$this->form_validation->set_rules('parent_id', 'Parent', 'xss_clean|trim|integer');
-		$this->form_validation->set_rules('image', 'Image', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('name', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
+		$this->form_validation->set_rules('description', 'lang:label_description', 'xss_clean|trim|min_length[2]|max_length[1028]');
+		$this->form_validation->set_rules('permalink[permalink_id]', 'lang:label_permalink_id', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('permalink[slug]', 'lang:label_permalink_slug', 'xss_clean|trim|alpha_dash|max_length[255]');
+		$this->form_validation->set_rules('parent_id', 'lang:label_parent', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('image', 'lang:label_image', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('priority', 'lang:label_priority', 'xss_clean|trim|required|integer');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;

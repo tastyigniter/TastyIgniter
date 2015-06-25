@@ -45,7 +45,9 @@ class Categories_model extends TI_Model {
         $result = array();
 
         if ($query->num_rows() > 0) {
-            $result = $query->result_array();
+            foreach ($query->result_array() as $row) {
+                $result[$row['category_id']] = $row;
+            }
         }
 
         return $result;
@@ -81,6 +83,10 @@ class Categories_model extends TI_Model {
 
         if (!empty($save['image'])) {
             $this->db->set('image', $save['image']);
+        }
+
+        if (!empty($save['priority'])) {
+            $this->db->set('priority', $save['priority']);
         }
 
         if (is_numeric($category_id)) {

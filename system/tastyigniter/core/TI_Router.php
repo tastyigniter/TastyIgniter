@@ -132,7 +132,7 @@ class TI_Router extends MX_Router {
             }
         }
 
-        $uri = str_replace('/(:any)', '', str_replace('/(:num)', '', $uri));
+        $uri = str_replace(array('/(:any)', '/(:num)', '/(.+)'), '', $uri);
 
         if (isset($query[1])) {
             $this->CI =& get_instance();

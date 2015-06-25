@@ -61,7 +61,7 @@ if ( ! function_exists('image_url'))
 {
 	function image_url($uri = '', $protocol = NULL)
 	{
-		return root_url('assets/images/'.$uri);
+        return get_instance()->config->root_url('assets/images/'.$uri, $protocol);
 	}
 }
 
@@ -71,8 +71,7 @@ if ( ! function_exists('image_url'))
  * Root URL
  *
  * Create a local URL based on your root path.
- * Segments can be passed in as a string or an array, same as root_url
- * or a URL to a file can be passed in, e.g. to an image file.
+ * Segments can be passed in as a string.
  *
  * @param	string	$uri
  * @param	string	$protocol
@@ -82,8 +81,7 @@ if ( ! function_exists('root_url'))
 {
 	function root_url($uri = '', $protocol = NULL)
 	{
-        $base_url = get_instance()->config->base_url('', $protocol);
-        return str_replace(array('setup/', ADMINDIR.'/'), '', $base_url).$uri;
+        return get_instance()->config->root_url($uri, $protocol);
 	}
 }
 
@@ -93,8 +91,7 @@ if ( ! function_exists('root_url'))
  * Admin URL
  *
  * Create a local URL based on your admin path.
- * Segments can be passed in as a string or an array, same as root_url
- * or a URL to a file can be passed in, e.g. to an image file.
+ * Segments can be passed in as a string.
  *
  * @param	string	$uri
  * @param	string	$protocol
@@ -104,8 +101,27 @@ if ( ! function_exists('admin_url'))
 {
 	function admin_url($uri = '', $protocol = NULL)
 	{
-		$base_url = get_instance()->config->base_url('', $protocol);
-		return str_replace(array('setup/', ADMINDIR.'/'), '', $base_url).ADMINDIR.'/'.$uri;
+        return get_instance()->config->root_url(ADMINDIR.'/'.$uri, $protocol);
+	}
+}
+
+// ------------------------------------------------------------------------
+
+/**
+ * Extensions URL
+ *
+ * Create a local URL based on your extensions path.
+ * Segments can be passed in as a string.
+ *
+ * @param	string	$uri
+ * @param	string	$protocol
+ * @return	string
+ */
+if ( ! function_exists('extension_url'))
+{
+	function extension_url($uri = '', $protocol = NULL)
+	{
+		return get_instance()->config->root_url(EXTPATH.$uri, $protocol);
 	}
 }
 

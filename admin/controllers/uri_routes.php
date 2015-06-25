@@ -14,7 +14,7 @@ class Uri_routes extends Admin_Controller {
 	public function index() {
 		$this->template->setTitle('URI Routes');
 		$this->template->setHeading('URI Routes');
-		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 
 		if ($this->input->post('routes')) {
 			$routes = $this->input->post('routes');

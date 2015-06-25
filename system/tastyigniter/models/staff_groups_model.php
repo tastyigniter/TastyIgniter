@@ -2,17 +2,32 @@
 
 class Staff_groups_model extends TI_Model {
 
-    public function getList($filter = array()) {
+    public function getCount($filter = array()) {
         $this->db->from('staff_groups');
+        return $this->db->count_all_results();
+    }
 
-        $query = $this->db->get();
-        $result = array();
-
-        if ($query->num_rows() > 0) {
-            $result = $query->result_array();
+    public function getList($filter = array()) {
+        if (!empty($filter['page']) AND $filter['page'] !== 0) {
+            $filter['page'] = ($filter['page'] - 1) * $filter['limit'];
         }
 
-        return $result;
+        if ($this->db->limit($filter['limit'], $filter['page'])) {
+            $this->db->from('staff_groups');
+
+            if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+                $this->db->order_by($filter['sort_by'], $filter['order_by']);
+            }
+
+            $query = $this->db->get();
+            $result = array();
+
+            if ($query->num_rows() > 0) {
+                $result = $query->result_array();
+            }
+
+            return $result;
+        }
     }
 
     public function getStaffGroups() {

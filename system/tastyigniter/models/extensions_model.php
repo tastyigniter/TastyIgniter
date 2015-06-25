@@ -39,7 +39,7 @@ class Extensions_model extends TI_Model {
                 'name'         => $basename,
                 'title'        => (!empty($extension['title'])) ? $extension['title'] : $title,
                 'type'         => $ext_type,
-                'ext_data'     => (isset($extension['data'])) ? $extension['data'] : '',
+                'ext_data'     => (isset($extension['ext_data'])) ? $extension['ext_data'] : '',
                 'options'      => $options,
                 'config'       => $config,
                 'installed'    => $installed

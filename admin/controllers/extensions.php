@@ -4,17 +4,18 @@ class Extensions extends Admin_Controller {
 
    	public function __construct() {
 		parent::__construct();
+
         $this->load->model('Extensions_model');
+
+        $this->lang->load('extensions');
     }
 
 	public function index() {
         $this->user->restrict('Admin.Modules');
 
-        $this->template->setTitle('Modules');
-        $this->template->setHeading('Modules');
-        $this->template->setButton('+ New', array('class' => 'btn btn-primary', 'href' => page_url() .'/add'));
-
-        $data['text_empty'] 		= 'There are no extensions available.';
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading($this->lang->line('text_heading'));
+        $this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/add'));
 
         $data['extensions'] = array();
         $results = $this->Extensions_model->getList(array('type' => 'module'));
@@ -58,18 +59,18 @@ class Extensions extends Admin_Controller {
 
             if (isset($extension['installed'], $extension['config'], $extension['options']) AND $action === 'edit') {
                 if ($extension['config'] === FALSE) {
-                    $error_msg = 'An error occurred, module extension config file failed to load';
+                    $error_msg = $this->lang->line('error_config');
                 } else if ($extension['options'] === FALSE) {
-                    $error_msg = 'An error occurred, module extension admin options disabled';
+                    $error_msg = $this->lang->line('error_options');
                 } else if ($extension['installed'] === FALSE) {
-                    $error_msg = 'An error occurred, module extension is not installed properly';
+                    $error_msg = $this->lang->line('error_installed');
                 } else {
                     $this->load->module($ext_controller);
                     if (class_exists($ext_class, FALSE)) {
                         $data['extension'] = $this->{$ext_class}->index($extension);
                         $loaded = TRUE;
                     } else {
-                        $error_msg = 'An error occurred, module extension class failed to load: admin_'.$extension_name;
+                        $error_msg = sprintf($this->lang->line('error_failed'), $extension_name);
                     }
                 }
             }
@@ -78,15 +79,11 @@ class Extensions extends Admin_Controller {
         if ($this->input->get('name') AND $this->input->get('action') AND $action !== 'edit') {
             $_POST = $_GET;
 
-            if ($this->input->get('action') === 'install' AND $this->_install()) {
+            if ($this->input->get('action') === 'install' AND $this->_install() === TRUE) {
                 redirect('extensions');
-            }
-
-            if ($this->input->get('action') === 'uninstall' AND $this->_uninstall()) {
+            } else if ($this->input->get('action') === 'uninstall' AND $this->_uninstall() === TRUE) {
                 redirect('extensions');
-            }
-
-            if ($this->input->get('action') === 'delete' AND $this->_delete()) {
+            } else if ($this->input->get('action') === 'delete' AND $this->_delete() === TRUE) {
                 redirect('extensions');
             }
         }
@@ -103,10 +100,11 @@ class Extensions extends Admin_Controller {
 	public function add() {
         $this->user->restrict('Admin.Modules.Access');
 
-        $this->template->setTitle('Module');
-        $this->template->setHeading('Module: Upload');
-        $this->template->setButton('Upload', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-        $this->template->setButton('Upload & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+        $this->template->setTitle($this->lang->line('text_add_heading'));
+        $this->template->setHeading($this->lang->line('text_add_heading'));
+
+        $this->template->setButton($this->lang->line('button_upload'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+        $this->template->setButton($this->lang->line('button_upload_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
         $this->template->setBackButton('btn btn-back', site_url('extensions'));
 
         $data['_action']	= site_url('extensions/add');
@@ -123,43 +121,26 @@ class Extensions extends Admin_Controller {
 		$this->template->render('extensions_add', $data);
 	}
 
-    private function _delete() {
-        $this->user->restrict('Admin.Modules.Delete');
-
-        if ($this->input->get('action') === 'delete') {
-            if ($this->Extensions_model->extensionExists($this->input->get('name'))) {
-                if ($this->Extensions_model->delete('module', $this->input->get('name'), $this->input->get('id'))) {
-                    $this->alert->set('success', 'Extension deleted successfully.');
-                }
-            }
-
-            $this->alert->danger_now('An error occurred, please try again.');
-        }
-
-        redirect('extensions');
-	}
-
     private function _install() {
         $this->user->restrict('Admin.Modules.Manage');
 
         if ($this->input->get('action') === 'install') {
             if ($this->Extensions_model->extensionExists($this->input->get('name'))) {
-	    		if ($this->Extensions_model->install('module', $this->input->get('name'), $this->input->get('id'))) {
+                if ($this->Extensions_model->install('module', $this->input->get('name'), $this->input->get('id'))) {
                     log_activity($this->user->getStaffId(), 'installed', 'extensions', get_activity_message('activity_custom_no_link',
                         array('{staff}', '{action}', '{context}', '{item}'),
                         array($this->user->getStaffName(), 'installed', 'extension module', $this->input->get('name'))
                     ));
 
-                    $this->alert->set('success', 'Extension Installed successfully.');
-					return TRUE;
-	    		}
-	    	}
+                    $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Extension installed '));
+                    return TRUE;
+                }
+            }
 
-            $this->alert->danger_now('An error occurred, please try again.');
+            $this->alert->danger_now($this->lang->line('alert_error_try_again'));
+            return TRUE;
         }
-
-        return FALSE;
-	}
+    }
 
     private function _uninstall() {
         $this->user->restrict('Admin.Modules.Manage');
@@ -171,13 +152,30 @@ class Extensions extends Admin_Controller {
                     array($this->user->getStaffName(), 'uninstalled', 'extension module', $this->input->get('name'))
                 ));
 
-                $this->alert->set('success', 'Extension Uninstalled successfully.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Extension uninstalled '));
                 return TRUE;
             }
-		}
 
-		return FALSE;
+            $this->alert->danger_now($this->lang->line('alert_error_try_again'));
+            return TRUE;
+        }
 	}
+
+    private function _delete() {
+        $this->user->restrict('Admin.Modules.Delete');
+
+        if ($this->input->get('action') === 'delete') {
+            if ($this->Extensions_model->extensionExists($this->input->get('name'))) {
+                if ($this->Extensions_model->delete('module', $this->input->get('name'), $this->input->get('id'))) {
+                    $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Extension deleted '));
+                    return TRUE;
+                }
+            }
+
+            $this->alert->danger_now($this->lang->line('alert_error_try_again'));
+            return TRUE;
+        }
+    }
 
     private function _uploadExtension() {
         $this->user->restrict('Admin.Modules.Add', site_url('extensions/add'));
@@ -190,11 +188,11 @@ class Extensions extends Admin_Controller {
                         array($this->user->getStaffName(), 'uploaded', 'extension', $_FILES['extension_zip']['name'])
                     ));
 
-                    $this->alert->set('success', 'Module extension uploaded successfully');
+                    $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Extension uploaded '));
                     return TRUE;
                 }
 
-                $this->alert->danger_now('An error occurred (upload failed or already exists), please try again.');
+                $this->alert->danger_now($this->lang->line('alert_error_try_again'));
             }
         }
 
@@ -205,7 +203,7 @@ class Extensions extends Admin_Controller {
         if (!empty($_FILES['extension_zip']['name']) AND !empty($_FILES['extension_zip']['tmp_name'])) {
 
             if ($_FILES['extension_zip']['type'] !== 'application/zip') {
-                $this->alert->danger_now('The filetype you are attempting to upload is not allowed.');
+                $this->alert->danger_now($this->lang->line('error_upload'));
                 return FALSE;
             }
 
@@ -215,7 +213,7 @@ class Extensions extends Admin_Controller {
             $_FILES['extension_zip']['name'] = basename($filename);
 
             if (!empty($_FILES['extension_zip']['error'])) {
-                $this->alert->danger_now('PHP File Uploading Error No'. $_FILES['extension_zip']['error']);
+                $this->alert->danger_now($this->lang->line('error_php_upload'). $_FILES['extension_zip']['error']);
                 return FALSE;
             }
 

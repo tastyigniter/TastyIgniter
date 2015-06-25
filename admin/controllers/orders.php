@@ -4,18 +4,23 @@ class Orders extends Admin_Controller {
 
     public function __construct() {
 		parent::__construct(); //  calls the constructor
+
         $this->user->restrict('Admin.Orders');
+
+        $this->load->model('Customers_model');
+        $this->load->model('Addresses_model');
+        $this->load->model('Locations_model');
+        $this->load->model('Orders_model');
+        $this->load->model('Statuses_model');
+        $this->load->model('Staffs_model');
+        $this->load->model('Payment_model');
+        $this->load->model('Countries_model');
+
         $this->load->library('pagination');
-		$this->load->library('currency'); // load the currency library
-		$this->load->model('Customers_model');
-		$this->load->model('Addresses_model');
-		$this->load->model('Locations_model');
-		$this->load->model('Orders_model');
-		$this->load->model('Statuses_model');
-		$this->load->model('Staffs_model');
-		$this->load->model('Payment_model');
-		$this->load->model('Countries_model');
-	}
+        $this->load->library('currency'); // load the currency library
+
+        $this->lang->load('orders');
+    }
 
 	public function index() {
 		$url = '?';
@@ -80,11 +85,9 @@ class Orders extends Admin_Controller {
 			$data['order_by_active'] = 'DESC';
 		}
 
-		$this->template->setTitle('Orders');
-		$this->template->setHeading('Orders');
-		$this->template->setButton('Delete', array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
-
-		$data['text_empty'] 		= 'There are no orders available.';
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading($this->lang->line('text_heading'));
+		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_id'] 			= site_url('orders'.$url.'sort_by=order_id&order_by='.$order_by);
@@ -105,7 +108,7 @@ class Orders extends Admin_Controller {
 				'location_name'		=> $result['location_name'],
 				'first_name'		=> $result['first_name'],
 				'last_name'			=> $result['last_name'],
-				'order_type' 		=> ($result['order_type'] === '1') ? 'Delivery' : 'Collection',
+				'order_type' 		=> ($result['order_type'] === '1') ? $this->lang->line('text_delivery') : $this->lang->line('text_collection'),
 				'order_time'		=> mdate('%H:%i', strtotime($result['order_time'])),
                 'order_status'		=> $result['status_name'],
                 'status_color'		=> $result['status_color'],
@@ -136,7 +139,6 @@ class Orders extends Admin_Controller {
 		$data['order_dates'] = array();
 		$order_dates = $this->Orders_model->getOrderDates();
 		foreach ($order_dates as $order_date) {
-			$month_year = '';
 			$month_year = $order_date['year'].'-'.$order_date['month'];
 			$data['order_dates'][$month_year] = mdate('%F %Y', strtotime($order_date['date_added']));
 		}
@@ -177,14 +179,13 @@ class Orders extends Admin_Controller {
 			redirect('orders');
 		}
 
-		$title = (isset($order_info['order_id'])) ? $order_info['order_id'] : 'New';
-		$this->template->setTitle('Order: '. $title);
-		$this->template->setHeading('Order: '. $title);
-		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
-		$this->template->setBackButton('btn btn-back', site_url('orders'));
+		$title = (isset($order_info['order_id'])) ? $order_info['order_id'] : $this->lang->line('text_new');
+        $this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $title));
+        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
 
-		$data['text_empty'] 		= 'There are no status history for this order.';
+        $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('btn btn-back', site_url('orders'));
 
 		$data['order_id'] 			= $order_info['order_id'];
 		$data['customer_id'] 		= $order_info['customer_id'];
@@ -196,7 +197,7 @@ class Orders extends Admin_Controller {
 		$data['date_added'] 		= mdate('%d %M %y - %H:%i', strtotime($order_info['date_added']));
 		$data['date_modified'] 		= mdate('%d %M %y', strtotime($order_info['date_modified']));
 		$data['order_time'] 		= mdate('%H:%i', strtotime($order_info['order_time']));
-		$data['order_type'] 		= ($order_info['order_type'] === '1') ? 'Delivery' : 'Collection';
+		$data['order_type'] 		= ($order_info['order_type'] === '1') ? $this->lang->line('text_delivery') : $this->lang->line('text_collection');
 		$data['status_id'] 			= $order_info['status_id'];
 		$data['assignee_id'] 		= $order_info['assignee_id'];
 		$data['comment'] 			= $order_info['comment'];
@@ -327,7 +328,7 @@ class Orders extends Admin_Controller {
 		$data['order_total'] 		= $this->currency->format($order_info['order_total']);
 		$data['total_items']		= $order_info['total_items'];
 
-		if ($this->input->post() AND $this->_updateOrder($order_info['status_id'], $data['assignee_id']) === TRUE) {
+		if ($this->input->post() AND $this->_updateOrder() === TRUE) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('orders');
 			}
@@ -339,39 +340,25 @@ class Orders extends Admin_Controller {
 		$this->template->render('orders_edit', $data);
 	}
 
-	private function _updateOrder($status_id = FALSE, $assignee_id = 0) {
+	private function _updateOrder() {
     	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
-			$update = array();
-			$history = array();
-			$current_time = time();														// retrieve current timestamp
 
-			$update['order_id'] = (int)$this->input->get('id');
-			$update['status_id'] = (int)$this->input->post('order_status');
-			$update['date_modified'] =  mdate('%Y-%m-%d', $current_time);
-
-			$update['staff_id']			= $this->user->getStaffId();
-			$update['old_assignee_id']	= (int)$assignee_id;
-			$update['assignee_id']		= (int)$this->input->post('assignee_id');
-			$update['notify']			= $this->input->post('notify');
-			$update['comment']			= $this->input->post('status_comment');
-			$update['date_added']		= mdate('%Y-%m-%d %H:%i:%s', $current_time);
-
-			if ($this->Orders_model->updateOrder($update, $status_id)) {
+			if ($this->Orders_model->updateOrder($this->input->get('id'), $this->input->post())) {
                 log_activity($this->user->getStaffId(), 'updated', 'orders', get_activity_message('activity_custom',
                     array('{staff}', '{action}', '{context}', '{link}', '{item}'),
-                    array($this->user->getStaffName(), 'updated', 'order', current_url(), '#'.$update['order_id'])
+                    array($this->user->getStaffName(), 'updated', 'order', current_url(), '#'.$this->input->get('id'))
                 ));
 
-                if ($update['old_assignee_id'] !== $update['assignee_id']) {
+                if ($this->input->get('old_assignee_id') !== $this->input->get('assignee_id')) {
                     log_activity($this->user->getStaffId(), 'assigned', 'orders', get_activity_message('activity_assigned',
                         array('{staff}', '{action}', '{context}', '{link}', '{item}', '{assignee}'),
-                        array($this->user->getStaffName(), 'assigned', 'order', current_url(), '#'.$update['order_id'], $update['assignee_id'])
+                        array($this->user->getStaffName(), 'assigned', 'order', current_url(), '#'.$this->input->get('id'), $this->input->post('assignee_id'))
                     ));
                 }
 
-                $this->alert->set('success', 'Order updated successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Order updated'));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), 'updated'));
 			}
 
 			return TRUE;
@@ -384,9 +371,9 @@ class Orders extends Admin_Controller {
 
             if ($deleted_rows > 0) {
                 $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Orders': 'Order';
-                $this->alert->set('success', $prefix.' deleted successfully.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), $prefix.' '.$this->lang->line('text_deleted')));
             } else {
-                $this->alert->set('warning', 'An error occurred, nothing deleted.');
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted')));
             }
 
             return TRUE;
@@ -394,8 +381,8 @@ class Orders extends Admin_Controller {
 	}
 
 	private function validateForm() {
-		$this->form_validation->set_rules('order_status', 'Order Status', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('assigned_staff', 'Assign Staff', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('order_status', 'lang:label_status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('assigned_staff', 'lang:label_assign_staff', 'xss_clean|trim|integer');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;

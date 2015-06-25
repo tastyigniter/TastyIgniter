@@ -4,12 +4,17 @@ class Menus extends Admin_Controller {
 
     public function __construct() {
 		parent::__construct(); //  calls the constructor
+
         $this->user->restrict('Admin.Menus');
-        $this->load->library('pagination');
-		$this->load->library('currency'); // load the currency library
+
         $this->load->model('Menus_model'); // load the menus model
         $this->load->model('Categories_model'); // load the categories model
         $this->load->model('Menu_options_model'); // load the menu options model
+
+        $this->load->library('pagination');
+        $this->load->library('currency'); // load the currency library
+
+        $this->lang->load('menus');
 	}
 
 	public function index() {
@@ -60,12 +65,11 @@ class Menus extends Admin_Controller {
 			$data['order_by_active'] = 'ASC active';
 		}
 
-		$this->template->setTitle('Menus');
-		$this->template->setHeading('Menus');
-		$this->template->setButton('+ New', array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
-		$this->template->setButton('Delete', array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
+		$this->template->setTitle($this->lang->line('text_heading'));
+		$this->template->setHeading($this->lang->line('text_heading'));
 
-        $data['text_no_menus'] 		= 'There are no menus available.';
+        $this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
+		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_name'] 			= site_url('menus'.$url.'sort_by=menu_name&order_by='.$order_by);
@@ -153,11 +157,12 @@ class Menus extends Admin_Controller {
 			$data['_action']	= site_url('menus/edit');
 		}
 
-		$title = (isset($menu_info['menu_name'])) ? $menu_info['menu_name'] : 'New';
-		$this->template->setTitle('Menu: '. $title);
-		$this->template->setHeading('Menu: '. $title);
-		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$title = (isset($menu_info['menu_name'])) ? $menu_info['menu_name'] : $this->lang->line('text_new');
+		$this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $title));
+		$this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
+
+        $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setBackButton('btn btn-back', site_url('menus'));
 
         $this->template->setStyleTag(root_url('assets/js/fancybox/jquery.fancybox.css'), 'jquery-fancybox-css');
@@ -190,7 +195,7 @@ class Menus extends Admin_Controller {
 		$data['start_date'] 		= (isset($menu_info['start_date']) AND $menu_info['start_date'] !== '0000-00-00') ? mdate('%d-%m-%Y', strtotime($menu_info['start_date'])) : '';
 		$data['end_date'] 			= (isset($menu_info['end_date']) AND $menu_info['end_date'] !== '0000-00-00') ? mdate('%d-%m-%Y', strtotime($menu_info['end_date'])) : '';
 		$data['special_price'] 		= (isset($menu_info['special_price']) AND $menu_info['special_price'] == '0.00') ? '' : $menu_info['special_price'];
-		$data['special_status'] 	= $menu_info['special_status'];
+		$data['special_status'] 	= ($this->input->post('special_status')) ? $this->input->post('special_status') : $menu_info['special_status'];
 		$data['menu_status'] 		= $menu_info['menu_status'];
 		$data['no_photo'] 			= $this->Image_tool_model->resize('data/no_photo.png');
 
@@ -269,7 +274,7 @@ class Menus extends Admin_Controller {
 					);
 				}
 			} else {
-				$json['results'] = array('id' => '0', 'text' => 'No Matches Found');
+				$json['results'] = array('id' => '0', 'text' => $this->lang->line('text_no_match'));
 			}
 		}
 
@@ -278,7 +283,7 @@ class Menus extends Admin_Controller {
 
 	private function _saveMenu() {
     	if ($this->validateForm() === TRUE) {
-            $save_type = (! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
+            $save_type = (! is_numeric($this->input->get('id'))) ? $this->lang->line('text_added') : $this->lang->line('text_updated');
 
 			if ($menu_id = $this->Menus_model->saveMenu($this->input->get('id'), $this->input->post())) {
                 log_activity($this->user->getStaffId(), $save_type, 'menus', get_activity_message('activity_custom',
@@ -286,9 +291,9 @@ class Menus extends Admin_Controller {
                     array($this->user->getStaffName(), $save_type, 'menu item', site_url('menus/edit?id='.$menu_id), $this->input->post('menu_name'))
                 ));
 
-                $this->alert->set('success', 'Menu ' . $save_type . ' successfully.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Menu '.$save_type));
 			} else {
-				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
+				$this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $save_type));
 			}
 
 			return $menu_id;
@@ -301,9 +306,9 @@ class Menus extends Admin_Controller {
 
             if ($deleted_rows > 0) {
                 $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Menus': 'Menu';
-                $this->alert->set('success', $prefix.' deleted successfully.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), $prefix.' '.$this->lang->line('text_deleted')));
             } else {
-                $this->alert->set('warning', 'An error occurred, nothing deleted.');
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted')));
             }
 
             return TRUE;
@@ -311,36 +316,36 @@ class Menus extends Admin_Controller {
 	}
 
  	private function validateForm() {
-		$this->form_validation->set_rules('menu_name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[255]');
-		$this->form_validation->set_rules('menu_description', 'Description', 'xss_clean|trim|min_length[2]|max_length[1028]');
-		$this->form_validation->set_rules('menu_price', 'Price', 'xss_clean|trim|required|numeric');
-		$this->form_validation->set_rules('menu_category', 'Category', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('menu_photo', 'Photo', 'xss_clean|trim|required');
-		$this->form_validation->set_rules('stock_qty', 'Stock Quantity', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('minimum_qty', 'Minimum Quantity', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('subtract_stock', 'Subtract Stock', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('menu_status', 'Status', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('special_status', 'Special Status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('menu_name', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[255]');
+		$this->form_validation->set_rules('menu_description', 'lang:label_description', 'xss_clean|trim|min_length[2]|max_length[1028]');
+		$this->form_validation->set_rules('menu_price', 'lang:label_price', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('menu_category', 'lang:label_category', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('menu_photo', 'lang:label_photo', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('stock_qty', 'lang:label_stock_qty', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('minimum_qty', 'lang:label_minimum_qty', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('subtract_stock', 'lang:label_subtract_stock', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('menu_status', 'lang:label_status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('special_status', 'lang:label_special_status', 'xss_clean|trim|required|integer');
 
 		if ($this->input->post('menu_options')) {
 			foreach ($this->input->post('menu_options') as $key => $value) {
-				$this->form_validation->set_rules('menu_options['.$key.'][option_id]', 'Option ID', 'xss_clean|trim|required|integer');
-				$this->form_validation->set_rules('menu_options['.$key.'][required]', 'Menu Option Required', 'xss_clean|trim|required|integer');
+				$this->form_validation->set_rules('menu_options['.$key.'][option_id]', 'lang:label_option_id', 'xss_clean|trim|required|integer');
+				$this->form_validation->set_rules('menu_options['.$key.'][required]', 'lang:label_option_required', 'xss_clean|trim|required|integer');
 
 				foreach ($value['option_values'] as $option => $option_value) {
-					$this->form_validation->set_rules('menu_options['.$key.'][option_values]['.$option.'][option_value_id]', 'Option Value', 'xss_clean|trim|required|integer');
-					$this->form_validation->set_rules('menu_options['.$key.'][option_values]['.$option.'][price]', 'Option Price', 'xss_clean|trim|numeric');
-					$this->form_validation->set_rules('menu_options['.$key.'][option_values]['.$option.'][quantity]', 'Option Quantity', 'xss_clean|trim|numeric');
-					$this->form_validation->set_rules('menu_options['.$key.'][option_values]['.$option.'][subtract_stock]', 'Option Subtract Stock', 'xss_clean|trim|numeric');
-					$this->form_validation->set_rules('menu_options['.$key.'][option_values]['.$option.'][menu_option_value_id]', 'Menu Option Value ID', 'xss_clean|trim|numeric');
+					$this->form_validation->set_rules('menu_options['.$key.'][option_values]['.$option.'][option_value_id]', 'lang:label_option_value', 'xss_clean|trim|required|integer');
+					$this->form_validation->set_rules('menu_options['.$key.'][option_values]['.$option.'][price]', 'lang:label_option_price', 'xss_clean|trim|numeric');
+					$this->form_validation->set_rules('menu_options['.$key.'][option_values]['.$option.'][quantity]', 'lang:label_option_qty', 'xss_clean|trim|numeric');
+					$this->form_validation->set_rules('menu_options['.$key.'][option_values]['.$option.'][subtract_stock]', 'lang:label_option_subtract_stock', 'xss_clean|trim|numeric');
+					$this->form_validation->set_rules('menu_options['.$key.'][option_values]['.$option.'][menu_option_value_id]', 'lang:label_option_value_id', 'xss_clean|trim|numeric');
 				}
 			}
 		}
 
 		if ($this->input->post('special_status') === '1') {
-			$this->form_validation->set_rules('start_date', 'Start Date', 'xss_clean|trim|required');
-			$this->form_validation->set_rules('end_date', 'End Date', 'xss_clean|trim|required');
-			$this->form_validation->set_rules('special_price', 'Special Price', 'xss_clean|trim|required');
+			$this->form_validation->set_rules('start_date', 'lang:label_start_date', 'xss_clean|trim|required');
+			$this->form_validation->set_rules('end_date', 'lang:label_end_date', 'xss_clean|trim|required');
+			$this->form_validation->set_rules('special_price', 'lang:label_special_price', 'xss_clean|trim|required');
 		}
 
 		if ($this->form_validation->run() === TRUE) {

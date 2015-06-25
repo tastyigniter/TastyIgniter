@@ -4,18 +4,21 @@ class Layouts extends Admin_Controller {
 
     public function __construct() {
 		parent::__construct();
+
         $this->user->restrict('Site.Layouts');
+
         $this->load->model('Layouts_model');
-		$this->load->model('Extensions_model');
-	}
+
+        $this->load->model('Extensions_model');
+
+        $this->lang->load('layouts');
+    }
 
 	public function index() {
-		$this->template->setTitle('Layouts');
-		$this->template->setHeading('Layouts');
-		$this->template->setButton('+ New', array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
-		$this->template->setButton('Delete', array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
-
-		$data['text_empty'] 		= 'There are no layouts available.';
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading($this->lang->line('text_heading'));
+		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
+		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
 		$data['layouts'] = array();
 		$results = $this->Layouts_model->getLayouts();
@@ -56,11 +59,12 @@ class Layouts extends Admin_Controller {
 			$data['_action']	= site_url('layouts/edit');
 		}
 
-		$title = (isset($layout_info['name'])) ? $layout_info['name'] : 'New';
-		$this->template->setTitle('Layout: '. $title);
-		$this->template->setHeading('Layout: '. $title);
-		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$title = (isset($layout_info['name'])) ? $layout_info['name'] : $this->lang->line('text_new');
+        $this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $title));
+        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
+
+        $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setBackButton('btn btn-back', site_url('layouts'));
 
 		$data['layout_id'] 			= $layout_info['layout_id'];
@@ -123,12 +127,12 @@ class Layouts extends Admin_Controller {
 
 	private function _saveLayout() {
     	if ($this->validateForm() === TRUE) {
-            $save_type = (! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
+            $save_type = (! is_numeric($this->input->get('id'))) ? $this->lang->line('text_added') : $this->lang->line('text_updated');
 
 			if ($layout_id = $this->Layouts_model->saveLayout($this->input->get('id'), $this->input->post())) {
-				$this->alert->set('success', 'Layout ' . $save_type . ' successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Layout '.$save_type));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $save_type));
 			}
 
 			return $layout_id;
@@ -141,9 +145,9 @@ class Layouts extends Admin_Controller {
 
             if ($deleted_rows > 0) {
                 $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Layouts': 'Layout';
-                $this->alert->set('success', $prefix.' deleted successfully.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), $prefix.' '.$this->lang->line('text_deleted')));
             } else {
-                $this->alert->set('warning', 'An error occurred, nothing deleted.');
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted')));
             }
 
             return TRUE;
@@ -151,20 +155,20 @@ class Layouts extends Admin_Controller {
 	}
 
 	private function validateForm() {
-		$this->form_validation->set_rules('name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+		$this->form_validation->set_rules('name', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 
         if ($this->input->post('routes')) {
             foreach ($this->input->post('routes') as $key => $value) {
-                $this->form_validation->set_rules('routes['.$key.'][uri_route]', 'Route', 'xss_clean|trim|required');
+                $this->form_validation->set_rules('routes['.$key.'][uri_route]', 'lang:label_route', 'xss_clean|trim|required');
             }
         }
 
         if ($this->input->post('modules')) {
             foreach ($this->input->post('modules') as $key => $value) {
-                $this->form_validation->set_rules('modules['.$key.'][module_code]', 'Module ['.$key.'] code', 'xss_clean|trim|required|alpha_dash');
-                $this->form_validation->set_rules('modules['.$key.'][position]', 'Module ['.$key.'] position', 'xss_clean|trim|required|alpha');
-                $this->form_validation->set_rules('modules['.$key.'][priority]', 'Module ['.$key.'] priority', 'xss_clean|trim|required|integer');
-                $this->form_validation->set_rules('modules['.$key.'][status]', 'Module ['.$key.'] status', 'xss_clean|trim|required|integer');
+                $this->form_validation->set_rules('modules['.$key.'][module_code]', '['.$key.'] lang:label_module_code', 'xss_clean|trim|required|alpha_dash');
+                $this->form_validation->set_rules('modules['.$key.'][position]', '['.$key.'] lang:label_module_position', 'xss_clean|trim|required|alpha');
+                $this->form_validation->set_rules('modules['.$key.'][priority]', '['.$key.'] lang:label_module_priority', 'xss_clean|trim|required|integer');
+                $this->form_validation->set_rules('modules['.$key.'][status]', '['.$key.'] lang:label_module_status', 'xss_clean|trim|required|integer');
             }
         }
 

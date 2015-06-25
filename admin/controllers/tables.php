@@ -4,9 +4,14 @@ class Tables extends Admin_Controller {
 
     public function __construct() {
 		parent::__construct(); //  calls the constructor
+
         $this->user->restrict('Admin.Tables');
+
+        $this->load->model('Tables_model');
+
         $this->load->library('pagination');
-		$this->load->model('Tables_model');
+
+        $this->lang->load('tables');
 	}
 
 	public function index() {
@@ -50,12 +55,10 @@ class Tables extends Admin_Controller {
 			$data['order_by_active'] = 'ASC';
 		}
 
-		$this->template->setTitle('Tables');
-		$this->template->setHeading('Tables');
-		$this->template->setButton('+ New', array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
-		$this->template->setButton('Delete', array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
-
-		$data['text_empty'] 		= 'There are no tables available.';
+		$this->template->setTitle($this->lang->line('text_title'));
+		$this->template->setHeading($this->lang->line('text_heading'));
+		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
+		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_name'] 			= site_url('tables'.$url.'sort_by=table_name&order_by='.$order_by);
@@ -71,7 +74,7 @@ class Tables extends Admin_Controller {
 				'table_name'		=> $result['table_name'],
 				'min_capacity'		=> $result['min_capacity'],
 				'max_capacity'		=> $result['max_capacity'],
-				'table_status'		=> ($result['table_status'] == '1') ? 'Enabled' : 'Disabled',
+				'table_status'		=> ($result['table_status'] == '1') ? $this->lang->line('text_enabled') : $this->lang->line('text_disabled'),
 				'edit'				=> site_url('tables/edit?id=' . $result['table_id'])
 			);
 		}
@@ -111,11 +114,12 @@ class Tables extends Admin_Controller {
 			$data['_action']	= site_url('tables/edit');
 		}
 
-		$title = (isset($table_info['table_name'])) ? $table_info['table_name'] : 'New';
-		$this->template->setTitle('Table: '. $title);
-		$this->template->setHeading('Table: '. $title);
-		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$title = (isset($table_info['table_name'])) ? $table_info['table_name'] : $this->lang->line('text_new');
+        $this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $title));
+        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
+
+        $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setBackButton('btn btn-back', site_url('tables'));
 
 
@@ -157,7 +161,7 @@ class Tables extends Admin_Controller {
 					);
 				}
 			} else {
-				$json['results'] = array('id' => '0', 'text' => 'No Matches Found');
+				$json['results'] = array('id' => '0', 'text' => $this->lang->line('text_no_match'));
 			}
 		}
 
@@ -166,7 +170,7 @@ class Tables extends Admin_Controller {
 
 	private function _saveTable() {
     	if ($this->validateForm() === TRUE) {
-            $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
+            $save_type = ( ! is_numeric($this->input->get('id'))) ? $this->lang->line('text_added') : $this->lang->line('text_updated');
 
 			if ($table_id = $this->Tables_model->saveTable($this->input->get('id'), $this->input->post())) {
                 log_activity($this->user->getStaffId(), $save_type, 'tables', get_activity_message('activity_custom',
@@ -174,9 +178,9 @@ class Tables extends Admin_Controller {
                     array($this->user->getStaffName(), $save_type, 'table', current_url(), $this->input->post('table_name'))
                 ));
 
-                $this->alert->set('success', 'Table ' . $save_type . ' successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Table '.$save_type));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $save_type));
 			}
 
 			return $table_id;
@@ -189,9 +193,9 @@ class Tables extends Admin_Controller {
 
             if ($deleted_rows > 0) {
                 $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Tables': 'Table';
-                $this->alert->set('success', $prefix.' deleted successfully.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), $prefix.' '.$this->lang->line('text_deleted')));
             } else {
-                $this->alert->set('warning', 'An error occurred, nothing deleted.');
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted')));
             }
 
             return TRUE;
@@ -199,10 +203,10 @@ class Tables extends Admin_Controller {
 	}
 
 	private function validateForm() {
-		$this->form_validation->set_rules('table_name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[255]');
-		$this->form_validation->set_rules('min_capacity', 'Minimum', 'xss_clean|trim|required|integer|greater_than[1]');
-		$this->form_validation->set_rules('max_capacity', 'Capacity', 'xss_clean|trim|required|integer|greater_than[1]|callback__check_capacity');
-		$this->form_validation->set_rules('table_status', 'Status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('table_name', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[255]');
+		$this->form_validation->set_rules('min_capacity', 'lang:label_min_capacity', 'xss_clean|trim|required|integer|greater_than[1]');
+		$this->form_validation->set_rules('max_capacity', 'lang:label_capacity', 'xss_clean|trim|required|integer|greater_than[1]|callback__check_capacity');
+		$this->form_validation->set_rules('table_status', 'lang:label_status', 'xss_clean|trim|required|integer');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;
@@ -213,7 +217,7 @@ class Tables extends Admin_Controller {
 
 	public function _check_capacity($str) {
     	if ($str < $_POST['min_capacity']) {
-			$this->form_validation->set_message('_check_capacity', 'The Maximum capacity value must be greater than minimum capacity value.');
+			$this->form_validation->set_message('_check_capacity', $this->lang->line('error_capacity'));
 			return FALSE;
 		}
 

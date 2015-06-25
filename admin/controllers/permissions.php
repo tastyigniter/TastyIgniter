@@ -4,9 +4,14 @@ class Permissions extends Admin_Controller {
 
     public function __construct() {
 		parent::__construct(); //  calls the constructor
+
         $this->user->restrict('Admin.Permissions');
-        $this->load->library('pagination');
+
         $this->load->model('Permissions_model');
+
+        $this->load->library('pagination');
+
+        $this->lang->load('Permissions');
     }
 
 	public function index() {
@@ -50,12 +55,10 @@ class Permissions extends Admin_Controller {
 			$data['order_by_active'] = 'ASC';
 		}
 
-		$this->template->setTitle('Permissions');
-		$this->template->setHeading('Permissions');
-		$this->template->setButton('+ New', array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
-		$this->template->setButton('Delete', array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
-
-		$data['text_empty'] 		= 'There are no permissions available.';
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading($this->lang->line('text_heading'));
+		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
+		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_name'] 			= site_url('permissions'.$url.'sort_by=name&order_by='.$order_by);
@@ -110,11 +113,12 @@ class Permissions extends Admin_Controller {
 			$data['_action']	= site_url('permissions/edit');
 		}
 
-		$title = (isset($permission_info['name'])) ? $permission_info['name'] : 'New';
-		$this->template->setTitle('Permission: '. $title);
-		$this->template->setHeading('Permission: '. $title);
-		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$title = (isset($permission_info['name'])) ? $permission_info['name'] : $this->lang->line('text_new');
+        $this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $title));
+        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
+
+        $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setBackButton('btn btn-back', site_url('permissions'));
 
 
@@ -131,7 +135,7 @@ class Permissions extends Admin_Controller {
             $data['action'] = array();
         }
 
-        $data['permission_actions'] = array('access' => 'Access', 'manage' => 'Manage', 'add' => 'Add', 'delete' => 'Delete');
+        $data['permission_actions'] = array('access' => $this->lang->line('text_access'), 'manage' => $this->lang->line('text_manage'), 'add' => $this->lang->line('text_add'), 'delete' => $this->lang->line('text_delete'));
 
 		if ($this->input->post() AND $permission_id = $this->_savePermission()) {
 			if ($this->input->post('save_close') === '1') {
@@ -147,7 +151,7 @@ class Permissions extends Admin_Controller {
 
 	private function _savePermission() {
     	if ($this->validateForm() === TRUE) {
-            $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
+            $save_type = ( ! is_numeric($this->input->get('id'))) ? $this->lang->line('text_added') : $this->lang->line('text_updated');
 
 			if ($permission_id = $this->Permissions_model->savePermission($this->input->get('id'), $this->input->post())) {
                 log_activity($this->user->getStaffId(), $save_type, 'permissions', get_activity_message('activity_custom_no_link',
@@ -155,9 +159,9 @@ class Permissions extends Admin_Controller {
                     array($this->user->getStaffName(), $save_type, 'permission', $this->input->post('name'))
                 ));
 
-                $this->alert->set('success', 'Permission ' . $save_type . ' successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Permission '.$save_type));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $save_type));
 			}
 
 			return $permission_id;
@@ -170,9 +174,9 @@ class Permissions extends Admin_Controller {
 
             if ($deleted_rows > 0) {
                 $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Permissions': 'Permission';
-                $this->alert->set('success', $prefix.' deleted successfully.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), $prefix.' '.$this->lang->line('text_deleted')));
             } else {
-                $this->alert->set('warning', 'An error occurred, nothing deleted.');
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted')));
             }
 
             return TRUE;
@@ -180,9 +184,9 @@ class Permissions extends Admin_Controller {
 	}
 
 	private function validateForm() {
-		$this->form_validation->set_rules('name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
-		$this->form_validation->set_rules('description', 'Description', 'xss_clean|trim|required|max_length[255]');
-		$this->form_validation->set_rules('status', 'Status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('name', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+		$this->form_validation->set_rules('description', 'lang:label_description', 'xss_clean|trim|required|max_length[255]');
+		$this->form_validation->set_rules('status', 'lang:label_status', 'xss_clean|trim|required|integer');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;

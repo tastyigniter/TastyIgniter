@@ -94,6 +94,31 @@ class TI_Config extends MX_Config {
 		return $base_url.$this->item('index_page').$uri;
 	}
 
+    /**
+     * Root URL
+     *
+     * Returns root_url [. uri_string]
+     *
+     * @uses	CI_Config::_uri_string()
+     *
+     * @param	string|string[]	$uri	URI string or an array of segments
+     * @param	string	$protocol
+     * @return	string
+     */
+    public function root_url($uri = '', $protocol = NULL)
+    {
+        $root_url = str_replace(array('setup/', ADMINDIR.'/'), '', $this->slash_item('base_url'));
+
+        if (isset($protocol))
+        {
+            $root_url = $protocol.substr($root_url, strpos($root_url, '://'));
+        }
+
+        return $root_url.ltrim($this->_uri_string($uri), '/');
+    }
+
+    // -------------------------------------------------------------
+
     public function load_db_config() {
         $CI =& get_instance();
         $CI->load->model('Settings_model');

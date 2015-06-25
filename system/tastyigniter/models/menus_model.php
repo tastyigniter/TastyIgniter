@@ -32,7 +32,7 @@ class Menus_model extends TI_Model {
             if (APPDIR === ADMINDIR) {
                 $this->db->select('*, menus.menu_id');
             } else {
-                $this->db->select('menus.menu_id, menu_name, menu_description, menu_photo, menu_price, categories.name, start_date, end_date, special_price');
+                $this->db->select('menus.menu_id, menu_name, menu_description, menu_photo, menu_price, minimum_qty, menu_category_id, categories.name AS category_name, start_date, end_date, special_price');
                 $this->db->select('IF(start_date <= CURRENT_DATE(), IF(end_date >= CURRENT_DATE(), "1", "0"), "0") AS is_special', FALSE);
             }
 
@@ -64,8 +64,55 @@ class Menus_model extends TI_Model {
 				$result = $query->result_array();
 			}
 
-			return $result;
-		}
+            if (APPDIR === ADMINDIR) {
+                return $result;
+            }
+
+            $this->load->model('Image_tool_model');
+
+            $results = array();
+
+            $show_menu_images = (is_numeric($this->config->item('show_menu_images'))) ? $this->config->item('show_menu_images') : '';
+            $menu_images_h = (is_numeric($this->config->item('menu_images_h'))) ? $this->config->item('menu_images_h') : '50';
+            $menu_images_w = (is_numeric($this->config->item('menu_images_w'))) ? $this->config->item('menu_images_w') : '50';
+
+            foreach ($result as $row) {                                                            // loop through menus array
+                $menu_photo_src = '';
+                if ($show_menu_images === '1') {
+                    if ( ! empty($row['menu_photo'])) {
+                        $menu_photo_src = $this->Image_tool_model->resize($row['menu_photo'], $menu_images_w, $menu_images_h);
+                    } else {
+                        $menu_photo_src = $this->Image_tool_model->resize('data/no_photo.png', $menu_images_w, $menu_images_h);
+                    }
+                }
+
+                $start_date = $end_date = $end_days = '';
+                $price = $row['menu_price'];
+                if ($row['is_special'] === '1') {
+                    $price = $row['special_price'];
+                    $daydiff = floor((strtotime($row['end_date']) - strtotime($this->location->currentTime())) / 86400);
+                    $start_date = $row['start_date'];
+                    $end_date = mdate('%d %M', strtotime($row['end_date']));
+                    $end_days = ($daydiff < 0) ? sprintf($this->lang->line('text_end_today')) : sprintf($this->lang->line('text_end_days'), $end_date, $daydiff);
+                }
+
+                $results[$row['menu_category_id']][] = array(                                                            // create array of menu data to be sent to view
+                    'menu_id'               => $row['menu_id'],
+                    'menu_name'             => (strlen($row['menu_name']) > 80) ? strtolower(substr($row['menu_name'], 0, 80)) . '...' : strtolower($row['menu_name']),
+                    'menu_description'      => (strlen($row['menu_description']) > 120) ? substr($row['menu_description'], 0, 120) . '...' : $row['menu_description'],
+                    'category_name'         => $row['category_name'],
+                    'category_id'           => $row['menu_category_id'],
+                    'minimum_qty'           => !empty($row['minimum_qty']) ? $row['minimum_qty'] : '1',
+                    'is_special'            => $row['is_special'],
+                    'start_date'            => $start_date,
+                    'end_days'              => $end_days,
+                    'menu_price'            => $this->currency->format($price),        //add currency symbol and format price to two decimal places
+                    'menu_photo'            => $menu_photo_src
+                );
+            }
+
+            return $results;
+        }
 	}
 
 	public function getMenu($menu_id) {

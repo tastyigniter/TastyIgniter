@@ -4,21 +4,23 @@ class Messages extends Admin_Controller {
 
     public function __construct() {
 		parent::__construct(); //  calls the constructor
+
         $this->load->library('pagination');
-		$this->load->model('Messages_model');
-		$this->load->model('Staffs_model');
-	}
+
+        $this->load->model('Messages_model');
+        $this->load->model('Staffs_model');
+
+        $this->lang->load('messages');
+    }
 
 	public function index() {
         $filter = array();
         $filter['filter_folder'] = $data['filter_folder'] = 'inbox';
         $data['page_uri'] = 'messages';
 
-        $this->template->setTitle('Messages');
-        $this->template->setHeading('Messages: Inbox');
-        $this->template->setButton('+ Compose', array('class' => 'btn btn-primary', 'href' => site_url('messages/compose')));
-
-        $data['text_empty'] 		= 'There are no messages available.';
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), 'Inbox'));
+        $this->template->setButton($this->lang->line('button_compose'), array('class' => 'btn btn-primary', 'href' => site_url('messages/compose')));
 
         $data = $this->getList($data, $filter);
 
@@ -33,12 +35,10 @@ class Messages extends Admin_Controller {
         $filter['filter_folder'] = $data['filter_folder'] = 'all';
         $data['page_uri'] = 'messages/all';
 
-        $this->template->setTitle('Messages');
-        $this->template->setHeading('Messages: All');
-        $this->template->setButton('+ Compose', array('class' => 'btn btn-primary', 'href' => site_url('messages/compose')));
-        $this->template->setButton('Delete', array('class' => 'btn btn-danger', 'onclick' => '$(\'#message-form\').submit();'));
-
-        $data['text_empty'] 		= 'There are no messages available.';
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), 'All'));
+        $this->template->setButton($this->lang->line('button_compose'), array('class' => 'btn btn-primary', 'href' => site_url('messages/compose')));
+        $this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#message-form\').submit();'));
 
         $data = $this->getList($data, $filter);
 
@@ -53,11 +53,9 @@ class Messages extends Admin_Controller {
         $filter['filter_folder'] = $data['filter_folder'] = 'draft';
         $data['page_uri'] = 'messages/draft';
 
-        $this->template->setTitle('Messages');
-        $this->template->setHeading('Messages: Draft');
-        $this->template->setButton('+ Compose', array('class' => 'btn btn-primary', 'href' => site_url('messages/compose')));
-
-        $data['text_empty'] 		= 'There are no messages available.';
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), 'Draft'));
+        $this->template->setButton($this->lang->line('button_compose'), array('class' => 'btn btn-primary', 'href' => site_url('messages/compose')));
 
         $data = $this->getList($data, $filter);
 
@@ -70,11 +68,9 @@ class Messages extends Admin_Controller {
         $filter['filter_folder'] = $data['filter_folder'] = 'sent';
         $data['page_uri'] = 'messages/sent';
 
-        $this->template->setTitle('Messages');
-        $this->template->setHeading('Messages: Sent');
-        $this->template->setButton('+ Compose', array('class' => 'btn btn-primary', 'href' => site_url('messages/compose')));
-
-        $data['text_empty'] 		= 'There are no messages available.';
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), 'Sent'));
+        $this->template->setButton($this->lang->line('button_compose'), array('class' => 'btn btn-primary', 'href' => site_url('messages/compose')));
 
         $data = $this->getList($data, $filter);
 
@@ -87,11 +83,9 @@ class Messages extends Admin_Controller {
         $filter['filter_folder'] = $data['filter_folder'] = 'archive';
         $data['page_uri'] = 'messages/sent';
 
-        $this->template->setTitle('Messages');
-        $this->template->setHeading('Messages: Archive');
-        $this->template->setButton('+ Compose', array('class' => 'btn btn-primary', 'href' => site_url('messages/compose')));
-
-        $data['text_empty'] 		= 'There are no messages available.';
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), 'Archive'));
+        $this->template->setButton($this->lang->line('button_compose'), array('class' => 'btn btn-primary', 'href' => site_url('messages/compose')));
 
         $data = $this->getList($data, $filter);
 
@@ -113,33 +107,30 @@ class Messages extends Admin_Controller {
         $message_id = $message_info['message_id'];
 
         if ($this->input->post('message_state')) {
-			if ($alert_msg = $this->_updateMessageState($this->input->post('message_state'), $message_id, $this->user->getStaffId())) {
-                $this->alert->set('success', $alert_msg);
+			if ($this->_updateMessageState($this->input->post('message_state'), $message_id, $this->user->getStaffId()) === TRUE) {
                 redirect('messages');
             }
 		} else if ($message_info['state'] !== '1') {
-			$this->_updateMessageState('read', $message_id, $this->user->getStaffId());
+			$this->_updateMessageState('read', $message_id, $this->user->getStaffId(), FALSE);
 		}
 
         $message_unread = $this->user->unreadMessageTotal();
         $data['folders'] = array(
-            'inbox' => array('icon' => 'fa-inbox', 'badge' => $message_unread, 'url' => site_url('messages')),
-            'draft' => array('icon' => 'fa-file-text-o', 'badge' => '', 'url' => site_url('messages/draft')),
-            'sent' => array('icon' => 'fa-paper-plane-o', 'badge' => '', 'url' => site_url('messages/sent')),
-            'all' 	=> array('icon' => 'fa-briefcase', 'badge' => '', 'url' => site_url('messages/all')),
-            'archive' 	=> array('icon' => 'fa-archive', 'badge' => '', 'url' => site_url('messages/archive')),
+            'inbox' => array('title' => $this->lang->line('text_inbox'), 'icon' => 'fa-inbox', 'badge' => $message_unread, 'url' => site_url('messages')),
+            'draft' => array('title' => $this->lang->line('text_draft'), 'icon' => 'fa-file-text-o', 'badge' => '', 'url' => site_url('messages/draft')),
+            'sent' => array('title' => $this->lang->line('text_sent'), 'icon' => 'fa-paper-plane-o', 'badge' => '', 'url' => site_url('messages/sent')),
+            'all' 	=> array('title' => $this->lang->line('text_all'), 'icon' => 'fa-briefcase', 'badge' => '', 'url' => site_url('messages/all')),
+            'archive' 	=> array('title' => $this->lang->line('text_archive'), 'icon' => 'fa-archive', 'badge' => '', 'url' => site_url('messages/archive')),
         );
 
         $data['labels'] = array(
-            'account' => array('icon' => 'fa-circle-o text-primary', 'url' => page_url().'?filter_type=account'),
-            'email' => array('icon' => 'fa-circle-o text-danger', 'url' => page_url().'?filter_type=email'),
+            'account' => array('title' => $this->lang->line('text_account'), 'icon' => 'fa-circle-o text-primary', 'url' => page_url().'?filter_type=account'),
+            'email' => array('title' => $this->lang->line('text_email'), 'icon' => 'fa-circle-o text-danger', 'url' => page_url().'?filter_type=email'),
         );
 
-        $this->template->setTitle('Messages');
-		$this->template->setHeading('Messages: View');
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $this->lang->line('text_view')));
 		$this->template->setBackButton('btn btn-back', site_url('messages'));
-
-		$data['text_empty'] 	= 'There are no recipients available.';
 
 		$data['message_id'] 	= $message_info['message_id'];
 		$data['date_added'] 	= mdate('%H:%i - %d %M %y', strtotime($message_info['date_added']));
@@ -185,10 +176,10 @@ class Messages extends Admin_Controller {
             redirect('messages');
         }
 
-        $this->template->setTitle('Message: Compose');
-		$this->template->setHeading('Message: Compose');
-		$this->template->setButton('Send', array('class' => 'btn btn-success', 'onclick' => '$(\'#compose-form\').submit();'));
-        $this->template->setButton('Save as Draft', array('class' => 'btn btn-default', 'onclick' => 'saveAsDraft();'));
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), 'Compose'));
+		$this->template->setButton($this->lang->line('button_send'), array('class' => 'btn btn-success', 'onclick' => '$(\'#compose-form\').submit();'));
+        $this->template->setButton($this->lang->line('button_save_draft'), array('class' => 'btn btn-default', 'onclick' => 'saveAsDraft();'));
         $this->template->setBackButton('btn btn-back', site_url('messages'));
 
         $this->template->setScriptTag(root_url('assets/js/tinymce/tinymce.min.js'), 'tinymce-js', '111');
@@ -211,12 +202,12 @@ class Messages extends Admin_Controller {
         $data['body'] 			    = $message_info['body'];
 
         $data['recipients']     = array(
-            'all_newsletters'   =>  'All Customers',
-            'customer_group'    =>  'Customer Group',
-            'customers'         =>  'Customers',
-            'all_staffs'        =>  'All Staffs',
-            'staff_group'       =>  'Staff Group',
-            'staffs'            =>  'Staffs'
+            'all_newsletters'   =>  $this->lang->line('text_all_customers'),
+            'customer_group'    =>  $this->lang->line('text_customer_group'),
+            'customers'         =>  $this->lang->line('text_customers'),
+            'all_staffs'        =>  $this->lang->line('text_all_staffs'),
+            'staff_group'       =>  $this->lang->line('text_staff_group'),
+            'staffs'            =>  $this->lang->line('text_staffs')
         );
 
 		$this->load->model('Customer_groups_model');
@@ -241,16 +232,16 @@ class Messages extends Admin_Controller {
 
         $message_unread = $this->user->unreadMessageTotal();
         $data['folders'] = array(
-            'inbox' => array('icon' => 'fa-inbox', 'badge' => $message_unread, 'url' => site_url('messages')),
-            'draft' => array('icon' => 'fa-file-text-o', 'badge' => '', 'url' => site_url('messages/draft')),
-            'sent' => array('icon' => 'fa-paper-plane-o', 'badge' => '', 'url' => site_url('messages/sent')),
-            'all' 	=> array('icon' => 'fa-briefcase', 'badge' => '', 'url' => site_url('messages/all')),
-            'archive' 	=> array('icon' => 'fa-archive', 'badge' => '', 'url' => site_url('messages/archive')),
+            'inbox' => array('title' => $this->lang->line('text_inbox'), 'icon' => 'fa-inbox', 'badge' => $message_unread, 'url' => site_url('messages')),
+            'draft' => array('title' => $this->lang->line('text_draft'), 'icon' => 'fa-file-text-o', 'badge' => '', 'url' => site_url('messages/draft')),
+            'sent' => array('title' => $this->lang->line('text_sent'), 'icon' => 'fa-paper-plane-o', 'badge' => '', 'url' => site_url('messages/sent')),
+            'all' 	=> array('title' => $this->lang->line('text_all'), 'icon' => 'fa-briefcase', 'badge' => '', 'url' => site_url('messages/all')),
+            'archive' 	=> array('title' => $this->lang->line('text_archive'), 'icon' => 'fa-archive', 'badge' => '', 'url' => site_url('messages/archive')),
         );
 
         $data['labels'] = array(
-            'account' => array('icon' => 'fa-circle-o text-primary', 'url' => page_url().'?filter_type=account'),
-            'email' => array('icon' => 'fa-circle-o text-danger', 'url' => page_url().'?filter_type=email'),
+            'account' => array('title' => $this->lang->line('text_account'), 'icon' => 'fa-circle-o text-primary', 'url' => page_url().'?filter_type=account'),
+            'email' => array('title' => $this->lang->line('text_email'), 'icon' => 'fa-circle-o text-danger', 'url' => page_url().'?filter_type=email'),
         );
 
         if ($this->input->post() AND $message_id = $this->_saveMessage()) {
@@ -271,8 +262,6 @@ class Messages extends Admin_Controller {
         $data['page_uri'] = 'messages/latest';
         $this->config->set_item('page_limit', '10');
 
-        $data['text_empty'] 		= 'There are no messages available.';
-
         $data = $this->getList($data, $filter);
 
         $this->template->render('messages_latest', $data);
@@ -283,25 +272,25 @@ class Messages extends Admin_Controller {
             $save_type = (is_numeric($this->input->post('save_as_draft'))) ? 'saved to draft' : 'sent';
 
 			if ($message_id = $this->Messages_model->saveMessage($this->input->get('id'), $this->input->post())) {
-				$this->alert->set('success', 'Message '.$save_type.' successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing '.$save_type.'.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Message '.$save_type));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $save_type));
 			}
 
 			return $message_id;
 		}
 	}
 
-	private function _updateMessageState($state = '', $message_id = '', $staff_id = '') {
+	private function _updateMessageState($state = '', $message_id = '', $staff_id = '', $display_error = TRUE) {
     	if (is_numeric($staff_id)) {
 			if ($state === 'unread') {
-				$alert = 'has been marked as unread.';
+				$alert = $this->lang->line('alert_mark_as_unread');
 			} else if ($state === 'read') {
-				$alert = 'has been marked as read.';
+				$alert = $this->lang->line('alert_mark_as_read');
 			} else if ($state === 'inbox') {
-				$alert = 'has been moved to inbox.';
+				$alert = $this->lang->line('alert_move_to_inbox');
 			} else if ($state === 'archive') {
-				$alert = 'has been moved to archive.';
+				$alert = $this->lang->line('alert_move_to_archive');
 			}
 
 			if ($state !== '') {
@@ -317,8 +306,11 @@ class Messages extends Admin_Controller {
                 }
 
                 if ($num > 0) {
-					$num_message = ($num == 1) ? 'Message '.$alert : $num.' messages '.$alert;
-                    return $num_message;
+                    $alert_msg = ($num == 1) ? 'Message '.$alert : $num.' messages '.$alert;
+
+                    if ($display_error === TRUE) $this->alert->set('success', $alert_msg);
+
+                    return TRUE;
 				}
 			}
 		}
@@ -327,9 +319,9 @@ class Messages extends Admin_Controller {
 	}
 
 	private function validateForm() {
-		$this->form_validation->set_rules('recipient', 'To', 'xss_clean|trim|required|min_length[2]|max_length[128]');
-		$this->form_validation->set_rules('subject', 'Subject', 'xss_clean|trim|required|min_length[2]|max_length[128]');
-		$this->form_validation->set_rules('body', 'Body', 'required|min_length[3]');
+		$this->form_validation->set_rules('recipient', 'lang:label_to', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+		$this->form_validation->set_rules('subject', 'lang:label_subject', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+		$this->form_validation->set_rules('body', 'lang:label_body', 'required|min_length[3]');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;
@@ -340,8 +332,7 @@ class Messages extends Admin_Controller {
 
     private function getList($data, $filter) {
         if ($this->input->post('message_state')) {
-            if ($alert_msg = $this->_updateMessageState($this->input->post('message_state'), '', $this->user->getStaffId())) {
-                $this->alert->set('success', $alert_msg);
+            if ($this->_updateMessageState($this->input->post('message_state'), '', $this->user->getStaffId()) === TRUE) {
                 redirect(current_url());
             }
         }
@@ -428,16 +419,16 @@ class Messages extends Admin_Controller {
 
         $message_unread = $this->user->unreadMessageTotal();
         $data['folders'] = array(
-            'inbox' => array('icon' => 'fa-inbox', 'badge' => $message_unread, 'url' => site_url('messages')),
-            'draft' => array('icon' => 'fa-file-text-o', 'badge' => '', 'url' => site_url('messages/draft')),
-            'sent' => array('icon' => 'fa-paper-plane-o', 'badge' => '', 'url' => site_url('messages/sent')),
-            'all' 	=> array('icon' => 'fa-briefcase', 'badge' => '', 'url' => site_url('messages/all')),
-            'archive' 	=> array('icon' => 'fa-archive', 'badge' => '', 'url' => site_url('messages/archive')),
+            'inbox' => array('title' => $this->lang->line('text_inbox'), 'icon' => 'fa-inbox', 'badge' => $message_unread, 'url' => site_url('messages')),
+            'draft' => array('title' => $this->lang->line('text_draft'), 'icon' => 'fa-file-text-o', 'badge' => '', 'url' => site_url('messages/draft')),
+            'sent' => array('title' => $this->lang->line('text_sent'), 'icon' => 'fa-paper-plane-o', 'badge' => '', 'url' => site_url('messages/sent')),
+            'all' 	=> array('title' => $this->lang->line('text_all'), 'icon' => 'fa-briefcase', 'badge' => '', 'url' => site_url('messages/all')),
+            'archive' 	=> array('title' => $this->lang->line('text_archive'), 'icon' => 'fa-archive', 'badge' => '', 'url' => site_url('messages/archive')),
         );
 
         $data['labels'] = array(
-            'account' => array('icon' => 'fa-circle-o text-primary', 'url' => site_url($data['page_uri'].$url.'filter_type=account')),
-            'email' => array('icon' => 'fa-circle-o text-danger', 'url' => site_url($data['page_uri'].$url.'filter_type=email')),
+            'account' => array('title' => $this->lang->line('text_account'), 'icon' => 'fa-circle-o text-primary', 'url' => page_url().'?filter_type=account'),
+            'email' => array('title' => $this->lang->line('text_email'), 'icon' => 'fa-circle-o text-danger', 'url' => page_url().'?filter_type=email'),
         );
 
         $data['message_dates'] = array();

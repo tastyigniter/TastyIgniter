@@ -4,19 +4,22 @@ class Banners extends Admin_Controller {
 
 	public function __construct() {
 		parent::__construct();
+
         $this->user->restrict('Admin.Banners');
+
         $this->load->model('Banners_model');
-		$this->load->model('Image_tool_model');
-	}
+
+        $this->load->model('Image_tool_model');
+
+        $this->lang->load('banners');
+    }
 
 	public function index() {
-		$this->template->setTitle('Banners');
-		$this->template->setHeading('Banners');
-		$this->template->setButton('+ New', array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
-		$this->template->setButton('Delete', array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
-		$this->template->setButton('Modules', array('class' => 'btn btn-default pull-right', 'href' => site_url('extensions')));
-
-		$data['text_empty'] 		= 'There are no banners available.';
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading($this->lang->line('text_heading'));
+		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
+		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
+		$this->template->setButton($this->lang->line('button_modules'), array('class' => 'btn btn-default pull-right', 'href' => site_url('extensions')));
 
 		$data['banners'] = array();
 		$results = $this->Banners_model->getBanners();
@@ -25,7 +28,7 @@ class Banners extends Admin_Controller {
 				'banner_id'		=> $result['banner_id'],
 				'name'			=> $result['name'],
 				'type'			=> $result['type'],
-				'status'		=> ($result['status'] === '1') ? 'Enabled' : 'Disabled',
+				'status'		=> ($result['status'] === '1') ? $this->lang->line('text_enabled') : $this->lang->line('text_disabled'),
 				'edit' 			=> site_url('banners/edit?id=' . $result['banner_id'])
 			);
 		}
@@ -49,11 +52,12 @@ class Banners extends Admin_Controller {
 			$data['_action']	= site_url('banners/edit');
 		}
 
-		$title = (isset($banner_info['name'])) ? $banner_info['name'] : 'New';
-		$this->template->setTitle('Banner: '. $title);
-		$this->template->setHeading('Banner: '. $title);
-		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$title = (isset($banner_info['name'])) ? $banner_info['name'] : $this->lang->line('text_new');
+        $this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $title));
+        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
+
+        $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setBackButton('btn btn-back', site_url('banners'));
 
         $this->template->setStyleTag(root_url('assets/js/fancybox/jquery.fancybox.css'), 'jquery-fancybox-css');
@@ -127,34 +131,12 @@ class Banners extends Admin_Controller {
 
     private function _saveBanner() {
     	if ($this->validateForm() === TRUE) {
-			$update['name'] 		= $this->input->post('name');
-			$update['type'] 		= $this->input->post('type');
-			$update['click_url'] 	= $this->input->post('click_url');
-			$update['language_id'] 	= $this->input->post('language_id');
-			$update['alt_text'] 	= $this->input->post('alt_text');
-			$update['status'] 		= $this->input->post('status');
+            $save_type = (! is_numeric($this->input->get('id'))) ? $this->lang->line('text_added') : $this->lang->line('text_updated');
 
-			if ($this->input->post('type') === 'custom') {
-                $update['custom_code'] 	= $this->input->post('custom_code');
+            if ($banner_id = $this->Banners_model->saveBanner($this->input->get('id'), $this->input->post())) {
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Banner '.$save_type));
             } else {
-
-                if ($this->input->post('image_path') AND $this->input->post('type') === 'image') {
-                    $update['image_code']['path'] = $this->input->post('image_path');
-                }
-
-                if ($this->input->post('carousels') AND $this->input->post('type') === 'carousel') {
-                    foreach ($this->input->post('carousels') as $key => $value) {
-                        $update['image_code']['paths'][] = $value;
-                    }
-                }
-            }
-
-            $save_type = (! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
-
-            if ($banner_id = $this->Banners_model->saveBanner($this->input->get('id'), $update)) {
-				$this->alert->set('success', 'Banner ' . $save_type . ' successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $save_type));
 			}
 
 			return $banner_id;
@@ -167,9 +149,9 @@ class Banners extends Admin_Controller {
 
             if ($deleted_rows > 0) {
                 $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Banners': 'Banner';
-                $this->alert->set('success', $prefix.' deleted successfully.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), $prefix.' '.$this->lang->line('text_deleted')));
             } else {
-                $this->alert->set('warning', 'An error occurred, nothing deleted.');
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted')));
             }
 
             return TRUE;
@@ -177,25 +159,25 @@ class Banners extends Admin_Controller {
 	}
 
 	private function validateForm() {
-		$this->form_validation->set_rules('name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[255]');
-		$this->form_validation->set_rules('type', 'Type', 'xss_clean|trim|required|alpha|max_length[8]');
-		$this->form_validation->set_rules('click_url', 'Click URL', 'xss_clean|trim|required|min_length[2]|max_length[255]');
-		$this->form_validation->set_rules('language_id', 'Language', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('alt_text', 'Alternative Text', 'xss_clean|trim|required|min_length[2]|max_length[255]');
-		$this->form_validation->set_rules('status', 'Status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('name', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[255]');
+		$this->form_validation->set_rules('type', 'lang:label_type', 'xss_clean|trim|required|alpha|max_length[8]');
+		$this->form_validation->set_rules('click_url', 'lang:label_click_url', 'xss_clean|trim|required|min_length[2]|max_length[255]');
+		$this->form_validation->set_rules('language_id', 'lang:label_language', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('alt_text', 'lang:label_alt_text', 'xss_clean|trim|required|min_length[2]|max_length[255]');
+		$this->form_validation->set_rules('status', 'lang:label_status', 'xss_clean|trim|required|integer');
 
 		if ($this->input->post('type') === 'image') {
-			$this->form_validation->set_rules('image_path', 'Image', 'xss_clean|trim|required');
+			$this->form_validation->set_rules('image_path', 'lang:label_image', 'xss_clean|trim|required');
 		}
 
 		if ($this->input->post('type') === 'carousel' AND $this->input->post('carousels')) {
 			foreach ($this->input->post('carousels') as $key => $value) {
-				$this->form_validation->set_rules('carousels['.$key.']', 'Images', 'xss_clean|trim|required');
+				$this->form_validation->set_rules('carousels['.$key.']', 'lang:label_images', 'xss_clean|trim|required');
 			}
 		}
 
 		if ($this->input->post('type') === 'custom') {
-			$this->form_validation->set_rules('custom_code', 'Name', 'xss_clean|trim|required');
+			$this->form_validation->set_rules('custom_code', 'lang:label_custom_code', 'xss_clean|trim|required');
 		}
 
 		if ($this->form_validation->run() === TRUE) {

@@ -17,9 +17,15 @@ class Extension {
         !empty($this->extensions) OR $this->extensions = $this->CI->Extensions_model->getExtensions('', TRUE);
 
         if (!empty($type)) {
-            if (!empty($this->extensions[$type]) AND is_array($this->extensions[$type])) {
-                return $this->extensions[$type];
+            $results = array();
+
+            foreach ($this->extensions as $name => $extenion) {
+                if ($extenion['type'] === $type) {
+                    $results[$name] = $extenion;
+                }
             }
+
+            return $results;
         }
 
         return $this->extensions;
@@ -39,6 +45,36 @@ class Extension {
 
     public function getPayments() {
         return $this->getExtensions('payment');
+    }
+
+    public function getAvailablePayments($load_payment = TRUE) {
+        $payments = array();
+        $this->CI->load->library('location');
+
+        foreach ($this->getPayments() as $payment) {
+            if (!empty($payment['ext_data'])) {
+                if ($payment['ext_data']['status'] === '1') {
+
+                    $payments[$payment['name']] = array(
+                        'name'		=> $payment['title'],
+                        'code'		=> $payment['name'],
+                        'priority'	=> $payment['ext_data']['priority'],
+                        'status'	=> $payment['ext_data']['status'],
+                        'data'      => ($load_payment) ? Modules::run($payment['name'] . '/' . $payment['name'] . '/index') : array()
+                    );
+                }
+            }
+        }
+
+        if (!empty($payments)) {
+            $sort_order = array();
+            foreach ($payments as $key => $value) {
+                $sort_order[$key] = $value['priority'];
+            }
+            array_multisort($sort_order, SORT_ASC, $payments);
+        }
+
+        return $payments;
     }
 
     public function getPayment($name) {

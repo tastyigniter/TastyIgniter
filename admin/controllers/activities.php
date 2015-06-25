@@ -4,10 +4,15 @@ class Activities extends Admin_Controller {
 
     public function __construct() {
 		parent::__construct(); //  calls the constructor
+
         $this->user->restrict('Admin.Activities');
+
+        $this->load->model('Activities_model');
+
         $this->load->library('pagination');
-		$this->load->model('Activities_model');
-	}
+
+        $this->lang->load('activities');
+    }
 
 	public function index() {
 		$url = '?';
@@ -22,31 +27,26 @@ class Activities extends Admin_Controller {
 			$filter['limit'] = $this->config->item('page_limit');
 		}
 
-		$this->template->setTitle('Activities');
-		$this->template->setHeading('Activities');
-		$this->template->setButton('Mark all as read', array('class' => 'btn btn-primary', 'onclick' => '$(\'#list-form\').submit();'));
-
-		$data['text_empty'] 		= 'There are no activities available.';
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading($this->lang->line('text_heading'));
 
 		$data['activities'] = $activities = array();
 		$results = $this->Activities_model->getList($filter);
 		foreach ($results as $result) {
-			$activities[] = array(
+            $day_elapsed = day_elapsed($result['date_added']);
+
+            $data['activities'][$day_elapsed][] = array(
 				'activity_id'	    => $result['activity_id'],
 				'domain'			=> $result['domain'],
 				'action'			=> $result['action'],
 				'icon'			    => 'fa fa-tasks',
 				'message'			=> $result['message'],
-                'time'		        => time_elapsed($result['date_added']),
-                'date'		        => day_elapsed($result['date_added']),
+                'time'		        => mdate('%h:%i %A', strtotime($result['date_added'])),
+                'time_elapsed'		=> time_elapsed($result['date_added']),
+                'day_elapsed'		=> $day_elapsed,
 				'status'			=> $result['status'] === '1' ? 'read' : 'unread',
 			);
 		}
-
-        foreach ($activities as $activity) {
-            $date_added = $activity['date'];
-            $data['activities'][$date_added][] = $activity;
-        }
 
         $config['base_url'] 		= site_url('activities'.$url);
 		$config['total_rows'] 		= $this->Activities_model->getCount($filter);
@@ -68,8 +68,6 @@ class Activities extends Admin_Controller {
         $filter['page'] = '1';
         $filter['limit'] = '10';
 
-        $data['text_empty'] 		= 'There are no new activities available.';
-
         $data['activities'] = array();
         $results = $this->Activities_model->getList($filter);
         foreach ($results as $result) {
@@ -77,7 +75,8 @@ class Activities extends Admin_Controller {
                 'activity_id'	    => $result['activity_id'],
                 'icon'			    => 'fa fa-tasks',
                 'message'			=> $result['message'],
-                'time'		        => time_elapsed($result['date_added']),
+                'time'		        => mdate('%h:%i %A', strtotime($result['date_added'])),
+                'time_elapsed'		=> time_elapsed($result['date_added']),
                 'state'			    => $result['status'] === '1' ? 'read' : 'unread',
             );
         }
@@ -96,8 +95,6 @@ class Activities extends Admin_Controller {
 		if ($this->config->item('page_limit')) {
 			$filter['limit'] = $this->config->item('page_limit');
 		}
-
-		$data['text_empty'] 		= 'There are no new activities available.';
 
 		$data['activities'] = array();
 		$results = $this->Activities_model->getList($filter);

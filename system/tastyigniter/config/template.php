@@ -13,12 +13,6 @@
 | $config['breadcrumb_link_close'] 		The closing tag for breadcrumb link.
 |
 */
-$config['breadcrumb_divider'] 		= '<span class="divider">/</span>';
-$config['breadcrumb_tag_open'] 		= '<div id="breadcrumb" class="btn-group btn-breadcrumb">';
-$config['breadcrumb_tag_close'] 	= '</div>';
-$config['breadcrumb_link_open'] 	= '<a href="{link}" class="btn btn-default">';
-$config['breadcrumb_link_close'] 	= '</a>';
-
 /*
 |--------------------------------------------------------------------------
 | Title Separator
@@ -83,3 +77,32 @@ $config['head_tags']['back_button'] = '';
 $config['theme_locations'] = array(
     THEMEPATH,
 );
+
+/*
+|--------------------------------------------------------------------------
+| Theme allowed file and image extension
+|--------------------------------------------------------------------------
+|
+| Which theme file and image extension is allowed by default?
+|
+|
+|
+*/
+
+$config['allowed_image_ext']        = array('jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff');
+$config['allowed_file_ext']         = array('html', 'txt', 'xml', 'js', 'php', 'css');
+
+/*
+|--------------------------------------------------------------------------
+| Theme hidden file and folders
+|--------------------------------------------------------------------------
+|
+| Which theme file and folders is hidden by default?
+|
+|
+|
+*/
+
+$config['theme_hidden_files']       = array('index.html');
+$config['theme_hidden_folders']     = array();
+
