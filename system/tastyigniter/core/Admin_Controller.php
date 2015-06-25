@@ -16,7 +16,7 @@ class Admin_Controller extends Base_Controller {
 
 		log_message('info', 'Admin Controller Class Initialized');
 
-		$this->load->library('user');
+        $this->load->library('user');
 
         if (!$this->user->isLogged() AND $this->uri->rsegment(1) !== 'login') {
             $this->alert->set('danger', 'You must be logged in to access that page.');

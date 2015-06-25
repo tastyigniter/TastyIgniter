@@ -19,9 +19,9 @@ class Base_Controller extends MX_Controller {
         // Load session
         $this->load->library('session');
 
-        $this->form_validation->CI =& $this;
-
         $this->load->library('alert');
+
+        $this->form_validation->CI =& $this;
 
         // Load database and system configuration from database
         $DATABASE = $this->load->database('default', TRUE);

@@ -35,7 +35,7 @@ class Main_Controller extends Base_Controller {
         if ($default_theme = $this->config->item(MAINDIR, 'default_themes')) {
             $this->template->setTheme($default_theme);
         }
-	}
+    }
 }
 
 /* End of file Main_Controller.php */

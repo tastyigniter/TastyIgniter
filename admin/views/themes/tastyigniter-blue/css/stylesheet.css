@@ -56,6 +56,13 @@ padding: 48px 15px;
 .jumbotron p {
 font-size: 14px;
 }
+h1 small, .h1 small, h2 small, .h2 small, h3 small, .h3 small, h1 .small, .h1 .small, h2 .small, .h2 .small, h3 .small, .h3 .small {
+font-size: 50%;
+}
+h1.block-heading, h2.block-heading, h3.block-heading, h4.block-heading, h5.block-heading, h6.block-heading {
+padding: 15px 0;
+}
+
 
 /** WRAPPER **/
 #wrapper {
@@ -393,9 +400,6 @@ padding-left: 42px;
 }
 
 /** HEADER **/
-h1 small, .h1 small, h2 small, .h2 small, h3 small, .h3 small, h1 .small, .h1 .small, h2 .small, .h2 .small, h3 .small, .h3 .small {
-font-size: 50%;
-}
 .header {
 border-bottom: 0 solid #DDDBDB;
 }
@@ -451,6 +455,9 @@ border-radius: 0;
 padding:0;
 margin-bottom:0;
 }
+.alert{
+border-radius: 0;
+}
 #notification .alert-dismissable .close {
 right: -26px;
 top: -5px;
@@ -473,6 +480,10 @@ border-left: 5px solid #c05f5f;
 .alert-warning {
 background:#f8efc0;
 border-left: 5px solid #e7c720;
+}
+.alert-info {
+background:#d9edf7;
+border-left: 5px solid #5bc0de;
 }
 .list-group-alert {
 list-style: none outside none;
@@ -1895,44 +1906,44 @@ margin-top:45px;
 
 
 /** SETUP ***/
-.setup_box {
-background:#FFF;
-border: 1px solid #DDDDDD;
-border-radius: 3px;
-margin: 100px auto;
-width: 50%;
-padding: 20px;
-font-size:12px;
-}
-.setup_box p, .setup_box h2 {
-text-align:left;
-padding: 5px 0;
-margin: 10px 0;
-}
-.setup_box h1 {
-font-size: 30px;
-margin-bottom: 30px;
-}
-.setup_box h2 {
-border-bottom: 1px solid #DDDDDD;
-}
-.setup_box .green {
-background: url(../images/setup-yes.svg) no-repeat center center;
-display: block;
-float: right;
-height: 20px;
-width: 20px;
-}
-.setup_box .red {
-background: url(../images/setup-no.svg) no-repeat center center;
-display: block;
-float: right;
-height: 20px;
-width: 20px;
-}
-.success .download {
-background: none repeat scroll 0 0 #FFFFFF;
-}
+/*.setup_box {*/
+/*background:#FFF;*/
+/*border: 1px solid #DDDDDD;*/
+/*border-radius: 3px;*/
+/*margin: 100px auto;*/
+/*width: 50%;*/
+/*padding: 20px;*/
+/*font-size:12px;*/
+/*}*/
+/*.setup_box p, .setup_box h2 {*/
+/*text-align:left;*/
+/*padding: 5px 0;*/
+/*margin: 10px 0;*/
+/*}*/
+/*.setup_box h1 {*/
+/*font-size: 30px;*/
+/*margin-bottom: 30px;*/
+/*}*/
+/*.setup_box h2 {*/
+/*border-bottom: 1px solid #DDDDDD;*/
+/*}*/
+/*.setup_box .green {*/
+/*background: url(../images/setup-yes.svg) no-repeat center center;*/
+/*display: block;*/
+/*float: right;*/
+/*height: 20px;*/
+/*width: 20px;*/
+/*}*/
+/*.setup_box .red {*/
+/*background: url(../images/setup-no.svg) no-repeat center center;*/
+/*display: block;*/
+/*float: right;*/
+/*height: 20px;*/
+/*width: 20px;*/
+/*}*/
+/*.success .download {*/
+/*background: none repeat scroll 0 0 #FFFFFF;*/
+/*}*/
 
 
 /*** MAIL TEMPLATE ***/
@@ -2306,7 +2317,9 @@ background: none repeat scroll 0 0 #3681c2;
 background-image: none;
 border: 0 none;
 }
-
+.select2-drop.select2-drop-above .select2-search input {
+margin-top: 0;
+}
 
 /** DATE RANGE PICKER **/
 .daterangepicker .calendar th, .daterangepicker .calendar td {
@@ -2393,17 +2406,16 @@ box-shadow: 0 1px 1px rgba(0,0,0, 0.1);
 margin-left: 75px;
 margin-right: 15px;
 margin-top: 0;
-padding: 8px 10px;
+padding: 12px;
 position: relative;
 }
-.timeline > li > .timeline-body .time {
-font-size: 10px;
-font-style: italic;
-}
 .timeline > li > .timeline-body .timeline-header {
-font-size: 12px;
-font-weight: 400;
+font-size: 13px;
+font-weight: 200;
 margin: 0;
+}
+.timeline > li > .timeline-body .timeline-header b {
+font-weight: 400;
 }
 .timeline-body > p,
 .timeline-body > ul {
