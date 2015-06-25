@@ -2,12 +2,16 @@
 
 class Customer_groups extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('pagination');
-		$this->load->model('Customer_groups_model');
+
+        $this->user->restrict('Admin.CustomerGroups');
+
+        $this->load->model('Customer_groups_model');
+
+        $this->load->library('pagination');
+
+        $this->lang->load('customer_groups');
 	}
 
 	public function index() {
@@ -38,12 +42,10 @@ class Customer_groups extends Admin_Controller {
 			$data['order_by_active'] = '';
 		}
 
-		$this->template->setTitle('Customer Groups');
-		$this->template->setHeading('Customer Groups');
-		$this->template->setButton('+ New', array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
-		$this->template->setButton('Delete', array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
-
-		$data['text_empty'] 		= 'There is no customer group available.';
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading($this->lang->line('text_heading'));
+		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
+		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_id'] 			= site_url('customer_groups'.$url.'sort_by=customer_group_id&order_by='.$order_by);
@@ -65,7 +67,7 @@ class Customer_groups extends Admin_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 
-		$config['base_url'] 		= site_url('customer_groups').$url;
+		$config['base_url'] 		= site_url('customer_groups'.$url);
 		$config['total_rows'] 		= $this->Customer_groups_model->getCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 
@@ -89,17 +91,17 @@ class Customer_groups extends Admin_Controller {
 
 		if ($group_info) {
 			$customer_group_id = $group_info['customer_group_id'];
-			$data['action']	= site_url('customer_groups/edit?id='. $customer_group_id);
+			$data['_action']	= site_url('customer_groups/edit?id='. $customer_group_id);
 		} else {
 		    $customer_group_id = 0;
-			$data['action']	= site_url('customer_groups/edit');
+			$data['_action']	= site_url('customer_groups/edit');
 		}
 
-		$title = (isset($group_info['group_name'])) ? $group_info['group_name'] : 'New';
-		$this->template->setTitle('Customer Group: '. $title);
-		$this->template->setHeading('Customer Group: '. $title);
-		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$title = (isset($group_info['group_name'])) ? $group_info['group_name'] : $this->lang->line('text_new');
+        $this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $title));
+        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
+		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setBackButton('btn btn-back', site_url('customer_groups'));
 
 		$data['customer_group_id'] 	= $group_info['customer_group_id'];
@@ -121,12 +123,12 @@ class Customer_groups extends Admin_Controller {
 
 	private function _saveCustomerGroup() {
     	if ($this->validateForm() === TRUE) {
-            $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
+            $save_type = ( ! is_numeric($this->input->get('id'))) ? $this->lang->line('text_added') : $this->lang->line('text_updated');
 
 			if ($customer_group_id = $this->Customer_groups_model->saveCustomerGroup($this->input->get('id'), $this->input->post())) {
-				$this->alert->set('success', 'Customer Groups ' . $save_type . ' successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, ' . $save_type . ' updated.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Customer Groups '.$save_type));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $save_type));
 			}
 
 			return $customer_group_id;
@@ -134,21 +136,24 @@ class Customer_groups extends Admin_Controller {
 	}
 
 	private function _deleteCustomerGroup() {
-    	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $value) {
-				$this->Customer_groups_model->deleteCustomerGroup($value);
-			}
+        if ($this->input->post('delete')) {
+            $deleted_rows = $this->Customer_groups_model->deleteCustomerGroup($this->input->post('delete'));
 
-			$this->alert->set('success', 'Customer Group(s) deleted successfully!');
-		}
+            if ($deleted_rows > 0) {
+                $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Currencies': 'Currency';
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), $prefix.' '.$this->lang->line('text_deleted')));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted')));
+            }
 
-		return TRUE;
+            return TRUE;
+        }
 	}
 
 	private function validateForm() {
-		$this->form_validation->set_rules('group_name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
-		$this->form_validation->set_rules('approval', 'Approval', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('description', 'Description', 'xss_clean|trim|min_length[2]|max_length[1028]');
+		$this->form_validation->set_rules('group_name', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
+		$this->form_validation->set_rules('approval', 'lang:label_approval', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('description', 'lang:label_description', 'xss_clean|trim|min_length[2]|max_length[1028]');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;

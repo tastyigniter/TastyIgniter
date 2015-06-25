@@ -9,7 +9,7 @@ class Database extends Base_Controller {
         $this->load->helper('file');
         $this->load->model('Setup_model');
 
-        if ($this->session->userdata('setup') === 'step_3' OR $this->config->item('ti_version')) {
+        if ($this->session->userdata('setup') === 'step_3' OR $this->config->item('ti_setup')) {
             redirect('success');
         }
 
@@ -167,13 +167,13 @@ class Database extends Base_Controller {
         }
 
         if ($current_version !== FALSE AND $old_version !== $current_version) {
-            if (!$this->Setup_model->addData()) {
+            if ( ! $this->Setup_model->loadInitialSchema($current_version)) {
                 log_message('info', 'Migration: initial_schema execution failed');
             }
         }
 
         if ($current_version !== FALSE AND $this->input->post_get('demo_data') === '1') {
-            if (!$this->Setup_model->addDemoData($this->input->post_get('demo_data'))) {
+            if ( ! $this->Setup_model->loadDemoSchema($this->input->post_get('demo_data'))) {
                 log_message('info', 'Migration: demo_schema execution failed');
             }
         }

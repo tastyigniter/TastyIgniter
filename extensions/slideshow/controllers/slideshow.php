@@ -1,11 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-class Slideshow extends Ext_Controller {
-
-	public function __construct() {
-		parent::__construct(); 																	// calls the constructor
-		$this->lang->load('slideshow');
-	}
+class Slideshow extends Main_Controller {
 
 	public function index($ext_data = array()) {
 		if ( ! file_exists(EXTPATH .'slideshow/views/slideshow.php')) { 			//check if file exists in views folder

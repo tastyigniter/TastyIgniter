@@ -56,7 +56,7 @@ class Dashboard_model extends TI_Model {
 
 		if ($stat_range !== '' AND !empty($stat_range)) {
 			$this->db->select_sum('order_total', 'total_lost_sales');
-			$this->db->where('status_id', $this->config->item('order_status_cancel'));
+			$this->db->where('status_id', $this->config->item('canceled_order_status'));
 			$query = $this->db->get('orders');
 
 			if ($stat_range === 'today') {
@@ -134,7 +134,7 @@ class Dashboard_model extends TI_Model {
 				$this->db->where('YEAR(date_added)', date('Y'));
 			}
 
-			$this->db->where('status_id', $this->config->item('order_status_complete'));
+			$this->db->where('status_id', $this->config->item('complete_order_status'));
 			$this->db->from('orders');
 			$total_orders_completed = $this->db->count_all_results();
 		}

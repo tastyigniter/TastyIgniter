@@ -5,7 +5,7 @@
  */
 class TI_Cart extends CI_Cart {
 
-    private $coupon = array('code' => '', 'discount' => '');
+    private $coupon_array = array('code' => '', 'discount' => '');
 
 	public function __construct($params = array()) {
 		parent::__construct();
@@ -20,7 +20,7 @@ class TI_Cart extends CI_Cart {
 		}
 
 		if (!isset($this->_cart_contents['coupon'])) {
-			$this->_cart_contents['coupon'] = $this->coupon;
+			$this->_cart_contents['coupon'] = $this->coupon_array;
 		}
 
 		log_message('info', "Cart Class Initialized");
@@ -72,15 +72,15 @@ class TI_Cart extends CI_Cart {
 	public function add_coupon($coupon = array()) {
 		$save_cart = FALSE;
 
-		if ($coupon['type'] !== 'P' OR $coupon['type'] !== 'F') {
-			$coupon['type'] = 'F';
-		}
+        if (!isset($coupon['type'])) {
+            $coupon['type'] = 'F';
+        }
 
-		if ($coupon['type'] === 'P' AND is_numeric($coupon['discount']) AND $coupon['discount'] > 0) {
-			$coupon['discount'] = ($coupon['discount'] / 100) * $this->_cart_contents['cart_total'];
-		}
+        if ($coupon['type'] === 'P' AND is_numeric($coupon['discount']) AND $coupon['discount'] > 0) {
+            $coupon['discount'] = ($coupon['discount'] / 100) * $this->_cart_contents['cart_total'];
+        }
 
-		if ($coupon['discount'] > 0) {
+        if ($coupon['discount'] > 0) {
 			$this->_cart_contents['coupon'] = array('code' => $coupon['code'], 'discount' => $coupon['discount']); //$coupon['discount'];
 			$save_cart = TRUE;
 		}
@@ -106,7 +106,7 @@ class TI_Cart extends CI_Cart {
 	public function remove_coupon($coupon_code = '') {
 		if (isset($this->_cart_contents['coupon'])) {
 			if ($coupon_code !== '' AND $this->_cart_contents['coupon']['code'] === $coupon_code) {
-				$this->_cart_contents['coupon'] = $this->coupon;
+				$this->_cart_contents['coupon'] = $this->coupon_array;
 				$this->_save_cart();
 			}
 		}
@@ -250,14 +250,66 @@ class TI_Cart extends CI_Cart {
 	/**
 	 * Coupon Amount *** TASTYIGNITER
 	 *
-	 * Returns coupon amount
+	 * Returns coupon
 	 *
 	 * @access	public
 	 * @return	integer
 	 */
 	public function coupon() {
-		return is_array($this->_cart_contents['coupon']) ? $this->_cart_contents['coupon'] : $this->coupon;
+		return is_array($this->_cart_contents['coupon']) ? $this->_cart_contents['coupon'] : $this->coupon_array;
 	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Coupon Code *** TASTYIGNITER
+	 *
+	 * Returns the coupon code
+	 *
+	 * @access	public
+	 * @return	integer
+	 */
+	public function coupon_code() {
+		$coupon = $this->coupon();
+        return !empty($coupon['code']) ? $coupon['code'] : NULL;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Coupon Discount *** TASTYIGNITER
+	 *
+	 * Returns coupon discount
+	 *
+	 * @access	public
+	 * @return	integer
+	 */
+	public function coupon_discount() {
+        $coupon = $this->coupon();
+        return ($coupon['discount'] > 0) ? $coupon['discount'] : NULL;
+	}
+
+    public function product_options_string($row_id, $split = '<br />') {
+        $string = '';
+        foreach ($this->product_options($row_id) as $option_id => $options) {
+            foreach ($options as $option) {
+                $string .= '+ ' . $option['value_name'] . ' = ' . $option['value_price'] . $split;
+            }
+        }
+
+        return trim($string, $split);
+    }
+
+    public function product_options_ids($row_id) {
+        $ids = array();
+        foreach ($this->product_options($row_id) as $option_id => $options) {
+            foreach ($options as $option) {
+                $ids[$option_id][] = $option['value_id'];
+            }
+        }
+
+        return $ids;
+    }
 }
 
 // END Cart Class

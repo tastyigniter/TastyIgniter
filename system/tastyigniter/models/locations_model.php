@@ -115,11 +115,11 @@ class Locations_model extends TI_Model {
 	}
 
     public function getOpeningHourByDay($location_id = FALSE, $day = FALSE) {
-        $datestring = '%H:%i';
         $weekdays = array('Monday' => 0, 'Tuesday' => 1, 'Wednesday' => 2, 'Thursday' => 3, 'Friday' => 4, 'Saturday' => 5, 'Sunday' => 6);
-        $hour = array();
-        $hour['open'] = '00:00:00';
-        $hour['close'] = '00:00:00';
+
+        $day = (!isset($weekdays[$day])) ? date('l', strtotime($day)) : $day;
+
+        $hour = array('open' => '00:00:00', 'close' => '00:00:00', 'status' => '0');
 
         $this->db->from('working_hours');
         $this->db->where('location_id', $location_id);
@@ -131,6 +131,7 @@ class Locations_model extends TI_Model {
             $row = $query->row_array();
             $hour['open']	= $row['opening_time'];
             $hour['close']	= $row['closing_time'];
+            $hour['status']	= $row['status'];
         }
 
         return $hour;
@@ -278,6 +279,10 @@ class Locations_model extends TI_Model {
 			$this->db->set('description', $save['description']);
 		}
 
+		if (isset($save['location_image'])) {
+			$this->db->set('location_image', $save['location_image']);
+		}
+
 		if ($save['offer_delivery'] === '1') {
 			$this->db->set('offer_delivery', $save['offer_delivery']);
 		} else {
@@ -308,16 +313,16 @@ class Locations_model extends TI_Model {
 			$this->db->set('last_order_time', '0');
 		}
 
-		if (!empty($save['reservation_interval'])) {
-			$this->db->set('reservation_interval', $save['reservation_interval']);
+		if (!empty($save['reservation_time_interval'])) {
+			$this->db->set('reservation_time_interval', $save['reservation_time_interval']);
 		} else {
-			$this->db->set('reservation_interval', '0');
+			$this->db->set('reservation_time_interval', '0');
 		}
 
-		if (!empty($save['reservation_turn'])) {
-			$this->db->set('reservation_turn', $save['reservation_turn']);
+		if (!empty($save['reservation_stay_time'])) {
+			$this->db->set('reservation_stay_time', $save['reservation_stay_time']);
 		} else {
-			$this->db->set('reservation_turn', '0');
+			$this->db->set('reservation_stay_time', '0');
 		}
 
         $options = array();
@@ -354,11 +359,9 @@ class Locations_model extends TI_Model {
 		}
 
 		if (is_numeric($location_id)) {
-            $notification_action = 'updated';
             $this->db->where('location_id', $location_id);
             $query = $this->db->update('locations');
         } else {
-            $notification_action = 'added';
             $query = $this->db->insert('locations');
             $location_id = $this->db->insert_id();
         }
@@ -380,9 +383,6 @@ class Locations_model extends TI_Model {
                 $this->permalink->savePermalink('local', $save['permalink'], 'location_id=' . $location_id);
             }
 
-            $this->load->model('Notifications_model');
-            $this->Notifications_model->addNotification(array('action' => $notification_action, 'object' => 'location', 'object_id' => $location_id));
-
             return $location_id;
         }
 	}
@@ -393,24 +393,24 @@ class Locations_model extends TI_Model {
 
 		$hours = array();
 
-		if (!empty($data['opening_type']) AND !empty($data['daily_days']) AND !empty($data['flexible_hours'])) {
+		if (!empty($data['opening_type'])) {
 			if ($data['opening_type'] === '24_7') {
 				for ($day = 0; $day <= 6; $day++) {
-					$hours[] = array('day' => $day, 'open' => '00:00', 'close' => '23:59', 'status' => '0');
+					$hours[] = array('day' => $day, 'open' => '00:00', 'close' => '23:59', 'status' => '1');
 				}
 			} else if ($data['opening_type'] === 'daily') {
 				for ($day = 0; $day <= 6; $day++) {
-					if (in_array($day, $data['daily_days'])) {
-						$hours[] = array('day' => $day, 'open' => $data['daily_hours']['open'], 'close' => $data['daily_hours']['close'], 'status' => '0');
-					} else {
+					if (!empty($data['daily_days']) AND in_array($day, $data['daily_days'])) {
 						$hours[] = array('day' => $day, 'open' => $data['daily_hours']['open'], 'close' => $data['daily_hours']['close'], 'status' => '1');
+					} else {
+						$hours[] = array('day' => $day, 'open' => $data['daily_hours']['open'], 'close' => $data['daily_hours']['close'], 'status' => '0');
 					}
 				}
-			} else if ($data['opening_type'] === 'flexible') {
+			} else if ($data['opening_type'] === 'flexible' AND !empty($data['flexible_hours'])) {
 				$hours = $data['flexible_hours'];
 			}
 
-			if (!empty($hours) AND is_array($hours)) {
+			if (is_numeric($location_id) AND !empty($hours) AND is_array($hours)) {
 				foreach ($hours as $hour) {
 					$this->db->set('location_id', $location_id);
 					$this->db->set('weekday', $hour['day']);
@@ -446,22 +446,26 @@ class Locations_model extends TI_Model {
 	}
 
 	public function deleteLocation($location_id) {
-		if (is_numeric($location_id)) {
-			$this->db->where('location_id', $location_id);
-			$this->db->delete('locations');
+        if (is_numeric($location_id)) $location_id = array($location_id);
 
-			$this->db->where('location_id', $location_id);
-			$this->db->delete('location_tables');
+        if (!empty($location_id) AND ctype_digit(implode('', $location_id))) {
+            $this->db->where_in('location_id', $location_id);
+            $this->db->delete('locations');
 
-			$this->db->where('location_id', $location_id);
-			$this->db->delete('working_hours');
+            if (($affected_rows = $this->db->affected_rows()) > 0) {
+                $this->db->where_in('location_id', $location_id);
+                $this->db->delete('location_tables');
 
-            $this->permalink->deletePermalink('local', 'location_id=' . $location_id);
+                $this->db->where_in('location_id', $location_id);
+                $this->db->delete('working_hours');
 
-			if ($this->db->affected_rows() > 0) {
-				return TRUE;
-			}
-		}
+                foreach ($location_id as $id) {
+                    $this->permalink->deletePermalink('local', 'location_id=' . $id);
+                }
+
+                return $affected_rows;
+            }
+        }
 	}
 
 	public function validateLocation($location_id) {

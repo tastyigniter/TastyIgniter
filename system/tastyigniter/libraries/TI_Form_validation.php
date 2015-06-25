@@ -3,6 +3,10 @@
 class TI_Form_validation extends CI_Form_validation
 {
     public $CI;
+    protected $_old_field_data = array();
+    protected $_old_error_array = array();
+    protected $_old_error_messages = array();
+    protected $old_error_string = '';
 
 	/**
 	 * Is Unique
@@ -35,7 +39,6 @@ class TI_Form_validation extends CI_Form_validation
         return ( ! preg_match('/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/', $str) AND ! preg_match('/^(1[012]|[1-9]):[0-5][0-9](\s)?(?i)(am|pm)$/', $str)) ? FALSE : TRUE;
     }
 
-
     // --------------------------------------------------------------------
 
     /**
@@ -56,6 +59,37 @@ class TI_Form_validation extends CI_Form_validation
     // --------------------------------------------------------------------
 
     /**
+     * Valid Date
+     *
+     * @access  public
+     * @param $str
+     * @param string $post_item
+     * @return bool
+     */
+    public function get_lat_lag($str, $post_item = 'address') {
+        if (!empty($str) AND $post_data = $this->CI->input->post($post_item)) {
+            if (is_array($post_data) AND !empty($post_data['address_1']) AND !empty($post_data['postcode'])) {
+                $address_string = implode(", ", $post_data);
+                $address = urlencode($address_string);
+                $geocode = file_get_contents('http://maps.googleapis.com/maps/api/geocode/json?address=' . $address . '&sensor=false&region=GB');
+                $output = json_decode($geocode);
+                $status = $output->status;
+
+                if ($status === 'OK') {
+                    $_POST['address']['location_lat'] = $output->results[0]->geometry->location->lat;
+                    $_POST['address']['location_lng'] = $output->results[0]->geometry->location->lng;
+
+                    return TRUE;
+                }
+            } else {
+                return FALSE;
+            }
+        }
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
      * XSS Clean
      *
      * @param	string
@@ -67,6 +101,78 @@ class TI_Form_validation extends CI_Form_validation
     }
 
     // --------------------------------------------------------------------
+
+    /**
+     * Translate a field name
+     *
+     * @param	string	the field name
+     * @return	string
+     */
+    protected function _translate_fieldname($fieldname)
+    {
+        // Do we need to translate the field name?
+        // We look for the prefix lang: to determine this
+        if (sscanf($fieldname, 'lang:%s', $line) === 1)
+        {
+            // Were we able to translate the field name?  If not we use $line
+            if (FALSE === ($fieldname = $this->CI->lang->line('form_validation_'.$line, FALSE))
+                // added DEPRECATED support for non-prefixed keys to be used within TI
+                && FALSE === ($fieldname = $this->CI->lang->line($line, FALSE)))
+            {
+                return $line;
+            }
+        }
+
+        return $fieldname;
+    }
+
+    // --------------------------------------------------------------------
+
+    public function error($field, $prefix = '', $suffix = '')
+    {
+        if (!empty($this->_old_field_data[$field]['error']))
+        {
+            if ($prefix === '')
+            {
+                $prefix = $this->_error_prefix;
+            }
+
+            if ($suffix === '')
+            {
+                $suffix = $this->_error_suffix;
+            }
+
+            return $prefix.$this->_old_field_data[$field]['error'].$suffix;
+        }
+
+        return parent::error($field, $prefix, $suffix);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Reset validation vars
+     *
+     * Prevents subsequent validation routines from being affected by the
+     * results of any previous validation routine due to the CI singleton.
+     *
+     * @return	CI_Form_validation
+     */
+    public function reset_validation()
+    {
+        $this->_old_field_data = $this->_field_data;
+        $this->_old_error_array = $this->_error_array;
+        $this->_old_error_messages = $this->_error_messages;
+        $this->old_error_string = $this->error_string;
+
+        $this->_field_data = array();
+        $this->_config_rules = array();
+        $this->_error_array = array();
+        $this->_error_messages = array();
+        $this->error_string = '';
+
+        return $this;
+    }
 
 }
 

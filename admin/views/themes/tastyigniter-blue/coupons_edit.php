@@ -3,31 +3,31 @@
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
 			<ul id="nav-tabs" class="nav nav-tabs">
-				<li class="active"><a href="#general" data-toggle="tab">Coupon</a></li>
-				<li><a href="#coupon-history" data-toggle="tab">History</a></li>
+				<li class="active"><a href="#general" data-toggle="tab"><?php echo lang('text_tab_general'); ?></a></li>
+				<li><a href="#coupon-history" data-toggle="tab"><?php echo lang('text_tab_history'); ?></a></li>
 			</ul>
 		</div>
 
-		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
+		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo $_action; ?>">
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Coupon Name:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_name'); ?></label>
 						<div class="col-sm-5">
 							<input type="text" name="name" id="input-name" class="form-control" value="<?php echo set_value('name', $name); ?>" />
 							<?php echo form_error('name', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-code" class="col-sm-3 control-label">Code:</label>
+						<label for="input-code" class="col-sm-3 control-label"><?php echo lang('label_code'); ?></label>
 						<div class="col-sm-5">
 							<input type="text" name="code" id="input-code" class="form-control" value="<?php echo set_value('code', $code); ?>" />
 							<?php echo form_error('code', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-type" class="col-sm-3 control-label">Type:
-							<span class="help-block">Whether to subtract a fixed amount or percentage from order total.</span>
+						<label for="input-type" class="col-sm-3 control-label"><?php echo lang('label_type'); ?>
+							<span class="help-block"><?php echo lang('help_type'); ?></span>
 						</label>
 						<div class="col-sm-5">
 							<div id="coupon-type" class="btn-group btn-group-toggle" data-toggle="buttons">
@@ -43,18 +43,18 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-discount" class="col-sm-3 control-label">Discount:</label>
+						<label for="input-discount" class="col-sm-3 control-label"><?php echo lang('label_discount'); ?></label>
 						<div class="col-sm-5">
 							<div class="input-group">
 								<input type="text" name="discount" id="input-discount" class="form-control" value="<?php echo set_value('discount', $discount); ?>" />
-								<span id="discount-addon" class="input-group-addon">.00</span>
+								<span id="discount-addon" class="input-group-addon"><?php echo lang('text_leading_zeros'); ?></span>
 							</div>
 							<?php echo form_error('discount', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-redemptions" class="col-sm-3 control-label">Redemptions:
-							<span class="help-block">The total number of times this coupon can be redeem. Enter 0 for unlimited redemptions.</span>
+						<label for="input-redemptions" class="col-sm-3 control-label"><?php echo lang('label_redemption'); ?>
+							<span class="help-block"><?php echo lang('help_redemption'); ?></span>
 						</label>
 						<div class="col-sm-5">
 							<input type="text" name="redemptions" id="input-redemptions" class="form-control" value="<?php echo set_value('redemptions', $redemptions); ?>" />
@@ -62,8 +62,8 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-customer-redemptions" class="col-sm-3 control-label">Customer Redemptions:
-							<span class="help-block">The number of times a specific customer can redeem this coupon. Enter 0 for unlimited redemptions.</span>
+						<label for="input-customer-redemptions" class="col-sm-3 control-label"><?php echo lang('label_customer_redemption'); ?>
+							<span class="help-block"><?php echo lang('help_customer_redemption'); ?></span>
 						</label>
 						<div class="col-sm-5">
 							<input type="text" name="customer_redemptions" id="input-customer-redemptions" class="form-control" value="<?php echo set_value('customer_redemptions', $customer_redemptions); ?>" />
@@ -71,17 +71,17 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-min-total" class="col-sm-3 control-label">Minimum Total:</label>
+						<label for="input-min-total" class="col-sm-3 control-label"><?php echo lang('label_min_total'); ?></label>
 						<div class="col-sm-5">
 							<div class="input-group">
 								<input type="text" name="min_total" id="input-min-total" class="form-control" value="<?php echo set_value('min_total', $min_total); ?>" />
-								<span class="input-group-addon">.00</span>
+								<span class="input-group-addon"><?php echo lang('text_leading_zeros'); ?></span>
 							</div>
 							<?php echo form_error('min_total', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-validity" class="col-sm-3 control-label">Validity:</label>
+						<label for="input-validity" class="col-sm-3 control-label"><?php echo lang('label_validity'); ?></label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle btn-group-4" data-toggle="buttons">
 								<?php if ($validity === 'forever') { ?>
@@ -110,7 +110,7 @@
 					</div>
 					<div id="validity-fixed">
 						<div class="form-group">
-							<label for="start-date" class="col-sm-3 control-label">Date:</label>
+							<label for="start-date" class="col-sm-3 control-label"><?php echo lang('label_date'); ?></label>
 							<div class="col-sm-5">
 								<div class="input-group date">
 									<input type="text" name="validity_times[fixed_date]" id="fixed-date" class="form-control" value="<?php echo set_value('validity_times[fixed_date]', $fixed_date); ?>" />
@@ -120,25 +120,25 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Time:</label>
+							<label for="" class="col-sm-3 control-label"><?php echo lang('label_fixed_time'); ?></label>
 							<div class="col-sm-7">
 								<div class="control-group control-group-3">
 									<div class="btn-group btn-group-toggle" data-toggle="buttons">
 										<?php if ($fixed_time == '24hours') { ?>
-											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="fixed_time" value="24hours" checked="checked">24 Hours</label>
-											<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="fixed_time" value="custom">Custom</label>
+											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="fixed_time" value="24hours" checked="checked"><?php echo lang('text_24_hour'); ?></label>
+											<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="fixed_time" value="custom"><?php echo lang('text_custom'); ?></label>
 										<?php } else { ?>
-											<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="fixed_time" value="24hours">24 Hours</label>
-											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="fixed_time" value="custom" checked="checked">Custom</label>
+											<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="fixed_time" value="24hours"><?php echo lang('text_24_hour'); ?></label>
+											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="fixed_time" value="custom" checked="checked"><?php echo lang('text_custom'); ?></label>
 										<?php } ?>
 									</div>
 									<div class="input-group time">
-										<span class="input-group-addon"><b>From:</b></span>
+										<span class="input-group-addon"><b><?php echo lang('label_fixed_from_time'); ?></b></span>
 										<input type="text" name="validity_times[fixed_from_time]" id="fixed-from-time" class="form-control" value="<?php echo set_value('validity_times[fixed_from_time]', $fixed_from_time); ?>" />
 										<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
 									</div>
 									<div class="input-group time">
-										<span class="input-group-addon"><b>To:</b></span>
+										<span class="input-group-addon"><b><?php echo lang('label_fixed_to_time'); ?></b></span>
 										<input type="text" name="validity_times[fixed_to_time]" id="fixed-to-time" class="form-control" value="<?php echo set_value('validity_times[fixed_to_time]', $fixed_to_time); ?>" />
 										<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
 									</div>
@@ -151,16 +151,16 @@
 					</div>
 					<div id="validity-period">
 						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Date:</label>
+							<label for="" class="col-sm-3 control-label"><?php echo lang('label_date'); ?></label>
 							<div class="col-sm-5">
 								<div class="control-group control-group-2">
 									<div class="input-group date">
-										<span class="input-group-addon"><b>Start:</b></span>
+										<span class="input-group-addon"><b><?php echo lang('label_period_start_date'); ?></b></span>
 										<input type="text" name="validity_times[period_start_date]" id="period-start-date" class="form-control" value="<?php echo set_value('validity_times[period_start_date]', $period_start_date); ?>" />
 										<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 									</div>
 									<div class="input-group date">
-										<span class="input-group-addon"><b>End:</b></span>
+										<span class="input-group-addon"><b><?php echo lang('label_period_end_date'); ?></b></span>
 										<input type="text" name="validity_times[period_end_date]" id="period-end-date" class="form-control" value="<?php echo set_value('validity_times[period_end_date]', $period_end_date); ?>" />
 										<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 									</div>
@@ -172,7 +172,7 @@
 					</div>
 					<div id="validity-recurring">
 						<div class="form-group">
-							<label for="start-date" class="col-sm-3 control-label">Every:</label>
+							<label for="start-date" class="col-sm-3 control-label"><?php echo lang('label_recurring_every'); ?></label>
 							<div class="col-sm-5">
 								<div class="btn-group btn-group-toggle btn-group-7" data-toggle="buttons">
 									<?php foreach ($weekdays as $key => $value) { ?>
@@ -187,25 +187,25 @@
 							</div>
 						</div><?php echo $recurring_from_time; ?>
 						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Time:</label>
+							<label for="" class="col-sm-3 control-label"><?php echo lang('label_recurring_time'); ?></label>
 							<div class="col-sm-7">
 								<div class="control-group control-group-3">
 									<div class="btn-group btn-group-toggle" data-toggle="buttons">
 										<?php if ($recurring_time == '24hours') { ?>
-											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="recurring_time" value="24hours" checked="checked">24 Hours</label>
-											<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="recurring_time" value="custom">Custom</label>
+											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="recurring_time" value="24hours" checked="checked"><?php echo lang('text_24_hour'); ?></label>
+											<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="recurring_time" value="custom"><?php echo lang('text_custom'); ?></label>
 										<?php } else { ?>
-											<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="recurring_time" value="24hours">24 Hours</label>
-											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="recurring_time" value="custom" checked="checked">Custom</label>
+											<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="recurring_time" value="24hours"><?php echo lang('text_24_hour'); ?></label>
+											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="recurring_time" value="custom" checked="checked"><?php echo lang('text_custom'); ?></label>
 										<?php } ?>
 									</div>
 									<div class="input-group time">
-										<span class="input-group-addon"><b>From:</b></span>
+										<span class="input-group-addon"><b><?php echo lang('label_recurring_from_time'); ?></b></span>
 										<input type="text" name="validity_times[recurring_from_time]" id="recurring-from-time" class="form-control" value="<?php echo set_value('validity_times[recurring_from_time]', $recurring_from_time); ?>" />
 										<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
 									</div>
 									<div class="input-group time">
-										<span class="input-group-addon"><b>To:</b></span>
+										<span class="input-group-addon"><b><?php echo lang('label_recurring_to_time'); ?></b></span>
 										<input type="text" name="validity_times[recurring_to_time]" id="recurring-to-time" class="form-control" value="<?php echo set_value('validity_times[recurring_to_time]', $recurring_to_time); ?>" />
 										<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
 									</div>
@@ -217,22 +217,22 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-description" class="col-sm-3 control-label">Description:</label>
+						<label for="input-description" class="col-sm-3 control-label"><?php echo lang('label_description'); ?></label>
 						<div class="col-sm-5">
 							<textarea name="description" id="input-description" class="form-control" rows="7"><?php echo set_value('description', $description); ?></textarea>
 							<?php echo form_error('description', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-status" class="col-sm-3 control-label">Status:</label>
+						<label for="input-status" class="col-sm-3 control-label"><?php echo lang('label_status'); ?></label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($status == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0'); ?>>Disabled</label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1', TRUE); ?>>Enabled</label>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0', TRUE); ?>>Disabled</label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1'); ?>>Enabled</label>
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1'); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('status', '<span class="text-danger">', '</span>'); ?>
@@ -245,10 +245,10 @@
                         <table height="auto" class="table table-striped table-border" id="history">
                             <thead>
                                 <tr>
-                                    <th class="">Order ID</th>
-                                    <th width="55%">Customer</th>
-                                    <th class="text-center">Amount</th>
-                                    <th class="text-right">Date Used</th>
+                                    <th class=""><?php echo lang('column_order_id'); ?></th>
+                                    <th width="55%"><?php echo lang('column_customer'); ?></th>
+                                    <th class="text-center"><?php echo lang('column_amount'); ?></th>
+                                    <th class="text-right"><?php echo lang('column_date_used'); ?></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -263,7 +263,7 @@
                                 <?php } ?>
                                 <?php } else { ?>
                                 <tr>
-                                    <td colspan="6"><?php echo $text_empty; ?></td>
+                                    <td colspan="6"><?php echo lang('text_no_history'); ?></td>
                                 </tr>
                                 <?php } ?>
                             </tbody>
@@ -293,7 +293,7 @@ $(document).ready(function() {
 		if (this.value === 'P') {
 			$('#discount-addon').html('%');
 		} else {
-			$('#discount-addon').html('.00');
+			$('#discount-addon').html('<?php echo lang('text_leading_zeros'); ?>');
 		}
 	});
 

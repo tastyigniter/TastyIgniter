@@ -2,14 +2,18 @@
 
 class Countries extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('pagination');
-		$this->load->model('Countries_model');
-		$this->load->model('Image_tool_model');
-	}
+
+        $this->user->restrict('Site.Countries');
+
+        $this->load->model('Countries_model');
+        $this->load->model('Image_tool_model');
+
+        $this->load->library('pagination');
+
+        $this->lang->load('countries');
+    }
 
 	public function index() {
 		$url = '?';
@@ -52,17 +56,15 @@ class Countries extends Admin_Controller {
 			$data['order_by_active'] = 'ASC';
 		}
 
-		$this->template->setTitle('Countries');
-		$this->template->setHeading('Countries');
-		$this->template->setButton('+ New', array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
-		$this->template->setButton('Delete', array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
-
-		$data['text_empty'] 		= 'There are no countries available.';
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading($this->lang->line('text_heading'));
+		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
+		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
-		$data['sort_name'] 			= site_url('countries').$url.'sort_by=country_name&order_by='.$order_by;
-		$data['sort_iso_2'] 		= site_url('countries').$url.'sort_by=iso_code_2&order_by='.$order_by;
-		$data['sort_iso_3'] 		= site_url('countries').$url.'sort_by=iso_code_3&order_by='.$order_by;
+		$data['sort_name'] 			= site_url('countries'.$url.'sort_by=country_name&order_by='.$order_by);
+		$data['sort_iso_2'] 		= site_url('countries'.$url.'sort_by=iso_code_2&order_by='.$order_by);
+		$data['sort_iso_3'] 		= site_url('countries'.$url.'sort_by=iso_code_3&order_by='.$order_by);
 
 		$data['country_id'] = $this->config->item('country_id');
 
@@ -75,7 +77,7 @@ class Countries extends Admin_Controller {
 				'iso_code_2'	=>	$result['iso_code_2'],
 				'iso_code_3'	=>	$result['iso_code_3'],
 				'flag'			=>	(!empty($result['flag'])) ? $this->Image_tool_model->resize($result['flag']) : $this->Image_tool_model->resize('data/flags/no_flag.png'),
-				'status'		=>	($result['status'] === '1') ? 'Enabled' : 'Disabled',
+                'status'	    => ($result['status'] === '1') ? $this->lang->line('text_enabled') : $this->lang->line('text_disabled'),
 				'edit' 			=> site_url('countries/edit?id=' . $result['country_id'])
 			);
 		}
@@ -85,7 +87,7 @@ class Countries extends Admin_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 
-		$config['base_url'] 		= site_url('countries').$url;
+		$config['base_url'] 		= site_url('countries'.$url);
 		$config['total_rows'] 		= $this->Countries_model->getCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 
@@ -110,17 +112,18 @@ class Countries extends Admin_Controller {
 
 		if ($country_info) {
 			$country_id = $country_info['country_id'];
-			$data['action']	= site_url('countries/edit?id='. $country_id);
+			$data['_action']	= site_url('countries/edit?id='. $country_id);
 		} else {
 		    $country_id = 0;
-			$data['action']	= site_url('countries/edit');
+			$data['_action']	= site_url('countries/edit');
 		}
 
-		$title = (isset($country_info['country_name'])) ? $country_info['country_name'] : 'New';
-		$this->template->setTitle('Country: '. $title);
-		$this->template->setHeading('Country: '. $title);
-		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$title = (isset($country_info['country_name'])) ? $country_info['country_name'] : $this->lang->line('text_new');
+        $this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $title));
+        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
+
+        $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setBackButton('btn btn-back', site_url('countries'));
 
         $this->template->setStyleTag(root_url('assets/js/fancybox/jquery.fancybox.css'), 'jquery-fancybox-css');
@@ -161,12 +164,12 @@ class Countries extends Admin_Controller {
 
     private function _saveCountry() {
     	if ($this->validateForm() === TRUE) {
-            $save_type = (! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
+            $save_type = (! is_numeric($this->input->get('id'))) ? $this->lang->line('text_added') : $this->lang->line('text_updated');
 
 			if ($country_id = $this->Countries_model->saveCountry($this->input->get('id'), $this->input->post())) {
-				$this->alert->set('success', 'Country ' . $save_type . ' successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, ' . $save_type . ' updated.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Country '.$save_type));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $save_type));
 			}
 
 			return $country_id;
@@ -174,24 +177,27 @@ class Countries extends Admin_Controller {
 	}
 
     private function _deleteCountry() {
-    	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $value) {
-				$this->Countries_model->deleteCountry($value);
-			}
+    	if ($this->input->post('delete')) {
+            $deleted_rows = $this->Countries_model->deleteCountry($this->input->post('delete'));
 
-			$this->alert->set('success', 'Country(s) deleted successfully!');
-		}
+            if ($deleted_rows > 0) {
+                $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Countries': 'Country';
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), $prefix.' '.$this->lang->line('text_deleted')));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted')));
+            }
 
-		return TRUE;
+            return TRUE;
+        }
 	}
 
     private function validateForm() {
-		$this->form_validation->set_rules('country_name', 'Country', 'xss_clean|trim|required|min_length[2]|max_length[128]');
-		$this->form_validation->set_rules('iso_code_2', 'ISO Code 2', 'xss_clean|trim|required|exact_length[2]');
-		$this->form_validation->set_rules('iso_code_3', 'ISO Code 3', 'xss_clean|trim|required|exact_length[3]');
-		$this->form_validation->set_rules('flag', 'Flag', 'xss_clean|trim|required');
-		$this->form_validation->set_rules('format', 'Format', 'xss_clean|trim|min_length[2]');
-		$this->form_validation->set_rules('status', 'Status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('country_name', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+		$this->form_validation->set_rules('iso_code_2', 'lang:label_iso_code2', 'xss_clean|trim|required|exact_length[2]');
+		$this->form_validation->set_rules('iso_code_3', 'lang:label_iso_code3', 'xss_clean|trim|required|exact_length[3]');
+		$this->form_validation->set_rules('flag', 'lang:label_flag', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('format', 'lang:label_format', 'xss_clean|trim|min_length[2]');
+		$this->form_validation->set_rules('status', 'lang:label_status', 'xss_clean|trim|required|integer');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;

@@ -1,15 +1,21 @@
 <?php echo get_header(); ?>
 <?php echo get_partial('content_top'); ?>
+
+<?php if ($this->alert->get()) { ?>
+    <div id="notification">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <?php echo $this->alert->display(); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+
 <div id="page-content">
 	<div class="container">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="heading-section">
-				</div>
-			</div>
-		</div>
-
-		<div class="row">
+		<div class="row top-spacing">
 			<?php echo get_partial('content_left'); ?>
 			<?php
 				if (partial_exists('content_left') AND partial_exists('content_right')) {
@@ -25,12 +31,12 @@
 				<div class="row">
 					<div class="col-md-12">
 						<ul id="nav-tabs" class="nav nav-tabs nav-tabs-line">
-							<li class="active"><a href="#details" data-toggle="tab"><?php echo $text_my_details; ?></a></li>
-							<li><a href="#address" data-toggle="tab"><?php echo $text_default_address; ?></a></li>
-							<li><a href="#cart" data-toggle="tab"><?php echo $text_cart; ?></a></li>
-							<li><a href="#orders" data-toggle="tab"><?php echo $text_orders; ?></a></li>
-							<li><a href="#reservations" data-toggle="tab"><?php echo $text_reservations; ?></a></li>
-							<li><a href="#inbox" data-toggle="tab"><?php echo $text_inbox; ?></a></li>
+							<li class="active"><a href="#details" data-toggle="tab"><?php echo lang('text_my_details'); ?></a></li>
+							<li><a href="#address" data-toggle="tab"><?php echo lang('text_default_address'); ?></a></li>
+							<li><a href="#cart" data-toggle="tab"><?php echo lang('text_cart'); ?></a></li>
+							<li><a href="#orders" data-toggle="tab"><?php echo lang('text_orders'); ?></a></li>
+							<li><a href="#reservations" data-toggle="tab"><?php echo lang('text_reservations'); ?></a></li>
+							<li><a href="#inbox" data-toggle="tab"><?php echo sprintf(lang('text_inbox'), $inbox_total); ?></a></li>
 						</ul>
 					</div>
 
@@ -42,31 +48,31 @@
 									<table class="table table-none">
 										<tbody>
 											<tr>
-												<td><b><?php echo $entry_first_name; ?></b></td>
+												<td><b><?php echo lang('label_first_name'); ?></b></td>
 												<td><?php echo $customer_info['first_name']; ?></td>
 											</tr>
 											<tr>
-												<td><b><?php echo $entry_last_name; ?></b></td>
+												<td><b><?php echo lang('label_last_name'); ?></b></td>
 												<td><?php echo $customer_info['last_name']; ?></td>
 											</tr>
 											<tr>
-												<td><b><?php echo $entry_email; ?></b></td>
+												<td><b><?php echo lang('label_email'); ?></b></td>
 												<td><?php echo $customer_info['email']; ?></td>
 											</tr>
 											<tr>
-												<td><b><?php echo $entry_password; ?></b></td>
-												<td><a class="btn btn-default" href="<?php echo $password_url; ?>"><?php echo $text_password; ?></a></td>
+												<td><b><?php echo lang('label_password'); ?></b></td>
+												<td><a class="btn btn-default" href="<?php echo $password_url; ?>"><?php echo lang('text_change_password'); ?></a></td>
 											</tr>
 											<tr>
-												<td><b><?php echo $entry_telephone; ?></b></td>
+												<td><b><?php echo lang('label_telephone'); ?></b></td>
 												<td><?php echo $customer_info['telephone']; ?></td>
 											</tr>
 											<tr>
-												<td><b><?php echo $entry_s_question; ?></b></td>
+												<td><b><?php echo lang('label_s_question'); ?></b></td>
 												<td><?php echo $customer_info['security_question']; ?></td>
 											</tr>
 											<tr>
-												<td><b><?php echo $entry_s_answer; ?></b></td>
+												<td><b><?php echo lang('label_s_answer'); ?></b></td>
 												<td><?php echo $customer_info['security_answer']; ?></td>
 											</tr>
 										</tbody>
@@ -78,9 +84,14 @@
 							<div id="address" class="tab-pane">
 								<div class="">
 									<?php if ($address_info) { ?>
-										<address><?php echo $address_info; ?></address>
+                                    <div class="btn-group btn-group-md col-md-12">
+                                        <label class="btn btn-default wrap-all col-xs-3">
+                                            <a class="edit-address pull-right" href="<?php echo $address_info_edit; ?>" data-original-title="" title=""><?php echo lang('text_edit'); ?></a>
+                                            <address class="text-left"><?php echo $address_info; ?></address>
+                                        </label>
+                                    </div>
 									<?php } else { ?>
-										<p><?php echo $text_no_default_add; ?></p>
+										<p><?php echo lang('text_no_default_address'); ?></p>
 									<?php } ?>
 								</div>
 							</div>
@@ -91,8 +102,8 @@
 										<table class="table table-none">
 											<thead>
 												<tr>
-													<th><?php echo $column_cart_items; ?></th>
-													<th><?php echo $column_cart_total; ?></th>
+													<th><?php echo lang('column_cart_items'); ?></th>
+													<th><?php echo lang('column_cart_total'); ?></th>
 													<th></th>
 												</tr>
 											</thead>
@@ -100,14 +111,14 @@
 												<tr>
 													<td><?php echo $cart_items; ?></td>
 													<td><?php echo $cart_total; ?></td>
-													<td><a class="btn btn-success" href="<?php echo $button_checkout; ?>"><?php echo $text_checkout; ?></a></td>
+													<td><a class="btn btn-primary" href="<?php echo $checkout_url; ?>"><?php echo lang('text_checkout'); ?></a></td>
 												</tr>
 											</tbody>
 										</table>
 									</div>
 								<?php } else { ?>
 									<div class="panel-body">
-										<p><?php echo $text_no_cart_items; ?></p>
+										<p><?php echo lang('text_no_cart_items'); ?></p>
 									</div>
 								<?php } ?>
 							</div>
@@ -118,9 +129,9 @@
 										<table class="table table-none">
 											<thead>
 												<tr>
-													<th><?php echo $column_id; ?></th>
-													<th width="80%" class="text-center"><?php echo $column_status; ?></th>
-													<th><?php echo $column_date; ?></th>
+													<th><?php echo lang('column_id'); ?></th>
+													<th width="80%" class="text-center"><?php echo lang('column_status'); ?></th>
+													<th><?php echo lang('column_date'); ?></th>
 												</tr>
 											</thead>
 											<tbody>
@@ -136,7 +147,7 @@
 									</div>
 								<?php } else { ?>
 									<div class="panel-body">
-										<p><?php echo $text_no_orders; ?></p>
+										<p><?php echo lang('text_no_orders'); ?></p>
 									</div>
 								<?php } ?>
 							</div>
@@ -147,9 +158,9 @@
 										<table class="table table-none">
 											<thead>
 												<tr>
-													<th><?php echo $column_id; ?></th>
-													<th><?php echo $column_status; ?></th>
-													<th><?php echo $column_date; ?></th>
+                                                    <th><?php echo lang('column_id'); ?></th>
+                                                    <th><?php echo lang('column_status'); ?></th>
+                                                    <th><?php echo lang('column_date'); ?></th>
 												</tr>
 											</thead>
 											<tbody>
@@ -165,7 +176,7 @@
 									</div>
 								<?php } else { ?>
 									<div class="panel-body">
-										<p><?php echo $text_no_reservations; ?></p>
+										<p><?php echo lang('text_no_reservations'); ?></p>
 									</div>
 								<?php } ?>
 							</div>
@@ -176,8 +187,8 @@
 										<table class="table table-none">
 											<thead>
 												<tr>
-													<th><?php echo $column_date; ?></th>
-													<th><?php echo $column_subject; ?></th>
+                                                    <th><?php echo lang('column_date'); ?></th>
+                                                    <th><?php echo lang('column_subject'); ?></th>
 												</tr>
 											</thead>
 											<tbody>
@@ -195,7 +206,7 @@
 									</div>
 								<?php } else { ?>
 									<div class="panel-body">
-										<p><?php echo $text_no_inbox; ?></p>
+                                        <p><?php echo lang('text_no_inbox'); ?></p>
 									</div>
 								<?php } ?>
 							</div>

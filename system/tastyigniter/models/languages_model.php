@@ -94,8 +94,14 @@ class Languages_model extends TI_Model {
 			$this->db->set('image', $save['image']);
 		}
 
-		if (!empty($save['directory'])) {
-			$this->db->set('directory', $save['directory']);
+		if (!empty($save['idiom'])) {
+			$this->db->set('idiom', $save['idiom']);
+		}
+
+		if ($save['can_delete'] === '1') {
+			$this->db->set('can_delete', '1');
+		} else {
+			$this->db->set('can_delete', '0');
 		}
 
 		if ($save['status'] === '1') {
@@ -116,14 +122,15 @@ class Languages_model extends TI_Model {
 	}
 
 	public function deleteLanguage($language_id) {
-		if (is_numeric($language_id)) {
-			$this->db->where('language_id', $language_id);
-			$this->db->delete('languages');
+        if (is_numeric($language_id)) $language_id = array($language_id);
 
-			if ($this->db->affected_rows() > 0) {
-				return TRUE;
-			}
-		}
+        if (!empty($language_id) AND ctype_digit(implode('', $language_id))) {
+            $this->db->where('can_delete', '0');
+            $this->db->where_in('language_id', $language_id);
+            $this->db->delete('languages');
+
+            return $this->db->affected_rows();
+        }
 	}
 }
 

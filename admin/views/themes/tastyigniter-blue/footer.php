@@ -1,23 +1,11 @@
 <?php
 		$locations = array();
-		if ($this->user->islogged()) {
-			$no_sidenav = '';
-			//$this->load->model('Locations_model');
-			$results = array(); //$this->Locations_model->getLocations();
-
-			foreach ($results as $result) {
-				$locations[] = array(
-					'location_id'	=>	$result['location_id'],
-					'location_name'	=>	$result['location_name'],
-				);
-			}
-		}
 ?>
 </div>
 <div id="footer" class="<?php echo ($this->user->islogged()) ? '' : 'wrap-none'; ?>">
 	<div class="row navbar-footer">
 		<div class="col-sm-8">
-			<p class="text-copyright">&copy; <?php echo date('Y'); ?> TastyIgniter. All Rights Reserved <?php echo config_item('ti_version'); ?></p>
+			<p class="text-copyright"><?php echo sprintf(lang('text_copyright'), date('Y'), config_item('ti_version')); ?></p>
 		</div>
 		<div id="profiler" class="col-sm-4"></div>
 		<?php if ($locations) { ?>
@@ -58,7 +46,7 @@ $(document).ready(function() {
 	//Delete Confirmation Box
 	$('#list-form').submit(function(){
 		//if ($('input[name=\'delete\']').attr("checked") == "checked") {
-			if (!confirm('This cannot be undone! Are you sure you want to do this?')) {
+			if (!confirm('<?php echo lang('alert_warning_confirm'); ?>')) {
 				return false;
 			}
 		//}
@@ -67,43 +55,48 @@ $(document).ready(function() {
 	//Uninstall Confirmation Box
 	$('a').click(function(){
 		if ($(this).attr('href') != null && $(this).attr('href').indexOf('uninstall', 1) != -1) {
-			if (!confirm('This cannot be undone! Are you sure you want to do this?')) {
+			if (!confirm('<?php echo lang('alert_warning_confirm'); ?>')) {
 				return false;
 			}
 		}
 	});
 	
 	if (document.location.toString().toLowerCase().indexOf(active_menu, 1) != -1) {
-		//$('.' + active_menu).parents('.collapse').addClass('in');
+        //$('.' + active_menu).parents('.collapse').addClass('in');
 		$('#side-menu .' + active_menu).addClass('active');
-		$('#side-menu .' + active_menu).parents('.collapse').parent().addClass('active');
-		$('#side-menu .' + active_menu).parents('.collapse').collapse('show');
-		$('#side-menu .' + active_menu).parents('.collapse').collapse('show');
-	}
+        $('#side-menu .' + active_menu).parents('.collapse').parent().addClass('active');
+        $('#side-menu .' + active_menu).parents('.collapse').collapse('show');
+        $('#side-menu .' + active_menu).parents('.collapse').collapse('show');
+    }
 
-	if (window.location.hash) {
-		var hash = window.location.hash.substring(1); //Puts hash in variable, and removes the # character
+    if (window.location.hash) {
+        var hash = window.location.hash.substring(1); //Puts hash in variable, and removes the # character
 		$('html,body').animate({scrollTop: $('#wrapper').offset().top - 45}, 800);
-		$('#nav-tabs a[href="#'+hash+'"]').tab('show');
-	}
+        $('#nav-tabs a[href="#'+hash+'"]').tab('show');
+    }
 
-	$(document).on('change', '.btn-group-toggle input[type="radio"], .btn-group input[type="radio"]', function() {
-		var btn = $(this).parent();
-		var parent = btn.parent();
+    if (window.location.search.indexOf('filter_', 1) != -1) {
+        $('.btn-filter').trigger('click');
+    }
 
-		if (btn.attr('data-btn')) {
-			parent.find('.btn').removeClass('btn-primary btn-success btn-info btn-warning btn-danger');
-			btn.addClass(btn.attr('data-btn'));
-		} else {
-			btn.addClass('btn-success');
-		}
-	});
+    $(document).on('change', '.btn-group-toggle input[type="radio"], .btn-group input[type="radio"]', function() {
+        var btn = $(this).parent();
+        var parent = btn.parent();
+        var activeClass = (btn.attr('data-btn')) ? btn.attr('data-btn'): 'btn-success';
 
-	$('.btn-group-toggle .active input[type="radio"], .btn-group .active input[type="radio"]').trigger('change');
+        parent.find('.btn').each(function() {
+            removeClass = ($(this).attr('data-btn')) ? $(this).attr('data-btn') : activeClass;
+            $(this).removeClass(removeClass);
+        });
 
-	/*if ($('.form-group .text-danger').length > 0) {
-		$('.form-group .text-danger').parents('.form-group').addClass('has-error');
-	}*/
+        btn.addClass(activeClass);
+    });
+
+    $('.btn-group-toggle input[type="radio"]:checked, .btn-group-toggle .active input[type="radio"], .btn-group .active input[type="radio"]').trigger('change');
+
+    /*if ($('.form-group .text-danger').length > 0) {
+        $('.form-group .text-danger').parents('.form-group').addClass('has-error');
+    }*/
 });
 
 function saveClose() {

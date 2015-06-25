@@ -3,15 +3,15 @@
 	<div class="col-md-12">
 		<div class="panel panel-default panel-table">
 			<div class="panel-heading">
-				<h3 class="panel-title">Theme List</h3>
+				<h3 class="panel-title"><?php echo lang('text_list'); ?></h3>
 			</div>
-			<form role="form" id="list-form" accept-charset="utf-8" method="post" action="<?php echo current_url(); ?>">
+			<form role="form" id="list-form" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
 				<div class="table-responsive">
 					<table border="0" class="table table-striped table-border">
 						<thead>
 							<tr>
 								<th></th>
-								<th>Name</th>
+								<th><?php echo lang('column_name'); ?></th>
 								<th class="text-center"></th>
 							</tr>
 						</thead>
@@ -19,28 +19,28 @@
 							<?php if ($themes) { ?>
 							<?php foreach ($themes as $theme) { ?>
 							<tr>
-								<td><a class="preview-thumb" title="Click to enlarge." href="<?php echo $theme['preview']; ?>">
+								<td><a class="preview-thumb" title="<?php echo lang('text_enlarge'); ?>" href="<?php echo $theme['preview']; ?>">
 									<img class="img-responsive img-thumbnail" alt="" src="<?php echo $theme['thumbnail']; ?>" style="height:150px !important" /></td>
 								<td><?php echo $theme['title']; ?><br />
 									<i><?php echo $theme['description']; ?></i><br />
-                                    <span class="text-mute text-sm"><b>Location:</b> <?php echo $theme['location']; ?></span>
+                                    <span class="text-mute text-sm"><b><?php echo lang('text_location'); ?>:</b> <?php echo $theme['location']; ?></span>
 								</td>
 								<td class="text-center">
 									<?php if ($theme['active'] === '1') { ?>
-										<a class="btn btn-edit" title="Customize" href="<?php echo $theme['edit']; ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
-										<a class="btn btn-warning" disabled="disabled" title="Default"><i class="fa fa-star"></i></a>&nbsp;&nbsp;
-										<a class="btn btn-info preview-thumb" title="Preview" href="<?php echo $theme['preview']; ?>" title="Default"><i class="fa fa-eye"></i></a>
+										<a class="btn btn-edit" title="<?php echo lang('text_customize'); ?>" href="<?php echo $theme['edit']; ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
+										<a class="btn btn-warning" disabled="disabled" title="<?php echo lang('text_is_default'); ?>"><i class="fa fa-star"></i></a>&nbsp;&nbsp;
+										<a class="btn btn-info preview-thumb" title="<?php echo lang('text_preview'); ?>" href="<?php echo $theme['preview']; ?>" title="Default"><i class="fa fa-eye"></i></a>
 									<?php } else {?>
-										<a class="btn btn-edit" title="Customize" href="<?php echo $theme['edit']; ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
-										<a class="btn btn-warning" title="Set Default" href="<?php echo $theme['activate']; ?>"><i class="fa fa-star"></i></a>&nbsp;&nbsp;
-										<a class="btn btn-info preview-thumb" title="Preview" href="<?php echo $theme['preview']; ?>" title="Default"><i class="fa fa-eye"></i></a>
+										<a class="btn btn-edit" title="<?php echo lang('text_customize'); ?>" href="<?php echo $theme['edit']; ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
+										<a class="btn btn-warning" title="<?php echo lang('text_set_default'); ?>" href="<?php echo $theme['activate']; ?>"><i class="fa fa-star"></i></a>&nbsp;&nbsp;
+										<a class="btn btn-info preview-thumb" title="<?php echo lang('text_preview'); ?>" href="<?php echo $theme['preview']; ?>" title="Default"><i class="fa fa-eye"></i></a>
 									<?php } ?>
 								</td>
 							</tr>
 							<?php } ?>
 							<?php } else {?>
 							<tr>
-								<td colspan="3"><?php echo $text_empty; ?></td>
+								<td colspan="3"><?php echo lang('text_empty'); ?></td>
 							</tr>
 							<?php } ?>
 						</tbody>

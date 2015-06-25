@@ -1,14 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-class Paypal_express extends Ext_Controller {
+class Paypal_express extends Main_Controller {
 
     public function __construct() {
         parent::__construct();
         $this->load->library('customer');
         $this->load->model('Orders_model');
         $this->load->model('Paypal_model');
-        $this->load->model('Extensions_model');
-
     }
 
     public function index() {
@@ -16,7 +14,7 @@ class Paypal_express extends Ext_Controller {
             show_404(); 																		// Whoops, show 404 error page!
         }
 
-        $payment = $this->Extensions_model->getPayment('paypal_express');
+        $payment = $this->extension->getPayment('paypal_express');
 
         // START of retrieving lines from language file to pass to view.
         $data['code'] 			= $payment['name'];
@@ -81,8 +79,21 @@ class Paypal_express extends Ext_Controller {
             }
         }
 
-        $this->alert->set('alert', $this->lang->line('alert_server_error'));
+        $this->alert->set('alert', $this->lang->line('alert_error_server'));
         redirect('checkout');
+    }
+
+    public function cancel() {
+        $order_data = $this->session->userdata('order_data'); 							// retrieve order details from session userdata
+
+        if (!empty($order_data) AND $this->input->get('token')) { 						// check if token and PayerID is in $_GET data
+
+            $token = $this->input->get('token'); 												// retrieve token from $_GET data
+
+
+//        $this->alert->set('alert', $this->lang->line('alert_error_server'));
+            redirect('checkout');
+        }
     }
 }
 

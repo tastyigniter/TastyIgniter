@@ -1,15 +1,17 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-class Admin_reservation_module extends Ext_Controller {
+class Admin_reservation_module extends Admin_Controller {
 
 	public function index($data = array()) {
+        $this->user->restrict('Module.ReservationModule');
+
         if (!empty($data)) {
             $data['title'] = (isset($data['title'])) ? $data['title'] : 'Reservation Module';
 
             $this->template->setTitle('Module: ' . $data['title']);
             $this->template->setHeading('Module: ' . $data['title']);
-            $this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-            $this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+            $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+            $this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
             $this->template->setBackButton('btn btn-back', site_url('extensions'));
 
             if ($this->input->post() AND $this->_updateModule() === TRUE) {
@@ -31,7 +33,7 @@ class Admin_reservation_module extends Ext_Controller {
 			$update['type'] 			= 'module';
 			$update['name'] 			= $this->input->get('name');
 			$update['title'] 			= $this->input->post('title');
-			$update['extension_id'] 	= (int) $this->input->get('extension_id');
+			$update['extension_id'] 	= (int) $this->input->get('id');
 
 			if ($this->Extensions_model->updateExtension($update, '1')) {
 				$this->alert->set('success', 'Reservation Module updated successfully.');

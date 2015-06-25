@@ -3,27 +3,27 @@
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
 			<ul id="nav-tabs" class="nav nav-tabs">
-				<li class="active"><a href="#general" data-toggle="tab">Category Details</a></li>
+				<li class="active"><a href="#general" data-toggle="tab"><?php echo lang('text_tab_general'); ?></a></li>
 			</ul>
 		</div>
 
-		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
+		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo $_action; ?>">
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Name:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_name'); ?></label>
 						<div class="col-sm-5">
 							<input type="text" name="name" id="input-name" class="form-control" value="<?php echo set_value('name', $name); ?>"/>
 							<?php echo form_error('name', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-slug" class="col-sm-3 control-label">Slug:
-							<span class="help-block">Use ONLY alpha-numeric lowercase characters, underscores or dashes and make sure it is unique GLOBALLY.</span>
+						<label for="input-slug" class="col-sm-3 control-label"><?php echo lang('label_permalink_slug'); ?>
+							<span class="help-block"><?php echo lang('help_permalink'); ?></span>
 						</label>
 						<div class="col-sm-5">
                             <div class="input-group">
-                                <span class="input-group-addon"><?php echo $permalink['url']; ?></span>
+                                <span class="input-group-addon text-sm"><?php echo $permalink['url']; ?></span>
                                 <input type="hidden" name="permalink[permalink_id]" value="<?php echo set_value('permalink[permalink_id]', $permalink['permalink_id']); ?>"/>
                                 <input type="text" name="permalink[slug]" id="input-slug" class="form-control" value="<?php echo set_value('permalink[slug]', $permalink['slug']); ?>"/>
                             </div>
@@ -32,10 +32,10 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Parent:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_parent'); ?></label>
 						<div class="col-sm-5">
 							<select name="parent_id" id="category" class="form-control">
-								<option value="">None</option>
+								<option value=""><?php echo lang('text_none'); ?></option>
 							<?php foreach ($categories as $category) { ?>
 							<?php if ($category['category_id'] === $parent_id) { ?>
 								<option value="<?php echo $category['category_id']; ?>" <?php echo set_select('parent', $category['category_id'], TRUE); ?> ><?php echo $category['category_name']; ?></option>
@@ -48,15 +48,15 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-description" class="col-sm-3 control-label">Description:</label>
+						<label for="input-description" class="col-sm-3 control-label"><?php echo lang('label_description'); ?></label>
 						<div class="col-sm-5">
 							<textarea name="description" id="input-description" class="form-control" rows="7"><?php echo set_value('description', $description); ?></textarea>
 							<?php echo form_error('description', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="" class="col-sm-3 control-label">Image:
-							<span class="help-block">Select a file to update category image, otherwise leave blank.</span>
+						<label for="" class="col-sm-3 control-label"><?php echo lang('label_image'); ?>
+							<span class="help-block"><?php echo lang('help_photo'); ?></span>
 						</label>
 						<div class="col-sm-5">
 							<div class="thumbnail imagebox imagebox-sm" id="selectImage">
@@ -75,7 +75,14 @@
 							<?php echo form_error('image', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
-				</div>
+                    <div class="form-group">
+                        <label for="input-priority" class="col-sm-3 control-label"><?php echo lang('label_priority'); ?></label>
+                        <div class="col-sm-5">
+                            <input type="text" name="priority" id="input-priority" class="form-control" value="<?php echo set_value('priority', $priority); ?>"/>
+                            <?php echo form_error('priority', '<span class="text-danger">', '</span>'); ?>
+                        </div>
+                    </div>
+                </div>
 			</div>
 		</form>
 	</div>

@@ -111,16 +111,16 @@ class Countries_model extends TI_Model {
 		return ($query === TRUE AND is_numeric($country_id)) ? $country_id : FALSE;
 	}
 
-	public function deleteCountry($country_id) {
-		if (is_numeric($country_id)) {
-			$this->db->where('country_id', $country_id);
-			$this->db->delete('countries');
+    public function deleteCountry($country_id) {
+        if (is_numeric($country_id)) $country_id = array($country_id);
 
-			if ($this->db->affected_rows() > 0) {
-				return TRUE;
-			}
-		}
-	}
+        if (!empty($country_id) AND ctype_digit(implode('', $country_id))) {
+            $this->db->where_in('country_id', $country_id);
+            $this->db->delete('countries');
+
+            return $this->db->affected_rows();
+        }
+    }
 }
 
 /* End of file countries_model.php */

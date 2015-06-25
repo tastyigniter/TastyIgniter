@@ -3,15 +3,15 @@
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
 			<ul id="nav-tabs" class="nav nav-tabs">
-				<li class="active"><a href="#general" data-toggle="tab">Review Details</a></li>
+				<li class="active"><a href="#general" data-toggle="tab"><?php echo lang('text_tab_general'); ?></a></li>
 			</ul>
 		</div>
 
-		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
+		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo $_action; ?>">
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="input-location" class="col-sm-3 control-label">Restaurant:</label>
+						<label for="input-location" class="col-sm-3 control-label"><?php echo lang('label_location'); ?></label>
 						<div class="col-sm-5">
 							<select name="location_id" id="input-location" class="form-control">
 								<?php foreach ($locations as $location) { ?>
@@ -26,29 +26,29 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-show-menu-images" class="col-sm-3 control-label">Sale Type:</label>
+						<label for="input-show-menu-images" class="col-sm-3 control-label"><?php echo lang('label_sale_type'); ?></label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($sale_type == 'reservation') { ?>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="sale_type" value="order" <?php echo set_radio('show_menu_images', 'order'); ?>>Order</label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="sale_type" value="reservation" <?php echo set_radio('show_menu_images', 'reservation', TRUE); ?>>Reservation</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="sale_type" value="order" <?php echo set_radio('sale_type', 'order'); ?>><?php echo lang('text_order'); ?></label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="sale_type" value="reservation" <?php echo set_radio('sale_type', 'reservation', TRUE); ?>><?php echo lang('text_reservation'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="sale_type" value="order" <?php echo set_radio('show_menu_images', 'order', TRUE); ?>>Order</label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="sale_type" value="reservation" <?php echo set_radio('show_menu_images', 'reservation'); ?>>Reservation</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="sale_type" value="order" <?php echo set_radio('sale_type', 'order', TRUE); ?>><?php echo lang('text_order'); ?></label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="sale_type" value="reservation" <?php echo set_radio('sale_type', 'reservation'); ?>><?php echo lang('text_reservation'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('sale_type', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-order" class="col-sm-3 control-label">Sale ID:</label>
+						<label for="input-order" class="col-sm-3 control-label"><?php echo lang('label_sale_id'); ?></label>
 						<div class="col-sm-5">
 							<input type="text" name="sale_id" id="input-order" class="form-control" value="<?php echo set_value('sale_id', $sale_id); ?>"/>
 							<?php echo form_error('sale_id', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-author" class="col-sm-3 control-label">Author:</label>
+						<label for="input-author" class="col-sm-3 control-label"><?php echo lang('label_author'); ?></label>
 						<div class="col-sm-5">
 							<input type="text" name="customer_id" id="input-author" class="form-control" value="<?php echo set_value('customer_id', $customer_id); ?>"/>
 							<input type="hidden" name="author" value="<?php echo set_value('author', $author); ?>"/>
@@ -56,16 +56,16 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-rating" class="col-sm-3 control-label">Rating:</label>
+						<label for="input-rating" class="col-sm-3 control-label"><?php echo lang('label_rating'); ?></label>
 						<div class="col-sm-5">
 							<ul class="list-inline rating-inline">
-								<li>Quality<br />
+								<li><?php echo lang('label_quality'); ?><br />
 									<div class="rating rating-star" data-score="<?php echo $quality; ?>" data-score-name="rating[quality]"></div>
 								</li>
-								<li>Delivery<br />
+								<li><?php echo lang('label_delivery'); ?><br />
 									<div class="rating rating-star" data-score="<?php echo $delivery; ?>" data-score-name="rating[delivery]"></div>
 								</li>
-								<li>Service<br />
+								<li><?php echo lang('label_service'); ?><br />
 									<div class="rating rating-star" data-score="<?php echo $service; ?>" data-score-name="rating[service]"></div>
 								</li>
                                 <?php echo form_error('rating[quality]', '<span class="text-danger">', '</span>'); ?>
@@ -75,22 +75,22 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-review-text" class="col-sm-3 control-label">Review Text:</label>
+						<label for="input-review-text" class="col-sm-3 control-label"><?php echo lang('label_text'); ?></label>
 						<div class="col-sm-5">
 							<textarea name="review_text" id="input-review-text" class="form-control" rows="7"><?php echo set_value('review_text', $review_text); ?></textarea>
 							<?php echo form_error('review_text', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-status" class="col-sm-3 control-label">Review Status:</label>
+						<label for="input-status" class="col-sm-3 control-label"><?php echo lang('label_status'); ?></label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($review_status == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="review_status" value="0" <?php echo set_radio('review_status', '0'); ?>>Pending Review</label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="review_status" value="1" <?php echo set_radio('review_status', '1', TRUE); ?>>Approved</label>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="review_status" value="0" <?php echo set_radio('review_status', '0'); ?>><?php echo lang('text_pending_review'); ?></label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="review_status" value="1" <?php echo set_radio('review_status', '1', TRUE); ?>><?php echo lang('text_approved'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="review_status" value="0" <?php echo set_radio('review_status', '0', TRUE); ?>>Pending Review</label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="review_status" value="1" <?php echo set_radio('review_status', '1'); ?>>Approved</label>
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="review_status" value="0" <?php echo set_radio('review_status', '0', TRUE); ?>><?php echo lang('text_pending_review'); ?></label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="review_status" value="1" <?php echo set_radio('review_status', '1'); ?>><?php echo lang('text_approved'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('review_status', '<span class="text-danger">', '</span>'); ?>
@@ -102,6 +102,24 @@
 	</div>
 </div>
 <script type="text/javascript"><!--
+$(document).ready(function() {
+    $('.rating-star').raty({
+        score: function() {
+            return $(this).attr('data-score');
+        },
+        scoreName: function() {
+            return $(this).attr('data-score-name');
+        },
+        readOnly: function() {
+            return $(this).attr('data-readonly') == 'true';
+        },
+        hints: ['Bad', 'Worse', 'Good', 'Average', 'Excellent'],
+        starOff : 'fa fa-star-o',
+        starOn : 'fa fa-star',
+        cancel : false, half : false, starType : 'i'
+    });
+});
+
 $('input[name=\'customer_id\']').select2({
 	placeholder: 'Start typing...',
 	minimumInputLength: 2,

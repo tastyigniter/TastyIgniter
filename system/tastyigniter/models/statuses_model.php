@@ -2,8 +2,45 @@
 
 class Statuses_model extends TI_Model {
 
-	public function getStatuses($for = FALSE) {
+    public function getCount($filter = array()) {
+        if (!empty($filter['filter_type'])) {
+            $this->db->where('status_for', $filter['filter_type']);
+        }
+
+        $this->db->from('statuses');
+        return $this->db->count_all_results();
+    }
+
+    public function getList($filter = array()) {
+        if (!empty($filter['page']) AND $filter['page'] !== 0) {
+            $filter['page'] = ($filter['page'] - 1) * $filter['limit'];
+        }
+
+        if ($this->db->limit($filter['limit'], $filter['page'])) {
+            $this->db->from('statuses');
+
+            if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+                $this->db->order_by($filter['sort_by'], $filter['order_by']);
+            }
+
+            if (isset($filter['filter_type']) AND is_numeric($filter['filter_type'])) {
+                $this->db->where('status_for', $filter['filter_type']);
+            }
+
+            $query = $this->db->get();
+            $result = array();
+
+            if ($query->num_rows() > 0) {
+                $result = $query->result_array();
+            }
+
+            return $result;
+        }
+    }
+
+    public function getStatuses($for = FALSE) {
 		$this->db->from('statuses');
+        $this->db->order_by('status_for', 'ASC');
 
 		if (!empty($for)) {
 			$this->db->where('status_for', $for);
@@ -162,14 +199,14 @@ class Statuses_model extends TI_Model {
 	}
 
 	public function deleteStatus($status_id) {
-		if (is_numeric($status_id)) {
-			$this->db->where('status_id', $status_id);
-			$this->db->delete('statuses');
+        if (is_numeric($status_id)) $status_id = array($status_id);
 
-			if ($this->db->affected_rows() > 0) {
-				return TRUE;
-			}
-		}
+        if (!empty($status_id) AND ctype_digit(implode('', $status_id))) {
+            $this->db->where_in('status_id', $status_id);
+            $this->db->delete('statuses');
+
+            return $this->db->affected_rows();
+        }
 	}
 }
 

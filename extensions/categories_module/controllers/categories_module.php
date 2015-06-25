@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-class Categories_module extends Ext_Controller {
+class Categories_module extends Main_Controller {
 
 	public function __construct() {
 		parent::__construct(); 																	// calls the constructor
@@ -20,16 +20,11 @@ class Categories_module extends Ext_Controller {
 			$data['category_id'] = 0;
 		}
 
-		// START of retrieving lines from language file to pass to view.
-		$data['text_heading'] 			= $this->lang->line('text_categories');
-		$data['text_clear'] 			= $this->lang->line('text_clear');
 		$data['menu_total'] 			= $this->Menus_model->getCount();
-
-		// END of retrieving lines from language file to send to view.
 
 		$data['categories'] = array();
 		$results = $this->Categories_model->getCategories(); 										// retrieve all menu categories from getCategories method in Menus model
-		foreach ($results as $result) {															// loop through menu categories array
+        foreach (sort_array($results) as $result) {															// loop through menu categories array
 			$data['categories'][] = array( 														// create array of category data to pass to view
 				'category_id'	=>	$result['category_id'],
 				'category_name'	=>	$result['name'],

@@ -2,14 +2,14 @@
 
 class Ratings extends Admin_Controller {
 
-    public $_permission_rules = array('access', 'modify');
-
 	public function index() {
-		$this->template->setTitle('Ratings');
-		$this->template->setHeading('Ratings');
-		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+        $this->user->restrict('Admin.Ratings');
 
-		$data['text_empty'] 		= 'There are no ratings, please add!.';
+        $this->lang->load('ratings');
+
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading($this->lang->line('text_heading'));
+		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 
 		if ($this->input->post('ratings')) {
 			$results = $this->input->post('ratings');
@@ -42,9 +42,9 @@ class Ratings extends Admin_Controller {
 			$update['ratings'] = $this->input->post('ratings');
 
 			if ($this->Settings_model->addSetting('ratings', 'ratings', $update, '1')) {
-				$this->alert->set('success', 'Rating updated successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Rating updated '));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), 'updated'));
 			}
 
 			return TRUE;
@@ -54,7 +54,7 @@ class Ratings extends Admin_Controller {
 	private function validateForm() {
 		if ($this->input->post('ratings')) {
 			foreach ($this->input->post('ratings') as $key => $value) {
-				$this->form_validation->set_rules('ratings['.$key.']', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
+				$this->form_validation->set_rules('ratings['.$key.']', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 			}
 		}
 

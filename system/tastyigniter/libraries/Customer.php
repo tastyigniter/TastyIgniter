@@ -69,6 +69,8 @@ class Customer {
 			$this->CI->session->set_userdata('cust_info', $cust_info);
 
 			$this->customer_id = $result['customer_id'];
+            $this->firstname = $result['first_name'];
+            $this->lastname = $result['last_name'];
 			$this->email = $result['email'];
 
 			$this->CI->db->set('ip_address', $this->CI->input->ip_address());
@@ -103,6 +105,10 @@ class Customer {
 
   	public function getId() {
 		return $this->customer_id;
+  	}
+
+  	public function getName() {
+		return $this->firstname . ' ' . $this->lastname;
   	}
 
   	public function getFirstName() {

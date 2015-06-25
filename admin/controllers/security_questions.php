@@ -2,19 +2,20 @@
 
 class Security_questions extends Admin_Controller {
 
-    public $_permission_rules = array('access', 'modify');
-
     public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->model('Security_questions_model');
+
+        $this->user->restrict('Admin.SecurityQuestions');
+
+        $this->load->model('Security_questions_model');
+
+        $this->lang->load('security_questions');
 	}
 
 	public function index() {
-		$this->template->setTitle('Security Questions');
-		$this->template->setHeading('Security Questions');
-		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-
-		$data['text_empty'] 		= 'There are no security questions, please add!.';
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading($this->lang->line('text_heading'));
+		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 
 		//load questions data into array
 		$data['questions'] = array();
@@ -45,9 +46,9 @@ class Security_questions extends Admin_Controller {
 			$questions = $this->input->post('questions');
 
 			if ($this->Security_questions_model->updateQuestions($questions)) {
-				$this->alert->set('success', 'Security Question updated successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Security Question updated '));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), 'updated'));
 			}
 
 			return TRUE;
@@ -57,8 +58,8 @@ class Security_questions extends Admin_Controller {
 	private function validateForm() {
 		if ($this->input->post('questions')) {
 			foreach ($this->input->post('questions') as $key => $value) {
-				$this->form_validation->set_rules('questions['.$key.'][question_id]', 'Question Id', 'xss_clean|trim|required|integer');
-				$this->form_validation->set_rules('questions['.$key.'][text]', 'Security Question', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+				$this->form_validation->set_rules('questions['.$key.'][question_id]', 'lang:label_question', 'xss_clean|trim|required|integer');
+				$this->form_validation->set_rules('questions['.$key.'][text]', 'lang:label_answer', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 			}
 		}
 

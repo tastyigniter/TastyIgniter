@@ -3,54 +3,40 @@
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
 			<ul id="nav-tabs" class="nav nav-tabs">
-				<li class="active"><a href="#general" data-toggle="tab">General</a></li>
-				<li><a href="#content-f" data-toggle="tab">Content</a></li>
+				<li class="active"><a href="#general" data-toggle="tab"><?php echo lang('text_tab_general'); ?></a></li>
+				<li><a href="#content-f" data-toggle="tab"><?php echo lang('text_tab_content'); ?></a></li>
 			</ul>
 		</div>
 
-		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
+		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo $_action; ?>">
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Name:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_name'); ?></label>
 						<div class="col-sm-5">
 							<input type="text" name="name" id="" class="form-control" value="<?php echo set_value('name', $name); ?>" />
 							<?php echo form_error('name', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-title" class="col-sm-3 control-label">Title:</label>
+						<label for="input-title" class="col-sm-3 control-label"><?php echo lang('label_title'); ?></label>
 						<div class="col-sm-5">
 							<input type="text" name="title" id="input-title" class="form-control" value="<?php echo set_value('title', $page_title); ?>" />
 							<?php echo form_error('title', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-heading" class="col-sm-3 control-label">Heading:</label>
+						<label for="input-heading" class="col-sm-3 control-label"><?php echo lang('label_heading'); ?></label>
 						<div class="col-sm-5">
 							<input type="text" name="heading" id="input-heading" class="form-control" value="<?php echo set_value('heading', $page_heading); ?>" />
 							<?php echo form_error('heading', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-meta-description" class="col-sm-3 control-label">Meta Description:</label>
-						<div class="col-sm-5">
-							<textarea name="meta_description" id="input-meta-description" class="form-control" rows="5" cols="45"><?php echo set_value('meta_description', $meta_description); ?></textarea>
-							<?php echo form_error('meta_description', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-meta-keywords" class="col-sm-3 control-label">Meta Keywords:</label>
-						<div class="col-sm-5">
-							<textarea name="meta_keywords" rows="5" id="input-meta-keywords" class="form-control"><?php echo set_value('meta_keywords', $meta_keywords); ?></textarea>
-							<?php echo form_error('meta_keywords', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-layout" class="col-sm-3 control-label">Layout:</label>
+						<label for="input-layout" class="col-sm-3 control-label"><?php echo lang('label_layout'); ?></label>
 						<div class="col-sm-5">
 							<select name="layout_id" id="input-layout" class="form-control">
-								<option value="0">None</option>
+								<option value="0"><?php echo lang('text_none'); ?></option>
 								<?php foreach ($layouts as $layout) { ?>
 								<?php if ($layout['layout_id'] === $layout_id) { ?>
 									<option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
@@ -63,7 +49,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-language" class="col-sm-3 control-label">Language:</label>
+						<label for="input-language" class="col-sm-3 control-label"><?php echo lang('label_language'); ?></label>
 						<div class="col-sm-5">
 							<select name="language_id" id="input-language" class="form-control">
 								<?php foreach ($languages as $language) { ?>
@@ -78,12 +64,12 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-slug" class="col-sm-3 control-label">Slug:
-							<span class="help-block">Use ONLY alpha-numeric lowercase characters, underscores or dashes and make sure it is unique GLOBALLY.</span>
+						<label for="input-slug" class="col-sm-3 control-label"><?php echo lang('label_permalink_slug'); ?>
+							<span class="help-block"><?php echo lang('help_permalink'); ?></span>
 						</label>
 						<div class="col-sm-5">
                             <div class="input-group">
-                                <span class="input-group-addon"><?php echo $permalink['url']; ?></span>
+                                <span class="input-group-addon text-sm"><?php echo $permalink['url']; ?></span>
                                 <input type="hidden" name="permalink[permalink_id]" value="<?php echo set_value('permalink[permalink_id]', $permalink['permalink_id']); ?>"/>
                                 <input type="text" name="permalink[slug]" id="input-slug" class="form-control" value="<?php echo set_value('permalink[slug]', $permalink['slug']); ?>"/>
                             </div>
@@ -92,43 +78,57 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-navigation" class="col-sm-3 control-label">Navigation:</label>
+						<label for="input-navigation" class="col-sm-3 control-label"><?php echo lang('label_navigation'); ?></label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle btn-group-4" data-toggle="buttons">
 								<?php if (in_array('none', $navigation)) { ?>
-									<label class="btn btn-default active"><input type="checkbox" name="navigation[]" value="none" <?php echo set_checkbox('navigation[]', 'none', TRUE); ?>>None</label>
+									<label class="btn btn-default active"><input type="checkbox" name="navigation[]" value="none" <?php echo set_checkbox('navigation[]', 'none', TRUE); ?>><?php echo lang('text_none'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default"><input type="checkbox" name="navigation[]" value="none" <?php echo set_checkbox('navigation[]', 'none'); ?>>None</label>
+									<label class="btn btn-default"><input type="checkbox" name="navigation[]" value="none" <?php echo set_checkbox('navigation[]', 'none'); ?>><?php echo lang('text_none'); ?></label>
 								<?php } ?>
 								<?php if (in_array('header', $navigation)) { ?>
-									<label class="btn btn-default active"><input type="checkbox" name="navigation[]" value="header" <?php echo set_checkbox('navigation[]', 'header', TRUE); ?>>Header</label>
+									<label class="btn btn-default active"><input type="checkbox" name="navigation[]" value="header" <?php echo set_checkbox('navigation[]', 'header', TRUE); ?>><?php echo lang('text_header'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default"><input type="checkbox" name="navigation[]" value="header" <?php echo set_checkbox('navigation[]', 'header'); ?>>Header</label>
+									<label class="btn btn-default"><input type="checkbox" name="navigation[]" value="header" <?php echo set_checkbox('navigation[]', 'header'); ?>><?php echo lang('text_header'); ?></label>
 								<?php } ?>
 								<?php if (in_array('side_bar', $navigation)) { ?>
-									<label class="btn btn-default active"><input type="checkbox" name="navigation[]" value="side_bar" <?php echo set_checkbox('navigation[]', 'side_bar', TRUE); ?>>Side Bar</label>
+									<label class="btn btn-default active"><input type="checkbox" name="navigation[]" value="side_bar" <?php echo set_checkbox('navigation[]', 'side_bar', TRUE); ?>><?php echo lang('text_side_bar'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default"><input type="checkbox" name="navigation[]" value="side_bar" <?php echo set_checkbox('navigation[]', 'side_bar'); ?>>Side Bar</label>
+									<label class="btn btn-default"><input type="checkbox" name="navigation[]" value="side_bar" <?php echo set_checkbox('navigation[]', 'side_bar'); ?>><?php echo lang('text_side_bar'); ?></label>
 								<?php } ?>
 								<?php if (in_array('footer', $navigation)) { ?>
-									<label class="btn btn-default active"><input type="checkbox" name="navigation[]" value="footer" <?php echo set_checkbox('navigation[]', 'footer', TRUE); ?>>Footer</label>
+									<label class="btn btn-default active"><input type="checkbox" name="navigation[]" value="footer" <?php echo set_checkbox('navigation[]', 'footer', TRUE); ?>><?php echo lang('text_footer'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default"><input type="checkbox" name="navigation[]" value="footer" <?php echo set_checkbox('navigation[]', 'footer'); ?>>Footer</label>
+									<label class="btn btn-default"><input type="checkbox" name="navigation[]" value="footer" <?php echo set_checkbox('navigation[]', 'footer'); ?>><?php echo lang('text_footer'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('navigation[]', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
-					<div class="form-group">
-						<label for="input-status" class="col-sm-3 control-label">Status:</label>
+                    <div class="form-group">
+                        <label for="input-meta-description" class="col-sm-3 control-label"><?php echo lang('label_meta_description'); ?></label>
+                        <div class="col-sm-5">
+                            <textarea name="meta_description" id="input-meta-description" class="form-control" rows="5" cols="45"><?php echo set_value('meta_description', $meta_description); ?></textarea>
+                            <?php echo form_error('meta_description', '<span class="text-danger">', '</span>'); ?>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-meta-keywords" class="col-sm-3 control-label"><?php echo lang('label_meta_keywords'); ?></label>
+                        <div class="col-sm-5">
+                            <textarea name="meta_keywords" rows="5" id="input-meta-keywords" class="form-control"><?php echo set_value('meta_keywords', $meta_keywords); ?></textarea>
+                            <?php echo form_error('meta_keywords', '<span class="text-danger">', '</span>'); ?>
+                        </div>
+                    </div>
+                    <div class="form-group">
+						<label for="input-status" class="col-sm-3 control-label"><?php echo lang('label_status'); ?></label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($status == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0'); ?>>Disabled</label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1', TRUE); ?>>Enabled</label>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0', TRUE); ?>>Disabled</label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1'); ?>>Enabled</label>
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1'); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('status', '<span class="text-danger">', '</span>'); ?>

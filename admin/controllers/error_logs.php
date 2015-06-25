@@ -2,16 +2,14 @@
 
 class Error_logs extends Admin_Controller {
 
-    public $_permission_rules = array('access', 'modify');
-
-	public function __construct() {
-		parent::__construct(); //  calls the constructor
-	}
-
 	public function index() {
-		$this->template->setTitle('Error Logs');
-		$this->template->setHeading('Error Logs');
-		$this->template->setButton('Clear', array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
+        $this->lang->load('error_logs');
+
+        $this->user->restrict('Admin.ErrorLogs.Access');
+
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading($this->lang->line('text_heading'));
+		$this->template->setButton($this->lang->line('text_clear'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
 		$log_path = $this->config->item('log_path');
 
@@ -36,6 +34,8 @@ class Error_logs extends Admin_Controller {
 	}
 
 	private function _clearLog() {
+        $this->user->restrict('Admin.ErrorLogs.Delete');
+
         $log_path = IGNITEPATH .'/logs/';
 
         if (is_readable($log_path .'logs.php')) {
@@ -44,7 +44,7 @@ class Error_logs extends Admin_Controller {
             $this->load->helper('file');
             write_file($log_path .'logs.php', $log);
 
-            $this->alert->set('success', 'Logs Cleared successfully!');
+            $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Logs Cleared '));
         }
 
 		return TRUE;

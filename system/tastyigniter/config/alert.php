@@ -41,7 +41,7 @@ $config['alert']['styles'] = array(
 	'warning' 	=> array('<div class="alert alert-warning alert-dismissable" role="alert">', '</div>'),
 	'error'   	=> array('<div class="alert alert-danger alert-dismissable" role="alert">',   '</div>'),
 	'form'    	=> array('<div class="alert alert-danger alert-dismissable alert-collapsible" role="alert">
-							<button type="button" class="btn-dropdown" aria-hidden="true"><i class="fa fa-chevron-down text-muted"></i></button>',   '</div>')
+                <button type="button" class="btn-dropdown" aria-hidden="true"><i class="fa fa-chevron-down text-muted"></i></button>',   '</div>')
 );
 
 

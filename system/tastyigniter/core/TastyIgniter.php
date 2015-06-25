@@ -337,16 +337,14 @@ if ( ! is_php('5.4'))
     // Load the base controller class
     require_once IGNITEPATH.'core/Base_Controller.php';
 
-	// Load the extensions, main and admin controller class
+	// Load the main or admin base controller class
 	if (APPDIR === ADMINDIR) {
 		require_once IGNITEPATH.'core/Admin_Controller.php';
-		require_once IGNITEPATH.'core/Ext_Controller.php';
 	} else {
 		require_once IGNITEPATH.'core/Main_Controller.php';
-		require_once IGNITEPATH.'core/Ext_Controller.php';
-	}
+    }
 
-	// Set a mark point for benchmarking
+    // Set a mark point for benchmarking
 	$BM->mark('loading_time:_base_classes_end');
 
 /*

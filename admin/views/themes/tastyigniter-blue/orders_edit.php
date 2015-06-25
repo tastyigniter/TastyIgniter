@@ -3,28 +3,28 @@
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
 			<ul id="nav-tabs" class="nav nav-tabs">
-				<li class="active"><a href="#general" data-toggle="tab">Order</a></li>
-				<li><a href="#status" data-toggle="tab">Status</a></li>
-				<li><a href="#restaurant" data-toggle="tab">Restaurant</a></li>
+				<li class="active"><a href="#general" data-toggle="tab"><?php echo lang('text_tab_general'); ?></a></li>
+				<li><a href="#status" data-toggle="tab"><?php echo lang('text_tab_status'); ?></a></li>
+				<li><a href="#restaurant" data-toggle="tab"><?php echo lang('text_tab_restaurant'); ?></a></li>
 				<?php if ($check_order_type === '1') { ?>
-					<li><a href="#delivery-address" data-toggle="tab">Delivery Address</a></li>
+					<li><a href="#delivery-address" data-toggle="tab"><?php echo lang('text_tab_delivery_address'); ?></a></li>
 				<?php } ?>
-				<li><a href="#payment" data-toggle="tab">Payment</a></li>
-				<li><a href="#menus" data-toggle="tab">Menus &nbsp;<span class="badge"><?php echo $total_items; ?></span></a></li>
+				<li><a href="#payment" data-toggle="tab"><?php echo lang('text_tab_payment'); ?></a></li>
+				<li><a href="#menus" data-toggle="tab"><?php echo sprintf(lang('text_tab_menu'), $total_items); ?></span></a></li>
 			</ul>
 		</div>
 
-		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="post" action="<?php echo $action; ?>">
+		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo $_action; ?>">
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="" class="col-sm-3 control-label">Order ID:</label>
+						<label for="" class="col-sm-3 control-label"><?php echo lang('label_order_id'); ?></label>
 						<div class="col-sm-5">
 							#<?php echo $order_id; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Name:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_customer_name'); ?></label>
 						<div class="col-sm-5">
 							<?php if (!empty($customer_id)) { ?>
 								<a href="<?php echo $customer_edit; ?>"><?php echo $first_name; ?> <?php echo $last_name; ?></a>
@@ -34,71 +34,71 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Email:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_email'); ?></label>
 						<div class="col-sm-5">
 							<?php echo $email; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Telephone:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_telephone'); ?></label>
 						<div class="col-sm-5">
 							<?php echo $telephone; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Order Type:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_order_type'); ?></label>
 						<div class="col-sm-5">
 							<?php echo $order_type; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Delivery/Collection Time:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_order_time'); ?></label>
 						<div class="col-sm-5">
 							<?php echo $order_time; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Order Date:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_order_date'); ?></label>
 						<div class="col-sm-5">
 							<?php echo $date_added; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Total:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_order_total'); ?></label>
 						<div class="col-sm-5">
 							<?php echo $order_total; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Comment:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_comment'); ?></label>
 						<div class="col-sm-5">
 							<?php echo $comment; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Date Modified:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_date_modified'); ?></label>
 						<div class="col-sm-5">
 							<?php echo $date_modified; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Notified Customer:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_notify'); ?></label>
 						<div class="col-sm-5">
 							<?php if ($notify === '1') { ?>
-								Email SENT
+								<?php echo lang('text_email_sent'); ?>
 							<?php } else { ?>
-								Email not SENT
+								<?php echo lang('text_email_not_sent'); ?>
 							<?php } ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">IP Address:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_ip_address'); ?></label>
 						<div class="col-sm-5">
 							<?php echo $ip_address; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">User Agent:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_user_agent'); ?></label>
 						<div class="col-sm-5">
 							<?php echo $user_agent; ?>
 						</div>
@@ -107,10 +107,12 @@
 
 				<div id="status" class="tab-pane row wrap-all">
 					<div class="form-group">
-						<label for="input-assign-staff" class="col-sm-3 control-label">Assign Staff:</label>
+						<label for="input-assign-staff" class="col-sm-3 control-label"><?php echo lang('label_assign_staff'); ?></label>
 						<div class="col-sm-5">
+                            <input type="hidden" name="old_assignee_id" value="<?php echo $assignee_id; ?>" />
+                            <input type="hidden" name="old_status_id" value="<?php echo $status_id; ?>" />
 							<select name="assignee_id" class="form-control">
-								<option value=""> - please select - </option>
+								<option value=""><?php echo lang('text_please_select'); ?></option>
 								<?php foreach ($staffs as $staff) { ?>
 									<?php if ($staff['staff_id'] === $assignee_id) { ?>
 										<option value="<?php echo $staff['staff_id']; ?>" <?php echo set_select('assignee_id', $staff['staff_id'], TRUE); ?> ><?php echo $staff['staff_name']; ?></option>
@@ -123,7 +125,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Order Status:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_status'); ?></label>
 						<div class="col-sm-5">
 							<select name="order_status" id="" class="form-control" onChange="getStatusComment();">
 							<?php foreach ($statuses as $status) { ?>
@@ -138,22 +140,22 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Status Comment:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_comment'); ?></label>
 						<div class="col-sm-5">
-							<textarea name="status_comment" id="" class="form-control" rows="5" cols="45"><?php echo set_value('status_comment'); ?></textarea>
+							<textarea name="status_comment" id="" class="form-control" rows="3"><?php echo set_value('status_comment'); ?></textarea>
 							<?php echo form_error('status_comment', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-3 control-label">Notify Customer:</label>
+						<label class="col-sm-3 control-label"><?php echo lang('label_notify'); ?></label>
 						<div class="col-sm-5">
 							<div id="input-notify" class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($notify == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="notify" value="0" <?php echo set_radio('notify', '0'); ?>>NO</label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="notify" value="1" <?php echo set_radio('notify', '1', TRUE); ?>>YES</label>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="notify" value="0" <?php echo set_radio('notify', '0'); ?>><?php echo lang('text_no'); ?></label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="notify" value="1" <?php echo set_radio('notify', '1', TRUE); ?>><?php echo lang('text_yes'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="notify" value="0" <?php echo set_radio('notify', '0', TRUE); ?>>NO</label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="notify" value="1" <?php echo set_radio('notify', '1'); ?>>YES</label>
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="notify" value="0" <?php echo set_radio('notify', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="notify" value="1" <?php echo set_radio('notify', '1'); ?>><?php echo lang('text_yes'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('notify', '<span class="text-danger">', '</span>'); ?>
@@ -161,18 +163,18 @@
 					</div>
 					<br />
 
-					<h3>History</h3>
+					<h4 class="block-heading">History</h4>
 					<div class="panel panel-default panel-table">
 						<div class="table-responsive">
 							<table height="auto" class="table table-striped table-border" id="history">
 								<thead>
 									<tr>
-										<th>Date/Time</th>
-										<th>Status</th>
-										<th>Staff</th>
-										<th>Staff Assignee</th>
-										<th class="text-center">Customer Notified</th>
-										<th class="left" width="25%">Comment</th>
+										<th><?php echo lang('column_time_date'); ?></th>
+										<th><?php echo lang('column_status'); ?></th>
+										<th><?php echo lang('column_staff'); ?></th>
+										<th><?php echo lang('column_assignee'); ?></th>
+                                        <th class="left" width="35%"><?php echo lang('column_comment'); ?></th>
+                                        <th class="text-center"><?php echo lang('column_notify'); ?></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -189,13 +191,13 @@
 												<?php } ?>
 											<?php } ?>
 										</td>
-										<td class="text-center"><?php echo ($history['notify'] === '1') ? 'Yes' : 'No'; ?></td>
-										<td class="left"><?php echo $history['comment']; ?></td>
+                                        <td class="text-left"><?php echo $history['comment']; ?></td>
+                                        <td class="text-center"><?php echo ($history['notify'] === '1') ? $this->lang->line('text_yes') : $this->lang->line('text_no'); ?></td>
 									</tr>
 									<?php } ?>
 									<?php } else { ?>
 									<tr>
-										<td colspan="5"><?php echo $text_empty; ?></td>
+										<td colspan="5"><?php echo lang('text_no_status_history'); ?></td>
 									</tr>
 									<?php } ?>
 								</tbody>
@@ -206,13 +208,13 @@
 
 				<div id="restaurant" class="tab-pane row wrap-all">
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Name:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_restaurant_name'); ?></label>
 						<div class="col-sm-5">
 							<?php echo $location_name; ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Address:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_restaurant_address'); ?></label>
 						<div class="col-sm-5">
 							<address><?php echo $location_address; ?></address>
 						</div>
@@ -222,7 +224,7 @@
 				<?php if ($check_order_type === '1') { ?>
 				<div id="delivery-address" class="tab-pane row wrap-all">
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Address:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_restaurant_address'); ?></label>
 						<div class="col-sm-5">
 							<address><?php echo $customer_address; ?></address>
 						</div>
@@ -232,11 +234,11 @@
 
 				<div id="payment" class="tab-pane row wrap-all">
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Payment Method:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_payment_method'); ?></label>
 						<div class="col-sm-5">
 							<?php echo $payment; ?>
 							<?php if ($paypal_details) { ?>
-								<a class="view_details">View Transaction Details</a><br />
+								<a class="view_details"><?php echo lang('text_transaction_detail'); ?></a><br />
 							<?php } ?>
 						</div>
 					</div>
@@ -258,9 +260,9 @@
 								<thead>
 									<tr>
 										<th></th>
-										<th width="25%">Name/Options</th>
-										<th class="text-center">Price</th>
-										<th>Total</th>
+										<th width="25%"><?php echo lang('column_name_option'); ?></th>
+										<th class="text-center"><?php echo lang('column_price'); ?></th>
+										<th><?php echo lang('column_total'); ?></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -287,7 +289,7 @@
 									<tr>
 										<td width="1"></td>
 										<td></td>
-										<td class="text-center"><b>TOTAL</b></td>
+										<td class="text-center"><b><?php echo lang('text_total'); ?></b></td>
 										<td><b><?php echo $order_total; ?></b></td>
 									</tr>
 								</tbody>

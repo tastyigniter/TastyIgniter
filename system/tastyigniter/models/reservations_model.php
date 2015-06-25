@@ -49,7 +49,7 @@ class Reservations_model extends TI_Model {
 		return $this->db->count_all_results();
     }
 
-	public function getList($filter = array()) {
+    public function getList($filter = array()) {
 		if (!empty($filter['page']) AND $filter['page'] !== 0) {
 			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
 		}
@@ -116,23 +116,21 @@ class Reservations_model extends TI_Model {
 		}
 	}
 
-    public function getReservations($customer_id = FALSE) {
-        if ($customer_id !== FALSE) {
-            $this->db->from('reservations');
-            $this->db->join('tables', 'tables.table_id = reservations.table_id', 'left');
-            $this->db->join('statuses', 'statuses.status_id = reservations.status', 'left');
-            $this->db->join('locations', 'locations.location_id = reservations.location_id', 'left');
-            $this->db->order_by('reservation_id', 'ASC');
+    public function getReservations() {
+        $this->db->from('reservations');
+        $this->db->join('tables', 'tables.table_id = reservations.table_id', 'left');
+        $this->db->join('statuses', 'statuses.status_id = reservations.status', 'left');
+        $this->db->join('locations', 'locations.location_id = reservations.location_id', 'left');
+        $this->db->order_by('reservation_id', 'ASC');
 
-            $query = $this->db->get();
-            $result = array();
+        $query = $this->db->get();
+        $result = array();
 
-            if ($query->num_rows() > 0) {
-                $result = $query->result_array();
-            }
-
-            return $result;
+        if ($query->num_rows() > 0) {
+            $result = $query->result_array();
         }
+
+        return $result;
     }
 
     public function getReservation($reservation_id = FALSE, $customer_id = FALSE) {
@@ -167,7 +165,7 @@ class Reservations_model extends TI_Model {
 		}
 	}
 
-	public function getReservationDates() {
+    public function getReservationDates() {
 		$this->db->select('reserve_date, MONTH(reserve_date) as month, YEAR(reserve_date) as year');
 		$this->db->from('reservations');
 		$this->db->group_by('MONTH(reserve_date)');
@@ -207,7 +205,7 @@ class Reservations_model extends TI_Model {
 		$result = 0;
 
 		$this->db->select_sum('reservations.guest_num', 'total_guest');
-		//$this->db->where('status', (int)$this->config->item('reservation_status'));
+		//$this->db->where('status', (int)$this->config->item('new_reservation_status'));
 
 		if (!empty($location_id)) {
 			$this->db->where('location_id', $location_id);
@@ -229,52 +227,107 @@ class Reservations_model extends TI_Model {
 		return $result;
 	}
 
-    public function checkAvailability($data = array()) {
+    public function getLocationTablesByMinCapacity($location_id, $guest_num) {
 
-        $available_tables = $reserved_tables = array();
+        $tables = array();
 
-        $guest_tables = $this->getTablesByGuestNum($data['location'], $data['guest_num']);
+        if (isset($location_id, $guest_num)) {
+            $this->db->from('location_tables');
+            $this->db->join('tables', 'tables.table_id = location_tables.table_id', 'left');
 
-        if ( ! $guest_tables OR empty($guest_tables)) {
-            return 'NO_GUEST_TABLE';
-        }
+            $this->db->where('location_id', $location_id);
+            $this->db->where('table_status', '1');
 
-        if (!empty($data)) {
-            $this->db->from('reservations');
-        }
+            $this->db->group_start();
+            $this->db->where('min_capacity <=', $guest_num);
+            $this->db->where('max_capacity >=', $guest_num);
+            $this->db->group_end();
 
-        if (isset($data['location'])) {
-            $this->db->where('location_id', $data['location']);
-        }
+            $this->db->order_by('min_capacity', 'ASC');
 
-        if (is_array($guest_tables)) {
-            $this->db->where_in('table_id', $guest_tables);
-        }
-
-        if (isset($data['reserve_date'])) {
-            $this->db->where('reserve_date', mdate('%Y-%m-%d', strtotime($data['reserve_date'])));
-        }
-
-        if (isset($data['reserve_time'])) {
-            $this->db->where('reserve_time', mdate('%h:%i:%s', strtotime($data['reserve_time'])));
-        }
-
-        $query = $this->db->get();
-        if ($query->num_rows() > 0) {
-            $row = $query->row_array();
-
-            if (in_array($row['table_id'], $guest_tables)) {
-                $reserved_tables[] = $row['table_id'];
+            $query = $this->db->get();
+            if ($query->num_rows() > 0) {
+                foreach ($query->result_array() as $row) {
+                    $tables[$row['table_id']] = $row;
+                }
             }
         }
 
-        $available_tables = array_diff($guest_tables, $reserved_tables);
+        return $tables;
+    }
 
-        if ( ! $available_tables OR empty($available_tables)) {
-            return 'NO_TABLE_AVAIL';
+    public function findATable($find = array()) {
+
+        if (!isset($find['location']) OR !isset($find['guest_num']) OR empty($find['reserve_date']) OR empty($find['reserve_time']) OR empty($find['time_interval'])) {
+            return 'NO_ARGUMENTS';
         }
 
-        return array('tables' => $available_tables);
+        if (!($available_tables = $this->getLocationTablesByMinCapacity($find['location'], $find['guest_num']))) {
+            return 'NO_TABLE';
+        }
+
+        $find['reserve_date_time']      = strtotime($find['reserve_date'] .' '. $find['reserve_time']);
+        $find['unix_start_time']        = strtotime('-'.($find['time_interval'] * 2) .' mins', $find['reserve_date_time']);
+        $find['unix_end_time']          = strtotime('+'.($find['time_interval'] * 2) .' mins', $find['reserve_date_time']);
+
+        $time_slots = time_range(mdate('%H:%i', $find['unix_start_time']), mdate('%H:%i', $find['unix_end_time']), $find['time_interval'], '%H:%i');
+        $reserve_time_slot = array_flip($time_slots);
+
+        $reserved_tables = $this->getReservedTableByDate($find, array_keys($available_tables));
+
+        foreach ($reserved_tables as $reserved) {
+            // remove available table if already reserved
+            if (isset($available_tables[$reserved['table_id']])) {
+                unset($available_tables[$reserved['table_id']]);
+            }
+
+            // remove reserve time slot if already reserved
+            $reserve_time = mdate('%H:%i', strtotime($reserved['reserve_date'] .' '. $reserved['reserve_time']));
+            if (isset($reserve_time_slot[$reserve_time])) {
+                unset($reserve_time_slot[$reserve_time]);
+            }
+        }
+
+        if (empty($available_tables) OR empty($reserve_time_slot)) {
+            return 'FULLY_BOOKED';
+        }
+
+        return array('table_found' => $available_tables, 'time_slots' => array_flip($reserve_time_slot));
+    }
+
+    public function getReservedTableByDate($find = array(), $table_id, $group = FALSE) {
+        if (!isset($find['location']) OR !is_numeric($find['location']) OR empty($find['reserve_date']) OR empty($table_id)) {
+            return FALSE;
+        }
+
+        is_array($table_id) OR $table_id = array($table_id);
+
+        $this->db->from('reservations');
+        $this->db->where('location_id', $find['location']);
+
+        if (!empty($table_id)) {
+            $this->db->where_in('table_id', $table_id);
+        }
+
+        $this->db->group_start();
+        $this->db->where('ADDTIME(reserve_date, reserve_time) >=', mdate('%Y-%m-%d %H:%i:%s', $find['unix_start_time']));
+        $this->db->where('ADDTIME(reserve_date, reserve_time) <=', mdate('%Y-%m-%d %H:%i:%s', $find['unix_end_time']));
+        $this->db->group_end();
+
+        $query = $this->db->get();
+
+        $results = array();
+        if ($query->num_rows() > 0) {
+            if ($group) {
+                foreach ($query->result_array() as $row) {
+                    $results[$row['table_id']][] = $row;
+                }
+            } else {
+                $results = $query->result_array();
+            }
+        }
+
+        return $results;
     }
 
     public function getTotalSeats($location_id) {
@@ -290,31 +343,7 @@ class Reservations_model extends TI_Model {
         }
     }
 
-    public function getTablesByGuestNum($location_id, $num) {
-
-        $tables = array();
-
-        if (isset($location_id, $num)) {
-            $this->db->from('location_tables');
-            $this->db->join('tables', 'tables.table_id = location_tables.table_id', 'left');
-
-            $this->db->where('location_id', $location_id);
-            $this->db->where('min_capacity <=', $num);
-            $this->db->where('max_capacity >=', $num);
-            $this->db->order_by('max_capacity', 'ASC');
-
-            $query = $this->db->get();
-            if ($query->num_rows() > 0) {
-                foreach ($query->result_array() as $table) {
-                    $tables[] = $table['table_id'];
-                }
-            }
-        }
-
-        return $tables;
-    }
-
-    public function updateReservation($update = array(), $status_id) {
+    public function updateReservation($reservation_id, $update = array()) {
 		$query = FALSE;
 
 		if (!empty($update['status'])) {
@@ -326,29 +355,21 @@ class Reservations_model extends TI_Model {
 		}
 
 		if (!empty($update['date_modified'])) {
-			$this->db->set('date_modified', $update['date_modified']);
+			$this->db->set('date_modified', mdate('%Y-%m-%d', time()));
 		}
 
-		if (!empty($update['reservation_id'])) {
-			$this->db->where('reservation_id', $update['reservation_id']);
+		if (is_numeric($reservation_id)) {
+			$this->db->where('reservation_id', $reservation_id);
 			$query = $this->db->update('reservations');
 
-			$this->load->model('Notifications_model');
-			$notification = array('object' => 'reservation', 'object_id' => $update['reservation_id'],
-				'actor_id' => $update['staff_id'], 'subject_id' => $update['status_id'],
-			);
+			if ($query === TRUE AND (int) $update['old_status_id'] !== (int) $update['status']) {
+                $update['object_id'] 		= $reservation_id;
+                $update['staff_id']			= $this->user->getStaffId();
+                $update['status_id']		= (int)$update['status'];
+                $update['comment']			= $update['status_comment'];
+                $update['date_added']		= mdate('%Y-%m-%d %H:%i:%s', time());
 
-			if ((int) $status_id !== (int) $update['status_id']) {
-				$notification['action'] = 'changed';
-				$this->Statuses_model->addStatusHistory('reserve', $update);
-				$this->Notifications_model->addNotification($notification);
-			}
-
-			if ($update['old_assignee_id'] !== $update['assignee_id']) {
-				$this->load->model('Notifications_model');
-				$notification['action'] = 'assigned';
-				$notification['subject_id'] = $update['assignee_id'];
-				$this->Notifications_model->addNotification($notification);
+                $this->Statuses_model->addStatusHistory('reserve', $update);
 			}
 		}
 
@@ -375,20 +396,14 @@ class Reservations_model extends TI_Model {
 		}
 
 		if (!empty($add['reserve_date'])) {
-			$this->db->set('reserve_date', $add['reserve_date']);
+			$this->db->set('reserve_date', mdate('%Y-%m-%d', strtotime($add['reserve_date'])));
 		}
 
 		if (!empty($add['reserve_time'])) {
 			$this->db->set('reserve_time', $add['reserve_time']);
-		}
-
-		if (!empty($add['date_added'])) {
-			$this->db->set('date_added', $add['date_added']);
-		}
-
-		if (!empty($add['date_modified'])) {
-			$this->db->set('date_modified', $add['date_modified']);
-		}
+            $this->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', time()));
+            $this->db->set('date_modified', mdate('%Y-%m-%d', time()));
+        }
 
 		if (!empty($add['occasion_id'])) {
 			$this->db->set('occasion_id', $add['occasion_id']);
@@ -430,20 +445,27 @@ class Reservations_model extends TI_Model {
 			if ($this->db->insert('reservations')) {
 				$reservation_id = $this->db->insert_id();
 
-				$notify = $this->_sendMail($reservation_id);
+                if (APPDIR === MAINDIR) {
+                    log_activity($add['customer_id'], 'reserved', 'reservations', get_activity_message('activity_reserved_table',
+                        array('{customer}', '{link}', '{reservation_id}'),
+                        array($add['first_name'].' '.$add['last_name'], admin_url('reservations/edit?id='.$reservation_id), $reservation_id)
+                    ));
+                }
+
+                $notify = $this->_sendMail($reservation_id);
 				$this->db->set('notify', $notify);
 
-				$this->db->set('status', $this->config->item('reservation_status'));
+				$this->db->set('status', $this->config->item('new_reservation_status'));
 				$this->db->where('reservation_id', $reservation_id);
 
 				if ($this->db->update('reservations')) {
 					$this->load->model('Statuses_model');
-					$status = $this->Statuses_model->getStatus($this->config->item('reservation_status'));
+					$status = $this->Statuses_model->getStatus($this->config->item('new_reservation_status'));
 					$reserve_history = array(
 						'object_id' 	=> $reservation_id,
 						'status_id' 	=> $status['status_id'],
 						'notify' 		=> $notify,
-						'comment' 		=> $status['comment'],
+						'comment' 		=> $status['status_comment'],
 						'date_added' 	=> mdate('%Y-%m-%d %H:%i:%s', time())
 					);
 
@@ -543,14 +565,14 @@ class Reservations_model extends TI_Model {
 	}
 
 	public function deleteReservation($reservation_id) {
-		if (is_numeric($reservation_id)) {
-			$this->db->where('reservation_id', $reservation_id);
-			$this->db->delete('reservations');
+        if (is_numeric($reservation_id)) $reservation_id = array($reservation_id);
 
-			if ($this->db->affected_rows() > 0) {
-				return TRUE;
-			}
-		}
+        if (!empty($reservation_id) AND ctype_digit(implode('', $reservation_id))) {
+            $this->db->where_in('reservation_id', $reservation_id);
+            $this->db->delete('reservations');
+
+            return $this->db->affected_rows();
+        }
 	}
 }
 

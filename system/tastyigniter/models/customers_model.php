@@ -103,31 +103,71 @@ class Customers_model extends TI_Model {
 		return $result;
 	}
 
-	public function getCustomersByGroupId($customer_group_id) {
-		if ($customer_group_id) {
-			$this->db->from('customers');
+    public function getCustomersForMessages($type) {
+        $this->db->select('customer_id, email, status');
+        $this->db->from('customers');
+        $this->db->where('status', '1');
+
+        $query = $this->db->get();
+        $result = array();
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row)
+                $result[] = ($type === 'email') ? $row['email'] : $row['customer_id'];
+        }
+
+        return $result;
+    }
+
+    public function getCustomerForMessages($type, $customer_id) {
+        if (!empty($customer_id) AND is_array($customer_id)) {
+            $this->db->select('customer_id, email, status');
+            $this->db->from('customers');
+            $this->db->where('status', '1');
+            $this->db->where_in('customer_id', $customer_id);
+
+            $query = $this->db->get();
+
+            if ($query->num_rows() > 0) {
+                foreach ($query->result_array() as $row)
+                    $result[] = ($type === 'email') ? $row['email'] : $row['customer_id'];
+            }
+
+            return $result;
+        }
+    }
+
+    public function getCustomersByGroupIdForMessages($type, $customer_group_id) {
+        if (is_numeric($customer_group_id)) {
+            $this->db->select('customer_id, email, customer_group_id, status');
+            $this->db->from('customers');
 			$this->db->where('customer_group_id', $customer_group_id);
+            $this->db->where('status', '1');
 
 			$query = $this->db->get();
 			$result = array();
 
 			if ($query->num_rows() > 0) {
-				$result = $query->result_array();
+                foreach ($query->result_array() as $row)
+                    $result[] = ($type === 'email') ? $row['email'] : $row['customer_id'];
 			}
 
 			return $result;
 		}
 	}
 
-	public function getCustomersByNewsletter() {
-		$this->db->from('customers');
+	public function getCustomersByNewsletterForMessages($type) {
+        $this->db->select('customer_id, email, newsletter, status');
+        $this->db->from('customers');
 		$this->db->where('newsletter', '1');
+        $this->db->where('status', '1');
 
 		$query = $this->db->get();
 		$result = array();
 
 		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
+            foreach ($query->result_array() as $row)
+                $result[] = ($type === 'email') ? $row['email'] : $row['customer_id'];
 		}
 
 		return $result;
@@ -147,22 +187,24 @@ class Customers_model extends TI_Model {
         }
     }
 
-    public function resetPassword($customer_id = FALSE, $email = FALSE, $security_question_id = FALSE, $security_answer = FALSE) {
-        if ($customer_id != FALSE && $email != FALSE && $security_question_id != FALSE && $security_answer != FALSE) {
+    public function resetPassword($customer_id, $reset = array()) {
+        if (is_numeric($customer_id) AND !empty($reset)) {
 
             $this->db->from('customers');
             $this->db->where('customer_id', $customer_id);
-            $this->db->where('email', strtolower($email));
-            $this->db->where('security_question_id', $security_question_id);
-            $this->db->where('security_answer', $security_answer);
+            $this->db->where('email', strtolower($reset['email']));
+
+            if (!empty($reset['security_question_id']) AND !empty($reset['security_answer'])) {
+                $this->db->where('security_question_id', $reset['security_question_id']);
+                $this->db->where('security_answer', $reset['security_answer']);
+            }
+
             $this->db->where('status', '1');
-
             $query = $this->db->get();
-
             if ($query->num_rows() === 1) {
                 $row = $query->row_array();
 
-                //Randome Password
+                //Random Password
                 $alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
                 $pass = array();
                 for ($i = 0; $i < 8; $i++) {
@@ -177,22 +219,19 @@ class Customers_model extends TI_Model {
                 $this->db->where('customer_id', $row['customer_id']);
                 $this->db->where('email', $row['email']);
 
-                $this->db->update('customers');
-
-                if ($this->db->affected_rows() > 0) {
-                    $this->load->library('mail_template');
-
+                if ($this->db->update('customers') AND $this->db->affected_rows() > 0) {
                     $mail_data['site_name']         = $this->config->item('site_name');
                     $mail_data['first_name']        = $row['first_name'];
                     $mail_data['last_name']         = $row['last_name'];
                     $mail_data['created_password']  = $password;
                     $mail_data['signature']         = $this->config->item('site_name');
-                    $mail_data['login_link']        = root_url('main/login');
+                    $mail_data['login_link']        = root_url('account/login');
 
+                    $this->load->library('mail_template');
                     $message = $this->mail_template->parseTemplate('password_reset', $mail_data);
                     $subject = $this->mail_template->getSubject();
 
-                    $this->sendMail($email, $subject, $message);
+                    $this->sendMail($row['email'], $subject, $message);
                     return TRUE;
                 }
             }
@@ -278,20 +317,17 @@ class Customers_model extends TI_Model {
 		}
 
 		if (is_numeric($customer_id)) {
-            $notification_action = 'updated';
+            $action = 'updated';
             $this->db->where('customer_id', $customer_id);
             $query = $this->db->update('customers');
         } else {
-            $notification_action = 'added';
+            $action = 'added';
             $this->db->set('date_added', mdate('%Y-%m-%d', time()));
             $query = $this->db->insert('customers');
             $customer_id = $this->db->insert_id();
         }
 
         if ($query === TRUE AND is_numeric($customer_id)) {
-            $this->load->model('Notifications_model');
-            $this->Notifications_model->addNotification(array('action' => $notification_action, 'object' => 'customer', 'object_id' => $customer_id));
-
             if (!empty($save['address'])) {
                 $this->load->model('Addresses_model');
 
@@ -304,8 +340,17 @@ class Customers_model extends TI_Model {
                 }
             }
 
-            if ($notification_action === 'added' AND $this->config->item('registration_email') === '1') {
-                $this->sendMail($save);
+            if ($action === 'added' AND $this->config->item('registration_email') === '1') {
+                $mail_data['site_name'] 		= $this->config->item('site_name');
+                $mail_data['first_name'] 		= $save['first_name'];
+                $mail_data['last_name'] 		= $save['last_name'];
+                $mail_data['signature'] 		= $this->config->item('site_name');
+                $mail_data['login_link'] 		= root_url('account/login');
+
+                $this->load->library('mail_template');
+                $message = $this->mail_template->parseTemplate('registration', $mail_data);
+                $subject = $this->mail_template->getSubject();
+                $this->sendMail($save['email'], $subject, $message);
             }
 
             return $customer_id;
@@ -313,38 +358,28 @@ class Customers_model extends TI_Model {
 	}
 
 	public function deleteCustomer($customer_id) {
-		if ($customer_id) {
-			$this->db->where('customer_id', $customer_id);
-			$this->db->delete('customers');
+        if (is_numeric($customer_id)) $customer_id = array($customer_id);
 
-			$this->db->where('customer_id', $customer_id);
-			$this->db->delete('addresses');
-		}
+        if (!empty($customer_id) AND ctype_digit(implode('', $customer_id))) {
+            $this->db->where_in('customer_id', $customer_id);
+            $this->db->delete('customers');
 
-		if ($this->db->affected_rows() > 0) {
-			return TRUE;
-		}
+            if (($affected_rows = $this->db->affected_rows()) > 0) {
+                $this->db->where_in('customer_id', $customer_id);
+                $this->db->delete('addresses');
+
+                return $affected_rows;
+            }
+        }
 	}
 
-	public function sendMail($data) {
-
-        $mail_data['site_name'] 		= $this->config->item('site_name');
-        $mail_data['first_name'] 		= $data['first_name'];
-        $mail_data['last_name'] 		= $data['last_name'];
-        $mail_data['signature'] 		= $this->config->item('site_name');
-        $mail_data['login_link'] 		= root_url('account/login');
-
+	public function sendMail($email, $subject, $message) {
 	   	$this->load->library('email');
-
 		$this->email->initialize();
 
 		$this->email->from($this->config->item('site_email'), $this->config->item('site_name'));
-		$this->email->to(strtolower($data['email']));
-
-        $this->load->library('mail_template');
-        $message = $this->mail_template->parseTemplate('registration', $mail_data);
-
-        $this->email->subject($this->mail_template->getSubject());
+		$this->email->to(strtolower($email));
+        $this->email->subject($subject);
 		$this->email->message($message);
 
         if ($this->email->send()) {

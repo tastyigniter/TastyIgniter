@@ -2,12 +2,16 @@
 
 class Coupons extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('pagination');
-		$this->load->model('Coupons_model');
+
+        $this->user->restrict('Admin.Coupons');
+
+        $this->load->model('Coupons_model');
+
+        $this->load->library('pagination');
+
+        $this->lang->load('coupons');
 	}
 
 	public function index() {
@@ -58,12 +62,10 @@ class Coupons extends Admin_Controller {
 			$data['order_by_active'] = 'DESC';
 		}
 
-		$this->template->setTitle('Coupons');
-		$this->template->setHeading('Coupons');
-		$this->template->setButton('+ New', array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
-		$this->template->setButton('Delete', array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
-
-		$data['text_empty'] 		= 'There are no coupons available.';
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading($this->lang->line('text_heading'));
+		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
+		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_name'] 			= site_url('coupons'.$url.'sort_by=name&order_by='.$order_by);
@@ -79,12 +81,12 @@ class Coupons extends Admin_Controller {
 				'coupon_id'		=> $result['coupon_id'],
 				'name'			=> $result['name'],
 				'code'			=> $result['code'],
-				'type'			=> ($result['type'] === 'P') ? 'Percentage' : 'Fixed Amount',
+				'type'			=> ($result['type'] === 'P') ? $this->lang->line('text_percentage') : $this->lang->line('text_fixed_amount'),
 				'discount'		=> ($result['type'] === 'P') ? round($result['discount']) .'%' : $result['discount'],
 				'min_total'		=> $result['min_total'],
 				'validity'		=> ucwords($result['validity']),
 				'description'	=> $result['description'],
-				'status'		=> ($result['status'] === '1') ? 'Enabled' : 'Disabled',
+				'status'		=> ($result['status'] === '1') ? $this->lang->line('text_enabled') : $this->lang->line('text_disabled'),
 				'edit' 			=> site_url('coupons/edit?id=' . $result['coupon_id'])
 			);
 		}
@@ -94,7 +96,7 @@ class Coupons extends Admin_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 
-		$config['base_url'] 		= site_url('coupons').$url;
+		$config['base_url'] 		= site_url('coupons'.$url);
 		$config['total_rows'] 		= $this->Coupons_model->getCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 
@@ -118,10 +120,10 @@ class Coupons extends Admin_Controller {
 
 		if ($coupon_info) {
 			$coupon_id = $coupon_info['coupon_id'];
-			$data['action']	= site_url('coupons/edit?id='. $coupon_id);
+			$data['_action']	= site_url('coupons/edit?id='. $coupon_id);
 		} else {
 		    $coupon_id = 0;
-			$data['action']	= site_url('coupons/edit');
+			$data['_action']	= site_url('coupons/edit');
 		}
 
 		if ($this->input->post('validity')) {
@@ -132,14 +134,13 @@ class Coupons extends Admin_Controller {
 			$validity = 'forever';
 		}
 
-		$title = (isset($coupon_info['name'])) ? $coupon_info['name'] : 'New';
-		$this->template->setTitle('Coupon: '. $title);
-		$this->template->setHeading('Coupon: '. $title);
-		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
-		$this->template->setBackButton('btn btn-back', site_url('coupons'));
+		$title = (isset($coupon_info['name'])) ? $coupon_info['name'] : $this->lang->line('text_new');
+        $this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $title));
+        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
 
-		$data['text_empty'] 		= 'There is no history available for this coupon.';
+        $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$this->template->setBackButton('btn btn-back', site_url('coupons'));
 
 		$data['coupon_id'] 			= $coupon_info['coupon_id'];
 		$data['name'] 				= $coupon_info['name'];
@@ -164,14 +165,14 @@ class Coupons extends Admin_Controller {
 
 		$data['weekdays'] = array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun');
 
-		$data['fixed_time'] 		= '24hours';
+		$data['fixed_time'] 		= $this->lang->line('text_24_hour');
 		if (isset($coupon_info['fixed_from_time'], $coupon_info['fixed_to_time']) AND ($coupon_info['fixed_from_time'] !== '00:00:00' OR $coupon_info['fixed_to_time'] !== '23:59:00')) {
-			$data['fixed_time'] 	= 'custom';
+			$data['fixed_time'] 	= $this->lang->line('text_custom');
 		}
 
-		$data['recurring_time'] 		= '24hours';
+		$data['recurring_time'] 		= $this->lang->line('text_24_hour');
 		if (isset($coupon_info['recurring_from_time'], $coupon_info['recurring_to_time']) AND ($coupon_info['recurring_from_time'] !== '00:00:00' OR $coupon_info['recurring_to_time'] !== '23:59:00')) {
-			$data['recurring_time'] 	= 'custom';
+			$data['recurring_time'] 	= $this->lang->line('text_custom');
 		}
 
 		$data['coupon_histories'] = array();
@@ -201,73 +202,81 @@ class Coupons extends Admin_Controller {
 
     private function _saveCoupon() {
     	if ($this->validateForm() === TRUE) {
-            $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
+            $save_type = ( ! is_numeric($this->input->get('id'))) ? $this->lang->line('text_added') : $this->lang->line('text_updated');
 
 			if ($coupon_id = $this->Coupons_model->saveCoupon($this->input->get('id'), $this->input->post())) {
-				$this->alert->set('success', 'Coupon ' . $save_type . ' successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, ' . $save_type . ' updated.');
-			}
+                log_activity($this->user->getStaffId(), $save_type, 'coupons', get_activity_message('activity_custom',
+                    array('{staff}', '{action}', '{context}', '{link}', '{item}'),
+                    array($this->user->getStaffName(), $save_type, 'coupon', site_url('coupons/edit?id='.$coupon_id), $this->input->post('name'))
+                ));
+
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Coupon '.$save_type));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $save_type));
+            }
 
 			return $coupon_id;
 		}
 	}
 
     private function _deleteCoupon() {
-    	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $value) {
-				$this->Coupons_model->deleteCoupon($value);
-			}
+        if ($this->input->post('delete')) {
+            $deleted_rows = $this->Coupons_model->deleteCoupon($this->input->post('delete'));
 
-			$this->alert->set('success', 'Coupon(s) deleted successfully!');
-		}
+            if ($deleted_rows > 0) {
+                $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Coupons': 'Coupon';
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), $prefix.' '.$this->lang->line('text_deleted')));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted')));
+            }
 
-		return TRUE;
-	}
+            return TRUE;
+        }
+    }
 
     private function validateForm() {
-		$this->form_validation->set_rules('name', 'Coupon Name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
-		$this->form_validation->set_rules('code', 'Code', 'xss_clean|trim|required|min_length[2]|max_length[15]');
-		$this->form_validation->set_rules('type', 'Type', 'xss_clean|trim|required|exact_length[1]');
-		$this->form_validation->set_rules('discount', 'Discount', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('name', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+		$this->form_validation->set_rules('code', 'lang:label_code', 'xss_clean|trim|required|min_length[2]|max_length[15]');
+		$this->form_validation->set_rules('type', 'lang:label_type', 'xss_clean|trim|required|exact_length[1]');
+		$this->form_validation->set_rules('discount', 'lang:label_discount', 'xss_clean|trim|required|numeric');
 
 		if ($this->input->post('type') === 'P') {
-			$this->form_validation->set_rules('discount', 'Discount', 'less_than[100]');
+			$this->form_validation->set_rules('discount', 'lang:label_discount', 'less_than[100]');
 		}
 
-		$this->form_validation->set_rules('min_total', 'Minimum Total', 'xss_clean|trim|numeric');
-		$this->form_validation->set_rules('redemptions', 'Redemptions', 'xss_clean|trim|integer');
-		$this->form_validation->set_rules('customer_redemptions', 'Customer Redemptions', 'xss_clean|trim|integer');
-		$this->form_validation->set_rules('description', 'Description', 'xss_clean|trim|min_length[2]|max_length[1028]');
-		$this->form_validation->set_rules('validity', 'Validity', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('min_total', 'lang:label_min_total', 'xss_clean|trim|numeric');
+		$this->form_validation->set_rules('redemptions', 'lang:label_redemption', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('customer_redemptions', 'lang:label_customer_redemption', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('description', 'lang:label_description', 'xss_clean|trim|min_length[2]|max_length[1028]');
+		$this->form_validation->set_rules('validity', 'lang:label_validity', 'xss_clean|trim|required');
 
 		if ($this->input->post('validity') === 'fixed') {
-			$this->form_validation->set_rules('validity_times[fixed_date]', 'Fixed date', 'xss_clean|trim|required|valid_date');
-			$this->form_validation->set_rules('fixed_time', 'Fixed time', 'xss_clean|trim|required');
+			$this->form_validation->set_rules('validity_times[fixed_date]', 'lang:label_fixed_date', 'xss_clean|trim|required|valid_date');
+			$this->form_validation->set_rules('fixed_time', 'lang:label_fixed_time', 'xss_clean|trim|required');
 
 			if ($this->input->post('fixed_time') !== '24hours') {
-				$this->form_validation->set_rules('validity_times[fixed_from_time]', 'Fixed from time', 'xss_clean|trim|required|valid_time');
-				$this->form_validation->set_rules('validity_times[fixed_to_time]', 'Fixed to time', 'xss_clean|trim|required|valid_time');
+				$this->form_validation->set_rules('validity_times[fixed_from_time]', 'lang:label_fixed_from_time', 'xss_clean|trim|required|valid_time');
+				$this->form_validation->set_rules('validity_times[fixed_to_time]', 'lang:label_fixed_to_time', 'xss_clean|trim|required|valid_time');
 			}
 		} else if ($this->input->post('validity') === 'period') {
-			$this->form_validation->set_rules('validity_times[period_start_date]', 'Period start date', 'xss_clean|trim|required|valid_date');
-			$this->form_validation->set_rules('validity_times[period_end_date]', 'Period end date', 'xss_clean|trim|required|valid_date');
+			$this->form_validation->set_rules('validity_times[period_start_date]', 'lang:label_period_start_date', 'xss_clean|trim|required|valid_date');
+			$this->form_validation->set_rules('validity_times[period_end_date]', 'lang:label_period_end_date', 'xss_clean|trim|required|valid_date');
 		} else if ($this->input->post('validity') === 'recurring') {
-			$this->form_validation->set_rules('validity_times[recurring_every]', 'Recurring every', 'xss_clean|trim|required');
+			$this->form_validation->set_rules('validity_times[recurring_every]', 'lang:label_recurring_every', 'xss_clean|trim|required');
 			if (isset($_POST['validity_times']['recurring_every'])) {
 				foreach ($_POST['validity_times']['recurring_every'] as $key => $value) {
-					$this->form_validation->set_rules('validity_times[recurring_every]['.$key.']', 'Recurring every', 'xss_clean|required');
+					$this->form_validation->set_rules('validity_times[recurring_every]['.$key.']', 'lang:label_recurring_every', 'xss_clean|required');
 				}
 			}
 
-			$this->form_validation->set_rules('recurring_time', 'Recurring time', 'xss_clean|trim|required');
+			$this->form_validation->set_rules('recurring_time', 'lang:label_recurring_time', 'xss_clean|trim|required');
 			if ($this->input->post('recurring_time') !== '24hours') {
-				$this->form_validation->set_rules('validity_times[recurring_from_time]', 'Recurring from time', 'xss_clean|trim|required|valid_time');
-				$this->form_validation->set_rules('validity_times[recurring_to_time]', 'Recurring to time', 'xss_clean|trim|required|valid_time');
+				$this->form_validation->set_rules('validity_times[recurring_from_time]', 'lang:label_recurring_from_time', 'xss_clean|trim|required|valid_time');
+				$this->form_validation->set_rules('validity_times[recurring_to_time]', 'lang:label_recurring_to_time', 'xss_clean|trim|required|valid_time');
 			}
 		}
 
-		$this->form_validation->set_rules('status', 'Status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('status', 'lang:label_status', 'xss_clean|trim|required|integer');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;

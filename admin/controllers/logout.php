@@ -7,8 +7,15 @@ class Logout extends Admin_Controller {
 	}
 
 	public function index() {
-		$this->user->logout();
-		$this->alert->set('success', 'You are now logged out.');
+        $this->lang->load('login');
+
+        log_activity($this->user->getStaffId(), 'logged out', 'staffs', get_activity_message('activity_logged_out',
+            array('{staff}', '{link}'),
+            array($this->user->getStaffName(), admin_url('staffs/edit?id='.$this->user->getStaffId()))
+        ));
+
+        $this->user->logout();
+		$this->alert->set('success', $this->lang->line('alert_success_logout'));
 		redirect('login');
 	}
 }

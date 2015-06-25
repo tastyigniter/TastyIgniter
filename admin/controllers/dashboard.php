@@ -4,14 +4,23 @@ class Dashboard extends Admin_Controller {
 
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('currency'); // load the currency library
-		$this->load->model('Dashboard_model');
-		$this->load->model('Locations_model'); // load the menus model
+
+        $this->load->model('Dashboard_model');
+        $this->load->model('Locations_model'); // load the menus model
+
+        $this->load->library('currency'); // load the currency library
+
+		$this->lang->load('dashboard');
 	}
 
 	public function index() {
-		$this->template->setTitle('Dashboard');
-		$this->template->setHeading('Dashboard');
+		$this->template->setTitle($this->lang->line('text_title'));
+		$this->template->setHeading($this->lang->line('text_heading'));
+
+        $this->template->setStyleTag(root_url('assets/js/daterange/daterangepicker-bs3.css'), 'daterangepicker-css');
+        $this->template->setScriptTag(root_url('assets/js/daterange/moment.min.js'), 'daterange-moment-js');
+        $this->template->setScriptTag(root_url('assets/js/daterange/daterangepicker.js'), 'daterangepicker-js');
+        $this->template->setScriptTag(root_url('assets/js/Chart.min.js'), 'chart-min-js');
 
 		$data['menus'] 					= $this->Dashboard_model->getTotalMenus();
 		$data['current_month'] 			= mdate('%Y-%m', time());
@@ -34,22 +43,39 @@ class Dashboard extends Admin_Controller {
 			);
 		}
 
-		$filter = array();
+        $filter = array();
+        $filter['page'] = '1';
+        $filter['limit'] = '10';
+
+        $data['activities'] = array();
+        $this->load->model('Activities_model');
+        $results = $this->Activities_model->getList($filter);
+        foreach ($results as $result) {
+            $data['activities'][] = array(
+                'activity_id'	    => $result['activity_id'],
+                'icon'			    => 'fa fa-tasks',
+                'message'			=> $result['message'],
+                'time'		        => time_elapsed($result['date_added']),
+                'state'			    => $result['status'] === '1' ? 'read' : 'unread',
+            );
+        }
+
+        $filter = array();
 		$filter['page'] = '';
 		$filter['limit'] = 10;
 		$filter['sort_by'] = 'orders.date_added';
 		$filter['order_by'] = 'DESC';
 		$data['order_by_active'] = 'DESC';
 
-		$this->load->model('Orders_model');
-		$results = $this->Orders_model->getList($filter);
-		$data['orders'] = array();
+        $data['orders'] = array();
+        $this->load->model('Orders_model');
+        $results = $this->Orders_model->getList($filter);
 		foreach ($results as $result) {
 			$current_date = mdate('%d-%m-%Y', time());
 			$date_added = mdate('%d-%m-%Y', strtotime($result['date_added']));
 
 			if ($current_date === $date_added) {
-				$date_added = 'Today';
+				$date_added = $this->lang->line('text_today');
 			} else {
 				$date_added = mdate('%d %M %y', strtotime($date_added));
 			}
@@ -62,7 +88,7 @@ class Dashboard extends Admin_Controller {
                 'order_status'		=> $result['status_name'],
                 'status_color'		=> $result['status_color'],
 				'order_time'		=> mdate('%H:%i', strtotime($result['order_time'])),
-				'order_type' 		=> ($result['order_type'] === '1') ? 'Delivery' : 'Collection',
+				'order_type' 		=> ($result['order_type'] === '1') ? $this->lang->line('text_delivery') : $this->lang->line('text_collection'),
 				'date_added'		=> $date_added,
 				'edit' 				=> site_url('orders/edit?id=' . $result['order_id'])
 			);

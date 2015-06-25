@@ -4,61 +4,39 @@ class Contact extends Main_Controller {
 
 	public function __construct() {
 		parent::__construct(); 																	// calls the constructor
-		$this->load->library('location'); 														// load the location library
-		$this->load->library('currency'); 														// load the currency library
-		$this->load->model('Pages_model');
+
+        $this->load->model('Pages_model');
+
+        $this->load->library('location'); 														// load the location library
+        $this->load->library('currency'); 														// load the currency library
 
 		$this->lang->load('contact');
 	}
 
 	public function index() {
-		if ($this->session->flashdata('local_alert')) {
-			$data['local_alert'] = $this->session->flashdata('local_alert'); 								// retrieve session flashdata variable if available
-		} else {
-			$data['local_alert'] = '';
-		}
 
-		if ($this->session->userdata('user_postcode')) {
-			$data['postcode'] = $this->session->userdata('user_postcode'); 						// retrieve session userdata variable if available
-		} else {
-			$data['postcode'] = '';
-		}
+        if ($this->config->item('maps_api_key')) {
+            $map_key = '&key=' . $this->config->item('maps_api_key');
+        } else {
+            $map_key = '';
+        }
 
-		$this->template->setBreadcrumb('<i class="fa fa-home"></i>', '/');
+        $this->template->setScriptTag('http://maps.googleapis.com/maps/api/js?v=3' . $map_key .'&sensor=false&region=GB', 'google-maps-js', '104330');
+
+        $this->template->setBreadcrumb('<i class="fa fa-home"></i>', '/');
 		$this->template->setBreadcrumb($this->lang->line('text_heading'), 'contact');
 
-		// START of retrieving lines from language file to pass to view.
 		$this->template->setTitle($this->lang->line('text_heading'));
-		//$this->template->setHeading($this->lang->line('text_heading'));
-		$data['text_heading'] 			= $this->lang->line('text_heading');
-		$data['text_summary'] 			= $this->lang->line('text_summary');
-		$data['text_find_us'] 			= $this->lang->line('text_find_us');
-		$data['text_local'] 			= $this->lang->line('text_local');
-		$data['text_postcode'] 			= $this->lang->line('text_postcode');
-		$data['text_find'] 				= $this->lang->line('text_find');
-		$data['text_reviews'] 			= $this->lang->line('text_reviews');
-		$data['text_opening_hours'] 	= $this->lang->line('text_opening_hours');
-		$data['text_open'] 				= $this->lang->line('text_open');
-		$data['entry_subject'] 			= $this->lang->line('entry_subject');
-		$data['entry_full_name'] 		= $this->lang->line('entry_full_name');
-		$data['entry_email'] 			= $this->lang->line('entry_email');
-		$data['entry_telephone'] 		= $this->lang->line('entry_telephone');
-		$data['entry_comment'] 			= $this->lang->line('entry_comment');
-		$data['entry_captcha'] 				= $this->lang->line('entry_captcha');
-		$data['button_send'] 			= $this->lang->line('button_send');
-		// END of retrieving lines from language file to send to view.
 
-		$data['local_action'] 			= site_url('local_module/main/local_module/search');
-		$data['action'] 				= site_url('contact');
+		$data['_action'] 				= site_url('contact');
 
-		$main_local 	= $this->location->getMainLocal();
-		if ($main_local) {
-			$data['main_local'] 		= $main_local;										//if local restaurant data is available
-			$data['location_address'] 	= $this->location->getFormatAddress($main_local, FALSE);
-			$data['location_name'] 		= $main_local['location_name'];
-			$data['location_telephone'] = $main_local['location_telephone'];
-			$data['location_lat'] 		= $main_local['location_lat'];
-			$data['location_lng'] 		= $main_local['location_lng'];
+		if ($default_local = $this->location->getDefaultLocal()) {
+			$data['default_local'] 		= $default_local;										//if local restaurant data is available
+			$data['location_address'] 	= $this->location->formatAddress($default_local);
+			$data['location_name'] 		= $default_local['location_name'];
+			$data['location_telephone'] = $default_local['location_telephone'];
+			$data['location_lat'] 		= $default_local['location_lat'];
+			$data['location_lng'] 		= $default_local['location_lng'];
 		}
 
 		if ($this->config->item('maps_api_key')) {
@@ -67,17 +45,9 @@ class Contact extends Main_Controller {
 			$data['map_key'] = '';
 		}
 
-		$data['opening_hours'] 			= $this->location->openingHours(); 								//retrieve local location opening hours from location library
-
-		if ($this->location->isOpened()) { 														// check if local location is open
-			$data['text_open_or_close'] = $this->lang->line('text_opened');						// display we are open
-		} else {
-			$data['text_open_or_close'] = $this->lang->line('text_closed');						// display we are closed
-		}
-
 		$data['subjects'] = array('1' => 'General enquiry', '2' => 'Comment', '3' => 'Technical Issues');	// array of enquiry subject to pass to view
 
-        if ($this->input->post() && $this->_sendContact() === TRUE) {							// checks if $_POST data is set and if contact form validation was successful
+        if ($this->input->post() AND $this->_sendContact() === TRUE) {							// checks if $_POST data is set and if contact form validation was successful
 
             $this->alert->set('alert', $this->lang->line('alert_contact_sent'));		// display success message and redirect to account login page
 
@@ -112,7 +82,7 @@ class Contact extends Main_Controller {
 			$message = $this->mail_template->parseTemplate('contact', $mail_data);
 
 			$this->email->from(strtolower($email), ucwords($full_name));
-			$this->email->to($this->location->getEmail() ? $this->location->getEmail() : $this->config->item('site_email'));
+			$this->email->to(strtolower($this->config->item('site_email')));
 			$this->email->subject($this->mail_template->getSubject());
 			$this->email->message($message);
 
@@ -126,12 +96,12 @@ class Contact extends Main_Controller {
 
 	private function validateForm() {
 		// START of form validation rules
-		$this->form_validation->set_rules('subject', 'Subject', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('full_name', 'Full Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
-		$this->form_validation->set_rules('email', 'Email Address', 'xss_clean|trim|required|valid_email|max_length[96]');
-		$this->form_validation->set_rules('telephone', 'Telephone', 'xss_clean|trim|required|numeric|max_length[20]');
-		$this->form_validation->set_rules('comment', 'Comment', 'htmlspecialchars|required|max_length[1028]');
-		$this->form_validation->set_rules('captcha', 'Captcha', 'xss_clean|trim|required|callback__validate_captcha');
+		$this->form_validation->set_rules('subject', 'lang:label_subject', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('full_name', 'lang:label_full_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
+		$this->form_validation->set_rules('email', 'lang:label_email', 'xss_clean|trim|required|valid_email|max_length[96]');
+		$this->form_validation->set_rules('telephone', 'lang:label_telephone', 'xss_clean|trim|required|numeric|max_length[20]');
+		$this->form_validation->set_rules('comment', 'lang:label_comment', 'htmlspecialchars|required|max_length[1028]');
+		$this->form_validation->set_rules('captcha', 'lang:label_captcha', 'xss_clean|trim|required|callback__validate_captcha');
 		// END of form validation rules
 
   		if ($this->form_validation->run() === TRUE) {											// checks if form validation routines ran successfully
@@ -145,7 +115,7 @@ class Contact extends Main_Controller {
 		$session_caption = $this->session->tempdata('captcha');
 
         if (strtolower($word) !== strtolower($session_caption['word'])) {
-            $this->form_validation->set_message('_validate_captcha', 'The letters you entered does not match the image.');
+            $this->form_validation->set_message('_validate_captcha', $this->lang->line('error_captcha'));
             return FALSE;
         } else {
             return TRUE;
@@ -154,27 +124,7 @@ class Contact extends Main_Controller {
 
 	private function createCaptcha() {
         $this->load->helper('captcha');
-
-		$prefs = array(
-            'img_path' 		=> './assets/images/thumbs/',
-            'img_url' 		=> root_url() . '/assets/images/thumbs/',
-			'font_path'     => './system/fonts/texb.ttf',
-			'img_width'     => '150',
-			'img_height'    => 30,
-			'expiration'    => 300,
-			'word_length'   => 8,
-			'pool'          => '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
-
-			// White background and border, black text and white grid
-			'colors'        => array(
-				'background' 	=> array(255, 255, 255),
-				'border' 		=> array(255, 255, 255),
-				'text' 			=> array(0, 0, 0),
-				'grid' 			=> array(255, 255, 255)
-			)
-		);
-
-        $captcha = create_captcha($prefs);
+        $captcha = create_captcha();
         $this->session->set_tempdata('captcha', array('word' => $captcha['word'], 'image' => $captcha['image']), '300'); //set data to session for compare
 
         return $captcha['image'];
@@ -182,4 +132,4 @@ class Contact extends Main_Controller {
 }
 
 /* End of file contact.php */
-/* Location: ./main/controllers//contact.php */
+/* Location: ./main/controllers/contact.php */

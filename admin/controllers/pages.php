@@ -2,14 +2,18 @@
 
 class Pages extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
     public function __construct() {
 		parent::__construct(); //  calls the constructor
+
+        $this->user->restrict('Site.Pages');
+
+        $this->load->model('Pages_model');
+
         $this->load->library('permalink');
-		$this->load->library('pagination');
-		$this->load->model('Pages_model');
-	}
+        $this->load->library('pagination');
+
+        $this->lang->load('pages');
+    }
 
 	public function index() {
 		$url = '?';
@@ -38,12 +42,10 @@ class Pages extends Admin_Controller {
 			$filter['filter_status'] = $data['filter_status'] = '';
 		}
 
-		$this->template->setTitle('Pages');
-		$this->template->setHeading('Pages');
-		$this->template->setButton('+ New', array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
-		$this->template->setButton('Delete', array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
-
-		$data['text_empty'] 		= 'There are no pages available.';
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading($this->lang->line('text_heading'));
+		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
+		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
 		$data['pages'] = array();
 		$results = $this->Pages_model->getList($filter);
@@ -59,7 +61,7 @@ class Pages extends Admin_Controller {
 			);
 		}
 
-		$config['base_url'] 		= site_url('pages').$url;
+		$config['base_url'] 		= site_url('pages'.$url);
 		$config['total_rows'] 		= $this->Pages_model->getCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 
@@ -83,17 +85,18 @@ class Pages extends Admin_Controller {
 
 		if ($page_info) {
 			$page_id = $page_info['page_id'];
-			$data['action']	= site_url('pages/edit?id='. $page_id);
+			$data['_action']	= site_url('pages/edit?id='. $page_id);
 		} else {
 		    $page_id = 0;
-			$data['action']	= site_url('pages/edit');
+			$data['_action']	= site_url('pages/edit');
 		}
 
-		$title = (isset($page_info['name'])) ? $page_info['name'] : 'New';
-		$this->template->setTitle('Page: '. $title);
-		$this->template->setHeading('Page: '. $title);
-		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$title = (isset($page_info['name'])) ? $page_info['name'] : $this->lang->line('text_new');
+        $this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $title));
+        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
+
+        $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setBackButton('btn btn-back', site_url('pages'));
         $this->template->setScriptTag(root_url('assets/js/tinymce/tinymce.min.js'), 'tinymce-js', '111');
 
@@ -155,12 +158,12 @@ class Pages extends Admin_Controller {
 
 	private function _savePage() {
     	if ($this->validateForm() === TRUE) {
-            $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
+            $save_type = ( ! is_numeric($this->input->get('id'))) ? $this->lang->line('text_added') : $this->lang->line('text_updated');
 
 			if ($page_id = $this->Pages_model->savePage($this->input->get('id'), $this->input->post())) {
-				$this->alert->set('success', 'Page ' . $save_type . ' successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Page '.$save_type));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $save_type));
 			}
 
 			return $page_id;
@@ -168,30 +171,33 @@ class Pages extends Admin_Controller {
 	}
 
 	private function _deletePage() {
-    	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $page_id) {
-				$this->Pages_model->deletePage($page_id);
-			}
+        if ($this->input->post('delete')) {
+            $deleted_rows = $this->Pages_model->deletePage($this->input->post('delete'));
 
-			$this->alert->set('success', 'Page(s) deleted successfully!');
-		}
+            if ($deleted_rows > 0) {
+                $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Pages': 'Page';
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), $prefix.' '.$this->lang->line('text_deleted')));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted')));
+            }
 
-		return TRUE;
+            return TRUE;
+        }
 	}
 
 	private function validateForm() {
-		$this->form_validation->set_rules('language_id', 'Language', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
-		$this->form_validation->set_rules('title', 'Title', 'xss_clean|trim|required|min_length[2]|max_length[255]');
-		$this->form_validation->set_rules('heading', 'Heading', 'xss_clean|trim|required|min_length[2]|max_length[255]');
-		$this->form_validation->set_rules('permalink[permalink_id]', 'Permalink ID', 'xss_clean|trim|integer');
-		$this->form_validation->set_rules('permalink[slug]', 'Permalink Slug', 'xss_clean|trim|alpha_dash|max_length[255]');
-		$this->form_validation->set_rules('content', 'Content', 'trim|required|min_length[2]|max_length[5028]');
-		$this->form_validation->set_rules('meta_description', 'Meta Description', 'xss_clean|trim|min_length[2]|max_length[255]');
-		$this->form_validation->set_rules('meta_keywords', 'Meta Keywords', 'xss_clean|trim|min_length[2]|max_length[255]');
-		$this->form_validation->set_rules('layout_id', 'Layout', 'xss_clean|trim|integer');
-		$this->form_validation->set_rules('navigation[]', 'Navigation', 'xss_clean|trim|required');
-		$this->form_validation->set_rules('status', 'Status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('language_id', 'lang:label_language', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('name', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
+		$this->form_validation->set_rules('title', 'lang:label_title', 'xss_clean|trim|required|min_length[2]|max_length[255]');
+		$this->form_validation->set_rules('heading', 'lang:label_heading', 'xss_clean|trim|required|min_length[2]|max_length[255]');
+		$this->form_validation->set_rules('permalink[permalink_id]', 'lang:label_permalink_id', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('permalink[slug]', 'lang:label_permalink_slug', 'xss_clean|trim|alpha_dash|max_length[255]');
+		$this->form_validation->set_rules('content', 'lang:label_content', 'trim|required|min_length[2]|max_length[5028]');
+		$this->form_validation->set_rules('meta_description', 'lang:label_meta_description', 'xss_clean|trim|min_length[2]|max_length[255]');
+		$this->form_validation->set_rules('meta_keywords', 'lang:label_meta_keywords', 'xss_clean|trim|min_length[2]|max_length[255]');
+		$this->form_validation->set_rules('layout_id', 'lang:label_layout', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('navigation[]', 'lang:label_navigation', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('status', 'lang:label_status', 'xss_clean|trim|required|integer');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;

@@ -8,10 +8,11 @@ if (APPDIR === ADMINDIR) {
 } else {
     $route['default_controller'] = 'home';
     $route['local/reviews'] = 'local/reviews';
-    $route["^(" . implode('|', array('home', 'menus', 'reserve', 'contact', 'checkout', 'maintenance', 'local', 'pages')) . ")?$"] = '$1';
-    $route["^(" . implode('|', array('home', 'menus', 'reserve', 'contact', 'maintenance', 'local', 'pages')) . ")?/(:any)$"] = '$1/$2';
-    $route["^(" . implode('|', array('home', 'menus', 'reserve', 'contact', 'maintenance', 'local', 'pages')) . ")?/(:any)$"] = '$1';
-    $route['locations'] = 'local/locations';
+    $route["^(" . implode('|', array('home', 'menus', 'reservation', 'contact', 'checkout', 'maintenance', 'local', 'pages')) . ")?$"] = '$1';
+    $route["^(" . implode('|', array('home', 'menus', 'contact', 'maintenance', 'local', 'pages')) . ")?/(:any)$"] = '$1/$2';
+    $route["^(" . implode('|', array('home', 'menus', 'contact', 'maintenance', 'local', 'pages')) . ")?/(:any)$"] = '$1';
+    $route['locations'] = 'local/all';
+    $route['local/(.+)'] = 'local';
     $route['account'] = 'account/account';
     $route['(:any)'] = 'pages';
     $route['404_override'] = '';

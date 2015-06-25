@@ -1,5 +1,5 @@
 ADDED:
-Session library now using 'CI' PHP native session
+Session library now using 'CI' files session
 root_url() method to return site root url
 Themes customization:
 	New method to template library to load theme configuration file
@@ -10,8 +10,7 @@ Themes customization:
     admin_theme_helper methods moved to Customizer class
 
 Menu Category hierarchy: with parent and as many child levels
-Ext_Controller
-Extensions::options to load extensions admin options page
+Ext_Controller to be extended by module controllers
 New column 'status' added to extensions table, to indicate whether extension is installed/uninstalled and to keep extension data in database after uninstallation.
 Cart Module: option to show or hide menu images and set sizes
 Migrations schemas:
@@ -23,7 +22,10 @@ Notifications System:
 Added order and reservation status color
 Activity:
     page views count per ip/customer
-Admin base controller property _permission_rules added
+Admin base controller property _permission_rules added can be overridden by admin controllers to set permission rules for the controller
+All controller methods visibility are accurately set
+Extension:
+    Extensions controllers now loads a mandatory config file on initialization in module_name/config/module_name.php
 
 
 
@@ -50,23 +52,18 @@ Extensions sub-folders structure re-arranged:
 	controllers/admin and controllers/main merged into controllers/
 	languages/admin and languages/main merged into languages/
 	views/admin and views/main merged into views/
-
-Extension class methods moved to Extension_model class
-Extension class now extensible to load admin backend module option page
-Extension admin options class must extend Extension class
-Extensions class now extends Ext_Controller instead of MX_Controller and Admin_options extends Extension
-
+Extension class methods moved to Extension_model class and Extension class acts as a Facade
+Extensions class now extends Ext_Controller instead of MX_Controller and Admin_options extends Ext_Controller
 Renamed permalink to USER-friendly slug also column in permalinks table
 Reviews can now be added on reservations and orders. column order_id changed to sale_id and new column sale_type added to differentiate order reviews from reservations reviews.
 Status History:
 	changed status_history database table column from assigned_id to assignee_id
 	changed reservations database table column from staff_id to assignee_id
 	added assignee_id column to orders database table
-Activity:
-    activity timeout changed to activity online timeout on settings page
-    activity archive changed to activity archive timeout on settings page
+Customers Online:
+    settings item activity timeout changed to customers_online_timeout
+    settings item activity archive changed to customers_online_archive_timeout
     IP blacklist removed, to be added back in next version
-
 Moved admin login auth and permission check from controllers to admin base controllers
 Added referrer_url to ti_url_helper, which will return the user referral url.
 Changed config('maintenance_page') to config('maintenance_message') and use show_error() instead of loading controller.
@@ -75,22 +72,26 @@ Extracted categories, menu_options associated methods into separate models from 
 Extracted banners associated methods into separate models from design_model and rename to layout_model
 Improved admin user has permission functionality, the permission rule action can be set as controller class property.
 Removed duplicate admin controllers methods and models methods
-All controller methods visibility are accurately set
+Improved site_url and redirect() uri re-routing
+Improved image manager styles responsiveness and remove irrelevant options
+Fixed models delete methods to accept array of ids
+Changed customer activity to customer_online
 
 
 TO-DO:
-move get_lat_lag form validation callback from controllers to library
-prefix all form validation callback methods with _ to avoid being called through the browser
-Improve site_url and redirect() uri re-routing
-Improve image manager styles responsiveness and remove irrelevant options
+Lock alert library message to specific app
 Customer Activity IP blacklist
+possibly add customer activity
+bring back the cart page
 add functionality to add multiple banners in module (jst like layout tables.)
-Improve admin controllers to remove duplicate methods
-show filter box on document load when filter is active in admin
 Fancy checkbox bootstrap plugin
-validate from and to dates
-Fix model delete methods to accept array of ids
+display category parent hierarchy in levels - category module
+Add google analytics code to settings-server
 
 
+Reduced admin interface normal font weight to 200
+
+
+Database configuration key debug must be FALSE in development
 
 CURRENT TASK:

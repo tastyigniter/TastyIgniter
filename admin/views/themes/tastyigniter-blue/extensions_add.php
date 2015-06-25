@@ -1,12 +1,12 @@
 <?php echo get_header(); ?>
 <div class="row content">
     <div class="col-md-12">
-        <form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="post" action="<?php echo $action; ?>" enctype="multipart/form-data">
+        <form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo $_action; ?>" enctype="multipart/form-data">
             <div class="table-responsive">
                 <table class="table table-striped table-border">
                     <thead>
                     <tr>
-                        <th>Upload module extension zip file and it will be installed automatically.</th>
+                        <th><?php echo lang('alert_info_upload'); ?></th>
                     </tr>
                     </thead>
                     <tbody>

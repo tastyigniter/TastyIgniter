@@ -1,12 +1,15 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-class Local_module extends Ext_Controller {
+class Local_module extends Main_Controller {
 
 	public function __construct() {
 		parent::__construct(); 																	// calls the constructor
 		$this->load->library('location'); 														// load the location library
 		$this->load->library('currency'); 														// load the location library
 		$this->lang->load('local_module/local_module');
+
+        $referrer_uri = explode('/', str_replace(site_url(), '', $this->agent->referrer()));
+        $this->referrer_uri = (!empty($referrer_uri[0])) ? $referrer_uri[0] : '';
 	}
 
 	public function index($ext_data = array()) {
@@ -14,117 +17,144 @@ class Local_module extends Ext_Controller {
 			show_404(); 																		// Whoops, show 404 error page!
 		}
 
-		$data['local_page'] = ($this->uri->rsegment(1) === 'local' AND $this->uri->rsegment(2) === 'locations') ? TRUE : FALSE;
+        $this->template->setStyleTag(extension_url('local_module/views/stylesheet.css'), 'local-module-css', '100000');
 
-		if ($this->session->flashdata('local_alert')) {
-			$data['local_alert'] = $this->session->flashdata('local_alert');  								// retrieve session flashdata variable if available
-		} else {
-			$data['local_alert'] = '';
-		}
+        $data['module_position'] = isset($ext_data['module_position']) ? $ext_data['module_position'] : '';
 
-        // START of retrieving lines from language file to pass to view.
-		$data['text_heading'] 			= $this->lang->line('text_heading');
-		$data['text_local'] 			= $this->lang->line('text_local');
-		$data['text_postcode'] 			= ($this->config->item('search_by') === 'postcode') ? $this->lang->line('entry_postcode') : $this->lang->line('entry_address');
-		$data['text_delivery_charge'] 	= $this->lang->line('text_delivery_charge');
-		$data['text_min_total'] 		= $this->lang->line('text_min_total');
-		$data['text_avail'] 			= $this->lang->line('text_avail');
-		$data['text_more_info'] 		= $this->lang->line('text_more_info');
-		$data['text_reviews'] 			= $this->lang->line('text_reviews');
-		$data['text_goto_menus'] 		= $this->lang->line('text_goto_menus');
-		$data['text_open24_7'] 			= $this->lang->line('text_open24_7');
+        $data['local_action']			= site_url('local_module/local_module/search');
 
-		$data['button_view_map'] 		= $this->lang->line('button_view_map');
-		$data['button_change_location'] = $this->lang->line('button_change_location');
-		// END of retrieving lines from language file to send to view.
+        $data['rsegment'] = $rsegment = ($this->uri->rsegment(1) === 'local_module' AND !empty($this->referrer_uri)) ? $this->referrer_uri : $this->uri->rsegment(1);
 
-		$data['info_url'] 				= site_url('local');
-		$data['local_info'] 			= $this->location->local(); 										// retrieve local location data
-		$data['location_name'] 			= $this->location->getName(); 										// retrieve local location data
-		$data['location_address'] 		= $this->location->getAddress(FALSE); 										// retrieve local location data
-		$data['opening_type'] 			= $this->location->getOpeningType();
-		$data['opening_status']		 	= $this->location->openingStatus();
-		$data['opening_time']		 	= $this->location->openingTime();
-		$data['closing_time'] 			= $this->location->closingTime();
+        $data['local_alert']            = $this->alert->display('local_module');
 
-		if ($this->config->item('maps_api_key')) {
-			$data['map_key'] = '&key='. $this->config->item('maps_api_key');
-		} else {
-			$data['map_key'] = '';
-		}
+        $data['info_url'] 				= site_url('local');
+        $data['local_info'] 			= $this->location->local(); 										// retrieve local location data
+        $data['location_id'] 			= $this->location->getId(); 										// retrieve local location data
+        $data['location_name'] 			= $this->location->getName(); 										// retrieve local location data
+        $data['location_address'] 		= $this->location->getAddress(); 										// retrieve local location data
+        $data['location_image'] 		= $this->location->getImage(); 										// retrieve local location data
+        $data['is_opened'] 			    = $this->location->isOpened();
+        $data['opening_type'] 			= $this->location->getOpeningType();
+        $data['opening_status']		 	= $this->location->openingStatus();
+        $data['opening_time']		 	= $this->location->openingTime();
+        $data['closing_time'] 			= $this->location->closingTime();
+        $data['order_type']             = $this->location->orderType();
+        $data['delivery_charge']        = $this->location->deliveryCharge();
+        $data['delivery_time'] 		    = $this->location->deliveryTime();
+        $data['collection_time'] 	    = $this->location->collectionTime();
+        $data['search_query']           = $this->location->searchQuery();
 
-		$local_info = $this->session->userdata('local_info');
-		if (isset($local_info['search_query'])) {
-			$data['postcode'] = $local_info['search_query'];
-		} else {
-			$data['postcode'] = '';
-		}
+        $data['location_search'] = FALSE;
+        if ($rsegment === 'home') {
+            $data['location_search'] = TRUE;
+        }
 
-		if ($this->location->isOpened()) { 														// checks if local location is open
-			$data['text_open_or_close'] = $this->lang->line('text_opened');						// display we are open
-		} else {
-			$data['text_open_or_close'] = $this->lang->line('text_closed');						// display we are closed
-		}
+        if ($this->config->item('maps_api_key')) {
+            $data['map_key'] = '&key='. $this->config->item('maps_api_key');
+        } else {
+            $data['map_key'] = '';
+        }
 
-		$check_delivery = $this->location->hasDelivery();
-		$check_collection = $this->location->hasCollection();
+        if (!$this->location->hasDelivery() AND $this->location->hasCollection()) { 														// checks if cart contents is empty
+            $data['text_service_offered'] = $this->lang->line('text_collection_only');
+        } else if ($this->location->hasDelivery() AND !$this->location->hasCollection()) {
+            $data['text_service_offered'] = $this->lang->line('text_delivery_only');
+        } else if ($this->location->hasDelivery() AND $this->location->hasCollection()) {
+            $data['text_service_offered'] = $this->lang->line('text_both_types');						// display we are open
+        } else {
+            $data['text_service_offered'] = $this->lang->line('text_no_types');
+        }
 
-		if (!$check_delivery AND $check_collection) { 														// checks if cart contents is empty
-			$data['text_delivery'] = $this->lang->line('text_collection');
-		} else if ($check_delivery AND !$check_collection) {
-			$data['text_delivery'] = $this->lang->line('text_delivery');
-		} else if ($check_delivery AND $check_collection) {
-			$data['text_delivery'] = $this->lang->line('text_both_types');						// display we are open
-		} else {
-			$data['text_delivery'] = $this->lang->line('text_no_types');
-		}
+        if ($this->location->deliveryCharge() > 0) {
+            $data['text_delivery_charge'] = sprintf($this->lang->line('text_delivery_charge'), $this->currency->format($this->location->deliveryCharge()));
+        } else {
+            $data['text_delivery_charge'] = $this->lang->line('text_free_delivery');
+        }
 
-		$this->load->model('Reviews_model');
-		$total_reviews = $this->Reviews_model->getTotalLocationReviews($this->location->getId());
-		$data['text_total_review'] = sprintf($this->lang->line('text_total_review'), site_url('local/reviews'), $total_reviews);
+        if ($this->location->minimumOrder() > 0) {
+            $data['min_total'] = $this->currency->format($this->location->minimumOrder());
+        } else {
+            $data['min_total'] = $this->currency->format('0.00');
+        }
 
-		$data['module_position'] 			= isset($ext_data['module_position']) ? $ext_data['module_position'] : '';
+        $this->load->model('Reviews_model');
+        $total_reviews = $this->Reviews_model->getTotalLocationReviews($this->location->getId());
+        $data['text_total_review'] = sprintf($this->lang->line('text_total_review'), $total_reviews);
 
-		// pass array $data and load view files
-		$this->load->view('local_module/local_module', $data);
-	}
+        // pass array $data and load view files
+        $this->load->view('local_module/local_module', $data);
+    }
 
-	public function search() {
+    public function order_type() {																	// _updateModule() method to update cart
+        $json = array();
+
+        if (!$json) {
+            $this->load->library('location');
+            $this->load->library('cart');
+
+            if ( ! $this->location->isOpened() AND $this->config->item('future_orders') !== '1') { 													// else if local restaurant is not open
+                $json['error'] = $this->lang->line('alert_location_closed');
+            } else if ( ! $this->location->isOpened() AND $this->config->item('future_orders') === '1') {
+                $json['error'] = $this->lang->line('alert_local_future_order');
+            } else {
+                $order_type = (is_numeric($this->input->post('order_type'))) ? $this->input->post('order_type') : '1';
+
+                if ($order_type === '1') {
+                    if ( ! $this->location->hasDelivery()) {
+                        $json['error'] = $this->lang->line('alert_delivery_unavailable');
+                    } else if ($this->location->hasSearchQuery() AND $this->location->hasDelivery() AND ! $this->location->checkDeliveryCoverage()) {
+                        $json['error'] = $this->lang->line('alert_delivery_coverage');
+                    } else if ($this->cart->contents() AND ! $this->location->checkMinimumOrder($this->cart->total())) {                            // checks if cart contents is empty
+                        $json['error'] = $this->lang->line('alert_min_delivery_order_total');
+                    }
+
+                } else if ($order_type === '2') {
+                    if ( ! $this->location->hasCollection()) {
+                        $json['error'] = $this->lang->line('alert_collection_unavailable');
+                    }
+                }
+
+                $this->location->setOrderType($order_type);
+            }
+        }
+
+        $this->output->set_output(json_encode($json));	// encode the json array and set final out to be sent to jQuery AJAX
+    }
+
+    public function search() {
 		$this->load->library('user_agent');
 		$json = array();
 
-		$result = $this->location->searchRestaurant($this->input->post('postcode'));
+		$result = $this->location->searchRestaurant($this->input->post('search_query'));
 
 		switch ($result) {
-			case 'FAILED':
-				$json['error'] = $this->lang->line('error_failed');				// display error: invalid postcode
-				break;
 			case 'NO_SEARCH_QUERY':
-				$json['error'] = $this->lang->line('error_no_postcode');
+				$json['error'] = $this->lang->line('alert_no_search_query');
 				break;
-			case 'ENTER_POSTCODE':
-				$json['error'] = $this->lang->line('error_enter_postcode');	// display error: enter postcode
+			case 'INVALID_SEARCH_QUERY':
+				$json['error'] = $this->lang->line('alert_invalid_search_query');	// display error: enter postcode
 				break;
 			case 'outside':
-				$json['error'] = $this->lang->line('error_no_restaurant');	// display error: no available restaurant
+				$json['error'] = $this->lang->line('alert_no_found_restaurant');	// display error: no available restaurant
 				break;
 		}
 
+        $redirect = '';
 		if (!isset($json['error'])) {
 			$order_type = (is_numeric($this->input->post('order_type'))) ? $this->input->post('order_type') : '1';
 			$this->location->setOrderType($order_type);
-		}
 
-		if ($this->agent->referrer() == site_url() OR $this->agent->referrer() == site_url('home')) {
-			$redirect = site_url('menus');
-		} else {
-			$redirect = $this->agent->referrer();
-		}
+            $redirect = $json['redirect'] = site_url('local?location_id='.$this->location->getId());
+        }
 
-		if ($this->input->is_ajax_request()) {
+        if ($redirect === '') {
+            $redirect = $this->referrer_uri;
+        }
+
+        if ($this->input->is_ajax_request()) {
 			$this->output->set_output(json_encode($json));											// encode the json array and set final out to be sent to jQuery AJAX
 		} else {
-			if (isset($json['error'])) $this->alert->set('custom', $json['error']);
+			if (isset($json['error'])) $this->alert->set('custom', $json['error'], 'local_module');
 			redirect($redirect);
 		}
 	}

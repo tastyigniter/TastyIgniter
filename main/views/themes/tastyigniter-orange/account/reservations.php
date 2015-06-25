@@ -1,14 +1,20 @@
 <?php echo get_header(); ?>
 <?php echo get_partial('content_top'); ?>
-<div id="page-content">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="heading-section">
-				</div>
-			</div>
-		</div>
 
+<?php if ($this->alert->get()) { ?>
+    <div id="notification">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <?php echo $this->alert->display(); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+
+<div id="page-content">
+	<div class="container top-spacing">
 		<div class="row">
 			<?php echo get_partial('content_left'); ?>
 			<?php
@@ -28,12 +34,12 @@
 						<table class="table table-hover">
 							<thead>
 								<tr>
-									<th><?php echo $column_id; ?></th>
-									<th><?php echo $column_status; ?></th>
-									<th><?php echo $column_location; ?></th>
-									<th><?php echo $column_date; ?></th>
-									<th><?php echo $column_table; ?></th>
-									<th><?php echo $column_guest; ?></th>
+									<th><?php echo lang('column_id'); ?></th>
+									<th><?php echo lang('column_status'); ?></th>
+									<th><?php echo lang('column_location'); ?></th>
+									<th><?php echo lang('column_date'); ?></th>
+									<th><?php echo lang('column_table'); ?></th>
+									<th><?php echo lang('column_guest'); ?></th>
 									<th></th>
 								</tr>
 							</thead>
@@ -47,12 +53,12 @@
 									<td><?php echo $reservation['reserve_time']; ?> - <?php echo $reservation['reserve_date']; ?></td>
 									<td><?php echo $reservation['table_name']; ?></td>
 									<td><?php echo $reservation['guest_num']; ?></td>
-									<td><a title="<?php echo $text_leave_review; ?>" href="<?php echo $reservation['leave_review']; ?>"><i class="fa fa-heart"></i></a></td>
+									<td><a title="<?php echo lang('text_leave_review'); ?>" href="<?php echo $reservation['leave_review']; ?>"><i class="fa fa-heart"></i></a></td>
 								</tr>
 								<?php } ?>
 							<?php } else { ?>
 								<tr>
-									<td colspan="7"><?php echo $text_empty; ?></td>
+									<td colspan="7"><?php echo lang('text_empty'); ?></td>
 								</tr>
 							<?php } ?>
 							</tbody>
@@ -62,8 +68,8 @@
 
 					<div class="col-md-12">
 						<div class="buttons col-xs-6 wrap-none">
-							<a class="btn btn-default" href="<?php echo $back; ?>"><?php echo $button_back; ?></a>
-							<a class="btn btn-success" href="<?php echo $new_reserve_url; ?>"><?php echo $button_reserve; ?></a>
+							<a class="btn btn-default" href="<?php echo $back_url; ?>"><?php echo lang('button_back'); ?></a>
+							<a class="btn btn-primary btn-lg" href="<?php echo $new_reservation_url; ?>"><?php echo lang('button_reserve'); ?></a>
 						</div>
 
 						<div class="col-xs-6 wrap-none">

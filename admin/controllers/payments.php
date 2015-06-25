@@ -2,48 +2,38 @@
 
 class Payments extends Admin_Controller {
 
-    public $_permission_rules = 'access';
-
     public function __construct() {
 		parent::__construct();
-		$this->load->model('Extensions_model');
+
+        $this->user->restrict('Admin.Payments');
+
+        $this->load->model('Extensions_model');
+
+        $this->lang->load('payments');
 	}
 
 	public function index() {
-		if ($this->input->get('name') AND $this->input->get('action')) {
-			if ($this->input->get('action') === 'install' AND $this->_install() === TRUE) {
-				redirect('payments');
-			}
-
-			if ($this->input->get('action') === 'uninstall' AND $this->_uninstall() === TRUE) {
-				redirect('payments');
-			}
-		}
-
-		$this->template->setTitle('Payments');
-		$this->template->setHeading('Payments');
-
-		$data['text_empty'] 		= 'There are no extensions available.';
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading($this->lang->line('text_heading'));
+        $this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/add'));
 
 		$data['payments'] = array();
-		$results = $this->Extensions_model->getList('payment');
+		$results = $this->Extensions_model->getList(array('type' => 'payment'));
 		foreach ($results as $result) {
 			if ($result['installed'] === TRUE) {
-				$extension_id = $result['extension_id'];
-				$manage = site_url('payments?action=uninstall&name='.$result['name']);
-			} else {
-				$extension_id = '-';
-				$manage = site_url('payments?action=install&name='.$result['name']);
+                $manage = 'uninstall';
+            } else {
+                $manage = 'install';
 			}
 
 			$data['payments'][] = array(
-				'extension_id' 	=> $extension_id,
+				'extension_id' 	=> $result['extension_id'],
 				'name' 			=> $result['title'],
 				'installed' 	=> $result['installed'],
 				'type' 			=> $result['type'],
 				'options' 		=> $result['options'],
-				'edit' 			=> site_url('payments/edit?action=edit&name='.$result['name']),
-				'manage'		=> $manage
+				'edit' 			=> site_url('payments/edit?action=edit&name='.$result['name'].'&id='.$result['extension_id']),
+                'manage'		=> site_url('payments/edit?action='.$manage.'&name='.$result['name'].'&id='.$result['extension_id'])
 			);
 		}
 
@@ -57,33 +47,35 @@ class Payments extends Admin_Controller {
 		$loaded = FALSE;
         $error_msg = FALSE;
 
-        if ($payment = $this->Extensions_model->getExtension('payment', $extension_name)) {
-
+        if ($payment = $this->Extensions_model->getExtension('payment', $extension_name, FALSE)) {
             $data['payment_name'] = $payment['name'];
             $ext_controller = $payment['name'] . '/admin_' . $payment['name'];
             $ext_class = strtolower('admin_'.$payment['name']);
 
             if (isset($payment['installed'], $payment['config'], $payment['options']) AND $action === 'edit') {
                 if ($payment['config'] === FALSE) {
-                    $error_msg = 'An error occurred, payment extension config file failed to load.';
+                    $error_msg = $this->lang->line('error_config');
                 } else if ($payment['options'] === FALSE) {
-                    $error_msg = 'An error occurred, payment extension admin options disabled';
+                    $error_msg = $this->lang->line('error_options');
                 } else if ($payment['installed'] === FALSE) {
-                    $error_msg = 'An error occurred, payment extension is not installed properly';
-                } else if (!$this->user->hasPermissions('access', $extension_name)) {
-                    $error_msg = 'You do not have the right permission to access this payment';
-                } else if ($this->input->post() AND !$this->user->hasPermissions('modify', $extension_name)) {
-                    $error_msg = 'You do not have the right permission to modify this payment';
+                    $error_msg = $this->lang->line('error_installed');
                 } else {
-                    $_GET['extension_id'] = $payment['extension_id'] ? $payment['extension_id'] : 0;
                     $this->load->module($ext_controller);
                     if (class_exists($ext_class, FALSE)) {
                         $data['payment'] = $this->{$ext_class}->index($payment);
                         $loaded = TRUE;
                     } else {
-                        $error_msg = 'An error occurred, module extension class failed to load: admin_'.$extension_name;
+                        $error_msg = sprintf($this->lang->line('error_failed'), $extension_name);
                     }
                 }
+            }
+        }
+
+        if ($this->input->get('name') AND $this->input->get('action') AND $action !== 'edit') {
+            if ($this->input->get('action') === 'install' AND $this->_install() === TRUE) {
+                redirect('payments');
+            } else if ($this->input->get('action') === 'uninstall' AND $this->_uninstall() === TRUE) {
+                redirect('payments');
             }
         }
 
@@ -99,27 +91,37 @@ class Payments extends Admin_Controller {
 	private function _install() {
         if ($this->input->get('action') === 'install') {
             if ($this->Extensions_model->extensionExists($this->input->get('name'))) {
-                if ($this->Extensions_model->install('payment', $this->input->get('name'))) {
-                    $this->alert->set('success', 'Payment Installed successfully!');
+                if ($this->Extensions_model->install('payment', $this->input->get('name'), $this->input->get('id'))) {
+                    log_activity($this->user->getStaffId(), 'installed', 'extensions', get_activity_message('activity_custom_no_link',
+                        array('{staff}', '{action}', '{context}', '{item}'),
+                        array($this->user->getStaffName(), 'installed', 'extension payment', $this->input->get('name'))
+                    ));
+
+                    $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Payment installed '));
                     return TRUE;
                 }
             }
 
-            $this->alert->danger_now('An error occurred, please try again.');
+            $this->alert->danger_now($this->lang->line('alert_error_try_again'));
+            return TRUE;
         }
-
-        return FALSE;
 	}
 
 	private function _uninstall() {
         if ($this->input->get('action') === 'uninstall') {
-            if ($this->Extensions_model->uninstall('payment', $this->input->get('name'))) {
-                $this->alert->set('success', 'Payment Uninstalled successfully!');
+            if ($this->Extensions_model->uninstall('payment', $this->input->get('name'), $this->input->get('id'))) {
+                log_activity($this->user->getStaffId(), 'uninstalled', 'extensions', get_activity_message('activity_custom_no_link',
+                    array('{staff}', '{action}', '{context}', '{item}'),
+                    array($this->user->getStaffName(), 'uninstalled', 'extension payment', $this->input->get('name'))
+                ));
+
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Payment uninstalled '));
                 return TRUE;
             }
-        }
 
-        return FALSE;
+            $this->alert->danger_now($this->lang->line('alert_error_try_again'));
+            return TRUE;
+        }
 	}
 }
 

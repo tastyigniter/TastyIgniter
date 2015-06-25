@@ -1,254 +1,138 @@
 <?php echo get_header(); ?>
 <?php echo get_partial('content_top'); ?>
+<?php if ($this->alert->get()) { ?>
+    <div id="notification">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <?php echo $this->alert->display(); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+
 <div id="page-content">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="heading-section">
-					<?php if ($local_location) { ?>
-						<h4><?php echo $text_local; ?></h4>
-	                    <span class="under-heading"></span>
-	                <?php } ?>
-				</div>
-			</div>
-		</div>
+    <div class="container">
+        <div class="row">
+            <?php
+            if (partial_exists('content_right')) {
+                $class = "col-sm-9 col-md-9";
+            } else {
+                $class = "col-sm-12";
+            }
 
-		<div class="row">
-			<?php echo get_partial('content_left'); ?>
-			<?php
-				if (partial_exists('content_left') AND partial_exists('content_right')) {
-					$class = "col-sm-6 col-md-6";
-				} else if (partial_exists('content_left') OR partial_exists('content_right')) {
-					$class = "col-sm-9 col-md-9";
-				} else {
-					$class = "col-md-10 center-block";
-				}
-			?>
+            if (partial_exists('content_left')) {
+                $menu_class = "col-sm-9 col-md-9";
+            } else {
+                $menu_class = "col-sm-9";
+            }
+            ?>
 
-			<div class="<?php echo $class; ?>">
-				<?php if (!$local_location) { ?>
-					<div class="row location-list">
-						<?php if ($locations) {?>
-							<?php foreach ($locations as $location) { ?>
-								<div class="panel panel-local">
-									<div class="panel-heading">
-										<h4><?php echo $location['location_name']; ?>
-											<span class="pull-right"><?php echo $location['open_or_closed']; ?></span>
-										</h4>
-									</div>
+            <div class="<?php echo $class; ?>">
 
-									<div class="panel-body">
-										<div class="col-md-4">
-											<dl>
-												<dd><span class="text-muted"><?php echo $location['address']; ?></span></dd>
-												<dd>
-													<div class="rating rating-sm">
-														<span class="fa fa-star"></span><span class="fa fa-star"></span><span class="fa fa-star"></span><span class="fa fa-star-half-o"></span><span class="fa fa-star-o"></span>
-													</div>
-													<span><?php echo $location['total_reviews']; ?></span>
-												</dd>
-											</dl>
-										</div>
-										<div class="col-md-3">
-											<dl>
-												<dd class="text-info">
-													<?php if ($location['opening_time'] == '00:00' AND $location['closing_time'] == '23:59') { ?>
-														<span class="fa fa-clock-o"></span>&nbsp;&nbsp;<span><?php echo $text_24h; ?></span>
-													<?php } else if (empty($opening_status)) { ?>
-														<span class="fa fa-clock-o"></span>&nbsp;&nbsp;<span><?php echo $location['opening_time']; ?> - <?php echo $location['closing_time']; ?></span>
-													<?php } ?>
-												</dd>
-												<!--<dd><span><?php echo $location['delivery_charge']; ?></span></dd>-->
-											</dl>
-										</div>
-										<div class="col-md-3">
-											<dl>
-												<dd><?php echo $location['offers']; ?></dd>
-												<dd><span><?php echo $text_delivery_time; ?><?php echo $location['delivery_time']; ?></span></dd>
-												<dd><span><?php echo $text_collection_time; ?><?php echo $location['collection_time']; ?></span></dd>
-											</dl>
-										</div>
-										<div class="col-md-2 text-right">
-											<dl>
-												<dd><a class="btn btn-success" href="<?php echo $location['href']; ?>"><?php echo $button_view_menu; ?></a></dd>
-											</dl>
-										</div>
-										<div class="clearfix"></div>
-									</div>
-								</div>
-							<?php } ?>
-						<?php } else { ?>
-							<p><?php echo $text_empty; ?></p>
-						<?php } ?>
-					</div>
-				<?php } else { ?>
-					<div class="row">
-						<div class="col-sm-6">
-							<?php if ($opening_hours) { ?>
-								<div class="panel panel-local-hours">
-								<?php if (!empty($opening_type) AND $opening_type == '24_7') { ?>
-									<p><?php echo $text_open24_7; ?></p>
-								<?php } else { ?>
-									<strong><?php echo $text_opening_hours; ?></strong>
-									<dl class="dl-horizontal opening-hour">
-										<?php foreach ($opening_hours as $opening_hour) { ?>
-											<dt><?php echo $opening_hour['day']; ?>:</dt>
-											<dd><?php echo $opening_hour['time']; ?></dd>
-										<?php } ?>
-									</dl>
-								<?php } ?>
-								</div>
-							<?php } ?>
+                <div class="row wrap-vertical">
+                    <ul id="nav-tabs" class="nav nav-tabs nav-justified nav-tabs-line">
+                        <li class="active"><a href="#local-menus" data-toggle="tab"><?php echo lang('text_tab_general'); ?></a></li>
+                        <li><a href="#local-reviews" data-toggle="tab"><?php echo lang('text_tab_review'); ?></a></li>
+                        <li><a href="#local-information" data-toggle="tab"><?php echo lang('text_tab_info'); ?></a></li>
+                    </ul>
+                </div>
 
-							<div class="panel panel-local-info wrap-horizontal">
-								<div class="btn-group btn-group-md" data-toggle="buttons">
-									<?php if ($order_type === '1' AND ($has_delivery AND $has_collection)) { ?>
-										<label class="btn btn-default active">
-											<input type="radio" name="order_type" value="1" checked="checked">&nbsp;&nbsp;<?php echo $text_delivery; ?>
-										</label>
-										<label class="btn btn-default">
-											<input type="radio" name="order_type" value="2">&nbsp;&nbsp;<?php echo $text_collection; ?>
-										</label>
-									<?php } else if ($order_type === '2' AND ($has_delivery AND $has_collection)) { ?>
-										<label class="btn btn-default">
-											<input type="radio" name="order_type" value="1">&nbsp;&nbsp;<?php echo $text_delivery; ?>
-										</label>
-										<label class="btn btn-default active">
-											<input type="radio" name="order_type" value="2" checked="checked">&nbsp;&nbsp;<?php echo $text_collection; ?>
-										</label>
-									<?php } else if ($order_type === '1' AND ($has_delivery AND !$has_collection)) { ?>
-										<label class="btn btn-default active">
-											<input type="radio" name="order_type" value="1" checked="checked">&nbsp;&nbsp;<?php echo $text_delivery_only; ?>
-										</label>
-									<?php } else if ($order_type === '2' AND (!$has_delivery AND $has_collection)) { ?>
-										<label class="btn btn-default active">
-											<input type="radio" name="order_type" value="2" checked="checked">&nbsp;&nbsp;<?php echo $text_collection_only; ?>
-										</label>
-									<?php } else { ?>
-										<label class="btn btn-default">
-											<input type="radio" name="order_type" value="0">&nbsp;&nbsp;<?php echo $text_no_types; ?>
-										</label>
-									<?php } ?>
-								</div>
-								<div class="delivery-info wrap-horizontal" style="display:none;">
-									<dl>
-										<dd><span class=""><?php echo $text_delivery_time; ?><?php echo $delivery_time; ?></span></dd>
-										<dd><span class=""><?php echo $text_last_order_time; ?><?php echo $last_order_time; ?></span></dd>
-										<dd><span class=""><?php echo $text_payments; ?><?php echo $payments; ?></span></dd>
-										<?php if (!empty($text_delivery_coverage)) { ?>
-											<dd><?php echo $text_delivery_coverage; ?></dd>
-										<?php } ?>
-									</dl>
+                <div class="tab-content tab-content-line">
+                    <div id="local-menus" class="tab-pane row wrap-all active">
 
-									<h4><?php echo $text_delivery_areas; ?></h4>
+                        <?php echo get_partial('content_left', 'wrap-none col-sm-3'); ?>
 
-									<div class="row">
-										<div class="col-sm-5"><b>Name</b></div>
-										<div class="col-sm-4"><?php echo $text_delivery_charge; ?></div>
-										<div class="col-sm-3"><?php echo $text_min_total; ?></div>
-										<?php foreach($delivery_areas as $area) { ?>
-											<div class="col-sm-12 wrap-none">
-												<div class="col-sm-5"><?php echo $area['name']; ?></div>
-												<div class="col-sm-4"><?php echo $area['charge']; ?></div>
-												<div class="col-sm-3"><?php echo $area['min_amount']; ?></div>
-											</div>
-										<?php } ?>
-									</div>
-								</div>
-								<div class="collection-info wrap-horizontal" style="display:none;">
-									<dl>
-										<dd><span class=""><?php echo $text_collection_time; ?><?php echo $collection_time; ?></span></dd>
-										<dd><span class=""><?php echo $text_last_order_time; ?><?php echo $last_order_time; ?></span></dd>
-									<dl>
-								</div>
-							</div>
-						</div>
+                        <div class="<?php echo $menu_class; ?>">
+                            <?php echo load_partial('menu_list', $menu_list); ?>
+                        </div>
+                    </div>
 
-						<div class="col-sm-6">
-							<div id="map" class="">
-								<div id="map-holder" style="height:370px;text-align:left;"></div>
-							</div>
-						</div>
-					</div>
-
-                    <?php if ($description) { ?>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <h4 class="text-center">About Local</h4>
+                    <div id="local-reviews" class="tab-pane row wrap-all">
+                        <div class="col-md-12">
+                            <div class="heading-section">
+                                <h4><?php echo sprintf(lang('text_review_heading'), $location_name); ?></h4>
                                 <span class="under-heading"></span>
-
-                                <p><?php echo $description; ?></p>
                             </div>
                         </div>
-                    <?php } ?>
 
-                    <script src="http://maps.googleapis.com/maps/api/js?v=3<?php echo $map_key; ?>&sensor=false&region=GB"></script>
-					<script type="text/javascript">//<![CDATA[
-						var map;
-						var geocoder = null;
-						var bounds = null;
-						var markers = [];
-						var infoWindow = null;
-						var local_name = "<?php echo $location_name; ?>";
-						var latlng = new google.maps.LatLng(
-										parseFloat("<?php echo $location_lat; ?>"),
-										parseFloat("<?php echo $location_lng; ?>")
-									);
+                        <?php echo load_partial('local_reviews', $local_reviews); ?>
+                    </div>
 
-						function initializeMap() {
-							var html = "<b>" + local_name + "</b> <br/>" +
-										"<?php echo $map_address; ?><br/>" +
-										"<?php echo $location_telephone; ?>";
-
-							var mapOptions = {
-                                scrollwheel: false,
-                                center: latlng,
-								zoom: 16,
-								mapTypeId: google.maps.MapTypeId.ROADMAP
-							}
-
-							var map = new google.maps.Map(document.getElementById('map-holder'), mapOptions);
-
-							var infowindow = new google.maps.InfoWindow({
-								content: html
-							});
-
-							var marker = new google.maps.Marker({
-											position: latlng,
-											map: map,
-											title: local_name
-										});
-
-							google.maps.event.addListener(marker, 'click', function() {
-							  	infowindow.open(map,marker);
-							});
-						}
-
-					    google.maps.event.addDomListener(window, 'load', initializeMap);
-					//]]></script>
-
-					<script type="text/javascript"><!--
-					$(document).ready(function() {
-						$('input[name="order_type"]').on('change', function() {
-							$('.delivery-info, .collection-info').fadeOut();
-
-							if (this.value == '1') {
-								$('.delivery-info').fadeIn();
-								$('.collection-info').fadeOut();
-							} else if (this.value == '2') {
-								$('.delivery-info').fadeOut();
-								$('.collection-info').fadeIn();
-							}
-						});
-
-						$('input[name="order_type"]:checked').trigger('change');
-					});
-					//--></script>
-				<?php } ?>
-			</div>
-			<?php echo get_partial('content_right'); ?>
-			<?php echo get_partial('content_bottom'); ?>
-		</div>
-	</div>
+                    <div id="local-information" class="tab-pane row wrap-all">
+                        <?php echo load_partial('local_info', $local_info); ?>
+                    </div>
+                </div>
+            </div>
+            <?php echo get_partial('content_right', 'col-sm-3'); ?>
+            <?php echo get_partial('content_bottom'); ?>
+        </div>
+    </div>
 </div>
+<script type="text/javascript"><!--
+    $(document).ready(function() {
+        $(function(){
+
+            var layout = 'list', // Store the current layout as a variable
+            $container = $('#Container'), // Cache the MixItUp container
+            $changeLayout = $('#viewcontrols .btn'); // Cache the changeLayout button
+            $listButton = $('#viewcontrols .listview'); // Cache the list button
+            $gridButton = $('#viewcontrols .gridview'); // Cache the grid button
+
+            // Instantiate MixItUp with some custom options:
+
+            $container.mixItUp({
+                animation: {
+                    animateChangeLayout: true, // Animate the positions of targets as the layout changes
+                    animateResizeTargets: true, // Animate the width/height of targets as the layout changes
+                    effects: 'fade rotateX(-40deg) translateZ(-100px)'
+                },
+                layout: {
+                    containerClass: 'list' // Add the class 'list' to the container on load
+                },
+                controls: { enable: true },
+                callbacks: {
+                    onMixFail: function(){
+                        alert('<?php echo lang('text_no_match'); ?>');
+                        $container.mixItUp('filter', 'all');
+                    }
+                }
+            });
+
+            // MixItUp does not provide a default "change layout" button, so we need to make our own and bind it with a click handler:
+
+            $changeLayout.on('click', function() {
+
+                // If the current layout is a list, change to grid:
+
+                if(layout == 'list'){
+                    layout = 'grid';
+
+                    $listButton.removeClass('active'); // Update the list button as active
+                    $gridButton.addClass('active'); // Update the grid button as active
+
+                    $container.mixItUp('changeLayout', {
+                        containerClass: layout // change the container class to "grid"
+                    });
+
+                    // Else if the current layout is a grid, change to list:
+
+                } else {
+                    layout = 'list';
+
+                    $listButton.addClass('active'); // Update the list button as active
+                    $gridButton.removeClass('active'); // Update the grid button as active
+                    //$changeLayout.text('Grid'); // Update the button  as active
+
+                    $container.mixItUp('changeLayout', {
+                        containerClass: layout // Change the container class to 'list'
+                    });
+                }
+            });
+
+        });
+
+    });
+//--></script>
 <?php echo get_footer(); ?>

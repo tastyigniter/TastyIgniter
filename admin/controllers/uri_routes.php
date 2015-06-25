@@ -2,11 +2,10 @@
 
 class Uri_routes extends Admin_Controller {
 
-    public $_permission_rules = 'access';
-
     public function __construct() {
 		parent::__construct();
-		$this->load->model('Layouts_model');
+        $this->user->restrict('Admin.UriRoutes');
+        $this->load->model('Layouts_model');
 
         $this->alert->set('warning', 'URI Routes Page disabled for improvement in next release');
         redirect('dashboard');
@@ -15,7 +14,7 @@ class Uri_routes extends Admin_Controller {
 	public function index() {
 		$this->template->setTitle('URI Routes');
 		$this->template->setHeading('URI Routes');
-		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 
 		if ($this->input->post('routes')) {
 			$routes = $this->input->post('routes');

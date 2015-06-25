@@ -107,6 +107,29 @@ class Reviews_model extends TI_Model {
         }
     }
 
+    public function getTotalsbyId($location_id = FALSE) {
+        $this->db->select('location_id, COUNT(location_id) as review_total');
+        $this->db->from('reviews');
+        $this->db->group_by('location_id');
+        $this->db->order_by('review_total');
+        $this->db->where('review_status', '1');
+
+        if ($location_id !== FALSE) {
+            $this->db->where('location_id', $location_id);
+        }
+
+        $query = $this->db->get();
+        $result = array();
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $result[$row['location_id']] = $row['review_total'];
+            }
+        }
+
+        return $result;
+    }
+
     public function getReview($review_id, $customer_id = FALSE, $sale_type = FALSE) {
         if (!empty($review_id)) {
             $this->db->from('reviews');
@@ -229,35 +252,27 @@ class Reviews_model extends TI_Model {
 		}
 
 		if (is_numeric($review_id)) {
-            $notification_action = 'updated';
             $this->db->where('review_id', $review_id);
 			$query = $this->db->update('reviews');
         } else {
-            $notification_action = 'added';
             $this->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', time()));
             $query = $this->db->insert('reviews');
             $review_id = $this->db->insert_id();
 
         }
 
-        if ($query === TRUE AND is_numeric($review_id)) {
-            $this->load->model('Notifications_model');
-            $customer_id = !empty($save['customer_id']) ? $save['customer_id'] : '0';
-            $this->Notifications_model->addNotification(array('action' => $notification_action, 'object' => 'review', 'object_id' => $review_id, 'subject_id' => $customer_id));
-
-            return $review_id;
-        }
+        return $review_id;
 	}
 
 	public function deleteReview($review_id) {
-		if (is_numeric($review_id)) {
-			$this->db->where('review_id', $review_id);
-			$this->db->delete('reviews');
+        if (is_numeric($review_id)) $review_id = array($review_id);
 
-			if ($this->db->affected_rows() > 0) {
-				return TRUE;
-			}
-		}
+        if (!empty($review_id) AND ctype_digit(implode('', $review_id))) {
+            $this->db->where_in('review_id', $review_id);
+            $this->db->delete('reviews');
+
+            return $this->db->affected_rows();
+        }
 	}
 }
 

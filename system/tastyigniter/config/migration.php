@@ -68,7 +68,7 @@ $config['migration_auto_latest'] = FALSE;
 | be upgraded / downgraded to.
 |
 */
-$config['migration_version'] = 4;
+$config['migration_version'] = 9;
 
 /*
 |--------------------------------------------------------------------------
@@ -80,7 +80,7 @@ $config['migration_version'] = 4;
 | Also, writing permission is required within the migrations path.
 |
 */
-$config['migration_path'] = APPPATH.'migrations/';
+$config['migration_path'] = IGNITEPATH.'migrations/';
 
 /* End of file migration.php */
 /* Location: ./system/tastyigniter/config/migration.php */

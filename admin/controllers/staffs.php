@@ -2,17 +2,21 @@
 
 class Staffs extends Admin_Controller {
 
-    public $_permission_rules = array('access', 'modify');
-
     public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('pagination');
-		$this->load->model('Staffs_model');
-		$this->load->model('Locations_model'); // load the locations model
-		$this->load->model('Staff_groups_model');
-	}
+
+        $this->load->model('Staffs_model');
+        $this->load->model('Locations_model'); // load the locations model
+        $this->load->model('Staff_groups_model');
+
+        $this->load->library('pagination');
+
+        $this->lang->load('staffs');
+    }
 
 	public function index() {
+        $this->user->restrict('Admin.Staffs');
+
 		$url = '?';
 		$filter = array();
 		if ($this->input->get('page')) {
@@ -74,12 +78,10 @@ class Staffs extends Admin_Controller {
 			$data['order_by_active'] = 'DESC';
 		}
 
-		$this->template->setTitle('Staffs');
-		$this->template->setHeading('Staffs');
-		$this->template->setButton('+ New', array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
-		$this->template->setButton('Delete', array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
-
-		$data['text_empty'] 		= 'There are no staffs available.';
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading($this->lang->line('text_heading'));
+		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
+		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_name'] 			= site_url('staffs'.$url.'sort_by=staff_name&order_by='.$order_by);
@@ -98,8 +100,8 @@ class Staffs extends Admin_Controller {
 				'staff_email' 			=> $result['staff_email'],
 				'staff_group_name' 		=> $result['staff_group_name'],
 				'location_name' 		=> $result['location_name'],
-				'date_added' 			=> mdate('%d %M %y', strtotime($result['date_added'])),
-				'staff_status' 			=> ($result['staff_status'] === '1') ? 'Enabled' : 'Disabled',
+				'date_added' 			=> day_elapsed($result['date_added']),
+				'staff_status' 			=> ($result['staff_status'] === '1') ? $this->lang->line('text_enabled') : $this->lang->line('text_disabled'),
 				'edit' 					=> site_url('staffs/edit?id=' . $result['staff_id'])
 			);
 		}
@@ -126,7 +128,6 @@ class Staffs extends Admin_Controller {
 		$data['staff_dates'] = array();
 		$staff_dates = $this->Staffs_model->getStaffDates();
 		foreach ($staff_dates as $staff_date) {
-			$month_year = '';
 			$month_year = $staff_date['year'].'-'.$staff_date['month'];
 			$data['staff_dates'][$month_year] = mdate('%F %Y', strtotime($staff_date['date_added']));
 		}
@@ -136,7 +137,7 @@ class Staffs extends Admin_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 
-		$config['base_url'] 		= site_url('staffs').$url;
+		$config['base_url'] 		= site_url('staffs'.$url);
 		$config['total_rows'] 		= $this->Staffs_model->getCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 
@@ -156,32 +157,32 @@ class Staffs extends Admin_Controller {
 	}
 
 	public function edit() {
-        if (!$this->user->hasPermissions('access', 'staffs') AND $this->user->getStaffId() !== $this->input->get('id')) {
-            redirect(root_url('admin/permission'));
+        if ($this->user->getStaffId() !== $this->input->get('id')) {
+            $this->user->restrict('Admin.Staffs');
         }
 
         $staff_info = $this->Staffs_model->getStaff((int) $this->input->get('id'));
 
 		if ($staff_info) {
 			$staff_id = $staff_info['staff_id'];
-			$data['action']	= site_url('staffs/edit?id='. $staff_id);
+			$data['_action']	= site_url('staffs/edit?id='. $staff_id);
 		} else {
 		    $staff_id = 0;
-			$data['action']	= site_url('staffs/edit');
+			$data['_action']	= site_url('staffs/edit');
 		}
 
-		$title = (isset($staff_info['staff_name'])) ? $staff_info['staff_name'] : 'New';
-		$this->template->setTitle('Staff: '. $title);
-		$this->template->setHeading('Staff: '. $title);
-		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+		$title = (isset($staff_info['staff_name'])) ? $staff_info['staff_name'] : $this->lang->line('text_new');
+        $this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $title));
+        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
+		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 		$this->template->setBackButton('btn btn-back', site_url('staffs'));
 
-        if ($this->user->hasPermissions('modify', 'staffs')) {
-            $this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+        if ($this->user->hasPermission('Admin.Staffs.Access')) {
+            $this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
         }
 
         $data['display_staff_group'] = FALSE;
-        if ($this->user->hasPermissions('modify', 'staff_groups')) {
+        if ($this->user->hasPermission('Admin.StaffGroups.Manage')) {
             $data['display_staff_group'] = TRUE;
         }
 
@@ -196,7 +197,6 @@ class Staffs extends Admin_Controller {
 
 		$result = $this->Staffs_model->getStaffUser($staff_id);
 		$data['username'] 			= $result['username'];
-		//$data['staff_group'] 		= $result['staff_group'];
 
 		$data['staff_groups'] = array();
 		$results = $this->Staff_groups_model->getStaffGroups();
@@ -260,7 +260,7 @@ class Staffs extends Admin_Controller {
 					);
 				}
 			} else {
-				$json['results'] = array('id' => '0', 'text' => 'No Matches Found');
+				$json['results'] = array('id' => '0', 'text' => $this->lang->line('text_no_match'));
 			}
 		}
 
@@ -268,18 +268,22 @@ class Staffs extends Admin_Controller {
 	}
 
 	private function _saveStaff($staff_email, $username) {
-        if (!$this->user->hasPermissions('modify', 'staffs') AND $this->user->getStaffId() !== $this->input->get('id')) {
-            $this->alert->set('warning', 'Warning: You do not have permission to modify!');
-            redirect(referrer_url());
-        }
-
         if ($this->validateForm($staff_email, $username) === TRUE) {
-            $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
+            $save_type = ( ! is_numeric($this->input->get('id'))) ? $this->lang->line('text_added') : $this->lang->line('text_updated');
 
-			if ($staff_id = $this->Staffs_model->saveStaff($this->input->get('id'), $this->input->post())) {
-				$this->alert->set('success', 'Staff ' . $save_type . ' successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
+            if ($staff_id = $this->Staffs_model->saveStaff($this->input->get('id'), $this->input->post())) {
+                $action = ($this->input->get('id') === $this->user->getStaffId()) ? $save_type.' their' : $save_type;
+                $message_lang = ($this->input->get('id') === $this->user->getStaffId()) ? 'activity_custom_no_link' : 'activity_custom';
+                $item = ($this->input->get('id') === $this->user->getStaffId()) ? 'details' : ucwords($username);
+
+                log_activity($this->user->getStaffId(), $action, 'staffs', get_activity_message($message_lang,
+                    array('{staff}', '{action}', '{context}', '{link}', '{item}'),
+                    array($this->user->getStaffName(), $action, 'staff', current_url(), $item)
+                ));
+
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Staff '.$save_type));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $save_type));
 			}
 
 			return $staff_id;
@@ -287,44 +291,47 @@ class Staffs extends Admin_Controller {
 	}
 
 	private function _deleteStaff() {
-    	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $value) {
-				$this->Staffs_model->deleteStaff($value);
-			}
+        if ($this->input->post('delete')) {
+            $deleted_rows = $this->Staffs_model->deleteStaff($this->input->post('delete'));
 
-			$this->alert->set('success', 'Staff(s) deleted successfully!');
-		}
+            if ($deleted_rows > 0) {
+                $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Staffs': 'Staff';
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), $prefix.' '.$this->lang->line('text_deleted')));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted')));
+            }
 
-		return TRUE;
+            return TRUE;
+        }
 	}
 
 	private function validateForm($staff_email = FALSE, $username = FALSE) {
-		$this->form_validation->set_rules('staff_name', 'Name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+		$this->form_validation->set_rules('staff_name', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 
 		if ($staff_email !== $this->input->post('staff_email')) {
-			$this->form_validation->set_rules('staff_email', 'Email', 'xss_clean|trim|required|valid_email|is_unique[staffs.staff_email]|max_length[96]');
+			$this->form_validation->set_rules('staff_email', 'lang:label_email', 'xss_clean|trim|required|valid_email|is_unique[staffs.staff_email]|max_length[96]');
 		}
 
 		if ($username !== $this->input->post('username')) {
-			$this->form_validation->set_rules('username', 'Username', 'xss_clean|trim|required|is_unique[users.username]|min_length[2]|max_length[32]');
+			$this->form_validation->set_rules('username', 'lang:label_username', 'xss_clean|trim|required|is_unique[users.username]|min_length[2]|max_length[32]');
 		}
 
-		$this->form_validation->set_rules('password', 'Password', 'xss_clean|trim|min_length[6]|max_length[32]|matches[password_confirm]');
-		$this->form_validation->set_rules('password_confirm', 'Password Confirm', 'xss_clean|trim');
+		$this->form_validation->set_rules('password', 'lang:label_password', 'xss_clean|trim|min_length[6]|max_length[32]|matches[password_confirm]');
+		$this->form_validation->set_rules('password_confirm', 'lang:label_confirm_password', 'xss_clean|trim');
 
 		if (!$this->input->get('id')) {
-			$this->form_validation->set_rules('password', 'Password', 'xss_clean|trim|required|min_length[6]|max_length[32]|matches[password_confirm]');
-			$this->form_validation->set_rules('password_confirm', 'Confirm Password', 'xss_clean|trim|required');
+			$this->form_validation->set_rules('password', 'lang:label_password', 'xss_clean|trim|required|min_length[6]|max_length[32]|matches[password_confirm]');
+			$this->form_validation->set_rules('password_confirm', 'lang:label_confirm_password', 'xss_clean|trim|required');
 		}
 
-		if ($this->user->hasPermissions('modify', 'staff_groups')) {
-			$this->form_validation->set_rules('staff_group_id', 'Department', 'xss_clean|trim|required|integer');
-			$this->form_validation->set_rules('staff_location_id', 'Location', 'xss_clean|trim|integer');
+		if ($this->user->hasPermission('Admin.StaffGroups.Manage')) {
+			$this->form_validation->set_rules('staff_group_id', 'lang:label_group', 'xss_clean|trim|required|integer');
+			$this->form_validation->set_rules('staff_location_id', 'lang:label_location', 'xss_clean|trim|integer');
 		}
 
-		$this->form_validation->set_rules('timezone', 'Timezone', 'xss_clean|trim');
-		$this->form_validation->set_rules('language_id', 'Language', 'xss_clean|trim|integer');
-		$this->form_validation->set_rules('staff_status', 'Status', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('timezone', 'lang:label_timezone', 'xss_clean|trim');
+		$this->form_validation->set_rules('language_id', 'lang:label_language', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('staff_status', 'lang:label_status', 'xss_clean|trim|integer');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;

@@ -84,14 +84,14 @@ class Customer_groups_model extends TI_Model {
 	}
 
 	public function deleteCustomerGroup($customer_group_id) {
-		if (is_numeric($customer_group_id)) {
-			$this->db->where('customer_group_id', $customer_group_id);
-			$this->db->delete('customer_groups');
+        if (is_numeric($customer_group_id)) $customer_group_id = array($customer_group_id);
 
-			if ($this->db->affected_rows() > 0) {
-				return TRUE;
-			}
-		}
+        if (!empty($customer_group_id) AND ctype_digit(implode('', $customer_group_id))) {
+            $this->db->where_in('customer_group_id', $customer_group_id);
+            $this->db->delete('customer_groups');
+
+            return $this->db->affected_rows();
+        }
 	}
 }
 

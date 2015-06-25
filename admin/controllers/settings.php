@@ -1,23 +1,26 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Settings extends Admin_Controller {
-
-    public $_permission_rules = array('access', 'modify[index|delete_thumbs]');
-
+    
     public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->model('Locations_model');
+
+        $this->user->restrict('Site.Settings.Manage');
+
+        $this->load->model('Locations_model');
 		$this->load->model('Settings_model');
 		$this->load->model('Countries_model');
 		$this->load->model('Currencies_model');
 		$this->load->model('Statuses_model');
 		$this->load->model('Categories_model');
-	}
+
+        $this->lang->load('settings');
+    }
 
 	public function index() {
-		$this->template->setTitle('Settings');
-		$this->template->setHeading('Settings');
-		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading($this->lang->line('text_heading'));
+		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 
         $this->template->setStyleTag(root_url('assets/js/fancybox/jquery.fancybox.css'), 'jquery-fancybox-css');
         $this->template->setScriptTag(root_url("assets/js/fancybox/jquery.fancybox.js"), 'jquery-fancybox-js');
@@ -37,8 +40,8 @@ class Settings extends Admin_Controller {
 
         $this->load->model('Image_tool_model');
         $data['no_photo'] = $this->Image_tool_model->resize('data/no_photo.png');
-        if ($data['site_logo']) {
-            $data['logo_val'] = $data['site_logo'];
+        if ($this->config->item('site_logo')) {
+            $data['logo_val'] = $this->config->item('site_logo');
             $data['site_logo'] = $this->Image_tool_model->resize($data['logo_val']);
             $data['logo_name'] = basename($data['logo_val']);
         } else {
@@ -69,7 +72,6 @@ class Settings extends Admin_Controller {
         }
 
         $data['image_manager'] = array(
-//            'root_folder' 			=> (isset($image_manager['root_folder'])) ? $image_manager['root_folder'] : '',
             'max_size' 				=> (isset($image_manager['max_size'])) ? $image_manager['max_size'] : '',
             'thumb_height' 			=> (isset($image_manager['thumb_height'])) ? $image_manager['thumb_height'] : '',
             'thumb_width' 			=> (isset($image_manager['thumb_width'])) ? $image_manager['thumb_width'] : '',
@@ -79,16 +81,13 @@ class Settings extends Admin_Controller {
             'move' 					=> (isset($image_manager['move'])) ? $image_manager['move'] : '',
             'rename' 				=> (isset($image_manager['rename'])) ? $image_manager['rename'] : '',
             'delete' 				=> (isset($image_manager['delete'])) ? $image_manager['delete'] : '',
-//            'allowed_ext' 			=> (isset($image_manager['allowed_ext'])) ? $image_manager['allowed_ext'] : '',
-//            'hidden_files' 			=> (isset($image_manager['hidden_files'])) ? $image_manager['hidden_files'] : '',
-//            'hidden_folders' 		=> (isset($image_manager['hidden_folders'])) ? $image_manager['hidden_folders'] : '',
             'transliteration' 		=> (isset($image_manager['transliteration'])) ? $image_manager['transliteration'] : '',
             'remember_days' 		=> (isset($image_manager['remember_days'])) ? $image_manager['remember_days'] : '',
             'delete_thumbs'			=> site_url('settings/delete_thumbs'),
         );
 
-        if (empty($data['activity_online_time_out'])) {
-            $data['activity_online_time_out'] = '120';
+        if (empty($data['customer_online_time_out'])) {
+            $data['customer_online_time_out'] = '120';
         }
 
         if (empty($data['cache_time'])) {
@@ -96,8 +95,6 @@ class Settings extends Admin_Controller {
         }
 
         $data['page_limits'] = array('10', '20', '50', '75', '100');
-
-        $data['search_by_array'] = array('postcode' => 'Postcode Only', 'address' => 'Postcode & Address');
 
         $data['protocols'] 	= array('mail', 'sendmail', 'smtp');
         $data['mailtypes'] 	= array('text', 'html');
@@ -187,14 +184,14 @@ class Settings extends Admin_Controller {
 	public function delete_thumbs() {
         if (file_exists(IMAGEPATH . 'thumbs')) {
             $this->_delete_thumbs(IMAGEPATH . 'thumbs/*');
-            $this->alert->set('success', 'Thumbs deleted successfully!');
+            $this->alert->set('success', 'Thumbs deleted successfully.');
         }
 
 		redirect('settings');
 	}
 
 	private function _updateSettings() {
-    	if ($this->validateForm() === TRUE) {
+        if ($this->validateForm() === TRUE) {
 			$update = array(
                 'site_name' 				=> $this->input->post('site_name'),
 				'site_email' 				=> $this->input->post('site_email'),
@@ -219,23 +216,24 @@ class Settings extends Admin_Controller {
 				'customer_reserve_email'	=> $this->input->post('customer_reserve_email'),
 				'main_address'				=> $this->input->post('main_address'),
 				'maps_api_key'				=> $this->input->post('maps_api_key'),
-				'search_by'					=> $this->input->post('search_by'),
 				'distance_unit'				=> $this->input->post('distance_unit'),
 				'future_orders' 			=> $this->input->post('future_orders'),
 				'location_order'			=> $this->input->post('location_order'),
 				'location_order_email'		=> $this->input->post('location_order_email'),
 				'location_reserve_email'	=> $this->input->post('location_reserve_email'),
 				'approve_reviews'			=> $this->input->post('approve_reviews'),
-				'order_status_new'			=> $this->input->post('order_status_new'),
-				'order_status_complete'		=> $this->input->post('order_status_complete'),
-				'order_status_cancel'		=> $this->input->post('order_status_cancel'),
+				'new_order_status'			=> $this->input->post('new_order_status'),
+				'complete_order_status'		=> $this->input->post('complete_order_status'),
+				'canceled_order_status'		=> $this->input->post('canceled_order_status'),
 				'guest_order'				=> $this->input->post('guest_order'),
 				'delivery_time'				=> $this->input->post('delivery_time'),
 				'collection_time'			=> $this->input->post('collection_time'),
 				'reservation_mode'			=> $this->input->post('reservation_mode'),
-				'reservation_status'		=> $this->input->post('reservation_status'),
-				'reservation_interval'		=> $this->input->post('reservation_interval'),
-				'reservation_turn'			=> $this->input->post('reservation_turn'),
+				'new_reservation_status'	=> $this->input->post('new_reservation_status'),
+				'confirmed_reservation_status'	=> $this->input->post('confirmed_reservation_status'),
+				'canceled_reservation_status'	=> $this->input->post('canceled_reservation_status'),
+				'reservation_time_interval'		=> $this->input->post('reservation_time_interval'),
+				'reservation_stay_time'			=> $this->input->post('reservation_stay_time'),
 				'themes_allowed_img'		=> $this->input->post('themes_allowed_img'),
 				'themes_allowed_file'		=> $this->input->post('themes_allowed_file'),
 				'themes_hidden_files'		=> $this->input->post('themes_hidden_files'),
@@ -247,8 +245,8 @@ class Settings extends Admin_Controller {
 				'smtp_port' 				=> $this->input->post('smtp_port'),
 				'smtp_user' 				=> $this->input->post('smtp_user'),
 				'smtp_pass' 				=> $this->input->post('smtp_pass'),
-				'activity_online_time_out' 	=> $this->input->post('activity_online_time_out'),
-				'activity_archive_time_out' => $this->input->post('activity_archive_time_out'),
+				'customer_online_time_out' 	=> $this->input->post('customer_online_time_out'),
+				'customer_online_archive_time_out' => $this->input->post('customer_online_archive_time_out'),
 				'permalink' 				=> $this->input->post('permalink'),
 				'maintenance_mode' 			=> $this->input->post('maintenance_mode'),
 				'maintenance_message' 		=> $this->input->post('maintenance_message'),
@@ -263,9 +261,9 @@ class Settings extends Admin_Controller {
 			}
 
 			if ($this->Settings_model->updateSettings('config', $update)) {
-				$this->alert->set('success', 'Settings updated successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Settings updated '));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), 'updated'));
 			}
 
 			return TRUE;
@@ -273,84 +271,81 @@ class Settings extends Admin_Controller {
 	}
 
 	private function validateForm() {
-		$this->form_validation->set_rules('site_name', 'Restaurant Name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
-		$this->form_validation->set_rules('site_email', 'Restaurant Email', 'xss_clean|trim|required|valid_email');
-		$this->form_validation->set_rules('site_logo', 'Site Logo', 'xss_clean|trim|required');
-		$this->form_validation->set_rules('country_id', 'Restaurant Country', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('timezone', 'Timezones', 'xss_clean|trim|required');
-		$this->form_validation->set_rules('currency_id', 'Restaurant Currency', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('language_id', 'Default Language', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('customer_group_id', 'Customer Group', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('page_limit', 'Items Per Page', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('meta_description', 'Meta Description', 'xss_clean|trim');
-		$this->form_validation->set_rules('meta_keywords', 'Meta Keywords', 'xss_clean|trim');
-		$this->form_validation->set_rules('menus_page_limit', 'Menus Per Page', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('show_menu_images', 'Show Menu Images', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('site_name', 'lang:label_site_name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+		$this->form_validation->set_rules('site_email', 'lang:label_site_email', 'xss_clean|trim|required|valid_email');
+		$this->form_validation->set_rules('site_logo', 'lang:label_site_logo', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('country_id', 'lang:label_site_country', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('timezone', 'lang:label_timezone', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('currency_id', 'lang:label_site_currency', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('language_id', 'lang:label_site_language', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('customer_group_id', 'lang:label_customer_group', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('page_limit', 'lang:label_page_limit', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('meta_description', 'lang:label_meta_description', 'xss_clean|trim');
+		$this->form_validation->set_rules('meta_keywords', 'lang:label_meta_keyword', 'xss_clean|trim');
+		$this->form_validation->set_rules('menus_page_limit', 'lang:label_menu_page_limit', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('show_menu_images', 'lang:label_show_menu_image', 'xss_clean|trim|required|integer');
 
 		if ($this->input->post('show_menu_images') == '1') {
-			$this->form_validation->set_rules('menu_images_h', 'Menu Images Height', 'xss_clean|trim|required|numeric');
-			$this->form_validation->set_rules('menu_images_w', 'Menu Images Width', 'xss_clean|trim|required|numeric');
+			$this->form_validation->set_rules('menu_images_h', 'lang:label_menu_image_height', 'xss_clean|trim|required|numeric');
+			$this->form_validation->set_rules('menu_images_w', 'lang:label_menu_image_width', 'xss_clean|trim|required|numeric');
 		}
 
-		$this->form_validation->set_rules('special_category_id', 'Specials Category', 'xss_clean|trim|numeric');
-		$this->form_validation->set_rules('registration_terms', 'Registration Terms', 'xss_clean|trim|required|numeric');
-		$this->form_validation->set_rules('checkout_terms', 'Checkout Terms', 'xss_clean|trim|required|numeric');
-		$this->form_validation->set_rules('registration_email', 'Registration Email', 'xss_clean|trim|required|numeric');
-		$this->form_validation->set_rules('customer_order_email', 'Customer Order Email', 'xss_clean|trim|required|numeric');
-		$this->form_validation->set_rules('customer_reserve_email', 'Customer Reservation Email', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('special_category_id', 'lang:label_special_category', 'xss_clean|trim|numeric');
+		$this->form_validation->set_rules('registration_terms', 'lang:label_registration_terms', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('checkout_terms', 'lang:label_checkout_terms', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('registration_email', 'lang:label_registration_email', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('customer_order_email', 'lang:label_customer_order_email', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('customer_reserve_email', 'lang:label_customer_reserve_email', 'xss_clean|trim|required|numeric');
 
-		$this->form_validation->set_rules('main_address[address_1]', 'Address 1', 'xss_clean|trim|required|min_length[2]|max_length[128]');
-		$this->form_validation->set_rules('main_address[address_2]', 'Address 2', 'xss_clean|trim|max_length[128]');
-		$this->form_validation->set_rules('main_address[city]', 'City', 'xss_clean|trim|required|min_length[2]|max_length[128]');
-		$this->form_validation->set_rules('main_address[postcode]', 'Postcode', 'xss_clean|trim|required|min_length[2]|max_length[10]|callback__get_lat_lag');
-		$this->form_validation->set_rules('main_address[country_id]', 'Country', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('main_address[address_1]', 'lang:label_address_1', 'xss_clean|trim|required|min_length[2]|max_length[128]|get_lat_lag[main_address]');
+		$this->form_validation->set_rules('main_address[address_2]', 'lang:label_address_2', 'xss_clean|trim|max_length[128]');
+		$this->form_validation->set_rules('main_address[city]', 'lang:label_city', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+		$this->form_validation->set_rules('main_address[postcode]', 'lang:label_postcode', 'xss_clean|trim|required|min_length[2]|max_length[10]');
+		$this->form_validation->set_rules('main_address[country_id]', 'lang:label_country', 'xss_clean|trim|required|integer');
 
-		$this->form_validation->set_rules('maps_api_key', 'Google Maps API Key', 'xss_clean|trim');
-		$this->form_validation->set_rules('search_by', 'Search By', 'xss_clean|trim|required|alpha');
-		$this->form_validation->set_rules('distance_unit', 'Distance Unit', 'xss_clean|trim|required');
-		$this->form_validation->set_rules('future_orders', 'Future Orders', 'xss_clean|trim|required|numeric');
-		$this->form_validation->set_rules('location_order', 'Allow Order', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('location_order_email', 'Send Order Email', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('location_reserve_email', 'Send Reservation Email', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('approve_reviews', 'Approve Reviews', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('order_status_new', 'New Order Status', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('order_status_complete', 'Complete Order Status', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('order_status_cancel', 'Cancellation Order Status', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('guest_order', 'Guest Order', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('delivery_time', 'Delivery Time', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('collection_time', 'Collection Time', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('reservation_mode', 'Reservation Mode', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('reservation_status', 'Reservation Status', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('reservation_interval', 'Reservation Interval', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('reservation_turn', 'Reservations Turn', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('themes_allowed_img', 'Themes Allowed Images', 'xss_clean|trim');
-		$this->form_validation->set_rules('themes_allowed_file', 'Themes Allowed Files', 'xss_clean|trim');
-		$this->form_validation->set_rules('themes_hidden_files', 'Themes Hidden Files', 'xss_clean|trim');
-		$this->form_validation->set_rules('themes_hidden_folders', 'Themes Hidden Folders', 'xss_clean|trim');
-		$this->form_validation->set_rules('image_manager[max_size]', 'Maximum File Size', 'xss_clean|trim|required|numeric');
-		$this->form_validation->set_rules('image_manager[thumb_height]', 'Thumbnail Height', 'xss_clean|trim|required|numeric');
-		$this->form_validation->set_rules('image_manager[thumb_width]', 'Thumbnail Width', 'xss_clean|trim|required|numeric');
-		$this->form_validation->set_rules('image_manager[uploads]', 'Uploads', 'xss_clean|trim|integer');
-		$this->form_validation->set_rules('image_manager[new_folder]', 'New Folder', 'xss_clean|trim|integer');
-		$this->form_validation->set_rules('image_manager[copy]', 'Copy', 'xss_clean|trim|integer');
-		$this->form_validation->set_rules('image_manager[move]', 'Move', 'xss_clean|trim|integer');
-		$this->form_validation->set_rules('image_manager[rename]', 'Rename', 'xss_clean|trim|integer');
-		$this->form_validation->set_rules('image_manager[delete]', 'Delete', 'xss_clean|trim|integer');
-		$this->form_validation->set_rules('image_manager[transliteration]', 'Transliteration', 'xss_clean|trim|integer');
-		$this->form_validation->set_rules('image_manager[remember_days]', 'Remember Last Folder', 'xss_clean|trim|integer');
-		$this->form_validation->set_rules('protocol', 'Mail Protocol', 'xss_clean|trim|required');
-		$this->form_validation->set_rules('mailtype', 'Mail Type Format', 'xss_clean|trim|required');
-		$this->form_validation->set_rules('smtp_host', 'SMTP Host', 'xss_clean|trim');
-		$this->form_validation->set_rules('smtp_port', 'SMTP Port', 'xss_clean|trim');
-		$this->form_validation->set_rules('smtp_user', 'SMTP Username', 'xss_clean|trim');
-		$this->form_validation->set_rules('smtp_pass', 'SMTP Password', 'xss_clean|trim');
-		$this->form_validation->set_rules('activity_online_time_out', 'Activity Online Timeout', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('activity_archive_time_out', 'Activity Archive Timeout', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('permalink', 'Permalink', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('maintenance_mode', 'Maintenance Mode', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('maintenance_message', 'Maintenance Message', 'xss_clean|trim');
-		$this->form_validation->set_rules('cache_mode', 'Cache Mode', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('cache_time', 'Cache Time', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('maps_api_key', 'lang:label_maps_api_key', 'xss_clean|trim');
+		$this->form_validation->set_rules('distance_unit', 'lang:label_distance_unit', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('future_orders', 'lang:label_future_order', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('location_order', 'lang:label_location_order', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('location_order_email', 'lang:label_location_order_email', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('location_reserve_email', 'lang:label_location_reserve_email', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('approve_reviews', 'lang:label_approve_reviews', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('new_order_status', 'lang:label_new_order_status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('complete_order_status', 'lang:label_complete_order_status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('canceled_order_status', 'lang:label_canceled_order_status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('guest_order', 'lang:label_guest_order', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('delivery_time', 'lang:label_delivery_time', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('collection_time', 'lang:label_collection_time', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('reservation_mode', 'lang:label_reservation_mode', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('new_reservation_status', 'lang:label_new_reservation_status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('confirmed_reservation_status', 'lang:label_confirmed_reservation_status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('canceled_reservation_status', 'lang:label_canceled_reservation_status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('reservation_time_interval', 'lang:label_reservation_time_interval', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('reservation_stay_time', 'lang:label_reservation_stay_time', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('image_manager[max_size]', 'lang:label_media_max_size', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('image_manager[thumb_height]', 'lang:label_media_thumb_height', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('image_manager[thumb_width]', 'lang:label_media_thumb_width', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('image_manager[uploads]', 'lang:label_media_uploads', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('image_manager[new_folder]', 'lang:label_media_new_folder', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('image_manager[copy]', 'lang:label_media_copy', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('image_manager[move]', 'lang:label_media_move', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('image_manager[rename]', 'lang:label_media_rename', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('image_manager[delete]', 'lang:label_media_delete', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('image_manager[transliteration]', 'lang:label_media_transliteration', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('image_manager[remember_days]', 'lang:label_media_remember_days', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('protocol', 'lang:label_protocol', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('mailtype', 'lang:label_mailtype', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('smtp_host', 'lang:label_smtp_host', 'xss_clean|trim');
+		$this->form_validation->set_rules('smtp_port', 'lang:label_smtp_port', 'xss_clean|trim');
+		$this->form_validation->set_rules('smtp_user', 'lang:label_smtp_user', 'xss_clean|trim');
+		$this->form_validation->set_rules('smtp_pass', 'lang:label_smtp_pass', 'xss_clean|trim');
+		$this->form_validation->set_rules('customer_online_time_out', 'lang:label_customer_online_time_out', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('customer_online_archive_time_out', 'lang:label_customer_online_archive_time_out', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('permalink', 'lang:label_permalink', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('maintenance_mode', 'lang:label_maintenance_mode', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('maintenance_message', 'lang:label_maintenance_message', 'xss_clean|trim');
+		$this->form_validation->set_rules('cache_mode', 'lang:label_cache_mode', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('cache_time', 'lang:label_cache_time', 'xss_clean|trim|integer');
 
 		if ($this->form_validation->run() == TRUE) {
 			return TRUE;
@@ -378,7 +373,7 @@ class Settings extends Admin_Controller {
 			return ($a['offset'] == $b['offset']) ? strcmp($a['identifier'], $b['identifier']) : $a['offset'] - $b['offset'];
 		});
 
-		$timezoneList = array();
+        $timezone_list = array();
 		foreach ($temp_timezones as $tz) {
 			$sign = ($tz['offset'] > 0) ? '+' : '-';
 			$offset = gmdate('H:i', abs($tz['offset']));
@@ -386,25 +381,6 @@ class Settings extends Admin_Controller {
 		}
 
 		return $timezone_list;
-	}
-
-	public function _get_lat_lag() {
-		if (isset($_POST['main_address']) AND is_array($_POST['main_address']) AND !empty($_POST['main_address']['postcode'])) {
-			$address_string =  implode(", ", $_POST['main_address']);
-			$address = urlencode($address_string);
-			$geocode = file_get_contents('http://maps.googleapis.com/maps/api/geocode/json?address='. $address .'&sensor=false&region=GB');
-    		$output = json_decode($geocode);
-    		$status = $output->status;
-
-    		if ($status === 'OK') {
-				$_POST['main_address']['location_lat'] = $output->results[0]->geometry->location->lat;
-				$_POST['main_address']['location_lng'] = $output->results[0]->geometry->location->lng;
-			    return TRUE;
-    		} else {
-        		$this->form_validation->set_message('_get_lat_lag', 'The Address you entered failed Geocoding, please enter a different address!');
-        		return FALSE;
-    		}
-        }
 	}
 
 	private function _delete_thumbs($thumb_path) {

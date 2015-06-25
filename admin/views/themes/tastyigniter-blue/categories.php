@@ -3,9 +3,9 @@
 	<div class="col-md-12">
 		<div class="panel panel-default panel-table">
 			<div class="panel-heading">
-				<h3 class="panel-title">Category List</h3>
+				<h3 class="panel-title"><?php echo lang('text_list'); ?></h3>
 				<div class="pull-right">
-					<button class="btn btn-default btn-xs btn-filter"><i class="fa fa-filter"></i></button>
+					<button class="btn btn-filter btn-xs"><i class="fa fa-filter"></i></button>
 				</div>
 			</div>
 			<div class="panel-body panel-filter">
@@ -15,9 +15,9 @@
 							<div class="row">
 								<div class="col-md-3 pull-right text-right">
 									<div class="form-group">
-										<input type="text" name="filter_search" class="form-control input-sm" value="<?php echo set_value('filter_search', $filter_search); ?>" placeholder="Search category name." />&nbsp;&nbsp;&nbsp;
+										<input type="text" name="filter_search" class="form-control input-sm" value="<?php echo set_value('filter_search', $filter_search); ?>" placeholder="<?php echo lang('text_filter_search'); ?>" />&nbsp;&nbsp;&nbsp;
 									</div>
-									<a class="btn btn-grey" onclick="filterList();" title="Search"><i class="fa fa-search"></i></a>
+									<a class="btn btn-grey" onclick="filterList();" title="<?php echo lang('text_search'); ?>"><i class="fa fa-search"></i></a>
 								</div>
 							</div>
 						</div>
@@ -31,10 +31,11 @@
 					<thead>
 						<tr>
 							<th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
-							<th class="name sorter"><a class="sort" href="<?php echo $sort_name; ?>">Name<i class="fa fa-sort-<?php echo ($sort_by === 'category_name') ? $order_by_active : $order_by; ?>"></i></a></th>
-                            <th>Description</th>
-                            <th>Parent</th>
-							<th class="id"><a class="sort" href="<?php echo $sort_id; ?>">ID<i class="fa fa-sort-<?php echo ($sort_by === 'category_id') ? $order_by_active : $order_by; ?>"></i></a></th>
+							<th class="name sorter"><a class="sort" href="<?php echo $sort_name; ?>"><?php echo lang('column_name'); ?> <i class="fa fa-sort-<?php echo ($sort_by === 'category_name') ? $order_by_active : $order_by; ?>"></i></a></th>
+                            <th width="40%"><?php echo lang('column_description'); ?> </th>
+                            <th><?php echo lang('column_parent'); ?> </th>
+							<th class="id"><a class="sort" href="<?php echo $sort_priority; ?>"><?php echo lang('column_priority'); ?> <i class="fa fa-sort-<?php echo ($sort_by === 'priority') ? $order_by_active : $order_by; ?>"></i></a></th>
+							<th class="id"><a class="sort" href="<?php echo $sort_id; ?>"><?php echo lang('column_id'); ?> <i class="fa fa-sort-<?php echo ($sort_by === 'category_id') ? $order_by_active : $order_by; ?>"></i></a></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -42,7 +43,7 @@
 						<?php foreach ($categories as $category) { ?>
 						<tr>
 							<td class="action"><input type="checkbox" name="delete[]" value="<?php echo $category['category_id']; ?>" />&nbsp;&nbsp;&nbsp;
-								<a class="btn btn-edit" title="Edit" href="<?php echo $category['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
+								<a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $category['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
 							<td><?php echo $category['name']; ?></td>
                             <td><?php echo $category['description']; ?></td>
                             <td>
@@ -52,13 +53,14 @@
                                     <?php } ?>
                                 <?php } ?>
                             </td>
+							<td class="id"><?php echo $category['priority']; ?></td>
 							<td class="id"><?php echo $category['category_id']; ?></td>
 						</tr>
 
 						<?php } ?>
 						<?php } else { ?>
 						<tr>
-							<td colspan="4"><?php echo $text_empty; ?></td>
+							<td colspan="4"><?php echo lang('text_empty'); ?></td>
 						</tr>
 						<?php } ?>
 					</tbody>

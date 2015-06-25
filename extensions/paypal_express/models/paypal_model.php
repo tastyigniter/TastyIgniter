@@ -53,9 +53,8 @@ class Paypal_model extends TI_Model {
 				$nvp_data .= '&PAYMENTREQUEST_0_SHIPPINGAMT='. urlencode($this->cart->delivery());
 			}
 
-			$coupon = $this->cart->coupon();
-            if ($coupon['discount'] > 0) {
-				$nvp_data .= '&PAYMENTREQUEST_0_SHIPDISCAMT='. urlencode('-'. $coupon['discount']);
+            if ($this->cart->coupon_discount()) {
+				$nvp_data .= '&PAYMENTREQUEST_0_SHIPDISCAMT='. urlencode('-'. $this->cart->coupon_discount());
 			}
 
 			if ($this->cart->order_total() > 0) {
@@ -78,9 +77,8 @@ class Paypal_model extends TI_Model {
 			$nvp_data .= '&PAYMENTREQUEST_0_SHIPPINGAMT='. urlencode($this->cart->delivery());
 		}
 
-        $coupon = $this->cart->coupon();
-        if ($coupon['discount'] > 0) {
-			$nvp_data .= '&PAYMENTREQUEST_0_SHIPDISCAMT='. urlencode('-'. $coupon['discount']);
+        if ($this->cart->coupon_discount()) {
+			$nvp_data .= '&PAYMENTREQUEST_0_SHIPDISCAMT='. urlencode('-'. $this->cart->coupon_discount());
 		}
 
 		if ($this->cart->order_total() > 0) {
@@ -137,7 +135,7 @@ class Paypal_model extends TI_Model {
 	}
 
 	public function callPayPal($method, $nvp_data) {
-		$payment = $this->Extensions_model->getPayment('paypal_express');
+		$payment = $this->extension->getPayment('paypal_express');
 		$settings = $payment['ext_data'];
 		$api_user = (isset($settings['api_user'])) ? $settings['api_user'] : '';
 		$api_pass = (isset($settings['api_pass'])) ? $settings['api_pass'] : '';

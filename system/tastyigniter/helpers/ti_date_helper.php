@@ -5,8 +5,6 @@
  *
  */
 
-// ------------------------------------------------------------------------
-
 if ( ! function_exists('time_elapsed')) {
     /**
      * Get time elapsed
@@ -49,7 +47,6 @@ if ( ! function_exists('time_elapsed')) {
     }
 }
 
-
 // ------------------------------------------------------------------------
 
 if ( ! function_exists('day_elapsed')) {
@@ -65,18 +62,60 @@ if ( ! function_exists('day_elapsed')) {
     function day_elapsed($datetime) {
         $datetime = strtotime($datetime);
 
-        if ($datetime >= strtotime('today')) {
+        if ($datetime === strtotime('today')) {
             return 'Today';
-        } else if ($datetime >= strtotime('yesterday')) {
+        } else if ($datetime === strtotime('yesterday')) {
             return 'Yesterday';
         }
 
         if (mdate('%Y', $datetime) === mdate('%Y', time())) {
-            return mdate('%d %M', $datetime);
+            return mdate('%d %M %y', $datetime);
         }
 
         return mdate('%d %M %y', $datetime);
     }
 }
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('time_range')) {
+    /**
+     * Date range
+     *
+     * Returns a list of time within a specified period.
+     *
+     * @param	int	unix_start	UNIX timestamp of period start time
+     * @param	int	unix_end	UNIX timestamp of period end time
+     * @param	int	interval		Specifies the second interval
+     * @param	string  time_format	Output time format, same as in date()
+     * @return	array
+     */
+    function time_range($unix_start, $unix_end, $interval, $time_format = '%H:%i') {
+        if ($unix_start == '' OR $unix_end == '' OR $interval == '') {
+            return FALSE;
+        }
+
+        $interval = ctype_digit($interval) ? $interval . ' mins' : $interval;
+
+        $start_time = strtotime($unix_start);
+        $end_time   = strtotime($unix_end);
+
+        $current    = time();
+        $add_time   = strtotime('+'.$interval, $current);
+        $diff       = $add_time-$current;
+
+        $times = array();
+        while ($start_time < $end_time) {
+            $times[] = mdate($time_format, $start_time);
+            $start_time += $diff;
+        }
+        $times[] = mdate($time_format, $start_time);
+        return $times;
+    }
+}
+
+// ------------------------------------------------------------------------
+
+
 /* End of file ti_date_helper.php */
 /* Location: ./system/tastyigniter/helpers/ti_date_helper.php */

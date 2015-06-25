@@ -128,7 +128,7 @@ class Alert {
 				$this->{$config_key} = $config_value;
 			}
 		}
-	}
+    }
 
 	/**
 	 * Add Message
@@ -138,7 +138,7 @@ class Alert {
 	 * will be stored in flashdata for the next one.
 	 *
 	 * @param mixed  $message     The message to be added
-	 * @param mixed  $data        Array or string to be used to format the message
+	 * @param mixed  $group        string to be used to group the message
 	 * @param string $type        The type of message being added
 	 * @param bool   $display_now Display the message on this request or the next
 	 *
@@ -146,7 +146,7 @@ class Alert {
 	 * @return object $this
 	 * @access private
 	 */
-	private function _add_message($message, $data = '', $type = 'default', $display_now = FALSE)
+	private function _add_message($message, $group = '', $type = 'default', $display_now = FALSE)
 	{
 		// all messages must be scalar types (int, float, string or boolean)
 		// and the type must be a string, if either invalid an exception is raised
@@ -154,37 +154,47 @@ class Alert {
 			log_message('debug','Invalid message type/value entered.');
 
 		// apply formatting based on type
-		$message = (is_array($data)) ?
-			vsprintf($message, $data) : sprintf($message, $data);
+//		$message = (is_array($data)) ?
+//			vsprintf($message, $data) : sprintf($message, $data);
+
+        // Set alert session name to lock alert to admin, main or modules
+        $group = (!empty($group)) ? $group : APPDIR.'_'.$this->session_name;
 
 		if ($display_now === FALSE) {
 			$this->_session_messages[$type][] = $message;
-			$this->_ci->session->set_flashdata($this->session_name, $this->_session_messages);
+			$this->_ci->session->set_flashdata($group, $this->_session_messages);
 		}
 		else {
-			$this->_messages[$type][] = $message;
+			$this->_messages[$group][$type][] = $message;
 		}
 
 		return $this;
 	}
 
-	/**
-	 * Get Messages
-	 *
-	 * Returns the specifed type of messages as an array, else returns all available
-	 * messages. Optionally allows you to return single types of messages as an associative
-	 * array, which is internally used for displaying.
-	 *
-	 * @param string  $type            the message type to return, or empty for all
-	 * @param boolean $single_as_assoc return single types as an associative array
-	 *
-	 * @return array The specifed types messages or empty array
-	 * @access public
-	 */
-	public function get($type = '', $single_as_assoc = FALSE)
+    /**
+     * Get Messages
+     *
+     * Returns the specifed type of messages as an array, else returns all available
+     * messages. Optionally allows you to return single types of messages as an associative
+     * array, which is internally used for displaying.
+     *
+     * @param mixed  $group  string to be used to group the message
+     * @param string $type the message type to return, or empty for all
+     * @param boolean $single_as_assoc return single types as an associative array
+     *
+     * @return array The specifed types messages or empty array
+     * @access public
+     */
+	public function get($group = '', $type = '', $single_as_assoc = FALSE)
 	{
-		$session_messages = $this->_ci->session->flashdata($this->session_name);
-		$messages         = $this->_messages;
+        $not_module = FALSE;
+        if (empty($group)) {
+            $not_module = TRUE;
+            $group = APPDIR.'_'.$this->session_name;
+        }
+
+        $session_messages = $this->_ci->session->flashdata($group);
+		$messages         = isset($this->_messages[$group]) ? $this->_messages[$group] : array();
 
 		// sets the session message to an array if not already the case
 		if ( ! is_array($session_messages)) {
@@ -192,7 +202,7 @@ class Alert {
 		}
 
 		// attempt to display form errors if no type or form/error types passed in
-		if ($type === '' OR $type === 'form' OR ($this->merge_form_errors AND $type === 'error')) {
+		if ($not_module === TRUE AND ($type === '' OR $type === 'form' OR ($this->merge_form_errors AND $type === 'error'))) {
 			$this->_ci->load->library('form_validation');
 
 			// check to see if any form validation errors are present
@@ -259,20 +269,21 @@ class Alert {
 	 * If 'form' is passed in as the type the form validation class is used
 	 * to retrieve the errors.
 	 *
-	 * @param string  $type  The message type to display
+     * @param mixed  $group  string to be used to group the message
+     * @param string  $type  The message type to display
 	 * @param boolean $split Display messages split or joined
 	 *
 	 * @return string The message HTML
 	 * @access public
 	 */
-	public function display($type = '', $split = NULL)
+	public function display($group = '', $type = '', $split = NULL)
 	{
 		// set split option to default if no option passed in
 		if ($split === NULL)
 			$split = $this->split_default;
 
 		// returns an associative array with specified messages in
-		$messages = $this->get($type, TRUE);
+		$messages = $this->get($group, $type, TRUE);
 		$close_btn = $this->close_button[0] . $this->close_button[1];
 
 		$output = '';
@@ -313,19 +324,21 @@ class Alert {
 		return $output;
 	}
 
-	/**
-	 * Set Messages
-	 *
-	 *
-	 * @param string  $type  The message type to display
-	 * @param boolean $split Display messages split or joined
-	 *
-	 * @return string The message HTML
-	 * @access public
-	 */
-	public function set($type = '', $message, $display_now = FALSE) {
+    /**
+     * Set Messages
+     *
+     *
+     * @param string $type The message type to display
+     * @param $message
+     * @param mixed  $group  string to be used to group the message
+     * @return string The message HTML
+     * @internal param bool $split Display messages split or joined
+     *
+     * @access public
+     */
+	public function set($type = '', $message, $group = '') {
 		// call the private add message method with provided arguments
-		return $this->{$type}($message);
+		return $this->{$type}($message, $group);
 	}
 
 	/**
@@ -343,14 +356,14 @@ class Alert {
 	 */
 	public function __call($name, $arguments)
 	{
-		if ( ! empty($arguments)) {
+        if ( ! empty($arguments)) {
 			// set display status based on function call name and set message
 			$name    = preg_replace('/_now$/', '', $name, 1, $display_now);
 			$message = $arguments[0];
-			$data = (isset($arguments[1])) ? $arguments[1] : '';
+            $group = (isset($arguments[1])) ? $arguments[1] : '';
 
 			// call the private add message method with provided arguments
-			return $this->_add_message($message, $data, $name, (bool)$display_now);
+			return $this->_add_message($message, $group, $name, (bool)$display_now);
 		}
 		// throw a bad method exception if no arguments passed
 		else {
@@ -371,7 +384,7 @@ class Alert {
 	 */
 	public function __get($name)
 	{
-		return $this->get($name);
+        return $this->get($name);
 	}
 
 }

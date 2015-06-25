@@ -12,7 +12,6 @@ class TI_Model extends CI_Model {
         log_message('info', $class . ' Class Initialized');
         $this->load->database();
     }
-
 }
 
 /* End of file TI_Model.php */

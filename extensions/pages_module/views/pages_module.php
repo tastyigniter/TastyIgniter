@@ -1,7 +1,7 @@
 <div id="page-box" class="module-box">
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			<h3 class="panel-title"><?php echo $text_heading; ?></h3>
+			<h3 class="panel-title"><?php echo lang('text_heading'); ?></h3>
 		</div>
 		<div class="list-group list-group-responsive">
 			<?php foreach ($pages as $page) { ?>

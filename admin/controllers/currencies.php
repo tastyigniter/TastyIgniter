@@ -2,13 +2,17 @@
 
 class Currencies extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('pagination');
-		$this->load->model('Currencies_model');
-		$this->load->model('Countries_model');
+
+        $this->user->restrict('Site.Currencies');
+
+        $this->load->model('Currencies_model');
+        $this->load->model('Countries_model');
+
+        $this->load->library('pagination');
+
+        $this->lang->load('currencies');
 	}
 
 	public function index() {
@@ -52,12 +56,10 @@ class Currencies extends Admin_Controller {
 			$data['order_by_active'] = '';
 		}
 
-		$this->template->setTitle('Currencies');
-		$this->template->setHeading('Currencies');
-		$this->template->setButton('+ New', array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
-		$this->template->setButton('Delete', array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
-
-		$data['text_empty'] 		= 'There are no currencies available.';
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading($this->lang->line('text_heading'));
+		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
+		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_country'] 		= site_url('currencies'.$url.'sort_by=country_name&order_by='.$order_by);
@@ -75,7 +77,7 @@ class Currencies extends Admin_Controller {
 				'currency_code'		=> $result['currency_code'],
 				'currency_symbol'	=> $result['currency_symbol'],
 				'country_name'		=> $result['country_name'],
-				'currency_status'	=> ($result['currency_status'] === '1') ? 'Enabled' : 'Disabled',
+				'currency_status'	=> ($result['currency_status'] === '1') ? $this->lang->line('text_enabled') : $this->lang->line('text_disabled'),
 				'edit' 				=> site_url('currencies/edit?id=' . $result['currency_id'])
 			);
 		}
@@ -85,7 +87,7 @@ class Currencies extends Admin_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 
-		$config['base_url'] 		= site_url('currencies').$url;
+		$config['base_url'] 		= site_url('currencies'.$url);
 		$config['total_rows'] 		= $this->Currencies_model->getCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 
@@ -109,17 +111,18 @@ class Currencies extends Admin_Controller {
 
 		if ($currency_info) {
 			$currency_id = $currency_info['currency_id'];
-			$data['action']	= site_url('currencies/edit?id='. $currency_id);
+			$data['_action']	= site_url('currencies/edit?id='. $currency_id);
 		} else {
 		    $currency_id = 0;
-			$data['action']	= site_url('currencies/edit');
+			$data['_action']	= site_url('currencies/edit');
 		}
 
-		$title = (isset($currency_info['currency_name'])) ? $currency_info['currency_name'] : 'New';
-		$this->template->setTitle('Currency: '. $title);
-		$this->template->setHeading('Currency: '. $title);
-		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$title = (isset($currency_info['currency_name'])) ? $currency_info['currency_name'] : $this->lang->line('text_new');
+        $this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $title));
+        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
+
+        $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setBackButton('btn btn-back', site_url('currencies'));
 
 		$data['currency_name'] 		= $currency_info['currency_name'];
@@ -154,12 +157,12 @@ class Currencies extends Admin_Controller {
 
 	private function _saveCurrency() {
     	if ($this->validateForm() === TRUE) {
-            $save_type = ( ! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
+            $save_type = ( ! is_numeric($this->input->get('id'))) ? $this->lang->line('text_added') : $this->lang->line('text_updated');
 
 			if ($currency_id = $this->Currencies_model->addCurrency($this->input->get('id'), $this->input->post())) {
-				$this->alert->set('success', 'Currency ' . $save_type . ' successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing ' . $save_type . '.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Currency '.$save_type));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $save_type));
 			}
 
 			return $currency_id;
@@ -167,26 +170,29 @@ class Currencies extends Admin_Controller {
 	}
 
 	private function _deleteCurrency() {
-    	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $value) {
-				$this->Currencies_model->deleteCurrency($value);
-			}
+        if ($this->input->post('delete')) {
+            $deleted_rows = $this->Currencies_model->deleteCurrency($this->input->post('delete'));
 
-			$this->alert->set('success', 'Currency(s) deleted successfully!');
-		}
+            if ($deleted_rows > 0) {
+                $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Currencies': 'Currency';
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), $prefix.' '.$this->lang->line('text_deleted')));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted')));
+            }
 
-		return TRUE;
+            return TRUE;
+        }
 	}
 
 	private function validateForm() {
-		$this->form_validation->set_rules('currency_name', 'Title', 'xss_clean|trim|required|min_length[2]|max_length[32]');
-		$this->form_validation->set_rules('currency_code', 'Code', 'xss_clean|trim|required|exact_length[3]');
-		$this->form_validation->set_rules('currency_symbol', 'Symbol', 'xss_clean|trim|required');
-		$this->form_validation->set_rules('country_id', 'Country', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('iso_alpha2', 'ISO Alpha 2', 'xss_clean|trim|required|exact_length[2]');
-		$this->form_validation->set_rules('iso_alpha3', 'ISO Alpha 3', 'xss_clean|trim|required|exact_length[3]');
-		$this->form_validation->set_rules('iso_numeric', 'ISO Numeric', 'xss_clean|trim|required|numeric');
-		$this->form_validation->set_rules('currency_status', 'Status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('currency_name', 'lang:label_title', 'xss_clean|trim|required|min_length[2]|max_length[32]');
+		$this->form_validation->set_rules('currency_code', 'lang:label_code', 'xss_clean|trim|required|exact_length[3]');
+		$this->form_validation->set_rules('currency_symbol', 'lang:label_symbol', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('country_id', 'lang:label_country', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('iso_alpha2', 'lang:label_iso_alpha2', 'xss_clean|trim|required|exact_length[2]');
+		$this->form_validation->set_rules('iso_alpha3', 'lang:label_iso_alpha3', 'xss_clean|trim|required|exact_length[3]');
+		$this->form_validation->set_rules('iso_numeric', 'lang:label_iso_numeric', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('currency_status', 'lang:label_status', 'xss_clean|trim|required|integer');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;

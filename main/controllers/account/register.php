@@ -15,32 +15,9 @@ class Register extends Main_Controller {
 			redirect('account/login');
 		}
 
-		$this->template->setBreadcrumb('<i class="fa fa-home"></i>', '/');
-		$this->template->setBreadcrumb($this->lang->line('text_heading'), 'account/register');
-
-		// START of retrieving lines from language file to pass to view.
 		$this->template->setTitle($this->lang->line('text_register_heading'));
-		//$this->template->setHeading($this->lang->line('text_register_heading'));
-		$data['text_login_register']		= sprintf($this->lang->line('text_login_register'), site_url('account/login'));
-		$data['text_login'] 				= $this->lang->line('text_login');
-		$data['text_register'] 				= $this->lang->line('text_register');
-		$data['text_required'] 				= $this->lang->line('text_required');
-		$data['entry_first_name'] 			= $this->lang->line('entry_first_name');
-		$data['entry_last_name'] 			= $this->lang->line('entry_last_name');
-		$data['entry_email'] 				= $this->lang->line('entry_email');
-		$data['entry_password'] 			= $this->lang->line('entry_password');
-		$data['entry_password_confirm'] 	= $this->lang->line('entry_password_confirm');
-		$data['entry_telephone'] 			= $this->lang->line('entry_telephone');
-		$data['entry_s_question'] 			= $this->lang->line('entry_s_question');
-		$data['entry_s_answer'] 			= $this->lang->line('entry_s_answer');
-		$data['entry_captcha'] 				= $this->lang->line('entry_captcha');
-		$data['entry_newsletter'] 			= $this->lang->line('entry_newsletter');
-		$data['entry_terms'] 				= $this->lang->line('entry_terms');
-		$data['button_register'] 			= $this->lang->line('button_register');
-		$data['button_login'] 				= $this->lang->line('button_login');
-		// END of retrieving lines from language file to send to view.
 
-		$data['login_url'] 				= site_url('account/login');
+		$data['login_url'] 				        = site_url('account/login');
 		$data['config_registration_terms'] 		= $this->config->item('registration_terms');
 
 		$this->load->model('Security_questions_model');											// load the security questions model
@@ -86,27 +63,32 @@ class Register extends Main_Controller {
 				$add['status'] = '1';
 			}
 
-			if (!empty($add) AND $this->Customers_model->saveCustomer(NULL, $add)) {								// pass add array data to saveCustomer method in Customers model then return TRUE
-  				return TRUE;
+			if (!empty($add) AND $customer_id = $this->Customers_model->saveCustomer(NULL, $add)) {								// pass add array data to saveCustomer method in Customers model then return TRUE
+                log_activity($customer_id, 'registered', 'customers', get_activity_message('activity_registered_account',
+                    array('{customer}', '{link}'),
+                    array($this->input->post('first_name').' '.$this->input->post('last_name'), admin_url('customers/edit?id='.$customer_id))
+                ));
+
+                return TRUE;
 			}
 		}
 	}
 
 	private function validateForm() {
 		// START of form validation rules
-		$this->form_validation->set_rules('first_name', 'First Name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
-		$this->form_validation->set_rules('last_name', 'First Name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
-		$this->form_validation->set_rules('email', 'Email Address', 'xss_clean|trim|required|valid_email|is_unique[customers.email]');
-		$this->form_validation->set_rules('password', 'Password', 'xss_clean|trim|required|min_length[6]|max_length[32]|matches[password_confirm]');
-		$this->form_validation->set_rules('password_confirm', 'Password Confirm', 'xss_clean|trim|required');
-		$this->form_validation->set_rules('telephone', 'Telephone', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('security_question', 'Security Question', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('security_answer', 'Security Answer', 'xss_clean|trim|required|min_length[2]');
-		$this->form_validation->set_rules('newsletter', 'Newsletter', 'xss_clean|trim|integer');
-		$this->form_validation->set_rules('captcha', 'Captcha', 'xss_clean|trim|required|callback__validate_captcha');
+		$this->form_validation->set_rules('first_name', 'lang:label_first_name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
+		$this->form_validation->set_rules('last_name', 'lang:label_last_name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
+		$this->form_validation->set_rules('email', 'lang:label_email', 'xss_clean|trim|required|valid_email|is_unique[customers.email]');
+		$this->form_validation->set_rules('password', 'lang:label_password', 'xss_clean|trim|required|min_length[6]|max_length[32]|matches[password_confirm]');
+		$this->form_validation->set_rules('password_confirm', 'lang:label_password_confirm', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('telephone', 'lang:label_telephone', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('security_question', 'lang:label_s_question', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('security_answer', 'lang:label_s_answer', 'xss_clean|trim|required|min_length[2]');
+		$this->form_validation->set_rules('newsletter', 'lang:label_newsletter', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('captcha', 'lang:label_captcha', 'xss_clean|trim|required|callback__validate_captcha');
 
 		if ($this->config->item('registration_terms') === '1') {
-			$this->form_validation->set_rules('terms_condition', 'Terms & Condition', 'xss_clean|trim|integer');
+			$this->form_validation->set_rules('terms_condition', 'lang:label_terms', 'xss_clean|trim|integer');
 		}
 		// END of form validation rules
 
@@ -120,8 +102,8 @@ class Register extends Main_Controller {
     public function _validate_captcha($word) {
 		$session_caption = $this->session->tempdata('captcha');
 
-        if (empty($word) OR strtolower($word) !== strtolower($session_caption['word'])) {
-            $this->form_validation->set_message('_validate_captcha', 'The letters you entered does not match the image.');
+        if (strtolower($word) !== strtolower($session_caption['word'])) {
+            $this->form_validation->set_message('_validate_captcha', $this->lang->line('error_captcha'));
             return FALSE;
         } else {
             return TRUE;
@@ -131,30 +113,11 @@ class Register extends Main_Controller {
 	private function createCaptcha() {
         $this->load->helper('captcha');
 
-		$prefs = array(
-            'img_path' 		=> './assets/images/thumbs/',
-            'img_url' 		=> root_url() . '/assets/images/thumbs/',
-			'font_path'     => './system/fonts/texb.ttf',
-			'img_width'     => '150',
-			'img_height'    => 30,
-			'expiration'    => 300,
-			'word_length'   => 8,
-			'pool'          => '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
-
-			// White background and border, black text and white grid
-			'colors'        => array(
-				'background' 	=> array(255, 255, 255),
-				'border' 		=> array(255, 255, 255),
-				'text' 			=> array(0, 0, 0),
-				'grid' 			=> array(255, 255, 255)
-			)
-		);
-
-        $captcha = create_captcha($prefs);
-        $this->session->set_tempdata('captcha', array('word' => $captcha['word'], 'image' => $captcha['time'].'.jpg')); //set data to session for compare
+        $captcha = create_captcha();
+        $this->session->set_tempdata('captcha', array('word' => $captcha['word'], 'image' => $captcha['time'].'.jpg'), '120'); //set data to session for compare
         return $captcha['image'];
     }
 }
 
 /* End of file register.php */
-/* Location: ./main/controllers//register.php */
+/* Location: ./main/controllers/register.php */

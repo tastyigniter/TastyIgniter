@@ -136,16 +136,53 @@ class Staffs_model extends TI_Model {
 		return $result;
 	}
 
-	public function getStaffsByGroupId($staff_group_id = FALSE) {
-		if ($staff_group_id) {
-			$this->db->from('staffs');
+    public function getStaffsForMessages($type) {
+        $this->db->select('staff_id, staff_email, staff_status');
+        $this->db->from('staffs');
+        $this->db->where('staff_status', '1');
+
+        $query = $this->db->get();
+        $result = array();
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row)
+                $result[] = ($type === 'email') ? $row['staff_email'] : $row['staff_id'];
+        }
+
+        return $result;
+    }
+
+    public function getStaffForMessages($type, $staff_id = FALSE) {
+        if (!empty($staff_id) AND is_array($staff_id)) {
+            $this->db->select('staff_id, staff_email, staff_status');
+            $this->db->from('staffs');
+            $this->db->where_in('staff_id', $staff_id);
+            $this->db->where('staff_status', '1');
+
+            $query = $this->db->get();
+
+            if ($query->num_rows() > 0) {
+                foreach ($query->result_array() as $row)
+                    $result[] = ($type === 'email') ? $row['staff_email'] : $row['staff_id'];
+            }
+
+            return $result;
+        }
+    }
+
+    public function getStaffsByGroupIdForMessages($type, $staff_group_id = FALSE) {
+        if (is_numeric($staff_group_id)) {
+            $this->db->select('staff_id, staff_email, staff_group_id, staff_status');
+            $this->db->from('staffs');
 			$this->db->where('staff_group_id', $staff_group_id);
+            $this->db->where('staff_status', '1');
 
 			$query = $this->db->get();
 			$result = array();
 
 			if ($query->num_rows() > 0) {
-				$result = $query->result_array();
+                foreach ($query->result_array() as $row)
+                    $result[] = ($type === 'email') ? $row['staff_email'] : $row['staff_id'];
 			}
 
 			return $result;
@@ -213,11 +250,11 @@ class Staffs_model extends TI_Model {
 		}
 
 		if (is_numeric($staff_id)) {
-            $notification_action = 'updated';
+            $_action = 'updated';
             $this->db->where('staff_id', $staff_id);
             $query = $this->db->update('staffs');
         } else {
-            $notification_action = 'added';
+            $_action = 'added';
             $this->db->set('date_added', mdate('%Y-%m-%d', time()));
             $query = $this->db->insert('staffs');
             $staff_id = $this->db->insert_id();
@@ -228,7 +265,7 @@ class Staffs_model extends TI_Model {
                 $this->db->set('salt', $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9));
                 $this->db->set('password', sha1($salt . sha1($salt . sha1($save['password']))));
 
-                if ($notification_action === 'added' AND !empty($save['username'])) {
+                if ($_action === 'added' AND !empty($save['username'])) {
                     $this->db->set('username', strtolower($save['username']));
                     $this->db->set('staff_id', $staff_id);
                     $query = $this->db->insert('users');
@@ -237,9 +274,6 @@ class Staffs_model extends TI_Model {
                     $query = $this->db->update('users');
                 }
             }
-
-            $this->load->model('Notifications_model');
-            $this->Notifications_model->addNotification(array('action' => $notification_action, 'object' => 'staff', 'object_id' => $staff_id));
 
             return ($query === TRUE AND is_numeric($staff_id)) ? $staff_id : FALSE;
         }
@@ -289,17 +323,19 @@ class Staffs_model extends TI_Model {
 	}
 
 	public function deleteStaff($staff_id) {
-		if (is_numeric($staff_id)) {
-			$this->db->where('staff_id', $staff_id);
-			$this->db->delete('staffs');
+        if (is_numeric($staff_id)) $staff_id = array($staff_id);
 
-			$this->db->where('staff_id', $staff_id);
-			$this->db->delete('users');
+        if (!empty($staff_id) AND ctype_digit(implode('', $staff_id))) {
+            $this->db->where_in('staff_id', $staff_id);
+            $this->db->delete('staffs');
 
-			if ($this->db->affected_rows() > 0) {
-				return TRUE;
-			}
-		}
+            if (($affected_rows = $this->db->affected_rows()) > 0) {
+                $this->db->where('staff_id', $staff_id);
+                $this->db->delete('users');
+
+                return $affected_rows;
+            }
+        }
 	}
 }
 

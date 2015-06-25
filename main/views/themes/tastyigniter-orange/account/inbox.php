@@ -1,14 +1,20 @@
 <?php echo get_header(); ?>
 <?php echo get_partial('content_top'); ?>
-<div id="page-content">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="heading-section">
-				</div>
-			</div>
-		</div>
 
+<?php if ($this->alert->get()) { ?>
+    <div id="notification">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <?php echo $this->alert->display(); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+
+<div id="page-content">
+	<div class="container top-spacing">
 		<div class="row">
 			<?php echo get_partial('content_left'); ?>
 			<?php
@@ -41,14 +47,14 @@
 								<?php } ?>
 							</div>
 						<?php } else { ?>
-							<p><?php echo $text_empty; ?></p>
+							<p><?php echo lang('text_empty'); ?></p>
 						<?php } ?>
 					</div>
 				</div>
 
 				<div class="row">
 					<div class="buttons col-sm-6">
-						<a class="btn btn-default" href="<?php echo $back; ?>"><?php echo $button_back; ?></a>
+						<a class="btn btn-default" href="<?php echo $back_url; ?>"><?php echo lang('button_back'); ?></a>
 					</div>
 
 					<div class="col-sm-6">

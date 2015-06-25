@@ -51,12 +51,26 @@ class Banners_model extends TI_Model {
             $this->db->set('alt_text', $save['alt_text']);
         }
 
-        if (!empty($save['custom_code'])) {
-            $this->db->set('custom_code', $save['custom_code']);
-        }
+        if (!empty($save['type']) AND $save['type'] === 'custom') {
 
-        if (!empty($save['image_code'])) {
+            if ( ! empty($save['custom_code'])) {
+                $this->db->set('custom_code', $save['custom_code']);
+            }
+
+        } else if (!empty($save['type']) AND $save['type'] === 'image') {
+
+            $save['image_code']['path'] = $save['image_path'];
+
             $this->db->set('image_code', serialize($save['image_code']));
+
+        } else if (!empty($save['type']) AND $save['type'] === 'carousel') {
+            if (!empty($save['carousels']) AND is_array($save['carousels'])) {
+                foreach ($save['carousels'] as $key => $value) {
+                    $save['image_code']['paths'][] = $value;
+                }
+
+                $this->db->set('image_code', serialize($save['image_code']));
+            }
         }
 
         if (!empty($save['status'])) {
@@ -77,11 +91,13 @@ class Banners_model extends TI_Model {
     }
 
     public function deleteBanner($banner_id) {
-        $this->db->where('banner_id', $banner_id);
-        $this->db->delete('banners');
+        if (is_numeric($banner_id)) $banner_id = array($banner_id);
 
-        if ($this->db->affected_rows() > 0) {
-            return TRUE;
+        if (!empty($banner_id) AND ctype_digit(implode('', $banner_id))) {
+            $this->db->where_in('banner_id', $banner_id);
+            $this->db->delete('banners');
+
+            return $this->db->affected_rows();
         }
     }
 }

@@ -4,16 +4,15 @@ class Pages extends Main_Controller {
 
 	public function __construct() {
 		parent::__construct(); 																	//  calls the constructor
-		$this->load->library('user'); 														// load the user library
-		$this->load->model('Pages_model');
+
+        $this->load->model('Pages_model');
+
+        $this->load->library('user'); 														// load the user library
 	}
 
 	public function index() {
-		$page_id = (int) $this->input->get('page_id');
-		$result = $this->Pages_model->getPage($page_id);
-
-		if (!$result) {
-//			show_404();
+		if (!$result = $this->Pages_model->getPage((int) $this->input->get('page_id'))) {
+			show_404();
 		}
 
 		$this->template->setBreadcrumb('<i class="fa fa-home"></i>', '/');
@@ -33,4 +32,4 @@ class Pages extends Main_Controller {
 }
 
 /* End of file pages.php */
-/* Location: ./main/controllers//pages.php */
+/* Location: ./main/controllers/pages.php */

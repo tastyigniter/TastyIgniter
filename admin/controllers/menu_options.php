@@ -2,13 +2,17 @@
 
 class Menu_options extends Admin_Controller {
 
-    public $_permission_rules = array('access[index|edit]', 'modify[index|edit]');
-
     public function __construct() {
 		parent::__construct(); //  calls the constructor
-		$this->load->library('pagination');
-		$this->load->library('currency'); // load the currency library
-		$this->load->model('Menu_options_model'); // load the menus model
+
+        $this->user->restrict('Admin.MenuOptions');
+
+        $this->load->model('Menu_options_model'); // load the menus model
+
+        $this->load->library('pagination');
+        $this->load->library('currency'); // load the currency library
+
+        $this->lang->load('menu_options');
 	}
 
 	public function index() {
@@ -52,12 +56,11 @@ class Menu_options extends Admin_Controller {
 			$data['order_by_active'] = 'ASC';
 		}
 
-		$this->template->setTitle('Menu Options');
-		$this->template->setHeading('Menu Options');
-		$this->template->setButton('+ New', array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
-		$this->template->setButton('Delete', array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
+		$this->template->setTitle($this->lang->line('text_title'));
+		$this->template->setHeading($this->lang->line('text_heading'));
 
-		$data['text_empty'] 		= 'There are no menu options, please add!.';
+        $this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
+		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_name'] 			= site_url('menu_options'.$url.'sort_by=option_name&order_by='.$order_by);
@@ -82,7 +85,7 @@ class Menu_options extends Admin_Controller {
 			$url .= 'order_by='.$filter['order_by'].'&';
 		}
 
-		$config['base_url'] 		= site_url('menu_options').$url;
+		$config['base_url'] 		= site_url('menu_options'.$url);
 		$config['total_rows'] 		= $this->Menu_options_model->getCount($filter);
 		$config['per_page'] 		= $filter['limit'];
 
@@ -107,17 +110,18 @@ class Menu_options extends Admin_Controller {
 
 		if ($option_info) {
 			$option_id = $option_info['option_id'];
-			$data['action']	= site_url('menu_options/edit?id='. $option_id);
+			$data['_action']	= site_url('menu_options/edit?id='. $option_id);
 		} else {
 			$option_id = 0;
-			$data['action']	= site_url('menu_options/edit');
+			$data['_action']	= site_url('menu_options/edit');
 		}
 
-		$title = (isset($option_info['option_name'])) ? $option_info['option_name'] : 'New';
-		$this->template->setTitle('Menu Option: '. $title);
-		$this->template->setHeading('Menu Option: '. $title);
-		$this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-		$this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$title = (isset($option_info['option_name'])) ? $option_info['option_name'] : $this->lang->line('text_new');
+        $this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $title));
+        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
+
+        $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setBackButton('btn btn-back', site_url('menu_options'));
 
 		$data['option_id'] 			= $option_info['option_id'];
@@ -172,7 +176,7 @@ class Menu_options extends Admin_Controller {
 					);
 				}
 			} else {
-				$json['results'] = array('id' => '0', 'text' => 'No Matches Found');
+				$json['results'] = array('id' => '0', 'text' => $this->lang->line('text_no_match'));
 			}
 		}
 
@@ -181,12 +185,12 @@ class Menu_options extends Admin_Controller {
 
 	private function _saveOption() {
     	if ($this->validateForm() === TRUE) {
-            $save_type = (! is_numeric($this->input->get('id'))) ? 'added' : 'updated';
+            $save_type = (! is_numeric($this->input->get('id'))) ? $this->lang->line('text_added') : $this->lang->line('text_updated');
 
 			if ($option_id = $this->Menu_options_model->saveOption($this->input->get('id'), $this->input->post())) {
-				$this->alert->set('success', 'Menu option ' . $save_type . ' successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, ' . $save_type . ' updated.');
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Menu option '.$save_type));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $save_type));
 			}
 
 			return $option_id;
@@ -194,26 +198,29 @@ class Menu_options extends Admin_Controller {
 	}
 
 	private function _deleteMenuOption() {
-    	if (is_array($this->input->post('delete'))) {
-			foreach ($this->input->post('delete') as $key => $option_id) {
-				$this->Menu_options_model->deleteOption($option_id);
-			}
+        if ($this->input->post('delete')) {
+            $deleted_rows = $this->Menu_options_model->deleteOption($this->input->post('delete'));
 
-			$this->alert->set('success', 'Menu option(s) deleted successfully!');
-		}
+            if ($deleted_rows > 0) {
+                $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Menu options': 'Menu option';
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), $prefix.' '.$this->lang->line('text_deleted')));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted')));
+            }
 
-		return TRUE;
+            return TRUE;
+        }
 	}
 
 	private function validateForm() {
-		$this->form_validation->set_rules('option_name', 'Option Name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
-		$this->form_validation->set_rules('display_type', 'Display Type', 'xss_clean|trim|required|alpha');
-		$this->form_validation->set_rules('priority', 'Priority', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('option_name', 'lang:label_option_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
+		$this->form_validation->set_rules('display_type', 'lang:label_display_type', 'xss_clean|trim|required|alpha');
+		$this->form_validation->set_rules('priority', 'lang:label_priority', 'xss_clean|trim|required|integer');
 
 		if ($this->input->post('option_values')) {
 			foreach ($this->input->post('option_values') as $key => $value) {
-				$this->form_validation->set_rules('option_values['.$key.'][value]', 'Value', 'xss_clean|trim|required|min_length[2]|max_length[128]');
-				$this->form_validation->set_rules('option_values['.$key.'][price]', 'Price', 'xss_clean|trim|required|numeric');
+				$this->form_validation->set_rules('option_values['.$key.'][value]', 'lang:label_option_value', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+				$this->form_validation->set_rules('option_values['.$key.'][price]', 'lang:label_option_price', 'xss_clean|trim|required|numeric');
 			}
 		}
 

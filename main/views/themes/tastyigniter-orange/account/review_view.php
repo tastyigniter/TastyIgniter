@@ -1,14 +1,20 @@
 <?php echo get_header(); ?>
 <?php echo get_partial('content_top'); ?>
-<div id="page-content">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="heading-section">
-				</div>
-			</div>
-		</div>
 
+<?php if ($this->alert->get()) { ?>
+    <div id="notification">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <?php echo $this->alert->display(); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+
+<div id="page-content">
+	<div class="container top-spacing">
 		<div class="row">
 			<?php echo get_partial('content_left'); ?>
 			<?php
@@ -27,39 +33,39 @@
 						<div class="table-responsive">
 						<table class="table table-none">
 							<tr>
-								<td><b>Restaurant:</b></td>
+								<td><b><?php echo lang('column_restaurant'); ?></b></td>
 								<td><?php echo $location_name; ?></td>
 							</tr>
 							<tr>
-								<td><b>Order ID:</b></td>
-								<td><?php echo $sale_id; ?></td>
+								<td><b><?php echo lang('column_sale_id'); ?></b></td>
+								<td><?php echo $sale_id; ?> - <?php echo ucwords($sale_type); ?></td>
 							</tr>
 							<tr>
-								<td><b>Author:</b></td>
+								<td><b><?php echo lang('column_author'); ?></b></td>
 								<td><?php echo $author; ?></td>
 							</tr>
 							<tr>
-								<td><b>Rating:</b></td>
+								<td><b><?php echo lang('column_rating'); ?></b></td>
 								<td>
 									<ul class="list-inline rating-inline">
-										<li><b>Quality:</b><br />
+										<li><b><?php echo lang('label_quality'); ?></b><br />
 											<div class="rating rating-star" data-score="<?php echo $quality; ?>" data-readonly="true"></div>
 										</li>
-										<li><b>Delivery:</b><br />
+										<li><b><?php echo lang('label_delivery'); ?></b><br />
 											<div class="rating rating-star" data-score="<?php echo $delivery; ?>" data-readonly="true"></div>
 										</li>
-										<li><b>Service:</b><br />
+										<li><b><?php echo lang('label_service'); ?></b><br />
 											<div class="rating rating-star" data-score="<?php echo $service; ?>" data-readonly="true"></div>
 										</li>
 									</ul>
 								</td>
 							</tr>
 							<tr>
-								<td><b>Review Text:</b></td>
+								<td><b><?php echo lang('label_review'); ?></b></td>
 								<td><?php echo $review_text; ?></td>
 							</tr>
 							<tr>
-								<td><b>Review Date:</b></td>
+								<td><b><?php echo lang('label_date'); ?></b></td>
 								<td><?php echo $date; ?></td>
 							</tr>
 						</table>
@@ -68,7 +74,7 @@
 
 					<div class="col-md-12">
 						<div class="buttons">
-							<a class="btn btn-default" href="<?php echo $back; ?>"><?php echo $button_back; ?></a>
+							<a class="btn btn-default" href="<?php echo $back_url; ?>"><?php echo lang('button_back'); ?></a>
 						</div>
 					</div>
 				</div>

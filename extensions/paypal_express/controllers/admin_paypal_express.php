@@ -1,16 +1,18 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-class Admin_paypal_express extends Ext_Controller {
+class Admin_paypal_express extends Admin_Controller {
 
 	public function index($data = array()) {
-		$this->load->model('Statuses_model');
+        $this->user->restrict('Payment.PaypalExpress');
+
+        $this->load->model('Statuses_model');
 
         $data['title'] = (isset($data['title'])) ? $data['title'] : 'PayPal Express';
 
         $this->template->setTitle('Payment: ' . $data['title']);
         $this->template->setHeading('Payment: ' . $data['title']);
-        $this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-        $this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+        $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+        $this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
         $this->template->setBackButton('btn btn-back', site_url('payments'));
 
         $ext_data = array();
@@ -119,7 +121,7 @@ class Admin_paypal_express extends Ext_Controller {
 			$update['type'] 		= 'payment';
 			$update['name'] 		= $this->input->get('name');
 			$update['title'] 		= $this->input->post('title');
-			$update['extension_id'] = (int) $this->input->get('extension_id');
+			$update['extension_id'] = (int) $this->input->get('id');
 
 			$update['data'] = array(
 				'priority' 			=> $this->input->post('priority'),
