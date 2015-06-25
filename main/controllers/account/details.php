@@ -4,42 +4,28 @@ class Details extends Main_Controller {
 
 	public function __construct() {
 		parent::__construct(); 																	//  calls the constructor
-		$this->load->library('customer'); 													// load the customer library
-		$this->load->model('Customers_model');
-		$this->load->model('Security_questions_model');											// load the security questions model
 
-		$this->lang->load('account/details');
-	}
-
-	public function index() {
 		if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
   			redirect('account/login');
 		}
 
+        $this->load->model('Customers_model');
+        $this->load->model('Security_questions_model');											// load the security questions model
+
+        $this->load->library('customer'); 													// load the customer library
+
+        $this->lang->load('account/details');
+	}
+
+	public function index() {
 		$this->template->setBreadcrumb('<i class="fa fa-home"></i>', '/');
+        $this->template->setBreadcrumb($this->lang->line('text_my_account'), 'account/account');
 		$this->template->setBreadcrumb($this->lang->line('text_heading'), 'account/details');
 
-		// START of retrieving lines from language file to pass to view.
 		$this->template->setTitle($this->lang->line('text_heading'));
 		$this->template->setHeading($this->lang->line('text_heading'));
-		$data['text_details'] 			= $this->lang->line('text_details');
-		$data['text_password'] 			= $this->lang->line('text_password');
-		$data['text_select'] 			= $this->lang->line('text_select');
-		$data['entry_first_name'] 		= $this->lang->line('entry_first_name');
-		$data['entry_last_name'] 		= $this->lang->line('entry_last_name');
-		$data['entry_email'] 			= $this->lang->line('entry_email');
-		$data['entry_password'] 		= $this->lang->line('entry_password');
-		$data['entry_password_confirm'] = $this->lang->line('entry_password_confirm');
-		$data['entry_old_password'] 	= $this->lang->line('entry_old_password');
-		$data['entry_telephone'] 		= $this->lang->line('entry_telephone');
-		$data['entry_s_question'] 		= $this->lang->line('entry_s_question');
-		$data['entry_s_answer'] 		= $this->lang->line('entry_s_answer');
-		$data['entry_newsletter'] 		= $this->lang->line('entry_newsletter');
-		$data['button_back'] 			= $this->lang->line('button_back');
-		$data['button_save'] 			= $this->lang->line('button_save');
-		// END of retrieving lines from language file to pass to view.
 
-		$data['back'] 					= site_url('account/account');
+		$data['back_url'] 				= site_url('account/account');
 
 		$result = $this->Customers_model->getCustomer($this->customer->getId());				// retrieve customer data based on customer id from getCustomer method in Customers model
 		if ($result) {
@@ -60,7 +46,6 @@ class Details extends Main_Controller {
 				'text'	=> $result['text']
 			);
 		}
-
 
 		// check if $_POST is set and if update details validation was successful then redirect
 		if ($this->input->post() AND $this->_updateDetails() === TRUE) {
@@ -100,7 +85,7 @@ class Details extends Main_Controller {
                         ));
                     }
 
-                    $this->alert->set('alert', $this->lang->line('alert_updated'));
+                    $this->alert->set('alert', $this->lang->line('alert_updated_success'));
 				}
 
 				return TRUE;
@@ -110,16 +95,16 @@ class Details extends Main_Controller {
 
 	private function validateForm() {
 		// START of form validation rules
-		$this->form_validation->set_rules('first_name', 'First Name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
-		$this->form_validation->set_rules('last_name', 'First Name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
-		$this->form_validation->set_rules('telephone', 'Telephone', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('security_question_id', 'Security Question', 'required');
-		$this->form_validation->set_rules('security_answer', 'Security Answer', 'required');
+		$this->form_validation->set_rules('first_name', 'lang:label_first_name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
+		$this->form_validation->set_rules('last_name', 'lang:label_last_name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
+		$this->form_validation->set_rules('telephone', 'lang:label_telephone', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('security_question_id', 'lang:label_s_question', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('security_answer', 'lang:label_s_answer', 'xss_clean|trim|required');
 
 		if ($this->input->post('old_password')) {
-			$this->form_validation->set_rules('old_password', 'Old Password', 'xss_clean|trim|required|min_length[6]|max_length[32]|callback__check_old_password');
-			$this->form_validation->set_rules('new_password', 'New Password', 'xss_clean|trim|required|min_length[6]|max_length[32]|matches[confirm_new_password]');
-			$this->form_validation->set_rules('confirm_new_password', 'Confirm New Password', 'xss_clean|trim|required');
+			$this->form_validation->set_rules('old_password', 'lang:label_old_password', 'xss_clean|trim|required|min_length[6]|max_length[32]|callback__check_old_password');
+			$this->form_validation->set_rules('new_password', 'lang:label_password', 'xss_clean|trim|required|min_length[6]|max_length[32]|matches[confirm_new_password]');
+			$this->form_validation->set_rules('confirm_new_password', 'lang:label_password_confirm', 'xss_clean|trim|required');
 		}
 		// END of form validation rules
 
@@ -142,4 +127,4 @@ class Details extends Main_Controller {
 }
 
 /* End of file details.php */
-/* Location: ./main/controllers//details.php */
+/* Location: ./main/controllers/details.php */

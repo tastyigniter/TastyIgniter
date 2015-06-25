@@ -2,11 +2,6 @@
 
 class Slideshow extends Main_Controller {
 
-	public function __construct() {
-		parent::__construct(); 																	// calls the constructor
-		$this->lang->load('slideshow');
-	}
-
 	public function index($ext_data = array()) {
 		if ( ! file_exists(EXTPATH .'slideshow/views/slideshow.php')) { 			//check if file exists in views folder
 			show_404(); 																		// Whoops, show 404 error page!

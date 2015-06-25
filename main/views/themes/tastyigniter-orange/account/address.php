@@ -1,14 +1,20 @@
 <?php echo get_header(); ?>
 <?php echo get_partial('content_top'); ?>
-<div id="page-content">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="heading-section">
-				</div>
-			</div>
-		</div>
 
+<?php if ($this->alert->get()) { ?>
+    <div id="notification">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <?php echo $this->alert->display(); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+
+<div id="page-content">
+	<div class="container top-spacing">
 		<div class="row">
 			<?php echo get_partial('content_left'); ?>
 			<?php
@@ -28,14 +34,14 @@
                         <div class="btn-group btn-group-md col-md-12">
                             <?php foreach ($addresses as $address) { ?>
                                 <label class="btn btn-default wrap-all col-xs-3 <?php echo ($address_id == $address['address_id']) ? 'active' : ''; ?>">
-                                    <a class="edit-address pull-right" href="<?php echo $address['edit']; ?>"><?php echo $text_edit; ?></a>
+                                    <a class="edit-address pull-right" href="<?php echo $address['edit']; ?>"><?php echo lang('text_edit'); ?></a>
                                     <address class="text-left"><?php echo $address['address']; ?></address>
                                 </label>
                                 <?php $address_row++; ?>
                             <?php } ?>
                         </div>
                     <?php } else { ?>
-                        <p><?php echo $text_no_address; ?></p>
+                        <p><?php echo lang('text_no_address'); ?></p>
                     <?php } ?>
 
 					<div class="col-md-12 page-spacing"></div>
@@ -43,8 +49,8 @@
 					<div class="col-md-12">
 						<div class="row">
 							<div class="buttons col-sm-6">
-								<a class="btn btn-default" href="<?php echo $back; ?>"><?php echo $button_back; ?></a>
-								<a class="btn btn-success" href="<?php echo $continue; ?>"><?php echo $button_add; ?></a>
+								<a class="btn btn-default" href="<?php echo $back_url; ?>"><?php echo lang('button_back'); ?></a>
+								<a class="btn btn-primary btn-lg" href="<?php echo $continue_url; ?>"><?php echo lang('button_add'); ?></a>
 							</div>
 
 							<div class="col-sm-6">

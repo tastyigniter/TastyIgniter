@@ -6,7 +6,7 @@
                 <table class="table table-striped table-border">
                     <thead>
                     <tr>
-                        <th>Upload module extension zip file and it will be installed automatically.</th>
+                        <th><?php echo lang('alert_info_upload'); ?></th>
                     </tr>
                     </thead>
                     <tbody>

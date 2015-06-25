@@ -5,15 +5,15 @@
             <div class="col-sm-12 col-md-3">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Folders</h3>
+                        <h3 class="panel-title"><?php echo lang('text_folders'); ?></h3>
                     </div>
                     <div class="panel-body wrap-none">
                         <div class="list-group list-group-hover">
                             <?php foreach ($folders as $key => $folder) { ?>
                                 <?php if ($key === $filter_folder) { ?>
-                                    <a class="list-group-item active" href="<?php echo $folder['url']; ?>"><i class="fa <?php echo $folder['icon']; ?>"></i>&nbsp;&nbsp;<?php echo ucwords($key); ?>&nbsp;&nbsp;<span class="label label-primary pull-right"><?php echo $folder['badge']; ?></span></a>
+                                    <a class="list-group-item active" href="<?php echo $folder['url']; ?>"><i class="fa <?php echo $folder['icon']; ?>"></i>&nbsp;&nbsp;<?php echo $folder['title']; ?>&nbsp;&nbsp;<span class="label label-primary pull-right"><?php echo $folder['badge']; ?></span></a>
                                 <?php } else { ?>
-                                    <a class="list-group-item" href="<?php echo $folder['url']; ?>"><i class="fa <?php echo $folder['icon']; ?>"></i>&nbsp;&nbsp;<?php echo ucwords($key); ?>&nbsp;&nbsp;<span class="label label-primary pull-right"><?php echo $folder['badge']; ?></span></a>
+                                    <a class="list-group-item" href="<?php echo $folder['url']; ?>"><i class="fa <?php echo $folder['icon']; ?>"></i>&nbsp;&nbsp;<?php echo $folder['title']; ?>&nbsp;&nbsp;<span class="label label-primary pull-right"><?php echo $folder['badge']; ?></span></a>
                                 <?php } ?>
                             <?php } ?>
                         </div>
@@ -21,15 +21,15 @@
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Labels/Types</h3>
+                        <h3 class="panel-title"><?php echo lang('text_labels'); ?></h3>
                     </div>
                     <div class="panel-body wrap-none">
                         <div class="list-group list-group-hover">
                             <?php foreach ($labels as $key => $label) { ?>
                                 <?php if ($key === $filter_type) { ?>
-                                    <a class="list-group-item active" href="<?php echo $label['url']; ?>"><i class="fa <?php echo $label['icon']; ?>"></i>&nbsp;&nbsp;<?php echo ucwords($key); ?></a>
+                                    <a class="list-group-item active" href="<?php echo $label['url']; ?>"><i class="fa <?php echo $label['icon']; ?>"></i>&nbsp;&nbsp;<?php echo $label['title']; ?></a>
                                 <?php } else { ?>
-                                    <a class="list-group-item" href="<?php echo $label['url']; ?>"><i class="fa <?php echo $label['icon']; ?>"></i>&nbsp;&nbsp;<?php echo ucwords($key); ?></a>
+                                    <a class="list-group-item" href="<?php echo $label['url']; ?>"><i class="fa <?php echo $label['icon']; ?>"></i>&nbsp;&nbsp;<?php echo $label['title']; ?></a>
                                 <?php } ?>
                             <?php } ?>
                         </div>
@@ -52,29 +52,29 @@
                                     <div class="row">
                                         <div class="col-md-4 pull-right text-right">
                                             <div class="form-group">
-                                                <input type="text" name="filter_search" class="form-control input-sm" value="<?php echo $filter_search; ?>" placeholder="Search sender or subject." />&nbsp;&nbsp;&nbsp;
+                                                <input type="text" name="filter_search" class="form-control input-sm" value="<?php echo $filter_search; ?>" placeholder="<?php echo lang('text_filter_search'); ?>" />&nbsp;&nbsp;&nbsp;
                                             </div>
-                                            <a class="btn btn-grey" onclick="filterList();" title="Search"><i class="fa fa-search"></i></a>
+                                            <a class="btn btn-grey" onclick="filterList();" title="<?php echo lang('text_search'); ?>"><i class="fa fa-search"></i></a>
                                         </div>
 
                                         <div class="col-md-8 pull-left">
                                             <?php if ($filter_folder === 'all' OR $filter_folder === 'sent') { ?>
                                                 <div class="form-group">
                                                     <select name="filter_recipient" class="form-control input-sm">
-                                                        <option value="">View all recipients</option>
-                                                        <option value="all_newsletters" <?php echo set_select('filter_recipient', 'all_newsletters'); ?> >All Newsletter Subscribers</option>
-                                                        <option value="all_customers" <?php echo set_select('filter_recipient', 'all_customers'); ?> >All Customers</option>
-                                                        <option value="customer_group" <?php echo set_select('filter_recipient', 'customer_group'); ?> >Customer Group</option>
-                                                        <option value="customers" <?php echo set_select('filter_recipient', 'customers'); ?> >Customers</option>
-                                                        <option value="all_staffs" <?php echo set_select('filter_recipient', 'all_staffs'); ?> >All Staffs</option>
-                                                        <option value="staff_group" <?php echo set_select('filter_recipient', 'staff_group'); ?> >Staff Group</option>
-                                                        <option value="staffs" <?php echo set_select('filter_recipient', 'staffs'); ?> >Staffs</option>
+                                                        <option value=""><?php echo lang('text_filter_recipient'); ?></option>
+                                                        <option value="all_newsletters" <?php echo set_select('filter_recipient', 'all_newsletters'); ?> ><?php echo lang('text_all_newsletters'); ?></option>
+                                                        <option value="all_customers" <?php echo set_select('filter_recipient', 'all_customers'); ?> ><?php echo lang('text_all_customers'); ?></option>
+                                                        <option value="customer_group" <?php echo set_select('filter_recipient', 'customer_group'); ?> ><?php echo lang('text_customer_group'); ?></option>
+                                                        <option value="customers" <?php echo set_select('filter_recipient', 'customers'); ?> ><?php echo lang('text_customers'); ?></option>
+                                                        <option value="all_staffs" <?php echo set_select('filter_recipient', 'all_staffs'); ?> ><?php echo lang('text_all_staff'); ?></option>
+                                                        <option value="staff_group" <?php echo set_select('filter_recipient', 'staff_group'); ?> ><?php echo lang('text_staff_group'); ?></option>
+                                                        <option value="staffs" <?php echo set_select('filter_recipient', 'staffs'); ?> ><?php echo lang('text_staff'); ?></option>
                                                     </select>
                                                 </div>
                                             <?php } ?>
                                             <div class="form-group">
                                                 <select name="filter_date" class="form-control input-sm">
-                                                    <option value="">View all dates</option>
+                                                    <option value=""><?php echo lang('text_filter_date'); ?></option>
                                                     <?php foreach ($message_dates as $key => $value) { ?>
                                                         <?php if ($key === $filter_date) { ?>
                                                             <option value="<?php echo $key; ?>" <?php echo set_select('filter_date', $key, TRUE); ?> ><?php echo $value; ?></option>
@@ -84,8 +84,8 @@
                                                     <?php } ?>
                                                 </select>
                                             </div>
-                                            <a class="btn btn-grey" onclick="filterList();" title="Filter"><i class="fa fa-filter"></i></a>&nbsp;
-                                            <a class="btn btn-grey" href="<?php echo page_url(); ?>" title="Clear"><i class="fa fa-times"></i></a>
+                                            <a class="btn btn-grey" onclick="filterList();" title="<?php echo lang('text_filter'); ?>"><i class="fa fa-filter"></i></a>&nbsp;
+                                            <a class="btn btn-grey" href="<?php echo page_url(); ?>" title="<?php echo lang('text_clear'); ?>"><i class="fa fa-times"></i></a>
                                         </div>
                                     </div>
                                 </div>
@@ -97,20 +97,20 @@
                         <div class="message-controls">
                             <input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);">&nbsp;&nbsp;
                             <?php if ($filter_folder === 'archive') { ?>
-                                <button class="btn btn-default" title="Move to Inbox" onclick="moveToInbox()"><i class="fa fa-inbox"></i></button>
+                                <button class="btn btn-default" title="<?php echo lang('text_move_to_inbox'); ?>" onclick="moveToInbox()"><i class="fa fa-inbox"></i></button>
                             <?php } else { ?>
-                                <button class="btn btn-default" title="Move to Archive" onclick="moveToArchive()"><i class="fa fa-archive"></i></button>
+                                <button class="btn btn-default" title="<?php echo lang('text_move_to_archive'); ?>" onclick="moveToArchive()"><i class="fa fa-archive"></i></button>
                             <?php } ?>
-                            <button class="btn btn-default" title="Refresh"><i class="fa fa-refresh"></i></button>
+                            <button class="btn btn-default" title="<?php echo lang('text_refresh'); ?>"><i class="fa fa-refresh"></i></button>
                             <div class="btn-group">
                                 <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" aria-expanded="true"><i class="fa fa-ellipsis-h"></i> &nbsp;<i class="caret"></i></button>
                                 <ul class="dropdown-menu">
                                     <?php if ($filter_folder === 'inbox') { ?>
-                                        <li><a onclick="markAsRead()">Mark as read</a></li>
-                                        <li><a onclick="markAsUnread()">Mark as unread</a></li>
+                                        <li><a onclick="markAsRead()"><?php echo lang('text_mark_as_read'); ?></a></li>
+                                        <li><a onclick="markAsUnread()"><?php echo lang('text_mark_as_unread'); ?></a></li>
                                     <?php } else { ?>
-                                        <li class="disabled"><a>Mark as read</a></li>
-                                        <li class="disabled"><a>Mark as unread</a></li>
+                                        <li class="disabled"><a><?php echo lang('text_mark_as_read'); ?></a></li>
+                                        <li class="disabled"><a><?php echo lang('text_mark_as_unread'); ?></a></li>
                                     <?php } ?>
                                 </ul>
                             </div>
@@ -134,7 +134,7 @@
                                         <?php } ?>
                                     <?php } else { ?>
                                         <tr>
-                                            <td colspan="6"><?php echo $text_empty; ?></td>
+                                            <td colspan="6"><?php echo lang('text_empty'); ?></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>

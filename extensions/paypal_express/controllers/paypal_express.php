@@ -79,7 +79,7 @@ class Paypal_express extends Main_Controller {
             }
         }
 
-        $this->alert->set('alert', $this->lang->line('alert_server_error'));
+        $this->alert->set('alert', $this->lang->line('alert_error_server'));
         redirect('checkout');
     }
 
@@ -91,7 +91,7 @@ class Paypal_express extends Main_Controller {
             $token = $this->input->get('token'); 												// retrieve token from $_GET data
 
 
-//        $this->alert->set('alert', $this->lang->line('alert_server_error'));
+//        $this->alert->set('alert', $this->lang->line('alert_error_server'));
             redirect('checkout');
         }
     }

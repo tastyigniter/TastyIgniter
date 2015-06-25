@@ -6,9 +6,9 @@
                 <ul id="nav-tabs" class="nav nav-tabs">
                     <?php foreach ($types as $key => $value) { ?>
                         <?php if ($key === $filter_type) { ?>
-                            <li class="active"><a href="<?php echo $value['url']; ?>"><?php echo ucwords($key); ?> &nbsp;<span class="badge"><?php echo $value['badge']; ?></span></a></li>
+                            <li class="active"><a href="<?php echo $value['url']; ?>"><?php echo $value['title']; ?> &nbsp;<span class="badge"><?php echo $value['badge']; ?></span></a></li>
                         <?php } else { ?>
-                            <li><a href="<?php echo $value['url']; ?>"><?php echo ucwords($key); ?> &nbsp;<span class="badge"><?php echo $value['badge']; ?></span></a></li>
+                            <li><a href="<?php echo $value['url']; ?>"><?php echo $value['title']; ?> &nbsp;<span class="badge"><?php echo $value['badge']; ?></span></a></li>
                         <?php } ?>
                     <?php } ?>
                 </ul>
@@ -24,38 +24,38 @@
                             <div class="row">
                                 <div class="col-md-3 pull-right text-right">
                                     <div class="form-group">
-                                        <input type="text" name="filter_search" class="form-control input-sm" value="<?php echo $filter_search; ?>" placeholder="Search ip, customer or browser." />&nbsp;&nbsp;&nbsp;
+                                        <input type="text" name="filter_search" class="form-control input-sm" value="<?php echo $filter_search; ?>" placeholder="<?php echo lang('text_filter_search'); ?>" />&nbsp;&nbsp;&nbsp;
                                     </div>
-                                    <a class="btn btn-grey" onclick="filterList();" title="Search"><i class="fa fa-search"></i></a>
+                                    <a class="btn btn-grey" onclick="filterList();" title="<?php echo lang('text_search'); ?>"><i class="fa fa-search"></i></a>
                                 </div>
 
                                 <div class="col-md-8 pull-left">
                                     <input type="hidden" name="filter_type" value="<?php echo $filter_type; ?>" />
                                     <div class="form-group">
                                         <select name="filter_access" class="form-control input-sm">
-                                            <option value="">View all access</option>
+                                            <option value=""><?php echo lang('text_filter_access'); ?></option>
                                             <?php if ($filter_access === 'browser') { ?>
-                                                <option value="browser" <?php echo set_select('filter_access', 'browser', TRUE); ?> >Browser</option>
-                                                <option value="mobile" <?php echo set_select('filter_access', 'mobile'); ?> >Mobile</option>
-                                                <option value="robot" <?php echo set_select('filter_access', 'robot'); ?> >Robot</option>
+                                                <option value="browser" <?php echo set_select('filter_access', 'browser', TRUE); ?> ><?php echo lang('text_browser'); ?></option>
+                                                <option value="mobile" <?php echo set_select('filter_access', 'mobile'); ?> ><?php echo lang('text_mobile'); ?></option>
+                                                <option value="robot" <?php echo set_select('filter_access', 'robot'); ?> ><?php echo lang('text_robot'); ?></option>
                                             <?php } else if ($filter_access === 'mobile') { ?>
-                                                <option value="browser" <?php echo set_select('filter_access', 'browser'); ?> >Browser</option>
-                                                <option value="mobile" <?php echo set_select('filter_access', 'mobile', TRUE); ?> >Mobile</option>
-                                                <option value="robot" <?php echo set_select('filter_access', 'robot'); ?> >Robot</option>
+                                                <option value="browser" <?php echo set_select('filter_access', 'browser'); ?> ><?php echo lang('text_browser'); ?></option>
+                                                <option value="mobile" <?php echo set_select('filter_access', 'mobile', TRUE); ?> ><?php echo lang('text_mobile'); ?></option>
+                                                <option value="robot" <?php echo set_select('filter_access', 'robot'); ?> ><?php echo lang('text_robot'); ?></option>
                                             <?php } else if ($filter_access === 'robot') { ?>
-                                                <option value="browser" <?php echo set_select('filter_access', 'browser'); ?> >Browser</option>
-                                                <option value="mobile" <?php echo set_select('filter_access', 'mobile'); ?> >Mobile</option>
-                                                <option value="robot" <?php echo set_select('filter_access', 'robot', TRUE); ?> >Robot</option>
+                                                <option value="browser" <?php echo set_select('filter_access', 'browser'); ?> ><?php echo lang('text_browser'); ?></option>
+                                                <option value="mobile" <?php echo set_select('filter_access', 'mobile'); ?> ><?php echo lang('text_mobile'); ?></option>
+                                                <option value="robot" <?php echo set_select('filter_access', 'robot', TRUE); ?> ><?php echo lang('text_robot'); ?></option>
                                             <?php } else { ?>
-                                                <option value="browser" <?php echo set_select('filter_access', 'browser'); ?> >Browser</option>
-                                                <option value="mobile" <?php echo set_select('filter_access', 'mobile'); ?> >Mobile</option>
-                                                <option value="robot" <?php echo set_select('filter_access', 'robot'); ?> >Robot</option>
+                                                <option value="browser" <?php echo set_select('filter_access', 'browser'); ?> ><?php echo lang('text_browser'); ?></option>
+                                                <option value="mobile" <?php echo set_select('filter_access', 'mobile'); ?> ><?php echo lang('text_mobile'); ?></option>
+                                                <option value="robot" <?php echo set_select('filter_access', 'robot'); ?> ><?php echo lang('text_robot'); ?></option>
                                             <?php } ?>
                                         </select>&nbsp;
                                     </div>
                                     <div class="form-group">
                                         <select name="filter_date" class="form-control input-sm">
-                                            <option value="">View by date</option>
+                                            <option value=""><?php echo lang('text_filter_date'); ?></option>
                                             <?php foreach ($online_dates as $key => $value) { ?>
                                                 <?php if ($key === $filter_date) { ?>
                                                     <option value="<?php echo $key; ?>" <?php echo set_select('filter_date', $key, TRUE); ?> ><?php echo $value; ?></option>
@@ -65,8 +65,8 @@
                                             <?php } ?>
                                         </select>
                                     </div>
-                                    <a class="btn btn-grey" onclick="filterList();" title="Filter"><i class="fa fa-filter"></i></a>&nbsp;
-                                    <a class="btn btn-grey" href="<?php echo page_url(); ?>" title="Clear"><i class="fa fa-times"></i></a>
+                                    <a class="btn btn-grey" onclick="filterList();" title="<?php echo lang('text_filter'); ?>"><i class="fa fa-filter"></i></a>&nbsp;
+                                    <a class="btn btn-grey" href="<?php echo page_url(); ?>" title="<?php echo lang('text_clear'); ?>"><i class="fa fa-times"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -80,14 +80,14 @@
                         <thead>
                         <tr>
                             <!--<th class="action action-one"></th>-->
-                            <th>IP</th>
-                            <th>Customer</th>
-                            <th>Access</th>
-                            <th>Browser</th>
-<!--                            <th class="text-center">User Agent</th>-->
-                            <th style="width:22%;">Last Request URL</th>
-                            <th style="width:22%;">Last Referrer URL</th>
-                            <th><a class="sort" href="<?php echo $sort_date; ?>">Last Activity<i class="fa fa-sort-<?php echo ($sort_by == 'date_added') ? $order_by_active : $order_by; ?>"></i></a></th>
+                            <th><?php echo lang('column_ip'); ?></th>
+                            <th><?php echo lang('column_customer'); ?></th>
+                            <th><?php echo lang('column_access'); ?></th>
+                            <th><?php echo lang('column_browser'); ?></th>
+<!--                            <th class="text-center"><?php echo lang('column_agent'); ?></th>-->
+                            <th style="width:22%;"><?php echo lang('column_request_uri'); ?></th>
+                            <th style="width:22%;"><?php echo lang('column_referrer_url'); ?></th>
+                            <th><a class="sort" href="<?php echo $sort_date; ?>"><?php echo lang('column_last_activity'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'date_added') ? $order_by_active : $order_by; ?>"></i></a></th>
                         </tr>
                         </thead>
                         <tbody>

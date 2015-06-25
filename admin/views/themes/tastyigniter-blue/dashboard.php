@@ -8,12 +8,12 @@
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col-xs-8">
-                                    <span class="stat-heading">Total Sales!</span>
+                                    <span class="stat-heading"><?php echo lang('text_total_sale'); ?></span>
                                 </div>
                                 <div class="col-xs-4 text-right">
                                     <i class="stat-icon fa fa-line-chart fa-4x"></i>
                                 </div>
-                                <div class="col-xs-12"><span class="stat-text sales">--</span></div>
+                                <div class="col-xs-12"><span class="stat-text sales"><?php echo lang('text_dash_dash'); ?></span></div>
                             </div>
                         </div>
                     </div>
@@ -23,12 +23,12 @@
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col-xs-9">
-                                    <span class="stat-heading">Total Customers!</span>
+                                    <span class="stat-heading"><?php echo lang('text_total_customer'); ?></span>
                                 </div>
                                 <div class="col-xs-3 text-right">
                                     <i class="stat-icon fa fa-users fa-4x"></i>
                                 </div>
-                                <div class="col-xs-12"><span class="stat-text customers">--</span></div>
+                                <div class="col-xs-12"><span class="stat-text customers"><?php echo lang('text_dash_dash'); ?></span></div>
                             </div>
                         </div>
                     </div>
@@ -38,12 +38,12 @@
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col-xs-9">
-                                    <span class="stat-heading">Total Orders!</span>
+                                    <span class="stat-heading"><?php echo lang('text_total_order'); ?></span>
                                 </div>
                                 <div class="col-xs-3 text-right">
                                     <i class="stat-icon fa fa-shopping-cart fa-4x"></i>
                                 </div>
-                                <div class="col-xs-12"><span class="stat-text orders">--</span></div>
+                                <div class="col-xs-12"><span class="stat-text orders"><?php echo lang('text_dash_dash'); ?></span></div>
                             </div>
                         </div>
                     </div>
@@ -53,12 +53,12 @@
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col-xs-9">
-                                    <span class="stat-heading">Total Reservations!</span>
+                                    <span class="stat-heading"><?php echo lang('text_total_reservation'); ?></span>
                                 </div>
                                 <div class="col-xs-3 text-right">
                                     <i class="stat-icon fa fa-calendar fa-4x"></i>
                                 </div>
-                                <div class="col-xs-12"><span class="stat-text tables_reserved">--</span></div>
+                                <div class="col-xs-12"><span class="stat-text tables_reserved"><?php echo lang('text_dash_dash'); ?></span></div>
                             </div>
                         </div>
                     </div>
@@ -70,36 +70,36 @@
 			<div class="row">
 				<div class="col-md-6">
 					<div class="panel panel-default">
-						<div class="panel-heading"><h3 class="panel-title">Complete Setup</h3></div>
+						<div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_complete_setup'); ?></h3></div>
 						<div class="panel-body">
                             <div class="progress">
                                 <div data-percentage="0%" style="width: 60%;" class="progress-bar progress-bar-info" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                                    <span class="sr-only">60% Complete</span>
+                                    <span class="sr-only"><?php echo lang('text_progress_count'); ?> <?php echo lang('text_progress'); ?></span>
                                 </div>
-                                <span class="progress-type">Add Menus</span>
-                                <span class="progress-completed">60%</span>
+                                <span class="progress-type"><?php echo lang('text_progress_type'); ?></span>
+                                <span class="progress-completed"><?php echo lang('text_progress_count'); ?></span>
                             </div>
-							<span class="text-center">Follow these steps to get your restaurant up &amp; running. </span><br />
+							<span class="text-center"><?php echo lang('text_progress_summary'); ?></span><br />
 							<div class="list-group check-list-group">
 								<a href="#" class="list-group-item">
                                     <span class="check-icon pull-left"><i class="fa fa-check"></i></span>
-                                    <span class="check-info"><b>Initial Setup</b> - Set your prefered general settings, such as restuarant name and email.</span>
+                                    <span class="check-info"><?php echo lang('text_initial_progress'); ?></span>
                                 </a>
 								<a href="#" class="list-group-item">
                                     <span class="check-icon pull-left"><i class="fa fa-check"></i></span>
-                                    <span class="check-info"><b>Your restaurant settings</b> - Let your customers know your restaurant opening times, delivery hours, preparation time and where its located.</span>
+                                    <span class="check-info"><?php echo lang('text_settings_progress'); ?></span>
                                 </a>
 								<a href="#" class="list-group-item">
                                     <span class="check-icon pull-left"><i class="fa fa-check"></i></span>
-                                    <span class="check-info"><b>Add Menus</b> - Add your menu using our simple editor. Display multiple menus like delivery &amp; eat-in, includes sizes and meal options</span>
+                                    <span class="check-info"><?php echo lang('text_menus_progress'); ?></span>
                                 </a>
 								<a href="#" class="list-group-item">
                                     <span class="check-icon pull-left"><i class="fa fa-check"></i></span>
-                                    <span class="check-info"><b>Design your website background</b> - Upload your own or choose a background image for your website from our gallery.</span>
+                                    <span class="check-info"><?php echo lang('text_design_progress'); ?></span>
                                 </a>
 								<a href="#" class="list-group-item">
                                     <span class="check-icon pull-left"><i class="fa fa-check"></i></span>
-                                    <span class="check-info"><b>Send test email</b> - Ensure order confirmation emails are sent to customers successfully.</span>
+                                    <span class="check-info"><?php echo lang('text_email_progress'); ?></span>
                                 </a>
 							</div>
 						</div>
@@ -111,19 +111,19 @@
                             <div class="form-inline">
                                 <div class="row">
                                     <div class="col-md-5 pull-left">
-                                        <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i>&nbsp;&nbsp;Statistics</h3>
+                                        <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i>&nbsp;&nbsp;<?php echo lang('text_statistic'); ?></h3>
                                     </div>
 
                                     <div class="col-md-5 pull-right text-right">
                                         <div class="form-group">
                                             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-                                                Range&nbsp;&nbsp;<span class="caret"></span>
+                                                <?php echo lang('text_range'); ?>&nbsp;&nbsp;<span class="caret"></span>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-range pull-right" role="menu">
-                                                <li><a rel="today">Today</a></li>
-                                                <li><a rel="week">Week</a></li>
-                                                <li><a rel="month">Month</a></li>
-                                                <li><a rel="year">Year</a></li>
+                                                <li><a rel="today"><?php echo lang('text_today'); ?></a></li>
+                                                <li><a rel="week"><?php echo lang('text_week'); ?></a></li>
+                                                <li><a rel="month"><?php echo lang('text_month'); ?></a></li>
+                                                <li><a rel="year"><?php echo lang('text_year'); ?></a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -133,14 +133,14 @@
 						<div class="panel-body">
 							<div id="statistics">
 								<ul class="list-group text-sm">
-									<li class="list-group-item">Total Sales <span class="label label-default sales">0</span></li>
-									<li class="list-group-item">Total Lost Sales <span class="label label-default lost_sales">0</span></li>
-									<li class="list-group-item">Total Customers <span class="label label-default customers">0</span></li>
-									<li class="list-group-item">Total Orders <span class="label label-default orders">0</span></li>
-									<li class="list-group-item">Total Delivery Orders<span class="label label-default delivery_orders">0</span></li>
-									<li class="list-group-item">Total Collection Orders<span class="label label-default collection_orders">0</span></li>
-									<li class="list-group-item">Total Orders Completed<span class="label label-default orders_completed">0</span></li>
-									<li class="list-group-item">Total Table(s) Reserved<span class="label label-default tables_reserved">0</span></li>
+									<li class="list-group-item"><?php echo lang('text_total_sale'); ?> <span class="label label-default sales"><?php echo lang('text_zero'); ?></span></li>
+									<li class="list-group-item"><?php echo lang('text_total_lost_sale'); ?> <span class="label label-default lost_sales"><?php echo lang('text_zero'); ?></span></li>
+									<li class="list-group-item"><?php echo lang('text_total_customer'); ?> <span class="label label-default customers"><?php echo lang('text_zero'); ?></span></li>
+									<li class="list-group-item"><?php echo lang('text_total_order'); ?> <span class="label label-default orders"><?php echo lang('text_zero'); ?></span></li>
+									<li class="list-group-item"><?php echo lang('text_total_delivery_order'); ?> <span class="label label-default delivery_orders"><?php echo lang('text_zero'); ?></span></li>
+									<li class="list-group-item"><?php echo lang('text_total_collection_order'); ?> <span class="label label-default collection_orders"><?php echo lang('text_zero'); ?></span></li>
+									<li class="list-group-item"><?php echo lang('text_total_completed_order'); ?> <span class="label label-default orders_completed"><?php echo lang('text_zero'); ?></span></li>
+									<li class="list-group-item"><?php echo lang('text_total_reserved_table'); ?><span class="label label-default tables_reserved"><?php echo lang('text_zero'); ?></span></li>
 								</ul>
 							</div>
   						</div>
@@ -149,78 +149,96 @@
 			</div>
 		</div>
 
-		<div class="panel panel-default panel-chart">
-			<div class="panel-heading">
-				<div class="form-inline">
-					<div class="row">
-						<div class="col-md-4 pull-left">
-							<h3 class="panel-title"><i class="fa fa-line-chart"></i>&nbsp;&nbsp;Reports Chart</h3>
-						</div>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="panel panel-default panel-activities">
+                    <div class="panel-heading"><h3 class="panel-title"><i class="fa fa-clock-o"></i>&nbsp;&nbsp;<?php echo lang('text_recent_activity'); ?></h3></div>
+                    <ul class="list-group">
+                        <?php if ($orders) { ?>
+                            <?php foreach ($activities as $activity) { ?>
+                                <li class="list-group-item">
+                                    <div class="clearfix">
+                                        <span class="activity-body"><i class="fa fa-tasks fa-fw"></i><?php echo $activity['message']; ?></span>
+                                        <span class="activity-time text-muted text-right small"><?php echo $activity['time']; ?></span>
+                                    </div>
+                                </li>
+                            <?php } ?>
+                        <?php } else { ?>
+                            <?php echo lang('text_no_activity'); ?>
+                        <?php } ?>
+                    </ul>
+                </div>
+            </div>
 
-						<div class="col-md-5 pull-right text-right">
+            <div class="col-sm-8">
+                <?php if ($orders) { ?>
+                <div class="panel panel-default panel-orders">
+                    <div class="panel-heading"><h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;<?php echo lang('text_latest_order'); ?></h3></div>
+                    <div class="table-responsive">
+                        <table border="0" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th class="action action-one"></th>
+                                    <th><?php echo lang('column_id'); ?></th>
+                                    <th><?php echo lang('column_location'); ?></th>
+                                    <th><?php echo lang('column_name'); ?></th>
+                                    <th class="text-center"><?php echo lang('column_status'); ?></th>
+                                    <th class="text-center"><?php echo lang('column_type'); ?></th>
+                                    <th class="text-center"><?php echo lang('column_ready_type'); ?></th>
+                                    <th class="text-center"><?php echo lang('column_date_added'); ?></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($orders as $order) { ?>
+                                <tr>
+                                    <td class="action action-one"><a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $order['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
+                                    <td><?php echo $order['order_id']; ?></td>
+                                    <td><?php echo $order['location_name']; ?></td>
+                                    <td><?php echo $order['first_name']; ?> <?php echo $order['last_name']; ?></td>
+                                    <td class="text-center"><span class="label label-default" style="background-color: <?php echo $order['status_color']; ?>;"><?php echo $order['order_status']; ?></span></td>
+                                    <td class="text-center"><?php echo $order['order_type']; ?></td>
+                                    <td class="text-center"><?php echo $order['order_time']; ?></td>
+                                    <td class="text-center"><?php echo $order['date_added']; ?></td>
+                                </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <?php } ?>
+            </div>
+        </div>
+
+        <div class="panel panel-default panel-chart">
+            <div class="panel-heading">
+                <div class="form-inline">
+                    <div class="row">
+                        <div class="col-md-4 pull-left">
+                            <h3 class="panel-title"><i class="fa fa-line-chart"></i>&nbsp;&nbsp;<?php echo lang('text_reports_chart'); ?></h3>
+                        </div>
+
+                        <div class="col-md-5 pull-right text-right">
                             <div class="form-group">
                                 <div class="input-group">
                                     <button class="btn btn-default btn-sm daterange">
-                                        <i class="fa fa-calendar"></i>&nbsp;&nbsp;<span>Select date range</span>&nbsp;&nbsp;<i class="fa fa-caret-down"></i>
+                                        <i class="fa fa-calendar"></i>&nbsp;&nbsp;<span><?php echo lang('text_select_range'); ?></span>&nbsp;&nbsp;<i class="fa fa-caret-down"></i>
                                     </button>
                                 </div>
                             </div>
-						</div>
-					</div>
-				</div>
-			</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-			<div class="panel-body">
+            <div class="panel-body">
                 <div class="chart-legend"></div>
                 <div class="chart-responsive">
                     <canvas id="chart-holder" width="960px" height="295px"></canvas>
                 </div>
-			</div>
-		</div>
-
-		<?php if ($orders) { ?>
-		<div class="panel panel-default panel-orders">
-			<div class="panel-heading"><h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;10 Latest Orders</h3></div>
-			<div class="table-responsive">
-				<table border="0" class="table table-striped">
-					<thead>
-						<tr>
-							<th class="action action-one"></th>
-							<th>ID</th>
-							<th>Location</th>
-							<th>Customer Name</th>
-							<th class="text-center">Status</th>
-							<th class="text-center">Type</th>
-							<th class="text-center">Ready Time</th>
-							<th class="text-center">Date Added</th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php foreach ($orders as $order) { ?>
-						<tr>
-							<td class="action action-one"><a class="btn btn-edit" title="Edit" href="<?php echo $order['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
-							<td><?php echo $order['order_id']; ?></td>
-							<td><?php echo $order['location_name']; ?></td>
-							<td><?php echo $order['first_name']; ?> <?php echo $order['last_name']; ?></td>
-							<td class="text-center"><span class="label label-default" style="background-color: <?php echo $order['status_color']; ?>;"><?php echo $order['order_status']; ?></span></td>
-							<td class="text-center"><?php echo $order['order_type']; ?></td>
-							<td class="text-center"><?php echo $order['order_time']; ?></td>
-							<td class="text-center"><?php echo $order['date_added']; ?></td>
-						</tr>
-						<?php } ?>
-					</tbody>
-				</table>
-			</div>
-		</div>
-		<?php } ?>
-	</div>
+            </div>
+        </div>
+    </div>
 </div>
-<script type="text/javascript" src="<?php echo root_url("assets/js/daterange/moment.min.js"); ?>"></script>
-<!-- Include Date Range Picker -->
-<script type="text/javascript" src="<?php echo root_url("assets/js/daterange/daterangepicker.js"); ?>"></script>
-<link rel="stylesheet" type="text/css" href="<?php echo root_url("assets/js/daterange/daterangepicker-bs3.css"); ?>" />
-
-<script type="text/javascript" src="<?php echo root_url("assets/js/Chart.min.js"); ?>"></script>
 <script type="text/javascript"><!--
 $(document).ready(function() {
 	$('.dropdown-menu-range a[rel="today"]').trigger('click');

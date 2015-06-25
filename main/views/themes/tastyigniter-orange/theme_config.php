@@ -24,15 +24,14 @@ $theme['head_tags'] = array(
             array('css/select2.css', 'select2-css', '13'),
             array('css/select2-bootstrap.css', 'select2-bootstrap-css', '14'),
             array('css/jquery.raty.css', 'jquery-raty-css', '15'),
-            array('css/stylesheet.css', 'stylesheet-css', '100'),
+            array('css/stylesheet.css', 'stylesheet-css', '100100100100100'),
     ),
     'script'   => array(
             array('js/jquery-1.11.2.min.js', 'jquery-js', '1'),
-            array('js/jquery-ui-1.10.4.custom.js', 'jquery-ui-custom-js', '5'),
             array('js/bootstrap.min.js', 'bootstrap-js', '10'),
             array('js/select2.js', 'select-2-js', '12'),
             array('js/jquery.raty.js', 'jquery-raty-js', '13'),
-            array('js/common.js', 'common-js'),
+            array('js/common.js', 'common-js', '100100100100100'),
     ),
 );
 

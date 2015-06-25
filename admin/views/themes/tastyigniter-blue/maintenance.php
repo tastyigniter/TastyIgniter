@@ -4,9 +4,9 @@
     <div class="col-md-12">
 		<div class="row wrap-vertical">
 			<ul id="nav-tabs" class="nav nav-tabs">
-				<li class="active"><a href="#backup" data-toggle="tab">Backup</a></li>
-                <li><a href="#existing-backup" data-toggle="tab">Existing Backups</a></li>
-                <li><a href="#migrations" data-toggle="tab">Migrations</a></li>
+				<li class="active"><a href="#backup" data-toggle="tab"><?php echo lang('text_tab_backup'); ?></a></li>
+                <li><a href="#existing-backup" data-toggle="tab"><?php echo lang('text_tab_existing_backup'); ?></a></li>
+                <li><a href="#migrations" data-toggle="tab"><?php echo lang('text_tab_migrations'); ?></a></li>
 			</ul>
 		</div>
 
@@ -19,12 +19,12 @@
                                     <thead>
                                         <tr>
                                             <th width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'tables\']').prop('checked', this.checked);"></th>
-                                            <th>Select tables to backup</th>
-                                            <th># Records</th>
-                                            <th>Data Size</th>
-                                            <th>Index Size</th>
-                                            <th>Data Free</th>
-                                            <th>Engine</th>
+                                            <th><?php echo lang('column_select_tables'); ?></th>
+                                            <th><?php echo lang('column_records'); ?></th>
+                                            <th><?php echo lang('column_data_size'); ?></th>
+                                            <th><?php echo lang('column_index_size'); ?></th>
+                                            <th><?php echo lang('column_data_free'); ?></th>
+                                            <th><?php echo lang('column_engine'); ?></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -51,10 +51,10 @@
                         <table class="table table-striped table-border">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th class="text-center">Download</th>
-                                    <th class="text-center">Restore</th>
-                                    <th class="text-center">Delete</th>
+                                    <th><?php echo lang('column_name'); ?></th>
+                                    <th class="text-center"><?php echo lang('column_download'); ?></th>
+                                    <th class="text-center"><?php echo lang('column_restore'); ?></th>
+                                    <th class="text-center"><?php echo lang('column_delete'); ?></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -69,7 +69,7 @@
                                     <?php } ?>
                                 <?php } else { ?>
                                     <tr>
-                                        <td colspan="4">No database backup available.</td>
+                                        <td colspan="4"><?php echo lang('text_no_backup'); ?></td>
                                     </tr>
                                 <?php } ?>
                             </tbody>
@@ -81,15 +81,15 @@
                     <form role="form" id="migrate-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo site_url('maintenance'); ?>" id="backup-database">
                         <div class="alert alert-info">
                             <p>
-                                Installed Version: <b></b><?php echo $installed_version; ?></b> <br />
-                                Latest Available Version: <b></b><?php echo $latest_version; ?></b> <br />
+                                <?php echo lang('text_installed_version'); ?>: <b><?php echo $installed_version; ?></b> <br />
+                                <?php echo lang('text_latest_version'); ?>: <b><?php echo $latest_version; ?></b> <br />
                             </p>
                         </div>
                         <div class="form-group">
-                            <label for="input-migrate" class="col-sm-3 control-label">Migrate to verison:</label>
+                            <label for="input-migrate" class="col-sm-3 control-label"><?php echo lang('label_migrate_version'); ?></label>
                             <div class="col-sm-5">
                                 <select name="migrate" id="input-migrate" class="form-control">
-                                    <option value="" selected="selected">Select version file</option>
+                                    <option value="" selected="selected"><?php echo lang('text_select_version'); ?></option>
                                     <?php foreach ($migration_files as $version => $migration_file) { ?>
                                         <option value="<?php echo $version; ?>"><?php echo $migration_file; ?></option>
                                     <?php } ?>
@@ -105,7 +105,7 @@
     <div class="col-md-12">
         <div class="row wrap-vertical">
             <ul id="nav-tabs" class="nav nav-tabs">
-                <li class="active"><a href="#backup-details" data-toggle="tab">Create A New Backup</a></li>
+                <li class="active"><a href="#backup-details" data-toggle="tab"><?php echo lang('text_tab_create_backup'); ?></a></li>
             </ul>
         </div>
 
@@ -113,77 +113,74 @@
             <div class="tab-content">
                 <div id="backup-details" class="tab-pane row wrap-all active">
                     <div class="alert alert-info">
-                        <p>Note: Due to the limited execution time and memory available to PHP, backing up very large databases may not be possible.
-                            If your database is very large you might need to backup directly from your SQL server via the command line,
-                            or have your server admin do it for you if you do not have root privileges.
-                        </p>
+                        <?php echo lang('alert_info_memory_limit'); ?>
                     </div>
                     <div class="form-group">
-                        <label for="input-name" class="col-sm-3 control-label">File Name:</label>
+                        <label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_file_name'); ?></label>
                         <div class="col-sm-5">
                             <input type="text" name="file_name" id="input-name" class="form-control" value="<?php echo set_value('file_name', $file_name); ?>" />
                             <?php echo form_error('file_name', '<span class="text-danger">', '</span>'); ?>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="input-drop-table" class="col-sm-3 control-label">Add DROP TABLE statement:</label>
+                        <label for="input-drop-table" class="col-sm-3 control-label"><?php echo lang('text_drop_tables'); ?></label>
                         <div class="col-sm-5">
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                 <?php if ($drop_tables == '1') { ?>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="drop_tables" value="1" <?php echo set_radio('drop_tables', '1', TRUE); ?>>YES</label>
-                                    <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="drop_tables" value="0" <?php echo set_radio('drop_tables', '0'); ?>>NO</label>
+                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="drop_tables" value="1" <?php echo set_radio('drop_tables', '1', TRUE); ?>><?php echo lang('text_yes'); ?></label>
+                                    <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="drop_tables" value="0" <?php echo set_radio('drop_tables', '0'); ?>><?php echo lang('text_no'); ?></label>
                                 <?php } else { ?>
-                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="drop_tables" value="1" <?php echo set_radio('drop_tables', '1'); ?>>YES</label>
-                                    <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="drop_tables" value="0" <?php echo set_radio('drop_tables', '0', TRUE); ?>>NO</label>
+                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="drop_tables" value="1" <?php echo set_radio('drop_tables', '1'); ?>><?php echo lang('text_yes'); ?></label>
+                                    <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="drop_tables" value="0" <?php echo set_radio('drop_tables', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
                                 <?php } ?>
                             </div>
                             <?php echo form_error('drop_tables', '<span class="text-danger">', '</span>'); ?>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="input-drop-table" class="col-sm-3 control-label">Add INSERT statement for data dump:</label>
+                        <label for="input-drop-table" class="col-sm-3 control-label"><?php echo lang('text_add_inserts'); ?></label>
                         <div class="col-sm-5">
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                 <?php if ($add_inserts == '1') { ?>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="add_inserts" value="1" <?php echo set_radio('add_inserts', '1', TRUE); ?>>YES</label>
-                                    <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="add_inserts" value="0" <?php echo set_radio('add_inserts', '0'); ?>>NO</label>
+                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="add_inserts" value="1" <?php echo set_radio('add_inserts', '1', TRUE); ?>><?php echo lang('text_yes'); ?></label>
+                                    <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="add_inserts" value="0" <?php echo set_radio('add_inserts', '0'); ?>><?php echo lang('text_no'); ?></label>
                                 <?php } else { ?>
-                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="add_inserts" value="1" <?php echo set_radio('add_inserts', '1'); ?>>YES</label>
-                                    <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="add_inserts" value="0" <?php echo set_radio('add_inserts', '0', TRUE); ?>>NO</label>
+                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="add_inserts" value="1" <?php echo set_radio('add_inserts', '1'); ?>><?php echo lang('text_yes'); ?></label>
+                                    <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="add_inserts" value="0" <?php echo set_radio('add_inserts', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
                                 <?php } ?>
                             </div>
                             <?php echo form_error('add_inserts', '<span class="text-danger">', '</span>'); ?>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="input-drop-table" class="col-sm-3 control-label">Compression Format:
-                            <span class="help-block">The Restore option is only capable of reading un-compressed files. Gzip or Zip compression is good if you just want a backup to download and store on your computer.</span>
+                        <label for="input-drop-table" class="col-sm-3 control-label"><?php echo lang('label_compression'); ?>
+                            <span class="help-block"><?php echo lang('help_compression'); ?></span>
                         </label>
                         <div class="col-sm-5">
                             <div class="btn-group btn-group-3 btn-group-toggle" data-toggle="buttons">
                                 <?php if ($compression === 'none') { ?>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="compression" value="none" <?php echo set_radio('compression', 'none', TRUE); ?>>None</label>
-                                    <label class="btn btn-default disabled" data-btn="btn-success"><input type="radio" name="compression" value="gzip" <?php echo set_radio('compression', 'gzip'); ?>>gzip</label>
-                                    <label class="btn btn-default disabled" data-btn="btn-success"><input type="radio" name="compression" value="zip" <?php echo set_radio('compression', 'zip'); ?>>zip</label>
+                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="compression" value="none" <?php echo set_radio('compression', 'none', TRUE); ?>><?php echo lang('text_none'); ?></label>
+                                    <label class="btn btn-default disabled" data-btn="btn-success"><input type="radio" name="compression" value="gzip" <?php echo set_radio('compression', 'gzip'); ?>><?php echo lang('text_gzip'); ?></label>
+                                    <label class="btn btn-default disabled" data-btn="btn-success"><input type="radio" name="compression" value="zip" <?php echo set_radio('compression', 'zip'); ?>><?php echo lang('text_zip'); ?></label>
                                 <?php } else if ($compression === 'gzip') { ?>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="compression" value="none" <?php echo set_radio('compression', 'none'); ?>>None</label>
-                                    <label class="btn btn-default disabled" data-btn="btn-success"><input type="radio" name="compression" value="gzip" <?php echo set_radio('compression', 'gzip', TRUE); ?>>gzip</label>
-                                    <label class="btn btn-default disabled" data-btn="btn-success"><input type="radio" name="compression" value="zip" <?php echo set_radio('compression', 'zip'); ?>>zip</label>
+                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="compression" value="none" <?php echo set_radio('compression', 'none'); ?>><?php echo lang('text_none'); ?></label>
+                                    <label class="btn btn-default disabled" data-btn="btn-success"><input type="radio" name="compression" value="gzip" <?php echo set_radio('compression', 'gzip', TRUE); ?>><?php echo lang('text_gzip'); ?></label>
+                                    <label class="btn btn-default disabled" data-btn="btn-success"><input type="radio" name="compression" value="zip" <?php echo set_radio('compression', 'zip'); ?>><?php echo lang('text_zip'); ?></label>
                                 <?php } else if ($compression === 'zip') { ?>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="compression" value="none" <?php echo set_radio('compression', 'none'); ?>>None</label>
-                                    <label class="btn btn-default disabled" data-btn="btn-success"><input type="radio" name="compression" value="gzip" <?php echo set_radio('compression', 'gzip', TRUE); ?>>gzip</label>
-                                    <label class="btn btn-default disabled" data-btn="btn-success"><input type="radio" name="compression" value="zip" <?php echo set_radio('compression', 'zip'); ?>>zip</label>
+                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="compression" value="none" <?php echo set_radio('compression', 'none'); ?>><?php echo lang('text_none'); ?></label>
+                                    <label class="btn btn-default disabled" data-btn="btn-success"><input type="radio" name="compression" value="gzip" <?php echo set_radio('compression', 'gzip', TRUE); ?>><?php echo lang('text_gzip'); ?></label>
+                                    <label class="btn btn-default disabled" data-btn="btn-success"><input type="radio" name="compression" value="zip" <?php echo set_radio('compression', 'zip'); ?>><?php echo lang('text_zip'); ?></label>
                                 <?php } else { ?>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="compression" value="none" <?php echo set_radio('compression', 'none', TRUE); ?>>None</label>
-                                    <label class="btn btn-default disabled" data-btn="btn-success"><input type="radio" name="compression" value="gzip" <?php echo set_radio('compression', 'gzip'); ?>>gzip</label>
-                                    <label class="btn btn-default disabled" data-btn="btn-success"><input type="radio" name="compression" value="zip" <?php echo set_radio('compression', 'zip'); ?>>zip</label>
+                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="compression" value="none" <?php echo set_radio('compression', 'none', TRUE); ?>><?php echo lang('text_none'); ?></label>
+                                    <label class="btn btn-default disabled" data-btn="btn-success"><input type="radio" name="compression" value="gzip" <?php echo set_radio('compression', 'gzip'); ?>><?php echo lang('text_gzip'); ?></label>
+                                    <label class="btn btn-default disabled" data-btn="btn-success"><input type="radio" name="compression" value="zip" <?php echo set_radio('compression', 'zip'); ?>><?php echo lang('text_zip'); ?></label>
                                 <?php } ?>
                             </div>
                             <?php echo form_error('compression', '<span class="text-danger">', '</span>'); ?>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="input-backup-tables" class="col-sm-3 control-label">Backup Tables:</label>
+                        <label for="input-backup-tables" class="col-sm-3 control-label"><?php echo lang('label_backup_table'); ?></label>
                         <div class="col-sm-5">
                             <select name="tables[]" id="input-backup-tables" class="form-control" multiple="multiple">
                                 <?php foreach ($tables as $table) { ?>

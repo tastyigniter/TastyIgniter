@@ -11,8 +11,8 @@ class Logout extends Main_Controller {
 		$this->template->setBreadcrumb($this->lang->line('text_heading'), 'account/logout');
 
 		$this->template->setTitle($this->lang->line('text_logout_heading'));
-		//$this->template->setHeading($this->lang->line('text_logout_heading'));
-		$data['text_logout_msg'] 		= sprintf($this->lang->line('text_logout_msg'), site_url('account/login'));
+
+		$this->alert->set('success', $this->lang->line('alert_logout_success'));
 
         log_activity($this->customer->getId(), 'logged out', 'customers', get_activity_message('activity_logged_out',
             array('{customer}', '{link}'),
@@ -21,8 +21,12 @@ class Logout extends Main_Controller {
 
         $this->customer->logout();
 
-        $this->template->setPartials(array('header', 'footer'));
-		$this->template->render('account/logout', $data);
+        if ($previous_url = $this->session->tempdata('previous_url')) {
+            $this->session->unset_tempdata('previous_url');
+            redirect($previous_url);
+        }
+
+        redirect('account/login');
 	}
 }
 

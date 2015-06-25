@@ -53,9 +53,8 @@ class Paypal_model extends TI_Model {
 				$nvp_data .= '&PAYMENTREQUEST_0_SHIPPINGAMT='. urlencode($this->cart->delivery());
 			}
 
-			$coupon = $this->cart->coupon();
-            if ($coupon['discount'] > 0) {
-				$nvp_data .= '&PAYMENTREQUEST_0_SHIPDISCAMT='. urlencode('-'. $coupon['discount']);
+            if ($this->cart->coupon_discount()) {
+				$nvp_data .= '&PAYMENTREQUEST_0_SHIPDISCAMT='. urlencode('-'. $this->cart->coupon_discount());
 			}
 
 			if ($this->cart->order_total() > 0) {
@@ -78,9 +77,8 @@ class Paypal_model extends TI_Model {
 			$nvp_data .= '&PAYMENTREQUEST_0_SHIPPINGAMT='. urlencode($this->cart->delivery());
 		}
 
-        $coupon = $this->cart->coupon();
-        if ($coupon['discount'] > 0) {
-			$nvp_data .= '&PAYMENTREQUEST_0_SHIPDISCAMT='. urlencode('-'. $coupon['discount']);
+        if ($this->cart->coupon_discount()) {
+			$nvp_data .= '&PAYMENTREQUEST_0_SHIPDISCAMT='. urlencode('-'. $this->cart->coupon_discount());
 		}
 
 		if ($this->cart->order_total() > 0) {

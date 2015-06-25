@@ -1,14 +1,20 @@
 <?php echo get_header(); ?>
 <?php echo get_partial('content_top'); ?>
-<div id="page-content">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="heading-section">
-				</div>
-			</div>
-		</div>
 
+<?php if ($this->alert->get()) { ?>
+    <div id="notification">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <?php echo $this->alert->display(); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+
+<div id="page-content">
+	<div class="container top-spacing">
 		<div class="row">
 			<?php echo get_partial('content_left'); ?>
 			<?php
@@ -28,11 +34,11 @@
 						<table class="table table-hover">
 							<thead>
 								<tr>
-									<th><?php echo $column_sale_id; ?></th>
-									<th><?php echo $column_sale_type; ?></th>
-									<th><?php echo $column_restaurant; ?></th>
-									<th class="text-center"><?php echo $column_rating; ?></th>
-									<th><?php echo $column_date; ?></th>
+									<th><?php echo lang('column_sale_id'); ?></th>
+									<th><?php echo lang('column_sale_type'); ?></th>
+									<th><?php echo lang('column_restaurant'); ?></th>
+									<th class="text-center"><?php echo lang('column_rating'); ?></th>
+									<th><?php echo lang('column_date'); ?></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -57,7 +63,7 @@
 									<?php } ?>
 								<?php } else { ?>
 									<tr>
-										<td colspan="4"><?php echo $text_empty; ?></td>
+										<td colspan="4"><?php echo lang('text_empty'); ?></td>
 									</tr>
 								<?php } ?>
 							</tbody>
@@ -67,7 +73,7 @@
 
 					<div class="col-md-12">
 						<div class="buttons col-xs-6 wrap-none">
-							<a class="btn btn-default" href="<?php echo $back; ?>"><?php echo $button_back; ?></a>
+							<a class="btn btn-default" href="<?php echo $back_url; ?>"><?php echo lang('button_back'); ?></a>
 						</div>
 
 						<div class="col-xs-6 wrap-none">

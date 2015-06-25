@@ -28,8 +28,7 @@ if ( ! function_exists('log_activity'))
 // ------------------------------------------------------------------------
 
 /**
- * Get Activity Message
- * from language file
+ * Get Activity Message from language file
  *
  * @access	public
  * @return	string
@@ -45,6 +44,30 @@ if ( ! function_exists('get_activity_message'))
 }
 
 // ------------------------------------------------------------------------
+
+/**
+ * Sort Array
+ *
+ * @access	public
+ * @return	string
+ */
+if ( ! function_exists('sort_array'))
+{
+    function sort_array($array = array(), $sort_key = 'priority', $sory_array = array()) {
+        if (!empty($array)) {
+            foreach ($array as $key => $value) {
+                $sory_array[$key] = $value[$sort_key];
+            }
+
+            array_multisort($sory_array, SORT_ASC, $array);
+        }
+
+        return $array;
+    }
+}
+
+// ------------------------------------------------------------------------
+
 
 /* End of file tastyigniter_helper.php */
 /* Location: ./system/tastyigniter/helpers/tastyigniter_helper.php */

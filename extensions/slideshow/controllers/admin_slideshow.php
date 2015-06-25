@@ -11,8 +11,8 @@ class Admin_slideshow extends Admin_Controller {
 
         $this->template->setTitle('Module: ' . $data['title']);
         $this->template->setHeading('Module: ' . $data['title']);
-        $this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-        $this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+        $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+        $this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
         $this->template->setBackButton('btn btn-back', site_url('extensions'));
 
         $this->template->setStyleTag(root_url('assets/js/fancybox/jquery.fancybox.css'), 'jquery-fancybox-css');

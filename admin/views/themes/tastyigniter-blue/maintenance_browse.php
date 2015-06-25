@@ -22,7 +22,7 @@
                             <div class="info"><?php echo $pagination['info']; ?></div>
                         </div>
                     <?php } else { ?>
-                        <?php echo $text_empty; ?>
+                        <?php echo lang('text_no_row'); ?>
                     <?php }  ?>
                 </div>
             </div>

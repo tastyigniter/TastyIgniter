@@ -5,12 +5,12 @@
             <div class="col-sm-12 col-md-3">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Folders</h3>
+                        <h3 class="panel-title"><?php echo lang('text_folders'); ?></h3>
                     </div>
                     <div class="panel-body wrap-none">
                         <div class="list-group list-group-hover">
                             <?php foreach ($folders as $key => $folder) { ?>
-                                <a class="list-group-item" href="<?php echo $folder['url']; ?>"><i class="fa <?php echo $folder['icon']; ?>"></i>&nbsp;&nbsp;<?php echo ucwords($key); ?>&nbsp;&nbsp;<span class="label label-primary pull-right"><?php echo $folder['badge']; ?></span></a>
+                                <a class="list-group-item" href="<?php echo $folder['url']; ?>"><i class="fa <?php echo $folder['icon']; ?>"></i>&nbsp;&nbsp;<?php echo $folder['title']; ?>&nbsp;&nbsp;<span class="label label-primary pull-right"><?php echo $folder['badge']; ?></span></a>
                             <?php } ?>
                         </div>
                     </div>
@@ -19,11 +19,11 @@
 
             <div class="col-sm-12 col-md-9">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title">Compose New Message</h3></div>
+                    <div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_compose_message'); ?></h3></div>
                     <div class="panel-body">
                         <form role="form" id="compose-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
                             <div class="form-group">
-                                <label for="input-recipient" class="col-sm-3 control-label">To:</label>
+                                <label for="input-recipient" class="col-sm-3 control-label"><?php echo lang('label_to'); ?></label>
                                 <div class="col-sm-9">
                                     <select name="recipient" id="input-recipient" class="form-control">
                                         <?php foreach ($recipients as $key => $value) { ?>
@@ -33,19 +33,19 @@
                                                 <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
                                             <?php } ?>
                                         <?php } ?>
-                                        <option value="all_customers">All Customers</option>
-                                        <option value="customer_group">Customer Group</option>
-                                        <option value="customers">Customers</option>
-                                        <option value="all_staffs">All Staffs</option>
-                                        <option value="staff_group">Staff Group</option>
-                                        <option value="staffs">Staffs</option>
+                                        <option value="all_customers" <?php echo set_select('recipient', 'all_customers'); ?> ><?php echo lang('text_all_customers'); ?></option>
+                                        <option value="customer_group" <?php echo set_select('recipient', 'customer_group'); ?> ><?php echo lang('text_customer_group'); ?></option>
+                                        <option value="customers" <?php echo set_select('recipient', 'customers'); ?> ><?php echo lang('text_customers'); ?></option>
+                                        <option value="all_staffs" <?php echo set_select('recipient', 'all_staffs'); ?> ><?php echo lang('text_all_staff'); ?></option>
+                                        <option value="staff_group" <?php echo set_select('recipient', 'staff_group'); ?> ><?php echo lang('text_staff_group'); ?></option>
+                                        <option value="staffs" <?php echo set_select('recipient', 'staffs'); ?> ><?php echo lang('text_staff'); ?></option>
                                     </select>
                                     <?php echo form_error('recipient', '<span class="text-danger">', '</span>'); ?>
                                 </div>
                             </div>
                             <div id="recipient-customer-group" class="recipient">
                                 <div class="form-group">
-                                    <label for="input-customer-group" class="col-sm-3 control-label">Customer Group:</label>
+                                    <label for="input-customer-group" class="col-sm-3 control-label"><?php echo lang('label_customer_group'); ?></label>
                                     <div class="col-sm-9">
                                         <select name="customer_group_id" id="input-customer-group" class="form-control">
                                             <?php foreach ($customer_groups as $customer_group) { ?>
@@ -58,7 +58,7 @@
                             </div>
                             <div id="recipient-staff-group" class="recipient">
                                 <div class="form-group">
-                                    <label for="input-staff-group" class="col-sm-3 control-label">Staff Group:</label>
+                                    <label for="input-staff-group" class="col-sm-3 control-label"><?php echo lang('label_staff_group'); ?></label>
                                     <div class="col-sm-9">
                                         <select name="staff_group_id" id="input-staff-group" class="form-control">
                                             <?php foreach ($staff_groups as $staff_group) { ?>
@@ -71,7 +71,7 @@
                             </div>
                             <div id="recipient-customers" class="recipient">
                                 <div class="form-group">
-                                    <label for="input-customer" class="col-sm-3 control-label">Customers:</label>
+                                    <label for="input-customer" class="col-sm-3 control-label"><?php echo lang('label_customers'); ?></label>
                                     <div class="col-sm-9">
                                         <input type="text" name="customer" id="input-customer" class="form-control" value="" placeholder="Start typing customer name..." />
                                         <?php echo form_error('customer', '<span class="text-danger">', '</span>'); ?>
@@ -90,7 +90,7 @@
                             </div>
                             <div id="recipient-staffs" class="recipient">
                                 <div class="form-group">
-                                    <label for="input-staff" class="col-sm-3 control-label">Staffs:</label>
+                                    <label for="input-staff" class="col-sm-3 control-label"><?php echo lang('label_staff'); ?></label>
                                     <div class="col-sm-9">
                                         <input type="text" name="staff" id="input-staff" class="form-control" value="" placeholder="Start typing staff name..." />
                                         <?php echo form_error('staff', '<span class="text-danger">', '</span>'); ?>
@@ -109,18 +109,18 @@
                             </div>
                             <div id="send-type" class="">
                                 <div class="form-group">
-                                    <label for="input-send-type" class="col-sm-3 control-label">Send Type:</label>
+                                    <label for="input-send-type" class="col-sm-3 control-label"><?php echo lang('label_send_type'); ?></label>
                                     <div class="col-sm-9">
                                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                             <?php if ($send_type === 'account') { ?>
-                                                <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="send_type" value="account" checked="checked">Account</label>
-                                                <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="send_type" value="email">Email</label>
+                                                <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="send_type" value="account" checked="checked"><?php echo lang('text_account'); ?></label>
+                                                <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="send_type" value="email"><?php echo lang('text_email'); ?></label>
                                             <?php } else if ($send_type === 'email') { ?>
-                                                <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="send_type" value="account">Account</label>
-                                                <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="send_type" value="email" checked="checked">Email</label>
+                                                <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="send_type" value="account"><?php echo lang('text_account'); ?></label>
+                                                <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="send_type" value="email" checked="checked"><?php echo lang('text_email'); ?></label>
                                             <?php } else { ?>
-                                                <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="send_type" value="account" checked="checked">Account</label>
-                                                <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="send_type" value="email">Email</label>
+                                                <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="send_type" value="account" checked="checked"><?php echo lang('text_account'); ?></label>
+                                                <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="send_type" value="email"><?php echo lang('text_email'); ?></label>
                                             <?php } ?>
                                         </div>
                                         <?php echo form_error('send_type', '<span class="text-danger">', '</span>'); ?>
@@ -128,7 +128,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="input-subject" class="col-sm-3 control-label">Subject:</label>
+                                <label for="input-subject" class="col-sm-3 control-label"><?php echo lang('label_subject'); ?></label>
                                 <div class="col-sm-9">
                                     <input type="text" name="subject" id="input-subject" class="form-control" value="<?php echo set_value('subject', $subject); ?>" size="40" />
                                     <?php echo form_error('subject', '<span class="text-danger">', '</span>'); ?>

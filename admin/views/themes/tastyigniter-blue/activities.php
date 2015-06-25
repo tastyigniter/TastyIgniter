@@ -13,8 +13,9 @@
                                 <div class="timeline-badge bg-primary"><i class="<?php echo $activity['icon']; ?>"></i></div>
                                 <div class="timeline-body">
                                     <h3 class="timeline-header">
+                                        <span class="text-muted"><?php echo $activity['time']; ?>&nbsp;-&nbsp;</span>
                                         <?php echo $activity['message']; ?>
-                                        <span class="time text-muted"><?php echo $activity['time']; ?></span>
+                                        <span class="text-muted pull-right"><?php echo $activity['time_elapsed']; ?></span>
                                     </h3>
                                 </div>
                             </li>
@@ -22,7 +23,7 @@
                     <?php } ?>
                 </ul>
             <?php } else { ?>
-                <p><?php echo $text_empty; ?></p>
+                <p><?php echo lang('text_empty'); ?></p>
             <?php } ?>
         </form>
 

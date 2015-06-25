@@ -3,8 +3,8 @@
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
 			<ul id="nav-tabs" class="nav nav-tabs">
-				<li class="active"><a href="#general" data-toggle="tab">Details</a></li>
-				<li><a href="#values" data-toggle="tab">Values</a></li>
+				<li class="active"><a href="#general" data-toggle="tab"><?php echo lang('text_tab_general'); ?></a></li>
+				<li><a href="#values" data-toggle="tab"><?php echo lang('text_tab_values'); ?></a></li>
 			</ul>
 		</div>
 
@@ -12,37 +12,37 @@
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Name:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_option_name'); ?> </label>
 						<div class="col-sm-5">
 							<input type="text" name="option_name" id="input-name" class="form-control" value="<?php echo set_value('option_name', $option_name); ?>" />
 							<?php echo form_error('option_name', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-display-type" class="col-sm-3 control-label">Display Type:</label>
+						<label for="input-display-type" class="col-sm-3 control-label"><?php echo lang('label_display_type'); ?></label>
 						<div class="col-sm-5">
 							<select name="display_type" id="input-display-type" class="form-control">
 								<?php if ($display_type == 'radio') { ?>
-									<option value="radio" selected="selected" <?php echo set_select('display_type', 'radio'); ?> >Radio</option>
+									<option value="radio" selected="selected" <?php echo set_select('display_type', 'radio'); ?> ><?php echo lang('text_radio'); ?></option>
 								<?php } else { ?>
-									<option value="radio" <?php echo set_select('display_type', 'radio'); ?> >Radio</option>
+									<option value="radio" <?php echo set_select('display_type', 'radio'); ?> ><?php echo lang('text_radio'); ?></option>
 								<?php } ?>
 								<?php if ($display_type == 'checkbox') { ?>
-									<option value="checkbox" selected="selected" <?php echo set_select('display_type', 'checkbox'); ?> >Checkbox</option>
+                                    <option value="checkbox" selected="selected" <?php echo set_select('display_type', 'checkbox'); ?> ><?php echo lang('text_checkbo'); ?></option>
 								<?php } else { ?>
-									<option value="checkbox" <?php echo set_select('display_type', 'checkbox'); ?> >Checkbox</option>
+									<option value="checkbox" <?php echo set_select('display_type', 'checkbox'); ?> ><?php echo lang('text_checkbox'); ?></option>
 								<?php } ?>
 								<?php if ($display_type == 'select') { ?>
-									<option value="select" selected="selected" <?php echo set_select('display_type', 'select'); ?> >Select</option>
+									<option value="select" selected="selected" <?php echo set_select('display_type', 'select'); ?> ><?php echo lang('text_select'); ?></option>
 								<?php } else { ?>
-									<option value="select" <?php echo set_select('display_type', 'select'); ?> >Select</option>
+									<option value="select" <?php echo set_select('display_type', 'select'); ?> ><?php echo lang('text_select'); ?></option>
 								<?php } ?>
 							</select>
 							<?php echo form_error('display_type', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-priority" class="col-sm-3 control-label">Priority:</label>
+						<label for="input-priority" class="col-sm-3 control-label"><?php echo lang('label_priority'); ?> </label>
 						<div class="col-sm-5">
 							<input type="text" name="priority" id="input-priority" class="form-control" value="<?php echo set_value('priority', $priority); ?>" />
 							<?php echo form_error('priority', '<span class="text-danger">', '</span>'); ?>
@@ -58,9 +58,9 @@
 									<tr>
 										<th class="action action-one"></th>
 										<th class="action action-one"></th>
-										<th>Value</th>
-										<th>Price</th>
-										<th class="id">ID</th>
+										<th><?php echo lang('label_option_value'); ?></th>
+										<th><?php echo lang('label_option_price'); ?></th>
+										<th class="id"><?php echo lang('column_id'); ?></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -87,11 +87,7 @@
 								</tbody>
 								<tfoot>
 									<tr id="tfoot">
-										<td class="action action-one"><a class="btn btn-primary btn-lg" onclick="addValue();"><i class="fa fa-plus"></i></a></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
+										<td class="action action-one" colspan="5"><a class="btn btn-primary btn-lg" onclick="addValue();"><i class="fa fa-plus"></i></a></td>
 									</tr>
 								</tfoot>
 							</table>

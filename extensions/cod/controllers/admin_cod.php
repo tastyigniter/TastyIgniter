@@ -12,8 +12,8 @@ class Admin_cod extends Admin_Controller {
 
             $this->template->setTitle('Payment: ' . $data['title']);
             $this->template->setHeading('Payment: ' . $data['title']);
-            $this->template->setButton('Save', array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-            $this->template->setButton('Save & Close', array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+            $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+            $this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
             $this->template->setBackButton('btn btn-back', site_url('payments'));
 
             $ext_data = array();

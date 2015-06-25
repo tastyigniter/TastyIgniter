@@ -1,23 +1,11 @@
 <?php
 		$locations = array();
-		if ($this->user->islogged()) {
-			$no_sidenav = '';
-			//$this->load->model('Locations_model');
-			$results = array(); //$this->Locations_model->getLocations();
-
-			foreach ($results as $result) {
-				$locations[] = array(
-					'location_id'	=>	$result['location_id'],
-					'location_name'	=>	$result['location_name'],
-				);
-			}
-		}
 ?>
 </div>
 <div id="footer" class="<?php echo ($this->user->islogged()) ? '' : 'wrap-none'; ?>">
 	<div class="row navbar-footer">
 		<div class="col-sm-8">
-			<p class="text-copyright">&copy; <?php echo date('Y'); ?> TastyIgniter. All Rights Reserved <?php echo config_item('ti_version'); ?></p>
+			<p class="text-copyright"><?php echo sprintf(lang('text_copyright'), date('Y'), config_item('ti_version')); ?></p>
 		</div>
 		<div id="profiler" class="col-sm-4"></div>
 		<?php if ($locations) { ?>
@@ -58,7 +46,7 @@ $(document).ready(function() {
 	//Delete Confirmation Box
 	$('#list-form').submit(function(){
 		//if ($('input[name=\'delete\']').attr("checked") == "checked") {
-			if (!confirm('This cannot be undone! Are you sure you want to do this?')) {
+			if (!confirm('<?php echo lang('alert_warning_confirm'); ?>')) {
 				return false;
 			}
 		//}
@@ -67,7 +55,7 @@ $(document).ready(function() {
 	//Uninstall Confirmation Box
 	$('a').click(function(){
 		if ($(this).attr('href') != null && $(this).attr('href').indexOf('uninstall', 1) != -1) {
-			if (!confirm('This cannot be undone! Are you sure you want to do this?')) {
+			if (!confirm('<?php echo lang('alert_warning_confirm'); ?>')) {
 				return false;
 			}
 		}
@@ -91,23 +79,24 @@ $(document).ready(function() {
         $('.btn-filter').trigger('click');
     }
 
-	$(document).on('change', '.btn-group-toggle input[type="radio"], .btn-group input[type="radio"]', function() {
-		var btn = $(this).parent();
-		var parent = btn.parent();
+    $(document).on('change', '.btn-group-toggle input[type="radio"], .btn-group input[type="radio"]', function() {
+        var btn = $(this).parent();
+        var parent = btn.parent();
+        var activeClass = (btn.attr('data-btn')) ? btn.attr('data-btn'): 'btn-success';
 
-		if (btn.attr('data-btn')) {
-			parent.find('.btn').removeClass('btn-primary btn-success btn-info btn-warning btn-danger');
-			btn.addClass(btn.attr('data-btn'));
-		} else {
-			btn.addClass('btn-success');
-		}
-	});
+        parent.find('.btn').each(function() {
+            removeClass = ($(this).attr('data-btn')) ? $(this).attr('data-btn') : activeClass;
+            $(this).removeClass(removeClass);
+        });
 
-	$('.btn-group-toggle .active input[type="radio"], .btn-group .active input[type="radio"]').trigger('change');
+        btn.addClass(activeClass);
+    });
 
-	/*if ($('.form-group .text-danger').length > 0) {
-		$('.form-group .text-danger').parents('.form-group').addClass('has-error');
-	}*/
+    $('.btn-group-toggle input[type="radio"]:checked, .btn-group-toggle .active input[type="radio"], .btn-group .active input[type="radio"]').trigger('change');
+
+    /*if ($('.form-group .text-danger').length > 0) {
+        $('.form-group .text-danger').parents('.form-group').addClass('has-error');
+    }*/
 });
 
 function saveClose() {

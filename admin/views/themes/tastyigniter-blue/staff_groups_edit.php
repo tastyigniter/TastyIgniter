@@ -3,8 +3,8 @@
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
 			<ul id="nav-tabs" class="nav nav-tabs">
-				<li class="active"><a href="#staff-group" data-toggle="tab">Staff Group</a></li>
-				<li><a href="#permission-level" data-toggle="tab">Permission Levels</a></li>
+				<li class="active"><a href="#staff-group" data-toggle="tab"><?php echo lang('text_tab_general'); ?></a></li>
+				<li><a href="#permission-level" data-toggle="tab"><?php echo lang('text_tab_permission'); ?></a></li>
 			</ul>
 		</div>
 
@@ -12,21 +12,21 @@
 			<div class="tab-content">
 				<div id="staff-group" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Name:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_name'); ?></label>
 						<div class="col-sm-5">
 							<input type="text" name="staff_group_name" id="input-name" class="form-control" value="<?php echo set_value('staff_group_name', $staff_group_name); ?>" />
 							<?php echo form_error('staff_group_name', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-location" class="col-sm-3 control-label">Location Access:</label>
+						<label for="input-location" class="col-sm-3 control-label"><?php echo lang('label_location_access'); ?></label>
 						<div class="col-sm-5">
 							<select name="location_access" id="input-location" class="form-control">
-								<option value="0" <?php echo set_select('location_access', '0'); ?> >All Locations</option>
+								<option value="0" <?php echo set_select('location_access', '0'); ?> ><?php echo lang('text_all_location'); ?></option>
 								<?php if ($location_access === '1') { ?>
-									<option value="1" <?php echo set_select('location_access', '1', TRUE); ?> >Staff Location</option>
+									<option value="1" <?php echo set_select('location_access', '1', TRUE); ?> ><?php echo lang('text_staff_location'); ?></option>
 								<?php } else { ?>
-									<option value="1" <?php echo set_select('location_access', '1'); ?> >Staff Location</option>
+									<option value="1" <?php echo set_select('location_access', '1'); ?> ><?php echo lang('text_staff_location'); ?></option>
 								<?php } ?>
 							</select>
 							<?php echo form_error('location_access', '<span class="text-danger">', '</span>'); ?>
@@ -42,11 +42,11 @@
                                     <thead>
                                         <tr>
                                             <th><b><?php echo $key; ?></b></th>
-                                            <th class="action text-center"><a class="clickable" onclick="var $checkbox = $('input[value*=\'access\']');$checkbox.prop('checked', !$checkbox[0].checked);">Access</a></th>
-                                            <th class="action text-center"><a class="clickable" onclick="var $checkbox = $('input[value*=\'manage\']');$checkbox.prop('checked', !$checkbox[0].checked);">Manage</a></th>
-                                            <th class="action text-center"><a class="clickable" onclick="var $checkbox = $('input[value*=\'add\']');$checkbox.prop('checked', !$checkbox[0].checked);">Add</a></th>
-                                            <th class="action text-center"><a class="clickable" onclick="var $checkbox = $('input[value*=\'delete\']');$checkbox.prop('checked', !$checkbox[0].checked);">Delete</a></th>
-                                            <th>Description</th>
+                                            <th class="action text-center"><a class="clickable" onclick="var $checkbox = $('input[value*=\'access\']');$checkbox.prop('checked', !$checkbox[0].checked);"><?php echo lang('column_access'); ?></a></th>
+                                            <th class="action text-center"><a class="clickable" onclick="var $checkbox = $('input[value*=\'manage\']');$checkbox.prop('checked', !$checkbox[0].checked);"><?php echo lang('column_manage'); ?></a></th>
+                                            <th class="action text-center"><a class="clickable" onclick="var $checkbox = $('input[value*=\'add\']');$checkbox.prop('checked', !$checkbox[0].checked);"><?php echo lang('column_add'); ?></a></th>
+                                            <th class="action text-center"><a class="clickable" onclick="var $checkbox = $('input[value*=\'delete\']');$checkbox.prop('checked', !$checkbox[0].checked);"><?php echo lang('column_delete'); ?></a></th>
+                                            <th><?php echo lang('column_description'); ?></th>
                                         </tr>
                                     </thead>
                                     <tbody>

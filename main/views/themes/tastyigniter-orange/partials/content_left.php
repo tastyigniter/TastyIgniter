@@ -1,5 +1,5 @@
 <?php if (!empty($left_modules)) { ?>
-	<div id="module-left" class="col-sm-3">
+	<div id="module-left" class="col-sm-3 {class}">
 		<div class="side-bar">
 			<?php foreach ($left_modules as $module) { ?>
 				<?php echo $module; ?>

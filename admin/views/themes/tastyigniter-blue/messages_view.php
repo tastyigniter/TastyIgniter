@@ -3,15 +3,15 @@
 	<div class="col-md-12">
         <div class="row">
             <div class="col-sm-12 col-md-3">
-                <a href="<?php echo site_url('messages/compose'); ?>" class="btn btn-primary btn-block">+ Compose</a><br />
+                <a href="<?php echo site_url('messages/compose'); ?>" class="btn btn-primary btn-block"><?php echo lang('button_compose'); ?></a><br />
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Folders</h3>
+                        <h3 class="panel-title"><?php echo lang('text_folders'); ?></h3>
                     </div>
                     <div class="panel-body wrap-none">
                         <div class="list-group list-group-hover">
                             <?php foreach ($folders as $key => $folder) { ?>
-                                <a class="list-group-item" href="<?php echo $folder['url']; ?>"><i class="fa <?php echo $folder['icon']; ?>"></i>&nbsp;&nbsp;<?php echo ucwords($key); ?>&nbsp;&nbsp;<span class="label label-primary pull-right"><?php echo $folder['badge']; ?></span></a>
+                                <a class="list-group-item" href="<?php echo $folder['url']; ?>"><i class="fa <?php echo $folder['icon']; ?>"></i>&nbsp;&nbsp;<?php echo $folder['title']; ?>&nbsp;&nbsp;<span class="label label-primary pull-right"><?php echo $folder['badge']; ?></span></a>
                             <?php } ?>
                         </div>
                     </div>
@@ -21,7 +21,7 @@
             <div class="col-sm-12 col-md-9">
                 <div class="panel panel-default panel-table">
                     <div class="panel-heading">
-                        <h3 class="panel-title">View Message</h3>
+                        <h3 class="panel-title"><?php echo lang('text_view_message'); ?></h3>
                     </div>
                     <div class="panel-body wrap-none wrap-bottom">
                         <div class="message-view-info">
@@ -45,8 +45,8 @@
                                     <i class="fa fa-ellipsis-h"></i> &nbsp;<i class="caret"></i>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li class="disabled"><a>Mark as read</a></li>
-                                    <li><a onclick="markAsUnread()">Mark as unread</a></li>
+                                    <li class="disabled"><a><?php echo lang('text_mark_as_read'); ?></a></li>
+                                    <li><a onclick="markAsUnread()"><?php echo lang('text_mark_as_unread'); ?></a></li>
                                 </ul>
                             </div>
                         </div>
@@ -56,7 +56,7 @@
                     </div>
 
                     <div class="panel-heading">
-                        <h3 class="panel-title">Recipients List</h3>
+                        <h3 class="panel-title"><?php echo lang('text_recipient_list'); ?></h3>
                     </div>
 
                     <div class="panel-body">
@@ -66,9 +66,9 @@
                                     <thead>
                                     <tr>
                                         <th class="action action-one"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
-                                        <th><?php echo ($send_type === 'Email') ? 'Email' : 'Recipient'; ?></th>
-                                        <th class="text-center">Status</th>
-                                        <th class="id">ID</th>
+                                        <th><?php echo ($send_type === 'Email') ? lang('text_email') : lang('text_recipient'); ?></th>
+                                        <th class="text-center"><?php echo lang('column_status'); ?></th>
+                                        <th class="id"><?php echo lang('column_id'); ?></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -92,7 +92,7 @@
                                 <?php } else { ?>
                                     <tbody>
                                     <tr>
-                                        <td><?php echo $text_empty; ?></td>
+                                        <td><?php echo lang('text_no_recipient'); ?></td>
                                     </tr>
                                     </tbody>
                                 <?php } ?>

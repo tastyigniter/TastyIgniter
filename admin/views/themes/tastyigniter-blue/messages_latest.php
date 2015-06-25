@@ -15,7 +15,7 @@
             <li class="divider"></li>
         <?php } ?>
     <?php } else { ?>
-        <li><?php echo $text_empty; ?></li>
+        <li><?php echo lang('text_empty'); ?></li>
         <li class="divider"></li>
     <?php } ?>
 </ul>

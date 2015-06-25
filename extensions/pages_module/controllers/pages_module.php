@@ -19,9 +19,6 @@ class Pages_module extends Main_Controller {
 			$data['page_id'] = 0;
 		}
 
-		// START of retrieving lines from language file to pass to view.
-		$data['text_heading'] 			= $this->lang->line('text_heading');
-		// END of retrieving lines from language file to send to view.
 
 		$data['pages'] = array();
 		$results = $this->Pages_model->getPages(); 										// retrieve all menu categories from getCategories method in Menus model

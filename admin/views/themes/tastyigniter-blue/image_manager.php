@@ -47,7 +47,7 @@
                         <option value="<?php echo $value; ?>"><?php echo $value; ?></option>
                     <?php } ?>
                 </select>
-                <span class="help-block small">Existing file/folder will NOT be replaced</span>
+                <span class="help-block small"><?php echo lang('help_existing_files'); ?></span>
             </div>
 
 			<nav class="navbar navbar-default navbar-menu" role="navigation">
@@ -72,7 +72,7 @@
 							<div class="col-xs-12 col-sm-5 wrap-none">
 								<div class="btn-group">
 									<?php if ($uploads) { ?>
-										<button type="button" class="btn btn-default navbar-btn btn-upload"><i class="fa fa-upload"></i>&nbsp;&nbsp;<small>Upload</small></button>
+										<button type="button" class="btn btn-default navbar-btn btn-upload"><i class="fa fa-upload"></i>&nbsp;&nbsp;<small><?php echo lang('button_upload'); ?></small></button>
 									<?php } ?>
 								</div>
                             </div>
@@ -87,12 +87,12 @@
 											<?php } ?>
 										</a>
 										<ul class="dropdown-menu dropdown-sorter" role="menu">
-											<li><span><strong>Sort By:</strong></span></li>
+											<li><span><strong><?php echo lang('text_sort_by'); ?>:</strong></span></li>
 											<li class="divider"></li>
-											<li><a class="sorter" data-sort="name"><?php echo ($sort_by === 'name') ? $sort_icon:''; ?>Name</a></li>
-											<li><a class="sorter" data-sort="date"><?php echo ($sort_by === 'date') ? $sort_icon:''; ?>Date</a></li>
-											<li><a class="sorter" data-sort="size"><?php echo ($sort_by === 'size') ? $sort_icon:''; ?>Size</a></li>
-											<li><a class="sorter" data-sort="extension"><?php echo ($sort_by === 'extension') ? $sort_icon:''; ?>Type</a></li>
+											<li><a class="sorter" data-sort="name"><?php echo ($sort_by === 'name') ? $sort_icon:''; ?><?php echo lang('label_name'); ?></a></li>
+											<li><a class="sorter" data-sort="date"><?php echo ($sort_by === 'date') ? $sort_icon:''; ?><?php echo lang('label_date'); ?></a></li>
+											<li><a class="sorter" data-sort="size"><?php echo ($sort_by === 'size') ? $sort_icon:''; ?><?php echo lang('label_size'); ?></a></li>
+											<li><a class="sorter" data-sort="extension"><?php echo ($sort_by === 'extension') ? $sort_icon:''; ?><?php echo lang('label_type'); ?></a></li>
 										</ul>
 									</div>
 								</div>
@@ -100,9 +100,9 @@
 							<div class="col-xs-8 col-sm-4">
 								<div class="btn-group btn-block">
 									<div class="navbar-form input-group">
-										<span id="btn-clear" class="input-group-addon" title="Clear"><i id="filter-clear" class="fa fa-times"></i></span>
-										<input type="text" name="filter_search" id="filter-search" class="form-control" value="<?php echo $filter; ?>" placeholder="Search files and folders..." />
-										<span id="btn-search" class="input-group-addon" title="Search"><i class="fa fa-search"></i></span>
+										<span id="btn-clear" class="input-group-addon" title="<?php echo lang('text_clear'); ?>"><i id="filter-clear" class="fa fa-times"></i></span>
+										<input type="text" name="filter_search" id="filter-search" class="form-control" value="<?php echo $filter; ?>" placeholder="<?php echo lang('text_filter_search'); ?>" />
+										<span id="btn-search" class="input-group-addon" title="<?php echo lang('text_search'); ?>"><i class="fa fa-search"></i></span>
 									</div>
 								</div>
 							</div>
@@ -124,13 +124,13 @@
                         <?php } ?>
                         <li>
                             <?php if ($new_folder) { ?>
-                                <a class="btn btn-new-folder" title="New Folder" href="#"><i class="fa fa-folder"></i></a>&nbsp;&nbsp;&nbsp;
+                                <a class="btn btn-new-folder" title="<?php echo lang('text_new_folder'); ?>" href="#"><i class="fa fa-folder"></i></a>&nbsp;&nbsp;&nbsp;
                             <?php } ?>
                             <?php if ($rename) { ?>
-                                <a class="btn btn-rename" title="Rename Folder" data-name="<?php echo $current_folder; ?>" data-path="<?php echo $parent_folder; ?>" href="#"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;
+                                <a class="btn btn-rename" title="<?php echo lang('text_rename_folder'); ?>" data-name="<?php echo $current_folder; ?>" data-path="<?php echo $parent_folder; ?>" href="#"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;
                             <?php } ?>
                             <?php if ($delete) { ?>
-                                <a class="btn btn-delete" title="Delete Folder" data-name="<?php echo $current_folder; ?>" data-path="<?php echo $parent_folder; ?>" href="#"><i class="fa fa-trash"></i></a>
+                                <a class="btn btn-delete" title="<?php echo lang('text_delete_folder'); ?>" data-name="<?php echo $current_folder; ?>" data-path="<?php echo $parent_folder; ?>" href="#"><i class="fa fa-trash"></i></a>
                             <?php } ?>
                         </li>
                     </ol>
@@ -147,7 +147,7 @@
 								<form role="form" method="POST" enctype="multipart/form-data" id="my-awesome-dropzone" class="dropzone">
 									<input type="hidden" name="sub_folder" value="<?php echo $sub_folder; ?>"/>
 									<div class="fallback">
-										Upload:<br/>
+										<?php echo lang('button_upload'); ?>:<br/>
 										<input name="file" type="file" />
 									</div>
 								</form>
@@ -204,21 +204,21 @@
                                                     <li class="file-name">
                                                         <span>Name :</span><?php echo $file['name']; ?>
                                                     </li>
-                                                    <li class="file-size"><span>Size :</span> <?php echo $file['size']; ?></li>
-                                                    <li class="file-path"><span>Path :</span> <?php echo '/'.$sub_folder; ?></li>
+                                                    <li class="file-size"><span><?php echo lang('label_size'); ?> :</span> <?php echo $file['size']; ?></li>
+                                                    <li class="file-path"><span><?php echo lang('label_path'); ?> :</span> <?php echo '/'.$sub_folder; ?></li>
                                                     <?php if ($file['type'] === 'img') { ?>
-                                                        <li class="file-url"><span>URL :</span> <input type="text" class="form-control url-control" readonly="readonly" value="<?php echo $file['img_url']; ?>"/></li>
-                                                        <li class="img-dimension"><span>Dimension :</span> <?php echo $file['img_dimension']; ?></li>
+                                                        <li class="file-url"><span><?php echo lang('label_url'); ?> :</span> <input type="text" class="form-control url-control" readonly="readonly" value="<?php echo $file['img_url']; ?>"/></li>
+                                                        <li class="img-dimension"><span><?php echo lang('label_dimension'); ?> :</span> <?php echo $file['img_dimension']; ?></li>
                                                     <?php } ?>
-                                                    <li class="file-date"><span>Modified Date :</span> <?php echo $file['date']; ?></li>
-                                                    <li class="file-extension"><span>Extension :</span><em class="text-uppercase"><?php echo $file['ext']; ?></em></li>
-                                                    <li class="file-permission"><span>Permission :</span>
+                                                    <li class="file-date"><span><?php echo lang('label_modified_date'); ?> :</span> <?php echo $file['date']; ?></li>
+                                                    <li class="file-extension"><span><?php echo lang('label_extension'); ?> :</span><em class="text-uppercase"><?php echo $file['ext']; ?></em></li>
+                                                    <li class="file-permission"><span><?php echo lang('label_permission'); ?> :</span>
                                                         <?php if ($file['perms'] === '04' OR $file['perms'] === '05') { ?>
-                                                            Read Only
+                                                            <?php echo lang('text_read_only'); ?>
                                                         <?php } else if ($file['perms'] === '06' OR $file['perms'] === '07') { ?>
-                                                            Read & Write
+                                                            <?php echo lang('text_read_write'); ?>
                                                         <?php } else { ?>
-                                                            No Access
+                                                            <?php echo lang('text_no_access'); ?>
                                                         <?php } ?>
                                                     </li>
                                                 </ul>
@@ -242,11 +242,11 @@
                     <div class="row">
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <p class="navbar-text"><span class="total-selected">0</span><span class="total-selected-text"> of </span><?php echo $total_files; ?> items selected, <?php echo $folder_size; ?></p>
+                            <p class="navbar-text"><span class="total-selected">0</span><span class="total-selected-text"> of </span><?php echo sprintf(lang('text_footer_note'), $total_files, $folder_size); ?></p>
                         </div>
                         <div class="col-sm-4 text-right">
                             <?php if ($field_id) { ?>
-                                <a class="btn btn-primary btn-choose disabled">Choose</a>
+                                <a class="btn btn-primary btn-choose disabled"><?php echo lang('text_choose'); ?></a>
                             <?php } ?>
                         </div>
                     </div>

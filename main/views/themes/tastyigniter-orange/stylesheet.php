@@ -43,6 +43,8 @@
     border-color: <?php echo $sidebar['border']; ?>;
     border-width: 0 1px 1px;
     border-style: solid;
+    }
+    .side-bar .panel, .side-bar .panel-heading {
     color: <?php echo $sidebar['font']; ?>;
     }
     .side-bar .panel, .side-bar .panel .panel-body {

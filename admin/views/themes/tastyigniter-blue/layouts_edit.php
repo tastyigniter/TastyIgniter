@@ -3,8 +3,8 @@
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
 			<ul id="nav-tabs" class="nav nav-tabs">
-				<li class="active"><a href="#general" data-toggle="tab">Layout</a></li>
-				<li><a href="#routes" data-toggle="tab">Routes</a></li>
+				<li class="active"><a href="#general" data-toggle="tab"><?php echo lang('text_tab_general'); ?></a></li>
+				<li><a href="#tab-routes" data-toggle="tab"><?php echo lang('text_tab_routes'); ?></a></li>
 			</ul>
 		</div>
 
@@ -13,7 +13,7 @@
 				<div id="general" class="tab-pane row wrap-bottom active">
                     <div class="wrap-all">
                         <div class="form-group">
-                            <label for="input-name" class="col-sm-3 control-label">Name:</label>
+                            <label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_name'); ?></label>
                             <div class="col-sm-5">
                                 <input type="text" name="name" id="input-name" class="form-control" value="<?php echo set_value('name', $name); ?>" />
                                 <?php echo form_error('name', '<span class="text-danger">', '</span>'); ?>
@@ -23,17 +23,17 @@
 
                     <div class="panel panel-default panel-table">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Modules</h3>
+                            <h3 class="panel-title"><?php echo lang('text_modules'); ?></h3>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-striped table-border">
                                 <thead>
                                 <tr>
                                     <th class="action action-one"></th>
-                                    <th>Module</th>
-                                    <th>Position</th>
-                                    <th>Priority</th>
-                                    <th>Status</th>
+                                    <th><?php echo lang('column_module'); ?></th>
+                                    <th><?php echo lang('column_position'); ?></th>
+                                    <th><?php echo lang('column_priority'); ?></th>
+                                    <th><?php echo lang('column_status'); ?></th>
                                 </tr>
                                 </thead>
                                 <tbody id="modules">
@@ -69,11 +69,11 @@
                                         <td>
                                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                                 <?php if ($module['status'] === '1') { ?>
-                                                    <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="modules[<?php echo $module_row; ?>][status]" value="0" <?php echo set_radio('modules['.$module_row.'][status]', '0'); ?>>Disabled</label>
-                                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="modules[<?php echo $module_row; ?>][status]" value="1" <?php echo set_radio('modules['.$module_row.'][status]', '1', TRUE); ?>>Enabled</label>
+                                                    <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="modules[<?php echo $module_row; ?>][status]" value="0" <?php echo set_radio('modules['.$module_row.'][status]', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+                                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="modules[<?php echo $module_row; ?>][status]" value="1" <?php echo set_radio('modules['.$module_row.'][status]', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
                                                 <?php } else { ?>
-                                                    <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="modules[<?php echo $module_row; ?>][status]" value="0" <?php echo set_radio('modules['.$module_row.'][status]', '0', TRUE); ?>>Disabled</label>
-                                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="modules[<?php echo $module_row; ?>][status]" value="1" <?php echo set_radio('modules['.$module_row.'][status]', '1'); ?>>Enabled</label>
+                                                    <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="modules[<?php echo $module_row; ?>][status]" value="0" <?php echo set_radio('modules['.$module_row.'][status]', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+                                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="modules[<?php echo $module_row; ?>][status]" value="1" <?php echo set_radio('modules['.$module_row.'][status]', '1'); ?>><?php echo lang('text_enabled'); ?></label>
                                                 <?php } ?>
                                             </div>
                                             <?php echo form_error('modules['.$module_row.'][status]', '<span class="text-danger small">', '</span>'); ?>
@@ -93,14 +93,14 @@
                     </div>
                 </div>
 
-				<div id="routes" class="tab-pane row wrap-horizontal">
+				<div id="tab-routes" class="tab-pane row wrap-horizontal">
                     <div class="panel panel-default panel-table">
                         <div class="table-responsive">
                             <table class="table table-striped table-border">
                                 <thead>
                                     <tr>
                                         <th class="action action-one"></th>
-                                        <th>URI Route</th>
+                                        <th><?php echo lang('column_uri_route'); ?></th>
                                     </tr>
                                 </thead>
                                 <tbody id="routes">
@@ -160,8 +160,8 @@ function addModule() {
     html += '	</select></td>';
 	html += '	<td><input type="text" name="modules[' + module_row + '][priority]" class="form-control" value="" /></td>';
 	html += '   <td><div class="btn-group btn-group-toggle" data-toggle="buttons">';
-	html += '   	<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="modules[' + module_row + '][status]" value="0" checked="checked">Disabled</label>';
-	html += '   	<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="modules[' + module_row + '][status]" value="1">Enabled</label>';
+	html += '   	<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="modules[' + module_row + '][status]" value="0" checked="checked"><?php echo lang('text_disabled'); ?></label>';
+	html += '   	<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="modules[' + module_row + '][status]" value="1"><?php echo lang('text_enabled'); ?></label>';
 	html += '   </div></td>';
 	html += '</tr>';
 

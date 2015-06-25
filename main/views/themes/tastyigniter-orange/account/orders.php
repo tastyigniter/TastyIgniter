@@ -1,14 +1,20 @@
 <?php echo get_header(); ?>
 <?php echo get_partial('content_top'); ?>
-<div id="page-content">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="heading-section">
-				</div>
-			</div>
-		</div>
 
+<?php if ($this->alert->get()) { ?>
+    <div id="notification">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <?php echo $this->alert->display(); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+
+<div id="page-content">
+	<div class="container top-spacing">
 		<div class="row">
 			<?php echo get_partial('content_left'); ?>
 			<?php
@@ -28,13 +34,13 @@
 							<table class="table table-hover">
 								<thead>
 									<tr>
-										<th><?php echo $column_id; ?></th>
-										<th><?php echo $column_status; ?></th>
-										<th><?php echo $column_location; ?></th>
-										<th><?php echo $column_date; ?></th>
-										<th><?php echo $column_order; ?></th>
-										<th><?php echo $column_items; ?></th>
-										<th><?php echo $column_total; ?></th>
+										<th><?php echo lang('column_id'); ?></th>
+										<th><?php echo lang('column_status'); ?></th>
+										<th><?php echo lang('column_location'); ?></th>
+										<th><?php echo lang('column_date'); ?></th>
+										<th><?php echo lang('column_order'); ?></th>
+										<th><?php echo lang('column_items'); ?></th>
+										<th><?php echo lang('column_total'); ?></th>
 										<th></th>
 										<th></th>
 									</tr>
@@ -42,21 +48,21 @@
 								<tbody>
 								<?php if ($orders) { ?>
 									<?php foreach ($orders as $order) { ?>
-									<tr>
-										<td><a href="<?php echo $order['view']; ?>"><?php echo $order['order_id']; ?></a></td>
-										<td><?php echo $order['status_name']; ?></td>
-										<td><?php echo $order['location_name']; ?></td>
-										<td><?php echo $order['order_time']; ?> - <?php echo $order['date_added']; ?></td>
-										<td><?php echo $order['order_type']; ?></td>
-										<td><?php echo $order['total_items']; ?></td>
-										<td><?php echo $order['order_total']; ?></td>
-										<td><a class="text-info" title="<?php echo $text_reorder; ?>" href="<?php echo $order['reorder']; ?>"><i class="fa fa-mail-reply"></i></a></td>
-										<td><a title="<?php echo $text_leave_review; ?>" href="<?php echo $order['leave_review']; ?>"><i class="fa fa-heart"></i></a></td>
-									</tr>
+                                        <tr>
+                                            <td><a href="<?php echo $order['view']; ?>"><?php echo $order['order_id']; ?></a></td>
+                                            <td><?php echo $order['status_name']; ?></td>
+                                            <td><?php echo $order['location_name']; ?></td>
+                                            <td><?php echo $order['order_time']; ?> - <?php echo $order['date_added']; ?></td>
+                                            <td><?php echo $order['order_type']; ?></td>
+                                            <td><?php echo $order['total_items']; ?></td>
+                                            <td><?php echo $order['order_total']; ?></td>
+                                            <td><a class="" title="<?php echo lang('text_reorder'); ?>" href="<?php echo $order['reorder']; ?>"><i class="fa fa-mail-reply text-primary"></i></a></td>
+                                            <td><a class="" title="<?php echo lang('text_leave_review'); ?>" href="<?php echo $order['leave_review']; ?>"><i class="fa fa-heart text-warning"></i></a></td>
+                                        </tr>
 									<?php } ?>
 								<?php } else { ?>
 									<tr>
-										<td colspan="9"><?php echo $text_empty; ?></td>
+										<td colspan="9"><?php echo lang('text_empty'); ?></td>
 									</tr>
 								<?php } ?>
 								</tbody>
@@ -66,8 +72,8 @@
 
 					<div class="col-md-12">
 						<div class="buttons col-xs-6 wrap-none">
-							<a class="btn btn-default" href="<?php echo $back; ?>"><?php echo $button_back; ?></a>
-							<a class="btn btn-primary" href="<?php echo $new_order_url; ?>"><?php echo $button_order; ?></a>
+							<a class="btn btn-default" href="<?php echo $back_url; ?>"><?php echo lang('button_back'); ?></a>
+							<a class="btn btn-primary" href="<?php echo $new_order_url; ?>"><?php echo lang('button_order'); ?></a>
 						</div>
 
 						<div class="col-xs-6">

@@ -3,7 +3,7 @@
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
 			<ul id="nav-tabs" class="nav nav-tabs">
-				<li class="active"><a href="#general" data-toggle="tab">Banner Details</a></li>
+				<li class="active"><a href="#general" data-toggle="tab"><?php echo lang('text_tab_general'); ?></a></li>
 			</ul>
 		</div>
 
@@ -11,30 +11,30 @@
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Name:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_name'); ?></label>
 						<div class="col-sm-5">
 							<input type="text" name="name" id="input-name" class="form-control" value="<?php echo set_value('name', $name); ?>" />
 							<?php echo form_error('name', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-type" class="col-sm-3 control-label">Type:</label>
+						<label for="input-type" class="col-sm-3 control-label"><?php echo lang('label_type'); ?></label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle btn-group-3" data-toggle="buttons">
 								<?php if ($type == 'image') { ?>
-									<label class="btn btn-default active" data-btn="btn-info"><input type="radio" name="type" value="image" <?php echo set_radio('type', 'image', TRUE); ?>>Image</label>
+									<label class="btn btn-default active" data-btn="btn-info"><input type="radio" name="type" value="image" <?php echo set_radio('type', 'image', TRUE); ?>><?php echo lang('text_image'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default" data-btn="btn-info"><input type="radio" name="type" value="image" <?php echo set_radio('type', 'image'); ?>>Image</label>
+									<label class="btn btn-default" data-btn="btn-info"><input type="radio" name="type" value="image" <?php echo set_radio('type', 'image'); ?>><?php echo lang('text_image'); ?></label>
 								<?php } ?>
 								<?php if ($type == 'carousel') { ?>
-									<label class="btn btn-default active" data-btn="btn-primary"><input type="radio" name="type" value="carousel" <?php echo set_radio('type', 'carousel', TRUE); ?>>Carousel</label>
+									<label class="btn btn-default active" data-btn="btn-primary"><input type="radio" name="type" value="carousel" <?php echo set_radio('type', 'carousel', TRUE); ?>><?php echo lang('text_carousel'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default" data-btn="btn-primary"><input type="radio" name="type" value="carousel" <?php echo set_radio('type', 'carousel'); ?>>Carousel</label>
+									<label class="btn btn-default" data-btn="btn-primary"><input type="radio" name="type" value="carousel" <?php echo set_radio('type', 'carousel'); ?>><?php echo lang('text_carousel'); ?></label>
 								<?php } ?>
 								<?php if ($type == 'custom') { ?>
-									<label class="btn btn-default active" data-btn="btn-warning"><input type="radio" name="type" value="custom" <?php echo set_radio('type', 'custom', TRUE); ?>>Custom</label>
+									<label class="btn btn-default active" data-btn="btn-warning"><input type="radio" name="type" value="custom" <?php echo set_radio('type', 'custom', TRUE); ?>><?php echo lang('text_custom'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default" data-btn="btn-warning"><input type="radio" name="type" value="custom" <?php echo set_radio('type', 'custom'); ?>>Custom</label>
+									<label class="btn btn-default" data-btn="btn-warning"><input type="radio" name="type" value="custom" <?php echo set_radio('type', 'custom'); ?>><?php echo lang('text_custom'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('type', '<span class="text-danger">', '</span>'); ?>
@@ -42,7 +42,7 @@
 					</div>
 					<div id="image-type" class="type">
 						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Image:</label>
+							<label for="" class="col-sm-3 control-label"><?php echo lang('label_image'); ?></label>
 							<div class="col-sm-5">
 								<div class="thumbnail imagebox" id="selectImage">
 									<div class="preview"><img src="<?php echo $image['url']; ?>" class="thumb img-responsive" id="thumb"></div>
@@ -50,8 +50,8 @@
 										<span class="name text-center"><?php echo $image['name']; ?></span>
 										<input type="hidden" name="image_path" value="<?php echo set_value('image_path', $image['path']); ?>" id="field" />
 										<p>
-											<a id="select-image" class="btn btn-primary" onclick="mediaManager('field');"><i class="fa fa-picture-o"></i>&nbsp;&nbsp;Select</a>
-											<a class="btn btn-danger" onclick="$('#thumb').attr('src', '<?php echo $no_photo; ?>'); $('#field').attr('value', 'data/no_photo.png'); $(this).parent().parent().find('.name').html('no_photo.png');"><i class="fa fa-times-circle"></i>&nbsp;&nbsp;Remove</a>
+											<a id="select-image" class="btn btn-primary" onclick="mediaManager('field');"><i class="fa fa-picture-o"></i>&nbsp;&nbsp;<?php echo lang('text_select'); ?></a>
+											<a class="btn btn-danger" onclick="$('#thumb').attr('src', '<?php echo $no_photo; ?>'); $('#field').attr('value', 'data/no_photo.png'); $(this).parent().parent().find('.name').html('no_photo.png');"><i class="fa fa-times-circle"></i>&nbsp;&nbsp;<?php echo lang('text_remove'); ?></a>
 										</p>
 									</div>
 								</div>
@@ -61,7 +61,7 @@
 					</div>
 					<div id="carousel-type" class="type">
 						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Images:</label>
+							<label for="" class="col-sm-3 control-label"><?php echo lang('label_images'); ?></label>
 							<div class="col-sm-7">
 								<ul class="thumbnail-list">
 								<?php $image_row = 0; ?>
@@ -97,7 +97,7 @@
 					</div>
 					<div id="image-type-extra" class="type">
 						<div class="form-group">
-							<label for="input-alt-text" class="col-sm-3 control-label">Alternative Text:</label>
+							<label for="input-alt-text" class="col-sm-3 control-label"><?php echo lang('label_alt_text'); ?></label>
 							<div class="col-sm-5">
 								<input type="text" name="alt_text" id="input-alt-text" class="form-control" value="<?php echo set_value('alt_text', $alt_text); ?>" />
 								<?php echo form_error('alt_text', '<span class="text-danger">', '</span>'); ?>
@@ -106,7 +106,7 @@
 					</div>
 					<div id="custom-type" class="type">
 						<div class="form-group">
-							<label for="input-custom-code" class="col-sm-3 control-label">Custom Code:</label>
+							<label for="input-custom-code" class="col-sm-3 control-label"><?php echo lang('label_custom_code'); ?></label>
 							<div class="col-sm-5">
 								<textarea name="custom_code" id="input-custom-code" class="form-control" rows="7"><?php echo set_value('custom_code', $custom_code); ?></textarea>
 								<?php echo form_error('custom_code', '<span class="text-danger">', '</span>'); ?>
@@ -115,14 +115,14 @@
 					</div>
 					<div class="clearfix"></div>
 					<div class="form-group">
-						<label for="input-click-url" class="col-sm-3 control-label">Click URL:</label>
+						<label for="input-click-url" class="col-sm-3 control-label"><?php echo lang('label_click_url'); ?></label>
 						<div class="col-sm-5">
 							<input type="text" name="click_url" id="input-click-url" class="form-control" value="<?php echo set_value('click_url', $click_url); ?>" />
 							<?php echo form_error('click_url', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Language:</label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_language'); ?></label>
 						<div class="col-sm-5">
 							<select name="language_id" id="input-language" class="form-control">
 								<?php foreach ($languages as $language) { ?>
@@ -137,15 +137,15 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-status" class="col-sm-3 control-label">Status:</label>
+						<label for="input-status" class="col-sm-3 control-label"><?php echo lang('label_status'); ?></label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($status == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0'); ?>>Disabled</label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1', TRUE); ?>>Enabled</label>
+									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0', TRUE); ?>>Disabled</label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1'); ?>>Enabled</label>
+									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1'); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('status', '<span class="text-danger">', '</span>'); ?>
@@ -180,8 +180,8 @@ function addImage() {
 	html += '		<input type="hidden" name="carousels[' + image_row + ']" value="data/no_photo.png" id="field' + image_row + '" />';
 	html += '		<span class="name text-center">no_photo.png</span>';
 	html += '		<p>';
-	html += '			<a id="select-image" class="btn btn-primary" onclick="mediaManager(\'field' + image_row + '\');"><i class="fa fa-picture-o"></i>&nbsp;&nbsp;Select</a>';
-	html += '			<a class="btn btn-danger" onclick="$(this).parent().parent().parent().remove();"><i class="fa fa-times-circle"></i>&nbsp;&nbsp;Remove</a>';
+	html += '			<a id="select-image" class="btn btn-primary" onclick="mediaManager(\'field' + image_row + '\');"><i class="fa fa-picture-o"></i>&nbsp;&nbsp;<?php echo lang('text_select'); ?></a>';
+	html += '			<a class="btn btn-danger" onclick="$(this).parent().parent().parent().remove();"><i class="fa fa-times-circle"></i>&nbsp;&nbsp;<?php echo lang('text_remove'); ?></a>';
 	html += '		</p>';
 	html += '	</div>';
 	html += '</li>';

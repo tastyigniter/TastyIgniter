@@ -3,7 +3,7 @@
 	<div class="col-md-12">
 		<div class="panel panel-default panel-table">
 			<div class="panel-heading">
-				<h3 class="panel-title">Rating List</h3>
+				<h3 class="panel-title"><?php echo lang('text_list'); ?></h3>
 			</div>
 			<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
 				<table class="table table-striped table-border table-sortable">
@@ -11,7 +11,7 @@
 						<tr>
 							<th class="action action-one"></th>
 							<th class="action action-one"></th>
-							<th>Name</th>
+							<th><?php echo lang('column_name'); ?></th>
 						</tr>
 					</thead>
 					<tbody>

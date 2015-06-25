@@ -4,7 +4,7 @@
 		<div class="col-md-4 center-block float-none">
 			<div class="panel panel-primary panel-login">
 				<div class="panel-heading">
-					<h3 class="panel-title">Reset Password</h3>
+					<h3 class="panel-title"><?php echo lang('text_reset_password_title'); ?></h3>
 				</div>
 				<div class="panel-body">
 					<div id="notification">
@@ -13,7 +13,7 @@
 
 					<form role="form" id="edit-form" class="form-vertical" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
 						<div class="form-group">
-							<label for="input-user" class="control-label">Username or Email</label>
+							<label for="input-user" class="control-label"><?php echo lang('label_username_email'); ?></label>
 							<div class="">
 								<input name="user_email" type="text" id="input-user" class="form-control" /></td>
 								<?php echo form_error('user_email', '<span class="text-danger">', '</span>'); ?>
@@ -21,9 +21,9 @@
 						</div>
 						<div class="form-group">
 							<div class="pull-left">
-								<a href="<?php echo $login_url; ?>"><- Back to Login</a>
+								<a href="<?php echo $login_url; ?>"><?php echo lang('text_back_to_login'); ?></a>
 							</div>
-							<button type="submit" class="btn btn-success pull-right">Get New Password</button>
+							<button type="submit" class="btn btn-success pull-right"><?php echo lang('button_reset_password'); ?></button>
 						</div>
 
 					</form>

@@ -4,22 +4,25 @@ class Reservations extends Main_Controller {
 
 	public function __construct() {
 		parent::__construct(); 																	//  calls the constructor
-		$this->load->library('customer'); 														// load the customer library
+
+        if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
+            redirect('account/login');
+        }
+
+        $this->load->library('customer'); 														// load the customer library
 		$this->load->library('currency'); 														// load the currency library
-				$this->load->model('Reservations_model');														// load orders model
-		$this->lang->load('account/reservations');
+
+        $this->load->model('Reservations_model');														// load orders model
+
+        $this->lang->load('account/reservations');
 
 		if ($this->config->item('reservation_mode') !== '1') {
-			$this->alert->set('alert', $this->lang->line('alert_no_reservation'));
+			$this->alert->set('alert', $this->lang->line('alert_reservation_disabled'));
 			redirect('account/account');
 		}
 	}
 
 	public function index() {
-		if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
-  			redirect('account/login');
-		}
-
 		$url = '?';
 		$filter = array();
 		$filter['customer_id'] = (int) $this->customer->getId();
@@ -38,26 +41,14 @@ class Reservations extends Main_Controller {
         $filter['order_by'] = 'DESC';
 
         $this->template->setBreadcrumb('<i class="fa fa-home"></i>', '/');
+        $this->template->setBreadcrumb($this->lang->line('text_my_account'), 'account/account');
 		$this->template->setBreadcrumb($this->lang->line('text_heading'), 'account/reservations');
 
-		// START of retrieving lines from language file to pass to view.
 		$this->template->setTitle($this->lang->line('text_heading'));
 		$this->template->setHeading($this->lang->line('text_heading'));
-		$data['text_heading'] 			= $this->lang->line('text_heading');
-		$data['text_empty'] 			= $this->lang->line('text_empty');
-		$data['text_leave_review'] 		= $this->lang->line('text_leave_review');
-		$data['column_id'] 				= $this->lang->line('column_id');
-		$data['column_status'] 			= $this->lang->line('column_status');
-		$data['column_location'] 		= $this->lang->line('column_location');
-		$data['column_date'] 			= $this->lang->line('column_date');
-		$data['column_table'] 			= $this->lang->line('column_table');
-		$data['column_guest'] 			= $this->lang->line('column_guest');
-		$data['button_back'] 			= $this->lang->line('button_back');
-		$data['button_reserve'] 		= $this->lang->line('button_reserve');
-		// END of retrieving lines from language file to pass to view.
 
-		$data['back'] 					= site_url('account/account');
-		$data['new_reserve_url'] 		= site_url('reserve');
+		$data['back_url'] 				= site_url('account/account');
+		$data['new_reservation_url'] 	= site_url('reservation');
 
 		$data['reservations'] = array();
 		$results = $this->Reservations_model->getList($filter);								// retrieve customer reservations based on customer id from getMainReservations method in Reservations model
@@ -95,39 +86,17 @@ class Reservations extends Main_Controller {
 		$this->load->library('country');
 		$this->load->model('Locations_model');														// load locations model
 
-		if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
-  			redirect('account/login');
-		}
-
-		if ($this->uri->rsegment(3)) {															// check if customer_id is set in uri string
-			$reservation_id = (int)$this->uri->rsegment(3);
-		} else {
+		if (!($result = $this->Reservations_model->getReservation($this->uri->rsegment(3), $this->customer->getId()))) {															// check if customer_id is set in uri string
   			redirect('account/reservations');
 		}
 
-		$result = $this->Reservations_model->getReservation($reservation_id, $this->customer->getId());
-
 		$this->template->setBreadcrumb('<i class="fa fa-home"></i>', '/');
-		$this->template->setBreadcrumb($this->lang->line('text_heading'), 'account/reservations');
+        $this->template->setBreadcrumb($this->lang->line('text_my_account'), 'account/account');
+        $this->template->setBreadcrumb($this->lang->line('text_heading'), 'account/reservations');
 		$this->template->setBreadcrumb($this->lang->line('text_view_heading'), 'account/reservations/view');
 
-		// START of retrieving lines from language file to pass to view.
 		$this->template->setTitle($this->lang->line('text_view_heading'));
 		$this->template->setHeading($this->lang->line('text_view_heading'));
-		$data['text_heading'] 			= $this->lang->line('text_view_heading');
-		$data['column_id'] 				= $this->lang->line('column_id');
-		$data['column_location'] 		= $this->lang->line('column_location');
-		$data['column_status'] 			= $this->lang->line('column_status');
-		$data['column_date'] 			= $this->lang->line('column_date');
-		$data['column_guest'] 			= $this->lang->line('column_guest');
-		$data['column_table'] 			= $this->lang->line('column_table');
-		$data['column_occasion'] 		= $this->lang->line('column_occasion');
-		$data['column_name'] 			= $this->lang->line('column_name');
-		$data['column_email'] 			= $this->lang->line('column_email');
-		$data['column_telephone'] 		= $this->lang->line('column_telephone');
-		$data['column_comment'] 		= $this->lang->line('column_comment');
-		$data['button_back'] 			= $this->lang->line('button_back');
-		// END of retrieving lines from language file to pass to view.
 
 		$data['back_url'] 				= site_url('account/reservations');
 
@@ -140,27 +109,23 @@ class Reservations extends Main_Controller {
 			'5' => 'stag party'
 		);
 
-		if ($result) {
-			$data['reservation_id'] 	= $result['reservation_id'];
-			$data['guest_num'] 			= $result['guest_num'] .' person(s)';
-			$data['reserve_date'] 		= mdate('%d %M %y', strtotime($result['reserve_date']));
-			$data['reserve_time'] 		= mdate('%H:%i', strtotime($result['reserve_time']));
-			$data['occasion_id'] 		= $result['occasion_id'];
-			$data['status_name'] 		= $result['status_name'];
-			$data['table_name'] 		= $result['table_name'];
+        $data['reservation_id'] 	= $result['reservation_id'];
+        $data['guest_num'] 			= $result['guest_num'] .' person(s)';
+        $data['reserve_date'] 		= mdate('%d %M %y', strtotime($result['reserve_date']));
+        $data['reserve_time'] 		= mdate('%H:%i', strtotime($result['reserve_time']));
+        $data['occasion_id'] 		= $result['occasion_id'];
+        $data['status_name'] 		= $result['status_name'];
+        $data['table_name'] 		= $result['table_name'];
 
-			$data['first_name'] 		= $result['first_name'];
-			$data['last_name'] 			= $result['last_name'];
-			$data['email'] 				= $result['email'];
-			$data['telephone'] 			= $result['telephone'];
-			$data['comment'] 			= $result['comment'];
+        $data['first_name'] 		= $result['first_name'];
+        $data['last_name'] 			= $result['last_name'];
+        $data['email'] 				= $result['email'];
+        $data['telephone'] 			= $result['telephone'];
+        $data['comment'] 			= $result['comment'];
 
-			$location_address = $this->Locations_model->getAddress($result['location_id']);
-			$data['location_name'] = $location_address['location_name'];
-			$data['location_address'] = $this->country->addressFormat($location_address);
-		} else {
-			redirect('account/reservations');
-		}
+        $location_address = $this->Locations_model->getAddress($result['location_id']);
+        $data['location_name'] = $location_address['location_name'];
+        $data['location_address'] = $this->country->addressFormat($location_address);
 
 		$this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
 		$this->template->render('account/reservations_view', $data);
