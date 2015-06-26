@@ -3,6 +3,12 @@
     "description": "Composer plugin to merge multiple composer.json files",
     "type": "composer-plugin",
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Bryan Davis",
+            "email": "bd808@wikimedia.org"
+        }
+    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
