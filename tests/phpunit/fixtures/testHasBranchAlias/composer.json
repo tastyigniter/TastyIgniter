@@ -1,0 +1,15 @@
+{
+    "require": {
+        "wikimedia/composer-merge-plugin": "dev-master"
+    },
+    "extra": {
+        "merge-plugin": {
+            "include": [
+                "composer.local.json"
+            ]
+        },
+        "branch-alias": {
+            "dev-master": "8.0.x-dev"
+        }
+    }
+}

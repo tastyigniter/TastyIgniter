@@ -22,6 +22,7 @@ use Composer\Package\RootPackage;
 use Composer\Script\CommandEvent;
 use Composer\Script\ScriptEvents;
 use Prophecy\Argument;
+use \ReflectionMethod;
 
 /**
  * @covers Wikimedia\Composer\MergePlugin
@@ -385,6 +386,42 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
             array(MergePlugin::PACKAGE_NAME, true),
             array('foo/bar', false),
         );
+    }
+
+    /**
+     * Given a root package with a branch alias
+     * When the plugin is run
+     * Then the root package will be unwrapped from the alias.
+     */
+    public function testHasBranchAlias()
+    {
+        $that = $this;
+        $dir = $this->fixtureDir(__FUNCTION__);
+        $root = $this->rootFromJson("{$dir}/composer.json");
+        $root->setRequires(Argument::type('array'))->will(
+            function ($args) use ($that) {
+                $requires = $args[0];
+                $that->assertEquals(2, count($requires));
+                $that->assertArrayHasKey(
+                    'wikimedia/composer-merge-plugin',
+                    $requires
+                );
+                $that->assertArrayHasKey('php', $requires);
+            }
+        );
+        $root = $root->reveal();
+
+        $alias = $this->prophesize('Composer\Package\RootAliasPackage');
+        $alias->getAliasOf()->willReturn($root)->shouldBeCalled();
+
+        $this->triggerPlugin($alias->reveal(), $dir);
+
+        $getRootPackage = new ReflectionMethod(
+            get_class($this->fixture),
+            'getRootPackage'
+        );
+        $getRootPackage->setAccessible(true);
+        $this->assertEquals($root, $getRootPackage->invoke($this->fixture));
     }
 
     /**
