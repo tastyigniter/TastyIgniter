@@ -9,7 +9,10 @@
         "wikimedia/composer-merge-plugin": "*@dev"
     },
     "config": {
-        "preferred-install": "source"
+        "preferred-install": "source",
+        "classmap-authoritative": true,
+        "prepend-autoloader": false,
+        "optimize-autoloader": true
     },
     "extra": {
         "merge-plugin": {

@@ -22,7 +22,7 @@ use Composer\Package\RootPackage;
 use Composer\Script\CommandEvent;
 use Composer\Script\ScriptEvents;
 use Prophecy\Argument;
-use \ReflectionMethod;
+use ReflectionMethod;
 
 /**
  * @covers Wikimedia\Composer\MergePlugin
@@ -442,7 +442,7 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
             array(),
             array()
         );
-        $this->fixture->onInstallOrUpdate($event);
+        $this->fixture->onInstallUpdateOrDump($event);
 
         $requestInstalls = array();
         $request = $this->prophesize('Composer\DependencyResolver\Request');

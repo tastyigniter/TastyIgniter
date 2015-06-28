@@ -11,7 +11,6 @@
 namespace Wikimedia\Composer;
 
 use Composer\Composer;
-use Composer\Config;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\Factory;
 use Composer\Installer;
@@ -115,9 +114,25 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     protected $loadedFiles = array();
 
     /**
+     * Is this the first time that our plugin has been installed?
+     *
      * @var bool $pluginFirstInstall
      */
     protected $pluginFirstInstall;
+
+    /**
+     * Is the autoloader file supposed to be written out?
+     *
+     * @var bool $dumpAutoloader
+     */
+    protected $dumpAutoloader;
+
+    /**
+     * Is the autoloader file supposed to be optimized?
+     *
+     * @var bool $optimizeAutoloader
+     */
+    protected $optimizeAutoloader;
 
     /**
      * {@inheritdoc}
@@ -136,23 +151,23 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     {
         return array(
             InstallerEvents::PRE_DEPENDENCIES_SOLVING => 'onDependencySolve',
-            ScriptEvents::PRE_INSTALL_CMD => 'onInstallOrUpdate',
-            ScriptEvents::PRE_UPDATE_CMD => 'onInstallOrUpdate',
-            ScriptEvents::PRE_AUTOLOAD_DUMP => 'onInstallOrUpdate',
             PackageEvents::POST_PACKAGE_INSTALL => 'onPostPackageInstall',
             ScriptEvents::POST_INSTALL_CMD => 'onPostInstallOrUpdate',
             ScriptEvents::POST_UPDATE_CMD => 'onPostInstallOrUpdate',
+            ScriptEvents::PRE_AUTOLOAD_DUMP => 'onInstallUpdateOrDump',
+            ScriptEvents::PRE_INSTALL_CMD => 'onInstallUpdateOrDump',
+            ScriptEvents::PRE_UPDATE_CMD => 'onInstallUpdateOrDump',
         );
     }
 
     /**
-     * Handle an event callback for an install or update command by checking
-     * for "merge-patterns" in the "extra" data and merging package contents
-     * if found.
+     * Handle an event callback for an install, update or dump command by
+     * checking for "merge-patterns" in the "extra" data and merging package
+     * contents if found.
      *
      * @param Event $event
      */
-    public function onInstallOrUpdate(Event $event)
+    public function onInstallUpdateOrDump(Event $event)
     {
         $config = $this->readConfig($this->getRootPackage());
         if (isset($config['recurse'])) {
@@ -166,6 +181,14 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
             );
             $this->devMode = $event->isDevMode();
             $this->mergePackages($config);
+        }
+
+        if ($event->getName() === ScriptEvents::PRE_AUTOLOAD_DUMP) {
+            $this->dumpAutoloader = true;
+            $flags = $event->getFlags();
+            if (isset($flags['optimize'])) {
+                $this->optimizeAutoloader = $flags['optimize'];
+            }
         }
     }
 
@@ -490,6 +513,11 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
                 '</comment>'
             );
 
+            $config = $this->composer->getConfig();
+
+            $preferSource = $config->get('preferred-install') == 'source';
+            $preferDist = $config->get('preferred-install') == 'dist';
+
             $installer = Installer::create(
                 $event->getIO(),
                 // Create a new Composer instance to ensure full processing of
@@ -497,12 +525,16 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
                 Factory::create($event->getIO(), null, false)
             );
 
+            $installer->setPreferSource($preferSource);
+            $installer->setPreferDist($preferDist);
+            $installer->setDevMode($event->isDevMode());
+            $installer->setDumpAutoloader($this->dumpAutoloader);
+            $installer->setOptimizeAutoloader($this->optimizeAutoloader);
+
             // Force update mode so that new packages are processed rather
             // than just telling the user that composer.json and composer.lock
             // don't match.
             $installer->setUpdate(true);
-            $installer->setDevMode($event->isDevMode());
-            // TODO: can we set more flags to match the current run?
 
             $installer->run();
         }
