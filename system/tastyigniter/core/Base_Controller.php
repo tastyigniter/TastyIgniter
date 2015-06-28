@@ -14,12 +14,6 @@ class Base_Controller extends MX_Controller {
     {
         parent::__construct();
 
-        foreach(glob(APPPATH.'controllers/*.php') as $filepath) {
-            var_dump($filepath);
-            $filename = basename($filepath);
-            rename($filepath, APPPATH.'controllers/'.strtolower($filename));
-        }exit;
-
         log_message('info', 'Base Controller Class Initialized');
 
         // Load session
