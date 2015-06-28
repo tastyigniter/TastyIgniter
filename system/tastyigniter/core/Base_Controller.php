@@ -14,14 +14,18 @@ class Base_Controller extends MX_Controller {
     {
         parent::__construct();
 
+        foreach(glob(APPPATH.'controllers/*.php') as $filepath) {
+            var_dump($filepath);
+            $filename = basename($filepath);
+            rename($filepath, APPPATH.'controllers/'.strtolower($filename));
+        }exit;
+
         log_message('info', 'Base Controller Class Initialized');
 
         // Load session
         $this->load->library('session');
 
         $this->load->library('alert');
-
-        $this->form_validation->CI =& $this;
 
         // Load database and system configuration from database
         $DATABASE = $this->load->database('default', TRUE);
@@ -68,10 +72,12 @@ class Base_Controller extends MX_Controller {
             // Check if the module configuration items are correctly set
             $this->checkModuleConfig($_module, $config);
         }
+
+        $this->form_validation->CI =& $this;
     }
 
     private function maintenanceEnabled() {
-        if ($this->config->item('maintenance_mode') === '1') {                                                    // if customer is not logged in redirect to account login page
+        if ($this->config->item('maintenance_mode') === '1') {
             $this->load->library('user');
             if (APPDIR === MAINDIR
                 AND $this->uri->rsegment(1) !== 'maintenance'

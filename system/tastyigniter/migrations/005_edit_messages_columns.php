@@ -12,7 +12,7 @@ class Migration_edit_messages_columns extends CI_Migration {
         $this->dbforge->drop_column('message_recipients', 'staff_email');
         $this->dbforge->drop_column('message_recipients', 'customer_email');
 
-        $this->dbforge->add_column('message_recipients', array('key VARCHAR(32) NOT NULL'));
+        $this->dbforge->add_column('message_recipients', array('item VARCHAR(32) NOT NULL'));
         $this->dbforge->add_column('message_recipients', array('value TEXT NOT NULL'));
     }
 
@@ -26,7 +26,7 @@ class Migration_edit_messages_columns extends CI_Migration {
         $this->dbforge->add_column('message_recipients', 'staff_email VARCHAR(96) NOT NULL');
         $this->dbforge->add_column('message_recipients', 'customer_email VARCHAR(96) NOT NULL');
 
-        $this->dbforge->drop_column('message_recipients', 'key');
+        $this->dbforge->drop_column('message_recipients', 'item');
         $this->dbforge->drop_column('message_recipients', 'value');
     }
 }

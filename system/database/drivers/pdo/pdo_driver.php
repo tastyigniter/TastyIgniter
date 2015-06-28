@@ -2,11 +2,11 @@
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 5.2.4 or newer
+ * An open source application development framework for PHP
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2015, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
  * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (http://ellislab.com/)
- * @copyright	Copyright (c) 2014, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2014 - 2015, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
  * @link	http://codeigniter.com
  * @since	Version 2.1.0
@@ -155,10 +155,6 @@ class CI_DB_pdo_driver extends CI_DB {
 		if (isset($this->data_cache['version']))
 		{
 			return $this->data_cache['version'];
-		}
-		elseif ( ! $this->conn_id)
-		{
-			$this->initialize();
 		}
 
 		// Not all subdrivers support the getAttribute() method
@@ -310,7 +306,7 @@ class CI_DB_pdo_driver extends CI_DB {
 	 * Error
 	 *
 	 * Returns an array containing code and message of the last
-	 * database error that has occurred.
+	 * database error that has occured.
 	 *
 	 * @return	array
 	 */
@@ -398,6 +394,3 @@ class CI_DB_pdo_driver extends CI_DB {
 	}
 
 }
-
-/* End of file pdo_driver.php */
-/* Location: ./system/database/drivers/pdo/pdo_driver.php */

@@ -2,11 +2,11 @@
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 5.2.4 or newer
+ * An open source application development framework for PHP
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2015, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
  * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (http://ellislab.com/)
- * @copyright	Copyright (c) 2014, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2014 - 2015, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
  * @link	http://codeigniter.com
  * @since	Version 1.0.0
@@ -75,7 +75,7 @@ class CI_Security {
 	/**
 	 * Character set
 	 *
-	 * Will be overriden by the constructor.
+	 * Will be overridden by the constructor.
 	 *
 	 * @var	string
 	 */
@@ -192,7 +192,7 @@ class CI_Security {
 
 		$this->charset = strtoupper(config_item('charset'));
 
-		log_message('debug', 'Security Class Initialized');
+		log_message('info', 'Security Class Initialized');
 	}
 
 	// --------------------------------------------------------------------
@@ -244,7 +244,7 @@ class CI_Security {
 		$this->_csrf_set_hash();
 		$this->csrf_set_cookie();
 
-		log_message('debug', 'CSRF token verified');
+		log_message('info', 'CSRF token verified');
 		return $this;
 	}
 
@@ -275,7 +275,7 @@ class CI_Security {
 			$secure_cookie,
 			config_item('cookie_httponly')
 		);
-		log_message('debug', 'CRSF cookie Set');
+		log_message('info', 'CRSF cookie sent');
 
 		return $this;
 	}
@@ -533,7 +533,6 @@ class CI_Security {
 			return ($str === $converted_string);
 		}
 
-		log_message('debug', 'XSS Filtering completed');
 		return $str;
 	}
 
@@ -640,11 +639,16 @@ class CI_Security {
 			$str_compare = $str;
 
 			// Decode standard entities, avoiding false positives
-			if ($c = preg_match_all('/&[a-z]{2,}(?![a-z;])/i', $str, $matches))
+			if (preg_match_all('/&[a-z]{2,}(?![a-z;])/i', $str, $matches))
 			{
 				if ( ! isset($_entities))
 				{
-					$_entities = array_map('strtolower', get_html_translation_table(HTML_ENTITIES, $flag, $charset));
+					$_entities = array_map(
+						'strtolower',
+						is_php('5.3.4')
+							? get_html_translation_table(HTML_ENTITIES, $flag, $charset)
+							: get_html_translation_table(HTML_ENTITIES, $flag)
+					);
 
 					// If we're not on PHP 5.4+, add the possibly dangerous HTML 5
 					// entities to the array manually
@@ -652,7 +656,7 @@ class CI_Security {
 					{
 						$_entities[':'] = '&colon;';
 						$_entities['('] = '&lpar;';
-						$_entities[')'] = '&rpar';
+						$_entities[')'] = '&rpar;';
 						$_entities["\n"] = '&newline;';
 						$_entities["\t"] = '&tab;';
 					}
@@ -660,11 +664,11 @@ class CI_Security {
 
 				$replace = array();
 				$matches = array_unique(array_map('strtolower', $matches[0]));
-				for ($i = 0; $i < $c; $i++)
+				foreach ($matches as &$match)
 				{
-					if (($char = array_search($matches[$i].';', $_entities, TRUE)) !== FALSE)
+					if (($char = array_search($match.';', $_entities, TRUE)) !== FALSE)
 					{
-						$replace[$matches[$i]] = $char;
+						$replace[$match] = $char;
 					}
 				}
 
@@ -673,7 +677,7 @@ class CI_Security {
 
 			// Decode numeric & UTF16 two byte entities
 			$str = html_entity_decode(
-				preg_replace('/(&#(?:x0*[0-9a-f]{2,5}(?![0-9a-f;]))|(?:0*\d{2,4}(?![0-9;])))/iS', '$1;', $str),
+				preg_replace('/(&#(?:x0*[0-9a-f]{2,5}(?![0-9a-f;])|(?:0*\d{2,4}(?![0-9;]))))/iS', '$1;', $str),
 				$flag,
 				$charset
 			);
@@ -768,7 +772,7 @@ class CI_Security {
 	 */
 	protected function _remove_evil_attributes($str, $is_image)
 	{
-		$evil_attributes = array('on\w*', 'style', 'xmlns', 'formaction', 'form', 'xlink:href');
+		$evil_attributes = array('on\w*', 'style', 'xmlns', 'formaction', 'form', 'xlink:href', 'FSCommand', 'seekSegmentTime');
 
 		if ($is_image === TRUE)
 		{
@@ -780,30 +784,15 @@ class CI_Security {
 		}
 
 		do {
-			$count = 0;
-			$attribs = array();
+			$count = $temp_count = 0;
 
-			// find occurrences of illegal attribute strings with quotes (042 and 047 are octal quotes)
-			preg_match_all('/(?<!\w)('.implode('|', $evil_attributes).')\s*=\s*(\042|\047)([^\\2]*?)(\\2)/is', $str, $matches, PREG_SET_ORDER);
-
-			foreach ($matches as $attr)
-			{
-				$attribs[] = preg_quote($attr[0], '/');
-			}
+			// replace occurrences of illegal attribute strings with quotes (042 and 047 are octal quotes)
+			$str = preg_replace('/(<[^>]+)(?<!\w)('.implode('|', $evil_attributes).')\s*=\s*(\042|\047)([^\\2]*?)(\\2)/is', '$1[removed]', $str, -1, $temp_count);
+			$count += $temp_count;
 
 			// find occurrences of illegal attribute strings without quotes
-			preg_match_all('/(?<!\w)('.implode('|', $evil_attributes).')\s*=\s*([^\s>]*)/is', $str, $matches, PREG_SET_ORDER);
-
-			foreach ($matches as $attr)
-			{
-				$attribs[] = preg_quote($attr[0], '/');
-			}
-
-			// replace illegal attribute strings that are inside an html tag
-			if (count($attribs) > 0)
-			{
-				$str = preg_replace('/(<?)(\/?[^><]+?)([^A-Za-z<>\-])(.*?)('.implode('|', $attribs).')(.*?)([\s><]?)([><]*)/i', '$1$2 $4$6$7$8', $str, -1, $count);
-			}
+			$str = preg_replace('/(<[^>]+)(?<!\w)('.implode('|', $evil_attributes).')\s*=\s*([^\s>]*)/is', '$1[removed]', $str, -1, $temp_count);
+			$count += $temp_count;
 		}
 		while ($count);
 
@@ -977,8 +966,8 @@ class CI_Security {
 			// We don't necessarily want to regenerate it with
 			// each page load since a page could contain embedded
 			// sub-pages causing this feature to fail
-			if (isset($_COOKIE[$this->_csrf_cookie_name]) &&
-				preg_match('#^[0-9a-f]{32}$#iS', $_COOKIE[$this->_csrf_cookie_name]) === 1)
+			if (isset($_COOKIE[$this->_csrf_cookie_name]) && is_string($_COOKIE[$this->_csrf_cookie_name])
+				&& preg_match('#^[0-9a-f]{32}$#iS', $_COOKIE[$this->_csrf_cookie_name]) === 1)
 			{
 				return $this->_csrf_hash = $_COOKIE[$this->_csrf_cookie_name];
 			}
@@ -993,6 +982,3 @@ class CI_Security {
 	}
 
 }
-
-/* End of file Security.php */
-/* Location: ./system/core/Security.php */

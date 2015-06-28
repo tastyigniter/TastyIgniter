@@ -2,11 +2,11 @@
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 5.2.4 or newer
+ * An open source application development framework for PHP
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2015, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
  * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (http://ellislab.com/)
- * @copyright	Copyright (c) 2014, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2014 - 2015, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
  * @link	http://codeigniter.com
  * @since	Version 3.0.0
@@ -247,17 +247,31 @@ class CI_DB_sqlite3_driver extends CI_DB {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Show column query
+	 * Fetch Field Names
 	 *
-	 * Generates a platform-specific query string so that the column names can be fetched
-	 *
-	 * @param	string	$table
-	 * @return	string
+	 * @param	string	$table	Table name
+	 * @return	array
 	 */
-	protected function _list_columns($table = '')
+	public function list_fields($table)
 	{
-		// Not supported
-		return FALSE;
+		// Is there a cached result?
+		if (isset($this->data_cache['field_names'][$table]))
+		{
+			return $this->data_cache['field_names'][$table];
+		}
+
+		if (($result = $this->query('PRAGMA TABLE_INFO('.$this->protect_identifiers($table, TRUE, NULL, FALSE).')')) === FALSE)
+		{
+			return FALSE;
+		}
+
+		$this->data_cache['field_names'][$table] = array();
+		foreach ($result as $row)
+		{
+			$this->data_cache['field_names'][$table][] = $row['name'];
+		}
+
+		return $this->data_cache['field_names'][$table];
 	}
 
 	// --------------------------------------------------------------------
@@ -268,13 +282,8 @@ class CI_DB_sqlite3_driver extends CI_DB {
 	 * @param	string	$table
 	 * @return	array
 	 */
-	public function field_data($table = '')
+	public function field_data($table)
 	{
-		if ($table === '')
-		{
-			return ($this->db_debug) ? $this->display_error('db_field_param_missing') : FALSE;
-		}
-
 		if (($query = $this->query('PRAGMA TABLE_INFO('.$this->protect_identifiers($table, TRUE, NULL, FALSE).')')) === FALSE)
 		{
 			return FALSE;
@@ -306,7 +315,7 @@ class CI_DB_sqlite3_driver extends CI_DB {
 	 * Error
 	 *
 	 * Returns an array containing code and message of the last
-	 * database error that has occurred.
+	 * database error that has occured.
 	 *
 	 * @return	array
 	 */
@@ -363,6 +372,3 @@ class CI_DB_sqlite3_driver extends CI_DB {
 	}
 
 }
-
-/* End of file sqlite3_driver.php */
-/* Location: ./system/database/drivers/sqlite3/sqlite3_driver.php */

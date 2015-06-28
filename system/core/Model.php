@@ -2,11 +2,11 @@
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 5.2.4 or newer
+ * An open source application development framework for PHP
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2015, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
  * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (http://ellislab.com/)
- * @copyright	Copyright (c) 2014, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2014 - 2015, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
  * @link	http://codeigniter.com
  * @since	Version 1.0.0
@@ -48,36 +48,33 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class CI_Model {
 
-	/**
-	 * Class constructor
-	 *
-	 * @return	void
-	 */
-	public function __construct()
-	{
-		log_message('debug', 'Model Class Initialized');
-	}
+    /**
+     * Class constructor
+     *
+     * @return	void
+     */
+    public function __construct()
+    {
+        log_message('info', 'Model Class Initialized');
+    }
 
-	// --------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
-	/**
-	 * __get magic
-	 *
-	 * Allows models to access CI's loaded classes using the same
-	 * syntax as controllers.
-	 *
-	 * @param	string	$key
-	 */
-	public function __get($key)
-	{
-		// Debugging note:
-		//	If you're here because you're getting an error message
-		//	saying 'Undefined Property: system/core/Model.php', it's
-		//	most likely a typo in your model code.
-		return get_instance()->$key;
-	}
+    /**
+     * __get magic
+     *
+     * Allows models to access CI's loaded classes using the same
+     * syntax as controllers.
+     *
+     * @param	string	$key
+     */
+    public function __get($key)
+    {
+        // Debugging note:
+        //	If you're here because you're getting an error message
+        //	saying 'Undefined Property: system/core/Model.php', it's
+        //	most likely a typo in your model code.
+        return get_instance()->$key;
+    }
 
 }
-
-/* End of file Model.php */
-/* Location: ./system/core/Model.php */

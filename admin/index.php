@@ -148,7 +148,6 @@
 
 	// Path to the images folder"
 	define('IMAGEPATH', realpath('../assets/images/') .'/');
-	//define('IMAGEPATH', str_replace(SYSDIR.'/', '', BASEPATH) . 'assets/images/');
 
 	// The path to the "application" folder
 	if (is_dir($application_folder))

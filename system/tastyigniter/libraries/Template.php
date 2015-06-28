@@ -99,6 +99,9 @@ class Template {
         $template['breadcrumbs'] 	= $this->_breadcrumbs;              //*** future reference
         $template['partials']	    = array();
 
+        // Assign by reference, as all loaded views will need access to partials
+        $this->_data['template'] =& $template;
+
         // Load the partials variables
         foreach ($this->_partials as $name => $partial) {
             $template['partials'][$name] = $this->_loadPartial($partial);
@@ -109,11 +112,9 @@ class Template {
             $template['partials'][$name] = $this->_loadPartial($layout);
         }
 
-        // Assign by reference, as all loaded views will need access to partials
-        $this->_data['template'] =& $template;
-
-        if ($this->CI->config->item('cache_mode') == '1') {
-			$this->CI->output->cache($this->CI->config->item('cache_time'));
+        // Lets do the caching instead of the browser
+        if ($this->CI->config->item('cache_mode') === '1') {
+//			$this->CI->output->cache($this->CI->config->item('cache_time'));
 		}
 
         // Want it returned or output to browser?

@@ -139,12 +139,12 @@ INSERT INTO `ti_menus_specials` (`special_id`, `menu_id`, `start_date`, `end_dat
 
 INSERT INTO `ti_permalinks` (`permalink_id`, `slug`, `controller`, `query`)
 VALUES
-	(11, 'traditional', 'menus', 'category_id=19'),
 	(12, 'vegetarian', 'menus', 'category_id=20'),
-	(13, 'soups', 'menus', 'category_id=21'),
-	(14, 'specials', 'menus', 'category_id=24'),
-	(16, 'salads', 'menus', 'category_id=17'),
-	(18, 'appetizer', 'menus', 'category_id=15'),
-	(19, 'main-course', 'menus', 'category_id=16'),
-	(20, 'seafoods', 'menus', 'category_id=18'),
-	(41, 'rice-dishes', 'menus', 'category_id=26');
+  (13, 'soups', 'menus', 'category_id=21'),
+  (14, 'specials', 'menus', 'category_id=24'),
+  (16, 'salads', 'menus', 'category_id=17'),
+  (18, 'appetizer', 'menus', 'category_id=15'),
+  (19, 'main-course', 'menus', 'category_id=16'),
+  (20, 'seafoods', 'menus', 'category_id=18'),
+  (21, 'traditional', 'menus', 'category_id=19'),
+  (41, 'rice-dishes', 'menus', 'category_id=26');

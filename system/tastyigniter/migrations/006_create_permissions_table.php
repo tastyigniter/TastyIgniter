@@ -15,13 +15,13 @@ class Migration_create_permissions_table extends CI_Migration {
         $this->dbforge->create_table('permissions');
         $this->db->query('ALTER TABLE '.$this->db->dbprefix('permissions').' AUTO_INCREMENT 11');
 
-        $this->db->query("ALTER TABLE ".$this->db->dbprefix('staff_groups')." CHANGE `premission` `premissions` TEXT  NOT NULL;");
+        $this->db->query("ALTER TABLE ".$this->db->dbprefix('staff_groups')." CHANGE `permission` `permissions` TEXT  NOT NULL;");
     }
 
     public function down() {
         $this->dbforge->drop_table('permissions');
 
-        $this->db->query("ALTER TABLE ".$this->db->dbprefix('staff_groups')." CHANGE `premissions` `premission` TEXT  NOT NULL;");
+        $this->db->query("ALTER TABLE ".$this->db->dbprefix('staff_groups')." CHANGE `permissions` `permission` TEXT  NOT NULL;");
     }
 }
 
