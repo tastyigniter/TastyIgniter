@@ -1,5 +1,8 @@
 {
     "require": {
         "monolog/monolog": "~1.0"
+    },
+    "suggest": {
+        "ext-apc": "caching is good"
     }
 }

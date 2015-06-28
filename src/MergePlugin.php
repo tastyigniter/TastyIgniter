@@ -11,6 +11,7 @@
 namespace Wikimedia\Composer;
 
 use Composer\Composer;
+use Composer\DependencyResolver\Operation\InstallOperation;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\Factory;
 use Composer\Installer;
@@ -455,7 +456,14 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     public function onDependencySolve(InstallerEvent $event)
     {
         if (empty($this->duplicateLinks)) {
+            // @codeCoverageIgnoreStart
+            // We shouldn't really ever be able to get here as this event is
+            // triggered inside Composer\Installer and should have been
+            // preceded by a pre-install or pre-update event but better to
+            // have an unneeded check than to break with some future change in
+            // the event system.
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         $request = $event->getRequest();
@@ -479,10 +487,13 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
      */
     public function onPostPackageInstall(PackageEvent $event)
     {
-        $package = $event->getOperation()->getPackage()->getName();
-        if ($package === self::PACKAGE_NAME) {
-            $this->debug('composer-merge-plugin installed');
-            $this->pluginFirstInstall = true;
+        $op = $event->getOperation();
+        if ($op instanceof InstallOperation) {
+            $package = $op->getPackage()->getName();
+            if ($package === self::PACKAGE_NAME) {
+                $this->debug('composer-merge-plugin installed');
+                $this->pluginFirstInstall = true;
+            }
         }
     }
 

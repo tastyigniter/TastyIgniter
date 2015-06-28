@@ -19,7 +19,7 @@ use Composer\IO\IOInterface;
 use Composer\Package\BasePackage;
 use Composer\Package\Package;
 use Composer\Package\RootPackage;
-use Composer\Script\CommandEvent;
+use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
 use Prophecy\Argument;
 use ReflectionMethod;
@@ -96,9 +96,17 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
             }
         );
 
+        $root->getSuggests()->shouldBeCalled();
+        $root->setSuggests(Argument::type('array'))->will(
+            function ($args) use ($that) {
+                $suggest = $args[0];
+                $that->assertEquals(1, count($suggest));
+                $that->assertArrayHasKey('ext-apc', $suggest);
+            }
+        );
+
         $root->getDevRequires()->shouldNotBeCalled();
         $root->getRepositories()->shouldNotBeCalled();
-        $root->getSuggests()->shouldNotBeCalled();
 
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
 
@@ -215,8 +223,9 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
 
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
 
-        $this->assertEquals(1, count($extraInstalls));
+        $this->assertEquals(2, count($extraInstalls));
         $this->assertEquals('monolog/monolog', $extraInstalls[0][0]);
+        $this->assertEquals('foo', $extraInstalls[1][0]);
     }
 
     /**
@@ -434,7 +443,7 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
         chdir($directory);
         $this->composer->getPackage()->willReturn($package);
 
-        $event = new CommandEvent(
+        $event = new Event(
             ScriptEvents::PRE_INSTALL_CMD,
             $this->composer->reveal(),
             $this->io->reveal(),
@@ -465,6 +474,27 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
         );
 
         $this->fixture->onDependencySolve($event);
+
+        $event = new Event(
+            ScriptEvents::PRE_AUTOLOAD_DUMP,
+            $this->composer->reveal(),
+            $this->io->reveal(),
+            true, //dev mode
+            array(),
+            array( 'optimize' => true )
+        );
+        $this->fixture->onInstallUpdateOrDump($event);
+
+        $event = new Event(
+            ScriptEvents::POST_INSTALL_CMD,
+            $this->composer->reveal(),
+            $this->io->reveal(),
+            true, //dev mode
+            array(),
+            array()
+        );
+        $this->fixture->onPostInstallOrUpdate($event);
+
         return $requestInstalls;
     }
 
