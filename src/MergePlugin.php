@@ -108,6 +108,16 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     protected $recurse = true;
 
     /**
+     * Whether to replace duplicate links.
+      *
+      * Normally, duplicate links are resolved using Composer's resolver.
+      * Setting this flag changes the behaviour to 'last definition wins'.
+     *
+     * @var bool $replace
+     */
+    protected $replace = false;
+
+    /**
      * Files that have already been processed
      *
      * @var string[] $loadedFiles
@@ -173,6 +183,9 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
         $config = $this->readConfig($this->getRootPackage());
         if (isset($config['recurse'])) {
             $this->recurse = (bool)$config['recurse'];
+        }
+        if (isset($config['replace'])) {
+            $this->replace = (bool)$config['replace'];
         }
         if ($config['include']) {
             $this->loader = new ArrayLoader();
@@ -433,7 +446,7 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     protected function mergeLinks(array $origin, array $merge, array &$dups)
     {
         foreach ($merge as $name => $link) {
-            if (!isset($origin[$name])) {
+            if (!isset($origin[$name]) || $this->replace) {
                 $this->debug("Merging <comment>{$name}</comment>");
                 $origin[$name] = $link;
             } else {
