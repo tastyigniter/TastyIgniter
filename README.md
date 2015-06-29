@@ -28,7 +28,8 @@ Usage
                 "extensions/*/composer.json"
             ],
             "recurse": false,
-            "replace": false
+            "replace": false,
+            "merge-extra": false
         }
     }
 }
@@ -45,6 +46,16 @@ functionality can be disabled by setting `"recurse": false` inside the
 The "require", "require-dev", "repositories" and "suggest" sections of the
 found configuration files will be merged into the root package configuration
 as though they were directly included in the top-level composer.json file.
+
+The `"merge-extra": true` setting enables the merging of the "extra" section.
+The normal merge mode for the extra section is to accept the first version of
+any key found (e.g. a key in the master config wins over the version found in
+an imported config). If `replace` mode is active (see below) then this behaviour
+changes and the last found key will win (the key in the master config is
+replaced by the key in the imported config). Note that the `merge-plugin`
+key itself is excluded from this merge process. Your mileage with merging the
+extra section will vary depending on the plugins being used and the order in
+which they are processed by Composer.
 
 By default, Composer's normal conflict resolution engine is used to determine
 which version of a package should be installed if multiple files specify the

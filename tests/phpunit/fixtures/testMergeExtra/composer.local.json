@@ -1,0 +1,9 @@
+{
+    "extra": {
+        "merge-plugin": {
+            "ignored": true,
+            "include": []
+        },
+        "wibble": "wobble"
+    }
+}

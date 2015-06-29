@@ -114,6 +114,7 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
         $this->assertEquals(0, count($extraInstalls));
     }
 
+
     /**
      * Given a root package with requires
      *   and a composer.local.json with requires
@@ -173,7 +174,6 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
             }
         );
 
-
         $root->getDevRequires()->shouldNotBeCalled();
         $root->getRepositories()->shouldNotBeCalled();
         $root->getSuggests()->shouldNotBeCalled();
@@ -206,7 +206,6 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
                 $packages = array_merge($packages, $args[0]);
             }
         );
-
 
         $root->getDevRequires()->shouldNotBeCalled();
         $root->getRepositories()->shouldNotBeCalled();
@@ -431,6 +430,106 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
                 );
             }
         );
+
+        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
+
+        $this->assertEquals(0, count($extraInstalls));
+    }
+
+    /**
+     * Given a root package with an extra section
+     *   and a composer.local.json with an extra section with no conflicting keys
+     * When the plugin is run
+     * Then the root package extra section should be extended with content from the local config.
+     */
+    public function testMergeExtra()
+    {
+        $that = $this;
+        $dir = $this->fixtureDir(__FUNCTION__);
+
+        $root = $this->rootFromJson("{$dir}/composer.json");
+
+        $root->setExtra(Argument::type('array'))->will(
+            function ($args) use ($that) {
+                $extra = $args[0];
+                $that->assertEquals(2, count($extra));
+                $that->assertArrayHasKey('merge-plugin', $extra);
+                $that->assertEquals(2, count($extra['merge-plugin']));
+                $that->assertArrayHasKey('wibble', $extra);
+            }
+        )->shouldBeCalled();
+
+        $root->getRequires()->shouldNotBeCalled();
+        $root->getDevRequires()->shouldNotBeCalled();
+        $root->getRepositories()->shouldNotBeCalled();
+        $root->getSuggests()->shouldNotBeCalled();
+
+        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
+
+        $this->assertEquals(0, count($extraInstalls));
+    }
+
+    /**
+     * Given a root package with an extra section
+     *   and a composer.local.json with an extra section with a conflicting key
+     * When the plugin is run
+     * Then the version in the root package should win.
+     */
+    public function testMergeExtraConflict()
+    {
+        $that = $this;
+        $dir = $this->fixtureDir(__FUNCTION__);
+
+        $root = $this->rootFromJson("{$dir}/composer.json");
+
+        $root->setExtra(Argument::type('array'))->will(
+            function ($args) use ($that) {
+                $extra = $args[0];
+                $that->assertEquals(2, count($extra));
+                $that->assertArrayHasKey('merge-plugin', $extra);
+                $that->assertArrayHasKey('wibble', $extra);
+                $that->assertEquals('wobble', $extra['wibble']);
+            }
+        )->shouldBeCalled();
+
+        $root->getRequires()->shouldNotBeCalled();
+        $root->getDevRequires()->shouldNotBeCalled();
+        $root->getRepositories()->shouldNotBeCalled();
+        $root->getSuggests()->shouldNotBeCalled();
+
+        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
+
+        $this->assertEquals(0, count($extraInstalls));
+    }
+
+    /**
+     * Given a root package with an extra section
+     *   and replace mode is active
+     *   and a composer.local.json with an extra section with a conflicting key
+     * When the plugin is run
+     * Then the version in the composer.local.json package should win.
+     */
+    public function testMergeExtraConflictReplace()
+    {
+        $that = $this;
+        $dir = $this->fixtureDir(__FUNCTION__);
+
+        $root = $this->rootFromJson("{$dir}/composer.json");
+
+        $root->setExtra(Argument::type('array'))->will(
+            function ($args) use ($that) {
+                $extra = $args[0];
+                $that->assertEquals(2, count($extra));
+                $that->assertArrayHasKey('merge-plugin', $extra);
+                $that->assertArrayHasKey('wibble', $extra);
+                $that->assertEquals('ping', $extra['wibble']);
+            }
+        )->shouldBeCalled();
+
+        $root->getRequires()->shouldNotBeCalled();
+        $root->getDevRequires()->shouldNotBeCalled();
+        $root->getRepositories()->shouldNotBeCalled();
+        $root->getSuggests()->shouldNotBeCalled();
 
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
 
