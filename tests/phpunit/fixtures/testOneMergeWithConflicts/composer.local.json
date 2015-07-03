@@ -3,6 +3,7 @@
         "monolog/monolog": "1.10.0"
     },
     "require-dev": {
+        "foo": "^1.0",
         "xyzzy": "dev-master"
     }
 }
