@@ -109,7 +109,7 @@
 									</li>
 								<?php } else { ?>
 									<li><a href="<?php echo site_url('account/login'); ?>"><?php echo lang('menu_login'); ?></a></li>
-									<li><a href="<?php echo site_url('account/login'); ?>"><?php echo lang('menu_register'); ?></a></li>
+									<li><a href="<?php echo site_url('account/register'); ?>"><?php echo lang('menu_register'); ?></a></li>
 								<?php } ?>
 
 								<?php if ($pages) { ?>

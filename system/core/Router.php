@@ -2,11 +2,11 @@
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 5.2.4 or newer
+ * An open source application development framework for PHP
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2015, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
  * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (http://ellislab.com/)
- * @copyright	Copyright (c) 2014, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2014 - 2015, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
  * @link	http://codeigniter.com
  * @since	Version 1.0.0
@@ -147,7 +147,7 @@ class CI_Router {
 			}
 		}
 
-		log_message('debug', 'Router Class Initialized');
+		log_message('info', 'Router Class Initialized');
 	}
 
 	// --------------------------------------------------------------------
@@ -171,18 +171,21 @@ class CI_Router {
 			$_d = isset($_GET[$_d]) ? trim($_GET[$_d], " \t\n\r\0\x0B/") : '';
 			if ($_d !== '')
 			{
-				$this->set_directory($this->uri->filter_uri($_d));
+				$this->uri->filter_uri($_d);
+				$this->set_directory($_d);
 			}
 
-			$_c = $this->config->item('controller_trigger');
+			$_c = trim($this->config->item('controller_trigger'));
 			if ( ! empty($_GET[$_c]))
 			{
-				$this->set_class(trim($this->uri->filter_uri(trim($_GET[$_c]))));
+				$this->uri->filter_uri($_GET[$_c]);
+				$this->set_class($_GET[$_c]);
 
-				$_f = $this->config->item('function_trigger');
+				$_f = trim($this->config->item('function_trigger'));
 				if ( ! empty($_GET[$_f]))
 				{
-					$this->set_method(trim($this->uri->filter_uri($_GET[$_f])));
+					$this->uri->filter_uri($_GET[$_f]);
+					$this->set_method($_GET[$_f]);
 				}
 
 				$this->uri->rsegments = array(
@@ -245,8 +248,8 @@ class CI_Router {
 	 */
 	protected function _set_request($segments = array())
 	{
-        $segments = $this->_validate_request($segments);
-        // If we don't have any segments left - try the default controller;
+		$segments = $this->_validate_request($segments);
+		// If we don't have any segments left - try the default controller;
 		// WARNING: Directories get shifted out of the segments array!
 		if (empty($segments))
 		{
@@ -329,16 +332,16 @@ class CI_Router {
 	 */
 	protected function _validate_request($segments)
 	{
-        $c = count($segments);
-        // Loop through our segments and return as soon as a controller
-        // is found or when such a directory doesn't exist
-        while ($c-- > 0)
-        {
-            $test = $this->directory
+		$c = count($segments);
+		// Loop through our segments and return as soon as a controller
+		// is found or when such a directory doesn't exist
+		while ($c-- > 0)
+		{
+			$test = $this->directory
 				.ucfirst($this->translate_uri_dashes === TRUE ? str_replace('-', '_', $segments[0]) : $segments[0]);
 
-            if ( ! file_exists(APPPATH.'controllers/'.$test.'.php') && is_dir(APPPATH.'controllers/'.$this->directory.$segments[0]))
-            {
+			if ( ! file_exists(APPPATH.'controllers/'.$test.'.php') && is_dir(APPPATH.'controllers/'.$this->directory.$segments[0]))
+			{
 				$this->set_directory(array_shift($segments), TRUE);
 				continue;
 			}
@@ -374,7 +377,7 @@ class CI_Router {
 			// Check default routes format
 			if (is_string($this->routes[$uri]))
 			{
-                $this->_set_request(explode('/', $this->routes[$uri]));
+				$this->_set_request(explode('/', $this->routes[$uri]));
 				return;
 			}
 			// Is there a matching http verb?
@@ -490,7 +493,7 @@ class CI_Router {
 	 * Set directory name
 	 *
 	 * @param	string	$dir	Directory name
-	 * @param	bool	$appent	Whether we're appending rather then setting the full value
+	 * @param	bool	$appent	Whether we're appending rather than setting the full value
 	 * @return	void
 	 */
 	public function set_directory($dir, $append = FALSE)
@@ -522,6 +525,3 @@ class CI_Router {
 	}
 
 }
-
-/* End of file Router.php */
-/* Location: ./system/core/Router.php */

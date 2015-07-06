@@ -20,13 +20,13 @@
  *  Load the framework constants
  * ------------------------------------------------------
  */
-	if (file_exists(IGNITEPATH.'config/'.ENVIRONMENT.'/constants.php'))
-	{
-		require_once(IGNITEPATH.'config/'.ENVIRONMENT.'/constants.php');
-	}
 
-	require_once(IGNITEPATH.'config/constants.php');
+    require_once(IGNITEPATH.'config/constants.php');
 
+    if (file_exists(IGNITEPATH.'config/'.ENVIRONMENT.'/constants.php'))
+    {
+        require_once(IGNITEPATH.'config/'.ENVIRONMENT.'/constants.php');
+    }
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING

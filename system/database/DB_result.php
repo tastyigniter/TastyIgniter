@@ -2,11 +2,11 @@
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 5.2.4 or newer
+ * An open source application development framework for PHP
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2015, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
  * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (http://ellislab.com/)
- * @copyright	Copyright (c) 2014, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2014 - 2015, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
  * @link	http://codeigniter.com
  * @since	Version 1.0.0
@@ -556,7 +556,7 @@ class CI_DB_result {
 	/**
 	 * Number of fields in the result set
 	 *
-	 * Overriden by driver result classes.
+	 * Overridden by driver result classes.
 	 *
 	 * @return	int
 	 */
@@ -572,7 +572,7 @@ class CI_DB_result {
 	 *
 	 * Generates an array of column names.
 	 *
-	 * Overriden by driver result classes.
+	 * Overridden by driver result classes.
 	 *
 	 * @return	array
 	 */
@@ -588,7 +588,7 @@ class CI_DB_result {
 	 *
 	 * Generates an array of objects containing field meta-data.
 	 *
-	 * Overriden by driver result classes.
+	 * Overridden by driver result classes.
 	 *
 	 * @return	array
 	 */
@@ -602,7 +602,7 @@ class CI_DB_result {
 	/**
 	 * Free the result
 	 *
-	 * Overriden by driver result classes.
+	 * Overridden by driver result classes.
 	 *
 	 * @return	void
 	 */
@@ -620,7 +620,7 @@ class CI_DB_result {
 	 * this internally before fetching results to make sure the
 	 * result set starts at zero.
 	 *
-	 * Overriden by driver result classes.
+	 * Overridden by driver result classes.
 	 *
 	 * @param	int	$n
 	 * @return	bool
@@ -637,7 +637,7 @@ class CI_DB_result {
 	 *
 	 * Returns the result set as an array.
 	 *
-	 * Overriden by driver result classes.
+	 * Overridden by driver result classes.
 	 *
 	 * @return	array
 	 */
@@ -653,7 +653,7 @@ class CI_DB_result {
 	 *
 	 * Returns the result set as an object.
 	 *
-	 * Overriden by driver result classes.
+	 * Overridden by driver result classes.
 	 *
 	 * @param	string	$class_name
 	 * @return	object
@@ -664,6 +664,3 @@ class CI_DB_result {
 	}
 
 }
-
-/* End of file DB_result.php */
-/* Location: ./system/database/DB_result.php */

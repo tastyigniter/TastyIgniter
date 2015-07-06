@@ -21,8 +21,6 @@ class Base_Controller extends MX_Controller {
 
         $this->load->library('alert');
 
-        $this->form_validation->CI =& $this;
-
         // Load database and system configuration from database
         $DATABASE = $this->load->database('default', TRUE);
         if ($DATABASE->conn_id) {
@@ -68,10 +66,12 @@ class Base_Controller extends MX_Controller {
             // Check if the module configuration items are correctly set
             $this->checkModuleConfig($_module, $config);
         }
+
+        $this->form_validation->CI =& $this;
     }
 
     private function maintenanceEnabled() {
-        if ($this->config->item('maintenance_mode') === '1') {                                                    // if customer is not logged in redirect to account login page
+        if ($this->config->item('maintenance_mode') === '1') {
             $this->load->library('user');
             if (APPDIR === MAINDIR
                 AND $this->uri->rsegment(1) !== 'maintenance'

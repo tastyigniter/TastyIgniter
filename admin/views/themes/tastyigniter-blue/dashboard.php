@@ -158,8 +158,11 @@
                             <?php foreach ($activities as $activity) { ?>
                                 <li class="list-group-item">
                                     <div class="clearfix">
-                                        <span class="activity-body"><i class="fa fa-tasks fa-fw"></i><?php echo $activity['message']; ?></span>
-                                        <span class="activity-time text-muted text-right small"><?php echo $activity['time']; ?></span>
+                                        <span class="activity-body"><i class="<?php echo $activity['icon']; ?> fa-fw"></i>
+                                            <span class="small text-muted"><?php echo $activity['time']; ?>&nbsp;-&nbsp;</span>
+                                            <?php echo $activity['message']; ?>
+                                        </span>
+                                        <span class="activity-time text-muted text-right small"><?php echo $activity['time_elapsed']; ?></span>
                                     </div>
                                 </li>
                             <?php } ?>

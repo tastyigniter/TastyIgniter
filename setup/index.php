@@ -141,14 +141,14 @@
 	// Name of the "system folder"
 	define('SYSDIR', trim(strrchr(trim(BASEPATH, '/'), '/'), '/'));
 
-//	// Path to the extensions folder
+    // Name of the "application folder"
+    define('APPDIR', trim(basename($application_folder)));
+
+    // Path to the extensions folder
     define('EXTPATH', 'extensions/');
 
-	// Path to the images folder"
-	define('IMAGEPATH', realpath('assets/images/') .'/');
-
-	// Name of the "application folder"
-	define('APPDIR', trim(strrchr(trim(FCPATH, '/'), '/'), '/'));
+    // Path to the images folder"
+    define('IMAGEPATH', realpath('../assets/images/') .'/');
 
 	// The path to the "application" folder
 	if (is_dir($application_folder))
