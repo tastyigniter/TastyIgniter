@@ -90,8 +90,11 @@ class Setup_model extends TI_Model {
 			$this->db->set('staff_name', $add['staff_name']);
 		}
 
-		$this->db->set('staff_group_id', '11');
-		$this->db->set('staff_status', '1');
+		$this->db->set('staff_group_id', '11')
+		    ->set('staff_location_id', '0')
+		    ->set('language_id', '11')
+		    ->set('timezone', '0')
+            ->set('staff_status', '1');
 
 		$this->db->set('date_added', mdate('%Y-%m-%d', time()));
 

@@ -87,7 +87,7 @@ class Customer {
   	public function logout() {
 		$this->CI->session->unset_userdata('cust_info');
 
-		$this->customer_id = '';
+		$this->customer_id = '0';
 		$this->firstname = '';
 		$this->lastname = '';
 		$this->email = '';
