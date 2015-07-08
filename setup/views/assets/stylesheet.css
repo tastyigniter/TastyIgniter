@@ -130,6 +130,7 @@ border-radius: 0;
 outline: 0 none;
 }
 .btn-success {
+background-image: none;
 background-color: #00B87A;
 border-color: #00B87A;
 }

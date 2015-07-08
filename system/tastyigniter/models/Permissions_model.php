@@ -90,6 +90,8 @@ class Permissions_model extends TI_Model {
     public function getPermissionsByIds($permission_id = NULL) {
         $permissions_list = $this->getPermissions();
 
+        $results = array();
+
         foreach ($permissions_list as $domain => $permissions) {
             foreach ($permissions as $permission) {
                 if (is_numeric($permission_id) AND $permission_id === $permission['permission_id']) {

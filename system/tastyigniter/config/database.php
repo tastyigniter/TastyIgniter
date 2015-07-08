@@ -5,13 +5,13 @@ $query_builder = TRUE;
 
 $db['default']['dsn'] = '';
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = '';
-$db['default']['password'] = '';
-$db['default']['database'] = '';
+$db['default']['username'] = 'your database username';
+$db['default']['password'] = 'your database password';
+$db['default']['database'] = 'your database name';
 $db['default']['dbdriver'] = 'mysqli';
 $db['default']['dbprefix'] = 'ti_';
 $db['default']['pconnect'] = TRUE;
-$db['default']['db_debug'] = TRUE;
+$db['default']['db_debug'] = FALSE;
 $db['default']['cache_on'] = FALSE;
 $db['default']['cachedir'] = '';
 $db['default']['char_set'] = 'utf8';

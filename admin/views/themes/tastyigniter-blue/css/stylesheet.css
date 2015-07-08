@@ -374,7 +374,9 @@ padding-left: 27px;
 .sidebar .nav-third-level li a {
 padding-left: 42px;
 }
-
+.sidebar-toggle {
+position: absolute;
+}
 
 @media(min-width:768px) {
     .sidebar {
