@@ -23,7 +23,7 @@ class Base_Controller extends MX_Controller {
 
         // Load database and system configuration from database
         $DATABASE = $this->load->database('default', TRUE);
-        if ($DATABASE->conn_id) {
+        if ($DATABASE->conn_id !== FALSE) {
             $this->config->load_db_config();
 
             $this->load->library('extension');

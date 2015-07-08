@@ -4,7 +4,8 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title><?php echo $heading; ?></title>
 	<link type="image/ico" rel="shortcut icon" href="<?php echo base_url('views/assets/favicon.ico'); ?>">
-	<link type="text/css" rel="stylesheet" href="<?php echo base_url('views/assets/bootstrap.css'); ?>">
+    <link type="text/css" rel="stylesheet" href="<?php echo base_url('views/assets/bootstrap.min.css'); ?>">
+    <link type="text/css" rel="stylesheet" href="<?php echo base_url('views/assets/bootstrap-theme.min.css'); ?>">
 	<link type="text/css" rel="stylesheet" href="<?php echo base_url('views/assets/font-awesome.css'); ?>">
 	<link type="text/css" rel="stylesheet" href="<?php echo base_url('views/assets/stylesheet.css'); ?>">
 </head>
