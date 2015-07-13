@@ -98,7 +98,7 @@
                     </div>
                 </div>
             </div>
-        <? } ?>
+        <?php } ?>
     </div>
 <script type="text/javascript"><!--
     $(document).ready(function() {

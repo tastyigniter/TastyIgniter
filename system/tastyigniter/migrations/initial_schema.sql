@@ -521,8 +521,9 @@ VALUES
 # TABLE STRUCTURE FOR: ti_languages
 #
 
-INSERT INTO `ti_languages` (`language_id`, `code`, `name`, `image`, `idiom`, `status`) VALUES
-	(11, 'en', 'English', 'data/flags/gb.png', 'english', 1);
+INSERT INTO `ti_languages` (`language_id`, `code`, `name`, `image`, `idiom`, `can_delete`, `status`)
+VALUES
+  (11, 'en', 'English', 'data/flags/gb.png', 'english', 1, 1);
 
 
 #
