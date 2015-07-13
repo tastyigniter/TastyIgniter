@@ -606,6 +606,8 @@ class Location {
 		$this->current_day = '';
 		$this->current_date = '';
 		$this->current_time = '';
+
+		$this->CI->session->unset_userdata('local_info');
 	}
 }
 

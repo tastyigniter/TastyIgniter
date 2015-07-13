@@ -32,11 +32,11 @@ class Extension {
     }
 
     public function getModules() {
-        return $this->getExtensions('module');
+        return $this->CI->Extensions_model->getExtensions('module', TRUE);
     }
 
     public function getModule($name) {
-        $modules = $this->getExtensions('module');
+        $modules = $this->getModules();
 
         if (!empty($modules[$name]) AND is_array($modules[$name])) {
             return $modules[$name];
@@ -44,7 +44,15 @@ class Extension {
     }
 
     public function getPayments() {
-        return $this->getExtensions('payment');
+        return $this->CI->Extensions_model->getExtensions('payment', TRUE);
+    }
+
+    public function getPayment($name) {
+        $payments = $this->getPayments();
+
+        if (!empty($payments[$name]) AND is_array($payments[$name])) {
+            return $payments[$name];
+        }
     }
 
     public function getAvailablePayments($load_payment = TRUE) {
@@ -75,14 +83,6 @@ class Extension {
         }
 
         return $payments;
-    }
-
-    public function getPayment($name) {
-        $payments = $this->getExtensions('payment');
-
-        if (!empty($payments[$name]) AND is_array($payments[$name])) {
-            return $payments[$name];
-        }
     }
 
     public function getConfig($ext_name = '', $item = '', $fail_gracefully = FALSE) {
