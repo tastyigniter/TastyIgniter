@@ -32,14 +32,14 @@ class Cart_module extends Main_Controller {
         }
 
         $this->template->setStyleTag(extension_url('cart_module/views/stylesheet.css'), 'cart-module-css', '144000');
-        $this->template->setStyleTag(base_url("assets/js/fancybox/jquery.fancybox.css"), 'cart-module-css', '145000');
-        $this->template->setScriptTag(base_url("assets/js/fancybox/jquery.fancybox.js"), 'cart-module-js', '14000');
+        $this->template->setStyleTag(base_url("assets/js/fancybox/jquery.fancybox.css"), 'jquery-fancybox-css', '145000');
+        $this->template->setScriptTag(base_url("assets/js/fancybox/jquery.fancybox.js"), 'jquery-fancybox-js', '14000');
 
         $order_data = $this->session->userdata('order_data');
         if ($rsegment === 'checkout' AND isset($order_data['checkout_step']) AND $order_data['checkout_step'] === 'two') {
-            $data['button_order'] = '<a class="btn btn-primary btn-block btn-lg" onclick="$(\'form\').submit();">' . $this->lang->line('button_confirm') . '</a>';
-        } else if ($rsegment === 'checkout') {
-            $data['button_order'] = '<a class="btn btn-primary btn-block btn-lg" onclick="$(\'form\').submit();">' . $this->lang->line('button_payment') . '</a>';
+            $data['button_order'] = '<a class="btn btn-primary btn-block btn-lg" onclick="$(\'#checkout-form\').submit();">' . $this->lang->line('button_confirm') . '</a>';
+        } else if ($rsegment == 'checkout') {
+            $data['button_order'] = '<a class="btn btn-primary btn-block btn-lg" onclick="$(\'#checkout-form\').submit();">' . $this->lang->line('button_payment') . '</a>';
         } else {
             $data['button_order'] = '<a class="btn btn-primary btn-block btn-lg" href="' . site_url('checkout') . '">' . $this->lang->line('button_order') . '</a>';
         }

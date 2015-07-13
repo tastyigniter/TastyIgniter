@@ -123,16 +123,16 @@
 		</div>
 
 	</div>
-
-	<?php if (!empty($button_order)) { ?>
-	<div class="buttons wrap-none">
-		<div class="center-block">
-			<?php echo $button_order; ?>
-		</div>
-		<div class="clearfix"></div>
-	</div>
-	<?php } ?>
 </div>
+
+<?php if (!empty($button_order)) { ?>
+    <div class="buttons wrap-none">
+        <div class="center-block">
+            <?php echo $button_order; ?>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+<?php } ?>
 <script type="text/javascript"><!--
     var alert_close = '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
 
