@@ -344,7 +344,7 @@ class Checkout extends Main_Controller {
         $data['payments'] = array();
         $payments = $this->extension->getAvailablePayments();
         foreach (sort_array($payments) as $code => $payment) {
-            if (!empty($local_payments) AND !in_array($payment['name'], $local_payments)) continue;
+            if (!empty($local_payments) AND !in_array($payment['code'], $local_payments)) continue;
             $data['payments'][] = $payment;
         }
 
