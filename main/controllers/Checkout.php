@@ -121,8 +121,8 @@ class Checkout extends Main_Controller {
         foreach ($menus as $menu) {
             $option_data = array();
 
-            if (!empty($menu_options[$menu['menu_id']])) {
-                foreach ($menu_options[$menu['menu_id']] as $menu_option) {
+            if (!empty($menu_options)) {
+                foreach ($menu_options as $menu_option) {
                     if ($menu['order_menu_id'] === $menu_option['order_menu_id']) {
                         $option_data[] = '+ ' . $menu_option['order_option_name'] . ' = ' . $menu_option['order_option_price'];
                     }
