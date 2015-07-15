@@ -281,7 +281,7 @@ $(document).ready(function() {
         $('input[name="checkout_step"]').val('one');
         $('#checkout').fadeIn();
         $('#payment').fadeOut();
-        $('.side-bar .buttons .btn').text('Payment');
+        $('.side-bar .buttons .btn').text('<?php echo lang('button_payment'); ?>');
 
     });
 //    $('input[name="order_type"]:checked').trigger('change');
