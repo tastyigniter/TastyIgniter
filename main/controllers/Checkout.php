@@ -67,7 +67,7 @@ class Checkout extends Main_Controller {
 
         $data['_action'] = site_url('checkout');
 
-		if (isset($order_data['customer_id']) AND $order_data['customer_id'] !== $this->customer->getId()) {
+		if (isset($order_data['order_id']) OR (isset($order_data['customer_id']) AND $order_data['customer_id'] !== $this->customer->getId())) {
             $order_data = array();
             $this->session->unset_userdata('order_data');
 		}
@@ -121,8 +121,8 @@ class Checkout extends Main_Controller {
         foreach ($menus as $menu) {
             $option_data = array();
 
-            if (!empty($menu_options[$menu['menu_id']])) {
-                foreach ($menu_options[$menu['menu_id']] as $menu_option) {
+            if (!empty($menu_options)) {
+                foreach ($menu_options as $menu_option) {
                     if ($menu['order_menu_id'] === $menu_option['order_menu_id']) {
                         $option_data[] = '+ ' . $menu_option['order_option_name'] . ' = ' . $menu_option['order_option_price'];
                     }
@@ -344,7 +344,7 @@ class Checkout extends Main_Controller {
         $data['payments'] = array();
         $payments = $this->extension->getAvailablePayments();
         foreach (sort_array($payments) as $code => $payment) {
-            if (!empty($local_payments) AND !in_array($payment['name'], $local_payments)) continue;
+            if (!empty($local_payments) AND !in_array($payment['code'], $local_payments)) continue;
             $data['payments'][] = $payment;
         }
 

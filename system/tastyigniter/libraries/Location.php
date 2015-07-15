@@ -274,7 +274,7 @@ class Location {
 
 	public function checkDeliveryTime($time) {
 		$time = mdate($this->timestring, strtotime($time));
-    	return (($this->opening_status !== '1' AND $this->opening_time <= $time AND $this->closing_time >= $time) OR ($this->opening_time === '00:00' AND $this->closing_time === '00:00'));
+    	return (($this->opening_status === '1' AND $this->opening_time <= $time AND $this->closing_time >= $time) OR ($this->opening_time === '00:00' AND $this->closing_time === '00:00'));
 	}
 
 	public function setLocation($location_id) {
@@ -606,6 +606,8 @@ class Location {
 		$this->current_day = '';
 		$this->current_date = '';
 		$this->current_time = '';
+
+		$this->CI->session->unset_userdata('local_info');
 	}
 }
 

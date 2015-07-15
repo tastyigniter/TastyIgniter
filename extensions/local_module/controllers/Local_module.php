@@ -9,7 +9,7 @@ class Local_module extends Main_Controller {
 		$this->lang->load('local_module/local_module');
 
         $referrer_uri = explode('/', str_replace(site_url(), '', $this->agent->referrer()));
-        $this->referrer_uri = (!empty($referrer_uri[0])) ? $referrer_uri[0] : '';
+        $this->referrer_uri = (!empty($referrer_uri[0])) ? $referrer_uri[0] : 'home';
 	}
 
 	public function index($ext_data = array()) {

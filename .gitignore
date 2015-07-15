@@ -24,3 +24,6 @@ assets/images/thumbs/*
 assets/images/data/*
 !assets/images/data/index.html
 !assets/images/data/flags
+
+assets/downloads/*
+!assets/downloads/index.html

@@ -1746,7 +1746,7 @@ text-transform: uppercase;
 height: 30px !important;
 }
 .table-calendar .day, .table-calendar .today {
-height: 70px !important;
+height: 50px !important;
 padding: 0;
 border-bottom: 1px solid #E7E7E7 !important;
 border-right: 1px solid #E7E7E7;

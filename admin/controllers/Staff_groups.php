@@ -10,6 +10,8 @@ class Staff_groups extends Admin_Controller {
         $this->load->model('Staff_groups_model');
         $this->load->model('Permissions_model');
 
+        $this->load->library('pagination');
+
         $this->lang->load('staff_groups');
     }
 
@@ -30,7 +32,7 @@ class Staff_groups extends Admin_Controller {
         if ($this->input->get('sort_by')) {
             $filter['sort_by'] = $data['sort_by'] = $this->input->get('sort_by');
         } else {
-            $filter['sort_by'] = $data['sort_by'] = 'customer_group_id';
+            $filter['sort_by'] = $data['sort_by'] = 'staff_group_id';
         }
 
         if ($this->input->get('order_by')) {

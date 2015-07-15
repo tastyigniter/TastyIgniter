@@ -285,15 +285,12 @@ class Orders extends Admin_Controller {
 		foreach ($cart_items as $cart_item) {
 			$option_data = array();
 
-			if (!empty($menu_options[$cart_item['menu_id']])) {
-				foreach ($menu_options[$cart_item['menu_id']] as $menu_option) {
-					$option_data[] = $menu_option['order_option_name'];
+			if (!empty($menu_options)) {
+				foreach ($menu_options as $menu_option) {
+					if ($cart_item['order_menu_id'] === $menu_option['order_menu_id']) {
+						$option_data[] = $menu_option['order_option_name'] . ' = ' . $menu_option['order_option_price'];
+					}
 				}
-			}
-
-			$options = array();
-			if (!empty($cart_item['order_option_id'])) {
-				$options = array('name' => $cart_item['option_name'], 'price' => $cart_item['option_price']);
 			}
 
 			$data['cart_items'][] = array(

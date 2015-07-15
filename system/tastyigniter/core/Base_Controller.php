@@ -50,6 +50,7 @@ class Base_Controller extends MX_Controller {
             }
 
         } else if (ENVIRONMENT === 'development') {
+            $this->db->db_debug = TRUE;
 
             // Enable profiler for development environments.
             if ( ! $this->input->is_ajax_request()) {
