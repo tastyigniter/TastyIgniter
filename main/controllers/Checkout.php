@@ -67,7 +67,7 @@ class Checkout extends Main_Controller {
 
         $data['_action'] = site_url('checkout');
 
-		if (isset($order_data['customer_id']) AND $order_data['customer_id'] !== $this->customer->getId()) {
+		if (isset($order_data['order_id']) OR (isset($order_data['customer_id']) AND $order_data['customer_id'] !== $this->customer->getId())) {
             $order_data = array();
             $this->session->unset_userdata('order_data');
 		}
