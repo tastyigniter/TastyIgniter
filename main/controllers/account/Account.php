@@ -49,7 +49,7 @@ class Account extends Main_Controller {
 			'email' 			=> $result['email'],
 			'telephone' 		=> $result['telephone'],
 			'security_question' => (isset($question_result['text'])) ? $question_result['text'] : '',
-			'security_answer' 	=> $result['security_answer']
+			'security_answer' 	=> '******'
 		);
 
 		$data['address_info'] = array();
