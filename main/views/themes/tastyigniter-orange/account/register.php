@@ -64,7 +64,8 @@
 						</div>
 						<div class="form-group">
 							<div class="input-group">
-         		 				<span><?php echo $captcha_image; ?></span>
+         		 				<span><?php echo $captcha['image']; ?></span>
+								<input type="hidden" name="captcha_word" class="form-control" value="<?php echo $captcha['word']; ?>" />
 								<input type="text" name="captcha" class="form-control" placeholder="<?php echo lang('label_captcha'); ?>" />
 							</div>
 							<?php echo form_error('captcha', '<span class="text-danger">', '</span>'); ?>
@@ -72,8 +73,8 @@
 						<div class="row">
 							<div class="col-xs-8 col-sm-9 col-md-9">
 								<span class="button-checkbox">
-									<button type="button" class="btn" data-color="info" tabindex="7">&nbsp;&nbsp<?php echo lang('button_subscribe'); ?></button>
-			                        <input type="checkbox" name="newsletter" id="newsletter" class="hidden" value="1" <?php echo set_checkbox('newsletter', '1'); ?>>
+									<button id="newsletter" type="button" class="btn" data-color="info" tabindex="7">&nbsp;&nbsp<?php echo lang('button_subscribe'); ?></button>
+			                        <input type="checkbox" name="newsletter" class="hidden" value="1" <?php echo set_checkbox('newsletter', '1'); ?>>
 								</span>
 								 <?php echo lang('label_newsletter'); ?>
 							</div>
@@ -85,8 +86,8 @@
 							<div class="row">
 								<div class="col-xs-8 col-sm-9 col-md-9">
 									<span class="button-checkbox">
-										<button type="button" class="btn" data-color="info" tabindex="7">&nbsp;&nbsp;<?php echo lang('button_terms_agree'); ?></button>
-				                        <input type="checkbox" name="terms_condition" id="terms-condition" class="hidden" value="1" <?php echo set_checkbox('terms_condition', '1'); ?>>
+										<button id="terms-condition" type="button" class="btn" data-color="info" tabindex="7">&nbsp;&nbsp;<?php echo lang('button_terms_agree'); ?></button>
+				                        <input type="checkbox" name="terms_condition" class="hidden" value="1" <?php echo set_checkbox('terms_condition', '1'); ?>>
 									</span>
 									 <?php echo lang('label_terms'); ?>
 								</div>
