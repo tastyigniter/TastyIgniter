@@ -170,13 +170,22 @@
             alert_message = '<div class="alert">' + alert_close + json['success'] + '</div>';
         }
 
-        $('#cart-box').load(js_site_url('cart_module/cart_module #cart-box > *'), function(response) {
+        if ($('#cart-box').is(':visible')) {
+            $('#cart-box').load(js_site_url('cart_module/cart_module #cart-box > *'), function (response) {
+                if (alert_message != '') {
+                    local_alert.empty();
+                    local_alert.append(alert_message);
+                    $('#local-alert').fadeIn('slow').fadeTo('fast', 0.5).fadeTo('fast', 1.0);
+                    $('html, body').animate({scrollTop: 0}, 300);
+                }
+            });
+        } else {
             if (alert_message != '') {
                 local_alert.empty();
                 local_alert.append(alert_message);
                 $('#local-alert').fadeIn('slow').fadeTo('fast', 0.5).fadeTo('fast', 1.0);
                 $('html, body').animate({scrollTop: 0}, 300);
             }
-        });
+        }
     }
 //--></script>

@@ -218,14 +218,14 @@ class Template {
         return is_array($this->_head_tags['script']) ? implode("\n\t\t", $this->_head_tags['script']) : '';
 	}
 
-    public function getBreadcrumb($tag_open = '<li class="{class}">', $link_open = '<a href="{link}">', $link_close = '</a>', $tag_close = '</li>') {
+    public function getBreadcrumb($tag_open = '<li class="{class}">', $link_open = '<a href="{link}">', $link_close = ' </a>', $tag_close = '</li>') {
         $crumbs = '';
 
         foreach ($this->_breadcrumbs as $crumb) {
             if (!empty($crumb['uri'])) {
                 $crumbs .= str_replace('{class}', '', $tag_open) . str_replace('{link}', site_url(trim($crumb['uri'], '/')), $link_open) . $crumb['name'] . $link_close;
             } else {
-                $crumbs .= str_replace('{class}', 'active', $tag_open) . '<span>'.$crumb['name'].'</span>';
+                $crumbs .= str_replace('{class}', 'active', $tag_open) . '<span>'.$crumb['name'].' </span>';
             }
 
             $crumbs .= $tag_close;
@@ -482,7 +482,7 @@ class Template {
 
                 $this->sortModules($position);
                 foreach ($this->_modules[$position] as $module) {
-                    $partial['data'][$position.'_modules'][] = Modules::run($module['name'] .'/'. $module['name'] .'/index', $this->_data + $module['data'] + $partial['data']);
+                    $partial['data'][$position.'_modules'][] = Modules::run($module['name'] .'/index', $this->_data + $module['data'] + $partial['data']);
                 }
             }
 

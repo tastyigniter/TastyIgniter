@@ -13,6 +13,10 @@ if (APPDIR === ADMINDIR) {
     $route['locations'] = 'local/all';
     $route['local/(.+)'] = 'local';
     $route['account'] = 'account/account';
+    $route['login'] = 'account/login';
+    $route['logout'] = 'account/logout';
+    $route['register'] = 'account/register';
+    $route['forgot-password'] = 'account/reset';
     $route['([^/]+)'] = 'pages';
 }
 

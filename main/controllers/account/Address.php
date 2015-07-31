@@ -131,7 +131,7 @@ class Address extends Main_Controller {
 	private function _updateAddress() {
 		$this->load->library('location'); 														// load the customer library
 
-		if ($this->validateForm() === TRUE AND $this->uri->rsegment(3)) {
+		if ($this->validateForm() === TRUE AND $this->input->post('address')) {
 			$address = $this->input->post('address');
 
 			if ($this->Addresses_model->saveAddress($this->customer->getId(), $this->uri->rsegment(3), $address)) {								// check if address updated successfully then display success message else error message
