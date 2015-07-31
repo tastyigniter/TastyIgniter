@@ -112,6 +112,12 @@ font-size:14px;
 .text-xs {
 font-size:12px;
 }
+.hidden {
+display: inline-block !important;
+visibility: visible !important;
+left: -999999px;
+position: absolute;
+}
 /*** End Helpers ***/
 
 
