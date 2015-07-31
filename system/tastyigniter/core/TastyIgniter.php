@@ -7,13 +7,13 @@
  *
  */
 	define('CI_VERSION', '3.0-dev');
-	define('TI_VERSION', '1.3-beta');
+	define('TI_VERSION', 'v1.3-beta');
 
 	// Path to the root folder
-	define('ROOTPATH', str_replace(SYSDIR.'/', '', BASEPATH));
+	defined('ROOTPATH') OR define('ROOTPATH', str_replace(SYSDIR.'/', '', BASEPATH));
 
 	// Path to the tastyigniter system core folder
-	define('IGNITEPATH', BASEPATH.'tastyigniter/');
+	defined('IGNITEPATH') OR define('IGNITEPATH', BASEPATH.'tastyigniter/');
 
 /*
  * ------------------------------------------------------
@@ -268,7 +268,7 @@ if ( ! is_php('5.4'))
  *  Instantiate the routing class and set the routing
  * ------------------------------------------------------
  */
-	$RTR =& load_class('Router', 'core', isset($routing) ? $routing : NULL);
+    $RTR =& load_class('Router', 'core', isset($routing) ? $routing : NULL);
 
 /*
  * ------------------------------------------------------

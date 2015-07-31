@@ -33,13 +33,13 @@ class Base_Controller extends MX_Controller {
         }
 
         // Redirect to setup if app requires setup
-        if (APPDIR !== 'setup' AND !$this->config->item('ti_setup')) redirect(root_url('setup/'));
+        if (APPDIR !== 'setup' AND TI_VERSION !== $this->config->item('ti_version')) redirect(root_url('setup/'));
 
         // Check app for setup or maintenance for production environments.
         if (ENVIRONMENT === 'production') {
 
             // Redirect to root url if app has already been set up
-            if (APPDIR === 'setup' AND $this->config->item('ti_setup')) redirect(root_url());
+            if (APPDIR === 'setup' AND TI_VERSION === $this->config->item('ti_version')) redirect(root_url());
 
             // Saving queries can vastly increase the memory usage, so better to turn off in production
             $this->db->save_queries = FALSE;
@@ -59,13 +59,15 @@ class Base_Controller extends MX_Controller {
         }
 
         // If the requested controller is a module controller then load the module config
-        if ($this->router AND $_module = $this->router->fetch_module()) {
-            // Load the module configuration file and retrieve the configuration items
-            $this->config->load($_module.'/'.$_module, TRUE);
-            $config = $this->config->item($_module);
+        if (ENVIRONMENT !== 'testing') {
+            if ($this->router AND $_module = $this->router->fetch_module()) {
+                // Load the module configuration file and retrieve the configuration items
+                $this->config->load($_module . '/' . $_module, TRUE);
+                $config = $this->config->item($_module);
 
-            // Check if the module configuration items are correctly set
-            $this->checkModuleConfig($_module, $config);
+                // Check if the module configuration items are correctly set
+                $this->checkModuleConfig($_module, $config);
+            }
         }
 
         $this->form_validation->CI =& $this;

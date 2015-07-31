@@ -6,7 +6,7 @@ class Settings extends Base_Controller {
         parent::__construct();
         $this->load->model('Setup_model');
 
-        if ($this->session->tempdata('setup') === 'step_3' OR $this->config->item('ti_setup') === 'v2.0') {
+        if ($this->session->tempdata('setup') === 'step_3' OR $this->config->item('ti_version') === TI_VERSION) {
             redirect('success');
         }
     }
