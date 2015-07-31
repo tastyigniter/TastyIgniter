@@ -166,20 +166,6 @@ add hidden input to all post forms to specify CRUD action using http method verb
 
 Database configuration key debug must be FALSE in development
 
-Orders List:
-    show specific orders on list page
-    split list page to Mine and All (staff claimed order and unclaimed orders)
-    lock orders to staff on first open
-    add claim and release order button on order page
-
-
-Acceptance Test: - pages covered
-/login
-/register
-/forgot-password
-/account
-/account/details
-/account/address
 
 TastyIgniter - Restaurant Ordering & Reservation System
 
