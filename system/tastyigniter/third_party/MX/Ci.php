@@ -17,17 +17,17 @@ require_once dirname(__FILE__).'/Config.php';
  *
  * @copyright	Copyright (c) 2015 Wiredesignz
  * @version 	5.5
- *
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -38,19 +38,19 @@ require_once dirname(__FILE__).'/Config.php';
  **/
 class CI
 {
-    public static $APP;
-
-    public function __construct() {
-
-        /* assign the application instance */
-        self::$APP = CI_Controller::get_instance();
-
-        global $LANG, $CFG;
-
-        /* re-assign language and config for modules */
-        if ( ! $LANG instanceof MX_Lang) $LANG = new MX_Lang;
-        if ( ! $CFG instanceof MX_Config) $CFG = new MX_Config;
-    }
+	public static $APP;
+	
+	public function __construct() {
+		
+		/* assign the application instance */
+		self::$APP = CI_Controller::get_instance();
+		
+		global $LANG, $CFG;
+		
+		/* re-assign language and config for modules */
+		if ( ! $LANG instanceof MX_Lang) $LANG = new MX_Lang;
+		if ( ! $CFG instanceof MX_Config) $CFG = new MX_Config;
+	}
 }
 
 /* create the application object */

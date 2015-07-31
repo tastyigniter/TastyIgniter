@@ -48,7 +48,7 @@ class TI_Lang extends MX_Lang {
 
 			if ($query->num_rows() > 0) {
 				$row = $query->row_array();
-				$this->directory = $row['directory'];
+				$this->directory = $row['idiom'];
 			}
 		}
 
