@@ -30,7 +30,7 @@ class Register extends Main_Controller {
 			);
 		}
 
-		$data['captcha_image'] = $this->createCaptcha();
+		$data['captcha'] = $this->createCaptcha();
 
 		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('account/register', $data);
@@ -76,19 +76,19 @@ class Register extends Main_Controller {
 
 	private function validateForm() {
 		// START of form validation rules
-		$this->form_validation->set_rules('first_name', 'lang:label_first_name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
-		$this->form_validation->set_rules('last_name', 'lang:label_last_name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
+		$this->form_validation->set_rules('first_name', 'lang:label_first_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
+		$this->form_validation->set_rules('last_name', 'lang:label_last_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		$this->form_validation->set_rules('email', 'lang:label_email', 'xss_clean|trim|required|valid_email|is_unique[customers.email]');
 		$this->form_validation->set_rules('password', 'lang:label_password', 'xss_clean|trim|required|min_length[6]|max_length[32]|matches[password_confirm]');
 		$this->form_validation->set_rules('password_confirm', 'lang:label_password_confirm', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('telephone', 'lang:label_telephone', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('security_question', 'lang:label_s_question', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('security_answer', 'lang:label_s_answer', 'xss_clean|trim|required|min_length[2]');
-		$this->form_validation->set_rules('newsletter', 'lang:label_newsletter', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('newsletter', 'lang:label_subscribe', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('captcha', 'lang:label_captcha', 'xss_clean|trim|required|callback__validate_captcha');
 
 		if ($this->config->item('registration_terms') === '1') {
-			$this->form_validation->set_rules('terms_condition', 'lang:label_terms', 'xss_clean|trim|integer');
+			$this->form_validation->set_rules('terms_condition', 'lang:label_i_agree', 'xss_clean|trim|integer|required');
 		}
 		// END of form validation rules
 
@@ -115,7 +115,7 @@ class Register extends Main_Controller {
 
         $captcha = create_captcha();
         $this->session->set_tempdata('captcha', array('word' => $captcha['word'], 'image' => $captcha['time'].'.jpg'), '120'); //set data to session for compare
-        return $captcha['image'];
+        return $captcha;
     }
 }
 
