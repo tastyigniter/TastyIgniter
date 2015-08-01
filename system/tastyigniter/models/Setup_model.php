@@ -136,7 +136,7 @@ class Setup_model extends TI_Model {
 		}
 
 		$this->db->where('sort', 'prefs')->where('item', 'ti_version')->delete('settings');
-		$this->db->set('sort', 'prefs')->set('item', 'ti_version')->set('value', 'v1.3-beta')->set('serialized', '0')->insert('settings');
+		$this->db->set('sort', 'prefs')->set('item', 'ti_version')->set('value', TI_VERSION)->set('serialized', '0')->insert('settings');
 	}
 }
 
