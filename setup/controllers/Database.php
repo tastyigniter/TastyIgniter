@@ -155,30 +155,6 @@ class Database extends Base_Controller {
         }
     }
 
-    private function doMigration() {
-        $this->load->library('migration');
-        $row = $this->db->select('version')->get('migrations')->row();
-        $old_version = !empty($row) ? $row->version : '0';
-
-        if (($current_version = $this->migration->current()) === FALSE) {
-            show_error($this->migration->error_string());
-        }
-
-        if ($current_version !== FALSE AND $old_version !== $current_version) {
-            if ( ! $this->Setup_model->loadInitialSchema()) {
-                log_message('info', 'Migration: initial_schema execution failed');
-            }
-        }
-
-        if ($current_version !== FALSE AND $this->input->post_get('demo_data') === '1') {
-            if ( ! $this->Setup_model->loadDemoSchema($this->input->post_get('demo_data'))) {
-                log_message('info', 'Migration: demo_schema execution failed');
-            }
-        }
-
-        return $current_version;
-    }
-
     public function _handle_connect() {
         $db_user 	= $this->input->post('db_user');
         $db_pass 	= $this->input->post('db_pass');
