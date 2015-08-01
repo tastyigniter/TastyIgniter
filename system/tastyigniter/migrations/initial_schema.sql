@@ -644,7 +644,7 @@ INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) 
 (9225, 'config', 'site_desc', '', 0),
 (9241, 'config', 'search_radius', '20', 0),
 (9249, 'config', 'ready_time', '45', 0),
-(10836, 'prefs', 'default_location_id', '117', 0),
+(10836, 'prefs', 'default_location_id', '', 0),
 (10839, 'config', 'site_logo', 'data/no_photo.png', 0),
 (10840, 'config', 'country_id', '222', 0),
 (10841, 'config', 'timezone', 'Europe/London', 0),
