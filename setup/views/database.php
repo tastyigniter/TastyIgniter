@@ -38,15 +38,6 @@
 			<?php echo form_error('db_prefix', '<span class="text-danger">', '</span>'); ?>
 		</div>
 	</div>
-	<div class="form-group">
-		<label for="input-demo-data" class="col-sm-4 control-label">Include demo data:</label>
-		<div class="col-sm-8">
-			<div class="checkbox">
-				<input type="checkbox" name="demo_data" value="1">
-				<?php echo form_error('demo_data', '<span class="text-danger">', '</span>'); ?>
-			</div>
-		</div>
-	</div>
 
 	<a class="btn btn-danger" href="<?php echo $back_url; ?>">Back</a>
 	<button type="submit" class="btn btn-success pull-right">Continue</button>

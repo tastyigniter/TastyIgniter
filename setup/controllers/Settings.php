@@ -84,6 +84,8 @@ class Settings extends Base_Controller {
                 'password' 		=> $this->input->post('password')
             );
 
+            $current_version = $this->doMigration();
+
             if ($this->Setup_model->addUser($add)) {
                 $this->session->set_tempdata('setup', 'step_3', 300);
                 return TRUE;
@@ -91,6 +93,30 @@ class Settings extends Base_Controller {
                 $this->alert->danger_now('Error installing user and site settings.');
             }
         }
+    }
+
+    private function doMigration() {
+        $this->load->library('migration');
+        $row = $this->db->select('version')->get('migrations')->row();
+        $old_version = !empty($row) ? $row->version : '0';
+
+        if (($current_version = $this->migration->current()) === FALSE) {
+            show_error($this->migration->error_string());
+        }
+
+        if ($current_version !== FALSE AND $old_version !== $current_version) {
+            if ( ! $this->Setup_model->loadInitialSchema()) {
+                log_message('info', 'Migration: initial_schema execution failed');
+            }
+        }
+
+        if ($current_version !== FALSE AND $this->input->post_get('demo_data') === '1') {
+            if ( ! $this->Setup_model->loadDemoSchema($this->input->post_get('demo_data'))) {
+                log_message('info', 'Migration: demo_schema execution failed');
+            }
+        }
+
+        return $current_version;
     }
 }
 
