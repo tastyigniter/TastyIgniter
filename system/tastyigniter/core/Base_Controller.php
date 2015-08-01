@@ -41,7 +41,7 @@ class Base_Controller extends MX_Controller {
         if (ENVIRONMENT === 'production') {
 
             // Redirect to root url if app has already been set up
-            if (APPDIR === 'setup' AND TI_VERSION === $this->config->item('ti_version')) redirect(root_url());
+            if (APPDIR === 'setup' AND $this->uri->rsegment(1) !== 'success' AND TI_VERSION === $this->config->item('ti_version')) redirect(root_url('setup/success'));
 
             // Saving queries can vastly increase the memory usage, so better to turn off in production
             if ($DATABASE->conn_id !== FALSE) $this->db->save_queries = FALSE;
