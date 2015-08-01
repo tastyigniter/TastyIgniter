@@ -540,7 +540,7 @@ INSERT INTO `ti_layout_modules` (`layout_module_id`, `layout_id`, `module_code`,
 	(70, 12, 'cart_module', 'right', 1, 1),
 	(71, 13, 'local_module', 'top', 1, 1),
 	(72, 13, 'cart_module', 'right', 1, 1),
-	(73, 16, 'reservation_module', 'left', 1, 1),
+	(73, 16, 'reservation_module', 'top', 1, 1),
 	(74, 18, 'local_module', 'top', 1, 1),
 	(75, 18, 'categories_module', 'left', 1, 1),
 	(76, 18, 'cart_module', 'right', 1, 1);
