@@ -180,12 +180,17 @@ Acceptance Test: - pages covered
 /account
 /account/details
 /account/address
+/account/orders
+/account/reservations
 
 TastyIgniter - Restaurant Ordering & Reservation System
 
 Hi All-
 
-I just released an online restaurant ordering and reservation system / restaurant table manager. It is built on the CodeIgniter Framework. I rewrote all my previous javascript and replaced it with Ext. I've been working on this project for about 2 years now, and I am continually impressed by its consistency and its depth. Its really an amazing system and has changed how I think about web applications.
+I just released an online restaurant ordering and reservation system / restaurant table manager.
+It is built on the CodeIgniter Framework. I rewrote all my previous javascript and replaced it with Ext.
+I've been working on this project for about 2 years now, and I am continually impressed by its consistency and its depth.
+Its really an amazing system and has changed how I think about web applications.
 
 url: http://tastyigniter.com
 demo: http://demo.tastyigniter.com
