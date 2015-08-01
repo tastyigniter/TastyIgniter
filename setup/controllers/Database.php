@@ -148,10 +148,8 @@ class Database extends Base_Controller {
 
                     @chmod($db_path, FILE_WRITE_MODE);
 
-                    if ($this->doMigration()) {
-                        $this->session->set_tempdata('setup', 'step_2', 300);
-                        return TRUE;
-                    }
+                    $this->session->set_tempdata('setup', 'step_2', 300);
+                    return TRUE;
                 }
             }
         }
