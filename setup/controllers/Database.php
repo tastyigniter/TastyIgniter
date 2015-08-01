@@ -125,7 +125,7 @@ class Database extends Base_Controller {
                     $db_file .= "$"."db['default']['dbdriver'] = 'mysqli';\n";
                     $db_file .= "$"."db['default']['dbprefix'] = '". $db_prefix ."';\n";
                     $db_file .= "$"."db['default']['pconnect'] = TRUE;\n";
-                    $db_file .= "$"."db['default']['db_debug'] = TRUE;\n";
+                    $db_file .= "$"."db['default']['db_debug'] = FALSE;\n";
                     $db_file .= "$"."db['default']['cache_on'] = FALSE;\n";
                     $db_file .= "$"."db['default']['cachedir'] = '';\n";
                     $db_file .= "$"."db['default']['char_set'] = 'utf8';\n";
