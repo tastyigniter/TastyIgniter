@@ -2,13 +2,15 @@
 	<div class="flexslider">
 		<ul class="slides">
 			<?php foreach ($slides as $slide) { ?>
-				<li>
-			        <div class="slider-caption">
-			        	<?php echo $slide['caption']; ?>
-			        </div>
+				<?php if (isset($slide['image_src'])) { ?>
+					<li>
+						<div class="slider-caption">
+							<?php echo $slide['caption']; ?>
+						</div>
 
-					<img alt="<?php echo $slide['name']; ?>" src="<?php echo $slide['image_src']; ?>"  />
-				</li>
+						<img alt="<?php echo $slide['name']; ?>" src="<?php echo $slide['image_src']; ?>"  />
+					</li>
+				<?php } ?>
 			<?php } ?>
 	  	</ul>
 	</div>
