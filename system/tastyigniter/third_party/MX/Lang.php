@@ -13,7 +13,7 @@
  * Install this file as application/third_party/MX/Lang.php
  *
  * @copyright	Copyright (c) 2011 Wiredesignz
- * @version 	5.4
+ * @version 	5.5
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,9 +35,10 @@
  **/
 class MX_Lang extends CI_Lang
 {
-	public function load($langfile = array(), $lang = '', $return = FALSE, $add_suffix = TRUE, $alt_path = '', $_module = '')	{
-		
-		if (is_array($langfile)) {
+	public function load($langfile, $lang = '', $return = FALSE, $add_suffix = TRUE, $alt_path = '', $_module = '')	
+	{
+		if (is_array($langfile)) 
+		{
 			foreach($langfile as $_lang) $this->load($_lang);
 			return $this->language;
 		}
@@ -51,13 +52,15 @@ class MX_Lang extends CI_Lang
 		$_module OR $_module = CI::$APP->router->fetch_module();
 		list($path, $_langfile) = Modules::find($langfile.'_lang', $_module, 'language/'.$idiom.'/');
 
-		if ($path === FALSE) {
-			
+		if ($path === FALSE) 
+		{
 			if ($lang = parent::load($langfile, $lang, $return, $add_suffix, $alt_path)) return $lang;
 		
-		} else {
-
-			if($lang = Modules::load_file($_langfile, $path, 'lang')) {
+		} 
+		else 
+		{
+			if($lang = Modules::load_file($_langfile, $path, 'lang'))
+			{
 				if ($return) return $lang;
 				$this->language = array_merge($this->language, $lang);
 				$this->is_loaded[] = $langfile.'_lang'.EXT;

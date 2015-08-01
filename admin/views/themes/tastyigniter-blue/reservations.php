@@ -36,7 +36,7 @@
 									</div>
 									<div class="form-group">
 										<select name="filter_status" class="form-control input-sm">
-											<option value=""><?php echo lang('text_filter_location'); ?></option>
+											<option value=""><?php echo lang('text_filter_status'); ?></option>
 											<?php foreach ($statuses as $status) { ?>
 											<?php if ($status['status_id'] === $filter_status) { ?>
 												<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('filter_status', $status['status_id'], TRUE); ?> ><?php echo $status['status_name']; ?></option>

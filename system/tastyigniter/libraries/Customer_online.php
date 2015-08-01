@@ -26,15 +26,15 @@ class Customer_online {
         $user_agent = $this->getUserAgent();
 
         $input_data = array();
-        $input_data['ip_address'] = $this->CI->input->ip_address();
-        $input_data['customer_id'] = $this->CI->customer->getId();
-        $input_data['access_type'] = $user_agent['type'];
-        $input_data['browser'] = $user_agent['browser'];
-        $input_data['country_code'] = $this->getCountry();
-        $input_data['request_uri'] = uri_string();
-        $input_data['referrer_uri'] = str_replace(site_url(), '', $this->CI->agent->referrer());
-        $input_data['date_added'] = mdate('%Y-%m-%d %H:%i:%s', time());
-        $input_data['user_agent'] = $user_agent['string'];
+        $input_data['ip_address']       = $this->CI->input->ip_address();
+        $input_data['customer_id']      = $this->CI->customer->getId();
+        $input_data['access_type']      = $user_agent['type'];
+        $input_data['browser']          = $user_agent['browser'];
+        $input_data['country_code']     = $this->getCountry();
+        $input_data['request_uri']      = uri_string();
+        $input_data['referrer_uri']     = str_replace(site_url(), '', $this->CI->agent->referrer());
+        $input_data['date_added']       = mdate('%Y-%m-%d %H:%i:%s', time());
+        $input_data['user_agent']       = $user_agent['string'];
 
         $this->_saveActivity($input_data);
     }
@@ -61,6 +61,8 @@ class Customer_online {
         } else if ($this->CI->agent->is_browser()) {
             $user_agent['type'] = 'browser';
             $user_agent['browser'] = $this->CI->agent->browser();
+        } else {
+            $user_agent['type'] = $user_agent['browser'] = '';
         }
 
         $user_agent['string'] = $this->CI->agent->agent_string();

@@ -16,14 +16,13 @@ $lang['text_no_orders'] 	            = 'There are no orders available to show.';
 $lang['text_no_reservations'] 	        = 'There are no reservations available to show.';
 $lang['text_no_inbox'] 	                = 'There are no messages available to show';
 
-$lang['label_first_name'] 		        = 'First Name';
-$lang['label_last_name'] 		        = 'Last Name';
-$lang['label_email'] 			        = 'Email Address';
-$lang['label_password'] 		        = 'Password';
-$lang['label_password_confirm']         = 'Password Confirm';
-$lang['label_telephone'] 		        = 'Telephone';
-$lang['label_s_question'] 		        = 'Security Question';
-$lang['label_s_answer'] 		        = 'Security Answer';
+$lang['label_first_name'] 		        = 'First Name:';
+$lang['label_last_name'] 		        = 'Last Name:';
+$lang['label_email'] 			        = 'Email Address:';
+$lang['label_password'] 		        = 'Password:';
+$lang['label_telephone'] 		        = 'Telephone:';
+$lang['label_s_question'] 		        = 'Security Question:';
+$lang['label_s_answer'] 		        = 'Security Answer:';
 
 $lang['column_cart_items'] 		        = 'Total Items';
 $lang['column_cart_total'] 		        = 'Total Amount';

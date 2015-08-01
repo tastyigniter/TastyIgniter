@@ -340,7 +340,7 @@ if ( ! is_php('5.4'))
 	// Load the main or admin base controller class
 	if (APPDIR === ADMINDIR) {
 		require_once IGNITEPATH.'core/Admin_Controller.php';
-	} else {
+	} else if (APPDIR === MAINDIR) {
 		require_once IGNITEPATH.'core/Main_Controller.php';
     }
 
