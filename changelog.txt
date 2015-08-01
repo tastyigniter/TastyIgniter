@@ -166,31 +166,12 @@ add hidden input to all post forms to specify CRUD action using http method verb
 
 Database configuration key debug must be FALSE in development
 
-Orders List:
-    show specific orders on list page
-    split list page to Mine and All (staff claimed order and unclaimed orders)
-    lock orders to staff on first open
-    add claim and release order button on order page
-
-
-Acceptance Test: - pages covered
-/login
-/register
-/forgot-password
-/account
-/account/details
-/account/address
-/account/orders
-/account/reservations
 
 TastyIgniter - Restaurant Ordering & Reservation System
 
 Hi All-
 
-I just released an online restaurant ordering and reservation system / restaurant table manager.
-It is built on the CodeIgniter Framework. I rewrote all my previous javascript and replaced it with Ext.
-I've been working on this project for about 2 years now, and I am continually impressed by its consistency and its depth.
-Its really an amazing system and has changed how I think about web applications.
+I just released an online restaurant ordering and reservation system / restaurant table manager. It is built on the CodeIgniter Framework. I rewrote all my previous javascript and replaced it with Ext. I've been working on this project for about 2 years now, and I am continually impressed by its consistency and its depth. Its really an amazing system and has changed how I think about web applications.
 
 url: http://tastyigniter.com
 demo: http://demo.tastyigniter.com
