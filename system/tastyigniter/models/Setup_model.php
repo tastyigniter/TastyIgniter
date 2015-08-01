@@ -20,7 +20,7 @@ class Setup_model extends TI_Model {
                         $sql .= $line;
 
                         if (preg_match('/;\s*$/', $line)) {
-                            $sql = str_replace('INSERT INTO ti_', 'INSERT INTO ' . $this->db->dbprefix, $sql);
+							$sql = str_replace('INSERT INTO ti_', 'INSERT INTO ' . $this->db->dbprefix, str_replace('INSERT INTO `ti_', 'INSERT INTO `' . $this->db->dbprefix, $sql));
                             $this->db->query($sql);
                             $sql = '';
                         }
@@ -52,7 +52,7 @@ class Setup_model extends TI_Model {
 						$sql .= $line;
 
 						if (preg_match('/;\s*$/', $line)) {
-							$sql = str_replace('INSERT INTO ti_', 'INSERT INTO '. $this->db->dbprefix, $sql);
+							$sql = str_replace('INSERT INTO ti_', 'INSERT INTO ' . $this->db->dbprefix, str_replace('INSERT INTO `ti_', 'INSERT INTO `' . $this->db->dbprefix, $sql));
 							$this->db->query($sql);
 							$sql = '';
 						}
