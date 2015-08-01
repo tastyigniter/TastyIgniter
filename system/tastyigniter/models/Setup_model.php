@@ -75,7 +75,7 @@ class Setup_model extends TI_Model {
 
         $this->db->set('sort', 'prefs')
             ->set('item', 'ti_setup')
-            ->set('value', 'v2.0')
+            ->set('value', 'installed')
             ->set('serialized', '0')
             ->insert('settings');
 

@@ -305,7 +305,7 @@
 						<label for="input-postcode" class="col-sm-3 control-label"><?php echo lang('label_postcode'); ?></label>
 						<div class="col-sm-5">
 							<input type="text" name="main_address[postcode]" id="input-postcode" class="form-control" value="<?php echo set_value('main_address[postcode]', $main_address['postcode']); ?>" />
-							<input type="hidden" name="main_address[location_id]" value="<?php echo set_value('main_address[location_id]', $main_address['location_id']); ?>" />
+							<input type="hidden" name="main_address[location_id]" value="<?php echo set_value('main_address[location_id]', config_item('default_location_id')); ?>" />
 							<?php echo form_error('main_address[postcode]', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>

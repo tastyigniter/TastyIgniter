@@ -255,8 +255,8 @@ class Settings extends Admin_Controller {
 			);
 
 
-			$this->load->model('Locations_model');
 			if (!empty($update['main_address']) AND is_array($update['main_address'])) {
+				$this->load->model('Locations_model');
 				if ($this->Locations_model->updateDefault($update['main_address'])) {
 					unset($update['main_address']);
 				}
