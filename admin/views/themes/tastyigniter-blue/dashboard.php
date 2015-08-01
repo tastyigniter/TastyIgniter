@@ -73,7 +73,7 @@
 						<div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_complete_setup'); ?></h3></div>
 						<div class="panel-body">
                             <div class="progress">
-                                <div data-percentage="0%" style="width: 60%;" class="progress-bar progress-bar-info" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                <div data-percentage="0%" style="width: 20%;" class="progress-bar progress-bar-info" role="progressbar" aria-valuemin="0" aria-valuemax="100">
                                     <span class="sr-only"><?php echo lang('text_progress_count'); ?> <?php echo lang('text_progress'); ?></span>
                                 </div>
                                 <span class="progress-type"><?php echo lang('text_progress_type'); ?></span>

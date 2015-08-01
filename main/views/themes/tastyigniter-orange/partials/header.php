@@ -82,7 +82,11 @@
 						</button>
                         <div class="logo">
 							<a class="" href="<?php echo rtrim(site_url(), '/').'/'; ?>">
-								<img alt="<?php echo $this->config->item('site_name'); ?>" src="<?php echo image_url($this->config->item('site_logo')) ?>" height="40">
+								<?php if ($this->config->item('site_logo') === 'data/no_photo.png') { ?>
+									<?php echo $this->config->item('site_name'); ?>
+								<?php } else { ?>
+									<img alt="<?php echo $this->config->item('site_name'); ?>" src="<?php echo image_url($this->config->item('site_logo')) ?>" height="40">
+								<?php } ?>
 							</a>
 						</div>
 					</div>

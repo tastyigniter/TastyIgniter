@@ -162,6 +162,12 @@ background-color: #ed561a;
 #main-header .logo {
 padding: 10px 0;
 }
+#main-header .logo a {
+font-size: 27px;
+color: #fff;
+text-transform: uppercase;
+text-decoration: none;
+}
 #main-header .navbar-toggle {
 right: 0;
 position: absolute;
@@ -770,6 +776,10 @@ width: 11px;
   #slider .flexslider .slides img {
     /*height: 600px;*/
   }
+.flexslider .slides {
+min-height: 400px;
+background-color: #eee;
+}
 }
 
 @media screen and (max-width: 860px) {
