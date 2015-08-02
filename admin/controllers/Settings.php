@@ -214,7 +214,6 @@ class Settings extends Admin_Controller {
 				'registration_email'		=> $this->input->post('registration_email'),
 				'customer_order_email'		=> $this->input->post('customer_order_email'),
 				'customer_reserve_email'	=> $this->input->post('customer_reserve_email'),
-				'main_address'				=> $this->input->post('main_address'),
 				'maps_api_key'				=> $this->input->post('maps_api_key'),
 				'distance_unit'				=> $this->input->post('distance_unit'),
 				'future_orders' 			=> $this->input->post('future_orders'),
@@ -255,9 +254,9 @@ class Settings extends Admin_Controller {
 			);
 
 
-			if (!empty($update['main_address']) AND is_array($update['main_address'])) {
+			if ($this->input->post('main_address') AND is_array($this->input->post('main_address'))) {
 				$this->load->model('Locations_model');
-				$this->Locations_model->updateDefault($update['main_address']);
+				$this->Locations_model->updateDefault($this->input->post('main_address'));
 			}
 
 			if ($this->Settings_model->updateSettings('config', $update)) {

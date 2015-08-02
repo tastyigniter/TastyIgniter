@@ -222,13 +222,16 @@ class Locations_model extends TI_Model {
 			$this->db->where('location_id', $location_id);
 			$query = $this->db->update('locations');
 		} else {
-			if ($this->db->insert('locations')) {
+			if ($query = $this->db->insert('locations')) {
 				$location_id = (int) $this->db->insert_id();
 			}
 		}
 
-		$this->Settings_model->addSetting('config', 'main_address', $this->getAddress($location_id), '1');
-		$this->Settings_model->addSetting('prefs', 'default_location_id', $location_id, '0');
+		if ($query === TRUE AND is_numeric($location_id)) {
+			$this->Settings_model->addSetting('config', 'main_address', $this->getAddress($location_id), '1');
+			$this->Settings_model->addSetting('prefs', 'default_location_id', $location_id, '0');
+		}
+
 		return $query;
 	}
 

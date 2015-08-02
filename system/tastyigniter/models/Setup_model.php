@@ -20,7 +20,7 @@ class Setup_model extends TI_Model {
                         $sql .= $line;
 
                         if (preg_match('/;\s*$/', $line)) {
-                            $sql = str_replace('INSERT INTO ti_', 'INSERT INTO ' . $this->db->dbprefix, $sql);
+							$sql = str_replace('INSERT INTO ti_', 'INSERT INTO ' . $this->db->dbprefix, str_replace('INSERT INTO `ti_', 'INSERT INTO `' . $this->db->dbprefix, $sql));
                             $this->db->query($sql);
                             $sql = '';
                         }
@@ -52,7 +52,7 @@ class Setup_model extends TI_Model {
 						$sql .= $line;
 
 						if (preg_match('/;\s*$/', $line)) {
-							$sql = str_replace('INSERT INTO ti_', 'INSERT INTO '. $this->db->dbprefix, $sql);
+							$sql = str_replace('INSERT INTO ti_', 'INSERT INTO ' . $this->db->dbprefix, str_replace('INSERT INTO `ti_', 'INSERT INTO `' . $this->db->dbprefix, $sql));
 							$this->db->query($sql);
 							$sql = '';
 						}
@@ -75,7 +75,7 @@ class Setup_model extends TI_Model {
 
         $this->db->set('sort', 'prefs')
             ->set('item', 'ti_setup')
-            ->set('value', 'v2.0')
+            ->set('value', 'installed')
             ->set('serialized', '0')
             ->insert('settings');
 
@@ -136,7 +136,7 @@ class Setup_model extends TI_Model {
 		}
 
 		$this->db->where('sort', 'prefs')->where('item', 'ti_version')->delete('settings');
-		$this->db->set('sort', 'prefs')->set('item', 'ti_version')->set('value', 'v1.3-beta')->set('serialized', '0')->insert('settings');
+		$this->db->set('sort', 'prefs')->set('item', 'ti_version')->set('value', TI_VERSION)->set('serialized', '0')->insert('settings');
 	}
 }
 
