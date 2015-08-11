@@ -576,7 +576,7 @@ class Location {
 
         $temp_query = (is_array($temp_query)) ? implode(', ', $temp_query) : $temp_query;
 
-        $url  = 'http://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($temp_query) .'&sensor=false'; //encode $postcode string and construct the url query
+        $url  = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($temp_query) .'&sensor=false'; //encode $postcode string and construct the url query
 		$geocode_data = @file_get_contents($url);
 		$output = json_decode($geocode_data);											// decode the geocode data
 

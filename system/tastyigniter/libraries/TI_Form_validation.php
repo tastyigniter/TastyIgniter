@@ -71,7 +71,7 @@ class TI_Form_validation extends CI_Form_validation
             if (is_array($post_data) AND !empty($post_data['address_1']) AND !empty($post_data['postcode'])) {
                 $address_string = implode(", ", $post_data);
                 $address = urlencode($address_string);
-                $geocode = file_get_contents('http://maps.googleapis.com/maps/api/geocode/json?address=' . $address . '&sensor=false&region=GB');
+                $geocode = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address=' . $address . '&sensor=false&region=GB');
                 $output = json_decode($geocode);
                 $status = $output->status;
 
