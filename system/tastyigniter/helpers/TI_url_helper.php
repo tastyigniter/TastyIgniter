@@ -171,7 +171,7 @@ if ( ! function_exists('referrer_url'))
         $CI->load->library('user_agent');
 
         if (!$CI->agent->is_referral()) {
-            return $CI->agent->referrer();
+            return ($CI->agent->referrer() == page_url()) ? $CI->config->site_url() : $CI->agent->referrer();
         } else {
             return $CI->config->site_url();
         }
