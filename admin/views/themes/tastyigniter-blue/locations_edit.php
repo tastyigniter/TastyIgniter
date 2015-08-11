@@ -565,7 +565,7 @@ $(document).on('change', '.area-types input[type="radio"]', function () {
 });
 
 //--></script>
-<script src="http://maps.googleapis.com/maps/api/js?v=3<?php echo $map_key; ?>&sensor=false&region=GB&libraries=geometry"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3<?php echo $map_key; ?>&sensor=false&region=GB&libraries=geometry"></script>
 <script type="text/javascript">//<![CDATA[
 var map = null,
 panel_row = <?php echo $panel_row; ?>,
