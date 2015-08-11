@@ -161,7 +161,7 @@ if ( ! function_exists('restaurant_url'))
 	function restaurant_url()
 	{
 		$CI =& get_instance();
-        if (isset($CI->location) AND !empty($CI->location->getId())) {
+        if (isset($CI->location) AND is_numeric($CI->location->getId())) {
             return site_url('local?location_id='.$CI->location->getId());
         } else {
             return site_url('locations');
