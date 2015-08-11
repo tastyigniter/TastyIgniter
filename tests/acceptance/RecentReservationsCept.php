@@ -1,19 +1,23 @@
 <?php
 $I = new AcceptanceTester($scenario);
-
-$I->wantTo('view a customer recent reservation list');
+$I->am('Registered Customer');
+$I->wantTo('view customer recent reservations list');
 
 // Log in Test User
 $I->login('demo@demo.com', 'monday');
 
+$I->amGoingTo('navigate to \'recent reservations\' page, check page title, header and breadcrumb');
 $I->amOnPage('/account/reservations');
+$I->seeInTitle('Recent Reservations');
 $I->see('Recent Reservations', 'h2');
-$I->seeElement('.breadcrumb');
+$I->see('My Account Recent Reservations', '.breadcrumb');
+$I->seeAccountSidebarLinks();
 
 //--------------------------------------------------------------------
 // Expect recent reservations list to be empty
 //--------------------------------------------------------------------
 $I->expect('the reservations list to be empty');
+$I->seeNumberOfElements('.order-lists tbody tr', [0,10]); //between 0 and 10 elements
 $I->see('Reservation ID', '.reservations-lists thead th');
 $I->see('Status', '.reservations-lists thead th');
 $I->see('Location', '.reservations-lists thead th');
@@ -21,20 +25,15 @@ $I->see('Time - Date', '.reservations-lists thead th');
 $I->see('Table Name', '.reservations-lists thead th');
 $I->see('Guest Number', '.reservations-lists thead th');
 $I->see('There are no reservation(s).', '.reservations-lists td');
-$I->see('Displaying');  // ensure pagination is present.
+$I->see('Displaying 0 to', '.pagination-bar');  // ensure pagination is present.
 
 //--------------------------------------------------------------------
-// Expect back and make reservation links work.
+// Check back navigation link and place new order link.
 //--------------------------------------------------------------------
-$I->expect('the back and make reservation buttons to be linked');
-$I->click('Back');
-$I->see('My Account', 'h2');
+$I->amGoingTo('check the back navigation link and place new order link');
+$I->seeLink('Back', '/account');
+$I->seeLink('Make Reservation', '/reservation');
 
-$I->amOnPage('/account/reservations');
-$I->click('Make Reservation');
-$I->see('Reserve A Table', 'h2');
-
-//
 //// Navigate to Order #20015 View Page
 //$I->amOnPage('/account/orders/view/20015');
 //$I->seeInCurrentUrl('orders/view/20015');
@@ -70,3 +69,5 @@ $I->see('Reserve A Table', 'h2');
 //$I->see('£10.00', 'table td b');
 //$I->see('Order Total', 'table td b');
 //$I->see('£2,770.67', 'table td b');
+
+$I->comment('All Done!');

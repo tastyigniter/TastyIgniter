@@ -51,7 +51,7 @@ $bad_fields = [
 ];
 
 $I->click('#newsletter'); // Click subscribe to newsletter button
-$I->submitForm('#register-form form', $fields, '#register-form button[type=submit]');
+$I->submitForm('#register-form form', $bad_fields, '#register-form button[type=submit]');
 
 $I->expect('form errors due to incorrect criteria and unacceptable characters');
 $I->see('The First Name field cannot exceed 32 characters in length.', '.text-danger');
