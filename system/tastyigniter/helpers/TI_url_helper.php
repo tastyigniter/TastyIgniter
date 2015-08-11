@@ -104,13 +104,6 @@ if ( ! function_exists('admin_url'))
         return get_instance()->config->root_url(ADMINDIR.'/'.$uri, $protocol);
 	}
 }
-if ( ! function_exists('roott_url'))
-{
-	function roott_url($uri = '', $protocol = NULL)
-	{
-        return get_instance()->config->root_url(ADMINDIR.'/'.$uri, $protocol);
-	}
-}
 
 // ------------------------------------------------------------------------
 
@@ -155,6 +148,30 @@ if ( ! function_exists('page_url'))
 // ------------------------------------------------------------------------
 
 /**
+ * Restaurant URL
+ *
+ * Returns the full URL (including segments) of the local restaurant if any,
+ * else locations URL is returned
+ *
+ * @access	public
+ * @return	string
+ */
+if ( ! function_exists('restaurant_url'))
+{
+	function restaurant_url()
+	{
+		$CI =& get_instance();
+        if (isset($CI->location) AND !empty($CI->location->getId())) {
+            return site_url('local?location_id='.$CI->location->getId());
+        } else {
+            return site_url('locations');
+        }
+	}
+}
+
+// ------------------------------------------------------------------------
+
+/**
  * Referrer URL
  *
  * Returns the full URL (including segments) of the page where this
@@ -171,7 +188,7 @@ if ( ! function_exists('referrer_url'))
         $CI->load->library('user_agent');
 
         if (!$CI->agent->is_referral()) {
-            return ($CI->agent->referrer() == page_url()) ? $CI->config->site_url() : $CI->agent->referrer();
+            return $CI->agent->referrer();
         } else {
             return $CI->config->site_url();
         }
