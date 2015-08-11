@@ -29,7 +29,7 @@
 
 			<div class="<?php echo $class; ?>">
 				<div class="row">
-					<div class="col-md-12">
+					<div class="col-md-12 reviews-list">
 						<div class="table-responsive">
 						<table class="table table-hover">
 							<thead>
