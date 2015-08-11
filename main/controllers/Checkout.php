@@ -25,26 +25,26 @@ class Checkout extends Main_Controller {
 	public function index() {
 		if ( ! $this->cart->contents()) { 														// checks if cart contents is empty
 			$this->alert->set('alert', $this->lang->line('alert_no_menu_to_order'));
-            redirect(referrer_url());																	// redirect to menus page and display error
+            redirect(restaurant_url());																	// redirect to menus page and display error
 		}
 
 		if ($this->config->item('location_order') === '1' AND ! $this->location->hasSearchQuery()) { 														// else if local restaurant is not selected
             $this->alert->set('alert', $this->lang->line('alert_no_selected_local'));
-            redirect(referrer_url());																	// redirect to menus page and display error
+            redirect(restaurant_url());																	// redirect to menus page and display error
         }
 
         if ( ! $this->location->isOpened() AND $this->config->item('future_orders') !== '1') { 													// else if local restaurant is not open
             $this->alert->set('alert', $this->lang->line('alert_location_closed'));
-            redirect(referrer_url());																	// redirect to previous page and display error
+            redirect(restaurant_url());																	// redirect to previous page and display error
 		}
 
 		if (( ! $this->location->hasDelivery() AND ! $this->location->hasCollection()) AND $this->config->item('location_order') === '1') { 													// else if local restaurant is not open
 			$this->alert->set('alert', $this->lang->line('alert_order_unavailable'));
-            redirect(referrer_url());																	// redirect to previous page and display error
+            redirect(restaurant_url());																	// redirect to previous page and display error
 		}
 
 		if ($this->location->orderType() === '1' AND ! $this->location->checkMinimumOrder($this->cart->total())) { 							// checks if cart contents is empty
-            redirect(referrer_url());																	// redirect to previous page and display error
+            redirect(restaurant_url());																	// redirect to previous page and display error
 		}
 
 		if ( ! $this->customer->islogged() AND $this->config->item('guest_order') !== '1') { 											// else if customer is not logged in
