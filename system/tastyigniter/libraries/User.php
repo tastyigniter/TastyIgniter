@@ -203,14 +203,11 @@ class User {
             }
 
             foreach ($group_permissions as $permission_id => $permitted_actions) {
-                if (!empty($permissions[$permission_id]['name'])  AND $permission_name = $permissions[$permission_id]['name']
-                    AND !empty(array_intersect($permitted_actions, $this->available_actions[$permission_name]))) {
-
-                    $this->permitted_actions[$permission_name] = $permitted_actions;
+                if (!empty($permissions[$permission_id]['name'])  AND $permission_name = $permissions[$permission_id]['name']) {
+                    $intersect = array_intersect($permitted_actions, $this->available_actions[$permission_name]);
+                    if (!empty($intersect)) $this->permitted_actions[$permission_name] = $permitted_actions;
                 }
             }
-
-
         }
     }
 
