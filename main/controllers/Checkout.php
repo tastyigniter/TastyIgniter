@@ -376,12 +376,12 @@ class Checkout extends Main_Controller {
             $order_data['comment'] 		= $this->input->post('comment');						// retrieve comment value from $_POST data if set and convert to integer then add to order_data array
 
             if ($this->input->post('order_type') === '1') {
-                foreach ($this->input->post('address') as $key => &$address) {
-                    $address['country'] = $address['country_id'];
+                foreach ($this->input->post('address') as $key => $address) {
+                    $_POST['address'][$key]['country'] = $address['country_id'];
 
                     !empty($address['address_id']) OR $address['address_id'] = NULL;
 
-                    $address['address_id'] = $this->Addresses_model->saveAddress($order_data['customer_id'], $address['address_id'], $address);    // send new-address $_POST data and customer id to saveAddress method in Customers model
+                    $_POST['address'][$key]['address_id'] = $address['address_id'] = $this->Addresses_model->saveAddress($order_data['customer_id'], $address['address_id'], $address);    // send new-address $_POST data and customer id to saveAddress method in Customers model
 
                     if (empty($order_data['address_id']) OR $address['address_id'] === $order_data['address_id']) {
                         $order_data['address_id'] = $address['address_id'];
