@@ -71,7 +71,7 @@ class Local extends Main_Controller {
             $map_key = '';
         }
 
-        $this->template->setScriptTag('http://maps.googleapis.com/maps/api/js?v=3' . $map_key .'&sensor=false&region=GB', 'google-maps-js', '104330');
+        $this->template->setScriptTag('https://maps.googleapis.com/maps/api/js?v=3' . $map_key .'&sensor=false&region=GB', 'google-maps-js', '104330');
 
         $opening_hours = $this->location->openingHours();                                //retrieve local restaurant opening hours from location library
         $data['opening_hours'] = array();

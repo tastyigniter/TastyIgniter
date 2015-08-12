@@ -9,8 +9,8 @@
                         <img src="<?php echo $category['image']; ?>" alt=""/>
                     <?php }?>
                 </div>
-                <?php if (isset($menus[$category_id]) AND !empty($temp_menus = $menus[$category_id])) { ?>
-                    <?php foreach ($temp_menus as $menu) { ?>
+                <?php if (isset($menus[$category_id]) AND !empty($menus[$category_id])) { ?>
+                    <?php foreach ($menus[$category_id] as $menu) { ?>
 
                         <div id="menu<?php echo $menu['menu_id']; ?>" class="menu-item">
                             <div class="menu-item-wrapper">

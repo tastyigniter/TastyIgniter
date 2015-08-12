@@ -461,13 +461,13 @@ class Locations extends Admin_Controller {
 
 		if ($this->input->post('delivery_areas')) {
 			foreach ($this->input->post('delivery_areas') as $key => $value) {
-				$this->form_validation->set_rules('delivery_areas['.$key.'][shape]', $key.' lang:label_area_shape', 'trim|required');
-				$this->form_validation->set_rules('delivery_areas['.$key.'][circle]', $key.' lang:label_area_circle', 'trim|required');
-				$this->form_validation->set_rules('delivery_areas['.$key.'][vertices]', $key.' lang:label_area_vertices', 'trim|required');
-				$this->form_validation->set_rules('delivery_areas['.$key.'][type]', $key.' lang:label_area_type', 'xss_clean|trim|required');
-				$this->form_validation->set_rules('delivery_areas['.$key.'][name]', $key.' lang:label_area_name', 'xss_clean|trim|required');
-				$this->form_validation->set_rules('delivery_areas['.$key.'][charge]', $key.' lang:label_area_charge', 'xss_clean|trim|required|numeric');
-				$this->form_validation->set_rules('delivery_areas['.$key.'][min_amount]', $key.' lang:label_area_min_amount', 'xss_clean|trim|required|numeric');
+				$this->form_validation->set_rules('delivery_areas['.$key.'][shape]', 'lang:label_area_shape', 'trim|required');
+				$this->form_validation->set_rules('delivery_areas['.$key.'][circle]', 'lang:label_area_circle', 'trim|required');
+				$this->form_validation->set_rules('delivery_areas['.$key.'][vertices]', 'lang:label_area_vertices', 'trim|required');
+				$this->form_validation->set_rules('delivery_areas['.$key.'][type]', 'lang:label_area_type', 'xss_clean|trim|required');
+				$this->form_validation->set_rules('delivery_areas['.$key.'][name]', 'lang:label_area_name', 'xss_clean|trim|required');
+				$this->form_validation->set_rules('delivery_areas['.$key.'][charge]', 'lang:label_area_charge', 'xss_clean|trim|required|numeric');
+				$this->form_validation->set_rules('delivery_areas['.$key.'][min_amount]', 'lang:label_area_min_amount', 'xss_clean|trim|required|numeric');
 			}
 		}
 
