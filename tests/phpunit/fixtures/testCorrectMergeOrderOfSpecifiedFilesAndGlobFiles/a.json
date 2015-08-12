@@ -1,0 +1,8 @@
+{
+    "require": {
+        "wikimedia/composer-merge-plugin": "dev-master"
+    },
+    "require": {
+        "wibble/wobble":"3.0"
+    }
+}

@@ -1,0 +1,18 @@
+{
+    "require": {
+        "wikimedia/composer-merge-plugin": "dev-master"
+    },
+    "require": {
+        "wibble/wobble":"1.0"
+    },
+    "extra": {
+        "merge-plugin": {
+            "replace" : true,
+            "include": [
+                "b.json",
+                "a.json",
+                "glob/*.json"
+            ]
+        }
+    }
+}
