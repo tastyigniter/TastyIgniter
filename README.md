@@ -26,7 +26,9 @@ Usage
             "include": [
                 "composer.local.json",
                 "extensions/*/composer.json"
-            ]
+            ],
+            "recurse": false,
+            "replace": false
         }
     }
 }
@@ -36,13 +38,22 @@ The `include` key can specify either a single value or an array of values.
 Each value is treated as a glob() pattern identifying additional composer.json
 style configuration files to merge into the configuration for the current
 Composer execution. By default the merge plugin is recursive, if an included
-file also has a "merge-plugin" section it will also be processed. This 
-functionality can be disabled by setting `"recurse": false` inside the 
+file also has a "merge-plugin" section it will also be processed. This
+functionality can be disabled by setting `"recurse": false` inside the
 "merge-plugin" section.
 
 The "require", "require-dev", "repositories" and "suggest" sections of the
 found configuration files will be merged into the root package configuration
 as though they were directly included in the top-level composer.json file.
+
+By default, Composer's normal conflict resolution engine is used to determine
+which version of a package should be installed if multiple files specify the
+same package. A `"replace": true` setting can be provided inside the
+"merge-plugin" section to change to a "last version specified wins" conflict
+resolution strategy. In this mode, duplicate package declarations in merged
+files will overwrite the declarations made in earlier files. Files are loaded
+in the order specified in the `include` section with globbed files being
+loaded in alphabetical order.
 
 Running tests
 -------------
