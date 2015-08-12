@@ -264,6 +264,7 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
         $this->mergeRequires($root, $package);
         $this->mergeDevRequires($root, $package);
         $this->mergeAutoload($root, $package, $path);
+        $this->mergeDevAutoload($root, $package, $path);
 
         if (isset($json['repositories'])) {
             $this->addRepositories($json['repositories'], $root);
@@ -365,19 +366,53 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
             return;
         }
 
-        $packagePath = substr($path, 0, strrpos($path, '/') + 1);
-
-        array_walk_recursive(
-            $autoload,
-            function(&$path) use ($packagePath) {
-                $path = $packagePath . $path;
-            }
-        );
+        $this->prependPath($path, $autoload);
 
         $root->setAutoload(array_merge_recursive(
             $root->getAutoload(),
             $autoload
         ));
+    }
+
+    /**
+     * @param RootPackage $root
+     * @param CompletePackage $package
+     * @param string $path
+     */
+    protected function mergeDevAutoload(
+        RootPackage $root,
+        CompletePackage $package,
+        $path
+    ) {
+        $autoload = $package->getDevAutoload();
+        if (empty($autoload)) {
+            return;
+        }
+
+        $this->prependPath($path, $autoload);
+
+        $root->setDevAutoload(array_merge_recursive(
+            $root->getDevAutoload(),
+            $autoload
+        ));
+    }
+
+    /**
+     * Prepend a path to a collection of paths.
+     *
+     * @param string $basePath
+     * @param array $paths
+     */
+    protected function prependPath($basePath, array &$paths)
+    {
+        $basePath = substr($basePath, 0, strrpos($basePath, '/') + 1);
+
+        array_walk_recursive(
+            $paths,
+            function (&$localPath) use ($basePath) {
+                $localPath = $basePath . $localPath;
+            }
+        );
     }
 
     /**
