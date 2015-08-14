@@ -47,7 +47,7 @@ function mediaManager(field) {
 
     var iframe_url = js_site_url('image_manager?popup=iframe&field_id=') + encodeURIComponent(field) + '&sub_folder=' + $('#' + field).attr('value');
 
-    $('body').append('<div id="media-manager"><iframe src="'+ iframe_url +'" width="1200" height="' + height + 'px" frameborder="0"></iframe></div>');
+    $('body').append('<div id="media-manager"><iframe name="media_manager" src="'+ iframe_url +'" width="1200" height="' + height + 'px" frameborder="0"></iframe></div>');
 
     $.fancybox({
         padding : 0,
