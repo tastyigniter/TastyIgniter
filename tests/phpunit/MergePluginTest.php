@@ -10,6 +10,9 @@
 
 namespace Wikimedia\Composer;
 
+use Wikimedia\Composer\Merge\PluginState;
+use Wikimedia\Composer\Merge\ExtraPackage;
+
 use Composer\Composer;
 use Composer\DependencyResolver\Operation\InstallOperation;
 use Composer\Installer\InstallerEvent;
@@ -23,9 +26,12 @@ use Composer\Package\RootPackage;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
 use Prophecy\Argument;
-use ReflectionMethod;
+use ReflectionProperty;
 
 /**
+ * @covers Wikimedia\Composer\Logger
+ * @covers Wikimedia\Composer\Merge\ExtraPackage
+ * @covers Wikimedia\Composer\Merge\PluginState
  * @covers Wikimedia\Composer\MergePlugin
  */
 class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
@@ -560,8 +566,8 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
         }
 
         $this->fixture->onPostPackageInstall($event->reveal());
-        $this->assertEquals($first, $this->fixture->isFirstInstall());
-        $this->assertEquals($locked, $this->fixture->wasLocked());
+        $this->assertEquals($first, $this->getState()->isFirstInstall());
+        $this->assertEquals($locked, $this->getState()->isLocked());
     }
 
     public function provideOnPostPackageInstall()
@@ -601,12 +607,7 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
 
         $this->triggerPlugin($alias->reveal(), $dir);
 
-        $getRootPackage = new ReflectionMethod(
-            get_class($this->fixture),
-            'getRootPackage'
-        );
-        $getRootPackage->setAccessible(true);
-        $this->assertEquals($root, $getRootPackage->invoke($this->fixture));
+        $this->assertEquals($root, $this->getState()->getRootPackage());
     }
 
 
@@ -647,7 +648,6 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
         );
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
     }
-
 
 
     /**
@@ -764,6 +764,19 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
         );
 
         return $root;
+    }
+
+    /**
+     * @return PluginState
+     */
+    protected function getState()
+    {
+        $state = new ReflectionProperty(
+            get_class($this->fixture),
+            'state'
+        );
+        $state->setAccessible(true);
+        return $state->getValue($this->fixture);
     }
 }
 // vim:sw=4:ts=4:sts=4:et:
