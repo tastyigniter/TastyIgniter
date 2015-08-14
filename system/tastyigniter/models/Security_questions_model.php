@@ -31,7 +31,7 @@ class Security_questions_model extends TI_Model {
 
 		if (!empty($questions)) {
 			$priority = 1;
-			foreach ($questions as $result) {
+			foreach ($questions as $question) {
 				if (!empty($question['text'])) {
 					if (!empty($question['question_id']) AND $question['question_id'] > 0) {
 						$this->db->set('text', $question['text']);

@@ -11,7 +11,7 @@ class Permissions extends Admin_Controller {
 
         $this->load->library('pagination');
 
-        $this->lang->load('Permissions');
+        $this->lang->load('permissions');
     }
 
 	public function index() {
