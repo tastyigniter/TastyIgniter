@@ -10,5 +10,7 @@ modules:
         - WebDriver:
             url: http://tastyigniter.remote
             browser: firefox
+#        - PhpBrowser:
+#            url: http://tastyigniter.remote
         - \Helper\Acceptance
         - Db

@@ -62,6 +62,15 @@ class AcceptanceTester extends \Codeception\Actor
 //        $I->saveSessionSnapshot('login');
     }
 
+    public function adminLogin($username, $password, $user = 'admin') {
+        $I = $this;
+        $I->amGoingTo('log into administrator panel as '. $user);
+
+        $I->amOnPage('/admin');
+
+        $I->submitForm('#edit-form', ['user' => $username, 'password' => $password], '#edit-form button[type=submit]');
+    }
+
     public function seeAccountSidebarLinks() {
         $I = $this;
 
@@ -75,5 +84,27 @@ class AcceptanceTester extends \Codeception\Actor
         $I->see('Recent Reviews', '.side-bar .module-box .panel .list-group');
         $I->see('My Inbox', '.side-bar .module-box .panel .list-group');
         $I->see('Logout', '.side-bar .module-box .panel .list-group');
+    }
+
+    public function seeNavTabs($links) {
+        $I = $this;
+
+        for ($i = 0; $i < count($links); $i++) {
+            $I->see($links[$i], '#nav-tabs');
+        }
+    }
+
+    public function seeTableHeads($context, $heads) {
+        $I = $this;
+
+        for ($i = 0; $i < count($heads); $i++) {
+            $I->see($heads[$i], $context .' table thead');
+        }
+    }
+
+    public function toggleButton($locator, $context = '') {
+        $I = $this;
+
+        $I->click('label[for='.$locator.'] + div label.btn:not(.active)');
     }
 }

@@ -3415,7 +3415,7 @@ INSERT INTO `ti_staffs` (`staff_id`, `staff_name`, `staff_email`, `staff_group_i
 VALUES
 	(11,'Admin','info@tastyigniter.com',11,0,'0',0,'2015-05-24',1),
 	(12,'Iana','iana@iana.com',13,0,'0',0,'2015-05-25',1),
-	(13,'Sam','sampoyigi@gmail.com',12,0,'0',0,'2015-06-02',1);
+	(13,'Kitchen Staff','sampoyigi@gmail.com',12,0,'0',0,'2015-06-02',1);
 
 /*!40000 ALTER TABLE `ti_staffs` ENABLE KEYS */;
 UNLOCK TABLES;
