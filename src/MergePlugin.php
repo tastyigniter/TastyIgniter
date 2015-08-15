@@ -132,6 +132,13 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     protected $pluginFirstInstall;
 
     /**
+     * Were packages locled at the time of $pluginFirstInstall?
+     *
+     * @var bool $wasLockedAtInstall
+     */
+    protected $wasLockedAtInstall;
+
+    /**
      * Is the autoloader file supposed to be written out?
      *
      * @var bool $dumpAutoloader
@@ -153,6 +160,7 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
         $this->composer = $composer;
         $this->inputOutput = $io;
         $this->pluginFirstInstall = false;
+        $this->wasLockedAtInstall = false;
     }
 
     /**
@@ -541,8 +549,11 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
             if ($package === self::PACKAGE_NAME) {
                 $this->debug('composer-merge-plugin installed');
                 $this->pluginFirstInstall = true;
+                $this->wasLockedAtInstall =
+                    $event->getComposer()->getLocker()->isLocked();
             }
         }
+        // composer->getLocker()
     }
 
     /**
@@ -553,6 +564,16 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     public function isFirstInstall()
     {
         return $this->pluginFirstInstall;
+    }
+
+    /**
+     * Was a lockfile present when the plugin was installed?
+     *
+     * @return bool
+     */
+    public function wasLocked()
+    {
+        return $this->wasLockedAtInstall;
     }
 
     /**
@@ -590,10 +611,12 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
             $installer->setDumpAutoloader($this->dumpAutoloader);
             $installer->setOptimizeAutoloader($this->optimizeAutoloader);
 
-            // Force update mode so that new packages are processed rather
-            // than just telling the user that composer.json and composer.lock
-            // don't match.
-            $installer->setUpdate(true);
+            if (!$this->wasLockedAtInstall) {
+                // Force update mode so that new packages are processed rather
+                // than just telling the user that composer.json and
+                // composer.lock don't match.
+                $installer->setUpdate(true);
+            }
 
             $installer->run();
         }

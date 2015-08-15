@@ -17,6 +17,7 @@ use Composer\Installer\InstallerEvents;
 use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
 use Composer\Package\BasePackage;
+use Composer\Package\Locker;
 use Composer\Package\Package;
 use Composer\Package\RootPackage;
 use Composer\Script\Event;
@@ -438,23 +439,38 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
 
     /**
      * @dataProvider provideOnPostPackageInstall
+     * @param string $package Package installed
+     * @param bool $first Expected isFirstInstall() value
+     * @param bool $locked Expected wasLocked() value
      */
-    public function testOnPostPackageInstall($package, $first)
+    public function testOnPostPackageInstall($package, $first, $locked)
     {
         $operation = new InstallOperation(
             new Package($package, '1.2.3.4', '1.2.3')
         );
         $event = $this->prophesize('Composer\Installer\PackageEvent');
         $event->getOperation()->willReturn($operation)->shouldBeCalled();
+
+        if ($first) {
+            $locker = $this->prophesize('Composer\Package\Locker');
+            $locker->isLocked()->willReturn($locked)->shouldBeCalled();
+            $this->composer->getLocker()->willReturn($locker->reveal())
+                ->shouldBeCalled();
+            $event->getComposer()->willReturn($this->composer->reveal())
+                ->shouldBeCalled();
+        }
+
         $this->fixture->onPostPackageInstall($event->reveal());
         $this->assertEquals($first, $this->fixture->isFirstInstall());
+        $this->assertEquals($locked, $this->fixture->wasLocked());
     }
 
     public function provideOnPostPackageInstall()
     {
         return array(
-            array(MergePlugin::PACKAGE_NAME, true),
-            array('foo/bar', false),
+            array(MergePlugin::PACKAGE_NAME, true, true),
+            array(MergePlugin::PACKAGE_NAME, true, false),
+            array('foo/bar', false, false),
         );
     }
 
