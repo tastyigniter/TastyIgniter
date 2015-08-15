@@ -2,7 +2,16 @@
     "require": {
         "monolog/monolog": "~1.0"
     },
+    "conflict": {
+        "conflict/conflict": "*"
+    },
+    "replace": {
+        "replace/replace": "*"
+    },
+    "provide": {
+        "provide/provide": "*"
+    },
     "suggest": {
-        "ext-apc": "caching is good"
+        "suggest/suggest": "good for stuff"
     }
 }
