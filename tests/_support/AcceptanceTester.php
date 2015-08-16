@@ -94,14 +94,6 @@ class AcceptanceTester extends \Codeception\Actor
         }
     }
 
-    public function seeTableHeads($context, $heads) {
-        $I = $this;
-
-        for ($i = 0; $i < count($heads); $i++) {
-            $I->see($heads[$i], $context .' table thead');
-        }
-    }
-
     public function toggleButton($locator, $context = '') {
         $I = $this;
 

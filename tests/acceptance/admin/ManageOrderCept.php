@@ -1,7 +1,7 @@
 <?php
 $I = new AcceptanceTester($scenario);
 $I->am('Admin');
-$I->wantTo('manage orders from the administrator panel');
+$I->wantTo('manage order from the administrator panel');
 
 // Login Test staff user
 $I->adminLogin('tastyadmin', 'demoadmin', 'admin');
@@ -17,8 +17,7 @@ $I->see('Order List', 'h3');
 // Expect list of orders
 //--------------------------------------------------------------------
 $I->expectTo('see list of all orders');
-$I->seeTableHeads('#list-form', ['ID', 'Location', 'Customer Name',
-    'Status', 'Type', 'Total', 'Time - Date']);
+$I->see('ID Location Customer Name Status Type Total Time - Date', '#list-form thead tr');
 $I->seeElement('#list-form tbody td');
 $I->seeNumberOfElements('#list-form tbody tr', [1,20]); //between 1 and 20 elements
 $I->dontSee('There are no orders available.', '#list-form');

@@ -1,7 +1,7 @@
 <?php
 $I = new AcceptanceTester($scenario);
 $I->am('Admin');
-$I->wantTo('manage reservations from the administrator panel');
+$I->wantTo('manage reservation from the administrator panel');
 
 // Login Test staff user
 $I->adminLogin('tastyadmin', 'demoadmin', 'admin');
@@ -17,8 +17,7 @@ $I->see('Reservation List', 'h3');
 // Expect list of reservations
 //--------------------------------------------------------------------
 $I->expectTo('see list of all reservations');
-$I->seeTableHeads('#list-form', ['ID', 'Location', 'Customer Name', 'Guest(s)',
-    'Table', 'Status', 'Assigned Staff', 'Time - Date']);
+$I->see('ID Location Customer Name Guest(s) Table Status Assigned Staff Time - Date', '#list-form thead tr');
 $I->seeElement('#list-form tbody td');
 $I->seeNumberOfElements('#list-form tbody tr', [1,20]); //between 1 and 20 elements
 $I->dontSee('There are no reservations available.', '#list-form');

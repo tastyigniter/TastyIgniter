@@ -1,25 +1,34 @@
 <?php
 $I = new AcceptanceTester($scenario);
 $I->am('Admin');
-$I->wantTo('manage menus from the administrator panel');
+$I->wantTo('manage menu from the administrator panel');
 
 // Login Test staff user
 $I->adminLogin('tastyadmin', 'demoadmin', 'admin');
 
-$I->amGoingTo('navigate to \'menu options\' page, check page title, header and action buttons');
-$I->amOnPage('/admin/menu_options');
-$I->seeInTitle('Menu Options ‹ Administrator Panel');
-$I->see('Menu Options', '.page-header h1');
+//--------------------------------------------------------------------
+// Expect special category selected in system settings
+//--------------------------------------------------------------------
+$I->amGoingTo('ensure [Specials] is the default special category in system settings');
+$I->lookForwardTo('know which category to check for specials');
+$I->amOnPage('/admin/settings');
+$I->click('Options', '#nav-tabs');
+$I->selectOption('select[name=special_category_id]', 'Specials');
+$I->click('Save', '.page-header-action');
+
+$I->amGoingTo('navigate to \'menus\' page, check page title, header and action buttons');
+$I->amOnPage('/admin/menus');
+$I->seeInTitle('Menus ‹ Administrator Panel');
+$I->see('Menus', '.page-header h1');
 $I->seeLink('+ New', '/admin/menus/edit');
 $I->see('Delete', '.page-header-action');
-$I->see('Menu Option List', 'h3');
+$I->see('Menu Item List', 'h3');
 
 //--------------------------------------------------------------------
-// Expect list of menu options
+// Expect list of menus
 //--------------------------------------------------------------------
-$I->expectTo('see list of all menu options');
-$I->seeTableHeads('Name	Priority	Display Type	ID', '#list-form thead tr');
-//$I->seeTableHeads('#list-form', ['Name', 'Priority', 'Display Type', 'ID']);
+$I->expectTo('see list of all menus');
+$I->see('Name Price Category Stock Qty Status ID', '#list-form thead tr');
 $I->seeElement('#list-form tbody td');
 $I->seeNumberOfElements('#list-form tbody tr', [1,20]); //between 1 and 20 elements
 $I->dontSee('There are no menus available.', '#list-form');
@@ -41,12 +50,12 @@ $I->makeScreenshot('menus_page');
 //--------------------------------------------------------------------
 $I->amGoingTo('navigate to add a new menu item page, check title, action buttons and nav tabs');
 $I->click('+ New');
-$I->seeInTitle('Menu Option: New ‹ Administrator Panel');
-$I->see('Menu Option   New', '.page-header h1');
+$I->seeInTitle('Menu: New ‹ Administrator Panel');
+$I->see('Menu   New', '.page-header h1');
 $I->seeElement('.page-header .btn-back');
 $I->see('Save', '.page-header-action');
 $I->see('Save & Close', '.page-header-action');
-$I->seeNavTabs(['Menu Option', 'Menu Option Options', 'Specials']);
+$I->seeNavTabs(['Menu', 'Menu Options', 'Specials']);
 
 // Error due to empty fields
 $I->amGoingTo('submit menu form with empty fields');
@@ -85,7 +94,7 @@ $I->click('Save & Close', '.page-header-action');
 $I->expect('success with a new menu without option added and page redirected to menu item list');
 $I->dontSeeElement('.text-danger');
 $I->dontSeeElement('.alert-danger');
-$I->see('Menu Option added successfully.', '.alert-success');
+$I->see('Menu added successfully.', '.alert-success');
 
 $I->amGoingTo('check that added menu item appears in list');
 $I->see('Fried coconut rice and vegetables £23.99   Main Course 100 Enabled 89', '#list-form tbody tr:last-child');
@@ -100,12 +109,12 @@ $I->makeScreenshot('menu_added');
 $I->amGoingTo('update the last menu item in the list');
 $I->expectTo('navigate to update an existing menu item page, see title, action buttons and nav tabs');
 $I->click('#list-form tbody tr:last-child .btn-edit');
-$I->seeInTitle('Menu Option: Fried coconut rice and vegetables ‹ Administrator Panel');
-$I->see('Menu Option   Fried coconut rice and vegetables', '.page-header h1');
+$I->seeInTitle('Menu: Fried coconut rice and vegetables ‹ Administrator Panel');
+$I->see('Menu   Fried coconut rice and vegetables', '.page-header h1');
 $I->seeElement('.page-header .btn-back');
 $I->see('Save', '.page-header-action');
 $I->see('Save & Close', '.page-header-action');
-$I->seeNavTabs(['Menu Option', 'Menu Option Options', 'Specials']);
+$I->seeNavTabs(['Menu', 'Menu Options', 'Specials']);
 
 $I->amGoingTo('update menu item with menu photo, options and specials');
 $I->expectTo('choose a menu photo from the media manager');
@@ -116,8 +125,8 @@ $I->click('.btn-choose');
 $I->wait(2);
 $I->switchToIframe();
 
-$I->expectTo('choose a menu option and add some option values to it');
-$I->click('Menu Option Options', '#nav-tabs');
+$I->expectTo('choose a menu option from a dropdown list and add some option values to it');
+$I->click('Menu Options', '#nav-tabs');
 $I->click('#s2id_input-status .select2-choice');
 $I->wait(1);
 $I->seeElement('#select2-drop .select2-search input');
@@ -164,7 +173,7 @@ $I->expect('success with menu photo, option and special updated');
 $I->click('Save & Close', '.page-header-action');
 $I->dontSeeElement('.text-danger');
 $I->dontSeeElement('.alert-danger');
-$I->see('Menu Option updated successfully.', '.alert-success');
+$I->see('Menu updated successfully.', '.alert-success');
 
 $I->amGoingTo('check that updated menu item appears in list with specials enabled');
 $I->seeElement('#list-form tbody tr:last-child .fa-star-special');
@@ -184,7 +193,7 @@ $I->acceptPopup();
 
 $I->expect('success with menu item deleted');
 $I->dontSeeElement('.alert-danger');
-$I->see('Menu Option deleted successfully.', '.alert-success');
+$I->see('Menu deleted successfully.', '.alert-success');
 
 $I->amGoingTo('check that deleted menu item does not appear in list');
 $I->dontSee('Fried coconut rice and vegetables £23.99   Specials 100 Enabled 89', '#list-form tbody tr');
