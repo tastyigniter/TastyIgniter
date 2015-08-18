@@ -66,7 +66,10 @@
                                     <?php if (!empty($cart_item['options'])) { ?>
                                         <span class="options small"><?php echo $cart_item['options']; ?></span>
                                     <?php } ?>
-                                    <span class="amount"><?php echo $cart_item['sub_total']; ?></span>
+                                    <?php if (!empty($cart_item['comment'])) { ?>
+                                        <span class="text-muted comment small">[<?php echo $cart_item['comment']; ?>]</span>
+                                    <?php } ?>
+                                    <p class="amount"><?php echo $cart_item['sub_total']; ?></p>
 								</li>
 							<?php } ?>
 						</ul>
@@ -138,7 +141,7 @@
 
     function addToCart(menu_id, quantity) {
         if ($('#menu-options' + menu_id).length) {
-            var data = $('#menu-options' + menu_id + ' input:checked, #menu-options' + menu_id + ' input[type="hidden"], #menu-options' + menu_id + ' select, #menu-options' + menu_id + '  input[type="text"]');
+            var data = $('#menu-options' + menu_id + ' input:checked, #menu-options' + menu_id + ' input[type="hidden"], #menu-options' + menu_id + ' select, #menu-options' + menu_id + ' textarea, #menu-options' + menu_id + '  input[type="text"]');
         } else {
             var data = 'menu_id=' + menu_id + '&quantity=' + quantity;
         }

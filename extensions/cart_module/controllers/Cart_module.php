@@ -91,6 +91,7 @@ class Cart_module extends Main_Controller {
                         'image' 			=> $cart_image,
                         //add currency symbol and format item subtotal to two decimal places
                         'sub_total' 		=> $this->currency->format($cart_item['subtotal']),
+                        'comment'           => isset($cart_item['comment']) ? $cart_item['comment'] : '',
                         'options' 			=> ($this->cart->has_options($row_id) == TRUE) ? $this->cart->product_options_string($row_id) : ''
                     );
                 }
@@ -150,6 +151,7 @@ class Cart_module extends Main_Controller {
 		$data['description'] 			= $menu_data['menu_description'];
 		$data['quantities'] 			= array('1', '2', '3', '4', '5', '6', '7', '8', '9', '10');
         $data['quantity']               = (isset($quantity)) ? $quantity : 1;
+        $data['comment']                = isset($cart_item['comment']) ? $cart_item['comment'] : '';
 
         $menu_photo = (!empty($menu_data['menu_photo'])) ? $menu_data['menu_photo'] : 'data/no_photo.png';
         $data['menu_image'] = $this->Image_tool_model->resize($menu_photo, '154', '154');
@@ -271,6 +273,8 @@ class Cart_module extends Main_Controller {
 
             $cart_option_required = FALSE;
 
+            $comment = $this->input->post('comment') ? substr(htmlspecialchars(trim($this->input->post('comment'))), 0, 50) : '';
+
             $cart_options = array();
             if ($this->input->post('menu_options') AND is_array($this->input->post('menu_options'))) {
                 $option_price = 0;
@@ -316,7 +320,8 @@ class Cart_module extends Main_Controller {
 				'name'   		=> $menu_data['menu_name'],
 				'qty'    		=> $quantity,
 				'price'  		=> $this->cart->format_number(($menu_data['is_special'] === '1') ? $menu_data['special_price'] : $menu_data['menu_price']),
-				'options' 		=> $cart_options
+				'comment'       => $comment,
+                'options' 		=> $cart_options
 			);
         }
 
