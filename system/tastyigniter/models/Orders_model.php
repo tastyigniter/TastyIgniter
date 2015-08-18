@@ -407,6 +407,10 @@ class Orders_model extends TI_Model {
                         $this->db->set('subtotal', $item['subtotal']);
                     }
 
+                    if (!empty($item['comment'])) {
+                        $this->db->set('comment', $item['comment']);
+                    }
+
                     if (!empty($item['options'])) {
                         $this->db->set('option_values', serialize($item['options']));
                     }

@@ -26,7 +26,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-show-menu-images" class="col-sm-3 control-label"><?php echo lang('label_sale_type'); ?></label>
+						<label for="input-sale-type" class="col-sm-3 control-label"><?php echo lang('label_sale_type'); ?></label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
 								<?php if ($sale_type == 'reservation') { ?>

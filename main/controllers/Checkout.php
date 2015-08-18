@@ -135,6 +135,7 @@ class Checkout extends Main_Controller {
                 'price' 		=> $this->currency->format($menu['price']),		//add currency symbol and format item price to two decimal places
                 'quantity' 		=> $menu['quantity'],
                 'subtotal' 		=> $this->currency->format($menu['subtotal']), 	//add currency symbol and format item subtotal to two decimal places
+                'comment' 		=> $menu['comment'],
                 'options' 		=> implode('<br />', $option_data)
             );
         }

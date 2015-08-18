@@ -145,7 +145,8 @@ class Orders extends Main_Controller {
                 'qty' 			=> $order_menu['quantity'],
                 'price' 		=> $this->currency->format($order_menu['price']),
                 'subtotal' 		=> $this->currency->format($order_menu['subtotal']),
-                'options'		=> implode(', ', $option_data)
+				'comment' 		=> $order_menu['comment'],
+				'options'		=> implode(', ', $option_data)
             );
         }
 
@@ -174,6 +175,7 @@ class Orders extends Main_Controller {
 					'name' 			=> $menu['name'],
 					'qty' 			=> $menu['quantity'],
 					'price' 		=> $this->cart->format_number($menu['price']),
+					'comment' 		=> $menu['comment'],
 					'options'		=> (!empty($menu['option_values'])) ? unserialize($menu['option_values']) : array()
 				));
 			}

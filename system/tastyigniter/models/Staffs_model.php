@@ -330,7 +330,7 @@ class Staffs_model extends TI_Model {
             $this->db->delete('staffs');
 
             if (($affected_rows = $this->db->affected_rows()) > 0) {
-                $this->db->where('staff_id', $staff_id);
+                $this->db->where_in('staff_id', $staff_id);
                 $this->db->delete('users');
 
                 return $affected_rows;
