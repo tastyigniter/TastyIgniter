@@ -11,7 +11,7 @@ function testAddMenuToOrder($I) {
     $I->amOnPage('/');
     $I->fillField('search_query', 'E8 1BN');
     $I->click('#search');
-    $I->wait('2');
+    $I->wait('3');
     $I->see('Lewisham can deliver to you at E8 1BN');
 
     $I->amGoingTo('add menus to order then proceed with order');
@@ -24,12 +24,14 @@ function testAddMenuToOrder($I) {
     $I->checkOption('#menu-options81 .option-checkbox .checkbox:nth-child(4) input[type="checkbox"]');
     $I->checkOption('#menu-options81 .option-checkbox .checkbox:nth-child(5) input[type="checkbox"]');
     $I->checkOption('#menu-options81 .option-checkbox .checkbox:nth-child(6) input[type="checkbox"]');
+    $I->fillField('comment', 'I want it extra hot');
     $I->click('UPDATE', '#menu-options81');
     $I->wait('2');
 
     $I->expectTo('see menu added to order successfully');
     $I->see('3 × puff-puff', '.cart-items');
     $I->see('10 × whole catfish with rice a...', '.cart-items');
+    $I->see('[I want it extra hot]', '.cart-items');
     $I->see('Sub Total: £274.57', '.cart-total');
     $I->see('Delivery: £10.00', '.cart-total');
     $I->see('Order Total: £284.57', '.cart-total');
@@ -64,7 +66,7 @@ $fields = [
     'address[0][city]'      => 'London',
     'address[0][postcode]'  => 'E8 1BN',
     'address[0][country_id]'=> '222',
-    'comment'               => 'I want it extra hot',
+    'comment'               => 'I do really want it extra extra hot',
 ];
 
 $bad_fields = $fields;

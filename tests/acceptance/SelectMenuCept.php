@@ -48,7 +48,7 @@ $I->click('a[data-filter=".rice-dishes"]');
 $I->waitForElement('a.active[data-filter=".rice-dishes"]', '3');
 $I->see('Rice Dishes', '.menu-category h3');
 $I->click('a[data-filter=".main-course"]');
-$I->waitForElement('a.active[data-filter=".main-course"]', '3');
+$I->waitForElement('a.active[data-filter=".main-course"]', '5');
 $I->see('Main Course', '.menu-category h3');
 $I->click('a[data-filter="all"]');
 
@@ -168,6 +168,7 @@ $I->checkOption('#menu-options81 .option-checkbox .checkbox:nth-child(4) input[t
 $I->checkOption('#menu-options81 .option-checkbox .checkbox:nth-child(5) input[type="checkbox"]');
 $I->checkOption('#menu-options81 .option-checkbox .checkbox:nth-child(6) input[type="checkbox"]');
 $I->see('Add Comment', '#menu-options81');
+$I->fillField('comment', 'I want it extra hot');
 $I->click('UPDATE', '#menu-options81');
 $I->wait('2');
 
@@ -180,6 +181,7 @@ $I->see('+ Fish = 4.00', '.cart-items li:first-child');
 $I->see('+ Jalapenos = 3.99', '.cart-items li:first-child');
 $I->see('+ Peperoni = 1.99', '.cart-items li:first-child');
 $I->see('+ Sweetcorn = 1.99', '.cart-items li:first-child');
+$I->see('[I want it extra hot]', '.cart-items li:first-child');
 $I->see('£25.96', '.cart-items li:first-child');
 
 //--------------------------------------------------------------------
