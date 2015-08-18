@@ -5,13 +5,26 @@
 Composer Merge Plugin
 =====================
 
-Merge one or more additional composer.json files at runtime.
+Merge one or more additional composer.json files at [Composer] runtime.
+
+Composer Merge Plugin is intended to allow easier dependency management for
+applications which ship a composer.json file and expect some deployments to
+install additional Composer managed libraries. It does this by allowing the
+application's top level `composer.json` file to provide a list of optional
+additional configuration files. When Composer is run it will parse these files
+and merge their configuration into the base configuration. This combined
+configuration will allow downloading additional libraries and generating the
+autoloader. It was specifically created to help with installation of
+[MediaWiki] which has core Composer managed library requirements and optional
+libraries and extensions which may also be managed via Composer.
+
 
 Installation
 ------------
 ```
 $ composer require wikimedia/composer-merge-plugin
 ```
+
 
 Usage
 -----
@@ -66,12 +79,14 @@ files will overwrite the declarations made in earlier files. Files are loaded
 in the order specified in the `include` section with globbed files being
 loaded in alphabetical order.
 
+
 Running tests
 -------------
 ```
 $ composer install
 $ composer test
 ```
+
 
 Contributing
 ------------
@@ -91,12 +106,16 @@ GitHub as well.
   easier for you to make sure you have updated the necessary tests and
   documentation.
 
+
 License
 -------
 Composer Merge plugin is licensed under the MIT license. See the `LICENSE`
 file for more details.
 
+
 ---
+[Composer]: https://getcomposer.org/
+[MediaWiki]: https://www.mediawiki.org/wiki/MediaWiki
 [GitHub project]: https://github.com/wikimedia/composer-merge-plugin
 [PSR-2 Coding Standard]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md
 [PHP Code Sniffer]: http://pear.php.net/package/PHP_CodeSniffer
