@@ -1,11 +1,12 @@
 <?php
 // Ensure that we don't run into any php date-related issues
-if( ! ini_get('date.timezone') ) {
+if( ! ini_get('date.timezone') )
+{
     date_default_timezone_set('UTC');
 }
 
-// The path to the tastyigniter application index.php folder
-define ('ROOT', getcwd() .'/');
+// The path to the codeigniter application index.php folder
+define ('ROOTPATH', getcwd() .'/');
 
 //--------------------------------------------------------------------
 // Override Functions
@@ -13,30 +14,34 @@ define ('ROOT', getcwd() .'/');
 // Override some functions from core/Common.php so they throw errors
 // instead of strings.
 
-function show_error($message, $status_code = 500, $heading = 'An Error Was Encountered') {
+function show_error($message, $status_code = 500, $heading = 'An Error Was Encountered')
+{
     throw new PHPUnit_Framework_Exception($message, $status_code);
 }
 
-function show_404($page = '', $log_error = TRUE) {
+function show_404($page = '', $log_error = TRUE)
+{
 //	throw new PHPUnit_Framework_Exception($page, 404);
 }
 
 //--------------------------------------------------------------------
-// Load up TastyIgniter so that we can use it!
+// Load up CodeIgniter so that we can use it!
 //--------------------------------------------------------------------
 
 
 ob_start();
-//include( ROOT . 'index.php' );
+include( ROOTPATH . 'index.php' );
 ob_end_clean();
 
 /**
- * Class TastyIgniterTestCase
+ * Class CodeIgniterTestCase
  *
  * Use this for testing anything that needs $ci access.
  *
  */
-class TastyIgniterTestCase extends \Codeception\TestCase\Test {
+class CodeIgniterTestCase extends \Codeception\TestCase\Test {
+
+    use \MythTester;
 
     protected $ci;
 
