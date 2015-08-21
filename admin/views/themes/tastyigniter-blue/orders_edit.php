@@ -271,7 +271,10 @@
 										<td><?php echo $cart_item['qty']; ?>x</td>
 										<td><?php echo $cart_item['name']; ?><br />
 										<?php if (!empty($cart_item['options'])) { ?>
-											<div><font size="1">+ <?php echo $cart_item['options']; ?></font></div>
+											<div><small>+ <?php echo $cart_item['options']; ?></small></div>
+										<?php } ?>
+										<?php if (!empty($cart_item['comment'])) { ?>
+											<div><small><b><?php echo $cart_item['comment']; ?></b></small></div>
 										<?php } ?>
 										</td>
 										<td class="text-center"><?php echo $cart_item['price']; ?></td>

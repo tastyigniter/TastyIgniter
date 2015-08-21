@@ -76,6 +76,9 @@
 															<?php if (!empty($menu['options'])) { ?>
 																<div><small><?php echo $menu['options']; ?></small></div>
 															<?php } ?>
+															<?php if (!empty($menu['comment'])) { ?>
+																<div><small><b><?php echo $menu['comment']; ?></b></small></div>
+															<?php } ?>
 														</td>
 														<td class="text-right"><?php echo $menu['subtotal']; ?></td>
 													 </tr>

@@ -83,7 +83,7 @@
 							<div class="list-group check-list-group">
                                 <a class="list-group-item">
                                     <span class="check-icon pull-left"><i class="fa fa-check-square-o"></i></span>
-                                    <span class="check-info"><s><?php echo lang('text_initial_progress'); ?><s></span>
+                                    <span class="check-info"><s><?php echo lang('text_initial_progress'); ?></s></span>
                                 </a>
                                 <a href="<?php echo site_url('settings'); ?>" class="list-group-item">
                                     <span class="check-icon pull-left"><i class="fa fa-square-o"></i></span>

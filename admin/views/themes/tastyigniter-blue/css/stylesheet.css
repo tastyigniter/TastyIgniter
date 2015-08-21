@@ -1495,7 +1495,7 @@ top: -4px;
 .sort, .sort:hover, .sort:focus {
 color:#444;
 text-decoration:none;
-display:block;
+display:inline-block;
 min-width: 40px;
 }
 .sort .fa {
