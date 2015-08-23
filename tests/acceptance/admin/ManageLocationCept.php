@@ -18,7 +18,7 @@ $I->see('Location List', 'h3');
 // Expect list of locations
 //--------------------------------------------------------------------
 $I->expectTo('see list of all locations');
-$I->see('Name City Postcode Telephone Status ID', '#list-form thead tr');
+$I->see('Name City State Postcode Telephone Status ID', '#list-form thead tr');
 $I->seeElement('#list-form tbody td');
 $I->seeNumberOfElements('#list-form tbody tr', [1,20]); //between 1 and 20 elements
 $I->dontSee('There are no locations available.', '#list-form');
@@ -55,6 +55,7 @@ $I->see('The Name field is required', '.text-danger');
 $I->see('The Address 1 field is required.', '.text-danger');
 $I->dontSee('The Address 2 field is required.', '.text-danger');
 $I->see('The City field is required.', '.text-danger');
+$I->dontSee('The State field is required.', '.text-danger');
 $I->see('The Postcode field is required.', '.text-danger');
 $I->dontSee('The Country field is required.', '.text-danger');
 $I->see('The Email field is required.', '.text-danger');
@@ -79,6 +80,7 @@ $I->fillField('location_name', 'Belvedere Hill');
 $I->fillField('address[address_1]', '191 Belvedere Rd');
 $I->fillField('address[address_2]', '');
 $I->fillField('address[city]', 'Salford');
+$I->fillField('address[state]', 'Manchester');
 $I->fillField('address[postcode]', 'M6 5FL');
 $I->selectOption('address[country]', 'United Kingdom');
 $I->fillField('email', 'belvedere@example.com');
@@ -103,7 +105,7 @@ $I->dontSeeElement('.alert-danger');
 $I->see('Location added successfully.', '.alert-success');
 
 $I->amGoingTo('check that added location appears in list');
-$I->see('Belvedere Hill Salford M6 5FL 8929292020 Enabled', '#list-form tbody tr');
+$I->see('Belvedere Hill Salford Manchester M6 5FL 8929292020 Enabled', '#list-form tbody tr');
 
 //$I->makeScreenshot('location_added');
 
@@ -158,7 +160,7 @@ $I->dontSeeElement('.alert-danger');
 $I->see('Location updated successfully.', '.alert-success');
 
 $I->amGoingTo('check that updated location appears in list');
-$I->see('Belvedere Hill Salford M6 5FL 8929292020 Enabled', '#list-form tbody tr');
+$I->see('Belvedere Hill Salford Manchester M6 5FL 8929292020 Enabled', '#list-form tbody tr');
 
 //$I->makeScreenshot('location_updated');
 
@@ -177,7 +179,7 @@ $I->dontSeeElement('.alert-danger');
 $I->see('Location deleted successfully.', '.alert-success');
 
 $I->amGoingTo('check that deleted location does not appear in list');
-$I->dontSee('Belvedere Hill Salford M6 5FL 8929292020 Enabled', '#list-form tbody tr');
+$I->dontSee('Belvedere Hill Salford Manchester M6 5FL 8929292020 Enabled', '#list-form tbody tr');
 
 //$I->makeScreenshot('location_deleted');
 

@@ -86,6 +86,7 @@ $I->click('#sub-tabs .add_address a');
 $I->fillField('address[1][address_1]', '1 Test Address');
 $I->fillField('address[1][address_2]', 'Test address 2');
 $I->fillField('address[1][city]', 'City');
+$I->fillField('address[1][state]', 'State');
 $I->fillField('address[1][postcode]', 'M94BL');
 $I->selectOption('address[1][country_id]', 'United Kingdom');
 
@@ -129,6 +130,7 @@ $I->click('#sub-tabs .add_address a');
 $I->fillField('address[2][address_1]', '100 Test Address');
 $I->fillField('address[2][address_2]', 'Test address 2');
 $I->fillField('address[2][city]', 'City');
+$I->fillField('address[2][state]', 'State');
 $I->fillField('address[2][postcode]', 'M194BL');
 $I->selectOption('address[2][country_id]', 'United Kingdom');
 

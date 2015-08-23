@@ -65,6 +65,7 @@ $I->dontSee('Address added/updated successfully.', '.alert-success');
 $I->see('The Address 1 field is required.', '.text-danger');
 $I->dontSee('The Address 2 field is required.', '.text-danger');
 $I->see('The City field is required.', '.text-danger');
+$I->dontSee('The State field is required.', '.text-danger');
 $I->see('The Postcode field is required.', '.text-danger');
 $I->see('United Kingdom', '.form-group');
 $I->dontSee('The Country field is required.', '.text-danger');
@@ -80,7 +81,6 @@ $bad_fields = [
     'address[address_2]'        => 'User User User User User User User User Test TestTest Test TestTest Test TestTest Test TestTest Test TestTest Test TestTest Test TestTest Test TestTest Test TestTest Test TestTest Test TestTest Test TestTest ',
     // I suppose city is shorter than minimum length of 2
     'address[city]'             => 'D',
-//    'state'             => '12345', // I suppose state field is currently not present
     // I suppose postcode is longer than maximum length of 11
     'address[postcode]'         => '123456789101112',
     // I suppose 'United Kingdom' is selected
@@ -95,7 +95,6 @@ $I->dontSee('Address added/updated successfully.', '.alert-success');
 $I->see('The Address 1 field must be at least 3 characters in length.', '.text-danger');
 $I->see('The Address 2 field cannot exceed 128 characters in length.', '.text-danger');
 $I->see('The City field must be at least 2 characters in length.', '.text-danger');
-$I->see('The City field must be at least 2 characters in length.', '.text-danger');
 $I->see('The Postcode field cannot exceed 11 characters in length.', '.text-danger');
 $I->see('United Kingdom', '.form-group');
 $I->dontSee('The Country field is required.', '.text-danger');
@@ -107,7 +106,8 @@ $I->amGoingTo('submit form with the correct criteria and permitted characters');
 $fields = [
     'address[address_1]'    => '400 Lewisham Road',
     'address[address_2]'    => 'Apt 545',
-    'address[city]'         => 'London',
+    'address[city]'         => 'Lewisham',
+    'address[state]'        => 'London',
     'address[postcode]'     => 'SE12 7DH',
     'address[country]'      => '222',
 ];
@@ -138,7 +138,8 @@ $I->amGoingTo('submit form with the correct criteria and permitted characters');
 $fields = [
     'address[address_1]'    => '400 Rachele Road',
     'address[address_2]'    => ' ',
-    'address[city]'         => 'London',
+    'address[city]'         => 'Rachele',
+    'address[state]'        => 'London',
     'address[postcode]'     => 'QE12 7DH',
     'address[country]'      => '222',
 ];

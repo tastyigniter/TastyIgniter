@@ -64,6 +64,7 @@ $fields = [
     'address[0][address_1]' => '95 Wilton Way',
     'address[0][address_2]' => '',
     'address[0][city]'      => 'London',
+    'address[0][state]'     => 'London',
     'address[0][postcode]'  => 'E8 1BN',
     'address[0][country_id]'=> '222',
     'comment'               => 'I do really want it extra extra hot',
@@ -74,6 +75,7 @@ $bad_fields['email'] = 'demo@demo.com';
 $bad_fields['address[0][address_1]'] = '';
 $bad_fields['address[0][address_2]'] = '';
 $bad_fields['address[0][city]'] = '';
+$bad_fields['address[0][state]'] = '';
 $bad_fields['address[0][postcode]'] = '';
 $bad_fields['address[0][country_id]'] = '222';
 $I->seeElement('#checkout-form');
@@ -118,6 +120,7 @@ $temp_fields['order_type'] = '2';
 unset($temp_fields['address[0][address_1]']);
 unset($temp_fields['address[0][address_2]']);
 unset($temp_fields['address[0][city]']);
+unset($temp_fields['address[0][state]']);
 unset($temp_fields['address[0][postcode]']);
 unset($temp_fields['address[0][country_id]']);
 
