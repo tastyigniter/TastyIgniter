@@ -136,7 +136,7 @@
                     <div class="form-group clearfix">
                         <div class="col-sm-10 wrap-none wrap-top">
                             <label for="comment"><?php echo lang('label_add_comment'); ?></label>
-                            <textarea name="comment" class="form-control" rows="3"></textarea>
+                            <textarea name="comment" class="form-control" rows="3"><?php echo $comment; ?></textarea>
                         </div>
                     </div>
                     <div class="clearfix"></div>

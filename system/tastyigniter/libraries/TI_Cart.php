@@ -291,6 +291,7 @@ class TI_Cart extends CI_Cart {
 
     public function product_options_string($row_id, $split = '<br />') {
         $string = '';
+
         foreach ($this->product_options($row_id) as $option_id => $options) {
             foreach ($options as $option) {
                 $string .= '+ ' . $option['value_name'] . ' = ' . $option['value_price'] . $split;
@@ -302,7 +303,8 @@ class TI_Cart extends CI_Cart {
 
     public function product_options_ids($row_id) {
         $ids = array();
-        foreach ($this->product_options($row_id) as $option_id => $options) {
+
+		foreach ($this->product_options($row_id) as $option_id => $options) {
             foreach ($options as $option) {
                 $ids[$option_id][] = $option['value_id'];
             }

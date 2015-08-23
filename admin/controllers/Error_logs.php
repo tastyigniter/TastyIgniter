@@ -16,7 +16,7 @@ class Error_logs extends Admin_Controller {
 		if ( file_exists($log_path .'logs.php')) {
 
 			$logs = file_get_contents($log_path .'logs.php');
-			$remove = "<"."?php  if ( ! defined('BASEPATH')) exit('No direct access allowed'); ?".">\n";
+			$remove = "<"."?php defined('BASEPATH') OR exit('No direct script access allowed'); ?".">\n";
 
 			$data['logs'] = str_replace($remove, '', $logs);
 		} else {
@@ -39,7 +39,7 @@ class Error_logs extends Admin_Controller {
         $log_path = IGNITEPATH .'/logs/';
 
         if (is_readable($log_path .'logs.php')) {
-            $log = "<"."?php  if ( ! defined('BASEPATH')) exit('No direct access allowed'); ?".">\n\n";
+			$log = "<"."?php defined('BASEPATH') OR exit('No direct script access allowed'); ?".">\n";
 
             $this->load->helper('file');
             write_file($log_path .'logs.php', $log);
