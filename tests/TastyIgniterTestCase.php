@@ -5,8 +5,8 @@ if( ! ini_get('date.timezone') )
     date_default_timezone_set('UTC');
 }
 
-// The path to the codeigniter application index.php folder
-define ('ROOTPATH', getcwd() .'/');
+// The path to the tastyigniter application index.php folder
+//define ('ROOTPATH', '../test');
 
 //--------------------------------------------------------------------
 // Override Functions
@@ -30,7 +30,7 @@ function show_404($page = '', $log_error = TRUE)
 
 
 ob_start();
-include( ROOTPATH . 'index.php' );
+include( 'index.php' );
 ob_end_clean();
 
 /**
