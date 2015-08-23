@@ -44,6 +44,13 @@
 						</div>
 					</div>
 					<div class="form-group">
+						<label for="input-state" class="col-sm-3 control-label"><?php echo lang('label_state'); ?></label>
+						<div class="col-sm-5">
+							<input type="text" name="address[state]" id="input-state" class="form-control" value="<?php echo set_value('address[state]', $location_state); ?>" />
+							<?php echo form_error('address[state]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
 						<label for="input-postcode" class="col-sm-3 control-label"><?php echo lang('label_postcode'); ?></label>
 						<div class="col-sm-5">
 							<input type="text" name="address[postcode]" id="input-postcode" class="form-control" value="<?php echo set_value('address[postcode]', $location_postcode); ?>" />

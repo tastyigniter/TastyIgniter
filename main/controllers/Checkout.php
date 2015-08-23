@@ -269,7 +269,7 @@ class Checkout extends Main_Controller {
         }
 
         if (empty($addresses)) {
-            $addresses = array(array('address_id' => '', 'address_1' => '', 'address_2' => '', 'city' => '', 'postcode' => '', 'country_id' => $country_id));
+            $addresses = array(array('address_id' => '', 'address_1' => '', 'address_2' => '', 'city' => '', 'state' => '', 'postcode' => '', 'country_id' => $country_id));
         }
 
         $data['addresses'] = array();
@@ -285,6 +285,7 @@ class Checkout extends Main_Controller {
                     'address_1'     => $address['address_1'],
                     'address_2'     => $address['address_2'],
                     'city'          => $address['city'],
+                    'state'         => $address['state'],
                     'postcode'      => $address['postcode'],
                     'country_id'    => $address['country_id'],
                     'address'       => $this->country->addressFormat($address)
@@ -463,6 +464,7 @@ class Checkout extends Main_Controller {
 				$this->form_validation->set_rules('address['.$key.'][address_id]', 'lang:label_address_id', 'xss_clean|trim');
 				$this->form_validation->set_rules('address['.$key.'][address_1]', 'lang:label_address_1', 'xss_clean|trim|required|min_length[3]|max_length[128]');
 				$this->form_validation->set_rules('address['.$key.'][city]', 'lang:label_city', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+				$this->form_validation->set_rules('address['.$key.'][state]', 'lang:label_state', 'xss_clean|trim|max_length[128]');
 				$this->form_validation->set_rules('address['.$key.'][postcode]', 'lang:label_postcode', 'xss_clean|trim|required|min_length[2]|max_length[10]');
 				$this->form_validation->set_rules('address['.$key.'][country_id]', 'lang:label_country', 'xss_clean|trim|required|integer');
 			}

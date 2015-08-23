@@ -70,6 +70,7 @@ class Locations extends Admin_Controller {
         $order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
         $data['sort_name'] 			= site_url('locations'.$url.'sort_by=location_name&order_by='.$order_by);
         $data['sort_city'] 			= site_url('locations'.$url.'sort_by=location_city&order_by='.$order_by);
+        $data['sort_state'] 		= site_url('locations'.$url.'sort_by=location_state&order_by='.$order_by);
         $data['sort_postcode'] 		= site_url('locations'.$url.'sort_by=location_postcode&order_by='.$order_by);
         $data['sort_id'] 			= site_url('locations'.$url.'sort_by=location_id&order_by='.$order_by);
 
@@ -90,6 +91,7 @@ class Locations extends Admin_Controller {
 				'location_name'			=> $result['location_name'],
 				'location_address_1'	=> $result['location_address_1'],
 				'location_city'			=> $result['location_city'],
+				'location_state'		=> $result['location_state'],
 				'location_postcode'		=> $result['location_postcode'],
 				'location_telephone'	=> $result['location_telephone'],
 				'location_lat'			=> $result['location_lat'],
@@ -183,6 +185,7 @@ class Locations extends Admin_Controller {
 		$data['location_address_1'] 	= $location_info['location_address_1'];
 		$data['location_address_2'] 	= $location_info['location_address_2'];
 		$data['location_city'] 			= $location_info['location_city'];
+		$data['location_state'] 		= $location_info['location_state'];
 		$data['location_postcode'] 		= $location_info['location_postcode'];
 		$data['location_email'] 		= $location_info['location_email'];
 		$data['location_telephone'] 	= $location_info['location_telephone'];
@@ -424,6 +427,7 @@ class Locations extends Admin_Controller {
 		$this->form_validation->set_rules('address[address_1]', 'lang:label_address_1', 'xss_clean|trim|required|min_length[2]|max_length[128]|get_lat_lag[address]');
 		$this->form_validation->set_rules('address[address_2]', 'lang:label_address_2', 'xss_clean|trim|max_length[128]');
 		$this->form_validation->set_rules('address[city]', 'lang:label_city', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+		$this->form_validation->set_rules('address[state]', 'lang:label_state', 'xss_clean|trim|max_length[128]');
 		$this->form_validation->set_rules('address[postcode]', 'lang:label_postcode', 'xss_clean|trim|required|min_length[2]|max_length[10]');
 		$this->form_validation->set_rules('address[country]', 'lang:label_country', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('email', 'lang:label_email', 'xss_clean|trim|required|valid_email');

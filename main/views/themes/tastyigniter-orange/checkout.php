@@ -167,14 +167,21 @@
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-sm-6">
+                                                        <div class="col-sm-4">
                                                             <div class="form-group">
                                                                 <label for=""><?php echo lang('label_city'); ?></label>
                                                                 <input type="text" name="address[<?php echo $address_row; ?>][city]" class="form-control" value="<?php echo set_value('address['.$address_row.'][city]', $address['city']); ?>" />
                                                                 <?php echo form_error('address['.$address_row.'][city]', '<span class="text-danger">', '</span>'); ?>
                                                             </div>
                                                         </div>
-                                                        <div class="col-sm-6">
+                                                        <div class="col-sm-4">
+                                                            <div class="form-group">
+                                                                <label for=""><?php echo lang('label_state'); ?></label>
+                                                                <input type="text" name="address[<?php echo $address_row; ?>][state]" class="form-control" value="<?php echo set_value('address['.$address_row.'][state]', $address['state']); ?>" />
+                                                                <?php echo form_error('address['.$address_row.'][state]', '<span class="text-danger">', '</span>'); ?>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4">
                                                             <div class="form-group">
                                                                 <label for=""><?php echo lang('label_postcode'); ?></label>
                                                                 <input type="text" name="address[<?php echo $address_row; ?>][postcode]" class="form-control" value="<?php echo set_value('address['.$address_row.'][postcode]', $address['postcode']); ?>" />
