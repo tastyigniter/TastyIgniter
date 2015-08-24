@@ -6,6 +6,7 @@ class Locations_model extends TI_Model {
 		if (!empty($filter['filter_search'])) {
 			$this->db->like('location_name', $filter['filter_search']);
 			$this->db->or_like('location_city', $filter['filter_search']);
+			$this->db->or_like('location_state', $filter['filter_search']);
 			$this->db->or_like('location_postcode', $filter['filter_search']);
 		}
 
@@ -32,6 +33,7 @@ class Locations_model extends TI_Model {
 			if (!empty($filter['filter_search'])) {
 				$this->db->like('location_name', $filter['filter_search']);
 				$this->db->or_like('location_city', $filter['filter_search']);
+				$this->db->or_like('location_state', $filter['filter_search']);
 				$this->db->or_like('location_postcode', $filter['filter_search']);
 			}
 
@@ -198,6 +200,10 @@ class Locations_model extends TI_Model {
 			$this->db->set('location_city', $address['city']);
 		}
 
+		if (!empty($address['state'])) {
+			$this->db->set('location_state', $address['state']);
+		}
+
 		if (!empty($address['postcode'])) {
 			$this->db->set('location_postcode', $address['postcode']);
 		}
@@ -252,6 +258,10 @@ class Locations_model extends TI_Model {
 
 		if (!empty($save['address']['city'])) {
 			$this->db->set('location_city', $save['address']['city']);
+		}
+
+		if (!empty($save['address']['state'])) {
+			$this->db->set('location_state', $save['address']['state']);
 		}
 
 		if (!empty($save['address']['postcode'])) {

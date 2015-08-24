@@ -203,6 +203,10 @@ class Addresses_model extends TI_Model {
             $this->db->set('city', $address['city']);
         }
 
+        if (!empty($address['state'])) {
+            $this->db->set('state', $address['state']);
+        }
+
         if (!empty($address['postcode'])) {
             $this->db->set('postcode', $address['postcode']);
         }
