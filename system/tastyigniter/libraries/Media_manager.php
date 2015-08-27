@@ -249,7 +249,7 @@ class Media_manager {
         $this->CI->upload->set_max_filesize($this->_max_size);
 
         if ( ! $this->CI->upload->do_upload('file')) {
-            log_message('debug', $this->upload->display_errors('', ''));
+            log_message('debug', $this->CI->upload->display_errors('', ''));
             return FALSE;
         } else {
             $data = $this->CI->upload->data();
