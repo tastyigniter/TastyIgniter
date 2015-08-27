@@ -18,8 +18,6 @@ class Main_Controller extends Base_Controller {
 
         $this->load->library('template');
 
-        $this->load->library('extension');
-
         // Load permalink
         $this->load->library('permalink');
 

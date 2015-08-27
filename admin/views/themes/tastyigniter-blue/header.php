@@ -202,11 +202,7 @@
 							</ul>
 						</li>
 						<li>
-							<a class="extensions"><i class="fa fa-puzzle-piece fa-fw"></i><span class="content"><?php echo lang('menu_extension'); ?> </span><span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-								<li><a class="modules extensions" href="<?php echo site_url('extensions'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_module'); ?></a></li>
-								<li><a class="payments" href="<?php echo site_url('payments'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_payment'); ?></a></li>
-							</ul>
+							<a class="extensions" href="<?php echo site_url('extensions'); ?>"><i class="fa fa-puzzle-piece fa-fw"></i><span class="content"><?php echo lang('menu_extension'); ?> </span></a>
 						</li>
 						<li>
 							<a class="themes"><i class="fa fa-paint-brush fa-fw"></i><span class="content"><?php echo lang('menu_design'); ?> </span><span class="fa arrow"></span></a>

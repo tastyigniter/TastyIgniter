@@ -2,30 +2,20 @@
 
 /*
 |--------------------------------------------------------------------------
-| Extension Type
+| Extension Meta
 |--------------------------------------------------------------------------
 |
-| The Extension type. Typically this will be used to put your extension
-| in the right group
-|
-| This can be set to any of these:
-|
-|     module
-|     payment
-|     widget
-|
+| The Extension Meta Data (Required)
+| 'author'      => The name of the extension author. More than one author may be listed, separated by comma.
+| 'name'        => The name of your extension
+| 'type'        => The type of your extension, could be module, payment or widget
+| 'description' => A short description of the extension. Keep this description to fewer than 128 characters.
 |
 */
-$config['ext_type']	= 'module';
-
-
-/*
-|--------------------------------------------------------------------------
-| Enable/Disable Admin Options
-|--------------------------------------------------------------------------
-|
-| If you would like to use the admin option page you must enable it by
-| setting this variable to TRUE (boolean).
-|
-*/
-$config['admin_options']	= TRUE;
+$config['extension_meta'] = array(
+    'author'		=> 'SamPoyigi',
+    'name'			=> 'slideshow',
+    'type'		    => 'module',
+    'description'   => 'This extension will allow you to place a slide show on your homepage.',
+    'settings'      => TRUE,
+);

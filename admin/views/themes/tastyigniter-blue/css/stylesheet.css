@@ -249,11 +249,12 @@ min-height: 0;
 white-space: normal;
 }
 .navbar-top-links li a .label {
+border-radius: 50%;
 font-size: 9px;
 line-height: 0.9;
-padding: 2px 3px;
+padding: 5px 7px;
 position: absolute;
-right: 3px;
+right: 0px;
 text-align: center;
 top: 7px;
 }
@@ -287,11 +288,7 @@ margin-left: -135px;
 width: 250px;
 }
 .navbar-top-links .dropdown-activities .menu .activity-body {
-width: 74%;
 padding-left: 20px;
-}
-.navbar-top-links .dropdown-activities .menu .activity-time {
-width: 24%;
 }
 .navbar-top-links .dropdown-activities .menu .activity-body .fa {
 margin-left: -20px;
