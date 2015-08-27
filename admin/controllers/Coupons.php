@@ -111,7 +111,6 @@ class Coupons extends Admin_Controller {
 			redirect('coupons');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('coupons', $data);
 	}
 
@@ -197,7 +196,6 @@ class Coupons extends Admin_Controller {
 			redirect('coupons/edit?id='. $coupon_id);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('coupons_edit', $data);
 	}
 

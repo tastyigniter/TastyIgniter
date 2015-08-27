@@ -74,7 +74,6 @@ class Checkout extends Main_Controller {
 
         $data = $this->getFormData($order_data, $data);
 
-		$this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
 		$this->template->render('checkout', $data);
 	}
 
@@ -173,7 +172,6 @@ class Checkout extends Main_Controller {
         $this->cart->destroy();
         $this->session->mark_as_temp('order_data', 300);
 
-        $this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
 		$this->template->render('checkout_success', $data);
 	}
 

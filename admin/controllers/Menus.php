@@ -142,7 +142,6 @@ class Menus extends Admin_Controller {
 			redirect('menus');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('menus', $data);
 	}
 
@@ -253,7 +252,6 @@ class Menus extends Admin_Controller {
 			redirect('menus/edit?id='. $menu_id);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('menus_edit', $data);
 	}
 

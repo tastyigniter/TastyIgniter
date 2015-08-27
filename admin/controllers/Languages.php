@@ -102,7 +102,6 @@ class Languages extends Admin_Controller {
 			redirect('languages');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('languages', $data);
 	}
 

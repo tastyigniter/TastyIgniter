@@ -143,7 +143,6 @@ class Customers extends Admin_Controller {
 			redirect('customers');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('customers', $data);
 	}
 
@@ -218,7 +217,6 @@ class Customers extends Admin_Controller {
 			redirect('customers/edit?id='. $customer_id);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('customers_edit', $data);
 	}
 

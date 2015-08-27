@@ -29,7 +29,6 @@ class Error_logs extends Admin_Controller {
 			redirect('error_logs');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('error_logs', $data);
 	}
 

@@ -95,7 +95,6 @@ class Dashboard extends Admin_Controller {
 			);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('dashboard', $data);
 	}
 

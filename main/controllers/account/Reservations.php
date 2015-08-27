@@ -78,7 +78,6 @@ class Reservations extends Main_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		$this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
 		$this->template->render('account/reservations', $data);
 	}
 
@@ -127,7 +126,6 @@ class Reservations extends Main_Controller {
         $data['location_name'] = $location_address['location_name'];
         $data['location_address'] = $this->country->addressFormat($location_address);
 
-		$this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
 		$this->template->render('account/reservations_view', $data);
 	}
 }

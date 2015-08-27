@@ -89,7 +89,6 @@ class Statuses extends Admin_Controller {
 			redirect('statuses');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('statuses', $data);
 	}
 
@@ -127,7 +126,6 @@ class Statuses extends Admin_Controller {
 			redirect('statuses/edit?id='. $status_id);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('statuses_edit', $data);
 	}
 

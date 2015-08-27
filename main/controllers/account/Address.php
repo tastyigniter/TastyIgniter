@@ -71,7 +71,6 @@ class Address extends Main_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		$this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
 		$this->template->render('account/address', $data);
 	}
 
@@ -125,7 +124,6 @@ class Address extends Main_Controller {
 			redirect('account/address');
 		}
 
-		$this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
 		$this->template->render('account/address_edit', $data);
 	}
 

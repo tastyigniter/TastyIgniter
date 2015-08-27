@@ -384,7 +384,6 @@ class Locations extends Admin_Controller {
 			redirect('locations/edit?id='. $location_id);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('locations_edit', $data);
 	}
 

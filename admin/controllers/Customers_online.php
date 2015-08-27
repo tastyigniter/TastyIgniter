@@ -26,7 +26,6 @@ class Customers_online extends Admin_Controller {
 
         $data = $this->getList($data, $filter);
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('customers_online', $data);
 	}
 
@@ -40,7 +39,6 @@ class Customers_online extends Admin_Controller {
 
         $data = $this->getList($data, $filter);
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('customers_online', $data);
 	}
 

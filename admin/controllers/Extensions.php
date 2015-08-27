@@ -139,7 +139,6 @@ class Extensions extends Admin_Controller {
             redirect(referrer_url());
         }
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('extensions_edit', $data);
 	}
 
@@ -163,7 +162,6 @@ class Extensions extends Admin_Controller {
             redirect('extensions/add');
         }
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('extensions_add', $data);
 	}
 

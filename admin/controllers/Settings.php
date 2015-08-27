@@ -177,7 +177,6 @@ class Settings extends Admin_Controller {
 			redirect('settings');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('settings', $data);
 	}
 

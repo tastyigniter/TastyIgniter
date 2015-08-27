@@ -82,7 +82,6 @@ class Customer_groups extends Admin_Controller {
 		    redirect('customer_groups');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('customer_groups', $data);
 	}
 
@@ -117,7 +116,6 @@ class Customer_groups extends Admin_Controller {
 			redirect('customer_groups/edit?id='. $customer_group_id);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('customer_groups_edit', $data);
 	}
 

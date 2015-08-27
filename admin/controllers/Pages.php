@@ -76,7 +76,6 @@ class Pages extends Admin_Controller {
 			redirect('pages');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('pages', $data);
 	}
 
@@ -152,7 +151,6 @@ class Pages extends Admin_Controller {
 			redirect('pages/edit?id='. $page_id);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('pages_edit', $data);
 	}
 

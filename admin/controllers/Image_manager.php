@@ -186,8 +186,7 @@ class Image_manager extends Admin_Controller {
 		$data['allowed_ext']        = $this->media_manager->getAllowedExt();
 
 		if ($popup !== 'iframe') {
-			$this->template->setPartials(array('header', 'footer'));
-		}
+			}
 
 		$this->template->render('image_manager', $data);
 	}

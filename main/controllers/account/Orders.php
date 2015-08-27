@@ -86,7 +86,6 @@ class Orders extends Main_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		$this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
 		$this->template->render('account/orders', $data);
 	}
 
@@ -164,7 +163,6 @@ class Orders extends Main_Controller {
         $data['order_total'] 		= $this->currency->format($result['order_total']);
         $data['total_items']		= $result['total_items'];
 
-		$this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
 		$this->template->render('account/orders_view', $data);
 	}
 

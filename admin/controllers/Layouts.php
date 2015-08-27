@@ -44,7 +44,6 @@ class Layouts extends Admin_Controller {
 			redirect('layouts');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('layouts', $data);
 	}
 
@@ -130,7 +129,6 @@ class Layouts extends Admin_Controller {
 			redirect('layouts/edit?id='. $layout_id);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('layouts_edit', $data);
 	}
 
