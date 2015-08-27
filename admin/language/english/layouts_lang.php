@@ -11,7 +11,7 @@ $lang['text_modules'] 		            = 'Modules';
 
 $lang['column_name'] 		            = 'Layout';
 $lang['column_module'] 		            = 'Routes';
-$lang['column_position'] 		        = 'Position';
+$lang['column_partial'] 		        = 'Partial Area';
 $lang['column_priority'] 		        = 'Priority';
 $lang['column_status'] 		            = 'Status';
 $lang['column_uri_route'] 		        = 'URI Route';
@@ -19,7 +19,7 @@ $lang['column_uri_route'] 		        = 'URI Route';
 $lang['label_name'] 		            = 'Name';
 $lang['label_route'] 		            = 'Route';
 $lang['label_module_code'] 		        = 'Module Code';
-$lang['label_module_position'] 		    = 'Module Position';
+$lang['label_module_partial'] 		    = 'Module Partial';
 $lang['label_module_priority'] 		    = 'Module Priority';
 $lang['label_module_status'] 		    = 'Module Status';
 

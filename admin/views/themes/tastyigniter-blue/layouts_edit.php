@@ -31,7 +31,7 @@
                                 <tr>
                                     <th class="action action-one"></th>
                                     <th><?php echo lang('column_module'); ?></th>
-                                    <th><?php echo lang('column_position'); ?></th>
+                                    <th><?php echo lang('column_partial'); ?></th>
                                     <th><?php echo lang('column_priority'); ?></th>
                                     <th><?php echo lang('column_status'); ?></th>
                                 </tr>
@@ -52,16 +52,18 @@
                                             </select>
                                             <?php echo form_error('modules['.$module_row.'][module_code]', '<span class="text-danger small">', '</span>'); ?>
                                         </td>
-                                        <td><select name="modules[<?php echo $module_row; ?>][position]" class="form-control">
-                                                <?php foreach ($layout_positions as $key => $value) { ?>
-                                                    <?php if ($key === $module['position']) { ?>
-                                                        <option value="<?php echo $key; ?>" selected="selected"><?php echo $value; ?></option>
+                                        <td><select name="modules[<?php echo $module_row; ?>][partial]" class="form-control">
+                                                <?php foreach ($theme_partials as $partial) { ?>
+                                                    <?php if ($partial['id'] === $module['partial']) { ?>
+                                                        <option value="<?php echo $partial['id']; ?>" selected="selected"><?php echo $partial['name']; ?></option>
+                                                    <?php } else if ($partial['deprecated_id'] === $module['partial']) { ?>
+                                                        <option value="<?php echo $partial['id']; ?>" selected="selected"><?php echo $partial['name']; ?></option>
                                                     <?php } else { ?>
-                                                        <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                                                        <option value="<?php echo $partial['id']; ?>"><?php echo $partial['name']; ?></option>
                                                     <?php } ?>
                                                 <?php } ?>
                                             </select>
-                                            <?php echo form_error('modules['.$module_row.'][position]', '<span class="text-danger small">', '</span>'); ?>
+                                            <?php echo form_error('modules['.$module_row.'][partial]', '<span class="text-danger small">', '</span>'); ?>
                                         </td>
                                         <td><input type="text" name="modules[<?php echo $module_row; ?>][priority]" class="form-control" value="<?php echo $module['priority']; ?>" />
                                             <?php echo form_error('modules['.$module_row.'][priority]', '<span class="text-danger small">', '</span>'); ?>

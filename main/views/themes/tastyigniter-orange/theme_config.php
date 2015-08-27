@@ -13,12 +13,12 @@ $theme['description'] = 'Responsive theme for front-end';
 $theme['head_tags'] = array(
     'doctype'   => 'html5',
     'favicon'   => 'images/favicon.ico',
-    'meta'     => array(
+    'meta'     	=> array(
             array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'),
             array('name' => 'X-UA-Compatible', 'content' => 'IE=edge', 'type' => 'equiv'),
             array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1', 'type' => 'name'),
     ),
-    'style'    => array(
+    'style'    	=> array(
             array('css/bootstrap.min.css', 'bootstrap-css', '10'),
             array('css/font-awesome.min.css', 'font-awesome-css', '11'),
             array('css/select2.css', 'select2-css', '13'),
@@ -26,12 +26,49 @@ $theme['head_tags'] = array(
             array('css/jquery.raty.css', 'jquery-raty-css', '15'),
             array('css/stylesheet.css', 'stylesheet-css', '100100100100100'),
     ),
-    'script'   => array(
+    'script'   	=> array(
             array('js/jquery-1.11.2.min.js', 'jquery-js', '1'),
             array('js/bootstrap.min.js', 'bootstrap-js', '10'),
             array('js/select2.js', 'select-2-js', '12'),
             array('js/jquery.raty.js', 'jquery-raty-js', '13'),
             array('js/common.js', 'common-js', '100100100100100'),
+    ),
+);
+
+// Register partial areas for modules.
+$theme['partial_area'] = array(
+    array(
+        'name'      => 'Content Top',
+        'id'        => 'content_top',
+        'open_tag'  => '<div id="{id}" class="partial">',
+        'close_tag' => '</div>',
+    ),
+    array(
+        'name'      => 'Content Bottom',
+        'id'        => 'content_bottom',
+        'open_tag'  => '<div class="clearfix"></div><div id="{id}" class="partial">',
+        'close_tag' => '</div>',
+    ),
+    array(
+        'name'      => 'Content Left',
+        'id'        => 'content_left',
+        'class'     => 'col-sm-3',
+        'open_tag'  => '<div id="{id}" class="partial {class}"><div class="side-bar">',
+        'close_tag' => '</div></div>',
+    ),
+    array(
+        'name'      => 'Content Right',
+        'id'        => 'content_right',
+        'class'     => 'col-sm-3 ',
+        'open_tag'  => '<div id="{id}" class="partial {class}"><div class="side-bar">',
+        'close_tag' => '</div></div>',
+    ),
+    array(
+        'name'      => 'Content Footer',
+        'id'        => 'content_footer',
+        'class'     => 'footer-section ',
+        'open_tag'  => '<div id="{id}" class="partial {class}">',
+        'close_tag' => '</div>',
     ),
 );
 
