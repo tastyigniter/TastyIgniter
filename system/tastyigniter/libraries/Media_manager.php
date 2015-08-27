@@ -252,7 +252,7 @@ class Media_manager {
             log_message('debug', $this->upload->display_errors('', ''));
             return FALSE;
         } else {
-            $data = $this->upload->data();
+            $data = $this->CI->upload->data();
             if (!$data) {
                 unlink($data['full_path']);
                 return FALSE;
