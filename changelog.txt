@@ -160,6 +160,8 @@ Add google analytics code to settings-server
 
 ******      move all post method calls to the start of controller methods
 
+Add Sitemap
+
 Improve admin context list filter
 
 add hidden input to all post forms to specify CRUD action using http method verb (PUT, PATCH, DELETE) as value
