@@ -5,9 +5,9 @@ $query_builder = TRUE;
 
 $db['default']['dsn'] = '';
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'workbench';
-$db['default']['password'] = '9HPTnqu3pLFchdWd';
-$db['default']['database'] = 'tastyigniter_test';
+$db['default']['username'] = 'your database username';
+$db['default']['password'] = 'your database password';
+$db['default']['database'] = 'your database name';
 $db['default']['dbdriver'] = 'mysqli';
 $db['default']['dbprefix'] = 'ti_';
 $db['default']['pconnect'] = TRUE;

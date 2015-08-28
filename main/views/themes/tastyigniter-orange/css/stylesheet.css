@@ -1090,12 +1090,12 @@ footer {
 background-color: #f3f3f3;
 border-top: 4px solid #ed561a;
 }
-.main-footer {
+.main-footer, .bottom-footer {
 color: #888;
 }
 .social-bottom {
-margin-top: 0px;
-padding-bottom: 10px;
+margin-top: 20px;
+padding-bottom: 20px;
 }
 .social-bottom .social-icons {
 margin: 0;
@@ -1125,7 +1125,7 @@ background-color: #ed561a;
 color: #FFF;
 }
 .subscribe-form {
-margin-top: 28px;
+margin-top: 48px;
 padding-bottom: 20px;
 }
 .subscribe-form span, .social-bottom span {
@@ -1185,23 +1185,23 @@ font-size: 13px;
 .footer-links a:hover {
 color: #ed561a;
 }
-.main-footer {
+.bottom-footer {
 text-align: left;
 padding: 10px 0 0;
 border-top: 1px solid #ddd;
 }
-.main-footer .footer-links li {
+.bottom-footer .footer-links li {
 display: inline-block;
 }
-.main-footer .footer-links li::after {
+.bottom-footer .footer-links li::after {
 content: "·";
 margin: 0 10px;
 }
-.main-footer .footer-links li:last-child::after {
+.bottom-footer .footer-links li:last-child::after {
 content: "";
 margin: 0px;
 }
-.main-footer .footer-links a {
+.bottom-footer .footer-links a {
 text-transform: none;
 }
 .main-footer .contact-info p {
@@ -1400,7 +1400,7 @@ width: 70% !important;
     margin-top: 60px;
   }
 
-  .main-footer {
+  .bottom-footer {
     text-align: center;
   }
 
@@ -1418,7 +1418,7 @@ width: 70% !important;
     margin-top: 60px;
   }
 
-  .main-footer {
+  .bottom-footer {
     text-align: center;
   }
 

@@ -54,7 +54,7 @@ $(document).ready(function() {
 
 	//Uninstall Confirmation Box
 	$('a').click(function(){
-		if ($(this).attr('href') != null && $(this).attr('href').indexOf('delete', 1) != -1) {
+		if ($(this).attr('href') != null && $(this).attr('href').indexOf('uninstall', 1) != -1) {
 			if (!confirm('<?php echo lang('alert_warning_confirm'); ?>')) {
 				return false;
 			}

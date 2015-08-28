@@ -19,6 +19,8 @@ class Local_module extends Main_Controller {
 
         $this->template->setStyleTag(extension_url('local_module/views/stylesheet.css'), 'local-module-css', '100000');
 
+        $data['module_position'] = isset($ext_data['module_position']) ? $ext_data['module_position'] : '';
+
         $data['local_action']			= site_url('local_module/local_module/search');
 
         $data['rsegment'] = $rsegment = ($this->uri->rsegment(1) === 'local_module' AND !empty($this->referrer_uri)) ? $this->referrer_uri : $this->uri->rsegment(1);
