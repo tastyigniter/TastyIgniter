@@ -1,4 +1,6 @@
 <?php
+// @group main
+
 $I = new AcceptanceTester($scenario);
 $I->am('Registered Customer');
 $I->wantTo('add a new and edit existing customer address');

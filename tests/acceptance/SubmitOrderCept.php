@@ -1,4 +1,6 @@
 <?php
+// @group main
+
 $I = new AcceptanceTester($scenario);
 $I->am('Customer');
 $I->wantTo('submit both new delivery and collection order as guest and registered customer');

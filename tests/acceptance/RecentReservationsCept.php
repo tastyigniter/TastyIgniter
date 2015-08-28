@@ -1,4 +1,6 @@
 <?php
+// @group main
+
 $I = new AcceptanceTester($scenario);
 $I->am('Registered Customer');
 $I->wantTo('view customer recent reservations list');

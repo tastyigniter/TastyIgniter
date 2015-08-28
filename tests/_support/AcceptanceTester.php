@@ -75,7 +75,7 @@ class AcceptanceTester extends \Codeception\Actor
         $I = $this;
 
         $I->expectTo('see all links in the account sidebar');
-        $I->seeElement('#module-left .side-bar .module-box .panel .list-group');
+        $I->seeElement('.side-bar .module-box .panel .list-group');
         $I->see('My Account', '.side-bar .module-box .panel .list-group');
         $I->see('Edit My Details', '.side-bar .module-box .panel .list-group');
         $I->see('Address Book', '.side-bar .module-box .panel .list-group');

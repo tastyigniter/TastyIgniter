@@ -1,4 +1,6 @@
 <?php
+$scenario->group('admin');
+
 $I = new AcceptanceTester($scenario);
 $I->am('Admin');
 $I->wantTo('manage category from the administrator panel');

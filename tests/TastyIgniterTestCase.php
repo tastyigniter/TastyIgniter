@@ -1,10 +1,4 @@
 <?php
-// Ensure that we don't run into any php date-related issues
-if( ! ini_get('date.timezone') )
-{
-    date_default_timezone_set('UTC');
-}
-
 // The path to the tastyigniter application index.php folder
 //define ('ROOTPATH', '../test');
 

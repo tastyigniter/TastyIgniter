@@ -1,4 +1,6 @@
 <?php
+// @group main
+
 $I = new AcceptanceTester($scenario);
 $I->am('Customer');
 $I->wantTo('search location, add menu to order and apply coupon');
@@ -27,28 +29,28 @@ $I->see('£13.99', '.menu-items > #menu81.menu-item');
 
 $I->amGoingTo('check the categories sidebar links');
 $I->click('a[data-filter=".appetizer"]');
-$I->waitForElement('a.active[data-filter=".appetizer"]', '3');
+$I->wait('3');
 $I->see('Appetizer', '.menu-category h3');
 $I->click('a[data-filter=".salads"]');
-$I->waitForElement('a.active[data-filter=".salads"]', '3');
+$I->wait('3');
 $I->see('Salads', '.menu-category h3');
 $I->click('a[data-filter=".seafoods"]');
-$I->waitForElement('a.active[data-filter=".seafoods"]', '3');
+$I->wait('3');
 $I->see('Seafoods', '.menu-category h3');
 $I->click('a[data-filter=".traditional"]');
-$I->waitForElement('a.active[data-filter=".traditional"]', '3');
+$I->wait('3');
 $I->see('Traditional', '.menu-category h3');
 $I->click('a[data-filter=".vegetarian"]');
-$I->waitForElement('a.active[data-filter=".vegetarian"]', '3');
+$I->wait('3');
 $I->see('Vegetarian', '.menu-category h3');
 $I->click('a[data-filter=".soups"]');
-$I->waitForElement('a.active[data-filter=".soups"]', '3');
+$I->wait('3');
 $I->see('Soups', '.menu-category h3');
 $I->click('a[data-filter=".rice-dishes"]');
-$I->waitForElement('a.active[data-filter=".rice-dishes"]', '3');
+$I->wait('3');
 $I->see('Rice Dishes', '.menu-category h3');
 $I->click('a[data-filter=".main-course"]');
-$I->waitForElement('a.active[data-filter=".main-course"]', '5');
+$I->wait('3');
 $I->see('Main Course', '.menu-category h3');
 $I->click('a[data-filter="all"]');
 
@@ -81,7 +83,7 @@ $I->click('#search');
 $I->wait('2');
 
 $I->expect('success after customer enter their postcode/address');
-$I->see('Lewisham can deliver to you at E9 6QH');
+$I->see('Lewisham can deliver to you at E9 6QH', '.panel-local');
 
 //--------------------------------------------------------------------
 // Success with menu added to order

@@ -1,4 +1,6 @@
 <?php
+$scenario->group('admin');
+
 $I = new AcceptanceTester($scenario);
 $I->am('Admin');
 $I->wantTo('manage reservation from the administrator panel');

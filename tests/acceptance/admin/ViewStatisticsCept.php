@@ -1,4 +1,6 @@
 <?php
+$scenario->group('admin');
+
 $I = new AcceptanceTester($scenario);
 $I->am('Admin');
 $I->wantTo('view statistics from the administrator panel');

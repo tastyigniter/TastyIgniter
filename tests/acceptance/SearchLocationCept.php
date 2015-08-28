@@ -1,4 +1,6 @@
 <?php
+// @group main
+
 $I = new AcceptanceTester($scenario);
 $I->am('Customer');
 $I->wantTo('search restaurant location');

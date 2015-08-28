@@ -2160,9 +2160,10 @@ VALUES
 	(67,15,'account_module','left',1,1),
 	(71,13,'local_module','top',1,1),
 	(72,13,'cart_module','right',1,1),
-	(74,18,'local_module','top',1,1),
-	(75,18,'categories_module','left',1,1),
-	(76,18,'cart_module','right',1,1),
+	(74,18,'local_module','content_top',1,1),
+	(75,18,'categories_module','content_left',1,1),
+	(76,18,'cart_module','content_right',1,1),
+	(77,18,'newsletter','content_footer',1,1),
 	(78,16,'reservation_module','top',1,1),
 	(83,12,'local_module','top',1,1),
 	(84,12,'categories_module','left',1,1),
@@ -2678,7 +2679,7 @@ LOCK TABLES `ti_migrations` WRITE;
 
 INSERT INTO `ti_migrations` (`version`)
 VALUES
-	(9);
+	(12);
 
 /*!40000 ALTER TABLE `ti_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
