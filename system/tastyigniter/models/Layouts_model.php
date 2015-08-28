@@ -89,7 +89,7 @@ class Layouts_model extends TI_Model {
         $result = array();
 
         if (!empty($uri_route)) {
-            $this->db->select('layout_modules.layout_id, layout_module_id, module_code, position, priority, layout_modules.status');
+            $this->db->select('layout_modules.layout_id, layout_module_id, module_code, partial, priority, layout_modules.status');
 
             if (is_numeric($uri_route)) {
                 $this->db->from('pages');
@@ -282,7 +282,7 @@ class Layouts_model extends TI_Model {
                 if (!empty($module) AND is_array($module)) {
                     $this->db->set('layout_id', $layout_id);
                     $this->db->set('module_code', $module['module_code']);
-                    $this->db->set('position', $module['position']);
+                    $this->db->set('partial', $module['partial']);
                     $this->db->set('priority', !empty($module['priority']) ? $module['priority'] : $priority);
                     $this->db->set('status', $module['status']);
                     $query = $this->db->insert('layout_modules');

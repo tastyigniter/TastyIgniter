@@ -36,6 +36,7 @@ $lang['label_address_id']               = 'Address Id';
 $lang['label_address_1']                = 'Address 1';
 $lang['label_address_2']                = 'Address 2';
 $lang['label_city']                     = 'City';
+$lang['label_state']                    = 'State';
 $lang['label_postcode']                 = 'Postcode';
 $lang['label_country']                  = 'Country';
 $lang['label_order_type']               = 'Delivery or Collection';

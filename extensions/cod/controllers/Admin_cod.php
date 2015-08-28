@@ -14,7 +14,7 @@ class Admin_cod extends Admin_Controller {
             $this->template->setHeading('Payment: ' . $data['title']);
             $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
             $this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
-            $this->template->setBackButton('btn btn-back', site_url('payments'));
+            $this->template->setBackButton('btn btn-back', site_url('extensions'));
 
             $ext_data = array();
             if (!empty($data['ext_data']) AND is_array($data['ext_data'])) {
@@ -72,10 +72,10 @@ class Admin_cod extends Admin_Controller {
 
             if ($this->input->post() AND $this->_updateCod() === TRUE){
                 if ($this->input->post('save_close') === '1') {
-                    redirect('payments');
+                    redirect('extensions');
                 }
 
-                redirect('payments/edit?action=edit&name=cod');
+                redirect('extensions/edit?action=edit&name=cod');
             }
 
             return $this->load->view('cod/admin_cod', $data, TRUE);
@@ -120,4 +120,4 @@ class Admin_cod extends Admin_Controller {
 }
 
 /* End of file cod.php */
-/* Location: ./extensions/payments/cod/controllers/cod.php */
+/* Location: ./extensions/cod/controllers/cod.php */

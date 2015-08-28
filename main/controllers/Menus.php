@@ -55,7 +55,6 @@ class Menus extends Main_Controller {
             $filter['category_id'] = 0;
         }
 
-        $this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
 		$this->template->render('menus', $data);
 	}
 

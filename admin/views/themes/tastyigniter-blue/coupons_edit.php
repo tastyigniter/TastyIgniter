@@ -121,9 +121,9 @@
 						</div>
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label"><?php echo lang('label_fixed_time'); ?></label>
-							<div class="col-sm-7">
-								<div class="control-group control-group-3">
-									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="col-sm-5">
+								<div class="">
+									<div class="btn-group btn-group-toggle wrap-bottom" data-toggle="buttons">
 										<?php if ($fixed_time == '24hours') { ?>
 											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="fixed_time" value="24hours" checked="checked"><?php echo lang('text_24_hour'); ?></label>
 											<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="fixed_time" value="custom"><?php echo lang('text_custom'); ?></label>
@@ -132,12 +132,12 @@
 											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="fixed_time" value="custom" checked="checked"><?php echo lang('text_custom'); ?></label>
 										<?php } ?>
 									</div>
-									<div class="input-group time">
+									<div class="input-group time wrap-bottom">
 										<span class="input-group-addon"><b><?php echo lang('label_fixed_from_time'); ?></b></span>
 										<input type="text" name="validity_times[fixed_from_time]" id="fixed-from-time" class="form-control" value="<?php echo set_value('validity_times[fixed_from_time]', $fixed_from_time); ?>" />
 										<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
 									</div>
-									<div class="input-group time">
+									<div class="input-group time wrap-bottom">
 										<span class="input-group-addon"><b><?php echo lang('label_fixed_to_time'); ?></b></span>
 										<input type="text" name="validity_times[fixed_to_time]" id="fixed-to-time" class="form-control" value="<?php echo set_value('validity_times[fixed_to_time]', $fixed_to_time); ?>" />
 										<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
@@ -153,13 +153,13 @@
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label"><?php echo lang('label_date'); ?></label>
 							<div class="col-sm-5">
-								<div class="control-group control-group-2">
-									<div class="input-group date">
+								<div class="">
+									<div class="input-group date wrap-bottom">
 										<span class="input-group-addon"><b><?php echo lang('label_period_start_date'); ?></b></span>
 										<input type="text" name="validity_times[period_start_date]" id="period-start-date" class="form-control" value="<?php echo set_value('validity_times[period_start_date]', $period_start_date); ?>" />
 										<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 									</div>
-									<div class="input-group date">
+									<div class="input-group date wrap-bottom">
 										<span class="input-group-addon"><b><?php echo lang('label_period_end_date'); ?></b></span>
 										<input type="text" name="validity_times[period_end_date]" id="period-end-date" class="form-control" value="<?php echo set_value('validity_times[period_end_date]', $period_end_date); ?>" />
 										<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
@@ -172,7 +172,7 @@
 					</div>
 					<div id="validity-recurring">
 						<div class="form-group">
-							<label for="start-date" class="col-sm-3 control-label"><?php echo lang('label_recurring_every'); ?></label>
+							<label for="" class="col-sm-3 control-label"><?php echo lang('label_recurring_every'); ?></label>
 							<div class="col-sm-5">
 								<div class="btn-group btn-group-toggle btn-group-7" data-toggle="buttons">
 									<?php foreach ($weekdays as $key => $value) { ?>
@@ -185,12 +185,12 @@
 								</div>
 								<?php echo form_error('validity_times[recurring_every][]', '<span class="text-danger">', '</span>'); ?>
 							</div>
-						</div><?php echo $recurring_from_time; ?>
+						</div>
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label"><?php echo lang('label_recurring_time'); ?></label>
-							<div class="col-sm-7">
-								<div class="control-group control-group-3">
-									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="col-sm-5">
+								<div class="">
+									<div class="btn-group btn-group-toggle wrap-bottom" data-toggle="buttons">
 										<?php if ($recurring_time == '24hours') { ?>
 											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="recurring_time" value="24hours" checked="checked"><?php echo lang('text_24_hour'); ?></label>
 											<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="recurring_time" value="custom"><?php echo lang('text_custom'); ?></label>
@@ -199,12 +199,12 @@
 											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="recurring_time" value="custom" checked="checked"><?php echo lang('text_custom'); ?></label>
 										<?php } ?>
 									</div>
-									<div class="input-group time">
+									<div class="input-group time wrap-bottom">
 										<span class="input-group-addon"><b><?php echo lang('label_recurring_from_time'); ?></b></span>
 										<input type="text" name="validity_times[recurring_from_time]" id="recurring-from-time" class="form-control" value="<?php echo set_value('validity_times[recurring_from_time]', $recurring_from_time); ?>" />
 										<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
 									</div>
-									<div class="input-group time">
+									<div class="input-group time wrap-bottom">
 										<span class="input-group-addon"><b><?php echo lang('label_recurring_to_time'); ?></b></span>
 										<input type="text" name="validity_times[recurring_to_time]" id="recurring-to-time" class="form-control" value="<?php echo set_value('validity_times[recurring_to_time]', $recurring_to_time); ?>" />
 										<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
@@ -214,6 +214,29 @@
 								<?php echo form_error('validity_times[recurring_from_time]', '<span class="text-danger">', '</span>'); ?>
 								<?php echo form_error('validity_times[recurring_to_time]', '<span class="text-danger">', '</span>'); ?>
 							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-order-restriction" class="col-sm-3 control-label"><?php echo lang('label_order_restriction'); ?>
+							<span class="help-block"><?php echo lang('help_order_restriction'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<div id="order-restriction" class="btn-group btn-group-3 btn-group-toggle" data-toggle="buttons">
+								<?php if ($order_restriction === '1') { ?>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="order_restriction" value="0" <?php echo set_radio('order_restriction', '0'); ?>>None</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="order_restriction" value="1" <?php echo set_radio('order_restriction', '1', TRUE); ?>>Delivery Only</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="order_restriction" value="2" <?php echo set_radio('order_restriction', '2'); ?>>Collection Only</label>
+								<?php } else if ($order_restriction === '2') { ?>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="order_restriction" value="0" <?php echo set_radio('order_restriction', '0'); ?>>None</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="order_restriction" value="1" <?php echo set_radio('order_restriction', '1'); ?>>Delivery Only</label>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="order_restriction" value="2" <?php echo set_radio('order_restriction', '2', TRUE); ?>>Collection Only</label>
+								<?php } else { ?>
+									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="order_restriction" value="0" <?php echo set_radio('order_restriction', '0', TRUE); ?>>None</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="order_restriction" value="1" <?php echo set_radio('order_restriction', '1'); ?>>Delivery Only</label>
+									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="order_restriction" value="2" <?php echo set_radio('order_restriction', '2'); ?>>Collection Only</label>
+								<?php } ?>
+							</div>
+							<?php echo form_error('order_restriction', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">

@@ -13,7 +13,7 @@ class Admin_paypal_express extends Admin_Controller {
         $this->template->setHeading('Payment: ' . $data['title']);
         $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
         $this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
-        $this->template->setBackButton('btn btn-back', site_url('payments'));
+        $this->template->setBackButton('btn btn-back', site_url('extensions'));
 
         $ext_data = array();
         if (!empty($data['ext_data']) AND is_array($data['ext_data'])) {
@@ -107,10 +107,10 @@ class Admin_paypal_express extends Admin_Controller {
 
 		if ($this->input->post() AND $this->_updatePayPalExpress() === TRUE){
 			if ($this->input->post('save_close') === '1') {
-				redirect('payments');
+				redirect('extensions');
 			}
 
-			redirect('payments/edit?&action=edit&name=paypal_express');
+			redirect('extensions/edit?&action=edit&name=paypal_express');
 		}
 
         return $this->load->view('paypal_express/admin_paypal_express', $data, TRUE);
@@ -169,4 +169,4 @@ class Admin_paypal_express extends Admin_Controller {
 }
 
 /* End of file paypal_express.php */
-/* Location: ./extensions/payments/paypal_express/controllers/paypal_express.php */
+/* Location: ./extensions/paypal_express/controllers/paypal_express.php */

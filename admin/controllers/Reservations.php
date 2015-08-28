@@ -220,7 +220,6 @@ class Reservations extends Admin_Controller {
 			redirect('reservations');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('reservations', $data);
 	}
 
@@ -321,7 +320,6 @@ class Reservations extends Admin_Controller {
 			redirect('reservations/edit?id='. $reservation_id);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('reservations_edit', $data);
 	}
 

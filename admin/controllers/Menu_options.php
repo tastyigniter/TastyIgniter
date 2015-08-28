@@ -101,7 +101,6 @@ class Menu_options extends Admin_Controller {
 			redirect('menu_options');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('menu_options', $data);
 	}
 
@@ -152,7 +151,6 @@ class Menu_options extends Admin_Controller {
 			redirect('menu_options/edit?id='. $option_id);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('menu_options_edit', $data);
 	}
 

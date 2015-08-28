@@ -46,6 +46,7 @@ $lang['alert_coupon_invalid'] 	            = '<p class="alert-danger">Please ent
 $lang['alert_coupon_expired'] 	            = '<p class="alert-danger">Your coupon is either invalid or expired.</p>';
 $lang['alert_coupon_not_applied'] 	        = '<p class="alert-danger">Your coupon can not be applied to orders below %s.</p>';
 $lang['alert_coupon_maximum_reached'] 	    = '<p class="alert-danger">Maximum number of redemptions for the coupon has been reached.</p>';
+$lang['alert_coupon_order_restriction'] 	= '<p class="alert-danger">Your coupon can be applied to <b>%s</b> orders only</p>';
 
 /* End of file cart_module_lang.php */
 /* Location: ./extensions/cart_module/language/english/cart_module_lang.php */

@@ -16,7 +16,6 @@ class Home extends Main_Controller {
 	public function index() {
 		$this->template->setTitle($this->lang->line('text_heading'));
 
-		$this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
 		$this->template->render('home');
 	}
 }

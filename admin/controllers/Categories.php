@@ -96,7 +96,6 @@ class Categories extends Admin_Controller {
 			redirect('categories');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('categories', $data);
 	}
 
@@ -163,7 +162,6 @@ class Categories extends Admin_Controller {
 			redirect('categories/edit?id='. $category_id);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('categories_edit', $data);
 	}
 

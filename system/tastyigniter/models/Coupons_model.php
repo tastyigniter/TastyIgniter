@@ -187,6 +187,12 @@ class Coupons_model extends TI_Model {
 			}
 		}
 
+		if (!empty($save['order_restriction']) AND is_numeric($coupon_id)) {
+			$this->db->set('order_restriction', $save['order_restriction']);
+		} else {
+			$this->db->set('order_restriction', '0');
+		}
+
 		if (!empty($save['description'])) {
 			$this->db->set('description', $save['description']);
 		}

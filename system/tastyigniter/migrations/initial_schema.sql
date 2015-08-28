@@ -511,7 +511,7 @@ VALUES
 	(16, 'module', 'slideshow', 'a:6:{s:11:\"dimension_h\";s:3:\"420\";s:11:\"dimension_w\";s:4:\"1170\";s:6:\"effect\";s:4:\"fade\";s:5:\"speed\";s:3:\"500\";s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"15\";s:8:\"position\";s:3:\"top\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}s:6:\"slides\";a:3:{i:0;a:3:{s:4:\"name\";s:9:\"slide.png\";s:9:\"image_src\";s:14:\"data/slide.jpg\";s:7:\"caption\";s:0:\"\";}i:1;a:3:{s:4:\"name\";s:10:\"slide1.png\";s:9:\"image_src\";s:15:\"data/slide1.jpg\";s:7:\"caption\";s:0:\"\";}i:2;a:3:{s:4:\"name\";s:10:\"slide2.png\";s:9:\"image_src\";s:15:\"data/slide2.jpg\";s:7:\"caption\";s:0:\"\";}}}', 1, 1, 'Slideshow'),
 	(18, 'payment', 'cod', 'a:5:{s:4:\"name\";N;s:11:\"order_total\";s:4:\"0.00\";s:12:\"order_status\";s:2:\"11\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}', 1, 1, 'Cash On Delivery'),
 	(20, 'module', 'pages_module', 'a:1:{s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"17\";s:8:\"position\";s:5:\"right\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}}', 1, 1, 'Pages'),
-  (21, 'payment', 'paypal_express', 'a:11:{s:8:\"priority\";s:0:\"\";s:6:\"status\";s:1:\"0\";s:8:\"api_mode\";s:7:\"sandbox\";s:8:\"api_user\";s:0:\"\";s:8:\"api_pass\";s:0:\"\";s:13:\"api_signature\";s:0:\"\";s:10:\"api_action\";s:4:\"sale\";s:10:\"return_uri\";s:24:\"paypal_express/authorize\";s:10:\"cancel_uri\";s:21:\"paypal_express/cancel\";s:11:\"order_total\";s:4:\"0.00\";s:12:\"order_status\";s:2:\"11\";}', 1, 1, 'PayPal Express'),
+  (21, 'payment', 'paypal_express', 'a:11:{s:8:\"priority\";s:0:\"\";s:6:\"status\";s:1:\"0\";s:8:\"api_mode\";s:7:\"sandbox\";s:8:\"api_user\";s:0:\"\";s:8:\"api_pass\";s:0:\"\";s:13:\"api_signature\";s:0:\"\";s:10:\"api_action\";s:4:\"sale\";s:10:\"return_uri\";s:24:\"paypal_express/authorize\";s:10:\"cancel_uri\";s:21:\"paypal_express/cancel\";s:11:\"order_total\";s:4:\"0.00\";s:12:\"order_status\";s:2:\"11\";}', 1, 0, 'PayPal Express'),
 	(23, 'theme', 'tastyigniter-orange', 'a:13:{s:11:\"logo_height\";s:2:\"40\";s:16:\"logo_padding_top\";s:2:\"25\";s:19:\"logo_padding_bottom\";s:2:\"25\";s:11:\"font_family\";s:25:\"\"Oxygen\",Arial,sans-serif\";s:11:\"font_weight\";s:6:\"normal\";s:9:\"font_size\";s:2:\"13\";s:10:\"font_color\";s:7:\"#333333\";s:4:\"body\";a:2:{s:10:\"background\";s:7:\"#ffffff\";s:5:\"image\";s:0:\"\";}s:6:\"header\";a:3:{s:10:\"background\";s:7:\"#fdeae2\";s:5:\"image\";s:0:\"\";s:5:\"color\";s:7:\"#333333\";}s:7:\"sidebar\";a:4:{s:10:\"background\";s:7:\"#ffffff\";s:5:\"image\";s:0:\"\";s:4:\"font\";s:7:\"#484848\";s:6:\"border\";s:7:\"#ffffff\";}s:4:\"link\";a:2:{s:5:\"color\";s:7:\"#428bca\";s:5:\"hover\";s:7:\"#2a6496\";}s:6:\"button\";a:4:{s:7:\"default\";a:2:{s:10:\"background\";s:7:\"#ffffff\";s:6:\"border\";s:7:\"#cccccc\";}s:7:\"primary\";a:2:{s:10:\"background\";s:7:\"#428bca\";s:6:\"border\";s:7:\"#357ebd\";}s:7:\"success\";a:2:{s:10:\"background\";s:7:\"#5cb85c\";s:6:\"border\";s:7:\"#4cae4c\";}s:6:\"danger\";a:2:{s:10:\"background\";s:7:\"#d9534f\";s:6:\"border\";s:7:\"#d43f3a\";}}s:10:\"custom_css\";s:0:\"\";}', 1, 1, 'TastyIgniter Orange'),
 	(24, 'theme', 'tastyigniter-blue', '', 1, 0, 'TastyIgniter Blue'),
 	(25, 'module', 'banners_module', 'a:1:{s:7:\"banners\";a:1:{i:1;a:3:{s:9:\"banner_id\";s:1:\"1\";s:5:\"width\";s:0:\"\";s:6:\"height\";s:0:\"\";}}}', 1, 0, 'Banners');
@@ -621,6 +621,55 @@ VALUES
 INSERT INTO `ti_permalinks` (`permalink_id`, `slug`, `controller`, `query`) VALUES
 (11, 'about-us', 'pages', 'page_id=11');
 
+#
+# TABLE STRUCTURE FOR: ti_permissions
+#
+
+INSERT INTO `ti_permissions` (`permission_id`, `name`, `description`, `action`, `status`)
+VALUES
+  (11, 'Admin.Banners', 'Ability to access, manage, add and delete banners', 'a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}', 1),
+  (12, 'Admin.Categories', 'Ability to access, manage, add and delete categories', 'a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}', 1),
+  (13, 'Site.Countries', 'Ability to manage, add and delete site countries', 'a:3:{i:0;s:6:\"manage\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}', 1),
+  (14, 'Admin.Coupons', 'Ability to access, manage, add and delete coupons', 'a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}', 1),
+  (15, 'Site.Currencies', 'Ability to access, manage, add and delete site currencies', 'a:3:{i:0;s:6:\"manage\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}', 1),
+  (16, 'Admin.CustomerGroups', 'Ability to access, manage, add and delete customer groups', 'a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}', 1),
+  (17, 'Admin.Customers', 'Ability to access, manage, add and delete customers', 'a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}', 1),
+  (18, 'Admin.CustomersOnline', 'Ability to access online customers', 'a:1:{i:0;s:6:\"access\";}', 1),
+  (19, 'Admin.Maintenance', 'Ability to access, backup, restore and migrate database', 'a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}', 1),
+  (20, 'Admin.ErrorLogs', 'Ability to access and delete error logs file', 'a:2:{i:0;s:6:\"access\";i:1;s:6:\"delete\";}', 1),
+  (21, 'Admin.Modules', 'Ability to access, manage, add and delete extension modules', 'a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}', 1),
+  (22, 'Admin.MediaManager', 'Ability to access, manage, add and delete media items', 'a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}', 1),
+  (23, 'Site.Languages', 'Ability to manage, add and delete site languages', 'a:3:{i:0;s:6:\"manage\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}', 1),
+  (24, 'Site.Layouts', 'Ability to manage, add and delete site layouts', 'a:3:{i:0;s:6:\"manage\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}', 1),
+  (25, 'Admin.Locations', 'Ability to access, manage, add and delete locations', 'a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}', 1),
+  (26, 'Admin.MailTemplates', 'Ability to access, manage, add and delete mail templates', 'a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}', 1),
+  (27, 'Admin.MenuOptions', 'Ability to access, manage, add and delete menu option items', 'a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}', 1),
+  (28, 'Admin.Menus', 'Ability to access, manage, add and delete menu items', 'a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}', 1),
+  (29, 'Admin.Messages', 'Ability to add and delete messages', 'a:2:{i:0;s:3:\"add\";i:1;s:6:\"delete\";}', 1),
+  (30, 'Admin.Orders', 'Ability to access, manage, add and delete orders', 'a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}', 1),
+  (31, 'Site.Pages', 'Ability to manage, add and delete site pages', 'a:3:{i:0;s:6:\"manage\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}', 1),
+  (32, 'Admin.Payments', 'Ability to access, add and delete extension payments', 'a:3:{i:0;s:6:\"access\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}', 1),
+  (33, 'Admin.Permissions', 'Ability to manage, add and delete staffs permissions', 'a:3:{i:0;s:6:\"manage\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}', 1),
+  (34, 'Admin.Ratings', 'Ability to add and delete review ratings', 'a:2:{i:0;s:3:\"add\";i:1;s:6:\"delete\";}', 1),
+  (35, 'Admin.Reservations', 'Ability to access, manage, add and delete reservations', 'a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}', 1),
+  (36, 'Admin.Reviews', 'Ability to access, manage, add and delete user reviews', 'a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}', 1),
+  (37, 'Admin.SecurityQuestions', 'Ability to add and delete customer registration security questions', 'a:2:{i:0;s:3:\"add\";i:1;s:6:\"delete\";}', 1),
+  (38, 'Site.Settings', 'Ability to manage system settings', 'a:1:{i:0;s:6:\"manage\";}', 1),
+  (39, 'Admin.StaffGroups', 'Ability to access, manage, add and delete staff groups', 'a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}', 1),
+  (40, 'Admin.Staffs', 'Ability to access, manage, add and delete staffs', 'a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}', 1),
+  (42, 'Admin.Statuses', 'Ability to access, manage, add and delete orders and reservations statuses', 'a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}', 1),
+  (43, 'Admin.Tables', 'Ability to access, manage, add and delete reservations tables', 'a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}', 1),
+  (44, 'Site.Themes', 'Ability to access, manage site themes', 'a:2:{i:0;s:6:\"access\";i:1;s:6:\"manage\";}', 1),
+  (45, 'Module.AccountModule', 'Ability to manage account module', 'a:1:{i:0;s:6:\"manage\";}', 1),
+  (46, 'Module.BannersModule', 'Ability to manage banners module', 'a:1:{i:0;s:6:\"manage\";}', 1),
+  (47, 'Module.CartModule', 'Ability to manage cart module', 'a:1:{i:0;s:6:\"manage\";}', 1),
+  (48, 'Module.CategoriesModule', 'Ability to manage categories module', 'a:1:{i:0;s:6:\"manage\";}', 1),
+  (49, 'Module.LocalModule', 'Ability to manage local module', 'a:1:{i:0;s:6:\"manage\";}', 1),
+  (50, 'Module.PagesModule', 'Ability to manage pages module', 'a:1:{i:0;s:6:\"manage\";}', 1),
+  (51, 'Module.ReservationModule', 'Ability to manage reservation module', 'a:1:{i:0;s:6:\"manage\";}', 1),
+  (52, 'Module.Slideshow', 'Ability to manage slideshow module', 'a:1:{i:0;s:6:\"manage\";}', 1),
+  (53, 'Payment.Cod', 'Ability to manage cash on delivery payment', 'a:1:{i:0;s:6:\"manage\";}', 1),
+  (54, 'Payment.PaypalExpress', 'Ability to manage paypal express payment', 'a:1:{i:0;s:6:\"manage\";}', 1);
 
 #
 # TABLE STRUCTURE FOR: ti_security_questions

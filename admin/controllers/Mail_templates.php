@@ -55,7 +55,6 @@ class Mail_templates extends Admin_Controller {
 			redirect('mail_templates');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('mail_templates', $data);
 	}
 
@@ -132,7 +131,6 @@ class Mail_templates extends Admin_Controller {
 			redirect('mail_templates/edit?id='. $template_id);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('mail_templates_edit', $data);
 	}
 

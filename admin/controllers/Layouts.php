@@ -44,7 +44,6 @@ class Layouts extends Admin_Controller {
 			redirect('layouts');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('layouts', $data);
 	}
 
@@ -70,7 +69,16 @@ class Layouts extends Admin_Controller {
 		$data['layout_id'] 			= $layout_info['layout_id'];
 		$data['name'] 				= $layout_info['name'];
 
-        $data['layout_positions'] = array('top' => 'Content Top', 'left' => 'Content Left', 'right' => 'Content Right', 'bottom' => 'Content Bottom');
+		$theme_partials = get_theme_partials($this->config->item('main', 'default_themes'), 'main');
+        foreach ($theme_partials as $partial) {
+            $partial['id'] = isset($partial['id']) ? $partial['id'] : '';
+            $deprecated_id = explode('_', $partial['id']);
+            $partial['deprecated_id'] = isset($deprecated_id['1']) ? $deprecated_id['1'] : ''; // support @DEPRECATED position key
+
+            $partial['name'] = isset($partial['name']) ? $partial['name'] : '';
+
+            $data['theme_partials'][] = $partial;
+        }
 
         if ($this->input->post('modules')) {
             $layout_modules = $this->input->post('modules');
@@ -82,7 +90,7 @@ class Layouts extends Admin_Controller {
         foreach ($layout_modules as $priority => $module) {
             $data['layout_modules'][] = array(
                 'module_code'       => $module['module_code'],
-                'position' 		    => $module['position'],
+                'partial' 		    => !empty($module['position']) ? $module['position'] : $module['partial'], // position key @DEPRECATED starting from v1.4.0
                 'priority' 		    => !empty($module['priority']) ? $module['priority'] : $priority,
                 'status' 		    => $module['status']
             );
@@ -100,7 +108,7 @@ class Layouts extends Admin_Controller {
             $data['modules'][] = array(
                 'extension_id'	=> $result['extension_id'],
                 'module_code'	=> $result['name'],
-                'title'			=> $result['title']
+                'title'			=> $result['title'],
             );
         }
 
@@ -121,7 +129,6 @@ class Layouts extends Admin_Controller {
 			redirect('layouts/edit?id='. $layout_id);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('layouts_edit', $data);
 	}
 
@@ -166,7 +173,7 @@ class Layouts extends Admin_Controller {
         if ($this->input->post('modules')) {
             foreach ($this->input->post('modules') as $key => $value) {
                 $this->form_validation->set_rules('modules['.$key.'][module_code]', '['.$key.'] lang:label_module_code', 'xss_clean|trim|required|alpha_dash');
-                $this->form_validation->set_rules('modules['.$key.'][position]', '['.$key.'] lang:label_module_position', 'xss_clean|trim|required|alpha');
+                $this->form_validation->set_rules('modules['.$key.'][partial]', '['.$key.'] lang:label_module_partial', 'xss_clean|trim|required|alpha_dash');
                 $this->form_validation->set_rules('modules['.$key.'][priority]', '['.$key.'] lang:label_module_priority', 'xss_clean|trim|required|integer');
                 $this->form_validation->set_rules('modules['.$key.'][status]', '['.$key.'] lang:label_module_status', 'xss_clean|trim|required|integer');
             }

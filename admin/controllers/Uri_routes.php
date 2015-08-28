@@ -35,7 +35,6 @@ class Uri_routes extends Admin_Controller {
 			redirect('uri_routes');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('uri_routes', $data);
 	}
 

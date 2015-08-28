@@ -31,7 +31,6 @@ class Ratings extends Admin_Controller {
 			redirect('ratings');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('ratings', $data);
 	}
 

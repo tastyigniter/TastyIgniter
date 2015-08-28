@@ -37,7 +37,6 @@ class Security_questions extends Admin_Controller {
 			redirect('security_questions');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('security_questions', $data);
 	}
 

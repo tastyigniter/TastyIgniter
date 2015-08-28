@@ -80,7 +80,6 @@ class Staff_groups extends Admin_Controller {
 		    redirect('staff_groups');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('staff_groups', $data);
 	}
 
@@ -151,7 +150,6 @@ class Staff_groups extends Admin_Controller {
 			redirect('staff_groups/edit?id='. $staff_group_id);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('staff_groups_edit', $data);
 	}
 

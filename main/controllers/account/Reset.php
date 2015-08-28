@@ -35,7 +35,6 @@ class Reset extends Main_Controller {
             redirect('account/login');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('account/reset', $data);
 	}
 

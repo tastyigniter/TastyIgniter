@@ -26,7 +26,6 @@ class Pages extends Main_Controller {
 		$data['text_heading'] 		= $result['heading'];
 		$data['page_content'] 		= $result['content'];
 
-		$this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
 		$this->template->render('pages', $data);
 	}
 }

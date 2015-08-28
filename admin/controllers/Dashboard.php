@@ -22,7 +22,7 @@ class Dashboard extends Admin_Controller {
         $this->template->setScriptTag(root_url('assets/js/daterange/daterangepicker.js'), 'daterangepicker-js', '1000452');
         $this->template->setScriptTag(root_url('assets/js/Chart.min.js'), 'chart-min-js', '1000453');
 
-		$data['menus'] 					= $this->Dashboard_model->getTotalMenus();
+		$data['total_menus'] 					= $this->Dashboard_model->getTotalMenus();
 		$data['current_month'] 			= mdate('%Y-%m', time());
 
 		$data['months'] = array();
@@ -95,7 +95,6 @@ class Dashboard extends Admin_Controller {
 			);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('dashboard', $data);
 	}
 

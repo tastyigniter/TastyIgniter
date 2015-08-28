@@ -103,7 +103,6 @@ class Countries extends Admin_Controller {
 			redirect('countries');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('countries', $data);
 	}
 
@@ -158,7 +157,6 @@ class Countries extends Admin_Controller {
 			redirect('countries/edit?id='. $country_id);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('countries_edit', $data);
 	}
 

@@ -10,11 +10,15 @@ class Extension {
 
     public function __construct() {
         $this->CI =& get_instance();
+    }
+
+    public function getInstalledExtensions($type = NULL) {
         $this->CI->load->model('Extensions_model');
+        return $this->CI->Extensions_model->getInstalledExtensions($type);
     }
 
     public function getExtensions($type = NULL) {
-        !empty($this->extensions) OR $this->extensions = $this->CI->Extensions_model->getExtensions('', TRUE);
+        !empty($this->extensions) OR $this->extensions = $this->getInstalledExtensions();
 
         if (!empty($type)) {
             $results = array();
@@ -32,7 +36,7 @@ class Extension {
     }
 
     public function getModules() {
-        return $this->CI->Extensions_model->getExtensions('module', TRUE);
+        return $this->getInstalledExtensions('module');
     }
 
     public function getModule($name) {
@@ -44,7 +48,7 @@ class Extension {
     }
 
     public function getPayments() {
-        return $this->CI->Extensions_model->getExtensions('payment', TRUE);
+        return $this->getInstalledExtensions('payment');
     }
 
     public function getPayment($name) {
@@ -85,8 +89,75 @@ class Extension {
         return $payments;
     }
 
-    public function getConfig($ext_name = '', $item = '', $fail_gracefully = FALSE) {
-        return $this->CI->Extensions_model->getConfig($ext_name, $item, $fail_gracefully);
+    public function loadConfig($module, $fail_gracefully = FALSE, $non_persistent = FALSE) {
+        if (!is_string($module)) return FALSE;
+
+        // and retrieve the configuration items
+        if ($non_persistent === TRUE) {
+            $path = ROOTPATH.EXTPATH."{$module}/config/";
+            $config = is_file($path."{$module}.php") ? Modules::load_file($module, $path, 'config') : NULL;
+        } else {
+            $this->CI->config->load($module . '/' . $module, TRUE);
+            $config = $this->CI->config->item($module);
+        }
+
+        if ($error = $this->checkConfig($module, $config)) {
+            return ($fail_gracefully === FALSE) ? $error : show_error($error);
+        }
+
+        return $config;
+    }
+
+    public function getConfig($module = '', $item = '') {
+        if (!is_string($module)) return NULL;
+
+        $config = $this->CI->config->item($module);
+
+        if ($item == '') {
+            return isset($config) ? $config : NULL;
+        }
+
+        return isset($config, $config[$item]) ? $config[$item] : NULL;
+    }
+
+    public function getMeta($module = '', $config = array()) {
+        !empty($config) OR $config = $this->getConfig($module);
+
+        if (isset($config['extension_meta']) AND is_array($config['extension_meta'])) {
+            return $config['extension_meta'];
+        } else {
+            $metadata['type'] = (isset($config['ext_type'])) ? $config['ext_type'] : '';
+            $metadata['settings'] = (isset($config['admin_options'])) ? $config['admin_options'] : '';
+
+            return $metadata;
+        }
+    }
+
+    private function checkConfig($module, $config = array()) {
+        $error = FALSE;
+
+        // Check if the module configuration items are correctly set
+        $mtypes = array('module', 'payment', 'widget');
+
+        $metadata = (isset($config['extension_meta'])) ? $config['extension_meta'] : array();
+
+        if (!isset($config['ext_type']) OR !in_array($config['ext_type'], $mtypes)) {
+            if (!is_array($metadata) OR ! isset($metadata['name'], $metadata['type'])
+                OR !in_array($metadata['type'], $mtypes)) {
+
+                $error = 'Check that the extension [' . $module . '] configuration type key is correctly set';
+            }
+        }
+
+        if (class_exists('Admin_' . $module, FALSE)) {
+            $this->CI->load->library('user');
+
+            if (!isset($metadata['settings']) OR !is_bool($metadata['settings']) OR !class_exists('Admin_Controller', FALSE)) {
+                $error = 'Check that the extension [' . $module . '] configuration admin_options key is correctly set';
+            }
+        }
+
+        return $error;
     }
 }
 

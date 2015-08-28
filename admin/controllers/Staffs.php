@@ -152,7 +152,6 @@ class Staffs extends Admin_Controller {
 			redirect('staffs');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('staffs', $data);
 	}
 
@@ -240,7 +239,6 @@ class Staffs extends Admin_Controller {
 			redirect('staffs/edit?id='. $staff_id);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('staffs_edit', $data);
 	}
 

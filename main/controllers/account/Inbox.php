@@ -63,7 +63,6 @@ class Inbox extends Main_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		$this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
 		$this->template->render('account/inbox', $data);
 	}
 
@@ -90,7 +89,6 @@ class Inbox extends Main_Controller {
         $data['subject'] 		= $result['subject'];
         $data['body'] 			= $result['body'];
 
-		$this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
 		$this->template->render('account/inbox_view', $data);
 	}
 }

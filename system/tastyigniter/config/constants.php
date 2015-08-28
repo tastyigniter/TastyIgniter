@@ -79,7 +79,18 @@ define('THEMEPATH', VIEWPATH.'themes/');
  *
  * NOTE: If you change these, also change the error_reporting() code below
  */
-define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'production');
+defined('ENVIRONMENT') OR define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'production');
+
+/*
+|--------------------------------------------------------------------------
+| Display Debug Profiler
+|--------------------------------------------------------------------------
+|
+| If set to TRUE, a benchmark will be displayed. If profiler is set to
+| false, the benchmark will not display
+|
+*/
+define('TI_DEBUG', TRUE);
 
 /*
 |--------------------------------------------------------------------------

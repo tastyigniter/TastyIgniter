@@ -59,7 +59,6 @@ class Local extends Main_Controller {
 
         $data['local_reviews'] = $this->reviews();
 
-        $this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
 		$this->template->render('local', $data);
 	}
 
@@ -261,7 +260,6 @@ class Local extends Main_Controller {
 			}
 		}
 
-		$this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
 		$this->template->render('local_all', $data);
 	}
 }

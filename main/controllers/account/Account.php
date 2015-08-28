@@ -97,7 +97,6 @@ class Account extends Main_Controller {
 			);
 		}
 
-		$this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
 		$this->template->render('account/account', $data);
 	}
 }
