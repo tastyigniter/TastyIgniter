@@ -2143,7 +2143,7 @@ CREATE TABLE `ti_layout_modules` (
   `layout_module_id` int(11) NOT NULL AUTO_INCREMENT,
   `layout_id` int(11) NOT NULL,
   `module_code` varchar(128) NOT NULL,
-  `position` varchar(32) NOT NULL,
+  `partial` varchar(32) NOT NULL,
   `priority` int(11) NOT NULL,
   `status` tinyint(1) NOT NULL,
   PRIMARY KEY (`layout_module_id`)
@@ -2152,7 +2152,7 @@ CREATE TABLE `ti_layout_modules` (
 LOCK TABLES `ti_layout_modules` WRITE;
 /*!40000 ALTER TABLE `ti_layout_modules` DISABLE KEYS */;
 
-INSERT INTO `ti_layout_modules` (`layout_module_id`, `layout_id`, `module_code`, `position`, `priority`, `status`)
+INSERT INTO `ti_layout_modules` (`layout_module_id`, `layout_id`, `module_code`, `partial`, `priority`, `status`)
 VALUES
 	(60,17,'pages_module','right',1,1),
 	(65,11,'slideshow','top',1,1),
