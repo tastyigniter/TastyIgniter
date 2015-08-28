@@ -55,8 +55,6 @@ class Extensions_model extends TI_Model {
 
                 if ( ! empty($filter['filter_installed']) AND $ext['installed'] !== TRUE) continue;
 
-                if ( ! empty($filter['filter_installed']) AND $ext['installed'] !== TRUE) continue;
-
                 $result[$name] = $ext;
             }
         }
