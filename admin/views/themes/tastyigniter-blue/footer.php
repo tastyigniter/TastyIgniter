@@ -4,10 +4,9 @@
 </div>
 <div id="footer" class="<?php echo ($this->user->islogged()) ? '' : 'wrap-none'; ?>">
 	<div class="row navbar-footer">
-		<div class="col-sm-8">
+		<div class="col-sm-8 copyright">
 			<p class="text-copyright"><?php echo sprintf(lang('text_copyright'), date('Y'), config_item('ti_version')); ?></p>
 		</div>
-		<div id="profiler" class="col-sm-4"></div>
 		<?php if ($locations) { ?>
 			<div class="col-sm-3 navbar-locations">
 				<form role="form" class="navbar-form navbar-left" role="form">
@@ -30,19 +29,6 @@
 </div>
 <script type="text/javascript">
 $(document).ready(function() {
-	if ($('#codeigniter_profiler').length) {
-		$('#footer #profiler').append('<a class="btn btn-default btn-profiler"><i class="fa fa-bug"></i></a>');
-		$('.btn-profiler').on('click', function(){
-			if($('#codeigniter_profiler').is(':visible')) {
-				$('#codeigniter_profiler').fadeOut();
-			} else {
-				$('#codeigniter_profiler').fadeIn();
-			}
-		});
-
-		 $('#codeigniter_profiler').fadeOut();
-	}
-
 	//Delete Confirmation Box
 	$('#list-form').submit(function(){
 		//if ($('input[name=\'delete\']').attr("checked") == "checked") {
