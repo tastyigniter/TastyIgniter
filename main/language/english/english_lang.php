@@ -5,7 +5,6 @@ $lang['site_copyright'] 			                = '&copy; %s %s. All Rights Reserved'
 
 $lang['text_minutes'] 			                    = 'minutes';
 $lang['text_min'] 		                            = 'min';
-$lang['text_subscribe'] 			                = 'Subscribe to our newsletter';
 $lang['text_follow_us'] 			                = 'Follow us on:';
 
 $lang['menu_home'] 		                            = 'Home';
