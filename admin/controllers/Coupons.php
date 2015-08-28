@@ -111,7 +111,6 @@ class Coupons extends Admin_Controller {
 			redirect('coupons');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('coupons', $data);
 	}
 
@@ -160,6 +159,7 @@ class Coupons extends Admin_Controller {
 		$data['recurring_every'] 	= (empty($coupon_info['recurring_every'])) ? array() : explode(', ', $coupon_info['recurring_every']);
 		$data['recurring_from_time'] = (empty($coupon_info['recurring_from_time']) OR $coupon_info['recurring_from_time'] === '00:00:00') ? '' : mdate('%h:%i %a', strtotime($coupon_info['recurring_from_time']));
 		$data['recurring_to_time'] 	= (empty($coupon_info['recurring_to_time']) OR $coupon_info['recurring_to_time'] === '00:00:00') ? '' : mdate('%h:%i %a', strtotime($coupon_info['recurring_to_time']));
+		$data['order_restriction'] 	= $coupon_info['order_restriction'];
 		$data['date_added'] 		= $coupon_info['date_added'];
 		$data['status'] 			= $coupon_info['status'];
 
@@ -196,7 +196,6 @@ class Coupons extends Admin_Controller {
 			redirect('coupons/edit?id='. $coupon_id);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('coupons_edit', $data);
 	}
 
@@ -276,6 +275,7 @@ class Coupons extends Admin_Controller {
 			}
 		}
 
+		$this->form_validation->set_rules('order_restriction', 'lang:label_order_restriction', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('status', 'lang:label_status', 'xss_clean|trim|required|integer');
 
 		if ($this->form_validation->run() === TRUE) {

@@ -1,5 +1,5 @@
 <div id="local-box" <?php echo ($location_search === TRUE) ? 'class="local-box-fluid"' : ''; ?>>
-    <div <?php echo ($module_position === 'top') ? 'class="container"' : 'class="container-fluid"'; ?>>
+    <div class="container">
         <div id="local-alert" class="col-md-12" style="display: <?php echo ($local_alert) ? 'block' : 'none'; ?>">
             <div class="local-alert">
                 <?php echo $local_alert; ?>
@@ -189,3 +189,4 @@
         }
     }
 //--></script>
+</div>

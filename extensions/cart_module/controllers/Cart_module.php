@@ -353,7 +353,12 @@ class Cart_module extends Main_Controller {
         } else if (!$coupon = $this->Cart_model->checkCoupon($code)) {
 			$error = $this->lang->line('alert_coupon_expired');								// display error message
 		} else {
-			if ($coupon['min_total'] > $this->cart->total()) {
+            if (!empty($coupon['order_restriction']) AND $coupon['order_restriction'] !== $this->location->orderType()) {
+                $order_type = ($coupon['order_restriction'] === '1') ? $this->lang->line('text_delivery') : $this->lang->line('text_collection');
+                $error = sprintf($this->lang->line('alert_coupon_order_restriction'), strtolower($order_type));
+            }
+
+            if ($coupon['min_total'] > $this->cart->total()) {
 				$error = sprintf($this->lang->line('alert_coupon_not_applied'), $this->currency->format($coupon['min_total']));
 			}
 

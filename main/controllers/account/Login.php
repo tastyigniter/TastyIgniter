@@ -40,7 +40,6 @@ class Login extends Main_Controller {
     		}
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('account/login', $data);
 	}
 

@@ -102,7 +102,6 @@ class Currencies extends Admin_Controller {
 			redirect('currencies');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('currencies', $data);
 	}
 
@@ -151,7 +150,6 @@ class Currencies extends Admin_Controller {
 			redirect('currencies/edit?id='. $currency_id);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('currencies_edit', $data);
 	}
 

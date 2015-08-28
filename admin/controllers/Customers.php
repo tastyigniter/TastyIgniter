@@ -143,7 +143,6 @@ class Customers extends Admin_Controller {
 			redirect('customers');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('customers', $data);
 	}
 
@@ -218,7 +217,6 @@ class Customers extends Admin_Controller {
 			redirect('customers/edit?id='. $customer_id);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('customers_edit', $data);
 	}
 
@@ -267,21 +265,6 @@ class Customers extends Admin_Controller {
 		}
 	}
 
-	private function _deleteCustomer() {
-        if ($this->input->post('delete')) {
-            $deleted_rows = $this->Customers_model->deleteCustomer($this->input->post('delete'));
-
-            if ($deleted_rows > 0) {
-                $prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Customers': 'Customer';
-                $this->alert->set('success', sprintf($this->lang->line('alert_success'), $prefix.' '.$this->lang->line('text_deleted')));
-            } else {
-                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted')));
-            }
-
-            return TRUE;
-        }
-	}
-
 	private function validateForm($customer_email = FALSE) {
 		$this->form_validation->set_rules('first_name', 'lang:label_first_name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
 		$this->form_validation->set_rules('last_name', 'lang:label_last_name', 'xss_clean|trim|required|min_length[2]|max_length[12]');
@@ -311,6 +294,7 @@ class Customers extends Admin_Controller {
 			foreach ($this->input->post('address') as $key => $value) {
 				$this->form_validation->set_rules('address['.$key.'][address_1]', '['.$key.'] lang:label_address_1', 'xss_clean|trim|required|min_length[3]|max_length[128]');
 				$this->form_validation->set_rules('address['.$key.'][city]', '['.$key.'] lang:label_city', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+				$this->form_validation->set_rules('address['.$key.'][state]', '['.$key.'] lang:label_state', 'xss_clean|trim|max_length[128]');
 				$this->form_validation->set_rules('address['.$key.'][postcode]', '['.$key.'] lang:label_postcode', 'xss_clean|trim|required|min_length[2]|max_length[10]');
 				$this->form_validation->set_rules('address['.$key.'][country_id]', '['.$key.'] lang:label_country', 'xss_clean|trim|required|integer');
 			}
@@ -320,6 +304,21 @@ class Customers extends Admin_Controller {
 			return TRUE;
 		} else {
 			return FALSE;
+		}
+	}
+
+	private function _deleteCustomer() {
+		if ($this->input->post('delete')) {
+			$deleted_rows = $this->Customers_model->deleteCustomer($this->input->post('delete'));
+
+			if ($deleted_rows > 0) {
+				$prefix = ($deleted_rows > 1) ? '['.$deleted_rows.'] Customers': 'Customer';
+				$this->alert->set('success', sprintf($this->lang->line('alert_success'), $prefix.' '.$this->lang->line('text_deleted')));
+			} else {
+				$this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted')));
+			}
+
+			return TRUE;
 		}
 	}
 }

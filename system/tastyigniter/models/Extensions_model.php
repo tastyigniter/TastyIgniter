@@ -2,62 +2,94 @@
 
 class Extensions_model extends TI_Model {
 
-	public function getList($filter = array()) {
-        $results = array();
+    private function extensions() {
+        $extensions = array();
 
-        $extensions = $this->getExtensions();
+        $installed_extensions = $this->getInstalledExtensions(NULL, FALSE);
+        $extension_paths = $this->fetchExtensionsPath();
 
-        foreach ($this->fetchExtensionsPath() as $extension_path) {
-            $options = $installed = FALSE;
+        foreach ($extension_paths as $extension_path) {
+            $extension = array();
 
             $basename = basename($extension_path);
-            $title = ucwords(str_replace('_module', '', $basename));
 
-            if (isset($extensions[$basename]) AND $extension = $extensions[$basename]) {
-                if (isset($extension['status']) AND $extension['status'] === '1') {
-                    $installed = TRUE;
-                }
-            } else {
-                $extension = array();
-            }
+            $installed_ext = isset($installed_extensions[$basename]) ? $installed_extensions[$basename] : array();
 
-            // skip loop if not installed and $is_installed is set TRUE
-            if (!empty($filter['status']) AND $filter['status'] === TRUE AND $installed === FALSE) continue;
+            $config = $this->extension->loadConfig($basename, FALSE, TRUE);
 
-            $config_items = $this->getConfig($basename);
+            $extension['extension_id'] = isset($installed_ext['extension_id']) ? $installed_ext['extension_id'] : 0;
+            $extension['name'] = $basename;
+            $extension['title'] = (!empty($installed_ext['title'])) ? $installed_ext['title'] : ucwords(str_replace('_module', '', $basename));
 
-            $config = (!empty($config_items) AND is_array($config_items)) ? TRUE : FALSE;
+            $extension_meta = $this->extension->getMeta($basename, $config);
+            $extension = array_merge($extension, $extension_meta);
 
-            $ext_type = (isset($config_items['ext_type'])) ? $config_items['ext_type'] : 'module';
+            $extension['ext_data'] = isset($installed_ext['ext_data']) ? $installed_ext['ext_data'] : '';
 
-            if (isset($config_items['admin_options']) AND $config_items['admin_options'] === TRUE) {
-                $options = file_exists($extension_path.'/controllers/admin_' . $basename . '.php') ? TRUE : FALSE;
-            }
+            $extension['settings'] = !empty($extension_meta['settings'])
+            AND file_exists($extension_path.'/controllers/admin_' . $basename . '.php') ? TRUE : FALSE;
 
-            $results[$ext_type][$basename] = array(
-                'extension_id' => isset($extension['extension_id']) ? $extension['extension_id'] : 0,
-                'name'         => $basename,
-                'title'        => (!empty($extension['title'])) ? $extension['title'] : $title,
-                'type'         => $ext_type,
-                'ext_data'     => (isset($extension['ext_data'])) ? $extension['ext_data'] : '',
-                'options'      => $options,
-                'config'       => $config,
-                'installed'    => $installed
-            );
+            $extension['config'] = (!empty($config) AND is_array($config)) ? TRUE : $config;
+
+            $extension['installed'] = (!empty($installed_ext) AND $installed_ext['extension_id'] > 0) ? TRUE : FALSE;
+
+            $extension['status'] = (isset($installed_ext['status']) AND $installed_ext['status'] === '1') ? '1' : '0';
+
+            $extension_type = !empty($extension_meta['type']) ? $extension_meta['type'] : 'module';
+            $extensions[$extension_type][$basename] = $extension;
         }
 
-        if (!empty($filter['type'])) {
-            return $results[$filter['type']];
-        }
-
-        return $results;
+        return $extensions;
     }
 
-    public function getExtension($type = '', $name = '', $is_installed = TRUE) {
+    public function getList($filter = array()) {
         $result = array();
 
-        if (!empty($type) AND !empty($name)) {
-            $extensions = $this->getList(array('type' => $type, 'status' => $is_installed));
+        foreach ($this->extensions() as $type => $extensions) {
+
+            if ( ! empty($filter['filter_type']) AND $type !== $filter['filter_type']) continue;
+
+            foreach ($extensions as $name => $ext) {
+                // filter extensions by enabled only
+                if ( ! empty($filter['filter_status']) AND $ext['status'] !== $filter['filter_status']) continue;
+
+                if ( ! empty($filter['filter_installed']) AND $ext['installed'] !== TRUE) continue;
+
+                if ( ! empty($filter['filter_installed']) AND $ext['installed'] !== TRUE) continue;
+
+                $result[$name] = $ext;
+            }
+        }
+
+        if ( ! empty($filter['sort_by'])) {
+            switch ($filter['sort_by']) {
+                case 'name':
+                    usort($result, function ($x, $y) {
+                        return $x['name'] > $y['name'];
+                    });
+                    break;
+                case 'type':
+                    usort($result, function ($x, $y) {
+                        return $x['type'] > $y['type'];
+                    });
+                    break;
+            }
+
+            if ( ! empty($filter['order_by']) AND $filter['order_by'] === 'DESC') {
+                $result = array_reverse($result);
+
+                return $result;
+            }
+        }
+
+        return $result;
+    }
+
+    public function getExtension($name = '') {
+        $result = array();
+
+        if (!empty($name)) {
+            $extensions = $this->getList(array('filter_status' => '1'));
 
             if ($extensions AND is_array($extensions)) {
                 if (isset($extensions[$name]) AND is_array($extensions[$name])) {
@@ -69,23 +101,18 @@ class Extensions_model extends TI_Model {
         return $result;
     }
 
-    public function getExtensions($type = '', $filter_installed = FALSE) {
+    public function getInstalledExtensions($type = '', $is_enabled = TRUE) {
 
         $this->db->from('extensions');
 
-        if ($type === '') {
-            $this->db->where('type', 'module');
-            $this->db->or_where('type', 'payment');
-        } else {
-            $this->db->where('type', $type);
-        }
+        $type = ($type === '') ? array('module', 'payment', 'widget') : $type;
+        $this->db->where_in('type', $type);
 
-        if ($filter_installed === TRUE) {
+        if ($is_enabled === TRUE) {
             $this->db->where('status', '1');
         }
 
         $query = $this->db->get();
-
         $result = array();
 
         if ($query->num_rows() > 0) {
@@ -97,6 +124,7 @@ class Extensions_model extends TI_Model {
 
                 $row['ext_data'] = ($row['serialized'] === '1' AND !empty($row['data'])) ? unserialize($row['data']) : array();
                 unset($row['data']);
+                $row['title'] = !empty($row['title']) ? $row['title'] : ucwords(str_replace('_module', '', $row['name']));
                 $result[$row['name']] = $row;
             }
         }
@@ -122,18 +150,18 @@ class Extensions_model extends TI_Model {
 	}
 
     public function getModules() {
-        return $this->getExtensions('module', TRUE);
+        return $this->getInstalledExtensions('module', TRUE);
     }
 
     public function getPayments() {
-        return $this->getExtensions('payment', TRUE);
+        return $this->getInstalledExtensions('payment', TRUE);
     }
 
 	public function getPayment($name = '') {
         $result = array();
 
         if (!empty($name) AND is_string($name)) {
-            $extensions = $this->getExtensions('payment', TRUE);
+            $extensions = $this->getInstalledExtensions('payment', TRUE);
 
             if ($extensions AND is_array($extensions)) {
                 if (isset($extensions[$name]) AND is_array($extensions[$name])) {
@@ -143,18 +171,6 @@ class Extensions_model extends TI_Model {
         }
 
         return $result;
-	}
-
-    public function getConfig($ext_name = '', $item = '', $fail_gracefully = TRUE) {
-        $this->config->load($ext_name.'/'.$ext_name, TRUE, $fail_gracefully);
-
-		if ($config = $this->config->item($ext_name)) {
-			if ($item !== '') {
-				return $config[$item];
-			}
-		}
-
-        return $config;
 	}
 
     public function updateExtension($update = array(), $serialized = '0') {

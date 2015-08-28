@@ -33,7 +33,6 @@ class Login extends Admin_Controller {
             }
         }
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('login', $data);
 	}
 
@@ -52,7 +51,6 @@ class Login extends Admin_Controller {
 			redirect('login');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('login_reset', $data);
 	}
 

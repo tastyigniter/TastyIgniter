@@ -24,7 +24,6 @@ class Messages extends Admin_Controller {
 
         $data = $this->getList($data, $filter);
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('messages', $data);
 	}
 
@@ -155,7 +154,6 @@ class Messages extends Admin_Controller {
             }
         }
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('messages_view', $data);
 	}
 
@@ -252,7 +250,6 @@ class Messages extends Admin_Controller {
 			redirect('messages');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('messages_compose', $data);
 	}
 

@@ -77,7 +77,15 @@ class Database extends Base_Controller {
             $data['demo_data'] = '';
         }
 
-        if ($this->input->post() AND $this->_checkDatabase() === TRUE) {
+        if (!$this->input->post()) {
+            $db_check = @mysqli_connect($data['db_host'], $data['db_user'], $db_data['default']['password'], $data['db_name']);
+
+            if ($db_check AND !mysqli_connect_error()) {
+                mysqli_close($db_check);
+                $this->session->set_tempdata('setup', 'step_2', 300);
+                redirect('settings');
+            }
+        } else if ($this->input->post() AND $this->_checkDatabase() === TRUE) {
             redirect('settings');
         }
 

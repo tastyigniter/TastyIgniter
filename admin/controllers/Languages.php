@@ -102,7 +102,6 @@ class Languages extends Admin_Controller {
 			redirect('languages');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('languages', $data);
 	}
 
@@ -181,7 +180,7 @@ class Languages extends Admin_Controller {
             if (!empty($data['lang_file'])) {
                 if ($lang_file_values = load_lang_file($this->input->get('file'), $language_info['idiom'], $this->input->get('location'))) {
                     foreach ($lang_file_values as $key => $value) {
-                        $data['lang_file_values'][$key] = htmlspecialchars($value);
+                        $data['lang_file_values'][$key] = $value;
                     }
                 }
             }

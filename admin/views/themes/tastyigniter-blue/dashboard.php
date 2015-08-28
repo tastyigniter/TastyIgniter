@@ -83,15 +83,25 @@
 							<div class="list-group check-list-group">
                                 <a class="list-group-item">
                                     <span class="check-icon pull-left"><i class="fa fa-check-square-o"></i></span>
-                                    <span class="check-info"><s><?php echo lang('text_initial_progress'); ?><s></span>
+                                    <span class="check-info"><s><?php echo lang('text_initial_progress'); ?></s></span>
                                 </a>
                                 <a href="<?php echo site_url('settings'); ?>" class="list-group-item">
-                                    <span class="check-icon pull-left"><i class="fa fa-square-o"></i></span>
-                                    <span class="check-info"><?php echo lang('text_settings_progress'); ?></span>
+                                    <?php if ($main_address = config_item('main_address') AND !empty($main_address['address_1'])) { ?>
+                                        <span class="check-icon pull-left"><i class="fa fa-check-square-o"></i></span>
+                                        <span class="check-info"><s><?php echo lang('text_settings_progress'); ?></s></span>
+                                    <?php } else { ?>
+                                        <span class="check-icon pull-left"><i class="fa fa-square-o"></i></span>
+                                        <span class="check-info"><?php echo lang('text_settings_progress'); ?></span>
+                                    <?php }?>
                                 </a>
                                 <a href="<?php echo site_url('menus'); ?>" class="list-group-item">
-                                    <span class="check-icon pull-left"><i class="fa fa-square-o"></i></span>
-                                    <span class="check-info"><?php echo lang('text_menus_progress'); ?></span>
+                                    <?php if ($total_menus > 0) { ?>
+                                        <span class="check-icon pull-left"><i class="fa fa-check-square-o"></i></span>
+                                        <span class="check-info"><s><?php echo lang('text_menus_progress'); ?></s></span>
+                                    <?php } else { ?>
+                                        <span class="check-icon pull-left"><i class="fa fa-square-o"></i></span>
+                                        <span class="check-info"><?php echo lang('text_menus_progress'); ?></span>
+                                    <?php }?>
                                 </a>
                                 <a href="<?php echo site_url('themes'); ?>" class="list-group-item">
                                     <span class="check-icon pull-left"><i class="fa fa-square-o"></i></span>
@@ -158,11 +168,12 @@
                             <?php foreach ($activities as $activity) { ?>
                                 <li class="list-group-item">
                                     <div class="clearfix">
-                                        <span class="activity-body"><i class="<?php echo $activity['icon']; ?> fa-fw"></i>
-                                            <span class="small text-muted"><?php echo $activity['time']; ?>&nbsp;-&nbsp;</span>
+                                        <div class="activity-body"><i class="<?php echo $activity['icon']; ?> fa-fw"></i>&nbsp;
                                             <?php echo $activity['message']; ?>
+                                        </div>
+                                        <span class="activity-time text-muted pull-right small">
+                                            <span class="small"><?php echo $activity['time']; ?>&nbsp;-&nbsp;<?php echo $activity['time_elapsed']; ?></span>
                                         </span>
-                                        <span class="activity-time text-muted text-right small"><?php echo $activity['time_elapsed']; ?></span>
                                     </div>
                                 </li>
                             <?php } ?>

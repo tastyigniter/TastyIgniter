@@ -69,7 +69,6 @@ class Reviews extends Main_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		$this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
 		$this->template->render('account/reviews', $data);
 	}
 
@@ -101,7 +100,6 @@ class Reviews extends Main_Controller {
 		$data['date'] 				= mdate('%H:%i - %d %M %y', strtotime($result['date_added']));
 		$data['review_text'] 		= $result['review_text'];
 
-		$this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
 		$this->template->render('account/review_view', $data);
 	}
 
@@ -146,7 +144,6 @@ class Reviews extends Main_Controller {
 			redirect('account/reviews');
 		}
 
-		$this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
 		$this->template->render('account/review_add', $data);
 	}
 

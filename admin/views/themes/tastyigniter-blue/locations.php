@@ -53,6 +53,7 @@
 							<th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
 							<th><a class="sort" href="<?php echo $sort_name; ?>"><?php echo lang('column_name'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'location_name') ? $order_by_active : $order_by; ?>"></i></a></th>
 							<th><a class="sort" href="<?php echo $sort_city; ?>"><?php echo lang('column_city'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'location_city') ? $order_by_active : $order_by; ?>"></i></a></th>
+							<th><a class="sort" href="<?php echo $sort_state; ?>"><?php echo lang('column_state'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'location_state') ? $order_by_active : $order_by; ?>"></i></a></th>
 							<th><a class="sort" href="<?php echo $sort_postcode; ?>"><?php echo lang('column_postcode'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'location_postcode') ? $order_by_active : $order_by; ?>"></i></a></th>
 							<th><?php echo lang('column_telephone'); ?></th>
 							<th class="text-center"><?php echo lang('column_status'); ?></th>
@@ -77,6 +78,7 @@
 								<?php } ?>
 							</td>
 							<td><?php echo $location['location_city']; ?></td>
+							<td><?php echo $location['location_state']; ?></td>
 							<td><?php echo $location['location_postcode']; ?></td>
 							<td><?php echo $location['location_telephone']; ?></td>
 							<td class="text-center"><?php echo $location['location_status']; ?></td>

@@ -52,7 +52,6 @@ class Details extends Main_Controller {
 			redirect('account/details');
 		}
 
-		$this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
 		$this->template->render('account/details', $data);
 	}
 

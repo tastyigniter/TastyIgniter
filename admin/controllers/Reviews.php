@@ -140,7 +140,6 @@ class Reviews extends Admin_Controller {
 			redirect('reviews');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('reviews', $data);
 	}
 
@@ -196,7 +195,6 @@ class Reviews extends Admin_Controller {
 			redirect('reviews/edit?id='. $review_id);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('reviews_edit', $data);
 	}
 

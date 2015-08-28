@@ -59,7 +59,6 @@ class Activities extends Admin_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('activities', $data);
 	}
 

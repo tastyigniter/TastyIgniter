@@ -32,7 +32,6 @@ class Register extends Main_Controller {
 
 		$data['captcha'] = $this->createCaptcha();
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('account/register', $data);
 	}
 

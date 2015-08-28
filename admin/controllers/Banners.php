@@ -37,7 +37,6 @@ class Banners extends Admin_Controller {
 			redirect('banners');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('banners', $data);
 	}
 
@@ -125,7 +124,6 @@ class Banners extends Admin_Controller {
 			redirect('banners/edit?id='. $banner_id);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('banners_edit', $data);
 	}
 

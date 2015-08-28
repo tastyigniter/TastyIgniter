@@ -398,6 +398,24 @@ if ( ! function_exists('get_back_button')) {
 
 // ------------------------------------------------------------------------
 
+/**
+ * Get theme partial areas
+ *
+ *
+ * @access    public
+ * @return    string
+ */
+if ( ! function_exists('get_theme_partials')) {
+    function get_theme_partials($theme = NULL, $domain = 'main') {
+
+        $theme_config = load_theme_config(trim($theme, '/'), $domain);
+
+        return isset($theme_config['partial_area']) ? $theme_config['partial_area'] : array();
+    }
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('find_theme_files')) {
     /**
      * Search a theme folder for files.

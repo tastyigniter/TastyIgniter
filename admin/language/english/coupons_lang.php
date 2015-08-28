@@ -38,6 +38,7 @@ $lang['label_redemption'] 		        = 'Redemptions';
 $lang['label_customer_redemption'] 		= 'Customer Redemptions';
 $lang['label_description'] 		        = 'Description';
 $lang['label_validity'] 		        = 'Validity';
+$lang['label_order_restriction'] 		= 'Order Restriction';
 $lang['label_date'] 		            = 'Date';
 $lang['label_fixed_date'] 		        = 'Fixed date';
 $lang['label_fixed_time'] 		        = 'Fixed time';
@@ -54,6 +55,7 @@ $lang['label_status'] 		            = 'Status';
 $lang['help_type'] 		                = 'Whether to subtract a fixed amount or percentage from order total.';
 $lang['help_redemption'] 		        = 'The total number of times this coupon can be redeem. Enter 0 for unlimited redemptions.';
 $lang['help_customer_redemption'] 		= 'The number of times a specific customer can redeem this coupon. Enter 0 for unlimited redemptions.';
+$lang['help_order_restriction'] 		= 'Whether to restrict the coupon to a specific order type.';
 
 
 /* End of file coupons_lang.php */

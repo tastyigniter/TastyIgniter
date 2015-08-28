@@ -12,7 +12,7 @@
 	<head>
         <?php echo get_metas(); ?>
         <?php echo get_favicon(); ?>
-        <title><?php echo get_title(); ?></title>
+        <title><?php echo sprintf(lang('site_title'), get_title(), config_item('site_name')); ?></title>
         <?php echo get_style_tags(); ?>
         <?php echo get_active_styles(); ?>
         <?php echo get_script_tags(); ?>

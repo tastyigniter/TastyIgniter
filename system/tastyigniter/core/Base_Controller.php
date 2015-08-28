@@ -53,23 +53,20 @@ class Base_Controller extends MX_Controller {
 
         } else if (ENVIRONMENT === 'development') {
             if ($DATABASE->conn_id !== FALSE) $this->db->db_debug = TRUE;
+        }
 
-            // Enable profiler for development environments.
-            if ( ! $this->input->is_ajax_request()) {
-                $this->output->enable_profiler(TRUE);
+        if (ENVIRONMENT !== 'testing') {
+            // If the requested controller is a module controller then load the module config
+            if ($this->extension AND $this->router AND $_module = $this->router->fetch_module()) {
+                // Load the module configuration file and retrieve its items.
+                // Shows 404 error message on failure to load
+                $this->extension->loadConfig($_module, TRUE);
             }
         }
 
-        // If the requested controller is a module controller then load the module config
-        if (ENVIRONMENT !== 'testing') {
-            if ($this->router AND $_module = $this->router->fetch_module()) {
-                // Load the module configuration file and retrieve the configuration items
-                $this->config->load($_module . '/' . $_module, TRUE);
-                $config = $this->config->item($_module);
-
-                // Check if the module configuration items are correctly set
-                $this->checkModuleConfig($_module, $config);
-            }
+        // Enable profiler for development environments.
+        if ( ! $this->input->is_ajax_request()) {
+            $this->output->enable_profiler(TI_DEBUG);
         }
 
         $this->form_validation->CI =& $this;
@@ -83,20 +80,6 @@ class Base_Controller extends MX_Controller {
                 AND !$this->user->isLogged()
             ) {
                 return TRUE;
-            }
-        }
-    }
-
-    private function checkModuleConfig($_module, $config) {
-        if (!isset($config['ext_type']) OR !in_array($config['ext_type'], array('module', 'payment', 'widget'))) {
-            show_error('Check that the extension [' . $_module . '] configuration type key is correctly set');
-        }
-
-        if (class_exists('admin_' . $_module, FALSE)) {
-            $this->load->library('user');
-
-            if (!isset($config['admin_options']) OR !is_bool($config['admin_options']) OR !class_exists('Admin_Controller', FALSE)) {
-                show_error('Check that the extension [' . $_module . '] configuration admin_options key is correctly set');
             }
         }
     }

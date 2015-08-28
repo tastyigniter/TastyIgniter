@@ -163,7 +163,6 @@ class Orders extends Admin_Controller {
 			redirect('orders');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('orders', $data);
 	}
 
@@ -334,7 +333,6 @@ class Orders extends Admin_Controller {
 			redirect('orders/edit?id='. $order_id);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('orders_edit', $data);
 	}
 

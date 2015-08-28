@@ -76,7 +76,6 @@ class Reservation extends Main_Controller {
 
         $data['captcha_image'] = $this->createCaptcha();
 
-        $this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
 		$this->template->render('reservation', $data);
 	}
 
@@ -99,7 +98,6 @@ class Reservation extends Main_Controller {
 			redirect('reservation');
 		}
 
-		$this->template->setPartials(array('header', 'content_top', 'content_left', 'content_right', 'content_bottom', 'footer'));
 		$this->template->render('reservation_success', $data);
 	}
 

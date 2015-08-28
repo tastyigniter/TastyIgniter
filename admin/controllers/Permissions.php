@@ -98,7 +98,6 @@ class Permissions extends Admin_Controller {
 			redirect('permissions');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('permissions', $data);
 	}
 
@@ -145,7 +144,6 @@ class Permissions extends Admin_Controller {
 			redirect('permissions/edit?id='. $permission_id);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('permissions_edit', $data);
 	}
 

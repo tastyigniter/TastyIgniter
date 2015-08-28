@@ -99,7 +99,6 @@ class Tables extends Admin_Controller {
 			redirect('tables');
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('tables', $data);
 	}
 
@@ -137,7 +136,6 @@ class Tables extends Admin_Controller {
 			redirect('tables/edit?id='. $table_id);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('tables_edit', $data);
 	}
 

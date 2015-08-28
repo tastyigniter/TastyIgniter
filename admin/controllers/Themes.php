@@ -46,7 +46,6 @@ class Themes extends Admin_Controller {
 			);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('themes', $data);
 	}
 
@@ -151,7 +150,6 @@ class Themes extends Admin_Controller {
 			}
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('themes_edit', $data);
 	}
 
