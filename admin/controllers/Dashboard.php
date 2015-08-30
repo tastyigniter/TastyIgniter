@@ -61,6 +61,17 @@ class Dashboard extends Admin_Controller {
             );
         }
 
+        $data['top_customers'] = array();
+        $results = $this->Dashboard_model->getTopCustomers($filter);
+        foreach ($results as $result) {
+            $data['top_customers'][] = array(
+                'first_name'	    => $result['first_name'],
+                'last_name'	    	=> $result['last_name'],
+                'total_orders'		=> $result['total_orders'],
+                'total_sale'		=> $result['total_sale'],
+            );
+        }
+
         $filter = array();
 		$filter['page'] = '';
 		$filter['limit'] = 10;
