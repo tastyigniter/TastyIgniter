@@ -1,0 +1,10 @@
+#newsletter-alert .alert > .list-group-alert p {
+margin: 0;
+}
+#newsletter-alert .alert {
+margin-bottom: 0;
+padding: 10px;
+border: 0 none;
+text-align: center;
+border-radius: 0;
+}

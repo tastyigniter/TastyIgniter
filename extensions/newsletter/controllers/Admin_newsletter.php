@@ -4,7 +4,7 @@ class Admin_newsletter extends Admin_Controller {
 
 	public function index($data = array()) {
         $this->lang->load('newsletter/newsletter');
-//        $this->user->restrict('Module.Newsletter');
+        $this->user->restrict('Module.Newsletter');
 
         if (!empty($data)) {
             $data['title'] = (isset($data['title'])) ? $data['title'] : 'Newsletter';
