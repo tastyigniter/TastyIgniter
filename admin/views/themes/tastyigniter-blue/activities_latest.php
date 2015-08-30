@@ -3,7 +3,7 @@
         <?php foreach ($activities as $activity) { ?>
             <li class="<?php echo $activity['state']; ?>">
                 <div class="clearfix">
-                    <div class="activity-body"><i class="<?php echo $activity['icon']; ?> fa-fw"></i>&nbsp;
+                    <div class="activity-body pull-left"><i class="<?php echo $activity['icon']; ?> fa-fw"></i>&nbsp;
                         <?php echo $activity['message']; ?>
                     </div>
                     <span class="activity-time text-muted pull-right small">
