@@ -155,7 +155,7 @@ function addModule() {
     html += '<option value="<?php echo $mod['module_code']; ?>"><?php echo $mod['title']; ?></option>';
         <?php } ?>
     html += '	</select></td>';
-    html += '	<td><select name="modules[' + module_row + '][position]" class="form-control">';
+    html += '	<td><select name="modules[' + module_row + '][partial]" class="form-control">';
         <?php foreach ($theme_partials as $partial) { ?>
     html += '<option value="<?php echo $partial['id']; ?>"><?php echo $partial['name']; ?></option>';
         <?php } ?>
