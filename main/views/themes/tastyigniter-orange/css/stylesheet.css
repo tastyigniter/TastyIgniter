@@ -934,10 +934,10 @@ margin-left: 15px;
 }
 .menu-thumb {
 float: left;
+margin-right: 20px;
 }
 .menu-item .menu-content {
 float: left;
-margin-left: 20px;
 width: 48%;
 }
 .menu-right {

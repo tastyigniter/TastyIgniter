@@ -293,7 +293,7 @@ padding-left: 20px;
 .navbar-top-links .dropdown-activities .menu .activity-body .fa {
 margin-left: -20px;
 }
-.navbar-top-links .dropdown-activities .menu .activity-body b {
+.activity-body b {
 font-weight: 500;
 }
 @media(min-width:768px) {
@@ -1056,13 +1056,13 @@ border-width: 1px 1px 1px;
 .panel-default > .panel-heading {
 background-color: #f9fafc;
 border-color: #ecf0f5;
-padding: 12px 15px;
+padding: 10px 15px;
 }
 .panel-title {
-font-size: 18px;
-line-height: 18px;
+font-size: 16px;
+line-height: 16px;
 color:#484848;
-font-weight: 200;
+font-weight: 400;
 }
 .panel-heading, .panel-footer {
 border-radius:0;
@@ -1209,9 +1209,6 @@ color: #A94442;
 .panel-chart .panel-heading {
 /*padding: 5px 10px;*/
 }
-.panel-chart .panel-title, .panel-statistics .panel-title {
-line-height: 28px;
-}
 .chart-responsive {
 width: 100%;
 }
@@ -1221,7 +1218,14 @@ text-align: center;
 .chart-legend span + span {
 margin-left: 10px;
 }
-
+.panel-default > .panel-heading .btn {
+padding: 0 10px;
+background-color: transparent;
+border-width: 0px 0 0 1px;
+}
+.panel-default > .panel-heading .btn .btn.active, .panel-default > .panel-heading .btn .btn:active {
+box-shadow: none;
+}
 
 
 /** SELECTED PANEL **/
