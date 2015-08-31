@@ -396,7 +396,6 @@ class Messages_model extends TI_Model {
     public function _sendMail($message_id, $email) {
 		if (!empty($message_id) AND !empty($email)) {
 			$this->load->library('email');
-			$this->load->library('mail_template');
 
 			$mail_data = $this->getMessage($message_id);
 			if ($mail_data) {

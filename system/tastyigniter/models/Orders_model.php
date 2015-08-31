@@ -607,9 +607,13 @@ class Orders_model extends TI_Model {
             }
 
             if ($send_mail === '1') {
-                $this->load->library('mail_template');
-                $message = $this->mail_template->parseTemplate('order', $mail_data);
-                $this->email->subject($this->mail_template->getSubject());
+                $this->load->model('Mail_templates_model');
+                $mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'order');
+
+                $subject = $this->email->parse_template($mail_template['subject'], $mail_data);
+                $message = $this->email->parse_template($mail_template['body'], $mail_data);
+
+                $this->email->subject($subject);
                 $this->email->message($message);
 
                 if (!$this->email->send()) {

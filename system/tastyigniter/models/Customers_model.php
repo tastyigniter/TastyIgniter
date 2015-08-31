@@ -173,7 +173,7 @@ class Customers_model extends TI_Model {
 		return $result;
 	}
 
-    public function getCustomerByEmail($email) {
+	public function getCustomerByEmail($email) {
 
         $this->db->from('customers');
         $this->db->where('email', strtolower($email));
@@ -220,18 +220,18 @@ class Customers_model extends TI_Model {
                 $this->db->where('email', $row['email']);
 
                 if ($this->db->update('customers') AND $this->db->affected_rows() > 0) {
-                    $mail_data['site_name']         = $this->config->item('site_name');
+
+					$mail_data['site_name']         = $this->config->item('site_name');
                     $mail_data['first_name']        = $row['first_name'];
                     $mail_data['last_name']         = $row['last_name'];
                     $mail_data['created_password']  = $password;
                     $mail_data['signature']         = $this->config->item('site_name');
                     $mail_data['login_link']        = root_url('account/login');
 
-                    $this->load->library('mail_template');
-                    $message = $this->mail_template->parseTemplate('password_reset', $mail_data);
-                    $subject = $this->mail_template->getSubject();
+					$this->load->model('Mail_templates_model');
+					$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'password_reset');
 
-                    $this->sendMail($row['email'], $subject, $message);
+                    $this->sendMail($row['email'], $mail_template, $mail_data);
                     return TRUE;
                 }
             }
@@ -347,10 +347,10 @@ class Customers_model extends TI_Model {
                 $mail_data['signature'] 		= $this->config->item('site_name');
                 $mail_data['login_link'] 		= root_url('account/login');
 
-                $this->load->library('mail_template');
-                $message = $this->mail_template->parseTemplate('registration', $mail_data);
-                $subject = $this->mail_template->getSubject();
-                $this->sendMail($save['email'], $subject, $message);
+				$this->load->model('Mail_templates_model');
+				$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'registration');
+
+				$this->sendMail($save['email'], $mail_template, $mail_data);
             }
 
             return $customer_id;
@@ -373,9 +373,13 @@ class Customers_model extends TI_Model {
         }
 	}
 
-	public function sendMail($email, $subject, $message) {
-	   	$this->load->library('email');
+	public function sendMail($email, $template, $data = array()) {
+		$this->load->library('email');
+
 		$this->email->initialize();
+
+		$subject = $this->email->parse_template($template['subject'], $data);
+		$message = $this->email->parse_template($template['body'], $data);
 
 		$this->email->from($this->config->item('site_email'), $this->config->item('site_name'));
 		$this->email->to(strtolower($email));
