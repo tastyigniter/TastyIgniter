@@ -87,7 +87,7 @@ class Reservation extends Main_Controller {
 		$this->template->setTitle($this->lang->line('text_success_heading'));
 		$this->template->setHeading($this->lang->line('text_success_heading'));
 
-        if ($result = $this->Reservations_model->getReservation('2449', $this->customer->getId())) {
+        if ($result = $this->Reservations_model->getReservation($this->session->tempdata('last_reservation_id'), $this->customer->getId())) {
 			$guest_num = $result['guest_num'] .' person(s)';
 
 			$data['text_success'] 	= sprintf($this->lang->line('text_success'), $result['location_name'], $guest_num, mdate('%l, %F %j, %Y', strtotime($result['reserve_date'])), mdate('%h:%i %a', strtotime($result['reserve_time'])));
