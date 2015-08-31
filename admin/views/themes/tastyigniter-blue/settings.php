@@ -775,11 +775,11 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="" class="col-sm-3 control-label"><?php echo lang('label_thumbs'); ?>
+						<label for="input-delete-thumbs" class="col-sm-3 control-label"><?php echo lang('label_thumbs'); ?>
 							<span class="help-block"><?php echo lang('help_delete_thumbs'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<a class="label label-danger" href="<?php echo $image_manager['delete_thumbs']; ?>">Delete thumbs</a>
+							<a id="input-delete-thumbs" class="label label-danger"><?php echo lang('text_delete_thumbs'); ?></a>
 						</div>
 					</div>
 				</div>
@@ -855,6 +855,12 @@
                                 <input type="password" name="smtp_pass" id="input-smtp-pass" class="form-control" value="<?php echo set_value('smtp_pass', config_item('smtp_pass')); ?>" autocomplete="off" />
                                 <?php echo form_error('smtp_pass', '<span class="text-danger">', '</span>'); ?>
                             </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-send-test-email" class="col-sm-3 control-label"><?php echo lang('label_test_email'); ?></label>
+                        <div class="col-sm-5">
+                            <a id="input-send-test-email" class="btn btn-primary btn-block"><?php echo lang('text_send_test_email'); ?></a>
                         </div>
                     </div>
                     <div class="form-group">
@@ -942,7 +948,7 @@
                             <?php echo form_error('location_reserve_email', '<span class="text-danger">', '</span>'); ?>
                         </div>
                     </div>
-                </div>
+				</div>
 
 				<div id="system" class="tab-pane row wrap-all">
 					<div class="form-group">
@@ -1094,6 +1100,57 @@ $(document).ready(function() {
 	});
 
 	$('input[name="protocol"]:checked').trigger('change');
+
+    $('#input-delete-thumbs').click(function() {
+        var obj = $(this);
+
+        $.ajax({
+            url: js_site_url('settings/delete_thumbs'),
+            type: 'POST',
+            data: 'delete_thumbs=1',
+            dataType: 'json',
+            beforeSend: function() {
+                obj.html('Deleting...');
+            },
+            success: function(json) {
+                if (json['error']) {
+                    obj.html(json['error']);
+                }
+
+                if (json['success']) {
+                    obj.html(json['success']);
+                    obj.removeClass('label-danger');
+                    obj.addClass('label-success');
+                }
+            }
+        });
+    });
+
+    $('#input-send-test-email').click(function() {
+        var obj = $(this);
+
+        $.ajax({
+            url: js_site_url('settings/send_test_email'),
+            type: 'POST',
+            data: 'send_test_email=1',
+            dataType: 'json',
+            beforeSend: function() {
+                obj.html('Sending...');
+            },
+            success: function(json) {
+                if (json['error']) {
+                    obj.html(json['error']);
+                }
+
+                if (json['success']) {
+                    obj.html(json['success']);
+                    obj.removeClass('btn-primary');
+                    obj.addClass('btn-success');
+                }
+            }
+        });
+
+    });
 });
 //--></script>
 <?php echo get_footer(); ?>

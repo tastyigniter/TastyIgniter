@@ -181,12 +181,55 @@ class Settings extends Admin_Controller {
 	}
 
 	public function delete_thumbs() {
-        if (file_exists(IMAGEPATH . 'thumbs')) {
-            $this->_delete_thumbs(IMAGEPATH . 'thumbs/*');
-            $this->alert->set('success', 'Thumbs deleted successfully.');
-        }
+		$json = array();
 
-		redirect('settings');
+		if (empty($json) AND $this->input->post('delete_thumbs') AND file_exists(IMAGEPATH . 'thumbs')) {
+            $this->_delete_thumbs(IMAGEPATH . 'thumbs/*');
+			$json['success'] = $this->lang->line('alert_success_thumb_deleted');
+        } else {
+			$json['error'] = $this->lang->line('alert_error_try_again');
+		}
+
+
+		if ($this->input->is_ajax_request()) {
+			$this->output->set_output(json_encode($json));											// encode the json array and set final out to be sent to jQuery AJAX
+		} else {
+			if (isset($json['error'])) $this->alert->set('danger', $json['error']);
+			if (isset($json['success'])) $this->alert->set('success', $json['success']);
+			redirect('settings/#image-manager');
+		}
+	}
+
+	public function send_test_email() {
+		$json = array();
+
+		if ( ! $this->input->post('send_test_email')) {
+			$json['error'] = $this->lang->line('alert_error_try_again');
+		}
+
+		if (empty($json)) {
+			$this->load->library('email');                                                        //loading upload library
+			$this->email->initialize();
+
+			$this->email->from(strtolower($this->config->item('site_email')), $this->config->item('site_name'));
+			$this->email->to(strtolower($this->config->item('site_email')));
+			$this->email->subject('This a test email');
+			$this->email->message('This is a test email. If you\'ve received this, it means emails are working in TastyIgniter.');
+
+			if ($this->email->send()) {
+				$json['success'] = sprintf($this->lang->line('alert_email_sent'), $this->config->item('site_email'));
+			} else {
+				$json['error'] = $this->email->print_debugger(array('headers'));
+            }
+		}
+
+		if ($this->input->is_ajax_request()) {
+			$this->output->set_output(json_encode($json));											// encode the json array and set final out to be sent to jQuery AJAX
+		} else {
+			if (isset($json['error'])) $this->alert->set('danger', $json['error']);
+			if (isset($json['success'])) $this->alert->set('success', $json['success']);
+			redirect('settings/#mail');
+		}
 	}
 
 	private function _updateSettings() {
