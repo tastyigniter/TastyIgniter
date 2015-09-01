@@ -7,10 +7,10 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <div class="row">
-                                <div class="col-xs-8">
+                                <div class="col-xs-12">
                                     <span class="stat-heading"><?php echo lang('text_total_sale'); ?></span>
                                 </div>
-                                <div class="col-xs-4 text-right">
+                                <div class="col-xs-4 pull-right">
                                     <i class="stat-icon fa fa-line-chart fa-4x"></i>
                                 </div>
                                 <div class="col-xs-12"><span class="stat-text sales"><?php echo lang('text_dash_dash'); ?></span></div>
@@ -22,10 +22,10 @@
                     <div class="panel panel-green">
                         <div class="panel-heading">
                             <div class="row">
-                                <div class="col-xs-9">
+                                <div class="col-xs-12">
                                     <span class="stat-heading"><?php echo lang('text_total_customer'); ?></span>
                                 </div>
-                                <div class="col-xs-3 text-right">
+                                <div class="col-xs-3 pull-right">
                                     <i class="stat-icon fa fa-users fa-4x"></i>
                                 </div>
                                 <div class="col-xs-12"><span class="stat-text customers"><?php echo lang('text_dash_dash'); ?></span></div>
@@ -37,10 +37,10 @@
                     <div class="panel panel-yellow">
                         <div class="panel-heading">
                             <div class="row">
-                                <div class="col-xs-9">
+                                <div class="col-xs-12">
                                     <span class="stat-heading"><?php echo lang('text_total_order'); ?></span>
                                 </div>
-                                <div class="col-xs-3 text-right">
+                                <div class="col-xs-3 pull-right">
                                     <i class="stat-icon fa fa-shopping-cart fa-4x"></i>
                                 </div>
                                 <div class="col-xs-12"><span class="stat-text orders"><?php echo lang('text_dash_dash'); ?></span></div>
@@ -49,13 +49,13 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-red">
+                    <div class="panel panel-primary">
                         <div class="panel-heading">
                             <div class="row">
-                                <div class="col-xs-9">
+                                <div class="col-xs-12">
                                     <span class="stat-heading"><?php echo lang('text_total_reservation'); ?></span>
                                 </div>
-                                <div class="col-xs-3 text-right">
+                                <div class="col-xs-3 pull-right">
                                     <i class="stat-icon fa fa-calendar fa-4x"></i>
                                 </div>
                                 <div class="col-xs-12"><span class="stat-text tables_reserved"><?php echo lang('text_dash_dash'); ?></span></div>
