@@ -1,9 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 $lang['text_heading'] 			= 'Menu';
-$lang['text_tab_general'] 		= 'Menu';
-$lang['text_tab_review'] 		= 'Reviews';
-$lang['text_tab_info'] 			= 'Info';
 $lang['column_price'] 			= 'Price';
 $lang['text_filter'] 			= 'Note: Filter the menu by selecting a category on the left';
 $lang['text_empty'] 			= 'There are no menus in this category.';
