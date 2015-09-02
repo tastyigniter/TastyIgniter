@@ -63,7 +63,7 @@ class Mail_templates_model extends TI_Model {
 	}
 
 	public function getTemplateData($template_id, $template_code) {
-		if ($template_id AND $template_code) {
+		if (is_numeric($template_id) AND is_string($template_code)) {
 			$this->db->from('mail_templates_data');
 			$this->db->join('mail_templates', 'mail_templates.template_id = mail_templates_data.template_id', 'left');
 			$this->db->where('mail_templates_data.template_id', $template_id);

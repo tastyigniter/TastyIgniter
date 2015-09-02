@@ -25,9 +25,24 @@ class Categories_module extends Main_Controller {
 		$data['categories'] = array();
 		$results = $this->Categories_model->getCategories(); 										// retrieve all menu categories from getCategories method in Menus model
         foreach (sort_array($results) as $result) {															// loop through menu categories array
-			$data['categories'][] = array( 														// create array of category data to pass to view
+            $children_data = array();
+
+            if ($result['child_id'] !== NULL) {
+                $children = $this->Categories_model->getCategories($result['category_id']); 										// retrieve all menu categories from getCategories method in Menus model
+
+                foreach ($children as $child) {
+                    $children_data[$child['category_id']] = array( 														// create array of category data to pass to view
+                        'category_id'	=>	$child['category_id'],
+                        'category_name'	=>	$child['name'],
+                        'href'			=>	site_url('menus?category_id='. $child['category_id'])
+                    );
+                }
+            }
+
+			$data['categories'][$result['category_id']] = array( 														// create array of category data to pass to view
 				'category_id'	=>	$result['category_id'],
 				'category_name'	=>	$result['name'],
+				'children'		=>	$children_data,
 				'href'			=>	site_url('menus?category_id='. $result['category_id'])
 			);
 		}

@@ -34,6 +34,7 @@ $lang['text_week'] 		                    = 'Week';
 $lang['text_month'] 		                = 'Month';
 $lang['text_year'] 		                    = 'Year';
 $lang['text_recent_activity'] 		        = 'Recent Activity';
+$lang['text_top_customers'] 		        = 'Top Customers';
 $lang['text_latest_order'] 		            = '10 Latest Orders';
 $lang['text_reports_chart'] 		        = 'Reports Chart';
 $lang['text_select_range'] 		            = 'Select date range';
@@ -45,6 +46,8 @@ $lang['column_status'] 		                = 'Status';
 $lang['column_type'] 		                = 'Type';
 $lang['column_ready_type'] 		            = 'Ready Time';
 $lang['column_date_added'] 		            = 'Date Added';
+$lang['column_total_orders'] 		        = '# Orders';
+$lang['column_total_sale'] 		            = 'Total Sale';
 
 /* End of file dashboard_lang.php */
 /* Location: ./admin/language/english/dashboard_lang.php */

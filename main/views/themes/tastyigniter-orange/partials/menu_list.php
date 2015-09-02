@@ -22,24 +22,23 @@
 
                                 <div class="menu-content">
                                     <span class="menu-name"><b><?php echo $menu['menu_name']; ?></b></span>
-                                                    <span class="menu-desc small">
-                                                        <?php echo $menu['menu_description']; ?>
-                                                    </span>
-
+                                    <span class="menu-desc small">
+                                        <?php echo $menu['menu_description']; ?>
+                                    </span>
                                 </div>
                                 <div class="menu-right">
                                     <span class="menu-price"><?php echo $menu['menu_price']; ?></span>
-                                                        <span class="menu-button">
-                                                            <?php if (isset($menu_options[$menu['menu_id']])) { ?>
-                                                                <a class="btn btn-primary btn-cart add_cart" onClick="openMenuOptions('<?php echo $menu['menu_id']; ?>', '<?php echo $menu['minimum_qty']; ?>');">
-                                                                    <span class="fa fa-plus"></span>
-                                                                </a>
-                                                            <?php } else { ?>
-                                                                <a class="btn btn-primary btn-cart add_cart" title="<?php echo lang('button_add'); ?>" onClick="addToCart('<?php echo $menu['menu_id']; ?>', '<?php echo $menu['minimum_qty']; ?>');">
-                                                                    <span class="fa fa-plus"></span>
-                                                                </a>
-                                                            <?php } ?>
-                                                        </span>
+                                        <span class="menu-button">
+                                            <?php if (isset($menu_options[$menu['menu_id']])) { ?>
+                                                <a class="btn btn-primary btn-cart add_cart" onClick="openMenuOptions('<?php echo $menu['menu_id']; ?>', '<?php echo $menu['minimum_qty']; ?>');">
+                                                    <span class="fa fa-plus"></span>
+                                                </a>
+                                            <?php } else { ?>
+                                                <a class="btn btn-primary btn-cart add_cart" title="<?php echo lang('button_add'); ?>" onClick="addToCart('<?php echo $menu['menu_id']; ?>', '<?php echo $menu['minimum_qty']; ?>');">
+                                                    <span class="fa fa-plus"></span>
+                                                </a>
+                                            <?php } ?>
+                                        </span>
                                     <?php if ($menu['is_special'] === '1') { ?>
                                         <div class="menu-special"><?php echo $menu['end_days']; ?></div>
                                     <?php }?>

@@ -7,10 +7,10 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <div class="row">
-                                <div class="col-xs-8">
+                                <div class="col-xs-12">
                                     <span class="stat-heading"><?php echo lang('text_total_sale'); ?></span>
                                 </div>
-                                <div class="col-xs-4 text-right">
+                                <div class="col-xs-4 pull-right">
                                     <i class="stat-icon fa fa-line-chart fa-4x"></i>
                                 </div>
                                 <div class="col-xs-12"><span class="stat-text sales"><?php echo lang('text_dash_dash'); ?></span></div>
@@ -22,10 +22,10 @@
                     <div class="panel panel-green">
                         <div class="panel-heading">
                             <div class="row">
-                                <div class="col-xs-9">
+                                <div class="col-xs-12">
                                     <span class="stat-heading"><?php echo lang('text_total_customer'); ?></span>
                                 </div>
-                                <div class="col-xs-3 text-right">
+                                <div class="col-xs-3 pull-right">
                                     <i class="stat-icon fa fa-users fa-4x"></i>
                                 </div>
                                 <div class="col-xs-12"><span class="stat-text customers"><?php echo lang('text_dash_dash'); ?></span></div>
@@ -37,10 +37,10 @@
                     <div class="panel panel-yellow">
                         <div class="panel-heading">
                             <div class="row">
-                                <div class="col-xs-9">
+                                <div class="col-xs-12">
                                     <span class="stat-heading"><?php echo lang('text_total_order'); ?></span>
                                 </div>
-                                <div class="col-xs-3 text-right">
+                                <div class="col-xs-3 pull-right">
                                     <i class="stat-icon fa fa-shopping-cart fa-4x"></i>
                                 </div>
                                 <div class="col-xs-12"><span class="stat-text orders"><?php echo lang('text_dash_dash'); ?></span></div>
@@ -49,13 +49,13 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-red">
+                    <div class="panel panel-primary">
                         <div class="panel-heading">
                             <div class="row">
-                                <div class="col-xs-9">
+                                <div class="col-xs-12">
                                     <span class="stat-heading"><?php echo lang('text_total_reservation'); ?></span>
                                 </div>
-                                <div class="col-xs-3 text-right">
+                                <div class="col-xs-3 pull-right">
                                     <i class="stat-icon fa fa-calendar fa-4x"></i>
                                 </div>
                                 <div class="col-xs-12"><span class="stat-text tables_reserved"><?php echo lang('text_dash_dash'); ?></span></div>
@@ -85,7 +85,7 @@
                                     <span class="check-icon pull-left"><i class="fa fa-check-square-o"></i></span>
                                     <span class="check-info"><s><?php echo lang('text_initial_progress'); ?></s></span>
                                 </a>
-                                <a href="<?php echo site_url('settings'); ?>" class="list-group-item">
+                                <a href="<?php echo site_url('settings#location'); ?>" class="list-group-item">
                                     <?php if ($main_address = config_item('main_address') AND !empty($main_address['address_1'])) { ?>
                                         <span class="check-icon pull-left"><i class="fa fa-check-square-o"></i></span>
                                         <span class="check-info"><s><?php echo lang('text_settings_progress'); ?></s></span>
@@ -107,7 +107,7 @@
                                     <span class="check-icon pull-left"><i class="fa fa-square-o"></i></span>
                                     <span class="check-info"><?php echo lang('text_design_progress'); ?></span>
                                 </a>
-                                <a href="<?php echo site_url('mail_templates'); ?>" class="list-group-item">
+                                <a href="<?php echo site_url('settings#mail'); ?>" class="list-group-item">
                                     <span class="check-icon pull-left"><i class="fa fa-square-o"></i></span>
                                     <span class="check-info"><?php echo lang('text_email_progress'); ?></span>
                                 </a>
@@ -160,7 +160,7 @@
 		</div>
 
         <div class="row">
-            <div class="col-sm-4">
+            <div class="col-sm-6">
                 <div class="panel panel-default panel-activities">
                     <div class="panel-heading"><h3 class="panel-title"><i class="fa fa-clock-o"></i>&nbsp;&nbsp;<?php echo lang('text_recent_activity'); ?></h3></div>
                     <ul class="list-group">
@@ -168,7 +168,7 @@
                             <?php foreach ($activities as $activity) { ?>
                                 <li class="list-group-item">
                                     <div class="clearfix">
-                                        <div class="activity-body"><i class="<?php echo $activity['icon']; ?> fa-fw"></i>&nbsp;
+                                        <div class="activity-body pull-left"><i class="<?php echo $activity['icon']; ?> fa-fw"></i>&nbsp;
                                             <?php echo $activity['message']; ?>
                                         </div>
                                         <span class="activity-time text-muted pull-right small">
@@ -184,44 +184,70 @@
                 </div>
             </div>
 
-            <div class="col-sm-8">
-                <?php if ($orders) { ?>
-                <div class="panel panel-default panel-orders">
-                    <div class="panel-heading"><h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;<?php echo lang('text_latest_order'); ?></h3></div>
-                    <div class="table-responsive">
-                        <table border="0" class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th class="action action-one"></th>
-                                    <th><?php echo lang('column_id'); ?></th>
-                                    <th><?php echo lang('column_location'); ?></th>
-                                    <th><?php echo lang('column_name'); ?></th>
-                                    <th class="text-center"><?php echo lang('column_status'); ?></th>
-                                    <th class="text-center"><?php echo lang('column_type'); ?></th>
-                                    <th class="text-center"><?php echo lang('column_ready_type'); ?></th>
-                                    <th class="text-center"><?php echo lang('column_date_added'); ?></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($orders as $order) { ?>
-                                <tr>
-                                    <td class="action action-one"><a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $order['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
-                                    <td><?php echo $order['order_id']; ?></td>
-                                    <td><?php echo $order['location_name']; ?></td>
-                                    <td><?php echo $order['first_name']; ?> <?php echo $order['last_name']; ?></td>
-                                    <td class="text-center"><span class="label label-default" style="background-color: <?php echo $order['status_color']; ?>;"><?php echo $order['order_status']; ?></span></td>
-                                    <td class="text-center"><?php echo $order['order_type']; ?></td>
-                                    <td class="text-center"><?php echo $order['order_time']; ?></td>
-                                    <td class="text-center"><?php echo $order['date_added']; ?></td>
-                                </tr>
-                                <?php } ?>
-                            </tbody>
-                        </table>
+            <div class="col-sm-6">
+                <?php if ($top_customers) { ?>
+                    <div class="panel panel-default panel-top-customers">
+                        <div class="panel-heading"><h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;<?php echo lang('text_top_customers'); ?></h3></div>
+                        <div class="table-responsive">
+                            <table border="0" class="table table-striped table-no-spacing">
+                                <thead>
+                                    <tr>
+                                        <th><?php echo lang('column_name'); ?></th>
+                                        <th class="text-center"><?php echo lang('column_total_orders'); ?></th>
+                                        <th class="text-center"><?php echo lang('column_total_sale'); ?></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($top_customers as $top_customer) { ?>
+                                        <tr>
+                                            <td><?php echo $top_customer['first_name']; ?> <?php echo $top_customer['last_name']; ?></td>
+                                            <td class="text-center"><?php echo $top_customer['total_orders']; ?></td>
+                                            <td class="text-center"><?php echo $top_customer['total_sale']; ?></td>
+                                        </tr>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
                 <?php } ?>
             </div>
         </div>
+
+        <?php if ($orders) { ?>
+            <div class="panel panel-default panel-orders">
+                <div class="panel-heading"><h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;<?php echo lang('text_latest_order'); ?></h3></div>
+                <div class="table-responsive">
+                    <table border="0" class="table table-striped table-no-spacing">
+                        <thead>
+                        <tr>
+                            <th class="action action-one"></th>
+                            <th><?php echo lang('column_id'); ?></th>
+                            <th><?php echo lang('column_location'); ?></th>
+                            <th><?php echo lang('column_name'); ?></th>
+                            <th class="text-center"><?php echo lang('column_status'); ?></th>
+                            <th class="text-center"><?php echo lang('column_type'); ?></th>
+                            <th class="text-center"><?php echo lang('column_ready_type'); ?></th>
+                            <th class="text-center"><?php echo lang('column_date_added'); ?></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($orders as $order) { ?>
+                            <tr>
+                                <td class="action action-one"><a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $order['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
+                                <td><?php echo $order['order_id']; ?></td>
+                                <td><?php echo $order['location_name']; ?></td>
+                                <td><?php echo $order['first_name']; ?> <?php echo $order['last_name']; ?></td>
+                                <td class="text-center"><span class="label label-default" style="background-color: <?php echo $order['status_color']; ?>;"><?php echo $order['order_status']; ?></span></td>
+                                <td class="text-center"><?php echo $order['order_type']; ?></td>
+                                <td class="text-center"><?php echo $order['order_time']; ?></td>
+                                <td class="text-center"><?php echo $order['date_added']; ?></td>
+                            </tr>
+                        <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        <?php } ?>
 
         <div class="panel panel-default panel-chart">
             <div class="panel-heading">

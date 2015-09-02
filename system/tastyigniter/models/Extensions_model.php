@@ -55,8 +55,6 @@ class Extensions_model extends TI_Model {
 
                 if ( ! empty($filter['filter_installed']) AND $ext['installed'] !== TRUE) continue;
 
-                if ( ! empty($filter['filter_installed']) AND $ext['installed'] !== TRUE) continue;
-
                 $result[$name] = $ext;
             }
         }
@@ -172,6 +170,31 @@ class Extensions_model extends TI_Model {
 
         return $result;
 	}
+
+    public function saveExtensionData($name, $data = array()) {
+        if (empty($data)) return FALSE;
+
+        !isset($data['ext_data']) OR $data = $data['ext_data'];
+
+        $name = url_title(strtolower($name), '-');
+
+        $query = FALSE;
+
+        if ($this->extensionExists($name)) {
+
+            if (is_array($data)) {
+                $this->db->set('data', serialize($data));
+            } else {
+                $this->db->set('data', $data);
+            }
+
+            $this->db->where('name', $name);
+            $query = $this->db->update('extensions');
+
+        }
+
+        return $query;
+    }
 
     public function updateExtension($update = array(), $serialized = '0') {
 		$query = FALSE;

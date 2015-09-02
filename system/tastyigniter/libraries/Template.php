@@ -58,6 +58,9 @@ class Template {
             $this->setTheme($default_theme);
         }
 
+        // Load the theme config and store array in $this->_theme_config
+        $this->_theme_config = load_theme_config($this->_theme, APPDIR);
+
         // Modular Separation / Modular Extensions has been detected
 		if (method_exists( $this->CI->router, 'fetch_module' )) {
 			$this->_module 	= $this->CI->router->fetch_module();
@@ -127,9 +130,6 @@ class Template {
         if ($theme_location = $this->getThemeLocation($this->_theme)) {
             $this->_theme_path = rtrim($theme_location . $this->_theme);
             $this->_theme_shortpath = APPDIR . '/views/themes/' . $this->_theme;
-
-            // Load the theme config and store array in $this->_theme_config
-            $this->_theme_config = load_theme_config($this->_theme, APPDIR);
         } else {
             show_error('Unable to locate the active theme: '.APPDIR . '/views/themes/' . $this->_theme);
         }

@@ -5,11 +5,11 @@ if (APPDIR === ADMINDIR) {
 } else if (APPDIR === 'setup') {
     $route['default_controller'] = 'setup';
 } else {
-    $route['default_controller'] = 'home';
+    $default_controller = 'home';
+    $controller_exceptions = array('home', 'menus', 'reservation', 'contact', 'local', 'pages');
+
+    $route['default_controller'] = $default_controller;
     $route['local/reviews'] = 'local/reviews';
-    $route["^(" . implode('|', array('home', 'menus', 'reservation', 'contact', 'checkout', 'maintenance', 'local', 'pages')) . ")?$"] = '$1';
-    $route["^(" . implode('|', array('home', 'menus', 'contact', 'maintenance', 'local', 'pages')) . ")?/([^/]+)$"] = '$1/$2';
-    $route["^(" . implode('|', array('home', 'menus', 'contact', 'maintenance', 'local', 'pages')) . ")?/([^/]+)$"] = '$1';
     $route['locations'] = 'local/all';
     $route['local/(.+)'] = 'local';
     $route['account'] = 'account/account';
@@ -17,6 +17,9 @@ if (APPDIR === ADMINDIR) {
     $route['logout'] = 'account/logout';
     $route['register'] = 'account/register';
     $route['forgot-password'] = 'account/reset';
+    $route["^(" . implode('|', $controller_exceptions) . ")?$"] = '$1';
+    $route["^(" . implode('|', $controller_exceptions) . ")?/([^/]+)$"] = '$1';
+    $route["^(" . implode('|', $controller_exceptions) . ")?/([^/]+)$"] = '$1/$2';
     $route['([^/]+)'] = 'pages';
 }
 

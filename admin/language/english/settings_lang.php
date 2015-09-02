@@ -25,6 +25,7 @@ $lang['text_6_months'] 		                    = '6 months';
 $lang['text_12_months'] 		                = '12 months';
 $lang['text_minutes'] 		                    = 'minutes';
 $lang['text_seconds'] 		                    = 'seconds';
+$lang['text_delete_thumbs'] 		            = 'Delete thumbs';
 $lang['text_auto'] 		                        = 'Auto';
 $lang['text_manual'] 		                    = 'Manual';
 $lang['text_miles'] 		                    = 'Miles';
@@ -34,6 +35,7 @@ $lang['text_html'] 		                        = 'HTML';
 $lang['text_mail'] 		                        = 'MAIL';
 $lang['text_sendmail'] 		                    = 'SENDMAIL';
 $lang['text_smtp'] 		                        = 'SMTP';
+$lang['text_send_test_email'] 		            = 'Sent Test Email';
 
 $lang['label_site_name'] 		                = 'Restaurant Name';
 $lang['label_site_email'] 		                = 'Restaurant Email';
@@ -100,6 +102,7 @@ $lang['label_smtp_host'] 		                = 'SMTP Host';
 $lang['label_smtp_port'] 		                = 'SMTP Port';
 $lang['label_smtp_user'] 		                = 'SMTP Username';
 $lang['label_smtp_pass'] 		                = 'SMTP Password';
+$lang['label_test_email'] 		                = 'Test Email';
 $lang['label_customer_online_time_out'] 		= 'Customer Online Timeout';
 $lang['label_customer_online_archive_time_out'] = 'Customer Online Archive Timeout';
 $lang['label_permalink'] 		                = 'Permalink';
@@ -107,6 +110,10 @@ $lang['label_maintenance_mode'] 		        = 'Maintenance Mode';
 $lang['label_maintenance_message'] 		        = 'Maintenance Message';
 $lang['label_cache_mode'] 		                = 'Cache Mode';
 $lang['label_cache_time'] 		                = 'Cache Time';
+
+$lang['alert_email_sending'] 		            = 'Sending email...';
+$lang['alert_email_sent'] 		                = 'Email sent to %s';
+$lang['alert_success_thumb_deleted'] 		    = 'Thumbs deleted successfully.';
 
 $lang['help_page_limit'] 		                = 'Limit how many items are shown per page';
 $lang['help_menu_page_limit'] 		            = 'Limit how many menus are shown per page';

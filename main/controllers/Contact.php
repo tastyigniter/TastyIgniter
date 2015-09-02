@@ -77,12 +77,15 @@ class Contact extends Main_Controller {
 			$mail_data['site_name'] 			= $this->config->item('site_name');
 			$mail_data['signature'] 			= $this->config->item('site_name');
 
-			$this->load->library('mail_template');
-			$message = $this->mail_template->parseTemplate('contact', $mail_data);
+			$this->load->model('Mail_templates_model');
+			$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'contact');
+
+			$subject = $this->email->parse_template($mail_template['subject'], $mail_data);
+			$message = $this->email->parse_template($mail_template['body'], $mail_data);
 
 			$this->email->from(strtolower($email), ucwords($full_name));
 			$this->email->to(strtolower($this->config->item('site_email')));
-			$this->email->subject($this->mail_template->getSubject());
+			$this->email->subject($subject);
 			$this->email->message($message);
 
 			if ($this->email->send()) {

@@ -293,7 +293,7 @@ padding-left: 20px;
 .navbar-top-links .dropdown-activities .menu .activity-body .fa {
 margin-left: -20px;
 }
-.navbar-top-links .dropdown-activities .menu .activity-body b {
+.activity-body b {
 font-weight: 500;
 }
 @media(min-width:768px) {
@@ -1056,13 +1056,13 @@ border-width: 1px 1px 1px;
 .panel-default > .panel-heading {
 background-color: #f9fafc;
 border-color: #ecf0f5;
-padding: 12px 15px;
+padding: 10px 15px;
 }
 .panel-title {
-font-size: 18px;
-line-height: 18px;
+font-size: 16px;
+line-height: 16px;
 color:#484848;
-font-weight: 200;
+font-weight: 400;
 }
 .panel-heading, .panel-footer {
 border-radius:0;
@@ -1074,6 +1074,15 @@ border-bottom: 1px solid #dfe6ee;
 }
 .panel-body .list-group > .list-group-item {
 border-radius: 0;
+}
+.panel > .panel-heading .btn {
+padding: 0 10px;
+background-color: transparent;
+border-width: 0px 0 0 1px;
+}
+.panel > .panel-heading .btn .btn.active,
+.panel > .panel-heading .btn .btn:active {
+box-shadow: none;
 }
 .panel-green {
 border-color: #5cb85c;
@@ -1183,22 +1192,20 @@ color: #A94442;
 }
 
 .stat-heading {
-    font-weight: 600;
     text-transform: uppercase;
-    line-height: 33px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 .stat-icon {
     transform: rotate(-10deg);
-    color: rgba(0, 0, 0, 0.2);
+    color: rgba(255, 255, 255, 0.5);
     position: absolute;
     right: 14px;
-    top: 38px;
+    top: 0;
 }
 .stat-text {
     font-size: 30px;
     font-weight: 600;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
     display: block;
     padding: 6px 0;
 }
@@ -1209,9 +1216,6 @@ color: #A94442;
 .panel-chart .panel-heading {
 /*padding: 5px 10px;*/
 }
-.panel-chart .panel-title, .panel-statistics .panel-title {
-line-height: 28px;
-}
 .chart-responsive {
 width: 100%;
 }
@@ -1221,7 +1225,6 @@ text-align: center;
 .chart-legend span + span {
 margin-left: 10px;
 }
-
 
 
 /** SELECTED PANEL **/
@@ -1261,9 +1264,19 @@ margin-top: -21px;
 .panel-table .panel-heading .btn-filter {
 background-color: transparent;
 margin-left:5px;
+line-height: 25px;
+border-color: #D2DCE7;
 }
 .panel-table .panel-heading .btn-filter > .fa {
-font-size: 20px;
+font-size: 16px;
+}
+.panel-table .panel-heading .btn-filter > .fa-filter::after {
+content: "\f107";
+font-size: 14px;
+margin-left: 5px;
+}
+.panel-table .panel-heading .btn-filter.active > .fa-filter::after {
+content: "\f106";
 }
 .panel-table .panel-filter {
 border-bottom: 1px solid #ecf0f5;
@@ -1657,7 +1670,7 @@ border-color: #d2dce7;
 background-color: #f9fafc;
 border-left: 1px solid #ecf0f5;
 font-size: 11px;
-padding: 0 20px 30px;
+padding: 5px 20px 10px;
 }
 .text-copyright {
 color: #777;

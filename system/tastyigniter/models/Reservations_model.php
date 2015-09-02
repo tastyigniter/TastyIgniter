@@ -503,7 +503,6 @@ class Reservations_model extends TI_Model {
 
 	public function _sendMail($reservation_id) {
 	   	$this->load->library('email');
-		$this->load->library('mail_template');
 
 		$notify = $send_mail = '0';
 
@@ -533,8 +532,13 @@ class Reservations_model extends TI_Model {
             }
 
             if ($send_mail === '1') {
-                $message = $this->mail_template->parseTemplate('reservation', $mail_data);
-                $this->email->subject($this->mail_template->getSubject());
+                $this->load->model('Mail_templates_model');
+                $mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'reservation');
+
+                $subject = $this->email->parse_template($mail_template['subject'], $mail_data);
+                $message = $this->email->parse_template($mail_template['body'], $mail_data);
+
+                $this->email->subject($subject);
                 $this->email->message($message);
 
                 if (!$this->email->send()) {
