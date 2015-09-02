@@ -6,7 +6,7 @@ if (APPDIR === ADMINDIR) {
     $route['default_controller'] = 'setup';
 } else {
     $default_controller = 'home';
-    $controller_exceptions = array('home', 'menus', 'reservation', 'contact', 'local', 'pages');
+    $controller_exceptions = array('home', 'menus', 'reservation', 'contact', 'local', 'checkout', 'pages');
 
     $route['default_controller'] = $default_controller;
     $route['local/reviews'] = 'local/reviews';
