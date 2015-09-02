@@ -293,7 +293,7 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
                 $that->assertArrayHasKey('foo', $requires);
                 $that->assertArrayHasKey('xyzzy', $requires);
             }
-        );
+        )->shouldBeCalled();
 
         $root->getRepositories()->shouldNotBeCalled();
         $root->getConflicts()->shouldNotBeCalled();
@@ -656,32 +656,56 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
     /**
      * Given a root package with a branch alias
      * When the plugin is run
-     * Then the root package will be unwrapped from the alias.
+     * Then the alias is used directly for some calls.
      */
     public function testHasBranchAlias()
     {
         $that = $this;
+        $io = $this->io;
         $dir = $this->fixtureDir(__FUNCTION__);
-        $root = $this->rootFromJson("{$dir}/composer.json");
-        $root->setRequires(Argument::type('array'))->will(
-            function ($args) use ($that) {
-                $requires = $args[0];
-                $that->assertEquals(2, count($requires));
-                $that->assertArrayHasKey(
-                    'wikimedia/composer-merge-plugin',
-                    $requires
-                );
-                $that->assertArrayHasKey('php', $requires);
+
+        $repoManager = $this->prophesize(
+            'Composer\Repository\RepositoryManager'
+        );
+        $repoManager->createRepository(
+            Argument::type('string'),
+            Argument::type('array')
+        )->will(function ($args) use ($that, $io) {
+            return new \Composer\Repository\VcsRepository(
+                $args[1],
+                $io->reveal(),
+                new \Composer\Config()
+            );
+        });
+        $repoManager->addRepository(Argument::any())->shouldBeCalled();
+        $this->composer->getRepositoryManager()->will(
+            function () use ($repoManager) {
+                return $repoManager->reveal();
             }
         );
-        $root = $root->reveal();
 
-        $alias = $this->prophesize('Composer\Package\RootAliasPackage');
-        $alias->getAliasOf()->willReturn($root)->shouldBeCalled();
+        $root = $this->rootFromJson("{$dir}/composer.json");
+        // Handled by alias
+        $root->setDevRequires(Argument::type('array'))->shouldNotBeCalled();
+        $root->setRequires(Argument::type('array'))->shouldNotBeCalled();
 
-        $this->triggerPlugin($alias->reveal(), $dir);
+        // Handled unwrapped
+        $root->setAutoload(Argument::type('array'))->shouldBeCalled();
+        $root->setConflicts(Argument::type('array'))->shouldBeCalled();
+        $root->setDevAutoload(Argument::type('array'))->shouldBeCalled();
+        $root->setProvides(Argument::type('array'))->shouldBeCalled();
+        $root->setReplaces(Argument::type('array'))->shouldBeCalled();
+        $root->setRepositories(Argument::type('array'))->shouldBeCalled();
+        $root->setSuggests(Argument::type('array'))->shouldBeCalled();
 
-        $this->assertEquals($root, $this->getState()->getRootPackage());
+        $alias = $this->makeAliasFor($root->reveal());
+        $alias->getAliasOf()->shouldBeCalled();
+        $alias->getExtra()->shouldBeCalled();
+        $alias->setDevRequires(Argument::type('array'))->shouldBeCalled();
+        $alias->setRequires(Argument::type('array'))->shouldBeCalled();
+        $alias = $alias->reveal();
+
+        $this->triggerPlugin($alias, $dir);
     }
 
 
@@ -844,6 +868,58 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
         );
 
         return $root;
+    }
+
+    /**
+     * Wrap a package in a mocked alias.
+     *
+     * @param object $root
+     * @return ObjectProphecy
+     */
+    protected function makeAliasFor($root)
+    {
+        $alias = $this->prophesize('Composer\Package\RootAliasPackage');
+        $alias->getAliasOf()->willReturn($root);
+        $alias->getAliases()->will(function() use ($root) {
+            return $root->getAliases();
+        });
+        $alias->getAutoload()->will(function() use ($root) {
+            return $root->getAutoload();
+        });
+        $alias->getConflicts()->will(function() use ($root) {
+            return $root->getConflicts();
+        });
+        $alias->getDevAutoload()->will(function() use ($root) {
+            return $root->getDevAutoload();
+        });
+        $alias->getDevRequires()->will(function() use ($root) {
+            return $root->getDevRequires();
+        });
+        $alias->getExtra()->will(function() use ($root) {
+            return $root->getExtra();
+        });
+        $alias->getProvides()->will(function() use ($root) {
+            return $root->getProvides();
+        });
+        $alias->getReferences()->will(function() use ($root) {
+            return $root->getReferences();
+        });
+        $alias->getReplaces()->will(function() use ($root) {
+            return $root->getReplaces();
+        });
+        $alias->getRepositories()->will(function() use ($root) {
+            return $root->getRepositories();
+        });
+        $alias->getRequires()->will(function() use ($root) {
+            return $root->getRequires();
+        });
+        $alias->getStabilityFlags()->will(function() use ($root) {
+            return $root->getStabilityFlags();
+        });
+        $alias->getSuggests()->will(function() use ($root) {
+            return $root->getSuggests();
+        });
+        return $alias;
     }
 
     /**

@@ -11,9 +11,6 @@
 namespace Wikimedia\Composer\Merge;
 
 use Composer\Composer;
-use Composer\Package\AliasPackage;
-use Composer\Package\RootPackage;
-use UnexpectedValueException;
 
 /**
  * Mutable plugin state
@@ -99,7 +96,7 @@ class PluginState
      */
     public function loadSettings()
     {
-        $extra = $this->getRootPackage()->getExtra();
+        $extra = $this->composer->getPackage()->getExtra();
         $config = array_merge(
             array(
                 'include' => array(),
@@ -115,28 +112,6 @@ class PluginState
         $this->recurse = (bool)$config['recurse'];
         $this->replace = (bool)$config['replace'];
         $this->mergeExtra = (bool)$config['merge-extra'];
-    }
-
-    /**
-     * Get the root package
-     *
-     * @return RootPackage
-     */
-    public function getRootPackage()
-    {
-        $root = $this->composer->getPackage();
-        if ($root instanceof AliasPackage) {
-            $root = $root->getAliasOf();
-        }
-        // @codeCoverageIgnoreStart
-        if (!$root instanceof RootPackage) {
-            throw new UnexpectedValueException(
-                'Expected instance of RootPackage, got ' .
-                get_class($root)
-            );
-        }
-        // @codeCoverageIgnoreEnd
-        return $root;
     }
 
     /**
