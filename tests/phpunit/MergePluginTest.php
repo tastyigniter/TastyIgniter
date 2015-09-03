@@ -103,12 +103,36 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
             }
         );
 
+        $root->getConflicts()->shouldBeCalled();
+        $root->setConflicts(Argument::type('array'))->will(
+            function ($args) use ($that) {
+                $suggest = $args[0];
+                $that->assertEquals(1, count($suggest));
+                $that->assertArrayHasKey('conflict/conflict', $suggest);
+            }
+        );
+        $root->getReplaces()->shouldBeCalled();
+        $root->setReplaces(Argument::type('array'))->will(
+            function ($args) use ($that) {
+                $suggest = $args[0];
+                $that->assertEquals(1, count($suggest));
+                $that->assertArrayHasKey('replace/replace', $suggest);
+            }
+        );
+        $root->getProvides()->shouldBeCalled();
+        $root->setProvides(Argument::type('array'))->will(
+            function ($args) use ($that) {
+                $suggest = $args[0];
+                $that->assertEquals(1, count($suggest));
+                $that->assertArrayHasKey('provide/provide', $suggest);
+            }
+        );
         $root->getSuggests()->shouldBeCalled();
         $root->setSuggests(Argument::type('array'))->will(
             function ($args) use ($that) {
                 $suggest = $args[0];
                 $that->assertEquals(1, count($suggest));
-                $that->assertArrayHasKey('ext-apc', $suggest);
+                $that->assertArrayHasKey('suggest/suggest', $suggest);
             }
         );
 
@@ -150,6 +174,9 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
 
         $root->getDevRequires()->shouldNotBeCalled();
         $root->getRepositories()->shouldNotBeCalled();
+        $root->getConflicts()->shouldNotBeCalled();
+        $root->getReplaces()->shouldNotBeCalled();
+        $root->getProvides()->shouldNotBeCalled();
         $root->getSuggests()->shouldNotBeCalled();
 
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
@@ -182,6 +209,9 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
 
         $root->getDevRequires()->shouldNotBeCalled();
         $root->getRepositories()->shouldNotBeCalled();
+        $root->getConflicts()->shouldNotBeCalled();
+        $root->getReplaces()->shouldNotBeCalled();
+        $root->getProvides()->shouldNotBeCalled();
         $root->getSuggests()->shouldNotBeCalled();
 
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
@@ -215,6 +245,9 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
 
         $root->getDevRequires()->shouldNotBeCalled();
         $root->getRepositories()->shouldNotBeCalled();
+        $root->getConflicts()->shouldNotBeCalled();
+        $root->getReplaces()->shouldNotBeCalled();
+        $root->getProvides()->shouldNotBeCalled();
         $root->getSuggests()->shouldNotBeCalled();
 
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
@@ -263,6 +296,9 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
         );
 
         $root->getRepositories()->shouldNotBeCalled();
+        $root->getConflicts()->shouldNotBeCalled();
+        $root->getReplaces()->shouldNotBeCalled();
+        $root->getProvides()->shouldNotBeCalled();
         $root->getSuggests()->shouldNotBeCalled();
 
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
@@ -342,6 +378,9 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
             }
         );
 
+        $root->getConflicts()->shouldNotBeCalled();
+        $root->getReplaces()->shouldNotBeCalled();
+        $root->getProvides()->shouldNotBeCalled();
         $root->getSuggests()->shouldNotBeCalled();
 
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
@@ -378,6 +417,9 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
         $root->getRepositories()->shouldNotBeCalled();
         $root->setRepositories(Argument::any())->shouldNotBeCalled();
 
+        $root->getConflicts()->shouldNotBeCalled();
+        $root->getReplaces()->shouldNotBeCalled();
+        $root->getProvides()->shouldNotBeCalled();
         $root->getSuggests()->shouldNotBeCalled();
         $root->setSuggests(Argument::any())->shouldNotBeCalled();
 
@@ -468,6 +510,9 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
         $root->getRequires()->shouldNotBeCalled();
         $root->getDevRequires()->shouldNotBeCalled();
         $root->getRepositories()->shouldNotBeCalled();
+        $root->getConflicts()->shouldNotBeCalled();
+        $root->getReplaces()->shouldNotBeCalled();
+        $root->getProvides()->shouldNotBeCalled();
         $root->getSuggests()->shouldNotBeCalled();
 
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
@@ -501,6 +546,9 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
         $root->getRequires()->shouldNotBeCalled();
         $root->getDevRequires()->shouldNotBeCalled();
         $root->getRepositories()->shouldNotBeCalled();
+        $root->getConflicts()->shouldNotBeCalled();
+        $root->getReplaces()->shouldNotBeCalled();
+        $root->getProvides()->shouldNotBeCalled();
         $root->getSuggests()->shouldNotBeCalled();
 
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
@@ -535,6 +583,9 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
         $root->getRequires()->shouldNotBeCalled();
         $root->getDevRequires()->shouldNotBeCalled();
         $root->getRepositories()->shouldNotBeCalled();
+        $root->getConflicts()->shouldNotBeCalled();
+        $root->getReplaces()->shouldNotBeCalled();
+        $root->getProvides()->shouldNotBeCalled();
         $root->getSuggests()->shouldNotBeCalled();
 
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
@@ -737,6 +788,9 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
                 'repositories' => array(),
                 'require' => array(),
                 'require-dev' => array(),
+                'conflict' => array(),
+                'replace' => array(),
+                'provide' => array(),
                 'suggest' => array(),
                 'extra' => array(),
                 'autoload' => array(),
@@ -749,6 +803,9 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
         $root->getRequires()->willReturn($data['require'])->shouldBeCalled();
         $root->getDevRequires()->willReturn($data['require-dev']);
         $root->getRepositories()->willReturn($data['repositories']);
+        $root->getConflicts()->willReturn($data['conflict']);
+        $root->getReplaces()->willReturn($data['replace']);
+        $root->getProvides()->willReturn($data['provide']);
         $root->getSuggests()->willReturn($data['suggest']);
         $root->getExtra()->willReturn($data['extra'])->shouldBeCalled();
         $root->getAutoload()->willReturn($data['autoload']);
