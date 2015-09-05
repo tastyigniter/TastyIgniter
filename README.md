@@ -49,26 +49,36 @@ Usage
 ```
 
 The `include` key can specify either a single value or an array of values.
-Each value is treated as a glob() pattern identifying additional composer.json
-style configuration files to merge into the configuration for the current
-Composer execution. By default the merge plugin is recursive, if an included
-file also has a "merge-plugin" section it will also be processed. This
-functionality can be disabled by setting `"recurse": false` inside the
+Each value is treated as a `glob()` pattern identifying additional
+composer.json style configuration files to merge into the configuration for
+the current Composer execution. By default the merge plugin is recursive, if
+an included file also has a "merge-plugin" section it will also be processed.
+This functionality can be disabled by setting `"recurse": false` inside the
 "merge-plugin" section.
 
-The "require", "require-dev", "repositories" and "suggest" sections of the
-found configuration files will be merged into the root package configuration
-as though they were directly included in the top-level composer.json file.
+These sections of the found configuration files will be merged into the root
+package configuration as though they were directly included in the top-level
+composer.json file:
 
-The `"merge-extra": true` setting enables the merging of the "extra" section.
-The normal merge mode for the extra section is to accept the first version of
-any key found (e.g. a key in the master config wins over the version found in
-an imported config). If `replace` mode is active (see below) then this behaviour
-changes and the last found key will win (the key in the master config is
-replaced by the key in the imported config). Note that the `merge-plugin`
-key itself is excluded from this merge process. Your mileage with merging the
-extra section will vary depending on the plugins being used and the order in
-which they are processed by Composer.
+* [autoload](https://getcomposer.org/doc/04-schema.md#autoload)
+* [autoload-dev](https://getcomposer.org/doc/04-schema.md#autoload-dev)
+* [conflict](https://getcomposer.org/doc/04-schema.md#conflict)
+* [provide](https://getcomposer.org/doc/04-schema.md#provide)
+* [replace](https://getcomposer.org/doc/04-schema.md#replace)
+* [repositories](https://getcomposer.org/doc/04-schema.md#repositories)
+* [require](https://getcomposer.org/doc/04-schema.md#require)
+* [require-dev](https://getcomposer.org/doc/04-schema.md#require-dev)
+* [suggest](https://getcomposer.org/doc/04-schema.md#suggest)
+
+A `"merge-extra": true` setting enables the merging of the "extra" section of
+included files as well. The normal merge mode for the extra section is to
+accept the first version of any key found (e.g. a key in the master config
+wins over the version found in an imported config). If `replace` mode is
+active (see below) then this behavior changes and the last found key will win
+(the key in the master config is replaced by the key in the imported config).
+Note that the `merge-plugin` key itself is excluded from this merge process.
+Your mileage with merging the extra section will vary depending on the plugins
+being used and the order in which they are processed by Composer.
 
 By default, Composer's normal conflict resolution engine is used to determine
 which version of a package should be installed if multiple files specify the
