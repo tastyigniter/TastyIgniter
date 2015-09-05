@@ -1,0 +1,5 @@
+{
+	"autoload": {
+		"files": ["private/bootstrap.php"]
+	}
+}

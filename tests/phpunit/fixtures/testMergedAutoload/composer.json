@@ -11,7 +11,10 @@
 	},
 	"extra": {
 		"merge-plugin": {
-			"include": "extensions/*/composer.json"
+			"include": [
+				"composer.local.json",
+				"extensions/*/composer.json"
+			]
 		}
 	}
 }

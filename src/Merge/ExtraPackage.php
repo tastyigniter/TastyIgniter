@@ -272,11 +272,9 @@ class ExtraPackage
             return;
         }
 
-        $this->prependPath($this->path, $autoload);
-
         $root->setAutoload(array_merge_recursive(
             $root->getAutoload(),
-            $autoload
+            $this->fixRelativePaths($autoload)
         ));
     }
 
@@ -292,30 +290,31 @@ class ExtraPackage
             return;
         }
 
-        $this->prependPath($this->path, $autoload);
-
         $root->setDevAutoload(array_merge_recursive(
             $root->getDevAutoload(),
-            $autoload
+            $this->fixRelativePaths($autoload)
         ));
     }
 
     /**
-     * Prepend a path to a collection of paths.
+     * Fix a collection of paths that are relative to this package to be
+     * relative to the base package.
      *
-     * @param string $basePath
      * @param array $paths
+     * @return array
      */
-    protected function prependPath($basePath, array &$paths)
+    protected function fixRelativePaths(array $paths)
     {
-        $basePath = substr($basePath, 0, strrpos($basePath, '/') + 1);
+        $base = dirname($this->path);
+        $base = ($base === '.') ? '' : "{$base}/";
 
         array_walk_recursive(
             $paths,
-            function (&$localPath) use ($basePath) {
-                $localPath = $basePath . $localPath;
+            function (&$path) use ($base) {
+                $path = "{$base}{$path}";
             }
         );
+        return $paths;
     }
 
     /**
