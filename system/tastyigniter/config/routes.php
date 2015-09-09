@@ -17,6 +17,8 @@ if (APPDIR === ADMINDIR) {
     $route['logout'] = 'account/logout';
     $route['register'] = 'account/register';
     $route['forgot-password'] = 'account/reset';
+    $route['checkout/success'] = 'checkout/success';
+    $route['reservation/success'] = 'reservation/success';
     $route["^(" . implode('|', $controller_exceptions) . ")?$"] = '$1';
     $route["^(" . implode('|', $controller_exceptions) . ")?/([^/]+)$"] = '$1';
     $route["^(" . implode('|', $controller_exceptions) . ")?/([^/]+)$"] = '$1/$2';
