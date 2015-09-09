@@ -41,6 +41,8 @@ class Local_module extends Main_Controller {
         $data['delivery_time'] 		    = $this->location->deliveryTime();
         $data['collection_time'] 	    = $this->location->collectionTime();
         $data['search_query']           = $this->location->searchQuery();
+        $data['has_delivery']           = $this->location->hasDelivery();
+        $data['has_collection']         = $this->location->hasCollection();
 
         $data['location_search'] = FALSE;
         if ($rsegment === 'home') {
