@@ -9,7 +9,7 @@ class Database extends Base_Controller {
         $this->load->helper('file');
         $this->load->model('Setup_model');
 
-        if ($this->session->userdata('setup') === 'step_3' OR $this->config->item('ti_version') === TI_VERSION) {
+        if ($this->session->tempdata('setup_step') === '3' OR TI_VERSION === $this->config->item('ti_version')) {
             redirect('success');
         }
 
@@ -17,7 +17,7 @@ class Database extends Base_Controller {
     }
 
     public function index() {
-        if ($this->session->tempdata('setup') !== 'step_1') {
+        if ($this->session->tempdata('setup_step') !== '1') {
             $this->alert->set('danger', 'Please check below to make sure all server requirements are provided!');
             redirect('setup');
         }
@@ -82,7 +82,7 @@ class Database extends Base_Controller {
 
             if ($db_check AND !mysqli_connect_error()) {
                 mysqli_close($db_check);
-                $this->session->set_tempdata('setup', 'step_2', 300);
+                $this->session->set_tempdata('setup_step', '2', 60);
                 redirect('settings');
             }
         } else if ($this->input->post() AND $this->_checkDatabase() === TRUE) {
@@ -156,7 +156,7 @@ class Database extends Base_Controller {
 
                     @chmod($db_path, FILE_WRITE_MODE);
 
-                    $this->session->set_tempdata('setup', 'step_2', 300);
+                    $this->session->set_tempdata('setup_step', '2', 60);
                     return TRUE;
                 }
             }

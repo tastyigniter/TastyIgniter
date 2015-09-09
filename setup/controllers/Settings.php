@@ -6,13 +6,13 @@ class Settings extends Base_Controller {
         parent::__construct();
         $this->load->model('Setup_model');
 
-        if ($this->session->tempdata('setup') === 'step_3' OR $this->config->item('ti_version') === TI_VERSION) {
+        if ($this->session->tempdata('setup_step') === '3' OR TI_VERSION === $this->config->item('ti_version')) {
             redirect('success');
         }
     }
 
     public function index() {
-        if ($this->session->tempdata('setup') !== 'step_2') {
+        if ($this->session->tempdata('setup_step') !== '2') {
             redirect('database');
         }
 
@@ -56,6 +56,10 @@ class Settings extends Base_Controller {
 
         if ($this->input->post() AND $this->_checkSettings() === TRUE) {
             redirect('success');
+        } else if (!empty($data['site_name']) AND !empty($data['site_email'])) {
+            $this->Setup_model->updateSettings($data['site_name'], $data['site_email']);
+            $this->session->set_tempdata('setup_step', '3', 300);
+            redirect('success');
         }
 
         if ( !file_exists(VIEWPATH .'/settings.php')) {
@@ -87,7 +91,7 @@ class Settings extends Base_Controller {
             $current_version = $this->doMigration();
 
             if ($this->Setup_model->addUser($add)) {
-                $this->session->set_tempdata('setup', 'step_3', 300);
+                $this->session->set_tempdata('setup_step', '3', 60);
                 return TRUE;
             } else {
                 $this->alert->danger_now('Error installing user and site settings.');

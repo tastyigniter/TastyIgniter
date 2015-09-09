@@ -7,8 +7,8 @@ class Setup extends Base_Controller {
 		$this->load->helper('file');
 		$this->load->model('Setup_model');
 
-        if (($this->session->tempdata('setup') === 'step_3' OR $this->config->item('ti_version') === TI_VERSION) AND ENVIRONMENT === 'production') {
-            redirect('success');
+        if ($this->session->tempdata('setup_step') === '3' OR TI_VERSION === $this->config->item('ti_version')) {
+			redirect('success');
         }
 	}
 
@@ -105,7 +105,7 @@ class Setup extends Base_Controller {
 		if ($this->input->post()) {
 
 			if ($error === 0) {
-				$this->session->set_tempdata('setup', 'step_1', 300);
+				$this->session->set_tempdata('setup_step', '1', 60);
 				redirect('database');
 			}
 

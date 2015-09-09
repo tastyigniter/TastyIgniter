@@ -12,7 +12,7 @@ class Success extends Base_Controller {
             show_404();
         }
 
-        if ($this->session->tempdata('setup') === 'step_3' OR $this->config->item('ti_version') === TI_VERSION) {
+        if ($this->session->tempdata('setup_step') === '3' OR TI_VERSION === $this->config->item('ti_version')) {
             $data['heading'] 			= 'TastyIgniter - Setup - Successful';
             $data['sub_heading'] 		= 'Installation Successful';
             $data['complete_setup'] 	= '<a href="'. root_url(ADMINDIR) .'">Login to Administrator Panel</a>';
@@ -23,7 +23,6 @@ class Success extends Base_Controller {
             $this->load->view('header', $data);
             $this->load->view('success', $data);
             $this->load->view('footer', $data);
-
         } else {
             redirect('setup');
         }
