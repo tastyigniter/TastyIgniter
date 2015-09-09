@@ -14,3 +14,27 @@ modules:
 #            url: http://tastyigniter.remote
         - \Helper\Acceptance
         - Db
+#extensions:
+#    enabled:
+#    - Codeception\Extension\Recorder
+#    config:
+#        Codeception\Extension\Recorder:
+#            delete_successful: false
+env:
+    opera:
+         modules:
+            config:
+                WebDriver:
+                    browser: 'opera'
+    chrome:
+         modules:
+            config:
+                WebDriver:
+                    browser: 'chrome'
+    phantom:
+         modules:
+            config:
+                WebDriver:
+                    browser: 'phantomjs'
+    firefox:
+        # nothing changed

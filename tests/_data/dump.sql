@@ -3329,7 +3329,7 @@ VALUES
 	(15611,'config','main_address','a:6:{s:9:\"address_1\";s:16:\"400 Lewisham Way\";s:9:\"address_2\";s:0:\"\";s:4:\"city\";s:8:\"Lewisham\";s:8:\"postcode\";s:8:\"SE10 9HF\";s:11:\"location_id\";s:2:\"12\";s:10:\"country_id\";s:3:\"222\";}',1),
 	(15612,'config','maps_api_key','',0),
 	(15613,'config','distance_unit','mi',0),
-	(15614,'config','future_orders','1',0),
+	(15614,'config','future_orders','0',0),
 	(15615,'config','location_order','1',0),
 	(15616,'config','location_order_email','1',0),
 	(15617,'config','location_reserve_email','1',0),

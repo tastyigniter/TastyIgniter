@@ -1,3 +1,4 @@
+#namespace: TestIgniter\
 actor: Tester
 paths:
     tests: ../tests
@@ -11,11 +12,11 @@ settings:
     memory_limit: 1024M
 extensions:
     enabled:
-        - Codeception\Extension\RunFailed
+    - Codeception\Extension\RunFailed
 modules:
     config:
         Db:
-            dsn: 'mysql:unix_socket=/Applications/MAMP/tmp/mysql/mysql.sock;port=3306;dbname=tastyigniter_test'
-            user: 'workbench'
-            password: '9HPTnqu3pLFchdWd'
+            dsn: ''
+            user: ''
+            password: ''
             dump: ../tests/_data/dump.sql
