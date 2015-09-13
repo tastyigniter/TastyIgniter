@@ -530,7 +530,7 @@ VALUES
 # TABLE STRUCTURE FOR: ti_layout_modules
 #
 
-INSERT INTO `ti_layout_modules` (`layout_module_id`, `layout_id`, `module_code`, `position`, `priority`, `status`) VALUES
+INSERT INTO `ti_layout_modules` (`layout_module_id`, `layout_id`, `module_code`, `partial`, `priority`, `status`) VALUES
 	(60, 17, 'pages_module', 'right', 1, 1),
 	(65, 11, 'slideshow', 'top', 1, 1),
 	(66, 11, 'local_module', 'top', 2, 1),
