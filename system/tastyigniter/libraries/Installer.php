@@ -4,10 +4,8 @@ class Installer {
 
     public $db_exists = NULL;
 
-    public $php_version;
-    public $php_required_version = '5.4';
-
-    private $supported_dbs = array('mysql', 'mysqli', 'sqlite');
+    public $installed_php_version;
+    public $required_php_version = '5.4';
 
     private $writable_folders = array(
         'admin/cache/',
@@ -23,17 +21,18 @@ class Installer {
 
     public function __construct($config = array()) {
         $this->CI =& get_instance();
-        $this->php_version = phpversion();
+
+        $this->installed_php_version = phpversion();
     }
 
     public function checkRequirements() {
-        $result['php_status'] = (bool) ($this->php_version < $this->php_required_version);
-        $result['mysqli_status'] = (bool) (extension_loaded('mysqli') AND class_exists('Mysqli'));
-        $result['curl_status'] = (bool) function_exists('curl_init');
-        $result['gd_status'] = (bool) extension_loaded('gd');
-        $result['register_globals_status'] = (bool) !ini_get('register_globals');
-        $result['magic_quotes_gpc_status'] = (bool) !ini_get('magic_quotes_gpc');
-        $result['file_uploads'] = (bool) !ini_get('file_uploads');
+        $result['php_status']               = (bool) !($this->installed_php_version < $this->required_php_version);
+        $result['mysqli_status']            = (bool) (extension_loaded('mysqli') AND class_exists('Mysqli'));
+        $result['curl_status']              = (bool) function_exists('curl_init');
+        $result['gd_status']                = (bool) extension_loaded('gd');
+        $result['magic_quotes_status']      = (bool) !ini_get('magic_quotes_gpc');
+        $result['register_globals_status']  = (bool) !ini_get('register_globals');
+        $result['file_uploads_status']      = (bool) ini_get('file_uploads');
 
         return $result;
     }
@@ -54,29 +53,61 @@ class Installer {
         return $data;
     }
 
-    public function testDbConnection($hostname, $username, $password, $db_name, $driver) {
-        switch ($driver) {
-            case 'mysqli':
-                $mysqli = @mysqli_connect($hostname, $username, $password, $db_name);
-                if ( ! $mysqli->connect_error) {
-                    return TRUE;
-                }
-
-                return FALSE;
-            case 'sqlite':
-                if ( ! $sqlite = @sqlite_open($db_name, FILE_WRITE_MODE, $error)) {
-                    show_error($error, 500);
-                    return FALSE;
-                }
-
-                return $sqlite;
-            default:
-                return FALSE;
+    public function checkSettings() {
+        // Check if site_name and site_email config item is set
+        if ( ! $this->CI->config->item('site_name') AND ! $this->CI->config->item('site_email')) {
+            return FALSE;
         }
+
+        // Does the users table exist?
+        if ( ! $this->CI->db->table_exists('users')) {
+            return FALSE;
+        }
+
+        // Make sure at least one row exists in the users table.
+        $query = $this->CI->db->get('users');
+        if ($query->num_rows() == 0) {
+            return FALSE;
+        }
+
+        // Install the latest database migrations.
+//        $this->CI->load->library('migration');
+//
+//        if ( ! $this->CI->migration->install()) {
+//            show_error($this->CI->migration->error_string());
+//            return FALSE;
+//        }
+
+        $this->CI->Setup_model->updateVersion();
+
+        return TRUE;
+    }
+
+    public function checkCoreUpdate() {
+        $url = "https://api.github.com/repos/sampoyigi/tastyigniter/tags";
+        $ch = curl_init();
+        curl_setopt($ch,CURLOPT_URL,$url);
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+        curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,1);
+        curl_setopt($ch,CURLOPT_USERAGENT,$this->CI->agent->agent_string());
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        $tags = json_decode($result);
+
+        $latest_version = (empty($tags) OR !isset($tags[0]->name)) ? '' : $tags[0]->name;
+
+        if (TI_VERSION === $latest_version) {
+            return TRUE;
+        }
+
+        return FALSE;
     }
 
     public function isInstalled() {
-        if (TI_VERSION === $this->config->item('ti_version')) {
+        // If config ti_version is same with TI_VERSION const, the app is installed
+        if (TI_VERSION === $this->CI->config->item('ti_version')) {
+            $this->db_exists = TRUE;
             return TRUE;
         }
 
@@ -98,25 +129,102 @@ class Installer {
             $this->db_exists = FALSE;
             return FALSE;
         }
+
+        // Make sure the database is connected and the settings table exist
+        if ( $this->CI->db->conn_id === FALSE OR ! $this->CI->db->table_exists('settings')) {
+            return FALSE;
+        }
+
         $this->db_exists = TRUE;
 
-        $this->CI->load->database($db['default']);
-//        $DATABASE = $this->load->database('default', TRUE);
-
-        // Does the settings table exist?
-        if ( ! $this->CI->db->conn_id === FALSE OR ! $this->CI->db->table_exists('settings')) {
+        if (TI_VERSION !== $this->CI->config->item('ti_version')) {
             return FALSE;
         }
-
-        // Make sure at least one row exists in the settings table.
-        $query = $this->CI->db->get('settings');
-        if ($query->num_rows() == 0) {
-            return FALSE;
-        }
-
-        defined('TI_INSTALLED') OR define('TI_INSTALLED', TRUE);
 
         return TRUE;
+    }
+
+    public function testDbConnection() {
+        $driver   = 'mysqli';
+        $database  = $this->CI->input->post('database');
+        $hostname = $this->CI->input->post('hostname');
+        $password = $this->CI->input->post('password');
+        $username = $this->CI->input->post('username');
+
+        switch ($driver) {
+            case 'mysqli':
+                $mysqli = @mysqli_connect($hostname, $username, $password, $database);
+                if ($mysqli AND ! $mysqli->connect_error) {
+                    return TRUE;
+                }
+
+                return FALSE;
+            case 'sqlite':
+                if ( ! $sqlite = @sqlite_open($database, FILE_WRITE_MODE, $error)) {
+                    show_error($error, 500);
+                    return FALSE;
+                }
+
+                return $sqlite;
+            default:
+                return FALSE;
+        }
+    }
+
+    public function writeDbConfiguration() {
+        if (!$this->CI->input->post()) {
+            return;
+        }
+
+        $db_config_path = IGNITEPATH .'config/database.php';
+        $database  = $this->CI->input->post('database');
+        $hostname = $this->CI->input->post('hostname');
+        $username = $this->CI->input->post('username');
+        $password = $this->CI->input->post('password');
+        $dbprefix = $this->CI->input->post('dbprefix');
+
+        if ( is_writable($db_config_path)) {
+            if ($fp = @fopen($db_config_path, FOPEN_READ_WRITE_CREATE_DESTRUCTIVE)) {
+
+                $content = "<"."?php  if ( ! defined('BASEPATH')) exit('No direct access allowed');\n\n";
+
+                $content .= "$"."active_group = 'default';\n";
+                $content .= "$"."query_builder = TRUE;\n\n";
+
+                $content .= "$"."db['default']['dsn'] = '';\n";
+                $content .= "$"."db['default']['hostname'] = '". $hostname ."';\n";
+                $content .= "$"."db['default']['username'] = '". $username ."';\n";
+                $content .= "$"."db['default']['password'] = '". $password ."';\n";
+                $content .= "$"."db['default']['database'] = '". $database ."';\n";
+                $content .= "$"."db['default']['dbdriver'] = 'mysqli';\n";
+                $content .= "$"."db['default']['dbprefix'] = '". $dbprefix ."';\n";
+                $content .= "$"."db['default']['pconnect'] = TRUE;\n";
+                $content .= "$"."db['default']['db_debug'] = FALSE;\n";
+                $content .= "$"."db['default']['cache_on'] = FALSE;\n";
+                $content .= "$"."db['default']['cachedir'] = '';\n";
+                $content .= "$"."db['default']['char_set'] = 'utf8';\n";
+                $content .= "$"."db['default']['dbcollat'] = 'utf8_general_ci';\n";
+                $content .= "$"."db['default']['swap_pre'] = '';\n";
+                $content .= "$"."db['default']['autoinit'] = TRUE;\n";
+                $content .= "$"."db['default']['encrypt']  = FALSE;\n";
+                $content .= "$"."db['default']['compress'] = FALSE;\n";
+                $content .= "$"."db['default']['stricton'] = FALSE;\n";
+                $content .= "$"."db['default']['failover'] = array();\n";
+                $content .= "$"."db['default']['save_queries'] = TRUE;\n\n";
+
+                $content .= "/* End of file database.php */\n";
+                $content .= "/* Location: ./system/tastyigniter/config/database.php */\n";
+
+                flock($fp, LOCK_EX);
+                fwrite($fp, $content);
+                flock($fp, LOCK_UN);
+                fclose($fp);
+
+                @chmod($db_config_path, FILE_WRITE_MODE);
+
+                return TRUE;
+            }
+        }
     }
 
     public function checkFolders($folders = NULL) {
@@ -132,136 +240,39 @@ class Installer {
     }
 
     public function setup() {
-        // Install default info into the database.
-        // This is done by running the app, core, and module-specific migrations
-
-        // Load the Database before calling the Migrations
-        $this->CI->load->database();
-
         // Install the database tables.
         $this->CI->load->library('migration');
-        $row = $this->CI->db->select('version')->get('migrations')->row();
-        $old_version = !empty($row) ? $row->version : '0';
 
-        if (($current_version = $this->CI->migration->current()) === FALSE) {
+        if ( ! $this->CI->migration->install()) {
             show_error($this->CI->migration->error_string());
+            return FALSE;
         }
 
-        if ($current_version !== FALSE AND $old_version !== $current_version) {
-            if ( ! $this->CI->Setup_model->loadInitialSchema()) {
-                log_message('info', 'Migration: initial_schema execution failed');
-            }
+        // Insert the admin user in the users table so they can login.
+        if ( ! $this->CI->Setup_model->addUser($this->CI->input->post())) {
+            return FALSE;
         }
 
-        if ($current_version !== FALSE AND $this->CI->input->post_get('demo_data') === '1') {
-            if ( ! $this->CI->Setup_model->loadDemoSchema($this->CI->input->post_get('demo_data'))) {
-                log_message('info', 'Migration: demo_schema execution failed');
-            }
+        // Save the site configuration to the settings table
+        $settings = array(
+            'ti_setup'          => 'installed',
+            'site_name'         => $this->CI->input->post('site_name'),
+            'site_email'        => $this->CI->input->post('site_email'),
+        );
+
+        if ( ! $this->CI->Setup_model->updateSettings($settings)) {
+            return FALSE;
         }
 
-//        // Core Migrations - this is all that is needed for Bonfire install.
-//        if ( ! $this->CI->migrations->install()) {
-//            return $this->CI->migrations->getErrorMessage();
-//        }
-//
-//        // Save the information to the settings table
-//        $settings = array(
-//            'site.title'        => 'My Bonfire',
-//            'site.system_email' => 'admin@mybonfire.com',
-//        );
-//
-//        foreach ($settings as $key => $value) {
-//            $setting_rec = array(
-//                'name'   => $key,
-//                'module' => 'core',
-//                'value'  => $value,
-//            );
-//
-//            $this->CI->db->where('name', $key);
-//            if ($this->CI->db->update('settings', $setting_rec) == FALSE) {
-//                return lang('in_db_settings_error');
-//            }
-//        }
-//
-//        // Update the emailer sender_email
-//        $setting_rec = array(
-//            'name'   => 'sender_email',
-//            'module' => 'email',
-//            'value'  => '',
-//        );
-//
-//        $this->CI->db->where('name', 'sender_email');
-//        if ($this->CI->db->update('settings', $setting_rec) == FALSE) {
-//            return lang('in_db_settings_error');
-//        }
-//
-//        // Install the admin user in the users table so they can login.
-//        $data = array(
-//            'role_id'  => 1,
-//            'email'    => 'admin@mybonfire.com',
-//            'username' => 'admin',
-//            'active'   => 1,
-//        );
-//
-//        // As of 0.7, using phpass for password encryption...
-//        require(BFPATH . 'modules/users/libraries/PasswordHash.php');
-//
-//        $iterations = $this->CI->config->item('password_iterations');
-//        $hasher = new PasswordHash($iterations, FALSE);
-//        $password = $hasher->HashPassword('password');
-//
-//        $data['password_hash'] = $password;
-//        $data['created_on'] = date('Y-m-d H:i:s');
-//        $data['display_name'] = $data['username'];
-//
-//        if ($this->CI->db->insert('users', $data) == FALSE) {
-//            $this->errors = lang('in_db_account_error');
-//
-//            return FALSE;
-//        }
-//
-//        // Create a unique encryption key
-//        $this->CI->load->helper('string');
-//        $key = random_string('md5', 40);
-//
-//        $this->CI->load->helper('config_file');
-//
-//        $config_array = array('encryption_key' => $key);
-//        write_config('config', $config_array, '', APPPATH);
-//
-//        // Run custom migrations last. In particular this comes after the core
-//        // migrations, and after populating the user table.
-//
-//        // Get the list of custom modules in the main application
-//        $module_list = $this->get_module_versions();
-//        if (is_array($module_list) && count($module_list)) {
-//            foreach ($module_list as $module_name => $module_detail) {
-//                // Install the migrations for the custom modules
-//                if ( ! $this->CI->migrations->install("{$module_name}_")) {
-//                    return $this->CI->migrations->getErrorMessage();
-//                }
-//            }
-//        }
-//
-//        // Write a file to /public/install/installed.txt as a simple check
-//        // whether it's installed, so development doesn't require removing the
-//        // install folder.
-//        $this->CI->load->helper('file');
-//
-//        $filename = APPPATH . 'config/installed.txt';
-//        $msg = 'Installed On: ' . date('r') . "\n";
-//        write_file($filename, $msg);
-//
-//        $config_array = array(
-//            'bonfire.installed' => TRUE,
-//        );
-//        write_config('application', $config_array, '', APPPATH);
-//
-//        return TRUE;
+        // Add an item to db configuration as a simple check whether it's installed,
+        // so development doesn't require removing the setup folder.
+        $this->CI->Setup_model->updateVersion();
+
+        return TRUE;
     }
 }
 
-// END Setting Class
+// END Installer Class
 
-/* End of file Setting.php */
-/* Location: ./system/tastyigniter/libraries/Setting.php */
+/* End of file Installer.php */
+/* Location: ./system/tastyigniter/libraries/Installer.php */

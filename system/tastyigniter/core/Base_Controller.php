@@ -21,43 +21,51 @@ class Base_Controller extends MX_Controller {
 
         $this->load->library('alert');
 
-        // Load database if connected
-        $DATABASE = $this->load->database('default', TRUE);
-        if ($DATABASE->conn_id !== FALSE) {
-            // Load system configuration from database
-            $this->config->load_db_config();
+        $this->load->database();
+
+        // Load system configuration from database
+        $this->config->load_db_config();
+
+        // Load installer library and database config items
+        $this->load->library('installer');
+
+        // Redirect to setup if app requires setup
+        if (($installed = $this->installer->isInstalled()) !== TRUE AND APPDIR !== 'setup') {
+            redirect(root_url('setup/requirements'));
+        }
+
+        // If database is connected, then app is ready
+        if ($this->installer->db_exists === TRUE) {
+
+            // Load template library
+            $this->load->library('template');
 
             // Load extension library
             $this->load->library('extension');
 
-            // Load template library
-            $this->load->library('template');
-        }
-
-        // Redirect to setup if app requires setup
-        if (APPDIR !== 'setup' AND TI_VERSION !== $this->config->item('ti_version')) redirect(root_url('setup/'));
-
-        // Check app for setup or maintenance for production environments.
-        if (ENVIRONMENT === 'production') {
+            // If the requested controller is a module controller then load the module config
+            if (ENVIRONMENT !== 'testing') {
+                if ($this->extension AND $this->router AND $_module = $this->router->fetch_module()) {
+                    // Load the module configuration file and retrieve its items.
+                    // Shows 404 error message on failure to load
+                    $this->extension->loadConfig($_module, TRUE);
+                }
+            }
 
             // Saving queries can vastly increase the memory usage, so better to turn off in production
-            if ($DATABASE->conn_id !== FALSE) $this->db->save_queries = FALSE;
+            if (ENVIRONMENT === 'production') {
+                $this->db->save_queries = FALSE;
+            } else if (ENVIRONMENT === 'development') {
+                $this->db->db_debug = TRUE;
+            }
+        }
+
+        // Check app for maintenance in production environments.
+        if (ENVIRONMENT === 'production') {
 
             // Show maintenance message if maintenance is enabled
             if ($this->maintenanceEnabled()) {
                 show_error($this->config->item('maintenance_message'), '503', 'Maintenance Enabled');
-            }
-
-        } else if (ENVIRONMENT === 'development') {
-            if ($DATABASE->conn_id !== FALSE) $this->db->db_debug = TRUE;
-        }
-
-        if (ENVIRONMENT !== 'testing') {
-            // If the requested controller is a module controller then load the module config
-            if ($this->extension AND $this->router AND $_module = $this->router->fetch_module()) {
-                // Load the module configuration file and retrieve its items.
-                // Shows 404 error message on failure to load
-                $this->extension->loadConfig($_module, TRUE);
             }
         }
 
