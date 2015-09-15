@@ -19,9 +19,8 @@
 							<?php if ($themes) { ?>
 							<?php foreach ($themes as $theme) { ?>
 							<tr>
-								<td><a class="preview-thumb" title="<?php echo lang('text_enlarge'); ?>" href="<?php echo $theme['preview']; ?>">
-									<img class="img-responsive img-thumbnail" alt="" src="<?php echo $theme['thumbnail']; ?>" style="height:150px !important" /></td>
-								<td><?php echo $theme['title']; ?><br />
+								<td><img class="img-responsive img-thumbnail" alt="" src="<?php echo $theme['screenshot']; ?>" style="width:200px!important;height:200px!important" /></td>
+								<td><?php echo $theme['title']; ?> <b class="small">(<?php if ($theme['active'] === '1') echo lang('text_is_default'); ?>)</b><br />
 									<i><?php echo $theme['description']; ?></i><br />
                                     <span class="text-mute text-sm"><b><?php echo lang('text_location'); ?>:</b> <?php echo $theme['location']; ?></span>
 								</td>
@@ -29,11 +28,11 @@
 									<?php if ($theme['active'] === '1') { ?>
 										<a class="btn btn-edit" title="<?php echo lang('text_customize'); ?>" href="<?php echo $theme['edit']; ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
 										<a class="btn btn-warning" disabled="disabled" title="<?php echo lang('text_is_default'); ?>"><i class="fa fa-star"></i></a>&nbsp;&nbsp;
-										<a class="btn btn-info preview-thumb" title="<?php echo lang('text_preview'); ?>" href="<?php echo $theme['preview']; ?>" title="Default"><i class="fa fa-eye"></i></a>
+										<a class="btn btn-info preview-thumb" title="<?php echo lang('text_preview'); ?>" href="<?php echo $theme['screenshot']; ?>" title="Default"><i class="fa fa-eye"></i></a>
 									<?php } else {?>
 										<a class="btn btn-edit" title="<?php echo lang('text_customize'); ?>" href="<?php echo $theme['edit']; ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
 										<a class="btn btn-warning" title="<?php echo lang('text_set_default'); ?>" href="<?php echo $theme['activate']; ?>"><i class="fa fa-star"></i></a>&nbsp;&nbsp;
-										<a class="btn btn-info preview-thumb" title="<?php echo lang('text_preview'); ?>" href="<?php echo $theme['preview']; ?>" title="Default"><i class="fa fa-eye"></i></a>
+										<a class="btn btn-info preview-thumb" title="<?php echo lang('text_preview'); ?>" href="<?php echo $theme['screenshot']; ?>" title="Default"><i class="fa fa-eye"></i></a>
 									<?php } ?>
 								</td>
 							</tr>
