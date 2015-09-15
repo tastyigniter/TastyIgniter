@@ -2,125 +2,183 @@
 
 class Setup extends Base_Controller {
 
-	public function __construct() {
-		parent::__construct();
-		$this->load->helper('file');
-		$this->load->model('Setup_model');
+    protected $setup_step;
+    protected $setup_timeout = '120';
+    protected $setup_proceed = FALSE;
 
-        if ($this->session->tempdata('setup_step') === '3' OR TI_VERSION === $this->config->item('ti_version')) {
-			redirect('success');
+    public function __construct() {
+		parent::__construct();
+
+        $this->load->model('Setup_model');
+
+        $this->setup_step = $this->uri->segment(1);
+
+        if ($this->setup_step !== 'success' AND $this->installer->isInstalled()) {
+            redirect('success');
         }
-	}
+
+        if ($this->session->tempdata('setup_step') === $this->setup_step) {
+            $this->setup_proceed = TRUE;
+        }
+    }
 
 	public function index() {
-        $this->session->set_tempdata('setup', '', 300);
+        $this->requirements();
+    }
 
-		$error = 0;
+	public function requirements() {
+        $data['text_heading']           = $this->lang->line('text_requirement_heading');
+        $data['installed_php_version']  = $this->installer->installed_php_version;
+        $data['required_php_version']   = $this->installer->required_php_version;
+        $data['requirements']           = $this->installer->checkRequirements();
+        $data['writables']              = $this->installer->checkWritable();
 
-        $php_required  = '5.4';
-        $php_installed = phpversion();
-
-		$data['heading'] 					= 'TastyIgniter - Setup';
-		$data['sub_heading'] 				= 'Server Requirements';
-        $data['php_version'] 				= 'is version '. $php_installed .' supported?';
-		$data['mysqli_installed'] 			= 'is MySQLi installed?';
-		$data['curl_installed'] 			= 'is cURL installed?';
-		$data['gd_installed'] 				= 'is GD/GD2 library installed?';
-		$data['register_globals_enabled'] 	= 'is Register Globals turned off?';
-		$data['magic_quotes_gpc_enabled'] 	= 'is Magic Quotes GPC turned off?';
-		$data['file_uploads_enabled'] 		= 'is File Uploads turned on?';
-		$data['is_writable'] 				= 'is writable?';
-
-        if ($php_installed < $php_required) {
-			$error = 1;
-			$data['php_status'] = '<i class="fa fa-exclamation-triangle red"></i>';
-        } else {
-			$data['php_status'] = '<i class="fa fa-check-square-o green"></i>';
-        }
-
-        if (!extension_loaded('mysqli')) {
-			$error = 1;
-			$data['mysqli_status'] = '<i class="fa fa-exclamation-triangle red"></i>';
-        } else {
-			$data['mysqli_status'] = '<i class="fa fa-check-square-o green"></i>';
-        }
-
-        if (!extension_loaded('curl')) {
-			$error = 1;
-			$data['curl_status'] = '<i class="fa fa-exclamation-triangle red"></i>';
-        } else {
-			$data['curl_status'] = '<i class="fa fa-check-square-o green"></i>';
-        }
-
-        if (!extension_loaded('gd')) {
-			$error = 1;
-			$data['gd_status'] = '<i class="fa fa-exclamation-triangle red"></i>';
-        } else {
-			$data['gd_status'] = '<i class="fa fa-check-square-o green"></i>';
-        }
-
-		if (ini_get('register_globals')) {
-			$error = 1;
-			$data['register_globals_status'] = '<i class="fa fa-exclamation-triangle red"></i>';
-        } else {
-			$data['register_globals_status'] = '<i class="fa fa-check-square-o green"></i>';
-		}
-
-		if (ini_get('magic_quotes_gpc')) {
-			$error = 1;
-			$data['magic_quotes_gpc_status'] = '<i class="fa fa-exclamation-triangle red"></i>';
-        } else {
-			$data['magic_quotes_gpc_status'] = '<i class="fa fa-check-square-o green"></i>';
-		}
-
-		if (!ini_get('file_uploads')) {
-			$error = 1;
-			$data['file_uploads_status'] = '<i class="fa fa-exclamation-triangle red"></i>';
-        } else {
-			$data['file_uploads_status'] = '<i class="fa fa-check-square-o green"></i>';
-		}
-
-		$writables = array(
-            '/admin/cache/',
-            '/main/cache/',
-			'/system/tastyigniter/logs/',
-			'/assets/downloads/',
-			'/assets/images/'
-		);
-
-        foreach ($writables as $writable) {
-            if (!is_really_writable(ROOTPATH . $writable)) {
-				$error = 1;
-                $status = '<i class="fa fa-exclamation-triangle red"></i>';
-            } else {
-                $status = '<i class="fa fa-check-square-o green"></i>';
+        if ($this->input->post('requirements')) {
+            if (!in_array(FALSE, $data['requirements'], TRUE) AND !in_array(FALSE, $data['writables'], TRUE)) {
+                $this->session->set_tempdata('setup_step', 'database', $this->setup_timeout);
+                redirect('database');
             }
 
-            $data['writables'][] = array(
-                'file' => $writable,
-                'status' => $status
-            );
+            $this->alert->set('danger_now', $this->lang->line('alert_requirement_error'));
         }
 
-		if ($this->input->post()) {
-
-			if ($error === 0) {
-				$this->session->set_tempdata('setup_step', '1', 60);
-				redirect('database');
-			}
-
-			$this->alert->set('danger', 'Please check below to make sure all server requirements are provided!');
-		}
-
-		if ( ! file_exists(VIEWPATH .'/setup.php')) {
-			show_404();
-		} else {
-			$this->load->view('header', $data);
-			$this->load->view('setup', $data);
-			$this->load->view('footer', $data);
-		}
+        if ( ! file_exists(VIEWPATH .'/requirements.php')) {
+            show_404();
+        } else {
+            $this->load->view('header', $data);
+            $this->load->view('requirements', $data);
+            $this->load->view('footer', $data);
+        }
 	}
+
+	public function database() {
+        if ($this->setup_proceed === FALSE) {
+            $this->alert->set('danger', $this->lang->line('alert_requirement_error'));
+            redirect('requirements');
+        }
+
+        if ($this->installer->db_exists === TRUE OR $this->_validateDatabase() === TRUE) {
+            $this->session->set_tempdata('setup_step', 'settings', $this->setup_timeout);
+            redirect('settings');
+        }
+
+        $data['text_heading'] 		= $this->lang->line('text_database_heading');
+        $data['back_url'] 		    = site_url('requirements');
+
+        foreach (array('database', 'hostname', 'username', 'password', 'dbprefix') as $item) {
+            if ($this->input->post($item)) {
+                $data[$item] = $this->input->post($item);
+            } else if (isset($this->db->{$item})) {
+                $data[$item] = $this->db->{$item};
+            } else {
+                $data[$item] = '';
+            }
+        }
+
+        if ( ! file_exists(VIEWPATH .'/database.php')) {
+            show_404();
+        } else {
+            $this->load->view('header', $data);
+            $this->load->view('database', $data);
+            $this->load->view('footer', $data);
+        }
+	}
+
+	public function settings() {
+        if ($this->installer->db_exists === FALSE OR $this->setup_proceed === FALSE) {
+            $this->alert->set('danger', $this->lang->line('alert_database_error'));
+            redirect('database');
+        }
+
+        if ($this->installer->checkSettings() === TRUE OR $this->_validateSettings() === TRUE) {
+            $this->session->set_tempdata('setup_step', 'success', $this->setup_timeout);
+            redirect('success');
+        }
+
+        $data['text_heading'] 		= $this->lang->line('text_settings_heading');
+        $data['back_url'] 		    = site_url('database');
+
+        foreach (array('site_name', 'site_email', 'staff_name', 'username', 'password') as $item) {
+            if ($this->input->post($item)) {
+                $data[$item] = $this->input->post($item);
+            } else if ($this->config->item($item)) {
+                $data[$item] = $this->config->item($item);
+            } else {
+                $data[$item] = '';
+            }
+        }
+
+        if ( !file_exists(VIEWPATH .'/settings.php')) {
+            show_404();
+        } else {
+            $this->load->view('header', $data);
+            $this->load->view('settings', $data);
+            $this->load->view('footer', $data);
+        }
+    }
+
+	public function success() {
+        if ( ! file_exists(VIEWPATH .'/success.php')) {
+            show_404();
+        }
+
+        if ( ! ($this->setup_proceed === TRUE OR $this->installer->checkSettings() === TRUE)) {
+            redirect('requirements');
+        }
+
+        $data['text_heading'] 		= $this->lang->line('text_success_heading');
+        $data['admin_url'] 	        = root_url(ADMINDIR);
+
+        $this->load->library('user');
+        $this->user->logout();
+
+        $this->load->view('header', $data);
+        $this->load->view('success', $data);
+        $this->load->view('footer', $data);
+    }
+
+    private function _validateDatabase() {
+        if ($this->input->post()) {
+            $this->form_validation->set_rules('database', 'lang:label_database', 'xss_clean|trim|required');
+            $this->form_validation->set_rules('hostname', 'lang:label_hostname', 'xss_clean|trim|required');
+            $this->form_validation->set_rules('username', 'lang:label_username', 'xss_clean|trim|required');
+            $this->form_validation->set_rules('password', 'lang:label_password', 'xss_clean|trim|required');
+            $this->form_validation->set_rules('dbprefix', 'lang:label_prefix', 'xss_clean|trim|required');
+
+            if ($this->form_validation->run() === TRUE) {
+                if ($this->installer->testDbConnection() === FALSE) {
+                    $this->alert->set('danger_now', $this->lang->line('alert_database_error'));
+                } else if ($this->installer->writeDbConfiguration() === TRUE) {
+                    return TRUE;
+                }
+            }
+        }
+
+        return FALSE;
+    }
+
+    private function _validateSettings() {
+        if ($this->input->post()) {
+            $this->form_validation->set_rules('site_name', 'lang:label_site_name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+            $this->form_validation->set_rules('site_email', 'lang:site_email', 'xss_clean|trim|required|valid_email');
+            $this->form_validation->set_rules('staff_name', 'lang:label_staff_name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+            $this->form_validation->set_rules('username', 'lang:label_username', 'xss_clean|trim|required|min_length[2]|max_length[32]');
+            $this->form_validation->set_rules('password', 'lang:label_password', 'xss_clean|trim|required|min_length[6]|max_length[128]|matches[confirm_password]');
+            $this->form_validation->set_rules('confirm_password', 'lang:label_confirm_password', 'xss_clean|trim|required');
+
+            if ($this->form_validation->run() === TRUE) {
+
+                if ($this->installer->setup() === FALSE) {
+                    $this->alert->set('danger_now', $this->lang->line('alert_settings_error'));
+                } else {
+                    return TRUE;
+                }
+            }
+        }
+
+        return FALSE;
+    }
 }
 
-/* End of file setup.php */
-/* Location: ./setup/controllers/setup.php */
+/* End of file Setup.php */
+/* Location: ./setup/controllers/Setup.php */
