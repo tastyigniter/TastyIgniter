@@ -84,24 +84,27 @@ class Installer {
     }
 
     public function checkCoreUpdate() {
-        $url = "https://api.github.com/repos/sampoyigi/tastyigniter/tags";
+        $url = "https://api.github.com/repos/sampoyigi/tastyigniter/releases/latest";
         $ch = curl_init();
-        curl_setopt($ch,CURLOPT_URL,$url);
-        curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
-        curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,1);
-        curl_setopt($ch,CURLOPT_USERAGENT,$this->CI->agent->agent_string());
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
+        curl_setopt($ch, CURLOPT_USERAGENT, $this->CI->agent->agent_string());
         $result = curl_exec($ch);
         curl_close($ch);
 
-        $tags = json_decode($result);
+        $latest_release = json_decode($result);
 
-        $latest_version = (empty($tags) OR !isset($tags[0]->name)) ? '' : $tags[0]->name;
+        if (!empty($latest_release) AND isset($latest_release->tag_name)) {
 
-        if (TI_VERSION === $latest_version) {
-            return TRUE;
+            if (TI_VERSION !== $latest_release->tag_name) {
+                return array(
+                    'version' => $latest_release->tag_name,
+                    'download' => $latest_release->zipball_url,
+                    'changelog' => nl2br($latest_release->body),
+                );
+            }
         }
-
-        return FALSE;
     }
 
     public function isInstalled() {
