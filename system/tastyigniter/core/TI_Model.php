@@ -10,7 +10,6 @@ class TI_Model extends CI_Model {
     {
         $class = str_replace($this->config->item('subclass_prefix'), '', get_class($this));
         log_message('info', $class . ' Class Initialized');
-        $this->load->database();
     }
 }
 

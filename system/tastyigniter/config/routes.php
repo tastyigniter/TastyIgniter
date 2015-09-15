@@ -4,6 +4,7 @@ if (APPDIR === ADMINDIR) {
     $route['default_controller'] = 'login';
 } else if (APPDIR === 'setup') {
     $route['default_controller'] = 'setup';
+    $route['([^/]+)'] = 'setup/$1';
 } else {
     $default_controller = 'home';
     $controller_exceptions = array('home', 'menus', 'reservation', 'contact', 'local', 'checkout', 'pages');

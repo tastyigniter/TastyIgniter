@@ -83,22 +83,26 @@ class TI_Config extends MX_Config {
 
     public function load_db_config() {
         $CI =& get_instance();
-        $CI->load->model('Settings_model');
 
-        !empty($this->settings) OR $this->settings = $CI->Settings_model->getAll();
+        // Make sure the database is connected and settings table exists
+        if ($CI->db->conn_id !== FALSE AND $CI->db->table_exists('settings')) {
+            $CI->load->model('Settings_model');
 
-        if (!empty($this->settings)) {
-            foreach ($this->settings as $setting) {
-                if (!empty($setting['serialized'])) {
-                    $this->set_item($setting['item'], unserialize($setting['value']));
-                } else {
-                    $this->set_item($setting['item'], $setting['value']);
+            ! empty($this->settings) OR $this->settings = $CI->Settings_model->getAll();
+
+            if ( ! empty($this->settings)) {
+                foreach ($this->settings as $setting) {
+                    if ( ! empty($setting['serialized'])) {
+                        $this->set_item($setting['item'], unserialize($setting['value']));
+                    } else {
+                        $this->set_item($setting['item'], $setting['value']);
+                    }
                 }
             }
-        }
 
-        if (isset($this->config['timezone'])) {
-            date_default_timezone_set($this->config['timezone']);
+            if (isset($this->config['timezone'])) {
+                date_default_timezone_set($this->config['timezone']);
+            }
         }
     }
 }

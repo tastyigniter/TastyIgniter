@@ -3,18 +3,16 @@
 class Settings_model extends TI_Model {
 
     public function getAll() {
-        if ($this->db->table_exists($this->db->dbprefix('settings'))) {
-            $this->db->from('settings');
+		$this->db->from('settings');
 
-            $query = $this->db->get();
-            $result = array();
+		$query = $this->db->get();
+		$result = array();
 
-            if ($query->num_rows() > 0) {
-                $result = $query->result_array();
-            }
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
 
-            return $result;
-        }
+		return $result;
 	}
 
 	public function updateSettings($sort, $update = array()) {
