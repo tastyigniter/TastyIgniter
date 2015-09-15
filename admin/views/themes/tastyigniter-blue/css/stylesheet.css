@@ -1672,7 +1672,7 @@ border-left: 1px solid #ecf0f5;
 font-size: 11px;
 padding: 5px 20px 10px;
 }
-.text-copyright {
+.text-version {
 color: #777;
 margin: 12px 0;
 text-align:center;
@@ -1689,7 +1689,7 @@ text-align:center;
 	position: inherit;
 	margin: 0 0 0 220px;
 	}
-	.text-copyright {
+	.text-version {
 	text-align:left;
 	}
 	#footer #profiler {
