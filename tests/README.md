@@ -11,7 +11,7 @@ Requirements:
 * A bit of command line knowledge
 * Selenium Web Server (optional)
 
-In other to begin testing `run: wget http://codeception.com/codecept.phar` from tests folder to download and save the phar archive.
+In other to begin testing `run: wget http://codeception.com/codecept.phar` from tests folder to download and save the Codeception phar archive.
 
 
 Selenium installation instructions

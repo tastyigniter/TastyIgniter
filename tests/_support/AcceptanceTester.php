@@ -36,18 +36,19 @@ class AcceptanceTester extends \Codeception\Actor {
         $I->submitForm('#login-form form', ['email' => $email, 'password' => $password], '#login-form button');
     }
 
-    public function adminLogin($username, $password, $user = 'admin') {
+    public function adminLogin($username, $password) {
         $I = $this;
 
         // if snapshot exists - skipping login
         if ($I->loadSessionSnapshot('adminLogin')) return;
 
-        $I->amGoingTo('log into administrator panel as ' . $user);
+        $I->amGoingTo('log into administrator panel as ' . $username);
 
         $I->amOnPage('/admin/logout');
         $I->amOnPage('/admin/login');
 
         $I->submitForm('#edit-form', ['user' => $username, 'password' => $password], '#edit-form button[type=submit]');
+        $I->dontSee('You must be logged in to access that page.', '.alert-danger');
 
         // saving snapshot
         $I->saveSessionSnapshot('adminLogin');

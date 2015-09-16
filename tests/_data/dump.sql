@@ -3299,7 +3299,7 @@ VALUES
 	(14357,'config','	canceled_reservation_status','17',0),
 	(14397,'config','	confirmed_reservation_status','16',0),
 	(14400,'prefs','ti_setup','installed',0),
-	(14401,'prefs','ti_version','v1.4.0-beta',0),
+	(14401,'prefs','ti_version','v1.4.2-beta',0),
 	(15434,'config','search_by','address',0),
 	(15512,'config','reservation_interval','15',0),
 	(15513,'config','reservation_turn','60',0),
