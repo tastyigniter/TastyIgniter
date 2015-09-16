@@ -278,11 +278,6 @@ class Customers extends Admin_Controller {
 			$this->form_validation->set_rules('confirm_password', 'lang:label_confirm_password', 'xss_clean|trim|required|md5');
 		}
 
-		if (!$this->input->get('id')) {
-			$this->form_validation->set_rules('password', 'lang:label_password', 'required');
-			$this->form_validation->set_rules('confirm_password', 'lang:label_confirm_password', 'required');
-		}
-
 		$this->form_validation->set_rules('telephone', 'lang:label_telephone', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('security_question_id', 'lang:label_security_question', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('security_answer', 'lang:label_security_answer', 'xss_clean|trim|required|min_length[2]');

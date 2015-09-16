@@ -2,7 +2,7 @@
 # TABLE STRUCTURE FOR: ti_countries
 #
 
-INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `flag`, `format`, `status`) VALUES
+REPLACE INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `flag`, `format`, `status`) VALUES
 (1, 'Afghanistan', 'AF', 'AFG', 'data/flags/af.png', '', 1),
 (2, 'Albania', 'AL', 'ALB', 'data/flags/al.png', '', 1),
 (3, 'Algeria', 'DZ', 'DZA', 'data/flags/dz.png', '', 1),
@@ -248,252 +248,254 @@ INSERT INTO `ti_countries` (`country_id`, `country_name`, `iso_code_2`, `iso_cod
 # TABLE STRUCTURE FOR: ti_currencies
 #
 
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('1', '1', 'Afghani', 'AFN', '؋', 'AF', 'AFG', '4', 'AF.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('2', '2', 'Lek', 'ALL', 'Lek', 'AL', 'ALB', '8', 'AL.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('3', '3', 'Dinar', 'DZD', 'د.ج', 'DZ', 'DZA', '12', 'DZ.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('4', '4', 'Dollar', 'USD', '$', 'AS', 'ASM', '16', 'AS.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('5', '5', 'Euro', 'EUR', '€', 'AD', 'AND', '20', 'AD.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('6', '6', 'Kwanza', 'AOA', 'Kz', 'AO', 'AGO', '24', 'AO.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('7', '7', 'Dollar', 'XCD', '$', 'AI', 'AIA', '660', 'AI.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('8', '8', 'Antarctican', 'AQD', 'A$', 'AQ', 'ATA', '10', 'AQ.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('9', '9', 'Dollar', 'XCD', '$', 'AG', 'ATG', '28', 'AG.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('10', '10', 'Peso', 'ARS', '$', 'AR', 'ARG', '32', 'AR.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('11', '11', 'Dram', 'AMD', 'դր.', 'AM', 'ARM', '51', 'AM.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('12', '12', 'Guilder', 'AWG', 'ƒ', 'AW', 'ABW', '533', 'AW.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('13', '13', 'Dollar', 'AUD', '$', 'AU', 'AUS', '36', 'AU.png', '1');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('14', '14', 'Euro', 'EUR', '€', 'AT', 'AUT', '40', 'AT.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('15', '15', 'Manat', 'AZN', 'ман', 'AZ', 'AZE', '31', 'AZ.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('16', '16', 'Dollar', 'BSD', '$', 'BS', 'BHS', '44', 'BS.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('17', '17', 'Dinar', 'BHD', '.د.', 'BH', 'BHR', '48', 'BH.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('18', '18', 'Taka', 'BDT', '৳', 'BD', 'BGD', '50', 'BD.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('19', '19', 'Dollar', 'BBD', '$', 'BB', 'BRB', '52', 'BB.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('20', '20', 'Ruble', 'BYR', 'p.', 'BY', 'BLR', '112', 'BY.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('21', '21', 'Euro', 'EUR', '€', 'BE', 'BEL', '56', 'BE.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('22', '22', 'Dollar', 'BZD', 'BZ$', 'BZ', 'BLZ', '84', 'BZ.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('23', '23', 'Franc', 'XOF', '', 'BJ', 'BEN', '204', 'BJ.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('24', '24', 'Dollar', 'BMD', '$', 'BM', 'BMU', '60', 'BM.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('25', '25', 'Ngultrum', 'BTN', 'Nu.', 'BT', 'BTN', '64', 'BT.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('26', '26', 'Boliviano', 'BOB', '$b', 'BO', 'BOL', '68', 'BO.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('27', '27', 'Marka', 'BAM', 'KM', 'BA', 'BIH', '70', 'BA.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('28', '28', 'Pula', 'BWP', 'P', 'BW', 'BWA', '72', 'BW.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('29', '29', 'Krone', 'NOK', 'kr', 'BV', 'BVT', '74', 'BV.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('30', '30', 'Real', 'BRL', 'R$', 'BR', 'BRA', '76', 'BR.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('31', '31', 'Dollar', 'USD', '$', 'IO', 'IOT', '86', 'IO.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('32', '231', 'Dollar', 'USD', '$', 'VG', 'VGB', '92', 'VG.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('33', '32', 'Dollar', 'BND', '$', 'BN', 'BRN', '96', 'BN.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('34', '33', 'Lev', 'BGN', 'лв', 'BG', 'BGR', '100', 'BG.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('35', '34', 'Franc', 'XOF', '', 'BF', 'BFA', '854', 'BF.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('36', '35', 'Franc', 'BIF', 'Fr', 'BI', 'BDI', '108', 'BI.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('37', '36', 'Riels', 'KHR', '៛', 'KH', 'KHM', '116', 'KH.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('38', '37', 'Franc', 'XAF', 'FCF', 'CM', 'CMR', '120', 'CM.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('39', '38', 'Dollar', 'CAD', '$', 'CA', 'CAN', '124', 'CA.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('40', '39', 'Escudo', 'CVE', '', 'CV', 'CPV', '132', 'CV.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('41', '40', 'Dollar', 'KYD', '$', 'KY', 'CYM', '136', 'KY.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('42', '41', 'Franc', 'XAF', 'FCF', 'CF', 'CAF', '140', 'CF.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('43', '42', 'Franc', 'XAF', '', 'TD', 'TCD', '148', 'TD.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('44', '43', 'Peso', 'CLP', '', 'CL', 'CHL', '152', 'CL.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('45', '44', 'Yuan Renminbi', 'CNY', '¥', 'CN', 'CHN', '156', 'CN.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('46', '45', 'Dollar', 'AUD', '$', 'CX', 'CXR', '162', 'CX.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('47', '46', 'Dollar', 'AUD', '$', 'CC', 'CCK', '166', 'CC.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('48', '47', 'Peso', 'COP', '$', 'CO', 'COL', '170', 'CO.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('49', '48', 'Franc', 'KMF', '', 'KM', 'COM', '174', 'KM.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('50', '50', 'Dollar', 'NZD', '$', 'CK', 'COK', '184', 'CK.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('51', '51', 'Colon', 'CRC', '₡', 'CR', 'CRI', '188', 'CR.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('52', '53', 'Kuna', 'HRK', 'kn', 'HR', 'HRV', '191', 'HR.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('53', '54', 'Peso', 'CUP', '₱', 'CU', 'CUB', '192', 'CU.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('54', '55', 'Pound', 'CYP', '', 'CY', 'CYP', '196', 'CY.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('55', '56', 'Koruna', 'CZK', 'Kč', 'CZ', 'CZE', '203', 'CZ.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('56', '49', 'Franc', 'CDF', 'FC', 'CD', 'COD', '180', 'CD.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('57', '57', 'Krone', 'DKK', 'kr', 'DK', 'DNK', '208', 'DK.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('58', '58', 'Franc', 'DJF', '', 'DJ', 'DJI', '262', 'DJ.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('59', '59', 'Dollar', 'XCD', '$', 'DM', 'DMA', '212', 'DM.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('60', '60', 'Peso', 'DOP', 'RD$', 'DO', 'DOM', '214', 'DO.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('61', '61', 'Dollar', 'USD', '$', 'TL', 'TLS', '626', 'TL.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('62', '62', 'Dollar', 'USD', '$', 'EC', 'ECU', '218', 'EC.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('63', '63', 'Pound', 'EGP', '£', 'EG', 'EGY', '818', 'EG.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('64', '64', 'Colone', 'SVC', '$', 'SV', 'SLV', '222', 'SV.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('65', '65', 'Franc', 'XAF', 'FCF', 'GQ', 'GNQ', '226', 'GQ.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('66', '66', 'Nakfa', 'ERN', 'Nfk', 'ER', 'ERI', '232', 'ER.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('67', '67', 'Kroon', 'EEK', 'kr', 'EE', 'EST', '233', 'EE.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('68', '68', 'Birr', 'ETB', '', 'ET', 'ETH', '231', 'ET.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('69', '69', 'Pound', 'FKP', '£', 'FK', 'FLK', '238', 'FK.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('70', '70', 'Krone', 'DKK', 'kr', 'FO', 'FRO', '234', 'FO.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('71', '71', 'Dollar', 'FJD', '$', 'FJ', 'FJI', '242', 'FJ.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('72', '72', 'Euro', 'EUR', '€', 'FI', 'FIN', '246', 'FI.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('73', '73', 'Euro', 'EUR', '€', 'FR', 'FRA', '250', 'FR.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('74', '75', 'Euro', 'EUR', '€', 'GF', 'GUF', '254', 'GF.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('75', '76', 'Franc', 'XPF', '', 'PF', 'PYF', '258', 'PF.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('76', '77', 'Euro  ', 'EUR', '€', 'TF', 'ATF', '260', 'TF.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('77', '78', 'Franc', 'XAF', 'FCF', 'GA', 'GAB', '266', 'GA.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('78', '79', 'Dalasi', 'GMD', 'D', 'GM', 'GMB', '270', 'GM.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('79', '80', 'Lari', 'GEL', '', 'GE', 'GEO', '268', 'GE.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('80', '81', 'Euro', 'EUR', '€', 'DE', 'DEU', '276', 'DE.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('81', '82', 'Cedi', 'GHC', '¢', 'GH', 'GHA', '288', 'GH.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('82', '83', 'Pound', 'GIP', '£', 'GI', 'GIB', '292', 'GI.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('83', '84', 'Euro', 'EUR', '€', 'GR', 'GRC', '300', 'GR.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('84', '85', 'Krone', 'DKK', 'kr', 'GL', 'GRL', '304', 'GL.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('85', '86', 'Dollar', 'XCD', '$', 'GD', 'GRD', '308', 'GD.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('86', '87', 'Euro', 'EUR', '€', 'GP', 'GLP', '312', 'GP.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('87', '88', 'Dollar', 'USD', '$', 'GU', 'GUM', '316', 'GU.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('88', '89', 'Quetzal', 'GTQ', 'Q', 'GT', 'GTM', '320', 'GT.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('89', '90', 'Franc', 'GNF', '', 'GN', 'GIN', '324', 'GN.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('90', '91', 'Franc', 'XOF', '', 'GW', 'GNB', '624', 'GW.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('91', '92', 'Dollar', 'GYD', '$', 'GY', 'GUY', '328', 'GY.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('92', '93', 'Gourde', 'HTG', 'G', 'HT', 'HTI', '332', 'HT.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('93', '94', 'Dollar', 'AUD', '$', 'HM', 'HMD', '334', 'HM.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('94', '95', 'Lempira', 'HNL', 'L', 'HN', 'HND', '340', 'HN.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('95', '96', 'Dollar', 'HKD', '$', 'HK', 'HKG', '344', 'HK.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('96', '97', 'Forint', 'HUF', 'Ft', 'HU', 'HUN', '348', 'HU.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('97', '98', 'Krona', 'ISK', 'kr', 'IS', 'ISL', '352', 'IS.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('98', '99', 'Rupee', 'INR', '₹', 'IN', 'IND', '356', 'IN.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('99', '100', 'Rupiah', 'IDR', 'Rp', 'ID', 'IDN', '360', 'ID.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('100', '101', 'Rial', 'IRR', '﷼', 'IR', 'IRN', '364', 'IR.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('101', '102', 'Dinar', 'IQD', '', 'IQ', 'IRQ', '368', 'IQ.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('102', '103', 'Euro', 'EUR', '€', 'IE', 'IRL', '372', 'IE.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('103', '104', 'Shekel', 'ILS', '₪', 'IL', 'ISR', '376', 'IL.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('104', '105', 'Euro', 'EUR', '€', 'IT', 'ITA', '380', 'IT.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('105', '52', 'Franc', 'XOF', '', 'CI', 'CIV', '384', 'CI.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('106', '106', 'Dollar', 'JMD', '$', 'JM', 'JAM', '388', 'JM.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('107', '107', 'Yen', 'JPY', '¥', 'JP', 'JPN', '392', 'JP.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('108', '108', 'Dinar', 'JOD', '', 'JO', 'JOR', '400', 'JO.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('109', '109', 'Tenge', 'KZT', 'лв', 'KZ', 'KAZ', '398', 'KZ.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('110', '110', 'Shilling', 'KES', '', 'KE', 'KEN', '404', 'KE.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('111', '111', 'Dollar', 'AUD', '$', 'KI', 'KIR', '296', 'KI.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('112', '114', 'Dinar', 'KWD', 'د.ك', 'KW', 'KWT', '414', 'KW.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('113', '115', 'Som', 'KGS', 'лв', 'KG', 'KGZ', '417', 'KG.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('114', '116', 'Kip', 'LAK', '₭', 'LA', 'LAO', '418', 'LA.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('115', '117', 'Lat', 'LVL', 'Ls', 'LV', 'LVA', '428', 'LV.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('116', '118', 'Pound', 'LBP', '£', 'LB', 'LBN', '422', 'LB.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('117', '119', 'Loti', 'LSL', 'L', 'LS', 'LSO', '426', 'LS.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('118', '120', 'Dollar', 'LRD', '$', 'LR', 'LBR', '430', 'LR.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('119', '121', 'Dinar', 'LYD', 'ل.د', 'LY', 'LBY', '434', 'LY.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('120', '122', 'Franc', 'CHF', 'CHF', 'LI', 'LIE', '438', 'LI.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('121', '123', 'Litas', 'LTL', 'Lt', 'LT', 'LTU', '440', 'LT.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('122', '124', 'Euro', 'EUR', '€', 'LU', 'LUX', '442', 'LU.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('123', '125', 'Pataca', 'MOP', 'MOP', 'MO', 'MAC', '446', 'MO.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('124', '140', 'Denar', 'MKD', 'ден', 'MK', 'MKD', '807', 'MK.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('125', '127', 'Ariary', 'MGA', 'Ar', 'MG', 'MDG', '450', 'MG.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('126', '128', 'Kwacha', 'MWK', 'MK', 'MW', 'MWI', '454', 'MW.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('127', '129', 'Ringgit', 'MYR', 'RM', 'MY', 'MYS', '458', 'MY.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('128', '130', 'Rufiyaa', 'MVR', 'Rf', 'MV', 'MDV', '462', 'MV.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('129', '131', 'Franc', 'XOF', 'MAF', 'ML', 'MLI', '466', 'ML.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('130', '132', 'Lira', 'MTL', 'Lm', 'MT', 'MLT', '470', 'MT.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('131', '133', 'Dollar', 'USD', '$', 'MH', 'MHL', '584', 'MH.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('132', '134', 'Euro', 'EUR', '€', 'MQ', 'MTQ', '474', 'MQ.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('133', '135', 'Ouguiya', 'MRO', 'UM', 'MR', 'MRT', '478', 'MR.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('134', '136', 'Rupee', 'MUR', '₨', 'MU', 'MUS', '480', 'MU.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('135', '137', 'Euro', 'EUR', '€', 'YT', 'MYT', '175', 'YT.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('136', '138', 'Peso', 'MXN', '$', 'MX', 'MEX', '484', 'MX.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('137', '139', 'Dollar', 'USD', '$', 'FM', 'FSM', '583', 'FM.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('138', '140', 'Leu', 'MDL', 'MDL', 'MD', 'MDA', '498', 'MD.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('139', '141', 'Euro', 'EUR', '€', 'MC', 'MCO', '492', 'MC.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('140', '142', 'Tugrik', 'MNT', '₮', 'MN', 'MNG', '496', 'MN.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('141', '143', 'Dollar', 'XCD', '$', 'MS', 'MSR', '500', 'MS.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('142', '144', 'Dirham', 'MAD', '', 'MA', 'MAR', '504', 'MA.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('143', '145', 'Meticail', 'MZN', 'MT', 'MZ', 'MOZ', '508', 'MZ.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('144', '146', 'Kyat', 'MMK', 'K', 'MM', 'MMR', '104', 'MM.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('145', '147', 'Dollar', 'NAD', '$', 'NA', 'NAM', '516', 'NA.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('146', '148', 'Dollar', 'AUD', '$', 'NR', 'NRU', '520', 'NR.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('147', '149', 'Rupee', 'NPR', '₨', 'NP', 'NPL', '524', 'NP.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('148', '150', 'Euro', 'EUR', '€', 'NL', 'NLD', '528', 'NL.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('149', '151', 'Guilder', 'ANG', 'ƒ', 'AN', 'ANT', '530', 'AN.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('150', '152', 'Franc', 'XPF', '', 'NC', 'NCL', '540', 'NC.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('151', '153', 'Dollar', 'NZD', '$', 'NZ', 'NZL', '554', 'NZ.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('152', '154', 'Cordoba', 'NIO', 'C$', 'NI', 'NIC', '558', 'NI.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('153', '155', 'Franc', 'XOF', '', 'NE', 'NER', '562', 'NE.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('154', '156', 'Naira', 'NGN', '₦', 'NG', 'NGA', '566', 'NG.png', '1');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('155', '157', 'Dollar', 'NZD', '$', 'NU', 'NIU', '570', 'NU.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('156', '158', 'Dollar', 'AUD', '$', 'NF', 'NFK', '574', 'NF.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('157', '112', 'Won', 'KPW', '₩', 'KP', 'PRK', '408', 'KP.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('158', '159', 'Dollar', 'USD', '$', 'MP', 'MNP', '580', 'MP.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('159', '160', 'Krone', 'NOK', 'kr', 'NO', 'NOR', '578', 'NO.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('160', '161', 'Rial', 'OMR', '﷼', 'OM', 'OMN', '512', 'OM.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('161', '162', 'Rupee', 'PKR', '₨', 'PK', 'PAK', '586', 'PK.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('162', '163', 'Dollar', 'USD', '$', 'PW', 'PLW', '585', 'PW.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('163', '0', 'Shekel', 'ILS', '₪', 'PS', 'PSE', '275', 'PS.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('164', '164', 'Balboa', 'PAB', 'B/.', 'PA', 'PAN', '591', 'PA.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('165', '165', 'Kina', 'PGK', '', 'PG', 'PNG', '598', 'PG.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('166', '166', 'Guarani', 'PYG', 'Gs', 'PY', 'PRY', '600', 'PY.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('167', '167', 'Sol', 'PEN', 'S/.', 'PE', 'PER', '604', 'PE.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('168', '168', 'Peso', 'PHP', 'Php', 'PH', 'PHL', '608', 'PH.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('169', '169', 'Dollar', 'NZD', '$', 'PN', 'PCN', '612', 'PN.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('170', '170', 'Zloty', 'PLN', 'zł', 'PL', 'POL', '616', 'PL.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('171', '171', 'Euro', 'EUR', '€', 'PT', 'PRT', '620', 'PT.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('172', '172', 'Dollar', 'USD', '$', 'PR', 'PRI', '630', 'PR.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('173', '173', 'Rial', 'QAR', '﷼', 'QA', 'QAT', '634', 'QA.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('174', '49', 'Franc', 'XAF', 'FCF', 'CG', 'COG', '178', 'CG.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('175', '174', 'Euro', 'EUR', '€', 'RE', 'REU', '638', 'RE.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('176', '175', 'Leu', 'RON', 'lei', 'RO', 'ROU', '642', 'RO.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('177', '176', 'Ruble', 'RUB', 'руб', 'RU', 'RUS', '643', 'RU.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('178', '177', 'Franc', 'RWF', '', 'RW', 'RWA', '646', 'RW.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('179', '179', 'Pound', 'SHP', '£', 'SH', 'SHN', '654', 'SH.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('180', '178', 'Dollar', 'XCD', '$', 'KN', 'KNA', '659', 'KN.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('181', '179', 'Dollar', 'XCD', '$', 'LC', 'LCA', '662', 'LC.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('182', '180', 'Euro', 'EUR', '€', 'PM', 'SPM', '666', 'PM.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('183', '180', 'Dollar', 'XCD', '$', 'VC', 'VCT', '670', 'VC.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('184', '181', 'Tala', 'WST', 'WS$', 'WS', 'WSM', '882', 'WS.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('185', '182', 'Euro', 'EUR', '€', 'SM', 'SMR', '674', 'SM.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('186', '183', 'Dobra', 'STD', 'Db', 'ST', 'STP', '678', 'ST.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('187', '184', 'Rial', 'SAR', '﷼', 'SA', 'SAU', '682', 'SA.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('188', '185', 'Franc', 'XOF', '', 'SN', 'SEN', '686', 'SN.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('189', '142', 'Dinar', 'RSD', 'Дин', 'CS', 'SCG', '891', 'CS.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('190', '186', 'Rupee', 'SCR', '₨', 'SC', 'SYC', '690', 'SC.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('191', '187', 'Leone', 'SLL', 'Le', 'SL', 'SLE', '694', 'SL.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('192', '188', 'Dollar', 'SGD', '$', 'SG', 'SGP', '702', 'SG.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('193', '189', 'Koruna', 'SKK', 'Sk', 'SK', 'SVK', '703', 'SK.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('194', '190', 'Euro', 'EUR', '€', 'SI', 'SVN', '705', 'SI.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('195', '191', 'Dollar', 'SBD', '$', 'SB', 'SLB', '90', 'SB.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('196', '192', 'Shilling', 'SOS', 'S', 'SO', 'SOM', '706', 'SO.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('197', '193', 'Rand', 'ZAR', 'R', 'ZA', 'ZAF', '710', 'ZA.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('198', '113', 'Pound', 'GBP', '£', 'GS', 'SGS', '239', 'GS.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('199', '194', 'Won', 'KRW', '₩', 'KR', 'KOR', '410', 'KR.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('200', '195', 'Euro', 'EUR', '€', 'ES', 'ESP', '724', 'ES.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('201', '196', 'Rupee', 'LKR', '₨', 'LK', 'LKA', '144', 'LK.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('202', '199', 'Dinar', 'SDD', '', 'SD', 'SDN', '736', 'SD.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('203', '200', 'Dollar', 'SRD', '$', 'SR', 'SUR', '740', 'SR.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('204', '0', 'Krone', 'NOK', 'kr', 'SJ', 'SJM', '744', 'SJ.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('205', '202', 'Lilangeni', 'SZL', '', 'SZ', 'SWZ', '748', 'SZ.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('206', '203', 'Krona', 'SEK', 'kr', 'SE', 'SWE', '752', 'SE.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('207', '204', 'Franc', 'CHF', 'CHF', 'CH', 'CHE', '756', 'CH.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('208', '205', 'Pound', 'SYP', '£', 'SY', 'SYR', '760', 'SY.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('209', '206', 'Dollar', 'TWD', 'NT$', 'TW', 'TWN', '158', 'TW.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('210', '207', 'Somoni', 'TJS', '', 'TJ', 'TJK', '762', 'TJ.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('211', '208', 'Shilling', 'TZS', '', 'TZ', 'TZA', '834', 'TZ.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('212', '209', 'Baht', 'THB', '฿', 'TH', 'THA', '764', 'TH.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('213', '210', 'Franc', 'XOF', '', 'TG', 'TGO', '768', 'TG.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('214', '211', 'Dollar', 'NZD', '$', 'TK', 'TKL', '772', 'TK.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('215', '212', 'Pa\'anga', 'TOP', 'T$', 'TO', 'TON', '776', 'TO.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('216', '213', 'Dollar', 'TTD', 'TT$', 'TT', 'TTO', '780', 'TT.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('217', '214', 'Dinar', 'TND', '', 'TN', 'TUN', '788', 'TN.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('218', '215', 'Lira', 'TRY', 'YTL', 'TR', 'TUR', '792', 'TR.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('219', '216', 'Manat', 'TMM', 'm', 'TM', 'TKM', '795', 'TM.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('220', '217', 'Dollar', 'USD', '$', 'TC', 'TCA', '796', 'TC.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('221', '218', 'Dollar', 'AUD', '$', 'TV', 'TUV', '798', 'TV.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('222', '232', 'Dollar', 'USD', '$', 'VI', 'VIR', '850', 'VI.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('223', '219', 'Shilling', 'UGX', '', 'UG', 'UGA', '800', 'UG.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('224', '220', 'Hryvnia', 'UAH', '₴', 'UA', 'UKR', '804', 'UA.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('225', '221', 'Dirham', 'AED', '', 'AE', 'ARE', '784', 'AE.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('226', '222', 'Pound', 'GBP', '£', 'GB', 'GBR', '826', 'GB.png', '1');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('227', '223', 'Dollar', 'USD', '$', 'US', 'USA', '840', 'US.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('228', '224', 'Dollar ', 'USD', '$', 'UM', 'UMI', '581', 'UM.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('229', '225', 'Peso', 'UYU', '$U', 'UY', 'URY', '858', 'UY.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('230', '226', 'Som', 'UZS', 'лв', 'UZ', 'UZB', '860', 'UZ.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('231', '227', 'Vatu', 'VUV', 'Vt', 'VU', 'VUT', '548', 'VU.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('232', '228', 'Euro', 'EUR', '€', 'VA', 'VAT', '336', 'VA.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('233', '229', 'Bolivar', 'VEF', 'Bs', 'VE', 'VEN', '862', 'VE.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('234', '230', 'Dong', 'VND', '₫', 'VN', 'VNM', '704', 'VN.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('235', '233', 'Franc', 'XPF', '', 'WF', 'WLF', '876', 'WF.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('236', '234', 'Dirham', 'MAD', '', 'EH', 'ESH', '732', 'EH.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('237', '235', 'Rial', 'YER', '﷼', 'YE', 'YEM', '887', 'YE.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('238', '238', 'Kwacha', 'ZMK', 'ZK', 'ZM', 'ZMB', '894', 'ZM.png', '0');
-INSERT INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`) VALUES ('239', '239', 'Dollar', 'ZWD', 'Z$', 'ZW', 'ZWE', '716', 'ZW.png', '0');
+REPLACE INTO `ti_currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`)
+VALUES
+  (1, 1, 'Afghani', 'AFN', '؋', 'AF', 'AFG', 4, 'AF.png', 0),
+  (2, 2, 'Lek', 'ALL', 'Lek', 'AL', 'ALB', 8, 'AL.png', 0),
+  (3, 3, 'Dinar', 'DZD', 'د.ج', 'DZ', 'DZA', 12, 'DZ.png', 0),
+  (4, 4, 'Dollar', 'USD', '$', 'AS', 'ASM', 16, 'AS.png', 0),
+  (5, 5, 'Euro', 'EUR', '€', 'AD', 'AND', 20, 'AD.png', 0),
+  (6, 6, 'Kwanza', 'AOA', 'Kz', 'AO', 'AGO', 24, 'AO.png', 0),
+  (7, 7, 'Dollar', 'XCD', '$', 'AI', 'AIA', 660, 'AI.png', 0),
+  (8, 8, 'Antarctican', 'AQD', 'A$', 'AQ', 'ATA', 10, 'AQ.png', 0),
+  (9, 9, 'Dollar', 'XCD', '$', 'AG', 'ATG', 28, 'AG.png', 0),
+  (10, 10, 'Peso', 'ARS', '$', 'AR', 'ARG', 32, 'AR.png', 0),
+  (11, 11, 'Dram', 'AMD', 'դր.', 'AM', 'ARM', 51, 'AM.png', 0),
+  (12, 12, 'Guilder', 'AWG', 'ƒ', 'AW', 'ABW', 533, 'AW.png', 0),
+  (13, 13, 'Dollar', 'AUD', '$', 'AU', 'AUS', 36, 'AU.png', 1),
+  (14, 14, 'Euro', 'EUR', '€', 'AT', 'AUT', 40, 'AT.png', 0),
+  (15, 15, 'Manat', 'AZN', 'ман', 'AZ', 'AZE', 31, 'AZ.png', 0),
+  (16, 16, 'Dollar', 'BSD', '$', 'BS', 'BHS', 44, 'BS.png', 0),
+  (17, 17, 'Dinar', 'BHD', '.د.', 'BH', 'BHR', 48, 'BH.png', 0),
+  (18, 18, 'Taka', 'BDT', '৳', 'BD', 'BGD', 50, 'BD.png', 0),
+  (19, 19, 'Dollar', 'BBD', '$', 'BB', 'BRB', 52, 'BB.png', 0),
+  (20, 20, 'Ruble', 'BYR', 'p.', 'BY', 'BLR', 112, 'BY.png', 0),
+  (21, 21, 'Euro', 'EUR', '€', 'BE', 'BEL', 56, 'BE.png', 0),
+  (22, 22, 'Dollar', 'BZD', 'BZ$', 'BZ', 'BLZ', 84, 'BZ.png', 0),
+  (23, 23, 'Franc', 'XOF', '', 'BJ', 'BEN', 204, 'BJ.png', 0),
+  (24, 24, 'Dollar', 'BMD', '$', 'BM', 'BMU', 60, 'BM.png', 0),
+  (25, 25, 'Ngultrum', 'BTN', 'Nu.', 'BT', 'BTN', 64, 'BT.png', 0),
+  (26, 26, 'Boliviano', 'BOB', '$b', 'BO', 'BOL', 68, 'BO.png', 0),
+  (27, 27, 'Marka', 'BAM', 'KM', 'BA', 'BIH', 70, 'BA.png', 0),
+  (28, 28, 'Pula', 'BWP', 'P', 'BW', 'BWA', 72, 'BW.png', 0),
+  (29, 29, 'Krone', 'NOK', 'kr', 'BV', 'BVT', 74, 'BV.png', 0),
+  (30, 30, 'Real', 'BRL', 'R$', 'BR', 'BRA', 76, 'BR.png', 0),
+  (31, 31, 'Dollar', 'USD', '$', 'IO', 'IOT', 86, 'IO.png', 0),
+  (32, 231, 'Dollar', 'USD', '$', 'VG', 'VGB', 92, 'VG.png', 0),
+  (33, 32, 'Dollar', 'BND', '$', 'BN', 'BRN', 96, 'BN.png', 0),
+  (34, 33, 'Lev', 'BGN', 'лв', 'BG', 'BGR', 100, 'BG.png', 0),
+  (35, 34, 'Franc', 'XOF', '', 'BF', 'BFA', 854, 'BF.png', 0),
+  (36, 35, 'Franc', 'BIF', 'Fr', 'BI', 'BDI', 108, 'BI.png', 0),
+  (37, 36, 'Riels', 'KHR', '៛', 'KH', 'KHM', 116, 'KH.png', 0),
+  (38, 37, 'Franc', 'XAF', 'FCF', 'CM', 'CMR', 120, 'CM.png', 0),
+  (39, 38, 'Dollar', 'CAD', '$', 'CA', 'CAN', 124, 'CA.png', 0),
+  (40, 39, 'Escudo', 'CVE', '', 'CV', 'CPV', 132, 'CV.png', 0),
+  (41, 40, 'Dollar', 'KYD', '$', 'KY', 'CYM', 136, 'KY.png', 0),
+  (42, 41, 'Franc', 'XAF', 'FCF', 'CF', 'CAF', 140, 'CF.png', 0),
+  (43, 42, 'Franc', 'XAF', '', 'TD', 'TCD', 148, 'TD.png', 0),
+  (44, 43, 'Peso', 'CLP', '', 'CL', 'CHL', 152, 'CL.png', 0),
+  (45, 44, 'Yuan Renminbi', 'CNY', '¥', 'CN', 'CHN', 156, 'CN.png', 0),
+  (46, 45, 'Dollar', 'AUD', '$', 'CX', 'CXR', 162, 'CX.png', 0),
+  (47, 46, 'Dollar', 'AUD', '$', 'CC', 'CCK', 166, 'CC.png', 0),
+  (48, 47, 'Peso', 'COP', '$', 'CO', 'COL', 170, 'CO.png', 0),
+  (49, 48, 'Franc', 'KMF', '', 'KM', 'COM', 174, 'KM.png', 0),
+  (50, 50, 'Dollar', 'NZD', '$', 'CK', 'COK', 184, 'CK.png', 0),
+  (51, 51, 'Colon', 'CRC', '₡', 'CR', 'CRI', 188, 'CR.png', 0),
+  (52, 53, 'Kuna', 'HRK', 'kn', 'HR', 'HRV', 191, 'HR.png', 0),
+  (53, 54, 'Peso', 'CUP', '₱', 'CU', 'CUB', 192, 'CU.png', 0),
+  (54, 55, 'Pound', 'CYP', '', 'CY', 'CYP', 196, 'CY.png', 0),
+  (55, 56, 'Koruna', 'CZK', 'Kč', 'CZ', 'CZE', 203, 'CZ.png', 0),
+  (56, 49, 'Franc', 'CDF', 'FC', 'CD', 'COD', 180, 'CD.png', 0),
+  (57, 57, 'Krone', 'DKK', 'kr', 'DK', 'DNK', 208, 'DK.png', 0),
+  (58, 58, 'Franc', 'DJF', '', 'DJ', 'DJI', 262, 'DJ.png', 0),
+  (59, 59, 'Dollar', 'XCD', '$', 'DM', 'DMA', 212, 'DM.png', 0),
+  (60, 60, 'Peso', 'DOP', 'RD$', 'DO', 'DOM', 214, 'DO.png', 0),
+  (61, 61, 'Dollar', 'USD', '$', 'TL', 'TLS', 626, 'TL.png', 0),
+  (62, 62, 'Dollar', 'USD', '$', 'EC', 'ECU', 218, 'EC.png', 0),
+  (63, 63, 'Pound', 'EGP', '£', 'EG', 'EGY', 818, 'EG.png', 0),
+  (64, 64, 'Colone', 'SVC', '$', 'SV', 'SLV', 222, 'SV.png', 0),
+  (65, 65, 'Franc', 'XAF', 'FCF', 'GQ', 'GNQ', 226, 'GQ.png', 0),
+  (66, 66, 'Nakfa', 'ERN', 'Nfk', 'ER', 'ERI', 232, 'ER.png', 0),
+  (67, 67, 'Kroon', 'EEK', 'kr', 'EE', 'EST', 233, 'EE.png', 0),
+  (68, 68, 'Birr', 'ETB', '', 'ET', 'ETH', 231, 'ET.png', 0),
+  (69, 69, 'Pound', 'FKP', '£', 'FK', 'FLK', 238, 'FK.png', 0),
+  (70, 70, 'Krone', 'DKK', 'kr', 'FO', 'FRO', 234, 'FO.png', 0),
+  (71, 71, 'Dollar', 'FJD', '$', 'FJ', 'FJI', 242, 'FJ.png', 0),
+  (72, 72, 'Euro', 'EUR', '€', 'FI', 'FIN', 246, 'FI.png', 0),
+  (73, 73, 'Euro', 'EUR', '€', 'FR', 'FRA', 250, 'FR.png', 0),
+  (74, 75, 'Euro', 'EUR', '€', 'GF', 'GUF', 254, 'GF.png', 0),
+  (75, 76, 'Franc', 'XPF', '', 'PF', 'PYF', 258, 'PF.png', 0),
+  (76, 77, 'Euro  ', 'EUR', '€', 'TF', 'ATF', 260, 'TF.png', 0),
+  (77, 78, 'Franc', 'XAF', 'FCF', 'GA', 'GAB', 266, 'GA.png', 0),
+  (78, 79, 'Dalasi', 'GMD', 'D', 'GM', 'GMB', 270, 'GM.png', 0),
+  (79, 80, 'Lari', 'GEL', '', 'GE', 'GEO', 268, 'GE.png', 0),
+  (80, 81, 'Euro', 'EUR', '€', 'DE', 'DEU', 276, 'DE.png', 0),
+  (81, 82, 'Cedi', 'GHC', '¢', 'GH', 'GHA', 288, 'GH.png', 0),
+  (82, 83, 'Pound', 'GIP', '£', 'GI', 'GIB', 292, 'GI.png', 0),
+  (83, 84, 'Euro', 'EUR', '€', 'GR', 'GRC', 300, 'GR.png', 0),
+  (84, 85, 'Krone', 'DKK', 'kr', 'GL', 'GRL', 304, 'GL.png', 0),
+  (85, 86, 'Dollar', 'XCD', '$', 'GD', 'GRD', 308, 'GD.png', 0),
+  (86, 87, 'Euro', 'EUR', '€', 'GP', 'GLP', 312, 'GP.png', 0),
+  (87, 88, 'Dollar', 'USD', '$', 'GU', 'GUM', 316, 'GU.png', 0),
+  (88, 89, 'Quetzal', 'GTQ', 'Q', 'GT', 'GTM', 320, 'GT.png', 0),
+  (89, 90, 'Franc', 'GNF', '', 'GN', 'GIN', 324, 'GN.png', 0),
+  (90, 91, 'Franc', 'XOF', '', 'GW', 'GNB', 624, 'GW.png', 0),
+  (91, 92, 'Dollar', 'GYD', '$', 'GY', 'GUY', 328, 'GY.png', 0),
+  (92, 93, 'Gourde', 'HTG', 'G', 'HT', 'HTI', 332, 'HT.png', 0),
+  (93, 94, 'Dollar', 'AUD', '$', 'HM', 'HMD', 334, 'HM.png', 0),
+  (94, 95, 'Lempira', 'HNL', 'L', 'HN', 'HND', 340, 'HN.png', 0),
+  (95, 96, 'Dollar', 'HKD', '$', 'HK', 'HKG', 344, 'HK.png', 0),
+  (96, 97, 'Forint', 'HUF', 'Ft', 'HU', 'HUN', 348, 'HU.png', 0),
+  (97, 98, 'Krona', 'ISK', 'kr', 'IS', 'ISL', 352, 'IS.png', 0),
+  (98, 99, 'Rupee', 'INR', '₹', 'IN', 'IND', 356, 'IN.png', 0),
+  (99, 100, 'Rupiah', 'IDR', 'Rp', 'ID', 'IDN', 360, 'ID.png', 0),
+  (100, 101, 'Rial', 'IRR', '﷼', 'IR', 'IRN', 364, 'IR.png', 0),
+  (101, 102, 'Dinar', 'IQD', '', 'IQ', 'IRQ', 368, 'IQ.png', 0),
+  (102, 103, 'Euro', 'EUR', '€', 'IE', 'IRL', 372, 'IE.png', 0),
+  (103, 104, 'Shekel', 'ILS', '₪', 'IL', 'ISR', 376, 'IL.png', 0),
+  (104, 105, 'Euro', 'EUR', '€', 'IT', 'ITA', 380, 'IT.png', 0),
+  (105, 52, 'Franc', 'XOF', '', 'CI', 'CIV', 384, 'CI.png', 0),
+  (106, 106, 'Dollar', 'JMD', '$', 'JM', 'JAM', 388, 'JM.png', 0),
+  (107, 107, 'Yen', 'JPY', '¥', 'JP', 'JPN', 392, 'JP.png', 0),
+  (108, 108, 'Dinar', 'JOD', '', 'JO', 'JOR', 400, 'JO.png', 0),
+  (109, 109, 'Tenge', 'KZT', 'лв', 'KZ', 'KAZ', 398, 'KZ.png', 0),
+  (110, 110, 'Shilling', 'KES', '', 'KE', 'KEN', 404, 'KE.png', 0),
+  (111, 111, 'Dollar', 'AUD', '$', 'KI', 'KIR', 296, 'KI.png', 0),
+  (112, 114, 'Dinar', 'KWD', 'د.ك', 'KW', 'KWT', 414, 'KW.png', 0),
+  (113, 115, 'Som', 'KGS', 'лв', 'KG', 'KGZ', 417, 'KG.png', 0),
+  (114, 116, 'Kip', 'LAK', '₭', 'LA', 'LAO', 418, 'LA.png', 0),
+  (115, 117, 'Lat', 'LVL', 'Ls', 'LV', 'LVA', 428, 'LV.png', 0),
+  (116, 118, 'Pound', 'LBP', '£', 'LB', 'LBN', 422, 'LB.png', 0),
+  (117, 119, 'Loti', 'LSL', 'L', 'LS', 'LSO', 426, 'LS.png', 0),
+  (118, 120, 'Dollar', 'LRD', '$', 'LR', 'LBR', 430, 'LR.png', 0),
+  (119, 121, 'Dinar', 'LYD', 'ل.د', 'LY', 'LBY', 434, 'LY.png', 0),
+  (120, 122, 'Franc', 'CHF', 'CHF', 'LI', 'LIE', 438, 'LI.png', 0),
+  (121, 123, 'Litas', 'LTL', 'Lt', 'LT', 'LTU', 440, 'LT.png', 0),
+  (122, 124, 'Euro', 'EUR', '€', 'LU', 'LUX', 442, 'LU.png', 0),
+  (123, 125, 'Pataca', 'MOP', 'MOP', 'MO', 'MAC', 446, 'MO.png', 0),
+  (124, 140, 'Denar', 'MKD', 'ден', 'MK', 'MKD', 807, 'MK.png', 0),
+  (125, 127, 'Ariary', 'MGA', 'Ar', 'MG', 'MDG', 450, 'MG.png', 0),
+  (126, 128, 'Kwacha', 'MWK', 'MK', 'MW', 'MWI', 454, 'MW.png', 0),
+  (127, 129, 'Ringgit', 'MYR', 'RM', 'MY', 'MYS', 458, 'MY.png', 0),
+  (128, 130, 'Rufiyaa', 'MVR', 'Rf', 'MV', 'MDV', 462, 'MV.png', 0),
+  (129, 131, 'Franc', 'XOF', 'MAF', 'ML', 'MLI', 466, 'ML.png', 0),
+  (130, 132, 'Lira', 'MTL', 'Lm', 'MT', 'MLT', 470, 'MT.png', 0),
+  (131, 133, 'Dollar', 'USD', '$', 'MH', 'MHL', 584, 'MH.png', 0),
+  (132, 134, 'Euro', 'EUR', '€', 'MQ', 'MTQ', 474, 'MQ.png', 0),
+  (133, 135, 'Ouguiya', 'MRO', 'UM', 'MR', 'MRT', 478, 'MR.png', 0),
+  (134, 136, 'Rupee', 'MUR', '₨', 'MU', 'MUS', 480, 'MU.png', 0),
+  (135, 137, 'Euro', 'EUR', '€', 'YT', 'MYT', 175, 'YT.png', 0),
+  (136, 138, 'Peso', 'MXN', '$', 'MX', 'MEX', 484, 'MX.png', 0),
+  (137, 139, 'Dollar', 'USD', '$', 'FM', 'FSM', 583, 'FM.png', 0),
+  (138, 140, 'Leu', 'MDL', 'MDL', 'MD', 'MDA', 498, 'MD.png', 0),
+  (139, 141, 'Euro', 'EUR', '€', 'MC', 'MCO', 492, 'MC.png', 0),
+  (140, 142, 'Tugrik', 'MNT', '₮', 'MN', 'MNG', 496, 'MN.png', 0),
+  (141, 143, 'Dollar', 'XCD', '$', 'MS', 'MSR', 500, 'MS.png', 0),
+  (142, 144, 'Dirham', 'MAD', '', 'MA', 'MAR', 504, 'MA.png', 0),
+  (143, 145, 'Meticail', 'MZN', 'MT', 'MZ', 'MOZ', 508, 'MZ.png', 0),
+  (144, 146, 'Kyat', 'MMK', 'K', 'MM', 'MMR', 104, 'MM.png', 0),
+  (145, 147, 'Dollar', 'NAD', '$', 'NA', 'NAM', 516, 'NA.png', 0),
+  (146, 148, 'Dollar', 'AUD', '$', 'NR', 'NRU', 520, 'NR.png', 0),
+  (147, 149, 'Rupee', 'NPR', '₨', 'NP', 'NPL', 524, 'NP.png', 0),
+  (148, 150, 'Euro', 'EUR', '€', 'NL', 'NLD', 528, 'NL.png', 0),
+  (149, 151, 'Guilder', 'ANG', 'ƒ', 'AN', 'ANT', 530, 'AN.png', 0),
+  (150, 152, 'Franc', 'XPF', '', 'NC', 'NCL', 540, 'NC.png', 0),
+  (151, 153, 'Dollar', 'NZD', '$', 'NZ', 'NZL', 554, 'NZ.png', 0),
+  (152, 154, 'Cordoba', 'NIO', 'C$', 'NI', 'NIC', 558, 'NI.png', 0),
+  (153, 155, 'Franc', 'XOF', '', 'NE', 'NER', 562, 'NE.png', 0),
+  (154, 156, 'Naira', 'NGN', '₦', 'NG', 'NGA', 566, 'NG.png', 1),
+  (155, 157, 'Dollar', 'NZD', '$', 'NU', 'NIU', 570, 'NU.png', 0),
+  (156, 158, 'Dollar', 'AUD', '$', 'NF', 'NFK', 574, 'NF.png', 0),
+  (157, 112, 'Won', 'KPW', '₩', 'KP', 'PRK', 408, 'KP.png', 0),
+  (158, 159, 'Dollar', 'USD', '$', 'MP', 'MNP', 580, 'MP.png', 0),
+  (159, 160, 'Krone', 'NOK', 'kr', 'NO', 'NOR', 578, 'NO.png', 0),
+  (160, 161, 'Rial', 'OMR', '﷼', 'OM', 'OMN', 512, 'OM.png', 0),
+  (161, 162, 'Rupee', 'PKR', '₨', 'PK', 'PAK', 586, 'PK.png', 0),
+  (162, 163, 'Dollar', 'USD', '$', 'PW', 'PLW', 585, 'PW.png', 0),
+  (163, 0, 'Shekel', 'ILS', '₪', 'PS', 'PSE', 275, 'PS.png', 0),
+  (164, 164, 'Balboa', 'PAB', 'B/.', 'PA', 'PAN', 591, 'PA.png', 0),
+  (165, 165, 'Kina', 'PGK', '', 'PG', 'PNG', 598, 'PG.png', 0),
+  (166, 166, 'Guarani', 'PYG', 'Gs', 'PY', 'PRY', 600, 'PY.png', 0),
+  (167, 167, 'Sol', 'PEN', 'S/.', 'PE', 'PER', 604, 'PE.png', 0),
+  (168, 168, 'Peso', 'PHP', 'Php', 'PH', 'PHL', 608, 'PH.png', 0),
+  (169, 169, 'Dollar', 'NZD', '$', 'PN', 'PCN', 612, 'PN.png', 0),
+  (170, 170, 'Zloty', 'PLN', 'zł', 'PL', 'POL', 616, 'PL.png', 0),
+  (171, 171, 'Euro', 'EUR', '€', 'PT', 'PRT', 620, 'PT.png', 0),
+  (172, 172, 'Dollar', 'USD', '$', 'PR', 'PRI', 630, 'PR.png', 0),
+  (173, 173, 'Rial', 'QAR', '﷼', 'QA', 'QAT', 634, 'QA.png', 0),
+  (174, 49, 'Franc', 'XAF', 'FCF', 'CG', 'COG', 178, 'CG.png', 0),
+  (175, 174, 'Euro', 'EUR', '€', 'RE', 'REU', 638, 'RE.png', 0),
+  (176, 175, 'Leu', 'RON', 'lei', 'RO', 'ROU', 642, 'RO.png', 0),
+  (177, 176, 'Ruble', 'RUB', 'руб', 'RU', 'RUS', 643, 'RU.png', 0),
+  (178, 177, 'Franc', 'RWF', '', 'RW', 'RWA', 646, 'RW.png', 0),
+  (179, 179, 'Pound', 'SHP', '£', 'SH', 'SHN', 654, 'SH.png', 0),
+  (180, 178, 'Dollar', 'XCD', '$', 'KN', 'KNA', 659, 'KN.png', 0),
+  (181, 179, 'Dollar', 'XCD', '$', 'LC', 'LCA', 662, 'LC.png', 0),
+  (182, 180, 'Euro', 'EUR', '€', 'PM', 'SPM', 666, 'PM.png', 0),
+  (183, 180, 'Dollar', 'XCD', '$', 'VC', 'VCT', 670, 'VC.png', 0),
+  (184, 181, 'Tala', 'WST', 'WS$', 'WS', 'WSM', 882, 'WS.png', 0),
+  (185, 182, 'Euro', 'EUR', '€', 'SM', 'SMR', 674, 'SM.png', 0),
+  (186, 183, 'Dobra', 'STD', 'Db', 'ST', 'STP', 678, 'ST.png', 0),
+  (187, 184, 'Rial', 'SAR', '﷼', 'SA', 'SAU', 682, 'SA.png', 0),
+  (188, 185, 'Franc', 'XOF', '', 'SN', 'SEN', 686, 'SN.png', 0),
+  (189, 142, 'Dinar', 'RSD', 'Дин', 'CS', 'SCG', 891, 'CS.png', 0),
+  (190, 186, 'Rupee', 'SCR', '₨', 'SC', 'SYC', 690, 'SC.png', 0),
+  (191, 187, 'Leone', 'SLL', 'Le', 'SL', 'SLE', 694, 'SL.png', 0),
+  (192, 188, 'Dollar', 'SGD', '$', 'SG', 'SGP', 702, 'SG.png', 0),
+  (193, 189, 'Koruna', 'SKK', 'Sk', 'SK', 'SVK', 703, 'SK.png', 0),
+  (194, 190, 'Euro', 'EUR', '€', 'SI', 'SVN', 705, 'SI.png', 0),
+  (195, 191, 'Dollar', 'SBD', '$', 'SB', 'SLB', 90, 'SB.png', 0),
+  (196, 192, 'Shilling', 'SOS', 'S', 'SO', 'SOM', 706, 'SO.png', 0),
+  (197, 193, 'Rand', 'ZAR', 'R', 'ZA', 'ZAF', 710, 'ZA.png', 0),
+  (198, 113, 'Pound', 'GBP', '£', 'GS', 'SGS', 239, 'GS.png', 0),
+  (199, 194, 'Won', 'KRW', '₩', 'KR', 'KOR', 410, 'KR.png', 0),
+  (200, 195, 'Euro', 'EUR', '€', 'ES', 'ESP', 724, 'ES.png', 0),
+  (201, 196, 'Rupee', 'LKR', '₨', 'LK', 'LKA', 144, 'LK.png', 0),
+  (202, 199, 'Dinar', 'SDD', '', 'SD', 'SDN', 736, 'SD.png', 0),
+  (203, 200, 'Dollar', 'SRD', '$', 'SR', 'SUR', 740, 'SR.png', 0),
+  (204, 0, 'Krone', 'NOK', 'kr', 'SJ', 'SJM', 744, 'SJ.png', 0),
+  (205, 202, 'Lilangeni', 'SZL', '', 'SZ', 'SWZ', 748, 'SZ.png', 0),
+  (206, 203, 'Krona', 'SEK', 'kr', 'SE', 'SWE', 752, 'SE.png', 0),
+  (207, 204, 'Franc', 'CHF', 'CHF', 'CH', 'CHE', 756, 'CH.png', 0),
+  (208, 205, 'Pound', 'SYP', '£', 'SY', 'SYR', 760, 'SY.png', 0),
+  (209, 206, 'Dollar', 'TWD', 'NT$', 'TW', 'TWN', 158, 'TW.png', 0),
+  (210, 207, 'Somoni', 'TJS', '', 'TJ', 'TJK', 762, 'TJ.png', 0),
+  (211, 208, 'Shilling', 'TZS', '', 'TZ', 'TZA', 834, 'TZ.png', 0),
+  (212, 209, 'Baht', 'THB', '฿', 'TH', 'THA', 764, 'TH.png', 0),
+  (213, 210, 'Franc', 'XOF', '', 'TG', 'TGO', 768, 'TG.png', 0),
+  (214, 211, 'Dollar', 'NZD', '$', 'TK', 'TKL', 772, 'TK.png', 0),
+  (215, 212, 'Pa\'anga', 'TOP', 'T$', 'TO', 'TON', 776, 'TO.png', 0),
+  (216, 213, 'Dollar', 'TTD', 'TT$', 'TT', 'TTO', 780, 'TT.png', 0),
+  (217, 214, 'Dinar', 'TND', '', 'TN', 'TUN', 788, 'TN.png', 0),
+  (218, 215, 'Lira', 'TRY', 'YTL', 'TR', 'TUR', 792, 'TR.png', 0),
+  (219, 216, 'Manat', 'TMM', 'm', 'TM', 'TKM', 795, 'TM.png', 0),
+  (220, 217, 'Dollar', 'USD', '$', 'TC', 'TCA', 796, 'TC.png', 0),
+  (221, 218, 'Dollar', 'AUD', '$', 'TV', 'TUV', 798, 'TV.png', 0),
+  (222, 232, 'Dollar', 'USD', '$', 'VI', 'VIR', 850, 'VI.png', 0),
+  (223, 219, 'Shilling', 'UGX', '', 'UG', 'UGA', 800, 'UG.png', 0),
+  (224, 220, 'Hryvnia', 'UAH', '₴', 'UA', 'UKR', 804, 'UA.png', 0),
+  (225, 221, 'Dirham', 'AED', '', 'AE', 'ARE', 784, 'AE.png', 0),
+  (226, 222, 'Pound', 'GBP', '£', 'GB', 'GBR', 826, 'GB.png', 1),
+  (227, 223, 'Dollar', 'USD', '$', 'US', 'USA', 840, 'US.png', 0),
+  (228, 224, 'Dollar ', 'USD', '$', 'UM', 'UMI', 581, 'UM.png', 0),
+  (229, 225, 'Peso', 'UYU', '$U', 'UY', 'URY', 858, 'UY.png', 0),
+  (230, 226, 'Som', 'UZS', 'лв', 'UZ', 'UZB', 860, 'UZ.png', 0),
+  (231, 227, 'Vatu', 'VUV', 'Vt', 'VU', 'VUT', 548, 'VU.png', 0),
+  (232, 228, 'Euro', 'EUR', '€', 'VA', 'VAT', 336, 'VA.png', 0),
+  (233, 229, 'Bolivar', 'VEF', 'Bs', 'VE', 'VEN', 862, 'VE.png', 0),
+  (234, 230, 'Dong', 'VND', '₫', 'VN', 'VNM', 704, 'VN.png', 0),
+  (235, 233, 'Franc', 'XPF', '', 'WF', 'WLF', 876, 'WF.png', 0),
+  (236, 234, 'Dirham', 'MAD', '', 'EH', 'ESH', 732, 'EH.png', 0),
+  (237, 235, 'Rial', 'YER', '﷼', 'YE', 'YEM', 887, 'YE.png', 0),
+  (238, 238, 'Kwacha', 'ZMK', 'ZK', 'ZM', 'ZMB', 894, 'ZM.png', 0),
+  (239, 239, 'Dollar', 'ZWD', 'Z$', 'ZW', 'ZWE', 716, 'ZW.png', 0);
 
 
 #
 # TABLE STRUCTURE FOR: ti_customer_groups
 #
 
-INSERT INTO `ti_customer_groups` (`customer_group_id`, `group_name`, `description`, `approval`) VALUES
+REPLACE INTO `ti_customer_groups` (`customer_group_id`, `group_name`, `description`, `approval`) VALUES
 (11, 'Default', '', 0);
 
 
@@ -501,7 +503,7 @@ INSERT INTO `ti_customer_groups` (`customer_group_id`, `group_name`, `descriptio
 # TABLE STRUCTURE FOR: ti_extensions
 #
 
-INSERT INTO `ti_extensions` (`extension_id`, `type`, `name`, `data`, `serialized`, `status`, `title`)
+REPLACE INTO `ti_extensions` (`extension_id`, `type`, `name`, `data`, `serialized`, `status`, `title`)
 VALUES
 	(11, 'module', 'account_module', 'a:1:{s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"11\";s:8:\"position\";s:4:\"left\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}}', 1, 1, 'Account'),
 	(12, 'module', 'local_module', 'a:1:{s:7:\"layouts\";N;}', 1, 1, 'Local'),
@@ -521,7 +523,7 @@ VALUES
 # TABLE STRUCTURE FOR: ti_languages
 #
 
-INSERT INTO `ti_languages` (`language_id`, `code`, `name`, `image`, `idiom`, `can_delete`, `status`)
+REPLACE INTO `ti_languages` (`language_id`, `code`, `name`, `image`, `idiom`, `can_delete`, `status`)
 VALUES
   (11, 'en', 'English', 'data/flags/gb.png', 'english', 1, 1);
 
@@ -530,7 +532,7 @@ VALUES
 # TABLE STRUCTURE FOR: ti_layout_modules
 #
 
-INSERT INTO `ti_layout_modules` (`layout_module_id`, `layout_id`, `module_code`, `position`, `priority`, `status`) VALUES
+REPLACE INTO `ti_layout_modules` (`layout_module_id`, `layout_id`, `module_code`, `partial`, `priority`, `status`) VALUES
 	(60, 17, 'pages_module', 'right', 1, 1),
 	(65, 11, 'slideshow', 'top', 1, 1),
 	(66, 11, 'local_module', 'top', 2, 1),
@@ -550,7 +552,7 @@ INSERT INTO `ti_layout_modules` (`layout_module_id`, `layout_id`, `module_code`,
 # TABLE STRUCTURE FOR: ti_layout_routes
 #
 
-INSERT INTO `ti_layout_routes` (`layout_route_id`, `layout_id`, `uri_route`) VALUES
+REPLACE INTO `ti_layout_routes` (`layout_route_id`, `layout_id`, `uri_route`) VALUES
 	(19, 13, 'checkout'),
 	(41, 16, 'reservation'),
 	(44, 12, 'menus'),
@@ -571,7 +573,7 @@ INSERT INTO `ti_layout_routes` (`layout_route_id`, `layout_id`, `uri_route`) VAL
 # TABLE STRUCTURE FOR: ti_layouts
 #
 
-INSERT INTO `ti_layouts` (`layout_id`, `name`) VALUES
+REPLACE INTO `ti_layouts` (`layout_id`, `name`) VALUES
 	(11, 'Home'),
 	(12, 'Menus'),
 	(13, 'Checkout'),
@@ -586,14 +588,14 @@ INSERT INTO `ti_layouts` (`layout_id`, `name`) VALUES
 # TABLE STRUCTURE FOR: ti_mail_templates
 #
 
-INSERT INTO `ti_mail_templates` (`template_id`, `name`, `language_id`, `date_added`, `date_updated`, `status`) VALUES ('11', 'Default', '1', '2014-04-16 01:49:52', '2014-06-16 14:44:13', '1');
+REPLACE INTO `ti_mail_templates` (`template_id`, `name`, `language_id`, `date_added`, `date_updated`, `status`) VALUES ('11', 'Default', '1', '2014-04-16 01:49:52', '2014-06-16 14:44:13', '1');
 
 
 #
 # TABLE STRUCTURE FOR: ti_mail_templates_data
 #
 
-INSERT INTO `ti_mail_templates_data` (`template_data_id`, `template_id`, `code`, `subject`, `body`, `date_added`, `date_updated`) VALUES
+REPLACE INTO `ti_mail_templates_data` (`template_data_id`, `template_id`, `code`, `subject`, `body`, `date_added`, `date_updated`) VALUES
 (11, 11, 'registration', 'Account Created at {site_name}', '<p>Hello {first_name} {last_name},</p><p>Your account has now been created and you can log in using your email address and password by visiting our website or at the following URL: <a href="{login_link}">Click Here</a></p><p>Thank you for using.<br /> {signature}</p>', '2014-04-16 00:56:00', '2014-05-15 15:24:56'),
 (12, 11, 'password_reset', 'Password Reset at {site_name}', '<p>Dear {first_name} {last_name},</p><p>Your password has been reset successfull! Please <a href="{login_link}" target="_blank">login</a> using your new password: {created_password}.</p><p>Thank you for using.<br /> {signature}</p>', '2014-04-16 00:56:00', '2014-05-15 15:46:30'),
 (13, 11, 'order', 'Order Successful - {order_number}', '<div><div class="text-align"><p>Hello {first_name} {last_name},</p><p>Your order has been received and will be with you shortly.<br /><a href="{order_link}">Click here</a> to view your order progress.<br /> Thanks for shopping with us online! &nbsp;</p><h3>Order Details</h3><p>Your order number is {order_number}<br /> This is a {order_type} order.<br /><strong>Order Date:</strong> {order_date}<br /><strong>Delivery Time</strong> {order_time}</p><h3>What you''ve ordered:</h3></div></div><table border="1" cellspacing="1" cellpadding="1"><tbody><tr><td><div><div class="text-align">{menus}</div></div></td><td><div><div class="text-align">&nbsp;</div></div></td><td><div><div class="text-align">&nbsp;</div></div></td><td><div><div class="text-align">&nbsp;</div></div></td></tr><tr><td><div><div class="text-align">{quantity}x</div></div></td><td><div><div class="text-align"><p>{name}</p><p>{options}</p></div></div></td><td><div><div class="text-align">{price}</div></div></td><td><div><div class="text-align">{subtotal}</div></div></td></tr><tr><td><div><div class="text-align">{/menus}</div></div></td><td><div><div class="text-align">&nbsp;</div></div></td><td><div><div class="text-align">&nbsp;</div></div></td><td><div><div class="text-align">&nbsp;</div></div></td></tr></tbody></table><div><div class="text-align"><p>&nbsp;</p><p>{order_totals}<br /><strong>{title}:</strong> {value}<br /> {/order_totals}</p><p>Your delivery address {order_address}</p><p>Your local restaurant {location_name}</p><p>We hope to see you again soon.</p><p>{signature}</p></div></div>', '2014-04-16 00:56:00', '2014-07-20 14:29:55'),
@@ -608,7 +610,7 @@ INSERT INTO `ti_mail_templates_data` (`template_data_id`, `template_id`, `code`,
 # TABLE STRUCTURE FOR: ti_pages
 #
 
-INSERT INTO `ti_pages` (`page_id`, `language_id`, `name`, `title`, `heading`, `content`, `meta_description`, `meta_keywords`, `layout_id`, `navigation`, `date_added`, `date_updated`, `status`)
+REPLACE INTO `ti_pages` (`page_id`, `language_id`, `name`, `title`, `heading`, `content`, `meta_description`, `meta_keywords`, `layout_id`, `navigation`, `date_added`, `date_updated`, `status`)
 VALUES
 	(11, 11, 'About Us', 'About Us', 'About Us', '<h3 style=\"text-align: center;\"><span style=\"color: #993300;\">Aim</span></h3>\r\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In venenatis massa ac magna sagittis, sit amet gravida metus gravida. Aenean dictum pellentesque erat, vitae adipiscing libero semper sit amet. Vestibulum nec nunc lorem. Duis vitae libero a libero hendrerit tincidunt in eu tellus. Aliquam consequat ultrices felis ut dictum. Nulla euismod felis a sem mattis ornare. Aliquam ut diam sit amet dolor iaculis molestie ac id nisl. Maecenas hendrerit convallis mi feugiat gravida. Quisque tincidunt, leo a posuere imperdiet, metus leo vestibulum orci, vel volutpat justo ligula id quam. Cras placerat tincidunt lorem eu interdum.</p>\r\n<h3 style=\"text-align: center;\"><span style=\"color: #993300;\">Mission</span></h3>\r\n<p>Ut eu pretium urna. In sed consectetur neque. In ornare odio erat, id ornare arcu euismod a. Ut dapibus sit amet erat commodo vestibulum. Praesent vitae lacus faucibus, rhoncus tortor et, bibendum justo. Etiam pharetra congue orci, eget aliquam orci. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eleifend justo eros, sit amet fermentum tellus ullamcorper quis. Cras cursus mi at imperdiet faucibus. Proin iaculis, felis vitae luctus venenatis, ante tortor porta nisi, et ornare magna metus sit amet enim. Phasellus et turpis nec metus aliquet adipiscing. Etiam at augue nec odio lacinia tincidunt. Suspendisse commodo commodo ipsum ac sollicitudin. Nunc nec consequat lacus. Donec gravida rhoncus justo sed elementum.</p>\r\n<h3 style=\"text-align: center;\"><span style=\"color: #a52a2a;\">Vision</span></h3>\r\n<p>Praesent erat massa, consequat a nulla et, eleifend facilisis risus. Nullam libero mi, bibendum id eleifend vitae, imperdiet a nulla. Fusce congue porta ultricies. Vivamus felis lectus, egestas at pretium vitae, posuere a nibh. Mauris lobortis urna nec rhoncus consectetur. Fusce sed placerat sem. Nulla venenatis elit risus, non auctor arcu lobortis eleifend. Ut aliquet vitae velit a faucibus. Suspendisse quis risus sit amet arcu varius malesuada. Vestibulum vitae massa consequat, euismod lorem a, euismod lacus. Duis sagittis dolor risus, ac vehicula mauris lacinia quis. Nulla facilisi. Duis tristique ipsum nec egestas auctor. Nullam in felis vel ligula dictum tincidunt nec a neque. Praesent in egestas elit.</p>', '', '', 17, 'a:2:{i:0;s:8:\"side_bar\";i:1;s:6:\"footer\";}', '2014-04-19 16:57:21', '2015-05-07 12:39:52', 1),
 	(12, 11, 'Policy', 'Policy', 'Policy', '<div id=\"lipsum\">\r\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ligula eros, semper a lorem et, venenatis volutpat dolor. Pellentesque hendrerit lectus feugiat nulla cursus, quis dapibus dolor porttitor. Donec velit enim, adipiscing ac orci id, congue tincidunt arcu. Proin egestas nulla eget leo scelerisque, et semper diam ornare. Suspendisse potenti. Suspendisse vitae bibendum enim. Duis eu ligula hendrerit, lacinia felis in, mollis nisi. Sed gravida arcu in laoreet dictum. Nulla faucibus lectus a mollis dapibus. Fusce vehicula convallis urna, et congue nulla ultricies in. Nulla magna velit, bibendum eu odio et, euismod rhoncus sem. Nullam quis magna fermentum, ultricies neque nec, blandit neque. Etiam nec congue arcu. Curabitur sed tellus quam. Cras adipiscing odio odio, et porttitor dui suscipit eget. Aliquam non est commodo, elementum turpis at, pellentesque lorem.</p>\r\n<p>Duis nec diam diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vulputate est et lorem sagittis, et mollis libero ultricies. Nunc ultrices tortor vel convallis varius. In dolor dolor, scelerisque ac faucibus ut, aliquet ac sem. Praesent consectetur lacus quis tristique posuere. Nulla sed ultricies odio. Cras tristique vulputate facilisis.</p>\r\n<p>Mauris at metus in magna condimentum gravida eu tincidunt urna. Praesent sodales vel mi eu condimentum. Suspendisse in luctus purus. Vestibulum dignissim, metus non luctus accumsan, odio ligula pharetra massa, in eleifend turpis risus in diam. Sed non lorem nibh. Nam at feugiat urna. Curabitur interdum, diam sit amet pulvinar blandit, mauris ante scelerisque nisi, sit amet placerat mi nunc eget orci. Nulla eget quam sit amet risus rhoncus lacinia a ut eros. Praesent non libero nisi. Mauris tincidunt at purus sit amet adipiscing. Donec interdum, velit nec dignissim vehicula, libero ipsum imperdiet ligula, lacinia mattis augue dui ac lacus. Aenean molestie sed nunc at pulvinar. Fusce ornare lacus non venenatis rhoncus.</p>\r\n<p>Aenean at enim luctus ante commodo consequat nec ut mi. Sed porta adipiscing tempus. Aliquam sit amet ullamcorper ipsum, id adipiscing quam. Fusce iaculis odio ut nisi convallis hendrerit. Morbi auctor adipiscing ligula, sit amet aliquet ante consectetur at. Donec vulputate neque eleifend libero pellentesque, vitae lacinia enim ornare. Vestibulum fermentum erat blandit, ultricies felis ac, facilisis augue. Nulla facilisis mi porttitor, interdum diam in, lobortis ipsum. In molestie quam nisl, lacinia convallis tellus fermentum ac. Nulla quis velit augue. Fusce accumsan, lacus et lobortis blandit, neque magna gravida enim, dignissim ultricies tortor dui in dolor. Vestibulum vel convallis justo, quis venenatis elit. Aliquam erat volutpat. Nunc quis iaculis ligula. Suspendisse dictum sodales neque vitae faucibus. Fusce id tellus pretium, varius nunc et, placerat metus.</p>\r\n<p>Pellentesque quis facilisis mauris. Phasellus porta, metus a dignissim viverra, est elit luctus erat, nec ultricies ligula lorem eget sapien. Pellentesque ac justo velit. Maecenas semper accumsan nulla eget rhoncus. Aliquam vel urna sed nibh dignissim auctor. Integer volutpat lacus ac purus convallis, at lobortis nisi tincidunt. Vestibulum condimentum elit ac sapien placerat, at ornare libero hendrerit. Cras tincidunt nunc sit amet ante bibendum tempor. Fusce quam orci, suscipit sed eros quis, vulputate molestie metus. Nam hendrerit vitae felis et porttitor. Proin et commodo velit, id porta erat. Donec eu consectetur odio. Fusce porta odio risus. Aliquam vel erat feugiat, vestibulum elit eget, ornare sapien. Sed sed nulla justo. Sed a dolor eu justo lacinia blandit</p>\r\n</div>', '', '', 17, 'a:2:{i:0;s:8:\"side_bar\";i:1;s:6:\"footer\";}', '2014-04-19 17:21:23', '2015-05-16 09:18:39', 1);
@@ -618,14 +620,14 @@ VALUES
 # TABLE STRUCTURE FOR: ti_permalinks
 #
 
-INSERT INTO `ti_permalinks` (`permalink_id`, `slug`, `controller`, `query`) VALUES
+REPLACE INTO `ti_permalinks` (`permalink_id`, `slug`, `controller`, `query`) VALUES
 (11, 'about-us', 'pages', 'page_id=11');
 
 #
 # TABLE STRUCTURE FOR: ti_permissions
 #
 
-INSERT INTO `ti_permissions` (`permission_id`, `name`, `description`, `action`, `status`)
+REPLACE INTO `ti_permissions` (`permission_id`, `name`, `description`, `action`, `status`)
 VALUES
   (11, 'Admin.Banners', 'Ability to access, manage, add and delete banners', 'a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}', 1),
   (12, 'Admin.Categories', 'Ability to access, manage, add and delete categories', 'a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}', 1),
@@ -675,19 +677,21 @@ VALUES
 # TABLE STRUCTURE FOR: ti_security_questions
 #
 
-INSERT INTO `ti_security_questions` (`question_id`, `text`, `priority`) VALUES ('11', 'Whats your pets name?', '1');
-INSERT INTO `ti_security_questions` (`question_id`, `text`, `priority`) VALUES ('12', 'What high school did you attend?', '2');
-INSERT INTO `ti_security_questions` (`question_id`, `text`, `priority`) VALUES ('13', 'What is your father\'s middle name?', '7');
-INSERT INTO `ti_security_questions` (`question_id`, `text`, `priority`) VALUES ('14', 'What is your mother\'s name?', '3');
-INSERT INTO `ti_security_questions` (`question_id`, `text`, `priority`) VALUES ('15', 'What is your place of birth?', '4');
-INSERT INTO `ti_security_questions` (`question_id`, `text`, `priority`) VALUES ('16', 'Whats your favourite teacher\'s name?', '5');
+REPLACE INTO `ti_security_questions` (`question_id`, `text`, `priority`)
+VALUES
+  (11, 'Whats your pets name?', 1),
+  (12, 'What high school did you attend?', 2),
+  (13, 'What is your father\'s middle name?', 7),
+  (14, 'What is your mother\'s name?', 3),
+  (15, 'What is your place of birth?', 4),
+  (16, 'Whats your favourite teacher\'s name?', 5);
 
 
 #
 # TABLE STRUCTURE FOR: ti_settings
 #
 
-INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES
+REPLACE INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES
 (7870, 'prefs', 'mail_template_id', '11', 0),
 (8500, 'ratings', 'ratings', 'a:1:{s:7:"ratings";a:5:{i:1;s:3:"Bad";i:2;s:5:"Worse";i:3;s:4:"Good";i:4;s:7:"Average";i:5;s:9:"Excellent";}}', 1),
 (9225, 'config', 'site_desc', '', 0),
@@ -757,7 +761,7 @@ INSERT INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) 
 # TABLE STRUCTURE FOR: ti_staff_groups
 #
 
-INSERT INTO `ti_staff_groups` (`staff_group_id`, `staff_group_name`, `location_access`, `permissions`) VALUES
+REPLACE INTO `ti_staff_groups` (`staff_group_id`, `staff_group_name`, `location_access`, `permissions`) VALUES
   (11, 'Administrator', 0, 'a:44:{i:11;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:12;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:13;a:3:{i:0;s:6:\"manage\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}i:14;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:15;a:3:{i:0;s:6:\"manage\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}i:16;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:17;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:18;a:1:{i:0;s:6:\"access\";}i:19;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:20;a:2:{i:0;s:6:\"access\";i:1;s:6:\"delete\";}i:21;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:22;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:25;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:26;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:27;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:28;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:29;a:2:{i:0;s:3:\"add\";i:1;s:6:\"delete\";}i:30;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:32;a:3:{i:0;s:6:\"access\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}i:33;a:3:{i:0;s:6:\"manage\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}i:34;a:2:{i:0;s:3:\"add\";i:1;s:6:\"delete\";}i:35;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:36;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:37;a:2:{i:0;s:3:\"add\";i:1;s:6:\"delete\";}i:39;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:40;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:41;a:2:{i:0;s:6:\"access\";i:1;s:6:\"manage\";}i:42;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:43;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:23;a:3:{i:0;s:6:\"manage\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}i:24;a:3:{i:0;s:6:\"manage\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}i:31;a:3:{i:0;s:6:\"manage\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}i:38;a:1:{i:0;s:6:\"manage\";}i:44;a:2:{i:0;s:6:\"access\";i:1;s:6:\"manage\";}i:45;a:1:{i:0;s:6:\"manage\";}i:46;a:1:{i:0;s:6:\"manage\";}i:47;a:1:{i:0;s:6:\"manage\";}i:48;a:1:{i:0;s:6:\"manage\";}i:49;a:1:{i:0;s:6:\"manage\";}i:50;a:1:{i:0;s:6:\"manage\";}i:51;a:1:{i:0;s:6:\"manage\";}i:52;a:1:{i:0;s:6:\"manage\";}i:53;a:1:{i:0;s:6:\"manage\";}i:54;a:1:{i:0;s:6:\"manage\";}}');
 
 
@@ -765,7 +769,7 @@ INSERT INTO `ti_staff_groups` (`staff_group_id`, `staff_group_name`, `location_a
 # TABLE STRUCTURE FOR: ti_statuses
 #
 
-INSERT INTO `ti_statuses` (`status_id`, `status_name`, `status_comment`, `notify_customer`, `status_for`, `status_color`)
+REPLACE INTO `ti_statuses` (`status_id`, `status_name`, `status_comment`, `notify_customer`, `status_for`, `status_color`)
 VALUES
 	(11, 'Received', 'Your order has been received.', 1, 'order', '#686663'),
 	(12, 'Pending', 'Your order is pending', 1, 'order', '#f0ad4e'),
@@ -782,7 +786,7 @@ VALUES
 # TABLE STRUCTURE FOR: ti_uri_routes
 #
 
-INSERT INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`)
+REPLACE INTO `ti_uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`)
 VALUES
 	(1, 'locations', 'local/locations', 1),
 	(2, 'account', 'account/account', 2),

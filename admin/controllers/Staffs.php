@@ -272,7 +272,7 @@ class Staffs extends Admin_Controller {
             if ($staff_id = $this->Staffs_model->saveStaff($this->input->get('id'), $this->input->post())) {
                 $action = ($this->input->get('id') === $this->user->getStaffId()) ? $save_type.' their' : $save_type;
                 $message_lang = ($this->input->get('id') === $this->user->getStaffId()) ? 'activity_custom_no_link' : 'activity_custom';
-                $item = ($this->input->get('id') === $this->user->getStaffId()) ? 'details' : ucwords($username);
+                $item = ($this->input->get('id') === $this->user->getStaffId()) ? 'details' : $this->input->post('staff_name');
 
                 log_activity($this->user->getStaffId(), $action, 'staffs', get_activity_message($message_lang,
                     array('{staff}', '{action}', '{context}', '{link}', '{item}'),

@@ -68,7 +68,7 @@
                 <div class="col-md-4 col-sm-6">
                     <div class="menu-special">
                         <div class="menu-thumb">
-                            <img src="http://tastyigniter.remote/assets/images/data/seafoods_salad.JPG" alt="" />
+                            <img src="<?php echo image_url('data/no_photo.png'); ?>" alt="" />
                         </div>
                         <div class="menu-content">
                             <div class="content-show">
@@ -84,7 +84,7 @@
                 <div class="col-md-4 col-sm-6">
                     <div class="menu-special">
                         <div class="menu-thumb">
-                            <img src="http://tastyigniter.remote/assets/images/data/seafoods_salad.JPG" alt="" />
+                            <img src="<?php echo image_url('data/no_photo.png'); ?>" alt="" />
                         </div>
                         <div class="menu-content">
                             <div class="content-show">
@@ -100,7 +100,7 @@
                 <div class="col-md-4 col-sm-6">
                     <div class="menu-special">
                         <div class="menu-thumb">
-                            <img src="http://tastyigniter.remote/assets/images/data/seafoods_salad.JPG" alt="" />
+                            <img src="<?php echo image_url('data/no_photo.png'); ?>" alt="" />
                         </div>
                         <div class="menu-content">
                             <div class="content-show">

@@ -1,3 +1,22 @@
+### v1.4.2-beta
+*
+
+
+### v1.4.1-beta
+
+* Added support for acceptance testing
+* Fixed php version backward-compatibility issues of empty()
+* Changed google maps api call from http to https for location search
+* Fixed adding comment to menu item added to cart
+* Fixed issue with escaping htmlspecialchars when saving lanugaue line to database
+* Fixed issue with saving state in customer and location addresses
+* Added order restriction option to coupons. Coupon is restricted by order types
+* Improved template library, and loading theme config file
+* Improved extension update, install, uninstall, and loading extension config file.
+* Added newsletter module to collect emails for marketing purposes
+
+### v1.3-beta
+
 ADDED:
 Session library now using 'CI' files session
 root_url, page_url, admin_url, extension_url method to return site root url
@@ -147,11 +166,7 @@ Themes: move some themes_model functions to template_helper
 
 
 TO-DO:
-Improve uninstall, install and upload extension module functionality to seamless
 Improve extension upload functionality to list "files to modify"
-
-Activities:
-   add updated order status, assigned order, updated reservation status, assigned reservation
 
 Customer Online IP blacklist
 bring back the cart page

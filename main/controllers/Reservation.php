@@ -74,7 +74,7 @@ class Reservation extends Main_Controller {
 			$data['comment'] = '';
 		}
 
-        $data['captcha_image'] = $this->createCaptcha();
+        $data['captcha'] = $this->createCaptcha();
 
 		$this->template->render('reservation', $data);
 	}
@@ -183,7 +183,7 @@ class Reservation extends Main_Controller {
 
         $captcha = create_captcha();
         $this->session->set_tempdata('captcha', array('word' => $captcha['word'], 'image' => $captcha['time'].'.jpg')); //set data to session for compare
-        return $captcha['image'];
+        return $captcha;
     }
 }
 

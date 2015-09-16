@@ -39,8 +39,7 @@ class Themes extends Admin_Controller {
 				'description'	=> $theme['description'],
                 'location' 		=> ($theme['location'] === 'main') ? $this->lang->line('text_main') : $this->lang->line('text_admin'),
 				'active'		=> $active,
-				'thumbnail'		=> $theme['thumbnail'],
-				'preview'		=> $theme['preview'],
+				'screenshot'    => $theme['screenshot'],
 				'activate'		=> site_url('themes?action=activate&name='. $theme['name'] .'&location='. $theme['location']),
 				'edit' 			=> site_url('themes/edit?name='. $theme['name'] .'&location='. $theme['location'])
 			);

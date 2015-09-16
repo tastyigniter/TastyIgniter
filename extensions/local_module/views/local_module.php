@@ -84,14 +84,21 @@
                                 <?php } else { ?>
                                     <dt class="text-muted"><?php echo lang('text_is_temp_closed'); ?></dt>
                                 <?php } ?>
-                                <dd><?php echo sprintf(lang('text_delivery_time_info'), $delivery_time); ?></dd>
-                                <dd><?php echo sprintf(lang('text_collection_time_info'), $collection_time); ?></dd>
+                                <?php if ($has_delivery) { ?>
+                                    <dd><?php echo sprintf(lang('text_delivery_time_info'), $delivery_time); ?></dd>
+                                <?php } ?>
+
+                                <?php if ($has_collection) { ?>
+                                    <dd><?php echo sprintf(lang('text_collection_time_info'), $collection_time); ?></dd>
+                                <?php } ?>
                             </dl>
                         </div>
                         <div class="box-three col-sm-3 col-md-3">
                             <dl>
                                 <dd><b><?php echo lang('text_offer'); ?>:</b> <?php echo $text_service_offered; ?></dd>
-                                <dd><?php echo $text_delivery_charge; ?></dd>
+                                <?php if ($has_delivery) { ?>
+                                    <dd><?php echo $text_delivery_charge; ?></dd>
+                                <?php } ?>
                                 <dd><b><?php echo lang('text_min_total'); ?>:</b> <?php echo $min_total; ?></dd>
                             </dl>
                        </div>

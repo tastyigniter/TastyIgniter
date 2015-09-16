@@ -22,7 +22,7 @@ class Image_tool_model extends TI_Model {
 		}
 
 		if ( ! file_exists(IMAGEPATH . $root_folder . $img_path) OR ! is_file(IMAGEPATH . $root_folder . $img_path) OR strpos($img_path, '/') === 0) {
-			return;
+			$img_path = 'no_photo.png';
 		}
 
 		if (is_dir(IMAGEPATH . $root_folder . $img_path) AND ! is_dir($thumbs_path .'/'. $img_path)) {
@@ -31,7 +31,6 @@ class Image_tool_model extends TI_Model {
 
 		$info = pathinfo($img_path);
 		$extension = $info['extension'];
-		$img_name = $info['basename'];
 
 		$old_path = IMAGEPATH . $root_folder . $img_path;
 		list ($img_width, $img_height, $img_type, $attr) = getimagesize($old_path);

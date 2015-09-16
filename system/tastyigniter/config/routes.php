@@ -4,6 +4,7 @@ if (APPDIR === ADMINDIR) {
     $route['default_controller'] = 'login';
 } else if (APPDIR === 'setup') {
     $route['default_controller'] = 'setup';
+    $route['([^/]+)'] = 'setup/$1';
 } else {
     $default_controller = 'home';
     $controller_exceptions = array('home', 'menus', 'reservation', 'contact', 'local', 'checkout', 'pages');
@@ -17,6 +18,8 @@ if (APPDIR === ADMINDIR) {
     $route['logout'] = 'account/logout';
     $route['register'] = 'account/register';
     $route['forgot-password'] = 'account/reset';
+    $route['checkout/success'] = 'checkout/success';
+    $route['reservation/success'] = 'reservation/success';
     $route["^(" . implode('|', $controller_exceptions) . ")?$"] = '$1';
     $route["^(" . implode('|', $controller_exceptions) . ")?/([^/]+)$"] = '$1';
     $route["^(" . implode('|', $controller_exceptions) . ")?/([^/]+)$"] = '$1/$2';

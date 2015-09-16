@@ -640,7 +640,10 @@ font-size: 20px;
 }
 .side-bar #category-box .list-group-item {
 border-color: #eee;
-padding: 6px;
+padding: 6px 0;
+}
+.side-bar #category-box .list-group-item .list-group-item {
+  padding-left: 10px;
 }
 .side-bar a.list-group-item.active,
 .side-bar .list-group-item.active > a {
@@ -661,7 +664,9 @@ color: #484848;
 .side-bar .list-group .list-group-item .list-group {
 margin-top: 9px;
 border-top: 1px solid #EEE;
+margin-bottom: 0;
 }
+
 /*** End Side Bar ***/
 
 

@@ -1,44 +1,44 @@
 <form role="form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>" >
 	<div class="form-group">
-		<label for="input-db-name" class="col-sm-4 control-label">Database Name:</label>
+		<label for="input-db-name" class="col-sm-4 control-label"><?php echo lang('label_database'); ?></label>
 		<div class="col-sm-8">
-			<input type="text" name="db_name" id="input-db-name" class="form-control" value="<?php echo $db_name; ?>" />
-			<span class="help-block">Enter the name of the database you want to use.</span>
-			<?php echo form_error('db_name', '<span class="text-danger">', '</span>'); ?>
+			<input type="text" name="database" id="input-db-name" class="form-control" value="<?php echo $database; ?>" />
+			<span class="help-block"><?php echo lang('help_database'); ?></span>
+			<?php echo form_error('database', '<span class="text-danger">', '</span>'); ?>
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="input-db-host" class="col-sm-4 control-label">Hostname:</label>
+		<label for="input-db-host" class="col-sm-4 control-label"><?php echo lang('label_hostname'); ?></label>
 		<div class="col-sm-8">
-			<input type="text" name="db_host" id="input-db-host" class="form-control" value="<?php echo $db_host; ?>" />
-			<span class="help-block">Enter the database host name.</span>
-			<?php echo form_error('db_host', '<span class="text-danger">', '</span>'); ?>
+			<input type="text" name="hostname" id="input-db-host" class="form-control" value="<?php echo $hostname; ?>" />
+			<span class="help-block"><?php echo lang('help_hostname'); ?></span>
+			<?php echo form_error('hostname', '<span class="text-danger">', '</span>'); ?>
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="input-db-user" class="col-sm-4 control-label">Username:</label>
+		<label for="input-db-user" class="col-sm-4 control-label"><?php echo lang('label_username'); ?></label>
 		<div class="col-sm-8">
-			<input type="text" name="db_user" id="input-db-user" class="form-control" value="<?php echo $db_user; ?>" />
-			<span class="help-block">Enter the database username.</span>
-			<?php echo form_error('db_user', '<span class="text-danger">', '</span>'); ?>
+			<input type="text" name="username" id="input-db-user" class="form-control" value="<?php echo $username; ?>" />
+			<span class="help-block"><?php echo lang('help_username'); ?></span>
+			<?php echo form_error('username', '<span class="text-danger">', '</span>'); ?>
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="input-db-pass" class="col-sm-4 control-label">Password:</label>
+		<label for="input-db-pass" class="col-sm-4 control-label"><?php echo lang('label_password'); ?></label>
 		<div class="col-sm-8">
-			<input type="password" name="db_pass" id="input-db-pass" class="form-control" value="<?php echo $db_pass; ?>" />
-			<span class="help-block">Enter the database password. Make sure to use a strong password.</span>
-			<?php echo form_error('db_pass', '<span class="text-danger">', '</span>'); ?>
+			<input type="password" name="password" id="input-db-pass" class="form-control" value="<?php echo $password; ?>" />
+			<span class="help-block"><?php echo lang('help_password'); ?></span>
+			<?php echo form_error('password', '<span class="text-danger">', '</span>'); ?>
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="input-db-prefix" class="col-sm-4 control-label">Prefix:</label>
+		<label for="input-db-prefix" class="col-sm-4 control-label"><?php echo lang('label_prefix'); ?></label>
 		<div class="col-sm-8">
-			<input type="text" name="db_prefix" id="input-db-prefix" class="form-control" value="<?php echo $db_prefix; ?>" />
-			<?php echo form_error('db_prefix', '<span class="text-danger">', '</span>'); ?>
+			<input type="text" name="dbprefix" id="input-db-prefix" class="form-control" value="<?php echo $dbprefix; ?>" />
+			<?php echo form_error('dbprefix', '<span class="text-danger">', '</span>'); ?>
 		</div>
 	</div>
 
-	<a class="btn btn-danger" href="<?php echo $back_url; ?>">Back</a>
-	<button type="submit" class="btn btn-success pull-right">Continue</button>
+	<a class="btn btn-danger" href="<?php echo $back_url; ?>"><?php echo lang('button_back'); ?></a>
+	<button type="submit" class="btn btn-success pull-right"><?php echo lang('button_continue'); ?></button>
 </form>

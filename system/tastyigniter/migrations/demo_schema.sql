@@ -2,7 +2,7 @@
 # TABLE STRUCTURE FOR: ti_categories
 #
 
-INSERT INTO `ti_categories` (`category_id`, `name`, `description`, `parent_id`, `image`)
+REPLACE INTO `ti_categories` (`category_id`, `name`, `description`, `parent_id`, `image`)
 VALUES
 	(15, 'Appetizer', '', 0, 'data/no_photo.png'),
 	(16, 'Main Course', '', 0, ''),
@@ -21,7 +21,7 @@ VALUES
 # TABLE STRUCTURE FOR: ti_coupons
 #
 
-INSERT INTO `ti_coupons` (`coupon_id`, `name`, `code`, `type`, `discount`, `min_total`, `redemptions`, `customer_redemptions`, `validity`, `fixed_date`, `fixed_from_time`, `fixed_to_time`, `period_start_date`, `period_end_date`, `recurring_every`, `recurring_from_time`, `recurring_to_time`, `description`, `status`, `date_added`) VALUES
+REPLACE INTO `ti_coupons` (`coupon_id`, `name`, `code`, `type`, `discount`, `min_total`, `redemptions`, `customer_redemptions`, `validity`, `fixed_date`, `fixed_from_time`, `fixed_to_time`, `period_start_date`, `period_end_date`, `recurring_every`, `recurring_from_time`, `recurring_to_time`, `description`, `status`, `date_added`) VALUES
 (11, 'Half Sundays', '2222', 'F', '100.00', '500.00', 0, 0, 'forever', NULL, NULL, NULL, NULL, NULL, '', NULL, NULL, '', 1, '0000-00-00'),
 (12, 'Half Tuesdays', '3333', 'P', '30.00', '1000.00', 0, 0, 'forever', NULL, NULL, NULL, NULL, NULL, '', NULL, NULL, '', 1, '0000-00-00'),
 (13, 'Full Mondays', 'MTo6TuTg', 'P', '50.00', '0.00', 0, 1, 'forever', NULL, '00:00:00', '23:59:00', NULL, NULL, '', '00:00:00', '23:59:00', '', 1, '0000-00-00'),
@@ -32,7 +32,7 @@ INSERT INTO `ti_coupons` (`coupon_id`, `name`, `code`, `type`, `discount`, `min_
 # TABLE STRUCTURE FOR: ti_location_tables
 #
 
-INSERT INTO `ti_location_tables` (`location_id`, `table_id`)
+REPLACE INTO `ti_location_tables` (`location_id`, `table_id`)
 VALUES
   (11, 7),
   (11, 16),
@@ -46,7 +46,7 @@ VALUES
 # TABLE STRUCTURE FOR: ti_locations
 #
 
-INSERT INTO `ti_locations` (`location_id`, `location_name`, `location_email`, `description`, `location_address_1`, `location_address_2`, `location_city`, `location_state`, `location_postcode`, `location_country_id`, `location_telephone`, `location_lat`, `location_lng`, `location_radius`, `offer_delivery`, `offer_collection`, `delivery_time`, `last_order_time`, `reservation_time_interval`, `reservation_stay_time`, `location_status`, `collection_time`, `options`, `location_image`)
+REPLACE INTO `ti_locations` (`location_id`, `location_name`, `location_email`, `description`, `location_address_1`, `location_address_2`, `location_city`, `location_state`, `location_postcode`, `location_country_id`, `location_telephone`, `location_lat`, `location_lng`, `location_radius`, `offer_delivery`, `offer_collection`, `delivery_time`, `last_order_time`, `reservation_time_interval`, `reservation_stay_time`, `location_status`, `collection_time`, `options`, `location_image`)
 VALUES
   (11, 'Lewisham', 'lewisham@tastyigniter.com', 'Mauris maximus tempor ligula vitae placerat. Proin at orci fermentum, aliquam turpis sit amet, ultrices risus. Donec pellentesque justo in pharetra rutrum. Cras ac dui eu orci lacinia consequat vitae quis sapien. Proin vehicula erat volutpat est tempor, eu feugiat diam malesuada. Mauris iaculis ac nisi at euismod. Nunc sit amet luctus ipsum. Pellentesque eget lobortis turpis. Vivamus mattis, massa ac vulputate vulputate, risus purus tincidunt nibh, vitae pellentesque ex nibh at mi. Donec placerat, urna quis interdum tempus, tellus nulla commodo leo, vitae auctor orci est congue eros. In vel ex quis orci blandit porttitor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus tincidunt risus non mattis semper.', '44 Darnley Road', '', 'Greater London', '', 'E9 6QH', 222, '1203392202', 51.544060, -0.053999, 0, 1, 1, 20, 0, 0, 0, 1, 10, 'a:3:{s:13:\"opening_hours\";a:4:{s:12:\"opening_type\";s:4:\"24_7\";s:10:\"daily_days\";a:7:{i:0;s:1:\"0\";i:1;s:1:\"1\";i:2;s:1:\"2\";i:3;s:1:\"3\";i:4;s:1:\"4\";i:5;s:1:\"5\";i:6;s:1:\"6\";}s:11:\"daily_hours\";a:2:{s:4:\"open\";s:8:\"12:00 AM\";s:5:\"close\";s:8:\"11:59 PM\";}s:14:\"flexible_hours\";a:7:{i:0;a:4:{s:3:\"day\";s:1:\"0\";s:4:\"open\";s:8:\"12:00 AM\";s:5:\"close\";s:8:\"11:59 PM\";s:6:\"status\";s:1:\"1\";}i:1;a:4:{s:3:\"day\";s:1:\"1\";s:4:\"open\";s:8:\"12:00 AM\";s:5:\"close\";s:8:\"11:59 PM\";s:6:\"status\";s:1:\"1\";}i:2;a:4:{s:3:\"day\";s:1:\"2\";s:4:\"open\";s:8:\"12:00 AM\";s:5:\"close\";s:8:\"11:59 PM\";s:6:\"status\";s:1:\"1\";}i:3;a:4:{s:3:\"day\";s:1:\"3\";s:4:\"open\";s:8:\"12:00 AM\";s:5:\"close\";s:8:\"11:59 PM\";s:6:\"status\";s:1:\"1\";}i:4;a:4:{s:3:\"day\";s:1:\"4\";s:4:\"open\";s:8:\"12:00 AM\";s:5:\"close\";s:8:\"11:59 PM\";s:6:\"status\";s:1:\"1\";}i:5;a:4:{s:3:\"day\";s:1:\"5\";s:4:\"open\";s:8:\"12:00 AM\";s:5:\"close\";s:8:\"11:59 PM\";s:6:\"status\";s:1:\"1\";}i:6;a:4:{s:3:\"day\";s:1:\"6\";s:4:\"open\";s:8:\"12:00 AM\";s:5:\"close\";s:8:\"11:59 PM\";s:6:\"status\";s:1:\"1\";}}}s:8:\"payments\";a:2:{i:0;s:3:\"cod\";i:1;s:14:\"paypal_express\";}s:14:\"delivery_areas\";a:4:{i:1;a:7:{s:5:\"shape\";s:34:\"[{\"shape\":\"_yryHzpHff@??d~@gf@?\"}]\";s:8:\"vertices\";s:219:\"[{\"lat\":51.547200000000004,\"lng\":-0.048940000000000004},{\"lat\":51.54092000000001,\"lng\":-0.048940000000000004},{\"lat\":51.54092000000001,\"lng\":-0.059050000000000005},{\"lat\":51.547200000000004,\"lng\":-0.059050000000000005}]\";s:6:\"circle\";s:71:\"[{\"center\":{\"lat\":51.54406,\"lng\":-0.05399899999997615}},{\"radius\":500}]\";s:4:\"type\";s:5:\"shape\";s:4:\"name\";s:6:\"Area 1\";s:6:\"charge\";s:2:\"10\";s:10:\"min_amount\";s:3:\"100\";}i:2;a:7:{s:5:\"shape\";s:34:\"[{\"shape\":\"kvtyHrfJrmA??j}BsmA?\"}]\";s:8:\"vertices\";s:177:\"[{\"lat\":51.55702,\"lng\":-0.05754000000000001},{\"lat\":51.54444,\"lng\":-0.05754000000000001},{\"lat\":51.54444,\"lng\":-0.07776000000000001},{\"lat\":51.55702,\"lng\":-0.07776000000000001}]\";s:6:\"circle\";s:72:\"[{\"center\":{\"lat\":51.54406,\"lng\":-0.05399899999997615}},{\"radius\":1000}]\";s:4:\"type\";s:5:\"shape\";s:4:\"name\";s:6:\"Area 2\";s:6:\"charge\";s:1:\"4\";s:10:\"min_amount\";s:2:\"10\";}i:3;a:7:{s:5:\"shape\";s:34:\"[{\"shape\":\"kvuyH`dBztB??r|D{tB?\"}]\";s:8:\"vertices\";s:147:\"[{\"lat\":51.56214000000001,\"lng\":-0.01617},{\"lat\":51.54328,\"lng\":-0.01617},{\"lat\":51.54328,\"lng\":-0.04651},{\"lat\":51.56214000000001,\"lng\":-0.04651}]\";s:6:\"circle\";s:72:\"[{\"center\":{\"lat\":51.54406,\"lng\":-0.05399899999997615}},{\"radius\":1500}]\";s:4:\"type\";s:5:\"shape\";s:4:\"name\";s:6:\"Area 3\";s:6:\"charge\";s:2:\"30\";s:10:\"min_amount\";s:3:\"300\";}i:4;a:7:{s:5:\"shape\";s:34:\"[{\"shape\":\"gmqyHlhEf|C??x{Fg|C?\"}]\";s:8:\"vertices\";s:193:\"[{\"lat\":51.540200000000006,\"lng\":-0.03223},{\"lat\":51.515040000000006,\"lng\":-0.03223},{\"lat\":51.515040000000006,\"lng\":-0.07268000000000001},{\"lat\":51.540200000000006,\"lng\":-0.07268000000000001}]\";s:6:\"circle\";s:72:\"[{\"center\":{\"lat\":51.54406,\"lng\":-0.05399899999997615}},{\"radius\":2000}]\";s:4:\"type\";s:5:\"shape\";s:4:\"name\";s:6:\"Area 4\";s:6:\"charge\";s:2:\"10\";s:10:\"min_amount\";s:3:\"200\";}}}', 'data/meat_pie.jpg'),
   (12, 'Hackney\'s Branch', 'hackney@tastyigniter.com', 'Vestibulum mattis elementum justo quis vehicula. Fusce a elementum tellus, non tincidunt felis. Maecenas a dui dictum, dictum risus id, tempor enim. Curabitur fermentum elit eu iaculis tristique. Sed lobortis purus sed dui rhoncus fringilla. Integer orci ante, placerat a purus vel, commodo convallis nisi. Maecenas tristique, dui in ullamcorper hendrerit, dui odio pellentesque erat, rutrum vulputate enim ante vel nulla.', '400 Lewisham Way', '', 'Lewisham', '', 'SE10 9HF', 222, '949200202', 51.469627, -0.008745, 0, 1, 1, 0, 0, 0, 0, 1, 0, 'a:1:{s:13:\"opening_hours\";a:4:{s:12:\"opening_type\";s:5:\"daily\";s:10:\"daily_days\";a:7:{i:0;s:1:\"0\";i:1;s:1:\"1\";i:2;s:1:\"2\";i:3;s:1:\"3\";i:4;s:1:\"4\";i:5;s:1:\"5\";i:6;s:1:\"6\";}s:11:\"daily_hours\";a:2:{s:4:\"open\";s:7:\"2:00 AM\";s:5:\"close\";s:7:\"5:59 PM\";}s:14:\"flexible_hours\";a:7:{i:0;a:4:{s:3:\"day\";s:1:\"0\";s:4:\"open\";s:8:\"12:00 AM\";s:5:\"close\";s:8:\"11:59 PM\";s:6:\"status\";s:1:\"0\";}i:1;a:4:{s:3:\"day\";s:1:\"1\";s:4:\"open\";s:8:\"12:00 AM\";s:5:\"close\";s:8:\"11:59 PM\";s:6:\"status\";s:1:\"0\";}i:2;a:4:{s:3:\"day\";s:1:\"2\";s:4:\"open\";s:8:\"12:00 AM\";s:5:\"close\";s:8:\"11:59 PM\";s:6:\"status\";s:1:\"0\";}i:3;a:4:{s:3:\"day\";s:1:\"3\";s:4:\"open\";s:8:\"12:00 AM\";s:5:\"close\";s:8:\"11:59 PM\";s:6:\"status\";s:1:\"0\";}i:4;a:4:{s:3:\"day\";s:1:\"4\";s:4:\"open\";s:8:\"12:00 AM\";s:5:\"close\";s:8:\"11:59 PM\";s:6:\"status\";s:1:\"0\";}i:5;a:4:{s:3:\"day\";s:1:\"5\";s:4:\"open\";s:8:\"12:00 AM\";s:5:\"close\";s:8:\"11:59 PM\";s:6:\"status\";s:1:\"0\";}i:6;a:4:{s:3:\"day\";s:1:\"6\";s:4:\"open\";s:8:\"12:00 AM\";s:5:\"close\";s:8:\"11:59 PM\";s:6:\"status\";s:1:\"0\";}}}}', 'data/steamed_rice.jpg'),
@@ -56,7 +56,7 @@ VALUES
 # TABLE STRUCTURE FOR: ti_menu_options
 #
 
-INSERT INTO `ti_menu_options` (`menu_option_id`, `menu_id`, `option_id`, `required`, `option_values`) VALUES
+REPLACE INTO `ti_menu_options` (`menu_option_id`, `menu_id`, `option_id`, `required`, `option_values`) VALUES
 (22, 85, 22, 1, 'a:3:{i:3;a:3:{s:15:"option_value_id";s:1:"8";s:5:"price";s:0:"";s:20:"menu_option_value_id";s:0:"";}i:4;a:3:{s:15:"option_value_id";s:1:"9";s:5:"price";s:0:"";s:20:"menu_option_value_id";s:0:"";}i:5;a:3:{s:15:"option_value_id";s:2:"10";s:5:"price";s:0:"";s:20:"menu_option_value_id";s:0:"";}}'),
 (23, 81, 23, 0, 'a:3:{i:1;a:3:{s:15:"option_value_id";s:1:"7";s:5:"price";s:0:"";s:20:"menu_option_value_id";s:0:"";}i:2;a:3:{s:15:"option_value_id";s:1:"6";s:5:"price";s:0:"";s:20:"menu_option_value_id";s:0:"";}i:3;a:3:{s:15:"option_value_id";s:2:"15";s:5:"price";s:0:"";s:20:"menu_option_value_id";s:0:"";}}'),
 (24, 85, 24, 1, 'a:2:{i:1;a:3:{s:15:"option_value_id";s:2:"13";s:5:"price";s:0:"";s:20:"menu_option_value_id";s:0:"";}i:2;a:3:{s:15:"option_value_id";s:2:"14";s:5:"price";s:0:"";s:20:"menu_option_value_id";s:0:"";}}'),
@@ -70,7 +70,7 @@ INSERT INTO `ti_menu_options` (`menu_option_id`, `menu_id`, `option_id`, `requir
 # TABLE STRUCTURE FOR: ti_menu_option_values
 #
 
-INSERT INTO `ti_menu_option_values` (`menu_option_value_id`, `menu_option_id`, `menu_id`, `option_id`, `option_value_id`, `new_price`, `quantity`, `subtract_stock`) VALUES
+REPLACE INTO `ti_menu_option_values` (`menu_option_value_id`, `menu_option_id`, `menu_id`, `option_id`, `option_value_id`, `new_price`, `quantity`, `subtract_stock`) VALUES
 (52, 25, 84, 22, 8, '0.00', 0, 0),
 (53, 25, 84, 22, 9, '0.00', 0, 0),
 (54, 25, 84, 22, 11, '0.00', 0, 0),
@@ -100,7 +100,7 @@ INSERT INTO `ti_menu_option_values` (`menu_option_value_id`, `menu_option_id`, `
 # TABLE STRUCTURE FOR: ti_options
 #
 
-INSERT INTO `ti_options` (`option_id`, `option_name`, `display_type`, `priority`) VALUES
+REPLACE INTO `ti_options` (`option_id`, `option_name`, `display_type`, `priority`) VALUES
 (22, 'Cooked', 'radio', 1),
 (23, 'Toppings', 'checkbox', 2),
 (24, 'Dressing', 'select', 3);
@@ -110,7 +110,7 @@ INSERT INTO `ti_options` (`option_id`, `option_name`, `display_type`, `priority`
 # TABLE STRUCTURE FOR: ti_option_values
 #
 
-INSERT INTO `ti_option_values` (`option_value_id`, `option_id`, `value`, `price`, `priority`) VALUES
+REPLACE INTO `ti_option_values` (`option_value_id`, `option_id`, `value`, `price`, `priority`) VALUES
 (6, 23, 'Peperoni', '1.99', 2),
 (7, 23, 'Jalapenos', '3.99', 1),
 (8, 22, 'Meat', '4.00', 1),
@@ -126,7 +126,7 @@ INSERT INTO `ti_option_values` (`option_value_id`, `option_id`, `value`, `price`
 # TABLE STRUCTURE FOR: ti_menus
 #
 
-INSERT INTO `ti_menus` (`menu_id`, `menu_name`, `menu_description`, `menu_price`, `menu_photo`, `menu_category_id`, `stock_qty`, `minimum_qty`, `subtract_stock`, `menu_status`) VALUES
+REPLACE INTO `ti_menus` (`menu_id`, `menu_name`, `menu_description`, `menu_price`, `menu_photo`, `menu_category_id`, `stock_qty`, `minimum_qty`, `subtract_stock`, `menu_status`) VALUES
 (76, 'PUFF-PUFF', 'Traditional Nigerian donut ball, rolled in sugar', '4.99', 'data/puff_puff.jpg', 24, 856, 3, 1, 1),
 (77, 'SCOTCH EGG', 'Boiled egg wrapped in a ground meat mixture, coated in breadcrumbs, and deep-fried.', '2.00', 'data/scotch_egg.jpg', 15, 0, 1, 1, 1),
 (78, 'ATA RICE', 'Small pieces of beef, goat, stipe, and tendon sautéed in crushed green Jamaican pepper.', '12.00', 'data/Seared_Ahi_Spinach_Salad.jpg', 16, 1000, 1, 0, 1),
@@ -145,7 +145,7 @@ INSERT INTO `ti_menus` (`menu_id`, `menu_name`, `menu_description`, `menu_price`
 # TABLE STRUCTURE FOR: ti_menus_specials
 #
 
-INSERT INTO `ti_menus_specials` (`special_id`, `menu_id`, `start_date`, `end_date`, `special_price`, `special_status`) VALUES
+REPLACE INTO `ti_menus_specials` (`special_id`, `menu_id`, `start_date`, `end_date`, `special_price`, `special_status`) VALUES
 (51, 81, '2014-04-10', '2014-04-30', '6.99', 1),
 (52, 76, '2014-04-23', '2014-07-31', '10.00', 1),
 (53, 86, '0000-00-00', '0000-00-00', '0.00', 0),
@@ -160,7 +160,7 @@ INSERT INTO `ti_menus_specials` (`special_id`, `menu_id`, `start_date`, `end_dat
 # TABLE STRUCTURE FOR: ti_permalinks
 #
 
-INSERT INTO `ti_permalinks` (`permalink_id`, `slug`, `controller`, `query`)
+REPLACE INTO `ti_permalinks` (`permalink_id`, `slug`, `controller`, `query`)
 VALUES
 	(12, 'vegetarian', 'menus', 'category_id=20'),
   (13, 'soups', 'menus', 'category_id=21'),
@@ -179,7 +179,7 @@ VALUES
 # TABLE STRUCTURE FOR: ti_tables
 #
 
-INSERT INTO `ti_tables` (`table_id`, `table_name`, `min_capacity`, `max_capacity`, `table_status`)
+REPLACE INTO `ti_tables` (`table_id`, `table_name`, `min_capacity`, `max_capacity`, `table_status`)
 VALUES
 	(1, 'EE10', 2, 10, 1),
 	(2, 'NN02', 2, 4, 1),
@@ -197,7 +197,7 @@ VALUES
 # TABLE STRUCTURE FOR: ti_working_hours
 #
 
-INSERT INTO `ti_working_hours` (`location_id`, `weekday`, `opening_time`, `closing_time`, `status`)
+REPLACE INTO `ti_working_hours` (`location_id`, `weekday`, `opening_time`, `closing_time`, `status`)
 VALUES
   (11, 0, '00:00:00', '23:59:00', 1),
   (11, 1, '00:00:00', '23:59:00', 1),

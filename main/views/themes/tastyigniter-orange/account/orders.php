@@ -56,8 +56,8 @@
                                             <td><?php echo $order['order_type']; ?></td>
                                             <td><?php echo $order['total_items']; ?></td>
                                             <td><?php echo $order['order_total']; ?></td>
-                                            <td><a class="" title="<?php echo lang('text_reorder'); ?>" href="<?php echo $order['reorder']; ?>"><i class="fa fa-mail-reply text-primary"></i></a></td>
-                                            <td><a class="" title="<?php echo lang('text_leave_review'); ?>" href="<?php echo $order['leave_review']; ?>"><i class="fa fa-heart text-warning"></i></a></td>
+                                            <td><a class="re-order" title="<?php echo lang('text_reorder'); ?>" href="<?php echo $order['reorder']; ?>"><i class="fa fa-mail-reply text-primary"></i></a></td>
+                                            <td><a class="leave-review" title="<?php echo lang('text_leave_review'); ?>" href="<?php echo $order['leave_review']; ?>"><i class="fa fa-heart text-warning"></i></a></td>
                                         </tr>
 									<?php } ?>
 								<?php } else { ?>
