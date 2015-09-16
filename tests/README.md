@@ -6,10 +6,13 @@ They have been created to help developers test and improve not only TastyIgniter
 
 Requirements:
 =====================
-Git
-Codeception
-A bit of command line knowledge
-Selenium Web Server (optional)
+... Git
+... Codeception
+... A bit of command line knowledge
+... Selenium Web Server (optional)
+
+In other to begin testing `run: wget http://codeception.com/codecept.phar` from tests folder to download and save the phar archive.
+
 
 Selenium installation instructions
 =====================
@@ -18,9 +21,9 @@ The Selenium server can be downloaded from [here](http://docs.seleniumhq.org/dow
 Before starting your Selenium Tests you have to run the standalone server: java -jar selenium-server-standalone-2.32.0.jar 
 *Writing Acceptance (Functional) Tests requires you to extend the TastyIgniterTestCase class.
 
-`run: php codecept.phar run acceptance -g main from tests folder to run main group tests`
+`run: php codecept.phar run acceptance -g main` from tests folder to run main group tests
 OR
-`run: php codecept.phar run acceptance -g admin from tests folder to run admin group tests`
+`run: php codecept.phar run acceptance -g admin` from tests folder to run admin group tests
 
 Must READ
 =====================
