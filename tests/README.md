@@ -13,6 +13,7 @@ Requirements:
 
 In other to begin testing `run: wget http://codeception.com/codecept.phar` from tests folder to download and save the Codeception phar archive.
 
+Edit database connection settings in tests/codeception.dist.yml
 
 Selenium installation instructions
 =====================
