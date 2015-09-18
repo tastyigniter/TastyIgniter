@@ -68,6 +68,24 @@ if ( ! function_exists('sort_array'))
 
 // ------------------------------------------------------------------------
 
+/**
+ * Currency Format
+ *
+ *
+ * @access	public
+ * @return	string
+ */
+if ( ! function_exists('currency_format'))
+{
+    function currency_format($num = '')
+    {
+        $CI =& get_instance();
+        return $CI->currency->format($num);
+    }
+}
+
+// ------------------------------------------------------------------------
+
 
 /* End of file tastyigniter_helper.php */
 /* Location: ./system/tastyigniter/helpers/tastyigniter_helper.php */
