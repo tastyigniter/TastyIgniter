@@ -87,6 +87,17 @@ class Permissions_model extends TI_Model {
 		}
 	}
 
+	public function getPermissionByName($permission_name = NULL) {
+		$this->db->from('permissions');
+		$this->db->where('name', $permission_name);
+
+		$query = $this->db->get();
+
+		if ($query->num_rows() > 0) {
+			return $query->row_array();
+		}
+	}
+
     public function getPermissionsByIds($permission_id = NULL) {
         $permissions_list = $this->getPermissions();
 
@@ -106,9 +117,13 @@ class Permissions_model extends TI_Model {
     }
 
 	public function savePermission($permission_id, $save = array()) {
-        if (empty($save)) return FALSE;
+        if (empty($save) OR empty($save['name'])) return FALSE;
 
 		if (!empty($save['name'])) {
+			if ($permission = $this->getPermissionByName($save['name'])) {
+				$permission_id = $permission['permission_id'];
+			}
+
 			$this->db->set('name', $save['name']);
 		}
 
@@ -117,6 +132,7 @@ class Permissions_model extends TI_Model {
 		}
 
 		if (!empty($save['action'])) {
+            if (!is_array($save['action'])) $save['action'] = array($save['action']);
 			$this->db->set('action', serialize($save['action']));
 		}
 
@@ -135,6 +151,42 @@ class Permissions_model extends TI_Model {
         }
 
         return $permission_id;
+	}
+
+    public function addToStaffGroup($staff_group_id, $permission, $actions) {
+        $query = FALSE;
+
+        if ( ! ($permission = $this->getPermissionByName($permission))) {
+            return $query;
+        }
+
+        $permission_id = $permission['permission_id'];
+
+        $staff_group = $this->db->get_where('staff_groups', array('staff_group_id' => $staff_group_id));
+
+        if ($staff_group->num_rows() > 0) {
+            $row = $staff_group->row_array();
+            $group_permissions = (!empty($row['permissions'])) ? unserialize($row['permissions']) : array();
+
+            is_array($actions) OR $actions = array($actions);
+
+            $group_permissions[$permission_id] = $actions;
+
+            $this->db->set('permissions', serialize($group_permissions));
+            $this->db->where('staff_group_id', $staff_group_id);
+            $query = $this->db->update('staff_groups');
+        }
+
+        return $query;
+    }
+
+	public function deletePermissionByName($permission_name) {
+        if (is_string($permission_name) AND ! ctype_space($permission_name)) {
+            $this->db->where('name', $permission_name);
+            $this->db->delete('permissions');
+
+            return $this->db->affected_rows();
+        }
 	}
 
 	public function deletePermission($permission_id) {
