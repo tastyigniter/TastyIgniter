@@ -29,7 +29,7 @@ class Extensions_model extends TI_Model {
             $extension['settings'] = !empty($extension_meta['settings'])
             AND file_exists($extension_path.'/controllers/admin_' . $basename . '.php') ? TRUE : FALSE;
 
-            $extension['config'] = (!empty($config) AND is_array($config)) ? TRUE : $config;
+            $extension['config'] = (!empty($config) AND is_array($config)) ? TRUE : FALSE;
 
             $extension['installed'] = (!empty($installed_ext) AND $installed_ext['extension_id'] > 0) ? TRUE : FALSE;
 
@@ -205,10 +205,6 @@ class Extensions_model extends TI_Model {
 
             if ($this->extensionExists($update['name'])) {
 
-                if (empty($update['extension_id'])) {
-                    $update['extension_id'] = $this->install($update['type'], $update['name']);
-                }
-
                 if (isset($update['data']) AND $serialized === '1') {
                     $this->db->set('data', serialize($update['data']));
                 } else if (!empty( $update['data'])) {
@@ -224,15 +220,12 @@ class Extensions_model extends TI_Model {
                 $this->db->where('type', $update['type']);
                 $this->db->where('name', $update['name']);
 
-                if (!empty($update['extension_id'])) {
-                    $this->db->where('extension_id', $update['extension_id']);
-                    $query = $this->db->update('extensions');
+                $query = $this->db->update('extensions');
 
-                    log_activity($this->user->getStaffId(), 'updated', 'extensions', get_activity_message('activity_custom_no_link',
-                        array('{staff}', '{action}', '{context}', '{item}'),
-                        array($this->user->getStaffName(), 'updated', 'extension '.$update['type'], $update['title'])
-                    ));
-                }
+                log_activity($this->user->getStaffId(), 'updated', 'extensions', get_activity_message('activity_custom_no_link',
+                    array('{staff}', '{action}', '{context}', '{item}'),
+                    array($this->user->getStaffName(), 'updated', 'extension '.$update['type'], $update['title'])
+                ));
             }
 		}
 
@@ -294,12 +287,21 @@ class Extensions_model extends TI_Model {
                     $this->db->where('type', $type);
                     $this->db->where('name', $name);
                     $this->db->where('extension_id', $extension_id);
-                    $this->db->update('extensions');
+                    $query = $this->db->update('extensions');
                 } else {
                     $this->db->set('status', '1');
                     $this->db->set('type', $type);
                     $this->db->set('name', $name);
-                    if ($this->db->insert('extensions')) $extension_id = $this->db->insert_id();
+                    if ($query = $this->db->insert('extensions')) $extension_id = $this->db->insert_id();
+                }
+
+                if ($query === TRUE) {
+                    $config = $this->extension->loadConfig($name, FALSE, TRUE);
+                    if (!empty($config['extension_permission_rules']) AND !empty($config['extension_permission_rules']['name'])) {
+                        $this->Permissions_model->savePermission(NULL, $config['extension_permission_rules']);
+                        $actions = !empty($config['extension_permission_rules']['action']) ? $config['extension_permission_rules']['action'] : array();
+                        $this->Permissions_model->addToStaffGroup($this->user->getStaffGroupId(), $config['extension_permission_rules']['name'], $actions);
+                    }
                 }
 
                 return $extension_id;
@@ -328,6 +330,11 @@ class Extensions_model extends TI_Model {
             } else {
                 $this->db->update('extensions');
                 if ($this->db->affected_rows() > 0) {
+                    $config = $this->extension->loadConfig($name, FALSE, TRUE);
+                    if (!empty($config['extension_permission_rules']['name'])) {
+                        $this->Permissions_model->deletePermissionByName($config['extension_permission_rules']['name']);
+                    }
+
                     $query = TRUE;
                 }
             }
