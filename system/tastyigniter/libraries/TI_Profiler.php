@@ -10,30 +10,24 @@ class TI_Profiler extends CI_Profiler {
      */
     public function run()
     {
-        if (APPDIR === ADMINDIR) {
-            $toggle_selector = "$('<div id=\"profiler\" class=\"col-sm-4\"><a class=\"btn btn-default btn-profiler\"><i class=\"fa fa-bug\"></i></a></div>').insertAfter('#footer .copyright');";
-        } else {
-            $toggle_selector = "$('body > footer .container .social-bottom > ul').append('<li><a class=\"fa fa-bug btn-profiler\"></a></li>');";
-        }
-
-        $output = '<div id="codeigniter_profiler" style="clear:both;background-color:#fff;padding:10px;">';
-        $output .= '<style>#codeigniter_profiler{background-color:#f9fafc!important;padding:10px 20px!important}#codeigniter_profiler #ci_profiler_benchmarks,#codeigniter_profiler #ci_profiler_benchmarks td{background-color:#ffd4d4!important}#codeigniter_profiler #ci_profiler_get,#codeigniter_profiler #ci_profiler_get td{background-color:#ffe8cd!important}#codeigniter_profiler #ci_profiler_memory_usage,#codeigniter_profiler #ci_profiler_memory_usage td{background-color:#edd4ff!important}#codeigniter_profiler #ci_profiler_post,#codeigniter_profiler #ci_profiler_post td{background-color:#e7ffe7!important}#codeigniter_profiler #ci_profiler_config,#codeigniter_profiler #ci_profiler_config td,#codeigniter_profiler #ci_profiler_csession,#codeigniter_profiler #ci_profiler_csession td,#codeigniter_profiler #ci_profiler_http_headers,#codeigniter_profiler #ci_profiler_http_headers td,#codeigniter_profiler #ci_profiler_uri_string,#codeigniter_profiler #ci_profiler_uri_string td{background-color:#e0e0e0!important}#codeigniter_profiler #ci_profiler_controller_info,#codeigniter_profiler #ci_profiler_controller_info td{background-color:#ffe2c0!important}#codeigniter_profiler fieldset{background-color:#ebebff!important;margin-bottom:15px;overflow-x:scroll;overflow-y:hidden;width:100%}#codeigniter_profiler legend{border:0;width:auto!important;margin-bottom:4px}#codeigniter_profiler td{background-color:#ebebff!important;border-bottom:2px solid #FCFCFC}#codeigniter_profiler td:first-child{border-right:2px solid #FCFCFC}#codeigniter_profiler #ci_profiler_benchmarks td:first-child,#codeigniter_profiler #ci_profiler_http_headers td:first-child{width:10%!important}#codeigniter_profiler code{background-color:#ebebff!important;display:inline-block;width:100%;word-wrap:break-word}#codeigniter_profiler #ci_profiler_post td:first-child{width:30%!important}#codeigniter_profiler #ci_profiler_post td:last-child{width:70%!important}</style>';
+        $output = '<div id="codeigniter_profiler" style="clear:both;background-color:#fff;">';
+        $output .= '<a class="btn btn-success btn-profiler"><i class="fa fa-bug"></i></a>';
+        $output .= '<style>#codeigniter_profiler .sections{background-color:#f9fafc!important;padding:10px 20px!important}#codeigniter_profiler #ci_profiler_benchmarks,#codeigniter_profiler #ci_profiler_benchmarks td{background-color:#ffd4d4!important}#codeigniter_profiler #ci_profiler_get,#codeigniter_profiler #ci_profiler_get td{background-color:#ffe8cd!important}#codeigniter_profiler #ci_profiler_memory_usage,#codeigniter_profiler #ci_profiler_memory_usage td{background-color:#edd4ff!important}#codeigniter_profiler #ci_profiler_post,#codeigniter_profiler #ci_profiler_post td{background-color:#e7ffe7!important}#codeigniter_profiler #ci_profiler_config,#codeigniter_profiler #ci_profiler_config td,#codeigniter_profiler #ci_profiler_csession,#codeigniter_profiler #ci_profiler_csession td,#codeigniter_profiler #ci_profiler_http_headers,#codeigniter_profiler #ci_profiler_http_headers td,#codeigniter_profiler #ci_profiler_uri_string,#codeigniter_profiler #ci_profiler_uri_string td{background-color:#e0e0e0!important}#codeigniter_profiler #ci_profiler_controller_info,#codeigniter_profiler #ci_profiler_controller_info td{background-color:#ffe2c0!important}#codeigniter_profiler fieldset{background-color:#ebebff!important;margin-bottom:15px;overflow-x:scroll;overflow-y:hidden;width:100%}#codeigniter_profiler legend{border:0;width:auto!important;margin-bottom:4px}#codeigniter_profiler td{background-color:#ebebff!important;border-bottom:2px solid #FCFCFC}#codeigniter_profiler td:first-child{border-right:2px solid #FCFCFC}#codeigniter_profiler #ci_profiler_benchmarks td:first-child,#codeigniter_profiler #ci_profiler_http_headers td:first-child{width:10%!important}#codeigniter_profiler code{background-color:#ebebff!important;display:inline-block;width:100%;word-wrap:break-word}#codeigniter_profiler #ci_profiler_post td:first-child{width:30%!important}#codeigniter_profiler #ci_profiler_post td:last-child{width:70%!important}.btn-profiler{position:fixed;bottom:0px;left:0px;z-index:99999;}</style>';
         $output .= '<script type="text/javascript">
                         $(document).ready(function() {
-                            if ($("#codeigniter_profiler").length) {
-                                '.$toggle_selector.'
-                                $(".btn-profiler").on("click", function(){
-                                    if($("#codeigniter_profiler").is(":visible")) {
-                                        $("#codeigniter_profiler").fadeOut();
-                                    } else {
-                                        $("#codeigniter_profiler").fadeIn();
-                                    }
-                                });
+                            $(".btn-profiler").on("click", function(){
+                                if($("#codeigniter_profiler .sections").is(":visible")) {
+                                    $("#codeigniter_profiler .sections").fadeOut();
+                                } else {
+                                    $("#codeigniter_profiler .sections").fadeIn();
+                                }
+                            });
 
-                                 $("#codeigniter_profiler").fadeOut();
-                            }
+                            $("#codeigniter_profiler .sections").fadeOut();
                         });
                     </script>';
+
+        $output .= '<div class="sections" style="padding:10px;">';
 
         $fields_displayed = 0;
 
@@ -53,6 +47,6 @@ class TI_Profiler extends CI_Profiler {
                 .$this->CI->lang->line('profiler_no_profiles').'</p>';
         }
 
-        return $output.'</div>';
+        return $output.'</div></div>';
     }
 }

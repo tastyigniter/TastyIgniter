@@ -1285,62 +1285,7 @@ border: 0 none;
 .select2-drop.select2-drop-above .select2-search input {
 margin-top: 0;
 }
-
-
 /*** End Select 2 ***/
-
-
-
-/** PROFILER **/
-#codeigniter_profiler {
-background-color:#FCFCFC !important;
-padding: 10px 20px !important;
-}
-#codeigniter_profiler fieldset {
-background-color:#ffd9d9 !important;
-margin-bottom: 15px;
-overflow-x: scroll;
-overflow-y: hidden;
-width: 100%;
-}
-#codeigniter_profiler legend {
-border:0 none;
-width: auto !important;
-margin-bottom: 4px;
-}
-#codeigniter_profiler td {
-background-color: #ffd9d9 !important;
-border-bottom: 2px solid #FCFCFC;
-}
-#codeigniter_profiler td:first-child {
-border-right: 2px solid #FCFCFC;
-}
-#codeigniter_profiler #ci_profiler_http_headers td:first-child,
-#codeigniter_profiler #ci_profiler_benchmarks td:first-child {
-width: 10% !important;
-}
-#codeigniter_profiler code {
-display: inline-block;
-width: 100%;
-word-wrap: break-word;
-}
-#codeigniter_profiler #ci_profiler_post td:first-child {
-width: 30% !important;
-}
-#codeigniter_profiler #ci_profiler_post td:last-child {
-width: 70% !important;
-}
-@media(min-width:768px) {
-  #codeigniter_profiler {
-  border-top: 1px solid #E7E7E7;
-  border-left: 1px solid #E7E7E7;
-  }
-}
-
-
-
-
-
 
 
 /*** RESPONSIVE ***/
