@@ -102,28 +102,6 @@ class Staff_groups_model extends TI_Model {
         return ($query === TRUE AND is_numeric($staff_group_id)) ? $staff_group_id : FALSE;
 	}
 
-	public function addPermission($staff_group_id, $type, $page) {
-		$query = FALSE;
-
-		$department_query = $this->db->get_where('staff_groups', array('staff_group_id' => $staff_group_id));
-
-		if ($department_query->num_rows() > 0) {
-			$row = $department_query->row_array();
-			$permission = array();
-			if (!empty($row['permissions'])) {
-				$permission = unserialize($row['permissions']);
-			}
-
-			$permission[$type][] = $page;
-
-			$this->db->set('permission', serialize($permission));
-			$this->db->where('staff_group_id', $staff_group_id);
-			$query = $this->db->update('staff_groups');
-		}
-
-		return $query;
-	}
-
 	public function deleteStaffGroup($staff_group_id) {
         if (is_numeric($staff_group_id)) $staff_group_id = array($staff_group_id);
 
