@@ -834,66 +834,6 @@ margin-top: 25px;
 
 
 
-/*** Menu Specials ***/
-.menu-special {
-color: #ed561a;
-font-size: 12px;
-margin-top: 5px;
-}
-.menu-special {
-position: relative;
-margin-bottom: 30px;
-overflow: hidden;
-}
-
-.menu-special .menu-thumb {
-  overflow: hidden;
-  position: relative;
-}
-
-.menu-special .menu-thumb img {
-  width: 100%;
-}
-
-.menu-special .menu-content {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: rgba(0,0,0,0.7);
-  color: #fff;
-  padding: 15px;
-}
-
-.menu-special .content-show a {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  color: #fff;
-  text-transform: uppercase;
-}
-
-.menu-special .content-show span {
-  color: #ed561a;
-}
-
-.menu-special .content-hide {
-  margin-top: 15px;
-  display: none;
-}
-
-.menu-special .content-hide p {
-  color: #fff;
-}
-.menu-special .menu-content:hover .content-hide {
-display: block;
-}
-
-/*** End Menu Specials ***/
-
-
-
-
 /*** Menus ***/
 .menus-page .btn-menus {
 display:none;
