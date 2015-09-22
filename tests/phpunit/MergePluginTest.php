@@ -434,41 +434,39 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
         $dir = $this->fixtureDir(__FUNCTION__);
         $root = $this->rootFromJson("{$dir}/composer.json");
 
+        $autoload = array();
+
         $root->getAutoload()->shouldBeCalled();
         $root->getDevAutoload()->shouldBeCalled();
         $root->getRequires()->shouldNotBeCalled();
         $root->setAutoload(Argument::type('array'))->will(
-            function ($args) use ($that) {
-                $that->assertEquals(
-                    array(
-                        'psr-4' => array(
-                            'Kittens\\' => array( 'everywhere/', 'extensions/Foo/a/', 'extensions/Foo/b/' ),
-                            'Cats\\' => 'extensions/Foo/src/'
-                        ),
-                        'psr-0' => array(
-                            'UniqueGlobalClass' => 'extensions/Foo/',
-                            '' => 'extensions/Foo/fallback/'
-                        ),
-                        'files' => array( 'extensions/Foo/SemanticMediaWiki.php' ),
-                        'classmap' => array( 'extensions/Foo/SemanticMediaWiki.hooks.php', 'extensions/Foo/includes/' ),
-                    ),
-                    $args[0]
-                );
+            function ($args, $root) use (&$autoload) {
+                // Can't easily assert directly since there will be multiple
+                // calls to this setter to create our final expected state
+                $autoload = $args[0];
+                // Return the new data for the next call to getAutoLoad()
+                $root->getAutoload()->willReturn($args[0]);
             }
-        );
+        )->shouldBeCalledTimes(2);
         $root->setDevAutoload(Argument::type('array'))->will(
             function ($args) use ($that) {
                 $that->assertEquals(
                     array(
                         'psr-4' => array(
-                            'Dev\\Kittens\\' => array( 'everywhere/', 'extensions/Foo/a/', 'extensions/Foo/b/' ),
+                            'Dev\\Kittens\\' => array(
+                                'everywhere/',
+                                'extensions/Foo/a/',
+                                'extensions/Foo/b/',
+                            ),
                             'Dev\\Cats\\' => 'extensions/Foo/src/'
                         ),
                         'psr-0' => array(
                             'DevUniqueGlobalClass' => 'extensions/Foo/',
                             '' => 'extensions/Foo/dev/fallback/'
                         ),
-                        'files' => array( 'extensions/Foo/DevSemanticMediaWiki.php' ),
+                        'files' => array(
+                            'extensions/Foo/DevSemanticMediaWiki.php',
+                        ),
                         'classmap' => array(
                             'extensions/Foo/DevSemanticMediaWiki.hooks.php',
                             'extensions/Foo/dev/includes/',
@@ -477,11 +475,36 @@ class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
                     $args[0]
                 );
             }
-        );
+        )->shouldBeCalled();
 
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
 
         $this->assertEquals(0, count($extraInstalls));
+        $this->assertEquals(
+            array(
+                'psr-4' => array(
+                    'Kittens\\' => array(
+                        'everywhere/',
+                        'extensions/Foo/a/',
+                        'extensions/Foo/b/',
+                    ),
+                    'Cats\\' => 'extensions/Foo/src/'
+                ),
+                'psr-0' => array(
+                    'UniqueGlobalClass' => 'extensions/Foo/',
+                    '' => 'extensions/Foo/fallback/',
+                ),
+                'files' => array(
+                    'private/bootstrap.php',
+                    'extensions/Foo/SemanticMediaWiki.php',
+                ),
+                'classmap' => array(
+                    'extensions/Foo/SemanticMediaWiki.hooks.php',
+                    'extensions/Foo/includes/',
+                ),
+            ),
+            $autoload
+        );
     }
 
     /**
