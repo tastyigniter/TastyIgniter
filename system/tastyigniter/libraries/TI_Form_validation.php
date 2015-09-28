@@ -69,9 +69,14 @@ class TI_Form_validation extends CI_Form_validation
     public function get_lat_lag($str, $post_item = 'address') {
         if (!empty($str) AND $post_data = $this->CI->input->post($post_item)) {
             if (is_array($post_data) AND !empty($post_data['address_1']) AND !empty($post_data['postcode'])) {
-                $address_string = implode(", ", $post_data);
-                $address = urlencode($address_string);
-                $geocode = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address=' . $address . '&sensor=false&region=GB');
+                $url  = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode(implode(", ", $post_data)) .'&sensor=false'; //encode $postcode string and construct the url query
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
+                curl_setopt($ch, CURLOPT_USERAGENT, $this->CI->agent->agent_string());
+                $geocode = curl_exec($ch);
+                curl_close($ch);
                 $output = json_decode($geocode);
                 $status = $output->status;
 
