@@ -27,5 +27,3 @@ assets/images/data/*
 
 assets/downloads/*
 !assets/downloads/index.html
-
-tests
