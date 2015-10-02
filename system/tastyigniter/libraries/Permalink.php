@@ -60,20 +60,13 @@ class Permalink {
 
         parse_str($query, $query_arr);
 
-        $slug = '';
         foreach ($query_arr as $key => $val) {
-            var_dump($key.'='.$val);
             if (isset($slugs[$key.'='.$val])) {
                 $slug = $slugs[$key.'='.$val];
 
                 unset($query_arr[$key]);
-
-                break;
+                return ! empty($query_arr) ? $slug . '?' . http_build_query($query_arr) : $slug;
             }
-        }
-
-        if ($slug !== '') {
-            return ! empty($query_arr) ? $slug . '?' . http_build_query($query_arr) : $slug;
         }
     }
 
