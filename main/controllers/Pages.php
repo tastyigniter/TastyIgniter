@@ -26,8 +26,10 @@ class Pages extends Main_Controller {
 		$data['text_heading'] 		= $result['heading'];
 		$data['page_content'] 		= $result['content'];
 
-		$this->template->render('pages', $data);
-	}
+        $data['page_popup'] 		= $this->input->get('popup');
+
+        $this->template->render('pages', $data);
+    }
 }
 
 /* End of file pages.php */
