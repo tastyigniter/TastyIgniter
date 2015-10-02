@@ -2,11 +2,11 @@
 <?php if (empty($page_popup)) echo get_partial('content_top'); ?>
 <div id="page-content">
 	<div class="<?php echo empty($page_popup) ? 'container' : 'container-fluid'; ?>">
-		<div class="row">
+		<div <?php if (!empty($page_popup)) echo 'id="heading"'; ?> class="row">
 			<div class="col-md-12">
 				<div class="heading-section">
 					<?php if (!empty($page_popup)) { ?>
-						<h3><?php echo $text_heading; ?></h3>
+						<h2><?php echo $text_heading; ?></h2>
 					<?php } ?>
 				</div>
 			</div>
