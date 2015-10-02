@@ -54,10 +54,26 @@ class Permalink {
 
 
     public function getQuerySlug($query = '') {
+        $query_arr = array();
+
         $slugs = array_flip($this->slugs);
 
-        if (isset($slugs[$query])) {
-            return $slugs[$query];
+        parse_str($query, $query_arr);
+
+        $slug = '';
+        foreach ($query_arr as $key => $val) {
+            var_dump($key.'='.$val);
+            if (isset($slugs[$key.'='.$val])) {
+                $slug = $slugs[$key.'='.$val];
+
+                unset($query_arr[$key]);
+
+                break;
+            }
+        }
+
+        if ($slug !== '') {
+            return ! empty($query_arr) ? $slug . '?' . http_build_query($query_arr) : $slug;
         }
     }
 

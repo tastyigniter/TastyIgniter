@@ -1,12 +1,27 @@
+### v1.4.3-beta (pending)
+* Changed LICENCE from Apache to GNU GPLv3
+* Replaced file_get_contents with cURL for google maps geocoding api request ()
+* Template Library: Replaced loadPartial with loadView to load single views without header, footer and partials
+* Added option to select a page for checkout and registration terms and condition.
+* Fixed the checkout terms and condition agree button to display terms and condition in modal when clicked
+* Improved reverse routing for permalink slugs so that extra URL query is appended after slug
+
 ### v1.4.2-beta
-*
+* [fixed] staff name in staff updated activity log (67e3fa6)
+* [added] TI_DEBUG constant to enable / disable profiler, disabled by default (3a20c4e)
+* [fixed] display no_photo.png when resizing an image that doesnt exist (da3d3a8)
+* Minor theme fix (4c1ce6b & 01b4535)
+* [replaced] theme preview and thumb files with screenshot.png (bb3cfa4)
+* [added] Installer library to handle TI initial setup and version updates	(c5a5175)
+* [replaced] INSERT SQL to REPLACE SQL in initial_schema and demo_schema (d0aa31c)
+
 
 
 ### v1.4.1-beta
 
 * Added support for acceptance testing
 * Fixed php version backward-compatibility issues of empty()
-* Changed google maps api call from http to https for location search
+* Changed google maps api request from http to https for location search
 * Fixed adding comment to menu item added to cart
 * Fixed issue with escaping htmlspecialchars when saving lanugaue line to database
 * Fixed issue with saving state in customer and location addresses
