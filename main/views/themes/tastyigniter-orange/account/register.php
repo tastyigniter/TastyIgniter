@@ -82,16 +82,24 @@
 						</div>
 						<br />
 
-						<?php if ($config_registration_terms) {?>
+						<?php if ($registration_terms) {?>
 							<div class="row">
 								<div class="col-xs-8 col-sm-9 col-md-9">
 									<span class="button-checkbox">
 										<button id="terms-condition" type="button" class="btn" data-color="info" tabindex="7">&nbsp;&nbsp;<?php echo lang('button_terms_agree'); ?></button>
 				                        <input type="checkbox" name="terms_condition" class="hidden" value="1" <?php echo set_checkbox('terms_condition', '1'); ?>>
 									</span>
-									 <?php echo lang('label_terms'); ?>
+									<?php echo sprintf(lang('label_terms'), $registration_terms); ?>
 								</div>
 								<?php echo form_error('terms_condition', '<span class="text-danger">', '</span>'); ?>
+							</div>
+							<div class="modal fade" id="terms-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-body">
+										</div>
+									</div>
+								</div>
 							</div>
 						<?php } ?>
 						<br />

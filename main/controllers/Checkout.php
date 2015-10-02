@@ -307,7 +307,11 @@ class Checkout extends Main_Controller {
             $data['payment'] = '';
         }
 
-        $data['checkout_terms'] = ($this->config->item('checkout_terms') === '1') ? TRUE : FALSE;
+        if ($this->config->item('checkout_terms') > 0) {
+            $data['checkout_terms'] = str_replace(root_url(), '/', site_url('pages?popup=1&page_id='.$this->config->item('checkout_terms')));
+        } else {
+            $data['checkout_terms'] = FALSE;
+        }
 
         if ($this->input->ip_address()) {
             $data['ip_address'] = $this->input->ip_address();                                    // retrieve ip_address value if set
@@ -398,7 +402,7 @@ class Checkout extends Main_Controller {
                 $order_data['payment'] = $this->input->post('payment');
                 $order_data['ext_payment'] = $this->extension->getPayment($order_data['payment']);
 
-                if ($this->config->item('checkout_terms') === '1') {
+                if ($this->config->item('checkout_terms') > 0) {
                     $order_data['terms_condition'] = $this->input->post('terms_condition');
                 }
 
@@ -473,7 +477,7 @@ class Checkout extends Main_Controller {
 		if ($this->input->post('checkout_step') === 'two') {
 			$this->form_validation->set_rules('payment', 'lang:label_payment_method', 'xss_clean|trim|required|alpha_dash|callback__validate_payment');
 
-            if ($this->config->item('checkout_terms') === '1') {
+            if ($this->config->item('checkout_terms') > 0) {
                 $this->form_validation->set_rules('terms_condition', 'lang:label_terms', 'xss_clean|trim|required|integer');
             }
 		}

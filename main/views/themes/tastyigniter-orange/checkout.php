@@ -236,9 +236,17 @@
                                                     <button type="button" class="btn" data-color="info" tabindex="7">&nbsp;&nbsp;<?php echo lang('button_agree_terms'); ?></button>
                                                     <input type="checkbox" name="terms_condition" id="terms-condition" class="hidden" value="1" <?php echo set_checkbox('terms_condition', '1'); ?>>
                                                 </span>
-                                                <span class="form-control"><?php echo lang('label_terms'); ?></span>
+                                                <span class="form-control"><?php echo sprintf(lang('label_terms'), $checkout_terms); ?></span>
                                             </div>
                                             <?php echo form_error('terms_condition', '<span class="text-danger col-xs-12">', '</span>'); ?>
+                                        </div>
+                                        <div class="modal fade" id="terms-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-body">
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     <?php } ?>
 

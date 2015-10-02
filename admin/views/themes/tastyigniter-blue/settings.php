@@ -246,15 +246,16 @@
                             <span class="help-block"><?php echo lang('help_checkout_terms'); ?></span>
                         </label>
                         <div class="col-sm-5">
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                <?php if (config_item('checkout_terms') == '1') { ?>
-                                    <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="checkout_terms" value="0" <?php echo set_radio('checkout_terms', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="checkout_terms" value="1" <?php echo set_radio('checkout_terms', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
-                                <?php } else { ?>
-                                    <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="checkout_terms" value="0" <?php echo set_radio('checkout_terms', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="checkout_terms" value="1" <?php echo set_radio('checkout_terms', '1'); ?>><?php echo lang('text_enabled'); ?></label>
-                                <?php } ?>
-                            </div>
+							<select name="checkout_terms" id="input-checkout-terms" class="form-control">
+								<option value="0"><?php echo lang('text_none'); ?></option>
+								<?php foreach ($pages as $page) { ?>
+									<?php if ($page['page_id'] == config_item('checkout_terms')) { ?>
+										<option value="<?php echo $page['page_id']; ?>" <?php echo set_select('checkout_terms', $page['page_id'], TRUE); ?>><?php echo $page['name']; ?></option>
+									<?php } else { ?>
+										<option value="<?php echo $page['page_id']; ?>" <?php echo set_select('checkout_terms', $page['page_id']); ?>><?php echo $page['name']; ?></option>
+									<?php } ?>
+								<?php } ?>
+							</select>
                             <?php echo form_error('checkout_terms', '<span class="text-danger">', '</span>'); ?>
                         </div>
                     </div>
@@ -263,15 +264,16 @@
                             <span class="help-block"><?php echo lang('help_registration_terms'); ?></span>
                         </label>
                         <div class="col-sm-5">
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                <?php if (config_item('registration_terms') == '1') { ?>
-                                    <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="registration_terms" value="0" <?php echo set_radio('registration_terms', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="registration_terms" value="1" <?php echo set_radio('registration_terms', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
-                                <?php } else { ?>
-                                    <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="registration_terms" value="0" <?php echo set_radio('registration_terms', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="registration_terms" value="1" <?php echo set_radio('registration_terms', '1'); ?>><?php echo lang('text_enabled'); ?></label>
-                                <?php } ?>
-                            </div>
+							<select name="registration_terms" id="input-registration-terms" class="form-control">
+								<option value="0"><?php echo lang('text_none'); ?></option>
+								<?php foreach ($pages as $page) { ?>
+									<?php if ($page['page_id'] == config_item('registration_terms')) { ?>
+										<option value="<?php echo $page['page_id']; ?>" <?php echo set_select('registration_terms', $page['page_id'], TRUE); ?>><?php echo $page['name']; ?></option>
+									<?php } else { ?>
+										<option value="<?php echo $page['page_id']; ?>" <?php echo set_select('registration_terms', $page['page_id']); ?>><?php echo $page['name']; ?></option>
+									<?php } ?>
+								<?php } ?>
+							</select>
                             <?php echo form_error('registration_terms', '<span class="text-danger">', '</span>'); ?>
                         </div>
                     </div>

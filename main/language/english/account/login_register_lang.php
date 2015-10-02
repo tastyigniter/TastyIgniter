@@ -22,7 +22,7 @@ $lang['label_telephone'] 		= 'Telephone';
 $lang['label_s_question'] 		= 'Security Question';
 $lang['label_s_answer'] 		= 'Security Answer';
 $lang['label_newsletter'] 		= 'Keep me up-to-date with offers by email.';
-$lang['label_terms'] 			= 'By clicking <strong class="label label-primary">Register</strong>, you agree to the <a href="#" data-toggle="modal" data-target="#terms-modal">Terms and Conditions</a> set out by this site, including our Cookie Use.';
+$lang['label_terms'] 			= 'By clicking <strong class="label label-primary">Register</strong>, you agree to the <a href="%s" data-toggle="modal" data-target="#terms-modal">Terms and Conditions</a> set out by this site, including our Cookie Use.';
 $lang['label_captcha'] 			= 'Type the code shown';
 $lang['label_i_agree'] 	        = 'I Agree';
 $lang['label_subscribe'] 	    = 'Subscribe';

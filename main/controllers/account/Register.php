@@ -18,7 +18,12 @@ class Register extends Main_Controller {
 		$this->template->setTitle($this->lang->line('text_register_heading'));
 
 		$data['login_url'] 				        = site_url('account/login');
-		$data['config_registration_terms'] 		= $this->config->item('registration_terms');
+
+		if ($this->config->item('registration_terms') > 0) {
+			$data['registration_terms'] = str_replace(root_url(), '/', site_url('pages?popup=1&page_id='.$this->config->item('registration_terms')));
+		} else {
+			$data['registration_terms'] = FALSE;
+		}
 
 		$this->load->model('Security_questions_model');											// load the security questions model
 		$data['questions'] = array();
