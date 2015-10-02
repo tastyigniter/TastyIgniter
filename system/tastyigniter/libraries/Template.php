@@ -423,9 +423,9 @@ class Template {
         return $_modules;
     }
 
-    public function loadPartial($layout_name, $data = array()) {
-        if (is_string($layout_name)) {
-            return $this->_find_view($layout_name, $data);
+    public function loadView($view, $data = array()) {
+        if (is_string($view)) {
+            return $this->_find_view($view, (array) $data);
         }
     }
 

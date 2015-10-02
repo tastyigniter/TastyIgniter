@@ -64,7 +64,7 @@ if ( ! function_exists('get_partial')) {
  */
 if ( ! function_exists('load_partial')) {
     function load_partial($partial = '', $data = array()) {
-        echo get_instance()->template->loadPartial($partial, $data);
+        echo get_instance()->template->loadView($partial, $data);
     }
 }
 
