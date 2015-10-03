@@ -23,6 +23,7 @@ assets/images/thumbs/*
 
 assets/images/data/*
 !assets/images/data/index.html
+!assets/images/data/no_photo.png
 !assets/images/data/flags
 
 assets/downloads/*
