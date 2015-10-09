@@ -75,6 +75,9 @@ class Setup extends Base_Controller {
             }
         }
 
+        $this->load->helper('string');
+        $data['dbprefix'] = strtolower(random_string('alnum', '9').'_');
+
         if ( ! file_exists(VIEWPATH .'/database.php')) {
             show_404();
         } else {
