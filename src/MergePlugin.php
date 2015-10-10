@@ -32,13 +32,17 @@ use Composer\Script\ScriptEvents;
  * Composer plugin that allows merging multiple composer.json files.
  *
  * When installed, this plugin will look for a "merge-plugin" key in the
- * composer configuration's "extra" section. The value of this setting can be
- * either a single value or an array of values. Each value is treated as
- * a glob() pattern identifying additional composer.json style configuration
- * files to merge into the configuration for the current compser execution.
+ * composer configuration's "extra" section. The value for this key is
+ * a set of options configuring the plugin.
  *
- * The "require", "require-dev", "repositories", "extra" and "suggest" sections
- * of the found configuration files will be merged into the root package
+ * An "include" setting is required. The value of this setting can be either
+ * a single value or an array of values. Each value is treated as a glob()
+ * pattern identifying additional composer.json style configuration files to
+ * merge into the configuration for the current compser execution.
+ *
+ * The "autoload", "autoload-dev", "conflict", "provide", "replace",
+ * "repositories", "require", "require-dev", and "suggest" sections of the
+ * found configuration files will be merged into the root package
  * configuration as though they were directly included in the top-level
  * composer.json file.
  *
@@ -48,10 +52,10 @@ use Composer\Script\ScriptEvents;
  * change this default behaviour so that the last-defined version of a package
  * will win, allowing for force-overrides of package defines.
  *
- * By default the "extra" section is not merged. This can be enabled with the
- * 'merge-extra' key by setting it to true. In normal mode, when the same key
- * is found in both the original and the imported extra section, the version
- * in the original config is used and the imported version is skipped. If
+ * By default the "extra" section is not merged. This can be enabled by
+ * setitng the 'merge-extra' key to true. In normal mode, when the same key is
+ * found in both the original and the imported extra section, the version in
+ * the original config is used and the imported version is skipped. If
  * 'replace' mode is active, this behaviour changes so the imported version of
  * the key is used, replacing the version in the original config.
  *
