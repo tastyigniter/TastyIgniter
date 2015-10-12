@@ -15,7 +15,7 @@ use Composer\Composer;
 /**
  * @covers Wikimedia\Composer\Merge\PluginState
  */
-class PluginStateTest extends \Prophecy\PhpUnit\ProphecyTestCase
+class PluginStateTest extends \PHPUnit_Framework_TestCase
 {
 
     public function testLocked()

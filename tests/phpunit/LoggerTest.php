@@ -16,7 +16,7 @@ use Prophecy\Argument;
 /**
  * @covers Wikimedia\Composer\Logger
  */
-class LoggerTest extends \Prophecy\PhpUnit\ProphecyTestCase
+class LoggerTest extends \PHPUnit_Framework_TestCase
 {
 
     public function testVerboseDebug()

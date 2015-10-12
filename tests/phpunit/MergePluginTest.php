@@ -34,7 +34,7 @@ use ReflectionProperty;
  * @covers Wikimedia\Composer\Merge\PluginState
  * @covers Wikimedia\Composer\MergePlugin
  */
-class MergePluginTest extends \Prophecy\PhpUnit\ProphecyTestCase
+class MergePluginTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
