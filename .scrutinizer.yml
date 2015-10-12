@@ -1,3 +1,23 @@
+tools:
+    external_code_coverage:
+        timeout: 1200
+        runs: 5
+    php_analyzer: true
+    php_code_coverage: false
+    php_code_sniffer:
+        config:
+            standard: PSR2
+        filter:
+            paths: ['src','tests']
+    php_cpd:
+        enabled: true
+        excluded_dirs: ['vendor', 'tests', 'example']
+    php_loc:
+        enabled: true
+        excluded_dirs: ['vendor', 'tests', 'example']
+    php_pdepend: true
+    php_sim: true
+
 filter:
     excluded_paths:
         - 'tests/*'
@@ -35,24 +55,3 @@ checks:
         avoid_useless_overridden_methods: true
         avoid_conflicting_incrementers: true
         assignment_of_null_return: true
-        avoid_corrupting_byteorder_marks: true
-
-tools:
-    external_code_coverage:
-        timeout: 300
-        runs: 1
-    php_analyzer: true
-    php_code_coverage: false
-    php_code_sniffer:
-        config:
-            standard: PSR2
-        filter:
-            paths: ['src','tests']
-    php_cpd:
-        enabled: true
-        excluded_dirs: ['vendor', 'tests', 'example']
-    php_loc:
-        enabled: true
-        excluded_dirs: ['vendor', 'tests', 'example']
-    php_pdepend: true
-    php_sim: true
