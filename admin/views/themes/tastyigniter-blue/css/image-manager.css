@@ -42,14 +42,14 @@ text-decoration: none;
 
 /*** NAVBAR TOP ***/
 .navbar-menu {
-background-color: #F7F7F7;
+background-color: #ECF0F5;
 border-top: 0 solid #dedede;
 border-right: 0 solid #dedede;
 border-left: 0 solid #dedede;
 border-bottom:0px;
 padding: 0 0px;
 margin-bottom:0px;
-min-height: 96px;
+min-height: 100px;
 }
 .navbar-menu .input-group-addon {
 background-color: #ffffff;
@@ -67,7 +67,7 @@ box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05
 cursor: pointer;
 display: inline-block;
 margin-bottom: 0;
-padding: 4px 12px;
+padding: 6px 12px;
 text-align: center;
 vertical-align: middle;
 }
@@ -104,7 +104,7 @@ box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
 outline: 0 none;
 }
 .btn-toolbar {
-background-color: #F7F7F7;
+background-color: #ECF0F5;
 margin-left: 0;
 padding: 5px 0;
 }
@@ -160,8 +160,9 @@ margin: 5px 0;
 
 /*** CONTAINERS ***/
 .media-content {
+border: 1px solid #D2DCE7;
 position: fixed;
-top: 96px;
+top: 100px;
 bottom: 38px;
 left: 0px;
 right: 0px;
@@ -184,11 +185,12 @@ height: 100%;
 position: relative;
 }
 .navbar-statusbar {
-background-color: #F7F7F7;
-border-color: #e7e7e7;
-border-width: 1px 0 0px;
+background-color: #fff;
+border-color: #D2DCE7;
+border-width: 1px;
 min-height: 38px;
-text-align:center;
+text-align: center;
+border-radius: 0 0 3px 3px;
 }
 .navbar-statusbar .navbar-text {
 float:none;
@@ -204,8 +206,8 @@ font-weight: 400;
 /** SIDEBAR **/
 .media-sidebar {
 height: 100%;
-background-color: #f0f0f0;
-border-left: 1px solid #DEDEDE;
+background-color: #ECF0F5;
+border-left: 1px solid #D2DCE7;
 padding: 0;
 overflow: auto;
 }
@@ -228,7 +230,7 @@ margin: 5px 0 10px;
 }
 #media-details .btn {
 font-size: 12px;
-padding: 4px 8px;
+padding: 6px 12px;
 }
 .get_info {
 font-size: 12px;
@@ -245,7 +247,7 @@ cursor: default !important;
 display: inline-block;
 margin-right: 5px;
 text-align: right;
-width: 85px;
+font-weight: 600;
 }
 .uploader-box {
 background: none repeat scroll 0 0 #FFFFFF;
@@ -308,11 +310,12 @@ height: 100%;
 
 /*** BREADCRUMB ***/
 .breadcrumb {
-border-top: 1px solid #eee;
-border-bottom: 1px solid #E7E7E7;
-border-radius:0;
-padding: 6px 15px;
-margin: 0 -15px;
+background-color: #FFFFFF;
+border: 1px solid #D2DCE7;
+border-bottom: 0 none;
+border-radius:3px 3px 0 0;
+padding: 7px 15px;
+margin: 0;
 z-index:5;
 }
 .breadcrumb > li {
@@ -379,8 +382,8 @@ width: 100%;
 padding:0;
 }
 .media-list .thumbnail > a {
-background-color: #FCFCFC;
-box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1) inset, 0px 0px 0px 1px rgba(0, 0, 0, 0.02) inset;
+background-color: #f8fafc;
+box-shadow: 0px 0px 15px rgba(235, 240, 245, 0.9) inset, 0px 0px 0px 1px rgba(235, 240, 245, 0.02) inset;
 cursor: pointer;
 top: 0px;
 display: block;

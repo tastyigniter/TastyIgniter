@@ -97,7 +97,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="col-xs-8 col-sm-4">
+							<div class="col-xs-8 col-sm-4 wrap-none">
 								<div class="btn-group btn-block">
 									<div class="navbar-form input-group">
 										<span id="btn-clear" class="input-group-addon" title="<?php echo lang('text_clear'); ?>"><i id="filter-clear" class="fa fa-times"></i></span>
@@ -183,21 +183,21 @@
                                             <div class="info">
                                                 <div class="btn-group">
                                                     <?php if ($file['type'] === 'img') { ?>
-                                                        <button type="button" class="btn btn-default btn-preview" data-url="<?php echo $file['img_url']; ?>"><i class="fa fa-eye"></i></button>
+                                                        <button type="button" class="btn btn-default btn-preview" title="<?php echo lang('button_preview'); ?>" data-url="<?php echo $file['img_url']; ?>"><i class="fa fa-eye"></i></button>
                                                     <?php } else { ?>
-                                                        <button type="button" class="btn btn-default btn-preview" disabled="disabled" data-url="<?php echo $file['img_url']; ?>"><i class="fa fa-eye"></i></button>
+                                                        <button type="button" class="btn btn-default btn-preview" title="<?php echo lang('button_preview'); ?>" disabled="disabled" data-url="<?php echo $file['img_url']; ?>"><i class="fa fa-eye"></i></button>
                                                     <?php } ?>
                                                     <?php if ($rename) { ?>
-                                                        <button type="button" class="btn btn-default btn-rename" data-name="<?php echo $file['name']; ?>" data-path="<?php echo $sub_folder; ?>"><i class="fa fa-pencil"></i></button>
+                                                        <button type="button" class="btn btn-default btn-rename" title="<?php echo lang('button_rename'); ?>" data-name="<?php echo $file['name']; ?>" data-path="<?php echo $sub_folder; ?>"><i class="fa fa-pencil"></i></button>
                                                     <?php } ?>
                                                     <?php if ($move) { ?>
-                                                        <button type="button" class="btn btn-default btn-move"><i class="fa fa-folder-open"></i></button>
+                                                        <button type="button" class="btn btn-default btn-move" title="<?php echo lang('button_move'); ?>"><i class="fa fa-folder-open"></i></button>
                                                     <?php } ?>
                                                     <?php if ($copy) { ?>
-                                                        <button type="button" class="btn btn-default btn-copy"><i class="fa fa-clipboard"></i></button>
+                                                        <button type="button" class="btn btn-default btn-copy" title="<?php echo lang('button_copy'); ?>"><i class="fa fa-clipboard"></i></button>
                                                     <?php } ?>
                                                     <?php if ($delete) { ?>
-                                                        <button type="button" class="btn btn-default btn-delete"><i class="fa fa-trash"></i></button>
+                                                        <button type="button" class="btn btn-default btn-delete" title="<?php echo lang('button_delete'); ?>"><i class="fa fa-trash"></i></button>
                                                     <?php } ?>
                                                 </div>
                                                 <ul class="get_info">

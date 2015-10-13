@@ -15,6 +15,11 @@ $lang['text_rename_folder'] 		    = 'Rename Folder';
 $lang['text_delete_folder'] 		    = 'Delete Folder';
 
 $lang['button_upload'] 		            = 'Upload';
+$lang['button_preview'] 		        = 'Preview';
+$lang['button_rename'] 		            = 'Rename';
+$lang['button_move'] 		            = 'Move';
+$lang['button_copy'] 		            = 'Copy';
+$lang['button_delete'] 		            = 'Delete';
 
 $lang['label_name'] 		            = 'Name';
 $lang['label_date'] 		            = 'Date';
