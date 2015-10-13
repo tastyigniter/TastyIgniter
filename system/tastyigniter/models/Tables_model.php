@@ -2,8 +2,8 @@
 
 class Tables_model extends TI_Model {
 
-    public function getCount($filter) {
-		if (!empty($filter['filter_search'])) {
+	public function getCount($filter) {
+		if ( ! empty($filter['filter_search'])) {
 			$this->db->like('table_name', $filter['filter_search']);
 		}
 
@@ -12,22 +12,23 @@ class Tables_model extends TI_Model {
 		}
 
 		$this->db->from('tables');
+
 		return $this->db->count_all_results();
-    }
+	}
 
 	public function getList($filter = array()) {
-		if (!empty($filter['page']) AND $filter['page'] !== 0) {
+		if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
 			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
 		}
 
-        if ($this->db->limit($filter['limit'], $filter['page'])) {
+		if ($this->db->limit($filter['limit'], $filter['page'])) {
 			$this->db->from('tables');
 
-			if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+			if ( ! empty($filter['sort_by']) AND ! empty($filter['order_by'])) {
 				$this->db->order_by($filter['sort_by'], $filter['order_by']);
 			}
 
-			if (!empty($filter['filter_search'])) {
+			if ( ! empty($filter['filter_search'])) {
 				$this->db->like('table_name', $filter['filter_search']);
 			}
 
@@ -91,9 +92,9 @@ class Tables_model extends TI_Model {
 	}
 
 	public function getAutoComplete($filter_data = array()) {
-		if (is_array($filter_data) && !empty($filter_data)) {
+		if (is_array($filter_data) && ! empty($filter_data)) {
 
-			if (!empty($filter_data['table_name'])) {
+			if ( ! empty($filter_data['table_name'])) {
 				$this->db->from('tables');
 				$this->db->where('table_status >', '0');
 				$this->db->like('table_name', $filter_data['table_name']);
@@ -111,46 +112,46 @@ class Tables_model extends TI_Model {
 	}
 
 	public function saveTable($table_id, $save = array()) {
-        if (empty($save)) return FALSE;
+		if (empty($save)) return FALSE;
 
-		if (!empty($save['table_name'])) {
+		if (isset($save['table_name'])) {
 			$this->db->set('table_name', $save['table_name']);
 		}
 
-		if (!empty($save['min_capacity'])) {
+		if (isset($save['min_capacity'])) {
 			$this->db->set('min_capacity', $save['min_capacity']);
 		}
 
-		if (!empty($save['max_capacity'])) {
+		if (isset($save['max_capacity'])) {
 			$this->db->set('max_capacity', $save['max_capacity']);
 		}
 
-		if ($save['table_status'] === '1') {
+		if (isset($save['table_status']) AND $save['table_status'] === '1') {
 			$this->db->set('table_status', $save['table_status']);
 		} else {
 			$this->db->set('table_status', '0');
 		}
 
 		if (is_numeric($table_id)) {
-            $this->db->where('table_id', $table_id);
-            $query = $this->db->update('tables');
-        } else {
-            $query = $this->db->insert('tables');
-            $table_id = $this->db->insert_id();
-        }
+			$this->db->where('table_id', $table_id);
+			$query = $this->db->update('tables');
+		} else {
+			$query = $this->db->insert('tables');
+			$table_id = $this->db->insert_id();
+		}
 
-        return $table_id;
+		return $table_id;
 	}
 
 	public function deleteTable($table_id) {
-        if (is_numeric($table_id)) $table_id = array($table_id);
+		if (is_numeric($table_id)) $table_id = array($table_id);
 
-        if (!empty($table_id) AND ctype_digit(implode('', $table_id))) {
-            $this->db->where_in('table_id', $table_id);
-            $this->db->delete('tables');
+		if ( ! empty($table_id) AND ctype_digit(implode('', $table_id))) {
+			$this->db->where_in('table_id', $table_id);
+			$this->db->delete('tables');
 
-            return $this->db->affected_rows();
-        }
+			return $this->db->affected_rows();
+		}
 	}
 }
 

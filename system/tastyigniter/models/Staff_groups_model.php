@@ -75,17 +75,17 @@ class Staff_groups_model extends TI_Model {
     public function saveStaffGroup($staff_group_id, $save = array()) {
         if (empty($save)) return FALSE;
 
-		if (!empty($save['staff_group_name'])) {
+		if (isset($save['staff_group_name'])) {
 			$this->db->set('staff_group_name', $save['staff_group_name']);
 		}
 
-		if ($save['location_access'] === '1') {
+		if (isset($save['location_access']) AND $save['location_access'] === '1') {
 			$this->db->set('location_access', $save['location_access']);
 		} else {
 			$this->db->set('location_access', '0');
 		}
 
-		if (!empty($save['permissions'])) {
+		if (isset($save['permissions'])) {
             $this->db->set('permissions', serialize($save['permissions']));
         } else {
 			$this->db->set('permissions', serialize(array()));

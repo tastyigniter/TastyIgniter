@@ -8,11 +8,12 @@ class Activities_model extends TI_Model {
 		}
 
 		$this->db->from('activities');
+
 		return $this->db->count_all_results();
-    }
+	}
 
 	public function getList($filter = array()) {
-		if (!empty($filter['page']) AND $filter['page'] !== 0) {
+		if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
 			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
 		}
 
@@ -29,7 +30,7 @@ class Activities_model extends TI_Model {
 			$result = $sort_result = array();
 
 			if ($query->num_rows() > 0) {
-                return $query->result_array();
+				return $query->result_array();
 			}
 
 			return $result;
@@ -51,43 +52,44 @@ class Activities_model extends TI_Model {
 	}
 
 	public function logActivity($user_id, $action, $context, $message) {
-        if (method_exists( $this->router, 'fetch_module' )) {
-            $this->_module 	= $this->router->fetch_module();
-        }
+		if (method_exists($this->router, 'fetch_module')) {
+			$this->_module = $this->router->fetch_module();
+		}
 
-        if (is_numeric($user_id) AND is_string($action) AND is_string($message)) {
-            // set the current domain (e.g admin, main, module)
-            $domain = (!empty($this->_module)) ? 'module' : APPDIR;
-            $this->db->set('domain', $domain);
-            $this->db->set('context', $context);
+		if (is_numeric($user_id) AND is_string($action) AND is_string($message)) {
+			// set the current domain (e.g admin, main, module)
+			$domain = ( ! empty($this->_module)) ? 'module' : APPDIR;
+			$this->db->set('domain', $domain);
+			$this->db->set('context', $context);
 
-            // set user if customer is logged in and the domain is not admin
-            $this->load->library('customer');
-            $user = ($this->customer->islogged() AND $domain !== ADMINDIR) ? 'customer' : 'staff';
-            $this->db->set('user', $user);
+			// set user if customer is logged in and the domain is not admin
+			$this->load->library('customer');
+			$user = ($this->customer->islogged() AND $domain !== ADMINDIR) ? 'customer' : 'staff';
+			$this->db->set('user', $user);
 
-            if (is_numeric($user_id)) {
-                $this->db->set('user_id', $user_id);
-            }
+			if (is_numeric($user_id)) {
+				$this->db->set('user_id', $user_id);
+			}
 
-            if (is_string($action)) {
-                $this->db->set('action', $action);
-            }
+			if (is_string($action)) {
+				$this->db->set('action', $action);
+			}
 
-            if (is_string($message)) {
-                $this->db->set('message', $message);
-            }
+			if (is_string($message)) {
+				$this->db->set('message', $message);
+			}
 
-            $this->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', time()));
+			$this->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', time()));
 
 			$this->db->insert('activities');
 		}
 	}
 
-    public function getMessage($lang, $search = array(), $replace = array()) {
-        $this->lang->load('activities');
-        return str_replace($search, $replace, $this->lang->line($lang));
-    }
+	public function getMessage($lang, $search = array(), $replace = array()) {
+		$this->lang->load('activities');
+
+		return str_replace($search, $replace, $this->lang->line($lang));
+	}
 }
 
 /* End of file activities_model.php */

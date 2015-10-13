@@ -17,35 +17,36 @@ class Security_questions_model extends TI_Model {
 		return $result;
 	}
 
-    public function getQuestion($question_id) {
-        $this->db->from('security_questions');
+	public function getQuestion($question_id) {
+		$this->db->from('security_questions');
 
-        $this->db->where('question_id', $question_id);
-        $query = $this->db->get();
+		$this->db->where('question_id', $question_id);
+		$query = $this->db->get();
 
-        return $query->row_array();
-    }
+		return $query->row_array();
+	}
 
 	public function updateQuestions($questions = array()) {
 		$query = FALSE;
 
-		if (!empty($questions)) {
+		if ( ! empty($questions)) {
 			$priority = 1;
+
 			foreach ($questions as $question) {
-				if (!empty($question['text'])) {
-					if (!empty($question['question_id']) AND $question['question_id'] > 0) {
+				if ( ! empty($question['text'])) {
+					if ( ! empty($question['question_id']) AND $question['question_id'] > 0) {
 						$this->db->set('text', $question['text']);
 						$this->db->set('priority', $priority);
 						$this->db->where('question_id', $question['question_id']);
 						$this->db->update('security_questions');
-					} else if (!empty($question['text'])) {
+					} else if ( ! empty($question['text'])) {
 						$this->db->set('text', $question['text']);
 						$this->db->set('priority', $priority);
 						$this->db->insert('security_questions');
 					}
 				}
 
-				$priority++;
+				$priority ++;
 			}
 
 			$query = TRUE;

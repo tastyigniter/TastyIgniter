@@ -2,8 +2,8 @@
 
 class Countries_model extends TI_Model {
 
-    public function getCount($filter = array()) {
-		if (!empty($filter['filter_search'])) {
+	public function getCount($filter = array()) {
+		if (isset($filter['filter_search'])) {
 			$this->db->like('country_name', $filter['filter_search']);
 		}
 
@@ -12,18 +12,19 @@ class Countries_model extends TI_Model {
 		}
 
 		$this->db->from('countries');
+
 		return $this->db->count_all_results();
-    }
+	}
 
 	public function getList($filter = array()) {
-		if (!empty($filter['page']) AND $filter['page'] !== 0) {
+		if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
 			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
 		}
 
 		if ($this->db->limit($filter['limit'], $filter['page'])) {
 			$this->db->from('countries');
 
-			if (!empty($filter['filter_search'])) {
+			if ( ! empty($filter['filter_search'])) {
 				$this->db->like('country_name', $filter['filter_search']);
 			}
 
@@ -31,7 +32,7 @@ class Countries_model extends TI_Model {
 				$this->db->where('status', $filter['filter_status']);
 			}
 
-			if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+			if ( ! empty($filter['sort_by']) AND ! empty($filter['order_by'])) {
 				$this->db->order_by($filter['sort_by'], $filter['order_by']);
 			}
 
@@ -74,27 +75,27 @@ class Countries_model extends TI_Model {
 	public function saveCountry($country_id, $save = array()) {
 		if (empty($save)) return FALSE;
 
-		if (!empty($save['country_name'])) {
+		if (isset($save['country_name'])) {
 			$this->db->set('country_name', $save['country_name']);
 		}
 
-		if (!empty($save['iso_code_2'])) {
+		if (isset($save['iso_code_2'])) {
 			$this->db->set('iso_code_2', $save['iso_code_2']);
 		}
 
-		if (!empty($save['iso_code_3'])) {
+		if (isset($save['iso_code_3'])) {
 			$this->db->set('iso_code_3', $save['iso_code_3']);
 		}
 
-		if (!empty($save['flag'])) {
+		if (isset($save['flag'])) {
 			$this->db->set('flag', $save['flag']);
 		}
 
-		if (!empty($save['format'])) {
+		if (isset($save['format'])) {
 			$this->db->set('format', $save['format']);
 		}
 
-		if ($save['status'] === '1') {
+		if (isset($save['status']) AND $save['status'] === '1') {
 			$this->db->set('status', $save['status']);
 		} else {
 			$this->db->set('status', '0');
@@ -104,23 +105,23 @@ class Countries_model extends TI_Model {
 			$this->db->where('country_id', $country_id);
 			$query = $this->db->update('countries');
 		} else {
-            $query = $this->db->insert('countries');
-            $country_id = $this->db->insert_id();
-        }
+			$query = $this->db->insert('countries');
+			$country_id = $this->db->insert_id();
+		}
 
 		return ($query === TRUE AND is_numeric($country_id)) ? $country_id : FALSE;
 	}
 
-    public function deleteCountry($country_id) {
-        if (is_numeric($country_id)) $country_id = array($country_id);
+	public function deleteCountry($country_id) {
+		if (is_numeric($country_id)) $country_id = array($country_id);
 
-        if (!empty($country_id) AND ctype_digit(implode('', $country_id))) {
-            $this->db->where_in('country_id', $country_id);
-            $this->db->delete('countries');
+		if ( ! empty($country_id) AND ctype_digit(implode('', $country_id))) {
+			$this->db->where_in('country_id', $country_id);
+			$this->db->delete('countries');
 
-            return $this->db->affected_rows();
-        }
-    }
+			return $this->db->affected_rows();
+		}
+	}
 }
 
 /* End of file countries_model.php */

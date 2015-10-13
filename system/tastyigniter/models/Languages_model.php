@@ -2,8 +2,8 @@
 
 class Languages_model extends TI_Model {
 
-    public function getCount($filter = array()) {
-		if (!empty($filter['filter_search'])) {
+	public function getCount($filter = array()) {
+		if ( ! empty($filter['filter_search'])) {
 			$this->db->like('name', $filter['filter_search']);
 			$this->db->or_like('code', $filter['filter_search']);
 		}
@@ -13,22 +13,23 @@ class Languages_model extends TI_Model {
 		}
 
 		$this->db->from('languages');
+
 		return $this->db->count_all_results();
-    }
+	}
 
 	public function getList($filter = array()) {
-		if (!empty($filter['page']) AND $filter['page'] !== 0) {
+		if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
 			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
 		}
 
 		if ($this->db->limit($filter['limit'], $filter['page'])) {
 			$this->db->from('languages');
 
-			if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
+			if ( ! empty($filter['sort_by']) AND ! empty($filter['order_by'])) {
 				$this->db->order_by($filter['sort_by'], $filter['order_by']);
 			}
 
-			if (!empty($filter['filter_search'])) {
+			if ( ! empty($filter['filter_search'])) {
 				$this->db->like('name', $filter['filter_search']);
 				$this->db->or_like('code', $filter['filter_search']);
 			}
@@ -80,57 +81,57 @@ class Languages_model extends TI_Model {
 	}
 
 	public function saveLanguage($language_id, $save = array()) {
-        if (empty($save)) return FALSE;
+		if (empty($save)) return FALSE;
 
-		if (!empty($save['name'])) {
+		if (isset($save['name'])) {
 			$this->db->set('name', $save['name']);
 		}
 
-		if (!empty($save['code'])) {
+		if (isset($save['code'])) {
 			$this->db->set('code', $save['code']);
 		}
 
-		if (!empty($save['image'])) {
+		if (isset($save['image'])) {
 			$this->db->set('image', $save['image']);
 		}
 
-		if (!empty($save['idiom'])) {
+		if (isset($save['idiom'])) {
 			$this->db->set('idiom', $save['idiom']);
 		}
 
-		if ($save['can_delete'] === '1') {
+		if (isset($save['can_delete']) AND $save['can_delete'] === '1') {
 			$this->db->set('can_delete', '1');
 		} else {
 			$this->db->set('can_delete', '0');
 		}
 
-		if ($save['status'] === '1') {
+		if (isset($save['status']) AND $save['status'] === '1') {
 			$this->db->set('status', '1');
 		} else {
 			$this->db->set('status', '0');
 		}
 
 		if (is_numeric($language_id)) {
-            $this->db->where('language_id', $language_id);
-            $query = $this->db->update('languages');
-        } else {
-            $query = $this->db->insert('languages');
-            $language_id = $this->db->insert_id();
-        }
+			$this->db->where('language_id', $language_id);
+			$query = $this->db->update('languages');
+		} else {
+			$query = $this->db->insert('languages');
+			$language_id = $this->db->insert_id();
+		}
 
-        return ($query === TRUE AND is_numeric($language_id)) ? $language_id : FALSE;
+		return ($query === TRUE AND is_numeric($language_id)) ? $language_id : FALSE;
 	}
 
 	public function deleteLanguage($language_id) {
-        if (is_numeric($language_id)) $language_id = array($language_id);
+		if (is_numeric($language_id)) $language_id = array($language_id);
 
-        if (!empty($language_id) AND ctype_digit(implode('', $language_id))) {
-            $this->db->where('can_delete', '0');
-            $this->db->where_in('language_id', $language_id);
-            $this->db->delete('languages');
+		if ( ! empty($language_id) AND ctype_digit(implode('', $language_id))) {
+			$this->db->where('can_delete', '0');
+			$this->db->where_in('language_id', $language_id);
+			$this->db->delete('languages');
 
-            return $this->db->affected_rows();
-        }
+			return $this->db->affected_rows();
+		}
 	}
 }
 

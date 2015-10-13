@@ -119,7 +119,7 @@ class Permissions_model extends TI_Model {
 	public function savePermission($permission_id, $save = array()) {
         if (empty($save) OR empty($save['name'])) return FALSE;
 
-		if (!empty($save['name'])) {
+		if (isset($save['name'])) {
 			if ($permission = $this->getPermissionByName($save['name'])) {
 				$permission_id = $permission['permission_id'];
 			}
@@ -127,16 +127,16 @@ class Permissions_model extends TI_Model {
 			$this->db->set('name', $save['name']);
 		}
 
-		if (!empty($save['description'])) {
+		if (isset($save['description'])) {
 			$this->db->set('description', $save['description']);
 		}
 
-		if (!empty($save['action'])) {
+		if (isset($save['action'])) {
             if (!is_array($save['action'])) $save['action'] = array($save['action']);
 			$this->db->set('action', serialize($save['action']));
 		}
 
-		if ($save['status'] === '1') {
+		if (isset($save['status']) AND $save['status'] === '1') {
 			$this->db->set('status', $save['status']);
 		} else {
 			$this->db->set('status', '0');

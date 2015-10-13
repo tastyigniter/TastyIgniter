@@ -2,104 +2,100 @@
 
 class Banners_model extends TI_Model {
 
-    public function getBanners() {
-        $this->db->from('banners');
+	public function getBanners() {
+		$this->db->from('banners');
 
-        $query = $this->db->get();
+		$query = $this->db->get();
 
-        $result = array();
+		$result = array();
 
-        if ($query->num_rows() > 0) {
-            $result = $query->result_array();
-        }
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
 
-        return $result;
-    }
+		return $result;
+	}
 
-    public function getBanner($banner_id) {
-        $this->db->from('banners');
+	public function getBanner($banner_id) {
+		$this->db->from('banners');
 
-        $this->db->where('banner_id', $banner_id);
+		$this->db->where('banner_id', $banner_id);
 
-        $query = $this->db->get();
+		$query = $this->db->get();
 
-        if ($query->num_rows() > 0) {
-            return $query->row_array();
-        }
-    }
+		if ($query->num_rows() > 0) {
+			return $query->row_array();
+		}
+	}
 
-    public function saveBanner($banner_id, $save = array()) {
-        if (empty($save)) return FALSE;
+	public function saveBanner($banner_id, $save = array()) {
+		if (empty($save)) return FALSE;
 
-        if (!empty($save['name'])) {
-            $this->db->set('name', $save['name']);
-        }
+		if (isset($save['name'])) {
+			$this->db->set('name', $save['name']);
+		}
 
-        if (!empty($save['type'])) {
-            $this->db->set('type', $save['type']);
-        }
+		if (isset($save['type'])) {
+			$this->db->set('type', $save['type']);
+		}
 
-        if (!empty($save['click_url'])) {
-            $this->db->set('click_url', $save['click_url']);
-        }
+		if (isset($save['click_url'])) {
+			$this->db->set('click_url', $save['click_url']);
+		}
 
-        if (!empty($save['language_id'])) {
-            $this->db->set('language_id', $save['language_id']);
-        }
+		if (isset($save['language_id'])) {
+			$this->db->set('language_id', $save['language_id']);
+		}
 
-        if (!empty($save['alt_text'])) {
-            $this->db->set('alt_text', $save['alt_text']);
-        }
+		if (isset($save['alt_text'])) {
+			$this->db->set('alt_text', $save['alt_text']);
+		}
 
-        if (!empty($save['type']) AND $save['type'] === 'custom') {
+		if (isset($save['type']) AND $save['type'] === 'custom' AND isset($save['custom_code'])) {
 
-            if ( ! empty($save['custom_code'])) {
-                $this->db->set('custom_code', $save['custom_code']);
-            }
+			$this->db->set('custom_code', $save['custom_code']);
+		} else if (isset($save['type']) AND $save['type'] === 'image' AND isset($save['image_path'])) {
 
-        } else if (!empty($save['type']) AND $save['type'] === 'image') {
+			$save['image_code']['path'] = $save['image_path'];
 
-            $save['image_code']['path'] = $save['image_path'];
+			$this->db->set('image_code', serialize($save['image_code']));
+		} else if (isset($save['type']) AND $save['type'] === 'carousel') {
+			if (isset($save['carousels']) AND is_array($save['carousels'])) {
+				foreach ($save['carousels'] as $key => $value) {
+					$save['image_code']['paths'][] = $value;
+				}
 
-            $this->db->set('image_code', serialize($save['image_code']));
+				$this->db->set('image_code', serialize($save['image_code']));
+			}
+		}
 
-        } else if (!empty($save['type']) AND $save['type'] === 'carousel') {
-            if (!empty($save['carousels']) AND is_array($save['carousels'])) {
-                foreach ($save['carousels'] as $key => $value) {
-                    $save['image_code']['paths'][] = $value;
-                }
+		if (isset($save['status'])) {
+			$this->db->set('status', $save['status']);
+		} else {
+			$this->db->set('status', '0');
+		}
 
-                $this->db->set('image_code', serialize($save['image_code']));
-            }
-        }
+		if (is_numeric($banner_id)) {
+			$this->db->where('banner_id', $banner_id);
+			$query = $this->db->update('banners');
+		} else {
+			$query = $this->db->insert('banners');
+			$banner_id = $this->db->insert_id();
+		}
 
-        if (!empty($save['status'])) {
-            $this->db->set('status', $save['status']);
-        } else {
-            $this->db->set('status', '0');
-        }
+		return ($query === TRUE AND is_numeric($banner_id)) ? $banner_id : FALSE;
+	}
 
-        if (is_numeric($banner_id)) {
-            $this->db->where('banner_id', $banner_id);
-            $query = $this->db->update('banners');
-        } else {
-            $query = $this->db->insert('banners');
-            $banner_id = $this->db->insert_id();
-        }
+	public function deleteBanner($banner_id) {
+		if (is_numeric($banner_id)) $banner_id = array($banner_id);
 
-        return ($query === TRUE AND is_numeric($banner_id)) ? $banner_id : FALSE;
-    }
+		if (isset($banner_id) AND ctype_digit(implode('', $banner_id))) {
+			$this->db->where_in('banner_id', $banner_id);
+			$this->db->delete('banners');
 
-    public function deleteBanner($banner_id) {
-        if (is_numeric($banner_id)) $banner_id = array($banner_id);
-
-        if (!empty($banner_id) AND ctype_digit(implode('', $banner_id))) {
-            $this->db->where_in('banner_id', $banner_id);
-            $this->db->delete('banners');
-
-            return $this->db->affected_rows();
-        }
-    }
+			return $this->db->affected_rows();
+		}
+	}
 }
 
 /* End of file banners_model.php */

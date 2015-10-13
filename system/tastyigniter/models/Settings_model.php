@@ -2,7 +2,7 @@
 
 class Settings_model extends TI_Model {
 
-    public function getAll() {
+	public function getAll() {
 		$this->db->from('settings');
 
 		$query = $this->db->get();
@@ -16,9 +16,9 @@ class Settings_model extends TI_Model {
 	}
 
 	public function updateSettings($sort, $update = array()) {
- 		if (!empty($update) && !empty($sort)) {
+		if ( ! empty($update) && ! empty($sort)) {
 			foreach ($update as $item => $value) {
-				if (!empty($item)) {
+				if ( ! empty($item)) {
 					$this->db->where('sort', $sort);
 					$this->db->where('item', $item);
 					$this->db->delete('settings');
@@ -41,7 +41,7 @@ class Settings_model extends TI_Model {
 
 			return TRUE;
 		}
- 	}
+	}
 
 	public function addSetting($sort, $item, $value, $serialized = '0') {
 		$query = FALSE;
@@ -70,7 +70,7 @@ class Settings_model extends TI_Model {
 	}
 
 	public function deleteSettings($sort, $item) {
-		if (!empty($sort) AND !empty($item)) {
+		if ( ! empty($sort) AND ! empty($item)) {
 			$this->db->where('sort', $sort);
 			$this->db->where('item', $item);
 			$this->db->delete('settings');

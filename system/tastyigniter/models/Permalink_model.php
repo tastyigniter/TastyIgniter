@@ -2,107 +2,108 @@
 
 class Permalink_model extends TI_Model {
 
-    public function isPermalinkEnabled() {
-        return ($this->config->item('permalink') == '1') ? TRUE : FALSE;
-    }
+	public function isPermalinkEnabled() {
+		return ($this->config->item('permalink') == '1') ? TRUE : FALSE;
+	}
 
-    public function getPermalinks() {
-        if (!$this->isPermalinkEnabled()) return array();
+	public function getPermalinks() {
+		if ( ! $this->isPermalinkEnabled()) return array();
 
-        $this->db->from('permalinks');
+		$this->db->from('permalinks');
 
-        $query = $this->db->get();
-        $result = array();
+		$query = $this->db->get();
+		$result = array();
 
-        if ($query->num_rows() > 0) {
-            $result = $query->result_array();
-        }
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
 
-        return $result;
-    }
+		return $result;
+	}
 
-    public function getPermalink($query) {
-        if (!$this->isPermalinkEnabled()) return array();
+	public function getPermalink($query) {
+		if ( ! $this->isPermalinkEnabled()) return array();
 
-        $this->db->from('permalinks');
-        $this->db->where('query', $query);
+		$this->db->from('permalinks');
+		$this->db->where('query', $query);
 
-        $query = $this->db->get();
+		$query = $this->db->get();
 
-        if ($query->num_rows() > 0) {
-            return $query->row_array();
-        }
-    }
+		if ($query->num_rows() > 0) {
+			return $query->row_array();
+		}
+	}
 
-    public function savePermalink($controller, $permalink = array(), $query = '') {
-        if (!$this->isPermalinkEnabled()) return FALSE;
+	public function savePermalink($controller, $permalink = array(), $query = '') {
+		if ( ! $this->isPermalinkEnabled()) return FALSE;
 
-        if (empty($controller)) return FALSE;
+		if (empty($controller)) return FALSE;
 
-        if (!empty($permalink['slug']) AND !empty($query)) {
-            $slug = $this->_checkDuplicate($controller, $permalink);
-            if (!empty($permalink['permalink_id'])) {
-                $this->db->set('slug', $slug);
-                $this->db->set('controller', $controller);
+		if ( ! empty($permalink['slug']) AND ! empty($query)) {
+			$slug = $this->_checkDuplicate($controller, $permalink);
 
-                $this->db->where('permalink_id', $permalink['permalink_id']);
-                $this->db->where('query', $query);
-                $query = $this->db->update('permalinks');
-            } else {
-                $this->db->where('query', $query);
-                $this->db->where('controller', $controller);
-                $this->db->delete('permalinks');
+			if ( ! empty($permalink['permalink_id'])) {
+				$this->db->set('slug', $slug);
+				$this->db->set('controller', $controller);
 
-                $this->db->set('controller', $controller);
-                $this->db->set('slug', $slug);
-                $this->db->set('query', $query);
+				$this->db->where('permalink_id', $permalink['permalink_id']);
+				$this->db->where('query', $query);
+				$query = $this->db->update('permalinks');
+			} else {
+				$this->db->where('query', $query);
+				$this->db->where('controller', $controller);
+				$this->db->delete('permalinks');
 
-                $query = $this->db->insert('permalinks');
-                $permalink['permalink_id'] = $this->db->insert_id();
-            }
-        }
+				$this->db->set('controller', $controller);
+				$this->db->set('slug', $slug);
+				$this->db->set('query', $query);
 
-        return $query;
-    }
+				$query = $this->db->insert('permalinks');
+				$permalink['permalink_id'] = $this->db->insert_id();
+			}
+		}
 
-    private function _checkDuplicate($controller, $permalink = array(), $duplicate = '0') {
-        if (!empty($controller) AND !empty($permalink['slug'])) {
+		return $query;
+	}
 
-            $slug = ($duplicate > 0) ? $permalink['slug'].'-'.$duplicate : $permalink['slug'];
-            $slug = url_title($slug, '-', TRUE);
+	private function _checkDuplicate($controller, $permalink = array(), $duplicate = '0') {
+		if ( ! empty($controller) AND ! empty($permalink['slug'])) {
 
-            $this->db->where('controller', $controller);
-            $this->db->where('slug', $slug);
+			$slug = ($duplicate > 0) ? $permalink['slug'] . '-' . $duplicate : $permalink['slug'];
+			$slug = url_title($slug, '-', TRUE);
 
-            $this->db->from('permalinks');
-            $query = $this->db->get();
+			$this->db->where('controller', $controller);
+			$this->db->where('slug', $slug);
 
-            if ($query->num_rows() > 0) {
-                $row = $query->row_array();
+			$this->db->from('permalinks');
+			$query = $this->db->get();
 
-                if (!empty($permalink['permalink_id']) AND $permalink['permalink_id'] === $row['permalink_id']) {
-                    return $slug;
-                }
+			if ($query->num_rows() > 0) {
+				$row = $query->row_array();
 
-                $duplicate++;
-                $slug = $this->_checkDuplicate($controller, $permalink, $duplicate);
-            }
+				if ( ! empty($permalink['permalink_id']) AND $permalink['permalink_id'] === $row['permalink_id']) {
+					return $slug;
+				}
 
-            return $slug;
-        }
-    }
+				$duplicate ++;
+				$slug = $this->_checkDuplicate($controller, $permalink, $duplicate);
+			}
 
-    public function deletePermalink($controller, $query) {
-        if (is_string($controller) AND is_string($query)) {
-            $this->db->where('query', $query);
-            $this->db->where('controller', $controller);
-            $this->db->delete('permalinks');
+			return $slug;
+		}
+	}
 
-            if ($this->db->affected_rows() > 0) {
-                return TRUE;
-            }
-        }
-    }
+	public function deletePermalink($controller, $query) {
+		if (is_string($controller) AND is_string($query)) {
+			$this->db->where('query', $query);
+			$this->db->where('controller', $controller);
+			$this->db->delete('permalinks');
+
+			if ($this->db->affected_rows() > 0) {
+				return TRUE;
+			}
+		}
+	}
 }
 
 /* End of file permalink_model.php */

@@ -2,58 +2,57 @@
 
 class Addresses_model extends TI_Model {
 
-    public function getCount($filter = array()) {
-        if (!empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
-            $this->db->where('customer_id', $filter['customer_id']);
+	public function getCount($filter = array()) {
+		if ( ! empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
+			$this->db->where('customer_id', $filter['customer_id']);
 
-            $this->db->from('addresses');
-            return $this->db->count_all_results();
-        }
-    }
+			$this->db->from('addresses');
 
-    public function getList($filter = array()) {
-        if (!empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
-            if (!empty($filter['page']) AND $filter['page'] !== 0) {
-                $filter['page'] = ($filter['page'] - 1) * $filter['limit'];
-            }
+			return $this->db->count_all_results();
+		}
+	}
 
-            if ($this->db->limit($filter['limit'], $filter['page'])) {
-                $this->db->from('addresses');
-                $this->db->join('countries', 'countries.country_id = addresses.country_id', 'left');
+	public function getList($filter = array()) {
+		if ( ! empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
+			if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
+				$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
+			}
 
-                $this->db->where('customer_id', $filter['customer_id']);
+			if ($this->db->limit($filter['limit'], $filter['page'])) {
+				$this->db->from('addresses');
+				$this->db->join('countries', 'countries.country_id = addresses.country_id', 'left');
 
-                $query = $this->db->get();
+				$this->db->where('customer_id', $filter['customer_id']);
 
-                $address_data = array();
+				$query = $this->db->get();
 
-                if ($query->num_rows() > 0) {
-                    foreach ($query->result_array() as $result) {
+				$address_data = array();
 
-                        $address_data[$result['address_id']] = array(
-                            'address_id'     => $result['address_id'],
-                            'address_1'      => $result['address_1'],
-                            'address_2'      => $result['address_2'],
-                            'city'           => $result['city'],
-                            'state'          => $result['state'],
-                            'postcode'       => $result['postcode'],
-                            'country_id'     => $result['country_id'],
-                            'country'        => $result['country_name'],
-                            'iso_code_2'     => $result['iso_code_2'],
-                            'iso_code_3'     => $result['iso_code_3'],
-                            'format'         => $result['format']
-                        );
-                    }
-                }
+				if ($query->num_rows() > 0) {
+					foreach ($query->result_array() as $result) {
 
+						$address_data[$result['address_id']] = array(
+							'address_id' => $result['address_id'],
+							'address_1'  => $result['address_1'],
+							'address_2'  => $result['address_2'],
+							'city'       => $result['city'],
+							'state'      => $result['state'],
+							'postcode'   => $result['postcode'],
+							'country_id' => $result['country_id'],
+							'country'    => $result['country_name'],
+							'iso_code_2' => $result['iso_code_2'],
+							'iso_code_3' => $result['iso_code_3'],
+							'format'     => $result['format'],
+						);
+					}
+				}
 
-                return $address_data;
-            }
+				return $address_data;
+			}
+		}
+	}
 
-        }
-    }
-
-    public function getAddresses($customer_id) {
+	public function getAddresses($customer_id) {
 		$address_data = array();
 
 		if (is_numeric($customer_id)) {
@@ -68,17 +67,17 @@ class Addresses_model extends TI_Model {
 				foreach ($query->result_array() as $result) {
 
 					$address_data[$result['address_id']] = array(
-						'address_id'     => $result['address_id'],
-						'address_1'      => $result['address_1'],
-						'address_2'      => $result['address_2'],
-						'city'           => $result['city'],
-						'state'          => $result['state'],
-						'postcode'       => $result['postcode'],
-						'country_id'     => $result['country_id'],
-						'country'        => $result['country_name'],
-						'iso_code_2'     => $result['iso_code_2'],
-						'iso_code_3'     => $result['iso_code_3'],
-						'format'		 => $result['format']
+						'address_id' => $result['address_id'],
+						'address_1'  => $result['address_1'],
+						'address_2'  => $result['address_2'],
+						'city'       => $result['city'],
+						'state'      => $result['state'],
+						'postcode'   => $result['postcode'],
+						'country_id' => $result['country_id'],
+						'country'    => $result['country_name'],
+						'iso_code_2' => $result['iso_code_2'],
+						'iso_code_3' => $result['iso_code_3'],
+						'format'     => $result['format'],
 					);
 				}
 			}
@@ -87,41 +86,41 @@ class Addresses_model extends TI_Model {
 		return $address_data;
 	}
 
-    public function getAddress($customer_id, $address_id) {
-        if (($customer_id !== '0') AND ($address_id !== '0')) {
-            $this->db->from('addresses');
-            $this->db->join('countries', 'countries.country_id = addresses.country_id', 'left');
+	public function getAddress($customer_id, $address_id) {
+		if (($customer_id !== '0') AND ($address_id !== '0')) {
+			$this->db->from('addresses');
+			$this->db->join('countries', 'countries.country_id = addresses.country_id', 'left');
 
-            $this->db->where('address_id', $address_id);
-            $this->db->where('customer_id', $customer_id);
+			$this->db->where('address_id', $address_id);
+			$this->db->where('customer_id', $customer_id);
 
-            $query = $this->db->get();
+			$query = $this->db->get();
 
-            $address_data = array();
+			$address_data = array();
 
-            if ($query->num_rows() > 0) {
-                $row = $query->row_array();
+			if ($query->num_rows() > 0) {
+				$row = $query->row_array();
 
-                $address_data = array(
-                    'address_id'     => $row['address_id'],
-                    'address_1'      => $row['address_1'],
-                    'address_2'      => $row['address_2'],
-                    'city'           => $row['city'],
-                    'state'          => $row['state'],
-                    'postcode'       => $row['postcode'],
-                    'country_id'     => $row['country_id'],
-                    'country'        => $row['country_name'],
-                    'iso_code_2'     => $row['iso_code_2'],
-                    'iso_code_3'     => $row['iso_code_3'],
-                    'format'     	 => $row['format']
-                );
-            }
+				$address_data = array(
+					'address_id' => $row['address_id'],
+					'address_1'  => $row['address_1'],
+					'address_2'  => $row['address_2'],
+					'city'       => $row['city'],
+					'state'      => $row['state'],
+					'postcode'   => $row['postcode'],
+					'country_id' => $row['country_id'],
+					'country'    => $row['country_name'],
+					'iso_code_2' => $row['iso_code_2'],
+					'iso_code_3' => $row['iso_code_3'],
+					'format'     => $row['format'],
+				);
+			}
 
-            return $address_data;
-        }
-    }
+			return $address_data;
+		}
+	}
 
-    public function getGuestAddress($address_id) {
+	public function getGuestAddress($address_id) {
 		$this->db->from('addresses');
 		$this->db->join('countries', 'countries.country_id = addresses.country_id', 'left');
 
@@ -135,17 +134,17 @@ class Addresses_model extends TI_Model {
 			$row = $query->row_array();
 
 			$address_data = array(
-				'address_id'     => $row['address_id'],
-				'address_1'      => $row['address_1'],
-				'address_2'      => $row['address_2'],
-				'city'           => $row['city'],
-				'state'          => $row['state'],
-				'postcode'       => $row['postcode'],
-				'country_id'     => $row['country_id'],
-				'country'        => $row['country_name'],
-				'iso_code_2'     => $row['iso_code_2'],
-				'iso_code_3'     => $row['iso_code_3'],
-				'format'		 => $row['format']
+				'address_id' => $row['address_id'],
+				'address_1'  => $row['address_1'],
+				'address_2'  => $row['address_2'],
+				'city'       => $row['city'],
+				'state'      => $row['state'],
+				'postcode'   => $row['postcode'],
+				'country_id' => $row['country_id'],
+				'country'    => $row['country_name'],
+				'iso_code_2' => $row['iso_code_2'],
+				'iso_code_3' => $row['iso_code_3'],
+				'format'     => $row['format'],
 			);
 		}
 
@@ -168,7 +167,7 @@ class Addresses_model extends TI_Model {
 		}
 	}
 
-    public function updateDefault($customer_id = '', $address_id = '') {
+	public function updateDefault($customer_id = '', $address_id = '') {
 		$query = FALSE;
 
 		if ($address_id !== '' AND $customer_id !== '') {
@@ -181,50 +180,50 @@ class Addresses_model extends TI_Model {
 		return $query;
 	}
 
-    public function saveAddress($customer_id = FALSE, $address_id = FALSE, $address = array()) {
+	public function saveAddress($customer_id = FALSE, $address_id = FALSE, $address = array()) {
 
-        if (is_array($address_id)) $address = $address_id;
+		if (is_array($address_id)) $address = $address_id;
 
-        if (empty($address)) return FALSE;
+		if (empty($address)) return FALSE;
 
-        if ($customer_id) {
-            $this->db->set('customer_id', $customer_id);
-        }
+		if ($customer_id) {
+			$this->db->set('customer_id', $customer_id);
+		}
 
-        if (!empty($address['address_1'])) {
-            $this->db->set('address_1', $address['address_1']);
-        }
+		if (isset($address['address_1'])) {
+			$this->db->set('address_1', $address['address_1']);
+		}
 
-        if (!empty($address['address_2'])) {
-            $this->db->set('address_2', $address['address_2']);
-        }
+		if (isset($address['address_2'])) {
+			$this->db->set('address_2', $address['address_2']);
+		}
 
-        if (!empty($address['city'])) {
-            $this->db->set('city', $address['city']);
-        }
+		if (isset($address['city'])) {
+			$this->db->set('city', $address['city']);
+		}
 
-        if (!empty($address['state'])) {
-            $this->db->set('state', $address['state']);
-        }
+		if (isset($address['state'])) {
+			$this->db->set('state', $address['state']);
+		}
 
-        if (!empty($address['postcode'])) {
-            $this->db->set('postcode', $address['postcode']);
-        }
+		if (isset($address['postcode'])) {
+			$this->db->set('postcode', $address['postcode']);
+		}
 
-        if (!empty($address['country'])) {
-            $this->db->set('country_id', $address['country']);
-        }
+		if (isset($address['country'])) {
+			$this->db->set('country_id', $address['country']);
+		}
 
-        if (is_numeric($address_id)) {
-            $this->db->where('address_id', $address_id);
-            $query = $this->db->update('addresses');
-        } else {
-            $query = $this->db->insert('addresses');
-            $address_id = $this->db->insert_id();
-        }
+		if (is_numeric($address_id)) {
+			$this->db->where('address_id', $address_id);
+			$query = $this->db->update('addresses');
+		} else {
+			$query = $this->db->insert('addresses');
+			$address_id = $this->db->insert_id();
+		}
 
-        return ($query === TRUE AND is_numeric($address_id)) ? $address_id : FALSE;
-    }
+		return ($query === TRUE AND is_numeric($address_id)) ? $address_id : FALSE;
+	}
 
 	public function deleteAddress($customer_id, $address_id) {
 

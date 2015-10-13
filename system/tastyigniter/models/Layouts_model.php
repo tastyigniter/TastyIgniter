@@ -2,33 +2,34 @@
 
 class Layouts_model extends TI_Model {
 
-    public function getCount($filter = array()) {
-        $this->db->from('layouts');
-        return $this->db->count_all_results();
-    }
+	public function getCount($filter = array()) {
+		$this->db->from('layouts');
 
-    public function getList($filter = array()) {
-        if (!empty($filter['page']) AND $filter['page'] !== 0) {
-            $filter['page'] = ($filter['page'] - 1) * $filter['limit'];
-        }
+		return $this->db->count_all_results();
+	}
 
-        if ($this->db->limit($filter['limit'], $filter['page'])) {
-            $this->db->from('layouts');
+	public function getList($filter = array()) {
+		if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
+			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
+		}
 
-            if (!empty($filter['sort_by']) AND !empty($filter['order_by'])) {
-                $this->db->order_by($filter['sort_by'], $filter['order_by']);
-            }
+		if ($this->db->limit($filter['limit'], $filter['page'])) {
+			$this->db->from('layouts');
 
-            $query = $this->db->get();
-            $result = array();
+			if ( ! empty($filter['sort_by']) AND ! empty($filter['order_by'])) {
+				$this->db->order_by($filter['sort_by'], $filter['order_by']);
+			}
 
-            if ($query->num_rows() > 0) {
-                $result = $query->result_array();
-            }
+			$query = $this->db->get();
+			$result = array();
 
-            return $result;
-        }
-    }
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+
+			return $result;
+		}
+	}
 
 	public function getLayouts() {
 		$this->db->from('layouts');
@@ -72,46 +73,46 @@ class Layouts_model extends TI_Model {
 	}
 
 	public function getLayoutModules($layout_id) {
-        $this->db->from('layout_modules');
-        $this->db->where('layout_id', $layout_id);
+		$this->db->from('layout_modules');
+		$this->db->where('layout_id', $layout_id);
 
 		$query = $this->db->get();
 
-        $result = array();
+		$result = array();
 		if ($query->num_rows() > 0) {
-            $result = $query->result_array();
+			$result = $query->result_array();
 		}
 
-        return $result;
+		return $result;
 	}
 
 	public function getRouteLayoutModules($uri_route) {
-        $result = array();
+		$result = array();
 
-        if (!empty($uri_route)) {
-            $this->db->select('layout_modules.layout_id, layout_module_id, module_code, partial, priority, layout_modules.status');
+		if ( ! empty($uri_route)) {
+			$this->db->select('layout_modules.layout_id, layout_module_id, module_code, partial, priority, layout_modules.status');
 
-            if (is_numeric($uri_route)) {
-                $this->db->from('pages');
-                $this->db->where('page_id', $uri_route);
-                $this->db->join('layout_modules', 'layout_modules.layout_id = pages.layout_id', 'left');
-            } else if (is_string($uri_route)) {
-                $this->db->from('layout_routes');
-                $this->db->join('layout_modules', 'layout_modules.layout_id = layout_routes.layout_id', 'left');
-                $this->db->where('uri_route', $uri_route);
-            }
+			if (is_numeric($uri_route)) {
+				$this->db->from('pages');
+				$this->db->where('page_id', $uri_route);
+				$this->db->join('layout_modules', 'layout_modules.layout_id = pages.layout_id', 'left');
+			} else if (is_string($uri_route)) {
+				$this->db->from('layout_routes');
+				$this->db->join('layout_modules', 'layout_modules.layout_id = layout_routes.layout_id', 'left');
+				$this->db->where('uri_route', $uri_route);
+			}
 
-            $query = $this->db->get();
+			$query = $this->db->get();
 
-            if ($query->num_rows() > 0) {
-                $result = $query->result_array();
-            }
-        }
+			if ($query->num_rows() > 0) {
+				$result = $query->result_array();
+			}
+		}
 
-        return $result;
+		return $result;
 	}
 
-    public function getLayoutRoutes($layout_id) {
+	public function getLayoutRoutes($layout_id) {
 		$this->db->from('layout_routes');
 
 		$this->db->where('layout_id', $layout_id);
@@ -127,50 +128,50 @@ class Layouts_model extends TI_Model {
 		return $result;
 	}
 
-    public function getRouteLayoutId($uri_route = '') {
-        $layout_id = NULL;
+	public function getRouteLayoutId($uri_route = '') {
+		$layout_id = NULL;
 
-        if ($uri_route !== '') {
-            $this->db->from('layout_routes');
-            $this->db->where('uri_route', $uri_route);
+		if ($uri_route !== '') {
+			$this->db->from('layout_routes');
+			$this->db->where('uri_route', $uri_route);
 
-            $query = $this->db->get();
+			$query = $this->db->get();
 
-            if ($query->num_rows() > 0) {
-                $row = $query->row_array('first');
-                $layout_id = $row['layout_id'];
-            }
-        }
+			if ($query->num_rows() > 0) {
+				$row = $query->row_array('first');
+				$layout_id = $row['layout_id'];
+			}
+		}
 
-        return $layout_id;
-    }
+		return $layout_id;
+	}
 
-    public function getPageLayoutId($page_id = '') {
-        $layout_id = NULL;
+	public function getPageLayoutId($page_id = '') {
+		$layout_id = NULL;
 
-        if ($page_id !== '') {
-            $this->db->from('pages');
-            $this->db->where('page_id', $page_id);
+		if ($page_id !== '') {
+			$this->db->from('pages');
+			$this->db->where('page_id', $page_id);
 
-            $query = $this->db->get();
+			$query = $this->db->get();
 
-            if ($query->num_rows() > 0) {
-                $row = $query->row_array('first');
-                $layout_id = $row['layout_id'];
-            }
-        }
+			if ($query->num_rows() > 0) {
+				$row = $query->row_array('first');
+				$layout_id = $row['layout_id'];
+			}
+		}
 
-        return $layout_id;
-    }
+		return $layout_id;
+	}
 
-    public function updateRoutes($routes = array()) {
-		if (!empty($routes)) {
+	public function updateRoutes($routes = array()) {
+		if ( ! empty($routes)) {
 			$write_routes = array();
 
 			$this->db->truncate('uri_routes');
 			$priority = 1;
 			foreach ($routes as $key => $value) {
-				if (!empty($value['uri_route']) AND !empty($value['controller'])) {
+				if ( ! empty($value['uri_route']) AND ! empty($value['controller'])) {
 					$write_routes[$priority] = $value;
 
 					$this->db->set('uri_route', $value['uri_route']);
@@ -178,7 +179,7 @@ class Layouts_model extends TI_Model {
 					$this->db->set('priority', $priority);
 
 					$this->db->insert('uri_routes');
-					$priority++;
+					$priority ++;
 				}
 			}
 
@@ -197,22 +198,21 @@ class Layouts_model extends TI_Model {
 
 		if ($fp = @fopen($filepath, FOPEN_READ_WRITE_CREATE_DESTRUCTIVE)) {
 
-            $line .= "<"."?php  if ( ! defined('BASEPATH')) exit('No direct access allowed');\n\n";
+			$line .= "<" . "?php  if ( ! defined('BASEPATH')) exit('No direct access allowed');\n\n";
 
-            $line .= "$"."route['default_controller'] = 'home';\n";
-            $line .= "$"."route[\"^(\".implode('|', array('home', 'menus', 'reserve', 'contact', 'checkout', 'maintenance', 'local', 'pages')).\")?$\"] = '$1';\n";
-            $line .= "$"."route[\"^(\".implode('|', array('home', 'menus', 'reserve', 'contact', 'checkout', 'maintenance', 'local', 'pages')).\")?/(:any)$\"] = '$1';\n";
-            $line .= "$"."route[\"^(\".implode('|', array('home', 'menus', 'reserve', 'contact', 'checkout', 'maintenance', 'local', 'pages')).\")?/(:any)$\"] = '$1/$2';\n";
+			$line .= "$" . "route['default_controller'] = 'home';\n";
+			$line .= "$" . "route[\"^(\".implode('|', array('home', 'menus', 'reserve', 'contact', 'checkout', 'maintenance', 'local', 'pages')).\")?$\"] = '$1';\n";
+			$line .= "$" . "route[\"^(\".implode('|', array('home', 'menus', 'reserve', 'contact', 'checkout', 'maintenance', 'local', 'pages')).\")?/(:any)$\"] = '$1';\n";
+			$line .= "$" . "route[\"^(\".implode('|', array('home', 'menus', 'reserve', 'contact', 'checkout', 'maintenance', 'local', 'pages')).\")?/(:any)$\"] = '$1/$2';\n";
 
-
-            if (!empty($write_routes) AND is_array($write_routes)) {
+			if ( ! empty($write_routes) AND is_array($write_routes)) {
 				foreach ($write_routes as $key => $value) {
-					$line .= "$"."route['". $value['uri_route'] ."'] = '". $value['controller'] ."';\n";
+					$line .= "$" . "route['" . $value['uri_route'] . "'] = '" . $value['controller'] . "';\n";
 				}
-        	}
+			}
 
 			//$line .= "$"."route['(:any)'] = 'slug';\n\n";
-			$line .= "$"."route['404_override'] = '';\n\n";
+			$line .= "$" . "route['404_override'] = '';\n\n";
 
 			$line .= "/* End of file routes.php */\n";
 			$line .= "/* Location: ./system/tastyigniter/config/routes.php */";
@@ -227,91 +227,91 @@ class Layouts_model extends TI_Model {
 	}
 
 	public function saveLayout($layout_id, $save = array()) {
-        if (empty($save)) return FALSE;
+		if (empty($save)) return FALSE;
 
-		if (!empty($save['name'])) {
+		if (isset($save['name'])) {
 			$this->db->set('name', $save['name']);
 		}
 
-        if (is_numeric($layout_id)) {
-            $this->db->where('layout_id', $layout_id);
-            $query = $this->db->update('layouts');
-        } else {
-            $query = $this->db->insert('layouts');
-            $layout_id = $this->db->insert_id();
-        }
+		if (is_numeric($layout_id)) {
+			$this->db->where('layout_id', $layout_id);
+			$query = $this->db->update('layouts');
+		} else {
+			$query = $this->db->insert('layouts');
+			$layout_id = $this->db->insert_id();
+		}
 
 		if ($query === TRUE AND is_numeric($layout_id)) {
-            if (!empty($save['routes'])) {
-                $this->addLayoutRoutes($layout_id, $save['routes']);
-            }
+			if ( ! empty($save['routes'])) {
+				$this->addLayoutRoutes($layout_id, $save['routes']);
+			}
 
-            if (!empty($save['modules'])) {
-                $this->addLayoutModules($layout_id, $save['modules']);
-            }
+			if ( ! empty($save['modules'])) {
+				$this->addLayoutModules($layout_id, $save['modules']);
+			}
 
-            return $layout_id;
-        }
-    }
+			return $layout_id;
+		}
+	}
 
-    private function addLayoutRoutes($layout_id, $routes = array()) {
-        $query = FALSE;
-        $this->db->where('layout_id', $layout_id);
-        $this->db->delete('layout_routes');
+	private function addLayoutRoutes($layout_id, $routes = array()) {
+		$query = FALSE;
+		$this->db->where('layout_id', $layout_id);
+		$this->db->delete('layout_routes');
 
-        if (is_array($routes)) {
-            foreach ($routes as $route) {
-                $this->db->set('layout_id', $layout_id);
-                $this->db->set('uri_route', $route['uri_route']);
-                $query = $this->db->insert('layout_routes');
-            }
+		if (is_array($routes)) {
+			foreach ($routes as $route) {
+				if ( ! empty($route['uri_route'])) {
+					$this->db->set('layout_id', $layout_id);
+					$this->db->set('uri_route', $route['uri_route']);
+					$query = $this->db->insert('layout_routes');
+				}
+			}
+		}
 
-            return $query;
-        }
+		return $query;
+	}
 
-        return $query;
-    }
+	private function addLayoutModules($layout_id, $modules = array()) {
+		$query = FALSE;
+		$this->db->where('layout_id', $layout_id);
+		$this->db->delete('layout_modules');
 
-    private function addLayoutModules($layout_id, $modules = array()) {
-        $query = FALSE;
-        $this->db->where('layout_id', $layout_id);
-        $this->db->delete('layout_modules');
+		if (is_array($modules)) {
+			foreach ($modules as $priority => $module) {
+				if ( ! empty($module) AND is_array($module)) {
+					$this->db->set('layout_id', $layout_id);
+					$this->db->set('module_code', $module['module_code']);
+					$this->db->set('partial', $module['partial']);
+					$this->db->set('priority', ! empty($module['priority']) ? $module['priority'] : $priority);
+					$this->db->set('status', $module['status']);
+					$query = $this->db->insert('layout_modules');
+				}
+			}
 
-        if (is_array($modules)) {
-            foreach ($modules as $priority => $module) {
-                if (!empty($module) AND is_array($module)) {
-                    $this->db->set('layout_id', $layout_id);
-                    $this->db->set('module_code', $module['module_code']);
-                    $this->db->set('partial', $module['partial']);
-                    $this->db->set('priority', !empty($module['priority']) ? $module['priority'] : $priority);
-                    $this->db->set('status', $module['status']);
-                    $query = $this->db->insert('layout_modules');
-                }
-            }
+			return $query;
+		}
 
-            return $query;
-        }
+		return $query;
+	}
 
-        return $query;
-    }
+	public function deleteLayout($layout_id) {
+		if (is_numeric($layout_id)) $layout_id = array($layout_id);
 
-    public function deleteLayout($layout_id) {
-        if (is_numeric($layout_id)) $layout_id = array($layout_id);
+		if ( ! empty($layout_id) AND ctype_digit(implode('', $layout_id))) {
+			$this->db->where_in('layout_id', $layout_id);
+			$this->db->delete('layouts');
 
-        if (!empty($layout_id) AND ctype_digit(implode('', $layout_id))) {
-            $this->db->where_in('layout_id', $layout_id);
-            $this->db->delete('layouts');
+			if (($affected_rows = $this->db->affected_rows()) > 0) {
+				$this->db->where_in('layout_id', $layout_id);
+				$this->db->delete('layout_routes');
 
-            if (($affected_rows = $this->db->affected_rows()) > 0) {
-                $this->db->where_in('layout_id', $layout_id);
-                $this->db->delete('layout_routes');
+				$this->db->where_in('layout_id', $layout_id);
+				$this->db->delete('layout_modules');
 
-                $this->db->where_in('layout_id', $layout_id);
-                $this->db->delete('layout_modules');
-
-                return $affected_rows;
-            }
-        }
+				return $affected_rows;
+			}
+		}
 	}
 }
 

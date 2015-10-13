@@ -2,8 +2,8 @@
 
 class Pages_model extends TI_Model {
 
-    public function getCount($filter = array()) {
-		if (!empty($filter['filter_search'])) {
+	public function getCount($filter = array()) {
+		if ( ! empty($filter['filter_search'])) {
 			$this->db->like('name', $filter['filter_search']);
 		}
 
@@ -12,20 +12,22 @@ class Pages_model extends TI_Model {
 		}
 
 		$this->db->from('pages');
+
 		return $this->db->count_all_results();
-    }
+	}
 
 	public function getList($filter = array()) {
-		if (!empty($filter['page']) AND $filter['page'] !== 0) {
+		if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
 			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
 		}
 
 		if ($this->db->limit($filter['limit'], $filter['page'])) {
 			$this->db->select('*, languages.name AS language_name, pages.name AS name');
 			$this->db->from('pages');
-			$this->db->join('languages', 'languages.language_id = pages.language_id', 'left'); // join categories based on category_id
+			$this->db->join('languages', 'languages.language_id = pages.language_id',
+			                'left'); // join categories based on category_id
 
-			if (!empty($filter['filter_search'])) {
+			if ( ! empty($filter['filter_search'])) {
 				$this->db->like('pages.name', $filter['filter_search']);
 			}
 
@@ -53,13 +55,13 @@ class Pages_model extends TI_Model {
 		$result = array();
 
 		if ($query->num_rows() > 0) {
-            foreach ($query->result_array() as $row) {
-                if (!empty($row['navigation'])) {
-                    $row['navigation'] = unserialize($row['navigation']);
-                }
+			foreach ($query->result_array() as $row) {
+				if ( ! empty($row['navigation'])) {
+					$row['navigation'] = unserialize($row['navigation']);
+				}
 
-                $result[] = $row;
-            }
+				$result[] = $row;
+			}
 		}
 
 		return $result;
@@ -72,53 +74,53 @@ class Pages_model extends TI_Model {
 
 		$query = $this->db->get();
 
-        if ($query->num_rows() > 0) {
+		if ($query->num_rows() > 0) {
 			return $query->row_array();
 		}
 	}
 
 	public function savePage($page_id, $save = array()) {
-        if (empty($save)) return FALSE;
+		if (empty($save)) return FALSE;
 
-		if (!empty($save['language_id'])) {
+		if (isset($save['language_id'])) {
 			$this->db->set('language_id', $save['language_id']);
 		}
 
-		if (!empty($save['name'])) {
+		if (isset($save['name'])) {
 			$this->db->set('name', $save['name']);
 		}
 
-		if (!empty($save['title'])) {
+		if (isset($save['title'])) {
 			$this->db->set('title', $save['title']);
 		}
 
-		if (!empty($save['heading'])) {
+		if (isset($save['heading'])) {
 			$this->db->set('heading', $save['heading']);
 		}
 
-		if (!empty($save['content'])) {
+		if (isset($save['content'])) {
 			$this->db->set('content', $save['content']);
 		}
 
-		if (!empty($save['meta_description'])) {
+		if (isset($save['meta_description'])) {
 			$this->db->set('meta_description', $save['meta_description']);
 		}
 
-		if (!empty($save['meta_keywords'])) {
+		if (isset($save['meta_keywords'])) {
 			$this->db->set('meta_keywords', $save['meta_keywords']);
 		}
 
-		if (!empty($save['layout_id'])) {
+		if (isset($save['layout_id'])) {
 			$this->db->set('layout_id', $save['layout_id']);
 		} else {
 			$this->db->set('layout_id', '0');
 		}
 
-		if (!empty($save['navigation'])) {
+		if (isset($save['navigation'])) {
 			$this->db->set('navigation', serialize($save['navigation']));
 		}
 
-		if (!empty($save['date_updated'])) {
+		if (isset($save['date_updated'])) {
 			$this->db->set('date_updated', $save['date_updated']);
 		}
 
@@ -129,40 +131,40 @@ class Pages_model extends TI_Model {
 		}
 
 		if (is_numeric($page_id)) {
-            $this->db->set('date_updated', mdate('%Y-%m-%d %H:%i:%s', time()));
-            $this->db->where('page_id', $page_id);
+			$this->db->set('date_updated', mdate('%Y-%m-%d %H:%i:%s', time()));
+			$this->db->where('page_id', $page_id);
 			$query = $this->db->update('pages');
-        } else {
-            $this->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', time()));
-            $this->db->set('date_updated', mdate('%Y-%m-%d %H:%i:%s', time()));
-            $query = $this->db->insert('pages');
-            $page_id = $this->db->insert_id();
-        }
+		} else {
+			$this->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', time()));
+			$this->db->set('date_updated', mdate('%Y-%m-%d %H:%i:%s', time()));
+			$query = $this->db->insert('pages');
+			$page_id = $this->db->insert_id();
+		}
 
-        if ($query === TRUE AND is_numeric($page_id)) {
-            if (!empty($save['permalink'])) {
-                $this->permalink->savePermalink('pages', $save['permalink'], 'page_id=' . $page_id);
-            }
+		if ($query === TRUE AND is_numeric($page_id)) {
+			if ( ! empty($save['permalink'])) {
+				$this->permalink->savePermalink('pages', $save['permalink'], 'page_id=' . $page_id);
+			}
 
-            return $page_id;
-        }
+			return $page_id;
+		}
 	}
 
 	public function deletePage($page_id) {
-        if (is_numeric($page_id)) $page_id = array($page_id);
+		if (is_numeric($page_id)) $page_id = array($page_id);
 
-        if (!empty($page_id) AND ctype_digit(implode('', $page_id))) {
-            $this->db->where_in('page_id', $page_id);
-            $this->db->delete('pages');
+		if ( ! empty($page_id) AND ctype_digit(implode('', $page_id))) {
+			$this->db->where_in('page_id', $page_id);
+			$this->db->delete('pages');
 
-            if (($affected_rows = $this->db->affected_rows()) > 0) {
-                foreach ($page_id as $id) {
-                    $this->permalink->deletePermalink('pages', 'page_id=' . $id);
-                }
+			if (($affected_rows = $this->db->affected_rows()) > 0) {
+				foreach ($page_id as $id) {
+					$this->permalink->deletePermalink('pages', 'page_id=' . $id);
+				}
 
-                return $affected_rows;
-            }
-        }
+				return $affected_rows;
+			}
+		}
 	}
 }
 
