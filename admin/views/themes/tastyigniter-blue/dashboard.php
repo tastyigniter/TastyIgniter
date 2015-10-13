@@ -2,68 +2,68 @@
 <div class="row content dashboard">
 	<div class="col-md-12">
         <div class="mini-statistics">
-            <div class="row">
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
+<!--            <div class="row">-->
+                <div class="col-lg-3 col-md-6 wrap-none">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <span class="stat-heading"><?php echo lang('text_total_sale'); ?></span>
+                                    <span class="stat-heading text-red"><?php echo lang('text_total_sale'); ?></span>
                                 </div>
                                 <div class="col-xs-4 pull-right">
-                                    <i class="stat-icon fa fa-line-chart fa-4x"></i>
+                                    <i class="stat-icon fa fa-line-chart fa-3x text-red"></i>
                                 </div>
-                                <div class="col-xs-12"><span class="stat-text sales"><?php echo lang('text_dash_dash'); ?></span></div>
+                                <div class="col-xs-12"><span class="stat-text text-red sales"><?php echo lang('text_dash_dash'); ?></span></div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-green">
-                        <div class="panel-heading">
+                <div class="col-lg-3 col-md-6 wrap-none">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <span class="stat-heading"><?php echo lang('text_total_customer'); ?></span>
+                                    <span class="stat-heading text-blue"><?php echo lang('text_total_customer'); ?></span>
                                 </div>
                                 <div class="col-xs-3 pull-right">
-                                    <i class="stat-icon fa fa-users fa-4x"></i>
+                                    <i class="stat-icon fa fa-users fa-3x text-blue"></i>
                                 </div>
-                                <div class="col-xs-12"><span class="stat-text customers"><?php echo lang('text_dash_dash'); ?></span></div>
+                                <div class="col-xs-12"><span class="stat-text text-blue customers"><?php echo lang('text_dash_dash'); ?></span></div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-yellow">
-                        <div class="panel-heading">
+                <div class="col-lg-3 col-md-6 wrap-none">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <span class="stat-heading"><?php echo lang('text_total_order'); ?></span>
+                                    <span class="stat-heading text-green"><?php echo lang('text_total_order'); ?></span>
                                 </div>
                                 <div class="col-xs-3 pull-right">
-                                    <i class="stat-icon fa fa-shopping-cart fa-4x"></i>
+                                    <i class="stat-icon fa fa-shopping-cart fa-3x text-green"></i>
                                 </div>
-                                <div class="col-xs-12"><span class="stat-text orders"><?php echo lang('text_dash_dash'); ?></span></div>
+                                <div class="col-xs-12"><span class="stat-text text-green orders"><?php echo lang('text_dash_dash'); ?></span></div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
+                <div class="col-lg-3 col-md-6 wrap-none">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <span class="stat-heading"><?php echo lang('text_total_reservation'); ?></span>
+                                    <span class="stat-heading text-primary"><?php echo lang('text_total_reservation'); ?></span>
                                 </div>
                                 <div class="col-xs-3 pull-right">
-                                    <i class="stat-icon fa fa-calendar fa-4x"></i>
+                                    <i class="stat-icon fa fa-calendar fa-3x text-primary"></i>
                                 </div>
-                                <div class="col-xs-12"><span class="stat-text tables_reserved"><?php echo lang('text_dash_dash'); ?></span></div>
+                                <div class="col-xs-12"><span class="stat-text text-primary tables_reserved"><?php echo lang('text_dash_dash'); ?></span></div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+<!--            </div>-->
         </div>
 
         <div class="statistics">
@@ -159,6 +159,35 @@
 			</div>
 		</div>
 
+        <div class="panel panel-default panel-chart">
+            <div class="panel-heading">
+                <div class="form-inline">
+                    <div class="row">
+                        <div class="col-md-4 pull-left">
+                            <h3 class="panel-title"><i class="fa fa-line-chart"></i>&nbsp;&nbsp;<?php echo lang('text_reports_chart'); ?></h3>
+                        </div>
+
+                        <div class="col-md-5 pull-right text-right">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <button class="btn btn-default btn-sm daterange">
+                                        <i class="fa fa-calendar"></i>&nbsp;&nbsp;<span><?php echo lang('text_select_range'); ?></span>&nbsp;&nbsp;<i class="fa fa-caret-down"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-body">
+                <div class="chart-legend"></div>
+                <div class="chart-responsive">
+                    <canvas id="chart-holder" width="960px" height="295px"></canvas>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-sm-6">
                 <div class="panel panel-default panel-activities">
@@ -248,35 +277,6 @@
                 </div>
             </div>
         <?php } ?>
-
-        <div class="panel panel-default panel-chart">
-            <div class="panel-heading">
-                <div class="form-inline">
-                    <div class="row">
-                        <div class="col-md-4 pull-left">
-                            <h3 class="panel-title"><i class="fa fa-line-chart"></i>&nbsp;&nbsp;<?php echo lang('text_reports_chart'); ?></h3>
-                        </div>
-
-                        <div class="col-md-5 pull-right text-right">
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <button class="btn btn-default btn-sm daterange">
-                                        <i class="fa fa-calendar"></i>&nbsp;&nbsp;<span><?php echo lang('text_select_range'); ?></span>&nbsp;&nbsp;<i class="fa fa-caret-down"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="panel-body">
-                <div class="chart-legend"></div>
-                <div class="chart-responsive">
-                    <canvas id="chart-holder" width="960px" height="295px"></canvas>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 <script type="text/javascript"><!--
