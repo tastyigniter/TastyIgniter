@@ -75,13 +75,12 @@
                                     <?php foreach ($recipients as $recipient) { ?>
                                         <tr>
                                             <?php if ($send_type === 'Email') { ?>
-                                                <td class="action action-one"><input type="checkbox" value="<?php echo $recipient['message_recipient_id']; ?>" name="delete[]" /></td>
+                                                <td class="action action-one"><input type="checkbox" value="<?php echo $recipient['message_recipient_id']; ?>" name="resend[]" /></td>
                                                 <td><?php echo $recipient['recipient_email']; ?></td>
                                                 <td class="text-center"><?php echo $recipient['status']; ?></td>
                                                 <td class="id"><?php echo $recipient['message_recipient_id']; ?></td>
-                                            <?php } ?>
-                                            <?php if ($send_type === 'Account') { ?>
-                                                <td class="action action-one"><input type="checkbox" value="<?php echo $recipient['message_recipient_id']; ?>" name="delete[]" /></td>
+                                            <?php } else if ($send_type === 'Account') { ?>
+                                                <td class="action action-one"><input type="checkbox" value="<?php echo $recipient['message_recipient_id']; ?>" name="resend[]" /></td>
                                                 <td><?php echo $recipient['recipient_name']; ?></td>
                                                 <td class="text-center"><?php echo $recipient['status']; ?></td>
                                                 <td class="id"><?php echo $recipient['message_recipient_id']; ?></td>

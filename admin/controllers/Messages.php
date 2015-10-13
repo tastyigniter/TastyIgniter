@@ -266,7 +266,7 @@ class Messages extends Admin_Controller {
 
     private function _saveMessage() {
     	if ($this->validateForm() === TRUE) {
-            $save_type = (is_numeric($this->input->post('save_as_draft'))) ? 'saved to draft' : 'sent';
+            $save_type = (is_numeric($this->input->post('save_as_draft'))) ? $this->lang->line('text_saved_to_draft') : $this->lang->line('text_sent');
 
 			if ($message_id = $this->Messages_model->saveMessage($this->input->get('id'), $this->input->post())) {
                 $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Message '.$save_type));

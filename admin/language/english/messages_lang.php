@@ -56,6 +56,8 @@ $lang['alert_mark_as_unread'] 		    = 'has been marked as unread.';
 $lang['alert_mark_as_read'] 		    = 'has been marked as read.';
 $lang['alert_move_to_inbox'] 		    = 'has been moved to inbox.';
 $lang['alert_move_to_archive'] 		    = 'has been moved to archive.';
+$lang['alert_saved_to_draft'] 		    = 'saved to draft';
+$lang['alert_success_sent'] 		    = 'sent';
 
 /* End of file messages_lang.php */
 /* Location: ./admin/language/english/messages_lang.php */
