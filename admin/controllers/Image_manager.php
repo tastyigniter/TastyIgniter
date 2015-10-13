@@ -473,15 +473,14 @@ class Image_manager extends Admin_Controller {
             $this->template->setStyleTag('css/image-manager.css', 'image-manager-css', '100');
 
             $this->template->setScriptTag('js/jquery-1.11.2.min.js', 'jquery-js', '1');
-            $this->template->setScriptTag('js/bootstrap.min.js', 'bootstrap-js', '10');
-            $this->template->setScriptTag('js/metisMenu.min.js', 'metis-menu-js', '11');
-            $this->template->setScriptTag('js/bootbox.min.js', 'bootbox-js', '12');
-            $this->template->setScriptTag('js/select2.js', 'select-2-js', '13');
-            $this->template->setScriptTag('js/dropzone.min.js', 'dropzone-js', '14');
-            $this->template->setScriptTag('js/jquery.ui.position.js', 'jquery-ui-position-js', '15');
-            $this->template->setScriptTag('js/jquery.contextMenu.js', 'jquery-contextMenu-js', '16');
-//            $this->template->setScriptTag('js/jquery.finderSelect.min.js', 'jquery-finderSelect-js', '17');
-            $this->template->setScriptTag('js/selectonic.min.js', 'selectonic-js', '17');
+            $this->template->setScriptTag('js/bootstrap.min.js', 'bootstrap-js', '100');
+            $this->template->setScriptTag('js/metisMenu.min.js', 'metis-menu-js', '101');
+            $this->template->setScriptTag('js/bootbox.min.js', 'bootbox-js', '102');
+            $this->template->setScriptTag('js/select2.js', 'select-2-js', '103');
+            $this->template->setScriptTag('js/dropzone.min.js', 'dropzone-js', '104');
+            $this->template->setScriptTag('js/jquery.ui.position.js', 'jquery-ui-position-js', '105');
+            $this->template->setScriptTag('js/jquery.contextMenu.js', 'jquery-contextMenu-js', '106');
+            $this->template->setScriptTag('js/selectonic.min.js', 'selectonic-js', '107');
             $this->template->setScriptTag('js/common.js', 'common-js');
         }
 
