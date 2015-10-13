@@ -1,10 +1,25 @@
-### v1.4.3-beta (pending)
+### v1.4.3 (pending)
+#### Added
+* Added option to select a page for checkout and registration terms and condition.
+* Added missing extension meta title item and extension permission rules to config
+
+#### Changed
 * Changed LICENCE from Apache to GNU GPLv3
 * Replaced file_get_contents with cURL for google maps geocoding api request ()
 * Template Library: Replaced loadPartial with loadView to load single views without header, footer and partials
-* Added option to select a page for checkout and registration terms and condition.
+* Replaced Permission_Model function addToStaffGroup to assignPermissionRule and moved to Staff_group_model
+* Improved the design of the Media Manager and some other theme adjustment
+* Moved getPayPalDetails() method from Payments_model to Paypal_model and deleted Payments_model
+
+#### Fixed
 * Fixed the checkout terms and condition agree button to display terms and condition in modal when clicked
 * Improved reverse routing for permalink slugs so that extra URL query is appended after slug
+* Setup now generates a random alpha-numeric 9 length string for database table prefixes
+* Improved all model post data validation to isset() instead of !empty() during INSERT/UPDATE
+* Fixed issue where bootbox.js is not added to <head> of Media_manager
+* Fixed error saving theme file with undefined method writeTheme that was replaced in previous version to helper function save_theme_file
+*
+* Minor bugs fix
 
 ### v1.4.2-beta
 * [fixed] staff name in staff updated activity log (67e3fa6)
@@ -182,6 +197,7 @@ Themes: move some themes_model functions to template_helper
 
 TO-DO:
 Improve extension upload functionality to list "files to modify"
+Replace hard coded payment methods to be loaded dynamically everywhere
 
 Customer Online IP blacklist
 bring back the cart page
@@ -197,16 +213,3 @@ Improve admin context list filter
 add hidden input to all post forms to specify CRUD action using http method verb (PUT, PATCH, DELETE) as value
 
 Database configuration key debug must be FALSE in development
-
-
-TastyIgniter - Restaurant Ordering & Reservation System
-
-Hi All-
-
-I just released an online restaurant ordering and reservation system / restaurant table manager. It is built on the CodeIgniter Framework. I rewrote all my previous javascript and replaced it with Ext. I've been working on this project for about 2 years now, and I am continually impressed by its consistency and its depth. Its really an amazing system and has changed how I think about web applications.
-
-url: http://tastyigniter.com
-demo: http://demo.tastyigniter.com
-
-Regards-
-Sam
