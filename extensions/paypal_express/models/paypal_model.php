@@ -11,6 +11,19 @@ class Paypal_model extends TI_Model {
         $this->load->library('currency');
     }
 
+	public function getPaypalDetails($order_id, $customer_id) {
+		$this->db->from('pp_payments');
+		$this->db->where('order_id', $order_id);
+		$this->db->where('customer_id', $customer_id);
+
+		$query = $this->db->get();
+		if ($query->num_rows() > 0) {
+			$row = $query->row_array();
+
+			return unserialize($row['serialized']);
+		}
+	}
+
 	public function setExpressCheckout($order_info, $cart_items) {
 		if ($cart_items) {
 

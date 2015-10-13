@@ -13,7 +13,6 @@ class Orders extends Admin_Controller {
         $this->load->model('Orders_model');
         $this->load->model('Statuses_model');
         $this->load->model('Staffs_model');
-        $this->load->model('Payment_model');
         $this->load->model('Countries_model');
 
         $this->load->library('pagination');
@@ -205,15 +204,15 @@ class Orders extends Admin_Controller {
 		$data['user_agent'] 		= $order_info['user_agent'];
 		$data['check_order_type'] 	= $order_info['order_type'];
 
+		$data['paypal_details'] = array();
 		if ($order_info['payment'] === 'paypal_express') {
 			$data['payment'] = 'PayPal';
-			$data['paypal_details'] = $this->Payment_model->getPaypalDetails($order_info['order_id'], $order_info['customer_id']);
+			$this->load->model('paypal_express/Paypal_model');
+			$data['paypal_details'] = (isset($this->Paypal_model)) ? $this->Paypal_model->getPaypalDetails($order_info['order_id'], $order_info['customer_id']) : '';
 		} else if ($order_info['payment'] === 'cod') {
 			$data['payment'] = 'Cash On Delivery';
-			$data['paypal_details'] = array();
 		} else {
 			$data['payment'] = 'No Payment';
-			$data['paypal_details'] = array();
 		}
 
 		$data['countries'] = array();
