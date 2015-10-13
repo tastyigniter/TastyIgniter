@@ -13,9 +13,30 @@
 |
 */
 $config['extension_meta'] = array(
-    'author'		=> 'SamPoyigi',
-    'name'			=> 'categories_module',
-    'type'		    => 'module',
-    'description'   => 'This extension will allow you to place a banner module around your website.',
-    'settings'      => TRUE,
+	'author'      => 'SamPoyigi',
+	'title'       => 'Categories',
+	'name'        => 'categories_module',
+	'type'        => 'module',
+	'description' => 'This extension will allow you to place a list of categories around your website.',
+	'settings'    => TRUE,
+);
+
+/*
+|--------------------------------------------------------------------------
+| Extension Permission (Optional)
+|--------------------------------------------------------------------------
+|
+| The Extension Permission Rule that will be saved then assigned to the installer staff group
+| 'name'        => The name of the permission e.g Module.ModuleName or Payment.ModuleName
+| 'action'      => The extension permitted action array (access, manage, add, delete)
+| 'description' => A short description of the permission. Keep this description
+|               to fewer than 128 characters.
+| 'status'      => The status of your permission, if you want it
+|               enabled or disabled by default
+|
+*/
+$config['extension_permission'] = array(
+	'name'        => 'Module.CategoriesModule',
+	'action'      => array('manage'),
+	'description' => 'Ability to manage categories module',
 );

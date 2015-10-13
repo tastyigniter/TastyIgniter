@@ -13,9 +13,10 @@
 |
 */
 $config['extension_meta'] = array(
-    'author'		=> 'SamPoyigi',
-    'name'			=> 'newsletter',
-    'type'		    => 'module',
-    'description'   => 'This extension will allow you to place a newsletter subscribe module around your website.',
-    'settings'      => TRUE,
+	'author'      => 'SamPoyigi',
+	'title'       => 'Newsletter',
+	'name'        => 'newsletter',
+	'type'        => 'module',
+	'description' => 'This extension will allow you to place a newsletter subscribe module around your website.',
+	'settings'    => TRUE,
 );
