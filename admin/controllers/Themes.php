@@ -208,7 +208,7 @@ class Themes extends Admin_Controller {
         if ($this->input->get('name') AND $this->input->get('location') AND $this->validateForm($theme['customize']) === TRUE) {
             if ($this->input->post('editor_area') AND $this->input->get('file')) {
                 $theme_file = $this->input->get('file');
-                if ($this->Themes_model->writeFile($theme['name'], $theme['location'], $theme_file, $this->input->post('editor_area'))) {
+                if (save_theme_file($theme_file, $theme['name'], $theme['location'], $this->input->post('editor_area'))) {
                     $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Theme File (' . $theme_file . ') saved '));
                 } else {
                     $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), 'saved'));
@@ -220,7 +220,7 @@ class Themes extends Admin_Controller {
             $update['title'] 			= $theme['title'];
             $update['location'] 		= $theme['location'];
 
-            if ($theme['customize']) {
+            if (isset($theme['customize'])) {
                 $update['data'] = $this->customizer->getPostData();
             }
 
