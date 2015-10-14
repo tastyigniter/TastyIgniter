@@ -106,7 +106,7 @@ class Staff_groups_model extends TI_Model {
 	public function assignPermissionRule($staff_group_id, $permission_rule) {
 		$query = FALSE;
 
-		if (isset($permission_rule['name']) AND ! ($permission = $this->getPermissionByName($permission_rule['name']))) {
+		if (isset($permission_rule['name']) AND ! ($permission = $this->Permissions_model->getPermissionByName($permission_rule['name']))) {
 			return $query;
 		}
 
