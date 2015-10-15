@@ -33,6 +33,7 @@ $lang['label_navigation'] 		        = 'Navigation';
 $lang['label_status'] 		            = 'Status';
 
 $lang['help_permalink'] 		        = 'Use ONLY alpha-numeric lowercase characters, underscores or dashes and make sure it is unique GLOBALLY.';
+$lang['help_navigation'] 		        = 'Select where you would want this page link to be located';
 
 /* End of file pages_lang.php */
 /* Location: ./admin/language/english/pages_lang.php */

@@ -47,7 +47,9 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_iso_alpha2'); ?></label>
+						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_iso_alpha2'); ?>
+							<span class="help-block"><?php echo lang('help_iso'); ?></span>
+						</label>
 						<div class="col-sm-5">
 							<input type="text" name="iso_alpha2" id="" class="form-control" value="<?php echo set_value('iso_alpha2', $iso_alpha2); ?>" />
 							<?php echo form_error('iso_alpha2', '<span class="text-danger">', '</span>'); ?>

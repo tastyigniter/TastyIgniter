@@ -78,7 +78,9 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-navigation" class="col-sm-3 control-label"><?php echo lang('label_navigation'); ?></label>
+						<label for="input-navigation" class="col-sm-3 control-label"><?php echo lang('label_navigation'); ?>
+							<span class="help-block"><?php echo lang('help_navigation'); ?></span>
+						</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle btn-group-4" data-toggle="buttons">
 								<?php if (in_array('none', $navigation)) { ?>

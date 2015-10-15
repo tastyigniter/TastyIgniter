@@ -19,7 +19,7 @@ class Banners extends Admin_Controller {
         $this->template->setHeading($this->lang->line('text_heading'));
 		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
 		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
-		$this->template->setButton($this->lang->line('button_modules'), array('class' => 'btn btn-default pull-right', 'href' => site_url('extensions')));
+		$this->template->setButton($this->lang->line('button_modules'), array('class' => 'btn btn-default', 'href' => site_url('extensions')));
 
 		$data['banners'] = array();
 		$results = $this->Banners_model->getBanners();
@@ -57,6 +57,7 @@ class Banners extends Admin_Controller {
 
         $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$this->template->setButton($this->lang->line('button_modules'), array('class' => 'btn btn-default', 'href' => site_url('banners/edit')));
 		$this->template->setBackButton('btn btn-back', site_url('banners'));
 
         $this->template->setStyleTag(root_url('assets/js/fancybox/jquery.fancybox.css'), 'jquery-fancybox-css');

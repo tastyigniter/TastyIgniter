@@ -18,7 +18,9 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-iso-code-2" class="col-sm-3 control-label"><?php echo lang('label_iso_code2'); ?></label>
+						<label for="input-iso-code-2" class="col-sm-3 control-label"><?php echo lang('label_iso_code2'); ?>
+							<span class="help-block"><?php echo lang('help_iso'); ?></span>
+						</label>
 						<div class="col-sm-5">
 							<input type="text" name="iso_code_2" id="input-iso-code-2" class="form-control" value="<?php echo set_value('iso_code_2', $iso_code_2); ?>" size="5" />
 							<?php echo form_error('iso_code_2', '<span class="text-danger">', '</span>'); ?>

@@ -22,6 +22,7 @@ $lang['label_iso_code3'] 		        = 'ISO Code 3';
 $lang['label_status'] 		            = 'Status';
 
 $lang['help_format'] 		            = 'Address 1 = {address_1}<br />Address 2 = {address_2}<br />City = {city}<br />Postcode = {postcode}<br />State = {state}<br />Country = {country}';
+$lang['help_iso'] 		                = 'Learn more about <a target="_blank" href="http://en.wikipedia.org/wiki/ISO_3166-1">ISO Alpha 2 & 3</a>';
 
 /* End of file countries_lang.php */
 /* Location: ./admin/language/english/countries_lang.php */

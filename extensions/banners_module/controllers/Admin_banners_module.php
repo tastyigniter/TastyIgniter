@@ -6,6 +6,7 @@ class Admin_banners_module extends Admin_Controller {
         parent::__construct();
         $this->load->model('Layouts_model');
         $this->load->model('Banners_model');
+        $this->lang->load('banners_module/banners_module');
     }
 
 	public function index($data = array()) {
@@ -18,6 +19,7 @@ class Admin_banners_module extends Admin_Controller {
             $this->template->setHeading('Module: ' . $data['title']);
             $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
             $this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+            $this->template->setButton($this->lang->line('button_banners'), array('class' => 'btn btn-default', 'href' => site_url('banners/edit')));
             $this->template->setBackButton('btn btn-back', site_url('extensions'));
 
             $ext_data = array();
