@@ -30,13 +30,13 @@
 							<span class="help-block"><?php echo lang('help_type'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<div id="coupon-type" class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div id="coupon-type" class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if ($type === 'P') { ?>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="type" value="F" <?php echo set_radio('type', 'F'); ?>>Fixed Amount</label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="type" value="P" <?php echo set_radio('type', 'P', TRUE); ?>>Percentage</label>
+									<label class="btn btn-success"><input type="radio" name="type" value="F" <?php echo set_radio('type', 'F'); ?>>Fixed Amount</label>
+									<label class="btn btn-success active"><input type="radio" name="type" value="P" <?php echo set_radio('type', 'P', TRUE); ?>>Percentage</label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="type" value="F" <?php echo set_radio('type', 'F', TRUE); ?>>Fixed Amount</label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="type" value="P" <?php echo set_radio('type', 'P'); ?>>Percentage</label>
+									<label class="btn btn-success active"><input type="radio" name="type" value="F" <?php echo set_radio('type', 'F', TRUE); ?>>Fixed Amount</label>
+									<label class="btn btn-success"><input type="radio" name="type" value="P" <?php echo set_radio('type', 'P'); ?>>Percentage</label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('type', '<span class="text-danger">', '</span>'); ?>
@@ -85,24 +85,24 @@
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle btn-group-4" data-toggle="buttons">
 								<?php if ($validity === 'forever') { ?>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="validity" value="forever" <?php echo set_radio('validity', 'forever', TRUE); ?>>Forever</label>
+									<label class="btn btn-success active"><input type="radio" name="validity" value="forever" <?php echo set_radio('validity', 'forever', TRUE); ?>>Forever</label>
 								<?php } else { ?>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="validity" value="forever" <?php echo set_radio('validity', 'forever'); ?>>Forever</label>
+									<label class="btn btn-success"><input type="radio" name="validity" value="forever" <?php echo set_radio('validity', 'forever'); ?>>Forever</label>
 								<?php } ?>
 								<?php if ($validity === 'fixed') { ?>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="validity" value="fixed" <?php echo set_radio('validity', 'fixed', TRUE); ?>>Fixed</label>
+									<label class="btn btn-success active"><input type="radio" name="validity" value="fixed" <?php echo set_radio('validity', 'fixed', TRUE); ?>>Fixed</label>
 								<?php } else { ?>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="validity" value="fixed" <?php echo set_radio('validity', 'fixed'); ?>>Fixed</label>
+									<label class="btn btn-success"><input type="radio" name="validity" value="fixed" <?php echo set_radio('validity', 'fixed'); ?>>Fixed</label>
 								<?php } ?>
 								<?php if ($validity === 'period') { ?>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="validity" value="period" <?php echo set_radio('validity', 'period', TRUE); ?>>Period</label>
+									<label class="btn btn-success active"><input type="radio" name="validity" value="period" <?php echo set_radio('validity', 'period', TRUE); ?>>Period</label>
 								<?php } else { ?>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="validity" value="period" <?php echo set_radio('validity', 'period'); ?>>Period</label>
+									<label class="btn btn-success"><input type="radio" name="validity" value="period" <?php echo set_radio('validity', 'period'); ?>>Period</label>
 								<?php } ?>
 								<?php if ($validity === 'recurring') { ?>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="validity" value="recurring" <?php echo set_radio('validity', 'recurring', TRUE); ?>>Recurring</label>
+									<label class="btn btn-success active"><input type="radio" name="validity" value="recurring" <?php echo set_radio('validity', 'recurring', TRUE); ?>>Recurring</label>
 								<?php } else { ?>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="validity" value="recurring" <?php echo set_radio('validity', 'recurring'); ?>>Recurring</label>
+									<label class="btn btn-success"><input type="radio" name="validity" value="recurring" <?php echo set_radio('validity', 'recurring'); ?>>Recurring</label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('validity', '<span class="text-danger">', '</span>'); ?>
@@ -123,13 +123,13 @@
 							<label for="" class="col-sm-3 control-label"><?php echo lang('label_fixed_time'); ?></label>
 							<div class="col-sm-5">
 								<div class="">
-									<div class="btn-group btn-group-toggle wrap-bottom" data-toggle="buttons">
+									<div class="btn-group btn-group-switch wrap-bottom" data-toggle="buttons">
 										<?php if ($fixed_time == '24hours') { ?>
-											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="fixed_time" value="24hours" checked="checked"><?php echo lang('text_24_hour'); ?></label>
-											<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="fixed_time" value="custom"><?php echo lang('text_custom'); ?></label>
+											<label class="btn btn-success active"><input type="radio" name="fixed_time" value="24hours" checked="checked"><?php echo lang('text_24_hour'); ?></label>
+											<label class="btn btn-success"><input type="radio" name="fixed_time" value="custom"><?php echo lang('text_custom'); ?></label>
 										<?php } else { ?>
-											<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="fixed_time" value="24hours"><?php echo lang('text_24_hour'); ?></label>
-											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="fixed_time" value="custom" checked="checked"><?php echo lang('text_custom'); ?></label>
+											<label class="btn btn-success"><input type="radio" name="fixed_time" value="24hours"><?php echo lang('text_24_hour'); ?></label>
+											<label class="btn btn-success active"><input type="radio" name="fixed_time" value="custom" checked="checked"><?php echo lang('text_custom'); ?></label>
 										<?php } ?>
 									</div>
 									<div class="input-group time wrap-bottom">
@@ -177,9 +177,9 @@
 								<div class="btn-group btn-group-toggle btn-group-7" data-toggle="buttons">
 									<?php foreach ($weekdays as $key => $value) { ?>
 										<?php if (in_array($key, $recurring_every)) { ?>
-											<label class="btn btn-default active" data-btn="btn-success"><input type="checkbox" name="validity_times[recurring_every][]" value="<?php echo $key; ?>" checked="checked"><?php echo $value; ?></label>
+											<label class="btn btn-success active"><input type="checkbox" name="validity_times[recurring_every][]" value="<?php echo $key; ?>" checked="checked"><?php echo $value; ?></label>
 										<?php } else { ?>
-											<label class="btn btn-default" data-btn="btn-success"><input type="checkbox" name="validity_times[recurring_every][]" value="<?php echo $key; ?>"><?php echo $value; ?></label>
+											<label class="btn btn-success"><input type="checkbox" name="validity_times[recurring_every][]" value="<?php echo $key; ?>"><?php echo $value; ?></label>
 										<?php } ?>
 									<?php } ?>
 								</div>
@@ -190,13 +190,13 @@
 							<label for="" class="col-sm-3 control-label"><?php echo lang('label_recurring_time'); ?></label>
 							<div class="col-sm-5">
 								<div class="">
-									<div class="btn-group btn-group-toggle wrap-bottom" data-toggle="buttons">
+									<div class="btn-group btn-group-switch wrap-bottom" data-toggle="buttons">
 										<?php if ($recurring_time == '24hours') { ?>
-											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="recurring_time" value="24hours" checked="checked"><?php echo lang('text_24_hour'); ?></label>
-											<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="recurring_time" value="custom"><?php echo lang('text_custom'); ?></label>
+											<label class="btn btn-success active"><input type="radio" name="recurring_time" value="24hours" checked="checked"><?php echo lang('text_24_hour'); ?></label>
+											<label class="btn btn-success"><input type="radio" name="recurring_time" value="custom"><?php echo lang('text_custom'); ?></label>
 										<?php } else { ?>
-											<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="recurring_time" value="24hours"><?php echo lang('text_24_hour'); ?></label>
-											<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="recurring_time" value="custom" checked="checked"><?php echo lang('text_custom'); ?></label>
+											<label class="btn btn-success"><input type="radio" name="recurring_time" value="24hours"><?php echo lang('text_24_hour'); ?></label>
+											<label class="btn btn-success active"><input type="radio" name="recurring_time" value="custom" checked="checked"><?php echo lang('text_custom'); ?></label>
 										<?php } ?>
 									</div>
 									<div class="input-group time wrap-bottom">
@@ -223,17 +223,17 @@
 						<div class="col-sm-5">
 							<div id="order-restriction" class="btn-group btn-group-3 btn-group-toggle" data-toggle="buttons">
 								<?php if ($order_restriction === '1') { ?>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="order_restriction" value="0" <?php echo set_radio('order_restriction', '0'); ?>>None</label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="order_restriction" value="1" <?php echo set_radio('order_restriction', '1', TRUE); ?>>Delivery Only</label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="order_restriction" value="2" <?php echo set_radio('order_restriction', '2'); ?>>Collection Only</label>
+									<label class="btn btn-success"><input type="radio" name="order_restriction" value="0" <?php echo set_radio('order_restriction', '0'); ?>>None</label>
+									<label class="btn btn-success active"><input type="radio" name="order_restriction" value="1" <?php echo set_radio('order_restriction', '1', TRUE); ?>>Delivery Only</label>
+									<label class="btn btn-success"><input type="radio" name="order_restriction" value="2" <?php echo set_radio('order_restriction', '2'); ?>>Collection Only</label>
 								<?php } else if ($order_restriction === '2') { ?>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="order_restriction" value="0" <?php echo set_radio('order_restriction', '0'); ?>>None</label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="order_restriction" value="1" <?php echo set_radio('order_restriction', '1'); ?>>Delivery Only</label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="order_restriction" value="2" <?php echo set_radio('order_restriction', '2', TRUE); ?>>Collection Only</label>
+									<label class="btn btn-success"><input type="radio" name="order_restriction" value="0" <?php echo set_radio('order_restriction', '0'); ?>>None</label>
+									<label class="btn btn-success"><input type="radio" name="order_restriction" value="1" <?php echo set_radio('order_restriction', '1'); ?>>Delivery Only</label>
+									<label class="btn btn-success active"><input type="radio" name="order_restriction" value="2" <?php echo set_radio('order_restriction', '2', TRUE); ?>>Collection Only</label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="order_restriction" value="0" <?php echo set_radio('order_restriction', '0', TRUE); ?>>None</label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="order_restriction" value="1" <?php echo set_radio('order_restriction', '1'); ?>>Delivery Only</label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="order_restriction" value="2" <?php echo set_radio('order_restriction', '2'); ?>>Collection Only</label>
+									<label class="btn btn-success active"><input type="radio" name="order_restriction" value="0" <?php echo set_radio('order_restriction', '0', TRUE); ?>>None</label>
+									<label class="btn btn-success"><input type="radio" name="order_restriction" value="1" <?php echo set_radio('order_restriction', '1'); ?>>Delivery Only</label>
+									<label class="btn btn-success"><input type="radio" name="order_restriction" value="2" <?php echo set_radio('order_restriction', '2'); ?>>Collection Only</label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('order_restriction', '<span class="text-danger">', '</span>'); ?>
@@ -249,13 +249,13 @@
 					<div class="form-group">
 						<label for="input-status" class="col-sm-3 control-label"><?php echo lang('label_status'); ?></label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if ($status == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger active"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1'); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('status', '<span class="text-danger">', '</span>'); ?>

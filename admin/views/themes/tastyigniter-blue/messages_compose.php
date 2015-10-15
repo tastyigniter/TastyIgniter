@@ -111,16 +111,16 @@
                                 <div class="form-group">
                                     <label for="input-send-type" class="col-sm-3 control-label"><?php echo lang('label_send_type'); ?></label>
                                     <div class="col-sm-9">
-                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                        <div class="btn-group btn-group-switch" data-toggle="buttons">
                                             <?php if ($send_type === 'account') { ?>
-                                                <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="send_type" value="account" checked="checked"><?php echo lang('text_account'); ?></label>
-                                                <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="send_type" value="email"><?php echo lang('text_email'); ?></label>
+                                                <label class="btn btn-danger active"><input type="radio" name="send_type" value="account" checked="checked"><?php echo lang('text_account'); ?></label>
+                                                <label class="btn btn-success"><input type="radio" name="send_type" value="email"><?php echo lang('text_email'); ?></label>
                                             <?php } else if ($send_type === 'email') { ?>
-                                                <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="send_type" value="account"><?php echo lang('text_account'); ?></label>
-                                                <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="send_type" value="email" checked="checked"><?php echo lang('text_email'); ?></label>
+                                                <label class="btn btn-danger"><input type="radio" name="send_type" value="account"><?php echo lang('text_account'); ?></label>
+                                                <label class="btn btn-success active"><input type="radio" name="send_type" value="email" checked="checked"><?php echo lang('text_email'); ?></label>
                                             <?php } else { ?>
-                                                <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="send_type" value="account" checked="checked"><?php echo lang('text_account'); ?></label>
-                                                <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="send_type" value="email"><?php echo lang('text_email'); ?></label>
+                                                <label class="btn btn-danger active"><input type="radio" name="send_type" value="account" checked="checked"><?php echo lang('text_account'); ?></label>
+                                                <label class="btn btn-success"><input type="radio" name="send_type" value="email"><?php echo lang('text_email'); ?></label>
                                             <?php } ?>
                                         </div>
                                         <?php echo form_error('send_type', '<span class="text-danger">', '</span>'); ?>

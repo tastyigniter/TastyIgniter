@@ -28,13 +28,13 @@
 					<div class="form-group">
 						<label for="input-sale-type" class="col-sm-3 control-label"><?php echo lang('label_sale_type'); ?></label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if ($sale_type == 'reservation') { ?>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="sale_type" value="order" <?php echo set_radio('sale_type', 'order'); ?>><?php echo lang('text_order'); ?></label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="sale_type" value="reservation" <?php echo set_radio('sale_type', 'reservation', TRUE); ?>><?php echo lang('text_reservation'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="sale_type" value="order" <?php echo set_radio('sale_type', 'order'); ?>><?php echo lang('text_order'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="sale_type" value="reservation" <?php echo set_radio('sale_type', 'reservation', TRUE); ?>><?php echo lang('text_reservation'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="sale_type" value="order" <?php echo set_radio('sale_type', 'order', TRUE); ?>><?php echo lang('text_order'); ?></label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="sale_type" value="reservation" <?php echo set_radio('sale_type', 'reservation'); ?>><?php echo lang('text_reservation'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="sale_type" value="order" <?php echo set_radio('sale_type', 'order', TRUE); ?>><?php echo lang('text_order'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="sale_type" value="reservation" <?php echo set_radio('sale_type', 'reservation'); ?>><?php echo lang('text_reservation'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('sale_type', '<span class="text-danger">', '</span>'); ?>
@@ -84,13 +84,13 @@
 					<div class="form-group">
 						<label for="input-status" class="col-sm-3 control-label"><?php echo lang('label_status'); ?></label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if ($review_status == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="review_status" value="0" <?php echo set_radio('review_status', '0'); ?>><?php echo lang('text_pending_review'); ?></label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="review_status" value="1" <?php echo set_radio('review_status', '1', TRUE); ?>><?php echo lang('text_approved'); ?></label>
+									<label class="btn btn-danger"><input type="radio" name="review_status" value="0" <?php echo set_radio('review_status', '0'); ?>><?php echo lang('text_pending_review'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="review_status" value="1" <?php echo set_radio('review_status', '1', TRUE); ?>><?php echo lang('text_approved'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="review_status" value="0" <?php echo set_radio('review_status', '0', TRUE); ?>><?php echo lang('text_pending_review'); ?></label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="review_status" value="1" <?php echo set_radio('review_status', '1'); ?>><?php echo lang('text_approved'); ?></label>
+									<label class="btn btn-danger active"><input type="radio" name="review_status" value="0" <?php echo set_radio('review_status', '0', TRUE); ?>><?php echo lang('text_pending_review'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="review_status" value="1" <?php echo set_radio('review_status', '1'); ?>><?php echo lang('text_approved'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('review_status', '<span class="text-danger">', '</span>'); ?>

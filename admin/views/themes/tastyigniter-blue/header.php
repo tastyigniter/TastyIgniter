@@ -34,6 +34,7 @@
     $logout 			= site_url('logout');
 
     $heading 			= get_heading();
+    $context_help       = get_context_help();
 ?>
 <?php echo get_doctype(); ?>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
@@ -246,6 +247,12 @@
                             <?php } ?>
 
                             <?php echo get_heading(); ?>
+
+                            <?php if (!empty($context_help)) { ?>
+                                <a class="btn btn-help" role="button" data-toggle="collapse" href="#context-help-wrap" title="<?php echo lang('text_help'); ?>">
+                                    <i class="fa fa-question-circle"></i>
+                                </a>
+                            <?php } ?>
                         </h1>
 					</div>
 
@@ -266,6 +273,12 @@
 						</div>
 					<?php } ?>
 				</div>
+
+				<?php if (!empty($context_help)) { ?>
+					<div class="collapse" id="context-help-wrap">
+						<div class="well"><?php echo $context_help; ?></div>
+					</div>
+				<?php } ?>
 
 				<div id="notification">
 					<?php echo $this->alert->display(); ?>

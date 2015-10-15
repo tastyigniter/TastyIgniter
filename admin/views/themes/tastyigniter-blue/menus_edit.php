@@ -94,13 +94,13 @@
 					<div class="form-group">
 						<label for="input-subtract-stock" class="col-sm-3 control-label"><?php echo lang('label_subtract_stock'); ?></label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if ($subtract_stock == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="subtract_stock" value="0" <?php echo set_radio('subtract_stock', '0'); ?>><?php echo lang('text_no'); ?></label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="subtract_stock" value="1" <?php echo set_radio('subtract_stock', '1', TRUE); ?>><?php echo lang('text_yes'); ?></label>
+									<label class="btn btn-danger"><input type="radio" name="subtract_stock" value="0" <?php echo set_radio('subtract_stock', '0'); ?>><?php echo lang('text_no'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="subtract_stock" value="1" <?php echo set_radio('subtract_stock', '1', TRUE); ?>><?php echo lang('text_yes'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="subtract_stock" value="0" <?php echo set_radio('subtract_stock', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="subtract_stock" value="1" <?php echo set_radio('subtract_stock', '1'); ?>><?php echo lang('text_yes'); ?></label>
+									<label class="btn btn-danger active"><input type="radio" name="subtract_stock" value="0" <?php echo set_radio('subtract_stock', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="subtract_stock" value="1" <?php echo set_radio('subtract_stock', '1'); ?>><?php echo lang('text_yes'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('subtract_stock', '<span class="text-danger">', '</span>'); ?>
@@ -109,13 +109,13 @@
 					<div class="form-group">
 						<label for="input-status" class="col-sm-3 control-label"><?php echo lang('label_status'); ?></label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if ($menu_status == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="menu_status" value="0" <?php echo set_radio('menu_status', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="menu_status" value="1" <?php echo set_radio('menu_status', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger"><input type="radio" name="menu_status" value="0" <?php echo set_radio('menu_status', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="menu_status" value="1" <?php echo set_radio('menu_status', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="menu_status" value="0" <?php echo set_radio('menu_status', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="menu_status" value="1" <?php echo set_radio('menu_status', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger active"><input type="radio" name="menu_status" value="0" <?php echo set_radio('menu_status', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="menu_status" value="1" <?php echo set_radio('menu_status', '1'); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('menu_status', '<span class="text-danger">', '</span>'); ?>
@@ -129,6 +129,9 @@
 						<div class="col-sm-5">
 							<input type="text" name="menu_option" id="input-status" class="form-control" value="" />
 							<?php echo form_error('menu_option', '<span class="text-danger">', '</span>'); ?>
+						</div>
+						<div class="col-sm-3">
+							<a class="btn btn-default" href="<?php echo site_url('menu_options/edit'); ?>"><?php echo lang('button_add_menu_options'); ?></a>
 						</div>
 					</div>
 					<br />
@@ -160,13 +163,13 @@
 											<span class="help-block"><?php echo lang('help_option_required'); ?></span>
 										</label>
 										<div class="col-sm-5">
-											<div class="btn-group btn-group-toggle" data-toggle="buttons">
+											<div class="btn-group btn-group-switch" data-toggle="buttons">
 												<?php if ($menu_option['required'] === '1') { ?>
-													<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="menu_options[<?php echo $option_row; ?>][required]" value="0" <?php echo set_radio('menu_options['.$option_row.'][required]', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-													<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="menu_options[<?php echo $option_row; ?>][required]" value="1" <?php echo set_radio('menu_options['.$option_row.'][required]', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+													<label class="btn btn-danger"><input type="radio" name="menu_options[<?php echo $option_row; ?>][required]" value="0" <?php echo set_radio('menu_options['.$option_row.'][required]', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+													<label class="btn btn-success active"><input type="radio" name="menu_options[<?php echo $option_row; ?>][required]" value="1" <?php echo set_radio('menu_options['.$option_row.'][required]', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 												<?php } else { ?>
-													<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="menu_options[<?php echo $option_row; ?>][required]" value="0" <?php echo set_radio('menu_options['.$option_row.'][required]', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-													<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="menu_options[<?php echo $option_row; ?>][required]" value="1" <?php echo set_radio('menu_options['.$option_row.'][required]', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+													<label class="btn btn-danger active"><input type="radio" name="menu_options[<?php echo $option_row; ?>][required]" value="0" <?php echo set_radio('menu_options['.$option_row.'][required]', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+													<label class="btn btn-success"><input type="radio" name="menu_options[<?php echo $option_row; ?>][required]" value="1" <?php echo set_radio('menu_options['.$option_row.'][required]', '1'); ?>><?php echo lang('text_enabled'); ?></label>
 												<?php } ?>
 											</div>
 											<?php echo form_error('menu_options['.$option_row.'][required]', '<span class="text-danger">', '</span>'); ?>
@@ -213,13 +216,13 @@
 															<?php echo form_error('menu_options['.$option_row.'][option_values]['.$option_value_row.'][quantity]', '<span class="text-danger">', '</span>'); ?>
 														</td>
 														<td class="text-center">
-															<div class="btn-group btn-group-toggle" data-toggle="buttons">
+															<div class="btn-group btn-group-switch" data-toggle="buttons">
 																<?php if ($value['subtract_stock'] === '1') { ?>
-																	<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="0"><?php echo lang('text_disabled'); ?></label>
-																	<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="1" checked="checked"><?php echo lang('text_enabled'); ?></label>
+																	<label class="btn btn-danger"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="0"><?php echo lang('text_disabled'); ?></label>
+																	<label class="btn btn-success active"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="1" checked="checked"><?php echo lang('text_enabled'); ?></label>
 																<?php } else { ?>
-																	<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="0" checked="checked"><?php echo lang('text_disabled'); ?></label>
-																	<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="1"><?php echo lang('text_enabled'); ?></label>
+																	<label class="btn btn-danger active"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="0" checked="checked"><?php echo lang('text_disabled'); ?></label>
+																	<label class="btn btn-success"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="1"><?php echo lang('text_enabled'); ?></label>
 																<?php } ?>
 															</div>
 															<?php echo form_error('menu_options['.$option_row.'][option_values]['.$option_value_row.'][subtract_stock]', '<span class="text-danger">', '</span>'); ?>
@@ -261,13 +264,13 @@
 					<div class="form-group">
 						<label for="input-special-status" class="col-sm-3 control-label">Special</label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if ($special_status === '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="special_status" value="0"><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="special_status" value="1" checked><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger"><input type="radio" name="special_status" value="0"><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="special_status" value="1" checked><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="special_status" value="0" checked><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="special_status" value="1"><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger active"><input type="radio" name="special_status" value="0" checked><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="special_status" value="1"><?php echo lang('text_enabled'); ?></label>
 								<?php } ?>
 							</div>
 							<input type="hidden" name="special_id" value="<?php echo set_value('special_id', $special_id); ?>" />
@@ -373,9 +376,9 @@ function addOption(data) {
 	html += '			<span class="help-block"><?php echo lang('help_option_required'); ?></span>';
 	html += '		</label>';
 	html += '		<div class="col-sm-5">';
-	html += '			<div class="btn-group btn-group-toggle" data-toggle="buttons">';
-	html += '				<label class="btn btn-default active btn-danger" data-btn="btn-danger"><input type="radio" name="menu_options[' + option_row + '][required]" checked="checked"value="0"><?php echo lang('text_disabled'); ?></label>';
-	html += '				<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="menu_options[' + option_row + '][required]" value="1"><?php echo lang('text_enabled'); ?></label>';
+	html += '			<div class="btn-group btn-group-switch" data-toggle="buttons">';
+	html += '				<label class="btn btn-danger active"><input type="radio" name="menu_options[' + option_row + '][required]" checked="checked"value="0"><?php echo lang('text_disabled'); ?></label>';
+	html += '				<label class="btn btn-success"><input type="radio" name="menu_options[' + option_row + '][required]" value="1"><?php echo lang('text_enabled'); ?></label>';
 	html += '			</div>';
 	html += '		</div>';
 	html += '	</div>';
@@ -419,9 +422,9 @@ function addOptionValue(option_row) {
 	html += '	</select></td>';
 	html += '	<td><input type="text" name="menu_options[' + option_row + '][option_values][' + option_value_row + '][price]" class="form-control" value="" /></td>';
 	html += '	<td><input type="text" name="menu_options[' + option_row + '][option_values][' + option_value_row + '][quantity]" class="form-control" value="" /></td>';
-	html += '	<td class="text-center"><div class="btn-group btn-group-toggle" data-toggle="buttons">';
-	html += '		<label class="btn btn-default active btn-danger" data-btn="btn-danger"><input type="radio" name="menu_options[' + option_row + '][option_values][' + option_value_row + '][subtract_stock]" checked="checked"value="0"><?php echo lang('text_disabled'); ?></label>';
-	html += '		<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="menu_options[' + option_row + '][option_values][' + option_value_row + '][subtract_stock]" value="1"><?php echo lang('text_enabled'); ?></label>';
+	html += '	<td class="text-center"><div class="btn-group btn-group-switch" data-toggle="buttons">';
+	html += '		<label class="btn btn-danger active"><input type="radio" name="menu_options[' + option_row + '][option_values][' + option_value_row + '][subtract_stock]" checked="checked"value="0"><?php echo lang('text_disabled'); ?></label>';
+	html += '		<label class="btn btn-success"><input type="radio" name="menu_options[' + option_row + '][option_values][' + option_value_row + '][subtract_stock]" value="1"><?php echo lang('text_enabled'); ?></label>';
 	html += '	</div></td>';
 	html += '	<td class="id"><input type="hidden" name="menu_options[' + option_row + '][option_values][' + option_value_row + '][menu_option_value_id]" class="form-control" value="" />-</td>';
 	html += '</tr>';

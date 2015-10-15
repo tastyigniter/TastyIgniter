@@ -151,9 +151,9 @@
 							<div class="btn-group btn-group-toggle btn-group-5" data-toggle="buttons">
 							<?php foreach ($page_limits as $key => $value) { ?>
 								<?php if ($value === config_item('page_limit')) { ?>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="page_limit" value="<?php echo $value; ?>" <?php echo set_radio('page_limit', $value, TRUE); ?>><?php echo $value; ?></label>
+									<label class="btn btn-success active"><input type="radio" name="page_limit" value="<?php echo $value; ?>" <?php echo set_radio('page_limit', $value, TRUE); ?>><?php echo $value; ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="page_limit" value="<?php echo $value; ?>" <?php echo set_radio('page_limit', $value); ?>><?php echo $value; ?></label>
+									<label class="btn btn-success"><input type="radio" name="page_limit" value="<?php echo $value; ?>" <?php echo set_radio('page_limit', $value); ?>><?php echo $value; ?></label>
 								<?php } ?>
 							<?php } ?>
 							</div>
@@ -168,9 +168,9 @@
 							<div class="btn-group btn-group-toggle btn-group-5" data-toggle="buttons">
 							<?php foreach ($page_limits as $key => $value) { ?>
 								<?php if ($value === config_item('menus_page_limit')) { ?>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="menus_page_limit" value="<?php echo $value; ?>" <?php echo set_radio('menus_page_limit', $value, TRUE); ?>><?php echo $value; ?></label>
+									<label class="btn btn-success active"><input type="radio" name="menus_page_limit" value="<?php echo $value; ?>" <?php echo set_radio('menus_page_limit', $value, TRUE); ?>><?php echo $value; ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="menus_page_limit" value="<?php echo $value; ?>" <?php echo set_radio('menus_page_limit', $value); ?>><?php echo $value; ?></label>
+									<label class="btn btn-success"><input type="radio" name="menus_page_limit" value="<?php echo $value; ?>" <?php echo set_radio('menus_page_limit', $value); ?>><?php echo $value; ?></label>
 								<?php } ?>
 							<?php } ?>
 							</div>
@@ -182,13 +182,13 @@
 							<span class="help-block"><?php echo lang('help_show_menu_image'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if (config_item('show_menu_images') == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="show_menu_images" value="0" <?php echo set_radio('show_menu_images', '0'); ?>><?php echo lang('text_hide'); ?></label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="show_menu_images" value="1" <?php echo set_radio('show_menu_images', '1', TRUE); ?>><?php echo lang('text_show'); ?></label>
+									<label class="btn btn-danger"><input type="radio" name="show_menu_images" value="0" <?php echo set_radio('show_menu_images', '0'); ?>><?php echo lang('text_hide'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="show_menu_images" value="1" <?php echo set_radio('show_menu_images', '1', TRUE); ?>><?php echo lang('text_show'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="show_menu_images" value="0" <?php echo set_radio('show_menu_images', '0', TRUE); ?>><?php echo lang('text_hide'); ?></label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="show_menu_images" value="1" <?php echo set_radio('show_menu_images', '1'); ?>><?php echo lang('text_show'); ?></label>
+									<label class="btn btn-danger active"><input type="radio" name="show_menu_images" value="0" <?php echo set_radio('show_menu_images', '0', TRUE); ?>><?php echo lang('text_hide'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="show_menu_images" value="1" <?php echo set_radio('show_menu_images', '1'); ?>><?php echo lang('text_show'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('show_menu_images', '<span class="text-danger">', '</span>'); ?>
@@ -229,7 +229,7 @@
                             <span class="help-block"><?php echo lang('help_approve_reviews'); ?></span>
                         </label>
                         <div class="col-sm-5">
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <div class="btn-group btn-group-switch" data-toggle="buttons">
                                 <?php if (config_item('approve_reviews') == '1') { ?>
                                     <label class="btn btn-default"><input type="radio" name="approve_reviews" value="0" <?php echo set_radio('approve_reviews', '0'); ?>><?php echo lang('text_auto'); ?></label>
                                     <label class="btn btn-default active"><input type="radio" name="approve_reviews" value="1" <?php echo set_radio('approve_reviews', '1', TRUE); ?>><?php echo lang('text_manual'); ?></label>
@@ -336,7 +336,7 @@
 					<div class="form-group">
 						<label for="input-distance-unit" class="col-sm-3 control-label"><?php echo lang('label_distance_unit'); ?></label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if (config_item('distance_unit') === 'km') { ?>
 									<label class="btn btn-default"><input type="radio" name="distance_unit" value="mi" <?php echo set_radio('distance_unit', 'mi'); ?>><?php echo lang('text_miles'); ?></label>
 									<label class="btn btn-default active"><input type="radio" name="distance_unit" value="km" <?php echo set_radio('distance_unit', 'km', TRUE); ?>><?php echo lang('text_kilometers'); ?></label>
@@ -443,13 +443,13 @@
 							<span class="help-block"><?php echo lang('help_guest_order'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if (config_item('guest_order') == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="guest_order" value="0" <?php echo set_radio('guest_order', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="guest_order" value="1" <?php echo set_radio('guest_order', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger"><input type="radio" name="guest_order" value="0" <?php echo set_radio('guest_order', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="guest_order" value="1" <?php echo set_radio('guest_order', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="guest_order" value="0" <?php echo set_radio('guest_order', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="guest_order" value="1" <?php echo set_radio('guest_order', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger active"><input type="radio" name="guest_order" value="0" <?php echo set_radio('guest_order', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="guest_order" value="1" <?php echo set_radio('guest_order', '1'); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('guest_order', '<span class="text-danger">', '</span>'); ?>
@@ -460,13 +460,13 @@
 							<span class="help-block"><?php echo lang('help_location_order'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if (config_item('location_order') === '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="location_order" value="0" <?php echo set_radio('location_order', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="location_order" value="1" <?php echo set_radio('location_order', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger"><input type="radio" name="location_order" value="0" <?php echo set_radio('location_order', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="location_order" value="1" <?php echo set_radio('location_order', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="location_order" value="0" <?php echo set_radio('location_order', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="location_order" value="1" <?php echo set_radio('location_order', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger active"><input type="radio" name="location_order" value="0" <?php echo set_radio('location_order', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="location_order" value="1" <?php echo set_radio('location_order', '1'); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('location_order', '<span class="text-danger">', '</span>'); ?>
@@ -477,13 +477,13 @@
 							<span class="help-block"><?php echo lang('help_future_order'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if (config_item('future_orders') === '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="future_orders" value="0" <?php echo set_radio('future_orders', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="future_orders" value="1" <?php echo set_radio('future_orders', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger"><input type="radio" name="future_orders" value="0" <?php echo set_radio('future_orders', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="future_orders" value="1" <?php echo set_radio('future_orders', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="future_orders" value="0" <?php echo set_radio('future_orders', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="future_orders" value="1" <?php echo set_radio('future_orders', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger active"><input type="radio" name="future_orders" value="0" <?php echo set_radio('future_orders', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="future_orders" value="1" <?php echo set_radio('future_orders', '1'); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('future_orders', '<span class="text-danger">', '</span>'); ?>
@@ -497,13 +497,13 @@
 							<span class="help-block"><?php echo lang('help_reservation_mode'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if (config_item('reservation_mode') === '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="reservation_mode" value="0" <?php echo set_radio('reservation_mode', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="reservation_mode" value="1" <?php echo set_radio('reservation_mode', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger"><input type="radio" name="reservation_mode" value="0" <?php echo set_radio('reservation_mode', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="reservation_mode" value="1" <?php echo set_radio('reservation_mode', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="reservation_mode" value="0" <?php echo set_radio('reservation_mode', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="reservation_mode" value="1" <?php echo set_radio('reservation_mode', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger active"><input type="radio" name="reservation_mode" value="0" <?php echo set_radio('reservation_mode', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="reservation_mode" value="1" <?php echo set_radio('reservation_mode', '1'); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('reservation_mode', '<span class="text-danger">', '</span>'); ?>
@@ -626,13 +626,13 @@
 							<span class="help-block"><?php echo lang('help_media_upload'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if ($image_manager['uploads'] == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="image_manager[uploads]" value="0" <?php echo set_radio('image_manager[uploads]', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="image_manager[uploads]" value="1" <?php echo set_radio('image_manager[uploads]', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger"><input type="radio" name="image_manager[uploads]" value="0" <?php echo set_radio('image_manager[uploads]', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="image_manager[uploads]" value="1" <?php echo set_radio('image_manager[uploads]', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="image_manager[uploads]" value="0" <?php echo set_radio('image_manager[uploads]', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="image_manager[uploads]" value="1" <?php echo set_radio('image_manager[uploads]', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger active"><input type="radio" name="image_manager[uploads]" value="0" <?php echo set_radio('image_manager[uploads]', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="image_manager[uploads]" value="1" <?php echo set_radio('image_manager[uploads]', '1'); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('image_manager[uploads]', '<span class="text-danger">', '</span>'); ?>
@@ -643,13 +643,13 @@
 							<span class="help-block"><?php echo lang('help_media_new_folder'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if ($image_manager['new_folder'] == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="image_manager[new_folder]" value="0" <?php echo set_radio('image_manager[new_folder]', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="image_manager[new_folder]" value="1" <?php echo set_radio('image_manager[new_folder]', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger"><input type="radio" name="image_manager[new_folder]" value="0" <?php echo set_radio('image_manager[new_folder]', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="image_manager[new_folder]" value="1" <?php echo set_radio('image_manager[new_folder]', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="image_manager[new_folder]" value="0" <?php echo set_radio('image_manager[new_folder]', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="image_manager[new_folder]" value="1" <?php echo set_radio('image_manager[new_folder]', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger active"><input type="radio" name="image_manager[new_folder]" value="0" <?php echo set_radio('image_manager[new_folder]', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="image_manager[new_folder]" value="1" <?php echo set_radio('image_manager[new_folder]', '1'); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('image_manager[new_folder]', '<span class="text-danger">', '</span>'); ?>
@@ -660,13 +660,13 @@
 							<span class="help-block"><?php echo lang('help_media_copy'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if ($image_manager['copy'] == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="image_manager[copy]" value="0" <?php echo set_radio('image_manager[copy]', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="image_manager[copy]" value="1" <?php echo set_radio('image_manager[copy]', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger"><input type="radio" name="image_manager[copy]" value="0" <?php echo set_radio('image_manager[copy]', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="image_manager[copy]" value="1" <?php echo set_radio('image_manager[copy]', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="image_manager[copy]" value="0" <?php echo set_radio('image_manager[copy]', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="image_manager[copy]" value="1" <?php echo set_radio('image_manager[copy]', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger active"><input type="radio" name="image_manager[copy]" value="0" <?php echo set_radio('image_manager[copy]', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="image_manager[copy]" value="1" <?php echo set_radio('image_manager[copy]', '1'); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('image_manager[copy]', '<span class="text-danger">', '</span>'); ?>
@@ -677,13 +677,13 @@
 							<span class="help-block"><?php echo lang('help_media_move'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if ($image_manager['move'] == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="image_manager[move]" value="0" <?php echo set_radio('image_manager[move]', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="image_manager[move]" value="1" <?php echo set_radio('image_manager[move]', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger"><input type="radio" name="image_manager[move]" value="0" <?php echo set_radio('image_manager[move]', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="image_manager[move]" value="1" <?php echo set_radio('image_manager[move]', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="image_manager[move]" value="0" <?php echo set_radio('image_manager[move]', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="image_manager[move]" value="1" <?php echo set_radio('image_manager[move]', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger active"><input type="radio" name="image_manager[move]" value="0" <?php echo set_radio('image_manager[move]', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="image_manager[move]" value="1" <?php echo set_radio('image_manager[move]', '1'); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('image_manager[move]', '<span class="text-danger">', '</span>'); ?>
@@ -694,13 +694,13 @@
 							<span class="help-block"><?php echo lang('help_media_rename'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if ($image_manager['rename'] == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="image_manager[rename]" value="0" <?php echo set_radio('image_manager[rename]', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="image_manager[rename]" value="1" <?php echo set_radio('image_manager[rename]', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger"><input type="radio" name="image_manager[rename]" value="0" <?php echo set_radio('image_manager[rename]', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="image_manager[rename]" value="1" <?php echo set_radio('image_manager[rename]', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="image_manager[rename]" value="0" <?php echo set_radio('image_manager[rename]', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="image_manager[rename]" value="1" <?php echo set_radio('image_manager[rename]', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger active"><input type="radio" name="image_manager[rename]" value="0" <?php echo set_radio('image_manager[rename]', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="image_manager[rename]" value="1" <?php echo set_radio('image_manager[rename]', '1'); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('image_manager[rename]', '<span class="text-danger">', '</span>'); ?>
@@ -711,13 +711,13 @@
 							<span class="help-block"><?php echo lang('help_media_delete'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if ($image_manager['delete'] == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="image_manager[delete]" value="0" <?php echo set_radio('image_manager[delete]', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="image_manager[delete]" value="1" <?php echo set_radio('image_manager[delete]', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger"><input type="radio" name="image_manager[delete]" value="0" <?php echo set_radio('image_manager[delete]', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="image_manager[delete]" value="1" <?php echo set_radio('image_manager[delete]', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="image_manager[delete]" value="0" <?php echo set_radio('image_manager[delete]', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="image_manager[delete]" value="1" <?php echo set_radio('image_manager[delete]]', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger active"><input type="radio" name="image_manager[delete]" value="0" <?php echo set_radio('image_manager[delete]', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="image_manager[delete]" value="1" <?php echo set_radio('image_manager[delete]]', '1'); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('image_manager[delete]', '<span class="text-danger">', '</span>'); ?>
@@ -728,13 +728,13 @@
 							<span class="help-block"><?php echo lang('help_media_transliteration'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if ($image_manager['transliteration'] == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="image_manager[transliteration]" value="0" <?php echo set_radio('image_manager[transliteration]', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="image_manager[transliteration]" value="1" <?php echo set_radio('image_manager[transliteration]', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger"><input type="radio" name="image_manager[transliteration]" value="0" <?php echo set_radio('image_manager[transliteration]', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="image_manager[transliteration]" value="1" <?php echo set_radio('image_manager[transliteration]', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="image_manager[transliteration]" value="0" <?php echo set_radio('image_manager[transliteration]', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="image_manager[transliteration]" value="1" <?php echo set_radio('image_manager[transliteration]', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger active"><input type="radio" name="image_manager[transliteration]" value="0" <?php echo set_radio('image_manager[transliteration]', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="image_manager[transliteration]" value="1" <?php echo set_radio('image_manager[transliteration]', '1'); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('image_manager[transliteration]', '<span class="text-danger">', '</span>'); ?>
@@ -790,16 +790,16 @@
                     <div class="form-group">
                         <label for="input-mailtype" class="col-sm-3 control-label"><?php echo lang('label_mailtype'); ?></label>
                         <div class="col-sm-5">
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <div class="btn-group btn-group-switch" data-toggle="buttons">
                                 <?php if (config_item('mailtype') == 'text') { ?>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="mailtype" value="text" <?php echo set_radio('mailtype', 'text', TRUE); ?>><?php echo lang('text_text'); ?></label>
+                                    <label class="btn btn-success active"><input type="radio" name="mailtype" value="text" <?php echo set_radio('mailtype', 'text', TRUE); ?>><?php echo lang('text_text'); ?></label>
                                 <?php } else { ?>
-                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="mailtype" value="text" <?php echo set_radio('mailtype', 'text'); ?>><?php echo lang('text_text'); ?></label>
+                                    <label class="btn btn-success"><input type="radio" name="mailtype" value="text" <?php echo set_radio('mailtype', 'text'); ?>><?php echo lang('text_text'); ?></label>
                                 <?php } ?>
                                 <?php if (config_item('mailtype') == 'html') { ?>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="mailtype" value="html" <?php echo set_radio('mailtype', 'html', TRUE); ?>><?php echo lang('text_html'); ?></label>
+                                    <label class="btn btn-success active"><input type="radio" name="mailtype" value="html" <?php echo set_radio('mailtype', 'html', TRUE); ?>><?php echo lang('text_html'); ?></label>
                                 <?php } else { ?>
-                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="mailtype" value="html" <?php echo set_radio('mailtype', 'html'); ?>><?php echo lang('text_html'); ?></label>
+                                    <label class="btn btn-success"><input type="radio" name="mailtype" value="html" <?php echo set_radio('mailtype', 'html'); ?>><?php echo lang('text_html'); ?></label>
                                 <?php } ?>
                             </div>
                             <?php echo form_error('mailtype', '<span class="text-danger">', '</span>'); ?>
@@ -810,19 +810,19 @@
                         <div class="col-sm-5">
                             <div class="btn-group btn-group-toggle btn-group-3" data-toggle="buttons">
                                 <?php if (config_item('protocol') == 'mail') { ?>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="protocol" value="mail" <?php echo set_radio('protocol', 'mail', TRUE); ?>><?php echo lang('text_mail'); ?></label>
+                                    <label class="btn btn-success active"><input type="radio" name="protocol" value="mail" <?php echo set_radio('protocol', 'mail', TRUE); ?>><?php echo lang('text_mail'); ?></label>
                                 <?php } else { ?>
-                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="protocol" value="mail" <?php echo set_radio('protocol', 'mail'); ?>><?php echo lang('text_mail'); ?></label>
+                                    <label class="btn btn-success"><input type="radio" name="protocol" value="mail" <?php echo set_radio('protocol', 'mail'); ?>><?php echo lang('text_mail'); ?></label>
                                 <?php } ?>
                                 <?php if (config_item('protocol') == 'sendmail') { ?>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="protocol" value="sendmail" <?php echo set_radio('protocol', 'sendmail', TRUE); ?>><?php echo lang('text_sendmail'); ?></label>
+                                    <label class="btn btn-success active"><input type="radio" name="protocol" value="sendmail" <?php echo set_radio('protocol', 'sendmail', TRUE); ?>><?php echo lang('text_sendmail'); ?></label>
                                 <?php } else { ?>
-                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="protocol" value="sendmail" <?php echo set_radio('protocol', 'sendmail'); ?>><?php echo lang('text_sendmail'); ?></label>
+                                    <label class="btn btn-success"><input type="radio" name="protocol" value="sendmail" <?php echo set_radio('protocol', 'sendmail'); ?>><?php echo lang('text_sendmail'); ?></label>
                                 <?php } ?>
                                 <?php if (config_item('protocol') == 'smtp') { ?>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="protocol" value="smtp" <?php echo set_radio('protocol', 'smtp', TRUE); ?>><?php echo lang('text_smtp'); ?></label>
+                                    <label class="btn btn-success active"><input type="radio" name="protocol" value="smtp" <?php echo set_radio('protocol', 'smtp', TRUE); ?>><?php echo lang('text_smtp'); ?></label>
                                 <?php } else { ?>
-                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="protocol" value="smtp" <?php echo set_radio('protocol', 'smtp'); ?>><?php echo lang('text_smtp'); ?></label>
+                                    <label class="btn btn-success"><input type="radio" name="protocol" value="smtp" <?php echo set_radio('protocol', 'smtp'); ?>><?php echo lang('text_smtp'); ?></label>
                                 <?php } ?>
                             </div>
                             <?php echo form_error('protocol', '<span class="text-danger">', '</span>'); ?>
@@ -870,13 +870,13 @@
                             <span class="help-block"><?php echo lang('help_registration_email'); ?></span>
                         </label>
                         <div class="col-sm-5">
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <div class="btn-group btn-group-switch" data-toggle="buttons">
                                 <?php if (config_item('registration_email') == '1') { ?>
-                                    <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="registration_email" value="0" <?php echo set_radio('registration_email', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="registration_email" value="1" <?php echo set_radio('registration_email', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+                                    <label class="btn btn-danger"><input type="radio" name="registration_email" value="0" <?php echo set_radio('registration_email', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+                                    <label class="btn btn-success active"><input type="radio" name="registration_email" value="1" <?php echo set_radio('registration_email', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
                                 <?php } else { ?>
-                                    <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="registration_email" value="0" <?php echo set_radio('registration_email', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="registration_email" value="1" <?php echo set_radio('registration_email', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+                                    <label class="btn btn-danger active"><input type="radio" name="registration_email" value="0" <?php echo set_radio('registration_email', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+                                    <label class="btn btn-success"><input type="radio" name="registration_email" value="1" <?php echo set_radio('registration_email', '1'); ?>><?php echo lang('text_enabled'); ?></label>
                                 <?php } ?>
                             </div>
                             <?php echo form_error('registration_email', '<span class="text-danger">', '</span>'); ?>
@@ -887,13 +887,13 @@
                             <span class="help-block"><?php echo lang('help_customer_order_email'); ?></span>
                         </label>
                         <div class="col-sm-5">
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <div class="btn-group btn-group-switch" data-toggle="buttons">
                                 <?php if (config_item('customer_order_email') == '1') { ?>
-                                    <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="customer_order_email" value="0" <?php echo set_radio('customer_order_email', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="customer_order_email" value="1" <?php echo set_radio('customer_order_email', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+                                    <label class="btn btn-danger"><input type="radio" name="customer_order_email" value="0" <?php echo set_radio('customer_order_email', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+                                    <label class="btn btn-success active"><input type="radio" name="customer_order_email" value="1" <?php echo set_radio('customer_order_email', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
                                 <?php } else { ?>
-                                    <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="customer_order_email" value="0" <?php echo set_radio('customer_order_email', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="customer_order_email" value="1" <?php echo set_radio('customer_order_email', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+                                    <label class="btn btn-danger active"><input type="radio" name="customer_order_email" value="0" <?php echo set_radio('customer_order_email', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+                                    <label class="btn btn-success"><input type="radio" name="customer_order_email" value="1" <?php echo set_radio('customer_order_email', '1'); ?>><?php echo lang('text_enabled'); ?></label>
                                 <?php } ?>
                             </div>
                             <?php echo form_error('customer_order_email', '<span class="text-danger">', '</span>'); ?>
@@ -904,13 +904,13 @@
                             <span class="help-block"><?php echo lang('help_customer_reserve_email'); ?></span>
                         </label>
                         <div class="col-sm-5">
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <div class="btn-group btn-group-switch" data-toggle="buttons">
                                 <?php if (config_item('customer_reserve_email') == '1') { ?>
-                                    <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="customer_reserve_email" value="0" <?php echo set_radio('customer_reserve_email', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="customer_reserve_email" value="1" <?php echo set_radio('customer_reserve_email', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+                                    <label class="btn btn-danger"><input type="radio" name="customer_reserve_email" value="0" <?php echo set_radio('customer_reserve_email', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+                                    <label class="btn btn-success active"><input type="radio" name="customer_reserve_email" value="1" <?php echo set_radio('customer_reserve_email', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
                                 <?php } else { ?>
-                                    <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="customer_reserve_email" value="0" <?php echo set_radio('customer_reserve_email', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="customer_reserve_email" value="1" <?php echo set_radio('customer_reserve_email', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+                                    <label class="btn btn-danger active"><input type="radio" name="customer_reserve_email" value="0" <?php echo set_radio('customer_reserve_email', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+                                    <label class="btn btn-success"><input type="radio" name="customer_reserve_email" value="1" <?php echo set_radio('customer_reserve_email', '1'); ?>><?php echo lang('text_enabled'); ?></label>
                                 <?php } ?>
                             </div>
                             <?php echo form_error('customer_reserve_email', '<span class="text-danger">', '</span>'); ?>
@@ -921,13 +921,13 @@
                             <span class="help-block"><?php echo lang('help_location_order_email'); ?></span>
                         </label>
                         <div class="col-sm-5">
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <div class="btn-group btn-group-switch" data-toggle="buttons">
                                 <?php if (config_item('location_order_email') == '1') { ?>
-                                    <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="location_order_email" value="0" <?php echo set_radio('location_order_email', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="location_order_email" value="1" <?php echo set_radio('location_order_email', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+                                    <label class="btn btn-danger"><input type="radio" name="location_order_email" value="0" <?php echo set_radio('location_order_email', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+                                    <label class="btn btn-success active"><input type="radio" name="location_order_email" value="1" <?php echo set_radio('location_order_email', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
                                 <?php } else { ?>
-                                    <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="location_order_email" value="0" <?php echo set_radio('location_order_email', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="location_order_email" value="1" <?php echo set_radio('location_order_email', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+                                    <label class="btn btn-danger active"><input type="radio" name="location_order_email" value="0" <?php echo set_radio('location_order_email', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+                                    <label class="btn btn-success"><input type="radio" name="location_order_email" value="1" <?php echo set_radio('location_order_email', '1'); ?>><?php echo lang('text_enabled'); ?></label>
                                 <?php } ?>
                             </div>
                             <?php echo form_error('location_order_email', '<span class="text-danger">', '</span>'); ?>
@@ -938,13 +938,13 @@
                             <span class="help-block"><?php echo lang('help_location_reserve_email'); ?></span>
                         </label>
                         <div class="col-sm-5">
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <div class="btn-group btn-group-switch" data-toggle="buttons">
                                 <?php if (config_item('location_reserve_email') == '1') { ?>
-                                    <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="location_reserve_email" value="0" <?php echo set_radio('location_reserve_email', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="location_reserve_email" value="1" <?php echo set_radio('location_reserve_email', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+                                    <label class="btn btn-danger"><input type="radio" name="location_reserve_email" value="0" <?php echo set_radio('location_reserve_email', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+                                    <label class="btn btn-success active"><input type="radio" name="location_reserve_email" value="1" <?php echo set_radio('location_reserve_email', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
                                 <?php } else { ?>
-                                    <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="location_reserve_email" value="0" <?php echo set_radio('location_reserve_email', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="location_reserve_email" value="1" <?php echo set_radio('location_reserve_email', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+                                    <label class="btn btn-danger active"><input type="radio" name="location_reserve_email" value="0" <?php echo set_radio('location_reserve_email', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+                                    <label class="btn btn-success"><input type="radio" name="location_reserve_email" value="1" <?php echo set_radio('location_reserve_email', '1'); ?>><?php echo lang('text_enabled'); ?></label>
                                 <?php } ?>
                             </div>
                             <?php echo form_error('location_reserve_email', '<span class="text-danger">', '</span>'); ?>
@@ -958,13 +958,13 @@
 							<span class="help-block"><?php echo lang('help_maintenance'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if (config_item('maintenance_mode') == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="maintenance_mode" value="0" <?php echo set_radio('maintenance_mode', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="maintenance_mode" value="1" <?php echo set_radio('maintenance_mode', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger"><input type="radio" name="maintenance_mode" value="0" <?php echo set_radio('maintenance_mode', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="maintenance_mode" value="1" <?php echo set_radio('maintenance_mode', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="maintenance_mode" value="0" <?php echo set_radio('maintenance_mode', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="maintenance_mode" value="1" <?php echo set_radio('maintenance_mode', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger active"><input type="radio" name="maintenance_mode" value="0" <?php echo set_radio('maintenance_mode', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="maintenance_mode" value="1" <?php echo set_radio('maintenance_mode', '1'); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('maintenance_mode', '<span class="text-danger">', '</span>'); ?>
@@ -982,13 +982,13 @@
                             <span class="help-block"><?php echo lang('help_permalink'); ?></span>
                         </label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if (config_item('permalink') == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="permalink" value="0" <?php echo set_radio('permalink', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="permalink" value="1" <?php echo set_radio('permalink', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger"><input type="radio" name="permalink" value="0" <?php echo set_radio('permalink', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="permalink" value="1" <?php echo set_radio('permalink', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="permalink" value="0" <?php echo set_radio('permalink', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="permalink" value="1" <?php echo set_radio('permalink', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger active"><input type="radio" name="permalink" value="0" <?php echo set_radio('permalink', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="permalink" value="1" <?php echo set_radio('permalink', '1'); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('permalink', '<span class="text-danger">', '</span>'); ?>
@@ -1052,13 +1052,13 @@
 							<span class="help-block"><?php echo lang('help_cache_mode'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if (config_item('cache_mode') == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="cache_mode" value="0" <?php echo set_radio('cache_mode', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="cache_mode" value="1" <?php echo set_radio('cache_mode', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger"><input type="radio" name="cache_mode" value="0" <?php echo set_radio('cache_mode', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="cache_mode" value="1" <?php echo set_radio('cache_mode', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="cache_mode" value="0" <?php echo set_radio('cache_mode', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="cache_mode" value="1" <?php echo set_radio('cache_mode', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger active"><input type="radio" name="cache_mode" value="0" <?php echo set_radio('cache_mode', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="cache_mode" value="1" <?php echo set_radio('cache_mode', '1'); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('cache_mode', '<span class="text-danger">', '</span>'); ?>

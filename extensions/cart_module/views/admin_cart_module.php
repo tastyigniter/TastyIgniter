@@ -21,13 +21,13 @@
 							<span class="help-block">Show or hide cart menu images</span>
 						</label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if ($show_cart_images == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="show_cart_images" value="0" <?php echo set_radio('show_cart_images', '0'); ?>>Hide</label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="show_cart_images" value="1" <?php echo set_radio('show_cart_images', '1', TRUE); ?>>Show</label>
+									<label class="btn btn-danger"><input type="radio" name="show_cart_images" value="0" <?php echo set_radio('show_cart_images', '0'); ?>>Hide</label>
+									<label class="btn btn-success active"><input type="radio" name="show_cart_images" value="1" <?php echo set_radio('show_cart_images', '1', TRUE); ?>>Show</label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="show_cart_images" value="0" <?php echo set_radio('show_cart_images', '0', TRUE); ?>>Hide</label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="show_cart_images" value="1" <?php echo set_radio('show_cart_images', '1'); ?>>Show</label>
+									<label class="btn btn-danger active"><input type="radio" name="show_cart_images" value="0" <?php echo set_radio('show_cart_images', '0', TRUE); ?>>Hide</label>
+									<label class="btn btn-success"><input type="radio" name="show_cart_images" value="1" <?php echo set_radio('show_cart_images', '1'); ?>>Show</label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('show_cart_images', '<span class="text-danger">', '</span>'); ?>

@@ -69,13 +69,13 @@
                                             <?php echo form_error('modules['.$module_row.'][priority]', '<span class="text-danger small">', '</span>'); ?>
                                         </td>
                                         <td>
-                                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                            <div class="btn-group btn-group-switch" data-toggle="buttons">
                                                 <?php if ($module['status'] === '1') { ?>
-                                                    <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="modules[<?php echo $module_row; ?>][status]" value="0" <?php echo set_radio('modules['.$module_row.'][status]', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-                                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="modules[<?php echo $module_row; ?>][status]" value="1" <?php echo set_radio('modules['.$module_row.'][status]', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+                                                    <label class="btn btn-danger"><input type="radio" name="modules[<?php echo $module_row; ?>][status]" value="0" <?php echo set_radio('modules['.$module_row.'][status]', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+                                                    <label class="btn btn-success active"><input type="radio" name="modules[<?php echo $module_row; ?>][status]" value="1" <?php echo set_radio('modules['.$module_row.'][status]', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
                                                 <?php } else { ?>
-                                                    <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="modules[<?php echo $module_row; ?>][status]" value="0" <?php echo set_radio('modules['.$module_row.'][status]', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-                                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="modules[<?php echo $module_row; ?>][status]" value="1" <?php echo set_radio('modules['.$module_row.'][status]', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+                                                    <label class="btn btn-danger active"><input type="radio" name="modules[<?php echo $module_row; ?>][status]" value="0" <?php echo set_radio('modules['.$module_row.'][status]', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+                                                    <label class="btn btn-success"><input type="radio" name="modules[<?php echo $module_row; ?>][status]" value="1" <?php echo set_radio('modules['.$module_row.'][status]', '1'); ?>><?php echo lang('text_enabled'); ?></label>
                                                 <?php } ?>
                                             </div>
                                             <?php echo form_error('modules['.$module_row.'][status]', '<span class="text-danger small">', '</span>'); ?>
@@ -161,14 +161,14 @@ function addModule() {
         <?php } ?>
     html += '	</select></td>';
 	html += '	<td><input type="text" name="modules[' + module_row + '][priority]" class="form-control" value="" /></td>';
-	html += '   <td><div class="btn-group btn-group-toggle" data-toggle="buttons">';
-	html += '   	<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="modules[' + module_row + '][status]" value="0" checked="checked"><?php echo lang('text_disabled'); ?></label>';
-	html += '   	<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="modules[' + module_row + '][status]" value="1"><?php echo lang('text_enabled'); ?></label>';
+	html += '   <td><div class="btn-group btn-group-switch" data-toggle="buttons">';
+	html += '   	<label class="btn btn-danger active"><input type="radio" name="modules[' + module_row + '][status]" value="0" checked="checked"><?php echo lang('text_disabled'); ?></label>';
+	html += '   	<label class="btn btn-success"><input type="radio" name="modules[' + module_row + '][status]" value="1"><?php echo lang('text_enabled'); ?></label>';
 	html += '   </div></td>';
 	html += '</tr>';
 
 	$('#modules').append(html);
-	$('.btn-group-toggle input[type="radio"]:checked').trigger('change');
+	$('.btn-group-switch input[type="radio"]:checked').trigger('change');
 
 	$('#module-row' + module_row + ' select.form-control').select2();
 

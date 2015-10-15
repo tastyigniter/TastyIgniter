@@ -125,13 +125,13 @@
                     <div class="form-group">
                         <label for="input-drop-table" class="col-sm-3 control-label"><?php echo lang('text_drop_tables'); ?></label>
                         <div class="col-sm-5">
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <div class="btn-group btn-group-switch" data-toggle="buttons">
                                 <?php if ($drop_tables == '1') { ?>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="drop_tables" value="1" <?php echo set_radio('drop_tables', '1', TRUE); ?>><?php echo lang('text_yes'); ?></label>
-                                    <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="drop_tables" value="0" <?php echo set_radio('drop_tables', '0'); ?>><?php echo lang('text_no'); ?></label>
+                                    <label class="btn btn-success active"><input type="radio" name="drop_tables" value="1" <?php echo set_radio('drop_tables', '1', TRUE); ?>><?php echo lang('text_yes'); ?></label>
+                                    <label class="btn btn-danger"><input type="radio" name="drop_tables" value="0" <?php echo set_radio('drop_tables', '0'); ?>><?php echo lang('text_no'); ?></label>
                                 <?php } else { ?>
-                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="drop_tables" value="1" <?php echo set_radio('drop_tables', '1'); ?>><?php echo lang('text_yes'); ?></label>
-                                    <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="drop_tables" value="0" <?php echo set_radio('drop_tables', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
+                                    <label class="btn btn-success"><input type="radio" name="drop_tables" value="1" <?php echo set_radio('drop_tables', '1'); ?>><?php echo lang('text_yes'); ?></label>
+                                    <label class="btn btn-danger active"><input type="radio" name="drop_tables" value="0" <?php echo set_radio('drop_tables', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
                                 <?php } ?>
                             </div>
                             <?php echo form_error('drop_tables', '<span class="text-danger">', '</span>'); ?>
@@ -140,13 +140,13 @@
                     <div class="form-group">
                         <label for="input-drop-table" class="col-sm-3 control-label"><?php echo lang('text_add_inserts'); ?></label>
                         <div class="col-sm-5">
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <div class="btn-group btn-group-switch" data-toggle="buttons">
                                 <?php if ($add_inserts == '1') { ?>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="add_inserts" value="1" <?php echo set_radio('add_inserts', '1', TRUE); ?>><?php echo lang('text_yes'); ?></label>
-                                    <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="add_inserts" value="0" <?php echo set_radio('add_inserts', '0'); ?>><?php echo lang('text_no'); ?></label>
+                                    <label class="btn btn-success active"><input type="radio" name="add_inserts" value="1" <?php echo set_radio('add_inserts', '1', TRUE); ?>><?php echo lang('text_yes'); ?></label>
+                                    <label class="btn btn-danger"><input type="radio" name="add_inserts" value="0" <?php echo set_radio('add_inserts', '0'); ?>><?php echo lang('text_no'); ?></label>
                                 <?php } else { ?>
-                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="add_inserts" value="1" <?php echo set_radio('add_inserts', '1'); ?>><?php echo lang('text_yes'); ?></label>
-                                    <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="add_inserts" value="0" <?php echo set_radio('add_inserts', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
+                                    <label class="btn btn-success"><input type="radio" name="add_inserts" value="1" <?php echo set_radio('add_inserts', '1'); ?>><?php echo lang('text_yes'); ?></label>
+                                    <label class="btn btn-danger active"><input type="radio" name="add_inserts" value="0" <?php echo set_radio('add_inserts', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
                                 <?php } ?>
                             </div>
                             <?php echo form_error('add_inserts', '<span class="text-danger">', '</span>'); ?>
@@ -159,21 +159,21 @@
                         <div class="col-sm-5">
                             <div class="btn-group btn-group-3 btn-group-toggle" data-toggle="buttons">
                                 <?php if ($compression === 'none') { ?>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="compression" value="none" <?php echo set_radio('compression', 'none', TRUE); ?>><?php echo lang('text_none'); ?></label>
-                                    <label class="btn btn-default disabled" data-btn="btn-success"><input type="radio" name="compression" value="gzip" <?php echo set_radio('compression', 'gzip'); ?>><?php echo lang('text_gzip'); ?></label>
-                                    <label class="btn btn-default disabled" data-btn="btn-success"><input type="radio" name="compression" value="zip" <?php echo set_radio('compression', 'zip'); ?>><?php echo lang('text_zip'); ?></label>
+                                    <label class="btn btn-success active"><input type="radio" name="compression" value="none" <?php echo set_radio('compression', 'none', TRUE); ?>><?php echo lang('text_none'); ?></label>
+                                    <label class="btn btn-success disabled"><input type="radio" name="compression" value="gzip" <?php echo set_radio('compression', 'gzip'); ?>><?php echo lang('text_gzip'); ?></label>
+                                    <label class="btn btn-success disabled"><input type="radio" name="compression" value="zip" <?php echo set_radio('compression', 'zip'); ?>><?php echo lang('text_zip'); ?></label>
                                 <?php } else if ($compression === 'gzip') { ?>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="compression" value="none" <?php echo set_radio('compression', 'none'); ?>><?php echo lang('text_none'); ?></label>
-                                    <label class="btn btn-default disabled" data-btn="btn-success"><input type="radio" name="compression" value="gzip" <?php echo set_radio('compression', 'gzip', TRUE); ?>><?php echo lang('text_gzip'); ?></label>
-                                    <label class="btn btn-default disabled" data-btn="btn-success"><input type="radio" name="compression" value="zip" <?php echo set_radio('compression', 'zip'); ?>><?php echo lang('text_zip'); ?></label>
+                                    <label class="btn btn-success active"><input type="radio" name="compression" value="none" <?php echo set_radio('compression', 'none'); ?>><?php echo lang('text_none'); ?></label>
+                                    <label class="btn btn-success disabled"><input type="radio" name="compression" value="gzip" <?php echo set_radio('compression', 'gzip', TRUE); ?>><?php echo lang('text_gzip'); ?></label>
+                                    <label class="btn btn-success disabled"><input type="radio" name="compression" value="zip" <?php echo set_radio('compression', 'zip'); ?>><?php echo lang('text_zip'); ?></label>
                                 <?php } else if ($compression === 'zip') { ?>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="compression" value="none" <?php echo set_radio('compression', 'none'); ?>><?php echo lang('text_none'); ?></label>
-                                    <label class="btn btn-default disabled" data-btn="btn-success"><input type="radio" name="compression" value="gzip" <?php echo set_radio('compression', 'gzip', TRUE); ?>><?php echo lang('text_gzip'); ?></label>
-                                    <label class="btn btn-default disabled" data-btn="btn-success"><input type="radio" name="compression" value="zip" <?php echo set_radio('compression', 'zip'); ?>><?php echo lang('text_zip'); ?></label>
+                                    <label class="btn btn-success active"><input type="radio" name="compression" value="none" <?php echo set_radio('compression', 'none'); ?>><?php echo lang('text_none'); ?></label>
+                                    <label class="btn btn-success disabled"><input type="radio" name="compression" value="gzip" <?php echo set_radio('compression', 'gzip', TRUE); ?>><?php echo lang('text_gzip'); ?></label>
+                                    <label class="btn btn-success disabled"><input type="radio" name="compression" value="zip" <?php echo set_radio('compression', 'zip'); ?>><?php echo lang('text_zip'); ?></label>
                                 <?php } else { ?>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="compression" value="none" <?php echo set_radio('compression', 'none', TRUE); ?>><?php echo lang('text_none'); ?></label>
-                                    <label class="btn btn-default disabled" data-btn="btn-success"><input type="radio" name="compression" value="gzip" <?php echo set_radio('compression', 'gzip'); ?>><?php echo lang('text_gzip'); ?></label>
-                                    <label class="btn btn-default disabled" data-btn="btn-success"><input type="radio" name="compression" value="zip" <?php echo set_radio('compression', 'zip'); ?>><?php echo lang('text_zip'); ?></label>
+                                    <label class="btn btn-success active"><input type="radio" name="compression" value="none" <?php echo set_radio('compression', 'none', TRUE); ?>><?php echo lang('text_none'); ?></label>
+                                    <label class="btn btn-success disabled"><input type="radio" name="compression" value="gzip" <?php echo set_radio('compression', 'gzip'); ?>><?php echo lang('text_gzip'); ?></label>
+                                    <label class="btn btn-success disabled"><input type="radio" name="compression" value="zip" <?php echo set_radio('compression', 'zip'); ?>><?php echo lang('text_zip'); ?></label>
                                 <?php } ?>
                             </div>
                             <?php echo form_error('compression', '<span class="text-danger">', '</span>'); ?>

@@ -65,20 +65,7 @@ $(document).ready(function() {
         $('.btn-filter').trigger('click');
     }
 
-    $(document).on('change', '.btn-group-toggle input[type="radio"], .btn-group input[type="radio"]', function() {
-        var btn = $(this).parent();
-        var parent = btn.parent();
-        var activeClass = (btn.attr('data-btn')) ? btn.attr('data-btn'): 'btn-success';
-
-        parent.find('.btn').each(function() {
-            removeClass = ($(this).attr('data-btn')) ? $(this).attr('data-btn') : activeClass;
-            $(this).removeClass(removeClass);
-        });
-
-        btn.addClass(activeClass);
-    });
-
-    $('.btn-group-toggle input[type="radio"]:checked, .btn-group-toggle .active input[type="radio"], .btn-group .active input[type="radio"]').trigger('change');
+    $('.btn-group input[type="radio"]:checked, .btn-group .active input[type="radio"]').trigger('change');
 
     /*if ($('.form-group .text-danger').length > 0) {
         $('.form-group .text-danger').parents('.form-group').addClass('has-error');

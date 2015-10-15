@@ -34,13 +34,13 @@
 					<div class="form-group">
 						<label for="input-status" class="col-sm-3 control-label"><?php echo lang('label_status'); ?></label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if ($table_status == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="table_status" value="0" <?php echo set_radio('table_status', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="table_status" value="1" <?php echo set_radio('table_status', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger"><input type="radio" name="table_status" value="0" <?php echo set_radio('table_status', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="table_status" value="1" <?php echo set_radio('table_status', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="table_status" value="0" <?php echo set_radio('table_status', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="table_status" value="1" <?php echo set_radio('table_status', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger active"><input type="radio" name="table_status" value="0" <?php echo set_radio('table_status', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="table_status" value="1" <?php echo set_radio('table_status', '1'); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('table_status', '<span class="text-danger">', '</span>'); ?>

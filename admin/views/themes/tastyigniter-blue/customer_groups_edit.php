@@ -22,13 +22,13 @@
 							<span class="help-block"><?php echo lang('help_approval'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<div id="input-approval" class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div id="input-approval" class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if ($approval == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="approval" value="0" <?php echo set_radio('approval', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="approval" value="1" <?php echo set_radio('approval', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger"><input type="radio" name="approval" value="0" <?php echo set_radio('approval', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="approval" value="1" <?php echo set_radio('approval', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="approval" value="0" <?php echo set_radio('approval', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="approval" value="1" <?php echo set_radio('approval', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger active"><input type="radio" name="approval" value="0" <?php echo set_radio('approval', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="approval" value="1" <?php echo set_radio('approval', '1'); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('approval', '<span class="text-danger">', '</span>'); ?>

@@ -72,9 +72,9 @@
                             <label class="col-sm-3 control-label"><?php echo lang('label_clone'); ?></label>
 
                             <div class="col-sm-5">
-                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                    <label class="btn btn-default" data-btn="btn-primary"><input type="radio" name="clone_language" value="0" <?php echo set_radio('clone_language', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
-                                    <label class="btn btn-default" data-btn="btn-primary"><input type="radio" name="clone_language" value="1" <?php echo set_radio('clone_language', '1'); ?>><?php echo lang('text_yes'); ?></label>
+                                <div class="btn-group btn-group-switch" data-toggle="buttons">
+                                    <label class="btn btn-primary"><input type="radio" name="clone_language" value="0" <?php echo set_radio('clone_language', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
+                                    <label class="btn btn-primary"><input type="radio" name="clone_language" value="1" <?php echo set_radio('clone_language', '1'); ?>><?php echo lang('text_yes'); ?></label>
                                 </div>
                                 <?php echo form_error('clone_language', '<span class="text-danger">', '</span>'); ?>
                             </div>
@@ -95,13 +95,13 @@
                         <label class="col-sm-3 control-label"><?php echo lang('label_can_delete'); ?></label>
 
                         <div class="col-sm-5">
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <div class="btn-group btn-group-switch" data-toggle="buttons">
                                 <?php if ($can_delete === '1') { ?>
-                                    <label class="btn btn-default active" data-btn="btn-primary"><input type="radio" name="can_delete" value="1" <?php echo set_radio('can_delete', '1', TRUE); ?>><?php echo lang('text_no'); ?></label>
-                                    <label class="btn btn-default" data-btn="btn-primary"><input type="radio" name="can_delete" value="0" <?php echo set_radio('can_delete', '0'); ?>><?php echo lang('text_yes'); ?></label>
+                                    <label class="btn btn-primary active"><input type="radio" name="can_delete" value="1" <?php echo set_radio('can_delete', '1', TRUE); ?>><?php echo lang('text_no'); ?></label>
+                                    <label class="btn btn-primary"><input type="radio" name="can_delete" value="0" <?php echo set_radio('can_delete', '0'); ?>><?php echo lang('text_yes'); ?></label>
                                 <?php } else { ?>
-                                    <label class="btn btn-default" data-btn="btn-primary"><input type="radio" name="can_delete" value="1" <?php echo set_radio('can_delete', '1'); ?>><?php echo lang('text_no'); ?></label>
-                                    <label class="btn btn-default" data-btn="btn-primary"><input type="radio" name="can_delete" value="0" <?php echo set_radio('can_delete', '0', TRUE); ?>><?php echo lang('text_yes'); ?></label>
+                                    <label class="btn btn-primary"><input type="radio" name="can_delete" value="1" <?php echo set_radio('can_delete', '1'); ?>><?php echo lang('text_no'); ?></label>
+                                    <label class="btn btn-primary"><input type="radio" name="can_delete" value="0" <?php echo set_radio('can_delete', '0', TRUE); ?>><?php echo lang('text_yes'); ?></label>
                                 <?php } ?>
                             </div>
                             <?php echo form_error('can_delete', '<span class="text-danger">', '</span>'); ?>
@@ -111,13 +111,13 @@
                         <label for="input-status" class="col-sm-3 control-label"><?php echo lang('label_status'); ?></label>
 
                         <div class="col-sm-5">
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <div class="btn-group btn-group-switch" data-toggle="buttons">
                                 <?php if ($status == '1') { ?>
-                                    <label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-                                    <label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+                                    <label class="btn btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+                                    <label class="btn btn-success active"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
                                 <?php } else { ?>
-                                    <label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-                                    <label class="btn btn-default" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+                                    <label class="btn btn-danger active"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+                                    <label class="btn btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1'); ?>><?php echo lang('text_enabled'); ?></label>
                                 <?php } ?>
                             </div>
                             <?php echo form_error('status', '<span class="text-danger">', '</span>'); ?>

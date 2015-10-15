@@ -40,13 +40,13 @@
 					<div class="form-group">
 						<label for="input-api-mode" class="col-sm-3 control-label">Mode:</label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if ($api_mode === 'live') { ?>
-									<label class="btn btn-default" data-btn="btn-warning"><input type="radio" name="api_mode" value="sandbox" <?php echo set_radio('api_mode', 'sandbox'); ?>>Sandbox</label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="api_mode" value="live" <?php echo set_radio('api_mode', 'live', TRUE); ?>>Go Live</label>
+									<label class="btn btn-warning"><input type="radio" name="api_mode" value="sandbox" <?php echo set_radio('api_mode', 'sandbox'); ?>>Sandbox</label>
+									<label class="btn btn-success active"><input type="radio" name="api_mode" value="live" <?php echo set_radio('api_mode', 'live', TRUE); ?>>Go Live</label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-warning"><input type="radio" name="api_mode" value="sandbox" <?php echo set_radio('api_mode', 'sandbox', TRUE); ?>>Sandbox</label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="api_mode" value="live" <?php echo set_radio('api_mode', 'live'); ?>>Go Live</label>
+									<label class="btn btn-warning active"><input type="radio" name="api_mode" value="sandbox" <?php echo set_radio('api_mode', 'sandbox', TRUE); ?>>Sandbox</label>
+									<label class="btn btn-success"><input type="radio" name="api_mode" value="live" <?php echo set_radio('api_mode', 'live'); ?>>Go Live</label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('api_mode', '<span class="text-danger">', '</span>'); ?>
@@ -55,7 +55,7 @@
 					<div class="form-group">
 						<label for="input-api-action" class="col-sm-3 control-label">Payment Action:</label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if ($api_action === 'authorization') { ?>
 									<label class="btn btn-default"><input type="radio" name="api_action" value="sale" <?php echo set_radio('api_action', 'sale'); ?>>SALE</label>
 									<label class="btn btn-default active"><input type="radio" name="api_action" value="authorization" <?php echo set_radio('api_action', 'authorization', TRUE); ?>>AUTHORIZATION</label>
@@ -115,13 +115,13 @@
 					<div class="form-group">
 						<label for="input-status" class="col-sm-3 control-label">Status:</label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if ($status == '1') { ?>
-									<label class="btn btn-default" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default active" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active" data-btn="btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-default" data-btn="btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger active"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1'); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('status', '<span class="text-danger">', '</span>'); ?>
