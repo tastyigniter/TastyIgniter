@@ -31,6 +31,8 @@ class Extensions_model extends TI_Model {
 
 			$extension['config'] = ( ! empty($config) AND is_array($config)) ? TRUE : FALSE;
 
+			$extension['meta'] = ( ! empty($extension_meta) AND is_array($extension_meta)) ? $extension_meta : array();
+
 			$extension['installed'] = ( ! empty($installed_ext) AND $installed_ext['extension_id'] > 0) ? TRUE : FALSE;
 
 			$extension['status'] = (isset($installed_ext['status']) AND $installed_ext['status'] === '1') ? '1' : '0';
@@ -171,59 +173,43 @@ class Extensions_model extends TI_Model {
 		return $result;
 	}
 
-	public function saveExtensionData($name, $data = array()) {
+	public function saveExtensionData($name = NULL, $data = array(), $log_activity = FALSE) {
 		if (empty($data)) return FALSE;
 
 		! isset($data['ext_data']) OR $data = $data['ext_data'];
 
+		return $this->updateExtension($name, $data, $log_activity);
+	}
+
+	public function updateExtension($type = 'module', $name = NULL, $data = array(), $log_activity = TRUE) {
+		if ($name === NULL) return FALSE;
+
 		$name = url_title(strtolower($name), '-');
+
+		! isset($data['data']) OR $data = $data['data'];
+		unset($data['save_close']);
 
 		$query = FALSE;
 
 		if ($this->extensionExists($name)) {
+			$config = $this->extension->loadConfig($name, FALSE, TRUE);
+			$meta = $this->extension->getMeta($name, $config);
 
-			if (is_array($data)) {
-				$this->db->set('data', serialize($data));
-			} else {
-				$this->db->set('data', $data);
-			}
+			if (isset($meta['type'], $meta['title']) AND $type === $meta['type']) {
+				$this->db->set('data', (is_array($data)) ? serialize($data) : $data);
 
-			$this->db->where('name', $name);
-			$query = $this->db->update('extensions');
-		}
+				$this->db->set('serialized', '1');
 
-		return $query;
-	}
-
-	public function updateExtension($update = array(), $serialized = '0') {
-		$query = FALSE;
-
-		if ( ! empty($update['type']) AND ! empty($update['name'])) {
-
-			$update['name'] = url_title(strtolower($update['name']), '-');
-
-			if ($this->extensionExists($update['name'])) {
-
-				if (isset($update['data']) AND $serialized === '1') {
-					$this->db->set('data', serialize($update['data']));
-				} else if ( ! empty($update['data'])) {
-					$this->db->set('data', $update['data']);
-				}
-
-				$this->db->set('serialized', $serialized);
-
-				if ( ! empty($update['title'])) {
-					$this->db->set('title', $update['title']);
-				}
-
-				$this->db->where('type', $update['type']);
-				$this->db->where('name', $update['name']);
+				$this->db->where('type', $meta['type']);
+				$this->db->where('name', $name);
 
 				$query = $this->db->update('extensions');
 
-				log_activity($this->user->getStaffId(), 'updated', 'extensions',
-				             get_activity_message('activity_custom_no_link', array('{staff}', '{action}', '{context}',
-					             '{item}'), array($this->user->getStaffName(), 'updated', 'extension ' . $update['type'], $update['title'])));
+				if ($log_activity) {
+					log_activity($this->user->getStaffId(), 'updated', 'extensions',
+					             get_activity_message('activity_custom_no_link', array('{staff}', '{action}', '{context}',
+						             '{item}'), array($this->user->getStaffName(), 'updated', 'extension ' . $meta['type'], $meta['title'])));
+				}
 			}
 		}
 
@@ -275,22 +261,25 @@ class Extensions_model extends TI_Model {
 		return FALSE;
 	}
 
-	public function install($type = '', $name = '', $extension_id = '0') {
+	public function install($type = '', $name = '') {
 
 		if ( ! empty($type) AND ! empty($name)) {
 			$name = url_title(strtolower($name), '-');
 
 			if ($this->extensionExists($name)) {
+				$extension_id = NULL;
 				$config = $this->extension->loadConfig($name, FALSE, TRUE);
 				$title = !empty($config['extension_meta']['title']) ? $config['extension_meta']['title'] : NULL;
 
-				if ($extension_id !== '0' AND is_numeric($extension_id)) {
+				$query = $this->db->where('type', $type)->where('name', $name)->get('extensions');
+
+				if ($query->num_rows() === 1) {
+					$row = $query->row_array();
 					$this->db->set('title', $title);
 					$this->db->set('status', '1');
 					$this->db->where('type', $type);
 					$this->db->where('name', $name);
-					$this->db->where('extension_id', $extension_id);
-					$query = $this->db->update('extensions');
+					if ($query = $this->db->update('extensions')) $extension_id = $row['extension_id'];
 				} else {
 					$this->db->set('status', '1');
 					$this->db->set('type', $type);
@@ -316,7 +305,7 @@ class Extensions_model extends TI_Model {
 		return FALSE;
 	}
 
-	public function uninstall($type = '', $name = '', $extension_id = '0') {
+	public function uninstall($type = '', $name = '') {
 		$query = FALSE;
 
 		if ( ! empty($type) AND $this->extensionExists($name)) {
@@ -324,10 +313,6 @@ class Extensions_model extends TI_Model {
 			$this->db->set('status', '0');
 			$this->db->where('type', $type);
 			$this->db->where('name', $name);
-
-			if ($extension_id !== '0' AND is_numeric($extension_id)) {
-				$this->db->where('extension_id', $extension_id);
-			}
 
 			if (preg_match('/\s/', $name) > 0) {
 				$query = $this->delete($name);
@@ -347,7 +332,7 @@ class Extensions_model extends TI_Model {
 		return $query;
 	}
 
-	public function delete($type = '', $name = '', $extension_id = '0') {
+	public function delete($type = '', $name = '') {
 		$query = FALSE;
 
 		if ( ! empty($type) AND $this->extensionExists($name)) {
@@ -355,10 +340,6 @@ class Extensions_model extends TI_Model {
 			$this->db->where('status', '0');
 			$this->db->where('type', $type);
 			$this->db->where('name', $name);
-
-			if ($extension_id !== '0' AND is_numeric($extension_id)) {
-				$this->db->where('extension_id', $extension_id);
-			}
 
 			$this->db->delete('extensions');
 			if ($this->db->affected_rows() > 0) {
