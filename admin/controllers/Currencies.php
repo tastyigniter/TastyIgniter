@@ -122,7 +122,7 @@ class Currencies extends Admin_Controller {
 
         $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
-		$this->template->setBackButton('btn btn-back', site_url('currencies'));
+		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('currencies')));
 
 		$data['currency_name'] 		= $currency_info['currency_name'];
 		$data['currency_code'] 		= $currency_info['currency_code'];

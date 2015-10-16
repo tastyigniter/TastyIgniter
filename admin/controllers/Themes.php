@@ -2,27 +2,27 @@
 
 class Themes extends Admin_Controller {
 
-    public function __construct() {
+	public function __construct() {
 		parent::__construct();
 
-        $this->load->model('Themes_model');
-        $this->load->model('Settings_model');
-        $this->load->model('Image_tool_model');
+		$this->load->model('Themes_model');
+		$this->load->model('Settings_model');
+		$this->load->model('Image_tool_model');
 
-        $this->load->helper('template');
+		$this->load->helper('template');
 
-        $this->lang->load('themes');
-    }
+		$this->lang->load('themes');
+	}
 
 	public function index() {
-        $this->user->restrict('Site.Themes.Access');
+		$this->user->restrict('Site.Themes.Access');
 
-        if ($this->input->get('action') === 'activate' AND $this->_activateTheme()) {
+		if ($this->input->get('action') === 'activate' AND $this->_activateTheme()) {
 			redirect('themes');
 		}
 
-        $this->template->setTitle($this->lang->line('text_title'));
-        $this->template->setHeading($this->lang->line('text_heading'));
+		$this->template->setTitle($this->lang->line('text_title'));
+		$this->template->setHeading($this->lang->line('text_heading'));
 
 		$data['themes'] = array();
 		$themes = $this->Themes_model->getList();
@@ -34,14 +34,14 @@ class Themes extends Admin_Controller {
 			}
 
 			$data['themes'][] = array(
-				'name' 			=> $theme['name'],
-				'title' 		=> $theme['title'],
-				'description'	=> $theme['description'],
-                'location' 		=> ($theme['location'] === 'main') ? $this->lang->line('text_main') : $this->lang->line('text_admin'),
-				'active'		=> $active,
-				'screenshot'    => $theme['screenshot'],
-				'activate'		=> site_url('themes?action=activate&name='. $theme['name'] .'&location='. $theme['location']),
-				'edit' 			=> site_url('themes/edit?name='. $theme['name'] .'&location='. $theme['location'])
+				'name'        => $theme['name'],
+				'title'       => $theme['title'],
+				'description' => $theme['description'],
+				'location'    => ($theme['location'] === 'main') ? $this->lang->line('text_main') : $this->lang->line('text_admin'),
+				'active'      => $active,
+				'screenshot'  => $theme['screenshot'],
+				'activate'    => site_url('themes?action=activate&name=' . $theme['name'] . '&location=' . $theme['location']),
+				'edit'        => site_url('themes/edit?name=' . $theme['name'] . '&location=' . $theme['location']),
 			);
 		}
 
@@ -49,85 +49,85 @@ class Themes extends Admin_Controller {
 	}
 
 	public function edit() {
-        $this->user->restrict('Site.Themes.Access');
+		$this->user->restrict('Site.Themes.Access');
 
-        $theme_name = $this->input->get('name');
+		$theme_name = $this->input->get('name');
 		$theme_location = $this->input->get('location');
 
-        $url = '?';
-        $url .= 'name='. $theme_name .'&location='. $theme_location;
+		$url = '?';
+		$url .= 'name=' . $theme_name . '&location=' . $theme_location;
 
-        if (!$theme = $this->Themes_model->getTheme($theme_name)) {
-            $this->alert->set('danger', $this->lang->line('error_theme_not_found'));
-            redirect('themes');
-        }
+		if ( ! $theme = $this->Themes_model->getTheme($theme_name)) {
+			$this->alert->set('danger', $this->lang->line('error_theme_not_found'));
+			redirect('themes');
+		}
 
-        $_GET['extension_id'] = $theme['extension_id'];
-        $theme_config = (isset($theme['config'])) ? $theme['config'] : FALSE;
+		$_GET['extension_id'] = $theme['extension_id'];
+		$theme_config = (isset($theme['config'])) ? $theme['config'] : FALSE;
 
-        $this->load->library('customizer');
-        $this->customizer->initialize($theme);
+		$this->load->library('customizer');
+		$this->customizer->initialize($theme);
 
-        if ($this->input->post() AND $this->_updateTheme($theme) === TRUE) {
-            if ($this->input->post('save_close') === '1') {
-                redirect('themes/edit'.'?name='. $theme_name .'&location='. $theme_location);
-            }
+		if ($this->input->post() AND $this->_updateTheme($theme) === TRUE) {
+			if ($this->input->post('save_close') === '1') {
+				redirect('themes/edit' . '?name=' . $theme_name . '&location=' . $theme_location);
+			}
 
-            redirect(current_url());
-        }
+			redirect(current_url());
+		}
 
-        $this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $theme['title']));
-        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $theme['title']));
+		$this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $theme['title']));
+		$this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $theme['title']));
 
-        $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-        $this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
-        $this->template->setBackButton('btn btn-back', site_url('themes'));
+		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('themes')));
 
-        $this->template->setStyleTag(root_url('assets/js/colorpicker/css/bootstrap-colorpicker.min.css'), 'bootstrap-colorpicker-css');
-        $this->template->setStyleTag(root_url('assets/js/codemirror/codemirror.css'), 'codemirror-css');
-        $this->template->setStyleTag(root_url('assets/js/fancybox/jquery.fancybox.css'), 'jquery-fancybox-css');
-        $this->template->setScriptTag(root_url('assets/js/colorpicker/js/bootstrap-colorpicker.min.js'), 'bootstrap-colorpicker-js');
-        $this->template->setScriptTag(root_url('assets/js/codemirror/codemirror.js'), 'codemirror-js', '300');
-        $this->template->setScriptTag(root_url('assets/js/codemirror/xml/xml.js'), 'codemirror-xml-js', '301');
-        $this->template->setScriptTag(root_url('assets/js/codemirror/css/css.js'), 'codemirror-css-js', '302');
-        $this->template->setScriptTag(root_url('assets/js/codemirror/javascript/javascript.js'), 'codemirror-javascript-js', '303');
-        $this->template->setScriptTag(root_url('assets/js/codemirror/php/php.js'), 'codemirror-php-js', '304');
-        $this->template->setScriptTag(root_url('assets/js/codemirror/htmlmixed/htmlmixed.js'), 'codemirror-htmlmixed-js', '305');
-        $this->template->setScriptTag(root_url('assets/js/codemirror/clike/clike.js'), 'codemirror-clike-js', '306');
-        $this->template->setScriptTag(root_url('assets/js/jquery-sortable.js'), 'jquery-sortable-js');
-        $this->template->setScriptTag(root_url("assets/js/fancybox/jquery.fancybox.js"), 'jquery-fancybox-js');
+		$this->template->setStyleTag(root_url('assets/js/colorpicker/css/bootstrap-colorpicker.min.css'), 'bootstrap-colorpicker-css');
+		$this->template->setStyleTag(root_url('assets/js/codemirror/codemirror.css'), 'codemirror-css');
+		$this->template->setStyleTag(root_url('assets/js/fancybox/jquery.fancybox.css'), 'jquery-fancybox-css');
+		$this->template->setScriptTag(root_url('assets/js/colorpicker/js/bootstrap-colorpicker.min.js'), 'bootstrap-colorpicker-js');
+		$this->template->setScriptTag(root_url('assets/js/codemirror/codemirror.js'), 'codemirror-js', '300');
+		$this->template->setScriptTag(root_url('assets/js/codemirror/xml/xml.js'), 'codemirror-xml-js', '301');
+		$this->template->setScriptTag(root_url('assets/js/codemirror/css/css.js'), 'codemirror-css-js', '302');
+		$this->template->setScriptTag(root_url('assets/js/codemirror/javascript/javascript.js'), 'codemirror-javascript-js', '303');
+		$this->template->setScriptTag(root_url('assets/js/codemirror/php/php.js'), 'codemirror-php-js', '304');
+		$this->template->setScriptTag(root_url('assets/js/codemirror/htmlmixed/htmlmixed.js'), 'codemirror-htmlmixed-js', '305');
+		$this->template->setScriptTag(root_url('assets/js/codemirror/clike/clike.js'), 'codemirror-clike-js', '306');
+		$this->template->setScriptTag(root_url('assets/js/jquery-sortable.js'), 'jquery-sortable-js');
+		$this->template->setScriptTag(root_url("assets/js/fancybox/jquery.fancybox.js"), 'jquery-fancybox-js');
 
-        $data['file'] = array();
-        if ($this->input->get('file')) {
-            $url .= '&file='. $this->input->get('file');
+		$data['file'] = array();
+		if ($this->input->get('file')) {
+			$url .= '&file=' . $this->input->get('file');
 
-            $theme_file = load_theme_file($this->input->get('file'), $theme_name, $theme_location);
+			$theme_file = load_theme_file($this->input->get('file'), $theme_name, $theme_location);
 
-            if (isset($theme_file['type']) AND $theme_file['type'] === 'img') {
-                $theme_file['heading'] = sprintf($this->lang->line('text_viewing'), $this->input->get('file'), $theme_name);
-            } else if (isset($theme_file['type']) AND $theme_file['type'] === 'file') {
-                $theme_file['heading'] = sprintf($this->lang->line('text_editing'), $this->input->get('file'), $theme_name);
-            } else {
-                $this->alert->set('danger', $this->lang->line('error_file_not_supported'));
-            }
+			if (isset($theme_file['type']) AND $theme_file['type'] === 'img') {
+				$theme_file['heading'] = sprintf($this->lang->line('text_viewing'), $this->input->get('file'), $theme_name);
+			} else if (isset($theme_file['type']) AND $theme_file['type'] === 'file') {
+				$theme_file['heading'] = sprintf($this->lang->line('text_editing'), $this->input->get('file'), $theme_name);
+			} else {
+				$this->alert->set('danger', $this->lang->line('error_file_not_supported'));
+			}
 
-            $data['file'] = $theme_file;
-        }
+			$data['file'] = $theme_file;
+		}
 
-        $theme_files = '';
-        $tree_link = site_url('themes/edit'. $url .'&file={link}');
-        $theme_files .= $this->_themeTree($theme_name, $theme_location, $tree_link);
+		$theme_files = '';
+		$tree_link = site_url('themes/edit' . $url . '&file={link}');
+		$theme_files .= $this->_themeTree($theme_name, $theme_location, $tree_link);
 
-        $data['name'] 				= $theme['name'];
-        $data['theme_files'] 		= $theme_files;
-        $data['theme_config'] 		= $theme_config;
-        $data['is_customizable']    = (isset($theme['customize']) AND $theme['customize']) ? TRUE : FALSE;
+		$data['name'] = $theme['name'];
+		$data['theme_files'] = $theme_files;
+		$data['theme_config'] = $theme_config;
+		$data['is_customizable'] = (isset($theme['customize']) AND $theme['customize']) ? TRUE : FALSE;
 
-        $data['customizer_nav'] = $this->customizer->getNavView();
-        $data['customizer_sections'] = $this->customizer->getSectionsView();
-        $data['sections'] = $data['error_fields'] = array();
+		$data['customizer_nav'] = $this->customizer->getNavView();
+		$data['customizer_sections'] = $this->customizer->getSectionsView();
+		$data['sections'] = $data['error_fields'] = array();
 
-        if (!empty($data['is_customizable'])) {
+		if ( ! empty($data['is_customizable'])) {
 			if (isset($theme_config['error_fields']) AND is_array($theme_config['error_fields'])) {
 				foreach ($theme_config['error_fields'] as $error_field) {
 					if (isset($error_field['field']) AND isset($error_field['error'])) {
@@ -137,9 +137,9 @@ class Themes extends Admin_Controller {
 			}
 		}
 
-		$data['_action']	= site_url('themes/edit'. $url);
+		$data['_action'] = site_url('themes/edit' . $url);
 		$data['mode'] = '';
-		if (!empty($data['file']['ext'])) {
+		if ( ! empty($data['file']['ext'])) {
 			if ($data['file']['ext'] === 'php') {
 				$data['mode'] = 'application/x-httpd-php';
 			} else if ($data['file']['ext'] === 'css') {
@@ -152,100 +152,100 @@ class Themes extends Admin_Controller {
 		$this->template->render('themes_edit', $data);
 	}
 
-    private function _themeTree($directory, $location, $return_link, $parent = '') {
-        $current_path = ($this->input->get('file')) ? explode('/', $this->input->get('file')) : array();
+	private function _themeTree($directory, $location, $return_link, $parent = '') {
+		$current_path = ($this->input->get('file')) ? explode('/', $this->input->get('file')) : array();
 
-        $theme_tree = '';
-        $theme_tree .= ($parent === '') ? '<nav class="nav"><ul class="metisFolder">' : '<ul>';
+		$theme_tree = '';
+		$theme_tree .= ($parent === '') ? '<nav class="nav"><ul class="metisFolder">' : '<ul>';
 
-        $theme_files = find_theme_files($directory, $location);
+		$theme_files = find_theme_files($directory, $location);
 
-        if (!empty($theme_files)) {
-            foreach ($theme_files as $file) {
-                $active = (in_array($file['name'], $current_path)) ? ' active' : '';
+		if ( ! empty($theme_files)) {
+			foreach ($theme_files as $file) {
+				$active = (in_array($file['name'], $current_path)) ? ' active' : '';
 
-                if ($file['type'] === 'dir') {
-                    $parent_dir = $parent.'/'.$file['name'];
-                    $theme_tree .= '<li class="directory'. $active .'"><a><i class="fa fa-folder-open"></i>&nbsp;&nbsp;'. htmlspecialchars($file['name']) .'</a>';
-                    $theme_tree .= $this->_themeTree($directory .'/'. $file['name'], $location, $return_link, $parent_dir);
-                    $theme_tree .= '</li>';
-                } else if ($file['type'] === 'img') {
-                    $link = str_replace('{link}', $parent .'/'. urlencode($file['name']), $return_link);
-                    $theme_tree .= '<li class="img'. $active .'"><a href="'. $link .'"><i class="fa fa-file-image-o"></i>&nbsp;&nbsp;'. htmlspecialchars($file['name']) .'</a></li>';
-                } else if ($file['type'] === 'file') {
-                    $link = str_replace('{link}', $parent .'/'. urlencode($file['name']), $return_link);
-                    $theme_tree .= '<li class="file'. $active .'"><a href="'. $link .'"><i class="fa fa-file-code-o"></i>&nbsp;&nbsp;'. htmlspecialchars($file['name']) .'</a></li>';
-                }
-            }
-        }
+				if ($file['type'] === 'dir') {
+					$parent_dir = $parent . '/' . $file['name'];
+					$theme_tree .= '<li class="directory' . $active . '"><a><i class="fa fa-folder-open"></i>&nbsp;&nbsp;' . htmlspecialchars($file['name']) . '</a>';
+					$theme_tree .= $this->_themeTree($directory . '/' . $file['name'], $location, $return_link, $parent_dir);
+					$theme_tree .= '</li>';
+				} else if ($file['type'] === 'img') {
+					$link = str_replace('{link}', $parent . '/' . urlencode($file['name']), $return_link);
+					$theme_tree .= '<li class="img' . $active . '"><a href="' . $link . '"><i class="fa fa-file-image-o"></i>&nbsp;&nbsp;' . htmlspecialchars($file['name']) . '</a></li>';
+				} else if ($file['type'] === 'file') {
+					$link = str_replace('{link}', $parent . '/' . urlencode($file['name']), $return_link);
+					$theme_tree .= '<li class="file' . $active . '"><a href="' . $link . '"><i class="fa fa-file-code-o"></i>&nbsp;&nbsp;' . htmlspecialchars($file['name']) . '</a></li>';
+				}
+			}
+		}
 
-        $theme_tree .= '</ul>';
-        if ($parent === '') {
-            $theme_tree .= '</nav>';
-        }
+		$theme_tree .= '</ul>';
+		if ($parent === '') {
+			$theme_tree .= '</nav>';
+		}
 
-        return $theme_tree;
-    }
+		return $theme_tree;
+	}
 
 	private function _activateTheme() {
-        $this->user->restrict('Site.Themes.Manage');
+		$this->user->restrict('Site.Themes.Manage');
 
-        if ($this->input->get('action') === 'activate' AND $this->input->get('name') AND $this->input->get('location')) {
-            $theme_name = $this->input->get('name');
-            $theme_location = $this->input->get('location');
+		if ($this->input->get('action') === 'activate' AND $this->input->get('name') AND $this->input->get('location')) {
+			$theme_name = $this->input->get('name');
+			$theme_location = $this->input->get('location');
 
-            if ($theme_name = $this->Themes_model->activateTheme($theme_name, $theme_location)) {
-                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Theme ['.$theme_name.'] set as default '));
-            }
-        }
+			if ($theme_name = $this->Themes_model->activateTheme($theme_name, $theme_location)) {
+				$this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Theme [' . $theme_name . '] set as default '));
+			}
+		}
 
-        return TRUE;
+		return TRUE;
 	}
 
 	private function _updateTheme($theme = array()) {
-        $this->user->restrict('Site.Themes.Manage');
+		$this->user->restrict('Site.Themes.Manage');
 
-        if ($this->input->get('name') AND $this->input->get('location') AND $this->validateForm($theme['customize']) === TRUE) {
-            if ($this->input->post('editor_area') AND $this->input->get('file')) {
-                $theme_file = $this->input->get('file');
-                if (save_theme_file($theme_file, $theme['name'], $theme['location'], $this->input->post('editor_area'))) {
-                    $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Theme File (' . $theme_file . ') saved '));
-                } else {
-                    $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), 'saved'));
-                }
-            }
+		if ($this->input->get('name') AND $this->input->get('location') AND $this->validateForm($theme['customize']) === TRUE) {
+			if ($this->input->post('editor_area') AND $this->input->get('file')) {
+				$theme_file = $this->input->get('file');
+				if (save_theme_file($theme_file, $theme['name'], $theme['location'], $this->input->post('editor_area'))) {
+					$this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Theme File (' . $theme_file . ') saved '));
+				} else {
+					$this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), 'saved'));
+				}
+			}
 
-            $update['extension_id'] 	= $this->input->get('extension_id') ? $this->input->get('extension_id') : $theme['extension_id'];
-            $update['name'] 			= $theme['name'];
-            $update['title'] 			= $theme['title'];
-            $update['location'] 		= $theme['location'];
+			$update['extension_id'] = $this->input->get('extension_id') ? $this->input->get('extension_id') : $theme['extension_id'];
+			$update['name'] = $theme['name'];
+			$update['title'] = $theme['title'];
+			$update['location'] = $theme['location'];
 
-            if (isset($theme['customize'])) {
-                $update['data'] = $this->customizer->getPostData();
-            }
+			if (isset($theme['customize'])) {
+				$update['data'] = $this->customizer->getPostData();
+			}
 
-            if ($this->Themes_model->updateTheme($update)) {
-                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Theme updated'));
-            } else {
-                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), 'updated'));
-            }
+			if ($this->Themes_model->updateTheme($update)) {
+				$this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Theme updated'));
+			} else {
+				$this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), 'updated'));
+			}
 
-            return TRUE;
-        }
+			return TRUE;
+		}
 	}
 
 	private function validateForm($is_customizable = FALSE) {
-        $this->form_validation->set_rules('editor_area', 'Editor area');
+		$this->form_validation->set_rules('editor_area', 'Editor area');
 
-        if ($is_customizable) {
-            $rules = $this->customizer->getRules();
-            $this->form_validation->set_rules($rules);
-        }
+		if ($is_customizable) {
+			$rules = $this->customizer->getRules();
+			$this->form_validation->set_rules($rules);
+		}
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;
 		} else {
-            return FALSE;
+			return FALSE;
 		}
 	}
 }

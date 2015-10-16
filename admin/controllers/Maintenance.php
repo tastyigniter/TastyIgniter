@@ -103,7 +103,7 @@ class Maintenance extends Admin_Controller {
 
         $this->template->setButton($this->lang->line('button_backup'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
         $this->template->setButton($this->lang->line('button_migrate'), array('class' => 'btn btn-success', 'onclick' => '$(\'#migrate-form\').submit();'));
-        $this->template->setBackButton('btn btn-back', site_url('maintenance'));
+        $this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('maintenance')));
 
         if ($this->input->post('file_name')) {
             $data['file_name'] = $this->input->post('file_name');
@@ -166,7 +166,7 @@ class Maintenance extends Admin_Controller {
 
         $this->template->setTitle(sprintf($this->lang->line('text_browse_heading'), $filter['table']));
         $this->template->setHeading(sprintf($this->lang->line('text_browse_heading'), $filter['table']));
-        $this->template->setBackButton('btn btn-back', site_url('maintenance'));
+        $this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('maintenance')));
 
         $data['sql_query'] = 'SELECT * FROM (' . $filter['table'] . ')';
 

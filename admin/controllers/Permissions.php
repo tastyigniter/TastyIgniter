@@ -118,7 +118,7 @@ class Permissions extends Admin_Controller {
 
         $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
-		$this->template->setBackButton('btn btn-back', site_url('permissions'));
+		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('permissions')));
 
 
 		$data['permission_id'] 		= $permission_info['permission_id'];

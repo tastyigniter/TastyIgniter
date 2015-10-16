@@ -174,7 +174,7 @@ class Staffs extends Admin_Controller {
         $this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $title));
         $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
 		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-		$this->template->setBackButton('btn btn-back', site_url('staffs'));
+		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('staffs')));
 
         if ($this->user->hasPermission('Admin.Staffs.Access')) {
             $this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));

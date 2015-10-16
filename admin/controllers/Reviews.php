@@ -159,7 +159,7 @@ class Reviews extends Admin_Controller {
         $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
 		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
-		$this->template->setBackButton('btn btn-back', site_url('reviews'));
+		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('reviews')));
 
 		$data['review_id'] 			= $review_info['review_id'];
 		$data['location_id'] 		= $review_info['location_id'];

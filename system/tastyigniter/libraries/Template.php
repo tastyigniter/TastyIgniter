@@ -192,10 +192,6 @@ class Template {
         return $heading;
     }
 
-    public function getBackButton() {
-        return isset($this->_head_tags['back_button']) ? $this->_head_tags['back_button'] : '';
-    }
-
     public function getButtonList() {
         return is_array($this->_head_tags['buttons']) ? implode("\n\t\t", $this->_head_tags['buttons']) : '';
     }
@@ -280,10 +276,6 @@ class Template {
 
     public function setHeading($heading = '') {
         $this->_head_tags['heading'] = $heading;
-    }
-
-    public function setBackButton($class, $href) {
-        $this->_head_tags['back_button'] = '<a class="'.$class.'" href="'. $this->prepUrl($href) .'"><b class="fa fa-caret-left"></b></a>';
     }
 
     public function setButton($name, $attributes = array()) {

@@ -109,7 +109,7 @@ class Statuses extends Admin_Controller {
 
         $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
-		$this->template->setBackButton('btn btn-back', site_url('statuses'));
+		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('statuses')));
 
 		$data['status_id'] 			= $status_info['status_id'];
 		$data['status_name'] 		= $status_info['status_name'];

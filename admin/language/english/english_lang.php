@@ -27,6 +27,7 @@ $lang['button_delete'] 		                = 'Delete';
 $lang['button_edit'] 		                = 'Edit';
 $lang['button_save'] 		                = 'Save';
 $lang['button_save_close'] 		            = 'Save & Close';
+$lang['button_icon_back'] 		                = '<i class="fa fa-angle-double-left"></i>';
 $lang['button_upload'] 		                = 'Upload';
 $lang['button_upload_close'] 		        = 'Upload & Close';
 $lang['button_close'] 		                = 'Close';
