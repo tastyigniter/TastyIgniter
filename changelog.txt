@@ -2,14 +2,20 @@
 #### Added
 * Added option to select a page for checkout and registration terms and condition.
 * Added missing extension meta title item and extension permission rules to config
+* Added version number to extension meta data for extension version control and automatic update (feature coming soon)
+* Added version number to themes config for themes version control and automatic update (feature coming soon)
 
 #### Changed
 * Changed LICENCE from Apache to GNU GPLv3
-* Replaced file_get_contents with cURL for google maps geocoding api request ()
+* Replaced file_get_contents with cURL for google maps geocoding api request
 * Template Library: Replaced loadPartial with loadView to load single views without header, footer and partials
 * Replaced Permission_Model function addToStaffGroup to assignPermissionRule and moved to Staff_group_model
 * Improved the design of the Media Manager and some other theme adjustment
-* Moved getPayPalDetails() method from Payments_model to Paypal_model and deleted Payments_model
+* Moved getPayPalDetails() method from Payments_model (deprecated) to Paypal_model
+* Theme Improvement: changed button group toggles to interactive button group switches
+* Removed page name redundancy so that only page title and heading are required when creating a new page
+* Improved Extensions model updateExtension method arguments as updateExtension(type, name, data)
+*** Template library setBackButton(), getBackButton deprecated, use setButton() and getButton() instead.
 
 #### Fixed
 * Fixed the checkout terms and condition agree button to display terms and condition in modal when clicked
@@ -18,7 +24,7 @@
 * Improved all model post data validation to isset() instead of !empty() during INSERT/UPDATE
 * Fixed issue where bootbox.js is not added to <head> of Media_manager
 * Fixed error saving theme file with undefined method writeTheme that was replaced in previous version to helper function save_theme_file
-*
+* Fixed extensions language line
 * Minor bugs fix
 
 ### v1.4.2-beta
@@ -196,8 +202,49 @@ Themes: move some themes_model functions to template_helper
 
 
 TO-DO:
+Order Invoice, print, email
+** Add seat map to backend
+Add Sitemap
 Improve extension upload functionality to list "files to modify"
-Replace hard coded payment methods to be loaded dynamically everywhere
+
+Improve Payments
+    Add language lines
+    Replace payments multi-select dropdown to checkboxes with option to edit optional payment settings
+    Replace hard coded payment methods to be loaded dynamically everywhere
+    Improve paypal_express module such that return and cancel URI are hardcoded and more options added ()
+    Add paypal express ipn for subscriptions
+    Default currency for paypal express
+    Hide payment method when order total is below minimum order total
+
+
+Add option in settings whether to display location search on homepage or redirect to default location.
+Add option in location settings to set location Timezone if different from the globally set timezone
+Improve local module by making its options customizable from admin panel
+Improve local module notification, such that critical warning or errors are shown in confirm box using modal
+Customize (show/hide/new) checkout, registration and reservation form fields
+Delivery Man module - integrate with Bringg.com
+Add more payment methods like: authorize, google checkout, interswitch, braintree, worldpay,
+Improve banners to Ad Manager
+    add impressions and clicks
+Add Import Menus
+Add Quick Tour
+Show polygon on local map in front-end as Alonso
+Add location photo gallery and video gallery
+Add create order functionality
+Add option to calculate tax to location
+Improve admin dashboard statistics to include total commission and turnover
+Create module to integrate third-party marketing tools (mailchimp, constantcontact)
+
+Create Google Analytics Module
+
+Create social media module (facebook, twitter, RSS, Google+, )
+
+Integrate Twilio third-party services to send SMS notifications
+
+Display confirmation box when;
+    Delivery charge changes
+    Minimum order total changes
+    Menu is out of stock
 
 Customer Online IP blacklist
 bring back the cart page
@@ -206,7 +253,6 @@ Add google analytics code to settings-server
 
 ******      move all post method calls to the start of controller methods
 
-Add Sitemap
 
 Improve admin context list filter
 

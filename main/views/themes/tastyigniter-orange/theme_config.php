@@ -9,6 +9,7 @@
 
 // Set a custom theme title.
 $theme['title'] = 'TastyIgniter Orange';
+$theme['version']  = '1.0';
 $theme['description'] = 'Responsive theme for front-end';
 $theme['head_tags'] = array(
     'doctype'   => 'html5',

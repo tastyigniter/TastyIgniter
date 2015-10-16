@@ -9,6 +9,7 @@
 
 // Set a custom theme title.
 $theme['title']         = 'TastyIgniter Blue';
+$theme['version']       = '1.0';
 $theme['description']   = 'Responsive theme for admin panel';
 
 /* End of file theme_config.php */
