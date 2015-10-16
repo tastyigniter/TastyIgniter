@@ -34,15 +34,18 @@ $lang['column_name'] 		            = 'Name';
 $lang['column_download'] 		        = 'Download';
 $lang['column_restore'] 		        = 'Restore';
 $lang['column_delete'] 		            = 'Delete';
-$lang['label_migrate_version'] 		    = 'Migrate to verison';
-$lang['help_compression'] 		        = 'The Restore option is only capable of reading un-compressed files. Gzip or Zip compression is good if you just want a backup to download and store on your computer.';
-$lang['alert_info_memory_limit'] 		= '<p>Note: Due to the limited execution time and memory available to PHP, backing up very large databases may not be possible.If your database is very large you might need to backup directly from your SQL server via the command line,or have your server admin do it for you if you do not have root privileges.</p>';
 
 $lang['label_file_name'] 		        = 'File Name';
 $lang['label_drop_tables'] 		        = 'Drop Tables';
 $lang['label_add_inserts'] 		        = 'Insert Data';
 $lang['label_compression'] 		        = 'Compression Format';
 $lang['label_backup_table'] 		    = 'Backup Tables';
+$lang['label_migrate_version'] 		    = 'Migrate to verison';
+
+$lang['alert_info_memory_limit'] 		= '<p>Note: Due to the limited execution time and memory available to PHP, backing up very large databases may not be possible.If your database is very large you might need to backup directly from your SQL server via the command line,or have your server admin do it for you if you do not have root privileges.</p>';
+$lang['alert_warning_migration'] 		= '<b>BE CAREFUL!</b> Do not migrate unless you know what you\'re doing. This can break the system';
+
+$lang['help_compression'] 		        = 'The Restore option is only capable of reading un-compressed files. Gzip or Zip compression is good if you just want a backup to download and store on your computer.';
 
 /* End of file maintenance_lang.php */
 /* Location: ./admin/language/english/maintenance_lang.php */

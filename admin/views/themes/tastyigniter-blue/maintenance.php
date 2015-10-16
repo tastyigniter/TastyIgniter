@@ -79,6 +79,9 @@
 
                 <div id="migrations" class="tab-pane row wrap-all">
                     <form role="form" id="migrate-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo site_url('maintenance'); ?>" id="backup-database">
+                        <div class="alert alert-danger">
+                            <p><?php echo lang('alert_warning_migration'); ?></p>
+                        </div>
                         <div class="alert alert-info">
                             <p>
                                 <?php echo lang('text_installed_version'); ?>: <b><?php echo $installed_version; ?></b> <br />
