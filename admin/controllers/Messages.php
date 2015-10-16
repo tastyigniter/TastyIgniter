@@ -404,7 +404,7 @@ class Messages extends Admin_Controller {
                 'message_id'	=> $result['message_id'],
                 'from'			=> $result['staff_name'],
                 'send_type'		=> $result['send_type'],
-                'type_icon'		=> (isset($result['send_type']) AND $result['send_type'] === 'account') ? 'user' : 'envelope',
+                'type_color'	=> (isset($result['send_type']) AND $result['send_type'] === 'account') ? 'fa-circle-o text-primary' : 'fa-circle-o text-danger',
                 'subject' 	    => (strlen($result['subject']) > 30) ? substr(strip_tags(html_entity_decode($result['subject'], ENT_QUOTES, 'UTF-8')), 0, 30) . '..' : strip_tags(html_entity_decode($result['subject'], ENT_QUOTES, 'UTF-8')),
                 'recipient' 	=> ucwords(str_replace('_', ' ', $result['recipient'])),
                 'date_added'	=> time_elapsed($result['date_added']),

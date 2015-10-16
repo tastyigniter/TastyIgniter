@@ -128,7 +128,7 @@
                                                 <td><a href="<?php echo $message['view']; ?>"><?php echo $message['recipient']; ?></a></td>
                                                 <td><span class="message-subject"><?php echo $message['subject']; ?></span> - <small><?php echo $message['body']; ?></small></td>
 <!--                                                <td>--><?php //echo $message['recipient']; ?><!--</td>-->
-                                                <td><i title="<?php echo $message['send_type']; ?>" class="fa fa-<?php echo $message['type_icon']; ?>"></i></td>
+                                                <td><i title="<?php echo $message['send_type']; ?>" class="fa <?php echo $message['type_color']; ?>"></i></td>
                                                 <td class="text-center"><?php echo $message['date_added']; ?></td>
                                             </tr>
                                         <?php } ?>
