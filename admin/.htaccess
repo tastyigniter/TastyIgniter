@@ -1,14 +1,25 @@
+# 1.To use URL Alias you need to be running apache with mod_rewrite enabled.
+Options +FollowSymlinks
+
+# Prevent Directoy listing
+Options -Indexes
+
 <IfModule mod_rewrite.c>
+	# Turn on URL rewriting
+	RewriteEngine On
+
 	# !IMPORTANT! Set your RewriteBase here and don't forget trailing and leading
 	#  slashes.
 	# If your page resides at
-	#  http://www.example.com/mypage/test1
+	#  http://www.example.com/mypage/test1/admin/
 	# then use
-	# RewriteBase /mypage/test1/
-	RewriteEngine On
+	# RewriteBase mypage/test1/admin/
+
+	RewriteRule ^sitemap.xml$ feed/google_sitemap [L]
+	RewriteRule ^assets/downloads/(.*) error/not_found [L]
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond $1 !^(index\.php|images|robots\.txt)
+	RewriteCond $1 !^(index\.php|robots\.txt)
 	RewriteRule ^(.*)$ index.php?/$1 [L]
 </IfModule>
 
@@ -18,7 +29,3 @@
 
 	ErrorDocument 404 /index.php
 </IfModule>
-#RewriteEngine on
-#RewriteCond %{REQUEST_FILENAME} !-f
-#RewriteCond %{REQUEST_FILENAME} !-d
-#RewriteRule .* index.php/$0 [PT,L]
