@@ -121,7 +121,7 @@ class Admin_paypal_express extends Admin_Controller {
 	private function _updatePayPalExpress() {
 		if ($this->input->post() AND $this->validateForm() === TRUE) {
 
-			if ($this->Extensions_model->updateExtension('module', 'paypal_express', $this->input->post())) {
+			if ($this->Extensions_model->updateExtension('payment', 'paypal_express', $this->input->post())) {
 				$this->alert->set('success', sprintf($this->lang->line('alert_success'), $this->lang->line('_text_title') . ' payment ' . $this->lang->line('text_updated')));
 			} else {
 				$this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_updated')));
