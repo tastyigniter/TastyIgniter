@@ -241,11 +241,6 @@
 				<div class="page-header clearfix">
 					<div class="page-header-title pull-left">
                         <h1 class="">
-                            <?php $back_button = get_back_button(); ?>
-                            <?php if (!empty($back_button)) { ?>
-                                <?php echo $back_button; ?>
-                            <?php } ?>
-
                             <?php echo get_heading(); ?>
 
                             <?php if (!empty($context_help)) { ?>

@@ -384,21 +384,6 @@ if ( ! function_exists('get_icon_list')) {
 // ------------------------------------------------------------------------
 
 /**
- * Get template back butotn
- *
- *
- * @access    public
- * @return    string
- */
-if ( ! function_exists('get_back_button')) {
-    function get_back_button() {
-        return get_instance()->template->getBackButton();
-    }
-}
-
-// ------------------------------------------------------------------------
-
-/**
  * Get theme partial areas
  *
  *
