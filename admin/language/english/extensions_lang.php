@@ -17,12 +17,14 @@ $lang['text_uninstalled'] 		        = 'Uninstalled';
 
 $lang['column_name'] 		            = 'Name';
 $lang['column_type'] 		            = 'Type';
+$lang['column_version'] 		        = 'Version';
 $lang['column_desc'] 		            = 'Description';
 $lang['column_author'] 		            = 'Author';
 $lang['column_id'] 		                = 'ID';
 
 $lang['alert_info_upload'] 		        = 'Upload module extension zip file and it will be installed automatically.';
 $lang['alert_install'] 		            = ' <a href="%s" class="alert-link">Install It</a>';
+$lang['alert_info_layouts'] 		    = 'After you have installed and configured a module you can display it on a layout <a href="%s" class="alert-link">here!</a>';
 
 $lang['error_config'] 		            = 'An error occurred, extension config file failed to load';
 $lang['error_options'] 		            = 'An error occurred, extension admin options disabled';

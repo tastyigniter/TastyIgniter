@@ -63,11 +63,8 @@
 						<thead>
 							<tr>
 								<th class="action action-three"></th>
-                                <th class="name sorter"><a class="sort" href="<?php echo $sort_name; ?>"><?php echo lang('column_name'); ?> <i class="fa fa-sort-<?php echo ($sort_by === 'name') ? $order_by_active : $order_by; ?>"></i></a></th>
-                                <th class="type sorter"><a class="sort" href="<?php echo $sort_type; ?>"><?php echo lang('column_type'); ?> <i class="fa fa-sort-<?php echo ($sort_by === 'type') ? $order_by_active : $order_by; ?>"></i></a></th>
-								<th width="55%"><?php echo lang('column_desc'); ?></th>
-                                <th><?php echo lang('column_author'); ?></th>
-                                <th class="id"><?php echo lang('column_id'); ?></th>
+                                <th width="15%" class="name sorter"><a class="sort" href="<?php echo $sort_name; ?>"><?php echo lang('column_name'); ?> <i class="fa fa-sort-<?php echo ($sort_by === 'name') ? $order_by_active : $order_by; ?>"></i></a></th>
+								<th width="65%"><?php echo lang('column_desc'); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -80,20 +77,27 @@
                                         &nbsp;&nbsp;&nbsp;
                                     <?php } ?>
 									<?php if ($extension['installed'] === TRUE AND $extension['status'] === '1') {?>
-										<a class="btn btn-success" title="<?php echo lang('text_uninstall'); ?>" href="<?php echo $extension['manage']; ?>"><i class="fa fa-pause"></i></a>
+										<a class="btn btn-danger" title="<?php echo lang('text_uninstall'); ?>" href="<?php echo $extension['manage']; ?>"><i class="fa fa-pause"></i></a>
 									<?php } else { ?>
 										<a class="btn btn-success" title="<?php echo lang('text_install'); ?>" href="<?php echo $extension['manage']; ?>"><i class="fa fa-play"></i></a>
                                     <?php } ?>
                                     &nbsp;&nbsp;&nbsp;
 									<?php if ($extension['installed'] !== TRUE OR $extension['status'] !== '1') {?>
-										<a class="btn btn-danger" title="<?php echo lang('button_delete'); ?>" href="<?php echo $extension['delete']; ?>"><i class="fa fa-times"></i></a>
+										<a class="btn btn-danger" title="<?php echo lang('button_delete'); ?>" href="<?php echo $extension['delete']; ?>"><i class="fa fa-trash-o"></i></a>
                                     <?php } ?>
 								</td>
 								<td><?php echo $extension['title']; ?></td>
-								<td><?php echo $extension['type']; ?></td>
-								<td><?php echo $extension['description']; ?></td>
-                                <td class="small"><?php echo $extension['author']; ?></td>
-                                <td class="id"><?php echo $extension['extension_id']; ?></td>
+								<td>
+                                    <div class="extension_desc"><p><?php echo $extension['description']; ?></p></div>
+                                    <div class="extension_meta text-muted small">
+                                        <span><?php echo lang('column_version'); ?>: <?php echo $extension['version']; ?></span>
+                                        &nbsp;&nbsp;|&nbsp;&nbsp;
+                                        <span><?php echo lang('column_type'); ?>: <?php echo $extension['type']; ?></span>
+                                        &nbsp;&nbsp;|&nbsp;&nbsp;
+                                        <span><?php echo lang('column_author'); ?>: <?php echo $extension['author']; ?></span>
+                                    </div>
+
+                                </td>
 							</tr>
 							<?php } ?>
 							<?php } else {?>
