@@ -13,6 +13,7 @@ $lang['text_leave_review'] 		        = 'Leave review';
 $lang['column_id'] 				        = 'ID';
 $lang['column_status'] 			        = 'Status';
 $lang['column_delivery'] 		        = 'Delivery';
+$lang['column_payment'] 		        = 'Payment';
 $lang['column_location'] 		        = 'Location';
 $lang['column_date'] 			        = 'Ready Time - Date';
 $lang['column_order'] 			        = 'Order Type';

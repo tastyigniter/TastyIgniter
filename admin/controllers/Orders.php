@@ -205,12 +205,13 @@ class Orders extends Admin_Controller {
 		$data['check_order_type'] 	= $order_info['order_type'];
 
 		$data['paypal_details'] = array();
-		if ($order_info['payment'] === 'paypal_express') {
-			$data['payment'] = 'PayPal';
-			$this->load->model('paypal_express/Paypal_model');
-			$data['paypal_details'] = (isset($this->Paypal_model)) ? $this->Paypal_model->getPaypalDetails($order_info['order_id'], $order_info['customer_id']) : '';
-		} else if ($order_info['payment'] === 'cod') {
-			$data['payment'] = 'Cash On Delivery';
+		if ($payment = $this->extension->getPayment($order_info['payment'])) {
+			if ($payment['name'] === 'paypal_express') {
+				$this->load->model('paypal_express/Paypal_model');
+				$data['paypal_details'] = (isset($this->Paypal_model)) ? $this->Paypal_model->getPaypalDetails($order_info['order_id'], $order_info['customer_id']) : '';
+			}
+
+			$data['payment'] = !empty($payment['ext_data']['title']) ? $payment['ext_data']['title']: $payment['title'];
 		} else {
 			$data['payment'] = 'No Payment';
 		}

@@ -50,6 +50,10 @@
 									<td><?php echo $delivery_address; ?></td>
 								</tr>
 								<tr>
+									<td><b><?php echo lang('column_payment'); ?>:</b></td>
+									<td><?php echo $payment; ?></td>
+								</tr>
+								<tr>
 									<td><b><?php echo lang('column_location'); ?>:</b></td>
 									<td><?php echo $location_name; ?><br /><?php echo $location_address; ?></td>
 								</tr>

@@ -326,16 +326,20 @@
 						<label for="input-payments" class="col-sm-3 control-label"><?php echo lang('label_payments'); ?>
 							<span class="help-block"><?php echo lang('help_payments'); ?></span>
 						</label>
-						<div class="col-sm-5">
-							<select name="payments[]" id="input-payments" class="form-control" multiple="multiple">
-								<?php foreach ($payment_list as $payment) { ?>
-								<?php if (in_array($payment['code'], $payments)) { ?>
-									<option value="<?php echo $payment['code']; ?>" selected="selected"><?php echo $payment['name']; ?></option>
-								<?php } else { ?>
-									<option value="<?php echo $payment['code']; ?>"><?php echo $payment['name']; ?></option>
-								<?php } ?>
-								<?php } ?>
-							</select>
+						<div class="col-sm-7">
+							<?php foreach ($payment_list as $payment) { ?>
+								<div class="col-xs-12 col-sm-5 wrap-none wrap-horizontal">
+									<div class="input-group button-checkbox">
+								        <button type="button" class="btn" data-color="default">&nbsp;&nbsp;&nbsp;<?php echo $payment['name']; ?></button>
+										<?php if (in_array($payment['code'], $payments)) { ?>
+											<input name="payments[]" type="checkbox" class="hidden" value="<?php echo $payment['code']; ?>" checked />
+										<?php } else { ?>
+											<input name="payments[]" type="checkbox" class="hidden" value="<?php echo $payment['code']; ?>" />
+										<?php } ?>
+										<a href="<?php echo $payment['edit']; ?>" class="btn btn-default"><i class="fa fa-cog"></i></a>
+									</div>
+								</div>
+							<?php } ?>
 							<?php echo form_error('payments[]', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>

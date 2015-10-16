@@ -370,7 +370,8 @@ class Locations extends Admin_Controller {
 						'name'		=> $payment['title'],
 						'code'		=> $payment['name'],
 						'priority'	=> $payment['ext_data']['priority'],
-						'status'	=> $payment['ext_data']['status']
+						'status'	=> $payment['ext_data']['status'],
+						'edit'      => site_url("extensions/edit/payment/{$payment['name']}")
 					);
 				}
 			}

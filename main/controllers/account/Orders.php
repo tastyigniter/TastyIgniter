@@ -163,6 +163,12 @@ class Orders extends Main_Controller {
         $data['order_total'] 		= $this->currency->format($result['order_total']);
         $data['total_items']		= $result['total_items'];
 
+		if ($payment = $this->extension->getPayment($result['payment'])) {
+			$data['payment'] = !empty($payment['ext_data']['title']) ? $payment['ext_data']['title']: $payment['title'];
+		} else {
+			$data['payment'] = 'No Payment';
+		}
+
 		$this->template->render('account/orders_view', $data);
 	}
 
