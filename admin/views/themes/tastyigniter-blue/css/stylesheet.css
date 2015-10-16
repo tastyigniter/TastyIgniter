@@ -456,7 +456,7 @@ margin-top: 0;
 }
 .page-header h1 {
 border-bottom: 0 solid #d3d3d3;
-font-size: 26px;
+font-size: 28px;
 font-weight: normal;
 padding-right: 15px;
 margin:0 0 10px;
@@ -489,7 +489,7 @@ float: left;
 .page-header .btn-back b {
 color: #333;
 font-size: 22px;
-padding: 3px 10px 3px 3px;
+padding: 4px 10px 4px 3px;
 }
 
 
@@ -736,17 +736,21 @@ border-radius: 50% !important;
 }
 .btn-group-switch .btn:last-child:not(.active) {
 position: absolute;
-right: 49%;
+right: 46%;
 z-index: 9;
 }
 .btn-group-switch .btn:first-child:not(.active) {
 position: absolute;
-left: -4px;
+left: 0;
 z-index: 9;
+}
+.btn-group-switch > .btn.active:last-child {
+margin-left: 15px;
 }
 .btn-group-switch > .btn.active {
 border: 0 solid #C5D2E1;
 border-radius: 10px !important;
+cursor: default;
 }
 .btn-group-switch .btn:not(.active) {
 text-indent: -9999px;
