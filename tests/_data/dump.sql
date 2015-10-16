@@ -3106,7 +3106,7 @@ VALUES
 	(18,'Admin.CustomersOnline','Ability to access online customers','a:1:{i:0;s:6:\"access\";}',1),
 	(19,'Admin.Maintenance','Ability to access, backup, restore and migrate database','a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}',1),
 	(20,'Admin.ErrorLogs','Ability to access and delete error logs file','a:2:{i:0;s:6:\"access\";i:1;s:6:\"delete\";}',1),
-	(21,'Admin.Modules','Ability to access, manage, add and delete extension modules','a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}',1),
+	(21,'Admin.Extensions','Ability to access, manage, add and delete extension','a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}',1),
 	(22,'Admin.MediaManager','Ability to access, manage, add and delete media items','a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}',1),
 	(23,'Site.Languages','Ability to manage, add and delete site languages','a:3:{i:0;s:6:\"manage\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}',1),
 	(24,'Site.Layouts','Ability to manage, add and delete site layouts','a:3:{i:0;s:6:\"manage\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}',1),
