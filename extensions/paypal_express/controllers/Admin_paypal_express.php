@@ -3,24 +3,26 @@
 class Admin_paypal_express extends Admin_Controller {
 
 	public function index($data = array()) {
-        $this->user->restrict('Payment.PaypalExpress');
+		$this->lang->load('paypal_express/paypal_express');
 
-        $this->load->model('Statuses_model');
+		$this->user->restrict('Payment.PaypalExpress');
 
-        $data['title'] = (isset($data['title'])) ? $data['title'] : 'PayPal Express';
+		$this->load->model('Statuses_model');
 
-        $this->template->setTitle('Payment: ' . $data['title']);
-        $this->template->setHeading('Payment: ' . $data['title']);
-        $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-        $this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
-        $this->template->setBackButton('btn btn-back', site_url('extensions'));
+		$title = (isset($data['title'])) ? $data['title'] : $this->lang->line('_text_title');
 
-        $ext_data = array();
-        if (!empty($data['ext_data']) AND is_array($data['ext_data'])) {
-            $ext_data = $data['ext_data'];
-        }
+		$this->template->setTitle('Payment: ' . $title);
+		$this->template->setHeading('Payment: ' . $title);
+		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('extensions')));
 
-        if (isset($ext_data['api_user'])) {
+		$ext_data = array();
+		if ( ! empty($data['ext_data']) AND is_array($data['ext_data'])) {
+			$ext_data = $data['ext_data'];
+		}
+
+		if (isset($ext_data['api_user'])) {
 			$data['api_user'] = $ext_data['api_user'];
 		} else {
 			$data['api_user'] = '';
@@ -100,47 +102,29 @@ class Admin_paypal_express extends Admin_Controller {
 		$results = $this->Statuses_model->getStatuses('order');
 		foreach ($results as $result) {
 			$data['statuses'][] = array(
-				'status_id'		=> $result['status_id'],
-				'status_name'		=> $result['status_name']
+				'status_id'   => $result['status_id'],
+				'status_name' => $result['status_name'],
 			);
 		}
 
-		if ($this->input->post() AND $this->_updatePayPalExpress() === TRUE){
+		if ($this->input->post() AND $this->_updatePayPalExpress() === TRUE) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('extensions');
 			}
 
-			redirect('extensions/edit?&action=edit&name=paypal_express');
+			redirect('extensions/edit/payment/paypal_express');
 		}
 
-        return $this->load->view('paypal_express/admin_paypal_express', $data, TRUE);
+		return $this->load->view('paypal_express/admin_paypal_express', $data, TRUE);
 	}
 
 	private function _updatePayPalExpress() {
-    	if ($this->input->post() AND $this->validateForm() === TRUE) {
-			$update['type'] 		= 'payment';
-			$update['name'] 		= $this->input->get('name');
-			$update['title'] 		= $this->input->post('title');
-			$update['extension_id'] = (int) $this->input->get('id');
+		if ($this->input->post() AND $this->validateForm() === TRUE) {
 
-			$update['data'] = array(
-				'priority' 			=> $this->input->post('priority'),
-				'status' 			=> $this->input->post('status'),
-				'api_mode' 			=> $this->input->post('api_mode'),
-				'api_user' 			=> $this->input->post('api_user'),
-				'api_pass' 			=> $this->input->post('api_pass'),
-				'api_signature' 	=> $this->input->post('api_signature'),
-				'api_action' 		=> $this->input->post('api_action'),
-				'return_uri' 		=> $this->input->post('return_uri'),
-				'cancel_uri' 		=> $this->input->post('cancel_uri'),
-				'order_total' 		=> $this->input->post('order_total'),
-				'order_status' 		=> $this->input->post('order_status')
-			);
-
-			if ($this->Extensions_model->updateExtension($update, '1')) {
-				$this->alert->set('success', 'PayPal Express Checkout updated successfully.');
+			if ($this->Extensions_model->updateExtension('module', 'paypal_express', $this->input->post())) {
+				$this->alert->set('success', sprintf($this->lang->line('alert_success'), $this->lang->line('_text_title') . ' payment ' . $this->lang->line('text_updated')));
 			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
+				$this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_updated')));
 			}
 
 			return TRUE;
@@ -148,17 +132,15 @@ class Admin_paypal_express extends Admin_Controller {
 	}
 
 	private function validateForm() {
-		$this->form_validation->set_rules('title', 'Title', 'xss_clean|trim|required|min_length[2]|max_length[128]');
-		$this->form_validation->set_rules('api_user', 'API Username', 'xss_clean|trim|required');
-		$this->form_validation->set_rules('api_pass', 'API Password', 'xss_clean|trim|required');
-		$this->form_validation->set_rules('api_signature', 'API Signature', 'xss_clean|trim|required');
-		$this->form_validation->set_rules('api_action', 'Payment Action', 'xss_clean|trim|required');
-		$this->form_validation->set_rules('order_total', 'Order Total', 'xss_clean|trim|required|numeric');
-		$this->form_validation->set_rules('order_status', 'Order Status', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('status', 'Status', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('api_mode', 'Mode', 'xss_clean|trim|required');
-		$this->form_validation->set_rules('return_uri', 'Return URI', 'xss_clean|trim|required');
-		$this->form_validation->set_rules('cancel_uri', 'Cancel URI', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('title', 'lang:label_title', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+		$this->form_validation->set_rules('api_user', 'lang:label_api_user', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('api_pass', 'lang:label_api_pass', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('api_signature', 'lang:label_api_signature', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('api_mode', 'lang:label_api_mode', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('api_action', 'lang:label_api_action', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('order_total', 'lang:label_order_total', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('order_status', 'lang:label_order_status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('status', 'lang:label_status', 'xss_clean|trim|required|integer');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;

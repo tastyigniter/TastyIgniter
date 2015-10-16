@@ -2,15 +2,12 @@
 
 class Banners_module extends Main_Controller {
 
-	public function __construct() {
-		parent::__construct(); 																	// calls the constructor
-		$this->load->model('Layouts_model'); 													// load the menus model
-		$this->load->model('Banners_model'); 													// load the menus model
-		$this->load->model('Image_tool_model'); 													// load the menus model
-		$this->lang->load('banners_module/banners_module');
-	}
-
 	public function index($data = array()) {
+        $this->load->model('Layouts_model'); 													// load the menus model
+        $this->load->model('Banners_model'); 													// load the menus model
+        $this->load->model('Image_tool_model'); 													// load the menus model
+        $this->lang->load('banners_module/banners_module');
+
 		if ( ! file_exists(EXTPATH .'banners_module/views/banners_module.php')) { 				//check if file exists in views folder
 			show_404(); 																		// Whoops, show 404 error page!
 		}
@@ -22,10 +19,6 @@ class Banners_module extends Main_Controller {
         $image_height = (!empty($data['banners'][1]['height'])) ? $data['banners'][1]['height'] : 250 ;
 
         $banner_info = $this->Banners_model->getBanner($banner_id);
-
-        // START of retrieving lines from language file to pass to view.
-        $data['text_heading'] 			= (isset($banner_info['name'])) ? $banner_info['name'] : $this->lang->line('text_heading');
-        // END of retrieving lines from language file to send to view.
 
         $data['banner_id'] 			= $banner_info['banner_id'];
         $data['name'] 				= $banner_info['name'];

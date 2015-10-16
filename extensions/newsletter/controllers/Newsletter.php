@@ -2,14 +2,9 @@
 
 class Newsletter extends Main_Controller {
 
-	public function __construct() {
-		parent::__construct(); 																	// calls the constructor
-		$this->load->model('Menus_model'); 														// load the menus model
-		$this->load->model('Categories_model'); 														// load the menus model
-		$this->lang->load('newsletter/newsletter');
-	}
-
 	public function index() {
+		$this->lang->load('newsletter/newsletter');
+
 		if ( ! file_exists(EXTPATH .'newsletter/views/newsletter.php')) { 		//check if file exists in views folder
 			show_404(); 																		// Whoops, show 404 error page!
 		}
@@ -25,6 +20,8 @@ class Newsletter extends Main_Controller {
 	}
 
 	public function subscribe() {
+		$this->lang->load('newsletter/newsletter');
+
 		$this->load->library('user_agent');
 		$validated = FALSE;
 		$json = array();
@@ -53,12 +50,12 @@ class Newsletter extends Main_Controller {
                 $ext_data['subscribe_list'][] = $subscribe_email;
 
                 if ($this->Extensions_model->saveExtensionData('newsletter', $ext_data)) {
-                    $json['success'] = $this->lang->line('alert_success');
+                    $json['success'] = $this->lang->line('alert_success_subscribed');
                 }
 
             } else if (in_array($subscribe_email, $ext_data['subscribe_list'])) {
 
-                $json['success'] = $this->lang->line('alert_existing_success');
+                $json['success'] = $this->lang->line('alert_success_existing');
 
             } else {
                 $json['error'] = $this->lang->line('alert_error_try_again');

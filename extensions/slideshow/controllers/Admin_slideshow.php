@@ -3,17 +3,19 @@
 class Admin_slideshow extends Admin_Controller {
 
 	public function index($data = array()) {
-        $this->user->restrict('Module.Slideshow');
+		$this->lang->load('slideshow/slideshow');
+
+		$this->user->restrict('Module.Slideshow');
 
         if (empty($data)) return;
 
-        $data['title'] = (isset($data['title'])) ? $data['title'] : 'Slideshow Module';
+		$title = (isset($data['title'])) ? $data['title'] : $this->lang->line('_text_title');
 
-        $this->template->setTitle('Module: ' . $data['title']);
-        $this->template->setHeading('Module: ' . $data['title']);
-        $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setTitle('Module: ' . $title);
+		$this->template->setHeading('Module: ' . $title);
+		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
         $this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
-        $this->template->setBackButton('btn btn-back', site_url('extensions'));
+        $this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('extensions')));
 
         $this->template->setStyleTag(root_url('assets/js/fancybox/jquery.fancybox.css'), 'jquery-fancybox-css');
         $this->template->setScriptTag(root_url("assets/js/fancybox/jquery.fancybox.js"), 'jquery-fancybox-js');
@@ -25,7 +27,15 @@ class Admin_slideshow extends Admin_Controller {
             $ext_data = $data['ext_data'];
         }
 
-        if (isset($ext_data['dimension_h'])) {
+		if ($this->input->post('status')) {
+			$data['status'] = $this->input->post('status');
+		} else if (!empty($data['ext_data']['status'])) {
+			$data['status'] = $data['ext_data']['status'];
+		} else {
+			$data['status'] = '0';
+		}
+
+		if (isset($ext_data['dimension_h'])) {
 			$data['dimension_h'] = $ext_data['dimension_h'];
 		} else {
 			$data['dimension_h'] = '360';
@@ -78,7 +88,7 @@ class Admin_slideshow extends Admin_Controller {
 				redirect('extensions');
 			}
 
-			redirect('extensions/edit?action=edit&name=slideshow');
+			redirect('extensions/edit/module/slideshow');
 		}
 
         return $this->load->view('slideshow/admin_slideshow', $data, TRUE);
@@ -86,39 +96,28 @@ class Admin_slideshow extends Admin_Controller {
 
 	private function _updateModule() {
     	if ($this->validateForm() === TRUE) {
-			$update = array();
 
-			$update['type'] 				= 'module';
-			$update['name'] 				= $this->input->get('name');
-			$update['title'] 				= $this->input->post('title');
-			$update['extension_id'] 		= (int) $this->input->get('id');
-			$update['data']['dimension_h'] 	= $this->input->post('dimension_h');
-			$update['data']['dimension_w']	= $this->input->post('dimension_w');
-			$update['data']['effect'] 		= ($this->input->post('effect')) ? $this->input->post('effect') : 'random';
-			$update['data']['speed'] 		= ($this->input->post('speed')) ? $this->input->post('speed') : '500';
-			$update['data']['slides'] 		= $this->input->post('slides');
-
-			if ($this->Extensions_model->updateExtension($update, '1')) {
-				$this->alert->set('success', 'Slideshow Module updated successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
-			}
+		    if ($this->Extensions_model->updateExtension('module', 'slideshow', $this->input->post())) {
+			    $this->alert->set('success', sprintf($this->lang->line('alert_success'), $this->lang->line('_text_title') . ' module ' . $this->lang->line('text_updated')));
+		    } else {
+			    $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_updated')));
+		    }
 
 			return TRUE;
 		}
 	}
 
  	private function validateForm() {
-		$this->form_validation->set_rules('title', 'Title', 'xss_clean|trim|required|min_length[2]|max_length[128]');
-		$this->form_validation->set_rules('dimension_h', 'Dimension Height', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('dimension_w', 'Dimension Width', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('effect', 'Effects', 'xss_clean|trim|required');
-		$this->form_validation->set_rules('speed', 'Transition Speed', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('status', 'lang:label_status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('dimension_h', 'lang:label_dimension_h', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('dimension_w', 'lang:label_dimension_w', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('effect', 'lang:label_effect', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('speed', 'lang:label_speed', 'xss_clean|trim|integer');
 
 		foreach ($this->input->post('slides') as $key => $value) {
-			$this->form_validation->set_rules('slides['.$key.'][name]', 'Slide Name', 'xss_clean|trim|required');
-			$this->form_validation->set_rules('slides['.$key.'][image_src]', 'Slide', 'xss_clean|trim|required');
-			$this->form_validation->set_rules('slides['.$key.'][caption]', 'Caption');
+			$this->form_validation->set_rules('slides['.$key.'][name]', 'lang:label_slide_name', 'xss_clean|trim|required');
+			$this->form_validation->set_rules('slides['.$key.'][image_src]', 'lang:label_slide_image', 'xss_clean|trim|required');
+			$this->form_validation->set_rules('slides['.$key.'][caption]', 'lang:label_slide_caption');
 		}
 
 		if ($this->form_validation->run() === TRUE) {

@@ -2,14 +2,11 @@
 
 class Categories_module extends Main_Controller {
 
-	public function __construct() {
-		parent::__construct(); 																	// calls the constructor
+	public function index() {
 		$this->load->model('Menus_model'); 														// load the menus model
 		$this->load->model('Categories_model'); 														// load the menus model
 		$this->lang->load('categories_module/categories_module');
-	}
 
-	public function index() {
 		if ( ! file_exists(EXTPATH .'categories_module/views/categories_module.php')) { 		//check if file exists in views folder
 			show_404(); 																		// Whoops, show 404 error page!
 		}

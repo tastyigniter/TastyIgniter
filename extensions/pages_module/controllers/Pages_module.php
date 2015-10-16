@@ -2,13 +2,10 @@
 
 class Pages_module extends Main_Controller {
 
-	public function __construct() {
-		parent::__construct(); 																	// calls the constructor
+	public function index($ext_data = array()) {
 		$this->load->model('Pages_model'); 														// load the menus model
 		$this->lang->load('pages_module/pages_module');
-	}
 
-	public function index() {
 		if ( ! file_exists(EXTPATH .'pages_module/views/pages_module.php')) { 								//check if file exists in views folder
 			show_404(); 																		// Whoops, show 404 error page!
 		}
@@ -19,6 +16,7 @@ class Pages_module extends Main_Controller {
 			$data['page_id'] = 0;
 		}
 
+		$data['heading'] = (!empty($ext_data['heading'])) ? $ext_data['heading'] : $this->lang->line('_text_title');
 
 		$data['pages'] = array();
 		$results = $this->Pages_model->getPages(); 										// retrieve all menu categories from getCategories method in Menus model

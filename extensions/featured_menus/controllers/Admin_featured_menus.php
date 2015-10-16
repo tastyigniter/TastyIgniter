@@ -9,20 +9,20 @@ class Admin_featured_menus extends Admin_Controller {
 
         if (empty($data)) return;
 
-        $data['title'] = (isset($data['title'])) ? $data['title'] : 'Featured Menus';
+        $title = (isset($data['title'])) ? $data['title'] : $this->lang->line('_text_title');
 
-        $this->template->setTitle('Module: ' . $data['title']);
-        $this->template->setHeading('Module: ' . $data['title']);
+        $this->template->setTitle('Module: ' . $title);
+        $this->template->setHeading('Module: ' . $title);
         $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
         $this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
-        $this->template->setBackButton('btn btn-back', site_url('extensions'));
+        $this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('extensions')));
 
         if ($this->input->post() AND $this->_updateModule() === TRUE) {
             if ($this->input->post('save_close') === '1') {
                 redirect('extensions');
             }
 
-            redirect('extensions/edit?action=edit&name=featured_menus');
+            redirect('extensions/edit/module/featured_menus');
         }
 
         $ext_data = array();
@@ -53,21 +53,11 @@ class Admin_featured_menus extends Admin_Controller {
         $this->user->restrict('Module.FeaturedMenus');
 
         if ($this->validateForm() === TRUE) {
-            $update = array();
 
-            $update['type'] 			= 'module';
-            $update['name'] 			= $this->input->get('name');
-            $update['title'] 			= $this->input->post('title');
-            $update['extension_id'] 	= (int) $this->input->get('id');
-            $update['data']['limit'] 		= $this->input->post('limit');
-            $update['data']['dimension_w']	= $this->input->post('dimension_w');
-            $update['data']['dimension_h'] 	= $this->input->post('dimension_h');
-            $update['data']['featured_menu'] 	= $this->input->post('featured_menu');
-
-            if ($this->Extensions_model->updateExtension($update, '1')) {
-                $this->alert->set('success', $this->lang->line('alert_updated_success'));
+            if ($this->Extensions_model->updateExtension('module', 'featured_menus', $this->input->post())) {
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), $this->lang->line('_text_title').' module '.$this->lang->line('text_updated')));
             } else {
-                $this->alert->set('warning', $this->lang->line('alert_error_try_again'));
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_updated')));
             }
 
             return TRUE;

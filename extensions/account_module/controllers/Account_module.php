@@ -2,15 +2,10 @@
 
 class Account_module extends Main_Controller {
 
-	public function __construct() {
-		parent::__construct(); 																	// calls the constructor
+	public function index($data = array()) {
+		$this->load->library('customer');
+		$this->lang->load('account_module/account_module');
 
-        $this->load->library('customer');  														// loads language file
-
-        $this->lang->load('account_module/account_module');
-	}
-
-	public function index() {
 		if ( ! file_exists(EXTPATH .'account_module/views/account_module.php')) { 								//check if file exists in views folder
 			show_404(); 																		// Whoops, show 404 error page!
 		}
@@ -20,6 +15,8 @@ class Account_module extends Main_Controller {
 		} else {
 			$data['page'] = 'account';
 		}
+
+		$data['heading'] = (!empty($data['heading'])) ? $data['heading'] : $this->lang->line('text_heading');
 
 		$this->load->model('Messages_model');													// load the customers model
         $data['inbox_total'] = $this->Messages_model->getUnreadCount($this->customer->getId());					// retrieve total number of customer messages from getUnreadCount method in Messages model

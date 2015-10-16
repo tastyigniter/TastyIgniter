@@ -3,30 +3,32 @@
 class Admin_cod extends Admin_Controller {
 
 	public function index($data = array()) {
+        $this->lang->load('cod/cod');
+
         $this->user->restrict('Payment.Cod');
 
         if (!empty($data)) {
             $this->load->model('Statuses_model');
 
-            $data['title'] = (isset($data['title'])) ? $data['title'] : 'Cash On Delivery';
+            $title = (isset($data['title'])) ? $data['title'] : $this->lang->line('_text_title');
 
-            $this->template->setTitle('Payment: ' . $data['title']);
-            $this->template->setHeading('Payment: ' . $data['title']);
+            $this->template->setTitle('Payment: ' . $title);
+            $this->template->setHeading('Payment: ' . $title);
             $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
             $this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
-            $this->template->setBackButton('btn btn-back', site_url('extensions'));
+            $this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('extensions')));
 
             $ext_data = array();
             if (!empty($data['ext_data']) AND is_array($data['ext_data'])) {
                 $ext_data = $data['ext_data'];
             }
 
-            if (isset($this->input->post['name'])) {
-                $data['name'] = $this->input->post['name'];
-            } else if (isset($ext_data['name'])) {
-                $data['name'] = $ext_data['name'];
+            if (isset($this->input->post['title'])) {
+                $data['title'] = $this->input->post['title'];
+            } else if (isset($ext_data['title'])) {
+                $data['title'] = $ext_data['title'];
             } else {
-                $data['name'] = '';
+                $data['title'] = $title;
             }
 
             if (isset($this->input->post['order_total'])) {
@@ -75,7 +77,7 @@ class Admin_cod extends Admin_Controller {
                     redirect('extensions');
                 }
 
-                redirect('extensions/edit?action=edit&name=cod');
+                redirect('extensions/edit/payment/cod');
             }
 
             return $this->load->view('cod/admin_cod', $data, TRUE);
@@ -83,23 +85,12 @@ class Admin_cod extends Admin_Controller {
 	}
 
 	private function _updateCod() {
-    	if (!$this->input->post('delete') AND $this->validateForm() === TRUE) {
-			$update = array();
+    	if ($this->validateForm() === TRUE) {
 
-			$update['type'] 				= 'payment';
-			$update['name'] 				= $this->input->get('name');
-			$update['title'] 				= $this->input->post('title');
-			$update['extension_id'] 		= (int) $this->input->get('id');
-			$update['data']['name'] 		= $this->input->post('name');
-			$update['data']['order_total'] 	= $this->input->post('order_total');
-			$update['data']['order_status'] = $this->input->post('order_status');
-			$update['data']['priority'] 	= $this->input->post('priority');
-			$update['data']['status'] 		= $this->input->post('status');
-
-			if ($this->Extensions_model->updateExtension($update, '1')) {
-				$this->alert->set('success', 'COD Payment updated successfully.');
-			} else {
-				$this->alert->set('warning', 'An error occurred, nothing updated.');
+			if ($this->Extensions_model->updateExtension('payment', 'cod', $this->input->post())) {
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), $this->lang->line('_text_title').' payment '.$this->lang->line('text_updated')));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_updated')));
 			}
 
 			return TRUE;
@@ -107,9 +98,11 @@ class Admin_cod extends Admin_Controller {
 	}
 
 	private function validateForm() {
-		$this->form_validation->set_rules('order_total', 'Minimum Total', 'xss_clean|trim|required|numeric');
-		$this->form_validation->set_rules('order_status', 'Order Status', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('status', 'Status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('title', 'lang:label_title', 'xss_clean|trim|required|max_length[128]');
+		$this->form_validation->set_rules('order_total', 'lang:label_order_total', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('order_status', 'lang:label_order_status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('priority', 'lang:label_priority', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('status', 'lang:label_status', 'xss_clean|trim|required|integer');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;

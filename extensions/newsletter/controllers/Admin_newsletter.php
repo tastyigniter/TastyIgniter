@@ -3,24 +3,33 @@
 class Admin_newsletter extends Admin_Controller {
 
 	public function index($data = array()) {
-        $this->lang->load('newsletter/admin_newsletter');
+        $this->lang->load('newsletter/newsletter');
+
         $this->user->restrict('Module.Newsletter');
 
         if (!empty($data)) {
-            $data['title'] = (isset($data['title'])) ? $data['title'] : 'Newsletter';
+            $title = (isset($data['title'])) ? $data['title'] : $this->lang->line('_text_title');
 
-            $this->template->setTitle('Module: ' . $data['title']);
-            $this->template->setHeading('Module: ' . $data['title']);
+            $this->template->setTitle('Module: ' . $title);
+            $this->template->setHeading('Module: ' . $title);
             $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
             $this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
-            $this->template->setBackButton('btn btn-back', site_url('extensions'));
+            $this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('extensions')));
+
+            if ($this->input->post('status')) {
+                $data['status'] = $this->input->post('status');
+            } else if (!empty($data['ext_data']['status'])) {
+                $data['status'] = $data['ext_data']['status'];
+            } else {
+                $data['status'] = '0';
+            }
 
             if ($this->input->post() AND $this->_updateModule() === TRUE) {
                 if ($this->input->post('save_close') === '1') {
                     redirect('extensions');
                 }
 
-                redirect('extensions/edit?action=edit&name=newsletter');
+                redirect('extensions/edit/module/newsletter');
             }
 
             return $this->load->view('newsletter/admin_newsletter', $data, TRUE);
@@ -29,17 +38,11 @@ class Admin_newsletter extends Admin_Controller {
 
     private function _updateModule() {
         if ($this->validateForm() === TRUE) {
-            $update = array();
 
-            $update['type'] 			= 'module';
-            $update['name'] 			= $this->input->get('name');
-            $update['title'] 			= $this->input->post('title');
-            $update['extension_id'] 	= (int) $this->input->get('id');
-
-            if ($this->Extensions_model->updateExtension($update, '1')) {
-                $this->alert->set('success', 'Newsletter updated successfully.');
+            if ($this->Extensions_model->updateExtension('module', 'newsletter', $this->input->post())) {
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), $this->lang->line('_text_title').' module '.$this->lang->line('text_updated')));
             } else {
-                $this->alert->set('warning', 'An error occurred, nothing updated.');
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_updated')));
             }
 
             return TRUE;
@@ -47,7 +50,7 @@ class Admin_newsletter extends Admin_Controller {
     }
 
     private function validateForm() {
-        $this->form_validation->set_rules('title', 'Title', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+        $this->form_validation->set_rules('status', 'lang:label_status', 'xss_clean|trim|required|integer');
 
         if ($this->form_validation->run() === TRUE) {
             return TRUE;

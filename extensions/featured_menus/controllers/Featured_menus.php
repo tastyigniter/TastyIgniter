@@ -2,13 +2,10 @@
 
 class Featured_menus extends Main_Controller {
 
-	public function __construct() {
-		parent::__construct(); 																	// calls the constructor
+	public function index($ext_data = array()) {
 		$this->load->model('Featured_menus_model'); 														// load the featured menus model
 		$this->lang->load('featured_menus/featured_menus');
-	}
 
-	public function index($ext_data = array()) {
 		if ( ! file_exists(EXTPATH .'featured_menus/views/featured_menus.php')) { 		//check if file exists in views folder
 			show_404(); 																		// Whoops, show 404 error page!
 		}

@@ -2,18 +2,14 @@
 
 class Reservation_module extends Main_Controller {
 
-	public function __construct() {
-		parent::__construct(); //  calls the constructor
-
+	public function index() {
         $this->load->model('Reservations_model');
 
         $this->load->library('location'); // load the location library
 
         $this->lang->load('reservation_module/reservation_module');
-	}
 
-	public function index() {
-		if ( ! file_exists(EXTPATH .'reservation_module/views/reservation_module.php')) { 								//check if file exists in views folder
+        if ( ! file_exists(EXTPATH .'reservation_module/views/reservation_module.php')) { 								//check if file exists in views folder
 			show_404(); 																		// Whoops, show 404 error page!
 		}
 
@@ -170,7 +166,7 @@ class Reservation_module extends Main_Controller {
 
     public function _validate_date($str) {
 		if (strtotime($str) < time()) {
-        	$this->form_validation->set_message('_validate_date', 'Date must be after today, you can only make future reservations!');
+        	$this->form_validation->set_message('_validate_date', $this->lang->line('error_invalid_date'));
       		return FALSE;
 		} else {
       		return TRUE;
@@ -189,7 +185,7 @@ class Reservation_module extends Main_Controller {
                 }
             }
 
-            $this->form_validation->set_message('_validate_time', 'Time must be between restaurant opening time!');
+            $this->form_validation->set_message('_validate_time', $this->lang->line('error_invalid_time'));
             return FALSE;
 		}
 	}
