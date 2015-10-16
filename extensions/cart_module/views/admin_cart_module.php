@@ -2,7 +2,7 @@
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
 			<ul id="nav-tabs" class="nav nav-tabs">
-				<li class="active"><a href="#general" data-toggle="tab">General</a></li>
+				<li class="active"><a href="#general" data-toggle="tab"><?php echo lang('text_tab_general'); ?></a></li>
 			</ul>
 		</div>
 
@@ -10,32 +10,25 @@
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="input-title" class="col-sm-3 control-label">Title:</label>
-						<div class="col-sm-5">
-							<input type="text" name="title" id="input-title" class="form-control" value="<?php echo set_value('title', $title); ?>" />
-							<?php echo form_error('title', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-show-menu-images" class="col-sm-3 control-label">Display Cart Images:
-							<span class="help-block">Show or hide cart menu images</span>
+						<label for="input-show-menu-images" class="col-sm-3 control-label"><?php echo lang('label_show_cart_images'); ?>
+							<span class="help-block"><?php echo lang('help_show_cart_images'); ?></span>
 						</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if ($show_cart_images == '1') { ?>
-									<label class="btn btn-danger"><input type="radio" name="show_cart_images" value="0" <?php echo set_radio('show_cart_images', '0'); ?>>Hide</label>
-									<label class="btn btn-success active"><input type="radio" name="show_cart_images" value="1" <?php echo set_radio('show_cart_images', '1', TRUE); ?>>Show</label>
+									<label class="btn btn-danger"><input type="radio" name="show_cart_images" value="0" <?php echo set_radio('show_cart_images', '0'); ?>><?php echo lang('text_hide'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="show_cart_images" value="1" <?php echo set_radio('show_cart_images', '1', TRUE); ?>><?php echo lang('text_show'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-danger active"><input type="radio" name="show_cart_images" value="0" <?php echo set_radio('show_cart_images', '0', TRUE); ?>>Hide</label>
-									<label class="btn btn-success"><input type="radio" name="show_cart_images" value="1" <?php echo set_radio('show_cart_images', '1'); ?>>Show</label>
+									<label class="btn btn-danger active"><input type="radio" name="show_cart_images" value="0" <?php echo set_radio('show_cart_images', '0', TRUE); ?>><?php echo lang('text_hide'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="show_cart_images" value="1" <?php echo set_radio('show_cart_images', '1'); ?>><?php echo lang('text_show'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('show_cart_images', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group" id="cart-image-size">
-						<label for="input-cart-image-size" class="col-sm-3 control-label">Cart Image Size:
-							<span class="help-block">(Height x Width)</span>
+						<label for="input-cart-image-size" class="col-sm-3 control-label"><?php echo lang('label_cart_image_size'); ?>
+							<span class="help-block"><?php echo lang('help_cart_image_size'); ?></span>
 						</label>
 						<div class="col-sm-5">
 							<div class="control-group control-group-2">

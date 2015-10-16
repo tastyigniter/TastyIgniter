@@ -1,5 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
+$lang['_text_title'] 			            = 'Featured Menu';
+$lang['text_tab_general'] 		            = 'General';
+
 $lang['text_find'] 				            = 'Go';
 $lang['text_order_summary'] 	            = 'Order delicious food online';
 $lang['text_goto_menus'] 		            = 'Go to Menu';
@@ -25,6 +28,7 @@ $lang['button_view_map'] 		            = 'View Map';
 $lang['button_change_location']             = 'Change Location';
 $lang['button_search_location']             = 'Search Location';
 
+$lang['label_status'] 			            = 'Status';
 $lang['label_search_query'] 			    = 'Enter your address/postcode to order';
 
 $lang['alert_location_closed'] 		        = '<p class="alert-danger"><b>Restaurant is currently closed.</b></p>';

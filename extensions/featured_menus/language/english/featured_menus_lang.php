@@ -1,5 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
+$lang['_text_title'] 			        = 'Featured Menu';
 $lang['text_tab_general'] 		        = 'General';
 $lang['text_subscribe'] 			    = 'Subscribe to our newsletter';
 $lang['text_featured_menus'] 		    = 'Featured Menus';
@@ -16,10 +17,6 @@ $lang['label_dimension_h'] 			    = 'Dimension Height';
 $lang['label_email'] 			        = 'Email';
 
 $lang['help_dimension'] 			    = '(Width x Height)';
-
-$lang['alert_updated_success'] 	        = 'Featured updated successfully.';
-$lang['alert_success'] 			        = 'Thanks, Your email now subscribed for our offers';
-$lang['alert_existing_success'] 		= 'Thanks, Your email already subscribed for our offers';
 
 /* End of file newsletter_lang.php */
 /* Location: ./extensions/newsletter/language/english/newsletter_lang.php */

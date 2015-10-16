@@ -2,7 +2,7 @@
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
 			<ul id="nav-tabs" class="nav nav-tabs">
-				<li class="active"><a href="#general" data-toggle="tab">Details</a></li>
+				<li class="active"><a href="#general" data-toggle="tab"><?php echo lang('text_tab_general'); ?></a></li>
 			</ul>
 		</div>
 
@@ -10,22 +10,24 @@
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="input-title" class="col-sm-3 control-label">Title:</label>
+						<label for="input-title" class="col-sm-3 control-label"><?php echo lang('label_title'); ?></label>
 						<div class="col-sm-5">
 							<input type="text" name="title" id="input-title" class="form-control" value="<?php echo set_value('title', $title); ?>" />
 							<?php echo form_error('title', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-order-total" class="col-sm-3 control-label">Minimum Total:</label>
+						<label for="input-order-total" class="col-sm-3 control-label"><?php echo lang('label_order_total'); ?>
+							<span class="help-block"><?php echo lang('help_order_total'); ?></span>
+						</label>
 						<div class="col-sm-5">
 							<input type="text" name="order_total" id="input-order-total" class="form-control" value="<?php echo $order_total; ?>" />
 							<?php echo form_error('order_total', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-order-status" class="col-sm-3 control-label">Order Status:
-							<span class="help-block">Default order status when cod is the payment method</span>
+						<label for="input-order-status" class="col-sm-3 control-label"><?php echo lang('label_order_status'); ?>
+							<span class="help-block"><?php echo lang('help_order_status'); ?></span>
 						</label>
 						<div class="col-sm-5">
 							<select name="order_status" id="input-order-status" class="form-control">
@@ -41,14 +43,14 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-priority" class="col-sm-3 control-label">Priority:</label>
+						<label for="input-priority" class="col-sm-3 control-label"><?php echo lang('label_priority'); ?></label>
 						<div class="col-sm-5">
 							<input type="text" name="priority" id="input-priority" class="form-control" value="<?php echo $priority; ?>" />
 							<?php echo form_error('priority', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-status" class="col-sm-3 control-label">Status:</label>
+						<label for="input-status" class="col-sm-3 control-label"><?php echo lang('label_status'); ?></label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if ($status == '1') { ?>

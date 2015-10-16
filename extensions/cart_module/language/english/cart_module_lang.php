@@ -1,5 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
+$lang['_text_title'] 		                = 'Cart';
+$lang['text_tab_general'] 		            = 'General';
+
 $lang['text_heading'] 			            = 'My Order';
 $lang['text_update_heading'] 		        = 'Updating menu choices';
 $lang['text_add_heading'] 			        = 'Adding menu choices';
@@ -27,6 +30,10 @@ $lang['button_apply_coupon'] 			    = 'Apply Coupon';
 
 $lang['label_menu_quantity'] 			    = 'Menu Quantity';
 $lang['label_add_comment'] 			        = 'Add Comment';
+$lang['label_show_cart_images'] 		    = 'Display Cart Images';
+$lang['label_cart_image_size'] 			    = 'Cart Image Size';
+$lang['label_cart_images_h'] 			    = 'Image Height';
+$lang['label_cart_images_w'] 			    = 'Image Width';
 
 $lang['alert_menu_added'] 		            = '<p class="alert-success">Menu has been added to your order.</p>';
 $lang['alert_menu_updated'] 	            = '<p class="alert-success">Menu has been updated successfully</p>';
@@ -47,6 +54,9 @@ $lang['alert_coupon_expired'] 	            = '<p class="alert-danger">Your coupo
 $lang['alert_coupon_not_applied'] 	        = '<p class="alert-danger">Your coupon can not be applied to orders below %s.</p>';
 $lang['alert_coupon_maximum_reached'] 	    = '<p class="alert-danger">Maximum number of redemptions for the coupon has been reached.</p>';
 $lang['alert_coupon_order_restriction'] 	= '<p class="alert-danger">Your coupon can be applied to <b>%s</b> orders only</p>';
+
+$lang['help_show_cart_images'] 			    = 'Show or hide cart menu images';
+$lang['help_cart_image_size'] 			    = '(Height x Width)';
 
 /* End of file cart_module_lang.php */
 /* Location: ./extensions/cart_module/language/english/cart_module_lang.php */

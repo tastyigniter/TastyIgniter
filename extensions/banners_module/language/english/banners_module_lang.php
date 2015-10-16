@@ -1,6 +1,14 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-$lang['text_heading'] 			= 'Banners';
+$lang['_text_title'] 		    = 'Banners';
+$lang['text_tab_general'] 		= 'General';
+
+$lang['column_banner'] 		    = 'Banner';
+$lang['column_dimension'] 		= 'Dimension (W x H)';
+
+$lang['label_banner'] 		    = 'Banner';
+$lang['label_width'] 		    = 'Width';
+$lang['label_height'] 		    = 'Height';
 
 $lang['button_banners'] 		= 'Add New Banner';
 

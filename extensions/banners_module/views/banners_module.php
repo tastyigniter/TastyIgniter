@@ -1,9 +1,5 @@
 <div id="banner-box" class="module-box">
 	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h3 class="panel-title"><?php echo $text_heading; ?></h3>
-		</div>
- 		
  		<div class="panel-body">
             <?php if ($type === 'image') { ?>
                 <a href="<?php echo $click_url; ?>">

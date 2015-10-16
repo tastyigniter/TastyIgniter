@@ -2,7 +2,7 @@
 	<div class="col-md-12">
 		<div class="row wrap-vertical">
 			<ul id="nav-tabs" class="nav nav-tabs">
-				<li class="active"><a href="#general" data-toggle="tab">General</a></li>
+				<li class="active"><a href="#general" data-toggle="tab"><?php echo lang('text_tab_general'); ?></a></li>
 			</ul>
 		</div>
 
@@ -10,10 +10,10 @@
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="input-title" class="col-sm-3 control-label">Title:</label>
+						<label for="input-heading" class="col-sm-3 control-label"><?php echo lang('label_heading'); ?></label>
 						<div class="col-sm-5">
-							<input type="text" name="title" id="input-title" class="form-control" value="<?php echo set_value('title', $title); ?>" />
-							<?php echo form_error('title', '<span class="text-danger">', '</span>'); ?>
+							<input type="text" name="heading" id="input-heading" class="form-control" value="<?php echo set_value('heading', $heading); ?>" />
+							<?php echo form_error('heading', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 				</div>
