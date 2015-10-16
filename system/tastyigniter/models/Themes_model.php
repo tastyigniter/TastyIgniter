@@ -19,6 +19,7 @@ class Themes_model extends TI_Model {
 					'extension_id' => $extension_id,
 					'name'         => $theme_name,
 					'title'        => isset($theme['config']['title']) ? $theme['config']['title'] : $theme_name,
+					'version'      => isset($theme['config']['version']) ? $theme['config']['version'] : '',
 					'description'  => isset($theme['config']['description']) ? $theme['config']['description'] : '',
 					'location'     => $theme['location'],
 					'screenshot'   => root_url($theme['path'] . '/screenshot.png'),

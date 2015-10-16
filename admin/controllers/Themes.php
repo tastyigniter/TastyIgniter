@@ -36,6 +36,7 @@ class Themes extends Admin_Controller {
 			$data['themes'][] = array(
 				'name'        => $theme['name'],
 				'title'       => $theme['title'],
+				'version'     => $theme['version'],
 				'description' => $theme['description'],
 				'location'    => ($theme['location'] === 'main') ? $this->lang->line('text_main') : $this->lang->line('text_admin'),
 				'active'      => $active,

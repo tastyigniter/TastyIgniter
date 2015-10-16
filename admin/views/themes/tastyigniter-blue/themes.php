@@ -22,7 +22,8 @@
 								<td><img class="img-responsive img-thumbnail" alt="" src="<?php echo $theme['screenshot']; ?>" style="width:200px!important;height:200px!important" /></td>
 								<td><?php echo $theme['title']; ?> <b class="small">(<?php if ($theme['active'] === '1') echo lang('text_is_default'); ?>)</b><br />
 									<i><?php echo $theme['description']; ?></i><br />
-                                    <span class="text-mute text-sm"><b><?php echo lang('text_location'); ?>:</b> <?php echo $theme['location']; ?></span>
+                                    <span class="text-mute text-sm"><b><?php echo lang('text_location'); ?>:</b> <?php echo $theme['location']; ?></span>&nbsp;&nbsp;|&nbsp;&nbsp;
+                                    <span class="text-mute text-sm"><b><?php echo lang('text_version'); ?>:</b> <?php echo $theme['version']; ?></span>
 								</td>
 								<td class="text-center">
 									<?php if ($theme['active'] === '1') { ?>

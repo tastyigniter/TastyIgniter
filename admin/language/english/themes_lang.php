@@ -18,6 +18,7 @@ $lang['text_enlarge'] 		            = 'Click to enlarge.';
 $lang['text_is_default'] 		        = 'Default';
 $lang['text_set_default'] 		        = 'Set Default';
 $lang['text_location'] 		            = 'Location';
+$lang['text_version'] 		            = 'Version';
 $lang['text_select_file_summary'] 		= '<h4>Select a File!</h4><p>You can select from a number of options to alter the look of your theme. <br /> The Theme Editor only supports source files(php, css, js,...) and image files.</p>';
 
 $lang['column_name'] 		            = 'Name';
