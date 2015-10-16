@@ -125,6 +125,12 @@ class Permissions_model extends TI_Model {
 				$permission_id = $permission['permission_id'];
 			}
 
+			$name = explode('.', $save['name']);
+
+			if (!isset($name[0]) OR !in_array(strtolower($name[0]), array('admin', 'site', 'module', 'payment'))) {
+				return FALSE;
+			}
+
 			$this->db->set('name', $save['name']);
 		}
 
