@@ -86,11 +86,8 @@ class Pages_model extends TI_Model {
 			$this->db->set('language_id', $save['language_id']);
 		}
 
-		if (isset($save['name'])) {
-			$this->db->set('name', $save['name']);
-		}
-
 		if (isset($save['title'])) {
+			$this->db->set('name', $save['title']);
 			$this->db->set('title', $save['title']);
 		}
 

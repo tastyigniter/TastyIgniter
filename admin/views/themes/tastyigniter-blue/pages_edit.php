@@ -12,13 +12,6 @@
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_name'); ?></label>
-						<div class="col-sm-5">
-							<input type="text" name="name" id="" class="form-control" value="<?php echo set_value('name', $name); ?>" />
-							<?php echo form_error('name', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
 						<label for="input-title" class="col-sm-3 control-label"><?php echo lang('label_title'); ?></label>
 						<div class="col-sm-5">
 							<input type="text" name="title" id="input-title" class="form-control" value="<?php echo set_value('title', $page_title); ?>" />
