@@ -154,8 +154,8 @@ class Paypal_model extends TI_Model {
 		$api_pass = (isset($settings['api_pass'])) ? $settings['api_pass'] : '';
 		$api_signature = (isset($settings['api_signature'])) ? $settings['api_signature'] : '';
 		$api_action = (isset($settings['api_action'])) ? $settings['api_action'] : '';
-		$return_uri = (isset($settings['return_uri'])) ? $settings['return_uri'] : '';
-		$cancel_uri = (isset($settings['cancel_uri'])) ? $settings['cancel_uri'] : '';
+		$return_uri = 'paypal_express/authorize';
+		$cancel_uri = 'paypal_express/cancel';
 
 		if (isset($settings['api_mode']) AND $settings['api_mode'] === 'sandbox') {
 			$api_mode = '.sandbox';
