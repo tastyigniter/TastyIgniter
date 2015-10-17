@@ -728,7 +728,7 @@ REPLACE INTO `ti_settings` (`setting_id`, `sort`, `item`, `value`, `serialized`)
 (10867, 'config', 'location_reserve_email', '0', 0),
 (10868, 'config', 'approve_reviews', '1', 0),
 (10869, 'config', 'new_order_status', '11', 0),
-(10870, 'config', 'complete_order_status', '15', 0),
+(10870, 'config', 'completed_order_status', '15', 0),
 (10878, 'config', 'canceled_order_status', '19', 0),
 (10871, 'config', 'guest_order', '1', 0),
 (10872, 'config', 'delivery_time', '45', 0),

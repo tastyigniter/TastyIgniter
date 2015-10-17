@@ -98,7 +98,7 @@ class Dashboard_model extends TI_Model {
 
 		if (is_array($range_query) AND ! empty($range_query)) {
 			$this->db->where($range_query);
-			$this->db->where('status_id', $this->config->item('complete_order_status'));
+			$this->db->where('status_id', $this->config->item('completed_order_status'));
 			$this->db->from('orders');
 			$total_orders_completed = $this->db->count_all_results();
 		}

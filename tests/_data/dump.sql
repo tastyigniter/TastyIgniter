@@ -3335,7 +3335,7 @@ VALUES
 	(15617,'config','location_reserve_email','1',0),
 	(15618,'config','approve_reviews','1',0),
 	(15619,'config','new_order_status','11',0),
-	(15620,'config','complete_order_status','15',0),
+	(15620,'config','completed_order_status','15',0),
 	(15621,'config','canceled_order_status','19',0),
 	(15622,'config','guest_order','1',0),
 	(15623,'config','delivery_time','45',0),

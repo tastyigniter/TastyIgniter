@@ -264,7 +264,7 @@ class Settings extends Admin_Controller {
 				'location_reserve_email'	=> $this->input->post('location_reserve_email'),
 				'approve_reviews'			=> $this->input->post('approve_reviews'),
 				'new_order_status'			=> $this->input->post('new_order_status'),
-				'complete_order_status'		=> $this->input->post('complete_order_status'),
+				'completed_order_status'		=> $this->input->post('completed_order_status'),
 				'canceled_order_status'		=> $this->input->post('canceled_order_status'),
 				'guest_order'				=> $this->input->post('guest_order'),
 				'delivery_time'				=> $this->input->post('delivery_time'),
@@ -352,7 +352,7 @@ class Settings extends Admin_Controller {
 		$this->form_validation->set_rules('location_reserve_email', 'lang:label_location_reserve_email', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('approve_reviews', 'lang:label_approve_reviews', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('new_order_status', 'lang:label_new_order_status', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('complete_order_status', 'lang:label_complete_order_status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('completed_order_status', 'lang:label_completed_order_status', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('canceled_order_status', 'lang:label_canceled_order_status', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('guest_order', 'lang:label_guest_order', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('delivery_time', 'lang:label_delivery_time', 'xss_clean|trim|required|integer');

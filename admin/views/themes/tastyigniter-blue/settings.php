@@ -373,24 +373,24 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-order-status-complete" class="col-sm-3 control-label"><?php echo lang('label_complete_order_status'); ?>
+						<label for="input-order-status-completed" class="col-sm-3 control-label"><?php echo lang('label_completed_order_status'); ?>
 							<span class="help-block"><?php echo lang('help_completed_order_status'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<select name="complete_order_status" id="input-order-status-complete" class="form-control">
+							<select name="completed_order_status" id="input-order-status-completed" class="form-control">
 								<optgroup label="Orders">
 									<?php foreach ($statuses as $status) { ?>
 									<?php if ($status['status_for'] === 'order') { ?>
-										<?php if ($status['status_id'] === config_item('complete_order_status')) { ?>
-											<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('complete_order_status', $status['status_id'], TRUE); ?>><?php echo $status['status_name']; ?></option>
+										<?php if ($status['status_id'] === config_item('completed_order_status')) { ?>
+											<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('completed_order_status', $status['status_id'], TRUE); ?>><?php echo $status['status_name']; ?></option>
 										<?php } else { ?>
-											<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('complete_order_status', $status['status_id']); ?>><?php echo $status['status_name']; ?></option>
+											<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('completed_order_status', $status['status_id']); ?>><?php echo $status['status_name']; ?></option>
 										<?php } ?>
 									<?php } ?>
 									<?php } ?>
 								</optgroup>
 							</select>
-							<?php echo form_error('complete_order_status', '<span class="text-danger">', '</span>'); ?>
+							<?php echo form_error('completed_order_status', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
