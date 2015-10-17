@@ -28,8 +28,6 @@ class Settings extends Admin_Controller {
         $post_data = $this->input->post();
 		$config_items = $this->config->config;
 
-        $data['current_time'] = mdate('%d-%m-%Y %H:%i:%s', time());
-
         foreach ($config_items as $key => $value) {
             if (isset($post_data[$key])) {
                 $data[$key] = $post_data[$key];
@@ -104,6 +102,22 @@ class Settings extends Admin_Controller {
 		foreach ($timezones as $key => $value) {
 			$data['timezones'][$key] = $value;
 		}
+
+		$data['date_formats'] = array(
+			'%j%S %F %Y',
+			'%d/%m/%Y',
+			'%m/%d/%Y',
+			'%Y-%m-%d',
+		);
+
+		$data['time_formats'] = array(
+			'%h:%i %A',
+			'%h:%i %a',
+			'%H:%i',
+		);
+
+		isset($data['date_format']) OR $data['date_format'] = $data['date_formats'][0];
+		isset($data['time_format']) OR $data['time_format'] = $data['time_formats'][0];
 
 		$data['countries'] = array();
 		$results = $this->Countries_model->getCountries();
@@ -240,6 +254,8 @@ class Settings extends Admin_Controller {
 				'site_logo' 				=> $this->input->post('site_logo'),
 				'country_id' 				=> $this->input->post('country_id'),
 				'timezone' 					=> $this->input->post('timezone'),
+				'date_format' 				=> $this->input->post('date_format'),
+				'time_format' 				=> $this->input->post('time_format'),
 				'currency_id' 				=> $this->input->post('currency_id'),
 				'language_id' 				=> $this->input->post('language_id'),
 				'customer_group_id' 		=> $this->input->post('customer_group_id'),
@@ -317,6 +333,8 @@ class Settings extends Admin_Controller {
 		$this->form_validation->set_rules('site_logo', 'lang:label_site_logo', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('country_id', 'lang:label_site_country', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('timezone', 'lang:label_timezone', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('date_format', 'lang:label_date_format', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('time_format', 'lang:label_time_format', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('currency_id', 'lang:label_site_currency', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('language_id', 'lang:label_site_language', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('customer_group_id', 'lang:label_customer_group', 'xss_clean|trim|required|integer');

@@ -24,6 +24,28 @@ class Reservation_module extends Main_Controller {
             redirect('home');
         }
 
+        $date_format = ($this->config->item('date_format')) ? $this->config->item('date_format') : '%d %M %y';
+        $time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
+
+        if (strpos($time_format, '%h') !== FALSE) {
+            $data['time_format'] = '12hr';
+            $time_format = '%g:%i %A';
+        } else {
+            $data['time_format'] = '24hr';
+            $time_format = '%H:%i';
+        }
+
+        if (strpos($date_format, 'm') === 1) {
+            $data['date_format'] = 'month_first';
+            $date_format = '%m-%d-%Y';
+        } else if (strpos($date_format, 'Y') === 1) {
+            $data['date_format'] = 'year_first';
+            $date_format = '%Y-%m-%d';
+        } else {
+            $data['date_format'] = 'day_first';
+            $date_format = '%d-%m-%Y';
+        }
+
 		$data['current_url'] 			= page_url().'?action=find_table&';
 		$data['reset_url'] 				= site_url('reservation');
 
@@ -56,7 +78,7 @@ class Reservation_module extends Main_Controller {
 			$data['location_id'] 	= $this->input->get('location');
             $data['current_url'] .= 'location='. $data['location_id'] .'&';
 		} else {
-			$data['location_id'] 	= '';
+			$data['location_id'] 	= $this->location->getId();
 		}
 
 		if ($this->input->get('guest_num')) {
@@ -70,24 +92,32 @@ class Reservation_module extends Main_Controller {
 			$data['date'] 	= $this->input->get('reserve_date');
             $data['current_url'] .= 'reserve_date='. urlencode($data['date']) .'&';
         } else {
-			$data['date'] 	= '';
+			$data['date'] 	= mdate($date_format, strtotime('+1 day', time()));
 		}
 
 		if ($this->input->get('selected_time')) {
-            $data['time'] 	= mdate('%g:%i %A', strtotime($this->input->get('selected_time')));
+            $data['time'] 	= mdate($time_format, strtotime($this->input->get('selected_time')));
             $data['current_url'] .= 'reserve_time='. urlencode($data['time']) .'&';
         } else if ($this->input->get('reserve_time')) {
-			$data['time'] 	= mdate('%g:%i %A', strtotime($this->input->get('reserve_time')));
+			$data['time'] 	= mdate($time_format, strtotime($this->input->get('reserve_time')));
             $data['current_url'] .= 'reserve_time='. urlencode($data['time']) .'&';
         } else {
 			$data['time'] 	= '';
 		}
 
+        $data['reservation_times'] = array();
+        $start_time = mdate('%H:%i', strtotime($this->location->openingTime()) + $this->location->getReservationInterval() * 60);
+
+        $reservation_times = time_range($start_time, $this->location->closingTime(), $this->location->getReservationInterval());    // retrieve the location delivery times from location library
+        foreach ($reservation_times as $key => $value) {                                            // loop through delivery times
+            $data['reservation_times'][$value] = mdate($time_format, strtotime($value));
+        }
+
         $data['time_slots'] = array();
         if (!empty($response['time_slots'])) {
             for ($i = 0; $i < 5; $i++) {
                 if (isset($response['time_slots'][$i])) {
-                    $time = mdate('%g:%i %A', strtotime($response['time_slots'][$i]));
+                    $time = mdate($time_format, strtotime($response['time_slots'][$i]));
                     $data['time_slots'][$i]['state'] = '';
                     $data['time_slots'][$i]['time'] = $time;
                 } else {

@@ -47,7 +47,9 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-timezone" class="col-sm-3 control-label"><?php echo lang('label_timezone'); ?></label>
+						<label for="input-timezone" class="col-sm-3 control-label"><?php echo lang('label_timezone'); ?>
+							<span class="help-block"><?php echo lang('help_timezone'); ?></span>
+						</label>
 						<div class="col-sm-5">
 							<select name="timezone" id="" class="form-control">
 								<?php foreach ($timezones as $key => $value) { ?>
@@ -58,8 +60,38 @@
                                     <?php } ?>
 								<?php } ?>
 							</select>
-							<span class="help-block"><?php echo lang('text_utc_time'); ?>: <?php echo $current_time; ?></span>
+							<span class="help-block"><?php echo lang('text_utc_time'); ?>: <?php echo mdate("{$date_format} {$time_format}", time()); ?></span>
 							<?php echo form_error('timezone', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-date-format" class="col-sm-3 control-label"><?php echo lang('label_date_format'); ?></label>
+						<div class="col-sm-6">
+							<div class="btn-group btn-group-toggle btn-group-<?php echo count($date_formats); ?>" data-toggle="buttons">
+								<?php foreach ($date_formats as $format) { ?>
+									<?php if ($format === $date_format) { ?>
+										<label class="btn btn-success active"><input type="radio" name="date_format" value="<?php echo $format; ?>" <?php echo set_radio('date_format', $format, TRUE); ?>><?php echo mdate($format, time()); ?></label>
+									<?php } else { ?>
+										<label class="btn btn-success"><input type="radio" name="date_format" value="<?php echo $format; ?>" <?php echo set_radio('date_format', $format); ?>><?php echo mdate($format, time()); ?></label>
+									<?php } ?>
+								<?php }?>
+							</div>
+							<?php echo form_error('date_format', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-time-format" class="col-sm-3 control-label"><?php echo lang('label_time_format'); ?></label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-toggle btn-group-<?php echo count($time_formats); ?>" data-toggle="buttons">
+								<?php foreach ($time_formats as $format) { ?>
+									<?php if ($format === $time_format) { ?>
+										<label class="btn btn-success active"><input type="radio" name="time_format" value="<?php echo $format; ?>" <?php echo set_radio('time_format', $format, TRUE); ?>><?php echo mdate($format, time()); ?></label>
+									<?php } else { ?>
+										<label class="btn btn-success"><input type="radio" name="time_format" value="<?php echo $format; ?>" <?php echo set_radio('time_format', $format); ?>><?php echo mdate($format, time()); ?></label>
+									<?php } ?>
+								<?php }?>
+							</div>
+							<?php echo form_error('time_format', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">

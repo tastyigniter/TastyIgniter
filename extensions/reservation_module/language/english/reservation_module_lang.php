@@ -10,6 +10,7 @@ $lang['text_no_table'] 			        = 'No tables available at your local restauran
 $lang['text_find_msg'] 			        = 'Please use the form below to find a table to reserve';
 $lang['text_time_msg'] 			        = 'Available reservation time slots on %s for %s guests';
 $lang['text_no_time_slot'] 		        = '<span class="text-danger">No reservation time slot available, please go back to check your table details.</span>';
+$lang['text_location_closed']           = 'Sorry, but we\'re closed, come back during opening hours';
 
 $lang['label_status'] 		            = 'Status';
 $lang['label_location'] 		        = 'Location';

@@ -50,6 +50,9 @@ class Reservations extends Main_Controller {
 		$data['back_url'] 				= site_url('account/account');
 		$data['new_reservation_url'] 	= site_url('reservation');
 
+		$date_format = ($this->config->item('date_format')) ? $this->config->item('date_format') : '%d %M %y';
+		$time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
+
 		$data['reservations'] = array();
 		$results = $this->Reservations_model->getList($filter);								// retrieve customer reservations based on customer id from getMainReservations method in Reservations model
 		foreach ($results as $result) {
@@ -57,8 +60,8 @@ class Reservations extends Main_Controller {
 				'reservation_id' 		=> $result['reservation_id'],
 				'location_name' 		=> $result['location_name'],
 				'status_name' 			=> $result['status_name'],
-				'reserve_date' 			=> mdate('%d %M %y', strtotime($result['reserve_date'])),
-				'reserve_time'			=> mdate('%H:%i', strtotime($result['reserve_time'])),
+				'reserve_date' 			=> day_elapsed($result['reserve_date']),
+				'reserve_time'			=> mdate($time_format, strtotime($result['reserve_time'])),
 				'guest_num'				=> $result['guest_num'],
 				'table_name' 			=> $result['table_name'],
 				'view' 					=> site_url('account/reservations/view/' . $result['reservation_id']),
@@ -99,6 +102,9 @@ class Reservations extends Main_Controller {
 
 		$data['back_url'] 				= site_url('account/reservations');
 
+		$date_format = ($this->config->item('date_format')) ? $this->config->item('date_format') : '%d %M %y';
+		$time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
+
 		$data['occasions'] = array(
 			'0' => 'not applicable',
 			'1' => 'birthday',
@@ -110,8 +116,8 @@ class Reservations extends Main_Controller {
 
         $data['reservation_id'] 	= $result['reservation_id'];
         $data['guest_num'] 			= $result['guest_num'] .' person(s)';
-        $data['reserve_date'] 		= mdate('%d %M %y', strtotime($result['reserve_date']));
-        $data['reserve_time'] 		= mdate('%H:%i', strtotime($result['reserve_time']));
+        $data['reserve_date'] 		= mdate($date_format, strtotime($result['reserve_date']));
+        $data['reserve_time'] 		= mdate($time_format, strtotime($result['reserve_time']));
         $data['occasion_id'] 		= $result['occasion_id'];
         $data['status_name'] 		= $result['status_name'];
         $data['table_name'] 		= $result['table_name'];

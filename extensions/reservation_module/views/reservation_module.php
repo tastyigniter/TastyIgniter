@@ -57,11 +57,20 @@
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-3 wrap-none <?php echo (form_error('reserve_time')) ? 'has-error' : ''; ?>">
-                                <label class="sr-only" for="date"><?php echo lang('label_time'); ?></label>
-                                <div class="input-group">
-                                    <input type="text" name="reserve_time" id="time" class="form-control" value="<?php echo set_value('reserve_time', $time); ?>" />
-                                    <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
-                                </div>
+                                <label class="sr-only" for="time"><?php echo lang('label_time'); ?></label>
+	                            <?php if ($reservation_times) { ?>
+		                            <select name="reserve_time" id="time" class="form-control">
+			                            <?php foreach ($reservation_times as $key => $value) { ?>
+				                            <?php if ($value == $time) { ?>
+					                            <option value="<?php echo $key; ?>" selected="selected"><?php echo $value; ?></option>
+				                            <?php } else { ?>
+					                            <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
+				                            <?php } ?>
+			                            <?php } ?>
+		                            </select>
+	                            <?php } else { ?>
+		                            <br /><?php echo lang('text_location_closed'); ?>
+	                            <?php } ?>
                             </div>
                         </div>
                         <?php echo form_error('location', '<span class="text-danger">', '</span>'); ?>
@@ -167,10 +176,19 @@
             $('.display-local').fadeOut();
         });
 
-        $('#time').timepicker();
+//        $('#time').timepicker({
+//            <?php //echo ($time_format === '24hr') ? 'showMeridian: false' : 'showMeridian: true'; ?>
+//        });
 
         $('#date').datepicker({
-            format: 'dd-mm-yyyy'
+            <?php if ($date_format === 'year_first') { ?>
+                <?php echo "format: 'yyyy-mm-dd'" ?>
+            <?php } else if ($date_format === 'month_first') { ?>
+                <?php echo "format: 'mm-dd-yyyy'" ?>
+            <?php } else { ?>
+                <?php echo "format: 'dd-mm-yyyy'" ?>
+            <?php } ?>
+
         });
 
         if ($('input[name="action"]').val() == 'view_summary') {

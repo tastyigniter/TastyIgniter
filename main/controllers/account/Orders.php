@@ -51,6 +51,7 @@ class Orders extends Main_Controller {
         } else {
             $data['new_order_url'] = site_url('local/all');
         }
+		$time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
 
 		$data['orders'] = array();
 		$results = $this->Orders_model->getList($filter);			// retrieve customer orders based on customer id from getMainOrders method in Orders model
@@ -62,8 +63,8 @@ class Orders extends Main_Controller {
 			$data['orders'][] = array(															// create array of customer orders to pass to view
 				'order_id' 				=> $result['order_id'],
 				'location_name' 		=> $result['location_name'],
-				'date_added' 			=> mdate('%d %M %y', strtotime($result['date_added'])),
-				'order_time'			=> mdate('%H:%i', strtotime($result['order_time'])),
+				'date_added' 			=> day_elapsed($result['date_added']),
+				'order_time'			=> mdate($time_format, strtotime($result['order_time'])),
 				'total_items'			=> $result['total_items'],
 				'order_total' 			=> $this->currency->format($result['order_total']),		// add currency symbol and format order total to two decimal places
 				'order_type' 			=> ucwords(strtolower($order_type)),					// convert string to lower case and capitalize first letter
@@ -107,9 +108,12 @@ class Orders extends Main_Controller {
 		$data['reorder_url'] 			= site_url('account/orders/reorder/'. $order_id .'/'. $result['location_id']);
 		$data['back_url'] 				= site_url('account/orders');
 
-        $data['order_id'] 		        = $result['order_id'];
-        $data['date_added'] 	        = mdate('%d %M %y', strtotime($result['date_added']));
-        $data['order_time'] 	        = mdate('%H:%i', strtotime($result['order_time']));
+		$date_format = ($this->config->item('date_format')) ? $this->config->item('date_format') : '%d %M %y';
+		$time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
+
+		$data['order_id'] 		        = $result['order_id'];
+        $data['date_added'] 	        = mdate($date_format, strtotime($result['date_added']));
+        $data['order_time'] 	        = mdate($time_format, strtotime($result['order_time']));
         $data['order_type'] 		    = $result['order_type'];
 
         $this->load->library('country');

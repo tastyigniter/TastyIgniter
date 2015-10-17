@@ -37,7 +37,7 @@
                                         <dl>
                                             <dd class="text-info">
                                                 <?php if ($location['opening_status'] === '1') { ?>
-                                                    <?php if ($location['opening_time'] == '00:00' AND $location['closing_time'] == '23:59') { ?>
+                                                    <?php if ($location['open_24_hour'] === TRUE) { ?>
                                                         <span class="fa fa-clock-o"></span>&nbsp;&nbsp;<span><?php echo lang('text_24h'); ?></span>
                                                     <?php } else if (empty($opening_status)) { ?>
                                                         <span class="fa fa-clock-o"></span>&nbsp;&nbsp;<span><?php echo $location['opening_time']; ?> - <?php echo $location['closing_time']; ?></span>

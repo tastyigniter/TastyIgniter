@@ -64,6 +64,8 @@ class Local extends Main_Controller {
 
     public function info($data = array()) {
 
+	    $time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
+
         if ($this->config->item('maps_api_key')) {
             $map_key = '&key=' . $this->config->item('maps_api_key');
         } else {
@@ -77,15 +79,19 @@ class Local extends Main_Controller {
         foreach ($opening_hours as $hour) {
             if ($hour['status'] !== '1') {
                 $time = $this->lang->line('text_closed');
-            } else if ($hour['open'] === '00:00' AND $hour['close'] === '23:59') {
-                $time = $this->lang->line('text_24h');
             } else {
-                $time = $hour['open'] . ' - ' . $hour['close'];
+	            $time = '('.mdate($time_format, strtotime($hour['open'])) . ' - ' . mdate($time_format, strtotime($hour['close'])) .')';
             }
+
+	        $type = '';
+	        if ($hour['status'] === '1' AND $hour['open'] === '00:00' AND $hour['close'] === '23:59') {
+		        $type = $this->lang->line('text_24h');
+	        }
 
             $data['opening_hours'][] = array(
                 'day'  => $hour['day'],
-                'time' => $time
+                'time' => $time,
+	            'type' => $type,
             );
         }
 
@@ -94,7 +100,7 @@ class Local extends Main_Controller {
         $data['has_collection']     = $this->location->hasCollection();
         $data['delivery_time']      = $this->location->deliveryTime();
         $data['collection_time']    = $this->location->collectionTime();
-        $data['last_order_time']    = $this->location->lastOrderTime();
+        $data['last_order_time']    = mdate($time_format, strtotime($this->location->lastOrderTime()));
         $data['local_description']  = $this->location->getDescription();
         $data['map_address']        = $this->location->getAddress();                                        // retrieve local location data
         $data['location_telephone'] = $this->location->getTelephone();                                        // retrieve local location data
@@ -132,7 +138,9 @@ class Local extends Main_Controller {
     }
 
     public function reviews($data = array()) {
-        $url = '?';
+	    $date_format = ($this->config->item('date_format')) ? $this->config->item('date_format') : '%d %M %y';
+
+	    $url = '?';
         $filter = array();
         $filter['location_id'] = (int) $this->location->getId();
 
@@ -160,7 +168,7 @@ class Local extends Main_Controller {
                 'quality'  => $result['quality'],
                 'delivery' => $result['delivery'],
                 'service'  => $result['service'],
-                'date'     => mdate('%d %M %y', strtotime($result['date_added'])),
+                'date'     => mdate($date_format, strtotime($result['date_added'])),
                 'text'     => $result['review_text']
             );
         }
@@ -193,7 +201,9 @@ class Local extends Main_Controller {
 		$this->template->setHeading($this->lang->line('text_heading'));
 
 		$current_time = mdate('%H:%i', time());
-        $review_totals = $this->Reviews_model->getTotalsbyId();                                    // retrieve all customer reviews from getMainList method in Reviews model
+	    $time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
+
+	    $review_totals = $this->Reviews_model->getTotalsbyId();                                    // retrieve all customer reviews from getMainList method in Reviews model
 
 		$data['locations'] = array();
 		if ($locations) {
@@ -223,9 +233,9 @@ class Local extends Main_Controller {
 					$open_or_closed = $this->lang->line('text_is_closed');
 				}
 
-                $delivery_time = (!empty($location['delivery_time'])) ? $location['delivery_time'] : $this->config->item('delivery_time');
+				$delivery_time = (!empty($location['delivery_time'])) ? $location['delivery_time'] : $this->config->item('delivery_time');
                 $collection_time = (!empty($location['collection_time'])) ? $location['collection_time'] : $this->config->item('collection_time');
-                $last_order_time = (is_numeric($location['last_order_time']) AND $location['last_order_time'] > 0) ? mdate($current_time, strtotime($opening_time) - ($location['last_order_time'] * 60)) : $closing_time;
+                $last_order_time = (is_numeric($location['last_order_time']) AND $location['last_order_time'] > 0) ? mdate('%H:%i', strtotime($closing_time) - ($location['last_order_time'] * 60)) : $closing_time;
 
                 $address = $this->country->addressFormat(array(
 					'address_1'      => $location['location_address_1'],
@@ -247,14 +257,15 @@ class Local extends Main_Controller {
                     'location_image' 		=> $location_image,
                     'open_or_closed'		=> $open_or_closed,
                     'opening_status'		=> $opening_status,
-                    'opening_time'			=> mdate('%h:%i %a', strtotime($opening_time)),
-                    'closing_time'			=> mdate('%h:%i %a', strtotime($closing_time)),
+                    'open_24_hour'			=> ($opening_time == '00:00' AND $closing_time == '23:59') ? TRUE : FALSE,
+                    'opening_time'			=> mdate($time_format, strtotime($opening_time)),
+                    'closing_time'			=> mdate($time_format, strtotime($closing_time)),
                     'offers'				=> $offers,
                     'min_total' 			=> (isset($location['min_total']) AND $location['min_total'] > 0) ? $this->currency->format($location['min_total']) : 'None',
                     'delivery_charge' 		=> (isset($location['delivery_charge']) AND $location['delivery_charge'] > 0) ? sprintf($this->lang->line('text_delivery_charge'), $this->currency->format($location['delivery_charge'])) : $this->lang->line('text_free_delivery'),
                     'delivery_time' 		=> ($delivery_time === '0') ? $this->lang->line('text_asap') : $delivery_time .' '. $this->lang->line('text_minutes'),
                     'collection_time' 		=> ($collection_time === '0') ? $this->lang->line('text_asap') : $collection_time .' '. $this->lang->line('text_minutes'),
-                    'last_order_time'		=> $last_order_time,
+                    'last_order_time'		=> mdate($time_format, strtotime($last_order_time)),
                     'href'					=> site_url('local?location_id='. $location['location_id'])
 				);
 			}

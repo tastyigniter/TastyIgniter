@@ -18,8 +18,8 @@ class Location {
 	private $closing_time = '23:59';
 	private $opening_status;
 	private $opened = FALSE;
-	private $datestring = "%Y/%m/%d";
-	private $timestring = "%H:%i";
+	private $dateFormat = "%Y/%m/%d";
+	private $timeFormat = "%H:%i";
 	private $current_day;
 	private $current_date;
 	private $current_time;
@@ -33,10 +33,12 @@ class Location {
 
 		$time = now();
 		$this->current_day = date('l');
-		$this->current_date = mdate($this->datestring, $time);
-		$this->current_time = mdate($this->timestring, $time);
+		$this->current_time = mdate($this->timeFormat, $time);
 
-		$this->getLocations();
+//	    $this->dateFormat = ($this->CI->config->item('date_format')) ? $this->CI->config->item('date_format') : $this->dateFormat;
+//	    $this->timeFormat = ($this->CI->config->item('time_format')) ? $this->CI->config->item('time_format') : $this->timeFormat;
+
+	    $this->getLocations();
 		$this->getOpeningHours();
 
 		$local_info = $this->CI->session->userdata('local_info');
@@ -71,7 +73,7 @@ class Location {
 	}
 
 	public function currentDate() {
-		return $this->current_date;
+		return mdate($this->dateFormat, time());
 	}
 
 	public function currentTime() {
@@ -263,7 +265,7 @@ class Location {
 	}
 
 	public function lastOrderTime() {
-		return (is_numeric($this->local_info['last_order_time']) AND $this->local_info['last_order_time'] > 0) ? mdate($this->timestring, strtotime($this->closing_time) - ($this->local_info['last_order_time'] * 60)) : $this->closing_time;
+		return (is_numeric($this->local_info['last_order_time']) AND $this->local_info['last_order_time'] > 0) ? mdate($this->timeFormat, strtotime($this->closing_time) - ($this->local_info['last_order_time'] * 60)) : mdate($this->timeFormat, strtotime($this->closing_time));
 	}
 
 	public function payments($split = '') {
@@ -273,7 +275,7 @@ class Location {
 	}
 
 	public function checkDeliveryTime($time) {
-		$time = mdate($this->timestring, strtotime($time));
+		$time = mdate($this->timeFormat, strtotime($time));
     	return (($this->opening_status === '1' AND $this->opening_time <= $time AND $this->closing_time >= $time) OR ($this->opening_time === '00:00' AND $this->closing_time === '00:00'));
 	}
 
@@ -492,8 +494,8 @@ class Location {
 					$opening_hours[$result['location_id']][] = array(
 						'location_id'	=> $result['location_id'],
 						'day'			=> $weekdays[$result['weekday']],
-						'open'			=> ($result['opening_time'] === '00:00:00') ? '00:00' : mdate($this->timestring, strtotime($result['opening_time'])),
-						'close'			=> ($result['closing_time'] === '00:00:00') ? '00:00' : mdate($this->timestring, strtotime($result['closing_time'])),
+						'open'			=> ($result['opening_time'] === '00:00:00') ? '00:00' : mdate($this->timeFormat, strtotime($result['opening_time'])),
+						'close'			=> ($result['closing_time'] === '00:00:00') ? '00:00' : mdate($this->timeFormat, strtotime($result['closing_time'])),
 						'status'		=> $result['status']
 					);
 				}
@@ -509,9 +511,7 @@ class Location {
         $opening_hours = $this->getOpeningHours();
         $weekdays = array('Monday' => 0, 'Tuesday' => 1, 'Wednesday' => 2, 'Thursday' => 3, 'Friday' => 4, 'Saturday' => 5, 'Sunday' => 6);
 
-        $day = (!isset($weekdays[$day])) ? date('l', strtotime($day)) : $day;
-
-        $hour = array('open' => '00:00:00', 'close' => '00:00:00');
+        $day = !isset($weekdays[$day]) ? date('l', strtotime($day)) : $day;
 
         if (isset($opening_hours[$this->location_id])) {
             foreach ($opening_hours[$this->location_id] as $hour) {
@@ -521,7 +521,7 @@ class Location {
             }
         }
 
-        return $hour;
+        return array('day' => $day, 'open' => '00:00:00', 'close' => '00:00:00', 'status' => '0');
     }
 
     public function getPolygons() {

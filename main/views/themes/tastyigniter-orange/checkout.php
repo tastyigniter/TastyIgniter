@@ -90,11 +90,11 @@
                                             <?php if ($delivery_times) { ?>
                                                 <select name="order_time" id="order-time" class="form-control">
                                                     <option value="<?php echo $asap_time; ?>"><?php echo lang('text_asap'); ?></option>
-                                                    <?php foreach ($delivery_times as $delivery_time) { ?>
-                                                        <?php if ($delivery_time['24hr'] === $order_time) { ?>
-                                                            <option value="<?php echo $delivery_time['24hr']; ?>" selected="selected"><?php echo $delivery_time['12hr']; ?></option>
+                                                    <?php foreach ($delivery_times as $key => $value) { ?>
+                                                        <?php if ($key === $order_time) { ?>
+                                                            <option value="<?php echo $key; ?>" selected="selected"><?php echo $value; ?></option>
                                                         <?php } else { ?>
-                                                            <option value="<?php echo $delivery_time['24hr']; ?>"><?php echo $delivery_time['12hr']; ?></option>
+                                                            <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
                                                         <?php } ?>
                                                     <?php } ?>
                                                 </select>

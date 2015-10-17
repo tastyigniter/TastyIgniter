@@ -90,7 +90,9 @@ class Reservation extends Main_Controller {
         if ($result = $this->Reservations_model->getReservation($this->session->tempdata('last_reservation_id'), $this->customer->getId())) {
 			$guest_num = $result['guest_num'] .' person(s)';
 
-			$data['text_success'] 	= sprintf($this->lang->line('text_success'), $result['location_name'], $guest_num, mdate('%l, %F %j, %Y', strtotime($result['reserve_date'])), mdate('%h:%i %a', strtotime($result['reserve_time'])));
+	        $time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
+
+			$data['text_success'] 	= sprintf($this->lang->line('text_success'), $result['location_name'], $guest_num, mdate('%l, %F %j, %Y', strtotime($result['reserve_date'])), mdate($time_format, strtotime($result['reserve_time'])));
 			$data['text_greetings'] = sprintf($this->lang->line('text_greetings'), $result['first_name'] .' '. $result['last_name']);
 			$data['text_signature'] = sprintf($this->lang->line('text_signature'), $this->config->item('site_name'));
 			$this->session->unset_userdata('reservation');

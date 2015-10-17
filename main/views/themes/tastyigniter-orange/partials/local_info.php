@@ -28,7 +28,7 @@
                 <dl class="dl-horizontal opening-hour">
                     <?php foreach ($opening_hours as $opening_hour) { ?>
                         <dt><?php echo $opening_hour['day']; ?>:</dt>
-                        <dd><?php echo $opening_hour['time']; ?></dd>
+                        <dd><?php echo $opening_hour['time']; ?> <span class="small text-muted"><?php echo $opening_hour['type']; ?></span></dd>
                     <?php } ?>
                 </dl>
             <?php } ?>

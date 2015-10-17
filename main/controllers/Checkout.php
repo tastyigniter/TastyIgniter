@@ -112,7 +112,9 @@ class Checkout extends Main_Controller {
             $payment_method = 'N/A';
         }
 
-        $data['order_details'] = sprintf($this->lang->line('text_order_info'), $order_type,  mdate('%d %M %y - %H:%i', strtotime($order_info['date_added'])), mdate('%d %M %y - %H:%i', strtotime($order_info['order_time'])), $payment_method);
+        $date_format = ($this->config->item('date_format')) ? $this->config->item('date_format') : '%d %M %y';
+        $time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
+        $data['order_details'] = sprintf($this->lang->line('text_order_info'), $order_type,  mdate($date_format, strtotime($order_info['date_added'])), mdate($time_format, strtotime($order_info['order_time'])), $payment_method);
 
         $data['menus'] = array();
         $menus = $this->Orders_model->getOrderMenus($order_info['order_id']);
@@ -326,20 +328,19 @@ class Checkout extends Main_Controller {
             );
         }
 
-        $start_time = $this->location->openingTime();
-        $end_time = $this->location->lastOrderTime();											// retrieve location closing time from location library
+        $time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
         $current_time = $this->location->currentTime(); 								// retrieve the location current time from location library
-        $delivery_time = $this->location->deliveryTime();
 
-        $data['asap_time'] = mdate('%H:%i', strtotime($current_time) + $delivery_time * 60);
         $data['delivery_times'] = array();
-        $delivery_times = time_range($start_time, $end_time, $delivery_time); 	// retrieve the location delivery times from location library
-        foreach ($delivery_times as $key => $value) {											// loop through delivery times
-            if (strtotime($value) > (strtotime($current_time)) OR $this->config->item('future_orders') === '1') {
-                $data['delivery_times'][] = array( 													// create array of delivery_times data to pass to view
-                    '12hr'		=> mdate('%h:%i %a', strtotime($value)),
-                    '24hr'		=> $value
-                );
+        $data['asap_time'] = mdate('%H:%i', strtotime($current_time) + $this->location->deliveryTime() * 60);
+
+        if (strtotime($current_time) > strtotime($this->location->openingTime())) {
+            $delivery_times = time_range($this->location->openingTime(), $this->location->lastOrderTime(), $this->location->deliveryTime());    // retrieve the location delivery times from location library
+
+            foreach ($delivery_times as $key => $value) {                                            // loop through delivery times
+                if ((strtotime($value) > strtotime($data['asap_time'])) OR $this->config->item('future_orders') === '1') {
+                    $data['delivery_times'][$value] = mdate($time_format, strtotime($value));
+                }
             }
         }
 

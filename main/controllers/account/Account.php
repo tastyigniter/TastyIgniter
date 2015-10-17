@@ -26,6 +26,8 @@ class Account extends Main_Controller {
 	}
 
 	public function index() {
+		$time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
+
 		$data['inbox_total'] = $this->Messages_model->getUnreadCount($this->customer->getId());					// retrieve total number of customer messages from getUnreadCount method in Messages model
 
 		$this->template->setBreadcrumb('<i class="fa fa-home"></i>', '/');
@@ -66,8 +68,8 @@ class Account extends Main_Controller {
 		foreach ($results as $result) {
 			$data['orders'][] = array(															// create array of customer orders to pass to view
 				'order_id' 				=> $result['order_id'],
-				'date_added' 			=> mdate('%d %M %y', strtotime($result['date_added'])),
-				'order_time'			=> mdate('%H:%i', strtotime($result['order_time'])),
+				'date_added' 			=> day_elapsed($result['date_added']),
+				'order_time'			=> mdate($time_format, strtotime($result['order_time'])),
 				'status_name' 			=> $result['status_name'],
 				'view' 					=> site_url('account/orders/view/' . $result['order_id'])
 			);
@@ -79,8 +81,8 @@ class Account extends Main_Controller {
 			$data['reservations'][] = array(															// create array of customer reservations to pass to view
 				'reservation_id' 		=> $result['reservation_id'],
 				'status_name' 			=> $result['status_name'],
-				'reserve_date' 			=> mdate('%d %M %y', strtotime($result['reserve_date'])),
-				'reserve_time'			=> mdate('%H:%i', strtotime($result['reserve_time'])),
+				'reserve_date' 			=> day_elapsed($result['reserve_date']),
+				'reserve_time'			=> mdate($time_format, strtotime($result['reserve_time'])),
 				'view' 					=> site_url('account/reservations/view/' . $result['reservation_id'])
 			);
 		}
@@ -89,7 +91,7 @@ class Account extends Main_Controller {
 		$results = $this->Messages_model->getList($filter + array('sort_by' => 'messages.date_added'));									// retrieve all customer messages from getMainInbox method in Messages model
 		foreach ($results as $result) {
 			$data['messages'][] = array(														// create array of customer messages to pass to view
-				'date_added'	=> mdate('%d %M %y - %H:%i', strtotime($result['date_added'])),
+				'date_added'	=> day_elapsed($result['date_added']),
 				'subject' 		=> $result['subject'],
 				'body' 			=> substr(strip_tags(html_entity_decode($result['body'], ENT_QUOTES, 'UTF-8')), 0, 50) . '..',
 				'state'			=> ($result['state'] === '0') ? 'unread' : 'read',

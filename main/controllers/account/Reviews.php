@@ -42,6 +42,8 @@ class Reviews extends Main_Controller {
 
 		$data['back_url'] 					= site_url('account/account');
 
+		$date_format = ($this->config->item('date_format')) ? $this->config->item('date_format') : '%d %M %y';
+
 		$data['reviews'] = array();
 		$results = $this->Reviews_model->getList($filter);									// retrieve all customer reviews from getMainList method in Reviews model
 		foreach ($results as $result) {
@@ -52,7 +54,7 @@ class Reviews extends Main_Controller {
 				'quality' 			=> $result['quality'],
 				'delivery' 			=> $result['delivery'],
 				'service' 			=> $result['service'],
-				'date'				=> mdate('%d %M %y', strtotime($result['date_added'])),
+				'date'				=> mdate($date_format, strtotime($result['date_added'])),
 				'view' 				=> site_url('account/reviews/view/'. $result['review_id'])
 			);
 		}
@@ -90,6 +92,9 @@ class Reviews extends Main_Controller {
 
 		$data['back_url'] 					= site_url('account/reviews');
 
+		$date_format = ($this->config->item('date_format')) ? $this->config->item('date_format') : '%d %M %y';
+		$time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
+
 		$data['location_name'] 		= $result['location_name'];
 		$data['sale_id'] 			= $result['sale_id'];
 		$data['sale_type'] 			= $result['sale_type'];
@@ -97,7 +102,7 @@ class Reviews extends Main_Controller {
 		$data['quality'] 			= $result['quality'];
 		$data['delivery'] 			= $result['delivery'];
 		$data['service'] 			= $result['service'];
-		$data['date'] 				= mdate('%H:%i - %d %M %y', strtotime($result['date_added']));
+		$data['date'] 				= mdate("{$time_format} - {$date_format}", strtotime($result['date_added']));
 		$data['review_text'] 		= $result['review_text'];
 
 		$this->template->render('account/review_view', $data);
