@@ -36,10 +36,6 @@ $lang['alert_local_future_order'] 		    = '<p class="alert-danger"><b>Restaurant
 $lang['alert_no_search_setting'] 		    = '<p class="alert-danger">Location Search By setting has not been specified.</p>';
 $lang['alert_invalid_search_query'] 	    = '<p class="alert-danger">We couldn\'t locate the entered address/postcode, please enter a valid address/postcode.</p>';
 $lang['alert_no_found_restaurant'] 	        = '<p class="alert-danger">We do not have any local restaurant near you.</p>';
-$lang['alert_min_delivery_order_total'] 	= '<p class="alert-danger">Order total is below the minimum delivery order total.</p>';
-$lang['alert_delivery_unavailable'] 		= '<p class="alert-danger">Delivery is unavailable at the selected restaurant.</p>';
-$lang['alert_collection_unavailable'] 	    = '<p class="alert-danger">Collection is unavailable at the selected restaurant.</p>';
-$lang['alert_delivery_coverage']            = '<p class="alert-danger">Sorry, this restaurant does not deliver to your address</b>';
 
 
 /* End of file local_module_lang.php */

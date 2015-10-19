@@ -192,15 +192,31 @@ class Cart_module extends Main_Controller {
 		$this->load->view('cart_module/cart_options', $data);
 	}
 
-    public function remove() {																	// remove() method to update cart
+    public function order_type() {																	// _updateModule() method to update cart
         $json = array();
 
         if (!$json) {
-            if ($this->cart->update(array ('rowid' => $this->input->post('row_id'), 'qty' => $this->input->post('quantity')))) {											// pass the cart_data array to add item to cart, if successful
-                $json['success'] = $this->lang->line('alert_menu_updated');						// display success message
-            } else {																			// else redirect to menus page
-                $json['redirect'] = site_url(referrer_url());
+            $this->load->library('location');
+            $this->load->library('cart');
+
+            $order_type = (is_numeric($this->input->post('order_type'))) ? $this->input->post('order_type') : '1';
+
+            if ($order_type === '1') {
+                if ( ! $this->location->hasDelivery()) {
+                    $json['error'] = $this->lang->line('alert_delivery_unavailable');
+                } else if ($this->location->hasSearchQuery() AND $this->location->hasDelivery() AND ! $this->location->checkDeliveryCoverage()) {
+                    $json['error'] = $this->lang->line('alert_delivery_coverage');
+                } else if ($this->cart->contents() AND ! $this->location->checkMinimumOrder($this->cart->total())) {                            // checks if cart contents is empty
+                    $json['error'] = sprintf($this->lang->line('alert_min_delivery_order_total'), $this->currency->format($this->location->minimumOrder()));
+                }
+
+            } else if ($order_type === '2') {
+                if ( ! $this->location->hasCollection()) {
+                    $json['error'] = $this->lang->line('alert_collection_unavailable');
+                }
             }
+
+            $this->location->setOrderType($order_type);
         }
 
         $this->output->set_output(json_encode($json));	// encode the json array and set final out to be sent to jQuery AJAX
@@ -230,6 +246,20 @@ class Cart_module extends Main_Controller {
         }
 
         $this->output->set_output(json_encode($json));											// encode the json array and set final out to be sent to jQuery AJAX
+    }
+
+    public function remove() {																	// remove() method to update cart
+        $json = array();
+
+        if (!$json) {
+            if ($this->cart->update(array ('rowid' => $this->input->post('row_id'), 'qty' => $this->input->post('quantity')))) {											// pass the cart_data array to add item to cart, if successful
+                $json['success'] = $this->lang->line('alert_menu_updated');						// display success message
+            } else {																			// else redirect to menus page
+                $json['redirect'] = site_url(referrer_url());
+            }
+        }
+
+        $this->output->set_output(json_encode($json));	// encode the json array and set final out to be sent to jQuery AJAX
     }
 
     public function add() {																		// add() method to add item to cart

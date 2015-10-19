@@ -77,48 +77,18 @@ class Local_module extends Main_Controller {
             $data['min_total'] = $this->currency->format('0.00');
         }
 
+        if ( ! $this->location->isOpened() AND $this->config->item('future_orders') !== '1') { 													// else if local restaurant is not open
+            $data['local_alert'] = $this->lang->line('alert_location_closed');
+        } else if ( ! $this->location->isOpened() AND $this->config->item('future_orders') === '1') {
+            $data['local_alert'] = $this->lang->line('alert_local_future_order');
+        }
+
         $this->load->model('Reviews_model');
         $total_reviews = $this->Reviews_model->getTotalLocationReviews($this->location->getId());
         $data['text_total_review'] = sprintf($this->lang->line('text_total_review'), $total_reviews);
 
         // pass array $data and load view files
         $this->load->view('local_module/local_module', $data);
-    }
-
-    public function order_type() {																	// _updateModule() method to update cart
-        $json = array();
-
-        if (!$json) {
-            $this->load->library('location');
-            $this->load->library('cart');
-
-            if ( ! $this->location->isOpened() AND $this->config->item('future_orders') !== '1') { 													// else if local restaurant is not open
-                $json['error'] = $this->lang->line('alert_location_closed');
-            } else if ( ! $this->location->isOpened() AND $this->config->item('future_orders') === '1') {
-                $json['error'] = $this->lang->line('alert_local_future_order');
-            } else {
-                $order_type = (is_numeric($this->input->post('order_type'))) ? $this->input->post('order_type') : '1';
-
-                if ($order_type === '1') {
-                    if ( ! $this->location->hasDelivery()) {
-                        $json['error'] = $this->lang->line('alert_delivery_unavailable');
-                    } else if ($this->location->hasSearchQuery() AND $this->location->hasDelivery() AND ! $this->location->checkDeliveryCoverage()) {
-                        $json['error'] = $this->lang->line('alert_delivery_coverage');
-                    } else if ($this->cart->contents() AND ! $this->location->checkMinimumOrder($this->cart->total())) {                            // checks if cart contents is empty
-                        $json['error'] = $this->lang->line('alert_min_delivery_order_total');
-                    }
-
-                } else if ($order_type === '2') {
-                    if ( ! $this->location->hasCollection()) {
-                        $json['error'] = $this->lang->line('alert_collection_unavailable');
-                    }
-                }
-
-                $this->location->setOrderType($order_type);
-            }
-        }
-
-        $this->output->set_output(json_encode($json));	// encode the json array and set final out to be sent to jQuery AJAX
     }
 
     public function search() {

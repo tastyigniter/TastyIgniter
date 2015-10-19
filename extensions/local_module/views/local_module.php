@@ -1,10 +1,15 @@
 <div id="local-box" <?php echo ($location_search === TRUE) ? 'class="local-box-fluid"' : ''; ?>>
     <div class="container">
-        <div id="local-alert" class="col-md-12" style="display: <?php echo ($local_alert) ? 'block' : 'none'; ?>">
-            <div class="local-alert">
+        <div id="local-alert" class="col-sm-12">
+            <div class="local-alert"></div>
+            <?php if (!empty($local_alert)) { ?>
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <div class="alert">
                 <?php echo $local_alert; ?>
             </div>
+            <?php } ?>
         </div>
+
 
         <?php if ($location_search === TRUE) { ?>
             <div id="local-search" class="col-md-12 text-center">
@@ -123,28 +128,6 @@
             $('.panel-local .panel-heading .local-change').fadeOut('fast');
         }
     }
-
-    $(document).on('change', 'input[name="order_type"]', function() {
-        $.ajax({
-            url: js_site_url('local_module/local_module/order_type'),
-            type: 'post',
-            data: 'order_type=' + this.value,
-            dataType: 'json',
-            success: function(json) {
-                $('.delivery-info, .collection-info').fadeOut();
-
-                if (this.value == '1') {
-                    $('.delivery-info').fadeIn();
-                    $('.collection-info').fadeOut();
-                } else {
-                    $('.delivery-info').fadeOut();
-                    $('.collection-info').fadeIn();
-                }
-
-                updateLocalBox(json);
-            }
-        });
-    });
 
     function searchLocal() {
         var search_query = $('input[name=\'search_query\']').val();
