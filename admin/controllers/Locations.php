@@ -177,10 +177,21 @@ class Locations extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('locations')));
 
-        $this->template->setStyleTag(root_url('assets/js/fancybox/jquery.fancybox.css'), 'jquery-fancybox-css');
-        $this->template->setScriptTag(root_url("assets/js/fancybox/jquery.fancybox.js"), 'jquery-fancybox-js');
+		$this->template->setStyleTag(root_url('assets/js/fancybox/jquery.fancybox.css'), 'jquery-fancybox-css');
+		$this->template->setStyleTag(root_url('assets/js/datepicker/bootstrap-timepicker.css'), 'bootstrap-timepicker-css');
+		$this->template->setScriptTag(root_url("assets/js/fancybox/jquery.fancybox.js"), 'jquery-fancybox-js');
+		$this->template->setScriptTag(root_url("assets/js/datepicker/bootstrap-timepicker.js"), 'bootstrap-timepicker-js');
+		$this->template->setScriptTag(root_url("assets/js/jquery-sortable.js"), 'jquery-sortable-js');
 
-        $data['location_id'] 			= $location_info['location_id'];
+		if ($this->config->item('maps_api_key')) {
+			$data['map_key'] = '&key='. $this->config->item('maps_api_key');
+		} else {
+			$data['map_key'] = '';
+		}
+
+		$this->template->setScriptTag('https://maps.googleapis.com/maps/api/js?v=3' . $data['map_key'] .'&sensor=false&region=GB&libraries=geometry', 'google-maps-js', '104330');
+
+		$data['location_id'] 			= $location_info['location_id'];
 		$data['location_name'] 			= $location_info['location_name'];
 		$data['location_address_1'] 	= $location_info['location_address_1'];
 		$data['location_address_2'] 	= $location_info['location_address_2'];
@@ -327,10 +338,32 @@ class Locations extends Admin_Controller {
 			);
 		}
 
-		if ($this->config->item('maps_api_key')) {
-			$data['map_key'] = '&key='. $this->config->item('maps_api_key');
+		if ($this->input->post('gallery')) {
+			$gallery = $this->input->post('gallery');
+		} else if (isset($options['gallery']) AND is_array($options['gallery'])) {
+			$gallery = $options['gallery'];
 		} else {
-			$data['map_key'] = '';
+			$gallery = array();
+		}
+
+		$data['gallery'] = array();
+		if (!empty($gallery)) {
+			$data['gallery'] = array(
+				'title'       => $gallery['title'],
+				'description' => $gallery['description'],
+			);
+
+			if (isset($gallery['images']) AND is_array($gallery['images'])) {
+				foreach ($gallery['images'] as $key => $image) {
+					$data['gallery']['images'][$key] = array(
+						'name'     => $image['name'],
+						'path'     => $image['path'],
+						'thumb'    => $this->Image_tool_model->resize($image['path'], 120, 120),
+						'alt_text' => $image['alt_text'],
+						'status'   => $image['status'],
+					);
+				}
+			}
 		}
 
 		if ($location_info['location_lat'] AND $location_info['location_lng']) {
@@ -472,6 +505,19 @@ class Locations extends Admin_Controller {
 				$this->form_validation->set_rules('delivery_areas['.$key.'][name]', 'lang:label_area_name', 'xss_clean|trim|required');
 				$this->form_validation->set_rules('delivery_areas['.$key.'][charge]', 'lang:label_area_charge', 'xss_clean|trim|required|numeric');
 				$this->form_validation->set_rules('delivery_areas['.$key.'][min_amount]', 'lang:label_area_min_amount', 'xss_clean|trim|required|numeric');
+			}
+		}
+
+	    $this->form_validation->set_rules('gallery[title]', 'lang:label_gallery_title', 'xss_clean|trim|max_length[128]');
+	    $this->form_validation->set_rules('gallery[description]', 'lang:label_gallery_description', 'xss_clean|trim|max_length[255]');
+	    if ($this->input->post('gallery')) {
+			foreach ($this->input->post('gallery') as $key => $value) {
+				if ($key === 'images') foreach ($value as $key => $image) {
+					$this->form_validation->set_rules('gallery[images][' . $key . '][name]', 'lang:label_gallery_image_name', 'xss_clean|trim|required');
+					$this->form_validation->set_rules('gallery[images][' . $key . '][path]', 'lang:label_gallery_image_thumbnail', 'xss_clean|trim|required');
+					$this->form_validation->set_rules('gallery[images][' . $key . '][alt_text]', 'lang:label_gallery_image_alt', 'xss_clean|trim');
+					$this->form_validation->set_rules('gallery[images][' . $key . '][status]', 'lang:label_gallery_image_status', 'xss_clean|trim|required|integer');
+				}
 			}
 		}
 

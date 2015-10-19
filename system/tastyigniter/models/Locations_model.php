@@ -364,6 +364,10 @@ class Locations_model extends TI_Model {
 			$options['delivery_areas'] = $save['delivery_areas'];
 		}
 
+		if (isset($save['gallery'])) {
+			$options['gallery'] = $save['gallery'];
+		}
+
 		$this->db->set('options', serialize($options));
 
 		if ($save['location_status'] === '1') {

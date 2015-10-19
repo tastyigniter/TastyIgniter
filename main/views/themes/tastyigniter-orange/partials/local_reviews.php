@@ -1,6 +1,5 @@
 <div class="col-md-12 reviews-list">
     <?php if ($reviews) { ?>
-        <?php $review_row = 1; ?>
         <?php foreach ($reviews as $review) { ?>
             <div class="review-item">
                 <blockquote>

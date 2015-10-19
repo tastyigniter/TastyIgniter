@@ -121,6 +121,10 @@ class Location {
         return $this->CI->Image_tool_model->resize('data/no_photo.png', '80', '80');
 	}
 
+	public function getGallery() {
+        return !empty($this->local_options['gallery']) ? $this->local_options['gallery'] : array();
+	}
+
 	public function getAddress($format = TRUE) {
 		$location_address = array(
 			'address_1'      => $this->local_info['location_address_1'],
@@ -294,6 +298,9 @@ class Location {
 				$this->delivery_areas[$area_id] = array(
 					'area_id'		=> $area_id,
 					'name'			=> $area['name'],
+					'type'			=> $area['type'],
+					'shape'			=> $area['shape'],
+					'circle'		=> $area['circle'],
 					'charge'		=> $area['charge'],
 					'min_amount'	=> $area['min_amount']
 				);

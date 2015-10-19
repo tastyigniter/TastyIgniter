@@ -1,9 +1,10 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 $lang['text_heading'] 			            = 'Restaurants';
-$lang['text_tab_general'] 		            = 'Menu';
+$lang['text_tab_menu'] 		                = 'Menu';
 $lang['text_tab_review'] 		            = 'Reviews';
 $lang['text_tab_info'] 			            = 'Info';
+$lang['text_tab_gallery'] 			        = 'Gallery';
 $lang['text_local_heading']                 = '%s - Restaurant';
 $lang['text_info_heading'] 			        = 'More info about %s local restaurant';
 $lang['text_review_heading'] 			    = 'Customer Reviews of %s';

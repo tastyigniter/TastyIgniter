@@ -8,6 +8,7 @@
 				<li><a href="#order" data-toggle="tab"><?php echo lang('text_tab_order'); ?></a></li>
 				<li><a href="#reservation" data-toggle="tab"><?php echo lang('text_tab_reservation'); ?></a></li>
 				<li><a id="open-map" href="#delivery" data-toggle="tab"><?php echo lang('text_tab_delivery'); ?></a></li>
+				<li><a href="#gallery" data-toggle="tab"><?php echo lang('text_tab_gallery'); ?></a></li>
 				<!--<li><a href="#options" data-toggle="tab"><?php echo lang('text_tab_options'); ?></a></li>-->
 			</ul>
 		</div>
@@ -343,18 +344,6 @@
 							<?php echo form_error('payments[]', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
-					<!--<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Latitude:</label>
-						<div class="col-sm-5">
-							<?php echo $location_lat; ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label">Longitude:</label>
-						<div class="col-sm-5">
-							<?php echo $location_lng; ?>
-						</div>
-					</div>-->
 				</div>
 
 				<div id="reservation" class="tab-pane row wrap-all">
@@ -509,12 +498,90 @@
 						<p class="alert text-danger"><?php echo lang('alert_delivery_area'); ?></p>
 					<?php } ?>
 				</div>
+
+				<div id="gallery" class="tab-pane row wrap-all">
+					<div class="form-group">
+						<label for="input-gallery-title" class="col-sm-3 control-label"><?php echo lang('label_gallery_title'); ?></label>
+						<div class="col-sm-5">
+							<input type="text" name="gallery[title]" id="input-gallery-title" class="form-control" value="<?php echo set_value('gallery[title]', $gallery['title']); ?>" />
+							<?php echo form_error('gallery[title]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-gallery-description" class="col-sm-3 control-label"><?php echo lang('label_gallery_description'); ?></label>
+						<div class="col-sm-5">
+							<textarea name="gallery[description]" id="input-gallery-description" class="form-control" rows="5"><?php echo set_value('gallery[description]', $gallery['description']); ?></textarea>
+							<?php echo form_error('gallery[description]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<br />
+
+					<div id="gallery-images" class="row>
+						<?php $gallery_image_row = 1; ?>
+						<div class="panel panel-default panel-table">
+							<div class="table-responsive">
+								<table class="table table-striped table-border table-sortable">
+									<thead>
+										<tr>
+											<th class="action"></th>
+											<th><?php echo lang('column_gallery_image_thumbnail'); ?></th>
+											<th class="col-sm-3"><?php echo lang('column_gallery_image_name'); ?></th>
+											<th class="col-sm-4"><?php echo lang('column_gallery_image_alt'); ?></th>
+											<th class="col-sm-4 text-center"><?php echo lang('column_gallery_image_status'); ?></th>
+										</tr>
+									</thead>
+									<tbody>
+									<?php if (!empty($gallery['images'])) { ?>
+										<?php foreach ($gallery['images'] as $image) { ?>
+											<tr id="gallery-image<?php echo $gallery_image_row; ?>">
+												<td class="action">
+													<i class="fa fa-sort handle"></i>&nbsp;&nbsp;&nbsp;
+													<a class="btn btn-danger" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a>
+												</td>
+												<td>
+													<img src="<?php echo $image['thumb']; ?>" class="image-thumb img-responsive">
+													<input type="hidden" id="image-thumb<?php echo $gallery_image_row; ?>" name="gallery[images][<?php echo $gallery_image_row; ?>][path]" value="<?php echo set_value("gallery[images][{$gallery_image_row}][path]", $image['path']); ?>">
+												</td>
+												<td>
+													<span class="name"><?php echo $image['name']; ?></span>
+													<input type="hidden" id="image-name<?php echo $gallery_image_row; ?>" class="image-name" name="gallery[images][<?php echo $gallery_image_row; ?>][name]" value="<?php echo set_value("gallery[images][{$gallery_image_row}][name]", $image['name']); ?>">
+												</td>
+												<td>
+													<input type="text" name="gallery[images][<?php echo $gallery_image_row; ?>][alt_text]" class="form-control" value="<?php echo set_value("gallery[images][{$gallery_image_row}][alt_text]", $image['alt_text']); ?>" />
+													<?php echo form_error('gallery[images]['.$gallery_image_row.'][alt_text]', '<span class="text-danger">', '</span>'); ?>
+												</td>
+												<td class="text-center">
+													<div class="btn-group btn-group-switch" data-toggle="buttons">
+														<?php if ($image['status'] === '1') { ?>
+															<label class="btn btn-default"><input type="radio" name="gallery[images][<?php echo $gallery_image_row; ?>][status]" value="0"><?php echo lang('text_included'); ?></label>
+															<label class="btn btn-danger active"><input type="radio" name="gallery[images][<?php echo $gallery_image_row; ?>][status]" value="1" checked="checked"><?php echo lang('text_excluded'); ?></label>
+														<?php } else { ?>
+															<label class="btn btn-default active"><input type="radio" name="gallery[images][<?php echo $gallery_image_row; ?>][status]" value="0" checked="checked"><?php echo lang('text_included'); ?></label>
+															<label class="btn btn-danger"><input type="radio" name="gallery[images][<?php echo $gallery_image_row; ?>][status]" value="1"><?php echo lang('text_excluded'); ?></label>
+														<?php } ?>
+													</div>
+													<?php echo form_error('gallery[images]['.$gallery_image_row.'][status]', '<span class="text-danger">', '</span>'); ?>
+												</td>
+											</tr>
+											<?php $gallery_image_row++; ?>
+										<?php } ?>
+									<?php } ?>
+									</tbody>
+									<tfoot>
+										<tr id="tfoot">
+											<td class="action action-one"><a class="btn btn-primary btn-lg" onclick="addImageToGallery();"><i class="fa fa-plus"></i></a></td>
+											<td colspan="4"></td>
+										</tr>
+									</tfoot>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</form>
 	</div>
 </div>
-<link type="text/css" rel="stylesheet" href="<?php echo root_url("assets/js/datepicker/bootstrap-timepicker.css"); ?>">
-<script type="text/javascript" src="<?php echo root_url("assets/js/datepicker/bootstrap-timepicker.js"); ?>"></script>
 <script type="text/javascript"><!--
 $(document).ready(function() {
 	$('.timepicker').timepicker({
@@ -576,7 +643,6 @@ $(document).on('change', '.area-types input[type="radio"]', function () {
 });
 
 //--></script>
-<script src="https://maps.googleapis.com/maps/api/js?v=3<?php echo $map_key; ?>&sensor=false&region=GB&libraries=geometry"></script>
 <script type="text/javascript">//<![CDATA[
 var map = null,
 panel_row = <?php echo $panel_row; ?>,
@@ -1016,4 +1082,79 @@ function addDeliveryArea() {
 }
 //]]></script>
 <?php } ?>
+<script type="text/javascript"><!--
+	$(function () {
+		$('.table-sortable').sortable({
+			containerSelector: 'table',
+			itemPath: '> tbody',
+			itemSelector: 'tr',
+			placeholder: '<tr class="placeholder"><td colspan="5"></td></tr>',
+			handle: '.handle'
+		})
+	});
+
+	var gallery_image_row = <?php echo (int)$gallery_image_row; ?>;
+
+	function addImageToGallery(image_row = null) {
+		var height = (this.window.innerHeight > 0) ? this.window.innerHeight-100 : this.screen.height-100;
+		$(window).bind("load resize", function() {
+			var height = (this.window.innerHeight > 0) ? this.window.innerHeight-100 : this.screen.height-100;
+			$('#media-manager > iframe').css("height", (height) + "px");
+		});
+
+		if (null == image_row) {
+			image_row = gallery_image_row;
+
+			html = '<tr id="gallery-image' + image_row + '">';
+			html += '	<td class="action action-one"><i class="fa fa-sort handle"></i>&nbsp;&nbsp;&nbsp;<a class="btn btn-danger" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a></td>';
+			html += '	<td><img src="" class="image-thumb img-responsive" />'
+				+ '<input type="hidden" id="image-thumb' + image_row + '" name="gallery[images][' + image_row + '][path]" value=""></td>';
+			html += '	<td><span class="name"></span><input type="hidden" class="image-name" id="image-name' + image_row + '" name="gallery[images][' + image_row + '][name]" value=""></td>';
+			html += '	<td><input type="text" name="gallery[images][' + image_row + '][alt_text]" class="form-control" value="" /></td>';
+			html += '	<td class="text-center"><div class="btn-group btn-group-switch" data-toggle="buttons">';
+			html += '		<label class="btn btn-default active"><input type="radio" name="gallery[images][' + image_row + '][status]" checked="checked"value="0"><?php echo lang('text_included'); ?></label>';
+			html += '		<label class="btn btn-danger"><input type="radio" name="gallery[images][' + image_row + '][status]" value="1"><?php echo lang('text_excluded'); ?></label>';
+			html += '	</div></td>';
+			html += '</tr>';
+
+			$('#gallery-images .table-sortable tbody').append(html);
+			$('#gallery-image' + image_row + ' select.form-control').select2();
+
+			gallery_image_row++;
+		}
+
+		var field = 'image-thumb' + image_row;
+		$('#media-manager').remove();
+		var iframe_url = js_site_url('image_manager?popup=iframe&field_id=' + field);
+		$('body').append('<div id="media-manager"><iframe name="media_manager" src="'+ iframe_url +'" width="1200" height="' + height + 'px" frameborder="0"></iframe></div>');
+
+		$.fancybox({
+			padding : 0,
+			title: "Media Manager",
+			helpers : {
+				title: {
+					type: 'inside',
+					position: 'top'
+				}
+			},
+			href:"#media-manager",
+			autoResize: true,
+			scrolling: 'no',
+			preload   : true,
+			afterClose: function() {
+				if ($('#' + field).attr('value')) {
+					$.ajax({
+						url: js_site_url('image_manager/resize?image=') + encodeURIComponent($('#' + field).attr('value')) + '&width=120&height=120',
+						dataType: 'json',
+						success: function(json) {
+							var parent = $('#' + field).parent().parent();
+							parent.find('.image-thumb').attr('src', json);
+							parent.find('.image-name').attr('value', parent.find('.name').html());
+						}
+					});
+				}
+			}
+		});
+	};
+//--></script>
 <?php echo get_footer(); ?>

@@ -59,6 +59,8 @@ class Local extends Main_Controller {
 
         $data['local_reviews'] = $this->reviews();
 
+		$data['local_gallery'] = $this->gallery();
+
 		$this->template->render('local', $data);
 	}
 
@@ -72,7 +74,7 @@ class Local extends Main_Controller {
             $map_key = '';
         }
 
-        $this->template->setScriptTag('https://maps.googleapis.com/maps/api/js?v=3' . $map_key .'&sensor=false&region=GB', 'google-maps-js', '104330');
+        $this->template->setScriptTag('https://maps.googleapis.com/maps/api/js?v=3' . $map_key .'&sensor=false&region=GB&libraries=geometry', 'google-maps-js', '104330');
 
         $opening_hours = $this->location->openingHours();                                //retrieve local restaurant opening hours from location library
         $data['opening_hours'] = array();
@@ -117,12 +119,19 @@ class Local extends Main_Controller {
 
         $data['payments'] = trim($payment_list, ', ').'.';
 
-        $data['delivery_areas'] = array();
+	    $area_colors = array('#F16745', '#FFC65D', '#7BC8A4', '#4CC3D9', '#93648D', '#404040', '#F16745', '#FFC65D', '#7BC8A4', '#4CC3D9', '#93648D', '#404040', '#F16745', '#FFC65D', '#7BC8A4', '#4CC3D9', '#93648D', '#404040', '#F16745', '#FFC65D');
+	    $data['area_colors'] = $area_colors;
+
+	    $data['delivery_areas'] = array();
         $delivery_areas = $this->location->deliveryAreas();
         foreach ($delivery_areas as $area_id => $area) {
             $data['delivery_areas'][] = array(
                 'area_id'       => $area['area_id'],
                 'name'          => $area['name'],
+                'type'			=> $area['type'],
+                'color'			=> $area_colors[(int) $area_id - 1],
+                'shape'			=> $area['shape'],
+                'circle'		=> $area['circle'],
                 'charge'        => ($area['charge'] > 0) ? $this->currency->format($area['charge']) : $this->lang->line('text_free_delivery'),
                 'min_amount'    => ($area['min_amount'] > 0) ? $this->currency->format($area['min_amount']) : $this->currency->format('0.00')
             );
@@ -136,6 +145,31 @@ class Local extends Main_Controller {
 
         return $data;
     }
+
+	public function gallery($data = array()) {
+		$gallery = $this->location->getGallery();
+
+		if (empty($gallery) OR empty($gallery['images'])) {
+			return $data;
+		}
+
+		$data['title'] = isset($gallery['title']) ? $gallery['title'] : '';
+		$data['description'] = isset($gallery['description']) ? $gallery['description'] : '';
+
+		foreach ($gallery['images'] as $key => $image) {
+			if (isset($image['status']) AND $image['status'] !== '1') {
+				$data['images'][$key] = array(
+					'name'     => isset($image['name']) ? $image['name'] : '',
+					'path'     => isset($image['path']) ? $image['path'] : '',
+					'thumb'    => isset($image['path']) ? $this->Image_tool_model->resize($image['path']) : '',
+					'alt_text' => isset($image['alt_text']) ? $image['alt_text'] : '',
+					'status'   => $image['status'],
+				);
+			}
+		}
+
+		return $data;
+	}
 
     public function reviews($data = array()) {
 	    $date_format = ($this->config->item('date_format')) ? $this->config->item('date_format') : '%d %M %y';

@@ -33,9 +33,12 @@
 
                 <div class="row wrap-vertical">
                     <ul id="nav-tabs" class="nav nav-tabs nav-justified nav-tabs-line">
-                        <li class="active"><a href="#local-menus" data-toggle="tab"><?php echo lang('text_tab_general'); ?></a></li>
+                        <li class="active"><a href="#local-menus" data-toggle="tab"><?php echo lang('text_tab_menu'); ?></a></li>
                         <li><a href="#local-reviews" data-toggle="tab"><?php echo lang('text_tab_review'); ?></a></li>
                         <li><a href="#local-information" data-toggle="tab"><?php echo lang('text_tab_info'); ?></a></li>
+                        <?php if (!empty($local_gallery)) { ?>
+                            <li><a href="#local-gallery" data-toggle="tab"><?php echo lang('text_tab_gallery'); ?></a></li>
+                        <?php } ?>
                     </ul>
                 </div>
 
@@ -63,6 +66,12 @@
                     <div id="local-information" class="tab-pane row wrap-all">
                         <?php echo load_partial('local_info', $local_info); ?>
                     </div>
+
+                    <?php if (!empty($local_gallery)) { ?>
+                        <div id="local-gallery" class="tab-pane row wrap-all">
+                            <?php echo load_partial('local_gallery', $local_gallery); ?>
+                        </div>
+                    <?php } ?>
                 </div>
             </div>
             <?php echo get_partial('content_right', 'col-sm-3'); ?>

@@ -9,6 +9,7 @@ $lang['text_tab_opening_hours'] 		= 'Opening Hours';
 $lang['text_tab_order'] 		        = 'Order';
 $lang['text_tab_reservation'] 		    = 'Reservation';
 $lang['text_tab_delivery'] 		        = 'Delivery';
+$lang['text_tab_gallery'] 		        = 'Gallery';
 $lang['text_tab_options'] 		        = 'Options';
 $lang['text_filter_search'] 		    = 'Search name, city, state or postcode.';
 $lang['text_filter_status'] 		    = 'View all status';
@@ -26,8 +27,10 @@ $lang['text_area'] 		                = 'Area ';
 $lang['text_leading_zeros'] 		    = '.00';
 $lang['text_add_new_area'] 		        = 'Add new area';
 $lang['text_options'] 		            = 'Options';
+$lang['text_included'] 		            = 'Included';
+$lang['text_excluded'] 		            = 'Excluded';
 
-$lang['alert_set_default'] 		        = 'Location set as default';
+$lang['button_gallery_add_image'] 	    = 'Select';
 
 $lang['column_name'] 		            = 'Name';
 $lang['column_city'] 		            = 'City';
@@ -40,6 +43,10 @@ $lang['column_table_name'] 		        = 'Name';
 $lang['column_table_minimum'] 		    = 'Minimum';
 $lang['column_table_capacity'] 		    = 'Capacity';
 $lang['column_table_remove'] 		    = 'Remove';
+$lang['column_gallery_image_thumbnail'] = 'Thumbnail';
+$lang['column_gallery_image_name'] 	    = 'Filename';
+$lang['column_gallery_image_alt'] 	    = 'Alt Text';
+$lang['column_gallery_image_status']    = 'Status';
 
 $lang['label_name'] 		            = 'Name';
 $lang['label_address_1'] 		        = 'Address 1';
@@ -77,9 +84,17 @@ $lang['label_area_type'] 		        = 'Area Type';
 $lang['label_area_name'] 		        = 'Area Name';
 $lang['label_area_charge'] 		        = 'Area Charge';
 $lang['label_area_min_amount'] 		    = 'Area Min Amount';
+$lang['label_gallery_title'] 		    = 'Title';
+$lang['label_gallery_description'] 		= 'Description';
+$lang['label_gallery_add_image'] 	    = 'Add Image';
+$lang['label_gallery_image_thumbnail'] = 'Thumbnail';
+$lang['label_gallery_image_name'] 	    = 'Filename';
+$lang['label_gallery_image_alt'] 	    = 'Alt Text';
+$lang['label_gallery_image_status']    = 'Status';
 
 $lang['error_less_time'] 		        = 'The %s must be less than Close hour.';
-$lang['alert_delivery_area'] 		    = 'Delivery area map will be visible after location has been saved.';
+$lang['alert_delivery_area'] 		    = 'Delivery area map will be visible after location has been added.';
+$lang['alert_set_default'] 		        = 'Location set as default';
 
 $lang['help_permalink'] 		        = 'Use ONLY alpha-numeric lowercase characters, underscores or dashes and make sure it is unique GLOBALLY.';
 $lang['help_image'] 		            = 'Select an image to use as the location logo, this image is displayed in the restaurant list.';
