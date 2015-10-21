@@ -235,7 +235,7 @@ class ExtraPackage
      *
      * @param array $origin Primary collection
      * @param array $merge Additional collection
-     * @param bool $replace Replace exising links?
+     * @param bool $replace Replace existing links?
      * @param array &dups Duplicate storage
      * @return array Merged collection
      */
