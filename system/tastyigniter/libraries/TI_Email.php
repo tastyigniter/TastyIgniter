@@ -34,11 +34,11 @@ class TI_Email extends CI_Email {
 
     public function parse_template($template, $data = array()) {
         if (!is_string($template) OR !is_array($data)) return NULL;
-        $data['site_name'] = $this->config->item('site_name');
+        $data['site_name'] = $this->CI->config->item('site_name');
         $data['site_url'] = root_url();
 
-        $this->load->model('Image_tool_model');
-        $data['site_logo'] = $this->Image_tool_model->resize($this->config->item('site_logo'));
+        $this->CI->load->model('Image_tool_model');
+        $data['site_logo'] = $this->CI->Image_tool_model->resize($this->CI->config->item('site_logo'));
 
         $this->CI->load->library('parser');
 
