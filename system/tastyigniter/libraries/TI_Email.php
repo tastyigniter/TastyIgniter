@@ -8,6 +8,8 @@ class TI_Email extends CI_Email {
 
     public $useragent	= 'TastyIgniter';
 
+    public $mailtype	= 'html';
+
     /**
      * Initialize preferences
      *
@@ -19,7 +21,6 @@ class TI_Email extends CI_Email {
         $this->CI =& get_instance();
 
         $config['protocol']  = $this->CI->config->item('protocol');
-        $config['mailtype']  = $this->CI->config->item('mailtype');
         $config['smtp_host'] = $this->CI->config->item('smtp_host');
         $config['smtp_port'] = $this->CI->config->item('smtp_port');
         $config['smtp_user'] = $this->CI->config->item('smtp_user');
@@ -33,6 +34,11 @@ class TI_Email extends CI_Email {
 
     public function parse_template($template, $data = array()) {
         if (!is_string($template) OR !is_array($data)) return NULL;
+        $data['site_name'] = $this->config->item('site_name');
+        $data['site_url'] = root_url();
+
+        $this->load->model('Image_tool_model');
+        $data['site_logo'] = $this->Image_tool_model->resize($this->config->item('site_logo'));
 
         $this->CI->load->library('parser');
 

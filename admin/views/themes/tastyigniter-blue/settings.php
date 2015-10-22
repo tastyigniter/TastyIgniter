@@ -820,84 +820,6 @@
 
 				<div id="mail" class="tab-pane row wrap-all">
                     <div class="form-group">
-                        <label for="input-mailtype" class="col-sm-3 control-label"><?php echo lang('label_mailtype'); ?></label>
-                        <div class="col-sm-5">
-                            <div class="btn-group btn-group-switch" data-toggle="buttons">
-                                <?php if (config_item('mailtype') == 'text') { ?>
-                                    <label class="btn btn-success active"><input type="radio" name="mailtype" value="text" <?php echo set_radio('mailtype', 'text', TRUE); ?>><?php echo lang('text_text'); ?></label>
-                                <?php } else { ?>
-                                    <label class="btn btn-success"><input type="radio" name="mailtype" value="text" <?php echo set_radio('mailtype', 'text'); ?>><?php echo lang('text_text'); ?></label>
-                                <?php } ?>
-                                <?php if (config_item('mailtype') == 'html') { ?>
-                                    <label class="btn btn-success active"><input type="radio" name="mailtype" value="html" <?php echo set_radio('mailtype', 'html', TRUE); ?>><?php echo lang('text_html'); ?></label>
-                                <?php } else { ?>
-                                    <label class="btn btn-success"><input type="radio" name="mailtype" value="html" <?php echo set_radio('mailtype', 'html'); ?>><?php echo lang('text_html'); ?></label>
-                                <?php } ?>
-                            </div>
-                            <?php echo form_error('mailtype', '<span class="text-danger">', '</span>'); ?>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="input-protocol" class="col-sm-3 control-label"><?php echo lang('label_protocol'); ?></label>
-                        <div class="col-sm-5">
-                            <div class="btn-group btn-group-toggle btn-group-3" data-toggle="buttons">
-                                <?php if (config_item('protocol') == 'mail') { ?>
-                                    <label class="btn btn-success active"><input type="radio" name="protocol" value="mail" <?php echo set_radio('protocol', 'mail', TRUE); ?>><?php echo lang('text_mail'); ?></label>
-                                <?php } else { ?>
-                                    <label class="btn btn-success"><input type="radio" name="protocol" value="mail" <?php echo set_radio('protocol', 'mail'); ?>><?php echo lang('text_mail'); ?></label>
-                                <?php } ?>
-                                <?php if (config_item('protocol') == 'sendmail') { ?>
-                                    <label class="btn btn-success active"><input type="radio" name="protocol" value="sendmail" <?php echo set_radio('protocol', 'sendmail', TRUE); ?>><?php echo lang('text_sendmail'); ?></label>
-                                <?php } else { ?>
-                                    <label class="btn btn-success"><input type="radio" name="protocol" value="sendmail" <?php echo set_radio('protocol', 'sendmail'); ?>><?php echo lang('text_sendmail'); ?></label>
-                                <?php } ?>
-                                <?php if (config_item('protocol') == 'smtp') { ?>
-                                    <label class="btn btn-success active"><input type="radio" name="protocol" value="smtp" <?php echo set_radio('protocol', 'smtp', TRUE); ?>><?php echo lang('text_smtp'); ?></label>
-                                <?php } else { ?>
-                                    <label class="btn btn-success"><input type="radio" name="protocol" value="smtp" <?php echo set_radio('protocol', 'smtp'); ?>><?php echo lang('text_smtp'); ?></label>
-                                <?php } ?>
-                            </div>
-                            <?php echo form_error('protocol', '<span class="text-danger">', '</span>'); ?>
-                        </div>
-                    </div>
-
-                    <div id="smtp-settings">
-                        <div class="form-group">
-                            <label for="input-smtp-host" class="col-sm-3 control-label"><?php echo lang('label_smtp_host'); ?></label>
-                            <div class="col-sm-5">
-                                <input type="text" name="smtp_host" id="input-smtp-host" class="form-control" value="<?php echo set_value('smtp_host', config_item('smtp_host')); ?>" />
-                                <?php echo form_error('smtp_host', '<span class="text-danger">', '</span>'); ?>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="input-smtp-port" class="col-sm-3 control-label"><?php echo lang('label_smtp_port'); ?></label>
-                            <div class="col-sm-5">
-                                <input type="text" name="smtp_port" id="input-smtp-port" class="form-control" value="<?php echo set_value('smtp_port', config_item('smtp_port')); ?>" />
-                                <?php echo form_error('smtp_port', '<span class="text-danger">', '</span>'); ?>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="input-smtp-user" class="col-sm-3 control-label"><?php echo lang('label_smtp_user'); ?></label>
-                            <div class="col-sm-5">
-                                <input type="text" name="smtp_user" id="input-smtp-user" class="form-control" value="<?php echo set_value('smtp_user', config_item('smtp_user')); ?>" autocomplete="off" />
-                                <?php echo form_error('smtp_user', '<span class="text-danger">', '</span>'); ?>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="input-smtp-pass" class="col-sm-3 control-label"><?php echo lang('label_smtp_pass'); ?></label>
-                            <div class="col-sm-5">
-                                <input type="password" name="smtp_pass" id="input-smtp-pass" class="form-control" value="<?php echo set_value('smtp_pass', config_item('smtp_pass')); ?>" autocomplete="off" />
-                                <?php echo form_error('smtp_pass', '<span class="text-danger">', '</span>'); ?>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="input-send-test-email" class="col-sm-3 control-label"><?php echo lang('label_test_email'); ?></label>
-                        <div class="col-sm-5">
-                            <a id="input-send-test-email" class="btn btn-primary btn-block"><?php echo lang('text_send_test_email'); ?></a>
-                        </div>
-                    </div>
-                    <div class="form-group">
                         <label for="input-registration-email" class="col-sm-3 control-label"><?php echo lang('label_registration_email'); ?>
                             <span class="help-block"><?php echo lang('help_registration_email'); ?></span>
                         </label>
@@ -982,6 +904,66 @@
                             <?php echo form_error('location_reserve_email', '<span class="text-danger">', '</span>'); ?>
                         </div>
                     </div>
+					<div class="form-group">
+						<label for="input-protocol" class="col-sm-3 control-label"><?php echo lang('label_protocol'); ?></label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-toggle btn-group-3" data-toggle="buttons">
+								<?php if (config_item('protocol') == 'mail') { ?>
+									<label class="btn btn-success active"><input type="radio" name="protocol" value="mail" <?php echo set_radio('protocol', 'mail', TRUE); ?>><?php echo lang('text_mail'); ?></label>
+								<?php } else { ?>
+									<label class="btn btn-success"><input type="radio" name="protocol" value="mail" <?php echo set_radio('protocol', 'mail'); ?>><?php echo lang('text_mail'); ?></label>
+								<?php } ?>
+								<?php if (config_item('protocol') == 'sendmail') { ?>
+									<label class="btn btn-success active"><input type="radio" name="protocol" value="sendmail" <?php echo set_radio('protocol', 'sendmail', TRUE); ?>><?php echo lang('text_sendmail'); ?></label>
+								<?php } else { ?>
+									<label class="btn btn-success"><input type="radio" name="protocol" value="sendmail" <?php echo set_radio('protocol', 'sendmail'); ?>><?php echo lang('text_sendmail'); ?></label>
+								<?php } ?>
+								<?php if (config_item('protocol') == 'smtp') { ?>
+									<label class="btn btn-success active"><input type="radio" name="protocol" value="smtp" <?php echo set_radio('protocol', 'smtp', TRUE); ?>><?php echo lang('text_smtp'); ?></label>
+								<?php } else { ?>
+									<label class="btn btn-success"><input type="radio" name="protocol" value="smtp" <?php echo set_radio('protocol', 'smtp'); ?>><?php echo lang('text_smtp'); ?></label>
+								<?php } ?>
+							</div>
+							<?php echo form_error('protocol', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+
+					<div id="smtp-settings">
+						<div class="form-group">
+							<label for="input-smtp-host" class="col-sm-3 control-label"><?php echo lang('label_smtp_host'); ?></label>
+							<div class="col-sm-5">
+								<input type="text" name="smtp_host" id="input-smtp-host" class="form-control" value="<?php echo set_value('smtp_host', config_item('smtp_host')); ?>" />
+								<?php echo form_error('smtp_host', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="input-smtp-port" class="col-sm-3 control-label"><?php echo lang('label_smtp_port'); ?></label>
+							<div class="col-sm-5">
+								<input type="text" name="smtp_port" id="input-smtp-port" class="form-control" value="<?php echo set_value('smtp_port', config_item('smtp_port')); ?>" />
+								<?php echo form_error('smtp_port', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="input-smtp-user" class="col-sm-3 control-label"><?php echo lang('label_smtp_user'); ?></label>
+							<div class="col-sm-5">
+								<input type="text" name="smtp_user" id="input-smtp-user" class="form-control" value="<?php echo set_value('smtp_user', config_item('smtp_user')); ?>" autocomplete="off" />
+								<?php echo form_error('smtp_user', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="input-smtp-pass" class="col-sm-3 control-label"><?php echo lang('label_smtp_pass'); ?></label>
+							<div class="col-sm-5">
+								<input type="password" name="smtp_pass" id="input-smtp-pass" class="form-control" value="<?php echo set_value('smtp_pass', config_item('smtp_pass')); ?>" autocomplete="off" />
+								<?php echo form_error('smtp_pass', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-send-test-email" class="col-sm-3 control-label"><?php echo lang('label_test_email'); ?></label>
+						<div class="col-sm-5">
+							<a id="input-send-test-email" class="btn btn-primary btn-block"><?php echo lang('text_send_test_email'); ?></a>
+						</div>
+					</div>
 				</div>
 
 				<div id="system" class="tab-pane row wrap-all">

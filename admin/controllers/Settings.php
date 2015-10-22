@@ -95,7 +95,6 @@ class Settings extends Admin_Controller {
         $data['page_limits'] = array('10', '20', '50', '75', '100');
 
         $data['protocols'] 	= array('mail', 'sendmail', 'smtp');
-        $data['mailtypes'] 	= array('text', 'html');
         $data['thresholds'] = array('Disable', 'Error Only', 'Debug Only', 'Info Only', 'All');
 
 		$timezones = $this->getTimezones();
@@ -297,7 +296,6 @@ class Settings extends Admin_Controller {
 				'themes_hidden_folders'		=> $this->input->post('themes_hidden_folders'),
 				'image_manager'				=> $this->input->post('image_manager'),
 				'protocol'	 				=> strtolower($this->input->post('protocol')),
-				'mailtype' 					=> strtolower($this->input->post('mailtype')),
 				'smtp_host' 				=> $this->input->post('smtp_host'),
 				'smtp_port' 				=> $this->input->post('smtp_port'),
 				'smtp_user' 				=> $this->input->post('smtp_user'),
@@ -393,7 +391,6 @@ class Settings extends Admin_Controller {
 		$this->form_validation->set_rules('image_manager[transliteration]', 'lang:label_media_transliteration', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('image_manager[remember_days]', 'lang:label_media_remember_days', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('protocol', 'lang:label_protocol', 'xss_clean|trim|required');
-		$this->form_validation->set_rules('mailtype', 'lang:label_mailtype', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('smtp_host', 'lang:label_smtp_host', 'xss_clean|trim');
 		$this->form_validation->set_rules('smtp_port', 'lang:label_smtp_port', 'xss_clean|trim');
 		$this->form_validation->set_rules('smtp_user', 'lang:label_smtp_user', 'xss_clean|trim');
