@@ -2,11 +2,11 @@
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 5.2.4 or newer
+ * An open source application development framework for PHP
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2015, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
  * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (http://ellislab.com/)
- * @copyright	Copyright (c) 2014, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2014 - 2015, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
  * @link	http://codeigniter.com
  * @since	Version 1.0.0
@@ -405,7 +405,7 @@ class CI_Email {
 	 * @param	array	$config = array()
 	 * @return	void
 	 */
-	public function __construct($config = array())
+	public function __construct(array $config = array())
 	{
 		$this->charset = config_item('charset');
 
@@ -421,7 +421,7 @@ class CI_Email {
 		$this->_safe_mode = ( ! is_php('5.4') && ini_get('safe_mode'));
 		$this->charset = strtoupper($this->charset);
 
-		log_message('debug', 'Email Class Initialized');
+		log_message('info', 'Email Class Initialized');
 	}
 
 	// --------------------------------------------------------------------
@@ -804,11 +804,12 @@ class CI_Email {
 	 *
 	 * @param	string
 	 * @param	string
-	 * @return	void
+	 * @return	CI_Email
 	 */
 	public function set_header($header, $value)
 	{
 		$this->_headers[$header] = str_replace(array("\n", "\r"), '', $value);
+		return $this;
 	}
 
 	// --------------------------------------------------------------------
@@ -1401,7 +1402,7 @@ class CI_Email {
 					.$this->newline
 					.$this->_body.$this->newline.$this->newline;
 
-			break;
+				break;
 			case 'html-attach' :
 
 				$hdr .= 'Content-Type: multipart/'.$this->multipart.'; boundary="'.$this->_atc_boundary.'"';
@@ -1427,7 +1428,7 @@ class CI_Email {
 					.$this->_prep_quoted_printable($this->_body).$this->newline.$this->newline
 					.'--'.$this->_alt_boundary.'--'.$this->newline.$this->newline;
 
-			break;
+				break;
 		}
 
 		$attachment = array();
@@ -1569,13 +1570,13 @@ class CI_Email {
 			elseif (ICONV_ENABLED === TRUE)
 			{
 				$output = @iconv_mime_encode('', $str,
-					array(
-						'scheme' => 'Q',
-						'line-length' => 76,
-						'input-charset' => $this->charset,
-						'output-charset' => $this->charset,
-						'line-break-chars' => $this->crlf
-					)
+				                             array(
+					                             'scheme' => 'Q',
+					                             'line-length' => 76,
+					                             'input-charset' => $this->charset,
+					                             'output-charset' => $this->charset,
+					                             'line-break-chars' => $this->crlf
+				                             )
 				);
 
 				// There are reports that iconv_mime_encode() might fail and return FALSE
@@ -1825,9 +1826,9 @@ class CI_Email {
 		// is popen() enabled?
 		if ( ! function_usable('popen')
 			OR FALSE === ($fp = @popen(
-						$this->mailpath.' -oi -f '.$this->clean_email($this->_headers['From'])
-							.' -t -r '.$this->clean_email($this->_headers['Return-Path'])
-						, 'w'))
+				$this->mailpath.' -oi -f '.$this->clean_email($this->_headers['From'])
+				.' -t -r '.$this->clean_email($this->_headers['Return-Path'])
+				, 'w'))
 		) // server probably has popen disabled, so nothing we can do to get a verbose error.
 		{
 			return FALSE;
@@ -1868,20 +1869,26 @@ class CI_Email {
 			return FALSE;
 		}
 
-		$this->_send_command('from', $this->clean_email($this->_headers['From']));
+		if ( ! $this->_send_command('from', $this->clean_email($this->_headers['From'])))
+		{
+			return FALSE;
+		}
 
 		foreach ($this->_recipients as $val)
 		{
-			$this->_send_command('to', $val);
+			if ( ! $this->_send_command('to', $val))
+			{
+				return FALSE;
+			}
 		}
 
 		if (count($this->_cc_array) > 0)
 		{
 			foreach ($this->_cc_array as $val)
 			{
-				if ($val !== '')
+				if ($val !== '' && ! $this->_send_command('to', $val))
 				{
-					$this->_send_command('to', $val);
+					return FALSE;
 				}
 			}
 		}
@@ -1890,14 +1897,17 @@ class CI_Email {
 		{
 			foreach ($this->_bcc_array as $val)
 			{
-				if ($val !== '')
+				if ($val !== '' && ! $this->_send_command('to', $val))
 				{
-					$this->_send_command('to', $val);
+					return FALSE;
 				}
 			}
 		}
 
-		$this->_send_command('data');
+		if ( ! $this->_send_command('data'))
+		{
+			return FALSE;
+		}
 
 		// perform dot transformation on any lines that begin with a dot
 		$this->_send_data($this->_header_str.preg_replace('/^\./m', '..$1', $this->_finalbody));
@@ -1943,10 +1953,10 @@ class CI_Email {
 		$ssl = ($this->smtp_crypto === 'ssl') ? 'ssl://' : '';
 
 		$this->_smtp_connect = fsockopen($ssl.$this->smtp_host,
-							$this->smtp_port,
-							$errno,
-							$errstr,
-							$this->smtp_timeout);
+		                                 $this->smtp_port,
+		                                 $errno,
+		                                 $errstr,
+		                                 $this->smtp_timeout);
 
 		if ( ! is_resource($this->_smtp_connect))
 		{
@@ -1989,55 +1999,55 @@ class CI_Email {
 		{
 			case 'hello' :
 
-						if ($this->_smtp_auth OR $this->_get_encoding() === '8bit')
-						{
-							$this->_send_data('EHLO '.$this->_get_hostname());
-						}
-						else
-						{
-							$this->_send_data('HELO '.$this->_get_hostname());
-						}
+				if ($this->_smtp_auth OR $this->_get_encoding() === '8bit')
+				{
+					$this->_send_data('EHLO '.$this->_get_hostname());
+				}
+				else
+				{
+					$this->_send_data('HELO '.$this->_get_hostname());
+				}
 
-						$resp = 250;
-			break;
+				$resp = 250;
+				break;
 			case 'starttls'	:
 
-						$this->_send_data('STARTTLS');
-						$resp = 220;
-			break;
+				$this->_send_data('STARTTLS');
+				$resp = 220;
+				break;
 			case 'from' :
 
-						$this->_send_data('MAIL FROM:<'.$data.'>');
-						$resp = 250;
-			break;
+				$this->_send_data('MAIL FROM:<'.$data.'>');
+				$resp = 250;
+				break;
 			case 'to' :
 
-						if ($this->dsn)
-						{
-							$this->_send_data('RCPT TO:<'.$data.'> NOTIFY=SUCCESS,DELAY,FAILURE ORCPT=rfc822;'.$data);
-						}
-						else
-						{
-							$this->_send_data('RCPT TO:<'.$data.'>');
-						}
+				if ($this->dsn)
+				{
+					$this->_send_data('RCPT TO:<'.$data.'> NOTIFY=SUCCESS,DELAY,FAILURE ORCPT=rfc822;'.$data);
+				}
+				else
+				{
+					$this->_send_data('RCPT TO:<'.$data.'>');
+				}
 
-						$resp = 250;
-			break;
+				$resp = 250;
+				break;
 			case 'data'	:
 
-						$this->_send_data('DATA');
-						$resp = 354;
-			break;
+				$this->_send_data('DATA');
+				$resp = 354;
+				break;
 			case 'reset':
 
-						$this->_send_data('RSET');
-						$resp = 250;
-			break;
+				$this->_send_data('RSET');
+				$resp = 250;
+				break;
 			case 'quit'	:
 
-						$this->_send_data('QUIT');
-						$resp = 221;
-			break;
+				$this->_send_data('QUIT');
+				$resp = 221;
+				break;
 		}
 
 		$reply = $this->_get_smtp_data();
@@ -2126,11 +2136,31 @@ class CI_Email {
 	protected function _send_data($data)
 	{
 		$data .= $this->newline;
-		for ($written = 0, $length = strlen($data); $written < $length; $written += $result)
+		for ($written = $timestamp = 0, $length = strlen($data); $written < $length; $written += $result)
 		{
 			if (($result = fwrite($this->_smtp_connect, substr($data, $written))) === FALSE)
 			{
 				break;
+			}
+			// See https://bugs.php.net/bug.php?id=39598 and http://php.net/manual/en/function.fwrite.php#96951
+			elseif ($result === 0)
+			{
+				if ($timestamp === 0)
+				{
+					$timestamp = time();
+				}
+				elseif ($timestamp < (time() - $this->smtp_timeout))
+				{
+					$result = FALSE;
+					break;
+				}
+
+				usleep(250000);
+				continue;
+			}
+			else
+			{
+				$timestamp = 0;
 			}
 		}
 
@@ -2172,11 +2202,22 @@ class CI_Email {
 	/**
 	 * Get Hostname
 	 *
+	 * There are only two legal types of hostname - either a fully
+	 * qualified domain name (eg: "mail.example.com") or an IP literal
+	 * (eg: "[1.2.3.4]").
+	 *
+	 * @link	https://tools.ietf.org/html/rfc5321#section-2.3.5
+	 * @link	http://cbl.abuseat.org/namingproblems.html
 	 * @return	string
 	 */
 	protected function _get_hostname()
 	{
-		return isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost.localdomain';
+		if (isset($_SERVER['SERVER_NAME']))
+		{
+			return $_SERVER['SERVER_NAME'];
+		}
+
+		return isset($_SERVER['SERVER_ADDR']) ? '['.$_SERVER['SERVER_ADDR'].']' : '[127.0.0.1]';
 	}
 
 	// --------------------------------------------------------------------
@@ -2271,6 +2312,3 @@ class CI_Email {
 	}
 
 }
-
-/* End of file Email.php */
-/* Location: ./system/libraries/Email.php */
