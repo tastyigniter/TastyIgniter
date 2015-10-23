@@ -2,18 +2,10 @@
 
 class Image_tool_model extends TI_Model {
 
-	public function resize($img_path, $width = '', $height = '') {
-		$thumbs_path = IMAGEPATH . 'thumbs';
-
-		if ( ! is_dir($thumbs_path)) {
-			$this->_createFolder($thumbs_path);
-		}
-
+	public function resize($img_path, $width = NULL, $height = NULL) {
 		$setting = $this->config->item('image_tool');
 
-		if (isset($setting['root_folder']) AND (strpos($setting['root_folder'],
-		                                               '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE)
-		) {
+		if (isset($setting['root_folder']) AND (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE)) {
 			$root_folder = $setting['root_folder'] . '/';
 		} else {
 			$root_folder = 'data/';
@@ -23,10 +15,18 @@ class Image_tool_model extends TI_Model {
 			$img_path = str_replace($root_folder, '', $img_path);
 		}
 
-		if ( ! file_exists(IMAGEPATH . $root_folder . $img_path) OR ! is_file(IMAGEPATH . $root_folder . $img_path) OR strpos($img_path,
-		                                                                                                                      '/') === 0
-		) {
+		if ( ! file_exists(IMAGEPATH . $root_folder . $img_path) OR ! is_file(IMAGEPATH . $root_folder . $img_path) OR strpos($img_path, '/') === 0) {
 			$img_path = 'no_photo.png';
+		}
+
+		if (empty($width) AND empty($height)) {
+			return root_url() . 'assets/images/' . $root_folder . $img_path;
+		}
+
+		$thumbs_path = IMAGEPATH . 'thumbs';
+
+		if ( ! is_dir($thumbs_path)) {
+			$this->_createFolder($thumbs_path);
 		}
 
 		if (is_dir(IMAGEPATH . $root_folder . $img_path) AND ! is_dir($thumbs_path . '/' . $img_path)) {
@@ -37,14 +37,9 @@ class Image_tool_model extends TI_Model {
 		$extension = $info['extension'];
 
 		$old_path = IMAGEPATH . $root_folder . $img_path;
-		list ($img_width, $img_height, $img_type, $attr) = getimagesize($old_path);
-		$width = ($width === '') ? $img_width : $width;
-		$height = ($height === '') ? $img_height : $height;
 
-		$new_path = IMAGEPATH . 'thumbs/' . substr($img_path, 0, strrpos($img_path,
-		                                                                 '.')) . '-' . $width . 'x' . $height . '.' . $extension;
-		$new_image = 'thumbs/' . substr($img_path, 0,
-		                                strrpos($img_path, '.')) . '-' . $width . 'x' . $height . '.' . $extension;
+		$new_path = IMAGEPATH . 'thumbs/' . substr($img_path, 0, strrpos($img_path, '.')) . '-' . $width . 'x' . $height . '.' . $extension;
+		$new_image = 'thumbs/' . substr($img_path, 0, strrpos($img_path, '.')) . '-' . $width . 'x' . $height . '.' . $extension;
 
 		if (file_exists($old_path) AND ! file_exists($new_path)) {
 			$this->load->library('image_lib');
