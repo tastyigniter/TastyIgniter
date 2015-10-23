@@ -70,23 +70,18 @@ class Contact extends Main_Controller {
 			$email		= $this->input->post('email');
 			$subjects 	= array('1' => 'General enquiry', '2' => 'Comment', '3' => 'Technical Issues');
 
-			$mail_data['contact_topic'] 		= $subjects[$this->input->post('subject')];
 			$mail_data['full_name'] 			= $this->input->post('full_name');
+			$mail_data['contact_topic'] 		= $subjects[$this->input->post('subject')];
 			$mail_data['contact_telephone'] 	= $this->input->post('telephone');
 			$mail_data['contact_message'] 		= nl2br($this->input->post('comment'));
-			$mail_data['site_name'] 			= $this->config->item('site_name');
-			$mail_data['signature'] 			= $this->config->item('site_name');
 
 			$this->load->model('Mail_templates_model');
 			$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'contact');
 
-			$subject = $this->email->parse_template($mail_template['subject'], $mail_data);
-			$message = $this->email->parse_template($mail_template['body'], $mail_data);
-
 			$this->email->from(strtolower($email), ucwords($full_name));
 			$this->email->to(strtolower($this->config->item('site_email')));
-			$this->email->subject($subject);
-			$this->email->message($message);
+			$this->email->subject($mail_template['subject'], $mail_data);
+			$this->email->message($mail_template['body'], $mail_data);
 
 			if ($this->email->send()) {
                 return TRUE;

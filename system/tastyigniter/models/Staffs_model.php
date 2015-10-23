@@ -280,9 +280,9 @@ class Staffs_model extends TI_Model {
 		}
 	}
 
-	public function resetPassword($user_email) {
+	public function resetPassword($user_email = NULL) {
 		if ( ! empty($user_email)) {
-			$this->db->select('staffs.staff_id, staffs.staff_email, users.username');
+			$this->db->select('staffs.staff_id, staffs.staff_email, staffs.staff_name, users.username');
 			$this->db->from('staffs');
 			$this->db->join('users', 'users.staff_id = staffs.staff_id', 'left');
 			$this->db->where('staffs.staff_email', $user_email);
@@ -305,15 +305,16 @@ class Staffs_model extends TI_Model {
 				$this->db->set('password', sha1($salt . sha1($salt . sha1($password))));
 				$this->db->where('staff_id', $row['staff_id']);
 
-				if ($query = $this->db->update('users')) {
-					$message = "Someone requested that the password be reset for the following account:\r\n\r\n";
-					$message .= "Username: " . $row['username'] . " \r\n\r\n";
-					$message .= "Password: " . $password . " \r\n\r\n";
-					$message .= "Please don't forget to change your password after you login.\r\n\r\n";
+				if ($this->db->update('users') AND $this->db->affected_rows() > 0) {
+					$mail_data['staff_name'] = $row['staff_name'];
+					$mail_data['username'] = $row['username'];
+					$mail_data['password'] = $password;
 
-					$headers = "From: " . $this->config->item('site_name') . " <" . $this->config->item('site_email') . ">\r\n";
+					$this->load->model('Mail_templates_model');
+					$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'),
+					                                                              'password_reset_alert');
 
-					if (mail($row['staff_email'], 'Password Reset', $message, $headers)) {
+					if ($this->sendMail($row['staff_email'], $mail_template, $mail_data)) {
 						return TRUE;
 					}
 				}
@@ -337,6 +338,43 @@ class Staffs_model extends TI_Model {
 				return $affected_rows;
 			}
 		}
+	}
+
+	public function sendMail($email, $template, $data = array()) {
+		$this->load->library('email');
+
+		$this->email->initialize();
+
+		$this->email->from($this->config->item('site_email'), $this->config->item('site_name'));
+		$this->email->to(strtolower($email));
+		$this->email->subject($template['subject'], $data);
+		$this->email->message($template['body'], $data);
+
+		if ($this->email->send()) {
+			return TRUE;
+		} else {
+			log_message('debug', $this->email->print_debugger(array('headers')));
+		}
+	}
+
+	public function validateStaff($customer_id = NULL) {
+		if (!empty($customer_id)) {
+			$this->db->from('staffs');
+
+			if (is_numeric($customer_id)) {
+				$this->db->where('staff_id', $customer_id);
+			} else {
+				$this->db->where('staff_email', $customer_id);
+			}
+
+			$query = $this->db->get();
+
+			if ($query->num_rows() > 0) {
+				return TRUE;
+			}
+		}
+
+		return FALSE;
 	}
 }
 

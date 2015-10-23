@@ -498,7 +498,6 @@ class Reservations_model extends TI_Model {
 			$data['first_name'] = $result['first_name'];
 			$data['last_name'] = $result['last_name'];
 			$data['email'] = $result['email'];
-			$data['signature'] = $this->config->item('site_name');
 			$data['location_name'] = $result['location_name'];
 		}
 
@@ -540,11 +539,8 @@ class Reservations_model extends TI_Model {
 				$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'),
 				                                                              'reservation');
 
-				$subject = $this->email->parse_template($mail_template['subject'], $mail_data);
-				$message = $this->email->parse_template($mail_template['body'], $mail_data);
-
-				$this->email->subject($subject);
-				$this->email->message($message);
+				$this->email->subject($mail_template['subject'], $mail_data);
+				$this->email->message($mail_template['body'], $mail_data);
 
 				if ( ! $this->email->send()) {
 					log_message('debug', $this->email->print_debugger(array('headers')));

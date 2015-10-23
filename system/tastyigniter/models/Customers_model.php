@@ -222,11 +222,9 @@ class Customers_model extends TI_Model {
 
 				if ($this->db->update('customers') AND $this->db->affected_rows() > 0) {
 
-					$mail_data['site_name'] = $this->config->item('site_name');
 					$mail_data['first_name'] = $row['first_name'];
 					$mail_data['last_name'] = $row['last_name'];
 					$mail_data['created_password'] = $password;
-					$mail_data['signature'] = $this->config->item('site_name');
 					$mail_data['login_link'] = root_url('account/login');
 
 					$this->load->model('Mail_templates_model');
@@ -344,10 +342,8 @@ class Customers_model extends TI_Model {
 			}
 
 			if ($action === 'added' AND $this->config->item('registration_email') === '1') {
-				$mail_data['site_name'] = $this->config->item('site_name');
 				$mail_data['first_name'] = $save['first_name'];
 				$mail_data['last_name'] = $save['last_name'];
-				$mail_data['signature'] = $this->config->item('site_name');
 				$mail_data['login_link'] = root_url('account/login');
 
 				$this->load->model('Mail_templates_model');
@@ -382,13 +378,10 @@ class Customers_model extends TI_Model {
 
 		$this->email->initialize();
 
-		$subject = $this->email->parse_template($template['subject'], $data);
-		$message = $this->email->parse_template($template['body'], $data);
-
 		$this->email->from($this->config->item('site_email'), $this->config->item('site_name'));
 		$this->email->to(strtolower($email));
-		$this->email->subject($subject);
-		$this->email->message($message);
+		$this->email->subject($template['subject'], $data);
+		$this->email->message($template['body'], $data);
 
 		if ($this->email->send()) {
 			return TRUE;
