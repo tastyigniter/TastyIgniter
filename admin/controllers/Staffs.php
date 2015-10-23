@@ -174,13 +174,14 @@ class Staffs extends Admin_Controller {
         $this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $title));
         $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
 		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+
+		if ($this->user->hasPermission('Admin.Staffs.Access')) {
+			$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+		}
+
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('staffs')));
 
-        if ($this->user->hasPermission('Admin.Staffs.Access')) {
-            $this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
-        }
-
-        $data['display_staff_group'] = FALSE;
+		$data['display_staff_group'] = FALSE;
         if ($this->user->hasPermission('Admin.StaffGroups.Manage')) {
             $data['display_staff_group'] = TRUE;
         }
