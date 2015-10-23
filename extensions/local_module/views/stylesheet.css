@@ -90,8 +90,9 @@ margin-bottom: 0;
 }
 .panel-local .panel-heading {
 border-color: #eee;
-overflow: hidden;
+overflow: visible;
 padding: 0;
+display: block;
 }
 .panel-local .panel-body h2 {
 margin: 25px 0;
