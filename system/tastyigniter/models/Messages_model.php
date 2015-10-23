@@ -325,7 +325,7 @@ class Messages_model extends TI_Model {
 					                                                                    $send['customer_group_id']);
 					break;
 				case 'customers':
-					if ($send['customers']) {
+					if (isset($send['customers'])) {
 						$results = $this->Customers_model->getCustomerForMessages($column, $send['customers']);
 					}
 
@@ -337,7 +337,7 @@ class Messages_model extends TI_Model {
 					$results = $this->Staffs_model->getStaffsByGroupIdForMessages($column, $send['staff_group_id']);
 					break;
 				case 'staffs':
-					if ($send['staffs']) {
+					if (isset($send['staffs'])) {
 						$results = $this->Staffs_model->getStaffForMessages($column, $send['staffs']);
 					}
 
