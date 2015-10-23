@@ -4,9 +4,6 @@
 		<div class="row wrap-vertical">
 			<ul id="nav-tabs" class="nav nav-tabs">
 				<li class="active"><a href="#general" data-toggle="tab"><?php echo lang('text_tab_general'); ?></a></li>
-				<?php if ($template_data) { ?>
-					<li><a href="#templates" data-toggle="tab"><?php echo lang('text_tab_templates'); ?></a></li>
-				<?php } ?>
 			</ul>
 		</div>
 
@@ -57,74 +54,78 @@
 							<?php echo form_error('status', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
-				</div>
 
-				<?php if ($template_data) { ?>
-				<div id="templates" class="tab-pane row wrap-all">
-					<div class="panel panel-default panel-table">
-						<div class="table-responsive">
-							<table border="0" class="table table-striped table-border table-no-spacing table-templates">
-								<thead>
-									<tr>
-										<th class="action action-one"></th>
-										<th class="left"><?php echo lang('column_title'); ?></th>
-										<th class="text-right"><?php echo lang('column_date_updated'); ?></th>
-										<th class="text-right"><?php echo lang('column_date_added'); ?></th>
-									</tr>
-								</thead>
-								<tbody id="accordion">
-									<?php $template_row = 1; ?>
-									<?php foreach ($template_data as $tpl_data) { ?>
-									<tr>
-		  								<td colspan="4">
-		    								<div class="template-heading">
-												<div class="table-responsive">
-			  										<table border="0" class="table-template">
-														<tr data-toggle="collapse" data-parent="#accordion" data-target="#template-row-<?php echo $tpl_data['template_data_id']; ?>">
-															<td class="action action-one">
-																<i class="fa fa-angle-double-up up"></i>
-																<i class="fa fa-angle-double-down down"></i>
-															</td>
-															<td class="left"><?php echo $tpl_data['title']; ?></td>
-															<td class="text-right"><?php echo $tpl_data['date_updated']; ?></td>
-															<td class="text-right"><?php echo $tpl_data['date_added']; ?></td>
-														</tr>
-													</table>
-												</div>
-		    								</div>
-											<div id="template-row-<?php echo $tpl_data['template_data_id']; ?>" class="collapse">
-												<div class="template-content">
-													<div class="form-group">
-														<div class="col-sm-3">
-                                                            <label for="input-subject" class="control-label"><?php echo lang('label_subject'); ?></label>
-                                                        </div>
-                                                        <div class="col-sm-7">
-															<input type="hidden" name="templates[<?php echo $tpl_data['template_data_id']; ?>][code]" id="input-subject" class="form-control" value="<?php echo set_value('templates['.$tpl_data['template_data_id'].'][code]', $tpl_data['code']); ?>" />
-															<input type="text" name="templates[<?php echo $tpl_data['template_data_id']; ?>][subject]" id="input-subject" class="form-control" value="<?php echo set_value('templates['.$tpl_data['template_data_id'].'][subject]', $tpl_data['subject']); ?>" />
-															<?php echo form_error('subject', '<span class="text-danger">', '</span>'); ?>
+					<?php if ($template_data) { ?>
+					<div id="templates" class="row wrap-top">
+						<div class="panel panel-default panel-table">
+							<div class="panel-heading">
+								<h3 class="panel-title"><?php echo lang('text_tab_templates'); ?></h3>
+							</div>
+							<div class="table-responsive">
+								<table border="0" class="table table-striped table-border table-no-spacing table-templates">
+									<thead>
+										<tr>
+											<th class="action action-one"></th>
+											<th class="left"><?php echo lang('column_title'); ?></th>
+											<th class="text-right"><?php echo lang('column_date_updated'); ?></th>
+											<th class="text-right"><?php echo lang('column_date_added'); ?></th>
+										</tr>
+									</thead>
+									<tbody id="accordion">
+										<?php $template_row = 1; ?>
+										<?php foreach ($template_data as $tpl_data) { ?>
+										<tr>
+			                                <td colspan="4">
+			                                    <div class="template-heading">
+													<div class="table-responsive">
+				                                        <table border="0" class="table-template">
+															<tr data-toggle="collapse" data-parent="#accordion" aria-expanded="false" aria-controls="template-row-<?php echo $tpl_data['template_data_id']; ?>" data-target="#template-row-<?php echo $tpl_data['template_data_id']; ?>">
+																<td class="action action-one">
+																	<i class="fa fa-chevron-up up"></i>
+																	<i class="fa fa-chevron-down down"></i>
+																</td>
+																<td class="left"><?php echo $tpl_data['title']; ?></td>
+																<td class="text-right"><?php echo $tpl_data['date_updated']; ?></td>
+																<td class="text-right"><?php echo $tpl_data['date_added']; ?></td>
+															</tr>
+														</table>
+													</div>
+			                                    </div>
+												<div id="template-row-<?php echo $tpl_data['template_data_id']; ?>" class="collapse">
+													<div class="template-content">
+														<div class="form-group">
+															<div class="col-sm-3">
+	                                                            <label for="input-subject" class="control-label"><?php echo lang('label_subject'); ?></label>
+	                                                        </div>
+	                                                        <div class="col-sm-7">
+																<input type="hidden" name="templates[<?php echo $tpl_data['template_data_id']; ?>][code]" id="input-subject" class="form-control" value="<?php echo set_value('templates['.$tpl_data['template_data_id'].'][code]', $tpl_data['code']); ?>" />
+																<input type="text" name="templates[<?php echo $tpl_data['template_data_id']; ?>][subject]" id="input-subject" class="form-control" value="<?php echo set_value('templates['.$tpl_data['template_data_id'].'][subject]', $tpl_data['subject']); ?>" />
+																<?php echo form_error('subject', '<span class="text-danger">', '</span>'); ?>
+															</div>
+															<div class="col-sm-2">
+																<a class="btn btn-info btn-block" data-toggle="modal" data-target=".mail-variable-container #mail-variables">Variables &nbsp;&nbsp; <i class="fa fa-info-circle"></i></a>
+															</div>
 														</div>
-														<div class="col-sm-2">
-															<a class="btn btn-info btn-block" data-toggle="modal" data-target=".mail-variable-container #mail-variables">Variables &nbsp;&nbsp; <i class="fa fa-info-circle"></i></a>
+
+														<div class="form-group">
+															<div id="input-wysiwyg" class="col-md-12">
+																<textarea name="templates[<?php echo $tpl_data['template_data_id']; ?>][body]" style="height:300px;width:100%;" class="form-control"><?php echo set_value('templates['.$tpl_data['template_data_id'].'][body]', $tpl_data['body']); ?></textarea>
+																<?php echo form_error('templates['.$tpl_data['template_data_id'].'][body]', '<span class="text-danger">', '</span>'); ?>
+															</div>
 														</div>
 													</div>
-
-													<div class="form-group">
-														<div id="input-wysiwyg" class="col-md-12">
-															<textarea name="templates[<?php echo $tpl_data['template_data_id']; ?>][body]" style="height:300px;width:100%;" class="form-control"><?php echo set_value('templates['.$tpl_data['template_data_id'].'][body]', $tpl_data['body']); ?></textarea>
-														</div>
-													</div>
 												</div>
-											</div>
-										</td>
-									</tr>
-									<?php $template_row++; ?>
-									<?php } ?>
-								</tbody>
-							</table>
+											</td>
+										</tr>
+										<?php $template_row++; ?>
+										<?php } ?>
+									</tbody>
+								</table>
+							</div>
 						</div>
 					</div>
+					<?php } ?>
 				</div>
-				<?php } ?>
 			</div>
 		</form>
 
@@ -132,33 +133,14 @@
 	</div>
 </div>
 <script type="text/javascript">
-tinymce.init({
-    selector: 'textarea',
-    menubar: false,
-	plugins : 'table link image code charmap autolink lists textcolor variable',
-	toolbar1: 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | formatselect | bullist numlist | table hr code',
-	toolbar2: 'forecolor backcolor | outdent indent | undo redo | link unlink anchor image | subscript superscript | charmap variable',
-	removed_menuitems: 'newdocument',
-    theme: 'modern',
-	skin : 'tiskin',
-	convert_urls : false,
-    file_browser_callback : imageManager
+$(document).ready(function() {
+	$('textarea').summernote({
+		height: 300,
+	});
 });
 
 $(document).ready(function() {
 	$('.mail-variable-container').load(js_site_url('mail_templates/variables'));
-});
-
-$(document).on('click', '.show_hide', function() {
-	$('.mail-variable-container').load(js_site_url('mail_templates/variables'));
-
-	if ($('#supported-var').hasClass('hide')) {
-		$('#input-body').removeClass('col-md-12').addClass('col-md-9');
-		$('#supported-var').removeClass('hide');
-	} else {
-		$('#input-body').removeClass('col-md-9').addClass('col-md-12');
-		$('#supported-var').addClass('hide');
-	}
 });
 </script>
 <?php echo get_footer(); ?>

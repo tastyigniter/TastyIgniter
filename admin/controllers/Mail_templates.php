@@ -77,7 +77,8 @@ class Mail_templates extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('mail_templates')));
 
-        $this->template->setScriptTag(root_url('assets/js/tinymce/tinymce.min.js'), 'tinymce-js', '111');
+		$this->template->setStyleTag('css/summernote.css', 'summernote-css');
+		$this->template->setScriptTag('js/summernote.min.js', 'summernote-js');
 
 		$data['template_id'] 		= $template_id;
 		$data['name'] 				= $template_info['name'];
@@ -85,29 +86,31 @@ class Mail_templates extends Admin_Controller {
 
 		$titles = array(
 			'registration'			=> $this->lang->line('text_registration'),
+			'registration_alert'	=> $this->lang->line('text_registration_alert'),
 			'password_reset'		=> $this->lang->line('text_password_reset'),
+			'password_reset_alert'  => $this->lang->line('text_password_reset_alert'),
 			'order'					=> $this->lang->line('text_order'),
+			'order_alert'			=> $this->lang->line('text_order_alert'),
 			'reservation'			=> $this->lang->line('text_reservation'),
+			'reservation_alert'		=> $this->lang->line('text_reservation_alert'),
 			'internal'				=> $this->lang->line('text_internal'),
 			'contact'				=> $this->lang->line('text_contact'),
-			'order_alert'			=> $this->lang->line('text_order_alert'),
-			'reservation_alert'		=> $this->lang->line('text_reservation_alert')
 		);
 
 		$data['template_data'] = array();
 		$template_data = $this->Mail_templates_model->getAllTemplateData($template_id);
-		foreach ($template_data as $tpl_data) {
-			foreach ($titles as $key => $title) {
+		foreach ($titles as $key => $value) {
+			foreach ($template_data as $tpl_data) {
 				if ($key === $tpl_data['code']) {
 					$data['template_data'][] = array(
-						'template_id'		=> $tpl_data['template_id'],
-						'template_data_id'	=> $tpl_data['template_data_id'],
-						'title'				=> $title,
-						'code'				=> $tpl_data['code'],
-						'subject'			=> $tpl_data['subject'],
-						'body'				=> html_entity_decode($tpl_data['body']),
-						'date_added'		=> mdate('%d %M %y - %H:%i', strtotime($tpl_data['date_added'])),
-						'date_updated'		=> mdate('%d %M %y - %H:%i', strtotime($tpl_data['date_updated']))
+						'template_id'      => $tpl_data['template_id'],
+						'template_data_id' => $tpl_data['template_data_id'],
+						'title'            => $value,
+						'code'             => $tpl_data['code'],
+						'subject'          => $tpl_data['subject'],
+						'body'             => html_entity_decode($tpl_data['body']),
+						'date_added'       => mdate('%d %M %y - %H:%i', strtotime($tpl_data['date_added'])),
+						'date_updated'     => mdate('%d %M %y - %H:%i', strtotime($tpl_data['date_updated'])),
 					);
 				}
 			}
