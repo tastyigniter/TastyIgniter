@@ -221,7 +221,7 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for=""><?php echo lang('label_customer_name'); ?></label><br /><?php echo $email; ?>
+                                            <label for=""><?php echo lang('label_customer_name'); ?></label><br /><?php echo $first_name; ?> <?php echo $last_name; ?>
                                         </div>
                                         <?php if ($addresses) { ?>
                                             <div class="form-group">
@@ -249,13 +249,15 @@
                                 </div>
 
                                 <div class="row">
-									<div class="col-sm-12 form-group">
+									<div class="col-sm-6 form-group">
 										<label for=""><?php echo lang('label_payment_method'); ?></label><br />
-										<?php foreach ($payments as $payment) { ?>
-                                            <?php if (!empty($payment['data'])) { ?>
-                                                <?php echo $payment['data']; ?>
-                                            <?php } ?>
-										<?php } ?>
+										<div class="list-group">
+											<?php foreach ($payments as $payment) { ?>
+	                                            <?php if (!empty($payment['data'])) { ?>
+	                                                <div class="list-group-item"><?php echo $payment['data']; ?></div>
+	                                            <?php } ?>
+											<?php } ?>
+										</div>
 										<?php echo form_error('payment', '<span class="text-danger">', '</span>'); ?>
 									</div>
 

@@ -18,6 +18,8 @@ class Cod extends Main_Controller {
 
         $order_data = $this->session->userdata('order_data');                           // retrieve order details from session userdata
         $data['payment'] = !empty($order_data['payment']) ? $order_data['payment'] : '';
+        $data['minimum_order_total'] = is_numeric($payment['ext_data']['order_total']) ? $payment['ext_data']['order_total'] : 0;
+        $data['order_total'] = $this->cart->total();
 
         // pass array $data and load view files
         return $this->load->view('cod/cod', $data, TRUE);

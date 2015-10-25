@@ -23,5 +23,7 @@ $lang['text_tab_general'] 	    = 'General';
 $lang['help_order_total'] 		= 'The total amount the order must reach before this payment gateway becomes active';
 $lang['help_order_status'] 	    = 'Default order status when paypal is the payment method';
 
+$lang['alert_min_order_total'] 	= 'You need to spend %s or more to use this payment method</p>';
+
 /* End of file paypal_express_lang.php */
 /* Location: ./extensions/cod/language/english/paypal_express_lang.php */
