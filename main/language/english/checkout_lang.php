@@ -27,6 +27,7 @@ $lang['text_success_message']           = 'Your order  %s has been received and 
 $lang['text_order_info']                = 'This is a %s order. <br /><br /><b>Order Date:</b> %s <br /><b>Delivery Time:</b> %s <br /><b>Payment Method:</b> %s ';
 $lang['text_order_total']               = 'Order Total: <b>%s.</b>';
 
+$lang['label_customer_name']            = 'Customer Name';
 $lang['label_first_name']               = 'First Name';
 $lang['label_last_name']                = 'Last Name';
 $lang['label_email']                    = 'Email';

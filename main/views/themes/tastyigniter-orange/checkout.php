@@ -218,7 +218,37 @@
 							</div>
 
 							<div id="payment" style="display: <?php echo ($checkout_step === 'two') ? 'block' : 'none'; ?>">
-								<div class="row">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for=""><?php echo lang('label_customer_name'); ?></label><br /><?php echo $email; ?>
+                                        </div>
+                                        <?php if ($addresses) { ?>
+                                            <div class="form-group">
+                                                <label for=""><?php echo lang('label_address'); ?></label><br />
+                                                <?php foreach ($addresses as $address) { ?>
+                                                    <?php if (!empty($address['address_id']) AND $address_id == $address['address_id']) { ?>
+                                                        <address class="text-left"><?php echo $address['address']; ?></address>
+                                                    <?php } ?>
+                                                <?php } ?>
+                                            </div>
+                                        <?php } ?>
+                                        <div class="form-group">
+                                            <label for=""><?php echo lang('label_telephone'); ?></label><br />
+                                            <?php echo $telephone; ?>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for=""><?php echo lang('label_order_type'); ?></label><br /><?php echo ($order_type === '1') ? lang('label_delivery') : lang('label_collection'); ?>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for=""><?php echo lang('label_order_time'); ?></label><br /><?php echo mdate(config_item('time_format'), strtotime($order_time)); ?>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
 									<div class="col-sm-12 form-group">
 										<label for=""><?php echo lang('label_payment_method'); ?></label><br />
 										<?php foreach ($payments as $payment) { ?>
