@@ -180,7 +180,8 @@ class Messages extends Admin_Controller {
         $this->template->setButton($this->lang->line('button_save_draft'), array('class' => 'btn btn-default', 'onclick' => 'saveAsDraft();'));
         $this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('messages')));
 
-        $this->template->setScriptTag(root_url('assets/js/tinymce/tinymce.min.js'), 'tinymce-js', '111');
+        $this->template->setStyleTag(root_url('assets/js/summernote/summernote.css'), 'summernote-css', '111');
+        $this->template->setScriptTag(root_url('assets/js/summernote/summernote.min.js'), 'summernote-js', '111');
 
 		$data['sub_menu_back'] 		= site_url('messages');
 

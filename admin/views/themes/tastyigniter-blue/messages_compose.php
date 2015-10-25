@@ -2,7 +2,7 @@
 <div class="row content">
 	<div class="col-md-12">
         <div class="row">
-            <div class="col-sm-12 col-md-3">
+            <div class="col-sm-12 col-md-3 hide">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title"><?php echo lang('text_folders'); ?></h3>
@@ -17,7 +17,7 @@
                 </div>
             </div>
 
-            <div class="col-sm-12 col-md-9">
+            <div class="col-sm-12">
                 <div class="panel panel-default">
                     <div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_compose_message'); ?></h3></div>
                     <div class="panel-body">
@@ -135,7 +135,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-sm-12 wrap-none">
+                                <div class="col-sm-12">
                                     <textarea name="body" id="input-wysiwyg" class="form-control" style="height:300px;width:100%;"><?php echo set_value('body', $body); ?></textarea>
                                     <?php echo form_error('body', '<span class="text-danger">', '</span>'); ?>
                                 </div>
@@ -148,18 +148,9 @@
 	</div>
 </div>
 <script type="text/javascript">
-tinymce.init({
-    selector: '#input-wysiwyg',
-    menubar: false,
-	plugins : 'table link image code charmap autolink lists textcolor',
-	toolbar1: 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | formatselect | bullist numlist',
-	toolbar2: 'forecolor backcolor | outdent indent | undo redo | link unlink anchor image code | hr table | subscript superscript | charmap',
-	removed_menuitems: 'newdocument',
-	skin : 'tiskin',
-	convert_urls : false,
-    file_browser_callback : imageManager
-
-});
+    $('#input-wysiwyg').summernote({
+        height: 300,
+    });
 </script>
 <script type="text/javascript"><!--
 

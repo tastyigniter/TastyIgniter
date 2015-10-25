@@ -133,14 +133,12 @@
 	</div>
 </div>
 <script type="text/javascript">
-$(document).ready(function() {
 	$('textarea').summernote({
 		height: 300,
 	});
-});
 
-$(document).ready(function() {
-	$('.mail-variable-container').load(js_site_url('mail_templates/variables'));
-});
+	$(document).ready(function() {
+		$('.mail-variable-container').load(js_site_url('mail_templates/variables'));
+	});
 </script>
 <?php echo get_footer(); ?>

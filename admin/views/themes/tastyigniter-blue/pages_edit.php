@@ -132,24 +132,18 @@
 				</div>
 
 				<div id="content-f" class="tab-pane row">
-					<textarea name="content" id="input-wysiwyg" style="height:400px;width:100%;"><?php echo set_value('content', $content); ?></textarea>
-					<?php echo form_error('content', '<span class="text-danger">', '</span>'); ?>
+					<div class="col-sm-12">
+						<textarea name="content" id="input-wysiwyg" class="form-control" style="height:400px;width:100%;"><?php echo set_value('content', $content); ?></textarea>
+						<?php echo form_error('content', '<span class="text-danger">', '</span>'); ?>
+					</div>
 				</div>
 			</div>
 		</form>
 	</div>
 </div>
 <script type="text/javascript">
-tinymce.init({
-    selector: '#input-wysiwyg',
-    menubar: false,
-	plugins : 'table link image code charmap autolink lists textcolor',
-	toolbar1: 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | formatselect | bullist numlist',
-	toolbar2: 'forecolor backcolor | outdent indent | undo redo | link unlink anchor image code | hr table | subscript superscript | charmap',
-	removed_menuitems: 'newdocument',
-	skin : 'tiskin',
-	convert_urls : false,
-    file_browser_callback : imageManager
-});
+	$('#input-wysiwyg').summernote({
+		height: 300,
+	});
 </script>
 <?php echo get_footer(); ?>

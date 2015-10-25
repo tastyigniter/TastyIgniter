@@ -97,8 +97,9 @@ class Pages extends Admin_Controller {
         $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('pages')));
-		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('pages')));
-        $this->template->setScriptTag(root_url('assets/js/tinymce/tinymce.min.js'), 'tinymce-js', '111');
+
+		$this->template->setStyleTag(root_url('assets/js/summernote/summernote.css'), 'summernote-css');
+		$this->template->setScriptTag(root_url('assets/js/summernote/summernote.min.js'), 'summernote-js');
 
 		$data['page_id'] 			= $page_info['page_id'];
 		$data['language_id'] 		= $page_info['language_id'];
