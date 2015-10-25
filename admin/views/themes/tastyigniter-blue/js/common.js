@@ -36,78 +36,78 @@ $(function() {
     })
 })
 
+// Image Manager
 function mediaManager(field) {
     var height = (this.window.innerHeight > 0) ? this.window.innerHeight-100 : this.screen.height-100;
     $(window).bind("load resize", function() {
         var height = (this.window.innerHeight > 0) ? this.window.innerHeight-100 : this.screen.height-100;
-        $('#media-manager > iframe').css("height", (height) + "px");
+        $('#media-manager iframe').css("height", (height) + "px");
     });
 
     $('#media-manager').remove();
 
     var iframe_url = js_site_url('image_manager?popup=iframe&field_id=') + encodeURIComponent(field) + '&sub_folder=' + $('#' + field).attr('value');
 
-    $('body').append('<div id="media-manager"><iframe name="media_manager" src="'+ iframe_url +'" width="1200" height="' + height + 'px" frameborder="0"></iframe></div>');
+	$('body').append('<div id="media-manager" class="modal" tabindex="-1" data-parent="note-editor" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">'
+		+ '<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header">'
+		+ '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>'
+		+ '<h4 class="modal-title">Image Manager</h4>'
+		+ '</div><div class="modal-body wrap-none">'
+		+ '<iframe name="media_manager" src="'+ iframe_url +'" width="100%" height="' + height + 'px" frameborder="0"></iframe>'
+		+ '</div></div></div></div>');
 
-    $.fancybox({
-        padding : 0,
-        title: "Media Manager",
-        helpers : {
-            title: {
-                type: 'inside',
-                position: 'top'
-            }
-        },
-        href:"#media-manager",
-        autoResize: true,
-        scrolling: 'no',
-        preload   : true,
-        afterClose: function() {
-            if ($('#' + field).attr('value')) {
-                $.ajax({
-                    url: js_site_url('image_manager/resize?image=') + encodeURIComponent($('#' + field).attr('value')) + '&width=120&height=120',
-                    dataType: 'json',
-                    success: function(json) {
-                        var thumb = $('#' + field).parent().parent().find('.thumb');
-                        $(thumb).attr('src', json);
-                    }
-                });
-            }
-        }
-    });
-};
+	$('#media-manager').modal('show');
 
-function imageManager(field, url, type, win) {
-	var iframe_url = js_site_url('image_manager?popup=iframe&field_id=') + encodeURIComponent(field);
-
-	tinyMCE.activeEditor.windowManager.open({
-		file : iframe_url,
-		title : 'Image Manager',
-		width : 980,
-		height : 550,
-		resizable : 'yes',
-		inline : 'yes',
-		close_previous : 'no'
-	}, {
-		window : win,
-		input : field,
-		updateInput: function (url) {
-			var fieldElm = win.document.getElementById(field);
-			fieldElm.value = url;
-
-			if ("fireEvent" in fieldElm) {
-				fieldElm.fireEvent("onchange")
-			} else {
-				var evt = document.createEvent("HTMLEvents");
-				evt.initEvent("change", false, true);
-				fieldElm.dispatchEvent(evt);
-			}
+	$('#media-manager').on('hide.bs.modal', function (e) {
+		if ($('#' + field).attr('value')) {
+			$.ajax({
+				url: js_site_url('image_manager/resize?image=') + encodeURIComponent($('#' + field).attr('value')) + '&width=120&height=120',
+				dataType: 'json',
+				success: function(json) {
+					var thumb = $('#' + field).parent().parent().find('.thumb');
+					$(thumb).attr('src', json);
+				}
+			});
 		}
 	});
+};
 
-	return false;
-}
+// Override summernote image manager
+$(document).ready(function() {
+    $('.note-editor button[data-event=\'showImageDialog\']').attr('data-toggle', 'imageManager').removeAttr('data-event');
 
+    $(document).on('click', '.note-editor button[data-toggle=\'imageManager\']', function() {
+        $('#media-manager').remove();
+
+        $(this).parents('.note-editor').find('.note-editable').focus();
+
+        var height = ($(window).innerHeight() > 0) ? $(window).innerHeight()-100 : $(window).height()-100;
+        $(window).bind("load resize", function() {
+            var height = ($(window).innerHeight() > 0) ? $(window).innerHeight()-100 : $(window).height()-100;
+            $('#media-manager iframe').css("height", (height) + "px");
+        });
+
+        var iframe_url = js_site_url('image_manager?popup=iframe');
+
+        $('body').append('<div id="media-manager" class="modal" tabindex="-1" data-parent="note-editor" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">'
+            + '<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header">'
+            + '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>'
+            + '<h4 class="modal-title">Image Manager</h4>'
+            + '</div><div class="modal-body wrap-none">'
+            + '<iframe name="media_manager" src="'+ iframe_url +'" width="100%" height="' + height + 'px" frameborder="0"></iframe>'
+            + '</div></div></div></div>');
+
+        $('#media-manager').modal('show');
+    });
+});
+
+// Load messages and activities top navbar dropdown content
+$(function(){
+    $('.dropdown-messages .menu-body').load(js_site_url('messages/latest'));
+    $('.dropdown-activities .menu-body').load(js_site_url('activities/latest'));
+})
+
+// Panel Table Filter Button Toggle
 $(function(){
 	$('#page-wrapper').on('click', '.panel-table .btn-filter', function(e) {
 		var $this = $(this),
@@ -122,14 +122,9 @@ $(function(){
             }
         });
 	});
-
-    //$('#page-wrapper .panel-table .btn-filter').trigger('click');
-
-    $('.dropdown-messages .menu-body').load(js_site_url('messages/latest'));
-    $('.dropdown-activities .menu-body').load(js_site_url('activities/latest'));
 })
 
-
+// Alert Collapsible
 $(function() {
     var alertMsgs = $('.alert-collapsible .alert-hide');
     var dropdownButton = $('.btn-dropdown');
@@ -150,31 +145,10 @@ $(function() {
     });
 })
 
-$(function() {
-    window.setInterval(function () {
-        //updateNotifications();
-    }, 60000);
-
-	function updateNotifications() {
-		$.ajax({
-			url: js_site_url('cart_module/cart_module/add'),
-			type: 'POST',
-			//data: data,
-			dataType: 'json',
-			success: function(json) {
-			}
-		});
-
-		//setTimeout('updateNotifications()', 15000); // Every 15 seconds.
-	}
-
-});
-
+// Checkbox button toggle
 $(function () {
-
     $('.button-checkbox').each(function () {
-
-        // Settings
+        // Setting
         var $widget = $(this),
             $button = $widget.find('button'),
             $checkbox = $widget.find('input:checkbox'),

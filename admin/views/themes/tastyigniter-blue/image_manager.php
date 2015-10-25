@@ -491,11 +491,38 @@
                 }
             });
 
+            // choose
             function chooseSelected(figure) {
                 var field = parent.$('#' + $('#field_id').val());
                 var file_path = 'data/' + figure.attr('data-path');
                 var file_name = figure.attr('data-name');
                 var thumb_name = field.parent().parent().find('.name');
+
+                if (parent.$('#media-manager.modal[data-parent="note-editor"]').is(':visible')) {
+	                // Get the current selection
+	                var range = parent.window.getSelection().getRangeAt(0);
+	                var node = range.startContainer;
+	                var startOffset = range.startOffset;  // where the range starts
+	                var endOffset = range.endOffset;      // where the range ends
+
+	                $.ajax({
+		                url: js_site_url('image_manager/resize?image=' + encodeURIComponent(file_path)),
+		                dataType: 'json',
+		                success: function (url) {
+			                 // Create a new range from the orginal selection
+			                var range = document.createRange();
+			                range.setStart(node, startOffset);
+			                range.setEnd(node, endOffset);
+
+			                var img = document.createElement('img');
+			                img.src = url;
+
+			                range.insertNode(img);
+
+			                parent.$('#media-manager').modal('hide');
+		                }
+	                });
+                }
 
                 if (typeof parent.$.fancybox == 'function') {
                     field.attr('value', file_path);
@@ -503,18 +530,6 @@
 
                     parent.$.fancybox.close();
                     parent.$('#image-manager').empty();
-                }
-
-                if (typeof top.tinymce != 'undefined') {
-                    $.ajax({
-                        url: js_site_url('image_manager/resize?image=' + encodeURIComponent(file_path)),
-                        dataType: 'json',
-                        success: function (url) {
-                            var dialogArguments = top.tinymce.activeEditor.windowManager.getParams();
-                            dialogArguments.updateInput(url);
-                            top.tinymce.activeEditor.windowManager.close();
-                        }
-                    });
                 }
             }
 

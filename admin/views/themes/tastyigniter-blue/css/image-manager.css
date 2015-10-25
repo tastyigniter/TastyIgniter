@@ -13,7 +13,7 @@ body {
 padding-top:0;
 font-weight:200;
 background-color:#F7F7F7;
-border: 0 solid #dedede;
+border: 0 solid #D2DCE7;
 max-height: 100%;
 width: 100%;
 overflow: hidden;
@@ -43,9 +43,9 @@ text-decoration: none;
 /*** NAVBAR TOP ***/
 .navbar-menu {
 background-color: #ECF0F5;
-border-top: 0 solid #dedede;
-border-right: 0 solid #dedede;
-border-left: 0 solid #dedede;
+border-top: 0 solid #D2DCE7;
+border-right: 0 solid #D2DCE7;
+border-left: 0 solid #D2DCE7;
 border-bottom:0px;
 padding: 0 0px;
 margin-bottom:0px;
@@ -72,7 +72,7 @@ text-align: center;
 vertical-align: middle;
 }
 .btn-default {
-border-color: #dedede;
+border-color: #D2DCE7;
 }
 .btn-default.active, .btn-default.focus, .btn-default:active, .btn-default:focus, .btn-default:hover {
 border-color: #c4c4c4;
@@ -129,7 +129,7 @@ padding: 0;
 box-shadow: none;
 }
 .input-group-addon, .form-control {
-    border: 1px solid #dedede;
+    border: 1px solid #D2DCE7;
 }
 
 
@@ -315,7 +315,7 @@ border: 1px solid #D2DCE7;
 border-bottom: 0 none;
 border-radius:3px 3px 0 0;
 padding: 7px 15px;
-margin: 0;
+margin: 5px 0 0;
 z-index:5;
 }
 .breadcrumb > li {

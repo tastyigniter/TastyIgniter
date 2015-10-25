@@ -105,6 +105,13 @@ background-color: #EC971F;
 color: #FFF;
 }
 
+.modal-lg {
+width: 85% !important;
+}
+#media-manager.modal {
+z-index: 9999999;
+}
+
 
 /** WRAPPER **/
 #wrapper {
@@ -388,6 +395,7 @@ color: #bfccdd;
 cursor:pointer;
 font-weight: normal;
 transition: all 0.4s ease-in-out 0s;
+font-size: 14px;
 }
 .sidebar .nav > li > a:hover,
 .sidebar .nav > li > a:focus {
@@ -433,7 +441,8 @@ border-bottom: 0!important;
 color: #b2c2d6;
 }
 .sidebar .nav-second-level li a {
-padding-left: 27px;
+padding: 8px 15px 8px 27px;
+font-size: 13px;
 }
 .sidebar .nav-third-level li a {
 padding-left: 42px;
@@ -750,7 +759,7 @@ margin-top: -1px;
 .btn-group-xs > .btn, .btn-xs {
 padding: 2px 10px;
 }
-.btn-group {
+.btn-group-toggle {
 width: 100%;
 }
 
@@ -819,6 +828,7 @@ width: 14.2857%;
 /** NAV-TABS **/
 .nav-tabs {
 background-color: #FFF;
+border-radius: 4px 4px 0 0;
 border-bottom: 2px solid #ECF0F5;
 padding: 0;
 margin-top:0;
@@ -831,7 +841,6 @@ margin-bottom: -2px;
 }
 .nav-tabs > li > a {
 border: 0px solid transparent;
-border-radius:  0;
 padding:12px 15px;
 color:#444;
 font-weight: 400;
@@ -879,7 +888,7 @@ border-width: 0 0 2px;
 }
 .tab-content {
 background-color: #fff;
-border-color: #ECF0F5;
+border-color: #FFF;
 border-style: solid;
 border-width: 0 1px 1px;
 padding: 15px;
@@ -1290,8 +1299,6 @@ margin-left: 10px;
 /** SELECTED PANEL **/
 .panel-selected {
 border: 1px solid #dce4ec !important;
-overflow: auto;
-height: 150px;
 min-height: 150px;
 }
 .panel-selected .img img {
@@ -1970,13 +1977,17 @@ width:100%;
 .template-heading {
 padding: 6px;
 }
-.template-heading tr .action .up,
-.template-heading tr.collapsed .action .down {
+#accordion .template-heading tr .action .up {
 display: block !important;
 }
-.template-heading tr.collapsed .action .up,
-.template-heading tr .action .down {
+#accordion .template-heading tr .action .down {
 display: none !important;
+}
+#accordion .template-heading tr.collapsed .action .up {
+display: none !important;
+}
+#accordion .template-heading tr.collapsed .action .down {
+display: block !important;
 }
 .table-templates .text-right,
 .table-template .text-right {
@@ -2462,6 +2473,34 @@ font-family: "Oxygen",Arial,sans-serif;
 z-index: 804000;
 top: 3px;
 right: 10px;
+}
+
+
+/** NOTE EDITOR **/
+.note-editor.panel {
+border-radius: 3px;
+border: 1px solid #D2DCE7;
+}
+.note-editor .panel-heading {
+padding: 5px;
+border-color: #D2DCE7;
+}
+.note-editor .btn {
+border-width: 1px !important;
+}
+.note-editor.panel > .panel-heading .btn {
+padding: 6px 12px;
+}
+.panel-heading.note-toolbar > .btn-group {
+margin-top: 0;
+}
+.note-editor .btn-default {
+color: #333;
+background-color: #FFF;
+border-color: #D2DCE7;
+}
+.note-editor .note-statusbar {
+background-color: #F9FAFC;
 }
 
 
