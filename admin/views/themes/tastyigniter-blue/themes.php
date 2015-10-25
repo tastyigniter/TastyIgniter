@@ -29,11 +29,11 @@
 									<?php if ($theme['active'] === '1') { ?>
 										<a class="btn btn-edit" title="<?php echo lang('text_customize'); ?>" href="<?php echo $theme['edit']; ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
 										<a class="btn btn-warning" disabled="disabled" title="<?php echo lang('text_is_default'); ?>"><i class="fa fa-star"></i></a>&nbsp;&nbsp;
-										<a class="btn btn-info preview-thumb" title="<?php echo lang('text_preview'); ?>" href="<?php echo $theme['screenshot']; ?>" title="Default"><i class="fa fa-eye"></i></a>
+										<a class="btn btn-info preview-thumb" title="<?php echo lang('text_preview'); ?>" data-img-src="<?php echo $theme['screenshot']; ?>" title="Default"><i class="fa fa-eye"></i></a>
 									<?php } else {?>
 										<a class="btn btn-edit" title="<?php echo lang('text_customize'); ?>" href="<?php echo $theme['edit']; ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
 										<a class="btn btn-warning" title="<?php echo lang('text_set_default'); ?>" href="<?php echo $theme['activate']; ?>"><i class="fa fa-star"></i></a>&nbsp;&nbsp;
-										<a class="btn btn-info preview-thumb" title="<?php echo lang('text_preview'); ?>" href="<?php echo $theme['screenshot']; ?>" title="Default"><i class="fa fa-eye"></i></a>
+										<a class="btn btn-info preview-thumb" title="<?php echo lang('text_preview'); ?>" data-img-src="<?php echo $theme['screenshot']; ?>" title="Default"><i class="fa fa-eye"></i></a>
 									<?php } ?>
 								</td>
 							</tr>
@@ -50,11 +50,22 @@
 		</div>
 	</div>
 </div>
-<link type="text/css" rel="stylesheet" href="<?php echo root_url("assets/js/fancybox/jquery.fancybox.css"); ?>">
-<script src="<?php echo root_url("assets/js/fancybox/jquery.fancybox.js"); ?>"></script>
 <script type="text/javascript">
 $(document).ready(function() {
-	$('.preview-thumb').fancybox();
+	$(document).on('click', '.preview-thumb', function() {
+		$('#preview-theme').remove();
+
+		$('body').append('<div id="preview-theme" class="modal" tabindex="-1" data-parent="note-editor" role="dialog" aria-hidden="true">'
+			+ '<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header">'
+			+ '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>'
+			+ '<h4 class="modal-title">Preview Theme</h4>'
+			+ '</div><div class="modal-body wrap-none">'
+			+ '<img src="'+ $(this).attr('data-img-src') +'" width="100%" />'
+			+ '</div></div></div></div>');
+
+		$('#preview-theme').modal('show');
+
+	});
 });
 </script>
 <?php echo get_footer(); ?>

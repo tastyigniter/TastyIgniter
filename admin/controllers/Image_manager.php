@@ -491,9 +491,6 @@ class Image_manager extends Admin_Controller {
         $this->template->setHeading($this->lang->line('text_heading'));
 
         $this->template->setButton($this->lang->line('button_option'), array('class' => 'btn btn-default pull-right', 'href' => site_url('settings#image-manager')));
-
-        $this->template->setStyleTag(root_url('assets/js/fancybox/jquery.fancybox.css'), 'jquery-fancybox-css');
-        $this->template->setScriptTag(root_url("assets/js/fancybox/jquery.fancybox.js"), 'jquery-fancybox-js');
     }
 }
 

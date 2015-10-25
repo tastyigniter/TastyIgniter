@@ -86,7 +86,6 @@ class Themes extends Admin_Controller {
 
 		$this->template->setStyleTag(root_url('assets/js/colorpicker/css/bootstrap-colorpicker.min.css'), 'bootstrap-colorpicker-css');
 		$this->template->setStyleTag(root_url('assets/js/codemirror/codemirror.css'), 'codemirror-css');
-		$this->template->setStyleTag(root_url('assets/js/fancybox/jquery.fancybox.css'), 'jquery-fancybox-css');
 		$this->template->setScriptTag(root_url('assets/js/colorpicker/js/bootstrap-colorpicker.min.js'), 'bootstrap-colorpicker-js');
 		$this->template->setScriptTag(root_url('assets/js/codemirror/codemirror.js'), 'codemirror-js', '300');
 		$this->template->setScriptTag(root_url('assets/js/codemirror/xml/xml.js'), 'codemirror-xml-js', '301');
@@ -96,7 +95,6 @@ class Themes extends Admin_Controller {
 		$this->template->setScriptTag(root_url('assets/js/codemirror/htmlmixed/htmlmixed.js'), 'codemirror-htmlmixed-js', '305');
 		$this->template->setScriptTag(root_url('assets/js/codemirror/clike/clike.js'), 'codemirror-clike-js', '306');
 		$this->template->setScriptTag(root_url('assets/js/jquery-sortable.js'), 'jquery-sortable-js');
-		$this->template->setScriptTag(root_url("assets/js/fancybox/jquery.fancybox.js"), 'jquery-fancybox-js');
 
 		$data['file'] = array();
 		if ($this->input->get('file')) {

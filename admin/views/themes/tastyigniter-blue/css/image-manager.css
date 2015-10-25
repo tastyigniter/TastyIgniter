@@ -127,6 +127,7 @@ color: #FFF;
 color: #686868;
 padding: 0;
 box-shadow: none;
+line-height: 1;
 }
 .input-group-addon, .form-control {
     border: 1px solid #D2DCE7;
@@ -315,7 +316,7 @@ border: 1px solid #D2DCE7;
 border-bottom: 0 none;
 border-radius:3px 3px 0 0;
 padding: 7px 15px;
-margin: 5px 0 0;
+margin: 4px 0 0;
 z-index:5;
 }
 .breadcrumb > li {

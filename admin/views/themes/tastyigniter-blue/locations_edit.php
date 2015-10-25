@@ -348,6 +348,30 @@
 
 				<div id="reservation" class="tab-pane row wrap-all">
 					<div class="form-group">
+						<label for="input-reserve-interval" class="col-sm-3 control-label"><?php echo lang('label_reservation_time_interval'); ?>
+							<span class="help-block"><?php echo lang('help_reservation_time_interval'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<div class="input-group">
+								<input type="text" name="reservation_time_interval" id="input-reserve-interval" class="form-control" value="<?php echo set_value('reservation_time_interval', $reservation_time_interval); ?>" />
+								<span class="input-group-addon"><?php echo lang('text_minutes'); ?></span>
+							</div>
+							<?php echo form_error('reservation_time_interval', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-reserve-turn" class="col-sm-3 control-label"><?php echo lang('label_reservation_stay_time'); ?>
+							<span class="help-block"><?php echo lang('help_reservation_stay_time'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<div class="input-group">
+								<input type="text" name="reservation_stay_time" id="input-reserve-turn" class="form-control" value="<?php echo set_value('reservation_stay_time', $reservation_stay_time); ?>" />
+								<span class="input-group-addon"><?php echo lang('text_minutes'); ?></span>
+							</div>
+							<?php echo form_error('reservation_stay_time', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
 						<label for="input-table" class="col-sm-3 control-label"><?php echo lang('label_tables'); ?></label>
 						<div class="col-sm-5">
 							<input type="text" name="table" value="" id="input-table" class="form-control" />
@@ -381,30 +405,6 @@
 									</tbody>
 								</table>
 							</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-reserve-interval" class="col-sm-3 control-label"><?php echo lang('label_reservation_time_interval'); ?>
-							<span class="help-block"><?php echo lang('help_reservation_time_interval'); ?></span>
-						</label>
-						<div class="col-sm-5">
-							<div class="input-group">
-								<input type="text" name="reservation_time_interval" id="input-reserve-interval" class="form-control" value="<?php echo set_value('reservation_time_interval', $reservation_time_interval); ?>" />
-								<span class="input-group-addon"><?php echo lang('text_minutes'); ?></span>
-							</div>
-							<?php echo form_error('reservation_time_interval', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-reserve-turn" class="col-sm-3 control-label"><?php echo lang('label_reservation_stay_time'); ?>
-							<span class="help-block"><?php echo lang('help_reservation_stay_time'); ?></span>
-						</label>
-						<div class="col-sm-5">
-							<div class="input-group">
-								<input type="text" name="reservation_stay_time" id="input-reserve-turn" class="form-control" value="<?php echo set_value('reservation_stay_time', $reservation_stay_time); ?>" />
-								<span class="input-group-addon"><?php echo lang('text_minutes'); ?></span>
-							</div>
-							<?php echo form_error('reservation_stay_time', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 				</div>
@@ -1126,33 +1126,28 @@ function addDeliveryArea() {
 		var field = 'image-thumb' + image_row;
 		$('#media-manager').remove();
 		var iframe_url = js_site_url('image_manager?popup=iframe&field_id=' + field);
-		$('body').append('<div id="media-manager"><iframe name="media_manager" src="'+ iframe_url +'" width="1200" height="' + height + 'px" frameborder="0"></iframe></div>');
 
-		$.fancybox({
-			padding : 0,
-			title: "Media Manager",
-			helpers : {
-				title: {
-					type: 'inside',
-					position: 'top'
-				}
-			},
-			href:"#media-manager",
-			autoResize: true,
-			scrolling: 'no',
-			preload   : true,
-			afterClose: function() {
-				if ($('#' + field).attr('value')) {
-					$.ajax({
-						url: js_site_url('image_manager/resize?image=') + encodeURIComponent($('#' + field).attr('value')) + '&width=120&height=120',
-						dataType: 'json',
-						success: function(json) {
-							var parent = $('#' + field).parent().parent();
-							parent.find('.image-thumb').attr('src', json);
-							parent.find('.image-name').attr('value', parent.find('.name').html());
-						}
-					});
-				}
+        $('body').append('<div id="media-manager" class="modal" tabindex="-1" data-parent="note-editor" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">'
+            + '<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header">'
+            + '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>'
+            + '<h4 class="modal-title">Image Manager</h4>'
+            + '</div><div class="modal-body wrap-none">'
+            + '<iframe name="media_manager" src="'+ iframe_url +'" width="100%" height="' + height + 'px" frameborder="0"></iframe>'
+            + '</div></div></div></div>');
+
+        $('#media-manager').modal('show');
+
+		$('#media-manager').on('hide.bs.modal', function (e) {
+			if ($('#' + field).attr('value')) {
+				$.ajax({
+					url: js_site_url('image_manager/resize?image=') + encodeURIComponent($('#' + field).attr('value')) + '&width=120&height=120',
+					dataType: 'json',
+					success: function(json) {
+						var parent = $('#' + field).parent().parent();
+						parent.find('.image-thumb').attr('src', json);
+						parent.find('.image-name').attr('value', parent.find('.name').html());
+					}
+				});
 			}
 		});
 	};

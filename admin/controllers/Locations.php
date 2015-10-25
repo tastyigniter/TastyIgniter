@@ -177,9 +177,7 @@ class Locations extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('locations')));
 
-		$this->template->setStyleTag(root_url('assets/js/fancybox/jquery.fancybox.css'), 'jquery-fancybox-css');
 		$this->template->setStyleTag(root_url('assets/js/datepicker/bootstrap-timepicker.css'), 'bootstrap-timepicker-css');
-		$this->template->setScriptTag(root_url("assets/js/fancybox/jquery.fancybox.js"), 'jquery-fancybox-js');
 		$this->template->setScriptTag(root_url("assets/js/datepicker/bootstrap-timepicker.js"), 'bootstrap-timepicker-js');
 		$this->template->setScriptTag(root_url("assets/js/jquery-sortable.js"), 'jquery-sortable-js');
 

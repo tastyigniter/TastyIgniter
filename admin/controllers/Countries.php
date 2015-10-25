@@ -125,9 +125,6 @@ class Countries extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('countries')));
 
-        $this->template->setStyleTag(root_url('assets/js/fancybox/jquery.fancybox.css'), 'jquery-fancybox-css');
-        $this->template->setScriptTag(root_url("assets/js/fancybox/jquery.fancybox.js"), 'jquery-fancybox-js');
-
         $data['country_name'] 		= $country_info['country_name'];
 		$data['iso_code_2'] 		= $country_info['iso_code_2'];
 		$data['iso_code_3'] 		= $country_info['iso_code_3'];

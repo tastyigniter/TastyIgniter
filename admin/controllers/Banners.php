@@ -60,9 +60,6 @@ class Banners extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_modules'), array('class' => 'btn btn-default', 'href' => site_url('banners/edit')));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('banners')));
 
-        $this->template->setStyleTag(root_url('assets/js/fancybox/jquery.fancybox.css'), 'jquery-fancybox-css');
-        $this->template->setScriptTag(root_url("assets/js/fancybox/jquery.fancybox.js"), 'jquery-fancybox-js');
-
         $data['banner_id'] 			= $banner_info['banner_id'];
 		$data['name'] 				= $banner_info['name'];
 		$data['type'] 				= ($this->input->post('type')) ? $this->input->post('type') : $banner_info['type'];

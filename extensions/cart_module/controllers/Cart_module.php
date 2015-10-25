@@ -32,8 +32,6 @@ class Cart_module extends Main_Controller {
         }
 
         $this->template->setStyleTag(extension_url('cart_module/views/stylesheet.css'), 'cart-module-css', '144000');
-        $this->template->setStyleTag(base_url("assets/js/fancybox/jquery.fancybox.css"), 'jquery-fancybox-css', '145000');
-        $this->template->setScriptTag(base_url("assets/js/fancybox/jquery.fancybox.js"), 'jquery-fancybox-js', '14000');
 
         $order_data = $this->session->userdata('order_data');
         if ($rsegment === 'checkout' AND isset($order_data['checkout_step']) AND $order_data['checkout_step'] === 'two') {

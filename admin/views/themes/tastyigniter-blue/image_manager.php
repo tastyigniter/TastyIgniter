@@ -390,14 +390,11 @@
             $(document).on('click', '.btn-preview', function() {
                 var image_url = decodeURIComponent($(this).attr('data-url'));
                 if (image_url != '') {
-                    $('#previewBox').empty();
-                    $('#previewBox').html('<img src="'+ image_url +'" />');
-                    $.fancybox({
-                        padding : 0,
-                        href:"#previewBox",
-                        autoScale: false,
-                        parent: ".media-preview"
-                    });
+	                bootbox.dialog({
+		                title: "Preview",
+		                size: "large",
+		                message: '<img src="'+ image_url +'" width="100%"/>'
+	                });
                 }
             });
 
@@ -522,14 +519,6 @@
 			                parent.$('#media-manager').modal('hide');
 		                }
 	                });
-                }
-
-                if (typeof parent.$.fancybox == 'function') {
-                    field.attr('value', file_path);
-                    thumb_name.html(file_name);
-
-                    parent.$.fancybox.close();
-                    parent.$('#image-manager').empty();
                 }
             }
 
