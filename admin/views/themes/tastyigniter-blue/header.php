@@ -141,9 +141,18 @@
 							<i class="fa fa-user"></i>
 						</a>
 						<ul class="dropdown-menu  dropdown-user">
-							<li><span><b><?php echo lang('text_user'); ?>:</b> <?php echo $staff_name; ?></span></li>
-							<li><span><b><?php echo lang('text_staff_group'); ?>:</b> <?php echo $staff_group; ?></span></li>
-							<li><span><b><?php echo lang('text_location'); ?>:</b> <?php echo $staff_location; ?></span></li>
+							<li>
+								<div class="row wrap-vertical">
+									<div class="col-sm-6 col-md-4 wrap-top">
+										<img class="img-rounded img-responsive" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
+									</div>
+									<div class="col-sm-6 col-md-8">
+										<h4><?php echo $staff_name; ?></h4><span class="small"><i>(<?php echo $username; ?>)</i></span>
+										<span class="small text-uppercase"><?php echo $staff_group; ?></span>
+										<span><?php echo $staff_location; ?></span>
+									</div>
+								</div>
+							</li>
 							<li class="divider"></li>
 							<li><a href="<?php echo $staff_edit; ?>"><i class="fa fa-user fa-fw"></i><?php echo lang('text_edit_details'); ?></a></li>
 							<li><a href="<?php echo $logout; ?>"><i class="fa fa-power-off fa-fw"></i><?php echo lang('text_logout'); ?></a></li>
@@ -166,9 +175,6 @@
 								</ul>
 							</li>
 							<li>
-								<a class="tables" href="<?php echo site_url('tables'); ?>"><i class="fa fa-table fa-fw"></i><span class="content"><?php echo lang('menu_table'); ?></span></a>
-							</li>
-							<li>
 								<a class="sales"><i class="fa fa-bar-chart-o fa-fw"></i><span class="content"><?php echo lang('menu_sale'); ?> </span><span class="fa arrow"></span></a>
 	                            <ul class="nav nav-second-level">
 									<li><a class="orders" href="<?php echo site_url('orders'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_order'); ?></a></li>
@@ -178,8 +184,14 @@
 								</ul>
 							</li>
 							<li>
+								<a class="tables" href="<?php echo site_url('tables'); ?>"><i class="fa fa-table fa-fw"></i><span class="content"><?php echo lang('menu_table'); ?></span></a>
+							</li>
+							<li>
+								<a class="locations" href="<?php echo site_url('locations'); ?>"><i class="fa fa-map-marker fa-fw"></i><span class="content"><?php echo lang('menu_location'); ?></span></a>
+							</li>
+							<li>
 								<a class="users"><i class="fa fa-user fa-fw"></i><span class="content"><?php echo lang('menu_user'); ?> </span><span class="fa arrow"></span></a>
-	                            <ul class="nav nav-second-level">
+								<ul class="nav nav-second-level">
 									<li><a class="customers" href="<?php echo site_url('customers'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_customer'); ?></a></li>
 									<li><a class="staffs" href="<?php echo site_url('staffs'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_staff'); ?></a>
 									<li><a class="customer_groups" href="<?php echo site_url('customer_groups'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_customer_group'); ?></a></li>
@@ -188,7 +200,25 @@
 								</ul>
 							</li>
 							<li>
-								<a class="locations" href="<?php echo site_url('locations'); ?>"><i class="fa fa-map-marker fa-fw"></i><span class="content"><?php echo lang('menu_location'); ?></span></a>
+								<a class="extensions" href="<?php echo site_url('extensions'); ?>"><i class="fa fa-puzzle-piece fa-fw"></i><span class="content"><?php echo lang('menu_extension'); ?> </span></a>
+							</li>
+							<li>
+								<a class="themes"><i class="fa fa-paint-brush fa-fw"></i><span class="content"><?php echo lang('menu_design'); ?> </span><span class="fa arrow"></span></a>
+								<ul class="nav nav-second-level">
+									<li><a class="layouts" href="<?php echo site_url('layouts'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_layout'); ?></a></li>
+									<li><a class="themes" href="<?php echo site_url('themes'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_theme'); ?></a></li>
+									<li><a class="mail_templates" href="<?php echo site_url('mail_templates'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_mail_template'); ?></a></li>
+								</ul>
+							</li>
+							<li>
+								<a class="marketing"><i class="fa fa-line-chart fa-fw"></i><span class="content"><?php echo lang('menu_marketing'); ?> </span><span class="fa arrow"></span></a>
+	                            <ul class="nav nav-second-level">
+		                            <li><a class="banners" href="<?php echo site_url('banners'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_banner'); ?></a></li>
+		                            <li><a class="messages" href="<?php echo site_url('messages'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_messages'); ?></a></li>
+								</ul>
+							</li>
+							<li>
+								<a class="pages" href="<?php echo site_url('pages'); ?>"><i class="fa fa-file fa-fw"></i><span class="content"><?php echo lang('menu_page'); ?></span></a>
 							</li>
 							<li>
 								<a class="localisation"><i class="fa fa-globe fa-fw"></i><span class="content"><?php echo lang('menu_localisation'); ?> </span><span class="fa arrow"></span></a>
@@ -202,18 +232,6 @@
 								</ul>
 							</li>
 							<li>
-								<a class="extensions" href="<?php echo site_url('extensions'); ?>"><i class="fa fa-puzzle-piece fa-fw"></i><span class="content"><?php echo lang('menu_extension'); ?> </span></a>
-							</li>
-							<li>
-								<a class="themes"><i class="fa fa-paint-brush fa-fw"></i><span class="content"><?php echo lang('menu_design'); ?> </span><span class="fa arrow"></span></a>
-	                            <ul class="nav nav-second-level">
-	                                <li><a class="layouts" href="<?php echo site_url('layouts'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_layout'); ?></a></li>
-	                                <li><a class="themes" href="<?php echo site_url('themes'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_theme'); ?></a></li>
-	                                <li><a class="banners" href="<?php echo site_url('banners'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_banner'); ?></a></li>
-									<li><a class="mail_templates" href="<?php echo site_url('mail_templates'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_mail_template'); ?></a></li>
-								</ul>
-							</li>
-							<li>
 								<a class="tools"><i class="fa fa-wrench fa-fw"></i><span class="content"><?php echo lang('menu_tool'); ?> </span><span class="fa arrow"></span></a>
 	                            <ul class="nav nav-second-level">
 									<li><a class="image_manager image_options" href="<?php echo site_url('image_manager'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_media_manager'); ?></a></li>
@@ -223,7 +241,6 @@
 							<li>
 								<a class="system"><i class="fa fa-cog fa-fw"></i><span class="content"><?php echo lang('menu_system'); ?></span> <span class="fa arrow"></span></a>
 	                            <ul class="nav nav-second-level">
-									<li><a class="pages" href="<?php echo site_url('pages'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_page'); ?></a></li>
 	                                <li><a class="permissions" href="<?php echo site_url('permissions'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_permission'); ?></a></li>
 	                                <li><a class="uri_routes" href="<?php echo site_url('uri_routes'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_uri_route'); ?></a></li>
 									<li><a class="error_logs" href="<?php echo site_url('error_logs'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_error_log'); ?></a></li>

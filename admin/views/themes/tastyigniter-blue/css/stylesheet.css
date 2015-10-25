@@ -1992,18 +1992,21 @@ border-top: 1px solid #E3E3E3;
 padding:25px;
 }
 .supported-var {
-margin: -10px 25px 10px;
+margin: 0px;
 list-style: none outside none;
-overflow: scroll;
-max-height: 460px;
 }
 .supported-var .list-group-item {
 border-width: 0 0 2px;
 }
-.supported-var span {
+.supported-var a > span {
 border-radius: 4px;
 font-weight: normal;
-padding: 4px 10px;
+padding: 4px 0px;
+width: 30%;
+display: inline-block;
+}
+.supported-var .list-group-item {
+padding: 5px 15px;
 }
 
 
