@@ -307,8 +307,8 @@ class Staffs_model extends TI_Model {
 
 				if ($this->db->update('users') AND $this->db->affected_rows() > 0) {
 					$mail_data['staff_name'] = $row['staff_name'];
-					$mail_data['username'] = $row['username'];
-					$mail_data['password'] = $password;
+					$mail_data['staff_username'] = $row['username'];
+					$mail_data['reset_password'] = $password;
 
 					$this->load->model('Mail_templates_model');
 					$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'),

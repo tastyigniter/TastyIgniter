@@ -225,7 +225,7 @@ class Customers_model extends TI_Model {
 					$mail_data['first_name'] = $row['first_name'];
 					$mail_data['last_name'] = $row['last_name'];
 					$mail_data['created_password'] = $password;
-					$mail_data['login_link'] = root_url('account/login');
+					$mail_data['account_login_link'] = root_url('account/login');
 
 					$this->load->model('Mail_templates_model');
 					$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'),
@@ -344,7 +344,7 @@ class Customers_model extends TI_Model {
 			if ($action === 'added' AND $this->config->item('registration_email') === '1') {
 				$mail_data['first_name'] = $save['first_name'];
 				$mail_data['last_name'] = $save['last_name'];
-				$mail_data['login_link'] = root_url('account/login');
+				$mail_data['account_login_link'] = root_url('account/login');
 
 				$this->load->model('Mail_templates_model');
 				$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'),

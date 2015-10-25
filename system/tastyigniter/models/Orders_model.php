@@ -515,7 +515,7 @@ class Orders_model extends TI_Model {
 			$this->load->library('currency');
 
 			$data['order_number'] = $result['order_id'];
-			$data['order_link'] = root_url('account/orders/view/' . $result['order_id']);
+			$data['order_view_url'] = root_url('account/orders/view/' . $result['order_id']);
 			$data['order_type'] = ($result['order_type'] === '1') ? 'delivery' : 'collection';
 			$data['order_time'] = mdate('%H:%i', strtotime($result['order_time']));
 			$data['order_date'] = mdate('%d %M %y', strtotime($result['date_added']));
@@ -523,7 +523,7 @@ class Orders_model extends TI_Model {
 			$data['last_name'] = $result['last_name'];
 			$data['email'] = $result['email'];
 
-			$data['menus'] = array();
+			$data['order_menus'] = array();
 			$menus = $this->getOrderMenus($result['order_id']);
 			$options = $this->getOrderMenuOptions($result['order_id']);
 			if ($menus) {
@@ -536,13 +536,13 @@ class Orders_model extends TI_Model {
 						}
 					}
 
-					$data['menus'][] = array(
-						'name'     => (strlen($menu['name']) > 20) ? substr($menu['name'], 0,
+					$data['order_menus'][] = array(
+						'menu_name'     => (strlen($menu['name']) > 20) ? substr($menu['name'], 0,
 						                                                    20) . '...' : $menu['name'],
-						'quantity' => $menu['quantity'],
-						'price'    => $this->currency->format($menu['price']),
-						'subtotal' => $this->currency->format($menu['subtotal']),
-						'options'  => implode(', ', $option_data),
+						'menu_quantity' => $menu['quantity'],
+						'menu_price'    => $this->currency->format($menu['price']),
+						'menu_subtotal' => $this->currency->format($menu['subtotal']),
+						'menu_options'  => implode(', ', $option_data),
 					);
 				}
 			}
@@ -552,8 +552,8 @@ class Orders_model extends TI_Model {
 				$data['order_totals'] = array();
 				foreach ($order_totals as $total) {
 					$data['order_totals'][] = array(
-						'title' => $total['title'],
-						'value' => $this->currency->format($total['value']),
+						'order_total_title' => $total['title'],
+						'order_total_value' => $this->currency->format($total['value']),
 					);
 				}
 			}

@@ -490,11 +490,11 @@ class Reservations_model extends TI_Model {
 		if ($result) {
 			$this->load->library('country');
 
-			$data['reserve_number'] = $result['reservation_id'];
-			$data['reserve_link'] = root_url('main/reservations?id=' . $result['reservation_id']);
-			$data['reserve_time'] = mdate('%H:%i', strtotime($result['reserve_time']));
-			$data['reserve_date'] = mdate('%l, %F %j, %Y', strtotime($result['reserve_date']));
-			$data['reserve_guest'] = $result['guest_num'];
+			$data['reservation_number'] = $result['reservation_id'];
+			$data['reservation_view_url'] = root_url('main/reservations?id=' . $result['reservation_id']);
+			$data['reservation_time'] = mdate('%H:%i', strtotime($result['reserve_time']));
+			$data['reservation_date'] = mdate('%l, %F %j, %Y', strtotime($result['reserve_date']));
+			$data['reservation_guest'] = $result['guest_num'];
 			$data['first_name'] = $result['first_name'];
 			$data['last_name'] = $result['last_name'];
 			$data['email'] = $result['email'];

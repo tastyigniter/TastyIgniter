@@ -141,7 +141,174 @@ class Mail_templates extends Admin_Controller {
         $this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $this->lang->line('text_variables')));
         $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $this->lang->line('text_variables')));
 
-        $data['variables'] = array();
+        $data['variables'] = array(
+	        'General' => array(
+		        array(
+			        'var'  => '{site_name}',
+			        'name' => 'Site name',
+		        ),
+		        array(
+			        'var'  => '{site_logo}',
+			        'name' => 'Site logo',
+	            ),
+		        array(
+			        'var'  => '{site_url}',
+			        'name' => 'Site URL',
+		        ),
+		        array(
+			        'var'  => '{signature}',
+			        'name' => 'Signature',
+		        ),
+		        array(
+			        'var'  => '{location_name}',
+			        'name' => 'Location name',
+		        ),
+	        ),
+	        'Customer' => array(
+		        array(
+			        'var'  => '{full_name}',
+			        'name' => 'Customer full name',
+		        ),
+		        array(
+			        'var'  => '{first_name}',
+			        'name' => 'Customer first name',
+		        ),
+		        array(
+			        'var'  => '{last_name}',
+			        'name' => 'Customer last name',
+		        ),
+		        array(
+			        'var'  => '{email}',
+			        'name' => 'Customer email address',
+		        ),
+	        ),
+	        'Staff' => array(
+		        array(
+			        'var'  => '{staff_name}',
+			        'name' => 'Staff name',
+		        ),
+		        array(
+			        'var'  => '{staff_username}',
+			        'name' => 'Staff username',
+		        ),
+	        ),
+	        'Registration/Reset' => array(
+		        array(
+			        'var'  => '{account_login_link}',
+			        'name' => 'Account login link',
+		        ),
+		        array(
+			        'var'  => '{reset_password}',
+			        'name' => 'Created password on password reset',
+		        ),
+	        ),
+	        'Order' => array(
+		        array(
+			        'var'  => '{order_number}',
+			        'name' => 'Order number',
+		        ),
+		        array(
+			        'var'  => '{order_view_url}',
+			        'name' => 'Order view URL',
+		        ),
+		        array(
+			        'var'  => '{order_type}',
+			        'name' => 'Order type ex. delivery/collection',
+		        ),
+		        array(
+			        'var'  => '{order_time}',
+			        'name' => 'Order delivery/collection time',
+		        ),
+		        array(
+			        'var'  => '{order_date}',
+			        'name' => 'Order delivery/collection date',
+		        ),
+		        array(
+			        'var'  => '{order_address}',
+			        'name' => 'Customer address for delivery order',
+		        ),
+		        array(
+			        'var'  => '{order_menus}',
+			        'name' => 'Order menus  - START iteration',
+		        ),
+		        array(
+			        'var'  => '{menu_name}',
+			        'name' => 'Order menu name',
+		        ),
+		        array(
+			        'var'  => '{menu_options}',
+			        'name' => 'Order menu option ex. name: price',
+		        ),
+		        array(
+			        'var'  => '{menu_quantity}',
+			        'name' => 'Order menu quantity',
+		        ),
+		        array(
+			        'var'  => '{menu_price}',
+			        'name' => 'Order menu price',
+		        ),
+		        array(
+			        'var'  => '{menu_subtotal}',
+			        'name' => 'Order menu subtotal',
+		        ),
+		        array(
+			        'var'  => '{/order_menus}',
+			        'name' => 'Order menus  - END iteration',
+		        ),
+		        array(
+			        'var'  => '{order_totals}',
+			        'name' => 'Order total pairs - START iteration',
+		        ),
+		        array(
+			        'var'  => '{order_total_title}',
+			        'name' => 'Order total title',
+		        ),
+		        array(
+			        'var'  => '{order_total_value}',
+			        'name' => 'Order total value',
+		        ),
+		        array(
+			        'var'  => '{/order_totals}',
+			        'name' => 'Order total pairs - END iteration',
+		        ),
+	        ),
+	        'Reservation' => array(
+		        array(
+			        'var'  => '{reservation_number}',
+			        'name' => 'Reservation number',
+		        ),
+		        array(
+			        'var'  => '{reservation_view_url}',
+			        'name' => 'Reservation view URL',
+		        ),
+		        array(
+			        'var'  => '{reservation_date}',
+			        'name' => 'Reservation date',
+		        ),
+		        array(
+			        'var'  => '{reservation_time}',
+			        'name' => 'Reservation time',
+		        ),
+		        array(
+			        'var'  => '{reservation_guest_no}',
+			        'name' => 'No. of guest reserved',
+		        ),
+	        ),
+	        'Contact' => array(
+		        array(
+			        'var'  => '{contact_topic}',
+			        'name' => 'Contact topic',
+		        ),
+		        array(
+			        'var'  => '{contact_telephone}',
+			        'name' => 'Contact telephone',
+		        ),
+		        array(
+			        'var'  => '{contact_message}',
+			        'name' => 'Contact message body',
+		        ),
+	        ),
+        );
 
 		$this->output->enable_profiler(FALSE);
 		$this->template->render('mail_templates_variables', $data);
