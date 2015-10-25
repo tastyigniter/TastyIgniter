@@ -8,7 +8,7 @@
 (function (factory) {
 	if (typeof define === 'function' && define.amd) {
 		// AMD. Register as anonymous module.
-		define(['jquery'], factory);
+		define(['../../../admin/views/themes/tastyigniter-blue/js/jquery.raty'], factory);
 	} else {
 		// Browser globals.
 		factory(jQuery);
