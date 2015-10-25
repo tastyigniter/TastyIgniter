@@ -198,7 +198,7 @@ class Locations extends Admin_Controller {
 		$data['location_city'] 			= $location_info['location_city'];
 		$data['location_state'] 		= $location_info['location_state'];
 		$data['location_postcode'] 		= $location_info['location_postcode'];
-		$data['location_email'] 		= $location_info['location_email'];
+		$data['location_email'] 		= !empty($location_info['location_email']) ? $location_info['location_email'] : $this->config->item('site_email');
 		$data['location_telephone'] 	= $location_info['location_telephone'];
 		$data['description'] 			= $location_info['description'];
 		$data['location_lat'] 			= $location_info['location_lat'];
@@ -346,13 +346,12 @@ class Locations extends Admin_Controller {
 			$gallery = array();
 		}
 
-		$data['gallery'] = array();
-		if (!empty($gallery)) {
-			$data['gallery'] = array(
-				'title'       => $gallery['title'],
-				'description' => $gallery['description'],
-			);
+		$data['gallery'] = array(
+			'title'       => !empty($gallery) ? $gallery['title'] : '',
+			'description' => !empty($gallery) ? $gallery['description'] : '',
+		);
 
+		if (!empty($gallery)) {
 			if (isset($gallery['images']) AND is_array($gallery['images'])) {
 				foreach ($gallery['images'] as $key => $image) {
 					$data['gallery']['images'][$key] = array(
