@@ -27,6 +27,8 @@ class Image_manager extends Admin_Controller {
 	public function index() {
         $this->user->restrict('Admin.MediaManager.Access');
 
+        $this->output->enable_profiler(FALSE);
+
         $data['uploads'] = $this->_uploads;
         $data['new_folder'] = $this->_new_folder;
         $data['move'] = $this->_move;
@@ -185,11 +187,12 @@ class Image_manager extends Admin_Controller {
         $data['max_size_upload']    = $this->media_manager->getUploadMaxSize();
 		$data['allowed_ext']        = $this->media_manager->getAllowedExt();
 
-		if ($popup !== 'iframe') {
-			}
-
-		$this->template->render('image_manager', $data);
-	}
+		if ($popup === 'iframe') {
+            $this->load->view($this->config->item(ADMINDIR, 'default_themes') . 'image_manager', $data);
+        } else {
+            $this->template->render('image_manager', $data);
+        }
+    }
 
 	public function resize() {
 		$this->load->model('Image_tool_model');
