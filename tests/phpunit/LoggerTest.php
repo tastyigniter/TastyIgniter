@@ -19,11 +19,11 @@ use Prophecy\Argument;
 class LoggerTest extends \Prophecy\PhpUnit\ProphecyTestCase
 {
 
-    public function testVerboseDebug()
+    public function testVeryVerboseDebug()
     {
         $output = array();
         $io = $this->prophesize('Composer\IO\IOInterface');
-        $io->isVerbose()->willReturn(true)->shouldBeCalled();
+        $io->isVeryVerbose()->willReturn(true)->shouldBeCalled();
         $io->writeError(Argument::type('string'))->will(
             function ($args) use (&$output) {
                 $output[] = $args[0];
@@ -37,7 +37,37 @@ class LoggerTest extends \Prophecy\PhpUnit\ProphecyTestCase
         $this->assertContains('<info>[test]</info>', $output[0]);
     }
 
-    public function testNotVerboseDebug()
+    public function testNotVeryVerboseDebug()
+    {
+        $output = array();
+        $io = $this->prophesize('Composer\IO\IOInterface');
+        $io->isVeryVerbose()->willReturn(false)->shouldBeCalled();
+        $io->writeError(Argument::type('string'))->shouldNotBeCalled();
+        $io->write(Argument::type('string'))->shouldNotBeCalled();
+
+        $fixture = new Logger('test', $io->reveal());
+        $fixture->debug('foo');
+    }
+
+    public function testVerboseInfo()
+    {
+        $output = array();
+        $io = $this->prophesize('Composer\IO\IOInterface');
+        $io->isVerbose()->willReturn(true)->shouldBeCalled();
+        $io->writeError(Argument::type('string'))->will(
+            function ($args) use (&$output) {
+                $output[] = $args[0];
+            }
+        )->shouldBeCalled();
+        $io->write(Argument::type('string'))->shouldNotBeCalled();
+
+        $fixture = new Logger('test', $io->reveal());
+        $fixture->info('foo');
+        $this->assertEquals(1, count($output));
+        $this->assertContains('<info>[test]</info>', $output[0]);
+    }
+
+    public function testNotVerboseInfo()
     {
         $output = array();
         $io = $this->prophesize('Composer\IO\IOInterface');
@@ -46,7 +76,24 @@ class LoggerTest extends \Prophecy\PhpUnit\ProphecyTestCase
         $io->write(Argument::type('string'))->shouldNotBeCalled();
 
         $fixture = new Logger('test', $io->reveal());
-        $fixture->debug('foo');
+        $fixture->info('foo');
+    }
+
+    public function testWarning()
+    {
+        $output = array();
+        $io = $this->prophesize('Composer\IO\IOInterface');
+        $io->writeError(Argument::type('string'))->will(
+            function ($args) use (&$output) {
+                $output[] = $args[0];
+            }
+        )->shouldBeCalled();
+        $io->write(Argument::type('string'))->shouldNotBeCalled();
+
+        $fixture = new Logger('test', $io->reveal());
+        $fixture->warning('foo');
+        $this->assertEquals(1, count($output));
+        $this->assertContains('<error>[test]</error>', $output[0]);
     }
 }
 // vim:sw=4:ts=4:sts=4:et:

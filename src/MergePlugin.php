@@ -182,14 +182,12 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     protected function mergeFile(RootPackageInterface $root, $path)
     {
         if (isset($this->loadedFiles[$path])) {
-            $this->logger->debug(
-                "Skipping duplicate <comment>$path</comment>..."
-            );
+            $this->logger->debug("Already merged <comment>$path</comment>");
             return;
         } else {
             $this->loadedFiles[$path] = true;
         }
-        $this->logger->debug("Loading <comment>{$path}</comment>...");
+        $this->logger->info("Loading <comment>{$path}</comment>...");
 
         $package = new ExtraPackage($path, $this->composer, $this->logger);
         $package->mergeInto($root, $this->state);
@@ -211,14 +209,14 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     {
         $request = $event->getRequest();
         foreach ($this->state->getDuplicateLinks('require') as $link) {
-            $this->logger->debug(
+            $this->logger->info(
                 "Adding dependency <comment>{$link}</comment>"
             );
             $request->install($link->getTarget(), $link->getConstraint());
         }
         if ($this->state->isDevMode()) {
             foreach ($this->state->getDuplicateLinks('require-dev') as $link) {
-                $this->logger->debug(
+                $this->logger->info(
                     "Adding dev dependency <comment>{$link}</comment>"
                 );
                 $request->install($link->getTarget(), $link->getConstraint());
@@ -238,7 +236,7 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
         if ($op instanceof InstallOperation) {
             $package = $op->getPackage()->getName();
             if ($package === self::PACKAGE_NAME) {
-                $this->logger->debug('composer-merge-plugin installed');
+                $this->logger->info('composer-merge-plugin installed');
                 $this->state->setFirstInstall(true);
                 $this->state->setLocked(
                     $event->getComposer()->getLocker()->isLocked()
@@ -259,7 +257,7 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
         // @codeCoverageIgnoreStart
         if ($this->state->isFirstInstall()) {
             $this->state->setFirstInstall(false);
-            $this->logger->debug(
+            $this->logger->info(
                 '<comment>' .
                 'Running additional update to apply merge settings' .
                 '</comment>'
