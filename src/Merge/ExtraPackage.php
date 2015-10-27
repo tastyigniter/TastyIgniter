@@ -17,12 +17,15 @@ use Composer\Json\JsonFile;
 use Composer\Package\BasePackage;
 use Composer\Package\CompletePackage;
 use Composer\Package\Loader\ArrayLoader;
+use Composer\Package\AliasPackage;
+use Composer\Package\RootAliasPackage;
 use Composer\Package\RootPackage;
+use Composer\Package\RootPackageInterface;
 use Composer\Package\Version\VersionParser;
 use UnexpectedValueException;
 
 /**
- * Processing for a composer.json file that will be merged into a RootPackage
+ * Processing for a composer.json file that will be merged into a RootPackageInterface
  *
  * @author Bryan Davis <bd808@bd808.com>
  */
@@ -123,21 +126,25 @@ class ExtraPackage
     }
 
     /**
-     * Merge this package into a RootPackage
+     * Merge this package into a RootPackageInterface
      *
-     * @param RootPackage $root
+     * @param RootPackageInterface $root
      * @param PluginState $state
      */
-    public function mergeInto(RootPackage $root, PluginState $state)
+    public function mergeInto(RootPackageInterface $root, PluginState $state)
     {
         $this->addRepositories($root);
 
         $this->mergeRequires($root, $state);
         $this->mergeDevRequires($root, $state);
 
+        // UPSTREAM: These don't have any effect if our RootPackageInterface
+        // is actually a RootAliasPackage due to caching done at construction
+        // of the alias.
         $this->mergeConflicts($root);
         $this->mergeReplaces($root);
         $this->mergeProvides($root);
+
         $this->mergeSuggests($root);
 
         $this->mergeAutoload($root);
@@ -150,9 +157,9 @@ class ExtraPackage
      * Add a collection of repositories described by the given configuration
      * to the given package and the global repository manager.
      *
-     * @param RootPackage $root
+     * @param RootPackageInterface $root
      */
-    protected function addRepositories(RootPackage $root)
+    protected function addRepositories(RootPackageInterface $root)
     {
         if (!isset($this->json['repositories'])) {
             return;
@@ -173,20 +180,22 @@ class ExtraPackage
             $newRepos[] = $repo;
         }
 
-        $root->setRepositories(array_merge(
+        self::castRootPackage($root)->setRepositories(array_merge(
             $newRepos,
             $root->getRepositories()
         ));
     }
 
     /**
-     * Merge require into a RootPackage
+     * Merge require into a RootPackageInterface
      *
-     * @param RootPackage $root
+     * @param RootPackageInterface $root
      * @param PluginState $state
      */
-    protected function mergeRequires(RootPackage $root, PluginState $state)
-    {
+    protected function mergeRequires(
+        RootPackageInterface $root,
+        PluginState $state
+    ) {
         $requires = $this->package->getRequires();
         if (empty($requires)) {
             return;
@@ -205,13 +214,15 @@ class ExtraPackage
     }
 
     /**
-     * Merge require-dev into RootPackage
+     * Merge require-dev into RootPackageInterface
      *
-     * @param RootPackage $root
+     * @param RootPackageInterface $root
      * @param PluginState $state
      */
-    protected function mergeDevRequires(RootPackage $root, PluginState $state)
-    {
+    protected function mergeDevRequires(
+        RootPackageInterface $root,
+        PluginState $state
+    ) {
         $requires = $this->package->getDevRequires();
         if (empty($requires)) {
             return;
@@ -261,36 +272,36 @@ class ExtraPackage
     }
 
     /**
-     * Merge autoload into a RootPackage
+     * Merge autoload into a RootPackageInterface
      *
-     * @param RootPackage $root
+     * @param RootPackageInterface $root
      */
-    protected function mergeAutoload(RootPackage $root)
+    protected function mergeAutoload(RootPackageInterface $root)
     {
         $autoload = $this->package->getAutoload();
         if (empty($autoload)) {
             return;
         }
 
-        $root->setAutoload(array_merge_recursive(
+        self::castRootPackage($root)->setAutoload(array_merge_recursive(
             $root->getAutoload(),
             $this->fixRelativePaths($autoload)
         ));
     }
 
     /**
-     * Merge autoload-dev into a RootPackage
+     * Merge autoload-dev into a RootPackageInterface
      *
-     * @param RootPackage $root
+     * @param RootPackageInterface $root
      */
-    protected function mergeDevAutoload(RootPackage $root)
+    protected function mergeDevAutoload(RootPackageInterface $root)
     {
         $autoload = $this->package->getDevAutoload();
         if (empty($autoload)) {
             return;
         }
 
-        $root->setDevAutoload(array_merge_recursive(
+        self::castRootPackage($root)->setDevAutoload(array_merge_recursive(
             $root->getDevAutoload(),
             $this->fixRelativePaths($autoload)
         ));
@@ -319,13 +330,13 @@ class ExtraPackage
 
     /**
      * Extract and merge stability flags from the given collection of
-     * requires and merge them into a RootPackage
+     * requires and merge them into a RootPackageInterface
      *
-     * @param RootPackage $root
+     * @param RootPackageInterface $root
      * @param array $requires
      */
     protected function mergeStabilityFlags(
-        RootPackage $root,
+        RootPackageInterface $root,
         array $requires
     ) {
         $flags = $root->getStabilityFlags();
@@ -335,19 +346,26 @@ class ExtraPackage
             $stability = VersionParser::parseStability($version);
             $flags[$name] = BasePackage::$stabilities[$stability];
         }
-        $root->setStabilityFlags($flags);
+
+        // setStabilityFlags is not part of RootPackageInterface :/
+        self::castRootPackage($root)->setStabilityFlags($flags);
     }
 
     /**
-     * Merge conflicting packages into a RootPackage
+     * Merge conflicting packages into a RootPackageInterface
      *
-     * @param RootPackage $root
+     * @param RootPackageInterface $root
      */
-    protected function mergeConflicts(RootPackage $root)
+    protected function mergeConflicts(RootPackageInterface $root)
     {
         $conflicts = $this->package->getConflicts();
         if (!empty($conflicts)) {
-            $root->setconflicts(array_merge(
+            if ($root instanceof RootAliasPackage) {
+                $this->logger->warning(
+                    "Aliased packages do not support conflict merging."
+                );
+            }
+            self::castRootPackage($root)->setConflicts(array_merge(
                 $root->getConflicts(),
                 $conflicts
             ));
@@ -355,15 +373,20 @@ class ExtraPackage
     }
 
     /**
-     * Merge replaced packages into a RootPackage
+     * Merge replaced packages into a RootPackageInterface
      *
-     * @param RootPackage $root
+     * @param RootPackageInterface $root
      */
-    protected function mergeReplaces(RootPackage $root)
+    protected function mergeReplaces(RootPackageInterface $root)
     {
         $replaces = $this->package->getReplaces();
         if (!empty($replaces)) {
-            $root->setReplaces(array_merge(
+            if ($root instanceof RootAliasPackage) {
+                $this->logger->warning(
+                    "Aliased packages do not support replace merging."
+                );
+            }
+            self::castRootPackage($root)->setReplaces(array_merge(
                 $root->getReplaces(),
                 $replaces
             ));
@@ -371,15 +394,20 @@ class ExtraPackage
     }
 
     /**
-     * Merge provided virtual packages into a RootPackage
+     * Merge provided virtual packages into a RootPackageInterface
      *
-     * @param RootPackage $root
+     * @param RootPackageInterface $root
      */
-    protected function mergeProvides(RootPackage $root)
+    protected function mergeProvides(RootPackageInterface $root)
     {
         $provides = $this->package->getProvides();
         if (!empty($provides)) {
-            $root->setProvides(array_merge(
+            if ($root instanceof RootAliasPackage) {
+                $this->logger->warning(
+                    "Aliased packages do not support provide merging."
+                );
+            }
+            self::castRootPackage($root)->setProvides(array_merge(
                 $root->getProvides(),
                 $provides
             ));
@@ -387,15 +415,16 @@ class ExtraPackage
     }
 
     /**
-     * Merge suggested packages into a RootPackage
+     * Merge suggested packages into a RootPackageInterface
      *
-     * @param RootPackage $root
+     * @param RootPackageInterface $root
      */
-    protected function mergeSuggests(RootPackage $root)
+    protected function mergeSuggests(RootPackageInterface $root)
     {
         $suggests = $this->package->getSuggests();
         if (!empty($suggests)) {
-            $root->setSuggests(array_merge(
+            // setSuggests is from Package and not in any interfaces
+            self::castRootPackage($root)->setSuggests(array_merge(
                 $root->getSuggests(),
                 $suggests
             ));
@@ -403,12 +432,12 @@ class ExtraPackage
     }
 
     /**
-     * Merge extra config into a RootPackage
+     * Merge extra config into a RootPackageInterface
      *
-     * @param RootPackage $root
+     * @param RootPackageInterface $root
      * @param PluginState $state
      */
-    public function mergeExtra(RootPackage $root, PluginState $state)
+    public function mergeExtra(RootPackageInterface $root, PluginState $state)
     {
         $extra = $this->package->getExtra();
         unset($extra['merge-plugin']);
@@ -419,7 +448,9 @@ class ExtraPackage
         $rootExtra = $root->getExtra();
 
         if ($state->replaceDuplicateLinks()) {
-            $root->setExtra(array_merge($rootExtra, $extra));
+            self::castRootPackage($root)->setExtra(
+                array_merge($rootExtra, $extra)
+            );
 
         } else {
             foreach ($extra as $key => $value) {
@@ -430,8 +461,32 @@ class ExtraPackage
                     );
                 }
             }
-            $root->setExtra(array_merge($extra, $rootExtra));
+            self::castRootPackage($root)->setExtra(
+                array_merge($extra, $rootExtra)
+            );
         }
+    }
+
+    /**
+     * Get the RootPackage from a RootPackageInterface
+     *
+     * @param RootPackageInterface $root
+     * @return RootPackage
+     */
+    public static function castRootPackage(RootPackageInterface $root)
+    {
+        if ($root instanceof AliasPackage) {
+            $root = $root->getAliasOf();
+        }
+        // @codeCoverageIgnoreStart
+        if (!$root instanceof RootPackage) {
+            throw new UnexpectedValueException(
+                'Expected instance of RootPackage, got ' .
+                get_class($root)
+            );
+        }
+        // @codeCoverageIgnoreEnd
+        return $root;
     }
 }
 // vim:sw=4:ts=4:sts=4:et:

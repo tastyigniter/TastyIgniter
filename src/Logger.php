@@ -51,15 +51,35 @@ class Logger
     {
         if ($this->inputOutput->isVerbose()) {
             $message = "  <info>[{$this->name}]</info> {$message}";
+            $this->log($message);
+        }
+    }
 
-            if (method_exists($this->inputOutput, 'writeError')) {
-                $this->inputOutput->writeError($message);
-            } else {
-                // @codeCoverageIgnoreStart
-                // Backwards compatiblity for Composer before cb336a5
-                $this->inputOutput->write($message);
-                // @codeCoverageIgnoreEnd
-            }
+    /**
+     * Log a warning message
+     *
+     * @param string $message
+     */
+    public function warning($message)
+    {
+        $message = "  <error>[{$this->name}]</error> {$message}";
+        $this->log($message);
+    }
+
+    /**
+     * Write a message
+     *
+     * @param string $message
+     */
+    protected function log($message)
+    {
+        if (method_exists($this->inputOutput, 'writeError')) {
+            $this->inputOutput->writeError($message);
+        } else {
+            // @codeCoverageIgnoreStart
+            // Backwards compatiblity for Composer before cb336a5
+            $this->inputOutput->write($message);
+            // @codeCoverageIgnoreEnd
         }
     }
 }

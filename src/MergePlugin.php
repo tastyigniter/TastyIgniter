@@ -23,7 +23,7 @@ use Composer\Installer\InstallerEvents;
 use Composer\Installer\PackageEvent;
 use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
-use Composer\Package\RootPackage;
+use Composer\Package\RootPackageInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
@@ -163,7 +163,7 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
      */
     protected function mergeIncludes(array $includes)
     {
-        $root = $this->state->getRootPackage();
+        $root = $this->composer->getPackage();
         foreach (array_reduce(
             array_map('glob', $includes),
             'array_merge',
@@ -176,10 +176,10 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     /**
      * Read a JSON file and merge its contents
      *
-     * @param RootPackage $root
+     * @param RootPackageInterface $root
      * @param string $path
      */
-    protected function mergeFile(RootPackage $root, $path)
+    protected function mergeFile(RootPackageInterface $root, $path)
     {
         if (isset($this->loadedFiles[$path])) {
             $this->logger->debug(
