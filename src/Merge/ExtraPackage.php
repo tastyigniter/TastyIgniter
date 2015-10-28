@@ -17,7 +17,6 @@ use Composer\Json\JsonFile;
 use Composer\Package\BasePackage;
 use Composer\Package\CompletePackage;
 use Composer\Package\Loader\ArrayLoader;
-use Composer\Package\AliasPackage;
 use Composer\Package\RootAliasPackage;
 use Composer\Package\RootPackage;
 use Composer\Package\RootPackageInterface;
@@ -25,7 +24,8 @@ use Composer\Package\Version\VersionParser;
 use UnexpectedValueException;
 
 /**
- * Processing for a composer.json file that will be merged into a RootPackageInterface
+ * Processing for a composer.json file that will be merged into
+ * a RootPackageInterface
  *
  * @author Bryan Davis <bd808@bd808.com>
  */
@@ -138,9 +138,6 @@ class ExtraPackage
         $this->mergeRequires($root, $state);
         $this->mergeDevRequires($root, $state);
 
-        // UPSTREAM: These don't have any effect if our RootPackageInterface
-        // is actually a RootAliasPackage due to caching done at construction
-        // of the alias.
         $this->mergeConflicts($root);
         $this->mergeReplaces($root);
         $this->mergeProvides($root);
@@ -180,7 +177,8 @@ class ExtraPackage
             $newRepos[] = $repo;
         }
 
-        self::castRootPackage($root)->setRepositories(array_merge(
+        $unwrapped = self::unwrapIfNeeded($root, 'setRepositories');
+        $unwrapped->setRepositories(array_merge(
             $newRepos,
             $root->getRepositories()
         ));
@@ -283,7 +281,8 @@ class ExtraPackage
             return;
         }
 
-        self::castRootPackage($root)->setAutoload(array_merge_recursive(
+        $unwrapped = self::unwrapIfNeeded($root, 'setAutoload');
+        $unwrapped->setAutoload(array_merge_recursive(
             $root->getAutoload(),
             $this->fixRelativePaths($autoload)
         ));
@@ -301,7 +300,8 @@ class ExtraPackage
             return;
         }
 
-        self::castRootPackage($root)->setDevAutoload(array_merge_recursive(
+        $unwrapped = self::unwrapIfNeeded($root, 'setDevAutoload');
+        $unwrapped->setDevAutoload(array_merge_recursive(
             $root->getDevAutoload(),
             $this->fixRelativePaths($autoload)
         ));
@@ -382,8 +382,8 @@ class ExtraPackage
             }
         }
 
-        // setStabilityFlags is not part of RootPackageInterface :/
-        self::castRootPackage($root)->setStabilityFlags($flags);
+        $unwrapped = self::unwrapIfNeeded($root, 'setStabilityFlags');
+        $unwrapped->setStabilityFlags($flags);
     }
 
     /**
@@ -395,12 +395,14 @@ class ExtraPackage
     {
         $conflicts = $this->package->getConflicts();
         if (!empty($conflicts)) {
-            if ($root instanceof RootAliasPackage) {
+            $unwrapped = self::unwrapIfNeeded($root, 'setConflicts');
+            if ($root !== $unwrapped) {
                 $this->logger->warning(
-                    "Aliased packages do not support conflict merging."
+                    'This Composer version does not support ' .
+                    "'conflicts' merging for aliased packages."
                 );
             }
-            self::castRootPackage($root)->setConflicts(array_merge(
+            $unwrapped->setConflicts(array_merge(
                 $root->getConflicts(),
                 $conflicts
             ));
@@ -416,12 +418,14 @@ class ExtraPackage
     {
         $replaces = $this->package->getReplaces();
         if (!empty($replaces)) {
-            if ($root instanceof RootAliasPackage) {
+            $unwrapped = self::unwrapIfNeeded($root, 'setReplaces');
+            if ($root !== $unwrapped) {
                 $this->logger->warning(
-                    "Aliased packages do not support replace merging."
+                    'This Composer version does not support ' .
+                    "'replaces' merging for aliased packages."
                 );
             }
-            self::castRootPackage($root)->setReplaces(array_merge(
+            $unwrapped->setReplaces(array_merge(
                 $root->getReplaces(),
                 $replaces
             ));
@@ -437,12 +441,14 @@ class ExtraPackage
     {
         $provides = $this->package->getProvides();
         if (!empty($provides)) {
-            if ($root instanceof RootAliasPackage) {
+            $unwrapped = self::unwrapIfNeeded($root, 'setProvides');
+            if ($root !== $unwrapped) {
                 $this->logger->warning(
-                    "Aliased packages do not support provide merging."
+                    'This Composer version does not support ' .
+                    "'provides' merging for aliased packages."
                 );
             }
-            self::castRootPackage($root)->setProvides(array_merge(
+            $unwrapped->setProvides(array_merge(
                 $root->getProvides(),
                 $provides
             ));
@@ -458,8 +464,8 @@ class ExtraPackage
     {
         $suggests = $this->package->getSuggests();
         if (!empty($suggests)) {
-            // setSuggests is from Package and not in any interfaces
-            self::castRootPackage($root)->setSuggests(array_merge(
+            $unwrapped = self::unwrapIfNeeded($root, 'setSuggests');
+            $unwrapped->setSuggests(array_merge(
                 $root->getSuggests(),
                 $suggests
             ));
@@ -481,9 +487,10 @@ class ExtraPackage
         }
 
         $rootExtra = $root->getExtra();
+        $unwrapped = self::unwrapIfNeeded($root, 'setExtra');
 
         if ($state->replaceDuplicateLinks()) {
-            self::castRootPackage($root)->setExtra(
+            $unwrapped->setExtra(
                 array_merge($rootExtra, $extra)
             );
 
@@ -496,31 +503,39 @@ class ExtraPackage
                     );
                 }
             }
-            self::castRootPackage($root)->setExtra(
+            $unwrapped->setExtra(
                 array_merge($extra, $rootExtra)
             );
         }
     }
 
     /**
-     * Get the RootPackage from a RootPackageInterface
+     * Get a full featured Package from a RootPackageInterface.
+     *
+     * In Composer versions before 599ad77 the RootPackageInterface only
+     * defines a sub-set of operations needed by composer-merge-plugin and
+     * RootAliasPackage only implemented those methods defined by the
+     * interface. Most of the unimplemented methods in RootAliasPackage can be
+     * worked around because the getter methods that are implemented proxy to
+     * the aliased package which we can modify by unwrapping. The exception
+     * being modifying the 'conflicts', 'provides' and 'replaces' collections.
+     * We have no way to actually modify those collections unfortunately in
+     * older versions of Composer.
      *
      * @param RootPackageInterface $root
-     * @return RootPackage
+     * @param string $method Method needed
+     * @return RootPackageInterface|RootPackage
      */
-    public static function castRootPackage(RootPackageInterface $root)
-    {
-        if ($root instanceof AliasPackage) {
+    public static function unwrapIfNeeded(
+        RootPackageInterface $root,
+        $method = 'setExtra'
+    ) {
+        if ($root instanceof RootAliasPackage &&
+            !method_exists($root, $method)
+        ) {
+            // Unwrap and return the aliased RootPackage.
             $root = $root->getAliasOf();
         }
-        // @codeCoverageIgnoreStart
-        if (!$root instanceof RootPackage) {
-            throw new UnexpectedValueException(
-                'Expected instance of RootPackage, got ' .
-                get_class($root)
-            );
-        }
-        // @codeCoverageIgnoreEnd
         return $root;
     }
 }
