@@ -39,6 +39,7 @@ $config['alert']['styles'] = array(
 	'success' 	=> array('<div class="alert alert-success alert-dismissable" role="alert">', '</div>'),
 	'danger' 	=> array('<div class="alert alert-danger alert-dismissable" role="alert">', '</div>'),
 	'warning' 	=> array('<div class="alert alert-warning alert-dismissable" role="alert">', '</div>'),
+	'info' 	    => array('<div class="alert alert-info alert-dismissable" role="alert">', '</div>'),
 	'error'   	=> array('<div class="alert alert-danger alert-dismissable" role="alert">',   '</div>'),
 	'form'    	=> array('<div class="alert alert-danger alert-dismissable alert-collapsible" role="alert">
                 <button type="button" class="btn-dropdown" aria-hidden="true"><i class="fa fa-chevron-down text-muted"></i></button>',   '</div>')

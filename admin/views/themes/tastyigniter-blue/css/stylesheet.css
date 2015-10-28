@@ -545,6 +545,7 @@ top: -5px;
 #notification p,
 #notification .alert-success,
 #notification .alert-warning,
+#notification .alert-info,
 #notification .alert-danger {
 padding: 8px 35px 8px 15px;
 margin-bottom:20px;
