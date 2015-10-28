@@ -1,0 +1,13 @@
+{
+  "require": {
+    "wikimedia/composer-merge-plugin": "^1.0-stable"
+  },
+  "minimum-stability": "beta",
+  "extra": {
+    "merge-plugin": {
+      "include": [
+        "composer.local.json"
+      ]
+    }
+  }
+}
