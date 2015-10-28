@@ -48,7 +48,7 @@ $lang['text_staff_group'] 		            = 'Staff Group';
 $lang['text_location'] 		                = 'Location';
 $lang['text_edit_details'] 		            = 'Edit Details';
 $lang['text_logout'] 		                = 'Logout';
-$lang['text_version'] 		                = 'Thanks for using <b>TastyIgniter</b> %s';
+$lang['text_copyright'] 		            = 'Thanks for using <b>TastyIgniter</b> %s';
 
 $lang['menu_page'] 		                    = 'Pages';
 $lang['menu_banner'] 		                = 'Banners';

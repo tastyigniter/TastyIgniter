@@ -5,7 +5,7 @@
 <div id="footer" class="<?php echo ($this->user->islogged()) ? '' : 'wrap-none'; ?>">
 	<div class="row navbar-footer">
 		<div class="col-sm-8 version">
-			<p class="text-version"><?php echo sprintf(lang('text_version'), config_item('ti_version')); ?></p>
+			<p class="text-version"><?php echo sprintf(lang('text_copyright'), config_item('ti_version')); ?></p>
 		</div>
 		<?php if ($locations) { ?>
 			<div class="col-sm-3 navbar-locations">
