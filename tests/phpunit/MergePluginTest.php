@@ -403,11 +403,29 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
         $root->setRequires(Argument::type('array'))->will(
             function ($args) use ($that) {
                 $requires = $args[0];
-                $that->assertEquals(4, count($requires));
+                $that->assertEquals(7, count($requires));
                 $that->assertArrayHasKey('test/foo', $requires);
                 $that->assertArrayHasKey('test/bar', $requires);
                 $that->assertArrayHasKey('test/baz', $requires);
                 $that->assertArrayHasKey('test/xyzzy', $requires);
+                $that->assertArrayHasKey('test/plugh', $requires);
+                $that->assertArrayHasKey('test/plover', $requires);
+                $that->assertArrayHasKey('test/bedquilt', $requires);
+            }
+        );
+
+        $root->setStabilityFlags(Argument::type('array'))->will(
+            function ($args) use ($that, &$expects) {
+                $that->assertSame(
+                    array(
+                        'test/foo' => BasePackage::STABILITY_DEV,
+                        'test/bar' => BasePackage::STABILITY_BETA,
+                        'test/baz' => BasePackage::STABILITY_ALPHA,
+                        'test/xyzzy' => BasePackage::STABILITY_RC,
+                        'test/plugh' => BasePackage::STABILITY_STABLE,
+                    ),
+                    $args[0]
+                );
             }
         );
 
@@ -749,6 +767,51 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
 
 
     /**
+     * Given a root package with minimum-stability=beta
+     *   and a required stable package
+     *   and an include with a stability=dev require for the same package
+     *   and a stability=stable require for another package
+     * When the plugin is run
+     * Then the first package should require stability=dev
+     *   amd the second package should not specify a minimum stability.
+     *
+     * @return void
+     */
+    public function testMergedStabilityFlagsRespectsMinimumStability()
+    {
+        $that = $this;
+        $dir = $this->fixtureDir(__FUNCTION__);
+        $root = $this->rootFromJson("{$dir}/composer.json");
+
+        // The root package declares a stable package
+        $root->getStabilityFlags()->willReturn(array(
+            'wikimedia/composer-merge-plugin' => BasePackage::STABILITY_STABLE,
+        ))->shouldBeCalled();
+
+        $root->setRequires(Argument::type('array'))->will(
+            function ($args) use ($that) {
+                $requires = $args[0];
+                $that->assertEquals(2, count($requires));
+                $that->assertArrayHasKey('wikimedia/composer-merge-plugin', $requires);
+                $that->assertArrayHasKey('robbytaylor/test', $requires);
+            }
+        );
+
+        $root->setStabilityFlags(Argument::type('array'))->will(
+            function ($args) use ($that, &$expects) {
+                $that->assertSame(
+                    array(
+                        'wikimedia/composer-merge-plugin' => BasePackage::STABILITY_DEV,
+                    ),
+                    $args[0]
+                );
+            }
+        );
+        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
+    }
+
+
+    /**
      * @param RootPackage $package
      * @param string $directory Working directory for composer run
      * @return array Constrains added by MergePlugin::onDependencySolve
@@ -842,11 +905,13 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
                 'extra' => array(),
                 'autoload' => array(),
                 'autoload-dev' => array(),
+                'minimum-stability' => 'stable',
             ),
             $json
         );
 
         $root = $this->prophesize('Composer\Package\RootPackage');
+        $root->getMinimumStability()->willReturn($data['minimum-stability']);
         $root->getRequires()->willReturn($data['require'])->shouldBeCalled();
         $root->getDevRequires()->willReturn($data['require-dev']);
         $root->getRepositories()->willReturn($data['repositories']);
@@ -880,6 +945,9 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
     {
         $alias = $this->prophesize('Composer\Package\RootAliasPackage');
         $alias->getAliasOf()->willReturn($root);
+        $alias->getMinimumStability()->will(function() use ($root) {
+            return $root->getMinimumStability();
+        });
         $alias->getAliases()->will(function() use ($root) {
             return $root->getAliases();
         });

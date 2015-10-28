@@ -3,6 +3,9 @@
         "test/foo": "dev-master",
         "test/bar": "~1.0@beta",
         "test/baz": "0.1@alpha",
-        "test/xyzzy": "1.0.0-rc1"
+        "test/xyzzy": "1.0.0-rc1",
+        "test/plugh": "1.0.0@stable",
+        "test/plover": "1.0.0-stable",
+        "test/bedquilt": "1.2.3"
     }
 }
