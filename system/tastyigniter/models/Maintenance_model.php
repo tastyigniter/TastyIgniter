@@ -87,7 +87,7 @@ class Maintenance_model extends TI_Model {
 	}
 
 	public function restoreDatabase($restore_path) {
-		if ($content = file_get_contents($restore_path)) {
+		if (strpos($restore_path, 'tastyigniter-') === 0 AND $content = file_get_contents($restore_path)) {
 			foreach (explode(";\n", $content) as $sql) {
 				$sql = trim($sql);
 
@@ -102,5 +102,6 @@ class Maintenance_model extends TI_Model {
 		}
 	}
 }
+
 /* End of file maintenance_model.php */
 /* Location: ./system/tastyigniter/models/maintenance_model.php */
