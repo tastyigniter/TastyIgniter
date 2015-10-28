@@ -146,7 +146,7 @@
 									<div class="col-sm-6 col-md-4 wrap-top">
 										<img class="img-rounded img-responsive" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
 									</div>
-									<div class="col-sm-6 col-md-8">
+									<div class="col-sm-6 col-md-8 wrap-none wrap-right">
 										<h4><?php echo $staff_name; ?></h4><span class="small"><i>(<?php echo $username; ?>)</i></span>
 										<span class="small text-uppercase"><?php echo $staff_group; ?></span>
 										<span><?php echo $staff_location; ?></span>

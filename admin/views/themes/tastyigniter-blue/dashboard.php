@@ -1,8 +1,8 @@
 <?php echo get_header(); ?>
 <div class="row content dashboard">
 	<div class="col-md-12">
-        <div class="mini-statistics">
-<!--            <div class="row">-->
+        <div class="row mini-statistics">
+            <div class="col-sm-12">
                 <div class="col-lg-3 col-md-6 wrap-none">
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -63,7 +63,7 @@
                         </div>
                     </div>
                 </div>
-<!--            </div>-->
+            </div>
         </div>
 
         <div class="statistics">
@@ -143,14 +143,14 @@
 						<div class="panel-body">
 							<div id="statistics">
 								<ul class="list-group text-sm">
-									<li class="list-group-item"><?php echo lang('text_total_sale'); ?> <span class="label label-default sales"><?php echo lang('text_zero'); ?></span></li>
-									<li class="list-group-item"><?php echo lang('text_total_lost_sale'); ?> <span class="label label-default lost_sales"><?php echo lang('text_zero'); ?></span></li>
-									<li class="list-group-item"><?php echo lang('text_total_customer'); ?> <span class="label label-default customers"><?php echo lang('text_zero'); ?></span></li>
-									<li class="list-group-item"><?php echo lang('text_total_order'); ?> <span class="label label-default orders"><?php echo lang('text_zero'); ?></span></li>
-									<li class="list-group-item"><?php echo lang('text_total_delivery_order'); ?> <span class="label label-default delivery_orders"><?php echo lang('text_zero'); ?></span></li>
-									<li class="list-group-item"><?php echo lang('text_total_collection_order'); ?> <span class="label label-default collection_orders"><?php echo lang('text_zero'); ?></span></li>
-									<li class="list-group-item"><?php echo lang('text_total_completed_order'); ?> <span class="label label-default orders_completed"><?php echo lang('text_zero'); ?></span></li>
-									<li class="list-group-item"><?php echo lang('text_total_reserved_table'); ?><span class="label label-default tables_reserved"><?php echo lang('text_zero'); ?></span></li>
+									<li class="list-group-item"><?php echo lang('text_total_sale'); ?> <span class="text-red sales"><?php echo lang('text_zero'); ?></span></li>
+									<li class="list-group-item"><?php echo lang('text_total_lost_sale'); ?> <span class="text-yellow lost_sales"><?php echo lang('text_zero'); ?></span></li>
+									<li class="list-group-item"><?php echo lang('text_total_customer'); ?> <span class="text-blue customers"><?php echo lang('text_zero'); ?></span></li>
+									<li class="list-group-item"><?php echo lang('text_total_order'); ?> <span class="text-green orders"><?php echo lang('text_zero'); ?></span></li>
+									<li class="list-group-item"><?php echo lang('text_total_delivery_order'); ?> <span class="text-success delivery_orders"><?php echo lang('text_zero'); ?></span></li>
+									<li class="list-group-item"><?php echo lang('text_total_collection_order'); ?> <span class="text-info collection_orders"><?php echo lang('text_zero'); ?></span></li>
+									<li class="list-group-item"><?php echo lang('text_total_completed_order'); ?> <span class="text-danger orders_completed"><?php echo lang('text_zero'); ?></span></li>
+									<li class="list-group-item"><?php echo lang('text_total_reserved_table'); ?><span class="text-primary tables_reserved"><?php echo lang('text_zero'); ?></span></li>
 								</ul>
 							</div>
   						</div>

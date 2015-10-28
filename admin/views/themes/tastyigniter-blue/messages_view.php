@@ -55,47 +55,49 @@
                         </form>
                     </div>
 
-                    <div class="panel-heading">
-                        <h3 class="panel-title"><?php echo lang('text_recipient_list'); ?></h3>
-                    </div>
+                    <div id="recipients" class="panel panel-default" style="display:none">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><?php echo lang('text_recipient_list'); ?></h3>
+                        </div>
 
-                    <div class="panel-body">
-                        <div id="recipients" class="table-responsive" style="display:none">
-                            <table class="table table-striped table-border table-no-spacing">
-                                <?php if ($recipients) { ?>
-                                    <thead>
-                                    <tr>
-                                        <th class="action action-one"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
-                                        <th><?php echo ($send_type === 'Email') ? lang('text_email') : lang('text_recipient'); ?></th>
-                                        <th class="text-center"><?php echo lang('column_status'); ?></th>
-                                        <th class="id"><?php echo lang('column_id'); ?></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php foreach ($recipients as $recipient) { ?>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-border table-no-spacing">
+                                    <?php if ($recipients) { ?>
+                                        <thead>
                                         <tr>
-                                            <?php if ($send_type === 'Email') { ?>
-                                                <td class="action action-one"><input type="checkbox" value="<?php echo $recipient['message_recipient_id']; ?>" name="resend[]" /></td>
-                                                <td><?php echo $recipient['recipient_email']; ?></td>
-                                                <td class="text-center"><?php echo $recipient['status']; ?></td>
-                                                <td class="id"><?php echo $recipient['message_recipient_id']; ?></td>
-                                            <?php } else if ($send_type === 'Account') { ?>
-                                                <td class="action action-one"><input type="checkbox" value="<?php echo $recipient['message_recipient_id']; ?>" name="resend[]" /></td>
-                                                <td><?php echo $recipient['recipient_name']; ?></td>
-                                                <td class="text-center"><?php echo $recipient['status']; ?></td>
-                                                <td class="id"><?php echo $recipient['message_recipient_id']; ?></td>
-                                            <?php } ?>
+                                            <th class="action action-one"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
+                                            <th><?php echo ($send_type === 'Email') ? lang('text_email') : lang('text_recipient'); ?></th>
+                                            <th class="text-center"><?php echo lang('column_status'); ?></th>
+                                            <th class="id"><?php echo lang('column_id'); ?></th>
                                         </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach ($recipients as $recipient) { ?>
+                                            <tr>
+                                                <?php if ($send_type === 'Email') { ?>
+                                                    <td class="action action-one"><input type="checkbox" value="<?php echo $recipient['message_recipient_id']; ?>" name="resend[]" /></td>
+                                                    <td><?php echo $recipient['recipient_email']; ?></td>
+                                                    <td class="text-center"><?php echo $recipient['status']; ?></td>
+                                                    <td class="id"><?php echo $recipient['message_recipient_id']; ?></td>
+                                                <?php } else if ($send_type === 'Account') { ?>
+                                                    <td class="action action-one"><input type="checkbox" value="<?php echo $recipient['message_recipient_id']; ?>" name="resend[]" /></td>
+                                                    <td><?php echo $recipient['recipient_name']; ?></td>
+                                                    <td class="text-center"><?php echo $recipient['status']; ?></td>
+                                                    <td class="id"><?php echo $recipient['message_recipient_id']; ?></td>
+                                                <?php } ?>
+                                            </tr>
+                                        <?php } ?>
+                                        </tbody>
+                                    <?php } else { ?>
+                                        <tbody>
+                                        <tr>
+                                            <td><?php echo lang('text_no_recipient'); ?></td>
+                                        </tr>
+                                        </tbody>
                                     <?php } ?>
-                                    </tbody>
-                                <?php } else { ?>
-                                    <tbody>
-                                    <tr>
-                                        <td><?php echo lang('text_no_recipient'); ?></td>
-                                    </tr>
-                                    </tbody>
-                                <?php } ?>
-                            </table>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
