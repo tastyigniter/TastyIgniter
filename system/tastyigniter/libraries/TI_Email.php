@@ -25,6 +25,7 @@ class TI_Email extends CI_Email {
         $config['smtp_port'] = $this->CI->config->item('smtp_port');
         $config['smtp_user'] = $this->CI->config->item('smtp_user');
         $config['smtp_pass'] = $this->CI->config->item('smtp_pass');
+        $config['crlf']      = "\r\n";
         $config['newline']   = "\r\n";
 
         return parent::initialize($config);
