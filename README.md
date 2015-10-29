@@ -45,6 +45,7 @@ Usage
             ],
             "recurse": true,
             "replace": false,
+            "merge-dev": true,
             "merge-extra": false
         }
     }
@@ -73,15 +74,17 @@ in the top-level composer.json file:
 
 * [autoload](https://getcomposer.org/doc/04-schema.md#autoload)
 * [autoload-dev](https://getcomposer.org/doc/04-schema.md#autoload-dev)
+  (optional, see [merge-dev](#merge-dev) below)
 * [conflict](https://getcomposer.org/doc/04-schema.md#conflict)
 * [provide](https://getcomposer.org/doc/04-schema.md#provide)
 * [replace](https://getcomposer.org/doc/04-schema.md#replace)
 * [repositories](https://getcomposer.org/doc/04-schema.md#repositories)
 * [require](https://getcomposer.org/doc/04-schema.md#require)
 * [require-dev](https://getcomposer.org/doc/04-schema.md#require-dev)
+  (optional, see [merge-dev](#merge-dev) below)
 * [suggest](https://getcomposer.org/doc/04-schema.md#suggest)
-* [extra](https://getcomposer.org/doc/04-schema.md#extra) (optional, see
-  [merge-extra](#merge-extra) below)
+* [extra](https://getcomposer.org/doc/04-schema.md#extra)
+  (optional, see [merge-extra](#merge-extra) below)
 
 
 ### recurse
@@ -100,6 +103,12 @@ version specified wins" conflict resolution strategy. In this mode, duplicate
 package declarations found in merged files will overwrite the declarations
 made by earlier files. Files are loaded in the order specified by the
 `include` setting with globbed files being processed in alphabetical order.
+
+
+### merge-dev
+
+By default, `autoload-dev` and `require-dev` sections of included files are
+merged. A `"merge-dev": false` setting will disable this behavior.
 
 
 ### merge-extra

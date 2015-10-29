@@ -50,6 +50,12 @@ class PluginState
     protected $replace = false;
 
     /**
+     * Whether to merge the -dev sections.
+     * @var bool $mergeDev
+     */
+    protected $mergeDev = true;
+
+    /**
      * Whether to merge the extra section.
      *
      * By default, the extra section is not merged and there will be many
@@ -102,6 +108,7 @@ class PluginState
                 'include' => array(),
                 'recurse' => true,
                 'replace' => false,
+                'merge-dev' => true,
                 'merge-extra' => false,
             ),
             isset($extra['merge-plugin']) ? $extra['merge-plugin'] : array()
@@ -111,6 +118,7 @@ class PluginState
             $config['include'] : array($config['include']);
         $this->recurse = (bool)$config['recurse'];
         $this->replace = (bool)$config['replace'];
+        $this->mergeDev = (bool)$config['merge-dev'];
         $this->mergeExtra = (bool)$config['merge-extra'];
     }
 
@@ -191,7 +199,7 @@ class PluginState
      */
     public function isDevMode()
     {
-        return $this->devMode;
+        return $this->mergeDev && $this->devMode;
     }
 
     /**

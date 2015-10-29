@@ -1,0 +1,11 @@
+{
+    "require": {
+        "acme/foo": "1.0.x-dev#abc123"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.8|~5.0"
+    },
+    "autoload-dev": {
+        "psr-4": { "Foo\\Tests\\": "tests/" }
+    }
+}
