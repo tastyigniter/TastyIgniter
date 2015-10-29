@@ -206,34 +206,33 @@ class ExtraPackage
 
         $this->mergeStabilityFlags($root, $requires);
 
-        $dups = array();
-        $root->{$setter}($this->mergeLinks(
+        $root->{$setter}($this->mergeOrDefer(
+            $type,
             $root->{$getter}(),
             $requires,
-            $state->replaceDuplicateLinks(),
-            $dups
+            $state
         ));
-        $state->addDuplicateLinks($type, $dups);
     }
 
     /**
      * Merge two collections of package links and collect duplicates for
      * subsequent processing.
      *
+     * @param string $type 'requires' or 'devRequires'
      * @param array $origin Primary collection
      * @param array $merge Additional collection
-     * @param bool $replace Replace existing links?
-     * @param array &dups Duplicate storage
+     * @param PluginState $state
      * @return array Merged collection
      */
-    protected function mergeLinks(
+    protected function mergeOrDefer(
+        $type,
         array $origin,
         array $merge,
-        $replace,
-        array &$dups
+        $state
     ) {
+        $dups = array();
         foreach ($merge as $name => $link) {
-            if (!isset($origin[$name]) || $replace) {
+            if (!isset($origin[$name]) || $state->replaceDuplicateLinks()) {
                 $this->logger->info("Merging <comment>{$name}</comment>");
                 $origin[$name] = $link;
             } else {
@@ -244,6 +243,7 @@ class ExtraPackage
                 $dups[] = $link;
             }
         }
+        $state->addDuplicateLinks($type, $dups);
         return $origin;
     }
 
