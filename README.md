@@ -1,6 +1,6 @@
-[![Latest Stable Version](https://img.shields.io/packagist/v/wikimedia/composer-merge-plugin.svg?style=flat)](https://packagist.org/packages/wikimedia/composer-merge-plugin) [![License](https://img.shields.io/packagist/l/wikimedia/composer-merge-plugin.svg?style=flat)](https://github.com/wikimedia/composer-merge-plugin/blob/master/LICENSE)
-[![Build Status](https://img.shields.io/travis/wikimedia/composer-merge-plugin.svg?style=flat)](https://travis-ci.org/wikimedia/composer-merge-plugin)
-[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/wikimedia/composer-merge-plugin/master.svg?style=flat)](https://scrutinizer-ci.com/g/wikimedia/composer-merge-plugin/?branch=master)
+[![Latest Stable Version]](https://packagist.org/packages/wikimedia/composer-merge-plugin) [![License]](https://github.com/wikimedia/composer-merge-plugin/blob/master/LICENSE)
+[![Build Status]](https://travis-ci.org/wikimedia/composer-merge-plugin)
+[![Code Coverage]](https://scrutinizer-ci.com/g/wikimedia/composer-merge-plugin/?branch=master)
 
 Composer Merge Plugin
 =====================
@@ -160,3 +160,7 @@ file for more details.
 [GitHub project]: https://github.com/wikimedia/composer-merge-plugin
 [PSR-2 Coding Standard]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md
 [PHP Code Sniffer]: http://pear.php.net/package/PHP_CodeSniffer
+[Latest Stable Version]: https://img.shields.io/packagist/v/wikimedia/composer-merge-plugin.svg?style=flat
+[License]: https://img.shields.io/packagist/l/wikimedia/composer-merge-plugin.svg?style=flat
+[Build Status]: https://img.shields.io/travis/wikimedia/composer-merge-plugin.svg?style=flat
+[Code Coverage]: https://img.shields.io/scrutinizer/coverage/g/wikimedia/composer-merge-plugin/master.svg?style=flat
