@@ -135,8 +135,8 @@ class ExtraPackage
     {
         $this->addRepositories($root);
 
-        $this->mergeRequires($root, $state);
-        $this->mergeDevRequires($root, $state);
+        $this->mergeRequires('requires', $root, $state);
+        $this->mergeRequires('devRequires', $root, $state);
 
         $this->mergeConflicts($root);
         $this->mergeReplaces($root);
@@ -185,16 +185,21 @@ class ExtraPackage
     }
 
     /**
-     * Merge require into a RootPackageInterface
+     * Merge require or require-dev into a RootPackageInterface
      *
+     * @param string $type 'requires' or 'devRequires'
      * @param RootPackageInterface $root
      * @param PluginState $state
      */
     protected function mergeRequires(
+        $type,
         RootPackageInterface $root,
         PluginState $state
     ) {
-        $requires = $this->package->getRequires();
+        $getter = 'get' . ucfirst($type);
+        $setter = 'set' . ucfirst($type);
+
+        $requires = $this->package->{$getter}();
         if (empty($requires)) {
             return;
         }
@@ -202,40 +207,13 @@ class ExtraPackage
         $this->mergeStabilityFlags($root, $requires);
 
         $dups = array();
-        $root->setRequires($this->mergeLinks(
-            $root->getRequires(),
+        $root->{$setter}($this->mergeLinks(
+            $root->{$getter}(),
             $requires,
             $state->replaceDuplicateLinks(),
             $dups
         ));
-        $state->addDuplicateLinks('require', $dups);
-    }
-
-    /**
-     * Merge require-dev into RootPackageInterface
-     *
-     * @param RootPackageInterface $root
-     * @param PluginState $state
-     */
-    protected function mergeDevRequires(
-        RootPackageInterface $root,
-        PluginState $state
-    ) {
-        $requires = $this->package->getDevRequires();
-        if (empty($requires)) {
-            return;
-        }
-
-        $this->mergeStabilityFlags($root, $requires);
-
-        $dups = array();
-        $root->setDevRequires($this->mergeLinks(
-            $root->getDevRequires(),
-            $requires,
-            $state->replaceDuplicateLinks(),
-            $dups
-        ));
-        $state->addDuplicateLinks('require-dev', $dups);
+        $state->addDuplicateLinks($type, $dups);
     }
 
     /**
