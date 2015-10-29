@@ -208,14 +208,14 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     public function onDependencySolve(InstallerEvent $event)
     {
         $request = $event->getRequest();
-        foreach ($this->state->getDuplicateLinks('requires') as $link) {
+        foreach ($this->state->getDuplicateLinks('require') as $link) {
             $this->logger->info(
                 "Adding dependency <comment>{$link}</comment>"
             );
             $request->install($link->getTarget(), $link->getConstraint());
         }
         if ($this->state->isDevMode()) {
-            foreach ($this->state->getDuplicateLinks('devRequires') as $link) {
+            foreach ($this->state->getDuplicateLinks('require-dev') as $link) {
                 $this->logger->info(
                     "Adding dev dependency <comment>{$link}</comment>"
                 );

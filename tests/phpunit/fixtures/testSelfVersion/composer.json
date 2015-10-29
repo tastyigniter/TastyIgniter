@@ -1,0 +1,12 @@
+{
+    "name": "foo/root",
+    "version": "1.2.3.4",
+    "replace": {
+      "foo/bar": "self.version"
+    },
+    "extra": {
+        "merge-plugin": {
+            "include": "composer.local.json"
+        }
+    }
+}

@@ -16,6 +16,7 @@ use Composer\Composer;
 use Composer\Json\JsonFile;
 use Composer\Package\BasePackage;
 use Composer\Package\CompletePackage;
+use Composer\Package\Link;
 use Composer\Package\Loader\ArrayLoader;
 use Composer\Package\RootAliasPackage;
 use Composer\Package\RootPackage;
@@ -135,14 +136,14 @@ class ExtraPackage
     {
         $this->addRepositories($root);
 
-        $this->mergeRequires('requires', $root, $state);
+        $this->mergeRequires('require', $root, $state);
         if ($state->isDevMode()) {
-            $this->mergeRequires('devRequires', $root, $state);
+            $this->mergeRequires('require-dev', $root, $state);
         }
 
-        $this->mergePackageLinks('conflicts', $root);
-        $this->mergePackageLinks('replaces', $root);
-        $this->mergePackageLinks('provides', $root);
+        $this->mergePackageLinks('conflict', $root);
+        $this->mergePackageLinks('replace', $root);
+        $this->mergePackageLinks('provide', $root);
 
         $this->mergeSuggests($root);
 
@@ -191,7 +192,7 @@ class ExtraPackage
     /**
      * Merge require or require-dev into a RootPackageInterface
      *
-     * @param string $type 'requires' or 'devRequires'
+     * @param string $type 'require' or 'require-dev'
      * @param RootPackageInterface $root
      * @param PluginState $state
      */
@@ -200,8 +201,9 @@ class ExtraPackage
         RootPackageInterface $root,
         PluginState $state
     ) {
-        $getter = 'get' . ucfirst($type);
-        $setter = 'set' . ucfirst($type);
+        $linkType = BasePackage::$supportedLinkTypes[$type];
+        $getter = 'get' . ucfirst($linkType['method']);
+        $setter = 'set' . ucfirst($linkType['method']);
 
         $requires = $this->package->{$getter}();
         if (empty($requires)) {
@@ -209,6 +211,12 @@ class ExtraPackage
         }
 
         $this->mergeStabilityFlags($root, $requires);
+
+        $requires = $this->replaceSelfVersionDependencies(
+            $type,
+            $requires,
+            $root
+        );
 
         $root->{$setter}($this->mergeOrDefer(
             $type,
@@ -222,7 +230,7 @@ class ExtraPackage
      * Merge two collections of package links and collect duplicates for
      * subsequent processing.
      *
-     * @param string $type 'requires' or 'devRequires'
+     * @param string $type 'require' or 'require-dev'
      * @param array $origin Primary collection
      * @param array $merge Additional collection
      * @param PluginState $state
@@ -319,13 +327,14 @@ class ExtraPackage
     /**
      * Merge package links of the given type  into a RootPackageInterface
      *
-     * @param string $type 'conflicts', 'replaces' or 'provides'
+     * @param string $type 'conflict', 'replace' or 'provide'
      * @param RootPackageInterface $root
      */
     protected function mergePackageLinks($type, RootPackageInterface $root)
     {
-        $getter = 'get' . ucfirst($type);
-        $setter = 'set' . ucfirst($type);
+        $linkType = BasePackage::$supportedLinkTypes[$type];
+        $getter = 'get' . ucfirst($linkType['method']);
+        $setter = 'set' . ucfirst($linkType['method']);
 
         $links = $this->package->{$getter}();
         if (!empty($links)) {
@@ -338,7 +347,7 @@ class ExtraPackage
             }
             $unwrapped->{$setter}(array_merge(
                 $root->{$getter}(),
-                $links
+                $this->replaceSelfVersionDependencies($type, $links, $root)
             ));
         }
     }
@@ -395,6 +404,42 @@ class ExtraPackage
                 array_merge($extra, $rootExtra)
             );
         }
+    }
+
+    /**
+     * Update Links with a 'self.version' constraint with the root package's
+     * version.
+     *
+     * @param string $type Link type
+     * @param array $links
+     * @param RootPackageInterface $root
+     * @return array
+     */
+    protected function replaceSelfVersionDependencies(
+        $type,
+        array $links,
+        RootPackageInterface $root
+    ) {
+        $linkType = BasePackage::$supportedLinkTypes[$type];
+        $version = $root->getVersion();
+        $prettyVersion = $root->getPrettyVersion();
+        $vp = new VersionParser();
+
+        return array_map(
+            function ($link) use ($linkType, $version, $prettyVersion, $vp) {
+                if ('self.version' === $link->getPrettyConstraint()) {
+                    return new Link(
+                        $link->getSource(),
+                        $link->getTarget(),
+                        $vp->parseConstraints($version),
+                        $linkType['description'],
+                        $prettyVersion
+                    );
+                }
+                return $link;
+            },
+            $links
+        );
     }
 
     /**

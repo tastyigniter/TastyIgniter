@@ -10,8 +10,8 @@
 
 namespace Wikimedia\Composer;
 
-use Wikimedia\Composer\Merge\PluginState;
 use Wikimedia\Composer\Merge\ExtraPackage;
+use Wikimedia\Composer\Merge\PluginState;
 
 use Composer\Composer;
 use Composer\DependencyResolver\Operation\InstallOperation;
@@ -20,9 +20,11 @@ use Composer\Installer\InstallerEvents;
 use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
 use Composer\Package\BasePackage;
+use Composer\Package\Link;
 use Composer\Package\Locker;
 use Composer\Package\Package;
 use Composer\Package\RootPackage;
+use Composer\Package\Version\VersionParser;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
 use Prophecy\Argument;
@@ -766,6 +768,49 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
     }
 
+    /**
+     * Test replace link with self.version as version constraint.
+     */
+    public function testSelfVersion()
+    {
+        $that = $this;
+        $dir = $this->fixtureDir(__FUNCTION__);
+        $root = $this->rootFromJson("{$dir}/composer.json");
+
+        $root->setReplaces(Argument::type('array'))->will(
+            function ($args) use ($that) {
+                $replace = $args[0];
+                $that->assertEquals(3, count($replace));
+
+                $that->assertArrayHasKey('foo/bar', $replace);
+                $that->assertArrayHasKey('foo/baz', $replace);
+                $that->assertArrayHasKey('foo/xyzzy', $replace);
+
+                $that->assertTrue($replace['foo/bar'] instanceof Link);
+                $that->assertTrue($replace['foo/baz'] instanceof Link);
+                $that->assertTrue($replace['foo/xyzzy'] instanceof Link);
+
+                $that->assertEquals(
+                    '1.2.3.4',
+                    $replace['foo/bar']->getPrettyConstraint()
+                );
+                $that->assertEquals(
+                    '1.2.3.4',
+                    $replace['foo/baz']->getPrettyConstraint()
+                );
+                $that->assertEquals(
+                    '~1.0',
+                    $replace['foo/xyzzy']->getPrettyConstraint()
+                );
+            }
+        );
+
+        $root->getRequires()->shouldNotBeCalled();
+
+        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
+        $this->assertEquals(0, count($extraInstalls));
+    }
+
 
     /**
      * Given a root package with minimum-stability=beta
@@ -921,8 +966,11 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
     {
         $that = $this;
         $json = json_decode(file_get_contents($file), true);
+
         $data = array_merge(
             array(
+                'name' => '__root__',
+                'version' => '1.0.0',
                 'repositories' => array(),
                 'require' => array(),
                 'require-dev' => array(),
@@ -938,7 +986,30 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
             $json
         );
 
+        // Convert packages to proper links
+        $vp = new VersionParser();
+        foreach (array(
+            'require', 'require-dev', 'conflict', 'replace', 'provide'
+        ) as $type) {
+            $lt = BasePackage::$supportedLinkTypes[$type];
+            foreach ($data[$type] as $k => $v) {
+                unset($data[$type][$k]);
+                if ($v === 'self.version') {
+                    $v = $data['version'];
+                }
+                $data[$type][strtolower($k)] = new Link(
+                    $data['name'],
+                    $k,
+                    $vp->parseConstraints($v),
+                    $lt['description'],
+                    $v
+                );
+            }
+        }
+
         $root = $this->prophesize('Composer\Package\RootPackage');
+        $root->getVersion()->willReturn($vp->normalize($data['version']));
+        $root->getPrettyVersion()->willReturn($data['version']);
         $root->getMinimumStability()->willReturn($data['minimum-stability']);
         $root->getRequires()->willReturn($data['require'])->shouldBeCalled();
         $root->getDevRequires()->willReturn($data['require-dev']);
@@ -973,6 +1044,12 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
     {
         $alias = $this->prophesize('Composer\Package\RootAliasPackage');
         $alias->getAliasOf()->willReturn($root);
+        $alias->getVersion()->will(function() use ($root) {
+            return $root->getVersion();
+        });
+        $alias->getPrettyVersion()->will(function() use ($root) {
+            return $root->getPrettyVersion();
+        });
         $alias->getMinimumStability()->will(function() use ($root) {
             return $root->getMinimumStability();
         });
