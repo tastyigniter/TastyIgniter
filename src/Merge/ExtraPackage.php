@@ -144,8 +144,8 @@ class ExtraPackage
 
         $this->mergeSuggests($root);
 
-        $this->mergeAutoload($root);
-        $this->mergeDevAutoload($root);
+        $this->mergeAutoload('autoload', $root);
+        $this->mergeAutoload('devAutoload', $root);
 
         $this->mergeExtra($root, $state);
     }
@@ -248,39 +248,24 @@ class ExtraPackage
     }
 
     /**
-     * Merge autoload into a RootPackageInterface
+     * Merge autoload or autoload-dev into a RootPackageInterface
      *
+     * @param string $type 'autoload' or 'devAutoload'
      * @param RootPackageInterface $root
      */
-    protected function mergeAutoload(RootPackageInterface $root)
+    protected function mergeAutoload($type, RootPackageInterface $root)
     {
-        $autoload = $this->package->getAutoload();
+        $getter = 'get' . ucfirst($type);
+        $setter = 'set' . ucfirst($type);
+
+        $autoload = $this->package->{$getter}();
         if (empty($autoload)) {
             return;
         }
 
-        $unwrapped = self::unwrapIfNeeded($root, 'setAutoload');
-        $unwrapped->setAutoload(array_merge_recursive(
-            $root->getAutoload(),
-            $this->fixRelativePaths($autoload)
-        ));
-    }
-
-    /**
-     * Merge autoload-dev into a RootPackageInterface
-     *
-     * @param RootPackageInterface $root
-     */
-    protected function mergeDevAutoload(RootPackageInterface $root)
-    {
-        $autoload = $this->package->getDevAutoload();
-        if (empty($autoload)) {
-            return;
-        }
-
-        $unwrapped = self::unwrapIfNeeded($root, 'setDevAutoload');
-        $unwrapped->setDevAutoload(array_merge_recursive(
-            $root->getDevAutoload(),
+        $unwrapped = self::unwrapIfNeeded($root, $setter);
+        $unwrapped->{$setter}(array_merge_recursive(
+            $root->{$getter}(),
             $this->fixRelativePaths($autoload)
         ));
     }
