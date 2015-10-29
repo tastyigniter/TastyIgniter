@@ -340,50 +340,13 @@ class ExtraPackage
         array $requires
     ) {
         $flags = $root->getStabilityFlags();
-
-        // Adapted from RootPackageLoader::extractStabilityFlags
-        $rootMin = BasePackage::$stabilities[$root->getMinimumStability()];
-        $explicitStabilityRe = '/^[^@]*?@(' .
-            implode('|', array_keys(BasePackage::$stabilities)) .
-            ')$/i';
-
-        foreach ($requires as $name => $link) {
-            $name = strtolower($name);
-            $version = $link->getPrettyConstraint();
-            $unaliased = preg_replace('/^([^,\s@]+) as .+$/', '$1', $version);
-            $stability = null;
-
-            if (preg_match($explicitStabilityRe, $version, $match)) {
-                // Extract explict '@stability'
-                $stability = BasePackage::$stabilities[
-                    VersionParser::normalizeStability($match[1])
-                ];
-
-            } elseif (preg_match('/^[^,\s@]+$/', $unaliased)) {
-                // Extract explicit '-stability'
-                $stability = BasePackage::$stabilities[
-                    VersionParser::parseStability($unaliased)
-                ];
-
-                if ($stability === BasePackage::STABILITY_STABLE ||
-                    $rootMin > $stability
-                ) {
-                    // Ignore if 'stable' or more stable than the global
-                    // minimum
-                    $stability = null;
-                }
-            }
-
-            if ($stability !== null &&
-                !(isset($flags[$name]) && $flags[$name] > $stability)
-            ) {
-                // Store if less stable than current stability for package
-                $flags[$name] = $stability;
-            }
-        }
+        $sf = new StabilityFlags($flags, $root->getMinimumStability());
 
         $unwrapped = self::unwrapIfNeeded($root, 'setStabilityFlags');
-        $unwrapped->setStabilityFlags($flags);
+        $unwrapped->setStabilityFlags(array_merge(
+            $flags,
+            $sf->extractAll($requires)
+        ));
     }
 
     /**
