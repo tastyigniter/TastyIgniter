@@ -1044,52 +1044,52 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
     {
         $alias = $this->prophesize('Composer\Package\RootAliasPackage');
         $alias->getAliasOf()->willReturn($root);
-        $alias->getVersion()->will(function() use ($root) {
+        $alias->getVersion()->will(function () use ($root) {
             return $root->getVersion();
         });
-        $alias->getPrettyVersion()->will(function() use ($root) {
+        $alias->getPrettyVersion()->will(function () use ($root) {
             return $root->getPrettyVersion();
         });
-        $alias->getMinimumStability()->will(function() use ($root) {
+        $alias->getMinimumStability()->will(function () use ($root) {
             return $root->getMinimumStability();
         });
-        $alias->getAliases()->will(function() use ($root) {
+        $alias->getAliases()->will(function () use ($root) {
             return $root->getAliases();
         });
-        $alias->getAutoload()->will(function() use ($root) {
+        $alias->getAutoload()->will(function () use ($root) {
             return $root->getAutoload();
         });
-        $alias->getConflicts()->will(function() use ($root) {
+        $alias->getConflicts()->will(function () use ($root) {
             return $root->getConflicts();
         });
-        $alias->getDevAutoload()->will(function() use ($root) {
+        $alias->getDevAutoload()->will(function () use ($root) {
             return $root->getDevAutoload();
         });
-        $alias->getDevRequires()->will(function() use ($root) {
+        $alias->getDevRequires()->will(function () use ($root) {
             return $root->getDevRequires();
         });
-        $alias->getExtra()->will(function() use ($root) {
+        $alias->getExtra()->will(function () use ($root) {
             return $root->getExtra();
         });
-        $alias->getProvides()->will(function() use ($root) {
+        $alias->getProvides()->will(function () use ($root) {
             return $root->getProvides();
         });
-        $alias->getReferences()->will(function() use ($root) {
+        $alias->getReferences()->will(function () use ($root) {
             return $root->getReferences();
         });
-        $alias->getReplaces()->will(function() use ($root) {
+        $alias->getReplaces()->will(function () use ($root) {
             return $root->getReplaces();
         });
-        $alias->getRepositories()->will(function() use ($root) {
+        $alias->getRepositories()->will(function () use ($root) {
             return $root->getRepositories();
         });
-        $alias->getRequires()->will(function() use ($root) {
+        $alias->getRequires()->will(function () use ($root) {
             return $root->getRequires();
         });
-        $alias->getStabilityFlags()->will(function() use ($root) {
+        $alias->getStabilityFlags()->will(function () use ($root) {
             return $root->getStabilityFlags();
         });
-        $alias->getSuggests()->will(function() use ($root) {
+        $alias->getSuggests()->will(function () use ($root) {
             return $root->getSuggests();
         });
         return $alias;
