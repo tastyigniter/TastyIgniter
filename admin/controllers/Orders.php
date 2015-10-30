@@ -241,7 +241,7 @@ class Orders extends Admin_Controller {
 				'status_id'			=> $statuses['status_id'],
 				'status_name'		=> $statuses['status_name'],
 				'notify'			=> $statuses['notify_customer'],
-				'status_comment'	=> $statuses['status_comment']
+				'status_comment'	=> nl2br($statuses['status_comment'])
 			);
 		}
 
@@ -255,7 +255,7 @@ class Orders extends Admin_Controller {
 				'assignee_id'	=> $history['assignee_id'],
 				'status_name'	=> $history['status_name'],
 				'notify'		=> $history['notify'],
-				'comment'		=> $history['comment']
+				'comment'		=> nl2br($history['comment'])
 			);
 		}
 

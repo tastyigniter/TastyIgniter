@@ -77,9 +77,13 @@ class Statuses_model extends TI_Model {
 	}
 
 	public function getStatusHistory($for = FALSE, $order_id) {
-		$this->db->select('history_id, status_history.date_added, staffs.staff_name, statuses.status_name, status_history.notify, status_history.comment');
 		$this->db->from('status_history');
 		$this->db->where('status_for', $for);
+
+		if (!empty($order_id)) {
+			$this->db->where('status_history.object_id', $order_id);
+		}
+
 		$this->db->order_by('status_history.date_added', 'DESC');
 
 		$query = $this->db->get();
