@@ -13,7 +13,7 @@ class Cod extends Main_Controller {
 
         // START of retrieving lines from language file to pass to view.
         $data['code'] 			= $payment['name'];
-        $data['title'] 			= !empty($payment['title']) ? $payment['title'] : $this->lang->line('text_title');
+        $data['title'] 			= !empty($payment['ext_data']['title']) ? $payment['ext_data']['title'] : $payment['title'];
         // END of retrieving lines from language file to send to view.
 
         $order_data = $this->session->userdata('order_data');                           // retrieve order details from session userdata
