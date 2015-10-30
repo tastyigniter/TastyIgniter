@@ -17,7 +17,7 @@ class Themes extends Admin_Controller {
 	public function index() {
 		$this->user->restrict('Site.Themes.Access');
 
-		if ($this->input->get('action') === 'activate' AND $this->_activateTheme()) {
+		if ($this->uri->rsegment(2) === 'activate' AND $this->_activateTheme()) {
 			redirect('themes');
 		}
 
@@ -190,9 +190,9 @@ class Themes extends Admin_Controller {
 	private function _activateTheme() {
 		$this->user->restrict('Site.Themes.Manage');
 
-		if ($this->input->get('action') === 'activate' AND $this->input->get('name') AND $this->input->get('location')) {
-			$theme_name = $this->input->get('name');
-			$theme_location = $this->input->get('location');
+		if ($this->uri->rsegment(2) === 'activate' AND $this->uri->rsegment(4) AND $this->uri->rsegment(3)) {
+			$theme_name = $this->uri->rsegment(4);
+			$theme_location = $this->uri->rsegment(3);
 
 			if ($theme_name = $this->Themes_model->activateTheme($theme_name, $theme_location)) {
 				$this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Theme [' . $theme_name . '] set as default '));
@@ -205,7 +205,7 @@ class Themes extends Admin_Controller {
 	private function _updateTheme($theme = array()) {
 		$this->user->restrict('Site.Themes.Manage');
 
-		if ($this->input->get('name') AND $this->input->get('location') AND $this->validateForm($theme['customize']) === TRUE) {
+		if ($this->uri->rsegment(4) AND $this->uri->rsegment(3) AND $this->validateForm($theme['customize']) === TRUE) {
 			if ($this->input->post('editor_area') AND $this->input->get('file')) {
 				$theme_file = $this->input->get('file');
 				if (save_theme_file($theme_file, $theme['name'], $theme['location'], $this->input->post('editor_area'))) {
