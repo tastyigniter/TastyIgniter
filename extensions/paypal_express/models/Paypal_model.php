@@ -76,6 +76,10 @@ class Paypal_model extends TI_Model {
 
 			$response = $this->callPayPal('SetExpressCheckout', $nvp_data);
 
+			if (isset($response['ACK']) AND strtoupper($response['ACK']) !== 'SUCCESS' OR strtoupper($response['ACK']) !== 'SUCCESSWITHWARNING') {
+				log_message('error', $this->error_prefix . $response['L_ERRORCODE0'] . ': ' . $response['L_LONGMESSAGE0'] . ' : ' . $response['CORRELATIONID']);
+			}
+
 			return $response;
 		}
 	}
@@ -103,7 +107,7 @@ class Paypal_model extends TI_Model {
 		if (strtoupper($response['ACK']) === 'SUCCESS' OR strtoupper($response['ACK']) === 'SUCCESSWITHWARNING') {
 			return $response['PAYMENTINFO_0_TRANSACTIONID'];
 		} else {
-			log_message('error', $this->error_prefix . $response['L_ERRORCODE0'] .' --> '. $response['L_LONGMESSAGE0'] .' --> '. $response['CORRELATIONID']);
+			log_message('error', $this->error_prefix . $response['L_ERRORCODE0'] .': '. $response['L_LONGMESSAGE0'] .' : '. $response['CORRELATIONID']);
 			return FALSE;
 		}
 	}
@@ -117,7 +121,7 @@ class Paypal_model extends TI_Model {
 		if (strtoupper($response['ACK']) === 'SUCCESS' OR strtoupper($response['ACK']) === 'SUCCESSWITHWARNING') {
 			return $response;
 		} else {
-			log_message('error', $this->error_prefix . $response['L_ERRORCODE0'] .' --> '. $response['L_LONGMESSAGE0'] .' --> '. $response['CORRELATIONID']);
+			log_message('error', $this->error_prefix . $response['L_ERRORCODE0'] .': '. $response['L_LONGMESSAGE0'] .' : '. $response['CORRELATIONID']);
 		}
 	}
 
@@ -196,6 +200,11 @@ class Paypal_model extends TI_Model {
 
 		// Get response from the server.
 		$output = curl_exec($curl);
+
+		if (curl_error($curl)) {
+			log_message('error', 'PayPalExpress cURL Error -> ' . curl_errno($curl) . ':' . curl_error($curl));
+		}
+
 		curl_close($curl);
 
 		$result = array();
