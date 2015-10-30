@@ -41,8 +41,8 @@ class Themes extends Admin_Controller {
 				'location'    => ($theme['location'] === 'main') ? $this->lang->line('text_main') : $this->lang->line('text_admin'),
 				'active'      => $active,
 				'screenshot'  => $theme['screenshot'],
-				'activate'    => site_url('themes?action=activate&name=' . $theme['name'] . '&location=' . $theme['location']),
-				'edit'        => site_url('themes/edit?name=' . $theme['name'] . '&location=' . $theme['location']),
+				'activate'    => site_url('themes/activate/' . $theme['location'] . '/' . $theme['name']),
+				'edit'        => site_url('themes/edit/' . $theme['location'] . '/' . $theme['name']),
 			);
 		}
 
@@ -52,11 +52,11 @@ class Themes extends Admin_Controller {
 	public function edit() {
 		$this->user->restrict('Site.Themes.Access');
 
-		$theme_name = $this->input->get('name');
-		$theme_location = $this->input->get('location');
+		$theme_name = $this->uri->rsegment(4);
+		$theme_location = $this->uri->rsegment(3);
 
 		$url = '?';
-		$url .= 'name=' . $theme_name . '&location=' . $theme_location;
+//		$url .= 'name=' . $theme_name . '&location=' . $theme_location;
 
 		if ( ! $theme = $this->Themes_model->getTheme($theme_name)) {
 			$this->alert->set('danger', $this->lang->line('error_theme_not_found'));
@@ -71,7 +71,7 @@ class Themes extends Admin_Controller {
 
 		if ($this->input->post() AND $this->_updateTheme($theme) === TRUE) {
 			if ($this->input->post('save_close') === '1') {
-				redirect('themes/edit' . '?name=' . $theme_name . '&location=' . $theme_location);
+				redirect("themes/edit/{$theme_location}/{$theme_name}");
 			}
 
 			redirect(current_url());
@@ -98,7 +98,7 @@ class Themes extends Admin_Controller {
 
 		$data['file'] = array();
 		if ($this->input->get('file')) {
-			$url .= '&file=' . $this->input->get('file');
+			$url .= 'file=' . $this->input->get('file');
 
 			$theme_file = load_theme_file($this->input->get('file'), $theme_name, $theme_location);
 
@@ -114,7 +114,7 @@ class Themes extends Admin_Controller {
 		}
 
 		$theme_files = '';
-		$tree_link = site_url('themes/edit' . $url . '&file={link}');
+		$tree_link = site_url("themes/edit/{$theme_location}/{$theme_name}?file={link}");
 		$theme_files .= $this->_themeTree($theme_name, $theme_location, $tree_link);
 
 		$data['name'] = $theme['name'];
@@ -124,7 +124,7 @@ class Themes extends Admin_Controller {
 
 		$data['customizer_nav'] = $this->customizer->getNavView();
 		$data['customizer_sections'] = $this->customizer->getSectionsView();
-		$data['sections'] = $data['error_fields'] = array();
+		$data['error_fields'] = array();
 
 		if ( ! empty($data['is_customizable'])) {
 			if (isset($theme_config['error_fields']) AND is_array($theme_config['error_fields'])) {
@@ -136,7 +136,8 @@ class Themes extends Admin_Controller {
 			}
 		}
 
-		$data['_action'] = site_url('themes/edit' . $url);
+		$data['_action'] = site_url("themes/edit/{$theme_location}/{$theme_name}{$url}");
+
 		$data['mode'] = '';
 		if ( ! empty($data['file']['ext'])) {
 			if ($data['file']['ext'] === 'php') {
