@@ -14,8 +14,8 @@
 								<img class="img-responsive" alt="" src="<?php echo $theme['screenshot']; ?>" style="width:100%!important;height:320px!important" />
 								<div class="caption">
 									<h4><?php echo $theme['title']; ?><span class="badge text-sm pull-right"><?php if ($theme['active'] === '1') echo lang('text_is_default'); ?></span></h4>
-									<p class="wrap-bottom"><?php echo $theme['description']; ?></p>
-									<div class="wrap-bottom">
+									<p><?php echo $theme['description']; ?></p>
+									<div class="buttons">
 										<?php if ($theme['active'] === '1') { ?>
 											<a class="btn btn-edit" title="<?php echo lang('text_customize'); ?>" href="<?php echo $theme['edit']; ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
 											<a class="btn btn-warning" disabled="disabled" title="<?php echo lang('text_is_default'); ?>"><i class="fa fa-star"></i></a>&nbsp;&nbsp;
