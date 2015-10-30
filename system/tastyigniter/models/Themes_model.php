@@ -117,11 +117,14 @@ class Themes_model extends TI_Model {
 			$query = $this->db->insert('extensions');
 		}
 
-		$customizer_active_style = $this->config->item('customizer_active_style');
-		$customizer_active_style[$update['location']] = array($update['name'], $update['data']);
+		if ($query === TRUE) {
+			$active_theme_options = $this->config->item('active_theme_options');
+			$active_theme_options[$update['location']] = array($update['name'], $update['data']);
 
-		if ($this->config->item($update['location'], 'default_themes') === $update['name'] . '/') {
-			$this->Settings_model->addSetting('prefs', 'customizer_active_style', $customizer_active_style, '1');
+			if ($this->config->item($update['location'], 'default_themes') === $update['name'] . '/') {
+				$this->Settings_model->deleteSettings('prefs', 'customizer_active_style');  //@to-do remove in next version release
+				$this->Settings_model->addSetting('prefs', 'active_theme_options', $active_theme_options, '1');
+			}
 		}
 
 		return $query;
