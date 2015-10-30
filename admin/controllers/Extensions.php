@@ -182,7 +182,7 @@ class Extensions extends Admin_Controller {
 				             ));
 
 				$this->alert->set('success', sprintf($this->lang->line('alert_success'), "Extension {$extension_name} installed "));
-				$this->alert->set('info', $this->lang->line('alert_info_layouts'));
+				$this->alert->set('info', sprintf($this->lang->line('alert_info_layouts'), site_url('layouts')));
 				$success = TRUE;
 			}
 		}
