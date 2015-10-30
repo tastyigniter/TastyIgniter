@@ -19,11 +19,11 @@
 										<?php if ($theme['active'] === '1') { ?>
 											<a class="btn btn-edit" title="<?php echo lang('text_customize'); ?>" href="<?php echo $theme['edit']; ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
 											<a class="btn btn-warning" disabled="disabled" title="<?php echo lang('text_is_default'); ?>"><i class="fa fa-star"></i></a>&nbsp;&nbsp;
-											<a class="btn btn-info preview-thumb" title="<?php echo lang('text_preview'); ?>" data-img-src="<?php echo $theme['screenshot']; ?>" title="Default"><i class="fa fa-eye"></i></a>
+											<a class="btn btn-default preview-thumb" title="<?php echo lang('text_preview'); ?>" data-img-src="<?php echo $theme['screenshot']; ?>" title="Default"><i class="fa fa-eye"></i></a>
 										<?php } else {?>
 											<a class="btn btn-edit" title="<?php echo lang('text_customize'); ?>" href="<?php echo $theme['edit']; ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
 											<a class="btn btn-warning" title="<?php echo lang('text_set_default'); ?>" href="<?php echo $theme['activate']; ?>"><i class="fa fa-star"></i></a>&nbsp;&nbsp;
-											<a class="btn btn-info preview-thumb" title="<?php echo lang('text_preview'); ?>" data-img-src="<?php echo $theme['screenshot']; ?>" title="Default"><i class="fa fa-eye"></i></a>
+											<a class="btn btn-default preview-thumb" title="<?php echo lang('text_preview'); ?>" data-img-src="<?php echo $theme['screenshot']; ?>" title="Default"><i class="fa fa-eye"></i></a>
 										<?php } ?>
 									</div>
 									<div class="row">
