@@ -1903,23 +1903,16 @@ width: 100%;
 .thumbnail-list-horizontal .thumbnail {
 margin-bottom: 0;
 }
-.thumbnail {
-background: none repeat scroll 0 0 transparent;
-border: 0 none;
-border-radius: 0;
-overflow: hidden;
-padding: 0;
-}
-.thumbnail .preview {
-border: 1px solid #d2dce7;
-padding: 10px;
-text-align: center;
-}
 .thumbnail-list .thumbnail .preview {
 height: 80px;
 }
 .thumbnail-list .thumbnail .preview img {
 width:60px !important;
+}
+.thumbnail .preview {
+border: 1px solid #d2dce7;
+padding: 10px;
+text-align: center;
 }
 .thumbnail .preview img {
 display:inline;
@@ -1928,9 +1921,26 @@ width:160px !important;
 .imagebox-sm .preview img {
 width: 80px !important;
 }
+.thumbnail {
+/*background: none repeat scroll 0 0 transparent;*/
+/*border: 0 none;*/
+/*overflow: hidden;*/
+border: 1px solid #ECF0F5;
+padding: 0;
+}
+.thumbnail > img {
+border-top-left-radius: 4px;
+border-top-right-radius: 4px;
+}
 .thumbnail .caption {
 padding-top:20px;
-text-align:center;
+}
+.thumbnail .caption h1,
+.thumbnail .caption h2,
+.thumbnail .caption h3,
+.thumbnail .caption h4,
+.thumbnail .caption h5 {
+margin-top: 0;
 }
 .thumbnail .caption .name {
 border-bottom: 1px solid #d2dce7;
@@ -1941,14 +1951,19 @@ text-overflow: ellipsis;
 white-space: nowrap;
 display: block;
 }
+.thumbnail .caption .badge {
+font-size:50%
+}
 .thumbnail .caption a {
 padding: 4px 8px;
 font-size: 12px;
 }
-.thumbnail .caption p {
-margin: 0;
+.thumbnail .caption .buttons {
+padding: 10px 0px;
+border-top: 1px solid #ECF0F5;
+border-bottom: 1px solid #ECF0F5;
+margin-bottom: 10px;
 }
-
 
 .red {
 color:#D9534F;
@@ -2345,6 +2360,20 @@ border: 0 none;
 .select2-drop.select2-drop-above .select2-search input {
 margin-top: 0;
 }
+.select2-container-multi .select2-choices {
+background-image: none;
+}
+.select2-container-multi .select2-choices .select2-search-choice {
+background: #ECF0F5 none;
+border: 1px solid #D2DCE7;
+box-shadow: none;
+padding: 5px 5px 5px 18px;
+margin: 5px 0px 5px 5px;
+}
+.select2-search-choice-close {
+top: 6px;
+}
+
 
 /** DATE RANGE PICKER **/
 .daterangepicker .calendar th, .daterangepicker .calendar td {

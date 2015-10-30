@@ -1,31 +1,49 @@
-### v1.4.3 (pending)
+### v1.4.3 (stable)
 #### Added
-* Added option to select a page for checkout and registration terms and condition.
-* Added missing extension meta title item and extension permission rules to config
-* Added version number to extension meta data for extension version control and automatic update (feature coming soon)
-* Added version number to themes config for themes version control and automatic update (feature coming soon)
+* Setup now generates a random alpha-numeric 9 length string for database table prefixes
+* Admin option to select a page for checkout and registration terms and condition.
+* Missing extension meta title item and extension permission rules to config
+* Version number to extension metadata and themes config for version control and automatic update feature
+* New admin setting option to set site date/time format
+* Location image gallery: option to add multiple images to be displayed on local storefront
+* New mail templates to send emails to admin on new customer registration and admin password reset
+* Second parameter to both subject() and message() method of Email library to parse data into mail template
+* New mail templates variables (site_logo, site_url, staff_name, staff_username)
+* Authorize.Net (AIM) Payment gateway
+* Template Library function getActiveThemeOptions() to retrieve admin theme customizer options and get_theme_options helper function to use within theme files
+* Added google analytics tracking code and social links theme options to tastyigniter-orange theme
 
 #### Changed
-* Changed LICENCE from Apache to GNU GPLv3
-* Replaced file_get_contents with cURL for google maps geocoding api request
-* Template Library: Replaced loadPartial with loadView to load single views without header, footer and partials
-* Replaced Permission_Model function addToStaffGroup to assignPermissionRule and moved to Staff_group_model
-* Improved the design of the Media Manager and some other theme adjustment
-* Moved getPayPalDetails() method from Payments_model (deprecated) to Paypal_model
-* Theme Improvement: changed button group toggles to interactive button group switches
-* Removed page name redundancy so that only page title and heading are required when creating a new page
-* Improved Extensions model updateExtension method arguments as updateExtension(type, name, data)
-*** Template library setBackButton(), getBackButton deprecated, use setButton() and getButton() instead.
+* LICENCE from Apache to GNU GPLv3
+* Replaced file_get_contents with cURL to fix issue with google maps geocoding api request not being sent
+* Replaced loadPartial() in Template Library to loadView() to load single views without header, footer and partials
+* Replaced addToStaffGroup() in Permissions Model to assignPermissionRule() and moved into Staff groups Model
+* Checkout and registration terms and condition pages to display in modal instead of new window
+* Media Manager view and style adjustment
+* Moved getPayPalDetails() method from deprecated Payments model into PayPalExpress extension Paypal model
+* Pages: Removed page name redundancy so that only page title and heading are required when creating a new page
+* Changed updateExtension() parameters in Extensions model to (type, name, data)
+* Removed deprecated setBackButton() and getBackButton() in Template library, use setButton() and getButton() instead.
+* Hard code return and cancel URI in paypal_express module
+* Send HTML emails only, remove admin settings option to set TEXT as mail type format
+* Improved resize() in image tool model so that original image is returned when width and height is not given
+* Replaced existing mail templates into responsive HTML mail templates
+* Replaced tinymce editor with summernote editor to reduce total source size
+* Replaced fancybox with bootstrap modal to reduce total source size
 
 #### Fixed
-* Fixed the checkout terms and condition agree button to display terms and condition in modal when clicked
-* Improved reverse routing for permalink slugs so that extra URL query is appended after slug
-* Setup now generates a random alpha-numeric 9 length string for database table prefixes
-* Improved all model post data validation to isset() instead of !empty() during INSERT/UPDATE
-* Fixed issue where bootbox.js is not added to <head> of Media_manager
-* Fixed error saving theme file with undefined method writeTheme that was replaced in previous version to helper function save_theme_file
-* Fixed extensions language line
+* Bug where extra URL query is not appended after permalink slugs in URI reverse routing
+* Bug where empty value is not updated in database by using isset() instead of !empty() in models INSERT/UPDATE
+* Issue where duplicate head tags are added to <head> of Media manager
+* Bug with undefined method writeTheme() in Themes that was replaced in previous version to helper function save_theme_file
+* Missing extensions admin language line
+* Spelling error in admin setting option complete_order_status to completed_order_status
+* Issue where payment method is not disabled when order total is below the payments minimum order total
+* Issue where payment method is not displayed in admin and storefront order view
+* Issue where duplicate order is added upon page redirect, also remove received order from user session
+* Orders model from not displaying incomplete/lost orders in customer account
 * Minor bugs fix
+
 
 ### v1.4.2-beta
 * [fixed] staff name in staff updated activity log (67e3fa6)
@@ -50,6 +68,8 @@
 * Improved template library, and loading theme config file
 * Improved extension update, install, uninstall, and loading extension config file.
 * Added newsletter module to collect emails for marketing purposes
+
+
 
 ### v1.3-beta
 
@@ -200,7 +220,7 @@ Themes: move some themes_model functions to template_helper
 
 
 
-
+### JUNK
 TO-DO:
 Order Invoice, print, email
 ** Add seat map to backend
@@ -208,40 +228,57 @@ Add Sitemap
 Improve extension upload functionality to list "files to modify"
 
 Improve Payments
-    Add language lines
-    Replace payments multi-select dropdown to checkboxes with option to edit optional payment settings
-    Replace hard coded payment methods to be loaded dynamically everywhere
-    Improve paypal_express module such that return and cancel URI are hardcoded and more options added ()
     Add paypal express ipn for subscriptions
     Default currency for paypal express
-    Hide payment method when order total is below minimum order total
+    Add more payment methods:
+        authorize,
+        google checkout,
+        interswitch/VoguePay,
+        braintree,
+        worldpay,
 
-
-Add option in settings whether to display location search on homepage or redirect to default location.
-Add option in location settings to set location Timezone if different from the globally set timezone
+Add Distance
+Add states/cites to countries
 Improve local module by making its options customizable from admin panel
-Improve local module notification, such that critical warning or errors are shown in confirm box using modal
-Customize (show/hide/new) checkout, registration and reservation form fields
+    Add option in settings whether to display location search on homepage or redirect to default location.
+    Option to modify is_open, is_closed, is_temp_closed language text
+    Option to display delivery tab, collection tab, **reservation tab**, country field, city field
+
+
+Customize Main Forms (show/hide/new)
+    checkout,
+    registration
+    reservation form fields
+
 Delivery Man module - integrate with Bringg.com
-Add more payment methods like: authorize, google checkout, interswitch, braintree, worldpay,
+
 Improve banners to Ad Manager
     add impressions and clicks
-Add Import Menus
+
+*****Add Import Menus
+
 Add Quick Tour
-Show polygon on local map in front-end as Alonso
-Add location photo gallery and video gallery
+Add Quick links - app icon style with blurry background
 Add create order functionality
 Add option to calculate tax to location
 Improve admin dashboard statistics to include total commission and turnover
 Create module to integrate third-party marketing tools (mailchimp, constantcontact)
 
-Create Google Analytics Module
+*********Remote Printer Module
 
-Create social media module (facebook, twitter, RSS, Google+, )
+Menus - add option to set if available for delivery or collection
+
+Themes:
+Create Google Analytics field
+Create social media links (facebook, twitter, RSS, Google+, )
 
 Integrate Twilio third-party services to send SMS notifications
 
+****Mail_templates:
+    add google fonts and image manager and video url to summernote
+
 Display confirmation box when;
+    Improve local module notification, such that critical warning or errors are shown in confirm box using modal
     Delivery charge changes
     Minimum order total changes
     Menu is out of stock
@@ -252,7 +289,7 @@ add functionality to add multiple banners in module (jst like layout tables.)
 Add google analytics code to settings-server
 
 ******      move all post method calls to the start of controller methods
-
+ Improve location and menus listing to just-eat like
 
 Improve admin context list filter
 
