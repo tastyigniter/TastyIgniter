@@ -23,17 +23,67 @@
                     <li><?php echo sprintf(lang('site_copyright'), config_item('site_name'), date('Y')); ?></li>
                 </ul>
             </div>
+
+            <?php $social_icons = get_theme_options('social'); ?>
+
             <div class="col-md-4">
-                <div class="social-bottom">
-                    <ul class="social-icons">
-                        <li><a class="fa fa-facebook" target="_blank"></a></li>
-                        <li><a class="fa fa-twitter" target="_blank"></a></li>
-                        <li><a class="fa fa-google-plus" target="_blank"></a></li>
-                        <li><a class="fa fa-skype" target="_blank"></a></li>
-                        <li><a class="fa fa-linkedin" target="_blank"></a></li>
-                        <li><a class="fa fa-youtube" target="_blank"></a></li>
-                    </ul>
-                </div>
+                <?php if (array_filter($social_icons)) { ?>
+                    <div class="social-bottom">
+                        <ul class="social-icons">
+                            <?php if (!empty($social_icons['facebook'])) { ?>
+                                <li><a class="fa fa-facebook" target="_blank" href="<?php echo $social_icons['facebook']; ?>"></a></li>
+                            <?php } ?>
+
+                            <?php if (!empty($social_icons['twitter'])) { ?>
+                                <li><a class="fa fa-twitter" target="_blank" href="<?php echo $social_icons['twitter']; ?>"></a></li>
+                            <?php } ?>
+
+                            <?php if (!empty($social_icons['google'])) { ?>
+                                <li><a class="fa fa-google-plus" target="_blank" href="<?php echo $social_icons['google']; ?>"></a></li>
+                            <?php } ?>
+
+                            <?php if (!empty($social_icons['youtube'])) { ?>
+                                <li><a class="fa fa-youtube" target="_blank" href="<?php echo $social_icons['youtube']; ?>"></a></li>
+                            <?php } ?>
+
+                            <?php if (!empty($social_icons['vimeo'])) { ?>
+                                <li><a class="fa fa-vimeo" target="_blank" href="<?php echo $social_icons['vimeo']; ?>"></a></li>
+                            <?php } ?>
+
+                            <?php if (!empty($social_icons['vimeo'])) { ?>
+                                <li><a class="fa fa-vimeo" target="_blank" href="<?php echo $social_icons['vimeo']; ?>"></a></li>
+                            <?php } ?>
+
+                            <?php if (!empty($social_icons['linkedin'])) { ?>
+                                <li><a class="fa fa-linkedin" target="_blank" href="<?php echo $social_icons['linkedin']; ?>"></a></li>
+                            <?php } ?>
+
+                            <?php if (!empty($social_icons['pinterest'])) { ?>
+                                <li><a class="fa fa-pinterest" target="_blank" href="<?php echo $social_icons['pinterest']; ?>"></a></li>
+                            <?php } ?>
+
+                            <?php if (!empty($social_icons['tumblr'])) { ?>
+                                <li><a class="fa fa-tumblr" target="_blank" href="<?php echo $social_icons['tumblr']; ?>"></a></li>
+                            <?php } ?>
+
+                            <?php if (!empty($social_icons['flickr'])) { ?>
+                                <li><a class="fa fa-flickr" target="_blank" href="<?php echo $social_icons['flickr']; ?>"></a></li>
+                            <?php } ?>
+
+                            <?php if (!empty($social_icons['instagram'])) { ?>
+                                <li><a class="fa fa-instagram" target="_blank" href="<?php echo $social_icons['instagram']; ?>"></a></li>
+                            <?php } ?>
+
+                            <?php if (!empty($social_icons['dribbble'])) { ?>
+                                <li><a class="fa fa-dribbble" target="_blank" href="<?php echo $social_icons['dribbble']; ?>"></a></li>
+                            <?php } ?>
+
+                            <?php if (!empty($social_icons['foursquare'])) { ?>
+                                <li><a class="fa fa-foursquare" target="_blank" href="<?php echo $social_icons['foursquare']; ?>"></a></li>
+                            <?php } ?>
+                        </ul>
+                    </div>
+                <?php } ?>
             </div>
         </div>
 	</div>

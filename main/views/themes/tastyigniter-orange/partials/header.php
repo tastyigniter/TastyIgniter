@@ -16,6 +16,7 @@
         <?php echo get_style_tags(); ?>
         <?php echo get_active_styles(); ?>
         <?php echo get_script_tags(); ?>
+        <?php echo get_theme_options('ga_tracking_code'); ?>
 		<script type="text/javascript">
 			var alert_close = '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
 

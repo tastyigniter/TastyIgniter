@@ -109,6 +109,15 @@ $theme['customize']['sections']['general'] = array(
 			'value'		=> '25',
             'rules'     => 'required|numeric',
 		),
+		array(
+			'id'        => 'input-ga-tracking-code',
+			'name'      => 'ga_tracking_code',
+			'label'     => 'GA Tracking Code',
+			'desc'      => 'Paste your Google Analytics Tracking Code here.',
+			'type'      => 'textarea',
+			'rows'      => '10',
+			'value'     => ''
+		),
 //		array(
 //			'id'		=> 'input-display-crumbs',
 //			'name'		=> 'display_crumbs',
@@ -271,6 +280,98 @@ $theme['customize']['sections']['styling'] = array(
 	)
 );
 
+$theme['customize']['sections']['social'] = array(
+	'title'		=> 'Social',
+	'desc'		=> 'Add full URL for your social network profiles',
+	'icon'		=> '',
+	'fields'	=> array(
+		array(
+			'id'			=> 'input-social-facebook',
+			'name'			=> 'social[facebook]',
+			'label' 		=> 'Facebook',
+			'type' 			=> 'text',
+			'value'			=> '',
+		),
+		array(
+			'id'			=> 'input-social-twitter',
+			'name'			=> 'social[twitter]',
+			'label' 		=> 'Twitter',
+			'type' 			=> 'text',
+			'value'			=> '',
+		),
+		array(
+			'id'			=> 'input-social-google',
+			'name'			=> 'social[google]',
+			'label' 		=> 'Google +',
+			'type' 			=> 'text',
+			'value'			=> '',
+		),
+		array(
+			'id'			=> 'input-social-youtube',
+			'name'			=> 'social[youtube]',
+			'label' 		=> 'Youtube',
+			'type' 			=> 'text',
+			'value'			=> '',
+		),
+		array(
+			'id'			=> 'input-social-vimeo',
+			'name'			=> 'social[vimeo]',
+			'label' 		=> 'Vimeo',
+			'type' 			=> 'text',
+			'value'			=> '',
+		),
+		array(
+			'id'			=> 'input-social-linkedin',
+			'name'			=> 'social[linkedin]',
+			'label' 		=> 'LinkedIn',
+			'type' 			=> 'text',
+			'value'			=> '',
+		),
+		array(
+			'id'			=> 'input-social-pinterest',
+			'name'			=> 'social[pinterest]',
+			'label' 		=> 'Pinterest',
+			'type' 			=> 'text',
+			'value'			=> '',
+		),
+		array(
+			'id'			=> 'input-social-tumblr',
+			'name'			=> 'social[tumblr]',
+			'label' 		=> 'Tumblr',
+			'type' 			=> 'text',
+			'value'			=> '',
+		),
+		array(
+			'id'			=> 'input-social-flickr',
+			'name'			=> 'social[flickr]',
+			'label' 		=> 'Flickr',
+			'type' 			=> 'text',
+			'value'			=> '',
+		),
+		array(
+			'id'			=> 'input-social-instagram',
+			'name'			=> 'social[instagram]',
+			'label' 		=> 'Instagram',
+			'type' 			=> 'text',
+			'value'			=> '',
+		),
+		array(
+			'id'			=> 'input-social-dribbble',
+			'name'			=> 'social[dribbble]',
+			'label' 		=> 'Dribbble',
+			'type' 			=> 'text',
+			'value'			=> '',
+		),
+		array(
+			'id'			=> 'input-social-foursquare',
+			'name'			=> 'social[foursquare]',
+			'label' 		=> 'Foursquare',
+			'type' 			=> 'text',
+			'value'			=> '',
+		),
+	)
+);
+
 $theme['customize']['sections']['custom_css'] = array(
 	'title'		=> 'Custom CSS',
 	'desc'		=> '',
@@ -314,8 +415,8 @@ $theme['customize']['sections']['custom_css'] = array(
 //);
 
 // Set accepted post item for updating the admin theme customisation.
-$theme['customize']['post_items'] = array('logo_height', 'logo_padding_top', 'logo_padding_bottom', 'font_family', 'font_weight', 'font_size',
-    'font_color', 'body', 'header', 'sidebar', 'link', 'button', 'custom_css');
+$theme['customize']['post_items'] = array('logo_height', 'logo_padding_top', 'logo_padding_bottom', 'ga_tracking_code', 'font_family', 'font_weight', 'font_size',
+    'font_color', 'body', 'header', 'sidebar', 'link', 'button', 'social', 'custom_css');
 
 
 /* End of file theme_config.php */
