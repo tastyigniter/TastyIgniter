@@ -22,19 +22,33 @@ class Admin_paypal_express extends Admin_Controller {
 			$ext_data = $data['ext_data'];
 		}
 
-		if (isset($ext_data['api_user'])) {
+		if (isset($this->input->post['title'])) {
+			$data['title'] = $this->input->post('title');
+		} else if (isset($ext_data['title'])) {
+			$data['title'] = $ext_data['title'];
+		} else {
+			$data['title'] = $title;
+		}
+
+		if (isset($this->input->post['api_user'])) {
+			$data['api_user'] = $this->input->post('api_user');
+		} else if (isset($ext_data['api_user'])) {
 			$data['api_user'] = $ext_data['api_user'];
 		} else {
 			$data['api_user'] = '';
 		}
 
-		if (isset($ext_data['api_pass'])) {
+		if (isset($this->input->post['api_pass'])) {
+			$data['api_pass'] = $this->input->post('api_pass');
+		} else if (isset($ext_data['api_pass'])) {
 			$data['api_pass'] = $ext_data['api_pass'];
 		} else {
 			$data['api_pass'] = '';
 		}
 
-		if (isset($ext_data['api_signature'])) {
+		if (isset($this->input->post['api_signature'])) {
+			$data['api_signature'] = $this->input->post('api_signature');
+		} else if (isset($ext_data['api_signature'])) {
 			$data['api_signature'] = $ext_data['api_signature'];
 		} else {
 			$data['api_signature'] = '';
@@ -68,18 +82,6 @@ class Admin_paypal_express extends Admin_Controller {
 			$data['order_status'] = $ext_data['order_status'];
 		} else {
 			$data['order_status'] = '';
-		}
-
-		if (isset($ext_data['return_uri'])) {
-			$data['return_uri'] = $ext_data['return_uri'];
-		} else {
-			$data['return_uri'] = '';
-		}
-
-		if (isset($ext_data['cancel_uri'])) {
-			$data['cancel_uri'] = $ext_data['cancel_uri'];
-		} else {
-			$data['cancel_uri'] = '';
 		}
 
 		if (isset($this->input->post['priority'])) {

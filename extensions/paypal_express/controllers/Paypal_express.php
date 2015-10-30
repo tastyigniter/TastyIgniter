@@ -6,7 +6,7 @@ class Paypal_express extends Main_Controller {
         parent::__construct();
         $this->load->library('customer');
         $this->load->model('Orders_model');
-        $this->load->model('Paypal_model');
+        $this->load->model('paypal_express/Paypal_model');
     }
 
     public function index() {
@@ -18,7 +18,7 @@ class Paypal_express extends Main_Controller {
 
         // START of retrieving lines from language file to pass to view.
         $data['code'] 			= $payment['name'];
-        $data['title'] 			= !empty($payment['title']) ? $payment['title'] : $this->lang->line('text_title');
+        $data['title'] 			= !empty($payment['ext_data']['title']) ? $payment['ext_data']['title'] : $payment['title'];
         // END of retrieving lines from language file to send to view.
 
         $order_data = $this->session->userdata('order_data');                           // retrieve order details from session userdata
@@ -39,7 +39,15 @@ class Paypal_express extends Main_Controller {
         }
 
         if (!empty($order_data['payment']) AND $order_data['payment'] == 'paypal_express') { 	// check if payment method is equal to paypal
-            $this->load->model('Paypal_model');
+
+            $ext_payment_data = !empty($order_data['ext_payment']['ext_data']) ? $order_data['ext_payment']['ext_data'] : array();
+
+            if (!empty($ext_payment_data['order_total']) AND $cart_contents['order_total'] < $ext_payment_data['order_total']) {
+                $this->alert->set('danger', $this->lang->line('alert_min_total'));
+                return FALSE;
+            }
+
+            $this->load->model('paypal_express/Paypal_model');
             $response = $this->Paypal_model->setExpressCheckout($order_data, $this->cart->contents());
 
             if (strtoupper($response['ACK']) === 'SUCCESS' OR strtoupper($response['ACK']) === 'SUCCESSWITHWARNING') {
@@ -51,8 +59,6 @@ class Paypal_express extends Main_Controller {
                 }
 
                 redirect('https://www' . $api_mode . '.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $response['TOKEN'] . '');
-            } else {
-                log_message('error', $response['L_ERRORCODE0'] . ' --> ' . $response['L_LONGMESSAGE0'] . ' --> ' . $response['CORRELATIONID']);
             }
         }
     }
@@ -73,6 +79,12 @@ class Paypal_express extends Main_Controller {
             $transaction_id = $this->Paypal_model->doExpressCheckout($token, $payer_id);
 
             if ($transaction_id AND $order_info) {
+
+                $ext_payment_data = !empty($order_data['ext_payment']['ext_data']) ? $order_data['ext_payment']['ext_data'] : array();
+                if (isset($ext_payment_data['order_status']) AND is_numeric($ext_payment_data['order_status'])) {
+                    $order_data['status_id'] = $ext_payment_data['order_status'];
+                }
+
                 $transaction_details = $this->Paypal_model->getTransactionDetails($transaction_id);
                 $this->Paypal_model->addPaypalOrder($transaction_id, $order_id, $customer_id, $transaction_details);
                 $this->Orders_model->completeOrder($order_id, $order_data, $cart_contents);
