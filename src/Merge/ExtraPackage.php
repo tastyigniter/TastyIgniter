@@ -136,7 +136,9 @@ class ExtraPackage
         $this->addRepositories($root);
 
         $this->mergeRequires('requires', $root, $state);
-        $this->mergeRequires('devRequires', $root, $state);
+        if ($state->isDevMode()) {
+            $this->mergeRequires('devRequires', $root, $state);
+        }
 
         $this->mergePackageLinks('conflicts', $root);
         $this->mergePackageLinks('replaces', $root);
@@ -145,7 +147,9 @@ class ExtraPackage
         $this->mergeSuggests($root);
 
         $this->mergeAutoload('autoload', $root);
-        $this->mergeAutoload('devAutoload', $root);
+        if ($state->isDevMode()) {
+            $this->mergeAutoload('devAutoload', $root);
+        }
 
         $this->mergeExtra($root, $state);
     }

@@ -811,6 +811,33 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
     }
 
+    /**
+     * Given a root package with merge-dev=false
+     *   and an include with require-dev and autoload-dev sections
+     * When the plugin is run
+     * Then the -dev sections are not merged
+     */
+    public function testMergeDevFalse()
+    {
+        $that = $this;
+        $dir = $this->fixtureDir(__FUNCTION__);
+
+        $root = $this->rootFromJson("{$dir}/composer.json");
+        $root->setRequires(Argument::type('array'))->will(
+            function ($args) use ($that) {
+                $requires = $args[0];
+                $that->assertEquals(2, count($requires));
+                $that->assertArrayHasKey('wikimedia/composer-merge-plugin', $requires);
+                $that->assertArrayHasKey('acme/foo', $requires);
+            }
+        )->shouldBeCalled();
+        $root->setDevRequires(Argument::type('array'))->shouldNotBeCalled();
+        $root->setRepositories(Argument::type('array'))->shouldNotBeCalled();
+
+        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
+        $this->assertEquals(0, count($extraInstalls));
+    }
+
 
     /**
      * @param RootPackage $package
