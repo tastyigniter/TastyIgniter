@@ -231,6 +231,25 @@ class Template {
         return $this->_active_styles . "\n\t\t";
     }
 
+	public function getActiveThemeOptions($item = NULL) {
+		if ($this->CI->config->item(strtolower(APPDIR), 'active_theme_options')) {
+			$active_theme_options = $this->CI->config->item(strtolower(APPDIR), 'active_theme_options');
+		} else if ($this->CI->config->item(strtolower(APPDIR), 'customizer_active_style')) {
+			$active_theme_options = $this->CI->config->item(strtolower(APPDIR), 'customizer_active_style');
+		}
+
+		$theme_options = NULL;
+		if (!empty($active_theme_options) AND isset($active_theme_options[0]) AND $active_theme_options[0] === $this->_theme) {
+			$theme_options = (isset($active_theme_options[1]) AND is_array($active_theme_options[1])) ? $active_theme_options[1] : array();
+		}
+
+		if (isset($theme_options[$item])) {
+			return $theme_options[$item];
+		} else {
+			return $theme_options;
+		}
+	}
+
     public function setHeadTag($type = '', $tag = '') {
         if ($type) switch ($type) {
             case 'doctype':
@@ -525,13 +544,16 @@ class Template {
     }
 
     private function _compileActiveStyle($content = '') {
-        $active_styles = (strtolower(APPDIR) === MAINDIR) ? $this->CI->config->item(MAINDIR, 'customizer_active_style') : $this->CI->config->item(ADMINDIR, 'customizer_active_style');
-        if (!empty($active_styles) and is_array($active_styles)) {
-            if (isset($active_styles[0]) AND $active_styles[0] === $this->_theme) {
-                $data = (isset($active_styles[1]) AND is_array($active_styles[1])) ? $active_styles[1] : array();
-                $content = $this->_find_view('stylesheet', $data);
-            }
-        }
+	    if ($this->CI->config->item(strtolower(APPDIR), 'active_theme_options')) {
+		    $active_theme_options = $this->CI->config->item(strtolower(APPDIR), 'active_theme_options');
+	    } else if ($this->CI->config->item(strtolower(APPDIR), 'customizer_active_style')) {
+		    $active_theme_options = $this->CI->config->item(strtolower(APPDIR), 'customizer_active_style');
+	    }
+
+	    if (!empty($active_theme_options) AND isset($active_theme_options[0]) AND $active_theme_options[0] === $this->_theme) {
+		    $data = (isset($active_theme_options[1]) AND is_array($active_theme_options[1])) ? $active_theme_options[1] : array();
+		    $content = $this->_find_view('stylesheet', $data);
+	    }
 
         return $content;
 	}

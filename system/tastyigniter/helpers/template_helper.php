@@ -324,7 +324,7 @@ if ( ! function_exists('set_script_tags')) {
 // ------------------------------------------------------------------------
 
 /**
- * Get template active styles
+ * Get template active theme style
  *
  *
  * @access    public
@@ -333,6 +333,21 @@ if ( ! function_exists('set_script_tags')) {
 if ( ! function_exists('get_active_styles')) {
     function get_active_styles() {
         return get_instance()->template->getActiveStyle();
+    }
+}
+
+// ------------------------------------------------------------------------
+
+/**
+ * Get template active theme options
+ *
+ *
+ * @access    public
+ * @return    string
+ */
+if ( ! function_exists('get_theme_options')) {
+    function get_theme_options($item = '') {
+        return get_instance()->template->getActiveThemeOptions($item);
     }
 }
 
