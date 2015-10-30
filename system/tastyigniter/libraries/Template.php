@@ -238,15 +238,25 @@ class Template {
 			$active_theme_options = $this->CI->config->item(strtolower(APPDIR), 'customizer_active_style');
 		}
 
-		$theme_options = NULL;
-		if (!empty($active_theme_options) AND isset($active_theme_options[0]) AND $active_theme_options[0] === $this->_theme) {
-			$theme_options = (isset($active_theme_options[1]) AND is_array($active_theme_options[1])) ? $active_theme_options[1] : array();
+		if (empty($active_theme_options) OR !isset($active_theme_options[0]) OR !isset($active_theme_options[1])) {
+			return NULL;
 		}
 
-		if (isset($theme_options[$item])) {
+		if ($active_theme_options[0] !== $this->_theme) {
+			return NULL;
+		}
+
+		$theme_options = NULL;
+		if (is_array($active_theme_options[1])) {
+			$theme_options = $active_theme_options[1];
+		}
+
+		if ($item === NULL) {
+			return $theme_options;
+		} else if (isset($theme_options[$item])) {
 			return $theme_options[$item];
 		} else {
-			return $theme_options;
+			return NULL;
 		}
 	}
 
