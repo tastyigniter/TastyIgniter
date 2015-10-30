@@ -84,6 +84,17 @@ class ExtraPackage
     }
 
     /**
+     * Get list of additional packages to require if precessing recursively.
+     *
+     * @return array
+     */
+    public function getRequires()
+    {
+        return isset($this->json['extra']['merge-plugin']['require']) ?
+            $this->json['extra']['merge-plugin']['require'] : array();
+    }
+
+    /**
      * Read the contents of a composer.json style file into an array.
      *
      * The package contents are fixed up to be usable to create a Package

@@ -43,6 +43,9 @@ Usage
                 "composer.local.json",
                 "extensions/*/composer.json"
             ],
+            "require": [
+                "submodule/composer.json"
+            ],
             "recurse": true,
             "replace": false,
             "merge-dev": true,
@@ -86,6 +89,11 @@ in the top-level composer.json file:
 * [extra](https://getcomposer.org/doc/04-schema.md#extra)
   (optional, see [merge-extra](#merge-extra) below)
 
+
+### require
+
+The `require` setting is identical to `[include](#include)` except when
+a pattern fails to match at least one file then it will cause an error.
 
 ### recurse
 

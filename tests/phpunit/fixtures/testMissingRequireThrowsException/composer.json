@@ -1,0 +1,10 @@
+{
+    "require": {
+        "wikimedia/composer-merge-plugin": "dev-master"
+    },
+    "extra": {
+        "merge-plugin": {
+            "require": "glob/*.json"
+        }
+    }
+}
