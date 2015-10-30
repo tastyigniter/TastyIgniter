@@ -32,6 +32,8 @@ class Orders_model extends TI_Model {
 			if ( ! empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
 				$this->db->where('customer_id', $filter['customer_id']);
 			}
+
+			$this->db->where('orders.status_id !=', '0');
 		}
 
 		$this->db->from('orders');
@@ -82,6 +84,10 @@ class Orders_model extends TI_Model {
 				$date = explode('-', $filter['filter_date']);
 				$this->db->where('YEAR(date_added)', $date[0]);
 				$this->db->where('MONTH(date_added)', $date[1]);
+			}
+
+			if (APPDIR === MAINDIR) {
+				$this->db->where('orders.status_id !=', '0');
 			}
 
 			$query = $this->db->get();
@@ -611,7 +617,7 @@ class Orders_model extends TI_Model {
 				$this->email->message($mail_template['body'], $mail_data);
 
 				if ( ! $this->email->send()) {
-					log_message('debug', $this->email->print_debugger(array('headers')));
+					log_message('error', $this->email->print_debugger(array('headers')));
 					$notify = '0';
 				} else {
 					$notify = '1';

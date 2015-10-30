@@ -15,7 +15,7 @@
 			?>
 
 			<div class="<?php echo $class; ?>">
-				<div class="row">
+                <div class="row">
 					<div class="col-xs-12">
 						<ul class="nav nav-pills nav-justified thumbnail">
 							<li class="step-one <?php if ($checkout_step === 'one') { echo 'active'; } else if ($checkout_step === 'two') { echo 'link'; } else { echo 'disabled'; }; ?>">
@@ -40,10 +40,19 @@
 					</div>
 				</div>
 
-				<div class="row">
-					<div class="col-md-12">
+                <?php if ($this->alert->get()) { ?>
+                    <div id="notification" class="wrap-bottom">
+                        <div class="row wrap-bottom">
+                            <div class="col-md-12">
+                                <?php echo $this->alert->display(); ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
 
-						<form method="POST" accept-charset="utf-8" action="<?php echo $_action; ?>" id="checkout-form" role="form">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form method="POST" accept-charset="utf-8" action="<?php echo $_action; ?>" id="checkout-form" role="form">
                             <input type="hidden" name="checkout_step" class="checkout_step" value="<?php echo set_value('checkout_step', $checkout_step); ?>">
 
 							<div id="checkout" style="display: <?php echo ($checkout_step === 'one') ? 'block' : 'none'; ?>">
@@ -223,7 +232,7 @@
                                         <div class="form-group">
                                             <label for=""><?php echo lang('label_customer_name'); ?></label><br /><?php echo $first_name; ?> <?php echo $last_name; ?>
                                         </div>
-                                        <?php if ($addresses) { ?>
+                                        <?php if ($order_type === '1' AND $addresses) { ?>
                                             <div class="form-group">
                                                 <label for=""><?php echo lang('label_address'); ?></label><br />
                                                 <?php foreach ($addresses as $address) { ?>

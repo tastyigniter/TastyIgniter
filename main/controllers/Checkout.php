@@ -67,9 +67,14 @@ class Checkout extends Main_Controller {
 
         $data['_action'] = site_url('checkout');
 
-		if (isset($order_data['order_id']) OR (!empty($order_data['customer_id']) AND $order_data['customer_id'] !== $this->customer->getId())) {
-            $order_data = array();
-            $this->session->unset_userdata('order_data');
+		if (isset($order_data['order_id']) AND !empty($order_data['customer_id'])) {
+			$this->load->model('Statuses_model');
+			$order_status_history = $this->Statuses_model->getStatusHistory('order', $order_data['order_id']);
+
+			if ($order_data['customer_id'] !== $this->customer->getId() OR empty($order_status_history)) {
+	            $order_data = array();
+	            $this->session->unset_userdata('order_data');
+			}
 		}
 
         $data = $this->getFormData($order_data, $data);
@@ -370,8 +375,8 @@ class Checkout extends Main_Controller {
                 $order_data['customer_id'] = '';
             }
 
-            $order_data['checkout_step'] = $this->input->post('checkout_step');
-            $order_data['first_name'] 	= $this->input->post('first_name');
+	        $order_data['checkout_step'] = empty($order_data['checkout_step']) ? 'one' : $order_data['checkout_step'];
+	        $order_data['first_name'] 	= $this->input->post('first_name');
             $order_data['last_name'] 	= $this->input->post('last_name');
             $order_data['email'] 		= $this->input->post('email');
             $order_data['telephone'] 	= $this->input->post('telephone');
@@ -396,10 +401,11 @@ class Checkout extends Main_Controller {
             }
 
             if ($this->input->post('checkout_step') === 'one') {
-                $order_data['checkout_step'] = 'two';
+	            $order_data['checkout_step'] = 'two';
             }
 
-            if ($this->input->post('checkout_step') === 'two' AND $this->input->post('payment')) {
+	        if ($this->input->post('checkout_step') === 'two' AND $order_data['checkout_step'] === 'two' AND $this->input->post('payment')) {
+
                 $order_data['payment'] = $this->input->post('payment');
                 $order_data['ext_payment'] = $this->extension->getPayment($order_data['payment']);
 
@@ -407,9 +413,9 @@ class Checkout extends Main_Controller {
                     $order_data['terms_condition'] = $this->input->post('terms_condition');
                 }
 
-                $this->_confirmPayment($order_data, $this->session->userdata('cart_contents'));
+                return $this->_confirmPayment($order_data, $this->session->userdata('cart_contents'));
             } else {
-                $this->session->set_userdata('order_data', $order_data);					// save order details to session and return TRUE
+		        $this->session->set_userdata('order_data', $order_data);					// save order details to session and return TRUE
             }
 
             return TRUE;
@@ -545,7 +551,7 @@ class Checkout extends Main_Controller {
         }
 
         return TRUE;
-	}
+    }
 }
 
 /* End of file checkout.php */
