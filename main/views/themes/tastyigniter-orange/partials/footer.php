@@ -27,7 +27,7 @@
             <?php $social_icons = get_theme_options('social'); ?>
 
             <div class="col-md-4">
-                <?php if (array_filter($social_icons)) { ?>
+                <?php if (!empty($social_icons) AND array_filter($social_icons)) { ?>
                     <div class="social-bottom">
                         <ul class="social-icons">
                             <?php if (!empty($social_icons['facebook'])) { ?>
