@@ -67,7 +67,7 @@ class Checkout extends Main_Controller {
 
         $data['_action'] = site_url('checkout');
 
-		if (isset($order_data['order_id']) AND !empty($order_data['customer_id'])) {
+        if (isset($order_data['order_id']) AND isset($order_data['customer_id'])) {
 			$this->load->model('Statuses_model');
 			$order_status_history = $this->Statuses_model->getStatusHistory('order', $order_data['order_id']);
 
