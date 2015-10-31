@@ -90,7 +90,7 @@ defined('ENVIRONMENT') OR define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SE
 | false, the benchmark will not display
 |
 */
-defined('TI_DEBUG') OR define('TI_DEBUG', TRUE);
+defined('TI_DEBUG') OR define('TI_DEBUG', FALSE);
 
 /*
 |--------------------------------------------------------------------------
