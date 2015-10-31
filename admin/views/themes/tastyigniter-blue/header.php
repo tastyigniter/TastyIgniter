@@ -34,7 +34,6 @@
     $logout 			= site_url('logout');
 
     $heading 			= get_heading();
-    $context_help       = get_context_help();
 ?>
 <?php echo get_doctype(); ?>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
