@@ -383,13 +383,14 @@ class ExtraPackage
             );
 
         } else {
-            foreach ($extra as $key => $value) {
-                if (isset($rootExtra[$key])) {
-                    $this->logger->info(
-                        "Ignoring duplicate <comment>{$key}</comment> in ".
-                        "<comment>{$this->path}</comment> extra config."
-                    );
-                }
+            foreach (array_intersect(
+                array_keys($extra),
+                array_keys($rootExtra)
+            ) as $key) {
+                $this->logger->info(
+                    "Ignoring duplicate <comment>{$key}</comment> in ".
+                    "<comment>{$this->path}</comment> extra config."
+                );
             }
             $unwrapped->setExtra(
                 array_merge($extra, $rootExtra)
