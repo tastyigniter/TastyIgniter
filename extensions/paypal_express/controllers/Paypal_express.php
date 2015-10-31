@@ -7,6 +7,7 @@ class Paypal_express extends Main_Controller {
         $this->load->library('customer');
         $this->load->model('Orders_model');
         $this->load->model('paypal_express/Paypal_model');
+        $this->lang->load('paypal_express/paypal_express');
     }
 
     public function index() {
@@ -76,7 +77,7 @@ class Paypal_express extends Main_Controller {
             $order_id = (is_numeric($order_data['order_id'])) ? $order_data['order_id'] : FALSE;
             $order_info = $this->Orders_model->getOrder($order_id, $order_data['customer_id']);	// retrieve order details array from getMainOrder method in Orders model
 
-            $transaction_id = $this->Paypal_model->doExpressCheckout($token, $payer_id);
+            $transaction_id = $this->Paypal_model->doExpressCheckout($token, $payer_id, $order_info);
 
             if ($transaction_id AND $order_info) {
 
@@ -85,7 +86,7 @@ class Paypal_express extends Main_Controller {
                     $order_data['status_id'] = $ext_payment_data['order_status'];
                 }
 
-                $transaction_details = $this->Paypal_model->getTransactionDetails($transaction_id);
+                $transaction_details = $this->Paypal_model->getTransactionDetails($transaction_id, $order_info);
                 $this->Paypal_model->addPaypalOrder($transaction_id, $order_id, $customer_id, $transaction_details);
                 $this->Orders_model->completeOrder($order_id, $order_data, $cart_contents);
 
@@ -93,7 +94,7 @@ class Paypal_express extends Main_Controller {
             }
         }
 
-        $this->alert->set('alert', $this->lang->line('alert_error_server'));
+        $this->alert->set('danger', $this->lang->line('alert_error_server'));
         redirect('checkout');
     }
 

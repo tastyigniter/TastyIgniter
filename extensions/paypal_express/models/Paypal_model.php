@@ -2,8 +2,6 @@
 
 class Paypal_model extends TI_Model {
 
-    private $error_prefix = 'PayPal Express Error -->';
-
     public function __construct() {
         parent::__construct();
 
@@ -76,15 +74,19 @@ class Paypal_model extends TI_Model {
 
 			$response = $this->callPayPal('SetExpressCheckout', $nvp_data);
 
-			if (isset($response['ACK']) AND strtoupper($response['ACK']) !== 'SUCCESS' OR strtoupper($response['ACK']) !== 'SUCCESSWITHWARNING') {
-				log_message('error', $this->error_prefix . $response['L_ERRORCODE0'] . ': ' . $response['L_LONGMESSAGE0'] . ' : ' . $response['CORRELATIONID']);
+			if (isset($response['ACK'])) {
+				if (strtoupper($response['ACK']) !== 'SUCCESS' OR strtoupper($response['ACK']) !== 'SUCCESSWITHWARNING') {
+					if (isset($response['L_ERRORCODE0'], $response['L_LONGMESSAGE0'], $order_info['order_id'])) {
+						log_message('error', 'PayPalExpress::setExpressCheckout Error -->' . $order_info['order_id'] . ': ' . $response['L_ERRORCODE0'] . ': ' . $response['L_LONGMESSAGE0']);
+					}
+				}
 			}
 
 			return $response;
 		}
 	}
 
-	public function doExpressCheckout($token, $payer_id) {
+	public function doExpressCheckout($token, $payer_id, $order_info = array()) {
 
 		$nvp_data  = '&TOKEN='. urlencode($token);
 		$nvp_data .= '&PAYERID='. urlencode($payer_id);
@@ -104,25 +106,34 @@ class Paypal_model extends TI_Model {
 
 		$response = $this->callPayPal('DoExpressCheckoutPayment', $nvp_data);
 
-		if (strtoupper($response['ACK']) === 'SUCCESS' OR strtoupper($response['ACK']) === 'SUCCESSWITHWARNING') {
-			return $response['PAYMENTINFO_0_TRANSACTIONID'];
-		} else {
-			log_message('error', $this->error_prefix . $response['L_ERRORCODE0'] .': '. $response['L_LONGMESSAGE0'] .' : '. $response['CORRELATIONID']);
-			return FALSE;
+		if (isset($response['ACK'])) {
+			if (strtoupper($response['ACK']) === 'SUCCESS' OR strtoupper($response['ACK']) === 'SUCCESSWITHWARNING') {
+				return $response['PAYMENTINFO_0_TRANSACTIONID'];
+			} else {
+				if (isset($response['L_ERRORCODE0'], $response['L_LONGMESSAGE0'], $order_info['order_id'])) {
+					log_message('error', 'PayPalExpress::doExpressCheckout Error -->' . $order_info['order_id'] . ': ' . $response['L_ERRORCODE0'] . ': ' . $response['L_LONGMESSAGE0']);
+				}
+			}
 		}
+
+		return FALSE;
 	}
 
-	public function getTransactionDetails($transaction_id) {
+	public function getTransactionDetails($transaction_id, $order_info = array()) {
 
 		$nvp_data = '&TRANSACTIONID='. urlencode($transaction_id);
 
 		$response = $this->callPayPal('GetTransactionDetails', $nvp_data);
 
-		if (strtoupper($response['ACK']) === 'SUCCESS' OR strtoupper($response['ACK']) === 'SUCCESSWITHWARNING') {
-			return $response;
-		} else {
-			log_message('error', $this->error_prefix . $response['L_ERRORCODE0'] .': '. $response['L_LONGMESSAGE0'] .' : '. $response['CORRELATIONID']);
+		if (isset($response['ACK'])) {
+			if (strtoupper($response['ACK']) !== 'SUCCESS' OR strtoupper($response['ACK']) !== 'SUCCESSWITHWARNING') {
+				if (isset($response['L_ERRORCODE0'], $response['L_LONGMESSAGE0'], $order_info['order_id'])) {
+					log_message('error', 'PayPalExpress::getTransactionDetails Error -->' . $order_info['order_id'] . ': ' . $response['L_ERRORCODE0'] . ': ' . $response['L_LONGMESSAGE0']);
+				}
+			}
 		}
+
+		return $response;
 	}
 
 	public function addPaypalOrder($transaction_id, $order_id, $customer_id, $response_data) {
