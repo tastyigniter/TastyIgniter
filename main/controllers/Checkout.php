@@ -369,11 +369,7 @@ class Checkout extends Main_Controller {
                 $order_data['location_id'] = $this->location->getId();					// retrieve location id from location library and add to order_data array
             }
 
-            if ($this->customer->islogged() AND $this->customer->getId()) {
-                $order_data['customer_id'] = $this->customer->getId();					// retrive customer id from customer library and add to order_data array
-            } else {
-                $order_data['customer_id'] = '';
-            }
+            $order_data['customer_id'] = $this->customer->getId();					// retrive customer id from customer library and add to order_data array
 
 	        $order_data['checkout_step'] = empty($order_data['checkout_step']) ? 'one' : $order_data['checkout_step'];
 	        $order_data['first_name'] 	= $this->input->post('first_name');
