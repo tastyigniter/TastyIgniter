@@ -77,9 +77,9 @@ class Local_module extends Main_Controller {
             $data['min_total'] = $this->currency->format('0.00');
         }
 
-        if ( ! $this->location->isOpened() AND $this->config->item('future_orders') !== '1') { 													// else if local restaurant is not open
+        if ($this->location->searchQuery() AND ! $this->location->isOpened() AND $this->config->item('future_orders') !== '1') { 													// else if local restaurant is not open
             $data['local_alert'] = $this->lang->line('alert_location_closed');
-        } else if ( ! $this->location->isOpened() AND $this->config->item('future_orders') === '1') {
+        } else if ($this->location->searchQuery() AND ! $this->location->isOpened() AND $this->config->item('future_orders') === '1') {
             $data['local_alert'] = $this->lang->line('alert_local_future_order');
         }
 
@@ -109,24 +109,23 @@ class Local_module extends Main_Controller {
 				break;
 		}
 
-        $redirect = '';
-		if (!isset($json['error'])) {
-			$order_type = (is_numeric($this->input->post('order_type'))) ? $this->input->post('order_type') : '1';
-			$this->location->setOrderType($order_type);
+        if (!isset($json['error'])) {
+            $order_type = (is_numeric($this->input->post('order_type'))) ? $this->input->post('order_type') : '1';
+            $this->location->setOrderType($order_type);
 
-            $redirect = $json['redirect'] = site_url('local?location_id='.$this->location->getId());
+            $json['redirect'] = site_url('local?location_id='.$this->location->getId());
         }
 
-        if ($redirect === '') {
-            $redirect = $this->referrer_uri;
+        if (!isset($json['redirect'])) {
+            $json['redirect'] = $this->referrer_uri;
         }
 
         if ($this->input->is_ajax_request()) {
-			$this->output->set_output(json_encode($json));											// encode the json array and set final out to be sent to jQuery AJAX
-		} else {
-			if (isset($json['error'])) $this->alert->set('custom', $json['error'], 'local_module');
-			redirect($redirect);
-		}
+            $this->output->set_output(json_encode($json));											// encode the json array and set final out to be sent to jQuery AJAX
+        } else {
+            if (isset($json['error'])) $this->alert->set('custom', $json['error'], 'local_module');
+            redirect($json['redirect']);
+        }
 	}
 }
 
