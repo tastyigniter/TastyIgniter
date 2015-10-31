@@ -157,7 +157,7 @@ class Currencies extends Admin_Controller {
     	if ($this->validateForm() === TRUE) {
             $save_type = ( ! is_numeric($this->input->get('id'))) ? $this->lang->line('text_added') : $this->lang->line('text_updated');
 
-			if ($currency_id = $this->Currencies_model->addCurrency($this->input->get('id'), $this->input->post())) {
+			if ($currency_id = $this->Currencies_model->saveCurrency($this->input->get('id'), $this->input->post())) {
                 $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Currency '.$save_type));
             } else {
                 $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $save_type));
