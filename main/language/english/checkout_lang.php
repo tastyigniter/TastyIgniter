@@ -63,7 +63,6 @@ $lang['alert_no_selected_local']        = '<p class="alert-danger">Please select
 $lang['alert_location_closed']          = '<p class="alert-danger">Sorry, you can\'t place an order now, we are currently closed,<br /> please come back later during our opening times.</p>';
 $lang['alert_order_unavailable']        = '<p class="alert-danger">Niether delivery or collection is available at the selected restaurant.</p>';
 $lang['alert_customer_not_logged']      = '<p class="alert-info">Almost there, Please login or register to complete checkout.</p>';
-$lang['alert_error_server']             = '<p class="alert-danger">Sorry an error occurred, please try again</p>';
 
 /* End of file checkout_lang.php */
 /* Location: ./main/language/english/main/checkout_lang.php */

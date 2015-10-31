@@ -133,7 +133,7 @@
                                 </div>
 
                                 <?php if ($addresses) { ?>
-                                    <div id="checkout-delivery" class="row wrap-bottom">
+                                    <div id="checkout-delivery" class="row wrap-bottom" style="display:<?php echo ($order_type === '2') ? 'none' : 'block'; ?>">
                                         <?php $address_row = 0; ?>
                                         <div id="address-labels">
                                             <div class="btn-group btn-group-md col-xs-12" data-toggle="buttons">
