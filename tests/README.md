@@ -31,6 +31,10 @@ OR
 
 `run: php codecept.phar run acceptance -g admin` from tests folder to run admin group tests
 
+You will need to change the url under WebDriver modules in the Test Suite Configuration acceptance.suite.dist.yml
+
+You will also need to change the database setting under Db modules in codeception.dist.yml
+
 Must READ
 =====================
 The tests are still under development, there are hundreds of them to do.
