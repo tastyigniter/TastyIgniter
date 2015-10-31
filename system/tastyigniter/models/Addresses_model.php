@@ -212,6 +212,8 @@ class Addresses_model extends TI_Model {
 
 		if (isset($address['country'])) {
 			$this->db->set('country_id', $address['country']);
+		} else if (isset($address['country_id'])) {
+			$this->db->set('country_id', $address['country_id']);
 		}
 
 		if (is_numeric($address_id)) {
