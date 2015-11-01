@@ -197,7 +197,7 @@
                             <?php foreach ($activities as $activity) { ?>
                                 <li class="list-group-item">
                                     <div class="clearfix">
-                                        <div class="activity-body"><i class="<?php echo $activity['icon']; ?> fa-fw"></i>
+                                        <div class="activity-body"><i class="<?php echo $activity['icon']; ?> fa-fw bg-primary"></i>
                                             <?php echo $activity['message']; ?>
                                             <span class="activity-time text-muted small">
                                                 <span class="small"><?php echo $activity['time']; ?>&nbsp;-&nbsp;<?php echo $activity['time_elapsed']; ?></span>
