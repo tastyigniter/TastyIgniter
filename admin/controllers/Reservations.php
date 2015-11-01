@@ -306,6 +306,7 @@ class Reservations extends Admin_Controller {
 				'staff_name'	=> $history['staff_name'],
 				'assignee_id'	=> $history['assignee_id'],
 				'status_name'	=> $history['status_name'],
+				'status_color'	=> $history['status_color'],
 				'notify'		=> $history['notify'],
 				'comment'		=> $history['comment']
 			);

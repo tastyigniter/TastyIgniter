@@ -378,14 +378,13 @@
 							<?php echo form_error('table', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
-					<div class="form-group">
-						<label for="" class="col-sm-3 control-label"></label>
-						<div id="table-box" class="col-sm-5">
-							<div class="table-responsive panel-selected">
+					<div class="row">
+						<div id="table-box" class="col-sm-12 wrap-top">
+							<div class="table-responsive">
 								<table class="table table-striped">
 									<thead>
 										<tr>
-											<th><?php echo lang('column_table_name'); ?></th>
+											<th width="40%"><?php echo lang('column_table_name'); ?></th>
 											<th><?php echo lang('column_table_minimum'); ?></th>
 											<th><?php echo lang('column_table_capacity'); ?></th>
 											<th><?php echo lang('column_table_remove'); ?></th>

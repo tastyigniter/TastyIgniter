@@ -4,243 +4,286 @@
 		<div class="row wrap-vertical">
 			<ul id="nav-tabs" class="nav nav-tabs">
 				<li class="active"><a href="#general" data-toggle="tab"><?php echo lang('text_tab_general'); ?></a></li>
-				<li><a href="#status" data-toggle="tab"><?php echo lang('text_tab_status'); ?></a></li>
-				<li><a href="#table" data-toggle="tab"><?php echo lang('text_tab_table'); ?></a></li>
-				<li><a href="#restaurant" data-toggle="tab"><?php echo lang('text_tab_restaurant'); ?></a></li>
-				<li><a href="#customer" data-toggle="tab"><?php echo lang('text_tab_customer'); ?></a></li>
 			</ul>
 		</div>
 
 		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo $_action; ?>">
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
-					<div class="form-group">
-						<label for="" class="col-sm-3 control-label"><?php echo lang('label_reservation_id'); ?></label>
-						<div class="col-sm-5">
-							#<?php echo $reservation_id; ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="" class="col-sm-3 control-label"><?php echo lang('label_guest'); ?></label>
-						<div class="col-sm-5">
-							<?php echo $guest_num; ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="" class="col-sm-3 control-label"><?php echo lang('label_reservation_date'); ?></label>
-						<div class="col-sm-5">
-							<?php echo $reserve_date; ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="" class="col-sm-3 control-label"><?php echo lang('label_reservation_time'); ?></label>
-						<div class="col-sm-5">
-							<?php echo $reserve_time; ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="" class="col-sm-3 control-label"><?php echo lang('label_occasion'); ?></label>
-						<div class="col-sm-5">
-							<?php echo $occasions[$occasion]; ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="" class="col-sm-3 control-label"><?php echo lang('label_date_added'); ?></label>
-						<div class="col-sm-5">
-							<?php echo $date_added; ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="" class="col-sm-3 control-label"><?php echo lang('label_date_modified'); ?></label>
-						<div class="col-sm-5">
-							<?php echo $date_modified; ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="" class="col-sm-3 control-label"><?php echo lang('label_notify'); ?></label>
-						<div class="col-sm-5">
-							<?php if ($notify === '1') { ?>
-								<?php echo lang('text_email_sent'); ?>
-							<?php } else { ?>
-								<?php echo lang('text_email_not_sent'); ?>
-							<?php } ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="" class="col-sm-3 control-label"><?php echo lang('label_ip_address'); ?></label>
-						<div class="col-sm-5">
-							<?php echo $ip_address; ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="" class="col-sm-3 control-label"><?php echo lang('label_user_agent'); ?></label>
-						<div class="col-sm-5">
-							<?php echo $user_agent; ?>
-						</div>
-					</div>
-				</div>
-
-				<div id="status" class="tab-pane row wrap-all">
-					<div class="form-group">
-                        <input type="hidden" name="old_assignee_id" value="<?php echo $assignee_id; ?>" />
-                        <input type="hidden" name="old_status_id" value="<?php echo $status_id; ?>" />
-                        <label for="input-assign-staff" class="col-sm-3 control-label"><?php echo lang('label_assign_staff'); ?></label>
-						<div class="col-sm-5">
-							<select name="assignee_id" class="form-control">
-								<option value=""><?php echo lang('text_please_select'); ?></option>
-								<?php foreach ($staffs as $staff) { ?>
-									<?php if ($staff['staff_id'] === $assignee_id) { ?>
-										<option value="<?php echo $staff['staff_id']; ?>" <?php echo set_select('assignee_id', $staff['staff_id'], TRUE); ?> ><?php echo $staff['staff_name']; ?></option>
-									<?php } else { ?>
-										<option value="<?php echo $staff['staff_id']; ?>" <?php echo set_select('assignee_id', $staff['staff_id']); ?> ><?php echo $staff['staff_name']; ?></option>
-									<?php } ?>
-								<?php } ?>
-							</select>
-							<?php echo form_error('assignee_id', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-status" class="col-sm-3 control-label"><?php echo lang('label_status'); ?></label>
-						<div class="col-sm-5">
-							<select name="status" class="form-control" onChange="getStatusComment();">
-							<?php foreach ($statuses as $status) { ?>
-								<?php if ($status['status_id'] === $status_id) { ?>
-									<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('status', $status['status_id'], TRUE); ?> ><?php echo $status['status_name']; ?></option>
-								<?php } else { ?>
-									<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('status', $status['status_id']); ?> ><?php echo $status['status_name']; ?></option>
-								<?php } ?>
-							<?php } ?>
-							</select>
-							<?php echo form_error('status', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-comment" class="col-sm-3 control-label"><?php echo lang('label_comment'); ?></label>
-						<div class="col-sm-5">
-							<textarea name="status_comment" rows="3" class="form-control"><?php echo set_value('status_comment'); ?></textarea>
-							<?php echo form_error('status_comment', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-notify" class="col-sm-3 control-label"><?php echo lang('label_notify'); ?></label>
-						<div class="col-sm-5">
-							<div id="input-notify" class="btn-group btn-group-switch" data-toggle="buttons">
-								<?php if ($notify == '1') { ?>
-									<label class="btn btn-danger"><input type="radio" name="notify" value="0" <?php echo set_radio('notify', '0'); ?>><?php echo lang('text_no'); ?></label>
-									<label class="btn btn-success active"><input type="radio" name="notify" value="1" <?php echo set_radio('notify', '1', TRUE); ?>><?php echo lang('text_yes'); ?></label>
-								<?php } else { ?>
-									<label class="btn btn-danger active"><input type="radio" name="notify" value="0" <?php echo set_radio('notify', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
-									<label class="btn btn-success"><input type="radio" name="notify" value="1" <?php echo set_radio('notify', '1'); ?>><?php echo lang('text_yes'); ?></label>
-								<?php } ?>
+					<div class="row">
+						<div class="col-xs-12 col-sm-4">
+							<div class="panel panel-default">
+								<div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_tab_general'); ?></h3></div>
+								<div class="panel-body">
+									<div class="form-group col-xs-12">
+										<label for="" class="control-label"><?php echo lang('label_reservation_id'); ?></label>
+										<div class="">
+											#<?php echo $reservation_id; ?>
+										</div>
+									</div>
+									<div class="form-group col-xs-12">
+										<label for="" class="control-label"><?php echo lang('label_guest'); ?></label>
+										<div class="">
+											<?php echo $guest_num; ?>
+										</div>
+									</div>
+									<div class="form-group col-xs-12">
+										<label for="" class="control-label"><?php echo lang('label_reservation_date'); ?></label>
+										<div class="">
+											<?php echo $reserve_date; ?>
+										</div>
+									</div>
+									<div class="form-group col-xs-12">
+										<label for="" class="control-label"><?php echo lang('label_reservation_time'); ?></label>
+										<div class="">
+											<?php echo $reserve_time; ?>
+										</div>
+									</div>
+									<div class="form-group col-xs-12">
+										<label for="" class="control-label"><?php echo lang('label_occasion'); ?></label>
+										<div class="">
+											<?php echo $occasions[$occasion]; ?>
+										</div>
+									</div>
+									<div class="form-group col-xs-12">
+										<label for="" class="control-label"><?php echo lang('label_date_added'); ?></label>
+										<div class="">
+											<?php echo $date_added; ?>
+										</div>
+									</div>
+								</div>
 							</div>
-							<?php echo form_error('notify', '<span class="text-danger">', '</span>'); ?>
+						</div>
+						<div class="col-xs-12 col-sm-4">
+							<div class="panel panel-default">
+								<div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_tab_customer'); ?></h3></div>
+								<div class="panel-body">
+									<div class="form-group col-xs-12">
+										<label for="" class="control-label"><?php echo lang('label_customer_name'); ?></label>
+										<div class="">
+											<?php echo $first_name; ?> <?php echo $last_name; ?>
+										</div>
+									</div>
+									<div class="form-group col-xs-12">
+										<label for="" class="control-label"><?php echo lang('label_customer_email'); ?></label>
+										<div class="">
+											<?php echo $email; ?>
+										</div>
+									</div>
+									<div class="form-group col-xs-12">
+										<label for="" class="control-label"><?php echo lang('label_customer_telephone'); ?></label>
+										<div class="">
+											<?php echo $telephone; ?>
+										</div>
+									</div>
+									<div class="form-group col-xs-12">
+										<label for="" class="control-label"><?php echo lang('label_comment'); ?></label>
+										<div class="">
+											<?php echo $comment; ?>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-4">
+							<div class="panel panel-default">
+								<div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_tab_restaurant'); ?></h3></div>
+								<div class="panel-body">
+									<div class="form-group col-xs-12">
+										<label for="" class="control-label"><?php echo lang('label_restaurant_name'); ?></label>
+										<div class="">
+											<?php echo $location_name; ?>
+										</div>
+									</div>
+									<div class="form-group col-xs-12">
+										<label for="" class="control-label"><?php echo lang('label_restaurant_address'); ?></label>
+										<div class="">
+											<span>
+												<?php echo $location_address_1; ?>,
+												<?php echo $location_city; ?>,
+												<?php echo $location_postcode; ?>,
+												<?php echo $location_country; ?>
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
-					<br />
 
-					<h3>History</h3>
-					<table height="auto" class="table table-striped table-border" id="history">
-						<thead>
-							<tr>
-                                <th><?php echo lang('column_time_date'); ?></th>
-                                <th><?php echo lang('column_status'); ?></th>
-                                <th><?php echo lang('column_staff'); ?></th>
-                                <th><?php echo lang('column_assignee'); ?></th>
-                                <th class="left" width="35%"><?php echo lang('column_comment'); ?></th>
-                                <th class="text-center"><?php echo lang('column_notify'); ?></th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php if ($status_history) { ?>
-							<?php foreach ($status_history as $history) { ?>
-							<tr>
-								<td><?php echo $history['date_time']; ?></td>
-								<td><?php echo $history['status_name']; ?></td>
-								<td><?php echo $history['staff_name']; ?></td>
-								<td>
-								<?php foreach ($staffs as $staff) { ?>
-									<?php if ($staff['staff_id'] === $history['assignee_id']) { ?>
-										<?php echo $staff['staff_name']; ?>
-									<?php } ?>
-								<?php } ?>
-								</td>
-                                <td class="left"><?php echo $history['comment']; ?></td>
-                                <td class="text-center"><?php echo ($history['notify'] === '1') ? $this->lang->line('text_yes') : $this->lang->line('text_no'); ?></td>
-							</tr>
-							<?php } ?>
-							<?php } else { ?>
-							<tr>
-								<td colspan="6"><?php echo lang('text_no_status_history'); ?></td>
-							</tr>
-							<?php } ?>
-						</tbody>
-					</table>
-				</div>
+					<div class="row">
+						<div class="col-xs-12 col-sm-6">
+							<div class="panel panel-default">
+								<div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_tab_table'); ?></h3></div>
+								<div class="panel-body">
+									<div class="form-group col-xs-12">
+										<label for="" class="control-label"><?php echo lang('label_table_name'); ?></label>
+										<div class="">
+											<?php echo $table_name; ?>
+										</div>
+									</div>
+									<div class="form-group col-xs-12">
+										<label for="" class="control-label"><?php echo lang('label_table_min_capacity'); ?></label>
+										<div class="">
+											<?php echo $min_capacity; ?>
+										</div>
+									</div>
+									<div class="form-group col-xs-12">
+										<label for="" class="control-label"><?php echo lang('label_table_capacity'); ?></label>
+										<div class="">
+											<?php echo $max_capacity; ?>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 
-				<div id="table" class="tab-pane row wrap-all">
-					<div class="form-group">
-						<label for="" class="col-sm-3 control-label"><?php echo lang('label_table_name'); ?></label>
-						<div class="col-sm-5">
-							<?php echo $table_name; ?>
+						<div class="col-xs-12 col-sm-6">
+							<div class="panel panel-default">
+								<div class="panel-body">
+									<div class="form-group col-xs-12">
+										<label for="" class="control-label"><?php echo lang('label_date_modified'); ?></label>
+										<div class="">
+											<?php echo $date_modified; ?>
+										</div>
+									</div>
+									<div class="form-group col-xs-12">
+										<label for="" class="control-label"><?php echo lang('label_notify'); ?></label>
+										<div class="">
+											<?php if ($notify === '1') { ?>
+												<?php echo lang('text_email_sent'); ?>
+											<?php } else { ?>
+												<?php echo lang('text_email_not_sent'); ?>
+											<?php } ?>
+										</div>
+									</div>
+									<div class="form-group col-xs-12">
+										<label for="" class="control-label"><?php echo lang('label_ip_address'); ?></label>
+										<div class="">
+											<?php echo $ip_address; ?>
+										</div>
+									</div>
+									<div class="form-group col-xs-12">
+										<label for="" class="control-label"><?php echo lang('label_user_agent'); ?></label>
+										<div class="">
+											<?php echo $user_agent; ?>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="form-group">
-						<label for="" class="col-sm-3 control-label"><?php echo lang('label_table_min_capacity'); ?></label>
-						<div class="col-sm-5">
-							<?php echo $min_capacity; ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="" class="col-sm-3 control-label"><?php echo lang('label_table_capacity'); ?></label>
-						<div class="col-sm-5">
-							<?php echo $max_capacity; ?>
-						</div>
-					</div>
-				</div>
 
-				<div id="restaurant" class="tab-pane row wrap-all">
-					<div class="form-group">
-						<label for="" class="col-sm-3 control-label"><?php echo lang('label_restaurant_name'); ?></label>
-						<div class="col-sm-5">
-							<?php echo $location_name; ?>
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="panel panel-default">
+								<div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_status_history'); ?></h3></div>
+								<div class="panel-body">
+									<div class="table-responsive">
+										<table height="auto" class="table table-striped table-border" id="history">
+											<thead>
+											<tr>
+												<th><?php echo lang('column_time_date'); ?></th>
+												<th><?php echo lang('column_status'); ?></th>
+												<th><?php echo lang('column_staff'); ?></th>
+												<th><?php echo lang('column_assignee'); ?></th>
+												<th class="left" width="35%"><?php echo lang('column_comment'); ?></th>
+												<th class="text-center"><?php echo lang('column_notify'); ?></th>
+											</tr>
+											</thead>
+											<tbody>
+											<?php if ($status_history) { ?>
+												<?php foreach ($status_history as $history) { ?>
+													<tr>
+														<td><?php echo $history['date_time']; ?></td>
+														<td><span class="label label-default" style="background-color: <?php echo $history['status_color']; ?>;"><?php echo $history['status_name']; ?></span></td>
+														<td><?php echo $history['staff_name']; ?></td>
+														<td>
+															<?php foreach ($staffs as $staff) { ?>
+																<?php if ($staff['staff_id'] === $history['assignee_id']) { ?>
+																	<?php echo $staff['staff_name']; ?>
+																<?php } ?>
+															<?php } ?>
+														</td>
+														<td class="left"><?php echo $history['comment']; ?></td>
+														<td class="text-center"><?php echo ($history['notify'] === '1') ? $this->lang->line('text_yes') : $this->lang->line('text_no'); ?></td>
+													</tr>
+												<?php } ?>
+											<?php } else { ?>
+												<tr>
+													<td colspan="6"><?php echo lang('text_no_status_history'); ?></td>
+												</tr>
+											<?php } ?>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="form-group">
-						<label for="" class="col-sm-3 control-label"><?php echo lang('label_restaurant_address'); ?></label>
-						<div class="col-sm-5">
-							<address>
-								<?php echo $location_address_1; ?>,
-								<?php echo $location_city; ?>,
-								<?php echo $location_postcode; ?>,
-								<?php echo $location_country; ?>
-							</address>
-						</div>
-					</div>
-				</div>
 
-				<div id="customer" class="tab-pane row wrap-all">
-					<div class="form-group">
-						<label for="" class="col-sm-3 control-label"><?php echo lang('label_customer_name'); ?></label>
-						<div class="col-sm-5">
-							<?php echo $first_name; ?> <?php echo $last_name; ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="" class="col-sm-3 control-label"><?php echo lang('label_customer_email'); ?></label>
-						<div class="col-sm-5">
-							<?php echo $email; ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="" class="col-sm-3 control-label"><?php echo lang('label_customer_telephone'); ?></label>
-						<div class="col-sm-5">
-							<?php echo $telephone; ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="" class="col-sm-3 control-label"><?php echo lang('label_comment'); ?></label>
-						<div class="col-sm-5">
-							<?php echo $comment; ?>
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="panel panel-default">
+								<div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_tab_status'); ?></h3></div>
+								<div class="panel-body">
+									<div class="col-xs-3">
+										<input type="hidden" name="old_assignee_id" value="<?php echo $assignee_id; ?>" />
+										<input type="hidden" name="old_status_id" value="<?php echo $status_id; ?>" />
+										<label for="input-assign-staff" class="control-label"><?php echo lang('label_assign_staff'); ?></label>
+										<div class="">
+											<select name="assignee_id" class="form-control">
+												<option value=""><?php echo lang('text_please_select'); ?></option>
+												<?php foreach ($staffs as $staff) { ?>
+													<?php if ($staff['staff_id'] === $assignee_id) { ?>
+														<option value="<?php echo $staff['staff_id']; ?>" <?php echo set_select('assignee_id', $staff['staff_id'], TRUE); ?> ><?php echo $staff['staff_name']; ?></option>
+													<?php } else { ?>
+														<option value="<?php echo $staff['staff_id']; ?>" <?php echo set_select('assignee_id', $staff['staff_id']); ?> ><?php echo $staff['staff_name']; ?></option>
+													<?php } ?>
+												<?php } ?>
+											</select>
+											<?php echo form_error('assignee_id', '<span class="text-danger">', '</span>'); ?>
+										</div>
+									</div>
+									<div class="col-xs-2">
+										<label for="input-status" class="control-label"><?php echo lang('label_status'); ?></label>
+										<div class="">
+											<select name="status" class="form-control" onChange="getStatusComment();">
+												<?php foreach ($statuses as $status) { ?>
+													<?php if ($status['status_id'] === $status_id) { ?>
+														<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('status', $status['status_id'], TRUE); ?> ><?php echo $status['status_name']; ?></option>
+													<?php } else { ?>
+														<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('status', $status['status_id']); ?> ><?php echo $status['status_name']; ?></option>
+													<?php } ?>
+												<?php } ?>
+											</select>
+											<?php echo form_error('status', '<span class="text-danger">', '</span>'); ?>
+										</div>
+									</div>
+									<div class="col-xs-5">
+										<label for="input-comment" class="control-label"><?php echo lang('label_comment'); ?></label>
+										<div class="">
+											<textarea name="status_comment" rows="3" class="form-control"><?php echo set_value('status_comment'); ?></textarea>
+											<?php echo form_error('status_comment', '<span class="text-danger">', '</span>'); ?>
+										</div>
+									</div>
+									<div class="col-xs-2">
+										<label for="input-notify" class="control-label"><?php echo lang('label_notify'); ?></label>
+										<div class="">
+											<div id="input-notify" class="btn-group btn-group-switch" data-toggle="buttons">
+												<?php if ($notify == '1') { ?>
+													<label class="btn btn-danger"><input type="radio" name="notify" value="0" <?php echo set_radio('notify', '0'); ?>><?php echo lang('text_no'); ?></label>
+													<label class="btn btn-success active"><input type="radio" name="notify" value="1" <?php echo set_radio('notify', '1', TRUE); ?>><?php echo lang('text_yes'); ?></label>
+												<?php } else { ?>
+													<label class="btn btn-danger active"><input type="radio" name="notify" value="0" <?php echo set_radio('notify', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
+													<label class="btn btn-success"><input type="radio" name="notify" value="1" <?php echo set_radio('notify', '1'); ?>><?php echo lang('text_yes'); ?></label>
+												<?php } ?>
+											</div>
+											<?php echo form_error('notify', '<span class="text-danger">', '</span>'); ?>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
