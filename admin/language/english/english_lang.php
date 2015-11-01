@@ -21,6 +21,7 @@ $lang['text_deleted'] 		                = 'deleted';
 $lang['text_default'] 		                = '<b>(Default)</b>';
 $lang['text_select'] 		                = 'Select';
 $lang['text_remove'] 		                = 'Remove';
+$lang['text_help'] 		                    = 'Click for Help';
 
 $lang['button_new'] 		                = '+ New';
 $lang['button_delete'] 		                = 'Delete';
@@ -41,8 +42,10 @@ $lang['alert_warning_confirm'] 		        = 'This cannot be undone! Are you sure 
 
 $lang['text_message_count'] 		        = '<b>You have %s messages</b>';
 $lang['text_activity_count'] 		        = '<b>There are %s unread activities</b>';
-$lang['text_see_all_message'] 		        = 'See All Messages';
-$lang['text_see_all_activity'] 		        = 'See All Activities';
+$lang['text_see_all_message'] 		        = 'See all messages';
+$lang['text_see_all_activity'] 		        = 'See all activities';
+$lang['text_see_all_customers'] 		    = 'See all customers';
+$lang['text_see_all_orders'] 		        = 'See all orders';
 $lang['text_user'] 		                    = 'User';
 $lang['text_staff_group'] 		            = 'Staff Group';
 $lang['text_location'] 		                = 'Location';

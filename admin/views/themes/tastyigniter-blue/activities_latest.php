@@ -3,12 +3,12 @@
         <?php foreach ($activities as $activity) { ?>
             <li class="<?php echo $activity['state']; ?>">
                 <div class="clearfix">
-                    <div class="activity-body pull-left"><i class="<?php echo $activity['icon']; ?> fa-fw"></i>&nbsp;
+                    <div class="activity-body"><i class="<?php echo $activity['icon']; ?> fa-fw"></i>
                         <?php echo $activity['message']; ?>
+                        <span class="activity-time text-muted small">
+                            <span class="small"><?php echo $activity['time']; ?>&nbsp;-&nbsp;<?php echo $activity['time_elapsed']; ?></span>
+                        </span>
                     </div>
-                    <span class="activity-time text-muted pull-right small">
-                        <span class="small"><?php echo $activity['time']; ?>&nbsp;-&nbsp;<?php echo $activity['time_elapsed']; ?></span>
-                    </span>
                 </div>
             </li>
             <li class="divider"></li>

@@ -197,12 +197,12 @@
                             <?php foreach ($activities as $activity) { ?>
                                 <li class="list-group-item">
                                     <div class="clearfix">
-                                        <div class="activity-body pull-left"><i class="<?php echo $activity['icon']; ?> fa-fw"></i>&nbsp;
+                                        <div class="activity-body"><i class="<?php echo $activity['icon']; ?> fa-fw"></i>
                                             <?php echo $activity['message']; ?>
+                                            <span class="activity-time text-muted small">
+                                                <span class="small"><?php echo $activity['time']; ?>&nbsp;-&nbsp;<?php echo $activity['time_elapsed']; ?></span>
+                                            </span>
                                         </div>
-                                        <span class="activity-time text-muted pull-right small">
-                                            <span class="small"><?php echo $activity['time']; ?>&nbsp;-&nbsp;<?php echo $activity['time_elapsed']; ?></span>
-                                        </span>
                                     </div>
                                 </li>
                             <?php } ?>
@@ -210,6 +210,9 @@
                             <?php echo lang('text_no_activity'); ?>
                         <?php } ?>
                     </ul>
+                    <div class="panel-footer text-right">
+                        <a href="<?php echo site_url('activities'); ?>"><?php echo lang('text_see_all_activity'); ?>&nbsp;<i class="fa fa-arrow-right"></i></a>
+                    </div>
                 </div>
             </div>
 
@@ -236,6 +239,9 @@
                                     <?php } ?>
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="panel-footer text-right">
+                            <a href="<?php echo site_url('customers'); ?>"><?php echo lang('text_see_all_customers'); ?>&nbsp;<i class="fa fa-arrow-right"></i></a>
                         </div>
                     </div>
                 <?php } ?>
@@ -274,6 +280,9 @@
                         <?php } ?>
                         </tbody>
                     </table>
+                </div>
+                <div class="panel-footer text-right">
+                    <a href="<?php echo site_url('orders'); ?>"><?php echo lang('text_see_all_orders'); ?>&nbsp;<i class="fa fa-arrow-right"></i></a>
                 </div>
             </div>
         <?php } ?>

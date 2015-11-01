@@ -331,22 +331,34 @@ padding: 3px 0;
 .navbar-top-links .dropdown-activities .menu li:first-child {
 margin-top: 9px;
 }
-.navbar-top-links .dropdown-activities li div {
+.navbar-top-links .dropdown-activities li > div {
 font-size: 12px;
-padding: 0 10px;
+padding-left: 10px;
 }
-.navbar-top-links .dropdown-activities li div > span {
-display: inline-block;
+.activity-time {
+display: block;
+margin-top: 2px;
 }
 .navbar-top-links .dropdown-user {
 margin-left: -135px;
 width: 250px;
 }
-.navbar-top-links .dropdown-activities .menu .activity-body {
-padding-left: 20px;
+.activity-body {
+padding-left: 30px;
 }
-.navbar-top-links .dropdown-activities .menu .activity-body .fa {
-margin-left: -20px;
+.activity-body .fa {
+margin-left: -30px;
+text-align: center;
+padding: 2px;
+width: 20px;
+height: 20px;
+border-radius: 50%;
+border: 3px solid #D3DCE8;
+background-color: #337AB7;
+float: left;
+}
+.activity-body .fa::before {
+display: none;
 }
 .activity-body b {
 font-weight: 500;
@@ -865,7 +877,7 @@ font-weight: 400;
 border-left: 0 none;
 }
 .nav-tabs > li > a:focus, .nav-tabs > li > a:hover {
-background-color: #f8fafc;
+background-color: #eaeff4;
 border-width: 0;
 text-decoration: none;
 }
@@ -1184,7 +1196,7 @@ color:#484848;
 font-weight: 400;
 }
 .panel-footer {
-background-color: #ecf0f5;
+background-color: #f9fafc;
 border-top: 1px solid #dfe6ee;
 border-bottom: 1px solid #dfe6ee;
 }
@@ -1910,8 +1922,10 @@ height: 80px;
 width:60px !important;
 }
 .thumbnail .preview {
-border: 1px solid #d2dce7;
 padding: 10px;
+text-align: center;
+}
+.thumbnail.imagebox {
 text-align: center;
 }
 .thumbnail .preview img {
@@ -1922,10 +1936,7 @@ width:160px !important;
 width: 80px !important;
 }
 .thumbnail {
-/*background: none repeat scroll 0 0 transparent;*/
-/*border: 0 none;*/
-/*overflow: hidden;*/
-border: 1px solid #ECF0F5;
+border: 1px solid #d2dce7;
 padding: 0;
 }
 .thumbnail > img {
@@ -2406,27 +2417,26 @@ position: relative;
 margin-bottom: 30px;
 }
 .timeline:before {
-background-color: #b9c8da;
+background-color: #dfe6ee;
 top: 0;
 bottom: 0;
 position: absolute;
 content: " ";
 width: 3px;
-left: 42px;
+left: 110px;
 margin-left: -1.5px;
 }
 .timeline > li {
 position: relative;
+margin-left: 90px;
 }
-.timeline > li.time-label {
+.timeline > .time-label {
 margin-bottom: 20px;
+margin-left: 70px;
 }
-.timeline > li.timeline-item {
-margin-bottom: 15px;
-}
-.timeline > li.time-label > span {
+.timeline > .time-label > span {
 background-color: #ecf0f5;
-border-bottom: 5px solid #b9c8da;
+border-bottom: 5px solid #d3dce8;
 display: inline-block;
 padding: 15px 10px 5px;
 font-weight: 400;
@@ -2434,38 +2444,71 @@ font-size: 15px;
 width: 85px;
 text-align: center;
 }
-.timeline > li.time-label:first-child > span {
+.timeline .time-label:first-child > span {
 padding-top: 0;
 }
-.timeline > li > .timeline-badge {
-background-color: #b9c8da;
-text-align: center;
+.timeline .timeline-item {
+margin-bottom: 30px;
+}
+.timeline .timeline-time {
 position: absolute;
-left: 30px;
+left: -90px;
+text-align: left;
+padding: 5px 10px;
+box-sizing: border-box;
+}
+.timeline-item .timeline-time > span {
+display: block;
+}
+.timeline-item .timeline-time > span:first-child {
+font-weight: bold;
+}
+.timeline-item .timeline-time > span:last-child {
+font-size: 12px;
+}
+.timeline-item .timeline-icon {
+text-align: center;
+float: left;
 padding: 2px;
-width: 23px;
+width: 40px;
+height: 40px;
 z-index: 100;
 border-radius: 50%;
+border: 5px solid #d3dce8;
 }
-.timeline-badge .fa {
+.timeline-item .timeline-icon .fa {
 font-size: 11px;
+display: none;
 }
-.timeline > li > .timeline-body {
+.timeline .timeline-body {
 background: none repeat scroll 0 0 #fff;
 border-radius: 2px;
-box-shadow: 0 1px 1px rgba(0,0,0, 0.1);
-margin-left: 75px;
+box-shadow: 0px 1px 2px rgba(185, 200, 218, 0.79);
+margin-left: 60px;
 margin-right: 15px;
 margin-top: 0;
 padding: 12px;
 position: relative;
 }
-.timeline > li > .timeline-body .timeline-header {
+.timeline .timeline-body::after {
+content: "";
+display: block;
+position: absolute;
+width: 0px;
+height: 0px;
+border-style: solid;
+border-width: 9px 9px 9px 0px;
+border-color: transparent #FFF transparent transparent;
+left: 0px;
+top: 10px;
+margin-left: -9px;
+}
+.timeline .timeline-header {
 font-size: 13px;
 font-weight: 400;
 margin: 0;
 }
-.timeline > li > .timeline-body .timeline-header b {
+.timeline .timeline-header b {
 font-weight: 400;
 }
 .timeline-body > p,
@@ -2479,7 +2522,8 @@ margin-top: 5px;
 ul.timeline:before {
 left: 40px;
 }
-ul.timeline > li > .timeline-badge {
+ul.timeline > li > .timeline-icon {
+position: absolute;
 left: 15px;
 margin-left: 0;
 top: 16px;

@@ -6,18 +6,16 @@
                 <ul class="timeline activities-list-group">
                     <?php foreach ($activities as $date_added => $activities) { ?>
                         <li class="time-label">
-                            <span class="bg-danger"><?php echo $date_added; ?></span>
+                            <span><?php echo $date_added; ?></span>
                         </li>
                         <?php foreach ($activities as $activity) { ?>
                             <li class="timeline-item <?php echo $activity['status']; ?>">
-                                <div class="timeline-badge bg-primary"><i class="<?php echo $activity['icon']; ?>"></i></div>
-                                <div class="timeline-body">
-                                    <h3 class="timeline-header">
-                                        <span class="text-muted"><?php echo $activity['time']; ?>&nbsp;-&nbsp;</span>
-                                        <?php echo $activity['message']; ?>
-                                        <span class="text-muted pull-right"><?php echo $activity['time_elapsed']; ?></span>
-                                    </h3>
-                                </div>
+                                <time class="timeline-time" datetime="">
+                                    <span><?php echo $activity['time']; ?></span>
+                                    <span><?php echo $activity['time_elapsed']; ?></span>
+                                </time>
+                                <div class="timeline-icon bg-primary"><i class="<?php echo $activity['icon']; ?>"></i></div>
+                                <div class="timeline-body"><?php echo $activity['message']; ?></div>
                             </li>
                         <?php } ?>
                     <?php } ?>
