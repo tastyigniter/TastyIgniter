@@ -20,6 +20,10 @@ class Mail_templates extends Admin_Controller {
         $this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
 		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
+		if ($this->input->post('delete') AND $this->_deleteTemplate() === TRUE) {
+			redirect('mail_templates');
+		}
+
 		$results = $this->Mail_templates_model->getList();
 
 		$data['templates'] = array();
@@ -51,10 +55,6 @@ class Mail_templates extends Admin_Controller {
             redirect('mail_templates');
         }
 
-        if ($this->input->post('delete') AND $this->_deleteTemplate() === TRUE) {
-			redirect('mail_templates');
-		}
-
 		$this->template->render('mail_templates', $data);
 	}
 
@@ -79,6 +79,14 @@ class Mail_templates extends Admin_Controller {
 
 		$this->template->setStyleTag(root_url('assets/js/summernote/summernote.css'), 'summernote-css');
 		$this->template->setScriptTag(root_url('assets/js/summernote/summernote.min.js'), 'summernote-js');
+
+		if ($this->input->post() AND $template_id = $this->_saveTemplate()) {
+			if ($this->input->post('save_close') === '1') {
+				redirect('mail_templates');
+			}
+
+			redirect('mail_templates/edit?id='. $template_id);
+		}
 
 		$data['template_id'] 		= $template_id;
 		$data['name'] 				= $template_info['name'];
@@ -124,14 +132,6 @@ class Mail_templates extends Admin_Controller {
 				'name' 				=> $result['name'],
 				'status' 			=> $result['status']
 			);
-		}
-
-		if ($this->input->post() AND $template_id = $this->_saveTemplate()) {
-			if ($this->input->post('save_close') === '1') {
-				redirect('mail_templates');
-			}
-
-			redirect('mail_templates/edit?id='. $template_id);
 		}
 
 		$this->template->render('mail_templates_edit', $data);

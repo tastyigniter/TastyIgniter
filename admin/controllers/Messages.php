@@ -105,6 +105,10 @@ class Messages extends Admin_Controller {
 
         $message_id = $message_info['message_id'];
 
+        $this->template->setTitle($this->lang->line('text_title'));
+        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $this->lang->line('text_view')));
+        $this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('messages')));
+
         if ($this->input->post('message_state')) {
 			if ($this->_updateMessageState($this->input->post('message_state'), $message_id, $this->user->getStaffId()) === TRUE) {
                 redirect('messages');
@@ -126,10 +130,6 @@ class Messages extends Admin_Controller {
             'account' => array('title' => $this->lang->line('text_account'), 'icon' => 'fa-circle-o text-primary', 'url' => page_url().'?filter_type=account'),
             'email' => array('title' => $this->lang->line('text_email'), 'icon' => 'fa-circle-o text-danger', 'url' => page_url().'?filter_type=email'),
         );
-
-        $this->template->setTitle($this->lang->line('text_title'));
-        $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $this->lang->line('text_view')));
-		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('messages')));
 
 		$data['message_id'] 	= $message_info['message_id'];
 		$data['date_added'] 	= mdate('%H:%i - %d %M %y', strtotime($message_info['date_added']));
@@ -182,6 +182,14 @@ class Messages extends Admin_Controller {
 
         $this->template->setStyleTag(root_url('assets/js/summernote/summernote.css'), 'summernote-css', '111');
         $this->template->setScriptTag(root_url('assets/js/summernote/summernote.min.js'), 'summernote-js', '111');
+
+        if ($this->input->post() AND $message_id = $this->_saveMessage()) {
+            if ($this->input->post('save_as_draft') === '1') {
+                redirect('messages/compose?id='.$message_id);
+            }
+
+            redirect('messages');
+        }
 
 		$data['sub_menu_back'] 		= site_url('messages');
 
@@ -242,14 +250,6 @@ class Messages extends Admin_Controller {
             'account' => array('title' => $this->lang->line('text_account'), 'icon' => 'fa-circle-o text-primary', 'url' => page_url().'?filter_type=account'),
             'email' => array('title' => $this->lang->line('text_email'), 'icon' => 'fa-circle-o text-danger', 'url' => page_url().'?filter_type=email'),
         );
-
-        if ($this->input->post() AND $message_id = $this->_saveMessage()) {
-            if ($this->input->post('save_as_draft') === '1') {
-                redirect('messages/compose?id='.$message_id);
-            }
-
-			redirect('messages');
-		}
 
 		$this->template->render('messages_compose', $data);
 	}

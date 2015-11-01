@@ -16,6 +16,10 @@ class Uri_routes extends Admin_Controller {
 		$this->template->setHeading('URI Routes');
 		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 
+		if ($this->input->post() AND $this->_updateRoute() === TRUE){
+			redirect('uri_routes');
+		}
+
 		if ($this->input->post('routes')) {
 			$routes = $this->input->post('routes');
 		} else {
@@ -29,10 +33,6 @@ class Uri_routes extends Admin_Controller {
 				'uri_route'		=> $route['uri_route'],
 				'controller' 	=> $route['controller'],
 			);
-		}
-
-		if ($this->input->post() AND $this->_updateRoute() === TRUE){
-			redirect('uri_routes');
 		}
 
 		$this->template->render('uri_routes', $data);

@@ -47,6 +47,10 @@ class Customer_groups extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
 		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
+		if ($this->input->post('delete') AND $this->_deleteCustomerGroup() === TRUE) {
+			redirect('customer_groups');
+		}
+
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_id'] 			= site_url('customer_groups'.$url.'sort_by=customer_group_id&order_by='.$order_by);
 
@@ -78,10 +82,6 @@ class Customer_groups extends Admin_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		if ($this->input->post('delete') AND $this->_deleteCustomerGroup() === TRUE) {
-		    redirect('customer_groups');
-		}
-
 		$this->template->render('customer_groups', $data);
 	}
 
@@ -103,11 +103,6 @@ class Customer_groups extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('customer_groups')));
 
-		$data['customer_group_id'] 	= $group_info['customer_group_id'];
-		$data['group_name'] 		= $group_info['group_name'];
-		$data['approval'] 			= $group_info['approval'];
-		$data['description'] 		= $group_info['description'];
-
 		if ($this->input->post() AND $customer_group_id = $this->_saveCustomerGroup()) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('customer_groups');
@@ -115,6 +110,11 @@ class Customer_groups extends Admin_Controller {
 
 			redirect('customer_groups/edit?id='. $customer_group_id);
 		}
+
+		$data['customer_group_id'] 	= $group_info['customer_group_id'];
+		$data['group_name'] 		= $group_info['group_name'];
+		$data['approval'] 			= $group_info['approval'];
+		$data['description'] 		= $group_info['description'];
 
 		$this->template->render('customer_groups_edit', $data);
 	}

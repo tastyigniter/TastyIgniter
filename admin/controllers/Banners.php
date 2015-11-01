@@ -8,14 +8,17 @@ class Banners extends Admin_Controller {
         $this->user->restrict('Admin.Banners');
 
         $this->load->model('Banners_model');
-
         $this->load->model('Image_tool_model');
 
         $this->lang->load('banners');
     }
 
 	public function index() {
-        $this->template->setTitle($this->lang->line('text_title'));
+		if ($this->input->post('delete') AND $this->_deleteBanner() === TRUE) {
+			redirect('banners');
+		}
+
+		$this->template->setTitle($this->lang->line('text_title'));
         $this->template->setHeading($this->lang->line('text_heading'));
 		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
 		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
@@ -33,17 +36,13 @@ class Banners extends Admin_Controller {
 			);
 		}
 
-		if ($this->input->post('delete') AND $this->_deleteBanner() === TRUE) {
-			redirect('banners');
-		}
-
 		$this->template->render('banners', $data);
 	}
 
 	public function edit() {
 		$banner_info = $this->Banners_model->getBanner((int) $this->input->get('id'));
 
-		if ($banner_info) {
+		if (!empty($banner_info)) {
 			$banner_id = $banner_info['banner_id'];
 			$data['_action']	= site_url('banners/edit?id='. $banner_id);
 		} else {
@@ -59,6 +58,14 @@ class Banners extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_modules'), array('class' => 'btn btn-default', 'href' => site_url('banners/edit')));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('banners')));
+
+		if ($this->input->post() AND $banner_id = $this->_saveBanner()) {
+			if ($this->input->post('save_close') === '1') {
+				redirect('banners');
+			}
+
+			redirect('banners/edit?id='. $banner_id);
+		}
 
         $data['banner_id'] 			= $banner_info['banner_id'];
 		$data['name'] 				= $banner_info['name'];
@@ -112,14 +119,6 @@ class Banners extends Admin_Controller {
 				'language_id'	=> $result['language_id'],
 				'name'			=> $result['name']
 			);
-		}
-
-		if ($this->input->post() AND $banner_id = $this->_saveBanner()) {
-			if ($this->input->post('save_close') === '1') {
-				redirect('banners');
-			}
-
-			redirect('banners/edit?id='. $banner_id);
 		}
 
 		$this->template->render('banners_edit', $data);

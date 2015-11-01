@@ -88,6 +88,10 @@ class Orders extends Admin_Controller {
         $this->template->setHeading($this->lang->line('text_heading'));
 		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
+		if ($this->input->post('delete') AND $this->_deleteOrder() === TRUE) {
+			redirect('orders');
+		}
+
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_id'] 			= site_url('orders'.$url.'sort_by=order_id&order_by='.$order_by);
 		$data['sort_location'] 		= site_url('orders'.$url.'sort_by=location_name&order_by='.$order_by);
@@ -158,10 +162,6 @@ class Orders extends Admin_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		if ($this->input->post('delete') AND $this->_deleteOrder() === TRUE) {
-			redirect('orders');
-		}
-
 		$this->template->render('orders', $data);
 	}
 
@@ -184,6 +184,14 @@ class Orders extends Admin_Controller {
         $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('orders')));
+
+		if ($this->input->post() AND $this->_updateOrder() === TRUE) {
+			if ($this->input->post('save_close') === '1') {
+				redirect('orders');
+			}
+
+			redirect('orders/edit?id='. $order_id);
+		}
 
 		$data['order_id'] 			= $order_info['order_id'];
 		$data['customer_id'] 		= $order_info['customer_id'];
@@ -324,14 +332,6 @@ class Orders extends Admin_Controller {
 
 		$data['order_total'] 		= $this->currency->format($order_info['order_total']);
 		$data['total_items']		= $order_info['total_items'];
-
-		if ($this->input->post() AND $this->_updateOrder() === TRUE) {
-			if ($this->input->post('save_close') === '1') {
-				redirect('orders');
-			}
-
-			redirect('orders/edit?id='. $order_id);
-		}
 
 		$this->template->render('orders_edit', $data);
 	}

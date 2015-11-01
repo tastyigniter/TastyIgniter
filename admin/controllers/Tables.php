@@ -60,6 +60,10 @@ class Tables extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
 		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
+		if ($this->input->post('delete') AND $this->_deleteTable() === TRUE) {
+			redirect('tables');
+		}
+
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_name'] 			= site_url('tables'.$url.'sort_by=table_name&order_by='.$order_by);
 		$data['sort_min'] 			= site_url('tables'.$url.'sort_by=min_capacity&order_by='.$order_by);
@@ -95,10 +99,6 @@ class Tables extends Admin_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		if ($this->input->post('delete') AND $this->_deleteTable() === TRUE) {
-			redirect('tables');
-		}
-
 		$this->template->render('tables', $data);
 	}
 
@@ -121,13 +121,6 @@ class Tables extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('tables')));
 
-
-		$data['table_id'] 			= $table_info['table_id'];
-		$data['table_name'] 		= $table_info['table_name'];
-		$data['min_capacity'] 		= $table_info['min_capacity'];
-		$data['max_capacity'] 		= $table_info['max_capacity'];
-		$data['table_status'] 		= $table_info['table_status'];
-
 		if ($this->input->post() AND $table_id = $this->_saveTable()) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('tables');
@@ -135,6 +128,12 @@ class Tables extends Admin_Controller {
 
 			redirect('tables/edit?id='. $table_id);
 		}
+
+		$data['table_id'] 			= $table_info['table_id'];
+		$data['table_name'] 		= $table_info['table_name'];
+		$data['min_capacity'] 		= $table_info['min_capacity'];
+		$data['max_capacity'] 		= $table_info['max_capacity'];
+		$data['table_status'] 		= $table_info['table_status'];
 
 		$this->template->render('tables_edit', $data);
 	}

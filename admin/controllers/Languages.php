@@ -63,6 +63,10 @@ class Languages extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
 		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
+		if ($this->input->post('delete') AND $this->_deleteLanguage() === TRUE) {
+			redirect('languages');
+		}
+
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_name'] 			= site_url('languages'.$url.'sort_by=name&order_by='.$order_by);
 		$data['sort_code'] 			= site_url('languages'.$url.'sort_by=code&order_by='.$order_by);
@@ -97,10 +101,6 @@ class Languages extends Admin_Controller {
 			'info'		=> $this->pagination->create_infos(),
 			'links'		=> $this->pagination->create_links()
 		);
-
-		if ($this->input->post('delete') AND $this->_deleteLanguage() === TRUE) {
-			redirect('languages');
-		}
 
 		$this->template->render('languages', $data);
 	}

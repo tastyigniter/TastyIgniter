@@ -67,7 +67,19 @@ class Locations extends Admin_Controller {
         $this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
         $this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
-        $order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
+		if ($this->input->get('default') === '1' AND $this->input->get('location_id')) {
+			if ($this->Locations_model->updateDefault($this->Locations_model->getAddress($this->input->get('location_id')))) {
+				$this->alert->set('success', sprintf($this->lang->line('alert_success'), $this->lang->line('alert_set_default')));
+			}
+
+			redirect('locations');
+		}
+
+		if ($this->input->post('delete') AND $this->_deleteLocation() === TRUE) {
+			redirect('locations');
+		}
+
+		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
         $data['sort_name'] 			= site_url('locations'.$url.'sort_by=location_name&order_by='.$order_by);
         $data['sort_city'] 			= site_url('locations'.$url.'sort_by=location_city&order_by='.$order_by);
         $data['sort_state'] 		= site_url('locations'.$url.'sort_by=location_state&order_by='.$order_by);
@@ -140,21 +152,6 @@ class Locations extends Admin_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-        if ($this->input->get('default') === '1' AND $this->input->get('location_id')) {
-            $location_id = $this->input->get('location_id');
-
-            if ($this->Locations_model->updateDefault($this->Locations_model->getAddress($location_id))) {
-                $this->alert->set('success', sprintf($this->lang->line('alert_success'), $this->lang->line('alert_set_default')));
-            }
-
-            redirect('locations');
-        }
-
-        if ($this->input->post('delete') AND $this->_deleteLocation() === TRUE) {
-
-            redirect('locations');
-        }
-
         $this->template->setPartials(array('header', 'footer'));
         $this->template->render('locations', $data);
     }
@@ -188,6 +185,14 @@ class Locations extends Admin_Controller {
 		}
 
 		$this->template->setScriptTag('https://maps.googleapis.com/maps/api/js?v=3' . $data['map_key'] .'&sensor=false&region=GB&libraries=geometry', 'google-maps-js', '104330');
+
+		if ($this->input->post() AND $location_id = $this->_saveLocation()) {
+			if ($this->input->post('save_close') === '1') {
+				redirect('locations');
+			}
+
+			redirect('locations/edit?id='. $location_id);
+		}
 
 		$data['location_id'] 			= $location_info['location_id'];
 		$data['location_name'] 			= $location_info['location_name'];
@@ -405,14 +410,6 @@ class Locations extends Admin_Controller {
 					);
 				}
 			}
-		}
-
-		if ($this->input->post() AND $location_id = $this->_saveLocation()) {
-			if ($this->input->post('save_close') === '1') {
-				redirect('locations');
-			}
-
-			redirect('locations/edit?id='. $location_id);
 		}
 
 		$this->template->render('locations_edit', $data);

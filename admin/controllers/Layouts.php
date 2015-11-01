@@ -8,7 +8,6 @@ class Layouts extends Admin_Controller {
         $this->user->restrict('Site.Layouts');
 
         $this->load->model('Layouts_model');
-
         $this->load->model('Extensions_model');
 
         $this->lang->load('layouts');
@@ -19,6 +18,10 @@ class Layouts extends Admin_Controller {
         $this->template->setHeading($this->lang->line('text_heading'));
 		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
 		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
+
+        if ($this->input->post('delete') AND $this->_deleteLayout() === TRUE) {
+            redirect('layouts');
+        }
 
 		$data['layouts'] = array();
 		$results = $this->Layouts_model->getLayouts();
@@ -37,11 +40,6 @@ class Layouts extends Admin_Controller {
 				'uri_route_id'		=> $result['uri_route_id'],
 				'uri_route'			=> $result['uri_route']
 			);
-		}
-
-		if ($this->input->post('delete') AND $this->_deleteLayout() === TRUE) {
-
-			redirect('layouts');
 		}
 
 		$this->template->render('layouts', $data);
@@ -65,6 +63,14 @@ class Layouts extends Admin_Controller {
         $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('layouts')));
+
+        if ($this->input->post() AND $layout_id = $this->_saveLayout()) {
+            if ($this->input->post('save_close') === '1') {
+                redirect('layouts');
+            }
+
+            redirect('layouts/edit?id='. $layout_id);
+        }
 
 		$data['layout_id'] 			= $layout_info['layout_id'];
 		$data['name'] 				= $layout_info['name'];
@@ -119,14 +125,6 @@ class Layouts extends Admin_Controller {
 				'route_id'		=> $result['uri_route_id'],
 				'route'			=> $result['uri_route']
 			);
-		}
-
-		if ($this->input->post() AND $layout_id = $this->_saveLayout()) {
-			if ($this->input->post('save_close') === '1') {
-				redirect('layouts');
-			}
-
-			redirect('layouts/edit?id='. $layout_id);
 		}
 
 		$this->template->render('layouts_edit', $data);

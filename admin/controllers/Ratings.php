@@ -11,6 +11,10 @@ class Ratings extends Admin_Controller {
         $this->template->setHeading($this->lang->line('text_heading'));
 		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 
+		if ($this->input->post() AND $this->_updateRating() === TRUE) {
+			redirect('ratings');
+		}
+
 		if ($this->input->post('ratings')) {
 			$results = $this->input->post('ratings');
 		} else if ($this->config->item('ratings')) {
@@ -25,10 +29,6 @@ class Ratings extends Admin_Controller {
 			foreach ($results as $key => $value) {
 				$data['ratings'][$key] = $value;
 			}
-		}
-
-		if ($this->input->post() AND $this->_updateRating() === TRUE) {
-			redirect('ratings');
 		}
 
 		$this->template->render('ratings', $data);

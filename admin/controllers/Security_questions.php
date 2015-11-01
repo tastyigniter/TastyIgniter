@@ -17,6 +17,10 @@ class Security_questions extends Admin_Controller {
         $this->template->setHeading($this->lang->line('text_heading'));
 		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 
+		if ($this->input->post() AND $this->_updateSecurityQuestion() === TRUE){
+			redirect('security_questions');
+		}
+
 		//load questions data into array
 		$data['questions'] = array();
 
@@ -31,10 +35,6 @@ class Security_questions extends Admin_Controller {
 				'question_id'	=> ($result['question_id'] > 0) ? $result['question_id'] : '0',
 				'text'			=> $result['text']
 			);
-		}
-
-		if ($this->input->post() AND $this->_updateSecurityQuestion() === TRUE){
-			redirect('security_questions');
 		}
 
 		$this->template->render('security_questions', $data);

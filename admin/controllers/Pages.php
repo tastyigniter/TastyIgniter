@@ -47,6 +47,10 @@ class Pages extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
 		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
+		if ($this->input->post('delete') AND $this->_deletePage() === TRUE) {
+			redirect('pages');
+		}
+
 		$data['pages'] = array();
 		$results = $this->Pages_model->getList($filter);
 		foreach ($results as $result) {
@@ -72,10 +76,6 @@ class Pages extends Admin_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		if ($this->input->post('delete') AND $this->_deletePage() === TRUE) {
-			redirect('pages');
-		}
-
 		$this->template->render('pages', $data);
 	}
 
@@ -100,6 +100,14 @@ class Pages extends Admin_Controller {
 
 		$this->template->setStyleTag(root_url('assets/js/summernote/summernote.css'), 'summernote-css');
 		$this->template->setScriptTag(root_url('assets/js/summernote/summernote.min.js'), 'summernote-js');
+
+		if ($this->input->post() AND $page_id = $this->_savePage()) {
+			if ($this->input->post('save_close') === '1') {
+				redirect('pages');
+			}
+
+			redirect('pages/edit?id='. $page_id);
+		}
 
 		$data['page_id'] 			= $page_info['page_id'];
 		$data['language_id'] 		= $page_info['language_id'];
@@ -144,14 +152,6 @@ class Pages extends Admin_Controller {
 		}
 
 		$data['menu_locations'] = array('Hide', 'All', 'Header', 'Footer', 'Module');
-
-		if ($this->input->post() AND $page_id = $this->_savePage()) {
-			if ($this->input->post('save_close') === '1') {
-				redirect('pages');
-			}
-
-			redirect('pages/edit?id='. $page_id);
-		}
 
 		$this->template->render('pages_edit', $data);
 	}

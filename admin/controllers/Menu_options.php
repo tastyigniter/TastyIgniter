@@ -62,6 +62,10 @@ class Menu_options extends Admin_Controller {
         $this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
 		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
+		if ($this->input->post('delete') AND $this->_deleteMenuOption() === TRUE) {
+			redirect('menu_options');
+		}
+
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_name'] 			= site_url('menu_options'.$url.'sort_by=option_name&order_by='.$order_by);
 		$data['sort_priority'] 		= site_url('menu_options'.$url.'sort_by=priority&order_by='.$order_by);
@@ -96,11 +100,6 @@ class Menu_options extends Admin_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		if ($this->input->post('delete') AND $this->_deleteMenuOption() === TRUE) {
-
-			redirect('menu_options');
-		}
-
 		$this->template->render('menu_options', $data);
 	}
 
@@ -123,6 +122,14 @@ class Menu_options extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('menu_options')));
 
+		if ($this->input->post() AND $option_id = $this->_saveOption()){
+			if ($this->input->post('save_close') === '1') {
+				redirect('menu_options');
+			}
+
+			redirect('menu_options/edit?id='. $option_id);
+		}
+
 		$data['option_id'] 			= $option_info['option_id'];
 		$data['option_name'] 		= $option_info['option_name'];
 		$data['display_type'] 		= $option_info['display_type'];
@@ -141,14 +148,6 @@ class Menu_options extends Admin_Controller {
 				'value'				=> $value['value'],
 				'price'				=> $value['price']
 			);
-		}
-
-		if ($this->input->post() AND $option_id = $this->_saveOption()){
-			if ($this->input->post('save_close') === '1') {
-				redirect('menu_options');
-			}
-
-			redirect('menu_options/edit?id='. $option_id);
 		}
 
 		$this->template->render('menu_options_edit', $data);

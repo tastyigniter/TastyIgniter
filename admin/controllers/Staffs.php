@@ -83,6 +83,10 @@ class Staffs extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
 		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
+		if ($this->input->post('delete') AND $this->_deleteStaff() === TRUE) {
+			redirect('staffs');
+		}
+
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_name'] 			= site_url('staffs'.$url.'sort_by=staff_name&order_by='.$order_by);
 		$data['sort_group']			= site_url('staffs'.$url.'sort_by=staff_group_name&order_by='.$order_by);
@@ -148,10 +152,6 @@ class Staffs extends Admin_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		if ($this->input->post('delete') AND $this->_deleteStaff() === TRUE) {
-			redirect('staffs');
-		}
-
 		$this->template->render('staffs', $data);
 	}
 
@@ -181,11 +181,18 @@ class Staffs extends Admin_Controller {
 
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('staffs')));
 
+		if ($this->input->post() AND $staff_id = $this->_saveStaff($data['staff_email'], $data['username'])) {
+			if ($this->input->post('save_close') === '1') {
+				redirect('staffs');
+			}
+
+			redirect('staffs/edit?id='. $staff_id);
+		}
+
 		$data['display_staff_group'] = FALSE;
         if ($this->user->hasPermission('Admin.StaffGroups.Manage')) {
             $data['display_staff_group'] = TRUE;
         }
-
 
         $data['staff_name'] 		= $staff_info['staff_name'];
 		$data['staff_email'] 		= $staff_info['staff_email'];
@@ -230,14 +237,6 @@ class Staffs extends Admin_Controller {
 				'language_id'	=>	$result['language_id'],
 				'name'			=>	$result['name'],
 			);
-		}
-
-		if ($this->input->post() AND $staff_id = $this->_saveStaff($data['staff_email'], $data['username'])) {
-			if ($this->input->post('save_close') === '1') {
-				redirect('staffs');
-			}
-
-			redirect('staffs/edit?id='. $staff_id);
 		}
 
 		$this->template->render('staffs_edit', $data);

@@ -72,6 +72,10 @@ class Customers extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
 		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
+		if ($this->input->post('delete') AND $this->_deleteCustomer() === TRUE) {
+			redirect('customers');
+		}
+
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_first'] 		= site_url('customers'.$url.'sort_by=first_name&order_by='.$order_by);
 		$data['sort_last'] 			= site_url('customers'.$url.'sort_by=last_name&order_by='.$order_by);
@@ -138,11 +142,6 @@ class Customers extends Admin_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		if ($this->input->post('delete') AND $this->_deleteCustomer() === TRUE) {
-
-			redirect('customers');
-		}
-
 		$this->template->render('customers', $data);
 	}
 
@@ -163,6 +162,14 @@ class Customers extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('customers')));
+
+		if ($this->input->post() AND $customer_id = $this->_saveCustomer($data['email'])) {
+			if ($this->input->post('save_close') === '1') {
+				redirect('customers');
+			}
+
+			redirect('customers/edit?id='. $customer_id);
+		}
 
         $data['first_name'] 		= $customer_info['first_name'];
 		$data['last_name'] 			= $customer_info['last_name'];
@@ -207,14 +214,6 @@ class Customers extends Admin_Controller {
 				'country_id'	=>	$result['country_id'],
 				'name'			=>	$result['country_name'],
 			);
-		}
-
-        if ($this->input->post() AND $customer_id = $this->_saveCustomer($data['email'])) {
-			if ($this->input->post('save_close') === '1') {
-				redirect('customers');
-			}
-
-			redirect('customers/edit?id='. $customer_id);
 		}
 
 		$this->template->render('customers_edit', $data);

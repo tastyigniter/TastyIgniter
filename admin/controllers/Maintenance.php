@@ -79,14 +79,6 @@ class Maintenance extends Admin_Controller {
     public function backup() {
         $this->user->restrict('Admin.Maintenance.Manage');
 
-        if ($this->input->get('restore') AND $this->_restore() === TRUE) {
-            redirect('maintenance');
-        } else if ($this->input->get('download') AND $this->_download() === TRUE) {
-            redirect('maintenance');
-        } else if ($this->input->get('delete') AND $this->_delete() === TRUE) {
-            redirect('maintenance');
-        }
-
         $checked_tables = ($this->session->flashdata('tables')) ? $this->session->flashdata('tables') : $this->input->post('tables');
         if ( ! $this->Maintenance_model->checkTables($checked_tables)) {
             redirect('maintenance');
@@ -104,6 +96,14 @@ class Maintenance extends Admin_Controller {
         $this->template->setButton($this->lang->line('button_backup'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
         $this->template->setButton($this->lang->line('button_migrate'), array('class' => 'btn btn-success', 'onclick' => '$(\'#migrate-form\').submit();'));
         $this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('maintenance')));
+
+        if ($this->input->get('restore') AND $this->_restore() === TRUE) {
+            redirect('maintenance');
+        } else if ($this->input->get('download') AND $this->_download() === TRUE) {
+            redirect('maintenance');
+        } else if ($this->input->get('delete') AND $this->_delete() === TRUE) {
+            redirect('maintenance');
+        }
 
         if ($this->input->post('file_name')) {
             $data['file_name'] = $this->input->post('file_name');

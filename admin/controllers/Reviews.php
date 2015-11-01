@@ -74,6 +74,10 @@ class Reviews extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
 		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
+		if ($this->input->post('delete') AND $this->_deleteReview() === TRUE) {
+			redirect('reviews');
+		}
+
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_location'] 		= site_url('reviews'.$url.'sort_by=location_name&order_by='.$order_by);
 		$data['sort_author'] 		= site_url('reviews'.$url.'sort_by=author&order_by='.$order_by);
@@ -135,11 +139,6 @@ class Reviews extends Admin_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		if ($this->input->post('delete') AND $this->_deleteReview() === TRUE) {
-
-			redirect('reviews');
-		}
-
 		$this->template->render('reviews', $data);
 	}
 
@@ -160,6 +159,14 @@ class Reviews extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('reviews')));
+
+		if ($this->input->post() AND $review_id = $this->_saveReview()) {
+			if ($this->input->post('save_close') === '1') {
+				redirect('reviews');
+			}
+
+			redirect('reviews/edit?id='. $review_id);
+		}
 
 		$data['review_id'] 			= $review_info['review_id'];
 		$data['location_id'] 		= $review_info['location_id'];
@@ -185,14 +192,6 @@ class Reviews extends Admin_Controller {
 				'location_id'	=>	$result['location_id'],
 				'location_name'	=>	$result['location_name'],
 			);
-		}
-
-		if ($this->input->post() AND $review_id = $this->_saveReview()) {
-			if ($this->input->post('save_close') === '1') {
-				redirect('reviews');
-			}
-
-			redirect('reviews/edit?id='. $review_id);
 		}
 
 		$this->template->render('reviews_edit', $data);

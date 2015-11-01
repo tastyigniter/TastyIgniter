@@ -103,6 +103,10 @@ class Reservations extends Admin_Controller {
         $this->template->setHeading($this->lang->line('text_heading'));
 		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
+		if ($this->input->post('delete') AND $this->_deleteReservation() === TRUE) {
+			redirect('reservations');
+		}
+
 		if ($this->input->get('show_calendar') === '1') {
 			$day = ($filter['filter_day'] === '') ? date('d', time()) : $filter['filter_day'];
 			$month = ($filter['filter_month'] === '') ? date('m', time()) : $filter['filter_month'];
@@ -216,10 +220,6 @@ class Reservations extends Admin_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		if ($this->input->post('delete') AND $this->_deleteReservation() === TRUE) {
-			redirect('reservations');
-		}
-
 		$this->template->render('reservations', $data);
 	}
 
@@ -242,6 +242,14 @@ class Reservations extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('reservations')));
+
+		if ($this->input->post() AND $this->_updateReservation() === TRUE) {
+			if ($this->input->post('save_close') === '1') {
+				redirect('reservations');
+			}
+
+			redirect('reservations/edit?id='. $reservation_id);
+		}
 
 		$data['reservation_id'] 	= $reservation_info['reservation_id'];
 		$data['location_name'] 		= $reservation_info['location_name'];
@@ -310,14 +318,6 @@ class Reservations extends Admin_Controller {
 				'staff_id'		=> $staff['staff_id'],
 				'staff_name'	=> $staff['staff_name']
 			);
-		}
-
-		if ($this->input->post() AND $this->_updateReservation() === TRUE) {
-			if ($this->input->post('save_close') === '1') {
-				redirect('reservations');
-			}
-
-			redirect('reservations/edit?id='. $reservation_id);
 		}
 
 		$this->template->render('reservations_edit', $data);

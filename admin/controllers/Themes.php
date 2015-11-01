@@ -17,12 +17,12 @@ class Themes extends Admin_Controller {
 	public function index() {
 		$this->user->restrict('Site.Themes.Access');
 
+		$this->template->setTitle($this->lang->line('text_title'));
+		$this->template->setHeading($this->lang->line('text_heading'));
+
 		if ($this->uri->rsegment(2) === 'activate' AND $this->_activateTheme()) {
 			redirect('themes');
 		}
-
-		$this->template->setTitle($this->lang->line('text_title'));
-		$this->template->setHeading($this->lang->line('text_heading'));
 
 		$data['themes'] = array();
 		$themes = $this->Themes_model->getList();
@@ -56,7 +56,6 @@ class Themes extends Admin_Controller {
 		$theme_location = $this->uri->rsegment(3);
 
 		$url = '?';
-//		$url .= 'name=' . $theme_name . '&location=' . $theme_location;
 
 		if ( ! $theme = $this->Themes_model->getTheme($theme_name)) {
 			$this->alert->set('danger', $this->lang->line('error_theme_not_found'));
@@ -68,14 +67,6 @@ class Themes extends Admin_Controller {
 
 		$this->load->library('customizer');
 		$this->customizer->initialize($theme);
-
-		if ($this->input->post() AND $this->_updateTheme($theme) === TRUE) {
-			if ($this->input->post('save_close') === '1') {
-				redirect("themes/edit/{$theme_location}/{$theme_name}");
-			}
-
-			redirect(current_url());
-		}
 
 		$this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $theme['title']));
 		$this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $theme['title']));
@@ -95,6 +86,14 @@ class Themes extends Admin_Controller {
 		$this->template->setScriptTag(root_url('assets/js/codemirror/htmlmixed/htmlmixed.js'), 'codemirror-htmlmixed-js', '305');
 		$this->template->setScriptTag(root_url('assets/js/codemirror/clike/clike.js'), 'codemirror-clike-js', '306');
 		$this->template->setScriptTag(root_url('assets/js/jquery-sortable.js'), 'jquery-sortable-js');
+
+		if ($this->input->post() AND $this->_updateTheme($theme) === TRUE) {
+			if ($this->input->post('save_close') === '1') {
+				redirect("themes/edit/{$theme_location}/{$theme_name}");
+			}
+
+			redirect(current_url());
+		}
 
 		$data['file'] = array();
 		if ($this->input->get('file')) {

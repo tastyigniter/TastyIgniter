@@ -22,6 +22,10 @@ class Settings extends Admin_Controller {
         $this->template->setHeading($this->lang->line('text_heading'));
 		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 
+		if ($this->input->post() AND $this->_updateSettings() === TRUE) {
+			redirect('settings');
+		}
+
         $post_data = $this->input->post();
 		$config_items = $this->config->config;
 
@@ -181,10 +185,6 @@ class Settings extends Admin_Controller {
 				'page_id'		=>	$result['page_id'],
 				'name'			=>	$result['name'],
 			);
-		}
-
-		if ($this->input->post() AND $this->_updateSettings() === TRUE) {
-			redirect('settings');
 		}
 
 		$this->template->render('settings', $data);

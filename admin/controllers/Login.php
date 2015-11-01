@@ -45,11 +45,12 @@ class Login extends Admin_Controller {
 		}
 
         $this->template->setTitle($this->lang->line('text_password_reset_title'));
-		$data['login_url'] = site_url('login');
 
 		if ($this->input->post() AND $this->_resetPassword() === TRUE) {
 			redirect('login');
 		}
+
+		$data['login_url'] = site_url('login');
 
 		$this->template->render('login_reset', $data);
 	}

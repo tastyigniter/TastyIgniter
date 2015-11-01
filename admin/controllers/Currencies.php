@@ -61,6 +61,10 @@ class Currencies extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
 		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
+		if ($this->input->post('delete') AND $this->_deleteCurrency() === TRUE) {
+			redirect('currencies');
+		}
+
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_country'] 		= site_url('currencies'.$url.'sort_by=country_name&order_by='.$order_by);
 		$data['sort_name'] 			= site_url('currencies'.$url.'sort_by=currency_name&order_by='.$order_by);
@@ -98,10 +102,6 @@ class Currencies extends Admin_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		if ($this->input->post('delete') AND $this->_deleteCurrency() === TRUE) {
-			redirect('currencies');
-		}
-
 		$this->template->render('currencies', $data);
 	}
 
@@ -124,6 +124,14 @@ class Currencies extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('currencies')));
 
+		if ($this->input->post() AND $currency_id = $this->_saveCurrency()) {
+			if ($this->input->post('save_close') === '1') {
+				redirect('currencies');
+			}
+
+			redirect('currencies/edit?id='. $currency_id);
+		}
+
 		$data['currency_name'] 		= $currency_info['currency_name'];
 		$data['currency_code'] 		= $currency_info['currency_code'];
 		$data['currency_symbol'] 	= $currency_info['currency_symbol'];
@@ -140,14 +148,6 @@ class Currencies extends Admin_Controller {
 				'country_id'	=>	$result['country_id'],
 				'name'			=>	$result['country_name'],
 			);
-		}
-
-		if ($this->input->post() AND $currency_id = $this->_saveCurrency()) {
-			if ($this->input->post('save_close') === '1') {
-				redirect('currencies');
-			}
-
-			redirect('currencies/edit?id='. $currency_id);
 		}
 
 		$this->template->render('currencies_edit', $data);

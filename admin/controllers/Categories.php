@@ -56,6 +56,10 @@ class Categories extends Admin_Controller {
         $this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
 		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
+		if ($this->input->post('delete') AND $this->_deleteCategory() === TRUE) {
+			redirect('categories');
+		}
+
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_name'] 			= site_url('categories'.$url.'sort_by=name&order_by='.$order_by);
 		$data['sort_priority'] 		= site_url('categories'.$url.'sort_by=priority&order_by='.$order_by);
@@ -91,11 +95,6 @@ class Categories extends Admin_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-		if ($this->input->post('delete') AND $this->_deleteCategory() === TRUE) {
-
-			redirect('categories');
-		}
-
 		$this->template->render('categories', $data);
 	}
 
@@ -117,6 +116,14 @@ class Categories extends Admin_Controller {
         $this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('categories')));
+
+		if ($this->input->post() AND $category_id = $this->_saveCategory()) {
+			if ($this->input->post('save_close') === '1') {
+				redirect('categories');
+			}
+
+			redirect('categories/edit?id='. $category_id);
+		}
 
         $data['category_id'] 		= $category_info['category_id'];
 		$data['name'] 				= $category_info['name'];
@@ -149,14 +156,6 @@ class Categories extends Admin_Controller {
 				'category_id'	=>	$result['category_id'],
 				'category_name'	=>	$result['name']
 			);
-		}
-
-		if ($this->input->post() AND $category_id = $this->_saveCategory()) {
-			if ($this->input->post('save_close') === '1') {
-				redirect('categories');
-			}
-
-			redirect('categories/edit?id='. $category_id);
 		}
 
 		$this->template->render('categories_edit', $data);

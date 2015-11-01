@@ -48,6 +48,10 @@ class Staff_groups extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
 		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
+        if ($this->input->post('delete') AND $this->_deleteStaffGroup() === TRUE) {
+            redirect('staff_groups');
+        }
+
 		//load ratings data into array
 		$data['staff_groups'] = array();
 		$results = $this->Staff_groups_model->getList($filter);
@@ -76,10 +80,6 @@ class Staff_groups extends Admin_Controller {
             'links'		=> $this->pagination->create_links()
         );
 
-		if ($this->input->post('delete') AND $this->_deleteStaffGroup() === TRUE) {
-		    redirect('staff_groups');
-		}
-
 		$this->template->render('staff_groups', $data);
 	}
 
@@ -100,6 +100,14 @@ class Staff_groups extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('staff_groups')));
+
+        if ($this->input->post() AND $staff_group_id = $this->_saveStaffGroup()) {
+            if ($this->input->post('save_close') === '1') {
+                redirect('staff_groups');
+            }
+
+            redirect('staff_groups/edit?id='. $staff_group_id);
+        }
 
 		if (isset($this->input->post['staff_group_name'])) {
 			$data['staff_group_name'] = $this->input->post['staff_group_name'];
@@ -141,14 +149,6 @@ class Staff_groups extends Admin_Controller {
                 );
             }
         }
-
-		if ($this->input->post() AND $staff_group_id = $this->_saveStaffGroup()) {
-			if ($this->input->post('save_close') === '1') {
-				redirect('staff_groups');
-			}
-
-			redirect('staff_groups/edit?id='. $staff_group_id);
-		}
 
 		$this->template->render('staff_groups_edit', $data);
 	}
