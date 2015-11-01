@@ -62,9 +62,9 @@ if ( ! function_exists('day_elapsed')) {
     function day_elapsed($datetime) {
         $datetime = strtotime($datetime);
 
-        if ($datetime === strtotime('today')) {
+        if (mdate('%d', $datetime) === mdate('%d', time())) {
             return 'Today';
-        } else if ($datetime === strtotime('yesterday')) {
+        } else if (mdate('%d', $datetime) === mdate('%d', strtotime('yesterday'))) {
             return 'Yesterday';
         }
 
