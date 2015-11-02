@@ -51,7 +51,7 @@ Release Date:
 
 ### v1.4.2-beta
 
-Release Date:
+Release Date: 16 September 2015
 
 * [fixed] staff name in staff updated activity log (67e3fa6)
 * [added] TI_DEBUG constant to enable / disable profiler, disabled by default (3a20c4e)
@@ -65,7 +65,7 @@ Release Date:
 
 ### v1.4.1-beta
 
-Release Date:
+Release Date: 09 September 2015
 
 * Added support for acceptance testing
 * Fixed php version backward-compatibility issues of empty()
@@ -82,7 +82,7 @@ Release Date:
 
 ### v1.3-beta
 
-Release Date:
+Release Date: 18 May 2015
 
 ADDED:
 Session library now using 'CI' files session
@@ -227,71 +227,3 @@ Languages:
     added can_delete functionality to language edit
 
 Themes: move some themes_model functions to template_helper
-
-
-
-
-### JUNK
-TO-DO:
-Customer Online IP blacklist
-** Add seat map to backend
-Add Sitemap
-Improve extension upload functionality to list "files to modify"
-
-Improve Payments
-    Add paypal express ipn for subscriptions
-    Add more payment methods:
-        google checkout,
-        interswitch/VoguePay,
-        braintree,
-        worldpay,
-
-Add Distance and improve storefront locations listing and location filter module
-Improve location and menus listing to just-eat like
-Add states/cites to countries
-Improve local module by making its options customizable from admin panel
-    Add option in settings whether to display location search on homepage or redirect to default location.
-    Option to modify is_open, is_closed, is_temp_closed language text
-    Option to display delivery tab, collection tab, **reservation tab**, country field, city field
-
-
-Customize Main Forms (show/hide/new)
-    checkout,
-    registration
-    reservation form fields
-
-Delivery Man module - integrate with Bringg.com
-
-Improve banners to Ad Manager
-    add impressions and clicks
-
-*****Add Import Menus
-*****Remote Printer Module
-*****Print/Email Order & Reservation Invoice
-
-Display confirmation box when;
-    Improve local module notification, such that critical warning or errors are shown in confirm box using modal
-    Delivery charge changes
-    Minimum order total changes
-    Menu is out of stock
-
-Add Quick Tour
-Add Quick links - app icon style with blurry background
-Add create order functionality
-Add option to calculate tax to location
-Improve admin dashboard statistics to include total commission and turnover
-Create module to integrate third-party marketing tools (mailchimp, constantcontact)
-
-
-Menus - add option to set if available for delivery or collection
-
-Integrate Twilio third-party services to send SMS notifications
-
-****Mail_templates: add google fonts
-
-bring back the cart page
-add functionality to add multiple banners in module (jst like layout tables.)
-
-Improve admin context list filter
-
-add hidden input to all post forms to specify CRUD action using http method verb (PUT, PATCH, DELETE) as value
