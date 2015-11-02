@@ -174,14 +174,18 @@ class Extensions extends Admin_Controller {
 		$extension_name = ($this->input->get('name')) ? $this->input->get('name') : $this->uri->rsegment(4);
 
 		if ($this->Extensions_model->extensionExists($extension_name)) {
-			if ($this->Extensions_model->install($this->uri->rsegment(3), $extension_name)) {
+
+			$config = $this->extension->loadConfig($extension_name, FALSE, TRUE);
+			$extension_title = isset($config['extension_meta']['title']) ? $config['extension_meta']['title'] : '';
+
+			if ($this->Extensions_model->install($this->uri->rsegment(3), $extension_name, $config)) {
 				log_activity($this->user->getStaffId(), 'installed', 'extensions',
 				             get_activity_message('activity_custom_no_link',
 				                                  array('{staff}', '{action}', '{context}', '{item}'),
-				                                  array($this->user->getStaffName(), 'installed', 'extension module', $extension_name)
+				                                  array($this->user->getStaffName(), 'installed', 'extension module', $extension_title)
 				             ));
 
-				$this->alert->set('success', sprintf($this->lang->line('alert_success'), "Extension {$extension_name} installed "));
+				$this->alert->set('success', sprintf($this->lang->line('alert_success'), "Extension {$extension_title} installed "));
 				$this->alert->set('info', sprintf($this->lang->line('alert_info_layouts'), site_url('layouts')));
 				$success = TRUE;
 			}
@@ -197,16 +201,21 @@ class Extensions extends Admin_Controller {
 
 		$extension_name = ($this->input->get('name')) ? $this->input->get('name') : $this->uri->rsegment(4);
 
-		if ($this->Extensions_model->uninstall($this->uri->rsegment(3), $extension_name)) {
-			log_activity($this->user->getStaffId(), 'uninstalled', 'extensions',
-			             get_activity_message('activity_custom_no_link',
-			                                  array('{staff}', '{action}', '{context}', '{item}'),
-			                                  array($this->user->getStaffName(), 'uninstalled', 'extension module', $extension_name)
-			             ));
+		if ($this->Extensions_model->extensionExists($extension_name)) {
+			$config = $this->extension->loadConfig($extension_name, FALSE, TRUE);
+			$extension_title = isset($config['extension_meta']['title']) ? $config['extension_meta']['title'] : '';
 
-			$this->alert->set('success', sprintf($this->lang->line('alert_success'), "Extension {$extension_name} uninstalled "));
-		} else {
-			$this->alert->danger_now($this->lang->line('alert_error_try_again'));
+			if ($this->Extensions_model->uninstall($this->uri->rsegment(3), $extension_name)) {
+				log_activity($this->user->getStaffId(), 'uninstalled', 'extensions',
+				             get_activity_message('activity_custom_no_link',
+				                                  array('{staff}', '{action}', '{context}', '{item}'),
+				                                  array($this->user->getStaffName(), 'uninstalled', 'extension module', $extension_title)
+				             ));
+
+				$this->alert->set('success', sprintf($this->lang->line('alert_success'), "Extension {$extension_title} uninstalled "));
+			} else {
+				$this->alert->danger_now($this->lang->line('alert_error_try_again'));
+			}
 		}
 
 		redirect('extensions');

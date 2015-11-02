@@ -261,14 +261,16 @@ class Extensions_model extends TI_Model {
 		return FALSE;
 	}
 
-	public function install($type = '', $name = '') {
+	public function install($type = '', $name = '', $config = NULL) {
 
 		if ( ! empty($type) AND ! empty($name)) {
 			$name = url_title(strtolower($name), '-');
 
 			if ($this->extensionExists($name)) {
 				$extension_id = NULL;
-				$config = $this->extension->loadConfig($name, FALSE, TRUE);
+
+				is_array($config) OR $config = $this->extension->loadConfig($name, FALSE, TRUE);
+
 				$title = !empty($config['extension_meta']['title']) ? $config['extension_meta']['title'] : NULL;
 
 				$query = $this->db->where('type', $type)->where('name', $name)->get('extensions');
@@ -305,7 +307,7 @@ class Extensions_model extends TI_Model {
 		return FALSE;
 	}
 
-	public function uninstall($type = '', $name = '') {
+	public function uninstall($type = '', $name = '', $config = NULL) {
 		$query = FALSE;
 
 		if ( ! empty($type) AND $this->extensionExists($name)) {
@@ -319,7 +321,9 @@ class Extensions_model extends TI_Model {
 			} else {
 				$this->db->update('extensions');
 				if ($this->db->affected_rows() > 0) {
-					$config = $this->extension->loadConfig($name, FALSE, TRUE);
+
+					is_array($config) OR $config = $this->extension->loadConfig($name, FALSE, TRUE);
+
 					if ( ! empty($config['extension_permission']['name'])) {
 						$this->Permissions_model->deletePermissionByName($config['extension_permission']['name']);
 					}
