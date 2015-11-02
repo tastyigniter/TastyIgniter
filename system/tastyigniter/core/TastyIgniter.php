@@ -6,8 +6,7 @@
  * @var	string
  *
  */
-	define('CI_VERSION', '3.0-dev');
-	define('TI_VERSION', 'v1.4.3');
+	define('TI_VERSION', 'v1.5.0');
 
 	// Path to the root folder
 	defined('ROOTPATH') OR define('ROOTPATH', str_replace(SYSDIR.'/', '', BASEPATH));
