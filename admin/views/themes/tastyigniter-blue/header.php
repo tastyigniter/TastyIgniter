@@ -179,7 +179,6 @@
 									<li><a class="orders" href="<?php echo site_url('orders'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_order'); ?></a></li>
 									<li><a class="reservations" href="<?php echo site_url('reservations'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_reservation'); ?></a></li>
 									<li><a class="coupons" href="<?php echo site_url('coupons'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_coupon'); ?></a></li>
-									<li><a class="reviews" href="<?php echo site_url('reviews'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_review'); ?></a></li>
 								</ul>
 							</li>
 							<li>
@@ -213,6 +212,7 @@
 								<a class="marketing"><i class="fa fa-line-chart fa-fw"></i><span class="content"><?php echo lang('menu_marketing'); ?> </span><span class="fa arrow"></span></a>
 	                            <ul class="nav nav-second-level">
 		                            <li><a class="banners" href="<?php echo site_url('banners'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_banner'); ?></a></li>
+		                            <li><a class="reviews" href="<?php echo site_url('reviews'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_review'); ?></a></li>
 		                            <li><a class="messages" href="<?php echo site_url('messages'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_messages'); ?></a></li>
 								</ul>
 							</li>

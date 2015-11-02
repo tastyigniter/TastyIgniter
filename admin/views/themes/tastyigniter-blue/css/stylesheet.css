@@ -232,7 +232,7 @@ background-color: rgba(0, 0, 0, 0.1);
 }
 .navbar-top-links .dropdown-menu {
 background-color: #445E80;
-border-color: #445E80 #DFE6EE #DFE6EE;
+border-color: #445E80;
 border-top-left-radius: 0;
 border-top-right-radius: 0;
 min-width: 0;

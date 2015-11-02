@@ -68,7 +68,7 @@ class Dashboard extends Admin_Controller {
                 'first_name'	    => $result['first_name'],
                 'last_name'	    	=> $result['last_name'],
                 'total_orders'		=> $result['total_orders'],
-                'total_sale'		=> $result['total_sale'],
+                'total_sale'		=> $this->currency->format($result['total_sale']),
             );
         }
 
