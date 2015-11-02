@@ -233,6 +233,7 @@ Themes: move some themes_model functions to template_helper
 
 ### JUNK
 TO-DO:
+Customer Online IP blacklist
 ** Add seat map to backend
 Add Sitemap
 Improve extension upload functionality to list "files to modify"
@@ -288,7 +289,6 @@ Integrate Twilio third-party services to send SMS notifications
 
 ****Mail_templates: add google fonts
 
-Customer Online IP blacklist
 bring back the cart page
 add functionality to add multiple banners in module (jst like layout tables.)
 

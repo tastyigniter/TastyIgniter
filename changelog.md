@@ -1,0 +1,297 @@
+### v1.5.0 (stable)
+
+Release Date:
+
+#### Added
+* Setup now generates a random alpha-numeric 9 length string for database table prefixes
+* Admin option to select a page for checkout and registration terms and condition.
+* Missing extension meta title item and extension permission rules to config
+* Version number to extension metadata and themes config for version control and automatic update feature
+* New admin setting option to set site date/time format
+* Location image gallery: option to add multiple images to be displayed on local storefront
+* New mail templates to send emails to admin on new customer registration and admin password reset
+* Second parameter to both `subject()` and `message()` method of Email library to parse data into mail template
+* New mail templates variables (site_logo, site_url, staff_name, staff_username)
+* Authorize.Net (AIM) Payment gateway
+* Template Library function `getActiveThemeOptions()` to retrieve admin theme customizer options and `get_theme_options()` helper function to use within theme files
+* Added google analytics tracking code and social links theme options to tastyigniter-orange theme
+
+#### Changed
+* LICENCE from Apache to GNU GPLv3
+* Replaced file_get_contents with cURL to fix issue with google maps geocoding api request not being sent
+* Renamed `loadPartial()` in Template Library to `loadView()` to load single views without header, footer and partials
+* Renamed `addToStaffGroup()` in Permissions Model to `assignPermissionRule()` and moved into Staff groups Model
+* Checkout and registration terms and condition pages to display in modal instead of new window
+* Media Manager view and style adjustment
+* Moved `getPayPalDetails()` method from deprecated Payments model into PayPalExpress extension Paypal model
+* Pages: Removed page name redundancy so that only page title and heading are required when creating a new page
+* Changed `updateExtension()` parameters in Extensions model to (type, name, data)
+* Removed deprecated `setBackButton()` and `getBackButton()` in Template library, use `setButton()` and `getButton()` instead.
+* Hard code return and cancel URI in paypal_express module
+* Send HTML emails only, remove admin settings option to set TEXT as mail type format
+* Improved `resize()` in image tool model so that original image is returned when width and height is not given
+* Replaced existing mail templates into responsive HTML mail templates
+* Replaced tinymce editor with summernote editor to reduce total source size
+* Replaced fancybox with bootstrap modal to reduce total source size
+* Restructured controllers so that post data are validated and sent to model at the beginning not end to optimize page load time
+
+#### Fixed
+* Bug where extra URL query is not appended after permalink slugs in URI reverse routing
+* Bug where empty value is not updated in database by using `isset()` instead of `!empty()` in models INSERT/UPDATE
+* Issue where duplicate head tags are added to `<head>` of Media manager
+* Bug with undefined method `writeTheme()` in Themes that was replaced in previous version to helper function `save_theme_file()`
+* Missing extensions admin language line
+* Spelling error in admin setting option `complete_order_status` to `completed_order_status`
+* Issue where payment method is not disabled when order total is below the payments minimum order total
+* Issue where payment method is not displayed in admin and storefront order view
+* Issue where duplicate order is added upon page redirect, also remove received order from user session
+* Orders model from not displaying incomplete/lost orders in customer account
+* Minor bugs fix
+
+
+### v1.4.2-beta
+
+Release Date:
+
+* [fixed] staff name in staff updated activity log (67e3fa6)
+* [added] TI_DEBUG constant to enable / disable profiler, disabled by default (3a20c4e)
+* [fixed] display no_photo.png when resizing an image that doesnt exist (da3d3a8)
+* Minor theme fix (4c1ce6b & 01b4535)
+* [replaced] theme preview and thumb files with screenshot.png (bb3cfa4)
+* [added] Installer library to handle TI initial setup and version updates	(c5a5175)
+* [replaced] INSERT SQL to REPLACE SQL in initial_schema and demo_schema (d0aa31c)
+
+
+
+### v1.4.1-beta
+
+Release Date:
+
+* Added support for acceptance testing
+* Fixed php version backward-compatibility issues of empty()
+* Changed google maps api request from http to https for location search
+* Fixed adding comment to menu item added to cart
+* Fixed issue with escaping htmlspecialchars when saving lanugaue line to database
+* Fixed issue with saving state in customer and location addresses
+* Added order restriction option to coupons. Coupon is restricted by order types
+* Improved template library, and loading theme config file
+* Improved extension update, install, uninstall, and loading extension config file.
+* Added newsletter module to collect emails for marketing purposes
+
+
+
+### v1.3-beta
+
+Release Date:
+
+ADDED:
+Session library now using 'CI' files session
+root_url, page_url, admin_url, extension_url method to return site root url
+Themes customization:
+	New method to template library to load theme configuration file
+	theme_config.php configuration file is now required in theme root directory to install/customize themes.
+	'customize' key required in $theme configuration array, in other to enable/load customization.
+	Section array items ('title', 'desc', 'icon', 'fields')
+	fields array items ('id', 'type') ('type' => 'hidden|text|password|textarea|group|color|media|checkbox|radio|dropdown|upload')
+    admin_theme_helper methods moved to Customizer class
+
+Menu Category hierarchy: with parent and as many child levels
+New column 'status' added to extensions table, to indicate whether extension is installed/uninstalled and to keep extension data in database after uninstallation.
+Cart Module: option to show or hide menu images and set sizes
+Migrations schemas:
+	create trigger (duplicatePermalink) to avoid duplicate permalink value in permalinks table
+Permalinks:
+	added controller attribute to improve routing
+Activities System: New database table schema for activities
+Added order and reservation status color
+Admin domain base controller property _permission_rules added can be overridden by admin domain controllers to set permission rules for the controller
+Extension:
+    New modules can be uploaded from backend
+    Modules and it files can be deleted after its been uninstalled
+    Extensions controllers now loads a mandatory config file on initialization in module_name/config/module_name.php
+
+
+
+CHANGES:
+All controller methods visibility are accurately set
+Admin, Main and Setup now separated into apps and shares same system components
+    CI_Controller now has subclass Base_Controller
+    Base_Controller has subclasses Admin_Controller and Main_Controller
+    Both main and admin domain controllers now extends Admin_Controller and Main_Controller respectively instead of CI_Controller
+
+Application controllers now organized in folder, (this affects URI routing)
+Move encryption_key config item from database to config file.
+Move log_path config item from database to config file.
+***modules_locations config item now set from index.php instead of config file
+Settings library now sets config items from database only if settings database table exists
+Base controller now checks if session database table exists before using database with session
+
+Add option to disable security question for customer
+
+Migration schemas:
+    table indexes now added in $fields array instead of the dbforge->add_key function
+
+Flash alerts and info now uses this->alert->success/danger/error to add alert message and this->alert->display to display
+Renamed assets/download to assets/downloads (notice the downloads)
+Improved informative database backup with number of rows and displayed
+Renamed template library method regions() to setPartials()
+Rename template library setLinkTag() to setStyleTag()
+Default admin_theme and main_theme config items now grouped into default_themes array()
+Extensions root folder moved to root folder
+
+Extensions sub-folders structure re-arranged:
+	controllers/admin and controllers/main merged into controllers/
+	languages/admin and languages/main merged into languages/
+	views/admin and views/main merged into views/
+
+Extension class methods moved to Extension_model class and Extension class acts as a Facade
+Renamed permalink to USER-friendly slug also column in permalinks table
+Reviews can now be added on reservations and orders. column order_id changed to sale_id and new column sale_type added to differentiate order reviews from reservations reviews.
+
+Status History:
+	changed status_history database table column from assigned_id to assignee_id
+	changed reservations database table column from staff_id to assignee_id
+	added assignee_id column to orders database table
+
+Changed Activity library to Customer_online Library
+
+Customers Online:
+    settings item activity timeout changed to customers_online_timeout
+    settings item activity archive changed to customers_online_archive_timeout
+    IP blacklist removed, to be added back in next version
+
+Added referrer_url to ti_url_helper, which will return the user referral url.
+Changed config('maintenance_page') to config('maintenance_message') and use show_error() instead of loading controller.
+Improved banners and banners_module.... move dimension from banners and banners_module.
+Extracted categories, menu_options associated methods into separate models from menus_model
+Extracted banners associated methods into separate models from design_model and rename to layout_model
+Improved user permission functionality, permission can be set as rules within controllers.
+Removed duplicate admin domain controllers methods and models methods
+Improved site_url and redirect() uri re-routing
+Improved image manager styles responsiveness and remove irrelevant options
+Fixed models delete methods to accept array of ids
+Changed customer activity to customer_online
+
+Messages:
+    renamed messages controller method edit to compose
+    added messages controller methods all, draft, sent,
+    removed message type trash
+    Schema:
+        drop location_id, staff_id_to columns in messages table
+        drop staff_id, staff_email, customer_email, customer_id columns in message_recipients table
+        rename column staff_id_from to sender_id in messages table
+        added columns key and value to message_recipients table
+
+Improved user permissions
+    added permission database table and Permissions_model
+    added restrict() method to check user permission then redirect and show message to user if permission fails
+    improved hasPermission() method to check user permission and return TRUE on permitted or FALSE on restricted
+
+Permissions are a simple string made up of 3 parts:
+    Domain  - Typically the module name for application (e.g. Admin, Main, Module).
+    Context - The controller name (e.g. Menu, Order, Location, or Settings).
+    Action  - The permitted action (View, Manage, Add, Edit, Delete, etc.).
+
+Removed Setting Library, no longer used. (functionality moved to Base_Controller)
+Removed permission context (controller and view files), no longer needed. (Permission error message displayed using alerts)
+Add tastyigniter_helper to include log_activity() and other general helpers
+Activities:
+    Rename Notifications_model to Activities_model
+    add notifications from inside controllers instead of models
+    rename to Activities_model->addNotification to logActivity
+    create log_activity helper function to add activities to database and to be called from controllers
+    logActivity method accepts 4 args user_id, action, context and message
+        rename notifications database table to activities
+        rename actor_id to user_id and object to context
+        drop unused columns from notifications table: suffix, object_id, subject_id
+        add columns user, message, domain, context to activities table
+
+Database Migration from admin domain
+    Migrate database to latest version
+    Restore database from downloaded backup sql files and disabled uploading sql files
+
+Replaced reserve controller, language, view to reservation
+
+Location:
+    Added location image/logo
+    changed property reservation_interval, reservation_turn to reservation_time_interval and reservation_stay_time respectively
+    Move local search functionality from cart_module to local_module
+    removed location settings search by no needed getLatLng does not check search_by settings anymore
+
+Languages:
+    ensure main domain is completely internationalized
+    internationalized admin domain
+    ensure common and duplicate lang lines are moved to english_lang.php
+    prefix all language line keys with text_ label_ column_ error_ alert_ button_
+    added new language helper functions
+    added can_delete functionality to language edit
+
+Themes: move some themes_model functions to template_helper
+
+
+
+
+### JUNK
+TO-DO:
+Customer Online IP blacklist
+** Add seat map to backend
+Add Sitemap
+Improve extension upload functionality to list "files to modify"
+
+Improve Payments
+    Add paypal express ipn for subscriptions
+    Add more payment methods:
+        google checkout,
+        interswitch/VoguePay,
+        braintree,
+        worldpay,
+
+Add Distance and improve storefront locations listing and location filter module
+Improve location and menus listing to just-eat like
+Add states/cites to countries
+Improve local module by making its options customizable from admin panel
+    Add option in settings whether to display location search on homepage or redirect to default location.
+    Option to modify is_open, is_closed, is_temp_closed language text
+    Option to display delivery tab, collection tab, **reservation tab**, country field, city field
+
+
+Customize Main Forms (show/hide/new)
+    checkout,
+    registration
+    reservation form fields
+
+Delivery Man module - integrate with Bringg.com
+
+Improve banners to Ad Manager
+    add impressions and clicks
+
+*****Add Import Menus
+*****Remote Printer Module
+*****Print/Email Order & Reservation Invoice
+
+Display confirmation box when;
+    Improve local module notification, such that critical warning or errors are shown in confirm box using modal
+    Delivery charge changes
+    Minimum order total changes
+    Menu is out of stock
+
+Add Quick Tour
+Add Quick links - app icon style with blurry background
+Add create order functionality
+Add option to calculate tax to location
+Improve admin dashboard statistics to include total commission and turnover
+Create module to integrate third-party marketing tools (mailchimp, constantcontact)
+
+
+Menus - add option to set if available for delivery or collection
+
+Integrate Twilio third-party services to send SMS notifications
+
+****Mail_templates: add google fonts
+
+bring back the cart page
+add functionality to add multiple banners in module (jst like layout tables.)
+
+Improve admin context list filter
+
+add hidden input to all post forms to specify CRUD action using http method verb (PUT, PATCH, DELETE) as value
