@@ -346,10 +346,13 @@ class Orders extends Admin_Controller {
                     array($this->user->getStaffName(), 'updated', 'order', current_url(), '#'.$this->input->get('id'))
                 ));
 
-                if ($this->input->get('old_assignee_id') !== $this->input->get('assignee_id')) {
-                    log_activity($this->user->getStaffId(), 'assigned', 'orders', get_activity_message('activity_assigned',
+                if ($this->input->post('old_assignee_id') !== $this->input->post('assignee_id') OR $this->input->post('old_status_id') !== $this->input->post('status_id')) {
+                    $staff = $this->Staffs_model->getStaff($this->input->post('assignee_id'));
+	                $staff_assignee = site_url('staffs/edit?id='.$staff['staff_id']);
+
+	                log_activity($this->user->getStaffId(), 'assigned', 'orders', get_activity_message('activity_assigned',
                         array('{staff}', '{action}', '{context}', '{link}', '{item}', '{assignee}'),
-                        array($this->user->getStaffName(), 'assigned', 'order', current_url(), '#'.$this->input->get('id'), $this->input->post('assignee_id'))
+                        array($this->user->getStaffName(), 'assigned', 'order', current_url(), '#'.$this->input->get('id'), "<a href=\"{$staff_assignee}\">{$staff['staff_name']}</a>")
                     ));
                 }
 
@@ -379,7 +382,7 @@ class Orders extends Admin_Controller {
 
 	private function validateForm() {
 		$this->form_validation->set_rules('order_status', 'lang:label_status', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('assigned_staff', 'lang:label_assign_staff', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('assignee_id', 'lang:label_assign_staff', 'xss_clean|trim|integer');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;

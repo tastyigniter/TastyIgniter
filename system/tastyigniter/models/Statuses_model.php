@@ -58,7 +58,7 @@ class Statuses_model extends TI_Model {
 	}
 
 	public function getStatusHistories($for, $order_id) {
-		$this->db->select('status_history_id, status_history.date_added, staffs.staff_name, status_history.assignee_id, statuses.status_name, status_history.notify, status_history.comment');
+		$this->db->select('status_history_id, status_history.date_added, staffs.staff_name, status_history.assignee_id, statuses.status_name, statuses.status_color, status_history.notify, status_history.comment');
 		$this->db->from('status_history');
 		$this->db->join('statuses', 'statuses.status_id = status_history.status_id', 'left');
 		$this->db->join('staffs', 'staffs.staff_id = status_history.staff_id', 'left');
