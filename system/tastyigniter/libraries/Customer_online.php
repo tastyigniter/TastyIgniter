@@ -31,7 +31,7 @@ class Customer_online {
         $input_data['access_type']      = $user_agent['type'];
         $input_data['browser']          = $user_agent['browser'];
         $input_data['country_code']     = $this->getCountry();
-        $input_data['request_uri']      = uri_string();
+        $input_data['request_uri']      = str_replace(site_url(), '', current_url());
         $input_data['referrer_uri']     = str_replace(site_url(), '', $this->CI->agent->referrer());
         $input_data['date_added']       = mdate('%Y-%m-%d %H:%i:%s', time());
         $input_data['user_agent']       = $user_agent['string'];
