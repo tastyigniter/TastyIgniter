@@ -1487,8 +1487,9 @@ height: auto;
 }
 .table > thead > tr > th {
 border-bottom: 2px solid #ecf0f5;
-font-weight: 400;
+font-weight: 600;
 font-size: 14px;
+color: #484848;
 }
 .table-striped > tbody > tr:nth-child(2n+1) > td,
 .table-striped > tbody > tr:nth-child(2n+1) > th {
@@ -1574,7 +1575,7 @@ top: -4px;
 
 /** SORTER **/
 .sort, .sort:hover, .sort:focus {
-color:#444;
+color:#484848;
 text-decoration:none;
 display:inline-block;
 min-width: 40px;

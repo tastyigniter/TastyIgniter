@@ -246,7 +246,7 @@
 							<div class="panel panel-default">
 								<div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_tab_status'); ?></h3></div>
 								<div class="panel-body">
-									<div class="col-xs-3">
+									<div class="col-xs-12 col-sm-3">
 										<label for="input-assign-staff" class="control-label"><?php echo lang('label_assign_staff'); ?></label>
 										<div class="">
 											<input type="hidden" name="old_assignee_id" value="<?php echo $assignee_id; ?>" />
@@ -264,7 +264,7 @@
 											<?php echo form_error('assignee_id', '<span class="text-danger">', '</span>'); ?>
 										</div>
 									</div>
-									<div class="col-xs-2">
+									<div class="col-xs-12 col-sm-2">
 										<label for="input-name" class="control-label"><?php echo lang('label_status'); ?></label>
 										<div class="">
 											<select name="order_status" id="" class="form-control" onChange="getStatusComment();">
@@ -279,14 +279,14 @@
 											<?php echo form_error('order_status', '<span class="text-danger">', '</span>'); ?>
 										</div>
 									</div>
-									<div class="col-xs-5">
+									<div class="col-xs-12 col-sm-5">
 										<label for="input-name" class="control-label"><?php echo lang('label_comment'); ?></label>
 										<div class="">
 											<textarea name="status_comment" id="" class="form-control" rows="3"><?php echo set_value('status_comment'); ?></textarea>
 											<?php echo form_error('status_comment', '<span class="text-danger">', '</span>'); ?>
 										</div>
 									</div>
-									<div class="col-xs-2    ">
+									<div class="col-xs-12 col-sm-2">
 										<label class="control-label"><?php echo lang('label_notify'); ?></label>
 										<div class="">
 											<div id="input-notify" class="btn-group btn-group-switch" data-toggle="buttons">
