@@ -13,7 +13,7 @@
 							<div class="thumbnail">
 								<img class="img-responsive" alt="" src="<?php echo $theme['screenshot']; ?>" style="width:100%!important;height:320px!important" />
 								<div class="caption">
-									<h4><?php echo $theme['title']; ?><span class="badge text-sm pull-right"><?php if ($theme['active'] === '1') echo lang('text_is_default'); ?></span></h4>
+									<h4><?php echo $theme['title']; ?><span class="label label-warning text-sm pull-right"><?php if ($theme['active'] === '1') echo lang('text_is_default'); ?></span></h4>
 									<p><?php echo $theme['description']; ?></p>
 									<div class="buttons">
 										<?php if ($theme['active'] === '1') { ?>

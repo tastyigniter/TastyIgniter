@@ -68,7 +68,7 @@
 									<?php foreach ($values as $value) { ?>
 										<tr id="table-row<?php echo $table_row; ?>">
 											<td class="action action-one"><i class="fa fa-sort handle"></i></td>
-											<td class="action action-one"><a class="btn btn-danger" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a></td>
+											<td class="action action-one"><a class="btn btn-danger" onclick="confirm('<?php echo lang('alert_warning_confirm'); ?>') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a></td>
 											<td>
 												<input type="text" name="option_values[<?php echo $table_row; ?>][value]" class="form-control" value="<?php echo set_value('option_values[$table_row][value]', $value['value']); ?>" />
 												<?php echo form_error('option_values['.$table_row.'][value]', '<span class="text-danger">', '</span>'); ?>
@@ -104,7 +104,7 @@ var table_row = <?php echo $table_row; ?>;
 function addValue() {
 	html  = '<tr id="table-row' + table_row + '">';
     html += '	<td class="action action-one"><i class="fa fa-sort handle"></i></td>';
-	html += '	<td class="action action-one"><a class="btn btn-danger" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a></td>';
+	html += '	<td class="action action-one"><a class="btn btn-danger" onclick="confirm(\'<?php echo lang('alert_warning_confirm'); ?>\') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a></td>';
 	html += '	<td>';
 	html += '		<input type="text" name="option_values[' + table_row + '][value]" class="form-control" value="<?php echo set_value("option_values[' + table_row + '][value]"); ?>" />';
 	html += '	</td>';

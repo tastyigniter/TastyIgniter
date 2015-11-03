@@ -69,7 +69,7 @@
 						<?php foreach ($slides as $slide) { ?>
 							<li id="image-row<?php echo $slide_row; ?>">
 								<div class="col-md-1">
-									<a class="btn btn-danger btn-lg" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a>
+									<a class="btn btn-danger btn-lg" onclick="confirm('<?php echo lang('alert_warning_confirm'); ?>') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a>
 								</div>
 								<div class="col-md-4">
 									<div class="thumbnail imagebox">
@@ -114,7 +114,7 @@ var slide_row = <?php echo $slide_row; ?>;
 function addSlide() {
 	html  = '<li id="image-row' + slide_row + '">';
 	html += '	<div class="col-md-1">';
-	html += '		<a class="btn btn-danger btn-lg" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a>';
+	html += '		<a class="btn btn-danger btn-lg" onclick="confirm('<?php echo lang('alert_warning_confirm'); ?>') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a>';
 	html += '	</div>';
 	html +=	'	<div class="col-md-4">';
 	html += '		<div class="thumbnail imagebox">';

@@ -23,7 +23,7 @@
 								<td class="action action-one text-center"><i class="fa fa-sort handle"></i></td>
 								<td class="action action-one">
 									<?php if (!is_numeric($question['question_id'])) { ?>
-										<a class="btn btn-danger" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a>
+										<a class="btn btn-danger" onclick="confirm('<?php echo lang('alert_warning_confirm'); ?>') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a>
 									<?php } else { ?>
 										<a class="btn btn-danger" disabled="disabled"><i class="fa fa-times-circle"></i></a>
 									<?php } ?>
@@ -59,7 +59,7 @@ var table_row = <?php echo $table_row; ?>;
 function addQuestion() {
 	html  = '<tr id="table-row' + table_row + '">';
 	html += '	<td class="action action-one text-center"><i class="fa fa-sort handle"></i></td>';
-	html += '	<td class="action action-one"><a class="btn btn-danger" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a></td>';
+	html += '	<td class="action action-one"><a class="btn btn-danger" onclick="confirm(\'<?php echo lang('alert_warning_confirm'); ?>\') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a></td>';
 	html += '	<td><input type="hidden" name="questions[' + table_row + '][question_id]" value="<?php echo set_value("questions[' + table_row + '][question_id]", "0"); ?>"/>';
 	html += '		<input type="text" name="questions[' + table_row + '][text]" class="form-control" value="<?php echo set_value('questions[$table_row][text]'); ?>" /></td>';
 	html += '	<td>-</td>';

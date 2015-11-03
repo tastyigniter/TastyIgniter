@@ -28,7 +28,7 @@
 							<?php foreach ($routes as $route) { ?>
 							<tr id="table-row<?php echo $table_row; ?>">
 								<td class="action action-one text-center"><i class="fa fa-sort handle"></i></td>
-								<td class="action action-one"><a class="btn btn-danger" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a></td>
+								<td class="action action-one"><a class="btn btn-danger" onclick="confirm('<?php echo lang('alert_warning_confirm'); ?>') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a></td>
 								<td><input type="text" name="routes[<?php echo $table_row; ?>][uri_route]" class="form-control" value="<?php echo set_value('routes[$table_row][uri_route]', $route['uri_route']); ?>" /></td>
 								<td><input type="text" name="routes[<?php echo $table_row; ?>][controller]" class="form-control" value="<?php echo set_value('routes[$table_row][controller]', $route['controller']); ?>" /></td>
 							</tr>
@@ -54,7 +54,7 @@ var table_row = <?php echo $table_row; ?>;
 function addRoute() {
 	html  = '<tr id="table-row' + table_row + '">';
     html += '	<td><i class="fa fa-sort handle text-center"></i>';
-	html += '	<td class="action action-one"><a class="btn btn-danger" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a></td>';
+	html += '	<td class="action action-one"><a class="btn btn-danger" onclick="confirm(\'<?php echo lang('alert_warning_confirm'); ?>\') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a></td>';
 	html += '	<td><input type="text" name="routes[' + table_row + '][uri_route]" class="form-control" value="<?php echo set_value("routes[' + table_row + '][uri_route]"); ?>" /></td>';
 	html += '	<td><input type="text" name="routes[' + table_row + '][controller]" class="form-control" value="<?php echo set_value("routes[' + table_row + '][controller]"); ?>" /></td>';
 	html += '</tr>';

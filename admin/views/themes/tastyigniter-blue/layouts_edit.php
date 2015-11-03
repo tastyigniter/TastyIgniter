@@ -40,7 +40,7 @@
                                 <?php $module_row = 1; ?>
                                 <?php foreach ($layout_modules as $module) { ?>
                                     <tr id="module-row<?php echo $module_row; ?>">
-                                        <td class="action action-one"><a class="btn btn-danger" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a></td>
+                                        <td class="action action-one"><a class="btn btn-danger" onclick="confirm('<?php echo lang('alert_warning_confirm'); ?>') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a></td>
                                         <td><select name="modules[<?php echo $module_row; ?>][module_code]" class="form-control">
                                                 <?php foreach ($modules as $mod) { ?>
                                                     <?php if ($mod['module_code'] === $module['module_code']) { ?>
@@ -109,7 +109,7 @@
                                     <?php $table_row = 0; ?>
                                     <?php foreach ($layout_routes as $route) { ?>
                                     <tr id="table-row<?php echo $table_row; ?>">
-                                        <td class="action action-one"><a class="btn btn-danger" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a></td>
+                                        <td class="action action-one"><a class="btn btn-danger" onclick="confirm('<?php echo lang('alert_warning_confirm'); ?>') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a></td>
                                         <td><input type="text" name="routes[<?php echo $table_row; ?>][uri_route]" class="form-control" value="<?php echo $route['uri_route']; ?>" />
                                             <?php echo form_error('routes['.$table_row.'][uri_route]', '<span class="text-danger">', '</span>'); ?>
                                         </td>
@@ -136,7 +136,7 @@ var table_row = <?php echo $table_row; ?>;
 
 function addRoute() {
     var html = '<tr id="table-row' + table_row + '">';
-	html += '	<td class="action action-one"><a class="btn btn-danger" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a></td>';
+	html += '	<td class="action action-one"><a class="btn btn-danger" onclick="confirm(\'<?php echo lang('alert_warning_confirm'); ?>\') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a></td>';
 	html += '	<td><input type="text" name="routes[' + table_row + '][uri_route]" class="form-control" value="<?php echo set_value("routes[' + table_row + '][uri_route]"); ?>" size="50" />';
 	html += '</tr>';
 
@@ -149,7 +149,7 @@ var module_row = <?php echo $module_row; ?>;
 
 function addModule() {
     var html = '<tr id="module-row' + module_row + '">';
-	html += '	<td class="action action-one"><a class="btn btn-danger" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a></td>';
+	html += '	<td class="action action-one"><a class="btn btn-danger" onclick="confirm(\'<?php echo lang('alert_warning_confirm'); ?>\') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a></td>';
     html += '	<td><select name="modules[' + module_row + '][module_code]" class="form-control">';
 		<?php foreach ($modules as $mod) { ?>
     html += '<option value="<?php echo $mod['module_code']; ?>"><?php echo $mod['title']; ?></option>';

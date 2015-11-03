@@ -65,7 +65,7 @@ class Coupons extends Admin_Controller {
         $this->template->setTitle($this->lang->line('text_title'));
         $this->template->setHeading($this->lang->line('text_heading'));
 		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
-		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
+		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => 'confirmDelete();'));;
 
 		if ($this->input->post('delete') AND $this->_deleteCoupon() === TRUE) {
 			redirect('coupons');

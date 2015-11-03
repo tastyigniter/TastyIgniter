@@ -29,24 +29,6 @@
 </div>
 <script type="text/javascript">
 $(document).ready(function() {
-	//Delete Confirmation Box
-	$('#list-form').submit(function(){
-		//if ($('input[name=\'delete\']').attr("checked") == "checked") {
-			if (!confirm('<?php echo lang('alert_warning_confirm'); ?>')) {
-				return false;
-			}
-		//}
-	});
-
-	//Uninstall Confirmation Box
-	$('a').click(function(){
-		if ($(this).attr('href') != null && $(this).attr('href').indexOf('delete', 1) != -1) {
-			if (!confirm('<?php echo lang('alert_warning_confirm'); ?>')) {
-				return false;
-			}
-		}
-	});
-	
 	if (document.location.toString().toLowerCase().indexOf(active_menu, 1) != -1) {
         //$('.' + active_menu).parents('.collapse').addClass('in');
 		$('#side-menu .' + active_menu).addClass('active');
@@ -71,6 +53,14 @@ $(document).ready(function() {
         $('.form-group .text-danger').parents('.form-group').addClass('has-error');
     }*/
 });
+
+function confirmDelete(form = 'list-form') {
+	if ($('input[name="delete[]"]:checked').length && confirm('<?php echo lang('alert_warning_confirm'); ?>')) {
+		$('#'+form).submit();
+	} else {
+		return false;
+	}
+}
 
 function saveClose() {
 	$('#edit-form').append('<input type="hidden" name="save_close" value="1" />');

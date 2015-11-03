@@ -65,7 +65,7 @@ class Locations extends Admin_Controller {
         $this->template->setHeading($this->lang->line('text_heading'));
 
         $this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
-        $this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
+        $this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => 'confirmDelete();'));;
 
 		if ($this->input->get('default') === '1' AND $this->input->get('location_id')) {
 			if ($this->Locations_model->updateDefault($this->Locations_model->getAddress($this->input->get('location_id')))) {

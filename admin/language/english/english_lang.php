@@ -23,12 +23,12 @@ $lang['text_select'] 		                = 'Select';
 $lang['text_remove'] 		                = 'Remove';
 $lang['text_help'] 		                    = 'Click for Help';
 
-$lang['button_new'] 		                = '+ New';
-$lang['button_delete'] 		                = 'Delete';
+$lang['button_new'] 		                = '<i class="fa fa-plus"></i> New';
+$lang['button_delete'] 		                = '<i class="fa fa-trash-o"></i> Delete';
 $lang['button_edit'] 		                = 'Edit';
-$lang['button_save'] 		                = 'Save';
-$lang['button_save_close'] 		            = 'Save & Close';
-$lang['button_icon_back'] 		                = '<i class="fa fa-angle-double-left"></i>';
+$lang['button_save'] 		                = '<i class="fa fa-save"></i> Save';
+$lang['button_save_close'] 		            = '<i class="fa fa-save"></i> Save & Close';
+$lang['button_icon_back'] 		            = '<i class="fa fa-angle-double-left"></i>';
 $lang['button_upload'] 		                = 'Upload';
 $lang['button_upload_close'] 		        = 'Upload & Close';
 $lang['button_close'] 		                = 'Close';

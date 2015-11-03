@@ -23,7 +23,7 @@
                                 <?php $banner_row = 1; ?>
                                 <?php foreach ($module_banners as $banner) { ?>
                                     <tr id="banner-row<?php echo $banner_row; ?>">
-                                        <td class="action action-one"><a class="btn btn-danger" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a></td>
+                                        <td class="action action-one"><a class="btn btn-danger" onclick="confirm('<?php echo lang('alert_warning_confirm'); ?>') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a></td>
                                         <td><select name="banners[<?php echo $banner_row; ?>][banner_id]" class="form-control">
                                                 <?php foreach ($banners as $ban) { ?>
                                                     <?php if ($ban['banner_id'] === $banner['banner_id']) { ?>
@@ -67,7 +67,7 @@ var banner_row = <?php echo $banner_row; ?>;
 
 function addBanner() {
     var html = '<tr id="banner-row' + banner_row + '">';
-    html += '	<td class="action action-one"><a class="btn btn-danger" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a></td>';
+    html += '	<td class="action action-one"><a class="btn btn-danger" onclick="confirm(\'<?php echo lang('alert_warning_confirm'); ?>\') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a></td>';
     html += '	<td><select name="banners[' + banner_row + '][banner_id]" class="form-control">';
     <?php foreach ($banners as $ban) { ?>
         html += '<option value="<?php echo $ban['banner_id']; ?>"><?php echo $ban['name']; ?></option>';

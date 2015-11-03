@@ -2,7 +2,7 @@
 <div class="row content">
 	<div class="col-md-12">
         <div class="row">
-            <div class="col-sm-12 col-md-3">
+            <div class="col-xs-12 col-md-2">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title"><?php echo lang('text_folders'); ?></h3>
@@ -37,7 +37,7 @@
                 </div>
             </div>
 
-            <div class="col-sm-12 col-md-9">
+            <div class="col-xs-12 col-md-10">
                 <div class="panel panel-default panel-table">
                     <div class="panel-heading">
                         <h3 class="panel-title"><?php echo ucwords($filter_folder); ?></h3>

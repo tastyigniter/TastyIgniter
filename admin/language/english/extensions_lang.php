@@ -15,6 +15,8 @@ $lang['text_uninstall'] 		        = 'Uninstall';
 $lang['text_installed'] 		        = 'Installed';
 $lang['text_uninstalled'] 		        = 'Uninstalled';
 
+$lang['button_delete'] 		            = 'Delete';
+
 $lang['column_name'] 		            = 'Name';
 $lang['column_type'] 		            = 'Type';
 $lang['column_version'] 		        = 'Version';

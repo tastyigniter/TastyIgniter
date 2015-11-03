@@ -397,7 +397,7 @@
 											<td><?php echo $table['table_name']; ?></td>
 											<td><?php echo $table['min_capacity']; ?></td>
 											<td><?php echo $table['max_capacity']; ?></td>
-											<td class="img"><a class="btn btn-danger btn-xs" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a><input type="hidden" name="tables[]" value="<?php echo $table['table_id']; ?>" /></td>
+											<td class="img"><a class="btn btn-danger btn-xs" onclick="confirm('<?php echo lang('alert_warning_confirm'); ?>') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a><input type="hidden" name="tables[]" value="<?php echo $table['table_id']; ?>" /></td>
 										</tr>
 										<?php } ?>
 										<?php } ?>
@@ -431,7 +431,7 @@
 												<?php } else { ?>
 													<div class="area-color"><span class="fa-stack"><i class="fa fa-stop fa-stack-2x fa-inverse"></i><i class="fa fa-stop fa-stack-1x" style="color:<?php echo $area['color']; ?>"></i></span></div>
 												<?php } ?>
-												<div class="area-buttons pull-right hide"><a title="<?php echo lang('text_edit'); ?>"><i class="fa fa-pencil"></i></a> &nbsp;&nbsp; <a class="btn-times area-remove" title="Remove" onClick="$(this).parent().parent().parent().remove();"><i class="fa fa-times-circle"></i></a></div>
+												<div class="area-buttons pull-right hide"><a title="<?php echo lang('text_edit'); ?>"><i class="fa fa-pencil"></i></a> &nbsp;&nbsp; <a class="btn-times area-remove" title="Remove" onClick="confirm('<?php echo lang('alert_warning_confirm'); ?>') ? $(this).parent().parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a></div>
 											</div>
 											<div class="collapse">
 												<div class="panel-body">
@@ -535,7 +535,7 @@
 											<tr id="gallery-image<?php echo $gallery_image_row; ?>">
 												<td class="action">
 													<i class="fa fa-sort handle"></i>&nbsp;&nbsp;&nbsp;
-													<a class="btn btn-danger" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a>
+													<a class="btn btn-danger" onclick="confirm('<?php echo lang('alert_warning_confirm'); ?>') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a>
 												</td>
 												<td>
 													<img src="<?php echo $image['thumb']; ?>" class="image-thumb img-responsive">
@@ -627,7 +627,7 @@ $('input[name=\'table\']').select2({
 
 $('input[name=\'table\']').on('select2-selecting', function(e) {
 	$('#table-box' + e.choice.id).remove();
-	$('#table-box table tbody').append('<tr id="table-box' + e.choice.id + '"><td class="name">' + e.choice.text + '</td><td>' + e.choice.min + '</td><td>' + e.choice.max + '</td><td class="img">' + '<a class="btn btn-danger btn-xs" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a>' + '<input type="hidden" name="tables[]" value="' + e.choice.id + '" /></td></tr>');
+	$('#table-box table tbody').append('<tr id="table-box' + e.choice.id + '"><td class="name">' + e.choice.text + '</td><td>' + e.choice.min + '</td><td>' + e.choice.max + '</td><td class="img">' + '<a class="btn btn-danger btn-xs" onclick="confirm(\'<?php echo lang('alert_warning_confirm'); ?>\') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a>' + '<input type="hidden" name="tables[]" value="' + e.choice.id + '" /></td></tr>');
 });
 //--></script>
 <?php if ($has_lat_lng) { ?>
@@ -1030,7 +1030,7 @@ function addDeliveryArea() {
 	html += '		<div class="area-toggle"><i class="fa fa-angle-double-down up"></i><i class="fa fa-angle-double-up down"></i></div>';
 	html += '		<div class="area-name">&nbsp;&nbsp; <?php echo lang('text_area'); ?> ' + panel_row + '</div>';
 	html += '		<div class="area-color"><span class="fa-stack"><i class="fa fa-stop fa-stack-2x fa-inverse"></i><i class="fa fa-stop fa-stack-1x" style="color:' + deliveryArea.color + ';"></i></span></div>';
-	html += '		<div class="area-buttons pull-right hide"><a title="<?php echo lang('text_edit'); ?>"><i class="fa fa-pencil"></i></a> &nbsp;&nbsp; <a class="btn-times area-remove" title="<?php echo lang('text_remove'); ?>" onClick="$(this).parent().parent().parent().remove();"><i class="fa fa-times-circle"></i></a></div>';
+	html += '		<div class="area-buttons pull-right hide"><a title="<?php echo lang('text_edit'); ?>"><i class="fa fa-pencil"></i></a> &nbsp;&nbsp; <a class="btn-times area-remove" title="<?php echo lang('text_remove'); ?>" onClick="confirm(\'<?php echo lang('alert_warning_confirm'); ?>\') ? $(this).parent().parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a></div>';
 	html += '	</div>';
 	html += '	<div class="collapse">';
 	html += '	<div class="panel-body">';
@@ -1105,7 +1105,7 @@ function addDeliveryArea() {
 			image_row = gallery_image_row;
 
 			html = '<tr id="gallery-image' + image_row + '">';
-			html += '	<td class="action action-one"><i class="fa fa-sort handle"></i>&nbsp;&nbsp;&nbsp;<a class="btn btn-danger" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a></td>';
+			html += '	<td class="action action-one"><i class="fa fa-sort handle"></i>&nbsp;&nbsp;&nbsp;<a class="btn btn-danger" onclick="confirm(\'<?php echo lang('alert_warning_confirm'); ?>\') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a></td>';
 			html += '	<td><img src="" class="image-thumb img-responsive" />'
 				+ '<input type="hidden" id="image-thumb' + image_row + '" name="gallery[images][' + image_row + '][path]" value=""></td>';
 			html += '	<td><span class="name"></span><input type="hidden" class="image-name" id="image-name' + image_row + '" name="gallery[images][' + image_row + '][name]" value=""></td>';

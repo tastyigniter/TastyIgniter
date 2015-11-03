@@ -37,7 +37,7 @@ class Messages extends Admin_Controller {
         $this->template->setTitle($this->lang->line('text_title'));
         $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), 'All'));
         $this->template->setButton($this->lang->line('button_compose'), array('class' => 'btn btn-primary', 'href' => site_url('messages/compose')));
-        $this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#message-form\').submit();'));
+        $this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => 'confirmDelete(message-form);'));
 
         $data = $this->getList($data, $filter);
 

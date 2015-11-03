@@ -129,7 +129,7 @@
 					<ul id="sub-tabs" class="nav nav-tabs">
 						<?php $table_row = 1; ?>
 						<?php foreach ($addresses as $address) { ?>
-							<li><a href="#address<?php echo $table_row; ?>" data-toggle="tab"><?php echo lang('text_tab_address'); ?> <?php echo $table_row; ?>&nbsp;&nbsp;<i class="fa fa-times-circle" onclick="$('#sub-tabs a[rel=#address1]').trigger('click'); $('#address<?php echo $table_row; ?>').remove(); $(this).parent().parent().remove(); return false;"></i></a></li>
+							<li><a href="#address<?php echo $table_row; ?>" data-toggle="tab"><?php echo lang('text_tab_address'); ?> <?php echo $table_row; ?>&nbsp;&nbsp;<i class="fa fa-times-circle" onclick="if (confirm('<?php echo lang('alert_warning_confirm'); ?>')) { $('#sub-tabs a[rel=#address1]').trigger('click'); $('#address<?php echo $table_row; ?>').remove(); $(this).parent().parent().remove(); return false; } else { return false;}"></i></a></li>
 							<?php $table_row++; ?>
 						<?php } ?>
 						<li class="add_address"><a onclick="addAddress();"><i class="fa fa-book"></i>&nbsp;<i class="fa fa-plus"></i></a></li>
@@ -255,7 +255,7 @@ function addAddress() {
 
 	$('#new-address').append(html);
 
-	$('.add_address').before('<li><a href="#address' + table_row + '" data-toggle="tab"><?php echo lang('text_tab_address'); ?> ' + table_row + '&nbsp;&nbsp;<i class="fa fa-times-circle" onclick="$(\'#sub-tabs a[rel=#address1]\').trigger(\'click\'); $(\'#address' + table_row + '\').remove(); $(this).parent().parent().remove(); return false;"></i></a></li>');
+	$('.add_address').before('<li><a href="#address' + table_row + '" data-toggle="tab"><?php echo lang('text_tab_address'); ?> ' + table_row + '&nbsp;&nbsp;<i class="fa fa-times-circle" onclick="if (confirm(\'<?php echo lang('alert_warning_confirm'); ?>\')){ $(\'#sub-tabs a[rel=#address1]\').trigger(\'click\'); $(\'#address' + table_row + '\').remove(); $(this).parent().parent().remove(); return false } else { return false;}"></i></a></li>');
 
 	$('#sub-tabs a[href="#address' + table_row + '"]').tab('show');
 	$('select.form-control').select2();

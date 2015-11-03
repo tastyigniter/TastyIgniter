@@ -83,7 +83,7 @@
                                     <?php } ?>
                                     &nbsp;&nbsp;&nbsp;
 									<?php if ($extension['installed'] !== TRUE OR $extension['status'] !== '1') {?>
-										<a class="btn btn-danger" title="<?php echo lang('button_delete'); ?>" href="<?php echo $extension['delete']; ?>"><i class="fa fa-trash-o"></i></a>
+										<a class="btn btn-danger delete" title="<?php echo lang('button_delete'); ?>" href="<?php echo $extension['delete']; ?>"><i class="fa fa-trash-o"></i></a>
                                     <?php } ?>
 								</td>
 								<td><?php echo $extension['title']; ?></td>
@@ -116,5 +116,13 @@
     function filterList() {
         $('#filter-form').submit();
     }
+
+    $(document).ready(function() {
+        $('a.delete').click(function(){
+            if (!confirm('<?php echo lang('alert_warning_confirm'); ?>')) {
+                return false;
+            }
+        });
+    })
 //--></script>
 <?php echo get_footer(); ?>

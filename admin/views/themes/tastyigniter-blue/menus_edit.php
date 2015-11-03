@@ -140,7 +140,7 @@
 						<ul id="sub-tabs" class="nav nav-tabs">
 							<?php $option_row = 1; ?>
 							<?php foreach ($menu_options as $menu_option) { ?>
-								<li><a href="#option<?php echo $option_row; ?>" data-toggle="tab"><?php echo $menu_option['option_name']; ?>&nbsp;&nbsp;<i class="fa fa-times-circle" onclick="$('#sub-tabs a[rel=#option1]').trigger('click'); $('#option<?php echo $option_row; ?>').remove(); $(this).parent().parent().remove(); return false;"></i></a></li>
+								<li><a href="#option<?php echo $option_row; ?>" data-toggle="tab"><?php echo $menu_option['option_name']; ?>&nbsp;&nbsp;<i class="fa fa-times-circle" onclick="if (confirm('<?php echo lang('alert_warning_confirm'); ?>')) { $('#sub-tabs a[rel=#option1]').trigger('click'); $('#option<?php echo $option_row; ?>').remove(); $(this).parent().parent().remove(); return false; } else { return false;}"></i></a></li>
 								<?php $option_row++; ?>
 							<?php } ?>
 							<li id="last-tab"></li>
@@ -192,7 +192,7 @@
 												<tbody>
 												<?php foreach ($menu_option['option_values'] as $value) { ?>
 													<tr id="option-value<?php echo $option_value_row; ?>">
-														<td class="action action-one"><a class="btn btn-danger" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a></td>
+														<td class="action action-one"><a class="btn btn-danger" onclick="confirm('<?php echo lang('alert_warning_confirm'); ?>') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a></td>
 														<td>
 															<select name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][option_value_id]" class="form-control">
 															<?php if (isset($option_values[$menu_option['option_id']])) { ?>
@@ -407,7 +407,7 @@ function addOption(data) {
 	html += '</div>';
 
 	$('#option-content').append(html);
-	$('#last-tab').before('<li><a href="#option' + option_row + '" data-toggle="tab">' + data.text + '&nbsp;&nbsp;<i class="fa fa-times-circle" onclick="$(\'#sub-tabs a[rel=#option1]\').trigger(\'click\'); $(\'#option' + option_row + '\').remove(); $(this).parent().parent().remove(); return false;"></i></a></li>');
+	$('#last-tab').before('<li><a href="#option' + option_row + '" data-toggle="tab">' + data.text + '&nbsp;&nbsp;<i class="fa fa-times-circle" onclick="if (confirm(\'<?php echo lang('alert_warning_confirm'); ?>\')) { $(\'#sub-tabs a[rel=#option1]\').trigger(\'click\'); $(\'#option' + option_row + '\').remove(); $(this).parent().parent().remove(); return false;} else {return false;}"></i></a></li>');
 	$('#sub-tabs a[href="#option' + option_row + '"]').tab('show');
 
 	addOptionValue(option_row);
@@ -416,7 +416,7 @@ function addOption(data) {
 
 function addOptionValue(option_row) {
 	html  = '<tr id="option-value' + option_value_row + '">';
-	html += '	<td class="action action-one"><a class="btn btn-danger" onclick="$(this).parent().parent().remove();"><i class="fa fa-times-circle"></i></a></td>';
+	html += '	<td class="action action-one"><a class="btn btn-danger" onclick="confirm(\'<?php echo lang('alert_warning_confirm'); ?>\') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a></td>';
 	html += '	<td><select name="menu_options[' + option_row + '][option_values][' + option_value_row + '][option_value_id]" class="form-control">';
 	html += $('#option-values' + option_row).html();
 	html += '	</select></td>';

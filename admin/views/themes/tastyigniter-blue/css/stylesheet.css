@@ -528,6 +528,13 @@ padding: 6px 15px;
 font-size: 18px;
 padding: 0;
 }
+.page-header .btn .fa-save,
+.page-header .btn .fa-trash-o,
+.page-header .btn .fa-plus {
+font-size: 13px;
+margin-left: -5px;
+padding-right: 3px;
+}
 .page-header .btn-back {
 padding: 0;
 float: left;
@@ -1936,14 +1943,14 @@ width:160px !important;
 width: 80px !important;
 }
 .thumbnail {
-border: 1px solid #d2dce7;
+border: 0px solid #d2dce7;
+border-radius: 0px 0px 4px 4px;
 padding: 0;
 }
-.thumbnail > img {
-border-top-left-radius: 4px;
-border-top-right-radius: 4px;
-}
 .thumbnail .caption {
+border-right: 1px solid #d2dce7;
+border-left: 1px solid #d2dce7;
+border-bottom: 1px solid #d2dce7;
 padding-top:20px;
 }
 .thumbnail .caption h1,
@@ -2423,16 +2430,16 @@ bottom: 0;
 position: absolute;
 content: " ";
 width: 3px;
-left: 110px;
+left: 125px;
 margin-left: -1.5px;
 }
 .timeline > li {
 position: relative;
-margin-left: 90px;
+margin-left: 105px;
 }
 .timeline > .time-label {
 margin-bottom: 20px;
-margin-left: 70px;
+margin-left: 85px;
 }
 .timeline > .time-label > span {
 background-color: #ecf0f5;
@@ -2452,7 +2459,7 @@ margin-bottom: 30px;
 }
 .timeline .timeline-time {
 position: absolute;
-left: -90px;
+left: -105px;
 text-align: left;
 padding: 5px 10px;
 box-sizing: border-box;

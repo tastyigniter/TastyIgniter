@@ -52,6 +52,7 @@ $lang['help_stock_qty'] 		        = 'Set to 0 for unlimited stock quantity.';
 $lang['help_minimum_qty'] 		        = 'The minimum quantity that can be ordered. Default is 1, unless set otherwise.';
 $lang['help_option_required'] 		    = 'Enable/Disable if customer must choose option.';
 
+$lang['button_add_menu_options'] 		= 'Add New Menu Option';
 
 
 /* End of file menus_lang.php */
