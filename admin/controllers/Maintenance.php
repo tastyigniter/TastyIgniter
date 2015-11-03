@@ -79,13 +79,6 @@ class Maintenance extends Admin_Controller {
     public function backup() {
         $this->user->restrict('Admin.Maintenance.Manage');
 
-        $checked_tables = ($this->session->flashdata('tables')) ? $this->session->flashdata('tables') : $this->input->post('tables');
-        if ( ! $this->Maintenance_model->checkTables($checked_tables)) {
-            redirect('maintenance');
-        } else if ($this->input->post('tables') AND $this->input->post('compression') AND $this->_backup() === TRUE) {
-            redirect('maintenance');
-        }
-
         $data['backup_tables'] = TRUE;
 
         $timestamp = mdate('%Y-%m-%d-%H-%i-%s', now());
@@ -102,6 +95,13 @@ class Maintenance extends Admin_Controller {
         } else if ($this->input->get('download') AND $this->_download() === TRUE) {
             redirect('maintenance');
         } else if ($this->input->get('delete') AND $this->_delete() === TRUE) {
+            redirect('maintenance');
+        }
+
+        $checked_tables = ($this->session->flashdata('tables')) ? $this->session->flashdata('tables') : $this->input->post('tables');
+        if ( ! $this->Maintenance_model->checkTables($checked_tables)) {
+            redirect('maintenance');
+        } else if ($this->input->post('tables') AND $this->input->post('compression') AND $this->_backup() === TRUE) {
             redirect('maintenance');
         }
 
@@ -214,7 +214,7 @@ class Maintenance extends Admin_Controller {
             $restore = pathinfo($this->security->sanitize_filename($this->input->get('restore')));
             $restore_path = ROOTPATH . "assets/downloads/" . $restore['filename'] . ".sql";
 
-            if ($restore['extension'] === 'sql' AND strpos($restore_path, 'tastyigniter-') === 0 AND is_file($restore_path)) {
+            if ($restore['extension'] === 'sql' AND strpos($restore_path, 'tastyigniter-') !== FALSE AND is_file($restore_path)) {
                 if ($this->Maintenance_model->restoreDatabase($restore_path)) { // calls model to save data to SQL
                     $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Database restored '));
                 }
