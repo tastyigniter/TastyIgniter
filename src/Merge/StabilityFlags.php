@@ -109,7 +109,7 @@ class StabilityFlags
         }
 
         // Filter out null stability values
-        return array_filter($flags, function($v) {
+        return array_filter($flags, function ($v) {
             return $v !== null;
         });
     }
