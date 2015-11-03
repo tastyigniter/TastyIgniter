@@ -48,7 +48,7 @@ function mediaManager(field) {
 
     var iframe_url = js_site_url('image_manager?popup=iframe&field_id=') + encodeURIComponent(field) + '&sub_folder=' + $('#' + field).attr('value');
 
-	$('body').append('<div id="media-manager" class="modal" tabindex="-1" data-parent="note-editor" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">'
+	$('body').append('<div id="media-manager" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">'
 		+ '<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header">'
 		+ '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>'
 		+ '<h4 class="modal-title">Image Manager</h4>'

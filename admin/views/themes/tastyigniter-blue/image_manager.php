@@ -492,8 +492,15 @@
             function chooseSelected(figure) {
                 var field = parent.$('#' + $('#field_id').val());
                 var file_path = 'data/' + figure.attr('data-path');
-                var file_name = figure.attr('data-name');
-                var thumb_name = field.parent().parent().find('.name');
+
+                if ($('#field_id').attr('value').length) {
+                    var file_name = figure.attr('data-name');
+                    var thumb_name = field.parent().parent().find('.name');
+
+                    field.attr('value', file_path);
+                    thumb_name.html(file_name);
+                    parent.$('#media-manager').modal('hide');
+                }
 
                 if (parent.$('#media-manager.modal[data-parent="note-editor"]').is(':visible')) {
 	                // Get the current selection
