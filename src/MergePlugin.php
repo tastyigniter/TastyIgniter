@@ -11,6 +11,7 @@
 namespace Wikimedia\Composer;
 
 use Wikimedia\Composer\Merge\ExtraPackage;
+use Wikimedia\Composer\Merge\MissingFileException;
 use Wikimedia\Composer\Merge\PluginState;
 
 use Composer\Composer;
@@ -144,7 +145,8 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     {
         $this->state->loadSettings();
         $this->state->setDevMode($event->isDevMode());
-        $this->mergeIncludes($this->state->getIncludes());
+        $this->mergeFiles($this->state->getIncludes(), false);
+        $this->mergeFiles($this->state->getRequires(), true);
 
         if ($event->getName() === ScriptEvents::PRE_AUTOLOAD_DUMP) {
             $this->state->setDumpAutoloader(true);
@@ -159,16 +161,29 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
      * Find configuration files matching the configured glob patterns and
      * merge their contents with the master package.
      *
-     * @param array $includes List of files/glob patterns
+     * @param array $patterns List of files/glob patterns
+     * @param bool $required Are the patterns required to match files?
+     * @throws MissingFileException when required and a pattern returns no
+     *      results
      */
-    protected function mergeIncludes(array $includes)
+    protected function mergeFiles(array $patterns, $required = false)
     {
         $root = $this->composer->getPackage();
-        foreach (array_reduce(
-            array_map('glob', $includes),
-            'array_merge',
-            array()
-        ) as $path) {
+
+        $files = array_map(
+            function ($files, $pattern) use ($required) {
+                if ($required && !$files) {
+                    throw new MissingFileException(
+                        "merge-plugin: No files matched required '{$pattern}'"
+                    );
+                }
+                return $files;
+            },
+            array_map('glob', $patterns),
+            $patterns
+        );
+
+        foreach (array_reduce($files, 'array_merge', array()) as $path) {
             $this->mergeFile($root, $path);
         }
     }
@@ -193,7 +208,8 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
         $package->mergeInto($root, $this->state);
 
         if ($this->state->recurseIncludes()) {
-            $this->mergeIncludes($package->getIncludes());
+            $this->mergeFiles($package->getIncludes(), false);
+            $this->mergeFiles($package->getRequires(), true);
         }
     }
 

@@ -30,6 +30,11 @@ class PluginState
     protected $includes = array();
 
     /**
+     * @var array $requires
+     */
+    protected $requires = array();
+
+    /**
      * @var array $duplicateLinks
      */
     protected $duplicateLinks = array();
@@ -106,6 +111,7 @@ class PluginState
         $config = array_merge(
             array(
                 'include' => array(),
+                'require' => array(),
                 'recurse' => true,
                 'replace' => false,
                 'merge-dev' => true,
@@ -116,6 +122,8 @@ class PluginState
 
         $this->includes = (is_array($config['include'])) ?
             $config['include'] : array($config['include']);
+        $this->requires = (is_array($config['require'])) ?
+            $config['require'] : array($config['require']);
         $this->recurse = (bool)$config['recurse'];
         $this->replace = (bool)$config['replace'];
         $this->mergeDev = (bool)$config['merge-dev'];
@@ -130,6 +138,16 @@ class PluginState
     public function getIncludes()
     {
         return $this->includes;
+    }
+
+    /**
+     * Get list of filenames and/or glob patterns to require
+     *
+     * @return array
+     */
+    public function getRequires()
+    {
+        return $this->requires;
     }
 
     /**

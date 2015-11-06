@@ -188,7 +188,6 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
     }
 
 
-
     /**
      * Given a root package with no requires
      *   and a composer.local.json with one require, which includes a composer.local.2.json
@@ -225,6 +224,7 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, count($extraInstalls));
     }
 
+
     /**
      * Given a root package with no requires that disables recursion
      *   and a composer.local.json with one require, which includes a composer.local.2.json
@@ -260,6 +260,7 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(0, count($extraInstalls));
     }
+
 
     /**
      * Given a root package with requires
@@ -310,6 +311,7 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('monolog/monolog', $extraInstalls[0][0]);
         $this->assertEquals('foo', $extraInstalls[1][0]);
     }
+
 
     /**
      * Given a root package
@@ -391,6 +393,7 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, count($extraInstalls));
     }
 
+
     /**
      * Given a root package
      *   and a composer.local.json with required packages
@@ -448,6 +451,7 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(0, count($extraInstalls));
     }
+
 
     public function testMergedAutoload()
     {
@@ -528,6 +532,7 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+
     /**
      * Given a root package with an extra section
      *   and a composer.local.json with an extra section with no conflicting keys
@@ -564,6 +569,7 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, count($extraInstalls));
     }
 
+
     /**
      * Given a root package with an extra section
      *   and a composer.local.json with an extra section with a conflicting key
@@ -599,6 +605,7 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(0, count($extraInstalls));
     }
+
 
     /**
      * Given a root package with an extra section
@@ -637,6 +644,7 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, count($extraInstalls));
     }
 
+
     /**
      * @dataProvider provideOnPostPackageInstall
      * @param string $package Package installed
@@ -665,6 +673,7 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($locked, $this->getState()->isLocked());
     }
 
+
     public function provideOnPostPackageInstall()
     {
         return array(
@@ -673,6 +682,7 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
             array('foo/bar', false, false),
         );
     }
+
 
     /**
      * Given a root package with a branch alias
@@ -768,6 +778,7 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
     }
 
+
     /**
      * Test replace link with self.version as version constraint.
      */
@@ -856,6 +867,7 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
     }
 
+
     /**
      * Given a root package with merge-dev=false
      *   and an include with require-dev and autoload-dev sections
@@ -880,6 +892,39 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
         $root->setRepositories(Argument::type('array'))->shouldNotBeCalled();
 
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
+        $this->assertEquals(0, count($extraInstalls));
+    }
+
+
+    /**
+     * @expectedException \Wikimedia\Composer\Merge\MissingFileException
+     */
+    public function testMissingRequireThrowsException()
+    {
+        $dir = $this->fixtureDir(__FUNCTION__);
+        $root = $this->rootFromJson("{$dir}/composer.json");
+        $root->getRequires()->shouldNotBeCalled();
+        $this->triggerPlugin($root->reveal(), $dir);
+    }
+
+
+    public function testRequire()
+    {
+        $that = $this;
+        $dir = $this->fixtureDir(__FUNCTION__);
+
+        $root = $this->rootFromJson("{$dir}/composer.json");
+
+        $root->setRequires(Argument::type('array'))->will(
+            function ($args) use ($that) {
+                $requires = $args[0];
+                $that->assertEquals(1, count($requires));
+                $that->assertArrayHasKey('monolog/monolog', $requires);
+            }
+        );
+
+        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
+
         $this->assertEquals(0, count($extraInstalls));
     }
 
