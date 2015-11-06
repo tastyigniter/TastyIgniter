@@ -45,7 +45,7 @@ class StabilityFlags
         $minimumStability = BasePackage::STABILITY_STABLE
     ) {
         $this->stabilityFlags = $stabilityFlags;
-        $this->minimumStability = $this->getStability($minimumStability);
+        $this->minimumStability = $this->getStabilityInt($minimumStability);
         $this->explicitStabilityRe = '/^[^@]*?@(' .
             implode('|', array_keys(BasePackage::$stabilities)) .
             ')$/i';
@@ -57,7 +57,7 @@ class StabilityFlags
      * @param string $name Stability name
      * @return int Stability value
      */
-    protected function getStability($name)
+    protected function getStabilityInt($name)
     {
         $name = VersionParser::normalizeStability($name);
         return isset(BasePackage::$stabilities[$name]) ?
@@ -83,29 +83,10 @@ class StabilityFlags
             $stability = $this->getExplicitStability($version);
 
             if ($stability === null) {
-                // Drop aliasing if used
-                $version = preg_replace('/^([^,\s@]+) as .+$/', '$1', $version);
-                $stability = $this->getStability(
-                    VersionParser::parseStability($version)
-                );
-
-                if ($stability === BasePackage::STABILITY_STABLE ||
-                    $this->minimumStability > $stability
-                ) {
-                    // Ignore if 'stable' or more stable than the global
-                    // minimum
-                    $stability = null;
-                }
+                $stability = $this->getParsedStability($version);
             }
 
-            if (isset($this->stabilityFlags[$name]) &&
-                $this->stabilityFlags[$name] > $stability
-            ) {
-                // Keep current if more unstable
-                $stability = $this->stabilityFlags[$name];
-            }
-
-            $flags[$name] = $stability;
+            $flags[$name] = max($stability, $this->getCurrentStability($name));
         }
 
         // Filter out null stability values
@@ -128,10 +109,8 @@ class StabilityFlags
         $constraints = $this->splitConstraints($version);
         foreach ($constraints as $constraint) {
             if (preg_match($this->explicitStabilityRe, $constraint, $match)) {
-                $stability = $this->getStability($match[1]);
-                if ($found === null || $stability > $found) {
-                    $found = $stability;
-                }
+                $stability = $this->getStabilityInt($match[1]);
+                $found = max($stability, $found);
             }
         }
         return $found;
@@ -158,6 +137,45 @@ class StabilityFlags
             }
         }
         return $found;
+    }
+
+
+    /**
+     * Get the stability of a version
+     *
+     * @param string $version
+     * @return int|null Stability or null if STABLE or less than minimum
+     */
+    protected function getParsedStability($version)
+    {
+        // Drop aliasing if used
+        $version = preg_replace('/^([^,\s@]+) as .+$/', '$1', $version);
+        $stability = $this->getStabilityInt(
+            VersionParser::parseStability($version)
+        );
+
+        if ($stability === BasePackage::STABILITY_STABLE ||
+            $this->minimumStability > $stability
+        ) {
+            // Ignore if 'stable' or more stable than the global
+            // minimum
+            $stability = null;
+        }
+
+        return $stability;
+    }
+
+
+    /**
+     * Get the current stability of a given package.
+     *
+     * @param string $name
+     * @return int|null Stability of null if not set
+     */
+    protected function getCurrentStability($name)
+    {
+        return isset($this->stabilityFlags[$name]) ?
+            $this->stabilityFlags[$name] : null;
     }
 }
 // vim:sw=4:ts=4:sts=4:et:
