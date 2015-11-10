@@ -183,7 +183,7 @@
             <div class="panel-body">
                 <div class="chart-legend"></div>
                 <div class="chart-responsive">
-                    <canvas id="chart-holder" width="960px" height="295px"></canvas>
+                    <div id="chart-holder" width="960px" height="295px"></div>
                 </div>
             </div>
         </div>
@@ -289,10 +289,6 @@
     </div>
 </div>
 <script type="text/javascript"><!--
-$(document).ready(function() {
-	$('.dropdown-menu-range a[rel="today"]').trigger('click');
-});
-
 $(document).on('click', '.dropdown-menu-range a', function() {
 	if ($(this).parent().is(':not(.active)')) {
 		$('.dropdown-menu-range li').removeClass('active');
@@ -302,8 +298,6 @@ $(document).on('click', '.dropdown-menu-range a', function() {
 	}
 });
 
-//--></script>
-<script type="text/javascript"><!--
 function getStatistics(stat_range) {
 	$.ajax({
 		type: 'GET',
@@ -368,70 +362,36 @@ $(document).ready(function() {
     $('button.daterange').on('apply.daterangepicker', function(ev, picker) {
         getChart(picker.startDate.format('YYYY-MM-DD'), picker.endDate.format('YYYY-MM-DD'));
     });
+
+    $('.dropdown-menu-range a[rel="today"]').trigger('click');
+});
+
+var monthNames = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
+    "Aug", "Sep", "Oct", "Nov", "Dec"
+];
+
+var myAreaChart = Morris.Area({
+    element: 'chart-holder',
+    data: [],
+    xkey: 'time',
+    ykeys: ['customers', 'orders', 'reservations', 'reviews'],
+    labels: ['Total customer', 'Total order', 'Total reservation', 'Total reviews'],
+    lineColors: ['#63ADD0', '#5CB85C', '#337AB7', '#D9534F'],
+    parseTime: false,
+    behaveLikeLine: true,
+    resize: true,
+    hideHover: true,
 });
 
 function getChart(startDate, endDate) {
-    var ctx = $("#chart-holder").get(0).getContext("2d");
-    var myLineChart;
-
-	$.ajax({
+    $.ajax({
 		type: 'GET',
 		url: '<?php echo site_url("dashboard/chart?start_date="); ?>' + startDate + '&end_date=' + endDate,
 		dataType: 'json',
 		async: false,
 		success: function(json) {
-            var myChartData = {
-                labels: json.labels,
-                datasets: [
-                    {
-                        label: json.customers.label,
-                        fillColor: "rgba(" + json.customers.color + ",0.2)",
-                        strokeColor:  "rgba(" + json.customers.color + ",1)",
-                        pointColor:  "rgba(" + json.customers.color + ",1)",
-                        pointStrokeColor: "#fff",
-                        pointHighlightFill: "#fff",
-                        pointHighlightStroke:  json.customers.color, //"rgba(220,220,220,1)",
-                        data:  json.customers.data
-                    },
-                    {
-                        label: json.orders.label,
-                        fillColor: "rgba(" + json.orders.color + ",0.2)",
-                        strokeColor:  "rgba(" + json.orders.color + ",1)",
-                        pointColor:  "rgba(" + json.orders.color + ",1)",
-                        pointStrokeColor: "#fff",
-                        pointHighlightFill: "#fff",
-                        pointHighlightStroke:  "rgba(" + json.orders.color + ",1)",
-                        data:  json.orders.data
-                    },
-                    {
-                        label: json.reservations.label,
-                        fillColor: "rgba(" + json.reservations.color + ",0.2)",
-                        strokeColor:  "rgba(" + json.reservations.color + ",1)",
-                        pointColor:  "rgba(" + json.reservations.color + ",1)",
-                        pointStrokeColor: "#fff",
-                        pointHighlightFill: "#fff",
-                        pointHighlightStroke:  "rgba(" + json.reservations.color + ",1)",
-                        data:  json.reservations.data
-                    },
-                    {
-                        label: json.reviews.label,
-                        fillColor: "rgba(" + json.reviews.color + ",0.2)",
-                        strokeColor:  "rgba(" + json.reviews.color + ",1)",
-                        pointColor:  "rgba(" + json.reviews.color + ",1)",
-                        pointStrokeColor: "#fff",
-                        pointHighlightFill: "#fff",
-                        pointHighlightStroke:  "rgba(" + json.reviews.color + ",1)",
-                        data:  json.reviews.data
-                    }
-                ]
-            };
-
-            myLineChart = new Chart(ctx).Line(myChartData, {
-                responsive: true,
-                legendTemplate : "<p class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><span class=\"label label-default\" style=\"background-color:<%=datasets[i].pointColor%>\"><%if(datasets[i].label){%><%=datasets[i].label%><%}%></span><%}%></p>"
-            });
-
-            $('.chart-legend').html(myLineChart.generateLegend());
+            myAreaChart.setData(json.data);
         }
 	});
 }

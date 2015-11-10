@@ -20,9 +20,11 @@ class Dashboard extends Admin_Controller {
         $this->template->setStyleTag(root_url('assets/js/daterange/daterangepicker-bs3.css'), 'daterangepicker-css', '100400');
         $this->template->setScriptTag(root_url('assets/js/daterange/moment.min.js'), 'daterange-moment-js', '1000451');
         $this->template->setScriptTag(root_url('assets/js/daterange/daterangepicker.js'), 'daterangepicker-js', '1000452');
-        $this->template->setScriptTag(root_url('assets/js/Chart.min.js'), 'chart-min-js', '1000453');
+        $this->template->setStyleTag(root_url('assets/js/morris/morris.css'), 'chart-css', '100500');
+        $this->template->setScriptTag(root_url('assets/js/morris/raphael-min.js'), 'raphael-min-js', '1000453');
+        $this->template->setScriptTag(root_url('assets/js/morris/morris.min.js'), 'morris-min-js', '1000454');
 
-		$data['total_menus'] 					= $this->Dashboard_model->getTotalMenus();
+		$data['total_menus'] 		    = $this->Dashboard_model->getTotalMenus();
 		$data['current_month'] 			= mdate('%Y-%m', time());
 
 		$data['months'] = array();
@@ -134,11 +136,8 @@ class Dashboard extends Admin_Controller {
 		$json = array();
 		$results = array();
 
-        $json['labels'] = array();
-        $json['customers'] = array('label' => 'Total Customers', 'color' => '99, 173, 208');
-        $json['orders'] = array('label' => 'Total Orders', 'color' => '255, 184, 0');
-        $json['reservations'] = array('label' => 'Total Reservations', 'color' => '255, 104, 64');
-        $json['reviews'] = array('label' => 'Total Reviews', 'color' => '0, 174, 104');
+        $json['labels'] = array('Total Customers', 'Total Orders', 'Total Reservations', 'Total Reviews');
+        $json['colors'] = array('#63ADD0', '#5CB85C', '#337AB7', '#D9534F');
 
         $dateRanges = '1';
         if ($this->input->get('start_date') AND $this->input->get('start_date') !== 'undefined') {
@@ -147,24 +146,26 @@ class Dashboard extends Admin_Controller {
             }
         }
 
-		if (count($dateRanges) <= 1) {
+        $timestamp = strtotime($this->input->get('start_date'));
+
+        if (count($dateRanges) <= 1) {
             for ($i = 0; $i < 24; $i++) {
-                $results[] = $this->Dashboard_model->getTodayChart($i);
-                $json['labels'][] = mdate('%Hhr', mktime($i, 0, 0, date('n'), date('j'), date('Y')));
+                $data = $this->Dashboard_model->getTodayChart($i);
+                $data['time'] = mdate('%H:%i', mktime($i, 0, 0, date('n', $timestamp), date('j', $timestamp), date('Y', $timestamp)));
+                $results[] = $data;
             }
         } else {
             for ($i = 0; $i < count($dateRanges); $i++) {
-                $results[] = $this->Dashboard_model->getDateChart($dateRanges[$i]);
-                $json['labels'][] = mdate('%d %M', strtotime($dateRanges[$i]));
+                $data = $this->Dashboard_model->getDateChart($dateRanges[$i]);
+                $data['time'] = mdate('%d %M', strtotime($dateRanges[$i]));
+                $results[] = $data;
             }
         }
 
 		if (!empty($results)) {
-            foreach ($results as $result) {
-                foreach ($result as $key => $value) {
-                    $json[$key]['data'][] = $value;
-                }
-			}
+            foreach ($results as $key => $value) {
+                $json['data'][] = $value;
+            }
         }
 
 		$this->output->set_output(json_encode($json));
