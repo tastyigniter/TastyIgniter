@@ -25,6 +25,7 @@ $lang['text_email_not_sent'] 		    = 'Reservation Confirmation Email not SENT';
 $lang['text_no_booking'] 		        = 'No Bookings';
 $lang['text_half_booking'] 		        = 'Half Booked';
 $lang['text_fully_booked'] 		        = 'Fully Booked';
+$lang['text_no_comment'] 		        = 'No status update comment';
 
 $lang['column_id'] 		                = 'ID';
 $lang['column_location'] 		        = 'Location';

@@ -23,6 +23,7 @@ $lang['text_order_details'] 		    = 'Order Details';
 $lang['text_customer_details'] 		    = 'Customer Details';
 $lang['text_status_history'] 		    = 'Status History';
 $lang['text_no_match'] 		            = 'No Matches Found';
+$lang['text_no_comment'] 		        = 'No status update comment';
 $lang['text_email_sent'] 		        = 'Email SENT';
 $lang['text_email_not_sent'] 		    = 'Email not SENT';
 $lang['text_transaction_detail'] 		= 'View Transaction Details';

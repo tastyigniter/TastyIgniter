@@ -160,7 +160,7 @@
 										</div>
 									</div>
 									<div class="form-group col-xs-12">
-										<label for="input-name" class="control-label"><?php echo lang('label_notify'); ?></label>
+										<label for="input-name" class="control-label"><?php echo lang('column_notify'); ?></label>
 										<div class="">
 											<?php if ($notify === '1') { ?>
 												<?php echo lang('text_email_sent'); ?>

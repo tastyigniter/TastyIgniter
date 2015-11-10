@@ -99,8 +99,10 @@ class Mail_templates extends Admin_Controller {
 			'password_reset_alert'  => $this->lang->line('text_password_reset_alert'),
 			'order'					=> $this->lang->line('text_order'),
 			'order_alert'			=> $this->lang->line('text_order_alert'),
+			'order_update'			=> $this->lang->line('text_order_update'),
 			'reservation'			=> $this->lang->line('text_reservation'),
 			'reservation_alert'		=> $this->lang->line('text_reservation_alert'),
+			'reservation_update'	=> $this->lang->line('text_reservation_update'),
 			'internal'				=> $this->lang->line('text_internal'),
 			'contact'				=> $this->lang->line('text_contact'),
 		);
@@ -292,6 +294,16 @@ class Mail_templates extends Admin_Controller {
 		        array(
 			        'var'  => '{reservation_guest_no}',
 			        'name' => 'No. of guest reserved',
+		        ),
+	        ),
+	        'Status' => array(
+		        array(
+			        'var'  => '{status_name}',
+			        'name' => 'Status name',
+		        ),
+		        array(
+			        'var'  => '{status_comment}',
+			        'name' => 'Status comment',
 		        ),
 	        ),
 	        'Contact' => array(
