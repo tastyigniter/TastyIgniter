@@ -5,7 +5,7 @@ $lang['text_checkout']                  = 'Almost there, Please confirm your det
 $lang['text_payments']                  = 'Please choose your payment method.';
 $lang['text_registered']                = 'Already have an account? <a href="%s">Login Here</a>';
 $lang['text_logout']                    = 'Welcome Back %s, Not You? <a href="%s">Logout</a>';
-$lang['text_asap']                      = 'ASAP';
+$lang['text_asap']                      = 'As soon as possible';
 $lang['text_step_one']                  = 'Step 1';
 $lang['text_step_one_summary']          = 'Your Details';
 $lang['text_step_two']                  = 'Step 2';

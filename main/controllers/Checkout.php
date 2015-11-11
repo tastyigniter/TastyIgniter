@@ -337,15 +337,14 @@ class Checkout extends Main_Controller {
         $current_time = $this->location->currentTime(); 								// retrieve the location current time from location library
 
         $data['delivery_times'] = array();
-        $data['asap_time'] = mdate('%H:%i', strtotime($current_time) + $this->location->deliveryTime() * 60);
+        $start_time = mdate('%H:%i', strtotime($current_time) + $this->location->deliveryTime() * 60);
+        $delivery_times = time_range($this->location->openingTime(), $this->location->lastOrderTime(), $this->location->deliveryTime());    // retrieve the location delivery times from location library
 
-        if (strtotime($current_time) > strtotime($this->location->openingTime())) {
-            $delivery_times = time_range($this->location->openingTime(), $this->location->lastOrderTime(), $this->location->deliveryTime());    // retrieve the location delivery times from location library
-
-            foreach ($delivery_times as $key => $value) {                                            // loop through delivery times
-                if ((strtotime($value) > strtotime($data['asap_time'])) OR $this->config->item('future_orders') === '1') {
-                    $data['delivery_times'][$value] = mdate($time_format, strtotime($value));
-                }
+        foreach ($delivery_times as $key => $value) {                                            // loop through delivery times
+            if (strtotime($value) > strtotime($start_time) AND $this->config->item('future_orders') !== '1') {
+                $data['delivery_times'][$value] = mdate($time_format, strtotime($value));
+            } else if (strtotime($value) > strtotime($start_time) AND $this->config->item('future_orders') === '1') {
+                $data['delivery_times'][$value] = mdate($time_format, strtotime($value));
             }
         }
 

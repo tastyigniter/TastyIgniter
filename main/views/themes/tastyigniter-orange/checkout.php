@@ -98,13 +98,17 @@
 											<label for="order-time"><?php echo lang('label_order_time'); ?></label>
                                             <?php if ($delivery_times) { ?>
                                                 <select name="order_time" id="order-time" class="form-control">
-                                                    <option value="<?php echo $asap_time; ?>"><?php echo lang('text_asap'); ?></option>
+                                                    <?php $hour = 1; ?>
                                                     <?php foreach ($delivery_times as $key => $value) { ?>
+                                                        <?php $value = ($hour === 1) ? $value .' - '. lang('text_asap') : $value; ?>
+
                                                         <?php if ($key === $order_time) { ?>
                                                             <option value="<?php echo $key; ?>" selected="selected"><?php echo $value; ?></option>
                                                         <?php } else { ?>
                                                             <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
                                                         <?php } ?>
+
+                                                        <?php $hour++; ?>
                                                     <?php } ?>
                                                 </select>
                                             <?php } else { ?>
