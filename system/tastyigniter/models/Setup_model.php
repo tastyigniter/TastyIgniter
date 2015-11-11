@@ -116,7 +116,7 @@ class Setup_model extends TI_Model {
 
 		foreach ($setting as $key => $value) {
 			$setting_row = array(
-				'sort'       => ($key === 'ti_setup') ? 'prefs' : 'core',
+				'sort'       => ($key === 'ti_setup') ? 'prefs' : 'config',
 				'item'       => $key,
 				'value'      => $value,
 				'serialized' => '0',

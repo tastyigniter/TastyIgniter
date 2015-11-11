@@ -15,13 +15,20 @@ class Settings_model extends TI_Model {
 		return $result;
 	}
 
-	public function updateSettings($sort, $update = array()) {
+	public function updateSettings($sort, $update = array(), $flush = FALSE) {
 		if ( ! empty($update) && ! empty($sort)) {
+			if ($flush === TRUE) {
+				$this->db->where('sort', $sort);
+				$this->db->delete('settings');
+			}
+
 			foreach ($update as $item => $value) {
 				if ( ! empty($item)) {
-					$this->db->where('sort', $sort);
-					$this->db->where('item', $item);
-					$this->db->delete('settings');
+					if ($flush === FALSE) {
+						$this->db->where('sort', $sort);
+						$this->db->where('item', $item);
+						$this->db->delete('settings');
+					}
 
 					if (isset($value)) {
 						$serialized = '0';
