@@ -223,9 +223,9 @@ class Locations_model extends TI_Model {
 
 		$this->db->set('location_status', '1');
 
-		$location_id = 0;
-		if (isset($address['location_id']) AND is_numeric($address['location_id'])) {
-			$location_id = (int) $address['location_id'];
+		$location_id = (isset($address['location_id']) AND is_numeric($address['location_id'])) ? (int) $address['location_id'] : $this->config->item('default_location_id');
+
+		if (is_numeric($location_id)) {
 			$this->db->where('location_id', $location_id);
 			$query = $this->db->update('locations');
 		} else {
@@ -235,7 +235,7 @@ class Locations_model extends TI_Model {
 		}
 
 		if ($query === TRUE AND is_numeric($location_id)) {
-			$this->Settings_model->addSetting('config', 'main_address', $this->getAddress($location_id), '1');
+			$this->Settings_model->addSetting('prefs', 'main_address', $this->getAddress($location_id), '1');
 			$this->Settings_model->addSetting('prefs', 'default_location_id', $location_id, '0');
 		}
 
@@ -386,7 +386,7 @@ class Locations_model extends TI_Model {
 
 		if ($query === TRUE AND is_numeric($location_id)) {
 			if ($location_id === $this->config->item('default_location_id')) {
-				$this->Settings_model->addSetting('config', 'main_address', $this->getAddress($location_id), '1');
+				$this->Settings_model->addSetting('prefs', 'main_address', $this->getAddress($location_id), '1');
 			}
 
 			if ( ! empty($options['opening_hours'])) {
