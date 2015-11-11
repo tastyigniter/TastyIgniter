@@ -32,7 +32,7 @@ $lang['label_status'] 			            = 'Status';
 $lang['label_search_query'] 			    = 'Enter your address/postcode to order';
 
 $lang['alert_location_closed'] 		        = '<p class="alert-danger"><b>Restaurant is currently closed.</b></p>';
-$lang['alert_local_future_order'] 		    = '<p class="alert-danger"><b>Restaurant is currently closed.</b><br />Pre-ordering is available for later delivery.</p>';
+$lang['alert_local_future_order'] 		    = '<p class="alert-info"><b>Restaurant is currently closed.</b><br />Pre-ordering is available for later delivery.</p>';
 $lang['alert_no_search_setting'] 		    = '<p class="alert-danger">Location Search By setting has not been specified.</p>';
 $lang['alert_invalid_search_query'] 	    = '<p class="alert-danger">We couldn\'t locate the entered address/postcode, please enter a valid address/postcode.</p>';
 $lang['alert_no_found_restaurant'] 	        = '<p class="alert-danger">We do not have any local restaurant near you.</p>';

@@ -109,22 +109,23 @@ class Local_module extends Main_Controller {
 				break;
 		}
 
+        $redirect = '';
         if (!isset($json['error'])) {
             $order_type = (is_numeric($this->input->post('order_type'))) ? $this->input->post('order_type') : '1';
             $this->location->setOrderType($order_type);
 
-            $json['redirect'] = site_url('local?location_id='.$this->location->getId());
+            $redirect = $json['redirect'] = site_url('local?location_id='.$this->location->getId());
         }
 
-        if (!isset($json['redirect'])) {
-            $json['redirect'] = $this->referrer_uri;
+        if ($redirect === '') {
+            $redirect = $this->referrer_uri;
         }
 
         if ($this->input->is_ajax_request()) {
             $this->output->set_output(json_encode($json));											// encode the json array and set final out to be sent to jQuery AJAX
         } else {
             if (isset($json['error'])) $this->alert->set('custom', $json['error'], 'local_module');
-            redirect($json['redirect']);
+            redirect($redirect);
         }
 	}
 }
