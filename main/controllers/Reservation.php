@@ -87,18 +87,20 @@ class Reservation extends Main_Controller {
 		$this->template->setTitle($this->lang->line('text_success_heading'));
 		$this->template->setHeading($this->lang->line('text_success_heading'));
 
-        if ($result = $this->Reservations_model->getReservation($this->session->tempdata('last_reservation_id'), $this->customer->getId())) {
-			$guest_num = $result['guest_num'] .' person(s)';
+		$result = $this->Reservations_model->getReservation($this->session->tempdata('last_reservation_id'), $this->customer->getId());
 
-	        $time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
-
-			$data['text_success'] 	= sprintf($this->lang->line('text_success'), $result['location_name'], $guest_num, mdate('%l, %F %j, %Y', strtotime($result['reserve_date'])), mdate($time_format, strtotime($result['reserve_time'])));
-			$data['text_greetings'] = sprintf($this->lang->line('text_greetings'), $result['first_name'] .' '. $result['last_name']);
-			$data['text_signature'] = sprintf($this->lang->line('text_signature'), $this->config->item('site_name'));
-			$this->session->unset_userdata('reservation');
-		} else {
+		if (empty($result) OR empty($result['reservation_id']) OR empty($result['status']) OR $result['status'] <= 0) {															// check if customer_id is set in uri string
 			redirect('reservation');
 		}
+
+		$guest_num = $result['guest_num'] .' person(s)';
+
+        $time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
+
+		$data['text_success'] 	= sprintf($this->lang->line('text_success'), $result['location_name'], $guest_num, mdate('%l, %F %j, %Y', strtotime($result['reserve_date'])), mdate($time_format, strtotime($result['reserve_time'])));
+		$data['text_greetings'] = sprintf($this->lang->line('text_greetings'), $result['first_name'] .' '. $result['last_name']);
+		$data['text_signature'] = sprintf($this->lang->line('text_signature'), $this->config->item('site_name'));
+		$this->session->unset_userdata('reservation');
 
 		$this->template->render('reservation_success', $data);
 	}

@@ -88,7 +88,9 @@ class Reservations extends Main_Controller {
 		$this->load->library('country');
 		$this->load->model('Locations_model');														// load locations model
 
-		if (!($result = $this->Reservations_model->getReservation($this->uri->rsegment(3), $this->customer->getId()))) {															// check if customer_id is set in uri string
+		$result = $this->Reservations_model->getReservation($this->uri->rsegment(3), $this->customer->getId());
+
+		if (empty($result) OR empty($result['reservation_id']) OR empty($result['status']) OR $result['status'] <= 0) {															// check if customer_id is set in uri string
   			redirect('account/reservations');
 		}
 
