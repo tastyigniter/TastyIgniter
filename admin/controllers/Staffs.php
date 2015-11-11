@@ -170,6 +170,8 @@ class Staffs extends Admin_Controller {
 			$data['_action']	= site_url('staffs/edit');
 		}
 
+		$user_info = $this->Staffs_model->getStaffUser($staff_id);
+
 		$title = (isset($staff_info['staff_name'])) ? $staff_info['staff_name'] : $this->lang->line('text_new');
         $this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $title));
         $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
@@ -181,7 +183,7 @@ class Staffs extends Admin_Controller {
 
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('staffs')));
 
-		if ($this->input->post() AND $staff_id = $this->_saveStaff($data['staff_email'], $data['username'])) {
+		if ($this->input->post() AND $staff_id = $this->_saveStaff($staff_info['staff_email'], $user_info['username'])) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('staffs');
 			}
@@ -201,9 +203,7 @@ class Staffs extends Admin_Controller {
 		$data['timezone'] 			= $staff_info['timezone'];
 		$data['language_id'] 		= $staff_info['language_id'];
 		$data['staff_status'] 		= $staff_info['staff_status'];
-
-		$result = $this->Staffs_model->getStaffUser($staff_id);
-		$data['username'] 			= $result['username'];
+		$data['username'] 			= $user_info['username'];
 
 		$data['staff_groups'] = array();
 		$results = $this->Staff_groups_model->getStaffGroups();
@@ -307,7 +307,7 @@ class Staffs extends Admin_Controller {
 		$this->form_validation->set_rules('staff_name', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 
 		if ($staff_email !== $this->input->post('staff_email')) {
-			$this->form_validation->set_rules('staff_email', 'lang:label_email', 'xss_clean|trim|required|valid_email|is_unique[staffs.staff_email]|max_length[96]');
+			$this->form_validation->set_rules('staff_email', 'lang:label_email', 'xss_clean|trim|required|max_length[96]|valid_email|is_unique[staffs.staff_email]');
 		}
 
 		if ($username !== $this->input->post('username')) {
