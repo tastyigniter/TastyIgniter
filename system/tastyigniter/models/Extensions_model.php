@@ -364,10 +364,13 @@ class Extensions_model extends TI_Model {
 	}
 
 	public function extensionExists($extension_name) {
-		$extension_path = ROOTPATH . EXTPATH . $extension_name;
 
-		if ( ! empty($extension_name) AND file_exists($extension_path)) {
-			return TRUE;
+		if ( ! empty($extension_name) AND $modules_locations = $this->config->item('modules_locations')) {
+			foreach ($modules_locations as $location => $offset) {
+				if (is_dir($location . $extension_name)) {
+					return TRUE;
+				}
+			}
 		}
 
 		return FALSE;
