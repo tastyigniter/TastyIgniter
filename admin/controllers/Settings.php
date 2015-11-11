@@ -265,18 +265,13 @@ class Settings extends Admin_Controller {
 				'special_category_id' 		=> $this->input->post('special_category_id'),
 				'registration_terms' 		=> $this->input->post('registration_terms'),
 				'checkout_terms' 			=> $this->input->post('checkout_terms'),
-				'registration_email'		=> $this->input->post('registration_email'),
-				'customer_order_email'		=> $this->input->post('customer_order_email'),
-				'customer_reserve_email'	=> $this->input->post('customer_reserve_email'),
 				'maps_api_key'				=> $this->input->post('maps_api_key'),
 				'distance_unit'				=> $this->input->post('distance_unit'),
 				'future_orders' 			=> $this->input->post('future_orders'),
 				'location_order'			=> $this->input->post('location_order'),
-				'location_order_email'		=> $this->input->post('location_order_email'),
-				'location_reserve_email'	=> $this->input->post('location_reserve_email'),
 				'approve_reviews'			=> $this->input->post('approve_reviews'),
 				'new_order_status'			=> $this->input->post('new_order_status'),
-				'completed_order_status'		=> $this->input->post('completed_order_status'),
+				'completed_order_status'	=> $this->input->post('completed_order_status'),
 				'canceled_order_status'		=> $this->input->post('canceled_order_status'),
 				'guest_order'				=> $this->input->post('guest_order'),
 				'delivery_time'				=> $this->input->post('delivery_time'),
@@ -292,7 +287,10 @@ class Settings extends Admin_Controller {
 				'themes_hidden_files'		=> $this->input->post('themes_hidden_files'),
 				'themes_hidden_folders'		=> $this->input->post('themes_hidden_folders'),
 				'image_manager'				=> $this->input->post('image_manager'),
-				'protocol'	 				=> strtolower($this->input->post('protocol')),
+                'registration_email'		=> $this->input->post('registration_email'),
+                'order_email'		        => $this->input->post('order_email'),
+                'reservation_email'	        => $this->input->post('reservation_email'),
+                'protocol'	 				=> strtolower($this->input->post('protocol')),
 				'smtp_host' 				=> $this->input->post('smtp_host'),
 				'smtp_port' 				=> $this->input->post('smtp_port'),
 				'smtp_user' 				=> $this->input->post('smtp_user'),
@@ -312,7 +310,7 @@ class Settings extends Admin_Controller {
 				$this->Locations_model->updateDefault($this->input->post('main_address'));
 			}
 
-			if ($this->Settings_model->updateSettings('config', $update)) {
+			if ($this->Settings_model->updateSettings('config', $update, TRUE)) {
                 $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Settings updated '));
             } else {
                 $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), 'updated'));
@@ -347,9 +345,6 @@ class Settings extends Admin_Controller {
 		$this->form_validation->set_rules('special_category_id', 'lang:label_special_category', 'xss_clean|trim|numeric');
 		$this->form_validation->set_rules('registration_terms', 'lang:label_registration_terms', 'xss_clean|trim|required|numeric');
 		$this->form_validation->set_rules('checkout_terms', 'lang:label_checkout_terms', 'xss_clean|trim|required|numeric');
-		$this->form_validation->set_rules('registration_email', 'lang:label_registration_email', 'xss_clean|trim|required|numeric');
-		$this->form_validation->set_rules('customer_order_email', 'lang:label_customer_order_email', 'xss_clean|trim|required|numeric');
-		$this->form_validation->set_rules('customer_reserve_email', 'lang:label_customer_reserve_email', 'xss_clean|trim|required|numeric');
 
 		$this->form_validation->set_rules('main_address[address_1]', 'lang:label_address_1', 'xss_clean|trim|required|min_length[2]|max_length[128]|get_lat_lag[main_address]');
 		$this->form_validation->set_rules('main_address[address_2]', 'lang:label_address_2', 'xss_clean|trim|max_length[128]');
@@ -359,10 +354,9 @@ class Settings extends Admin_Controller {
 
 		$this->form_validation->set_rules('maps_api_key', 'lang:label_maps_api_key', 'xss_clean|trim');
 		$this->form_validation->set_rules('distance_unit', 'lang:label_distance_unit', 'xss_clean|trim|required');
+
 		$this->form_validation->set_rules('future_orders', 'lang:label_future_order', 'xss_clean|trim|required|numeric');
 		$this->form_validation->set_rules('location_order', 'lang:label_location_order', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('location_order_email', 'lang:label_location_order_email', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('location_reserve_email', 'lang:label_location_reserve_email', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('approve_reviews', 'lang:label_approve_reviews', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('new_order_status', 'lang:label_new_order_status', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('completed_order_status', 'lang:label_completed_order_status', 'xss_clean|trim|required|integer');
@@ -370,12 +364,14 @@ class Settings extends Admin_Controller {
 		$this->form_validation->set_rules('guest_order', 'lang:label_guest_order', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('delivery_time', 'lang:label_delivery_time', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('collection_time', 'lang:label_collection_time', 'xss_clean|trim|required|integer');
+
 		$this->form_validation->set_rules('reservation_mode', 'lang:label_reservation_mode', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('new_reservation_status', 'lang:label_new_reservation_status', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('confirmed_reservation_status', 'lang:label_confirmed_reservation_status', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('canceled_reservation_status', 'lang:label_canceled_reservation_status', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('reservation_time_interval', 'lang:label_reservation_time_interval', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('reservation_stay_time', 'lang:label_reservation_stay_time', 'xss_clean|trim|required|integer');
+
 		$this->form_validation->set_rules('image_manager[max_size]', 'lang:label_media_max_size', 'xss_clean|trim|required|numeric');
 		$this->form_validation->set_rules('image_manager[thumb_height]', 'lang:label_media_thumb_height', 'xss_clean|trim|required|numeric');
 		$this->form_validation->set_rules('image_manager[thumb_width]', 'lang:label_media_thumb_width', 'xss_clean|trim|required|numeric');
@@ -387,11 +383,16 @@ class Settings extends Admin_Controller {
 		$this->form_validation->set_rules('image_manager[delete]', 'lang:label_media_delete', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('image_manager[transliteration]', 'lang:label_media_transliteration', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('image_manager[remember_days]', 'lang:label_media_remember_days', 'xss_clean|trim|integer');
+
+		$this->form_validation->set_rules('registration_email[]', 'lang:label_registration_email', 'xss_clean|trim|required|alpha');
+		$this->form_validation->set_rules('order_email[]', 'lang:label_order_email', 'xss_clean|trim|required|alpha');
+		$this->form_validation->set_rules('reservation_email[]', 'lang:label_reservation_email', 'xss_clean|trim|required|alpha');
 		$this->form_validation->set_rules('protocol', 'lang:label_protocol', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('smtp_host', 'lang:label_smtp_host', 'xss_clean|trim');
 		$this->form_validation->set_rules('smtp_port', 'lang:label_smtp_port', 'xss_clean|trim');
 		$this->form_validation->set_rules('smtp_user', 'lang:label_smtp_user', 'xss_clean|trim');
 		$this->form_validation->set_rules('smtp_pass', 'lang:label_smtp_pass', 'xss_clean|trim');
+
 		$this->form_validation->set_rules('customer_online_time_out', 'lang:label_customer_online_time_out', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('customer_online_archive_time_out', 'lang:label_customer_online_archive_time_out', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('permalink', 'lang:label_permalink', 'xss_clean|trim|required|integer');

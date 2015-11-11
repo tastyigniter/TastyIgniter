@@ -153,8 +153,6 @@ class Reservations_model extends TI_Model {
 				if ($customer_id !== FALSE) {
 					$this->db->where('customer_id', $customer_id);
 				}
-
-				$this->db->where('reservations.status >', '0');
 			}
 
 			$query = $this->db->get();
@@ -365,6 +363,19 @@ class Reservations_model extends TI_Model {
 			$this->db->where('reservation_id', $reservation_id);
 			$query = $this->db->update('reservations');
 
+			$status = $this->Statuses_model->getStatus($update['status']);
+
+			if (isset($update['notify']) AND $update['notify'] === '1') {
+				$mail_data = $this->getMailData($reservation_id);
+
+				$mail_data['status_name'] = $status['status_name'];
+				$mail_data['status_comment'] = !empty($update['status_comment']) ? $update['status_comment'] : $this->lang->line('text_no_comment');
+
+				$this->load->model('Mail_templates_model');
+				$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'reservation_update');
+				$update['notify'] = $this->sendMail($mail_data['email'], $mail_template, $mail_data);
+			}
+
 			if ($query === TRUE AND (int) $update['old_status_id'] !== (int) $update['status']) {
 				$update['object_id'] = $reservation_id;
 				$update['staff_id'] = $this->user->getStaffId();
@@ -456,7 +467,26 @@ class Reservations_model extends TI_Model {
 					             ));
 				}
 
-				$notify = $this->_sendMail($reservation_id);
+				$this->load->model('Mail_templates_model');
+				$mail_data = $this->getMailData($reservation_id);
+				$config_reservation_email = is_array($this->config->item('reservation_email')) ? $this->config->item('reservation_email') : array();
+
+				$notify = '0';
+				if ($this->config->item('customer_reserve_email') === '1' OR in_array('customer', $config_reservation_email)) {
+					$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'reservation');
+					$notify = $this->sendMail($mail_data['email'], $mail_template, $mail_data);
+				}
+
+				if ($this->location->getEmail() AND ($this->config->item('location_reserve_email') === '1' OR in_array('location', $config_reservation_email))) {
+					$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'reservation_alert');
+					$this->sendMail($this->location->getEmail(), $mail_template, $mail_data);
+				}
+
+				if (in_array('admin', $config_reservation_email)) {
+					$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'reservation_alert');
+					$this->sendMail($this->config->item('site_email'), $mail_template, $mail_data);
+				}
+
 				$this->db->set('notify', $notify);
 
 				$this->db->set('status', $this->config->item('new_reservation_status'));
@@ -494,7 +524,7 @@ class Reservations_model extends TI_Model {
 			$data['reservation_view_url'] = root_url('main/reservations?id=' . $result['reservation_id']);
 			$data['reservation_time'] = mdate('%H:%i', strtotime($result['reserve_time']));
 			$data['reservation_date'] = mdate('%l, %F %j, %Y', strtotime($result['reserve_date']));
-			$data['reservation_guest'] = $result['guest_num'];
+			$data['reservation_guest_no'] = $result['guest_num'];
 			$data['first_name'] = $result['first_name'];
 			$data['last_name'] = $result['last_name'];
 			$data['email'] = $result['email'];
@@ -504,51 +534,25 @@ class Reservations_model extends TI_Model {
 		return $data;
 	}
 
-	public function _sendMail($reservation_id) {
+	public function sendMail($email, $mail_template = array(), $mail_data = array()) {
+		if (empty($mail_template) OR !isset($mail_template['subject'], $mail_template['body']) OR empty($mail_data)) {
+			return FALSE;
+		}
+
 		$this->load->library('email');
 
-		$notify = $send_mail = '0';
+		$this->email->initialize();
 
-		$mail_data = $this->getMailData($reservation_id);
-		if ($mail_data) {
-			$this->email->initialize();
+		$this->email->from($this->config->item('site_email'), $this->config->item('site_name'));
+		$this->email->to(strtolower($email));
+		$this->email->subject($mail_template['subject'], $mail_data);
+		$this->email->message($mail_template['body'], $mail_data);
 
-			$this->email->from($this->config->item('site_email'), $this->config->item('site_name'));
-
-			if ($this->config->item('location_reserve_email') === '1' AND $this->location->getEmail()) {
-				$this->email->cc($this->location->getEmail());
-			}
-			if ($this->config->item('customer_reserve_email') === 1 AND $this->config->item('location_reserve_email') === '1') {
-				$this->email->to(strtolower($mail_data['email']));
-
-				if ($this->location->getEmail()) {
-					$this->email->cc(strtolower($this->location->getEmail()));
-				}
-
-				$send_mail = '1';
-			} else if ($this->config->item('customer_reserve_email') === 1 AND $this->config->item('location_reserve_email') !== '1') {
-				$this->email->to(strtolower($mail_data['email']));
-				$send_mail = '1';
-			} else if ($this->config->item('customer_reserve_email') !== 1 AND $this->config->item('location_reserve_email') === '1' AND $this->location->getEmail()) {
-				$this->email->to(strtolower($this->location->getEmail()));
-				$send_mail = '1';
-			}
-
-			if ($send_mail === '1') {
-				$this->load->model('Mail_templates_model');
-				$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'),
-				                                                              'reservation');
-
-				$this->email->subject($mail_template['subject'], $mail_data);
-				$this->email->message($mail_template['body'], $mail_data);
-
-				if ( ! $this->email->send()) {
-					log_message('debug', $this->email->print_debugger(array('headers')));
-					$notify = '0';
-				} else {
-					$notify = '1';
-				}
-			}
+		if ( ! $this->email->send()) {
+			log_message('debug', $this->email->print_debugger(array('headers')));
+			$notify = '0';
+		} else {
+			$notify = '1';
 		}
 
 		return $notify;

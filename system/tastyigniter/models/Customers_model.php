@@ -341,16 +341,23 @@ class Customers_model extends TI_Model {
 				}
 			}
 
-			if ($action === 'added' AND $this->config->item('registration_email') === '1') {
+			if ($action === 'added') {
 				$mail_data['first_name'] = $save['first_name'];
 				$mail_data['last_name'] = $save['last_name'];
 				$mail_data['account_login_link'] = root_url('account/login');
 
 				$this->load->model('Mail_templates_model');
-				$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'),
-				                                                              'registration');
+				$config_registration_email = is_array($this->config->item('registration_email')) ? $this->config->item('registration_email') : array();
 
-				$this->sendMail($save['email'], $mail_template, $mail_data);
+				if ($this->config->item('registration_email') === '1' OR in_array('customer', $config_registration_email)) {
+					$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'registration');
+					$this->sendMail($save['email'], $mail_template, $mail_data);
+				}
+
+				if (in_array('admin', $config_registration_email)) {
+					$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'registration_alert');
+					$this->sendMail($this->config->item('site_email'), $mail_template, $mail_data);
+				}
 			}
 
 			return $customer_id;
@@ -373,7 +380,11 @@ class Customers_model extends TI_Model {
 		}
 	}
 
-	public function sendMail($email, $template, $data = array()) {
+	public function sendMail($email, $template = array(), $data = array()) {
+		if (empty($template) OR empty($email) OR !isset($template['subject'], $template['body']) OR empty($data)) {
+			return FALSE;
+		}
+
 		$this->load->library('email');
 
 		$this->email->initialize();
