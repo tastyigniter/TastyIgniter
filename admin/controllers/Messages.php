@@ -396,11 +396,17 @@ class Messages extends Admin_Controller {
         $data['sort_type'] 			= site_url($data['page_uri'].$url.'sort_by=send_type&order_by='.$order_by);
         $data['sort_date'] 			= site_url($data['page_uri'].$url.'sort_by=messages.date_added&order_by='.$order_by);
 
-        $message_state = ($data['filter_folder'] === 'inbox') ? 'message message-unread' : 'message';
+        $message_state = ($data['filter_folder'] === 'inbox') ? 'message message-unread active' : 'message';
 
         $data['messages'] = array();
         $results = $this->Messages_model->getList($filter);
         foreach ($results as $result) {
+            $date_added = time_elapsed($result['date_added']);
+
+            if (strpos($date_added, 'month') !== 'FALSE' OR strpos($date_added, 'year') !== 'FALSE') {
+                $date_added = mdate('%d %M %y', strtotime($result['date_added']));
+            }
+
             $data['messages'][] = array(
                 'message_id'	=> $result['message_id'],
                 'from'			=> $result['staff_name'],
@@ -408,7 +414,7 @@ class Messages extends Admin_Controller {
                 'type_color'	=> (isset($result['send_type']) AND $result['send_type'] === 'account') ? 'fa-circle-o text-primary' : 'fa-circle-o text-danger',
                 'subject' 	    => (strlen($result['subject']) > 30) ? substr(strip_tags(html_entity_decode($result['subject'], ENT_QUOTES, 'UTF-8')), 0, 30) . '..' : strip_tags(html_entity_decode($result['subject'], ENT_QUOTES, 'UTF-8')),
                 'recipient' 	=> ucwords(str_replace('_', ' ', $result['recipient'])),
-                'date_added'	=> time_elapsed($result['date_added']),
+                'date_added'	=> $date_added,
                 'body' 			=> (strlen($result['body']) > 40) ? substr(strip_tags(html_entity_decode($result['body'], ENT_QUOTES, 'UTF-8')), 0, 40) . '..' : strip_tags(html_entity_decode($result['body'], ENT_QUOTES, 'UTF-8')),
                 'state'			=> (isset($result['state']) AND $result['state'] === '1') ? 'message message-read' : $message_state,
                 'view'			=> ($filter['filter_folder'] === 'draft') ? site_url('messages/compose?id=' . $result['message_id']) : site_url('messages/view?id=' . $result['message_id'])

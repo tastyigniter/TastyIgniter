@@ -2,7 +2,7 @@
 <div class="row content">
 	<div class="col-md-12">
         <div class="row">
-            <div class="col-sm-12 col-md-3">
+            <div class="col-sm-12 col-md-2">
                 <a href="<?php echo site_url('messages/compose'); ?>" class="btn btn-primary btn-block"><?php echo lang('button_compose'); ?></a><br />
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -18,20 +18,18 @@
                 </div>
             </div>
 
-            <div class="col-sm-12 col-md-9">
+            <div class="col-sm-12 col-md-10">
                 <div class="panel panel-default panel-table">
                     <div class="panel-heading">
                         <h3 class="panel-title"><?php echo lang('text_view_message'); ?></h3>
                     </div>
                     <div class="panel-body wrap-none wrap-bottom">
                         <div class="message-view-info">
-                            <h4><?php echo $subject; ?></h4>
+                            <h4><?php echo $subject; ?> &nbsp;&nbsp;<span class="badge text-lowercase"><?php echo $send_type; ?></span></h4>
                             <h6>From: <?php echo $from; ?>
                                 <span class="message-view-time pull-right"><?php echo $date_added; ?></span>
                             </h6>
-                            <h6>To: <a class="recipient"><?php echo $recipient; ?></a>
-                                <span class="message-view-time pull-right"><?php echo $send_type; ?></span>
-                            </h6>
+                            <h6>To: <a class="recipient"><?php echo $recipient; ?></a></h6>
                         </div>
                         <div class="message-view-controls text-center">
                             <?php if ($message_deleted) { ?>

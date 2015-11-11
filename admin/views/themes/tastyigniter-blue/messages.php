@@ -117,7 +117,7 @@
                         </div>
 
                         <div class="table-responsive wrap-none">
-                            <table border="0" class="table table-striped table-border message-list table-no-spacing">
+                            <table border="0" class="table table-border message-list table-no-spacing">
                                 <tbody>
                                     <?php if ($messages) {?>
                                         <?php foreach ($messages as $message) { ?>
@@ -125,16 +125,17 @@
                                                 <td class="action"><input type="checkbox" value="<?php echo $message['message_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
                                                     <i class="fa fa-star-o text-warning"></i>
                                                 </td>
-                                                <td><a href="<?php echo $message['view']; ?>"><?php echo $message['recipient']; ?></a></td>
-                                                <td><span class="message-subject"><?php echo $message['subject']; ?></span> - <small><?php echo $message['body']; ?></small></td>
-<!--                                                <td>--><?php //echo $message['recipient']; ?><!--</td>-->
+                                                <td><?php echo $message['recipient']; ?></a></td>
+                                                <td><a class="message-subject" href="<?php echo $message['view']; ?>"><?php echo $message['subject']; ?></a>&nbsp;-&nbsp;
+                                                    <small><?php echo $message['body']; ?></small>
+                                                </td>
                                                 <td><i title="<?php echo $message['send_type']; ?>" class="fa <?php echo $message['type_color']; ?>"></i></td>
                                                 <td class="text-center"><?php echo $message['date_added']; ?></td>
                                             </tr>
                                         <?php } ?>
                                     <?php } else { ?>
                                         <tr>
-                                            <td colspan="6"><?php echo lang('text_empty'); ?></td>
+                                            <td colspan="5"><?php echo lang('text_empty'); ?></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
