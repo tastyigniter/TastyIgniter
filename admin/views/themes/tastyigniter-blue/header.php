@@ -20,6 +20,7 @@
     $this->template->setScriptTag('js/jquery.raty.js', 'jquery-raty-js', '13');
     $this->template->setScriptTag('js/common.js', 'common-js');
 
+	$site_logo          = base_url('views/themes/tastyigniter-blue/images/admin-logo.png');
     $site_name 			= $this->config->item('site_name');
     $site_url 			= rtrim(site_url(), '/').'/';
     $base_url 			= base_url();
@@ -78,7 +79,7 @@
     <div id="wrapper" class="<?php echo ($this->user->islogged()) ? '' : 'wrap-none'; ?>">
 		<nav class="navbar navbar-static-top navbar-top" role="navigation" style="margin-bottom: 0">
 			<div class="navbar-header">
-				<a class="navbar-brand" href="<?php echo site_url('dashboard'); ?>"><span class="navbar-logo"></span><?php echo $site_name; ?></a>
+				<a class="navbar-brand" href="<?php echo site_url('dashboard'); ?>"><img class="navbar-logo" alt="<?php echo $site_name; ?>" src="<?php echo $site_logo; ?>"/></a>
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
 					<span class="sr-only">Toggle navigation</span>
 					<span class="icon-bar"></span>
@@ -161,92 +162,10 @@
 
 				<div class="navbar-default sidebar" role="navigation">
 					<div class="sidebar-nav navbar-collapse">
-						<ul class="nav" id="side-menu">
-							<li>
-								<a class="dashboard admin" href="<?php echo site_url('dashboard'); ?>"><i class="fa fa-dashboard fa-fw"></i><span class="content"><?php echo lang('menu_dashboard'); ?></span></a>
-							</li>
-							<li>
-								<a class="kitchen"><i class="fa fa-cutlery fa-fw"></i><span class="content"><?php echo lang('menu_kitchen'); ?></span><span class="fa arrow"></span></a>
-	                            <ul class="nav nav-second-level">
-									<li><a class="menus" href="<?php echo site_url('menus'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_menu'); ?></a></li>
-									<li><a class="menu_options" href="<?php echo site_url('menu_options'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_option'); ?></a></li>
-									<li><a class="categories" href="<?php echo site_url('categories'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_category'); ?></a></li>
-								</ul>
-							</li>
-							<li>
-								<a class="sales"><i class="fa fa-bar-chart-o fa-fw"></i><span class="content"><?php echo lang('menu_sale'); ?> </span><span class="fa arrow"></span></a>
-	                            <ul class="nav nav-second-level">
-									<li><a class="orders" href="<?php echo site_url('orders'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_order'); ?></a></li>
-									<li><a class="reservations" href="<?php echo site_url('reservations'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_reservation'); ?></a></li>
-									<li><a class="coupons" href="<?php echo site_url('coupons'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_coupon'); ?></a></li>
-								</ul>
-							</li>
-							<li>
-								<a class="tables" href="<?php echo site_url('tables'); ?>"><i class="fa fa-table fa-fw"></i><span class="content"><?php echo lang('menu_table'); ?></span></a>
-							</li>
-							<li>
-								<a class="locations" href="<?php echo site_url('locations'); ?>"><i class="fa fa-map-marker fa-fw"></i><span class="content"><?php echo lang('menu_location'); ?></span></a>
-							</li>
-							<li>
-								<a class="users"><i class="fa fa-user fa-fw"></i><span class="content"><?php echo lang('menu_user'); ?> </span><span class="fa arrow"></span></a>
-								<ul class="nav nav-second-level">
-									<li><a class="customers" href="<?php echo site_url('customers'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_customer'); ?></a></li>
-									<li><a class="staffs" href="<?php echo site_url('staffs'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_staff'); ?></a>
-									<li><a class="customer_groups" href="<?php echo site_url('customer_groups'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_customer_group'); ?></a></li>
-									<li><a class="staff_groups" href="<?php echo site_url('staff_groups'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_staff_group'); ?></a></li>
-									<li><a class="customers_online" href="<?php echo site_url('customers_online'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_customer_online'); ?></a></li>
-								</ul>
-							</li>
-							<li>
-								<a class="extensions" href="<?php echo site_url('extensions'); ?>"><i class="fa fa-puzzle-piece fa-fw"></i><span class="content"><?php echo lang('menu_extension'); ?> </span></a>
-							</li>
-							<li>
-								<a class="themes"><i class="fa fa-paint-brush fa-fw"></i><span class="content"><?php echo lang('menu_design'); ?> </span><span class="fa arrow"></span></a>
-								<ul class="nav nav-second-level">
-									<li><a class="layouts" href="<?php echo site_url('layouts'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_layout'); ?></a></li>
-									<li><a class="themes" href="<?php echo site_url('themes'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_theme'); ?></a></li>
-									<li><a class="mail_templates" href="<?php echo site_url('mail_templates'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_mail_template'); ?></a></li>
-								</ul>
-							</li>
-							<li>
-								<a class="marketing"><i class="fa fa-line-chart fa-fw"></i><span class="content"><?php echo lang('menu_marketing'); ?> </span><span class="fa arrow"></span></a>
-	                            <ul class="nav nav-second-level">
-		                            <li><a class="banners" href="<?php echo site_url('banners'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_banner'); ?></a></li>
-		                            <li><a class="reviews" href="<?php echo site_url('reviews'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_review'); ?></a></li>
-		                            <li><a class="messages" href="<?php echo site_url('messages'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_messages'); ?></a></li>
-								</ul>
-							</li>
-							<li>
-								<a class="pages" href="<?php echo site_url('pages'); ?>"><i class="fa fa-file fa-fw"></i><span class="content"><?php echo lang('menu_page'); ?></span></a>
-							</li>
-							<li>
-								<a class="localisation"><i class="fa fa-globe fa-fw"></i><span class="content"><?php echo lang('menu_localisation'); ?> </span><span class="fa arrow"></span></a>
-	                            <ul class="nav nav-second-level">
-									<li><a class="languages" href="<?php echo site_url('languages'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_language'); ?></a></li>
-									<li><a class="currencies" href="<?php echo site_url('currencies'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_currency'); ?></a></li>
-									<li><a class="countries" href="<?php echo site_url('countries'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_country'); ?></a></li>
-									<li><a class="security_questions" href="<?php echo site_url('security_questions'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_security_question'); ?></a></li>
-									<li><a class="ratings" href="<?php echo site_url('ratings'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_rating'); ?></a></li>
-									<li><a class="statuses" href="<?php echo site_url('statuses'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_status'); ?></a></li>
-								</ul>
-							</li>
-							<li>
-								<a class="tools"><i class="fa fa-wrench fa-fw"></i><span class="content"><?php echo lang('menu_tool'); ?> </span><span class="fa arrow"></span></a>
-	                            <ul class="nav nav-second-level">
-									<li><a class="image_manager image_options" href="<?php echo site_url('image_manager'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_media_manager'); ?></a></li>
-									<li><a class="maintenance" href="<?php echo site_url('maintenance'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_maintenance'); ?></a></li>
-								</ul>
-							</li>
-							<li>
-								<a class="system"><i class="fa fa-cog fa-fw"></i><span class="content"><?php echo lang('menu_system'); ?></span> <span class="fa arrow"></span></a>
-	                            <ul class="nav nav-second-level">
-	                                <li><a class="permissions" href="<?php echo site_url('permissions'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_permission'); ?></a></li>
-	                                <li><a class="uri_routes" href="<?php echo site_url('uri_routes'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_uri_route'); ?></a></li>
-									<li><a class="error_logs" href="<?php echo site_url('error_logs'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_error_log'); ?></a></li>
-									<li><a class="settings" href="<?php echo site_url('settings'); ?>"><i class="fa fa-square-o fa-fw"></i><?php echo lang('menu_setting'); ?></a></li>
-								</ul>
-							</li>
-						</ul>
+						<?php echo get_nav_menu(array(
+	                        'container_open'    => '<ul class="nav" id="side-menu">',
+	                        'container_close'   => '</ul>',
+                        )); ?>
 					</div>
 				</div>
 			<?php } ?>
@@ -255,6 +174,11 @@
 		<div id="page-wrapper">
 			<?php if ($islogged) { ?>
 				<div class="page-header clearfix">
+                    <?php
+                        $button_list = get_button_list();
+                        $icon_list = get_icon_list();
+                    ?>
+
 					<div class="page-header-title pull-left">
                         <h1 class="">
                             <?php echo get_heading(); ?>
@@ -266,11 +190,6 @@
                             <?php } ?>
                         </h1>
 					</div>
-
-                    <?php
-                        $button_list = get_button_list();
-                        $icon_list = get_icon_list();
-                    ?>
 
                     <?php if (!empty($button_list) OR !empty($icon_list)) { ?>
 						<div class="page-header-action pull-right">

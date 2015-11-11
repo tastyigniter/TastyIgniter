@@ -21,7 +21,7 @@
 						</div>
 						<div class="form-group">
 							<div class="pull-left">
-								<a href="<?php echo $login_url; ?>"><?php echo lang('text_back_to_login'); ?></a>
+								<a class="btn btn-default" href="<?php echo $login_url; ?>"><?php echo lang('text_back_to_login'); ?></a>
 							</div>
 							<button type="submit" class="btn btn-success pull-right"><?php echo lang('button_reset_password'); ?></button>
 						</div>

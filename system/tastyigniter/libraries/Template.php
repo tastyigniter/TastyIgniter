@@ -95,6 +95,7 @@ class Template {
 
         // Assign by reference, as all loaded views will need access to partials
         $this->_data['template'] =& $template;
+        $this->_data['controller'] = $this->_controller;
 
         $this->setPartials();
 
@@ -122,6 +123,83 @@ class Template {
         } else {
             return self::_load_view('themes/'.$this->_theme.'/'.$view, $this->_data, NULL);
         }
+    }
+
+    public function buildNavMenu($prefs = array()) {
+        if ( ! is_array($this->_theme_config['nav_menu'])) {
+            return NULL;
+        }
+        
+        $nav_menu = $this->_theme_config['nav_menu'];
+        
+        $default = array(
+            'container_open' => '<ul class="nav" id="side-menu">',
+            'container_close' => '</ul>',
+        );
+
+        foreach ($default as $key => &$value) {
+            if (isset($prefs[$key])) $value = $prefs[$key];
+        }
+
+        $out = '';
+        foreach ($nav_menu as $menu) {
+            if (isset($menu['permission'])) {
+                $permission = (strpos($menu['permission'], '|') !== FALSE) ? explode('|', $menu['permission']) : array($menu['permission']);
+
+	            $permitted = array();
+	            foreach ($permission as $perm) {
+		            $permitted[strtolower($perm)] = ( ! $this->CI->user->hasPermission($perm.'.Access')) ? FALSE : TRUE;
+	            }
+
+                if (!($permitted = array_filter($permitted))) continue;
+            }
+
+            $out .= '<li>'.$this->buildNavMenuLink($menu);
+
+            if (isset($menu['child']) AND is_array($menu['child'])) {
+                $out .= '<ul class="nav nav-second-level">';
+
+                foreach ($menu['child'] as $child) {
+                    if (isset($child['permission']) AND empty($permitted[strtolower($child['permission'])])) continue;
+                    $out .= '<li>'.$this->buildNavMenuLink($child).'</li>';
+                }
+
+                $out .= '</ul>';
+            }
+
+            $out .= '</li>';
+        }
+
+        return $default['container_open'] . $out . $default['container_close'];
+    }
+
+    public function buildNavMenuLink($menu = array()) {
+        $out = '<a';
+
+        if (isset($menu['class'])) {
+            $out .= ' class="'.$menu['class'].'"';
+        }
+
+        if (isset($menu['href'])) {
+            $out .= ' href="'.$menu['href'].'"';
+        }
+
+        $out .= '>';
+        if (isset($menu['icon'])) {
+            $out .= '<i class="fa '.$menu['icon'].' fa-fw"></i>';
+        } else {
+            $out .= '<i class="fa fa-square-o fa-fw"></i>';
+        }
+
+        if (isset($menu['icon']) AND isset($menu['title'])) {
+            $out .= '<span class="content">'.$menu['title'].'</span>';
+        } else {
+            $out .= $menu['title'];
+        }
+
+        $out .= '</a>';
+
+        return $out;
     }
 
     public function setTheme($theme = '') {

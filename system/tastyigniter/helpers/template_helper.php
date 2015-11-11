@@ -368,6 +368,22 @@ if ( ! function_exists('get_breadcrumbs')) {
 
 // ------------------------------------------------------------------------
 
+
+/**
+ * Build template nav menu
+ *
+ *
+ * @access    public
+ * @return    string
+ */
+if ( ! function_exists('get_nav_menu')) {
+    function get_nav_menu($prefs = array()) {
+        return get_instance()->template->buildNavMenu($prefs);
+    }
+}
+
+// ------------------------------------------------------------------------
+
 /**
  * Get template menu buttons
  *
