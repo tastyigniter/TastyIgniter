@@ -233,11 +233,7 @@ class Checkout extends Main_Controller {
         }
 
         $local_info = $this->session->userdata('local_info');
-        if ($this->input->post('order_type')) {
-            $data['order_type'] = $this->input->post('order_type');                            // retrieve order_type value from $_POST data if set
-        } else if (isset($order_data['order_type'])) {
-            $data['order_type'] = $order_data['order_type'];                                    // retrieve order_type from session data
-        } else if (isset($local_info['order_type'])) {
+        if (isset($local_info['order_type'])) {
             $data['order_type'] = $local_info['order_type'];
         } else {
             $data['order_type'] = '1';
@@ -274,7 +270,7 @@ class Checkout extends Main_Controller {
         }
 
         if (empty($addresses)) {
-            $addresses = array(array('address_id' => '', 'address_1' => '', 'address_2' => '', 'city' => '', 'state' => '', 'postcode' => '', 'country_id' => $country_id));
+            $addresses = array(array('address_id' => '0', 'address_1' => '', 'address_2' => '', 'city' => '', 'state' => '', 'postcode' => '', 'country_id' => $country_id));
         }
 
         $data['addresses'] = array();
@@ -376,11 +372,11 @@ class Checkout extends Main_Controller {
             $order_data['email'] 		= $this->input->post('email');
             $order_data['telephone'] 	= $this->input->post('telephone');
             $order_data['order_time'] 	= $this->input->post('order_time');					// retrieve order_time value from $_POST data if set and add to order_data array
-            $order_data['order_type'] 	= $this->input->post('order_type');				// retrieve order_type value from $_POST data if set and convert to integer then add to order_data array
+            $order_data['order_type'] 	= $this->location->orderType();				// retrieve order_type value from $_POST data if set and convert to integer then add to order_data array
             $order_data['address_id'] 	= (int) $this->input->post('address_id');				// retrieve address_id value from $_POST data if set and convert to integer then add to order_data array
             $order_data['comment'] 		= $this->input->post('comment');						// retrieve comment value from $_POST data if set and convert to integer then add to order_data array
 
-            if ($this->input->post('order_type') === '1') {
+            if ($this->location->orderType() === '1') {
                 foreach ($this->input->post('address') as $key => $address) {
                     $_POST['address'][$key]['country'] = $address['country_id'];
 
@@ -458,10 +454,9 @@ class Checkout extends Main_Controller {
 		}
 
 		$this->form_validation->set_rules('telephone', 'lang:label_telephone', 'xss_clean|trim|required|numeric|max_length[20]');
-		$this->form_validation->set_rules('order_type', 'lang:label_order_type', 'xss_clean|trim|required|integer|callback__order_type');
 		$this->form_validation->set_rules('order_time', 'lang:label_order_time', 'xss_clean|trim|required|valid_time|callback__validate_time');
 
-        if ($this->input->post('order_type') === '1' AND $this->input->post('address')) {
+        if ($this->location->orderType() === '1' AND $this->input->post('address')) {
             $this->form_validation->set_rules('address_id', 'lang:label_address', 'xss_clean|trim|integer|callback__validate_address');
 
             foreach ($this->input->post('address') as $key => $address) {
@@ -494,33 +489,30 @@ class Checkout extends Main_Controller {
 	}
 
 	public function _validate_time($str) { 	// validation callback function to check if order_time $_POST data is a valid time, is less than the restaurant current time and is within the restaurant opening and closing hour
-		if (strtotime($str) < strtotime($this->location->currentTime())) {
+        if ($this->config->item('location_order') === '1') {
+            if ($this->location->orderType() == '1' AND ! $this->location->hasDelivery()) { 					// checks if cart contents is empty
+                $this->form_validation->set_message('_validate_time', $this->lang->line('error_delivery_unavailable'));
+                return FALSE;
+            } else if ($this->location->orderType() == '2' AND ! $this->location->hasCollection()) { 				// checks if cart contents is empty
+                $this->form_validation->set_message('_validate_time', $this->lang->line('error_collection_unavailable'));
+                return FALSE;
+            }
+        }
+
+        if (strtotime($str) < strtotime($this->location->currentTime())) {
         	$this->form_validation->set_message('_validate_time', $this->lang->line('error_delivery_less_current_time'));
       		return FALSE;
     	} else if ( ! $this->location->checkDeliveryTime($str)) {
         	$this->form_validation->set_message('_validate_time', $this->lang->line('error_no_delivery_time'));
       		return FALSE;
-		} else {																				// else validation is successful
-			return TRUE;
-		}
-	}
+        }
 
-	public function _order_type($type) {
-		if ($this->config->item('location_order') === '1') {
-			if (($type == '1') AND ( ! $this->location->hasDelivery())) { 					// checks if cart contents is empty
-				$this->form_validation->set_message('_order_type', $this->lang->line('error_delivery_unavailable'));
-				return FALSE;
-			} else if (($type == '2') AND ( ! $this->location->hasCollection())) { 				// checks if cart contents is empty
-				$this->form_validation->set_message('_order_type', $this->lang->line('error_collection_unavailable'));
-				return FALSE;
-			} else {																				// else validation is successful
-				return TRUE;
-			}
-		}
-	}
+        return TRUE;
+    }
 
 	public function _validate_address($address_id) {
-        if ($this->input->post('order_type') === '1' AND $this->input->post('address')) {
+        $addresses = $this->input->post('address');
+        if ($this->location->orderType() === '1' AND !empty($addresses[0]['address_1'])) {
             foreach ($this->input->post('address') as $address) {
                 if (empty($address_id) OR $address['address_id'] === $address_id) {
                     $country = $this->Countries_model->getCountry($address['country_id']);

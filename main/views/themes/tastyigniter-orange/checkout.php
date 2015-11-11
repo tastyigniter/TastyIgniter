@@ -118,26 +118,8 @@
 										</div>
 									</div>
                                </div>
-
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <label for=""><?php echo lang('label_order_type'); ?></label><br />
-                                        <div class="btn-group" data-toggle="buttons">
-                                            <label class="btn btn-default col-xs-6 <?php if ($order_type === '1') echo 'active btn-primary'; ?>" data-btn="btn-primary">
-                                                <input type="radio" name="order_type" value="1" <?php if ($order_type === '1') echo 'checked="checked"'; ?> /> <?php echo lang('label_delivery'); ?>
-                                            </label>
-                                            <label class="btn btn-default col-xs-6 <?php if ($order_type === '2') echo 'active btn-primary'; ?>" data-btn="btn-primary">
-                                                <input type="radio" name="order_type" value="2" <?php if ($order_type === '2') echo 'checked="checked"'; ?>/> <?php echo lang('label_collection'); ?>
-                                            </label>
-                                        </div>
-                                        <br />
-                                        <?php echo form_error('order_type', '<span class="text-danger">', '</span>'); ?>
-                                        <br /><br />
-                                    </div>
-                                </div>
-
                                 <?php if ($addresses) { ?>
-                                    <div id="checkout-delivery" class="row wrap-bottom" style="display:<?php echo ($order_type === '2') ? 'none' : 'block'; ?>">
+                                    <div id="checkout-delivery" class="row wrap-bottom" style="display:<?php echo ($order_type === '1') ? 'block' : 'none'; ?>">
                                         <?php $address_row = 0; ?>
                                         <div id="address-labels">
                                             <div class="btn-group btn-group-md col-xs-12" data-toggle="buttons">
@@ -148,6 +130,8 @@
                                                             <input type="radio" name="address_id" value="<?php echo $address['address_id']; ?>" <?php echo ($address['address_id'] == $address_id) ? 'checked="checked"' : ''; ?> />
                                                             <address class="text-left"><?php echo $address['address']; ?></address>
                                                         </label>
+                                                    <?php } else if ($address['address_id'] === '0') { ?>
+                                                        <input type="hidden" name="address_id" value="<?php echo $address['address_id']; ?>" />
                                                     <?php } ?>
                                                     <?php $address_row++; ?>
                                                 <?php } ?>
@@ -313,7 +297,7 @@
 
 <script type="text/javascript"><!--
 $(document).ready(function() {
-  	$('input[name="order_type"]').on('change', function() {
+    $(document).on('change', 'input[name="order_type"]', function() {
   		if (this.value === '1') {
      		$('#checkout-delivery').fadeIn();
 		} else {
@@ -344,7 +328,6 @@ $(document).ready(function() {
         $('.side-bar .buttons .btn').text('<?php echo lang('button_payment'); ?>');
 
     });
-//    $('input[name="order_type"]:checked').trigger('change');
 });
 //--></script>
 <?php echo get_footer(); ?>
