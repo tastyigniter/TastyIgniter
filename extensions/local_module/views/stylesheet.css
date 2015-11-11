@@ -152,7 +152,7 @@ text-align: left;
 
 /*** End Location Bar ***/
 
-#local-alert .alert > p {
+#local-alert .alert p {
 padding: 10px;
 }
 #local-alert .alert {

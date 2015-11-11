@@ -77,10 +77,12 @@ class Local_module extends Main_Controller {
             $data['min_total'] = $this->currency->format('0.00');
         }
 
-        if ($this->location->searchQuery() AND ! $this->location->isOpened() AND $this->config->item('future_orders') !== '1') { 													// else if local restaurant is not open
-            $data['local_alert'] = $this->lang->line('alert_location_closed');
-        } else if ($this->location->searchQuery() AND ! $this->location->isOpened() AND $this->config->item('future_orders') === '1') {
-            $data['local_alert'] = $this->lang->line('alert_local_future_order');
+        if ($ext_data['controller'] !== 'home') { // dont display alert if referrer is home
+            if ($this->location->searchQuery() AND ! $this->location->isOpened() AND $this->config->item('future_orders') !== '1') {                                                    // else if local restaurant is not open
+                $data['local_alert'] = $this->lang->line('alert_location_closed');
+            } else if ($this->location->searchQuery() AND ! $this->location->isOpened() AND $this->config->item('future_orders') === '1') {
+                $data['local_alert'] = $this->lang->line('alert_local_future_order');
+            }
         }
 
         $this->load->model('Reviews_model');
