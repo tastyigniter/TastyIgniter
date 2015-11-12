@@ -47,6 +47,8 @@ class Cart_module extends Main_Controller {
         $data['search_query'] 		        = $this->location->searchQuery();
         $data['delivery_time'] 		        = $this->location->deliveryTime();
         $data['collection_time'] 	        = $this->location->collectionTime();
+        $data['has_delivery']               = $this->location->hasDelivery();
+        $data['has_collection']             = $this->location->hasCollection();
         $data['show_cart_images'] 	        = isset($ext_data['show_cart_images']) ? $ext_data['show_cart_images'] : '';
         $data['cart_images_h'] 		        = isset($ext_data['cart_images_h']) ? $ext_data['cart_images_h'] : '';
         $data['cart_images_w'] 		        = isset($ext_data['cart_images_w']) ? $ext_data['cart_images_w'] :'';
