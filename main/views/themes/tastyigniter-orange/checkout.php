@@ -303,7 +303,9 @@ $(document).ready(function() {
 		} else {
    			$('#checkout-delivery').fadeOut();
 		}
-	});
+
+        window.location.href = js_site_url('checkout');
+    });
 
   	$('#address-labels .edit-address').on('click', function() {
         var formDiv = $(this).attr('data-form');
