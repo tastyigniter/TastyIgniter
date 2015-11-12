@@ -3,13 +3,12 @@
 class Login extends Main_Controller {
 
 	public function index() {
-		$this->load->library('customer');
+		if ($this->customer->islogged()) { 														// checks if customer is logged in then redirect to account page.
+			redirect('account/account');
+		}
+
 		$this->load->model('Pages_model');
 		$this->lang->load('account/login_register');
-
-		if ($this->customer->islogged()) { 														// checks if customer is logged in then redirect to account page.
-  			redirect('account/account');
-		}
 
 		$this->template->setTitle($this->lang->line('text_heading'));
 

@@ -3,7 +3,6 @@
 class Logout extends Main_Controller {
 
 	public function index() {
-		$this->load->library('customer');
         $this->load->model('Pages_model');
 		$this->lang->load('account/login_register');
 

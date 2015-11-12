@@ -9,9 +9,7 @@ class Cart_module extends Main_Controller {
         $this->load->model('Image_tool_model'); 														// load the Image tool model
 
         $this->load->library('cart'); 															// load the cart library
-        $this->load->library('customer');
         $this->load->library('currency'); 														// load the currency library
-        $this->load->library('location'); 														// load the location library
 
         $this->lang->load('cart_module/cart_module');
 	}

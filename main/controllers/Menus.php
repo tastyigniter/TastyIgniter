@@ -10,8 +10,6 @@ class Menus extends Main_Controller {
         $this->load->model('Menu_options_model'); 														// load the menus model
         $this->load->model('Pages_model');
 
-        $this->load->library('customer'); 														// load the customer library
-        $this->load->library('location'); 														// load the location library
         $this->load->library('currency'); 														// load the currency library
 
         $this->lang->load('menus');

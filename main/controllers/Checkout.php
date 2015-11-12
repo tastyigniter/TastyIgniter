@@ -12,9 +12,7 @@ class Checkout extends Main_Controller {
         $this->load->model('Countries_model');
         $this->load->model('Extensions_model');
 
-        $this->load->library('customer'); 														// load the customer library
         $this->load->library('cart'); 															// load the cart library
-        $this->load->library('location'); 														// load the location library
         $this->load->library('currency'); 														// load the currency library
         $this->load->library('country'); 														// load the currency library
 		$this->load->library('user_agent');

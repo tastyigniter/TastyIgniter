@@ -10,8 +10,6 @@ class Inbox extends Main_Controller {
 
         $this->load->model('Messages_model');													// loads messages model
 
-        $this->load->library('customer'); 														// load the customer library
-
 		$this->lang->load('account/inbox');
 	}
 

@@ -9,7 +9,6 @@ class Reservations extends Main_Controller {
             redirect('account/login');
         }
 
-        $this->load->library('customer'); 														// load the customer library
 		$this->load->library('currency'); 														// load the currency library
 
         $this->load->model('Reservations_model');														// load orders model

@@ -8,9 +8,6 @@ class Reservation extends Main_Controller {
         $this->load->model('Reservations_model');
         $this->load->model('Pages_model');
 
-        $this->load->library('customer'); 														// load the customer library
-        $this->load->library('location'); // load the location library
-
 		$this->lang->load('reservation');
 
 		if ($this->config->item('reservation_mode') !== '1') {

@@ -17,7 +17,6 @@ class Account extends Main_Controller {
         $this->load->model('Orders_model');														// load the orders model
         $this->load->model('Reservations_model');												// load the reservations model
 
-        $this->load->library('customer'); 														// load the customer library
         $this->load->library('cart'); 															// load the cart library
         $this->load->library('currency'); 														// load the currency library
         $this->load->library('country');

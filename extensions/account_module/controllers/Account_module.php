@@ -3,7 +3,6 @@
 class Account_module extends Main_Controller {
 
 	public function index($data = array()) {
-		$this->load->library('customer');
 		$this->lang->load('account_module/account_module');
 
 		if ( ! file_exists(EXTPATH .'account_module/views/account_module.php')) { 								//check if file exists in views folder

@@ -12,8 +12,6 @@ class Reset extends Main_Controller {
         $this->load->model('Customers_model');													// load the customers model
         $this->load->model('Security_questions_model');											// load the security questions model
 
-        $this->load->library('customer'); 														// load the customer library
-
 		$this->lang->load('account/reset');
 	}
 

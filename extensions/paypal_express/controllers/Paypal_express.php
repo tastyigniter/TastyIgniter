@@ -4,7 +4,6 @@ class Paypal_express extends Main_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->library('customer');
         $this->load->model('Orders_model');
         $this->load->model('paypal_express/Paypal_model');
         $this->lang->load('paypal_express/paypal_express');

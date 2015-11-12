@@ -13,8 +13,6 @@ class Address extends Main_Controller {
         $this->load->model('Addresses_model');
         $this->load->model('Pages_model');
 
-        $this->load->library('customer'); 														// load the customer library
-
         $this->lang->load('account/address');
 	}
 

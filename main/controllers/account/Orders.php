@@ -12,7 +12,6 @@ class Orders extends Main_Controller {
         $this->load->model('Orders_model');														// load orders model
         $this->load->model('Addresses_model');														// load addresses model
 
-        $this->load->library('customer'); 														// load the customer library
 		$this->load->library('currency'); 														// load the currency library
 
         $this->lang->load('account/orders');
