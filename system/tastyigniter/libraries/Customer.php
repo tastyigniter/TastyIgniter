@@ -5,19 +5,17 @@ class Customer {
 	private $firstname;
 	private $lastname;
 	private $email;
-	private $password;
 	private $telephone;
 	private $address_id;
 	private $security_question_id;
 	private $security_answer;
-	private $cart_contents;
-	private $currency_symbol;
 
 	public function __construct() {
 		$this->CI =& get_instance();
 		$this->CI->load->database();
         $this->CI->load->driver('session');
 		$this->CI->load->library('user_agent');
+		$this->CI->load->library('cart');
 
 		$this->initialize();
 	}
@@ -25,9 +23,7 @@ class Customer {
 	public function initialize() {
 		$cust_info = $this->CI->session->userdata('cust_info');
 
-		if ( ! isset($cust_info['customer_id']) AND  ! isset($cust_info['email'])) {
-			$this->logout();
-		} else {
+		if (isset($cust_info['customer_id']) AND  isset($cust_info['email'])) {
 			$this->CI->db->from('customers');
 			$this->CI->db->where('customer_id', $cust_info['customer_id']);
 			$this->CI->db->where('email', $cust_info['email']);
@@ -38,12 +34,13 @@ class Customer {
 				$this->customer_id 			= $result['customer_id'];
 				$this->firstname 			= $result['first_name'];
 				$this->lastname 			= $result['last_name'];
-				$this->email 				= $result['email'];
-				$this->password 			= $result['password'];
+				$this->email 				= strtolower($result['email']);
 				$this->telephone			= $result['telephone'];
 				$this->address_id 			= $result['address_id'];
 				$this->security_question_id = $result['security_question_id'];
 				$this->security_answer 		= $result['security_answer'];
+
+				$this->updateCart();
 			} else {
 				$this->logout();
 			}
@@ -61,24 +58,35 @@ class Customer {
 		if ($query->num_rows() === 1) {
 			$result = $query->row_array();
 
-			$cust_info = array(
+			if (!empty($result['cart']) AND is_string($result['cart'])) {
+				$cart_contents = unserialize($result['cart']);
+
+				foreach ($cart_contents as $rowid => $item) {
+					if (!empty($item['rowid']) AND $rowid === $item['rowid']) {
+						$this->CI->cart->insert($item);
+					}
+				}
+			}
+
+			$this->CI->session->set_userdata('cust_info', array(
 				'customer_id' 	=> $result['customer_id'],
 				'email'			=> $result['email']
-			);
+			));
 
-			$this->CI->session->set_userdata('cust_info', $cust_info);
-
-			$this->customer_id = $result['customer_id'];
-            $this->firstname = $result['first_name'];
-            $this->lastname = $result['last_name'];
-			$this->email = $result['email'];
+			$this->customer_id          = $result['customer_id'];
+            $this->firstname            = $result['first_name'];
+            $this->lastname             = $result['last_name'];
+			$this->email 				= strtolower($result['email']);
+			$this->telephone			= $result['telephone'];
+			$this->address_id 			= $result['address_id'];
+			$this->security_question_id = $result['security_question_id'];
+			$this->security_answer 		= $result['security_answer'];
 
 			$this->CI->db->set('ip_address', $this->CI->input->ip_address());
 			$this->CI->db->where('customer_id', $result['customer_id']);
 			$this->CI->db->update('customers');
 
 	  		return TRUE;
-
 		} else {
       		return FALSE;
 		}
@@ -95,9 +103,11 @@ class Customer {
 		$this->address_id = '';
 		$this->security_question_id = '';
 		$this->security_answer = '';
-		//$this->cart_contents = '';
 
-	}
+	    $this->CI->session->unset_userdata('order_info');
+
+	    $this->CI->cart->destroy();
+    }
 
   	public function isLogged() {
 	    return $this->customer_id;
@@ -126,13 +136,12 @@ class Customer {
   	public function checkPassword($password) {
 		$this->CI->db->select('*');
 		$this->CI->db->from('customers');
-		$this->CI->db->where('email', strtolower($this->email));
+		$this->CI->db->where('email', $this->email);
 		$this->CI->db->where('password', 'SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1("' . $password . '")))))', FALSE);
 
 		$query = $this->CI->db->get();
-		//Login Successful
 		if ($query->num_rows() === 1) {
-			return $this->password;
+			return TRUE;
 		} else {
 			return FAlSE;
 		}
@@ -152,6 +161,13 @@ class Customer {
 
   	public function getSecurityAnswer() {
 	    return $this->security_answer;
+	}
+
+	public function updateCart() {
+		$this->CI->db->set('cart', ($cart_contents = $this->CI->cart->contents()) ? serialize($cart_contents) : '');
+		$this->CI->db->where('customer_id', $this->customer_id);
+		$this->CI->db->where('email', $this->email);
+		$this->CI->db->update('customers');
 	}
 }
 
