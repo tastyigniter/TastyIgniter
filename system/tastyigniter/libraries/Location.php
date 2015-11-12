@@ -272,6 +272,29 @@ class Location {
 		return (is_numeric($this->local_info['last_order_time']) AND $this->local_info['last_order_time'] > 0) ? mdate($this->timeFormat, strtotime($this->closing_time) - ($this->local_info['last_order_time'] * 60)) : mdate($this->timeFormat, strtotime($this->closing_time));
 	}
 
+	public function orderTimeRange() {
+		if ($this->opening_status !== '1') {
+			return NULL;
+		}
+
+		$time_format = ($this->CI->config->item('time_format')) ? $this->CI->config->item('time_format') : '%h:%i %a';
+
+		$time_interval = ($this->order_type === '1') ? $this->deliveryTime() : $this->collectionTime();
+		$start_time = mdate('%H:%i', strtotime($this->current_time) + $time_interval * 60);
+
+		$time_range = array();
+		$order_times = time_range($this->openingTime(), $this->lastOrderTime(), $time_interval);    // retrieve the location delivery times from location library
+		foreach ($order_times as $key => $value) {                                            // loop through delivery times
+			if (strtotime($value) > strtotime($start_time) AND $this->CI->config->item('future_orders') !== '1') {
+				$time_range[$value] = mdate($time_format, strtotime($value));
+			} else if (strtotime($value) > strtotime($start_time) AND $this->CI->config->item('future_orders') === '1') {
+				$time_range[$value] = mdate($time_format, strtotime($value));
+			}
+		}
+
+		return $time_range;
+	}
+
 	public function payments($split = '') {
 		$payments = (!empty($this->local_options['payments'])) ? $this->local_options['payments'] : NULL;
 

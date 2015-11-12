@@ -96,10 +96,10 @@
 									<div class="col-sm-6">
 										<div class="form-group">
 											<label for="order-time"><?php echo lang('label_order_time'); ?></label>
-                                            <?php if ($delivery_times) { ?>
+                                            <?php if ($order_times) { ?>
                                                 <select name="order_time" id="order-time" class="form-control">
                                                     <?php $hour = 1; ?>
-                                                    <?php foreach ($delivery_times as $key => $value) { ?>
+                                                    <?php foreach ($order_times as $key => $value) { ?>
                                                         <?php $value = ($hour === 1) ? $value .' - '. lang('text_asap') : $value; ?>
 
                                                         <?php if ($key === $order_time) { ?>
@@ -112,7 +112,7 @@
                                                     <?php } ?>
                                                 </select>
                                             <?php } else { ?>
-                                                <br /><?php echo lang('text_location_closed'); ?>
+                                                <br /><?php echo lang('text_location_closed'); ?><br />
                                             <?php } ?>
                                             <?php echo form_error('order_time', '<span class="text-danger">', '</span>'); ?>
 										</div>

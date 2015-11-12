@@ -329,24 +329,10 @@ class Checkout extends Main_Controller {
             );
         }
 
-        $time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
-        $current_time = $this->location->currentTime(); 								// retrieve the location current time from location library
-
-        $data['delivery_times'] = array();
-        $start_time = mdate('%H:%i', strtotime($current_time) + $this->location->deliveryTime() * 60);
-        $delivery_times = time_range($this->location->openingTime(), $this->location->lastOrderTime(), $this->location->deliveryTime());    // retrieve the location delivery times from location library
-
-        foreach ($delivery_times as $key => $value) {                                            // loop through delivery times
-            if (strtotime($value) > strtotime($start_time) AND $this->config->item('future_orders') !== '1') {
-                $data['delivery_times'][$value] = mdate($time_format, strtotime($value));
-            } else if (strtotime($value) > strtotime($start_time) AND $this->config->item('future_orders') === '1') {
-                $data['delivery_times'][$value] = mdate($time_format, strtotime($value));
-            }
-        }
-
-        $local_payments = $this->location->payments();
+        $data['order_times'] = $this->location->orderTimeRange();
 
         $data['payments'] = array();
+        $local_payments = $this->location->payments();
         $payments = $this->extension->getAvailablePayments();
         foreach (sort_array($payments) as $code => $payment) {
             if (!empty($local_payments) AND !in_array($payment['code'], $local_payments)) continue;
