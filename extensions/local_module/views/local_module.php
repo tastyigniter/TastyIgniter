@@ -66,12 +66,14 @@
                             <img class="img-responsive pull-left" src="<?php echo $location_image; ?>">
                             <dl>
                                 <dd><h4><?php echo $location_name; ?></h4></dd>
-                                <dd>
-                                    <div class="rating rating-sm">
-                                        <span class="fa fa-star"></span><span class="fa fa-star"></span><span class="fa fa-star"></span><span class="fa fa-star-half-o"></span><span class="fa fa-star-o"></span>
-                                        <span class="small"><?php echo $text_total_review; ?></span>
-                                    </div>
-                                </dd>
+                                <?php if (config_item('allow_reviews') !== '1') { ?>
+                                    <dd>
+                                        <div class="rating rating-sm">
+                                            <span class="fa fa-star"></span><span class="fa fa-star"></span><span class="fa fa-star"></span><span class="fa fa-star-half-o"></span><span class="fa fa-star-o"></span>
+                                            <span class="small"><?php echo $text_total_review; ?></span>
+                                        </div>
+                                    </dd>
+                                <?php } ?>
                                 <dd><span class="text-muted"><?php echo $location_address; ?></span></dd>
                             </dl>
                         </div>

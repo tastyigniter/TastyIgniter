@@ -24,12 +24,14 @@
                                         <img class="img-responsive pull-left" src="<?php echo $location['location_image']; ?>">
                                         <dl>
                                             <dd><h4><?php echo $location['location_name']; ?></h4></dd>
+                                            <?php if (config_item('allow_reviews') !== '1') { ?>
                                             <dd>
                                                 <div class="rating rating-sm text-muted">
                                                     <span class="fa fa-star"></span><span class="fa fa-star"></span><span class="fa fa-star"></span><span class="fa fa-star-half-o"></span><span class="fa fa-star-o"></span>
                                                     <span><?php echo $location['total_reviews']; ?></span>
                                                 </div>
                                             </dd>
+                                            <?php } ?>
                                             <dd><span class="text-muted"><?php echo $location['address']; ?></span></dd>
                                         </dl>
                                     </div>

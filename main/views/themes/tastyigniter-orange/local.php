@@ -34,7 +34,9 @@
                 <div class="row wrap-vertical">
                     <ul id="nav-tabs" class="nav nav-tabs nav-justified nav-tabs-line">
                         <li class="active"><a href="#local-menus" data-toggle="tab"><?php echo lang('text_tab_menu'); ?></a></li>
+                        <?php if (config_item('allow_reviews') !== '1') { ?>
                         <li><a href="#local-reviews" data-toggle="tab"><?php echo lang('text_tab_review'); ?></a></li>
+                        <?php } ?>
                         <li><a href="#local-information" data-toggle="tab"><?php echo lang('text_tab_info'); ?></a></li>
                         <?php if (!empty($local_gallery)) { ?>
                             <li><a href="#local-gallery" data-toggle="tab"><?php echo lang('text_tab_gallery'); ?></a></li>
@@ -52,6 +54,7 @@
                         </div>
                     </div>
 
+                    <?php if (config_item('allow_reviews') !== '1') { ?>
                     <div id="local-reviews" class="tab-pane row wrap-all">
                         <div class="col-md-12">
                             <div class="heading-section">
@@ -62,6 +65,7 @@
 
                         <?php echo load_partial('local_reviews', $local_reviews); ?>
                     </div>
+                    <?php } ?>
 
                     <div id="local-information" class="tab-pane row wrap-all">
                         <?php echo load_partial('local_info', $local_info); ?>

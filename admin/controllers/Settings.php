@@ -269,6 +269,7 @@ class Settings extends Admin_Controller {
 				'distance_unit'				=> $this->input->post('distance_unit'),
 				'future_orders' 			=> $this->input->post('future_orders'),
 				'location_order'			=> $this->input->post('location_order'),
+				'allow_reviews'			    => $this->input->post('allow_reviews'),
 				'approve_reviews'			=> $this->input->post('approve_reviews'),
 				'new_order_status'			=> $this->input->post('new_order_status'),
 				'completed_order_status'	=> $this->input->post('completed_order_status'),
@@ -357,6 +358,7 @@ class Settings extends Admin_Controller {
 
 		$this->form_validation->set_rules('future_orders', 'lang:label_future_order', 'xss_clean|trim|required|numeric');
 		$this->form_validation->set_rules('location_order', 'lang:label_location_order', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('allow_reviews', 'lang:label_allow_reviews', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('approve_reviews', 'lang:label_approve_reviews', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('new_order_status', 'lang:label_new_order_status', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('completed_order_status', 'lang:label_completed_order_status', 'xss_clean|trim|required|integer');

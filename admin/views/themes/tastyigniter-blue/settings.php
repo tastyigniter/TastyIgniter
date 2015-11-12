@@ -241,6 +241,23 @@
 						</div>
 					</div>
                     <div class="form-group">
+                        <label for="input-allow-reviews" class="col-sm-3 control-label"><?php echo lang('label_allow_reviews'); ?>
+                            <span class="help-block"><?php echo lang('help_allow_reviews'); ?></span>
+                        </label>
+                        <div class="col-sm-5">
+                            <div class="btn-group btn-group-switch" data-toggle="buttons">
+                                <?php if (config_item('allow_reviews') == '1') { ?>
+                                    <label class="btn btn-success"><input type="radio" name="allow_reviews" value="0" <?php echo set_radio('allow_reviews', '0'); ?>><?php echo lang('text_enabled'); ?></label>
+                                    <label class="btn btn-danger active"><input type="radio" name="allow_reviews" value="1" <?php echo set_radio('allow_reviews', '1', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+                                <?php } else { ?>
+                                    <label class="btn btn-success active"><input type="radio" name="allow_reviews" value="0" <?php echo set_radio('allow_reviews', '0', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+                                    <label class="btn btn-danger"><input type="radio" name="allow_reviews" value="1" <?php echo set_radio('allow_reviews', '1'); ?>><?php echo lang('text_disabled'); ?></label>
+                                <?php } ?>
+                            </div>
+                            <?php echo form_error('allow_reviews', '<span class="text-danger">', '</span>'); ?>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="input-approve-reviews" class="col-sm-3 control-label"><?php echo lang('label_approve_reviews'); ?>
                             <span class="help-block"><?php echo lang('help_approve_reviews'); ?></span>
                         </label>

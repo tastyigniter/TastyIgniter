@@ -29,6 +29,7 @@ $lang['label_date'] 			= 'Review Date';
 $lang['alert_review_success'] 	= '<p class="alert-success">Review sent successfully, it will be visible once approved.</p>';
 $lang['alert_review_error'] 	= '<p class="alert-danger">An error has occurred, please try again.</p>';
 $lang['alert_review_duplicate'] = '<p class="alert-danger">Sorry. Either you\'ve already left a review for this order, or an error has occurred.</p>';
+$lang['alert_review_disabled']  = '<p class="alert-danger">Reviews has been disabled, please contact site administrator.</p>';
 
 /* End of file reviews_lang.php */
 /* Location: ./main/language/english/main/reviews_lang.php */

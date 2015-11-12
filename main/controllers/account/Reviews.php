@@ -4,15 +4,19 @@ class Reviews extends Main_Controller {
 
 	public function __construct() {
 		parent::__construct(); 																	//  calls the constructor
-        if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
+
+		if (!$this->customer->isLogged()) {  													// if customer is not logged in redirect to account login page
             redirect('account/login');
         }
 
         $this->load->model('Reviews_model');													// loads messages model
 
-        $this->load->library('customer'); 														// load the customer library
-
         $this->lang->load('account/reviews');
+
+		if ($this->config->item('allow_reviews') === '1') {
+			$this->alert->set('alert', $this->lang->line('alert_review_disabled'));
+			redirect('account/account');
+		}
 	}
 
 	public function index() {
