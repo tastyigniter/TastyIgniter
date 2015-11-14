@@ -212,9 +212,9 @@ class Messages extends Admin_Controller {
             'all_newsletters'   =>  $this->lang->line('text_all_customers'),
             'customer_group'    =>  $this->lang->line('text_customer_group'),
             'customers'         =>  $this->lang->line('text_customers'),
-            'all_staffs'        =>  $this->lang->line('text_all_staffs'),
+            'all_staffs'        =>  $this->lang->line('text_all_staff'),
             'staff_group'       =>  $this->lang->line('text_staff_group'),
-            'staffs'            =>  $this->lang->line('text_staffs')
+            'staffs'            =>  $this->lang->line('text_staff')
         );
 
 		$this->load->model('Customer_groups_model');

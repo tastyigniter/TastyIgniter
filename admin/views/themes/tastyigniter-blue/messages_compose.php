@@ -33,12 +33,6 @@
                                                 <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
                                             <?php } ?>
                                         <?php } ?>
-                                        <option value="all_customers" <?php echo set_select('recipient', 'all_customers'); ?> ><?php echo lang('text_all_customers'); ?></option>
-                                        <option value="customer_group" <?php echo set_select('recipient', 'customer_group'); ?> ><?php echo lang('text_customer_group'); ?></option>
-                                        <option value="customers" <?php echo set_select('recipient', 'customers'); ?> ><?php echo lang('text_customers'); ?></option>
-                                        <option value="all_staffs" <?php echo set_select('recipient', 'all_staffs'); ?> ><?php echo lang('text_all_staff'); ?></option>
-                                        <option value="staff_group" <?php echo set_select('recipient', 'staff_group'); ?> ><?php echo lang('text_staff_group'); ?></option>
-                                        <option value="staffs" <?php echo set_select('recipient', 'staffs'); ?> ><?php echo lang('text_staff'); ?></option>
                                     </select>
                                     <?php echo form_error('recipient', '<span class="text-danger">', '</span>'); ?>
                                 </div>
@@ -194,7 +188,7 @@ $('input[name=\'customer\']').select2({
 
 $('input[name=\'customer\']').on('select2-selecting', function(e) {
 	$('#customer' + e.choice.id).remove();
-	$('#customers-box table tbody').append('<tr id="customer' + e.choice.id + '"><td class="name">' + e.choice.text + '<td class="text-right">' + '<a class="btn btn-danger btn-xs" onclick="confirm('<?php echo lang('alert_warning_confirm'); ?>') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a>' + '<input type="hidden" name="customers[]" value="' + e.choice.id + '" /></tr>');
+	$('#customers-box table tbody').append('<tr id="customer' + e.choice.id + '"><td class="name">' + e.choice.text + '<td class="text-right">' + '<a class="btn btn-danger btn-xs" onclick="confirm(\'<?php echo lang('alert_warning_confirm'); ?>\') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a>' + '<input type="hidden" name="customers[]" value="' + e.choice.id + '" /></tr>');
 });
 //--></script>
 <script type="text/javascript"><!--
@@ -224,7 +218,7 @@ $('input[name=\'staff\']').select2({
 
 $('input[name=\'staff\']').on('select2-selecting', function(e) {
 	$('#staff' + e.choice.id).remove();
-	$('#staffs-box table tbody').append('<tr id="staff' + e.choice.id + '"><td class="name">' + e.choice.text + '<td class="text-right">' + '<a class="btn btn-danger btn-xs" onclick="confirm('<?php echo lang('alert_warning_confirm'); ?>') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a>' + '<input type="hidden" name="staffs[]" value="' + e.choice.id + '" /></tr>');
+	$('#staffs-box table tbody').append('<tr id="staff' + e.choice.id + '"><td class="name">' + e.choice.text + '<td class="text-right">' + '<a class="btn btn-danger btn-xs" onclick="confirm(\'<?php echo lang('alert_warning_confirm'); ?>\') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a>' + '<input type="hidden" name="staffs[]" value="' + e.choice.id + '" /></tr>');
 });
 //--></script>
 <?php echo get_footer(); ?>
