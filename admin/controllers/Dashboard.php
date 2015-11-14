@@ -27,6 +27,19 @@ class Dashboard extends Admin_Controller {
 		$data['total_menus'] 		    = $this->Dashboard_model->getTotalMenus();
 		$data['current_month'] 			= mdate('%Y-%m', time());
 
+        $main_address = $this->config->item('main_address');
+
+        if (empty($main_address['address_1'])) {
+            $data['progress_bar']['text'] = $this->lang->line('text_progress_setting');
+            $data['progress_bar']['count'] = '40%';
+        } else if ($data['total_menus'] > 0) {
+            $data['progress_bar']['text'] = $this->lang->line('text_progress_design');
+            $data['progress_bar']['count'] = '80%';
+        } else if (!empty($main_address['address_1'])) {
+            $data['progress_bar']['text'] = $this->lang->line('text_progress_menus');
+            $data['progress_bar']['count'] = '60%';
+        }
+
 		$data['months'] = array();
 		$pastMonth = date('Y-m-d', strtotime(date('Y-m-01') .' -3 months'));
 		$futureMonth = date('Y-m-d', strtotime(date('Y-m-01') .' +3 months'));

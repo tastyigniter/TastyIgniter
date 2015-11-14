@@ -72,14 +72,13 @@
 					<div class="panel panel-default">
 						<div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_complete_setup'); ?></h3></div>
 						<div class="panel-body">
+                            <span class="text-center"><?php echo lang('text_progress_summary'); ?></span><br /><br />
                             <div class="progress">
-                                <div data-percentage="0%" style="width: 20%;" class="progress-bar progress-bar-info" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                                    <span class="sr-only"><?php echo lang('text_progress_count'); ?> <?php echo lang('text_progress'); ?></span>
+                                <div data-percentage="<?php echo $progress_bar['count']; ?>" style="width: <?php echo $progress_bar['count']; ?>" class="progress-bar progress-bar-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                    <span class="sr-only"><?php echo $progress_bar['count']; ?> <?php echo lang('text_progress'); ?></span>
                                 </div>
-                                <span class="progress-type"><?php echo lang('text_progress_type'); ?></span>
-                                <span class="progress-completed"><?php echo lang('text_progress_count'); ?></span>
+                                <span class="progress-completed"><?php echo $progress_bar['count']; ?></span>
                             </div>
-							<span class="text-center"><?php echo lang('text_progress_summary'); ?></span><br />
 							<div class="list-group check-list-group">
                                 <a class="list-group-item">
                                     <span class="check-icon pull-left"><i class="fa fa-check-square-o"></i></span>
@@ -126,7 +125,7 @@
 
                                     <div class="col-md-5 pull-right text-right">
                                         <div class="form-group">
-                                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
                                                 <?php echo lang('text_range'); ?>&nbsp;&nbsp;<span class="caret"></span>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-range pull-right" role="menu">
@@ -170,7 +169,7 @@
                         <div class="col-md-5 pull-right text-right">
                             <div class="form-group">
                                 <div class="input-group">
-                                    <button class="btn btn-default btn-sm daterange">
+                                    <button class="btn btn-default btn-xs daterange">
                                         <i class="fa fa-calendar"></i>&nbsp;&nbsp;<span><?php echo lang('text_select_range'); ?></span>&nbsp;&nbsp;<i class="fa fa-caret-down"></i>
                                     </button>
                                 </div>
@@ -337,7 +336,7 @@ $(document).ready(function() {
             'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
         },
         opens: 'left',
-        buttonClasses: ['btn', 'btn-sm'],
+        buttonClasses: ['btn', 'btn-xs'],
         applyClass: 'btn-primary',
         cancelClass: 'btn-default',
         separator: ' to ',
@@ -379,7 +378,7 @@ var myAreaChart = Morris.Area({
     labels: ['Total customer', 'Total order', 'Total reservation', 'Total reviews'],
     lineColors: ['#63ADD0', '#5CB85C', '#337AB7', '#D9534F'],
     parseTime: false,
-    behaveLikeLine: true,
+    behaveLikeLine: false,
     resize: true,
     hideHover: true,
 });
