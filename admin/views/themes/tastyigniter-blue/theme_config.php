@@ -108,7 +108,7 @@ $theme['nav_menu'] = array(
 		'class' => 'localisation',
 		'icon' => 'fa-globe',
 		'title' => lang('menu_localisation'),
-		'permission' => 'Site.Languages|Site.Currencies|Site.Countries| Admin.SecurityQuestions|Admin.Ratings|Admin.Statuses',
+		'permission' => 'Site.Languages|Site.Currencies|Site.Countries|Admin.SecurityQuestions|Admin.Ratings|Admin.Statuses',
         'child' => array(
 	        'languages' => array('class' => 'languages', 'href' => site_url('languages'), 'title' => lang('menu_language'), 'permission' => 'Site.Languages'),
 	        'currencies' => array('class' => 'currencies', 'href' => site_url('currencies'), 'title' => lang('menu_currency'), 'permission' => 'Site.Currencies'),
@@ -137,7 +137,7 @@ $theme['nav_menu'] = array(
 			'permissions' => array('class' => 'permissions', 'href' => site_url('permissions'), 'title' => lang('menu_permission'), 'permission' => 'Admin.Permissions'),
 			'uri_routes' => array('class' => 'uri_routes', 'href' => site_url('uri_routes'), 'title' => lang('menu_uri_route')),
 			'error_logs' => array('class' => 'error_logs', 'href' => site_url('error_logs'), 'title' => lang('menu_error_log'), 'permission' => 'Admin.ErrorLogs'),
-			'settings' => array('class' => 'settings', 'href' => site_url('settings'), 'title' => lang('menu_setting'), 'permission' => 'Admin.Settings'),
+			'settings' => array('class' => 'settings', 'href' => site_url('settings'), 'title' => lang('menu_setting'), 'permission' => 'Site.Settings'),
 
 		)
 	),
