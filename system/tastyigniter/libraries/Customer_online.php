@@ -27,7 +27,7 @@ class Customer_online {
 
         $input_data = array();
         $input_data['ip_address']       = $this->CI->input->ip_address();
-        $input_data['customer_id']      = $this->CI->customer->getId();
+        $input_data['customer_id']      = $this->CI->customer->isLogged() ? $this->CI->customer->getId() : '0';
         $input_data['access_type']      = $user_agent['type'];
         $input_data['browser']          = $user_agent['browser'];
         $input_data['country_code']     = $this->getCountry();
