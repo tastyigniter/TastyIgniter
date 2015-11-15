@@ -197,6 +197,10 @@ class Template {
             $out .= $menu['title'];
         }
 
+        if (isset($menu['child'])) {
+            $out .= '<span class="fa arrow"></span>';
+        }
+
         $out .= '</a>';
 
         return $out;
