@@ -35,18 +35,29 @@
 										</div>
 									</div>
 									<div class="form-group col-xs-12">
-										<label for="input-name" class="control-label"><?php echo lang('label_order_date'); ?></label>
+										<label for="input-status" class="control-label"><?php echo lang('label_status'); ?></label>
 										<div class="">
-											<?php echo $date_added; ?>
+											<?php echo $status_name; ?>
 										</div>
 									</div>
 									<div class="form-group col-xs-12">
-										<label for="input-name" class="control-label"><?php echo lang('label_order_total'); ?></label>
+										<label for="input-name" class="control-label"><?php echo lang('label_payment_method'); ?></label>
 										<div class="">
-											<?php echo $order_total; ?>
+											<?php echo $payment; ?>
+											<?php if ($paypal_details) { ?>
+												<a class="view_details"><?php echo lang('text_transaction_detail'); ?></a><br />
+											<?php } ?>
 										</div>
 									</div>
-
+									<div class="paypal_details" style="display:none">
+										<ul>
+											<?php foreach ($paypal_details as $key => $value) { ?>
+												<li>
+													<span><?php echo $key; ?></span> <?php echo $value; ?>
+												</li>
+											<?php } ?>
+										</ul>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -82,77 +93,45 @@
 											<?php echo $ip_address; ?>
 										</div>
 									</div>
+									<div class="form-group col-xs-12">
+										<label for="input-name" class="control-label"><?php echo lang('label_user_agent'); ?></label>
+										<div class="">
+											<?php echo $user_agent; ?>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-4">
 							<div class="panel panel-default">
-								<div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_tab_restaurant'); ?></h3></div>
 								<div class="panel-body">
-									<div class="form-group col-xs-12">
-										<label for="input-name" class="control-label"><?php echo lang('label_restaurant_name'); ?></label>
-										<div class="">
-											<?php echo $location_name; ?>
-										</div>
-									</div>
-									<div class="form-group col-xs-12">
-										<label for="input-name" class="control-label"><?php echo lang('label_restaurant_address'); ?></label>
-										<div class="">
-											<span><?php echo $location_address; ?></span>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-xs-12 col-sm-6">
-							<div class="panel panel-default">
-								<div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_tab_payment'); ?></h3></div>
-								<div class="panel-body">
-									<div class="form-group col-xs-12">
-										<label for="input-name" class="control-label"><?php echo lang('label_payment_method'); ?></label>
-										<div class="">
-											<?php echo $payment; ?>
-											<?php if ($paypal_details) { ?>
-												<a class="view_details"><?php echo lang('text_transaction_detail'); ?></a><br />
+									<div class="form-group">
+										<label for="input-name" class="control-label col-xs-12"><?php echo lang('label_invoice'); ?></label>
+										<div class="col-xs-12">
+											<?php if (!empty($invoice_no)) { ?>
+												<div class="pull-left">
+													<?php echo $invoice_no; ?>
+												</div>
+												<div class="pull-right">
+													<a href="<?php echo site_url('orders/invoice/view?invoice_no='.$invoice_no.'&popup=1'); ?>" class="btn btn-success btn-xs view-invoice" title="<?php echo lang('button_view_invoice'); ?>" target="_blank"><i class="fa fa-eye"></i></a>
+												</div>
+											<?php } else { ?>
+												<button type="button" class="btn btn-info btn-xs create-invoice"><i class="fa fa-cog"></i> <?php echo lang('button_create_invoice'); ?></button>
 											<?php } ?>
 										</div>
 									</div>
-									<div class="paypal_details" style="display:none">
-										<ul>
-											<?php foreach ($paypal_details as $key => $value) { ?>
-												<li>
-													<span><?php echo $key; ?></span> <?php echo $value; ?>
-												</li>
-											<?php } ?>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<?php if ($check_order_type === '1') { ?>
-							<div class="col-xs-12 col-sm-6">
-								<div class="panel panel-default">
-									<div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_tab_delivery_address'); ?></h3></div>
-									<div class="panel-body">
-										<div class="form-group col-xs-12">
-											<label for="input-name" class="control-label"><?php echo lang('label_restaurant_address'); ?></label>
-											<div class="">
-												<span><?php echo $customer_address; ?></span>
-											</div>
+									<div class="form-group col-xs-12">
+										<label for="input-name" class="control-label"><?php echo lang('label_order_total'); ?></label>
+										<div class="">
+											<?php echo $order_total; ?>
 										</div>
 									</div>
-								</div>
-							</div>
-						<?php } ?>
-					</div>
-
-					<div class="row">
-						<div class="col-xs-12 col-sm-6">
-							<div class="panel panel-default">
-								<div class="panel-body">
+									<div class="form-group col-xs-12">
+										<label for="input-name" class="control-label"><?php echo lang('label_order_date'); ?></label>
+										<div class="">
+											<?php echo $date_added; ?>
+										</div>
+									</div>
 									<div class="form-group col-xs-12">
 										<label for="input-name" class="control-label"><?php echo lang('label_date_modified'); ?></label>
 										<div class="">
@@ -169,23 +148,52 @@
 											<?php } ?>
 										</div>
 									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-xs-12 col-sm-6">
+							<div class="panel panel-default">
+								<div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_tab_restaurant'); ?> - <span class="text-muted"><?php echo $location_name; ?></span></h3></div>
+								<div class="panel-body">
 									<div class="form-group col-xs-12">
-										<label for="input-name" class="control-label"><?php echo lang('label_user_agent'); ?></label>
-										<div class="">
-											<?php echo $user_agent; ?>
-										</div>
+										<span><?php echo $location_address; ?></span>
 									</div>
 								</div>
 							</div>
 						</div>
-
 						<div class="col-xs-12 col-sm-6">
+							<div class="panel panel-default">
+								<div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_tab_delivery_address'); ?></h3></div>
+								<div class="panel-body">
+									<?php if ($check_order_type === '1') { ?>
+									<div class="form-group col-xs-12">
+										<div class="">
+											<span><?php echo $customer_address; ?></span>
+										</div>
+									</div>
+									<?php } else { ?>
+										<p><?php echo lang('text_no_delivery_address'); ?></p>
+									<?php } ?>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-xs-12 col-sm-12">
 							<div class="panel panel-default">
 								<div class="panel-heading"><h3 class="panel-title"><?php echo lang('label_comment'); ?></h3></div>
 								<div class="panel-body">
 									<div class="form-group col-xs-12">
 										<div class="">
-											<?php echo $comment; ?>
+											<?php if(!empty($comment)) { ?>
+												<?php echo $comment; ?>
+											<?php } else { ?>
+												<?php echo lang('text_no_order_comment'); ?>
+											<?php } ?>
 										</div>
 									</div>
 								</div>
@@ -290,15 +298,10 @@
 										<label class="control-label"><?php echo lang('label_notify'); ?></label>
 										<div class="">
 											<div id="input-notify" class="btn-group btn-group-switch" data-toggle="buttons">
-												<?php if ($notify == '1') { ?>
-													<label class="btn btn-danger"><input type="radio" name="notify" value="0" <?php echo set_radio('notify', '0'); ?>><?php echo lang('text_no'); ?></label>
-													<label class="btn btn-success active"><input type="radio" name="notify" value="1" <?php echo set_radio('notify', '1', TRUE); ?>><?php echo lang('text_yes'); ?></label>
-												<?php } else { ?>
-													<label class="btn btn-danger active"><input type="radio" name="notify" value="0" <?php echo set_radio('notify', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
-													<label class="btn btn-success"><input type="radio" name="notify" value="1" <?php echo set_radio('notify', '1'); ?>><?php echo lang('text_yes'); ?></label>
-												<?php } ?>
+												<label class="btn btn-danger active"><input type="radio" name="status_notify" value="0" <?php echo set_radio('status_notify', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
+												<label class="btn btn-success"><input type="radio" name="status_notify" value="1" <?php echo set_radio('status_notify', '1'); ?>><?php echo lang('text_yes'); ?></label>
 											</div>
-											<?php echo form_error('notify', '<span class="text-danger">', '</span>'); ?>
+											<?php echo form_error('status_notify', '<span class="text-danger">', '</span>'); ?>
 										</div>
 									</div>
 								</div>
@@ -310,13 +313,13 @@
 				<div id="menus" class="tab-pane row wrap-all">
 					<div class="panel panel-default panel-table">
 						<div class="table-responsive">
-							<table height="auto" class="table table-striped table-border">
+							<table height="auto" class="table table-condensed table-border">
 								<thead>
 									<tr>
 										<th></th>
-										<th width="25%"><?php echo lang('column_name_option'); ?></th>
-										<th class="text-center"><?php echo lang('column_price'); ?></th>
-										<th><?php echo lang('column_total'); ?></th>
+										<th width="65%"><?php echo lang('column_name_option'); ?></th>
+										<th class="text-left"><?php echo lang('column_price'); ?></th>
+										<th class="text-right"><?php echo lang('column_total'); ?></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -331,23 +334,25 @@
 											<div><small><b><?php echo $cart_item['comment']; ?></b></small></div>
 										<?php } ?>
 										</td>
-										<td class="text-center"><?php echo $cart_item['price']; ?></td>
-										<td><?php echo $cart_item['subtotal']; ?></td>
+										<td class="text-left"><?php echo $cart_item['price']; ?></td>
+										<td class="text-right"><?php echo $cart_item['subtotal']; ?></td>
 									</tr>
 									<?php } ?>
+									<?php $total_count = 1; ?>
 									<?php foreach ($totals as $total) { ?>
-									<tr>
-										<td width="1"></td>
-										<td></td>
-										<td class="text-center"><b><?php echo $total['title']; ?></b></td>
-										<td><b><?php echo $total['value']; ?></b></td>
-									</tr>
+										<tr>
+											<td class="<?php echo ($total_count === 1) ? 'thick' : 'no'; ?>-line" width="1"></td>
+											<td class="<?php echo ($total_count === 1) ? 'thick' : 'no'; ?>-line"></td>
+											<td class="<?php echo ($total_count === 1) ? 'thick' : 'no'; ?>-line text-left"><b><?php echo $total['title']; ?></b></td>
+											<td class="<?php echo ($total_count === 1) ? 'thick' : 'no'; ?>-line text-right"><b><?php echo $total['value']; ?></b></td>
+										</tr>
+										<?php $total_count++; ?>
 									<?php } ?>
 									<tr>
-										<td width="1"></td>
-										<td></td>
-										<td class="text-center"><b><?php echo lang('text_total'); ?></b></td>
-										<td><b><?php echo $order_total; ?></b></td>
+										<td class="no-line" width="1"></td>
+										<td class="no-line"></td>
+										<td class="no-line text-left"><b><?php echo lang('text_total'); ?></b></td>
+										<td class="no-line text-right"><b><?php echo $order_total; ?></b></td>
 									</tr>
 								</tbody>
 							</table>
@@ -369,16 +374,34 @@ $(document).ready(function() {
    			$('.view_details').attr('class', 'active');
 		}
 	});
+
+  	$('.create-invoice').on('click', function(){
+	    $.ajax({
+		    url: js_site_url('orders/create_invoice'),
+		    type: 'POST',
+		    dataType: 'json',
+		    data: 'order_id=<?php echo $order_id; ?>',
+		    success: function(json) {
+			    window.location.href = json['redirect'];
+		    }
+	    });
+	});
 });
 </script>
 <script type="text/javascript"><!--
 function getStatusComment() {
 	if ($('select[name="order_status"]').val()) {
 		$.ajax({
-			url: js_site_url('statuses/comment?status_id=') + encodeURIComponent($('select[name="order_status"]').val()),
+			url: js_site_url('statuses/comment_notify?status_id=') + encodeURIComponent($('select[name="order_status"]').val()),
 			dataType: 'json',
 			success: function(json) {
-				$('textarea[name="status_comment"]').html(json);
+				$('textarea[name="status_comment"]').html(json['comment']);
+
+				if (json['notify'] === '1') {
+					$('input[name="notify"][value="1"]').parent().click();
+				} else {
+					$('input[name="notify"][value="0"]').parent().click();
+				}
 			}
 		});
 	}

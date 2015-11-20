@@ -194,6 +194,7 @@ class Orders extends Admin_Controller {
 		}
 
 		$data['order_id'] 			= $order_info['order_id'];
+		$data['invoice_no'] 		= !empty($order_info['invoice_no']) ? $order_info['invoice_prefix'].$order_info['invoice_no'] : '';
 		$data['customer_id'] 		= $order_info['customer_id'];
 		$data['customer_edit'] 		= site_url('customers/edit?id=' . $order_info['customer_id']);
 		$data['first_name'] 		= $order_info['first_name'];
@@ -205,6 +206,7 @@ class Orders extends Admin_Controller {
 		$data['order_time'] 		= mdate('%H:%i', strtotime($order_info['order_time']));
 		$data['order_type'] 		= ($order_info['order_type'] === '1') ? $this->lang->line('text_delivery') : $this->lang->line('text_collection');
 		$data['status_id'] 			= $order_info['status_id'];
+		$data['status_name'] 	    = $order_info['status_name'];
 		$data['assignee_id'] 		= $order_info['assignee_id'];
 		$data['comment'] 			= $order_info['comment'];
 		$data['notify'] 			= $order_info['notify'];
@@ -318,6 +320,10 @@ class Orders extends Admin_Controller {
 			$title = $total['title'];
 			$value = $this->currency->format($total['value']);
 
+			if ($total['code'] == 'delivery' AND $order_info['order_type'] === '2') {
+				continue;
+			}
+
 			if ($total['code'] == 'coupon') {
 				$coupon = $this->Orders_model->getOrderCoupon($order_info['order_id']);
 				$title = $total['title'] .'('. $coupon['code'] .')';
@@ -337,6 +343,140 @@ class Orders extends Admin_Controller {
 		$this->template->render('orders_edit', $data);
 	}
 
+	public function create_invoice() {
+		$json = array();
+
+		if (is_numeric($this->input->post('order_id'))) {
+			$json['invoice_no'] = $this->Orders_model->createInvoiceNo($this->input->post('order_id'));
+
+			if ($json['invoice_no'] === TRUE) {
+				$this->alert->set('warning', $this->lang->line('alert_order_not_completed'));
+			} else if (!empty($json['invoice_no'])) {
+				$this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Invoice generated'));
+			} else {
+				$this->alert->set('error', sprintf($this->lang->line('alert_error_nothing'), 'generated'));
+			}
+
+			$json['redirect'] = site_url('orders/edit?id='.$this->input->post('order_id'));
+		}
+
+		$this->output->set_output(json_encode($json));
+	}
+
+	public function invoice() {
+		$this->output->enable_profiler(FALSE);
+		$action = $this->uri->rsegment('3');
+
+		$this->template->setStyleTag('css/bootstrap.min.css', 'bootstrap-css', '1');
+		$this->template->setStyleTag('css/fonts.css', 'fonts-css', '2');
+
+		if ($this->input->get('invoice_no') AND is_string($this->input->get('invoice_no'))) {
+			$this->load->model('Image_tool_model');
+			$data['invoice_logo'] 		= $this->Image_tool_model->resize($this->config->item('site_logo'));
+
+			$invoice_info = $this->Orders_model->getInvoice($this->input->get('invoice_no'));
+
+			$data['order_id'] 			= $invoice_info['order_id'];
+			$data['invoice_no'] 		= $invoice_info['invoice_prefix'].$invoice_info['invoice_no'];
+			$data['customer_id'] 		= $invoice_info['customer_id'];
+			$data['first_name'] 		= $invoice_info['first_name'];
+			$data['last_name'] 			= $invoice_info['last_name'];
+			$data['email'] 				= $invoice_info['email'];
+			$data['telephone'] 			= $invoice_info['telephone'];
+			$data['date_added'] 		= mdate('%F %d, %Y', strtotime($invoice_info['date_added']));
+			$data['invoice_date'] 		= mdate('%F %d, %Y', strtotime($invoice_info['invoice_date']));
+			$data['date_modified'] 		= mdate('%d %M %y', strtotime($invoice_info['date_modified']));
+			$data['order_time'] 		= mdate('%H:%i', strtotime($invoice_info['order_time']));
+			$data['order_type'] 		= ($invoice_info['order_type'] === '1') ? $this->lang->line('text_delivery') : $this->lang->line('text_collection');
+			$data['comment'] 			= $invoice_info['comment'];
+			$data['check_order_type'] 	= $invoice_info['order_type'];
+
+			if ($payment = $this->extension->getPayment($invoice_info['payment'])) {
+				if ($payment['name'] === 'paypal_express') {
+					$this->load->model('paypal_express/Paypal_model');
+					$data['paypal_details'] = (isset($this->Paypal_model)) ? $this->Paypal_model->getPaypalDetails($order_info['order_id'], $order_info['customer_id']) : '';
+				}
+
+				$data['payment'] = !empty($payment['ext_data']['title']) ? $payment['ext_data']['title']: $payment['title'];
+			} else {
+				$data['payment'] = 'No Payment';
+			}
+
+			$this->load->library('country');
+			$data['location_name'] = $data['location_address'] = '';
+			if (!empty($invoice_info['location_id'])) {
+				$location_address = $this->Locations_model->getAddress($invoice_info['location_id']);
+				if ($location_address) {
+					$data['location_name'] = $location_address['location_name'];
+					$data['location_address'] = $this->country->addressFormat($location_address);
+				}
+			}
+
+			$data['customer_address'] = '';
+			if (!empty($invoice_info['customer_id'])) {
+				$customer_address = $this->Addresses_model->getAddress($invoice_info['customer_id'], $invoice_info['address_id']);
+				$data['customer_address'] = $this->country->addressFormat($customer_address);
+			} else if (!empty($invoice_info['address_id'])) {
+				$customer_address = $this->Addresses_model->getGuestAddress($invoice_info['address_id']);
+				$data['customer_address'] = $this->country->addressFormat($customer_address);
+			}
+
+			$data['cart_items'] = array();
+			$cart_items = $this->Orders_model->getOrderMenus($invoice_info['order_id']);
+			$menu_options = $this->Orders_model->getOrderMenuOptions($invoice_info['order_id']);
+			foreach ($cart_items as $cart_item) {
+				$option_data = array();
+
+				if (!empty($menu_options)) {
+					foreach ($menu_options as $menu_option) {
+						if ($cart_item['order_menu_id'] === $menu_option['order_menu_id']) {
+							$option_data[] = $menu_option['order_option_name'] . ' = ' . $menu_option['order_option_price'];
+						}
+					}
+				}
+
+				$data['cart_items'][] = array(
+					'id' 			=> $cart_item['menu_id'],
+					'name' 			=> $cart_item['name'],
+					'qty' 			=> $cart_item['quantity'],
+					'price' 		=> $this->currency->format($cart_item['price']),
+					'subtotal' 		=> $this->currency->format($cart_item['subtotal']),
+					'comment' 		=> $cart_item['comment'],
+					'options'		=> implode(', ', $option_data)
+				);
+			}
+
+			$data['totals'] = array();
+			$order_totals = $this->Orders_model->getOrderTotals($invoice_info['order_id']);
+			foreach ($order_totals as $total) {
+				$title = $total['title'];
+				$value = $this->currency->format($total['value']);
+
+				if ($total['code'] == 'delivery' AND $invoice_info['order_type'] === '2') {
+					continue;
+				}
+
+				if ($total['code'] == 'coupon') {
+					$coupon = $this->Orders_model->getOrderCoupon($invoice_info['order_id']);
+					$title = $total['title'] .'('. $coupon['code'] .')';
+					$value = $this->currency->format($coupon['amount']);
+				}
+
+				$data['totals'][] = array(
+					'title' 		=> $title,
+					'code' 			=> $total['code'],
+					'value' 		=> $value
+				);
+			}
+
+			$data['order_total'] 		= $this->currency->format($invoice_info['order_total']);
+		}
+
+		if ($action === 'view') {
+			$this->load->view($this->config->item(ADMINDIR, 'default_themes').'orders_invoice', $data);
+		}
+	}
+
 	private function _updateOrder() {
     	if (is_numeric($this->input->get('id')) AND $this->validateForm() === TRUE) {
 
@@ -346,7 +486,7 @@ class Orders extends Admin_Controller {
                     array($this->user->getStaffName(), 'updated', 'order', current_url(), '#'.$this->input->get('id'))
                 ));
 
-                if ($this->input->post('old_assignee_id') !== $this->input->post('assignee_id') OR $this->input->post('old_status_id') !== $this->input->post('status_id')) {
+                if ($this->input->post('old_assignee_id') !== $this->input->post('assignee_id')) {
                     $staff = $this->Staffs_model->getStaff($this->input->post('assignee_id'));
 	                $staff_assignee = site_url('staffs/edit?id='.$staff['staff_id']);
 

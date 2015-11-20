@@ -3,6 +3,7 @@
 $lang['text_title'] 		            = 'Orders';
 $lang['text_heading'] 		            = 'Orders';
 $lang['text_edit_heading'] 		        = 'Order: %s';
+$lang['text_invoice_heading'] 		    = 'Order Invoice: %s';
 $lang['text_list'] 		                = 'Order List';
 $lang['text_tab_general'] 		        = 'Order';
 $lang['text_tab_status'] 		        = 'Status';
@@ -23,11 +24,27 @@ $lang['text_order_details'] 		    = 'Order Details';
 $lang['text_customer_details'] 		    = 'Customer Details';
 $lang['text_status_history'] 		    = 'Status History';
 $lang['text_no_match'] 		            = 'No Matches Found';
-$lang['text_no_comment'] 		        = 'No status update comment';
+$lang['text_no_order_comment'] 		    = 'No order comment';
 $lang['text_email_sent'] 		        = 'Email SENT';
 $lang['text_email_not_sent'] 		    = 'Email not SENT';
 $lang['text_transaction_detail'] 		= 'View Transaction Details';
 $lang['text_total'] 		            = 'TOTAL';
+$lang['text_no_delivery_address'] 		= 'This is a collection order, there is no delivery address.';
+$lang['text_no_invoice'] 		        = 'Update status to auto-generate invoice';
+$lang['text_invoice'] 		            = 'Invoice';
+$lang['text_restaurant'] 		        = 'Restaurant';
+$lang['text_customer'] 		            = 'Customer';
+$lang['text_payment'] 		            = 'Payment';
+$lang['text_invoice_no'] 		        = 'Invoice #';
+$lang['text_invoice_date'] 		        = 'Invoice Date';
+$lang['text_order_date'] 		        = 'Order Date';
+$lang['text_deliver_to'] 		        = 'Deliver to';
+$lang['text_invoice_thank_you'] 	    = 'Thank you for your order';
+
+$lang['button_create_invoice'] 		    = 'Generate';
+$lang['button_view_invoice'] 		    = 'View Invoice';
+$lang['button_print_invoice'] 		    = 'Print Invoice';
+$lang['button_download_invoice'] 		= 'Download Invoice';
 
 $lang['column_location'] 		        = 'Location';
 $lang['column_customer_name'] 		    = 'Customer Name';
@@ -43,24 +60,27 @@ $lang['column_notify'] 		            = 'Customer Notified';
 $lang['column_name_option'] 		    = 'Name/Options';
 $lang['column_price'] 		            = 'Price';
 
-$lang['label_order_id'] 		        = 'Order ID';
+$lang['label_order_id'] 		        = 'Order #';
 $lang['label_customer_name'] 		    = 'Name';
 $lang['label_email'] 		            = 'Email';
 $lang['label_telephone'] 		        = 'Telephone';
 $lang['label_order_type'] 		        = 'Order Type';
 $lang['label_order_time'] 		        = 'Delivery/Collection Time';
-$lang['label_order_date'] 		        = 'Order Date';
-$lang['label_order_total'] 		        = 'Total';
-$lang['label_comment'] 		            = 'Comment';
+$lang['label_order_date'] 		        = 'Date Added';
+$lang['label_order_total'] 		        = 'Order Total';
+$lang['label_comment'] 		            = 'Order Comment';
 $lang['label_date_modified'] 		    = 'Date Modified';
 $lang['label_notify'] 		            = 'Notify Customer';
 $lang['label_user_agent'] 		        = 'User Agent';
 $lang['label_ip_address'] 		        = 'IP Address';
 $lang['label_status'] 		            = 'Order Status';
+$lang['label_invoice'] 		            = 'Invoice';
 $lang['label_assign_staff'] 		    = 'Assign Staff';
 $lang['label_restaurant_name'] 		    = 'Name';
 $lang['label_restaurant_address'] 		= 'Address';
 $lang['label_payment_method'] 		    = 'Payment Method';
+
+$lang['alert_order_not_completed'] 		= 'The order must reach the completed order status before generating an invoice';
 
 
 /* End of file orders_lang.php */

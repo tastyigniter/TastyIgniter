@@ -121,6 +121,27 @@ class Orders_model extends TI_Model {
 		return $order_id;
 	}
 
+	public function getInvoice($invoice_no = NULL) {
+		if (strpos($invoice_no, '-') !== FALSE) {
+			$invoice_no = substr($invoice_no, strrpos($invoice_no, '-')+1);
+		}
+
+		if ( ! empty($invoice_no) AND is_numeric($invoice_no)) {
+			$this->db->from('orders');
+			$this->db->join('statuses', 'statuses.status_id = orders.status_id', 'left');
+			$this->db->join('locations', 'locations.location_id = orders.location_id', 'left');
+			$this->db->where('invoice_no', (int) $invoice_no);
+
+			$query = $this->db->get();
+
+			if ($query->num_rows() > 0) {
+				return $query->row_array();
+			}
+		}
+
+		return FALSE;
+	}
+
 	public function getCheckoutOrder($order_id, $customer_id) {
 		if (isset($order_id, $customer_id)) {
 			$this->db->from('orders');
@@ -223,39 +244,91 @@ class Orders_model extends TI_Model {
 			$this->db->set('assignee_id', $update['assignee_id']);
 		}
 
-		if (isset($update['date_modified'])) {
-			$this->db->set('date_modified', mdate('%Y-%m-%d', time()));
+		if (isset($update['notify'])) {
+			$this->db->set('notify', $update['notify']);
 		}
+
+		$this->db->set('date_modified', mdate('%Y-%m-%d', time()));
 
 		if (is_numeric($order_id)) {
 			$this->db->where('order_id', $order_id);
 			$query = $this->db->update('orders');
 
-			$status = $this->Statuses_model->getStatus($update['order_status']);
+			if ($query === TRUE) {
+				if (isset($update['status_notify']) AND $update['status_notify'] === '1') {
+					$status = $this->Statuses_model->getStatus($update['order_status']);
 
-			if (isset($update['notify']) AND $update['notify'] === '1') {
-				$mail_data = $this->getMailData($order_id);
+					$mail_data = $this->getMailData($order_id);
 
-				$mail_data['status_name'] = $status['status_name'];
-				$mail_data['status_comment'] = !empty($update['status_comment']) ? $update['status_comment'] : $this->lang->line('text_no_comment');
+					$mail_data['status_name'] = $status['status_name'];
+					$mail_data['status_comment'] = ! empty($update['status_comment']) ? $update['status_comment'] : $this->lang->line('text_no_comment');
 
-				$this->load->model('Mail_templates_model');
-				$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'order_update');
-				$update['notify'] = $this->sendMail($mail_data['email'], $mail_template, $mail_data);
-			}
+					$this->load->model('Mail_templates_model');
+					$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'order_update');
+					$update['status_notify'] = $this->sendMail($mail_data['email'], $mail_template, $mail_data);
+				}
 
-			if ($query AND (int) $update['old_status_id'] !== (int) $update['order_status']) {
-				$update['staff_id'] = $this->user->getStaffId();
-				$update['object_id'] = (int) $order_id;
-				$update['status_id'] = (int) $update['order_status'];
-				$update['comment'] = $update['status_comment'];
-				$update['date_added'] = mdate('%Y-%m-%d %H:%i:%s', time());
+				if ((int) $update['old_status_id'] !== (int) $update['order_status']) {
+					if (APPDIR === ADMINDIR) {
+						$update['staff_id'] = $this->user->getStaffId();
+					}
 
-				$this->Statuses_model->addStatusHistory('order', $update);
+					$update['object_id']    = (int) $order_id;
+					$update['status_id']    = (int) $update['order_status'];
+					$update['comment']      = $update['status_comment'];
+					$update['notify']       = $update['status_notify'];
+					$update['date_added']   = mdate('%Y-%m-%d %H:%i:%s', time());
+
+					$this->Statuses_model->addStatusHistory('order', $update);
+				}
+
+				if ($this->config->item('auto_invoicing') === '1' AND in_array($update['status_id'], (array) $this->config->item('completed_order_status'))) {
+					$this->createInvoiceNo($order_id);
+				}
+
+				if (in_array($update['status_id'], (array) $this->config->item('processing_order_status'))) {
+					$this->subtractStock($order_id);
+				}
 			}
 		}
 
 		return $query;
+	}
+
+	public function createInvoiceNo($order_id = NULL) {
+
+		$order_status_exists = $this->Statuses_model->statusExists('order', $order_id, $this->config->item('completed_order_status'));
+		if ($order_status_exists !== TRUE) return TRUE;
+
+		$order_info = $this->getOrder($order_id);
+
+		if ($order_info AND empty($order_info['invoice_no'])) {
+			if (empty($order_info['invoice_prefix']) AND $this->config->item('invoice_prefix') !== NULL) {
+				$order_info['invoice_prefix'] = str_replace('{year}', date('Y'), str_replace('{month}', date('m'), str_replace('{day}', date('d'), $this->config->item('invoice_prefix'))));
+			}
+
+			$this->db->select_max('invoice_no');
+			$this->db->from('orders');
+			$this->db->where('invoice_prefix', $order_info['invoice_prefix']);
+			$query = $this->db->get();
+
+			if ($query->num_rows() > 0) {
+				$row = $query->row_array();
+				$invoice_no = $row['invoice_no'] + 1;
+			} else {
+				$invoice_no = 1;
+			}
+
+			$this->db->set('invoice_prefix', $order_info['invoice_prefix']);
+			$this->db->set('invoice_no', $invoice_no);
+			$this->db->set('invoice_date', mdate('%Y-%m-%d %H:%i:%s', time()));
+			$this->db->where('order_id', $order_id);
+			$this->db->update('orders');
+
+			return $order_info['invoice_prefix'].$invoice_no;
+		}
+
+		return FALSE;
 	}
 
 	public function addOrder($order_info = array(), $cart_contents = array()) {
@@ -264,6 +337,11 @@ class Orders_model extends TI_Model {
 
 		if (isset($order_info['location_id'])) {
 			$this->db->set('location_id', $order_info['location_id']);
+		}
+
+		if ($this->config->item('invoice_prefix')) {
+			$invoice_prefix = str_replace('{year}', date('Y'), str_replace('{month}', date('m'), str_replace('{day}', date('d'), $this->config->item('invoice_prefix'))));
+			$this->db->set('invoice_prefix', $invoice_prefix);
 		}
 
 		if (isset($order_info['customer_id'])) {
@@ -353,7 +431,6 @@ class Orders_model extends TI_Model {
 	}
 
 	public function completeOrder($order_id, $order_info, $cart_contents) {
-		$current_time = time();
 
 		if ($order_id AND ! empty($order_info)) {
 
@@ -372,45 +449,15 @@ class Orders_model extends TI_Model {
 				$this->addOrderCoupon($order_id, $order_info['customer_id'], $cart_contents['coupon']);
 			}
 
-			$status_id = ! empty($order_info['status_id']) ? (int) $order_info['status_id'] : (int) $this->config->item('new_order_status');
+			$notify = $this->sendConfirmationMail($order_id);
 
-			$this->load->model('Mail_templates_model');
-			$mail_data = $this->getMailData($order_id);
-			$config_order_email = is_array($this->config->item('order_email')) ? $this->config->item('order_email') : array();
+			$update = array(
+				'old_status_id'  => '',
+				'order_status'  => ! empty($order_info['status_id']) ? (int) $order_info['status_id'] : (int) $this->config->item('default_order_status'),
+				'notify'  => $notify,
+			);
 
-			$notify = '0';
-			if ($this->config->item('customer_order_email') === '1' OR in_array('customer', $config_order_email)) {
-				$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'order');
-				$notify = $this->sendMail($mail_data['email'], $mail_template, $mail_data);
-			}
-
-			if ($this->location->getEmail() AND ($this->config->item('location_order_email') === '1' OR in_array('location', $config_order_email))) {
-				$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'order_alert');
-				$this->sendMail($this->location->getEmail(), $mail_template, $mail_data);
-			}
-
-			if (in_array('admin', $config_order_email)) {
-				$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'order_alert');
-				$this->sendMail($this->config->item('site_email'), $mail_template, $mail_data);
-			}
-
-			$this->db->set('status_id', $status_id);
-			$this->db->set('notify', $notify);
-			$this->db->where('order_id', $order_id);
-
-			if ($this->db->update('orders')) {
-				$this->load->model('Statuses_model');
-				$status = $this->Statuses_model->getStatus($status_id);
-				$order_history = array(
-					'object_id'  => $order_id,
-					'status_id'  => $status_id,
-					'notify'     => $notify,
-					'comment'    => $status['status_comment'],
-					'date_added' => mdate('%Y-%m-%d %H:%i:%s', $current_time),
-				);
-
-				$this->Statuses_model->addStatusHistory('order', $order_history);
-
+			if ($this->updateOrder($order_id, $update)) {
 				return TRUE;
 			}
 		}
@@ -453,7 +500,6 @@ class Orders_model extends TI_Model {
 
 					if ($query = $this->db->insert('order_menus')) {
 						$order_menu_id = $this->db->insert_id();
-						$this->subtractStock($item['id'], $item['qty']);
 
 						if ( ! empty($item['options'])) {
 							$this->addOrderMenuOptions($order_menu_id, $order_id, $item['id'], $item['options']);
@@ -463,18 +509,6 @@ class Orders_model extends TI_Model {
 			}
 
 			return TRUE;
-		}
-	}
-
-	public function subtractStock($menu_id, $quantity) {
-		$this->load->model('Menus_model');
-		$menu_data = $this->Menus_model->getMenu($menu_id);
-
-		if ($menu_data['subtract_stock'] === '1' AND $quantity) {
-			$this->db->set('stock_qty', 'stock_qty - ' . $quantity, FALSE);
-
-			$this->db->where('menu_id', $menu_id);
-			$this->db->update('menus');
 		}
 	}
 
@@ -543,6 +577,41 @@ class Orders_model extends TI_Model {
 		}
 	}
 
+	public function subtractStock($order_id) {
+		$this->load->model('Menus_model');
+
+		$order_menus = $this->getOrderMenus($order_id);
+
+		foreach ($order_menus as $order_menu) {
+			$this->Menus_model->updateStock($order_menu['menu_id'], $order_menu['quantity'], 'subtract');
+		}
+	}
+
+	public function sendConfirmationMail($order_id) {
+		$this->load->model('Mail_templates_model');
+
+		$mail_data = $this->getMailData($order_id);
+		$config_order_email = is_array($this->config->item('order_email')) ? $this->config->item('order_email') : array();
+
+		$notify = '0';
+		if ($this->config->item('customer_order_email') === '1' OR in_array('customer', $config_order_email)) {
+			$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'order');
+			$notify = $this->sendMail($mail_data['email'], $mail_template, $mail_data);
+		}
+
+		if ($this->location->getEmail() AND ($this->config->item('location_order_email') === '1' OR in_array('location', $config_order_email))) {
+			$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'order_alert');
+			$this->sendMail($this->location->getEmail(), $mail_template, $mail_data);
+		}
+
+		if (in_array('admin', $config_order_email)) {
+			$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'order_alert');
+			$this->sendMail($this->config->item('site_email'), $mail_template, $mail_data);
+		}
+
+		return $notify;
+	}
+
 	public function getMailData($order_id) {
 		$data = array();
 
@@ -567,15 +636,16 @@ class Orders_model extends TI_Model {
 				foreach ($menus as $menu) {
 					$option_data = array();
 
-					if ( ! empty($options[$menu['menu_id']])) {
-						foreach ($options[$menu['menu_id']] as $option) {
-							$option_data[] = $option['order_option_name'];
+					if (!empty($options)) {
+						foreach ($options as $key => $option) {
+							if ($menu['order_menu_id'] === $option['order_menu_id']) {
+								$option_data[] = $option['order_option_name'] . ' = ' . $option['order_option_price'];
+							}
 						}
 					}
 
 					$data['order_menus'][] = array(
-						'menu_name'     => (strlen($menu['name']) > 20) ? substr($menu['name'], 0,
-						                                                    20) . '...' : $menu['name'],
+						'menu_name'     => (strlen($menu['name']) > 20) ? substr($menu['name'], 0, 20) . '...' : $menu['name'],
 						'menu_quantity' => $menu['quantity'],
 						'menu_price'    => $this->currency->format($menu['price']),
 						'menu_subtotal' => $this->currency->format($menu['subtotal']),
