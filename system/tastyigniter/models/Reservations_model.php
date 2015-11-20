@@ -121,6 +121,7 @@ class Reservations_model extends TI_Model {
 		$this->db->join('tables', 'tables.table_id = reservations.table_id', 'left');
 		$this->db->join('statuses', 'statuses.status_id = reservations.status', 'left');
 		$this->db->join('locations', 'locations.location_id = reservations.location_id', 'left');
+		$this->db->join('countries', 'countries.country_id = locations.location_country_id', 'left');
 		$this->db->order_by('reservation_id', 'ASC');
 
 		$query = $this->db->get();
@@ -145,6 +146,7 @@ class Reservations_model extends TI_Model {
 			$this->db->join('tables', 'tables.table_id = reservations.table_id', 'left');
 			$this->db->join('statuses', 'statuses.status_id = reservations.status', 'left');
 			$this->db->join('locations', 'locations.location_id = reservations.location_id', 'left');
+			$this->db->join('countries', 'countries.country_id = locations.location_country_id', 'left');
 
 			$this->db->from('reservations');
 			$this->db->where('reservation_id', $reservation_id);
@@ -203,7 +205,7 @@ class Reservations_model extends TI_Model {
 		$result = 0;
 
 		$this->db->select_sum('reservations.guest_num', 'total_guest');
-		//$this->db->where('status', (int)$this->config->item('new_reservation_status'));
+		//$this->db->where('status', (int)$this->config->item('default_reservation_status'));
 
 		if ( ! empty($location_id)) {
 			$this->db->where('location_id', $location_id);
@@ -489,12 +491,12 @@ class Reservations_model extends TI_Model {
 
 				$this->db->set('notify', $notify);
 
-				$this->db->set('status', $this->config->item('new_reservation_status'));
+				$this->db->set('status', $this->config->item('default_reservation_status'));
 				$this->db->where('reservation_id', $reservation_id);
 
 				if ($this->db->update('reservations')) {
 					$this->load->model('Statuses_model');
-					$status = $this->Statuses_model->getStatus($this->config->item('new_reservation_status'));
+					$status = $this->Statuses_model->getStatus($this->config->item('default_reservation_status'));
 					$reserve_history = array(
 						'object_id'  => $reservation_id,
 						'status_id'  => $status['status_id'],

@@ -45,12 +45,6 @@
 											<?php echo $occasions[$occasion]; ?>
 										</div>
 									</div>
-									<div class="form-group col-xs-12">
-										<label for="" class="control-label"><?php echo lang('label_date_added'); ?></label>
-										<div class="">
-											<?php echo $date_added; ?>
-										</div>
-									</div>
 								</div>
 							</div>
 						</div>
@@ -76,71 +70,18 @@
 											<?php echo $telephone; ?>
 										</div>
 									</div>
-									<div class="form-group col-xs-12">
-										<label for="" class="control-label"><?php echo lang('label_comment'); ?></label>
-										<div class="">
-											<?php echo $comment; ?>
-										</div>
-									</div>
 								</div>
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-4">
 							<div class="panel panel-default">
-								<div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_tab_restaurant'); ?></h3></div>
 								<div class="panel-body">
 									<div class="form-group col-xs-12">
-										<label for="" class="control-label"><?php echo lang('label_restaurant_name'); ?></label>
+										<label for="" class="control-label"><?php echo lang('label_date_added'); ?></label>
 										<div class="">
-											<?php echo $location_name; ?>
+											<?php echo $date_added; ?>
 										</div>
 									</div>
-									<div class="form-group col-xs-12">
-										<label for="" class="control-label"><?php echo lang('label_restaurant_address'); ?></label>
-										<div class="">
-											<span>
-												<?php echo $location_address_1; ?>,
-												<?php echo $location_city; ?>,
-												<?php echo $location_postcode; ?>,
-												<?php echo $location_country; ?>
-											</span>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-xs-12 col-sm-6">
-							<div class="panel panel-default">
-								<div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_tab_table'); ?></h3></div>
-								<div class="panel-body">
-									<div class="form-group col-xs-12">
-										<label for="" class="control-label"><?php echo lang('label_table_name'); ?></label>
-										<div class="">
-											<?php echo $table_name; ?>
-										</div>
-									</div>
-									<div class="form-group col-xs-12">
-										<label for="" class="control-label"><?php echo lang('label_table_min_capacity'); ?></label>
-										<div class="">
-											<?php echo $min_capacity; ?>
-										</div>
-									</div>
-									<div class="form-group col-xs-12">
-										<label for="" class="control-label"><?php echo lang('label_table_capacity'); ?></label>
-										<div class="">
-											<?php echo $max_capacity; ?>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-xs-12 col-sm-6">
-							<div class="panel panel-default">
-								<div class="panel-body">
 									<div class="form-group col-xs-12">
 										<label for="" class="control-label"><?php echo lang('label_date_modified'); ?></label>
 										<div class="">
@@ -167,6 +108,67 @@
 										<label for="" class="control-label"><?php echo lang('label_user_agent'); ?></label>
 										<div class="">
 											<?php echo $user_agent; ?>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-xs-12 col-sm-6">
+							<div class="panel panel-default">
+								<div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_tab_restaurant'); ?> - <span class="text-muted"><?php echo $location_name; ?></span></h3></div>
+								<div class="panel-body">
+									<div class="form-group col-xs-12">
+										<div class="">
+											<span>
+												<?php echo $location_address_1; ?>,<br />
+												<?php echo $location_city; ?>,
+												<?php echo $location_postcode; ?>,
+												<?php echo $location_country; ?>
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-xs-12 col-sm-6">
+							<div class="panel panel-default">
+								<div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_tab_table'); ?></h3></div>
+								<div class="panel-body">
+									<div class="form-group col-xs-12">
+										<label for="" class="control-label"><?php echo lang('label_table_name'); ?></label>
+										<div class="">
+											<?php echo $table_name; ?>
+										</div>
+									</div>
+									<div class="form-group col-xs-12">
+										<label for="" class="control-label"><?php echo lang('label_table_min_capacity'); ?></label>
+										<div class="">
+											<?php echo $min_capacity; ?>
+										</div>
+									</div>
+									<div class="form-group col-xs-12">
+										<label for="" class="control-label"><?php echo lang('label_table_capacity'); ?></label>
+										<div class="">
+											<?php echo $max_capacity; ?>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-xs-12 col-sm-12">
+							<div class="panel panel-default">
+								<div class="panel-heading"><h3 class="panel-title"><?php echo lang('label_comment'); ?> - <span class="text-muted"><?php echo $location_name; ?></span></h3></div>
+								<div class="panel-body">
+									<div class="form-group col-xs-12">
+										<div class="">
+											<?php echo $comment; ?>
 										</div>
 									</div>
 								</div>
@@ -308,10 +310,10 @@ $(document).ready(function() {
 function getStatusComment() {
 	if ($('select[name="status"]').val()) {
 		$.ajax({
-			url: js_site_url('statuses/comment?status_id=') + encodeURIComponent($('select[name="status"]').val()),
+			url: js_site_url('statuses/comment_notify?status_id=') + encodeURIComponent($('select[name="status"]').val()),
 			dataType: 'json',
 			success: function(json) {
-				$('textarea[name="status_comment"]').html(json);
+				$('textarea[name="status_comment"]').html(json['comment']);
 			}
 		});
 	}

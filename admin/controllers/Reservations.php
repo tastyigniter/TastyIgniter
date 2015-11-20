@@ -257,7 +257,7 @@ class Reservations extends Admin_Controller {
 		$data['location_address_2'] = $reservation_info['location_address_2'];
 		$data['location_city'] 		= $reservation_info['location_city'];
 		$data['location_postcode'] 	= $reservation_info['location_postcode'];
-		$data['location_country'] 	= $reservation_info['location_country_id'];
+		$data['location_country'] 	= $reservation_info['country_name'];
 		$data['table_name'] 		= $reservation_info['table_name'];
 		$data['min_capacity'] 		= $reservation_info['min_capacity'] .' person(s)';
 		$data['max_capacity'] 		= $reservation_info['max_capacity'] .' person(s)';

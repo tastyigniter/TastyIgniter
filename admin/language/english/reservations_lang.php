@@ -29,7 +29,7 @@ $lang['text_no_comment'] 		        = 'No status update comment';
 
 $lang['column_id'] 		                = 'ID';
 $lang['column_location'] 		        = 'Location';
-$lang['column_customer_name'] 		    = 'Customer Name';
+$lang['column_customer_name'] 		    = 'Name';
 $lang['column_guest'] 		            = 'Guest(s)';
 $lang['column_table'] 		            = 'Table';
 $lang['column_status'] 		            = 'Status';
@@ -47,10 +47,7 @@ $lang['label_occasion'] 		        = 'Occasion';
 $lang['label_date_added'] 		        = 'Date Added';
 $lang['label_date_modified'] 		    = 'Date Modified';
 $lang['label_notify'] 		            = 'Notify Customer';
-$lang['label_ip_address'] 		        = 'Customer IP';
-$lang['label_user_agent'] 		        = 'Customer User Agent';
 $lang['label_comment'] 		            = 'Comment';
-$lang['label_notify'] 		            = 'Notify Customer';
 $lang['label_user_agent'] 		        = 'User Agent';
 $lang['label_ip_address'] 		        = 'IP Address';
 $lang['label_status'] 		            = 'Reservation Status';
@@ -60,9 +57,9 @@ $lang['label_restaurant_address'] 		= 'Restaurant Address';
 $lang['label_table_name'] 		        = 'Table Name';
 $lang['label_table_capacity'] 		    = 'Table Capacity';
 $lang['label_table_min_capacity'] 		= 'Table Minimum';
-$lang['label_customer_name'] 		    = 'Customer Name';
-$lang['label_customer_email'] 		    = 'Customer Email';
-$lang['label_customer_telephone'] 		= 'Customer Telephone';
+$lang['label_customer_name'] 		    = 'Name';
+$lang['label_customer_email'] 		    = 'Email';
+$lang['label_customer_telephone'] 		= 'Telephone';
 
 
 /* End of file reservations_lang.php */
