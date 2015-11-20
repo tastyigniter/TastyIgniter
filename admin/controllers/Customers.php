@@ -163,7 +163,7 @@ class Customers extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('customers')));
 
-		if ($this->input->post() AND $customer_id = $this->_saveCustomer($data['email'])) {
+		if ($this->input->post() AND $customer_id = $this->_saveCustomer($customer_info['email'])) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('customers');
 			}
