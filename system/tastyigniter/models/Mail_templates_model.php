@@ -68,6 +68,7 @@ class Mail_templates_model extends TI_Model {
 			$this->db->join('mail_templates', 'mail_templates.template_id = mail_templates_data.template_id', 'left');
 			$this->db->where('mail_templates_data.template_id', $template_id);
 			$this->db->where('mail_templates_data.code', $template_code);
+			$this->db->where('mail_templates.status', '1');
 
 			$query = $this->db->get();
 
@@ -88,14 +89,6 @@ class Mail_templates_model extends TI_Model {
 			$this->db->set('language_id', $save['language_id']);
 		}
 
-		if (isset($save['date_added'])) {
-			$this->db->set('date_added', $save['date_added']);
-		}
-
-		if (isset($save['date_updated'])) {
-			$this->db->set('date_updated', $save['date_updated']);
-		}
-
 		if (isset($save['status']) AND $save['status'] === '1') {
 			$this->db->set('status', '1');
 		} else {
@@ -108,6 +101,7 @@ class Mail_templates_model extends TI_Model {
 			$query = $this->db->update('mail_templates');
 		} else {
 			$this->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', time()));
+			$this->db->set('date_updated', mdate('%Y-%m-%d %H:%i:%s', time()));
 			$query = $this->db->insert('mail_templates');
 			$template_id = $this->db->insert_id();
 		}

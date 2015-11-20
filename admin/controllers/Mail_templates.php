@@ -88,6 +88,10 @@ class Mail_templates extends Admin_Controller {
 			redirect('mail_templates/edit?id='. $template_id);
 		}
 
+		if ($template_id === '11') {
+			$this->alert->set('info', $this->lang->line('alert_caution_edit'));
+		}
+
 		$data['template_id'] 		= $template_id;
 		$data['name'] 				= $template_info['name'];
 		$data['status'] 			= $template_info['status'];
