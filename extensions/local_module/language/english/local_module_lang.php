@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-$lang['_text_title'] 			            = 'Featured Menu';
+$lang['_text_title'] 			            = 'Local';
 $lang['text_tab_general'] 		            = 'General';
 
 $lang['text_find'] 				            = 'Go';
