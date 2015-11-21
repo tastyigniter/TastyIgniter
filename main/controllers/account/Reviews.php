@@ -116,8 +116,21 @@ class Reviews extends Main_Controller {
 		$data['_action']	= site_url('account/reviews/add/'. $this->uri->rsegment(3) .'/'. $this->uri->rsegment(4) .'/'. $this->uri->rsegment(5));
 
 		if ($this->Reviews_model->checkReviewed($this->uri->rsegment(3), $this->uri->rsegment(4), $this->customer->getId())) {
-			$this->alert->set('alert', $this->lang->line('alert_duplicate'));
+			$this->alert->set('danger', $this->lang->line('alert_review_duplicate'));
   			redirect('account/reviews');
+		}
+
+		$this->load->model('Statuses_model');
+
+		if ($this->uri->rsegment(3) === 'reservation') {
+			$status_exists = $this->Statuses_model->statusExists('reserve', $this->uri->rsegment(4), $this->config->item('confirmed_reservation_status'));
+		} else {
+			$status_exists = $this->Statuses_model->statusExists('order', $this->uri->rsegment(4), $this->config->item('completed_order_status'));
+		}
+
+		if ($status_exists !== TRUE) {
+			$this->alert->set('danger', $this->lang->line('alert_review_status_history'));
+			redirect('account/reviews');
 		}
 
 		$this->template->setBreadcrumb('<i class="fa fa-home"></i>', '/');
@@ -157,7 +170,8 @@ class Reviews extends Main_Controller {
 	}
 
 	private function _addReview() {
-			$add = array();
+		$add = array();
+
 		if ($this->validateForm() === TRUE) {
 			$add['sale_type'] 			= $this->uri->rsegment(3);
 			$add['sale_id'] 			= (int)$this->uri->rsegment(4);

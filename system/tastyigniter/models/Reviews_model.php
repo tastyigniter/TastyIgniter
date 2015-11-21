@@ -180,8 +180,7 @@ class Reviews_model extends TI_Model {
 
 	public function checkReviewed($sale_type = 'order', $sale_id = '', $customer_id = '') {
 		if ($sale_type === 'reservation') {
-			$check_query = $this->db->get_where('reservations',
-			                                    array('reservation_id' => $sale_id, 'customer_id' => $customer_id));
+			$check_query = $this->db->get_where('reservations', array('reservation_id' => $sale_id, 'customer_id' => $customer_id));
 		} else {
 			$check_query = $this->db->get_where('orders', array('order_id' => $sale_id, 'customer_id' => $customer_id));
 		}
@@ -199,6 +198,8 @@ class Reviews_model extends TI_Model {
 			if ($query->num_rows() > 0) {
 				return TRUE;
 			}
+		} else {
+			return TRUE;
 		}
 
 		return FALSE;

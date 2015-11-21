@@ -26,10 +26,11 @@ $lang['label_service'] 			= 'Service';
 $lang['label_review'] 			= 'Review';
 $lang['label_date'] 			= 'Review Date';
 
-$lang['alert_review_success'] 	= '<p class="alert-success">Review sent successfully, it will be visible once approved.</p>';
-$lang['alert_review_error'] 	= '<p class="alert-danger">An error has occurred, please try again.</p>';
-$lang['alert_review_duplicate'] = '<p class="alert-danger">Sorry. Either you\'ve already left a review for this order, or an error has occurred.</p>';
-$lang['alert_review_disabled']  = '<p class="alert-danger">Reviews has been disabled, please contact site administrator.</p>';
+$lang['alert_review_success'] 	= 'Review sent successfully, it will be visible once approved.';
+$lang['alert_review_error'] 	= 'An error has occurred, please try again.';
+$lang['alert_review_duplicate'] = 'Sorry. Either you\'ve already left a review for this order, or an error has occurred.';
+$lang['alert_review_disabled']  = 'Reviews has been disabled, please contact site administrator.';
+$lang['alert_review_status_history']    = 'Review can not be added because order/reservation is not completed';
 
 /* End of file reviews_lang.php */
 /* Location: ./main/language/english/main/reviews_lang.php */
