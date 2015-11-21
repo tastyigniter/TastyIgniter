@@ -32,7 +32,7 @@ if ( ! function_exists('site_url'))
 /**
  * Current URL
  *
- * Returns the full URL (including segments) of the page where this
+ * Returns the full URL (including segments and query string) of the page where this
  * function is placed
  *
  * @access	public
@@ -43,7 +43,8 @@ if ( ! function_exists('current_url'))
 	function current_url()
 	{
 		$CI =& get_instance();
-    	return $_SERVER['QUERY_STRING'] ? $CI->config->site_url($CI->uri->uri_string().'?'.$_SERVER['QUERY_STRING']) : $CI->config->site_url($CI->uri->uri_string());
+        $url = $CI->config->site_url($CI->uri->uri_string());
+        return $_SERVER['QUERY_STRING'] ? $url.'?'.$_SERVER['QUERY_STRING'] : $url;
 	}
 }
 
