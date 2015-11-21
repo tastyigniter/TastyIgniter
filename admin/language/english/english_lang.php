@@ -51,7 +51,7 @@ $lang['text_staff_group'] 		            = 'Staff Group';
 $lang['text_location'] 		                = 'Location';
 $lang['text_edit_details'] 		            = 'Edit Details';
 $lang['text_logout'] 		                = 'Logout';
-$lang['text_copyright'] 		            = '<p class="pull-left">Thanks for using <b>TastyIgniter</b><br />TastyIgniter © 2013-2015 All Rights Reserved.</p><p class="pull-right">Version %s</p>';
+$lang['text_copyright'] 		            = '<p class="col-xs-12 col-sm-11 wrap-none">Thanks for using <b>TastyIgniter</b><br />TastyIgniter © 2013-%s All Rights Reserved.</p><p class="col-xs-12 col-sm-1 wrap-none">Version %s</p>';
 
 $lang['menu_page'] 		                    = 'Pages';
 $lang['menu_banner'] 		                = 'Banners';

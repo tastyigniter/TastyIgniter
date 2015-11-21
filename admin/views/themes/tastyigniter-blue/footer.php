@@ -2,7 +2,7 @@
 <div id="footer" class="<?php echo ($this->user->islogged()) ? '' : 'wrap-none'; ?>">
 	<div class="row navbar-footer">
 		<div class="col-sm-12 version">
-			<p class="text-version"><?php echo sprintf(lang('text_copyright'), config_item('ti_version')); ?></p>
+			<p class="text-version"><?php echo sprintf(lang('text_copyright'), date('Y'), config_item('ti_version')); ?></p>
 		</div>
 	</div>
 </div>
