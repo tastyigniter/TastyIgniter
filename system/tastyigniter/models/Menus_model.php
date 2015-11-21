@@ -138,6 +138,36 @@ class Menus_model extends TI_Model {
 		}
 	}
 
+	public function updateStock($menu_id, $quantity = 0, $action = 'subtract') {
+		$update = FALSE;
+
+		if (is_numeric($menu_id)) {
+			$this->db->select('menus.menu_id, menu_name, stock_qty, minimum_qty, subtract_stock, menu_status');
+			$this->db->from('menus');
+			$this->db->where('menus.menu_id', $menu_id);
+
+			$query = $this->db->get();
+
+			if ($query->num_rows() > 0) {
+				$row = $query->row_array();
+
+				if ($row['subtract_stock'] === '1' AND ! empty($quantity)) {
+					$quantity = 'stock_qty + ' . $quantity;
+
+					if ($action === 'subtract') {
+						$quantity = 'stock_qty - ' . $quantity;
+					}
+
+					$this->db->set('stock_qty', $quantity, FALSE);
+					$this->db->where('menu_id', $menu_id);
+					$update = $this->db->update('menus');
+				}
+			}
+		}
+
+		return $update;
+	}
+
 	public function getAutoComplete($filter_data = array()) {
 		if (is_array($filter_data) AND ! empty($filter_data)) {
 			//selecting all records from the menu and categories tables.
