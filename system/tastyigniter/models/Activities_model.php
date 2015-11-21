@@ -59,13 +59,19 @@ class Activities_model extends TI_Model {
 		if (is_numeric($user_id) AND is_string($action) AND is_string($message)) {
 			// set the current domain (e.g admin, main, module)
 			$domain = ( ! empty($this->_module)) ? 'module' : APPDIR;
-			$this->db->set('domain', $domain);
-			$this->db->set('context', $context);
 
 			// set user if customer is logged in and the domain is not admin
-			$this->load->library('customer');
-			$user = ($this->customer->islogged() AND $domain !== ADMINDIR) ? 'customer' : 'staff';
+			$user = 'staff';
+			if ($domain !== ADMINDIR) {
+				if ($this->customer->islogged()) {
+					$this->load->library('customer');
+					$user = 'customer';
+				}
+			}
+
 			$this->db->set('user', $user);
+			$this->db->set('domain', $domain);
+			$this->db->set('context', $context);
 
 			if (is_numeric($user_id)) {
 				$this->db->set('user_id', $user_id);
