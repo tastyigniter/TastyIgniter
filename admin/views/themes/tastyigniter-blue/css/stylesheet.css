@@ -3,7 +3,7 @@ min-height: 100%;
 position: relative;
 }
 body {
-background-color: #FFF;
+background-color: #263648;
 font-family:'Lato',Arial,sans-serif;
 font-weight: 400;
 margin-bottom:0;
@@ -793,7 +793,7 @@ border: 0 none;
 transition: all .4s ease;
 }
 .btn-group-switch .btn:not(.active) {
-text-indent: -99px;
+text-indent: -200px;
 width: 20%;
 background: #c5d2e1;
 background: -webkit-linear-gradient(top, #d6dfea 0%, #c5d2e1 40%, #b4c5d8 100%);
@@ -887,6 +887,9 @@ border-color: #DFE6EE;
 border-style: solid;
 border-width: 0 0 2px;
 }
+}
+.nav-tabs .badge {
+padding: 2px 7px;
 }
 .tab-content {
 background-color: #fff;
@@ -1177,11 +1180,11 @@ border-width: 1px;
 background-color: #FFFFFF;
 border-color: #ecf0f5;
 border-width: 0 0 2px;
-padding: 15px;
+padding: 10px 15px;
 }
 .panel-title {
 font-size: 16px;
-line-height: 16px;
+line-height: 24px;
 color:#484848;
 font-weight: 400;
 }
@@ -1194,9 +1197,7 @@ border-bottom: 1px solid #dfe6ee;
 border-radius: 0;
 }
 .panel > .panel-heading .btn {
-padding: 0 10px;
 background-color: transparent;
-border-width: 0px 0 0 1px;
 }
 .panel > .panel-heading .btn .btn.active,
 .panel > .panel-heading .btn .btn:active {
@@ -1326,7 +1327,7 @@ padding: 5px;
 
 /** PANEL TABLE **/
 .panel-table .panel-heading .pull-right {
-margin-top: -21px;
+margin-top: -27px;
 }
 .panel-table .panel-heading .btn-filter {
 background-color: transparent;
@@ -1447,11 +1448,6 @@ color: #555;
 
 
 /** TABLE **/
-.table-responsive {
-border-width: 0px 0px 1px;
-border-style: solid;
-border-color: #dfe6ee #ecf0f5 #ecf0f5;
-}
 .panel .table-responsive {
 padding: 0 10px 10px;
 }
@@ -1528,6 +1524,17 @@ table .id, table .id .sort {
 color: #656565;
 width: 3.33% !important;
 }
+.table > tbody > tr > .no-line {
+border-top: none;
+}
+.table > thead > tr > .no-line {
+border-bottom: none;
+}
+.table > tbody > tr > .thick-line {
+border-top-width: 2px;
+border-top-style: solid;
+}
+
 
 
 /** TABLE SORTABLE **/
@@ -1689,6 +1696,7 @@ color: #cceeff;
 
 /** PAGINATION **/
 .pagination-bar {
+border-top: 1px solid #ecf0f5;
 margin-bottom: 5px;
 padding: 15px;
 }
@@ -2389,6 +2397,13 @@ min-width: 20px !important;
 .progress {
 position: relative;
 height: 25px;
+background-color: #ECF0F5;
+box-shadow: none;
+border-radius: 3px;
+}
+.progress-bar {
+box-shadow: none;
+border-radius: 3px;
 }
 .progress > .progress-type {
 position: absolute;
@@ -2533,8 +2548,14 @@ top: 16px;
 
 
 /** MODAL **/
-.modal-lg {
-width: 85% !important;
+.modal-content > .close {
+position: absolute;
+right: 15px;
+top: 15px;
+font-size: 32px;
+}
+#media-manager .modal-lg {
+width: 85%;
 }
 #media-manager.modal {
 z-index: 9999999;

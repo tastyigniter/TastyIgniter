@@ -1,4 +1,4 @@
-### v1.5.0 (stable)
+### v2.0.0 (stable)
 
 Release Date:
 
@@ -7,14 +7,25 @@ Release Date:
 * Admin option to select a page for checkout and registration terms and condition.
 * Missing extension meta title item and extension permission rules to config
 * Version number to extension metadata and themes config for version control and automatic update feature
+* Featured Menus module to display selected featured menu on homepage or anywhere on the storefront
 * New admin setting option to set site date/time format
 * Location image gallery: option to add multiple images to be displayed on local storefront
 * New mail templates to send emails to admin on new customer registration and admin password reset
 * Second parameter to both `subject()` and `message()` method of Email library to parse data into mail template
-* New mail templates variables (site_logo, site_url, staff_name, staff_username)
+* New mail templates variables (site_logo, site_url, staff_name, staff_username, status_name, status_comment)
 * Authorize.Net (AIM) Payment gateway
 * Template Library function `getActiveThemeOptions()` to retrieve admin theme customizer options and `get_theme_options()` helper function to use within theme files
-* Added google analytics tracking code and social links theme options to tastyigniter-orange theme
+* Google analytics tracking code and social links theme options to tastyigniter-orange theme
+* New mail templates to send emails to notify customer of order or reservation status update
+* Dynamic menu navigation from nav_menu array in theme config, so that menu items can be easily managed
+* Location Library `orderTimeRange()` function to retrieve location order time ranges
+* Customer Library `updateCart()`function to keep track of cart so customer can login to continue later
+* New admin setting option to enable or disable new customer review entry and display of existing reviews on storefront
+* Invoicing: option to generate invoice number w/ prefix automatically or manually, view invoice from admin order page
+* New admin setting option to set invoice prefix and auto or manual invoicing
+* New admin setting option to set status to mark order as processing so system can start stock reduction and coupon redemption
+* New admin setting option to display or hide stock warning messages
+* New admin setting option to allow customers to still checkout if the menu they are ordering is not in stock
 
 #### Changed
 * LICENCE from Apache to GNU GPLv3
@@ -34,6 +45,8 @@ Release Date:
 * Replaced tinymce editor with summernote editor to reduce total source size
 * Replaced fancybox with bootstrap modal to reduce total source size
 * Restructured controllers so that post data are validated and sent to model at the beginning not end to optimize page load time
+* Replaced `completed_order_status` admin setting input field to multiple select field
+* Improved language files
 
 #### Fixed
 * Bug where extra URL query is not appended after permalink slugs in URI reverse routing
@@ -41,7 +54,7 @@ Release Date:
 * Issue where duplicate head tags are added to `<head>` of Media manager
 * Bug with undefined method `writeTheme()` in Themes that was replaced in previous version to helper function `save_theme_file()`
 * Missing extensions admin language line
-* Spelling error in admin setting option `complete_order_status` to `completed_order_status`
+* Spelling error in admin setting option `complete_order_status` to `completed_order_status` and `new_order_status` to `default_order_status` and `new_reservation_status` to `default_reservation_status`
 * Issue where payment method is not disabled when order total is below the payments minimum order total
 * Issue where payment method is not displayed in admin and storefront order view
 * Issue where duplicate order is added upon page redirect, also remove received order from user session
