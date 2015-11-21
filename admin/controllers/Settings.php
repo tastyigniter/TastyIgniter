@@ -85,6 +85,18 @@ class Settings extends Admin_Controller {
             'delete_thumbs'			=> site_url('settings/delete_thumbs'),
         );
 
+        if (!isset($data['show_stock_warning'])) {
+            $this->config->set_item('show_stock_warning', '1');
+        }
+
+        if (!isset($data['invoice_prefix'])) {
+            $this->config->set_item('invoice_prefix', 'INV-{year}-00');
+        }
+
+        if (!isset($data['processing_order_status'])) {
+            $this->config->set_item('processing_order_status', array('12', '13', '14'));
+        }
+
         if (empty($data['customer_online_time_out'])) {
             $data['customer_online_time_out'] = '120';
         }
@@ -263,6 +275,8 @@ class Settings extends Admin_Controller {
 				'menu_images_h' 			=> $this->input->post('menu_images_h'),
 				'menu_images_w' 			=> $this->input->post('menu_images_w'),
 				'special_category_id' 		=> $this->input->post('special_category_id'),
+				'stock_checkout' 		    => $this->input->post('stock_checkout'),
+				'show_stock_warning' 		=> $this->input->post('show_stock_warning'),
 				'registration_terms' 		=> $this->input->post('registration_terms'),
 				'checkout_terms' 			=> $this->input->post('checkout_terms'),
 				'maps_api_key'				=> $this->input->post('maps_api_key'),
@@ -271,14 +285,17 @@ class Settings extends Admin_Controller {
 				'location_order'			=> $this->input->post('location_order'),
 				'allow_reviews'			    => $this->input->post('allow_reviews'),
 				'approve_reviews'			=> $this->input->post('approve_reviews'),
-				'new_order_status'			=> $this->input->post('new_order_status'),
+				'default_order_status'		=> $this->input->post('default_order_status'),
+				'processing_order_status'	=> $this->input->post('processing_order_status'),
 				'completed_order_status'	=> $this->input->post('completed_order_status'),
 				'canceled_order_status'		=> $this->input->post('canceled_order_status'),
+				'auto_invoicing'		    => $this->input->post('auto_invoicing'),
+				'invoice_prefix'		    => $this->input->post('invoice_prefix'),
 				'guest_order'				=> $this->input->post('guest_order'),
 				'delivery_time'				=> $this->input->post('delivery_time'),
 				'collection_time'			=> $this->input->post('collection_time'),
 				'reservation_mode'			=> $this->input->post('reservation_mode'),
-				'new_reservation_status'	=> $this->input->post('new_reservation_status'),
+				'default_reservation_status'	=> $this->input->post('default_reservation_status'),
 				'confirmed_reservation_status'	=> $this->input->post('confirmed_reservation_status'),
 				'canceled_reservation_status'	=> $this->input->post('canceled_reservation_status'),
 				'reservation_time_interval'		=> $this->input->post('reservation_time_interval'),
@@ -355,20 +372,25 @@ class Settings extends Admin_Controller {
 
 		$this->form_validation->set_rules('maps_api_key', 'lang:label_maps_api_key', 'xss_clean|trim');
 		$this->form_validation->set_rules('distance_unit', 'lang:label_distance_unit', 'xss_clean|trim|required');
-
-		$this->form_validation->set_rules('future_orders', 'lang:label_future_order', 'xss_clean|trim|required|numeric');
-		$this->form_validation->set_rules('location_order', 'lang:label_location_order', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('allow_reviews', 'lang:label_allow_reviews', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('approve_reviews', 'lang:label_approve_reviews', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('new_order_status', 'lang:label_new_order_status', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('completed_order_status', 'lang:label_completed_order_status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('stock_checkout', 'lang:label_stock_checkout', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('show_stock_warning', 'lang:label_show_stock_warning', 'xss_clean|trim|required|integer');
+
+		$this->form_validation->set_rules('default_order_status', 'lang:label_default_order_status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('processing_order_status[]', 'lang:label_processing_order_status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('completed_order_status[]', 'lang:label_completed_order_status', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('canceled_order_status', 'lang:label_canceled_order_status', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('guest_order', 'lang:label_guest_order', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('delivery_time', 'lang:label_delivery_time', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('collection_time', 'lang:label_collection_time', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('guest_order', 'lang:label_guest_order', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('location_order', 'lang:label_location_order', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('future_orders', 'lang:label_future_order', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('auto_invoicing', 'lang:label_auto_invoicing', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('invoice_prefix', 'lang:label_invoice_prefix', 'xss_clean|trim');
 
 		$this->form_validation->set_rules('reservation_mode', 'lang:label_reservation_mode', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('new_reservation_status', 'lang:label_new_reservation_status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('default_reservation_status', 'lang:label_default_reservation_status', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('confirmed_reservation_status', 'lang:label_confirmed_reservation_status', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('canceled_reservation_status', 'lang:label_canceled_reservation_status', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('reservation_time_interval', 'lang:label_reservation_time_interval', 'xss_clean|trim|required|integer');

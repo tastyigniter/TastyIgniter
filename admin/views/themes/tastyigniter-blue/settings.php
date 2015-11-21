@@ -174,144 +174,6 @@
 					</div>
 				</div>
 
-				<div id="option" class="tab-pane row wrap-all">
-					<div class="form-group">
-						<label for="input-page-limit" class="col-sm-3 control-label"><?php echo lang('label_page_limit'); ?>
-							<span class="help-block"><?php echo lang('help_page_limit'); ?></span>
-						</label>
-						<div class="col-sm-5">
-							<input type="text" name="page_limit" class="form-control" value="<?php echo set_value('page_limit', config_item('page_limit')); ?>" />
-							<?php echo form_error('page_limit', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-menus-page-limit" class="col-sm-3 control-label"><?php echo lang('label_menu_page_limit'); ?>
-							<span class="help-block"><?php echo lang('help_menu_page_limit'); ?></span>
-						</label>
-						<div class="col-sm-5">
-							<input type="text" name="menus_page_limit" class="form-control" value="<?php echo set_value('menus_page_limit', config_item('menus_page_limit')); ?>" />
-							<?php echo form_error('menus_page_limit', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-show-menu-images" class="col-sm-3 control-label"><?php echo lang('label_show_menu_image'); ?>
-							<span class="help-block"><?php echo lang('help_show_menu_image'); ?></span>
-						</label>
-						<div class="col-sm-5">
-							<div class="btn-group btn-group-switch" data-toggle="buttons">
-								<?php if (config_item('show_menu_images') == '1') { ?>
-									<label class="btn btn-default"><input type="radio" name="show_menu_images" value="0" <?php echo set_radio('show_menu_images', '0'); ?>><?php echo lang('text_hide'); ?></label>
-									<label class="btn btn-default active"><input type="radio" name="show_menu_images" value="1" <?php echo set_radio('show_menu_images', '1', TRUE); ?>><?php echo lang('text_show'); ?></label>
-								<?php } else { ?>
-									<label class="btn btn-default active"><input type="radio" name="show_menu_images" value="0" <?php echo set_radio('show_menu_images', '0', TRUE); ?>><?php echo lang('text_hide'); ?></label>
-									<label class="btn btn-default"><input type="radio" name="show_menu_images" value="1" <?php echo set_radio('show_menu_images', '1'); ?>><?php echo lang('text_show'); ?></label>
-								<?php } ?>
-							</div>
-							<?php echo form_error('show_menu_images', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group" id="menu-image-size">
-						<label for="input-menu-image-size" class="col-sm-3 control-label"><?php echo lang('label_menu_image'); ?>
-							<span class="help-block"><?php echo lang('help_dimension'); ?></span>
-						</label>
-						<div class="col-sm-5">
-							<div class="control-group control-group-2">
-								<input type="text" name="menu_images_w" class="form-control" value="<?php echo set_value('menu_images_w', config_item('menu_images_w')); ?>" />
-                                <input type="text" name="menu_images_h" class="form-control" value="<?php echo set_value('menu_images_h', config_item('menu_images_h')); ?>" />
-                            </div>
-							<?php echo form_error('menu_images_w', '<span class="text-danger">', '</span>'); ?>
-                            <?php echo form_error('menu_images_h', '<span class="text-danger">', '</span>'); ?>
-                        </div>
-					</div>
-					<div class="form-group">
-						<label for="input-special-category" class="col-sm-3 control-label"><?php echo lang('label_special_category'); ?>
-							<span class="help-block"><?php echo lang('help_special_category'); ?></span>
-						</label>
-						<div class="col-sm-5">
-							<select name="special_category_id" id="input-special-category" class="form-control">
-								<?php foreach ($categories as $category) { ?>
-                                    <?php if ($category['category_id'] === config_item('special_category_id')) { ?>
-                                        <option value="<?php echo $category['category_id']; ?>" <?php echo set_select('category_id', $category['category_id'], TRUE); ?>><?php echo $category['category_name']; ?></option>
-                                    <?php } else { ?>
-                                        <option value="<?php echo $category['category_id']; ?>" <?php echo set_select('category_id', $category['category_id']); ?>><?php echo $category['category_name']; ?></option>
-                                    <?php } ?>
-								<?php } ?>
-							</select>
-							<?php echo form_error('special_category_id', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-                    <div class="form-group">
-                        <label for="input-allow-reviews" class="col-sm-3 control-label"><?php echo lang('label_allow_reviews'); ?>
-                            <span class="help-block"><?php echo lang('help_allow_reviews'); ?></span>
-                        </label>
-                        <div class="col-sm-5">
-                            <div class="btn-group btn-group-switch" data-toggle="buttons">
-                                <?php if (config_item('allow_reviews') == '1') { ?>
-                                    <label class="btn btn-success"><input type="radio" name="allow_reviews" value="0" <?php echo set_radio('allow_reviews', '0'); ?>><?php echo lang('text_enabled'); ?></label>
-                                    <label class="btn btn-danger active"><input type="radio" name="allow_reviews" value="1" <?php echo set_radio('allow_reviews', '1', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-                                <?php } else { ?>
-                                    <label class="btn btn-success active"><input type="radio" name="allow_reviews" value="0" <?php echo set_radio('allow_reviews', '0', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
-                                    <label class="btn btn-danger"><input type="radio" name="allow_reviews" value="1" <?php echo set_radio('allow_reviews', '1'); ?>><?php echo lang('text_disabled'); ?></label>
-                                <?php } ?>
-                            </div>
-                            <?php echo form_error('allow_reviews', '<span class="text-danger">', '</span>'); ?>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="input-approve-reviews" class="col-sm-3 control-label"><?php echo lang('label_approve_reviews'); ?>
-                            <span class="help-block"><?php echo lang('help_approve_reviews'); ?></span>
-                        </label>
-                        <div class="col-sm-5">
-                            <div class="btn-group btn-group-switch" data-toggle="buttons">
-                                <?php if (config_item('approve_reviews') == '1') { ?>
-                                    <label class="btn btn-default"><input type="radio" name="approve_reviews" value="0" <?php echo set_radio('approve_reviews', '0'); ?>><?php echo lang('text_auto'); ?></label>
-                                    <label class="btn btn-default active"><input type="radio" name="approve_reviews" value="1" <?php echo set_radio('approve_reviews', '1', TRUE); ?>><?php echo lang('text_manual'); ?></label>
-                                <?php } else { ?>
-                                    <label class="btn btn-default active"><input type="radio" name="approve_reviews" value="0" <?php echo set_radio('approve_reviews', '0', TRUE); ?>><?php echo lang('text_auto'); ?></label>
-                                    <label class="btn btn-default"><input type="radio" name="approve_reviews" value="1" <?php echo set_radio('approve_reviews', '1'); ?>><?php echo lang('text_manual'); ?></label>
-                                <?php } ?>
-                            </div>
-                            <?php echo form_error('approve_reviews', '<span class="text-danger">', '</span>'); ?>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="input-checkout-terms" class="col-sm-3 control-label"><?php echo lang('label_checkout_terms'); ?>
-                            <span class="help-block"><?php echo lang('help_checkout_terms'); ?></span>
-                        </label>
-                        <div class="col-sm-5">
-							<select name="checkout_terms" id="input-checkout-terms" class="form-control">
-								<option value="0"><?php echo lang('text_none'); ?></option>
-								<?php foreach ($pages as $page) { ?>
-									<?php if ($page['page_id'] == config_item('checkout_terms')) { ?>
-										<option value="<?php echo $page['page_id']; ?>" <?php echo set_select('checkout_terms', $page['page_id'], TRUE); ?>><?php echo $page['name']; ?></option>
-									<?php } else { ?>
-										<option value="<?php echo $page['page_id']; ?>" <?php echo set_select('checkout_terms', $page['page_id']); ?>><?php echo $page['name']; ?></option>
-									<?php } ?>
-								<?php } ?>
-							</select>
-                            <?php echo form_error('checkout_terms', '<span class="text-danger">', '</span>'); ?>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="input-registration-terms" class="col-sm-3 control-label"><?php echo lang('label_registration_terms'); ?>
-                            <span class="help-block"><?php echo lang('help_registration_terms'); ?></span>
-                        </label>
-                        <div class="col-sm-5">
-							<select name="registration_terms" id="input-registration-terms" class="form-control">
-								<option value="0"><?php echo lang('text_none'); ?></option>
-								<?php foreach ($pages as $page) { ?>
-									<?php if ($page['page_id'] == config_item('registration_terms')) { ?>
-										<option value="<?php echo $page['page_id']; ?>" <?php echo set_select('registration_terms', $page['page_id'], TRUE); ?>><?php echo $page['name']; ?></option>
-									<?php } else { ?>
-										<option value="<?php echo $page['page_id']; ?>" <?php echo set_select('registration_terms', $page['page_id']); ?>><?php echo $page['name']; ?></option>
-									<?php } ?>
-								<?php } ?>
-							</select>
-                            <?php echo form_error('registration_terms', '<span class="text-danger">', '</span>'); ?>
-                        </div>
-                    </div>
-				</div>
-
 				<div id="location" class="tab-pane row wrap-all">
 					<div class="form-group">
 						<label for="input-address-1" class="col-sm-3 control-label"><?php echo lang('label_address_1'); ?>
@@ -383,26 +245,245 @@
 					</div>
 				</div>
 
-				<div id="order" class="tab-pane row wrap-all">
+				<div id="option" class="tab-pane row wrap-all">
 					<div class="form-group">
-						<label for="input-order-status-new" class="col-sm-3 control-label"><?php echo lang('label_new_order_status'); ?>
-							<span class="help-block"><?php echo lang('help_new_order_status'); ?></span>
+						<label for="input-page-limit" class="col-sm-3 control-label"><?php echo lang('label_page_limit'); ?>
+							<span class="help-block"><?php echo lang('help_page_limit'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<select name="new_order_status" id="input-order-status-new" class="form-control">
+							<input type="text" name="page_limit" class="form-control" value="<?php echo set_value('page_limit', config_item('page_limit')); ?>" />
+							<?php echo form_error('page_limit', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-menus-page-limit" class="col-sm-3 control-label"><?php echo lang('label_menu_page_limit'); ?>
+							<span class="help-block"><?php echo lang('help_menu_page_limit'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<input type="text" name="menus_page_limit" class="form-control" value="<?php echo set_value('menus_page_limit', config_item('menus_page_limit')); ?>" />
+							<?php echo form_error('menus_page_limit', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-show-menu-images" class="col-sm-3 control-label"><?php echo lang('label_show_menu_image'); ?>
+							<span class="help-block"><?php echo lang('help_show_menu_image'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
+								<?php if (config_item('show_menu_images') == '1') { ?>
+									<label class="btn btn-default"><input type="radio" name="show_menu_images" value="0" <?php echo set_radio('show_menu_images', '0'); ?>><?php echo lang('text_hide'); ?></label>
+									<label class="btn btn-default active"><input type="radio" name="show_menu_images" value="1" <?php echo set_radio('show_menu_images', '1', TRUE); ?>><?php echo lang('text_show'); ?></label>
+								<?php } else { ?>
+									<label class="btn btn-default active"><input type="radio" name="show_menu_images" value="0" <?php echo set_radio('show_menu_images', '0', TRUE); ?>><?php echo lang('text_hide'); ?></label>
+									<label class="btn btn-default"><input type="radio" name="show_menu_images" value="1" <?php echo set_radio('show_menu_images', '1'); ?>><?php echo lang('text_show'); ?></label>
+								<?php } ?>
+							</div>
+							<?php echo form_error('show_menu_images', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group" id="menu-image-size">
+						<label for="input-menu-image-size" class="col-sm-3 control-label"><?php echo lang('label_menu_image'); ?>
+							<span class="help-block"><?php echo lang('help_dimension'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<div class="control-group control-group-2">
+								<input type="text" name="menu_images_w" class="form-control" value="<?php echo set_value('menu_images_w', config_item('menu_images_w')); ?>" />
+								<input type="text" name="menu_images_h" class="form-control" value="<?php echo set_value('menu_images_h', config_item('menu_images_h')); ?>" />
+							</div>
+							<?php echo form_error('menu_images_w', '<span class="text-danger">', '</span>'); ?>
+							<?php echo form_error('menu_images_h', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-special-category" class="col-sm-3 control-label"><?php echo lang('label_special_category'); ?>
+							<span class="help-block"><?php echo lang('help_special_category'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<select name="special_category_id" id="input-special-category" class="form-control">
+								<?php foreach ($categories as $category) { ?>
+									<?php if ($category['category_id'] === config_item('special_category_id')) { ?>
+										<option value="<?php echo $category['category_id']; ?>" <?php echo set_select('category_id', $category['category_id'], TRUE); ?>><?php echo $category['category_name']; ?></option>
+									<?php } else { ?>
+										<option value="<?php echo $category['category_id']; ?>" <?php echo set_select('category_id', $category['category_id']); ?>><?php echo $category['category_name']; ?></option>
+									<?php } ?>
+								<?php } ?>
+							</select>
+							<?php echo form_error('special_category_id', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-stock-checkout" class="col-sm-3 control-label"><?php echo lang('label_stock_checkout'); ?>
+							<span class="help-block"><?php echo lang('help_stock_checkout'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
+								<?php if (config_item('stock_checkout') == '1') { ?>
+									<label class="btn btn-danger"><input type="radio" name="stock_checkout" value="0" <?php echo set_radio('stock_checkout', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="stock_checkout" value="1" <?php echo set_radio('stock_checkout', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+								<?php } else { ?>
+									<label class="btn btn-danger active"><input type="radio" name="stock_checkout" value="0" <?php echo set_radio('stock_checkout', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="stock_checkout" value="1" <?php echo set_radio('stock_checkout', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+								<?php } ?>
+							</div>
+							<?php echo form_error('stock_checkout', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-show-stock-warning" class="col-sm-3 control-label"><?php echo lang('label_show_stock_warning'); ?>
+							<span class="help-block"><?php echo lang('help_show_stock_warning'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
+								<?php if (config_item('show_stock_warning') == '1') { ?>
+									<label class="btn btn-danger"><input type="radio" name="show_stock_warning" value="0" <?php echo set_radio('show_stock_warning', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="show_stock_warning" value="1" <?php echo set_radio('show_stock_warning', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+								<?php } else { ?>
+									<label class="btn btn-danger active"><input type="radio" name="show_stock_warning" value="0" <?php echo set_radio('show_stock_warning', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="show_stock_warning" value="1" <?php echo set_radio('show_stock_warning', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+								<?php } ?>
+							</div>
+							<?php echo form_error('show_stock_warning', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-allow-reviews" class="col-sm-3 control-label"><?php echo lang('label_allow_reviews'); ?>
+							<span class="help-block"><?php echo lang('help_allow_reviews'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
+								<?php if (config_item('allow_reviews') == '1') { ?>
+									<label class="btn btn-danger active"><input type="radio" name="allow_reviews" value="1" <?php echo set_radio('allow_reviews', '1', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="allow_reviews" value="0" <?php echo set_radio('allow_reviews', '0'); ?>><?php echo lang('text_enabled'); ?></label>
+								<?php } else { ?>
+									<label class="btn btn-danger"><input type="radio" name="allow_reviews" value="1" <?php echo set_radio('allow_reviews', '1'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="allow_reviews" value="0" <?php echo set_radio('allow_reviews', '0', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+								<?php } ?>
+							</div>
+							<?php echo form_error('allow_reviews', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-approve-reviews" class="col-sm-3 control-label"><?php echo lang('label_approve_reviews'); ?>
+							<span class="help-block"><?php echo lang('help_approve_reviews'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
+								<?php if (config_item('approve_reviews') == '1') { ?>
+									<label class="btn btn-default"><input type="radio" name="approve_reviews" value="0" <?php echo set_radio('approve_reviews', '0'); ?>><?php echo lang('text_auto'); ?></label>
+									<label class="btn btn-default active"><input type="radio" name="approve_reviews" value="1" <?php echo set_radio('approve_reviews', '1', TRUE); ?>><?php echo lang('text_manual'); ?></label>
+								<?php } else { ?>
+									<label class="btn btn-default active"><input type="radio" name="approve_reviews" value="0" <?php echo set_radio('approve_reviews', '0', TRUE); ?>><?php echo lang('text_auto'); ?></label>
+									<label class="btn btn-default"><input type="radio" name="approve_reviews" value="1" <?php echo set_radio('approve_reviews', '1'); ?>><?php echo lang('text_manual'); ?></label>
+								<?php } ?>
+							</div>
+							<?php echo form_error('approve_reviews', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-checkout-terms" class="col-sm-3 control-label"><?php echo lang('label_checkout_terms'); ?>
+							<span class="help-block"><?php echo lang('help_checkout_terms'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<select name="checkout_terms" id="input-checkout-terms" class="form-control">
+								<option value="0"><?php echo lang('text_none'); ?></option>
+								<?php foreach ($pages as $page) { ?>
+									<?php if ($page['page_id'] == config_item('checkout_terms')) { ?>
+										<option value="<?php echo $page['page_id']; ?>" <?php echo set_select('checkout_terms', $page['page_id'], TRUE); ?>><?php echo $page['name']; ?></option>
+									<?php } else { ?>
+										<option value="<?php echo $page['page_id']; ?>" <?php echo set_select('checkout_terms', $page['page_id']); ?>><?php echo $page['name']; ?></option>
+									<?php } ?>
+								<?php } ?>
+							</select>
+							<?php echo form_error('checkout_terms', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-registration-terms" class="col-sm-3 control-label"><?php echo lang('label_registration_terms'); ?>
+							<span class="help-block"><?php echo lang('help_registration_terms'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<select name="registration_terms" id="input-registration-terms" class="form-control">
+								<option value="0"><?php echo lang('text_none'); ?></option>
+								<?php foreach ($pages as $page) { ?>
+									<?php if ($page['page_id'] == config_item('registration_terms')) { ?>
+										<option value="<?php echo $page['page_id']; ?>" <?php echo set_select('registration_terms', $page['page_id'], TRUE); ?>><?php echo $page['name']; ?></option>
+									<?php } else { ?>
+										<option value="<?php echo $page['page_id']; ?>" <?php echo set_select('registration_terms', $page['page_id']); ?>><?php echo $page['name']; ?></option>
+									<?php } ?>
+								<?php } ?>
+							</select>
+							<?php echo form_error('registration_terms', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+				</div>
+
+				<div id="order" class="tab-pane row wrap-all">
+					<div class="form-group">
+						<label for="input-invoice-prefix" class="col-sm-3 control-label"><?php echo lang('label_invoice_prefix'); ?>
+							<span class="help-block"><?php echo lang('help_invoice_prefix'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<input type="text" name="invoice_prefix" id="input-invoice-prefix" class="form-control" value="<?php echo set_value('invoice_prefix', config_item('invoice_prefix')); ?>" />
+							<?php echo form_error('invoice_prefix', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-invoice-mode" class="col-sm-3 control-label"><?php echo lang('label_auto_invoicing'); ?>
+							<span class="help-block"><?php echo lang('help_auto_invoicing'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
+								<?php if (config_item('auto_invoicing') === '1') { ?>
+									<label class="btn btn-default"><input type="radio" name="auto_invoicing" value="0" <?php echo set_radio('auto_invoicing', '0'); ?>><?php echo lang('text_manual'); ?></label>
+									<label class="btn btn-default active"><input type="radio" name="auto_invoicing" value="1" <?php echo set_radio('auto_invoicing', '1', TRUE); ?>><?php echo lang('text_auto'); ?></label>
+								<?php } else { ?>
+									<label class="btn btn-default active"><input type="radio" name="auto_invoicing" value="0" <?php echo set_radio('auto_invoicing', '0', TRUE); ?>><?php echo lang('text_manual'); ?></label>
+									<label class="btn btn-default"><input type="radio" name="auto_invoicing" value="1" <?php echo set_radio('auto_invoicing', '1'); ?>><?php echo lang('text_auto'); ?></label>
+								<?php } ?>
+							</div>
+							<?php echo form_error('auto_invoicing', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-order-status-default" class="col-sm-3 control-label"><?php echo lang('label_default_order_status'); ?>
+							<span class="help-block"><?php echo lang('help_default_order_status'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<select name="default_order_status" id="input-order-status-default" class="form-control">
 								<optgroup label="Orders">
 									<?php foreach ($statuses as $status) { ?>
 									<?php if ($status['status_for'] === 'order') { ?>
-										<?php if ($status['status_id'] === config_item('new_order_status')) { ?>
-											<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('new_order_status', $status['status_id'], TRUE); ?>><?php echo $status['status_name']; ?></option>
+										<?php if ($status['status_id'] === config_item('default_order_status') OR $status['status_id'] === config_item('new_order_status')) { ?>
+											<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('default_order_status', $status['status_id'], TRUE); ?>><?php echo $status['status_name']; ?></option>
 										<?php } else { ?>
-											<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('new_order_status', $status['status_id']); ?>><?php echo $status['status_name']; ?></option>
+											<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('default_order_status', $status['status_id']); ?>><?php echo $status['status_name']; ?></option>
 										<?php } ?>
 									<?php } ?>
 									<?php } ?>
 								</optgroup>
 							</select>
-							<?php echo form_error('new_order_status', '<span class="text-danger">', '</span>'); ?>
+							<?php echo form_error('default_order_status', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-order-status-processing" class="col-sm-3 control-label"><?php echo lang('label_processing_order_status'); ?>
+							<span class="help-block"><?php echo lang('help_processing_order_status'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<select name="processing_order_status[]" id="input-order-status-processing" class="form-control" multiple="multiple">
+								<optgroup label="Orders">
+									<?php foreach ($statuses as $status) { ?>
+									<?php if ($status['status_for'] === 'order') { ?>
+										<?php if (in_array($status['status_id'], (array) config_item('processing_order_status'))) { ?>
+											<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('processing_order_status', $status['status_id'], TRUE); ?>><?php echo $status['status_name']; ?></option>
+										<?php } else { ?>
+											<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('processing_order_status', $status['status_id']); ?>><?php echo $status['status_name']; ?></option>
+										<?php } ?>
+									<?php } ?>
+									<?php } ?>
+								</optgroup>
+							</select>
+							<?php echo form_error('processing_order_status', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
@@ -410,11 +491,11 @@
 							<span class="help-block"><?php echo lang('help_completed_order_status'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<select name="completed_order_status" id="input-order-status-completed" class="form-control">
+							<select name="completed_order_status[]" id="input-order-status-completed" class="form-control" multiple="multiple">
 								<optgroup label="Orders">
 									<?php foreach ($statuses as $status) { ?>
 									<?php if ($status['status_for'] === 'order') { ?>
-										<?php if ($status['status_id'] === config_item('completed_order_status')) { ?>
+										<?php if (in_array($status['status_id'], (array) config_item('completed_order_status'))) { ?>
 											<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('completed_order_status', $status['status_id'], TRUE); ?>><?php echo $status['status_name']; ?></option>
 										<?php } else { ?>
 											<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('completed_order_status', $status['status_id']); ?>><?php echo $status['status_name']; ?></option>
@@ -543,24 +624,24 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-new-reserve-status" class="col-sm-3 control-label"><?php echo lang('label_new_reservation_status'); ?>
-							<span class="help-block"><?php echo lang('help_new_reservation_status'); ?></span>
+						<label for="input-default-reserve-status" class="col-sm-3 control-label"><?php echo lang('label_default_reservation_status'); ?>
+							<span class="help-block"><?php echo lang('help_default_reservation_status'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<select name="new_reservation_status" id="input-new-reserve-status" class="form-control">
+							<select name="default_reservation_status" id="input-default-reserve-status" class="form-control">
 								<optgroup label="Reservations">
 									<?php foreach ($statuses as $status) { ?>
                                         <?php if ($status['status_for'] === 'reserve') { ?>
-                                            <?php if ($status['status_id'] === config_item('new_reservation_status')) { ?>
-                                                <option value="<?php echo $status['status_id']; ?>" <?php echo set_select('new_reservation_status', $status['status_id'], TRUE); ?>><?php echo $status['status_name']; ?></option>
+                                            <?php if ($status['status_id'] === config_item('default_reservation_status') OR $status['status_id'] === config_item('new_reservation_status')) { ?>
+                                                <option value="<?php echo $status['status_id']; ?>" <?php echo set_select('default_reservation_status', $status['status_id'], TRUE); ?>><?php echo $status['status_name']; ?></option>
                                             <?php } else { ?>
-                                                <option value="<?php echo $status['status_id']; ?>" <?php echo set_select('new_reservation_status', $status['status_id']); ?>><?php echo $status['status_name']; ?></option>
+                                                <option value="<?php echo $status['status_id']; ?>" <?php echo set_select('default_reservation_status', $status['status_id']); ?>><?php echo $status['status_name']; ?></option>
                                             <?php } ?>
                                         <?php } ?>
 									<?php } ?>
 								</optgroup>
 							</select>
-							<?php echo form_error('new_reservation_status', '<span class="text-danger">', '</span>'); ?>
+							<?php echo form_error('default_reservation_status', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
@@ -814,7 +895,7 @@
 							<span class="help-block"><?php echo lang('help_delete_thumbs'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<a id="input-delete-thumbs" class="label label-danger"><?php echo lang('text_delete_thumbs'); ?></a>
+							<a id="input-delete-thumbs" class="btn btn-danger"><?php echo lang('text_delete_thumbs'); ?></a>
 						</div>
 					</div>
 				</div>
@@ -1121,8 +1202,8 @@ $(document).ready(function() {
 
                 if (json['success']) {
                     obj.html(json['success']);
-                    obj.removeClass('label-danger');
-                    obj.addClass('label-success');
+                    obj.removeClass('btn-danger');
+                    obj.addClass('btn-success');
                 }
             }
         });
