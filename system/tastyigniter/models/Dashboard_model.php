@@ -56,8 +56,13 @@ class Dashboard_model extends TI_Model {
 
 		if (is_array($range_query) AND ! empty($range_query)) {
 			$this->db->select_sum('order_total', 'total_lost_sales');
-			$this->db->where('status_id', $this->config->item('canceled_order_status'));
 			$this->db->where($range_query);
+
+			$this->db->group_start();
+			$this->db->where('status_id <=', '0');
+			$this->db->or_where('status_id', $this->config->item('canceled_order_status'));
+			$this->db->group_end();
+
 			$query = $this->db->get('orders');
 
 			if ($query->num_rows() > 0) {
@@ -98,7 +103,7 @@ class Dashboard_model extends TI_Model {
 
 		if (is_array($range_query) AND ! empty($range_query)) {
 			$this->db->where($range_query);
-			$this->db->where('status_id', $this->config->item('completed_order_status'));
+			$this->db->where_in('status_id', (array) $this->config->item('completed_order_status'));
 			$this->db->from('orders');
 			$total_orders_completed = $this->db->count_all_results();
 		}
