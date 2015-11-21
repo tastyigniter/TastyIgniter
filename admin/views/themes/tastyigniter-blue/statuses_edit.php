@@ -53,13 +53,19 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-3 control-label"><?php echo lang('label_notify'); ?></label>
+						<label class="col-sm-3 control-label"><?php echo lang('label_notify'); ?>
+							<span class="help-block"><?php echo lang('help_notify'); ?></span>
+						</label>
 						<div class="col-sm-5">
-							<?php if ($notify_customer === '1') { ?>
-								<input type="checkbox" name="notify_customer" value="<?php echo $notify_customer; ?>" checked="checked" />
-							<?php } else { ?>
-								<input type="checkbox" name="notify_customer" value="<?php echo $notify_customer; ?>" />
-							<?php } ?>
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
+								<?php if ($notify_customer == '1') { ?>
+									<label class="btn btn-danger"><input type="radio" name="notify_customer" value="0" <?php echo set_radio('notify_customer', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="notify_customer" value="1" <?php echo set_radio('notify_customer', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+								<?php } else { ?>
+									<label class="btn btn-danger active"><input type="radio" name="notify_customer" value="0" <?php echo set_radio('notify_customer', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="notify_customer" value="1" <?php echo set_radio('notify_customer', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+								<?php } ?>
+							</div>
 							<?php echo form_error('notify_customer', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>

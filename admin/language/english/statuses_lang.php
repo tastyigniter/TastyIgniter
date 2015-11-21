@@ -20,9 +20,9 @@ $lang['label_name'] 		            = 'Name';
 $lang['label_for'] 		                = 'Status For';
 $lang['label_color'] 		            = 'Color';
 $lang['label_comment'] 		            = 'Comment';
-$lang['label_notify'] 		            = 'Notify Customer';
+$lang['label_notify'] 		            = 'Email Notification';
 
-$lang['help_format'] 		            = 'Address 1 = {address_1}<br />Address 2 = {address_2}<br />City = {city}<br />Postcode = {postcode}<br />State = {state}<br />Status = {status}';
+$lang['help_notify'] 		            = 'Set whether an email is sent to the customer after this status is set to the order. This option can be overridden from the order edit page.';
 
 /* End of file statuses_lang.php */
 /* Location: ./admin/language/english/statuses_lang.php */

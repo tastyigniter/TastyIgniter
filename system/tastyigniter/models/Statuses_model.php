@@ -76,12 +76,13 @@ class Statuses_model extends TI_Model {
 		return $result;
 	}
 
-	public function getStatusHistory($for = FALSE, $order_id) {
+	public function getStatusHistory($for = FALSE, $order_id, $status_id = array()) {
 		$this->db->from('status_history');
 		$this->db->where('status_for', $for);
+		$this->db->where('status_history.object_id', $order_id);
 
-		if (!empty($order_id)) {
-			$this->db->where('status_history.object_id', $order_id);
+		if (!empty($status_id)) {
+			$this->db->where_in('status_history.status_id', (array) $status_id);
 		}
 
 		$this->db->order_by('status_history.date_added', 'DESC');
@@ -94,6 +95,27 @@ class Statuses_model extends TI_Model {
 		}
 
 		return $result;
+	}
+
+
+	public function statusExists($for = FALSE, $order_id, $status_id = array()) {
+		$for = ($for === 'reservation') ? 'reserve' : $for;
+
+		$this->db->from('status_history');
+		$this->db->where('status_for', $for);
+		$this->db->where('status_history.object_id', $order_id);
+
+		if (!empty($status_id)) {
+			$this->db->where_in('status_history.status_id', (array) $status_id);
+		}
+
+		$query = $this->db->get();
+
+		if ($query->num_rows() > 0) {
+			return TRUE;
+		}
+
+		return FALSE;
 	}
 
 	public function getStatus($status_id) {

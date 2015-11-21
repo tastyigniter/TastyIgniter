@@ -129,10 +129,13 @@ class Statuses extends Admin_Controller {
 		$this->template->render('statuses_edit', $data);
 	}
 
-	public function comment() {
+	public function comment_notify() {
 		if ($this->input->get('status_id')) {
-			$comment = $this->Statuses_model->getStatusComment($this->input->get('status_id'));
-			$this->output->set_output(json_encode($comment));
+			$status = $this->Statuses_model->getStatus($this->input->get('status_id'));
+
+			$json = array('comment' => $status['status_comment'], 'notify' => $status['notify_customer']);
+
+			$this->output->set_output(json_encode($json));
 		}
 	}
 
