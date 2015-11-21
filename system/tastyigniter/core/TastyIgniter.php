@@ -1,4 +1,17 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
+/**
+ * TastyIgniter
+ *
+ * An open source online ordering, reservation and management system for restaurants.
+ *
+ * @package   TastyIgniter
+ * @author    SamPoyigi
+ * @copyright Copyright (c) 2013 - 2015, SamPoyigi
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @link      http://tastyigniter.com
+ * @since     Version 1.0
+ * @filesource
+ */
 
 /**
  * TastyIgniter Version
@@ -6,7 +19,7 @@
  * @var	string
  *
  */
-	define('TI_VERSION', 'v1.5.0');
+	define('TI_VERSION', '2.0.0');
 
 	// Path to the root folder
 	defined('ROOTPATH') OR define('ROOTPATH', str_replace(SYSDIR.'/', '', BASEPATH));
