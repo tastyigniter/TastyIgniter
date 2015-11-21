@@ -46,7 +46,7 @@ $lang['alert_menu_not_found'] 			    = '<p class="alert-danger">%s not found, pl
 $lang['alert_no_menu_selected'] 			= '<p class="alert-danger">Please select a menu to add to your order.</p>';
 $lang['alert_option_required'] 	            = '<p class="alert-danger">Please choose from the <b>%s</b> option.</p>';
 $lang['alert_location_closed'] 			    = '<p class="alert-danger">Sorry, you can\'t place an order now, we are currently closed,<br /> please come back later during our opening times.</p>';
-$lang['alert_qty_is_below_min_qty'] 	    = '<p class="alert-danger">Selected quantity is below the menu\'s minimum quantity.</p>';
+$lang['alert_qty_is_below_min_qty'] 	    = '<p class="alert-danger">Selected quantity is below the menu\'s minimum quantity of %s.</p>';
 $lang['alert_delivery_unavailable'] 		= '<p class="alert-danger">Delivery is unavailable at the selected restaurant.</p>';
 $lang['alert_collection_unavailable'] 	    = '<p class="alert-danger">Collection is unavailable at the selected restaurant.</p>';
 $lang['alert_delivery_coverage']            = '<p class="alert-danger">Sorry, this restaurant does not deliver to your address</b>';
