@@ -67,9 +67,9 @@ class Checkout extends Main_Controller {
 
         if (isset($order_data['order_id']) AND isset($order_data['customer_id'])) {
 			$this->load->model('Statuses_model');
-			$order_status_history = $this->Statuses_model->getStatusHistory('order', $order_data['order_id']);
+			$order_status_exists = $this->Statuses_model->statusExists('order', $order_data['order_id']);
 
-			if ($order_data['customer_id'] !== $this->customer->getId() OR !empty($order_status_history)) {
+			if ($order_data['customer_id'] !== $this->customer->getId() OR $order_status_exists === TRUE) {
 	            $order_data = array();
 	            $this->session->unset_userdata('order_data');
 			}

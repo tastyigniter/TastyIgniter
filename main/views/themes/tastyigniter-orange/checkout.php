@@ -220,6 +220,14 @@
                                         <div class="form-group">
                                             <label for=""><?php echo lang('label_customer_name'); ?></label><br /><?php echo $first_name; ?> <?php echo $last_name; ?>
                                         </div>
+                                        <div class="form-group">
+                                            <label for=""><?php echo lang('label_email'); ?></label><br />
+                                            <?php echo $email; ?>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for=""><?php echo lang('label_telephone'); ?></label><br />
+                                            <?php echo $telephone; ?>
+                                        </div>
                                         <?php if ($order_type === '1' AND $addresses) { ?>
                                             <div class="form-group">
                                                 <label for=""><?php echo lang('label_address'); ?></label><br />
@@ -230,10 +238,6 @@
                                                 <?php } ?>
                                             </div>
                                         <?php } ?>
-                                        <div class="form-group">
-                                            <label for=""><?php echo lang('label_telephone'); ?></label><br />
-                                            <?php echo $telephone; ?>
-                                        </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
