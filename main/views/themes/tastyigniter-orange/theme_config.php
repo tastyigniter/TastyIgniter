@@ -25,6 +25,7 @@ $theme['head_tags'] = array(
             array('css/select2.css', 'select2-css', '13'),
             array('css/select2-bootstrap.css', 'select2-bootstrap-css', '14'),
             array('css/jquery.raty.css', 'jquery-raty-css', '15'),
+            array('css/fonts.css', 'fonts-css', '16'),
             array('css/stylesheet.css', 'stylesheet-css', '100100100100100'),
     ),
     'script'   	=> array(

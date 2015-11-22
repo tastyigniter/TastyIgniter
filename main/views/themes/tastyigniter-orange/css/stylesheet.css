@@ -3,7 +3,6 @@
 TastyIgniter Orange Store-front theme
 
 */
-@import "fonts.css";
 
 /*** Basic ***/
 
@@ -821,7 +820,7 @@ height: 120px;
 }
 
 .step-item h4 {
-font-family: 'Open Sans', sans-serif;
+font-family: 'Oxygen', sans-serif;
 font-size: 16px;
 font-weight: 700;
 color: #333;
