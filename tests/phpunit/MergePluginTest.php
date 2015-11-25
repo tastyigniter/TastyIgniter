@@ -695,6 +695,13 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
         $io = $this->io;
         $dir = $this->fixtureDir(__FUNCTION__);
 
+        // RootAliasPackage was updated in 06c44ce to include more setters
+        // that we take advantage of if available
+        $haveComposerWithCompleteRootAlias = method_exists(
+            'Composer\Package\RootPackageInterface',
+            'setRepositories'
+        );
+
         $repoManager = $this->prophesize(
             'Composer\Repository\RepositoryManager'
         );
@@ -716,24 +723,40 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
         );
 
         $root = $this->rootFromJson("{$dir}/composer.json");
-        // Handled by alias
+
+        // Always handled by alias
         $root->setDevRequires(Argument::type('array'))->shouldNotBeCalled();
         $root->setRequires(Argument::type('array'))->shouldNotBeCalled();
 
-        // Handled unwrapped
-        $root->setAutoload(Argument::type('array'))->shouldBeCalled();
-        $root->setConflicts(Argument::type('array'))->shouldBeCalled();
-        $root->setDevAutoload(Argument::type('array'))->shouldBeCalled();
-        $root->setProvides(Argument::type('array'))->shouldBeCalled();
-        $root->setReplaces(Argument::type('array'))->shouldBeCalled();
-        $root->setRepositories(Argument::type('array'))->shouldBeCalled();
-        $root->setSuggests(Argument::type('array'))->shouldBeCalled();
-
         $alias = $this->makeAliasFor($root->reveal());
-        $alias->getAliasOf()->shouldBeCalled();
         $alias->getExtra()->shouldBeCalled();
         $alias->setDevRequires(Argument::type('array'))->shouldBeCalled();
         $alias->setRequires(Argument::type('array'))->shouldBeCalled();
+
+        if ($haveComposerWithCompleteRootAlias) {
+            // When Composer supports it we will apply our changes directly to
+            // the RootAliasPackage
+            $alias->setAutoload(Argument::type('array'))->shouldBeCalled();
+            $alias->setConflicts(Argument::type('array'))->shouldBeCalled();
+            $alias->setDevAutoload(Argument::type('array'))->shouldBeCalled();
+            $alias->setProvides(Argument::type('array'))->shouldBeCalled();
+            $alias->setReplaces(Argument::type('array'))->shouldBeCalled();
+            $alias->setRepositories(Argument::type('array'))->shouldBeCalled();
+            $alias->setStabilityFlags(Argument::type('array'))->shouldBeCalled();
+            $alias->setSuggests(Argument::type('array'))->shouldBeCalled();
+        } else {
+            // With older versions of Composer we will fall back to unwrapping
+            // the aliased RootPackage and make calls to it
+            $root->setAutoload(Argument::type('array'))->shouldBeCalled();
+            $root->setConflicts(Argument::type('array'))->shouldBeCalled();
+            $root->setDevAutoload(Argument::type('array'))->shouldBeCalled();
+            $root->setProvides(Argument::type('array'))->shouldBeCalled();
+            $root->setReplaces(Argument::type('array'))->shouldBeCalled();
+            $root->setRepositories(Argument::type('array'))->shouldBeCalled();
+            $root->setSuggests(Argument::type('array'))->shouldBeCalled();
+            $alias->getAliasOf()->shouldBeCalled();
+        }
+
         $alias = $alias->reveal();
 
         $this->triggerPlugin($alias, $dir);

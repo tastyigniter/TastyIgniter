@@ -351,12 +351,14 @@ class ExtraPackage
         $links = $this->package->{$getter}();
         if (!empty($links)) {
             $unwrapped = self::unwrapIfNeeded($root, $setter);
+            // @codeCoverageIgnoreStart
             if ($root !== $unwrapped) {
                 $this->logger->warning(
                     'This Composer version does not support ' .
                     "'{$type}' merging for aliased packages."
                 );
             }
+            // @codeCoverageIgnoreEnd
             $unwrapped->{$setter}(array_merge(
                 $root->{$getter}(),
                 $this->replaceSelfVersionDependencies($type, $links, $root)
@@ -476,12 +478,14 @@ class ExtraPackage
         RootPackageInterface $root,
         $method = 'setExtra'
     ) {
+        // @codeCoverageIgnoreStart
         if ($root instanceof RootAliasPackage &&
             !method_exists($root, $method)
         ) {
             // Unwrap and return the aliased RootPackage.
             $root = $root->getAliasOf();
         }
+        // @codeCoverageIgnoreEnd
         return $root;
     }
 }
