@@ -120,6 +120,7 @@ class ExtraPackage
     }
 
     /**
+     * @param string $json
      * @return CompletePackage
      */
     protected function loadPackage($json)
