@@ -451,7 +451,7 @@ class Locations extends Admin_Controller {
 
     private function validateForm() {
 		$this->form_validation->set_rules('location_name', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
-		$this->form_validation->set_rules('address[address_1]', 'lang:label_address_1', 'xss_clean|trim|required|min_length[2]|max_length[128]|get_lat_lag[address]');
+		$this->form_validation->set_rules('address[address_1]', 'lang:label_address_1', 'xss_clean|trim|required|min_length[2]|max_length[128]|get_lat_lng[address]');
 		$this->form_validation->set_rules('address[address_2]', 'lang:label_address_2', 'xss_clean|trim|max_length[128]');
 		$this->form_validation->set_rules('address[city]', 'lang:label_city', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 		$this->form_validation->set_rules('address[state]', 'lang:label_state', 'xss_clean|trim|max_length[128]');
@@ -478,7 +478,6 @@ class Locations extends Admin_Controller {
 			$this->form_validation->set_rules('daily_days[]', 'lang:label_opening_days', 'xss_clean|trim|required|integer');
 			$this->form_validation->set_rules('daily_hours[open]', 'lang:label_open_hour', 'xss_clean|trim|required|valid_time|callback__less_time['.$_POST['daily_hours']['close'].']');
 			$this->form_validation->set_rules('daily_hours[close]', 'lang:label_close_hour', 'xss_clean|trim|required|valid_time');
-			//$this->form_validation->set_rules('daily_hours[status]', 'lang:label_opening_status', 'xss_clean|trim|required|integer');
 		}
 
 		if ($this->input->post('opening_type') === 'flexible' AND $this->input->post('flexible_hours')) {

@@ -141,7 +141,7 @@ class Address extends Main_Controller {
 
 	private function validateForm() {
 		// START of form validation rules
-		$this->form_validation->set_rules('address[address_1]', 'lang:label_address_1', 'xss_clean|trim|required|min_length[3]|max_length[128]|get_lat_lag[address]');
+		$this->form_validation->set_rules('address[address_1]', 'lang:label_address_1', 'xss_clean|trim|required|min_length[3]|max_length[128]|get_lat_lng[address]');
 		$this->form_validation->set_rules('address[address_2]', 'lang:label_address_2', 'xss_clean|trim|max_length[128]');
 		$this->form_validation->set_rules('address[city]', 'lang:label_city', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 		$this->form_validation->set_rules('address[state]', 'lang:label_state', 'xss_clean|trim|max_length[128]');

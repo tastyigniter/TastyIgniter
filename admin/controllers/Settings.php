@@ -367,7 +367,7 @@ class Settings extends Admin_Controller {
 
 		$this->form_validation->set_rules('special_category_id', 'lang:label_special_category', 'xss_clean|trim|numeric');
 
-		$this->form_validation->set_rules('main_address[address_1]', 'lang:label_address_1', 'xss_clean|trim|required|min_length[2]|max_length[128]|get_lat_lag[main_address]');
+		$this->form_validation->set_rules('main_address[address_1]', 'lang:label_address_1', 'xss_clean|trim|required|min_length[2]|max_length[128]|get_lat_lng[main_address]');
 		$this->form_validation->set_rules('main_address[address_2]', 'lang:label_address_2', 'xss_clean|trim|max_length[128]');
 		$this->form_validation->set_rules('main_address[city]', 'lang:label_city', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 		$this->form_validation->set_rules('main_address[postcode]', 'lang:label_postcode', 'xss_clean|trim|required|min_length[2]|max_length[10]');
