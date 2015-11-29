@@ -26,6 +26,7 @@ Release Date:
 * New admin setting option to set status to mark order as processing so system can start stock reduction and coupon redemption
 * New admin setting option to display or hide stock warning messages
 * New admin setting option to allow customers to still checkout if the menu they are ordering is not in stock
+* Taxation: option to enable or disable calculating taxes based on set percentage and whether to apply on menu prices or as included with menu prices
 
 #### Changed
 * LICENCE from Apache to GNU GPLv3

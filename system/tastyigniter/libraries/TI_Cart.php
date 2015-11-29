@@ -6,6 +6,7 @@
 class TI_Cart extends CI_Cart {
 
     private $coupon_array = array('code' => '', 'discount' => '');
+    private $taxes_array = array();
 
 	public function __construct($params = array()) {
 		parent::__construct();
@@ -21,6 +22,10 @@ class TI_Cart extends CI_Cart {
 
 		if (!isset($this->_cart_contents['coupon'])) {
 			$this->_cart_contents['coupon'] = $this->coupon_array;
+		}
+
+		if (!isset($this->_cart_contents['taxes'])) {
+			$this->_cart_contents['taxes'] = $this->taxes_array;
 		}
 
 		log_message('info', "Cart Class Initialized");
@@ -81,7 +86,7 @@ class TI_Cart extends CI_Cart {
         }
 
         if ($coupon['discount'] > 0) {
-			$this->_cart_contents['coupon'] = array('code' => $coupon['code'], 'discount' => $coupon['discount']); //$coupon['discount'];
+			$this->_cart_contents['coupon'] = array('code' => $coupon['code'], 'discount' => $coupon['discount']);
 			$save_cart = TRUE;
 		}
 
@@ -136,13 +141,22 @@ class TI_Cart extends CI_Cart {
 
 		$total = $this->_cart_contents['cart_total'];
 
-		$total = (isset($this->_cart_contents['coupon']['discount'])) ? $total - $this->_cart_contents['coupon']['discount'] : $total;
-		$total = (isset($this->_cart_contents['delivery'])) ? $total + $this->_cart_contents['delivery'] : $total;
+		if (isset($this->_cart_contents['coupon']['discount'])) {
+			$total -= $this->_cart_contents['coupon']['discount'];
+		}
+
+		if (isset($this->_cart_contents['delivery'])) {
+			$total += $this->_cart_contents['delivery'];
+		}
+
+		if (!empty($this->_cart_contents['taxes']['amount']) AND !empty($this->_cart_contents['taxes']['apply'])) {
+			$total += $this->_cart_contents['taxes']['amount'];
+		}
 
 		$this->_cart_contents['order_total'] = $total;
 
 		// Is our cart empty? If so we delete it from the session
-		if (count($this->_cart_contents) <= 5) {
+		if (count($this->_cart_contents) <= 6) {
 			$this->CI->session->unset_userdata('cart_contents');
 
 			// Nothing more to do... coffee time!
@@ -191,6 +205,7 @@ class TI_Cart extends CI_Cart {
 		unset($cart['order_total']);
 		unset($cart['delivery']);
 		unset($cart['coupon']);
+		unset($cart['taxes']);
 
 		return $cart;
 	}
@@ -289,29 +304,139 @@ class TI_Cart extends CI_Cart {
         return ($coupon['discount'] > 0) ? $coupon['discount'] : NULL;
 	}
 
-    public function product_options_string($row_id, $split = '<br />') {
-        $string = '';
+	/**
+	 * Get Taxes
+	 *
+	 * Returns taxes array
+	 *
+	 * @access	public
+	 * @return	integer
+	 */
+	public function tax_array() {
+		return is_array($this->_cart_contents['taxes']) ? $this->_cart_contents['taxes'] : $this->taxes_array;
+	}
 
-        foreach ($this->product_options($row_id) as $option_id => $options) {
-            foreach ($options as $option) {
-                $string .= '+ ' . $option['value_name'] . ' = ' . $option['value_price'] . $split;
-            }
-        }
+	// --------------------------------------------------------------------
 
-        return trim($string, $split);
-    }
+	/**
+	 * Get Taxes Title
+	 *
+	 * Returns the taxes title
+	 *
+	 * @access	public
+	 * @return	integer
+	 */
+	public function tax_title() {
+		$taxes = $this->tax_array();
+		return !empty($taxes['title']) ? $taxes['title'] : NULL;
+	}
 
-    public function product_options_ids($row_id) {
-        $ids = array();
+	// --------------------------------------------------------------------
+
+	/**
+	 * Get Taxes Percentage
+	 *
+	 * Returns the taxes percentage
+	 *
+	 * @access	public
+	 * @return	integer
+	 */
+	public function tax_percent() {
+		$taxes = $this->tax_array();
+		return !empty($taxes['percent']) ? $taxes['percent'] : NULL;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Get Taxes Amount
+	 *
+	 * Returns the taxes amount
+	 *
+	 * @access	public
+	 * @return	integer
+	 */
+	public function tax_amount() {
+		$taxes = $this->tax_array();
+		return !empty($taxes['amount']) ? $taxes['amount'] : NULL;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Calculate tax if enabled
+	 *
+	 * @param $total
+	 *
+	 * @return float
+	 */
+	public function calculate_tax() {
+
+		$this->_cart_contents['taxes'] = $this->taxes_array;
+
+		// Calculate taxes if enabled
+		if ($this->CI->config->item('tax_mode') === '1' AND $this->CI->config->item('tax_percentage')) {
+			$tax_percent = $this->CI->config->item('tax_percentage') ? $this->CI->config->item('tax_percentage') : 0;
+
+			$total = $this->_cart_contents['cart_total'];
+
+			if (isset($this->_cart_contents['coupon']['discount'])) {
+				$total -= $this->_cart_contents['coupon']['discount'];
+			}
+
+			// Add delivery charge to total if its taxable
+			if (isset($this->_cart_contents['delivery'])) {
+				if ($this->CI->config->item('tax_delivery_charge') === '1') {
+					$total += $this->_cart_contents['delivery'];
+				}
+			}
+
+			// calculate tax amount based on percentage
+			$tax_amount = ($tax_percent / 100 * $total);
+
+			// If apply taxes on menu price, else
+			if ($this->CI->config->item('tax_menu_price') === '1') {
+				$tax_title = $this->CI->config->item('tax_title') . ' (' . $tax_percent . '%)';
+				$apply = TRUE;
+			} else {
+				$tax_title = $this->CI->config->item('tax_title') . ' (' . $tax_percent . '% included)';
+				$apply = FALSE;
+			}
+
+			$this->_cart_contents['taxes']['title'] = $tax_title;
+			$this->_cart_contents['taxes']['percent'] = $tax_percent;
+			$this->_cart_contents['taxes']['amount'] = $tax_amount;
+			$this->_cart_contents['taxes']['apply'] = $apply;
+
+			$this->_save_cart();
+		}
+
+		return $this->_cart_contents['taxes'];
+	}
+
+	public function product_options_string($row_id, $split = '<br />') {
+		$string = '';
 
 		foreach ($this->product_options($row_id) as $option_id => $options) {
-            foreach ($options as $option) {
-                $ids[$option_id][] = $option['value_id'];
-            }
-        }
+			foreach ($options as $option) {
+				$string .= '+ ' . $option['value_name'] . ' = ' . $option['value_price'] . $split;
+			}
+		}
 
-        return $ids;
-    }
+		return trim($string, $split);
+	}
+
+	public function product_options_ids($row_id) {
+		$ids = array();
+
+		foreach ($this->product_options($row_id) as $option_id => $options) {
+			foreach ($options as $option) {
+				$ids[$option_id][] = $option['value_id'];
+			}
+		}
+
+		return $ids;
+	}
 }
 
 // END Cart Class

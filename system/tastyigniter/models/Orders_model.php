@@ -121,16 +121,12 @@ class Orders_model extends TI_Model {
 		return $order_id;
 	}
 
-	public function getInvoice($invoice_no = NULL) {
-		if (strpos($invoice_no, '-') !== FALSE) {
-			$invoice_no = substr($invoice_no, strrpos($invoice_no, '-')+1);
-		}
-
-		if ( ! empty($invoice_no) AND is_numeric($invoice_no)) {
+	public function getInvoice($order_id = NULL) {
+		if ( ! empty($order_id) AND is_numeric($order_id)) {
 			$this->db->from('orders');
 			$this->db->join('statuses', 'statuses.status_id = orders.status_id', 'left');
 			$this->db->join('locations', 'locations.location_id = orders.location_id', 'left');
-			$this->db->where('invoice_no', (int) $invoice_no);
+			$this->db->where('order_id', $order_id);
 
 			$query = $this->db->get();
 
@@ -255,9 +251,10 @@ class Orders_model extends TI_Model {
 			$query = $this->db->update('orders');
 
 			if ($query === TRUE) {
-				if (isset($update['status_notify']) AND $update['status_notify'] === '1') {
-					$status = $this->Statuses_model->getStatus($update['order_status']);
+				$this->load->model('Statuses_model');
+				$status = $this->Statuses_model->getStatus($update['order_status']);
 
+				if (isset($update['status_notify']) AND $update['status_notify'] === '1') {
 					$mail_data = $this->getMailData($order_id);
 
 					$mail_data['status_name'] = $status['status_name'];
@@ -273,20 +270,20 @@ class Orders_model extends TI_Model {
 						$update['staff_id'] = $this->user->getStaffId();
 					}
 
-					$update['object_id']    = (int) $order_id;
-					$update['status_id']    = (int) $update['order_status'];
-					$update['comment']      = $update['status_comment'];
-					$update['notify']       = $update['status_notify'];
-					$update['date_added']   = mdate('%Y-%m-%d %H:%i:%s', time());
+					$status_update['object_id']    = (int) $order_id;
+					$status_update['status_id']    = (int) $update['order_status'];
+					$status_update['comment']      = isset($update['status_comment']) ? $update['status_comment'] : $status['status_comment'];
+					$status_update['notify']       = isset($update['status_notify']) ? $update['status_notify'] : $status['notify_customer'];
+					$status_update['date_added']   = mdate('%Y-%m-%d %H:%i:%s', time());
 
-					$this->Statuses_model->addStatusHistory('order', $update);
+					$this->Statuses_model->addStatusHistory('order', $status_update);
 				}
 
-				if ($this->config->item('auto_invoicing') === '1' AND in_array($update['status_id'], (array) $this->config->item('completed_order_status'))) {
+				if ($this->config->item('auto_invoicing') === '1' AND in_array($update['order_status'], (array) $this->config->item('completed_order_status'))) {
 					$this->createInvoiceNo($order_id);
 				}
 
-				if (in_array($update['status_id'], (array) $this->config->item('processing_order_status'))) {
+				if (in_array($update['order_status'], (array) $this->config->item('processing_order_status'))) {
 					$this->subtractStock($order_id);
 				}
 			}
@@ -303,9 +300,7 @@ class Orders_model extends TI_Model {
 		$order_info = $this->getOrder($order_id);
 
 		if ($order_info AND empty($order_info['invoice_no'])) {
-			if (empty($order_info['invoice_prefix']) AND $this->config->item('invoice_prefix') !== NULL) {
-				$order_info['invoice_prefix'] = str_replace('{year}', date('Y'), str_replace('{month}', date('m'), str_replace('{day}', date('d'), $this->config->item('invoice_prefix'))));
-			}
+			$order_info['invoice_prefix'] = str_replace('{year}', date('Y'), str_replace('{month}', date('m'), str_replace('{day}', date('d'), $this->config->item('invoice_prefix'))));
 
 			$this->db->select_max('invoice_no');
 			$this->db->from('orders');
@@ -332,16 +327,10 @@ class Orders_model extends TI_Model {
 	}
 
 	public function addOrder($order_info = array(), $cart_contents = array()) {
-		$query = FALSE;
-		$current_time = time();
+		if (empty($order_info) OR empty($cart_contents)) return FALSE;
 
 		if (isset($order_info['location_id'])) {
 			$this->db->set('location_id', $order_info['location_id']);
-		}
-
-		if ($this->config->item('invoice_prefix')) {
-			$invoice_prefix = str_replace('{year}', date('Y'), str_replace('{month}', date('m'), str_replace('{day}', date('d'), $this->config->item('invoice_prefix'))));
-			$this->db->set('invoice_prefix', $invoice_prefix);
 		}
 
 		if (isset($order_info['customer_id'])) {
@@ -371,6 +360,7 @@ class Orders_model extends TI_Model {
 		}
 
 		if (isset($order_info['order_time'])) {
+			$current_time = time();
 			$order_time = (strtotime($order_info['order_time']) < strtotime($current_time)) ? $current_time : $order_info['order_time'];
 			$this->db->set('order_time', mdate('%H:%i', strtotime($order_time)));
 			$this->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', $current_time));
@@ -417,14 +407,6 @@ class Orders_model extends TI_Model {
 					$this->Addresses_model->updateDefault($order_info['customer_id'], $order_info['address_id']);
 				}
 
-				if ($_action === 'added' AND APPDIR === MAINDIR) {
-					log_activity($order_info['customer_id'], 'created', 'orders',
-					             get_activity_message('activity_created_order',
-					                                  array('{customer}', '{link}', '{order_id}'),
-					                                  array($order_info['first_name'] . ' ' . $order_info['last_name'], admin_url('orders/edit?id=' . $order_id), $order_id)
-					             ));
-				}
-
 				return $order_id;
 			}
 		}
@@ -443,6 +425,10 @@ class Orders_model extends TI_Model {
 				'coupon'      => array('title' => 'Coupon (' . $cart_contents['coupon']['code'] . ') ', 'value' => $cart_contents['coupon']['discount']),
 			);
 
+			if (!empty($cart_contents['taxes'])) {
+				$order_totals['taxes'] = array('title' => $cart_contents['taxes']['title'], 'value' => $cart_contents['taxes']['amount']);
+			}
+
 			$this->addOrderTotals($order_id, $order_totals);
 
 			if ( ! empty($cart_contents['coupon'])) {
@@ -458,6 +444,14 @@ class Orders_model extends TI_Model {
 			);
 
 			if ($this->updateOrder($order_id, $update)) {
+				if (APPDIR === MAINDIR) {
+					log_activity($order_info['customer_id'], 'created', 'orders',
+					             get_activity_message('activity_created_order',
+					                                  array('{customer}', '{link}', '{order_id}'),
+					                                  array($order_info['first_name'] . ' ' . $order_info['last_name'], admin_url('orders/edit?id=' . $order_id), $order_id)
+					             ));
+				}
+
 				return TRUE;
 			}
 		}

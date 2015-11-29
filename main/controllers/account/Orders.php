@@ -154,13 +154,15 @@ class Orders extends Main_Controller {
 
         $data['totals'] = array();
         $order_totals = $this->Orders_model->getOrderTotals($result['order_id']);
-        foreach ($order_totals as $total) {
-            if ($total['code'] !== 'order_total') {
-                $data['totals'][] = array(
-                    'title' => $total['title'],
-                    'value' => $this->currency->format($total['value'])
-                );
-            }
+		foreach (array('cart_total', 'coupon', 'delivery', 'taxes') as $key) {
+			foreach ($order_totals as $total) {
+	            if ($key == $total['code'] AND $total['code'] !== 'order_total') {
+	                $data['totals'][] = array(
+	                    'title' => $total['title'],
+	                    'value' => $this->currency->format($total['value'])
+	                );
+	            }
+	        }
         }
 
         $data['order_total'] 		= $this->currency->format($result['order_total']);

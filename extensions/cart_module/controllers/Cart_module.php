@@ -104,6 +104,15 @@ class Cart_module extends Main_Controller {
                 );
             }
 
+	        $data['taxes'] = array();
+	        if ($taxes = $this->cart->calculate_tax()) {
+		        $data['taxes'] = array(
+			        'title'     => $taxes['title'],
+			        'percent'   => $taxes['percent'],
+			        'amount'    => $this->currency->format($taxes['amount']),
+		        );
+	        }
+
             $data['sub_total'] 	= $this->currency->format($this->cart->total());
             $data['order_total'] = $this->currency->format($this->cart->order_total());
 		}

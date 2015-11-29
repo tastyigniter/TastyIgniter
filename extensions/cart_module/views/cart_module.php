@@ -95,6 +95,12 @@
                                             <td class="text-right"><?php echo $delivery; ?></td>
                                         </tr>
 									<?php } ?>
+									<?php if (!empty($taxes) AND isset($taxes['title']) AND isset($taxes['amount'])) { ?>
+                                        <tr>
+                                            <td><b><?php echo $taxes['title']; ?>:</b></td>
+                                            <td class="text-right"><?php echo $taxes['amount']; ?></td>
+                                        </tr>
+									<?php } ?>
                                         <tr>
                                             <td><b><?php echo lang('text_order_total'); ?>:</b></td>
                                             <td class="text-right"><span class="order-total"><?php echo $order_total; ?></span></td>

@@ -275,6 +275,11 @@ class Settings extends Admin_Controller {
 				'menu_images_h' 			=> $this->input->post('menu_images_h'),
 				'menu_images_w' 			=> $this->input->post('menu_images_w'),
 				'special_category_id' 		=> $this->input->post('special_category_id'),
+				'tax_mode' 		            => $this->input->post('tax_mode'),
+				'tax_title' 		        => $this->input->post('tax_title'),
+				'tax_percentage' 		    => $this->input->post('tax_percentage'),
+				'tax_menu_price' 		    => $this->input->post('tax_menu_price'),
+				'tax_delivery_charge' 		=> $this->input->post('tax_delivery_charge'),
 				'stock_checkout' 		    => $this->input->post('stock_checkout'),
 				'show_stock_warning' 		=> $this->input->post('show_stock_warning'),
 				'registration_terms' 		=> $this->input->post('registration_terms'),
@@ -361,21 +366,27 @@ class Settings extends Admin_Controller {
 		}
 
 		$this->form_validation->set_rules('special_category_id', 'lang:label_special_category', 'xss_clean|trim|numeric');
-		$this->form_validation->set_rules('registration_terms', 'lang:label_registration_terms', 'xss_clean|trim|required|numeric');
-		$this->form_validation->set_rules('checkout_terms', 'lang:label_checkout_terms', 'xss_clean|trim|required|numeric');
 
 		$this->form_validation->set_rules('main_address[address_1]', 'lang:label_address_1', 'xss_clean|trim|required|min_length[2]|max_length[128]|get_lat_lag[main_address]');
 		$this->form_validation->set_rules('main_address[address_2]', 'lang:label_address_2', 'xss_clean|trim|max_length[128]');
 		$this->form_validation->set_rules('main_address[city]', 'lang:label_city', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 		$this->form_validation->set_rules('main_address[postcode]', 'lang:label_postcode', 'xss_clean|trim|required|min_length[2]|max_length[10]');
 		$this->form_validation->set_rules('main_address[country_id]', 'lang:label_country', 'xss_clean|trim|required|integer');
-
 		$this->form_validation->set_rules('maps_api_key', 'lang:label_maps_api_key', 'xss_clean|trim');
 		$this->form_validation->set_rules('distance_unit', 'lang:label_distance_unit', 'xss_clean|trim|required');
+
+		$this->form_validation->set_rules('tax_mode', 'lang:label_tax_mode', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('tax_title', 'lang:label_tax_title', 'xss_clean|trim|max_length[32]');
+		$this->form_validation->set_rules('tax_percentage', 'lang:label_tax_percentage', 'xss_clean|trim|numeric');
+		$this->form_validation->set_rules('tax_menu_price', 'lang:label_tax_menu_price', 'xss_clean|trim|numeric');
+		$this->form_validation->set_rules('tax_delivery_charge', 'lang:label_tax_delivery_charge', 'xss_clean|trim|numeric');
+
 		$this->form_validation->set_rules('allow_reviews', 'lang:label_allow_reviews', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('approve_reviews', 'lang:label_approve_reviews', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('stock_checkout', 'lang:label_stock_checkout', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('show_stock_warning', 'lang:label_show_stock_warning', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('registration_terms', 'lang:label_registration_terms', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('checkout_terms', 'lang:label_checkout_terms', 'xss_clean|trim|required|numeric');
 
 		$this->form_validation->set_rules('default_order_status', 'lang:label_default_order_status', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('processing_order_status[]', 'lang:label_processing_order_status', 'xss_clean|trim|required|integer');

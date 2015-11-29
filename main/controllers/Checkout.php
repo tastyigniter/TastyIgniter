@@ -147,14 +147,18 @@ class Checkout extends Main_Controller {
         $order_totals = $this->Orders_model->getOrderTotals($order_info['order_id']);
         if ($order_totals) {
             $data['order_totals'] = array();
-            foreach ($order_totals as $total) {
-                if ($order_type === 'collection' AND $total['code'] === 'delivery') continue;
+            foreach (array('cart_total', 'coupon', 'delivery', 'taxes') as $key) {
+                foreach ($order_totals as $total) {
+                    if ($key === $total['code']) {
+                        if ($order_type === 'collection' AND $total['code'] === 'delivery') continue;
 
-                $data['order_totals'][] = array(
-                    'code'  => $total['code'],
-                    'title' => $total['title'],
-                    'value' => $this->currency->format($total['value'])
-                );
+                        $data['order_totals'][] = array(
+                            'code'  => $total['code'],
+                            'title' => $total['title'],
+                            'value' => $this->currency->format($total['value'])
+                        );
+                    }
+                }
             }
         }
 

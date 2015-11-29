@@ -113,7 +113,7 @@
 													<?php echo $invoice_no; ?>
 												</div>
 												<div class="pull-right">
-													<a href="<?php echo site_url('orders/invoice/view?invoice_no='.$invoice_no.'&popup=1'); ?>" class="btn btn-success btn-xs view-invoice" title="<?php echo lang('button_view_invoice'); ?>" target="_blank"><i class="fa fa-eye"></i></a>
+													<a href="<?php echo site_url("orders/invoice/view/{$order_id}"); ?>" class="btn btn-success btn-xs view-invoice" title="<?php echo lang('button_view_invoice'); ?>" target="_blank"><i class="fa fa-eye"></i></a>
 												</div>
 											<?php } else { ?>
 												<button type="button" class="btn btn-info btn-xs create-invoice"><i class="fa fa-cog"></i> <?php echo lang('button_create_invoice'); ?></button>

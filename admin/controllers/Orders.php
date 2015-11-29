@@ -316,25 +316,20 @@ class Orders extends Admin_Controller {
 
 		$data['totals'] = array();
 		$order_totals = $this->Orders_model->getOrderTotals($order_info['order_id']);
-		foreach ($order_totals as $total) {
-			$title = $total['title'];
-			$value = $this->currency->format($total['value']);
+		foreach (array('cart_total', 'coupon', 'delivery', 'taxes') as $key) {
+			foreach ($order_totals as $total) {
+				if ($key === $total['code']) {
+					if ($total['code'] == 'delivery' AND $order_info['order_type'] === '2') {
+						continue;
+					}
 
-			if ($total['code'] == 'delivery' AND $order_info['order_type'] === '2') {
-				continue;
+					$data['totals'][] = array(
+						'title' => $total['title'],
+						'code'  => $total['code'],
+						'value' => $this->currency->format($total['value']),
+					);
+				}
 			}
-
-			if ($total['code'] == 'coupon') {
-				$coupon = $this->Orders_model->getOrderCoupon($order_info['order_id']);
-				$title = $total['title'] .'('. $coupon['code'] .')';
-				$value = $this->currency->format($coupon['amount']);
-			}
-
-			$data['totals'][] = array(
-				'title' 		=> $title,
-				'code' 			=> $total['code'],
-				'value' 		=> $value
-			);
 		}
 
 		$data['order_total'] 		= $this->currency->format($order_info['order_total']);
@@ -370,11 +365,12 @@ class Orders extends Admin_Controller {
 		$this->template->setStyleTag('css/bootstrap.min.css', 'bootstrap-css', '1');
 		$this->template->setStyleTag('css/fonts.css', 'fonts-css', '2');
 
-		if ($this->input->get('invoice_no') AND is_string($this->input->get('invoice_no'))) {
+		$data = array();
+		if ($this->uri->rsegment('4') AND is_string($this->uri->rsegment('4'))) {
 			$this->load->model('Image_tool_model');
 			$data['invoice_logo'] 		= $this->Image_tool_model->resize($this->config->item('site_logo'));
 
-			$invoice_info = $this->Orders_model->getInvoice($this->input->get('invoice_no'));
+			$invoice_info = $this->Orders_model->getInvoice($this->uri->rsegment('4'));
 
 			$data['order_id'] 			= $invoice_info['order_id'];
 			$data['invoice_no'] 		= $invoice_info['invoice_prefix'].$invoice_info['invoice_no'];
@@ -394,7 +390,7 @@ class Orders extends Admin_Controller {
 			if ($payment = $this->extension->getPayment($invoice_info['payment'])) {
 				if ($payment['name'] === 'paypal_express') {
 					$this->load->model('paypal_express/Paypal_model');
-					$data['paypal_details'] = (isset($this->Paypal_model)) ? $this->Paypal_model->getPaypalDetails($order_info['order_id'], $order_info['customer_id']) : '';
+					$data['paypal_details'] = (isset($this->Paypal_model)) ? $this->Paypal_model->getPaypalDetails($invoice_info['order_id'], $invoice_info['customer_id']) : '';
 				}
 
 				$data['payment'] = !empty($payment['ext_data']['title']) ? $payment['ext_data']['title']: $payment['title'];
@@ -448,28 +444,23 @@ class Orders extends Admin_Controller {
 
 			$data['totals'] = array();
 			$order_totals = $this->Orders_model->getOrderTotals($invoice_info['order_id']);
-			foreach ($order_totals as $total) {
-				$title = $total['title'];
-				$value = $this->currency->format($total['value']);
+			foreach (array('cart_total', 'coupon', 'delivery', 'taxes') as $key) {
+				foreach ($order_totals as $total) {
+					if ($key === $total['code']) {
+						if ($total['code'] == 'delivery' AND $invoice_info['order_type'] === '2') {
+							continue;
+						}
 
-				if ($total['code'] == 'delivery' AND $invoice_info['order_type'] === '2') {
-					continue;
+						$data['totals'][] = array(
+							'title' => $total['title'],
+							'code'  => $total['code'],
+							'value' => $this->currency->format($total['value']),
+						);
+					}
 				}
-
-				if ($total['code'] == 'coupon') {
-					$coupon = $this->Orders_model->getOrderCoupon($invoice_info['order_id']);
-					$title = $total['title'] .'('. $coupon['code'] .')';
-					$value = $this->currency->format($coupon['amount']);
-				}
-
-				$data['totals'][] = array(
-					'title' 		=> $title,
-					'code' 			=> $total['code'],
-					'value' 		=> $value
-				);
 			}
 
-			$data['order_total'] 		= $this->currency->format($invoice_info['order_total']);
+			$data['order_total'] = $this->currency->format($invoice_info['order_total']);
 		}
 
 		if ($action === 'view') {
@@ -486,7 +477,7 @@ class Orders extends Admin_Controller {
                     array($this->user->getStaffName(), 'updated', 'order', current_url(), '#'.$this->input->get('id'))
                 ));
 
-                if ($this->input->post('old_assignee_id') !== $this->input->post('assignee_id')) {
+                if ($this->input->post('assignee_id') AND $this->input->post('old_assignee_id') !== $this->input->post('assignee_id')) {
                     $staff = $this->Staffs_model->getStaff($this->input->post('assignee_id'));
 	                $staff_assignee = site_url('staffs/edit?id='.$staff['staff_id']);
 

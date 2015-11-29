@@ -246,6 +246,7 @@
 				</div>
 
 				<div id="option" class="tab-pane row wrap-all">
+					<h4 class="tab-pane-title"><?php echo lang('text_tab_title_menus'); ?></h4>
 					<div class="form-group">
 						<label for="input-page-limit" class="col-sm-3 control-label"><?php echo lang('label_page_limit'); ?>
 							<span class="help-block"><?php echo lang('help_page_limit'); ?></span>
@@ -311,6 +312,85 @@
 							<?php echo form_error('special_category_id', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
+
+					<h4 class="tab-pane-title"><?php echo lang('text_tab_title_taxation'); ?></h4>
+					<div class="form-group">
+						<label for="input-tax-mode" class="col-sm-3 control-label"><?php echo lang('label_tax_mode'); ?>
+							<span class="help-block"><?php echo lang('help_tax_mode'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
+								<?php if (config_item('tax_mode') == '1') { ?>
+									<label class="btn btn-danger"><input type="radio" name="tax_mode" value="0" <?php echo set_radio('tax_mode', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="tax_mode" value="1" <?php echo set_radio('tax_mode', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+								<?php } else { ?>
+									<label class="btn btn-danger active"><input type="radio" name="tax_mode" value="0" <?php echo set_radio('tax_mode', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="tax_mode" value="1" <?php echo set_radio('tax_mode', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+								<?php } ?>
+							</div>
+							<?php echo form_error('tax_mode', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-tax-title" class="col-sm-3 control-label"><?php echo lang('label_tax_title'); ?>
+							<span class="help-block"><?php echo lang('help_tax_title'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<input type="text" name="tax_title" id="input-tax-title" class="form-control" value="<?php echo set_value('tax_title', config_item('tax_title')); ?>" />
+							<?php echo form_error('tax_title', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-tax-percentage" class="col-sm-3 control-label"><?php echo lang('label_tax_percentage'); ?>
+							<span class="help-block"><?php echo lang('help_tax_percentage'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<div class="input-group">
+								<input type="text" name="tax_percentage" id="input-tax-percentage" class="form-control" value="<?php echo set_value('tax_percentage', config_item('tax_percentage')); ?>" />
+								<span class="input-group-addon"><?php echo lang('text_percentage_sign'); ?></span>
+							</div>
+							<?php echo form_error('tax_percentage', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-tax-menu-price" class="col-sm-3 control-label"><?php echo lang('label_tax_menu_price'); ?>
+							<span class="help-block"><?php echo lang('help_tax_menu_price'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<select name="tax_menu_price" id="input-tax-menu-price" class="form-control">
+								<?php if (config_item('tax_menu_price') === '1') { ?>
+									<option value="0>" <?php echo set_select('tax_menu_price', '0'); ?>><?php echo lang('text_menu_price_include_tax'); ?></option>
+									<option value="1" <?php echo set_select('tax_menu_price', '1', TRUE); ?>><?php echo lang('text_apply_tax_on_menu_price'); ?></option>
+								<?php } else if (config_item('tax_menu_price') === '0') { ?>
+									<option value="0>" <?php echo set_select('tax_menu_price', '0', TRUE); ?>><?php echo lang('text_menu_price_include_tax'); ?></option>
+									<option value="1" <?php echo set_select('tax_menu_price', '1'); ?>><?php echo lang('text_apply_tax_on_menu_price'); ?></option>
+								<?php } else { ?>
+									<option value="0>" <?php echo set_select('tax_menu_price', '0'); ?>><?php echo lang('text_menu_price_include_tax'); ?></option>
+									<option value="1" <?php echo set_select('tax_menu_price', '1'); ?>><?php echo lang('text_apply_tax_on_menu_price'); ?></option>
+								<?php } ?>
+							</select>
+							<?php echo form_error('tax_menu_price', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-tax-delivery-charge" class="col-sm-3 control-label"><?php echo lang('label_tax_delivery_charge'); ?>
+							<span class="help-block"><?php echo lang('help_tax_delivery_charge'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
+								<?php if (config_item('tax_delivery_charge') == '1') { ?>
+									<label class="btn btn-default"><input type="radio" name="tax_delivery_charge" value="0" <?php echo set_radio('tax_delivery_charge', '0'); ?>><?php echo lang('text_no'); ?></label>
+									<label class="btn btn-default active"><input type="radio" name="tax_delivery_charge" value="1" <?php echo set_radio('tax_delivery_charge', '1', TRUE); ?>><?php echo lang('text_yes'); ?></label>
+								<?php } else { ?>
+									<label class="btn btn-default active"><input type="radio" name="tax_delivery_charge" value="0" <?php echo set_radio('tax_delivery_charge', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
+									<label class="btn btn-default"><input type="radio" name="tax_delivery_charge" value="1" <?php echo set_radio('tax_delivery_charge', '1'); ?>><?php echo lang('text_yes'); ?></label>
+								<?php } ?>
+							</div>
+							<?php echo form_error('tax_delivery_charge', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+
+					<h4 class="tab-pane-title"><?php echo lang('text_tab_title_stock'); ?></h4>
 					<div class="form-group">
 						<label for="input-stock-checkout" class="col-sm-3 control-label"><?php echo lang('label_stock_checkout'); ?>
 							<span class="help-block"><?php echo lang('help_stock_checkout'); ?></span>
@@ -345,6 +425,8 @@
 							<?php echo form_error('show_stock_warning', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
+
+					<h4 class="tab-pane-title"><?php echo lang('text_tab_title_reviews'); ?></h4>
 					<div class="form-group">
 						<label for="input-allow-reviews" class="col-sm-3 control-label"><?php echo lang('label_allow_reviews'); ?>
 							<span class="help-block"><?php echo lang('help_allow_reviews'); ?></span>
@@ -379,6 +461,8 @@
 							<?php echo form_error('approve_reviews', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
+
+					<h4 class="tab-pane-title"><?php echo lang('text_tab_title_terms'); ?></h4>
 					<div class="form-group">
 						<label for="input-checkout-terms" class="col-sm-3 control-label"><?php echo lang('label_checkout_terms'); ?>
 							<span class="help-block"><?php echo lang('help_checkout_terms'); ?></span>
@@ -418,6 +502,7 @@
 				</div>
 
 				<div id="order" class="tab-pane row wrap-all">
+					<h4 class="tab-pane-title"><?php echo lang('text_tab_title_invoice'); ?></h4>
 					<div class="form-group">
 						<label for="input-invoice-prefix" class="col-sm-3 control-label"><?php echo lang('label_invoice_prefix'); ?>
 							<span class="help-block"><?php echo lang('help_invoice_prefix'); ?></span>
@@ -444,6 +529,8 @@
 							<?php echo form_error('auto_invoicing', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
+
+					<h4 class="tab-pane-title"><?php echo lang('text_tab_title_checkout'); ?></h4>
 					<div class="form-group">
 						<label for="input-order-status-default" class="col-sm-3 control-label"><?php echo lang('label_default_order_status'); ?>
 							<span class="help-block"><?php echo lang('help_default_order_status'); ?></span>
@@ -1034,6 +1121,7 @@
 				</div>
 
 				<div id="system" class="tab-pane row wrap-all">
+					<h4 class="tab-pane-title"><?php echo lang('text_tab_title_maintenance'); ?></h4>
 					<div class="form-group">
 						<label for="input-maintenance-mode" class="col-sm-3 control-label"><?php echo lang('label_maintenance_mode'); ?>
 							<span class="help-block"><?php echo lang('help_maintenance'); ?></span>
@@ -1058,6 +1146,8 @@
                             <?php echo form_error('custom_code', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
+
+					<h4 class="tab-pane-title"><?php echo lang('text_tab_title_permalink'); ?></h4>
 					<div class="form-group">
 						<label for="input-permalink" class="col-sm-3 control-label"><?php echo lang('label_permalink'); ?>
                             <span class="help-block"><?php echo lang('help_permalink'); ?></span>
@@ -1075,6 +1165,8 @@
 							<?php echo form_error('permalink', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
+
+					<h4 class="tab-pane-title"><?php echo lang('text_tab_title_customer_online'); ?></h4>
 					<div class="form-group">
 						<label for="input-customer-online-time-out" class="col-sm-3 control-label"><?php echo lang('label_customer_online_time_out'); ?>
 							<span class="help-block"><?php echo lang('help_customer_online'); ?></span>
@@ -1128,6 +1220,8 @@
 							<?php echo form_error('customer_online_archive_time_out', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
+
+					<h4 class="tab-pane-title"><?php echo lang('text_tab_title_caching'); ?></h4>
 					<div class="form-group">
 						<label for="input-cache-mode" class="col-sm-3 control-label"><?php echo lang('label_cache_mode'); ?>
 							<span class="help-block"><?php echo lang('help_cache_mode'); ?></span>

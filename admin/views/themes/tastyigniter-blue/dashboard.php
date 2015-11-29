@@ -18,7 +18,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 wrap-none">
+                <div class="col-lg-3 col-md-6 wrap-none wrap-left">
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="row">
@@ -33,7 +33,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 wrap-none">
+                <div class="col-lg-3 col-md-6 wrap-none wrap-left">
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="row">
@@ -48,7 +48,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 wrap-none">
+                <div class="col-lg-3 col-md-6 wrap-none wrap-left">
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="row">
