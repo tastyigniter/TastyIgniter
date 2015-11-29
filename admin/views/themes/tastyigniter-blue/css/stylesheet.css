@@ -8,7 +8,7 @@ font-family:'Lato',Arial,sans-serif;
 font-weight: 400;
 margin-bottom:0;
 font-size: 13px;
-color:#585858;
+color:#484848;
 }
 .body-login {
 background-color: #c5d2e0;
@@ -291,7 +291,7 @@ background-color: #364b66;
 .navbar-top-links .dropdown-menu .menu-body .menu > li > a:focus,
 .navbar-top-links .dropdown-menu .menu-body .menu > li > a:hover {
 background-color: #ECF0F5;
-color: #585858;
+color: #484848;
 }
 .dropdown-menu .menu-body li a {
 color: #337AB7;
@@ -376,7 +376,7 @@ margin-right: 0;
 }
 .navbar-top-links .dropdown-menu .menu-body {
 background-color: #FFF;
-color: #585858;
+color: #484848;
 margin: -1px -1px;
 border-left: 1px solid #DFE6EE;
 border-right: 1px solid #DFE6EE;
@@ -844,7 +844,7 @@ margin-bottom: -2px;
 .nav-tabs > li > a {
 border: 0px solid transparent;
 padding:12px 15px;
-color:#585858;
+color:#484848;
 font-weight: 400;
 margin-right: 4px;
 }
@@ -946,6 +946,15 @@ margin-right: -1px;
 }
 .nav-stacked > li > a:hover {
 margin-right: 0;
+}
+.tab-pane .tab-pane-title {
+padding: 0 0 10px;
+margin: 25px 0px;
+border-bottom: 1px solid rgb(236, 240, 245);
+font-size: 20px;
+}
+.tab-pane .tab-pane-title:first-child {
+margin-top: 0;
 }
 
 
