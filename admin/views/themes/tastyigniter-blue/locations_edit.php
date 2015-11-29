@@ -16,6 +16,7 @@
 		<form role="form" id="edit-form" name="edit_form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo $_action; ?>">
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
+					<h4 class="tab-pane-title"><?php echo lang('text_tab_title_basic'); ?></h4>
 					<div class="form-group">
 						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_name'); ?></label>
 						<div class="col-sm-5">
@@ -23,6 +24,22 @@
 							<?php echo form_error('location_name', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
+					<div class="form-group">
+						<label for="input-email" class="col-sm-3 control-label"><?php echo lang('label_email'); ?></label>
+						<div class="col-sm-5">
+							<input type="text" name="email" id="input-email" class="form-control" value="<?php echo set_value('email', $location_email); ?>" />
+							<?php echo form_error('email', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-telephone" class="col-sm-3 control-label"><?php echo lang('label_telephone'); ?></label>
+						<div class="col-sm-5">
+							<input type="text" name="telephone" id="input-telephone" class="form-control" value="<?php echo set_value('telephone', $location_telephone); ?>" />
+							<?php echo form_error('telephone', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+
+					<h4 class="tab-pane-title"><?php echo lang('text_tab_title_address'); ?></h4>
 					<div class="form-group">
 						<label for="input-address-1" class="col-sm-3 control-label"><?php echo lang('label_address_1'); ?></label>
 						<div class="col-sm-5">
@@ -74,19 +91,40 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-email" class="col-sm-3 control-label"><?php echo lang('label_email'); ?></label>
+						<label for="" class="col-sm-3 control-label"><?php echo lang('label_auto_lat_lng'); ?></label>
 						<div class="col-sm-5">
-							<input type="text" name="email" id="input-email" class="form-control" value="<?php echo set_value('email', $location_email); ?>" />
-							<?php echo form_error('email', '<span class="text-danger">', '</span>'); ?>
+							<div class="btn-group btn-group-toggle btn-group-3" data-toggle="buttons">
+								<?php if ($auto_lat_lng == '1') { ?>
+									<label class="btn btn-default active"><input type="radio" name="auto_lat_lng" value="1" <?php echo set_radio('auto_lat_lng', '1', TRUE); ?>><?php echo lang('text_yes'); ?></label>
+									<label class="btn btn-default"><input type="radio" name="auto_lat_lng" value="0" <?php echo set_radio('auto_lat_lng', '0'); ?>><?php echo lang('text_no'); ?></label>
+								<?php } else { ?>
+									<label class="btn btn-default"><input type="radio" name="auto_lat_lng" value="1" <?php echo set_radio('auto_lat_lng', '1'); ?>><?php echo lang('text_yes'); ?></label>
+									<label class="btn btn-default active"><input type="radio" name="auto_lat_lng" value="0" <?php echo set_radio('auto_lat_lng', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
+								<?php } ?>
+							</div>
+							<?php echo form_error('auto_lat_lng', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
-					<div class="form-group">
-						<label for="input-telephone" class="col-sm-3 control-label"><?php echo lang('label_telephone'); ?></label>
-						<div class="col-sm-5">
-							<input type="text" name="telephone" id="input-telephone" class="form-control" value="<?php echo set_value('telephone', $location_telephone); ?>" />
-							<?php echo form_error('telephone', '<span class="text-danger">', '</span>'); ?>
+					<br />
+
+					<div id="lat-lng">
+						<div class="form-group">
+							<label for="input-address-latitude" class="col-sm-3 control-label"><?php echo lang('label_latitude'); ?></label>
+							<div class="col-sm-5">
+								<input type="text" name="address[location_lat]" id="input-address-latitude" class="form-control" value="<?php echo set_value('address[location_lat]', $location_lat); ?>" />
+								<?php echo form_error('address[location_lat]', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="input-address-longitude" class="col-sm-3 control-label"><?php echo lang('label_longitude'); ?></label>
+							<div class="col-sm-5">
+								<input type="text" name="address[location_lng]" id="input-address-longitude" class="form-control" value="<?php echo set_value('address[location_lng]', $location_lng); ?>" />
+								<?php echo form_error('address[location_lng]', '<span class="text-danger">', '</span>'); ?>
+							</div>
 						</div>
 					</div>
+
+					<h4 class="tab-pane-title"></h4>
 					<div class="form-group">
 						<label for="input-description" class="col-sm-3 control-label"><?php echo lang('label_description'); ?></label>
 						<div class="col-sm-5">
@@ -585,6 +623,14 @@
 $(document).ready(function() {
 	$('.timepicker').timepicker({
 		defaultTime: '11:45 AM'
+	});
+
+	$('input[name="auto_lat_lng"]').on('change', function() {
+		$('#lat-lng').fadeIn();
+
+		if (this.value == '1') {
+			$('#lat-lng').fadeOut();
+		}
 	});
 
 	$('input[name="opening_type"]').on('change', function() {

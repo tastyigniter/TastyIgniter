@@ -250,6 +250,14 @@ class Locations extends Admin_Controller {
 			$options = unserialize($location_info['options']);
 		}
 
+		if ($this->input->post('auto_lat_lng')) {
+			$data['auto_lat_lng'] = $this->input->post('auto_lat_lng');
+		} else if (isset($options['auto_lat_lng'])) {
+			$data['auto_lat_lng'] = $options['auto_lat_lng'];
+		} else {
+			$data['auto_lat_lng'] = '1';
+		}
+
 		if ($this->input->post('opening_type')) {
 			$data['opening_type'] = $this->input->post('opening_type');
 		} else if (isset($options['opening_hours']['opening_type'])) {
@@ -451,14 +459,23 @@ class Locations extends Admin_Controller {
 
     private function validateForm() {
 		$this->form_validation->set_rules('location_name', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
-		$this->form_validation->set_rules('address[address_1]', 'lang:label_address_1', 'xss_clean|trim|required|min_length[2]|max_length[128]|get_lat_lng[address]');
+	    $this->form_validation->set_rules('email', 'lang:label_email', 'xss_clean|trim|required|valid_email');
+	    $this->form_validation->set_rules('telephone', 'lang:label_telephone', 'xss_clean|trim|required|min_length[2]|max_length[15]');
+	    $this->form_validation->set_rules('address[address_1]', 'lang:label_address_1', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 		$this->form_validation->set_rules('address[address_2]', 'lang:label_address_2', 'xss_clean|trim|max_length[128]');
 		$this->form_validation->set_rules('address[city]', 'lang:label_city', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 		$this->form_validation->set_rules('address[state]', 'lang:label_state', 'xss_clean|trim|max_length[128]');
 		$this->form_validation->set_rules('address[postcode]', 'lang:label_postcode', 'xss_clean|trim|required|min_length[2]|max_length[10]');
 		$this->form_validation->set_rules('address[country]', 'lang:label_country', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('email', 'lang:label_email', 'xss_clean|trim|required|valid_email');
-		$this->form_validation->set_rules('telephone', 'lang:label_telephone', 'xss_clean|trim|required|min_length[2]|max_length[15]');
+
+	    $this->form_validation->set_rules('auto_lat_lng', 'lang:label_auto_lat_lng', 'xss_clean|trim|required|integer');
+	    if ($this->input->post('auto_lat_lng') === '1') {
+		    $this->form_validation->set_rules('auto_lat_lng', 'lang:label_auto_lat_lng', 'get_lat_lng[address]');
+	    } else {
+		    $this->form_validation->set_rules('address[location_lat]', 'lang:label_latitude', 'xss_clean|trim|required|numeric');
+		    $this->form_validation->set_rules('address[location_lng]', 'lang:label_longitude', 'xss_clean|trim|required|numeric');
+	    }
+
 		$this->form_validation->set_rules('description', 'lang:label_description', 'xss_clean|trim|min_length[2]|max_length[3028]');
 		$this->form_validation->set_rules('offer_delivery', 'lang:label_offer_delivery', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('offer_collection', 'lang:label_offer_collection', 'xss_clean|trim|required|integer');

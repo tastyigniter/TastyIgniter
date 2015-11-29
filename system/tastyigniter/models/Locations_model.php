@@ -340,6 +340,10 @@ class Locations_model extends TI_Model {
 		}
 
 		$options = array();
+		if (isset($save['auto_lat_lng'])) {
+			$options['auto_lat_lng'] = $save['auto_lat_lng'];
+		}
+
 		if (isset($save['opening_type'])) {
 			$options['opening_hours']['opening_type'] = $save['opening_type'];
 		}
