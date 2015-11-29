@@ -53,13 +53,13 @@ if ( ! function_exists('get_activity_message'))
  */
 if ( ! function_exists('sort_array'))
 {
-    function sort_array($array = array(), $sort_key = 'priority', $sory_array = array()) {
+    function sort_array($array = array(), $sort_key = 'priority', $sort_array = array()) {
         if (!empty($array)) {
             foreach ($array as $key => $value) {
-                $sory_array[$key] = $value[$sort_key];
+                $sort_array[$key] = $value[$sort_key];
             }
 
-            array_multisort($sory_array, SORT_ASC, $array);
+            array_multisort($sort_array, SORT_ASC, $array);
         }
 
         return $array;
@@ -81,6 +81,24 @@ if ( ! function_exists('currency_format'))
     {
         $CI =& get_instance();
         return $CI->currency->format($num);
+    }
+}
+
+// ------------------------------------------------------------------------
+
+/**
+ * Get Context-sensitive help
+ *
+ *
+ * @access	public
+ * @return	string
+ */
+if ( ! function_exists('get_context_help'))
+{
+    function get_context_help($context = '')
+    {
+        // @TO-DO
+        return FALSE;
     }
 }
 
