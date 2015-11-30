@@ -359,13 +359,13 @@
 						<div class="col-sm-5">
 							<select name="tax_menu_price" id="input-tax-menu-price" class="form-control">
 								<?php if (config_item('tax_menu_price') === '1') { ?>
-									<option value="0>" <?php echo set_select('tax_menu_price', '0'); ?>><?php echo lang('text_menu_price_include_tax'); ?></option>
+									<option value="0" <?php echo set_select('tax_menu_price', '0'); ?>><?php echo lang('text_menu_price_include_tax'); ?></option>
 									<option value="1" <?php echo set_select('tax_menu_price', '1', TRUE); ?>><?php echo lang('text_apply_tax_on_menu_price'); ?></option>
 								<?php } else if (config_item('tax_menu_price') === '0') { ?>
-									<option value="0>" <?php echo set_select('tax_menu_price', '0', TRUE); ?>><?php echo lang('text_menu_price_include_tax'); ?></option>
+									<option value="0" <?php echo set_select('tax_menu_price', '0', TRUE); ?>><?php echo lang('text_menu_price_include_tax'); ?></option>
 									<option value="1" <?php echo set_select('tax_menu_price', '1'); ?>><?php echo lang('text_apply_tax_on_menu_price'); ?></option>
 								<?php } else { ?>
-									<option value="0>" <?php echo set_select('tax_menu_price', '0'); ?>><?php echo lang('text_menu_price_include_tax'); ?></option>
+									<option value="0" <?php echo set_select('tax_menu_price', '0'); ?>><?php echo lang('text_menu_price_include_tax'); ?></option>
 									<option value="1" <?php echo set_select('tax_menu_price', '1'); ?>><?php echo lang('text_apply_tax_on_menu_price'); ?></option>
 								<?php } ?>
 							</select>
