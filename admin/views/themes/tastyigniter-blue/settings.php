@@ -994,12 +994,12 @@
                         </label>
                         <div class="col-sm-5">
 	                        <div class="btn-group btn-group-toggle btn-group-2" data-toggle="buttons">
-		                        <?php if (config_item('registration_email') == '1' OR in_array('customer', config_item('registration_email'))) { ?>
+		                        <?php if (config_item('registration_email') == '1' OR in_array('customer', (array) config_item('registration_email'))) { ?>
 			                        <label class="btn btn-default active"><input type="checkbox" name="registration_email[]" value="customer" <?php echo set_radio('registration_email[]', 'customer', TRUE); ?>><?php echo lang('text_to_customer'); ?></label>
 		                        <?php } else { ?>
 			                        <label class="btn btn-default"><input type="checkbox" name="registration_email[]" value="customer" <?php echo set_radio('registration_email[]', 'customer'); ?>><?php echo lang('text_to_customer'); ?></label>
 		                        <?php } ?>
-		                        <?php if (in_array('admin', config_item('registration_email'))) { ?>
+		                        <?php if (in_array('admin', (array) config_item('registration_email'))) { ?>
 			                        <label class="btn btn-default active"><input type="checkbox" name="registration_email[]" value="admin" <?php echo set_radio('registration_email[]', 'admin', TRUE); ?>><?php echo lang('text_to_admin'); ?></label>
 		                        <?php } else { ?>
 			                        <label class="btn btn-default"><input type="checkbox" name="registration_email[]" value="admin" <?php echo set_radio('registration_email[]', 'admin'); ?>><?php echo lang('text_to_admin'); ?></label>
@@ -1014,17 +1014,17 @@
                         </label>
                         <div class="col-sm-5">
 	                        <div class="btn-group btn-group-toggle btn-group-3" data-toggle="buttons">
-		                        <?php if (config_item('customer_order_email') == '1' OR in_array('customer', config_item('order_email'))) { ?>
+		                        <?php if (config_item('customer_order_email') == '1' OR in_array('customer', (array) config_item('order_email'))) { ?>
 			                        <label class="btn btn-default active"><input type="checkbox" name="order_email[]" value="customer" <?php echo set_radio('order_email[]', 'customer', TRUE); ?>><?php echo lang('text_to_customer'); ?></label>
 		                        <?php } else { ?>
 			                        <label class="btn btn-default"><input type="checkbox" name="order_email[]" value="customer" <?php echo set_radio('order_email[]', 'customer'); ?>><?php echo lang('text_to_customer'); ?></label>
 		                        <?php } ?>
-		                        <?php if (in_array('admin', config_item('order_email'))) { ?>
+		                        <?php if (in_array('admin', (array) config_item('order_email'))) { ?>
 			                        <label class="btn btn-default active"><input type="checkbox" name="order_email[]" value="admin" <?php echo set_radio('order_email[]', 'admin', TRUE); ?>><?php echo lang('text_to_admin'); ?></label>
 		                        <?php } else { ?>
 			                        <label class="btn btn-default"><input type="checkbox" name="order_email[]" value="admin" <?php echo set_radio('order_email[]', 'admin'); ?>><?php echo lang('text_to_admin'); ?></label>
 		                        <?php } ?>
-		                        <?php if (config_item('location_order_email') == '1' OR in_array('location', config_item('order_email'))) { ?>
+		                        <?php if (config_item('location_order_email') == '1' OR in_array('location', (array) config_item('order_email'))) { ?>
 			                        <label class="btn btn-default active"><input type="checkbox" name="order_email[]" value="location" <?php echo set_radio('order_email[]', 'location', TRUE); ?>><?php echo lang('text_to_location'); ?></label>
 		                        <?php } else { ?>
 			                        <label class="btn btn-default"><input type="checkbox" name="order_email[]" value="location" <?php echo set_radio('order_email[]', 'location'); ?>><?php echo lang('text_to_location'); ?></label>
@@ -1039,17 +1039,17 @@
                         </label>
                         <div class="col-sm-5">
 	                        <div class="btn-group btn-group-toggle btn-group-3" data-toggle="buttons">
-		                        <?php if (config_item('customer_reserve_email') == '1' OR in_array('customer', config_item('reservation_email'))) { ?>
+		                        <?php if (config_item('customer_reserve_email') == '1' OR in_array('customer', (array) config_item('reservation_email'))) { ?>
 			                        <label class="btn btn-default active"><input type="checkbox" name="reservation_email[]" value="customer" <?php echo set_radio('reservation_email[]', 'customer', TRUE); ?>><?php echo lang('text_to_customer'); ?></label>
 		                        <?php } else { ?>
 			                        <label class="btn btn-default"><input type="checkbox" name="reservation_email[]" value="customer" <?php echo set_radio('reservation_email[]', 'customer'); ?>><?php echo lang('text_to_customer'); ?></label>
 		                        <?php } ?>
-		                        <?php if (in_array('admin', config_item('reservation_email'))) { ?>
+		                        <?php if (in_array('admin', (array) config_item('reservation_email'))) { ?>
 			                        <label class="btn btn-default active"><input type="checkbox" name="reservation_email[]" value="admin" <?php echo set_radio('reservation_email[]', 'admin', TRUE); ?>><?php echo lang('text_to_admin'); ?></label>
 		                        <?php } else { ?>
 			                        <label class="btn btn-default"><input type="checkbox" name="reservation_email[]" value="admin" <?php echo set_radio('reservation_email[]', 'admin'); ?>><?php echo lang('text_to_admin'); ?></label>
 		                        <?php } ?>
-		                        <?php if (config_item('location_reserve_email') == '1' OR in_array('location', config_item('reservation_email'))) { ?>
+		                        <?php if (config_item('location_reserve_email') == '1' OR in_array('location', (array) config_item('reservation_email'))) { ?>
 			                        <label class="btn btn-default active"><input type="checkbox" name="reservation_email[]" value="location" <?php echo set_radio('reservation_email[]', 'location', TRUE); ?>><?php echo lang('text_to_location'); ?></label>
 		                        <?php } else { ?>
 			                        <label class="btn btn-default"><input type="checkbox" name="reservation_email[]" value="location" <?php echo set_radio('reservation_email[]', 'location'); ?>><?php echo lang('text_to_location'); ?></label>
