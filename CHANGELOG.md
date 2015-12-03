@@ -1,6 +1,6 @@
 ### v2.0.0 (stable)
 
-Release Date:
+Release Date: January 2016
 
 #### Added
 * Setup now generates a random alpha-numeric 9 length string for database table prefixes
@@ -102,145 +102,127 @@ Release Date: 09 September 2015
 Release Date: 18 May 2015
 
 ADDED:
-Session library now using 'CI' files session
-root_url, page_url, admin_url, extension_url method to return site root url
-Themes customization:
-	New method to template library to load theme configuration file
-	theme_config.php configuration file is now required in theme root directory to install/customize themes.
-	'customize' key required in $theme configuration array, in other to enable/load customization.
-	Section array items ('title', 'desc', 'icon', 'fields')
-	fields array items ('id', 'type') ('type' => 'hidden|text|password|textarea|group|color|media|checkbox|radio|dropdown|upload')
-    admin_theme_helper methods moved to Customizer class
 
-Menu Category hierarchy: with parent and as many child levels
-New column 'status' added to extensions table, to indicate whether extension is installed/uninstalled and to keep extension data in database after uninstallation.
-Cart Module: option to show or hide menu images and set sizes
-Migrations schemas:
-	create trigger (duplicatePermalink) to avoid duplicate permalink value in permalinks table
-Permalinks:
-	added controller attribute to improve routing
-Activities System: New database table schema for activities
-Added order and reservation status color
-Admin domain base controller property _permission_rules added can be overridden by admin domain controllers to set permission rules for the controller
-Extension:
-    New modules can be uploaded from backend
-    Modules and it files can be deleted after its been uninstalled
-    Extensions controllers now loads a mandatory config file on initialization in module_name/config/module_name.php
+* Session library now using 'CI' files session
+* root_url, page_url, admin_url, extension_url method to return site root url
+* Themes customization:
+	* New method to template library to load theme configuration file
+	* theme_config.php configuration file is now required in theme root directory to install/customize themes.
+	* 'customize' key required in $theme configuration array, in other to enable/load customization.
+	* Section array items `('title', 'desc', 'icon', 'fields')`
+	* fields array items `('id', 'type') ('type' => 'hidden|text|password|textarea|group|color|media|checkbox|radio|dropdown|upload')`
+    * admin_theme_helper methods moved to Customizer class
 
+* Menu Category hierarchy: with parent and as many child levels
+* New column 'status' added to extensions table, to indicate whether extension is installed/uninstalled and to keep extension data in database after uninstallation.
+* Cart Module: option to show or hide menu images and set sizes
+* Migrations schemas:
+	* create trigger (duplicatePermalink) to avoid duplicate permalink value in permalinks table
+* Permalinks:
+	* added controller attribute to improve routing
+* Activities System: New database table schema for activities
+* Added order and reservation status color
+* Admin domain base controller property _permission_rules added can be overridden by admin domain controllers to set permission rules for the controller
+* Extension:
+    * New modules can be uploaded from backend
+    * Modules and it files can be deleted after its been uninstalled
+    * Extensions controllers now loads a mandatory config file on initialization in module_name/config/module_name.php
 
 
 CHANGES:
-All controller methods visibility are accurately set
-Admin, Main and Setup now separated into apps and shares same system components
-    CI_Controller now has subclass Base_Controller
-    Base_Controller has subclasses Admin_Controller and Main_Controller
-    Both main and admin domain controllers now extends Admin_Controller and Main_Controller respectively instead of CI_Controller
 
-Application controllers now organized in folder, (this affects URI routing)
-Move encryption_key config item from database to config file.
-Move log_path config item from database to config file.
-***modules_locations config item now set from index.php instead of config file
-Settings library now sets config items from database only if settings database table exists
-Base controller now checks if session database table exists before using database with session
-
-Add option to disable security question for customer
-
-Migration schemas:
-    table indexes now added in $fields array instead of the dbforge->add_key function
-
-Flash alerts and info now uses this->alert->success/danger/error to add alert message and this->alert->display to display
-Renamed assets/download to assets/downloads (notice the downloads)
-Improved informative database backup with number of rows and displayed
-Renamed template library method regions() to setPartials()
-Rename template library setLinkTag() to setStyleTag()
-Default admin_theme and main_theme config items now grouped into default_themes array()
-Extensions root folder moved to root folder
-
-Extensions sub-folders structure re-arranged:
-	controllers/admin and controllers/main merged into controllers/
-	languages/admin and languages/main merged into languages/
-	views/admin and views/main merged into views/
-
-Extension class methods moved to Extension_model class and Extension class acts as a Facade
-Renamed permalink to USER-friendly slug also column in permalinks table
-Reviews can now be added on reservations and orders. column order_id changed to sale_id and new column sale_type added to differentiate order reviews from reservations reviews.
-
-Status History:
-	changed status_history database table column from assigned_id to assignee_id
-	changed reservations database table column from staff_id to assignee_id
-	added assignee_id column to orders database table
-
-Changed Activity library to Customer_online Library
-
-Customers Online:
-    settings item activity timeout changed to customers_online_timeout
-    settings item activity archive changed to customers_online_archive_timeout
-    IP blacklist removed, to be added back in next version
-
-Added referrer_url to ti_url_helper, which will return the user referral url.
-Changed config('maintenance_page') to config('maintenance_message') and use show_error() instead of loading controller.
-Improved banners and banners_module.... move dimension from banners and banners_module.
-Extracted categories, menu_options associated methods into separate models from menus_model
-Extracted banners associated methods into separate models from design_model and rename to layout_model
-Improved user permission functionality, permission can be set as rules within controllers.
-Removed duplicate admin domain controllers methods and models methods
-Improved site_url and redirect() uri re-routing
-Improved image manager styles responsiveness and remove irrelevant options
-Fixed models delete methods to accept array of ids
-Changed customer activity to customer_online
-
-Messages:
-    renamed messages controller method edit to compose
-    added messages controller methods all, draft, sent,
-    removed message type trash
-    Schema:
-        drop location_id, staff_id_to columns in messages table
-        drop staff_id, staff_email, customer_email, customer_id columns in message_recipients table
-        rename column staff_id_from to sender_id in messages table
-        added columns key and value to message_recipients table
-
-Improved user permissions
-    added permission database table and Permissions_model
-    added restrict() method to check user permission then redirect and show message to user if permission fails
-    improved hasPermission() method to check user permission and return TRUE on permitted or FALSE on restricted
-
-Permissions are a simple string made up of 3 parts:
-    Domain  - Typically the module name for application (e.g. Admin, Main, Module).
-    Context - The controller name (e.g. Menu, Order, Location, or Settings).
-    Action  - The permitted action (View, Manage, Add, Edit, Delete, etc.).
-
-Removed Setting Library, no longer used. (functionality moved to Base_Controller)
-Removed permission context (controller and view files), no longer needed. (Permission error message displayed using alerts)
-Add tastyigniter_helper to include log_activity() and other general helpers
-Activities:
-    Rename Notifications_model to Activities_model
-    add notifications from inside controllers instead of models
-    rename to Activities_model->addNotification to logActivity
-    create log_activity helper function to add activities to database and to be called from controllers
-    logActivity method accepts 4 args user_id, action, context and message
-        rename notifications database table to activities
-        rename actor_id to user_id and object to context
-        drop unused columns from notifications table: suffix, object_id, subject_id
-        add columns user, message, domain, context to activities table
-
-Database Migration from admin domain
-    Migrate database to latest version
-    Restore database from downloaded backup sql files and disabled uploading sql files
-
-Replaced reserve controller, language, view to reservation
-
-Location:
-    Added location image/logo
-    changed property reservation_interval, reservation_turn to reservation_time_interval and reservation_stay_time respectively
-    Move local search functionality from cart_module to local_module
-    removed location settings search by no needed getLatLng does not check search_by settings anymore
-
-Languages:
-    ensure main domain is completely internationalized
-    internationalized admin domain
-    ensure common and duplicate lang lines are moved to english_lang.php
-    prefix all language line keys with text_ label_ column_ error_ alert_ button_
-    added new language helper functions
-    added can_delete functionality to language edit
-
-Themes: move some themes_model functions to template_helper
+* All controller methods visibility are accurately set
+* Admin, Main and Setup now separated into apps and shares same system components
+    * CI_Controller now has subclass Base_Controller
+    * Base_Controller has subclasses Admin_Controller and Main_Controller
+    * Both main and admin domain controllers now extends Admin_Controller and Main_Controller respectively instead of CI_Controller
+* Application controllers now organized in folder, (this affects URI routing)
+* Move encryption_key config item from database to config file.
+* Move log_path config item from database to config file.
+* modules_locations config item now set from index.php instead of config file
+* Settings library now sets config items from database only if settings database table exists
+* Base controller now checks if session database table exists before using database with session
+* Add option to disable security question for customer
+* Migration schemas:
+    * table indexes now added in $fields array instead of the `dbforge->add_key` function
+* Flash alerts and info now uses `$this->alert->success/danger/error` to add alert message and `$this->alert->display` to display
+* Renamed assets/download to assets/downloads (notice the downloads)
+* Improved informative database backup with number of rows and displayed
+* Renamed template library method `regions()` to `setPartials()`
+* Rename template library `setLinkTag()` to `setStyleTag()`
+* Default admin_theme and main_theme config items now grouped into default_themes array
+* Extensions root folder moved to root folder
+* Extensions sub-folders structure re-arranged:
+	* controllers/admin and controllers/main merged into controllers/
+	* languages/admin and languages/main merged into languages/
+	* views/admin and views/main merged into views/
+* Extension class methods moved to Extension_model class and Extension class acts as a Facade
+* Renamed permalink to USER-friendly slug also column in permalinks table
+* Reviews can now be added on reservations and orders. column order_id changed to sale_id and new column sale_type added to differentiate order reviews from reservations reviews.
+* Status History:
+	* changed status_history database table column from assigned_id to assignee_id
+	* changed reservations database table column from staff_id to assignee_id
+	* added assignee_id column to orders database table
+* Changed Activity library to Customer_online Library
+* Customers Online:
+    * settings item activity timeout changed to customers_online_timeout
+    * settings item activity archive changed to customers_online_archive_timeout
+    * IP blacklist removed, to be added back in next version
+* Added referrer_url to ti_url_helper, which will return the user referral url.
+* Changed `config('maintenance_page')` to `config('maintenance_message')` and use `show_error()` instead of loading controller.
+* Improved banners and banners_module.... move dimension from banners and banners_module.
+* Extracted categories, menu_options associated methods into separate models from menus_model
+* Extracted banners associated methods into separate models from design_model and rename to layout_model
+* Improved user permission functionality, permission can be set as rules within controllers.
+* Removed duplicate admin domain controllers methods and models methods
+* Improved site_url and `redirect()` uri re-routing
+* Improved image manager styles responsiveness and remove irrelevant options
+* Fixed models delete methods to accept array of ids
+* Changed customer activity to customer_online
+* Messages:
+    * renamed messages controller method edit to compose
+    * added messages controller methods all, draft, sent,
+    * removed message type trash
+    * Schema:
+        * drop location_id, staff_id_to columns in messages table
+        * drop staff_id, staff_email, customer_email, customer_id columns in message_recipients table
+        * rename column staff_id_from to sender_id in messages table
+        * added columns key and value to message_recipients table
+* Improved user permissions
+    * added permission database table and Permissions_model
+    * added `restrict()` method to check user permission then redirect and show message to user if permission fails
+    * improved `hasPermission()` method to check user permission and return TRUE on permitted or FALSE on restricted
+* Permissions are a simple string made up of 3 parts:
+    * Domain  - Typically the module name for application (e.g. Admin, Main, Module).
+    * Context - The controller name (e.g. Menu, Order, Location, or Settings).
+    * Action  - The permitted action (View, Manage, Add, Edit, Delete, etc.).
+* Removed Setting Library, no longer used. (functionality moved to Base_Controller)
+* Removed permission context (controller and view files), no longer needed. (Permission error message displayed using alerts)
+* Add tastyigniter_helper to include `log_activity()` and other general helpers
+* Activities:
+    * Rename Notifications_model to Activities_model
+    * add notifications from inside controllers instead of models
+    * rename to `Activities_model->addNotification` to logActivity
+    * create log_activity helper function to add activities to database and to be called from controllers
+    * logActivity method accepts 4 args user_id, action, context and message
+        * rename notifications database table to activities
+        * rename actor_id to user_id and object to context
+        * drop unused columns from notifications table: suffix, object_id, subject_id
+        * add columns user, message, domain, context to activities table
+* Database Migration from admin domain
+    * Migrate database to latest version
+    * Restore database from downloaded backup sql files and disabled uploading sql files
+* Replaced reserve controller, language, view to reservation
+* Location:
+    * Added location image/logo
+    * changed property reservation_interval, reservation_turn to reservation_time_interval and reservation_stay_time respectively
+    * Move local search functionality from cart_module to local_module
+    * removed location settings search by no needed getLatLng does not check search_by settings anymore
+* Languages:
+    * ensure main domain is completely internationalized
+    * internationalized admin domain
+    * ensure common and duplicate lang lines are moved to english_lang.php
+    * prefix all language line keys with text_ label_ column_ error_ alert_ button_
+    * added new language helper functions
+    * added can_delete functionality to language edit
+* Themes: move some themes_model functions to template_helper
