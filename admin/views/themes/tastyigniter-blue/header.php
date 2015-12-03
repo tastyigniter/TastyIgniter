@@ -15,13 +15,15 @@
 
     $this->template->setScriptTag('js/jquery-1.11.2.min.js', 'jquery-js', '1');
     $this->template->setScriptTag('js/bootstrap.min.js', 'bootstrap-js', '10');
-    $this->template->setScriptTag('js/metisMenu.min.js', 'metis-menu-js', '11');
-    $this->template->setScriptTag('js/select2.js', 'select-2-js', '12');
-    $this->template->setScriptTag('js/jquery.raty.js', 'jquery-raty-js', '13');
-    $this->template->setScriptTag('js/common.js', 'common-js');
+	$this->template->setScriptTag(root_url('assets/js/js.cookie.js'), 'js-cookie-js', '14');
+	$this->template->setScriptTag('js/metisMenu.min.js', 'metis-menu-js', '11');
+	$this->template->setScriptTag('js/select2.js', 'select-2-js', '12');
+	$this->template->setScriptTag('js/jquery.raty.js', 'jquery-raty-js', '13');
+	$this->template->setScriptTag('js/common.js', 'common-js');
 
-	$site_logo          = base_url('views/themes/tastyigniter-blue/images/admin-logo.png');
-    $site_name 			= $this->config->item('site_name');
+	$site_logo          = root_url('assets/images/admin-logo.png');
+    $system_name 		= lang('ti_system_name');
+    $site_name 		    = config_item('site_name');
     $site_url 			= rtrim(site_url(), '/').'/';
     $base_url 			= base_url();
     $active_menu 		= ($this->uri->rsegment(1)) ? $this->uri->rsegment(1) : ADMINDIR;
@@ -34,14 +36,21 @@
     $staff_edit 		= site_url('staffs/edit?id='. $this->user->getStaffId());
     $logout 			= site_url('logout');
 
-    $heading 			= get_heading();
+	$wrapper_class = '';
+	if (!$this->user->islogged()) {
+		$wrapper_class .= 'wrap-none';
+	}
+
+	if ($this->input->cookie('sidebarToggleState') == 'hide') {
+		$wrapper_class .= ' hide-sidebar';
+	}
 ?>
 <?php echo get_doctype(); ?>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
 	<?php echo get_metas(); ?>
 	<?php echo get_favicon(); ?>
-	<title><?php echo sprintf(lang('site_title'), get_title(), $site_name); ?></title>
+	<title><?php echo sprintf(lang('site_title'), get_title(), $site_name, $system_name); ?></title>
 	<?php echo get_style_tags(); ?>
 	<?php echo get_script_tags(); ?>
 	<script type="text/javascript">
@@ -76,19 +85,16 @@
 	<![endif]-->
 </head>
 <body>
-    <div id="wrapper" class="<?php echo ($this->user->islogged()) ? '' : 'wrap-none'; ?>">
+    <div id="wrapper" class="<?php echo $wrapper_class; ?>">
 		<nav class="navbar navbar-static-top navbar-top" role="navigation" style="margin-bottom: 0">
 			<div class="navbar-header">
-				<a class="navbar-brand" href="<?php echo site_url('dashboard'); ?>"><img class="navbar-logo" alt="<?php echo $site_name; ?>" src="<?php echo $site_logo; ?>"/></a>
+				<a class="navbar-brand" href="<?php echo site_url('dashboard'); ?>"><img class="navbar-logo" alt="<?php echo $system_name; ?>" src="<?php echo $site_logo; ?>"/></a>
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
 					<span class="sr-only">Toggle navigation</span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-                <a class="navbar-brand hidden-xs sidebar-toggle">
-                    <i class="fa fa-bars"></i>
-                </a>
             </div>
 
 			<?php if ($islogged) { ?>
@@ -143,10 +149,10 @@
 						<ul class="dropdown-menu  dropdown-user">
 							<li>
 								<div class="row wrap-vertical">
-									<div class="col-sm-6 col-md-4 wrap-top">
-										<img class="img-rounded img-responsive" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
+									<div class="col-xs-4 wrap-top">
+										<img class="img-rounded img-responsive" src="<?php echo root_url('assets/images/avatar_2x.png'); ?>" width="53px">
 									</div>
-									<div class="col-sm-6 col-md-8 wrap-none wrap-right">
+									<div class="col-xs-8 wrap-none wrap-right">
 										<h4><?php echo $staff_name; ?></h4><span class="small"><i>(<?php echo $username; ?>)</i></span>
 										<span class="small text-uppercase"><?php echo $staff_group; ?></span>
 										<span><?php echo $staff_location; ?></span>

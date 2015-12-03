@@ -7,31 +7,38 @@ $(function() {
 //collapses the sidebar on window resize.
 // Sets the min-height of #page-wrapper to window size
 $(function() {
+
+    var collapseState = Cookies.get('sidebarToggleState');
+
     $(window).bind("load resize", function() {
         topOffset = 50;
         width = (this.window.innerWidth > 0) ? this.window.innerWidth : this.screen.width;
         if (width < 768) {
-            $('div.navbar-collapse').addClass('collapse')
+            $('.navbar-top .navbar-collapse').addClass('collapse');
+            $('#wrapper').removeClass('hide-sidebar');
             topOffset = 100; // 2-row-menu
         } else {
-            $('div.navbar-collapse').removeClass('collapse')
+            $('.navbar-top .navbar-collapse').removeClass('collapse');
+            if (collapseState == 'hide') {
+                $('#wrapper').addClass('hide-sidebar');
+            }
         }
 
         height = (this.window.innerHeight > 0) ? this.window.innerHeight : this.screen.height;
         height = height - topOffset;
         if (height < 1) height = 1;
         if (height > topOffset) {
-            $("#page-wrapper").css("min-height", (height) + "px");
+            $("#page-wrapper").css("min-height", (height-64) + "px");
         }
     });
 
     $(document).on('click', '.sidebar-toggle', function() {
-        if ($('#wrapper > .navbar').hasClass('hide-menu')) {
-            $('#wrapper > .navbar').removeClass('hide-menu');
-            $("#page-wrapper, #footer").css("margin-left", "220px");
+        if ($('#wrapper').hasClass('hide-sidebar')) {
+            $('#wrapper').removeClass('hide-sidebar');
+            Cookies.set('sidebarToggleState', 'show');
         } else {
-            $('#wrapper > .navbar').addClass('hide-menu');
-            $("#page-wrapper, #footer").css("margin-left", "46px");
+            $('#wrapper').addClass('hide-sidebar');
+            Cookies.set('sidebarToggleState', 'hide');
         }
     })
 })
