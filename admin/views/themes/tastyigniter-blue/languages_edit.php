@@ -73,8 +73,8 @@
 
                             <div class="col-sm-5">
                                 <div class="btn-group btn-group-switch" data-toggle="buttons">
-                                    <label class="btn btn-primary"><input type="radio" name="clone_language" value="0" <?php echo set_radio('clone_language', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
-                                    <label class="btn btn-primary"><input type="radio" name="clone_language" value="1" <?php echo set_radio('clone_language', '1'); ?>><?php echo lang('text_yes'); ?></label>
+                                    <label class="btn btn-default active"><input type="radio" name="clone_language" value="0" <?php echo set_radio('clone_language', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
+                                    <label class="btn btn-default"><input type="radio" name="clone_language" value="1" <?php echo set_radio('clone_language', '1'); ?>><?php echo lang('text_yes'); ?></label>
                                 </div>
                                 <?php echo form_error('clone_language', '<span class="text-danger">', '</span>'); ?>
                             </div>
@@ -97,11 +97,11 @@
                         <div class="col-sm-5">
                             <div class="btn-group btn-group-switch" data-toggle="buttons">
                                 <?php if ($can_delete === '1') { ?>
-                                    <label class="btn btn-primary active"><input type="radio" name="can_delete" value="1" <?php echo set_radio('can_delete', '1', TRUE); ?>><?php echo lang('text_no'); ?></label>
-                                    <label class="btn btn-primary"><input type="radio" name="can_delete" value="0" <?php echo set_radio('can_delete', '0'); ?>><?php echo lang('text_yes'); ?></label>
+                                    <label class="btn btn-default active"><input type="radio" name="can_delete" value="1" <?php echo set_radio('can_delete', '1', TRUE); ?>><?php echo lang('text_no'); ?></label>
+                                    <label class="btn btn-default"><input type="radio" name="can_delete" value="0" <?php echo set_radio('can_delete', '0'); ?>><?php echo lang('text_yes'); ?></label>
                                 <?php } else { ?>
-                                    <label class="btn btn-primary"><input type="radio" name="can_delete" value="1" <?php echo set_radio('can_delete', '1'); ?>><?php echo lang('text_no'); ?></label>
-                                    <label class="btn btn-primary"><input type="radio" name="can_delete" value="0" <?php echo set_radio('can_delete', '0', TRUE); ?>><?php echo lang('text_yes'); ?></label>
+                                    <label class="btn btn-default"><input type="radio" name="can_delete" value="1" <?php echo set_radio('can_delete', '1'); ?>><?php echo lang('text_no'); ?></label>
+                                    <label class="btn btn-default active"><input type="radio" name="can_delete" value="0" <?php echo set_radio('can_delete', '0', TRUE); ?>><?php echo lang('text_yes'); ?></label>
                                 <?php } ?>
                             </div>
                             <?php echo form_error('can_delete', '<span class="text-danger">', '</span>'); ?>

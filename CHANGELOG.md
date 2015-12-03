@@ -27,6 +27,7 @@ Release Date:
 * New admin setting option to display or hide stock warning messages
 * New admin setting option to allow customers to still checkout if the menu they are ordering is not in stock
 * Taxation: option to enable or disable calculating taxes based on set percentage and whether to apply on menu prices or as included with menu prices
+* New option to add latitude and longitude manually or fetch automatically in Locations
 
 #### Changed
 * LICENCE from Apache to GNU GPLv3
@@ -48,6 +49,8 @@ Release Date:
 * Restructured controllers so that post data are validated and sent to model at the beginning not end to optimize page load time
 * Replaced `completed_order_status` admin setting input field to multiple select field
 * Improved language files
+* Re-arranged admin nav menu items and improved Template Library `buildNavMenu()` to show third level nav menu
+* Improved Themes from listing admin themes on admin panel, this will allow focus only on storefront theme development
 
 #### Fixed
 * Bug where extra URL query is not appended after permalink slugs in URI reverse routing

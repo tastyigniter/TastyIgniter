@@ -86,7 +86,7 @@
 										<a class="btn btn-danger delete" title="<?php echo lang('button_delete'); ?>" href="<?php echo $extension['delete']; ?>"><i class="fa fa-trash-o"></i></a>
                                     <?php } ?>
 								</td>
-								<td><?php echo $extension['title']; ?></td>
+								<td><strong><?php echo $extension['title']; ?></strong></td>
 								<td>
                                     <div class="extension_desc"><p><?php echo $extension['description']; ?></p></div>
                                     <div class="extension_meta text-muted small">

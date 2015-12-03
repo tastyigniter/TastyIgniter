@@ -223,17 +223,17 @@
 						<div class="col-sm-5">
 							<div id="order-restriction" class="btn-group btn-group-3 btn-group-toggle" data-toggle="buttons">
 								<?php if ($order_restriction === '1') { ?>
-									<label class="btn btn-success"><input type="radio" name="order_restriction" value="0" <?php echo set_radio('order_restriction', '0'); ?>>None</label>
-									<label class="btn btn-success active"><input type="radio" name="order_restriction" value="1" <?php echo set_radio('order_restriction', '1', TRUE); ?>>Delivery Only</label>
-									<label class="btn btn-success"><input type="radio" name="order_restriction" value="2" <?php echo set_radio('order_restriction', '2'); ?>>Collection Only</label>
+									<label class="btn btn-default"><input type="radio" name="order_restriction" value="0" <?php echo set_radio('order_restriction', '0'); ?>>None</label>
+									<label class="btn btn-default active"><input type="radio" name="order_restriction" value="1" <?php echo set_radio('order_restriction', '1', TRUE); ?>>Delivery Only</label>
+									<label class="btn btn-default"><input type="radio" name="order_restriction" value="2" <?php echo set_radio('order_restriction', '2'); ?>>Collection Only</label>
 								<?php } else if ($order_restriction === '2') { ?>
-									<label class="btn btn-success"><input type="radio" name="order_restriction" value="0" <?php echo set_radio('order_restriction', '0'); ?>>None</label>
-									<label class="btn btn-success"><input type="radio" name="order_restriction" value="1" <?php echo set_radio('order_restriction', '1'); ?>>Delivery Only</label>
-									<label class="btn btn-success active"><input type="radio" name="order_restriction" value="2" <?php echo set_radio('order_restriction', '2', TRUE); ?>>Collection Only</label>
+									<label class="btn btn-default"><input type="radio" name="order_restriction" value="0" <?php echo set_radio('order_restriction', '0'); ?>>None</label>
+									<label class="btn btn-default"><input type="radio" name="order_restriction" value="1" <?php echo set_radio('order_restriction', '1'); ?>>Delivery Only</label>
+									<label class="btn btn-default active"><input type="radio" name="order_restriction" value="2" <?php echo set_radio('order_restriction', '2', TRUE); ?>>Collection Only</label>
 								<?php } else { ?>
-									<label class="btn btn-success active"><input type="radio" name="order_restriction" value="0" <?php echo set_radio('order_restriction', '0', TRUE); ?>>None</label>
-									<label class="btn btn-success"><input type="radio" name="order_restriction" value="1" <?php echo set_radio('order_restriction', '1'); ?>>Delivery Only</label>
-									<label class="btn btn-success"><input type="radio" name="order_restriction" value="2" <?php echo set_radio('order_restriction', '2'); ?>>Collection Only</label>
+									<label class="btn btn-default active"><input type="radio" name="order_restriction" value="0" <?php echo set_radio('order_restriction', '0', TRUE); ?>>None</label>
+									<label class="btn btn-default"><input type="radio" name="order_restriction" value="1" <?php echo set_radio('order_restriction', '1'); ?>>Delivery Only</label>
+									<label class="btn btn-default"><input type="radio" name="order_restriction" value="2" <?php echo set_radio('order_restriction', '2'); ?>>Collection Only</label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('order_restriction', '<span class="text-danger">', '</span>'); ?>
