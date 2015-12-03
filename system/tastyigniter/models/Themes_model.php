@@ -10,6 +10,8 @@ class Themes_model extends TI_Model {
 
 		if ( ! empty($themes) AND ! empty($themes_list)) {
 			foreach ($themes_list as $theme) {
+				if ($theme['location'] === ADMINDIR) continue;
+
 				$db_theme = (isset($themes[$theme['basename']]) AND ! empty($themes[$theme['basename']])) ? $themes[$theme['basename']] : array();
 
 				$extension_id = ( ! empty($db_theme['extension_id'])) ? $db_theme['extension_id'] : 0;
@@ -21,7 +23,7 @@ class Themes_model extends TI_Model {
 					'title'        => isset($theme['config']['title']) ? $theme['config']['title'] : $theme_name,
 					'version'      => isset($theme['config']['version']) ? $theme['config']['version'] : '',
 					'description'  => isset($theme['config']['description']) ? $theme['config']['description'] : '',
-					'location'     => $theme['location'],
+					'author'       => isset($theme['config']['author']) ? $theme['config']['author'] : '',
 					'screenshot'   => root_url($theme['path'] . '/screenshot.png'),
 					'path'         => $theme['path'],
 					'is_writable'  => is_writable($theme['path']),
@@ -68,18 +70,16 @@ class Themes_model extends TI_Model {
 		return $results;
 	}
 
-	public function activateTheme($name, $location) {
+	public function activateTheme($name) {
 		$query = FALSE;
 
 		if ( ! empty($name) AND $theme = $this->getTheme($name)) {
-			if ( ! empty($location) AND $theme['location'] === $location) {
-				$default_themes = $this->config->item('default_themes');
-				$default_themes[$location] = $name . '/';
+			$default_themes = $this->config->item('default_themes');
+			$default_themes[MAINDIR] = $name . '/';
 
-				$this->load->model('Settings_model');
-				if ($this->Settings_model->addSetting('prefs', 'default_themes', $default_themes, '1')) {
-					$query = $theme['title'];
-				}
+			$this->load->model('Settings_model');
+			if ($this->Settings_model->addSetting('prefs', 'default_themes', $default_themes, '1')) {
+				$query = $theme['title'];
 			}
 		}
 
@@ -89,7 +89,7 @@ class Themes_model extends TI_Model {
 	public function updateTheme($update = array()) {
 		if (empty($update)) return FALSE;
 
-		if ($this->config->item($update['location'], 'default_themes') === $update['name'] . '/') {
+		if ($this->config->item(MAINDIR, 'default_themes') === $update['name'] . '/') {
 			$this->db->set('status', '1');
 		} else {
 			$this->db->set('status', '0');
@@ -119,9 +119,9 @@ class Themes_model extends TI_Model {
 
 		if ($query === TRUE) {
 			$active_theme_options = $this->config->item('active_theme_options');
-			$active_theme_options[$update['location']] = array($update['name'], $update['data']);
+			$active_theme_options[MAINDIR] = array($update['name'], $update['data']);
 
-			if ($this->config->item($update['location'], 'default_themes') === $update['name'] . '/') {
+			if ($this->config->item(MAINDIR, 'default_themes') === $update['name'] . '/') {
 				$this->Settings_model->deleteSettings('prefs', 'customizer_active_style');  //@to-do remove in next version release
 				$this->Settings_model->addSetting('prefs', 'active_theme_options', $active_theme_options, '1');
 			}

@@ -9,15 +9,13 @@ $lang['text_tab_edit_source'] 		    = 'Edit Source';
 $lang['text_empty'] 		            = 'There are no themes available.';
 $lang['text_customize'] 		        = 'Customize';
 $lang['text_theme'] 		            = 'Theme';
-$lang['text_main'] 		                = 'Main';
-$lang['text_admin'] 		            = 'Administrator Panel';
 $lang['text_editing'] 		            = 'Editing file "%s" in theme "%s".';
 $lang['text_viewing'] 		            = 'Viewing image "%s" in theme "%s".';
 $lang['text_preview'] 		            = 'Preview';
 $lang['text_enlarge'] 		            = 'Click to enlarge.';
 $lang['text_is_default'] 		        = 'Active';
 $lang['text_set_default'] 		        = 'Activate';
-$lang['text_location'] 		            = 'Location';
+$lang['text_author'] 		            = 'Author';
 $lang['text_version'] 		            = 'Version';
 $lang['text_select_file_summary'] 		= '<h4>Select a File!</h4><p>You can select from a number of options to alter the look of your theme. <br /> The Theme Editor only supports source files(php, css, js,...) and image files.</p>';
 

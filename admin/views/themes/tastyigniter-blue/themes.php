@@ -7,14 +7,26 @@
 			</div>
 			<div class="panel-body">
 				<?php if ($themes) { ?>
-				<div class="row">
+				<div class="list-group list-group-theme">
 					<?php foreach ($themes as $theme) { ?>
-						<div class="col-sm-6 col-md-4">
-							<div class="thumbnail">
-								<img class="img-responsive" alt="" src="<?php echo $theme['screenshot']; ?>" style="width:100%!important;height:320px!important" />
-								<div class="caption">
+						<div class="list-group-item">
+							<div class="row">
+								<div class="col-xs-3">
+									<img class="img-responsive" alt="" src="<?php echo $theme['screenshot']; ?>" style="width:100%!important;height:100%!important" />
+								</div>
+								<div class="col-xs-9 description">
 									<h4><?php echo $theme['title']; ?><span class="label label-warning text-sm pull-right"><?php if ($theme['active'] === '1') echo lang('text_is_default'); ?></span></h4>
 									<p><?php echo $theme['description']; ?></p>
+									<div class="row metas">
+										<div class="col-xs-8 text-muted text-sm">
+											<b><?php echo lang('text_author'); ?>:</b><br />
+											<?php echo $theme['author']; ?>
+										</div>
+										<div class="col-xs-4 text-muted text-sm text-right">
+											<b><?php echo lang('text_version'); ?>:</b><br />
+											<?php echo $theme['version']; ?>
+										</div>
+									</div>
 									<div class="buttons">
 										<?php if ($theme['active'] === '1') { ?>
 											<a class="btn btn-edit" title="<?php echo lang('text_customize'); ?>" href="<?php echo $theme['edit']; ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
@@ -25,16 +37,6 @@
 											<a class="btn btn-warning" title="<?php echo lang('text_set_default'); ?>" href="<?php echo $theme['activate']; ?>"><i class="fa fa-star"></i></a>&nbsp;&nbsp;
 											<a class="btn btn-default preview-thumb" title="<?php echo lang('text_preview'); ?>" data-img-src="<?php echo $theme['screenshot']; ?>" title="Default"><i class="fa fa-eye"></i></a>
 										<?php } ?>
-									</div>
-									<div class="row">
-										<div class="col-xs-6 text-muted text-sm">
-											<b><?php echo lang('text_location'); ?>:</b><br />
-											<?php echo $theme['location']; ?>
-										</div>
-										<div class="col-xs-6 text-muted text-sm">
-											<b><?php echo lang('text_version'); ?>:</b><br />
-											<?php echo $theme['version']; ?>
-										</div>
 									</div>
 								</div>
 							</div>

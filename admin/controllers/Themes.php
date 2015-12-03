@@ -20,14 +20,10 @@ class Themes extends Admin_Controller {
 		$this->template->setTitle($this->lang->line('text_title'));
 		$this->template->setHeading($this->lang->line('text_heading'));
 
-		if ($this->uri->rsegment(2) === 'activate' AND $this->_activateTheme()) {
-			redirect('themes');
-		}
-
 		$data['themes'] = array();
 		$themes = $this->Themes_model->getList();
 		foreach ($themes as $theme) {
-			if ($theme['name'] === trim($this->config->item($theme['location'], 'default_themes'), '/')) {
+			if ($theme['name'] === trim($this->config->item(MAINDIR, 'default_themes'), '/')) {
 				$active = '1';
 			} else {
 				$active = FALSE;
@@ -38,11 +34,11 @@ class Themes extends Admin_Controller {
 				'title'       => $theme['title'],
 				'version'     => $theme['version'],
 				'description' => $theme['description'],
-				'location'    => ($theme['location'] === 'main') ? $this->lang->line('text_main') : $this->lang->line('text_admin'),
+				'author'      => $theme['author'],
 				'active'      => $active,
 				'screenshot'  => $theme['screenshot'],
-				'activate'    => site_url('themes/activate/' . $theme['location'] . '/' . $theme['name']),
-				'edit'        => site_url('themes/edit/' . $theme['location'] . '/' . $theme['name']),
+				'activate'    => site_url('themes/activate/' . $theme['name']),
+				'edit'        => site_url('themes/edit/' . $theme['name']),
 			);
 		}
 
@@ -52,8 +48,7 @@ class Themes extends Admin_Controller {
 	public function edit() {
 		$this->user->restrict('Site.Themes.Access');
 
-		$theme_name = $this->uri->rsegment(4);
-		$theme_location = $this->uri->rsegment(3);
+		$theme_name = $this->uri->rsegment(3);
 
 		$url = '?';
 
@@ -89,7 +84,7 @@ class Themes extends Admin_Controller {
 
 		if ($this->input->post() AND $this->_updateTheme($theme) === TRUE) {
 			if ($this->input->post('save_close') === '1') {
-				redirect("themes/edit/{$theme_location}/{$theme_name}");
+				redirect("themes/edit/{$theme_name}");
 			}
 
 			redirect(current_url());
@@ -99,7 +94,7 @@ class Themes extends Admin_Controller {
 		if ($this->input->get('file')) {
 			$url .= 'file=' . $this->input->get('file');
 
-			$theme_file = load_theme_file($this->input->get('file'), $theme_name, $theme_location);
+			$theme_file = load_theme_file($this->input->get('file'), $theme_name);
 
 			if (isset($theme_file['type']) AND $theme_file['type'] === 'img') {
 				$theme_file['heading'] = sprintf($this->lang->line('text_viewing'), $this->input->get('file'), $theme_name);
@@ -113,8 +108,8 @@ class Themes extends Admin_Controller {
 		}
 
 		$theme_files = '';
-		$tree_link = site_url("themes/edit/{$theme_location}/{$theme_name}?file={link}");
-		$theme_files .= $this->_themeTree($theme_name, $theme_location, $tree_link);
+		$tree_link = site_url("themes/edit/{$theme_name}?file={link}");
+		$theme_files .= $this->_themeTree($theme_name, $tree_link);
 
 		$data['name'] = $theme['name'];
 		$data['theme_files'] = $theme_files;
@@ -135,7 +130,7 @@ class Themes extends Admin_Controller {
 			}
 		}
 
-		$data['_action'] = site_url("themes/edit/{$theme_location}/{$theme_name}{$url}");
+		$data['_action'] = site_url("themes/edit/{$theme_name}{$url}");
 
 		$data['mode'] = '';
 		if ( ! empty($data['file']['ext'])) {
@@ -151,13 +146,25 @@ class Themes extends Admin_Controller {
 		$this->template->render('themes_edit', $data);
 	}
 
-	private function _themeTree($directory, $location, $return_link, $parent = '') {
+	public function activate() {
+		$this->user->restrict('Site.Themes.Manage');
+
+		if ($theme_name = $this->uri->rsegment(3)) {
+			if ($theme_name = $this->Themes_model->activateTheme($theme_name)) {
+				$this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Theme [' . $theme_name . '] set as default '));
+			}
+		}
+
+		redirect('themes');
+	}
+
+	private function _themeTree($directory, $return_link, $parent = '') {
 		$current_path = ($this->input->get('file')) ? explode('/', $this->input->get('file')) : array();
 
 		$theme_tree = '';
 		$theme_tree .= ($parent === '') ? '<nav class="nav"><ul class="metisFolder">' : '<ul>';
 
-		$theme_files = find_theme_files($directory, $location);
+		$theme_files = find_theme_files($directory);
 
 		if ( ! empty($theme_files)) {
 			foreach ($theme_files as $file) {
@@ -166,7 +173,7 @@ class Themes extends Admin_Controller {
 				if ($file['type'] === 'dir') {
 					$parent_dir = $parent . '/' . $file['name'];
 					$theme_tree .= '<li class="directory' . $active . '"><a><i class="fa fa-folder-open"></i>&nbsp;&nbsp;' . htmlspecialchars($file['name']) . '</a>';
-					$theme_tree .= $this->_themeTree($directory . '/' . $file['name'], $location, $return_link, $parent_dir);
+					$theme_tree .= $this->_themeTree($directory . '/' . $file['name'], $return_link, $parent_dir);
 					$theme_tree .= '</li>';
 				} else if ($file['type'] === 'img') {
 					$link = str_replace('{link}', $parent . '/' . urlencode($file['name']), $return_link);
@@ -186,28 +193,13 @@ class Themes extends Admin_Controller {
 		return $theme_tree;
 	}
 
-	private function _activateTheme() {
-		$this->user->restrict('Site.Themes.Manage');
-
-		if ($this->uri->rsegment(2) === 'activate' AND $this->uri->rsegment(4) AND $this->uri->rsegment(3)) {
-			$theme_name = $this->uri->rsegment(4);
-			$theme_location = $this->uri->rsegment(3);
-
-			if ($theme_name = $this->Themes_model->activateTheme($theme_name, $theme_location)) {
-				$this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Theme [' . $theme_name . '] set as default '));
-			}
-		}
-
-		return TRUE;
-	}
-
 	private function _updateTheme($theme = array()) {
 		$this->user->restrict('Site.Themes.Manage');
 
-		if ($this->uri->rsegment(4) AND $this->uri->rsegment(3) AND $this->validateForm($theme['customize']) === TRUE) {
+		if ($this->uri->rsegment(3) AND $this->validateForm($theme['customize']) === TRUE) {
 			if ($this->input->post('editor_area') AND $this->input->get('file')) {
 				$theme_file = $this->input->get('file');
-				if (save_theme_file($theme_file, $theme['name'], $theme['location'], $this->input->post('editor_area'))) {
+				if (save_theme_file($theme_file, $theme['name'], $this->input->post('editor_area'))) {
 					$this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Theme File (' . $theme_file . ') saved '));
 				} else {
 					$this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), 'saved'));
@@ -217,7 +209,6 @@ class Themes extends Admin_Controller {
 			$update['extension_id'] = $this->input->get('extension_id') ? $this->input->get('extension_id') : $theme['extension_id'];
 			$update['name'] = $theme['name'];
 			$update['title'] = $theme['title'];
-			$update['location'] = $theme['location'];
 
 			if (isset($theme['customize'])) {
 				$update['data'] = $this->customizer->getPostData();
