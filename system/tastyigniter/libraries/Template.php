@@ -125,21 +125,22 @@ class Template {
         }
     }
 
-    public function buildNavMenu($prefs = array()) {
+    public function navMenu($prefs = array()) {
+        $container_open = '<ul class="nav" id="side-menu">';
+        $container_close = '</ul>';
+
+        extract($prefs);
+
+        // Bail out if nav_menu theme config item is missing or not an array
         if ( ! is_array($this->_theme_config['nav_menu'])) {
             return NULL;
         }
-        
-        $nav_menu = $this->_theme_config['nav_menu'];
-        
-        $default = array(
-            'container_open' => '<ul class="nav" id="side-menu">',
-            'container_close' => '</ul>',
-        );
 
-        foreach ($default as $key => &$value) {
-            if (isset($prefs[$key])) $value = $prefs[$key];
-        }
+        return $container_open . $this->_buildNavMenu($this->_theme_config['nav_menu']) . $container_close;
+    }
+
+    protected function _buildNavMenu($nav_menu = array(), $has_child = 0) {
+        $levels = array('', 'nav-second-level', 'nav-third-level');
 
         $out = '';
         foreach ($nav_menu as $menu) {
@@ -154,50 +155,48 @@ class Template {
                 if (!($permitted = array_filter($permitted))) continue;
             }
 
-            $out .= '<li>'.$this->buildNavMenuLink($menu);
+            $out .= '<li>'.$this->_buildNavMenuLink($menu);
 
             if (isset($menu['child']) AND is_array($menu['child'])) {
-                $out .= '<ul class="nav nav-second-level">';
+                $has_child += 1;
 
-                foreach ($menu['child'] as $child) {
-                    if (isset($child['permission']) AND empty($permitted[strtolower($child['permission'])])) continue;
-                    $out .= '<li>'.$this->buildNavMenuLink($child).'</li>';
-                }
+                $child_links = $this->_buildNavMenu($menu['child'], $has_child);
+                $out .= '<ul class="nav '. $levels[$has_child] .'">' . $child_links . '</ul>';
 
-                $out .= '</ul>';
+                $has_child = 0;
             }
 
             $out .= '</li>';
         }
 
-        return $default['container_open'] . $out . $default['container_close'];
+        return $out;
     }
 
-    public function buildNavMenuLink($menu = array()) {
+    protected function _buildNavMenuLink($menu_link = array()) {
         $out = '<a';
 
-        if (isset($menu['class'])) {
-            $out .= ' class="'.$menu['class'].'"';
+        if (isset($menu_link['class'])) {
+            $out .= ' class="'.$menu_link['class'].'"';
         }
 
-        if (isset($menu['href'])) {
-            $out .= ' href="'.$menu['href'].'"';
+        if (isset($menu_link['href'])) {
+            $out .= ' href="'.$menu_link['href'].'"';
         }
 
         $out .= '>';
-        if (isset($menu['icon'])) {
-            $out .= '<i class="fa '.$menu['icon'].' fa-fw"></i>';
+        if (isset($menu_link['icon'])) {
+            $out .= '<i class="fa '.$menu_link['icon'].' fa-fw"></i>';
         } else {
             $out .= '<i class="fa fa-square-o fa-fw"></i>';
         }
 
-        if (isset($menu['icon']) AND isset($menu['title'])) {
-            $out .= '<span class="content">'.$menu['title'].'</span>';
+        if (isset($menu_link['icon']) AND isset($menu_link['title'])) {
+            $out .= '<span class="content">'.$menu_link['title'].'</span>';
         } else {
-            $out .= $menu['title'];
+            $out .= $menu_link['title'];
         }
 
-        if (isset($menu['child'])) {
+        if (isset($menu_link['child'])) {
             $out .= '<span class="fa arrow"></span>';
         }
 

@@ -8,7 +8,8 @@
 */
 
 // Set a custom theme title.
-$theme['title']         = 'TastyIgniter Blue';
+$theme['title']         = 'TastyIgniter Admin Blue';
+$theme['author']        = 'SamPoyigi';
 $theme['version']       = '1.0';
 $theme['description']   = 'Responsive theme for admin panel';
 
@@ -41,19 +42,25 @@ $theme['nav_menu'] = array(
 			'coupons' => array('class' => 'coupons', 'href' => site_url('coupons'), 'title' => lang('menu_coupon'), 'permission' => 'Admin.Coupons'),
 		)
 	),
-	'tables' => array(
-		'class' => 'tables',
-		'href' => site_url('tables'),
-		'icon' => 'fa-table',
-		'title' => lang('menu_table'),
-		'permission' => 'Admin.Tables'
+	'marketing' => array(
+		'class' => 'marketing',
+		'icon' => 'fa-line-chart',
+		'title' => lang('menu_marketing'),
+		'permission' => 'Admin.Banners|Admin.Reviews|Admin.Messages',
+		'child' => array(
+			'reviews' => array('class' => 'reviews', 'href' => site_url('reviews'), 'title' => lang('menu_review'), 'permission' => 'Admin.Reviews'),
+			'messages' => array('class' => 'messages', 'href' => site_url('messages'), 'title' => lang('menu_messages'), 'permission' => 'Admin.Messages'),
+		)
 	),
-	'locations' => array(
-		'class' => 'locations',
-		'href' => site_url('locations'),
+	'restaurant' => array(
+		'class' => 'restaurant',
 		'icon' => 'fa-map-marker',
-		'title' => lang('menu_location'),
-		'permission' => 'Admin.Locations'
+		'title' => lang('menu_restaurant'),
+		'permission' => 'Admin.Locations|Admin.Tables',
+		'child' => array(
+			'locations' => array('class' => 'locations', 'href' => site_url('locations'), 'title' => lang('menu_location'), 'permission' => 'Admin.Locations'),
+			'tables' => array('class' => 'tables', 'href' => site_url('tables'), 'title' => lang('menu_table'), 'permission' => 'Admin.Tables'),
+		)
 	),
 	'users' => array(
 		'class' => 'users',
@@ -66,6 +73,7 @@ $theme['nav_menu'] = array(
 			'customers_online' => array('class' => 'customers_online', 'href' => site_url('customers_online'), 'title' => lang('menu_customer_online'), 'permission' => 'Admin.CustomersOnline'),
 			'staffs' => array('class' => 'staffs', 'href' => site_url('staffs'), 'title' => lang('menu_staff'), 'permission' => 'Admin.Staffs'),
 			'staff_groups' => array('class' => 'staff_groups', 'href' => site_url('staff_groups'), 'title' => lang('menu_staff_group'), 'permission' => 'Admin.StaffGroups'),
+			'activities' => array('class' => 'activities', 'href' => site_url('activities'), 'title' => lang('menu_activities'), 'permission' => 'Admin.Activities'),
 		)
 	),
 	'extensions' => array(
@@ -79,30 +87,14 @@ $theme['nav_menu'] = array(
 		'class' => 'design',
 		'icon' => 'fa-paint-brush',
 		'title' => lang('menu_design'),
-		'permission' => 'Site.Layouts|Site.Themes|Admin.MailTemplates',
+		'permission' => 'Site.Pages|Site.Layouts|Site.Themes|Admin.MailTemplates',
 		'child' => array(
+			'pages' => array('class' => 'pages', 'href' => site_url('pages'), 'title' => lang('menu_page'), 'permission' => 'Site.Pages'),
 			'layouts' => array('class' => 'layouts', 'href' => site_url('layouts'), 'title' => lang('menu_layout'), 'permission' => 'Site.Layouts'),
 			'themes' => array('class' => 'themes', 'href' => site_url('themes'), 'title' => lang('menu_theme'), 'permission' => 'Site.Themes'),
+			'banners' => array('class' => 'banners', 'href' => site_url('banners'), 'title' => lang('menu_banner'), 'permission' => 'Admin.Banners'),
 			'mail_templates' => array('class' => 'mail_templates', 'href' => site_url('mail_templates'), 'title' => lang('menu_mail_template'), 'permission' => 'Admin.MailTemplates'),
 		)
-	),
-	'marketing' => array(
-		'class' => 'marketing',
-		'icon' => 'fa-line-chart',
-		'title' => lang('menu_marketing'),
-		'permission' => 'Admin.Banners|Admin.Reviews|Admin.Messages',
-		'child' => array(
-			'banners' => array('class' => 'banners', 'href' => site_url('banners'), 'title' => lang('menu_banner'), 'permission' => 'Admin.Banners'),
-			'reviews' => array('class' => 'reviews', 'href' => site_url('reviews'), 'title' => lang('menu_review'), 'permission' => 'Admin.Reviews'),
-			'messages' => array('class' => 'messages', 'href' => site_url('messages'), 'title' => lang('menu_messages'), 'permission' => 'Admin.Messages'),
-		)
-	),
-	'pages' => array(
-		'class' => 'pages',
-		'href' => site_url('pages'),
-		'icon' => 'fa-file',
-		'title' => lang('menu_page'),
-		'permission' => 'Site.Pages'
 	),
 	'localisation' => array(
 		'class' => 'localisation',
@@ -118,28 +110,32 @@ $theme['nav_menu'] = array(
 	        'statuses' => array('class' => 'statuses', 'href' => site_url('statuses'), 'title' => lang('menu_status'), 'permission' => 'Admin.Statuses'),
         )
 	),
-	'tools' => array(
-		'class' => 'tools',
-		'icon' => 'fa-wrench',
-		'title' => lang('menu_tool'),
-		'permission' => 'Admin.MediaManager|Admin.Maintenance',
-		'child' => array(
-			'image_manager' => array('class' => 'image_manager', 'href' => site_url('image_manager'), 'title' => lang('menu_media_manager'), 'permission' => 'Admin.MediaManager'),
-			'maintenance' => array('class' => 'maintenance', 'href' => site_url('maintenance'), 'title' => lang('menu_maintenance'), 'permission' => 'Admin.Maintenance'),
-		)
-	),
 	'system' => array(
 		'class' => 'system',
 		'icon' => 'fa-cog',
 		'title' => lang('menu_system'),
 		'permission' => 'Admin.Permissions|Admin.ErrorLogs|Site.Settings',
 		'child' => array(
+			'settings' => array('class' => 'settings', 'href' => site_url('settings'), 'title' => lang('menu_setting'), 'permission' => 'Site.Settings'),
 			'permissions' => array('class' => 'permissions', 'href' => site_url('permissions'), 'title' => lang('menu_permission'), 'permission' => 'Admin.Permissions'),
 //			'uri_routes' => array('class' => 'uri_routes', 'href' => site_url('uri_routes'), 'title' => lang('menu_uri_route')),
 			'error_logs' => array('class' => 'error_logs', 'href' => site_url('error_logs'), 'title' => lang('menu_error_log'), 'permission' => 'Admin.ErrorLogs'),
-			'settings' => array('class' => 'settings', 'href' => site_url('settings'), 'title' => lang('menu_setting'), 'permission' => 'Site.Settings'),
+			'tools' => array(
+				'class' => 'tools',
+				'title' => lang('menu_tool'),
+				'permission' => 'Admin.MediaManager|Admin.Maintenance',
+				'child' => array(
+					'image_manager' => array('class' => 'image_manager', 'href' => site_url('image_manager'), 'title' => lang('menu_media_manager'), 'permission' => 'Admin.MediaManager'),
+					'maintenance' => array('class' => 'maintenance', 'href' => site_url('maintenance'), 'title' => lang('menu_maintenance'), 'permission' => 'Admin.Maintenance'),
+				)
+			),
 
 		)
+	),
+	'collapse' => array(
+		'class' => 'hidden-xs sidebar-toggle',
+		'icon' => 'fa-chevron-circle-left',
+		'title' => lang('menu_collapse')
 	),
 );
 

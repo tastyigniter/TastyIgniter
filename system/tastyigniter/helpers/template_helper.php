@@ -378,7 +378,7 @@ if ( ! function_exists('get_breadcrumbs')) {
  */
 if ( ! function_exists('get_nav_menu')) {
     function get_nav_menu($prefs = array()) {
-        return get_instance()->template->buildNavMenu($prefs);
+        return get_instance()->template->navMenu($prefs);
     }
 }
 
@@ -440,11 +440,10 @@ if ( ! function_exists('find_theme_files')) {
      * appropriate for display in the theme tree view.
      *
      * @param string $filename The theme folder to search
-     * @param string $domain The domain where the theme is located
      *
      * @return array $theme_files
      */
-    function find_theme_files($filename = NULL, $domain = 'main') {
+    function find_theme_files($filename = NULL) {
         if (empty($filename)) {
             return NULL;
         }
@@ -453,7 +452,7 @@ if ( ! function_exists('find_theme_files')) {
         $CI->config->load('template');
 
         $theme_files = array();
-        foreach (glob(ROOTPATH . "{$domain}/views/themes/{$filename}/*") as $file) {
+        foreach (glob(ROOTPATH.MAINDIR."/views/themes/{$filename}/*") as $file) {
             $file_name = basename($file);
             $file_ext = strtolower(substr(strrchr($file, '.'), 1));
 
@@ -528,7 +527,7 @@ if ( ! function_exists('load_theme_config')) {
      * @return mixed The $theme array from the file or false if not found. Returns
      * null if $filename is empty.
      */
-    function load_theme_config($filename = NULL, $domain = 'main') {
+    function load_theme_config($filename = NULL, $domain = MAINDIR) {
         if (empty($filename)) {
             return NULL;
         }
@@ -559,17 +558,16 @@ if ( ! function_exists('load_theme_file')) {
      * @param string $filename The name of the file to locate. The file will be
      * found by looking in the admin and main themes folders.
      * @param string $theme The theme to check.
-     * @param string $domain The domain where the theme is located.
      *
      * @return mixed The $theme_file array from the file or false if not found. Returns
      * null if $filename is empty.
      */
-    function load_theme_file($filename = NULL, $theme = NULL, $domain = 'main') {
+    function load_theme_file($filename = NULL, $theme = NULL) {
         if (empty($filename) OR empty($theme)) {
             return NULL;
         }
 
-        $theme_file_path = ROOTPATH."{$domain}/views/themes/{$theme}/{$filename}";
+        $theme_file_path = ROOTPATH.MAINDIR."/views/themes/{$theme}/{$filename}";
 
         if ( ! file_exists($theme_file_path)) {
             return NULL;
@@ -583,7 +581,7 @@ if ( ! function_exists('load_theme_file')) {
 
         if (in_array($file_ext, config_item('allowed_image_ext'))) {
             $file_type = 'img';
-            $content = root_url("{$domain}/views/themes/{$theme}/{$filename}");
+            $content = root_url(MAINDIR."/views/themes/{$theme}/{$filename}");
         } else if (in_array($file_ext, config_item('allowed_file_ext'))) {
             $file_type = 'file';
             $content = htmlspecialchars(file_get_contents($theme_file_path));
@@ -613,7 +611,6 @@ if ( ! function_exists('save_theme_file')) {
      * @param string $filename The name of the file to locate. The file will be
      * found by looking in the admin and main themes folders.
      * @param string $theme The theme to check.
-     * @param string $domain The domain where the theme is located.
      * @param array $new_data A string of the theme file content replace.
      * @param boolean $return True to return the contents or false to return TRUE.
      *
@@ -621,12 +618,12 @@ if ( ! function_exists('save_theme_file')) {
      * returns true when $return is false or a string containing the file's contents
      * when $return is true.
      */
-    function save_theme_file($filename = NULL, $theme = NULL, $domain = 'main', $new_data = NULL, $return = FALSE) {
+    function save_theme_file($filename = NULL, $theme = NULL, $new_data = NULL, $return = FALSE) {
         if (empty($filename) OR empty($theme) OR empty($new_data)) {
             return FALSE;
         }
 
-        $theme_file_path = ROOTPATH."{$domain}/views/themes/{$theme}/{$filename}";
+        $theme_file_path = ROOTPATH.MAINDIR."/views/themes/{$theme}/{$filename}";
 
         if ( ! file_exists($theme_file_path)) {
             return FALSE;

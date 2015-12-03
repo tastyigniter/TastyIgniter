@@ -2,15 +2,17 @@
 
 /**
 * Theme configuration options for admin panel customization.
-* This file contains an array of options for use with the theme customizer.
+* This file contains an array of options to be retrieved later in the theme.
 * ONLY $theme = array() allowed
 *
 */
 
 // Set a custom theme title.
-$theme['title'] = 'TastyIgniter Orange';
-$theme['version']  = '1.0';
-$theme['description'] = 'Responsive theme for front-end';
+$theme['title']         = 'TastyIgniter Orange';
+$theme['author']        = 'SamPoyigi';
+$theme['version']       = '1.0';
+$theme['description']   = 'Responsive theme for front-end';
+
 $theme['head_tags'] = array(
     'doctype'   => 'html5',
     'favicon'   => 'images/favicon.ico',
