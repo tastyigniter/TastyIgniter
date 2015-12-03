@@ -22,7 +22,7 @@
 	$this->template->setScriptTag('js/common.js', 'common-js');
 
 	$site_logo          = root_url('assets/images/admin-logo.png');
-    $system_name 		= lang('ti_system_name');
+    $system_name 		= lang('ti_text_system_name');
     $site_name 		    = config_item('site_name');
     $site_url 			= rtrim(site_url(), '/').'/';
     $base_url 			= base_url();

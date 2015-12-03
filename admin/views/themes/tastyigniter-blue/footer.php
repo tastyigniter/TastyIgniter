@@ -1,8 +1,9 @@
 </div>
 <div id="footer" class="<?php echo ($this->user->islogged()) ? '' : 'wrap-none'; ?>">
 	<div class="row navbar-footer">
-		<div class="col-sm-12 version">
-			<p class="text-version"><?php echo sprintf(lang('text_copyright'), date('Y'), config_item('ti_version')); ?></p>
+		<div class="col-sm-12 text-version">
+			<p class="col-xs-12 col-sm-11 wrap-none"><?php echo lang('ti_text_copyright'); ?></p>
+			<p class="col-xs-12 col-sm-1 wrap-none"><?php echo sprintf(lang('ti_text_version'), config_item('ti_version')); ?></p>
 		</div>
 	</div>
 </div>

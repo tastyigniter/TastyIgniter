@@ -119,7 +119,7 @@ $autoload['config'] = array();
 |
 */
 
-$autoload['language'] = array('english');
+$autoload['language'] = array('tastyigniter', 'english');
 
 
 /*

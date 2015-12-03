@@ -2,7 +2,10 @@
 <div class="row content">
 	<div class="col-md-12">
 		<div class="col-md-4 center-block float-none">
-			<div class="panel panel-primary panel-login">
+			<div class="panel panel-default panel-login">
+				<div class="thumbnail">
+					<img src="<?php echo root_url('assets/images/admin-logo.png'); ?>" width="75%">
+				</div>
 				<div class="panel-body">
 					<div id="notification">
 						<?php echo $this->alert->display(); ?>

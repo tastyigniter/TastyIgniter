@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-$lang['site_title'] 		                = '%s ‹ Administrator Panel ‹ %s';
+$lang['site_title'] 		                = '%s ‹ Administrator Panel ‹ %s — %s';
 $lang['text_edit'] 		                    = 'Edit';
 $lang['text_filter'] 		                = 'Filter';
 $lang['text_clear'] 		                = 'Clear';
@@ -51,7 +51,6 @@ $lang['text_staff_group'] 		            = 'Staff Group';
 $lang['text_location'] 		                = 'Location';
 $lang['text_edit_details'] 		            = 'Edit Details';
 $lang['text_logout'] 		                = 'Logout';
-$lang['text_copyright'] 		            = '<p class="col-xs-12 col-sm-11 wrap-none">Thanks for using <b>TastyIgniter</b><br />TastyIgniter © 2013-%s All Rights Reserved.</p><p class="col-xs-12 col-sm-1 wrap-none">Version %s</p>';
 
 $lang['menu_page'] 		                    = 'Pages';
 $lang['menu_banner'] 		                = 'Banners';
@@ -72,10 +71,12 @@ $lang['menu_coupon'] 		                = 'Coupons';
 $lang['menu_review'] 		                = 'Reviews';
 $lang['menu_user'] 		                    = 'Users';
 $lang['menu_customer'] 		                = 'Customers';
-$lang['menu_staff'] 		                = 'Staffs';
+$lang['menu_staff'] 		                = 'Staff';
 $lang['menu_customer_group'] 		        = 'Customer Groups';
 $lang['menu_staff_group'] 		            = 'Staff Groups';
 $lang['menu_customer_online'] 		        = 'Customers Online';
+$lang['menu_activities'] 		            = 'Activities';
+$lang['menu_restaurant'] 		            = 'Restaurant';
 $lang['menu_location'] 		                = 'Locations';
 $lang['menu_marketing'] 		            = 'Marketing';
 $lang['menu_messages'] 		                = 'Messages';
@@ -97,6 +98,7 @@ $lang['menu_media_manager'] 		        = 'Image Manager';
 $lang['menu_maintenance'] 		            = 'Maintenance';
 $lang['menu_system'] 		                = 'System';
 $lang['menu_permission'] 		            = 'Permissions';
+$lang['menu_collapse'] 		                = 'Collapse Menu';
 
 
 /* End of file english_lang.php */

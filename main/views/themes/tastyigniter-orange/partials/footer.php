@@ -20,7 +20,7 @@
                     <?php } ?>
 
                     <li><a target="_blank" href="<?php echo admin_url(); ?>" ><?php echo lang('menu_admin'); ?></a></li>
-                    <li><?php echo sprintf(lang('site_copyright'), config_item('site_name'), date('Y')); ?></li>
+                    <li><?php echo sprintf(lang('site_copyright'), date('Y'), config_item('site_name'), lang('ti_text_system_name')) . lang('ti_text_system_powered'); ?></li>
                 </ul>
             </div>
 

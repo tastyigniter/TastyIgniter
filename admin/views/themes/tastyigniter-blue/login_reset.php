@@ -2,7 +2,10 @@
 <div class="row content">
 	<div class="col-md-12">
 		<div class="col-md-4 center-block float-none">
-			<div class="panel panel-primary panel-login">
+			<div class="panel panel-default panel-login">
+				<div class="thumbnail">
+					<img src="<?php echo root_url('assets/images/admin-logo.png'); ?>" width="75%">
+				</div>
 				<div class="panel-heading">
 					<h3 class="panel-title"><?php echo lang('text_reset_password_title'); ?></h3>
 				</div>

@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 $lang['site_title'] 		                        = '%s ‹ %s';
-$lang['site_copyright'] 			                = '&copy; %s %s. All Rights Reserved';
+$lang['site_copyright'] 			                = '&copy; %s %s - ';
 
 $lang['text_minutes'] 			                    = 'minutes';
 $lang['text_min'] 		                            = 'min';
