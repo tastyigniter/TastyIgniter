@@ -53,7 +53,18 @@ class Menus extends Main_Controller {
             $filter['category_id'] = 0;
         }
 
-		$this->template->render('menus', $data);
+        $this->load->module('local');
+
+        $data['location_name'] = $this->location->getName();
+
+        $data['local_info'] = $this->local->info();
+
+        $data['local_reviews'] = $this->local->reviews();
+
+        $data['local_gallery'] = $this->local->gallery();
+
+
+        $this->template->render('local', $data);
 	}
 
 	public function category() {

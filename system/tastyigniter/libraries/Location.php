@@ -41,11 +41,15 @@ class Location {
 	    $this->getLocations();
 		$this->getOpeningHours();
 
-		$local_info = $this->CI->session->userdata('local_info');
-		if (is_array($local_info) AND !empty($local_info)) {
-			$this->initialize($local_info);
-		}
-	}
+	    $local_info = $this->CI->session->userdata('local_info');
+	    if (!isset($local_info['location_id']) AND $this->CI->config->item('location_order') !== '1') {
+		    $local_info['location_id'] = $this->CI->config->item('location_id', 'main_address');
+	    }
+
+	    if (is_array($local_info) AND !empty($local_info)) {
+		    $this->initialize($local_info);
+	    }
+    }
 
 	public function initialize($local_info) {
 		if (isset($this->locations[$local_info['location_id']]) AND is_array($this->locations[$local_info['location_id']])) {
@@ -284,7 +288,9 @@ class Location {
 
 		$time_range = array();
 		$order_times = time_range($this->openingTime(), $this->lastOrderTime(), $time_interval);    // retrieve the location delivery times from location library
+
 		foreach ($order_times as $key => $value) {                                            // loop through delivery times
+			// check if current time is within location opening hour
 			if (strtotime($value) > strtotime($start_time) AND $this->CI->config->item('future_orders') !== '1') {
 				$time_range[$value] = mdate($time_format, strtotime($value));
 			} else if (strtotime($value) > strtotime($start_time) AND $this->CI->config->item('future_orders') === '1') {

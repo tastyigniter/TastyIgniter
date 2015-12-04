@@ -55,6 +55,8 @@ class Local extends Main_Controller {
             $filter['category_id'] = 0;
         }
 
+        $data['location_name'] = $this->location->getName();
+
         $data['local_info'] = $this->info();
 
         $data['local_reviews'] = $this->reviews();

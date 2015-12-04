@@ -1,12 +1,12 @@
 <?php echo get_header(); ?>
 <?php echo get_partial('content_top'); ?>
 
-<?php if ($this->alert->get('', 'alert')) { ?>
+<?php if ($this->alert->get()) { ?>
     <div id="notification">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <?php echo $this->alert->display('', 'alert'); ?>
+                    <?php echo $this->alert->display(); ?>
                 </div>
             </div>
         </div>
@@ -31,14 +31,53 @@
 			?>
 
 			<div class="<?php echo $class; ?>">
-                <div id="general" class="tab-pane row wrap-all active">
 
-                    <?php echo get_partial('content_left', 'wrap-none col-sm-3'); ?>
+				<div class="row wrap-vertical">
+					<ul id="nav-tabs" class="nav nav-tabs nav-justified nav-tabs-line">
+						<li class="active"><a href="#local-menus" data-toggle="tab"><?php echo lang('text_tab_menu'); ?></a></li>
+						<?php if (config_item('allow_reviews') !== '1') { ?>
+							<li><a href="#local-reviews" data-toggle="tab"><?php echo lang('text_tab_review'); ?></a></li>
+						<?php } ?>
+						<li><a href="#local-information" data-toggle="tab"><?php echo lang('text_tab_info'); ?></a></li>
+						<?php if (!empty($local_gallery)) { ?>
+							<li><a href="#local-gallery" data-toggle="tab"><?php echo lang('text_tab_gallery'); ?></a></li>
+						<?php } ?>
+					</ul>
+				</div>
 
-                    <div class="<?php echo $menu_class; ?>">
-                        <?php echo load_partial('menu_list', $menu_list); ?>
-                    </div>
-                </div>
+				<div class="tab-content tab-content-line">
+					<div id="local-menus" class="tab-pane row wrap-all active">
+
+	                    <?php echo get_partial('content_left', 'wrap-none col-sm-3'); ?>
+
+	                    <div class="<?php echo $menu_class; ?>">
+	                        <?php echo load_partial('menu_list', $menu_list); ?>
+	                    </div>
+	                </div>
+
+					<?php if (config_item('allow_reviews') !== '1') { ?>
+						<div id="local-reviews" class="tab-pane row wrap-all">
+							<div class="col-md-12">
+								<div class="heading-section">
+									<h4><?php echo sprintf(lang('text_review_heading'), $location_name); ?></h4>
+									<span class="under-heading"></span>
+								</div>
+							</div>
+
+							<?php echo load_partial('local_reviews', $local_reviews); ?>
+						</div>
+					<?php } ?>
+
+					<div id="local-information" class="tab-pane row wrap-all">
+						<?php echo load_partial('local_info', $local_info); ?>
+					</div>
+
+					<?php if (!empty($local_gallery)) { ?>
+						<div id="local-gallery" class="tab-pane row wrap-all">
+							<?php echo load_partial('local_gallery', $local_gallery); ?>
+						</div>
+					<?php } ?>
+				</div>
 			</div>
 			<?php echo get_partial('content_right', 'col-sm-3'); ?>
 			<?php echo get_partial('content_bottom'); ?>
@@ -56,7 +95,6 @@ $(document).ready(function() {
 		  $gridButton = $('#viewcontrols .gridview'); // Cache the grid button
 
 		// Instantiate MixItUp with some custom options:
-
 		$container.mixItUp({
 			animation: {
 				animateChangeLayout: true, // Animate the positions of targets as the layout changes
@@ -75,39 +113,35 @@ $(document).ready(function() {
 		    }
 		});
 
-	  // MixItUp does not provide a default "change layout" button, so we need to make our own and bind it with a click handler:
+		// MixItUp does not provide a default "change layout" button, so we need to make our own and bind it with a click handler:
+		$changeLayout.on('click', function() {
 
-	  $changeLayout.on('click', function() {
+			// If the current layout is a list, change to grid:
+			if(layout == 'list'){
+			  layout = 'grid';
 
-	    // If the current layout is a list, change to grid:
+			  $listButton.removeClass('active'); // Update the list button as active
+			  $gridButton.addClass('active'); // Update the grid button as active
 
-	    if(layout == 'list'){
-	      layout = 'grid';
+			  $container.mixItUp('changeLayout', {
+			    containerClass: layout // change the container class to "grid"
+			  });
 
-	      $listButton.removeClass('active'); // Update the list button as active
-	      $gridButton.addClass('active'); // Update the grid button as active
+			// Else if the current layout is a grid, change to list:
 
-	      $container.mixItUp('changeLayout', {
-	        containerClass: layout // change the container class to "grid"
-	      });
+			} else {
+			  layout = 'list';
 
-	    // Else if the current layout is a grid, change to list:
+			  $listButton.addClass('active'); // Update the list button as active
+			  $gridButton.removeClass('active'); // Update the grid button as active
+			  //$changeLayout.text('Grid'); // Update the button  as active
 
-	    } else {
-	      layout = 'list';
-
-	      $listButton.addClass('active'); // Update the list button as active
-	      $gridButton.removeClass('active'); // Update the grid button as active
-	      //$changeLayout.text('Grid'); // Update the button  as active
-
-	      $container.mixItUp('changeLayout', {
-	        containerClass: layout // Change the container class to 'list'
-	      });
-	    }
-	  });
-
+			  $container.mixItUp('changeLayout', {
+			    containerClass: layout // Change the container class to 'list'
+			  });
+			}
+		});
 	});
-
 });
 //--></script>
 <?php echo get_footer(); ?>
