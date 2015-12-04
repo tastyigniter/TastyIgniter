@@ -1,7 +1,7 @@
 TastyIgniter
 ============
 
-(TastyIgniter)[http://tastyigniter.com/] is a free open source restaurant ordering and management system. TastyIgniter provides a professional and reliable platform for restaurants wanting to offer online ordering to their customers.
+[TastyIgniter](http://tastyigniter.com/) is a free open source restaurant ordering and management system. TastyIgniter provides a professional and reliable platform for restaurants wanting to offer online ordering to their customers.
 
 Installation
 ============
