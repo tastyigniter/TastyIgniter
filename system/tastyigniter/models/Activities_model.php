@@ -63,8 +63,8 @@ class Activities_model extends TI_Model {
 			// set user if customer is logged in and the domain is not admin
 			$user = 'staff';
 			if ($domain !== ADMINDIR) {
+				$this->load->library('customer');
 				if ($this->customer->islogged()) {
-					$this->load->library('customer');
 					$user = 'customer';
 				}
 			}
