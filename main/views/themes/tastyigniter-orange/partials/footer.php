@@ -20,7 +20,14 @@
                     <?php } ?>
 
                     <li><a target="_blank" href="<?php echo admin_url(); ?>" ><?php echo lang('menu_admin'); ?></a></li>
+                    <!-- TastyIgniter is open source software developed and maintained by a volunteer community.
+						It would be much appreciated by the TastyIgniter community if you left the full copyright and "powered by" notice intact,
+						to show your support for TastyIgniter.  If you choose to remove or modify the copyright below,
+						you may be refused support on the TastyIgniter Community Forums.
+
+						This is free software, support us and we'll support you. -->
                     <li><?php echo sprintf(lang('site_copyright'), date('Y'), config_item('site_name'), lang('ti_text_system_name')) . lang('ti_text_system_powered'); ?></li>
+                    <!-- End powered by -->
                 </ul>
             </div>
 

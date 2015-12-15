@@ -21,7 +21,7 @@
 	$this->template->setScriptTag('js/jquery.raty.js', 'jquery-raty-js', '13');
 	$this->template->setScriptTag('js/common.js', 'common-js');
 
-	$site_logo          = root_url('assets/images/admin-logo.png');
+	$site_logo          = base_url('views/themes/tastyigniter-blue/images/tastyigniter-logo.png');
     $system_name 		= lang('ti_text_system_name');
     $site_name 		    = config_item('site_name');
     $site_url 			= rtrim(site_url(), '/').'/';
@@ -88,8 +88,15 @@
     <div id="wrapper" class="<?php echo $wrapper_class; ?>">
 		<nav class="navbar navbar-static-top navbar-top" role="navigation" style="margin-bottom: 0">
 			<div class="navbar-header">
-				<a class="navbar-brand" href="<?php echo site_url('dashboard'); ?>"><img class="navbar-logo" alt="<?php echo $system_name; ?>" src="<?php echo $site_logo; ?>"/></a>
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<div class="navbar-brand">
+					<div class="navbar-logo">
+						<img class="navbar-logo" alt="<?php echo $system_name; ?>" title="<?php echo $system_name; ?>" src="<?php echo $site_logo; ?>"/>
+					</div>
+					<div class="navbar-sitename">
+						<a href="<?php echo site_url('dashboard'); ?>"><?php echo $site_name; ?></a>
+					</div>
+				</div>
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
 					<span class="sr-only">Toggle navigation</span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
@@ -150,7 +157,7 @@
 							<li>
 								<div class="row wrap-vertical">
 									<div class="col-xs-4 wrap-top">
-										<img class="img-rounded img-responsive" src="<?php echo root_url('assets/images/avatar_2x.png'); ?>" width="53px">
+										<img class="img-rounded img-responsive" src="<?php echo base_url('views/themes/tastyigniter-blue/images/avatar_2x.png'); ?>" width="53px">
 									</div>
 									<div class="col-xs-8 wrap-none wrap-right">
 										<h4><?php echo $staff_name; ?></h4><span class="small"><i>(<?php echo $username; ?>)</i></span>

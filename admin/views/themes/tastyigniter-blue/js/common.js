@@ -28,7 +28,7 @@ $(function() {
         height = height - topOffset;
         if (height < 1) height = 1;
         if (height > topOffset) {
-            $("#page-wrapper").css("min-height", (height-64) + "px");
+            $("#page-wrapper").css("min-height", (height-38) + "px");
         }
     });
 
