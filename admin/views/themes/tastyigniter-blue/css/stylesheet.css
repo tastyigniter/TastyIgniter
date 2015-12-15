@@ -190,25 +190,33 @@ min-height:50px;
 }
 .navbar-logo {
 display: inline-block;
-margin-right: 10px;
-margin-top: -5px;
-padding: 0px;
-vertical-align: middle;
-height: 32px;
+margin-right: 4px;
+margin-left: 7px;
+height: 20px;
+line-height: 32px;
+}
+.navbar-sitename {
+display: inline-block;
+white-space: nowrap;
 }
 .navbar-top .navbar-header {
 background-color: #445E80;
 }
 .navbar-top .navbar-brand {
-color:#FFFFFF;
-font-size: 20px;
 height: 50px;
-padding: 12px 15px;
+padding: 0px;
 cursor: pointer;
+width: 100%;
 }
-.navbar-top .navbar-brand:hover,
-.navbar-top .navbar-brand:focus {
-color: #FFF;
+.navbar-top .navbar-sitename a {
+font-size: 20px;
+color: #eee;
+line-height: 50px;
+text-decoration: none;
+}
+.navbar-top .navbar-sitename a:hover,
+.navbar-top .navbar-sitename a:focus {
+color: #eee;
 }
 @media (min-width: 768px) {
 .navbar-top .navbar-header {
@@ -433,7 +441,7 @@ border-left: 0 none;
 color: #f8fafb;
 }
 .sidebar .fa-fw {
-margin-right: 8px;
+margin-right: 12px;
 }
 .sidebar .arrow {
 float: right;
@@ -620,10 +628,9 @@ float: left;
 }
 .btn-dropdown i {
 color: inherit;
-font-size: 12px;
+font-size: 16px;
 font-weight: bold;
 line-height: 1;
-opacity: 0.5;
 text-shadow: 0 1px 0 #fff;
 }
 
@@ -1774,14 +1781,13 @@ border-color: #d2dce7;
 
 /** FOOTER **/
 #footer {
-background-color: #f9fafc;
+background-color: #ecf0f5;
 border-left: 1px solid #ecf0f5;
 font-size: 11px;
 padding: 5px 20px;
 }
 .text-version {
 color: #777;
-margin: 12px 0;
 text-align:center;
 }
 @media (min-width: 768px) {
