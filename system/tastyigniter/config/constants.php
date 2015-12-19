@@ -41,9 +41,8 @@ defined('FOPEN_READ_WRITE_CREATE_STRICT')       OR define('FOPEN_READ_WRITE_CREA
 | Back-end directory and uri
 |--------------------------------------------------------------------------
 |
-| If set to TRUE, a backtrace will be displayed along with php errors. If
-| error_reporting is disabled, the backtrace will not display, regardless
-| of this setting
+| The name of the admin and main folder, do not change unless you rename the
+| folders
 |
 */
 defined('ADMINDIR') OR define('ADMINDIR', 'admin');
