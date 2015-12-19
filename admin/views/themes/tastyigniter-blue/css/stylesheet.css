@@ -1,6 +1,5 @@
-html {
-min-height: 100%;
-position: relative;
+html, body {
+height: 100%;
 }
 body {
 background-color: #263648;
@@ -206,7 +205,6 @@ background-color: #445E80;
 height: 50px;
 padding: 0px;
 cursor: pointer;
-width: 100%;
 }
 .navbar-top .navbar-sitename a {
 font-size: 20px;
@@ -1389,6 +1387,7 @@ content: "\f106";
 .panel-table .panel-filter {
 border-bottom: 1px solid #ecf0f5;
 display: none;
+padding: 5px 10px;
 }
 .clickable {
 cursor: pointer;

@@ -29,6 +29,7 @@ $(function() {
         if (height < 1) height = 1;
         if (height > topOffset) {
             $("#page-wrapper").css("min-height", (height-38) + "px");
+            $("#page-wrapper").css("height", "100%");
         }
     });
 
@@ -116,6 +117,8 @@ $(function(){
 
 // Panel Table Filter Button Toggle
 $(function(){
+    var displayFilterPanel = Cookies.get('displayFilterPanel');
+
 	$('#page-wrapper').on('click', '.panel-table .btn-filter', function(e) {
 		var $this = $(this),
 		$panel = $this.parents('.panel'),
@@ -124,11 +127,19 @@ $(function(){
         $panel.find('.panel-filter').slideToggle(function() {
             if ($panelFilter.is(':visible')) {
                 $('.panel-table .btn-filter').addClass('active');
+                displayFilterPanel = 'true';
             } else {
+                displayFilterPanel = 'false';
                 $('.panel-table .btn-filter').removeClass('active');
             }
+
+            Cookies.set('displayFilterPanel', displayFilterPanel);
         });
 	});
+
+    if (displayFilterPanel == 'true') {
+        $('.btn-filter').trigger('click');
+    }
 })
 
 // Alert Collapsible
