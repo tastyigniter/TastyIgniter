@@ -36,7 +36,7 @@ class Extensions extends Admin_Controller {
 			$filter['filter_type'] = $data['filter_type'] = $this->input->get('filter_type');
 			$url .= 'filter_type=' . $filter['filter_type'] . '&';
 		} else {
-			$data['filter_type'] = '';
+			$filter['filter_type'] = $data['filter_type'] = 'module';
 		}
 
 		if (is_numeric($this->input->get('filter_status'))) {

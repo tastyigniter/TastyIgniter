@@ -22,18 +22,6 @@
                                 </div>
                                 <div class="col-md-8 pull-left">
                                     <div class="form-group">
-                                        <select name="filter_type" class="form-control input-sm">
-                                            <option value=""><?php echo lang('text_filter_type'); ?></option>
-                                            <?php foreach (array('module', 'payment', 'widget') as $type) { ?>
-                                                <?php if ($filter_type === $type) { ?>
-                                                    <option value="<?php echo $type; ?>" <?php echo set_select('filter_type', $type, TRUE); ?> ><?php echo ucfirst($type); ?></option>
-                                                <?php } else { ?>
-                                                    <option value="<?php echo $type; ?>" <?php echo set_select('filter_type', $type); ?> ><?php echo ucfirst($type); ?></option>
-                                                <?php } ?>
-                                            <?php } ?>
-                                        </select>&nbsp;
-                                    </div>
-                                    <div class="form-group">
                                         <select name="filter_status" class="form-control input-sm">
                                             <option value=""><?php echo lang('text_filter_status'); ?></option>
                                             <?php if ($filter_status === '1') { ?>
@@ -55,6 +43,20 @@
                         </div>
                     </div>
                 </form>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 wrap-vertical">
+                    <ul id="nav-tabs" class="nav nav-tabs">
+                        <?php if ($filter_type === 'payment') { ?>
+                            <li><a href="<?php echo site_url('extensions?filter_type=module'); ?>"><?php echo lang('text_tab_module'); ?></a></li>
+                            <li class="active"><a href="<?php echo site_url('extensions?filter_type=payment'); ?>"><?php echo lang('text_tab_payment'); ?></a></li>
+                        <?php } else { ?>
+                            <li class="active"><a href="<?php echo site_url('extensions?filter_type=module'); ?>"><?php echo lang('text_tab_module'); ?></a></li>
+                            <li><a href="<?php echo site_url('extensions?filter_type=payment'); ?>"><?php echo lang('text_tab_payment'); ?></a></li>
+                        <?php } ?>
+                    </ul>
+                </div>
             </div>
 
             <form role="form" id="list-form" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
@@ -92,7 +94,7 @@
                                     <div class="extension_meta text-muted small">
                                         <span><?php echo lang('column_version'); ?>: <?php echo $extension['version']; ?></span>
                                         &nbsp;&nbsp;|&nbsp;&nbsp;
-                                        <span><?php echo lang('column_type'); ?>: <?php echo $extension['type']; ?></span>
+                                        <span><?php echo lang('column_type'); ?>: <?php echo ucfirst($extension['type']); ?></span>
                                         &nbsp;&nbsp;|&nbsp;&nbsp;
                                         <span><?php echo lang('column_author'); ?>: <?php echo $extension['author']; ?></span>
                                     </div>

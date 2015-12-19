@@ -2,6 +2,8 @@
 
 $lang['text_title'] 		            = 'Extensions';
 $lang['text_heading'] 		            = 'Extensions';
+$lang['text_tab_module'] 		        = 'Modules';
+$lang['text_tab_payment'] 		        = 'Payments';
 $lang['text_edit_heading'] 		        = 'Extension: %s';
 $lang['text_add_heading'] 		        = 'Extension: Upload';
 $lang['text_list'] 		                = 'Extension List';

@@ -2,8 +2,8 @@
 <div id="footer" class="<?php echo ($this->user->islogged()) ? '' : 'wrap-none'; ?>">
 	<div class="row navbar-footer">
 		<div class="col-sm-12 text-version">
-			<p class="col-xs-12 col-sm-11 wrap-none"><?php echo lang('ti_text_copyright'); ?></p>
-			<p class="col-xs-12 col-sm-1 wrap-none"><?php echo sprintf(lang('ti_text_version'), config_item('ti_version')); ?></p>
+			<p class="col-xs-12 col-sm-9 wrap-none"><?php echo lang('ti_text_copyright'); ?></p>
+			<p class="col-xs-12 col-sm-3 text-right wrap-none"><?php echo sprintf(lang('ti_text_version'), config_item('ti_version')); ?></p>
 		</div>
 	</div>
 </div>
@@ -23,15 +23,12 @@ $(document).ready(function() {
         $('#nav-tabs a[href="#'+hash+'"]').tab('show');
     }
 
-    if (window.location.search.indexOf('filter_', 1) != -1) {
-        $('.btn-filter').trigger('click');
-    }
-
     $('.btn-group input[type="radio"]:checked, .btn-group .active input[type="radio"]').trigger('change');
 });
 
-function confirmDelete(form = 'list-form') {
+function confirmDelete(form) {
 	if ($('input[name="delete[]"]:checked').length && confirm('<?php echo lang('alert_warning_confirm'); ?>')) {
+		form = (typeof form === 'undefined' || form === null) ? 'list-form' : form;
 		$('#'+form).submit();
 	} else {
 		return false;
