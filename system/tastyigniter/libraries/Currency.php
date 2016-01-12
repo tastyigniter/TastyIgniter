@@ -1,6 +1,28 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+<?php
+/**
+ * TastyIgniter
+ *
+ * An open source online ordering, reservation and management system for restaurants.
+ *
+ * @package   TastyIgniter
+ * @author    SamPoyigi
+ * @copyright TastyIgniter
+ * @link      http://tastyigniter.com
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 1.0
+ * @filesource
+ */
+defined('BASEPATH') OR exit('No direct script access allowed');
 
+/**
+ * Currency Class
+ *
+ * @category       Libraries
+ * @package        TastyIgniter\Libraries\Currency.php
+ * @link           http://docs.tastyigniter.com
+ */
 class Currency {
+
 	private $currency_symbol;
 	private $currency_code;
 

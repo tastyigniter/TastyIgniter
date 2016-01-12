@@ -1,656 +1,648 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
+/**
+ * TastyIgniter
+ *
+ * An open source online ordering, reservation and management system for restaurants.
+ *
+ * @package   TastyIgniter
+ * @author    SamPoyigi
+ * @copyright TastyIgniter
+ * @link      http://tastyigniter.com
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 1.0
+ * @filesource
+ */
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * TastyIgniter Template Helpers
+ * Template helper functions
  *
- * @category    Helpers
+ * @category       Helpers
+ * @package        TastyIgniter\Helpers\template_helper.php
+ * @link           http://docs.tastyigniter.com
  */
 
-// ------------------------------------------------------------------------
-
-/**
- * Get Header
- *
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('get_header')) {
-    function get_header() {
-        return get_instance()->template->getPartials('header');
-    }
+	/**
+	 * Get Header
+	 *
+	 * @return    string
+	 */
+	function get_header() {
+		return get_instance()->template->getPartials('header');
+	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Get Footer
- *
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('get_footer')) {
-    function get_footer() {
-        return get_instance()->template->getPartials('footer');
-    }
+	/**
+	 * Get Footer
+	 *
+	 * @return    string
+	 */
+	function get_footer() {
+		return get_instance()->template->getPartials('footer');
+	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Get Partial
- *
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('get_partial')) {
-    function get_partial($partial = '', $class = '') {
-        $partial_data = get_instance()->template->getPartials($partial);
+	/**
+	 * Get Partial
+	 *
+	 * @param string $partial
+	 * @param string $class
+	 *
+	 * @return string
+	 */
+	function get_partial($partial = '', $class = '') {
+		$partial_data = get_instance()->template->getPartials($partial);
 
-        return str_replace('{class}', $class, $partial_data);
-    }
+		return str_replace('{class}', $class, $partial_data);
+	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Load Partial
- *
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('load_partial')) {
-    function load_partial($partial = '', $data = array()) {
-        echo get_instance()->template->loadView($partial, $data);
-    }
+	/**
+	 * Load Partial
+	 *
+	 * @param string $partial
+	 * @param array  $data
+	 *
+	 * @return string
+	 */
+	function load_partial($partial = '', $data = array()) {
+		echo get_instance()->template->loadView($partial, $data);
+	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Check if Partial Exist in layout
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('partial_exists')) {
-    function partial_exists($partial = '') {
-        return (get_instance()->template->getPartials($partial)) ? TRUE : FALSE;
-    }
+	/**
+	 * Check if Partial Exist in layout
+	 *
+	 * @param string $partial
+	 *
+	 * @return string
+	 */
+	function partial_exists($partial = '') {
+		return (get_instance()->template->getPartials($partial)) ? TRUE : FALSE;
+	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Get Doctype
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('get_doctype')) {
-    function get_doctype() {
-        return get_instance()->template->getDocType();
-    }
+	/**
+	 * Get Doctype
+	 *
+	 * @return    string
+	 */
+	function get_doctype() {
+		return get_instance()->template->getDocType();
+	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Set Doctype
- *
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('set_doctype')) {
-    function set_doctype($doctype = '') {
-        get_instance()->template->setHeadTag('doctype', $doctype);
-    }
+	/**
+	 * Set Doctype
+	 *
+	 * @param string $doctype
+	 */
+	function set_doctype($doctype = '') {
+		get_instance()->template->setHeadTag('doctype', $doctype);
+	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Get template metas
- *
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('get_metas')) {
-    function get_metas() {
-        return get_instance()->template->getMetas();
-    }
+	/**
+	 * Get metas html tags
+	 *
+	 * @return    string
+	 */
+	function get_metas() {
+		return get_instance()->template->getMetas();
+	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Set template metas
- *
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('set_meta')) {
-    function set_meta($meta = array()) {
-        get_instance()->template->setHeadTag('meta', $meta);
-    }
+	/**
+	 * Set metas html tags
+	 */
+	function set_meta($meta = array()) {
+		get_instance()->template->setHeadTag('meta', $meta);
+	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Get template favicon
- *
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('get_favicon')) {
-    function get_favicon() {
-        return get_instance()->template->getFavIcon();
-    }
+	/**
+	 * Get favicon html tag
+	 *
+	 * @return    string
+	 */
+	function get_favicon() {
+		return get_instance()->template->getFavIcon();
+	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Set template favicon
- *
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('set_favicon')) {
-    function set_favicon($href = '') {
-        get_instance()->template->setHeadTag('favicon', $href);
-    }
+	/**
+	 * Set favicon html tag
+	 *
+	 * @param string $href
+	 */
+	function set_favicon($href = '') {
+		get_instance()->template->setHeadTag('favicon', $href);
+	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Get template title
- *
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('get_title')) {
-    function get_title() {
-        return get_instance()->template->getTitle();
-    }
+	/**
+	 * Get page title html tag
+	 *
+	 * @return    string
+	 */
+	function get_title() {
+		return get_instance()->template->getTitle();
+	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Set template title
- *
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('set_title')) {
-    function set_title($title = '') {
-        get_instance()->template->setHeadTag('title', $title);
-    }
+	/**
+	 * Set page title html tag
+	 *
+	 * @param string $title
+	 *
+	 * @return string
+	 */
+	function set_title($title = '') {
+		get_instance()->template->setHeadTag('title', $title);
+	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Get template heading
- *
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('get_heading')) {
-    function get_heading() {
-        return get_instance()->template->getHeading();
-    }
+	/**
+	 * Get page heading
+	 *
+	 * @return    string
+	 */
+	function get_heading() {
+		return get_instance()->template->getHeading();
+	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Set template heading
- *
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('set_heading')) {
-    function set_heading($heading = '') {
-        get_instance()->template->setHeadTag('heading', $heading);
-    }
+	/**
+	 * Set page heading
+	 *
+	 * @param string $heading
+	 *
+	 * @return string
+	 */
+	function set_heading($heading = '') {
+		get_instance()->template->setHeadTag('heading', $heading);
+	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Get template styles tag
- *
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('get_style_tags')) {
-    function get_style_tags() {
-        return get_instance()->template->getStyleTags();
-    }
+	/**
+	 * Get multiple stylesheet html tags
+	 *
+	 * @return    string
+	 */
+	function get_style_tags() {
+		return get_instance()->template->getStyleTags();
+	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Set template styles tag
- *
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('set_style_tag')) {
-    function set_style_tag($href = '', $name = '', $priority = NULL) {
-        get_instance()->template->setStyleTag($href, $name, $priority);
-    }
+	/**
+	 * Set single stylesheet html tag
+	 *
+	 * @param string $href
+	 * @param string $name
+	 * @param null   $priority
+	 *
+	 * @return string
+	 */
+	function set_style_tag($href = '', $name = '', $priority = NULL) {
+		get_instance()->template->setStyleTag($href, $name, $priority);
+	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Set template styles tag
- *
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('set_style_tags')) {
-    function set_style_tags($tags = array()) {
-        get_instance()->template->setStyleTag($tags);
-    }
+	/**
+	 * Set multiple stylesheet html tags
+	 *
+	 * @param array $tags
+	 *
+	 * @return string
+	 */
+	function set_style_tags($tags = array()) {
+		get_instance()->template->setStyleTag($tags);
+	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Get template scripts tag
- *
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('get_script_tags')) {
-    function get_script_tags() {
-        return get_instance()->template->getScriptTags();
-    }
+	/**
+	 * Get multiple scripts html tags
+	 *
+	 * @return    string
+	 */
+	function get_script_tags() {
+		return get_instance()->template->getScriptTags();
+	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Set template scripts tag
- *
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('set_script_tag')) {
-    function set_script_tag($href = '', $name = '', $priority = NULL) {
-        get_instance()->template->setScriptTag($href, $name, $priority);
-    }
+	/**
+	 * Set single scripts html tags
+	 *
+	 * @param string $href
+	 * @param string $name
+	 * @param null   $priority
+	 *
+	 * @return string
+	 */
+	function set_script_tag($href = '', $name = '', $priority = NULL) {
+		get_instance()->template->setScriptTag($href, $name, $priority);
+	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Set template scripts tag
- *
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('set_script_tags')) {
-    function set_script_tags($tags = array()) {
-        get_instance()->template->setScriptTag($tags);
-    }
+	/**
+	 * Set multiple scripts html tags
+	 *
+	 * @param array $tags
+	 *
+	 * @return string
+	 */
+	function set_script_tags($tags = array()) {
+		get_instance()->template->setScriptTag($tags);
+	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Get template active theme style
- *
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('get_active_styles')) {
-    function get_active_styles() {
-        return get_instance()->template->getActiveStyle();
-    }
+	/**
+	 * Get the active theme custom stylesheet html tag,
+	 * generated by customizer
+	 *
+	 * @return    string
+	 */
+	function get_active_styles() {
+		return get_instance()->template->getActiveStyle();
+	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Get template active theme options
- *
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('get_theme_options')) {
-    function get_theme_options($item = '') {
-        return get_instance()->template->getActiveThemeOptions($item);
-    }
+	/**
+	 * Get the active theme options set in theme customizer
+	 *
+	 * @param string $item
+	 *
+	 * @return string
+	 */
+	function get_theme_options($item = '') {
+		return get_instance()->template->getActiveThemeOptions($item);
+	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Get template breadcrumbs
- *
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('get_breadcrumbs')) {
-    function get_breadcrumbs() {
-        return get_instance()->template->getBreadcrumb();
-    }
+	/**
+	 * Get page breadcrumbs
+	 *
+	 * @return    string
+	 */
+	function get_breadcrumbs() {
+		return get_instance()->template->getBreadcrumb();
+	}
 }
 
 // ------------------------------------------------------------------------
 
-
-/**
- * Build template nav menu
- *
- *
- * @access    public
- * @return    string
- */
-if ( ! function_exists('get_nav_menu')) {
-    function get_nav_menu($prefs = array()) {
-        return get_instance()->template->navMenu($prefs);
-    }
-}
-
-// ------------------------------------------------------------------------
-
-/**
- * Get template menu buttons
- *
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('get_button_list')) {
-    function get_button_list() {
-        return get_instance()->template->getButtonList();
-    }
+	/**
+	 * Get admin page heading action buttons
+	 *
+	 * @return    string
+	 */
+	function get_button_list() {
+		return get_instance()->template->getButtonList();
+	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Get template menu icons
- *
- *
- * @access    public
- * @return    string
- */
 if ( ! function_exists('get_icon_list')) {
-    function get_icon_list() {
-        return get_instance()->template->getIconList();
-    }
+	/**
+	 * Get admin page heading icons
+	 *
+	 * @return    string
+	 */
+	function get_icon_list() {
+		return get_instance()->template->getIconList();
+	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Get theme partial areas
- *
- *
- * @access    public
- * @return    string
- */
+if ( ! function_exists('get_nav_menu')) {
+	/**
+	 * Build admin theme navigation menu
+	 *
+	 * @param array $prefs
+	 *
+	 * @return string
+	 */
+	function get_nav_menu($prefs = array()) {
+		return get_instance()->template->navMenu($prefs);
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('get_theme_partials')) {
-    function get_theme_partials($theme = NULL, $domain = 'main') {
+	/**
+	 * Get the theme partial areas/regions
+	 *
+	 * @param null   $theme
+	 * @param string $domain
+	 *
+	 * @return string
+	 */
+	function get_theme_partials($theme = NULL, $domain = 'main') {
 
-        $theme_config = load_theme_config(trim($theme, '/'), $domain);
+		$theme_config = load_theme_config(trim($theme, '/'), $domain);
 
-        return isset($theme_config['partial_area']) ? $theme_config['partial_area'] : array();
-    }
+		return isset($theme_config['partial_area']) ? $theme_config['partial_area'] : array();
+	}
 }
 
 // ------------------------------------------------------------------------
 
 if ( ! function_exists('find_theme_files')) {
-    /**
-     * Search a theme folder for files.
-     *
-     * Searches an individual folder for any theme files and returns an array
-     * appropriate for display in the theme tree view.
-     *
-     * @param string $filename The theme folder to search
-     *
-     * @return array $theme_files
-     */
-    function find_theme_files($filename = NULL) {
-        if (empty($filename)) {
-            return NULL;
-        }
+	/**
+	 * Search a theme folder for files.
+	 *
+	 * Searches an individual folder for any theme files and returns an array
+	 * appropriate for display in the theme tree view.
+	 *
+	 * @param string $filename The theme folder to search
+	 *
+	 * @return array $theme_files
+	 */
+	function find_theme_files($filename = NULL) {
+		if (empty($filename)) {
+			return NULL;
+		}
 
-        $CI =& get_instance();
-        $CI->config->load('template');
+		$CI =& get_instance();
+		$CI->config->load('template');
 
-        $theme_files = array();
-        foreach (glob(ROOTPATH.MAINDIR."/views/themes/{$filename}/*") as $file) {
-            $file_name = basename($file);
-            $file_ext = strtolower(substr(strrchr($file, '.'), 1));
+		$theme_files = array();
+		foreach (glob(ROOTPATH . MAINDIR . "/views/themes/{$filename}/*") as $file) {
+			$file_name = basename($file);
+			$file_ext = strtolower(substr(strrchr($file, '.'), 1));
 
-            $type = '';
-            if (is_dir($file) AND ! in_array($file_name, config_item('theme_hidden_folders'))) {
-                $type = 'dir';
-            } else if ( ! in_array($file_name, config_item('theme_hidden_files'))) {
-                if (in_array($file_ext, config_item('allowed_image_ext'))) {
-                    $type = 'img';
-                } else if (in_array($file_ext, config_item('allowed_file_ext'))) {
-                    $type = 'file';
-                }
-            }
+			$type = '';
+			if (is_dir($file) AND ! in_array($file_name, config_item('theme_hidden_folders'))) {
+				$type = 'dir';
+			} else if ( ! in_array($file_name, config_item('theme_hidden_files'))) {
+				if (in_array($file_ext, config_item('allowed_image_ext'))) {
+					$type = 'img';
+				} else if (in_array($file_ext, config_item('allowed_file_ext'))) {
+					$type = 'file';
+				}
+			}
 
-            if ($type !== '') {
-                $theme_files[] = array('type' => $type, 'name' => $file_name, 'path' => $file, 'ext' => $file_ext);
-            }
-        }
+			if ($type !== '') {
+				$theme_files[] = array('type' => $type, 'name' => $file_name, 'path' => $file, 'ext' => $file_ext);
+			}
+		}
 
-        $type = array();
-        foreach ($theme_files as $key => $value) {
-            $type[$key] = $value['type'];
-        }
-        array_multisort($type, SORT_ASC, $theme_files);
+		$type = array();
+		foreach ($theme_files as $key => $value) {
+			$type[$key] = $value['type'];
+		}
+		array_multisort($type, SORT_ASC, $theme_files);
 
-        return $theme_files;
-    }
+		return $theme_files;
+	}
 }
 
 // ------------------------------------------------------------------------
 
 if ( ! function_exists('list_themes')) {
-    /**
-     * List existing themes in the system
-     *
-     * Lists the existing themes in the system by examining the
-     * theme folders in both admin and main domain, and also gets the theme
-     * config.
-     *
-     * @return array The names,path,config of the theme directories.
-     */
-    function list_themes() {
-        $themes = array();
+	/**
+	 * List existing themes in the system
+	 *
+	 * Lists the existing themes in the system by examining the
+	 * theme folders in both admin and main domain, and also gets the theme
+	 * config.
+	 *
+	 * @return array The names,path,config of the theme directories.
+	 */
+	function list_themes() {
+		$themes = array();
 
-        foreach (array(MAINDIR, ADMINDIR) as $domain) {
-            foreach (glob(ROOTPATH . "{$domain}/views/themes/*", GLOB_ONLYDIR) as $filepath) {
-                $filename = basename($filepath);
+		foreach (array(MAINDIR, ADMINDIR) as $domain) {
+			foreach (glob(ROOTPATH . "{$domain}/views/themes/*", GLOB_ONLYDIR) as $filepath) {
+				$filename = basename($filepath);
 
-                $themes[] = array(
-                    'location' => $domain,
-                    'basename' => $filename,
-                    'path'     => "{$domain}/views/themes/{$filename}",
-                    'config'   => load_theme_config($filename, $domain)
-                );
-            }
-        }
+				$themes[] = array(
+					'location' => $domain,
+					'basename' => $filename,
+					'path'     => "{$domain}/views/themes/{$filename}",
+					'config'   => load_theme_config($filename, $domain),
+				);
+			}
+		}
 
-        return $themes;
-    }
+		return $themes;
+	}
 }
 
 // ------------------------------------------------------------------------
 
 if ( ! function_exists('load_theme_config')) {
-    /**
-     * Load a single theme config file into an array.
-     *
-     * @param string $filename The name of the theme to locate. The config file
-     * will be found and loaded by looking in the admin and main theme folders.
-     * @param string $domain The domain where the theme is located.
-     *
-     * @return mixed The $theme array from the file or false if not found. Returns
-     * null if $filename is empty.
-     */
-    function load_theme_config($filename = NULL, $domain = MAINDIR) {
-        if (empty($filename)) {
-            return NULL;
-        }
+	/**
+	 * Load a single theme config file into an array.
+	 *
+	 * @param string $filename The name of the theme to locate. The config file
+	 *                         will be found and loaded by looking in the admin and main theme folders.
+	 * @param string $domain   The domain where the theme is located.
+	 *
+	 * @return mixed The $theme array from the file or false if not found. Returns
+	 * null if $filename is empty.
+	 */
+	function load_theme_config($filename = NULL, $domain = MAINDIR) {
+		if (empty($filename)) {
+			return NULL;
+		}
 
-        if ( ! file_exists(ROOTPATH."{$domain}/views/themes/{$filename}/theme_config.php")) {
-            log_message('debug', 'Theme ['.$filename.'] does not have a config file.');
-            return NULL;
-        }
+		if ( ! file_exists(ROOTPATH . "{$domain}/views/themes/{$filename}/theme_config.php")) {
+			log_message('debug', 'Theme [' . $filename . '] does not have a config file.');
 
-        include(ROOTPATH."{$domain}/views/themes/{$filename}/theme_config.php");
+			return NULL;
+		}
 
-        if ( ! isset($theme) OR ! is_array($theme)) {
-            log_message('debug', 'Theme ['.$filename.'] config file does not appear to contain a valid array.');
-            return NULL;
-        }
+		include(ROOTPATH . "{$domain}/views/themes/{$filename}/theme_config.php");
 
-        log_message('debug', 'Theme ['.$filename.'] config file loaded.');
-        return $theme;
-    }
+		if ( ! isset($theme) OR ! is_array($theme)) {
+			log_message('debug', 'Theme [' . $filename . '] config file does not appear to contain a valid array.');
+
+			return NULL;
+		}
+
+		log_message('debug', 'Theme [' . $filename . '] config file loaded.');
+
+		return $theme;
+	}
 }
 
 // ------------------------------------------------------------------------
 
 if ( ! function_exists('load_theme_file')) {
-    /**
-     * Load a single theme generic file into an array.
-     *
-     * @param string $filename The name of the file to locate. The file will be
-     * found by looking in the admin and main themes folders.
-     * @param string $theme The theme to check.
-     *
-     * @return mixed The $theme_file array from the file or false if not found. Returns
-     * null if $filename is empty.
-     */
-    function load_theme_file($filename = NULL, $theme = NULL) {
-        if (empty($filename) OR empty($theme)) {
-            return NULL;
-        }
+	/**
+	 * Load a single theme generic file into an array.
+	 *
+	 * @param string $filename The name of the file to locate. The file will be
+	 *                         found by looking in the admin and main themes folders.
+	 * @param string $theme    The theme to check.
+	 *
+	 * @return mixed The $theme_file array from the file or false if not found. Returns
+	 * null if $filename is empty.
+	 */
+	function load_theme_file($filename = NULL, $theme = NULL) {
+		if (empty($filename) OR empty($theme)) {
+			return NULL;
+		}
 
-        $theme_file_path = ROOTPATH.MAINDIR."/views/themes/{$theme}/{$filename}";
+		$theme_file_path = ROOTPATH . MAINDIR . "/views/themes/{$theme}/{$filename}";
 
-        if ( ! file_exists($theme_file_path)) {
-            return NULL;
-        }
+		if ( ! file_exists($theme_file_path)) {
+			return NULL;
+		}
 
-        $CI =& get_instance();
-        $CI->config->load('template');
+		$CI =& get_instance();
+		$CI->config->load('template');
 
-        $file_name = basename($theme_file_path);
-        $file_ext = strtolower(substr(strrchr($theme_file_path, '.'), 1));
+		$file_name = basename($theme_file_path);
+		$file_ext = strtolower(substr(strrchr($theme_file_path, '.'), 1));
 
-        if (in_array($file_ext, config_item('allowed_image_ext'))) {
-            $file_type = 'img';
-            $content = root_url(MAINDIR."/views/themes/{$theme}/{$filename}");
-        } else if (in_array($file_ext, config_item('allowed_file_ext'))) {
-            $file_type = 'file';
-            $content = htmlspecialchars(file_get_contents($theme_file_path));
-        } else {
-            return NULL;
-        }
+		if (in_array($file_ext, config_item('allowed_image_ext'))) {
+			$file_type = 'img';
+			$content = root_url(MAINDIR . "/views/themes/{$theme}/{$filename}");
+		} else if (in_array($file_ext, config_item('allowed_file_ext'))) {
+			$file_type = 'file';
+			$content = htmlspecialchars(file_get_contents($theme_file_path));
+		} else {
+			return NULL;
+		}
 
-        $theme_file = array(
-            'name'		    => $file_name,
-            'ext'		    => $file_ext,
-            'type'		    => $file_type,
-            'path'		    => $theme_file_path,
-            'content'	    => $content,
-            'is_writable'   => is_really_writable($theme_file_path)
-        );
+		$theme_file = array(
+			'name'        => $file_name,
+			'ext'         => $file_ext,
+			'type'        => $file_type,
+			'path'        => $theme_file_path,
+			'content'     => $content,
+			'is_writable' => is_really_writable($theme_file_path),
+		);
 
-        return $theme_file;
-    }
+		return $theme_file;
+	}
 }
 
 // ------------------------------------------------------------------------
 
 if ( ! function_exists('save_theme_file')) {
-    /**
-     * Save a theme file.
-     *
-     * @param string $filename The name of the file to locate. The file will be
-     * found by looking in the admin and main themes folders.
-     * @param string $theme The theme to check.
-     * @param array $new_data A string of the theme file content replace.
-     * @param boolean $return True to return the contents or false to return TRUE.
-     *
-     * @return bool|string False if there was a problem loading the file. Otherwise,
-     * returns true when $return is false or a string containing the file's contents
-     * when $return is true.
-     */
-    function save_theme_file($filename = NULL, $theme = NULL, $new_data = NULL, $return = FALSE) {
-        if (empty($filename) OR empty($theme) OR empty($new_data)) {
-            return FALSE;
-        }
+	/**
+	 * Save a theme file.
+	 *
+	 * @param string  $filename The name of the file to locate. The file will be
+	 *                          found by looking in the admin and main themes folders.
+	 * @param string  $theme    The theme to check.
+	 * @param array   $new_data A string of the theme file content replace.
+	 * @param boolean $return   True to return the contents or false to return TRUE.
+	 *
+	 * @return bool|string False if there was a problem loading the file. Otherwise,
+	 * returns true when $return is false or a string containing the file's contents
+	 * when $return is true.
+	 */
+	function save_theme_file($filename = NULL, $theme = NULL, $new_data = NULL, $return = FALSE) {
+		if (empty($filename) OR empty($theme) OR empty($new_data)) {
+			return FALSE;
+		}
 
-        $theme_file_path = ROOTPATH.MAINDIR."/views/themes/{$theme}/{$filename}";
+		$theme_file_path = ROOTPATH . MAINDIR . "/views/themes/{$theme}/{$filename}";
 
-        if ( ! file_exists($theme_file_path)) {
-            return FALSE;
-        }
+		if ( ! file_exists($theme_file_path)) {
+			return FALSE;
+		}
 
-        $file_ext = strtolower(substr(strrchr($theme_file_path, '.'), 1));
+		$file_ext = strtolower(substr(strrchr($theme_file_path, '.'), 1));
 
-        $CI =& get_instance();
-        $CI->config->load('template');
+		$CI =& get_instance();
+		$CI->config->load('template');
 
-        if (!in_array($file_ext, config_item('allowed_file_ext')) OR !is_really_writable($theme_file_path)) {
-            return FALSE;
-        }
+		if ( ! in_array($file_ext, config_item('allowed_file_ext')) OR ! is_really_writable($theme_file_path)) {
+			return FALSE;
+		}
 
-        if ($fp = @fopen($theme_file_path, FOPEN_READ_WRITE_CREATE_DESTRUCTIVE)) {
-            flock($fp, LOCK_EX);
-            fwrite($fp, $new_data);
-            flock($fp, LOCK_UN);
-            fclose($fp);
+		if ($fp = @fopen($theme_file_path, FOPEN_READ_WRITE_CREATE_DESTRUCTIVE)) {
+			flock($fp, LOCK_EX);
+			fwrite($fp, $new_data);
+			flock($fp, LOCK_UN);
+			fclose($fp);
 
-            @chmod($theme_file_path, FILE_WRITE_MODE);
+			@chmod($theme_file_path, FILE_WRITE_MODE);
 
-            return ($return === TRUE) ? $new_data : TRUE;
-        }
+			return ($return === TRUE) ? $new_data : TRUE;
+		}
 
-        return FALSE;
-    }
+		return FALSE;
+	}
 }
 
 // ------------------------------------------------------------------------

@@ -1,5 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
+/**
+ * Update the mail templates to responsive design
+ */
 class Migration_insert_and_update_row_in_mail_templates_data_table extends CI_Migration {
 
     public function up() {

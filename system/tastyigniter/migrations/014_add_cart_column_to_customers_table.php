@@ -1,5 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
+/**
+ * Add column cart to the customers table
+ */
 class Migration_add_cart_column_to_customers_table extends CI_Migration {
 
 	public function up() {

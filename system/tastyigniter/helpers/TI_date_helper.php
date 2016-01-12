@@ -1,8 +1,25 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
+/**
+ * TastyIgniter
+ *
+ * An open source online ordering, reservation and management system for restaurants.
+ *
+ * @package   TastyIgniter
+ * @author    SamPoyigi
+ * @copyright TastyIgniter
+ * @link      http://tastyigniter.com
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 1.0
+ * @filesource
+ */
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * TastyIgniter Date Helpers
+ * Date helper functions
  *
+ * @category       Helpers
+ * @package        TastyIgniter\Helpers\TI_date_helper.php
+ * @link           http://docs.tastyigniter.com
  */
 
 if ( ! function_exists('time_elapsed')) {
@@ -14,6 +31,7 @@ if ( ! function_exists('time_elapsed')) {
      *
      * @param string $datetime
      * @param bool $full
+     *
      * @return string
      */
     function time_elapsed($datetime, $full = FALSE) {
@@ -57,6 +75,7 @@ if ( ! function_exists('day_elapsed')) {
      *    Today or Yesterday or 12 Jan 15
      *
      * @param string $datetime
+     *
      * @return string
      */
     function day_elapsed($datetime) {
@@ -88,6 +107,7 @@ if ( ! function_exists('time_range')) {
      * @param	int	unix_end	UNIX timestamp of period end time
      * @param	int	interval		Specifies the second interval
      * @param	string  time_format	Output time format, same as in date()
+     *
      * @return	array
      */
     function time_range($unix_start, $unix_end, $interval, $time_format = '%H:%i') {

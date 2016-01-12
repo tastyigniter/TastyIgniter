@@ -1,8 +1,25 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
+/**
+ * TastyIgniter
+ *
+ * An open source online ordering, reservation and management system for restaurants.
+ *
+ * @package   TastyIgniter
+ * @author    SamPoyigi
+ * @copyright TastyIgniter
+ * @link      http://tastyigniter.com
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 1.0
+ * @filesource
+ */
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * TastyIgniter Language Helper
+ * Language helper functions
  *
+ * @category       Helpers
+ * @package        TastyIgniter\Helpers\TI_language_helper.php
+ * @link           http://docs.tastyigniter.com
  */
 
 // ------------------------------------------------------------------------
@@ -270,6 +287,7 @@ if ( ! function_exists('save_lang_file')) {
      * @param boolean $return True to return the contents or false to write to
      * the file.
      * @param boolean $allow_new_values If true, new values can be added to the file.
+     *
      * @return bool|string False if there was a problem loading the file. Otherwise,
      * returns true when $return is false or a string containing the file's contents
      * when $return is true.

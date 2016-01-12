@@ -1,5 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
+/**
+ * Drop column can_delete from the languages table
+ * Rename column directory to idiom in the staff_groups table
+ */
 class Migration_edit_languages_columns extends CI_Migration {
 
     public function up() {

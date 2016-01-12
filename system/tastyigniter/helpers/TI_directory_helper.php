@@ -1,11 +1,26 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
+/**
+ * TastyIgniter
+ *
+ * An open source online ordering, reservation and management system for restaurants.
+ *
+ * @package   TastyIgniter
+ * @author    SamPoyigi
+ * @copyright TastyIgniter
+ * @link      http://tastyigniter.com
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 1.0
+ * @filesource
+ */
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * TastyIgniter Language Helper
+ * Directory helper functions
  *
+ * @category       Helpers
+ * @package        TastyIgniter\Helpers\TI_directory_helper.php
+ * @link           http://docs.tastyigniter.com
  */
-
-// ------------------------------------------------------------------------
 
 if ( ! function_exists('directory_map'))
 {
@@ -21,6 +36,7 @@ if ( ! function_exists('directory_map'))
      *                        (0 = fully recursive, 1 = current dir, etc)
      * @param    bool $hidden Whether to show hidden files
      * @param   string $hide_file
+     *
      * @return array
      */
     function directory_map($source_dir, $directory_depth = 0, $hidden = FALSE, $hide_file = '.')

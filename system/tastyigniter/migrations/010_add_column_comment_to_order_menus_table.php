@@ -1,5 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
+/**
+ * Add column comment to the order_menus table
+ */
 class Migration_add_column_comment_to_order_menus_table extends CI_Migration {
 
     public function up() {

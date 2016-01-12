@@ -1,11 +1,26 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
+/**
+ * TastyIgniter
+ *
+ * An open source online ordering, reservation and management system for restaurants.
+ *
+ * @package   TastyIgniter
+ * @author    SamPoyigi
+ * @copyright TastyIgniter
+ * @link      http://tastyigniter.com
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 1.0
+ * @filesource
+ */
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * TastyIgniter HTML Helpers
+ * HTML helper functions
  *
- * @category    Helpers
+ * @category       Helpers
+ * @package        TastyIgniter\Helpers\TI_html_helper.php
+ * @link           http://docs.tastyigniter.com
  */
-
 
 if ( ! function_exists('doctype'))
 {
@@ -19,6 +34,7 @@ if ( ! function_exists('doctype'))
      * All values are saved in the doctypes config file.
      *
      * @param	string	type	The doctype to be generated
+     *
      * @return	string
      */
     function doctype($type = 'xhtml1-strict')

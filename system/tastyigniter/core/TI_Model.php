@@ -1,8 +1,24 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
+/**
+ * TastyIgniter
+ *
+ * An open source online ordering, reservation and management system for restaurants.
+ *
+ * @package   TastyIgniter
+ * @author    SamPoyigi
+ * @copyright TastyIgniter
+ * @link      http://tastyigniter.com
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 1.0
+ */
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * Model Class Extension
+ * TastyIgniter Model Class
  *
+ * @category       Libraries
+ * @package        TastyIgniter\Core\TI_Model.php
+ * @link           http://docs.tastyigniter.com
  */
 class TI_Model extends CI_Model {
 

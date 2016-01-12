@@ -1,8 +1,28 @@
-<?php defined('BASEPATH') or exit('No direct script access allowed');
+<?php
+/**
+ * TastyIgniter
+ *
+ * An open source online ordering, reservation and management system for restaurants.
+ *
+ * @package   TastyIgniter
+ * @author    SamPoyigi
+ * @copyright TastyIgniter
+ * @link      http://tastyigniter.com
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 1.0
+ */
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /* load the HMVC_Loader class */
 require IGNITEPATH . 'third_party/MX/Loader.php';
 
+/**
+ * TastyIgniter Loader Class
+ *
+ * @category       Libraries
+ * @package        TastyIgniter\Core\TI_Loader.php
+ * @link           http://docs.tastyigniter.com
+ */
 class TI_Loader extends MX_Loader {
 
     protected $_ci_view_paths =	array(VIEWPATH	=> TRUE, THEMEPATH => TRUE);

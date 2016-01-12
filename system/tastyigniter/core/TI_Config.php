@@ -1,8 +1,28 @@
-<?php (defined('BASEPATH')) OR exit('No direct access allowed');
+<?php
+/**
+ * TastyIgniter
+ *
+ * An open source online ordering, reservation and management system for restaurants.
+ *
+ * @package   TastyIgniter
+ * @author    SamPoyigi
+ * @copyright TastyIgniter
+ * @link      http://tastyigniter.com
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 1.0
+ */
+defined('BASEPATH') OR exit('No direct access allowed');
 
 /* load the MX_Router class */
 require IGNITEPATH."third_party/MX/Config.php";
 
+/**
+ * TastyIgniter Config Class
+ *
+ * @category       Libraries
+ * @package        TastyIgniter\Core\TI_Config.php
+ * @link           http://docs.tastyigniter.com
+ */
 class TI_Config extends MX_Config {
 
     public $_config_paths =	array(IGNITEPATH, APPPATH);

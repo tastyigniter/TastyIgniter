@@ -1,5 +1,17 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
+/**
+ * Install the initial tables:
+ *	addresses, banners, categories, countries, coupons, coupons_history,
+ *  currencies, customers, customers_activity, customer_groups, extensions,
+ *  languages, layouts, layout_routes, locations, location_tables,
+ *  mail_templates, mail_templates_data, menus, menus_specials,
+ *  menus_to_options, menu_options, messages, message_recipients, orders,
+ *  orders, order_menus, order_options, order_totals, pages, permalinks,
+ *  pp_payments, reservations, reviews, security_questions, settings,
+ *  staffs, staff_groups, statuses, status_history, tables, uri_routes,
+ *  users, working_hours
+ */
 class Migration_Schema extends CI_Migration {
 
 	public function up() {

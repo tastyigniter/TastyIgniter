@@ -1,4 +1,4 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
 /**
  * TastyIgniter
  *
@@ -6,12 +6,12 @@
  *
  * @package   TastyIgniter
  * @author    SamPoyigi
- * @copyright Copyright (c) 2013 - 2015, SamPoyigi
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @copyright TastyIgniter
  * @link      http://tastyigniter.com
- * @since     Version 1.0
- * @filesource
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 1.0
  */
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
  * TastyIgniter Version

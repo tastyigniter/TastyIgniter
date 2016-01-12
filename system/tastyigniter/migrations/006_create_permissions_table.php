@@ -1,5 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
+/**
+ * Create permissions table
+ * Rename column permission to permissions in the staff_groups table
+ */
 class Migration_create_permissions_table extends CI_Migration {
 
     public function up() {

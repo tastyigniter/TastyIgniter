@@ -1,5 +1,25 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+<?php
+/**
+ * TastyIgniter
+ *
+ * An open source online ordering, reservation and management system for restaurants.
+ *
+ * @package   TastyIgniter
+ * @author    SamPoyigi
+ * @copyright TastyIgniter
+ * @link      http://tastyigniter.com
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 1.0
+ */
+defined('BASEPATH') or exit('No direct script access allowed');
 
+/**
+ * Menus Model Class
+ *
+ * @category       Models
+ * @package        TastyIgniter\Models\Menus_model.php
+ * @link           http://docs.tastyigniter.com
+ */
 class Menus_model extends TI_Model {
 
 	public function getCount($filter = array()) {

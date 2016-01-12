@@ -1,5 +1,21 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
+/**
+ * Add columns status and title to the extensions table
+ * Add column status to the working_hours table
+ * Add columns parent_id, priority and image to the categories table
+ * Add columns parent_id, priority and image to the categories table
+ * Add default themes array to the settings table
+ * Add unique index slug and controller to the permalinks table
+ * Add column sale_type to the reviews table
+ * Rename column order_id to sales_id in the reviews table
+ * Add unique index review_id, sale_type and sale_id to the reviews table
+ * Drop column covered_area from the locations table
+ * Add column status_color to the statuses table
+ * Add column assignee_id to the orders table
+ * Rename table customers_activity to the customers_online
+ * Add column user_agent to the customers_online table
+ */
 class Migration_1_3_0 extends CI_Migration {
 
 	public function up() {

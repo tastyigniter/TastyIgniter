@@ -1,5 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
+/**
+ * Rename column reservation_interval to reservation_time_interval in the locations table
+ * Rename column reservation_turn to reservation_stay_time in the locations table
+ */
 class Migration_add_column_location_image_to_locations_table extends CI_Migration {
 
     public function up() {

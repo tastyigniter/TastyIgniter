@@ -1,5 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
+/**
+ * Add columns invoice_no, invoice_prefix and invoice_date to the orders table
+ */
 class Migration_add_invoice_fields_to_orders_table extends CI_Migration {
 
 	public function up() {

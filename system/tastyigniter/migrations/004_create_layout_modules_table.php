@@ -1,5 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
+/**
+ * Create the layouts and modules relationship table
+ */
 class Migration_create_layout_modules_table extends CI_Migration {
 
     public function up() {

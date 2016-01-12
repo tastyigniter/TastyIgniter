@@ -1,5 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
+/**
+ * Add messages recipient to the database
+ */
 class Migration_edit_messages_columns extends CI_Migration {
 
     public function up() {

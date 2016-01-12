@@ -1,26 +1,42 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
+/**
+ * TastyIgniter
+ *
+ * An open source online ordering, reservation and management system for restaurants.
+ *
+ * @package   TastyIgniter
+ * @author    SamPoyigi
+ * @copyright TastyIgniter
+ * @link      http://tastyigniter.com
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 1.0
+ * @filesource
+ */
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * TastyIgniter URL Helpers
+ * URL helper functions
  *
- * @category    Helpers
+ * @category       Helpers
+ * @package        TastyIgniter\Helpers\TI_url_helper.php
+ * @link           http://docs.tastyigniter.com
  */
 
 // ------------------------------------------------------------------------
 
 if ( ! function_exists('site_url'))
 {
-    /**
-     * Site URL
-     *
-     * Create a local URL based on your basepath. Segments can be passed via the
-     * first parameter either as a string or an array.
-     *
-     * @param    string $uri
-     * @param    string $protocol
-     * @param bool $reverse_routing
-     * @return string
-     */
+	/**
+	 * Site URL
+	 *
+	 * Create a local URL based on your basepath. Segments can be passed via the
+	 * first parameter either as a string or an array.
+	 *
+	 * @param    string $uri
+	 * @param    string $protocol
+	 *
+	 * @return string
+	 */
     function site_url($uri = '', $protocol = NULL)
     {
         return get_instance()->config->site_url($uri, $protocol);
@@ -29,17 +45,16 @@ if ( ! function_exists('site_url'))
 
 // ------------------------------------------------------------------------
 
-/**
- * Current URL
- *
- * Returns the full URL (including segments and query string) of the page where this
- * function is placed
- *
- * @access	public
- * @return	string
- */
 if ( ! function_exists('current_url'))
 {
+	/**
+	 * Current URL
+	 *
+	 * Returns the full URL (including segments and query string) of the page where this
+	 * function is placed
+	 *
+	 * @return	string
+	 */
 	function current_url()
 	{
 		$CI =& get_instance();
@@ -50,16 +65,18 @@ if ( ! function_exists('current_url'))
 
 // ------------------------------------------------------------------------
 
-/**
- * Assets URL
- *
- * Returns the full URL (including segments) of the assets directory
- *
- * @access	public
- * @return	string
- */
 if ( ! function_exists('image_url'))
 {
+	/**
+	 * Assets URL
+	 *
+	 * Returns the full URL (including segments) of the assets directory
+	 *
+	 * @param string $uri
+	 * @param null   $protocol
+	 *
+	 * @return string
+	 */
 	function image_url($uri = '', $protocol = NULL)
 	{
         return get_instance()->config->root_url('assets/images/'.$uri, $protocol);
@@ -68,18 +85,19 @@ if ( ! function_exists('image_url'))
 
 // ------------------------------------------------------------------------
 
-/**
- * Root URL
- *
- * Create a local URL based on your root path.
- * Segments can be passed in as a string.
- *
- * @param	string	$uri
- * @param	string	$protocol
- * @return	string
- */
 if ( ! function_exists('root_url'))
 {
+	/**
+	 * Root URL
+	 *
+	 * Create a local URL based on your root path.
+	 * Segments can be passed in as a string.
+	 *
+	 * @param	string	$uri
+	 * @param	string	$protocol
+	 *
+	 * @return	string
+	 */
 	function root_url($uri = '', $protocol = NULL)
 	{
         return get_instance()->config->root_url($uri, $protocol);
@@ -88,38 +106,40 @@ if ( ! function_exists('root_url'))
 
 // ------------------------------------------------------------------------
 
-/**
- * Admin URL
- *
- * Create a local URL based on your admin path.
- * Segments can be passed in as a string.
- *
- * @param	string	$uri
- * @param	string	$protocol
- * @return	string
- */
 if ( ! function_exists('admin_url'))
 {
+	/**
+	 * Admin URL
+	 *
+	 * Create a local URL based on your admin path.
+	 * Segments can be passed in as a string.
+	 *
+	 * @param	string	$uri
+	 * @param	string	$protocol
+	 *
+	 * @return	string
+	 */
 	function admin_url($uri = '', $protocol = NULL)
 	{
-        return get_instance()->config->root_url(ADMINDIR.'/'.$uri, $protocol);
+		return get_instance()->config->root_url(ADMINDIR.'/'.$uri, $protocol);
 	}
 }
 
 // ------------------------------------------------------------------------
 
-/**
- * Extensions URL
- *
- * Create a local URL based on your extensions path.
- * Segments can be passed in as a string.
- *
- * @param	string	$uri
- * @param	string	$protocol
- * @return	string
- */
 if ( ! function_exists('extension_url'))
 {
+	/**
+	 * Extensions URL
+	 *
+	 * Create a local URL based on your extensions path.
+	 * Segments can be passed in as a string.
+	 *
+	 * @param	string	$uri
+	 * @param	string	$protocol
+	 *
+	 * @return	string
+	 */
 	function extension_url($uri = '', $protocol = NULL)
 	{
 		return get_instance()->config->root_url(EXTPATH.$uri, $protocol);
@@ -128,17 +148,16 @@ if ( ! function_exists('extension_url'))
 
 // ------------------------------------------------------------------------
 
-/**
- * Page URL
- *
- * Returns the full URL (including segments) of the page where this
- * function is placed
- *
- * @access	public
- * @return	string
- */
 if ( ! function_exists('page_url'))
 {
+	/**
+	 * Page URL
+	 *
+	 * Returns the full URL (including segments) of the page where this
+	 * function is placed
+	 *
+	 * @return	string
+	 */
 	function page_url()
 	{
 		$CI =& get_instance();
@@ -148,17 +167,16 @@ if ( ! function_exists('page_url'))
 
 // ------------------------------------------------------------------------
 
-/**
- * Restaurant URL
- *
- * Returns the full URL (including segments) of the local restaurant if any,
- * else locations URL is returned
- *
- * @access	public
- * @return	string
- */
 if ( ! function_exists('restaurant_url'))
 {
+	/**
+	 * Restaurant URL
+	 *
+	 * Returns the full URL (including segments) of the local restaurant if any,
+	 * else locations URL is returned
+	 *
+	 * @return	string
+	 */
 	function restaurant_url()
 	{
 		$CI =& get_instance();
@@ -172,17 +190,16 @@ if ( ! function_exists('restaurant_url'))
 
 // ------------------------------------------------------------------------
 
-/**
- * Referrer URL
- *
- * Returns the full URL (including segments) of the page where this
- * function is placed
- *
- * @access	public
- * @return	string
- */
 if ( ! function_exists('referrer_url'))
 {
+	/**
+	 * Referrer URL
+	 *
+	 * Returns the full URL (including segments) of the page where this
+	 * function is placed
+	 *
+	 * @return	string
+	 */
 	function referrer_url()
 	{
         $CI =& get_instance();
@@ -199,7 +216,21 @@ if ( ! function_exists('referrer_url'))
 // ------------------------------------------------------------------------
 
 if ( ! function_exists('redirect')) {
-    function redirect($uri = '', $method = 'auto', $code = NULL) {
+	/**
+	 * Header Redirect
+	 *
+	 * Header redirect in two flavors
+	 * For very fine grained control over headers, you could use the Output
+	 * Library's set_header() function.
+	 *
+	 * @param    string $uri    URL
+	 * @param    string $method Redirect method
+	 *                          'auto', 'location' or 'refresh'
+	 * @param    int    $code   HTTP Response status code
+	 *
+	 * @throws CIPHPUnitTestRedirectException
+	 */
+	function redirect($uri = '', $method = 'auto', $code = NULL) {
         if ( ! preg_match('#^(\w+:)?//#i', $uri)) {
             $uri = site_url($uri);
         }

@@ -1,22 +1,38 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
+/**
+ * TastyIgniter
+ *
+ * An open source online ordering, reservation and management system for restaurants.
+ *
+ * @package   TastyIgniter
+ * @author    SamPoyigi
+ * @copyright TastyIgniter
+ * @link      http://tastyigniter.com
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 1.0
+ * @filesource
+ */
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * TastyIgniter CAPTCHA Helper
+ * Captcha helper functions
  *
+ * @category       Helpers
+ * @package        TastyIgniter\Helpers\TI_captcha_helper.php
+ * @link           http://docs.tastyigniter.com
  */
-
-// ------------------------------------------------------------------------
 
 if ( ! function_exists('create_captcha'))
 {
 	/**
 	 * Create CAPTCHA
 	 *
-	 * @param	array	$data		data for the CAPTCHA
-	 * @param	string	$img_path	path to create the image in
-	 * @param	string	$img_url	URL to the CAPTCHA image folder
-	 * @param	string	$font_path	server path to font
-	 * @return	string
+	 * @param array|string $data      data for the CAPTCHA
+	 * @param    string    $img_path  path to create the image in
+	 * @param    string    $img_url   URL to the CAPTCHA image folder
+	 * @param    string    $font_path server path to font
+	 *
+	 * @return string
 	 */
 	function create_captcha($data = '', $img_path = '', $img_url = '', $font_path = '')
 	{
@@ -212,6 +228,8 @@ if ( ! function_exists('create_captcha'))
 		return array('word' => $word, 'time' => $now, 'image' => $img, 'filename' => $img_filename);
 	}
 }
+
+// ------------------------------------------------------------------------
 
 /* End of file captcha_helper.php */
 /* Location: ./system/helpers/captcha_helper.php */

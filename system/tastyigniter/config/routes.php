@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct access allowed');
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 if (APPDIR === ADMINDIR) {
     $route['default_controller'] = 'login';

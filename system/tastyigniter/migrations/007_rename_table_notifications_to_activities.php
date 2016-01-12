@@ -1,5 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
+/**
+ * Drop notifications table
+ * Create activities table
+ */
 class Migration_rename_table_notifications_to_activities extends CI_Migration {
 
     public function up() {

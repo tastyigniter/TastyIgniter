@@ -1,8 +1,24 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
+/**
+ * TastyIgniter
+ *
+ * An open source online ordering, reservation and management system for restaurants.
+ *
+ * @package   TastyIgniter
+ * @author    SamPoyigi
+ * @copyright TastyIgniter
+ * @link      http://tastyigniter.com
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 1.0
+ */
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * Application Base Controller Class
+ * Base Controller Class
  *
+ * @category       Libraries
+ * @package        TastyIgniter\Core\Base_Controller.php
+ * @link           http://docs.tastyigniter.com
  */
 class Base_Controller extends MX_Controller {
 
@@ -28,6 +44,11 @@ class Base_Controller extends MX_Controller {
 
         // Load installer library and database config items
         $this->load->library('installer');
+
+        // If 'config/updated.txt' exists, system needs upgrade
+        if (is_file(IGNITEPATH . 'config/updated.txt')) {
+            $this->installer->upgrade();
+        }
 
         // Redirect to setup if app requires setup
         if (($installed = $this->installer->isInstalled()) !== TRUE AND APPDIR !== 'setup') {

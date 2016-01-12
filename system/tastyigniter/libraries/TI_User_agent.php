@@ -1,10 +1,25 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
+/**
+ * TastyIgniter
+ *
+ * An open source online ordering, reservation and management system for restaurants.
+ *
+ * @package   TastyIgniter
+ * @author    SamPoyigi
+ * @copyright TastyIgniter
+ * @link      http://tastyigniter.com
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 1.0
+ * @filesource
+ */
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * User Agent Class
+ * TastyIgniter User agent Class
  *
- * Identifies the platform, browser, robot, or mobile device of the browsing agent
- *
+ * @category       Libraries
+ * @package        TastyIgniter\Libraries\TI_User_agent.php
+ * @link           http://docs.tastyigniter.com
  */
 class TI_User_agent extends CI_User_agent {
 
