@@ -22,7 +22,7 @@
 	$this->template->setScriptTag('js/common.js', 'common-js');
 
 	$site_logo          = base_url('views/themes/tastyigniter-blue/images/tastyigniter-logo.png');
-    $system_name 		= lang('ti_text_system_name');
+    $system_name 		= lang('tastyigniter_system_name');
     $site_name 		    = config_item('site_name');
     $site_url 			= rtrim(site_url(), '/').'/';
     $base_url 			= base_url();
@@ -107,7 +107,13 @@
 			<?php if ($islogged) { ?>
  				<ul class="nav navbar-top-links navbar-right">
 					<li class="dropdown">
-						<a class="front-end" href="<?php echo root_url(); ?>" target="_blank">
+						<a class="updates" title="<?php echo lang('menu_updates'); ?>" href="<?php echo site_url('updates'); ?>">
+							<i class="fa fa-refresh"></i>
+							<span class="label label-danger"></span>
+						</a>
+					</li>
+					<li class="dropdown">
+						<a class="front-end" title="<?php echo lang('menu_storefront'); ?>" href="<?php echo root_url(); ?>" target="_blank">
 							<i class="fa fa-home"></i>
 						</a>
 					</li>

@@ -26,7 +26,7 @@
 						you may be refused support on the TastyIgniter Community Forums.
 
 						This is free software, support us and we'll support you. -->
-                    <li><?php echo sprintf(lang('site_copyright'), date('Y'), config_item('site_name'), lang('ti_text_system_name')) . lang('ti_text_system_powered'); ?></li>
+                    <li><?php echo sprintf(lang('site_copyright'), date('Y'), config_item('site_name'), lang('tastyigniter_system_name')) . lang('tastyigniter_system_powered'); ?></li>
                     <!-- End powered by -->
                 </ul>
             </div>
