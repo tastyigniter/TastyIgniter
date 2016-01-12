@@ -1,5 +1,26 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+<?php
+/**
+ * TastyIgniter
+ *
+ * An open source online ordering, reservation and management system for restaurants.
+ *
+ * @package   TastyIgniter
+ * @author    SamPoyigi
+ * @copyright TastyIgniter
+ * @link      http://tastyigniter.com
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 1.0
+ * @filesource
+ */
+defined('BASEPATH') OR exit('No direct script access allowed');
 
+/**
+ * Template Class
+ *
+ * @category       Libraries
+ * @package        TastyIgniter\Libraries\Template.php
+ * @link           http://docs.tastyigniter.com
+ */
 class Template {
 
     private $_module = '';
@@ -401,7 +422,7 @@ class Template {
         $this->_head_tags['icons'][] = $icon;
     }
 
-    public function setStyleTag($href = '', $name = '', $priority = NULL) {
+    public function setStyleTag($href = '', $name = '', $priority = NULL, $suffix = '') {
         if ( ! is_array($href)) {
             $href = array($priority => array('href' => $href, 'name' => $name, 'rel' => 'stylesheet', 'type' => 'text/css'));
         } else if (isset($href[0]) AND is_string($href[0])) {
@@ -417,7 +438,9 @@ class Template {
 
         foreach ($href as $priority => $tag) {
             if (isset($tag['href'])) {
-                $tag['href'] = $this->prepUrl($tag['href']);
+                !empty($suffix) OR $suffix = '?ver='.TI_VERSION;
+
+                $tag['href'] = $this->prepUrl($tag['href'].$suffix);
                 if (!empty($tag['name'])) {
                     $tag['id'] = $tag['name'];
                 }
@@ -432,8 +455,9 @@ class Template {
         }
     }
 
-    public function setScriptTag($href = '', $name = '', $priority = NULL) {
+    public function setScriptTag($href = '', $name = '', $priority = NULL, $suffix = '') {
         $charset = strtolower($this->CI->config->item('charset'));
+
         if ( ! is_array($href)) {
             $href = array($priority => array('src' => $href, 'name' => $name, 'charset' => $charset, 'type' => 'text/javascript'));
         } else if (isset($href[0]) AND is_string($href[0])) {
@@ -449,7 +473,9 @@ class Template {
 
         foreach ($href as $priority => $tag) {
             if (isset($tag['src'])) {
-                $tag['src'] = $this->prepUrl($tag['src']);
+                !empty($suffix) OR $suffix = '?ver='.TI_VERSION;
+
+                $tag['src'] = $this->prepUrl($tag['src'].$suffix);
 
                 if (!empty($tag['name'])) {
                     $tag['id'] = $tag['name'];
