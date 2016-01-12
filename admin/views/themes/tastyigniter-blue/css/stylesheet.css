@@ -1722,9 +1722,6 @@ line-height: 1.8em;
 .fa-stack-2x {
 font-size: 1.8em !important;
 }
-.fa-check {
-color:#00B87A;
-}
 .fa-sort, .fa-times, .fa-times-circle, .fa-plus {
 cursor: pointer;
 }
