@@ -20,6 +20,12 @@ class Migration_create_permissions_table extends CI_Migration {
         $this->db->query('ALTER TABLE '.$this->db->dbprefix('permissions').' AUTO_INCREMENT 11');
 
         $this->db->query("ALTER TABLE ".$this->db->dbprefix('staff_groups')." CHANGE `permission` `permissions` TEXT  NOT NULL;");
+
+        include(IGNITEPATH . '/migrations/initial_schema.php');
+
+        if ( ! empty($insert_permissions_data)) {
+            $this->db->query($insert_permissions_data);
+        }
     }
 
     public function down() {

@@ -17,6 +17,11 @@ class Migration_create_layout_modules_table extends CI_Migration {
 
         $this->dbforge->add_field($fields);
         $this->dbforge->create_table('layout_modules');
+
+        include(IGNITEPATH . '/migrations/initial_schema.php');
+        if (!empty($insert_layout_modules_data)) {
+            $this->db->query($insert_layout_modules_data);
+        }
     }
 
     public function down() {

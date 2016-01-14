@@ -1,38 +1,26 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+<?php
+/**
+ * TastyIgniter
+ *
+ * An open source online ordering, reservation and management system for restaurants.
+ *
+ * @package   TastyIgniter
+ * @author    SamPoyigi
+ * @copyright TastyIgniter
+ * @link      http://tastyigniter.com
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 1.0
+ */
+defined('BASEPATH') or exit('No direct script access allowed');
 
+/**
+ * Setup Model Class
+ *
+ * @category       Models
+ * @package        TastyIgniter\Models\Setup_model.php
+ * @link           http://docs.tastyigniter.com
+ */
 class Setup_model extends TI_Model {
-
-	public function loadInitialSchema() {
-		$query = FALSE;
-
-		$file = IGNITEPATH . '/migrations/initial_schema.sql';
-		if ( ! file_exists($file)) {
-			return FALSE;
-		}
-
-		$lines = file($file);
-		if ($lines) {
-			$sql = '';
-
-			foreach ($lines as $line) {
-				if ($line AND (substr($line, 0, 1) != '#')) {
-					$sql .= $line;
-
-					if (preg_match('/;\s*$/', $line)) {
-						$sql = str_replace('REPLACE INTO ti_', 'REPLACE INTO ' . $this->db->dbprefix,
-						                   str_replace('REPLACE INTO `ti_', 'REPLACE INTO `' . $this->db->dbprefix,
-						                               $sql));
-						$this->db->query($sql);
-						$sql = '';
-					}
-				}
-			}
-
-			$query = TRUE;
-		}
-
-		return $query;
-	}
 
 	public function loadDemoSchema($demo_data) {
 		$query = TRUE;
@@ -109,8 +97,8 @@ class Setup_model extends TI_Model {
 		return $query;
 	}
 
-	public function updateSettings($setting = array()) {
-		if (empty($setting['site_name']) AND empty($setting['site_email'])) {
+	public function updateSettings($setting = array(), $upgrade = FALSE) {
+		if ($upgrade === FALSE AND empty($setting['site_name']) AND empty($setting['site_email'])) {
 			return TRUE;
 		}
 
@@ -130,14 +118,14 @@ class Setup_model extends TI_Model {
 		return TRUE;
 	}
 
-	public function updateVersion() {
+	public function updateVersion($version = NULL) {
 		$this->db->where('sort', 'prefs');
 		$this->db->where('item', 'ti_version');
 		$this->db->delete('settings');
 
 		$this->db->set('sort', 'prefs');
 		$this->db->set('item', 'ti_version');
-		$this->db->set('value', TI_VERSION);
+		$this->db->set('value', (empty($version)) ? TI_VERSION : $version);
 		$this->db->set('serialized', '0');
 		$this->db->insert('settings');
 	}

@@ -46,6 +46,8 @@ class Migration_1_3_0 extends CI_Migration {
         $this->dbforge->add_column('customers_online', array('user_agent TEXT NOT NULL'));
 
         $this->_notifications();
+
+		$this->insertInitialData();
 	}
 
 	public function down() {
@@ -91,6 +93,74 @@ class Migration_1_3_0 extends CI_Migration {
 		$this->dbforge->add_field($fields);
 		$this->dbforge->create_table('notifications');
 		$this->db->query('ALTER TABLE '.$this->db->dbprefix('notifications').' AUTO_INCREMENT 11');
+	}
+
+	protected function insertInitialData() {
+		include(IGNITEPATH . '/migrations/initial_schema.php');
+
+		if ( ! empty($insert_countries_data)) {
+			$this->db->query($insert_countries_data);
+		}
+
+		if ( ! empty($insert_currencies_data)) {
+			$this->db->query($insert_currencies_data);
+		}
+
+		if ( ! empty($insert_customer_groups_data)) {
+			$this->db->query($insert_customer_groups_data);
+		}
+
+		if ( ! empty($insert_extensions_data)) {
+			$this->db->query($insert_extensions_data);
+		}
+
+		if ( ! empty($insert_languages_data)) {
+			$this->db->query($insert_languages_data);
+		}
+
+		if ( ! empty($insert_layout_routes_data)) {
+			$this->db->query($insert_layout_routes_data);
+		}
+
+		if ( ! empty($insert_layouts_data)) {
+			$this->db->query($insert_layouts_data);
+		}
+
+		if ( ! empty($insert_mail_templates_data)) {
+			$this->db->query($insert_mail_templates_data);
+		}
+
+		if ( ! empty($insert_mail_templates_data_data)) {
+			$this->db->query($insert_mail_templates_data_data);
+		}
+
+		if ( ! empty($insert_pages_data)) {
+			$this->db->query($insert_pages_data);
+		}
+
+		if ( ! empty($insert_permalinks_data)) {
+			$this->db->query($insert_permalinks_data);
+		}
+
+		if ( ! empty($insert_security_questions_data)) {
+			$this->db->query($insert_security_questions_data);
+		}
+
+		if ( ! empty($insert_settings_data)) {
+			$this->db->query($insert_settings_data);
+		}
+
+		if ( ! empty($insert_staff_groups_data)) {
+			$this->db->query($insert_staff_groups_data);
+		}
+
+		if ( ! empty($insert_statuses_data)) {
+			$this->db->query($insert_statuses_data);
+		}
+
+		if ( ! empty($insert_uri_routes_data)) {
+			$this->db->query($insert_uri_routes_data);
+		}
 	}
 }
 

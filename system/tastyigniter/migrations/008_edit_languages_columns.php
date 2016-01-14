@@ -10,6 +10,10 @@ class Migration_edit_languages_columns extends CI_Migration {
         $this->db->query("ALTER TABLE ".$this->db->dbprefix('languages')." CHANGE `directory` `idiom` VARCHAR(32) NOT NULL;");
 
         $this->dbforge->add_column('languages', array('can_delete TINYINT(1) NOT NULL'));
+
+        $this->db->set('can_delete', '1');
+        $this->db->where('language_id', '11');
+        $this->db->update('languages');
     }
 
     public function down() {

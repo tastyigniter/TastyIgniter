@@ -1,13 +1,32 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
+/**
+ * TastyIgniter
+ *
+ * An open source online ordering, reservation and management system for restaurants.
+ *
+ * @package   TastyIgniter
+ * @author    SamPoyigi
+ * @copyright TastyIgniter
+ * @link      http://tastyigniter.com
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 1.0
+ * @filesource
+ */
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * Migration Libary Class Extension
+ * TastyIgniter Migration Class
  *
+ * @category       Libraries
+ * @package        TastyIgniter\Libraries\TI_Migration.php
+ * @link           http://docs.tastyigniter.com
  */
 class TI_Migration extends CI_Migration {
 
     public function __construct($config = array()) {
         parent::__construct($config);
+
+        $this->load->database();
 
         // If the migrations type column is missing, add it
         if ( ! $this->db->field_exists('type', $this->_migration_table)) {
@@ -89,18 +108,16 @@ class TI_Migration extends CI_Migration {
      * @return string Current migration version
      */
     public function install() {
+        $this->load->model('Setup_model');
+
         // Core Migrations - this is all that is needed for TastyIgniter install.
         if (($current_version = $this->current()) === FALSE) {
             return FALSE;
         }
 
-        if ( ! $this->Setup_model->loadInitialSchema()) {
-            $this->_error_string = 'Migration: initial_schema execution failed';
-            return FALSE;
-        }
-
         if ($this->input->post('demo_data') === '1'
             AND ! $this->Setup_model->loadDemoSchema($this->input->post('demo_data'))) {
+
             $this->_error_string = 'Migration: demo_schema execution failed';
             return FALSE;
         }
