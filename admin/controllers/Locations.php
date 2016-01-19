@@ -465,7 +465,7 @@ class Locations extends Admin_Controller {
 		$this->form_validation->set_rules('address[address_2]', 'lang:label_address_2', 'xss_clean|trim|max_length[128]');
 		$this->form_validation->set_rules('address[city]', 'lang:label_city', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 		$this->form_validation->set_rules('address[state]', 'lang:label_state', 'xss_clean|trim|max_length[128]');
-		$this->form_validation->set_rules('address[postcode]', 'lang:label_postcode', 'xss_clean|trim|required|min_length[2]|max_length[10]');
+		$this->form_validation->set_rules('address[postcode]', 'lang:label_postcode', 'xss_clean|trim|min_length[2]|max_length[10]');
 		$this->form_validation->set_rules('address[country]', 'lang:label_country', 'xss_clean|trim|required|integer');
 
 	    $this->form_validation->set_rules('auto_lat_lng', 'lang:label_auto_lat_lng', 'xss_clean|trim|required|integer');
