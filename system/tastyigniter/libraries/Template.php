@@ -438,9 +438,9 @@ class Template {
 
         foreach ($href as $priority => $tag) {
             if (isset($tag['href'])) {
-                !empty($suffix) OR $suffix = '?ver='.TI_VERSION;
+                !empty($suffix) OR $suffix = 'ver='.TI_VERSION;
 
-                $tag['href'] = $this->prepUrl($tag['href'].$suffix);
+                $tag['href'] = $this->prepUrl($tag['href'], $suffix);
                 if (!empty($tag['name'])) {
                     $tag['id'] = $tag['name'];
                 }
@@ -473,9 +473,9 @@ class Template {
 
         foreach ($href as $priority => $tag) {
             if (isset($tag['src'])) {
-                !empty($suffix) OR $suffix = '?ver='.TI_VERSION;
+                !empty($suffix) OR $suffix = 'ver='.TI_VERSION;
 
-                $tag['src'] = $this->prepUrl($tag['src'].$suffix);
+                $tag['src'] = $this->prepUrl($tag['src'], $suffix);
 
                 if (!empty($tag['name'])) {
                     $tag['id'] = $tag['name'];
@@ -675,12 +675,16 @@ class Template {
         return $content;
 	}
 
-    private function prepUrl($href) {
+    private function prepUrl($href, $suffix = '') {
         if (!preg_match('#^(\w+:)?//#i', $href)) {
             $href = root_url($this->_theme_shortpath . '/' . $href);
         }
 
-        return $href;
+        if (!empty($suffix)) {
+            $suffix = (strpos($href, '?') === FALSE) ? '?'. $suffix : '&'. $suffix;
+        }
+
+        return $href . $suffix;
     }
 
     public function __get($name) {
