@@ -234,6 +234,10 @@ class Mail_templates extends Admin_Controller {
 			        'name' => 'Customer address for delivery order',
 		        ),
 		        array(
+			        'var'  => '{order_payment}',
+			        'name' => 'Order payment method',
+		        ),
+		        array(
 			        'var'  => '{order_menus}',
 			        'name' => 'Order menus  - START iteration',
 		        ),
