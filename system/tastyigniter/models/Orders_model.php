@@ -643,6 +643,12 @@ class Orders_model extends TI_Model {
 			$data['last_name'] = $result['last_name'];
 			$data['email'] = $result['email'];
 
+			if ($payment = $this->extension->getPayment($result['payment'])) {
+				$data['order_payment'] = !empty($payment['ext_data']['title']) ? $payment['ext_data']['title']: $payment['title'];
+			} else {
+				$data['order_payment'] = 'No payment method selected';
+			}
+
 			$data['order_menus'] = array();
 			$menus = $this->getOrderMenus($result['order_id']);
 			$options = $this->getOrderMenuOptions($result['order_id']);
