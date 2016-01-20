@@ -43,7 +43,8 @@ $lang['label_backup_table'] 		    = 'Backup Tables';
 $lang['label_migrate_version'] 		    = 'Migrate to verison';
 
 $lang['alert_info_memory_limit'] 		= '<p>Note: Due to the limited execution time and memory available to PHP, backing up very large databases may not be possible.If your database is very large you might need to backup directly from your SQL server via the command line,or have your server admin do it for you if you do not have root privileges.</p>';
-$lang['alert_warning_migration'] 		= '<b>BE CAREFUL!</b> Do not migrate unless you know what you\'re doing. This can break the system';
+$lang['alert_warning_migration'] 		= '<b>BE CAREFUL!</b> Do not migrate unless you know what you\'re doing.';
+$lang['alert_warning_maintenance'] 		= 'Your site is live you can\'t %s the database, please enable maintenance mode. Make sure you <b>BACKUP</b> your database.';
 
 $lang['help_compression'] 		        = 'The Restore option is only capable of reading un-compressed files. Gzip or Zip compression is good if you just want a backup to download and store on your computer.';
 

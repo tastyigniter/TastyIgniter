@@ -44,20 +44,7 @@ class Maintenance extends Admin_Controller {
             );
         }
 
-        $data['backup_files'] = array();
-        $backup_files = glob(ROOTPATH . 'assets/downloads/*.sql');
-        if (count($backup_files) > 0) {
-            foreach ($backup_files as $backup_file) {
-                $basename = basename($backup_file);
-                $data['backup_files'][] = array(
-                    'filename' => $basename,
-                    'size'     => filesize($backup_file),
-                    'download' => site_url('maintenance/backup?download=' . $basename),
-                    'restore'  => site_url('maintenance/backup?restore=' . $basename),
-                    'delete'   => site_url('maintenance/backup?delete=' . $basename)
-                );
-            }
-        }
+        $data['backup_files'] = $this->Maintenance_model->getBackupFiles();
 
         $this->load->library('migration');
         $data['installed_version'] = $this->migration->get_version();
@@ -211,13 +198,10 @@ class Maintenance extends Admin_Controller {
         $this->user->restrict('Admin.Maintenance.Add');
 
         if ($this->input->get('restore')) {
-            $restore = pathinfo($this->security->sanitize_filename($this->input->get('restore')));
-            $restore_path = ROOTPATH . "assets/downloads/" . $restore['filename'] . ".sql";
-
-            if ($restore['extension'] === 'sql' AND strpos($restore_path, 'tastyigniter-') !== FALSE AND is_file($restore_path)) {
-                if ($this->Maintenance_model->restoreDatabase($restore_path)) { // calls model to save data to SQL
-                    $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Database restored '));
-                }
+            if ($this->config->item('maintenance_mode') !== '1') {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_warning_maintenance'), 'restore'));
+            } else if ($this->Maintenance_model->restoreDatabase($this->input->get('restore'))) { // calls model to save data to SQL
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Database restored '));
             } else {
                 $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), 'restored'));
             }
@@ -229,15 +213,10 @@ class Maintenance extends Admin_Controller {
     private function _download() {
         $this->user->restrict('Admin.Maintenance.Manage');
 
-        if ($this->input->get('download')) {
-            $download = pathinfo($this->security->sanitize_filename($this->input->get('download')));
-            $file_path = ROOTPATH . "assets/downloads/" . $download['filename'] . ".sql";
+        if ($this->input->get('download') AND $result = $this->Maintenance_model->readBackupFile($this->input->get('download'))) {
 
-            if ($download['extension'] === 'sql' AND is_file($file_path)) {
-                $file_data = file_get_contents($file_path);
-                $this->load->helper('download');
-                force_download($download['basename'], $file_data);
-            }
+            $this->load->helper('download');
+            force_download($result['filename'], $result['content']);
 
         }
     }
@@ -246,11 +225,7 @@ class Maintenance extends Admin_Controller {
         $this->user->restrict('Admin.Maintenance.Delete');
 
         if ($this->input->get('delete')) {
-            $delete = pathinfo($this->security->sanitize_filename($this->input->get('delete')));
-            $file_path = ROOTPATH . "assets/downloads/" . $delete['filename'] . ".sql";
-
-            if ($delete['extension'] === 'sql' AND is_file($file_path)) {
-                unlink($file_path);
+            if ($result = $this->Maintenance_model->deleteBackupFile($this->input->get('delete'))) {
                 $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Database backup deleted '));
             }
 
@@ -262,13 +237,17 @@ class Maintenance extends Admin_Controller {
         $this->user->restrict('Admin.Maintenance.Manage');
 
         if ($this->input->post('migrate') AND is_numeric($this->input->post('migrate'))) {
-            $this->load->library('migration');
-            $migrate = (int) $this->migration->get_migration_number($this->input->post('migrate'));
-
-            if ($this->migration->version($migrate)) {
-                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Database migrated '));
+            if ($this->config->item('maintenance_mode') !== '1') {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_warning_maintenance'), 'migrate'));
             } else {
-                $this->alert->set('warning', sprintf($this->lang->line('alert_error'), $this->migration->error_string()));
+                $this->load->library('migration');
+                $migrate = (int) $this->migration->get_migration_number($this->input->post('migrate'));
+
+                if ($this->migration->version($migrate)) {
+                    $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Database migrated '));
+                } else {
+                    $this->alert->set('warning', sprintf($this->lang->line('alert_error'), $this->migration->error_string()));
+                }
             }
         }
 

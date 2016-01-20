@@ -40,6 +40,26 @@ class Maintenance_model extends TI_Model {
 		return $result;
 	}
 
+	public function getBackupFiles() {
+		$result = array();
+
+		$backup_files = glob(IGNITEPATH . 'migrations/backups/*.sql');
+		if (count($backup_files) > 0) {
+			foreach ($backup_files as $backup_file) {
+				$basename = basename($backup_file);
+				$result[] = array(
+					'filename' => $basename,
+					'size'     => filesize($backup_file),
+					'download' => site_url('maintenance/backup?download=' . $basename),
+					'restore'  => site_url('maintenance/backup?restore=' . $basename),
+					'delete'   => site_url('maintenance/backup?delete=' . $basename)
+				);
+			}
+		}
+
+		return $result;
+	}
+
 	public function browseTable($filter = array()) {
 		if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
 			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
@@ -98,7 +118,11 @@ class Maintenance_model extends TI_Model {
 
 			$back_up = $this->dbutil->backup($prefs);
 
-			if (file_put_contents(ROOTPATH . 'assets/downloads/' . $file_name . '.sql', $back_up, LOCK_EX)) {
+			if ( ! is_dir(IGNITEPATH . 'migrations/backups')) {
+				mkdir(IGNITEPATH . 'migrations/backups');
+			}
+
+			if (file_put_contents(IGNITEPATH . 'migrations/backups/' . $file_name . '.sql', $back_up, LOCK_EX)) {
 				return TRUE;
 			}
 		}
@@ -106,18 +130,47 @@ class Maintenance_model extends TI_Model {
 		return FALSE;
 	}
 
-	public function restoreDatabase($restore_path) {
-		if (strpos($restore_path, 'tastyigniter-') !== FALSE AND $content = file_get_contents($restore_path)) {
-			foreach (explode(";\n", $content) as $sql) {
-				$sql = trim($sql);
+	public function restoreDatabase($backup_file) {
+		$file = pathinfo($this->security->sanitize_filename($backup_file));
+		$file_path = IGNITEPATH . "migrations/backups/" . $file['filename'] . ".sql";
 
-				if ($sql) {
-					$this->db->query($sql);
+		if (isset($file['filename']) AND strpos($file_path, 'tastyigniter-') !== FALSE) {
+			if (is_file($file_path) AND $content = file_get_contents($file_path)) {
+				foreach (explode(";\n", $content) as $sql) {
+					$sql = trim($sql);
+
+					if ($sql) {
+						$this->db->query($sql);
+					}
 				}
+
+				$this->db->query("SET CHARACTER SET utf8");
+
+				return TRUE;
 			}
+		}
+	}
 
-			$this->db->query("SET CHARACTER SET utf8");
+	public function readBackupFile($backup_file) {
+		$file = pathinfo($this->security->sanitize_filename($backup_file));
+		$file_path = IGNITEPATH . "migrations/backups/" . $file['filename'] . ".sql";
 
+		if (isset($file['filename']) AND strpos($file_path, 'tastyigniter-') !== FALSE) {
+			if (is_file($file_path)) {
+				return array(
+					'filename' => $file['basename'],
+					'content' => file_get_contents($file_path),
+				);
+			}
+		}
+	}
+
+	public function deleteBackupFile($backup_file) {
+		$file = pathinfo($this->security->sanitize_filename($backup_file));
+		$file_path = IGNITEPATH . "migrations/backups/" . $file['filename'] . ".sql";
+
+		if ($file['extension'] === 'sql' AND is_file($file_path)) {
+			unlink($file_path);
 			return TRUE;
 		}
 	}
