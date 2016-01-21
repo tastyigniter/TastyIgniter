@@ -1,9 +1,15 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
-?><!DOCTYPE html>
+if (is_cli()) {
+	echo "\nDatabase error: ",
+	$heading,
+	"\n\n",
+	$message,
+	"\n\n";
+} else { ?><!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>404 Page Not Found</title>
+<title>Database Error</title>
 <style type="text/css">
 
 ::selection { background-color: #E13300; color: white; }
@@ -62,3 +68,4 @@ p {
 	</div>
 </body>
 </html>
+<?php } ?>
