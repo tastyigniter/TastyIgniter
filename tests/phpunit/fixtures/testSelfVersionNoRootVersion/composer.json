@@ -1,0 +1,11 @@
+{
+    "name": "foo/root",
+    "replace": {
+      "foo/bar": "~8.0"
+    },
+    "extra": {
+        "merge-plugin": {
+            "include": "composer.local.json"
+        }
+    }
+}

@@ -845,6 +845,49 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, count($extraInstalls));
     }
 
+    /**
+     * Test replace link with self.version as version constraint.
+     */
+    public function testSelfVersionNoRootVersion()
+    {
+        $that = $this;
+        $dir = $this->fixtureDir(__FUNCTION__);
+        $root = $this->rootFromJson("{$dir}/composer.json");
+
+        $root->setReplaces(Argument::type('array'))->will(
+            function ($args) use ($that) {
+                $replace = $args[0];
+                $that->assertEquals(3, count($replace));
+
+                $that->assertArrayHasKey('foo/bar', $replace);
+                $that->assertArrayHasKey('foo/baz', $replace);
+                $that->assertArrayHasKey('foo/xyzzy', $replace);
+
+                $that->assertTrue($replace['foo/bar'] instanceof Link);
+                $that->assertTrue($replace['foo/baz'] instanceof Link);
+                $that->assertTrue($replace['foo/xyzzy'] instanceof Link);
+
+                $that->assertEquals(
+                    '~8.0',
+                    $replace['foo/bar']->getPrettyConstraint()
+                );
+                $that->assertEquals(
+                    '~8.0',
+                    $replace['foo/baz']->getPrettyConstraint()
+                );
+                $that->assertEquals(
+                    '~1.0',
+                    $replace['foo/xyzzy']->getPrettyConstraint()
+                );
+            }
+        );
+
+        $root->getRequires()->shouldNotBeCalled();
+
+        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
+        $this->assertEquals(0, count($extraInstalls));
+    }
+
 
     /**
      * Given a root package with minimum-stability=beta
