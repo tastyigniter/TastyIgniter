@@ -1,0 +1,8 @@
+{
+    "require": {
+        "monolog/monolog": "dev-master#cb641a8"
+    },
+    "require-dev": {
+        "foo/baz": "dev-master#abc1234"
+    }
+}
