@@ -90,10 +90,10 @@
 			<div class="navbar-header">
 				<div class="navbar-brand">
 					<div class="navbar-logo">
-						<img class="navbar-logo" alt="<?php echo $system_name; ?>" title="<?php echo $system_name; ?>" src="<?php echo $site_logo; ?>"/>
+						<img class="logo-image" alt="<?php echo $system_name; ?>" title="<?php echo $system_name; ?>" src="<?php echo $site_logo; ?>"/>
 					</div>
 					<div class="navbar-sitename">
-						<a href="<?php echo site_url('dashboard'); ?>"><?php echo $site_name; ?></a>
+						<a class="logo-text" href="<?php echo site_url('dashboard'); ?>"><?php echo $site_name; ?></a>
 					</div>
 				</div>
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -165,8 +165,9 @@
 									<div class="col-xs-4 wrap-top">
 										<img class="img-rounded img-responsive" src="<?php echo base_url('views/themes/tastyigniter-blue/images/avatar_2x.png'); ?>" width="53px">
 									</div>
-									<div class="col-xs-8 wrap-none wrap-right">
-										<h4><?php echo $staff_name; ?></h4><span class="small"><i>(<?php echo $username; ?>)</i></span>
+									<div class="col-xs-8 wrap-none wrap-top wrap-right">
+										<span><strong><?php echo $staff_name; ?></strong></span><br>
+										<span class="small"><i>(<?php echo $username; ?>)</i></span>
 										<span class="small text-uppercase"><?php echo $staff_group; ?></span>
 										<span><?php echo $staff_location; ?></span>
 									</div>
@@ -178,6 +179,16 @@
 						</ul>
 					</li>
 				</ul>
+
+				<h1 class="navbar-heading">
+					<?php echo get_heading(); ?>
+
+					<?php if (!empty($context_help)) { ?>
+						<a class="btn btn-help" role="button" data-toggle="collapse" href="#context-help-wrap" title="<?php echo lang('text_help'); ?>">
+							<i class="fa fa-question-circle"></i>
+						</a>
+					<?php } ?>
+				</h1>
 
 				<div class="navbar-default sidebar" role="navigation">
 					<div class="sidebar-nav navbar-collapse">
@@ -198,20 +209,8 @@
                         $icon_list = get_icon_list();
                     ?>
 
-					<div class="page-header-title pull-left">
-                        <h1 class="">
-                            <?php echo get_heading(); ?>
-
-                            <?php if (!empty($context_help)) { ?>
-                                <a class="btn btn-help" role="button" data-toggle="collapse" href="#context-help-wrap" title="<?php echo lang('text_help'); ?>">
-                                    <i class="fa fa-question-circle"></i>
-                                </a>
-                            <?php } ?>
-                        </h1>
-					</div>
-
-                    <?php if (!empty($button_list) OR !empty($icon_list)) { ?>
-						<div class="page-header-action pull-right">
+                   <?php if (!empty($button_list) OR !empty($icon_list)) { ?>
+						<div class="page-header-action pull-left">
                             <?php if (!empty($icon_list)) { ?>
                                 <?php echo $icon_list; ?>
                             <?php } ?>

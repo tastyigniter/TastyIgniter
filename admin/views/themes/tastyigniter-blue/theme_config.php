@@ -50,6 +50,7 @@ $theme['nav_menu'] = array(
 		'child' => array(
 			'reviews' => array('class' => 'reviews', 'href' => site_url('reviews'), 'title' => lang('menu_review'), 'permission' => 'Admin.Reviews'),
 			'messages' => array('class' => 'messages', 'href' => site_url('messages'), 'title' => lang('menu_messages'), 'permission' => 'Admin.Messages'),
+			'banners' => array('class' => 'banners', 'href' => site_url('banners'), 'title' => lang('menu_banner'), 'permission' => 'Admin.Banners'),
 		)
 	),
 	'restaurant' => array(
@@ -92,7 +93,6 @@ $theme['nav_menu'] = array(
 			'pages' => array('class' => 'pages', 'href' => site_url('pages'), 'title' => lang('menu_page'), 'permission' => 'Site.Pages'),
 			'layouts' => array('class' => 'layouts', 'href' => site_url('layouts'), 'title' => lang('menu_layout'), 'permission' => 'Site.Layouts'),
 			'themes' => array('class' => 'themes', 'href' => site_url('themes'), 'title' => lang('menu_theme'), 'permission' => 'Site.Themes'),
-			'banners' => array('class' => 'banners', 'href' => site_url('banners'), 'title' => lang('menu_banner'), 'permission' => 'Admin.Banners'),
 			'mail_templates' => array('class' => 'mail_templates', 'href' => site_url('mail_templates'), 'title' => lang('menu_mail_template'), 'permission' => 'Admin.MailTemplates'),
 		)
 	),

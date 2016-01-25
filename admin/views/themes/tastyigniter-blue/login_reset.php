@@ -4,7 +4,7 @@
 		<div class="col-md-4 center-block float-none">
 			<div class="panel panel-default panel-login">
 				<div class="thumbnail">
-					<img src="<?php echo root_url('assets/images/admin-logo.png'); ?>" width="75%">
+					<img src="<?php echo base_url('views/themes/tastyigniter-blue/images/tastyigniter-logo.png'); ?>" width="64px">
 				</div>
 				<div class="panel-heading">
 					<h3 class="panel-title"><?php echo lang('text_reset_password_title'); ?></h3>

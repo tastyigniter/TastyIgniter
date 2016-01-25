@@ -27,7 +27,7 @@
 <body>
 	<div id="invoice-container" class="container">
 		<div class="row">
-			<div class="col-xs-8 col-xs-offset-2">
+			<div class="col-xs-12">
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="invoice-title">

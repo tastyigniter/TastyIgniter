@@ -182,13 +182,13 @@
 								<div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_status_history'); ?></h3></div>
 								<div class="panel-body">
 									<div class="table-responsive">
-										<table height="auto" class="table table-striped table-border" id="history">
+										<table height="auto" class="table table-striped table-border table-no-spacing" id="history">
 											<thead>
 											<tr>
 												<th><?php echo lang('column_time_date'); ?></th>
-												<th><?php echo lang('column_status'); ?></th>
 												<th><?php echo lang('column_staff'); ?></th>
 												<th><?php echo lang('column_assignee'); ?></th>
+												<th><?php echo lang('column_status'); ?></th>
 												<th class="left" width="35%"><?php echo lang('column_comment'); ?></th>
 												<th class="text-center"><?php echo lang('column_notify'); ?></th>
 											</tr>
@@ -198,7 +198,6 @@
 												<?php foreach ($status_history as $history) { ?>
 													<tr>
 														<td><?php echo $history['date_time']; ?></td>
-														<td><span class="label label-default" style="background-color: <?php echo $history['status_color']; ?>;"><?php echo $history['status_name']; ?></span></td>
 														<td><?php echo $history['staff_name']; ?></td>
 														<td>
 															<?php foreach ($staffs as $staff) { ?>
@@ -207,6 +206,7 @@
 																<?php } ?>
 															<?php } ?>
 														</td>
+														<td><span class="label label-default" style="background-color: <?php echo $history['status_color']; ?>;"><?php echo $history['status_name']; ?></span></td>
 														<td class="left"><?php echo $history['comment']; ?></td>
 														<td class="text-center"><?php echo ($history['notify'] === '1') ? $this->lang->line('text_yes') : $this->lang->line('text_no'); ?></td>
 													</tr>
