@@ -107,12 +107,6 @@
 			<?php if ($islogged) { ?>
  				<ul class="nav navbar-top-links navbar-right">
 					<li class="dropdown">
-						<a class="updates" title="<?php echo lang('menu_updates'); ?>" href="<?php echo site_url('updates'); ?>">
-							<i class="fa fa-refresh"></i>
-							<span class="label label-danger"></span>
-						</a>
-					</li>
-					<li class="dropdown">
 						<a class="front-end" title="<?php echo lang('menu_storefront'); ?>" href="<?php echo root_url(); ?>" target="_blank">
 							<i class="fa fa-home"></i>
 						</a>
