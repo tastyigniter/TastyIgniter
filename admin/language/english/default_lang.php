@@ -40,8 +40,8 @@ $lang['alert_error_nothing'] 		        = 'An error occurred, nothing %s.';
 $lang['alert_error_try_again'] 		        = 'An error occurred, please try again.';
 $lang['alert_warning_confirm'] 		        = 'This cannot be undone! Are you sure you want to do this?';
 
-$lang['text_message_count'] 		        = '<b>You have %s messages</b>';
-$lang['text_activity_count'] 		        = '<b>There are %s unread activities</b>';
+$lang['text_message_count'] 		        = 'You have %s messages';
+$lang['text_activity_count'] 		        = 'Recent activities';
 $lang['text_see_all_message'] 		        = 'See all messages';
 $lang['text_see_all_activity'] 		        = 'See all activities';
 $lang['text_see_all_customers'] 		    = 'See all customers';
@@ -52,6 +52,8 @@ $lang['text_location'] 		                = 'Location';
 $lang['text_edit_details'] 		            = 'Edit Details';
 $lang['text_logout'] 		                = 'Logout';
 
+$lang['menu_updates'] 		                = 'Updates';
+$lang['menu_storefront'] 		            = 'Storefront';
 $lang['menu_page'] 		                    = 'Pages';
 $lang['menu_banner'] 		                = 'Banners';
 $lang['menu_layout'] 		                = 'Layouts';
