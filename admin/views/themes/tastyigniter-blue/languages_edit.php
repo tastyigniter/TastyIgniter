@@ -6,13 +6,12 @@
                 <?php if (!empty($lang_file)) { ?>
                     <li><a href="#general" data-toggle="tab"><?php echo lang('text_tab_general'); ?></a></li>
                     <li><a href="#files" data-toggle="tab"><?php echo lang('text_tab_files'); ?></a></li>
-                    <li class="active"><a class="pull-left" href="#edit-lang-values" data-toggle="tab"><?php echo lang('text_tab_edit_file'); ?>: <?php echo $lang_file; ?></a><a class="pull-right" href="<?php echo $close_edit_link; ?>"><i class="fa fa-times-circle"></i></i></a></li>
+                    <li class="active"><a class="pull-left" href="#edit-lang-values" data-toggle="tab"><?php echo lang('text_tab_edit_file'); ?>: <?php echo $lang_file; ?></a><a class="pull-right" href="<?php echo $close_edit_link; ?>"><i class="fa fa-times-circle text-danger"></i></i></a></li>
                 <?php } else if (!empty($lang_files)) { ?>
                     <li><a href="#general" data-toggle="tab"><?php echo lang('text_tab_general'); ?></a></li>
                     <li class="active"><a href="#files" data-toggle="tab"><?php echo lang('text_tab_files'); ?></a></li>
                 <?php } else { ?>
                     <li class="active"><a href="#general" data-toggle="tab"><?php echo lang('text_tab_general'); ?></a></li>
-<!--                    <li><a href="#files" data-toggle="tab">--><?php //echo lang('text_tab_files'); ?><!--</a></li>-->
                 <?php } ?>
             </ul>
         </div>
@@ -149,16 +148,16 @@
                         <table class="table table-striped table-border table-no-spacing">
                             <thead>
                                 <tr>
-                                    <th class="text-right" width="40%"><?php echo lang('column_language'); ?></th>
-                                    <th width="60%"><?php echo lang('column_replace'); ?></th>
+                                    <th class="text-right" width="30%"><?php echo lang('column_variable'); ?></th>
+                                    <th width="70%"><?php echo lang('column_language'); ?></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php if (!empty($lang_file_values)) { ?>
                                     <?php foreach ($lang_file_values as $key => $value) { ?>
                                         <tr>
-                                            <td class="text-right"><?php echo htmlspecialchars($value); ?></td>
-                                            <td><input type="text" class="form-control" name="lang[<?php echo $key; ?>]" value="<?php echo set_value("lang[{$key}]", $value); ?>" /></td>
+                                            <td class="text-right"><?php echo $key; ?></td>
+                                            <td><textarea class="form-control" name="lang[<?php echo $key; ?>]"><?php echo set_value("lang[{$key}]", $value); ?></textarea></td>
                                         </tr>
                                     <?php } ?>
                                 <?php } ?>

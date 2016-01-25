@@ -146,6 +146,17 @@ class Languages_model extends TI_Model {
 		if (is_numeric($language_id)) $language_id = array($language_id);
 
 		if ( ! empty($language_id) AND ctype_digit(implode('', $language_id))) {
+			$this->db->from('languages');
+			$this->db->where('can_delete', '0');
+			$this->db->where_in('language_id', $language_id);
+			$query = $this->db->get();
+
+			if ($query->num_rows() > 0) {
+				foreach ($query->result_array() as $row) {
+					delete_language($row['idiom']);
+				}
+			}
+
 			$this->db->where('can_delete', '0');
 			$this->db->where_in('language_id', $language_id);
 			$this->db->delete('languages');

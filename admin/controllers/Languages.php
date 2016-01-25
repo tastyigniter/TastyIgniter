@@ -183,7 +183,6 @@ class Languages extends Admin_Controller {
             }
         }
 
-        $this->load->model('Languages_model');
         $data['languages'] = array();
         $results = $this->Languages_model->getLanguages();
         foreach ($results as $result) {
@@ -205,13 +204,13 @@ class Languages extends Admin_Controller {
                 $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Language '.$save_type));
 
                 if ($save_type === 'added' AND $this->input->post('clone_language') === '1') {
-                    if (!clone_language($this->input->post('idiom'), $this->input->post('language_to_clone'))) {
+                    if ( ! clone_language($this->input->post('idiom'), $this->input->post('language_to_clone'))) {
                         $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_cloned')));
                     }
                 }
 
                 if ($save_type === 'updated' AND $this->input->get('file')) {
-                    if (!save_lang_file($this->input->get('file'), $this->input->post('idiom'), $this->input->get('location'), $this->input->post('lang'))) {
+                    if ( ! save_lang_file($this->input->get('file'), $this->input->post('idiom'), $this->input->get('location'), $this->input->post('lang'))) {
                         $this->alert->set('warning', sprintf($this->lang->line('alert_warning_file'), $save_type));
                     }
                 }

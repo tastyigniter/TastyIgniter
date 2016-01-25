@@ -17,8 +17,8 @@ $lang['column_name'] 		            = 'Name';
 $lang['column_code'] 		            = 'Code';
 $lang['column_image'] 		            = 'Icon';
 $lang['column_status'] 		            = 'Status';
-$lang['column_language'] 		        = 'Language Line';
-$lang['column_replace'] 		        = 'Replace Line';
+$lang['column_variable'] 		        = 'Language variable';
+$lang['column_language'] 		        = 'Language translation';
 
 $lang['label_name'] 		            = 'Name';
 $lang['label_code'] 		            = 'Language Code';

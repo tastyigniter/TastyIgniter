@@ -1,36 +1,54 @@
-<?php defined('BASEPATH') or exit('No direct script access allowed');
+<?php
+/**
+ * TastyIgniter
+ *
+ * An open source online ordering, reservation and management system for restaurants.
+ *
+ * @package   TastyIgniter
+ * @author    SamPoyigi
+ * @copyright TastyIgniter
+ * @link      http://tastyigniter.com
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 1.0
+ */
+defined('BASEPATH') or exit('No direct script access allowed');
 
+/**
+ * TastyIgniter Lang Class
+ *
+ * @category       Libraries
+ * @package        TastyIgniter\Core\TI_Lang.php
+ * @link           http://docs.tastyigniter.com
+ */
 class TI_Lang extends MX_Lang {
 
-    protected $directory = '';
+    protected $languages = array();
 
     /**
      * Load a language file
      *
      * @param    mixed $langfile Language file name
-     * @param string $lang
+     * @param    string $lang
      * @param    bool $return Whether to return the loaded array of translations
      * @param    bool $add_suffix Whether to add suffix to $langfile
      * @param    string $alt_path Alternative path to look for the language file
      *
      * @param string $_module
      * @return string[]|void Array containing translations, if $return is set to TRUE
-     * @internal param lang $string Language name (english, etc.)
      */
-
     public function load($langfile = array(), $lang = '', $return = FALSE, $add_suffix = TRUE, $alt_path = '', $_module = '') {
-        $this->CI =& get_instance();
+	    if (is_array($langfile))
+	    {
+		    foreach($langfile as $_lang) $this->load($_lang);
+		    return $this->language;
+	    }
 
-        $this->CI->load->library('user_agent');
-        $http_lang = $this->CI->agent->languages();
+	    if (in_array($langfile.'_lang'.EXT, $this->is_loaded, TRUE))
+		    return $this->language;
 
-        if (APPDIR === MAINDIR AND $lang === '') {
-            if ( ! $this->CI->agent->accept_lang($http_lang[0]) AND ! ($lang = $this->getLangDirectory($http_lang[0]))) {
-                $lang = $this->getLangDirectory($this->CI->config->item('language_id'));
-            }
-        }
+	    $lang = $this->defaultLang($langfile, $lang);
 
-        parent::load($langfile, $lang, $return, $add_suffix, $alt_path, $_module);
+	    return parent::load($langfile, $lang, $return, $add_suffix, $alt_path, $_module);
     }
 
     // --------------------------------------------------------------------
@@ -56,7 +74,7 @@ class TI_Lang extends MX_Lang {
         }
 
         // Because killer robots like unicorns!
-        if ($value === FALSE && $log_errors === TRUE) {
+        if ($value === FALSE AND $log_errors === TRUE) {
             log_message('error', 'Could not find the language line "' . $line . '"');
         }
 
@@ -67,29 +85,83 @@ class TI_Lang extends MX_Lang {
         return $value;
     }
 
-    public function getLangDirectory($language) {
-        if ($this->directory === '' AND $language !== '' AND isset($this->CI->db)) {
-            $this->CI->db->from('languages');
+	// --------------------------------------------------------------------
 
-            if (is_numeric($language)) {
-                $this->CI->db->where('language_id', $language);
-            } else {
-                $this->CI->db->where('code', $language);
-            }
+	/**
+	 * Default Language
+	 *
+	 * Detects the browser language or uses the admin settings language as default language
+	 *
+	 * @param       string $langfile
+	 * @param       string $lang
+	 *
+	 * @return string
+	 */
+	public function defaultLang($langfile, $lang = '') {
+		if (empty($langfile)) return $lang;
 
-            $this->CI->db->where('status', '1');
-            $query = $this->CI->db->get();
+		$this->CI =& get_instance();
 
-            if ($query->num_rows() > 0) {
-                $row = $query->row_array();
-                $this->directory = $row['idiom'];
-            }
+		// Detect the browser language
+		if ($this->CI->config->item('detect_language') === '1') {
+			$this->CI->load->library('user_agent');
+
+			$http_lang = $this->CI->agent->languages();
+			if ($this->CI->agent->accept_lang($http_lang[0])) {
+				// Check the language file exist, else use the config default language
+				if ($idiom = $this->getIdiom($http_lang[0]) AND find_lang_file($langfile, $idiom)) {
+					return $idiom;
+				}
+			}
+		}
+
+		// Use admin settings
+		$default_lang = APPDIR === ADMINDIR ? $this->CI->config->item('admin_language_id') : $this->CI->config->item('language_id');
+
+		$idiom = (is_numeric($default_lang)) ? $this->getIdiom($default_lang) : $default_lang;
+
+		if (find_lang_file($langfile, $idiom)) {
+			return $idiom;
+		}
+
+		return $lang;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Language Idiom
+	 *
+	 * Fetches the idiom of the browser's language from the database.
+	 *
+	 * @param   string $language
+	 *
+	 * @return  string
+	 */
+	protected function getIdiom($language) {
+		if (empty($this->languages) AND isset($this->CI->db)) {
+			$this->CI->db->from('languages');
+
+			$this->CI->db->where('status', '1');
+			$query = $this->CI->db->get();
+
+			if ($query->num_rows() > 0) {
+				$this->languages = $query->result_array();
+			}
+		}
+
+		if ($language !== '' AND !empty($this->languages)) {
+			foreach ($this->languages as $row) {
+				if (is_numeric($language) AND $row['language_id'] === $language) {
+					return $row['idiom'];
+				} else if ($row['code'] === $language) {
+					return $row['idiom'];
+				}
+			}
         }
-
-        return $this->directory;
     }
 
-    // --------------------------------------------------------------------
+	// --------------------------------------------------------------------
 }
 
 /* End of file TI_Loader.php */
