@@ -157,11 +157,11 @@ class Media_manager {
         $oldumask = umask(0);
 
         if ($file_path AND !file_exists($file_path)) {
-            mkdir($file_path, 0777, TRUE);
+            mkdir($file_path, DIR_WRITE_MODE, TRUE);
         }
 
         if ($thumb_path AND !file_exists($thumb_path)) {
-            mkdir($thumb_path, 0777, TRUE);
+            mkdir($thumb_path, DIR_WRITE_MODE, TRUE);
         }
 
         umask($oldumask);

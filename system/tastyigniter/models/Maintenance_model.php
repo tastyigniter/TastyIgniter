@@ -119,7 +119,7 @@ class Maintenance_model extends TI_Model {
 			$back_up = $this->dbutil->backup($prefs);
 
 			if ( ! is_dir(IGNITEPATH . 'migrations/backups')) {
-				mkdir(IGNITEPATH . 'migrations/backups');
+				mkdir(IGNITEPATH . 'migrations/backups', DIR_WRITE_MODE);
 			}
 
 			if (file_put_contents(IGNITEPATH . 'migrations/backups/' . $file_name . '.sql', $back_up, LOCK_EX)) {

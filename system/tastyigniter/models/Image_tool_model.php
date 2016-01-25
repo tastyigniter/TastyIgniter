@@ -83,7 +83,7 @@ class Image_tool_model extends TI_Model {
 		$oldumask = umask(0);
 
 		if ($thumb_path AND ! file_exists($thumb_path)) {
-			mkdir($thumb_path, 0777, TRUE);
+			mkdir($thumb_path, DIR_WRITE_MODE, TRUE);
 		}
 
 		umask($oldumask);
