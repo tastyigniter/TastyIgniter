@@ -12,24 +12,26 @@
 				<?php } ?>
 			</div>
 
-			<div class="location-control text-center text-muted">
-				<div id="my-postcode" class="wrap-bottom" style="display:<?php echo (empty($alert_no_postcode)) ? 'block' : 'none'; ?>">
-					<div class="btn-group btn-group-md order-type" data-toggle="buttons">
-                        <?php if ($has_delivery) { ?>
-                        <label class="btn <?php echo ($order_type === '1') ? 'btn-primary active' : 'btn-default'; ?>" data-btn="btn-primary">
-                            <input type="radio" name="order_type" value="1" <?php echo ($order_type === '1') ? 'checked="checked"' : ''; ?>>&nbsp;&nbsp;<?php echo lang('text_delivery'); ?>
-                            <span class="small center-block"><?php echo $delivery_time.' '.lang('text_min'); ?></span>
-                        </label>
-                        <?php } ?>
-                        <?php if ($has_collection) { ?>
-                        <label class="btn <?php echo ($order_type === '2') ? 'btn-primary active' : 'btn-default'; ?>" data-btn="btn-primary">
-                            <input type="radio" name="order_type" value="2" <?php echo ($order_type === '2') ? 'checked="checked"' : ''; ?>>&nbsp;&nbsp;<?php echo lang('text_collection'); ?>
-                            <span class="small center-block"><?php echo $collection_time.' '.lang('text_min'); ?></span>
-                        </label>
-                        <?php } ?>
-                    </div>
+			<?php if ($has_delivery OR $has_collection) { ?>
+				<div class="location-control text-center text-muted">
+					<div id="my-postcode" class="wrap-bottom" style="display:<?php echo (empty($alert_no_postcode)) ? 'block' : 'none'; ?>">
+						<div class="btn-group btn-group-md order-type" data-toggle="buttons">
+	                        <?php if ($has_delivery) { ?>
+		                        <label class="btn <?php echo ($order_type === '1') ? 'btn-primary active' : 'btn-default'; ?>" data-btn="btn-primary">
+		                            <input type="radio" name="order_type" value="1" <?php echo ($order_type === '1') ? 'checked="checked"' : ''; ?>>&nbsp;&nbsp;<?php echo lang('text_delivery'); ?>
+		                            <span class="small center-block"><?php echo $delivery_time.' '.lang('text_min'); ?></span>
+		                        </label>
+	                        <?php } ?>
+	                        <?php if ($has_collection) { ?>
+		                        <label class="btn <?php echo ($order_type === '2') ? 'btn-primary active' : 'btn-default'; ?>" data-btn="btn-primary">
+		                            <input type="radio" name="order_type" value="2" <?php echo ($order_type === '2') ? 'checked="checked"' : ''; ?>>&nbsp;&nbsp;<?php echo lang('text_collection'); ?>
+		                            <span class="small center-block"><?php echo $collection_time.' '.lang('text_min'); ?></span>
+		                        </label>
+	                        <?php } ?>
+	                    </div>
+					</div>
 				</div>
-			</div>
+			<?php } ?>
 
 			<div id="cart-info">
 				<?php if ($cart_items) {?>
