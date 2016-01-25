@@ -27,9 +27,9 @@ class TI_Config extends MX_Config {
 
     public $_config_paths =	array(IGNITEPATH, APPPATH);
 
-    private $settings =	array();
+	// -------------------------------------------------------------
 
-    public function site_url($uri = '', $protocol = NULL)
+	public function site_url($uri = '', $protocol = NULL)
 	{
         $base_url = $this->slash_item('base_url');
 
@@ -76,7 +76,9 @@ class TI_Config extends MX_Config {
 		return $base_url.$this->item('index_page').$uri;
 	}
 
-    /**
+	// -------------------------------------------------------------
+
+	/**
      * Root URL
      *
      * Returns root_url [. uri_string]
@@ -101,30 +103,6 @@ class TI_Config extends MX_Config {
 
     // -------------------------------------------------------------
 
-    public function load_db_config() {
-        $CI =& get_instance();
-
-        // Make sure the database is connected and settings table exists
-        if ($CI->db->conn_id !== FALSE AND $CI->db->table_exists('settings')) {
-            $CI->load->model('Settings_model');
-
-            ! empty($this->settings) OR $this->settings = $CI->Settings_model->getAll();
-
-            if ( ! empty($this->settings)) {
-                foreach ($this->settings as $setting) {
-                    if ( ! empty($setting['serialized'])) {
-                        $this->set_item($setting['item'], unserialize($setting['value']));
-                    } else {
-                        $this->set_item($setting['item'], $setting['value']);
-                    }
-                }
-            }
-
-            if (isset($this->config['timezone'])) {
-                date_default_timezone_set($this->config['timezone']);
-            }
-        }
-    }
 }
 
 /* End of file TI_Config.php */

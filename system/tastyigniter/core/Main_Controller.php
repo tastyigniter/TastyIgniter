@@ -32,8 +32,6 @@ class Main_Controller extends Base_Controller {
 
 		log_message('info', 'Main Controller Class Initialized');
 
-        $this->load->library('template');
-
         // Load permalink
         $this->load->library('permalink');
 
@@ -44,11 +42,6 @@ class Main_Controller extends Base_Controller {
         $this->load->model('Pages_model');
 
 		$this->load->library('location');
-
-        // Set default theme
-        if ($default_theme = $this->config->item(MAINDIR, 'default_themes')) {
-            $this->template->setTheme($default_theme);
-        }
     }
 }
 

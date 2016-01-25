@@ -33,6 +33,23 @@ class TI_Loader extends MX_Loader {
 
     protected $_ci_helper_paths =	array(IGNITEPATH, BASEPATH);
 
+    protected $_db_config_loaded =	FALSE;
+
+	/**
+     * Initializer
+     *
+     * @param null $controller
+     */
+    public function initialize($controller = NULL)
+    {
+        // Load system configuration from database
+        $this->_load_db_config();
+
+        parent::initialize($controller);
+    }
+
+    // --------------------------------------------------------------------
+
     /**
      * Remove later
      * @param $class
@@ -124,6 +141,47 @@ class TI_Loader extends MX_Loader {
         if (isset($autoload['model']))
         {
             $this->model($autoload['model']);
+        }
+    }
+
+    // --------------------------------------------------------------------
+
+	/**
+     * Load config from database
+     *
+     * Fetches the config values from the database and adds them to config array
+     *
+     */
+    protected function _load_db_config() {
+        if ($this->_db_config_loaded === TRUE) {
+            return;
+        }
+
+        $this->database();
+
+        // Make sure the database is connected and settings table exists
+        if ($this->db->conn_id !== FALSE AND $this->db->table_exists('settings')) {
+            $this->db->from('settings');
+
+            $query = $this->db->get();
+
+            if ($query->num_rows() > 0) {
+                foreach ($query->result_array() as $setting) {
+                    if ( ! empty($setting['serialized'])) {
+                        $this->config->set_item($setting['item'], unserialize($setting['value']));
+                    } else {
+                        $this->config->set_item($setting['item'], $setting['value']);
+                    }
+                }
+
+                if (isset($this->config->item['timezone'])) {
+                    date_default_timezone_set($this->config->item['timezone']);
+                }
+
+                $this->_db_config_loaded = TRUE;
+
+                log_message('info', 'Database Config Loaded');
+            }
         }
     }
 }

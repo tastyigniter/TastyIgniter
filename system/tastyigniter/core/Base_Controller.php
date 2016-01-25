@@ -37,22 +37,17 @@ class Base_Controller extends MX_Controller {
 
         $this->load->library('alert');
 
-        $this->load->database();
-
-        // Load system configuration from database
-        $this->config->load_db_config();
-
         // Load installer library and database config items
         $this->load->library('installer');
 
         // If 'config/updated.txt' exists, system needs upgrade
         if (is_file(IGNITEPATH . 'config/updated.txt')) {
-            $this->installer->upgrade();
+            if ($this->installer->upgrade()) redirect(root_url(ADMINDIR.'/dashboard'));
         }
 
         // Redirect to setup if app requires setup
         if (($installed = $this->installer->isInstalled()) !== TRUE AND APPDIR !== 'setup') {
-            redirect(root_url('setup/requirements'));
+            redirect(root_url('setup'));
         }
 
         // If database is connected, then app is ready
