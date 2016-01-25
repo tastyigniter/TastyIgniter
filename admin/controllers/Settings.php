@@ -60,9 +60,16 @@ class Settings extends Admin_Controller {
             'address_1' 	=> (isset($main_address['address_1'])) ? $main_address['address_1'] : '',
             'address_2' 	=> (isset($main_address['address_2'])) ? $main_address['address_2'] : '',
             'city' 			=> (isset($main_address['city'])) ? $main_address['city'] : '',
+            'state' 		=> (isset($main_address['state'])) ? $main_address['state'] : '',
             'postcode' 		=> (isset($main_address['postcode'])) ? $main_address['postcode'] : '',
-            'country_id' 	=> (isset($main_address['country_id'])) ? $main_address['country_id'] : ''
+            'country_id' 	=> (isset($main_address['country_id'])) ? $main_address['country_id'] : '',
+            'location_lat' 	=> (isset($main_address['location_lat'])) ? $main_address['location_lat'] : '',
+            'location_lng' 	=> (isset($main_address['location_lng'])) ? $main_address['location_lng'] : '',
         );
+
+		if (!isset($data['auto_lat_lng'])) {
+			$data['auto_lat_lng'] = '1';
+		}
 
         if (is_array($data['image_manager'])) {
             $image_manager = $data['image_manager'];
@@ -157,6 +164,7 @@ class Settings extends Admin_Controller {
 			$data['languages'][] = array(
 				'language_id'	=>	$result['language_id'],
 				'name'			=>	$result['name'],
+				'idiom'			=>	$result['idiom'],
 			);
 		}
 
@@ -256,82 +264,84 @@ class Settings extends Admin_Controller {
 
 	private function _updateSettings() {
         if ($this->validateForm() === TRUE) {
-			$update = array(
-                'site_name' 				=> $this->input->post('site_name'),
-				'site_email' 				=> $this->input->post('site_email'),
-				'site_logo' 				=> $this->input->post('site_logo'),
-				'country_id' 				=> $this->input->post('country_id'),
-				'timezone' 					=> $this->input->post('timezone'),
-				'date_format' 				=> $this->input->post('date_format'),
-				'time_format' 				=> $this->input->post('time_format'),
-				'currency_id' 				=> $this->input->post('currency_id'),
-				'language_id' 				=> $this->input->post('language_id'),
-				'customer_group_id' 		=> $this->input->post('customer_group_id'),
-				'page_limit' 				=> $this->input->post('page_limit'),
-				'meta_description' 			=> $this->input->post('meta_description'),
-				'meta_keywords' 			=> $this->input->post('meta_keywords'),
-				'menus_page_limit' 			=> $this->input->post('menus_page_limit'),
-				'show_menu_images' 			=> $this->input->post('show_menu_images'),
-				'menu_images_h' 			=> $this->input->post('menu_images_h'),
-				'menu_images_w' 			=> $this->input->post('menu_images_w'),
-				'special_category_id' 		=> $this->input->post('special_category_id'),
-				'tax_mode' 		            => $this->input->post('tax_mode'),
-				'tax_title' 		        => $this->input->post('tax_title'),
-				'tax_percentage' 		    => $this->input->post('tax_percentage'),
-				'tax_menu_price' 		    => $this->input->post('tax_menu_price'),
-				'tax_delivery_charge' 		=> $this->input->post('tax_delivery_charge'),
-				'stock_checkout' 		    => $this->input->post('stock_checkout'),
-				'show_stock_warning' 		=> $this->input->post('show_stock_warning'),
-				'registration_terms' 		=> $this->input->post('registration_terms'),
-				'checkout_terms' 			=> $this->input->post('checkout_terms'),
-				'maps_api_key'				=> $this->input->post('maps_api_key'),
-				'distance_unit'				=> $this->input->post('distance_unit'),
-				'future_orders' 			=> $this->input->post('future_orders'),
-				'location_order'			=> $this->input->post('location_order'),
-				'allow_reviews'			    => $this->input->post('allow_reviews'),
-				'approve_reviews'			=> $this->input->post('approve_reviews'),
-				'default_order_status'		=> $this->input->post('default_order_status'),
-				'processing_order_status'	=> $this->input->post('processing_order_status'),
-				'completed_order_status'	=> $this->input->post('completed_order_status'),
-				'canceled_order_status'		=> $this->input->post('canceled_order_status'),
-				'auto_invoicing'		    => $this->input->post('auto_invoicing'),
-				'invoice_prefix'		    => $this->input->post('invoice_prefix'),
-				'guest_order'				=> $this->input->post('guest_order'),
-				'delivery_time'				=> $this->input->post('delivery_time'),
-				'collection_time'			=> $this->input->post('collection_time'),
-				'reservation_mode'			=> $this->input->post('reservation_mode'),
-				'default_reservation_status'	=> $this->input->post('default_reservation_status'),
-				'confirmed_reservation_status'	=> $this->input->post('confirmed_reservation_status'),
-				'canceled_reservation_status'	=> $this->input->post('canceled_reservation_status'),
-				'reservation_time_interval'		=> $this->input->post('reservation_time_interval'),
-				'reservation_stay_time'			=> $this->input->post('reservation_stay_time'),
-				'themes_allowed_img'		=> $this->input->post('themes_allowed_img'),
-				'themes_allowed_file'		=> $this->input->post('themes_allowed_file'),
-				'themes_hidden_files'		=> $this->input->post('themes_hidden_files'),
-				'themes_hidden_folders'		=> $this->input->post('themes_hidden_folders'),
-				'image_manager'				=> $this->input->post('image_manager'),
-                'registration_email'		=> $this->input->post('registration_email'),
-                'order_email'		        => $this->input->post('order_email'),
-                'reservation_email'	        => $this->input->post('reservation_email'),
-                'protocol'	 				=> strtolower($this->input->post('protocol')),
-				'smtp_host' 				=> $this->input->post('smtp_host'),
-				'smtp_port' 				=> $this->input->post('smtp_port'),
-				'smtp_user' 				=> $this->input->post('smtp_user'),
-				'smtp_pass' 				=> $this->input->post('smtp_pass'),
-				'customer_online_time_out' 	=> $this->input->post('customer_online_time_out'),
-				'customer_online_archive_time_out' => $this->input->post('customer_online_archive_time_out'),
-				'permalink' 				=> $this->input->post('permalink'),
-				'maintenance_mode' 			=> $this->input->post('maintenance_mode'),
-				'maintenance_message' 		=> $this->input->post('maintenance_message'),
-				'cache_mode' 				=> $this->input->post('cache_mode'),
-				'cache_time' 				=> $this->input->post('cache_time')
-			);
+	        if ($this->input->post('main_address') AND is_array($this->input->post('main_address'))) {
+		        $this->load->model('Locations_model');
+		        $this->Locations_model->updateDefault($this->input->post('main_address'));
+	        }
 
-
-			if ($this->input->post('main_address') AND is_array($this->input->post('main_address'))) {
-				$this->load->model('Locations_model');
-				$this->Locations_model->updateDefault($this->input->post('main_address'));
-			}
+	        $update = array(
+		        'site_name'                        => $this->input->post('site_name'),
+		        'site_email'                       => $this->input->post('site_email'),
+		        'site_logo'                        => $this->input->post('site_logo'),
+		        'country_id'                       => $this->input->post('main_address[country_id]'),
+		        'timezone'                         => $this->input->post('timezone'),
+		        'date_format'                      => $this->input->post('date_format'),
+		        'time_format'                      => $this->input->post('time_format'),
+		        'currency_id'                      => $this->input->post('currency_id'),
+		        'detect_language'                  => $this->input->post('detect_language'),
+		        'language_id'                      => $this->input->post('language_id'),
+		        'admin_language_id'                => $this->input->post('admin_language_id'),
+		        'customer_group_id'                => $this->input->post('customer_group_id'),
+		        'page_limit'                       => $this->input->post('page_limit'),
+		        'meta_description'                 => $this->input->post('meta_description'),
+		        'meta_keywords'                    => $this->input->post('meta_keywords'),
+		        'menus_page_limit'                 => $this->input->post('menus_page_limit'),
+		        'show_menu_images'                 => $this->input->post('show_menu_images'),
+		        'menu_images_h'                    => $this->input->post('menu_images_h'),
+		        'menu_images_w'                    => $this->input->post('menu_images_w'),
+		        'special_category_id'              => $this->input->post('special_category_id'),
+		        'tax_mode'                         => $this->input->post('tax_mode'),
+		        'tax_title'                        => $this->input->post('tax_title'),
+		        'tax_percentage'                   => $this->input->post('tax_percentage'),
+		        'tax_menu_price'                   => $this->input->post('tax_menu_price'),
+		        'tax_delivery_charge'              => $this->input->post('tax_delivery_charge'),
+		        'stock_checkout'                   => $this->input->post('stock_checkout'),
+		        'show_stock_warning'               => $this->input->post('show_stock_warning'),
+		        'registration_terms'               => $this->input->post('registration_terms'),
+		        'checkout_terms'                   => $this->input->post('checkout_terms'),
+		        'auto_lat_lng'                     => $this->input->post('auto_lat_lng'),
+		        'maps_api_key'                     => $this->input->post('maps_api_key'),
+		        'distance_unit'                    => $this->input->post('distance_unit'),
+		        'future_orders'                    => $this->input->post('future_orders'),
+		        'location_order'                   => $this->input->post('location_order'),
+		        'allow_reviews'                    => $this->input->post('allow_reviews'),
+		        'approve_reviews'                  => $this->input->post('approve_reviews'),
+		        'default_order_status'             => $this->input->post('default_order_status'),
+		        'processing_order_status'          => $this->input->post('processing_order_status'),
+		        'completed_order_status'           => $this->input->post('completed_order_status'),
+		        'canceled_order_status'            => $this->input->post('canceled_order_status'),
+		        'auto_invoicing'                   => $this->input->post('auto_invoicing'),
+		        'invoice_prefix'                   => $this->input->post('invoice_prefix'),
+		        'guest_order'                      => $this->input->post('guest_order'),
+		        'delivery_time'                    => $this->input->post('delivery_time'),
+		        'collection_time'                  => $this->input->post('collection_time'),
+		        'reservation_mode'                 => $this->input->post('reservation_mode'),
+		        'default_reservation_status'       => $this->input->post('default_reservation_status'),
+		        'confirmed_reservation_status'     => $this->input->post('confirmed_reservation_status'),
+		        'canceled_reservation_status'      => $this->input->post('canceled_reservation_status'),
+		        'reservation_time_interval'        => $this->input->post('reservation_time_interval'),
+		        'reservation_stay_time'            => $this->input->post('reservation_stay_time'),
+		        'themes_allowed_img'               => $this->input->post('themes_allowed_img'),
+		        'themes_allowed_file'              => $this->input->post('themes_allowed_file'),
+		        'themes_hidden_files'              => $this->input->post('themes_hidden_files'),
+		        'themes_hidden_folders'            => $this->input->post('themes_hidden_folders'),
+		        'image_manager'                    => $this->input->post('image_manager'),
+		        'registration_email'               => $this->input->post('registration_email'),
+		        'order_email'                      => $this->input->post('order_email'),
+		        'reservation_email'                => $this->input->post('reservation_email'),
+		        'protocol'                         => strtolower($this->input->post('protocol')),
+		        'smtp_host'                        => $this->input->post('smtp_host'),
+		        'smtp_port'                        => $this->input->post('smtp_port'),
+		        'smtp_user'                        => $this->input->post('smtp_user'),
+		        'smtp_pass'                        => $this->input->post('smtp_pass'),
+		        'customer_online_time_out'         => $this->input->post('customer_online_time_out'),
+		        'customer_online_archive_time_out' => $this->input->post('customer_online_archive_time_out'),
+		        'permalink'                        => $this->input->post('permalink'),
+		        'maintenance_mode'                 => $this->input->post('maintenance_mode'),
+		        'maintenance_message'              => $this->input->post('maintenance_message'),
+		        'cache_mode'                       => $this->input->post('cache_mode'),
+		        'cache_time'                       => $this->input->post('cache_time'),
+	        );
 
 			if ($this->Settings_model->updateSettings('config', $update, TRUE)) {
                 $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Settings updated '));
@@ -347,12 +357,13 @@ class Settings extends Admin_Controller {
 		$this->form_validation->set_rules('site_name', 'lang:label_site_name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 		$this->form_validation->set_rules('site_email', 'lang:label_site_email', 'xss_clean|trim|required|valid_email');
 		$this->form_validation->set_rules('site_logo', 'lang:label_site_logo', 'xss_clean|trim|required');
-		$this->form_validation->set_rules('country_id', 'lang:label_site_country', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('timezone', 'lang:label_timezone', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('date_format', 'lang:label_date_format', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('time_format', 'lang:label_time_format', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('currency_id', 'lang:label_site_currency', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('language_id', 'lang:label_site_language', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('detect_language', 'lang:label_default_language', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('language_id', 'lang:label_site_language', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('admin_language_id', 'lang:label_admin_language', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('customer_group_id', 'lang:label_customer_group', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('page_limit', 'lang:label_page_limit', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('meta_description', 'lang:label_meta_description', 'xss_clean|trim');
@@ -370,8 +381,18 @@ class Settings extends Admin_Controller {
 		$this->form_validation->set_rules('main_address[address_1]', 'lang:label_address_1', 'xss_clean|trim|required|min_length[2]|max_length[128]|get_lat_lng[main_address]');
 		$this->form_validation->set_rules('main_address[address_2]', 'lang:label_address_2', 'xss_clean|trim|max_length[128]');
 		$this->form_validation->set_rules('main_address[city]', 'lang:label_city', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+		$this->form_validation->set_rules('main_address[state]', 'lang:label_state', 'xss_clean|trim|max_length[128]');
 		$this->form_validation->set_rules('main_address[postcode]', 'lang:label_postcode', 'xss_clean|trim|min_length[2]|max_length[10]');
 		$this->form_validation->set_rules('main_address[country_id]', 'lang:label_country', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('auto_lat_lng', 'lang:label_auto_lat_lng', 'xss_clean|trim|required|integer');
+
+		if ($this->input->post('auto_lat_lng') === '1') {
+			$this->form_validation->set_rules('auto_lat_lng', 'lang:label_auto_lat_lng', 'get_lat_lng[main_address]');
+		} else {
+			$this->form_validation->set_rules('main_address[location_lat]', 'lang:label_latitude', 'xss_clean|trim|required|numeric');
+			$this->form_validation->set_rules('main_address[location_lng]', 'lang:label_longitude', 'xss_clean|trim|required|numeric');
+		}
+
 		$this->form_validation->set_rules('maps_api_key', 'lang:label_maps_api_key', 'xss_clean|trim');
 		$this->form_validation->set_rules('distance_unit', 'lang:label_distance_unit', 'xss_clean|trim|required');
 

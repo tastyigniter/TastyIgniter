@@ -4,7 +4,7 @@
 		<div class="row wrap-vertical">
 			<ul id="nav-tabs" class="nav nav-tabs">
 				<li class="active"><a href="#general" data-toggle="tab"><?php echo lang('text_tab_general'); ?></a></li>
-				<li><a href="#location" data-toggle="tab"><?php echo lang('text_tab_location'); ?></a></li>
+				<li><a href="#restaurant" data-toggle="tab"><?php echo lang('text_tab_restaurant'); ?></a></li>
 				<li><a href="#option" data-toggle="tab"><?php echo lang('text_tab_options'); ?></a></li>
 				<li><a href="#order" data-toggle="tab"><?php echo lang('text_tab_order'); ?></a></li>
 				<li><a href="#reservation" data-toggle="tab"><?php echo lang('text_tab_reservation'); ?></a></li>
@@ -29,114 +29,6 @@
 						<div class="col-sm-5">
 							<input type="text" name="site_email" id="input-site-email" class="form-control" value="<?php echo config_item('site_email'); ?>" autocomplete="off" />
 							<?php echo form_error('site_email', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-country" class="col-sm-3 control-label"><?php echo lang('label_site_country'); ?></label>
-						<div class="col-sm-5">
-							<select name="country_id" id="input-country" class="form-control">
-								<?php foreach ($countries as $country) { ?>
-                                    <?php if ($country['country_id'] === config_item('country_id')) { ?>
-                                        <option value="<?php echo $country['country_id']; ?>" <?php echo set_select('country_id', $country['country_id'], TRUE); ?>><?php echo $country['name']; ?></option>
-                                    <?php } else { ?>
-                                        <option value="<?php echo $country['country_id']; ?>" <?php echo set_select('country_id', $country['country_id']); ?>><?php echo $country['name']; ?></option>
-                                    <?php } ?>
-								<?php } ?>
-							</select>
-							<?php echo form_error('country_id', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-timezone" class="col-sm-3 control-label"><?php echo lang('label_timezone'); ?>
-							<span class="help-block"><?php echo lang('help_timezone'); ?></span>
-						</label>
-						<div class="col-sm-5">
-							<select name="timezone" id="" class="form-control">
-								<?php foreach ($timezones as $key => $value) { ?>
-                                    <?php if ($key === config_item('timezone')) { ?>
-                                        <option value="<?php echo $key; ?>" <?php echo set_select('timezone', $key, TRUE); ?>><?php echo $value; ?></option>
-                                    <?php } else { ?>
-                                        <option value="<?php echo $key; ?>" <?php echo set_select('timezone', $key); ?>><?php echo $value; ?></option>
-                                    <?php } ?>
-								<?php } ?>
-							</select>
-							<span class="help-block"><?php echo lang('text_utc_time'); ?>: <?php echo mdate("{$date_format} {$time_format}", time()); ?></span>
-							<?php echo form_error('timezone', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-date-format" class="col-sm-3 control-label"><?php echo lang('label_date_format'); ?></label>
-						<div class="col-sm-6">
-							<div class="btn-group btn-group-toggle btn-group-<?php echo count($date_formats); ?>" data-toggle="buttons">
-								<?php foreach ($date_formats as $format) { ?>
-									<?php if ($format === $date_format) { ?>
-										<label class="btn btn-default active"><input type="radio" name="date_format" value="<?php echo $format; ?>" <?php echo set_radio('date_format', $format, TRUE); ?>><?php echo mdate($format, time()); ?></label>
-									<?php } else { ?>
-										<label class="btn btn-default"><input type="radio" name="date_format" value="<?php echo $format; ?>" <?php echo set_radio('date_format', $format); ?>><?php echo mdate($format, time()); ?></label>
-									<?php } ?>
-								<?php }?>
-							</div>
-							<?php echo form_error('date_format', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-time-format" class="col-sm-3 control-label"><?php echo lang('label_time_format'); ?></label>
-						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle btn-group-<?php echo count($time_formats); ?>" data-toggle="buttons">
-								<?php foreach ($time_formats as $format) { ?>
-									<?php if ($format === $time_format) { ?>
-										<label class="btn btn-default active"><input type="radio" name="time_format" value="<?php echo $format; ?>" <?php echo set_radio('time_format', $format, TRUE); ?>><?php echo mdate($format, time()); ?></label>
-									<?php } else { ?>
-										<label class="btn btn-default"><input type="radio" name="time_format" value="<?php echo $format; ?>" <?php echo set_radio('time_format', $format); ?>><?php echo mdate($format, time()); ?></label>
-									<?php } ?>
-								<?php }?>
-							</div>
-							<?php echo form_error('time_format', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-currency" class="col-sm-3 control-label"><?php echo lang('label_site_currency'); ?></label>
-						<div class="col-sm-5">
-							<select name="currency_id" id="input-currency" class="form-control">
-								<?php foreach ($currencies as $currency) { ?>
-								<?php if ($currency['currency_id'] === config_item('currency_id')) { ?>
-									<option value="<?php echo $currency['currency_id']; ?>" <?php echo set_select('currency_id', $currency['currency_id'], TRUE); ?>><?php echo $currency['currency_name']; ?></option>
-								<?php } else { ?>
-									<option value="<?php echo $currency['currency_id']; ?>" <?php echo set_select('currency_id', $currency['currency_id']); ?>><?php echo $currency['currency_name']; ?></option>
-								<?php } ?>
-								<?php } ?>
-							</select>
-							<?php echo form_error('currency_id', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-language" class="col-sm-3 control-label"><?php echo lang('label_site_language'); ?></label>
-						<div class="col-sm-5">
-							<select name="language_id" id="input-language" class="form-control">
-								<?php foreach ($languages as $language) { ?>
-                                    <?php if ($language['language_id'] === config_item('language_id')) { ?>
-                                        <option value="<?php echo $language['language_id']; ?>" <?php echo set_select('language_id', $language['language_id'], TRUE); ?>><?php echo $language['name']; ?></option>
-                                    <?php } else { ?>
-                                        <option value="<?php echo $language['language_id']; ?>" <?php echo set_select('language_id', $language['language_id']); ?>><?php echo $language['name']; ?></option>
-                                    <?php } ?>
-								<?php } ?>
-							</select>
-							<?php echo form_error('language_id', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-customer-group" class="col-sm-3 control-label"><?php echo lang('label_customer_group'); ?></label>
-						<div class="col-sm-5">
-							<select name="customer_group_id" id="input-customer-group" class="form-control">
-								<?php foreach ($customer_groups as $customer_group) { ?>
-                                    <?php if ($customer_group['customer_group_id'] === config_item('customer_group_id')) { ?>
-                                        <option value="<?php echo $customer_group['customer_group_id']; ?>" <?php echo set_select('customer_group_id', $customer_group['customer_group_id'], TRUE); ?> ><?php echo $customer_group['group_name']; ?></option>
-                                    <?php } else { ?>
-                                        <option value="<?php echo $customer_group['customer_group_id']; ?>" <?php echo set_select('customer_group_id', $customer_group['customer_group_id']); ?> ><?php echo $customer_group['group_name']; ?></option>
-                                    <?php } ?>
-								<?php } ?>
-							</select>
-							<?php echo form_error('customer_group_id', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
@@ -174,7 +66,7 @@
 					</div>
 				</div>
 
-				<div id="location" class="tab-pane row wrap-all">
+				<div id="restaurant" class="tab-pane row wrap-all">
 					<div class="form-group">
 						<label for="input-address-1" class="col-sm-3 control-label"><?php echo lang('label_address_1'); ?>
 							<span class="help-block"><?php echo lang('help_main_address'); ?></span>
@@ -199,6 +91,13 @@
 						</div>
 					</div>
 					<div class="form-group">
+						<label for="input-state" class="col-sm-3 control-label"><?php echo lang('label_state'); ?></label>
+						<div class="col-sm-5">
+							<input type="text" name="main_address[state]" id="input-state" class="form-control" value="<?php echo set_value('main_address[state]', $main_address['state']); ?>" />
+							<?php echo form_error('main_address[state]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
 						<label for="input-postcode" class="col-sm-3 control-label"><?php echo lang('label_postcode'); ?></label>
 						<div class="col-sm-5">
 							<input type="text" name="main_address[postcode]" id="input-postcode" class="form-control" value="<?php echo set_value('main_address[postcode]', $main_address['postcode']); ?>" />
@@ -211,16 +110,50 @@
 						<div class="col-sm-5">
 							<select name="main_address[country_id]" id="input-country" class="form-control">
 								<?php foreach ($countries as $country) { ?>
-                                    <?php if ($country['country_id'] === $main_address['country_id']) { ?>
-                                        <option value="<?php echo $country['country_id']; ?>" <?php echo set_select('main_address[country_id]', $country['country_id'], TRUE); ?>><?php echo $country['name']; ?></option>
-                                    <?php } else { ?>
-                                        <option value="<?php echo $country['country_id']; ?>" <?php echo set_select('main_address[country_id]', $country['country_id']); ?>><?php echo $country['name']; ?></option>
-                                    <?php } ?>
+									<?php if ($country['country_id'] === $main_address['country_id']) { ?>
+										<option value="<?php echo $country['country_id']; ?>" <?php echo set_select('main_address[country_id]', $country['country_id'], TRUE); ?>><?php echo $country['name']; ?></option>
+									<?php } else { ?>
+										<option value="<?php echo $country['country_id']; ?>" <?php echo set_select('main_address[country_id]', $country['country_id']); ?>><?php echo $country['name']; ?></option>
+									<?php } ?>
 								<?php } ?>
 							</select>
 							<?php echo form_error('main_address[country_id]', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
+					<div class="form-group">
+						<label for="" class="col-sm-3 control-label"><?php echo lang('label_auto_lat_lng'); ?></label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($auto_lat_lng == '1') { ?>
+									<label class="btn btn-default active"><input type="radio" name="auto_lat_lng" value="1" <?php echo set_radio('auto_lat_lng', '1', TRUE); ?>><?php echo lang('text_yes'); ?></label>
+									<label class="btn btn-default"><input type="radio" name="auto_lat_lng" value="0" <?php echo set_radio('auto_lat_lng', '0'); ?>><?php echo lang('text_no'); ?></label>
+								<?php } else { ?>
+									<label class="btn btn-default"><input type="radio" name="auto_lat_lng" value="1" <?php echo set_radio('auto_lat_lng', '1'); ?>><?php echo lang('text_yes'); ?></label>
+									<label class="btn btn-default active"><input type="radio" name="auto_lat_lng" value="0" <?php echo set_radio('auto_lat_lng', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
+								<?php } ?>
+							</div>
+							<?php echo form_error('auto_lat_lng', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div id="lat-lng">
+						<br />
+						<div class="form-group">
+							<label for="input-address-latitude" class="col-sm-3 control-label"><?php echo lang('label_latitude'); ?></label>
+							<div class="col-sm-5">
+								<input type="text" name="main_address[location_lat]" id="input-address-latitude" class="form-control" value="<?php echo set_value('main_address[location_lat]', $main_address['location_lat']); ?>" />
+								<?php echo form_error('main_address[location_lat]', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="input-address-longitude" class="col-sm-3 control-label"><?php echo lang('label_longitude'); ?></label>
+							<div class="col-sm-5">
+								<input type="text" name="main_address[location_lng]" id="input-address-longitude" class="form-control" value="<?php echo set_value('main_address[location_lng]', $main_address['location_lng']); ?>" />
+								<?php echo form_error('main_address[location_lng]', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div>
+					</div>
+
+					<h4 class="tab-pane-title"><?php echo lang('text_tab_title_maps'); ?></h4>
 					<div class="form-group">
 						<label for="input-maps-api-key" class="col-sm-3 control-label"><?php echo lang('label_maps_api_key'); ?></label>
 						<div class="col-sm-5">
@@ -241,6 +174,122 @@
 								<?php } ?>
 							</div>
 							<?php echo form_error('distance_unit', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+
+					<h4 class="tab-pane-title"><?php echo lang('text_tab_title_currency'); ?></h4>
+					<div class="form-group">
+						<label for="input-currency" class="col-sm-3 control-label"><?php echo lang('label_site_currency'); ?></label>
+						<div class="col-sm-5">
+							<select name="currency_id" id="input-currency" class="form-control">
+								<?php foreach ($currencies as $currency) { ?>
+									<?php if ($currency['currency_id'] === config_item('currency_id')) { ?>
+										<option value="<?php echo $currency['currency_id']; ?>" <?php echo set_select('currency_id', $currency['currency_id'], TRUE); ?>><?php echo $currency['currency_name']; ?></option>
+									<?php } else { ?>
+										<option value="<?php echo $currency['currency_id']; ?>" <?php echo set_select('currency_id', $currency['currency_id']); ?>><?php echo $currency['currency_name']; ?></option>
+									<?php } ?>
+								<?php } ?>
+							</select>
+							<?php echo form_error('currency_id', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+
+					<h4 class="tab-pane-title"><?php echo lang('text_tab_title_language'); ?></h4>
+					<div class="form-group">
+						<label for="input-language" class="col-sm-3 control-label"><?php echo lang('label_site_language'); ?></label>
+						<div class="col-sm-5">
+							<select name="language_id" id="input-language" class="form-control">
+								<?php foreach ($languages as $language) { ?>
+									<?php if ($language['language_id'] === config_item('language_id') OR $language['idiom'] === config_item('language_id')) { ?>
+										<option value="<?php echo $language['idiom']; ?>" <?php echo set_select('language_id', $language['language_id'], TRUE); ?>><?php echo $language['name']; ?></option>
+									<?php } else { ?>
+										<option value="<?php echo $language['idiom']; ?>" <?php echo set_select('language_id', $language['language_id']); ?>><?php echo $language['name']; ?></option>
+									<?php } ?>
+								<?php } ?>
+							</select>
+							<?php echo form_error('language_id', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-admin-language" class="col-sm-3 control-label"><?php echo lang('label_admin_language'); ?></label>
+						<div class="col-sm-5">
+							<select name="admin_language_id" id="input-admin-language" class="form-control">
+								<?php foreach ($languages as $language) { ?>
+									<?php if ($language['idiom'] === config_item('admin_language_id')) { ?>
+										<option value="<?php echo $language['idiom']; ?>" <?php echo set_select('admin_language_id', $language['language_id'], TRUE); ?>><?php echo $language['name']; ?></option>
+									<?php } else { ?>
+										<option value="<?php echo $language['idiom']; ?>" <?php echo set_select('admin_language_id', $language['language_id']); ?>><?php echo $language['name']; ?></option>
+									<?php } ?>
+								<?php } ?>
+							</select>
+							<?php echo form_error('admin_language_id', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-detect-language" class="col-sm-3 control-label"><?php echo lang('label_detect_language'); ?>
+							<span class="help-block"><?php echo lang('help_detect_language'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
+								<?php if (config_item('detect_language') === '1') { ?>
+									<label class="btn btn-default"><input type="radio" name="detect_language" value="0" <?php echo set_radio('detect_language', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-default active"><input type="radio" name="detect_language" value="1" <?php echo set_radio('detect_language', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+								<?php } else { ?>
+									<label class="btn btn-default active"><input type="radio" name="detect_language" value="0" <?php echo set_radio('detect_language', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-default"><input type="radio" name="detect_language" value="1" <?php echo set_radio('detect_language', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+								<?php } ?>
+							</div>
+							<?php echo form_error('detect_language', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+
+					<h4 class="tab-pane-title"><?php echo lang('text_tab_title_date_time'); ?></h4>
+					<div class="form-group">
+						<label for="input-timezone" class="col-sm-3 control-label"><?php echo lang('label_timezone'); ?>
+							<span class="help-block"><?php echo lang('help_timezone'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<select name="timezone" id="" class="form-control">
+								<?php foreach ($timezones as $key => $value) { ?>
+									<?php if ($key === config_item('timezone')) { ?>
+										<option value="<?php echo $key; ?>" <?php echo set_select('timezone', $key, TRUE); ?>><?php echo $value; ?></option>
+									<?php } else { ?>
+										<option value="<?php echo $key; ?>" <?php echo set_select('timezone', $key); ?>><?php echo $value; ?></option>
+									<?php } ?>
+								<?php } ?>
+							</select>
+							<span class="help-block"><?php echo lang('text_utc_time'); ?>: <?php echo mdate("{$date_format} {$time_format}", time()); ?></span>
+							<?php echo form_error('timezone', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-date-format" class="col-sm-3 control-label"><?php echo lang('label_date_format'); ?></label>
+						<div class="col-sm-6">
+							<div class="btn-group btn-group-toggle btn-group-<?php echo count($date_formats); ?>" data-toggle="buttons">
+								<?php foreach ($date_formats as $format) { ?>
+									<?php if ($format === $date_format) { ?>
+										<label class="btn btn-default active"><input type="radio" name="date_format" value="<?php echo $format; ?>" <?php echo set_radio('date_format', $format, TRUE); ?>><?php echo mdate($format, time()); ?></label>
+									<?php } else { ?>
+										<label class="btn btn-default"><input type="radio" name="date_format" value="<?php echo $format; ?>" <?php echo set_radio('date_format', $format); ?>><?php echo mdate($format, time()); ?></label>
+									<?php } ?>
+								<?php }?>
+							</div>
+							<?php echo form_error('date_format', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-time-format" class="col-sm-3 control-label"><?php echo lang('label_time_format'); ?></label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-toggle btn-group-<?php echo count($time_formats); ?>" data-toggle="buttons">
+								<?php foreach ($time_formats as $format) { ?>
+									<?php if ($format === $time_format) { ?>
+										<label class="btn btn-default active"><input type="radio" name="time_format" value="<?php echo $format; ?>" <?php echo set_radio('time_format', $format, TRUE); ?>><?php echo mdate($format, time()); ?></label>
+									<?php } else { ?>
+										<label class="btn btn-default"><input type="radio" name="time_format" value="<?php echo $format; ?>" <?php echo set_radio('time_format', $format); ?>><?php echo mdate($format, time()); ?></label>
+									<?php } ?>
+								<?php }?>
+							</div>
+							<?php echo form_error('time_format', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 				</div>
@@ -423,6 +472,23 @@
 								<?php } ?>
 							</div>
 							<?php echo form_error('show_stock_warning', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+
+					<h4 class="tab-pane-title"><?php echo lang('text_tab_title_account'); ?></h4>
+					<div class="form-group">
+						<label for="input-customer-group" class="col-sm-3 control-label"><?php echo lang('label_customer_group'); ?></label>
+						<div class="col-sm-5">
+							<select name="customer_group_id" id="input-customer-group" class="form-control">
+								<?php foreach ($customer_groups as $customer_group) { ?>
+									<?php if ($customer_group['customer_group_id'] === config_item('customer_group_id')) { ?>
+										<option value="<?php echo $customer_group['customer_group_id']; ?>" <?php echo set_select('customer_group_id', $customer_group['customer_group_id'], TRUE); ?> ><?php echo $customer_group['group_name']; ?></option>
+									<?php } else { ?>
+										<option value="<?php echo $customer_group['customer_group_id']; ?>" <?php echo set_select('customer_group_id', $customer_group['customer_group_id']); ?> ><?php echo $customer_group['group_name']; ?></option>
+									<?php } ?>
+								<?php } ?>
+							</select>
+							<?php echo form_error('customer_group_id', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 
@@ -1258,6 +1324,14 @@
 </div>
 <script type="text/javascript"><!--
 $(document).ready(function() {
+	$('input[name="auto_lat_lng"]').on('change', function() {
+		$('#lat-lng').fadeIn();
+
+		if (this.value == '1') {
+			$('#lat-lng').fadeOut();
+		}
+	});
+
 	$('input[name="show_menu_images"]').on('change', function() {
 		if (this.value == '1') {
 			$('#menu-image-size').fadeIn();
