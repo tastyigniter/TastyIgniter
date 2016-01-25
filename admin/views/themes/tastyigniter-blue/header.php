@@ -204,7 +204,7 @@
                     ?>
 
                    <?php if (!empty($button_list) OR !empty($icon_list)) { ?>
-						<div class="page-header-action pull-left">
+						<div class="page-action pull-left">
                             <?php if (!empty($icon_list)) { ?>
                                 <?php echo $icon_list; ?>
                             <?php } ?>

@@ -215,6 +215,10 @@ font-size: 28px;
 padding: 0 20px;
 line-height: 50px;
 }
+.navbar-top .navbar-heading small,
+.navbar-top .navbar-heading .small {
+font-size: 65%;
+}
 .navbar-top .navbar-brand {
 height: 50px;
 padding: 0px;
@@ -579,7 +583,7 @@ margin-left: 0px;
 }
 
 
-/** HEADER **/
+/** PAGE HEADER **/
 .header {
 border-bottom: 0 solid #DDDBDB;
 }
@@ -607,7 +611,28 @@ margin: 0;
 }
 }
 .page-header .btn {
-padding: 4px 15px;
+padding: 6px 15px;
+border: 0 none;
+outline: 0 none;
+}
+.page-header .btn-default, .page-header .btn-default:hover, .page-header .btn-default:focus {
+background-color: #FFF;
+box-shadow: 0 3px 0 0 #D2DCE7;
+border: 1px solid #C1D9EE;
+}
+.page-header .btn-default:hover, .page-header .btn-default:focus {
+background-color: #ECF0F5;
+}
+.page-header .btn-primary, .page-header .btn-primary:hover, .page-header .btn-primary:focus {
+box-shadow: 0 3px 0 0 #255986;
+}
+.page-header .btn-danger, .page-header .btn-danger:hover, .page-header .btn-danger:focus {
+box-shadow: 0 3px 0 0 #AC2925;
+}
+.page-header .btn.active, .page-header .btn:active {
+box-shadow: none;
+margin-bottom: -3px;
+margin-top: 3px;
 }
 .page-header .fa {
 font-size: 18px;
@@ -1056,7 +1081,7 @@ font-weight: 400;
 font-size: 12px;
 }
 .btn:focus, .btn:active:focus, .btn.active:focus {
-outline-offset:-1px;
+outline: 0 none;
 }
 a.btn:active, a.btn.active {
 background-image: none;
@@ -1104,7 +1129,7 @@ text-shadow: 1px 1px 0 #255986;
 .btn-primary:active,
 .btn-primary.active,
 .open .dropdown-toggle.btn-primary {
-background-color: #3681c2;
+background-color: #2d6da3;
 border-color: #204d74;
 }
 .btn-info {
@@ -1146,10 +1171,53 @@ border-color: #357ebd;
 color: #FFF;
 text-shadow: 1px 1px 0px #255986;
 }
-.btn-edit:hover, .btn-view:hover, .btn-grey:hover {
+.btn-edit:hover, .btn-view:hover, .btn-grey:hover,
+.btn-edit:focus, .btn-view:focus, .btn-grey:focus {
 background-color: #3276b1;
 border-color: #285e8e;
 color: #FFF;
+}
+.action .btn {
+background-color: #FFF;
+text-shadow: unset;
+}
+.action .btn:hover, .action .btn:focus {
+background-color: #FFF;
+}
+.action .btn-edit, .action .btn-view, .action .btn-grey {
+border-color: #74aad8;
+color: #337AB7;
+}
+.action .btn-edit:hover, .action .btn-view:hover, .action .btn-grey:hover,
+.action .btn-edit:focus, .action .btn-view:focus, .action .btn-grey:focus {
+border-color: #468ecb;
+}
+.action .btn-success {
+border-color: #77c477;
+color: #5CB85C;
+}
+.action .btn-success:hover,
+.action .btn-success:focus {
+border-color: #4eb24e;
+}
+.action .btn-warning {
+border-color: #c5a876;
+color: #8A6D3B;
+}
+.action .btn-warning:hover,
+.action .btn-warning:focus {
+border-color: #b38d4d;
+}
+.action .btn-danger {
+border-color: #eaa2a0;
+color: #D9534F;
+}
+.action .btn-danger:hover,
+.action .btn-danger:focus {
+border-color: #e0736f;
+}
+.action .btn i {
+font-size: 14px;
 }
 .btn i {
 font-size:13px;
@@ -1592,7 +1660,7 @@ width: 12.53% !important;
 }
 table .action .btn {
 display:inline-block;
-padding: 4px 10px;
+padding: 8px 10px;
 }
 table .id, table .id .sort {
 color: #656565;
