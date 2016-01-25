@@ -129,6 +129,8 @@ class Locations_model extends TI_Model {
 					'country'       => $row['country_name'],
 					'iso_code_2'    => $row['iso_code_2'],
 					'iso_code_3'    => $row['iso_code_3'],
+					'location_lat'  => $row['location_lat'],
+					'location_lng'  => $row['location_lng'],
 					'format'        => $row['format'],
 				);
 			}

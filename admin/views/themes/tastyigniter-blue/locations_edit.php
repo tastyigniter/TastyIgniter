@@ -553,7 +553,7 @@
 					</div>
 					<br />
 
-					<div id="gallery-images" class="row>
+					<div id="gallery-images" class="row">
 						<?php $gallery_image_row = 1; ?>
 						<div class="panel panel-default panel-table">
 							<div class="table-responsive">
@@ -700,7 +700,7 @@ centerLatLng = new google.maps.LatLng(
 
 jQuery('#open-map').click(function() {
     if (map === null) {
-        initializeMap();
+	    initializeMap();
     }
 });
 
@@ -737,7 +737,7 @@ function initializeMap() {
 	$('#edit-form').on('submit', saveDeliveryAreas);
 
 	clearMapAreas();
-	createSavedArea(panel_row)
+	createSavedArea(panel_row);
 }
 
 function defaultAreaOptions() {

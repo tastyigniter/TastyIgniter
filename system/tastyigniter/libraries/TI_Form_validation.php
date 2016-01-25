@@ -101,8 +101,8 @@ class TI_Form_validation extends CI_Form_validation
                 $output = json_decode($geocode);
 
                 if (!empty($output->status) AND $output->status === 'OK') {
-                    $_POST['address']['location_lat'] = $output->results[0]->geometry->location->lat;
-                    $_POST['address']['location_lng'] = $output->results[0]->geometry->location->lng;
+                    $_POST[$post_item]['location_lat'] = $output->results[0]->geometry->location->lat;
+                    $_POST[$post_item]['location_lng'] = $output->results[0]->geometry->location->lng;
 
                     return TRUE;
                 }
