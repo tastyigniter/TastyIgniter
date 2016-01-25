@@ -102,38 +102,6 @@
 							</div>
 						</div>
 					<?php } ?>
-					<div class="form-group">
-						<label for="input-timezone" class="col-sm-3 control-label"><?php echo lang('label_timezone'); ?></label>
-						<div class="col-sm-5">
-							<select name="timezone" id="input-timezone" class="form-control">
-								<option value="0"><?php echo lang('text_use_default'); ?></option>
-								<?php foreach ($timezones as $key => $value) { ?>
-									<?php if ($key === $timezone) { ?>
-										<option value="<?php echo $key; ?>" selected="selected"><?php echo $value; ?></option>
-									<?php } else { ?>
-										<option value="<?php echo $key; ?>"><?php echo $value; ?></option>
-									<?php } ?>
-								<?php } ?>
-							</select>
-							<?php echo form_error('timezone', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-language" class="col-sm-3 control-label"><?php echo lang('label_language'); ?></label>
-						<div class="col-sm-5">
-							<select name="language_id" id="input-language" class="form-control">
-								<option value="0"><?php echo lang('text_use_default'); ?></option>
-								<?php foreach ($languages as $language) { ?>
-									<?php if ($language['language_id'] === $language_id) { ?>
-										<option value="<?php echo $language['language_id']; ?>" selected="selected"><?php echo $language['name']; ?></option>
-									<?php } else { ?>
-										<option value="<?php echo $language['language_id']; ?>"><?php echo $language['name']; ?></option>
-									<?php } ?>
-								<?php } ?>
-							</select>
-							<?php echo form_error('language_id', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
 				</div>
 			</div>
 		</form>

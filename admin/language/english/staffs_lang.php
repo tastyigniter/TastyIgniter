@@ -29,8 +29,6 @@ $lang['label_password'] 		        = 'Password';
 $lang['label_confirm_password'] 		= 'Password Confirm';
 $lang['label_group'] 		            = 'Department';
 $lang['label_location'] 		        = 'Location';
-$lang['label_timezone'] 		        = 'Timezone';
-$lang['label_language'] 		        = 'Language';
 $lang['label_status'] 		            = 'Status';
 
 $lang['help_password'] 		            = 'Leave blank to leave password unchanged';

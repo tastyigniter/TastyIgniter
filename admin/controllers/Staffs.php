@@ -200,8 +200,6 @@ class Staffs extends Admin_Controller {
 		$data['staff_email'] 		= $staff_info['staff_email'];
 		$data['staff_group_id'] 	= $staff_info['staff_group_id'];
 		$data['staff_location_id'] 	= $staff_info['staff_location_id'];
-		$data['timezone'] 			= $staff_info['timezone'];
-		$data['language_id'] 		= $staff_info['language_id'];
 		$data['staff_status'] 		= $staff_info['staff_status'];
 		$data['username'] 			= $user_info['username'];
 
@@ -220,22 +218,6 @@ class Staffs extends Admin_Controller {
 			$data['locations'][] = array(
 				'location_id'	=>	$result['location_id'],
 				'location_name'	=>	$result['location_name'],
-			);
-		}
-
-		$data['timezones'] = array();
-		$timezones = $this->getTimezones();
-		foreach ($timezones as $key => $value) {
-			$data['timezones'][$key] = $value;
-		}
-
-		$this->load->model('Languages_model');
-		$data['languages'] = array();
-		$results = $this->Languages_model->getLanguages();
-		foreach ($results as $result) {
-			$data['languages'][] = array(
-				'language_id'	=>	$result['language_id'],
-				'name'			=>	$result['name'],
 			);
 		}
 
@@ -327,8 +309,6 @@ class Staffs extends Admin_Controller {
 			$this->form_validation->set_rules('staff_location_id', 'lang:label_location', 'xss_clean|trim|integer');
 		}
 
-		$this->form_validation->set_rules('timezone', 'lang:label_timezone', 'xss_clean|trim');
-		$this->form_validation->set_rules('language_id', 'lang:label_language', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('staff_status', 'lang:label_status', 'xss_clean|trim|integer');
 
 		if ($this->form_validation->run() === TRUE) {
@@ -336,34 +316,6 @@ class Staffs extends Admin_Controller {
 		} else {
 			return FALSE;
 		}
-	}
-
-	private function getTimezones() {
-		$timezone_identifiers = DateTimeZone::listIdentifiers();
-		$utc_time = new DateTime('now', new DateTimeZone('UTC'));
-
-		$temp_timezones = array();
-		foreach ($timezone_identifiers as $timezone_identifier) {
-			$current_timezone = new DateTimeZone($timezone_identifier);
-
-			$temp_timezones[] = array(
-				'offset' => (int)$current_timezone->getOffset($utc_time),
-				'identifier' => $timezone_identifier
-			);
-		}
-
-		usort($temp_timezones, function($a, $b) {
-			return ($a['offset'] == $b['offset']) ? strcmp($a['identifier'], $b['identifier']) : $a['offset'] - $b['offset'];
-		});
-
-		$timezoneList = array();
-		foreach ($temp_timezones as $tz) {
-			$sign = ($tz['offset'] > 0) ? '+' : '-';
-			$offset = gmdate('H:i', abs($tz['offset']));
-            $timezoneList[$tz['identifier']] = '(UTC ' . $sign . $offset .') '. $tz['identifier'];
-		}
-
-		return $timezoneList;
 	}
 }
 

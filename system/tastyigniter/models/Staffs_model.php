@@ -252,18 +252,6 @@ class Staffs_model extends TI_Model {
 			$this->db->set('staff_location_id', $save['staff_location_id']);
 		}
 
-		if (isset($save['timezone'])) {
-			$this->db->set('timezone', $save['timezone']);
-		} else {
-			$this->db->set('timezone', '0');
-		}
-
-		if (isset($save['language_id'])) {
-			$this->db->set('language_id', $save['language_id']);
-		} else {
-			$this->db->set('language_id', '0');
-		}
-
 		if (isset($save['staff_status']) AND $save['staff_status'] === '1') {
 			$this->db->set('staff_status', $save['staff_status']);
 		} else {
