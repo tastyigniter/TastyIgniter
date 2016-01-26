@@ -114,7 +114,7 @@ var slide_row = <?php echo $slide_row; ?>;
 function addSlide() {
 	html  = '<li id="image-row' + slide_row + '">';
 	html += '	<div class="col-md-1">';
-	html += '		<a class="btn btn-danger btn-lg" onclick="confirm('<?php echo lang('alert_warning_confirm'); ?>') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a>';
+	html += '		<a class="btn btn-danger btn-lg" onclick="confirm(\'<?php echo lang('alert_warning_confirm'); ?>\') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a>';
 	html += '	</div>';
 	html +=	'	<div class="col-md-4">';
 	html += '		<div class="thumbnail imagebox">';
