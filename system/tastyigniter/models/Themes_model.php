@@ -101,6 +101,15 @@ class Themes_model extends TI_Model {
 			if ($this->Settings_model->addSetting('prefs', 'default_themes', $default_themes, '1')) {
 				$query = $theme['title'];
 			}
+
+			if ($query !== FALSE) {
+				$active_theme_options = $this->config->item('active_theme_options');
+				$active_theme_options[MAINDIR] = array($theme['name'], $theme['data']);
+
+				$this->Settings_model->deleteSettings('prefs', 'customizer_active_style');  //@to-do remove in next version release
+				$this->Settings_model->addSetting('prefs', 'active_theme_options', $active_theme_options, '1');
+			}
+
 		}
 
 		return $query;
@@ -109,11 +118,7 @@ class Themes_model extends TI_Model {
 	public function updateTheme($update = array()) {
 		if (empty($update)) return FALSE;
 
-		if ($this->config->item(MAINDIR, 'default_themes') === $update['name'] . '/') {
-			$this->db->set('status', '1');
-		} else {
-			$this->db->set('status', '0');
-		}
+		$this->db->set('status', '1');
 
 		if ( ! empty($update['data'])) {
 			$this->db->set('data', serialize($update['data']));
@@ -149,5 +154,49 @@ class Themes_model extends TI_Model {
 
 		return $query;
 	}
-}
 
+	public function extractTheme($file = array(), $domain = MAINDIR) {
+		if (isset($file['tmp_name']) AND class_exists('ZipArchive')) {
+
+			$zip = new ZipArchive;
+
+			chmod($file['tmp_name'], DIR_READ_MODE);
+
+			$THEMEPATH = ROOTPATH . $domain . '/views/themes';
+
+			if ($zip->open($file['tmp_name']) === TRUE) {
+				$theme_dir = $zip->getNameIndex(0);
+
+				if (preg_match('/\s/', $theme_dir) OR file_exists($THEMEPATH .'/'. $theme_dir)) {
+					return $this->lang->line('error_theme_exists');
+				}
+
+				$zip->extractTo($THEMEPATH);
+				$zip->close();
+
+				return TRUE;
+			}
+		}
+
+		return FALSE;
+	}
+
+	public function deleteTheme($theme_name = NULL) {
+		$query = FALSE;
+
+		if ( ! empty($theme_name)) {
+
+			$this->db->where('type', 'theme');
+			$this->db->where('name', $theme_name);
+
+			$this->db->delete('extensions');
+			if ($this->db->affected_rows() > 0) {
+				$query = TRUE;
+			}
+
+			return delete_theme($theme_name);
+		}
+
+		return $query;
+	}
+}

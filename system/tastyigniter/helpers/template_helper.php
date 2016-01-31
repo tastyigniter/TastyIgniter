@@ -596,6 +596,41 @@ if ( ! function_exists('load_theme_file')) {
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('delete_theme')) {
+	/**
+	 * Delete existing theme folder.
+	 *
+	 * @param null $theme
+	 * @param      $domain
+	 *
+	 * @return bool
+	 */
+	function delete_theme($theme = NULL, $domain = MAINDIR) {
+		if (empty($theme)) {
+			return FALSE;
+		}
+
+		if ( ! function_exists('delete_files')) {
+			get_instance()->load->helper('file');
+		}
+
+		// Delete the specified admin and main language folder.
+		if (!empty($domain)) {
+			$path = ROOTPATH . "{$domain}/views/themes/{$theme}";
+			if (is_dir($path)) {
+				delete_files($path, TRUE);
+				rmdir($path);
+
+				return TRUE;
+			}
+		}
+
+		return FALSE;
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('save_theme_file')) {
 	/**
 	 * Save a theme file.

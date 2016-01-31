@@ -19,6 +19,7 @@ class Themes extends Admin_Controller {
 
 		$this->template->setTitle($this->lang->line('text_title'));
 		$this->template->setHeading($this->lang->line('text_heading'));
+		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() . '/add'));
 
 		$data['themes'] = array();
 		$themes = $this->Themes_model->getList();
@@ -39,6 +40,7 @@ class Themes extends Admin_Controller {
 				'screenshot'  => $theme['screenshot'],
 				'activate'    => site_url('themes/activate/' . $theme['name']),
 				'edit'        => site_url('themes/edit/' . $theme['name']),
+				'delete'      => site_url('themes/delete/' . $theme['name']),
 			);
 		}
 
@@ -105,6 +107,7 @@ class Themes extends Admin_Controller {
 			}
 
 			$data['file'] = $theme_file;
+			$data['close_file'] = site_url("themes/edit/{$theme_name}");
 		}
 
 		$theme_files = '';
@@ -146,12 +149,45 @@ class Themes extends Admin_Controller {
 		$this->template->render('themes_edit', $data);
 	}
 
+	public function add() {
+		$this->user->restrict('Site.Themes.Access');
+
+		$this->template->setTitle($this->lang->line('text_add_heading'));
+		$this->template->setHeading($this->lang->line('text_add_heading'));
+
+		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('themes')));
+
+		$data['_action'] = site_url('themes/add');
+
+		if ($this->_addTheme() === TRUE) {
+			redirect('themes');
+		}
+
+		$this->template->render('themes_add', $data);
+	}
+
 	public function activate() {
 		$this->user->restrict('Site.Themes.Manage');
 
 		if ($theme_name = $this->uri->rsegment(3)) {
 			if ($theme_name = $this->Themes_model->activateTheme($theme_name)) {
 				$this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Theme [' . $theme_name . '] set as default '));
+			}
+		}
+
+		redirect('themes');
+	}
+
+	public function delete() {
+		$this->user->restrict('Site.Themes.Manage');
+
+		if ($theme_name = $this->uri->rsegment(3)) {
+			if ($this->config->item(MAINDIR, 'default_themes') === $theme_name . '/') {
+				$this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted'). $this->lang->line('text_theme_is_active')));
+			} else if ($this->Themes_model->deleteTheme($theme_name)) {
+				$this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Theme ' . $this->lang->line('text_deleted')));
+			} else {
+				$this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted')));
 			}
 		}
 
@@ -193,6 +229,34 @@ class Themes extends Admin_Controller {
 		return $theme_tree;
 	}
 
+	private function _addTheme() {
+		$this->user->restrict('Site.Themes.Add', site_url('extensions/add'));
+
+		if (isset($_FILES['theme_zip'])) {
+			if ($this->validateUpload() === TRUE) {
+				$message = $this->Themes_model->extractTheme($_FILES['theme_zip']);
+
+				if ($message === TRUE) {
+					$theme_name = $_FILES['theme_zip']['name'];
+
+					log_activity($this->user->getStaffId(), 'added', 'themes',
+						get_activity_message('activity_custom_no_link',
+							array('{staff}', '{action}', '{context}', '{item}'),
+							array($this->user->getStaffName(), 'added', 'a new theme', $theme_name)
+						)
+					);
+
+					$this->alert->set('success', sprintf($this->lang->line('alert_success'), "Theme {$theme_name} added "));
+					return TRUE;
+				}
+
+				$this->alert->danger_now(sprintf($this->lang->line('alert_error'), $message));
+			}
+		}
+
+		return FALSE;
+	}
+
 	private function _updateTheme($theme = array()) {
 		$this->user->restrict('Site.Themes.Manage');
 
@@ -200,7 +264,7 @@ class Themes extends Admin_Controller {
 			if ($this->input->post('editor_area') AND $this->input->get('file')) {
 				$theme_file = $this->input->get('file');
 				if (save_theme_file($theme_file, $theme['name'], $this->input->post('editor_area'))) {
-					$this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Theme File (' . $theme_file . ') saved '));
+					$this->alert->set('success', sprintf($this->lang->line('alert_success'), "Theme File [{$theme_file}] saved "));
 				} else {
 					$this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), 'saved'));
 				}
@@ -221,6 +285,46 @@ class Themes extends Admin_Controller {
 			}
 
 			return TRUE;
+		}
+	}
+
+	private function validateUpload() {
+		if ( ! empty($_FILES['theme_zip']['name']) AND ! empty($_FILES['theme_zip']['tmp_name'])) {
+
+			if (preg_match('/\s/', $_FILES['theme_zip']['name'])) {
+				$this->alert->danger_now($this->lang->line('error_upload_name'));
+
+				return FALSE;
+			}
+
+			if ($_FILES['theme_zip']['type'] !== 'application/zip') {
+				$this->alert->danger_now($this->lang->line('error_upload_type'));
+
+				return FALSE;
+			}
+
+			$_FILES['theme_zip']['name'] = html_entity_decode($_FILES['theme_zip']['name'], ENT_QUOTES, 'UTF-8');
+			$_FILES['theme_zip']['name'] = str_replace(array('"', "'", "/", "\\"), "", $_FILES['theme_zip']['name']);
+			$filename = $this->security->sanitize_filename($_FILES['theme_zip']['name']);
+			$_FILES['theme_zip']['name'] = basename($filename, '.zip');
+
+			if ( ! empty($_FILES['theme_zip']['error'])) {
+				$this->alert->danger_now($this->lang->line('error_php_upload') . $_FILES['theme_zip']['error']);
+
+				return FALSE;
+			}
+
+			if (file_exists(ROOTPATH . MAINDIR . '/views/themes/' . $_FILES['theme_zip']['name'])) {
+				$this->alert->danger_now(sprintf($this->lang->line('alert_error'), $this->lang->line('error_theme_exists')));
+
+				return FALSE;
+			}
+
+			if (is_uploaded_file($_FILES['theme_zip']['tmp_name'])) {
+				return TRUE;
+			}
+
+			return FALSE;
 		}
 	}
 

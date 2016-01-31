@@ -5,10 +5,15 @@
 			<ul id="nav-tabs" class="nav nav-tabs">
 				<?php if ($is_customizable) { ?>
                     <li class="active"><a href="#customize" data-toggle="tab"><?php echo lang('text_tab_customize'); ?></a></li>
-                    <li><a href="#edit-source" data-toggle="tab"><?php echo lang('text_tab_edit_source'); ?></a></li>
-                <?php } else { ?>
-                    <li class="active"><a href="#edit-source" data-toggle="tab"><?php echo lang('text_tab_edit_source'); ?></a></li>
-                <?php } ?>
+				<?php } ?>
+				<li class="<?php echo ($is_customizable) ?: 'active'; ?>">
+					<?php if (!empty($file)) { ?>
+						<a class="pull-left" href="#edit-source" data-toggle="tab"><?php echo lang('text_tab_edit_source'); ?></a>
+						<a class="pull-right" href="<?php echo $close_file; ?>"><i class="fa fa-times-circle text-danger"></i></a>
+					<?php } else { ?>
+						<a href="#edit-source" data-toggle="tab"><?php echo lang('text_tab_edit_source'); ?></a>
+					<?php } ?>
+				</li>
 			</ul>
 		</div>
 
@@ -19,7 +24,7 @@
                         <div class="col-sm-2 wrap-none">
                             <?php echo $customizer_nav; ?>
                         </div>
-                        <div class="col-sm-10 wrap-veritcal">
+                        <div class="col-sm-10 wrap-veritcal border-left">
                             <div class="tab-content">
                                 <?php echo $customizer_sections; ?>
                              </div>
@@ -83,6 +88,28 @@ $(document).ready(function() {
 //--></script>
 <script type="text/javascript"><!--
 $(function  () {
+	// Set the popover default content
+	$('.image-preview .input-group-addon').popover({
+		trigger:'manual',
+		html:true,
+		title: "Preview",
+		content: "There's no image",
+		placement:'bottom'
+	});
+
+	// Create the preview image
+	$(".image-preview .input-group-addon").hover(function () {
+		var img = $('<img/>', {
+			id: 'dynamic',
+			width:250,
+			height:200
+		});
+
+		img.attr('src', $(this).parent().find('img').attr('src'));
+		$(this).attr("data-trigger", "hover");
+		$(this).attr("data-content", $(img)[0].outerHTML).popover("toggle");
+	});
+
 	$('.table-sortable').sortable({
 		containerSelector: 'table',
 		itemPath: '> tbody',

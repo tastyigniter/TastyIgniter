@@ -1,57 +1,63 @@
 <?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
-		<div class="panel panel-default panel-table">
+		<div class="panel panel-default panel-themes">
 			<div class="panel-heading">
 				<h3 class="panel-title"><?php echo lang('text_list'); ?></h3>
 			</div>
 			<div class="panel-body">
-				<?php if ($themes) { ?>
-				<div class="list-group list-group-theme">
-					<?php foreach ($themes as $theme) { ?>
-						<div class="list-group-item">
-							<div class="row">
-								<div class="col-xs-3">
-									<img class="img-responsive" alt="" src="<?php echo $theme['screenshot']; ?>" style="width:100%!important;height:100%!important" />
-								</div>
-								<div class="col-xs-9 description">
-									<h4><?php echo $theme['title']; ?><span class="label label-warning text-sm pull-right"><?php if ($theme['active'] === '1') echo lang('text_is_default'); ?></span></h4>
-									<p><?php echo $theme['description']; ?></p>
-									<div class="row metas">
-										<div class="col-xs-8 text-muted text-sm">
-											<b><?php echo lang('text_author'); ?>:</b><br />
-											<?php echo $theme['author']; ?>
-										</div>
-										<div class="col-xs-4 text-muted text-sm text-right">
-											<b><?php echo lang('text_version'); ?>:</b><br />
-											<?php echo $theme['version']; ?>
-										</div>
+				<div class="row wrap-none wrap-left">
+					<?php if ($themes) { ?>
+						<?php foreach ($themes as $theme) { ?>
+							<div class="col-xs-12 col-sm-6 wrap-none wrap-right wrap-bottom">
+								<div class="row theme-box">
+									<div class="col-xs-4 wrap-none">
+										<img class="img-responsive" alt="" src="<?php echo $theme['screenshot']; ?>" style="width:100%!important;height:100%!important" />
 									</div>
-									<div class="buttons">
-										<?php if ($theme['active'] === '1') { ?>
+									<div class="col-xs-8 description">
+										<h4>
+											<span class="label label-warning text-sm"><?php if ($theme['active'] === '1') echo lang('text_is_default'); ?></span>
+											&nbsp;&nbsp;<?php echo $theme['title']; ?>
+										</h4>
+										<p><?php echo $theme['description']; ?></p>
+										<div class="row metas">
+											<div class="pull-left wrap-vertical text-muted text-sm">
+												<b><?php echo lang('text_author'); ?>:</b><br />
+												<?php echo $theme['author']; ?>
+											</div>
+											<div class="pull-left wrap-vertical text-muted text-sm text-left">
+												<b><?php echo lang('text_version'); ?>:</b><br />
+												<?php echo $theme['version']; ?>
+											</div>
+										</div>
+										<div class="buttons action">
 											<a class="btn btn-edit" title="<?php echo lang('text_customize'); ?>" href="<?php echo $theme['edit']; ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
-											<a class="btn btn-warning" disabled="disabled" title="<?php echo lang('text_is_default'); ?>"><i class="fa fa-star"></i></a>&nbsp;&nbsp;
-											<a class="btn btn-default preview-thumb" title="<?php echo lang('text_preview'); ?>" data-img-src="<?php echo $theme['screenshot']; ?>" title="Default"><i class="fa fa-eye"></i></a>
-										<?php } else {?>
-											<a class="btn btn-edit" title="<?php echo lang('text_customize'); ?>" href="<?php echo $theme['edit']; ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
-											<a class="btn btn-warning" title="<?php echo lang('text_set_default'); ?>" href="<?php echo $theme['activate']; ?>"><i class="fa fa-star"></i></a>&nbsp;&nbsp;
-											<a class="btn btn-default preview-thumb" title="<?php echo lang('text_preview'); ?>" data-img-src="<?php echo $theme['screenshot']; ?>" title="Default"><i class="fa fa-eye"></i></a>
-										<?php } ?>
+											<?php if ($theme['active'] === '1') { ?>
+												<a class="btn btn-warning disabled" title="<?php echo lang('text_is_default'); ?>"><i class="fa fa-star"></i></a>&nbsp;&nbsp;
+											<?php } else {?>
+												<a class="btn btn-warning" title="<?php echo lang('text_set_default'); ?>" href="<?php echo $theme['activate']; ?>"><i class="fa fa-star"></i></a>&nbsp;&nbsp;
+											<?php } ?>
+											<a class="btn btn-default preview-thumb" title="<?php echo lang('text_preview'); ?>" data-img-src="<?php echo $theme['screenshot']; ?>" title="Default"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;
+											<a class="btn btn-danger delete" title="<?php echo lang('text_delete'); ?>" href="<?php echo $theme['delete']; ?>"><i class="fa fa-trash-o"></i></a>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
+						<?php } ?>
 					<?php } ?>
 				</div>
-				<?php } else {?>
-					<?php echo lang('text_empty'); ?>
-				<?php } ?>
 			</div>
 		</div>
 	</div>
 </div>
 <script type="text/javascript">
 $(document).ready(function() {
+	$('a.delete').click(function(){
+		if (!confirm('<?php echo lang('alert_warning_confirm'); ?>')) {
+			return false;
+		}
+	});
+
 	$(document).on('click', '.preview-thumb', function() {
 		$('#preview-theme').remove();
 
