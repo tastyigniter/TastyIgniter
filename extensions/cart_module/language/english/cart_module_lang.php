@@ -31,6 +31,10 @@ $lang['button_apply_coupon'] 			    = 'Apply Coupon';
 $lang['label_menu_quantity'] 			    = 'Menu Quantity';
 $lang['label_add_comment'] 			        = 'Add Comment';
 $lang['label_show_cart_images'] 		    = 'Display Cart Images';
+$lang['label_fixed_cart'] 		            = 'Fixed Cart Box';
+$lang['label_fixed_offset'] 		    = 'Fixed Top Offset';
+$lang['label_fixed_top_offset'] 		    = 'Fixed Top Offset';
+$lang['label_fixed_bottom_offset'] 		    = 'Fixed Bottom Offset';
 $lang['label_cart_image_size'] 			    = 'Cart Image Size';
 $lang['label_cart_images_h'] 			    = 'Image Height';
 $lang['label_cart_images_w'] 			    = 'Image Width';
@@ -61,6 +65,7 @@ $lang['alert_coupon_order_restriction'] 	= '<p class="alert-danger">Your coupon 
 
 $lang['help_show_cart_images'] 			    = 'Show or hide cart menu images';
 $lang['help_cart_image_size'] 			    = '(Height x Width)';
+$lang['help_fixed_offset'] 			        = 'Pixels to offset from top and bottom screen when calculating position of scroll.';
 
 /* End of file cart_module_lang.php */
 /* Location: ./extensions/cart_module/language/english/cart_module_lang.php */

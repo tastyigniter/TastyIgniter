@@ -47,9 +47,17 @@ class Cart_module extends Main_Controller {
         $data['collection_time'] 	        = $this->location->collectionTime();
         $data['has_delivery']               = $this->location->hasDelivery();
         $data['has_collection']             = $this->location->hasCollection();
-        $data['show_cart_images'] 	        = isset($ext_data['show_cart_images']) ? $ext_data['show_cart_images'] : '';
+		$data['show_cart_images'] 	        = isset($ext_data['show_cart_images']) ? $ext_data['show_cart_images'] : '';
         $data['cart_images_h'] 		        = isset($ext_data['cart_images_h']) ? $ext_data['cart_images_h'] : '';
         $data['cart_images_w'] 		        = isset($ext_data['cart_images_w']) ? $ext_data['cart_images_w'] :'';
+
+		$data['fixed_cart'] = '';
+		$fixed_cart = isset($ext_data['fixed_cart']) ? $ext_data['fixed_cart'] : '1';
+		if ($fixed_cart === '1') {
+			$fixed_top_offset = isset($ext_data['fixed_top_offset']) ? $ext_data['fixed_top_offset'] : '250';
+			$fixed_bottom_offset = isset($ext_data['fixed_bottom_offset']) ? $ext_data['fixed_bottom_offset'] : '120';
+			$data['fixed_cart'] = 'data-spy="affix" data-offset-top="'.$fixed_top_offset.'" data-offset-bottom="'.$fixed_bottom_offset.'"';
+		}
 
         $menus = $this->Cart_model->getMenus();
 

@@ -21,13 +21,37 @@ class Admin_cart_module extends Admin_Controller {
                 $ext_data = $data['ext_data'];
             }
 
-            if (isset($ext_data['show_cart_images'])) {
-                $data['show_cart_images'] = $ext_data['show_cart_images'];
-            } else {
-                $data['show_cart_images'] = $this->input->post('show_cart_images');
-            }
+	        if (isset($ext_data['show_cart_images'])) {
+		        $data['show_cart_images'] = $ext_data['show_cart_images'];
+	        } else {
+		        $data['show_cart_images'] = $this->input->post('show_cart_images');
+	        }
 
-            if (isset($ext_data['cart_images_h'])) {
+	        if (isset($ext_data['fixed_cart'])) {
+		        $data['fixed_cart'] = $ext_data['fixed_cart'];
+	        } else if ($this->input->post('fixed_cart')) {
+		        $data['fixed_cart'] = $this->input->post('fixed_cart');
+	        } else {
+		        $data['fixed_cart'] = '1';
+	        }
+
+	        if (isset($ext_data['fixed_top_offset'])) {
+		        $data['fixed_top_offset'] = $ext_data['fixed_top_offset'];
+	        } else if ($this->input->post('fixed_top_offset')) {
+		        $data['fixed_top_offset'] = $this->input->post('fixed_top_offset');
+	        } else {
+		        $data['fixed_top_offset'] = '250';
+	        }
+
+	        if (isset($ext_data['fixed_bottom_offset'])) {
+		        $data['fixed_bottom_offset'] = $ext_data['fixed_bottom_offset'];
+	        } else if ($this->input->post('fixed_bottom_offset')) {
+		        $data['fixed_bottom_offset'] = $this->input->post('fixed_bottom_offset');
+	        } else {
+		        $data['fixed_bottom_offset'] = '120';
+	        }
+
+	        if (isset($ext_data['cart_images_h'])) {
                 $data['cart_images_h'] = $ext_data['cart_images_h'];
             } else {
                 $data['cart_images_h'] = $this->input->post('cart_images_h');
@@ -66,6 +90,12 @@ class Admin_cart_module extends Admin_Controller {
 
  	private function validateForm() {
 		$this->form_validation->set_rules('show_cart_images', 'lang:label_show_cart_images', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('fixed_cart', 'lang:label_fixed_cart', 'xss_clean|trim|required|integer');
+
+	    if ($this->input->post('fixed_cart') === '1') {
+		    $this->form_validation->set_rules('fixed_top_offset', 'lang:label_fixed_top_offset', 'xss_clean|trim|required|integer');
+		    $this->form_validation->set_rules('fixed_bottom_offset', 'lang:label_fixed_bottom_offset', 'xss_clean|trim|required|integer');
+	    }
 
         if ($this->input->post('show_cart_images') === '1')
         {

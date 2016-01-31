@@ -1,11 +1,89 @@
-.panel-cart {
+#cart-box-affix {
+margin-left: 0;
+}
+#cart-box-affix.affix {
+position: fixed !important;
+top: unset;
+bottom: 0;
+width: 100%;
+right: 0;
+left: 0;
+}
+#cart-box-affix.affix #cart-box {
+position: fixed;
+top: 0;
+bottom: 0;
+overflow: auto;
+width: 100%;
+height: auto !important;
+}
+#cart-box-affix .collapse {
+display: none;
+visibility: hidden;
+}
+#cart-box-affix .collapse.in {
+display: block;
+visibility: visible;
+}
+@media screen and (min-width: 768px) {
+#cart-box-affix {
+margin-left: -15px;
+}
+#cart-box-affix.affix {
+top: 5px;
+width: 23%;
+right: unset;
+left: unset;
+}
+#cart-box-affix.affix #cart-box {
+top: 5px;
+bottom: 10px;
+width: 23%;
+}
+#cart-box-affix .collapse {
+display: block;
+visibility: visible;
+}
+#cart-box-affix .collapse.in {
+display: block;
+visibility: visible;
+}
+}
+#cart-box-affix.affix .panel-cart {
+margin-left: 0;
+padding-bottom:50px;
 margin-bottom: 0;
+min-height: 100%;
+border-radius: 0;
+}
+#cart-box-affix.affix .buttons {
+position: relative;
+bottom: 50px;
+/*width: 23%;*/
+}
+@media screen and (min-width: 768px) {
+#cart-box-affix.affix .buttons {
+position: fixed;
+bottom: 10px;
+width: 23%;
+}
+}
+#cart-box-affix .navbar-toggle {
+float: none;
+}
+#cart-box-affix.affix .navbar-toggle {
+position: fixed;
+margin: 0;
+bottom: 10px;
+}
+#cart-box-affix.affix-bottom .navbar-toggle {
+display: none !important;
+}
+#cart-box-affix .navbar-toggle .order-total {
+font-weight: bold;
 }
 .panel-cart .panel-heading {
 margin-bottom: 0;
-}
-.panel-cart .panel-body {
-padding: 15px 0;
 }
 #cart-alert {
 font-size: 12px;
@@ -82,22 +160,22 @@ text-decoration: none;
 
 .cart-items ul li .name-image img {
 border-radius: 0;
-float: right;
+float: left;
 height: auto;
-margin-left: 4px;
+margin-right: 10px;
 max-width: 70px !important;
 width: 100% !important;
 }
-.cart-items {
-max-height: 300px;
-overflow: auto;
-}
+/*.cart-items {*/
+/*max-height: 300px;*/
+/*overflow: auto;*/
+/*}*/
 .cart-items ul li .cart-btn {
 float: right;
 height: auto;
 margin-left: 5px;
 margin-top: 10px;
-color:#11a2dc;
+color:#D9534F;
 cursor: pointer;
 text-decoration: none;
 margin-right: 20px;
