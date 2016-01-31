@@ -164,8 +164,8 @@ class Messages_model extends TI_Model {
 		if ($message_id) {
 			$this->db->select('message_recipients.*, staffs.staff_id, staffs.staff_name, staffs.staff_email, customers.customer_id, customers.first_name, customers.last_name, customers.email');
 			$this->db->from('message_recipients');
-			$this->db->join('staffs', 'staffs.staff_id = message_recipients.value', 'left');
-			$this->db->join('customers', 'customers.customer_id = message_recipients.value', 'left');
+			$this->db->join('staffs', 'staffs.staff_id = message_recipients.value OR staffs.staff_email = message_recipients.value', 'left');
+			$this->db->join('customers', 'customers.customer_id = message_recipients.value OR customers.email = message_recipients.value', 'left');
 			$this->db->where('message_id', $message_id);
 
 			$query = $this->db->get();
