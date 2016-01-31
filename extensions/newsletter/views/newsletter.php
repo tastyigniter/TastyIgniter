@@ -10,11 +10,11 @@
 
                 <div class="col-md-12">
 					<div class="subscribe-form col-sm-8 center-block">
-						<span><?php echo lang('text_subscribe'); ?></span>
+						<h3><?php echo lang('text_subscribe'); ?></h3>
 						<form class="subscribeForm" method="POST" action="<?php echo $subscribe_url; ?>">
 							<div class="input-group subscribe-group">
 								<input type="text" id="subscribe-email" class="form-control" name="subscribe_email">
-                                <a id="subscribeButton" class="input-group-addon clickable" onclick="subscribeEmail()"><i class="fa fa-paper-plane-o"></i></a>
+                                <a id="subscribeButton" class="input-group-addon btn btn-default" onclick="subscribeEmail()"><i class="fa fa-paper-plane-o"></i></a>
                             </div>
 						</form>
 					</div>

@@ -9,7 +9,7 @@
 
         <form method="GET" accept-charset="utf-8" action="<?php echo $current_url; ?>" id="find-table-form" role="form">
             <input type="hidden" name="action" value="<?php echo $find_table_action; ?>"/>
-            <div class="panel panel-default panel-find-table" style="display:<?php echo ($find_table_action === 'find_table') ? 'block' : 'none'; ?>">
+            <div class="panel panel-default panel-find-table" style="margin-bottom:0;display:<?php echo ($find_table_action === 'find_table') ? 'block' : 'none'; ?>">
                 <div class="panel-heading">
                     <h3 class="panel-title"><?php echo lang('text_heading'); ?></h3>
                 </div>
@@ -79,17 +79,17 @@
                         <?php echo form_error('reserve_time', '<span class="text-danger">', '</span>'); ?>
                     </div>
 
-                    <div class="col-xs-8 col-sm-2 wrap-none">
+                    <div class="col-xs-10 col-sm-2 wrap-none">
                         <button type="submit" class="btn btn-primary btn-block"><?php echo lang('button_find_table'); ?></button>
                     </div>
 
-                    <div class="col-xs-4 col-sm-2">
+                    <div class="col-xs-2 col-sm-2 text-right">
                         <a class="btn btn-default" href="<?php echo $reset_url; ?>"><?php echo lang('button_reset'); ?></a>
                     </div>
                 </div>
             </div>
 
-            <div class="panel panel-default panel-time-slots" style="display:<?php echo ($find_table_action === 'select_time') ? 'block' : 'none'; ?>">
+            <div class="panel panel-default panel-time-slots" style="margin-bottom:0;display:<?php echo ($find_table_action === 'select_time') ? 'block' : 'none'; ?>">
                 <div class="panel-heading">
                     <h3 class="panel-title"><?php echo lang('text_time_heading'); ?></h3>
                 </div>
@@ -134,7 +134,7 @@
             </div>
         </form>
 
-        <div class="panel panel-default panel-summary" style="display:<?php echo ($find_table_action === 'view_summary') ? 'block' : 'none'; ?>">
+        <div class="panel panel-default panel-summary" style="margin-bottom:0;display:<?php echo ($find_table_action === 'view_summary') ? 'block' : 'none'; ?>">
             <div class="panel-heading">
                 <h3 class="panel-title"><?php echo lang('text_reservation'); ?></h3>
             </div>

@@ -1,10 +1,24 @@
-#newsletter-alert .alert > .list-group-alert p {
-margin: 0;
+/*** Subscribe  ***/
+.newsletter-subscribe {
+background-color: #ED561A;
+color: #FFF;
 }
-#newsletter-alert .alert {
-margin-bottom: 0;
-padding: 10px;
-border: 0 none;
-text-align: center;
-border-radius: 0;
+.newsletter-subscribe h3 {
+float: left;
+margin: 10px 15px;
 }
+.subscribe-form {
+margin-top: 28px;
+padding-bottom: 20px;
+}
+.subscribe-form .input-group-addon {
+padding: 15px 20px;
+}
+.subscribe-form input.form-control {
+padding: 4px 10px 4px 10px;
+height: 46px;
+margin-top: 0px;
+outline: 0;
+border-color:#e7e7e7;
+}
+/*** End Subscribe  ***/

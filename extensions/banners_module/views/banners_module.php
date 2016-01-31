@@ -1,6 +1,6 @@
 <div id="banner-box" class="module-box">
 	<div class="panel panel-default">
- 		<div class="panel-body">
+ 		<div class="panel-body wrap-none">
             <?php if ($type === 'image') { ?>
                 <a href="<?php echo $click_url; ?>">
                     <img alt="<?php echo $alt_text; ?>" src="<?php echo $images[0]['url']; ?>" class="thumb img-responsive" />
