@@ -38,8 +38,12 @@ class Local_module extends Main_Controller {
 				$use_location = $this->config->item('default_location_id');
 			}
 
-			$this->location->setLocation($use_location);
-			$data['single_location_url'] = site_url('local?location_id='.$use_location);
+			if (!empty($use_location) AND is_numeric($use_location)) {
+				$this->location->setLocation($use_location);
+				$data['single_location_url'] = site_url('local?location_id=' . $use_location);
+			} else {
+				$data['single_location_url'] = site_url('local/all');
+			}
 		}
 
         $data['local_action']			= site_url('local_module/local_module/search');
