@@ -2,8 +2,9 @@
 
 $lang['_text_title'] 			            = 'Local';
 $lang['text_tab_general'] 		            = 'General';
+$lang['text_tab_texts'] 		            = 'Text';
 
-$lang['text_find'] 				            = 'Go';
+$lang['text_find'] 				            = 'View menu';
 $lang['text_order_summary'] 	            = 'Order delicious food online';
 $lang['text_goto_menus'] 		            = 'Go to Menu';
 $lang['text_location_summary'] 			    = '%s can deliver to you at %s';
@@ -23,13 +24,25 @@ $lang['text_collection_time_info'] 	        = 'Collect your order in <b class="t
 $lang['text_delivery_charge'] 	            = '<b>Delivery Cost:</b> %s';
 $lang['text_free_delivery'] 	            = 'Free Delivery';
 $lang['text_total_review'] 		            = '(%s)';
+$lang['text_single'] 		                = 'Single';
+$lang['text_multi'] 		                = 'Multi';
+
+$lang['column_language'] 		            = 'Language';
+$lang['column_replace'] 		            = 'Replace with';
 
 $lang['button_view_map'] 		            = 'View Map';
 $lang['button_change_location']             = 'Change Location';
 $lang['button_search_location']             = 'Search Location';
 
+$lang['label_location_search_mode'] 		= 'Location Search mode';
+$lang['label_use_location'] 		        = 'Use Location';
+$lang['label_display_min_order_amount'] 	= 'Display Min. Order Amount';
+$lang['label_lang'] 			            = 'Language Line';
 $lang['label_status'] 			            = 'Status';
 $lang['label_search_query'] 			    = 'Enter your address/postcode to order';
+
+$lang['help_location_search_mode'] 		    = 'Set whether to enable single or multi location search functionality. Single means search is disabled and the chosen location is used automatically.';
+$lang['help_use_location'] 		            = 'You can choose which location used by the system when taking orders in single location mode';
 
 $lang['alert_location_closed'] 		        = '<p class="alert-danger"><b>Restaurant is currently closed.</b></p>';
 $lang['alert_local_future_order'] 		    = '<p class="alert-info"><b>Restaurant is currently closed.</b><br />Pre-ordering is available for later delivery.</p>';

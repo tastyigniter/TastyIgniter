@@ -1,22 +1,36 @@
 .local-box-fluid {
-background-color: rgba(237, 86, 26, 0.9);
-border-radius: 35px;
-left: 10%;
-margin: 0 auto;
-padding-bottom: 20px;
-position: absolute;
-top: 35%;
-width: 80%;
+background-color: #ED561A;
+margin: 25px auto;
+padding-bottom: 0px;
 z-index: 999;
+position: relative;
+top: 0;
+}
+@media (min-width: 768px) {
+.local-box-fluid {
+margin: 0 auto;
+padding-bottom: 15px;
+border-radius: 25px;
+position: absolute;
+left: 10%;
+top: 36%;
+width: 80%;
+}
 }
 .local-box-fluid .container {
 width: 100%;
 }
 .local-box-fluid h2 {
 color: #fff;
-font-size: 42px;
+font-size: 24px;
 font-weight: 600;
-margin: 25px 0;
+margin: 5px 0px 20px !important;
+text-shadow: 1px 1px 0px rgba(0,0,0,0.3);
+}
+@media (max-width: 768px) {
+.local-box-fluid h2 {
+font-size: 16px;
+}
 }
 .local-box-fluid .form-control {
 border: 0 none;
@@ -53,18 +67,23 @@ color: #FFF;
 .postcode-group {
 width: 100%;
 }
+.postcode-group .input-group {
+margin: 0 auto;
+}
 .postcode-group .input-group-addon {
 background-color: #11a2dc;
 border-color: #11a2dc;
-border-radius:0;
+border-radius:0 5px 5px 0;
 color:#FFF;
+width: 35%;
+font-weight: bold;
 }
 .postcode-group .input-group-addon:hover {
 background-color: #0f91c4;
 border-color: #0f91c4;
 }
 .postcode-group .postcode-control {
-border-radius:0;
+border-radius:5px;
 /*width: 70%;*/
 }
 .location-search .postcode-group .postcode-control {
@@ -75,8 +94,8 @@ float: right;
 font-size: 32px;
 line-height: 24px;
 position: absolute;
-right: -45%;
-top: -22%;
+right: 5px;
+top: 0px;
 }
 /*** Location Search ***/
 
@@ -94,6 +113,15 @@ overflow: visible;
 padding: 0;
 display: block;
 }
+#local-info .panel-local .panel-heading {
+border: 0 none;
+}
+#local-info .panel-local .panel-body {
+padding-left: 15px;
+padding-right: 15px;
+background-color: #F5F5F5;
+margin: 0 -15px;
+}
 .panel-local .panel-body h2 {
 margin: 25px 0;
 }
@@ -102,6 +130,11 @@ margin-top: 0;
 margin-bottom: 5px;
 font-weight: normal;
 font-size: 24px;
+}
+@media (max-width: 768px) {
+.panel-local h4 {
+font-size: 14px;
+}
 }
 .panel-local .panel-heading, .panel-local .panel-body, .panel-local .panel-body > div {
 padding-left: 0;

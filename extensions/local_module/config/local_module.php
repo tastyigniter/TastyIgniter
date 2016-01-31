@@ -19,7 +19,7 @@
 */
 $config['extension_meta'] = array(
 	'name'        => 'local_module',
-	'version'     => '1.0',
+	'version'     => '1.1',
 	'type'        => 'module',
 	'title'       => 'Local',
 	'author'      => 'SamPoyigi',

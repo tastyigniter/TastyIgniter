@@ -17,7 +17,30 @@ class Local_module extends Main_Controller {
 			show_404(); 																		// Whoops, show 404 error page!
 		}
 
-        $this->template->setStyleTag(extension_url('local_module/views/stylesheet.css'), 'local-module-css', '100000');
+		if (empty($ext_data['status']) OR $ext_data['status'] !== '1') {
+			return;
+		}
+
+		$this->template->setStyleTag(extension_url('local_module/views/stylesheet.css'), 'local-module-css', '100000');
+
+		$data['local_lang'] = array();
+		if (!empty($ext_data['lang'])) {
+	        $data['local_lang'] = $ext_data['lang'];
+        }
+
+		$data['location_search_mode'] = 'multi';
+		if ($ext_data['location_search_mode'] === 'single') {
+			$data['location_search_mode'] = 'single';
+
+			if (is_numeric($ext_data['use_location'])) {
+				$use_location = $ext_data['use_location'];
+			} else {
+				$use_location = $this->config->item('default_location_id');
+			}
+
+			$this->location->setLocation($use_location);
+			$data['single_location_url'] = site_url('local?location_id='.$use_location);
+		}
 
         $data['local_action']			= site_url('local_module/local_module/search');
 
@@ -56,22 +79,23 @@ class Local_module extends Main_Controller {
         }
 
         if (!$this->location->hasDelivery() AND $this->location->hasCollection()) { 														// checks if cart contents is empty
-            $data['text_service_offered'] = $this->lang->line('text_collection_only');
+            $data['text_service_offered'] = (!empty($data['local_lang']['text_collection_only'])) ? $data['local_lang']['text_collection_only'] : $this->lang->line('text_collection_only');
         } else if ($this->location->hasDelivery() AND !$this->location->hasCollection()) {
-            $data['text_service_offered'] = $this->lang->line('text_delivery_only');
+            $data['text_service_offered'] = (!empty($data['local_lang']['text_delivery_only'])) ? $data['local_lang']['text_delivery_only'] : $this->lang->line('text_delivery_only');
         } else if ($this->location->hasDelivery() AND $this->location->hasCollection()) {
-            $data['text_service_offered'] = $this->lang->line('text_both_types');						// display we are open
+            $data['text_service_offered'] = (!empty($data['local_lang']['text_both_types'])) ? $data['local_lang']['text_both_types'] : $this->lang->line('text_both_types');						// display we are open
         } else {
-            $data['text_service_offered'] = $this->lang->line('text_no_types');
+            $data['text_service_offered'] = (!empty($data['local_lang']['text_no_types'])) ? $data['local_lang']['text_no_types'] : $this->lang->line('text_no_types');
         }
 
         if ($this->location->deliveryCharge() > 0) {
-            $data['text_delivery_charge'] = sprintf($this->lang->line('text_delivery_charge'), $this->currency->format($this->location->deliveryCharge()));
+            $text_delivery_charge = (!empty($data['local_lang']['text_delivery_charge'])) ? $data['local_lang']['text_delivery_charge'] : $this->lang->line('text_delivery_charge');
+            $data['text_delivery_charge'] = sprintf($text_delivery_charge, $this->currency->format($this->location->deliveryCharge()));
         } else {
-            $data['text_delivery_charge'] = $this->lang->line('text_free_delivery');
+            $data['text_delivery_charge'] = (!empty($data['local_lang']['text_free_delivery'])) ? $data['local_lang']['text_free_delivery'] : $this->lang->line('text_free_delivery');
         }
 
-        if ($this->location->minimumOrder() > 0) {
+		if ($this->location->minimumOrder() > 0) {
             $data['min_total'] = $this->currency->format($this->location->minimumOrder());
         } else {
             $data['min_total'] = $this->currency->format('0.00');
