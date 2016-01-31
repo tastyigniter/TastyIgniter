@@ -105,7 +105,16 @@
             </div>
 
 			<?php if ($islogged) { ?>
- 				<ul class="nav navbar-top-links navbar-right">
+				<div class="navbar-default sidebar" role="navigation">
+					<div class="sidebar-nav navbar-collapse">
+						<?php echo get_nav_menu(array(
+							'container_open'    => '<ul class="nav" id="side-menu">',
+							'container_close'   => '</ul>',
+						)); ?>
+					</div>
+				</div>
+
+				<ul class="nav navbar-top-links navbar-right">
 					<li class="dropdown">
 						<a class="front-end" title="<?php echo lang('menu_storefront'); ?>" href="<?php echo root_url(); ?>" target="_blank">
 							<i class="fa fa-home"></i>
@@ -183,15 +192,6 @@
 						</a>
 					<?php } ?>
 				</h1>
-
-				<div class="navbar-default sidebar" role="navigation">
-					<div class="sidebar-nav navbar-collapse">
-						<?php echo get_nav_menu(array(
-	                        'container_open'    => '<ul class="nav" id="side-menu">',
-	                        'container_close'   => '</ul>',
-                        )); ?>
-					</div>
-				</div>
 			<?php } ?>
 		</nav>
 

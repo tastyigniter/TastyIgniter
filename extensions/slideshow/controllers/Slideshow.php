@@ -14,7 +14,7 @@ class Slideshow extends Main_Controller {
 		}
 
 		$this->template->setStyleTag(extension_url('slideshow/views/assets/flexslider/flexslider.css'), 'flexslider-css', '155000');
-		$this->template->setStyleTag(extension_url('slideshow/views/assets/css/stylesheet.css'), 'slideshow-css', '155600');
+		$this->template->setStyleTag(extension_url('slideshow/views/css/stylesheet.css'), 'slideshow-css', '155600');
 		$this->template->setScriptTag(extension_url('slideshow/views/assets/flexslider/jquery.flexslider.js'), 'flexslider-js', '155000');
 
 		$data['dimension_h'] 		= (isset($result['dimension_h'])) ? $result['dimension_h'] : '360';

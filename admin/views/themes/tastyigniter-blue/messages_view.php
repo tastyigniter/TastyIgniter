@@ -37,7 +37,6 @@
                             <?php } else { ?>
                                 <button class="btn btn-default btn-sm" title="Archive" onclick="moveToArchive()"><i class="fa fa-archive"></i></button>
                             <?php } ?>
-                            <button class="btn btn-default btn-sm" title="Resend" onclick="resendList()"><i class="fa fa-share"></i></button>
                             <div class="btn-group">
                                 <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" aria-expanded="true">
                                     <i class="fa fa-ellipsis-h"></i> &nbsp;<i class="caret"></i>

@@ -1,10 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-$lang['site_title'] 		                        = '%s ‹ %s';
+$lang['site_title'] 		                        = '%s - %s';
 $lang['site_copyright'] 			                = '&copy; %s %s - ';
 
 $lang['text_minutes'] 			                    = 'minutes';
 $lang['text_min'] 		                            = 'min';
+$lang['text_my_account'] 			                = 'My Account';
+$lang['text_information'] 			                = 'Information';
 $lang['text_follow_us'] 			                = 'Follow us on:';
 
 $lang['menu_home'] 		                            = 'Home';
@@ -19,7 +21,7 @@ $lang['menu_detail'] 		                        = 'Edit Details';
 $lang['menu_address'] 		                        = 'Address Book';
 $lang['menu_recent_order'] 		                    = 'Recent Orders';
 $lang['menu_recent_reservation'] 		            = 'Recent Reservations';
-$lang['menu_locations'] 		                    = 'Locations';
+$lang['menu_locations'] 		                    = 'Our Locations';
 $lang['menu_contact'] 		                        = 'Contact Us';
 $lang['menu_admin'] 		                        = 'Administrator';
 

@@ -2,8 +2,8 @@
 <div id="footer" class="<?php echo ($this->user->islogged()) ? '' : 'wrap-none'; ?>">
 	<div class="row navbar-footer">
 		<div class="col-sm-12 text-version">
-			<p class="col-xs-12 col-sm-9 wrap-none"><?php echo lang('tastyigniter_copyright'); ?></p>
-			<p class="col-xs-12 col-sm-3 text-right wrap-none"><?php echo sprintf(lang('tastyigniter_version'), config_item('ti_version')); ?></p>
+			<p class="col-xs-9 wrap-none"><?php echo lang('tastyigniter_copyright'); ?></p>
+			<p class="col-xs-3 text-right wrap-none"><?php echo sprintf(lang('tastyigniter_version'), config_item('ti_version')); ?></p>
 		</div>
 	</div>
 </div>
