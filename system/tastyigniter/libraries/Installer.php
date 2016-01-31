@@ -1,18 +1,40 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+<?php
+/**
+ * TastyIgniter
+ *
+ * An open source online ordering, reservation and management system for restaurants.
+ *
+ * @package   TastyIgniter
+ * @author    SamPoyigi
+ * @copyright TastyIgniter
+ * @link      http://tastyigniter.com
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 1.0
+ * @filesource
+ */
+defined('BASEPATH') OR exit('No direct script access allowed');
 
+/**
+ * Installer Class
+ *
+ * @category       Libraries
+ * @package        TastyIgniter\Libraries\Installer.php
+ * @link           http://docs.tastyigniter.com
+ */
 class Installer {
 
     public $db_exists = NULL;
 
     public $installed_php_version;
+    public $installed_mysql_version;
     public $required_php_version = '5.4';
 
     private $writable_folders = array(
-        'admin/cache/',
-        'main/cache/',
-        'system/tastyigniter/logs/',
-        'assets/downloads/',
-        'assets/images/'
+        'admin/cache',
+        'main/cache',
+        'system/tastyigniter/logs',
+        'assets/downloads',
+        'assets/images'
     );
 
     private $writable_files = array(
@@ -22,7 +44,27 @@ class Installer {
     public function __construct($config = array()) {
         $this->CI =& get_instance();
 
+        $this->CI->load->model('Setup_model');
+
         $this->installed_php_version = phpversion();
+    }
+
+    public function getSysInfo() {
+        $info = array();
+        $info['version'] = TI_VERSION;
+        $info['php_version'] = $this->installed_php_version;
+        $info['mysql_version'] = $this->db_exists ? $this->CI->db->version() : '';
+        $info['api'] = $this->CI->config->item('api_key', '');
+
+        $this->CI->load->model('Languages_model');
+        $languages = $this->CI->Languages_model->getLanguages();
+        foreach ($languages as $language) {
+            $langs[] = $language['idiom'];
+        }
+
+        $info['languages'] = implode(',', $langs);
+
+        return $info;
     }
 
     public function checkRequirements() {
@@ -71,40 +113,17 @@ class Installer {
         }
 
         // Install the latest database migrations.
-//        $this->CI->load->library('migration');
-//
-//        if ( ! $this->CI->migration->install()) {
-//            show_error($this->CI->migration->error_string());
-//            return FALSE;
-//        }
+        $this->CI->load->library('migration');
+
+        if ( ! $this->CI->migration->current()) {
+            show_error($this->CI->migration->error_string());
+
+            return FALSE;
+        }
 
         $this->CI->Setup_model->updateVersion();
 
         return TRUE;
-    }
-
-    public function checkCoreUpdate() {
-        $url = "https://api.github.com/repos/sampoyigi/tastyigniter/releases/latest";
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
-        curl_setopt($ch, CURLOPT_USERAGENT, $this->CI->agent->agent_string());
-        $result = curl_exec($ch);
-        curl_close($ch);
-
-        $latest_release = json_decode($result);
-
-        if (!empty($latest_release) AND isset($latest_release->tag_name)) {
-
-            if (TI_VERSION !== $latest_release->tag_name) {
-                return array(
-                    'version' => $latest_release->tag_name,
-                    'download' => $latest_release->zipball_url,
-                    'changelog' => nl2br($latest_release->body),
-                );
-            }
-        }
     }
 
     public function isInstalled() {
@@ -271,7 +290,37 @@ class Installer {
         // so development doesn't require removing the setup folder.
         $this->CI->Setup_model->updateVersion();
 
+        // Create the encryption key used for sessions and encryption
+        $this->createEncryptionKey();
+
         return TRUE;
+    }
+
+    protected function createEncryptionKey() {
+        $this->CI->load->helper('config_helper');
+
+        $chars = array(
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+            'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+        );
+
+        shuffle($chars);
+        $num_chars = count($chars) - 1;
+
+        $token = '';
+        // Create random token at the specified length.
+        for ($i = 0; $i < 32; $i++) {
+            $token .= $chars[mt_rand(0, $num_chars)];
+        }
+
+        $config_array = array(
+            'encryption_key' => $token,
+        );
+
+        return write_config('config', $config_array, '', IGNITEPATH);
     }
 }
 
