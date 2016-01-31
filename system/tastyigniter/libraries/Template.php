@@ -668,9 +668,9 @@ class Template {
 	    }
 
 	    if (!empty($active_theme_options) AND isset($active_theme_options[0]) AND $active_theme_options[0] === $this->_theme) {
-		    $data = (isset($active_theme_options[1]) AND is_array($active_theme_options[1])) ? $active_theme_options[1] : array();
-		    $content = $this->_find_view('stylesheet', $data);
-	    }
+            $data = (isset($active_theme_options[1]) AND is_array($active_theme_options[1])) ? $active_theme_options[1] : array();
+            $content = $this->CI->load->view($this->_theme . '/stylesheet', $data, TRUE);
+        }
 
         return $content;
 	}
