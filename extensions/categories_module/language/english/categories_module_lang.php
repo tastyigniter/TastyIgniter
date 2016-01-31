@@ -4,6 +4,7 @@ $lang['_text_title'] 		    = 'Categories';
 $lang['text_tab_general'] 	    = 'General';
 
 $lang['text_categories'] 		= 'Categories';
+$lang['text_view_categories']   = 'View categories';
 $lang['text_clear'] 			= 'clear';
 $lang['text_show_all'] 			= 'Show All';
 

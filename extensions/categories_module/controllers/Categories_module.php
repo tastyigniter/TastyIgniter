@@ -17,6 +17,8 @@ class Categories_module extends Main_Controller {
 			$data['category_id'] = 0;
 		}
 
+		$this->template->setStyleTag(extension_url('categories_module/views/stylesheet.css'), 'categories-module-css', '155000');
+
 		$data['menu_total'] 			= $this->Menus_model->getCount();
 
 		$data['categories'] = array();

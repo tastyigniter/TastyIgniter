@@ -24,7 +24,7 @@ $config['extension_meta'] = array(
 	'title'       => 'Categories',
 	'author'      => 'SamPoyigi',
 	'description' => 'This extension will allow you to place a list of categories around your website.',
-	'settings'    => TRUE,
+	'settings'    => FALSE,
 );
 
 /*
