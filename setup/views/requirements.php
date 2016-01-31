@@ -1,6 +1,6 @@
 <form accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>" />
 	<input type="hidden" name="requirements" value="1" />
-	<table class="table table-bordered">
+	<table class="table table-striped requirements">
 		<tr>
 			<td class="first"><?php echo sprintf(lang('label_php_version'), $required_php_version); ?></td>
 			<td><?php echo sprintf(lang('text_php_version'), $installed_php_version); ?></td>
@@ -43,10 +43,9 @@
 			<td class="text-center"><?php echo (!$writable['status']) ? '<i class="fa fa-exclamation-triangle red"></i>' : '<i class="fa fa-check-square-o green"></i>'; ?></td>
 		</tr>
 		<?php } ?>
-		<tr>
-			<td colspan="3">
-				<button type="submit" class="btn btn-success pull-right"><?php echo lang('button_continue'); ?></button>
-			</td>
-		</tr>
 	</table>
+	<div class="buttons">
+		<a class="btn btn-default" href="<?php echo $back_url; ?>"><?php echo lang('button_back'); ?></a>
+		<button type="submit" class="btn btn-success pull-right"><?php echo lang('button_continue'); ?></button>
+	</div>
 </form>

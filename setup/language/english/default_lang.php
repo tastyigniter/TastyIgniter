@@ -23,6 +23,7 @@ $lang['text_magic_quotes_enabled'] 	    = 'is Magic Quotes GPC turned off?';
 $lang['text_file_uploads_enabled'] 		= 'is File Uploads turned on?';
 $lang['text_is_file_writable'] 		    = 'is file writable?';
 
+$lang['text_license_agreed'] 		    = 'By proceeding further, you will be deemed to have accepted the License agreement.';
 $lang['text_login_to_admin'] 		    = 'Login to your Admin Dashboard';
 $lang['text_goto_storefront'] 		    = 'Go to your Online Restaurant';
 $lang['text_next_step'] 		        = 'Next Step:';

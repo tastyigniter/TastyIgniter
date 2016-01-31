@@ -23,15 +23,44 @@ class Setup extends Base_Controller {
     }
 
 	public function index() {
-        $this->requirements();
+        $this->license();
+    }
+
+    public function license() {
+        $data['text_heading'] 		= $this->lang->line('text_license_heading');
+        $data['text_sub_heading'] 	= $this->lang->line('text_license_sub_heading');
+        $data['setup_step'] 	    = $this->setup_step;
+
+        if ($this->input->post('licence_agreed')) {
+            $this->session->set_tempdata('setup_step', 'requirements', $this->setup_timeout);
+            redirect('requirements');
+        }
+
+        if ( ! file_exists(VIEWPATH .'/license.php')) {
+            show_404();
+        } else {
+            $this->load->view('header', $data);
+            $this->load->view('license', $data);
+            $this->load->view('footer', $data);
+        }
+
     }
 
 	public function requirements() {
-        $data['text_heading']           = $this->lang->line('text_requirement_heading');
+        if ($this->setup_proceed === FALSE) {
+            $this->alert->set('danger', $this->lang->line('alert_license_error'));
+            redirect('license');
+        }
+
+        $data['text_heading'] 		    = $this->lang->line('text_requirement_heading');
+        $data['text_sub_heading'] 		= $this->lang->line('text_requirement_sub_heading');
         $data['installed_php_version']  = $this->installer->installed_php_version;
         $data['required_php_version']   = $this->installer->required_php_version;
         $data['requirements']           = $this->installer->checkRequirements();
         $data['writables']              = $this->installer->checkWritable();
+        $data['setup_step'] 	    = $this->setup_step;
+
+        $data['back_url'] 		        = site_url('license');
 
         if ($this->input->post('requirements')) {
             if (!in_array(FALSE, $data['requirements'], TRUE) AND !in_array(FALSE, $data['writables'], TRUE)) {
@@ -63,6 +92,8 @@ class Setup extends Base_Controller {
         }
 
         $data['text_heading'] 		= $this->lang->line('text_database_heading');
+        $data['text_sub_heading'] 	= $this->lang->line('text_database_sub_heading');
+        $data['setup_step'] 	    = $this->setup_step;
         $data['back_url'] 		    = site_url('requirements');
 
         foreach (array('database', 'hostname', 'username', 'password', 'dbprefix') as $item) {
@@ -99,6 +130,8 @@ class Setup extends Base_Controller {
         }
 
         $data['text_heading'] 		= $this->lang->line('text_settings_heading');
+        $data['text_sub_heading'] 	= $this->lang->line('text_settings_sub_heading');
+        $data['setup_step'] 	    = $this->setup_step;
         $data['back_url'] 		    = site_url('database');
 
         foreach (array('site_name', 'site_email', 'staff_name', 'username', 'password') as $item) {
@@ -130,7 +163,10 @@ class Setup extends Base_Controller {
         }
 
         $data['text_heading'] 		= $this->lang->line('text_success_heading');
+        $data['text_sub_heading'] 	= $this->lang->line('text_success_sub_heading');
+        $data['setup_step'] 	    = $this->setup_step;
         $data['admin_url'] 	        = root_url(ADMINDIR);
+        $data['site_url'] 	        = root_url();
 
         $this->load->library('user');
         $this->user->logout();
@@ -163,10 +199,10 @@ class Setup extends Base_Controller {
     private function _validateSettings() {
         if ($this->input->post()) {
             $this->form_validation->set_rules('site_name', 'lang:label_site_name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
-            $this->form_validation->set_rules('site_email', 'lang:site_email', 'xss_clean|trim|required|valid_email');
+            $this->form_validation->set_rules('site_email', 'lang:label_site_email', 'xss_clean|trim|required|valid_email');
             $this->form_validation->set_rules('staff_name', 'lang:label_staff_name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
-            $this->form_validation->set_rules('username', 'lang:label_username', 'xss_clean|trim|required|min_length[2]|max_length[32]');
-            $this->form_validation->set_rules('password', 'lang:label_password', 'xss_clean|trim|required|min_length[6]|max_length[128]|matches[confirm_password]');
+            $this->form_validation->set_rules('username', 'lang:label_admin_username', 'xss_clean|trim|required|min_length[2]|max_length[32]');
+            $this->form_validation->set_rules('password', 'lang:label_admin_password', 'xss_clean|trim|required|min_length[6]|max_length[128]|matches[confirm_password]');
             $this->form_validation->set_rules('confirm_password', 'lang:label_confirm_password', 'xss_clean|trim|required');
 
             if ($this->form_validation->run() === TRUE) {
