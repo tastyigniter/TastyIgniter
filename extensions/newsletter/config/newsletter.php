@@ -24,5 +24,5 @@ $config['extension_meta'] = array(
 	'title'       => 'Newsletter',
 	'author'      => 'SamPoyigi',
 	'description' => 'This extension will allow you to place a newsletter subscribe module around your website.',
-	'settings'    => TRUE,
+	'settings'    => FALSE,
 );

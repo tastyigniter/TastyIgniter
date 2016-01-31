@@ -24,7 +24,7 @@ $config['extension_meta'] = array(
 	'title'       => 'Reservation',
 	'author'      => 'SamPoyigi',
 	'description' => 'This extension will allow you to place a reservation module around your website.',
-	'settings'    => TRUE,
+	'settings'    => FALSE,
 );
 
 /*
