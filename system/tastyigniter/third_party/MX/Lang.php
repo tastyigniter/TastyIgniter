@@ -55,8 +55,8 @@ class MX_Lang extends CI_Lang
 		if ($path === FALSE) 
 		{
 			if ($lang = parent::load($langfile, $lang, $return, $add_suffix, $alt_path)) return $lang;
-		
-		} 
+
+		}
 		else 
 		{
 			if($lang = Modules::load_file($_langfile, $path, 'lang'))

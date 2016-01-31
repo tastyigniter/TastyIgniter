@@ -79,7 +79,7 @@
 		<header id="main-header">
 			<div class="container">
                 <div class="row">
-                    <div class="col-sm-4 col-md-3">
+                    <div class="col-sm-5">
 						<button type="button" class="btn-navbar navbar-toggle" data-toggle="collapse" data-target="#main-header-menu-collapse">
 							<i class="fa fa-align-justify"></i>
 						</button>
@@ -97,7 +97,7 @@
 							</a>
 						</div>
 					</div>
-                    <div class="col-sm-8 col-md-9">
+                    <div class="col-sm-7">
 						<div class="collapse navbar-collapse" id="main-header-menu-collapse">
 							<ul class="nav navbar-nav navbar-right">
 								<?php if ($this->config->item('reservation_mode') === '1') { ?>
@@ -143,7 +143,7 @@
 	            <div id="breadcrumb">
 	                <div class="container">
 	                    <div class="row">
-	                        <div class="col-md-12">
+	                        <div class="col-xs-12">
                                 <?php echo $breadcrumbs; ?>
 	                        </div>
 	                    </div>
@@ -155,7 +155,7 @@
 	            <div id="heading">
 	                <div class="container">
 	                    <div class="row">
-	                        <div class="col-md-12">
+	                        <div class="col-xs-12">
 	                            <div class="heading-content">
 	                                <h2><?php echo $page_heading; ?></h2>
 	                            </div>

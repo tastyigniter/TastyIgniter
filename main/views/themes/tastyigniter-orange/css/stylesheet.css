@@ -915,6 +915,19 @@ margin-top: 30px;
 
 
 /*** Footer  ***/
+#page-footer {
+background-color: #EDEFF1;
+background-image: linear-gradient(to bottom, #EDEFF1, #EDEFF1);
+}
+#page-footer .main-footer, #page-footer .main-footer a {
+  color: #9BA1A7;
+}
+#page-footer .bottom-footer {
+  background-color: #FBFBFB;
+}
+#page-footer .bottom-footer, #page-footer .bottom-footer a {
+  color: #A3AAAF;
+}
 .main-footer {
 padding: 10px 0 10px;
 }
