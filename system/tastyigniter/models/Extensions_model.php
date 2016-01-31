@@ -50,7 +50,7 @@ class Extensions_model extends TI_Model {
 			$extension['settings'] = ! empty($extension_meta['settings'])
 			AND file_exists($extension_path . '/controllers/admin_' . $basename . '.php') ? TRUE : FALSE;
 
-			$extension['config'] = ( ! empty($config) AND is_array($config)) ? TRUE : FALSE;
+			$extension['config'] = ( ! empty($config) AND is_array($config)) ? TRUE : $config;
 
 			$extension['meta'] = ( ! empty($extension_meta) AND is_array($extension_meta)) ? $extension_meta : array();
 
@@ -154,22 +154,6 @@ class Extensions_model extends TI_Model {
 		return $result;
 	}
 
-	private function fetchExtensionsPath() {
-		$results = array();
-
-		if ($modules_locations = $this->config->item('modules_locations')) {
-			foreach ($modules_locations as $location => $offset) {
-				foreach (glob($location . '*', GLOB_ONLYDIR) as $extension_path) {
-					if (is_dir($extension_path) OR is_file($extension_path . '/config/' . basename($extension_path) . '.php')) {
-						$results[] = $extension_path;
-					}
-				}
-			}
-		}
-
-		return $results;
-	}
-
 	public function getModules() {
 		return $this->getInstalledExtensions('module', TRUE);
 	}
@@ -199,7 +183,7 @@ class Extensions_model extends TI_Model {
 
 		! isset($data['ext_data']) OR $data = $data['ext_data'];
 
-		return $this->updateExtension($name, $data, $log_activity);
+		return $this->updateExtension(FALSE, $name, $data, $log_activity);
 	}
 
 	public function updateExtension($type = 'module', $name = NULL, $data = array(), $log_activity = TRUE) {
@@ -216,6 +200,8 @@ class Extensions_model extends TI_Model {
 			$config = $this->extension->loadConfig($name, FALSE, TRUE);
 			$meta = $this->extension->getMeta($name, $config);
 
+			if ($type === FALSE) $type = $meta['type'];
+
 			if (isset($meta['type'], $meta['title']) AND $type === $meta['type']) {
 				$this->db->set('data', (is_array($data)) ? serialize($data) : $data);
 
@@ -228,58 +214,13 @@ class Extensions_model extends TI_Model {
 
 				if ($log_activity) {
 					log_activity($this->user->getStaffId(), 'updated', 'extensions',
-					             get_activity_message('activity_custom_no_link', array('{staff}', '{action}', '{context}',
-						             '{item}'), array($this->user->getStaffName(), 'updated', 'extension ' . $meta['type'], $meta['title'])));
+						get_activity_message('activity_custom_no_link', array('{staff}', '{action}', '{context}',
+							'{item}'), array($this->user->getStaffName(), 'updated', $meta['type'].' extension', $meta['title'])));
 				}
 			}
 		}
 
 		return $query;
-	}
-
-	public function upload($type = '', $file = array()) {
-		if ($type === 'module' AND isset($file['tmp_name']) AND class_exists('ZipArchive')) {
-			$rename_dir = '__0';
-			$upload_path = ROOTPATH . EXTPATH;
-
-			$zip = new ZipArchive;
-
-			$file_path = $file['tmp_name'];
-			chmod($file_path, 0777);
-
-			if ($zip->open($file_path) === TRUE) {
-				$i = 0;
-
-				while ($info = $zip->statIndex($i)) {
-					if ($i === 0 AND preg_match('/\s/', $info['name'])) $rename_dir = $info['name'];
-
-					$file_path = $upload_path . $info['name'];
-					if (file_exists($file_path) OR ($rename_dir !== '__0' AND file_exists($upload_path . $rename_dir))) return FALSE;
-					$i ++;
-				}
-
-				$zip->extractTo($upload_path);
-				$zip->close();
-
-				if ($rename_dir !== '__0' AND is_dir($upload_path . $rename_dir)) {
-					$new_name = str_replace(' ', '-', $rename_dir);
-
-					if (is_dir($upload_path . $new_name)) {
-						$this->load->helper('file');
-						delete_files($upload_path . $rename_dir, TRUE);
-						rmdir($upload_path . $rename_dir);
-
-						return FALSE;
-					}
-
-					rename($upload_path . $rename_dir, $upload_path . $new_name);
-				}
-
-				return TRUE;
-			}
-		}
-
-		return FALSE;
 	}
 
 	public function install($type = '', $name = '', $config = NULL) {
@@ -357,6 +298,45 @@ class Extensions_model extends TI_Model {
 		return $query;
 	}
 
+	public function extensionExists($extension_name) {
+
+		if ( ! empty($extension_name) AND $modules_locations = $this->config->item('modules_locations')) {
+			foreach ($modules_locations as $location => $offset) {
+				if (is_dir($location . $extension_name)) {
+					return TRUE;
+				}
+			}
+		}
+
+		return FALSE;
+	}
+
+	public function extractExtension($file = array(), $module = NULL) {
+		if (isset($file['tmp_name']) AND class_exists('ZipArchive')) {
+
+			$zip = new ZipArchive;
+
+			chmod($file['tmp_name'], DIR_READ_MODE);
+
+			$EXTPATH = ROOTPATH . EXTPATH;
+
+			if ($zip->open($file['tmp_name']) === TRUE) {
+				$extension_dir = $zip->getNameIndex(0);
+
+				if (preg_match('/\s/', $extension_dir) OR file_exists($EXTPATH .'/'. $extension_dir)) {
+					return $this->lang->line('error_extension_exists');
+				}
+
+				$zip->extractTo($EXTPATH);
+				$zip->close();
+
+				return TRUE;
+			}
+		}
+
+		return FALSE;
+	}
+
 	public function delete($type = '', $name = '') {
 		$query = FALSE;
 
@@ -371,8 +351,8 @@ class Extensions_model extends TI_Model {
 				$query = TRUE;
 			}
 
-			$query = $this->db->where('status', '1')->where('type', $type)->where('name', $name)->get('extensions');
-			if ($query->num_rows() <= 0) {
+			$get_installed = $this->db->where('status', '1')->where('type', $type)->where('name', $name)->get('extensions');
+			if ($get_installed->num_rows() <= 0) {
 				$this->load->helper('file');
 				delete_files(ROOTPATH . EXTPATH . $name, TRUE);
 				rmdir(ROOTPATH . EXTPATH . $name);
@@ -384,17 +364,38 @@ class Extensions_model extends TI_Model {
 		return $query;
 	}
 
-	public function extensionExists($extension_name) {
+	private function fetchExtensionsPath() {
+		$results = array();
 
-		if ( ! empty($extension_name) AND $modules_locations = $this->config->item('modules_locations')) {
+		if ($modules_locations = $this->config->item('modules_locations')) {
 			foreach ($modules_locations as $location => $offset) {
-				if (is_dir($location . $extension_name)) {
-					return TRUE;
+				foreach (glob($location . '*', GLOB_ONLYDIR) as $extension_path) {
+					if (is_dir($extension_path) OR is_file($extension_path . '/config/' . basename($extension_path) . '.php')) {
+						$results[] = $extension_path;
+					}
 				}
 			}
 		}
 
-		return FALSE;
+		return $results;
+	}
+
+	public function getExtensionFiles($extension_name = NULL, $files = array()) {
+		if ( ! is_dir(ROOTPATH . EXTPATH . $extension_name)) {
+			return NULL;
+		}
+
+		foreach (glob(ROOTPATH . EXTPATH . $extension_name . '/*') as $filepath) {
+			$filename = str_replace(ROOTPATH . EXTPATH, '', $filepath);
+
+			if (is_dir($filepath)) {
+				$files = $this->getExtensionFiles($filename, $files);
+			} else {
+				$files[] = $filename;
+			}
+		}
+
+		return $files;
 	}
 }
 

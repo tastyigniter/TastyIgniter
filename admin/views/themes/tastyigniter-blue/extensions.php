@@ -74,11 +74,14 @@
 							<?php foreach ($extensions as $extension) { ?>
 							<tr>
 								<td class="action action-three">
-                                    <?php if ($extension['settings'] === TRUE AND $extension['status'] === '1') {?>
+                                    <?php if ($extension['settings'] === TRUE AND $extension['status'] === '1') { ?>
                                         <a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $extension['edit']; ?>"><i class="fa fa-pencil"></i></a>
                                         &nbsp;&nbsp;&nbsp;
+                                    <?php } else if ($extension['installed'] === TRUE AND $extension['status'] === '1') { ?>
+	                                    <a class="btn btn-edit disabled" title="<?php echo lang('text_edit'); ?>"><i class="fa fa-pencil"></i></a>
+	                                    &nbsp;&nbsp;&nbsp;
                                     <?php } ?>
-									<?php if ($extension['installed'] === TRUE AND $extension['status'] === '1') {?>
+									<?php if ($extension['installed'] === TRUE AND $extension['status'] === '1') { ?>
 										<a class="btn btn-danger" title="<?php echo lang('text_uninstall'); ?>" href="<?php echo $extension['manage']; ?>"><i class="fa fa-pause"></i></a>
 									<?php } else { ?>
 										<a class="btn btn-success" title="<?php echo lang('text_install'); ?>" href="<?php echo $extension['manage']; ?>"><i class="fa fa-play"></i></a>
@@ -93,8 +96,6 @@
                                     <div class="extension_desc"><p><?php echo $extension['description']; ?></p></div>
                                     <div class="extension_meta text-muted small">
                                         <span><?php echo lang('column_version'); ?>: <?php echo $extension['version']; ?></span>
-                                        &nbsp;&nbsp;|&nbsp;&nbsp;
-                                        <span><?php echo lang('column_type'); ?>: <?php echo ucfirst($extension['type']); ?></span>
                                         &nbsp;&nbsp;|&nbsp;&nbsp;
                                         <span><?php echo lang('column_author'); ?>: <?php echo $extension['author']; ?></span>
                                     </div>
@@ -118,13 +119,5 @@
     function filterList() {
         $('#filter-form').submit();
     }
-
-    $(document).ready(function() {
-        $('a.delete').click(function(){
-            if (!confirm('<?php echo lang('alert_warning_confirm'); ?>')) {
-                return false;
-            }
-        });
-    })
 //--></script>
 <?php echo get_footer(); ?>

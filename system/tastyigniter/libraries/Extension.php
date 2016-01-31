@@ -23,159 +23,173 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Extension {
 
-    private $extensions = array();
+	private $extensions = array();
 
-    public function __construct() {
-        $this->CI =& get_instance();
-    }
+	public function __construct() {
+		$this->CI =& get_instance();
+	}
 
-    public function getInstalledExtensions($type = NULL) {
-        $this->CI->load->model('Extensions_model');
-        return $this->CI->Extensions_model->getInstalledExtensions($type);
-    }
+	public function getInstalledExtensions($type = NULL) {
+		$this->CI->load->model('Extensions_model');
 
-    public function getExtensions($type = NULL) {
-        !empty($this->extensions) OR $this->extensions = $this->getInstalledExtensions();
+		return $this->CI->Extensions_model->getInstalledExtensions($type);
+	}
 
-        if (!empty($type)) {
-            $results = array();
+	public function getExtensions($type = NULL) {
+		! empty($this->extensions) OR $this->extensions = $this->getInstalledExtensions();
 
-            foreach ($this->extensions as $name => $extenion) {
-                if ($extenion['type'] === $type) {
-                    $results[$name] = $extenion;
-                }
-            }
+		if ( ! empty($type)) {
+			$results = array();
 
-            return $results;
-        }
+			foreach ($this->extensions as $name => $extenion) {
+				if ($extenion['type'] === $type) {
+					$results[$name] = $extenion;
+				}
+			}
 
-        return $this->extensions;
-    }
+			return $results;
+		}
 
-    public function getModules() {
-        return $this->getInstalledExtensions('module');
-    }
+		return $this->extensions;
+	}
 
-    public function getModule($name) {
-        $modules = $this->getModules();
+	public function getModules() {
+		return $this->getInstalledExtensions('module');
+	}
 
-        if (!empty($modules[$name]) AND is_array($modules[$name])) {
-            return $modules[$name];
-        }
-    }
+	public function getModule($name) {
+		$modules = $this->getModules();
 
-    public function getPayments() {
-        return $this->getInstalledExtensions('payment');
-    }
+		if ( ! empty($modules[$name]) AND is_array($modules[$name])) {
+			return $modules[$name];
+		}
+	}
 
-    public function getPayment($name) {
-        $payments = $this->getPayments();
+	public function getPayments() {
+		return $this->getInstalledExtensions('payment');
+	}
 
-        if (!empty($payments[$name]) AND is_array($payments[$name])) {
-            return $payments[$name];
-        }
-    }
+	public function getPayment($name) {
+		$payments = $this->getPayments();
 
-    public function getAvailablePayments($load_payment = TRUE) {
-        $payments = array();
-        $this->CI->load->library('location');
+		if ( ! empty($payments[$name]) AND is_array($payments[$name])) {
+			return $payments[$name];
+		}
+	}
 
-        foreach ($this->getPayments() as $payment) {
-            if (!empty($payment['ext_data'])) {
-                if ($payment['ext_data']['status'] === '1') {
+	public function getAvailablePayments($load_payment = TRUE) {
+		$payments = array();
+		$this->CI->load->library('location');
 
-                    $payments[$payment['name']] = array(
-                        'name'		=> $payment['title'],
-                        'code'		=> $payment['name'],
-                        'priority'	=> $payment['ext_data']['priority'],
-                        'status'	=> $payment['ext_data']['status'],
-                        'data'      => ($load_payment) ? Modules::run($payment['name'] . '/' . $payment['name'] . '/index') : array()
-                    );
-                }
-            }
-        }
+		foreach ($this->getPayments() as $payment) {
+			if ( ! empty($payment['ext_data'])) {
+				if ($payment['ext_data']['status'] === '1') {
 
-        if (!empty($payments)) {
-            $sort_order = array();
-            foreach ($payments as $key => $value) {
-                $sort_order[$key] = $value['priority'];
-            }
-            array_multisort($sort_order, SORT_ASC, $payments);
-        }
+					$payments[$payment['name']] = array(
+						'name'     => $payment['title'],
+						'code'     => $payment['name'],
+						'priority' => $payment['ext_data']['priority'],
+						'status'   => $payment['ext_data']['status'],
+						'data'     => ($load_payment) ? Modules::run($payment['name'] . '/' . $payment['name'] . '/index') : array(),
+					);
+				}
+			}
+		}
 
-        return $payments;
-    }
+		if ( ! empty($payments)) {
+			$sort_order = array();
+			foreach ($payments as $key => $value) {
+				$sort_order[$key] = $value['priority'];
+			}
+			array_multisort($sort_order, SORT_ASC, $payments);
+		}
 
-    public function loadConfig($module, $fail_gracefully = FALSE, $non_persistent = FALSE) {
-        if (!is_string($module)) return FALSE;
+		return $payments;
+	}
 
-        // and retrieve the configuration items
-        if ($non_persistent === TRUE) {
-            $path = ROOTPATH.EXTPATH."{$module}/config/";
-            $config = is_file($path."{$module}.php") ? Modules::load_file($module, $path, 'config') : NULL;
-        } else {
-            $this->CI->config->load($module . '/' . $module, TRUE);
-            $config = $this->CI->config->item($module);
-        }
+	public function loadConfig($module, $fail_gracefully = FALSE, $non_persistent = FALSE) {
+		if ( ! is_string($module)) return FALSE;
 
-        if ($error = $this->checkConfig($module, $config)) {
-            return ($fail_gracefully === FALSE) ? $error : show_error($error);
-        }
+		// and retrieve the configuration items
+		if ($non_persistent === TRUE) {
+			$path = ROOTPATH . EXTPATH . "{$module}/config/";
+			$config = is_file($path . "{$module}.php") ? Modules::load_file($module, $path, 'config') : NULL;
+		} else {
+			$this->CI->config->load($module . '/' . $module, TRUE);
+			$config = $this->CI->config->item($module);
+		}
 
-        return $config;
-    }
+		if ($error = $this->checkConfig($module, $config)) {
+			return ($fail_gracefully === FALSE) ? $error : show_error($error);
+		}
 
-    public function getConfig($module = '', $item = '') {
-        if (!is_string($module)) return NULL;
+		return $config;
+	}
 
-        $config = $this->CI->config->item($module);
+	public function getConfig($module = '', $item = '') {
+		if ( ! is_string($module)) return NULL;
 
-        if ($item == '') {
-            return isset($config) ? $config : NULL;
-        }
+		$config = $this->CI->config->item($module);
 
-        return isset($config, $config[$item]) ? $config[$item] : NULL;
-    }
+		if ($item == '') {
+			return isset($config) ? $config : NULL;
+		}
 
-    public function getMeta($module = '', $config = array()) {
-        !empty($config) OR $config = $this->getConfig($module);
+		return isset($config, $config[$item]) ? $config[$item] : NULL;
+	}
 
-        if (isset($config['extension_meta']) AND is_array($config['extension_meta'])) {
-            return $config['extension_meta'];
-        } else {
-            $metadata['type'] = (isset($config['ext_type'])) ? $config['ext_type'] : '';
-            $metadata['settings'] = (isset($config['admin_options'])) ? $config['admin_options'] : '';
+	public function getMeta($module = '', $config = array()) {
+		! empty($config) OR $config = $this->getConfig($module);
 
-            return $metadata;
-        }
-    }
+		if (isset($config['extension_meta']) AND is_array($config['extension_meta'])) {
+			return $config['extension_meta'];
+		} else {
+			$metadata['type'] = (isset($config['ext_type'])) ? $config['ext_type'] : '';
+			$metadata['settings'] = (isset($config['admin_options'])) ? $config['admin_options'] : '';
 
-    private function checkConfig($module, $config = array()) {
-        $error = FALSE;
+			return $metadata;
+		}
+	}
 
-        // Check if the module configuration items are correctly set
-        $mtypes = array('module', 'payment', 'widget');
+	private function checkConfig($module, $config = array()) {
+		if ( $config === NULL) {
+			return sprintf($this->CI->lang->line('error_config_not_found'), $module);
+		}
 
-        $metadata = (isset($config['extension_meta'])) ? $config['extension_meta'] : array();
+		// Check if the module configuration items are correctly set
+		$mtypes = array('module', 'payment', 'widget');
 
-        if (!isset($config['ext_type']) OR !in_array($config['ext_type'], $mtypes)) {
-            if (!is_array($metadata) OR ! isset($metadata['name'], $metadata['type'])
-                OR !in_array($metadata['type'], $mtypes)) {
+		$metadata = (isset($config['extension_meta'])) ? $config['extension_meta'] : array();
 
-                $error = 'Check that the extension [' . $module . '] configuration type key is correctly set';
-            }
-        }
+		if ( ! is_array($config) OR ! is_array($metadata)) {
+			return sprintf($this->CI->lang->line('error_config_invalid'), $module);
+		}
 
-        if (class_exists('Admin_' . $module, FALSE)) {
-            $this->CI->load->library('user');
+		if ( ! isset($config['ext_name']) AND ! isset($metadata['name'])) {
+			return sprintf($this->CI->lang->line('error_config_invalid_key'), 'name', $module);
+		}
 
-            if (!isset($metadata['settings']) OR !is_bool($metadata['settings']) OR !class_exists('Admin_Controller', FALSE)) {
-                $error = 'Check that the extension [' . $module . '] configuration admin_options key is correctly set';
-            }
-        }
+		if ( (isset($config['ext_name']) AND $module !== $config['ext_name'])
+			OR (isset($metadata['name']) AND $module !== $metadata['name'])) {
+				return sprintf($this->CI->lang->line('error_config_invalid_key'), 'name', $module);
+		}
 
-        return $error;
-    }
+		if ( ! isset($config['ext_type']) OR ! in_array($config['ext_type'], $mtypes)) {
+			if ( ! isset($metadata['type']) OR ! in_array($metadata['type'], $mtypes)) {
+				return sprintf($this->CI->lang->line('error_config_invalid_key'), 'type', $module);
+			}
+		}
+
+		if (class_exists('Admin_' . $module, FALSE)) {
+			$this->CI->load->library('user');
+
+			if ( ! isset($metadata['settings']) OR ! is_bool($metadata['settings']) OR ! class_exists('Admin_Controller', FALSE)) {
+				return sprintf($this->CI->lang->line('error_config_invalid_key'), 'admin_options', $module);
+			}
+		}
+
+		return FALSE;
+	}
 }
 
 // END Extension Class
