@@ -1,9 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-$lang['_text_title'] 			        = 'Featured Menu';
+$lang['_text_title'] 			        = 'Featured Menu Item';
 $lang['text_tab_general'] 		        = 'General';
 $lang['text_subscribe'] 			    = 'Subscribe to our newsletter';
-$lang['text_featured_menus'] 		    = 'Featured Menus';
+$lang['text_featured_menus'] 		    = 'Featured Menu';
 
 $lang['column_menu_name'] 			    = 'Menu Name';
 $lang['column_menu_remove'] 		    = 'Remove';

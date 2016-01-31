@@ -101,7 +101,7 @@
         $('#menu-box' + e.choice.id).remove();
         $('#featured-menus-box table tbody').append('<tr id="menu-box' + e.choice.id +
             '"><td class="name">' + e.choice.text + '</td><td class="img">' +
-            '<a class="btn btn-danger btn-xs" onclick="confirm('<?php echo lang('alert_warning_confirm'); ?>') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a>' +
+            '<a class="btn btn-danger btn-xs" onclick="confirm(\'<?php echo lang('alert_warning_confirm'); ?>\') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a>' +
             '<input type="hidden" name="featured_menu[]" value="' + e.choice.id + '" /></td></tr>');
     });
 //--></script>

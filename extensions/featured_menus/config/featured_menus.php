@@ -21,9 +21,9 @@ $config['extension_meta'] = array(
 	'name'        => 'featured_menus',
 	'version'     => '1.0',
 	'type'        => 'module',
-	'title'       => 'Featured Menus',
+	'title'       => 'Featured Menu Items',
 	'author'      => 'SamPoyigi',
-	'description' => 'This extension will allow you to place a featured menus module around your website.',
+	'description' => 'This extension will allow you to place a featured menu module around your website.',
 	'settings'    => TRUE,
 );
 
@@ -44,5 +44,5 @@ $config['extension_meta'] = array(
 $config['extension_permission'] = array(
 	'name'        => 'Module.FeaturedMenus',
 	'action'      => array('manage'),
-	'description' => 'Ability to manage featured menus module',
+	'description' => 'Ability to manage featured menu module',
 );
