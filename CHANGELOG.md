@@ -19,7 +19,7 @@ Release Date: January 2016
 * New mail templates to send emails to notify customer of order or reservation status update
 * Dynamic menu navigation from nav_menu array in theme config, so that menu items can be easily managed
 * Location Library `orderTimeRange()` function to retrieve location order time ranges
-* Customer Library `updateCart()`function to keep track of cart so customer can login to continue later
+* Customer Library `updateCart()` function to keep track of cart so customer can login to continue later
 * New admin setting option to enable or disable new customer review entry and display of existing reviews on storefront
 * Invoicing: option to generate invoice number w/ prefix automatically or manually, view invoice from admin order page
 * New admin setting option to set invoice prefix and auto or manual invoicing
@@ -28,6 +28,10 @@ Release Date: January 2016
 * New admin setting option to allow customers to still checkout if the menu they are ordering is not in stock
 * Taxation: option to enable or disable calculating taxes based on set percentage and whether to apply on menu prices or as included with menu prices
 * New option to add latitude and longitude manually or fetch automatically in Locations
+* New mail template variable `{order_payment}` to display the payment method in order email sent to customer and admin
+* Custom error views: override default error views within custom theme by copying the errors folder into the themes/your-custom-theme/ folder
+* Themes: option to add and delete theme in the admin backend plus template helper new method `delete_theme`
+* Local Module: option to enable or disable single or multi location search mode and selected location for single mode, where orders will be sent.
 
 #### Changed
 * LICENCE from Apache to GNU GPLv3
@@ -51,6 +55,20 @@ Release Date: January 2016
 * Improved language files
 * Re-arranged admin nav menu items and improved Template Library `buildNavMenu()` to show third level nav menu
 * Improved Themes from listing admin themes on admin panel, this will allow focus only on storefront theme development
+* Improved style and script tags so clearing browser cache is not required after upgrade, by appending query string to the URL
+* Security: create encryption key and add to config file during setup and upgrade
+* Update Page-level DocBlock in system files
+* Improved database migration such that initial data schema can be inserted while migration is running instead of after. This fixes issue where mail templates data is not updated
+* Improved system setup: added one additional step to system setup to confirm license agreement.
+* Postcode no longer a required field for non-UK
+* Database Maintenance: now saves database backup files into `tastyigniter/migrations/backups` instead of `assets/downloads/` as added security
+* Moved `load_db_config()` method from `TI_Config` to `TI_Loader`, so that database config items are loaded earlier in the system
+* Renamed admin, main and setup language file `english/english_lang.php` to `english/default_lang.php` to allow seamless translation
+* Removed timezone and language settings from staff edit in admin panel
+* CORE: use DIR_WRITE_MODE when creating directories.
+* Improved add extension functionality: strict upload validation with feedback, renamed methods `Extensions_model::upload()` to `Extensions_model::extractExtension()` and `Extensions::uploadExtension` to `Extensions::addExtension`
+* Improved storefront theme responsiveness on all devices
+* Theme Customizer: added more options to easily customize the storefront
 
 #### Fixed
 * Bug where extra URL query is not appended after permalink slugs in URI reverse routing
@@ -64,6 +82,8 @@ Release Date: January 2016
 * Issue where duplicate order is added upon page redirect, also remove received order from user session
 * Orders model from not displaying incomplete/lost orders in customer account
 * Minor bugs fix
+* Issue where site is not translated to default language
+* Issue where view data variable collides with theme options variable in the main app.
 
 
 ### v1.4.2-beta
