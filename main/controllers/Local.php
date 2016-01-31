@@ -28,7 +28,7 @@ class Local extends Main_Controller {
 
         $text_heading = sprintf($this->lang->line('text_local_heading'), $location['location_name']);
         $this->template->setTitle($text_heading);
-        $this->template->setScriptTag('js/jquery.mixitup.js', 'jquery-mixitup-css', '100330');
+        $this->template->setScriptTag('js/jquery.mixitup.js', 'jquery-mixitup-js', '100330');
 
         $filter = array();
 
@@ -155,6 +155,8 @@ class Local extends Main_Controller {
 			return $data;
 		}
 
+		$this->template->setScriptTag('js/jquery.bsPhotoGallery.js', 'jquery-bsPhotoGallery-js', '99330');
+
 		$data['title'] = isset($gallery['title']) ? $gallery['title'] : '';
 		$data['description'] = isset($gallery['description']) ? $gallery['description'] : '';
 
@@ -176,7 +178,7 @@ class Local extends Main_Controller {
     public function reviews($data = array()) {
 	    $date_format = ($this->config->item('date_format')) ? $this->config->item('date_format') : '%d %M %y';
 
-	    $url = '?';
+	    $url = '&';
         $filter = array();
         $filter['location_id'] = (int) $this->location->getId();
 
@@ -209,7 +211,7 @@ class Local extends Main_Controller {
             );
         }
 
-        $prefs['base_url'] = site_url('local' . $url);
+        $prefs['base_url'] = site_url('local?location_id='.$this->location->getId() . $url);
         $prefs['total_rows'] = $this->Reviews_model->getCount($filter);
         $prefs['per_page'] = $filter['limit'];
 
