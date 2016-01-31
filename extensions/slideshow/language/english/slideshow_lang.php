@@ -4,7 +4,7 @@ $lang['_text_title'] 		    = 'Slideshow';
 $lang['text_tab_general'] 	    = 'General';
 $lang['text_tab_slides'] 	    = 'Slides';
 
-$lang['label_status'] 			= 'Status';
+$lang['label_display'] 			= 'Display';
 $lang['label_dimension'] 	    = 'Dimension';
 $lang['label_dimension_h'] 	    = 'Dimension Height';
 $lang['label_dimension_w'] 	    = 'Dimension Width';

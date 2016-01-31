@@ -12,21 +12,6 @@
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-all active">
 					<div class="form-group">
-						<label for="input-status" class="col-sm-3 control-label"><?php echo lang('label_status'); ?></label>
-						<div class="col-sm-5">
-							<div class="btn-group btn-group-switch" data-toggle="buttons">
-								<?php if ($status == '1') { ?>
-									<label class="btn btn-danger"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-success active"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
-								<?php } else { ?>
-									<label class="btn btn-danger active"><input type="radio" name="status" value="0" <?php echo set_radio('status', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-success"><input type="radio" name="status" value="1" <?php echo set_radio('status', '1'); ?>><?php echo lang('text_enabled'); ?></label>
-								<?php } ?>
-							</div>
-							<?php echo form_error('status', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
 						<label for="" class="col-sm-3 control-label"><?php echo lang('label_dimension'); ?>
 							<span class="help-block"><?php echo lang('help_dimension'); ?></span>
 						</label>
@@ -61,6 +46,21 @@
 							<?php echo form_error('speed', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
+					<div class="form-group">
+						<label for="input-display" class="col-sm-3 control-label"><?php echo lang('label_display'); ?></label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
+								<?php if ($display == '1') { ?>
+									<label class="btn btn-default"><input type="radio" name="display" value="0" <?php echo set_radio('display', '0'); ?>><?php echo lang('text_hide'); ?></label>
+									<label class="btn btn-default active"><input type="radio" name="display" value="1" <?php echo set_radio('display', '1', TRUE); ?>><?php echo lang('text_show'); ?></label>
+								<?php } else { ?>
+									<label class="btn btn-default active"><input type="radio" name="display" value="0" <?php echo set_radio('display', '0', TRUE); ?>><?php echo lang('text_hide'); ?></label>
+									<label class="btn btn-default"><input type="radio" name="display" value="1" <?php echo set_radio('display', '1'); ?>><?php echo lang('text_show'); ?></label>
+								<?php } ?>
+							</div>
+							<?php echo form_error('display', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
 				</div>
 
 				<div id="slides" class="tab-pane row wrap-all">
@@ -78,12 +78,7 @@
 											<?php echo form_error('slides['.$slide_row.'][image_src]', '<span class="text-danger">', '</span>'); ?>
 										</div>
 										<div class="caption">
-											<span class="name text-center">
-												<input type="text" class="form-control" name="slides[<?php echo $slide_row; ?>][name]" value="<?php echo $slide['name']; ?>" /><br />
-												<?php echo form_error('slides['.$slide_row.'][name]', '<span class="text-danger">', '</span>'); ?>
-											</span>
 											<input type="hidden" name="slides[<?php echo $slide_row; ?>][image_src]" value="<?php echo $slide['image_src']; ?>" id="field<?php echo $slide_row; ?>" />
-
 											<p>
 												<a id="select-image" class="btn btn-primary" onclick="mediaManager('field<?php echo $slide_row; ?>');"><i class="fa fa-picture-o"></i></a>&nbsp;&nbsp;&nbsp;
 											</p>
@@ -123,7 +118,6 @@ function addSlide() {
 	html += '			</div>';
 	html += '			<div class="caption">';
 	html += '				<input type="hidden" name="slides[' + slide_row + '][image_src]" value="data/no_photo.png" id="field' + slide_row + '" />';
-	html += '				<span class="name text-center"><input type="text" class="form-control" name="slides[' + slide_row + '][name]" value="no_photo.png" /></span>';
 	html += '				<p>';
 	html += '					<a id="select-image" class="btn btn-primary" onclick="mediaManager(\'field' + slide_row + '\');"><i class="fa fa-picture-o"></i></a>&nbsp;&nbsp;&nbsp;';
 	html += '				</p>';

@@ -24,12 +24,12 @@ class Admin_slideshow extends Admin_Controller {
             $ext_data = $data['ext_data'];
         }
 
-		if ($this->input->post('status')) {
-			$data['status'] = $this->input->post('status');
-		} else if (!empty($data['ext_data']['status'])) {
-			$data['status'] = $data['ext_data']['status'];
+		if ($this->input->post('display')) {
+			$data['display'] = $this->input->post('display');
+		} else if (isset($ext_data['display'])) {
+			$data['display'] = $ext_data['display'];
 		} else {
-			$data['status'] = '0';
+			$data['display'] = '1';
 		}
 
 		if (isset($ext_data['dimension_h'])) {
@@ -65,12 +65,10 @@ class Admin_slideshow extends Admin_Controller {
 		$data['slides'] = array();
 		if (!empty($ext_data['slides'])) {
 			foreach ($ext_data['slides'] as $slide) {
-				$slide_name = (isset($slide['name'])) ? $slide['name'] : 'no_photo.png';
 				$image_src = (isset($slide['image_src'])) ? $slide['image_src'] : 'data/no_photo.png';
 				$caption = (isset($slide['caption'])) ? $slide['caption'] : '';
 
 				$data['slides'][] = array(
-					'name'		=> $slide_name,
 					'preview'	=> $this->Image_tool_model->resize($image_src),
 					'image_src'	=> $image_src,
 					'caption'	=> $caption
@@ -105,14 +103,13 @@ class Admin_slideshow extends Admin_Controller {
 	}
 
  	private function validateForm() {
-		$this->form_validation->set_rules('status', 'lang:label_status', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('dimension_h', 'lang:label_dimension_h', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('dimension_w', 'lang:label_dimension_w', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('effect', 'lang:label_effect', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('speed', 'lang:label_speed', 'xss_clean|trim|integer');
+	    $this->form_validation->set_rules('display', 'lang:label_display', 'xss_clean|trim|required|integer');
 
 		foreach ($this->input->post('slides') as $key => $value) {
-			$this->form_validation->set_rules('slides['.$key.'][name]', 'lang:label_slide_name', 'xss_clean|trim|required');
 			$this->form_validation->set_rules('slides['.$key.'][image_src]', 'lang:label_slide_image', 'xss_clean|trim|required');
 			$this->form_validation->set_rules('slides['.$key.'][caption]', 'lang:label_slide_caption');
 		}
