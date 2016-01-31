@@ -155,6 +155,7 @@ class Staff_groups_model extends TI_Model {
 
 		if ( ! empty($staff_group_id) AND ctype_digit(implode('', $staff_group_id))) {
 			$this->db->where_in('staff_group_id', $staff_group_id);
+			$this->db->where('staff_group_id !=', '11');
 			$this->db->delete('staff_groups');
 
 			return $this->db->affected_rows();

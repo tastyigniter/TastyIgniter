@@ -186,10 +186,12 @@ class Mail_templates_model extends TI_Model {
 
 		if ( ! empty($template_id) AND ctype_digit(implode('', $template_id))) {
 			$this->db->where_in('template_id', $template_id);
+			$this->db->where('template_id !=', '11');
 			$this->db->delete('mail_templates');
 
 			if (($affected_rows = $this->db->affected_rows()) > 0) {
 				$this->db->where_in('template_id', $template_id);
+				$this->db->where('template_id !=', '11');
 				$this->db->delete('mail_templates_data');
 
 				return $affected_rows;
