@@ -40,7 +40,39 @@ class Admin_featured_menus extends Admin_Controller {
 
         $filter['page'] = '1';
         $filter['limit'] = $this->config->item('menus_page_limit');
-        $data['limit'] = (isset($ext_data['limit'])) ? $ext_data['limit'] : '3';
+
+        if ($this->input->post('limit')) {
+            $data['limit'] = $this->input->post('limit');
+        } else if (isset($ext_data['limit'])) {
+            $data['limit'] = $ext_data['limit'];
+        } else {
+            $data['limit'] = '3';
+        }
+
+        if ($this->input->post('items_per_row')) {
+            $data['items_per_row'] = $this->input->post('items_per_row');
+        } else if (isset($ext_data['items_per_row'])) {
+            $data['items_per_row'] = $ext_data['items_per_row'];
+        } else {
+            $data['items_per_row'] = '3';
+        }
+
+        if ($this->input->post('dimension_w')) {
+            $data['dimension_w'] = $this->input->post('dimension_w');
+        } else if (isset($ext_data['dimension_w'])) {
+            $data['dimension_w'] = $ext_data['dimension_w'];
+        } else {
+            $data['dimension_w'] = '400';
+        }
+
+        if ($this->input->post('dimension_h')) {
+            $data['dimension_h'] = $this->input->post('dimension_h');
+        } else if (isset($ext_data['dimension_h'])) {
+            $data['dimension_h'] = $ext_data['dimension_h'];
+        } else {
+            $data['dimension_h'] = '300';
+        }
+
         $data['dimension_w'] = (isset($ext_data['dimension_w'])) ? $ext_data['dimension_w'] : '400';
         $data['dimension_h'] = (isset($ext_data['dimension_h'])) ? $ext_data['dimension_h'] : '300';
 

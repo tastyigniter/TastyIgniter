@@ -11,16 +11,19 @@ class Featured_menus extends Main_Controller {
 		}
 
         if (!empty($ext_data['featured_menu'])) {
-            $filter = array(
-                'menu_ids'  => $ext_data['featured_menu'],
-                'page'      => '1',
-                'limit'     => '3',
-                'dimension_w'     => isset($ext_data['dimension_w']) ? $ext_data['dimension_w'] : '400',
-                'dimension_h'     => isset($ext_data['dimension_h']) ? $ext_data['dimension_h'] : '300',
-            );
+	        $filter = array(
+		        'menu_ids'      => $ext_data['featured_menu'],
+		        'page'          => '1',
+		        'limit'         => isset($ext_data['limit']) ? $ext_data['limit'] : '3',
+		        'dimension_w'   => isset($ext_data['dimension_w']) ? $ext_data['dimension_w'] : '400',
+		        'dimension_h'   => isset($ext_data['dimension_h']) ? $ext_data['dimension_h'] : '300',
+	        );
         } else {
             $filter = array();
 		}
+
+		$data['featured_menu_title'] = isset($ext_data['title']) ? $ext_data['title'] : $this->lang->line('text_featured_menus');
+		$data['items_per_row'] = isset($ext_data['items_per_row']) ? $ext_data['items_per_row'] : '3';
 
         $this->template->setStyleTag(extension_url('featured_menus/views/featured_menus.css'), 'featured_menus-css', '20150918');
 

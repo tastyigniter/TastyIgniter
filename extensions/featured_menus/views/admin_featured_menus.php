@@ -60,6 +60,23 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label for="input-per-row" class="col-sm-3 control-label"><?php echo lang('label_items_per_row'); ?>
+                            <span class="help-block"><?php echo lang('help_items_per_row'); ?></span>
+                        </label>
+                        <div class="col-sm-5">
+	                        <select name="items_per_row" class="form-control">
+		                        <?php foreach (array('1' => 'One','2' => 'Two','3' => 'Three','4' => 'Four','6' => 'Six',) as $key => $value) { ?>
+			                        <?php if ($key == $items_per_row) { ?>
+				                        <option value="<?php echo $key; ?>" <?php echo set_select('items_per_row', $items_per_row, TRUE); ?>><?php echo $value; ?></option>
+			                        <?php } else { ?>
+				                        <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
+			                        <?php } ?>
+		                        <?php } ?>
+	                        </select>
+                            <?php echo form_error('items_per_row', '<span class="text-danger">', '</span>'); ?>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="" class="col-sm-3 control-label"><?php echo lang('label_dimension'); ?>
                             <span class="help-block"><?php echo lang('help_dimension'); ?></span>
                         </label>

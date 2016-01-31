@@ -2,14 +2,14 @@
 	<div class="row">
 		<div class="col-md-12">
 			<div class="heading-section bottom-spacing-20">
-				<h2><?php echo lang('text_featured_menus'); ?></h2>
+				<h2><?php echo $featured_menu_title; ?></h2>
 				<span class="under-heading"></span>
 			</div>
 		</div>
 	</div>
 	<div class="row">
 		<?php foreach($featured_menus as $menu_id => $menu) { ?>
-			<div class="col-xs-6 col-sm-6 col-md-4">
+			<div class="col-xs-6 col-sm-6 col-md-<?php echo round(12/$items_per_row); ?>">
 				<div class="featured-menu">
 					<div class="menu-thumb">
 						<img src="<?php echo $menu['menu_photo']; ?>" alt="" />
