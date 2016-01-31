@@ -56,7 +56,7 @@ $theme['partial_area'] = array(
     array(
         'name'      => 'Content Left',
         'id'        => 'content_left',
-        'class'     => 'col-sm-3',
+        'class'     => 'col-sm-3 ',
         'open_tag'  => '<div id="{id}" class="partial {class}"><div class="side-bar">',
         'close_tag' => '</div></div>',
     ),
@@ -81,36 +81,26 @@ $theme['customize']['sections']['general'] = array(
 	'title'		=> 'General',
 	'desc'		=> '',
 	'icon'		=> '',
-	'fields'	=> array(
+	'fields'		=> array(
 		array(
-			'id'		=> 'input-logo-height',
-			'name'		=> 'logo_height',
-			'label' 	=> 'Logo Height',
-			'desc' 		=> 'Default: 40',
-			'r_addon'   => 'px',
-			'type' 		=> 'text',
-			'value'		=> '40',
-            'rules'     => 'required|numeric',
+			'id'		=> 'input-display-crumbs',
+			'name'		=> 'display_crumbs',
+			'label' 	=> 'Display Breadcrumbs',
+			'type' 		=> 'button-group',
+			'group'			=> array(
+				array('data-btn' => 'btn-default', 'name' => 'display_crumbs', 'type' => 'radio', 'label' => 'Yes', 'value' => '1', 'checked' => TRUE),
+				array('data-btn' => 'btn-default', 'name' => 'display_crumbs', 'type' => 'radio', 'label' => 'No', 'value' => '0', 'rules' => 'required|numeric'),
+			)
 		),
 		array(
-			'id'		=> 'input-logo-padding-top',
-			'name'		=> 'logo_padding_top',
-			'label' 	=> 'Logo margin-top',
-			'desc' 		=> 'Default: 25',
-			'r_addon'   => 'px',
-			'type' 		=> 'text',
-			'value'		=> '25',
-            'rules'     => 'required|numeric',
-		),
-		array(
-			'id'		=> 'input-logo-padding-bottom',
-			'name'		=> 'logo_padding_bottom',
-			'label' 	=> 'Logo margin-bottom',
-			'desc' 		=> 'Default: 25',
-			'r_addon'   => 'px',
-			'type' 		=> 'text',
-			'value'		=> '25',
-            'rules'     => 'required|numeric',
+			'id'		=> 'input-hide-admin-link',
+			'name'		=> 'hide_admin_link',
+			'label' 	=> 'Hide footer admin link',
+			'type' 		=> 'button-group',
+			'group'			=> array(
+				array('data-btn' => 'btn-default', 'name' => 'hide_admin_link', 'type' => 'radio', 'label' => 'Yes', 'value' => '1'),
+				array('data-btn' => 'btn-default', 'name' => 'hide_admin_link', 'type' => 'radio', 'label' => 'No', 'value' => '0', 'checked' => TRUE, 'rules' => 'required|numeric'),
+			)
 		),
 		array(
 			'id'        => 'input-ga-tracking-code',
@@ -121,16 +111,6 @@ $theme['customize']['sections']['general'] = array(
 			'rows'      => '10',
 			'value'     => ''
 		),
-//		array(
-//			'id'		=> 'input-display-crumbs',
-//			'name'		=> 'display_crumbs',
-//			'label' 	=> 'Display Breadcrumbs',
-//			'type' 		=> 'button-group',
-//            'group'			=> array(
-//                array('data-btn' => 'btn-danger', 'name' => 'display_crumbs', 'type' => 'radio', 'label' => 'Disabled', 'value' => '0', 'checked' => TRUE, 'rules' => 'required|numeric'),
-//                array('data-btn' => 'btn-success', 'name' => 'display_crumbs', 'type' => 'radio', 'label' => 'Enabled', 'value' => '1'),
-//            )
-//        ),
 	)
 );
 
@@ -138,41 +118,75 @@ $theme['customize']['sections']['typography'] = array(
 	'title'		=> 'Typography',
 	'desc'		=> '',
 	'icon'		=> '',
-	'fields'	=> array(
+	'fieldset'	=> array(
 		array(
-			'id'			=> 'input-font-family',
-			'name'			=> 'font_family',
-			'label' 		=> 'Font Family',
-			'desc'			=> 'Choose custom font family to use for the main body text.',
+			'legend'		=> 'Main',
+			'fields'	=> array(
+				array(
+					'id'			=> 'input-font-family',
+					'name'			=> 'font[family]',
+					'label' 		=> 'Font Family',
+					'desc'			=> 'The font family to use for the main body text.',
+					'type' 			=> 'text',
+					'value'			=> '"Oxygen",Arial,sans-serif',
+		            'rules'         => 'required',
+				),
+				array(
+					'id'			=> 'input-font-weight',
+					'label' 		=> 'Font Weight & Style',
+					'desc'			=> 'The font weight and style to use for the main body text.',
+					'type' 			=> 'input-group',
+					'group'			=> array(
+						array('id' => 'input-font-weight', 'name' => 'font[weight]', 'type' => 'dropdown', 'value' => 'normal', 'rules' => 'required|alpha', 'options' => array('normal' => 'Normal', 'bold' => 'Bold', 'bolder' => 'Bolder', 'lighter' => 'Lighter')),
+						array('id' => 'input-font-style', 'name' => 'font[style]', 'type' => 'dropdown', 'options' => array('normal' => 'Normal', 'italic' => 'Italic'), 'value' => 'normal', 'rules' => 'required|alpha'),
+					)
+				),
+				array(
+					'id'			=> 'input-font-size',
+					'label' 		=> 'Font Size & Color',
+					'desc'			=> 'The font size and color to use for the main body text.',
+					'type' 			=> 'input-group',
+					'group'			=> array(
+						array('id' => 'input-font-size', 'name' => 'font[size]', 'type' => 'text', 'r_addon' => 'px', 'value' => '13', 'rules' => 'required|numeric'),
+						array('id' => 'input-font-color', 'name' => 'font[color]', 'type' => 'color', 'value' => '#333333', 'rules' => 'required'),
+					)
+				),
+			)
+		),
+		array(
+			'legend'		=> 'Menu',
+			'fields'	=> array(
+				array(
+			'id'			=> 'input-menu-font-family',
+			'name'			=> 'menu_font[family]',
+			'label' 		=> 'Menu Font Family',
+			'desc'			=> 'The font family to use for the header menu.',
 			'type' 			=> 'text',
 			'value'			=> '"Oxygen",Arial,sans-serif',
             'rules'         => 'required',
 		),
-		array(
-			'id'			=> 'input-font-weight',
-			'name'			=> 'font_weight',
-			'label' 		=> 'Font Weight',
-			'desc'			=> 'Choose custom font weight to use for the main body text.',
-			'type' 			=> 'dropdown',
-            'options'       => array(
-                'normal'         => 'Normal',
-                'bold'           => 'Bold',
-                'bolder'         => 'Bolder',
-                'lighter'        => 'Lighter',
-            ),
-			'value'			=> 'normal',
-            'rules'         => 'required|alpha',
-		),
-		array(
-			'id'			=> 'input-font-size',
-			'label' 		=> 'Font Size',
-			'desc'			=> 'Choose custom font size and color to use for the main body text.',
-			'type' 			=> 'input-group',
-			'group'			=> array(
-				array('id' => 'input-font-size', 'name' => 'font_size', 'type' => 'text', 'r_addon' => 'px', 'value' => '13', 'rules' => 'required|numeric'),
-				array('id' => 'input-font-color', 'name' => 'font_color', 'type' => 'color', 'value' => '#333333', 'rules' => 'required'),
+				array(
+					'id'			=> 'input-menu-font-weight',
+					'label' 		=> 'Menu Font Weight & Style',
+					'desc'			=> 'The font weight and style to use for the header menu.',
+					'type' 			=> 'input-group',
+					'group'			=> array(
+						array('id' => 'input-menu-font-weight', 'name' => 'menu_font[weight]', 'type' => 'dropdown', 'value' => 'normal', 'rules' => 'required|alpha', 'options' => array('normal' => 'Normal', 'bold' => 'Bold', 'bolder' => 'Bolder', 'lighter' => 'Lighter')),
+						array('id' => 'input-menu-font-style', 'name' => 'menu_font[style]', 'type' => 'dropdown', 'options' => array('normal' => 'Normal', 'italic' => 'Italic'), 'value' => 'normal', 'rules' => 'required|alpha'),
+					)
+				),
+				array(
+					'id'			=> 'input-menu-font-size',
+					'label' 		=> 'Menu Font Size & Color',
+					'desc'			=> 'The font size and color to use for the header menu.',
+					'type' 			=> 'input-group',
+					'group'			=> array(
+						array('id' => 'input-menu-font-size', 'name' => 'menu_font[size]', 'type' => 'text', 'r_addon' => 'px', 'value' => '16', 'rules' => 'required|numeric'),
+						array('id' => 'input-menu-font-color', 'name' => 'menu_font[color]', 'type' => 'color', 'value' => '#FFF', 'rules' => 'required'),
+					)
+				),
 			)
-		),
+		)
 	)
 );
 
@@ -180,105 +194,295 @@ $theme['customize']['sections']['styling'] = array(
 	'title'		=> 'Styling',
 	'desc'		=> '',
 	'icon'		=> '',
+	'fieldset'	=> array(
+		array(
+			'legend'		=> 'Body',
+			'fields'		=> array(
+				array(
+					'id'			=> 'input-body-background',
+					'label' 		=> 'Body background',
+					'desc'			=> 'The background color or image to use for the body body background and how the image is displayed.',
+					'type' 			=> 'input-group',
+					'group'			=> array(
+						array('id' => 'input-body-background', 'name' => 'body[background]', 'type' => 'color', 'value' => '#FFFFFF', 'rules' => 'required'),
+						array('id' => 'input-body-image', 'name' => 'body[image]', 'type' => 'media', 'value' => ''),
+						array('id' => 'input-body-background-display', 'name' => 'body[display]', 'type' => 'dropdown', 'options' => array('tiled' => 'Tiled', 'contain' => 'Contain', 'cover' => 'Cover', 'centered' => 'Centered'), 'value' => 'contain', 'rules' => 'required'),
+					)
+				),
+				array(
+					'id'			=> 'input-foreground',
+					'label' 		=> 'Body foreground and general color',
+					'desc'			=> 'The color to use for the foreground.',
+					'type' 			=> 'input-group',
+					'group'			=> array(
+						array('id' => 'input-foreground', 'name' => 'body[foreground]', 'type' => 'color', 'value' => '#FFF', 'rules' => 'required'),
+						array('id' => 'input-general-color', 'name' => 'body[color]', 'type' => 'color', 'value' => '#ed561a', 'rules' => 'required'),
+					)
+				),
+				array(
+					'id'			=> 'input-link-color',
+					'label' 		=> 'Link color',
+					'desc'			=> 'The normal and hover color to use for links.',
+					'type' 			=> 'input-group',
+					'group'			=> array(
+						array('id' => 'input-link-color', 'name' => 'link[color]', 'type' => 'color', 'value' => '#337AB7', 'rules' => 'required'),
+						array('id' => 'input-link-hover', 'name' => 'link[hover]', 'type' => 'color', 'value' => '#23527C', 'rules' => 'required'),
+					)
+				),
+			)
+		),
+		array(
+			'legend'		=> 'Heading',
+			'fields'		=> array(
+				array(
+					'id'			=> 'input-heading-background',
+					'label' 		=> 'Page heading background',
+					'desc'			=> 'The background color or image to use for the page heading and how the image is displayed.',
+					'type' 			=> 'input-group',
+					'group'			=> array(
+						array('id' => 'input-heading-background', 'name' => 'heading[background]', 'type' => 'color', 'value' => ''),
+						array('id' => 'input-heading-image', 'name' => 'heading[image]', 'type' => 'media', 'value' => 'data/no_photo.png'),
+						array('id' => 'input-heading-display', 'name' => 'heading[display]', 'type' => 'dropdown', 'options' => array('tiled' => 'Tiled', 'contain' => 'Contain', 'cover' => 'Cover', 'centered' => 'Centered'), 'value' => 'contain', 'rules' => 'required'),
+					)
+				),
+				array(
+					'id'			=> 'input-heading-color',
+					'name'			=> 'heading[color]',
+					'label' 		=> 'Page heading font color',
+					'desc'			=> 'The color to use for the page heading font/icons.',
+					'type' 			=> 'color',
+					'value'			=> '#333',
+					'rules'         => 'required',
+				),
+				array(
+					'id'			=> 'input-under-heading-image',
+					'label' 		=> 'Page heading under-image',
+					'desc'			=> 'The image and height to use for the page under-heading image.',
+					'type' 			=> 'input-group',
+					'group'			=> array(
+						array('id' => 'input-under-heading-image', 'name' => 'heading[under_image]', 'type' => 'media', 'value' => '', 'rules' => ''),
+						array('id' => 'input-under-heading-height', 'name' => 'heading[under_height]', 'type' => 'text', 'value' => '50', 'rules' => 'numeric'),
+					)
+				),
+			)
+		),
+		array(
+			'legend'		=> 'Buttons',
+			'fields'		=> array(
+				array(
+					'id'			=> 'input-button-default',
+					'label' 		=> 'Button default color',
+					'desc'			=> 'The normal and hover background color to use for the default button.',
+					'type' 			=> 'input-group',
+					'group'			=> array(
+						array('name' => 'button[default][background]', 'type' => 'color', 'value' => '#E7E7E7', 'rules' => 'required'),
+						array('name' => 'button[default][hover]', 'type' => 'color', 'value' => '#CCCCCC', 'rules' => 'required'),
+					)
+				),
+				array(
+					'id'			=> 'input-button-primary',
+					'label' 		=> 'Button primary color',
+					'desc'			=> 'The normal and hover background color to use for the primary button.',
+					'type' 			=> 'input-group',
+					'group'			=> array(
+						array('name' => 'button[primary][background]', 'type' => 'color', 'value' => '#428bca', 'rules' => 'required'),
+						array('name' => 'button[primary][hover]', 'type' => 'color', 'value' => '#357ebd', 'rules' => 'required'),
+					)
+				),
+				array(
+					'id'			=> 'input-button-success',
+					'label' 		=> 'Button success color',
+					'desc'			=> 'The normal and hover background color to use for the success button.',
+					'type' 			=> 'input-group',
+					'group'			=> array(
+						array('name' => 'button[success][background]', 'type' => 'color', 'value' => '#5cb85c', 'rules' => 'required'),
+						array('name' => 'button[success][hover]', 'type' => 'color', 'value' => '#4cae4c', 'rules' => 'required'),
+					)
+				),
+				array(
+					'id'			=> 'input-button-danger',
+					'label' 		=> 'Button danger color',
+					'desc'			=> 'The normal and hover background color to use for the danger button.',
+					'type' 			=> 'input-group',
+					'group'			=> array(
+						array('name' => 'button[danger][background]', 'type' => 'color', 'value' => '#d9534f', 'rules' => 'required'),
+						array('name' => 'button[danger][hover]', 'type' => 'color', 'value' => '#d43f3a', 'rules' => 'required'),
+					)
+				),
+			)
+		),
+	),
+);
+
+$theme['customize']['sections']['sidebar'] = array(
+	'title'		=> 'Sidebar',
+	'desc'		=> '',
+	'icon'		=> '',
 	'fields'	=> array(
-		array(
-			'id'			=> 'input-background',
-			'label' 		=> 'Main Background',
-			'desc'			=> 'Choose custom background color or image to use for the main body background.',
-			'type' 			=> 'input-group',
-			'group'			=> array(
-				array('id' => 'input-main-background', 'name' => 'body[background]', 'type' => 'color', 'value' => '#FFFFFF', 'rules' => 'required'),
-				array('id' => 'input-main-image', 'name' => 'body[image]', 'type' => 'media', 'value' => ''),
-			)
-		),
-		array(
-			'id'			=> 'input-header-background',
-			'label' 		=> 'Header background',
-			'desc'			=> 'Choose custom background color or image to use for the header.',
-			'type' 			=> 'input-group',
-			'group'			=> array(
-				array('id' => 'input-header-background', 'name' => 'header[background]', 'type' => 'color', 'value' => '#fdeae2', 'rules' => 'required'),
-				array('id' => 'input-header-image', 'name' => 'header[image]', 'type' => 'media', 'value' => ''),
-			)
-		),
-		array(
-			'id'			=> 'input-header-color',
-			'name'			=> 'header[color]',
-			'label' 		=> 'Header font color',
-			'desc'			=> 'Choose custom color to use for the header font/icons.',
-			'type' 			=> 'color',
-			'value'			=> '#333',
-            'rules'         => 'required',
-		),
 		array(
 			'id'			=> 'input-sidebar-background',
 			'label' 		=> 'Sidebar background',
-			'desc'			=> 'Choose custom background color or image to use for the sidebar background.',
+			'desc'			=> 'The background color or image to use for the sidebar background and how the image is displayed.',
 			'type' 			=> 'input-group',
 			'group'			=> array(
 				array('id' => 'input-sidebar-background', 'name' => 'sidebar[background]', 'type' => 'color', 'value' => '#FFFFFF', 'rules' => 'required'),
 				array('id' => 'input-sidebar-image', 'name' => 'sidebar[image]', 'type' => 'media', 'value' => ''),
+				array('id' => 'input-sidebar-display', 'name' => 'sidebar[display]', 'type' => 'dropdown', 'options' => array('tiled' => 'Tiled', 'contain' => 'Contain', 'cover' => 'Cover', 'centered' => 'Centered'), 'value' => 'contain', 'rules' => 'required'),
 			)
 		),
 		array(
 			'id'			=> 'input-sidebar-font',
-			'label' 		=> 'Sidebar color',
-			'desc'			=> 'Choose custom font and border color to use for the sidebar.',
+			'label' 		=> 'Sidebar font and border',
+			'desc'			=> 'The font and border color to use for the sidebar.',
 			'type' 			=> 'input-group',
 			'group'			=> array(
 				array('id' => 'input-sidebar-font', 'name' => 'sidebar[font]', 'type' => 'color', 'value' => '#484848', 'rules' => 'required'),
-                array('id' => 'input-sidebar-border', 'name' => 'sidebar[border]', 'type' => 'color', 'value' => '#FFFFFF', 'rules' => 'required'),
-            )
+				array('id' => 'input-sidebar-border', 'name' => 'sidebar[border]', 'type' => 'color', 'value' => '#EEEEEE', 'rules' => 'required'),
+			)
 		),
+	),
+);
+
+$theme['customize']['sections']['header'] = array(
+	'title'		=> 'Header',
+	'desc'		=> '',
+	'icon'		=> '',
+	'fields'		=> array(
+	),
+	'fieldset'	=> array(
 		array(
-			'id'			=> 'input-link-color',
-			'label' 		=> 'Link color',
-			'desc'			=> 'Choose custom color to use for links.',
-			'type' 			=> 'input-group',
-			'group'			=> array(
-				array('id' => 'input-link-color', 'name' => 'link[color]', 'type' => 'color', 'value' => '#428bca', 'rules' => 'required'),
-				array('id' => 'input-link-hover', 'name' => 'link[hover]', 'type' => 'color', 'value' => '#2a6496', 'rules' => 'required'),
+			'fields'		=> array(
+				array(
+					'id'			=> 'input-header-background',
+					'label' 		=> 'Header background',
+					'desc'			=> 'The background color or image to use for the top header and how the image is displayed.',
+					'type' 			=> 'input-group',
+					'group'			=> array(
+						array('id' => 'input-header-background', 'name' => 'header[background]', 'type' => 'color', 'value' => '#ED561A', 'rules' => 'required'),
+						array('id' => 'input-header-image', 'name' => 'header[image]', 'type' => 'media', 'value' => ''),
+						array('id' => 'input-sidebar-display', 'name' => 'header[display]', 'type' => 'dropdown', 'options' => array('tiled' => 'Tiled', 'contain' => 'Contain', 'cover' => 'Cover', 'centered' => 'Centered'), 'value' => 'contain', 'rules' => 'required'),
+					)
+				),
+				array(
+					'id'			=> 'input-header-dropdown',
+					'name'			=> 'header[dropdown_background]',
+					'label' 		=> 'Dropdown background color',
+					'desc'			=> 'The background color to use for the top header dropdown.',
+					'type' 			=> 'color',
+					'value'			=> '#ED561A',
+					'rules'         => 'required',
+				),
+				array(
+					'id'			=> 'input-header-color',
+					'name'			=> 'header[color]',
+					'label' 		=> 'Header font color',
+					'desc'			=> 'The color to use for the top header font/icons.',
+					'type' 			=> 'color',
+					'value'			=> '#FFF',
+					'rules'         => 'required',
+				),
 			)
 		),
 		array(
-			'id'			=> 'input-button-default',
-			'label' 		=> 'Button default color',
-			'desc'			=> 'Choose custom background and border color to use for the default button.',
-			'type' 			=> 'input-group',
-			'group'			=> array(
-				array('name' => 'button[default][background]', 'type' => 'color', 'value' => '#FFFFFF', 'rules' => 'required'),
-				array('name' => 'button[default][border]', 'type' => 'color', 'value' => '#CCCCCC', 'rules' => 'required'),
+			'legend'		=> 'Logo',
+			'fields'		=> array(
+				array(
+					'id'			=> 'input-logo',
+					'label' 		=> 'Logo',
+					'desc'			=> 'Upload custom logo or text to your website.',
+					'type' 			=> 'input-group',
+					'group'			=> array(
+						array('id' => 'input-logo-image', 'name' => 'logo_image', 'type' => 'media', 'value' => '', 'rules' => 'required'),
+						array('id' => 'input-logo-text', 'name' => 'logo_text', 'type' => 'text', 'value' => ''),
+					)
+				),
+				array(
+					'id'		=> 'input-logo-height',
+					'name'		=> 'logo_height',
+					'label' 	=> 'Logo Height',
+					'desc' 		=> 'Default: 40',
+					'r_addon'   => 'px',
+					'type' 		=> 'text',
+					'value'		=> '40',
+					'rules'     => 'required|numeric',
+				),
+				array(
+					'id'			=> 'input-logo-padding',
+					'label' 		=> 'Logo padding',
+					'desc'			=> 'The top and bottom padding for the logo.',
+					'type' 			=> 'input-group',
+					'group'			=> array(
+						array('id' => 'input-logo-padding-top', 'name' => 'logo_padding_top', 'type' => 'text', 'value' => '10', 'rules' => 'numeric'),
+						array('id' => 'input-logo-padding-bottom', 'name' => 'logo_padding_bottom', 'type' => 'text', 'value' => '10', 'rules' => 'numeric'),
+					)
+				),
 			)
 		),
 		array(
-			'id'			=> 'input-button-primary',
-			'label' 		=> 'Button primary color',
-			'desc'			=> 'Choose custom background and border color to use for the primary button.',
+			'legend'		=> 'Favicon',
+			'fields'		=> array(
+				array(
+					'id'		=> 'input-favicon',
+					'name'		=> 'favicon',
+					'label' 	=> 'Favicon',
+					'desc' 		=> 'Upload your favicon ( png, ico, jpg, gif or bmp ).',
+					'type' 		=> 'media',
+					'value'		=> '',
+					'rules'     => '',
+				),
+			)
+		),
+	),
+);
+
+$theme['customize']['sections']['footer'] = array(
+	'title'		=> 'Footer',
+	'desc'		=> '',
+	'icon'		=> '',
+	'fields'	=> array(
+		array(
+			'id'			=> 'input-main-footer-background',
+			'label' 		=> 'Footer background',
+			'desc'			=> 'The background color or image to use for the main footer and how the image is displayed.',
 			'type' 			=> 'input-group',
 			'group'			=> array(
-				array('name' => 'button[primary][background]', 'type' => 'color', 'value' => '#428bca', 'rules' => 'required'),
-				array('name' => 'button[primary][border]', 'type' => 'color', 'value' => '#357ebd', 'rules' => 'required'),
+				array('id' => 'input-main-footer-background', 'name' => 'footer[background]', 'type' => 'color', 'value' => '#EDEFF1', 'rules' => 'required'),
+				array('id' => 'input-main-footer-image', 'name' => 'footer[image]', 'type' => 'media', 'value' => ''),
+				array('id' => 'input-main-footer-display', 'name' => 'footer[display]', 'type' => 'dropdown', 'options' => array('tiled' => 'Tiled', 'contain' => 'Contain', 'cover' => 'Cover', 'centered' => 'Centered'), 'value' => 'contain', 'rules' => 'required'),
 			)
 		),
 		array(
-			'id'			=> 'input-button-success',
-			'label' 		=> 'Button success color',
-			'desc'			=> 'Choose custom background and border color to use for the success button.',
+			'id'			=> 'input-bottom-footer-background',
+			'label' 		=> 'Bottom footer background',
+			'desc'			=> 'The background color or image to use for the bottom footer and how the image is displayed.',
 			'type' 			=> 'input-group',
 			'group'			=> array(
-				array('name' => 'button[success][background]', 'type' => 'color', 'value' => '#5cb85c', 'rules' => 'required'),
-				array('name' => 'button[success][border]', 'type' => 'color', 'value' => '#4cae4c', 'rules' => 'required'),
+				array('id' => 'input-bottom-footer-background', 'name' => 'footer[bottom_background]', 'type' => 'color', 'value' => '#FBFBFB', 'rules' => 'required'),
+				array('id' => 'input-bottom-footer-image', 'name' => 'footer[bottom_image]', 'type' => 'media', 'value' => ''),
+				array('id' => 'input-bottom-footer-display', 'name' => 'footer[bottom_display]', 'type' => 'dropdown', 'options' => array('tiled' => 'Tiled', 'contain' => 'Contain', 'cover' => 'Cover', 'centered' => 'Centered'), 'value' => 'contain', 'rules' => 'required'),
 			)
 		),
 		array(
-			'id'			=> 'input-button-danger',
-			'label' 		=> 'Button danger color',
-			'desc'			=> 'Choose custom background and border color to use for the danger button.',
+			'id'			=> 'input-footer-font',
+			'label' 		=> 'Footer font color',
+			'desc'			=> 'The font color to use for the main and bottom footer.',
 			'type' 			=> 'input-group',
 			'group'			=> array(
-				array('name' => 'button[danger][background]', 'type' => 'color', 'value' => '#d9534f', 'rules' => 'required'),
-				array('name' => 'button[danger][border]', 'type' => 'color', 'value' => '#d43f3a', 'rules' => 'required'),
+				array('id' => 'input-footer-main-font', 'name' => 'footer[footer_color]', 'type' => 'color', 'value' => '#9BA1A7', 'rules' => 'required'),
+				array('id' => 'input-footer-bottom-font', 'name' => 'footer[bottom_footer_color]', 'type' => 'color', 'value' => '#A3AAAF', 'rules' => 'required'),
 			)
+		),
+	)
+);
+
+$theme['customize']['sections']['partials'] = array(
+	'title'		=> 'Partials',
+	'desc'		=> '',
+	'icon'		=> '',
+	'fieldset'	=> array(
+		array(
+			'legend'		=> 'Body',
+			'fields'		=> array()
 		),
 	)
 );
@@ -375,12 +579,14 @@ $theme['customize']['sections']['social'] = array(
 	)
 );
 
-$theme['customize']['sections']['custom_css'] = array(
-	'title'		=> 'Custom CSS',
+$theme['customize']['sections']['custom_script'] = array(
+	'title'		=> 'Custom Scripts',
 	'desc'		=> '',
 	'icon'		=> '',
 	'fields'	=> array(
-		array('id' => 'input-custom-css', 'name' => 'custom_css', 'label' => 'Custom CSS', 'desc' => 'Paste your custom CSS code here.', 'type' => 'textarea', 'rows' => '15', 'value' => '')
+		array('id' => 'input-custom-css', 'name' => 'custom_script[css]', 'label' => 'Add custom CSS', 'desc' => 'Paste your custom CSS code here.', 'type' => 'textarea', 'rows' => '9', 'value' => ''),
+		array('id' => 'input-custom-head-script', 'name' => 'custom_script[head]', 'label' => 'Add custom Javascript to header', 'desc' => 'Paste your custom Javascript code here.', 'type' => 'textarea', 'rows' => '9', 'value' => ''),
+		array('id' => 'input-custom-body-script', 'name' => 'custom_script[footer]', 'label' => 'Add custom Javascript to footer', 'desc' => 'Paste your custom Javascript code here.', 'type' => 'textarea', 'rows' => '9', 'value' => ''),
 	)
 );
 
@@ -417,9 +623,9 @@ $theme['customize']['sections']['custom_css'] = array(
 //    ),
 //);
 
-// Set accepted post item for updating the admin theme customisation.
-$theme['customize']['post_items'] = array('logo_height', 'logo_padding_top', 'logo_padding_bottom', 'ga_tracking_code', 'font_family', 'font_weight', 'font_size',
-    'font_color', 'body', 'header', 'sidebar', 'link', 'button', 'social', 'custom_css');
+// Set accepted post item when updating the admin theme options.
+$theme['customize']['post_items'] = array('logo_image', 'logo_text', 'favicon', 'logo_height', 'logo_padding_top', 'logo_padding_bottom', 'display_crumbs', 'hide_admin_link',
+	'ga_tracking_code', 'font', 'menu_font', 'body', 'header', 'heading', 'sidebar', 'link', 'button', 'footer', 'social', 'custom_script');
 
 
 /* End of file theme_config.php */

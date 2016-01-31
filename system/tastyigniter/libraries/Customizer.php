@@ -61,6 +61,11 @@ class Customizer {
                 if (isset($section['title'])) {
                     $nav_items .= ($nav_row === 1) ? $this->_styles['nav_active_item'][0] : $this->_styles['nav_item'][0];
                     $nav_items .= str_replace('{id}', $key, $this->_styles['nav_link'][0]);
+
+                    if (isset($section['icon'])) {
+                        $nav_items .= str_replace('{class}', $section['icon'], $this->_styles['nav_icon'][0]).$this->_styles['nav_icon'][1];
+                    }
+
                     $nav_items .= $section['title'] . $this->_styles['nav_link'][1] . $this->_styles['nav_active_item'][1];
                     $nav_row++;
                 }
@@ -87,9 +92,20 @@ class Customizer {
                 $view .= (empty($section['desc'])) ? '' : $this->_styles['section_desc'][0] . $section['desc'] . $this->_styles['section_desc'][1];
 
                 if (isset($this->fields[$key]) AND is_array($this->fields[$key])) {
-                    foreach ($this->fields[$key] as $field) {
-                        if (!empty($field['temp_field'])) {
-                            $view .= $this->getFieldMarkup($field['temp_field']);
+                    foreach ($this->fields[$key] as $fields) {
+                        foreach ($fields as $legend => $field) {
+                            if (!empty($field['temp_field'])) {
+                                $view .= $this->getFieldMarkup($field['temp_field']);
+                            } else {
+                                $view .= $this->_styles['fieldset'][0];
+                                $view .= $this->_styles['fieldset_legend'][0] . $legend . $this->_styles['fieldset_legend'][1];
+
+                                foreach ($field as $fld) {
+                                    $view .= $this->getFieldMarkup($fld['temp_field']);
+                                }
+
+                                $view .= $this->_styles['fieldset'][1];
+                            }
                         }
                     }
                 }
@@ -154,22 +170,44 @@ class Customizer {
     private function buildSections() {
         if (empty($this->sections) OR !is_array($this->sections)) return FALSE;
 
-        foreach ($this->sections as $key => $section) {
-            if (!empty($section['fields'])) {
-                $this->fields[$key] = $this->buildFields($section['fields']);
-            }
+        foreach ($this->sections as $section_key => $section) {
+            foreach ($section as $key => $value) {
+                if ($key === 'fields') {
+                    $this->fields[$section_key][] = $this->buildFields($value);
+                }
 
-            if (!empty($section['table'])) {
-                $this->tables[$key] = $this->buildTable($section['table']);
+                if ($key === 'fieldset') {
+                    $this->fields[$section_key][] = $this->buildFieldset($value);
+                }
+
+                if ($key === 'table') {
+                    $this->tables[$section_key][] = $this->buildTable($value);
+                }
             }
         }
+    }
+
+    private function buildFieldset($fieldsets = array()) {
+        $temp_fields = array();
+
+        if (isset($fieldsets['fields'])) {
+            $legend = isset($fieldsets['legend']) ? $fieldsets['legend'] : '';
+            $temp_fields[$legend] = $this->buildFields($fieldsets['fields']);
+        } else {
+            foreach ($fieldsets as $fieldset) {
+                $legend = isset($fieldset['legend']) ? $fieldset['legend'] : '';
+                $temp_fields[$legend] = $this->buildFields($fieldset['fields']);
+            }
+        }
+
+        return $temp_fields;
     }
 
     private function buildFields($fields = array()) {
         $temp_fields = array();
 
         if (isset($fields['type'])) {
-            $temp_fields[] = $this->buildField($fields);
+            $temp_fields = $this->buildField($fields);
         } else {
             foreach ($fields as $field) {
                 $temp_fields[] = $this->buildField($field);
@@ -375,9 +413,17 @@ class Customizer {
     private function createMediaInput($field = array()) {
         if (empty($field['type']) AND $field['type'] !== 'media') return FALSE;
 
-        $no_photo = image_url('data/no_photo.png');
-        $remove_event = 'onclick="$(\'#'.$field['id'].'-thumb\').attr(\'src\', \''.$no_photo.'\'); $(\'#'.$field['id'].'\').attr(\'value\', \'\');"';
-        $field['l_addon'] = $this->_styles['media_l_addon'][0] . '<i><img id="'.$field['id'].'-thumb" class="thumb img-responsive" width="28px" src="'.$no_photo.'" /></i>' . $this->_styles['media_l_addon'][1];
+        $this->CI->load->model('Image_tool_model');
+
+        $no_photo_src = $this->CI->Image_tool_model->resize('data/no_photo.png');
+        if (!empty($field['value'])) {
+            $image_src = $this->CI->Image_tool_model->resize($field['value']);
+        } else {
+            $image_src = $no_photo_src;
+        }
+
+        $remove_event = 'onclick="$(\'#'.$field['id'].'-thumb\').attr(\'src\', \''.$no_photo_src.'\'); $(\'#'.$field['id'].'\').attr(\'value\', \'\');"';
+        $field['l_addon'] = $this->_styles['media_l_addon'][0] . '<i><img id="'.$field['id'].'-thumb" class="thumb img-responsive" width="28px" src="'.$image_src.'" /></i>' . $this->_styles['media_l_addon'][1];
         $field['r_addon'] = $this->_styles['media_r_addon'][0] . '<button type="button" class="btn btn-primary" onclick="mediaManager(\''.$field['id'].'\');"><i class="fa fa-picture-o"></i></button><button type="button" class="btn btn-danger" '.$remove_event.'><i class="fa fa-times-circle"></i></button>' . $this->_styles['media_r_addon'][1];
 
         $input = form_input(array('id' => $field['id'], 'name' => $field['name'], 'class' => $this->_form_classes['media'], 'value' => $field['value']));
