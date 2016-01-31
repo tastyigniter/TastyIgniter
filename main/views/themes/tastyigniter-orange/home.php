@@ -13,10 +13,10 @@
     </div>
 <?php } ?>
 <div id="page-content">
-	<div class="container">
-	    <div id="order-steps" class="top-spacing">
-            <div class="row">
-                <div class="col-md-3 col-sm-6">
+	<div class="container top-spacing-10">
+	    <div class="content-wrap">
+            <div id="order-steps" class="row">
+                <div class="col-md-3 col-sm-6 col-xs-6">
                     <div class="step-item">
                         <div class="icon">
                             <i class="fa fa-pencil"></i>
@@ -25,7 +25,7 @@
                         <p><?php echo lang('text_step_search'); ?></p>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-6">
+                <div class="col-md-3 col-sm-6 col-xs-6">
                     <div class="step-item">
                         <div class="icon">
                             <i class="fa fa-bullhorn"></i>
@@ -34,7 +34,8 @@
                         <p><?php echo lang('text_step_choose'); ?></p>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-6">
+                <div class="clearfix visible-xs visible-sm"></div>
+                <div class="col-md-3 col-sm-6 col-xs-6">
                     <div class="step-item">
                         <div class="icon">
                             <i class="fa fa-bell"></i>
@@ -43,7 +44,7 @@
                         <p><?php echo lang('text_step_pay'); ?></p>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-6">
+                <div class="col-md-3 col-sm-6 col-xs-6">
                     <div class="step-item">
                         <div class="icon">
                             <i class="fa fa-heart"></i>

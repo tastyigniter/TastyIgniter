@@ -20,7 +20,7 @@
                         <?php foreach ($locations as $location) { ?>
                             <div class="panel panel-local">
                                 <div class="panel-body">
-                                    <div class="box-one col-md-4">
+                                    <div class="box-one col-xs-12 col-sm-5">
                                         <img class="img-responsive pull-left" src="<?php echo $location['location_image']; ?>">
                                         <dl>
                                             <dd><h4><?php echo $location['location_name']; ?></h4></dd>
@@ -35,7 +35,9 @@
                                             <dd><span class="text-muted"><?php echo $location['address']; ?></span></dd>
                                         </dl>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="clearfix visible-xs wrap-bottom"></div>
+                                    <div class="clearfix visible-xs border-top wrap-bottom"></div>
+                                    <div class="col-xs-6 col-sm-4">
                                         <dl>
                                             <dd class="text-info">
                                                 <?php if ($location['opening_status'] === '1') { ?>
@@ -47,19 +49,15 @@
                                                 <?php } ?>
                                             </dd>
                                             <h4><?php echo $location['open_or_closed']; ?></h4>
-                                        </dl>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <dl>
-                                            <dd><?php echo $location['offers']; ?></dd>
                                             <dd><span class="small"><b><?php echo lang('text_delivery_time'); ?>:</b> <?php echo $location['delivery_time']; ?></span></dd>
                                             <dd><span class="small"><b><?php echo lang('text_collection_time'); ?>:</b> <?php echo $location['collection_time']; ?></span></dd>
 <!--                                            <dd><span class="small"><b>--><?php //echo lang('text_last_order_time'); ?><!--:</b> --><?php //echo $location['last_order_time']; ?><!--</span></dd>-->
                                         </dl>
                                     </div>
-                                    <div class="col-md-2 text-right">
+                                    <div class="col-xs-6 col-sm-3 text-right">
                                         <dl>
                                             <dd><a class="btn btn-primary" href="<?php echo $location['href']; ?>"><?php echo lang('button_view_menu'); ?></a></dd>
+                                            <dd class="small"><?php echo $location['offers']; ?></dd>
                                         </dl>
                                     </div>
                                     <div class="clearfix"></div>

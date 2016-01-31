@@ -27,9 +27,9 @@
 				}
 			?>
 
-			<div class="<?php echo $class; ?>">
-				<div class="order-lists row">
-					<form method="POST" accept-charset="utf-8" action="<?php echo current_url(); ?>">
+			<div class="content-wrap <?php echo $class; ?>">
+				<form method="POST" accept-charset="utf-8" action="<?php echo current_url(); ?>">
+					<div class="reservation-lists row">
 						<div class="col-md-12">
 							<div class="table-responsive">
 								<table class="table table-none">
@@ -82,8 +82,8 @@
 								<a class="btn btn-primary btn-lg" href="<?php echo $back_url; ?>"><?php echo lang('button_back'); ?></a>
 							</div>
 						</div>
-					</form>
-				</div>
+					</div>
+				</form>
 			</div>
 			<?php echo get_partial('content_right'); ?>
 			<?php echo get_partial('content_bottom'); ?>

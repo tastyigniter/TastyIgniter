@@ -27,7 +27,7 @@
 				}
 			?>
 
-			<div class="<?php echo $class; ?>">
+			<div class="content-wrap <?php echo $class; ?>">
 				<div class="row">
 					<div class="col-md-12">
 						<?php if ($messages) {?>

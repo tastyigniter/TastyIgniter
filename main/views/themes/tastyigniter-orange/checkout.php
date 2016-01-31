@@ -1,7 +1,7 @@
 <?php echo get_header(); ?>
 <?php echo get_partial('content_top'); ?>
 <div id="page-content">
-	<div class="container top-spacing">
+	<div class="container">
 		<div class="row">
 			<?php echo get_partial('content_left'); ?>
 			<?php
@@ -55,7 +55,7 @@
                         <form method="POST" accept-charset="utf-8" action="<?php echo $_action; ?>" id="checkout-form" role="form">
                             <input type="hidden" name="checkout_step" class="checkout_step" value="<?php echo set_value('checkout_step', $checkout_step); ?>">
 
-							<div id="checkout" style="display: <?php echo ($checkout_step === 'one') ? 'block' : 'none'; ?>">
+							<div id="checkout" class="content-wrap" style="display: <?php echo ($checkout_step === 'one') ? 'block' : 'none'; ?>">
 								<p class="text-info"><?php echo $text_login_register; ?></p><br />
 
 								<div class="row">
@@ -214,7 +214,7 @@
 								</div>
 							</div>
 
-							<div id="payment" style="display: <?php echo ($checkout_step === 'two') ? 'block' : 'none'; ?>">
+							<div id="payment" class="content-wrap" style="display: <?php echo ($checkout_step === 'two') ? 'block' : 'none'; ?>">
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">

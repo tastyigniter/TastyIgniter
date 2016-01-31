@@ -1,68 +1,78 @@
 <?php if ($has_delivery OR $has_collection) { ?>
-    <div class="col-sm-12 wrap-none wrap-bottom">
-        <div class="col-sm-6">
-            <dl class="dl-group">
+    <div class="col-xs-12 wrap-none wrap-bottom">
+	    <div class="col-xs-12 col-sm-6 pull-right">
+		    <?php if ($has_delivery AND $opening_hours) { ?>
+			    <h4 class="opening-hour-title">
+				    <i class="fa fa-clock-o fa-fw"></i>&nbsp;
+				    <strong><?php echo lang('text_delivery_hours'); ?></strong>
+			    </h4>
+			    <div class="list-group opening-hour">
+				    <?php foreach ($opening_hours as $opening_hour) { ?>
+					    <div class="list-group-item">
+						    <div class="row">
+							    <div class="col-xs-4"><?php echo $opening_hour['day']; ?>:</div>
+							    <div class="col-xs-8">
+								    <?php echo $opening_hour['time']; ?>
+								    <span class="small text-muted"><?php echo $opening_hour['type']; ?></span>
+							    </div>
+						    </div>
+					    </div>
+				    <?php } ?>
+			    </div>
+		    <?php } ?>
+	    </div>
+
+	    <div class="col-xs-12 col-sm-6">
+            <div class="list-group">
                 <?php if ($has_delivery) { ?>
-                    <dd><i class="fa fa-clock-o fa-fw"></i>&nbsp;<b><?php echo lang('text_delivery_time'); ?></b><br /> <?php echo $delivery_time; ?> <?php echo lang('text_minutes'); ?></dd>
+                    <div class="list-group-item"><i class="fa fa-clock-o fa-fw"></i>&nbsp;<b><?php echo lang('text_delivery_time'); ?></b><br /> <?php echo $delivery_time; ?> <?php echo lang('text_minutes'); ?></div>
                 <?php } ?>
-                <dd><i class="fa fa-clock-o fa-fw"></i>&nbsp;<b><?php echo lang('text_collection_time'); ?></b><br />
+                <div class="list-group-item"><i class="fa fa-clock-o fa-fw"></i>&nbsp;<b><?php echo lang('text_collection_time'); ?></b><br />
                     <?php if ($has_collection) { ?>
                         <?php echo $collection_time; ?> <?php echo lang('text_minutes'); ?>
                     <?php } else { ?>
                         <?php echo lang('text_only_delivery_is_available'); ?>
                     <?php } ?>
-                </dd>
+                </div>
                 <?php if ($has_delivery) { ?>
-                    <dd><i class="fa fa-clock-o fa-fw"></i>&nbsp;<b><?php echo lang('text_last_order_time'); ?></b><br /> <?php echo $last_order_time; ?></dd>
-                    <dd><i class="fa fa-paypal fa-fw"></i>&nbsp;<b><?php echo lang('text_payments'); ?></b><br /> <?php echo $payments; ?></dd>
+                    <div class="list-group-item"><i class="fa fa-clock-o fa-fw"></i>&nbsp;<b><?php echo lang('text_last_order_time'); ?></b><br /> <?php echo $last_order_time; ?></div>
+                    <div class="list-group-item"><i class="fa fa-paypal fa-fw"></i>&nbsp;<b><?php echo lang('text_payments'); ?></b><br /> <?php echo $payments; ?></div>
                 <?php } ?>
                 <?php if (!empty($opening_type) AND $opening_type == '24_7') { ?>
-                    <dd><?php echo lang('text_opens_24_7'); ?></dd>
+                    <div class="list-group-item"><?php echo lang('text_opens_24_7'); ?></div>
                 <?php } ?>
-            </dl>
+            </div>
         </div>
 
-        <div class="col-sm-6">
-            <?php if ($has_delivery AND $opening_hours) { ?>
-                <p><i class="fa fa-clock-o fa-fw"></i>&nbsp;<strong><?php echo lang('text_delivery_hours'); ?></strong></p>
-                <dl class="dl-horizontal opening-hour">
-                    <?php foreach ($opening_hours as $opening_hour) { ?>
-                        <dt><?php echo $opening_hour['day']; ?>:</dt>
-                        <dd><?php echo $opening_hour['time']; ?> <span class="small text-muted"><?php echo $opening_hour['type']; ?></span></dd>
-                    <?php } ?>
-                </dl>
-            <?php } ?>
-        </div>
-
-        <div class="col-sm-12 wrap-none">
+        <div class="col-xs-12 wrap-none">
 	        <?php if ($has_delivery) { ?>
-	            <div class="col-sm-6">
+	            <div class="col-xs-12 col-sm-6">
                     <h4 class="wrap-bottom border-bottom"><?php echo lang('text_delivery_areas'); ?></h4>
 
                     <div class="row">
-                        <div class="col-sm-5"><b><?php echo lang('column_area_name'); ?></b></div>
-                        <div class="col-sm-4"><b><?php echo lang('column_area_charge'); ?></b></div>
-                        <div class="col-sm-3"><b><?php echo lang('column_area_min_total'); ?></b></div>
+                        <div class="col-xs-5"><b><?php echo lang('column_area_name'); ?></b></div>
+                        <div class="col-xs-3 wrap-none"><b><?php echo lang('column_area_charge'); ?></b></div>
+                        <div class="col-xs-4"><b><?php echo lang('column_area_min_total'); ?></b></div>
                         <?php if (!empty($delivery_areas)) { ?>
                             <?php foreach($delivery_areas as $key => $area) { ?>
-                                <div class="col-sm-12 wrap-none">
-                                    <div class="col-sm-5">
+                                <div class="col-xs-12 wrap-none">
+                                    <div class="col-xs-5">
 	                                    <?php echo $area['name']; ?>
 	                                    <span class="badge" style="background-color: <?php echo $area['color']; ?>">&nbsp;&nbsp;</span>
                                     </div>
-                                    <div class="col-sm-4"><?php echo $area['charge']; ?></div>
-                                    <div class="col-sm-3"><?php echo $area['min_amount']; ?></div>
+                                    <div class="col-xs-3 wrap-none"><?php echo $area['charge']; ?></div>
+                                    <div class="col-xs-4"><?php echo $area['min_amount']; ?></div>
                                 </div>
                             <?php } ?>
                         <?php } else { ?>
-                            <div class="col-sm-12">
+                            <div class="col-xs-12">
                                 <br /><p><?php echo lang('text_no_delivery_areas'); ?></p>
                             </div>
                         <?php } ?>
                     </div>
 	            </div>
 
-	            <div class="col-sm-6 wrap-top">
+	            <div class="col-xs-12 col-sm-6 wrap-top">
 	                <div id="map" class="">
 	                    <div id="map-holder" style="height:370px;text-align:left;"></div>
 	                </div>
@@ -71,12 +81,12 @@
         </div>
     </div>
 <?php } else { ?>
-    <div class="col-sm-12">
+    <div class="col-xs-12">
         <p class="alert alert-info"><?php echo lang('text_offers_no_types'); ?></p>
     </div>
 <?php } ?>
 
-<div class="col-sm-12">
+<div class="col-xs-12">
     <h4 class="wrap-bottom border-bottom"><?php echo sprintf(lang('text_info_heading'), $location_name); ?></h4>
     <p><?php echo $local_description; ?></p>
 </div>

@@ -1,16 +1,16 @@
 <?php if (empty($page_popup)) echo get_header(); ?>
 <?php if (empty($page_popup)) echo get_partial('content_top'); ?>
 <div id="page-content">
-	<div class="<?php echo empty($page_popup) ? 'container' : 'container-fluid'; ?>">
-		<div <?php if (!empty($page_popup)) echo 'id="heading"'; ?> class="row">
-			<div class="col-md-12">
-				<div class="heading-section">
-					<?php if (!empty($page_popup)) { ?>
+	<div class="<?php echo empty($page_popup) ? 'container' : 'container-fluid'; ?> top-spacing">
+		<?php if (!empty($page_popup)) { ?>
+			<div <?php if (!empty($page_popup)) echo 'id="heading"'; ?> class="row">
+				<div class="col-md-12">
+					<div class="heading-section">
 						<h2><?php echo $text_heading; ?></h2>
-					<?php } ?>
+					</div>
 				</div>
 			</div>
-		</div>
+		<?php } ?>
 
 		<div class="row">
 			<?php echo get_partial('content_left'); ?>
@@ -24,7 +24,7 @@
 				}
 			?>
 
-			<div class="<?php echo $class; ?>">
+			<div class="content-wrap <?php echo $class; ?>">
 				<?php echo $page_content; ?>
 			</div>
 

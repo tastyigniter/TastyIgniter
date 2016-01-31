@@ -27,7 +27,7 @@
 				}
 			?>
 
-			<div class="<?php echo $class; ?>">
+			<div class="content-wrap <?php echo $class; ?>">
 				<div class="row">
 					<form method="POST" accept-charset="utf-8" action="<?php echo current_url(); ?>" role="form">
 						<div class="col-md-12">

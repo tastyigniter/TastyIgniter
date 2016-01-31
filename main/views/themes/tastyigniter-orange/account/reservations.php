@@ -27,7 +27,7 @@
 				}
 			?>
 
-			<div class="<?php echo $class; ?>">
+			<div class="content-wrap <?php echo $class; ?>">
 				<div class="reservations-lists row">
 					<div class="col-md-12">
 						<div class="table-responsive">

@@ -15,7 +15,7 @@
 				}
 			?>
 
-			<div class="<?php echo $class; ?>">
+			<div class="content-wrap <?php echo $class; ?>">
 				<div class="row">
 					<form method="POST" accept-charset="utf-8" action="<?php echo $_action; ?>" role="form">
 						<?php if ($address) { ?>

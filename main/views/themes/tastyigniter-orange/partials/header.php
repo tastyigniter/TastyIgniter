@@ -67,6 +67,8 @@
 		  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 		  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 		<![endif]-->
+        <?php $custom_script = get_theme_options('custom_script'); ?>
+        <?php if (!empty($custom_script['head'])) { echo '<script type="text/javascript">'.$custom_script['head'].'</script>'; }; ?>
 	</head>
 	<body class="<?php echo $body_class; ?>">
 		<div id="opaclayer" onclick="closeReviewBox();"></div>
@@ -82,8 +84,12 @@
 							<i class="fa fa-align-justify"></i>
 						</button>
                         <div class="logo">
-							<a class="" href="<?php echo rtrim(site_url(), '/').'/'; ?>">
-								<?php if ($this->config->item('site_logo') === 'data/no_photo.png') { ?>
+                            <a class="" href="<?php echo rtrim(site_url(), '/').'/'; ?>">
+								<?php if (get_theme_options('logo_image')) { ?>
+									<img alt="<?php echo $this->config->item('site_name'); ?>" src="<?php echo image_url(get_theme_options('logo_image')) ?>" height="40">
+								<?php } else if (get_theme_options('logo_text')) { ?>
+									<?php echo get_theme_options('logo_text'); ?>
+								<?php } else if ($this->config->item('site_logo') === 'data/no_photo.png') { ?>
 									<?php echo $this->config->item('site_name'); ?>
 								<?php } else { ?>
 									<img alt="<?php echo $this->config->item('site_name'); ?>" src="<?php echo image_url($this->config->item('site_logo')) ?>" height="40">
@@ -133,7 +139,7 @@
 		</header>
 
 		<div id="page-wrapper" class="content-area">
-			<?php if (($breadcrumbs = get_breadcrumbs()) !== '') { ?>
+			<?php if (get_theme_options('display_crumbs') === '1' AND ($breadcrumbs = get_breadcrumbs()) !== '') { ?>
 	            <div id="breadcrumb">
 	                <div class="container">
 	                    <div class="row">

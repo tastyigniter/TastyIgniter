@@ -26,49 +26,39 @@
 							</li>
 						</ul>
 					</div>
-				</div>
 
-				<div class="row">
-					<div class="col-md-12">
+					<div class="col-xs-12 content">
 						<div class="heading-section">
 							<?php echo $text_success_message; ?>
 		                    <span class="under-heading"></span>
 						</div>
-					</div>
-				</div>
 
-				<div class="row">
-					<div class="col-md-12">
-			    		<div class="panel panel-default">
-			    			<div class="panel-heading">
-			    				<h3 class="panel-title"><strong><?php echo lang('text_order_details'); ?></strong></h3>
-			    			</div>
-			    			<div class="panel-body">
-			    				<div class="col-sm-6">
-			    					<p><?php echo $order_details; ?></p>
-			    				</div>
-			    				<div class="col-sm-6">
+			            <div class="panel panel-default">
+			                <div class="panel-heading">
+			                    <h3 class="panel-title"><strong><?php echo lang('text_order_details'); ?></strong></h3>
+			                </div>
+			                <div class="panel-body">
+			                    <div class="col-sm-6">
+			                        <p><?php echo $order_details; ?></p>
+			                    </div>
+			                    <div class="col-sm-6">
 									<?php if ($delivery_address) { ?>
 										<strong><?php echo lang('text_delivery_address'); ?>:</strong>
 										<address><?php echo $delivery_address; ?></address>
 									<?php } ?>
-			    				</div>
-			    			</div>
-			    		</div>
-			    	</div>
-				</div>
+			                    </div>
+			                </div>
+			            </div>
 
-				<div class="row">
-					<div class="col-md-12">
-			    		<div class="panel panel-default">
-			    			<div class="panel-heading">
-			    				<h3 class="panel-title"><strong><?php echo lang('text_order_items'); ?></strong></h3>
-			    			</div>
-			    			<div class="panel-body">
+			            <div class="panel panel-default">
+			                <div class="panel-heading">
+			                    <h3 class="panel-title"><strong><?php echo lang('text_order_items'); ?></strong></h3>
+			                </div>
+			                <div class="panel-body">
 								<?php if ($menus) { ?>
-				    				<div class="table-responsive">
-				    					<table class="table table-condensed">
-				    						<tbody>
+				                    <div class="table-responsive">
+				                        <table class="table table-condensed">
+				                            <tbody>
 												<?php foreach ($menus as $menu) { ?>
 													<tr>
 														<td>x <?php echo $menu['quantity']; ?></td>
@@ -84,7 +74,7 @@
 													 </tr>
 												<?php } ?>
 				                            </tbody>
-				    						<tfoot>
+				                            <tfoot>
 												<tr>
 													<td class="thick-line"></td>
 													<td class="thick-line"></td>
@@ -97,21 +87,19 @@
                                                         <?php echo $order_total; ?>
                                                     </td>
                                                 </tr>
-				    						</tfoot>
-				    					</table>
-				    				</div>
+				                            </tfoot>
+				                        </table>
+				                    </div>
 								<?php } ?>
 							</div>
 						</div>
-					</div>
-				</div>
 
-				<div class="row">
-					<div class="col-sm-12">
-						<h4><?php echo lang('text_your_local'); ?></h4>
-						<strong><?php echo $location_name; ?></strong><br />
-						<address><?php echo $location_address; ?></address>
-						<p><?php echo lang('text_thank_you'); ?></p>
+						<div class="col-xs-12">
+							<h4><?php echo lang('text_your_local'); ?></h4>
+							<strong><?php echo $location_name; ?></strong><br />
+							<address><?php echo $location_address; ?></address>
+							<p><?php echo lang('text_thank_you'); ?></p>
+						</div>
 					</div>
 				</div>
 			</div>

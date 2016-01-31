@@ -13,16 +13,20 @@
     </div>
 <?php } ?>
 
-<div id="page-content">
+<div id="heading">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
 				<div class="heading-section">
-					<h3><?php echo lang('text_summary'); ?></h3>
-					<span class="under-heading"></span>
+					<h3><?php echo lang('text_heading'); ?></h3>
 				</div>
 			</div>
 		</div>
+	</div>
+</div>
+
+<div id="page-content">
+	<div class="container top-spacing">
 
 		<div class="row">
 			<?php echo get_partial('content_left'); ?><?php echo get_partial('content_right'); ?>
@@ -36,12 +40,12 @@
 				}
 			?>
 
-			<div class="<?php echo $class; ?>">
+			<div class="content-wrap <?php echo $class; ?>">
 				<?php if ($default_local) { ?>
 					<div class="row">
                         <div class="col-md-7 center-block bottom-spacing text-center">
                             <div class="contact-info">
-<!--                                <h4 class="contact-title">--><?php //echo lang('text_contact_us'); ?><!--</h4>-->
+                                <h4 class="contact-title"><?php echo lang('text_summary'); ?></h4>
                                 <ul>
                                     <li><strong><?php echo $location_name; ?></strong></li>
                                     <li><i class="fa fa-globe"></i><?php echo $location_address; ?></li>

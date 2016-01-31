@@ -1,15 +1,4 @@
 <?php echo get_header(); ?>
-<?php if ($this->alert->get('', 'alert')) { ?>
-    <div id="notification">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <?php echo $this->alert->display('', 'alert'); ?>
-                </div>
-            </div>
-        </div>
-    </div>
-<?php } ?>
 
 <div id="page-content">
 	<div class="container">
@@ -23,7 +12,12 @@
 		</div>
 
 		<div class="row">
-			<div class="col-md-6 center-block">
+			<div class="content-wrap col-md-6 center-block">
+				<?php if ($this->alert->get('', 'alert')) { ?>
+					<div id="notification">
+						<?php echo $this->alert->display('', 'alert'); ?>
+					</div>
+				<?php } ?>
 				<p class="text-center"><?php echo lang('text_summary'); ?></p>
 				<form method="POST" accept-charset="utf-8" action="<?php echo current_url(); ?>" role="form">
 					<div class="form-group">

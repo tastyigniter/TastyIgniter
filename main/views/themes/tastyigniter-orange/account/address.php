@@ -27,7 +27,7 @@
 				}
 			?>
 
-			<div class="<?php echo $class; ?>">
+			<div class="content-wrap <?php echo $class; ?>">
 				<div class="row">
                     <?php if ($addresses) { ?>
                         <?php $address_row = 0; ?>

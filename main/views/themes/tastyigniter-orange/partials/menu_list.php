@@ -13,32 +13,32 @@
                     <?php foreach ($menus[$category_id] as $menu) { ?>
 
                         <div id="menu<?php echo $menu['menu_id']; ?>" class="menu-item">
-                            <div class="menu-item-wrapper">
+                            <div class="menu-item-wrapper row">
                                 <?php if ($show_menu_images === '1') { ?>
-                                    <div class="menu-thumb">
+                                    <div class="menu-thumb col-xs-3 col-sm-2 wrap-none wrap-left">
                                         <img class="img-responsive img-thumbnail" alt="<?php echo $menu['menu_name']; ?>" src="<?php echo $menu['menu_photo']; ?>">
                                     </div>
                                 <?php } ?>
 
-                                <div class="menu-content">
+                                <div class="menu-content <?php echo ($show_menu_images === '1') ? 'col-xs-6' : 'col-xs-9'; ?>">
                                     <span class="menu-name"><b><?php echo $menu['menu_name']; ?></b></span>
                                     <span class="menu-desc small">
                                         <?php echo $menu['menu_description']; ?>
                                     </span>
                                 </div>
-                                <div class="menu-right">
-                                    <span class="menu-price"><?php echo $menu['menu_price']; ?></span>
-                                        <span class="menu-button">
-                                            <?php if (isset($menu_options[$menu['menu_id']])) { ?>
-                                                <a class="btn btn-primary btn-cart add_cart" onClick="openMenuOptions('<?php echo $menu['menu_id']; ?>', '<?php echo $menu['minimum_qty']; ?>');">
-                                                    <span class="fa fa-plus"></span>
-                                                </a>
-                                            <?php } else { ?>
-                                                <a class="btn btn-primary btn-cart add_cart" title="<?php echo lang('button_add'); ?>" onClick="addToCart('<?php echo $menu['menu_id']; ?>', '<?php echo $menu['minimum_qty']; ?>');">
-                                                    <span class="fa fa-plus"></span>
-                                                </a>
-                                            <?php } ?>
-                                        </span>
+                                <div class="menu-right col-xs-3 wrap-none wrap-right">
+                                    <span class="menu-price visible-xs-inline-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block"><?php echo $menu['menu_price']; ?></span>
+                                    <span class="menu-button visible-xs-inline-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block">
+                                        <?php if (isset($menu_options[$menu['menu_id']])) { ?>
+                                            <a class="btn btn-primary btn-cart add_cart" onClick="openMenuOptions('<?php echo $menu['menu_id']; ?>', '<?php echo $menu['minimum_qty']; ?>');">
+                                                <span class="fa fa-plus"></span>
+                                            </a>
+                                        <?php } else { ?>
+                                            <a class="btn btn-primary btn-cart add_cart" title="<?php echo lang('button_add'); ?>" onClick="addToCart('<?php echo $menu['menu_id']; ?>', '<?php echo $menu['minimum_qty']; ?>');">
+                                                <span class="fa fa-plus"></span>
+                                            </a>
+                                        <?php } ?>
+                                    </span>
                                     <?php if ($menu['is_special'] === '1') { ?>
                                         <div class="menu-special"><?php echo $menu['end_days']; ?></div>
                                     <?php }?>
