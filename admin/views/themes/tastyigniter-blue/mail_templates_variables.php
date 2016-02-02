@@ -12,10 +12,10 @@
 						<div class="list-group supported-var">
 							<?php foreach ($value as $variable) { ?>
 								<a href="#" class="list-group-item"><span class="text-muted"><?php echo $variable['var']; ?></span> <?php echo $variable['name']; ?></a>
-							<? } ?>
+							<?php } ?>
 						</div>
 					</div>
-				<? } ?>
+				<?php } ?>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
