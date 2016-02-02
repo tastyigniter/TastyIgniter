@@ -144,11 +144,19 @@ class Messages extends Admin_Controller {
         $recipients = $this->Messages_model->getRecipients($message_id);
         if ($recipients) {
             foreach ($recipients as $recipient) {
-                $data['recipients'][] = array(
+                if ($recipient['item'] === 'staff_email' OR $recipient['item'] === 'staff_id') {
+					$recipient_name = $recipient['staff_name'];
+					$recipient_email = $recipient['staff_email'];
+                } else {
+	                $recipient_name = $recipient['first_name'] .' '. $recipient['last_name'];
+	                $recipient_email = $recipient['customer_email'];
+                }
+
+	            $data['recipients'][] = array(
                     'message_recipient_id'	=> $recipient['message_recipient_id'],
                     'message_id'			=> $recipient['message_id'],
-                    'recipient_name'		=> (!empty($recipient['first_name']) AND !empty($recipient['last_name'])) ? $recipient['first_name'] .' '. $recipient['last_name'] : $recipient['staff_name'] ,
-                    'recipient_email'		=> (!empty($recipient['customer_email'])) ? $recipient['customer_email'] : $recipient['staff_email'],
+                    'recipient_name'		=> $recipient_name,
+                    'recipient_email'		=> $recipient_email,
                     'status'				=> ($recipient['status'] === '1') ? '<i class="fa fa-check-square green"></i>' : '<i class="fa fa-exclamation-circle red"></i>'
                 );
             }
