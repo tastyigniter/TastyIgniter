@@ -44,7 +44,7 @@ class Maintenance_model extends TI_Model {
 		$result = array();
 
 		$backup_files = glob(IGNITEPATH . 'migrations/backups/*.sql');
-		if (count($backup_files) > 0) {
+		if (is_array($backup_files)) {
 			foreach ($backup_files as $backup_file) {
 				$basename = basename($backup_file);
 				$result[] = array(
