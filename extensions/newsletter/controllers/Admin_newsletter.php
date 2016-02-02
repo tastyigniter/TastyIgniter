@@ -37,6 +37,8 @@ class Admin_newsletter extends Admin_Controller {
 	}
 
     private function _updateModule() {
+        $this->user->restrict('Module.Newsletter.Manage');
+
         if ($this->validateForm() === TRUE) {
 
             if ($this->Extensions_model->updateExtension('module', 'newsletter', $this->input->post())) {

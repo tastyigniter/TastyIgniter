@@ -63,6 +63,8 @@ class Admin_banners_module extends Admin_Controller {
 	}
 
 	private function _updateModule() {
+		$this->user->restrict('Module.BannersModule.Manage');
+
     	if ($this->validateForm() === TRUE) {
 
 			if ($this->Extensions_model->updateExtension('module', 'banners_module', $this->input->post())) {

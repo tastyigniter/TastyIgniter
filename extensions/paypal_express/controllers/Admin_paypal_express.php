@@ -121,6 +121,8 @@ class Admin_paypal_express extends Admin_Controller {
 	}
 
 	private function _updatePayPalExpress() {
+		$this->user->restrict('Payment.PaypalExpress.Manage');
+
 		if ($this->input->post() AND $this->validateForm() === TRUE) {
 
 			if ($this->Extensions_model->updateExtension('payment', 'paypal_express', $this->input->post())) {

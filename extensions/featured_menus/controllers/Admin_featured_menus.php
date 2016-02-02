@@ -82,7 +82,7 @@ class Admin_featured_menus extends Admin_Controller {
     }
 
     private function _updateModule() {
-        $this->user->restrict('Module.FeaturedMenus');
+        $this->user->restrict('Module.FeaturedMenus.Manage');
 
         if ($this->validateForm() === TRUE) {
 

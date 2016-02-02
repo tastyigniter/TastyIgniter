@@ -85,6 +85,8 @@ class Admin_cod extends Admin_Controller {
 	}
 
 	private function _updateCod() {
+		$this->user->restrict('Payment.Cod.Manage');
+
     	if ($this->validateForm() === TRUE) {
 
 			if ($this->Extensions_model->updateExtension('payment', 'cod', $this->input->post())) {

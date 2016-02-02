@@ -129,6 +129,8 @@ class Admin_authorize_net_aim extends Admin_Controller {
 	}
 
 	private function _updateAuthorizeNetAIM() {
+		$this->user->restrict('Payment.AuthorizeNetAIM.Manage');
+
 		if ($this->input->post() AND $this->validateForm() === TRUE) {
 
 			if ($this->Extensions_model->updateExtension('payment', 'authorize_net_aim', $this->input->post())) {

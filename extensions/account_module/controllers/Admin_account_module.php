@@ -37,6 +37,8 @@ class Admin_account_module extends Admin_Controller {
 	}
 
 	private function _updateModule() {
+		$this->user->restrict('Module.AccountModule.Manage');
+
     	if ($this->validateForm() === TRUE) {
 
 			if ($this->Extensions_model->updateExtension('module', 'account_module', $this->input->post())) {

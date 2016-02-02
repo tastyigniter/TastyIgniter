@@ -76,6 +76,8 @@ class Admin_cart_module extends Admin_Controller {
 	}
 
 	private function _updateModule() {
+		$this->user->restrict('Module.CartModule.Manage');
+
     	if ($this->validateForm() === TRUE) {
 
 			if ($this->Extensions_model->updateExtension('module', 'cart_module', $this->input->post())) {

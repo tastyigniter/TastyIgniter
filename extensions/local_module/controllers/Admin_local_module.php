@@ -89,6 +89,8 @@ class Admin_local_module extends Admin_Controller {
 	}
 
 	private function _updateModule() {
+		$this->user->restrict('Module.LocalModule.Manage');
+
     	if ($this->validateForm() === TRUE) {
 
 			if ($this->Extensions_model->updateExtension('module', 'local_module', $this->input->post())) {
