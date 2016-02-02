@@ -475,18 +475,6 @@ $theme['customize']['sections']['footer'] = array(
 	)
 );
 
-$theme['customize']['sections']['partials'] = array(
-	'title'		=> 'Partials',
-	'desc'		=> '',
-	'icon'		=> '',
-	'fieldset'	=> array(
-		array(
-			'legend'		=> 'Body',
-			'fields'		=> array()
-		),
-	)
-);
-
 $theme['customize']['sections']['social'] = array(
 	'title'		=> 'Social',
 	'desc'		=> 'Add full URL for your social network profiles',
