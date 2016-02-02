@@ -360,20 +360,22 @@ class Media_manager {
 
         $directory = ($parent === '') ? $this->_image_path . $this->_root_folder : $directory;
 
-        foreach (glob($directory .'*', GLOB_ONLYDIR) as $dirpath) {
-            $dirname = basename($dirpath);
-            $active = (in_array($dirname, $this->_sub_folder)) ? ' active' : '';
+        if ($directory_map = glob($directory .'*', GLOB_ONLYDIR)) {
+            foreach ($directory_map as $dirpath) {
+                $dirname = basename($dirpath);
+                $active = (in_array($dirname, $this->_sub_folder)) ? ' active' : '';
 
-            if (is_dir($dirpath) AND !in_array($dirname, $this->_hidden_folders)) {
-                $parent_dir = $parent . '/' . $dirname;
+                if (is_dir($dirpath) AND ! in_array($dirname, $this->_hidden_folders)) {
+                    $parent_dir = $parent . '/' . $dirname;
 
-                $link = str_replace('{link}', $parent .'/'. urlencode($dirname). '/', $return_link);
-                $folder_tree .= '<li class="directory'. $active .'"><a href="'. $link .'"><i class="fa fa-folder-open"></i> '. htmlspecialchars($dirname) .'</a>';
-                $folder_tree .= $this->_folderTree($directory . $dirname .'/', $return_link, $parent_dir);
-                $folder_tree .= '</li>';
+                    $link = str_replace('{link}', $parent . '/' . urlencode($dirname) . '/', $return_link);
+                    $folder_tree .= '<li class="directory' . $active . '"><a href="' . $link . '"><i class="fa fa-folder-open"></i> ' . htmlspecialchars($dirname) . '</a>';
+                    $folder_tree .= $this->_folderTree($directory . $dirname . '/', $return_link, $parent_dir);
+                    $folder_tree .= '</li>';
 
-                if ( ! is_dir($this->_image_path . 'thumbs/' . $parent_dir)) {
-                    $this->createFolder(FALSE, $this->_image_path . 'thumbs/' . $parent_dir);
+                    if ( ! is_dir($this->_image_path . 'thumbs/' . $parent_dir)) {
+                        $this->createFolder(FALSE, $this->_image_path . 'thumbs/' . $parent_dir);
+                    }
                 }
             }
         }
