@@ -114,6 +114,8 @@ class Customer_online {
 
         is_array($input_data) OR $input_data = array();
 
+		!empty($input_data['customer_id']) OR $input_data['customer_id'] = '0';
+
         if ($last_online = $this->getLastOnline($input_data['ip_address'])) {
             if ((time() - strtotime($last_online['date_added'])) <= $this->getTimeout()) {
                 $save = FALSE;
