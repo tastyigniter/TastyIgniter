@@ -42,7 +42,9 @@
 										<th><?php echo lang('column_items'); ?></th>
 										<th><?php echo lang('column_total'); ?></th>
 										<th></th>
-										<th></th>
+										<?php if (config_item('allow_reviews') !== '1') { ?>
+											<th></th>
+										<?php } ?>
 									</tr>
 								</thead>
 								<tbody>
@@ -57,7 +59,9 @@
                                             <td><?php echo $order['total_items']; ?></td>
                                             <td><?php echo $order['order_total']; ?></td>
                                             <td><a class="re-order" title="<?php echo lang('text_reorder'); ?>" href="<?php echo $order['reorder']; ?>"><i class="fa fa-mail-reply text-primary"></i></a></td>
-                                            <td><a class="leave-review" title="<?php echo lang('text_leave_review'); ?>" href="<?php echo $order['leave_review']; ?>"><i class="fa fa-heart text-warning"></i></a></td>
+											<?php if (config_item('allow_reviews') !== '1') { ?>
+												<td><a class="leave-review" title="<?php echo lang('text_leave_review'); ?>" href="<?php echo $order['leave_review']; ?>"><i class="fa fa-heart text-warning"></i></a></td>
+											<?php } ?>
                                         </tr>
 									<?php } ?>
 								<?php } else { ?>
