@@ -80,8 +80,8 @@ class Admin_banners_module extends Admin_Controller {
  	private function validateForm() {
         foreach ($this->input->post('banners') as $key => $value) {
             $this->form_validation->set_rules('banners['.$key.'][banner_id]', 'lang:label_banner', 'xss_clean|trim|required|integer');
-            $this->form_validation->set_rules('banners['.$key.'][width]', 'lang:label_width', 'xss_clean|trim|required|alpha_numeric');
-            $this->form_validation->set_rules('banners['.$key.'][height]', 'lang:label_height', 'xss_clean|trim|required|alpha_numeric');
+            $this->form_validation->set_rules('banners['.$key.'][width]', 'lang:label_width', 'xss_clean|trim|alpha_numeric');
+            $this->form_validation->set_rules('banners['.$key.'][height]', 'lang:label_height', 'xss_clean|trim|alpha_numeric');
         }
 
 		if ($this->form_validation->run() === TRUE) {

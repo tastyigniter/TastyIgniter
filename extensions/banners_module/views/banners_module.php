@@ -1,10 +1,12 @@
 <div id="banner-box" class="module-box">
-	<div class="panel panel-default">
- 		<div class="panel-body wrap-none">
+	<div class="row">
+ 		<div class="col-xs-12">
             <?php if ($type === 'image') { ?>
-                <a href="<?php echo $click_url; ?>">
-                    <img alt="<?php echo $alt_text; ?>" src="<?php echo $images[0]['url']; ?>" class="thumb img-responsive" />
-                </a>
+                <div class="thumbnail">
+                    <a href="<?php echo $click_url; ?>">
+                        <img alt="<?php echo $alt_text; ?>" src="<?php echo $images[0]['url']; ?>" class="thumb img-responsive" />
+                    </a>
+                </div>
             <?php } else if ($type === 'carousel') { ?>
                 <div id="banner-slideshow" class="carousel slide" data-ride="carousel">
                     <ol class="carousel-indicators">

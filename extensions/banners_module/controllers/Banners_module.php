@@ -14,9 +14,9 @@ class Banners_module extends Main_Controller {
 
         isset($data['banners'][1]) OR $data['banners'][1] = array();
 
-        $banner_id = (!empty($data['banners'][1]['banner_id'])) ? $data['banners'][1]['banner_id'] : 0 ;
-        $image_width = (!empty($data['banners'][1]['width'])) ? $data['banners'][1]['width'] : 250 ;
-        $image_height = (!empty($data['banners'][1]['height'])) ? $data['banners'][1]['height'] : 250 ;
+        $banner_id = (!empty($data['banners'][1]['banner_id'])) ? $data['banners'][1]['banner_id'] : 0;
+        $image_width = (!empty($data['banners'][1]['width'])) ? $data['banners'][1]['width'] : '';
+        $image_height = (!empty($data['banners'][1]['height'])) ? $data['banners'][1]['height'] : '';
 
         $banner_info = $this->Banners_model->getBanner($banner_id);
 
