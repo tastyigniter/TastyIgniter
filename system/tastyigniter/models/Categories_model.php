@@ -27,6 +27,10 @@ class Categories_model extends TI_Model {
 			$this->db->like('name', $filter['filter_search']);
 		}
 
+		if (is_numeric($filter['filter_status'])) {
+			$this->db->where('menu_status', $filter['filter_status']);
+		}
+
 		$this->db->from('categories');
 
 		return $this->db->count_all_results();
@@ -61,11 +65,15 @@ class Categories_model extends TI_Model {
 
 	public function getCategories($parent = 0) {
 		$sql = "SELECT cat1.category_id, cat1.name, cat1.description, cat1.image, ";
-		$sql .= "cat1.priority, child.category_id as child_id, sibling.category_id as sibling_id ";
+		$sql .= "cat1.priority, cat1.status, child.category_id as child_id, sibling.category_id as sibling_id ";
 		$sql .= "FROM {$this->db->dbprefix('categories')} AS cat1 ";
 		$sql .= "LEFT JOIN {$this->db->dbprefix('categories')} AS child ON child.parent_id = cat1.category_id ";
 		$sql .= "LEFT JOIN {$this->db->dbprefix('categories')} AS sibling ON sibling.parent_id = child.category_id ";
 		$sql .= ($parent === 0) ? "WHERE cat1.parent_id = 0 " : "WHERE cat1.parent_id = ? ";
+
+		if (APPDIR === MAINDIR) {
+			$sql .= "AND cat1.status = 1 ";
+		}
 
 		$query = $this->db->query($sql, $parent);
 
@@ -84,6 +92,10 @@ class Categories_model extends TI_Model {
 		if (is_numeric($category_id)) {
 			$this->db->from('categories');
 			$this->db->where('category_id', $category_id);
+
+			if (APPDIR === MAINDIR) {
+				$this->db->where('status', '1');
+			}
 
 			$query = $this->db->get();
 
@@ -114,6 +126,12 @@ class Categories_model extends TI_Model {
 
 		if (isset($save['priority'])) {
 			$this->db->set('priority', $save['priority']);
+		}
+
+		if (isset($save['status']) AND $save['status'] === '1') {
+			$this->db->set('status', $save['status']);
+		} else {
+			$this->db->set('status', '0');
 		}
 
 		if (is_numeric($category_id)) {

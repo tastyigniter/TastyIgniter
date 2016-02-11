@@ -19,6 +19,25 @@
 									</div>
 									<a class="btn btn-grey" onclick="filterList();" title="<?php echo lang('text_search'); ?>"><i class="fa fa-search"></i></a>
 								</div>
+								<div class="col-md-8 pull-left">
+									<div class="form-group">
+										<select name="filter_status" class="form-control input-sm">
+											<option value=""><?php echo lang('text_filter_status'); ?></option>
+											<?php if ($filter_status === '1') { ?>
+												<option value="1" <?php echo set_select('filter_status', '1', TRUE); ?> ><?php echo lang('text_enabled'); ?></option>
+												<option value="0" <?php echo set_select('filter_status', '0'); ?> ><?php echo lang('text_disabled'); ?></option>
+											<?php } else if ($filter_status === '0') { ?>
+												<option value="1" <?php echo set_select('filter_status', '1'); ?> ><?php echo lang('text_enabled'); ?></option>
+												<option value="0" <?php echo set_select('filter_status', '0', TRUE); ?> ><?php echo lang('text_disabled'); ?></option>
+											<?php } else { ?>
+												<option value="1" <?php echo set_select('filter_status', '1'); ?> ><?php echo lang('text_enabled'); ?></option>
+												<option value="0" <?php echo set_select('filter_status', '0'); ?> ><?php echo lang('text_disabled'); ?></option>
+											<?php } ?>
+										</select>
+									</div>
+									<a class="btn btn-grey" onclick="filterList();" title="<?php echo lang('text_filter'); ?>"><i class="fa fa-filter"></i></a>&nbsp;
+									<a class="btn btn-grey" href="<?php echo page_url(); ?>" title="<?php echo lang('text_clear'); ?>"><i class="fa fa-times"></i></a>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -34,7 +53,8 @@
 							<th class="name sorter"><a class="sort" href="<?php echo $sort_name; ?>"><?php echo lang('column_name'); ?> <i class="fa fa-sort-<?php echo ($sort_by === 'category_name') ? $order_by_active : $order_by; ?>"></i></a></th>
                             <th width="40%"><?php echo lang('column_description'); ?> </th>
                             <th><?php echo lang('column_parent'); ?> </th>
-							<th class="id"><a class="sort" href="<?php echo $sort_priority; ?>"><?php echo lang('column_priority'); ?> <i class="fa fa-sort-<?php echo ($sort_by === 'priority') ? $order_by_active : $order_by; ?>"></i></a></th>
+							<th class="text-center"><a class="sort" href="<?php echo $sort_priority; ?>"><?php echo lang('column_priority'); ?> <i class="fa fa-sort-<?php echo ($sort_by === 'priority') ? $order_by_active : $order_by; ?>"></i></a></th>
+							<th class="text-center"><?php echo lang('column_status'); ?></th>
 							<th class="id"><a class="sort" href="<?php echo $sort_id; ?>"><?php echo lang('column_id'); ?> <i class="fa fa-sort-<?php echo ($sort_by === 'category_id') ? $order_by_active : $order_by; ?>"></i></a></th>
 						</tr>
 					</thead>
@@ -53,14 +73,15 @@
                                     <?php } ?>
                                 <?php } ?>
                             </td>
-							<td class="id"><?php echo $category['priority']; ?></td>
+							<td class="text-center"><?php echo $category['priority']; ?></td>
+							<td class="text-center"><?php echo $category['status']; ?></td>
 							<td class="id"><?php echo $category['category_id']; ?></td>
 						</tr>
 
 						<?php } ?>
 						<?php } else { ?>
 						<tr>
-							<td colspan="4"><?php echo lang('text_empty'); ?></td>
+							<td colspan="7"><?php echo lang('text_empty'); ?></td>
 						</tr>
 						<?php } ?>
 					</tbody>

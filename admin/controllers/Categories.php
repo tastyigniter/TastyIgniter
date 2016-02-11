@@ -36,6 +36,13 @@ class Categories extends Admin_Controller {
 			$data['filter_search'] = '';
 		}
 
+		if (is_numeric($this->input->get('filter_status'))) {
+			$filter['filter_status'] = $data['filter_status'] = $this->input->get('filter_status');
+			$url .= 'filter_status='.$filter['filter_status'].'&';
+		} else {
+			$filter['filter_status'] = $data['filter_status'] = '';
+		}
+
 		if ($this->input->get('sort_by')) {
 			$filter['sort_by'] = $data['sort_by'] = $this->input->get('sort_by');
 		} else {
@@ -75,6 +82,7 @@ class Categories extends Admin_Controller {
                 'parent_id' 			=> $result['parent_id'],
                 'priority' 			    => $result['priority'],
 				'description' 			=> substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..',
+				'status'		        => ($result['status'] === '1') ? $this->lang->line('text_enabled') : $this->lang->line('text_disabled'),
 				'edit' 					=> site_url('categories/edit?id=' . $result['category_id'])
 			);
 		}
@@ -130,6 +138,7 @@ class Categories extends Admin_Controller {
 		$data['parent_id'] 			= $category_info['parent_id'];
 		$data['description'] 		= $category_info['description'];
 		$data['priority'] 		    = $category_info['priority'];
+		$data['status'] 		    = $category_info['status'];
 		$data['no_image'] 			= $this->Image_tool_model->resize('data/no_photo.png');
 
 		$data['permalink'] = $this->permalink->getPermalink('category_id='.$category_info['category_id']);
@@ -198,6 +207,7 @@ class Categories extends Admin_Controller {
 		$this->form_validation->set_rules('parent_id', 'lang:label_parent', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('image', 'lang:label_image', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('priority', 'lang:label_priority', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('status', 'lang:label_status', 'xss_clean|trim|required|integer');
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;
