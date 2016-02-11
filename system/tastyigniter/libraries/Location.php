@@ -151,7 +151,7 @@ class Location {
 	}
 
 	public function getAreaId() {
-        return !empty($this->area_id) ? $this->area_id : array();
+        return $this->area_id;
 	}
 
 	public function getAddress($format = TRUE) {
