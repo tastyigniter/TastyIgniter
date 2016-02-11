@@ -507,8 +507,17 @@ class Checkout extends Main_Controller {
                     $address['country'] = $country['country_name'];
                     unset($address['address_id'], $address['country_id']);
 
-                    if ($this->location->checkDeliveryCoverage($address)) {
-                        return TRUE;
+                    if ($area = $this->location->checkDeliveryCoverage($address)) {
+	                    if (isset($area['area_id']) AND $area['area_id'] !== $this->location->getAreaId()) {
+		                    $this->location->setDeliveryArea($area['area_id']);
+		                    $this->alert->set('alert', $this->lang->line('alert_delivery_area_changed'));
+
+		                    if ($this->input->post('checkout_step') === 'two') {
+			                    redirect('checkout');
+		                    }
+	                    }
+
+	                    return TRUE;
                     }
                 }
             }

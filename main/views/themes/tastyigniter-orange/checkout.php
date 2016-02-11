@@ -41,8 +41,8 @@
 				</div>
 
                 <?php if ($this->alert->get()) { ?>
-                    <div id="notification" class="wrap-bottom">
-                        <div class="row wrap-bottom">
+                    <div id="notification">
+                        <div class="row">
                             <div class="col-md-12">
                                 <?php echo $this->alert->display(); ?>
                             </div>

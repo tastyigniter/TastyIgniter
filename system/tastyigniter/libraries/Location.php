@@ -150,6 +150,10 @@ class Location {
         return !empty($this->local_options['gallery']) ? $this->local_options['gallery'] : array();
 	}
 
+	public function getAreaId() {
+        return !empty($this->area_id) ? $this->area_id : array();
+	}
+
 	public function getAddress($format = TRUE) {
 		$location_address = array(
 			'address_1'      => $this->local_info['location_address_1'],
@@ -342,7 +346,28 @@ class Location {
 		}
 	}
 
-	public function setDeliveryAreas() {
+	public function setOrderType($order_type) {
+		if (is_numeric($order_type)) {
+			$local_info = $this->CI->session->userdata('local_info');
+			if (is_array($local_info) AND !empty($local_info)) {
+				$local_info['order_type'] = $order_type;
+				$this->CI->session->set_userdata('local_info', $local_info);
+			}
+		}
+	}
+
+	public function setDeliveryArea($area_id) {
+		if (is_numeric($area_id) AND $area_id !== $this->area_id) {
+			$local_info = $this->CI->session->userdata('local_info');
+			if (is_array($local_info) AND !empty($local_info)) {
+				$local_info['area_id'] = $area_id;
+				$this->CI->session->set_userdata('local_info', $local_info);
+				$this->initialize($local_info);
+			}
+		}
+	}
+
+	private function setDeliveryAreas() {
 		if (isset($this->local_options['delivery_areas']) AND is_array($this->local_options['delivery_areas'])) {
 			foreach ($this->local_options['delivery_areas'] as $area_id => $area) {
 				$this->delivery_areas[$area_id] = array(
@@ -356,21 +381,11 @@ class Location {
 				);
 			}
 		} else {
-            $this->delivery_areas = array();
-        }
-	}
-
-	public function setOrderType($order_type) {
-		if (is_numeric($order_type)) {
-			$local_info = $this->CI->session->userdata('local_info');
-			if (is_array($local_info) AND !empty($local_info)) {
-				$local_info['order_type'] = $order_type;
-				$this->CI->session->set_userdata('local_info', $local_info);
-			}
+			$this->delivery_areas = array();
 		}
 	}
 
-    public function setLocationOpeningHours() {
+	public function setLocationOpeningHours() {
 		if (isset($this->opening_hours[$this->location_id]) AND is_array($this->opening_hours[$this->location_id])) {
 
 			foreach ($this->opening_hours[$this->location_id] as $hour) {
