@@ -14,13 +14,13 @@ $lang['text_is_closed'] 			        = '<b class="text-danger">We are closed, chec
 $lang['text_is_temp_closed'] 			    = '<b class="text-danger">We are temporarily closed, check later.</b>';
 $lang['text_offer'] 			            = 'Service Offered';
 $lang['text_delivery_only'] 			    = 'Delivery only';
-$lang['text_collection_only'] 		        = 'Collection only';
-$lang['text_both_types'] 		            = 'Delivery and collection';
-$lang['text_no_types'] 			            = 'Neither delivery or collection';
+$lang['text_collection_only'] 		        = 'Pick-up only';
+$lang['text_both_types'] 		            = 'Delivery and pick-up';
+$lang['text_no_types'] 			            = 'Neither delivery or pick-up';
 $lang['text_24_7_hour'] 			        = '24 hours, 7 days.';
 $lang['text_min_total'] 		            = 'Min. Order Amount';
 $lang['text_delivery_time_info'] 	        = 'We will deliver your order in <b class="text-sm text-primary">%s min.</b>';
-$lang['text_collection_time_info'] 	        = 'Collect your order in <b class="text-sm text-primary">%s min.</b>';
+$lang['text_collection_time_info'] 	        = 'Pick-up your order in <b class="text-sm text-primary">%s min.</b>';
 $lang['text_delivery_charge'] 	            = '<b>Delivery Cost:</b> %s';
 $lang['text_free_delivery'] 	            = 'Free Delivery';
 $lang['text_total_review'] 		            = '(%s)';
@@ -34,7 +34,7 @@ $lang['button_view_map'] 		            = 'View Map';
 $lang['button_change_location']             = 'Change Location';
 $lang['button_search_location']             = 'Search Location';
 
-$lang['label_location_search_mode'] 		= 'Location Search mode';
+$lang['label_location_search_mode'] 		= 'Restaurant mode';
 $lang['label_use_location'] 		        = 'Use Location';
 $lang['label_display_min_order_amount'] 	= 'Display Min. Order Amount';
 $lang['label_lang'] 			            = 'Language Line';
@@ -42,7 +42,7 @@ $lang['label_status'] 			            = 'Status';
 $lang['label_search_query'] 			    = 'Enter your address/postcode to order';
 
 $lang['help_location_search_mode'] 		    = 'Set whether to enable single or multi location search functionality. Single means search is disabled and the chosen location is used automatically.';
-$lang['help_use_location'] 		            = 'You can choose which location used by the system when taking orders in single location mode';
+$lang['help_use_location'] 		            = 'You can choose which location used by the system when taking orders in single restaurant mode';
 
 $lang['alert_location_closed'] 		        = '<p class="alert-danger"><b>Restaurant is currently closed.</b></p>';
 $lang['alert_local_future_order'] 		    = '<p class="alert-info"><b>Restaurant is currently closed.</b><br />Pre-ordering is available for later delivery.</p>';

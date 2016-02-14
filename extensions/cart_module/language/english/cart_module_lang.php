@@ -8,7 +8,7 @@ $lang['text_update_heading'] 		        = 'Updating menu choices';
 $lang['text_add_heading'] 			        = 'Adding menu choices';
 $lang['text_no_cart_items'] 	            = '<p class="text-center">There are no menus added in your cart.</p>';
 $lang['text_delivery'] 			            = 'Delivery';
-$lang['text_collection'] 		            = 'Collection';
+$lang['text_collection'] 		            = 'Pick-up';
 $lang['text_apply_coupon'] 		            = 'Enter coupon code';
 $lang['text_sub_total'] 		            = 'Sub Total';
 $lang['text_coupon'] 			            = 'Coupon';
@@ -52,7 +52,7 @@ $lang['alert_option_required'] 	            = '<p class="alert-danger">Please ch
 $lang['alert_location_closed'] 			    = '<p class="alert-danger">Sorry, you can\'t place an order now, we are currently closed,<br /> please come back later during our opening times.</p>';
 $lang['alert_qty_is_below_min_qty'] 	    = '<p class="alert-danger">Selected quantity is below the menu\'s minimum quantity of %s.</p>';
 $lang['alert_delivery_unavailable'] 		= '<p class="alert-danger">Delivery is unavailable at the selected restaurant.</p>';
-$lang['alert_collection_unavailable'] 	    = '<p class="alert-danger">Collection is unavailable at the selected restaurant.</p>';
+$lang['alert_collection_unavailable'] 	    = '<p class="alert-danger">Pick-up is unavailable at the selected restaurant.</p>';
 $lang['alert_delivery_coverage']            = '<p class="alert-danger">Sorry, this restaurant does not deliver to your address</b>';
 $lang['alert_min_delivery_order_total'] 	= '<p class="alert-warning">Order total is below the minimum delivery order total. <br />You need to spend %s or more to order for delivery</p>';
 $lang['alert_coupon_removed'] 	            = '<p class="alert-success">Your coupon has been removed successfully.</p>';

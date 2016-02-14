@@ -219,15 +219,15 @@ class Mail_templates extends Admin_Controller {
 		        ),
 		        array(
 			        'var'  => '{order_type}',
-			        'name' => 'Order type ex. delivery/collection',
+			        'name' => 'Order type ex. delivery/pick-up',
 		        ),
 		        array(
 			        'var'  => '{order_time}',
-			        'name' => 'Order delivery/collection time',
+			        'name' => 'Order delivery/pick-up time',
 		        ),
 		        array(
 			        'var'  => '{order_date}',
-			        'name' => 'Order delivery/collection date',
+			        'name' => 'Order delivery/pick-up date',
 		        ),
 		        array(
 			        'var'  => '{order_address}',

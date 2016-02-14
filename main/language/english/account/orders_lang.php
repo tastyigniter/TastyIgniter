@@ -6,7 +6,7 @@ $lang['text_view_heading'] 		        = 'My Order View';
 $lang['text_order_menus'] 			    = 'Order Menus';
 $lang['text_empty'] 			        = 'There are no order(s).';
 $lang['text_delivery'] 			        = 'Delivery';
-$lang['text_collection'] 		        = 'Collection';
+$lang['text_collection'] 		        = 'Pick-up';
 $lang['text_reorder'] 			        = 'Re-order';
 $lang['text_leave_review'] 		        = 'Leave review';
 

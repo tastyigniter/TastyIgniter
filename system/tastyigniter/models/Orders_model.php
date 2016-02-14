@@ -685,7 +685,7 @@ class Orders_model extends TI_Model {
 				}
 			}
 
-			$data['order_address'] = 'This is a collection order';
+			$data['order_address'] = 'This is a pick-up order';
 			if ( ! empty($result['address_id'])) {
 				$this->load->model('Addresses_model');
 				$order_address = $this->Addresses_model->getAddress($result['customer_id'], $result['address_id']);
