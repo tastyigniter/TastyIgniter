@@ -122,12 +122,6 @@
 									</tr>
 									<?php $total_count++; ?>
 								<?php } ?>
-								<tr>
-									<td class="no-line"></td>
-									<td class="no-line"></td>
-									<td class="no-line text-left"><b><?php echo lang('text_total'); ?></b></td>
-									<td class="no-line text-right"><b><?php echo $order_total; ?></b></td>
-								</tr>
 								</tbody>
 							</table>
 						</div>
