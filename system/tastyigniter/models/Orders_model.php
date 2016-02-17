@@ -555,6 +555,7 @@ class Orders_model extends TI_Model {
 					$this->db->set('order_id', $order_id);
 					$this->db->set('code', $key);
 					$this->db->set('title', $value['title']);
+					$this->db->set('priority', $value['priority']);
 
 					if ($key === 'coupon') {
 						$this->db->set('value', '-' . $value['value']);
