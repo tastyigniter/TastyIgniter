@@ -211,6 +211,7 @@ class Orders_model extends TI_Model {
 
 	public function getOrderTotals($order_id) {
 		$this->db->from('order_totals');
+		$this->db->order_by('priority', 'ASC');
 		$this->db->where('order_id', $order_id);
 
 		$query = $this->db->get();
@@ -439,14 +440,14 @@ class Orders_model extends TI_Model {
 			$this->addOrderMenus($order_id, $cart_contents);
 
 			$order_totals = array(
-				'cart_total'  => array('title' => 'Sub Total', 'value' => (isset($cart_contents['cart_total'])) ? $cart_contents['cart_total'] : ''),
-				'order_total' => array('title' => 'Order Total', 'value' => (isset($cart_contents['order_total'])) ? $cart_contents['order_total'] : ''),
-				'delivery'    => array('title' => 'Delivery', 'value' => (isset($cart_contents['delivery'])) ? $cart_contents['delivery'] : ''),
-				'coupon'      => array('title' => 'Coupon (' . $cart_contents['coupon']['code'] . ') ', 'value' => $cart_contents['coupon']['discount']),
+				'cart_total'  => array('title' => 'Sub Total', 'value' => (isset($cart_contents['cart_total'])) ? $cart_contents['cart_total'] : '', 'priority' => '1'),
+				'order_total' => array('title' => 'Order Total', 'value' => (isset($cart_contents['order_total'])) ? $cart_contents['order_total'] : '', 'priority' => '5'),
+				'delivery'    => array('title' => 'Delivery', 'value' => (isset($cart_contents['delivery'])) ? $cart_contents['delivery'] : '', 'priority' => '3'),
+				'coupon'      => array('title' => 'Coupon (' . $cart_contents['coupon']['code'] . ') ', 'value' => $cart_contents['coupon']['discount'], 'priority' => '2'),
 			);
 
 			if (!empty($cart_contents['taxes'])) {
-				$order_totals['taxes'] = array('title' => $cart_contents['taxes']['title'], 'value' => $cart_contents['taxes']['amount']);
+				$order_totals['taxes'] = array('title' => $cart_contents['taxes']['title'], 'value' => $cart_contents['taxes']['amount'], 'priority' => '4');
 			}
 
 			$this->addOrderTotals($order_id, $order_totals);
@@ -466,10 +467,9 @@ class Orders_model extends TI_Model {
 			if ($this->updateOrder($order_id, $update)) {
 				if (APPDIR === MAINDIR) {
 					log_activity($order_info['customer_id'], 'created', 'orders',
-					             get_activity_message('activity_created_order',
-					                                  array('{customer}', '{link}', '{order_id}'),
-					                                  array($order_info['first_name'] . ' ' . $order_info['last_name'], admin_url('orders/edit?id=' . $order_id), $order_id)
-					             ));
+						get_activity_message('activity_created_order', array('{customer}', '{link}', '{order_id}'),
+							array($order_info['first_name'] . ' ' . $order_info['last_name'], admin_url('orders/edit?id=' . $order_id), $order_id)
+						));
 				}
 
 				return TRUE;
@@ -676,13 +676,21 @@ class Orders_model extends TI_Model {
 
 			$order_totals = $this->getOrderTotals($result['order_id']);
 			if ($order_totals) {
+				$totals = array('cart_total' => '1', 'coupon' => '2', 'delivery' => '3', 'taxes' => '4', 'order_total' => '5');
+
 				$data['order_totals'] = array();
 				foreach ($order_totals as $total) {
+
+					$priority = isset($totals[$total['code']]) ? $totals[$total['code']] : '0';
+
 					$data['order_totals'][] = array(
 						'order_total_title' => $total['title'],
 						'order_total_value' => $this->currency->format($total['value']),
+						'priority' => empty($total['priority']) ? $priority : $total['priority'],
 					);
 				}
+
+				$data['order_totals'] = sort_array($data['order_totals'], 'priority');
 			}
 
 			$data['order_address'] = 'This is a pick-up order';
