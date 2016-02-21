@@ -53,11 +53,14 @@ class Base_Controller extends MX_Controller {
         // If database is connected, then app is ready
         if ($this->installer->db_exists === TRUE) {
 
-            // Load template library
-            $this->load->library('template');
-
             // Load extension library
             $this->load->library('extension');
+
+            // Load events library
+            $this->load->library('events');
+
+            // Load template library
+            $this->load->library('template');
 
             // If the requested controller is a module controller then load the module config
             if (ENVIRONMENT !== 'testing') {
