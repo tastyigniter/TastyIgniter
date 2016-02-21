@@ -1,6 +1,6 @@
 ### v2.0.0 (stable)
 
-Release Date: January 2016
+Release Date: January 2016 (postponed: February 2016)
 
 #### Added
 * Setup now generates a random alpha-numeric 9 length string for database table prefixes
@@ -32,6 +32,11 @@ Release Date: January 2016
 * Custom error views: override default error views within custom theme by copying the errors folder into the themes/your-custom-theme/ folder
 * Themes: option to add and delete theme in the admin backend plus template helper new method `delete_theme`
 * Local Module: option to enable or disable single or multi location search mode and selected location for single mode, where orders will be sent.
+* Config helper to write configuration value like encryption key into config file
+* System Events: hooks to allow you integrate your custom modifications into various points within TastyIgniter’s execution
+* Categories: status field to enable or disable selected category in storefront
+* Location library `setDeliveryArea()` and `getAreaId()` method to update location delivery area when customer delivery address changes
+* Extension library `latestMigration()` method to migrate module migrations to the current version
 
 #### Changed
 * LICENCE from Apache to GNU GPLv3
@@ -69,6 +74,7 @@ Release Date: January 2016
 * Improved add extension functionality: strict upload validation with feedback, renamed methods `Extensions_model::upload()` to `Extensions_model::extractExtension()` and `Extensions::uploadExtension` to `Extensions::addExtension`
 * Improved storefront theme responsiveness on all devices
 * Theme Customizer: added more options to easily customize the storefront
+* Improved Migration capability to check and install module migrations 
 
 #### Fixed
 * Bug where extra URL query is not appended after permalink slugs in URI reverse routing
@@ -84,6 +90,8 @@ Release Date: January 2016
 * Minor bugs fix
 * Issue where site is not translated to default language
 * Issue where view data variable collides with theme options variable in the main app.
+* Issue with permission rule not being applied when updating individual modules
+* Issue with day_elapsed() helper method where it only checks the day instead of checking day and month to determine today or yesterday
 
 
 ### v1.4.2-beta
