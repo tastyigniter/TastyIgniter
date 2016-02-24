@@ -97,9 +97,11 @@
                                         <!--<td class="left"><img src="<?php echo $menu['menu_photo']; ?>"></td>-->
                                         <td class="name"><?php echo $menu['menu_name']; ?></td>
                                         <td class="left"><?php echo $menu['menu_price']; ?>&nbsp;&nbsp;
-                                            <?php if ($menu['special'] === 'enabled') { ?>
-                                                <a title="<?php echo lang(''); ?>"><i class="fa fa-star fa-star-special"></i></a>
-                                            <?php } else if ($menu['special'] === 'disabled') { ?>
+                                            <?php if ($menu['special_status'] === '1' AND $menu['is_special'] === '1') { ?>
+                                                <a title="<?php echo lang('text_special_enabled'); ?>"><i class="fa fa-star fa-star-special"></i></a>
+                                            <?php } else if ($menu['special_status'] === '1' AND $menu['is_special'] !== '1') { ?>
+                                                <a title="<?php echo lang('text_special_expired'); ?>"><i class="fa fa-star fa-star-special disabled"></i></a>
+                                            <?php } else if ($menu['is_special'] === '1') { ?>
                                                 <a title="<?php echo lang('text_special_disabled'); ?>"><i class="fa fa-star fa-star-special disabled"></i></a>
                                             <?php } ?>
                                         </td>

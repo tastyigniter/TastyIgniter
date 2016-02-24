@@ -52,10 +52,10 @@ class Menus_model extends TI_Model {
 		if ($this->db->limit($filter['limit'], $filter['page'])) {
 			if (APPDIR === ADMINDIR) {
 				$this->db->select('*, menus.menu_id');
+				$this->db->select('IF(start_date <= CURRENT_DATE(), IF(end_date >= CURRENT_DATE(), "1", "0"), "0") AS is_special', FALSE);
 			} else {
-				$this->db->select('menus.menu_id, menu_name, menu_description, menu_photo, menu_price, minimum_qty, menu_category_id, categories.name AS category_name, start_date, end_date, special_price');
-				$this->db->select('IF(start_date <= CURRENT_DATE(), IF(end_date >= CURRENT_DATE(), "1", "0"), "0") AS is_special',
-				                  FALSE);
+				$this->db->select('menus.menu_id, menu_name, menu_description, menu_photo, menu_price, minimum_qty, menu_category_id, categories.name AS category_name, special_status, start_date, end_date, special_price');
+				$this->db->select('IF(start_date <= CURRENT_DATE(), IF(end_date >= CURRENT_DATE(), "1", "0"), "0") AS is_special', FALSE);
 			}
 
 			$this->db->join('categories', 'categories.category_id = menus.menu_category_id', 'left');
@@ -102,35 +102,35 @@ class Menus_model extends TI_Model {
 				$menu_photo_src = '';
 				if ($show_menu_images === '1') {
 					if ( ! empty($row['menu_photo'])) {
-						$menu_photo_src = $this->Image_tool_model->resize($row['menu_photo'], $menu_images_w,
-						                                                  $menu_images_h);
+						$menu_photo_src = $this->Image_tool_model->resize($row['menu_photo'], $menu_images_w, $menu_images_h);
 					} else {
-						$menu_photo_src = $this->Image_tool_model->resize('data/no_photo.png', $menu_images_w,
-						                                                  $menu_images_h);
+						$menu_photo_src = $this->Image_tool_model->resize('data/no_photo.png', $menu_images_w, $menu_images_h);
 					}
 				}
 
 				$start_date = $end_date = $end_days = '';
 				$price = $row['menu_price'];
-				if ($row['is_special'] === '1') {
+				if (!empty($row['special_status']) AND $row['is_special'] === '1') {
 					$price = $row['special_price'];
 					$daydiff = floor((strtotime($row['end_date']) - strtotime($this->location->currentTime())) / 86400);
 					$start_date = $row['start_date'];
 					$end_date = mdate('%d %M', strtotime($row['end_date']));
-					$end_days = ($daydiff < 0) ? sprintf($this->lang->line('text_end_today')) : sprintf($this->lang->line('text_end_days'),
-					                                                                                    $end_date,
-					                                                                                    $daydiff);
+
+					if (($daydiff < 0)) {
+						$end_days = sprintf($this->lang->line('text_end_today'));
+					} else {
+						$end_days = sprintf($this->lang->line('text_end_days'), $end_date, $daydiff);
+					}
 				}
 
 				$results[$row['menu_category_id']][] = array(                                                            // create array of menu data to be sent to view
 					'menu_id'          => $row['menu_id'],
-					'menu_name'        => (strlen($row['menu_name']) > 80) ? strtolower(substr($row['menu_name'], 0,
-					                                                                           80)) . '...' : strtolower($row['menu_name']),
-					'menu_description' => (strlen($row['menu_description']) > 120) ? substr($row['menu_description'], 0,
-					                                                                        120) . '...' : $row['menu_description'],
+					'menu_name'        => (strlen($row['menu_name']) > 80) ? strtolower(substr($row['menu_name'], 0, 80)) . '...' : strtolower($row['menu_name']),
+					'menu_description' => (strlen($row['menu_description']) > 120) ? substr($row['menu_description'], 0, 120) . '...' : $row['menu_description'],
 					'category_name'    => $row['category_name'],
 					'category_id'      => $row['menu_category_id'],
 					'minimum_qty'      => ! empty($row['minimum_qty']) ? $row['minimum_qty'] : '1',
+					'special_status'   => $row['special_status'],
 					'is_special'       => $row['is_special'],
 					'start_date'       => $start_date,
 					'end_days'         => $end_days,
@@ -273,7 +273,7 @@ class Menus_model extends TI_Model {
 				$this->Menu_options_model->addMenuOption($menu_id, $save['menu_options']);
 			}
 
-			if (isset($save['start_date']) AND isset($save['end_date']) AND isset($save['special_price'])) {
+			if ( ! empty($save['start_date']) AND ! empty($save['end_date']) AND isset($save['special_price'])) {
 				$this->db->set('start_date', mdate('%Y-%m-%d', strtotime($save['start_date'])));
 				$this->db->set('end_date', mdate('%Y-%m-%d', strtotime($save['end_date'])));
 				$this->db->set('special_price', $save['special_price']);
