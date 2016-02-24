@@ -87,33 +87,19 @@ class Menus extends Admin_Controller {
 		$results = $this->Menus_model->getList($filter);
 		foreach ($results as $result) {
 
-			if ( ! empty($result['menu_photo'])) {
-				$menu_photo_src = $this->Image_tool_model->resize($result['menu_photo'], 40, 40);
-			} else {
-				$menu_photo_src = $this->Image_tool_model->resize('data/no_photo.png', 40, 40);
-			}
-
-			$special = '';
-			if (( ! empty($result['start_date']) AND $result['start_date'] !== '0000-00-00') AND ( ! empty($result['end_date']) AND $result['end_date'] !== '0000-00-00')) {
-				if (strtotime($result['start_date']) <= time() AND strtotime($result['end_date']) >= time()) {
-					$special = 'enabled';
-				} else {
-					$special = 'disabled';
-				}
-			}
+			$price = ($result['special_status'] === '1' AND $result['is_special'] === '1') ? $result['special_price'] : $result['menu_price'];
 
 			$data['menus'][] = array(
 				'menu_id'          => $result['menu_id'],
 				'menu_name'        => $result['menu_name'],
 				'menu_description' => $result['menu_description'],
 				'category_name'    => $result['name'],
-				'menu_price'       => $this->currency->format($result['menu_price']),
-				'menu_photo'       => $menu_photo_src,
+				'menu_price'       => $this->currency->format($price),
+				'menu_photo'       => $result['menu_photo'],
 				'stock_qty'        => $result['stock_qty'],
 				'special_status'   => $result['special_status'],
 				'is_special'       => $result['is_special'],
-				'special'          => $special,
-				'menu_status'      => ($result['menu_status'] === '1') ? 'Enabled' : 'Disabled',
+				'menu_status'      => ($result['menu_status'] === '1') ? $this->lang->line('text_enabled') : $this->lang->line('text_disabled'),
 				'edit'             => site_url('menus/edit?id=' . $result['menu_id']),
 			);
 		}
