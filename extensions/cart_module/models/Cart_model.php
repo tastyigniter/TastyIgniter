@@ -3,7 +3,7 @@
 class Cart_model extends TI_Model {
 
 	public function getMenus() {
-		$this->db->select('menus.menu_id, menu_name, menu_description, menu_price, menu_photo, stock_qty, subtract_stock, minimum_qty, special_price');
+		$this->db->select('menus.menu_id, menu_name, menu_description, menu_price, menu_photo, stock_qty, subtract_stock, minimum_qty, special_status, special_price');
 		$this->db->select('IF(start_date <= CURRENT_DATE(), IF(end_date >= CURRENT_DATE(), "1", "0"), "0") AS is_special', FALSE);
 		$this->db->from('menus');
 		$this->db->join('menus_specials', 'menus_specials.menu_id = menus.menu_id', 'left');
@@ -23,7 +23,7 @@ class Cart_model extends TI_Model {
 
 	public function getMenu($menu_id) {
 		if (!empty($menu_id) AND is_numeric($menu_id)) {
-			$this->db->select('menus.menu_id, menu_name, menu_description, menu_price, menu_photo, stock_qty, subtract_stock, minimum_qty, special_price');
+			$this->db->select('menus.menu_id, menu_name, menu_description, menu_price, menu_photo, stock_qty, subtract_stock, minimum_qty, special_status, special_price');
 			$this->db->select('IF(start_date <= CURRENT_DATE(), IF(end_date >= CURRENT_DATE(), "1", "0"), "0") AS is_special', FALSE);
 			$this->db->from('menus');
 			$this->db->join('menus_specials', 'menus_specials.menu_id = menus.menu_id', 'left');

@@ -51,14 +51,6 @@ class Cart_module extends Main_Controller {
         $data['cart_images_h'] 		        = isset($ext_data['cart_images_h']) ? $ext_data['cart_images_h'] : '';
         $data['cart_images_w'] 		        = isset($ext_data['cart_images_w']) ? $ext_data['cart_images_w'] :'';
 
-		$data['fixed_cart'] = '';
-		$fixed_cart = isset($ext_data['fixed_cart']) ? $ext_data['fixed_cart'] : '1';
-		if ($fixed_cart === '1') {
-			$fixed_top_offset = isset($ext_data['fixed_top_offset']) ? $ext_data['fixed_top_offset'] : '250';
-			$fixed_bottom_offset = isset($ext_data['fixed_bottom_offset']) ? $ext_data['fixed_bottom_offset'] : '120';
-			$data['fixed_cart'] = 'data-spy="affix" data-offset-top="'.$fixed_top_offset.'" data-offset-bottom="'.$fixed_bottom_offset.'"';
-		}
-
         $menus = $this->Cart_model->getMenus();
 
         $data['cart_items'] = array();
@@ -125,7 +117,15 @@ class Cart_module extends Main_Controller {
             $data['order_total'] = $this->currency->format($this->cart->order_total());
 		}
 
-        $data['cart_alert'] = $this->alert->display('cart_module');
+		$data['fixed_cart'] = '';
+		$fixed_cart = isset($ext_data['fixed_cart']) ? $ext_data['fixed_cart'] : '1';
+		if ($fixed_cart === '1' AND $rsegment !== 'checkout') {
+			$fixed_top_offset = isset($ext_data['fixed_top_offset']) ? $ext_data['fixed_top_offset'] : '250';
+			$fixed_bottom_offset = isset($ext_data['fixed_bottom_offset']) ? $ext_data['fixed_bottom_offset'] : '120';
+			$data['fixed_cart'] = 'data-spy="affix" data-offset-top="'.$fixed_top_offset.'" data-offset-bottom="'.$fixed_bottom_offset.'"';
+		}
+
+		$data['cart_alert'] = $this->alert->display('cart_module');
 
         $this->load->view('cart_module/cart_module', $data);
 	}
@@ -170,12 +170,14 @@ class Cart_module extends Main_Controller {
 				$quantity = ($quantity <= 0) ? $cart_item['qty'] + $quantity : $quantity;
 			}
 
+			$price = (!empty($menu_data['special_status']) AND $menu_data['is_special'] === '1') ? $menu_data['special_price'] : $menu_data['menu_price'];
+
 			$cart_data = array(																// create an array of item to be added to cart with id, name, qty, price and options as keys
 				'rowid'         => !empty($cart_item['rowid']) ? $cart_item['rowid'] : NULL,
 				'id'     		=> $menu_data['menu_id'],
 				'name'   		=> $menu_data['menu_name'],
 				'qty'    		=> $quantity,
-				'price'  		=> $this->cart->format_number(($menu_data['is_special'] === '1') ? $menu_data['special_price'] : $menu_data['menu_price']),
+				'price'  		=> $price,
 				'comment'       => $this->input->post('comment') ? substr(htmlspecialchars(trim($this->input->post('comment'))), 0, 50) : '',
 				'options' 		=> $cart_options
 			);

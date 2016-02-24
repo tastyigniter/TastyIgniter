@@ -185,7 +185,7 @@ class Orders extends Main_Controller {
 					'id' 			=> $menu['menu_id'],
 					'name' 			=> $menu['name'],
 					'qty' 			=> $menu['quantity'],
-					'price' 		=> $this->cart->format_number($menu['price']),
+					'price' 		=> $menu['price'],
 					'comment' 		=> $menu['comment'],
 					'options'		=> (!empty($menu['option_values'])) ? unserialize($menu['option_values']) : array()
 				));
