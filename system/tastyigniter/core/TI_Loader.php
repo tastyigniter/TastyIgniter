@@ -174,8 +174,8 @@ class TI_Loader extends MX_Loader {
                     }
                 }
 
-                if (isset($this->config->item['timezone'])) {
-                    date_default_timezone_set($this->config->item['timezone']);
+                if ($this->config->item('timezone')) {
+                    date_default_timezone_set($this->config->item('timezone'));
                 }
 
                 $this->_db_config_loaded = TRUE;
