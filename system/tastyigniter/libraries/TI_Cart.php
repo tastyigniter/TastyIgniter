@@ -23,7 +23,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class TI_Cart extends CI_Cart {
 
-    private $coupon_array = array('code' => '', 'discount' => '');
+	/**
+	 * These are the regular expression rules that we use to validate the product ID and product name
+	 * alpha-numeric, dashes, underscores, colons or periods
+	 *
+	 * @var string
+	 */
+	public $product_name_rules	= '^\/';
+
+	private $coupon_array = array('code' => '', 'discount' => '');
     private $taxes_array = array();
 
 	public function __construct($params = array()) {
