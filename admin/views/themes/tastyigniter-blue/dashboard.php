@@ -66,53 +66,58 @@
             </div>
         </div>
 
+        <div class="panel panel-default panel-chart">
+            <div class="panel-heading">
+                <div class="form-inline">
+                    <div class="row">
+                        <div class="col-md-4 pull-left">
+                            <h3 class="panel-title"><i class="fa fa-line-chart"></i>&nbsp;&nbsp;<?php echo lang('text_reports_chart'); ?></h3>
+                        </div>
+
+                        <div class="col-md-5 pull-right text-right">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <button class="btn btn-default btn-xs daterange">
+                                        <i class="fa fa-calendar"></i>&nbsp;&nbsp;<span><?php echo lang('text_select_range'); ?></span>&nbsp;&nbsp;<i class="fa fa-caret-down"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-body">
+                <div class="chart-legend"></div>
+                <div class="chart-responsive">
+                    <div id="chart-holder" width="960px" height="295px"></div>
+                </div>
+            </div>
+        </div>
+
         <div class="statistics">
 			<div class="row">
 				<div class="col-md-6">
 					<div class="panel panel-default">
 						<div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_complete_setup'); ?></h3></div>
 						<div class="panel-body">
-                            <span class="text-center"><?php echo lang('text_progress_summary'); ?></span><br /><br />
-                            <div class="progress progress-striped active">
-                                <div data-percentage="<?php echo $progress_bar['count']; ?>" style="width: <?php echo $progress_bar['count']; ?>" class="progress-bar progress-bar-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                                    <span class="sr-only"><?php echo $progress_bar['count']; ?> <?php echo lang('text_progress'); ?></span>
-                                </div>
-                                <span class="progress-completed"><?php echo $progress_bar['count']; ?></span>
-                            </div>
-							<div class="list-group check-list-group">
-                                <a class="list-group-item">
-                                    <span class="check-icon pull-left"><i class="fa fa-check-square-o"></i></span>
-                                    <span class="check-info"><s><?php echo lang('text_initial_progress'); ?></s></span>
-                                </a>
-                                <a href="<?php echo site_url('settings#location'); ?>" class="list-group-item">
-                                    <?php if ($main_address = config_item('main_address') AND !empty($main_address['address_1'])) { ?>
-                                        <span class="check-icon pull-left"><i class="fa fa-check-square-o"></i></span>
-                                        <span class="check-info"><s><?php echo lang('text_settings_progress'); ?></s></span>
-                                    <?php } else { ?>
-                                        <span class="check-icon pull-left"><i class="fa fa-square-o"></i></span>
-                                        <span class="check-info"><?php echo lang('text_settings_progress'); ?></span>
-                                    <?php }?>
-                                </a>
-                                <a href="<?php echo site_url('menus'); ?>" class="list-group-item">
-                                    <?php if ($total_menus > 0) { ?>
-                                        <span class="check-icon pull-left"><i class="fa fa-check-square-o"></i></span>
-                                        <span class="check-info"><s><?php echo lang('text_menus_progress'); ?></s></span>
-                                    <?php } else { ?>
-                                        <span class="check-icon pull-left"><i class="fa fa-square-o"></i></span>
-                                        <span class="check-info"><?php echo lang('text_menus_progress'); ?></span>
-                                    <?php }?>
-                                </a>
-                                <a href="<?php echo site_url('themes'); ?>" class="list-group-item">
-                                    <span class="check-icon pull-left"><i class="fa fa-square-o"></i></span>
-                                    <span class="check-info"><?php echo lang('text_design_progress'); ?></span>
-                                </a>
-                                <a href="<?php echo site_url('settings#mail'); ?>" class="list-group-item">
-                                    <span class="check-icon pull-left"><i class="fa fa-square-o"></i></span>
-                                    <span class="check-info"><?php echo lang('text_email_progress'); ?></span>
-                                </a>
-							</div>
+                            <h5><?php echo lang('text_progress_summary'); ?></h5>
 						</div>
-					</div>
+                        <div class="list-group check-list-group">
+                            <a href="<?php echo site_url('settings#location'); ?>" class="list-group-item">
+                                <span class=""><?php echo lang('text_settings_progress'); ?></span>
+                            </a>
+                            <a href="<?php echo site_url('menus'); ?>" class="list-group-item">
+                                <span class=""><?php echo lang('text_menus_progress'); ?></span>
+                            </a>
+                            <a href="<?php echo site_url('themes'); ?>" class="list-group-item">
+                                <span class=""><?php echo lang('text_design_progress'); ?></span>
+                            </a>
+                            <a href="<?php echo site_url('settings#mail'); ?>" class="list-group-item">
+                                <span class=""><?php echo lang('text_email_progress'); ?></span>
+                            </a>
+                        </div>
+                    </div>
 				</div>
 				<div class="col-md-6">
 					<div class="panel panel-default panel-statistics">
@@ -157,35 +162,6 @@
 				</div>
 			</div>
 		</div>
-
-        <div class="panel panel-default panel-chart">
-            <div class="panel-heading">
-                <div class="form-inline">
-                    <div class="row">
-                        <div class="col-md-4 pull-left">
-                            <h3 class="panel-title"><i class="fa fa-line-chart"></i>&nbsp;&nbsp;<?php echo lang('text_reports_chart'); ?></h3>
-                        </div>
-
-                        <div class="col-md-5 pull-right text-right">
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <button class="btn btn-default btn-xs daterange">
-                                        <i class="fa fa-calendar"></i>&nbsp;&nbsp;<span><?php echo lang('text_select_range'); ?></span>&nbsp;&nbsp;<i class="fa fa-caret-down"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="panel-body">
-                <div class="chart-legend"></div>
-                <div class="chart-responsive">
-                    <div id="chart-holder" width="960px" height="295px"></div>
-                </div>
-            </div>
-        </div>
 
         <div class="row">
             <div class="col-sm-6">
