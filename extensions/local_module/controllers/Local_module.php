@@ -32,7 +32,7 @@ class Local_module extends Main_Controller {
 		if ($ext_data['location_search_mode'] === 'single') {
 			$data['location_search_mode'] = 'single';
 
-			if (is_numeric($ext_data['use_location'])) {
+			if (!empty($ext_data['use_location'])) {
 				$use_location = $ext_data['use_location'];
 			} else {
 				$use_location = $this->config->item('default_location_id');
@@ -70,8 +70,9 @@ class Local_module extends Main_Controller {
         $data['search_query']           = $this->location->searchQuery();
         $data['has_delivery']           = $this->location->hasDelivery();
         $data['has_collection']         = $this->location->hasCollection();
+		$data['location_order']         = $this->config->item('location_order');
 
-        $data['location_search'] = FALSE;
+		$data['location_search'] = FALSE;
         if ($rsegment === 'home') {
             $data['location_search'] = TRUE;
         }
@@ -125,18 +126,20 @@ class Local_module extends Main_Controller {
 		$this->load->library('user_agent');
 		$json = array();
 
-		$result = $this->location->searchRestaurant($this->input->post('search_query'));
+	    if ($this->config->item('location_order') === '1') {
+		    $result = $this->location->searchRestaurant($this->input->post('search_query'));
 
-		switch ($result) {
-			case 'NO_SEARCH_QUERY':
-				$json['error'] = $this->lang->line('alert_no_search_query');
-				break;
-			case 'INVALID_SEARCH_QUERY':
-				$json['error'] = $this->lang->line('alert_invalid_search_query');	// display error: enter postcode
-				break;
-			case 'outside':
-				$json['error'] = $this->lang->line('alert_no_found_restaurant');	// display error: no available restaurant
-				break;
+		    switch ($result) {
+			    case 'NO_SEARCH_QUERY':
+				    $json['error'] = $this->lang->line('alert_no_search_query');
+				    break;
+			    case 'INVALID_SEARCH_QUERY':
+				    $json['error'] = $this->lang->line('alert_invalid_search_query');    // display error: enter postcode
+				    break;
+			    case 'outside':
+				    $json['error'] = $this->lang->line('alert_no_found_restaurant');    // display error: no available restaurant
+				    break;
+			}
 		}
 
         $redirect = '';

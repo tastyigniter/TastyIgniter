@@ -7,7 +7,7 @@ $lang['text_tab_texts'] 		            = 'Text';
 $lang['text_find'] 				            = 'View menu';
 $lang['text_order_summary'] 	            = 'Order delicious food online';
 $lang['text_goto_menus'] 		            = 'Go to Menu';
-$lang['text_location_summary'] 			    = '%s can deliver to you at %s';
+$lang['text_location_summary'] 			    = '%s can deliver to you %s';
 $lang['text_enter_location'] 		        = '<span class="text-danger">Please type in a postcode/address to check if we can deliver to you.</span>';
 $lang['text_is_opened'] 			        = '<b class="text-success">We are open</b>';
 $lang['text_is_closed'] 			        = '<b class="text-danger">We are closed, check later</b>';
@@ -26,6 +26,7 @@ $lang['text_free_delivery'] 	            = 'Free Delivery';
 $lang['text_total_review'] 		            = '(%s)';
 $lang['text_single'] 		                = 'Single';
 $lang['text_multi'] 		                = 'Multi';
+$lang['text_at'] 		                    = 'at ';
 
 $lang['column_language'] 		            = 'Language';
 $lang['column_replace'] 		            = 'Replace with';

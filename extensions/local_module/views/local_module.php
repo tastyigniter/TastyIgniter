@@ -1,16 +1,5 @@
 <div id="local-box" <?php echo ($location_search === TRUE) ? 'class="local-box-fluid"' : ''; ?>>
     <div class="container">
-        <div id="local-alert" class="col-sm-12">
-            <div class="local-alert"></div>
-            <?php if (!empty($local_alert)) { ?>
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <div class="alert">
-                <?php echo $local_alert; ?>
-            </div>
-            <?php } ?>
-        </div>
-
-
         <?php if ($location_search === TRUE) { ?>
             <div id="local-search" class="col-md-12 text-center">
                 <div class="panel panel-local">
@@ -32,39 +21,57 @@
                     </div>
                 </div>
             </div>
+            <div class="clearfix"></div>
+            <div id="local-alert" class="col-xs-12 col-sm-6 center-block">
+                <div class="local-alert"></div>
+            </div>
         <?php } else if ($rsegment !== 'locations') { ?>
+            <div id="local-alert" class="col-sm-12">
+                <div class="local-alert"></div>
+                <?php if (!empty($local_alert)) { ?>
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <div class="alert">
+                        <?php echo $local_alert; ?>
+                    </div>
+                <?php } ?>
+            </div>
+
+
             <div id="local-info" class="col-md-12" style="display: <?php echo ($local_info) ? 'block' : 'none'; ?>">
                 <div class="panel panel-local display-local">
-                    <div class="panel-heading">
-                        <div class="row local-change" style="display: <?php echo (!empty($search_query)) ? 'block' : 'none'; ?>">
-                            <div class="col-xs-12 col-sm-7">
-                                <?php $text_location_summary = (isset($local_lang['text_location_summary'])) ? $local_lang['text_location_summary'] : lang('text_location_summary'); ?>
-                                <?php echo sprintf($text_location_summary, $location_name, $search_query); ?>&nbsp;&nbsp;&nbsp;&nbsp;
-                                <a onclick="toggleLocalSearch();" class="clickable btn-link" title=""><?php echo lang('button_change_location'); ?></a>
+                    <?php if ($location_search_mode === 'multi') { ?>
+                        <div class="panel-heading">
+                            <div class="row local-change" style="display: <?php echo (!empty($search_query) OR $location_order !== '1') ? 'block' : 'none'; ?>">
+                                <div class="col-xs-12 col-sm-7">
+                                    <?php $text_location_summary = (isset($local_lang['text_location_summary'])) ? $local_lang['text_location_summary'] : lang('text_location_summary'); ?>
+                                    <?php $search_query = (empty($search_query)) ? '' : lang('text_at').$search_query; ?>
+                                    <?php echo sprintf($text_location_summary, $location_name, $search_query); ?>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a onclick="toggleLocalSearch();" class="clickable btn-link" title=""><?php echo lang('button_change_location'); ?></a>
+                                </div>
+
+                                <?php if (!in_array($rsegment, array('local', 'locations'))) { ?>
+                                    <div class="col-xs-12 col-sm-5 text-right">
+                                        <a class="btn btn-primary btn-menus" href="<?php echo site_url('local?location_id='.$location_id).'/#local-menus'; ?>"><i class="fa fa-cutlery"></i>
+                                            <span>&nbsp;&nbsp;<?php echo (isset($local_lang['text_goto_menus'])) ? $local_lang['text_goto_menus'] : lang('text_goto_menus'); ?></span>
+                                        </a>
+                                    </div>
+                                <?php } ?>
                             </div>
 
-                            <?php if (!in_array($rsegment, array('local', 'locations'))) { ?>
-                                <div class="col-xs-12 col-sm-5 text-right">
-                                    <a class="btn btn-primary btn-menus" href="<?php echo site_url('local?location_id='.$location_id).'/#local-menus'; ?>"><i class="fa fa-cutlery"></i>
-                                        <span>&nbsp;&nbsp;<?php echo (isset($local_lang['text_goto_menus'])) ? $local_lang['text_goto_menus'] : lang('text_goto_menus'); ?></span>
-                                    </a>
-                                </div>
-                            <?php } ?>
-                        </div>
-
-                        <div class="row local-search bg-warning" style="display: <?php echo (!empty($search_query)) ? 'none' : 'block'; ?>">
-                            <a class="close-search clickable" onclick="toggleLocalSearch();">&times;</a>
-                            <div class="col-xs-12 col-sm-6 center-block">
-                                <div class="postcode-group text-center">
-                                    <?php echo (isset($local_lang['text_enter_location'])) ? $local_lang['text_enter_location'] : lang('text_enter_location'); ?>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <div class="input-group">
-                                        <input type="text" id="search-query" class="form-control text-center postcode-control input-xs" name="search_query" placeholder="<?php echo lang('label_search_query'); ?>" value="<?php echo $search_query; ?>">
-                                        <a id="search" class="input-group-addon btn btn-primary" onclick="searchLocal();"><?php echo lang('button_search_location'); ?></a>
+                            <div class="row local-search bg-warning" style="display: <?php echo (!empty($search_query) OR $location_order !== '1') ? 'none' : 'block'; ?>">
+                                <a class="close-search clickable" onclick="toggleLocalSearch();">&times;</a>
+                                <div class="col-xs-12 col-sm-6 center-block">
+                                    <div class="postcode-group text-center">
+                                        <?php echo (isset($local_lang['text_enter_location'])) ? $local_lang['text_enter_location'] : lang('text_enter_location'); ?>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <div class="input-group">
+                                            <input type="text" id="search-query" class="form-control text-center postcode-control input-xs" name="search_query" placeholder="<?php echo lang('label_search_query'); ?>" value="<?php echo $search_query; ?>">
+                                            <a id="search" class="input-group-addon btn btn-primary" onclick="searchLocal();"><?php echo lang('button_search_location'); ?></a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    <?php } ?>
 
                     <div class="panel-body">
                         <div class="row boxes">
