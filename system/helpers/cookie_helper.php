@@ -108,6 +108,8 @@ if ( ! function_exists('delete_cookie'))
 	 */
 	function delete_cookie($name, $domain = '', $path = '/', $prefix = '')
 	{
-		set_cookie($name, '', '', $domain, $path, $prefix);
+		$prefix = ($prefix === '' AND !isset($_COOKIE[$name])) ? config_item('cookie_prefix') : $prefix;
+		unset($_COOKIE[$prefix.$name]);
+		setcookie($_COOKIE[$prefix.$name], null, -1, $path, $domain);
 	}
 }
