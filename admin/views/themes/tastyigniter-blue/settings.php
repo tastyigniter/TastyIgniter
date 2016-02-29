@@ -68,88 +68,44 @@
 
 				<div id="restaurant" class="tab-pane row wrap-all">
 					<div class="form-group">
-						<label for="input-address-1" class="col-sm-3 control-label"><?php echo lang('label_address_1'); ?>
-							<span class="help-block"><?php echo lang('help_main_address'); ?></span>
-						</label>
-						<div class="col-sm-5">
-							<input type="text" name="main_address[address_1]" id="input-address-1" class="form-control" value="<?php echo set_value('main_address[address_1]', $main_address['address_1']); ?>" />
-							<?php echo form_error('main_address[address_1]', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-address-2" class="col-sm-3 control-label"><?php echo lang('label_address_2'); ?></label>
-						<div class="col-sm-5">
-							<input type="text" name="main_address[address_2]" id="input-address-2" class="form-control" value="<?php echo set_value('main_address[address_2]', $main_address['address_2']); ?>" />
-							<?php echo form_error('main_address[address_2]', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-city" class="col-sm-3 control-label"><?php echo lang('label_city'); ?></label>
-						<div class="col-sm-5">
-							<input type="text" name="main_address[city]" id="input-city" class="form-control" value="<?php echo set_value('main_address[city]', $main_address['city']); ?>" />
-							<?php echo form_error('main_address[city]', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-state" class="col-sm-3 control-label"><?php echo lang('label_state'); ?></label>
-						<div class="col-sm-5">
-							<input type="text" name="main_address[state]" id="input-state" class="form-control" value="<?php echo set_value('main_address[state]', $main_address['state']); ?>" />
-							<?php echo form_error('main_address[state]', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-postcode" class="col-sm-3 control-label"><?php echo lang('label_postcode'); ?></label>
-						<div class="col-sm-5">
-							<input type="text" name="main_address[postcode]" id="input-postcode" class="form-control" value="<?php echo set_value('main_address[postcode]', $main_address['postcode']); ?>" />
-							<input type="hidden" name="main_address[location_id]" value="<?php echo set_value('main_address[location_id]', config_item('default_location_id')); ?>" />
-							<?php echo form_error('main_address[postcode]', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
 						<label for="input-country" class="col-sm-3 control-label"><?php echo lang('label_country'); ?></label>
 						<div class="col-sm-5">
-							<select name="main_address[country_id]" id="input-country" class="form-control">
+							<select name="country_id" id="input-country" class="form-control">
 								<?php foreach ($countries as $country) { ?>
-									<?php if ($country['country_id'] === $main_address['country_id']) { ?>
-										<option value="<?php echo $country['country_id']; ?>" <?php echo set_select('main_address[country_id]', $country['country_id'], TRUE); ?>><?php echo $country['name']; ?></option>
+									<?php if ($country['country_id'] === config_item('country_id')) { ?>
+										<option value="<?php echo $country['country_id']; ?>" <?php echo set_select('country_id', $country['country_id'], TRUE); ?>><?php echo $country['name']; ?></option>
 									<?php } else { ?>
-										<option value="<?php echo $country['country_id']; ?>" <?php echo set_select('main_address[country_id]', $country['country_id']); ?>><?php echo $country['name']; ?></option>
+										<option value="<?php echo $country['country_id']; ?>" <?php echo set_select('country_id', $country['country_id']); ?>><?php echo $country['name']; ?></option>
 									<?php } ?>
 								<?php } ?>
 							</select>
-							<?php echo form_error('main_address[country_id]', '<span class="text-danger">', '</span>'); ?>
+							<?php echo form_error('country_id', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="" class="col-sm-3 control-label"><?php echo lang('label_auto_lat_lng'); ?></label>
+						<label for="input-default-location" class="col-sm-3 control-label"><?php echo lang('label_default_location'); ?>
+							<span class="help-block"><?php echo lang('help_default_location'); ?></span>
+						</label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
-								<?php if ($auto_lat_lng == '1') { ?>
-									<label class="btn btn-default active"><input type="radio" name="auto_lat_lng" value="1" <?php echo set_radio('auto_lat_lng', '1', TRUE); ?>><?php echo lang('text_yes'); ?></label>
-									<label class="btn btn-default"><input type="radio" name="auto_lat_lng" value="0" <?php echo set_radio('auto_lat_lng', '0'); ?>><?php echo lang('text_no'); ?></label>
-								<?php } else { ?>
-									<label class="btn btn-default"><input type="radio" name="auto_lat_lng" value="1" <?php echo set_radio('auto_lat_lng', '1'); ?>><?php echo lang('text_yes'); ?></label>
-									<label class="btn btn-default active"><input type="radio" name="auto_lat_lng" value="0" <?php echo set_radio('auto_lat_lng', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
-								<?php } ?>
+							<div class="input-group">
+								<select name="default_location_id" id="input-default-location" class="form-control">
+									<?php if (!empty($locations)) { ?>
+										<?php foreach ($locations as $location) { ?>
+											<?php if ($location['location_id'] === config_item('default_location_id')) { ?>
+												<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('default_location_id', $location['location_id'], TRUE); ?>><?php echo $location['location_name']; ?></option>
+											<?php } else { ?>
+												<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('default_location_id', $location['location_id']); ?>><?php echo $location['location_name']; ?></option>
+											<?php } ?>
+										<?php } ?>
+									<?php } else { ?>
+										<option value=""><?php echo lang('button_add_location'); ?></option>
+									<?php } ?>
+								</select>
+								<span class="input-group-btn">
+									<a href="<?php echo site_url('locations/edit'); ?>" class="btn btn-primary"><?php echo lang('button_add_location'); ?></a>
+								</span>
 							</div>
-							<?php echo form_error('auto_lat_lng', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div id="lat-lng">
-						<br />
-						<div class="form-group">
-							<label for="input-address-latitude" class="col-sm-3 control-label"><?php echo lang('label_latitude'); ?></label>
-							<div class="col-sm-5">
-								<input type="text" name="main_address[location_lat]" id="input-address-latitude" class="form-control" value="<?php echo set_value('main_address[location_lat]', $main_address['location_lat']); ?>" />
-								<?php echo form_error('main_address[location_lat]', '<span class="text-danger">', '</span>'); ?>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="input-address-longitude" class="col-sm-3 control-label"><?php echo lang('label_longitude'); ?></label>
-							<div class="col-sm-5">
-								<input type="text" name="main_address[location_lng]" id="input-address-longitude" class="form-control" value="<?php echo set_value('main_address[location_lng]', $main_address['location_lng']); ?>" />
-								<?php echo form_error('main_address[location_lng]', '<span class="text-danger">', '</span>'); ?>
-							</div>
+							<?php echo form_error('default_location_id', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 

@@ -138,6 +138,16 @@ class Settings extends Admin_Controller {
 		isset($data['date_format']) OR $data['date_format'] = $data['date_formats'][0];
 		isset($data['time_format']) OR $data['time_format'] = $data['time_formats'][0];
 
+		$this->load->model('Locations_model');
+		$data['locations'] = array();
+		$results = $this->Locations_model->getLocations();
+		foreach ($results as $result) {
+			$data['locations'][] = array(
+				'location_id'	=>	$result['location_id'],
+				'location_name'	=>	$result['location_name'],
+			);
+		}
+
 		$data['countries'] = array();
 		$results = $this->Countries_model->getCountries();
 		foreach ($results as $result) {
@@ -264,16 +274,16 @@ class Settings extends Admin_Controller {
 
 	private function _updateSettings() {
         if ($this->validateForm() === TRUE) {
-	        if ($this->input->post('main_address') AND is_array($this->input->post('main_address'))) {
+	        if ($this->input->post('default_location_id') !== $this->config->item('default_location_id')) {
 		        $this->load->model('Locations_model');
-		        $this->Locations_model->updateDefault($this->input->post('main_address'));
+		        $this->Locations_model->updateDefault($this->Locations_model->getAddress($this->input->post('default_location_id')));
 	        }
 
 	        $update = array(
 		        'site_name'                        => $this->input->post('site_name'),
 		        'site_email'                       => $this->input->post('site_email'),
 		        'site_logo'                        => $this->input->post('site_logo'),
-		        'country_id'                       => $this->input->post('main_address[country_id]'),
+		        'country_id'                       => $this->input->post('country_id'),
 		        'timezone'                         => $this->input->post('timezone'),
 		        'date_format'                      => $this->input->post('date_format'),
 		        'time_format'                      => $this->input->post('time_format'),
@@ -378,20 +388,8 @@ class Settings extends Admin_Controller {
 
 		$this->form_validation->set_rules('special_category_id', 'lang:label_special_category', 'xss_clean|trim|numeric');
 
-		$this->form_validation->set_rules('main_address[address_1]', 'lang:label_address_1', 'xss_clean|trim|required|min_length[2]|max_length[128]|get_lat_lng[main_address]');
-		$this->form_validation->set_rules('main_address[address_2]', 'lang:label_address_2', 'xss_clean|trim|max_length[128]');
-		$this->form_validation->set_rules('main_address[city]', 'lang:label_city', 'xss_clean|trim|required|min_length[2]|max_length[128]');
-		$this->form_validation->set_rules('main_address[state]', 'lang:label_state', 'xss_clean|trim|max_length[128]');
-		$this->form_validation->set_rules('main_address[postcode]', 'lang:label_postcode', 'xss_clean|trim|min_length[2]|max_length[10]');
-		$this->form_validation->set_rules('main_address[country_id]', 'lang:label_country', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('auto_lat_lng', 'lang:label_auto_lat_lng', 'xss_clean|trim|required|integer');
-
-		if ($this->input->post('auto_lat_lng') === '1') {
-			$this->form_validation->set_rules('auto_lat_lng', 'lang:label_auto_lat_lng', 'get_lat_lng[main_address]');
-		} else {
-			$this->form_validation->set_rules('main_address[location_lat]', 'lang:label_latitude', 'xss_clean|trim|required|numeric');
-			$this->form_validation->set_rules('main_address[location_lng]', 'lang:label_longitude', 'xss_clean|trim|required|numeric');
-		}
+		$this->form_validation->set_rules('country_id', 'lang:label_country', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('default_location_id', 'lang:label_default_location', 'xss_clean|trim|required|integer');
 
 		$this->form_validation->set_rules('maps_api_key', 'lang:label_maps_api_key', 'xss_clean|trim');
 		$this->form_validation->set_rules('distance_unit', 'lang:label_distance_unit', 'xss_clean|trim|required');
