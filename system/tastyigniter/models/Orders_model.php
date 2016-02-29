@@ -125,6 +125,7 @@ class Orders_model extends TI_Model {
 		if ( ! empty($order_id)) {
 			$this->db->from('orders');
 			$this->db->join('statuses', 'statuses.status_id = orders.status_id', 'left');
+			$this->db->join('locations', 'locations.location_id = orders.location_id', 'left');
 			$this->db->where('order_id', $order_id);
 
 			if ( ! empty($customer_id)) {
@@ -428,49 +429,51 @@ class Orders_model extends TI_Model {
 					$this->Addresses_model->updateDefault($order_info['customer_id'], $order_info['address_id']);
 				}
 
+				$this->addOrderMenus($order_id, $cart_contents);
+
+				$order_totals = array(
+					'cart_total'  => array('title' => 'Sub Total', 'value' => (isset($cart_contents['cart_total'])) ? $cart_contents['cart_total'] : '', 'priority' => '1'),
+					'order_total' => array('title' => 'Order Total', 'value' => (isset($cart_contents['order_total'])) ? $cart_contents['order_total'] : '', 'priority' => '5'),
+					'delivery'    => array('title' => 'Delivery', 'value' => (isset($cart_contents['delivery'])) ? $cart_contents['delivery'] : '', 'priority' => '3'),
+					'coupon'      => array('title' => 'Coupon (' . $cart_contents['coupon']['code'] . ') ', 'value' => $cart_contents['coupon']['discount'], 'priority' => '2'),
+				);
+
+				if (!empty($cart_contents['taxes'])) {
+					$order_totals['taxes'] = array('title' => $cart_contents['taxes']['title'], 'value' => $cart_contents['taxes']['amount'], 'priority' => '4');
+				}
+
+				$this->addOrderTotals($order_id, $order_totals);
+
+				if ( ! empty($cart_contents['coupon'])) {
+					$this->addOrderCoupon($order_id, $order_info['customer_id'], $cart_contents['coupon']);
+				}
+
 				return $order_id;
 			}
 		}
 	}
 
-	public function completeOrder($order_id, $order_info, $cart_contents) {
+	public function completeOrder($order_id, $order_info, $cart_contents = array()) {
 
 		if ($order_id AND ! empty($order_info)) {
-
-			$this->addOrderMenus($order_id, $cart_contents);
-
-			$order_totals = array(
-				'cart_total'  => array('title' => 'Sub Total', 'value' => (isset($cart_contents['cart_total'])) ? $cart_contents['cart_total'] : '', 'priority' => '1'),
-				'order_total' => array('title' => 'Order Total', 'value' => (isset($cart_contents['order_total'])) ? $cart_contents['order_total'] : '', 'priority' => '5'),
-				'delivery'    => array('title' => 'Delivery', 'value' => (isset($cart_contents['delivery'])) ? $cart_contents['delivery'] : '', 'priority' => '3'),
-				'coupon'      => array('title' => 'Coupon (' . $cart_contents['coupon']['code'] . ') ', 'value' => $cart_contents['coupon']['discount'], 'priority' => '2'),
-			);
-
-			if (!empty($cart_contents['taxes'])) {
-				$order_totals['taxes'] = array('title' => $cart_contents['taxes']['title'], 'value' => $cart_contents['taxes']['amount'], 'priority' => '4');
-			}
-
-			$this->addOrderTotals($order_id, $order_totals);
-
-			if ( ! empty($cart_contents['coupon'])) {
-				$this->addOrderCoupon($order_id, $order_info['customer_id'], $cart_contents['coupon']);
-			}
 
 			$notify = $this->sendConfirmationMail($order_id);
 
 			$update = array(
-				'old_status_id'  => '',
+				'old_status_id' => '',
 				'order_status'  => ! empty($order_info['status_id']) ? (int) $order_info['status_id'] : (int) $this->config->item('default_order_status'),
-				'notify'  => $notify,
+				'notify'        => $notify,
 			);
 
 			if ($this->updateOrder($order_id, $update)) {
 				if (APPDIR === MAINDIR) {
-					log_activity($order_info['customer_id'], 'created', 'orders',
-						get_activity_message('activity_created_order', array('{customer}', '{link}', '{order_id}'),
-							array($order_info['first_name'] . ' ' . $order_info['last_name'], admin_url('orders/edit?id=' . $order_id), $order_id)
-						));
+					log_activity($order_info['customer_id'], 'created', 'orders', get_activity_message('activity_created_order',
+						array('{customer}', '{link}', '{order_id}'),
+						array($order_info['first_name'] . ' ' . $order_info['last_name'], admin_url('orders/edit?id=' . $order_id), $order_id)
+					));
 				}
+
+				Events::trigger('after_create_order', array('order_id' => $order_id));
 
 				return TRUE;
 			}
@@ -479,6 +482,9 @@ class Orders_model extends TI_Model {
 
 	public function addOrderMenus($order_id, $cart_contents = array()) {
 		if (is_array($cart_contents) AND ! empty($cart_contents) AND $order_id) {
+			$this->db->where('order_id', $order_id);
+			$this->db->delete('order_menus');
+
 			foreach ($cart_contents as $key => $item) {
 				if (is_array($item) AND isset($item['rowid']) AND $key === $item['rowid']) {
 
@@ -528,6 +534,10 @@ class Orders_model extends TI_Model {
 
 	public function addOrderMenuOptions($order_menu_id, $order_id, $menu_id, $menu_options) {
 		if ( ! empty($order_id) AND ! empty($menu_id) AND ! empty($menu_options)) {
+			$this->db->where('order_menu_id', $order_menu_id);
+			$this->db->where('order_id', $order_id);
+			$this->db->where('menu_id', $menu_id);
+			$this->db->delete('order_options');
 
 			foreach ($menu_options as $menu_option_id => $options) {
 				foreach ($options as $option) {
