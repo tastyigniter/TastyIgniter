@@ -241,8 +241,11 @@ class Customizer {
         if (!empty($field['name'])) {
             $markup['name'] = $field['name'];
             $markup['error'] = $this->getFieldError($field['name']);
-            $field['value'] = $this->getFieldValue($field['name'], $field['value']);
             $this->rules[$field['name']] = array('field' => $field['name'], 'label' => $field['label'], 'rules' => $field['rules']);
+
+            if ((isset($field['type']) AND !in_array($field['type'], array('radio', 'checkbox')))) {
+                $field['value'] = $this->getFieldValue($field['name'], $field['value']);
+            }
         }
 
         if (isset($field['type'])) switch ($field['type']) {
@@ -478,14 +481,24 @@ class Customizer {
         $group_count = 0;
         $temp_names = $temp_errors =array();
         $temp_html = $control = '';
-        foreach ($field['group'] as $field) {
-            if ($field['type'] !== 'hidden') $group_count++;
-            $temp_fields = $this->buildFieldMarkup($field);
+        foreach ($field['group'] as $button) {
+            if ($button['type'] !== 'hidden') $group_count++;
+
+            $value = $this->getFieldValue($button['name']);
+            if ($value === $button['value']) {
+                $button['checked'] = TRUE;
+            } else {
+                unset($button['checked']);
+            }
+
+            $button['id'] = $field['id'].'-'.$group_count;
+
+            $temp_fields = $this->buildFieldMarkup($button);
             $temp_names[] = $temp_fields['name'];
             $temp_errors[] = $temp_fields['error'];
 
-            $button_label = (isset($field['checked'])) ? str_replace('{active}', 'active', $this->_styles['button_label'][0]) : str_replace('{active}', '', $this->_styles['button_label'][0]);
-            $button_label = str_replace('{data_btn}', $field['data-btn'], $button_label);
+            $button_label = (isset($button['checked'])) ? str_replace('{active}', 'active', $this->_styles['button_label'][0]) : str_replace('{active}', '', $this->_styles['button_label'][0]);
+            $button_label = str_replace('{data_btn}', $button['data-btn'], $button_label);
 
             $temp_html .= $button_label . $temp_fields['html'] . $this->_styles['button_label'][1];
         }
@@ -570,7 +583,7 @@ class Customizer {
 
     private function getFieldValue($name, $default = '') {
         $temp_value = $this->getFieldData($name);
-        $temp_value = !empty($temp_value) ? $temp_value : $default;
+        $temp_value = ($temp_value !== NULL) ? $temp_value : $default;
         return $this->CI->form_validation->set_value($name, $temp_value);
     }
 
