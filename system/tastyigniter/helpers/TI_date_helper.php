@@ -60,7 +60,13 @@ if ( ! function_exists('time_elapsed')) {
             }
         }
 
-        if (!$full) $string = array_slice($string, 0, 1);
+        if (!empty($full)) {
+            $intersect = array_intersect_key($string, array_flip($full));
+            $string = (empty($intersect)) ? $string : $intersect;
+        } else {
+            $string = array_slice($string, 0, 1);
+        }
+
         return $string ? implode(', ', $string) . ' ago' : 'just now';
     }
 }
