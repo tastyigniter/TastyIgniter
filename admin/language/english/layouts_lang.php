@@ -10,7 +10,7 @@ $lang['text_tab_routes'] 		        = 'Routes';
 $lang['text_modules'] 		            = 'Modules';
 
 $lang['column_name'] 		            = 'Layout';
-$lang['column_module'] 		            = 'Routes';
+$lang['column_module'] 		            = 'Module';
 $lang['column_partial'] 		        = 'Partial Area';
 $lang['column_priority'] 		        = 'Priority';
 $lang['column_status'] 		            = 'Status';
