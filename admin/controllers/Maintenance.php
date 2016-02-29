@@ -46,12 +46,13 @@ class Maintenance extends Admin_Controller {
 
         $data['backup_files'] = $this->Maintenance_model->getBackupFiles();
 
+        $migrate_type = 'core';
         $this->load->library('migration');
-        $data['installed_version'] = $this->migration->get_version();
-        $data['latest_version'] = $this->migration->get_latest_version();
+        $data['installed_version'] = $this->migration->get_version($migrate_type);
+        $data['latest_version'] = (int)$this->migration->get_latest_version($migrate_type);
 
         $data['migration_files'] = array();
-        if ($migration_files = $this->migration->find_migrations()) {
+        if ($migration_files = $this->migration->find_migrations($migrate_type)) {
             foreach ($migration_files as $version => $migration_file) {
                 $migration_file = basename($migration_file);
                 $version = $this->migration->get_migration_number(basename($migration_file));
@@ -243,7 +244,7 @@ class Maintenance extends Admin_Controller {
                 $this->load->library('migration');
                 $migrate = (int) $this->migration->get_migration_number($this->input->post('migrate'));
 
-                if ($this->migration->version($migrate)) {
+                if ($this->migration->version($migrate, 'core')) {
                     $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Database migrated '));
                 } else {
                     $this->alert->set('warning', sprintf($this->lang->line('alert_error'), $this->migration->error_string()));

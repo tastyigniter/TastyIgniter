@@ -267,7 +267,6 @@ class Installer {
 
         if ( ! $this->CI->migration->install()) {
             show_error($this->CI->migration->error_string());
-            return FALSE;
         }
 
         // Insert the admin user in the users table so they can login.

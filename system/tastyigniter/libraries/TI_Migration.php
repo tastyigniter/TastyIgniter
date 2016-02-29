@@ -257,7 +257,7 @@ class TI_Migration extends CI_Migration {
 			return 0;
 		}
 
-		return $this->_get_migration_number($last_migration);
+		return $this->_get_migration_number(basename($last_migration));
 	}
 
 	// --------------------------------------------------------------------
