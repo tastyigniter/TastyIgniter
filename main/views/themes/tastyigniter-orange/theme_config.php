@@ -241,7 +241,7 @@ $theme['customize']['sections']['styling'] = array(
 					'type' 			=> 'input-group',
 					'group'			=> array(
 						array('id' => 'input-heading-background', 'name' => 'heading[background]', 'type' => 'color', 'value' => ''),
-						array('id' => 'input-heading-image', 'name' => 'heading[image]', 'type' => 'media', 'value' => 'data/no_photo.png'),
+						array('id' => 'input-heading-image', 'name' => 'heading[image]', 'type' => 'media', 'value' => ''),
 						array('id' => 'input-heading-display', 'name' => 'heading[display]', 'type' => 'dropdown', 'options' => array('tiled' => 'Tiled', 'contain' => 'Contain', 'cover' => 'Cover', 'centered' => 'Centered'), 'value' => 'contain', 'rules' => 'required'),
 					)
 				),
