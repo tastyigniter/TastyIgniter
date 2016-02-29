@@ -114,10 +114,11 @@ display: none;
 
 @media screen and (min-width: 768px) {
 #slider .flexslider .slides img {
-/*height: 600px;*/
+display: block;
+margin: 0 auto;
+width: auto;
 }
 .flexslider .slides {
-min-height: 400px;
 background-color: #eee;
 }
 }

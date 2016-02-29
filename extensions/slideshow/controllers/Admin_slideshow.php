@@ -109,10 +109,12 @@ class Admin_slideshow extends Admin_Controller {
 		$this->form_validation->set_rules('speed', 'lang:label_speed', 'xss_clean|trim|integer');
 	    $this->form_validation->set_rules('display', 'lang:label_display', 'xss_clean|trim|required|integer');
 
-		foreach ($this->input->post('slides') as $key => $value) {
-			$this->form_validation->set_rules('slides['.$key.'][image_src]', 'lang:label_slide_image', 'xss_clean|trim|required');
-			$this->form_validation->set_rules('slides['.$key.'][caption]', 'lang:label_slide_caption');
-		}
+	    if ($this->input->post('slides')) {
+		    foreach ($this->input->post('slides') as $key => $value) {
+			    $this->form_validation->set_rules('slides[' . $key . '][image_src]', 'lang:label_slide_image', 'xss_clean|trim|required');
+			    $this->form_validation->set_rules('slides[' . $key . '][caption]', 'lang:label_slide_caption');
+		    }
+	    }
 
 		if ($this->form_validation->run() === TRUE) {
 			return TRUE;
