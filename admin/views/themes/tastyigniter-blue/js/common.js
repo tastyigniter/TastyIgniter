@@ -8,7 +8,7 @@ $(function() {
 // Sets the min-height of #page-wrapper to window size
 $(function() {
 
-    var collapseState = Cookies.get('sidebarToggleState');
+    var collapseState = Cookies.set('ti_sidebarToggleState');
 
     $(window).bind("load resize", function() {
         topOffset = 50;
@@ -36,10 +36,10 @@ $(function() {
     $(document).on('click', '.sidebar-toggle', function() {
         if ($('#wrapper').hasClass('hide-sidebar')) {
             $('#wrapper').removeClass('hide-sidebar');
-            Cookies.set('sidebarToggleState', 'show');
+            Cookies.set('ti_sidebarToggleState', 'show');
         } else {
             $('#wrapper').addClass('hide-sidebar');
-            Cookies.set('sidebarToggleState', 'hide');
+            Cookies.set('ti_sidebarToggleState', 'hide');
         }
     })
 })
@@ -117,7 +117,7 @@ $(function(){
 
 // Panel Table Filter Button Toggle
 $(function(){
-    var displayFilterPanel = Cookies.get('displayFilterPanel');
+    var displayFilterPanel = Cookies.set('ti_displayFilterPanel');
 
 	$('#page-wrapper').on('click', '.panel-table .btn-filter', function(e) {
 		var $this = $(this),
@@ -133,7 +133,7 @@ $(function(){
                 $('.panel-table .btn-filter').removeClass('active');
             }
 
-            Cookies.set('displayFilterPanel', displayFilterPanel);
+            Cookies.set('ti_displayFilterPanel', displayFilterPanel);
         });
 	});
 

@@ -148,7 +148,7 @@ $style .= "}";
 
 $style .= ".under-heading {";
 if ( ! empty($heading['under_image'])) {
-	$style .= "background-image: url('{$heading['under_image']}');";
+	$style .= "background-image: url('".image_url($heading['under_image'])."');";
 } else if ( isset($heading['under_image']) AND  empty($heading['under_image'])) {
 	$style .= "background-image: none; height: auto;";
 }
@@ -175,6 +175,9 @@ if (!empty($sidebar['image'])) {
 	}
 }
 $style .= "}";
+
+if ( ! empty($sidebar['border']))
+	$style .= ".side-bar .panel-cart { border-color: {$sidebar['border']}; border-width: 1px; border-style: solid;}";
 
 $style .= ".side-bar .module-box li, .side-bar > .module-box .list-group-item, #category-box .list-group-item a, .cart-items ul li {";
 if ( ! empty($sidebar['border']))

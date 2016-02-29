@@ -16,35 +16,35 @@
 	<div class="container top-spacing-10">
 	    <div class="content-wrap">
             <div id="order-steps" class="row">
-                <div class="col-md-3 col-sm-6 col-xs-6">
+                <div class="col-md-3 col-sm-3 col-xs-6">
                     <div class="step-item">
                         <div class="icon">
-                            <i class="fa fa-pencil"></i>
+                            <i class="fa fa-search"></i>
                         </div>
                         <h4><?php echo lang('text_step_one'); ?></h4>
                         <p><?php echo lang('text_step_search'); ?></p>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-6 col-xs-6">
+                <div class="col-md-3 col-sm-3 col-xs-6">
                     <div class="step-item">
                         <div class="icon">
-                            <i class="fa fa-bullhorn"></i>
+                            <i class="fa fa-mouse-pointer"></i>
                         </div>
                         <h4><?php echo lang('text_step_two'); ?></h4>
                         <p><?php echo lang('text_step_choose'); ?></p>
                     </div>
                 </div>
-                <div class="clearfix visible-xs visible-sm"></div>
-                <div class="col-md-3 col-sm-6 col-xs-6">
+                <div class="clearfix visible-xs"></div>
+                <div class="col-md-3 col-sm-3 col-xs-6">
                     <div class="step-item">
                         <div class="icon">
-                            <i class="fa fa-bell"></i>
+                            <i class="fa fa-credit-card"></i>
                         </div>
                         <h4><?php echo lang('text_step_three'); ?></h4>
                         <p><?php echo lang('text_step_pay'); ?></p>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-6 col-xs-6">
+                <div class="col-md-3 col-sm-3 col-xs-6">
                     <div class="step-item">
                         <div class="icon">
                             <i class="fa fa-heart"></i>

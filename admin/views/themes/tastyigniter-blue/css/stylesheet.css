@@ -800,6 +800,9 @@ filter: alpha(opacity=0);
 .input-group-btn > .btn {
 height: 38px;
 }
+.input-group-btn > a.btn {
+padding: 9px 12px;
+}
 .input-group-addon {
 background-color: #ECF0F5;
 border: 1px solid #d2dce7;
@@ -835,7 +838,7 @@ display: block;
 
 
 /** FORM GROUP **/
-.form-group .text-danger {
+.form-group span.text-danger {
 display: block;
 }
 .form-inline .form-group {
@@ -1170,6 +1173,7 @@ box-shadow: inset 0px 3px 5px rgba(210, 220, 231, 0.825);
 }
 .btn-success {
 text-shadow: 1px 1px 0 #3d8b3d;
+background-color: #4CAE4C;
 }
 .btn-success:hover,
 .btn-success:focus,
@@ -2570,6 +2574,8 @@ margin-top: 0;
 }
 .select2-container-multi .select2-choices {
 background-image: none;
+max-height: 200px;
+overflow: auto;
 }
 .select2-container-multi .select2-choices .select2-search-choice {
 background: #ECF0F5 none;

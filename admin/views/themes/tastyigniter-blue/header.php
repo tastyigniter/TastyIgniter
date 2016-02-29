@@ -41,7 +41,7 @@
 		$wrapper_class .= 'wrap-none';
 	}
 
-	if ($this->input->cookie('sidebarToggleState') == 'hide') {
+	if ($this->input->cookie('ti_sidebarToggleState') == 'hide') {
 		$wrapper_class .= ' hide-sidebar';
 	}
 ?>
@@ -204,7 +204,7 @@
                     ?>
 
                    <?php if (!empty($button_list) OR !empty($icon_list)) { ?>
-						<div class="page-action pull-left">
+						<div class="page-action">
                             <?php if (!empty($icon_list)) { ?>
                                 <?php echo $icon_list; ?>
                             <?php } ?>

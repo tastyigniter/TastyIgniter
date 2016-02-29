@@ -20,7 +20,7 @@
                                     </div>
                                 <?php } ?>
 
-                                <div class="menu-content <?php echo ($show_menu_images === '1') ? 'col-xs-6' : 'col-xs-9'; ?>">
+                                <div class="menu-content <?php echo ($show_menu_images === '1') ? 'col-xs-6 col-sm-7' : 'col-xs-9'; ?>">
                                     <span class="menu-name"><b><?php echo $menu['menu_name']; ?></b></span>
                                     <span class="menu-desc small">
                                         <?php echo $menu['menu_description']; ?>
@@ -39,7 +39,7 @@
                                             </a>
                                         <?php } ?>
                                     </span>
-                                    <?php if ($menu['is_special'] === '1') { ?>
+                                    <?php if ($menu['special_status'] === '1' AND $menu['is_special'] === '1') { ?>
                                         <div class="menu-special"><?php echo $menu['end_days']; ?></div>
                                     <?php }?>
                                 </div>

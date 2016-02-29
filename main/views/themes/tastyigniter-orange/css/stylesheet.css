@@ -497,7 +497,6 @@ padding: 10px 8px;
 .nav-pills > li.active > a,
 .nav-pills > li.active > a:focus,
 .nav-pills > li.active > a:hover {
-background-color: #0f91c4;
 color: #fff;
 }
 .nav-tabs.nav-tabs-line {
@@ -539,7 +538,7 @@ border-bottom: 4px solid #F8BEA7;
 .tab-content-line {
 border-top: 1px solid #eee;
 margin-top: -3px;
-padding: 15px 0;
+padding: 0;
 margin-bottom: 20px;
 }
 /*** End Nav Tabs ***/
@@ -638,10 +637,11 @@ color: #484848;
 
 
 /*** Order Steps ***/
-
+#order-steps{
+margin-top: -15px;
+}
 .step-item {
 text-align: center;
-margin-top: 40px;
 }
 
 .step-item .icon i {
@@ -1131,8 +1131,11 @@ margin-top: 0;
     color: #ed561a;
   }
 
+  #order-steps {
+    margin-top: 0;
+  }
   .step-item {
-    margin-top: 40px;
+    margin-top: 0;
   }
 
   .main-footer {
