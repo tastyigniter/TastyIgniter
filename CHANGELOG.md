@@ -37,6 +37,7 @@ Release Date: January 2016 (postponed: February 2016)
 * Categories: status field to enable or disable selected category in storefront
 * Location library `setDeliveryArea()` and `getAreaId()` method to update location delivery area when customer delivery address changes
 * Extension library `latestMigration()` method to migrate module migrations to the current version
+* Added new parameter to time_elapsed to filter the time diff returned
 
 #### Changed
 * LICENCE from Apache to GNU GPLv3
@@ -75,6 +76,12 @@ Release Date: January 2016 (postponed: February 2016)
 * Improved storefront theme responsiveness on all devices
 * Theme Customizer: added more options to easily customize the storefront
 * Improved Migration capability to check and install module migrations 
+* Removed acceptance testing test cases to be improved and replaced with Unit testing
+* Improved currency: added left or right symbol placement, thousand & decimal sign and removed iso codes
+* Cookie helper now using php native function to delete cookie
+* Improved [local_module] strict location order and pre-order functions.
+* Replaced system setting default address entry fields with locations dropdown list so that location details can be modified from one interface
+* Disable admin from migrating database when system is in production environment
 
 #### Fixed
 * Bug where extra URL query is not appended after permalink slugs in URI reverse routing
@@ -92,7 +99,10 @@ Release Date: January 2016 (postponed: February 2016)
 * Issue where view data variable collides with theme options variable in the main app.
 * Issue with permission rule not being applied when updating individual modules
 * Issue with day_elapsed() helper method where it only checks the day instead of checking day and month to determine today or yesterday
-
+* Issue with delivery charge not based on delivery address (#107)
+* Issue where cart rounds thousands to the nearest unit
+* Issue with special menu status
+* Issue with slide-show height in storefront
 
 ### v1.4.2-beta
 
