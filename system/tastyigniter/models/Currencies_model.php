@@ -162,6 +162,11 @@ class Currencies_model extends TI_Model {
 		} else {
 			$query = $this->db->insert('currencies');
 			$currency_id = $this->db->insert_id();
+
+			if ($this->config->item('auto_update_currency_rates') === '1') {
+				$this->updateRates(TRUE);
+			}
+
 		}
 
 		return ($query === TRUE AND is_numeric($currency_id)) ? $currency_id : FALSE;
