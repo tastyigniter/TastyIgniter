@@ -18,13 +18,14 @@ $lang['text_install'] 		            = 'Install';
 $lang['text_uninstall'] 		        = 'Uninstall';
 $lang['text_installed'] 		        = 'Installed';
 $lang['text_uninstalled'] 		        = 'Uninstalled';
-$lang['text_view_files'] 		        = 'View files';
+$lang['text_view_files'] 		        = 'Hide/View files';
 $lang['text_upload_title'] 		        = 'Upload the extension .zip file and it will be installed automatically.';
 
 $lang['button_upload'] 		            = 'Upload & Install';
 $lang['button_browse'] 		            = 'Browse';
 $lang['button_change'] 		            = 'Change';
-$lang['button_delete'] 		            = 'Yes, delete';
+$lang['button_delete'] 		            = 'Delete';
+$lang['button_yes_delete'] 		        = 'Yes, delete';
 $lang['button_return_to_list'] 		    = 'No, return to list';
 
 $lang['column_name'] 		            = 'Name';

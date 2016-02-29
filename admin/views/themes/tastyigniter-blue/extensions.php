@@ -65,8 +65,7 @@
 						<thead>
 							<tr>
 								<th class="action action-three"></th>
-                                <th width="15%" class="name sorter"><a class="sort" href="<?php echo $sort_name; ?>"><?php echo lang('column_name'); ?> <i class="fa fa-sort-<?php echo ($sort_by === 'name') ? $order_by_active : $order_by; ?>"></i></a></th>
-								<th width="65%"><?php echo lang('column_desc'); ?></th>
+                                <th class="name sorter"><a class="sort" href="<?php echo $sort_name; ?>"><?php echo lang('column_name'); ?> / <?php echo lang('column_desc'); ?> <i class="fa fa-sort-<?php echo ($sort_by === 'name') ? $order_by_active : $order_by; ?>"></i></a></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -91,9 +90,9 @@
 										<a class="btn btn-danger delete" title="<?php echo lang('button_delete'); ?>" href="<?php echo $extension['delete']; ?>"><i class="fa fa-trash-o"></i></a>
                                     <?php } ?>
 								</td>
-								<td><strong><?php echo $extension['title']; ?></strong></td>
 								<td>
-                                    <div class="extension_desc"><p><?php echo $extension['description']; ?></p></div>
+									<strong><?php echo $extension['title']; ?></strong>
+                                    <div class="extension_desc text-muted"><?php echo $extension['description']; ?></div>
                                     <div class="extension_meta text-muted small">
                                         <span><?php echo lang('column_version'); ?>: <?php echo $extension['version']; ?></span>
                                         &nbsp;&nbsp;|&nbsp;&nbsp;
@@ -105,7 +104,7 @@
 							<?php } ?>
 							<?php } else {?>
 							<tr>
-								<td colspan="3"><?php echo lang('text_empty'); ?></td>
+								<td colspan="2"><?php echo lang('text_empty'); ?></td>
 							</tr>
 							<?php } ?>
 						</tbody>

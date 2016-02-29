@@ -13,7 +13,7 @@
                 <div class="panel-footer">
                     <input type="hidden" name="confirm_delete" value="<?php echo $extension_name; ?>">
                     <a class="btn btn-default" href="<?php echo site_url('extensions?filter_type='.$extension_type); ?>"><?php echo lang('button_return_to_list'); ?></a>
-                    <button type="submit" class="btn btn-danger"><?php echo lang('button_delete'); ?></button>
+                    <button type="submit" class="btn btn-danger"><?php echo lang('button_yes_delete'); ?></button>
                     <button type="button" class="btn btn-default" onclick="$('#deletedFiles').slideToggle();"><?php echo lang('text_view_files'); ?></button>
                 </div>
             </div>

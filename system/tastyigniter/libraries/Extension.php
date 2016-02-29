@@ -190,6 +190,35 @@ class Extension {
 
 		return FALSE;
 	}
+
+	/**
+	 * Migrate to the latest version or drop all migrations
+	 * for a given module migration
+	 *
+	 * @param        $module
+	 * @param bool $downgrade
+	 *
+	 * @return bool
+	 */
+	public function runMigration($module, $downgrade = FALSE) {
+
+		$path = Modules::path($module, 'config/');
+
+		if ( ! is_file($path . 'migration.php')) {
+			return FALSE;
+		}
+
+		$migration = Modules::load_file('migration', $path, 'config');
+		$migration['migration_enabled'] = TRUE;
+
+		$this->CI->load->library('migration', $migration);
+
+		if ($downgrade === TRUE) {
+			$this->CI->migration->version('0', $module);
+		} else {
+			$this->CI->migration->current($module);
+		}
+	}
 }
 
 // END Extension Class

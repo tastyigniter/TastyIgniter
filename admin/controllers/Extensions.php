@@ -174,17 +174,17 @@ class Extensions extends Admin_Controller {
 			$extension_type = isset($config['extension_meta']['type']) ? $config['extension_meta']['type'] : '';
 
 			if ($this->Extensions_model->install($this->uri->rsegment(3), $extension_name, $config)) {
-				log_activity($this->user->getStaffId(), 'installed', 'extensions',
-					get_activity_message('activity_custom_no_link',
-						array('{staff}', '{action}', '{context}', '{item}'),
-						array($this->user->getStaffName(), 'installed', $extension_type.' extension', $extension_title)
-					));
+				$success = TRUE;
+
+				log_activity($this->user->getStaffId(), 'installed', 'extensions', get_activity_message('activity_custom_no_link',
+					array('{staff}', '{action}', '{context}', '{item}'),
+					array($this->user->getStaffName(), 'installed', $extension_type.' extension', $extension_title)
+				));
 
 				$this->alert->set('success', sprintf($this->lang->line('alert_success'), "Extension {$extension_title} installed "));
 				if ($extension_type === 'module') {
 					$this->alert->set('info', sprintf($this->lang->line('alert_info_layouts'), site_url('layouts')));
 				}
-				$success = TRUE;
 			}
 		}
 
@@ -204,11 +204,10 @@ class Extensions extends Admin_Controller {
 			$extension_type = isset($config['extension_meta']['type']) ? $config['extension_meta']['type'] : '';
 
 			if ($this->Extensions_model->uninstall($this->uri->rsegment(3), $extension_name)) {
-				log_activity($this->user->getStaffId(), 'uninstalled', 'extensions',
-					get_activity_message('activity_custom_no_link',
-						array('{staff}', '{action}', '{context}', '{item}'),
-						array($this->user->getStaffName(), 'uninstalled', $extension_type.' extension', $extension_title)
-					));
+				log_activity($this->user->getStaffId(), 'uninstalled', 'extensions', get_activity_message('activity_custom_no_link',
+					array('{staff}', '{action}', '{context}', '{item}'),
+					array($this->user->getStaffName(), 'uninstalled', $extension_type.' extension', $extension_title)
+				));
 
 				$this->alert->set('success', sprintf($this->lang->line('alert_success'), "Extension {$extension_title} uninstalled "));
 			} else {
@@ -239,12 +238,10 @@ class Extensions extends Admin_Controller {
 		if ($this->input->post('confirm_delete') === $data['extension_name']) {
 
 			if ($this->Extensions_model->delete($this->uri->rsegment(3), $data['extension_name'])) {
-				log_activity($this->user->getStaffId(), 'deleted', 'extensions',
-					get_activity_message('activity_custom_no_link',
-						array('{staff}', '{action}', '{context}', '{item}'),
-						array($this->user->getStaffName(), 'deleted', $data['extension_type'] . ' extension', $data['extension_title'])
-					)
-				);
+				log_activity($this->user->getStaffId(), 'deleted', 'extensions', get_activity_message('activity_custom_no_link',
+					array('{staff}', '{action}', '{context}', '{item}'),
+					array($this->user->getStaffName(), 'deleted', $data['extension_type'] . ' extension', $data['extension_title'])
+				));
 
 				$this->alert->set('success', sprintf($this->lang->line('alert_success'), "Extension {$data['extension_name']} deleted "));
 			} else {
@@ -279,12 +276,10 @@ class Extensions extends Admin_Controller {
 					$alert = "Extension {$extension_title} uploaded ";
 
 					if ($this->Extensions_model->install($extension_type, $extension_name, $config)) {
-						log_activity($this->user->getStaffId(), 'installed', 'extensions',
-							get_activity_message('activity_custom_no_link',
-								array('{staff}', '{action}', '{context}', '{item}'),
-								array($this->user->getStaffName(), 'installed', $extension_type.' extension', $extension_title)
-							)
-						);
+						log_activity($this->user->getStaffId(), 'installed', 'extensions', get_activity_message('activity_custom_no_link',
+							array('{staff}', '{action}', '{context}', '{item}'),
+							array($this->user->getStaffName(), 'installed', $extension_type.' extension', $extension_title)
+						));
 
 						$alert .= "and installed ";
 					}

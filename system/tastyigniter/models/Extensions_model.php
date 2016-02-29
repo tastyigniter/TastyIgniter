@@ -23,6 +23,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Extensions_model extends TI_Model {
 
+	private $extensions = array();
+
 	private function extensions() {
 		$extensions = array();
 
@@ -124,24 +126,27 @@ class Extensions_model extends TI_Model {
 
 	public function getInstalledExtensions($type = '', $is_enabled = TRUE) {
 
-		$this->db->from('extensions');
+		if (empty($this->extensions)) {
+			$this->db->from('extensions');
 
-		$type = ($type === '') ? array('module', 'payment', 'widget') : $type;
-		$this->db->where_in('type', $type);
-
-		if ($is_enabled === TRUE) {
-			$this->db->where('status', '1');
+			$query = $this->db->get();
+			$this->extensions = $query->result_array();
 		}
 
-		$query = $this->db->get();
+		$type = empty($type) ? array('module', 'payment', 'widget') : array($type);
+
 		$result = array();
 
-		if ($query->num_rows() > 0) {
-			foreach ($query->result_array() as $name => $row) {
+		if (!empty($this->extensions)) {
+			foreach ($this->extensions as $name => $row) {
 				if (preg_match('/\s/', $row['name']) > 0 OR ! $this->extensionExists($row['name'])) {
 					$this->uninstall($row['type'], $row['name']);
 					continue;
 				}
+
+				if ( ! in_array($row['type'], $type)) continue;
+
+				if ($is_enabled === TRUE AND $row['status'] !== '1') continue;
 
 				$row['ext_data'] = ($row['serialized'] === '1' AND ! empty($row['data'])) ? unserialize($row['data']) : array();
 				unset($row['data']);
@@ -213,84 +218,9 @@ class Extensions_model extends TI_Model {
 				$query = $this->db->update('extensions');
 
 				if ($log_activity) {
-					log_activity($this->user->getStaffId(), 'updated', 'extensions',
-						get_activity_message('activity_custom_no_link', array('{staff}', '{action}', '{context}',
-							'{item}'), array($this->user->getStaffName(), 'updated', $meta['type'].' extension', $meta['title'])));
-				}
-			}
-		}
-
-		return $query;
-	}
-
-	public function install($type = '', $name = '', $config = NULL) {
-
-		if ( ! empty($type) AND ! empty($name)) {
-			$name = url_title(strtolower($name), '-');
-
-			if ($this->extensionExists($name)) {
-				$extension_id = NULL;
-
-				is_array($config) OR $config = $this->extension->loadConfig($name, FALSE, TRUE);
-
-				$title = !empty($config['extension_meta']['title']) ? $config['extension_meta']['title'] : NULL;
-
-				$query = $this->db->where('type', $type)->where('name', $name)->get('extensions');
-
-				if ($query->num_rows() === 1) {
-					$row = $query->row_array();
-					$this->db->set('title', $title);
-					$this->db->set('status', '1');
-					$this->db->where('type', $type);
-					$this->db->where('name', $name);
-					if ($query = $this->db->update('extensions')) $extension_id = $row['extension_id'];
-				} else {
-					$this->db->set('status', '1');
-					$this->db->set('type', $type);
-					$this->db->set('name', $name);
-					$this->db->set('title', $title);
-					if ($query = $this->db->insert('extensions')) $extension_id = $this->db->insert_id();
-				}
-
-				if ($query === TRUE) {
-					if ( ! empty($config['extension_permission']) AND ! empty($config['extension_permission']['name'])) {
-						$config['extension_permission']['status'] = '1';
-						$this->Permissions_model->savePermission(NULL, $config['extension_permission']);
-
-						$this->load->model('Staff_groups_model');
-						$this->Staff_groups_model->assignPermissionRule($this->user->getStaffGroupId(), $config['extension_permission']);
-					}
-				}
-
-				return $extension_id;
-			}
-		}
-
-		return FALSE;
-	}
-
-	public function uninstall($type = '', $name = '', $config = NULL) {
-		$query = FALSE;
-
-		if ( ! empty($type) AND $this->extensionExists($name)) {
-
-			$this->db->set('status', '0');
-			$this->db->where('type', $type);
-			$this->db->where('name', $name);
-
-			if (preg_match('/\s/', $name) > 0) {
-				$query = $this->delete($name);
-			} else {
-				$this->db->update('extensions');
-				if ($this->db->affected_rows() > 0) {
-
-					is_array($config) OR $config = $this->extension->loadConfig($name, FALSE, TRUE);
-
-					if ( ! empty($config['extension_permission']['name'])) {
-						$this->Permissions_model->deletePermissionByName($config['extension_permission']['name']);
-					}
-
-					$query = TRUE;
+					log_activity($this->user->getStaffId(), 'updated', 'extensions', get_activity_message('activity_custom_no_link', array('{staff}', '{action}', '{context}',
+						'{item}'), array($this->user->getStaffName(), 'updated', $meta['type'].' extension', $meta['title'])
+					));
 				}
 			}
 		}
@@ -337,10 +267,113 @@ class Extensions_model extends TI_Model {
 		return FALSE;
 	}
 
+	public function getExtensionFiles($extension_name = NULL, $files = array()) {
+		if ( ! is_dir(ROOTPATH . EXTPATH . $extension_name)) {
+			return NULL;
+		}
+
+		foreach (glob(ROOTPATH . EXTPATH . $extension_name . '/*') as $filepath) {
+			$filename = str_replace(ROOTPATH . EXTPATH, '', $filepath);
+
+			if (is_dir($filepath)) {
+				$files = $this->getExtensionFiles($filename, $files);
+			} else {
+				$files[] = $filename;
+			}
+		}
+
+		return $files;
+	}
+
+	public function install($type = '', $name = '', $config = NULL) {
+
+		if ( ! empty($type) AND ! empty($name)) {
+			$name = url_title(strtolower($name), '-');
+
+			if ($this->extensionExists($name) AND is_array($config)) {
+				$extension_id = NULL;
+
+				$title = !empty($config['extension_meta']['title']) ? $config['extension_meta']['title'] : NULL;
+
+				$query = $this->db->where('type', $type)->where('name', $name)->get('extensions');
+
+				if ($query->num_rows() === 1) {
+					$row = $query->row_array();
+					$this->db->set('title', $title);
+					$this->db->set('status', '1');
+					$this->db->where('type', $type);
+					$this->db->where('name', $name);
+					if ($query = $this->db->update('extensions')) $extension_id = $row['extension_id'];
+				} else {
+					$this->db->set('title', $title);
+					$this->db->set('status', '1');
+					$this->db->set('type', $type);
+					$this->db->set('name', $name);
+					if ($query = $this->db->insert('extensions')) $extension_id = $this->db->insert_id();
+				}
+
+				if ($query === TRUE) {
+					if ( ! empty($config['extension_permission']) AND ! empty($config['extension_permission']['name'])) {
+						$config['extension_permission']['status'] = '1';
+						$this->Permissions_model->savePermission(NULL, $config['extension_permission']);
+
+						$this->load->model('Staff_groups_model');
+						$this->Staff_groups_model->assignPermissionRule($this->user->getStaffGroupId(), $config['extension_permission']);
+					}
+
+					// set extension migration to the latest version
+					$this->extension->runMigration($name);
+				}
+
+				return $extension_id;
+			}
+		}
+
+		return FALSE;
+	}
+
+	public function uninstall($type = '', $name = '', $config = NULL) {
+		$query = FALSE;
+
+		if ( ! empty($type) AND $this->extensionExists($name)) {
+
+			$this->db->set('status', '0');
+			$this->db->where('type', $type);
+			$this->db->where('name', $name);
+
+			if (preg_match('/\s/', $name) > 0) {
+				$query = $this->delete($name);
+			} else {
+				$this->db->update('extensions');
+				if ($this->db->affected_rows() > 0) {
+
+					is_array($config) OR $config = $this->extension->loadConfig($name, FALSE, TRUE);
+
+					if ( ! empty($config['extension_permission']['name'])) {
+						$this->Permissions_model->deletePermissionByName($config['extension_permission']['name']);
+					}
+
+					$query = TRUE;
+				}
+			}
+		}
+
+		return $query;
+	}
+
 	public function delete($type = '', $name = '') {
 		$query = FALSE;
 
 		if ( ! empty($type) AND $this->extensionExists($name)) {
+
+			$get_installed = $this->db->where('status', '1')->where('type', $type)->where('name', $name)->get('extensions')->row();
+			if (empty($get_installed)) {
+				$this->load->helper('file');
+				delete_files(ROOTPATH . EXTPATH . $name, TRUE);
+				rmdir(ROOTPATH . EXTPATH . $name);
+
+				$query = TRUE;
+			}
 
 			$this->db->where('status', '0');
 			$this->db->where('type', $type);
@@ -348,14 +381,9 @@ class Extensions_model extends TI_Model {
 
 			$this->db->delete('extensions');
 			if ($this->db->affected_rows() > 0) {
-				$query = TRUE;
-			}
 
-			$get_installed = $this->db->where('status', '1')->where('type', $type)->where('name', $name)->get('extensions');
-			if ($get_installed->num_rows() <= 0) {
-				$this->load->helper('file');
-				delete_files(ROOTPATH . EXTPATH . $name, TRUE);
-				rmdir(ROOTPATH . EXTPATH . $name);
+				// downgrade extension migration
+				$this->extension->runMigration($name, TRUE);
 
 				$query = TRUE;
 			}
@@ -378,24 +406,6 @@ class Extensions_model extends TI_Model {
 		}
 
 		return $results;
-	}
-
-	public function getExtensionFiles($extension_name = NULL, $files = array()) {
-		if ( ! is_dir(ROOTPATH . EXTPATH . $extension_name)) {
-			return NULL;
-		}
-
-		foreach (glob(ROOTPATH . EXTPATH . $extension_name . '/*') as $filepath) {
-			$filename = str_replace(ROOTPATH . EXTPATH, '', $filepath);
-
-			if (is_dir($filepath)) {
-				$files = $this->getExtensionFiles($filename, $files);
-			} else {
-				$files[] = $filename;
-			}
-		}
-
-		return $files;
 	}
 }
 
