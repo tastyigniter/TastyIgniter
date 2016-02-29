@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
 class Settings extends Admin_Controller {
-    
+
     public function __construct() {
 		parent::__construct(); //  calls the constructor
 
@@ -92,6 +92,14 @@ class Settings extends Admin_Controller {
             'delete_thumbs'			=> site_url('settings/delete_thumbs'),
         );
 
+        if (!isset($data['auto_update_currency_rates'])) {
+            $this->config->set_item('auto_update_currency_rates', '0');
+        }
+
+        if (!isset($data['accepted_currencies'])) {
+            $this->config->set_item('accepted_currencies', array());
+        }
+
         if (!isset($data['show_stock_warning'])) {
             $this->config->set_item('show_stock_warning', '1');
         }
@@ -162,7 +170,7 @@ class Settings extends Admin_Controller {
 		foreach ($currencies as $currency) {
 			$data['currencies'][] = array(
 				'currency_id'		=>	$currency['currency_id'],
-				'currency_name'		=>	$currency['currency_name'],
+				'currency_name'		=>	$currency['country_name'] . ' - ' . $currency['currency_name'],
 				'currency_status'	=>	$currency['currency_status']
 			);
 		}
@@ -279,6 +287,11 @@ class Settings extends Admin_Controller {
 		        $this->Locations_model->updateDefault($this->Locations_model->getAddress($this->input->post('default_location_id')));
 	        }
 
+	        if ($this->input->post('accepted_currencies')) {
+		        $this->load->model('Currencies_model');
+		        $this->Currencies_model->updateAcceptedCurrencies($this->input->post('accepted_currencies'));
+	        }
+
 	        $update = array(
 		        'site_name'                        => $this->input->post('site_name'),
 		        'site_email'                       => $this->input->post('site_email'),
@@ -288,6 +301,8 @@ class Settings extends Admin_Controller {
 		        'date_format'                      => $this->input->post('date_format'),
 		        'time_format'                      => $this->input->post('time_format'),
 		        'currency_id'                      => $this->input->post('currency_id'),
+		        'auto_update_currency_rates'       => $this->input->post('auto_update_currency_rates'),
+		        'accepted_currencies'              => $this->input->post('accepted_currencies'),
 		        'detect_language'                  => $this->input->post('detect_language'),
 		        'language_id'                      => $this->input->post('language_id'),
 		        'admin_language_id'                => $this->input->post('admin_language_id'),
@@ -371,6 +386,8 @@ class Settings extends Admin_Controller {
 		$this->form_validation->set_rules('date_format', 'lang:label_date_format', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('time_format', 'lang:label_time_format', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('currency_id', 'lang:label_site_currency', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('auto_update_currency_rates', 'lang:label_auto_update_rates', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('accepted_currencies[]', 'lang:label_accepted_currency', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('detect_language', 'lang:label_default_language', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('language_id', 'lang:label_site_language', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('admin_language_id', 'lang:label_admin_language', 'xss_clean|trim|required');

@@ -18,8 +18,8 @@ class Migration_Schema_a extends CI_Migration {
 	public function down() {
 		$this->dbforge->drop_column('countries', 'flag');
 
-		$this->dbforge->add_column('coupons', array('start_date DECIMAL(15,2) NOT NULL'));
-		$this->dbforge->add_column('coupons', array('end_date DECIMAL(15,2) NOT NULL'));
+		$this->dbforge->add_column('coupons', array('start_date DATE NOT NULL'));
+		$this->dbforge->add_column('coupons', array('end_date DATE NOT NULL'));
 		$this->dbforge->drop_column('coupons', 'validity');
         $this->dbforge->drop_column('coupons', 'fixed_date');
         $this->dbforge->drop_column('coupons', 'fixed_from_time');

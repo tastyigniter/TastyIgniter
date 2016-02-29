@@ -6,7 +6,8 @@ class Dashboard extends Admin_Controller {
 		parent::__construct(); //  calls the constructor
 
         $this->load->model('Dashboard_model');
-        $this->load->model('Locations_model'); // load the menus model
+        $this->load->model('Locations_model');
+        $this->load->model('Themes_model');
 
         $this->load->library('currency'); // load the currency library
 
@@ -26,19 +27,6 @@ class Dashboard extends Admin_Controller {
 
 		$data['total_menus'] 		    = $this->Dashboard_model->getTotalMenus();
 		$data['current_month'] 			= mdate('%Y-%m', time());
-
-        $main_address = $this->config->item('main_address');
-
-        if (empty($main_address['address_1'])) {
-            $data['progress_bar']['text'] = $this->lang->line('text_progress_setting');
-            $data['progress_bar']['count'] = '40%';
-        } else if ($data['total_menus'] > 0) {
-            $data['progress_bar']['text'] = $this->lang->line('text_progress_design');
-            $data['progress_bar']['count'] = '80%';
-        } else if (!empty($main_address['address_1'])) {
-            $data['progress_bar']['text'] = $this->lang->line('text_progress_menus');
-            $data['progress_bar']['count'] = '60%';
-        }
 
 		$data['months'] = array();
 		$pastMonth = date('Y-m-d', strtotime(date('Y-m-01') .' -3 months'));
@@ -119,6 +107,13 @@ class Dashboard extends Admin_Controller {
 				'date_added'		=> $date_added,
 				'edit' 				=> site_url('orders/edit?id=' . $result['order_id'])
 			);
+		}
+
+		if ($this->config->item('auto_update_currency_rates') === '1') {
+			$this->load->model('Currencies_model');
+			if ($this->Currencies_model->updateRates()) {
+				$this->alert->set('success_now', $this->lang->line('alert_rates_updated'));
+			}
 		}
 
 		$this->template->render('dashboard', $data);

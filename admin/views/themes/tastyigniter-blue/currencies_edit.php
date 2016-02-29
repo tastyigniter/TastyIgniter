@@ -47,26 +47,46 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_iso_alpha2'); ?>
-							<span class="help-block"><?php echo lang('help_iso'); ?></span>
-						</label>
+						<label for="input-symbol" class="col-sm-3 control-label"><?php echo lang('label_symbol_position'); ?></label>
 						<div class="col-sm-5">
-							<input type="text" name="iso_alpha2" id="" class="form-control" value="<?php echo set_value('iso_alpha2', $iso_alpha2); ?>" />
-							<?php echo form_error('iso_alpha2', '<span class="text-danger">', '</span>'); ?>
+							<div class="btn-group btn-group-toggle btn-group-2" data-toggle="buttons">
+								<?php if ($symbol_position === '1') { ?>
+									<label class="btn btn-default"><input type="radio" name="symbol_position" value="0" <?php echo set_radio('symbol_position', '0'); ?>><?php echo lang('text_left'); ?></label>
+									<label class="btn btn-default active"><input type="radio" name="symbol_position" value="1" <?php echo set_radio('symbol_position', '1', TRUE); ?>><?php echo lang('text_right'); ?></label>
+								<?php } else { ?>
+									<label class="btn btn-default active"><input type="radio" name="symbol_position" value="0" <?php echo set_radio('symbol_position', '0', TRUE); ?>><?php echo lang('text_left'); ?></label>
+									<label class="btn btn-default"><input type="radio" name="symbol_position" value="1" <?php echo set_radio('symbol_position', '1'); ?>><?php echo lang('text_right'); ?></label>
+								<?php } ?>
+							</div>
+							<?php echo form_error('symbol_position', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-iso-alpha3" class="col-sm-3 control-label"><?php echo lang('label_iso_alpha3'); ?></label>
+						<label for="input-currency-rate" class="col-sm-3 control-label"><?php echo lang('label_rate'); ?></label>
 						<div class="col-sm-5">
-							<input type="text" name="iso_alpha3" id="input-iso-alpha3" class="form-control" value="<?php echo set_value('iso_alpha3', $iso_alpha3); ?>" />
-							<?php echo form_error('iso_alpha3', '<span class="text-danger">', '</span>'); ?>
+							<input type="text" name="currency_rate" id="input-currency-rate" class="form-control" value="<?php echo set_value('currency_rate', $currency_rate); ?>" />
+							<?php echo form_error('currency_rate', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-iso-numeric" class="col-sm-3 control-label"><?php echo lang('label_iso_numeric'); ?></label>
+						<label for="input-thousand-sign" class="col-sm-3 control-label"><?php echo lang('label_thousand_sign'); ?></label>
 						<div class="col-sm-5">
-							<input type="text" name="iso_numeric" id="input-iso-numeric" class="form-control" value="<?php echo set_value('iso_numeric', $iso_numeric); ?>" />
-							<?php echo form_error('iso_numeric', '<span class="text-danger">', '</span>'); ?>
+							<input type="text" name="thousand_sign" id="input-thousand-sign" class="form-control" value="<?php echo set_value('thousand_sign', $thousand_sign); ?>" />
+							<?php echo form_error('thousand_sign', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-decimal-sign" class="col-sm-3 control-label"><?php echo lang('label_decimal_sign'); ?></label>
+						<div class="col-sm-5">
+							<input type="text" name="decimal_sign" id="input-decimal-sign" class="form-control" value="<?php echo set_value('decimal_sign', $decimal_sign); ?>" />
+							<?php echo form_error('decimal_sign', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-decimal-position" class="col-sm-3 control-label"><?php echo lang('label_decimal_position'); ?></label>
+						<div class="col-sm-5">
+							<input type="text" name="decimal_position" id="input-decimal-position" class="form-control" value="<?php echo set_value('decimal_position', $decimal_position); ?>" />
+							<?php echo form_error('decimal_position', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 					<div class="form-group">

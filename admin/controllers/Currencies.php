@@ -60,6 +60,15 @@ class Currencies extends Admin_Controller {
         $this->template->setHeading($this->lang->line('text_heading'));
 		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() .'/edit'));
 		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => 'confirmDelete();'));;
+		$this->template->setButton($this->lang->line('button_update_rate'), array('class' => 'btn btn-success pull-right', 'href' => site_url('currencies?refresh=1')));;
+
+		if ($this->input->get('refresh') === '1') {
+			if ($this->Currencies_model->updateRates(TRUE)) {
+				$this->alert->set('success', $this->lang->line('alert_rates_updated'));
+			}
+
+			redirect('currencies');
+		}
 
 		if ($this->input->post('delete') AND $this->_deleteCurrency() === TRUE) {
 			redirect('currencies');
@@ -80,6 +89,7 @@ class Currencies extends Admin_Controller {
 				'currency_name'		=> $result['currency_name'],
 				'currency_code'		=> $result['currency_code'],
 				'currency_symbol'	=> $result['currency_symbol'],
+				'currency_rate'	    => $result['currency_rate'],
 				'country_name'		=> $result['country_name'],
 				'currency_status'	=> ($result['currency_status'] === '1') ? $this->lang->line('text_enabled') : $this->lang->line('text_disabled'),
 				'edit' 				=> site_url('currencies/edit?id=' . $result['currency_id'])
@@ -136,9 +146,11 @@ class Currencies extends Admin_Controller {
 		$data['currency_code'] 		= $currency_info['currency_code'];
 		$data['currency_symbol'] 	= $currency_info['currency_symbol'];
 		$data['country_id'] 		= $currency_info['country_id'];
-		$data['iso_alpha2'] 		= $currency_info['iso_alpha2'];
-		$data['iso_alpha3'] 		= $currency_info['iso_alpha3'];
-		$data['iso_numeric'] 		= $currency_info['iso_numeric'];
+		$data['currency_rate'] 		= $currency_info['currency_rate'];
+		$data['symbol_position']    = $currency_info['symbol_position'];
+		$data['thousand_sign'] 		= $currency_info['thousand_sign'];
+		$data['decimal_sign'] 		= $currency_info['decimal_sign'];
+		$data['decimal_position']   = $currency_info['decimal_position'];
 		$data['currency_status'] 	= $currency_info['currency_status'];
 
 		$data['countries'] = array();
@@ -187,9 +199,11 @@ class Currencies extends Admin_Controller {
 		$this->form_validation->set_rules('currency_code', 'lang:label_code', 'xss_clean|trim|required|exact_length[3]');
 		$this->form_validation->set_rules('currency_symbol', 'lang:label_symbol', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('country_id', 'lang:label_country', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('iso_alpha2', 'lang:label_iso_alpha2', 'xss_clean|trim|required|exact_length[2]');
-		$this->form_validation->set_rules('iso_alpha3', 'lang:label_iso_alpha3', 'xss_clean|trim|required|exact_length[3]');
-		$this->form_validation->set_rules('iso_numeric', 'lang:label_iso_numeric', 'xss_clean|trim|required|numeric');
+		$this->form_validation->set_rules('symbol_position', 'lang:label_symbol_position', 'xss_clean|trim|required|integer|exact_length[1]');
+		$this->form_validation->set_rules('currency_rate', 'lang:label_rate', 'xss_clean|trim|required|decimal');
+		$this->form_validation->set_rules('thousand_sign', 'lang:label_thousand_sign', 'xss_clean|trim|required|exact_length[1]');
+		$this->form_validation->set_rules('decimal_sign', 'lang:label_decimal_sign', 'xss_clean|trim|required|exact_length[1]');
+		$this->form_validation->set_rules('decimal_position', 'lang:label_decimal_position', 'xss_clean|trim|required|integer|exact_length[1]');
 		$this->form_validation->set_rules('currency_status', 'lang:label_status', 'xss_clean|trim|required|integer');
 
 		if ($this->form_validation->run() === TRUE) {

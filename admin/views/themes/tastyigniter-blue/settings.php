@@ -149,6 +149,40 @@
 							<?php echo form_error('currency_id', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
+					<div class="form-group">
+						<label for="input-auto-update-currency" class="col-sm-3 control-label"><?php echo lang('label_auto_update_rates'); ?>
+							<span class="help-block"><?php echo lang('help_auto_update_rates'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
+								<?php if (config_item('auto_update_currency_rates') === '1') { ?>
+									<label class="btn btn-default"><input type="radio" name="auto_update_currency_rates" value="0" <?php echo set_radio('auto_update_currency_rates', '0'); ?>><?php echo lang('text_manual'); ?></label>
+									<label class="btn btn-default active"><input type="radio" name="auto_update_currency_rates" value="1" <?php echo set_radio('auto_update_currency_rates', '1', TRUE); ?>><?php echo lang('text_auto'); ?></label>
+								<?php } else { ?>
+									<label class="btn btn-default active"><input type="radio" name="auto_update_currency_rates" value="0" <?php echo set_radio('auto_update_currency_rates', '0', TRUE); ?>><?php echo lang('text_manual'); ?></label>
+									<label class="btn btn-default"><input type="radio" name="auto_update_currency_rates" value="1" <?php echo set_radio('auto_update_currency_rates', '1'); ?>><?php echo lang('text_auto'); ?></label>
+								<?php } ?>
+							</div>
+							<?php echo form_error('auto_update_currency_rates', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-accepted-currency" class="col-sm-3 control-label"><?php echo lang('label_accepted_currency'); ?>
+							<span class="help-block"><?php echo lang('help_accepted_currency'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<select name="accepted_currencies[]" id="input-accepted-currency" class="form-control" multiple>
+								<?php foreach ($currencies as $currency) { ?>
+									<?php if (in_array($currency['currency_id'], config_item('accepted_currencies')) OR $currency['currency_status'] === '1') { ?>
+										<option value="<?php echo $currency['currency_id']; ?>" <?php echo set_select('currency_id', $currency['currency_id'], TRUE); ?>><?php echo $currency['currency_name']; ?></option>
+									<?php } else { ?>
+										<option value="<?php echo $currency['currency_id']; ?>" <?php echo set_select('currency_id', $currency['currency_id']); ?>><?php echo $currency['currency_name']; ?></option>
+									<?php } ?>
+								<?php } ?>
+							</select>
+							<?php echo form_error('accepted_currencies[]', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
 
 					<h4 class="tab-pane-title"><?php echo lang('text_tab_title_language'); ?></h4>
 					<div class="form-group">

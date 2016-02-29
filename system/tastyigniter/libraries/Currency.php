@@ -23,30 +23,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Currency {
 
-	private $currency_symbol;
-	private $currency_code;
+	private $currencies = array();
 
 	public function __construct() {
 		$this->CI =& get_instance();
 		$this->CI->load->database();
 
-		if ($this->CI->config->item('currency_id')) {
-			$this->CI->db->from('currencies');
-			$this->CI->db->where('currency_id', $this->CI->config->item('currency_id'));
-			$query = $this->CI->db->get();
+		$this->CI->db->from('currencies');
+		$query = $this->CI->db->get();
 
-			if ($query->num_rows() === 1) {
-
-				$row = $query->row_array();
-
-				$this->currency_symbol 	= $row['currency_symbol'];
-				$this->currency_code 	= $row['currency_code'];
-
+		if ($query->num_rows() > 0) {
+			foreach ($query->result_array() as $row) {
+				$this->currencies[$row['currency_id']] = array(
+					'currency_id'      => $row['currency_id'],
+					'country_id'       => $row['country_id'],
+					'currency_code'    => $row['currency_code'],
+					'currency_name'    => $row['currency_name'],
+					'currency_symbol'  => $row['currency_symbol'],
+					'symbol_position'  => $row['symbol_position'],
+					'thousand_sign'    => $row['thousand_sign'],
+					'decimal_sign'     => $row['decimal_sign'],
+					'decimal_position' => $row['decimal_position'],
+					'flag'             => $row['flag'],
+					'currency_status'  => $row['currency_status'],
+				);
 			}
-
-		} else {
-			$this->currency_symbol = '£';
-			$this->currency_code = 'GBP';
 		}
 	}
 
@@ -54,12 +55,30 @@ class Currency {
 		return $this->currency_code;
 	}
 
-	public function format($num) {
-		if (empty($num)) {
-			$num = '0';
+	public function format($number, $currency = '', $format = TRUE) {
+		$currency = empty($currency) ? $this->CI->config->item('currency_id') : $currency;
+
+		$currency_symbol = ! isset($this->currencies[$currency]['currency_symbol']) ? '&pound;' : $this->currencies[$currency]['currency_symbol'];
+		$symbol_position = ! isset($this->currencies[$currency]['symbol_position']) ? '0' : $this->currencies[$currency]['symbol_position'];
+		$thousand_sign = ! isset($this->currencies[$currency]['thousand_sign']) ? ',' : $this->currencies[$currency]['thousand_sign'];
+		$decimal_sign = ! isset($this->currencies[$currency]['decimal_sign']) ? '.' : $this->currencies[$currency]['decimal_sign'];
+		$decimal_position = ! isset($this->currencies[$currency]['decimal_position']) ? 2 : (int)$this->currencies[$currency]['decimal_position'];
+
+		$number = ! empty($number) ? $number : '0';
+
+		$number = round((float)$number, $decimal_position);
+
+		$string = number_format($number, $decimal_position, $decimal_sign, $thousand_sign);
+
+		if ($format) {
+			if ($symbol_position === '1') {
+				$string = $string . $currency_symbol;
+			} else {
+				$string = $currency_symbol . $string;
+			}
 		}
 
-		return $this->currency_symbol . number_format($num, 2, '.', ',');
+		return $string;
 	}
 }
 

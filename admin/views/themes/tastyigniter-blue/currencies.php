@@ -54,6 +54,7 @@
 							<th><a class="sort" href="<?php echo $sort_name; ?>"><?php echo lang('column_name'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'currency_name') ? $order_by_active : $order_by; ?>"></i></a></th>
 							<th><a class="sort" href="<?php echo $sort_code; ?>"><?php echo lang('column_code'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'currency_code') ? $order_by_active : $order_by; ?>"></i></a></th>
 							<th><a class="sort" href="<?php echo $sort_country; ?>"><?php echo lang('column_country'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'country_name') ? $order_by_active : $order_by; ?>"></i></a></th>
+							<th class="text-center"><?php echo lang('column_rate'); ?></th>
 							<th class="text-center"><?php echo lang('column_symbol'); ?></th>
 							<th class="text-center"><?php echo lang('column_status'); ?></th>
 						</tr>
@@ -71,6 +72,7 @@
 							</td>
 							<td><?php echo $currency['currency_code']; ?></td>
 							<td><?php echo $currency['country_name']; ?></td>
+							<td class="text-center"><?php echo $currency['currency_rate']; ?></td>
 							<td class="text-center"><?php echo $currency['currency_symbol']; ?></td>
 							<td class="text-center"><?php echo $currency['currency_status']; ?></td>
 						</tr>
