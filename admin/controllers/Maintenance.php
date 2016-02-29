@@ -237,7 +237,7 @@ class Maintenance extends Admin_Controller {
         $this->user->restrict('Admin.Maintenance.Manage');
 
         if ($this->input->post('migrate') AND is_numeric($this->input->post('migrate'))) {
-            if ($this->config->item('maintenance_mode') !== '1') {
+            if (ENVIRONMENT === 'production' AND $this->config->item('maintenance_mode') !== '1') {
                 $this->alert->set('warning', sprintf($this->lang->line('alert_warning_maintenance'), 'migrate'));
             } else {
                 $this->load->library('migration');
