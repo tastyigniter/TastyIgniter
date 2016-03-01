@@ -68,7 +68,6 @@ class User {
                 }
 
                 $this->setPermissions();
-                $this->setLocationAccess();
 
                 $this->is_logged = TRUE;
             }
@@ -181,13 +180,9 @@ class User {
     	return $this->staff_group_id;
   	}
 
-  	public function setLocationAccess() {
-        if ($this->location_access == '1') {
-            if (!isset($_GET['filter_location'])) {
-                $_GET['filter_location'] = $this->location_id;
-            }
-    	}
-  	}
+	public function isStrictLocation() {
+		return ($this->location_access == '1') ? TRUE : FALSE;
+	}
 
     public function unreadMessageTotal() {
         if (empty($this->unread)) {

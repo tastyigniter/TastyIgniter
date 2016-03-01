@@ -19,9 +19,10 @@ $lang['column_delete'] 		            = 'Delete';
 $lang['column_description'] 		    = 'Description';
 
 $lang['label_name'] 		            = 'Name';
-$lang['label_location_access'] 		    = 'Location Access';
+$lang['label_location_access'] 		    = 'Strict Location';
 
 $lang['help_approval'] 		            = 'New staffs must be approved before they can login.';
+$lang['help_location'] 		            = 'Enabling means staff in this group can ONLY view orders, reservations and coupons in their location.';
 
 /* End of file staff_groups_lang.php */
 /* Location: ./admin/language/english/staff_groups_lang.php */

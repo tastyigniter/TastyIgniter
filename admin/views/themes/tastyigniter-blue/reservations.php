@@ -22,18 +22,20 @@
 								</div>
 
 								<div class="col-md-9 pull-left">
-									<div class="form-group">
-										<select name="filter_location" class="form-control input-sm" class="form-control input-sm">
-											<option value=""><?php echo lang('text_filter_location'); ?></option>
-											<?php foreach ($locations as $location) { ?>
-											<?php if ($location['location_id'] === $filter_location) { ?>
-												<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('filter_location', $location['location_id'], TRUE); ?> ><?php echo $location['location_name']; ?></option>
-											<?php } else { ?>
-												<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('filter_location', $location['location_id']); ?> ><?php echo $location['location_name']; ?></option>
-											<?php } ?>
-											<?php } ?>
-										</select>&nbsp;
-									</div>
+									<?php if (!$user_strict_location) { ?>
+										<div class="form-group">
+											<select name="filter_location" class="form-control input-sm" class="form-control input-sm">
+												<option value=""><?php echo lang('text_filter_location'); ?></option>
+												<?php foreach ($locations as $location) { ?>
+													<?php if ($location['location_id'] === $filter_location) { ?>
+														<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('filter_location', $location['location_id'], TRUE); ?> ><?php echo $location['location_name']; ?></option>
+													<?php } else { ?>
+														<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('filter_location', $location['location_id']); ?> ><?php echo $location['location_name']; ?></option>
+													<?php } ?>
+												<?php } ?>
+											</select>&nbsp;
+										</div>
+									<?php } ?>
 									<div class="form-group">
 										<select name="filter_status" class="form-control input-sm">
 											<option value=""><?php echo lang('text_filter_status'); ?></option>

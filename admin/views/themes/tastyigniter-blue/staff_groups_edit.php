@@ -19,16 +19,19 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="input-location" class="col-sm-3 control-label"><?php echo lang('label_location_access'); ?></label>
+						<label for="input-location" class="col-sm-3 control-label"><?php echo lang('label_location_access'); ?>
+							<span class="help-block"><?php echo lang('help_location'); ?></span>
+						</label>
 						<div class="col-sm-5">
-							<select name="location_access" id="input-location" class="form-control">
-								<option value="0" <?php echo set_select('location_access', '0'); ?> ><?php echo lang('text_all_location'); ?></option>
-								<?php if ($location_access === '1') { ?>
-									<option value="1" <?php echo set_select('location_access', '1', TRUE); ?> ><?php echo lang('text_staff_location'); ?></option>
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
+								<?php if ($location_access == '1') { ?>
+									<label class="btn btn-danger"><input type="radio" name="location_access" value="0" <?php echo set_radio('location_access', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="location_access" value="1" <?php echo set_radio('location_access', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
-									<option value="1" <?php echo set_select('location_access', '1'); ?> ><?php echo lang('text_staff_location'); ?></option>
+									<label class="btn btn-danger active"><input type="radio" name="location_access" value="0" <?php echo set_radio('location_access', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="location_access" value="1" <?php echo set_radio('location_access', '1'); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } ?>
-							</select>
+							</div>
 							<?php echo form_error('location_access', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>

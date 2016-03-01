@@ -82,7 +82,11 @@ class Dashboard extends Admin_Controller {
 		$filter['order_by'] = 'DESC';
 		$data['order_by_active'] = 'DESC';
 
-        $data['orders'] = array();
+		if ($this->user->isStrictLocation()) {
+			$filter['filter_location'] = $this->user->getLocationId();
+		}
+
+		$data['orders'] = array();
         $this->load->model('Orders_model');
         $results = $this->Orders_model->getList($filter);
 		foreach ($results as $result) {

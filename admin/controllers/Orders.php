@@ -41,7 +41,10 @@ class Orders extends Admin_Controller {
 			$data['filter_search'] = '';
 		}
 
-    	if (is_numeric($this->input->get('filter_location'))) {
+		if ($data['user_strict_location'] = $this->user->isStrictLocation()) {
+			$filter['filter_location'] = $data['filter_location'] = $this->user->getLocationId();
+			$url .= 'filter_location='.$filter['filter_location'].'&';
+		} else if (is_numeric($this->input->get('filter_location'))) {
 			$filter['filter_location'] = $data['filter_location'] = $this->input->get('filter_location');
 			$url .= 'filter_location='.$filter['filter_location'].'&';
 		} else {
