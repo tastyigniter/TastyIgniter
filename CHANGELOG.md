@@ -42,7 +42,7 @@ Release Date: January 2016 (postponed: February 2016)
 * Auto update functionality: updates core files (default controllers, languages, themes, and extensions). ** still in beta mode
 * `Site.Updates` permission rule to control staff permission to Update system
 * Installer Library `getSysInfo()` function to retrieve current system info, such as ti version, php and mysql version
-* Installer Library `updateSystem()` function to install database migration and update core version after updating core files
+* Installer Library `upgrade()` function to install database migration and update core version after updating core files
 
 #### Changed
 * LICENCE from Apache to GNU GPLv3

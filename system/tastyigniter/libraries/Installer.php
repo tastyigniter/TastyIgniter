@@ -295,6 +295,50 @@ class Installer {
         return TRUE;
     }
 
+    public function upgrade() {
+        if ( ! is_file(IGNITEPATH . 'config/updated.txt')) {
+            return FALSE;
+        }
+
+        $update_version = '';
+        if ($fh = @fopen(IGNITEPATH . 'config/updated.txt', FOPEN_READ)) {
+            while ($line = fgets($fh)) {
+                if (strpos($line, 'Installed Version:') !== FALSE) {
+                    $update_version = preg_replace('/\s+/', '', str_replace('Installed Version:', '', $line));
+                }
+            }
+
+            fclose($fh);
+        }
+
+        if ( ! empty($update_version) AND $update_version === TI_VERSION) {
+            if (in_array(FALSE, $this->checkRequirements(), TRUE) AND in_array(FALSE, $this->checkWritable(), TRUE)) {
+                return FALSE;
+            }
+
+            // Install the latest database migrations.
+            $this->CI->load->library('migration');
+            if ( ! $this->CI->migration->current()) {
+                log_message('error', $this->CI->migration->error_string());
+
+                return FALSE;
+            } else {
+                $this->CI->Setup_model->updateVersion($update_version);
+
+                // Save the site configuration to the settings table
+                if ( ! $this->CI->Setup_model->updateSettings(array('ti_setup' => 'updated'), TRUE)) {
+                    return FALSE;
+                }
+
+                // Create the encryption key used for sessions and encryption
+                $this->createEncryptionKey();
+            }
+
+            unlink(IGNITEPATH . 'config/updated.txt');
+            return TRUE;
+        }
+    }
+
     protected function createEncryptionKey() {
         $this->CI->load->helper('config_helper');
 
