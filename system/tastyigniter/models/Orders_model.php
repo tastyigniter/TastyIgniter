@@ -307,6 +307,9 @@ class Orders_model extends TI_Model {
 
 				if (in_array($update['order_status'], (array) $this->config->item('processing_order_status'))) {
 					$this->subtractStock($order_id);
+
+					$this->load->model('Coupons_model');
+					$this->Coupons_model->redeemCoupon($order_id);
 				}
 			}
 		}

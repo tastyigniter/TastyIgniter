@@ -75,6 +75,9 @@ class Currencies_model extends TI_Model {
 
 	public function getCurrencies() {
 		$this->db->from('currencies');
+		$this->db->join('countries', 'countries.country_id = currencies.country_id', 'left');
+
+
 
 		$query = $this->db->get();
 		$result = array();

@@ -128,6 +128,20 @@ class Coupons_model extends TI_Model {
 		return $result;
 	}
 
+	public function redeemCoupon($order_id) {
+		$this->db->from('coupons_history');
+		$this->db->where('order_id', $order_id);
+		$this->db->where('status !=', '1');
+
+		$query = $this->db->get();
+		if ($query->num_rows() > 0) {
+			$this->db->set('status', '1');
+
+			$this->db->where('order_id', $order_id);
+			return $this->db->update('coupons_history');
+		}
+	}
+
 	public function saveCoupon($coupon_id, $save = array()) {
 		if (empty($save)) return FALSE;
 

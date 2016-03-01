@@ -169,6 +169,7 @@ class Cart_model extends TI_Model {
 	public function checkCouponHistory($coupon_id) {
 		if (!empty($coupon_id)) {
 			$this->db->where('coupon_id', $coupon_id);
+			$this->db->where('status', '1');
 			$this->db->from('coupons_history');
 
 			return $this->db->count_all_results();
@@ -179,6 +180,7 @@ class Cart_model extends TI_Model {
 		if (!empty($coupon_id)) {
 			$this->db->where('coupon_id', $coupon_id);
 			$this->db->where('customer_id', $customer_id);
+			$this->db->where('status', '1');
 			$this->db->from('coupons_history');
 
 			return $this->db->count_all_results();
