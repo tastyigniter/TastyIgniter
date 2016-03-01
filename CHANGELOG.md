@@ -38,6 +38,11 @@ Release Date: January 2016 (postponed: February 2016)
 * Location library `setDeliveryArea()` and `getAreaId()` method to update location delivery area when customer delivery address changes
 * Extension library `latestMigration()` method to migrate module migrations to the current version
 * Added new parameter to time_elapsed to filter the time diff returned
+* User library `isStrictLocation` method to check if staff's group has Strict Location enabled or disabled
+* Auto update functionality: updates core files (default controllers, languages, themes, and extensions). ** still in beta mode
+* `Site.Updates` permission rule to control staff permission to Update system
+* Installer Library `getSysInfo()` function to retrieve current system info, such as ti version, php and mysql version
+* Installer Library `updateSystem()` function to install database migration and update core version after updating core files
 
 #### Changed
 * LICENCE from Apache to GNU GPLv3
@@ -82,6 +87,8 @@ Release Date: January 2016 (postponed: February 2016)
 * Improved [local_module] strict location order and pre-order functions.
 * Replaced system setting default address entry fields with locations dropdown list so that location details can be modified from one interface
 * Disable admin from migrating database when system is in production environment
+* Improved coupons redemption capability so that coupon is marked as redeemed after order status is updated to the selected processing order statuses
+* Improved staff group strict location option and removed `setLocationAccess` method from User library
 
 #### Fixed
 * Bug where extra URL query is not appended after permalink slugs in URI reverse routing
@@ -103,6 +110,7 @@ Release Date: January 2016 (postponed: February 2016)
 * Issue where cart rounds thousands to the nearest unit
 * Issue with special menu status
 * Issue with slide-show height in storefront
+* Issue where child category menu items is not displaying
 
 ### v1.4.2-beta
 

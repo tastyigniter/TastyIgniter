@@ -8,6 +8,7 @@ class Dashboard extends Admin_Controller {
         $this->load->model('Dashboard_model');
         $this->load->model('Locations_model');
         $this->load->model('Themes_model');
+        $this->load->model('Updates_model');
 
         $this->load->library('currency'); // load the currency library
 
@@ -17,6 +18,7 @@ class Dashboard extends Admin_Controller {
 	public function index() {
 		$this->template->setTitle($this->lang->line('text_title'));
 		$this->template->setHeading($this->lang->line('text_heading'));
+		$this->template->setButton($this->lang->line('button_check_updates'), array('class' => 'btn btn-default', 'href' => site_url('updates')));
 
         $this->template->setStyleTag(root_url('assets/js/daterange/daterangepicker-bs3.css'), 'daterangepicker-css', '100400');
         $this->template->setScriptTag(root_url('assets/js/daterange/moment.min.js'), 'daterange-moment-js', '1000451');
@@ -118,6 +120,10 @@ class Dashboard extends Admin_Controller {
 			if ($this->Currencies_model->updateRates()) {
 				$this->alert->set('success_now', $this->lang->line('alert_rates_updated'));
 			}
+		}
+
+		if ( ! $this->Updates_model->lastVersionCheck()) {
+			$this->alert->set('success_now', sprintf($this->lang->line('text_last_version_check'), site_url('updates')));
 		}
 
 		$this->template->render('dashboard', $data);
