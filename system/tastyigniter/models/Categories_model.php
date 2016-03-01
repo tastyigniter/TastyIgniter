@@ -69,7 +69,7 @@ class Categories_model extends TI_Model {
 		$sql .= "FROM {$this->db->dbprefix('categories')} AS cat1 ";
 		$sql .= "LEFT JOIN {$this->db->dbprefix('categories')} AS child ON child.parent_id = cat1.category_id ";
 		$sql .= "LEFT JOIN {$this->db->dbprefix('categories')} AS sibling ON sibling.parent_id = child.category_id ";
-		$sql .= ($parent === 0) ? "WHERE cat1.parent_id = 0 " : "WHERE cat1.parent_id = ? ";
+		$sql .= ($parent === 0) ? "WHERE cat1.parent_id >= 0 " : "WHERE cat1.parent_id = ? ";
 
 		if (APPDIR === MAINDIR) {
 			$sql .= "AND cat1.status = 1 ";
