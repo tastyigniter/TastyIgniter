@@ -487,7 +487,7 @@ class Customizer {
             $value = $this->getFieldValue($button['name']);
             if ($value === $button['value']) {
                 $button['checked'] = TRUE;
-            } else {
+            } else if (!empty($value)) {
                 unset($button['checked']);
             }
 
