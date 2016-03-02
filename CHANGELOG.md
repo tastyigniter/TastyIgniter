@@ -1,6 +1,6 @@
 ### v2.0.0 (stable)
 
-Release Date: January 2016 (postponed: February 2016)
+Release Date: January 2016 (postponed: 02 March 2016)
 
 #### Added
 * Setup now generates a random alpha-numeric 9 length string for database table prefixes
@@ -43,6 +43,8 @@ Release Date: January 2016 (postponed: February 2016)
 * `Site.Updates` permission rule to control staff permission to Update system
 * Installer Library `getSysInfo()` function to retrieve current system info, such as ti version, php and mysql version
 * Installer Library `upgrade()` function to install database migration and update core version after updating core files
+* Added TastyIgniter news feed to admin dashboard, also added Feed_parser library to read and parse the RSS feed XML
+* Added missing `getStaffEmail()` to retrieve currently logged staff email
 
 #### Changed
 * LICENCE from Apache to GNU GPLv3

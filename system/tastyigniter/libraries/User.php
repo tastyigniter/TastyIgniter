@@ -31,6 +31,7 @@ class User {
     private $permitted_actions = array();
     private $available_actions = array();
     private $staff_name;
+    private $staff_email;
     private $staff_group_name;
     private $staff_group_id;
     private $location_id;
@@ -162,6 +163,10 @@ class User {
 
   	public function getStaffName() {
     	return $this->staff_name;
+  	}
+
+  	public function getStaffEmail() {
+    	return $this->staff_email;
   	}
 
   	public function getLocationId() {
