@@ -37,6 +37,7 @@ $lang['text_today'] 		                = 'Today';
 $lang['text_week'] 		                    = 'Week';
 $lang['text_month'] 		                = 'Month';
 $lang['text_year'] 		                    = 'Year';
+$lang['text_news'] 		                    = 'TastyIgniter News';
 $lang['text_recent_activity'] 		        = 'Recent Activity';
 $lang['text_top_customers'] 		        = 'Top Customers';
 $lang['text_latest_order'] 		            = '10 Latest Orders';

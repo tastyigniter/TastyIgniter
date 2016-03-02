@@ -315,6 +315,15 @@ class Dashboard_model extends TI_Model {
 			return $result;
 		}
 	}
+
+	public function getNewsFeed($number = 5, $expiry = 3) {
+		$this->load->library('feed_parser');
+
+		$this->feed_parser->set_feed_url('http://feeds.feedburner.com/Tastyigniter');
+		$this->feed_parser->set_cache_life($expiry);
+
+		return $this->feed_parser->getFeed($number);
+	}
 }
 
 /* End of file dashboard_model.php */

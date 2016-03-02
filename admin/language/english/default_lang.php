@@ -21,6 +21,9 @@ $lang['text_deleted'] 		                = 'deleted';
 $lang['text_default'] 		                = '<b>(Default)</b>';
 $lang['text_select'] 		                = 'Select';
 $lang['text_remove'] 		                = 'Remove';
+$lang['text_about_tastyigniter'] 		    = 'About TastyIgniter';
+$lang['text_documentation'] 		        = 'Documentation';
+$lang['text_community_support'] 		    = 'Community Support';
 $lang['text_help'] 		                    = 'Click for Help';
 
 $lang['button_new'] 		                = '<i class="fa fa-plus"></i> New';

@@ -30,7 +30,9 @@
     $message_unread 	= $this->user->unreadMessageTotal();
     $islogged 			= $this->user->islogged();
     $username 			= $this->user->getUsername();
-    $staff_name 		= $this->user->getStaffName();
+	$staff_name 		= $this->user->getStaffName();
+	$staff_email 		= $this->user->getStaffEmail();
+	$staff_avatar 		= md5(strtolower(trim($staff_email)));
     $staff_group 		= $this->user->staffGroup();
     $staff_location		= $this->user->getLocationName();
     $staff_edit 		= site_url('staffs/edit?id='. $this->user->getStaffId());
@@ -57,12 +59,12 @@
 		var js_site_url = function(str) {
 			var strTmp = "<?php echo $site_url; ?>" + str;
 			return strTmp;
-		}
+		};
 
 		var js_base_url = function(str) {
 			var strTmp = "<?php echo $base_url; ?>" + str;
 			return strTmp;
-		}
+		};
 
 		var active_menu = '<?php echo $active_menu; ?>';
 	</script>
@@ -156,6 +158,7 @@
 <!--							<li><a href="--><?php //echo site_url('uri_routes'); ?><!--">--><?php //echo lang('menu_uri_route'); ?><!--</a></li>-->
 							<li><a href="<?php echo site_url('error_logs'); ?>"><?php echo lang('menu_error_log'); ?></a></li>
 							<li><a href="<?php echo site_url('settings'); ?>"><?php echo lang('menu_setting'); ?></a></li>
+							<li class="menu-footer"></li>
 						</ul>
 					</li>
 					<li class="dropdown">
@@ -164,21 +167,26 @@
 						</a>
 						<ul class="dropdown-menu  dropdown-user">
 							<li>
-								<div class="row wrap-vertical">
-									<div class="col-xs-4 wrap-top">
-										<img class="img-rounded img-responsive" src="<?php echo base_url('views/themes/tastyigniter-blue/images/avatar_2x.png'); ?>" width="53px">
+								<div class="row wrap-vertical text-center">
+									<div class="col-xs-12 wrap-top">
+										<img class="img-rounded" src="<?php echo 'http://www.gravatar.com/avatar/'.$staff_avatar.'.png?s=48&d=mm'; ?>">
 									</div>
-									<div class="col-xs-8 wrap-none wrap-top wrap-right">
-										<span><strong><?php echo $staff_name; ?></strong></span><br>
-										<span class="small"><i>(<?php echo $username; ?>)</i></span>
+									<div class="col-xs-12 wrap-none wrap-top wrap-right">
+										<span><strong><?php echo $staff_name; ?></strong></span>
+										<span class="small"><i>(<?php echo $username; ?>)</i></span><br>
 										<span class="small text-uppercase"><?php echo $staff_group; ?></span>
 										<span><?php echo $staff_location; ?></span>
 									</div>
 								</div>
 							</li>
 							<li class="divider"></li>
-							<li><a href="<?php echo $staff_edit; ?>"><i class="fa fa-user fa-fw"></i><?php echo lang('text_edit_details'); ?></a></li>
-							<li><a href="<?php echo $logout; ?>"><i class="fa fa-power-off fa-fw"></i><?php echo lang('text_logout'); ?></a></li>
+							<li><a href="<?php echo $staff_edit; ?>"><i class="fa fa-user fa-fw"></i>&nbsp;&nbsp;<?php echo lang('text_edit_details'); ?></a></li>
+							<li><a class="list-group-item-danger" href="<?php echo $logout; ?>"><i class="fa fa-power-off fa-fw"></i>&nbsp;&nbsp;<?php echo lang('text_logout'); ?></a></li>
+							<li class="divider"></li>
+							<li><a href="http://tastyigniter.com/about/" target="_blank"><i class="fa fa-info-circle fa-fw"></i>&nbsp;&nbsp;<?php echo lang('text_about_tastyigniter'); ?></a></li>
+							<li><a href="http://docs.tastyigniter.com" target="_blank"><i class="fa fa-book fa-fw"></i>&nbsp;&nbsp;<?php echo lang('text_documentation'); ?></a></li>
+							<li><a href="http://forum.tastyigniter.com" target="_blank"><i class="fa fa-users fa-fw"></i>&nbsp;&nbsp;<?php echo lang('text_community_support'); ?></a></li>
+							<li class="menu-footer"></li>
 						</ul>
 					</li>
 				</ul>

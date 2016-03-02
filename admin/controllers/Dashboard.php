@@ -115,6 +115,8 @@ class Dashboard extends Admin_Controller {
 			);
 		}
 
+		$data['news_feed'] = $this->Dashboard_model->getNewsFeed();  // Get four items from the feed
+
 		if ($this->config->item('auto_update_currency_rates') === '1') {
 			$this->load->model('Currencies_model');
 			if ($this->Currencies_model->updateRates()) {
