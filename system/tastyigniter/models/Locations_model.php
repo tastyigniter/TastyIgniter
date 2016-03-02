@@ -256,8 +256,8 @@ class Locations_model extends TI_Model {
 			}
 		}
 
-		if ($query === TRUE AND is_numeric($location_id)) {
-			$this->Settings_model->addSetting('prefs', 'main_address', $this->getAddress($location_id), '1');
+		if (is_numeric($location_id) AND $default_address = $this->getAddress($location_id)) {
+			$this->Settings_model->addSetting('prefs', 'main_address', $default_address, '1');
 			$this->Settings_model->addSetting('prefs', 'default_location_id', $location_id, '0');
 		}
 

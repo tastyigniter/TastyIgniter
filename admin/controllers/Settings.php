@@ -282,7 +282,7 @@ class Settings extends Admin_Controller {
 
 	private function _updateSettings() {
         if ($this->validateForm() === TRUE) {
-	        if ($this->input->post('default_location_id') !== $this->config->item('default_location_id')) {
+	        if ($this->input->post('default_location_id') !== $this->config->item('location_id', 'main_address')) {
 		        $this->load->model('Locations_model');
 		        $this->Locations_model->updateDefault($this->Locations_model->getAddress($this->input->post('default_location_id')));
 	        }
