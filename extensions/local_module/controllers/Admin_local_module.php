@@ -26,8 +26,10 @@ class Admin_local_module extends Admin_Controller {
 
 	        if ($this->input->post('use_location')) {
 		        $data['use_location'] = $this->input->post('use_location');
-	        } else {
+	        } else if (isset($data['ext_data']['use_location'])) {
 		        $data['use_location'] = $data['ext_data']['use_location'];
+	        } else {
+		        $data['use_location'] = '0';
 	        }
 
 	        $data['lang_texts'] = array(
@@ -63,7 +65,7 @@ class Admin_local_module extends Admin_Controller {
 	        } else if (isset($data['ext_data']['status'])) {
 		        $data['status'] = $data['ext_data']['status'];
 	        } else {
-		        $data['status'] = '0';
+		        $data['status'] = '1';
 	        }
 
 	        $this->load->model('Locations_model');
