@@ -230,7 +230,7 @@ class Themes extends Admin_Controller {
 	}
 
 	private function _addTheme() {
-		$this->user->restrict('Site.Themes.Add', site_url('extensions/add'));
+		$this->user->restrict('Site.Themes.Add', site_url('themes/add'));
 
 		if (isset($_FILES['theme_zip'])) {
 			if ($this->validateUpload() === TRUE) {
