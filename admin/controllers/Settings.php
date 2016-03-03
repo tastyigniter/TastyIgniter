@@ -282,16 +282,6 @@ class Settings extends Admin_Controller {
 
 	private function _updateSettings() {
         if ($this->validateForm() === TRUE) {
-	        if ($this->input->post('default_location_id') !== $this->config->item('location_id', 'main_address')) {
-		        $this->load->model('Locations_model');
-		        $this->Locations_model->updateDefault($this->Locations_model->getAddress($this->input->post('default_location_id')));
-	        }
-
-	        if ($this->input->post('accepted_currencies')) {
-		        $this->load->model('Currencies_model');
-		        $this->Currencies_model->updateAcceptedCurrencies($this->input->post('accepted_currencies'));
-	        }
-
 	        $update = array(
 		        'site_name'                        => $this->input->post('site_name'),
 		        'site_email'                       => $this->input->post('site_email'),
@@ -369,7 +359,17 @@ class Settings extends Admin_Controller {
 	        );
 
 			if ($this->Settings_model->updateSettings('config', $update, TRUE)) {
-                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Settings updated '));
+				if ($this->input->post('default_location_id') !== $this->config->item('location_id', 'main_address')) {
+					$this->load->model('Locations_model');
+					$this->Locations_model->updateDefault($this->Locations_model->getAddress($this->input->post('default_location_id')));
+				}
+
+				if ($this->input->post('accepted_currencies')) {
+					$this->load->model('Currencies_model');
+					$this->Currencies_model->updateAcceptedCurrencies($this->input->post('accepted_currencies'));
+				}
+
+				$this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Settings updated '));
             } else {
                 $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), 'updated'));
 			}
