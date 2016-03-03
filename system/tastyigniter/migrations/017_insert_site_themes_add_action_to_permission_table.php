@@ -20,7 +20,7 @@ class Migration_insert_site_themes_add_action_to_permission_table extends CI_Mig
 
 				$group_permissions = ( ! empty($group_row['permissions'])) ? unserialize($group_row['permissions']) : array();
 
-				$group_permissions[$permission_row->permission_id] = array('access', 'manage', 'add', 'delete');
+				$group_permissions[$permission_row['permission_id']] = array('access', 'manage', 'add', 'delete');
 
 				$this->db->set('permissions', serialize($group_permissions));
 				$this->db->where('staff_group_id', '11');
@@ -44,7 +44,7 @@ class Migration_insert_site_themes_add_action_to_permission_table extends CI_Mig
 
 				$group_permissions = ( ! empty($group_row['permissions'])) ? unserialize($group_row['permissions']) : array();
 
-				$group_permissions[$permission_row->permission_id] = array('access', 'manage', 'delete');
+				$group_permissions[$permission_row['permission_id']] = array('access', 'manage', 'delete');
 
 				$this->db->set('permissions', serialize($group_permissions));
 				$this->db->where('staff_group_id', '11');
