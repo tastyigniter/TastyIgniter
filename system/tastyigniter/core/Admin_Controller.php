@@ -34,10 +34,11 @@ class Admin_Controller extends Base_Controller {
 
         $this->load->library('user');
 
-        if (!$this->user->isLogged() AND $this->uri->rsegment(1) !== 'login' AND $this->uri->rsegment(1) !== 'logout') {
-            $this->alert->set('danger', 'You must be logged in to access that page.');
-            $this->session->set_tempdata('previous_url', current_url());
-            redirect(root_url(ADMINDIR.'/login'));
+		$uri = $this->uri->rsegment(1);
+        if (!$this->user->isLogged() AND $uri !== 'login' AND $uri !== 'logout') {
+            $this->alert->set('danger', $this->lang->line('alert_user_not_logged_in'));
+            $prepend = empty($uri) ? '' : '?redirect=' . current_url();
+            redirect(root_url(ADMINDIR.'/login'.$prepend));
         }
     }
 }

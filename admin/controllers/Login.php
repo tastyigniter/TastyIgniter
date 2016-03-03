@@ -17,19 +17,18 @@ class Login extends Admin_Controller {
 		if ($this->input->post() AND $this->validateLoginForm() === TRUE) {
             if (!$this->user->login($this->input->post('user'), $this->input->post('password'))) {										// checks if form validation routines ran successfully
                 $this->alert->set('danger', $this->lang->line('alert_username_not_found'));
-                redirect('login');
+                redirect(current_url());
             } else {
                 log_activity($this->user->getStaffId(), 'logged in', 'staffs', get_activity_message('activity_logged_in',
                     array('{staff}', '{link}'),
                     array($this->user->getStaffName(), admin_url('staffs/edit?id='.$this->user->getStaffId()))
                 ));
 
-                if ($previous_url = $this->session->tempdata('previous_url')) {
-                    $this->session->unset_tempdata('previous_url');
-                    redirect($previous_url);
+                if ($redirect_url = $this->input->get('redirect')) {
+	                redirect($redirect_url);
                 }
 
-                redirect(referrer_url());
+                redirect('dashboard');
             }
         }
 
