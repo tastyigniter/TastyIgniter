@@ -163,11 +163,12 @@ class TI_Exceptions extends CI_Exceptions {
 		}
 
 		$default_theme = isset($default_themes[APPDIR]) ? $default_themes[APPDIR] : '';
+		$templates_path = config_item('error_views_path');
 
 		// set the error views path for the theme if it exists
 		if (!empty($default_theme) AND is_dir(THEMEPATH  . $default_theme . 'errors/')) {
 			$templates_path = THEMEPATH  . $default_theme . 'errors/';
-		} else if (empty($templates_path = config_item('error_views_path'))) {
+		} else if (empty($templates_path)) {
 			$templates_path = VIEWPATH.'errors'.DIRECTORY_SEPARATOR;
 		}
 

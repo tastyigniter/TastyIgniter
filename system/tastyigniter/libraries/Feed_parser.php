@@ -33,7 +33,7 @@ class Feed_parser {
 	public $channel_data = array();                    // Store RSS Channel Data in an array
 	public $feed_unavailable = NULL;                    // Boolean variable which indicates whether an RSS feed was unavailable
 	public $cache_life = 0;                        // Cache lifetime
-	public $cache_dir = APPPATH .'cache/';    // Cache directory
+	public $cache_dir;    // Cache directory
 	public $write_cache_flag = FALSE;                    // Flag to write to cache
 	public $callback = FALSE;                    // Callback to read custom data
 
@@ -41,6 +41,8 @@ class Feed_parser {
 		if ($callback) {
 			$this->callback = $callback;
 		}
+
+		$this->cache_dir = APPPATH."cache/";
 	}
 
 	// --------------------------------------------------------------------

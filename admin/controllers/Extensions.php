@@ -227,7 +227,7 @@ class Extensions extends Admin_Controller {
 
 		$data['extension_name'] = ($this->input->get('name')) ? $this->input->get('name') : $this->uri->rsegment(4);
 
-		if (empty($this->uri->rsegment(3)) OR ! $this->Extensions_model->extensionExists($data['extension_name'])) {
+		if ($this->uri->rsegment(3) OR ! $this->Extensions_model->extensionExists($data['extension_name'])) {
 			redirect(referrer_url());
 		}
 
