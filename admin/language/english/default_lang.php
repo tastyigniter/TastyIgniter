@@ -41,6 +41,8 @@ $lang['alert_error_nothing'] 		        = 'An error occurred, nothing %s.';
 $lang['alert_error_try_again'] 		        = 'An error occurred, please try again.';
 $lang['alert_warning_confirm'] 		        = 'This cannot be undone! Are you sure you want to do this?';
 $lang['alert_rates_updated'] 		        = 'Currency rates has been updated automatically';
+$lang['alert_user_not_logged_in'] 		    = 'You must be logged in to access that page.';
+$lang['alert_user_restricted'] 		        = 'Warning: You do not have the right permission to <b>%s</b> [%s] context, please contact system administrator.';
 
 $lang['text_message_count'] 		        = 'You have %s messages';
 $lang['text_activity_count'] 		        = 'Recent activities';

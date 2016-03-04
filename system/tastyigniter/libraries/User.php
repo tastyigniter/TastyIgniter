@@ -103,6 +103,7 @@ class User {
 			$this->username 	= $row['username'];
 			$this->staff_id 	= $row['staff_id'];
 			$this->staff_name 	= $row['staff_name'];
+			$this->staff_email 	= $row['staff_email'];
 
 	  		return TRUE;
 		} else {
@@ -111,38 +112,25 @@ class User {
 	}
 
     public function restrict($permission, $uri = '') {
-        // If user isn't logged in, redirect to the login page.
-        if ( ! $this->is_logged AND $this->uri->rsegment(1) !== 'login') redirect(root_url(ADMINDIR.'/login'));
+	    // If user isn't logged in, redirect to the login page.
+	    if ( ! $this->is_logged AND $this->uri->rsegment(1) !== 'login') redirect(root_url(ADMINDIR.'/login'));
 
-        if (empty($permission)) return TRUE;
+	    // Check whether the user has the proper permissions action.
+	    if (($has_permission = $this->checkPermittedActions($permission, TRUE)) === TRUE) return TRUE;
 
-        // Split the permission string into array and
-        // remove the last element and use it as  the permission action
-        $permission = explode('.', $permission);
+	    if ($uri === '') { // get the previous page from the session.
+		    $uri = referrer_url();
 
-        $action = '';
-        if (count($permission) === 3) {
-            $action = strtolower(array_pop($permission));
-        }
+		    // If previous page and current page are the same, but the user no longer
+		    // has permission, redirect to site URL to prevent an infinite loop.
+		    if (empty($uri) OR $uri === current_url() AND !$this->CI->input->post()) {
+			    $uri = site_url();
+		    }
+	    }
 
-        $permission = implode('.', $permission);
-
-        // Check whether the user has the proper permissions action.
-        if (($has_permission = $this->checkPermittedActions($permission, $action, TRUE)) === TRUE) return TRUE;
-
-        if ($uri === '') { // get the previous page from the session.
-            $uri = referrer_url();
-
-            // If previous page and current page are the same, but the user no longer
-            // has permission, redirect to site URL to prevent an infinite loop.
-            if ($uri === current_url() AND !$this->CI->input->post()) {
-                $uri = site_url();
-            }
-        }
-
-        if (!$this->CI->input->is_ajax_request()) {  // remove later
-            redirect($uri);
-        }
+	    if (!$this->CI->input->is_ajax_request()) {  // remove later
+		    redirect($uri);
+	    }
     }
 
   	public function isLogged() {
@@ -199,18 +187,9 @@ class User {
     }
 
     public function hasPermission($permission) {
-        if ( ! $this->is_logged) return FALSE;
+	    if ( ! $this->is_logged) return FALSE;
 
-        $permission = explode('.', $permission);
-
-        $action = '';
-        if (count($permission) === 3) {
-            $action = strtolower(array_pop($permission));
-        }
-
-        $permission = implode('.', $permission);
-
-        return $this->checkPermittedActions($permission, $action);
+	    return $this->checkPermittedActions($permission);
     }
 
     private function setPermissions() {
@@ -233,49 +212,57 @@ class User {
         }
     }
 
-    private function checkPermittedActions($perm = '', $action = '', $display_error = FALSE) {
-        // Fail silently if the permission doesn't have any permitted or available actions
-        if (!isset($this->permitted_actions[$perm]) AND !isset($this->available_actions[$perm])) {
-            return TRUE;
-        }
+    private function checkPermittedActions($perm, $display_error = FALSE) {
+	    $action = $this->getPermissionAction($perm);
 
-        // Success if the permission has no available actions
-        if (empty($this->available_actions[$perm])) return TRUE;
+	    // Ensure the permission string is matches pattern Domain.Context
+	    $perm = (substr_count($perm, '.') === 2) ? substr($perm, 0, strrpos($perm, '.')) : $perm;
 
-        // Specify the requested action if not present, based on the $_SERVER REQUEST_METHOD
-        if ($action === '') {
-            if ($this->CI->input->server('REQUEST_METHOD') === 'POST') {
-                if ($this->CI->input->post('delete')) {
-                    $action = 'delete';
-                } else if (is_numeric($this->CI->input->get('id'))) {
-                    $action = 'manage';
-                } else {
-                    $action = 'add';
-                }
-            } else if ($this->CI->input->server('REQUEST_METHOD') === 'GET') {
-                $action = 'access';
-            }
-        }
+	    $available_actions = (isset($this->available_actions[$perm]) AND is_array($this->available_actions[$perm])) ? $this->available_actions[$perm] : array();
+	    $permitted_actions = (isset($this->permitted_actions[$perm]) AND is_array($this->permitted_actions[$perm])) ? $this->permitted_actions[$perm] : array();
 
-        // Ensure the action string is in lowercase
-        $action = strtolower($action);
+	    // Success if the staff_group_id is the default one
+	    if ($this->staff_group_id === '11') return TRUE;
 
-        // Success if the action is not found in staff group permision available actions.
-        if (!in_array($action, $this->available_actions[$perm])) return TRUE;
+	    foreach ($action as $value) {
 
-        // Fail if action is not permitted but is available.
-        if (!isset($this->permitted_actions[$perm]) OR (!in_array($action, $this->permitted_actions[$perm]) AND in_array($action, $this->available_actions[$perm]))) {
-            $perm = explode('.', $perm);
-            $context = isset($perm[1]) ? $perm[1] : '';
-            if ($display_error) {
-                $this->CI->alert->set('warning', 'Warning: You do not have the right permission to <b>'.$action.'</b> ['.$context.'] context, please contact system administrator.');
-            }
+		    // Fail if action is not available or permitted.
+		    if (in_array($value, $available_actions) AND !in_array($value, $permitted_actions)) {
+			    if ($display_error) {
+				    $context = substr($perm, strpos($perm, '.')+1);
 
-            return FALSE;
-        }
+				    $this->CI->alert->set('warning', sprintf($this->CI->lang->line('alert_user_restricted'), $value, $context));
+			    }
 
-        return TRUE;
+			    return FALSE;
+		    }
+	    }
+
+	    return TRUE;
     }
+
+	private function getPermissionAction($permission) {
+		$action = array();
+
+		if (substr_count($permission, '.') === 2) {
+			$action[] = strtolower(substr($permission, strrpos($permission, '.')+1));
+		} else {
+			// Specify the requested action if not present, based on the $_SERVER REQUEST_METHOD
+			if ($this->CI->input->server('REQUEST_METHOD') === 'POST') {
+				if ($this->CI->input->post('delete')) {
+					$action = array('access', 'delete');
+				} else if (is_numeric($this->CI->input->get('id'))) {
+					$action = array('access', 'manage');
+				} else {
+					$action = array('access', 'add');
+				}
+			} else if ($this->CI->input->server('REQUEST_METHOD') === 'GET') {
+				$action = array('access');
+			}
+		}
+
+		return $action;
+	}
 
     public function logout() {
 		$this->CI->session->unset_userdata('user_info');
