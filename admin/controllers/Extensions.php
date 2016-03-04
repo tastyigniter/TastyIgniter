@@ -127,6 +127,8 @@ class Extensions extends Admin_Controller {
 				} else {
 					$this->load->module($ext_controller);
 					if (class_exists($ext_class, FALSE)) {
+						if ($this->input->post()) $this->user->restrict("Admin.Extensions.Manage");
+
 						$data['extension'] = $this->{strtolower($ext_class)}->index($extension);
 						$loaded = TRUE;
 					} else {
