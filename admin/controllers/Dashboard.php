@@ -50,7 +50,7 @@ class Dashboard extends Admin_Controller {
 
         $filter = array();
         $filter['page'] = '1';
-        $filter['limit'] = '10';
+        $filter['limit'] = '5';
 
         $data['activities'] = array();
         $this->load->model('Activities_model');
@@ -67,7 +67,8 @@ class Dashboard extends Admin_Controller {
         }
 
         $data['top_customers'] = array();
-        $results = $this->Dashboard_model->getTopCustomers($filter);
+		$filter['limit'] = 6;
+		$results = $this->Dashboard_model->getTopCustomers($filter);
         foreach ($results as $result) {
             $data['top_customers'][] = array(
                 'first_name'	    => $result['first_name'],
@@ -78,7 +79,7 @@ class Dashboard extends Admin_Controller {
         }
 
         $filter = array();
-		$filter['page'] = '';
+		$filter['page'] = '1';
 		$filter['limit'] = 10;
 		$filter['sort_by'] = 'orders.date_added';
 		$filter['order_by'] = 'DESC';
