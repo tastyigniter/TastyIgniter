@@ -378,10 +378,55 @@ class Customers_model extends TI_Model {
 					$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'registration_alert');
 					$this->sendMail($this->config->item('site_email'), $mail_template, $mail_data);
 				}
+
+				$this->saveCustomerGuestOrder($customer_id, $save['email']);
 			}
 
 			return $customer_id;
 		}
+	}
+
+	private function saveCustomerGuestOrder($customer_id, $customer_email) {
+		$query = FALSE;
+
+		if (is_numeric($customer_id) AND ! empty($customer_email)) {
+
+			$query = $this->db->from('orders')->where('email', $customer_email)->get();
+
+			if ($query->num_rows() > 0) {
+				foreach ($query->result_array() as $row) {
+					if (empty($row['order_id'])) continue;
+
+					$this->db->set('customer_id', $customer_id);
+					$this->db->where('order_id', $row['order_id'])->where('email', $customer_email);
+					$this->db->update('orders');
+
+					if ($row['order_type'] === '1' AND ! empty($row['address_id'])) {
+						$this->db->set('customer_id', $customer_id);
+						$this->db->where('address_id', $row['address_id']);
+						$this->db->update('addresses');
+					}
+
+					if ( ! empty($row['payment'])) {
+						$this->db->set('customer_id', $customer_id);
+						$this->db->where('order_id', $row['order_id']);
+						$this->db->update('pp_payments');
+					}
+
+					$this->db->set('customer_id', $customer_id);
+					$this->db->where('order_id', $row['order_id']);
+					$this->db->update('coupons_history');
+				}
+			}
+
+			$this->db->set('customer_id', $customer_id);
+			$this->db->where('email', $customer_email);
+			$this->db->update('reservations');
+
+			$query = TRUE;
+		}
+
+		return $query;
 	}
 
 	public function deleteCustomer($customer_id) {
