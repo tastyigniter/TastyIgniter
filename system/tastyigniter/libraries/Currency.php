@@ -23,6 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Currency {
 
+	private $currency_id;
 	private $currencies = array();
 
 	public function __construct() {
@@ -49,14 +50,16 @@ class Currency {
 				);
 			}
 		}
+
+		$this->currency_id = $this->CI->config->item('currency_id');
 	}
 
 	public function getCurrencyCode() {
-		return $this->currency_code;
+		return ( ! isset($this->currencies[$this->currency_id]['currency_code'])) ? 'GBP' : $this->currencies[$this->currency_id]['currency_code'];
 	}
 
 	public function format($number, $currency = '', $format = TRUE) {
-		$currency = empty($currency) ? $this->CI->config->item('currency_id') : $currency;
+		$currency = empty($currency) ? $this->currency_id : $currency;
 
 		$currency_symbol = ! isset($this->currencies[$currency]['currency_symbol']) ? '&pound;' : $this->currencies[$currency]['currency_symbol'];
 		$symbol_position = ! isset($this->currencies[$currency]['symbol_position']) ? '0' : $this->currencies[$currency]['symbol_position'];
