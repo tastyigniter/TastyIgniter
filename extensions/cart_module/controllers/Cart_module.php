@@ -262,33 +262,35 @@ class Cart_module extends Main_Controller {
 	}
 
 	public function order_type() {																// _updateModule() method to update cart
-        $json = array();
+		$json = array();
 
-        if (!$json) {
-            $this->load->library('location');
-            $this->load->library('cart');
+		$order_type = (is_numeric($this->input->post('order_type'))) ? $this->input->post('order_type') : NULL;
 
-            $order_type = (is_numeric($this->input->post('order_type'))) ? $this->input->post('order_type') : '1';
+		if (!$json AND $order_type) {
+			$this->load->library('location');
+			$this->load->library('cart');
 
-            if ($order_type === '1') {
-                if ( ! $this->location->hasDelivery()) {
-                    $json['error'] = $this->lang->line('alert_delivery_unavailable');
-                } else if ($this->location->hasSearchQuery() AND $this->location->hasDelivery() AND ! $this->location->checkDeliveryCoverage()) {
-                    $json['error'] = $this->lang->line('alert_delivery_coverage');
-                } else if ($this->cart->contents() AND ! $this->location->checkMinimumOrder($this->cart->total())) {                            // checks if cart contents is empty
-                    $json['error'] = sprintf($this->lang->line('alert_min_delivery_order_total'), $this->currency->format($this->location->minimumOrder()));
-                }
+			if ($order_type === '1') {
+				if ( ! $this->location->hasDelivery()) {
+					$json['error'] = $this->lang->line('alert_delivery_unavailable');
+				} else if ($this->location->hasSearchQuery() AND $this->location->hasDelivery() AND ! $this->location->checkDeliveryCoverage()) {
+					$json['error'] = $this->lang->line('alert_delivery_coverage');
+				} else if ($this->cart->contents() AND ! $this->location->checkMinimumOrder($this->cart->total())) {                            // checks if cart contents is empty
+					$json['error'] = sprintf($this->lang->line('alert_min_delivery_order_total'), $this->currency->format($this->location->minimumOrder()));
+				}
 
-            } else if ($order_type === '2') {
-                if ( ! $this->location->hasCollection()) {
-                    $json['error'] = $this->lang->line('alert_collection_unavailable');
-                }
-            }
+			} else if ($order_type === '2') {
+				if ( ! $this->location->hasCollection()) {
+					$json['error'] = $this->lang->line('alert_collection_unavailable');
+				}
+			}
 
-            $this->location->setOrderType($order_type);
-        }
+			$this->location->setOrderType($order_type);
 
-        $this->output->set_output(json_encode($json));	// encode the json array and set final out to be sent to jQuery AJAX
+			$json['order_type'] = $this->location->orderType();
+		}
+
+		$this->output->set_output(json_encode($json));	// encode the json array and set final out to be sent to jQuery AJAX
     }
 
 	public function coupon() {																	// _updateModule() method to update cart

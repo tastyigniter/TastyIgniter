@@ -301,16 +301,6 @@
 
 <script type="text/javascript"><!--
 $(document).ready(function() {
-    $(document).on('change', 'input[name="order_type"]', function() {
-  		if (this.value === '1') {
-     		$('#checkout-delivery').fadeIn();
-		} else {
-   			$('#checkout-delivery').fadeOut();
-		}
-
-        window.location.href = js_site_url('checkout');
-    });
-
   	$('#address-labels .edit-address').on('click', function() {
         var formDiv = $(this).attr('data-form');
         $('#address-forms > div').fadeOut();
