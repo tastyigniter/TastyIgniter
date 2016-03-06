@@ -301,7 +301,7 @@ class Orders extends Admin_Controller {
 			if (!empty($menu_options)) {
 				foreach ($menu_options as $menu_option) {
 					if ($cart_item['order_menu_id'] === $menu_option['order_menu_id']) {
-						$option_data[] = $menu_option['order_option_name'] . ' = ' . $menu_option['order_option_price'];
+						$option_data[] = $menu_option['order_option_name'] . $this->lang->line('text_equals') . $this->currency->format($menu_option['order_option_price']);
 					}
 				}
 			}
@@ -429,7 +429,7 @@ class Orders extends Admin_Controller {
 			if ( ! empty($menu_options)) {
 				foreach ($menu_options as $menu_option) {
 					if ($cart_item['order_menu_id'] === $menu_option['order_menu_id']) {
-						$option_data[] = $menu_option['order_option_name'] . ' = ' . $menu_option['order_option_price'];
+						$option_data[] = $menu_option['order_option_name'] . $this->lang->line('text_equals') . $this->currency->format($menu_option['order_option_price']);
 					}
 				}
 			}

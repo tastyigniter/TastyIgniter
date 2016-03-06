@@ -660,7 +660,7 @@ class Orders_model extends TI_Model {
 			if ($payment = $this->extension->getPayment($result['payment'])) {
 				$data['order_payment'] = !empty($payment['ext_data']['title']) ? $payment['ext_data']['title']: $payment['title'];
 			} else {
-				$data['order_payment'] = 'No payment method selected';
+				$data['order_payment'] = $this->lang->line('text_no_payment');
 			}
 
 			$data['order_menus'] = array();
@@ -673,7 +673,7 @@ class Orders_model extends TI_Model {
 					if (!empty($options)) {
 						foreach ($options as $key => $option) {
 							if ($menu['order_menu_id'] === $option['order_menu_id']) {
-								$option_data[] = $option['order_option_name'] . ' = ' . $option['order_option_price'];
+								$option_data[] = $option['order_option_name'] . $this->lang->line('text_equals') . $this->currency->format($option['order_option_price']);
 							}
 						}
 					}
@@ -707,7 +707,7 @@ class Orders_model extends TI_Model {
 				$data['order_totals'] = sort_array($data['order_totals'], 'priority');
 			}
 
-			$data['order_address'] = 'This is a pick-up order';
+			$data['order_address'] = $this->lang->line('text_collection_order_type');
 			if ( ! empty($result['address_id'])) {
 				$this->load->model('Addresses_model');
 				$order_address = $this->Addresses_model->getAddress($result['customer_id'], $result['address_id']);

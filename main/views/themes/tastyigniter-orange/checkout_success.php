@@ -64,7 +64,7 @@
 														<td>x <?php echo $menu['quantity']; ?></td>
 														<td class="text-center"><?php echo $menu['name']; ?><br />
 															<?php if (!empty($menu['options'])) { ?>
-																<div><small><?php echo $menu['options']; ?></small></div>
+																<div><small><?php echo lang('text_plus'); ?><?php echo $menu['options']; ?></small></div>
 															<?php } ?>
 															<?php if (!empty($menu['comment'])) { ?>
 																<div><small><b><?php echo $menu['comment']; ?></b></small></div>

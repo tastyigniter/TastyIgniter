@@ -127,19 +127,17 @@ class Orders extends Main_Controller {
 
         $data['menus'] = array();
         $order_menus = $this->Orders_model->getOrderMenus($result['order_id']);
-        foreach ($order_menus as $order_menu) {
+		$order_menu_options = $this->Orders_model->getOrderMenuOptions($result['order_id']);
+		foreach ($order_menus as $order_menu) {
             $option_data = array();
 
-            if (!empty($order_menu['option_values'])) {
-                $menu_options = unserialize($order_menu['option_values']);
-                foreach ($menu_options as $temp_options) {
-                    foreach ($temp_options as $menu_option) {
-                        if ( ! empty($menu_option['value_name'])) {
-                            $option_data[] = $menu_option['value_name'];
-                        }
-                    }
-                }
-            }
+			if (!empty($order_menu_options)) {
+				foreach ($order_menu_options as $menu_option) {
+					if ($order_menu['order_menu_id'] === $menu_option['order_menu_id']) {
+						$option_data[] = $menu_option['order_option_name'] . $this->lang->line('text_equals') . $this->currency->format($menu_option['order_option_price']);
+					}
+				}
+			}
 
             $data['menus'][] = array(
                 'id' 			=> $order_menu['menu_id'],

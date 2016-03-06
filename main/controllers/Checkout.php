@@ -112,7 +112,7 @@ class Checkout extends Main_Controller {
         } else if (!empty($order_info['payment'])) {
             $payment_method = $order_info['payment'];
         } else {
-            $payment_method = 'N/A';
+            $payment_method = $this->lang->line('text_no_payment');
         }
 
         $date_format = ($this->config->item('date_format')) ? $this->config->item('date_format') : '%d %M %y';
@@ -128,7 +128,7 @@ class Checkout extends Main_Controller {
             if (!empty($menu_options)) {
                 foreach ($menu_options as $menu_option) {
                     if ($menu['order_menu_id'] === $menu_option['order_menu_id']) {
-                        $option_data[] = '+ ' . $menu_option['order_option_name'] . ' = ' . $menu_option['order_option_price'];
+	                    $option_data[] = $menu_option['order_option_name'] . $this->lang->line('text_equals') . $this->currency->format($menu_option['order_option_price']);
                     }
                 }
             }
@@ -392,7 +392,7 @@ class Checkout extends Main_Controller {
                     $order_data['terms_condition'] = $this->input->post('terms_condition');
                 }
 
-                return $this->_confirmPayment($order_data, $this->session->userdata('cart_contents'));
+                $this->_confirmPayment($order_data, $this->session->userdata('cart_contents'));
             } else {
 		        $this->session->set_userdata('order_data', $order_data);					// save order details to session and return TRUE
             }
@@ -422,9 +422,7 @@ class Checkout extends Main_Controller {
                     $payment_controller = $payment_class.'/'.$payment_class;
 
                     $this->load->module($payment_controller);
-                    $response = $this->{$payment_class}->confirm();
-
-                    return $response;
+                    $this->{$payment_class}->confirm();
                 }
             }
 		}

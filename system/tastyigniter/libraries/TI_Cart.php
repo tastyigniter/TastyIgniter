@@ -443,9 +443,11 @@ class TI_Cart extends CI_Cart {
 	public function product_options_string($row_id, $split = '<br />') {
 		$string = '';
 
+		$this->CI->load->library('currency');
+
 		foreach ($this->product_options($row_id) as $option_id => $options) {
 			foreach ($options as $option) {
-				$string .= '+ ' . $option['value_name'] . ' = ' . $option['value_price'] . $split;
+				$string .= $this->CI->lang->line('text_plus') . $option['value_name'] . $this->CI->lang->line('text_equals') . $this->CI->currency->format($option['value_price']) . $split;
 			}
 		}
 

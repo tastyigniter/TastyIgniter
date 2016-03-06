@@ -91,6 +91,7 @@ Release Date: January 2016 (postponed: 02 March 2016)
 * Disable admin from migrating database when system is in production environment
 * Improved coupons redemption capability so that coupon is marked as redeemed after order status is updated to the selected processing order statuses
 * Improved staff group strict location option and removed `setLocationAccess` method from User library
+* Previous guest order now linked a to a newly created customer based on the customer email
 
 #### Fixed
 * Bug where extra URL query is not appended after permalink slugs in URI reverse routing

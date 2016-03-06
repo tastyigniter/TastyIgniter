@@ -13,6 +13,8 @@ $lang['text_yes'] 		                    = 'YES';
 $lang['text_none'] 		                    = 'None';
 $lang['text_hide'] 		                    = 'Hide';
 $lang['text_show'] 		                    = 'Show';
+$lang['text_equals'] 		                = ' = ';
+$lang['text_plus'] 		                    = '+ ';
 $lang['text_please_select'] 		        = ' - please select - ';
 $lang['text_use_default'] 		            = 'Use Default';
 $lang['text_updated'] 		                = 'updated';

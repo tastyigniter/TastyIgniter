@@ -3,6 +3,8 @@
 $lang['site_title'] 		                        = '%s - %s';
 $lang['site_copyright'] 			                = '&copy; %s %s - ';
 
+$lang['text_equals'] 		                        = ' = ';
+$lang['text_plus'] 		                            = '+ ';
 $lang['text_minutes'] 			                    = 'minutes';
 $lang['text_min'] 		                            = 'min';
 $lang['text_my_account'] 			                = 'My Account';

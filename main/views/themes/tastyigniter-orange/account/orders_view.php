@@ -79,7 +79,7 @@
 										<td width="1"><?php echo $menu['qty']; ?>x</td>
 										<td class="food_name"><?php echo $menu['name']; ?><br />
 										<?php if (!empty($menu['options'])) { ?>
-											<div><small>+ <?php echo $menu['options']; ?></small></div>
+											<div><small><?php echo lang('text_plus'); ?><?php echo $menu['options']; ?></small></div>
 										<?php } ?>
 										<?php if (!empty($menu['comment'])) { ?>
 											<div><small><b><?php echo $menu['comment']; ?></b></small></div>

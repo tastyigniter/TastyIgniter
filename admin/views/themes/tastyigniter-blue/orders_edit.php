@@ -328,7 +328,7 @@
 										<td><?php echo $cart_item['qty']; ?>x</td>
 										<td><?php echo $cart_item['name']; ?><br />
 										<?php if (!empty($cart_item['options'])) { ?>
-											<div><small>+ <?php echo $cart_item['options']; ?></small></div>
+											<div><small><?php echo lang('text_plus'); ?><?php echo $cart_item['options']; ?></small></div>
 										<?php } ?>
 										<?php if (!empty($cart_item['comment'])) { ?>
 											<div><small><b><?php echo $cart_item['comment']; ?></b></small></div>
@@ -405,8 +405,7 @@ function getStatusComment() {
 			}
 		});
 	}
-};
-
-$('select[name="order_status"]').trigger('change');
+}
+	$('select[name="order_status"]').trigger('change');
 //--></script>
 <?php echo get_footer(); ?>
