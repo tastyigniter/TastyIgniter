@@ -440,9 +440,24 @@ class ExtraPackage
         $prettyVersion = $root->getPrettyVersion();
         $vp = new VersionParser();
 
+        $method = 'get' . ucfirst($linkType['method']);
+        $packages = $root->$method();
+
         return array_map(
-            function ($link) use ($linkType, $version, $prettyVersion, $vp) {
+            function ($link) use ($linkType, $version, $prettyVersion, $vp, $packages) {
                 if ('self.version' === $link->getPrettyConstraint()) {
+                    if (isset($packages[$link->getSource()])) {
+                        /** @var Link $package */
+                        $package = $packages[$link->getSource()];
+                        return new Link(
+                            $link->getSource(),
+                            $link->getTarget(),
+                            $vp->parseConstraints($package->getConstraint()->getPrettyString()),
+                            $linkType['description'],
+                            $package->getPrettyConstraint()
+                        );
+                    }
+
                     return new Link(
                         $link->getSource(),
                         $link->getTarget(),
