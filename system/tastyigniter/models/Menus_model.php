@@ -172,13 +172,13 @@ class Menus_model extends TI_Model {
 				$row = $query->row_array();
 
 				if ($row['subtract_stock'] === '1' AND ! empty($quantity)) {
-					$quantity = 'stock_qty + ' . $quantity;
+					$stock_qty = 'stock_qty + ' . $quantity;
 
 					if ($action === 'subtract') {
-						$quantity = 'stock_qty - ' . $quantity;
+						$stock_qty = 'stock_qty - ' . $quantity;
 					}
 
-					$this->db->set('stock_qty', $quantity, FALSE);
+					$this->db->set('stock_qty', $stock_qty, FALSE);
 					$this->db->where('menu_id', $menu_id);
 					$update = $this->db->update('menus');
 				}
