@@ -182,10 +182,10 @@
                 $('#menu'+menu_id+ ' .add_cart').removeClass('failed');
                 $('#menu'+menu_id+ ' .add_cart').removeClass('added');
 
-                if (json['options_error']) {
+                if (json['option_error']) {
                     $('#cart-options-alert .alert').remove();
 
-                    $('#cart-options-alert').append('<div class="alert" style="display: none;">' + alert_close + json['options_error'] + '</div>');
+                    $('#cart-options-alert').append('<div class="alert" style="display: none;">' + alert_close + json['option_error'] + '</div>');
                     $('#cart-options-alert .alert').fadeIn('slow');
 
                     $('#menu' + menu_id + ' .add_cart').addClass('failed');
