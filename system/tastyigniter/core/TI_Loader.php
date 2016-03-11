@@ -161,6 +161,9 @@ class TI_Loader extends MX_Loader {
 
         // Make sure the database is connected and settings table exists
         if ($this->db->conn_id !== FALSE AND $this->db->table_exists('settings')) {
+
+            $this->db->query("SET SESSION sql_mode=''");
+
             $this->db->from('settings');
 
             $query = $this->db->get();
