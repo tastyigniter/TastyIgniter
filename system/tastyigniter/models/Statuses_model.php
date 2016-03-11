@@ -190,7 +190,7 @@ class Statuses_model extends TI_Model {
 		}
 
 		if (is_numeric($status_id)) {
-			$this->db->where('status_id', $save['status_id']);
+			$this->db->where('status_id', $status_id);
 			$query = $this->db->update('statuses');
 		} else {
 			$query = $this->db->insert('statuses');
