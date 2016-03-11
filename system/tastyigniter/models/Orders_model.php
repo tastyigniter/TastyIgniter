@@ -593,7 +593,7 @@ class Orders_model extends TI_Model {
 			$temp_coupon = $this->Coupons_model->getCouponByCode($coupon['code']);
 
 			$this->db->set('order_id', $order_id);
-			$this->db->set('customer_id', $customer_id);
+			$this->db->set('customer_id', empty($customer_id) ? '0' : $customer_id);
 			$this->db->set('coupon_id', $temp_coupon['coupon_id']);
 			$this->db->set('code', $temp_coupon['code']);
 			$this->db->set('amount', '-' . $coupon['discount']);
