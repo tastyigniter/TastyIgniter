@@ -21,7 +21,8 @@
 	$this->template->setScriptTag('js/jquery.raty.js', 'jquery-raty-js', '13');
 	$this->template->setScriptTag('js/common.js', 'common-js');
 
-	$site_logo          = base_url('views/themes/tastyigniter-blue/images/tastyigniter-logo.png');
+	$tastyigniter_logo  = base_url('views/themes/tastyigniter-blue/images/tastyigniter-logo.png');
+	$site_logo          = base_url('views/themes/tastyigniter-blue/images/tastyigniter-logo-text.png');
     $system_name 		= lang('tastyigniter_system_name');
     $site_name 		    = config_item('site_name');
     $site_url 			= rtrim(site_url(), '/').'/';
@@ -91,11 +92,12 @@
 		<nav class="navbar navbar-static-top navbar-top" role="navigation" style="margin-bottom: 0">
 			<div class="navbar-header">
 				<div class="navbar-brand">
-					<div class="navbar-logo">
-						<img class="logo-image" alt="<?php echo $system_name; ?>" title="<?php echo $system_name; ?>" src="<?php echo $site_logo; ?>"/>
+					<div class="navbar-logo col-xs-3">
+						<img class="logo-image" alt="<?php echo $system_name; ?>" title="<?php echo $system_name; ?>" src="<?php echo $tastyigniter_logo; ?>"/>
 					</div>
-					<div class="navbar-sitename">
-						<a class="logo-text" href="<?php echo site_url('dashboard'); ?>"><?php echo $site_name; ?></a>
+					<div class="navbar-logo col-xs-9">
+						<img class="logo-text" alt="<?php echo $system_name; ?>" title="<?php echo $system_name; ?>" src="<?php echo $site_logo; ?>"/>
+<!--						<a class="logo-text" href="--><?php //echo site_url('dashboard'); ?><!--">--><?php //echo $site_name; ?><!--</a>-->
 					</div>
 				</div>
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">

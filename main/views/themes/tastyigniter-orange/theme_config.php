@@ -120,7 +120,7 @@ $theme['customize']['sections']['typography'] = array(
 	'icon'		=> '',
 	'fieldset'	=> array(
 		array(
-			'legend'		=> 'Main',
+			'legend'		=> 'Main body',
 			'fields'	=> array(
 				array(
 					'id'			=> 'input-font-family',
@@ -154,20 +154,20 @@ $theme['customize']['sections']['typography'] = array(
 			)
 		),
 		array(
-			'legend'		=> 'Menu',
+			'legend'		=> 'Header Menu',
 			'fields'	=> array(
 				array(
-			'id'			=> 'input-menu-font-family',
-			'name'			=> 'menu_font[family]',
-			'label' 		=> 'Menu Font Family',
-			'desc'			=> 'The font family to use for the header menu.',
-			'type' 			=> 'text',
-			'value'			=> '"Oxygen",Arial,sans-serif',
-            'rules'         => 'required',
-		),
+					'id'			=> 'input-menu-font-family',
+					'name'			=> 'menu_font[family]',
+					'label' 		=> 'Header menu font family',
+					'desc'			=> 'The font family to use for the header menu.',
+					'type' 			=> 'text',
+					'value'			=> '"Oxygen",Arial,sans-serif',
+		            'rules'         => 'required',
+				),
 				array(
 					'id'			=> 'input-menu-font-weight',
-					'label' 		=> 'Menu Font Weight & Style',
+					'label' 		=> 'Header menu font weight & style',
 					'desc'			=> 'The font weight and style to use for the header menu.',
 					'type' 			=> 'input-group',
 					'group'			=> array(
@@ -177,7 +177,7 @@ $theme['customize']['sections']['typography'] = array(
 				),
 				array(
 					'id'			=> 'input-menu-font-size',
-					'label' 		=> 'Menu Font Size & Color',
+					'label' 		=> 'Header menu font size & color',
 					'desc'			=> 'The font size and color to use for the header menu.',
 					'type' 			=> 'input-group',
 					'group'			=> array(

@@ -218,11 +218,11 @@
 														<td class="text-center">
 															<div class="btn-group btn-group-switch" data-toggle="buttons">
 																<?php if ($value['subtract_stock'] === '1') { ?>
-																	<label class="btn btn-danger"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="0"><?php echo lang('text_disabled'); ?></label>
-																	<label class="btn btn-success active"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="1" checked="checked"><?php echo lang('text_enabled'); ?></label>
+																	<label class="btn btn-danger"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="0"><?php echo lang('text_no'); ?></label>
+																	<label class="btn btn-success active"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="1" checked="checked"><?php echo lang('text_yes'); ?></label>
 																<?php } else { ?>
-																	<label class="btn btn-danger active"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="0" checked="checked"><?php echo lang('text_disabled'); ?></label>
-																	<label class="btn btn-success"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="1"><?php echo lang('text_enabled'); ?></label>
+																	<label class="btn btn-danger active"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="0" checked="checked"><?php echo lang('text_no'); ?></label>
+																	<label class="btn btn-success"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="1"><?php echo lang('text_yes'); ?></label>
 																<?php } ?>
 															</div>
 															<?php echo form_error('menu_options['.$option_row.'][option_values]['.$option_value_row.'][subtract_stock]', '<span class="text-danger">', '</span>'); ?>

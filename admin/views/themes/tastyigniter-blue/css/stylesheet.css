@@ -198,6 +198,13 @@ padding: 9px 7px;
 height: 32px;
 line-height: 32px;
 }
+.navbar-logo .logo-image {
+margin-bottom: -15px;
+}
+.navbar-logo .logo-text {
+width: 100%;
+margin-left: -5px;
+}
 .navbar-sitename {
 display: inline-block;
 white-space: nowrap;
