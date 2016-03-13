@@ -656,6 +656,8 @@ class Orders_model extends TI_Model {
 			$data['first_name'] = $result['first_name'];
 			$data['last_name'] = $result['last_name'];
 			$data['email'] = $result['email'];
+			$data['telephone'] = $result['telephone'];
+			$data['order_comment'] = $result['comment'];
 
 			if ($payment = $this->extension->getPayment($result['payment'])) {
 				$data['order_payment'] = !empty($payment['ext_data']['title']) ? $payment['ext_data']['title']: $payment['title'];
@@ -732,6 +734,10 @@ class Orders_model extends TI_Model {
 		$this->load->library('email');
 
 		$this->email->initialize();
+
+		if (!empty($mail_data['status_comment'])) {
+			$mail_data['status_comment'] = $this->email->parse_template($mail_data['status_comment'], $mail_data);
+		}
 
 		$this->email->from($this->config->item('site_email'), $this->config->item('site_name'));
 		$this->email->to(strtolower($email));

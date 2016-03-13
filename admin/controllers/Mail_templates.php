@@ -147,7 +147,18 @@ class Mail_templates extends Admin_Controller {
         $this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $this->lang->line('text_variables')));
         $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $this->lang->line('text_variables')));
 
-        $data['variables'] = array(
+		$data['filters'] = array(
+			'General'            => array('registration', 'registration_alert', 'password_reset', 'password_reset_alert', 'order', 'order_alert', 'order_update', 'reservation', 'reservation_alert', 'reservation_update', 'internal', 'contact'),
+			'Customer'           => array('registration', 'registration_alert', 'password_reset', 'password_reset_alert', 'order', 'order_alert', 'order_update', 'reservation', 'reservation_alert', 'reservation_update'),
+			'Staff'              => array('password_reset_alert', 'order', 'order_alert', 'order_update', 'reservation', 'reservation_alert', 'reservation_update'),
+			'Registration/Reset' => array('registration', 'registration_alert', 'password_reset', 'password_reset_alert'),
+			'Order'              => array('order', 'order_alert', 'order_update'),
+			'Reservation'        => array('reservation', 'reservation_alert', 'reservation_update'),
+			'Status'             => array('order', 'order_alert', 'order_update', 'reservation', 'reservation_alert', 'reservation_update'),
+			'Contact'            => array('contact'),
+		);
+
+		$data['variables'] = array(
 	        'General' => array(
 		        array(
 			        'var'  => '{site_name}',
@@ -186,6 +197,10 @@ class Mail_templates extends Admin_Controller {
 		        array(
 			        'var'  => '{email}',
 			        'name' => 'Customer email address',
+		        ),
+		        array(
+			        'var'  => '{telephone}',
+			        'name' => 'Customer telephone address',
 		        ),
 	        ),
 	        'Staff' => array(
@@ -281,6 +296,10 @@ class Mail_templates extends Admin_Controller {
 			        'var'  => '{/order_totals}',
 			        'name' => 'Order total pairs - END iteration',
 		        ),
+		        array(
+			        'var'  => '{order_comment}',
+			        'name' => 'Order comment',
+		        ),
 	        ),
 	        'Reservation' => array(
 		        array(
@@ -302,6 +321,10 @@ class Mail_templates extends Admin_Controller {
 		        array(
 			        'var'  => '{reservation_guest_no}',
 			        'name' => 'No. of guest reserved',
+		        ),
+		        array(
+			        'var'  => '{reservation_comment}',
+			        'name' => 'Reservation comment',
 		        ),
 	        ),
 	        'Status' => array(

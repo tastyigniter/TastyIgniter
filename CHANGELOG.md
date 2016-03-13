@@ -45,6 +45,7 @@ Release Date: January 2016 (postponed: 02 March 2016)
 * Installer Library `upgrade()` function to install database migration and update core version after updating core files
 * Added TastyIgniter news feed to admin dashboard, also added Feed_parser library to read and parse the RSS feed XML
 * Added missing `getStaffEmail()` to retrieve currently logged staff email
+* New mail template variable `{order_comment}`, `{reservation_comment}` and `{telephone}` to display the order comment and customer telephone in emails
 
 #### Changed
 * LICENCE from Apache to GNU GPLv3

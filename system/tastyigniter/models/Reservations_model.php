@@ -550,7 +550,9 @@ class Reservations_model extends TI_Model {
 			$data['first_name'] = $result['first_name'];
 			$data['last_name'] = $result['last_name'];
 			$data['email'] = $result['email'];
+			$data['telephone'] = $result['telephone'];
 			$data['location_name'] = $result['location_name'];
+			$data['reservation_comment'] = $result['comment'];
 		}
 
 		return $data;
@@ -564,6 +566,10 @@ class Reservations_model extends TI_Model {
 		$this->load->library('email');
 
 		$this->email->initialize();
+
+		if (!empty($mail_data['status_comment'])) {
+			$mail_data['status_comment'] = $this->email->parse_template($mail_data['status_comment'], $mail_data);
+		}
 
 		$this->email->from($this->config->item('site_email'), $this->config->item('site_name'));
 		$this->email->to(strtolower($email));

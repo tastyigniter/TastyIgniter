@@ -103,7 +103,7 @@
 																	<?php echo form_error('subject', '<span class="text-danger">', '</span>'); ?>
 																</div>
 																<div class="col-sm-2">
-																	<a class="btn btn-info btn-block" data-toggle="modal" data-target=".mail-variable-container #mail-variables">Variables &nbsp;&nbsp; <i class="fa fa-info-circle"></i></a>
+																	<a class="btn btn-info btn-block" data-toggle="modal" data-target=".mail-variable-container #mail-variables" data-filter="<?php echo $tpl_data['code']; ?>"><?php echo lang('text_variables'); ?>&nbsp;&nbsp; <i class="fa fa-info-circle"></i></a>
 																</div>
 															</div>
 
