@@ -8,6 +8,7 @@ bottom: 0;
 width: 100%;
 right: 0;
 left: 0;
+z-index: 99;
 }
 #cart-box-affix.affix #cart-box {
 position: fixed;
@@ -74,10 +75,23 @@ float: none;
 #cart-box-affix.affix .navbar-toggle {
 position: fixed;
 margin: 0;
-bottom: 10px;
+bottom: 0px;
+padding: 0;
+width: 100%;
 }
 #cart-box-affix.affix-bottom .navbar-toggle {
 display: none !important;
+}
+#cart-box-affix .navbar-toggle .btn {
+width: 65%;
+}
+#cart-box-affix .navbar-toggle .btn-block {
+display: inline-block;
+float: right;
+}
+#cart-box-affix .navbar-toggle .cart-toggle {
+width: 35%;
+padding: 12px 15px;
 }
 #cart-box-affix .navbar-toggle .order-total {
 font-weight: bold;

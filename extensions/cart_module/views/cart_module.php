@@ -120,7 +120,7 @@
 		</div>
 
 		<?php if (!empty($button_order)) { ?>
-			<div class="buttons wrap-none">
+			<div class="buttons wrap-none hidden-xs">
 				<div class="center-block">
 					<?php echo $button_order; ?>
 				</div>
@@ -129,10 +129,14 @@
 		<?php } ?>
 	</div>
 
-	<a class="btn btn-default btn-block navbar-toggle visible-xs" data-toggle="collapse" data-target="#cart-box">
-		<?php echo lang('text_heading'); ?>
-		<span class="order-total"><?php echo (!empty($order_total)) ? '&nbsp;&nbsp;-&nbsp;&nbsp;'.$order_total : ''; ?></span>
-	</a>
+	<div class="navbar-toggle visible-xs">
+		<a class="btn btn-default cart-toggle" data-toggle="collapse" data-target="#cart-box" style="text-overflow:ellipsis; overflow:hidden;">
+			<?php echo lang('text_heading'); ?>
+			<span class="order-total"><?php echo (!empty($order_total)) ? '&nbsp;&nbsp;-&nbsp;&nbsp;'.$order_total : ''; ?></span>
+		</a>
+		<?php if (!empty($button_order)) { echo $button_order; } ?>
+	</div>
+
 </div>
 <script type="text/javascript"><!--
     var alert_close = '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
