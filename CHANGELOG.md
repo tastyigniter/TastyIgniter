@@ -1,6 +1,6 @@
 ### v2.0.0 (stable)
 
-Release Date: January 2016 (postponed: 02 March 2016)
+Release Date: January 2016 (postponed: 15 March 2016)
 
 #### Added
 * Setup now generates a random alpha-numeric 9 length string for database table prefixes
