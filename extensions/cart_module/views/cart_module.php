@@ -141,26 +141,24 @@
 <script type="text/javascript"><!--
     var alert_close = '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
 
-	$(document).ready(function() {
-		$('input[name="order_type"]').on('change', function() {
-			if (typeof this.value !== 'undefined') {
-				var order_type = this.value;
+	$(document).on('change', 'input[name="order_type"]', function() {
+		if (typeof this.value !== 'undefined') {
+			var order_type = this.value;
 
-				$.ajax({
-					url: js_site_url('cart_module/cart_module/order_type'),
-					type: 'post',
-					data: 'order_type=' + order_type,
-					dataType: 'json',
-					success: function (json) {
-						if ($('form#checkout-form').length && json['order_type'] != order_type) {
-							window.location.href = js_site_url('checkout');
-						} else {
-							updateCartBox(json);
-						}
+			$.ajax({
+				url: js_site_url('cart_module/cart_module/order_type'),
+				type: 'post',
+				data: 'order_type=' + order_type,
+				dataType: 'json',
+				success: function (json) {
+					if ($('form#checkout-form').length && json['order_type'] != order_type) {
+						window.location.href = js_site_url('checkout');
+					} else {
+						updateCartBox(json);
 					}
-				});
-			}
-		});
+				}
+			});
+		}
 	});
 
     function addToCart(menu_id, quantity) {
