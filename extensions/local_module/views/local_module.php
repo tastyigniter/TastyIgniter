@@ -44,8 +44,8 @@
                             <div class="row local-change" style="display: <?php echo (!empty($search_query) OR $location_order !== '1') ? 'block' : 'none'; ?>">
                                 <div class="col-xs-12 col-sm-7">
                                     <?php $text_location_summary = (isset($local_lang['text_location_summary'])) ? $local_lang['text_location_summary'] : lang('text_location_summary'); ?>
-                                    <?php $search_query = (empty($search_query)) ? '' : lang('text_at').$search_query; ?>
-                                    <?php echo sprintf($text_location_summary, $location_name, $search_query); ?>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <?php $text_search_query = (empty($search_query)) ? '' : lang('text_at').$search_query; ?>
+                                    <?php echo sprintf($text_location_summary, $location_name, $text_search_query); ?>&nbsp;&nbsp;&nbsp;&nbsp;
                                     <a onclick="toggleLocalSearch();" class="clickable btn-link" title=""><?php echo lang('button_change_location'); ?></a>
                                 </div>
 
