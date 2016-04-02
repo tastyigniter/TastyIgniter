@@ -686,6 +686,7 @@ class Orders_model extends TI_Model {
 						'menu_price'    => $this->currency->format($menu['price']),
 						'menu_subtotal' => $this->currency->format($menu['subtotal']),
 						'menu_options'  => implode(', ', $option_data),
+						'menu_comment'  => $menu['comment'],
 					);
 				}
 			}

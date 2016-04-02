@@ -261,10 +261,6 @@ class Mail_templates extends Admin_Controller {
 			        'name' => 'Order menu name',
 		        ),
 		        array(
-			        'var'  => '{menu_options}',
-			        'name' => 'Order menu option ex. name: price',
-		        ),
-		        array(
 			        'var'  => '{menu_quantity}',
 			        'name' => 'Order menu quantity',
 		        ),
@@ -275,6 +271,14 @@ class Mail_templates extends Admin_Controller {
 		        array(
 			        'var'  => '{menu_subtotal}',
 			        'name' => 'Order menu subtotal',
+		        ),
+				array(
+					'var'  => '{menu_options}',
+					'name' => 'Order menu option ex. name: price',
+				),
+				array(
+			        'var'  => '{menu_comment}',
+			        'name' => 'Order menu comment',
 		        ),
 		        array(
 			        'var'  => '{/order_menus}',
