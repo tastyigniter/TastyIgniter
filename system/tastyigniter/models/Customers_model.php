@@ -349,7 +349,9 @@ class Customers_model extends TI_Model {
 		}
 
 		if ($query === TRUE AND is_numeric($customer_id)) {
-			$this->saveAddress($customer_id, $save['address']);
+			if (isset($save['address'])) {
+				$this->saveAddress($customer_id, $save['address']);
+			}
 
 			if ($action === 'added') {
 				$mail_data['first_name'] = $save['first_name'];
