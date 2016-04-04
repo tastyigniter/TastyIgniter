@@ -141,6 +141,11 @@ class Coupons extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('coupons')));
 
+		$this->template->setStyleTag(assets_url('js/datepicker/datepicker.css'), 'datepicker-css');
+		$this->template->setScriptTag(assets_url("js/datepicker/bootstrap-datepicker.js"), 'bootstrap-datepicker-js');
+		$this->template->setStyleTag(assets_url('js/datepicker/bootstrap-timepicker.css'), 'bootstrap-timepicker-css');
+		$this->template->setScriptTag(assets_url("js/datepicker/bootstrap-timepicker.js"), 'bootstrap-timepicker-js');
+
 		if ($this->input->post() AND $coupon_id = $this->_saveCoupon()) {
 			if ($this->input->post('save_close') === '1') {
 				redirect('coupons');

@@ -79,17 +79,18 @@ class TI_Config extends MX_Config {
 	// -------------------------------------------------------------
 
 	/**
-     * Root URL
-     *
-     * Returns root_url [. uri_string]
-     *
-     * @uses	CI_Config::_uri_string()
-     *
-     * @param	string|string[]	$uri	URI string or an array of segments
-     * @param	string	$protocol
-     * @return	string
-     */
-    public function root_url($uri = '', $protocol = NULL)
+	 * Root URL
+	 *
+	 * Returns root_url [. uri_string]
+	 *
+	 * @uses    CI_Config::_uri_string()
+	 *
+	 * @param    string|string[] $uri URI string or an array of segments
+	 * @param    string $protocol
+	 * @param 	 bool $reserve_routing
+	 * @return string
+	 */
+    public function root_url($uri = '', $protocol = NULL, $reserve_routing = FALSE)
     {
         $root_url = str_replace(array('setup/', ADMINDIR.'/'), '', $this->slash_item('base_url'));
 
@@ -98,7 +99,11 @@ class TI_Config extends MX_Config {
             $root_url = $protocol.substr($root_url, strpos($root_url, '://'));
         }
 
-        return $root_url.ltrim($this->_uri_string($uri), '/');
+		if ($reserve_routing) {
+			$uri = get_instance()->router->_reverse_routing($uri);
+		}
+
+		return $root_url.ltrim($this->_uri_string($uri), '/');
     }
 
     // -------------------------------------------------------------

@@ -39,7 +39,7 @@ if ( ! function_exists('create_captcha'))
 		$defaults = array(
             'word'		=> '',
             'img_path' 		=> './assets/images/thumbs/captcha/',
-            'img_url' 		=> root_url() . '/assets/images/thumbs/captcha/',
+            'img_url' 		=> image_url('thumbs/captcha/'),
             'img_width'     => '150',
             'img_height'    => 30,
             'font_path'     => './system/fonts/texb.ttf',

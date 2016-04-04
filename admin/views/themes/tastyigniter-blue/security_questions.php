@@ -70,7 +70,6 @@ function addQuestion() {
 	table_row++;
 }
 //--></script>
-<script src="<?php echo root_url("assets/js/jquery-sortable.js"); ?>"></script>
 <script type="text/javascript"><!--
 $(function  () {
 	$('.table-sortable').sortable({
@@ -80,6 +79,6 @@ $(function  () {
 		placeholder: '<tr class="placeholder"><td colspan="3"></td></tr>',
 		handle: '.handle'
 	})
-})
+});
 //--></script>
 <?php echo get_footer(); ?>

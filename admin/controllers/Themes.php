@@ -72,17 +72,17 @@ class Themes extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('themes')));
 
-		$this->template->setStyleTag(root_url('assets/js/colorpicker/css/bootstrap-colorpicker.min.css'), 'bootstrap-colorpicker-css');
-		$this->template->setStyleTag(root_url('assets/js/codemirror/codemirror.css'), 'codemirror-css');
-		$this->template->setScriptTag(root_url('assets/js/colorpicker/js/bootstrap-colorpicker.min.js'), 'bootstrap-colorpicker-js');
-		$this->template->setScriptTag(root_url('assets/js/codemirror/codemirror.js'), 'codemirror-js', '300');
-		$this->template->setScriptTag(root_url('assets/js/codemirror/xml/xml.js'), 'codemirror-xml-js', '301');
-		$this->template->setScriptTag(root_url('assets/js/codemirror/css/css.js'), 'codemirror-css-js', '302');
-		$this->template->setScriptTag(root_url('assets/js/codemirror/javascript/javascript.js'), 'codemirror-javascript-js', '303');
-		$this->template->setScriptTag(root_url('assets/js/codemirror/php/php.js'), 'codemirror-php-js', '304');
-		$this->template->setScriptTag(root_url('assets/js/codemirror/htmlmixed/htmlmixed.js'), 'codemirror-htmlmixed-js', '305');
-		$this->template->setScriptTag(root_url('assets/js/codemirror/clike/clike.js'), 'codemirror-clike-js', '306');
-		$this->template->setScriptTag(root_url('assets/js/jquery-sortable.js'), 'jquery-sortable-js');
+		$this->template->setStyleTag(assets_url('js/colorpicker/css/bootstrap-colorpicker.min.css'), 'bootstrap-colorpicker-css');
+		$this->template->setStyleTag(assets_url('js/codemirror/codemirror.css'), 'codemirror-css');
+		$this->template->setScriptTag(assets_url('js/colorpicker/js/bootstrap-colorpicker.min.js'), 'bootstrap-colorpicker-js');
+		$this->template->setScriptTag(assets_url('js/codemirror/codemirror.js'), 'codemirror-js', '300');
+		$this->template->setScriptTag(assets_url('js/codemirror/xml/xml.js'), 'codemirror-xml-js', '301');
+		$this->template->setScriptTag(assets_url('js/codemirror/css/css.js'), 'codemirror-css-js', '302');
+		$this->template->setScriptTag(assets_url('js/codemirror/javascript/javascript.js'), 'codemirror-javascript-js', '303');
+		$this->template->setScriptTag(assets_url('js/codemirror/php/php.js'), 'codemirror-php-js', '304');
+		$this->template->setScriptTag(assets_url('js/codemirror/htmlmixed/htmlmixed.js'), 'codemirror-htmlmixed-js', '305');
+		$this->template->setScriptTag(assets_url('js/codemirror/clike/clike.js'), 'codemirror-clike-js', '306');
+		$this->template->setScriptTag(assets_url('js/jquery-sortable.js'), 'jquery-sortable-js');
 
 		if ($this->input->post() AND $this->_updateTheme($theme) === TRUE) {
 			if ($this->input->post('save_close') === '1') {

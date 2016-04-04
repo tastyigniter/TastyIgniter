@@ -42,7 +42,7 @@ class Base_Controller extends MX_Controller {
 
         // If 'config/updated.txt' exists, system needs upgrade
         if (is_file(IGNITEPATH . 'config/updated.txt')) {
-            if ($this->installer->upgrade()) redirect(root_url(ADMINDIR.'/dashboard'));
+            if ($this->installer->upgrade()) redirect(admin_url('dashboard'));
         }
 
         // Redirect to setup if app requires setup

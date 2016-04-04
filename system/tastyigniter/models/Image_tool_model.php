@@ -40,7 +40,7 @@ class Image_tool_model extends TI_Model {
 		}
 
 		if (empty($width) AND empty($height)) {
-			return root_url() . 'assets/images/' . $root_folder . $img_path;
+			return image_url($root_folder . $img_path);
 		}
 
 		$thumbs_path = IMAGEPATH . 'thumbs';
@@ -76,7 +76,7 @@ class Image_tool_model extends TI_Model {
 			}
 		}
 
-		return root_url() . 'assets/images/' . $new_image;
+		return image_url($new_image);
 	}
 
 	public function _createFolder($thumb_path = FALSE) {

@@ -14,10 +14,10 @@ class Reservation_module extends Main_Controller {
 		}
 
         $this->template->setStyleTag(extension_url('reservation_module/views/stylesheet.css'), 'reservation-module-css', '154000');
-        $this->template->setStyleTag(base_url('assets/js/datepicker/datepicker.css'), 'datepicker-css', '124000');
-        $this->template->setScriptTag(base_url("assets/js/datepicker/bootstrap-datepicker.js"), 'bootstrap-datepicker-js', '12000');
-        $this->template->setStyleTag(base_url('assets/js/datepicker/bootstrap-timepicker.css'), 'bootstrap-timepicker-css', '124440');
-        $this->template->setScriptTag(base_url("assets/js/datepicker/bootstrap-timepicker.js"), 'bootstrap-timepicker-js', '12550');
+        $this->template->setStyleTag(assets_url('js/datepicker/datepicker.css'), 'datepicker-css', '124000');
+        $this->template->setScriptTag(assets_url("js/datepicker/bootstrap-datepicker.js"), 'bootstrap-datepicker-js', '12000');
+        $this->template->setStyleTag(assets_url('js/datepicker/bootstrap-timepicker.css'), 'bootstrap-timepicker-css', '124440');
+        $this->template->setScriptTag(assets_url("js/datepicker/bootstrap-timepicker.js"), 'bootstrap-timepicker-js', '12550');
 
         if ($this->config->item('reservation_mode') !== '1') {
             $this->alert->set('alert', $this->lang->line('alert_reservation_disabled'));

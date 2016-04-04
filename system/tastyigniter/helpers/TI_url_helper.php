@@ -65,12 +65,32 @@ if ( ! function_exists('current_url'))
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('image_url'))
+if ( ! function_exists('assets_url'))
 {
 	/**
 	 * Assets URL
 	 *
 	 * Returns the full URL (including segments) of the assets directory
+	 *
+	 * @param string $uri
+	 * @param null   $protocol
+	 *
+	 * @return string
+	 */
+	function assets_url($uri = '', $protocol = NULL)
+	{
+        return get_instance()->config->root_url('assets/'.$uri, $protocol);
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('image_url'))
+{
+	/**
+	 * Image Assets URL
+	 *
+	 * Returns the full URL (including segments) of the assets image directory
 	 *
 	 * @param string $uri
 	 * @param null   $protocol
@@ -100,7 +120,7 @@ if ( ! function_exists('root_url'))
 	 */
 	function root_url($uri = '', $protocol = NULL)
 	{
-        return get_instance()->config->root_url($uri, $protocol);
+        return get_instance()->config->root_url($uri, $protocol, TRUE);
 	}
 }
 

@@ -20,12 +20,12 @@ class Dashboard extends Admin_Controller {
 		$this->template->setHeading($this->lang->line('text_heading'));
 		$this->template->setButton($this->lang->line('button_check_updates'), array('class' => 'btn btn-default', 'href' => site_url('updates')));
 
-        $this->template->setStyleTag(root_url('assets/js/daterange/daterangepicker-bs3.css'), 'daterangepicker-css', '100400');
-        $this->template->setScriptTag(root_url('assets/js/daterange/moment.min.js'), 'daterange-moment-js', '1000451');
-        $this->template->setScriptTag(root_url('assets/js/daterange/daterangepicker.js'), 'daterangepicker-js', '1000452');
-        $this->template->setStyleTag(root_url('assets/js/morris/morris.css'), 'chart-css', '100500');
-        $this->template->setScriptTag(root_url('assets/js/morris/raphael-min.js'), 'raphael-min-js', '1000453');
-        $this->template->setScriptTag(root_url('assets/js/morris/morris.min.js'), 'morris-min-js', '1000454');
+        $this->template->setStyleTag(assets_url('js/daterange/daterangepicker-bs3.css'), 'daterangepicker-css', '100400');
+        $this->template->setScriptTag(assets_url('js/daterange/moment.min.js'), 'daterange-moment-js', '1000451');
+        $this->template->setScriptTag(assets_url('js/daterange/daterangepicker.js'), 'daterangepicker-js', '1000452');
+        $this->template->setStyleTag(assets_url('js/morris/morris.css'), 'chart-css', '100500');
+        $this->template->setScriptTag(assets_url('js/morris/raphael-min.js'), 'raphael-min-js', '1000453');
+        $this->template->setScriptTag(assets_url('js/morris/morris.min.js'), 'morris-min-js', '1000454');
 
 		$data['total_menus'] 		    = $this->Dashboard_model->getTotalMenus();
 		$data['current_month'] 			= mdate('%Y-%m', time());

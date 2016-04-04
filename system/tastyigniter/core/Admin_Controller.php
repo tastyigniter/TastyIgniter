@@ -38,7 +38,7 @@ class Admin_Controller extends Base_Controller {
         if (!$this->user->isLogged() AND $uri !== 'login' AND $uri !== 'logout') {
             $this->alert->set('danger', $this->lang->line('alert_user_not_logged_in'));
             $prepend = empty($uri) ? '' : '?redirect=' . current_url();
-            redirect(root_url(ADMINDIR.'/login'.$prepend));
+            redirect(admin_url('login'.$prepend));
         }
     }
 }
