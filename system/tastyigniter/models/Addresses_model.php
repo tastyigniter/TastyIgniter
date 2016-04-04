@@ -213,6 +213,10 @@ class Addresses_model extends TI_Model {
 			$this->db->set('customer_id', $customer_id);
 		}
 
+		if (empty($address_id) AND isset($address['address_id'])) {
+			$this->db->set('address_id', $address['address_id']);
+		}
+
 		if (isset($address['address_1'])) {
 			$this->db->set('address_1', $address['address_1']);
 		}

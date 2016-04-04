@@ -34,7 +34,10 @@
                         <div class="btn-group btn-group-md col-md-12">
                             <?php foreach ($addresses as $address) { ?>
                                 <label class="btn btn-default wrap-all col-xs-3 <?php echo ($address_id == $address['address_id']) ? 'active' : ''; ?>">
-                                    <a class="edit-address pull-right" href="<?php echo $address['edit']; ?>"><?php echo lang('text_edit'); ?></a>
+                                    <span class="pull-right text-right">
+										<a class="edit-address" href="<?php echo $address['edit']; ?>"><?php echo lang('text_edit'); ?></a><br />
+                                    	<a class="delete-address text-danger" href="<?php echo $address['delete']; ?>"  onclick="if (confirm('<?php echo lang('alert_warning_confirm'); ?>')) {  return true; } else { return false;}"><?php echo lang('text_delete'); ?></a>
+									</span>
                                     <address class="text-left"><?php echo $address['address']; ?></address>
                                 </label>
                                 <?php $address_row++; ?>

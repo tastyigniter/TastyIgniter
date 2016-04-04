@@ -349,17 +349,7 @@ class Customers_model extends TI_Model {
 		}
 
 		if ($query === TRUE AND is_numeric($customer_id)) {
-			if ( ! empty($save['address'])) {
-				$this->load->model('Addresses_model');
-
-				foreach ($save['address'] as $address) {
-					if ( ! empty($address['address_id'])) {
-						$this->Addresses_model->saveAddress($customer_id, $address['address_id'], $address);
-					} else {
-						$this->Addresses_model->saveAddress($customer_id, '', $address);
-					}
-				}
-			}
+			$this->saveAddress($customer_id, $save['address']);
 
 			if ($action === 'added') {
 				$mail_data['first_name'] = $save['first_name'];
@@ -427,6 +417,21 @@ class Customers_model extends TI_Model {
 		}
 
 		return $query;
+	}
+
+	public function saveAddress($customer_id, $addresses = array()) {
+		if ( is_numeric($customer_id) AND ! empty($addresses)) {
+			$this->db->where('customer_id', $customer_id);
+			$this->db->delete('addresses');
+
+			$this->load->model('Addresses_model');
+
+			foreach ($addresses as $key => $address) {
+				if (!empty($address['address_1'])) {
+					$this->Addresses_model->saveAddress($customer_id, '', $address);
+				}
+			}
+		}
 	}
 
 	public function deleteCustomer($customer_id) {
