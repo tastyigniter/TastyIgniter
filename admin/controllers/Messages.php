@@ -217,7 +217,8 @@ class Messages extends Admin_Controller {
         $data['body'] 			    = $message_info['body'];
 
         $data['recipients']     = array(
-            'all_newsletters'   =>  $this->lang->line('text_all_customers'),
+            'all_newsletters'   =>  $this->lang->line('text_all_newsletters'),
+            'all_customers'     =>  $this->lang->line('text_all_customers'),
             'customer_group'    =>  $this->lang->line('text_customer_group'),
             'customers'         =>  $this->lang->line('text_customers'),
             'all_staffs'        =>  $this->lang->line('text_all_staff'),
