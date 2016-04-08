@@ -67,7 +67,7 @@ class Location {
 		}
 
 		$is_loaded = TRUE;
-		foreach (array('location_id', 'area_id', 'order_type', 'search_query') as $item) {
+		foreach (array('location_id', 'order_type', 'search_query', 'area_id') as $item) {
 			if (isset($local_info[$item]) AND $this->$item !== $local_info[$item]) {
 				$is_loaded = FALSE;
 				break;
@@ -99,7 +99,7 @@ class Location {
 				$this->setWorkingHours();
 				$this->setDeliveryAreas();
 
-				$this->checkDeliveryCoverage();
+				$this->delivery_area = $this->checkDeliveryArea();
 			}
 		}
 	}
@@ -505,11 +505,11 @@ class Location {
 
 	public function checkDistance() {
 		$distance = 0;
-		empty($this->user_coords) OR $this->user_coords = $this->getLatLng($this->search_query);
+		$coords = $this->getLatLng($this->search_query);
 
-		if (isset($this->user_coords['lat'], $this->user_coords['lng'], $this->local_info['location_lat'], $this->local_info['location_lng'])) {
-			$degrees = sin(deg2rad($this->user_coords['lat'])) * sin(deg2rad($this->local_info['location_lat'])) +
-				cos(deg2rad($this->user_coords['lat'])) * cos(deg2rad($this->local_info['location_lat'])) * cos(deg2rad($this->user_coords['lng'] - $this->local_info['location_lng']));
+		if (isset($coords['lat'], $coords['lng'], $this->local_info['location_lat'], $this->local_info['location_lng'])) {
+			$degrees = sin(deg2rad($coords['lat'])) * sin(deg2rad($this->local_info['location_lat'])) +
+				cos(deg2rad($coords['lat'])) * cos(deg2rad($this->local_info['location_lat'])) * cos(deg2rad($coords['lng'] - $this->local_info['location_lng']));
 
 			$distance = rad2deg(acos($degrees));
 
@@ -525,23 +525,22 @@ class Location {
 
     public function checkDeliveryCoverage($search_query = FALSE) {
 
-		if ($search_query !== FALSE OR empty($this->delivery_area)) {
-			$search_query = ($search_query === FALSE) ? $this->search_query : $search_query;
+		$search_query = ($search_query === FALSE) ? $this->search_query : $search_query;
 
-			$coords = $this->getLatLng($search_query);
-			$this->delivery_area = $this->checkDeliveryArea($coords);
-		}
+		$coords = $this->getLatLng($search_query);
+		$delivery_area = $this->checkDeliveryArea($coords);
 
-		if ($this->delivery_area !== 'outside' AND count($this->delivery_area) == 2 AND $this->delivery_area['location_id'] == $this->location_id) {
-			$this->setDeliveryArea($this->delivery_area);
-			return $this->delivery_area;
+		if ($delivery_area !== 'outside' AND count($delivery_area) == 2 AND $delivery_area['location_id'] === $this->location_id) {
+			return $delivery_area;
 		}
 
 		return FALSE;
 	}
 
-	public function checkDeliveryArea($coords) {
+	public function checkDeliveryArea($coords = '') {
 		$location = $point = '';
+
+		!empty($coords) OR $coords = $this->getLatLng($this->search_query);
 
 		if (is_array($coords) AND count($coords) == 3) {
 			$point = $coords['lat'].'|'.$coords['lng'];
@@ -558,14 +557,14 @@ class Location {
 					}
 
 					if ($location !== '') {
-						$this->delivery_area = array('location_id' => $location_id, 'area_id' => $area_id);
+						$delivery_area = array('location_id' => $location_id, 'area_id' => $area_id);
 						break 2;
 					}
 				}
 			}
 		}
 
-		return (empty($this->delivery_area)) ? 'outside' : $this->delivery_area;
+		return (empty($delivery_area)) ? 'outside' : $delivery_area;
 	}
 
     public function pointInPolygon($point, $vertices = array(), $pointOnVertex = TRUE) {
@@ -683,7 +682,11 @@ class Location {
 			return "NO_SEARCH_QUERY";
 		}
 
-        $temp_query = $search_query;
+		if (isset($this->user_coords['search_query']) AND $this->user_coords['search_query'] === $search_query) {
+			return $this->user_coords;
+		}
+
+		$temp_query = $search_query;
 
 		if (is_string($temp_query)) {
 			$postcode = strtoupper(str_replace(' ', '', $temp_query));								// strip spaces from postcode string and convert to uppercase
@@ -712,11 +715,13 @@ class Location {
 
 		if ($output) {
             if ($output->status === 'OK') {														// create variable for geocode data status
-                return array(
+                $this->user_coords = array(
                     'search_query'	=> $search_query,
                     'lat' 			=> $output->results[0]->geometry->location->lat,
                     'lng' 			=> $output->results[0]->geometry->location->lng
                 );
+
+				return $this->user_coords;
 		    }
 
             return "INVALID_SEARCH_QUERY";

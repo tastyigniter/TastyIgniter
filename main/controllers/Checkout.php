@@ -564,6 +564,9 @@ class Checkout extends Main_Controller {
 	public function _validate_address($address_id) {
         $addresses = $this->input->post('address');
         if ($this->location->orderType() === '1' AND !empty($addresses[0]['address_1'])) {
+            $location_id = $this->location->getId();
+            $area_id = $this->location->getAreaId();
+
             foreach ($this->input->post('address') as $address) {
                 if (empty($address_id) OR $address['address_id'] === $address_id) {
                     $country = $this->Countries_model->getCountry($address['country_id']);
@@ -571,8 +574,10 @@ class Checkout extends Main_Controller {
                     unset($address['address_id'], $address['country_id']);
 
                     if ($area = $this->location->checkDeliveryCoverage($address)) {
-	                    if (isset($area['area_id']) AND $area['area_id'] !== $this->location->getAreaId()) {
-		                    $this->alert->set('alert', $this->lang->line('alert_delivery_area_changed'));
+	                    if (isset($area['area_id']) AND ($area['area_id'] !== $area_id OR $area['location_id'] !== $location_id)) {
+                            $this->location->setDeliveryArea($area);
+
+                            $this->alert->set('alert', $this->lang->line('alert_delivery_area_changed'));
 
 		                    if ($this->input->post('checkout_step') === 'two') {
 			                    redirect('checkout');

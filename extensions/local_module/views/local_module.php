@@ -56,7 +56,7 @@
 
                                 <div class="row local-change" style="display: <?php echo (!empty($search_query) OR (empty($search_query) AND $location_order !== '1')) ? 'block' : 'none'; ?>">
                                     <div class="col-xs-12 col-sm-7">
-                                        <?php $text_location_summary = ($has_search_query AND ! $delivery_coverage) ? lang('text_delivery_coverage') : lang('text_location_summary'); ?>
+                                        <?php $text_location_summary = ($has_search_query AND $delivery_coverage) ? lang('text_location_summary') : lang('text_delivery_coverage'); ?>
                                         <?php $text_search_query = (empty($search_query)) ? lang('text_enter_location') : sprintf($text_location_summary, lang('text_at').$search_query); ?>
                                         <?php echo $text_search_query; ?>&nbsp;&nbsp;
                                         <a onclick="toggleLocalSearch();" class="clickable btn-link visible-xs-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block" title="">
