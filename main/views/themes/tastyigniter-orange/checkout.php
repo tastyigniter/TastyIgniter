@@ -21,19 +21,19 @@
 							<li class="step-one <?php if ($checkout_step === 'one') { echo 'active'; } else if ($checkout_step === 'two') { echo 'link'; } else { echo 'disabled'; }; ?>">
 								<a>
 									<h4 class="list-group-item-heading"><?php echo lang('text_step_one'); ?></h4>
-									<p class="list-group-item-text"><?php echo lang('text_step_one_summary'); ?></p>
+									<p class="list-group-item-text hidden-xs"><?php echo lang('text_step_one_summary'); ?></p>
 								</a>
 							</li>
 							<li class="step-two <?php echo ($checkout_step === 'two') ? 'active' : 'disabled'; ?>">
 								<a>
 									<h4 class="list-group-item-heading"><?php echo lang('text_step_two'); ?></h4>
-									<p class="list-group-item-text"><?php echo lang('text_step_two_summary'); ?></p>
+									<p class="list-group-item-text hidden-xs"><?php echo lang('text_step_two_summary'); ?></p>
 								</a>
 							</li>
 							<li class="step-three disabled">
 								<a>
 									<h4 class="list-group-item-heading"><?php echo lang('text_step_three'); ?></h4>
-									<p class="list-group-item-text"><?php echo lang('text_step_three_summary'); ?></p>
+									<p class="list-group-item-text hidden-xs"><?php echo lang('text_step_three_summary'); ?></p>
 								</a>
 							</li>
 						</ul>
@@ -97,20 +97,70 @@
 										<div class="form-group">
 											<label for="order-time"><?php echo lang('label_order_time'); ?></label>
                                             <?php if ($order_times) { ?>
-                                                <select name="order_time" id="order-time" class="form-control">
-                                                    <?php $hour = 1; ?>
-                                                    <?php foreach ($order_times as $key => $value) { ?>
-                                                        <?php $value = ($hour === 1) ? $value .' - '. lang('text_asap') : $value; ?>
+                                                <div class="row">
+                                                    <div class="col-sm-12 wrap-bottom">
+                                                        <div class="btn-group" data-toggle="buttons">
+                                                            <?php if (!empty($order_times['asap'])) { ?>
+                                                                <label class="btn btn-default <?php echo ($order_time_type === 'asap') ? 'btn-primary active' : ''; ?>" data-btn="btn-primary">
+                                                                    <input type="hidden" name="order_asap_time" value="<?php echo $order_times['asap']; ?>">
+                                                                    <input type="radio" name="order_time_type" value="asap"  <?php echo ($order_time_type === 'asap') ? 'checked="checked"' : ''; ?>>
+                                                                    <?php echo lang('text_asap'); ?>
+                                                                </label>
+                                                            <?php } ?>
+                                                            <label class="btn btn-default <?php echo ($order_time_type === 'later') ? 'btn-primary active' : ''; ?>" data-btn="btn-primary"><input type="radio" name="order_time_type" value="later"  <?php echo ($order_time_type === 'later') ? 'checked="checked"' : ''; ?>><?php echo lang('text_later'); ?></label>
+                                                        </div>
+                                                    </div>
+                                                    <div id="choose-order-time" class="col-sm-12" style="display: <?php echo ($order_time_type === 'later') ? 'block' : 'none'; ?>;">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon date-input-addon">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                                    <select name="order_date" id="order-date" class="form-control">
+                                                                        <?php foreach ($order_times as $date => $times) { ?>
+                                                                            <?php if ($date === 'asap' OR empty($times)) continue; ?>
 
-                                                        <?php if ($key === $order_time) { ?>
-                                                            <option value="<?php echo $key; ?>" selected="selected"><?php echo $value; ?></option>
-                                                        <?php } else { ?>
-                                                            <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
-                                                        <?php } ?>
-
-                                                        <?php $hour++; ?>
-                                                    <?php } ?>
-                                                </select>
+                                                                            <?php if ( ! empty($order_date) AND $date == $order_date) { ?>
+                                                                                <option value="<?php echo $date; ?>" selected="selected"><?php echo mdate(lang('text_date_format'), strtotime($date)); ?></option>
+                                                                            <?php } else { ?>
+                                                                                <option value="<?php echo $date; ?>"><?php echo mdate(lang('text_date_format'), strtotime($date)); ?></option>
+                                                                            <?php } ?>
+                                                                        <?php } ?>
+                                                                    </select>
+                                                                    <input type="hidden" name="order_hour" value="<?php echo $order_hour; ?>">
+                                                                    <input type="hidden" name="order_minute" value="<?php echo $order_minute; ?>">
+                                                                </div>
+                                                            </span>
+                                                            <?php foreach ($order_times as $date => $times) { ?>
+                                                                <?php if ($date === 'asap' OR empty($times)) continue; ?>
+                                                                <span id="order-time-<?php echo $date; ?>" class="input-group-addon time-input-addon" style="display: <?php echo ($date == $order_date) ? 'table-cell' : 'none'; ?>">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+                                                                    <select id="hours-for-<?php echo $date; ?>" data-parent="#order-time-<?php echo $date; ?>" class="form-control hours">
+                                                                        <?php foreach ($times as $hour => $minutes) { ?>
+                                                                            <?php if ($hour == $order_hour) { ?>
+                                                                                <option value="<?php echo $hour; ?>" selected="selected"><?php echo $hour; ?>:</option>
+                                                                            <?php } else { ?>
+                                                                                <option value="<?php echo $hour; ?>"><?php echo $hour; ?>:</option>
+                                                                            <?php } ?>
+                                                                        <?php } ?>
+                                                                    </select>
+                                                                    <?php foreach ($times as $hour => $minutes) { ?>
+                                                                    <select data-parent="#order-time-<?php echo $date; ?>" class="form-control minutes minutes-for-<?php echo $hour; ?> <?php echo ($hour == $order_hour) ? '' : 'hide'; ?>">
+                                                                        <?php foreach ($minutes as $minute) { ?>
+                                                                            <?php if ($minute == $order_minute) { ?>
+                                                                                <option value="<?php echo $minute; ?>" selected="selected"><?php echo $minute; ?></option>
+                                                                            <?php } else { ?>
+                                                                                <option value="<?php echo $minute; ?>"><?php echo $minute; ?></option>
+                                                                            <?php } ?>
+                                                                        <?php } ?>
+                                                                    </select>
+                                                                    <?php } ?>
+                                                                </div>
+                                                            </span>
+                                                            <?php } ?>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             <?php } else { ?>
                                                 <br /><?php echo lang('text_location_closed'); ?><br />
                                             <?php } ?>
@@ -125,8 +175,8 @@
                                             <div class="btn-group btn-group-md col-xs-12" data-toggle="buttons">
                                                 <?php foreach ($addresses as $address) { ?>
                                                     <?php if (!empty($address['address_id'])) { ?>
-                                                        <label class="btn btn-default wrap-all col-xs-3 <?php echo ($address_id == $address['address_id']) ? 'active' : ''; ?>">
-                                                            <a class="edit-address pull-right" data-form="#address-form-<?php echo $address_row; ?>"><?php echo lang('text_edit'); ?></a>
+                                                        <label class="btn btn-default wrap-all col-xs-3 <?php echo ($address_id == $address['address_id']) ? 'btn-primary active' : ''; ?>" data-btn="btn-primary">
+                                                            <span class="edit-address pull-right" data-form="#address-form-<?php echo $address_row; ?>"><?php echo lang('text_edit'); ?></span>
                                                             <input type="radio" name="address_id" value="<?php echo $address['address_id']; ?>" <?php echo ($address['address_id'] == $address_id) ? 'checked="checked"' : ''; ?> />
                                                             <address class="text-left"><?php echo $address['address']; ?></address>
                                                         </label>
@@ -244,7 +294,7 @@
                                             <label for=""><?php echo lang('label_order_type'); ?></label><br /><?php echo ($order_type === '1') ? lang('label_delivery') : lang('label_collection'); ?>
                                         </div>
                                         <div class="form-group">
-                                            <label for=""><?php echo lang('label_order_time'); ?></label><br /><?php echo mdate(config_item('time_format'), strtotime($order_time)); ?>
+                                            <label for=""><?php echo lang('label_order_time'); ?></label><br /><?php echo mdate(lang('text_date_format') .' '. config_item('time_format'), strtotime($order_time)); ?>
                                         </div>
                                     </div>
                                 </div>
@@ -301,15 +351,61 @@
 
 <script type="text/javascript"><!--
 $(document).ready(function() {
-  	$('#address-labels .edit-address').on('click', function() {
+    $("#choose-order-time select.form-control").select2({
+        minimumResultsForSearch: Infinity
+    });
+
+    $('input[name="order_time_type"]').on('change', function() {
+        $('#choose-order-time').slideUp();
+
+        if (this.value === 'later') {
+            $('#choose-order-time').slideDown();
+        }
+    });
+
+    $('select[name="order_date"]').on('change', function() {
+        $('#choose-order-time .time-input-addon').css("display", "none");
+
+        var timeAddonId = "#order-time-" + this.value;
+        if ($(timeAddonId).length) {
+            $(timeAddonId).css("display", "table-cell");
+            $(timeAddonId + ' select.hours, ' + timeAddonId + ' select.minutes:not(.hide)').trigger("change");
+        }
+    });
+
+    $('select.hours').on('change', function() {
+        var minutesAddonId = ".minutes-for-" + this.value;
+
+        $('#choose-order-time .time-input-addon .minutes').addClass("hide");
+        $('input[name="order_hour"]').val(this.value);
+
+        if ($(this).parent().find(minutesAddonId).length) {
+            $(minutesAddonId).removeClass("hide");
+            $(minutesAddonId).css("display", "table-cell");
+            $(minutesAddonId).trigger("change");
+        }
+    });
+
+    $('select.minutes').on('change', function() {
+        $('input[name="order_minute"]').val(this.value);
+    });
+
+    $('#address-labels input[name="address_id"]').on('change', function() {
+        var formToggle = $(this).parent().parent().find('.edit-address');
+        formToggle.text('<?php echo lang('text_edit'); ?>');
+        $('#address-forms > div').slideUp();
+    });
+
+
+    $('#address-labels .edit-address').on('click', function() {
         var formDiv = $(this).attr('data-form');
-        $('#address-forms > div').fadeOut();
+        $('#address-forms > div').slideUp();
 
         if ($(formDiv).is(':visible')) {
-            $(this).text('Edit');
+            $(this).text('<?php echo lang('text_edit'); ?>');
             $(formDiv).slideUp();
         } else {
-            $(this).text('Close');
+            $(this).text('<?php echo lang('text_close'); ?>');
             $(formDiv).slideDown();
         }
 	});

@@ -12,6 +12,9 @@ class Checkout extends Main_Controller {
         $this->load->model('Countries_model');
         $this->load->model('Extensions_model');
 
+        $this->load->library('location');
+        $this->location->initialize();
+
         $this->load->library('cart'); 															// load the cart library
         $this->load->library('currency'); 														// load the currency library
         $this->load->library('country'); 														// load the currency library
@@ -31,15 +34,13 @@ class Checkout extends Main_Controller {
             redirect(restaurant_url());																	// redirect to menus page and display error
         }
 
-        if ( ! $this->location->isOpened() AND $this->config->item('future_orders') !== '1') { 													// else if local restaurant is not open
-            $this->alert->set('alert', $this->lang->line('alert_location_closed'));
+        if ( $this->location->isClosed()) { 													// else if local restaurant is not open
             redirect(restaurant_url());																	// redirect to previous page and display error
 		}
 
-		if (( ! $this->location->hasDelivery() AND ! $this->location->hasCollection()) AND $this->config->item('location_order') === '1') { 													// else if local restaurant is not open
-			$this->alert->set('alert', $this->lang->line('alert_order_unavailable'));
+        if ( ! $this->location->checkOrderType()) {
             redirect(restaurant_url());																	// redirect to previous page and display error
-		}
+        }
 
 		if ($this->location->orderType() === '1' AND ! $this->location->checkMinimumOrder($this->cart->total())) { 							// checks if cart contents is empty
             redirect(restaurant_url());																	// redirect to previous page and display error
@@ -58,6 +59,11 @@ class Checkout extends Main_Controller {
 		$this->template->setBreadcrumb($this->lang->line('text_heading'), 'checkout');
 
 		$this->template->setTitle($this->lang->line('text_heading'));
+
+        $this->template->setStyleTag(assets_url('js/datepicker/datepicker.css'), 'datepicker-css');
+        $this->template->setScriptTag(assets_url("js/datepicker/bootstrap-datepicker.js"), 'bootstrap-datepicker-js');
+        $this->template->setStyleTag(assets_url('js/datepicker/bootstrap-timepicker.css'), 'bootstrap-timepicker-css');
+        $this->template->setScriptTag(assets_url("js/datepicker/bootstrap-timepicker.js"), 'bootstrap-timepicker-js');
 
         $data['text_login_register']	= $this->customer->isLogged() ? sprintf($this->lang->line('text_logout'), $this->customer->getFirstName(), site_url('account/logout')) : sprintf($this->lang->line('text_registered'), site_url('account/login'));
 
@@ -241,6 +247,56 @@ class Checkout extends Main_Controller {
             $data['order_type'] = '1';
         }
 
+        $data['order_times'] = $this->location->orderTimeRange();
+        $data['order_time_interval'] = ($data['order_type'] === '1') ? $this->location->deliveryTime() : $this->location->collectionTime();
+
+        $count = 1;
+        foreach ($data['order_times'] as $date => $times) {
+            if ($date === 'asap') continue;
+
+            if ($count === 1) {
+                $order_date = $date;
+                $order_hour = key($times);
+                $order_minute = isset($times[$order_hour]) ? current($times[$order_hour]) : '';
+            }
+
+            $count++;
+        }
+
+        if ($this->input->post('order_time_type')) {
+            $data['order_time_type'] = $this->input->post('order_time_type');                            // retrieve order_time value from $_POST data if set
+        } else if (isset($order_data['order_time_type'])) {
+            $data['order_time_type'] = $order_data['order_time_type'];                                    // retrieve order_type from session data
+        } else if (!empty($data['order_times']['asap'])) {
+            $data['order_time_type'] = 'asap';
+        } else {
+            $data['order_time_type'] = 'later';
+        }
+
+        if ($this->input->post('order_date')) {
+            $data['order_date'] = $this->input->post('order_date');                            // retrieve order_time value from $_POST data if set
+        } else if (isset($order_data['order_date'])) {
+            $data['order_date'] = $order_data['order_date'];                                    // retrieve order_type from session data
+        } else {
+            $data['order_date'] = $order_date;
+        }
+
+        if ($this->input->post('order_hour')) {
+            $data['order_hour'] = $this->input->post('order_hour');                            // retrieve order_time value from $_POST data if set
+        } else if (isset($order_data['order_hour'])) {
+            $data['order_hour'] = $order_data['order_hour'];                                    // retrieve order_type from session data
+        } else {
+            $data['order_hour'] = $order_hour;
+        }
+
+        if ($this->input->post('order_minute')) {
+            $data['order_minute'] = $this->input->post('order_minute');                            // retrieve order_time value from $_POST data if set
+        } else if (isset($order_data['order_minute'])) {
+            $data['order_minute'] = $order_data['order_minute'];                                    // retrieve order_type from session data
+        } else {
+            $data['order_minute'] = $order_minute;
+        }
+
         if ($this->input->post('order_time')) {
             $data['order_time'] = $this->input->post('order_time');                            // retrieve order_time value from $_POST data if set
         } else if (isset($order_data['order_time'])) {
@@ -331,8 +387,6 @@ class Checkout extends Main_Controller {
             );
         }
 
-        $data['order_times'] = $this->location->orderTimeRange();
-
         $data['payments'] = array();
         $local_payments = $this->location->payments();
         $payments = $this->extension->getAvailablePayments();
@@ -354,15 +408,20 @@ class Checkout extends Main_Controller {
 
             $order_data['customer_id'] = $this->customer->getId();					// retrive customer id from customer library and add to order_data array
 
-	        $order_data['checkout_step'] = empty($order_data['checkout_step']) ? 'one' : $order_data['checkout_step'];
-	        $order_data['first_name'] 	= $this->input->post('first_name');
-            $order_data['last_name'] 	= $this->input->post('last_name');
-            $order_data['email'] 		= $this->input->post('email');
-            $order_data['telephone'] 	= $this->input->post('telephone');
-            $order_data['order_time'] 	= $this->input->post('order_time');					// retrieve order_time value from $_POST data if set and add to order_data array
-            $order_data['order_type'] 	= $this->location->orderType();				// retrieve order_type value from $_POST data if set and convert to integer then add to order_data array
-            $order_data['address_id'] 	= (int) $this->input->post('address_id');				// retrieve address_id value from $_POST data if set and convert to integer then add to order_data array
-            $order_data['comment'] 		= $this->input->post('comment');						// retrieve comment value from $_POST data if set and convert to integer then add to order_data array
+	        $order_data['checkout_step']    = empty($order_data['checkout_step']) ? 'one' : $order_data['checkout_step'];
+	        $order_data['first_name'] 	    = $this->input->post('first_name');
+            $order_data['last_name'] 	    = $this->input->post('last_name');
+            $order_data['email'] 		    = $this->input->post('email');
+            $order_data['telephone'] 	    = $this->input->post('telephone');
+            $order_data['order_time_type']  = $this->input->post('order_time_type');
+            $order_data['order_asap_time'] = $this->input->post('order_asap_time');
+            $order_data['order_date'] 	    = $this->input->post('order_date');
+            $order_data['order_hour'] 	    = $this->input->post('order_hour');
+            $order_data['order_minute'] 	= $this->input->post('order_minute');
+            $order_data['order_time'] 	    = $this->input->post('order_time');					// retrieve order_time value from $_POST data if set and add to order_data array
+            $order_data['order_type'] 	    = $this->location->orderType();				// retrieve order_type value from $_POST data if set and convert to integer then add to order_data array
+            $order_data['address_id'] 	    = (int) $this->input->post('address_id');				// retrieve address_id value from $_POST data if set and convert to integer then add to order_data array
+            $order_data['comment'] 		    = $this->input->post('comment');						// retrieve comment value from $_POST data if set and convert to integer then add to order_data array
 
             if ($this->location->orderType() === '1') {
                 foreach ($this->input->post('address') as $key => $address) {
@@ -440,7 +499,15 @@ class Checkout extends Main_Controller {
 		}
 
 		$this->form_validation->set_rules('telephone', 'lang:label_telephone', 'xss_clean|trim|required|numeric|max_length[20]');
-		$this->form_validation->set_rules('order_time', 'lang:label_order_time', 'xss_clean|trim|required|valid_time|callback__validate_time');
+		$this->form_validation->set_rules('order_time_type', 'lang:label_order_time_type', 'xss_clean|trim|required|alpha');
+
+        if ($this->input->post('order_time_type') === 'asap') {
+            $this->form_validation->set_rules('order_asap_time', 'lang:label_order_asap_time', 'xss_clean|trim|required|callback__validate_time');
+        } else {
+            $this->form_validation->set_rules('order_date', 'lang:label_date', 'xss_clean|trim|required|valid_date');
+            $this->form_validation->set_rules('order_hour', 'lang:label_hour', 'xss_clean|trim|required|numeric|callback__validate_time');
+            $this->form_validation->set_rules('order_minute', 'lang:label_minute', 'xss_clean|trim|required|numeric');
+        }
 
         if ($this->location->orderType() === '1' AND $this->input->post('address')) {
             $this->form_validation->set_rules('address_id', 'lang:label_address', 'xss_clean|trim|integer|callback__validate_address');
@@ -461,7 +528,7 @@ class Checkout extends Main_Controller {
 			$this->form_validation->set_rules('payment', 'lang:label_payment_method', 'xss_clean|trim|required|alpha_dash|callback__validate_payment');
 
             if ($this->config->item('checkout_terms') > 0) {
-                $this->form_validation->set_rules('terms_condition', 'lang:label_terms', 'xss_clean|trim|required|integer');
+                $this->form_validation->set_rules('terms_condition', 'lang:button_agree_terms', 'xss_clean|trim|required|integer');
             }
 		}
 
@@ -475,24 +542,21 @@ class Checkout extends Main_Controller {
 	}
 
 	public function _validate_time($str) { 	// validation callback function to check if order_time $_POST data is a valid time, is less than the restaurant current time and is within the restaurant opening and closing hour
-        if ($this->config->item('location_order') === '1') {
-            if ($this->location->orderType() == '1' AND ! $this->location->hasDelivery()) { 					// checks if cart contents is empty
-                $this->form_validation->set_message('_validate_time', $this->lang->line('error_delivery_unavailable'));
-                return FALSE;
-            } else if ($this->location->orderType() == '2' AND ! $this->location->hasCollection()) { 				// checks if cart contents is empty
-                $this->form_validation->set_message('_validate_time', $this->lang->line('error_collection_unavailable'));
-                return FALSE;
-            }
+        if ($this->input->post('order_time_type') === 'later') {
+            $str = "{$this->input->post('order_date')} {$this->input->post('order_hour')}:{$this->input->post('order_minute')}";
         }
 
-        if (strtotime($str) < strtotime($this->location->currentTime())) {
+        $order_type = ($this->location->orderType() === '1') ? 'delivery' : 'collection';
+
+        if (strtotime($str) < time()) {
         	$this->form_validation->set_message('_validate_time', $this->lang->line('error_delivery_less_current_time'));
       		return FALSE;
-    	} else if ( ! $this->location->checkDeliveryTime($str)) {
+    	} else if ( ! $this->location->checkOrderTime($str, $order_type)) {
         	$this->form_validation->set_message('_validate_time', $this->lang->line('error_no_delivery_time'));
       		return FALSE;
         }
 
+        $_POST['order_time'] = $str;
         return TRUE;
     }
 
@@ -507,7 +571,6 @@ class Checkout extends Main_Controller {
 
                     if ($area = $this->location->checkDeliveryCoverage($address)) {
 	                    if (isset($area['area_id']) AND $area['area_id'] !== $this->location->getAreaId()) {
-		                    $this->location->setDeliveryArea($area['area_id']);
 		                    $this->alert->set('alert', $this->lang->line('alert_delivery_area_changed'));
 
 		                    if ($this->input->post('checkout_step') === 'two') {

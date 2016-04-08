@@ -1,95 +1,155 @@
-<?php if ($has_delivery OR $has_collection) { ?>
-    <div class="col-xs-12 wrap-none wrap-bottom">
-	    <div class="col-xs-12 col-sm-6 pull-right">
-		    <?php if ($has_delivery AND $opening_hours) { ?>
-			    <h4 class="opening-hour-title">
-				    <i class="fa fa-clock-o fa-fw"></i>&nbsp;
-				    <strong><?php echo lang('text_delivery_hours'); ?></strong>
-			    </h4>
-			    <div class="list-group opening-hour">
-				    <?php foreach ($opening_hours as $opening_hour) { ?>
-					    <div class="list-group-item">
-						    <div class="row">
-							    <div class="col-xs-4"><?php echo $opening_hour['day']; ?>:</div>
-							    <div class="col-xs-8">
-								    <?php echo $opening_hour['time']; ?>
-								    <span class="small text-muted"><?php echo $opening_hour['type']; ?></span>
-							    </div>
-						    </div>
-					    </div>
-				    <?php } ?>
-			    </div>
-		    <?php } ?>
-	    </div>
-
-	    <div class="col-xs-12 col-sm-6">
-            <div class="list-group">
-                <?php if ($has_delivery) { ?>
-                    <div class="list-group-item"><i class="fa fa-clock-o fa-fw"></i>&nbsp;<b><?php echo lang('text_delivery_time'); ?></b><br /> <?php echo $delivery_time; ?> <?php echo lang('text_minutes'); ?></div>
-                <?php } ?>
-                <div class="list-group-item"><i class="fa fa-clock-o fa-fw"></i>&nbsp;<b><?php echo lang('text_collection_time'); ?></b><br />
-                    <?php if ($has_collection) { ?>
-                        <?php echo $collection_time; ?> <?php echo lang('text_minutes'); ?>
-                    <?php } else { ?>
-                        <?php echo lang('text_only_delivery_is_available'); ?>
-                    <?php } ?>
-                </div>
-                <?php if ($has_delivery) { ?>
-                    <div class="list-group-item"><i class="fa fa-clock-o fa-fw"></i>&nbsp;<b><?php echo lang('text_last_order_time'); ?></b><br /> <?php echo $last_order_time; ?></div>
-                    <div class="list-group-item"><i class="fa fa-paypal fa-fw"></i>&nbsp;<b><?php echo lang('text_payments'); ?></b><br /> <?php echo $payments; ?></div>
-                <?php } ?>
-                <?php if (!empty($opening_type) AND $opening_type == '24_7') { ?>
-                    <div class="list-group-item"><?php echo lang('text_opens_24_7'); ?></div>
-                <?php } ?>
-            </div>
-        </div>
-
-        <div class="col-xs-12 wrap-none">
-	        <?php if ($has_delivery) { ?>
-	            <div class="col-xs-12 col-sm-6">
-                    <h4 class="wrap-bottom border-bottom"><?php echo lang('text_delivery_areas'); ?></h4>
-
-                    <div class="row">
-                        <div class="col-xs-5"><b><?php echo lang('column_area_name'); ?></b></div>
-                        <div class="col-xs-3 wrap-none"><b><?php echo lang('column_area_charge'); ?></b></div>
-                        <div class="col-xs-4"><b><?php echo lang('column_area_min_total'); ?></b></div>
-                        <?php if (!empty($delivery_areas)) { ?>
-                            <?php foreach($delivery_areas as $key => $area) { ?>
-                                <div class="col-xs-12 wrap-none">
-                                    <div class="col-xs-5">
-	                                    <?php echo $area['name']; ?>
-	                                    <span class="badge" style="background-color: <?php echo $area['color']; ?>">&nbsp;&nbsp;</span>
-                                    </div>
-                                    <div class="col-xs-3 wrap-none"><?php echo $area['charge']; ?></div>
-                                    <div class="col-xs-4"><?php echo $area['min_amount']; ?></div>
-                                </div>
-                            <?php } ?>
-                        <?php } else { ?>
-                            <div class="col-xs-12">
-                                <br /><p><?php echo lang('text_no_delivery_areas'); ?></p>
-                            </div>
-                        <?php } ?>
-                    </div>
-	            </div>
-
-	            <div class="col-xs-12 col-sm-6 wrap-top">
-	                <div id="map" class="">
-	                    <div id="map-holder" style="height:370px;text-align:left;"></div>
-	                </div>
-	            </div>
-	        <?php } ?>
-        </div>
-    </div>
-<?php } else { ?>
-    <div class="col-xs-12">
-        <p class="alert alert-info"><?php echo lang('text_offers_no_types'); ?></p>
-    </div>
-<?php } ?>
-
 <div class="col-xs-12">
-    <h4 class="wrap-bottom border-bottom"><?php echo sprintf(lang('text_info_heading'), $location_name); ?></h4>
-    <p><?php echo $local_description; ?></p>
+	<?php if (!empty($local_description)) { ?>
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<h4 class="wrap-bottom border-bottom"><?php echo sprintf(lang('text_info_heading'), $location_name); ?></h4>
+				<p><?php echo $local_description; ?></p>
+			</div>
+		</div>
+	<?php } ?>
 </div>
+
+<div class="col-xs-12 wrap-none wrap-bottom">
+	<div class="col-xs-12 col-sm-6">
+		<?php if ($working_hours) { ?>
+			<div class="panel panel-default panel-nav-tabs">
+				<div class="panel-heading">
+					<ul class="nav nav-tabs">
+						<li class="active"><a href="#opening-hours" data-toggle="tab"><?php echo lang('text_opening_hours'); ?></a></li>
+						<?php if ($has_delivery) { ?>
+							<li><a href="#delivery-hours" data-toggle="tab"><?php echo lang('text_delivery_hours'); ?></a></li>
+						<?php } ?>
+						<?php if ($has_collection) { ?>
+							<li><a href="#collection-hours" data-toggle="tab"><?php echo lang('text_collection_hours'); ?></a></li>
+						<?php } ?>
+					</ul>
+				</div>
+				<div class="panel-body">
+					<div class="tab-content">
+						<?php foreach (array('opening', 'delivery', 'collection') as $type) { ?>
+							<div id="<?php echo $type ?>-hours" class="tab-pane fade <?php echo ($type === 'opening') ? 'in active': ''; ?>">
+								<div class="list-group">
+									<?php if (!empty($working_hours[$type])) { ?>
+										<?php foreach ($working_hours[$type] as $hour) { ?>
+											<div class="list-group-item">
+												<div class="row">
+													<div class="col-xs-4"><?php echo $hour['day']; ?>:</div>
+													<div class="col-xs-8">
+														<?php if (!empty($hour['status'])) echo sprintf(lang('text_working_hour'), $hour['open'], $hour['close']); ?>
+														<span class="small text-muted"><?php if (isset($hour['info']) AND $hour['info'] === 'closed') { echo lang('text_closed'); } else if (isset($hour['info']) AND $hour['info'] === '24_hours') { echo lang('text_24h'); }; ?></span>
+													</div>
+												</div>
+											</div>
+										<?php } ?>
+									<?php } else if (empty($working_hours[$type])) { ?>
+										<div class="list-group-item">
+											<?php echo lang('text_same_as_opening_hours'); ?>
+										</div>
+									<?php } ?>
+								</div>
+							</div>
+						<?php } ?>
+					</div>
+				</div>
+			</div>
+		<?php } ?>
+	</div>
+
+	<div class="col-xs-12 col-sm-6">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<div class="list-group">
+					<?php if (!empty($working_type['opening']) AND $working_type['opening'] == '24_7') { ?>
+						<div class="list-group-item"><?php echo lang('text_opens_24_7'); ?></div>
+					<?php } ?>
+					<?php if ($has_delivery) { ?>
+						<div class="list-group-item"><i class="fa fa-clock-o fa-fw"></i>&nbsp;<b><?php echo lang('text_delivery_time'); ?></b><br />
+							<?php if ($delivery_status === 'open') { ?>
+								<?php echo sprintf(lang('text_in_minutes'), $delivery_time); ?>
+							<?php } else if ($delivery_status === 'opening') { ?>
+								<?php echo sprintf(lang('text_starts'), $delivery_time); ?>
+							<?php } else { ?>
+								<?php echo lang('text_closed'); ?>
+							<?php } ?>
+						</div>
+					<?php } ?>
+					<?php if ($has_collection) { ?>
+						<div class="list-group-item"><i class="fa fa-clock-o fa-fw"></i>&nbsp;<b><?php echo lang('text_collection_time'); ?></b><br />
+							<?php if ($collection_status === 'open') { ?>
+								<?php echo sprintf(lang('text_in_minutes'), $collection_time); ?>
+							<?php } else if ($collection_status === 'opening') { ?>
+								<?php echo sprintf(lang('text_starts'), $collection_time); ?>
+							<?php } else { ?>
+								<?php echo lang('text_closed'); ?>
+							<?php } ?>
+						</div>
+					<?php } ?>
+					<?php if ($has_delivery) { ?>
+						<div class="list-group-item"><i class="fa fa-clock-o fa-fw"></i>&nbsp;<b><?php echo lang('text_last_order_time'); ?></b><br />
+							<?php echo $last_order_time; ?>
+						</div>
+					<?php } ?>
+					<?php if ($payments) { ?>
+						<div class="list-group-item"><i class="fa fa-paypal fa-fw"></i>&nbsp;<b><?php echo lang('text_payments'); ?></b><br />
+							<?php echo $payments; ?>.
+						</div>
+					<?php } ?>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-xs-12 wrap-none">
+		<?php if ($has_delivery) { ?>
+			<div class="col-xs-12 col-sm-6">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title"><b><?php echo lang('text_delivery_areas'); ?></b></h4>
+					</div>
+					<div class="panel-body">
+						<div class="list-group">
+							<?php if (!empty($delivery_areas)) { ?>
+								<div class="list-group-item row">
+									<div class="col-xs-3"><b><?php echo lang('column_area_name'); ?></b></div>
+									<div class="col-xs-5 text-center wrap-none"><b><?php echo lang('column_area_charge'); ?></b></div>
+									<div class="col-xs-4"><b><?php echo lang('column_area_min_total'); ?></b></div>
+								</div>
+								<?php foreach($delivery_areas as $key => $area) { ?>
+									<div class="list-group-item">
+										<div class="row">
+											<div class="col-xs-5">
+												<?php echo $area['name']; ?>
+												<span class="badge" style="background-color: <?php echo $area['color']; ?>">&nbsp;&nbsp;</span>
+											</div>
+											<div class="col-xs-3 wrap-none"><?php echo $area['charge']; ?></div>
+											<div class="col-xs-4"><?php echo $area['min_amount']; ?></div>
+										</div>
+									</div>
+								<?php } ?>
+							<?php } else { ?>
+								<div class="list-group-item">
+									<p><?php echo lang('text_no_delivery_areas'); ?></p>
+								</div>
+							<?php } ?>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-xs-12 col-sm-6">
+				<div id="map" class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title"><b><?php echo lang('text_delivery_map'); ?></b></h4>
+					</div>
+					<div class="panel-body">
+						<div id="map-holder" style="height:300px;text-align:left;"></div>
+					</div>
+				</div>
+			</div>
+		<?php } ?>
+	</div>
+</div>
+
 <script type="text/javascript">//<![CDATA[
 	var map = null;
 	var geocoder = null;
@@ -121,7 +181,7 @@
             center: latlng,
             zoom: 16,
             mapTypeId: google.maps.MapTypeId.ROADMAP
-        }
+        };
 
 	    map = new google.maps.Map(document.getElementById('map-holder'), mapOptions);
 
@@ -240,7 +300,7 @@
 				shape, decodedPath;
 
 			if (area.center != undefined && area.radius != undefined) {
-				center = new google.maps.LatLng(area.center.lat, area.center.lng)
+				center = new google.maps.LatLng(area.center.lat, area.center.lng);
 				circleArea = drawCircleArea(area.row, center, area.radius);
 			}
 

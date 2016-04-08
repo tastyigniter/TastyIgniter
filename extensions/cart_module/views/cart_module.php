@@ -1,12 +1,12 @@
-<div id="cart-box-affix" <?php echo $fixed_cart; ?>>
-	<div id="cart-box" class="module-box collapse">
+<div id="cart-box-affix" class="hidden-xs" <?php echo $fixed_cart; ?>>
+	<div id="cart-box" class="module-box">
 		<div class="panel panel-default panel-cart">
 			<div class="panel-heading">
 				<h3 class="panel-title"><?php echo lang('text_heading'); ?></h3>
 			</div>
 
 			<div class="panel-body">
-				<div id="cart-alert">
+				<div id="cart-alert" class="cart-alert-wrap">
 	                <div class="cart-alert"></div>
 	                <?php if (!empty($cart_alert)) { ?>
 	                    <?php echo $cart_alert; ?>
@@ -15,18 +15,34 @@
 
 				<?php if ($has_delivery OR $has_collection) { ?>
 					<div class="location-control text-center text-muted">
-						<div id="my-postcode" class="wrap-bottom" style="display:<?php echo (empty($alert_no_postcode)) ? 'block' : 'none'; ?>">
-							<div class="btn-group btn-group-md order-type" data-toggle="buttons">
+						<div id="my-postcode" style="display:<?php echo (empty($alert_no_postcode)) ? 'block' : 'none'; ?>">
+							<div class="btn-group btn-group-md text-center order-type" data-toggle="buttons">
 		                        <?php if ($has_delivery) { ?>
-			                        <label class="btn <?php echo ($order_type === '1') ? 'btn-primary active' : 'btn-default'; ?>" data-btn="btn-primary">
-			                            <input type="radio" name="order_type" value="1" <?php echo ($order_type === '1') ? 'checked="checked"' : ''; ?>>&nbsp;&nbsp;<?php echo lang('text_delivery'); ?>
-			                            <span class="small center-block"><?php echo $delivery_time.' '.lang('text_min'); ?></span>
+			                        <label class="btn <?php echo ($order_type === '1') ? 'btn-default btn-primary active' : 'btn-default'; ?>" data-btn="btn-primary">
+			                            <input type="radio" name="order_type" value="1" <?php echo ($order_type === '1') ? 'checked="checked"' : ''; ?>>&nbsp;&nbsp;<strong><?php echo lang('text_delivery'); ?></strong>
+			                            <span class="small center-block">
+											<?php if ($delivery_status === 'open') { ?>
+												<?php echo sprintf(lang('text_in_minutes'), $delivery_time); ?>
+											<?php } else if ($delivery_status === 'opening') { ?>
+												<?php echo sprintf(lang('text_starts'), $delivery_time); ?>
+											<?php } else { ?>
+												<?php echo lang('text_is_closed'); ?>
+											<?php } ?>
+										</span>
 			                        </label>
 		                        <?php } ?>
 		                        <?php if ($has_collection) { ?>
-			                        <label class="btn <?php echo ($order_type === '2') ? 'btn-primary active' : 'btn-default'; ?>" data-btn="btn-primary">
-			                            <input type="radio" name="order_type" value="2" <?php echo ($order_type === '2') ? 'checked="checked"' : ''; ?>>&nbsp;&nbsp;<?php echo lang('text_collection'); ?>
-			                            <span class="small center-block"><?php echo $collection_time.' '.lang('text_min'); ?></span>
+			                        <label class="btn <?php echo ($order_type === '2') ? 'btn-default btn-primary active' : 'btn-default'; ?>" data-btn="btn-primary">
+			                            <input type="radio" name="order_type" value="2" <?php echo ($order_type === '2') ? 'checked="checked"' : ''; ?>>&nbsp;&nbsp;<strong><?php echo lang('text_collection'); ?></strong>
+			                            <span class="small center-block">
+											<?php if ($collection_status === 'open') { ?>
+												<?php echo sprintf(lang('text_in_minutes'), $collection_time); ?>
+											<?php } else if ($collection_status === 'opening') { ?>
+												<?php echo sprintf(lang('text_starts'), $collection_time); ?>
+											<?php } else { ?>
+												<?php echo lang('text_is_closed'); ?>
+											<?php } ?>
+										</span>
 			                        </label>
 		                        <?php } ?>
 		                    </div>
@@ -40,38 +56,32 @@
 							<ul>
 								<?php foreach ($cart_items as $cart_item) { ?>
 									<li>
-										<a class="cart-btn remove" onClick="removeCart('<?php echo $cart_item['menu_id']; ?>', '<?php echo $cart_item['rowid']; ?>', '0');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-trash"></i></a>
+										<a class="cart-btn remove text-muted small" onClick="removeCart('<?php echo $cart_item['menu_id']; ?>', '<?php echo $cart_item['rowid']; ?>', '0');"><i class="fa fa-minus-circle"></i></a>
 										<a class="name-image" onClick="openMenuOptions('<?php echo $cart_item['menu_id']; ?>', '<?php echo $cart_item['rowid']; ?>');">
 											<?php if (!empty($cart_item['image'])) { ?>
 												<img class="image img-responsive img-thumbnail" width="<?php echo $cart_images_w; ?>" height="<?php echo $cart_images_h; ?>" alt="<?php echo $cart_item['name']; ?>" src="<?php echo $cart_item['image']; ?>">
 											<?php } ?>
 											<span class="name">
-	                                            <span class="quantity small"><?php echo $cart_item['qty'].lang('text_times'); ?></span>
+	                                            <span class="quantity"><?php echo $cart_item['qty'].lang('text_times'); ?></span>
 	                                            <?php echo $cart_item['name']; ?>
 	                                        </span>
+											<?php if (!empty($cart_item['options'])) { ?>
+												<span class="options text-muted small"><?php echo $cart_item['options']; ?></span>
+											<?php } ?>
+											<?php if (!empty($cart_item['comment'])) { ?>
+												<span class="comment text-muted small">[<?php echo $cart_item['comment']; ?>]</span>
+											<?php } ?>
 										</a>
-	                                    <?php if (!empty($cart_item['options'])) { ?>
-	                                        <span class="options small"><?php echo $cart_item['options']; ?></span>
-	                                    <?php } ?>
-	                                    <?php if (!empty($cart_item['comment'])) { ?>
-	                                        <span class="text-muted comment small">[<?php echo $cart_item['comment']; ?>]</span>
-	                                    <?php } ?>
-	                                    <p class="amount"><?php echo $cart_item['sub_total']; ?></p>
+										<span class="amount"><?php echo $cart_item['sub_total']; ?></span>
 									</li>
 								<?php } ?>
 							</ul>
 						</div>
 
 						<div class="cart-coupon">
-							<div class="table-responsive">
-								<table width="100%" height="auto" class="table table-none">
-									<tbody>
-										<tr>
-											<td class="text-right"><input type="text" name="coupon_code" class="form-control pull-right" value="<?php echo isset($coupon['code']) ? $coupon['code'] : ''; ?>" placeholder="<?php echo lang('text_apply_coupon'); ?>" /></td>
-											<td><a class="btn btn-default" onclick="applyCoupon();"><?php echo lang('button_apply_coupon'); ?></a></td>
-										</tr>
-									</tbody>
-								</table>
+							<div class="input-group">
+								<input type="text" name="coupon_code" class="form-control" value="<?php echo isset($coupon['code']) ? $coupon['code'] : ''; ?>" placeholder="<?php echo lang('text_apply_coupon'); ?>" />
+								<span class="input-group-btn"><a class="btn btn-default" onclick="applyCoupon();"><?php echo lang('button_apply_coupon'); ?></a></span>
 							</div>
 						</div>
 
@@ -120,7 +130,7 @@
 		</div>
 
 		<?php if (!empty($button_order)) { ?>
-			<div class="buttons wrap-none hidden-xs">
+			<div class="cart-buttons wrap-none">
 				<div class="center-block">
 					<?php echo $button_order; ?>
 				</div>
@@ -128,18 +138,23 @@
 			</div>
 		<?php } ?>
 	</div>
-
-	<div class="navbar-toggle visible-xs">
-		<a class="btn btn-default cart-toggle" data-toggle="collapse" data-target="#cart-box" style="text-overflow:ellipsis; overflow:hidden;">
-			<?php echo lang('text_heading'); ?>
-			<span class="order-total"><?php echo (!empty($order_total)) ? '&nbsp;&nbsp;-&nbsp;&nbsp;'.$order_total : ''; ?></span>
-		</a>
-		<?php if (!empty($button_order)) { echo $button_order; } ?>
-	</div>
-
 </div>
+<div id="cart-buttons" class="visible-xs">
+	<a class="btn btn-default cart-toggle" href="<?php echo site_url('cart') ?>" style="text-overflow:ellipsis; overflow:hidden;">
+		<?php echo lang('text_heading'); ?>
+		<span class="order-total"><?php echo (!empty($order_total)) ? '&nbsp;&nbsp;-&nbsp;&nbsp;'.$order_total : ''; ?></span>
+	</a>
+</div>
+<div class="cart-alert-wrap cart-alert-affix visible-xs-block"><div class="cart-alert"></div><?php if (!empty($cart_alert)) { echo $cart_alert; } ?></div>
 <script type="text/javascript"><!--
     var alert_close = '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
+
+	var cartHeight = pageHeight-(65/100*pageHeight);
+
+	$(document).on('ready', function() {
+		$('.cart-alert-wrap .alert').fadeTo('slow', 0.1).fadeTo('slow', 1.0).delay(5000).slideUp('slow');
+		$('#cart-info .cart-items').css({"height" : "auto", "max-height" : cartHeight, "overflow" : "auto", "margin-right" : "-15px", "padding-right" : "5px"});
+	});
 
 	$(document).on('change', 'input[name="order_type"]', function() {
 		if (typeof this.value !== 'undefined') {
@@ -151,11 +166,7 @@
 				data: 'order_type=' + order_type,
 				dataType: 'json',
 				success: function (json) {
-					if ($('form#checkout-form').length && json['order_type'] != order_type) {
-						window.location.href = js_site_url('checkout');
-					} else {
-						updateCartBox(json);
-					}
+					window.location.href = $(location).attr('href');
 				}
 			});
 		}
@@ -273,28 +284,36 @@
 
     function updateCartBox(json) {
         var alert_message = '';
+
         if (json['redirect']) {
             window.location.href = json['redirect'];
         }
 
         if (json['error']) {
             alert_message = '<div class="alert">' + alert_close + json['error'] + '</div>';
-        }
+			updateCartAlert(alert_message);
+        } else {
+			if (json['success']) {
+				alert_message = '<div class="alert">' + alert_close + json['success'] + '</div>';
+			}
 
-        if (json['success']) {
-            alert_message = '<div class="alert">' + alert_close + json['success'] + '</div>';
-        }
-
-        $('#cart-box').load(js_site_url('cart_module/cart_module #cart-box > *'), function(response) {
-            if (alert_message != '') {
-                $('#cart-alert .cart-alert').empty();
-                $('#cart-alert .cart-alert').append(alert_message);
-                $('#cart-alert .alert').fadeIn('slow').fadeTo('fast', 0.5).fadeTo('fast', 1.0);
-            }
-
-	        if ($('#cart-info .order-total').length > 0) {
-		        $('#cart-box-affix .navbar-toggle .order-total').html(" - " + $('#cart-info .order-total').html());
-	        }
-        });
+			$('#cart-box').load(js_site_url('cart_module/cart_module #cart-box > *'), function(response) {
+				updateCartAlert(alert_message);
+			});
+		}
     }
+
+	function updateCartAlert(alert_message) {
+		if (alert_message != '') {
+			$('.cart-alert-wrap .alert').remove();
+			$('.cart-alert-wrap .cart-alert').append(alert_message);
+			$('.cart-alert-wrap .alert').slideDown('slow').fadeTo('slow', 0.1).fadeTo('slow', 1.0).delay(5000).slideUp('slow');
+		}
+
+		if ($('#cart-info .order-total').length > 0) {
+			$('#cart-box-affix .navbar-toggle .order-total').html(" - " + $('#cart-info .order-total').html());
+		}
+
+		$('#cart-info .cart-items').css({"height" : "auto", "max-height" : cartHeight, "overflow" : "auto", "margin-right" : "-15px", "padding-right" : "5px"});
+	}
     //--></script>

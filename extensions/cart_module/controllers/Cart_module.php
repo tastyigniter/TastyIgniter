@@ -8,7 +8,10 @@ class Cart_module extends Main_Controller {
         $this->load->model('Cart_model'); 														// load the cart model
         $this->load->model('Image_tool_model'); 														// load the Image tool model
 
-        $this->load->library('cart'); 															// load the cart library
+		$this->load->library('location');
+		$this->location->initialize();
+
+		$this->load->library('cart'); 															// load the cart library
         $this->load->library('currency'); 														// load the currency library
 
         $this->lang->load('cart_module/cart_module');
@@ -31,27 +34,46 @@ class Cart_module extends Main_Controller {
 
         $this->template->setStyleTag(extension_url('cart_module/views/stylesheet.css'), 'cart-module-css', '144000');
 
-        $order_data = $this->session->userdata('order_data');
-        if ($rsegment === 'checkout' AND isset($order_data['checkout_step']) AND $order_data['checkout_step'] === 'two') {
-            $data['button_order'] = '<a class="btn btn-primary btn-block btn-lg" onclick="$(\'#checkout-form\').submit();">' . $this->lang->line('button_confirm') . '</a>';
-        } else if ($rsegment == 'checkout') {
-            $data['button_order'] = '<a class="btn btn-primary btn-block btn-lg" onclick="$(\'#checkout-form\').submit();">' . $this->lang->line('button_payment') . '</a>';
-        } else {
-            $data['button_order'] = '<a class="btn btn-primary btn-block btn-lg" href="' . site_url('checkout') . '">' . $this->lang->line('button_order') . '</a>';
-        }
-
         $data['is_opened']                  = $this->location->isOpened();
         $data['order_type']                 = $this->location->orderType();
         $data['search_query'] 		        = $this->location->searchQuery();
-        $data['delivery_time'] 		        = $this->location->deliveryTime();
-        $data['collection_time'] 	        = $this->location->collectionTime();
+		$data['opening_status']		 		= $this->location->workingStatus('opening');
+		$data['delivery_status']			= $this->location->workingStatus('delivery');
+		$data['collection_status']			= $this->location->workingStatus('collection');
         $data['has_delivery']               = $this->location->hasDelivery();
         $data['has_collection']             = $this->location->hasCollection();
 		$data['show_cart_images'] 	        = isset($ext_data['show_cart_images']) ? $ext_data['show_cart_images'] : '';
         $data['cart_images_h'] 		        = isset($ext_data['cart_images_h']) ? $ext_data['cart_images_h'] : '';
         $data['cart_images_w'] 		        = isset($ext_data['cart_images_w']) ? $ext_data['cart_images_w'] :'';
 
-        $menus = $this->Cart_model->getMenus();
+		$data['delivery_time'] = $this->location->deliveryTime();
+		if ($data['delivery_status'] === 'closed') {
+			$data['delivery_time'] = 'closed';
+		} else if ($data['delivery_status'] === 'opening') {
+			$data['delivery_time'] = $this->location->workingTime('delivery', 'open');
+		}
+
+		$data['collection_time'] = $this->location->collectionTime();
+		if ($data['collection_status'] === 'closed') {
+			$data['collection_time'] = 'closed';
+		} else if ($data['collection_status'] === 'opening') {
+			$data['collection_time'] = $this->location->workingTime('collection', 'open');
+		}
+
+		$order_data = $this->session->userdata('order_data');
+		if ($rsegment === 'checkout' AND isset($order_data['checkout_step']) AND $order_data['checkout_step'] === 'two') {
+			$data['button_order'] = '<a class="btn btn-primary btn-block btn-lg" onclick="$(\'#checkout-form\').submit();">' . $this->lang->line('button_confirm') . '</a>';
+		} else if ($rsegment == 'checkout') {
+			$data['button_order'] = '<a class="btn btn-primary btn-block btn-lg" onclick="$(\'#checkout-form\').submit();">' . $this->lang->line('button_payment') . '</a>';
+		} else {
+			$data['button_order'] = '<a class="btn btn-primary btn-block btn-lg" href="' . site_url('checkout') . '">' . $this->lang->line('button_order') . '</a>';
+		}
+
+		if ($this->location->isClosed() OR ! $this->location->checkOrderType()) {
+			$data['button_order'] = '<a class="btn btn-default btn-block btn-lg" href="' . site_url('checkout') . '"><b>' . $this->lang->line('text_is_closed') . '</b></a>';
+		}
+
+		$menus = $this->Cart_model->getMenus();
 
         $data['cart_items'] = array();
         if ($cart_contents = $this->cart->contents()) {															// checks if cart contents is not empty
@@ -84,6 +106,10 @@ class Cart_module extends Main_Controller {
 		            $this->alert->set('custom_now', $alert_msg, 'cart_module');
 		            $this->cart->update(array('rowid' => $cart_item['rowid'], 'qty' => '0'));										// pass the cart_data array to add item to cart, if successful
 	            }
+			}
+
+			if (($response = $this->validateOrderType()) !== TRUE) {
+				$this->alert->set('custom', $response, 'cart_module');
 			}
 
 			if ($this->location->orderType() === '1' AND $this->cart->set_delivery($this->location->deliveryCharge())) {
@@ -137,13 +163,13 @@ class Cart_module extends Main_Controller {
 
 			$json['error'] = $this->lang->line('alert_bad_request');
 
-		} else if ( ! $this->location->hasSearchQuery() AND $this->config->item('location_order') === '1') { 														// if local restaurant is not selected
+		} else if ( $this->config->item('location_order') === '1' AND ! $this->location->hasSearchQuery()) { 														// if local restaurant is not selected
 
 			$json['error'] = $this->lang->line('alert_no_search_query');
 
-		} else if ( ! $this->location->isOpened() AND $this->config->item('future_orders') !== '1') { 											// else if local restaurant is not open
+		} else if (($response = $this->validateOrderType('', FALSE)) !== TRUE) {
 
-			$json['error'] = $this->lang->line('alert_location_closed');
+			$json['error'] = $response;
 
 		} else if ( ! $this->input->post('menu_id')) {
 
@@ -267,22 +293,10 @@ class Cart_module extends Main_Controller {
 		$order_type = (is_numeric($this->input->post('order_type'))) ? $this->input->post('order_type') : NULL;
 
 		if (!$json AND $order_type) {
-			$this->load->library('location');
-			$this->load->library('cart');
+			$response = $this->validateOrderType($order_type);
 
-			if ($order_type === '1') {
-				if ( ! $this->location->hasDelivery()) {
-					$json['error'] = $this->lang->line('alert_delivery_unavailable');
-				} else if ($this->location->hasSearchQuery() AND $this->location->hasDelivery() AND ! $this->location->checkDeliveryCoverage()) {
-					$json['error'] = $this->lang->line('alert_delivery_coverage');
-				} else if ($this->cart->contents() AND ! $this->location->checkMinimumOrder($this->cart->total())) {                            // checks if cart contents is empty
-					$json['error'] = sprintf($this->lang->line('alert_min_delivery_order_total'), $this->currency->format($this->location->minimumOrder()));
-				}
-
-			} else if ($order_type === '2') {
-				if ( ! $this->location->hasCollection()) {
-					$json['error'] = $this->lang->line('alert_collection_unavailable');
-				}
+			if ($response !== TRUE) {
+				$json['error'] = $response;
 			}
 
 			$this->location->setOrderType($order_type);
@@ -332,6 +346,32 @@ class Cart_module extends Main_Controller {
 
         $this->output->set_output(json_encode($json));	// encode the json array and set final out to be sent to jQuery AJAX
     }
+
+	public function validateOrderType($order_type = '', $check_min_total = TRUE) {
+		$order_type = empty($order_type) ? $this->location->orderType() : $order_type;
+
+		if ($this->location->isClosed()) {
+
+			return $this->lang->line('alert_order_unavailable');
+
+		} else if ($order_type === '1') {
+			if ( ! $this->location->checkOrderType($order_type)) {
+
+				return $this->lang->line('alert_delivery_unavailable');
+
+			} else if ($check_min_total AND $this->cart->contents() AND ! $this->location->checkMinimumOrder($this->cart->total())) {                            // checks if cart contents is empty
+
+				return sprintf($this->lang->line('alert_min_delivery_order_total'), $this->currency->format($this->location->minimumOrder()));
+			}
+
+		} else if ($order_type === '2') {
+			if ( ! $this->location->checkOrderType($order_type)) {
+				return $this->lang->line('alert_collection_unavailable');
+			}
+		}
+
+		return TRUE;
+	}
 
 	public function validateCartMenu($menu_data = array(), $cart_item = array()) {
 		// if no menu found in database
@@ -410,7 +450,7 @@ class Cart_module extends Main_Controller {
 
         if (empty($code)) {
             $error = $this->lang->line('alert_coupon_invalid');						// display error message
-        } else if (!$coupon = $this->Cart_model->checkCoupon($code)) {
+		} else if (!$coupon = $this->Cart_model->checkCoupon($code)) {
 			$error = $this->lang->line('alert_coupon_expired');								// display error message
 		} else {
             if (!empty($coupon['order_restriction']) AND $coupon['order_restriction'] !== $this->location->orderType()) {
@@ -439,11 +479,12 @@ class Cart_module extends Main_Controller {
             if ($error === '') {
                 $this->cart->add_coupon(array('code' => $coupon['code'], 'type' => $coupon['type'], 'discount' => $coupon['discount']));
                 return TRUE;
-            } else {
-                $this->cart->remove_coupon($coupon['code']);
             }
         }
 
+		if (!empty($code)) {
+			$this->cart->remove_coupon($code);
+		}
 
         return $error;
     }

@@ -78,48 +78,52 @@ class Local extends Main_Controller {
 
         $this->template->setScriptTag('https://maps.googleapis.com/maps/api/js?v=3' . $map_key .'&sensor=false&region=GB&libraries=geometry', 'google-maps-js', '104330');
 
-        $opening_hours = $this->location->openingHours();                                //retrieve local restaurant opening hours from location library
-        $data['opening_hours'] = array();
-        foreach ($opening_hours as $hour) {
-            if ($hour['status'] !== '1') {
-                $time = $this->lang->line('text_closed');
-            } else {
-	            $time = '('.mdate($time_format, strtotime($hour['open'])) . ' - ' . mdate($time_format, strtotime($hour['close'])) .')';
-            }
-
-	        $type = '';
-	        if ($hour['status'] === '1' AND $hour['open'] === '00:00' AND $hour['close'] === '23:59') {
-		        $type = $this->lang->line('text_24h');
-	        }
-
-            $data['opening_hours'][] = array(
-                'day'  => $hour['day'],
-                'time' => $time,
-	            'type' => $type,
-            );
-        }
-
-        $data['opening_type']       = $this->location->getOpeningType();
         $data['has_delivery']       = $this->location->hasDelivery();
         $data['has_collection']     = $this->location->hasCollection();
-        $data['delivery_time']      = $this->location->deliveryTime();
-        $data['collection_time']    = $this->location->collectionTime();
-        $data['last_order_time']    = mdate($time_format, strtotime($this->location->lastOrderTime()));
-        $data['local_description']  = $this->location->getDescription();
-        $data['map_address']        = $this->location->getAddress();                                        // retrieve local location data
-        $data['location_telephone'] = $this->location->getTelephone();                                        // retrieve local location data
+		$data['opening_status']		= $this->location->workingStatus('opening');
+		$data['delivery_status']	= $this->location->workingStatus('delivery');
+		$data['collection_status']	= $this->location->workingStatus('collection');
+		$data['last_order_time']    = mdate($time_format, strtotime($this->location->lastOrderTime()));
+		$data['local_description']  = $this->location->getDescription();
+		$data['map_address']        = $this->location->getAddress();                                        // retrieve local location data
+		$data['location_telephone'] = $this->location->getTelephone();                                        // retrieve local location data
 
-        $local_payments = $this->location->payments();
+		$data['working_hours'] 		= $this->location->workingHours();                                //retrieve local restaurant opening hours from location library
+		$data['working_type']      = $this->location->workingType();
+
+		if (!$this->location->hasDelivery() OR empty($data['working_type']['delivery'])) {
+			unset($data['working_hours']['delivery']);
+		}
+
+		if (!$this->location->hasCollection() OR empty($data['working_type']['collection'])) {
+			unset($data['working_hours']['collection']);
+		}
+
+		$data['delivery_time'] = $this->location->deliveryTime();
+		if ($data['delivery_status'] === 'closed') {
+			$data['delivery_time'] = 'closed';
+		} else if ($data['delivery_status'] === 'opening') {
+			$data['delivery_time'] = $this->location->workingTime('delivery', 'open');
+		}
+
+		$data['collection_time'] = $this->location->collectionTime();
+		if ($data['collection_status'] === 'closed') {
+			$data['collection_time'] = 'closed';
+		} else if ($data['collection_status'] === 'opening') {
+			$data['collection_time'] = $this->location->workingTime('collection', 'open');
+		}
+
+		$local_payments = $this->location->payments();
         $payments = $this->extension->getAvailablePayments(FALSE);
 
         $payment_list = '';
         foreach ($payments as $code => $payment) {
             if ( empty($local_payments) OR in_array($code, $local_payments)) {
-                $payment_list .= $payment['name'] . ', ';
+                $payment_list[] = $payment['name'];
             }
         }
 
-        $data['payments'] = trim($payment_list, ', ').'.';
+        $data['payments'] = implode(', ', $payment_list);
 
 	    $area_colors = array('#F16745', '#FFC65D', '#7BC8A4', '#4CC3D9', '#93648D', '#404040', '#F16745', '#FFC65D', '#7BC8A4', '#4CC3D9', '#93648D', '#404040', '#F16745', '#FFC65D', '#7BC8A4', '#4CC3D9', '#93648D', '#404040', '#F16745', '#FFC65D');
 	    $data['area_colors'] = $area_colors;
@@ -228,9 +232,41 @@ class Local extends Main_Controller {
 
     public function all() {
 		$this->load->library('country');
-        $this->load->model('Image_tool_model');
+		$this->load->library('pagination');
+		$this->load->model('Image_tool_model');
 
-        $locations = $this->Locations_model->getLocations();
+		$url = '?';
+		$filter = array();
+		if ($this->input->get('page')) {
+			$filter['page'] = (int) $this->input->get('page');
+		} else {
+			$filter['page'] = '';
+		}
+
+		if ($this->config->item('menus_page_limit')) {
+			$filter['limit'] = $this->config->item('menus_page_limit');
+		}
+
+		$filter['filter_status'] = '1';
+		$filter['order_by'] = 'ASC';
+
+		if ($this->input->get('search')) {
+			$filter['filter_search'] = $this->input->get('search');
+			$url .= 'search='.$filter['filter_search'].'&';
+		}
+
+		if ($this->input->get('sort_by')) {
+			$sort_by = $this->input->get('sort_by');
+
+			if ($sort_by === 'newest') {
+				$filter['sort_by'] = 'location_id';
+				$filter['order_by'] = 'DESC';
+			} else if ($sort_by === 'name') {
+				$filter['sort_by'] = 'location_name';
+			}
+
+			$url .= 'sort_by=' . $sort_by . '&';
+		}
 
 		$this->template->setBreadcrumb('<i class="fa fa-home"></i>', '/');
 		$this->template->setBreadcrumb($this->lang->line('text_heading'), 'local/all');
@@ -238,78 +274,121 @@ class Local extends Main_Controller {
 		$this->template->setTitle($this->lang->line('text_heading'));
 		$this->template->setHeading($this->lang->line('text_heading'));
 
-		$current_time = mdate('%H:%i', time());
-	    $time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
-
 	    $review_totals = $this->Reviews_model->getTotalsbyId();                                    // retrieve all customer reviews from getMainList method in Reviews model
 
 		$data['locations'] = array();
+		$locations = $this->Locations_model->getList($filter);
 		if ($locations) {
-			foreach ($locations as $location) {															// loop through menus array
-                $location_image = (!empty($location['location_image'])) ? $this->Image_tool_model->resize($location['location_image'], '80', '80') : '';
+			foreach ($locations as $location) {
+				$this->location->setLocation($location['location_id'], FALSE);
 
-				if ($location['offer_delivery'] !== '1' AND $location['offer_collection'] === '1') { 														// checks if cart contents is empty
-					$offers = $this->lang->line('text_only_collection_is_available');
-				} else if ($location['offer_delivery'] === '1' AND $location['offer_collection'] !== '1') {
-					$offers = $this->lang->line('text_only_delivery_is_available');
-				} else if ($location['offer_delivery'] === '1' AND $location['offer_collection'] === '1') {
-					$offers = $this->lang->line('text_offers_both_types');						// display we are open
-				} else {
-					$offers = $this->lang->line('text_offers_no_types');
+				$opening_status = $this->location->workingStatus('opening');
+				$delivery_status = $this->location->workingStatus('delivery');
+				$collection_status = $this->location->workingStatus('collection');
+
+				$delivery_time = $this->location->deliveryTime();
+				if ($delivery_status === 'closed') {
+					$delivery_time = 'closed';
+				} else if ($delivery_status === 'opening') {
+					$delivery_time = $this->location->workingTime('delivery', 'open');
 				}
 
-				$hour = $this->location->openingHours($location['location_id'], date('l'));
-				$opening_time = (!isset($hour['open'])) ? '00:00' : mdate('%H:%i', strtotime($hour['open']));
-				$closing_time = (!isset($hour['close'])) ? '00:00' : mdate('%H:%i', strtotime($hour['close']));
-				$opening_status = (!isset($hour['status'])) ? '' : $hour['status'];
-
-                if ($opening_status === '1' AND ($opening_time <= $current_time AND $closing_time >= $current_time)) {
-					$open_or_closed = $this->lang->line('text_is_opened');
-				} else if ($opening_status !== '1') {
-					$open_or_closed = $this->lang->line('text_is_temp_closed');
-				} else {
-					$open_or_closed = $this->lang->line('text_is_closed');
+				$collection_time = $this->location->collectionTime();
+				if ($collection_status === 'closed') {
+					$collection_time = 'closed';
+				} else if ($collection_status === 'opening') {
+					$collection_time = $this->location->workingTime('collection', 'open');
 				}
-
-				$delivery_time = (!empty($location['delivery_time'])) ? $location['delivery_time'] : $this->config->item('delivery_time');
-                $collection_time = (!empty($location['collection_time'])) ? $location['collection_time'] : $this->config->item('collection_time');
-                $last_order_time = (is_numeric($location['last_order_time']) AND $location['last_order_time'] > 0) ? mdate('%H:%i', strtotime($closing_time) - ($location['last_order_time'] * 60)) : $closing_time;
-
-                $address = $this->country->addressFormat(array(
-					'address_1'      => $location['location_address_1'],
-					'address_2'      => $location['location_address_2'],
-					'city'           => $location['location_city'],
-					'state'          => $location['location_state'],
-					'postcode'       => $location['location_postcode']
-				));
 
                 $review_totals = isset($review_totals[$location['location_id']]) ? $review_totals[$location['location_id']] : 0;
-                $total_reviews = sprintf($this->lang->line('text_total_review'), $review_totals);
 
-                $data['locations'][] = array( 															// create array of menu data to be sent to view
-					'location_id'			=> $location['location_id'],
-					'location_name' 		=> $location['location_name'],
-                    'description' 			=> (strlen($location['description']) > 120) ? substr($location['description'], 0, 120) .'...' : $location['description'],
-                    'address'				=> $address,
-                    'total_reviews'			=> $total_reviews,
-                    'location_image' 		=> $location_image,
-                    'open_or_closed'		=> $open_or_closed,
-                    'opening_status'		=> $opening_status,
-                    'open_24_hour'			=> ($opening_time == '00:00' AND $closing_time == '23:59') ? TRUE : FALSE,
-                    'opening_time'			=> mdate($time_format, strtotime($opening_time)),
-                    'closing_time'			=> mdate($time_format, strtotime($closing_time)),
-                    'offers'				=> $offers,
-                    'min_total' 			=> (isset($location['min_total']) AND $location['min_total'] > 0) ? $this->currency->format($location['min_total']) : 'None',
-                    'delivery_charge' 		=> (isset($location['delivery_charge']) AND $location['delivery_charge'] > 0) ? sprintf($this->lang->line('text_delivery_charge'), $this->currency->format($location['delivery_charge'])) : $this->lang->line('text_free_delivery'),
-                    'delivery_time' 		=> ($delivery_time === '0') ? $this->lang->line('text_asap') : $delivery_time .' '. $this->lang->line('text_minutes'),
-                    'collection_time' 		=> ($collection_time === '0') ? $this->lang->line('text_asap') : $collection_time .' '. $this->lang->line('text_minutes'),
-                    'last_order_time'		=> mdate($time_format, strtotime($last_order_time)),
-                    'href'					=> site_url('local?location_id='. $location['location_id'])
+				$data['locations'][] = array(                                                            // create array of menu data to be sent to view
+					'location_id'       => $location['location_id'],
+					'location_name'     => $location['location_name'],
+					'description'       => (strlen($location['description']) > 120) ? substr($location['description'], 0, 120) . '...' : $location['description'],
+					'address'           => $this->location->getAddress(TRUE),
+					'total_reviews'     => $review_totals,
+					'location_image'    => $this->location->getImage(),
+					'is_opened'         => $this->location->isOpened(),
+					'is_closed'         => $this->location->isClosed(),
+					'opening_status'    => $opening_status,
+					'delivery_status'   => $delivery_status,
+					'collection_status' => $collection_status,
+					'delivery_time'     => $delivery_time,
+					'collection_time'   => $collection_time,
+					'opening_time'      => $this->location->openingTime(),
+					'closing_time'      => $this->location->closingTime(),
+					'min_total'         => $this->location->minimumOrder(),
+					'delivery_charge'   => $this->location->deliveryCharge(),
+					'has_delivery'      => $this->location->hasDelivery(),
+					'has_collection'    => $this->location->hasCollection(),
+					'last_order_time'   => $this->location->lastOrderTime(),
+					'distance'   		=> $this->location->checkDistance(),
+					'href'              => site_url('local?location_id=' . $location['location_id']),
 				);
 			}
 		}
 
+		if (!empty($sort_by) AND $sort_by === 'distance') {
+			$data['locations'] = sort_array($data['locations'], 'distance');
+		} else if (!empty($sort_by) AND $sort_by === 'rating') {
+			$data['locations'] = sort_array($data['locations'], 'total_reviews');
+		}
+
+		$config['base_url'] 		= site_url('local/all'.$url);
+		$config['total_rows'] 		= $this->Locations_model->getCount($filter);
+		$config['per_page'] 		= $filter['limit'];
+
+		$this->pagination->initialize($config);
+
+		$data['pagination'] = array(
+			'info'		=> $this->pagination->create_infos(),
+			'links'		=> $this->pagination->create_links()
+		);
+
+		$this->location->initialize();
+
+		$data['locations_filter'] = $this->filter($url);
+
 		$this->template->render('local_all', $data);
+	}
+
+	public function filter() {
+		$url = '';
+		if ($this->input->get('page')) {
+//			$url .= 'page='.$this->input->get('page').'&';
+		}
+
+		$data['search'] = '';
+		if ($this->input->get('search')) {
+			$data['search'] = $this->input->get('search');
+			$url .= 'search='.$this->input->get('search').'&';
+		}
+
+		$filters['distance']['name'] = lang('text_filter_distance');
+		$filters['distance']['href'] = site_url('local/all?'.$url.'sort_by=distance');
+
+		$filters['newest']['name'] = lang('text_filter_newest');
+		$filters['newest']['href'] = site_url('local/all?'.$url.'sort_by=newest');
+
+		$filters['rating']['name'] = lang('text_filter_rating');
+		$filters['rating']['href'] = site_url('local/all?'.$url.'sort_by=rating');
+
+		$filters['name']['name'] = lang('text_filter_name');
+		$filters['name']['href'] = site_url('local/all?'.$url.'sort_by=name');
+
+		$data['sort_by'] = '';
+		if ($this->input->get('sort_by')) {
+			$data['sort_by'] = $this->input->get('sort_by');
+			$url .= 'sort_by=' . $data['sort_by'];
+		}
+
+		$data['filters'] = $filters;
+
+		$url = (!empty($url)) ? '?'.$url : '';
+		$data['search_action'] = site_url('local/all'.$url);
+
+		return $data;
 	}
 }
 
