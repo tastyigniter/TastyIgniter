@@ -208,7 +208,6 @@
 							<?php echo form_error('opening_type', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
-					<br />
 
 					<div id="opening-daily">
 						<div class="form-group">
@@ -244,7 +243,6 @@
 							</div>
 						</div>
 					</div>
-
 					<div id="opening-flexible">
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label"></label>
@@ -291,6 +289,112 @@
 							</div>
 						</div>
 						<?php } ?>
+					</div>
+
+					<hr>
+
+					<div id="delivery-type" class="form-group">
+						<label for="" class="col-sm-3 control-label"><?php echo lang('label_delivery_type'); ?></label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($delivery_type === '1') { ?>
+									<label class="btn btn-default"><input type="radio" name="delivery_type" value="0" <?php echo set_radio('delivery_type', '0'); ?>><?php echo lang('text_same_as_opening_hours'); ?></label>
+									<label class="btn btn-default active"><input type="radio" name="delivery_type" value="1" <?php echo set_radio('delivery_type', '1', TRUE); ?>><?php echo lang('text_custom'); ?></label>
+								<?php } else { ?>
+									<label class="btn btn-default active"><input type="radio" name="delivery_type" value="0" <?php echo set_radio('delivery_type', '0', TRUE); ?>><?php echo lang('text_same_as_opening_hours'); ?></label>
+									<label class="btn btn-default"><input type="radio" name="delivery_type" value="1" <?php echo set_radio('delivery_type', '1'); ?>><?php echo lang('text_custom'); ?></label>
+								<?php } ?>
+							</div>
+							<?php echo form_error('delivery_type', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+
+					<div id="delivery-hours-daily">
+						<div class="form-group">
+							<label for="input-delivery-days" class="col-sm-3 control-label"><?php echo lang('label_opening_days'); ?></label>
+							<div class="col-sm-5">
+								<div class="btn-group btn-group-toggle btn-group-7" data-toggle="buttons">
+									<?php foreach ($weekdays_abbr as $key => $value) { ?>
+										<?php if (in_array($key, $delivery_days)) { ?>
+											<label class="btn btn-default active"><input type="checkbox" name="delivery_days[]" value="<?php echo $key; ?>" <?php echo set_checkbox('delivery_days[]', $key, TRUE); ?>><?php echo $value; ?></label>
+										<?php } else { ?>
+											<label class="btn btn-default"><input type="checkbox" name="delivery_days[]" value="<?php echo $key; ?>" <?php echo set_checkbox('delivery_days[]', $key); ?>><?php echo $value; ?></label>
+										<?php } ?>
+									<?php } ?>
+								</div>
+								<?php echo form_error('delivery_days[]', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="input-delivery-hours" class="col-sm-3 control-label"><?php echo lang('label_opening_hour'); ?></label>
+							<div class="col-sm-5">
+								<div class="control-group control-group-2">
+									<div class="input-group">
+										<input type="text" name="delivery_hours[open]" class="form-control timepicker" value="<?php echo set_value('delivery_hours[open]', $delivery_hours['open']); ?>" />
+										<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+									</div>
+									<div class="input-group">
+										<input type="text" name="delivery_hours[close]" class="form-control timepicker" value="<?php echo set_value('delivery_hours[close]', $delivery_hours['close']); ?>" />
+										<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+									</div>
+								</div>
+								<?php echo form_error('delivery_hours[open]', '<span class="text-danger">', '</span>'); ?>
+								<?php echo form_error('delivery_hours[close]', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div>
+					</div>
+
+					<hr>
+
+					<div id="collection-type" class="form-group">
+						<label for="" class="col-sm-3 control-label"><?php echo lang('label_collection_type'); ?></label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<?php if ($collection_type === '1') { ?>
+									<label class="btn btn-default"><input type="radio" name="collection_type" value="0" <?php echo set_radio('collection_type', '0'); ?>><?php echo lang('text_same_as_opening_hours'); ?></label>
+									<label class="btn btn-default active"><input type="radio" name="collection_type" value="1" <?php echo set_radio('collection_type', '1', TRUE); ?>><?php echo lang('text_custom'); ?></label>
+								<?php } else { ?>
+									<label class="btn btn-default active"><input type="radio" name="collection_type" value="0" <?php echo set_radio('collection_type', '0', TRUE); ?>><?php echo lang('text_same_as_opening_hours'); ?></label>
+									<label class="btn btn-default"><input type="radio" name="collection_type" value="1" <?php echo set_radio('collection_type', '1'); ?>><?php echo lang('text_custom'); ?></label>
+								<?php } ?>
+							</div>
+							<?php echo form_error('collection_type', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+
+					<div id="collection-hours-daily">
+						<div class="form-group">
+							<label for="input-collection-days" class="col-sm-3 control-label"><?php echo lang('label_opening_days'); ?></label>
+							<div class="col-sm-5">
+								<div class="btn-group btn-group-toggle btn-group-7" data-toggle="buttons">
+									<?php foreach ($weekdays_abbr as $key => $value) { ?>
+										<?php if (in_array($key, $collection_days)) { ?>
+											<label class="btn btn-default active"><input type="checkbox" name="collection_days[]" value="<?php echo $key; ?>" <?php echo set_checkbox('collection_days[]', $key, TRUE); ?>><?php echo $value; ?></label>
+										<?php } else { ?>
+											<label class="btn btn-default"><input type="checkbox" name="collection_days[]" value="<?php echo $key; ?>" <?php echo set_checkbox('collection_days[]', $key); ?>><?php echo $value; ?></label>
+										<?php } ?>
+									<?php } ?>
+								</div>
+								<?php echo form_error('collection_days[]', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="input-collection-hours" class="col-sm-3 control-label"><?php echo lang('label_opening_hour'); ?></label>
+							<div class="col-sm-5">
+								<div class="control-group control-group-2">
+									<div class="input-group">
+										<input type="text" name="collection_hours[open]" class="form-control timepicker" value="<?php echo set_value('collection_hours[open]', $collection_hours['open']); ?>" />
+										<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+									</div>
+									<div class="input-group">
+										<input type="text" name="collection_hours[close]" class="form-control timepicker" value="<?php echo set_value('collection_hours[close]', $collection_hours['close']); ?>" />
+										<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+									</div>
+								</div>
+								<?php echo form_error('collection_hours[open]', '<span class="text-danger">', '</span>'); ?>
+								<?php echo form_error('collection_hours[close]', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div>
 					</div>
 				</div>
 
@@ -361,6 +465,47 @@
 							<?php echo form_error('last_order_time', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
+					<div class="form-group">
+						<label for="input-future-orders" class="col-sm-3 control-label"><?php echo lang('label_future_order'); ?>
+							<span class="help-block"><?php echo lang('help_future_order'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
+								<?php if ($future_orders === '1') { ?>
+									<label class="btn btn-danger"><input type="radio" name="future_orders" value="0" <?php echo set_radio('future_orders', '0'); ?>><?php echo lang('text_no'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="future_orders" value="1" <?php echo set_radio('future_orders', '1', TRUE); ?>><?php echo lang('text_yes'); ?></label>
+								<?php } else { ?>
+									<label class="btn btn-danger active"><input type="radio" name="future_orders" value="0" <?php echo set_radio('future_orders', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="future_orders" value="1" <?php echo set_radio('future_orders', '1'); ?>><?php echo lang('text_yes'); ?></label>
+								<?php } ?>
+							</div>
+							<?php echo form_error('future_orders', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div id="future-orders-days">
+						<div class="form-group">
+							<label for="input-delivery-days" class="col-sm-3 control-label"><?php echo lang('label_future_order_days'); ?>
+								<span class="help-block"><?php echo lang('help_future_order_days') ?></span>
+							</label>
+							<div class="col-sm-5">
+								<div class="control-group control-group-2">
+									<div class="input-group">
+										<span class="input-group-addon"><b><?php echo lang('text_delivery') ?>:</b></span>
+										<input type="text" name="future_order_days[delivery]" class="form-control" value="<?php echo set_value('future_order_days[delivery]', $future_order_days['delivery']); ?>" />
+										<span class="input-group-addon"><?php echo lang('text_days') ?></span>
+									</div>
+									<div class="input-group">
+										<span class="input-group-addon"><b><?php echo lang('text_collection') ?>:</b></span>
+										<input type="text" name="future_order_days[collection]" class="form-control" value="<?php echo set_value('future_order_days[collection]', $future_order_days['collection']); ?>" />
+										<span class="input-group-addon"><?php echo lang('text_days') ?></span>
+									</div>
+								</div>
+								<?php echo form_error('future_order_days[delivery]', '<span class="text-danger">', '</span>'); ?>
+								<?php echo form_error('future_order_days[collection]', '<span class="text-danger">', '</span>'); ?>
+							</div>
+						</div>
+					</div>
+
 					<div class="form-group">
 						<label for="input-payments" class="col-sm-3 control-label"><?php echo lang('label_payments'); ?>
 							<span class="help-block"><?php echo lang('help_payments'); ?></span>
@@ -626,27 +771,55 @@ $(document).ready(function() {
 	});
 
 	$('input[name="auto_lat_lng"]').on('change', function() {
-		$('#lat-lng').fadeIn();
+		$('#lat-lng').slideDown('fast');
 
 		if (this.value == '1') {
-			$('#lat-lng').fadeOut();
+			$('#lat-lng').slideUp('fast');
 		}
 	});
 
 	$('input[name="opening_type"]').on('change', function() {
 		if (this.value == '24_7') {
-			$('#opening-daily').fadeOut();
-			$('#opening-flexible').fadeOut();
+			$('#opening-daily').slideUp('fast');
+			$('#opening-flexible').slideUp('fast');
 		}
 
 		if (this.value == 'daily') {
-			$('#opening-flexible').fadeOut();
-			$('#opening-daily').fadeIn();
+			$('#opening-flexible').slideUp('fast');
+			$('#opening-daily').slideDown('fast');
 		}
 
 		if (this.value == 'flexible') {
-			$('#opening-daily').fadeOut();
-			$('#opening-flexible').fadeIn();
+			$('#opening-daily').slideUp('fast');
+			$('#opening-flexible').slideDown('fast');
+		}
+	});
+
+	$('input[name="delivery_type"]').on('change', function() {
+		if (this.value == '0') {
+			$('#delivery-hours-daily').slideUp('fast');
+		}
+
+		if (this.value == '1') {
+			$('#delivery-hours-daily').slideDown('fast');
+		}
+	});
+
+	$('input[name="collection_type"]').on('change', function() {
+		if (this.value == '0') {
+			$('#collection-hours-daily').slideUp('fast');
+		}
+
+		if (this.value == '1') {
+			$('#collection-hours-daily').slideDown('fast');
+		}
+	});
+
+	$('input[name="future_orders"]').on('change', function() {
+		$('#future-orders-days').slideUp('fast');
+
+		if (this.value == '1') {
+			$('#future-orders-days').slideDown('fast');
 		}
 	});
 });
@@ -724,7 +897,7 @@ function initializeMap() {
 		zoom: 14,
 		center: centerLatLng,
 		mapTypeId: google.maps.MapTypeId.ROADMAP
-	}
+	};
 
 	map = new google.maps.Map(
 		document.getElementById('map-holder'), mapOptions);
@@ -961,8 +1134,8 @@ function serializeAreas() {
 				});
 			}
 
-			outputPath = JSON.stringify(outputPath)
-			outputVertices = JSON.stringify(outputVertices)
+			outputPath = JSON.stringify(outputPath);
+			outputVertices = JSON.stringify(outputVertices);
 			$('input[name="delivery_areas[' + area.row + '][shape]"]').val(outputPath);
 			$('input[name="delivery_areas[' + area.row + '][vertices]"]').val(outputVertices);
 		}
@@ -971,7 +1144,7 @@ function serializeAreas() {
 			outputCircle.push({center: {lat: area.getCenter().lat(), lng: area.getCenter().lng()}});
 			outputCircle.push({radius: area.getRadius()});
 
-			outputCircle = JSON.stringify(outputCircle)
+			outputCircle = JSON.stringify(outputCircle);
 			$('input[name="delivery_areas[' + area.row + '][circle]"]').val(outputCircle);
 		}
 	});
@@ -1012,7 +1185,7 @@ function createSavedArea(row) {
 		shape, decodedPath;
 
 		if (area.center != undefined && area.radius != undefined) {
-			center = new google.maps.LatLng(area.center.lat, area.center.lng)
+			center = new google.maps.LatLng(area.center.lat, area.center.lng);
 			circleArea = drawCircleArea(area.row, center, area.radius);
 		}
 
@@ -1195,6 +1368,6 @@ function addDeliveryArea() {
 				});
 			}
 		});
-	};
-//--></script>
+	}
+	//--></script>
 <?php echo get_footer(); ?>

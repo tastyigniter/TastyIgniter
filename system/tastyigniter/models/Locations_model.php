@@ -90,7 +90,7 @@ class Locations_model extends TI_Model {
 
 	public function getLocation($location_id) {
 
-		if ($location_id !== 0) {
+		if (is_numeric($location_id)) {
 			$this->db->from('locations');
 			$this->db->join('countries', 'countries.country_id = locations.location_country_id', 'left');
 			//$this->db->join('working_hours', 'working_hours.location_id = locations.location_id', 'left');
@@ -102,6 +102,24 @@ class Locations_model extends TI_Model {
 				return $query->row_array();
 			}
 		}
+	}
+
+	public function getWorkingHours($location_id = FALSE) {
+		$result = array();
+
+		$this->db->from('working_hours');
+
+		if (is_numeric($location_id)) {
+			$this->db->where('location_id', $location_id);
+		}
+
+		$query = $this->db->get();
+
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+
+		return $result;
 	}
 
 	public function getAddress($location_id) {
@@ -382,6 +400,38 @@ class Locations_model extends TI_Model {
 			$options['opening_hours']['flexible_hours'] = $save['flexible_hours'];
 		}
 
+		if (isset($save['delivery_type'])) {
+			$options['opening_hours']['delivery_type'] = $save['delivery_type'];
+		}
+
+		if (isset($save['delivery_days'])) {
+			$options['opening_hours']['delivery_days'] = $save['delivery_days'];
+		}
+
+		if (isset($save['delivery_hours'])) {
+			$options['opening_hours']['delivery_hours'] = $save['delivery_hours'];
+		}
+
+		if (isset($save['collection_type'])) {
+			$options['opening_hours']['collection_type'] = $save['collection_type'];
+		}
+
+		if (isset($save['collection_days'])) {
+			$options['opening_hours']['collection_days'] = $save['collection_days'];
+		}
+
+		if (isset($save['collection_hours'])) {
+			$options['opening_hours']['collection_hours'] = $save['collection_hours'];
+		}
+
+		if (isset($save['future_orders'])) {
+			$options['future_orders'] = $save['future_orders'];
+		}
+
+		if (isset($save['future_order_days'])) {
+			$options['future_order_days'] = $save['future_order_days'];
+		}
+
 		if (isset($save['payments'])) {
 			$options['payments'] = $save['payments'];
 		}
@@ -440,28 +490,34 @@ class Locations_model extends TI_Model {
 		if ( ! empty($data['opening_type'])) {
 			if ($data['opening_type'] === '24_7') {
 				for ($day = 0; $day <= 6; $day ++) {
-					$hours[] = array('day' => $day, 'open' => '00:00', 'close' => '23:59', 'status' => '1');
+					$hours['opening'][] = array('day' => $day, 'open' => '00:00', 'close' => '23:59', 'status' => '1');
 				}
 			} else if ($data['opening_type'] === 'daily') {
 				for ($day = 0; $day <= 6; $day ++) {
 					if ( ! empty($data['daily_days']) AND in_array($day, $data['daily_days'])) {
-						$hours[] = array('day' => $day, 'open' => $data['daily_hours']['open'], 'close' => $data['daily_hours']['close'], 'status' => '1');
+						$hours['opening'][] = array('day' => $day, 'open' => $data['daily_hours']['open'], 'close' => $data['daily_hours']['close'], 'status' => '1');
 					} else {
-						$hours[] = array('day' => $day, 'open' => $data['daily_hours']['open'], 'close' => $data['daily_hours']['close'], 'status' => '0');
+						$hours['opening'][] = array('day' => $day, 'open' => $data['daily_hours']['open'], 'close' => $data['daily_hours']['close'], 'status' => '0');
 					}
 				}
 			} else if ($data['opening_type'] === 'flexible' AND ! empty($data['flexible_hours'])) {
-				$hours = $data['flexible_hours'];
+				$hours['opening'] = $data['flexible_hours'];
 			}
 
+			$hours['delivery'] = empty($data['delivery_type']) ? $hours['opening'] : $this->_createWorkingHours('delivery', $data);
+			$hours['collection'] = empty($data['collection_type']) ? $hours['opening'] : $this->_createWorkingHours('collection', $data);
+
 			if (is_numeric($location_id) AND ! empty($hours) AND is_array($hours)) {
-				foreach ($hours as $hour) {
-					$this->db->set('location_id', $location_id);
-					$this->db->set('weekday', $hour['day']);
-					$this->db->set('opening_time', mdate('%H:%i', strtotime($hour['open'])));
-					$this->db->set('closing_time', mdate('%H:%i', strtotime($hour['close'])));
-					$this->db->set('status', $hour['status']);
-					$this->db->insert('working_hours');
+				foreach ($hours as $type => $hr) {
+					foreach ($hr as $hour) {
+						$this->db->set('location_id', $location_id);
+						$this->db->set('weekday', $hour['day']);
+						$this->db->set('type', $type);
+						$this->db->set('opening_time', mdate('%H:%i', strtotime($hour['open'])));
+						$this->db->set('closing_time', mdate('%H:%i', strtotime($hour['close'])));
+						$this->db->set('status', $hour['status']);
+						$this->db->insert('working_hours');
+					}
 				}
 			}
 		}
@@ -525,6 +581,20 @@ class Locations_model extends TI_Model {
 		}
 
 		return FALSE;
+	}
+
+	private function _createWorkingHours($type, $data) {
+		$days = (empty($data["{$type}_days"])) ? array() : $data["{$type}_days"];
+		$hours = (empty($data["{$type}_hours"])) ? array('open' => '00:00', 'close' => '23:59') : $data["{$type}_hours"];
+
+		$working_hours = array();
+
+		for ($day = 0; $day <= 6; $day ++) {
+			$status = in_array($day, $days) ? '1' : '0';
+			$working_hours[] = array('day' => $day, 'open' => $hours['open'], 'close' => $hours['close'], 'status' => $status);
+		}
+
+		return $working_hours;
 	}
 }
 
