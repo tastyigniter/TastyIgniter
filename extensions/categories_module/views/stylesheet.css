@@ -1,3 +1,10 @@
+#category-box-affix.affix {
+position: fixed !important;
+top: 15px;
+width: 15.76%;
+z-index: 99;
+}
+
 #category-box .panel {
 padding-left: 15px;
 }

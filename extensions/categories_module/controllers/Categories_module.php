@@ -46,6 +46,10 @@ class Categories_module extends Main_Controller {
 			);
 		}
 
+		$fixed_top_offset = isset($ext_data['fixed_top_offset']) ? $ext_data['fixed_top_offset'] : '350';
+		$fixed_bottom_offset = isset($ext_data['fixed_bottom_offset']) ? $ext_data['fixed_bottom_offset'] : '320';
+		$data['fixed_cart'] = 'data-spy="affix" data-offset-top="'.$fixed_top_offset.'" data-offset-bottom="'.$fixed_bottom_offset.'"';
+
 		// pass array $data and load view files
 		return $this->load->view('categories_module/categories_module', $data, TRUE);
 	}
