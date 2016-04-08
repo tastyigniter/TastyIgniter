@@ -22,19 +22,18 @@ class Login extends Main_Controller {
 
 				if ($this->customer->login($email, $password) === FALSE) {						// invoke login method in customer library with email and password $_POST data value then check if login was unsuccessful
 					$this->alert->set('alert', $this->lang->line('alert_invalid_login'));	// display error message and redirect to account login page
-  					redirect('account/login');
+					redirect(current_url());
     			} else {																		// else if login was successful redirect to account page
                     log_activity($this->customer->getId(), 'logged in', 'customers', get_activity_message('activity_logged_in',
                         array('{customer}', '{link}'),
                         array($this->customer->getName(), admin_url('customers/edit?id='.$this->customer->getId()))
                     ));
 
-                    if ($previous_url = $this->session->tempdata('previous_url')) {
-                        $this->session->unset_tempdata('previous_url');
-                        redirect($previous_url);
-                    }
+					if ($redirect_url = $this->input->get('redirect')) {
+						redirect($redirect_url);
+					}
 
-                    redirect('account/account');
+					redirect('account/account');
   				}
     		}
 		}

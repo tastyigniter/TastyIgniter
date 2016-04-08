@@ -17,7 +17,7 @@ class Reservation extends Main_Controller {
 	}
 
 	public function index() {
-        $this->session->set_tempdata('previous_url', current_url());
+		$prepend = '?redirect=' . current_url();
 
         if ($this->input->post() AND $this->_reserveTable() === TRUE) {
             redirect('reservation/success');
@@ -29,7 +29,7 @@ class Reservation extends Main_Controller {
 		$this->template->setTitle($this->lang->line('text_heading'));
 		$this->template->setHeading($this->lang->line('text_heading'));
 
-		$data['text_login_register']		= ($this->customer->isLogged()) ? sprintf($this->lang->line('text_logout'), $this->customer->getName(), site_url('account/logout')) : sprintf($this->lang->line('text_login'), site_url('account/login'));
+		$data['text_login_register']		= ($this->customer->isLogged()) ? sprintf($this->lang->line('text_logout'), $this->customer->getName(), site_url('account/logout'.$prepend)) : sprintf($this->lang->line('text_login'), site_url('account/login'.$prepend));
 
 		$data['reset_url'] 			        = site_url('reservation');
 

@@ -46,9 +46,10 @@ class Checkout extends Main_Controller {
             redirect(restaurant_url());																	// redirect to previous page and display error
 		}
 
+        $prepend = '?redirect=' . current_url();
 		if ( ! $this->customer->islogged() AND $this->config->item('guest_order') !== '1') { 											// else if customer is not logged in
 			$this->alert->set('alert', $this->lang->line('alert_customer_not_logged'));
-  			redirect('account/login');															// redirect to account register page and display error
+  			redirect('account/login'.$prepend);															// redirect to account register page and display error
 		}
 
 		if ($this->input->post() AND $this->_validateCheckout() === TRUE) { 						// check if post data and validate checkout is successful
@@ -65,7 +66,7 @@ class Checkout extends Main_Controller {
         $this->template->setStyleTag(assets_url('js/datepicker/bootstrap-timepicker.css'), 'bootstrap-timepicker-css');
         $this->template->setScriptTag(assets_url("js/datepicker/bootstrap-timepicker.js"), 'bootstrap-timepicker-js');
 
-        $data['text_login_register']	= $this->customer->isLogged() ? sprintf($this->lang->line('text_logout'), $this->customer->getFirstName(), site_url('account/logout')) : sprintf($this->lang->line('text_registered'), site_url('account/login'));
+        $data['text_login_register']	= $this->customer->isLogged() ? sprintf($this->lang->line('text_logout'), $this->customer->getFirstName(), site_url('account/logout'.$prepend)) : sprintf($this->lang->line('text_registered'), site_url('account/login'.$prepend));
 
         $order_data = $this->session->userdata('order_data');
 

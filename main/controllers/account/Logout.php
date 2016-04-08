@@ -20,12 +20,11 @@ class Logout extends Main_Controller {
 
         $this->customer->logout();
 
-        if ($previous_url = $this->session->tempdata('previous_url')) {
-            $this->session->unset_tempdata('previous_url');
-            redirect($previous_url);
-        }
+		if ($redirect_url = $this->input->get('redirect')) {
+			redirect($redirect_url);
+		}
 
-        redirect('account/login');
+        redirect($this->customer->login_url);
 	}
 }
 

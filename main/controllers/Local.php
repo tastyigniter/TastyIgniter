@@ -355,9 +355,6 @@ class Local extends Main_Controller {
 
 	public function filter() {
 		$url = '';
-		if ($this->input->get('page')) {
-//			$url .= 'page='.$this->input->get('page').'&';
-		}
 
 		$data['search'] = '';
 		if ($this->input->get('search')) {
