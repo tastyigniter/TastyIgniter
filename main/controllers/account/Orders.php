@@ -45,11 +45,14 @@ class Orders extends Main_Controller {
 		$data['back_url'] 				= site_url('account/account');
 
         $this->load->library('location');
-        if ($this->location->local()) {
+		$this->location->initialize();
+
+		if ($this->location->local()) {
             $data['new_order_url'] = site_url('local?location_id='.$this->location->getId());
         } else {
             $data['new_order_url'] = site_url('local/all');
         }
+
 		$time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
 
 		$data['orders'] = array();
