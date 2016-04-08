@@ -1,6 +1,6 @@
-<div id="cart-box-affix" class="hidden-xs" <?php echo $fixed_cart; ?>>
+<div class="<?php echo ($is_mobile OR $is_checkout) ? '' : 'hidden-xs'; ?>" <?php echo $fixed_cart; ?>>
 	<div id="cart-box" class="module-box">
-		<div class="panel panel-default panel-cart">
+		<div class="panel panel-default panel-cart <?php echo ($is_checkout) ? 'hidden-xs' : ''; ?>">
 			<div class="panel-heading">
 				<h3 class="panel-title"><?php echo lang('text_heading'); ?></h3>
 			</div>
@@ -139,13 +139,15 @@
 		<?php } ?>
 	</div>
 </div>
-<div id="cart-buttons" class="visible-xs">
+<div id="cart-buttons" class="<?php echo (!$is_mobile AND !$is_checkout) ? 'visible-xs' : 'hide'; ?>">
 	<a class="btn btn-default cart-toggle" href="<?php echo site_url('cart') ?>" style="text-overflow:ellipsis; overflow:hidden;">
 		<?php echo lang('text_heading'); ?>
 		<span class="order-total"><?php echo (!empty($order_total)) ? '&nbsp;&nbsp;-&nbsp;&nbsp;'.$order_total : ''; ?></span>
 	</a>
 </div>
+<?php if (!$is_mobile) { ?>
 <div class="cart-alert-wrap cart-alert-affix visible-xs-block"><div class="cart-alert"></div><?php if (!empty($cart_alert)) { echo $cart_alert; } ?></div>
+<?php } ?>
 <script type="text/javascript"><!--
     var alert_close = '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
 

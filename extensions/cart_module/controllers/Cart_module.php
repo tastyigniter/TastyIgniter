@@ -17,7 +17,7 @@ class Cart_module extends Main_Controller {
         $this->lang->load('cart_module/cart_module');
 	}
 
-	public function index($ext_data = array()) {
+	public function index($ext_data = array(), $is_mobile = FALSE) {
 		if ( ! file_exists(EXTPATH .'cart_module/views/cart_module.php')) { 								//check if file exists in views folder
 			show_404(); 																		// Whoops, show 404 error page!
 		}
@@ -145,15 +145,22 @@ class Cart_module extends Main_Controller {
 
 		$data['fixed_cart'] = '';
 		$fixed_cart = isset($ext_data['fixed_cart']) ? $ext_data['fixed_cart'] : '1';
-		if ($fixed_cart === '1' AND $rsegment !== 'checkout') {
+		if (!$is_mobile AND $fixed_cart === '1' AND $rsegment !== 'checkout') {
 			$fixed_top_offset = isset($ext_data['fixed_top_offset']) ? $ext_data['fixed_top_offset'] : '250';
 			$fixed_bottom_offset = isset($ext_data['fixed_bottom_offset']) ? $ext_data['fixed_bottom_offset'] : '120';
-			$data['fixed_cart'] = 'data-spy="affix" data-offset-top="'.$fixed_top_offset.'" data-offset-bottom="'.$fixed_bottom_offset.'"';
+			$data['fixed_cart'] = 'id="cart-box-affix" data-spy="affix" data-offset-top="'.$fixed_top_offset.'" data-offset-bottom="'.$fixed_bottom_offset.'"';
 		}
+
+		$data['is_checkout'] = ($rsegment === 'checkout') ? TRUE : FALSE;
+		$data['is_mobile'] = $is_mobile;
 
 		$data['cart_alert'] = $this->alert->display('cart_module');
 
-        $this->load->view('cart_module/cart_module', $data);
+		if ($is_mobile) {
+			return $this->load->view('cart_module/cart_module', $data, TRUE);
+		} else {
+			$this->load->view('cart_module/cart_module', $data);
+		}
 	}
 
 	public function add() {																		// add() method to add item to cart

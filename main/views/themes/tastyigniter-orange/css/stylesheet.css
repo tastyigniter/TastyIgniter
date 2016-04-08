@@ -34,10 +34,11 @@ padding-bottom: 40px;
   border-radius: 4px;
   margin-bottom: 20px;
 }
-#content-right {
-  padding-left: 0;
+@media (min-width:767px) {
+  #content-right {
+    padding-left: 0;
+  }
 }
-
 
 /*** TYPOGRAPHY ***/
 @media (max-width: 768px) {
@@ -807,7 +808,7 @@ outline: none;
     border-bottom: 1px solid #eee;
     padding: 0 15px;
   }
-  #local-information .nav-tabs > li > a {
+  #local-information, #local-information .nav-tabs > li > a {
     font-size: 11px;
     padding: 8px 5px;
   }
@@ -1088,17 +1089,18 @@ body .bootstrap-timepicker-widget table td input {
 body .bootstrap-timepicker-widget table td a i {
   font-size: 12px;
 }
-#choose-order-time > .input-group > .input-group-addon {
-  border-color: #e2e2e2;
+.order-time-group {
+  margin: 0;
+  border-radius: 3px;
 }
-#choose-order-time .date-input-addon {
-  width: 42%;
+.order-time-group .date-input-addon,
+.order-time-group .time-input-addon {
+  background-color: #EEE;
+  padding: 10px;
+  border: 1px solid #ddd;
 }
-#choose-order-time .time-input-addon {
-  width: 48%;
-}
-#choose-order-time .hours,
-#choose-order-time .minutes {
+.order-time-group .time-input-addon .hours,
+.order-time-group .time-input-addon .minutes {
   width: 50%;
 }
 /** END DATE TIME PICKER **/
