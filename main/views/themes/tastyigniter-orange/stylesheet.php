@@ -29,7 +29,7 @@ if (!empty($font['color']))
 	$style .= "color: {$font['color']};";
 $style .= "}";
 
-$style .= "#page-wrapper {";
+$style .= "body, #page-wrapper {";
 if (!empty($body['background']))
 	$style .= "background-color: {$body['background']};";
 
@@ -50,11 +50,12 @@ $style .= "}";
 
 // GENERAL COLOR
 if (!empty($body['color'])) {
-	$style .= ".local-box-fluid { background-color: {$body['color']};}";
+	$style .= ".local-box-fluid, .local-box-fluid .panel { background-color: {$body['color']}; border-color: {$body['color']}}";
 	$style .= ".local-box-fluid h2 { color: {$body['foreground']};}";
 	$style .= ".step-item .icon i { color: {$body['color']}; border-color:{$body['color']};}";
 	$style .= ".newsletter-subscribe { background-color: {$body['color']}; color:{$body['foreground']}}";
-	$style .= ".nav-tabs-line > li.active, .nav-tabs-line > li.active:hover, .nav-tabs-line > li.active:focus, .nav-tabs-line > li.open a, .nav-tabs-line > li:hover, .nav-tabs-line > li:focus { border-color: {$body['color']};}";
+	$style .= ".nav-tabs-line > li.active > a, .nav-tabs-line > li.active > a:hover, .nav-tabs-line > li.active > a:focus, .nav-tabs-line > li.open a, .nav-tabs-line > li > a:hover, .nav-tabs-line > li > a:focus { border-color: {$sidebar['border']} {$sidebar['border']} {$body['color']};}";
+	$style .= ".nav-tabs-line > li.open a, .nav-tabs-line > li > a:hover, .nav-tabs-line > li > a:focus { background-color: {$sidebar['border']};}";
 }
 
 // Header
@@ -78,7 +79,7 @@ if (!empty($header['image']) AND !empty($header['display'])) {
 $style .= "}";
 
 if (!empty($header['color']))
-	$style .= "#main-header .navbar-nav a, .modal-header { color: {$header['color']};}";
+	$style .= "#main-header .navbar-nav > li > a, .modal-header { color: {$header['color']};}";
 
 if ( ! empty($header['dropdown_background']))
 	$style .= "#main-header .dropdown-menu { background-color: {$header['dropdown_background']};}";
@@ -120,7 +121,7 @@ $style .= "}";
 // FOREGROUND
 if ( ! empty($body['foreground'])) {
 	$style .= "#page-content div.content { background-color: {$body['foreground']};}";
-	$style .= "#page-content div.content-wrap { background-color: {$body['foreground']}; padding:15px; border-radius:5px;margin-bottom: 20px;}";
+	$style .= "#page-content div.content-wrap { background-color: {$body['foreground']}; border: 1px solid {$sidebar['border']}; padding:15px; border-radius:4px;margin-bottom: 20px;}";
 }
 
 // Heading
@@ -201,26 +202,34 @@ if ( ! empty($link['hover'])) {
 }
 
 // Button
-if ( ! empty($button['default']['background']))
+if ( ! empty($button['default']['background'])) {
 	$style .= ".btn-default { background-color: {$button['default']['background']}; border-color: {$button['default']['background']};}";
+	$style .= ".panel-default, .panel-default .panel-heading, .panel-nav-tabs.panel-default .panel-heading { border-color: {$button['default']['background']}}";
+}
 
 if ( ! empty($button['default']['hover']))
 	$style .= ".btn-default:hover, .btn-default:focus, .btn-default.active, .btn-default:active { background-color: {$button['default']['hover']}; border-color: {$button['default']['hover']};}";
 
-if ( ! empty($button['primary']['background']))
+if ( ! empty($button['primary']['background'])) {
 	$style .= ".btn-primary { background-color: {$button['primary']['background']}; border-color: {$button['primary']['background']};}";
+	$style .= ".panel-primary, .panel-primary .panel-heading, .panel-nav-tabs.panel-primary .panel-heading { border-color: {$button['primary']['background']}}";
+}
 
 if ( ! empty($button['primary']['hover']))
 	$style .= ".btn-primary:hover, .btn-primary:focus, .btn-primary.active, .btn-primary:active { background-color: {$button['primary']['hover']}; border-color: {$button['primary']['hover']};}";
 
-if ( ! empty($button['success']['background']))
+if ( ! empty($button['success']['background'])) {
 	$style .= ".btn-success { background-color: {$button['success']['background']}; border-color: {$button['success']['background']};}";
+	$style .= ".panel-success, .panel-success .panel-heading, .panel-nav-tabs.panel-success .panel-heading { border-color: {$button['success']['background']}}";
+}
 
 if ( ! empty($button['success']['hover']))
 	$style .= ".btn-success:hover, .btn-success:focus, .btn-success.active, .btn-success:active { background-color: {$button['success']['hover']}; border-color: {$button['success']['hover']};}";
 
-if ( ! empty($button['danger']['background']))
+if ( ! empty($button['danger']['background'])) {
 	$style .= ".btn-danger { background-color: {$button['danger']['background']}; border-color: {$button['danger']['background']};}";
+	$style .= ".panel-danger, .panel-danger .panel-heading, .panel-nav-tabs.panel-danger .panel-heading { border-color: {$button['danger']['background']}}";
+}
 
 if ( ! empty($button['danger']['hover']))
 	$style .= ".btn-danger:hover, .btn-danger:focus, .btn-danger.active, .btn-danger:active { background-color: {$button['danger']['hover']}; border-color: {$button['danger']['hover']};}";

@@ -267,12 +267,12 @@ $theme['customize']['sections']['styling'] = array(
 			)
 		),
 		array(
-			'legend'		=> 'Buttons',
+			'legend'		=> 'Colors',
 			'fields'		=> array(
 				array(
 					'id'			=> 'input-button-default',
-					'label' 		=> 'Button default color',
-					'desc'			=> 'The normal and hover background color to use for the default button.',
+					'label' 		=> 'Default color',
+					'desc'			=> 'The normal and hover background and hover default color',
 					'type' 			=> 'input-group',
 					'group'			=> array(
 						array('name' => 'button[default][background]', 'type' => 'color', 'value' => '#E7E7E7', 'rules' => 'required'),
@@ -281,8 +281,8 @@ $theme['customize']['sections']['styling'] = array(
 				),
 				array(
 					'id'			=> 'input-button-primary',
-					'label' 		=> 'Button primary color',
-					'desc'			=> 'The normal and hover background color to use for the primary button.',
+					'label' 		=> 'Primary color',
+					'desc'			=> 'The normal and hover background and hover primary color',
 					'type' 			=> 'input-group',
 					'group'			=> array(
 						array('name' => 'button[primary][background]', 'type' => 'color', 'value' => '#428bca', 'rules' => 'required'),
@@ -291,8 +291,8 @@ $theme['customize']['sections']['styling'] = array(
 				),
 				array(
 					'id'			=> 'input-button-success',
-					'label' 		=> 'Button success color',
-					'desc'			=> 'The normal and hover background color to use for the success button.',
+					'label' 		=> 'Success color',
+					'desc'			=> 'The normal and hover background and hover success color',
 					'type' 			=> 'input-group',
 					'group'			=> array(
 						array('name' => 'button[success][background]', 'type' => 'color', 'value' => '#5cb85c', 'rules' => 'required'),
@@ -300,9 +300,19 @@ $theme['customize']['sections']['styling'] = array(
 					)
 				),
 				array(
+					'id'			=> 'input-button-info',
+					'label' 		=> 'Info color',
+					'desc'			=> 'The normal and hover background and hover info color',
+					'type' 			=> 'input-group',
+					'group'			=> array(
+						array('name' => 'button[info][background]', 'type' => 'color', 'value' => '#5BC0DE', 'rules' => 'required'),
+						array('name' => 'button[info][hover]', 'type' => 'color', 'value' => '#31B0D5', 'rules' => 'required'),
+					)
+				),
+				array(
 					'id'			=> 'input-button-danger',
-					'label' 		=> 'Button danger color',
-					'desc'			=> 'The normal and hover background color to use for the danger button.',
+					'label' 		=> 'Danger color',
+					'desc'			=> 'The normal and hover background and hover danger color',
 					'type' 			=> 'input-group',
 					'group'			=> array(
 						array('name' => 'button[danger][background]', 'type' => 'color', 'value' => '#d9534f', 'rules' => 'required'),

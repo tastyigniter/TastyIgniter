@@ -23,12 +23,14 @@
 			var js_site_url = function(str) {
 				var strTmp = "<?php echo rtrim(site_url(), '/').'/'; ?>" + str;
 			 	return strTmp;
-			}
+			};
 
 			var js_base_url = function(str) {
 				var strTmp = "<?php echo base_url(); ?>" + str;
 				return strTmp;
-			}
+			};
+
+            var pageHeight = $(window).height();
 
 			$(document).ready(function() {
 				if ($('#notification > p').length > 0) {

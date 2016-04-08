@@ -447,7 +447,7 @@ class TI_Cart extends CI_Cart {
 
 		foreach ($this->product_options($row_id) as $option_id => $options) {
 			foreach ($options as $option) {
-				$string .= $this->CI->lang->line('text_plus') . $option['value_name'] . $this->CI->lang->line('text_equals') . $this->CI->currency->format($option['value_price']) . $split;
+				$string .= $this->CI->lang->line('text_plus') . $option['value_name'] . sprintf($this->CI->lang->line('text_option_price'), $this->CI->currency->format($option['value_price'])) . $split;
 			}
 		}
 

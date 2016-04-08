@@ -8,6 +8,7 @@ TastyIgniter Orange Store-front theme
 
 body {
 font-family:'Oxygen',Arial,sans-serif;
+background-color: #EEEEEE;
 }
 
 
@@ -22,7 +23,20 @@ padding-bottom: 40px;
   padding-left: 0;
   padding-right: 15px;
 }
-
+#page-content div.content {
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+}
+#page-content div.content-wrap {
+  background-color: #FFF;
+  border: 1px solid #DDD;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+#content-right {
+  padding-left: 0;
+}
 
 
 /*** TYPOGRAPHY ***/
@@ -293,7 +307,7 @@ color: #585858;
 /*** Alerts ***/
 #notification .alert {
 padding: 0;
-margin-top: 20px;
+/*margin-top: 20px;*/
 border-radius: 0;
 }
 #notification .alert-danger,
@@ -360,10 +374,7 @@ text-shadow: 0 1px 0 #fff;
 
 /*** Buttons ***/
 .btn {
-border-radius: 0;
-}
-.btn-cart {
-border: 2px solid;
+border-radius: 3px;
 }
 .btn-group {
 width: 100%;
@@ -462,10 +473,16 @@ color: #fff;
 a.list-group-item.unread {
 font-weight: bold;
 }
+#local-information .panel-heading {
+  background-color: transparent;
+}
 #local-information .list-group-item {
   border-width: 0 0 1px;
   margin-bottom: 0;
   border-color: #f0f0f0;
+}
+#local-information .list-group-item:last-child {
+  border-width: 0;
 }
 /*** End Groups ***/
 
@@ -473,20 +490,6 @@ font-weight: bold;
 
 
 /*** Tables ***/
-.table > thead > tr > th,
-.table > tbody > tr > th,
-.table > tfoot > tr > th,
-.table > thead > tr > td,
-.table > tbody > tr > td,
-.table > tfoot > tr > td {
-border-top: 0 solid #eee;
-border-bottom: 1px solid #eee;
-}
-.table > tbody > tr > td {
-font-size: 85%;
-padding: 10px 8px;
-}
-
 /*** End Tables ***/
 
 
@@ -505,7 +508,6 @@ margin: 0;
 }
 .nav-tabs.nav-tabs-line > li > a {
 border: 0 none;
-color: #737373;
 margin-right: 0;
 }
 .nav-tabs.nav-tabs-line > li.active > a {
@@ -515,7 +517,10 @@ color: #333333;
 .nav-tabs-line > li.active,
 .nav-tabs-line > li.active:hover,
 .nav-tabs-line > li.active:focus {
-border-bottom: 4px solid #ed561a;
+border-color: #dddddd #dddddd #ed561a;
+border-width: 1px 1px 4px;
+border-style: solid;
+border-radius: 4px 4px 0 0;
 position: relative;
 }
 .nav-tabs.nav-tabs-line > li.active > a:hover,
@@ -533,13 +538,41 @@ color: #333333;
 .nav-tabs-line > li.open a,
 .nav-tabs-line > li:hover,
 .nav-tabs-line > li:focus {
-border-bottom: 4px solid #F8BEA7;
+background-color: #ddd;
+border-bottom: 4px solid #ED561A;
+border-radius: 3px 3px 0 0;
 }
 .tab-content-line {
 border-top: 1px solid #eee;
+border-radius: 4px;
 margin-top: -3px;
-padding: 0;
 margin-bottom: 20px;
+padding: 0;
+}
+.nav-menus > li > a {
+  color: #666;
+  padding: 10px 40px;
+}
+@media (max-width:767px) {
+  .nav-justified > li {
+    display: table-cell;
+    width: 1%;
+  }
+  .nav-justified > li > a {
+    margin-bottom: 0px;
+  }
+  .nav-menus {
+      width: 100%;
+  }
+  .nav-menus > li {
+    display: table-cell !important;
+    width: 1%;
+    float: none;
+    text-align: center;
+  }
+  .nav-menus > li > a {
+    padding: 10px;
+  }
 }
 /*** End Nav Tabs ***/
 
@@ -636,6 +669,32 @@ color: #484848;
 /*** End Side Bar ***/
 
 
+/*** Panels ***/
+#local-information .panel {
+  border: 0 none;
+  box-shadow: none;
+}
+#local-information .panel-body {
+  padding-left: 0;
+  padding-right: 0;
+}
+.panel-nav-tabs .panel-heading {
+  padding-bottom: 0;
+  border-bottom: 0 none;
+}
+.panel-nav-tabs .nav-tabs {
+  margin-right: -15px;
+  margin-left: -15px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.panel .list-group {
+  margin-bottom: 0;
+}
+/*** End Panels ***/
+
+
+
 /*** Order Steps ***/
 #order-steps{
 margin-top: -15px;
@@ -670,7 +729,6 @@ margin-top: 25px;
 display:none;
 }
 .menu-container {
-margin-bottom: 40px;
 width: 100%;
 }
 .menu-items > div {
@@ -685,9 +743,12 @@ margin: 0;
 padding-bottom: 10px;
 }
 .menu-item {
-border-bottom: 1px solid #eee;
+border-top: 1px dashed #eee;
 width: 100%;
-padding-bottom: 15px;
+padding: 0 15px 0;
+}
+.menu-item:first-child {
+  border-top: 0px none;
 }
 .menu-name {
 display: block;
@@ -705,7 +766,7 @@ vertical-align: middle;
 }
 .menu-button {
 margin-top: 0;
-margin-left: 15px;
+margin-left: 5px;
 }
 .menu-right {
 text-align: right;
@@ -713,37 +774,42 @@ line-height: 22px;
 }
 .menu-button .btn-cart {
 border: 0 none;
-border-radius: 0;
 color:#FFF;
 padding: 0 5px;
 }
 .menu-items {
   font-size: 12px;
 }
-.menu-container .collapse.in {
-  margin: 0 -15px;
-}
 .menu-container .menu-toggle {
 display: block;
 font-size: 15px;
-padding: 10px 0;
-border-bottom: 1px solid #eee;
-color:#444;
+padding: 12px 0;
+color:inherit;
 outline: none;
 }
-.menu-container .menu-toggle .fa-angle-up,
-.menu-container .collapse.in .menu-toggle .fa-angle-down {
+.menu-container .menu-toggle .fa {
+  font-weight: 300;
+}
+.menu-container .menu-toggle.collapsed .fa-angle-up,
+.menu-container .menu-toggle .fa-angle-down {
   display: none;
 }
-.menu-container .collapse.in .menu-toggle .fa-angle-up {
+.menu-container .menu-toggle.collapsed .fa-angle-down,
+.menu-container .menu-toggle .fa-angle-up {
   display: block;
 }
 @media (max-width:767px) {
-  .menu-list {
-    margin: 0 -15px 0;
+  #local-menus .menu-list {
+    margin: 0 -15px;
   }
   .menu-container {
     margin-bottom:0;
+    border-bottom: 1px solid #eee;
+    padding: 0 15px;
+  }
+  #local-information .nav-tabs > li > a {
+    font-size: 11px;
+    padding: 8px 5px;
   }
 }
 /*** End Menus ***/
@@ -877,9 +943,6 @@ font-size: 12px;
 font-weight: 300;
 color:#444;
 }
-.panel-local .rating {
-margin-bottom: 5px;
-}
 .rating .fa {
 color: #ff9900;
 }
@@ -1009,8 +1072,45 @@ color: #fff;
 .modal-header .close {
 font-size: 32px;
 }
-
+.modal-title {
+  color: #FFF;
+}
 /*** End Modal ***/
+
+
+
+
+/** DATE TIME PICKER **/
+body .bootstrap-timepicker-widget table td input {
+  padding: 3px;
+  width: 42px;
+}
+body .bootstrap-timepicker-widget table td a i {
+  font-size: 12px;
+}
+#choose-order-time > .input-group > .input-group-addon {
+  border-color: #e2e2e2;
+}
+#choose-order-time .date-input-addon {
+  width: 42%;
+}
+#choose-order-time .time-input-addon {
+  width: 48%;
+}
+#choose-order-time .hours,
+#choose-order-time .minutes {
+  width: 50%;
+}
+/** END DATE TIME PICKER **/
+
+
+
+/** Location Filter **/
+.panel-locations-filter .list-group-item {
+  margin: 0 15px -1px;
+  padding: 10px;
+}
+/** End Location Filter **/
 
 
 

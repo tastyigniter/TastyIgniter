@@ -48,7 +48,7 @@ $(function() {
             }
         })
     });
-})
+});
 
 $(function () {
 
@@ -64,8 +64,6 @@ $(function () {
 
         btn.addClass(activeClass);
     });
-
-    $('.btn-group-toggle .active input[type="radio"], .btn-group .active input[type="radio"]').trigger('change');
 
     $('.button-checkbox').each(function () {
 
