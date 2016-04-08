@@ -113,7 +113,7 @@ class User {
 
     public function restrict($permission, $uri = '') {
 	    // If user isn't logged in, redirect to the login page.
-	    if ( ! $this->is_logged AND $this->uri->rsegment(1) !== 'login') redirect(root_url(ADMINDIR.'/login'));
+	    if ( ! $this->is_logged AND $this->uri->rsegment(1) !== 'login') redirect(admin_url('login'));
 
 	    // Check whether the user has the proper permissions action.
 	    if (($has_permission = $this->checkPermittedActions($permission, TRUE)) === TRUE) return TRUE;

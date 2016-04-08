@@ -112,7 +112,7 @@ class Menus_model extends TI_Model {
 				$price = $row['menu_price'];
 				if ($row['special_status'] === '1' AND $row['is_special'] === '1') {
 					$price = $row['special_price'];
-					$daydiff = floor((strtotime($row['end_date']) - strtotime($this->location->currentTime())) / 86400);
+					$daydiff = floor((strtotime($row['end_date']) - time()) / 86400);
 					$start_date = $row['start_date'];
 					$end_date = mdate('%d %M', strtotime($row['end_date']));
 

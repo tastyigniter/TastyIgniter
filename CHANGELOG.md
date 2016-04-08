@@ -1,3 +1,34 @@
+### v2.1.0
+
+Release Date: April 2016
+
+#### Added
+* Customers model: new method `saveAddress()` to update/save/delete customer addresses
+* URL Helper: new method `assets_url()` to return full URL (including segments) of the assets directory
+* Location admin option to choose different delivery and collection hours or use same as opening hours, and  option to choose future days in advance
+* Migration: added column `type` to `working_hours` table and update `type` column value to `opening` on existing rows
+* Locations can now have opening, delivery and collection hours past midnight
+* Location library methods `hasFutureOrders()` to check if location future order option is enabled or disabled in admin settings
+* Location library methods `futureOrderDays()` to get the future days in advance location option value
+* Location library methods `checkOrderType()` to check if delivery or collection order type is available open, and accepting orders
+* Location library methods `checkOrderTime()` to check if order time is within delivery or collection open and close hour
+* Improve `local_module` and `cart_module` to display and check opening, delivery and collection hours and status
+* Affix categories sidebar (module) to page
+* Migration: added column `order_date` to `orders` table to allow future orders
+* Customer now redirects back to previous page after login when previous page is either checkout or reservation page
+
+#### Changed
+* Major UI improvements to local, cart and categories modules, local, locations and checkout pages
+* Location library: MUST call `initialize()` method or `setLocation()` to load location library
+* Improved `orderTimeRange()` method in Location Library to get future order dates and hours
+* Removed `local_module ` admin edit language text feature. Language text should be changed from language file instead.
+* Location library methods `getOpeningType()`, `openingStatus()`, `openingHours()`, `checkDeliveryTime()`, `` to `getWorkingType()`, `workingStatus()`, `workingHours()`, `checkOrderTime()`, ``
+* Improved Checkout future order (order for later) feature with option to select date and time for later delivery or collection
+* Improved Location feature where customer must enter address to order
+* Improved Cart Module alerts to display top screen on mobile devices
+
+#### Fixed
+
 ### v2.0.0 (stable)
 
 Release Date: January 2016 (postponed: 15 March 2016)
