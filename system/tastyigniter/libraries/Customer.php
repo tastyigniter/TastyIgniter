@@ -127,8 +127,6 @@ class Customer {
 		$this->security_answer = '';
 
 	    $this->CI->session->unset_userdata('order_info');
-
-	    $this->CI->cart->destroy();
     }
 
   	public function isLogged() {
