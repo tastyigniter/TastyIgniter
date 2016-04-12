@@ -88,6 +88,7 @@ class Media_manager {
     public function fetchGalleries() {
         $galleries = $this->_recursiveFolders($this->_image_path . $this->_root_folder . 'gallery/', FALSE);
 
+        $_galleries = array();
         foreach ($galleries as $key => $value) {
             $_galleries[] = array('name' => basename($value), 'path' => $value);
         }
