@@ -563,11 +563,12 @@ class Checkout extends Main_Controller {
 
 	public function _validate_address($address_id) {
         $addresses = $this->input->post('address');
+
         if ($this->location->orderType() === '1' AND !empty($addresses[0]['address_1'])) {
             $location_id = $this->location->getId();
             $area_id = $this->location->getAreaId();
 
-            foreach ($this->input->post('address') as $address) {
+            foreach ($addresses as $address) {
                 if (empty($address_id) OR $address['address_id'] === $address_id) {
                     $country = $this->Countries_model->getCountry($address['country_id']);
                     $address['country'] = $country['country_name'];

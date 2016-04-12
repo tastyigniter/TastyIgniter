@@ -530,7 +530,7 @@ class Location {
 		$coords = $this->getLatLng($search_query);
 		$delivery_area = $this->checkDeliveryArea($coords);
 
-		if ($delivery_area !== 'outside' AND count($delivery_area) == 2 AND $delivery_area['location_id'] === $this->location_id) {
+		if ($delivery_area !== 'outside' AND count($delivery_area) == 2 AND $delivery_area['location_id'] == $this->location_id) {
 			return $delivery_area;
 		}
 
