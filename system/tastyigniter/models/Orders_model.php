@@ -388,6 +388,7 @@ class Orders_model extends TI_Model {
 			$current_time = time();
 			$order_time = (strtotime($order_info['order_time']) < strtotime($current_time)) ? $current_time : $order_info['order_time'];
 			$this->db->set('order_time', mdate('%H:%i', strtotime($order_time)));
+			$this->db->set('order_date', mdate('%Y-%m-%d', strtotime($order_time)));
 			$this->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', $current_time));
 			$this->db->set('date_modified', mdate('%Y-%m-%d', $current_time));
 			$this->db->set('ip_address', $this->input->ip_address());
@@ -651,8 +652,7 @@ class Orders_model extends TI_Model {
 			$data['order_number'] = $result['order_id'];
 			$data['order_view_url'] = root_url('account/orders/view/' . $result['order_id']);
 			$data['order_type'] = ($result['order_type'] === '1') ? 'delivery' : 'collection';
-			$data['order_time'] = mdate('%H:%i', strtotime($result['order_time']));
-			$data['order_date'] = mdate('%d %M %y', strtotime($result['date_added']));
+			$data['order_time'] = mdate('%H:%i', strtotime($result['order_time'])) . ' ' . mdate('%d %M', strtotime($result['date_added']));
 			$data['first_name'] = $result['first_name'];
 			$data['last_name'] = $result['last_name'];
 			$data['email'] = $result['email'];
@@ -685,7 +685,7 @@ class Orders_model extends TI_Model {
 						'menu_quantity' => $menu['quantity'],
 						'menu_price'    => $this->currency->format($menu['price']),
 						'menu_subtotal' => $this->currency->format($menu['subtotal']),
-						'menu_options'  => implode(', ', $option_data),
+						'menu_options'  => implode('<br /> ', $option_data),
 						'menu_comment'  => $menu['comment'],
 					);
 				}

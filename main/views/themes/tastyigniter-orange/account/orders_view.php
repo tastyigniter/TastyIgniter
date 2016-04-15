@@ -39,7 +39,11 @@
 									</tr>
 									<tr>
 										<td><b><?php echo lang('column_date'); ?>:</b></td>
-										<td><?php echo $order_time; ?> - <?php echo $date_added; ?></td>
+										<td><?php echo $order_time; ?> - <?php echo $order_date; ?></td>
+									</tr>
+									<tr>
+										<td><b><?php echo lang('column_date_added'); ?>:</b></td>
+										<td><?php echo $date_added; ?></td>
 									</tr>
 									<tr>
 										<td><b><?php echo lang('column_order'); ?>:</b></td>
@@ -68,41 +72,44 @@
 							</div>
 							<div class="table-responsive">
 								<table class="table table-hover">
-									<tr>
-										<th width="1"></th>
-										<th align="left" width="70%"><?php echo lang('column_menu_name'); ?></th>
-										<th class="center"><?php echo lang('column_menu_price'); ?></th>
-										<th class="right"><?php echo lang('column_menu_subtotal'); ?></th>
-									</tr>
-									<?php foreach ($menus as $menu) { ?>
-									<tr id="<?php echo $menu['id']; ?>">
-										<td width="1"><?php echo $menu['qty']; ?>x</td>
-										<td class="food_name"><?php echo $menu['name']; ?><br />
-										<?php if (!empty($menu['options'])) { ?>
-											<div><small><?php echo lang('text_plus'); ?><?php echo $menu['options']; ?></small></div>
+									<thead>
+										<tr>
+											<th width="1"></th>
+											<th class="text-left" width="70%"><?php echo lang('column_menu_name'); ?></th>
+											<th class="text-right"><?php echo lang('column_menu_price'); ?></th>
+											<th class="text-right"><?php echo lang('column_menu_subtotal'); ?></th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php foreach ($menus as $menu) { ?>
+											<tr id="<?php echo $menu['id']; ?>">
+												<td width="1"><?php echo $menu['qty']; ?> x</td>
+												<td class="text-left"><?php echo $menu['name']; ?><br />
+												<?php if (!empty($menu['options'])) { ?>
+													<div><small><?php echo lang('text_plus'); ?><?php echo $menu['options']; ?></small></div>
+												<?php } ?>
+												<?php if (!empty($menu['comment'])) { ?>
+													<div><small><b><?php echo $menu['comment']; ?></b></small></div>
+												<?php } ?>
+												</td>
+												<td class="text-right"><?php echo $menu['price']; ?></td>
+												<td class="text-right"><?php echo $menu['subtotal']; ?></td>
+											</tr>
 										<?php } ?>
-										<?php if (!empty($menu['comment'])) { ?>
-											<div><small><b><?php echo $menu['comment']; ?></b></small></div>
+										<tr><td class="thick-line" colspan="4"></td></tr>
+										<?php foreach ($totals as $total) { ?>
+											<tr>
+												<td class="no-line" colspan="2"></td>
+												<td class="text-right no-line"><b><?php echo $total['title']; ?></b></td>
+												<td class="text-right no-line"><b><?php echo $total['value']; ?></b></td>
+											</tr>
 										<?php } ?>
-										</td>
-										<td class="center"><?php echo $menu['price']; ?></td>
-										<td class="right"><?php echo $menu['subtotal']; ?></td>
-									</tr>
-									<?php } ?>
-									<?php foreach ($totals as $total) { ?>
-									<tr>
-										<td width="1"></td>
-										<td></td>
-										<td class="center"><b><?php echo $total['title']; ?></b></td>
-										<td class="right"><b><?php echo $total['value']; ?></b></td>
-									</tr>
-									<?php } ?>
-									<tr>
-										<td width="1"></td>
-										<td></td>
-										<td class="center"><b><?php echo lang('column_total'); ?></b></td>
-										<td class="right"><b><?php echo $order_total; ?></b></td>
-									</tr>
+											<tr>
+												<td class="no-line" colspan="2"></td>
+												<td class="text-right thick-line"><b><?php echo lang('column_total'); ?></b></td>
+												<td class="text-right thick-line"><b><?php echo $order_total; ?></b></td>
+											</tr>
+									</tbody>
 								</table>
 							</div>
 						</div>

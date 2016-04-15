@@ -66,6 +66,7 @@ class Orders extends Main_Controller {
 				'order_id' 				=> $result['order_id'],
 				'location_name' 		=> $result['location_name'],
 				'date_added' 			=> day_elapsed($result['date_added']),
+				'order_date' 			=> day_elapsed($result['order_date']),
 				'order_time'			=> mdate($time_format, strtotime($result['order_time'])),
 				'total_items'			=> $result['total_items'],
 				'order_total' 			=> $this->currency->format($result['order_total']),		// add currency symbol and format order total to two decimal places
@@ -115,8 +116,9 @@ class Orders extends Main_Controller {
 
 		$data['order_id'] 		        = $result['order_id'];
         $data['date_added'] 	        = mdate($date_format, strtotime($result['date_added']));
-        $data['order_time'] 	        = mdate($time_format, strtotime($result['order_time']));
-        $data['order_type'] 		    = $result['order_type'];
+		$data['order_time'] 	        = mdate($time_format, strtotime($result['order_time']));
+		$data['order_date'] 	        = mdate($date_format, strtotime($result['order_date']));
+		$data['order_type'] 		    = $result['order_type'];
 
         $this->load->library('country');
         $this->load->model('Locations_model');														// load orders model
@@ -172,7 +174,7 @@ class Orders extends Main_Controller {
 		if ($payment = $this->extension->getPayment($result['payment'])) {
 			$data['payment'] = !empty($payment['ext_data']['title']) ? $payment['ext_data']['title']: $payment['title'];
 		} else {
-			$data['payment'] = 'No Payment';
+			$data['payment'] = $this->lang->line('text_no_payment');
 		}
 
 		$this->template->render('account/orders_view', $data);

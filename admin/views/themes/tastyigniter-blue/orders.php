@@ -110,7 +110,7 @@
                             <td><span class="label label-default" style="background-color: <?php echo $order['status_color']; ?>;"><?php echo $order['order_status']; ?></span></td>
 							<td><?php echo $order['order_type']; ?></td>
 							<td><?php echo $order['order_total']; ?></td>
-							<td class="text-center"><?php echo $order['order_time']; ?> - <?php echo $order['date_added']; ?></td>
+							<td class="text-center"><?php echo $order['order_time']; ?> - <?php echo $order['order_date']; ?></td>
 						</tr>
 						<?php } ?>
 						<?php } else { ?>

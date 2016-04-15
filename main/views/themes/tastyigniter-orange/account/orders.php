@@ -54,7 +54,7 @@
                                             <td><a href="<?php echo $order['view']; ?>"><?php echo $order['order_id']; ?></a></td>
                                             <td><?php echo $order['status_name']; ?></td>
                                             <td><?php echo $order['location_name']; ?></td>
-                                            <td><?php echo $order['order_time']; ?> - <?php echo $order['date_added']; ?></td>
+                                            <td><?php echo $order['order_time']; ?> - <?php echo $order['order_date']; ?></td>
                                             <td><?php echo $order['order_type']; ?></td>
                                             <td><?php echo $order['total_items']; ?></td>
                                             <td><?php echo $order['order_total']; ?></td>

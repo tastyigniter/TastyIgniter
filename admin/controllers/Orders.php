@@ -116,8 +116,9 @@ class Orders extends Admin_Controller {
 				'last_name'			=> $result['last_name'],
 				'order_type' 		=> ($result['order_type'] === '1') ? $this->lang->line('text_delivery') : $this->lang->line('text_collection'),
 				'order_time'		=> mdate('%H:%i', strtotime($result['order_time'])),
-                'order_status'		=> $result['status_name'],
-                'status_color'		=> $result['status_color'],
+				'order_date'		=> day_elapsed($result['order_date']),
+				'order_status'		=> $result['status_name'],
+				'status_color'		=> $result['status_color'],
 				'order_total'		=> $this->currency->format($result['order_total']),
 				'date_added'		=> day_elapsed($result['date_added']),
 				'edit' 				=> site_url('orders/edit?id=' . $result['order_id'])
@@ -313,7 +314,7 @@ class Orders extends Admin_Controller {
 				'price' 		=> $this->currency->format($cart_item['price']),
 				'subtotal' 		=> $this->currency->format($cart_item['subtotal']),
 				'comment' 		=> $cart_item['comment'],
-				'options'		=> implode(', ', $option_data)
+				'options'		=> implode('<br /> ', $option_data)
 			);
 		}
 

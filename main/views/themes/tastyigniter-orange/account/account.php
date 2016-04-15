@@ -139,7 +139,7 @@
 												<tr>
 													<td><a href="<?php echo $order['view']; ?>"><?php echo $order['order_id']; ?></a></td>
 													<td width="80%" class="text-center"><?php echo $order['status_name']; ?></td>
-													<td><?php echo $order['order_time']; ?> - <?php echo $order['date_added']; ?></td>
+													<td><?php echo $order['order_time']; ?> - <?php echo $order['order_date']; ?></td>
 												</tr>
 												<?php } ?>
 											</tbody>
