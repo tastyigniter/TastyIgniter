@@ -72,7 +72,7 @@ class Checkout extends Main_Controller {
 
         $data['_action'] = site_url('checkout');
 
-        if (isset($order_data['order_id']) AND isset($order_data['customer_id'])) {
+        if (isset($order_data['customer_id']) AND isset($order_data['order_id'])) {
 			$this->load->model('Statuses_model');
 			$order_status_exists = $this->Statuses_model->statusExists('order', $order_data['order_id']);
 
@@ -81,6 +81,10 @@ class Checkout extends Main_Controller {
 	            $this->session->unset_userdata('order_data');
 			}
 		}
+
+        if (isset($order_data['location_id']) AND $order_data['location_id'] !== $this->location->getId()) {
+            $order_data['checkout_step'] = 'one';
+        }
 
         $data = $this->getFormData($order_data, $data);
 
@@ -199,6 +203,8 @@ class Checkout extends Main_Controller {
             $data['checkout_step'] = 'one';
         }
 
+        $data['is_logged'] = $this->customer->isLogged();
+
         if ($this->input->post('first_name')) {
             $data['first_name'] = $this->input->post('first_name');
         } else if (isset($order_data['first_name'])) {
@@ -219,12 +225,12 @@ class Checkout extends Main_Controller {
             $data['last_name'] = '';
         }
 
-        if ($this->input->post('email')) {
+        if ($this->customer->isLogged()) {
+            $data['email'] = $this->customer->getEmail();                                        // retrieve customer email address from customer library
+        } else if ($this->input->post('email')) {
             $data['email'] = $this->input->post('email');
         } else if (isset($order_data['email'])) {
             $data['email'] = $order_data['email'];                                // retrieve customer email from session data
-        } else if ($this->customer->getEmail()) {
-            $data['email'] = $this->customer->getEmail();                                        // retrieve customer email address from customer library
         } else {
             $data['email'] = '';
         }
@@ -245,6 +251,8 @@ class Checkout extends Main_Controller {
         } else {
             $data['order_type'] = '1';
         }
+
+        $data['order_type_text'] = ($data['order_type'] === '1') ? $this->lang->line('label_delivery') : $this->lang->line('label_collection');
 
         $data['order_times'] = $this->location->orderTimeRange();
         $data['order_time_interval'] = ($data['order_type'] === '1') ? $this->location->deliveryTime() : $this->location->collectionTime();
@@ -412,7 +420,7 @@ class Checkout extends Main_Controller {
 	        $order_data['checkout_step']    = empty($order_data['checkout_step']) ? 'one' : $order_data['checkout_step'];
 	        $order_data['first_name'] 	    = $this->input->post('first_name');
             $order_data['last_name'] 	    = $this->input->post('last_name');
-            $order_data['email'] 		    = $this->input->post('email');
+            $order_data['email'] 		    = $this->customer->isLogged() ? $this->customer->getEmail() : $this->input->post('email');
             $order_data['telephone'] 	    = $this->input->post('telephone');
             $order_data['order_time_type']  = $this->input->post('order_time_type');
             $order_data['order_asap_time'] = $this->input->post('order_asap_time');
@@ -457,8 +465,6 @@ class Checkout extends Main_Controller {
             }
 
             return TRUE;
-        } else {
-            $this->session->unset_userdata('order_data');					// remove order details to session and return TRUE
         }
 
     }
@@ -498,11 +504,13 @@ class Checkout extends Main_Controller {
 			$this->form_validation->set_message('is_unique', 'Warning: E-Mail Address is already registered!');
 		}
 
+        $order_type_text = ($this->location->orderType() === '1') ? $this->lang->line('label_delivery') : $this->lang->line('label_collection');
+
 		$this->form_validation->set_rules('telephone', 'lang:label_telephone', 'xss_clean|trim|required|numeric|max_length[20]');
-		$this->form_validation->set_rules('order_time_type', 'lang:label_order_time_type', 'xss_clean|trim|required|alpha');
+		$this->form_validation->set_rules('order_time_type', sprintf(lang('label_order_time_type'), $order_type_text), 'xss_clean|trim|required|alpha');
 
         if ($this->input->post('order_time_type') === 'asap') {
-            $this->form_validation->set_rules('order_asap_time', 'lang:label_order_asap_time', 'xss_clean|trim|required|callback__validate_time');
+            $this->form_validation->set_rules('order_asap_time', sprintf(lang('label_order_asap_time'), $order_type_text), 'xss_clean|trim|required|callback__validate_time');
         } else {
             $this->form_validation->set_rules('order_date', 'lang:label_date', 'xss_clean|trim|required|valid_date');
             $this->form_validation->set_rules('order_hour', 'lang:label_hour', 'xss_clean|trim|required|numeric|callback__validate_time');

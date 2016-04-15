@@ -79,7 +79,7 @@
 									<div class="col-sm-6">
 										<div class="form-group">
 											<label for="email"><?php echo lang('label_email'); ?></label>
-											<input type="text" name="email" id="email" class="form-control" value="<?php echo set_value('email', $email); ?>" />
+											<input type="text" name="email" id="email" class="form-control" value="<?php echo set_value('email', $email); ?>" <?php echo $is_logged ? 'disabled' : ''; ?> />
 											<?php echo form_error('email', '<span class="text-danger">', '</span>'); ?>
 										</div>
 									</div>
@@ -95,7 +95,7 @@
 								<div class="row">
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label for="order-time"><?php echo lang('label_order_time'); ?></label>
+											<label for="order-time"><?php echo sprintf(lang('label_order_time'), $order_type_text); ?></label>
                                             <?php if ($order_times) { ?>
                                                 <div class="btn-group" data-toggle="buttons">
                                                     <?php if (!empty($order_times['asap'])) { ?>
@@ -117,7 +117,7 @@
                                         <div class="clearfix"></div>
                                         <div id="choose-order-time" class="col-sm-6" style="display: <?php echo ($order_time_type === 'later') ? 'block' : 'none'; ?>;">
                                             <div class="form-group">
-                                                <label for="choose-order-time"><?php echo lang('label_choose_order_time'); ?></label>
+                                                <label for="choose-order-time"><?php echo sprintf(lang('label_choose_order_time'), $order_type_text); ?></label>
                                                 <div class="row order-time-group">
                                                     <div class="col-xs-12 col-sm-6 order-later date-input-addon">
                                                         <div class="input-group">
@@ -298,7 +298,7 @@
                                             <label for=""><?php echo lang('label_order_type'); ?></label><br /><?php echo ($order_type === '1') ? lang('label_delivery') : lang('label_collection'); ?>
                                         </div>
                                         <div class="form-group">
-                                            <label for=""><?php echo lang('label_order_time'); ?></label><br /><?php echo mdate(lang('text_date_format') .' '. config_item('time_format'), strtotime($order_time)); ?>
+                                            <label for=""><?php echo sprintf(lang('label_order_time'), $order_type_text); ?></label><br /><?php echo mdate(lang('text_date_format') .' '. config_item('time_format'), strtotime($order_time)); ?>
                                         </div>
                                     </div>
                                 </div>

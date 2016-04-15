@@ -309,7 +309,6 @@ color: #585858;
 #notification .alert {
 padding: 0;
 /*margin-top: 20px;*/
-border-radius: 0;
 }
 #notification .alert-danger,
 #notification .alert-info,
@@ -322,7 +321,10 @@ padding: 15px;
 right: 10px;
 top: 10px;
 }
-
+#notification .alert-collapsible .close {
+  top: 0px;
+  right: 0;
+}
 .list-group-alert {
 list-style: outside none none;
 padding: 0;
@@ -347,7 +349,7 @@ margin-top: 5px;
 color: inherit;
 position: relative;
 left: -7px;
-top: 2px;
+top: 0;
 }
 button.btn-dropdown {
 background: none repeat scroll 0 0 transparent;
