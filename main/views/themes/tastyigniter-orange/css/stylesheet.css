@@ -491,6 +491,16 @@ font-weight: bold;
 
 
 /*** Tables ***/
+.table > tbody > tr > .no-line {
+  border-top: none;
+}
+.table > thead > tr > .no-line {
+  border-bottom: none;
+}
+.table > tbody > tr > .thick-line {
+  border-top-width: 2px;
+  border-top-style: solid;
+}
 /*** End Tables ***/
 
 
@@ -699,6 +709,7 @@ color: #484848;
 /*** Order Steps ***/
 #order-steps{
 margin-top: -15px;
+padding-top: 20px;
 }
 .step-item {
 text-align: center;

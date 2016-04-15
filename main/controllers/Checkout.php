@@ -96,7 +96,7 @@ class Checkout extends Main_Controller {
 
         $order_data = $this->session->userdata('order_data'); 						            // retrieve order details from session userdata
 
-        $order_id = is_numeric($order_data['order_id']) ? $order_data['order_id'] : '0';
+        $order_id = (isset($order_data['order_id']) AND is_numeric($order_data['order_id'])) ? $order_data['order_id'] : '0';
         $order_info = $this->Orders_model->getOrder($order_id, $customer_id);	// retrieve order details array from getMainOrder method in Orders model
 
         if (empty($order_info) OR empty($order_info['order_id']) OR empty($order_info['status_id'])) {																	// checks if array is returned
@@ -114,17 +114,15 @@ class Checkout extends Main_Controller {
         // checks if order type is delivery or collection
         $order_type = ($order_info['order_type'] === '1') ? 'delivery' : 'collection';
 
-        if (!empty($order_data['ext_payment']['title'])) { 										// checks if payment method is paypal or cod
-            $payment_method = $order_data['ext_payment']['title'];
-        } else if (!empty($order_info['payment'])) {
-            $payment_method = $order_info['payment'];
+        if ($payment = $this->extension->getPayment($order_info['payment'])) {
+            $payment_method = !empty($payment['ext_data']['title']) ? $payment['ext_data']['title'] : $payment['title'];
         } else {
             $payment_method = $this->lang->line('text_no_payment');
         }
 
         $date_format = ($this->config->item('date_format')) ? $this->config->item('date_format') : '%d %M %y';
         $time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
-        $data['order_details'] = sprintf($this->lang->line('text_order_info'), $order_type,  mdate($date_format, strtotime($order_info['date_added'])), mdate($time_format, strtotime($order_info['order_time'])), $payment_method);
+        $data['order_details'] = sprintf($this->lang->line('text_order_info'), $order_type,  mdate($date_format, strtotime($order_info['date_added'])), ucwords($order_type), mdate(lang('text_date_format')." {$time_format}", strtotime("{$order_info['order_date']} {$order_info['order_time']}")), $payment_method);
 
         $data['menus'] = array();
         $menus = $this->Orders_model->getOrderMenus($order_info['order_id']);
@@ -169,7 +167,7 @@ class Checkout extends Main_Controller {
             }
         }
 
-        $data['order_total'] = sprintf($this->lang->line('text_order_total'), $this->currency->format($order_info['order_total']));
+        $data['order_total'] = $this->currency->format($order_info['order_total']);
 
         if ($order_type === 'delivery' AND !empty($order_info['address_id'])) {											// checks if address_id is set then retrieve delivery address
             $delivery_address = $this->Addresses_model->getAddress($customer_id, $order_info['address_id']);
@@ -439,12 +437,11 @@ class Checkout extends Main_Controller {
                 }
             }
 
-            if ($this->input->post('checkout_step') === 'one') {
+            if ($this->input->post('checkout_step') === 'one' OR $this->input->post('checkout_step') === 'two') {
 	            $order_data['checkout_step'] = 'two';
             }
 
 	        if ($this->input->post('checkout_step') === 'two' AND $order_data['checkout_step'] === 'two' AND $this->input->post('payment')) {
-
                 $order_data['payment'] = $this->input->post('payment');
                 $order_data['ext_payment'] = $this->extension->getPayment($order_data['payment']);
 
@@ -575,7 +572,7 @@ class Checkout extends Main_Controller {
                     unset($address['address_id'], $address['country_id']);
 
                     if ($area = $this->location->checkDeliveryCoverage($address)) {
-	                    if (isset($area['area_id']) AND ($area['area_id'] !== $area_id OR $area['location_id'] !== $location_id)) {
+	                    if (isset($area['area_id']) AND ($area['area_id'] != $area_id OR $area['location_id'] != $location_id)) {
                             $this->location->setDeliveryArea($area);
 
                             $this->alert->set('alert', $this->lang->line('alert_delivery_area_changed'));

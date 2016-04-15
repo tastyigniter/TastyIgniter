@@ -27,7 +27,7 @@ $lang['text_delivery_address']          = 'Your Delivery Address';
 $lang['text_your_local']                = 'Your local restaurant';
 $lang['text_thank_you']                 = 'We hope to see you again soon';
 $lang['text_success_message']           = 'Your order  %s has been received and will be with you shortly. <br /><a href="%s">Click here</a> to view your order progress. <br />Thanks for shopping with us online!';
-$lang['text_order_info']                = 'This is a %s order. <br /><br /><b>Order Date:</b> %s <br /><b>Delivery Time:</b> %s <br /><b>Payment Method:</b> %s ';
+$lang['text_order_info']                = 'This is a %s order. <br /><br /><b>Order Date:</b> %s <br /><b>%s Time:</b> %s <br /><b>Payment Method:</b> %s ';
 $lang['text_order_total']               = 'Order Total: <b>%s.</b>';
 $lang['text_collection_order_type'] 	= 'This is a pick-up order';
 $lang['text_no_payment'] 	            = 'No payment method selected';

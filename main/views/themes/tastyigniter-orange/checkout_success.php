@@ -9,25 +9,25 @@
 							<li class="disabled">
 								<a href="#checkout">
 									<h4 class="list-group-item-heading"><?php echo lang('text_step_one'); ?></h4>
-									<p class="list-group-item-text"><?php echo lang('text_step_one_summary'); ?></p>
+									<p class="list-group-item-text hidden-xs"><?php echo lang('text_step_one_summary'); ?></p>
 								</a>
 							</li>
 							<li class="disabled">
 								<a href="#payment">
 									<h4 class="list-group-item-heading"><?php echo lang('text_step_two'); ?></h4>
-									<p class="list-group-item-text"><?php echo lang('text_step_two_summary'); ?></p>
+									<p class="list-group-item-text hidden-xs"><?php echo lang('text_step_two_summary'); ?></p>
 								</a>
 							</li>
 							<li class="active">
 								<a href="#confirmation">
 									<h4 class="list-group-item-heading"><?php echo lang('text_step_three'); ?></h4>
-									<p class="list-group-item-text"><?php echo lang('text_step_three_summary'); ?></p>
+									<p class="list-group-item-text hidden-xs"><?php echo lang('text_step_three_summary'); ?></p>
 								</a>
 							</li>
 						</ul>
 					</div>
 
-					<div class="col-xs-12 content">
+					<div class="col-xs-12 content-wrap">
 						<div class="heading-section">
 							<?php echo $text_success_message; ?>
 		                    <span class="under-heading"></span>
@@ -38,15 +38,20 @@
 			                    <h3 class="panel-title"><strong><?php echo lang('text_order_details'); ?></strong></h3>
 			                </div>
 			                <div class="panel-body">
-			                    <div class="col-sm-6">
+			                    <div class="col-sm-4">
 			                        <p><?php echo $order_details; ?></p>
 			                    </div>
-			                    <div class="col-sm-6">
+			                    <div class="col-sm-4">
 									<?php if ($delivery_address) { ?>
 										<strong><?php echo lang('text_delivery_address'); ?>:</strong>
 										<address><?php echo $delivery_address; ?></address>
 									<?php } ?>
 			                    </div>
+								<div class="col-sm-4">
+									<strong><?php echo lang('text_your_local'); ?></strong><br />
+									<strong><?php echo $location_name; ?></strong><br />
+									<address><?php echo $location_address; ?></address>
+								</div>
 			                </div>
 			            </div>
 
@@ -57,55 +62,50 @@
 			                <div class="panel-body">
 								<?php if ($menus) { ?>
 				                    <div class="table-responsive">
-				                        <table class="table table-condensed">
+										<table class="table table-condensed">
 				                            <tbody>
 												<?php foreach ($menus as $menu) { ?>
 													<tr>
-														<td>x <?php echo $menu['quantity']; ?></td>
-														<td class="text-center"><?php echo $menu['name']; ?><br />
+														<td><?php echo $menu['quantity']; ?> x</td>
+														<td class="text-left" width="65%">
+															<?php echo $menu['name']; ?>
 															<?php if (!empty($menu['options'])) { ?>
-																<div><small><?php echo lang('text_plus'); ?><?php echo $menu['options']; ?></small></div>
+																<div class="text-muted"><small><?php echo $menu['options']; ?></small></div>
 															<?php } ?>
 															<?php if (!empty($menu['comment'])) { ?>
-																<div><small><b><?php echo $menu['comment']; ?></b></small></div>
+																<div class="text-muted"><small><b><?php echo $menu['comment']; ?></b></small></div>
 															<?php } ?>
 														</td>
+														<td class="text-right"><?php echo $menu['price']; ?></td>
 														<td class="text-right"><?php echo $menu['subtotal']; ?></td>
 													 </tr>
 												<?php } ?>
-				                            </tbody>
-				                            <tfoot>
+												<tr><td class="thick-line" colspan="4"></td></tr>
+												<?php foreach ($order_totals as $total) { ?>
+													<?php if ($total['code'] !== 'order_total') { ?>
+														<tr>
+															<td class="no-line" colspan="2"></td>
+															<td class="no-line text-right"><?php echo $total['title']; ?></td>                                                  <br />
+															<td class="no-line text-right"><?php echo $total['value']; ?></td>                                                   <br />
+														</tr>
+													<?php } ?>
+												<?php } ?>
 												<tr>
-													<td class="thick-line"></td>
-													<td class="thick-line"></td>
-													<td class="thick-line text-right">
-                                                        <?php foreach ($order_totals as $total) { ?>
-                                                            <?php if ($total['code'] !== 'order_total') { ?>
-                                                                <span class="small text-muted wrap-buttom"><?php echo $total['title']. ': '. $total['value']; ?></span>                                                      <br />
-                                                            <?php } ?>
-                                                        <?php } ?>
-                                                        <?php echo $order_total; ?>
-                                                    </td>
-                                                </tr>
-				                            </tfoot>
+													<td class="no-line" colspan="2"></td>
+													<td class="thick-line text-right"><strong><?php echo lang('text_order_total'); ?></strong></td>
+													<td class="thick-line text-right"><strong><?php echo $order_total; ?></strong></td>
+												</tr>
+				                            </tbody>
 				                        </table>
 				                    </div>
 								<?php } ?>
+								<p><?php echo lang('text_thank_you'); ?></p>
 							</div>
-						</div>
-
-						<div class="col-xs-12">
-							<h4><?php echo lang('text_your_local'); ?></h4>
-							<strong><?php echo $location_name; ?></strong><br />
-							<address><?php echo $location_address; ?></address>
-							<p><?php echo lang('text_thank_you'); ?></p>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-</div>
 	</div>
 </div>
 <?php echo get_footer(); ?>
