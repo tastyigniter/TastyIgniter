@@ -171,7 +171,7 @@
 							<li>
 								<div class="row wrap-vertical text-center">
 									<div class="col-xs-12 wrap-top">
-										<img class="img-rounded" src="<?php echo 'http://www.gravatar.com/avatar/'.$staff_avatar.'.png?s=48&d=mm'; ?>">
+										<img class="img-rounded" src="<?php echo 'https://www.gravatar.com/avatar/'.$staff_avatar.'.png?s=48&d=mm'; ?>">
 									</div>
 									<div class="col-xs-12 wrap-none wrap-top wrap-right">
 										<span><strong><?php echo $staff_name; ?></strong></span>
