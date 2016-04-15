@@ -61,12 +61,20 @@ class Cart_module extends Main_Controller {
 		}
 
 		$order_data = $this->session->userdata('order_data');
-		if ($rsegment === 'checkout' AND isset($order_data['checkout_step']) AND $order_data['checkout_step'] === 'two') {
-			$data['button_order'] = '<a class="btn btn-primary btn-block btn-lg" onclick="$(\'#checkout-form\').submit();">' . $this->lang->line('button_confirm') . '</a>';
-		} else if ($rsegment == 'checkout') {
-			$data['button_order'] = '<a class="btn btn-primary btn-block btn-lg" onclick="$(\'#checkout-form\').submit();">' . $this->lang->line('button_payment') . '</a>';
+		if ($this->input->post('checkout_step')) {
+			$checkout_step = $this->input->post('checkout_step');
+		} else if (isset($order_data['checkout_step'])) {
+			$checkout_step = $order_data['checkout_step'];
 		} else {
-			$data['button_order'] = '<a class="btn btn-primary btn-block btn-lg" href="' . site_url('checkout') . '">' . $this->lang->line('button_order') . '</a>';
+			$checkout_step = 'one';
+		}
+
+		if ($rsegment === 'checkout' AND $checkout_step === 'two') {
+			$data['button_order'] = '<a class="btn btn-order btn-primary btn-block btn-lg" onclick="$(\'#checkout-form\').submit();">' . $this->lang->line('button_confirm') . '</a>';
+		} else if ($rsegment == 'checkout') {
+			$data['button_order'] = '<a class="btn btn-order btn-primary btn-block btn-lg" onclick="$(\'#checkout-form\').submit();">' . $this->lang->line('button_payment') . '</a>';
+		} else {
+			$data['button_order'] = '<a class="btn btn-order btn-primary btn-block btn-lg" href="' . site_url('checkout') . '">' . $this->lang->line('button_order') . '</a>';
 		}
 
 		if ($this->location->isClosed() OR ! $this->location->checkOrderType()) {

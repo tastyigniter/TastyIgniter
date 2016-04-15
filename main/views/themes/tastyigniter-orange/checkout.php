@@ -364,7 +364,7 @@ $(document).ready(function() {
     });
 
     $('select[name="order_date"]').on('change', function() {
-        $('#choose-order-time .time-input-addon').css("display", "none");
+        $('#choose-order-time .time-input-addon .input-group').css("display", "none");
 
         var timeAddonId = "#order-time-" + this.value;
         if ($(timeAddonId).length) {
@@ -417,7 +417,7 @@ $(document).ready(function() {
         $('input[name="checkout_step"]').val('one');
         $('#checkout').fadeIn();
         $('#payment').fadeOut();
-        $('.side-bar .buttons .btn').text('<?php echo lang('button_payment'); ?>');
+        $('#cart-box .btn-order').text('<?php echo lang('button_payment'); ?>');
 
     });
 });
