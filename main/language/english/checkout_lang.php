@@ -49,13 +49,13 @@ $lang['label_order_type']               = 'Order Type';
 $lang['label_delivery']                 = 'Delivery';
 $lang['label_collection']               = 'Pick-up';
 $lang['label_order_time']               = 'Delivery or Pick-up Time';
-$lang['label_order_time_type']          = 'Delivery or Pick-up Time Type';
+$lang['label_choose_order_time']        = 'Choose Delivery or Pick-up Time';
 $lang['label_order_asap_time']          = 'Delivery or Pick-up ASAP Time';
 $lang['label_date']                     = 'Date';
 $lang['label_hour']                     = 'Hour';
 $lang['label_minute']                   = 'Minute';
 $lang['label_payment_method']           = 'Payment Method';
-$lang['label_terms']                    = 'By clicking <strong class="label label-success">Confirm</strong>, you agree to the <a href="%s" data-toggle="modal" data-target="#terms-modal">Terms and Conditions</a> set out by this site, including our Cookie Use.';
+$lang['label_terms']                    = 'By clicking I Agree, you agree to the <a href="%s" data-toggle="modal" data-target="#terms-modal">Terms and Conditions</a> set out by this site, including our Cookie Use.';
 $lang['label_comment']                  = 'Add Comments';
 $lang['label_ip']                       = 'IP Address';
 

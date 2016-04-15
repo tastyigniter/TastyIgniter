@@ -288,6 +288,8 @@ class Checkout extends Main_Controller {
             $data['order_hour'] = $order_hour;
         }
 
+        $data['order_hour'] = ( ! isset($data['order_times'][$order_date][$data['order_hour']])) ? $order_hour : $data['order_hour'];
+
         if ($this->input->post('order_minute')) {
             $data['order_minute'] = $this->input->post('order_minute');                            // retrieve order_time value from $_POST data if set
         } else if (isset($order_data['order_minute'])) {

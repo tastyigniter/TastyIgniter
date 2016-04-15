@@ -377,6 +377,9 @@ text-shadow: 0 1px 0 #fff;
 .btn {
 border-radius: 3px;
 }
+.form-group .btn {
+  border-radius: 0;
+}
 .btn-group {
 width: 100%;
 }
@@ -1104,11 +1107,16 @@ body .bootstrap-timepicker-widget table td a i {
   margin: 0;
   border-radius: 3px;
 }
+.order-time-group > div {
+  padding: 0;
+}
+.order-time-group .btn-group > .btn {
+  width: 50%;
+}
 .order-time-group .date-input-addon,
 .order-time-group .time-input-addon {
-  background-color: #EEE;
-  padding: 10px;
-  border: 1px solid #ddd;
+  /*background-color: #EEE;*/
+  /*border: 1px solid #ddd;*/
 }
 .order-time-group .time-input-addon .hours,
 .order-time-group .time-input-addon .minutes {
@@ -1133,8 +1141,8 @@ body .bootstrap-timepicker-widget table td a i {
 width: 100%;
 }
 .select2-container .select2-choice {
-height: 36px;
-line-height: 36px;
+height: 32px;
+line-height: 32px;
 background-image:none;
 }
 .select2-container.input-sm .select2-choice {
