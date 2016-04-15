@@ -24,6 +24,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('is_ssl'))
+{
+	/**
+	 * Is SSL (HTTPS)?
+	 *
+	 * Checks if the current http request is secured
+	 *
+	 * @return bool
+	 */
+	function is_ssl()
+	{
+		if (isset($_SERVER['HTTPS'])) {
+			if ('on' == strtolower($_SERVER['HTTPS']))
+				return TRUE;
+			if ('1' == $_SERVER['HTTPS'])
+				return TRUE;
+		} elseif (isset($_SERVER['SERVER_PORT']) && ('443' == $_SERVER['SERVER_PORT'])) {
+			return TRUE;
+		}
+
+		return FALSE;
+	}
+}
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('site_url'))
 {
 	/**

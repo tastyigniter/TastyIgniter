@@ -122,6 +122,9 @@ class Updates_model extends TI_Model {
 
 	public function getRemoteData($url, $options = array(), $params = array()) {
 		$options['USERAGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:43.0) Gecko/20100101 Firefox/43.0';
+		$options['AUTOREFERER'] = TRUE;
+		$options['FAILONERROR'] = TRUE;
+		$options['FOLLOWLOCATION'] = 1;
 
 		if (empty($options['TIMEOUT'])) {
 			$options['TIMEOUT'] = 30;
