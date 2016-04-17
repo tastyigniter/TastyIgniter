@@ -17,158 +17,8 @@ class Cart_module extends Main_Controller {
         $this->lang->load('cart_module/cart_module');
 	}
 
-	public function index($ext_data = array(), $is_mobile = FALSE) {
-		if ( ! file_exists(EXTPATH .'cart_module/views/cart_module.php')) { 								//check if file exists in views folder
-			show_404(); 																		// Whoops, show 404 error page!
-		}
-
-        $referrer_uri = explode('/', str_replace(site_url(), '', $this->agent->referrer()));
-        $data['rsegment'] = $rsegment = ($this->uri->rsegment(1) === 'cart_module' AND !empty($referrer_uri[0])) ? $referrer_uri[0] : $this->uri->rsegment(1);
-
-        if (empty($ext_data)) {
-            $extension = $this->extension->getModule('cart_module');
-            if (!empty($extension['ext_data'])) {
-                $ext_data = $extension['ext_data'];
-            };
-        }
-
-        $this->template->setStyleTag(extension_url('cart_module/views/stylesheet.css'), 'cart-module-css', '144000');
-
-        $data['is_opened']                  = $this->location->isOpened();
-        $data['order_type']                 = $this->location->orderType();
-        $data['search_query'] 		        = $this->location->searchQuery();
-		$data['opening_status']		 		= $this->location->workingStatus('opening');
-		$data['delivery_status']			= $this->location->workingStatus('delivery');
-		$data['collection_status']			= $this->location->workingStatus('collection');
-        $data['has_delivery']               = $this->location->hasDelivery();
-        $data['has_collection']             = $this->location->hasCollection();
-		$data['show_cart_images'] 	        = isset($ext_data['show_cart_images']) ? $ext_data['show_cart_images'] : '';
-        $data['cart_images_h'] 		        = isset($ext_data['cart_images_h']) ? $ext_data['cart_images_h'] : '';
-        $data['cart_images_w'] 		        = isset($ext_data['cart_images_w']) ? $ext_data['cart_images_w'] :'';
-
-		$data['delivery_time'] = $this->location->deliveryTime();
-		if ($data['delivery_status'] === 'closed') {
-			$data['delivery_time'] = 'closed';
-		} else if ($data['delivery_status'] === 'opening') {
-			$data['delivery_time'] = $this->location->workingTime('delivery', 'open');
-		}
-
-		$data['collection_time'] = $this->location->collectionTime();
-		if ($data['collection_status'] === 'closed') {
-			$data['collection_time'] = 'closed';
-		} else if ($data['collection_status'] === 'opening') {
-			$data['collection_time'] = $this->location->workingTime('collection', 'open');
-		}
-
-		$order_data = $this->session->userdata('order_data');
-		if ($this->input->post('checkout_step')) {
-			$checkout_step = $this->input->post('checkout_step');
-		} else if (isset($order_data['checkout_step'])) {
-			$checkout_step = $order_data['checkout_step'];
-		} else {
-			$checkout_step = 'one';
-		}
-
-		if ($rsegment === 'checkout' AND $checkout_step === 'two') {
-			$data['button_order'] = '<a class="btn btn-order btn-primary btn-block btn-lg" onclick="$(\'#checkout-form\').submit();">' . $this->lang->line('button_confirm') . '</a>';
-		} else if ($rsegment == 'checkout') {
-			$data['button_order'] = '<a class="btn btn-order btn-primary btn-block btn-lg" onclick="$(\'#checkout-form\').submit();">' . $this->lang->line('button_payment') . '</a>';
-		} else {
-			$data['button_order'] = '<a class="btn btn-order btn-primary btn-block btn-lg" href="' . site_url('checkout') . '">' . $this->lang->line('button_order') . '</a>';
-		}
-
-		if ($this->location->isClosed() OR ! $this->location->checkOrderType()) {
-			$data['button_order'] = '<a class="btn btn-default btn-block btn-lg" href="' . site_url('checkout') . '"><b>' . $this->lang->line('text_is_closed') . '</b></a>';
-		}
-
-		$menus = $this->Cart_model->getMenus();
-
-        $data['cart_items'] = array();
-        if ($cart_contents = $this->cart->contents()) {															// checks if cart contents is not empty
-            foreach ($cart_contents as $row_id => $cart_item) {								// loop through items in cart
-	            $menu_data = isset($menus[$cart_item['id']]) ? $menus[$cart_item['id']] : FALSE;				// get menu data based on cart item id from getMenu method in Menus model
-
-	            if (($alert_msg = $this->validateCartMenu($menu_data, $cart_item)) === TRUE) {
-		            $cart_image = '';
-		            if (isset($data['show_cart_images']) AND $data['show_cart_images'] === '1') {
-			            $menu_photo = (!empty($menu_data['menu_photo'])) ? $menu_data['menu_photo'] : 'data/no_photo.png';
-			            $cart_image = $this->Image_tool_model->resize($menu_photo, $data['cart_images_h'], $data['cart_images_w']);
-		            }
-
-		            // load menu data into array
-		            $data['cart_items'][] = array(
-			            'rowid'				=> $cart_item['rowid'],
-			            'menu_id' 			=> $cart_item['id'],
-			            'name' 				=> (strlen($cart_item['name']) > 25) ? strtolower(substr($cart_item['name'], 0, 25)) .'...' : strtolower($cart_item['name']),
-			            //add currency symbol and format item price to two decimal places
-			            'price' 			=> $this->currency->format($cart_item['price']),
-			            'qty' 				=> $cart_item['qty'],
-			            'image' 			=> $cart_image,
-			            //add currency symbol and format item subtotal to two decimal places
-			            'sub_total' 		=> $this->currency->format($cart_item['subtotal']),
-			            'comment'           => isset($cart_item['comment']) ? $cart_item['comment'] : '',
-			            'options' 			=> ($this->cart->has_options($row_id) == TRUE) ? $this->cart->product_options_string($row_id) : ''
-		            );
-
-	            } else {
-		            $this->alert->set('custom_now', $alert_msg, 'cart_module');
-		            $this->cart->update(array('rowid' => $cart_item['rowid'], 'qty' => '0'));										// pass the cart_data array to add item to cart, if successful
-	            }
-			}
-
-			if (($response = $this->validateOrderType()) !== TRUE) {
-				$this->alert->set('custom', $response, 'cart_module');
-			}
-
-			if ($this->location->orderType() === '1' AND $this->cart->set_delivery($this->location->deliveryCharge())) {
-                $data['delivery'] = $this->currency->format($this->cart->delivery());
-			} else {
-				$this->cart->set_delivery(0);
-			}
-
-			$data['coupon'] = array();
-			if ($this->cart->coupon_code()) {
-				if (($response = $this->validateCoupon($this->cart->coupon_code())) !== TRUE) {
-					$this->alert->set('custom', $response, 'cart_module');
-                }
-
-                $data['coupon'] = array(
-                    'code' 		=> $this->cart->coupon_code(),
-                    'discount' 	=> $this->currency->format($this->cart->coupon_discount())
-                );
-            }
-
-	        $data['taxes'] = array();
-	        if ($taxes = $this->cart->calculate_tax()) {
-		        $data['taxes'] = array(
-			        'title'     => $taxes['title'],
-			        'percent'   => $taxes['percent'],
-			        'amount'    => $this->currency->format($taxes['amount']),
-		        );
-	        }
-
-            $data['sub_total'] 	= $this->currency->format($this->cart->total());
-            $data['order_total'] = $this->currency->format($this->cart->order_total());
-		}
-
-		$data['fixed_cart'] = '';
-		$fixed_cart = isset($ext_data['fixed_cart']) ? $ext_data['fixed_cart'] : '1';
-		if (!$is_mobile AND $fixed_cart === '1' AND $rsegment !== 'checkout') {
-			$fixed_top_offset = isset($ext_data['fixed_top_offset']) ? $ext_data['fixed_top_offset'] : '250';
-			$fixed_bottom_offset = isset($ext_data['fixed_bottom_offset']) ? $ext_data['fixed_bottom_offset'] : '120';
-			$data['fixed_cart'] = 'id="cart-box-affix" data-spy="affix" data-offset-top="'.$fixed_top_offset.'" data-offset-bottom="'.$fixed_bottom_offset.'"';
-		}
-
-		$data['is_checkout'] = ($rsegment === 'checkout') ? TRUE : FALSE;
-		$data['is_mobile'] = $is_mobile;
-
-		$data['cart_alert'] = $this->alert->display('cart_module');
-
-		if ($is_mobile) {
-			return $this->load->view('cart_module/cart_module', $data, TRUE);
-		} else {
-			$this->load->view('cart_module/cart_module', $data);
-		}
+	public function index($module = array(), $data = array()) {
+		$this->getCart($module, $data);
 	}
 
 	public function add() {																		// add() method to add item to cart
@@ -361,6 +211,162 @@ class Cart_module extends Main_Controller {
 
         $this->output->set_output(json_encode($json));	// encode the json array and set final out to be sent to jQuery AJAX
     }
+
+	public function getCart($module = array(), $data = array(), $is_mobile = FALSE) {
+		if ( ! file_exists(EXTPATH .'cart_module/views/cart_module.php')) { 								//check if file exists in views folder
+			show_404(); 																		// Whoops, show 404 error page!
+		}
+
+		$referrer_uri = explode('/', str_replace(site_url(), '', $this->agent->referrer()));
+		$data['rsegment'] = $rsegment = ($this->uri->rsegment(1) === 'cart_module' AND !empty($referrer_uri[0])) ? $referrer_uri[0] : $this->uri->rsegment(1);
+
+		$ext_data = (!empty($module['data']) AND is_array($module['data'])) ? $module['data'] : array();
+
+		if (empty($ext_data)) {
+			$extension = $this->extension->getModule('cart_module');
+			if (!empty($extension['ext_data'])) {
+				$ext_data = $extension['ext_data'];
+			};
+		}
+
+		$this->template->setStyleTag(extension_url('cart_module/views/stylesheet.css'), 'cart-module-css', '144000');
+
+		$data['is_opened']                  = $this->location->isOpened();
+		$data['order_type']                 = $this->location->orderType();
+		$data['search_query'] 		        = $this->location->searchQuery();
+		$data['opening_status']		 		= $this->location->workingStatus('opening');
+		$data['delivery_status']			= $this->location->workingStatus('delivery');
+		$data['collection_status']			= $this->location->workingStatus('collection');
+		$data['has_delivery']               = $this->location->hasDelivery();
+		$data['has_collection']             = $this->location->hasCollection();
+		$data['show_cart_images'] 	        = isset($ext_data['show_cart_images']) ? $ext_data['show_cart_images'] : '';
+		$data['cart_images_h'] 		        = isset($ext_data['cart_images_h']) ? $ext_data['cart_images_h'] : '';
+		$data['cart_images_w'] 		        = isset($ext_data['cart_images_w']) ? $ext_data['cart_images_w'] :'';
+
+		$data['delivery_time'] = $this->location->deliveryTime();
+		if ($data['delivery_status'] === 'closed') {
+			$data['delivery_time'] = 'closed';
+		} else if ($data['delivery_status'] === 'opening') {
+			$data['delivery_time'] = $this->location->workingTime('delivery', 'open');
+		}
+
+		$data['collection_time'] = $this->location->collectionTime();
+		if ($data['collection_status'] === 'closed') {
+			$data['collection_time'] = 'closed';
+		} else if ($data['collection_status'] === 'opening') {
+			$data['collection_time'] = $this->location->workingTime('collection', 'open');
+		}
+
+		$order_data = $this->session->userdata('order_data');
+		if ($this->input->post('checkout_step')) {
+			$checkout_step = $this->input->post('checkout_step');
+		} else if (isset($order_data['checkout_step'])) {
+			$checkout_step = $order_data['checkout_step'];
+		} else {
+			$checkout_step = 'one';
+		}
+
+		if ($rsegment === 'checkout' AND $checkout_step === 'two') {
+			$data['button_order'] = '<a class="btn btn-order btn-primary btn-block btn-lg" onclick="$(\'#checkout-form\').submit();">' . $this->lang->line('button_confirm') . '</a>';
+		} else if ($rsegment == 'checkout') {
+			$data['button_order'] = '<a class="btn btn-order btn-primary btn-block btn-lg" onclick="$(\'#checkout-form\').submit();">' . $this->lang->line('button_payment') . '</a>';
+		} else {
+			$data['button_order'] = '<a class="btn btn-order btn-primary btn-block btn-lg" href="' . site_url('checkout') . '">' . $this->lang->line('button_order') . '</a>';
+		}
+
+		if ($this->location->isClosed() OR ! $this->location->checkOrderType()) {
+			$data['button_order'] = '<a class="btn btn-default btn-block btn-lg" href="' . site_url('checkout') . '"><b>' . $this->lang->line('text_is_closed') . '</b></a>';
+		}
+
+		$menus = $this->Cart_model->getMenus();
+
+		$data['cart_items'] = array();
+		if ($cart_contents = $this->cart->contents()) {															// checks if cart contents is not empty
+			foreach ($cart_contents as $row_id => $cart_item) {								// loop through items in cart
+				$menu_data = isset($menus[$cart_item['id']]) ? $menus[$cart_item['id']] : FALSE;				// get menu data based on cart item id from getMenu method in Menus model
+
+				if (($alert_msg = $this->validateCartMenu($menu_data, $cart_item)) === TRUE) {
+					$cart_image = '';
+					if (isset($data['show_cart_images']) AND $data['show_cart_images'] === '1') {
+						$menu_photo = (!empty($menu_data['menu_photo'])) ? $menu_data['menu_photo'] : 'data/no_photo.png';
+						$cart_image = $this->Image_tool_model->resize($menu_photo, $data['cart_images_h'], $data['cart_images_w']);
+					}
+
+					// load menu data into array
+					$data['cart_items'][] = array(
+						'rowid'				=> $cart_item['rowid'],
+						'menu_id' 			=> $cart_item['id'],
+						'name' 				=> (strlen($cart_item['name']) > 25) ? strtolower(substr($cart_item['name'], 0, 25)) .'...' : strtolower($cart_item['name']),
+						//add currency symbol and format item price to two decimal places
+						'price' 			=> $this->currency->format($cart_item['price']),
+						'qty' 				=> $cart_item['qty'],
+						'image' 			=> $cart_image,
+						//add currency symbol and format item subtotal to two decimal places
+						'sub_total' 		=> $this->currency->format($cart_item['subtotal']),
+						'comment'           => isset($cart_item['comment']) ? $cart_item['comment'] : '',
+						'options' 			=> ($this->cart->has_options($row_id) == TRUE) ? $this->cart->product_options_string($row_id) : ''
+					);
+
+				} else {
+					$this->alert->set('custom_now', $alert_msg, 'cart_module');
+					$this->cart->update(array('rowid' => $cart_item['rowid'], 'qty' => '0'));										// pass the cart_data array to add item to cart, if successful
+				}
+			}
+
+			if (($response = $this->validateOrderType()) !== TRUE) {
+				$this->alert->set('custom', $response, 'cart_module');
+			}
+
+			if ($this->location->orderType() === '1' AND $this->cart->set_delivery($this->location->deliveryCharge())) {
+				$data['delivery'] = $this->currency->format($this->cart->delivery());
+			} else {
+				$this->cart->set_delivery(0);
+			}
+
+			$data['coupon'] = array();
+			if ($this->cart->coupon_code()) {
+				if (($response = $this->validateCoupon($this->cart->coupon_code())) !== TRUE) {
+					$this->alert->set('custom', $response, 'cart_module');
+				}
+
+				$data['coupon'] = array(
+					'code' 		=> $this->cart->coupon_code(),
+					'discount' 	=> $this->currency->format($this->cart->coupon_discount())
+				);
+			}
+
+			$data['taxes'] = array();
+			if ($taxes = $this->cart->calculate_tax()) {
+				$data['taxes'] = array(
+					'title'     => $taxes['title'],
+					'percent'   => $taxes['percent'],
+					'amount'    => $this->currency->format($taxes['amount']),
+				);
+			}
+
+			$data['sub_total'] 	= $this->currency->format($this->cart->total());
+			$data['order_total'] = $this->currency->format($this->cart->order_total());
+		}
+
+		$data['fixed_cart'] = '';
+		$fixed_cart = isset($ext_data['fixed_cart']) ? $ext_data['fixed_cart'] : '1';
+		if (!$is_mobile AND $fixed_cart === '1' AND $rsegment !== 'checkout') {
+			$fixed_top_offset = isset($ext_data['fixed_top_offset']) ? $ext_data['fixed_top_offset'] : '250';
+			$fixed_bottom_offset = isset($ext_data['fixed_bottom_offset']) ? $ext_data['fixed_bottom_offset'] : '120';
+			$data['fixed_cart'] = 'id="cart-box-affix" data-spy="affix" data-offset-top="'.$fixed_top_offset.'" data-offset-bottom="'.$fixed_bottom_offset.'"';
+		}
+
+		$data['is_checkout'] = ($rsegment === 'checkout') ? TRUE : FALSE;
+		$data['is_mobile'] = $is_mobile;
+
+		$data['cart_alert'] = $this->alert->display('cart_module');
+
+		if ($is_mobile) {
+			return $this->load->view('cart_module/cart_module', $data, TRUE);
+		} else {
+			$this->load->view('cart_module/cart_module', $data);
+		}
+	}
 
 	public function validateOrderType($order_type = '', $check_min_total = TRUE) {
 		$order_type = empty($order_type) ? $this->location->orderType() : $order_type;
