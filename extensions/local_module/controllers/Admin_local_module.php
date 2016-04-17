@@ -2,13 +2,13 @@
 
 class Admin_local_module extends Admin_Controller {
 
-	public function index($data = array()) {
+	public function index($module = array()) {
 		$this->lang->load('local_module/local_module');
 
 		$this->user->restrict('Module.LocalModule');
 
-        if (!empty($data)) {
-	        $title = (isset($data['title'])) ? $data['title'] : $this->lang->line('_text_title');
+        if (!empty($module)) {
+	        $title = (isset($module['title'])) ? $module['title'] : $this->lang->line('_text_title');
 
 	        $this->template->setTitle('Module: ' . $title);
 	        $this->template->setHeading('Module: ' . $title);

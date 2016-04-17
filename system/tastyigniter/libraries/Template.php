@@ -572,7 +572,7 @@ class Template {
 
                 $this->sortModules($partial_name);
                 foreach ($this->_modules[$partial_name] as $module) {
-                    $partial_data .= Modules::run($module['name'] .'/index', $this->_data + $module['data']);
+                    $partial_data .= Modules::run($module['name'] .'/index', $module, $this->_data);
                 }
 
                 $partial_data .= isset($partial['close_tag']) ? $partial['close_tag'] : '';

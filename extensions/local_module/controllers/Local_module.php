@@ -14,12 +14,14 @@ class Local_module extends Main_Controller {
         $this->referrer_uri = (!empty($referrer_uri[0]) AND $referrer_uri[0] !== 'local_module') ? $referrer_uri[0] : 'home';
 	}
 
-	public function index($ext_data = array()) {
+	public function index($module = array()) {
 		if ( ! file_exists(EXTPATH .'local_module/views/local_module.php')) { 								//check if file exists in views folder
 			show_404(); 																		// Whoops, show 404 error page!
 		}
 
-		if (empty($ext_data['status']) OR $ext_data['status'] !== '1') {
+        $ext_data = (!empty($module['data']) AND is_array($module['data'])) ? $module['data'] : array();
+
+        if (empty($ext_data['status']) OR $ext_data['status'] !== '1') {
 			return;
 		}
 

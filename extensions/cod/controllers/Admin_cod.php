@@ -2,15 +2,15 @@
 
 class Admin_cod extends Admin_Controller {
 
-	public function index($data = array()) {
+	public function index($module = array()) {
         $this->lang->load('cod/cod');
 
         $this->user->restrict('Payment.Cod');
 
-        if (!empty($data)) {
+        if (!empty($module)) {
             $this->load->model('Statuses_model');
 
-            $title = (isset($data['title'])) ? $data['title'] : $this->lang->line('_text_title');
+            $title = (isset($module['title'])) ? $module['title'] : $this->lang->line('_text_title');
 
             $this->template->setTitle('Payment: ' . $title);
             $this->template->setHeading('Payment: ' . $title);
@@ -19,8 +19,8 @@ class Admin_cod extends Admin_Controller {
             $this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('extensions')));
 
             $ext_data = array();
-            if (!empty($data['ext_data']) AND is_array($data['ext_data'])) {
-                $ext_data = $data['ext_data'];
+            if (!empty($module['ext_data']) AND is_array($module['ext_data'])) {
+                $ext_data = $module['ext_data'];
             }
 
             if (isset($this->input->post['title'])) {

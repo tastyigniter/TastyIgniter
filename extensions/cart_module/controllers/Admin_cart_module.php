@@ -2,13 +2,13 @@
 
 class Admin_cart_module extends Admin_Controller {
 
-	public function index($data = array()) {
+	public function index($module = array()) {
         $this->lang->load('cart_module/cart_module');
 
         $this->user->restrict('Module.CartModule');
 
-        if (!empty($data)) {
-            $title = (isset($data['title'])) ? $data['title'] : $this->lang->line('_text_title');
+        if (!empty($module)) {
+            $title = (isset($module['title'])) ? $module['title'] : $this->lang->line('_text_title');
 
             $this->template->setTitle('Module: ' . $title);
             $this->template->setHeading('Module: ' . $title);
@@ -17,8 +17,8 @@ class Admin_cart_module extends Admin_Controller {
             $this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('extensions')));
 
             $ext_data = array();
-            if (!empty($data['ext_data']) AND is_array($data['ext_data'])) {
-                $ext_data = $data['ext_data'];
+            if (!empty($module['ext_data']) AND is_array($module['ext_data'])) {
+                $ext_data = $module['ext_data'];
             }
 
 	        if (isset($ext_data['show_cart_images'])) {

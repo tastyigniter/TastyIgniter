@@ -2,13 +2,15 @@
 
 class Pages_module extends Main_Controller {
 
-	public function index($ext_data = array()) {
+	public function index($module = array()) {
 		$this->load->model('Pages_model'); 														// load the menus model
 		$this->lang->load('pages_module/pages_module');
 
 		if ( ! file_exists(EXTPATH .'pages_module/views/pages_module.php')) { 								//check if file exists in views folder
 			show_404(); 																		// Whoops, show 404 error page!
 		}
+
+		$ext_data = (!empty($module['data']) AND is_array($module['data'])) ? $module['data'] : array();
 
 		if (is_numeric($this->input->get('page_id'))) {
 			$data['page_id'] = $this->input->get('page_id');
