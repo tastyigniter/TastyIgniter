@@ -682,7 +682,7 @@ class Orders_model extends TI_Model {
 					}
 
 					$data['order_menus'][] = array(
-						'menu_name'     => (strlen($menu['name']) > 20) ? substr($menu['name'], 0, 20) . '...' : $menu['name'],
+						'menu_name'     => $menu['name'],
 						'menu_quantity' => $menu['quantity'],
 						'menu_price'    => $this->currency->format($menu['price']),
 						'menu_subtotal' => $this->currency->format($menu['subtotal']),
