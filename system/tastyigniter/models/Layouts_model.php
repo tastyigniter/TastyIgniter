@@ -106,6 +106,21 @@ class Layouts_model extends TI_Model {
 		return $result;
 	}
 
+	public function getModuleLayouts($module_code) {
+		$this->db->from('layout_modules');
+		$this->db->where('module_code', $module_code);
+		$this->db->join('layouts', 'layouts.layout_id = layout_modules.layout_id', 'left');
+
+		$query = $this->db->get();
+
+		$result = array();
+		if ($query->num_rows() > 0) {
+			$result = $query->result_array();
+		}
+
+		return $result;
+	}
+
 	public function getRouteLayoutModules($uri_route) {
 		$result = array();
 
@@ -262,13 +277,11 @@ class Layouts_model extends TI_Model {
 		}
 
 		if ($query === TRUE AND is_numeric($layout_id)) {
-			if ( ! empty($save['routes'])) {
-				$this->addLayoutRoutes($layout_id, $save['routes']);
-			}
+			$routes = ( isset($save['routes'])) ? $save['routes'] : array();
+			$this->addLayoutRoutes($layout_id, $routes);
 
-			if ( ! empty($save['modules'])) {
-				$this->addLayoutModules($layout_id, $save['modules']);
-			}
+			$modules = ( isset($save['modules'])) ? $save['modules'] : array();
+			$this->addLayoutModules($layout_id, $modules);
 
 			return $layout_id;
 		}
