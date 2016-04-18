@@ -11,6 +11,7 @@
     $this->template->setStyleTag('css/select2-bootstrap.css', 'select2-bootstrap-css', '14');
     $this->template->setStyleTag('css/jquery.raty.css', 'jquery-raty-css', '15');
     $this->template->setStyleTag('css/fonts.css', 'fonts-css', '16');
+	$this->template->setStyleTag('css/awesome-bootstrap-checkbox.css', 'awesome-bootstrap-checkbox-css', '17');
     $this->template->setStyleTag('css/stylesheet.css', 'stylesheet-css', '1000000');
 
     $this->template->setScriptTag('js/jquery-1.11.2.min.js', 'jquery-js', '1');
@@ -19,6 +20,7 @@
 	$this->template->setScriptTag('js/metisMenu.min.js', 'metis-menu-js', '11');
 	$this->template->setScriptTag('js/select2.js', 'select-2-js', '12');
 	$this->template->setScriptTag('js/jquery.raty.js', 'jquery-raty-js', '13');
+	$this->template->setScriptTag('js/awesome-bootstrap-checkbox.js', 'awesome-bootstrap-checkbox-js', '15');
 	$this->template->setScriptTag('js/common.js', 'common-js');
 
 	$tastyigniter_logo  = base_url('views/themes/tastyigniter-blue/images/tastyigniter-logo.png');

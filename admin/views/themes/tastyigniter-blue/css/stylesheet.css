@@ -1728,7 +1728,7 @@ table .action-one {
 width: 3.33% !important;
 }
 table .action-three {
-width: 12.53% !important;
+width: 13.03% !important;
 }
 table .action .btn {
 display:inline-block;
@@ -1848,10 +1848,6 @@ padding: 5px;
 }
 .message-view-info {
 padding: 10px;
-}
-.message-controls input[type="checkbox"], .message-controls input[type="radio"],
-.message-view-controls input[type="checkbox"], .message-view-controls input[type="radio"] {
-margin:0;
 }
 .message-controls .btn, .message-view-controls .btn {
 height: 32px;
