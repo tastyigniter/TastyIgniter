@@ -6,6 +6,7 @@ class Reservation_module extends Main_Controller {
         $this->load->model('Reservations_model');
 
         $this->load->library('location'); // load the location library
+        $this->location->initialize();
 
         $this->lang->load('reservation_module/reservation_module');
 
@@ -106,11 +107,15 @@ class Reservation_module extends Main_Controller {
 		}
 
         $data['reservation_times'] = array();
-        $start_time = mdate('%H:%i', strtotime($this->location->openingTime()) + $this->location->getReservationInterval() * 60);
+        $opening_time = mdate("{$date_format} {$time_format}", $this->location->workingTime('opening', 'open', FALSE));
+        $closing_time = mdate("{$date_format} {$time_format}", $this->location->workingTime('opening', 'close', FALSE));
+        $start_time = mdate('%H:%i', strtotime($opening_time) + $this->location->getReservationInterval() * 60);
 
-        $reservation_times = time_range($start_time, $this->location->closingTime(), $this->location->getReservationInterval());    // retrieve the location delivery times from location library
-        foreach ($reservation_times as $key => $value) {                                            // loop through delivery times
-            $data['reservation_times'][$value] = mdate($time_format, strtotime($value));
+        $reservation_times = time_range($start_time, $closing_time, $this->location->getReservationInterval());    // retrieve the location delivery times from location library
+        if (!empty($reservation_times)) {
+            foreach ($reservation_times as $key => $value) {                                            // loop through delivery times
+                $data['reservation_times'][$value] = mdate($time_format, strtotime($value));
+            }
         }
 
         $data['time_slots'] = array();
