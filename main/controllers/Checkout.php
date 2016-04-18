@@ -463,7 +463,7 @@ class Checkout extends Main_Controller {
                     $order_data['terms_condition'] = $this->input->post('terms_condition');
                 }
 
-                $this->_confirmPayment($order_data, $this->session->userdata('cart_contents'));
+                return $this->_confirmPayment($order_data, $this->session->userdata('cart_contents'));
             } else {
 		        $this->session->set_userdata('order_data', $order_data);					// save order details to session and return TRUE
             }
@@ -490,7 +490,7 @@ class Checkout extends Main_Controller {
                     $payment_controller = $payment_class.'/'.$payment_class;
 
                     $this->load->module($payment_controller);
-                    $this->{$payment_class}->confirm();
+                    return $this->{$payment_class}->confirm();
                 }
             }
 		}
