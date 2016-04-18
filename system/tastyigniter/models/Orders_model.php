@@ -251,6 +251,25 @@ class Orders_model extends TI_Model {
 		return $result;
 	}
 
+	public function isOrderReceived($order_id) {
+		$this->db->from('status_history');
+		$this->db->where('status_for', 'order');
+		$this->db->where('status_history.object_id', $order_id);
+
+		$this->db->group_start();
+		$this->db->where('status_id >', '0');
+		$this->db->where('status_id !=', $this->config->item('canceled_order_status'));
+		$this->db->group_end();
+
+		$query = $this->db->get();
+
+		if ($query->num_rows() > 0) {
+			return TRUE;
+		}
+
+		return FALSE;
+	}
+
 	public function updateOrder($order_id = NULL, $update = array()) {
 		$query = FALSE;
 

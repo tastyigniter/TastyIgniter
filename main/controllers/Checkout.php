@@ -73,16 +73,19 @@ class Checkout extends Main_Controller {
         $data['_action'] = site_url('checkout');
 
         if (isset($order_data['customer_id']) AND isset($order_data['order_id'])) {
-			$this->load->model('Statuses_model');
-			$order_status_exists = $this->Statuses_model->statusExists('order', $order_data['order_id']);
+			$order_received = $this->Orders_model->isOrderReceived($order_data['order_id']);
 
-			if ($order_data['customer_id'] !== $this->customer->getId() OR $order_status_exists === TRUE) {
+            if ($order_received === TRUE OR (!empty($order_data['customer_id']) AND $order_data['customer_id'] !== $this->customer->getId())) {
 	            $order_data = array();
 	            $this->session->unset_userdata('order_data');
 			}
 		}
 
         if (isset($order_data['location_id']) AND $order_data['location_id'] !== $this->location->getId()) {
+            $order_data['checkout_step'] = 'one';
+        }
+
+        if (isset($order_data['order_type']) AND $order_data['order_type'] !== $this->location->orderType()) {
             $order_data['checkout_step'] = 'one';
         }
 
@@ -258,6 +261,7 @@ class Checkout extends Main_Controller {
         $data['order_time_interval'] = ($data['order_type'] === '1') ? $this->location->deliveryTime() : $this->location->collectionTime();
 
         $count = 1;
+        $order_date = $order_hour = $order_minute = '';
         foreach ($data['order_times'] as $date => $times) {
             if ($date === 'asap') continue;
 
@@ -415,7 +419,7 @@ class Checkout extends Main_Controller {
                 $order_data['location_id'] = $this->location->getId();					// retrieve location id from location library and add to order_data array
             }
 
-            $order_data['customer_id'] = $this->customer->getId();					// retrive customer id from customer library and add to order_data array
+            $order_data['customer_id'] = $this->customer->isLogged() ? $this->customer->getId() : '0';					// retrive customer id from customer library and add to order_data array
 
 	        $order_data['checkout_step']    = empty($order_data['checkout_step']) ? 'one' : $order_data['checkout_step'];
 	        $order_data['first_name'] 	    = $this->input->post('first_name');
@@ -466,7 +470,6 @@ class Checkout extends Main_Controller {
 
             return TRUE;
         }
-
     }
 
 	private function _confirmPayment($order_data, $cart_contents) {
