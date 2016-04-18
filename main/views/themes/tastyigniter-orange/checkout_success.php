@@ -85,8 +85,8 @@
 													<?php if ($total['code'] !== 'order_total') { ?>
 														<tr>
 															<td class="no-line" colspan="2"></td>
-															<td class="no-line text-right"><?php echo $total['title']; ?></td>                                                  <br />
-															<td class="no-line text-right"><?php echo $total['value']; ?></td>                                                   <br />
+															<td class="no-line text-right"><?php echo $total['title']; ?></td>
+															<td class="no-line text-right"><?php echo $total['value']; ?></td>
 														</tr>
 													<?php } ?>
 												<?php } ?>
