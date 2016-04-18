@@ -96,18 +96,20 @@ class Orders_model extends TI_Model {
 				$this->db->where('order_type', $filter['filter_type']);
 			}
 
-			if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-				$this->db->where('orders.status_id', $filter['filter_status']);
+			if (APPDIR === MAINDIR) {
+				$this->db->where('orders.status_id !=', '0');
+			} else {
+				if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
+					$this->db->where('orders.status_id', $filter['filter_status']);
+				} else {
+					$this->db->where('orders.status_id !=', '0');
+				}
 			}
 
 			if ( ! empty($filter['filter_date'])) {
 				$date = explode('-', $filter['filter_date']);
 				$this->db->where('YEAR(date_added)', $date[0]);
 				$this->db->where('MONTH(date_added)', $date[1]);
-			}
-
-			if (APPDIR === MAINDIR) {
-				$this->db->where('orders.status_id !=', '0');
 			}
 
 			$query = $this->db->get();

@@ -42,6 +42,7 @@ $lang['text_deliver_to'] 		        = 'Deliver to';
 $lang['text_invoice_thank_you'] 	    = 'Thank you for your order';
 $lang['text_collection_order_type'] 	= 'This is a pick-up order';
 $lang['text_no_payment'] 	            = 'No payment method selected';
+$lang['text_lost_orders'] 		        = 'Lost orders';
 
 $lang['button_create_invoice'] 		    = 'Generate';
 $lang['button_view_invoice'] 		    = 'View Invoice';

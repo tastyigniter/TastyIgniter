@@ -45,6 +45,7 @@
 												<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('filter_status', $status['status_id']); ?> ><?php echo $status['status_name']; ?></option>
 											<?php } ?>
 											<?php } ?>
+											<option value="0" <?php echo ($filter_status === '0') ? 'selected' : ''; ?>><?php echo lang('text_lost_orders'); ?></option>
 										</select>&nbsp;
 									</div>
 									<div class="form-group">
