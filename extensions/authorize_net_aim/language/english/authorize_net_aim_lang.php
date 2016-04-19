@@ -17,6 +17,7 @@ $lang['text_cc_number'] 	    = 'Valid Card Number';
 $lang['text_exp_month'] 	    = 'MM';
 $lang['text_exp_year'] 	        = 'YY';
 $lang['text_cc_cvc'] 	        = 'CVC';
+$lang['text_add_new_address'] 	= 'Enter my billing address';
 
 $lang['label_title'] 	        = 'Title';
 $lang['label_api_login_id'] 	= 'API Login ID';
@@ -31,6 +32,7 @@ $lang['label_status'] 	        = 'Status';
 $lang['label_card_number'] 	    = 'CARD NUMBER';
 $lang['label_card_expiry'] 	    = 'EXPIRY DATE';
 $lang['label_card_cvc'] 	    = 'CV CODE';
+$lang['label_same_address'] 	= 'My billing address is same as my delivery address';
 
 $lang['text_tab_general'] 	    = 'General';
 

@@ -51,7 +51,57 @@ class Authorize_net_aim extends Main_Controller {
             $data['authorize_cc_cvc'] = '';
         }
 
-        // pass array $data and load view files
+		if (isset($this->input->post['authorize_country_id'])) {
+			$data['authorize_country_id'] = $this->input->post('authorize_country_id');
+		} else {
+			$data['authorize_country_id'] = $this->config->item('country_id');
+		}
+
+		$data['order_type'] = $this->location->orderType();
+
+		if ($this->input->post('authorize_address_id')) {
+			$data['authorize_address_id'] = $this->input->post('authorize_address_id');                // retrieve existing_address value from $_POST data if set
+		} else if ($this->customer->getAddressId()) {
+			$data['authorize_address_id'] = $this->customer->getAddressId();                                        // retrieve customer default address id from customer library
+		} else {
+			$data['authorize_address_id'] = '';
+		}
+
+		if ($this->customer->islogged()) {
+			$addresses = $this->Addresses_model->getAddresses($this->customer->getId());                            // retrieve customer addresses array from getAddresses method in Customers model
+		} else {
+			$addresses = array(array('address_id' => '0', 'address_1' => '', 'address_2' => '', 'city' => '', 'state' => '', 'postcode' => '', 'country_id' => $country_id));
+		}
+
+		$data['addresses'] = array();
+		foreach ($addresses as $address) {                                                    // loop through customer addresses arrary
+			if (empty($address['country'])) {
+				$country = $this->Countries_model->getCountry($address['country_id']);
+				$address['country'] = !empty($address['country']) ? $address['country'] : $country['country_name'];
+			}
+
+			$data['addresses'][] = array(                                                    // create array of address data to pass to view
+				'address_id'    => $address['address_id'],
+				'address_1'     => $address['address_1'],
+				'address_2'     => $address['address_2'],
+				'city'          => $address['city'],
+				'state'         => $address['state'],
+				'postcode'      => $address['postcode'],
+				'country_id'    => $address['country_id'],
+				'address'       => str_replace('<br />', ', ', $this->country->addressFormat($address))
+			);
+		}
+
+		$data['countries'] = array();
+		$results = $this->Countries_model->getCountries(); 										// retrieve countries array from getCountries method in locations model
+		foreach ($results as $result) {															// loop through crountries array
+			$data['countries'][] = array( 														// create array of countries data to pass to view
+				'country_id'	=>	$result['country_id'],
+				'name'			=>	$result['country_name'],
+			);
+		}
+
+		// pass array $data and load view files
         return $this->load->view('authorize_net_aim/authorize_net_aim', $data, TRUE);
     }
 
@@ -70,8 +120,23 @@ class Authorize_net_aim extends Main_Controller {
         $this->form_validation->set_rules('authorize_cc_exp_month', 'lang:label_card_expiry', 'xss_clean|trim|required|integer|max_length[2]');
         $this->form_validation->set_rules('authorize_cc_exp_year', 'lang:label_card_expiry', 'xss_clean|trim|required|integer|max_length[4]');
         $this->form_validation->set_rules('authorize_cc_cvc', 'lang:label_card_cvc', 'xss_clean|trim|required|integer|max_length[4]');
+        $this->form_validation->set_rules('authorize_same_address', 'lang:label_same_address', 'xss_clean|trim');
 
-        if ($this->form_validation->run() === TRUE) {                                            // checks if form validation routines ran successfully
+		if ($this->input->post('authorize_same_address') !== '1') {
+			if ($this->input->post('authorize_address_id') === 'new') {
+				$this->form_validation->set_rules('authorize_address_id', 'lang:label_address_id', 'xss_clean|trim');
+				$this->form_validation->set_rules('authorize_address_1', 'lang:label_address_1', 'xss_clean|trim|required|min_length[3]|max_length[128]');
+				$this->form_validation->set_rules('authorize_address_2', 'lang:label_address_2', 'xss_clean|trim|max_length[128]');
+				$this->form_validation->set_rules('authorize_city', 'lang:label_city', 'xss_clean|trim|required|min_length[2]|max_length[128]');
+				$this->form_validation->set_rules('authorize_state', 'lang:label_state', 'xss_clean|trim|max_length[128]');
+				$this->form_validation->set_rules('authorize_postcode', 'lang:label_postcode', 'xss_clean|trim|min_length[2]|max_length[10]');
+				$this->form_validation->set_rules('authorize_country_id', 'lang:label_country', 'xss_clean|trim|required|integer');
+			} else {
+				$this->form_validation->set_rules('authorize_address_id', 'lang:label_address_id', 'xss_clean|trim|required|integer');
+            }
+		}
+
+		if ($this->form_validation->run() === TRUE) {                                            // checks if form validation routines ran successfully
             $validated = TRUE;
         } else {
             return FALSE;
@@ -99,7 +164,7 @@ class Authorize_net_aim extends Main_Controller {
 	        $this->load->model('authorize_net_aim/Authorize_net_aim_model');
             $response = $this->Authorize_net_aim_model->authorizeAndCapture($order_data);
 
-	        if (isset($response[1]) AND $response[1] === '1' AND (int) $response[8] === $order_data['order_id']) {
+	        if (isset($response[1]) AND ($response[1] === '1' OR $response[1] === '4') AND (int) $response[8] === $order_data['order_id']) {
 
 		        if (isset($ext_payment_data['order_status']) AND is_numeric($ext_payment_data['order_status'])) {
 			        $order_data['status_id'] = $ext_payment_data['order_status'];
@@ -116,15 +181,13 @@ class Authorize_net_aim extends Main_Controller {
 		        $this->load->model('Statuses_model');
 		        $this->Statuses_model->addStatusHistory('order', $order_history);
 
-		        if ($this->Orders_model->completeOrder($order_data['order_id'], $order_data, $cart_contents)) {
-			        redirect('checkout/success');									// redirect to checkout success page with returned order id
-		        }
-            } else {
-		        if (isset($response[4])) {
-			        $this->alert->set('danger', $response[4]);
-		        }
-	            return FALSE;
+				if ($this->Orders_model->completeOrder($order_data['order_id'], $order_data, $cart_contents)) {
+					redirect('checkout/success');									// redirect to checkout success page with returned order id
+				}
             }
+
+			if (isset($response[4])) $this->alert->set('danger', $response[4]);
+			return FALSE;
         }
     }
 

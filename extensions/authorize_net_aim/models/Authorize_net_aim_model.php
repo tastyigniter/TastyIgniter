@@ -2,6 +2,45 @@
 
 class Authorize_net_aim_model extends TI_Model {
 
+	public $avsResponse = array(
+		'A' => 'Address (Street) matches, ZIP does not',
+		'B' => 'Address information not provided for AVS check',
+		'E' => 'AVS error',
+		'G' => 'Non-U.S. Card Issuing Bank',
+		'N' => 'No Match on Address (Street) or ZIP',
+		'P' => 'AVS not applicable for this transaction',
+		'R' => 'Retry—System unavailable or timed out',
+		'S' => 'Service not supported by issuer',
+		'U' => 'Address information is unavailable',
+		'W' => 'Nine digit ZIP matches, Address (Street) does not',
+		'X' => 'Address (Street) and nine digit ZIP match',
+		'Y' => 'Address (Street) and five digit ZIP match',
+		'Z' => 'Five digit ZIP matches, Address (Street) does not'
+	);
+
+	public $ccvResponse = array(
+		'M' => 'Match',
+		'N' => 'No Match',
+		'P' => 'Not Processed',
+		'S' => 'Should have been present',
+		'U' => 'Issuer unable to process request'
+	);
+
+	public $cavvResponse = array(
+		'0' => 'CAVV not validated because erroneous data was submitted',
+		'1' => 'CAVV failed validation',
+		'2' => 'CAVV passed validation',
+		'3' => 'CAVV validation could not be performed; issuer attempt incomplete',
+		'4' => 'CAVV validation could not be performed; issuer system error',
+		'5' => 'Reserved for future use',
+		'6' => 'Reserved for future use',
+		'7' => 'CAVV attempt—failed validation—issuer available (U.S.-issued card/non-U.S acquirer)',
+		'8' => 'CAVV attempt—passed validation—issuer available (U.S.-issued card/non-U.S. acquirer)',
+		'9' => 'CAVV attempt—failed validation—issuer unavailable (U.S.-issued card/non-U.S. acquirer)',
+		'A' => 'CAVV attempt—passed validation—issuer unavailable (U.S.-issued card/non-U.S. acquirer)',
+		'B' => 'CAVV passed validation, information only, no liability shift'
+	);
+
     public function __construct() {
         parent::__construct();
 
@@ -21,24 +60,38 @@ class Authorize_net_aim_model extends TI_Model {
 		$data['x_phone']            = $order_data['telephone'];
 		$data['x_customer_ip']      = $this->input->ip_address();
 
-		if ($order_data['order_type'] === '1' AND (!empty($order_data['address_id']) OR !empty($order_data['customer_id']))) {
+		$this->load->model('Addresses_model');
 
-			$this->load->model('Addresses_model');
+		if ($order_data['order_type'] === '1' AND (!empty($order_data['address_id']) OR !empty($order_data['customer_id']))) {
 			$address = $this->Addresses_model->getAddress($order_data['customer_id'], $order_data['address_id']);
 
+			$data['x_ship_to_first_name'] = $order_data['first_name'];
+			$data['x_ship_to_last_name'] = $order_data['last_name'];
+			$data['x_ship_to_address'] = $address['address_1'];
+			$data['x_ship_to_city'] = $address['city'];
+			$data['x_ship_to_state'] = $address['state'];
+			$data['x_ship_to_zip'] = $address['postcode'];
+			$data['x_ship_to_country'] = $address['country'];
+		}
+
+		if (!$this->input->post('authorize_same_address')  AND is_numeric($this->input->post('authorize_address_id'))) {
+			$address = $this->Addresses_model->getAddress($order_data['customer_id'], $this->input->post('authorize_address_id'));
+		}
+
+		if (!empty($address)) {
 			$data['x_address']  = $address['address_1'];
 			$data['x_city']     = $address['city'];
 			$data['x_state']    = $address['state'];
 			$data['x_zip']      = $address['postcode'];
 			$data['x_country']  = $address['country'];
+		} else {
+			$data['x_address']  = $this->input->post('authorize_address_1') . ' ' . $this->input->post('authorize_address_2');
+			$data['x_city']     = $this->input->post('authorize_city');
+			$data['x_state']    = $this->input->post('authorize_state');
+			$data['x_zip']      = $this->input->post('authorize_postcode');
 
-			$data['x_ship_to_first_name']   = $order_data['first_name'];
-			$data['x_ship_to_last_name']    = $order_data['last_name'];
-			$data['x_ship_to_address']      = $address['address_1'];
-			$data['x_ship_to_city']         = $address['city'];
-			$data['x_ship_to_state']        = $address['state'];
-			$data['x_ship_to_zip']          = $address['postcode'];
-			$data['x_ship_to_country']      = $address['country'];
+			$country = $this->Countries_model->getCountry($this->input->post('authorize_country_id'));
+			$data['x_country']  = !empty($country['country_name']) ? $country['country_name'] : '';
 		}
 
 		$data['x_amount'] = $this->currency->format($this->cart->order_total());
@@ -50,7 +103,7 @@ class Authorize_net_aim_model extends TI_Model {
 		$response = $this->sendToAuthorizeNet($data);
 
 		if (isset($response[1]) AND $response[1] !== '1') {
-			log_message('error', 'Authorize.Net Error -> ' . $order_data['order_id'] . ': '  . $response[3] . ' :  ' . $response[8] . ' :  ' . $response[4]);
+			log_message('debug', 'Authorize.Net Debug -> ' . $order_data['order_id'] . ': '  . $response[3] . ' :  ' . $response[8] . ' :  ' . $response[4]);
 		}
 
 		return $response;
@@ -121,20 +174,31 @@ class Authorize_net_aim_model extends TI_Model {
 	public function parseResponse($response = array()) {
 		$message = '';
 
-		if (isset($response['5'])) {
-			$message .= 'Authorization Code: ' . $response['5'] . "\n";
+		if (isset($response['4'])) {
+			$message .= 'Transaction Response: ' . $response['4'] . "\n";
 		}
-		if (isset($response['6'])) {
-			$message .= 'AVS Response: ' . $response['6'] . "\n";
-		}
+
 		if (isset($response['7'])) {
 			$message .= 'Transaction ID: ' . $response['7'] . "\n";
 		}
-		if (isset($response['39'])) {
-			$message .= 'Card Code Response: ' . $response['39'] . "\n";
+
+		if (isset($response['5'])) {
+			$message .= 'Authorization Code: ' . $response['5'] . "\n";
 		}
+
+		if (isset($response['6'])) {
+			$avs_response = isset($this->avsResponse[$response['6']]) ? $this->avsResponse[$response['6']] : $response['6'];
+			$message .= 'AVS Response: ' . $avs_response . "\n";
+		}
+
+		if (isset($response['39'])) {
+			$ccv_response = isset($this->ccvResponse[$response['39']]) ? $this->ccvResponse[$response['39']] : $response['39'];
+			$message .= 'Card Code Response: ' . $ccv_response . "\n";
+		}
+
 		if (isset($response['40'])) {
-			$message .= 'Cardholder Authentication Verification Response: ' . $response['40'] . "\n";
+			$cavv_response = isset($this->cavvResponse[$response['40']]) ? $this->cavvResponse[$response['40']] : $response['40'];
+			$message .= 'Cardholder Authentication Verification Response: ' . $cavv_response . "\n";
 		}
 
 		return $message;
