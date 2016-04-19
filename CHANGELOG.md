@@ -26,8 +26,17 @@ Release Date: April 2016
 * Improved Checkout future order (order for later) feature with option to select date and time for later delivery or collection
 * Improved Location feature where customer must enter address to order
 * Improved Cart Module alerts to display top screen on mobile devices
+* Show order date instead of date added on order and checkout pages and display menu option on new line
+* Improved get_remote_data method and added is_ssl method
+* Pass entire extension array into extension index method instead of passing only the data key value
+* Improved banner module to allow multiple banners
+* Added option to enter billing address during checkout when authorize.net is selected as payment method
 
 #### Fixed
+* Issue with payment and confirm button changing incorrectly on checkout page
+* Issue with lost orders, this way a new order is not created after payment fails
+* Issue with displaying form validation error for payment methods
+* Issue where previous successfully placed order is overwritten when placing new order as guest
 
 ### v2.0.0 (stable)
 
