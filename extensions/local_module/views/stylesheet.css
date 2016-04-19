@@ -8,6 +8,7 @@ top: 0;
 }
 .local-box-fluid .panel {
 background-color: #ED561A;
+border-color: #ED561A;
 }
 @media (min-width: 768px) {
 .local-box-fluid {

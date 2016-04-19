@@ -24,8 +24,8 @@
 				}
 			?>
 
-			<div class="content-wrap <?php echo $class; ?>">
-				<?php echo $page_content; ?>
+			<div class="<?php echo $class; ?>">
+				<div class="content-wrap"><?php echo $page_content; ?></div>
 			</div>
 
 			<?php if (empty($page_popup)) echo get_partial('content_right'); ?>
