@@ -399,6 +399,7 @@ class Location {
 		$working_hours = $this->parseWorkingHours($order_type, $start_date, $end_date, $this->working_hours);
 
 		$count = 1;
+		$order_times = array();
 		foreach ($working_hours as $date => $hour) {
 			if ($hour['open'] > $hour['close']) $hour['close'] = $hour['close'] + 86400;
 
