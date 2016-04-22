@@ -139,7 +139,6 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
             }
         );
 
-        $root->getDevRequires()->shouldNotBeCalled();
         $root->getRepositories()->shouldNotBeCalled();
 
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
@@ -175,7 +174,6 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
             }
         );
 
-        $root->getDevRequires()->shouldNotBeCalled();
         $root->getRepositories()->shouldNotBeCalled();
         $root->getConflicts()->shouldNotBeCalled();
         $root->getReplaces()->shouldNotBeCalled();
@@ -209,7 +207,6 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
             }
         );
 
-        $root->getDevRequires()->shouldNotBeCalled();
         $root->getRepositories()->shouldNotBeCalled();
         $root->getConflicts()->shouldNotBeCalled();
         $root->getReplaces()->shouldNotBeCalled();
@@ -246,7 +243,6 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
             }
         );
 
-        $root->getDevRequires()->shouldNotBeCalled();
         $root->getRepositories()->shouldNotBeCalled();
         $root->getConflicts()->shouldNotBeCalled();
         $root->getReplaces()->shouldNotBeCalled();
@@ -373,7 +369,6 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
             }
         );
 
-        $root->getDevRequires()->shouldNotBeCalled();
         $root->setDevRequires()->shouldNotBeCalled();
 
         $root->setRepositories(Argument::type('array'))->will(
@@ -435,7 +430,6 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
             }
         );
 
-        $root->getDevRequires()->shouldNotBeCalled();
         $root->setDevRequires(Argument::any())->shouldNotBeCalled();
 
         $root->getRepositories()->shouldNotBeCalled();
@@ -463,7 +457,6 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
 
         $root->getAutoload()->shouldBeCalled();
         $root->getDevAutoload()->shouldBeCalled();
-        $root->getRequires()->shouldNotBeCalled();
         $root->setAutoload(Argument::type('array'))->will(
             function ($args, $root) use (&$autoload) {
                 // Can't easily assert directly since there will be multiple
@@ -556,8 +549,6 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
             }
         )->shouldBeCalled();
 
-        $root->getRequires()->shouldNotBeCalled();
-        $root->getDevRequires()->shouldNotBeCalled();
         $root->getRepositories()->shouldNotBeCalled();
         $root->getConflicts()->shouldNotBeCalled();
         $root->getReplaces()->shouldNotBeCalled();
@@ -593,8 +584,6 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
             }
         )->shouldBeCalled();
 
-        $root->getRequires()->shouldNotBeCalled();
-        $root->getDevRequires()->shouldNotBeCalled();
         $root->getRepositories()->shouldNotBeCalled();
         $root->getConflicts()->shouldNotBeCalled();
         $root->getReplaces()->shouldNotBeCalled();
@@ -631,8 +620,6 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
             }
         )->shouldBeCalled();
 
-        $root->getRequires()->shouldNotBeCalled();
-        $root->getDevRequires()->shouldNotBeCalled();
         $root->getRepositories()->shouldNotBeCalled();
         $root->getConflicts()->shouldNotBeCalled();
         $root->getReplaces()->shouldNotBeCalled();
@@ -839,8 +826,6 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
             }
         );
 
-        $root->getRequires()->shouldNotBeCalled();
-
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
         $this->assertEquals(0, count($extraInstalls));
     }
@@ -881,8 +866,6 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
                 );
             }
         );
-
-        $root->getRequires()->shouldNotBeCalled();
 
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
         $this->assertEquals(0, count($extraInstalls));
@@ -970,6 +953,8 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
         $dir = $this->fixtureDir(__FUNCTION__);
         $root = $this->rootFromJson("{$dir}/composer.json");
         $root->getRequires()->shouldNotBeCalled();
+        $root->getDevRequires()->shouldNotBeCalled();
+        $root->setReferences(Argument::type('array'))->shouldNotBeCalled();
         $this->triggerPlugin($root->reveal(), $dir);
     }
 
@@ -992,6 +977,42 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
 
         $this->assertEquals(0, count($extraInstalls));
+    }
+
+
+    public function testVersionConstraintWithRevision()
+    {
+        $that = $this;
+        $dir = $this->fixtureDir(__FUNCTION__);
+        $root = $this->rootFromJson("{$dir}/composer.json");
+
+        $root->setRequires(Argument::type('array'))->will(
+            function ($args, $root) {
+                $root->getRequires()->willReturn($args[0]);
+            }
+        )->shouldBeCalled();
+
+        $root->setDevRequires(Argument::type('array'))->will(
+            function ($args, $root) {
+                $root->getDevRequires()->willReturn($args[0]);
+            }
+        )->shouldBeCalled();
+
+        $root->setReferences(Argument::type('array'))->will(
+            function ($args) use ($that) {
+                $references = $args[0];
+                $that->assertEquals(3, count($references));
+
+                $that->assertArrayHasKey('foo/bar', $references);
+                $that->assertArrayHasKey('monolog/monolog', $references);
+                $that->assertArrayHasKey('foo/baz', $references);
+
+                $that->assertSame($references['foo/bar'], '1234567');
+                $that->assertSame($references['monolog/monolog'], 'cb641a8');
+                $that->assertSame($references['foo/baz'], 'abc1234');
+            }
+        );
+        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
     }
 
 
@@ -1123,7 +1144,7 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
         $root->getPrettyVersion()->willReturn($data['version']);
         $root->getMinimumStability()->willReturn($data['minimum-stability']);
         $root->getRequires()->willReturn($data['require'])->shouldBeCalled();
-        $root->getDevRequires()->willReturn($data['require-dev']);
+        $root->getDevRequires()->willReturn($data['require-dev'])->shouldBeCalled();
         $root->getRepositories()->willReturn($data['repositories']);
         $root->getConflicts()->willReturn($data['conflict']);
         $root->getReplaces()->willReturn($data['replace']);
@@ -1141,6 +1162,7 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
                 }
             }
         );
+        $root->setReferences(Argument::type('array'))->shouldBeCalled();
 
         return $root;
     }

@@ -59,6 +59,11 @@ class ExtraPackage
     protected $package;
 
     /**
+     * @var VersionParser $versionParser
+     */
+    protected $versionParser;
+
+    /**
      * @param string $path Path to composer.json file
      * @param Composer $composer
      * @param Logger $logger
@@ -70,6 +75,7 @@ class ExtraPackage
         $this->logger = $logger;
         $this->json = $this->readPackageJson($path);
         $this->package = $this->loadPackage($this->json);
+        $this->versionParser = new VersionParser();
     }
 
     /**
@@ -165,6 +171,7 @@ class ExtraPackage
         }
 
         $this->mergeExtra($root, $state);
+        $this->mergeReferences($root);
     }
 
     /**
@@ -438,7 +445,7 @@ class ExtraPackage
         $linkType = BasePackage::$supportedLinkTypes[$type];
         $version = $root->getVersion();
         $prettyVersion = $root->getPrettyVersion();
-        $vp = new VersionParser();
+        $vp = $this->versionParser;
 
         $method = 'get' . ucfirst($linkType['method']);
         $packages = $root->$method();
@@ -502,6 +509,54 @@ class ExtraPackage
         }
         // @codeCoverageIgnoreEnd
         return $root;
+    }
+
+    /**
+     * Update the root packages reference information.
+     *
+     * @param RootPackageInterface $root
+     */
+    protected function mergeReferences(RootPackageInterface $root)
+    {
+        // Merge source reference information for merged packages.
+        // @see RootPackageLoader::load
+        $references = array();
+        $unwrapped = $this->unwrapIfNeeded($root, 'setReferences');
+        foreach (array('require', 'require-dev') as $linkType) {
+            $linkInfo = BasePackage::$supportedLinkTypes[$linkType];
+            $method = 'get'.ucfirst($linkInfo['method']);
+            $links = array();
+            foreach ($unwrapped->$method() as $link) {
+                $links[$link->getTarget()] = $link->getConstraint()->getPrettyString();
+            }
+            $references = $this->extractReferences($links, $references);
+        }
+        $unwrapped->setReferences($references);
+    }
+
+    /**
+     * Extract vcs revision from version constraint (dev-master#abc123.
+     *
+     * @param array $requires
+     * @param array $references
+     * @return array
+     * @see RootPackageLoader::extractReferences()
+     */
+    protected function extractReferences(array $requires, array $references)
+    {
+        foreach ($requires as $reqName => $reqVersion) {
+            $reqVersion = preg_replace('{^([^,\s@]+) as .+$}', '$1', $reqVersion);
+            $stabilityName = VersionParser::parseStability($reqVersion);
+            if (
+                preg_match('{^[^,\s@]+?#([a-f0-9]+)$}', $reqVersion, $match) &&
+                $stabilityName === 'dev'
+            ) {
+                $name = strtolower($reqName);
+                $references[$name] = $match[1];
+            }
+        }
+
+        return $references;
     }
 }
 // vim:sw=4:ts=4:sts=4:et:

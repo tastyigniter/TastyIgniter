@@ -1,0 +1,12 @@
+{
+    "require": {
+        "foo/bar": "dev-master#1234567"
+    },
+    "extra": {
+        "merge-plugin": {
+            "include": [
+                "composer.local.json"
+            ]
+        }
+    }
+}
