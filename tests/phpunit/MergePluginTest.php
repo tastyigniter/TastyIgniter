@@ -724,6 +724,70 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, count($extraInstalls));
     }
 
+    /**
+     * Given a root package with an extra section
+     *   and a composer.local.json with an extra section with conflicting keys that are arrays
+     *   and the 'merge-extra-deep' option being activated
+     * When the plugin is run
+     * Then the root package extra section should be extended with content from the base config
+     *   and deep keys should be merged together, but root config wins on key conflicts.
+     *
+     * @dataProvider provideDeepMerge
+     */
+    public function testMergeExtraDeep($suffix, $replace)
+    {
+        $that = $this;
+        $dir = $this->fixtureDir(__FUNCTION__ . $suffix);
+
+        $root = $this->rootFromJson("{$dir}/composer.json");
+
+        $root->setExtra(Argument::type('array'))->will(
+            function ($args) use ($that, $replace) {
+                $extra = $args[0];
+                $that->assertEquals(3, count($extra));
+                $that->assertArrayHasKey('merge-plugin', $extra);
+                $that->assertEquals(4, count($extra['merge-plugin']));
+                $that->assertArrayHasKey('patches', $extra);
+                $that->assertArrayHasKey('wikimedia/composer-merge-plugin', $extra['patches']);
+                $patches = $extra['patches']['wikimedia/composer-merge-plugin'];
+                $key = 'Allow merging of sections in a deep way';
+                $that->assertEquals('patches/add-merge-extra-deep-option.diff', $patches[$key]);
+                $key = 'Add tests for merge-extra-deep option';
+                $that->assertEquals('patches/add-tests-for-merge-extra-deep-option.diff', $patches[$key]);
+                $that->assertArrayHasKey('somevendor/some-project', $extra['patches']);
+                $that->assertArrayHasKey('some-patch', $extra['patches']['somevendor/some-project']);
+                $value = $extra['patches']['somevendor/some-project']['some-patch'];
+                $that->assertEquals('patches/overridden-patch.diff', $value);
+                if (!$replace) {
+                    $that->assertArrayHasKey('base-patch', $extra['patches']['somevendor/some-project']);
+                    $value = $extra['patches']['somevendor/some-project']['base-patch'];
+                    $that->assertEquals('patches/always-patch.diff', $value);
+                }
+                $that->assertArrayHasKey('anothervendor/some-project', $extra['patches']);
+                $that->assertArrayHasKey('another-patch', $extra['patches']['anothervendor/some-project']);
+                $that->assertEquals(array('first', 'second', 'third', 'fourth'), $extra['list']);
+            }
+        )->shouldBeCalled();
+
+        $root->getRepositories()->shouldNotBeCalled();
+        $root->getConflicts()->shouldNotBeCalled();
+        $root->getReplaces()->shouldNotBeCalled();
+        $root->getProvides()->shouldNotBeCalled();
+        $root->getSuggests()->shouldNotBeCalled();
+
+        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
+
+        $this->assertEquals(0, count($extraInstalls));
+    }
+
+    public function provideDeepMerge()
+    {
+        return array(
+            array('Replace', true),
+            array('', false),
+        );
+    }
+
 
     /**
      * @dataProvider provideOnPostPackageInstall

@@ -437,23 +437,41 @@ class ExtraPackage
 
         if ($state->replaceDuplicateLinks()) {
             $unwrapped->setExtra(
-                array_merge($rootExtra, $extra)
+                self::mergeExtraArray($state->shouldMergeExtraDeep(), $rootExtra, $extra)
             );
-
         } else {
-            foreach (array_intersect(
-                array_keys($extra),
-                array_keys($rootExtra)
-            ) as $key) {
-                $this->logger->info(
-                    "Ignoring duplicate <comment>{$key}</comment> in ".
-                    "<comment>{$this->path}</comment> extra config."
-                );
+            if (!$state->shouldMergeExtraDeep()) {
+                foreach (array_intersect(
+                    array_keys($extra),
+                    array_keys($rootExtra)
+                ) as $key) {
+                    $this->logger->info(
+                        "Ignoring duplicate <comment>{$key}</comment> in ".
+                        "<comment>{$this->path}</comment> extra config."
+                    );
+                }
             }
             $unwrapped->setExtra(
-                array_merge($extra, $rootExtra)
+                self::mergeExtraArray($state->shouldMergeExtraDeep(), $extra, $rootExtra)
             );
         }
+    }
+
+    /**
+     * Merges two arrays either via arrayMergeDeep or via array_merge.
+     *
+     * @param bool $mergeDeep
+     * @param array $array1
+     * @param array $array2
+     * @return array
+     */
+    public static function mergeExtraArray($mergeDeep, $array1, $array2)
+    {
+        if ($mergeDeep) {
+            return NestedArray::mergeDeep($array1, $array2);
+        }
+
+        return array_merge($array1, $array2);
     }
 
     /**

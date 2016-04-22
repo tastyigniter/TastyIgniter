@@ -49,7 +49,8 @@ Usage
             "recurse": true,
             "replace": false,
             "merge-dev": true,
-            "merge-extra": false
+            "merge-extra": false,
+            "merge-extra-deep": false
         }
     }
 }
@@ -127,9 +128,12 @@ section is to accept the first version of any key found (e.g. a key in the
 master config wins over the version found in any imported config). If
 `replace` mode is active ([see above](#replace)) then this behavior changes
 and the last key found will win (e.g. the key in the master config is replaced
-by the key in the imported config). The usefulness of merging the extra
-section will vary depending on the Composer plugins being used and the order
-in which they are processed by Composer.
+by the key in the imported config). If `"merge-extra-deep": true` is specified
+then, the sections are merged similar to array_merge_recursive() - however
+duplicate string array keys are replaced instead of merged, while numeric
+array keys are merged as usual. The usefulness of merging the extra section
+will vary depending on the Composer plugins being used and the order in which
+they are processed by Composer.
 
 Note that `merge-plugin` sections are excluded from the merge process, but are
 always processed by the plugin unless [recursion](#recurse) is disabled.

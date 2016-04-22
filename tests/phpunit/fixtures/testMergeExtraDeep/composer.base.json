@@ -1,0 +1,14 @@
+{
+    "extra": {
+        "patches": {
+            "wikimedia/composer-merge-plugin": {
+                "Allow merging of sections in a deep way": "patches/add-merge-extra-deep-option.diff"
+            },
+            "somevendor/some-project": {
+                "some-patch": "patches/standard-way-to-patch.diff",
+                "base-patch": "patches/always-patch.diff"
+            }
+        },
+        "list": [ "first", "second" ]
+    }
+}
