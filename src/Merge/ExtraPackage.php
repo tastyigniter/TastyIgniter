@@ -175,6 +175,19 @@ class ExtraPackage
     }
 
     /**
+     * Merge just the dev portion into a RootPackageInterface
+     *
+     * @param RootPackageInterface $root
+     * @param PluginState $state
+     */
+    public function mergeDev(RootPackageInterface $root, PluginState $state)
+    {
+        $this->mergeRequires('require-dev', $root, $state);
+        $this->mergeAutoload('devAutoload', $root);
+        $this->mergeReferences($root);
+    }
+
+    /**
      * Add a collection of repositories described by the given configuration
      * to the given package and the global repository manager.
      *
