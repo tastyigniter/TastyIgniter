@@ -29,7 +29,7 @@ if ( ! function_exists('get_header')) {
 	 * @return    string
 	 */
 	function get_header() {
-		return get_instance()->template->getPartials('header');
+		return get_instance()->template->getPartialView('header');
 	}
 }
 
@@ -42,7 +42,7 @@ if ( ! function_exists('get_footer')) {
 	 * @return    string
 	 */
 	function get_footer() {
-		return get_instance()->template->getPartials('footer');
+		return get_instance()->template->getPartialView('footer');
 	}
 }
 
@@ -58,7 +58,7 @@ if ( ! function_exists('get_partial')) {
 	 * @return string
 	 */
 	function get_partial($partial = '', $class = '') {
-		$partial_data = get_instance()->template->getPartials($partial);
+		$partial_data = get_instance()->template->getPartialView($partial);
 
 		return str_replace('{class}', $class, $partial_data);
 	}
@@ -91,7 +91,7 @@ if ( ! function_exists('partial_exists')) {
 	 * @return string
 	 */
 	function partial_exists($partial = '') {
-		return (get_instance()->template->getPartials($partial)) ? TRUE : FALSE;
+		return (get_instance()->template->getPartialView($partial)) ? TRUE : FALSE;
 	}
 }
 

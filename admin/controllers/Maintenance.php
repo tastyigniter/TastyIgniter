@@ -60,7 +60,6 @@ class Maintenance extends Admin_Controller {
             }
         }
 
-        $this->template->setPartials(array('header', 'footer'));
         $this->template->render('maintenance', $data);
     }
 
@@ -125,7 +124,6 @@ class Maintenance extends Admin_Controller {
             $data['tables'] = array();
         }
 
-        $this->template->setPartials(array('header', 'footer'));
         $this->template->render('maintenance', $data);
     }
 
@@ -179,7 +177,6 @@ class Maintenance extends Admin_Controller {
             'links' => $this->pagination->create_links()
         );
 
-        $this->template->setPartials(array('header', 'footer'));
         $this->template->render('maintenance_browse', $data);
 
     }
@@ -218,7 +215,6 @@ class Maintenance extends Admin_Controller {
 
             $this->load->helper('download');
             force_download($result['filename'], $result['content']);
-
         }
     }
 

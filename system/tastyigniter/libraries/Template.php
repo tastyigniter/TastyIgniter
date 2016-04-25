@@ -32,6 +32,7 @@ class Template {
     private $_theme_locations = array();
     private $_partial_areas = array();
     private $_layouts = array();
+    private $_partials = array();
     private $_modules = array();
     private $_title_separator = ' | ';
     private $_data = array();
@@ -91,7 +92,16 @@ class Template {
 		$this->_controller	= $this->CI->router->fetch_class();
 		$this->_method 		= $this->CI->router->fetch_method();
 
-		// Load user agent library if not loaded
+        if (!empty($this->_theme_config['head_tags'])) {
+            $this->setHeadTags($this->_theme_config['head_tags']);
+        }
+
+        $this->setPartialArea();
+
+        // Set the modules for this layout using the current URI segments
+        !empty($this->_module) OR $this->_modules = $this->getLayoutModules();
+
+        // Load user agent library if not loaded
 		$this->CI->load->library('user_agent');
 	}
 
@@ -105,33 +115,16 @@ class Template {
 		// We don't need you any more buddy
 		unset($data);
 
-        if (!empty($this->_theme_config['head_tags'])) {
-            $this->setHeadTags($this->_theme_config['head_tags']);
-        }
-
         // Output template variables to the template
         $template['title'] 	        = $this->_head_tags['title'];
         $template['breadcrumbs'] 	= $this->_breadcrumbs;              //*** future reference
-        $template['partials']	    = array();
 
         // Assign by reference, as all loaded views will need access to partials
         $this->_data['template'] =& $template;
         $this->_data['controller'] = $this->_controller;
 
-        $this->setPartials();
-
-        // Set the modules for this layout using the current URI segments
-        if (!empty($this->_partial_areas)) {
-            $this->_modules = $this->getLayoutModules();
-
-            // Load the partials variables
-            $template['partials'] = $this->fetchPartials();
-        }
-
-        // Load the layouts variables
-        foreach ($this->_layouts as $name) {
-            $template['partials'][$name] = $this->_find_view($name, array());
-        }
+        // Load the layouts and partials variables
+        $this->fetchPartials();
 
         // Lets do the caching instead of the browser
         if ($this->CI->config->item('cache_mode') === '1') {
@@ -237,7 +230,7 @@ class Template {
         }
 	}
 
-    public function setPartials() {
+    public function setPartialArea() {
         $partial_areas = isset($this->_theme_config['partial_area']) ? $this->_theme_config['partial_area'] : $this->_partial_areas;
 
         foreach ($partial_areas as $partial_area) {
@@ -245,7 +238,7 @@ class Template {
             $this->_partial_areas[$id] = $partial_area;
         }
 
-        $this->_layouts = array('header', 'footer');
+        $this->_layouts = array('header' => array(), 'footer' => array());
 
         return $this;
     }
@@ -260,9 +253,10 @@ class Template {
         }
     }
 
-    public function getPartials($partial = '') {
-        $partials = !empty($this->_data['template']['partials']) ? $this->_data['template']['partials'] : array();
-        return ($partial !== '' AND !empty($partials[$partial])) ? $partials[$partial] : '';
+    public function getPartialView($view = '') {
+        $partial_view = empty($this->_partials[$view]) ? $this->fetchPartials($view) : $this->_partials[$view];
+
+        return empty($partial_view) ? '' : $partial_view;
     }
 
     public function getDocType() {
@@ -514,8 +508,6 @@ class Template {
     }
 
     public function getLayoutModules() {
-        $this->CI->load->model('Layouts_model');
-
         $layout_modules = $this->_getLayoutModules();
 
         $modules = $this->CI->extension->getModules();
@@ -557,66 +549,80 @@ class Template {
         }
     }
 
-    private function fetchPartials() {
-        if (empty($this->_partial_areas)) return NULL;
+    private function fetchPartials($partial = '') {
+        $partial_areas = array_merge($this->_partial_areas, $this->_layouts);
 
-        $partials = array();
-        foreach ($this->_partial_areas as $partial_name => $partial) {
-            if (is_string($partial_name)) {
-                $partial_class = isset($partial['class']) ? $partial['class'] : '';
+        if (!empty($partial)) $partial_areas = array($partial => isset($partial_areas[$partial]) ? $partial_areas[$partial] : array());
+
+        if (empty($partial_areas)) return NULL;
+
+        foreach ($partial_areas as $partial_name => $data) {
+            $partial_data = NULL;
+
+            if (!is_string($partial_name)) continue;
+
+            if (isset($this->_layouts[$partial_name])) {
+                $partial_data = $this->_find_view($partial_name, $data);
+            } else {
+                $partial_class = isset($data['class']) ? $data['class'] : '';
 
                 // We stop here if no module was found.
                 if (empty($this->_modules[$partial_name])) continue;
 
-                $partial_data = isset($partial['open_tag']) ? str_replace('{id}', str_replace('_', '-', $partial_name), str_replace('{class}', $partial_class, $partial['open_tag'])) : '';
+                $partial_data = isset($data['open_tag']) ? str_replace('{id}', str_replace('_', '-', $partial_name), str_replace('{class}', $partial_class, $data['open_tag'])) : '';
 
                 $this->sortModules($partial_name);
                 foreach ($this->_modules[$partial_name] as $module) {
                     $partial_data .= Modules::run($module['name'] .'/index', $module, $this->_data);
                 }
 
-                $partial_data .= isset($partial['close_tag']) ? $partial['close_tag'] : '';
-                $partials[$partial_name] = $partial_data;
+                $partial_data .= isset($data['close_tag']) ? $data['close_tag'] : '';
             }
+
+            $this->_partials[$partial_name] = $partial_data;
         }
 
-        return $partials;
+        if (!empty($partial)) return isset($this->_partials[$partial]) ? $this->_partials[$partial] : NULL;
+
+        return $this->_partials;
     }
 
     private function _getLayoutModules() {
-        $segments = array_merge(
-            array($this->CI->uri->uri_string()),
-            array('clear'),
-            $this->CI->uri->segment_array(),
-            array('clear'),
-            $this->CI->uri->rsegment_array()
-        );
+        $routes = array($this->CI->uri->segment_array(), $this->CI->uri->uri_string(),
+            $this->CI->uri->rsegment_array(), $this->CI->uri->ruri_string());
 
         if (!$this->CI->uri->segment(2) AND in_array('index', $this->CI->uri->rsegment_array())) {
-            array_push($segments, 'clear', $this->CI->uri->rsegment(1) .'/'. $this->CI->uri->rsegment(1));
+            array_push($routes, $this->CI->uri->rsegment(1) . '/' . $this->CI->uri->rsegment(1));
         }
 
-        if (APPDIR === ADMINDIR OR empty($segments)) return array(NULL, array());
+        if (APPDIR === ADMINDIR OR empty($routes)) return array(NULL, array());
+        
+        $segments = array();
+        foreach ($routes as $key => $route) {
+            if ($route === 'pages') {
+                $segments[] = (int)$this->CI->input->get('page_id');
+            } else if (is_array($route)) {
+                $val = '';
+                foreach ($route as $value) {
+                    if ($value === 'index') continue;
+
+                    $val = $val .'/'. $value;
+                    $segments[] .= trim($val, '/');
+                }
+            } else if ($route !== 'index') {
+                $segments[] = $route;
+            }
+        }
 
         $this->CI->load->model('Layouts_model');
+        $layout_modules = $this->CI->Layouts_model->getRouteLayoutModules($segments);
 
-        $uri_route = '';
-        foreach ($segments as $segment) {
-            if ($segment === 'clear') $uri_route = '';
-
-            if ($segment === 'index' OR $segment === 'clear') continue;
-
-            $uri_route = ($uri_route === '') ? $segment : $uri_route.'/'.$segment;
-
-            if ($segment === 'pages') {
-                $uri_route = (int)$this->CI->input->get('page_id');
-            }
-
-            $layout_modules = $this->CI->Layouts_model->getRouteLayoutModules($uri_route);
-
-            // Lets break the look if a layout was found.
-            if (!empty($layout_modules)) return array($uri_route, $layout_modules);
+        // Lets break the look if a layout was found.
+        $uri_route = isset($layout_modules['uri_route']) ? $layout_modules['uri_route'] : '';
+        if (!empty($layout_modules)) {
+            return array($uri_route, $layout_modules);
         }
+
         // We return null if no layout was found.
         return array(NULL, array());
     }

@@ -125,16 +125,18 @@ class Layouts_model extends TI_Model {
 		$result = array();
 
 		if ( ! empty($uri_route)) {
-			$this->db->select('layout_modules.layout_id, layout_module_id, module_code, partial, priority, layout_modules.status');
+			$this->db->select('layout_modules.layout_id, layout_module_id, module_code, uri_route, partial, priority, layout_modules.status');
 
-			if (is_numeric($uri_route)) {
-				$this->db->from('pages');
-				$this->db->where('page_id', $uri_route);
-				$this->db->join('layout_modules', 'layout_modules.layout_id = pages.layout_id', 'left');
-			} else if (is_string($uri_route)) {
-				$this->db->from('layout_routes');
-				$this->db->join('layout_modules', 'layout_modules.layout_id = layout_routes.layout_id', 'left');
-				$this->db->where('uri_route', $uri_route);
+			$this->db->from('layout_routes');
+			$this->db->join('layout_modules', 'layout_modules.layout_id = layout_routes.layout_id', 'left');
+			$this->db->join('pages', 'pages.layout_id = layout_routes.layout_id', 'left');
+
+			foreach ($uri_route as $route) {
+				if (is_numeric($route)) {
+					$this->db->or_where('pages.page_id', $route);
+				} else {
+					$this->db->or_where('layout_routes.uri_route', $route);
+				}
 			}
 
 			$query = $this->db->get();

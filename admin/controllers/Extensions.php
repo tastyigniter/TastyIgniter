@@ -99,7 +99,6 @@ class Extensions extends Admin_Controller {
 			);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('extensions', $data);
 	}
 

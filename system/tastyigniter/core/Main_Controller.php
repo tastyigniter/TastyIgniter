@@ -35,6 +35,9 @@ class Main_Controller extends Base_Controller {
         // Load permalink
         $this->load->library('permalink');
 
+        // Load template library
+        $this->load->library('template');
+
         $this->load->library('customer');
 
         $this->load->library('customer_online');

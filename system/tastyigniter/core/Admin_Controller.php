@@ -32,6 +32,9 @@ class Admin_Controller extends Base_Controller {
 
 		log_message('info', 'Admin Controller Class Initialized');
 
+        // Load template library
+        $this->load->library('template');
+
         $this->load->library('user');
 
 		$uri = $this->uri->rsegment(1);

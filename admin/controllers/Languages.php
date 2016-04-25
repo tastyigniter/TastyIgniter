@@ -192,7 +192,6 @@ class Languages extends Admin_Controller {
             );
         }
 
-        $this->template->setPartials(array('header', 'footer'));
 		$this->template->render('languages_edit', $data);
 	}
 

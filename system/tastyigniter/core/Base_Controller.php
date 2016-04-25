@@ -59,9 +59,6 @@ class Base_Controller extends MX_Controller {
             // Load events library
             $this->load->library('events');
 
-            // Load template library
-            $this->load->library('template');
-
             // If the requested controller is a module controller then load the module config
             if (ENVIRONMENT !== 'testing') {
                 if ($this->extension AND $this->router AND $_module = $this->router->fetch_module()) {
