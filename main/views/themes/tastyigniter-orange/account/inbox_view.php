@@ -49,6 +49,8 @@
 				<div class="row wrap-all">
 					<div class="buttons">
 						<a class="btn btn-default" href="<?php echo $back_url; ?>"><?php echo lang('button_back'); ?></a>
+						<a class="btn btn-danger"
+						   href="<?php echo $delete_url; ?>"><?php echo lang('button_delete'); ?></a>
 					</div>
 				</div>
 			</div>

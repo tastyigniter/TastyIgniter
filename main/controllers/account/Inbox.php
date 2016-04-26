@@ -28,6 +28,9 @@ class Inbox extends Main_Controller {
 			$filter['limit'] = $this->config->item('page_limit');
 		}
 
+		$filter['sort_by'] = 'messages.date_added';
+		$filter['order_by'] = 'DESC';
+
 		$this->template->setBreadcrumb('<i class="fa fa-home"></i>', '/');
         $this->template->setBreadcrumb($this->lang->line('text_my_account'), 'account/account');
 		$this->template->setBreadcrumb($this->lang->line('text_heading'), 'account/inbox');
@@ -70,7 +73,7 @@ class Inbox extends Main_Controller {
             redirect('account/inbox');
 		}
 
-        $this->Messages_model->updateState($result['message_id'], $this->customer->getId(), 'read');
+		$this->Messages_model->updateState($result['message_meta_id'], $this->customer->getId(), 'read');
 
         $this->template->setBreadcrumb('<i class="fa fa-home"></i>', '/');
         $this->template->setBreadcrumb($this->lang->line('text_my_account'), 'account/account');
@@ -81,6 +84,7 @@ class Inbox extends Main_Controller {
         $this->template->setHeading($this->lang->line('text_view_heading'));
 
         $data['back_url'] 			= site_url('account/inbox');
+		$data['delete_url'] = site_url('account/inbox/delete/' . $result['message_meta_id']);
 
         $data['message_id'] 	= $result['message_id'];
         $data['date_added'] 	= time_elapsed($result['date_added']) . ' - ' . mdate('%d %M %y - %H:%i', strtotime($result['date_added']));
@@ -88,6 +92,16 @@ class Inbox extends Main_Controller {
         $data['body'] 			= $result['body'];
 
 		$this->template->render('account/inbox_view', $data);
+	}
+
+	public function delete() {
+		$message_meta_id = is_numeric($this->uri->rsegment(3)) ? $this->uri->rsegment(3) : FALSE;
+
+		if ($this->Messages_model->updateState($message_meta_id, $this->customer->getId(), 'trash')) {
+			$this->alert->set('success', $this->lang->line('alert_deleted_success'));
+		}
+
+		redirect('account/inbox');
 	}
 }
 

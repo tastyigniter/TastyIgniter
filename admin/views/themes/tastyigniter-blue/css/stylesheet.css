@@ -104,7 +104,11 @@ color: #FFF;
 background-color: #EC971F;
 color: #FFF;
 }
-
+.text-nowrap {
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+}
 
 /** WRAPPER **/
 #wrapper {
@@ -657,6 +661,9 @@ box-shadow: 0 3px 0 0 #3D8B3D;
 }
 .page-header .btn-danger, .page-header .btn-danger:hover, .page-header .btn-danger:focus {
 box-shadow: 0 3px 0 0 #AC2925;
+}
+.page-header .btn-info, .page-header .btn-info:hover, .page-header .btn-info:focus {
+box-shadow: 0 3px 0 0 #2185a3;
 }
 .page-header .btn.active, .page-header .btn:active {
 box-shadow: none;
@@ -1872,9 +1879,6 @@ font-weight: bold;
 }
 .message-list .message-read .message-subject {
 font-weight: 400;
-}
-.message-list .message-read .fa {
-color: #AAA;
 }
 .message-controls .btn {
 margin-right: 5px;

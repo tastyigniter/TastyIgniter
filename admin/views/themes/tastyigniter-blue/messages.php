@@ -40,7 +40,7 @@
             <div class="col-xs-12 col-md-10">
                 <div class="panel panel-default panel-table">
                     <div class="panel-heading">
-                        <h3 class="panel-title"><?php echo ucwords($filter_folder); ?></h3>
+                        <h3 class="panel-title"><?php echo (isset($folders[$filter_folder]['title'])) ? $folders[$filter_folder]['title'] : ucwords($filter_folder); ?></h3>
                         <div class="pull-right">
                             <button class="btn btn-filter btn-xs"><i class="fa fa-filter"></i></button>
                         </div>
@@ -97,11 +97,14 @@
                         <div class="message-controls">
                             <input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);">&nbsp;&nbsp;
                             <?php if ($filter_folder === 'archive') { ?>
-                                <button class="btn btn-default" title="<?php echo lang('text_move_to_inbox'); ?>" onclick="moveToInbox()"><i class="fa fa-inbox"></i></button>
-                            <?php } else { ?>
+                                <button class="btn btn-default" title="<?php echo lang('text_move_to_inbox'); ?>" onclick="moveToInbox()"><i class="fa fa-inbox"></i>&nbsp;&nbsp;&nbsp;<i class="fa fa-arrow-left"></i></button>
+                            <?php } else if ($filter_folder === 'inbox' OR $filter_folder === 'sent') { ?>
                                 <button class="btn btn-default" title="<?php echo lang('text_move_to_archive'); ?>" onclick="moveToArchive()"><i class="fa fa-archive"></i></button>
                             <?php } ?>
+
+                            <button class="btn btn-default" title="<?php echo lang('text_move_to_trash'); ?>" onclick="moveToTrash()"><i class="fa fa-trash text-danger"></i></button>
                             <button class="btn btn-default" title="<?php echo lang('text_refresh'); ?>"><i class="fa fa-refresh"></i></button>
+
                             <div class="btn-group">
                                 <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" aria-expanded="true"><i class="fa fa-ellipsis-h"></i> &nbsp;<i class="caret"></i></button>
                                 <ul class="dropdown-menu">
@@ -122,14 +125,21 @@
                                     <?php if ($messages) {?>
                                         <?php foreach ($messages as $message) { ?>
                                             <tr class="<?php echo $message['state']; ?>">
-                                                <td class="action"><input type="checkbox" value="<?php echo $message['message_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
+                                                <td class="action">
+                                                    <input type="checkbox" value="<?php echo ($filter_folder === 'draft') ? $message['message_id'] : $message['message_meta_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
                                                     <i class="fa fa-star-o text-warning"></i>
                                                 </td>
                                                 <td><?php echo $message['recipient']; ?></a></td>
-                                                <td><a class="message-subject" href="<?php echo $message['view']; ?>"><?php echo $message['subject']; ?></a>&nbsp;-&nbsp;
+                                                <td width="65%">
+                                                    <?php if ($filter_folder === 'all') foreach ($folders as $key => $folder) { ?>
+                                                        <?php if ($key === $message['folder']) { ?>
+                                                            <i class="fa <?php echo $folder['icon']; ?> text-muted"></i>&nbsp;&nbsp;&nbsp;
+                                                        <?php } ?>
+                                                    <?php } ?>
+                                                    <a class="message-subject" href="<?php echo $message['view']; ?>"><?php echo $message['subject']; ?></a>&nbsp;-&nbsp;
                                                     <small><?php echo $message['body']; ?></small>
                                                 </td>
-                                                <td><i title="<?php echo $message['send_type']; ?>" class="fa <?php echo $message['type_color']; ?>"></i></td>
+                                                <td class="text-center text-muted"><i title="<?php echo $message['send_type']; ?>" class="fa <?php echo $message['send_type_class']; ?>"></i></td>
                                                 <td class="text-center"><?php echo $message['date_added']; ?></td>
                                             </tr>
                                         <?php } ?>
@@ -174,14 +184,23 @@ function markAsUnread() {
 
 function moveToInbox() {
 	if ($('#message-form input:checkbox:checked').length > 0) {
-		$('#message-form').append('<input type="hidden" name="message_state" value="inbox" />');
+		$('#message-form').append('<input type="hidden" name="message_state" value="restore" />');
 		$('#message-form').submit();
 	}
 }
 
 function moveToArchive() {
-	if (confirm('Are you sure you want to do this?')) {
+	if ($('#message-form input:checkbox:checked').length > 0 && confirm('<?php echo lang('alert_warning_confirm'); ?>')) {
 		$('#message-form').append('<input type="hidden" name="message_state" value="archive" />');
+		$('#message-form').submit();
+	} else {
+		return false;
+	}
+}
+
+function moveToTrash() {
+	if ($('#message-form input:checkbox:checked').length > 0 && confirm('<?php echo lang('alert_warning_confirm_undo'); ?>')) {
+		$('#message-form').append('<input type="hidden" name="message_state" value="trash" />');
 		$('#message-form').submit();
 	} else {
 		return false;
