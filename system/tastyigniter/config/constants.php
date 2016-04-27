@@ -26,11 +26,10 @@ defined('DIR_WRITE_MODE')  OR define('DIR_WRITE_MODE', 0755);
 | These modes are used when working with fopen()/popen()
 |
 */
-
 defined('FOPEN_READ')                           OR define('FOPEN_READ', 'rb');
 defined('FOPEN_READ_WRITE')                     OR define('FOPEN_READ_WRITE', 'r+b');
 defined('FOPEN_WRITE_CREATE_DESTRUCTIVE')       OR define('FOPEN_WRITE_CREATE_DESTRUCTIVE', 'wb'); // truncates existing file data, use with care
-defined('FOPEN_READ_WRITE_CREATE_DESCTRUCTIVE') OR define('FOPEN_READ_WRITE_CREATE_DESTRUCTIVE', 'w+b'); // truncates existing file data, use with care
+defined('FOPEN_READ_WRITE_CREATE_DESTRUCTIVE') OR define('FOPEN_READ_WRITE_CREATE_DESTRUCTIVE', 'w+b'); // truncates existing file data, use with care
 defined('FOPEN_WRITE_CREATE')                   OR define('FOPEN_WRITE_CREATE', 'ab');
 defined('FOPEN_READ_WRITE_CREATE')              OR define('FOPEN_READ_WRITE_CREATE', 'a+b');
 defined('FOPEN_WRITE_CREATE_STRICT')            OR define('FOPEN_WRITE_CREATE_STRICT', 'xb');
@@ -38,7 +37,7 @@ defined('FOPEN_READ_WRITE_CREATE_STRICT')       OR define('FOPEN_READ_WRITE_CREA
 
 /*
 |--------------------------------------------------------------------------
-| Back-end directory and uri
+| Back-end and front-end directory name
 |--------------------------------------------------------------------------
 |
 | The name of the admin and main folder, do not change unless you rename the
@@ -50,7 +49,7 @@ defined('MAINDIR')  OR define('MAINDIR', 'main');
 
 /*
 |--------------------------------------------------------------------------
-| Theme directory for admin and front-end
+| Theme directory path for admin and front-end
 |--------------------------------------------------------------------------
 |
 | Where should we expect to see themes?
@@ -86,7 +85,7 @@ defined('ENVIRONMENT') OR define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SE
 |--------------------------------------------------------------------------
 |
 | If set to TRUE, a benchmark will be displayed. If profiler is set to
-| false, the benchmark will not display
+| FALSE, the benchmark will not display
 |
 */
 defined('TI_DEBUG') OR define('TI_DEBUG', FALSE);
@@ -138,6 +137,3 @@ defined('EXIT_USER_INPUT')     OR define('EXIT_USER_INPUT', 7); // invalid user 
 defined('EXIT_DATABASE')       OR define('EXIT_DATABASE', 8); // database error
 defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
-
-/* End of file constants.php */
-/* Location: ./system/tastyigniter/config/constants.php */

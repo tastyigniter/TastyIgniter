@@ -2,11 +2,11 @@
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 5.2.4 or newer
+ * An open source application development framework for PHP
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2016, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (http://ellislab.com/)
- * @copyright	Copyright (c) 2014, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link	http://codeigniter.com
+ * @link    https://codeigniter.com
  * @since	Version 1.0.0
  * @filesource
  */
@@ -56,7 +56,7 @@ if ( ! class_exists('CI_Xmlrpc', FALSE))
  * @subpackage	Libraries
  * @category	XML-RPC
  * @author		EllisLab Dev Team
- * @link		http://codeigniter.com/user_guide/libraries/xmlrpc.html
+ * @link           https://codeigniter.com/user_guide/libraries/xmlrpc.html
  */
 class CI_Xmlrpcs extends CI_Xmlrpc {
 
@@ -104,7 +104,7 @@ class CI_Xmlrpcs extends CI_Xmlrpc {
 			$this->methods = array_merge($this->methods, $config['functions']);
 		}
 
-		log_message('debug', 'XML-RPC Server Class Initialized');
+		log_message('info', 'XML-RPC Server Class Initialized');
 	}
 
 	// --------------------------------------------------------------------
@@ -223,7 +223,7 @@ class CI_Xmlrpcs extends CI_Xmlrpc {
 			$CI =& get_instance();
 			if ($CI->input->method() === 'post')
 			{
-				$data = http_build_query($CI->input->input_stream(NULL, FALSE));
+				$data = $CI->input->raw_input_stream;
 			}
 		}
 
@@ -233,14 +233,15 @@ class CI_Xmlrpcs extends CI_Xmlrpc {
 
 		$parser = xml_parser_create($this->xmlrpc_defencoding);
 		$parser_object = new XML_RPC_Message('filler');
+		$pname = (string)$parser;
 
-		$parser_object->xh[$parser] = array(
-			'isf' =>	0,
-			'isf_reason' =>	'',
-			'params' =>	array(),
-			'stack' =>	array(),
-			'valuestack' =>	array(),
-			'method' =>	''
+		$parser_object->xh[$pname] = array(
+			'isf'        => 0,
+			'isf_reason' => '',
+			'params'     => array(),
+			'stack'      => array(),
+			'valuestack' => array(),
+			'method'     => '',
 		);
 
 		xml_set_object($parser, $parser_object);
@@ -262,8 +263,7 @@ class CI_Xmlrpcs extends CI_Xmlrpc {
 				xml_error_string(xml_get_error_code($parser)),
 				xml_get_current_line_number($parser)));
 			xml_parser_free($parser);
-		}
-		elseif ($parser_object->xh[$parser]['isf'])
+		} elseif ($parser_object->xh[$pname]['isf'])
 		{
 			return new XML_RPC_Response(0, $this->xmlrpcerr['invalid_return'], $this->xmlrpcstr['invalid_return']);
 		}
@@ -271,17 +271,17 @@ class CI_Xmlrpcs extends CI_Xmlrpc {
 		{
 			xml_parser_free($parser);
 
-			$m = new XML_RPC_Message($parser_object->xh[$parser]['method']);
+			$m = new XML_RPC_Message($parser_object->xh[$pname]['method']);
 			$plist = '';
 
-			for ($i = 0, $c = count($parser_object->xh[$parser]['params']); $i < $c; $i++)
+			for ($i = 0, $c = count($parser_object->xh[$pname]['params']); $i < $c; $i++)
 			{
 				if ($this->debug === TRUE)
 				{
-					$plist .= $i.' - '.print_r(get_object_vars($parser_object->xh[$parser]['params'][$i]), TRUE).";\n";
+					$plist .= $i . ' - ' . print_r(get_object_vars($parser_object->xh[$pname]['params'][$i]), TRUE) . ";\n";
 				}
 
-				$m->addParam($parser_object->xh[$parser]['params'][$i]);
+				$m->addParam($parser_object->xh[$pname]['params'][$i]);
 			}
 
 			if ($this->debug === TRUE)
@@ -622,6 +622,3 @@ class CI_Xmlrpcs extends CI_Xmlrpc {
 	}
 
 }
-
-/* End of file Xmlrpcs.php */
-/* Location: ./system/libraries/Xmlrpcs.php */

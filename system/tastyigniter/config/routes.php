@@ -28,5 +28,4 @@ if (APPDIR === ADMINDIR) {
     $route['404_override'] = 'pages';
 }
 
-/* End of file routes.php */
-/* Location: ./system/tastyigniter/config/routes.php */
+$route['translate_uri_dashes'] = FALSE;

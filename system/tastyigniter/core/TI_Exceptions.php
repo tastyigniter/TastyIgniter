@@ -23,18 +23,6 @@ defined('BASEPATH') OR exit('No direct access allowed');
 class TI_Exceptions extends CI_Exceptions {
 
 	/**
-	 * Class constructor
-	 *
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		// Note: Do not log messages from this constructor.
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
 	 * General Error Page
 	 *
 	 * Takes an error message as input (either as a string or an array)
@@ -75,7 +63,7 @@ class TI_Exceptions extends CI_Exceptions {
 
 	// --------------------------------------------------------------------
 
-	public function show_exception(Exception $exception)
+	public function show_exception($exception)
 	{
 		$templates_path = $this->getErrorViewsPath();
 

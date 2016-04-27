@@ -326,15 +326,13 @@ class TI_Migration extends CI_Migration {
 		}
 
 		if ($target_version > $current_version) {
-			// Moving Up
 			$method = 'up';
-		} else {
-			// Moving Down, apply in reverse order
+		} elseif ($target_version < $current_version) {
 			$method = 'down';
+			// We need this so that migrations are applied in reverse order
 			krsort($migrations);
-		}
-
-		if (empty($migrations)) {
+		} else {
+			// Well, there's nothing to migrate then ...
 			return TRUE;
 		}
 

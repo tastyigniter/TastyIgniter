@@ -222,6 +222,5 @@ if ( ! function_exists('get_context_help'))
 
 // ------------------------------------------------------------------------
 
-
 /* End of file tastyigniter_helper.php */
 /* Location: ./system/tastyigniter/helpers/tastyigniter_helper.php */

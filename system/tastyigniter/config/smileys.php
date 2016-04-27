@@ -9,10 +9,9 @@
 | :-) and :) use the same image replacement.
 |
 | Please see user guide for more info:
-| http://codeigniter.com/user_guide/helpers/smiley_helper.html
+| https://codeigniter.com/user_guide/helpers/smiley_helper.html
 |
 */
-
 $smileys = array(
 
 //	smiley			image name						width	height	alt
@@ -62,6 +61,3 @@ $smileys = array(
 	':question:'	=>	array('question.gif',		'19',	'19',	'question')
 
 );
-
-/* End of file smileys.php */
-/* Location: ./system/tastyigniter/config/smileys.php */

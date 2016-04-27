@@ -33,7 +33,8 @@ class TI_Pagination extends CI_Pagination {
      */
     public function initialize(array $params = array())
     {
-        if (isset($params['attributes']) && is_array($params['attributes']))
+        isset($params['attributes']) OR $params['attributes'] = array();
+        if (is_array($params['attributes']))
         {
             $this->_parse_attributes($params['attributes']);
             unset($params['attributes']);
@@ -60,7 +61,9 @@ class TI_Pagination extends CI_Pagination {
             $this->page_query_string = TRUE;
         }
 
-        $this->base_url = rtrim($this->base_url, "?");
+        if ($this->use_global_url_suffix === TRUE) {
+            $this->suffix = $this->CI->config->item('url_suffix');
+        }
 
         return $this;
     }

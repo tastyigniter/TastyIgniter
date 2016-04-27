@@ -29,13 +29,47 @@ class TI_Config extends MX_Config {
 
 	// -------------------------------------------------------------
 
+	/**
+	 * Class constructor
+	 *
+	 * Sets the $config data from the primary config.php file as a class variable.
+	 *
+	 * @return    void
+	 */
+	public function __construct() {
+		$this->config =& get_config();
+
+		// Set the base_url automatically if none was provided
+		if (empty($this->config['base_url'])) {
+			// The regular expression is only a basic validation for a valid "Host" header.
+			// It's not exhaustive, only checks for valid characters.
+			if (isset($_SERVER['HTTP_HOST']) && preg_match('/^((\[[0-9a-f:]+\])|(\d{1,3}(\.\d{1,3}){3})|[a-z0-9\-\.]+)(:\d+)?$/i', $_SERVER['HTTP_HOST'])) {
+				$base_url = (is_https() ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']
+					. substr($_SERVER['SCRIPT_NAME'], 0, strpos($_SERVER['SCRIPT_NAME'], basename($_SERVER['SCRIPT_FILENAME'])));
+			} else {
+				$base_url = 'http://localhost/';
+			}
+
+			$this->set_item('base_url', $base_url);
+		}
+
+		log_message('info', 'Config Class Initialized');
+	}
+
+	// --------------------------------------------------------------------
+
 	public function site_url($uri = '', $protocol = NULL)
 	{
         $base_url = $this->slash_item('base_url');
 
 		if (isset($protocol))
 		{
-			$base_url = $protocol.substr($base_url, strpos($base_url, '://'));
+			// For protocol-relative links
+			if ($protocol === '') {
+				$base_url = substr($base_url, strpos($base_url, '//'));
+			} else {
+				$base_url = $protocol . substr($base_url, strpos($base_url, '://'));
+			}
 		}
 
 		if (empty($uri))
@@ -96,8 +130,13 @@ class TI_Config extends MX_Config {
 
         if (isset($protocol))
         {
-            $root_url = $protocol.substr($root_url, strpos($root_url, '://'));
-        }
+			// For protocol-relative links
+			if ($protocol === '') {
+				$root_url = substr($root_url, strpos($root_url, '//'));
+			} else {
+				$root_url = $protocol . substr($root_url, strpos($root_url, '://'));
+			}
+		}
 
 		if ($reserve_routing) {
 			$uri = get_instance()->router->_reverse_routing($uri);
@@ -109,6 +148,3 @@ class TI_Config extends MX_Config {
     // -------------------------------------------------------------
 
 }
-
-/* End of file TI_Config.php */
-/* Location: ./system/tastyigniter/core/TI_Config.php */

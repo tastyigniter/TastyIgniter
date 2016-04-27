@@ -117,10 +117,7 @@ class TI_Loader extends MX_Loader {
         // Autoload drivers
         if (isset($autoload['drivers']))
         {
-            foreach ($autoload['drivers'] as $item)
-            {
-                $this->driver($item);
-            }
+            $this->driver($autoload['drivers']);
         }
 
         // Load libraries
@@ -179,6 +176,10 @@ class TI_Loader extends MX_Loader {
 
                 if ($this->config->item('timezone')) {
                     date_default_timezone_set($this->config->item('timezone'));
+                }
+
+                if ($this->config->item('site_url')) {
+                    $this->config->set_item('base_url', trim($this->config->item('site_url'), '/') . '/' . (APPDIR === MAINDIR) ? '' : APPDIR);
                 }
 
                 $this->_db_config_loaded = TRUE;

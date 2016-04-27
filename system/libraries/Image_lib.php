@@ -2,11 +2,11 @@
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 5.2.4 or newer
+ * An open source application development framework for PHP
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2016, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (http://ellislab.com/)
- * @copyright	Copyright (c) 2014, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link	http://codeigniter.com
+ * @link    https://codeigniter.com
  * @since	Version 1.0.0
  * @filesource
  */
@@ -44,7 +44,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Libraries
  * @category	Image_lib
  * @author		EllisLab Dev Team
- * @link		http://codeigniter.com/user_guide/libraries/image_lib.html
+ * @link           https://codeigniter.com/user_guide/libraries/image_lib.html
  */
 class CI_Image_lib {
 
@@ -392,7 +392,7 @@ class CI_Image_lib {
 			$this->initialize($props);
 		}
 
-		log_message('debug', 'Image Lib Class Initialized');
+		log_message('info', 'Image Lib Class Initialized');
 	}
 
 	// --------------------------------------------------------------------
@@ -779,7 +779,7 @@ class CI_Image_lib {
 			$this->y_axis = 0;
 		}
 
-		//  Create the image handle
+		// Create the image handle
 		if ( ! ($src_img = $this->image_create_gd()))
 		{
 			return FALSE;
@@ -845,7 +845,7 @@ class CI_Image_lib {
 	 */
 	public function image_process_imagemagick($action = 'resize')
 	{
-		//  Do we have a vaild library path?
+		// Do we have a vaild library path?
 		if ($this->library_path === '')
 		{
 			$this->set_error('imglib_libpath_invalid');
@@ -1010,7 +1010,7 @@ class CI_Image_lib {
 		// going to have to figure out how to determine the color
 		// of the alpha channel in a future release.
 
-		$white	= imagecolorallocate($src_img, 255, 255, 255);
+		$white = imagecolorallocate($src_img, 255, 255, 255);
 
 		// Rotate it!
 		$dst_img = imagerotate($src_img, $this->rotation_angle, $white);
@@ -1055,8 +1055,11 @@ class CI_Image_lib {
 
 		if ($this->rotation_angle === 'hor')
 		{
-			for ($i = 0; $i < $height; $i++, $left = 0, $right = $width-1)
+			for ($i = 0; $i < $height; $i++)
 			{
+				$left = 0;
+				$right = $width - 1;
+
 				while ($left < $right)
 				{
 					$cl = imagecolorat($src_img, $left, $i);
@@ -1072,18 +1075,21 @@ class CI_Image_lib {
 		}
 		else
 		{
-			for ($i = 0; $i < $width; $i++, $top = 0, $bot = $height-1)
+			for ($i = 0; $i < $width; $i++)
 			{
-				while ($top < $bot)
+				$top = 0;
+				$bottom = $height - 1;
+
+				while ($top < $bottom)
 				{
 					$ct = imagecolorat($src_img, $i, $top);
-					$cb = imagecolorat($src_img, $i, $bot);
+					$cb = imagecolorat($src_img, $i, $bottom);
 
 					imagesetpixel($src_img, $i, $top, $cb);
-					imagesetpixel($src_img, $i, $bot, $ct);
+					imagesetpixel($src_img, $i, $bottom, $ct);
 
 					$top++;
-					$bot--;
+					$bottom--;
 				}
 			}
 		}
@@ -1189,7 +1195,7 @@ class CI_Image_lib {
 			$x_axis += $this->orig_width - $wm_width;
 		}
 
-		//  Build the finalized image
+		// Build the finalized image
 		if ($wm_img_type === 3 && function_exists('imagealphablending'))
 		{
 			@imagealphablending($src_img, TRUE);
@@ -1210,6 +1216,12 @@ class CI_Image_lib {
 			// set our RGB value from above to be transparent and merge the images with the specified opacity
 			imagecolortransparent($wm_img, imagecolorat($wm_img, $this->wm_x_transp, $this->wm_y_transp));
 			imagecopymerge($src_img, $wm_img, $x_axis, $y_axis, 0, 0, $wm_width, $wm_height, $this->wm_opacity);
+		}
+
+		// We can preserve transparency for PNG images
+		if ($this->image_type === 3) {
+			imagealphablending($src_img, FALSE);
+			imagesavealpha($src_img, TRUE);
 		}
 
 		// Output the image
@@ -1303,13 +1315,14 @@ class CI_Image_lib {
 		$x_axis = $this->wm_hor_offset + $this->wm_padding;
 		$y_axis = $this->wm_vrt_offset + $this->wm_padding;
 
-		if ($this->wm_use_drop_shadow === FALSE)
+		if ($this->wm_use_drop_shadow === FALSE) {
 			$this->wm_shadow_distance = 0;
+		}
 
 		$this->wm_vrt_alignment = strtoupper($this->wm_vrt_alignment[0]);
 		$this->wm_hor_alignment = strtoupper($this->wm_hor_alignment[0]);
 
-		// Set verticle alignment
+		// Set vertical alignment
 		if ($this->wm_vrt_alignment === 'M')
 		{
 			$y_axis += ($this->orig_height / 2) + ($fontheight / 2);
@@ -1319,52 +1332,59 @@ class CI_Image_lib {
 			$y_axis += $this->orig_height - $fontheight - $this->wm_shadow_distance - ($fontheight / 2);
 		}
 
-		$x_shad = $x_axis + $this->wm_shadow_distance;
-		$y_shad = $y_axis + $this->wm_shadow_distance;
+		// Set horizontal alignment
+		if ($this->wm_hor_alignment === 'R') {
+			$x_axis += $this->orig_width - ($fontwidth * strlen($this->wm_text)) - $this->wm_shadow_distance;
+		} elseif ($this->wm_hor_alignment === 'C') {
+			$x_axis += floor(($this->orig_width - ($fontwidth * strlen($this->wm_text))) / 2);
+		}
 
 		if ($this->wm_use_drop_shadow)
 		{
-			// Set horizontal alignment
-			if ($this->wm_hor_alignment === 'R')
-			{
-				$x_shad += $this->orig_width - ($fontwidth * strlen($this->wm_text));
-				$x_axis += $this->orig_width - ($fontwidth * strlen($this->wm_text));
-			}
-			elseif ($this->wm_hor_alignment === 'C')
-			{
-				$x_shad += floor(($this->orig_width - ($fontwidth * strlen($this->wm_text))) / 2);
-				$x_axis += floor(($this->orig_width - ($fontwidth * strlen($this->wm_text))) / 2);
-			}
+			// Offset from text
+			$x_shad = $x_axis + $this->wm_shadow_distance;
+			$y_shad = $y_axis + $this->wm_shadow_distance;
 
-			/* Set RGB values for text and shadow
+			/* Set RGB values for shadow
 			 *
 			 * First character is #, so we don't really need it.
 			 * Get the rest of the string and split it into 2-length
 			 * hex values:
 			 */
-			$txt_color = str_split(substr($this->wm_font_color, 1, 6), 2);
-			$txt_color = imagecolorclosest($src_img, hexdec($txt_color[0]), hexdec($txt_color[1]), hexdec($txt_color[2]));
 			$drp_color = str_split(substr($this->wm_shadow_color, 1, 6), 2);
 			$drp_color = imagecolorclosest($src_img, hexdec($drp_color[0]), hexdec($drp_color[1]), hexdec($drp_color[2]));
 
-			// Add the text to the source image
+			// Add the shadow to the source image
 			if ($this->wm_use_truetype)
 			{
 				imagettftext($src_img, $this->wm_font_size, 0, $x_shad, $y_shad, $drp_color, $this->wm_font_path, $this->wm_text);
-				imagettftext($src_img, $this->wm_font_size, 0, $x_axis, $y_axis, $txt_color, $this->wm_font_path, $this->wm_text);
 			}
 			else
 			{
 				imagestring($src_img, $this->wm_font_size, $x_shad, $y_shad, $this->wm_text, $drp_color);
-				imagestring($src_img, $this->wm_font_size, $x_axis, $y_axis, $this->wm_text, $txt_color);
 			}
+		}
 
-			// We can preserve transparency for PNG images
-			if ($this->image_type === 3)
-			{
-				imagealphablending($src_img, FALSE);
-				imagesavealpha($src_img, TRUE);
-			}
+		/* Set RGB values for text
+		 *
+		 * First character is #, so we don't really need it.
+		 * Get the rest of the string and split it into 2-length
+		 * hex values:
+		 */
+		$txt_color = str_split(substr($this->wm_font_color, 1, 6), 2);
+		$txt_color = imagecolorclosest($src_img, hexdec($txt_color[0]), hexdec($txt_color[1]), hexdec($txt_color[2]));
+
+		// Add the text to the source image
+		if ($this->wm_use_truetype) {
+			imagettftext($src_img, $this->wm_font_size, 0, $x_axis, $y_axis, $txt_color, $this->wm_font_path, $this->wm_text);
+		} else {
+			imagestring($src_img, $this->wm_font_size, $x_axis, $y_axis, $this->wm_text, $txt_color);
+		}
+
+		// We can preserve transparency for PNG images
+		if ($this->image_type === 3) {
+			imagealphablending($src_img, FALSE);
+			imagesavealpha($src_img, TRUE);
 		}
 
 		// Output the final image
@@ -1408,7 +1428,7 @@ class CI_Image_lib {
 
 		switch ($image_type)
 		{
-			case 1 :
+			case 1:
 				if ( ! function_exists('imagecreatefromgif'))
 				{
 					$this->set_error(array('imglib_unsupported_imagecreate', 'imglib_gif_not_supported'));
@@ -1416,7 +1436,7 @@ class CI_Image_lib {
 				}
 
 				return imagecreatefromgif($path);
-			case 2 :
+			case 2:
 				if ( ! function_exists('imagecreatefromjpeg'))
 				{
 					$this->set_error(array('imglib_unsupported_imagecreate', 'imglib_jpg_not_supported'));
@@ -1424,7 +1444,7 @@ class CI_Image_lib {
 				}
 
 				return imagecreatefromjpeg($path);
-			case 3 :
+			case 3:
 				if ( ! function_exists('imagecreatefrompng'))
 				{
 					$this->set_error(array('imglib_unsupported_imagecreate', 'imglib_png_not_supported'));
@@ -1794,6 +1814,3 @@ class CI_Image_lib {
 	}
 
 }
-
-/* End of file Image_lib.php */
-/* Location: ./system/libraries/Image_lib.php */

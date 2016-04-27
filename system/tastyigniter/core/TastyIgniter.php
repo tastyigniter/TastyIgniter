@@ -143,7 +143,7 @@ if ( ! is_php('5.4'))
  * The subclass prefix allows CI to know if a core class is
  * being extended via a library in the local application
  * "libraries" folder. Since CI allows config items to be
- * overriden via data set in the main index.php file,
+ * overridden via data set in the main index.php file,
  * before proceeding we need to know if a subclass_prefix
  * override exists. If so, we will set this value now,
  * before any classes are loaded
@@ -154,6 +154,23 @@ if ( ! is_php('5.4'))
 	{
 		get_config(array('subclass_prefix' => $assign_to_config['subclass_prefix']));
 	}
+
+/*
+ * ------------------------------------------------------
+ *  Should we use a Composer autoloader?
+ * ------------------------------------------------------
+ */
+if ($composer_autoload = config_item('composer_autoload')) {
+	if ($composer_autoload === TRUE) {
+		file_exists(APPPATH . 'vendor/autoload.php')
+			? require_once(APPPATH . 'vendor/autoload.php')
+			: log_message('error', '$config[\'composer_autoload\'] is set to TRUE but ' . APPPATH . 'vendor/autoload.php was not found.');
+	} elseif (file_exists($composer_autoload)) {
+		require_once($composer_autoload);
+	} else {
+		log_message('error', 'Could not find the specified $config[\'composer_autoload\'] path: ' . $composer_autoload);
+	}
+}
 
 /*
  * ------------------------------------------------------
@@ -280,7 +297,7 @@ if ( ! is_php('5.4'))
  *  Instantiate the routing class and set the routing
  * ------------------------------------------------------
  */
-    $RTR =& load_class('Router', 'core', isset($routing) ? $routing : NULL);
+$RTR =& load_class('Router', 'core', isset($routing) ? $routing : NULL);
 
 /*
  * ------------------------------------------------------
@@ -334,7 +351,7 @@ if ( ! is_php('5.4'))
 	 *
 	 * Returns current CI instance object
 	 *
-	 * @return object
+	 * @return CI_Controller
 	 */
 	function &get_instance()
 	{
@@ -458,30 +475,13 @@ if ( ! is_php('5.4'))
 		}
 		else
 		{
-            show_404($RTR->directory.$class.'/'.$method);
+			show_404($RTR->directory . $class . '/' . $method);
 		}
 	}
 
 	if ($method !== '_remap')
 	{
 		$params = array_slice($URI->rsegments, 2);
-	}
-
-/*
- * ------------------------------------------------------
- *  Should we use a Composer autoloader?
- * ------------------------------------------------------
- */
-	if ($composer_autoload = config_item('composer_autoload'))
-	{
-		if ($composer_autoload === TRUE && file_exists(APPPATH.'vendor/autoload.php'))
-		{
-			require_once(APPPATH.'vendor/autoload.php');
-		}
-		elseif (file_exists($composer_autoload))
-		{
-			require_once($composer_autoload);
-		}
 	}
 
 /*
@@ -541,6 +541,3 @@ if ( ! is_php('5.4'))
  * ------------------------------------------------------
  */
 	$EXT->call_hook('post_system');
-
-/* End of file TastyIgniter.php */
-/* Location: ./system/tastyigniter/core/TastyIgniter.php */

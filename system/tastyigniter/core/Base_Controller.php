@@ -67,13 +67,6 @@ class Base_Controller extends MX_Controller {
                     $this->extension->loadConfig($_module, TRUE);
                 }
             }
-
-            // Saving queries can vastly increase the memory usage, so better to turn off in production
-            if (ENVIRONMENT === 'production') {
-                $this->db->save_queries = FALSE;
-            } else if (ENVIRONMENT === 'development') {
-                $this->db->db_debug = TRUE;
-            }
         }
 
         // Check app for maintenance in production environments.

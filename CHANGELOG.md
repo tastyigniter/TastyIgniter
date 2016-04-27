@@ -22,7 +22,7 @@ Release Date: April 2016
 * Location library: MUST call `initialize()` method or `setLocation()` to load location library
 * Improved `orderTimeRange()` method in Location Library to get future order dates and hours
 * Removed `local_module ` admin edit language text feature. Language text should be changed from language file instead.
-* Location library methods `getOpeningType()`, `openingStatus()`, `openingHours()`, `checkDeliveryTime()`, `` to `getWorkingType()`, `workingStatus()`, `workingHours()`, `checkOrderTime()`, ``
+* Location library methods `getOpeningType()`, `openingStatus()`, `openingHours()`, `checkDeliveryTime()` to `getWorkingType()`, `workingStatus()`, `workingHours()`, `checkOrderTime()`
 * Improved Checkout future order (order for later) feature with option to select date and time for later delivery or collection
 * Improved Location feature where customer must enter address to order
 * Improved Cart Module alerts to display top screen on mobile devices
@@ -31,6 +31,10 @@ Release Date: April 2016
 * Pass entire extension array into extension index method instead of passing only the data key value
 * Improved banner module to allow multiple banners
 * Added option to enter billing address during checkout when authorize.net is selected as payment method
+* Load Template library right after permalink library so the right modules can be loaded based on uri
+* Improved messages view folders and delete functionality ( you might find some archived messages showing under 'all' folder but not in 'archive', fix by moving to archive again)
+* Filter lost (blank status) orders from order list in admin by default
+* Updated CI core files to version 3.0.6, TI system files and modular HMVC files, also added composer support
 
 #### Fixed
 * Issue with payment and confirm button changing incorrectly on checkout page

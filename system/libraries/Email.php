@@ -6,7 +6,7 @@
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014 - 2015, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2016, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (http://ellislab.com/)
- * @copyright	Copyright (c) 2014 - 2015, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link	http://codeigniter.com
+ * @link    https://codeigniter.com
  * @since	Version 1.0.0
  * @filesource
  */
@@ -46,7 +46,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Libraries
  * @category	Libraries
  * @author		EllisLab Dev Team
- * @link		http://codeigniter.com/user_guide/libraries/email.html
+ * @link           https://codeigniter.com/user_guide/libraries/email.html
  */
 class CI_Email {
 
@@ -574,14 +574,15 @@ class CI_Email {
 			$this->validate_email($this->_str_to_array($replyto));
 		}
 
-		if ($name === '')
+		if ($name !== '')
 		{
-			$name = $replyto;
-		}
-
-		if (strpos($name, '"') !== 0)
-		{
-			$name = '"'.$name.'"';
+			// only use Q encoding if there are characters that would require it
+			if (!preg_match('/[\200-\377]/', $name)) {
+				// add slashes for non-printing characters, slashes, and double quotes, and surround it in double quotes
+				$name = '"' . addcslashes($name, "\0..\37\177'\"\\") . '"';
+			} else {
+				$name = $this->_prep_q_encoding($name);
+			}
 		}
 
 		$this->set_header('Reply-To', $name.' <'.$replyto.'>');
@@ -1469,6 +1470,20 @@ class CI_Email {
 	 */
 	protected function _prep_quoted_printable($str)
 	{
+		// ASCII code numbers for "safe" characters that can always be
+		// used literally, without encoding, as described in RFC 2049.
+		// http://www.ietf.org/rfc/rfc2049.txt
+		static $ascii_safe_chars = array(
+			// ' (  )   +   ,   -   .   /   :   =   ?
+			39, 40, 41, 43, 44, 45, 46, 47, 58, 61, 63,
+			// numbers
+			48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
+			// upper-case letters
+			65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
+			// lower-case letters
+			97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122,
+		);
+
 		// We are intentionally wrapping so mail servers will encode characters
 		// properly and MUAs will behave, so {unwrap} must go!
 		$str = str_replace(array('{unwrap}', '{/unwrap}'), '', $str);
@@ -1516,13 +1531,21 @@ class CI_Email {
 				$ascii = ord($char);
 
 				// Convert spaces and tabs but only if it's the end of the line
-				if ($i === ($length - 1) && ($ascii === 32 OR $ascii === 9))
+				if ($ascii === 32 OR $ascii === 9)
 				{
-					$char = $escape.sprintf('%02s', dechex($ascii));
+					if ($i === ($length - 1)) {
+						$char = $escape . sprintf('%02s', dechex($ascii));
+					}
 				}
-				elseif ($ascii === 61) // encode = signs
+				// DO NOT move this below the $ascii_safe_chars line!
+				//
+				// = (equals) signs are allowed by RFC2049, but must be encoded
+				// as they are the encoding delimiter!
+				elseif ($ascii === 61)
 				{
 					$char = $escape.strtoupper(sprintf('%02s', dechex($ascii)));  // =3D
+				} elseif (!in_array($ascii, $ascii_safe_chars, TRUE)) {
+					$char = $escape . strtoupper(sprintf('%02s', dechex($ascii)));
 				}
 
 				// If we're at the character limit, add the line to the output,
@@ -1563,20 +1586,19 @@ class CI_Email {
 
 		if ($this->charset === 'UTF-8')
 		{
-			if (MB_ENABLED === TRUE)
-			{
-				return mb_encode_mimeheader($str, $this->charset, 'Q', $this->crlf);
-			}
-			elseif (ICONV_ENABLED === TRUE)
+			// Note: We used to have mb_encode_mimeheader() as the first choice
+			//       here, but it turned out to be buggy and unreliable. DO NOT
+			//       re-add it! -- Narf
+			if (ICONV_ENABLED === TRUE)
 			{
 				$output = @iconv_mime_encode('', $str,
-				                             array(
-					                             'scheme' => 'Q',
-					                             'line-length' => 76,
-					                             'input-charset' => $this->charset,
-					                             'output-charset' => $this->charset,
-					                             'line-break-chars' => $this->crlf
-				                             )
+					array(
+						'scheme'           => 'Q',
+						'line-length'      => 76,
+						'input-charset'    => $this->charset,
+						'output-charset'   => $this->charset,
+						'line-break-chars' => $this->crlf,
+					)
 				);
 
 				// There are reports that iconv_mime_encode() might fail and return FALSE
@@ -1589,6 +1611,8 @@ class CI_Email {
 				}
 
 				$chars = iconv_strlen($str, 'UTF-8');
+			} elseif (MB_ENABLED === TRUE) {
+				$chars = mb_strlen($str, 'UTF-8');
 			}
 		}
 
@@ -1826,8 +1850,7 @@ class CI_Email {
 		// is popen() enabled?
 		if ( ! function_usable('popen')
 			OR FALSE === ($fp = @popen(
-				$this->mailpath.' -oi -f '.$this->clean_email($this->_headers['From'])
-				.' -t -r '.$this->clean_email($this->_headers['Return-Path'])
+				$this->mailpath . ' -oi -f ' . $this->clean_email($this->_headers['From']) . ' -t'
 				, 'w'))
 		) // server probably has popen disabled, so nothing we can do to get a verbose error.
 		{
@@ -1953,10 +1976,10 @@ class CI_Email {
 		$ssl = ($this->smtp_crypto === 'ssl') ? 'ssl://' : '';
 
 		$this->_smtp_connect = fsockopen($ssl.$this->smtp_host,
-		                                 $this->smtp_port,
-		                                 $errno,
-		                                 $errstr,
-		                                 $this->smtp_timeout);
+			$this->smtp_port,
+			$errno,
+			$errstr,
+			$this->smtp_timeout);
 
 		if ( ! is_resource($this->_smtp_connect))
 		{
@@ -1999,13 +2022,10 @@ class CI_Email {
 		{
 			case 'hello' :
 
-				if ($this->_smtp_auth OR $this->_get_encoding() === '8bit')
-				{
-					$this->_send_data('EHLO '.$this->_get_hostname());
-				}
-				else
-				{
-					$this->_send_data('HELO '.$this->_get_hostname());
+				if ($this->_smtp_auth OR $this->_get_encoding() === '8bit') {
+					$this->_send_data('EHLO ' . $this->_get_hostname());
+				} else {
+					$this->_send_data('HELO ' . $this->_get_hostname());
 				}
 
 				$resp = 250;
@@ -2017,18 +2037,15 @@ class CI_Email {
 				break;
 			case 'from' :
 
-				$this->_send_data('MAIL FROM:<'.$data.'>');
+				$this->_send_data('MAIL FROM:<' . $data . '>');
 				$resp = 250;
 				break;
 			case 'to' :
 
-				if ($this->dsn)
-				{
-					$this->_send_data('RCPT TO:<'.$data.'> NOTIFY=SUCCESS,DELAY,FAILURE ORCPT=rfc822;'.$data);
-				}
-				else
-				{
-					$this->_send_data('RCPT TO:<'.$data.'>');
+				if ($this->dsn) {
+					$this->_send_data('RCPT TO:<' . $data . '> NOTIFY=SUCCESS,DELAY,FAILURE ORCPT=rfc822;' . $data);
+				} else {
+					$this->_send_data('RCPT TO:<' . $data . '>');
 				}
 
 				$resp = 250;
