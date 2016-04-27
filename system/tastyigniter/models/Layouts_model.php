@@ -125,26 +125,26 @@ class Layouts_model extends TI_Model {
 		$result = array();
 
 		if ( ! empty($uri_route)) {
-			$this->db->select('layout_modules.layout_id, layout_module_id, module_code, uri_route, partial, priority, layout_modules.status');
+			foreach (array_unique($uri_route) as $route) {
+				$this->db->select('layout_modules.layout_id, layout_module_id, module_code, uri_route, partial, priority, layout_modules.status');
 
-			$this->db->from('layout_routes');
-			$this->db->join('layout_modules', 'layout_modules.layout_id = layout_routes.layout_id', 'left');
-			$this->db->join('pages', 'pages.layout_id = layout_routes.layout_id', 'left');
+				$this->db->from('layout_routes');
+				$this->db->join('layout_modules', 'layout_modules.layout_id = layout_routes.layout_id', 'left');
+				$this->db->join('pages', 'pages.layout_id = layout_routes.layout_id', 'left');
 
-			foreach ($uri_route as $route) {
 				if (is_numeric($route)) {
 					$this->db->or_where('pages.page_id', $route);
 				} else {
 					$this->db->or_where('layout_routes.uri_route', $route);
 				}
-			}
 
-			$this->db->group_by('layout_module_id');
+				$this->db->group_by('layout_module_id');
 
-			$query = $this->db->get();
+				$query = $this->db->get();
 
-			if ($query->num_rows() > 0) {
-				$result = $query->result_array();
+				if ($query->num_rows() > 0) {
+					return $query->result_array();
+                }
 			}
 		}
 
