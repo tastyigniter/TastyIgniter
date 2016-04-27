@@ -19,7 +19,7 @@ $theme['head_tags'] = array(
     'meta'     	=> array(
             array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'),
             array('name' => 'X-UA-Compatible', 'content' => 'IE=edge', 'type' => 'equiv'),
-            array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1', 'type' => 'name'),
+            array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no', 'type' => 'name'),
     ),
     'style'    	=> array(
             array('css/bootstrap.min.css', 'bootstrap-css', '10'),
