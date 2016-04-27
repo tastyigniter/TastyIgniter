@@ -31,3 +31,6 @@ system/tastyigniter/session/*
 
 system/tastyigniter/migrations/backups/*
 !system/tastyigniter/migrations/backups/index.html
+
+# Ignore all vendor files included by composer and the lock file
+/vendor/*

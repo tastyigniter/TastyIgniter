@@ -1728,14 +1728,14 @@ padding: 6px;
 background-color: #F9FAFC;
 }
 table .action {
-width: 8.33% !important;
+width: 9.33% !important;
 padding:5px 0 7px 7px;
 }
 table .action-one {
-width: 3.33% !important;
+width: 4.33% !important;
 }
 table .action-three {
-width: 13.03% !important;
+width: 14.23% !important;
 }
 table .action .btn {
 display:inline-block;
@@ -1743,7 +1743,7 @@ padding: 8px 10px;
 }
 table .id, table .id .sort {
 color: #656565;
-width: 3.33% !important;
+width: 4.33% !important;
 }
 .table > tbody > tr > .no-line {
 border-top: none;
