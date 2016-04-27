@@ -166,13 +166,18 @@ class Authorize_net_aim extends Main_Controller {
 
 	        if (isset($response[1], $response[4], $response[8]) AND (int) $response[8] === $order_data['order_id']) {
 
-		        if ($response[1] !== '1' OR $response[1] !== '4') {
+		        if ($response[1] === '2' OR $response[1] === '3') {
 					$order_data['status_id'] = $this->config->item('canceled_order_status');
 				} else if (isset($ext_payment_data['order_status']) AND is_numeric($ext_payment_data['order_status'])) {
 			        $order_data['status_id'] = $ext_payment_data['order_status'];
 		        }
 
-		        $order_history = array(
+				$success = FALSE;
+				if (($response[1] === '1' OR $response[1] === '4') AND $this->Orders_model->completeOrder($order_data['order_id'], $order_data, $cart_contents)) {
+					$success = TRUE;
+				}
+
+				$order_history = array(
 			        'object_id'  => $order_data['order_id'],
 			        'status_id'  => $order_data['status_id'],
 			        'notify'     => '0',
@@ -183,9 +188,7 @@ class Authorize_net_aim extends Main_Controller {
 		        $this->load->model('Statuses_model');
 		        $this->Statuses_model->addStatusHistory('order', $order_history);
 
-				if (($response[1] === '1' OR $response[1] === '4') AND $this->Orders_model->completeOrder($order_data['order_id'], $order_data, $cart_contents)) {
-					redirect('checkout/success');									// redirect to checkout success page with returned order id
-				}
+				if ($success) redirect('checkout/success');									// redirect to checkout success page with returned order id
 
 				$this->alert->set('danger', $response[4]);
 				return FALSE;
