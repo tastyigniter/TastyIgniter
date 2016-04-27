@@ -73,9 +73,9 @@ class Checkout extends Main_Controller {
         $data['_action'] = site_url('checkout');
 
         if (isset($order_data['customer_id']) AND isset($order_data['order_id'])) {
-			$order_received = $this->Orders_model->isOrderReceived($order_data['order_id']);
+			$is_order_placed = $this->Orders_model->isOrderPlaced($order_data['order_id']);
 
-            if ($order_received === TRUE OR (!empty($order_data['customer_id']) AND $order_data['customer_id'] !== $this->customer->getId())) {
+            if ($is_order_placed === TRUE OR (!empty($order_data['customer_id']) AND $order_data['customer_id'] !== $this->customer->getId())) {
 	            $order_data = array();
 	            $this->session->unset_userdata('order_data');
 			}

@@ -253,15 +253,10 @@ class Orders_model extends TI_Model {
 		return $result;
 	}
 
-	public function isOrderReceived($order_id) {
-		$this->db->from('status_history');
-		$this->db->where('status_for', 'order');
-		$this->db->where('status_history.object_id', $order_id);
-
-		$this->db->group_start();
+	public function isOrderPlaced($order_id) {
+		$this->db->from('orders');
+		$this->db->where('order_id', $order_id);
 		$this->db->where('status_id >', '0');
-		$this->db->where('status_id !=', $this->config->item('canceled_order_status'));
-		$this->db->group_end();
 
 		$query = $this->db->get();
 
