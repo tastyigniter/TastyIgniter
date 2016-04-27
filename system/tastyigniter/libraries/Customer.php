@@ -125,8 +125,6 @@ class Customer {
 		$this->address_id = '';
 		$this->security_question_id = '';
 		$this->security_answer = '';
-
-	    $this->CI->session->unset_userdata('order_info');
     }
 
   	public function isLogged() {

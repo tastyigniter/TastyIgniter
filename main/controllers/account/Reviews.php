@@ -182,9 +182,9 @@ class Reviews extends Main_Controller {
 			$add['review_text'] 		= $this->input->post('review_text');
 
 			if ($this->Reviews_model->saveReview(NULL, $add)) {
-				$this->alert->set('alert', $this->lang->line('alert_review_success'));
+				$this->alert->set('success', $this->lang->line('alert_review_success'));
 			} else {
-				$this->alert->set('alert', $this->lang->line('alert_review_error'));
+				$this->alert->set('danger', $this->lang->line('alert_review_error'));
 			}
 
 			return TRUE;

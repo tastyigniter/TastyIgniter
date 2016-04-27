@@ -139,6 +139,8 @@ class Layouts_model extends TI_Model {
 				}
 			}
 
+			$this->db->group_by('layout_module_id');
+
 			$query = $this->db->get();
 
 			if ($query->num_rows() > 0) {

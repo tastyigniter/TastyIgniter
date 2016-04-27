@@ -262,7 +262,7 @@
 
 				<div id="specials" class="tab-pane row wrap-all">
 					<div class="form-group">
-						<label for="input-special-status" class="col-sm-3 control-label">Special</label>
+						<label for="input-special-status" class="col-sm-3 control-label"><?php echo lang('label_special'); ?></label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if ($special_status === '1') { ?>
@@ -279,7 +279,7 @@
 					</div>
 					<div id="special-toggle">
 						<div class="form-group">
-							<label for="start-date" class="col-sm-3 control-label">Start Date</label>
+							<label for="start-date" class="col-sm-3 control-label"><?php echo lang('label_start_date'); ?></label>
 							<div class="col-sm-5">
 								<div class="input-group">
 									<input type="text" name="start_date" id="start-date" class="form-control" value="<?php echo set_value('start_date', $start_date); ?>" />
@@ -289,7 +289,7 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="end-date" class="col-sm-3 control-label">End Date</label>
+							<label for="end-date" class="col-sm-3 control-label"><?php echo lang('label_end_date'); ?></label>
 							<div class="col-sm-5">
 								<div class="input-group">
 									<input type="text" name="end_date" id="end-date" class="form-control" value="<?php echo set_value('end_date', $end_date); ?>" />
@@ -299,7 +299,7 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="input-special-price" class="col-sm-3 control-label">Special Price</label>
+							<label for="input-special-price" class="col-sm-3 control-label"><?php echo lang('label_special_price'); ?></label>
 							<div class="col-sm-5">
 								<div class="input-group">
 									<input type="text" name="special_price" id="input-special-price" class="form-control" value="<?php echo set_value('special_price', $special_price); ?>" />

@@ -3,6 +3,11 @@
 class Reservation_module extends Main_Controller {
 
 	public function index() {
+        if ($this->config->item('reservation_mode') !== '1') {
+            $this->alert->set('alert', $this->lang->line('alert_reservation_disabled'));
+            redirect('home');
+        }
+
         $this->load->model('Reservations_model');
 
         $this->load->library('location'); // load the location library
@@ -19,11 +24,6 @@ class Reservation_module extends Main_Controller {
         $this->template->setScriptTag(assets_url("js/datepicker/bootstrap-datepicker.js"), 'bootstrap-datepicker-js', '12000');
         $this->template->setStyleTag(assets_url('js/datepicker/bootstrap-timepicker.css'), 'bootstrap-timepicker-css', '124440');
         $this->template->setScriptTag(assets_url("js/datepicker/bootstrap-timepicker.js"), 'bootstrap-timepicker-js', '12550');
-
-        if ($this->config->item('reservation_mode') !== '1') {
-            $this->alert->set('alert', $this->lang->line('alert_reservation_disabled'));
-            redirect('home');
-        }
 
         $date_format = ($this->config->item('date_format')) ? $this->config->item('date_format') : '%d %M %y';
         $time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
@@ -134,7 +134,7 @@ class Reservation_module extends Main_Controller {
 
         $data['reservation_alert'] = $this->alert->display('reservation_module');
 
-		$this->load->view('reservation_module/reservation_module', $data);
+		return $this->load->view('reservation_module/reservation_module', $data);
 	}
 
 
@@ -188,7 +188,7 @@ class Reservation_module extends Main_Controller {
         $this->form_validation->set_rules('reserve_date', 'lang:label_date', 'xss_clean|trim|required|valid_date|callback__validate_date');
         $this->form_validation->set_rules('reserve_time', 'lang:label_time', 'xss_clean|trim|required|valid_time|callback__validate_time');
 
-        if ($this->input->get('selected_time')) {
+        if ($this->input->get('action') === 'select_time') {
             $this->form_validation->set_rules('selected_time', 'lang:label_time', 'xss_clean|trim|required|valid_time|callback__validate_time');
         }
 

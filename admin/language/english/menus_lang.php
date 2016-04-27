@@ -35,6 +35,7 @@ $lang['label_stock_qty'] 		        = 'Stock Quantity';
 $lang['label_minimum_qty'] 		        = 'Minimum Quantity';
 $lang['label_subtract_stock'] 		    = 'Subtract Stock';
 $lang['label_status'] 		            = 'Status';
+$lang['label_special'] 		            = 'Special';
 $lang['label_special_status'] 		    = 'Special Status';
 $lang['label_option'] 		            = 'Menu Option';
 $lang['label_option_id'] 		        = 'Option ID';

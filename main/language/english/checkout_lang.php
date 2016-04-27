@@ -51,6 +51,7 @@ $lang['label_collection']               = 'Pick-up';
 $lang['label_order_time']               = '%s Time';
 $lang['label_choose_order_time']        = 'Choose %s Time';
 $lang['label_order_asap_time']          = '%s ASAP Time';
+$lang['label_order_time_type']          = '%s Time Type';
 $lang['label_date']                     = 'Date';
 $lang['label_hour']                     = 'Hour';
 $lang['label_minute']                   = 'Minute';
