@@ -164,9 +164,11 @@ class Authorize_net_aim extends Main_Controller {
 	        $this->load->model('authorize_net_aim/Authorize_net_aim_model');
             $response = $this->Authorize_net_aim_model->authorizeAndCapture($order_data);
 
-	        if (isset($response[1]) AND ($response[1] === '1' OR $response[1] === '4') AND (int) $response[8] === $order_data['order_id']) {
+	        if (isset($response[1], $response[4], $response[8]) AND (int) $response[8] === $order_data['order_id']) {
 
-		        if (isset($ext_payment_data['order_status']) AND is_numeric($ext_payment_data['order_status'])) {
+		        if ($response[1] !== '1' OR $response[1] !== '4') {
+					$order_data['status_id'] = $this->config->item('canceled_order_status');
+				} else if (isset($ext_payment_data['order_status']) AND is_numeric($ext_payment_data['order_status'])) {
 			        $order_data['status_id'] = $ext_payment_data['order_status'];
 		        }
 
@@ -181,14 +183,14 @@ class Authorize_net_aim extends Main_Controller {
 		        $this->load->model('Statuses_model');
 		        $this->Statuses_model->addStatusHistory('order', $order_history);
 
-				if ($this->Orders_model->completeOrder($order_data['order_id'], $order_data, $cart_contents)) {
+				if (($response[1] === '1' OR $response[1] === '4') AND $this->Orders_model->completeOrder($order_data['order_id'], $order_data, $cart_contents)) {
 					redirect('checkout/success');									// redirect to checkout success page with returned order id
 				}
-            }
 
-			if (isset($response[4])) $this->alert->set('danger', $response[4]);
-			return FALSE;
-        }
+				$this->alert->set('danger', $response[4]);
+				return FALSE;
+			}
+		}
     }
 
 	protected function validCreditCard($number = NULL, $accepted_cards = array()) {

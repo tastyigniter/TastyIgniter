@@ -2,50 +2,58 @@
 
 class Authorize_net_aim_model extends TI_Model {
 
-	public $avsResponse = array(
-		'A' => 'Address (Street) matches, ZIP does not',
-		'B' => 'Address information not provided for AVS check',
-		'E' => 'AVS error',
-		'G' => 'Non-U.S. Card Issuing Bank',
-		'N' => 'No Match on Address (Street) or ZIP',
-		'P' => 'AVS not applicable for this transaction',
-		'R' => 'Retry—System unavailable or timed out',
-		'S' => 'Service not supported by issuer',
-		'U' => 'Address information is unavailable',
-		'W' => 'Nine digit ZIP matches, Address (Street) does not',
-		'X' => 'Address (Street) and nine digit ZIP match',
-		'Y' => 'Address (Street) and five digit ZIP match',
-		'Z' => 'Five digit ZIP matches, Address (Street) does not'
-	);
+	public $avsResponse = array();
 
-	public $ccvResponse = array(
-		'M' => 'Match',
-		'N' => 'No Match',
-		'P' => 'Not Processed',
-		'S' => 'Should have been present',
-		'U' => 'Issuer unable to process request'
-	);
+	public $ccvResponse = array();
 
-	public $cavvResponse = array(
-		'0' => 'CAVV not validated because erroneous data was submitted',
-		'1' => 'CAVV failed validation',
-		'2' => 'CAVV passed validation',
-		'3' => 'CAVV validation could not be performed; issuer attempt incomplete',
-		'4' => 'CAVV validation could not be performed; issuer system error',
-		'5' => 'Reserved for future use',
-		'6' => 'Reserved for future use',
-		'7' => 'CAVV attempt—failed validation—issuer available (U.S.-issued card/non-U.S acquirer)',
-		'8' => 'CAVV attempt—passed validation—issuer available (U.S.-issued card/non-U.S. acquirer)',
-		'9' => 'CAVV attempt—failed validation—issuer unavailable (U.S.-issued card/non-U.S. acquirer)',
-		'A' => 'CAVV attempt—passed validation—issuer unavailable (U.S.-issued card/non-U.S. acquirer)',
-		'B' => 'CAVV passed validation, information only, no liability shift'
-	);
+	public $cavvResponse = array();
 
     public function __construct() {
         parent::__construct();
 
         $this->load->library('cart');
         $this->load->library('currency');
+
+		$this->lang->load('authorize_net_aim/authorize_net_aim');
+
+		$this->avsResponse = array(
+			'A' => $this->lang->line('text_avs_response_A'),
+			'B' => $this->lang->line('text_avs_response_B'),
+			'E' => $this->lang->line('text_avs_response_E'),
+			'G' => $this->lang->line('text_avs_response_G'),
+			'N' => $this->lang->line('text_avs_response_N'),
+			'P' => $this->lang->line('text_avs_response_P'),
+			'R' => $this->lang->line('text_avs_response_R'),
+			'S' => $this->lang->line('text_avs_response_S'),
+			'U' => $this->lang->line('text_avs_response_U'),
+			'W' => $this->lang->line('text_avs_response_W'),
+			'X' => $this->lang->line('text_avs_response_X'),
+			'Y' => $this->lang->line('text_avs_response_Y'),
+			'Z' => $this->lang->line('text_avs_response_Z')
+		);
+
+		$this->ccvResponse = array(
+			'M' => $this->lang->line('text_ccv_response_M'),
+			'N' => $this->lang->line('text_ccv_response_N'),
+			'P' => $this->lang->line('text_ccv_response_P'),
+			'S' => $this->lang->line('text_ccv_response_S'),
+			'U' => $this->lang->line('text_ccv_response_U')
+		);
+
+		$this->cavvResponse = array(
+			'0' => $this->lang->line('text_cavv_response_0'),
+			'1' => $this->lang->line('text_cavv_response_1'),
+			'2' => $this->lang->line('text_cavv_response_2'),
+			'3' => $this->lang->line('text_cavv_response_3'),
+			'4' => $this->lang->line('text_cavv_response_4'),
+			'5' => $this->lang->line('text_cavv_response_5'),
+			'6' => $this->lang->line('text_cavv_response_6'),
+			'7' => $this->lang->line('text_cavv_response_7'),
+			'8' => $this->lang->line('text_cavv_response_8'),
+			'9' => $this->lang->line('text_cavv_response_9'),
+			'A' => $this->lang->line('text_cavv_response_A'),
+			'B' => $this->lang->line('text_cavv_response_B')
+		);
     }
 
 	public function authorizeAndCapture($order_data = array()) {

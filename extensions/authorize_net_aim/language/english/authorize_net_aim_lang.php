@@ -35,6 +35,38 @@ $lang['label_card_cvc'] 	    = 'CV CODE';
 $lang['label_same_address'] 	= 'My billing address is same as my delivery address';
 
 $lang['text_tab_general'] 	    = 'General';
+$lang['text_avs_response_A'] = 'Address (Street) matches, ZIP does not';
+$lang['text_avs_response_B'] = 'Address information not provided for AVS check';
+$lang['text_avs_response_E'] = 'AVS error';
+$lang['text_avs_response_G'] = 'Non-U.S. Card Issuing Bank';
+$lang['text_avs_response_N'] = 'No Match on Address (Street) or ZIP';
+$lang['text_avs_response_P'] = 'AVS not applicable for this transaction';
+$lang['text_avs_response_R'] = 'Retry—System unavailable or timed out';
+$lang['text_avs_response_S'] = 'Service not supported by issuer';
+$lang['text_avs_response_U'] = 'Address information is unavailable';
+$lang['text_avs_response_W'] = 'Nine digit ZIP matches, Address (Street) does not';
+$lang['text_avs_response_X'] = 'Address (Street) and nine digit ZIP match';
+$lang['text_avs_response_Y'] = 'Address (Street) and five digit ZIP match';
+$lang['text_avs_response_Z'] = 'Five digit ZIP matches, Address (Street) does not';
+
+$lang['text_ccv_response_M'] = 'Match';
+$lang['text_ccv_response_N'] = 'No Match';
+$lang['text_ccv_response_P'] = 'Not Processed';
+$lang['text_ccv_response_S'] = 'Should have been present';
+$lang['text_ccv_response_U'] = 'Issuer unable to process request';
+
+$lang['text_cavv_response_0'] = 'Card not validated because erroneous data was submitted';
+$lang['text_cavv_response_1'] = 'Card failed validation';
+$lang['text_cavv_response_2'] = 'Card passed validation';
+$lang['text_cavv_response_3'] = 'Card validation could not be performed; issuer attempt incomplete';
+$lang['text_cavv_response_4'] = 'Card validation could not be performed; issuer system error';
+$lang['text_cavv_response_5'] = 'Reserved for future use';
+$lang['text_cavv_response_6'] = 'Reserved for future use';
+$lang['text_cavv_response_7'] = 'Card attempt—failed validation—issuer available (U.S.-issued card/non-U.S acquirer)';
+$lang['text_cavv_response_8'] = 'Card attempt—passed validation—issuer available (U.S.-issued card/non-U.S. acquirer)';
+$lang['text_cavv_response_9'] = 'Card attempt—failed validation—issuer unavailable (U.S.-issued card/non-U.S. acquirer)';
+$lang['text_cavv_response_A'] = 'Card attempt—passed validation—issuer unavailable (U.S.-issued card/non-U.S. acquirer)';
+$lang['text_cavv_response_B'] = 'Card passed validation, information only, no liability shift';
 
 $lang['help_order_total'] 		= 'The total amount the order must reach before this payment gateway becomes active';
 $lang['help_order_status'] 	    = 'Default order status when Authorize.Net (AIM) is the selected payment method';
