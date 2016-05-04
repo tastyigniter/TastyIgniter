@@ -78,6 +78,8 @@ class Feed_parser {
 			$rawFeed = @file_get_contents($this->feed_uri);
 		}
 
+		if (!class_exists('SimpleXmlElement', FALSE)) return FALSE;
+
 		try {
 			$xml = new SimpleXmlElement($rawFeed);
 		} catch (Exception $e) {
