@@ -29,13 +29,12 @@ class Location {
 	private $location_telephone;
 	private $local_options;
 	private $local_info;
+	private $geocode;
 	private $search_query;
-	private $user_coords;
 	private $area_id;
 	private $order_type;
 	private $polygons = array();
 	private $delivery_areas = array();
-	private $delivery_area = array();
 	private $working_hours = array();
     private $working_hour = array();
 	public $dateFormat = "%d/%m/%Y";
@@ -67,7 +66,7 @@ class Location {
 		}
 
 		$is_loaded = TRUE;
-		foreach (array('location_id', 'order_type', 'search_query', 'area_id') as $item) {
+		foreach (array('location_id', 'order_type', 'geocode', 'area_id') as $item) {
 			if (isset($local_info[$item]) AND $this->$item !== $local_info[$item]) {
 				$is_loaded = FALSE;
 				break;
@@ -77,9 +76,7 @@ class Location {
 		if (!$is_loaded) {
 			if (!isset($local_info['location_id']) OR empty($this->locations[$local_info['location_id']])) {
 				$this->clearLocal();
-			}
-
-			if (is_array($this->locations[$local_info['location_id']])) {
+			} else if (is_array($this->locations[$local_info['location_id']])) {
 				$location = $this->locations[$local_info['location_id']];
 
 				$this->location_id = $location['location_id'];
@@ -88,7 +85,8 @@ class Location {
 				$this->location_telephone = $location['location_telephone'];
 				$this->local_options = (!empty($location['options'])) ? unserialize($location['options']) : array();
 				$this->local_info = $location;
-				$this->search_query = (empty($local_info['search_query'])) ? '' : $local_info['search_query'];
+				$this->geocode = (isset($local_info['geocode']) AND is_array($local_info['geocode'])) ? $local_info['geocode'] : array();
+				$this->search_query = (empty($this->geocode['search_query'])) ? '' : $this->geocode['search_query'];
 				$this->area_id = (empty($local_info['area_id'])) ? '' : $local_info['area_id'];
 				$this->order_type = (isset($local_info['order_type'])) ? $local_info['order_type'] : '1';
 
@@ -99,7 +97,8 @@ class Location {
 				$this->setWorkingHours();
 				$this->setDeliveryAreas();
 
-				$this->delivery_area = $this->checkDeliveryArea();
+				$delivery_area = $this->checkDeliveryCoverage();
+				$this->setDeliveryArea($delivery_area);
 			}
 		}
 	}
@@ -266,12 +265,50 @@ class Location {
 		return $this->delivery_areas;
 	}
 
-	public function deliveryCharge() {
-    	return (!empty($this->delivery_areas[$this->area_id]['charge'])) ? $this->delivery_areas[$this->area_id]['charge'] : 0;
+	public function deliveryCharge($cart_total = '0') {
+		return $this->deliveryCondition('amounts', $cart_total);
 	}
 
-	public function minimumOrder() {
-    	return (!empty($this->delivery_areas[$this->area_id]['min_amount'])) ? $this->delivery_areas[$this->area_id]['min_amount'] : 0;
+	public function minimumOrder($cart_total = '0') {
+		return $this->deliveryCondition('totals', $cart_total);
+	}
+
+	public function deliveryCondition($sort_by = 'amounts', $cart_total = FALSE) {
+		$area_id = isset($this->delivery_areas[$this->area_id]) ? $this->area_id : key($this->delivery_areas);
+
+		$condition = array();
+		if (isset($this->delivery_areas[$area_id]['charge'], $this->delivery_areas[$area_id]['charge'][$sort_by])) {
+			$charge = $this->delivery_areas[$area_id]['charge'];
+
+			asort($charge[$sort_by]);
+
+			// if a condition on all orders exist, use it
+			if ($key = array_search('all', $charge['conditions'])) {
+				$charge[$sort_by] = array($key => $charge[$sort_by][$key]);
+			}
+
+			$count = 1;
+			foreach ($charge[$sort_by] as $key => $amt) {
+				$con = isset($charge['conditions'][$key]) ? $charge['conditions'][$key] : 'above';
+				$total = isset($charge['totals'][$key]) ? $charge['totals'][$key] : 0;
+
+				if ($cart_total === FALSE) {
+					$condition[] = isset($this->delivery_areas[$area_id]['condition'][$key]) ? $this->delivery_areas[$area_id]['condition'][$key] : '';
+				} else if (empty($cart_total) OR ($con === 'above' AND $cart_total >= $total)) {
+					return $charge[$sort_by][$key];
+				} else if ($sort_by == 'totals' AND $count == count($charge[$sort_by])) {
+					return min($charge[$sort_by]);
+				}
+
+				if ($count === count($charge[$sort_by]) AND min($charge['totals']) > 0) {
+					$condition[] = "0|below|".min($charge['totals']);
+				}
+
+				$count++;
+			}
+		}
+
+		return ($cart_total === FALSE) ? $condition : NULL;
 	}
 
 	public function getReservationInterval() {
@@ -441,7 +478,7 @@ class Location {
 		if (is_numeric($order_type)) {
 			$local_info = $this->CI->session->userdata('local_info');
 
-			$local_info['order_type'] = $this->order_type = $order_type;
+			$this->order_type = $local_info['order_type'] = $order_type;
 			$this->CI->session->set_userdata('local_info', $local_info);
 		}
 	}
@@ -449,11 +486,11 @@ class Location {
 	public function setDeliveryArea($area = array()) {
 		$area = is_numeric($area) ? array('location_id' => $this->location_id, 'area_id' => $area) : $area;
 
-		if ($area !== 'outside' AND count($area) == 2 AND $area['area_id'] !== $this->area_id) {
+		if ($area !== 'outside' AND count($area) == 2) {
 			$local_info = $this->CI->session->userdata('local_info');
 
 			$local_info['location_id'] = $area['location_id'];
-			$local_info['area_id'] = $this->area_id =$area['area_id'];
+			$local_info['area_id'] = $this->area_id = $area['area_id'];
 
 			$this->CI->session->set_userdata('local_info', $local_info);
 		}
@@ -468,7 +505,12 @@ class Location {
 
 		$delivery_area = $this->checkDeliveryArea($output);
 		if ($delivery_area !== 'outside' AND count($delivery_area) == 2) {
-			$local_info = array('location_id' => $delivery_area['location_id'], 'area_id' => $delivery_area['area_id'], 'search_query' => $output['search_query']);
+			$local_info = $this->CI->session->userdata('local_info');
+
+			$local_info['location_id'] = $delivery_area['location_id'];
+			$local_info['area_id'] = $delivery_area['area_id'];
+			$local_info['geocode'] = $output;
+
 			$this->CI->session->set_userdata('local_info', $local_info);
 
 			$this->initialize($local_info);
@@ -501,7 +543,7 @@ class Location {
 	}
 
 	public function checkMinimumOrder($cart_total) {
-		return ($cart_total >= $this->minimumOrder());
+		return ($cart_total >= $this->minimumOrder($cart_total));
 	}
 
 	public function checkDistance() {
@@ -683,8 +725,9 @@ class Location {
 			return "NO_SEARCH_QUERY";
 		}
 
-		if (isset($this->user_coords['search_query']) AND $this->user_coords['search_query'] === $search_query) {
-			return $this->user_coords;
+		$local_info = empty($local_info) ? $this->CI->session->userdata('local_info') : $local_info;
+		if (isset($local_info['geocode']['search_query']) AND $local_info['geocode']['search_query'] === $search_query) {
+			return $local_info['geocode'];
 		}
 
 		$temp_query = $search_query;
@@ -716,13 +759,13 @@ class Location {
 
 		if ($output) {
             if ($output->status === 'OK') {														// create variable for geocode data status
-                $this->user_coords = array(
+                $this->geocode = array(
                     'search_query'	=> $search_query,
                     'lat' 			=> $output->results[0]->geometry->location->lat,
                     'lng' 			=> $output->results[0]->geometry->location->lng
                 );
 
-				return $this->user_coords;
+				return $this->geocode;
 		    }
 
             return "INVALID_SEARCH_QUERY";
@@ -815,14 +858,33 @@ class Location {
 	private function setDeliveryAreas() {
 		if (isset($this->local_options['delivery_areas']) AND is_array($this->local_options['delivery_areas'])) {
 			foreach ($this->local_options['delivery_areas'] as $area_id => $area) {
+
+				// backward compatible
+				if (isset($area['charge']) AND is_string($area['charge'])) {
+					$area['charge'] = array(1 => array(
+						'amount' => $area['charge'],
+						'condition' => isset($area['condition']) ? $area['condition'] : 'above',
+						'total' => (isset($area['min_amount'])) ? $area['min_amount'] : '0',
+					));
+				}
+
+				$charges = $condition = array();
+				foreach ($area['charge'] as $key => $charge) {
+					$charges['amounts'][$key] = $charge['amount'];
+					$charges['conditions'][$key] = $con = ($charge['condition'] === 'above' AND $charge['total'] <= 0) ? 'all' : $charge['condition'];
+					$charges['totals'][$key] = $charge['total'];
+
+					$condition[$key] = "{$charge['amount']}|{$con}|{$charge['total']}";
+				}
+
 				$this->delivery_areas[$area_id] = array(
 					'area_id'		=> $area_id,
 					'name'			=> $area['name'],
 					'type'			=> $area['type'],
 					'shape'			=> $area['shape'],
 					'circle'		=> $area['circle'],
-					'charge'		=> $area['charge'],
-					'min_amount'	=> $area['min_amount']
+					'charge'		=> $charges,
+					'condition'		=> $condition,
 				);
 			}
 		}
@@ -835,12 +897,12 @@ class Location {
 		$this->location_telephone = '';
 		$this->local_options = array();
 		$this->local_info = array();
+		$this->geocode = array();
 		$this->search_query = '';
 		$this->area_id = '';
 		$this->order_type = '';
 		$this->polygons = array();
 		$this->delivery_areas = array();
-		$this->delivery_area = array();
 		$this->working_hour = array();
 		$this->permalink = '';
 

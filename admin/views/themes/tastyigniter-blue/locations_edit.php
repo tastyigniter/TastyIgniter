@@ -593,10 +593,10 @@
 
 				<div id="delivery" class="tab-pane row wrap-none">
 					<?php if ($has_lat_lng) { ?>
-						<div class="col-md-8 wrap-none">
+						<div class="col-md-7 wrap-none">
 							<div id="map-holder" style="height:550px;"></div>
 						</div>
-						<div class="col-md-4 wrap-none">
+						<div class="col-md-5 wrap-none">
 							<div class="panel panel-default panel-delivery-areas border-left-3">
 								<div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_delivery_area'); ?></h3></div>
 								<div id="delivery-areas" class="panel-body">
@@ -621,40 +621,83 @@
 													<div class="form-group">
 														<div class="btn-group btn-group-switch area-types wrap-vertical" data-toggle="buttons">
 															<?php if ($area['type'] == 'circle') { ?>
-																<label class="btn btn-success active area-type-circle"><input type="radio" name="delivery_areas[<?php echo $panel_row; ?>][type]" value="circle" checked="checked"><?php echo lang('text_circle'); ?></label>
-																<label class="btn btn-success area-type-shape"><input type="radio" name="delivery_areas[<?php echo $panel_row; ?>][type]" value="shape"><?php echo lang('text_shape'); ?></label>
+																<label class="btn btn-default active area-type-circle"><input type="radio" name="delivery_areas[<?php echo $panel_row; ?>][type]" value="circle" checked="checked"><?php echo lang('text_circle'); ?></label>
+																<label class="btn btn-default area-type-shape"><input type="radio" name="delivery_areas[<?php echo $panel_row; ?>][type]" value="shape"><?php echo lang('text_shape'); ?></label>
 															<?php } else { ?>
-																<label class="btn btn-success area-type-circle"><input type="radio" name="delivery_areas[<?php echo $panel_row; ?>][type]" value="circle"><?php echo lang('text_circle'); ?></label>
-																<label class="btn btn-success active area-type-shape"><input type="radio" name="delivery_areas[<?php echo $panel_row; ?>][type]" value="shape" checked="checked"><?php echo lang('text_shape'); ?></label>
+																<label class="btn btn-default area-type-circle"><input type="radio" name="delivery_areas[<?php echo $panel_row; ?>][type]" value="circle"><?php echo lang('text_circle'); ?></label>
+																<label class="btn btn-default active area-type-shape"><input type="radio" name="delivery_areas[<?php echo $panel_row; ?>][type]" value="shape" checked="checked"><?php echo lang('text_shape'); ?></label>
 															<?php } ?>
 														</div>
 														<?php echo form_error('delivery_areas['.$panel_row.'][type]', '<span class="text-danger">', '</span>'); ?>
 													</div>
 													<div class="form-group">
-														<label for="" class="col-sm-5 control-label"><?php echo lang('label_area_name'); ?></label>
-														<div class="col-sm-7 wrap-none wrap-right">
+														<label for="" class="col-sm-4 control-label"><?php echo lang('label_area_name'); ?></label>
+														<div class="col-sm-8">
 															<input type="text" name="delivery_areas[<?php echo $panel_row; ?>][name]" id="" class="form-control" value="<?php echo $area['name']; ?>" />
 															<?php echo form_error('delivery_areas['.$panel_row.'][name]', '<span class="text-danger">', '</span>'); ?>
 														</div>
 													</div>
 													<div class="form-group">
-														<label for="" class="col-sm-5 control-label"><?php echo lang('label_area_charge'); ?></label>
-														<div class="col-sm-7 wrap-none wrap-right">
-															<div class="input-group">
-																<input type="text" name="delivery_areas[<?php echo $panel_row; ?>][charge]" id="" class="form-control" value="<?php echo $area['charge']; ?>" />
-																<span class="input-group-addon">.00</span>
+														<label for="" class="col-sm-12 control-label"><?php echo lang('label_delivery_condition'); ?>
+															<span class="help-block"><?php echo lang('help_delivery_condition'); ?></span>
+														</label>
+														<div class="col-sm-12">
+															<div class="table-responsive wrap-none">
+																<table class="table table-striped table-border table-sortable">
+																	<thead>
+																	<tr>
+																		<th class="action action-one"></th>
+																		<th><?php echo lang('label_area_charge'); ?></th>
+																		<th><?php echo lang('label_charge_condition'); ?></th>
+																		<th><?php echo lang('label_area_min_amount'); ?></th>
+																	</tr>
+																	</thead>
+																	<tbody>
+																	<?php $table_row = 1; ?>
+																	<?php if (is_array($area['charge'])) foreach ($area['charge'] as $key => $value) { ?>
+																		<tr id="panel-row-<?php echo $panel_row; ?>-table-row-<?php echo $table_row; ?>">
+																			<td class="action action-one handle">
+																				<a class="btn btn-danger btn-xs" onclick="confirm('<?php echo lang('alert_warning_confirm'); ?>') ? $(this).parent().parent().remove() : false;">
+																					<i class="fa fa-times-circle"></i>
+																				</a>
+																			</td>
+																			<td><input type="text" name="delivery_areas[<?php echo $panel_row; ?>][charge][<?php echo $table_row; ?>][amount]" class="form-control input-sm charge" value="<?php echo $value['amount']; ?>" /></td>
+																			<td><select name="delivery_areas[<?php echo $panel_row; ?>][charge][<?php echo $table_row; ?>][condition]" class="form-control input-sm">
+																					<?php foreach ($delivery_charge_conditions as $condition => $condition_text) { ?>
+																						<?php if ($condition == $value['condition']) { ?>
+																							<option value="<?php echo $condition; ?>" selected="selected"><?php echo $condition_text; ?></option>
+																						<?php } else { ?>
+																							<option value="<?php echo $condition; ?>"><?php echo $condition_text; ?></option>
+																						<?php } ?>
+																					<?php } ?>
+																				</select>
+																			</td>
+																			<td><input type="text" name="delivery_areas[<?php echo $panel_row; ?>][charge][<?php echo $table_row; ?>][total]" class="form-control input-sm total" value="<?php echo $value['total']; ?>" /></td>
+																		</tr>
+																		<?php if (form_error('delivery_areas['.$panel_row.'][charge]['.$table_row.'][amount]')
+																			OR form_error('delivery_areas['.$panel_row.'][charge]['.$table_row.'][condition]')
+																			OR form_error('delivery_areas['.$panel_row.'][charge]['.$table_row.'][total]')) { ?>
+																			<tr>
+																				<td colspan="4">
+																					<?php echo form_error('delivery_areas['.$panel_row.'][charge]['.$table_row.'][amount]', '<span class="text-danger">', '</span>'); ?>
+																					<?php echo form_error('delivery_areas['.$panel_row.'][charge]['.$table_row.'][condition]', '<span class="text-danger">', '</span>'); ?>
+																					<?php echo form_error('delivery_areas['.$panel_row.'][charge]['.$table_row.'][total]', '<span class="text-danger">', '</span>'); ?>
+																				</td>
+																			</tr>
+																		<?php } ?>
+																		<?php $table_row++; ?>
+																	<?php } ?>
+																	</tbody>
+																	<tfoot>
+																	<tr id="tfoot">
+																		<td class="action action-one text-center"><a class="btn btn-primary btn-xs btn-add-condition" data-panel-row="<?php echo $panel_row; ?>" data-table-row="<?php echo $table_row; ?>"><i class="fa fa-plus"></i></a></td>
+																		<td></td>
+																		<td></td>
+																		<td></td>
+																	</tr>
+																	</tfoot>
+																</table>
 															</div>
-															<?php echo form_error('delivery_areas['.$panel_row.'][charge]', '<span class="text-danger">', '</span>'); ?>
-														</div>
-													</div>
-													<div class="form-group">
-														<label for="" class="col-sm-5 control-label"><?php echo lang('label_area_min_amount'); ?></label>
-														<div class="col-sm-7 wrap-none wrap-right">
-															<div class="input-group">
-																<input type="text" name="delivery_areas[<?php echo $panel_row; ?>][min_amount]" id="" class="form-control" value="<?php echo $area['min_amount']; ?>" />
-																<span class="input-group-addon"><?php echo lang('text_leading_zeros'); ?></span>
-															</div>
-															<?php echo form_error('delivery_areas['.$panel_row.'][min_amount]', '<span class="text-danger">', '</span>'); ?>
 														</div>
 													</div>
 												</div>
@@ -766,6 +809,10 @@
 </div>
 <script type="text/javascript"><!--
 $(document).ready(function() {
+	$('#delivery-areas select.form-control').select2({
+		minimumResultsForSearch: Infinity
+	});
+
 	$('.timepicker').timepicker({
 		defaultTime: '11:45 AM'
 	});
@@ -822,6 +869,27 @@ $(document).ready(function() {
 			$('#future-orders-days').slideDown('fast');
 		}
 	});
+
+	$(document).on('click', '.btn-add-condition', function() {
+		var panelRow = $(this).attr('data-panel-row');
+		var tableRow = $(this).attr('data-table-row');
+
+		tableRow++;
+		addDeliveryCondition(panelRow, tableRow);
+
+		$(this).attr('data-table-row', tableRow);
+	});
+
+	$('#delivery-areas select.form-control').on('change', function() {
+		$(this).parent().parent().find('input.total').attr('disabled', false);
+
+		if (this.value == 'all') {
+			$(this).parent().parent().find('input.total').val('0');
+			$(this).parent().parent().find('input.total').attr('disabled', true);
+		}
+	});
+
+	$('#delivery-areas select.form-control').trigger('change');
 });
 //--></script>
 <script type="text/javascript"><!--
@@ -1240,6 +1308,7 @@ function createDeliveryArea(row) {
 
 function addDeliveryArea() {
 	deliveryArea = createDeliveryArea(panel_row);
+	var table_row = '1';
 
 	html  = '<div id="delivery-area' + panel_row + '" class="panel panel-default">';
 	html += '	<input type="hidden" name="delivery_areas[' + panel_row + '][shape]" value="" />';
@@ -1266,21 +1335,52 @@ function addDeliveryArea() {
 	html += '			</div>';
 	html += '		</div>';
 	html += '		<div class="form-group">';
-	html += '			<label for="" class="col-sm-5 control-label"><?php echo lang('label_area_charge'); ?></label>';
-	html += '			<div class="col-sm-7 wrap-none wrap-right">';
-		html += '			<div class="input-group">';
-		html += '				<input type="text" name="delivery_areas[' + panel_row + '][charge]" id="" class="form-control" value="" />';
-		html += '				<span class="input-group-addon"><?php echo lang('text_leading_zeros'); ?></span>';
-		html += '			</div>';
-	html += '			</div>';
-	html += '		</div>';
-	html += '		<div class="form-group">';
-	html += '			<label for="" class="col-sm-5 control-label"><?php echo lang('label_area_min_amount'); ?></label>';
-	html += '			<div class="col-sm-7 wrap-none wrap-right">';
-		html += '			<div class="input-group">';
-		html += '				<input type="text" name="delivery_areas[' + panel_row + '][min_amount]" id="" class="form-control" value="" />';
-		html += '				<span class="input-group-addon"><?php echo lang('text_leading_zeros'); ?></span>';
-		html += '			</div>';
+	html += '			<label for="" class="col-sm-12 control-label"><?php echo lang('label_delivery_condition'); ?>';
+	html += '				<span class="help-block"><?php echo lang('help_delivery_condition'); ?></span>';
+	html += '			</label>';
+	html += '			<div class="col-sm-12">';
+	html += '				<div class="table-responsive wrap-none">';
+	html += '					<table class="table table-striped table-border table-sortable">';
+	html += '						<thead>';
+	html += '						<tr>';
+	html += '							<th class="action action-one"></th>';
+	html += '							<th><?php echo lang('label_area_charge'); ?></th>';
+	html += '							<th><?php echo lang('label_charge_condition'); ?></th>';
+	html += '							<th><?php echo lang('label_area_min_amount'); ?></th>';
+	html += '						</tr>';
+	html += '						</thead>';
+	html += '						<tbody>';
+	html += '						<tr id="panel-row-' + panel_row + '-table-row-' + table_row + '">';
+	html += '							<td class="action action-one handle">';
+	html += '								<a class="btn btn-danger btn-xs" onclick="confirm(\'<?php echo lang('alert_warning_confirm'); ?>\') ? $(this).parent().parent().remove() : false;">';
+	html += '									<i class="fa fa-times-circle"></i>';
+	html += '								</a>';
+	html += '							</td>';
+	html += '							<td>';
+	html += '								<input type="text" name="delivery_areas[' + panel_row + '][charge][' + table_row + '][amount]" class="form-control input-sm charge" value="0" />';
+	html += '							</td>';
+	html += '							<td>';
+	html += '								<select name="delivery_areas[' + panel_row + '][charge][' + table_row + '][condition]" class="form-control input-sm">';
+												<?php foreach ($delivery_charge_conditions as $condition => $condition_text) { ?>
+	html += '										<option value="<?php echo $condition; ?>"><?php echo $condition_text; ?></option>';
+												<?php } ?>
+	html += '								</select>';
+	html += '							</td>';
+	html += '							<td>';
+	html += '								<input type="text" name="delivery_areas[' + panel_row + '][charge][' + table_row + '][total]" class="form-control input-sm total" value="0" />';
+	html += '							</td>';
+	html += '						</tr>';
+	html += '						</tbody>';
+	html += '						<tfoot>';
+	html += '						<tr id="tfoot">';
+	html += '							<td class="action action-one text-center"><a class="btn btn-primary btn-xs btn-add-condition" data-panel-row="' + panel_row + '" data-table-row="' + table_row + '"><i class="fa fa-plus"></i></a></td>';
+	html += '							<td></td>';
+	html += '							<td></td>';
+	html += '							<td></td>';
+	html += '						</tr>';
+	html += '						</tfoot>';
+	html += '					</table>';
+	html += '				</div>';
 	html += '			</div>';
 	html += '		</div>';
 	html += '	</div>';
@@ -1295,8 +1395,41 @@ function addDeliveryArea() {
 
 	$('#delivery-areas').append(html);
 
+	$('#panel-row-' + panel_row + '-table-row-' + table_row + ' select.form-control').select2({
+		minimumResultsForSearch: Infinity
+	});
+
 	panel_row++;
 	setDeliveryAreaEvents(deliveryArea);
+}
+
+function addDeliveryCondition(panelRow, tableRow) {
+	html = '<tr id="panel-row-' + panelRow + '-table-row-' + tableRow + '">';
+	html += '	<td class="action action-one handle">';
+	html += '		<a class="btn btn-danger btn-xs" onclick="confirm(\'<?php echo lang('alert_warning_confirm'); ?>\') ? $(this).parent().parent().remove() : false;">';
+	html += '			<i class="fa fa-times-circle"></i>';
+	html += '		</a>';
+	html += '	</td>';
+	html += '	<td>';
+	html += '		<input type="text" name="delivery_areas[' + panelRow + '][charge][' + tableRow + '][amount]" class="form-control input-sm charge" value="0" />';
+	html += '	</td>';
+	html += '	<td>';
+	html += '		<select name="delivery_areas[' + panelRow + '][charge][' + tableRow + '][condition]" class="form-control input-sm">';
+	<?php foreach ($delivery_charge_conditions as $condition => $condition_text) { ?>
+	html += '				<option value="<?php echo $condition; ?>"><?php echo $condition_text; ?></option>';
+	<?php } ?>
+	html += '		</select>';
+	html += '	</td>';
+	html += '	<td>';
+	html += '		<input type="text" name="delivery_areas[' + panelRow + '][charge][' + tableRow + '][total]" class="form-control input-sm total" value="0" />';
+	html += '	</td>';
+	html += '</tr>';
+
+	$('#delivery-area' + panelRow + ' .table-sortable tbody').append(html);
+
+	$('#panel-row-' + panelRow + '-table-row-' + tableRow + ' select.form-control').select2({
+		minimumResultsForSearch: Infinity
+	});
 }
 //]]></script>
 <?php } ?>

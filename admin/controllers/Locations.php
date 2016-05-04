@@ -394,6 +394,10 @@ class Locations extends Admin_Controller {
 
 		$area_colors = array('#F16745', '#FFC65D', '#7BC8A4', '#4CC3D9', '#93648D', '#404040', '#F16745', '#FFC65D', '#7BC8A4', '#4CC3D9', '#93648D', '#404040', '#F16745', '#FFC65D', '#7BC8A4', '#4CC3D9', '#93648D', '#404040', '#F16745', '#FFC65D');
 		$data['area_colors'] = json_encode($area_colors);
+		$data['delivery_charge_conditions'] = array(
+			'all'   => $this->lang->line('text_all_orders'),
+			'above' => $this->lang->line('text_above_order_total'),
+		);
 
 		if ($this->input->post('delivery_areas')) {
 			$delivery_areas = $this->input->post('delivery_areas');
@@ -405,6 +409,16 @@ class Locations extends Admin_Controller {
 
 		$data['delivery_areas'] = array();
 		foreach ($delivery_areas as $key => $area) {
+
+			// backward compatibility
+			if (isset($area['charge']) AND is_string($area['charge'])) {
+				$area['charge'] = array(array(
+					'amount' => $area['charge'],
+					'condition' => 'above',
+					'total' => (isset($area['min_amount'])) ? $area['min_amount'] : '',
+				));
+			}
+
 			$data['delivery_areas'][] = array(
 				'shape'			=> (isset($area['shape'])) ? htmlspecialchars($area['shape']) : '',
 				'circle'		=> (isset($area['circle'])) ? htmlspecialchars($area['circle']) : '',
@@ -412,8 +426,7 @@ class Locations extends Admin_Controller {
 				'name'			=> (isset($area['name'])) ? $area['name'] : '',
 				'type'			=> (isset($area['type'])) ? $area['type'] : 'shape',
 				'color'			=> (isset($area_colors[$key-1])) ? $area_colors[$key-1] : '#F16745',
-				'charge'		=> (isset($area['charge'])) ? str_replace('.00', '', $area['charge']) : '',
-				'min_amount'	=> (isset($area['min_amount'])) ? str_replace('.00', '', $area['min_amount']) : ''
+				'charge'		=> (empty($area['charge'])) ? array(array('amount' => '', 'condition' => '', 'total' => '')) : $area['charge'],
 			);
 		}
 
@@ -579,13 +592,19 @@ class Locations extends Admin_Controller {
 
 		if ($this->input->post('delivery_areas')) {
 			foreach ($this->input->post('delivery_areas') as $key => $value) {
-				$this->form_validation->set_rules('delivery_areas['.$key.'][shape]', 'lang:label_area_shape', 'trim|required');
-				$this->form_validation->set_rules('delivery_areas['.$key.'][circle]', 'lang:label_area_circle', 'trim|required');
-				$this->form_validation->set_rules('delivery_areas['.$key.'][vertices]', 'lang:label_area_vertices', 'trim|required');
-				$this->form_validation->set_rules('delivery_areas['.$key.'][type]', 'lang:label_area_type', 'xss_clean|trim|required');
-				$this->form_validation->set_rules('delivery_areas['.$key.'][name]', 'lang:label_area_name', 'xss_clean|trim|required');
-				$this->form_validation->set_rules('delivery_areas['.$key.'][charge]', 'lang:label_area_charge', 'xss_clean|trim|required|numeric');
-				$this->form_validation->set_rules('delivery_areas['.$key.'][min_amount]', 'lang:label_area_min_amount', 'xss_clean|trim|required|numeric');
+				$this->form_validation->set_rules('delivery_areas['.$key.'][shape]', '['.$key.'] '.$this->lang->line('label_area_shape'), 'trim|required');
+				$this->form_validation->set_rules('delivery_areas['.$key.'][circle]', '['.$key.'] '.$this->lang->line('label_area_circle'), 'trim|required');
+				$this->form_validation->set_rules('delivery_areas['.$key.'][vertices]', '['.$key.'] '.$this->lang->line('label_area_vertices'), 'trim|required');
+				$this->form_validation->set_rules('delivery_areas['.$key.'][type]', '['.$key.'] '.$this->lang->line('label_area_type'), 'xss_clean|trim|required');
+				$this->form_validation->set_rules('delivery_areas['.$key.'][name]', '['.$key.'] '.$this->lang->line('label_area_name'), 'xss_clean|trim|required');
+
+				if ($this->input->post('delivery_areas['.$key.'][charge]')) {
+					foreach ($this->input->post('delivery_areas['.$key.'][charge]') as $k => $v) {
+						$this->form_validation->set_rules('delivery_areas[' . $key . '][charge][' . $k . '][amount]', '['.$key.'] '.$this->lang->line('label_area_charge'), 'xss_clean|trim|required|numeric');
+						$this->form_validation->set_rules('delivery_areas[' . $key . '][charge][' . $k . '][condition]', '['.$key.'] '.$this->lang->line('label_charge_condition'), 'xss_clean|trim|required|alpha_dash');
+						$this->form_validation->set_rules('delivery_areas[' . $key . '][charge][' . $k . '][total]', '['.$key.'] '.$this->lang->line('label_area_min_amount'), 'xss_clean|trim|required|numeric');
+					}
+				}
 			}
 		}
 
@@ -607,18 +626,6 @@ class Locations extends Admin_Controller {
 		} else {
 			return FALSE;
 		}
-	}
-
-	public function _less_time($open, $close) {
-		$unix_open = strtotime($open);
-		$unix_close = strtotime($close);
-
-		if ($unix_open >= $unix_close) {
-			$this->form_validation->set_message('_less_time', $this->lang->line('error_less_time'));
-			return FALSE;
-		}
-
-		return TRUE;
 	}
 }
 

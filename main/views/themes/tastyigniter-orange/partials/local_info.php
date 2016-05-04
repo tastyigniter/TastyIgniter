@@ -109,20 +109,20 @@
 					<div class="panel-body">
 						<div class="list-group">
 							<?php if (!empty($delivery_areas)) { ?>
-								<div class="list-group-item row">
-									<div class="col-xs-3"><b><?php echo lang('column_area_name'); ?></b></div>
-									<div class="col-xs-5 text-center wrap-none"><b><?php echo lang('column_area_charge'); ?></b></div>
-									<div class="col-xs-4"><b><?php echo lang('column_area_min_total'); ?></b></div>
+								<div class="list-group-item">
+									<div class="row">
+										<div class="col-xs-4"><b><?php echo lang('column_area_name'); ?></b></div>
+										<div class="col-xs-8 wrap-none"><b><?php echo lang('column_area_charge'); ?></b></div>
+									</div>
 								</div>
 								<?php foreach($delivery_areas as $key => $area) { ?>
 									<div class="list-group-item">
 										<div class="row">
-											<div class="col-xs-5">
+											<div class="col-xs-4">
 												<?php echo $area['name']; ?>
 												<span class="badge" style="background-color: <?php echo $area['color']; ?>">&nbsp;&nbsp;</span>
 											</div>
-											<div class="col-xs-3 wrap-none"><?php echo $area['charge']; ?></div>
-											<div class="col-xs-4"><?php echo $area['min_amount']; ?></div>
+											<div class="col-xs-8 wrap-none"><?php echo $area['condition']; ?></div>
 										</div>
 									</div>
 								<?php } ?>

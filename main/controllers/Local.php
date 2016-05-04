@@ -128,18 +128,48 @@ class Local extends Main_Controller {
 	    $area_colors = array('#F16745', '#FFC65D', '#7BC8A4', '#4CC3D9', '#93648D', '#404040', '#F16745', '#FFC65D', '#7BC8A4', '#4CC3D9', '#93648D', '#404040', '#F16745', '#FFC65D', '#7BC8A4', '#4CC3D9', '#93648D', '#404040', '#F16745', '#FFC65D');
 	    $data['area_colors'] = $area_colors;
 
-	    $data['delivery_areas'] = array();
+		$conditions = array(
+			'all'   => $this->lang->line('text_delivery_all_orders'),
+			'above' => $this->lang->line('text_delivery_above_total'),
+			'below' => $this->lang->line('text_delivery_below_total'),
+		);
+
+		$data['delivery_areas'] = array();
         $delivery_areas = $this->location->deliveryAreas();
         foreach ($delivery_areas as $area_id => $area) {
-            $data['delivery_areas'][] = array(
+			if (isset($area['charge']) AND is_string($area['charge'])) {
+				$area['charge'] = array(array(
+					'amount' => $area['charge'],
+					'condition' => 'above',
+					'total' => (isset($area['min_amount'])) ? $area['min_amount'] : '0',
+				));
+			}
+
+			$text_condition = '';
+			foreach ($area['condition'] as $condition) {
+				$condition = explode('|', $condition);
+
+				$delivery = (isset($condition[0]) AND $condition[0] > 0) ? $this->currency->format($condition[0]) : $this->lang->line('text_free_delivery');
+				$con = (isset($condition[1])) ? $condition[1] : 'above';
+				$total = (isset($condition[2]) AND $condition[2] > 0) ? $this->currency->format($condition[2]) : $this->lang->line('text_no_min_total');
+
+				if ($con === 'all') {
+					$text_condition .= sprintf($conditions['all'], $delivery);
+				} else if ($con === 'above') {
+					$text_condition .= sprintf($conditions[$con], $delivery, $total) . ', ';
+				} else if ($con === 'below') {
+					$text_condition .= sprintf($conditions[$con], $total) . ', ';
+                }
+			}
+
+			$data['delivery_areas'][] = array(
                 'area_id'       => $area['area_id'],
                 'name'          => $area['name'],
                 'type'			=> $area['type'],
                 'color'			=> $area_colors[(int) $area_id - 1],
                 'shape'			=> $area['shape'],
                 'circle'		=> $area['circle'],
-                'charge'        => ($area['charge'] > 0) ? $this->currency->format($area['charge']) : $this->lang->line('text_free_delivery'),
-                'min_amount'    => ($area['min_amount'] > 0) ? $this->currency->format($area['min_amount']) : $this->currency->format('0.00')
+                'condition'     => trim($text_condition, ', '),
             );
         }
 
@@ -233,6 +263,7 @@ class Local extends Main_Controller {
     public function all() {
 		$this->load->library('country');
 		$this->load->library('pagination');
+		$this->load->library('cart'); 															// load the cart library
 		$this->load->model('Image_tool_model');
 
 		$url = '?';
@@ -274,7 +305,7 @@ class Local extends Main_Controller {
 		$this->template->setTitle($this->lang->line('text_heading'));
 		$this->template->setHeading($this->lang->line('text_heading'));
 
-	    $review_totals = $this->Reviews_model->getTotalsbyId();                                    // retrieve all customer reviews from getMainList method in Reviews model
+		$review_totals = $this->Reviews_model->getTotalsbyId();                                    // retrieve all customer reviews from getMainList method in Reviews model
 
 		$data['locations'] = array();
 		$locations = $this->Locations_model->getList($filter);
@@ -318,8 +349,8 @@ class Local extends Main_Controller {
 					'collection_time'   => $collection_time,
 					'opening_time'      => $this->location->openingTime(),
 					'closing_time'      => $this->location->closingTime(),
-					'min_total'         => $this->location->minimumOrder(),
-					'delivery_charge'   => $this->location->deliveryCharge(),
+					'min_total'         => $this->location->minimumOrder($this->cart->total()),
+					'delivery_charge'   => $this->location->deliveryCharge($this->cart->total()),
 					'has_delivery'      => $this->location->hasDelivery(),
 					'has_collection'    => $this->location->hasCollection(),
 					'last_order_time'   => $this->location->lastOrderTime(),

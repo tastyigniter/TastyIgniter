@@ -49,6 +49,9 @@ class Local_module extends Main_Controller {
 
         $data['rsegment'] = $rsegment = ($this->uri->rsegment(1) === 'local_module' AND !empty($this->referrer_uri)) ? $this->referrer_uri : $this->uri->rsegment(1);
 
+        $this->load->library('cart'); 															// load the cart library
+        $cart_total = $this->cart->total();
+
         $data['info_url'] 				= site_url('local');
         $data['local_info'] 			= $this->location->local(); 										// retrieve local location data
         $data['location_id'] 			= $this->location->getId(); 										// retrieve local location data
@@ -63,7 +66,7 @@ class Local_module extends Main_Controller {
         $data['opening_time']		 	= $this->location->workingTime('opening', 'open');
         $data['closing_time'] 			= $this->location->workingTime('opening', 'close');
 		$data['order_type']             = $this->location->orderType();
-        $data['delivery_charge']        = $this->location->deliveryCharge();
+        $data['delivery_charge']        = $this->location->deliveryCharge($cart_total);
         $data['delivery_coverage']      = $this->location->checkDeliveryCoverage();
         $data['search_query']           = $this->location->searchQuery();
         $data['has_search_query']       = $this->location->hasSearchQuery();
@@ -96,14 +99,47 @@ class Local_module extends Main_Controller {
             $data['collection_time'] = $this->location->workingTime('collection', 'open');
         }
 
-        if ($this->location->deliveryCharge() > 0) {
-            $data['text_delivery_charge'] = sprintf($this->lang->line('text_delivery_charge'), $this->currency->format($this->location->deliveryCharge()));
+        $conditions = array(
+            'all'   => $this->lang->line('text_condition_all_orders'),
+            'above' => $this->lang->line('text_condition_above_total'),
+            'below' => $this->lang->line('text_condition_below_total'),
+        );
+
+        $count = 1;
+        $data['text_delivery_condition'] = '';
+        $delivery_condition = $this->location->deliveryCondition();
+        foreach ($delivery_condition as $condition) {
+            $condition = explode('|', $condition);
+
+            $delivery = (isset($condition[0]) AND $condition[0] > 0) ? $this->currency->format($condition[0]) : $this->lang->line('text_free_delivery');
+            $con = (isset($condition[1])) ? $condition[1] : 'above';
+            $total = (isset($condition[2]) AND $condition[2] > 0) ? $this->currency->format($condition[2]) : $this->lang->line('text_no_min_total');
+
+            if ($count === 1 AND isset($condition[0]) AND $condition[0] > 0) {
+                $data['text_delivery_condition'] .= sprintf($this->lang->line('text_delivery_charge'), '');
+            }
+
+            if ($con === 'all') {
+                $data['text_delivery_condition'] .= sprintf($conditions['all'], $delivery);
+            } else if ($con === 'above') {
+                $data['text_delivery_condition'] .= sprintf($conditions[$con], $delivery, $total) . ', ';
+            } else if ($con === 'below') {
+                $data['text_delivery_condition'] .= sprintf($conditions[$con], $total) . ', ';
+            }
+
+            $count++;
+        }
+
+        $data['text_delivery_condition'] = trim($data['text_delivery_condition'], ', ');
+
+        if ($this->location->deliveryCharge($cart_total) > 0) {
+            $data['text_delivery_charge'] = sprintf($this->lang->line('text_delivery_charge'), $this->currency->format($this->location->deliveryCharge($cart_total)));
         } else {
             $data['text_delivery_charge'] = $this->lang->line('text_free_delivery');
         }
 
-		if ($this->location->minimumOrder() > 0) {
-            $data['min_total'] = $this->location->minimumOrder();
+		if ($this->location->minimumOrder($cart_total) > 0) {
+            $data['min_total'] = $this->location->minimumOrder($cart_total);
         } else {
             $data['min_total'] = '0.00';
         }
@@ -141,9 +177,6 @@ class Local_module extends Main_Controller {
 
         $redirect = '';
         if (!isset($json['error'])) {
-            $order_type = (is_numeric($this->input->post('order_type'))) ? $this->input->post('order_type') : '1';
-            $this->location->setOrderType($order_type);
-
             $redirect = $json['redirect'] = site_url('local?location_id='.$this->location->getId());
         }
 

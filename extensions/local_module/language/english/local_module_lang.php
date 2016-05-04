@@ -32,6 +32,10 @@ $lang['text_at'] 		                    = 'at ';
 $lang['text_starts'] 		                = '<span class="text-danger"> starts %s</span>';
 $lang['text_in_minutes'] 			        = '<span class="text-success">in %s min</span>';
 $lang['text_no_search_query'] 		        = '<span class="text-muted">Please type in a postcode/address to check if we can deliver to you.</span>';
+$lang['text_no_min_total'] 		            = 'No Min. Order Amount';
+$lang['text_condition_all_orders'] 		    = '%s on all orders';
+$lang['text_condition_above_total'] 		= '%s above %s';
+$lang['text_condition_below_total'] 		= 'not available below %s ';
 
 $lang['column_language'] 		            = 'Language';
 $lang['column_replace'] 		            = 'Replace with';

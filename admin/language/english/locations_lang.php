@@ -37,6 +37,9 @@ $lang['text_asap']                      = 'ASAP';
 $lang['text_delivery']                  = 'Delivery';
 $lang['text_collection']                = 'Pick-up';
 $lang['text_days']                      = 'days';
+$lang['text_all_orders']                = 'on all orders';
+$lang['text_above_order_total']         = 'on order total above';
+$lang['text_below_order_total']         = 'on order total below';
 
 $lang['button_gallery_add_image'] 	    = 'Select';
 
@@ -97,8 +100,9 @@ $lang['label_area_circle'] 		        = 'Area Circle';
 $lang['label_area_vertices'] 		    = 'Area Vertices';
 $lang['label_area_type'] 		        = 'Area Type';
 $lang['label_area_name'] 		        = 'Area Name';
-$lang['label_area_charge'] 		        = 'Area Charge';
-$lang['label_area_min_amount'] 		    = 'Area Min Amount';
+$lang['label_area_charge'] 		        = 'Charge';
+$lang['label_charge_condition'] 	    = 'Condition';
+$lang['label_area_min_amount'] 		    = 'Total';
 $lang['label_gallery_title'] 		    = 'Title';
 $lang['label_gallery_description'] 		= 'Description';
 $lang['label_gallery_add_image'] 	    = 'Add Image';
@@ -106,8 +110,9 @@ $lang['label_gallery_image_thumbnail']  = 'Thumbnail';
 $lang['label_gallery_image_name'] 	    = 'Filename';
 $lang['label_gallery_image_alt'] 	    = 'Alt Text';
 $lang['label_gallery_image_status']     = 'Status';
+$lang['label_delivery_condition'] 		= 'Delivery Condition';
 
-$lang['error_less_time'] 		        = 'The %s must be less than Close hour.';
+$lang['error_no_zero_total'] 		    = 'The %s can not be a value zero on conditions other than \'on all orders\'.';
 $lang['alert_delivery_area'] 		    = 'Delivery area map will be visible after location has been added.';
 $lang['alert_set_default'] 		        = 'Location set as default';
 
@@ -121,6 +126,7 @@ $lang['help_future_order_days']         = 'Set the number of days in advance to 
 $lang['help_payments'] 		            = 'Select the payment(s) available at this location. Leave blank to use all enabled payments';
 $lang['help_reservation_time_interval'] = 'Set the number of minutes between each reservation time, Leave as 0 to use system setting value';
 $lang['help_reservation_stay_time'] 	= 'Set in minutes the average time a guest will stay at a table, Leave as 0 to use system setting value';
+$lang['help_delivery_condition'] 		= 'Use the table below to set different delivery charge conditions. EX. xx delivery charge on order total above xx. Use 0 delivery charge for free delivery or to apply on all orders.';
 
 /* End of file locations_lang.php */
 /* Location: ./admin/language/english/locations_lang.php */

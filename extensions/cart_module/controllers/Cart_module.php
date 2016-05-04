@@ -317,7 +317,7 @@ class Cart_module extends Main_Controller {
 				$this->alert->set('custom', $response, 'cart_module');
 			}
 
-			if ($this->location->orderType() === '1' AND $this->cart->set_delivery($this->location->deliveryCharge())) {
+			if ($this->location->orderType() === '1' AND $this->cart->set_delivery($this->location->deliveryCharge($this->cart->total()))) {
 				$data['delivery'] = $this->currency->format($this->cart->delivery());
 			} else {
 				$this->cart->set_delivery(0);
@@ -370,6 +370,7 @@ class Cart_module extends Main_Controller {
 
 	public function validateOrderType($order_type = '', $check_min_total = TRUE) {
 		$order_type = empty($order_type) ? $this->location->orderType() : $order_type;
+		$cart_total = $this->cart->total();
 
 		if ($this->location->isClosed()) {
 
@@ -380,9 +381,9 @@ class Cart_module extends Main_Controller {
 
 				return $this->lang->line('alert_delivery_unavailable');
 
-			} else if ($check_min_total AND $this->cart->contents() AND ! $this->location->checkMinimumOrder($this->cart->total())) {                            // checks if cart contents is empty
+			} else if ($check_min_total AND $this->cart->contents() AND ! $this->location->checkMinimumOrder($cart_total)) {                            // checks if cart contents is empty
 
-				return sprintf($this->lang->line('alert_min_delivery_order_total'), $this->currency->format($this->location->minimumOrder()));
+				return sprintf($this->lang->line('alert_min_delivery_order_total'), $this->currency->format($this->location->minimumOrder($cart_total)));
 			}
 
 		} else if ($order_type === '2') {

@@ -51,6 +51,10 @@ $lang['text_in_minutes'] 		            = 'in <b>%s</b> minutes';
 $lang['text_after_opening'] 		        = '<b>%s</b> minutes after we open';
 $lang['text_same_as_opening_hours'] 	    = 'Same as opening hours';
 $lang['text_no_review'] 			        = 'There are no reviews yet.';
+$lang['text_no_min_total'] 		            = 'No Min. Order Amount';
+$lang['text_delivery_all_orders'] 		    = '%s on all orders';
+$lang['text_delivery_above_total'] 		    = '%s above %s';
+$lang['text_delivery_below_total'] 		    = 'not available below %s ';
 
 $lang['text_locations_filter_title'] 		= 'Filter Locations';
 $lang['text_filter_distance'] 		        = 'Distance';

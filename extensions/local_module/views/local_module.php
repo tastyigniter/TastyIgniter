@@ -93,7 +93,7 @@
                                     </dl>
                                 </div>
                                 <div class="col-xs-12 box-divider visible-xs"></div>
-                                <div class="box-two col-xs-12 col-sm-4 col-md-4">
+                                <div class="box-two col-xs-12 col-sm-3 col-md-3">
                                     <dl>
                                         <?php if ($opening_status === 'open') { ?>
                                             <dt><?php echo lang('text_is_opened'); ?></dt>
@@ -127,8 +127,17 @@
                                     </dl>
                                 </div>
                                 <div class="col-xs-12 box-divider visible-xs"></div>
-                                <div class="box-three col-xs-12 col-sm-3 col-md-3">
+                                <div class="box-three col-xs-12 col-sm-4 col-md-4">
                                     <dl>
+                                        <?php if ($opening_status !== 'closed') { ?>
+                                            <dd class="hidden-xs">
+                                                <?php if (!empty($opening_type) AND $opening_type == '24_7') { ?>
+                                                    <span class="fa fa-clock-o"></span>&nbsp;&nbsp;<span><?php echo lang('text_24_7_hour'); ?></span>
+                                                <?php } else if (!empty($opening_time) AND !empty($closing_time)) { ?>
+                                                    <span class="fa fa-clock-o"></span>&nbsp;&nbsp;<span><?php echo $opening_time; ?> - <?php echo $closing_time; ?></span>
+                                                <?php } ?>
+                                            </dd>
+                                        <?php } ?>
                                         <dd class="text-muted">
                                             <?php if (!$has_delivery AND $has_collection) { ?>
                                                 <?php echo lang('text_collection_only'); ?>
@@ -141,9 +150,10 @@
                                             <?php } ?>
                                         </dd>
                                         <?php if ($has_delivery) { ?>
-                                            <dd class="text-muted"><?php echo ($delivery_charge > 0) ? sprintf(lang('text_delivery_charge'), currency_format($delivery_charge)) : lang('text_free_delivery'); ?></dd>
+                                            <dd class="text-muted"><?php echo $text_delivery_condition; ?></dd>
+<!--                                            <dd class="text-muted">--><?php //echo ($delivery_charge > 0) ? sprintf(lang('text_delivery_charge'), currency_format($delivery_charge)) : lang('text_free_delivery'); ?><!--</dd>-->
                                         <?php } ?>
-                                        <dd class="text-muted"><?php echo lang('text_min_total'); ?>: <?php echo currency_format($min_total); ?></dd>
+<!--                                        <dd class="text-muted">--><?php //echo lang('text_min_total'); ?><!--: --><?php //echo currency_format($min_total); ?><!--</dd>-->
                                     </dl>
                                </div>
                             </div>
