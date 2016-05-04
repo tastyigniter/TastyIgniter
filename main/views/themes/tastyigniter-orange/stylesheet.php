@@ -51,10 +51,10 @@ $style .= "}";
 // GENERAL COLOR
 if (!empty($body['color'])) {
 	$style .= ".local-box-fluid, .local-box-fluid .panel { background-color: {$body['color']}; border-color: {$body['color']}}";
-	$style .= ".local-box-fluid h2 { color: {$body['foreground']};}";
 	$style .= ".step-item .icon i { color: {$body['color']}; border-color:{$body['color']};}";
 	$style .= ".newsletter-subscribe { background-color: {$body['color']}; color:{$body['foreground']}}";
 	$style .= ".nav-tabs-line > li.active > a, .nav-tabs-line > li.active > a:hover, .nav-tabs-line > li.active > a:focus, .nav-tabs-line > li.open a, .nav-tabs-line > li > a:hover, .nav-tabs-line > li > a:focus { border-color: {$sidebar['border']} {$sidebar['border']} {$body['color']};}";
+	$style .= ".nav-tabs-line > li.open a, .nav-tabs-line > li:hover, .nav-tabs-line > li:focus, .nav-tabs-line > li.active, .nav-tabs-line > li.active:hover, .nav-tabs-line > li.active:focus { border-color: {$sidebar['border']} {$sidebar['border']} {$body['color']};}";
 	$style .= ".nav-tabs-line > li.open a, .nav-tabs-line > li > a:hover, .nav-tabs-line > li > a:focus { background-color: {$sidebar['border']};}";
 }
 
@@ -76,10 +76,9 @@ if (!empty($header['image']) AND !empty($header['display'])) {
 		$style .= "background-size: {$header['display']};";
 	}
 }
-$style .= "}";
 
 if (!empty($header['color']))
-	$style .= "#main-header .navbar-nav > li > a, .modal-header { color: {$header['color']};}";
+	$style .= "#main-header .navbar-nav > li > a, .modal-header, .local-box-fluid h2 { color: {$header['color']};}";
 
 if ( ! empty($header['dropdown_background']))
 	$style .= "#main-header .dropdown-menu { background-color: {$header['dropdown_background']};}";
@@ -121,8 +120,11 @@ $style .= "}";
 // FOREGROUND
 if ( ! empty($body['foreground'])) {
 	$style .= "#page-content div.content { background-color: {$body['foreground']};}";
-	$style .= "#page-content div.content-wrap { background-color: {$body['foreground']}; border: 1px solid {$sidebar['border']}; padding:15px; border-radius:4px;margin-bottom: 20px;}";
+	$style .= "#page-content div.content-wrap { background-color: {$body['foreground']}; border-width: 1px; border-style: solid; padding:15px; border-radius:4px;margin-bottom: 20px;}";
 }
+
+if ( ! empty($body['border']))
+	$style .= "#page-content div.content-wrap, #page-content div.content { border-color: {$body['border']};}";
 
 // Heading
 $style .= "#heading {";
@@ -158,7 +160,7 @@ if ( ! empty($heading['under_height']))
 $style .= "}";
 
 // Sidebar
-$style .= ".side-bar .module-box:not(#category-box) .panel {";
+$style .= "#local-info .panel-local, .side-bar .module-box .panel, .side-bar .module-box:not(#category-box) .panel {";
 if (!empty($sidebar['background']))
 	$style .= "background-color: {$sidebar['background']};";
 
@@ -176,6 +178,9 @@ if (!empty($sidebar['image'])) {
 	}
 }
 $style .= "}";
+
+if ( ! empty($sidebar['border']))
+	$style .= ".side-bar .panel-default > .panel-heading, .panel-cart .location-control, .panel-cart .cart-coupon, #local-info .panel-local, .panel-local .panel-heading { border-color: {$sidebar['border']};}";
 
 if ( ! empty($sidebar['border']))
 	$style .= ".side-bar .panel-cart { border-color: {$sidebar['border']}; border-width: 1px; border-style: solid;}";
@@ -204,11 +209,13 @@ if ( ! empty($link['hover'])) {
 // Button
 if ( ! empty($button['default']['background'])) {
 	$style .= ".btn-default { background-color: {$button['default']['background']}; border-color: {$button['default']['background']};}";
-	$style .= ".panel-default, .panel-default .panel-heading, .panel-nav-tabs.panel-default .panel-heading { border-color: {$button['default']['background']}}";
+	$style .= ".panel-default .panel-heading, .panel-nav-tabs.panel-default .panel-heading { background-color: {$button['default']['background']}}";
 }
 
-if ( ! empty($button['default']['hover']))
+if ( ! empty($button['default']['hover'])) {
 	$style .= ".btn-default:hover, .btn-default:focus, .btn-default.active, .btn-default:active { background-color: {$button['default']['hover']}; border-color: {$button['default']['hover']};}";
+	$style .= ".panel-default, .panel-default .panel-heading, .panel-nav-tabs.panel-default .panel-heading { border-color: {$button['default']['hover']}}";
+}
 
 if ( ! empty($button['primary']['background'])) {
 	$style .= ".btn-primary { background-color: {$button['primary']['background']}; border-color: {$button['primary']['background']};}";

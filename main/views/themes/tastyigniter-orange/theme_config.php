@@ -211,12 +211,13 @@ $theme['customize']['sections']['styling'] = array(
 				),
 				array(
 					'id'			=> 'input-foreground',
-					'label' 		=> 'Body foreground and general color',
+					'label' 		=> 'Body foreground, general and border color',
 					'desc'			=> 'The color to use for the foreground.',
 					'type' 			=> 'input-group',
 					'group'			=> array(
 						array('id' => 'input-foreground', 'name' => 'body[foreground]', 'type' => 'color', 'value' => '#FFF', 'rules' => 'required'),
 						array('id' => 'input-general-color', 'name' => 'body[color]', 'type' => 'color', 'value' => '#ed561a', 'rules' => 'required'),
+						array('id' => 'input-border-color', 'name' => 'body[border]', 'type' => 'color', 'value' => '#DDD', 'rules' => 'required'),
 					)
 				),
 				array(

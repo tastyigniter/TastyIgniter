@@ -17,7 +17,7 @@ padding-bottom: 15px;
 border-radius: 25px;
 position: absolute;
 left: 10%;
-top: 36%;
+top: 26%;
 width: 80%;
 }
 }
@@ -75,16 +75,9 @@ width: 100%;
 margin: 0 auto;
 }
 .postcode-group .input-group-addon {
-background-color: #11a2dc;
-border-color: #11a2dc;
-border-radius:0 5px 5px 0;
 color:#FFF;
 width: 35%;
 font-weight: bold;
-}
-.postcode-group .input-group-addon:hover {
-background-color: #0f91c4;
-border-color: #0f91c4;
 }
 .postcode-group .postcode-control {
 border-radius:5px;

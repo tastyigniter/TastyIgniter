@@ -5,10 +5,20 @@ TastyIgniter Orange Store-front theme
 */
 
 /*** Basic ***/
+html {
+  position: relative;
+  min-height: 100%;
+}
 
 body {
 font-family:'Oxygen',Arial,sans-serif;
 background-color: #EEEEEE;
+padding-bottom: 200px;
+}
+@media (max-width:767px) {
+body {
+padding-bottom: 250px;
+}
 }
 
 
@@ -1024,6 +1034,9 @@ margin-top: 30px;
 #page-footer {
 background-color: #EDEFF1;
 background-image: linear-gradient(to bottom, #EDEFF1, #EDEFF1);
+position: absolute;
+bottom: 0;
+width: 100%;
 }
 #page-footer .main-footer, #page-footer .main-footer a {
   color: #9BA1A7;
