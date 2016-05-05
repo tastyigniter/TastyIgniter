@@ -83,6 +83,8 @@ class Customers extends Admin_Controller {
 		$data['sort_date'] 			= site_url('customers'.$url.'sort_by=date_added&order_by='.$order_by);
 		$data['sort_id'] 			= site_url('customers'.$url.'sort_by=customer_id&order_by='.$order_by);
 
+		$data['access_customer_account'] = $this->user->canAccessCustomerAccount();
+
 		$data['customers'] = array();
 		$results = $this->Customers_model->getList($filter);
 		foreach ($results as $result) {
@@ -95,6 +97,7 @@ class Customers extends Admin_Controller {
 				'telephone' 		=> $result['telephone'],
 				'date_added' 		=> day_elapsed($result['date_added']),
 				'status' 			=> ($result['status'] === '1') ? 'Enabled' : 'Disabled',
+				'login' 			=> site_url('customers/login?id=' . $result['customer_id']),
 				'edit' 				=> site_url('customers/edit?id=' . $result['customer_id'])
 			);
 		}
@@ -217,6 +220,33 @@ class Customers extends Admin_Controller {
 		}
 
 		$this->template->render('customers_edit', $data);
+	}
+
+	public function login() {
+		$customer_info = $this->Customers_model->getCustomer((int)$this->input->get('id'));
+
+		if ( ! $this->user->canAccessCustomerAccount()) {
+			$this->alert->set('warning', $this->lang->line('alert_login_restricted'));
+		} else if ($customer_info) {
+			$customer_id = $customer_info['customer_id'];
+
+			$this->load->library('customer');
+			$this->load->library('cart');
+
+			$this->customer->logout();
+			$this->cart->destroy();
+
+			if ($this->customer->login($customer_info['email'], '', TRUE)) {
+				log_activity($customer_id, 'logged in', 'customers', get_activity_message('activity_master_logged_in',
+					array('{staff}', '{staff_link}', '{customer}', '{customer_link}'),
+					array($this->user->getStaffName(), admin_url('staffs/edit?id=' . $this->user->getId()), $this->customer->getName(), admin_url('customers/edit?id=' . $customer_id))
+				));
+
+				redirect(root_url('account/account'));
+			}
+		}
+
+		redirect('customers');
 	}
 
 	public function autocomplete() {

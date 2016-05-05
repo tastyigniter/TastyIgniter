@@ -75,10 +75,11 @@ class Staff_groups_model extends TI_Model {
 			$row = $query->row_array();
 
 			return array(
-				'staff_group_id'   => $row['staff_group_id'],
-				'staff_group_name' => $row['staff_group_name'],
-				'location_access'  => $row['location_access'],
-				'permissions'      => $row['permissions'],
+				'staff_group_id'          => $row['staff_group_id'],
+				'staff_group_name'        => $row['staff_group_name'],
+				'customer_account_access' => $row['customer_account_access'],
+				'location_access'         => $row['location_access'],
+				'permissions'             => $row['permissions'],
 			);
 		}
 	}
@@ -104,6 +105,12 @@ class Staff_groups_model extends TI_Model {
 			$this->db->set('location_access', $save['location_access']);
 		} else {
 			$this->db->set('location_access', '0');
+		}
+
+		if (isset($save['customer_account_access']) AND $save['customer_account_access'] === '1') {
+			$this->db->set('customer_account_access', $save['customer_account_access']);
+		} else {
+			$this->db->set('customer_account_access', '0');
 		}
 
 		if (isset($save['permissions'])) {

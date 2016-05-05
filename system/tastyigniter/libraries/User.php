@@ -36,6 +36,7 @@ class User {
     private $staff_group_id;
     private $location_id;
     private $location_name;
+    private $customer_account_access;
     private $location_access;
 	private $unread;
 
@@ -177,6 +178,10 @@ class User {
 		return ($this->location_access == '1') ? TRUE : FALSE;
 	}
 
+	public function canAccessCustomerAccount() {
+		return ($this->customer_account_access == '1') ? TRUE : FALSE;
+	}
+
     public function unreadMessageTotal() {
         if (empty($this->unread)) {
             $this->CI->load->model('Messages_model');
@@ -276,6 +281,7 @@ class User {
 		$this->staff_group_id = '';
 		$this->location_id = '';
 		$this->location_name = '';
+		$this->customer_account_access = '';
 	}
 }
 

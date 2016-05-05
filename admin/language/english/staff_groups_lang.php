@@ -19,9 +19,11 @@ $lang['column_delete'] 		            = 'Delete';
 $lang['column_description'] 		    = 'Description';
 
 $lang['label_name'] 		            = 'Name';
+$lang['label_customer_account_access']  = 'Customer Account Access';
 $lang['label_location_access'] 		    = 'Strict Location';
 
 $lang['help_approval'] 		            = 'New staffs must be approved before they can login.';
+$lang['help_customer_account_access']   = 'Enabling means staff in this group can login to any customer account using the staff password. The staff must be logged in as admin.';
 $lang['help_location'] 		            = 'Enabling means staff in this group can ONLY view orders, reservations and coupons in their location.';
 
 /* End of file staff_groups_lang.php */

@@ -69,11 +69,15 @@ class Customer {
 		}
 	}
 
-	public function login($email, $password) {
+	public function login($email, $password, $override_login = FALSE) {
 
 		$this->CI->db->from('customers');
 		$this->CI->db->where('email', strtolower($email));
-		$this->CI->db->where('password', 'SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1("' . $password . '")))))', FALSE);
+
+		if ($override_login === FALSE) {
+			$this->CI->db->where('password', 'SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1("' . $password . '")))))', FALSE);
+		}
+
 		$this->CI->db->where('status', '1');
 
 		$query = $this->CI->db->get();
