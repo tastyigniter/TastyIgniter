@@ -16,6 +16,7 @@ Release Date: April 2016
 * Affix categories sidebar (module) to page
 * Migration: added column `order_date` to `orders` table to allow future orders
 * Customer now redirects back to previous page after login when previous page is either checkout or reservation page
+* Location library methods `deliveryCondition()` to return an array of the current location delivery conditions to be used within controller
 
 #### Changed
 * Major UI improvements to local, cart and categories modules, local, locations and checkout pages
@@ -35,6 +36,9 @@ Release Date: April 2016
 * Improved messages view folders and delete functionality ( you might find some archived messages showing under 'all' folder but not in 'archive', fix by moving to archive again)
 * Filter lost (blank status) orders from order list in admin by default
 * Updated CI core files to version 3.0.6, TI system files and modular HMVC files, also added composer support
+* Improved locations delivery area with conditions such as free delivery if total over certain amount
+* Location library method `deliveryCharge()` & `minimumOrder()` now expect cart total as parameter
+* Customer login function to allow the admin to login to any customer account without knowing the customer's password
 
 #### Fixed
 * Issue with payment and confirm button changing incorrectly on checkout page
