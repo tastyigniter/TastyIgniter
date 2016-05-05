@@ -307,7 +307,6 @@
 
 	function updateCartAlert(alert_message) {
 		if (alert_message != '') {
-			$('.cart-alert-wrap .alert').remove();
 			$('.cart-alert-wrap .cart-alert').append(alert_message);
 			$('.cart-alert-wrap .alert').slideDown('slow').fadeTo('slow', 0.1).fadeTo('slow', 1.0).delay(5000).slideUp('slow');
 		}
