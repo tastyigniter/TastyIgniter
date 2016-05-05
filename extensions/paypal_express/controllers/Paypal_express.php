@@ -50,7 +50,7 @@ class Paypal_express extends Main_Controller {
             $this->load->model('paypal_express/Paypal_model');
             $response = $this->Paypal_model->setExpressCheckout($order_data, $this->cart->contents());
 
-            if (strtoupper($response['ACK']) === 'SUCCESS' OR strtoupper($response['ACK']) === 'SUCCESSWITHWARNING') {
+            if (isset($response['ACK']) AND (strtoupper($response['ACK']) === 'SUCCESS' OR strtoupper($response['ACK']) === 'SUCCESSWITHWARNING')) {
                 $payment = isset($order_data['ext_payment']) ? $order_data['ext_payment'] : array();
                 if (isset($payment['ext_data']['api_mode']) AND $payment['ext_data']['api_mode'] === 'sandbox') {
                     $api_mode = '.sandbox';

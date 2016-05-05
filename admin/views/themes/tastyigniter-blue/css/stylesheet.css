@@ -135,6 +135,9 @@ margin-bottom: 20px;
 .float-none {
 float:none;
 }
+.border-none {
+border: 0 none !important;
+}
 .border-all {
 border-right: 1px solid #DFE6EE !important;
 border-left: 1px solid #DFE6EE !important;
@@ -926,10 +929,6 @@ margin-left: 15px;
 .control-group > .input-group:first-child {
 margin-left: 0;
 }
-.ti-color-picker .input-group-addon {
-background-color: transparent;
-}
-
 
 /** BUTTONS GROUP **/
 .bootstrap-select.btn-group .btn .caret {
@@ -1740,6 +1739,9 @@ width: 14.23% !important;
 table .action .btn {
 display:inline-block;
 padding: 8px 10px;
+}
+.table .action .btn-group-xs > .btn, .table .action .btn.btn-xs {
+padding: 2px 10px;
 }
 table .id, table .id .sort {
 color: #656565;
