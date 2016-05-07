@@ -50,7 +50,7 @@
 							<div class="col-xs-6">
 								<address>
 									<span class="text-muted"><?php echo lang('text_customer'); ?>:</span><br>
-									<strong><?php echo $first_name; ?> <?php echo $first_name; ?></strong><br>
+									<strong><?php echo $first_name; ?> <?php echo $last_name; ?></strong><br>
 									<?php echo $email; ?>
 								</address>
 								<?php if ($check_order_type === '1') { ?>
