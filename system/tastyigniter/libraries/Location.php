@@ -368,12 +368,13 @@ class Location {
 	}
 
 	public function workingStatus($type = 'opening', $time = '', $hours = array()) {
-		$last_order_time = (is_numeric($this->local_info['last_order_time']) AND $this->local_info['last_order_time'] > 0) ? $this->local_info['last_order_time'] * 60 : 0;
-		$working_hour = (isset($this->working_hour[$type])) ? $this->working_hour[$type] : array();
-		$time = !empty($time) ? strtotime($time) : $this->current_time;
-		$hours = !empty($hours) ? $hours : $working_hour;
-
 		$status = 'closed';
+
+		$last_order_time = (is_numeric($this->local_info['last_order_time']) AND $this->local_info['last_order_time'] > 0) ? $this->local_info['last_order_time'] * 60 : 0;
+		$time = !empty($time) ? strtotime($time) : $this->current_time;
+
+		$working_hour = (isset($this->working_hour[$type])) ? $this->working_hour[$type] : array();
+		$hours = !empty($hours) ? $hours : $working_hour;
 
 		if ( ! empty($hours) AND $hours['status'] === '1') {
 			$open = $hours['open'];
@@ -396,10 +397,12 @@ class Location {
 	public function workingHours($type = '') {
 		$working_hours = array();
 
-		if (!empty($type)) {
-			$working_hours[$type] = (isset($this->working_hours[$type])) ? $this->working_hours[$type] : $this->working_hours['opening'];
-		} else {
-			$working_hours = $this->working_hours;
+		if (!empty($type) AND isset($this->working_hours[$this->location_id][$type])) {
+			$working_hours[$type] = $this->working_hours[$this->location_id][$type];
+		} else if (!empty($type) AND isset($this->working_hours[$this->location_id]['opening'])) {
+			$working_hours[$type] = $this->working_hours[$this->location_id]['opening'];
+		} else if (isset($this->working_hours[$this->location_id])) {
+			$working_hours = $this->working_hours[$this->location_id];
 		}
 
 		foreach (array('opening', 'delivery', 'collection') as $value) {
@@ -433,7 +436,9 @@ class Location {
 		$days_in_advance = ($this->hasFutureOrder()) ? $this->futureOrderDays($order_type) : '0';
 		$start_date = mdate("%d-%m-%Y", strtotime("-1 day", $this->current_time));
 		$end_date = mdate("%d-%m-%Y", strtotime("+{$days_in_advance} day", $this->current_time));
-		$working_hours = $this->parseWorkingHours($order_type, $start_date, $end_date, $this->working_hours);
+
+		$working_hours = (isset($this->working_hours[$this->location_id])) ? $this->working_hours[$this->location_id] : array();
+		$working_hours = $this->parseWorkingHours($order_type, $start_date, $end_date, $working_hours);
 
 		$count = 1;
 		$order_times = array();
@@ -787,17 +792,17 @@ class Location {
 		return $this->locations;
 	}
 
-	private function getWorkingHours() {
-		if (empty($this->working_hours) OR empty($this->working_hours['opening'][0]['location_id']) OR $this->working_hours['opening'][0]['location_id'] !== $this->location_id) {
+	private function getWorkingHours($location_id = FALSE) {
+		if (empty($this->working_hours)) {
 			$this->CI->load->model('Locations_model');
-			$working_hours = $this->CI->Locations_model->getWorkingHours($this->location_id);
+			$working_hours = $this->CI->Locations_model->getWorkingHours();
 
 			$weekdays = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
 
 			foreach ($working_hours as $result) {
 				$type = !empty($result['type']) ? $result['type'] : 'opening';
 
-				$this->working_hours[$type][$result['weekday']] = array(
+				$this->working_hours[$result['location_id']][$type][$result['weekday']] = array(
 					'location_id' => $result['location_id'],
 					'day' => $weekdays[$result['weekday']],
 					'type' => $type,
@@ -810,11 +815,11 @@ class Location {
 			}
 		}
 
-		return $this->working_hours;
+		return (!empty($location_id) AND isset($this->working_hours[$location_id])) ? $this->working_hours[$location_id] : $this->working_hours;
 	}
 
 	private function setWorkingHours() {
-		$working_hours = $this->getWorkingHours();
+		$working_hours = $this->getWorkingHours($this->location_id);
 
 		foreach (array('opening', 'delivery', 'collection') as $type) {
 			if ($type !== 'opening' AND empty($working_hours[$type]) AND !empty($working_hours['opening'])) {
@@ -826,7 +831,7 @@ class Location {
 			$this->working_hour[$type] = $this->parseWorkingHours($type, $start_date, $end_date, $working_hours, TRUE);
 		}
 
-		$this->working_hours = $working_hours;
+		$this->working_hours[$this->location_id] = $working_hours;
 	}
 
 	private function parseWorkingHours($type, $start_date, $end_date, $working_hours, $return = FALSE) {

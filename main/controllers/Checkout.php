@@ -300,7 +300,7 @@ class Checkout extends Main_Controller {
             $data['order_hour'] = $order_hour;
         }
 
-        $data['order_hour'] = ( ! isset($data['order_times'][$order_date][$data['order_hour']])) ? $order_hour : $data['order_hour'];
+        $data['order_hour'] = ( ! isset($data['order_times'][$data['order_date']][$data['order_hour']])) ? $order_hour : $data['order_hour'];
 
         if ($this->input->post('order_minute')) {
             $data['order_minute'] = $this->input->post('order_minute');                            // retrieve order_time value from $_POST data if set
@@ -427,7 +427,7 @@ class Checkout extends Main_Controller {
             $order_data['email'] 		    = $this->customer->isLogged() ? $this->customer->getEmail() : $this->input->post('email');
             $order_data['telephone'] 	    = $this->input->post('telephone');
             $order_data['order_time_type']  = $this->input->post('order_time_type');
-            $order_data['order_asap_time'] = $this->input->post('order_asap_time');
+            $order_data['order_asap_time']  = $this->input->post('order_asap_time');
             $order_data['order_date'] 	    = $this->input->post('order_date');
             $order_data['order_hour'] 	    = $this->input->post('order_hour');
             $order_data['order_minute'] 	= $this->input->post('order_minute');
