@@ -804,6 +804,9 @@ border: 0 none;
 color:#FFF;
 padding: 0 5px;
 }
+.menu-category > p {
+  font-size: 13px;
+}
 .menu-items {
   font-size: 12px;
 }
