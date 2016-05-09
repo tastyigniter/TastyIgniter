@@ -26,6 +26,7 @@ class Template {
     private $_module = '';
     private $_controller = '';
     private $_method = '';
+    private $_parent_theme = NULL;
     private $_theme = NULL;
     private $_theme_path = NULL;
     private $_theme_shortpath = NULL;
@@ -83,6 +84,9 @@ class Template {
         // Load the theme config and store array in $this->_theme_config
         $this->_theme_config = load_theme_config($this->_theme, APPDIR);
 
+        // Set the parent theme if theme is child
+        $this->_parent_theme = (isset($this->_theme_config['parent'])) ? $this->_theme_config['parent'] : '';
+
         // Modular Separation / Modular Extensions has been detected
 		if (method_exists( $this->CI->router, 'fetch_module' )) {
 			$this->_module 	= $this->CI->router->fetch_module();
@@ -133,9 +137,9 @@ class Template {
 
         // Want it returned or output to browser?
 		if ( ! $return) {
-            $this->CI->load->view('themes/'.$this->_theme.'/'.$view, $this->_data, FALSE);
+            self::_load_view($view, $this->_data, NULL, FALSE);
         } else {
-            return self::_load_view('themes/'.$this->_theme.'/'.$view, $this->_data, NULL);
+            return self::_load_view($view, $this->_data, NULL);
         }
     }
 
@@ -545,7 +549,7 @@ class Template {
 
     public function loadView($view, $data = array()) {
         if (is_string($view)) {
-            return $this->_find_view($view, (array) $data);
+            return $this->_load_view($view, (array) $data);
         }
     }
 
@@ -562,7 +566,7 @@ class Template {
             if (!is_string($partial_name)) continue;
 
             if (isset($this->_layouts[$partial_name])) {
-                $partial_data = $this->_find_view($partial_name, $data);
+                $partial_data = $this->_load_view($partial_name, $data);
             } else {
                 $partial_class = isset($data['class']) ? $data['class'] : '';
 
@@ -627,20 +631,18 @@ class Template {
         return array(NULL, array());
     }
 
-    private function _find_view($view, array $data) {
+    private function _find_view_path($view = '') {
         if ( ! empty($this->_theme)) {
-            $view_path = NULL;
-            foreach ($this->_theme_locations as $location) {
-                $theme_views = array(
-                    $this->_theme . '/layouts/' . $view,
-                    $this->_theme . '/partials/' . $view,
-                    $this->_theme . '/modules/' . $this->_module . '/' . $view,
-                    $this->_theme . '/' . $view
-                );
+            $theme_views = array('/', '/layouts/', '/partials/');
 
-                foreach ($theme_views as $theme_view) {
-                    if (file_exists($location . $theme_view . '.php')) {
-                        return self::_load_view($theme_view, $this->_data + $data, $location);
+            foreach ($this->_theme_locations as $location) {
+                foreach (array($this->_theme, $this->_parent_theme) as $theme) {
+                    if ($theme) foreach ($theme_views as $theme_view) {
+                        $t_view = (pathinfo($view, PATHINFO_EXTENSION)) ? $view : $view.'.php';
+
+                        if (file_exists($location . $theme . $theme_view . $t_view)) {
+                            return array($theme . $theme_view . $view, $location);
+                        }
                     }
                 }
 
@@ -648,19 +650,24 @@ class Template {
         }
 
         // Not found it yet? Just load, its either in the module or root view
-        return self::_load_view($view, $this->_data + $data);
+        return array($view, NULL);
     }
 
-    private function _load_view($view, array $data, $override_view_path = NULL) {
-        if ($override_view_path !== NULL) {
+    private function _load_view($view, array $data, $override_view_path = NULL, $return = TRUE) {
+        list($view, $location) = self::_find_view_path($view);
+
+        if (!empty($location)) $override_view_path = $location;
+
+        if (!empty($override_view_path)) {
             $this->CI->load->vars($data);
 
             // Load it directly, bypassing $this->load->view() as ME resets _ci_view
-            $content = $this->CI->load->file($override_view_path . $view . '.php', TRUE);
+            $content = $this->CI->load->file($override_view_path . $view . '.php', $return);
 
-        } else {// Can just run as usual
+        } else {
+            // Can just run as usual
             // Grab the content of the view
-            $content = $this->CI->load->view($view, $data, TRUE);
+            $content = $this->CI->load->view($view, $data, $return);
         }
 
         return $content;
@@ -675,7 +682,7 @@ class Template {
 
 	    if (!empty($active_theme_options) AND isset($active_theme_options[0]) AND $active_theme_options[0] === $this->_theme) {
             $data = (isset($active_theme_options[1]) AND is_array($active_theme_options[1])) ? $active_theme_options[1] : array();
-            $content = $this->CI->load->view($this->_theme . '/stylesheet', $data, TRUE);
+            $content = self::_load_view('stylesheet', $data);
         }
 
         return $content;
@@ -683,7 +690,8 @@ class Template {
 
     private function prepUrl($href, $suffix = '') {
         if (!preg_match('#^(\w+:)?//#i', $href)) {
-            $href = root_url($this->_theme_shortpath . '/' . $href);
+            list($href, $location) = self::_find_view_path($href);
+            $href = theme_url($href);
         }
 
         if (!empty($suffix)) {

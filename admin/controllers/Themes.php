@@ -23,24 +23,28 @@ class Themes extends Admin_Controller {
 
 		$data['themes'] = array();
 		$themes = $this->Themes_model->getList();
-		foreach ($themes as $theme) {
+		foreach ($themes as $name => $theme) {
 			if ($theme['name'] === trim($this->config->item(MAINDIR, 'default_themes'), '/')) {
 				$active = '1';
 			} else {
 				$active = FALSE;
 			}
 
-			$data['themes'][] = array(
+            $data['themes'][$name] = array(
 				'name'        => $theme['name'],
 				'title'       => $theme['title'],
 				'version'     => $theme['version'],
 				'description' => $theme['description'],
 				'author'      => $theme['author'],
+				'parent'      => $theme['parent'],
+				'child'       => $theme['child'],
+				'parent_title'=> (!empty($theme['parent']) AND ! empty($themes[$theme['parent']]['title'])) ? $themes[$theme['parent']]['title'] : '',
 				'active'      => $active,
 				'screenshot'  => $theme['screenshot'],
 				'activate'    => site_url('themes/activate/' . $theme['name']),
 				'edit'        => site_url('themes/edit/' . $theme['name']),
 				'delete'      => site_url('themes/delete/' . $theme['name']),
+				'copy'        => site_url('themes/copy/' . $theme['name']),
 			);
 		}
 
@@ -178,21 +182,99 @@ class Themes extends Admin_Controller {
 		redirect('themes');
 	}
 
-	public function delete() {
-		$this->user->restrict('Site.Themes.Manage');
+    public function copy() {
+        $this->user->restrict('Site.Themes.Manage');
 
-		if ($theme_name = $this->uri->rsegment(3)) {
-			if ($this->config->item(MAINDIR, 'default_themes') === $theme_name . '/') {
-				$this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted'). $this->lang->line('text_theme_is_active')));
-			} else if ($this->Themes_model->deleteTheme($theme_name)) {
-				$this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Theme ' . $this->lang->line('text_deleted')));
-			} else {
-				$this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted')));
-			}
-		}
+        $this->template->setTitle($this->lang->line('text_copy_heading'));
+        $this->template->setHeading($this->lang->line('text_copy_heading'));
 
-		redirect('themes');
-	}
+        $theme = $this->Themes_model->getTheme($this->uri->rsegment(3));
+
+        if ( ! $this->uri->rsegment(3) OR empty($theme)) {
+            redirect(referrer_url());
+        }
+
+        $data['theme_title'] = $theme['title'];
+        $data['theme_name'] = $theme['name'];
+        $data['theme_data'] = !empty($theme['data']) ? TRUE : FALSE;
+        $data['copy_action'] = !empty($theme['data']) ? $this->lang->line('text_files_data') : $this->lang->line('text_files');
+
+        $data['files_to_copy'] = array();
+        $files[] = load_theme_file('theme_config.php', $theme['name']);
+        $files[] = load_theme_file('screenshot.png', $theme['name']);
+        foreach ($files as $file) {
+            $data['files_to_copy'][] = str_replace(ROOTPATH, '', $file['path']);
+        }
+
+        if ($this->input->post('confirm_copy') === $theme['name']) {
+            $copy_data = ($this->input->post('copy_data') === '1') ? TRUE : FALSE;
+
+            if ($this->Themes_model->copyTheme($theme['name'], $files, $copy_data)) {
+                log_activity($this->user->getStaffId(), 'copied', 'themes', get_activity_message('activity_custom_no_link',
+                    array('{staff}', '{action}', '{context}', '{item}'),
+                    array($this->user->getStaffName(), 'copied', 'theme', $data['theme_title'])
+                ));
+
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Theme [' . $theme['name'] . '] ' . $this->lang->line('text_copied')));
+            } else {
+                $this->alert->set('warning', $this->lang->line('alert_error_try_again'));
+            }
+
+            redirect('themes');
+        }
+
+        $this->template->render('themes_copy', $data);
+    }
+
+    public function delete() {
+        $this->user->restrict('Site.Themes.Access');
+        $this->user->restrict('Site.Themes.Delete');
+
+        $this->template->setTitle($this->lang->line('text_delete_heading'));
+        $this->template->setHeading($this->lang->line('text_delete_heading'));
+
+        $theme = $this->Themes_model->getTheme($this->uri->rsegment(3));
+
+        if ( ! $this->uri->rsegment(3) OR empty($theme)) {
+            redirect(referrer_url());
+        } else if ($this->config->item(MAINDIR, 'default_themes') === $theme['name'] . '/') {
+            $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted'). $this->lang->line('text_theme_is_active')));
+            redirect(referrer_url());
+        } else if ($this->config->item(MAINDIR.'_parent', 'default_themes') === $theme['name'] . '/') {
+            $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted'). $this->lang->line('text_theme_is_child_active')));
+            redirect(referrer_url());
+        }
+
+        $data['theme_title'] = $theme['title'];
+        $data['theme_name'] = $theme['name'];
+        $data['theme_data'] = !empty($theme['data']) ? TRUE : FALSE;
+        $data['delete_action'] = !empty($theme['data']) ? $this->lang->line('text_files_data') : $this->lang->line('text_files');
+
+        if ($this->input->post('confirm_delete') === $theme['name']) {
+            $delete_data = ($this->input->post('delete_data') === '1') ? TRUE : FALSE;
+
+            if ($this->Themes_model->deleteTheme($theme['name'], $delete_data)) {
+                log_activity($this->user->getStaffId(), 'deleted', 'themes', get_activity_message('activity_custom_no_link',
+                    array('{staff}', '{action}', '{context}', '{item}'),
+                    array($this->user->getStaffName(), 'deleted', 'theme', $data['theme_title'])
+                ));
+
+                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Theme [' . $theme['name'] . '] ' . $this->lang->line('text_deleted')));
+            } else {
+                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted')));
+            }
+
+            redirect('themes');
+        }
+
+        $data['files_to_delete'] = array();
+        $files = find_theme_files($theme['name']);
+        foreach ($files as $file) {
+            $data['files_to_delete'][] = str_replace(ROOTPATH, '', $file['path']);
+        }
+
+        $this->template->render('themes_delete', $data);
+    }
 
 	private function _themeTree($directory, $return_link, $parent = '') {
 		$current_path = ($this->input->get('file')) ? explode('/', $this->input->get('file')) : array();
@@ -273,6 +355,7 @@ class Themes extends Admin_Controller {
 			$update['extension_id'] = $this->input->get('extension_id') ? $this->input->get('extension_id') : $theme['extension_id'];
 			$update['name'] = $theme['name'];
 			$update['title'] = $theme['title'];
+			$update['version'] = $theme['version'];
 
 			if (isset($theme['customize'])) {
 				$update['data'] = $this->customizer->getPostData();

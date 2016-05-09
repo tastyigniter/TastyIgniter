@@ -10,33 +10,34 @@
 // Set a custom theme title.
 $theme['title']         = 'TastyIgniter Orange';
 $theme['author']        = 'SamPoyigi';
-$theme['version']       = '1.0';
+$theme['version']       = '2.0';
 $theme['description']   = 'Responsive theme for front-end';
+$theme['child']       	= TRUE;
 
 $theme['head_tags'] = array(
-    'doctype'   => 'html5',
-    'favicon'   => 'images/favicon.ico',
-    'meta'     	=> array(
-            array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'),
-            array('name' => 'X-UA-Compatible', 'content' => 'IE=edge', 'type' => 'equiv'),
-            array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no', 'type' => 'name'),
-    ),
-    'style'    	=> array(
-            array('css/bootstrap.min.css', 'bootstrap-css', '10'),
-            array('css/font-awesome.min.css', 'font-awesome-css', '11'),
-            array('css/select2.css', 'select2-css', '13'),
-            array('css/select2-bootstrap.css', 'select2-bootstrap-css', '14'),
-            array('css/jquery.raty.css', 'jquery-raty-css', '15'),
-            array('css/fonts.css', 'fonts-css', '16'),
-            array('css/stylesheet.css', 'stylesheet-css', '100100100100100'),
-    ),
-    'script'   	=> array(
-            array('js/jquery-1.11.2.min.js', 'jquery-js', '1'),
-            array('js/bootstrap.min.js', 'bootstrap-js', '10'),
-            array('js/select2.js', 'select-2-js', '12'),
-            array('js/jquery.raty.js', 'jquery-raty-js', '13'),
-            array('js/common.js', 'common-js', '100100100100100'),
-    ),
+	'doctype'   => 'html5',
+	'favicon'   => theme_url('tastyigniter-orange/images/favicon.ico'),
+	'meta'     	=> array(
+		array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'),
+		array('name' => 'X-UA-Compatible', 'content' => 'IE=edge', 'type' => 'equiv'),
+		array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no', 'type' => 'name'),
+	),
+	'style'    	=> array(
+		array(theme_url('tastyigniter-orange/css/bootstrap.min.css'), 'bootstrap-css', '10'),
+		array(theme_url('tastyigniter-orange/css/font-awesome.min.css'), 'font-awesome-css', '11'),
+		array(theme_url('tastyigniter-orange/css/select2.css'), 'select2-css', '13'),
+		array(theme_url('tastyigniter-orange/css/select2-bootstrap.css'), 'select2-bootstrap-css', '14'),
+		array(theme_url('tastyigniter-orange/css/jquery.raty.css'), 'jquery-raty-css', '15'),
+		array(theme_url('tastyigniter-orange/css/fonts.css'), 'fonts-css', '16'),
+		array(theme_url('tastyigniter-orange/css/stylesheet.css'), 'stylesheet-css', '100100100100100'),
+	),
+	'script'   	=> array(
+		array(theme_url('tastyigniter-orange/js/jquery-1.11.2.min.js'), 'jquery-js', '1'),
+		array(theme_url('tastyigniter-orange/js/bootstrap.min.js'), 'bootstrap-js', '10'),
+		array(theme_url('tastyigniter-orange/js/select2.js'), 'select-2-js', '12'),
+		array(theme_url('tastyigniter-orange/js/jquery.raty.js'), 'jquery-raty-js', '13'),
+		array(theme_url('tastyigniter-orange/js/common.js'), 'common-js', '100100100100100'),
+	),
 );
 
 // Register partial areas for modules.
