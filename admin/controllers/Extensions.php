@@ -228,17 +228,23 @@ class Extensions extends Admin_Controller {
 
 		$data['extension_name'] = ($this->input->get('name')) ? $this->input->get('name') : $this->uri->rsegment(4);
 
-		if ($this->uri->rsegment(3) OR ! $this->Extensions_model->extensionExists($data['extension_name'])) {
+		if ( ! $this->uri->rsegment(3) OR ! $this->Extensions_model->extensionExists($data['extension_name'])) {
 			redirect(referrer_url());
 		}
+
+		$extension = $this->Extensions_model->getExtension($data['extension_name'], FALSE);
 
 		$config = $this->extension->loadConfig($data['extension_name'], FALSE, TRUE);
 		$data['extension_title'] = isset($config['extension_meta']['title']) ? $config['extension_meta']['title'] : '';
 		$data['extension_type'] = isset($config['extension_meta']['type']) ? $config['extension_meta']['type'] : '';
+		$data['extension_data'] = !empty($extension['ext_data']) ? TRUE : FALSE;
+		$data['delete_action'] = !empty($extension['ext_data']) ? $this->lang->line('text_files_data') : $this->lang->line('text_files');
 
 		if ($this->input->post('confirm_delete') === $data['extension_name']) {
 
-			if ($this->Extensions_model->delete($this->uri->rsegment(3), $data['extension_name'])) {
+			$delete_data = ($this->input->post('delete_data') === '1') ? TRUE : FALSE;
+
+			if ($this->Extensions_model->delete($this->uri->rsegment(3), $data['extension_name'], $delete_data)) {
 				log_activity($this->user->getStaffId(), 'deleted', 'extensions', get_activity_message('activity_custom_no_link',
 					array('{staff}', '{action}', '{context}', '{item}'),
 					array($this->user->getStaffName(), 'deleted', $data['extension_type'] . ' extension', $data['extension_title'])
@@ -251,8 +257,6 @@ class Extensions extends Admin_Controller {
 
 			redirect('extensions?filter_type='.$data['extension_type']);
 		}
-
-		$this->load->helper('directory');
 
 		$files = $this->Extensions_model->getExtensionFiles($data['extension_name']);
 		$data['files_to_delete'] = $files;

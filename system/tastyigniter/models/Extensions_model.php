@@ -108,11 +108,11 @@ class Extensions_model extends TI_Model {
 		return $result;
 	}
 
-	public function getExtension($name = '') {
+	public function getExtension($name = '', $filter = array('filter_status' => '1')) {
 		$result = array();
 
 		if ( ! empty($name)) {
-			$extensions = $this->getList(array('filter_status' => '1'));
+			$extensions = $this->getList($filter);
 
 			if ($extensions AND is_array($extensions)) {
 				if (isset($extensions[$name]) AND is_array($extensions[$name])) {
@@ -278,7 +278,7 @@ class Extensions_model extends TI_Model {
 			if (is_dir($filepath)) {
 				$files = $this->getExtensionFiles($filename, $files);
 			} else {
-				$files[] = $filename;
+				$files[] = EXTPATH . $filename;
 			}
 		}
 
@@ -361,7 +361,7 @@ class Extensions_model extends TI_Model {
 		return $query;
 	}
 
-	public function delete($type = '', $name = '') {
+	public function delete($type = '', $name = '', $delete_data = TRUE) {
 		$query = FALSE;
 
 		if ( ! empty($type) AND $this->extensionExists($name)) {
@@ -375,17 +375,19 @@ class Extensions_model extends TI_Model {
 				$query = TRUE;
 			}
 
-			$this->db->where('status', '0');
-			$this->db->where('type', $type);
-			$this->db->where('name', $name);
+			if ($delete_data) {
+				$this->db->where('status', '0');
+				$this->db->where('type', $type);
+				$this->db->where('name', $name);
 
-			$this->db->delete('extensions');
-			if ($this->db->affected_rows() > 0) {
+				$this->db->delete('extensions');
+				if ($this->db->affected_rows() > 0) {
 
-				// downgrade extension migration
-				$this->extension->runMigration($name, TRUE);
+					// downgrade extension migration
+					$this->extension->runMigration($name, TRUE);
 
-				$query = TRUE;
+                    $query = TRUE;
+                }
 			}
 		}
 

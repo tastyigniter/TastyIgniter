@@ -20,6 +20,8 @@ $lang['text_installed'] 		        = 'Installed';
 $lang['text_uninstalled'] 		        = 'Uninstalled';
 $lang['text_view_files'] 		        = 'Hide/View files';
 $lang['text_upload_title'] 		        = 'Upload the extension .zip file and it will be installed automatically.';
+$lang['text_files'] 		            = 'files';
+$lang['text_files_data'] 		        = 'files and data';
 
 $lang['button_upload'] 		            = 'Upload & Install';
 $lang['button_browse'] 		            = 'Browse';
@@ -35,6 +37,8 @@ $lang['column_desc'] 		            = 'Description';
 $lang['column_author'] 		            = 'Author';
 $lang['column_id'] 		                = 'ID';
 
+$lang['label_delete_data'] 		        = 'Delete Data';
+
 $lang['error_config'] 		            = 'An error occurred, extension config file failed to load';
 $lang['error_options'] 		            = 'An error occurred, extension admin options disabled';
 $lang['error_failed'] 		            = 'An error occurred, extension admin setting class failed to load: %s';
@@ -48,8 +52,8 @@ $lang['error_config_invalid'] 		    = 'The configuration file for extension <b>%
 $lang['error_config_invalid_key'] 	    = 'Check that the <b>\'%s\'</b> configuration value for extension <b>%s</b> is correctly set';
 
 $lang['alert_info_layouts'] 		    = 'After you have installed and configured a module you can display it on a layout <a href="%s" class="alert-link">here!</a>';
-$lang['alert_delete_warning'] 		    = 'You are about to delete the files and data of extension <b>%s</b>';
-$lang['alert_delete_confirm'] 		    = 'Are you sure you wish to delete these files and data? This cannot be undone!';
+$lang['alert_delete_warning'] 		    = 'You are about to delete the %s of extension <b>%s</b>';
+$lang['alert_delete_confirm'] 		    = 'Are you sure you wish to delete these %s? This cannot be undone!';
 
 /* End of file extensions_lang.php */
 /* Location: ./admin/language/english/extensions_lang.php */
