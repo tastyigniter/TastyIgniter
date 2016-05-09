@@ -168,6 +168,26 @@ if ( ! function_exists('extension_url'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('theme_url'))
+{
+	/**
+	 * Theme URL
+	 *
+	 * Create a local URL based on your theme path.
+	 * Segments can be passed in as a string.
+	 *
+	 * @param	string	$uri
+	 * @param	string	$protocol
+	 *
+	 * @return	string
+	 */
+	function theme_url($uri = '', $protocol = NULL) {
+		return get_instance()->config->root_url(APPDIR . '/views/themes/' . $uri, $protocol, TRUE);
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('page_url'))
 {
 	/**
