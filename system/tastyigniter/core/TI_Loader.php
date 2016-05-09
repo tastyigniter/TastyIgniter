@@ -62,6 +62,41 @@ class TI_Loader extends MX_Loader {
 
     // --------------------------------------------------------------------
 
+    /** Load a module view **/
+    public function view($view, $vars = array(), $return = FALSE)
+    {
+        $theme_paths = array(
+            $this->config->item(APPDIR, 'default_themes'), $this->config->item(APPDIR.'_parent', 'default_themes')
+        );
+
+        foreach (array_filter($theme_paths) as $theme_path) {
+            $theme_path = rtrim($theme_path, '/');
+
+            foreach (array('/', '/layouts/', '/partials/') as $folder) {
+                $t_view = (pathinfo($view, PATHINFO_EXTENSION)) ? $view : $view.EXT;
+
+                if (file_exists(THEMEPATH . $theme_path . $folder . $t_view)) {
+                    $path = THEMEPATH . $theme_path . $folder;
+                    $this->_ci_view_paths = array($path => TRUE) + $this->_ci_view_paths;
+                    break;
+                }
+            }
+        }
+
+        if (empty($path)) {
+            list($path, $_view) = Modules::find($view, $this->_module, 'views/');
+
+            if ($path != FALSE) {
+                $this->_ci_view_paths = array($path => TRUE) + $this->_ci_view_paths;
+                $view = $_view;
+            }
+        }
+
+        return $this->_ci_load(array('_ci_view' => $view, '_ci_vars' => $this->_ci_object_to_array($vars), '_ci_return' => $return));
+    }
+
+    // --------------------------------------------------------------------
+
     /**
      * CI Autoloader
      *
