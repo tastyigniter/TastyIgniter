@@ -10,7 +10,7 @@
 				</li>
 
 				<?php foreach ($categories as $category) { ?>
-					<?php $category_selector = '.'.strtolower(str_replace(' ', '-', $category['category_name']));
+					<?php $category_selector = '.'.strtolower(str_replace(' ', '-', str_replace('&', '_', $category['category_name'])));
 					if (( ! empty($menu_total) AND $menu_total > 500)) {
 						$loop_filter = ($category['category_id'] === $category_id) ? 'class=""' : 'class="active"';
 					} else {
@@ -25,7 +25,7 @@
 								<?php foreach ($category['children'] as $child) { ?>
 									<?php
 
-									$child_category_selector = '.'.strtolower(str_replace(' ', '-', $child['category_name']));
+									$child_category_selector = '.'.strtolower(str_replace(' ', '-', str_replace('&', '_', $child['category_name'])));
 									if (( ! empty($menu_total) AND $menu_total > 500)) {
 										$child_loop_filter = ($child['category_id'] === $category_id) ? 'class=""' : 'class="active"';
 									} else {
