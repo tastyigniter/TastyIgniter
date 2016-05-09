@@ -16,7 +16,9 @@ Release Date: April 2016
 * Affix categories sidebar (module) to page
 * Migration: added column `order_date` to `orders` table to allow future orders
 * Customer now redirects back to previous page after login when previous page is either checkout or reservation page
-* Location library methods `deliveryCondition()` to return an array of the current location delivery conditions to be used within controller
+* Location library method `deliveryCondition()` to return an array of the current location delivery conditions to be used within controller
+* Capability to create a child theme and override any parent theme file or extension view file from within the child theme
+* Added theme_url() function to return the site theme URL
 
 #### Changed
 * Major UI improvements to local, cart and categories modules, local, locations and checkout pages
@@ -39,6 +41,9 @@ Release Date: April 2016
 * Improved locations delivery area with conditions such as free delivery if total over certain amount
 * Location library method `deliveryCharge()` & `minimumOrder()` now expect cart total as parameter
 * Customer login function to allow the admin to login to any customer account without knowing the customer's password
+* Replaced _find_view() with _find_view_path() in Template Library, use _load_view instead of _find_view
+* Improved Template library to search for files (views, css, js) both in the active and parent theme (if the active theme is a child theme)
+* Improved TI_Loader library view() method to search current theme folder for view file before modules, this allows extension view files to be overridden from within a child theme folder
 
 #### Fixed
 * Issue with payment and confirm button changing incorrectly on checkout page
