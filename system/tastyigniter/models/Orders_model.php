@@ -39,6 +39,10 @@ class Orders_model extends TI_Model {
 				$this->db->where('order_type', $filter['filter_type']);
 			}
 
+			if ( ! empty($filter['filter_payment'])) {
+				$this->db->where('payment', $filter['filter_payment']);
+			}
+
 			if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
 				$this->db->where('orders.status_id', $filter['filter_status']);
 			}
@@ -94,6 +98,10 @@ class Orders_model extends TI_Model {
 
 			if (isset($filter['filter_type']) AND is_numeric($filter['filter_type'])) {
 				$this->db->where('order_type', $filter['filter_type']);
+			}
+
+			if ( ! empty($filter['filter_payment'])) {
+				$this->db->where('payment', $filter['filter_payment']);
 			}
 
 			if (APPDIR === MAINDIR) {

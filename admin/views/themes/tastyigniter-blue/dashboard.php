@@ -124,6 +124,7 @@
                         <ul class="list-group text-sm">
                             <li class="list-group-item"><?php echo lang('text_total_sale'); ?> <span class="text-red sales"><?php echo lang('text_zero'); ?></span></li>
                             <li class="list-group-item"><?php echo lang('text_total_lost_sale'); ?> <span class="text-yellow lost_sales"><?php echo lang('text_zero'); ?></span></li>
+                            <li class="list-group-item"><?php echo lang('text_total_cash_payment'); ?><span class="text-primary cash_payments"><?php echo lang('text_zero'); ?></span></li>
                             <li class="list-group-item"><?php echo lang('text_total_customer'); ?> <span class="text-blue customers"><?php echo lang('text_zero'); ?></span></li>
                             <li class="list-group-item"><?php echo lang('text_total_order'); ?> <span class="text-green orders"><?php echo lang('text_zero'); ?></span></li>
                             <li class="list-group-item"><?php echo lang('text_total_delivery_order'); ?> <span class="text-success delivery_orders"><?php echo lang('text_zero'); ?></span></li>
@@ -297,6 +298,7 @@ function getStatistics(stat_range) {
 			if (json) {
 				$('#statistics .sales, .mini-statistics .sales').html(json['sales']);
 				$('#statistics .lost_sales').html(json['lost_sales']);
+                $('#statistics .cash_payments').html(json['cash_payments']);
 				$('#statistics .customers, .mini-statistics .customers').html(json['customers']);
 				$('#statistics .orders, .mini-statistics .orders').html(json['orders']);
 				$('#statistics .orders_completed').html(json['orders_completed']);

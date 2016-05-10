@@ -143,6 +143,7 @@ class Dashboard extends Admin_Controller {
 		$result = $this->Dashboard_model->getStatistics($stat_range);
 		$json['sales'] 				= (empty($result['sales'])) ? $this->currency->format('0.00') : $this->currency->format($result['sales']);
 		$json['lost_sales'] 		= (empty($result['lost_sales'])) ? $this->currency->format('0.00') : $this->currency->format($result['lost_sales']);
+		$json['cash_payments'] 		= (empty($result['cash_payments'])) ? $this->currency->format('0.00') : $this->currency->format($result['cash_payments']);
 		$json['customers'] 			= (empty($result['customers'])) ? '0' : $result['customers'];
 		$json['orders'] 			= (empty($result['orders'])) ? '0' : $result['orders'];
 		$json['orders_completed'] 	= (empty($result['orders_completed'])) ? '0' : $result['orders_completed'];

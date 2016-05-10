@@ -10,6 +10,7 @@ $lang['text_collection'] 		            = 'Pick-up';
 $lang['text_no_activity'] 		            = 'There are no new activities available.';
 $lang['text_total_sale'] 		            = 'Total Sales';
 $lang['text_total_lost_sale'] 		        = 'Total Lost Sales';
+$lang['text_total_cash_payment'] 		    = 'Total Cash Payments';
 $lang['text_total_customer'] 		        = 'Total Customers';
 $lang['text_total_order'] 		            = 'Total Orders';
 $lang['text_total_delivery_order'] 		    = 'Total Delivery Orders';

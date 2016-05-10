@@ -64,6 +64,18 @@
 										</select>&nbsp;
 									</div>
 									<div class="form-group">
+										<select name="filter_payment" class="form-control input-sm">
+											<option value=""><?php echo lang('text_filter_payment'); ?></option>
+											<?php foreach ($payments as $payment) { ?>
+												<?php if ($payment['name'] === $filter_payment) { ?>
+													<option value="<?php echo $payment['name']; ?>" <?php echo set_select('filter_payment', $payment['name'], TRUE); ?> ><?php echo $payment['title']; ?></option>
+												<?php } else { ?>
+													<option value="<?php echo $payment['name']; ?>" <?php echo set_select('filter_payment', $payment['name']); ?> ><?php echo $payment['title']; ?></option>
+												<?php } ?>
+											<?php } ?>
+										</select>&nbsp;
+									</div>
+									<div class="form-group">
 										<select name="filter_date" class="form-control input-sm">
 											<option value=""><?php echo lang('text_filter_date'); ?></option>
 											<?php foreach ($order_dates as $key => $value) { ?>
@@ -95,6 +107,7 @@
 							<th><a class="sort" href="<?php echo $sort_customer; ?>"><?php echo lang('column_customer_name'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'first_name') ? $order_by_active : $order_by; ?>"></i></a></th>
 							<th><a class="sort" href="<?php echo $sort_status; ?>"><?php echo lang('column_status'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'status_name') ? $order_by_active : $order_by; ?>"></i></a></th>
 							<th><a class="sort" href="<?php echo $sort_type; ?>"><?php echo lang('column_type'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'order_type') ? $order_by_active : $order_by; ?>"></i></a></th>
+							<th><a class="sort" href="<?php echo $sort_payment; ?>"><?php echo lang('column_payment'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'payment') ? $order_by_active : $order_by; ?>"></i></a></th>
 							<th><a class="sort" href="<?php echo $sort_total; ?>"><?php echo lang('column_total'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'order_total') ? $order_by_active : $order_by; ?>"></i></a></th>
 							<th class="text-center"><a class="sort" href="<?php echo $sort_date; ?>"><?php echo lang('column_time_date'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'date_added') ? $order_by_active : $order_by; ?>"></i></a></th>
 						</tr>
@@ -110,6 +123,7 @@
 							<td><?php echo $order['first_name'] .' '. $order['last_name']; ?></td>
                             <td><span class="label label-default" style="background-color: <?php echo $order['status_color']; ?>;"><?php echo $order['order_status']; ?></span></td>
 							<td><?php echo $order['order_type']; ?></td>
+							<td><?php echo $order['payment']; ?></td>
 							<td><?php echo $order['order_total']; ?></td>
 							<td class="text-center"><?php echo $order['order_time']; ?> - <?php echo $order['order_date']; ?></td>
 						</tr>

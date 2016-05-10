@@ -898,7 +898,7 @@ margin-bottom: 0;
 
 /** FORM CONTROL GROUP **/
 .control-group-2 > .form-control {
-width:47.6%;
+width:47.4%;
 }
 .control-group-2 > .form-control.select2-container,
 .control-group-2 > .btn-group,
@@ -1832,15 +1832,40 @@ content: "\f0de";
 
 
 /** THEMES **/
-.theme-box {
-margin: 0px;
-padding: 15px;
-border: 1px solid #ECF0F5;
+.panel-theme {
+height: 212px;
+position: relative;
 }
-.theme-box .metas {
+.panel-theme .label-active {
+background-color: transparent;
+display: block;
+position: absolute;
+top: 0;
+right: 0;
+border-left: 45px solid transparent;
+border-top: 45px solid #f0ad4e;
+z-index: 9;
+padding: 0;
+border-radius: 0;
+}
+.panel-theme .metas {
 padding: 10px 0;
 }
-
+.panel-theme .theme-img {
+position: relative;
+}
+.panel-theme .theme-img .preview-thumb {
+display: none;
+position: absolute;
+top: 35%;
+left: 35%;
+}
+.panel-theme .theme-img:hover img {
+opacity: 0.2;
+}
+.panel-theme .theme-img:hover .preview-thumb {
+display: block;
+}
 
 /** MESSAGES **/
 .list-group-hover .list-group-item.active,
