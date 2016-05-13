@@ -21,7 +21,7 @@ class Pages extends Main_Controller {
 		$this->template->setTitle($result['title']);
 		$this->template->setHeading($result['heading']);
 		$this->template->setMeta(array('name' => 'description', 'content' => $result['meta_description']));
-		$this->template->setMeta(array('name' => 'description', 'content' => $result['meta_keywords']));
+		$this->template->setMeta(array('name' => 'keywords', 'content' => $result['meta_keywords']));
 		$data['page_id'] 			= $result['page_id'];
 		$data['text_heading'] 		= $result['heading'];
 		$data['page_content'] 		= $result['content'];

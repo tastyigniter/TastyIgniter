@@ -248,6 +248,9 @@ class Template {
     }
 
     private function setHeadTags($head_tags = array()) {
+        $head_tags['meta'][] = array('name' => 'description', 'content' => config_item('meta_description'));
+        $head_tags['meta'][] = array('name' => 'keywords', 'content' => config_item('meta_keywords'));
+
         if (!empty($head_tags)) {
             foreach ($head_tags as $type => $value) {
                 if ($type) {
