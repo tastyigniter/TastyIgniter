@@ -784,7 +784,7 @@ line-height: 1.4;
 text-align: left;
 }
 .control-label .help-block {
-font-size: 85%;
+font-size: 95%;
 font-weight: normal;
 font-style: italic;
 }
@@ -954,6 +954,7 @@ width: 100%;
 overflow: hidden;
 width: 49%;
 border: 0 none;
+text-shadow: none;
 -webkit-transition: all .4s ease;
 -moz-transition: all .4s ease;
 -o-transition: all .4s ease;
@@ -1331,9 +1332,29 @@ color:#FFF;
 .btn-add-image i {
 font-size:26px;
 }
+.btn-group > .btn-primary.active:hover,
+.btn-group > .btn-primary.active {
+background-color: #5384ae;
+}
+.btn-group > .btn-success.active:hover,
+.btn-group > .btn-success.active {
+background-color: #67ae67;
+}
+.btn-group > .btn-danger.active:hover,
+.btn-group > .btn-danger.active {
+background-color: #d25753;
+}
+.btn-group > .btn-warning.active:hover,
+.btn-group > .btn-warning.active {
+background-color: #e6a84f;
+}
+.btn-group > .btn-info.active:hover,
+.btn-group > .btn-info.active {
+background-color: #5cbad5;
+}
 
 
-/** DROPDOWN MENU **/
+    /** DROPDOWN MENU **/
 .dropdown-menu {
 border: 1px solid #dfe6ee;
 box-shadow: 0 6px 12px rgba(95, 128, 171, 0.176);
@@ -2284,6 +2305,21 @@ display: inline-block;
 }
 
 
+/*** EXTRA CHARGE BOX***/
+.extra-charge-heading {
+padding: 0 0 5px;
+}
+.extra-charge-content {
+}
+a[aria-expanded="true"] .fa-chevron-up {display: block}
+a[aria-expanded="false"] .fa-chevron-up {display: none;}
+a[aria-expanded="true"] .fa-chevron-down {display: none;}
+a[aria-expanded="false"] .fa-chevron-down {display: block;}
+a.expanded .fa-angle-double-up {display: block}
+a.collapsed .fa-angle-double-up {display: none;}
+a.expanded .fa-angle-double-down {display: none;}
+a.collapsed .fa-angle-double-down {display: block;}
+
 /*** METIS FOLDER TREE***/
 .metisHolder {
 background-color: #f7f7f7;
@@ -2577,7 +2613,9 @@ box-shadow: none;
 border-color: #4796c4 !important;
 }
 .select2-drop-active {
-border-color: #4796c4 !important;
+border-color: #d7e9f3 #4796C4 #4796C4 !important;
+border-width: 1px;
+border-style: solid;
 }
 .form-control .select2-choice .select2-arrow {
 border-radius: 0;

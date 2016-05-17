@@ -78,7 +78,7 @@
 					<tr>
 						<td class="action"><input type="checkbox" value="<?php echo $customer['customer_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
 							<a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $customer['edit']; ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
-							<a class="btn btn-info <?php echo empty($access_customer_account) ? 'disabled' : ''; ?>" title="<?php echo lang('text_login_as_customer'); ?>" href="<?php echo $customer['login']; ?>" target="_blank"><i class="fa fa-lock"></i></a>
+							<a class="btn btn-info <?php echo empty($access_customer_account) ? 'disabled' : ''; ?>" title="<?php echo lang('text_login_as_customer'); ?>" href="<?php echo $customer['login']; ?>" target="_blank"><i class="fa fa-user"></i>&nbsp;&nbsp;<i class="fa fa-arrow-right"></i></a>
 						</td>
 						<td><?php echo $customer['first_name']; ?></td>
 						<td><?php echo $customer['last_name']; ?></td>

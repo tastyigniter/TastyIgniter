@@ -72,7 +72,7 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('a, span, button').tooltip({placement: 'bottom'});
-			$('select.form-control').select2();
+			$('select.form-control').select2({minimumResultsForSearch: 10});
 
 			$('.alert').alert();
 			$('.dropdown-toggle').dropdown();

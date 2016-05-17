@@ -49,10 +49,12 @@
 										<td><b><?php echo lang('column_order'); ?>:</b></td>
 										<td><?php echo ($order_type === '1') ? lang('text_delivery') : lang('text_collection'); ?></td>
 									</tr>
+									<?php if ($order_type === '1') { ?>
 									<tr>
 										<td><b><?php echo lang('column_delivery'); ?>:</b></td>
 										<td><?php echo $delivery_address; ?></td>
 									</tr>
+									<?php } ?>
 									<tr>
 										<td><b><?php echo lang('column_payment'); ?>:</b></td>
 										<td><?php echo $payment; ?></td>

@@ -21,7 +21,7 @@
 								<td class="action action-one text-center handle"><i class="fa fa-sort"></i></td>
 								<td class="action action-one handle"><a class="btn btn-danger" onclick="confirm('<?php echo lang('alert_warning_confirm'); ?>') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a></td>
 								<td>
-									<input type="text" name="ratings[<?php echo $table_row; ?>]" class="form-control" value="<?php echo set_value('ratings[$table_row]', $value); ?>" />
+									<input type="text" name="ratings[<?php echo $table_row; ?>]" class="form-control" value="<?php echo set_value('ratings['.$table_row.']', $value); ?>" />
 									<?php echo form_error('ratings['.$table_row.']', '<span class="text-danger">', '</span>'); ?>
 								</td>
 							</tr>

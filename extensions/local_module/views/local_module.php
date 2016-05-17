@@ -66,7 +66,7 @@
 
                                     <?php if (!in_array($rsegment, array('local', 'locations'))) { ?>
                                         <div class="col-xs-12 col-sm-5 text-right">
-                                            <a class="btn btn-primary btn-menus" href="<?php echo site_url('local?location_id='.$location_id).'/#local-menus'; ?>"><i class="fa fa-cutlery"></i>
+                                            <a class="btn btn-primary btn-menus" href="<?php echo site_url('local?location_id='.$location_id).'#local-menus'; ?>"><i class="fa fa-cutlery"></i>
                                                 <span>&nbsp;&nbsp;<?php echo lang('text_goto_menus'); ?></span>
                                             </a>
                                         </div>

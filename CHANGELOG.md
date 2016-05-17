@@ -1,6 +1,6 @@
 ### v2.1.0
 
-Release Date: April 2016
+Release Date: May 2016
 
 #### Added
 * Customers model: new method `saveAddress()` to update/save/delete customer addresses
@@ -18,7 +18,8 @@ Release Date: April 2016
 * Customer now redirects back to previous page after login when previous page is either checkout or reservation page
 * Location library method `deliveryCondition()` to return an array of the current location delivery conditions to be used within controller
 * Capability to create a child theme and override any parent theme file or extension view file from within the child theme
-* Added theme_url() function to return the site theme URL
+* TI_url_helper theme_url() function to return the site theme URL
+* Total cash payments to admin dashboard statistics and payment column to admin order list view
 
 #### Changed
 * Major UI improvements to local, cart and categories modules, local, locations and checkout pages

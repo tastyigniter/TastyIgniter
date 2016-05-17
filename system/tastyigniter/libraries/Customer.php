@@ -31,6 +31,7 @@ class Customer {
 	private $address_id;
 	private $security_question_id;
 	private $security_answer;
+	private $customer_group_id;
 
 	public function __construct() {
 		$this->CI =& get_instance();
@@ -61,6 +62,7 @@ class Customer {
 				$this->address_id 			= $result['address_id'];
 				$this->security_question_id = $result['security_question_id'];
 				$this->security_answer 		= $result['security_answer'];
+				$this->customer_group_id 	= $result['customer_group_id'];
 
 				$this->updateCart();
 			} else {
@@ -107,6 +109,7 @@ class Customer {
 			$this->address_id 			= $result['address_id'];
 			$this->security_question_id = $result['security_question_id'];
 			$this->security_answer 		= $result['security_answer'];
+			$this->customer_group_id 	= $result['customer_group_id'];
 
 			$this->CI->db->set('ip_address', $this->CI->input->ip_address());
 			$this->CI->db->where('customer_id', $result['customer_id']);
@@ -129,6 +132,7 @@ class Customer {
 		$this->address_id = '';
 		$this->security_question_id = '';
 		$this->security_answer = '';
+		$this->customer_group_id = '';
     }
 
   	public function isLogged() {
@@ -183,6 +187,10 @@ class Customer {
 
   	public function getSecurityAnswer() {
 	    return $this->security_answer;
+	}
+
+  	public function getGroupId() {
+	    return $this->customer_group_id;
 	}
 
 	public function updateCart() {
