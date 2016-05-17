@@ -5,6 +5,8 @@ class Authorize_net_aim extends Main_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('Orders_model');
+        $this->load->model('Addresses_model');
+        $this->load->model('Countries_model');
     }
 
     public function index() {
