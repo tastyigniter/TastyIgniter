@@ -447,7 +447,11 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
                 $that->assertEquals(2, count($repos));
                 $prependedRepo = $repos[0];
                 $that->assertInstanceOf('Composer\Repository\VcsRepository', $prependedRepo);
-                $that->assertAttributeEquals('https://github.com/furgas/composer-merge-plugin.git', 'url', $prependedRepo);
+                $that->assertAttributeEquals(
+                    'https://github.com/furgas/composer-merge-plugin.git',
+                    'url',
+                    $prependedRepo
+                );
             }
         );
 
