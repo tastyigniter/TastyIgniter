@@ -388,6 +388,78 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, count($extraInstalls));
     }
 
+    /**
+     * Given a root package with an extra section
+     *   and prepend-repositories mode is active
+     *   and a composer.local.json with a repository
+     * When the plugin is run
+     * Then the repository from composer.local.json should be prepended to root package repository list
+     */
+    public function testPrependRepositories()
+    {
+        $that = $this;
+        $io = $this->io;
+        $dir = $this->fixtureDir(__FUNCTION__);
+
+        $repoManager = $this->prophesize(
+            'Composer\Repository\RepositoryManager'
+        );
+        $repoManager->createRepository(
+            Argument::type('string'),
+            Argument::type('array')
+        )->will(
+            function ($args) use ($that, $io) {
+                $that->assertEquals('vcs', $args[0]);
+                $that->assertEquals(
+                    'https://github.com/furgas/composer-merge-plugin.git',
+                    $args[1]['url']
+                );
+
+                return new \Composer\Repository\VcsRepository(
+                    $args[1],
+                    $io->reveal(),
+                    new \Composer\Config()
+                );
+            }
+        );
+        $repoManager->prependRepository(Argument::any())->will(
+            function ($args) use ($that) {
+                $that->assertInstanceOf(
+                    'Composer\Repository\VcsRepository',
+                    $args[0]
+                );
+            }
+        );
+        $this->composer->getRepositoryManager()->will(
+            function () use ($repoManager) {
+                return $repoManager->reveal();
+            }
+        );
+
+        $root = $this->rootFromJson("{$dir}/composer.json");
+
+        $root->setRequires()->shouldNotBeCalled();
+        $root->setDevRequires()->shouldNotBeCalled();
+
+        $root->setRepositories(Argument::type('array'))->will(
+            function ($args) use ($that) {
+                $repos = $args[0];
+                $that->assertEquals(2, count($repos));
+                $prependedRepo = $repos[0];
+                $that->assertInstanceOf('Composer\Repository\VcsRepository', $prependedRepo);
+                $that->assertAttributeEquals('https://github.com/furgas/composer-merge-plugin.git', 'url', $prependedRepo);
+            }
+        );
+
+        $root->getConflicts()->shouldNotBeCalled();
+        $root->getReplaces()->shouldNotBeCalled();
+        $root->getProvides()->shouldNotBeCalled();
+        $root->getSuggests()->shouldNotBeCalled();
+
+        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
+
+        $this->assertEquals(0, count($extraInstalls));
+    }
 
     /**
      * Given a root package

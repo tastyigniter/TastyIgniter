@@ -1,0 +1,17 @@
+{
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/bd808/composer-merge-plugin.git"
+        }
+    ],
+    "require": {
+        "wikimedia/composer-merge-plugin": "dev-master#deadbeef"
+    },
+    "extra": {
+        "merge-plugin": {
+            "include": "composer.local.json",
+            "prepend-repositories": true
+        }
+    }
+}
