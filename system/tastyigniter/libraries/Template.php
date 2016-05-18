@@ -260,10 +260,17 @@ class Template {
         }
     }
 
-    public function getPartialView($view = '') {
-        $partial_view = empty($this->_partials[$view]) ? $this->fetchPartials($view) : $this->_partials[$view];
+    public function getPartialView($view = '', $replace = array()) {
+        $partial = empty($this->_partials[$view]) ? $this->fetchPartials($view) : $this->_partials[$view];
 
-        return empty($partial_view) ? '' : $partial_view;
+        $partial_class = !empty($partial['data']['class']) ? $partial['data']['class'] : '';
+        $partial_class = !empty($replace['class']) ? $replace['class'] : $partial_class;
+
+        $partial_data = isset($partial['data']['open_tag']) ? str_replace('{id}', str_replace('_', '-', $view), str_replace('{class}', $partial_class, $partial['data']['open_tag'])) : '';
+        $partial_data .= empty($partial['view']) ? '' : $partial['view'];
+        $partial_data .= isset($partial['data']['close_tag']) ? $partial['data']['close_tag'] : '';
+
+        return $partial_data;
     }
 
     public function getDocType() {
@@ -564,32 +571,27 @@ class Template {
         if (empty($partial_areas)) return NULL;
 
         foreach ($partial_areas as $partial_name => $data) {
-            $partial_data = NULL;
+            $partial_view = NULL;
 
             if (!is_string($partial_name)) continue;
 
             if (isset($this->_layouts[$partial_name])) {
-                $partial_data = $this->_load_view($partial_name, $data);
+                $partial_view = $this->_load_view($partial_name, $data);
             } else {
-                $partial_class = isset($data['class']) ? $data['class'] : '';
-
                 // We stop here if no module was found.
                 if (empty($this->_modules[$partial_name])) continue;
 
-                $partial_data = isset($data['open_tag']) ? str_replace('{id}', str_replace('_', '-', $partial_name), str_replace('{class}', $partial_class, $data['open_tag'])) : '';
-
                 $this->sortModules($partial_name);
                 foreach ($this->_modules[$partial_name] as $module) {
-                    $partial_data .= Modules::run($module['name'] .'/index', $module, $this->_data);
+                    $partial_view = Modules::run($module['name'] .'/index', $module, $this->_data);
                 }
 
-                $partial_data .= isset($data['close_tag']) ? $data['close_tag'] : '';
             }
 
-            $this->_partials[$partial_name] = $partial_data;
+            $this->_partials[$partial_name] = array('data' => $data, 'view' => $partial_view);
         }
 
-        if (!empty($partial)) return isset($this->_partials[$partial]) ? $this->_partials[$partial] : NULL;
+        if (!empty($partial)) return isset($this->_partials[$partial]) ? $this->_partials[$partial] : array('data' => NULL, 'view' => NULL);
 
         return $this->_partials;
     }

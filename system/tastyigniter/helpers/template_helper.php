@@ -58,9 +58,7 @@ if ( ! function_exists('get_partial')) {
 	 * @return string
 	 */
 	function get_partial($partial = '', $class = '') {
-		$partial_data = get_instance()->template->getPartialView($partial);
-
-		return str_replace('{class}', $class, $partial_data);
+		return get_instance()->template->getPartialView($partial, array('class' => $class));
 	}
 }
 
