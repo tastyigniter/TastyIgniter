@@ -1,5 +1,5 @@
 <div id="category-box-affix" <?php echo $fixed_cart; ?>>
-	<div id="category-box" class="module-box hidden-xs">
+	<div id="category-box" class="module-box">
 		<div class="panel panel-default">
 			<ul class="list-group list-group-responsive">
 				<?php $data_filter = (!empty($menu_total) AND $menu_total > 500) ? 'class=""' : 'class="filter" data-filter="all"'; ?>
@@ -49,6 +49,11 @@
 	$(document).ready(function() {
 		$('#category-box-collapse .list-group-item').on('click', function() {
 			if ($('#category-box-collapse.in').length > 0) $('#category-box-collapse').collapse('toggle');
+		});
+
+		$(window).bind("load resize", function() {
+			var sideBarWidth = $('#content-left .side-bar').width();
+			$('#category-box-affix').css('width', sideBarWidth);
 		});
 	});
 //--></script>

@@ -4,7 +4,6 @@ margin-left: 0;
 #cart-box-affix.affix {
 position: fixed !important;
 top: 15px;
-width: 22%;
 z-index: 99;
 }
 #cart-box-affix .panel-cart {
@@ -17,7 +16,7 @@ margin-bottom: 10px;
 .panel-cart .panel-body {
     padding: 10px 15px;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 766px) {
     #cart-box-affix .panel {
     display: none;
 }
@@ -27,7 +26,6 @@ margin-bottom: 10px;
 .cart-alert-affix {
 position: fixed;
 top: 0;
-width: 100%;
 left: 0;
 right: 0;
 }

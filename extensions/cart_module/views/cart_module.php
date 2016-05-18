@@ -159,6 +159,11 @@
 	$(document).on('ready', function() {
 		$('.cart-alert-wrap .alert').fadeTo('slow', 0.1).fadeTo('slow', 1.0).delay(5000).slideUp('slow');
 		$('#cart-info .cart-items').css({"height" : "auto", "max-height" : cartHeight, "overflow" : "auto", "margin-right" : "-15px", "padding-right" : "5px"});
+
+		$(window).bind("load resize", function() {
+			var sideBarWidth = $('#content-right .side-bar').width();
+			$('#cart-box-affix').css('width', sideBarWidth);
+		});
 	});
 
 	$(document).on('change', 'input[name="order_type"]', function() {
