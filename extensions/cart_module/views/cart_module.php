@@ -81,7 +81,7 @@
 						<div class="cart-coupon">
 							<div class="input-group">
 								<input type="text" name="coupon_code" class="form-control" value="<?php echo isset($coupon['code']) ? $coupon['code'] : ''; ?>" placeholder="<?php echo lang('text_apply_coupon'); ?>" />
-								<span class="input-group-btn"><a class="btn btn-default" onclick="applyCoupon();"><?php echo lang('button_apply_coupon'); ?></a></span>
+								<span class="input-group-btn"><a class="btn btn-default" onclick="applyCoupon();" title="<?php echo lang('button_apply_coupon'); ?>"><i class="fa fa-check"></i></a></span>
 							</div>
 						</div>
 
@@ -133,6 +133,9 @@
 			<div class="cart-buttons wrap-none">
 				<div class="center-block">
 					<?php echo $button_order; ?>
+					<?php if (!$is_mobile) { ?>
+						<a class="btn btn-link btn-block visible-xs" href="<?php echo site_url('cart') ?>"><?php echo lang('button_view_cart'); ?></a>
+					<?php } ?>
 				</div>
 				<div class="clearfix"></div>
 			</div>
@@ -168,7 +171,9 @@
 				data: 'order_type=' + order_type,
 				dataType: 'json',
 				success: function (json) {
-					window.location.href = $(location).attr('href');
+					if (json['redirect'] && json['order_type'] == order_type) {
+						window.location.href = json['redirect'];
+					}
 				}
 			});
 		}

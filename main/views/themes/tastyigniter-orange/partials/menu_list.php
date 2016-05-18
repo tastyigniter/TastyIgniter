@@ -3,14 +3,14 @@
         <?php foreach ($categories as $category_id => $category) { ?>
             <?php $category_name = strtolower(str_replace(' ', '-', str_replace('&', '_', $category['name']))); ?>
             <div class="menu-container mix <?php echo $category_name; ?>">
-                <a class="menu-toggle visible-xs collapsed" href="#<?php echo $category_name; ?>" role="button" data-toggle="collapse" data-parent=".menu-list" aria-expanded="false" aria-controls="<?php echo $category_name; ?>">
+                <a class="menu-toggle visible-xs visible-sm collapsed" href="#<?php echo $category_name; ?>" role="button" data-toggle="collapse" data-parent=".menu-list" aria-expanded="false" aria-controls="<?php echo $category_name; ?>">
                     <?php echo $category['name']; ?>
                     <i class="fa fa-angle-down fa-2x fa-pull-right text-muted"></i>
                     <i class="fa fa-angle-up fa-2x fa-pull-right text-muted"></i>
                 </a>
                 <div id="<?php echo $category_name; ?>" class="navbar-collapse collapse wrap-none">
                     <div class="menu-category">
-                        <h3 class="hidden-xs"><?php echo $category['name']; ?></h3>
+                        <h3 class="hidden-xs hidden-sm"><?php echo $category['name']; ?></h3>
                         <p><?php echo $category['description']; ?></p>
                         <?php if (!empty($category['image'])) { ?>
                             <img class="img-responsive" src="<?php echo $category['image']; ?>" alt="<?php echo $category['name']; ?>"/>
@@ -36,18 +36,24 @@
                                             </span>
                                         </div>
                                         <div class="menu-right col-xs-4 wrap-none">
-                                            <?php echo $menu['menu_price']; ?>
+                                            <span class="menu-price"><?php echo $menu['menu_price']; ?></span>
                                             <span class="menu-button">
-                                                <?php if (isset($menu_options[$menu['menu_id']])) { ?>
+                                                <?php if ($menu['mealtime_status'] === '1' AND empty($menu['is_mealtime'])) { ?>
+                                                    <a class="btn btn-primary btn-cart add_cart disabled"><span class="fa fa-plus"></span></a>
+                                                <?php } else if (isset($menu_options[$menu['menu_id']])) { ?>
                                                     <a class="btn btn-primary btn-cart add_cart" onClick="openMenuOptions('<?php echo $menu['menu_id']; ?>', '<?php echo $menu['minimum_qty']; ?>');">
                                                         <span class="fa fa-plus"></span>
                                                     </a>
                                                 <?php } else { ?>
-                                                    <a class="btn btn-primary btn-cart add_cart" title="<?php echo lang('button_add'); ?>" onClick="addToCart('<?php echo $menu['menu_id']; ?>', '<?php echo $menu['minimum_qty']; ?>');">
+                                                    <a class="btn btn-primary btn-cart add_cart" onClick="addToCart('<?php echo $menu['menu_id']; ?>', '<?php echo $menu['minimum_qty']; ?>');">
                                                         <span class="fa fa-plus"></span>
                                                     </a>
                                                 <?php } ?>
                                             </span>
+                                            <?php if ($menu['mealtime_status'] === '1' AND empty($menu['is_mealtime'])) { ?>
+                                                <div class="menu-mealtime text-danger"><?php echo sprintf(lang('text_mealtime'), $menu['mealtime_name'], $menu['start_time'], $menu['end_time']); ?></div>
+                                            <?php }?>
+
                                             <?php if ($menu['special_status'] === '1' AND $menu['is_special'] === '1') { ?>
                                                 <div class="menu-special"><?php echo $menu['end_days']; ?></div>
                                             <?php }?>

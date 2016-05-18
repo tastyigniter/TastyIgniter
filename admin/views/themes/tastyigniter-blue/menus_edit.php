@@ -4,6 +4,7 @@
 		<div class="row wrap-vertical">
 			<ul id="nav-tabs" class="nav nav-tabs">
 				<li class="active"><a href="#general" data-toggle="tab"><?php echo lang('text_tab_general'); ?></a></li>
+				<li><a href="#menu-details" data-toggle="tab"><?php echo lang('text_tab_menu_details'); ?> </a></li>
 				<li><a href="#menu-options" data-toggle="tab"><?php echo lang('text_tab_menu_option'); ?> </a></li>
 				<li><a href="#specials" data-toggle="tab"><?php echo lang('text_tab_special'); ?> </a></li>
 			</ul>
@@ -73,6 +74,27 @@
 							<?php echo form_error('menu_photo', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
+				</div>
+
+				<div id="menu-details" class="tab-pane row wrap-all">
+					<div class="form-group">
+						<label for="input-mealtime" class="col-sm-3 control-label"><?php echo lang('label_mealtime'); ?>
+							<span class="help-block"><?php echo lang('help_mealtime'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<select name="mealtime_id" id="mealtime" class="form-control">
+								<option value=""><?php echo lang('text_mealtime_all'); ?></option>
+								<?php foreach ($mealtimes as $mealtime) { ?>
+									<?php if ($mealtime_id === $mealtime['mealtime_id']) { ?>
+										<option value="<?php echo $mealtime['mealtime_id']; ?>" <?php echo set_select('mealtime_id', $mealtime['mealtime_id'], TRUE); ?> ><?php echo $mealtime['mealtime_name']; ?> <?php echo $mealtime['label']; ?></option>
+									<?php } else { ?>
+										<option value="<?php echo $mealtime['mealtime_id']; ?>" <?php echo set_select('mealtime_id', $mealtime['mealtime_id']); ?> ><?php echo $mealtime['mealtime_name']; ?> <?php echo $mealtime['label']; ?></option>
+									<?php } ?>
+								<?php } ?>
+							</select>
+							<?php echo form_error('mealtime_id', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
 					<div class="form-group">
 						<label for="input-stock" class="col-sm-3 control-label"><?php echo lang('label_stock_qty'); ?>
 							<span class="help-block"><?php echo lang('help_stock_qty'); ?></span>
@@ -121,6 +143,13 @@
 							<?php echo form_error('menu_status', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
+					<div class="form-group">
+						<label for="input-menu-priority" class="col-sm-3 control-label"><?php echo lang('label_menu_priority'); ?></label>
+						<div class="col-sm-5">
+							<input type="text" name="menu_priority" id="input-menu-priority" class="form-control" value="<?php echo set_value('menu_priority', $menu_priority); ?>" />
+							<?php echo form_error('menu_priority', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
 				</div>
 
 				<div id="menu-options" class="tab-pane row wrap-all">
@@ -140,7 +169,7 @@
 						<ul id="sub-tabs" class="nav nav-tabs">
 							<?php $option_row = 1; ?>
 							<?php foreach ($menu_options as $menu_option) { ?>
-								<li><a href="#option<?php echo $option_row; ?>" data-toggle="tab"><?php echo $menu_option['option_name']; ?>&nbsp;&nbsp;<i class="fa fa-times-circle" onclick="if (confirm('<?php echo lang('alert_warning_confirm'); ?>')) { $('#sub-tabs a[rel=#option1]').trigger('click'); $('#option<?php echo $option_row; ?>').remove(); $(this).parent().parent().remove(); return false; } else { return false;}"></i></a></li>
+								<li><a href="#option<?php echo $option_row; ?>" data-toggle="tab"><?php echo "{$menu_option['option_name']} ({$menu_option['display_type']})"; ?>&nbsp;&nbsp;<i class="fa fa-times-circle" onclick="if (confirm('<?php echo lang('alert_warning_confirm'); ?>')) { $('#sub-tabs a[rel=#option1]').trigger('click'); $('#option<?php echo $option_row; ?>').remove(); $(this).parent().parent().remove(); return false; } else { return false;}"></i></a></li>
 								<?php $option_row++; ?>
 							<?php } ?>
 							<li id="last-tab"></li>
@@ -185,7 +214,8 @@
 														<th class="col-sm-4"><?php echo lang('label_option_value'); ?></th>
 														<th><?php echo lang('label_option_price'); ?></th>
 														<th><?php echo lang('label_option_qty'); ?></th>
-														<th class="col-sm-3 text-center"><?php echo lang('label_subtract_stock'); ?></th>
+														<th class="col-sm-2 text-center"><?php echo lang('label_subtract_stock'); ?></th>
+														<th class="text-center"><?php echo lang('label_option_default_value'); ?></th>
 														<th class="id"><?php echo lang('label_option_value_id'); ?></th>
 													</tr>
 												</thead>
@@ -208,24 +238,31 @@
 															<?php echo form_error('menu_options['.$option_row.'][option_values]['.$option_value_row.'][option_value_id]', '<span class="text-danger">', '</span>'); ?>
 														</td>
 														<td>
-															<input type="text" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][price]" class="form-control" value="<?php echo set_value('menu_options[$option_row][option_values][$option_value_row][price]', $value['price']); ?>" />
+															<input type="text" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][price]" class="form-control" value="<?php echo set_value('menu_options['.$option_row.'][option_values]['.$option_value_row.'][price]', $value['price']); ?>" />
 															<?php echo form_error('menu_options['.$option_row.'][option_values]['.$option_value_row.'][price]', '<span class="text-danger">', '</span>'); ?>
 														</td>
 														<td>
-															<input type="text" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][quantity]" class="form-control" value="<?php echo set_value('menu_options[$option_row][option_values][$option_value_row][quantity]', $value['quantity']); ?>" />
+															<input type="text" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][quantity]" class="form-control" value="<?php echo set_value('menu_options['.$option_row.'][option_values]['.$option_value_row.'][quantity]', $value['quantity']); ?>" />
 															<?php echo form_error('menu_options['.$option_row.'][option_values]['.$option_value_row.'][quantity]', '<span class="text-danger">', '</span>'); ?>
 														</td>
 														<td class="text-center">
 															<div class="btn-group btn-group-switch" data-toggle="buttons">
 																<?php if ($value['subtract_stock'] === '1') { ?>
-																	<label class="btn btn-danger"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="0"><?php echo lang('text_no'); ?></label>
-																	<label class="btn btn-success active"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="1" checked="checked"><?php echo lang('text_yes'); ?></label>
+																	<label class="btn btn-default"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="0"><?php echo lang('text_no'); ?></label>
+																	<label class="btn btn-default active"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="1" checked="checked"><?php echo lang('text_yes'); ?></label>
 																<?php } else { ?>
-																	<label class="btn btn-danger active"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="0" checked="checked"><?php echo lang('text_no'); ?></label>
-																	<label class="btn btn-success"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="1"><?php echo lang('text_yes'); ?></label>
+																	<label class="btn btn-default active"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="0" checked="checked"><?php echo lang('text_no'); ?></label>
+																	<label class="btn btn-default"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="1"><?php echo lang('text_yes'); ?></label>
 																<?php } ?>
 															</div>
 															<?php echo form_error('menu_options['.$option_row.'][option_values]['.$option_value_row.'][subtract_stock]', '<span class="text-danger">', '</span>'); ?>
+														</td>
+														<td class="text-center">
+															<?php if ($menu_option['default_value_id'] == $value['menu_option_value_id']) { ?>
+																<input type="radio" name="menu_options[<?php echo $option_row; ?>][default_value_id]" value="<?php echo $value['menu_option_value_id']; ?>" checked />
+															<?php } else { ?>
+																<input type="radio" name="menu_options[<?php echo $option_row; ?>][default_value_id]" value="<?php echo $value['menu_option_value_id']; ?>" />
+															<?php } ?>
 														</td>
 														<td class="id">
 															<input type="hidden" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][menu_option_value_id]" value="<?php echo $value['menu_option_value_id']; ?>" />
@@ -421,9 +458,10 @@ function addOptionValue(option_row) {
 	html += '	<td><input type="text" name="menu_options[' + option_row + '][option_values][' + option_value_row + '][price]" class="form-control" value="" /></td>';
 	html += '	<td><input type="text" name="menu_options[' + option_row + '][option_values][' + option_value_row + '][quantity]" class="form-control" value="" /></td>';
 	html += '	<td class="text-center"><div class="btn-group btn-group-switch" data-toggle="buttons">';
-	html += '		<label class="btn btn-danger active"><input type="radio" name="menu_options[' + option_row + '][option_values][' + option_value_row + '][subtract_stock]" checked="checked"value="0"><?php echo lang('text_disabled'); ?></label>';
-	html += '		<label class="btn btn-success"><input type="radio" name="menu_options[' + option_row + '][option_values][' + option_value_row + '][subtract_stock]" value="1"><?php echo lang('text_enabled'); ?></label>';
+	html += '		<label class="btn btn-default active"><input type="radio" name="menu_options[' + option_row + '][option_values][' + option_value_row + '][subtract_stock]" checked="checked"value="0"><?php echo lang('text_no'); ?></label>';
+	html += '		<label class="btn btn-default"><input type="radio" name="menu_options[' + option_row + '][option_values][' + option_value_row + '][subtract_stock]" value="1"><?php echo lang('text_yes'); ?></label>';
 	html += '	</div></td>';
+	html += '	<td class="text-center">-</td>';
 	html += '	<td class="id"><input type="hidden" name="menu_options[' + option_row + '][option_values][' + option_value_row + '][menu_option_value_id]" class="form-control" value="" />-</td>';
 	html += '</tr>';
 

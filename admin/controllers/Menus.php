@@ -10,6 +10,7 @@ class Menus extends Admin_Controller {
 		$this->load->model('Menus_model'); // load the menus model
 		$this->load->model('Categories_model'); // load the categories model
 		$this->load->model('Menu_options_model'); // load the menu options model
+		$this->load->model('Mealtimes_model'); // load the mealtimes model
 
 		$this->load->library('pagination');
 		$this->load->library('currency'); // load the currency library
@@ -192,6 +193,8 @@ class Menus extends Admin_Controller {
 		$data['special_price'] = (isset($menu_info['special_price']) AND $menu_info['special_price'] == '0.00') ? '' : $menu_info['special_price'];
 		$data['special_status'] = ($this->input->post('special_status')) ? $this->input->post('special_status') : $menu_info['special_status'];
 		$data['menu_status'] = $menu_info['menu_status'];
+		$data['mealtime_id'] = $menu_info['mealtime_id'];
+		$data['menu_priority'] = $menu_info['menu_priority'];
 		$data['no_photo'] = $this->Image_tool_model->resize('data/no_photo.png');
 
 		$data['categories'] = array();
@@ -200,6 +203,19 @@ class Menus extends Admin_Controller {
 			$data['categories'][] = array(
 				'category_id'   => $result['category_id'],
 				'category_name' => $result['name'],
+			);
+		}
+
+		$data['mealtimes'] = array();
+		$results = $this->Mealtimes_model->getMealtimes();
+		foreach ($results as $result) {
+			$start_time = mdate('%H:%i', strtotime($result['start_time']));
+			$end_time = mdate('%H:%i', strtotime($result['end_time']));
+
+			$data['mealtimes'][] = array(
+				'mealtime_id'   => $result['mealtime_id'],
+				'mealtime_name' => $result['mealtime_name'],
+				'label' => "({$start_time} - {$end_time})",
 			);
 		}
 
@@ -223,13 +239,14 @@ class Menus extends Admin_Controller {
 			}
 
 			$data['menu_options'][] = array(
-				'menu_option_id' => $option['menu_option_id'],
-				'option_id'      => $option['option_id'],
-				'option_name'    => $option['option_name'],
-				'display_type'   => $option['display_type'],
-				'required'       => $option['required'],
-				'priority'       => $option['priority'],
-				'option_values'  => $option_values,
+				'menu_option_id'    => $option['menu_option_id'],
+				'option_id'         => $option['option_id'],
+				'option_name'       => $option['option_name'],
+				'display_type'      => $option['display_type'],
+				'required'          => $option['required'],
+				'default_value_id'  => isset($option['default_value_id']) ? $option['default_value_id'] : 0,
+				'priority'          => $option['priority'],
+				'option_values'     => $option_values,
 			);
 		}
 
@@ -311,11 +328,18 @@ class Menus extends Admin_Controller {
 		$this->form_validation->set_rules('minimum_qty', 'lang:label_minimum_qty', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('subtract_stock', 'lang:label_subtract_stock', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('menu_status', 'lang:label_status', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('mealtime_id', 'lang:label_mealtime', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('menu_priority', 'lang:label_menu_priority', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('special_status', 'lang:label_special_status', 'xss_clean|trim|required|integer');
 
 		if ($this->input->post('menu_options')) {
 			foreach ($this->input->post('menu_options') as $key => $value) {
+				$this->form_validation->set_rules('menu_options[' . $key . '][menu_option_id]', 'lang:label_option', 'xss_clean|trim|required|integer');
 				$this->form_validation->set_rules('menu_options[' . $key . '][option_id]', 'lang:label_option_id', 'xss_clean|trim|required|integer');
+				$this->form_validation->set_rules('menu_options[' . $key . '][option_name]', 'lang:label_option_name', 'xss_clean|trim|required');
+				$this->form_validation->set_rules('menu_options[' . $key . '][display_type]', 'lang:label_option_display_type', 'xss_clean|trim|required');
+				$this->form_validation->set_rules('menu_options[' . $key . '][default_value_id]', 'lang:label_default_value_id', 'xss_clean|trim|integer');
+				$this->form_validation->set_rules('menu_options[' . $key . '][priority]', 'lang:label_option_id', 'xss_clean|trim|required|integer');
 				$this->form_validation->set_rules('menu_options[' . $key . '][required]', 'lang:label_option_required', 'xss_clean|trim|required|integer');
 
 				foreach ($value['option_values'] as $option => $option_value) {

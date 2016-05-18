@@ -40,7 +40,7 @@ class Menus extends Main_Controller {
 			$filter['limit'] = $this->config->item('menus_page_limit');
 		}
 
-        $filter['sort_by'] = 'menus.menu_id';
+        $filter['sort_by'] = 'menus.menu_priority';
         $filter['order_by'] = 'ASC';
         $filter['filter_status'] = '1';
 
@@ -112,12 +112,13 @@ class Menus extends Main_Controller {
             }
 
             $list_data['menu_options'][$option['menu_id']][] = array(
-                'menu_option_id' => $option['menu_option_id'],
-                'option_id'      => $option['option_id'],
-                'option_name'    => $option['option_name'],
-                'display_type'   => $option['display_type'],
-                'priority'       => $option['priority'],
-                'option_values'  => $option_values
+                'menu_option_id'   => $option['menu_option_id'],
+                'option_id'        => $option['option_id'],
+                'option_name'      => $option['option_name'],
+                'display_type'     => $option['display_type'],
+                'priority'         => $option['priority'],
+                'default_value_id' => isset($option['default_value_id']) ? $option['default_value_id'] : 0,
+                'option_values'    => $option_values,
             );
         }
 

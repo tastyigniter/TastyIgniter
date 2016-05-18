@@ -2,6 +2,8 @@
 
 class Cart_module extends Main_Controller {
 
+	protected $referrer_uri;
+
 	public function __construct() {
 		parent::__construct(); 																	// calls the constructor
 
@@ -15,6 +17,9 @@ class Cart_module extends Main_Controller {
         $this->load->library('currency'); 														// load the currency library
 
         $this->lang->load('cart_module/cart_module');
+
+		$referrer_uri = explode('/', str_replace(site_url(), '', $this->agent->referrer()));
+		$this->referrer_uri = ($this->uri->rsegment(1) === 'cart_module' AND !empty($referrer_uri[0])) ? $referrer_uri[0] : $this->uri->rsegment(1);
 	}
 
 	public function index($module = array(), $data = array()) {
@@ -136,13 +141,14 @@ class Cart_module extends Main_Controller {
 				}
 
 				$data['menu_options'][$option['menu_option_id']] = array(
-					'menu_option_id'	=> $option['menu_option_id'],
-					'menu_id'			=> $option['menu_id'],
-					'option_id'			=> $option['option_id'],
-					'option_name'		=> $option['option_name'],
-					'display_type'		=> $option['display_type'],
-					'priority'			=> $option['priority'],
-					'option_values'		=> $option_values_data
+					'menu_option_id'   => $option['menu_option_id'],
+					'menu_id'          => $option['menu_id'],
+					'option_id'        => $option['option_id'],
+					'option_name'      => $option['option_name'],
+					'display_type'     => $option['display_type'],
+					'priority'         => $option['priority'],
+					'default_value_id' => isset($option['default_value_id']) ? $option['default_value_id'] : 0,
+					'option_values'    => $option_values_data,
 				);
 			}
 		}
@@ -167,6 +173,7 @@ class Cart_module extends Main_Controller {
 			$this->location->setOrderType($order_type);
 
 			$json['order_type'] = $this->location->orderType();
+			$json['redirect'] = referrer_url();
 		}
 
 		$this->output->set_output(json_encode($json));	// encode the json array and set final out to be sent to jQuery AJAX
@@ -190,7 +197,7 @@ class Cart_module extends Main_Controller {
                     }
                     break;
                 default:
-                    $json['redirect'] = site_url(referrer_url());
+                    $json['redirect'] = referrer_url();
                     break;
             }
         }
@@ -217,8 +224,7 @@ class Cart_module extends Main_Controller {
 			show_404(); 																		// Whoops, show 404 error page!
 		}
 
-		$referrer_uri = explode('/', str_replace(site_url(), '', $this->agent->referrer()));
-		$data['rsegment'] = $rsegment = ($this->uri->rsegment(1) === 'cart_module' AND !empty($referrer_uri[0])) ? $referrer_uri[0] : $this->uri->rsegment(1);
+		$data['rsegment'] = $rsegment = $this->referrer_uri;
 
 		$ext_data = (!empty($module['data']) AND is_array($module['data'])) ? $module['data'] : array();
 
@@ -399,6 +405,13 @@ class Cart_module extends Main_Controller {
 		// if no menu found in database
 		if (empty($menu_data)) {
 			return sprintf($this->lang->line('alert_menu_not_found'), $cart_item['name']);
+		}
+
+		// if mealtime is set and current time is outside mealtime
+		if (!empty($menu_data['mealtime_id']) AND !empty($menu_data['mealtime_status']) AND empty($menu_data['is_mealtime'])) {
+			$start_time = mdate($this->config->item('time_format'), strtotime($menu_data['start_time']));
+			$end_time = mdate($this->config->item('time_format'), strtotime($menu_data['end_time']));
+			return sprintf($this->lang->line('alert_mealtime'), $cart_item['name'], $menu_data['mealtime_name'], $start_time, $end_time);
 		}
 
 		// if cart quantity is less than minimum quantity

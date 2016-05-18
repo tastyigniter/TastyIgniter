@@ -110,14 +110,15 @@ class Menu_options_model extends TI_Model {
 		if ($query->num_rows() > 0) {
 			foreach ($query->result_array() as $row) {
 				$results[] = array(
-					'menu_option_id' => $row['menu_option_id'],
-					'menu_id'        => $row['menu_id'],
-					'option_id'      => $row['option_id'],
-					'option_name'    => $row['option_name'],
-					'display_type'   => $row['display_type'],
-					'required'       => $row['required'],
-					'priority'       => $row['priority'],
-					'option_values'  => $this->getMenuOptionValues($row['menu_option_id'], $row['option_id']),
+					'menu_option_id'   => $row['menu_option_id'],
+					'menu_id'          => $row['menu_id'],
+					'option_id'        => $row['option_id'],
+					'option_name'      => $row['option_name'],
+					'display_type'     => $row['display_type'],
+					'required'         => $row['required'],
+					'default_value_id' => $row['default_value_id'],
+					'priority'         => $row['priority'],
+					'option_values'    => $this->getMenuOptionValues($row['menu_option_id'], $row['option_id']),
 				);
 			}
 		}
@@ -252,6 +253,7 @@ class Menu_options_model extends TI_Model {
 					$this->db->set('menu_id', $menu_id);
 					$this->db->set('option_id', $option['option_id']);
 					$this->db->set('required', $option['required']);
+					$this->db->set('default_value_id', empty($option['default_value_id']) ? '0' : $option['default_value_id']);
 					$this->db->set('option_values', serialize($option['option_values']));
 
 					if (isset($option['menu_option_id'])) {
@@ -260,8 +262,7 @@ class Menu_options_model extends TI_Model {
 
 					if ($query = $this->db->insert('menu_options')) {
 						$menu_option_id = $this->db->insert_id();
-						$this->addMenuOptionValues($menu_option_id, $menu_id, $option['option_id'],
-						                           $option['option_values']);
+						$this->addMenuOptionValues($menu_option_id, $menu_id, $option['option_id'], $option['option_values']);
 					}
 				}
 			}

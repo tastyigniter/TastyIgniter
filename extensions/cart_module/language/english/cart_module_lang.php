@@ -31,6 +31,7 @@ $lang['button_order'] 			            = 'Checkout';
 $lang['button_payment'] 			        = 'Payment';
 $lang['button_confirm'] 			        = 'Confirm';
 $lang['button_apply_coupon'] 			    = 'Apply Coupon';
+$lang['button_view_cart'] 			        = 'Back to My Order';
 
 $lang['label_menu_quantity'] 			    = 'Menu Quantity';
 $lang['label_add_comment'] 			        = 'Add Comment';
@@ -67,6 +68,7 @@ $lang['alert_coupon_expired'] 	            = '<p class="alert-danger">Your coupo
 $lang['alert_coupon_not_applied'] 	        = '<p class="alert-danger">Your coupon can not be applied to orders below %s.</p>';
 $lang['alert_coupon_maximum_reached'] 	    = '<p class="alert-danger">Maximum number of redemption for the coupon has been reached.</p>';
 $lang['alert_coupon_order_restriction'] 	= '<p class="alert-danger">Your coupon can ONLY be applied to <b>%s</b> orders</p>';
+$lang['alert_mealtime'] 	                = '<p class="alert-warning">%s is available for %s ONLY between (%s - %s)</p>';
 
 $lang['help_show_cart_images'] 			    = 'Show or hide cart menu images';
 $lang['help_cart_image_size'] 			    = '(Height x Width)';

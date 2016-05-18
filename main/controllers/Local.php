@@ -42,7 +42,7 @@ class Local extends Main_Controller {
             $filter['limit'] = $this->config->item('menus_page_limit');
         }
 
-        $filter['sort_by'] = 'menus.menu_id';
+        $filter['sort_by'] = 'menus.menu_priority';
         $filter['order_by'] = 'ASC';
         $filter['filter_status'] = '1';
         $filter['filter_category'] = (int) $this->input->get('category_id'); 									// retrieve 3rd uri segment else set FALSE if unavailable.

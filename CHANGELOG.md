@@ -20,6 +20,10 @@ Release Date: May 2016
 * Capability to create a child theme and override any parent theme file or extension view file from within the child theme
 * TI_url_helper theme_url() function to return the site theme URL
 * Total cash payments to admin dashboard statistics and payment column to admin order list view
+* New Stripe payment method to accept credit card payments through Stripe
+* Mealtimes (breakfast, lunch, dinner, ...) to set what time of the day a menu item can be ordered by the customer
+* Migration: add column `priority` to Menus table and column `default_value_id` to Menu Option table to sort the storefront menu list and choose an option value to be selected default in storefront
+* Migration: new table `mealtimes` to hold `start_time` and `end_time` for mealtimes
 
 #### Changed
 * Major UI improvements to local, cart and categories modules, local, locations and checkout pages
@@ -51,6 +55,8 @@ Release Date: May 2016
 * Issue with lost orders, this way a new order is not created after payment fails
 * Issue with displaying form validation error for payment methods
 * Issue where previous successfully placed order is overwritten when placing new order as guest
+* Issue where class selector passed into get_partial method is ignored
+* Issue with storefront menu list and sidebar modules widths
 
 ### v2.0.0 (stable)
 
