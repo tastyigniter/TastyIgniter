@@ -583,7 +583,7 @@ class Template {
 
                 $this->sortModules($partial_name);
                 foreach ($this->_modules[$partial_name] as $module) {
-                    $partial_view = Modules::run($module['name'] .'/index', $module, $this->_data);
+                    $partial_view .= Modules::run($module['name'] .'/index', $module, $this->_data);
                 }
 
             }
