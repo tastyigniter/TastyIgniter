@@ -342,24 +342,19 @@ class Orders extends Admin_Controller {
 		}
 
 		$data['totals'] = array();
-		$totals = array('cart_total' => '1', 'coupon' => '2', 'delivery' => '3', 'taxes' => '4', 'order_total' => '5');
 		$order_totals = $this->Orders_model->getOrderTotals($order_info['order_id']);
 		foreach ($order_totals as $total) {
-			if ($total['code'] == 'delivery' AND $order_info['order_type'] === '2') {
+			if ($order_info['order_type'] === '2' AND $total['code'] == 'delivery') {
 				continue;
 			}
 
-			$priority = isset($totals[$total['code']]) ? $totals[$total['code']] : '0';
-
 			$data['totals'][] = array(
-				'title' => $total['title'],
 				'code'  => $total['code'],
+				'title' => htmlspecialchars_decode($total['title']),
 				'value' => $this->currency->format($total['value']),
-				'priority' => empty($total['priority']) ? $priority : $total['priority'],
+				'priority' => $total['priority'],
 			);
 		}
-
-		$data['totals'] = sort_array($data['totals'], 'priority');
 
 		$data['order_total'] 		= $this->currency->format($order_info['order_total']);
 		$data['total_items']		= $order_info['total_items'];
@@ -470,27 +465,21 @@ class Orders extends Admin_Controller {
 		}
 
 		$data['totals'] = array();
-		$totals = array('cart_total' => '1', 'coupon' => '2', 'delivery' => '3', 'taxes' => '4', 'order_total' => '5');
 		$order_totals = $this->Orders_model->getOrderTotals($invoice_info['order_id']);
-		foreach ($order_totals as $total) {
+		foreach ($order_totals as $name => $total) {
 			if ($total['code'] == 'delivery' AND $invoice_info['order_type'] === '2') {
 				continue;
 			}
 
-			$priority = isset($totals[$total['code']]) ? $totals[$total['code']] : '0';
-
 			$data['totals'][] = array(
-				'title' => $total['title'],
 				'code'  => $total['code'],
+				'title' => htmlspecialchars_decode($total['title']),
 				'value' => $this->currency->format($total['value']),
-				'priority' => empty($total['priority']) ? $priority : $total['priority'],
+				'priority' => $total['priority'],
 			);
 		}
 
-		$data['totals'] = sort_array($data['totals'], 'priority');
-
 		$data['order_total'] = $this->currency->format($invoice_info['order_total']);
-
 
 		if ($action === 'view') {
 			$this->load->view($this->config->item(ADMINDIR, 'default_themes').'orders_invoice', $data);

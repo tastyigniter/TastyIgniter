@@ -2,6 +2,7 @@
 
 $lang['_text_title'] 		                = 'Cart';
 $lang['text_tab_general'] 		            = 'General';
+$lang['text_tab_totals'] 		            = 'Cart Totals';
 
 $lang['text_heading'] 			            = 'My Order';
 $lang['text_update_heading'] 		        = 'Updating menu choices';
@@ -24,6 +25,7 @@ $lang['text_option_price'] 		            = '<span class="option-amount pull-righ
 $lang['text_equals'] 			            = ' &equals; ';
 $lang['text_starts'] 		                = ' starts %s';
 $lang['text_in_minutes'] 			        = 'in %s min';
+$lang['text_empty'] 		                = 'There are no cart totals available.';
 
 $lang['button_add_to_order'] 			    = 'ADD TO ORDER';
 $lang['button_update'] 			            = 'UPDATE';
@@ -32,6 +34,10 @@ $lang['button_payment'] 			        = 'Payment';
 $lang['button_confirm'] 			        = 'Confirm';
 $lang['button_apply_coupon'] 			    = 'Apply Coupon';
 $lang['button_view_cart'] 			        = 'Back to My Order';
+
+$lang['column_title'] 		                = 'Title';
+$lang['column_admin_title'] 		        = 'Admin Title';
+$lang['column_display'] 		            = 'Display';
 
 $lang['label_menu_quantity'] 			    = 'Menu Quantity';
 $lang['label_add_comment'] 			        = 'Add Comment';
@@ -73,6 +79,9 @@ $lang['alert_mealtime'] 	                = '<p class="alert-warning">%s is avail
 $lang['help_show_cart_images'] 			    = 'Show or hide cart menu images';
 $lang['help_cart_image_size'] 			    = '(Height x Width)';
 $lang['help_fixed_offset'] 			        = 'Pixels to offset from top and bottom screen when calculating position of scroll.';
+$lang['help_total_admin_title'] 	        = 'Enter the total title to be used internally by admin.';
+$lang['help_total_title'] 		            = 'Enter the total title as it should be displayed in storefront.';
+$lang['help_total_display'] 		        = 'Set whether to display the total.';
 
 /* End of file cart_module_lang.php */
 /* Location: ./extensions/cart_module/language/english/cart_module_lang.php */

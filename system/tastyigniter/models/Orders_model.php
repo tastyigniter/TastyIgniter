@@ -459,18 +459,7 @@ class Orders_model extends TI_Model {
 
 				$this->addOrderMenus($order_id, $cart_contents);
 
-				$order_totals = array(
-					'cart_total'  => array('title' => 'Sub Total', 'value' => (isset($cart_contents['cart_total'])) ? $cart_contents['cart_total'] : '', 'priority' => '1'),
-					'order_total' => array('title' => 'Order Total', 'value' => (isset($cart_contents['order_total'])) ? $cart_contents['order_total'] : '', 'priority' => '5'),
-					'delivery'    => array('title' => 'Delivery', 'value' => (isset($cart_contents['delivery'])) ? $cart_contents['delivery'] : '', 'priority' => '3'),
-					'coupon'      => array('title' => 'Coupon (' . $cart_contents['coupon']['code'] . ') ', 'value' => $cart_contents['coupon']['discount'], 'priority' => '2'),
-				);
-
-				if (!empty($cart_contents['taxes'])) {
-					$order_totals['taxes'] = array('title' => $cart_contents['taxes']['title'], 'value' => $cart_contents['taxes']['amount'], 'priority' => '4');
-				}
-
-				$this->addOrderTotals($order_id, $order_totals);
+				$this->addOrderTotals($order_id, $cart_contents);
 
 				if ( ! empty($cart_contents['coupon'])) {
 					$this->addOrderCoupon($order_id, $order_info['customer_id'], $cart_contents['coupon']);
@@ -583,25 +572,41 @@ class Orders_model extends TI_Model {
 		}
 	}
 
-	public function addOrderTotals($order_id, $order_totals) {
-		if (is_numeric($order_id) AND ! empty($order_totals)) {
+	public function addOrderTotals($order_id, $cart_contents) {
+		if (is_numeric($order_id) AND ! empty($cart_contents['totals'])) {
 			$this->db->where('order_id', $order_id);
 			$this->db->delete('order_totals');
 
-			foreach ($order_totals as $key => $value) {
-				if (is_numeric($value['value'])) {
-					$this->db->set('order_id', $order_id);
-					$this->db->set('code', $key);
-					$this->db->set('title', $value['title']);
-					$this->db->set('priority', $value['priority']);
+			$this->load->model('cart_module/Cart_model');
+			$order_totals = $this->Cart_model->getTotals();
 
-					if ($key === 'coupon') {
-						$this->db->set('value', '-' . $value['value']);
-					} else {
-						$this->db->set('value', $value['value']);
+			$cart_contents['totals']['cart_total']['amount'] = (isset($cart_contents['cart_total'])) ? $cart_contents['cart_total'] : '';
+			$cart_contents['totals']['order_total']['amount'] = (isset($cart_contents['order_total'])) ? $cart_contents['order_total'] : '';
+
+			foreach ($cart_contents['totals'] as $name => $total) {
+				foreach ($order_totals as $total_name => $order_total) {
+					if ($name === $total_name AND is_numeric($total['amount'])) {
+						$total['title'] = empty($total['title']) ? $order_total['title'] : $total['title'];
+
+						if (isset($total['code'])) {
+							$total['title'] = str_replace('{coupon}', $total['code'], $total['title']);
+						} else if (isset($total['tax'])) {
+							$total['title'] = str_replace('{tax}', $total['tax'], $total['title']);
+						}
+
+						$this->db->set('order_id', $order_id);
+						$this->db->set('code', $name);
+						$this->db->set('title', htmlspecialchars($total['title']));
+						$this->db->set('priority', $order_total['priority']);
+
+						if ($name === 'coupon') {
+							$this->db->set('value', 0 - $total['amount']);
+						} else {
+							$this->db->set('value', $total['amount']);
+						}
+
+						$this->db->insert('order_totals');
 					}
-
-					$this->db->insert('order_totals');
 				}
 			}
 
@@ -716,23 +721,16 @@ class Orders_model extends TI_Model {
 				}
 			}
 
+			$data['order_totals'] = array();
 			$order_totals = $this->getOrderTotals($result['order_id']);
 			if ($order_totals) {
-				$totals = array('cart_total' => '1', 'coupon' => '2', 'delivery' => '3', 'taxes' => '4', 'order_total' => '5');
-
-				$data['order_totals'] = array();
 				foreach ($order_totals as $total) {
-
-					$priority = isset($totals[$total['code']]) ? $totals[$total['code']] : '0';
-
 					$data['order_totals'][] = array(
-						'order_total_title' => $total['title'],
+						'order_total_title' => htmlspecialchars_decode($total['title']),
 						'order_total_value' => $this->currency->format($total['value']),
-						'priority' => empty($total['priority']) ? $priority : $total['priority'],
+						'priority' => $total['priority'],
 					);
 				}
-
-				$data['order_totals'] = sort_array($data['order_totals'], 'priority');
 			}
 
 			$data['order_address'] = $this->lang->line('text_collection_order_type');

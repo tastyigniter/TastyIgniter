@@ -2,6 +2,14 @@
 
 class Cart_model extends TI_Model {
 
+	public function __construct() {
+		parent::__construct();
+
+		if ($this->db->where('type', 'cart_total')->get('extensions')->num_rows() <= 0) {
+			$this->extension->runMigration('cart_module');
+		}
+	}
+
 	public function getMenus() {
 		$this->db->select('menus.menu_id, menu_name, menu_description, menu_price, menu_photo, stock_qty, subtract_stock,
 			minimum_qty, special_status, special_price, menus.mealtime_id, mealtimes.mealtime_name, mealtimes.start_time, mealtimes.end_time, mealtime_status');
@@ -122,7 +130,38 @@ class Cart_model extends TI_Model {
         return $result;
     }
 
-    public function checkCoupon($code) {
+	public function getTotals($filter = array('filter_status' => '1')) {
+		$this->db->from('extensions');
+		$this->db->where('type', 'cart_total');
+
+		if (!empty($filter['filter_status'])) {
+			$this->db->where('status', $filter['filter_status']);
+		}
+
+		$query = $this->db->get();
+
+		$results = array();
+
+		if ($query->num_rows() > 0) {
+			foreach ($query->result_array() as $row) {
+				$row['data'] = ($row['serialized'] === '1' AND ! empty($row['data'])) ? unserialize($row['data']) : array();
+
+				$results[$row['name']] = array(
+					'name'        => $row['name'],
+					'title'       => htmlspecialchars_decode($row['data']['title']),
+					'admin_title' => htmlspecialchars_decode($row['data']['admin_title']),
+					'type'        => $row['type'],
+					'data'        => $row['data'],
+					'status'      => $row['status'],
+					'priority'    => $row['data']['priority'],
+				);
+			}
+		}
+
+		return sort_array($results, 'priority');
+	}
+
+	public function checkCoupon($code) {
 		$result = FALSE;
 
 		if (!empty($code)) {
@@ -192,6 +231,32 @@ class Cart_model extends TI_Model {
 
 			return $this->db->count_all_results();
 		}
+	}
+
+	public function updateTotals($save = array()) {
+		if (empty($save) AND ! is_array($save)) return FALSE;
+
+		$query = FALSE;
+
+		$total_row = 1;
+		foreach ($save as $key => $value) {
+			$value['priority'] = $total_row;
+			$value['title'] = htmlspecialchars($value['title']);
+
+			$this->db->set('status', $value['status']);
+			$this->db->set('title', $value['title']);
+			$this->db->set('data', serialize($value));
+			$this->db->set('serialized', '1');
+
+			$this->db->where('type', 'cart_total');
+			$this->db->where('name', $value['name']);
+
+			$query = $this->db->update('extensions');
+
+			$total_row++;
+		}
+
+		return $query;
 	}
 }
 

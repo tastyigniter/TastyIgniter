@@ -73,11 +73,11 @@
 								<span class="under-heading"></span>
 							</div>
 							<div class="table-responsive">
-								<table class="table table-hover">
+								<table class="table">
 									<thead>
 										<tr>
-											<th width="1"></th>
-											<th class="text-left" width="70%"><?php echo lang('column_menu_name'); ?></th>
+											<th style="width:7%"></th>
+											<th class="text-left" width="65%"><?php echo lang('column_menu_name'); ?></th>
 											<th class="text-right"><?php echo lang('column_menu_price'); ?></th>
 											<th class="text-right"><?php echo lang('column_menu_subtotal'); ?></th>
 										</tr>
@@ -85,7 +85,7 @@
 									<tbody>
 										<?php foreach ($menus as $menu) { ?>
 											<tr id="<?php echo $menu['id']; ?>">
-												<td width="1"><?php echo $menu['qty']; ?> x</td>
+												<td><?php echo $menu['qty']; ?> x</td>
 												<td class="text-left"><?php echo $menu['name']; ?><br />
 												<?php if (!empty($menu['options'])) { ?>
 													<div><small><?php echo lang('text_plus'); ?><?php echo $menu['options']; ?></small></div>
@@ -102,15 +102,15 @@
 										<?php foreach ($totals as $total) { ?>
 											<tr>
 												<td class="no-line" colspan="2"></td>
-												<td class="text-right no-line"><b><?php echo $total['title']; ?></b></td>
-												<td class="text-right no-line"><b><?php echo $total['value']; ?></b></td>
+												<?php if ($total['code'] === 'order_total') { ?>
+													<td class="text-right thick-line"><b><?php echo $total['title']; ?></b></td>
+													<td class="text-right thick-line"><b><?php echo $total['value']; ?></b></td>
+												<?php } else { ?>
+													<td class="text-right no-line"><?php echo $total['title']; ?></td>
+													<td class="text-right no-line"><?php echo $total['value']; ?></td>
+												<?php } ?>
 											</tr>
 										<?php } ?>
-											<tr>
-												<td class="no-line" colspan="2"></td>
-												<td class="text-right thick-line"><b><?php echo lang('column_total'); ?></b></td>
-												<td class="text-right thick-line"><b><?php echo $order_total; ?></b></td>
-											</tr>
 									</tbody>
 								</table>
 							</div>

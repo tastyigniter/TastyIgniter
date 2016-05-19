@@ -10,7 +10,7 @@ $lang['text_tab_status'] 		        = 'Status';
 $lang['text_tab_restaurant'] 		    = 'Restaurant';
 $lang['text_tab_delivery_address'] 		= 'Delivery Address';
 $lang['text_tab_payment'] 		        = 'Payment';
-$lang['text_tab_menu'] 		            = 'Menus  &nbsp;<span class="badge">%s</span>';
+$lang['text_tab_menu'] 		            = 'Menu Items  &nbsp;<span class="badge">%s</span>';
 $lang['text_empty'] 		            = 'There are no orders available.';
 $lang['text_no_status_history'] 		= 'There are no status history for this order.';
 $lang['text_filter_search'] 		    = 'Search order id, location or customer name.';

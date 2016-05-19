@@ -68,11 +68,13 @@
 											<?php if (!empty($cart_item['options'])) { ?>
 												<span class="options text-muted small"><?php echo $cart_item['options']; ?></span>
 											<?php } ?>
+										</a>
+										<p class="comment-amount">
+											<span class="amount pull-right"><?php echo $cart_item['sub_total']; ?></span>
 											<?php if (!empty($cart_item['comment'])) { ?>
 												<span class="comment text-muted small">[<?php echo $cart_item['comment']; ?>]</span>
 											<?php } ?>
-										</a>
-										<span class="amount"><?php echo $cart_item['sub_total']; ?></span>
+										</p>
 									</li>
 								<?php } ?>
 							</ul>
@@ -89,35 +91,31 @@
 							<div class="table-responsive">
 								<table width="100%" height="auto" class="table table-none">
 									<tbody>
-										<?php if (!empty($sub_total)) { ?>
-	                                        <tr>
-	                                            <td><b><?php echo lang('text_sub_total'); ?>:</b></td>
-	                                            <td class="text-right"><?php echo $sub_total; ?></td>
-	                                        </tr>
+										<?php foreach ($cart_totals as $name => $total) { ?>
+											<?php if (!empty($total)) { ?>
+												<tr>
+													<td><span class="text-muted">
+														<?php if ($name === 'order_total') { ?>
+															<b><?php echo $total['title']; ?>:</b>
+														<?php } else if ($name === 'coupon' AND isset($total['code'])) { ?>
+															<?php echo $total['title']; ?>:&nbsp;&nbsp;
+															<a class="remove clickable" onclick="clearCoupon('<?php echo $total['code']; ?>');"><span class="fa fa-times"></span></a>
+														<?php } else { ?>
+															<?php echo $total['title']; ?>:
+														<?php } ?>
+													</span></td>
+													<td class="text-right">
+														<?php if ($name === 'coupon') { ?>
+															-<?php echo $total['amount']; ?>
+														<?php } else if ($name === 'order_total') { ?>
+															<b><span class="order-total"><?php echo $total['amount']; ?></span></b>
+														<?php } else { ?>
+															<?php echo $total['amount']; ?>
+														<?php } ?>
+													</td>
+												</tr>
+											<?php } ?>
 										<?php } ?>
-										<?php if (!empty($coupon) AND isset($coupon['code']) AND isset($coupon['discount'])) { ?>
-	                                        <tr>
-	                                            <td><b><?php echo lang('text_coupon'); ?>:</b></td>
-	                                            <td class="text-right"><a class="remove clickable" onclick="clearCoupon('<?php echo $coupon['code']; ?>');"><span class="fa fa-times"></span></a>
-	                                            &nbsp;&nbsp;-<?php echo $coupon['discount']; ?></td>
-	                                        </tr>
-										<?php } ?>
-										<?php if (!empty($delivery)) { ?>
-	                                        <tr>
-	                                            <td><b><?php echo lang('text_delivery'); ?>:</b></td>
-	                                            <td class="text-right"><?php echo $delivery; ?></td>
-	                                        </tr>
-										<?php } ?>
-										<?php if (!empty($taxes) AND isset($taxes['title']) AND isset($taxes['amount'])) { ?>
-	                                        <tr>
-	                                            <td><b><?php echo $taxes['title']; ?>:</b></td>
-	                                            <td class="text-right"><?php echo $taxes['amount']; ?></td>
-	                                        </tr>
-										<?php } ?>
-	                                        <tr>
-	                                            <td><b><?php echo lang('text_order_total'); ?>:</b></td>
-	                                            <td class="text-right"><span class="order-total"><?php echo $order_total; ?></span></td>
-										    </tr>
 									</tbody>
 								</table>
 							</div>
@@ -317,6 +315,7 @@
 
 	function updateCartAlert(alert_message) {
 		if (alert_message != '') {
+			$('.cart-alert-wrap .alert, .cart-alert-wrap .cart-alert').empty();
 			$('.cart-alert-wrap .cart-alert').append(alert_message);
 			$('.cart-alert-wrap .alert').slideDown('slow').fadeTo('slow', 0.1).fadeTo('slow', 1.0).delay(5000).slideUp('slow');
 		}

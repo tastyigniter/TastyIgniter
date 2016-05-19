@@ -31,34 +31,32 @@ class TI_Cart extends CI_Cart {
 	 */
 	public $product_name_rules	= '^\/';
 
-	private $coupon_array = array('code' => '', 'discount' => '');
-    private $taxes_array = array();
+	protected $_cart_totals = array();
 
 	public function __construct($params = array()) {
-		parent::__construct();
+		// Set the super object to a local variable for use later
 		$this->CI =& get_instance();
 
-		if (!isset($this->_cart_contents['order_total'])) {
-			$this->_cart_contents['order_total'] = 0;
+		// Are any config settings being passed manually?  If so, set them
+		$config = is_array($params) ? $params : array();
+
+		// Load the Sessions class
+		$this->CI->load->driver('session', $config);
+
+		// Grab the shopping cart array from the session table
+		$this->_cart_contents = $this->CI->session->userdata('cart_contents');
+		if ($this->_cart_contents === NULL)
+		{
+			// No cart exists so we'll set some base values
+			$this->_cart_contents = array('cart_total' => 0, 'total_items' => 0, 'order_total' => 0, 'totals' => array());
 		}
 
-		if (!isset($this->_cart_contents['delivery'])) {
-			$this->_cart_contents['delivery'] = 0;
-		}
-
-		if (!isset($this->_cart_contents['coupon'])) {
-			$this->_cart_contents['coupon'] = $this->coupon_array;
-		}
-
-		if (!isset($this->_cart_contents['taxes'])) {
-			$this->_cart_contents['taxes'] = $this->taxes_array;
-		}
+		$this->_cart_totals = isset($this->_cart_contents['totals']) ? $this->_cart_contents['totals'] : array();
 
 		log_message('info', "Cart Class Initialized");
 	}
 
 	// --------------------------------------------------------------------
-
 
     /**
      * Set Delivery Charge *** TASTYIGNITER
@@ -74,10 +72,12 @@ class TI_Cart extends CI_Cart {
 			$save_cart = FALSE;
 		}
 
-		$this->_cart_contents['delivery'] = 0;
+		$this->_cart_totals['delivery'] = NULL;
 
 		if ($charge > 0) {
-			$this->_cart_contents['delivery'] = $charge;
+			$this->_cart_totals['delivery']['priority'] = '2';
+			$this->_cart_totals['delivery']['amount'] = $charge;
+			$this->_cart_totals['delivery']['action'] = 'add';
 			$save_cart = TRUE;
 		}
 
@@ -112,7 +112,10 @@ class TI_Cart extends CI_Cart {
         }
 
         if ($coupon['discount'] > 0) {
-			$this->_cart_contents['coupon'] = array('code' => $coupon['code'], 'discount' => $coupon['discount']);
+			$this->_cart_totals['coupon']['priority'] = '1';
+			$this->_cart_totals['coupon']['amount'] = $coupon['discount'];
+			$this->_cart_totals['coupon']['action'] = 'subtract';
+			$this->_cart_totals['coupon']['code'] = $coupon['code'];
 			$save_cart = TRUE;
 		}
 
@@ -135,11 +138,106 @@ class TI_Cart extends CI_Cart {
      * @return bool
      */
 	public function remove_coupon($coupon_code = '') {
-		if (isset($this->_cart_contents['coupon'])) {
-			if ($coupon_code !== '' AND $this->_cart_contents['coupon']['code'] === $coupon_code) {
-				$this->_cart_contents['coupon'] = $this->coupon_array;
-				$this->_save_cart();
+		$coupon = $this->coupon();
+
+		if ($coupon_code !== '' AND isset($coupon['code']) AND $coupon['code'] === $coupon_code) {
+			unset($this->_cart_totals['coupon']);
+			$this->_save_cart();
+		}
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Calculate tax if enabled
+	 *
+	 * @return float
+	 */
+	public function calculate_tax() {
+		$this->_cart_totals['taxes'] = array();
+
+		// Calculate taxes if enabled
+		if ($this->CI->config->item('tax_mode') === '1' AND $this->CI->config->item('tax_percentage')) {
+			$tax_percent = $this->CI->config->item('tax_percentage') ? $this->CI->config->item('tax_percentage') : 0;
+
+			$total = $this->_cart_contents['order_total'];
+
+			// Remove delivery charge from total if its not taxable
+			if (isset($this->_cart_totals['delivery']['amount']) AND $this->CI->config->item('tax_delivery_charge') !== '1') {
+				$total -= $this->_cart_totals['delivery']['amount'];
 			}
+
+			// calculate tax amount based on percentage
+			$tax_amount = ($tax_percent / 100 * $total);
+
+			// If apply taxes on menu price, else
+			if ($this->CI->config->item('tax_menu_price') === '1') {
+				$tax_title = ' (' . $tax_percent . '%)';
+				$ignore = 'add';
+			} else {
+				$tax_title = ' (' . $tax_percent . '% included)';
+				$ignore = 'ignore';
+			}
+
+			$this->_cart_totals['taxes']['priority'] = '3';
+			$this->_cart_totals['taxes']['amount'] = $tax_amount;
+			$this->_cart_totals['taxes']['action'] = $ignore;
+			$this->_cart_totals['taxes']['tax'] = $tax_title;
+			$this->_cart_totals['taxes']['percent'] = $tax_percent;
+
+			$this->_save_cart();
+		}
+
+		return $this->_cart_totals['taxes'];
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Add additional cart total
+	 *
+	 * This function adds new total to cart totals.
+	 *
+	 * @access    public
+	 * @param array $total
+	 *
+	 * @return int
+	 */
+	public function add_total($total = array()) {
+		if ( ! is_array($total) OR ! isset($total['amount'], $total['title'], $total['action'], $total['priority'])) {
+			log_message('error', 'The cart total array must contain a total name, title, amount, action, and priority.');
+			return FALSE;
+		}
+
+		if ( ! isset($total['name']) OR ! preg_match('/^[a-z0-9_-]+$/i', $total['name'])) {
+			log_message('error', 'An invalid name was submitted as the total name: The name can only contain alpha-numeric characters, dashes, underscores');
+			return FALSE;
+		}
+
+		$total['amount'] = (float) $total['amount'];
+		$total['title'] = htmlspecialchars_decode($total['title']);
+		$this->_cart_totals[$total['name']] = $total;
+
+		$this->_save_cart();
+
+		return TRUE;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Remove Total
+	 *
+	 * This function removes total from totals.
+	 *
+	 * @access    public
+	 * @param string $total_name
+	 * @return bool
+	 */
+	public function remove_total($total_name = '') {
+		if ($total_name !== '' AND isset($this->_cart_totals[$total_name])) {
+			unset($this->_cart_totals[$total_name]);
+			$this->_save_cart();
 		}
 	}
 
@@ -167,22 +265,23 @@ class TI_Cart extends CI_Cart {
 
 		$total = $this->_cart_contents['cart_total'];
 
-		if (isset($this->_cart_contents['coupon']['discount'])) {
-			$total -= $this->_cart_contents['coupon']['discount'];
-		}
+		$this->_cart_contents['totals'] = sort_array($this->_cart_totals);
+		foreach ($this->_cart_contents['totals'] as $key => $val) {
+			if ( ! is_array($val) OR ! isset($val['amount'], $val['action'], $val['priority'])) {
+				continue;
+			}
 
-		if (isset($this->_cart_contents['delivery'])) {
-			$total += $this->_cart_contents['delivery'];
-		}
-
-		if (!empty($this->_cart_contents['taxes']['amount']) AND !empty($this->_cart_contents['taxes']['apply'])) {
-			$total += $this->_cart_contents['taxes']['amount'];
+			if ($val['action'] === 'add') {
+				$total += $val['amount'];
+			} else if ($val['action'] === 'subtract') {
+				$total -= $val['amount'];
+			}
 		}
 
 		$this->_cart_contents['order_total'] = $total;
 
 		// Is our cart empty? If so we delete it from the session
-		if (count($this->_cart_contents) <= 6) {
+		if (count($this->_cart_contents) <= 4) {
 			$this->CI->session->unset_userdata('cart_contents');
 
 			// Nothing more to do... coffee time!
@@ -229,15 +328,55 @@ class TI_Cart extends CI_Cart {
 		unset($cart['total_items']);
 		unset($cart['cart_total']);
 		unset($cart['order_total']);
-		unset($cart['delivery']);
-		unset($cart['coupon']);
-		unset($cart['taxes']);
+		unset($cart['totals']);
+
+		// Backward compatibility
+		if (isset($cart['delivery'])) unset($cart['delivery']);
+		if (isset($cart['coupon'])) unset($cart['coupon']);
+		if (isset($cart['taxes'])) unset($cart['taxes']);
 
 		return $cart;
 	}
 
 	// --------------------------------------------------------------------
 
+	/**
+	 * Get Cart Totals
+	 *
+	 * Returns the cart totals array
+	 *
+	 * @access	public
+	 * @return	integer
+	 */
+	public function totals() {
+		$cart_totals = $this->_cart_totals;
+		$cart_totals['cart_total']['amount'] = $this->total();
+		$cart_totals['order_total']['amount'] = $this->order_total();
+
+		return $cart_totals;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Get cart total
+	 *
+	 * Returns the total from the cart totals array
+	 *
+	 * @param	string	$total_name
+	 * @return	array
+	 */
+	public function get_total($total_name = '') {
+		$total = array();
+
+		if ($total_name !== '' AND isset($this->_cart_totals[$total_name])) {
+			$total = $this->_cart_totals[$total_name];
+		}
+
+		return $total;
+	}
+
+	// --------------------------------------------------------------------
 
 	/**
 	 * Get cart item by id
@@ -283,7 +422,7 @@ class TI_Cart extends CI_Cart {
 	 * @return	integer
 	 */
 	public function delivery() {
-		return $this->_cart_contents['delivery'];
+		return isset($this->_cart_totals['delivery']['amount']) ? $this->_cart_totals['delivery']['amount'] : 0;
 	}
 
 	// --------------------------------------------------------------------
@@ -297,7 +436,7 @@ class TI_Cart extends CI_Cart {
 	 * @return	integer
 	 */
 	public function coupon() {
-		return is_array($this->_cart_contents['coupon']) ? $this->_cart_contents['coupon'] : $this->coupon_array;
+		return !empty($this->_cart_totals['coupon']) ? $this->_cart_totals['coupon'] : array();
 	}
 
 	// --------------------------------------------------------------------
@@ -327,7 +466,7 @@ class TI_Cart extends CI_Cart {
 	 */
 	public function coupon_discount() {
         $coupon = $this->coupon();
-        return ($coupon['discount'] > 0) ? $coupon['discount'] : NULL;
+        return ($coupon['amount'] > 0) ? $coupon['amount'] : NULL;
 	}
 
 	/**
@@ -339,7 +478,7 @@ class TI_Cart extends CI_Cart {
 	 * @return	integer
 	 */
 	public function tax_array() {
-		return is_array($this->_cart_contents['taxes']) ? $this->_cart_contents['taxes'] : $this->taxes_array;
+		return !empty($this->_cart_totals['taxes']) ? $this->_cart_totals['taxes'] : array();
 	}
 
 	// --------------------------------------------------------------------
@@ -389,57 +528,6 @@ class TI_Cart extends CI_Cart {
 
 	// --------------------------------------------------------------------
 
-	/**
-	 * Calculate tax if enabled
-	 *
-	 * @param $total
-	 *
-	 * @return float
-	 */
-	public function calculate_tax() {
-
-		$this->_cart_contents['taxes'] = $this->taxes_array;
-
-		// Calculate taxes if enabled
-		if ($this->CI->config->item('tax_mode') === '1' AND $this->CI->config->item('tax_percentage')) {
-			$tax_percent = $this->CI->config->item('tax_percentage') ? $this->CI->config->item('tax_percentage') : 0;
-
-			$total = $this->_cart_contents['cart_total'];
-
-			if (isset($this->_cart_contents['coupon']['discount'])) {
-				$total -= $this->_cart_contents['coupon']['discount'];
-			}
-
-			// Add delivery charge to total if its taxable
-			if (isset($this->_cart_contents['delivery'])) {
-				if ($this->CI->config->item('tax_delivery_charge') === '1') {
-					$total += $this->_cart_contents['delivery'];
-				}
-			}
-
-			// calculate tax amount based on percentage
-			$tax_amount = ($tax_percent / 100 * $total);
-
-			// If apply taxes on menu price, else
-			if ($this->CI->config->item('tax_menu_price') === '1') {
-				$tax_title = $this->CI->config->item('tax_title') . ' (' . $tax_percent . '%)';
-				$apply = TRUE;
-			} else {
-				$tax_title = $this->CI->config->item('tax_title') . ' (' . $tax_percent . '% included)';
-				$apply = FALSE;
-			}
-
-			$this->_cart_contents['taxes']['title'] = $tax_title;
-			$this->_cart_contents['taxes']['percent'] = $tax_percent;
-			$this->_cart_contents['taxes']['amount'] = $tax_amount;
-			$this->_cart_contents['taxes']['apply'] = $apply;
-
-			$this->_save_cart();
-		}
-
-		return $this->_cart_contents['taxes'];
-	}
-
 	public function product_options_string($row_id, $split = '<br />') {
 		$string = '';
 
@@ -464,6 +552,19 @@ class TI_Cart extends CI_Cart {
 		}
 
 		return $ids;
+	}
+
+	/**
+	 * Destroy the cart
+	 *
+	 * Empties the cart and kills the session
+	 *
+	 * @return	void
+	 */
+	public function destroy()
+	{
+		$this->_cart_contents = array('cart_total' => 0, 'total_items' => 0, 'order_total' => 0, 'totals' => array());
+		$this->CI->session->unset_userdata('cart_contents');
 	}
 }
 

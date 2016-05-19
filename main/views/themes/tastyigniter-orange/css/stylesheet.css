@@ -737,6 +737,9 @@ color: #484848;
 .panel .list-group {
   margin-bottom: 0;
 }
+#local-information .panel-nav-tabs .nav-tabs > li > a {
+padding: 10px;
+}
 /*** End Panels ***/
 
 

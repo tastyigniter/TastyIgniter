@@ -82,19 +82,17 @@
 												<?php } ?>
 												<tr><td class="thick-line" colspan="4"></td></tr>
 												<?php foreach ($order_totals as $total) { ?>
-													<?php if ($total['code'] !== 'order_total') { ?>
-														<tr>
-															<td class="no-line" colspan="2"></td>
-															<td class="no-line text-right"><?php echo $total['title']; ?></td>
-															<td class="no-line text-right"><?php echo $total['value']; ?></td>
-														</tr>
-													<?php } ?>
+													<tr>
+														<td class="no-line" colspan="2"></td>
+														<?php if ($total['code'] === 'order_total') { ?>
+															<td class="text-right thick-line"><b><?php echo $total['title']; ?></b></td>
+															<td class="text-right thick-line"><b><?php echo $total['value']; ?></b></td>
+														<?php } else { ?>
+															<td class="text-right no-line"><?php echo $total['title']; ?></td>
+															<td class="text-right no-line"><?php echo $total['value']; ?></td>
+														<?php } ?>
+													</tr>
 												<?php } ?>
-												<tr>
-													<td class="no-line" colspan="2"></td>
-													<td class="thick-line text-right"><strong><?php echo lang('text_order_total'); ?></strong></td>
-													<td class="thick-line text-right"><strong><?php echo $order_total; ?></strong></td>
-												</tr>
 				                            </tbody>
 				                        </table>
 				                    </div>

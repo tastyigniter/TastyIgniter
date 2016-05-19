@@ -117,8 +117,13 @@
 									<tr>
 										<td class="<?php echo ($total_count === 1) ? 'thick' : 'no'; ?>-line"></td>
 										<td class="<?php echo ($total_count === 1) ? 'thick' : 'no'; ?>-line"></td>
-										<td class="<?php echo ($total_count === 1) ? 'thick' : 'no'; ?>-line text-left"><b><?php echo $total['title']; ?></b></td>
-										<td class="<?php echo ($total_count === 1) ? 'thick' : 'no'; ?>-line text-right"><b><?php echo $total['value']; ?></b></td>
+										<?php if ($total['code'] === 'order_total') { ?>
+											<td class="thick-line text-left"><b><?php echo $total['title']; ?></b></td>
+											<td class="thick-line text-right"><b><?php echo $total['value']; ?></b></td>
+										<?php } else { ?>
+											<td class="<?php echo ($total_count === 1) ? 'thick' : 'no'; ?>-line text-left"><?php echo $total['title']; ?></td>
+											<td class="<?php echo ($total_count === 1) ? 'thick' : 'no'; ?>-line text-right"><?php echo $total['value']; ?></td>
+										<?php } ?>
 									</tr>
 									<?php $total_count++; ?>
 								<?php } ?>

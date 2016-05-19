@@ -24,6 +24,8 @@ Release Date: May 2016
 * Mealtimes (breakfast, lunch, dinner, ...) to set what time of the day a menu item can be ordered by the customer
 * Migration: add column `priority` to Menus table and column `default_value_id` to Menu Option table to sort the storefront menu list and choose an option value to be selected default in storefront
 * Migration: new table `mealtimes` to hold `start_time` and `end_time` for mealtimes
+* Improved Cart: new extension type `cart_total` to allow cart totals extension and priority from within cart module
+* Improved Cart: developers can add new cart total using `cart_module_before_cart_totals` hook point and new Cart library methods `add_total()`, `remove_total()` and `get_total()`
 
 #### Changed
 * Major UI improvements to local, cart and categories modules, local, locations and checkout pages
@@ -46,9 +48,11 @@ Release Date: May 2016
 * Improved locations delivery area with conditions such as free delivery if total over certain amount
 * Location library method `deliveryCharge()` & `minimumOrder()` now expect cart total as parameter
 * Customer login function to allow the admin to login to any customer account without knowing the customer's password
-* Replaced _find_view() with _find_view_path() in Template Library, use _load_view instead of _find_view
-* Improved Template library to search for files (views, css, js) both in the active and parent theme (if the active theme is a child theme)
-* Improved TI_Loader library view() method to search current theme folder for view file before modules, this allows extension view files to be overridden from within a child theme folder
+* Replaced `_find_view()` with `_find_view_path()` in Template Library, use `_load_view()` instead of `_find_view()`
+* Improved Template library to search for files `views, css, js` both in the active and parent theme `if the active theme is a child theme`
+* Improved TI_Loader library `view()` method to search current theme folder for view file before modules, this allows extension view files to be overridden from within a child theme folder
+* Improved Cart: moved cart validate methods from controller to new `Cart_module_lib` library
+* Removed admin settings option Tax Title, so tax title can be set from within Cart Module
 
 #### Fixed
 * Issue with payment and confirm button changing incorrectly on checkout page
