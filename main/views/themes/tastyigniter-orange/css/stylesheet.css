@@ -114,6 +114,9 @@ padding-right: 15px !important;
 border-right: 1px solid #EEE !important;
 border-left: 1px solid #EEE !important;
 }
+.border-none {
+  border: 0 none;
+}
 .border-left {
 border-left: 1px solid #EEE !important;
 }

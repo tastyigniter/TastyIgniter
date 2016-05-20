@@ -2,19 +2,19 @@
 <?php echo get_partial('content_top'); ?>
 
 <?php if ($this->alert->get()) { ?>
-    <div id="notification">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <?php echo $this->alert->display(); ?>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div id="notification">
+		<div class="container top-spacing-20">
+			<div class="row">
+				<div class="col-md-12">
+					<?php echo $this->alert->display(); ?>
+				</div>
+			</div>
+		</div>
+	</div>
 <?php } ?>
 
 <div id="page-content">
-	<div class="container top-spacing">
+	<div class="container top-spacing-20">
 		<div class="row">
 			<?php echo get_partial('content_left'); ?>
 			<?php
@@ -29,23 +29,23 @@
 
 			<div class="content-wrap <?php echo $class; ?>">
 				<div class="row">
-                    <?php if ($addresses) { ?>
-                        <?php $address_row = 0; ?>
-                        <div class="btn-group btn-group-md col-md-12">
-                            <?php foreach ($addresses as $address) { ?>
-                                <label class="btn btn-default wrap-all col-xs-3 <?php echo ($address_id == $address['address_id']) ? 'active' : ''; ?>">
-                                    <span class="pull-right text-right">
-										<a class="edit-address" href="<?php echo $address['edit']; ?>"><?php echo lang('text_edit'); ?></a><br />
-                                    	<a class="delete-address text-danger" href="<?php echo $address['delete']; ?>"  onclick="if (confirm('<?php echo lang('alert_warning_confirm'); ?>')) {  return true; } else { return false;}"><?php echo lang('text_delete'); ?></a>
+					<?php if ($addresses) { ?>
+						<?php $address_row = 0; ?>
+						<div class="list-group">
+							<?php foreach ($addresses as $address) { ?>
+								<div class="list-group-item border-none border-top border-bottom <?php echo ($address_id == $address['address_id']) ? 'list-group-item-info' : ''; ?>">
+									<address class="text-left"><?php echo $address['address']; ?></address>
+									<span class="">
+										<a class="edit-address" href="<?php echo $address['edit']; ?>"><?php echo lang('text_edit'); ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;
+										<a class="delete-address text-danger" href="<?php echo $address['delete']; ?>"  onclick="if (confirm('<?php echo lang('alert_warning_confirm'); ?>')) {  return true; } else { return false;}"><?php echo lang('text_delete'); ?></a>
 									</span>
-                                    <address class="text-left"><?php echo $address['address']; ?></address>
-                                </label>
-                                <?php $address_row++; ?>
-                            <?php } ?>
-                        </div>
-                    <?php } else { ?>
-                        <p><?php echo lang('text_no_address'); ?></p>
-                    <?php } ?>
+								</div>
+								<?php $address_row++; ?>
+							<?php } ?>
+						</div>
+					<?php } else { ?>
+						<div class="list-group-item"><?php echo lang('text_no_address'); ?></div>
+					<?php } ?>
 
 					<div class="col-md-12 page-spacing"></div>
 
@@ -73,11 +73,11 @@
 </div>
 <script type="text/javascript"><!--
 $(document).ready(function() {
-  	$('#add-address').on('click', function() {
-	  	if($('#new-address').is(':visible')) {
-	     	$('#new-address').fadeOut();
+	$('#add-address').on('click', function() {
+		if($('#new-address').is(':visible')) {
+			$('#new-address').fadeOut();
 		}else{
-	   		$('#new-address').fadeIn();
+			$('#new-address').fadeIn();
 		}
 	});
 });
