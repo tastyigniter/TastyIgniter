@@ -2,23 +2,25 @@
 
 class Stripe_model extends TI_Model {
 
-    public function __construct() {
-        parent::__construct();
+	public function __construct() {
+		parent::__construct();
 
 		$this->load->library('cart');
-        $this->load->library('currency');
-    }
+		$this->load->library('currency');
+	}
 
 	public function createCharge($token, $order_data = array()) {
 		if (empty($token) OR empty($order_data['order_id'])) {
 			return FALSE;
 		}
 
+		$currency = $this->currency->getCurrencyCode();
 		$zero_decimal_currencies = array('BIF', 'DJF', 'JPY', 'KRW', 'PYG', 'VND', 'XAF', 'XPF', 'CLP', 'GNF', 'KMF', 'MGA', 'RWF', 'VUV', 'XOF');
+		$order_total = round((float)$this->cart->order_total(), 2);
 
 		$data = array();
-		$data['currency']        	= $this->currency->getCurrencyCode();
-		$data['amount'] 			= (in_array($data['currency'], $zero_decimal_currencies)) ? $this->cart->order_total() : $this->cart->order_total()*100;
+		$data['currency']        	= $currency;
+		$data['amount'] 			= (int) (in_array($currency, $zero_decimal_currencies)) ? $order_total : $order_total*100;
 		$data['description']       	= sprintf($this->lang->line('text_stripe_charge_description'), $this->config->item('site_name'), $order_data['email']);
 		$data['source']        		= $token;
 		$data['receipt_email']      = $order_data['email'];
