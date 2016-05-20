@@ -469,7 +469,7 @@ class TI_Cart extends CI_Cart {
 	 */
 	public function coupon_discount() {
 		$coupon = $this->coupon();
-		return ($coupon['amount'] > 0) ? $coupon['amount'] : NULL;
+		return (!empty($coupon['amount'])) ? $coupon['amount'] : NULL;
 	}
 
 	/**

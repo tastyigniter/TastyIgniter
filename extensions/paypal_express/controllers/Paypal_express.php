@@ -102,6 +102,19 @@ class Paypal_express extends Main_Controller {
 
         if (!empty($order_data) AND $this->input->get('token')) { 						// check if token and PayerID is in $_GET data
 
+            $this->load->model('Statuses_model');
+            $status = $this->Statuses_model->getStatus($this->config->item('canceled_order_status'));
+
+            $order_history = array(
+                'object_id'  => $order_data['order_id'],
+                'status_id'  => $status['status_id'],
+                'notify'     => '0',
+                'comment'    => $status['comment'],
+                'date_added' => mdate('%Y-%m-%d %H:%i:%s', time()),
+            );
+
+            $this->Statuses_model->addStatusHistory('order', $order_history);
+
             $token = $this->input->get('token'); 												// retrieve token from $_GET data
 
             $this->alert->set('alert', $this->lang->line('alert_error_server'));
