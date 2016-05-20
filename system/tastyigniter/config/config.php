@@ -125,6 +125,8 @@ $config['subclass_prefix'] = 'TI_';
 |
 |	$config['composer_autoload'] = TRUE;
 |
+| your vendor/ directory is located in the system folder: /system/
+|
 | Or if you have your vendor/ directory located somewhere else, you
 | can opt to set a specific path as well:
 |
@@ -135,7 +137,7 @@ $config['subclass_prefix'] = 'TI_';
 | Note: This will NOT disable or override the CodeIgniter-specific
 |	autoloading (application/config/autoload.php)
 */
-$config['composer_autoload'] = '/vendor/autoload.php';
+$config['composer_autoload'] = TRUE;
 
 /*
 |--------------------------------------------------------------------------
