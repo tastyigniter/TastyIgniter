@@ -8,11 +8,11 @@ class Authorize_net_aim_model extends TI_Model {
 
 	public $cavvResponse = array();
 
-    public function __construct() {
-        parent::__construct();
+	public function __construct() {
+		parent::__construct();
 
-        $this->load->library('cart');
-        $this->load->library('currency');
+		$this->load->library('cart');
+		$this->load->library('currency');
 
 		$this->lang->load('authorize_net_aim/authorize_net_aim');
 
@@ -54,7 +54,7 @@ class Authorize_net_aim_model extends TI_Model {
 			'A' => $this->lang->line('text_cavv_response_A'),
 			'B' => $this->lang->line('text_cavv_response_B')
 		);
-    }
+	}
 
 	public function authorizeAndCapture($order_data = array()) {
 		if (empty($order_data)) {
@@ -82,17 +82,19 @@ class Authorize_net_aim_model extends TI_Model {
 			$data['x_ship_to_country'] = $address['country'];
 		}
 
-		if (!$this->input->post('authorize_same_address')  AND is_numeric($this->input->post('authorize_address_id'))) {
-			$address = $this->Addresses_model->getAddress($order_data['customer_id'], $this->input->post('authorize_address_id'));
+		if (!$this->input->post('authorize_same_address') AND is_numeric($this->input->post('authorize_address_id'))) {
+			$billing_address = $this->Addresses_model->getAddress($order_data['customer_id'], $this->input->post('authorize_address_id'));
+		} else if ($this->input->post('authorize_same_address') AND !empty($address)) {
+			$billing_address = $address;
 		}
 
-		if (!empty($address)) {
-			$data['x_address']  = $address['address_1'];
-			$data['x_city']     = $address['city'];
-			$data['x_state']    = $address['state'];
-			$data['x_zip']      = $address['postcode'];
-			$data['x_country']  = $address['country'];
-		} else {
+		if (!empty($billing_address)) {
+			$data['x_address']  = $billing_address['address_1'] . ' ' . $billing_address['address_2'];
+			$data['x_city']     = $billing_address['city'];
+			$data['x_state']    = $billing_address['state'];
+			$data['x_zip']      = $billing_address['postcode'];
+			$data['x_country']  = $billing_address['country'];
+		} else if ($this->input->post('authorize_address_id') === 'new') {
 			$data['x_address']  = $this->input->post('authorize_address_1') . ' ' . $this->input->post('authorize_address_2');
 			$data['x_city']     = $this->input->post('authorize_city');
 			$data['x_state']    = $this->input->post('authorize_state');
