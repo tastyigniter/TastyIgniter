@@ -58,15 +58,15 @@ class TI_Cart extends CI_Cart {
 
 	// --------------------------------------------------------------------
 
-    /**
-     * Set Delivery Charge *** TASTYIGNITER
-     *
-     * This function permits calculates the delivery charge.
-     *
-     * @access    private
-     * @param int $charge
-     * @return bool
-     */
+	/**
+	 * Set Delivery Charge *** TASTYIGNITER
+	 *
+	 * This function permits calculates the delivery charge.
+	 *
+	 * @access    private
+	 * @param int $charge
+	 * @return bool
+	 */
 	public function set_delivery($charge = 0) {
 		if (is_numeric($charge) OR $charge <= 0) {
 			$save_cart = FALSE;
@@ -91,27 +91,27 @@ class TI_Cart extends CI_Cart {
 
 	// --------------------------------------------------------------------
 
-    /**
-     * Add Coupon *** TASTYIGNITER
-     *
-     * This function permits calculates the coupon coupon from code.
-     *
-     * @access    private
-     * @param array $coupon
-     * @return bool
-     */
+	/**
+	 * Add Coupon *** TASTYIGNITER
+	 *
+	 * This function permits calculates the coupon coupon from code.
+	 *
+	 * @access    private
+	 * @param array $coupon
+	 * @return bool
+	 */
 	public function add_coupon($coupon = array()) {
 		$save_cart = FALSE;
 
-        if (!isset($coupon['type'])) {
-            $coupon['type'] = 'F';
-        }
+		if (!isset($coupon['type'])) {
+			$coupon['type'] = 'F';
+		}
 
-        if ($coupon['type'] === 'P' AND is_numeric($coupon['discount']) AND $coupon['discount'] > 0) {
-            $coupon['discount'] = ($coupon['discount'] / 100) * $this->_cart_contents['cart_total'];
-        }
+		if ($coupon['type'] === 'P' AND is_numeric($coupon['discount']) AND $coupon['discount'] > 0) {
+			$coupon['discount'] = ($coupon['discount'] / 100) * $this->_cart_contents['cart_total'];
+		}
 
-        if ($coupon['discount'] > 0) {
+		if ($coupon['discount'] > 0) {
 			$this->_cart_totals['coupon']['priority'] = '1';
 			$this->_cart_totals['coupon']['amount'] = $coupon['discount'];
 			$this->_cart_totals['coupon']['action'] = 'subtract';
@@ -128,15 +128,15 @@ class TI_Cart extends CI_Cart {
 
 	// --------------------------------------------------------------------
 
-    /**
-     * Remove Coupon *** TASTYIGNITER
-     *
-     * This function removes coupon from cart.
-     *
-     * @access    private
-     * @param string $coupon_code
-     * @return bool
-     */
+	/**
+	 * Remove Coupon *** TASTYIGNITER
+	 *
+	 * This function removes coupon from cart.
+	 *
+	 * @access    private
+	 * @param string $coupon_code
+	 * @return bool
+	 */
 	public function remove_coupon($coupon_code = '') {
 		$coupon = $this->coupon();
 
@@ -167,16 +167,19 @@ class TI_Cart extends CI_Cart {
 				$total -= $this->_cart_totals['delivery']['amount'];
 			}
 
-			// calculate tax amount based on percentage
-			$tax_amount = ($tax_percent / 100 * $total);
-
 			// If apply taxes on menu price, else
 			if ($this->CI->config->item('tax_menu_price') === '1') {
 				$tax_title = ' (' . $tax_percent . '%)';
 				$ignore = 'add';
+
+				// calculate tax amount based on percentage
+				$tax_amount = ($tax_percent / 100 * $total);
 			} else {
 				$tax_title = ' (' . $tax_percent . '% included)';
 				$ignore = 'ignore';
+
+				// calculate tax amount based on percentage
+				$tax_amount = $total - ($total / (1 + $tax_percent / 100));
 			}
 
 			$this->_cart_totals['taxes']['priority'] = '3';
@@ -313,13 +316,13 @@ class TI_Cart extends CI_Cart {
 
 	// --------------------------------------------------------------------
 
-    /**
-     * Cart Contents *** TASTYIGNITER
-     *
-     * @access    public
-     * @param bool $newest_first
-     * @return int
-     */
+	/**
+	 * Cart Contents *** TASTYIGNITER
+	 *
+	 * @access    public
+	 * @param bool $newest_first
+	 * @return int
+	 */
 	public function contents($newest_first = FALSE) {
 		// do we want the newest first?
 		$cart = ($newest_first) ? array_reverse($this->_cart_contents) : $this->_cart_contents;
@@ -451,7 +454,7 @@ class TI_Cart extends CI_Cart {
 	 */
 	public function coupon_code() {
 		$coupon = $this->coupon();
-        return !empty($coupon['code']) ? $coupon['code'] : NULL;
+		return !empty($coupon['code']) ? $coupon['code'] : NULL;
 	}
 
 	// --------------------------------------------------------------------
@@ -465,8 +468,8 @@ class TI_Cart extends CI_Cart {
 	 * @return	integer
 	 */
 	public function coupon_discount() {
-        $coupon = $this->coupon();
-        return ($coupon['amount'] > 0) ? $coupon['amount'] : NULL;
+		$coupon = $this->coupon();
+		return ($coupon['amount'] > 0) ? $coupon['amount'] : NULL;
 	}
 
 	/**
