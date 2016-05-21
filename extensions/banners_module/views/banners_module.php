@@ -34,7 +34,7 @@
                         </div>
                     </div>
                 <?php } else if ($banner['type'] === 'custom') { ?>
-                    <?php echo $custom_code; ?>
+                    <?php echo $banner['custom_code']; ?>
                 <?php } ?>
             </div>
         </div>
