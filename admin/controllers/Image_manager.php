@@ -488,8 +488,6 @@ class Image_manager extends Admin_Controller {
 
         $this->template->setTitle($this->lang->line('text_title'));
         $this->template->setHeading($this->lang->line('text_heading'));
-
-        $this->template->setButton($this->lang->line('button_option'), array('class' => 'btn btn-default pull-right', 'href' => site_url('settings#image-manager')));
     }
 }
 

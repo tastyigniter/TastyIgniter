@@ -5,81 +5,81 @@ class Local extends Main_Controller {
 	public function __construct() {
 		parent::__construct(); 																	// calls the constructor
 
-        $this->load->model('Locations_model');
-        $this->load->model('Pages_model');
-        $this->load->model('Reviews_model');
+		$this->load->model('Locations_model');
+		$this->load->model('Pages_model');
+		$this->load->model('Reviews_model');
 
-        $this->load->library('location'); 														// load the location library
-        $this->load->library('currency'); 														// load the currency library
+		$this->load->library('location'); 														// load the location library
+		$this->load->library('currency'); 														// load the currency library
 
-        $this->lang->load('local');
+		$this->lang->load('local');
 	}
 
 	public function index() {
 		if (!($location = $this->Locations_model->getLocation($this->input->get('location_id')))) {
-            redirect('local/all');
-        }
+			redirect('local/all');
+		}
 
-        $this->location->setLocation($location['location_id']);
+		$this->location->setLocation($location['location_id']);
 
 		$this->template->setBreadcrumb('<i class="fa fa-home"></i>', '/');
 		$this->template->setBreadcrumb($this->lang->line('text_heading'), 'local/all');
 		$this->template->setBreadcrumb($location['location_name']);
 
-        $text_heading = sprintf($this->lang->line('text_local_heading'), $location['location_name']);
-        $this->template->setTitle($text_heading);
-        $this->template->setScriptTag('js/jquery.mixitup.js', 'jquery-mixitup-js', '100330');
+		$text_heading = sprintf($this->lang->line('text_local_heading'), $location['location_name']);
+		$this->template->setTitle($text_heading);
+		$this->template->setScriptTag('js/jquery.mixitup.js', 'jquery-mixitup-js', '100330');
 
-        $filter = array();
+		$filter = array();
 
-        if ($this->input->get('page')) {
-            $filter['page'] = (int) $this->input->get('page');
-        } else {
-            $filter['page'] = '';
-        }
+		if ($this->input->get('page')) {
+			$filter['page'] = (int) $this->input->get('page');
+		} else {
+			$filter['page'] = '';
+		}
 
-        if ($this->config->item('menus_page_limit')) {
-            $filter['limit'] = $this->config->item('menus_page_limit');
-        }
+		if ($this->config->item('menus_page_limit')) {
+			$filter['limit'] = $this->config->item('menus_page_limit');
+		}
 
-        $filter['sort_by'] = 'menus.menu_priority';
-        $filter['order_by'] = 'ASC';
-        $filter['filter_status'] = '1';
-        $filter['filter_category'] = (int) $this->input->get('category_id'); 									// retrieve 3rd uri segment else set FALSE if unavailable.
+		$filter['sort_by'] = 'menus.menu_priority';
+		$filter['order_by'] = 'ASC';
+		$filter['filter_status'] = '1';
+		$filter['filter_category'] = (int) $this->input->get('category_id'); 									// retrieve 3rd uri segment else set FALSE if unavailable.
 
-        $this->load->module('menus');
-        $data['menu_list'] = $this->menus->getList($filter);
+		$this->load->module('menus');
+		$data['menu_list'] = $this->menus->getList($filter);
 
-        $data['menu_total']	= $this->Menus_model->getCount();
-        if (is_numeric($data['menu_total']) AND $data['menu_total'] < 150) {
-            $filter['category_id'] = 0;
-        }
+		$data['menu_total']	= $this->Menus_model->getCount();
+		if (is_numeric($data['menu_total']) AND $data['menu_total'] < 150) {
+			$filter['category_id'] = 0;
+		}
 
-        $data['location_name'] = $this->location->getName();
+		$data['location_name'] = $this->location->getName();
 
-        $data['local_info'] = $this->info();
+		$data['local_info'] = $this->info();
 
-        $data['local_reviews'] = $this->reviews();
+		$data['local_reviews'] = $this->reviews();
 
 		$data['local_gallery'] = $this->gallery();
 
 		$this->template->render('local', $data);
 	}
 
-    public function info($data = array()) {
+	public function info($data = array()) {
 
-	    $time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
+		$time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
 
-        if ($this->config->item('maps_api_key')) {
-            $map_key = '&key=' . $this->config->item('maps_api_key');
-        } else {
-            $map_key = '';
-        }
+		if ($this->config->item('maps_api_key')) {
+			$map_key = '&key=' . $this->config->item('maps_api_key');
+		} else {
+			$map_key = '';
+		}
 
-        $this->template->setScriptTag('https://maps.googleapis.com/maps/api/js?v=3' . $map_key .'&sensor=false&region=GB&libraries=geometry', 'google-maps-js', '104330');
+		$this->template->setScriptTag('https://maps.googleapis.com/maps/api/js?v=3' . $map_key .'&sensor=false&region=GB&libraries=geometry', 'google-maps-js', '104330');
 
-        $data['has_delivery']       = $this->location->hasDelivery();
-        $data['has_collection']     = $this->location->hasCollection();
+		$data['has_delivery']       = $this->location->hasDelivery();
+		$data['has_collection']     = $this->location->hasCollection();
 		$data['opening_status']		= $this->location->workingStatus('opening');
 		$data['delivery_status']	= $this->location->workingStatus('delivery');
 		$data['collection_status']	= $this->location->workingStatus('collection');
@@ -114,19 +114,19 @@ class Local extends Main_Controller {
 		}
 
 		$local_payments = $this->location->payments();
-        $payments = $this->extension->getAvailablePayments(FALSE);
+		$payments = $this->extension->getAvailablePayments(FALSE);
 
-        $payment_list = '';
-        foreach ($payments as $code => $payment) {
-            if ( empty($local_payments) OR in_array($code, $local_payments)) {
-                $payment_list[] = $payment['name'];
-            }
-        }
+		$payment_list = '';
+		foreach ($payments as $code => $payment) {
+			if ( empty($local_payments) OR in_array($code, $local_payments)) {
+				$payment_list[] = $payment['name'];
+			}
+		}
 
-        $data['payments'] = implode(', ', $payment_list);
+		$data['payments'] = implode(', ', $payment_list);
 
-	    $area_colors = array('#F16745', '#FFC65D', '#7BC8A4', '#4CC3D9', '#93648D', '#404040', '#F16745', '#FFC65D', '#7BC8A4', '#4CC3D9', '#93648D', '#404040', '#F16745', '#FFC65D', '#7BC8A4', '#4CC3D9', '#93648D', '#404040', '#F16745', '#FFC65D');
-	    $data['area_colors'] = $area_colors;
+		$area_colors = array('#F16745', '#FFC65D', '#7BC8A4', '#4CC3D9', '#93648D', '#404040', '#F16745', '#FFC65D', '#7BC8A4', '#4CC3D9', '#93648D', '#404040', '#F16745', '#FFC65D', '#7BC8A4', '#4CC3D9', '#93648D', '#404040', '#F16745', '#FFC65D');
+		$data['area_colors'] = $area_colors;
 
 		$conditions = array(
 			'all'   => $this->lang->line('text_delivery_all_orders'),
@@ -135,8 +135,8 @@ class Local extends Main_Controller {
 		);
 
 		$data['delivery_areas'] = array();
-        $delivery_areas = $this->location->deliveryAreas();
-        foreach ($delivery_areas as $area_id => $area) {
+		$delivery_areas = $this->location->deliveryAreas();
+		foreach ($delivery_areas as $area_id => $area) {
 			if (isset($area['charge']) AND is_string($area['charge'])) {
 				$area['charge'] = array(array(
 					'amount' => $area['charge'],
@@ -159,28 +159,28 @@ class Local extends Main_Controller {
 					$text_condition .= sprintf($conditions[$con], $delivery, $total) . ', ';
 				} else if ($con === 'below') {
 					$text_condition .= sprintf($conditions[$con], $total) . ', ';
-                }
+				}
 			}
 
 			$data['delivery_areas'][] = array(
-                'area_id'       => $area['area_id'],
-                'name'          => $area['name'],
-                'type'			=> $area['type'],
-                'color'			=> $area_colors[(int) $area_id - 1],
-                'shape'			=> $area['shape'],
-                'circle'		=> $area['circle'],
-                'condition'     => trim($text_condition, ', '),
-            );
-        }
+				'area_id'       => $area['area_id'],
+				'name'          => $area['name'],
+				'type'			=> $area['type'],
+				'color'			=> $area_colors[(int) $area_id - 1],
+				'shape'			=> $area['shape'],
+				'circle'		=> $area['circle'],
+				'condition'     => trim($text_condition, ', '),
+			);
+		}
 
-        $data['location_lat'] = $data['location_lng'] = '';
-        if ($local_info = $this->location->local()) {                                                            //if local restaurant data is available
-            $data['location_lat'] = $local_info['location_lat'];
-            $data['location_lng'] = $local_info['location_lng'];
-        }
+		$data['location_lat'] = $data['location_lng'] = '';
+		if ($local_info = $this->location->local()) {                                                            //if local restaurant data is available
+			$data['location_lat'] = $local_info['location_lat'];
+			$data['location_lng'] = $local_info['location_lng'];
+		}
 
-        return $data;
-    }
+		return $data;
+	}
 
 	public function gallery($data = array()) {
 		$gallery = $this->location->getGallery();
@@ -209,58 +209,58 @@ class Local extends Main_Controller {
 		return $data;
 	}
 
-    public function reviews($data = array()) {
-	    $date_format = ($this->config->item('date_format')) ? $this->config->item('date_format') : '%d %M %y';
+	public function reviews($data = array()) {
+		$date_format = ($this->config->item('date_format')) ? $this->config->item('date_format') : '%d %M %y';
 
-	    $url = '&';
-        $filter = array();
-        $filter['location_id'] = (int) $this->location->getId();
+		$url = '&';
+		$filter = array();
+		$filter['location_id'] = (int) $this->location->getId();
 
-        if ($this->input->get('page')) {
-            $filter['page'] = (int) $this->input->get('page');
-        } else {
-            $filter['page'] = '';
-        }
+		if ($this->input->get('page')) {
+			$filter['page'] = (int) $this->input->get('page');
+		} else {
+			$filter['page'] = '';
+		}
 
-        if ($this->config->item('page_limit')) {
-            $filter['limit'] = $this->config->item('page_limit');
-        }
+		if ($this->config->item('page_limit')) {
+			$filter['limit'] = $this->config->item('page_limit');
+		}
 
-        $filter['filter_status'] = '1';
+		$filter['filter_status'] = '1';
 
-        $ratings = $this->config->item('ratings');
-        $data['ratings'] = $ratings['ratings'];
+		$ratings = $this->config->item('ratings');
+		$data['ratings'] = $ratings['ratings'];
 
-        $data['reviews'] = array();
-        $results = $this->Reviews_model->getList($filter);                                    // retrieve all customer reviews from getMainList method in Reviews model
-        foreach ($results as $result) {
-            $data['reviews'][] = array(                                                            // create array of customer reviews to pass to view
-                'author'   => $result['author'],
-                'city'     => $result['location_city'],
-                'quality'  => $result['quality'],
-                'delivery' => $result['delivery'],
-                'service'  => $result['service'],
-                'date'     => mdate($date_format, strtotime($result['date_added'])),
-                'text'     => $result['review_text']
-            );
-        }
+		$data['reviews'] = array();
+		$results = $this->Reviews_model->getList($filter);                                    // retrieve all customer reviews from getMainList method in Reviews model
+		foreach ($results as $result) {
+			$data['reviews'][] = array(                                                            // create array of customer reviews to pass to view
+				'author'   => $result['author'],
+				'city'     => $result['location_city'],
+				'quality'  => $result['quality'],
+				'delivery' => $result['delivery'],
+				'service'  => $result['service'],
+				'date'     => mdate($date_format, strtotime($result['date_added'])),
+				'text'     => $result['review_text']
+			);
+		}
 
-        $prefs['base_url'] = site_url('local?location_id='.$this->location->getId() . $url);
-        $prefs['total_rows'] = $this->Reviews_model->getCount($filter);
-        $prefs['per_page'] = $filter['limit'];
+		$prefs['base_url'] = site_url('local?location_id='.$this->location->getId() . $url);
+		$prefs['total_rows'] = $this->Reviews_model->getCount($filter);
+		$prefs['per_page'] = $filter['limit'];
 
-        $this->load->library('pagination');
-        $this->pagination->initialize($prefs);
+		$this->load->library('pagination');
+		$this->pagination->initialize($prefs);
 
-        $data['pagination'] = array(
-            'info'  => $this->pagination->create_infos(),
-            'links' => $this->pagination->create_links()
-        );
+		$data['pagination'] = array(
+			'info'  => $this->pagination->create_infos(),
+			'links' => $this->pagination->create_links()
+		);
 
-        return $data;
-    }
+		return $data;
+	}
 
-    public function all() {
+	public function all() {
 		$this->load->library('country');
 		$this->load->library('pagination');
 		$this->load->library('cart'); 															// load the cart library
@@ -331,7 +331,7 @@ class Local extends Main_Controller {
 					$collection_time = $this->location->workingTime('collection', 'open');
 				}
 
-                $review_totals = isset($review_totals[$location['location_id']]) ? $review_totals[$location['location_id']] : 0;
+				$review_totals = isset($review_totals[$location['location_id']]) ? $review_totals[$location['location_id']] : 0;
 
 				$data['locations'][] = array(                                                            // create array of menu data to be sent to view
 					'location_id'       => $location['location_id'],
@@ -354,7 +354,8 @@ class Local extends Main_Controller {
 					'has_delivery'      => $this->location->hasDelivery(),
 					'has_collection'    => $this->location->hasCollection(),
 					'last_order_time'   => $this->location->lastOrderTime(),
-					'distance'   		=> $this->location->checkDistance(),
+					'distance'   		=> round($this->location->checkDistance()),
+					'distance_unit'   	=> $this->config->item('distance_unit') === 'km' ? $this->lang->line('text_kilometers') : $this->lang->line('text_miles'),
 					'href'              => site_url('local?location_id=' . $location['location_id']),
 				);
 			}

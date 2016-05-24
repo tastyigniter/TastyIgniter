@@ -56,7 +56,7 @@ $lang['error_theme_exists'] 		    = 'the theme already exists';
 $lang['alert_delete_warning'] 		    = 'You are about to delete the %s of theme <b>%s</b>';
 $lang['alert_delete_confirm'] 		    = 'Are you sure you wish to delete these %s? This cannot be undone!';
 $lang['alert_copy_warning'] 		    = 'You are about to create a copy the following %s from theme <b>%s</b>';
-$lang['alert_copy_confirm'] 		    = 'Are you sure you wish to delete these %s? This cannot be undone!';
+$lang['alert_copy_confirm'] 		    = 'Are you sure you wish to copy these %s?';
 
 /* End of file themes_lang.php */
 /* Location: ./admin/language/english/themes_lang.php */

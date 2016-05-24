@@ -55,6 +55,8 @@ $lang['text_no_min_total'] 		            = 'No Min. Order Amount';
 $lang['text_delivery_all_orders'] 		    = '%s on all orders';
 $lang['text_delivery_above_total'] 		    = '%s above %s';
 $lang['text_delivery_below_total'] 		    = 'not available below %s ';
+$lang['text_miles'] 		                = 'Miles';
+$lang['text_kilometers'] 		            = 'Kilometers';
 
 $lang['text_locations_filter_title'] 		= 'Filter Locations';
 $lang['text_filter_distance'] 		        = 'Distance';
