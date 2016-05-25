@@ -51,8 +51,8 @@ class Mealtimes_model extends TI_Model {
 			foreach ($mealtimes as $mealtime) {
 
 				$this->db->set('mealtime_name', $mealtime['mealtime_name']);
-				$this->db->set('start_time', $mealtime['start_time']);
-				$this->db->set('end_time', $mealtime['end_time']);
+				$this->db->set('start_time', mdate('%H:%i', strtotime($mealtime['start_time'])));
+				$this->db->set('end_time', mdate('%H:%i', strtotime($mealtime['end_time'])));
 				$this->db->set('mealtime_status', $mealtime['mealtime_status']);
 
 				if ( ! empty($mealtime['mealtime_id']) AND $mealtime['mealtime_id'] > 0) {
