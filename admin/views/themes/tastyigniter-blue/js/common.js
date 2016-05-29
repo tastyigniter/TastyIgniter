@@ -42,7 +42,7 @@ $(function() {
             Cookies.set('ti_sidebarToggleState', 'hide');
         }
     })
-})
+});
 
 // Image Manager
 function mediaManager(field) {
@@ -78,8 +78,7 @@ function mediaManager(field) {
 			});
 		}
 	});
-};
-
+}
 // Override summernote image manager
 $(document).ready(function() {
     $('.note-editor button[data-event=\'showImageDialog\']').attr('data-toggle', 'imageManager').removeAttr('data-event');
@@ -113,7 +112,7 @@ $(document).ready(function() {
 $(function(){
     $('.dropdown-messages .menu-body').load(js_site_url('messages/latest'));
     $('.dropdown-activities .menu-body').load(js_site_url('activities/latest'));
-})
+});
 
 // Panel Table Filter Button Toggle
 $(function(){
@@ -140,7 +139,7 @@ $(function(){
     if (displayFilterPanel == 'true') {
         $('.btn-filter').trigger('click');
     }
-})
+});
 
 // Alert Collapsible
 $(function() {
@@ -161,7 +160,7 @@ $(function() {
             }
         })
     });
-})
+});
 
 // Checkbox button toggle
 $(function () {
@@ -228,3 +227,23 @@ $(function () {
         init();
     });
 });
+
+function displayRatings(ratings) {
+    $('.rating-star').raty({
+        score: function () {
+            return $(this).attr('data-score');
+        },
+        scoreName: function () {
+            return $(this).attr('data-score-name');
+        },
+        readOnly: function () {
+            return $(this).attr('data-readonly') == 'true';
+        },
+        hints: ratings,
+        starOff: 'fa fa-star-o',
+        starOn: 'fa fa-star',
+        cancel: false, half: false, starType: 'i'
+    });
+
+    $('.rating-star i[title]').tooltip({placement: 'bottom'});
+}

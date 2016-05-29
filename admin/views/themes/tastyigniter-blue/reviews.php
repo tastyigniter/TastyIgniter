@@ -153,23 +153,5 @@
         function filterList() {
             $('#filter-form').submit();
         }
-
-        $(document).ready(function () {
-            $('.rating-star').raty({
-                score: function () {
-                    return $(this).attr('data-score');
-                },
-                scoreName: function () {
-                    return $(this).attr('data-score-name');
-                },
-                readOnly: function () {
-                    return $(this).attr('data-readonly') == 'true';
-                },
-                hints: ['Bad', 'Worse', 'Good', 'Average', 'Excellent'],
-                starOff: 'fa fa-star-o',
-                starOn: 'fa fa-star',
-                cancel: false, half: false, starType: 'i'
-            });
-        });
         //--></script>
 <?php echo get_footer(); ?>

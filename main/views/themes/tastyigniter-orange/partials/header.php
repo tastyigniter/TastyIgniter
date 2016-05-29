@@ -43,24 +43,8 @@
 
 				$('.alert').alert();
 				$('.dropdown-toggle').dropdown();
-                $('a, i').tooltip({placement: 'bottom'});
+                $('a[title], i[title]').tooltip({placement: 'bottom'});
                 $('select.form-control').select2();
-
-				$('.rating-star').raty({
-					score: function() {
-						return $(this).attr('data-score');
-					},
-					scoreName: function() {
-						return $(this).attr('data-score-name');
-					},
-					readOnly: function() {
-						return $(this).attr('data-readonly') == 'true';
-					},
-					hints: ['Bad', 'Worse', 'Good', 'Average', 'Excellent'],
-					starOff : 'fa fa-star-o',
-					starOn : 'fa fa-star',
-					cancel : false, half : false, starType : 'i'
-				});
 			});
 		</script>
 		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

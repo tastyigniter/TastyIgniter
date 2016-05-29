@@ -34,3 +34,9 @@
         <div class="info"><?php echo $pagination['info']; ?></div>
     </div>
 </div>
+<script type="text/javascript"><!--
+$(document).ready(function() {
+    var ratings = <?php echo json_encode(array_values($ratings)); ?>;
+    displayRatings(ratings);
+});
+//--></script>

@@ -71,7 +71,7 @@
 	</script>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('a, span, button').tooltip({placement: 'bottom'});
+			$('a[title], span[title], button[title]').tooltip({placement: 'bottom'});
 			$('select.form-control').select2({minimumResultsForSearch: 10});
 
 			$('.alert').alert();
