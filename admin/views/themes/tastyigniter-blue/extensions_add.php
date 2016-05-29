@@ -14,7 +14,7 @@
                                 <span class="input-group-btn">
                                     <div class="btn btn-default btn-file-input">
                                         <i class="fa fa-fw fa-folder-open"></i>&nbsp;&nbsp;
-                                        <span class="btn-file-input-browse"><?php echo lang('button_browse'); ?></span>
+                                        <span class="btn-file-input-choose"><?php echo lang('button_choose'); ?></span>
                                         <span class="btn-file-input-change hide"><?php echo lang('button_change'); ?></span>
                                         <input type="file" name="extension_zip" value="<?php echo set_value('extension_zip'); ?>" onchange="var file = this.files[0];$('.btn-file-input-value').val(file.name);$('.btn-file-input-change').removeClass('hide');$('.btn-file-input-browse').addClass('hide');" />
                                     </div>

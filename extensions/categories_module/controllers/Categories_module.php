@@ -23,20 +23,20 @@ class Categories_module extends Main_Controller {
 
 		$data['categories'] = array();
 		$results = $this->Categories_model->getCategories(); 										// retrieve all menu categories from getCategories method in Menus model
-        foreach (sort_array($results) as $result) {															// loop through menu categories array
-            $children_data = array();
+		foreach (sort_array($results) as $result) {															// loop through menu categories array
+			$children_data = array();
 
-            if ($result['child_id'] !== NULL) {
-                $children = $this->Categories_model->getCategories($result['category_id']); 										// retrieve all menu categories from getCategories method in Menus model
+			if ($result['child_id'] !== NULL) {
+				$children = $this->Categories_model->getCategories($result['category_id']); 										// retrieve all menu categories from getCategories method in Menus model
 
-                foreach ($children as $child) {
-                    $children_data[$child['category_id']] = array( 														// create array of category data to pass to view
-                        'category_id'	=>	$child['category_id'],
-                        'category_name'	=>	$child['name'],
-                        'href'			=>	site_url('menus?category_id='. $child['category_id'])
-                    );
-                }
-            }
+				foreach ($children as $child) {
+					$children_data[$child['category_id']] = array( 														// create array of category data to pass to view
+						'category_id'	=>	$child['category_id'],
+						'category_name'	=>	$child['name'],
+						'href'			=>	site_url('menus?category_id='. $child['category_id'])
+					);
+				}
+			}
 
 			$data['categories'][$result['category_id']] = array( 														// create array of category data to pass to view
 				'category_id'	=>	$result['category_id'],
@@ -48,7 +48,7 @@ class Categories_module extends Main_Controller {
 
 		$fixed_top_offset = isset($ext_data['fixed_top_offset']) ? $ext_data['fixed_top_offset'] : '350';
 		$fixed_bottom_offset = isset($ext_data['fixed_bottom_offset']) ? $ext_data['fixed_bottom_offset'] : '320';
-		$data['fixed_cart'] = 'data-spy="affix" data-offset-top="'.$fixed_top_offset.'" data-offset-bottom="'.$fixed_bottom_offset.'"';
+		$data['fixed_categories'] = 'data-spy="affix" data-offset-top="'.$fixed_top_offset.'" data-offset-bottom="'.$fixed_bottom_offset.'"';
 
 		// pass array $data and load view files
 		return $this->load->view('categories_module/categories_module', $data, TRUE);

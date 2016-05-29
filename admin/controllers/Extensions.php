@@ -6,6 +6,7 @@ class Extensions extends Admin_Controller {
 		parent::__construct();
 
 		$this->load->model('Extensions_model');
+		$this->load->model('Layouts_model');
 
 		$this->lang->load('extensions');
 	}
@@ -63,6 +64,7 @@ class Extensions extends Admin_Controller {
 		$this->template->setTitle($this->lang->line('text_title'));
 		$this->template->setHeading($this->lang->line('text_heading'));
 		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() . '/add'));
+		$this->template->setButton($this->lang->line('button_browse'), array('class' => 'btn btn-default disabled', 'href' => page_url() . '/browse'));
 
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_name'] = site_url('extensions' . $url . 'sort_by=name&order_by=' . $order_by);
@@ -71,7 +73,7 @@ class Extensions extends Admin_Controller {
 		$data['extensions'] = array();
 		$results = $this->Extensions_model->getList($filter);
 		foreach ($results as $result) {
-			if ($result['config'] !== TRUE) {
+			if (!is_array($result['config'])) {
 				$this->alert->warning_now($result['config']);
 				continue;
 			}
@@ -116,8 +118,13 @@ class Extensions extends Admin_Controller {
 			$ext_controller = $extension['name'] . '/admin_' . $extension['name'];
 			$ext_class = ucfirst('admin_' . $extension['name']);
 
+			$module_layouts = $this->Layouts_model->getModuleLayouts($extension_name);
+			if (empty($module_layouts) AND isset($extension['config']['layout_ready']) AND $extension['config']['layout_ready'] === TRUE) {
+				$this->alert->set('info', sprintf($this->lang->line('alert_warning_layouts'), site_url('layouts')));
+			}
+
 			if (isset($extension['config'], $extension['installed'], $extension['settings'])) {
-				if ($extension['config'] !== TRUE) {
+				if (!is_array($extension['config'])) {
 					$error_msg = $this->lang->line('error_config');
 				} else if ($extension['settings'] === FALSE) {
 					$error_msg = $this->lang->line('error_options');
@@ -151,6 +158,7 @@ class Extensions extends Admin_Controller {
 		$this->template->setTitle($this->lang->line('text_add_heading'));
 		$this->template->setHeading($this->lang->line('text_add_heading'));
 
+		$this->template->setButton($this->lang->line('button_browse'), array('class' => 'btn btn-default disabled', 'href' => site_url('extensions/browse')));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('extensions')));
 
 		$data['_action'] = site_url('extensions/add');
@@ -160,6 +168,20 @@ class Extensions extends Admin_Controller {
 		}
 
 		$this->template->render('extensions_add', $data);
+	}
+
+	public function browse() {
+		$this->user->restrict('Admin.Extensions.Access');
+
+		$this->template->setTitle($this->lang->line('text_browse_heading'));
+		$this->template->setHeading($this->lang->line('text_browse_heading'));
+
+		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => site_url('extensions/add')));
+		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('extensions')));
+
+		$data['_action'] = site_url('extensions/browse');
+
+		$this->template->render('extensions_browse', $data);
 	}
 
 	public function install() {
@@ -183,7 +205,7 @@ class Extensions extends Admin_Controller {
 				));
 
 				$this->alert->set('success', sprintf($this->lang->line('alert_success'), "Extension {$extension_title} installed "));
-				if ($extension_type === 'module') {
+				if ((isset($config['layout_ready']) AND $config['layout_ready'] === TRUE)) {
 					$this->alert->set('info', sprintf($this->lang->line('alert_info_layouts'), site_url('layouts')));
 				}
 			}

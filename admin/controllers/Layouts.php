@@ -64,6 +64,8 @@ class Layouts extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('layouts')));
 
+        $this->template->setScriptTag(assets_url('js/jquery-sortable.js'), 'jquery-sortable-js');
+
         if ($this->input->post() AND $layout_id = $this->_saveLayout()) {
             if ($this->input->post('save_close') === '1') {
                 redirect('layouts');
@@ -86,36 +88,55 @@ class Layouts extends Admin_Controller {
             $data['theme_partials'][] = $partial;
         }
 
+        $data['modules'] = array();
+        $results = $this->Extensions_model->getModules();
+        foreach ($results as $result) {
+            $config = $this->extension->loadConfig($result['name'], FALSE, TRUE);
+
+            if (empty($config['layout_ready'])) {
+                continue;
+            }
+
+            $meta = $this->extension->getMeta($result['name'], $config);
+
+            $data['modules'][$result['name']] = array(
+                'extension_id'	=> $result['extension_id'],
+                'module_code'	=> $result['name'],
+                'title'			=> $result['title'],
+                'description'	=> (strlen($meta['description']) > 70) ? substr($meta['description'], 0, 70) . '...' : $meta['description'],
+            );
+        }
+
         if ($this->input->post('modules')) {
-            $layout_modules = $this->input->post('modules');
+            $modules = $this->input->post('modules');
         } else {
-            $layout_modules = $this->Layouts_model->getLayoutModules($layout_id);
+            $modules = $this->Layouts_model->getLayoutModules($layout_id);
         }
 
         $data['layout_modules'] = array();
-        foreach ($layout_modules as $priority => $module) {
-            $data['layout_modules'][] = array(
-                'module_code'       => $module['module_code'],
-                'partial' 		    => !empty($module['position']) ? $module['position'] : $module['partial'], // position key @DEPRECATED starting from v1.4.0
-                'priority' 		    => !empty($module['priority']) ? $module['priority'] : $priority,
-                'status' 		    => $module['status']
-            );
+        $data['partial_modules'] = array();
+        foreach ($modules as $partial => $partial_modules) {
+            $partial_modules = (is_numeric($partial)) ? $partial_modules : $partial_modules;
+
+            foreach ($partial_modules as $priority => $module) {
+                $data['partial_modules'][$partial][] = array(
+                    'module_code'         => $module['module_code'],
+                    'name'                => isset($data['modules'][$module['module_code']]['title']) ? $data['modules'][$module['module_code']]['title'] : $module['module_code'],
+                    'partial'             => !empty($module['partial']) ? $module['partial'] : $partial,
+                    'priority'            => !empty($module['priority']) ? $module['priority'] : $priority,
+                    'title'               => $module['title'],
+                    'fixed'               => isset($module['fixed']) ? $module['fixed'] : '0',
+                    'fixed_top_offset'    => $module['fixed_top_offset'],
+                    'fixed_bottom_offset' => $module['fixed_bottom_offset'],
+                    'status'              => isset($module['status']) ? $module['status'] : '1',
+                );
+            }
         }
 
         if ($this->input->post('routes')) {
             $data['layout_routes'] = $this->input->post('routes');
         } else {
             $data['layout_routes'] = $this->Layouts_model->getLayoutRoutes($layout_id);
-        }
-
-        $data['modules'] = array();
-        $results = $this->Extensions_model->getModules();
-        foreach ($results as $result) {
-            $data['modules'][] = array(
-                'extension_id'	=> $result['extension_id'],
-                'module_code'	=> $result['name'],
-                'title'			=> $result['title'],
-            );
         }
 
         $data['routes'] = array();
@@ -169,11 +190,20 @@ class Layouts extends Admin_Controller {
         }
 
         if ($this->input->post('modules')) {
-            foreach ($this->input->post('modules') as $key => $value) {
-                $this->form_validation->set_rules('modules['.$key.'][module_code]', '['.$key.'] lang:label_module_code', 'xss_clean|trim|required|alpha_dash');
-                $this->form_validation->set_rules('modules['.$key.'][partial]', '['.$key.'] lang:label_module_partial', 'xss_clean|trim|required|alpha_dash');
-                $this->form_validation->set_rules('modules['.$key.'][priority]', '['.$key.'] lang:label_module_priority', 'xss_clean|trim|required|integer');
-                $this->form_validation->set_rules('modules['.$key.'][status]', '['.$key.'] lang:label_module_status', 'xss_clean|trim|required|integer');
+            foreach ($this->input->post('modules') as $partial => $modules) {
+                foreach ($modules as $key => $value) {
+                    $this->form_validation->set_rules('modules['.$partial.']['.$key.'][module_code]', '['.$partial.'] '.$this->lang->line('label_module_code'), 'xss_clean|trim|required|alpha_dash');
+                    $this->form_validation->set_rules('modules['.$partial.']['.$key.'][partial]', '['.$partial.'] '.$this->lang->line('label_module_partial'), 'xss_clean|trim|required|alpha_dash');
+                    $this->form_validation->set_rules('modules['.$partial.']['.$key.'][title]', '['.$partial.'] '.$this->lang->line('label_module_title'), 'xss_clean|trim|min_length[2]');
+                    $this->form_validation->set_rules('modules['.$partial.']['.$key.'][fixed]', '['.$partial.'] '.$this->lang->line('label_module_fixed'), 'xss_clean|trim|required|integer');
+
+                    if ($this->input->post('modules['.$partial.']['.$key.'][fixed]') === '1') {
+                        $this->form_validation->set_rules('modules[' . $partial . '][' . $key . '][fixed_top_offset]', '[' . $partial . '] ' . $this->lang->line('label_fixed_offset'), 'xss_clean|trim|required|integer');
+                        $this->form_validation->set_rules('modules[' . $partial . '][' . $key . '][fixed_bottom_offset]', '[' . $partial . '] ' . $this->lang->line('label_fixed_offset'), 'xss_clean|trim|required|integer');
+                    }
+
+                    $this->form_validation->set_rules('modules['.$partial.']['.$key.'][status]', '['.$partial.'] '.$this->lang->line('label_module_status'), 'xss_clean|trim|required|integer');
+                }
             }
         }
 

@@ -715,6 +715,11 @@ cursor: pointer;
 text-decoration: none;
 color: #484848;
 }
+.affix-module .affix {
+  position: fixed !important;
+  top: 15px;
+  z-index: 99;
+}
 /*** End Side Bar ***/
 
 

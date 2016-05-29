@@ -1,4 +1,4 @@
-<div id="category-box-affix" <?php echo $fixed_cart; ?>>
+<div id="category-box-affix" <?php echo $fixed_categories; ?>>
 	<div id="category-box" class="module-box">
 		<div class="panel panel-default">
 			<ul class="list-group list-group-responsive">

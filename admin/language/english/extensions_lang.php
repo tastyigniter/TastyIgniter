@@ -6,6 +6,7 @@ $lang['text_tab_module'] 		        = 'Modules';
 $lang['text_tab_payment'] 		        = 'Payments';
 $lang['text_edit_heading'] 		        = 'Extension: %s';
 $lang['text_add_heading'] 		        = 'Extension: Upload';
+$lang['text_browse_heading'] 		    = 'Browse Extensions';
 $lang['text_delete_heading'] 		    = 'Extension: Delete';
 $lang['text_list'] 		                = 'Extension List';
 $lang['text_filter_search'] 		    = 'Search name.';
@@ -20,11 +21,13 @@ $lang['text_installed'] 		        = 'Installed';
 $lang['text_uninstalled'] 		        = 'Uninstalled';
 $lang['text_view_files'] 		        = 'Hide/View files';
 $lang['text_upload_title'] 		        = 'Upload the extension .zip file and it will be installed automatically.';
+$lang['text_browse_title'] 		        = 'Freshly baked from the oven...coming soon  <i class="fa fa-smile-o"></i>';
 $lang['text_files'] 		            = 'files';
 $lang['text_files_data'] 		        = 'files and data';
 
 $lang['button_upload'] 		            = 'Upload & Install';
-$lang['button_browse'] 		            = 'Browse';
+$lang['button_choose'] 		            = 'Choose';
+$lang['button_browse'] 		            = '<i class="fa fa-puzzle-piece"></i>  Browse all extensions';
 $lang['button_change'] 		            = 'Change';
 $lang['button_delete'] 		            = 'Delete';
 $lang['button_yes_delete'] 		        = 'Yes, delete';
@@ -52,6 +55,7 @@ $lang['error_config_invalid'] 		    = 'The configuration file for extension <b>%
 $lang['error_config_invalid_key'] 	    = 'Check that the <b>\'%s\'</b> configuration value for extension <b>%s</b> is correctly set';
 
 $lang['alert_info_layouts'] 		    = 'After you have installed and configured a module you can display it on a layout <a href="%s" class="alert-link">here!</a>';
+$lang['alert_warning_layouts'] 		    = 'To display this extension module in storefront add it to a layout <a href="%s" class="alert-link">here!</a>';
 $lang['alert_delete_warning'] 		    = 'You are about to delete the %s of extension <b>%s</b>';
 $lang['alert_delete_confirm'] 		    = 'Are you sure you wish to delete these %s? This cannot be undone!';
 

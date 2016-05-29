@@ -397,13 +397,12 @@ color: #333;
 .navbar-top-links li a > .label {
 border-radius: 50%;
 font-size: 10px;
-font-weight: 200;
 position: absolute;
 text-align: center;
-top: 7px;
+top: 10px;
 height: 15px;
 width: 15px;
-right: 5px;
+right: 10px;
 padding: 2px;
 line-height: 1em;
 text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.2);
@@ -1358,6 +1357,7 @@ background-color: #5cbad5;
 .dropdown-menu {
 border: 1px solid #dfe6ee;
 box-shadow: 0 6px 12px rgba(95, 128, 171, 0.176);
+font-size: 13px;
 }
 .dropdown-toggle {
 cursor:pointer;
@@ -1854,7 +1854,6 @@ content: "\f0de";
 
 /** THEMES **/
 .panel-theme {
-height: 212px;
 position: relative;
 }
 .panel-theme .label-active {
@@ -2556,6 +2555,49 @@ display: block !important;
 }
 
 
+/** LAYOUT MODULES DRAG & DROP **/
+.modules-row {
+padding-left: 10px;
+padding-right: 10px;
+}
+.modules-row > div {
+padding-left: 5px;
+padding-right: 5px;
+}
+.modules-row .btn,
+.panel-partials .btn {
+    text-align: left;
+}
+.partials {
+background-color: #f6f8fa;
+border-color: #ECF0F5;
+overflow: hidden;
+}
+.partials > div:first-child {
+padding-right: 5px !important;
+}
+.partials > div:last-child {
+padding-left: 5px !important;
+}
+.partials .panel-partial {
+padding: 5px;
+}
+.panel-partial, .panel-partial-module {
+border-color: #d2dce7;
+}
+.partials .panel-partial-module {
+margin-bottom: 15px;
+}
+.panel-partial-module .panel-heading {
+background-color: #ECF0F5;
+border-radius: 3px;
+}
+.partials .panel-partial > .panel-body {
+padding: 15px 10px;
+}
+.partials .control-group-2 > .form-control {
+width: 44%;
+}
 
 /** DATE TIME PICKER **/
 body .bootstrap-timepicker-widget table td input {

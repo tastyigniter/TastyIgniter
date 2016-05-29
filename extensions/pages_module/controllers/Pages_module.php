@@ -18,6 +18,7 @@ class Pages_module extends Main_Controller {
 			$data['page_id'] = 0;
 		}
 
+		$data['module_title'] = (!empty($module['title'])) ? $module['title'] : '';
 		$data['heading'] = (!empty($ext_data['heading'])) ? $ext_data['heading'] : $this->lang->line('_text_title');
 
 		$data['pages'] = array();

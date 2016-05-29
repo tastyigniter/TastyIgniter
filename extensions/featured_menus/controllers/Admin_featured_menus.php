@@ -41,6 +41,14 @@ class Admin_featured_menus extends Admin_Controller {
         $filter['page'] = '1';
         $filter['limit'] = $this->config->item('menus_page_limit');
 
+        if ($this->input->post('title')) {
+            $data['title'] = $this->input->post('title');
+        } else if (!empty($module['title'])) {
+            $data['title'] = $module['title'];
+        } else {
+            $data['title'] = '';
+        }
+
         if ($this->input->post('limit')) {
             $data['limit'] = $this->input->post('limit');
         } else if (isset($ext_data['limit'])) {

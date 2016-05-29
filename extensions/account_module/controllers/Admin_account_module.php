@@ -7,7 +7,7 @@ class Admin_account_module extends Admin_Controller {
 
 		$this->user->restrict('Module.AccountModule');
 
-        if (!empty($data)) {
+        if (!empty($module)) {
             $title = (isset($module['title'])) ? $module['title'] : $this->lang->line('_text_title');
 
             $this->template->setTitle('Module: ' . $title);

@@ -19,12 +19,12 @@
 */
 $config['extension_meta'] = array(
 	'name'        => 'account_module',
-	'version'     => '1.0',
+	'version'     => '1.1',
 	'type'        => 'module',
 	'title'       => 'Account',
 	'author'      => 'SamPoyigi',
 	'description' => 'This extension will allow you to place the account shortcut links around your website.',
-	'settings'    => TRUE,
+	'settings'    => FALSE,
 );
 
 /*
@@ -46,3 +46,13 @@ $config['extension_permission'] = array(
 	'action'      => array('manage'),
 	'description' => 'Ability to manage account module',
 );
+
+/*
+|--------------------------------------------------------------------------
+| Extension Layout Ready (Optional)
+|--------------------------------------------------------------------------
+|
+| This extension config value tells TastyIgniter to use the extension as a layout module
+| (layout modules are displayed in the storefront inside partial areas)
+*/
+$config['layout_ready'] = TRUE;

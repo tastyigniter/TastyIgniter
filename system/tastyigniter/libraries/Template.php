@@ -103,7 +103,7 @@ class Template {
         $this->setPartialArea();
 
         // Set the modules for this layout using the current URI segments
-        !empty($this->_module) OR $this->_modules = $this->getLayoutModules();
+        !empty($this->_modules) OR $this->_modules = $this->getLayoutModules();
 
         // Load user agent library if not loaded
 		$this->CI->load->library('user_agent');
@@ -522,35 +522,33 @@ class Template {
     }
 
     public function getLayoutModules() {
-        $layout_modules = $this->_getLayoutModules();
+        list($uri_route, $layout_modules) = $this->_getLayoutModules();
 
         $modules = $this->CI->extension->getModules();
 
         $_modules = array();
-        foreach ($layout_modules[1] as $layout_module) {
-            if (isset($layout_module['module_code']) AND !empty($modules[$layout_module['module_code']])) {
+        foreach ($layout_modules as $partial => $partial_modules) {
+            foreach ($partial_modules as $layout_module) {
+                if (isset($layout_module['module_code']) AND !empty($modules[$layout_module['module_code']])) {
+                    $module = $modules[$layout_module['module_code']];
 
-                $module = $modules[$layout_module['module_code']];
+                    if ($module['name'] === $layout_module['module_code'] AND $layout_module['status'] === '1') {
+                        $_modules[$partial][] = array(
+                            'name'                => $module['name'],
+                            'layout_id'		      => $layout_module['layout_id'],
+                            'uri_route'           => $uri_route,
+                            'partial'             => $partial,
+                            'priority'            => $layout_module['priority'],
+                            'status'              => $module['status'],
+                            'data'                => $module['ext_data'],
+                            'title'               => $layout_module['title'],
+                            'fixed'               => $layout_module['fixed'],
+                            'fixed_top_offset'    => $layout_module['fixed_top_offset'],
+                            'fixed_bottom_offset' => $layout_module['fixed_bottom_offset'],
+                        );
+                    }
 
-                // layouts array key not needed anymore @DEPRECATED.
-                unset($module['ext_data']['layouts']);
-
-                if ($module['name'] === $layout_module['module_code'] AND $layout_module['status'] === '1') {
-                    // position key @DEPRECATED starting from v1.4.0
-                    $partial = !empty($layout_module['position']) ? $layout_module['position'] : $layout_module['partial'];
-                    $partial = in_array($partial, array('top', 'left', 'right', 'bottom')) ? 'content_'.$partial : $partial;
-
-                    // in_array test to append content_ to @DEPRECATED position key
-                    $_modules[$partial][] = array(
-                        'name'			=> $module['name'],
-                        'title'			=> $module['title'],
-                        'layout_id'		=> $layout_module['layout_id'],
-                        'partial'		=> $partial,
-                        'priority'		=> $layout_module['priority'],
-                        'data'		    => $module['ext_data'],
-                    );
                 }
-
             }
         }
 
@@ -570,30 +568,35 @@ class Template {
 
         if (empty($partial_areas)) return NULL;
 
-        foreach ($partial_areas as $partial_name => $data) {
+        foreach ($partial_areas as $partial_name => $partial_data) {
             $partial_view = NULL;
 
             if (!is_string($partial_name)) continue;
 
             if (isset($this->_layouts[$partial_name])) {
-                $partial_view = $this->_load_view($partial_name, $data);
+                $partial_view = $this->_load_view($partial_name, $partial_data);
             } else {
                 // We stop here if no module was found.
                 if (empty($this->_modules[$partial_name])) continue;
 
                 $this->sortModules($partial_name);
+                $count = 1;
                 foreach ($this->_modules[$partial_name] as $module) {
-                    $partial_view .= Modules::run($module['name'] .'/index', $module, $this->_data);
+                    $partial_view .= $this->buildPartialModule($module, $this->_data, $partial_data, $count);
+                    $count++;
                 }
-
             }
 
-            $this->_partials[$partial_name] = array('data' => $data, 'view' => $partial_view);
+            $this->_partials[$partial_name] = array('data' => $partial_data, 'view' => $partial_view);
         }
 
-        if (!empty($partial)) return isset($this->_partials[$partial]) ? $this->_partials[$partial] : array('data' => NULL, 'view' => NULL);
-
-        return $this->_partials;
+        if (empty($partial)) {
+            return $this->_partials;
+        } else if (isset($this->_partials[$partial])) {
+            return $this->_partials[$partial];
+        } else {
+            return array('data' => NULL, 'view' => NULL);
+        }
     }
 
     private function _getLayoutModules() {
@@ -718,6 +721,30 @@ class Template {
 
             array_multisort($modules, SORT_ASC, $this->_modules[$partial_name]);
         }
+    }
+
+    protected function buildPartialModule($module, $view_data, $partial_data, $count) {
+        $module_view = Modules::run($module['name'] .'/index', $module, $view_data);
+
+        if (!empty($module['title'])) {
+            $module_view = ($module['title'] != strip_tags($module['title'])) ? $module['title'].$module_view : "<h3 class=\"module-title\">{$module['title']}</h3>".$module_view;
+        }
+
+        $module_class = 'module-' . $module['name'] . '';
+        if ($module['fixed'] === '1') {
+            $top_offset = isset($module['fixed_top_offset']) ? $module['fixed_top_offset'] : '';
+            $bottom_offset = isset($module['fixed_bottom_offset']) ? $module['fixed_bottom_offset'] : '';
+            $fixed_tag = '<div data-spy="affix" data-offset-top="' . $top_offset . '" data-offset-bottom="' . $bottom_offset . '">';
+            $module_view = $fixed_tag . $module_view . '</div>';
+            $module_class .= ' affix-module';
+        }
+
+        (!empty($partial_data['module_html'])) OR $partial_data['module_html'] = '<div id="{id}" class="{class}">{module}</div>';
+
+        $module_view = str_replace('{id}', 'module-' . str_replace('_', '-', $module['name']) . '-' . $count,
+            str_replace('{class}', $module_class, str_replace('{module}', $module_view, $partial_data['module_html'])));
+
+        return $module_view;
     }
 }
 
