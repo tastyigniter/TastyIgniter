@@ -126,6 +126,10 @@ class Languages extends Admin_Controller {
             redirect('languages/edit?id='. $language_id);
         }
 
+		if ($language_id === '11') {
+			$this->alert->set('info', $this->lang->line('alert_caution_edit'));
+		}
+
 		$title = (isset($language_info['name'])) ? $language_info['name'] : $this->lang->line('text_new');
         $this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $title));
         $this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
