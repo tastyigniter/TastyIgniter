@@ -21,7 +21,7 @@ class Local_module extends Main_Controller {
 
 		$ext_data = (!empty($module['data']) AND is_array($module['data'])) ? $module['data'] : array();
 
-		if (empty($ext_data['status']) OR $ext_data['status'] !== '1') {
+		if (empty($module['status']) OR (isset($ext_data['status']) AND $ext_data['status'] !== '1')) {
 			return;
 		}
 
