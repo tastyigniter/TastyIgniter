@@ -16,6 +16,7 @@ Release Date: May 2016
 * Affix categories sidebar (module) to page
 * Migration: added column `order_date` to `orders` table to allow future orders
 * Customer now redirects back to previous page after login when previous page is either checkout or reservation page
+* Composer support, to enabled create a file `vendor/autoload.php` within the system folder and
 * Location library method `deliveryCondition()` to return an array of the current location delivery conditions to be used within controller
 * Capability to create a child theme and override any parent theme file or extension view file from within the child theme
 * TI_url_helper theme_url() function to return the site theme URL
@@ -25,34 +26,41 @@ Release Date: May 2016
 * Migration: add column `priority` to Menus table and column `default_value_id` to Menu Option table to sort the storefront menu list and choose an option value to be selected default in storefront
 * Migration: new table `mealtimes` to hold `start_time` and `end_time` for mealtimes
 * Improved Cart: new extension type `cart_total` to allow cart totals extension and priority from within cart module
-* Improved Cart: developers can add new cart total using `cart_module_before_cart_totals` hook point and new Cart library methods `add_total()`, `remove_total()` and `get_total()`
+* Event Hook: developers can add new cart total using `cart_module_before_cart_totals` hook point and 
+* Cart library methods `add_total()`, `remove_total()` and `get_total()`
+* Extensions_model method `getModule($module)` to return specified installed module
+* Theme config item under partial_area `module_html` to customise each module html template displayed in storefront
+* Extension config item `layout_ready` to tell system an extension can be configured as layout module and displayed in storefront
 
 #### Changed
 * Major UI improvements to local, cart and categories modules, local, locations and checkout pages
 * Location library: MUST call `initialize()` method or `setLocation()` to load location library
 * Improved `orderTimeRange()` method in Location Library to get future order dates and hours
-* Removed `local_module ` admin edit language text feature. Language text should be changed from language file instead.
+* Removed `local_module` admin edit language text feature. Language text should be changed from language file instead.
 * Location library methods `getOpeningType()`, `openingStatus()`, `openingHours()`, `checkDeliveryTime()` to `getWorkingType()`, `workingStatus()`, `workingHours()`, `checkOrderTime()`
 * Improved Checkout future order (order for later) feature with option to select date and time for later delivery or collection
-* Improved Location feature where customer must enter address to order
+* Improved Admin Location settings whether customer must enter address to order or not
 * Improved Cart Module alerts to display top screen on mobile devices
-* Show order date instead of date added on order and checkout pages and display menu option on new line
-* Improved get_remote_data method and added is_ssl method
-* Pass entire extension array into extension index method instead of passing only the data key value
-* Improved banner module to allow multiple banners
+* Show order date instead of date added on admin & customer account order and checkout pages and display menu option on new line
+* Improved get_remote_data method
+* Pass entire module array into extension module index method instead of passing only the data array key value
+* Improved banner module with admin options to allow multiple banners on different layouts
 * Added option to enter billing address during checkout when authorize.net is selected as payment method
 * Load Template library right after permalink library so the right modules can be loaded based on uri
 * Improved messages view folders and delete functionality ( you might find some archived messages showing under 'all' folder but not in 'archive', fix by moving to archive again)
 * Filter lost (blank status) orders from order list in admin by default
-* Updated CI core files to version 3.0.6, TI system files and modular HMVC files, also added composer support
+* Updated CI core files to version 3.0.6, TI system files and modular HMVC files
 * Improved locations delivery area with conditions such as free delivery if total over certain amount
-* Location library method `deliveryCharge()` & `minimumOrder()` now expect cart total as parameter
-* Customer login function to allow the admin to login to any customer account without knowing the customer's password
+* Location library method `deliveryCharge()` and `minimumOrder()` now expect cart total as parameter
+* Customer login function to login admin to any customer account without knowing the customer's password
 * Replaced `_find_view()` with `_find_view_path()` in Template Library, use `_load_view()` instead of `_find_view()`
 * Improved Template library to search for files `views, css, js` both in the active and parent theme `if the active theme is a child theme`
-* Improved TI_Loader library `view()` method to search current theme folder for view file before modules, this allows extension view files to be overridden from within a child theme folder
+* Improved TI_Loader library `view()` method to search current (child and parent) theme folder for view file before modules, this allows extension view files to be overridden from within a child theme folder
 * Improved Cart: moved cart validate methods from controller to new `Cart_module_lib` library
 * Removed admin settings option Tax Title, so tax title can be set from within Cart Module
+* Improved send message to all newsletter subscriber feature to include emails submitted via newsletter extension
+* Improved Template Library to read new config item `layout_ready` and customise module based on `module_html` value in theme_config
+* Improved Admin Layout edit page to drag and drop layout modules into partial areas, add title and position module to page
 
 #### Fixed
 * Issue with payment and confirm button changing incorrectly on checkout page
@@ -61,6 +69,8 @@ Release Date: May 2016
 * Issue where previous successfully placed order is overwritten when placing new order as guest
 * Issue where class selector passed into get_partial method is ignored
 * Issue with storefront menu list and sidebar modules widths
+* Missing category module admin fixed position settings
+* Default language from being deleted accidentally
 
 ### v2.0.0 (stable)
 
