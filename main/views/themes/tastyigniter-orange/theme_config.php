@@ -40,41 +40,46 @@ $theme['head_tags'] = array(
 	),
 );
 
-// Register partial areas for modules.
+// Register partial areas for layout modules.
 $theme['partial_area'] = array(
-    array(
-        'name'      => 'Content Top',
-        'id'        => 'content_top',
-        'open_tag'  => '<div id="{id}" class="partial">',
-        'close_tag' => '</div>',
-    ),
-    array(
-        'name'      => 'Content Bottom',
-        'id'        => 'content_bottom',
-        'open_tag'  => '<div class="clearfix"></div><div id="{id}" class="partial">',
-        'close_tag' => '</div>',
-    ),
-    array(
-        'name'      => 'Content Left',
-        'id'        => 'content_left',
-        'class'     => 'col-sm-3 ',
-        'open_tag'  => '<div id="{id}" class="partial {class}"><div class="side-bar">',
-        'close_tag' => '</div></div>',
-    ),
-    array(
-        'name'      => 'Content Right',
-        'id'        => 'content_right',
-        'class'     => 'col-sm-3 ',
-        'open_tag'  => '<div id="{id}" class="partial {class}"><div class="side-bar">',
-        'close_tag' => '</div></div>',
-    ),
-    array(
-        'name'      => 'Content Footer',
-        'id'        => 'content_footer',
-        'class'     => 'footer-section ',
-        'open_tag'  => '<div id="{id}" class="partial {class}">',
-        'close_tag' => '</div>',
-    ),
+	array(
+		'name'          => 'Content Top',
+		'id'            => 'content_top',
+		'open_tag'      => '<div id="{id}" class="partial partial-area {class}">',
+		'close_tag'     => '</div>',
+		'module_html' 	=> '<div id="{id}" class="{class}">{module}</div>',
+	),
+	array(
+		'name'          => 'Content Left',
+		'id'            => 'content_left',
+		'class'         => 'col-sm-3 ',
+		'open_tag'      => '<div id="{id}" class="partial partial-area {class}">',
+		'close_tag'     => '</div>',
+		'module_html' 	=> '<div id="{id}" class="side-bar {class}">{module}</div>',
+	),
+	array(
+		'name'          => 'Content Footer',
+		'id'            => 'content_footer',
+		'class'         => 'footer-section ',
+		'open_tag'      => '<div id="{id}" class="partial partial-area {class}">',
+		'close_tag'     => '</div>',
+		'module_html' 	=> '<div id="{id}" class="{class}">{module}</div>',
+	),
+	array(
+		'name'          => 'Content Bottom',
+		'id'            => 'content_bottom',
+		'open_tag'      => '<div class="clearfix"></div><div id="{id}" class="partial partial-area {class}">',
+		'close_tag'     => '</div>',
+		'module_html' 	=> '<div id="{id}" class="{class}">{module}</div>',
+	),
+	array(
+		'name'          => 'Content Right',
+		'id'            => 'content_right',
+		'class'         => 'col-sm-3 ',
+		'open_tag'      => '<div id="{id}" class="partial partial-area {class}">',
+		'close_tag'     => '</div>',
+		'module_html' 	=> '<div id="{id}" class="side-bar {class}">{module}</div>',
+	),
 );
 
 // Set all sections for the admin theme customisation.
