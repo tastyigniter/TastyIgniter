@@ -875,6 +875,7 @@ class Location {
 
 				$charges = $condition = array();
 				foreach ($area['charge'] as $key => $charge) {
+					$charge['total'] = isset($charge['total']) ? $charge['total'] : '0';
 					$charges['amounts'][$key] = $charge['amount'];
 					$charges['conditions'][$key] = $con = ($charge['condition'] === 'above' AND $charge['total'] <= 0) ? 'all' : $charge['condition'];
 					$charges['totals'][$key] = $charge['total'];

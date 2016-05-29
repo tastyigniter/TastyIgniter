@@ -283,7 +283,7 @@ class Checkout extends Main_Controller {
 
         if ($this->input->post('order_date')) {
             $data['order_date'] = $this->input->post('order_date');                            // retrieve order_time value from $_POST data if set
-        } else if (isset($order_data['order_date'])) {
+        } else if (isset($order_data['order_date']) AND !empty($data['order_times'][$order_data['order_date']])) {
             $data['order_date'] = $order_data['order_date'];                                    // retrieve order_type from session data
         } else {
             $data['order_date'] = $order_date;
@@ -291,17 +291,16 @@ class Checkout extends Main_Controller {
 
         if ($this->input->post('order_hour')) {
             $data['order_hour'] = $this->input->post('order_hour');                            // retrieve order_time value from $_POST data if set
-        } else if (isset($order_data['order_hour'])) {
+        } else if (isset($order_data['order_hour']) AND !empty($data['order_times'][$data['order_date']][$order_data['order_hour']])) {
             $data['order_hour'] = $order_data['order_hour'];                                    // retrieve order_type from session data
         } else {
             $data['order_hour'] = $order_hour;
         }
 
-        $data['order_hour'] = ( ! isset($data['order_times'][$data['order_date']][$data['order_hour']])) ? $order_hour : $data['order_hour'];
-
         if ($this->input->post('order_minute')) {
             $data['order_minute'] = $this->input->post('order_minute');                            // retrieve order_time value from $_POST data if set
-        } else if (isset($order_data['order_minute'])) {
+        } else if (isset($order_data['order_minute'], $data['order_times'][$data['order_date']][$order_data['order_hour']])
+            AND in_array($order_data['order_minute'], $data['order_times'][$data['order_date']][$order_data['order_hour']])) {
             $data['order_minute'] = $order_data['order_minute'];                                    // retrieve order_type from session data
         } else {
             $data['order_minute'] = $order_minute;

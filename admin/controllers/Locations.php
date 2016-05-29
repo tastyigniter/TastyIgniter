@@ -602,7 +602,11 @@ class Locations extends Admin_Controller {
 					foreach ($this->input->post('delivery_areas['.$key.'][charge]') as $k => $v) {
 						$this->form_validation->set_rules('delivery_areas[' . $key . '][charge][' . $k . '][amount]', '['.$key.'] '.$this->lang->line('label_area_charge'), 'xss_clean|trim|required|numeric');
 						$this->form_validation->set_rules('delivery_areas[' . $key . '][charge][' . $k . '][condition]', '['.$key.'] '.$this->lang->line('label_charge_condition'), 'xss_clean|trim|required|alpha_dash');
-						$this->form_validation->set_rules('delivery_areas[' . $key . '][charge][' . $k . '][total]', '['.$key.'] '.$this->lang->line('label_area_min_amount'), 'xss_clean|trim|required|numeric');
+						$this->form_validation->set_rules('delivery_areas[' . $key . '][charge][' . $k . '][total]', '[' . $key . '] ' . $this->lang->line('label_area_min_amount'), 'xss_clean|trim|numeric');
+
+						if ($this->input->post('delivery_areas[' . $key . '][charge][' . $k . '][condition]') !== 'all') {
+							$this->form_validation->set_rules('delivery_areas[' . $key . '][charge][' . $k . '][total]', '[' . $key . '] ' . $this->lang->line('label_area_min_amount'), 'required');
+						}
 					}
 				}
 			}

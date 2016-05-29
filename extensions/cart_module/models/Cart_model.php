@@ -25,6 +25,9 @@ class Cart_model extends TI_Model {
         $result = array();
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
+                $row['start_time'] = !empty($row['start_time']) ? mdate($this->config->item('time_format'), strtotime($row['start_time'])) : '';
+                $row['end_time'] = !empty($row['end_time']) ? mdate($this->config->item('time_format'), strtotime($row['end_time'])) : '';
+
                 $result[$row['menu_id']] = $row;
             }
         }
@@ -47,7 +50,11 @@ class Cart_model extends TI_Model {
             $query = $this->db->get();
 
             if ($query->num_rows() > 0) {
-                return $query->row_array();
+                $row = $query->row_array();
+                $row['start_time'] = !empty($row['start_time']) ? mdate($this->config->item('time_format'), strtotime($row['start_time'])) : '';
+                $row['end_time'] = !empty($row['end_time']) ? mdate($this->config->item('time_format'), strtotime($row['end_time'])) : '';
+
+                return $row;
             }
         }
     }

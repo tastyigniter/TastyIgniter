@@ -661,7 +661,7 @@
 																					<i class="fa fa-times-circle"></i>
 																				</a>
 																			</td>
-																			<td><input type="text" name="delivery_areas[<?php echo $panel_row; ?>][charge][<?php echo $table_row; ?>][amount]" class="form-control input-sm charge" value="<?php echo $value['amount']; ?>" /></td>
+																			<td><input type="text" name="delivery_areas[<?php echo $panel_row; ?>][charge][<?php echo $table_row; ?>][amount]" class="form-control input-sm charge" value="<?php echo isset($value['amount']) ? $value['amount'] : ''; ?>" /></td>
 																			<td><select name="delivery_areas[<?php echo $panel_row; ?>][charge][<?php echo $table_row; ?>][condition]" class="form-control input-sm">
 																					<?php foreach ($delivery_charge_conditions as $condition => $condition_text) { ?>
 																						<?php if ($condition == $value['condition']) { ?>
@@ -672,7 +672,7 @@
 																					<?php } ?>
 																				</select>
 																			</td>
-																			<td><input type="text" name="delivery_areas[<?php echo $panel_row; ?>][charge][<?php echo $table_row; ?>][total]" class="form-control input-sm total" value="<?php echo $value['total']; ?>" /></td>
+																			<td><input type="text" name="delivery_areas[<?php echo $panel_row; ?>][charge][<?php echo $table_row; ?>][total]" class="form-control input-sm total" value="<?php echo isset($value['total']) ? $value['total'] : ''; ?>" /></td>
 																		</tr>
 																		<?php if (form_error('delivery_areas['.$panel_row.'][charge]['.$table_row.'][amount]')
 																			OR form_error('delivery_areas['.$panel_row.'][charge]['.$table_row.'][condition]')
@@ -880,7 +880,7 @@ $(document).ready(function() {
 		$(this).attr('data-table-row', tableRow);
 	});
 
-	$('#delivery-areas select.form-control').on('change', function() {
+	$(document).on('change', '#delivery-areas select.form-control', function() {
 		$(this).parent().parent().find('input.total').attr('disabled', false);
 
 		if (this.value == 'all') {
@@ -1421,7 +1421,7 @@ function addDeliveryCondition(panelRow, tableRow) {
 	html += '		</select>';
 	html += '	</td>';
 	html += '	<td>';
-	html += '		<input type="text" name="delivery_areas[' + panelRow + '][charge][' + tableRow + '][total]" class="form-control input-sm total" value="0" />';
+	html += '		<input type="text" name="delivery_areas[' + panelRow + '][charge][' + tableRow + '][total]" class="form-control input-sm total" disabled="disabled" value="0" />';
 	html += '	</td>';
 	html += '</tr>';
 

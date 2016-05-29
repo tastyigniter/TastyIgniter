@@ -96,6 +96,11 @@ class Cart_module_lib {
             return sprintf($this->CI->lang->line('alert_menu_not_found'), $cart_item['name']);
         }
 
+        // if menu mealtime is enable and menu is outside mealtime
+        if ($menu_data['mealtime_status'] === '1' AND empty($menu_data['is_mealtime'])) {
+            return sprintf($this->CI->lang->line('alert_menu_not_within_mealtime'), $menu_data['menu_name'], $menu_data['mealtime_name'], $menu_data['start_time'], $menu_data['end_time']);
+        }
+
         // if cart quantity is less than minimum quantity
         if ($cart_item['qty'] < $menu_data['minimum_qty']) {
             return sprintf($this->CI->lang->line('alert_qty_is_below_min_qty'), $menu_data['minimum_qty']);
