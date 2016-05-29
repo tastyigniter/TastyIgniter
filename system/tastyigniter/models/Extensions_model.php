@@ -52,7 +52,7 @@ class Extensions_model extends TI_Model {
 			$extension['settings'] = ! empty($extension_meta['settings'])
 			AND file_exists($extension_path . '/controllers/admin_' . $basename . '.php') ? TRUE : FALSE;
 
-			$extension['config'] = ( ! empty($config) AND is_array($config)) ? TRUE : $config;
+			$extension['config'] = $config;
 
 			$extension['meta'] = ( ! empty($extension_meta) AND is_array($extension_meta)) ? $extension_meta : array();
 
@@ -151,7 +151,7 @@ class Extensions_model extends TI_Model {
 				$row['ext_data'] = ($row['serialized'] === '1' AND ! empty($row['data'])) ? unserialize($row['data']) : array();
 				unset($row['data']);
 				$row['title'] = ! empty($row['title']) ? $row['title'] : ucwords(str_replace('_module', '',
-				                                                                             $row['name']));
+																							 $row['name']));
 				$result[$row['name']] = $row;
 			}
 		}
@@ -165,6 +165,22 @@ class Extensions_model extends TI_Model {
 
 	public function getPayments() {
 		return $this->getInstalledExtensions('payment', TRUE);
+	}
+
+	public function getModule($name = '') {
+		$result = array();
+
+		if ( ! empty($name) AND is_string($name)) {
+			$extensions = $this->getInstalledExtensions('module', TRUE);
+
+			if ($extensions AND is_array($extensions)) {
+				if (isset($extensions[$name]) AND is_array($extensions[$name])) {
+					$result = $extensions[$name];
+				}
+			}
+		}
+
+		return $result;
 	}
 
 	public function getPayment($name = '') {
@@ -386,8 +402,8 @@ class Extensions_model extends TI_Model {
 					// downgrade extension migration
 					$this->extension->runMigration($name, TRUE);
 
-                    $query = TRUE;
-                }
+					$query = TRUE;
+				}
 			}
 		}
 
