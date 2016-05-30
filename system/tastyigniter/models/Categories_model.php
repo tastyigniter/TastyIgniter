@@ -63,13 +63,20 @@ class Categories_model extends TI_Model {
 		}
 	}
 
-	public function getCategories($parent = 0) {
+	public function getCategories($parent = NULL) {
 		$sql = "SELECT cat1.category_id, cat1.name, cat1.description, cat1.image, ";
 		$sql .= "cat1.priority, cat1.status, child.category_id as child_id, sibling.category_id as sibling_id ";
 		$sql .= "FROM {$this->db->dbprefix('categories')} AS cat1 ";
 		$sql .= "LEFT JOIN {$this->db->dbprefix('categories')} AS child ON child.parent_id = cat1.category_id ";
 		$sql .= "LEFT JOIN {$this->db->dbprefix('categories')} AS sibling ON sibling.parent_id = child.category_id ";
-		$sql .= ($parent === 0) ? "WHERE cat1.parent_id >= 0 " : "WHERE cat1.parent_id = ? ";
+
+		if ($parent === NULL) {
+			$sql .= "WHERE cat1.parent_id >= 0 ";
+		} else if (empty($parent)) {
+			$sql .= "WHERE cat1.parent_id = 0 ";
+		} else {
+			$sql .= "WHERE cat1.parent_id = ? ";
+		}
 
 		if (APPDIR === MAINDIR) {
 			$sql .= "AND cat1.status = 1 ";

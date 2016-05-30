@@ -22,18 +22,33 @@ class Categories_module extends Main_Controller {
 		$data['menu_total'] 			= $this->Menus_model->getCount();
 
 		$data['categories'] = array();
-		$results = $this->Categories_model->getCategories(); 										// retrieve all menu categories from getCategories method in Menus model
+		$results = $this->Categories_model->getCategories(0); 										// retrieve all menu categories from getCategories method in Menus model
 		foreach (sort_array($results) as $result) {															// loop through menu categories array
 			$children_data = array();
 
-			if ($result['child_id'] !== NULL) {
-				$children = $this->Categories_model->getCategories($result['category_id']); 										// retrieve all menu categories from getCategories method in Menus model
+			if (!empty($result['child_id'])) {
+				$sibling_data = array();
+
+				if (!empty($result['sibling_id'])) {
+					$sibling = $this->Categories_model->getCategories($result['child_id']);							// retrieve all menu categories from getCategories method in Menus model
+
+					foreach ($sibling as $sib) {
+						$sibling_data[$sib['category_id']] = array( 														// create array of category data to pass to view
+							'category_id'	=>	$sib['category_id'],
+							'category_name'	=>	$sib['name'],
+							'href'			=>	site_url('menus?category_id='. $sib['category_id']),
+						);
+					}
+				}
+
+				$children = $this->Categories_model->getCategories($result['category_id']);							// retrieve all menu categories from getCategories method in Menus model
 
 				foreach ($children as $child) {
 					$children_data[$child['category_id']] = array( 														// create array of category data to pass to view
 						'category_id'	=>	$child['category_id'],
 						'category_name'	=>	$child['name'],
-						'href'			=>	site_url('menus?category_id='. $child['category_id'])
+						'href'			=>	site_url('menus?category_id='. $child['category_id']),
+						'children'		=>	$sibling_data,
 					);
 				}
 			}
@@ -41,10 +56,13 @@ class Categories_module extends Main_Controller {
 			$data['categories'][$result['category_id']] = array( 														// create array of category data to pass to view
 				'category_id'	=>	$result['category_id'],
 				'category_name'	=>	$result['name'],
+				'href'			=>	site_url('menus?category_id='. $result['category_id']),
 				'children'		=>	$children_data,
-				'href'			=>	site_url('menus?category_id='. $result['category_id'])
 			);
 		}
+
+		$mix_it_up = (!empty($menu_total) AND $menu_total > 500) ? FALSE : TRUE;
+		$data['category_tree'] = $this->categoryTree($data['categories'], $mix_it_up);
 
 		$fixed_top_offset = isset($ext_data['fixed_top_offset']) ? $ext_data['fixed_top_offset'] : '350';
 		$fixed_bottom_offset = isset($ext_data['fixed_bottom_offset']) ? $ext_data['fixed_bottom_offset'] : '320';
@@ -52,6 +70,41 @@ class Categories_module extends Main_Controller {
 
 		// pass array $data and load view files
 		return $this->load->view('categories_module/categories_module', $data, TRUE);
+	}
+
+	protected function categoryTree($categories, $mix_it_up, $is_child = FALSE) {
+		$category_id = $this->input->get('category_id');
+
+		$tree = '<ul class="list-group list-group-responsive">';
+
+		if (!$is_child) {
+			$attr = $mix_it_up ? ' class="filter" data-filter="all" ' : ' class="" href="'.site_url('menus').'" ';
+			$tree .= '<li class="list-group-item"><a' . $attr . '><i class="fa fa-angle-right"></i>&nbsp;&nbsp;'.$this->lang->line('text_show_all').'</a>';
+		}
+
+		if ( ! empty($categories)) {
+			foreach ($categories as $category) {
+				$selector = '.'.strtolower(str_replace(' ', '-', str_replace('&', '_', $category['category_name'])));
+
+				if ($mix_it_up) {
+					$attr = ' class="filter" data-filter="'.$selector.'" ';
+				} else {
+					$attr = ($category['category_id'] === $category_id) ? ' class="" href="#'.$selector.'" ' : ' class="active" href="#'.$selector.'" ';
+				}
+
+				if (!empty($category['children'])) {
+					$tree .= '<li class="list-group-item"><a'.$attr.'><i class="fa fa-angle-right"></i>&nbsp;&nbsp;' . $category['category_name'] . '</a>';
+					$tree .= $this->categoryTree($category['children'], $mix_it_up, TRUE);
+					$tree .= '</li>';
+				} else {
+					$tree .= '<li class="list-group-item"><a'.$attr.'><i class="fa fa-angle-right"></i>&nbsp;&nbsp;' . $category['category_name'] . '</a></li>';
+				}
+			}
+		}
+
+		$tree .= '</ul>';
+
+		return $tree;
 	}
 }
 
