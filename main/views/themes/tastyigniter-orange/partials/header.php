@@ -11,7 +11,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 	<head>
         <?php echo get_metas(); ?>
-        <?php echo get_favicon(); ?>
+        <?php if ($favicon = get_theme_options('favicon')) { ?>
+            <link href="<?php echo image_url($favicon); ?>" rel="shortcut icon" type="image/ico">
+        <?php } else { ?>
+            <?php echo get_favicon(); ?>
+        <?php } ?>
         <title><?php echo sprintf(lang('site_title'), get_title(), config_item('site_name')); ?></title>
         <?php echo get_style_tags(); ?>
         <?php echo get_active_styles(); ?>

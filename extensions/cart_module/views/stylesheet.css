@@ -80,8 +80,9 @@ display: table;
 }
 
 .cart-items ul li {
-border-bottom: 1px solid #eee;
+border-color: #eee;
 border-style: dashed !important;
+border-width: 0 0 1px;
 margin: 0;
 overflow: hidden;
 padding: 5px 0;

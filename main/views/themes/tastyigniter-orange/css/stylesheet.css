@@ -486,9 +486,6 @@ border-radius: 0;
 padding: 0;
 border: 0 none;
 }
-label {
-color: #686868;
-}
 /*** End Forms ***/
 
 
@@ -552,7 +549,7 @@ font-weight: bold;
 color: #fff;
 }
 .nav-tabs.nav-tabs-line {
-border: medium none;
+/*border: medium none;*/
 margin: 0;
 }
 .nav-tabs.nav-tabs-line > li > a {
@@ -592,7 +589,7 @@ border-bottom: 4px solid #ED561A;
 border-radius: 3px 3px 0 0;
 }
 .tab-content-line {
-border-top: 1px solid #eee;
+/*border-top: 1px solid #eee;*/
 border-radius: 4px;
 margin-top: -3px;
 margin-bottom: 20px;
@@ -681,8 +678,10 @@ color: #888;
 
 
 /*** Side Bar ***/
-.side-bar .panel {
+.side-bar .panel:not(.panel-cart) {
 border: 0 none;
+}
+.side-bar .panel {
 box-shadow: none;
 }
 .side-bar .panel-default > .panel-heading {

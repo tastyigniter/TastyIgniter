@@ -41,7 +41,7 @@
 					</div>
 
 					<div class="col-md-12">
-						<div class="tab-content tab-content-line">
+						<div class="tab-content tab-content-line wrap-top">
 							<div id="details" class="tab-pane active">
 								<?php if ($customer_info) { ?>
 								<div class="table-responsive">

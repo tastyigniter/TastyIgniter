@@ -120,6 +120,7 @@ class TI_Lang extends MX_Lang {
 
 		$idiom = (is_numeric($default_lang)) ? $this->getIdiom($default_lang) : $default_lang;
 
+		$this->CI->load->helper('language');
 		if (find_lang_file($langfile, $idiom)) {
 			return $idiom;
 		}
