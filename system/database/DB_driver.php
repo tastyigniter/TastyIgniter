@@ -429,7 +429,7 @@ abstract class CI_DB_driver {
 			// We still don't have a connection?
 			if ( ! $this->conn_id)
 			{
-				log_message('error', 'Unable to connect to the database');
+//				log_message('error', 'Unable to connect to the database');
 
 				if ($this->db_debug)
 				{
