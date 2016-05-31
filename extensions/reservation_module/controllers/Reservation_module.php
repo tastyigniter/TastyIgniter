@@ -47,12 +47,13 @@ class Reservation_module extends Main_Controller {
             $date_format = '%d-%m-%Y';
         }
 
-		$data['current_url'] 			= page_url().'?action=find_table&';
+        $page_url = $this->uri->rsegment('1') === 'reservation' ? page_url() : site_url('reservation');
+        $data['current_url'] 			= $page_url.'?action=find_table&';
 		$data['reset_url'] 				= site_url('reservation');
 
         $data['find_table_action'] = 'find_table';
 
-        if ($this->input->get() AND ($response = $this->findTable()) !== FALSE) {
+        if ($this->uri->rsegment('1') === 'reservation' AND $this->input->get() AND ($response = $this->findTable()) !== FALSE) {
             if ($this->input->get('action') === 'select_time' AND $this->input->get('selected_time')) {
                 $data['find_table_action'] = 'view_summary';
                 $data['current_url'] = page_url().'?action=select_time&';

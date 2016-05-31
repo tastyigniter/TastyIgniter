@@ -28,7 +28,7 @@ class Local_module extends Main_Controller {
 		$this->template->setStyleTag(extension_url('local_module/views/stylesheet.css'), 'local-module-css', '100000');
 
 		$data['location_search_mode'] = 'multi';
-		if ($ext_data['location_search_mode'] === 'single') {
+		if (isset($ext_data['location_search_mode']) AND $ext_data['location_search_mode'] === 'single') {
 			$data['location_search_mode'] = 'single';
 
 			if (!empty($ext_data['use_location'])) {

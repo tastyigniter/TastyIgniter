@@ -113,9 +113,9 @@
 									<li><a href="<?php echo site_url('account/register'); ?>"><?php echo lang('menu_register'); ?></a></li>
 								<?php } ?>
 
-								<?php if ($pages) { ?>
+								<?php if (!empty($pages)) { ?>
 									<?php foreach ($pages as $page) { ?>
-										<?php if ($page['navigation'] === 'header') { ?>
+										<?php if (is_array($page['navigation']) AND in_array('header', $page['navigation'])) { ?>
 											<li><a href="<?php echo site_url('pages?page_id='.$page['page_id']); ?>"><?php echo $page['name']; ?></a></li>
 										<?php } ?>
 									<?php } ?>

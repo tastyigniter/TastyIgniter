@@ -4,6 +4,7 @@
 		<div class="row wrap-vertical">
 			<ul id="nav-tabs" class="nav nav-tabs">
 				<li class="active"><a href="#general" data-toggle="tab"><?php echo lang('text_tab_general'); ?></a></li>
+				<li><a href="#data" data-toggle="tab"><?php echo lang('text_tab_data'); ?></a></li>
 				<li><a href="#opening-hours" data-toggle="tab"><?php echo lang('text_tab_opening_hours'); ?></a></li>
 				<li><a href="#order" data-toggle="tab"><?php echo lang('text_tab_order'); ?></a></li>
 				<li><a href="#reservation" data-toggle="tab"><?php echo lang('text_tab_reservation'); ?></a></li>
@@ -123,8 +124,9 @@
 							</div>
 						</div>
 					</div>
+				</div>
 
-					<h4 class="tab-pane-title"></h4>
+				<div id="data" class="tab-pane row wrap-all">
 					<div class="form-group">
 						<label for="input-description" class="col-sm-3 control-label"><?php echo lang('label_description'); ?></label>
 						<div class="col-sm-5">

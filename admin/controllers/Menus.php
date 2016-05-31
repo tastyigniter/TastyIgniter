@@ -192,7 +192,7 @@ class Menus extends Admin_Controller {
 		$data['end_date'] = (isset($menu_info['end_date']) AND $menu_info['end_date'] !== '0000-00-00') ? mdate('%d-%m-%Y', strtotime($menu_info['end_date'])) : '';
 		$data['special_price'] = (isset($menu_info['special_price']) AND $menu_info['special_price'] == '0.00') ? '' : $menu_info['special_price'];
 		$data['special_status'] = ($this->input->post('special_status')) ? $this->input->post('special_status') : $menu_info['special_status'];
-		$data['menu_status'] = $menu_info['menu_status'];
+		$data['menu_status'] = isset($menu_info['menu_status']) ? $menu_info['menu_status'] : '1';
 		$data['mealtime_id'] = $menu_info['mealtime_id'];
 		$data['menu_priority'] = $menu_info['menu_priority'];
 		$data['no_photo'] = $this->Image_tool_model->resize('data/no_photo.png');
@@ -324,12 +324,12 @@ class Menus extends Admin_Controller {
 		$this->form_validation->set_rules('menu_price', 'lang:label_price', 'xss_clean|trim|required|numeric');
 		$this->form_validation->set_rules('menu_category', 'lang:label_category', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('menu_photo', 'lang:label_photo', 'xss_clean|trim');
-		$this->form_validation->set_rules('stock_qty', 'lang:label_stock_qty', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('stock_qty', 'lang:label_stock_qty', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('minimum_qty', 'lang:label_minimum_qty', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('subtract_stock', 'lang:label_subtract_stock', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('menu_status', 'lang:label_status', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('mealtime_id', 'lang:label_mealtime', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('menu_priority', 'lang:label_menu_priority', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('menu_priority', 'lang:label_menu_priority', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('special_status', 'lang:label_special_status', 'xss_clean|trim|required|integer');
 
 		if ($this->input->post('menu_options')) {

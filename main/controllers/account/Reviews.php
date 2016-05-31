@@ -46,6 +46,10 @@ class Reviews extends Main_Controller {
 
 		$data['back_url'] 					= site_url('account/account');
 
+		//create array of ratings data to pass to view
+		$ratings = $this->config->item('ratings');
+		$data['ratings'] = $ratings['ratings'];
+
 		$date_format = ($this->config->item('date_format')) ? $this->config->item('date_format') : '%d %M %y';
 
 		$data['reviews'] = array();
@@ -95,6 +99,10 @@ class Reviews extends Main_Controller {
 		$this->template->setHeading($this->lang->line('text_view_review'));
 
 		$data['back_url'] 					= site_url('account/reviews');
+
+		//create array of ratings data to pass to view
+		$ratings = $this->config->item('ratings');
+		$data['ratings'] = $ratings['ratings'];
 
 		$date_format = ($this->config->item('date_format')) ? $this->config->item('date_format') : '%d %M %y';
 		$time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';

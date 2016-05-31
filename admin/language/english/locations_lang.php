@@ -5,6 +5,7 @@ $lang['text_heading'] 		            = 'Locations';
 $lang['text_edit_heading'] 		        = 'Location: %s';
 $lang['text_list'] 		                = 'Location List';
 $lang['text_tab_general'] 		        = 'Location';
+$lang['text_tab_data'] 		            = 'Data';
 $lang['text_tab_opening_hours'] 		= 'Opening Hours';
 $lang['text_tab_order'] 		        = 'Order';
 $lang['text_tab_reservation'] 		    = 'Reservation';

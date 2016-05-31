@@ -204,7 +204,7 @@ class Locations extends Admin_Controller {
 		$data['description'] 			= $location_info['description'];
 		$data['location_lat'] 			= $location_info['location_lat'];
 		$data['location_lng'] 			= $location_info['location_lng'];
-		$data['location_status'] 		= $location_info['location_status'];
+		$data['location_status'] 		= isset($location_info['location_status']) ? $location_info['location_status'] : '1';
 		$data['offer_delivery'] 		= $location_info['offer_delivery'];
 		$data['offer_collection'] 		= $location_info['offer_collection'];
 		$data['delivery_time'] 			= isset($location_info['delivery_time']) ? $location_info['delivery_time'] : '0';
