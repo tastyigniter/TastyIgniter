@@ -13,8 +13,10 @@ $lang['column_text'] 			= 'Text';
 $lang['column_action'] 			= 'Action(s)';
 
 $lang['button_back'] 			= 'Back';
+$lang['button_delete'] = 'Delete Message';
 
 $lang['alert_unknown_error'] 	= 'Sorry, an error has occurred.';
+$lang['alert_deleted_success'] = 'Message deleted successfully.';
 
 /* End of file inbox_lang.php */
 /* Location: ./main/language/english/main/inbox_lang.php */

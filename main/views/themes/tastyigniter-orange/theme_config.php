@@ -10,70 +10,76 @@
 // Set a custom theme title.
 $theme['title']         = 'TastyIgniter Orange';
 $theme['author']        = 'SamPoyigi';
-$theme['version']       = '1.0';
+$theme['version']       = '2.0';
 $theme['description']   = 'Responsive theme for front-end';
+$theme['child']       	= TRUE;
 
 $theme['head_tags'] = array(
-    'doctype'   => 'html5',
-    'favicon'   => 'images/favicon.ico',
-    'meta'     	=> array(
-            array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'),
-            array('name' => 'X-UA-Compatible', 'content' => 'IE=edge', 'type' => 'equiv'),
-            array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1', 'type' => 'name'),
-    ),
-    'style'    	=> array(
-            array('css/bootstrap.min.css', 'bootstrap-css', '10'),
-            array('css/font-awesome.min.css', 'font-awesome-css', '11'),
-            array('css/select2.css', 'select2-css', '13'),
-            array('css/select2-bootstrap.css', 'select2-bootstrap-css', '14'),
-            array('css/jquery.raty.css', 'jquery-raty-css', '15'),
-            array('css/fonts.css', 'fonts-css', '16'),
-            array('css/stylesheet.css', 'stylesheet-css', '100100100100100'),
-    ),
-    'script'   	=> array(
-            array('js/jquery-1.11.2.min.js', 'jquery-js', '1'),
-            array('js/bootstrap.min.js', 'bootstrap-js', '10'),
-            array('js/select2.js', 'select-2-js', '12'),
-            array('js/jquery.raty.js', 'jquery-raty-js', '13'),
-            array('js/common.js', 'common-js', '100100100100100'),
-    ),
+	'doctype'   => 'html5',
+	'favicon'   => theme_url('tastyigniter-orange/images/favicon.ico'),
+	'meta'     	=> array(
+		array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'),
+		array('name' => 'X-UA-Compatible', 'content' => 'IE=edge', 'type' => 'equiv'),
+		array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no', 'type' => 'name'),
+	),
+	'style'    	=> array(
+		array(theme_url('tastyigniter-orange/css/bootstrap.min.css'), 'bootstrap-css', '10'),
+		array(theme_url('tastyigniter-orange/css/font-awesome.min.css'), 'font-awesome-css', '11'),
+		array(theme_url('tastyigniter-orange/css/select2.css'), 'select2-css', '13'),
+		array(theme_url('tastyigniter-orange/css/select2-bootstrap.css'), 'select2-bootstrap-css', '14'),
+		array(theme_url('tastyigniter-orange/css/jquery.raty.css'), 'jquery-raty-css', '15'),
+		array(theme_url('tastyigniter-orange/css/fonts.css'), 'fonts-css', '16'),
+		array(theme_url('tastyigniter-orange/css/stylesheet.css'), 'stylesheet-css', '100100100100100'),
+	),
+	'script'   	=> array(
+		array(theme_url('tastyigniter-orange/js/jquery-1.11.2.min.js'), 'jquery-js', '1'),
+		array(theme_url('tastyigniter-orange/js/bootstrap.min.js'), 'bootstrap-js', '10'),
+		array(theme_url('tastyigniter-orange/js/select2.js'), 'select-2-js', '12'),
+		array(theme_url('tastyigniter-orange/js/jquery.raty.js'), 'jquery-raty-js', '13'),
+		array(theme_url('tastyigniter-orange/js/common.js'), 'common-js', '100100100100100'),
+	),
 );
 
-// Register partial areas for modules.
+// Register partial areas for layout modules.
 $theme['partial_area'] = array(
-    array(
-        'name'      => 'Content Top',
-        'id'        => 'content_top',
-        'open_tag'  => '<div id="{id}" class="partial">',
-        'close_tag' => '</div>',
-    ),
-    array(
-        'name'      => 'Content Bottom',
-        'id'        => 'content_bottom',
-        'open_tag'  => '<div class="clearfix"></div><div id="{id}" class="partial">',
-        'close_tag' => '</div>',
-    ),
-    array(
-        'name'      => 'Content Left',
-        'id'        => 'content_left',
-        'class'     => 'col-sm-3 ',
-        'open_tag'  => '<div id="{id}" class="partial {class}"><div class="side-bar">',
-        'close_tag' => '</div></div>',
-    ),
-    array(
-        'name'      => 'Content Right',
-        'id'        => 'content_right',
-        'class'     => 'col-sm-3 ',
-        'open_tag'  => '<div id="{id}" class="partial {class}"><div class="side-bar">',
-        'close_tag' => '</div></div>',
-    ),
-    array(
-        'name'      => 'Content Footer',
-        'id'        => 'content_footer',
-        'class'     => 'footer-section ',
-        'open_tag'  => '<div id="{id}" class="partial {class}">',
-        'close_tag' => '</div>',
-    ),
+	array(
+		'name'          => 'Content Top',
+		'id'            => 'content_top',
+		'open_tag'      => '<div id="{id}" class="partial partial-area {class}">',
+		'close_tag'     => '</div>',
+		'module_html' 	=> '<div id="{id}" class="{class}">{module}</div>',
+	),
+	array(
+		'name'          => 'Content Left',
+		'id'            => 'content_left',
+		'class'         => 'col-sm-3 ',
+		'open_tag'      => '<div id="{id}" class="partial partial-area {class}">',
+		'close_tag'     => '</div>',
+		'module_html' 	=> '<div id="{id}" class="side-bar {class}">{module}</div>',
+	),
+	array(
+		'name'          => 'Content Footer',
+		'id'            => 'content_footer',
+		'class'         => 'footer-section ',
+		'open_tag'      => '<div id="{id}" class="partial partial-area {class}">',
+		'close_tag'     => '</div>',
+		'module_html' 	=> '<div id="{id}" class="{class}">{module}</div>',
+	),
+	array(
+		'name'          => 'Content Bottom',
+		'id'            => 'content_bottom',
+		'open_tag'      => '<div class="clearfix"></div><div id="{id}" class="partial partial-area {class}">',
+		'close_tag'     => '</div>',
+		'module_html' 	=> '<div id="{id}" class="{class}">{module}</div>',
+	),
+	array(
+		'name'          => 'Content Right',
+		'id'            => 'content_right',
+		'class'         => 'col-sm-3 ',
+		'open_tag'      => '<div id="{id}" class="partial partial-area {class}">',
+		'close_tag'     => '</div>',
+		'module_html' 	=> '<div id="{id}" class="side-bar {class}">{module}</div>',
+	),
 );
 
 // Set all sections for the admin theme customisation.
@@ -211,12 +217,13 @@ $theme['customize']['sections']['styling'] = array(
 				),
 				array(
 					'id'			=> 'input-foreground',
-					'label' 		=> 'Body foreground and general color',
+					'label' 		=> 'Body foreground, general and border color',
 					'desc'			=> 'The color to use for the foreground.',
 					'type' 			=> 'input-group',
 					'group'			=> array(
 						array('id' => 'input-foreground', 'name' => 'body[foreground]', 'type' => 'color', 'value' => '#FFF', 'rules' => 'required'),
 						array('id' => 'input-general-color', 'name' => 'body[color]', 'type' => 'color', 'value' => '#ed561a', 'rules' => 'required'),
+						array('id' => 'input-border-color', 'name' => 'body[border]', 'type' => 'color', 'value' => '#DDD', 'rules' => 'required'),
 					)
 				),
 				array(
@@ -267,46 +274,72 @@ $theme['customize']['sections']['styling'] = array(
 			)
 		),
 		array(
-			'legend'		=> 'Buttons',
+			'legend'		=> 'Button Colors',
 			'fields'		=> array(
 				array(
 					'id'			=> 'input-button-default',
-					'label' 		=> 'Button default color',
-					'desc'			=> 'The normal and hover background color to use for the default button.',
+					'label' 		=> 'Default color',
+					'desc'			=> 'The default background, border and font color',
 					'type' 			=> 'input-group',
 					'group'			=> array(
 						array('name' => 'button[default][background]', 'type' => 'color', 'value' => '#E7E7E7', 'rules' => 'required'),
-						array('name' => 'button[default][hover]', 'type' => 'color', 'value' => '#CCCCCC', 'rules' => 'required'),
+						array('name' => 'button[default][hover]', 'type' => 'color', 'value' => '#E7E7E7', 'rules' => 'required'),
+						array('name' => 'button[default][font]', 'type' => 'color', 'value' => '#333333', 'rules' => 'required'),
 					)
 				),
 				array(
 					'id'			=> 'input-button-primary',
-					'label' 		=> 'Button primary color',
-					'desc'			=> 'The normal and hover background color to use for the primary button.',
+					'label' 		=> 'Primary color',
+					'desc'			=> 'The primary background, border and font color',
 					'type' 			=> 'input-group',
 					'group'			=> array(
 						array('name' => 'button[primary][background]', 'type' => 'color', 'value' => '#428bca', 'rules' => 'required'),
-						array('name' => 'button[primary][hover]', 'type' => 'color', 'value' => '#357ebd', 'rules' => 'required'),
+						array('name' => 'button[primary][hover]', 'type' => 'color', 'value' => '#428bca', 'rules' => 'required'),
+						array('name' => 'button[primary][font]', 'type' => 'color', 'value' => '#FFFFFF', 'rules' => 'required'),
 					)
 				),
 				array(
 					'id'			=> 'input-button-success',
-					'label' 		=> 'Button success color',
-					'desc'			=> 'The normal and hover background color to use for the success button.',
+					'label' 		=> 'Success color',
+					'desc'			=> 'The success background, border and font color',
 					'type' 			=> 'input-group',
 					'group'			=> array(
 						array('name' => 'button[success][background]', 'type' => 'color', 'value' => '#5cb85c', 'rules' => 'required'),
-						array('name' => 'button[success][hover]', 'type' => 'color', 'value' => '#4cae4c', 'rules' => 'required'),
+						array('name' => 'button[success][hover]', 'type' => 'color', 'value' => '#5cb85c', 'rules' => 'required'),
+						array('name' => 'button[success][font]', 'type' => 'color', 'value' => '#FFFFFF', 'rules' => 'required'),
+					)
+				),
+				array(
+					'id'			=> 'input-button-info',
+					'label' 		=> 'Info color',
+					'desc'			=> 'The info background, border and font color',
+					'type' 			=> 'input-group',
+					'group'			=> array(
+						array('name' => 'button[info][background]', 'type' => 'color', 'value' => '#5BC0DE', 'rules' => 'required'),
+						array('name' => 'button[info][hover]', 'type' => 'color', 'value' => '#5BC0DE', 'rules' => 'required'),
+						array('name' => 'button[info][font]', 'type' => 'color', 'value' => '#FFFFFF', 'rules' => 'required'),
+					)
+				),
+				array(
+					'id'			=> 'input-button-warning',
+					'label' 		=> 'Warning color',
+					'desc'			=> 'The warning background, border and font color',
+					'type' 			=> 'input-group',
+					'group'			=> array(
+						array('name' => 'button[warning][background]', 'type' => 'color', 'value' => '#f0ad4e', 'rules' => 'required'),
+						array('name' => 'button[warning][hover]', 'type' => 'color', 'value' => '#f0ad4e', 'rules' => 'required'),
+						array('name' => 'button[warning][font]', 'type' => 'color', 'value' => '#FFFFFF', 'rules' => 'required'),
 					)
 				),
 				array(
 					'id'			=> 'input-button-danger',
-					'label' 		=> 'Button danger color',
-					'desc'			=> 'The normal and hover background color to use for the danger button.',
+					'label' 		=> 'Danger color',
+					'desc'			=> 'The danger background, border and font color',
 					'type' 			=> 'input-group',
 					'group'			=> array(
 						array('name' => 'button[danger][background]', 'type' => 'color', 'value' => '#d9534f', 'rules' => 'required'),
-						array('name' => 'button[danger][hover]', 'type' => 'color', 'value' => '#d43f3a', 'rules' => 'required'),
+						array('name' => 'button[danger][border]', 'type' => 'color', 'value' => '#d9534f', 'rules' => 'required'),
+						array('name' => 'button[danger][font]', 'type' => 'color', 'value' => '#FFFFFF', 'rules' => 'required'),
 					)
 				),
 			)
@@ -375,8 +408,8 @@ $theme['customize']['sections']['header'] = array(
 				array(
 					'id'			=> 'input-header-color',
 					'name'			=> 'header[color]',
-					'label' 		=> 'Header font color',
-					'desc'			=> 'The color to use for the top header font/icons.',
+					'label' 		=> 'Header dropdown font color',
+					'desc'			=> 'The color to use for the top header dropdown font.',
 					'type' 			=> 'color',
 					'value'			=> '#FFF',
 					'rules'         => 'required',
@@ -485,28 +518,28 @@ $theme['customize']['sections']['social'] = array(
 			'name'			=> 'social[facebook]',
 			'label' 		=> 'Facebook',
 			'type' 			=> 'text',
-			'value'			=> '',
+			'value'			=> '#',
 		),
 		array(
 			'id'			=> 'input-social-twitter',
 			'name'			=> 'social[twitter]',
 			'label' 		=> 'Twitter',
 			'type' 			=> 'text',
-			'value'			=> '',
+			'value'			=> '#',
 		),
 		array(
 			'id'			=> 'input-social-google',
 			'name'			=> 'social[google]',
 			'label' 		=> 'Google +',
 			'type' 			=> 'text',
-			'value'			=> '',
+			'value'			=> '#',
 		),
 		array(
 			'id'			=> 'input-social-youtube',
 			'name'			=> 'social[youtube]',
 			'label' 		=> 'Youtube',
 			'type' 			=> 'text',
-			'value'			=> '',
+			'value'			=> '#',
 		),
 		array(
 			'id'			=> 'input-social-vimeo',

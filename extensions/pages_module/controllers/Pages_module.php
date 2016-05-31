@@ -2,7 +2,7 @@
 
 class Pages_module extends Main_Controller {
 
-	public function index($ext_data = array()) {
+	public function index($module = array()) {
 		$this->load->model('Pages_model'); 														// load the menus model
 		$this->lang->load('pages_module/pages_module');
 
@@ -10,12 +10,15 @@ class Pages_module extends Main_Controller {
 			show_404(); 																		// Whoops, show 404 error page!
 		}
 
+		$ext_data = (!empty($module['data']) AND is_array($module['data'])) ? $module['data'] : array();
+
 		if (is_numeric($this->input->get('page_id'))) {
 			$data['page_id'] = $this->input->get('page_id');
 		} else {
 			$data['page_id'] = 0;
 		}
 
+		$data['module_title'] = (!empty($module['title'])) ? $module['title'] : '';
 		$data['heading'] = (!empty($ext_data['heading'])) ? $ext_data['heading'] : $this->lang->line('_text_title');
 
 		$data['pages'] = array();

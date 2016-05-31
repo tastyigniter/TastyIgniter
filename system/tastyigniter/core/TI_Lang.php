@@ -36,7 +36,7 @@ class TI_Lang extends MX_Lang {
      * @param string $_module
      * @return string[]|void Array containing translations, if $return is set to TRUE
      */
-    public function load($langfile = array(), $lang = '', $return = FALSE, $add_suffix = TRUE, $alt_path = '', $_module = '') {
+	public function load($langfile, $lang = '', $return = FALSE, $add_suffix = TRUE, $alt_path = '', $_module = '') {
 	    if (is_array($langfile))
 	    {
 		    foreach($langfile as $_lang) $this->load($_lang);
@@ -120,6 +120,7 @@ class TI_Lang extends MX_Lang {
 
 		$idiom = (is_numeric($default_lang)) ? $this->getIdiom($default_lang) : $default_lang;
 
+		$this->CI->load->helper('language');
 		if (find_lang_file($langfile, $idiom)) {
 			return $idiom;
 		}

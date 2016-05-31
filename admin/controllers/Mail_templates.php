@@ -77,8 +77,8 @@ class Mail_templates extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('mail_templates')));
 
-		$this->template->setStyleTag(root_url('assets/js/summernote/summernote.css'), 'summernote-css');
-		$this->template->setScriptTag(root_url('assets/js/summernote/summernote.min.js'), 'summernote-js');
+		$this->template->setStyleTag(assets_url('js/summernote/summernote.css'), 'summernote-css');
+		$this->template->setScriptTag(assets_url('js/summernote/summernote.min.js'), 'summernote-js');
 
 		if ($this->input->post() AND $template_id = $this->_saveTemplate()) {
 			if ($this->input->post('save_close') === '1') {
@@ -261,10 +261,6 @@ class Mail_templates extends Admin_Controller {
 			        'name' => 'Order menu name',
 		        ),
 		        array(
-			        'var'  => '{menu_options}',
-			        'name' => 'Order menu option ex. name: price',
-		        ),
-		        array(
 			        'var'  => '{menu_quantity}',
 			        'name' => 'Order menu quantity',
 		        ),
@@ -275,6 +271,14 @@ class Mail_templates extends Admin_Controller {
 		        array(
 			        'var'  => '{menu_subtotal}',
 			        'name' => 'Order menu subtotal',
+		        ),
+				array(
+					'var'  => '{menu_options}',
+					'name' => 'Order menu option ex. name: price',
+				),
+				array(
+			        'var'  => '{menu_comment}',
+			        'name' => 'Order menu comment',
 		        ),
 		        array(
 			        'var'  => '{/order_menus}',

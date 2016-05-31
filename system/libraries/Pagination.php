@@ -2,11 +2,11 @@
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 5.2.4 or newer
+ * An open source application development framework for PHP
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2016, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (http://ellislab.com/)
- * @copyright	Copyright (c) 2014, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link	http://codeigniter.com
+ * @link    https://codeigniter.com
  * @since	Version 1.0.0
  * @filesource
  */
@@ -44,7 +44,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Libraries
  * @category	Pagination
  * @author		EllisLab Dev Team
- * @link		http://codeigniter.com/user_guide/libraries/pagination.html
+ * @link           https://codeigniter.com/user_guide/libraries/pagination.html
  */
 class CI_Pagination {
 
@@ -299,6 +299,13 @@ class CI_Pagination {
 	protected $reuse_query_string = FALSE;
 
 	/**
+	 * Use global URL suffix flag
+	 *
+	 * @var    bool
+	 */
+	protected $use_global_url_suffix = FALSE;
+
+	/**
 	 * Data page attribute
 	 *
 	 * @var	string
@@ -333,7 +340,7 @@ class CI_Pagination {
 		}
 
 		$this->initialize($params);
-		log_message('debug', 'Pagination Class Initialized');
+		log_message('info', 'Pagination Class Initialized');
 	}
 
 	// --------------------------------------------------------------------
@@ -342,11 +349,12 @@ class CI_Pagination {
 	 * Initialize Preferences
 	 *
 	 * @param	array	$params	Initialization parameters
-	 * @return	TI_Pagination
+	 *
+	 * @return    CI_Pagination
 	 */
-	public function initialize(array $params = array())
-	{
-		if (isset($params['attributes']) && is_array($params['attributes']))
+	public function initialize(array $params = array()) {
+		isset($params['attributes']) OR $params['attributes'] = array();
+		if (is_array($params['attributes']))
 		{
 			$this->_parse_attributes($params['attributes']);
 			unset($params['attributes']);
@@ -371,6 +379,10 @@ class CI_Pagination {
 		if ($this->CI->config->item('enable_query_strings') === TRUE)
 		{
 			$this->page_query_string = TRUE;
+		}
+
+		if ($this->use_global_url_suffix === TRUE) {
+			$this->suffix = $this->CI->config->item('url_suffix');
 		}
 
 		return $this;
@@ -483,8 +495,7 @@ class CI_Pagination {
 		if ($this->page_query_string === TRUE)
 		{
 			$this->cur_page = $this->CI->input->get($this->query_string_segment);
-		}
-		else
+		} elseif (empty($this->cur_page))
 		{
 			// Default to the last segment number if one hasn't been defined.
 			if ($this->uri_segment === 0)
@@ -499,6 +510,8 @@ class CI_Pagination {
 			{
 				$this->cur_page = str_replace(array($this->prefix, $this->suffix), '', $this->cur_page);
 			}
+		} else {
+			$this->cur_page = (string)$this->cur_page;
 		}
 
 		// If something isn't quite right, back to the default base page.
@@ -558,7 +571,7 @@ class CI_Pagination {
 		{
 			$i = ($this->use_page_numbers) ? $uri_page_number - 1 : $uri_page_number - $this->per_page;
 
-			$attributes = sprintf('%s %s="%d"', $this->_attributes, $this->data_page_attr, (int) $i);
+			$attributes = sprintf('%s %s="%d"', $this->_attributes, $this->data_page_attr, ($this->cur_page - 1));
 
 			if ($i === $base_page)
 			{
@@ -579,11 +592,11 @@ class CI_Pagination {
 		if ($this->display_pages !== FALSE)
 		{
 			// Write the digit links
-			for ($loop = $start -1; $loop <= $end; $loop++)
+			for ($loop = $start - 1; $loop <= $end; $loop++)
 			{
 				$i = ($this->use_page_numbers) ? $loop : ($loop * $this->per_page) - $this->per_page;
 
-				$attributes = sprintf('%s %s="%d"', $this->_attributes, $this->data_page_attr, (int) $i);
+				$attributes = sprintf('%s %s="%d"', $this->_attributes, $this->data_page_attr, $loop);
 
 				if ($i >= $base_page)
 				{
@@ -601,7 +614,7 @@ class CI_Pagination {
 					else
 					{
 						$append = $this->prefix.$i.$this->suffix;
-						$output .= $this->num_tag_open.'<a href="'.$base_url.$append.'"'.$attributes.$this->_attr_rel('start').'>'
+						$output .= $this->num_tag_open . '<a href="' . $base_url . $append . '"' . $attributes . '>'
 							.$loop.'</a>'.$this->num_tag_close;
 					}
 				}
@@ -613,7 +626,7 @@ class CI_Pagination {
 		{
 			$i = ($this->use_page_numbers) ? $this->cur_page + 1 : $this->cur_page * $this->per_page;
 
-			$attributes = sprintf('%s %s="%d"', $this->_attributes, $this->data_page_attr, (int) $i);
+			$attributes = sprintf('%s %s="%d"', $this->_attributes, $this->data_page_attr, $this->cur_page + 1);
 
 			$output .= $this->next_tag_open.'<a href="'.$base_url.$this->prefix.$i.$this->suffix.'"'.$attributes
 				.$this->_attr_rel('next').'>'.$this->next_link.'</a>'.$this->next_tag_close;
@@ -624,7 +637,7 @@ class CI_Pagination {
 		{
 			$i = ($this->use_page_numbers) ? $num_pages : ($num_pages * $this->per_page) - $this->per_page;
 
-			$attributes = sprintf('%s %s="%d"', $this->_attributes, $this->data_page_attr, (int) $i);
+			$attributes = sprintf('%s %s="%d"', $this->_attributes, $this->data_page_attr, $num_pages);
 
 			$output .= $this->last_tag_open.'<a href="'.$base_url.$this->prefix.$i.$this->suffix.'"'.$attributes.'>'
 				.$this->last_link.'</a>'.$this->last_tag_close;
@@ -632,7 +645,7 @@ class CI_Pagination {
 
 		// Kill double slashes. Note: Sometimes we can end up with a double slash
 		// in the penultimate link so we'll kill all double slashes.
-		$output = preg_replace('#([^:])//+#', '\\1/', $output);
+		$output = preg_replace('#([^:"])//+#', '\\1/', $output);
 
 		// Add the wrapper HTML if exists
 		return $this->full_tag_open.$output.$this->full_tag_close;
@@ -682,6 +695,3 @@ class CI_Pagination {
 	}
 
 }
-
-/* End of file Pagination.php */
-/* Location: ./system/libraries/Pagination.php */

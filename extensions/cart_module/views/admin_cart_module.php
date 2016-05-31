@@ -3,6 +3,7 @@
 		<div class="row wrap-vertical">
 			<ul id="nav-tabs" class="nav nav-tabs">
 				<li class="active"><a href="#general" data-toggle="tab"><?php echo lang('text_tab_general'); ?></a></li>
+				<li><a href="#cart-totals" data-toggle="tab"><?php echo lang('text_tab_totals'); ?></a></li>
 			</ul>
 		</div>
 
@@ -68,6 +69,59 @@
 						</div>
 					</div>
 				</div>
+
+				<div id="cart-totals" class="tab-pane row wrap-all">
+					<div class="table-responsive">
+						<table border="0" class="table table-striped table-border table-sortable">
+							<thead>
+							<tr>
+								<th class="action action-one"></th>
+								<th><?php echo lang('column_title'); ?>&nbsp;&nbsp;<span class="fa fa-info-circle" title="<?php echo lang('help_total_title'); ?>"></span></th>
+								<th><?php echo lang('column_admin_title'); ?>&nbsp;&nbsp;<span class="fa fa-info-circle" title="<?php echo lang('help_total_admin_title'); ?>"></span></th>
+								<th><?php echo lang('column_display'); ?>&nbsp;&nbsp;<span class="fa fa-info-circle" title="<?php echo lang('help_total_display'); ?>"></span></th>
+							</tr>
+							</thead>
+							<tbody>
+							<?php if ($cart_totals) { ?>
+								<?php $table_row = 1; ?>
+								<?php foreach ($cart_totals as $total) { ?>
+									<tr>
+										<td class="action action-one text-center handle">
+											<input type="hidden" name="cart_totals[<?php echo $table_row; ?>][name]" class="form-control" value="<?php echo set_value('cart_totals['.$table_row.'][name]', $total['name']); ?>" />
+											<i class="fa fa-sort"></i>
+										</td>
+										<td>
+											<input type="text" name="cart_totals[<?php echo $table_row; ?>][title]" class="form-control" value="<?php echo set_value('cart_totals['.$table_row.'][title]', $total['title']); ?>" />
+											<?php echo form_error('cart_totals['.$table_row.'][title]', '<span class="text-danger">', '</span>'); ?>
+										</td>
+										<td>
+											<input type="text" name="cart_totals[<?php echo $table_row; ?>][admin_title]" class="form-control" value="<?php echo set_value('cart_totals['.$table_row.'][admin_title]', $total['admin_title']); ?>" />
+											<?php echo form_error('cart_totals['.$table_row.'][admin_title]', '<span class="text-danger">', '</span>'); ?>
+										</td>
+										<td>
+											<div class="btn-group btn-group-switch" data-toggle="buttons">
+												<?php if ($total['status'] === '1') { ?>
+													<label class="btn btn-default"><input type="radio" name="cart_totals[<?php echo $table_row; ?>][status]" value="0" <?php echo set_radio('cart_totals['.$table_row.'][status]', '0'); ?>><?php echo lang('text_no'); ?></label>
+													<label class="btn btn-default active"><input type="radio" name="cart_totals[<?php echo $table_row; ?>][status]" value="1" <?php echo set_radio('cart_totals['.$table_row.'][status]', '1', TRUE); ?>><?php echo lang('text_yes'); ?></label>
+												<?php } else { ?>
+													<label class="btn btn-default active"><input type="radio" name="cart_totals[<?php echo $table_row; ?>][status]" value="0" <?php echo set_radio('cart_totals['.$table_row.'][status]', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
+													<label class="btn btn-default"><input type="radio" name="cart_totals[<?php echo $table_row; ?>][status]" value="1" <?php echo set_radio('cart_totals['.$table_row.'][status]', '1'); ?>><?php echo lang('text_yes'); ?></label>
+												<?php } ?>
+											</div>
+											<?php echo form_error('cart_totals['.$table_row.'][status]', '<span class="text-danger">', '</span>'); ?>
+										</td>
+									</tr>
+									<?php $table_row++; ?>
+								<?php } ?>
+							<?php } else {?>
+								<tr>
+									<td colspan="4"><?php echo lang('text_empty'); ?></td>
+								</tr>
+							<?php } ?>
+							</tbody>
+						</table>
+					</div>
+				</div>
 			</div>
 		</form>
 	</div>
@@ -92,5 +146,14 @@ $(document).ready(function() {
 
 	$('input[name="fixed_cart"]:checked').trigger('change');
 	$('input[name="show_cart_images"]:checked').trigger('change');
+});
+$(function () {
+	$('.table-sortable').sortable({
+		containerSelector: 'table-sortable',
+		itemPath: '> tbody',
+		itemSelector: 'tr',
+		placeholder: '<tr class="placeholder"><td colspan="4"></td></tr>',
+		handle: '.handle'
+	});
 });
 //--></script>

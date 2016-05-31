@@ -165,7 +165,7 @@ class Setup extends Base_Controller {
         $data['text_heading'] 		= $this->lang->line('text_success_heading');
         $data['text_sub_heading'] 	= $this->lang->line('text_success_sub_heading');
         $data['setup_step'] 	    = $this->setup_step;
-        $data['admin_url'] 	        = root_url(ADMINDIR);
+        $data['admin_url'] 	        = admin_url();
         $data['site_url'] 	        = root_url();
 
         $this->load->library('user');

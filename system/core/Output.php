@@ -6,7 +6,7 @@
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014 - 2015, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2016, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (http://ellislab.com/)
- * @copyright	Copyright (c) 2014 - 2015, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link	http://codeigniter.com
+ * @link    https://codeigniter.com
  * @since	Version 1.0.0
  * @filesource
  */
@@ -46,7 +46,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Libraries
  * @category	Output
  * @author		EllisLab Dev Team
- * @link		http://codeigniter.com/user_guide/libraries/output.html
+ * @link           https://codeigniter.com/user_guide/libraries/output.html
  */
 class CI_Output {
 
@@ -377,8 +377,9 @@ class CI_Output {
 	/**
 	 * Set Cache
 	 *
-	 * @param	int	$time	Cache expiration time in seconds
-	 * @return	CI_Output
+	 * @param    int $time Cache expiration time in minutes
+	 *
+	 * @return    CI_Output
 	 */
 	public function cache($time)
 	{
@@ -556,9 +557,12 @@ class CI_Output {
 			.$CI->config->item('index_page')
 			.$CI->uri->uri_string();
 
-		if ($CI->config->item('cache_query_string') && ! empty($_SERVER['QUERY_STRING']))
-		{
-			$uri .= '?'.$_SERVER['QUERY_STRING'];
+		if (($cache_query_string = $CI->config->item('cache_query_string')) && !empty($_SERVER['QUERY_STRING'])) {
+			if (is_array($cache_query_string)) {
+				$uri .= '?' . http_build_query(array_intersect_key($_GET, array_flip($cache_query_string)));
+			} else {
+				$uri .= '?' . $_SERVER['QUERY_STRING'];
+			}
 		}
 
 		$cache_path .= md5($uri);
@@ -646,9 +650,12 @@ class CI_Output {
 		// Build the file path. The file name is an MD5 hash of the full URI
 		$uri = $CFG->item('base_url').$CFG->item('index_page').$URI->uri_string;
 
-		if ($CFG->item('cache_query_string') && ! empty($_SERVER['QUERY_STRING']))
-		{
-			$uri .= '?'.$_SERVER['QUERY_STRING'];
+		if (($cache_query_string = $CFG->item('cache_query_string')) && !empty($_SERVER['QUERY_STRING'])) {
+			if (is_array($cache_query_string)) {
+				$uri .= '?' . http_build_query(array_intersect_key($_GET, array_flip($cache_query_string)));
+			} else {
+				$uri .= '?' . $_SERVER['QUERY_STRING'];
+			}
 		}
 
 		$filepath = $cache_path.md5($uri);
@@ -729,13 +736,16 @@ class CI_Output {
 		{
 			$uri = $CI->uri->uri_string();
 
-			if ($CI->config->item('cache_query_string') && ! empty($_SERVER['QUERY_STRING']))
-			{
-				$uri .= '?'.$_SERVER['QUERY_STRING'];
+			if (($cache_query_string = $CI->config->item('cache_query_string')) && !empty($_SERVER['QUERY_STRING'])) {
+				if (is_array($cache_query_string)) {
+					$uri .= '?' . http_build_query(array_intersect_key($_GET, array_flip($cache_query_string)));
+				} else {
+					$uri .= '?' . $_SERVER['QUERY_STRING'];
+				}
 			}
 		}
 
-		$cache_path .= md5($CI->config->item('base_url').$CI->config->item('index_page').$uri);
+		$cache_path .= md5($CI->config->item('base_url') . $CI->config->item('index_page') . ltrim($uri, '/'));
 
 		if ( ! @unlink($cache_path))
 		{

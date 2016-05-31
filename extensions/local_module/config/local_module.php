@@ -46,3 +46,13 @@ $config['extension_permission'] = array(
 	'action'      => array('manage'),
 	'description' => 'Ability to manage local module',
 );
+
+/*
+|--------------------------------------------------------------------------
+| Extension Layout Ready (Optional)
+|--------------------------------------------------------------------------
+|
+| This extension config value tells TastyIgniter to use the extension as a layout module
+| (layout modules are displayed in the storefront inside partial areas)
+*/
+$config['layout_ready'] = TRUE;

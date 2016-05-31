@@ -100,7 +100,39 @@ class Layouts_model extends TI_Model {
 
 		$result = array();
 		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
+			foreach ($query->result_array() as $row) {
+				$row['options'] = $options = !empty($row['options']) ? unserialize($row['options']) : array();
+				$row['title'] = isset($options['title']) ? htmlspecialchars_decode($options['title']) : '';
+				$row['fixed'] = isset($options['fixed']) ? $options['fixed'] : '';
+				$row['fixed_top_offset'] = isset($options['fixed_top_offset']) ? $options['fixed_top_offset'] : '';
+				$row['fixed_bottom_offset'] = isset($options['fixed_bottom_offset']) ? $options['fixed_bottom_offset'] : '';
+
+				$result[$row['partial']][] = $row;
+			}
+		}
+
+		return $result;
+	}
+
+	public function getModuleLayouts($module_code) {
+		$this->db->from('layout_modules');
+		$this->db->where('module_code', $module_code);
+		$this->db->join('layouts', 'layouts.layout_id = layout_modules.layout_id', 'left');
+		$this->db->order_by('priority', 'ASC');
+
+		$query = $this->db->get();
+
+		$result = array();
+		if ($query->num_rows() > 0) {
+			foreach ($query->result_array() as $row) {
+				$row['options'] = $options = !empty($row['options']) ? unserialize($row['options']) : array();
+				$row['title'] = isset($options['title']) ? htmlspecialchars_decode($options['title']) : '';
+				$row['fixed'] = isset($options['fixed']) ? $options['fixed'] : '';
+				$row['fixed_top_offset'] = isset($options['fixed_top_offset']) ? $options['fixed_top_offset'] : '';
+				$row['fixed_bottom_offset'] = isset($options['fixed_bottom_offset']) ? $options['fixed_bottom_offset'] : '';
+
+				$result[] = $row;
+			}
 		}
 
 		return $result;
@@ -110,22 +142,36 @@ class Layouts_model extends TI_Model {
 		$result = array();
 
 		if ( ! empty($uri_route)) {
-			$this->db->select('layout_modules.layout_id, layout_module_id, module_code, partial, priority, layout_modules.status');
+			foreach (array_unique($uri_route) as $route) {
+				$this->db->select('layout_modules.layout_id, layout_module_id, module_code, uri_route, partial, priority, layout_modules.options, layout_modules.status');
 
-			if (is_numeric($uri_route)) {
-				$this->db->from('pages');
-				$this->db->where('page_id', $uri_route);
-				$this->db->join('layout_modules', 'layout_modules.layout_id = pages.layout_id', 'left');
-			} else if (is_string($uri_route)) {
 				$this->db->from('layout_routes');
 				$this->db->join('layout_modules', 'layout_modules.layout_id = layout_routes.layout_id', 'left');
-				$this->db->where('uri_route', $uri_route);
-			}
+				$this->db->join('pages', 'pages.layout_id = layout_routes.layout_id', 'left');
 
-			$query = $this->db->get();
+				if (is_numeric($route)) {
+					$this->db->or_where('pages.page_id', $route);
+				} else {
+					$this->db->or_where('layout_routes.uri_route', $route);
+				}
 
-			if ($query->num_rows() > 0) {
-				$result = $query->result_array();
+				$this->db->group_by('layout_module_id');
+
+				$query = $this->db->get();
+
+				if ($query->num_rows() > 0) {
+					foreach ($query->result_array() as $row) {
+						$row['options'] = $options = !empty($row['options']) ? unserialize($row['options']) : array();
+						$row['title'] = isset($options['title']) ? htmlspecialchars_decode($options['title']) : '';
+						$row['fixed'] = isset($options['fixed']) ? $options['fixed'] : '';
+						$row['fixed_top_offset'] = isset($options['fixed_top_offset']) ? $options['fixed_top_offset'] : '';
+						$row['fixed_bottom_offset'] = isset($options['fixed_bottom_offset']) ? $options['fixed_bottom_offset'] : '';
+
+						$result[$row['partial']][] = $row;
+					}
+
+					return $result;
+				}
 			}
 		}
 
@@ -262,13 +308,11 @@ class Layouts_model extends TI_Model {
 		}
 
 		if ($query === TRUE AND is_numeric($layout_id)) {
-			if ( ! empty($save['routes'])) {
-				$this->addLayoutRoutes($layout_id, $save['routes']);
-			}
+			$routes = ( isset($save['routes'])) ? $save['routes'] : array();
+			$this->addLayoutRoutes($layout_id, $routes);
 
-			if ( ! empty($save['modules'])) {
-				$this->addLayoutModules($layout_id, $save['modules']);
-			}
+			$modules = ( isset($save['modules'])) ? $save['modules'] : array();
+			$this->addLayoutModules($layout_id, $modules);
 
 			return $layout_id;
 		}
@@ -292,20 +336,34 @@ class Layouts_model extends TI_Model {
 		return $query;
 	}
 
-	private function addLayoutModules($layout_id, $modules = array()) {
+	private function addLayoutModules($layout_id, $partial_modules = array()) {
 		$query = FALSE;
 		$this->db->where('layout_id', $layout_id);
 		$this->db->delete('layout_modules');
 
-		if (is_array($modules)) {
-			foreach ($modules as $priority => $module) {
-				if ( ! empty($module) AND is_array($module)) {
-					$this->db->set('layout_id', $layout_id);
-					$this->db->set('module_code', $module['module_code']);
-					$this->db->set('partial', $module['partial']);
-					$this->db->set('priority', ! empty($module['priority']) ? $module['priority'] : $priority);
-					$this->db->set('status', $module['status']);
-					$query = $this->db->insert('layout_modules');
+		if (is_array($partial_modules)) {
+			foreach ($partial_modules as $partial => $modules) {
+				$priority = 1;
+				foreach ($modules as $module) {
+					if ( ! empty($module) AND is_array($module)) {
+						$this->db->set('layout_id', $layout_id);
+						$this->db->set('module_code', $module['module_code']);
+						$this->db->set('partial', $module['partial']);
+						$this->db->set('priority', $priority);
+
+						$options = array();
+						$options['title'] = isset($module['title']) ? htmlspecialchars($module['title']) : '';
+						$options['fixed'] = isset($module['fixed']) ? $module['fixed'] : '';
+						$options['fixed_top_offset'] = isset($module['fixed_top_offset']) ? $module['fixed_top_offset'] : '';
+						$options['fixed_bottom_offset'] = isset($module['fixed_bottom_offset']) ? $module['fixed_bottom_offset'] : '';
+
+						$this->db->set('options', serialize($options));
+
+						$this->db->set('status', $module['status']);
+						$query = $this->db->insert('layout_modules');
+
+						$priority++;
+					}
 				}
 			}
 

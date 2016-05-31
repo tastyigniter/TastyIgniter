@@ -75,7 +75,7 @@ class Addresses_model extends TI_Model {
 	public function getAddresses($customer_id) {
 		$address_data = array();
 
-		if (is_numeric($customer_id)) {
+		if (!empty($customer_id) AND is_numeric($customer_id)) {
 			$this->db->from('addresses');
 			$this->db->join('countries', 'countries.country_id = addresses.country_id', 'left');
 
@@ -211,6 +211,10 @@ class Addresses_model extends TI_Model {
 
 		if ($customer_id) {
 			$this->db->set('customer_id', $customer_id);
+		}
+
+		if (empty($address_id) AND isset($address['address_id'])) {
+			$this->db->set('address_id', $address['address_id']);
 		}
 
 		if (isset($address['address_1'])) {

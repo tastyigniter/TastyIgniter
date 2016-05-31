@@ -2,7 +2,7 @@
 
 class Featured_menus extends Main_Controller {
 
-	public function index($ext_data = array()) {
+	public function index($module = array()) {
 		$this->load->model('Featured_menus_model'); 														// load the featured menus model
 		$this->lang->load('featured_menus/featured_menus');
 
@@ -10,7 +10,9 @@ class Featured_menus extends Main_Controller {
 			show_404(); 																		// Whoops, show 404 error page!
 		}
 
-        if (!empty($ext_data['featured_menu'])) {
+		$ext_data = (!empty($module['data']) AND is_array($module['data'])) ? $module['data'] : array();
+
+		if (!empty($ext_data['featured_menu'])) {
 	        $filter = array(
 		        'menu_ids'      => $ext_data['featured_menu'],
 		        'page'          => '1',

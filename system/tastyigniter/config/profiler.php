@@ -8,10 +8,6 @@
 | data are displayed when the Profiler is enabled.
 | Please see the user guide for info:
 |
-|	http://codeigniter.com/user_guide/general/profiling.html
+|	https://codeigniter.com/user_guide/general/profiling.html
 |
 */
-
-
-/* End of file profiler.php */
-/* Location: ./system/tastyigniter/config/profiler.php */

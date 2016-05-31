@@ -67,7 +67,7 @@ class Account extends Main_Controller {
 		foreach ($results as $result) {
 			$data['orders'][] = array(															// create array of customer orders to pass to view
 				'order_id' 				=> $result['order_id'],
-				'date_added' 			=> day_elapsed($result['date_added']),
+				'order_date' 			=> day_elapsed($result['order_date']),
 				'order_time'			=> mdate($time_format, strtotime($result['order_time'])),
 				'status_name' 			=> $result['status_name'],
 				'view' 					=> site_url('account/orders/view/' . $result['order_id'])

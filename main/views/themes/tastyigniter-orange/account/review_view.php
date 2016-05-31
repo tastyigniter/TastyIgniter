@@ -84,4 +84,10 @@
 		</div>
 	</div>
 </div>
+<script type="text/javascript"><!--
+$(document).ready(function() {
+	var ratings = <?php echo json_encode(array_values($ratings)); ?>;
+	displayRatings(ratings);
+});
+//--></script>
 <?php echo get_footer(); ?>

@@ -18,13 +18,13 @@
 		<div class="row">
 			<?php
                 if (partial_exists('content_right')) {
-                    $class = "col-sm-9 col-md-9";
+                    $class = "col-sm-8 col-md-9";
                 } else {
                     $class = "col-sm-12";
                 }
 
                 if (partial_exists('content_left')) {
-                    $menu_class = "col-sm-9 col-md-9";
+                    $menu_class = "col-sm-12 col-md-9";
                 } else {
                     $menu_class = "col-sm-9";
                 }
@@ -48,7 +48,7 @@
 				<div class="tab-content tab-content-line content">
 					<div id="local-menus" class="tab-pane row wrap-all active">
 
-	                    <?php echo get_partial('content_left', 'wrap-none col-sm-3'); ?>
+	                    <?php echo get_partial('content_left', 'col-sm-4 col-md-3 hidden-xs hidden-sm'); ?>
 
 	                    <div class="<?php echo $menu_class; ?>">
 	                        <?php echo load_partial('menu_list', $menu_list); ?>
@@ -79,7 +79,7 @@
 					<?php } ?>
 				</div>
 			</div>
-			<?php echo get_partial('content_right', 'col-sm-3'); ?>
+			<?php echo get_partial('content_right', 'col-sm-4 col-md-3'); ?>
 			<?php echo get_partial('content_bottom'); ?>
 		</div>
 	</div>

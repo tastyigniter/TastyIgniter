@@ -65,8 +65,3 @@ if ( ! function_exists('doctype'))
         return isset($doctypes[$type]) ? $doctypes[$type] : FALSE;
     }
 }
-
-// ------------------------------------------------------------------------
-
-/* End of file ti_html_helper.php */
-/* Location: ./system/tastyigniter/helpers/ti_html_helper.php */

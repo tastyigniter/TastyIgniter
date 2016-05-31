@@ -1,0 +1,24 @@
+{
+  "name": "tastyigniter/tastyigniter",
+  "description": "TastyIgniter is a free open source online ordering and restaurant management system",
+  "type": "project",
+  "keywords": [
+    "tastyigniter",
+    "restaurant",
+    "ordering",
+    "ecommerce",
+    "opensource"
+  ],
+  "homepage": "https://tastyigniter.com",
+  "license": "GPL-3.0+",
+  "support": {
+    "issues": "https://github.com/tastyigniter/TastyIgniter/issues",
+    "forum": "https://forum.tastyigniter.com/",
+    "irc": "irc://irc.freenode.net/tastyigniter",
+    "docs": "https://docs.tastyigniter.com",
+    "source": "https://github.com/tastyigniter/TastyIgniter"
+  },
+  "require": {
+    "php": ">=5.4.0"
+  }
+}

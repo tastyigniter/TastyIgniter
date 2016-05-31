@@ -1,54 +1,19 @@
-<div id="category-box" class="module-box hidden-xs">
-	<div class="panel panel-default">
-		<ul class="list-group list-group-responsive">
-			<?php $data_filter = (!empty($menu_total) AND $menu_total > 500) ? 'class=""' : 'class="filter" data-filter="all"'; ?>
-			<li class="list-group-item">
-				<a <?php echo $data_filter; ?> <?php echo (!empty($menu_total) AND $menu_total > 500) ? 'href="'.site_url('menus').'"' : ''; ?>>
-					<i class="fa fa-angle-right"></i>&nbsp;&nbsp;<?php echo lang('text_show_all'); ?>
-				</a>
-			</li>
-
-			<?php foreach ($categories as $category) { ?>
-				<?php
-
-				$category_selector = '.'.strtolower(str_replace(' ', '-', $category['category_name']));
-				if (( ! empty($menu_total) AND $menu_total > 500)) {
-					$loop_filter = ($category['category_id'] === $category_id) ? 'class=""' : 'class="active"';
-				} else {
-					$loop_filter = 'class="filter" data-filter="'.$category_selector.'"';
-				} ?>
-
-				<li class="list-group-item">
-					<a <?php echo $loop_filter; ?> <?php echo (!empty($menu_total) AND $menu_total > 500) ? 'href="'.$category['href'].'"' : ''; ?>><i class="fa fa-angle-right"></i>&nbsp;&nbsp;<?php echo $category['category_name']; ?></a>
-
-					<?php if (!empty($category['children'])) { ?>
-						<ul class="list-group list-group-responsive">
-							<?php foreach ($category['children'] as $child) { ?>
-								<?php
-
-								$child_category_selector = '.'.strtolower(str_replace(' ', '-', $child['category_name']));
-								if (( ! empty($menu_total) AND $menu_total > 500)) {
-									$child_loop_filter = ($child['category_id'] === $category_id) ? 'class=""' : 'class="active"';
-								} else {
-									$child_loop_filter = 'class="filter" data-filter="'.$child_category_selector.'"';
-								} ?>
-
-								<li class="list-group-item">
-									<a <?php echo $child_loop_filter; ?> <?php echo (!empty($menu_total) AND $menu_total > 500) ? 'href="'.$child['href'].'"' : ''; ?>><i class="fa fa-angle-right"></i>&nbsp;&nbsp;<?php echo $child['category_name']; ?></a>
-								</li>
-							<?php } ?>
-						</ul>
-					<?php } ?>
-
-				</li>
-			<?php } ?>
-		</ul>
+<div id="category-box-affix" <?php echo $fixed_categories; ?>>
+	<div id="category-box" class="module-box">
+		<div class="panel panel-default">
+			<?php echo $category_tree; ?>
+		</div>
 	</div>
 </div>
 <script type="text/javascript"><!--
 	$(document).ready(function() {
 		$('#category-box-collapse .list-group-item').on('click', function() {
 			if ($('#category-box-collapse.in').length > 0) $('#category-box-collapse').collapse('toggle');
+		});
+
+		$(window).bind("load resize", function() {
+			var sideBarWidth = $('#content-left .side-bar').width();
+			$('#category-box-affix').css('width', sideBarWidth);
 		});
 	});
 //--></script>

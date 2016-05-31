@@ -297,10 +297,6 @@
 		</form>
 	</div>
 </div>
-<link type="text/css" rel="stylesheet" href="<?php echo root_url("assets/js/datepicker/datepicker.css"); ?>">
-<link type="text/css" rel="stylesheet" href="<?php echo root_url("assets/js/datepicker/bootstrap-timepicker.css"); ?>">
-<script type="text/javascript" src="<?php echo root_url("assets/js/datepicker/bootstrap-datepicker.js"); ?>"></script>
-<script type="text/javascript" src="<?php echo root_url("assets/js/datepicker/bootstrap-timepicker.js"); ?>"></script>
 <script type="text/javascript"><!--
 $(document).ready(function() {
 

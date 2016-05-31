@@ -34,6 +34,7 @@ $lang['help_language'] 		            = 'Language url prefix';
 
 $lang['alert_save_changes'] 		    = 'Your changes will be lost if you don\'t save them before editing another language file.';
 $lang['alert_warning_file'] 		    = 'An error occurred, language file was not %s';
+$lang['alert_caution_edit'] 	        = '<b>CAUTION!</b> You may lose your modifications to this language when you update TastyIgniter.<br> Clone the default language [English] from the add new language page to make changes.';
 
 $lang['error_invalid_idiom'] 		    = 'The specified idiom name does not exist in the main or admin language folder';
 

@@ -77,6 +77,7 @@ class Banners extends Admin_Controller {
 		$data['status'] 			= $banner_info['status'];
 		$data['no_photo'] 			= $this->Image_tool_model->resize('data/no_photo.png');
 
+		$data['type'] = !empty($data['type']) ? $data['type'] : 'image';
 		$data['image'] = array('name' => 'no_photo.png', 'path' => 'data/no_photo.png', 'url' => $data['no_photo']);
 		$data['carousels'] = array();
 
@@ -158,14 +159,15 @@ class Banners extends Admin_Controller {
 		$this->form_validation->set_rules('type', 'lang:label_type', 'xss_clean|trim|required|alpha|max_length[8]');
 		$this->form_validation->set_rules('click_url', 'lang:label_click_url', 'xss_clean|trim|required|min_length[2]|max_length[255]');
 		$this->form_validation->set_rules('language_id', 'lang:label_language', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('alt_text', 'lang:label_alt_text', 'xss_clean|trim|required|min_length[2]|max_length[255]');
 		$this->form_validation->set_rules('status', 'lang:label_status', 'xss_clean|trim|required|integer');
 
 		if ($this->input->post('type') === 'image') {
+			$this->form_validation->set_rules('alt_text', 'lang:label_alt_text', 'xss_clean|trim|required|min_length[2]|max_length[255]');
 			$this->form_validation->set_rules('image_path', 'lang:label_image', 'xss_clean|trim|required');
 		}
 
 		if ($this->input->post('type') === 'carousel' AND $this->input->post('carousels')) {
+			$this->form_validation->set_rules('alt_text', 'lang:label_alt_text', 'xss_clean|trim|required|min_length[2]|max_length[255]');
 			foreach ($this->input->post('carousels') as $key => $value) {
 				$this->form_validation->set_rules('carousels['.$key.']', 'lang:label_images', 'xss_clean|trim|required');
 			}

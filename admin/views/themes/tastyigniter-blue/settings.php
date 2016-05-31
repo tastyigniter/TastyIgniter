@@ -370,62 +370,55 @@
 							<?php echo form_error('tax_mode', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
-					<div class="form-group">
-						<label for="input-tax-title" class="col-sm-3 control-label"><?php echo lang('label_tax_title'); ?>
-							<span class="help-block"><?php echo lang('help_tax_title'); ?></span>
-						</label>
-						<div class="col-sm-5">
-							<input type="text" name="tax_title" id="input-tax-title" class="form-control" value="<?php echo set_value('tax_title', config_item('tax_title')); ?>" />
-							<?php echo form_error('tax_title', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-tax-percentage" class="col-sm-3 control-label"><?php echo lang('label_tax_percentage'); ?>
-							<span class="help-block"><?php echo lang('help_tax_percentage'); ?></span>
-						</label>
-						<div class="col-sm-5">
-							<div class="input-group">
-								<input type="text" name="tax_percentage" id="input-tax-percentage" class="form-control" value="<?php echo set_value('tax_percentage', config_item('tax_percentage')); ?>" />
-								<span class="input-group-addon"><?php echo lang('text_percentage_sign'); ?></span>
+					<div id="taxes">
+						<div class="form-group">
+							<label for="input-tax-percentage" class="col-sm-3 control-label"><?php echo lang('label_tax_percentage'); ?>
+								<span class="help-block"><?php echo lang('help_tax_percentage'); ?></span>
+							</label>
+							<div class="col-sm-5">
+								<div class="input-group">
+									<input type="text" name="tax_percentage" id="input-tax-percentage" class="form-control" value="<?php echo set_value('tax_percentage', config_item('tax_percentage')); ?>" />
+									<span class="input-group-addon"><?php echo lang('text_percentage_sign'); ?></span>
+								</div>
+								<?php echo form_error('tax_percentage', '<span class="text-danger">', '</span>'); ?>
 							</div>
-							<?php echo form_error('tax_percentage', '<span class="text-danger">', '</span>'); ?>
 						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-tax-menu-price" class="col-sm-3 control-label"><?php echo lang('label_tax_menu_price'); ?>
-							<span class="help-block"><?php echo lang('help_tax_menu_price'); ?></span>
-						</label>
-						<div class="col-sm-5">
-							<select name="tax_menu_price" id="input-tax-menu-price" class="form-control">
-								<?php if (config_item('tax_menu_price') === '1') { ?>
-									<option value="0" <?php echo set_select('tax_menu_price', '0'); ?>><?php echo lang('text_menu_price_include_tax'); ?></option>
-									<option value="1" <?php echo set_select('tax_menu_price', '1', TRUE); ?>><?php echo lang('text_apply_tax_on_menu_price'); ?></option>
-								<?php } else if (config_item('tax_menu_price') === '0') { ?>
-									<option value="0" <?php echo set_select('tax_menu_price', '0', TRUE); ?>><?php echo lang('text_menu_price_include_tax'); ?></option>
-									<option value="1" <?php echo set_select('tax_menu_price', '1'); ?>><?php echo lang('text_apply_tax_on_menu_price'); ?></option>
-								<?php } else { ?>
-									<option value="0" <?php echo set_select('tax_menu_price', '0'); ?>><?php echo lang('text_menu_price_include_tax'); ?></option>
-									<option value="1" <?php echo set_select('tax_menu_price', '1'); ?>><?php echo lang('text_apply_tax_on_menu_price'); ?></option>
-								<?php } ?>
-							</select>
-							<?php echo form_error('tax_menu_price', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-tax-delivery-charge" class="col-sm-3 control-label"><?php echo lang('label_tax_delivery_charge'); ?>
-							<span class="help-block"><?php echo lang('help_tax_delivery_charge'); ?></span>
-						</label>
-						<div class="col-sm-5">
-							<div class="btn-group btn-group-switch" data-toggle="buttons">
-								<?php if (config_item('tax_delivery_charge') == '1') { ?>
-									<label class="btn btn-default"><input type="radio" name="tax_delivery_charge" value="0" <?php echo set_radio('tax_delivery_charge', '0'); ?>><?php echo lang('text_no'); ?></label>
-									<label class="btn btn-default active"><input type="radio" name="tax_delivery_charge" value="1" <?php echo set_radio('tax_delivery_charge', '1', TRUE); ?>><?php echo lang('text_yes'); ?></label>
-								<?php } else { ?>
-									<label class="btn btn-default active"><input type="radio" name="tax_delivery_charge" value="0" <?php echo set_radio('tax_delivery_charge', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
-									<label class="btn btn-default"><input type="radio" name="tax_delivery_charge" value="1" <?php echo set_radio('tax_delivery_charge', '1'); ?>><?php echo lang('text_yes'); ?></label>
-								<?php } ?>
+						<div class="form-group">
+							<label for="input-tax-menu-price" class="col-sm-3 control-label"><?php echo lang('label_tax_menu_price'); ?>
+								<span class="help-block"><?php echo lang('help_tax_menu_price'); ?></span>
+							</label>
+							<div class="col-sm-5">
+								<select name="tax_menu_price" id="input-tax-menu-price" class="form-control">
+									<?php if (config_item('tax_menu_price') === '1') { ?>
+										<option value="0" <?php echo set_select('tax_menu_price', '0'); ?>><?php echo lang('text_menu_price_include_tax'); ?></option>
+										<option value="1" <?php echo set_select('tax_menu_price', '1', TRUE); ?>><?php echo lang('text_apply_tax_on_menu_price'); ?></option>
+									<?php } else if (config_item('tax_menu_price') === '0') { ?>
+										<option value="0" <?php echo set_select('tax_menu_price', '0', TRUE); ?>><?php echo lang('text_menu_price_include_tax'); ?></option>
+										<option value="1" <?php echo set_select('tax_menu_price', '1'); ?>><?php echo lang('text_apply_tax_on_menu_price'); ?></option>
+									<?php } else { ?>
+										<option value="0" <?php echo set_select('tax_menu_price', '0'); ?>><?php echo lang('text_menu_price_include_tax'); ?></option>
+										<option value="1" <?php echo set_select('tax_menu_price', '1'); ?>><?php echo lang('text_apply_tax_on_menu_price'); ?></option>
+									<?php } ?>
+								</select>
+								<?php echo form_error('tax_menu_price', '<span class="text-danger">', '</span>'); ?>
 							</div>
-							<?php echo form_error('tax_delivery_charge', '<span class="text-danger">', '</span>'); ?>
+						</div>
+						<div class="form-group">
+							<label for="input-tax-delivery-charge" class="col-sm-3 control-label"><?php echo lang('label_tax_delivery_charge'); ?>
+								<span class="help-block"><?php echo lang('help_tax_delivery_charge'); ?></span>
+							</label>
+							<div class="col-sm-5">
+								<div class="btn-group btn-group-switch" data-toggle="buttons">
+									<?php if (config_item('tax_delivery_charge') == '1') { ?>
+										<label class="btn btn-default"><input type="radio" name="tax_delivery_charge" value="0" <?php echo set_radio('tax_delivery_charge', '0'); ?>><?php echo lang('text_no'); ?></label>
+										<label class="btn btn-default active"><input type="radio" name="tax_delivery_charge" value="1" <?php echo set_radio('tax_delivery_charge', '1', TRUE); ?>><?php echo lang('text_yes'); ?></label>
+									<?php } else { ?>
+										<label class="btn btn-default active"><input type="radio" name="tax_delivery_charge" value="0" <?php echo set_radio('tax_delivery_charge', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
+										<label class="btn btn-default"><input type="radio" name="tax_delivery_charge" value="1" <?php echo set_radio('tax_delivery_charge', '1'); ?>><?php echo lang('text_yes'); ?></label>
+									<?php } ?>
+								</div>
+								<?php echo form_error('tax_delivery_charge', '<span class="text-danger">', '</span>'); ?>
+							</div>
 						</div>
 					</div>
 
@@ -736,11 +729,11 @@
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if (config_item('future_orders') === '1') { ?>
-									<label class="btn btn-danger"><input type="radio" name="future_orders" value="0" <?php echo set_radio('future_orders', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-success active"><input type="radio" name="future_orders" value="1" <?php echo set_radio('future_orders', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger"><input type="radio" name="future_orders" value="0" <?php echo set_radio('future_orders', '0'); ?>><?php echo lang('text_no'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="future_orders" value="1" <?php echo set_radio('future_orders', '1', TRUE); ?>><?php echo lang('text_yes'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-danger active"><input type="radio" name="future_orders" value="0" <?php echo set_radio('future_orders', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-success"><input type="radio" name="future_orders" value="1" <?php echo set_radio('future_orders', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+									<label class="btn btn-danger active"><input type="radio" name="future_orders" value="0" <?php echo set_radio('future_orders', '0', TRUE); ?>><?php echo lang('text_no'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="future_orders" value="1" <?php echo set_radio('future_orders', '1'); ?>><?php echo lang('text_yes'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('future_orders', '<span class="text-danger">', '</span>'); ?>
@@ -1331,6 +1324,16 @@ $(document).ready(function() {
 	});
 
 	$('input[name="show_menu_images"]:checked').trigger('change');
+
+	$('input[name="tax_mode"]').on('change', function() {
+		if (this.value == '1') {
+			$('#taxes').slideDown();
+		} else {
+			$('#taxes').slideUp();
+		}
+	});
+
+	$('input[name="tax_mode"]:checked').trigger('change');
 
 	$('input[name="protocol"]').on('change', function() {
 		if (this.value == 'smtp') {

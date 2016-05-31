@@ -26,12 +26,14 @@ class Template {
     private $_module = '';
     private $_controller = '';
     private $_method = '';
+    private $_parent_theme = NULL;
     private $_theme = NULL;
     private $_theme_path = NULL;
     private $_theme_shortpath = NULL;
     private $_theme_locations = array();
     private $_partial_areas = array();
     private $_layouts = array();
+    private $_partials = array();
     private $_modules = array();
     private $_title_separator = ' | ';
     private $_data = array();
@@ -82,6 +84,9 @@ class Template {
         // Load the theme config and store array in $this->_theme_config
         $this->_theme_config = load_theme_config($this->_theme, APPDIR);
 
+        // Set the parent theme if theme is child
+        $this->_parent_theme = (isset($this->_theme_config['parent'])) ? $this->_theme_config['parent'] : '';
+
         // Modular Separation / Modular Extensions has been detected
 		if (method_exists( $this->CI->router, 'fetch_module' )) {
 			$this->_module 	= $this->CI->router->fetch_module();
@@ -91,7 +96,16 @@ class Template {
 		$this->_controller	= $this->CI->router->fetch_class();
 		$this->_method 		= $this->CI->router->fetch_method();
 
-		// Load user agent library if not loaded
+        if (!empty($this->_theme_config['head_tags'])) {
+            $this->setHeadTags($this->_theme_config['head_tags']);
+        }
+
+        $this->setPartialArea();
+
+        // Set the modules for this layout using the current URI segments
+        !empty($this->_modules) OR $this->_modules = $this->getLayoutModules();
+
+        // Load user agent library if not loaded
 		$this->CI->load->library('user_agent');
 	}
 
@@ -105,33 +119,16 @@ class Template {
 		// We don't need you any more buddy
 		unset($data);
 
-        if (!empty($this->_theme_config['head_tags'])) {
-            $this->setHeadTags($this->_theme_config['head_tags']);
-        }
-
         // Output template variables to the template
         $template['title'] 	        = $this->_head_tags['title'];
         $template['breadcrumbs'] 	= $this->_breadcrumbs;              //*** future reference
-        $template['partials']	    = array();
 
         // Assign by reference, as all loaded views will need access to partials
         $this->_data['template'] =& $template;
         $this->_data['controller'] = $this->_controller;
 
-        $this->setPartials();
-
-        // Set the modules for this layout using the current URI segments
-        if (!empty($this->_partial_areas)) {
-            $this->_modules = $this->getLayoutModules();
-
-            // Load the partials variables
-            $template['partials'] = $this->fetchPartials();
-        }
-
-        // Load the layouts variables
-        foreach ($this->_layouts as $name) {
-            $template['partials'][$name] = $this->_find_view($name, array());
-        }
+        // Load the layouts and partials variables
+        $this->fetchPartials();
 
         // Lets do the caching instead of the browser
         if ($this->CI->config->item('cache_mode') === '1') {
@@ -140,9 +137,9 @@ class Template {
 
         // Want it returned or output to browser?
 		if ( ! $return) {
-            $this->CI->load->view('themes/'.$this->_theme.'/'.$view, $this->_data, FALSE);
+            self::_load_view($view, $this->_data, NULL, FALSE);
         } else {
-            return self::_load_view('themes/'.$this->_theme.'/'.$view, $this->_data, NULL);
+            return self::_load_view($view, $this->_data, NULL);
         }
     }
 
@@ -237,7 +234,7 @@ class Template {
         }
 	}
 
-    public function setPartials() {
+    public function setPartialArea() {
         $partial_areas = isset($this->_theme_config['partial_area']) ? $this->_theme_config['partial_area'] : $this->_partial_areas;
 
         foreach ($partial_areas as $partial_area) {
@@ -245,12 +242,15 @@ class Template {
             $this->_partial_areas[$id] = $partial_area;
         }
 
-        $this->_layouts = array('header', 'footer');
+        $this->_layouts = array('header' => array(), 'footer' => array());
 
         return $this;
     }
 
     private function setHeadTags($head_tags = array()) {
+        $head_tags['meta'][] = array('name' => 'description', 'content' => config_item('meta_description'));
+        $head_tags['meta'][] = array('name' => 'keywords', 'content' => config_item('meta_keywords'));
+
         if (!empty($head_tags)) {
             foreach ($head_tags as $type => $value) {
                 if ($type) {
@@ -260,9 +260,17 @@ class Template {
         }
     }
 
-    public function getPartials($partial = '') {
-        $partials = !empty($this->_data['template']['partials']) ? $this->_data['template']['partials'] : array();
-        return ($partial !== '' AND !empty($partials[$partial])) ? $partials[$partial] : '';
+    public function getPartialView($view = '', $replace = array()) {
+        $partial = empty($this->_partials[$view]) ? $this->fetchPartials($view) : $this->_partials[$view];
+
+        $partial_class = !empty($partial['data']['class']) ? $partial['data']['class'] : '';
+        $partial_class = !empty($replace['class']) ? $replace['class'] : $partial_class;
+
+        $partial_data = isset($partial['data']['open_tag']) ? str_replace('{id}', str_replace('_', '-', $view), str_replace('{class}', $partial_class, $partial['data']['open_tag'])) : '';
+        $partial_data .= empty($partial['view']) ? '' : $partial['view'];
+        $partial_data .= isset($partial['data']['close_tag']) ? $partial['data']['close_tag'] : '';
+
+        return $partial_data;
     }
 
     public function getDocType() {
@@ -514,37 +522,33 @@ class Template {
     }
 
     public function getLayoutModules() {
-        $this->CI->load->model('Layouts_model');
-
-        $layout_modules = $this->_getLayoutModules();
+        list($uri_route, $layout_modules) = $this->_getLayoutModules();
 
         $modules = $this->CI->extension->getModules();
 
         $_modules = array();
-        foreach ($layout_modules[1] as $layout_module) {
-            if (isset($layout_module['module_code']) AND !empty($modules[$layout_module['module_code']])) {
+        foreach ($layout_modules as $partial => $partial_modules) {
+            foreach ($partial_modules as $layout_module) {
+                if (isset($layout_module['module_code']) AND !empty($modules[$layout_module['module_code']])) {
+                    $module = $modules[$layout_module['module_code']];
 
-                $module = $modules[$layout_module['module_code']];
+                    if ($module['name'] === $layout_module['module_code'] AND $layout_module['status'] === '1') {
+                        $_modules[$partial][] = array(
+                            'name'                => $module['name'],
+                            'layout_id'		      => $layout_module['layout_id'],
+                            'uri_route'           => $uri_route,
+                            'partial'             => $partial,
+                            'priority'            => $layout_module['priority'],
+                            'status'              => $module['status'],
+                            'data'                => $module['ext_data'],
+                            'title'               => $layout_module['title'],
+                            'fixed'               => $layout_module['fixed'],
+                            'fixed_top_offset'    => $layout_module['fixed_top_offset'],
+                            'fixed_bottom_offset' => $layout_module['fixed_bottom_offset'],
+                        );
+                    }
 
-                // layouts array key not needed anymore @DEPRECATED.
-                unset($module['ext_data']['layouts']);
-
-                if ($module['name'] === $layout_module['module_code'] AND $layout_module['status'] === '1') {
-                    // position key @DEPRECATED starting from v1.4.0
-                    $partial = !empty($layout_module['position']) ? $layout_module['position'] : $layout_module['partial'];
-                    $partial = in_array($partial, array('top', 'left', 'right', 'bottom')) ? 'content_'.$partial : $partial;
-
-                    // in_array test to append content_ to @DEPRECATED position key
-                    $_modules[$partial][] = array(
-                        'name'			=> $module['name'],
-                        'title'			=> $module['title'],
-                        'layout_id'		=> $layout_module['layout_id'],
-                        'partial'		=> $partial,
-                        'priority'		=> $layout_module['priority'],
-                        'data'		    => $module['ext_data'],
-                    );
                 }
-
             }
         }
 
@@ -553,88 +557,100 @@ class Template {
 
     public function loadView($view, $data = array()) {
         if (is_string($view)) {
-            return $this->_find_view($view, (array) $data);
+            return $this->_load_view($view, (array) $data);
         }
     }
 
-    private function fetchPartials() {
-        if (empty($this->_partial_areas)) return NULL;
+    private function fetchPartials($partial = '') {
+        $partial_areas = array_merge($this->_partial_areas, $this->_layouts);
 
-        $partials = array();
-        foreach ($this->_partial_areas as $partial_name => $partial) {
-            if (is_string($partial_name)) {
-                $partial_class = isset($partial['class']) ? $partial['class'] : '';
+        if (!empty($partial)) $partial_areas = array($partial => isset($partial_areas[$partial]) ? $partial_areas[$partial] : array());
 
+        if (empty($partial_areas)) return NULL;
+
+        foreach ($partial_areas as $partial_name => $partial_data) {
+            $partial_view = NULL;
+
+            if (!is_string($partial_name)) continue;
+
+            if (isset($this->_layouts[$partial_name])) {
+                $partial_view = $this->_load_view($partial_name, $partial_data);
+            } else {
                 // We stop here if no module was found.
                 if (empty($this->_modules[$partial_name])) continue;
 
-                $partial_data = isset($partial['open_tag']) ? str_replace('{id}', str_replace('_', '-', $partial_name), str_replace('{class}', $partial_class, $partial['open_tag'])) : '';
-
                 $this->sortModules($partial_name);
+                $count = 1;
                 foreach ($this->_modules[$partial_name] as $module) {
-                    $partial_data .= Modules::run($module['name'] .'/index', $this->_data + $module['data']);
+                    $partial_view .= $this->buildPartialModule($module, $this->_data, $partial_data, $count);
+                    $count++;
                 }
-
-                $partial_data .= isset($partial['close_tag']) ? $partial['close_tag'] : '';
-                $partials[$partial_name] = $partial_data;
             }
+
+            $this->_partials[$partial_name] = array('data' => $partial_data, 'view' => $partial_view);
         }
 
-        return $partials;
+        if (empty($partial)) {
+            return $this->_partials;
+        } else if (isset($this->_partials[$partial])) {
+            return $this->_partials[$partial];
+        } else {
+            return array('data' => NULL, 'view' => NULL);
+        }
     }
 
     private function _getLayoutModules() {
-        $segments = array_merge(
-            array($this->CI->uri->uri_string()),
-            array('clear'),
-            $this->CI->uri->segment_array(),
-            array('clear'),
-            $this->CI->uri->rsegment_array()
-        );
+        $routes = array($this->CI->uri->segment_array(), $this->CI->uri->uri_string(),
+            $this->CI->uri->rsegment_array(), $this->CI->uri->ruri_string());
 
         if (!$this->CI->uri->segment(2) AND in_array('index', $this->CI->uri->rsegment_array())) {
-            array_push($segments, 'clear', $this->CI->uri->rsegment(1) .'/'. $this->CI->uri->rsegment(1));
+            array_push($routes, $this->CI->uri->rsegment(1) . '/' . $this->CI->uri->rsegment(1));
         }
 
-        if (APPDIR === ADMINDIR OR empty($segments)) return array(NULL, array());
+        if (APPDIR === ADMINDIR OR empty($routes)) return array(NULL, array());
+        
+        $segments = array();
+        foreach ($routes as $key => $route) {
+            if ($route === 'pages') {
+                $segments[] = (int)$this->CI->input->get('page_id');
+            } else if (is_array($route)) {
+                $val = '';
+                foreach ($route as $value) {
+                    if ($value === 'index') continue;
+
+                    $val = $val .'/'. $value;
+                    $segments[] .= trim($val, '/');
+                }
+            } else if ($route !== 'index') {
+                $segments[] = $route;
+            }
+        }
 
         $this->CI->load->model('Layouts_model');
+        $layout_modules = $this->CI->Layouts_model->getRouteLayoutModules($segments);
 
-        $uri_route = '';
-        foreach ($segments as $segment) {
-            if ($segment === 'clear') $uri_route = '';
-
-            if ($segment === 'index' OR $segment === 'clear') continue;
-
-            $uri_route = ($uri_route === '') ? $segment : $uri_route.'/'.$segment;
-
-            if ($segment === 'pages') {
-                $uri_route = (int)$this->CI->input->get('page_id');
-            }
-
-            $layout_modules = $this->CI->Layouts_model->getRouteLayoutModules($uri_route);
-
-            // Lets break the look if a layout was found.
-            if (!empty($layout_modules)) return array($uri_route, $layout_modules);
+        // Lets break the look if a layout was found.
+        $uri_route = isset($layout_modules['uri_route']) ? $layout_modules['uri_route'] : '';
+        if (!empty($layout_modules)) {
+            return array($uri_route, $layout_modules);
         }
+
         // We return null if no layout was found.
         return array(NULL, array());
     }
 
-    private function _find_view($view, array $data) {
+    private function _find_view_path($view = '') {
         if ( ! empty($this->_theme)) {
-            $view_path = NULL;
-            foreach ($this->_theme_locations as $location) {
-                $theme_views = array(
-                    $this->_theme . '/layouts/' . $view,
-                    $this->_theme . '/partials/' . $view,
-                    $this->_theme . '/modules/' . $this->_module . '/' . $view,
-                    $this->_theme . '/' . $view
-                );
+            $theme_views = array('/', '/layouts/', '/partials/');
 
-                foreach ($theme_views as $theme_view) {
-                    if (file_exists($location . $theme_view . '.php')) {
-                        return self::_load_view($theme_view, $this->_data + $data, $location);
+            foreach ($this->_theme_locations as $location) {
+                foreach (array($this->_theme, $this->_parent_theme) as $theme) {
+                    if ($theme) foreach ($theme_views as $theme_view) {
+                        $t_view = (pathinfo($view, PATHINFO_EXTENSION)) ? $view : $view.'.php';
+
+                        if (file_exists($location . $theme . $theme_view . $t_view)) {
+                            return array($theme . $theme_view . $view, $location);
+                        }
                     }
                 }
 
@@ -642,19 +658,24 @@ class Template {
         }
 
         // Not found it yet? Just load, its either in the module or root view
-        return self::_load_view($view, $this->_data + $data);
+        return array($view, NULL);
     }
 
-    private function _load_view($view, array $data, $override_view_path = NULL) {
-        if ($override_view_path !== NULL) {
+    private function _load_view($view, array $data, $override_view_path = NULL, $return = TRUE) {
+        list($view, $location) = self::_find_view_path($view);
+
+        if (!empty($location)) $override_view_path = $location;
+
+        if (!empty($override_view_path)) {
             $this->CI->load->vars($data);
 
             // Load it directly, bypassing $this->load->view() as ME resets _ci_view
-            $content = $this->CI->load->file($override_view_path . $view . '.php', TRUE);
+            $content = $this->CI->load->file($override_view_path . $view . '.php', $return);
 
-        } else {// Can just run as usual
+        } else {
+            // Can just run as usual
             // Grab the content of the view
-            $content = $this->CI->load->view($view, $data, TRUE);
+            $content = $this->CI->load->view($view, $data, $return);
         }
 
         return $content;
@@ -669,7 +690,7 @@ class Template {
 
 	    if (!empty($active_theme_options) AND isset($active_theme_options[0]) AND $active_theme_options[0] === $this->_theme) {
             $data = (isset($active_theme_options[1]) AND is_array($active_theme_options[1])) ? $active_theme_options[1] : array();
-            $content = $this->CI->load->view($this->_theme . '/stylesheet', $data, TRUE);
+            $content = self::_load_view('stylesheet', $data);
         }
 
         return $content;
@@ -677,7 +698,8 @@ class Template {
 
     private function prepUrl($href, $suffix = '') {
         if (!preg_match('#^(\w+:)?//#i', $href)) {
-            $href = root_url($this->_theme_shortpath . '/' . $href);
+            list($href, $location) = self::_find_view_path($href);
+            $href = theme_url($href);
         }
 
         if (!empty($suffix)) {
@@ -699,6 +721,30 @@ class Template {
 
             array_multisort($modules, SORT_ASC, $this->_modules[$partial_name]);
         }
+    }
+
+    protected function buildPartialModule($module, $view_data, $partial_data, $count) {
+        $module_view = Modules::run($module['name'] .'/index', $module, $view_data);
+
+        if (!empty($module['title'])) {
+            $module_view = ($module['title'] != strip_tags($module['title'])) ? $module['title'].$module_view : "<h3 class=\"module-title\">{$module['title']}</h3>".$module_view;
+        }
+
+        $module_class = 'module-' . $module['name'] . '';
+        if ($module['fixed'] === '1') {
+            $top_offset = isset($module['fixed_top_offset']) ? $module['fixed_top_offset'] : '';
+            $bottom_offset = isset($module['fixed_bottom_offset']) ? $module['fixed_bottom_offset'] : '';
+            $fixed_tag = '<div data-spy="affix" data-offset-top="' . $top_offset . '" data-offset-bottom="' . $bottom_offset . '">';
+            $module_view = $fixed_tag . $module_view . '</div>';
+            $module_class .= ' affix-module';
+        }
+
+        (!empty($partial_data['module_html'])) OR $partial_data['module_html'] = '<div id="{id}" class="{class}">{module}</div>';
+
+        $module_view = str_replace('{id}', 'module-' . str_replace('_', '-', $module['name']) . '-' . $count,
+            str_replace('{class}', $module_class, str_replace('{module}', $module_view, $partial_data['module_html'])));
+
+        return $module_view;
     }
 }
 

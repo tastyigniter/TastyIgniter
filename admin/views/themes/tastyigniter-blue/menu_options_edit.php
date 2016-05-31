@@ -28,7 +28,7 @@
 									<option value="radio" <?php echo set_select('display_type', 'radio'); ?> ><?php echo lang('text_radio'); ?></option>
 								<?php } ?>
 								<?php if ($display_type == 'checkbox') { ?>
-                                    <option value="checkbox" selected="selected" <?php echo set_select('display_type', 'checkbox'); ?> ><?php echo lang('text_checkbo'); ?></option>
+                                    <option value="checkbox" selected="selected" <?php echo set_select('display_type', 'checkbox'); ?> ><?php echo lang('text_checkbox'); ?></option>
 								<?php } else { ?>
 									<option value="checkbox" <?php echo set_select('display_type', 'checkbox'); ?> ><?php echo lang('text_checkbox'); ?></option>
 								<?php } ?>
@@ -119,7 +119,6 @@ function addValue() {
 	table_row++;
 }
 //--></script>
-<script src="<?php echo root_url("assets/js/jquery-sortable.js"); ?>"></script>
 <script type="text/javascript"><!--
 $(function () {
 	$('.table-sortable').sortable({
@@ -129,6 +128,6 @@ $(function () {
 		placeholder: '<tr class="placeholder"><td colspan="3"></td></tr>',
 		handle: '.handle'
 	})
-})
+});
 //--></script>
 <?php echo get_footer(); ?>

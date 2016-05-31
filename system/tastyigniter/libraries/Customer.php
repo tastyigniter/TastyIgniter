@@ -31,6 +31,7 @@ class Customer {
 	private $address_id;
 	private $security_question_id;
 	private $security_answer;
+	private $customer_group_id;
 
 	public function __construct() {
 		$this->CI =& get_instance();
@@ -61,6 +62,7 @@ class Customer {
 				$this->address_id 			= $result['address_id'];
 				$this->security_question_id = $result['security_question_id'];
 				$this->security_answer 		= $result['security_answer'];
+				$this->customer_group_id 	= $result['customer_group_id'];
 
 				$this->updateCart();
 			} else {
@@ -69,11 +71,15 @@ class Customer {
 		}
 	}
 
-	public function login($email, $password) {
+	public function login($email, $password, $override_login = FALSE) {
 
 		$this->CI->db->from('customers');
 		$this->CI->db->where('email', strtolower($email));
-		$this->CI->db->where('password', 'SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1("' . $password . '")))))', FALSE);
+
+		if ($override_login === FALSE) {
+			$this->CI->db->where('password', 'SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1("' . $password . '")))))', FALSE);
+		}
+
 		$this->CI->db->where('status', '1');
 
 		$query = $this->CI->db->get();
@@ -103,6 +109,7 @@ class Customer {
 			$this->address_id 			= $result['address_id'];
 			$this->security_question_id = $result['security_question_id'];
 			$this->security_answer 		= $result['security_answer'];
+			$this->customer_group_id 	= $result['customer_group_id'];
 
 			$this->CI->db->set('ip_address', $this->CI->input->ip_address());
 			$this->CI->db->where('customer_id', $result['customer_id']);
@@ -125,10 +132,7 @@ class Customer {
 		$this->address_id = '';
 		$this->security_question_id = '';
 		$this->security_answer = '';
-
-	    $this->CI->session->unset_userdata('order_info');
-
-	    $this->CI->cart->destroy();
+		$this->customer_group_id = '';
     }
 
   	public function isLogged() {
@@ -183,6 +187,10 @@ class Customer {
 
   	public function getSecurityAnswer() {
 	    return $this->security_answer;
+	}
+
+  	public function getGroupId() {
+	    return $this->customer_group_id;
 	}
 
 	public function updateCart() {

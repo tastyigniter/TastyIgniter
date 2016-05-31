@@ -2,11 +2,11 @@
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 5.2.4 or newer
+ * An open source application development framework for PHP
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2016, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (http://ellislab.com/)
- * @copyright	Copyright (c) 2014, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link	http://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 3.0.0
  * @filesource
  */
@@ -44,7 +44,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	CodeIgniter
  * @category	Compatibility
  * @author		Andrey Andreev
- * @link		http://codeigniter.com/user_guide/
+ * @link		https://codeigniter.com/user_guide/
  * @link		http://php.net/hash
  */
 
@@ -174,9 +174,56 @@ if ( ! function_exists('hash_pbkdf2'))
 		}
 
 		$hash_length = strlen(hash($algo, NULL, TRUE));
-		if (empty($length))
+		empty($length) && $length = $hash_length;
+
+		// Pre-hash password inputs longer than the algorithm's block size
+		// (i.e. prepare HMAC key) to mitigate potential DoS attacks.
+		static $block_sizes;
+		empty($block_sizes) && $block_sizes = array(
+			'gost' => 32,
+			'haval128,3' => 128,
+			'haval160,3' => 128,
+			'haval192,3' => 128,
+			'haval224,3' => 128,
+			'haval256,3' => 128,
+			'haval128,4' => 128,
+			'haval160,4' => 128,
+			'haval192,4' => 128,
+			'haval224,4' => 128,
+			'haval256,4' => 128,
+			'haval128,5' => 128,
+			'haval160,5' => 128,
+			'haval192,5' => 128,
+			'haval224,5' => 128,
+			'haval256,5' => 128,
+			'md2' => 16,
+			'md4' => 64,
+			'md5' => 64,
+			'ripemd128' => 64,
+			'ripemd160' => 64,
+			'ripemd256' => 64,
+			'ripemd320' => 64,
+			'salsa10' => 64,
+			'salsa20' => 64,
+			'sha1' => 64,
+			'sha224' => 64,
+			'sha256' => 64,
+			'sha384' => 128,
+			'sha512' => 128,
+			'snefru' => 32,
+			'snefru256' => 32,
+			'tiger128,3' => 64,
+			'tiger160,3' => 64,
+			'tiger192,3' => 64,
+			'tiger128,4' => 64,
+			'tiger160,4' => 64,
+			'tiger192,4' => 64,
+			'whirlpool' => 64
+		);
+
+		if (isset($block_sizes[$algo]) && strlen($password) > $block_sizes[$algo])
 		{
-			$length = $hash_length;
+			$password = hash($algo, $password, TRUE);
 		}
 
 		$hash = '';
@@ -196,6 +243,3 @@ if ( ! function_exists('hash_pbkdf2'))
 		return substr($raw_output ? $hash : bin2hex($hash), 0, $length);
 	}
 }
-
-/* End of file hash.php */
-/* Location: ./system/core/compat/hash.php */

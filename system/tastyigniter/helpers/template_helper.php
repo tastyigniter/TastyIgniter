@@ -29,7 +29,7 @@ if ( ! function_exists('get_header')) {
 	 * @return    string
 	 */
 	function get_header() {
-		return get_instance()->template->getPartials('header');
+		return get_instance()->template->getPartialView('header');
 	}
 }
 
@@ -42,7 +42,7 @@ if ( ! function_exists('get_footer')) {
 	 * @return    string
 	 */
 	function get_footer() {
-		return get_instance()->template->getPartials('footer');
+		return get_instance()->template->getPartialView('footer');
 	}
 }
 
@@ -58,9 +58,7 @@ if ( ! function_exists('get_partial')) {
 	 * @return string
 	 */
 	function get_partial($partial = '', $class = '') {
-		$partial_data = get_instance()->template->getPartials($partial);
-
-		return str_replace('{class}', $class, $partial_data);
+		return get_instance()->template->getPartialView($partial, array('class' => $class));
 	}
 }
 
@@ -91,7 +89,7 @@ if ( ! function_exists('partial_exists')) {
 	 * @return string
 	 */
 	function partial_exists($partial = '') {
-		return (get_instance()->template->getPartials($partial)) ? TRUE : FALSE;
+		return (get_instance()->template->getPartialView($partial)) ? TRUE : FALSE;
 	}
 }
 
@@ -677,6 +675,76 @@ if ( ! function_exists('save_theme_file')) {
 		}
 
 		return FALSE;
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('create_child_theme_files')) {
+	/**
+	 * Create child theme file(s).
+	 *
+	 * @param array  $files The name of the files to locate. The file will be
+	 *                          found by looking in the main themes folders.
+	 * @param string $source_theme      The theme folder to copy the file from.
+	 * @param string $child_theme_data 	The child theme data.
+	 *
+	 * @return bool Returns false if file is not found in $source_theme
+	 * or $child_theme already exist.
+	 */
+	function create_child_theme_files($files = array(), $source_theme = NULL, $child_theme_data = NULL) {
+		if (empty($files) OR empty($source_theme) OR empty($child_theme_data)) {
+			return FALSE;
+		}
+
+		// preparing the paths
+		$source_theme = rtrim($source_theme, '/');
+		$child_theme = rtrim($child_theme_data['name'], '/');
+
+		$source_theme_path = ROOTPATH . MAINDIR . "/views/themes/" ."{$source_theme}";
+		$child_theme_path = ROOTPATH . MAINDIR . "/views/themes/" ."{$child_theme}";
+
+		if ( ! function_exists('write_file')) {
+			get_instance()->load->helper('file');
+		}
+
+		// creating the destination directory
+		if ( ! is_dir($child_theme_path)) {
+			mkdir($child_theme_path, DIR_WRITE_MODE, TRUE);
+		}
+
+		$failed = FALSE;
+		foreach ($files as $file) {
+			if (file_exists("{$child_theme_path}/{$file['name']}") OR ! file_exists($file['path'])) {
+				continue;
+			}
+
+			if ($file['name'] === 'theme_config.php') {
+				if ($start = strpos($file['content'], '$theme[\'child\']')) {
+					$end = strpos($file['content'], ';', $start);
+					$search = substr($file['content'], $start, $end - $start + 1);
+					$replace = str_replace('child', 'parent', str_replace('TRUE', '\'' . $source_theme . '\'', $search));
+
+					$file['content'] = str_replace($search, $replace, $file['content']);
+
+					if ($start = strpos($file['content'], '$theme[\'title\']')) {
+						$end = strpos($file['content'], ';', $start);
+						$search = substr($file['content'], $start, $end - $start + 1);
+						$replace = str_replace($child_theme_data['old_title'], $child_theme_data['title'], $search);
+
+						$file['content'] = str_replace($search, $replace, $file['content']);
+					}
+				}
+
+				if ( ! write_file("{$child_theme_path}/{$file['name']}", html_entity_decode($file['content']))) {
+					$failed = TRUE;
+				}
+			} else {
+				copy("{$source_theme_path}/{$file['name']}", "{$child_theme_path}/{$file['name']}");
+			}
+		}
+
+		return $failed === TRUE ? FALSE : TRUE;
 	}
 }
 

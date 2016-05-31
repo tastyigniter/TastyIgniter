@@ -19,12 +19,12 @@
 */
 $config['extension_meta'] = array(
 	'name'        => 'categories_module',
-	'version'     => '1.0',
+	'version'     => '1.1',
 	'type'        => 'module',
 	'title'       => 'Categories',
 	'author'      => 'SamPoyigi',
 	'description' => 'This extension will allow you to place a list of categories around your website.',
-	'settings'    => FALSE,
+	'settings'    => TRUE,
 );
 
 /*
@@ -46,3 +46,13 @@ $config['extension_permission'] = array(
 	'action'      => array('manage'),
 	'description' => 'Ability to manage categories module',
 );
+
+/*
+|--------------------------------------------------------------------------
+| Extension Layout Ready (Optional)
+|--------------------------------------------------------------------------
+|
+| This extension config value tells TastyIgniter to use the extension as a layout module
+| (layout modules are displayed in the storefront inside partial areas)
+*/
+$config['layout_ready'] = TRUE;

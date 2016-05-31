@@ -27,5 +27,7 @@ $lang['label_image'] 		            = 'Image';
 $lang['label_images'] 		            = 'Images';
 $lang['label_custom_code'] 		        = 'Custom Code';
 
+$lang['help_click_url'] 		        = 'You can use a relative or absolute site URL';
+
 /* End of file banners_lang.php */
 /* Location: ./admin/language/english/banners_lang.php */

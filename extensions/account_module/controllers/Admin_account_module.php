@@ -2,13 +2,13 @@
 
 class Admin_account_module extends Admin_Controller {
 
-	public function index($data = array()) {
+	public function index($module = array()) {
 		$this->lang->load('account_module/account_module');
 
 		$this->user->restrict('Module.AccountModule');
 
-        if (!empty($data)) {
-            $title = (isset($data['title'])) ? $data['title'] : $this->lang->line('_text_title');
+        if (!empty($module)) {
+            $title = (isset($module['title'])) ? $module['title'] : $this->lang->line('_text_title');
 
             $this->template->setTitle('Module: ' . $title);
             $this->template->setHeading('Module: ' . $title);
@@ -18,8 +18,8 @@ class Admin_account_module extends Admin_Controller {
 
 	        if ($this->input->post('heading')) {
 		        $data['heading'] = $this->input->post('heading');
-	        } else if (!empty($data['ext_data']['heading'])) {
-		        $data['heading'] = $data['ext_data']['heading'];
+	        } else if (!empty($module['ext_data']['heading'])) {
+		        $data['heading'] = $module['ext_data']['heading'];
 	        } else {
 		        $data['heading'] = $title;
 	        }

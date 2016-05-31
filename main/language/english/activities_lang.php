@@ -3,7 +3,7 @@
 $lang['activity_self'] 		            = 'You';
 $lang['activity_custom'] 		        = '{customer} <b>{action}</b> {context} <a href="{link}"><b>{item}</b></a>.';
 $lang['activity_logged_in']             = '<a href="{link}">{customer}</a> <b>logged</b> in.';
-$lang['activity_logged_out']             = '<a href="{link}">{customer}</a> <b>logged</b> out.';
+$lang['activity_logged_out']            = '<a href="{link}">{customer}</a> <b>logged</b> out.';
 $lang['activity_registered_account']    = '<a href="{link}">{customer}</a> <b>registered</b> an <b>account.</b>';
 $lang['activity_updated_account']       = '<a href="{link}">{customer}</a> <b>updated</b> their <b>account details.</b>';
 $lang['activity_changed_password']      = '<a href="{link}">{customer}</a> <b>changed</b> their <b>account password.</b>';

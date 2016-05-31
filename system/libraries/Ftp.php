@@ -2,11 +2,11 @@
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 5.2.4 or newer
+ * An open source application development framework for PHP
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2016, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (http://ellislab.com/)
- * @copyright	Copyright (c) 2014, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link	http://codeigniter.com
+ * @link    https://codeigniter.com
  * @since	Version 1.0.0
  * @filesource
  */
@@ -44,7 +44,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Libraries
  * @category	Libraries
  * @author		EllisLab Dev Team
- * @link		http://codeigniter.com/user_guide/libraries/ftp.html
+ * @link           https://codeigniter.com/user_guide/libraries/ftp.html
  */
 class CI_FTP {
 
@@ -112,7 +112,7 @@ class CI_FTP {
 	public function __construct($config = array())
 	{
 		empty($config) OR $this->initialize($config);
-		log_message('debug', 'FTP Class Initialized');
+		log_message('info', 'FTP Class Initialized');
 	}
 
 	// --------------------------------------------------------------------
@@ -466,10 +466,11 @@ class CI_FTP {
 
 	/**
 	 * Delete a folder and recursively delete everything (including sub-folders)
-	 * containted within it.
+	 * contained within it.
 	 *
 	 * @param	string	$filepath
-	 * @return	bool
+	 *
+*@return	bool
 	 */
 	public function delete_dir($filepath)
 	{
@@ -488,9 +489,8 @@ class CI_FTP {
 			{
 				// If we can't delete the item it's probaly a directory,
 				// so we'll recursively call delete_dir()
-				if ( ! preg_match('#/\.\.?$#', $list[$i]) && ! @ftp_delete($this->conn_id, $list[$i]))
-				{
-					$this->delete_dir($list[$i]);
+				if ( ! preg_match('#/\.\.?$#', $list[$i]) && ! @ftp_delete($this->conn_id, $list[$i])) {
+					$this->delete_dir($filepath . $list[$i]);
 				}
 			}
 		}
@@ -665,6 +665,3 @@ class CI_FTP {
 	}
 
 }
-
-/* End of file Ftp.php */
-/* Location: ./system/libraries/Ftp.php */

@@ -11,6 +11,7 @@ $lang['text_category'] 			= 'Menu Category';
 $lang['text_specials'] 			= 'Special Deals';
 $lang['text_end_days'] 			= 'Ends %s in %s days';
 $lang['text_end_today'] 		= 'Ends today';
+$lang['text_mealtime'] 		    = '%s only (%s - %s)';
 
 $lang['column_id'] 				= '';
 $lang['column_photo'] 			= 'Photo';

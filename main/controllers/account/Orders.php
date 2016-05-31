@@ -45,11 +45,14 @@ class Orders extends Main_Controller {
 		$data['back_url'] 				= site_url('account/account');
 
         $this->load->library('location');
-        if ($this->location->local()) {
+		$this->location->initialize();
+
+		if ($this->location->local()) {
             $data['new_order_url'] = site_url('local?location_id='.$this->location->getId());
         } else {
             $data['new_order_url'] = site_url('local/all');
         }
+
 		$time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
 
 		$data['orders'] = array();
@@ -63,6 +66,7 @@ class Orders extends Main_Controller {
 				'order_id' 				=> $result['order_id'],
 				'location_name' 		=> $result['location_name'],
 				'date_added' 			=> day_elapsed($result['date_added']),
+				'order_date' 			=> day_elapsed($result['order_date']),
 				'order_time'			=> mdate($time_format, strtotime($result['order_time'])),
 				'total_items'			=> $result['total_items'],
 				'order_total' 			=> $this->currency->format($result['order_total']),		// add currency symbol and format order total to two decimal places
@@ -112,8 +116,9 @@ class Orders extends Main_Controller {
 
 		$data['order_id'] 		        = $result['order_id'];
         $data['date_added'] 	        = mdate($date_format, strtotime($result['date_added']));
-        $data['order_time'] 	        = mdate($time_format, strtotime($result['order_time']));
-        $data['order_type'] 		    = $result['order_type'];
+		$data['order_time'] 	        = mdate($time_format, strtotime($result['order_time']));
+		$data['order_date'] 	        = mdate($date_format, strtotime($result['order_date']));
+		$data['order_type'] 		    = $result['order_type'];
 
         $this->load->library('country');
         $this->load->model('Locations_model');														// load orders model
@@ -152,16 +157,16 @@ class Orders extends Main_Controller {
 
         $data['totals'] = array();
         $order_totals = $this->Orders_model->getOrderTotals($result['order_id']);
-		foreach (array('cart_total', 'coupon', 'delivery', 'taxes') as $key) {
-			foreach ($order_totals as $total) {
-	            if ($key == $total['code'] AND $total['code'] !== 'order_total') {
-	                $data['totals'][] = array(
-	                    'title' => $total['title'],
-	                    'value' => $this->currency->format($total['value'])
-	                );
-	            }
-	        }
-        }
+		foreach ($order_totals as $order_total) {
+			if ($data['order_type'] !== '1' AND $order_total['code'] === 'delivery') continue;
+
+			$data['totals'][] = array(
+				'code'     => $order_total['code'],
+				'title'    => htmlspecialchars_decode($order_total['title']),
+				'value'    => $this->currency->format($order_total['value']),
+				'priority' => $order_total['priority'],
+			);
+		}
 
         $data['order_total'] 		= $this->currency->format($result['order_total']);
         $data['total_items']		= $result['total_items'];
@@ -169,7 +174,7 @@ class Orders extends Main_Controller {
 		if ($payment = $this->extension->getPayment($result['payment'])) {
 			$data['payment'] = !empty($payment['ext_data']['title']) ? $payment['ext_data']['title']: $payment['title'];
 		} else {
-			$data['payment'] = 'No Payment';
+			$data['payment'] = $this->lang->line('text_no_payment');
 		}
 
 		$this->template->render('account/orders_view', $data);

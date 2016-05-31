@@ -68,9 +68,9 @@
 								<li><?php echo lang('label_service'); ?><br />
 									<div class="rating rating-star" data-score="<?php echo $service; ?>" data-score-name="rating[service]"></div>
 								</li>
-                                <?php echo form_error('rating[quality]', '<span class="text-danger">', '</span>'); ?>
-                                <?php echo form_error('rating[delivery]', '<span class="text-danger">', '</span>'); ?>
-                                <?php echo form_error('rating[service]', '<span class="text-danger">', '</span>'); ?>
+								<?php echo form_error('rating[quality]', '<span class="text-danger">', '</span>'); ?>
+								<?php echo form_error('rating[delivery]', '<span class="text-danger">', '</span>'); ?>
+								<?php echo form_error('rating[service]', '<span class="text-danger">', '</span>'); ?>
 							</ul>
 						</div>
 					</div>
@@ -103,21 +103,8 @@
 </div>
 <script type="text/javascript"><!--
 $(document).ready(function() {
-    $('.rating-star').raty({
-        score: function() {
-            return $(this).attr('data-score');
-        },
-        scoreName: function() {
-            return $(this).attr('data-score-name');
-        },
-        readOnly: function() {
-            return $(this).attr('data-readonly') == 'true';
-        },
-        hints: ['Bad', 'Worse', 'Good', 'Average', 'Excellent'],
-        starOff : 'fa fa-star-o',
-        starOn : 'fa fa-star',
-        cancel : false, half : false, starType : 'i'
-    });
+	var ratings = <?php echo json_encode(array_values($ratings)); ?>;
+	displayRatings(ratings);
 });
 
 $('input[name=\'customer_id\']').select2({
@@ -139,7 +126,7 @@ $('input[name=\'customer_id\']').select2({
 	},
 	initSelection: function(element, callback) {
 		return $.getJSON('<?php echo site_url("/customers/autocomplete?customer_id="); ?>' + (element.val()), null, function(json) {
-        	var data = {id: json.results[0].id, text: json.results[0].text};
+			var data = {id: json.results[0].id, text: json.results[0].text};
 			return callback(data);
 		});
 	}

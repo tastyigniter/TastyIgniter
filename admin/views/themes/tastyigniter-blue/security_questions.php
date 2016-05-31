@@ -29,8 +29,8 @@
 									<?php } ?>
 								</td>
 								<td>
-									<input type="hidden" name="questions[<?php echo $table_row; ?>][question_id]" value="<?php echo set_value('questions[$table_row][question_id]', $question['question_id']); ?>"/>
-									<input type="text" name="questions[<?php echo $table_row; ?>][text]" class="form-control" value="<?php echo set_value('questions[$table_row][text]', $question['text']); ?>" />
+									<input type="hidden" name="questions[<?php echo $table_row; ?>][question_id]" value="<?php echo set_value('questions['.$table_row.'][question_id]', $question['question_id']); ?>"/>
+									<input type="text" name="questions[<?php echo $table_row; ?>][text]" class="form-control" value="<?php echo set_value('questions['.$table_row.'][text]', $question['text']); ?>" />
 									<?php echo form_error('questions['.$table_row.'][question_id]', '<span class="text-danger">', '</span>'); ?>
 									<?php echo form_error('questions['.$table_row.'][text]', '<span class="text-danger">', '</span>'); ?>
 								</td>
@@ -60,8 +60,8 @@ function addQuestion() {
 	html  = '<tr id="table-row' + table_row + '">';
 	html += '	<td class="action action-one text-center"><i class="fa fa-sort handle"></i></td>';
 	html += '	<td class="action action-one"><a class="btn btn-danger" onclick="confirm(\'<?php echo lang('alert_warning_confirm'); ?>\') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a></td>';
-	html += '	<td><input type="hidden" name="questions[' + table_row + '][question_id]" value="<?php echo set_value("questions[' + table_row + '][question_id]", "0"); ?>"/>';
-	html += '		<input type="text" name="questions[' + table_row + '][text]" class="form-control" value="<?php echo set_value('questions[$table_row][text]'); ?>" /></td>';
+	html += '	<td><input type="hidden" name="questions[' + table_row + '][question_id]" value="0"/>';
+	html += '		<input type="text" name="questions[' + table_row + '][text]" class="form-control" value="" /></td>';
 	html += '	<td>-</td>';
 	html += '</tr>';
 
@@ -70,7 +70,6 @@ function addQuestion() {
 	table_row++;
 }
 //--></script>
-<script src="<?php echo root_url("assets/js/jquery-sortable.js"); ?>"></script>
 <script type="text/javascript"><!--
 $(function  () {
 	$('.table-sortable').sortable({
@@ -80,6 +79,6 @@ $(function  () {
 		placeholder: '<tr class="placeholder"><td colspan="3"></td></tr>',
 		handle: '.handle'
 	})
-})
+});
 //--></script>
 <?php echo get_footer(); ?>

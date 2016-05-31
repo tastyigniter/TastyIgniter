@@ -152,16 +152,33 @@ if ( ! function_exists('get_remote_data'))
         curl_setopt($curl, CURLOPT_HEADER, FALSE);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($curl, CURLOPT_AUTOREFERER, TRUE);
-        curl_setopt($curl, CURLOPT_FAILONERROR, TRUE);
-        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($curl, CURLOPT_TIMEOUT, $options['TIMEOUT']);
-        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $options['TIMEOUT']);
-        curl_setopt($curl, CURLOPT_MAXREDIRS, 20);
+
+        if (!empty($options['TIMEOUT'])) {
+            curl_setopt($curl, CURLOPT_TIMEOUT, $options['TIMEOUT']);
+            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $options['TIMEOUT']);
+        }
+
+        if (!empty($options['HTTPHEADER'])) {
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $options['HTTPHEADER']);
+        }
 
         if (!empty($options['USERAGENT'])) {
             curl_setopt($curl, CURLOPT_USERAGENT, $options['USERAGENT']);
         }
+
+        if (isset($options['AUTOREFERER'])) {
+            curl_setopt($curl, CURLOPT_AUTOREFERER, $options['AUTOREFERER']);
+        }
+
+        if (isset($options['FAILONERROR'])) {
+            curl_setopt($curl, CURLOPT_FAILONERROR, $options['FAILONERROR']);
+        }
+
+        if (isset($options['FOLLOWLOCATION'])) {
+            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, $options['FOLLOWLOCATION']);
+        }
+
+        curl_setopt($curl, CURLOPT_MAXREDIRS, 20);
 
         if (!empty($options['REFERER'])) {
             curl_setopt($curl, CURLOPT_REFERER, current_url());
@@ -204,7 +221,6 @@ if ( ! function_exists('get_context_help'))
 }
 
 // ------------------------------------------------------------------------
-
 
 /* End of file tastyigniter_helper.php */
 /* Location: ./system/tastyigniter/helpers/tastyigniter_helper.php */

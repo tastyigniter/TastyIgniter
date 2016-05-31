@@ -6,6 +6,7 @@ class Extensions extends Admin_Controller {
 		parent::__construct();
 
 		$this->load->model('Extensions_model');
+		$this->load->model('Layouts_model');
 
 		$this->lang->load('extensions');
 	}
@@ -63,6 +64,7 @@ class Extensions extends Admin_Controller {
 		$this->template->setTitle($this->lang->line('text_title'));
 		$this->template->setHeading($this->lang->line('text_heading'));
 		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() . '/add'));
+		$this->template->setButton($this->lang->line('button_browse'), array('class' => 'btn btn-default disabled', 'href' => page_url() . '/browse'));
 
 		$order_by = (isset($filter['order_by']) AND $filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
 		$data['sort_name'] = site_url('extensions' . $url . 'sort_by=name&order_by=' . $order_by);
@@ -71,7 +73,7 @@ class Extensions extends Admin_Controller {
 		$data['extensions'] = array();
 		$results = $this->Extensions_model->getList($filter);
 		foreach ($results as $result) {
-			if ($result['config'] !== TRUE) {
+			if (!is_array($result['config'])) {
 				$this->alert->warning_now($result['config']);
 				continue;
 			}
@@ -99,7 +101,6 @@ class Extensions extends Admin_Controller {
 			);
 		}
 
-		$this->template->setPartials(array('header', 'footer'));
 		$this->template->render('extensions', $data);
 	}
 
@@ -117,8 +118,13 @@ class Extensions extends Admin_Controller {
 			$ext_controller = $extension['name'] . '/admin_' . $extension['name'];
 			$ext_class = ucfirst('admin_' . $extension['name']);
 
+			$module_layouts = $this->Layouts_model->getModuleLayouts($extension_name);
+			if (empty($module_layouts) AND isset($extension['config']['layout_ready']) AND $extension['config']['layout_ready'] === TRUE) {
+				$this->alert->set('info', sprintf($this->lang->line('alert_warning_layouts'), site_url('layouts')));
+			}
+
 			if (isset($extension['config'], $extension['installed'], $extension['settings'])) {
-				if ($extension['config'] !== TRUE) {
+				if (!is_array($extension['config'])) {
 					$error_msg = $this->lang->line('error_config');
 				} else if ($extension['settings'] === FALSE) {
 					$error_msg = $this->lang->line('error_options');
@@ -152,6 +158,7 @@ class Extensions extends Admin_Controller {
 		$this->template->setTitle($this->lang->line('text_add_heading'));
 		$this->template->setHeading($this->lang->line('text_add_heading'));
 
+		$this->template->setButton($this->lang->line('button_browse'), array('class' => 'btn btn-default disabled', 'href' => site_url('extensions/browse')));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('extensions')));
 
 		$data['_action'] = site_url('extensions/add');
@@ -161,6 +168,20 @@ class Extensions extends Admin_Controller {
 		}
 
 		$this->template->render('extensions_add', $data);
+	}
+
+	public function browse() {
+		$this->user->restrict('Admin.Extensions.Access');
+
+		$this->template->setTitle($this->lang->line('text_browse_heading'));
+		$this->template->setHeading($this->lang->line('text_browse_heading'));
+
+		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => site_url('extensions/add')));
+		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('extensions')));
+
+		$data['_action'] = site_url('extensions/browse');
+
+		$this->template->render('extensions_browse', $data);
 	}
 
 	public function install() {
@@ -184,7 +205,7 @@ class Extensions extends Admin_Controller {
 				));
 
 				$this->alert->set('success', sprintf($this->lang->line('alert_success'), "Extension {$extension_title} installed "));
-				if ($extension_type === 'module') {
+				if ((isset($config['layout_ready']) AND $config['layout_ready'] === TRUE)) {
 					$this->alert->set('info', sprintf($this->lang->line('alert_info_layouts'), site_url('layouts')));
 				}
 			}
@@ -229,17 +250,23 @@ class Extensions extends Admin_Controller {
 
 		$data['extension_name'] = ($this->input->get('name')) ? $this->input->get('name') : $this->uri->rsegment(4);
 
-		if ($this->uri->rsegment(3) OR ! $this->Extensions_model->extensionExists($data['extension_name'])) {
+		if ( ! $this->uri->rsegment(3) OR ! $this->Extensions_model->extensionExists($data['extension_name'])) {
 			redirect(referrer_url());
 		}
+
+		$extension = $this->Extensions_model->getExtension($data['extension_name'], FALSE);
 
 		$config = $this->extension->loadConfig($data['extension_name'], FALSE, TRUE);
 		$data['extension_title'] = isset($config['extension_meta']['title']) ? $config['extension_meta']['title'] : '';
 		$data['extension_type'] = isset($config['extension_meta']['type']) ? $config['extension_meta']['type'] : '';
+		$data['extension_data'] = !empty($extension['ext_data']) ? TRUE : FALSE;
+		$data['delete_action'] = !empty($extension['ext_data']) ? $this->lang->line('text_files_data') : $this->lang->line('text_files');
 
 		if ($this->input->post('confirm_delete') === $data['extension_name']) {
 
-			if ($this->Extensions_model->delete($this->uri->rsegment(3), $data['extension_name'])) {
+			$delete_data = ($this->input->post('delete_data') === '1') ? TRUE : FALSE;
+
+			if ($this->Extensions_model->delete($this->uri->rsegment(3), $data['extension_name'], $delete_data)) {
 				log_activity($this->user->getStaffId(), 'deleted', 'extensions', get_activity_message('activity_custom_no_link',
 					array('{staff}', '{action}', '{context}', '{item}'),
 					array($this->user->getStaffName(), 'deleted', $data['extension_type'] . ' extension', $data['extension_title'])
@@ -252,8 +279,6 @@ class Extensions extends Admin_Controller {
 
 			redirect('extensions?filter_type='.$data['extension_type']);
 		}
-
-		$this->load->helper('directory');
 
 		$files = $this->Extensions_model->getExtensionFiles($data['extension_name']);
 		$data['files_to_delete'] = $files;

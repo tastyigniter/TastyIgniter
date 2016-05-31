@@ -52,7 +52,8 @@ class Address extends Main_Controller {
 				$data['addresses'][] = array(													// create array of customer address data to pass to view
 					'address_id'	=> $result['address_id'],
 					'address' 		=> $this->country->addressFormat($result),
-					'edit' 			=> site_url('account/address/edit/'. $result['address_id'])
+					'edit' 			=> site_url('account/address/edit/'. $result['address_id']),
+					'delete' 		=> site_url('account/address/delete/'. $result['address_id'])
 				);
 			}
 		}
@@ -125,9 +126,17 @@ class Address extends Main_Controller {
 		$this->template->render('account/address_edit', $data);
 	}
 
-	private function _updateAddress() {
-		$this->load->library('location'); 														// load the customer library
+	public function delete() {
+		$address_id = is_numeric($this->uri->rsegment(3)) ? $this->uri->rsegment(3) : FALSE;
 
+		if ($this->Addresses_model->deleteAddress($this->customer->getId(), $address_id)) {
+			$this->alert->set('alert', $this->lang->line('alert_deleted_success'));
+		}
+
+		redirect('account/address');
+	}
+
+	private function _updateAddress() {
 		if ($this->validateForm() === TRUE AND $this->input->post('address')) {
 			$address = $this->input->post('address');
 

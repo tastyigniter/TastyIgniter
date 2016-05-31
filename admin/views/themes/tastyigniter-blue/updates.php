@@ -17,7 +17,7 @@
 							<div class="alert alert-warning"><?php echo lang('alert_updates_warning'); ?></div>
 							<div class="alert alert-info"><?php echo lang('alert_modification_warning'); ?></div>
 							<h4><?php echo lang('text_core_update_available'); ?></h4>
-							<p><?php echo sprintf(lang('help_core_update'), $updates['core']['stable_tag']); ?></p>
+							<p><?php echo sprintf(lang('help_core_update'), $updates['core']['version_name']); ?></p>
 							<p><?php echo lang('text_maintenance_mode'); ?></p>
 						<?php } else { ?>
 							<h4><?php echo lang('text_core_updated'); ?></h4>

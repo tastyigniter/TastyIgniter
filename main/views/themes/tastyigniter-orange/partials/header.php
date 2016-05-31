@@ -11,7 +11,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 	<head>
         <?php echo get_metas(); ?>
-        <?php echo get_favicon(); ?>
+        <?php if ($favicon = get_theme_options('favicon')) { ?>
+            <link href="<?php echo image_url($favicon); ?>" rel="shortcut icon" type="image/ico">
+        <?php } else { ?>
+            <?php echo get_favicon(); ?>
+        <?php } ?>
         <title><?php echo sprintf(lang('site_title'), get_title(), config_item('site_name')); ?></title>
         <?php echo get_style_tags(); ?>
         <?php echo get_active_styles(); ?>
@@ -23,12 +27,14 @@
 			var js_site_url = function(str) {
 				var strTmp = "<?php echo rtrim(site_url(), '/').'/'; ?>" + str;
 			 	return strTmp;
-			}
+			};
 
 			var js_base_url = function(str) {
 				var strTmp = "<?php echo base_url(); ?>" + str;
 				return strTmp;
-			}
+			};
+
+            var pageHeight = $(window).height();
 
 			$(document).ready(function() {
 				if ($('#notification > p').length > 0) {
@@ -41,24 +47,8 @@
 
 				$('.alert').alert();
 				$('.dropdown-toggle').dropdown();
-                $('a, i').tooltip({placement: 'bottom'});
+                $('a[title], i[title]').tooltip({placement: 'bottom'});
                 $('select.form-control').select2();
-
-				$('.rating-star').raty({
-					score: function() {
-						return $(this).attr('data-score');
-					},
-					scoreName: function() {
-						return $(this).attr('data-score-name');
-					},
-					readOnly: function() {
-						return $(this).attr('data-readonly') == 'true';
-					},
-					hints: ['Bad', 'Worse', 'Good', 'Average', 'Excellent'],
-					starOff : 'fa fa-star-o',
-					starOn : 'fa fa-star',
-					cancel : false, half : false, starType : 'i'
-				});
 			});
 		</script>
 		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -123,9 +113,9 @@
 									<li><a href="<?php echo site_url('account/register'); ?>"><?php echo lang('menu_register'); ?></a></li>
 								<?php } ?>
 
-								<?php if ($pages) { ?>
+								<?php if (!empty($pages)) { ?>
 									<?php foreach ($pages as $page) { ?>
-										<?php if ($page['navigation'] === 'header') { ?>
+										<?php if (is_array($page['navigation']) AND in_array('header', $page['navigation'])) { ?>
 											<li><a href="<?php echo site_url('pages?page_id='.$page['page_id']); ?>"><?php echo $page['name']; ?></a></li>
 										<?php } ?>
 									<?php } ?>

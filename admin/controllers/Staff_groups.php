@@ -117,6 +117,14 @@ class Staff_groups extends Admin_Controller {
 			$data['staff_group_name'] = '';
 		}
 
+		if (isset($this->input->post['customer_account_access'])) {
+			$data['customer_account_access'] = $this->input->post['customer_account_access'];
+		} else if (isset($group_info['customer_account_access'])) {
+			$data['customer_account_access'] = $group_info['customer_account_access'];
+		} else {
+			$data['customer_account_access'] = '';
+		}
+
 		if (isset($this->input->post['location_access'])) {
 			$data['location_access'] = $this->input->post['location_access'];
 		} else if (isset($group_info['location_access'])) {
@@ -184,7 +192,9 @@ class Staff_groups extends Admin_Controller {
 
 	private function validateForm() {
 		$this->form_validation->set_rules('staff_group_name', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
+		$this->form_validation->set_rules('customer_account_access', 'lang:label_customer_account_access', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('location_access', 'lang:label_location_access', 'xss_clean|trim|required|integer');
+
         if ($this->input->post('permissions')) {
             foreach ($this->input->post('permissions') as $key => $permissions) {
                 foreach ($permissions as $k => $permission) {

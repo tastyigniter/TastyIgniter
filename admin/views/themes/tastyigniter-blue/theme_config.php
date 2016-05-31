@@ -105,6 +105,7 @@ $theme['nav_menu'] = array(
 	        'languages' => array('class' => 'languages', 'href' => site_url('languages'), 'title' => lang('menu_language'), 'permission' => 'Site.Languages'),
 	        'currencies' => array('class' => 'currencies', 'href' => site_url('currencies'), 'title' => lang('menu_currency'), 'permission' => 'Site.Currencies'),
 	        'countries' => array('class' => 'countries', 'href' => site_url('countries'), 'title' => lang('menu_country'), 'permission' => 'Site.Countries'),
+	        'mealtimes' => array('class' => 'mealtimes', 'href' => site_url('mealtimes'), 'title' => lang('menu_mealtimes'), 'permission' => 'Admin.Mealtimes'),
 	        'security_questions' => array('class' => 'security_questions', 'href' => site_url('security_questions'), 'title' => lang('menu_security_question'), 'permission' => 'Admin.SecurityQuestions'),
 	        'ratings' => array('class' => 'ratings', 'href' => site_url('ratings'), 'title' => lang('menu_rating'), 'permission' => 'Admin.Ratings'),
 	        'statuses' => array('class' => 'statuses', 'href' => site_url('statuses'), 'title' => lang('menu_status'), 'permission' => 'Admin.Statuses'),

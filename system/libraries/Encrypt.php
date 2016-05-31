@@ -2,11 +2,11 @@
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 5.2.4 or newer
+ * An open source application development framework for PHP
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2016, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (http://ellislab.com/)
- * @copyright	Copyright (c) 2014, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link	http://codeigniter.com
+ * @link    https://codeigniter.com
  * @since	Version 1.0.0
  * @filesource
  */
@@ -46,7 +46,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Libraries
  * @category	Libraries
  * @author		EllisLab Dev Team
- * @link		http://codeigniter.com/user_guide/libraries/encryption.html
+ * @link           https://codeigniter.com/user_guide/libraries/encryption.html
  */
 class CI_Encrypt {
 
@@ -65,7 +65,7 @@ class CI_Encrypt {
 	protected $_hash_type		= 'sha1';
 
 	/**
-	 * Flag for the existance of mcrypt
+	 * Flag for the existence of mcrypt
 	 *
 	 * @var bool
 	 */
@@ -97,7 +97,7 @@ class CI_Encrypt {
 			show_error('The Encrypt library requires the Mcrypt extension.');
 		}
 
-		log_message('debug', 'Encrypt Class Initialized');
+		log_message('info', 'Encrypt Class Initialized');
 	}
 
 	// --------------------------------------------------------------------
@@ -198,12 +198,13 @@ class CI_Encrypt {
 	 * This allows for backwards compatibility and a method to transition to the
 	 * new encryption algorithms.
 	 *
-	 * For more details, see http://codeigniter.com/user_guide/installation/upgrade_200.html#encryption
+	 * For more details, see https://codeigniter.com/user_guide/installation/upgrade_200.html#encryption
 	 *
 	 * @param	string
 	 * @param	int		(mcrypt mode constant)
 	 * @param	string
-	 * @return	string
+	 *
+*@return	string
 	 */
 	public function encode_from_legacy($string, $legacy_mode = MCRYPT_MODE_ECB, $key = '')
 	{
@@ -478,6 +479,3 @@ class CI_Encrypt {
 	}
 
 }
-
-/* End of file Encrypt.php */
-/* Location: ./system/libraries/Encrypt.php */

@@ -62,7 +62,7 @@
 				<table border="0" class="table table-striped table-border">
 					<thead>
 						<tr>
-							<th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
+							<th class="action action-three"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
 							<th><a class="sort" href="<?php echo $sort_first; ?>"><?php echo lang('column_first_name'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'first_name') ? $order_by_active : $order_by; ?>"></i></a></th>
 							<th><a class="sort" href="<?php echo $sort_last; ?>"><?php echo lang('column_last_name'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'last_name') ? $order_by_active : $order_by; ?>"></i></a></th>
 							<th><a class="sort" href="<?php echo $sort_email; ?>"><?php echo lang('column_email'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'email') ? $order_by_active : $order_by; ?>"></i></a></th>
@@ -77,7 +77,9 @@
 					<?php foreach ($customers as $customer) { ?>
 					<tr>
 						<td class="action"><input type="checkbox" value="<?php echo $customer['customer_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
-							<a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $customer['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
+							<a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $customer['edit']; ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
+							<a class="btn btn-info <?php echo empty($access_customer_account) ? 'disabled' : ''; ?>" title="<?php echo lang('text_login_as_customer'); ?>" href="<?php echo $customer['login']; ?>" target="_blank"><i class="fa fa-user"></i>&nbsp;&nbsp;<i class="fa fa-arrow-right"></i></a>
+						</td>
 						<td><?php echo $customer['first_name']; ?></td>
 						<td><?php echo $customer['last_name']; ?></td>
 						<td><?php echo $customer['email']; ?></td>

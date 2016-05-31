@@ -24,13 +24,7 @@ class Updates_model extends TI_Model {
 
 	protected $updated_files = array('modified' => array(), 'added' => array());
 
-	protected $endpoint = 'http://api.tastyigniter.com/v1';
-
-	public function __construct() {
-		parent::__construct();
-
-//		$this->load->model('Extensions_model');
-	}
+	protected $endpoint = 'https://api.tastyigniter.com/v1';
 
 	public function lastVersionCheck() {
 		$version = $this->config->item('last_version_check');
@@ -51,6 +45,7 @@ class Updates_model extends TI_Model {
 		foreach ($versions as $key => $version) {
 			if ($key == 'core' AND !empty($version->stable_tag)) {
 				if (version_compare(TI_VERSION, $version->stable_tag) !== 0) {
+					$result['core']['version_name'] = $version->version;
 					$result['core']['stable_tag'] = $version->stable_tag;
 				}
 			} else if (is_array($version)) {
@@ -76,7 +71,7 @@ class Updates_model extends TI_Model {
 	public function getVersions($extensions = array(), $refresh = FALSE) {
 		$version = $this->config->item('last_version_check');
 
-		if (!$refresh AND isset($version['last_version_check']) AND strtotime('-3 day') < strtotime($version['last_version_check'])) {
+		if (!$refresh AND isset($version['last_version_check']) AND strtotime('-7 day') < strtotime($version['last_version_check'])) {
 			return $version;
 		}
 
@@ -122,6 +117,9 @@ class Updates_model extends TI_Model {
 
 	public function getRemoteData($url, $options = array(), $params = array()) {
 		$options['USERAGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:43.0) Gecko/20100101 Firefox/43.0';
+		$options['AUTOREFERER'] = TRUE;
+		$options['FAILONERROR'] = TRUE;
+		$options['FOLLOWLOCATION'] = 1;
 
 		if (empty($options['TIMEOUT'])) {
 			$options['TIMEOUT'] = 30;

@@ -41,7 +41,7 @@
 					</div>
 
 					<div class="col-md-12">
-						<div class="tab-content tab-content-line">
+						<div class="tab-content tab-content-line wrap-top">
 							<div id="details" class="tab-pane active">
 								<?php if ($customer_info) { ?>
 								<div class="table-responsive">
@@ -139,7 +139,7 @@
 												<tr>
 													<td><a href="<?php echo $order['view']; ?>"><?php echo $order['order_id']; ?></a></td>
 													<td width="80%" class="text-center"><?php echo $order['status_name']; ?></td>
-													<td><?php echo $order['order_time']; ?> - <?php echo $order['date_added']; ?></td>
+													<td><?php echo $order['order_time']; ?> - <?php echo $order['order_date']; ?></td>
 												</tr>
 												<?php } ?>
 											</tbody>

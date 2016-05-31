@@ -60,7 +60,7 @@
                                         <?php if (isset($menu_option['option_values'])) { ?>
                                             <?php foreach ($menu_option['option_values'] as $option_value) { ?>
                                                 <?php isset($cart_option_value_ids[$key]) OR $cart_option_value_ids[$key] = array() ?>
-                                                <?php if (in_array($option_value['menu_option_value_id'], $cart_option_value_ids[$key])) { ?>
+                                                <?php if (in_array($option_value['menu_option_value_id'], $cart_option_value_ids[$key]) OR (empty($cart_option_value_ids[$key]) AND $menu_option['default_value_id'] == $option_value['menu_option_value_id'])) { ?>
                                                     <div class="radio"><label>
                                                         <input type="radio" name="menu_options[<?php echo $key; ?>][option_values][]" value="<?php echo $option_value['option_value_id']; ?>" checked="checked" />
                                                         <?php echo $option_value['value']; ?> <span class="price small"><?php echo $option_value['price']; ?></span>
@@ -85,7 +85,7 @@
                                         <?php if (isset($menu_option['option_values'])) { ?>
                                             <?php foreach ($menu_option['option_values'] as $option_value) { ?>
                                                 <?php isset($cart_option_value_ids[$key]) OR $cart_option_value_ids[$key] = array() ?>
-                                                <?php if (in_array($option_value['menu_option_value_id'], $cart_option_value_ids[$key])) { ?>
+                                                <?php if (in_array($option_value['menu_option_value_id'], $cart_option_value_ids[$key]) OR (empty($cart_option_value_ids[$key]) AND $menu_option['default_value_id'] == $option_value['menu_option_value_id'])) { ?>
                                                     <div class="checkbox"><label>
                                                         <input type="checkbox" name="menu_options[<?php echo $key; ?>][option_values][]" value="<?php echo $option_value['option_value_id']; ?>" checked="checked" />
                                                         <?php echo $option_value['value']; ?> <span class="price small"><?php echo $option_value['price']; ?></span>
@@ -113,7 +113,7 @@
                                                         <option value=""><?php echo $menu_option['option_name']; ?></option>
                                                         <?php foreach ($menu_option['option_values'] as $option_value) { ?>
                                                             <?php isset($cart_option_value_ids[$key]) OR $cart_option_value_ids[$key] = array() ?>
-                                                            <?php if (in_array($option_value['menu_option_value_id'], $cart_option_value_ids[$key])) { ?>
+                                                            <?php if (in_array($option_value['menu_option_value_id'], $cart_option_value_ids[$key]) OR (empty($cart_option_value_ids[$key]) AND $menu_option['default_value_id'] == $option_value['menu_option_value_id'])) { ?>
                                                                 <option value="<?php echo $option_value['option_value_id']; ?>" data-subtext="<?php echo $option_value['price']; ?>" selected="selected">
                                                                     <?php echo $option_value['value']; ?>
                                                                 </option>

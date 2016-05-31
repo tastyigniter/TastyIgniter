@@ -25,8 +25,9 @@ $lang['text_staff_group'] 		        = 'Staff Group';
 $lang['text_staff'] 		            = 'Staff';
 $lang['text_folders'] 		            = 'Folders';
 $lang['text_labels'] 		            = 'Labels/Types';
-$lang['text_move_to_inbox'] 		    = 'Move to Inbox';
+$lang['text_move_to_inbox'] = 'Restore';
 $lang['text_move_to_archive'] 		    = 'Move to Archive';
+$lang['text_move_to_trash'] = 'Move to Trash';
 $lang['text_refresh'] 		            = 'Refresh';
 $lang['text_mark_as_read'] 		        = 'Mark as read';
 $lang['text_mark_as_unread'] 		    = 'Mark as unread';
@@ -40,10 +41,12 @@ $lang['button_compose'] 		        = '+ Compose';
 $lang['button_send'] 		            = 'Send';
 $lang['button_save_draft'] 		        = 'Save as Draft';
 
-$lang['column_status'] 		            = 'Status';
-$lang['column_id'] 		                = 'ID';
+$lang['column_sent'] = 'Sent';
+$lang['column_read'] = 'Read';
+$lang['column_deleted'] = 'Deleted';
 
 $lang['label_to'] 		                = 'To';
+$lang['label_from'] = 'From';
 $lang['label_subject'] 		            = 'Subject';
 $lang['label_body'] 		            = 'Body';
 $lang['label_customer_group'] 		    = 'Customer Group';
@@ -54,10 +57,13 @@ $lang['label_send_type'] 		        = 'Send Type';
 
 $lang['alert_mark_as_unread'] 		    = 'has been marked as unread.';
 $lang['alert_mark_as_read'] 		    = 'has been marked as read.';
-$lang['alert_move_to_inbox'] 		    = 'has been moved to inbox.';
+$lang['alert_move_to_inbox'] = 'has been restored.';
 $lang['alert_move_to_archive'] 		    = 'has been moved to archive.';
+$lang['alert_move_to_trash'] = 'has been deleted.';
 $lang['alert_saved_to_draft'] 		    = 'saved to draft';
 $lang['alert_success_sent'] 		    = 'sent';
+$lang['alert_warning_confirm'] = 'Are you sure you want to do this?';
+$lang['alert_warning_confirm_undo'] = 'Are you sure you want to do this? This can not be undone!';
 
 /* End of file messages_lang.php */
 /* Location: ./admin/language/english/messages_lang.php */

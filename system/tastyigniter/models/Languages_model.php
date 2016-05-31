@@ -149,6 +149,7 @@ class Languages_model extends TI_Model {
 			$this->db->from('languages');
 			$this->db->where('can_delete', '0');
 			$this->db->where_in('language_id', $language_id);
+			$this->db->where('language_id !=', '11');
 			$query = $this->db->get();
 
 			if ($query->num_rows() > 0) {
@@ -159,6 +160,7 @@ class Languages_model extends TI_Model {
 
 			$this->db->where('can_delete', '0');
 			$this->db->where_in('language_id', $language_id);
+			$this->db->where('language_id !=', '11');
 			$this->db->delete('languages');
 
 			return $this->db->affected_rows();

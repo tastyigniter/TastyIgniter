@@ -294,7 +294,7 @@
 											<?php echo form_error('status_comment', '<span class="text-danger">', '</span>'); ?>
 										</div>
 									</div>
-									<div class="col-xs-12 col-sm-2">
+									<div class="col-xs-12 col-sm-2 wrap-none">
 										<label class="control-label"><?php echo lang('label_notify'); ?></label>
 										<div class="">
 											<div id="input-notify" class="btn-group btn-group-switch" data-toggle="buttons">
@@ -328,7 +328,7 @@
 										<td><?php echo $cart_item['qty']; ?>x</td>
 										<td><?php echo $cart_item['name']; ?><br />
 										<?php if (!empty($cart_item['options'])) { ?>
-											<div><small><?php echo lang('text_plus'); ?><?php echo $cart_item['options']; ?></small></div>
+											<div><small><?php echo $cart_item['options']; ?></small></div>
 										<?php } ?>
 										<?php if (!empty($cart_item['comment'])) { ?>
 											<div><small><b><?php echo $cart_item['comment']; ?></b></small></div>
@@ -343,17 +343,16 @@
 										<tr>
 											<td class="<?php echo ($total_count === 1) ? 'thick' : 'no'; ?>-line" width="1"></td>
 											<td class="<?php echo ($total_count === 1) ? 'thick' : 'no'; ?>-line"></td>
-											<td class="<?php echo ($total_count === 1) ? 'thick' : 'no'; ?>-line text-left"><b><?php echo $total['title']; ?></b></td>
-											<td class="<?php echo ($total_count === 1) ? 'thick' : 'no'; ?>-line text-right"><b><?php echo $total['value']; ?></b></td>
+											<?php if ($total['code'] === 'order_total') { ?>
+												<td class="thick-line text-left"><b><?php echo $total['title']; ?></b></td>
+												<td class="thick-line text-right"><b><?php echo $total['value']; ?></b></td>
+											<?php } else { ?>
+												<td class="<?php echo ($total_count === 1) ? 'thick' : 'no'; ?>-line text-left"><?php echo $total['title']; ?></td>
+												<td class="<?php echo ($total_count === 1) ? 'thick' : 'no'; ?>-line text-right"><?php echo $total['value']; ?></td>
+											<?php } ?>
 										</tr>
 										<?php $total_count++; ?>
 									<?php } ?>
-									<tr>
-										<td class="no-line" width="1"></td>
-										<td class="no-line"></td>
-										<td class="no-line text-left"><b><?php echo lang('text_total'); ?></b></td>
-										<td class="no-line text-right"><b><?php echo $order_total; ?></b></td>
-									</tr>
 								</tbody>
 							</table>
 						</div>

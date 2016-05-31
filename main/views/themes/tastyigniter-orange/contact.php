@@ -41,7 +41,7 @@
 			?>
 
 			<div class="content-wrap <?php echo $class; ?>">
-				<?php if ($default_local) { ?>
+				<?php if (!empty($default_local)) { ?>
 					<div class="row">
                         <div class="col-md-7 center-block bottom-spacing text-center">
                             <div class="contact-info">
@@ -146,7 +146,7 @@
                                 center: latlng,
 								zoom: 14,
 								mapTypeId: google.maps.MapTypeId.ROADMAP
-							}
+							};
 
 							var map = new google.maps.Map(document.getElementById('map-holder'), mapOptions);
 

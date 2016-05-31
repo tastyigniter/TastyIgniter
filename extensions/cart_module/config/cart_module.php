@@ -19,7 +19,7 @@
 */
 $config['extension_meta'] = array(
 	'name'        => 'cart_module',
-	'version'     => '1.0',
+	'version'     => '2.0',
 	'type'        => 'module',
 	'title'       => 'Cart',
 	'author'      => 'SamPoyigi',
@@ -46,3 +46,13 @@ $config['extension_permission'] = array(
 	'action'      => array('manage'),
 	'description' => 'Ability to manage cart module',
 );
+
+/*
+|--------------------------------------------------------------------------
+| Extension Layout Ready (Optional)
+|--------------------------------------------------------------------------
+|
+| This extension config value tells TastyIgniter to use the extension as a layout module
+| (layout modules are displayed in the storefront inside partial areas)
+*/
+$config['layout_ready'] = TRUE;

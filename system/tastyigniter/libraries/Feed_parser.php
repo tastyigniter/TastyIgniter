@@ -78,6 +78,8 @@ class Feed_parser {
 			$rawFeed = @file_get_contents($this->feed_uri);
 		}
 
+		if (!class_exists('SimpleXmlElement', FALSE)) return FALSE;
+
 		try {
 			$xml = new SimpleXmlElement($rawFeed);
 		} catch (Exception $e) {
@@ -132,7 +134,7 @@ class Feed_parser {
 
 		// Do we need to write the cache file?
 		if ($this->write_cache_flag) {
-			if ( ! $fp = @fopen($filename, 'wb')) {
+			if ( ! $fp = @fopen($filename, FOPEN_WRITE_CREATE_DESTRUCTIVE)) {
 				echo "RSSParser error";
 				log_message('error', "Unable to write cache file: " . $filename);
 

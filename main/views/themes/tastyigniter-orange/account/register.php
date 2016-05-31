@@ -59,7 +59,7 @@
 							<?php echo form_error('security_question', '<span class="text-danger">', '</span>'); ?>
 						</div>
 						<div class="form-group">
-							<input type="text" id="security-answer" class="form-control input-lg" name="security_answer" placeholder="<?php echo lang('label_s_answer'); ?>">
+							<input type="text" id="security-answer" class="form-control input-lg" name="security_answer" value="<?php echo set_value('security_answer'); ?>" placeholder="<?php echo lang('label_s_answer'); ?>">
 							<?php echo form_error('security_answer', '<span class="text-danger">', '</span>'); ?>
 						</div>
 						<div class="form-group">

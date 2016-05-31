@@ -2,14 +2,14 @@
 
 class Admin_slideshow extends Admin_Controller {
 
-	public function index($data = array()) {
+	public function index($module = array()) {
 		$this->lang->load('slideshow/slideshow');
 
 		$this->user->restrict('Module.Slideshow');
 
-        if (empty($data)) return;
+        if (empty($module)) return;
 
-		$title = (isset($data['title'])) ? $data['title'] : $this->lang->line('_text_title');
+		$title = (isset($module['title'])) ? $module['title'] : $this->lang->line('_text_title');
 
 		$this->template->setTitle('Module: ' . $title);
 		$this->template->setHeading('Module: ' . $title);
@@ -20,8 +20,8 @@ class Admin_slideshow extends Admin_Controller {
         $data['effects'] 	= array('sliceDown', 'sliceDownLeft', 'sliceUp', 'sliceUpLeft', 'sliceUpDown', 'sliceUpDownLeft', 'fold', 'fade', 'random', 'slideInRight', 'slideInLeft', 'boxRandom', 'boxRain', 'boxRainReverse', 'boxRainGrow', 'boxRainGrowReverse');
 
         $ext_data = array();
-        if (!empty($data['ext_data']) AND is_array($data['ext_data'])) {
-            $ext_data = $data['ext_data'];
+        if (!empty($module['ext_data']) AND is_array($module['ext_data'])) {
+            $ext_data = $module['ext_data'];
         }
 
 		if ($this->input->post('display')) {

@@ -25,7 +25,7 @@ class TI_Model extends CI_Model {
     public function __construct($config = array())
     {
         $class = str_replace($this->config->item('subclass_prefix'), '', get_class($this));
-        log_message('info', $class . ' Class Initialized');
+        log_message('info', $class . '  Model Class Initialized');
     }
 }
 

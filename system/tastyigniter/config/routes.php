@@ -2,12 +2,14 @@
 
 if (APPDIR === ADMINDIR) {
     $route['default_controller'] = 'login';
+    $route['404_override'] = '';
 } else if (APPDIR === 'setup') {
     $route['default_controller'] = 'setup';
     $route['([^/]+)'] = 'setup/$1';
+    $route['404_override'] = '';
 } else {
     $default_controller = 'home';
-    $controller_exceptions = array('home', 'menus', 'reservation', 'contact', 'local', 'checkout', 'pages');
+    $controller_exceptions = array('home', 'menus', 'reservation', 'contact', 'local', 'cart', 'checkout', 'pages');
 
     $route['default_controller'] = $default_controller;
     $route['local/reviews'] = 'local/reviews';
@@ -23,10 +25,7 @@ if (APPDIR === ADMINDIR) {
     $route["^(" . implode('|', $controller_exceptions) . ")?$"] = '$1';
     $route["^(" . implode('|', $controller_exceptions) . ")?/([^/]+)$"] = '$1';
     $route["^(" . implode('|', $controller_exceptions) . ")?/([^/]+)$"] = '$1/$2';
-    $route['([^/]+)'] = 'pages';
+    $route['404_override'] = 'pages';
 }
 
-$route['404_override'] = '';
-
-/* End of file routes.php */
-/* Location: ./system/tastyigniter/config/routes.php */
+$route['translate_uri_dashes'] = FALSE;

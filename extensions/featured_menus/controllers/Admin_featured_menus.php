@@ -2,14 +2,14 @@
 
 class Admin_featured_menus extends Admin_Controller {
 
-	public function index($data = array()) {
+	public function index($module = array()) {
         $this->load->model('Featured_menus_model'); 														// load the featured menus model
         $this->lang->load('featured_menus/featured_menus');
         $this->user->restrict('Module.FeaturedMenus');
 
-        if (empty($data)) return;
+        if (empty($module)) return;
 
-        $title = (isset($data['title'])) ? $data['title'] : $this->lang->line('_text_title');
+        $title = (isset($module['title'])) ? $module['title'] : $this->lang->line('_text_title');
 
         $this->template->setTitle('Module: ' . $title);
         $this->template->setHeading('Module: ' . $title);
@@ -26,8 +26,8 @@ class Admin_featured_menus extends Admin_Controller {
         }
 
         $ext_data = array();
-        if (!empty($data['ext_data']) AND is_array($data['ext_data'])) {
-            $ext_data = $data['ext_data'];
+        if (!empty($module['ext_data']) AND is_array($module['ext_data'])) {
+            $ext_data = $module['ext_data'];
         }
 
         if ($this->input->post('featured_menu')) {
@@ -40,6 +40,14 @@ class Admin_featured_menus extends Admin_Controller {
 
         $filter['page'] = '1';
         $filter['limit'] = $this->config->item('menus_page_limit');
+
+        if ($this->input->post('title')) {
+            $data['title'] = $this->input->post('title');
+        } else if (!empty($module['title'])) {
+            $data['title'] = $module['title'];
+        } else {
+            $data['title'] = '';
+        }
 
         if ($this->input->post('limit')) {
             $data['limit'] = $this->input->post('limit');

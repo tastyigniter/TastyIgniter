@@ -2,7 +2,7 @@
     $this->template->setDocType('html5');
     $this->template->setMeta(array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'));
     $this->template->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=edge', 'type' => 'equiv'));
-    $this->template->setMeta(array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1', 'type' => 'name'));
+    $this->template->setMeta(array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no', 'type' => 'name'));
     $this->template->setFavIcon('images/favicon.ico');
     $this->template->setStyleTag('css/bootstrap.min.css', 'bootstrap-css', '10');
     $this->template->setStyleTag('css/font-awesome.min.css', 'font-awesome-css', '11');
@@ -15,7 +15,7 @@
 
     $this->template->setScriptTag('js/jquery-1.11.2.min.js', 'jquery-js', '1');
     $this->template->setScriptTag('js/bootstrap.min.js', 'bootstrap-js', '10');
-	$this->template->setScriptTag(root_url('assets/js/js.cookie.js'), 'js-cookie-js', '14');
+	$this->template->setScriptTag(assets_url('js/js.cookie.js'), 'js-cookie-js', '14');
 	$this->template->setScriptTag('js/metisMenu.min.js', 'metis-menu-js', '11');
 	$this->template->setScriptTag('js/select2.js', 'select-2-js', '12');
 	$this->template->setScriptTag('js/jquery.raty.js', 'jquery-raty-js', '13');
@@ -71,13 +71,13 @@
 	</script>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('a, span, button').tooltip({placement: 'bottom'});
-			$('select.form-control').select2();
+			$('a[title], span[title], button[title]').tooltip({placement: 'bottom'});
+			$('select.form-control').select2({minimumResultsForSearch: 10});
 
 			$('.alert').alert();
 			$('.dropdown-toggle').dropdown();
 
-			$("#list-form td:contains('Disabled')").addClass('red');
+			$("#list-form td:contains('<?php echo lang('text_disabled'); ?>')").addClass('red');
 		});
 	</script>
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -171,7 +171,7 @@
 							<li>
 								<div class="row wrap-vertical text-center">
 									<div class="col-xs-12 wrap-top">
-										<img class="img-rounded" src="<?php echo 'http://www.gravatar.com/avatar/'.$staff_avatar.'.png?s=48&d=mm'; ?>">
+										<img class="img-rounded" src="<?php echo 'https://www.gravatar.com/avatar/'.$staff_avatar.'.png?s=48&d=mm'; ?>">
 									</div>
 									<div class="col-xs-12 wrap-none wrap-top wrap-right">
 										<span><strong><?php echo $staff_name; ?></strong></span>

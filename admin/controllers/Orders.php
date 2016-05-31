@@ -66,6 +66,13 @@ class Orders extends Admin_Controller {
 			$filter['filter_type'] = $data['filter_type'] = '';
 		}
 
+		if ($this->input->get('filter_payment')) {
+			$filter['filter_payment'] = $data['filter_payment'] = $this->input->get('filter_payment');
+			$url .= 'filter_payment='.$filter['filter_payment'].'&';
+		} else {
+			$filter['filter_payment'] = $data['filter_payment'] = '';
+		}
+
 		if ($this->input->get('filter_date')) {
 			$filter['filter_date'] = $data['filter_date'] = $this->input->get('filter_date');
 			$url .= 'filter_date='.$filter['filter_date'].'&';
@@ -101,6 +108,7 @@ class Orders extends Admin_Controller {
 		$data['sort_customer'] 		= site_url('orders'.$url.'sort_by=first_name&order_by='.$order_by);
 		$data['sort_status'] 		= site_url('orders'.$url.'sort_by=status_name&order_by='.$order_by);
 		$data['sort_type'] 			= site_url('orders'.$url.'sort_by=order_type&order_by='.$order_by);
+		$data['sort_payment'] 		= site_url('orders'.$url.'sort_by=payment&order_by='.$order_by);
 		$data['sort_total'] 		= site_url('orders'.$url.'sort_by=order_total&order_by='.$order_by);
 		$data['sort_time']			= site_url('orders'.$url.'sort_by=order_time&order_by='.$order_by);
 		$data['sort_date'] 			= site_url('orders'.$url.'sort_by=date_added&order_by='.$order_by);
@@ -109,15 +117,22 @@ class Orders extends Admin_Controller {
 
 		$data['orders'] = array();
 		foreach ($results as $result) {
+			$payment_title = '--';
+			if ($payment = $this->extension->getPayment($result['payment'])) {
+				$payment_title = !empty($payment['ext_data']['title']) ? $payment['ext_data']['title']: $payment['title'];
+			}
+
 			$data['orders'][] = array(
 				'order_id'			=> $result['order_id'],
 				'location_name'		=> $result['location_name'],
 				'first_name'		=> $result['first_name'],
 				'last_name'			=> $result['last_name'],
 				'order_type' 		=> ($result['order_type'] === '1') ? $this->lang->line('text_delivery') : $this->lang->line('text_collection'),
+				'payment'			=> $payment_title,
 				'order_time'		=> mdate('%H:%i', strtotime($result['order_time'])),
-                'order_status'		=> $result['status_name'],
-                'status_color'		=> $result['status_color'],
+				'order_date'		=> day_elapsed($result['order_date']),
+				'order_status'		=> $result['status_name'],
+				'status_color'		=> $result['status_color'],
 				'order_total'		=> $this->currency->format($result['order_total']),
 				'date_added'		=> day_elapsed($result['date_added']),
 				'edit' 				=> site_url('orders/edit?id=' . $result['order_id'])
@@ -139,6 +154,15 @@ class Orders extends Admin_Controller {
 			$data['statuses'][] = array(
 				'status_id'			=> $statuses['status_id'],
 				'status_name'		=> $statuses['status_name']
+			);
+		}
+
+		$data['payments'] = array();
+		$payments = $this->extension->getPayments();
+		foreach ($payments as $payment) {
+			$data['payments'][] = array(
+				'name'  => $payment['name'],
+				'title' => $payment['title'],
 			);
 		}
 
@@ -226,7 +250,7 @@ class Orders extends Admin_Controller {
 
 			$data['payment'] = !empty($payment['ext_data']['title']) ? $payment['ext_data']['title']: $payment['title'];
 		} else {
-			$data['payment'] = 'No Payment';
+			$data['payment'] = $this->lang->line('text_no_payment');
 		}
 
 		$data['countries'] = array();
@@ -313,29 +337,24 @@ class Orders extends Admin_Controller {
 				'price' 		=> $this->currency->format($cart_item['price']),
 				'subtotal' 		=> $this->currency->format($cart_item['subtotal']),
 				'comment' 		=> $cart_item['comment'],
-				'options'		=> implode(', ', $option_data)
+				'options'		=> implode('<br /> ', $option_data)
 			);
 		}
 
 		$data['totals'] = array();
-		$totals = array('cart_total' => '1', 'coupon' => '2', 'delivery' => '3', 'taxes' => '4', 'order_total' => '5');
 		$order_totals = $this->Orders_model->getOrderTotals($order_info['order_id']);
 		foreach ($order_totals as $total) {
-			if ($total['code'] == 'delivery' AND $order_info['order_type'] === '2') {
+			if ($order_info['order_type'] === '2' AND $total['code'] == 'delivery') {
 				continue;
 			}
 
-			$priority = isset($totals[$total['code']]) ? $totals[$total['code']] : '0';
-
 			$data['totals'][] = array(
-				'title' => $total['title'],
 				'code'  => $total['code'],
+				'title' => htmlspecialchars_decode($total['title']),
 				'value' => $this->currency->format($total['value']),
-				'priority' => empty($total['priority']) ? $priority : $total['priority'],
+				'priority' => $total['priority'],
 			);
 		}
-
-		$data['totals'] = sort_array($data['totals'], 'priority');
 
 		$data['order_total'] 		= $this->currency->format($order_info['order_total']);
 		$data['total_items']		= $order_info['total_items'];
@@ -446,27 +465,21 @@ class Orders extends Admin_Controller {
 		}
 
 		$data['totals'] = array();
-		$totals = array('cart_total' => '1', 'coupon' => '2', 'delivery' => '3', 'taxes' => '4', 'order_total' => '5');
 		$order_totals = $this->Orders_model->getOrderTotals($invoice_info['order_id']);
-		foreach ($order_totals as $total) {
+		foreach ($order_totals as $name => $total) {
 			if ($total['code'] == 'delivery' AND $invoice_info['order_type'] === '2') {
 				continue;
 			}
 
-			$priority = isset($totals[$total['code']]) ? $totals[$total['code']] : '0';
-
 			$data['totals'][] = array(
-				'title' => $total['title'],
 				'code'  => $total['code'],
+				'title' => htmlspecialchars_decode($total['title']),
 				'value' => $this->currency->format($total['value']),
-				'priority' => empty($total['priority']) ? $priority : $total['priority'],
+				'priority' => $total['priority'],
 			);
 		}
 
-		$data['totals'] = sort_array($data['totals'], 'priority');
-
 		$data['order_total'] = $this->currency->format($invoice_info['order_total']);
-
 
 		if ($action === 'view') {
 			$this->load->view($this->config->item(ADMINDIR, 'default_themes').'orders_invoice', $data);

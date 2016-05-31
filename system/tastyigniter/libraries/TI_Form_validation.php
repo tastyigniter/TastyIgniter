@@ -41,7 +41,7 @@ class TI_Form_validation extends CI_Form_validation
 	 */
 	public function is_unique($str, $field)
 	{
-		sscanf($field, '%[^.].%[^.]', $table, $field);
+        sscanf($field, '%[^.].%[^.]', $table, $field);
         $query = $this->CI->db->limit(1)->get_where($table, array($field => $str));
         return $query->num_rows() === 0;
 	}
@@ -89,7 +89,7 @@ class TI_Form_validation extends CI_Form_validation
      */
     public function get_lat_lng($str, $post_item = 'address') {
         if (!empty($str) AND $post_data = $this->CI->input->post($post_item)) {
-            if (is_array($post_data) AND !empty($post_data['address_1']) AND !empty($post_data['postcode'])) {
+            if (is_array($post_data) AND !empty($post_data['address_1'])) {
                 $url  = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode(implode(", ", $post_data)) .'&sensor=false'; //encode $postcode string and construct the url query
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $url);

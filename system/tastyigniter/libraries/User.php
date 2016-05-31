@@ -36,6 +36,7 @@ class User {
     private $staff_group_id;
     private $location_id;
     private $location_name;
+    private $customer_account_access;
     private $location_access;
 	private $unread;
 
@@ -113,7 +114,7 @@ class User {
 
     public function restrict($permission, $uri = '') {
 	    // If user isn't logged in, redirect to the login page.
-	    if ( ! $this->is_logged AND $this->uri->rsegment(1) !== 'login') redirect(root_url(ADMINDIR.'/login'));
+	    if ( ! $this->is_logged AND $this->uri->rsegment(1) !== 'login') redirect(admin_url('login'));
 
 	    // Check whether the user has the proper permissions action.
 	    if (($has_permission = $this->checkPermittedActions($permission, TRUE)) === TRUE) return TRUE;
@@ -175,6 +176,10 @@ class User {
 
 	public function isStrictLocation() {
 		return ($this->location_access == '1') ? TRUE : FALSE;
+	}
+
+	public function canAccessCustomerAccount() {
+		return ($this->customer_account_access == '1') ? TRUE : FALSE;
 	}
 
     public function unreadMessageTotal() {
@@ -276,6 +281,7 @@ class User {
 		$this->staff_group_id = '';
 		$this->location_id = '';
 		$this->location_name = '';
+		$this->customer_account_access = '';
 	}
 }
 

@@ -6,6 +6,10 @@ z-index: 999;
 position: relative;
 top: 0;
 }
+.local-box-fluid .panel {
+background-color: #ED561A;
+border-color: #ED561A;
+}
 @media (min-width: 768px) {
 .local-box-fluid {
 margin: 0 auto;
@@ -13,7 +17,7 @@ padding-bottom: 15px;
 border-radius: 25px;
 position: absolute;
 left: 10%;
-top: 36%;
+top: 300px;
 width: 80%;
 }
 }
@@ -71,16 +75,9 @@ width: 100%;
 margin: 0 auto;
 }
 .postcode-group .input-group-addon {
-background-color: #11a2dc;
-border-color: #11a2dc;
-border-radius:0 5px 5px 0;
 color:#FFF;
 width: 35%;
 font-weight: bold;
-}
-.postcode-group .input-group-addon:hover {
-background-color: #0f91c4;
-border-color: #0f91c4;
 }
 .postcode-group .postcode-control {
 border-radius:5px;
@@ -94,33 +91,27 @@ float: right;
 font-size: 32px;
 line-height: 24px;
 position: absolute;
-right: 5px;
-top: 0px;
+right: 20px;
+top: 5px;
+}
+#local-alert .close {
+    margin-right: 8px;
+    margin-top: 6px;
 }
 /*** Location Search ***/
 
 /*** Location Bar ***/
 .panel-local {
-background-color: transparent;
-border: 0 solid #eee;
-border-radius: 0;
+background-color: #FFFFFF;
+border: 1px solid #dddddd;
 box-shadow: none;
 margin-bottom: 0;
 }
 .panel-local .panel-heading {
-border-color: #eee;
+border-color: #EEEEEE;
 overflow: visible;
-padding: 0;
+padding: 0 15px;
 display: block;
-}
-#local-info .panel-local .panel-heading {
-border: 0 none;
-}
-#local-info .panel-local .panel-body {
-padding-left: 15px;
-padding-right: 15px;
-background-color: #F5F5F5;
-margin: 0 -15px;
 }
 .panel-local .panel-body h2 {
 margin: 25px 0;
@@ -135,17 +126,18 @@ font-size: 24px;
 .panel-local h4 {
 font-size: 14px;
 }
+.box-divider {
+border-bottom: 1px solid #e7e7e7;
+padding-bottom: 8px;
+margin-bottom: 8px;
 }
-.panel-local .panel-heading, .panel-local .panel-body, .panel-local .panel-body > div {
+}
+.panel-local .panel-body > div {
 padding-left: 0;
 padding-right: 0;
 }
 .panel-local dl {
-color: #666;
 margin-bottom: 0;
-}
-.panel-local b, .panel-local strong {
-font-weight: 400;
 }
 .panel-local .panel-heading > div {
 line-height: 2.1;
@@ -164,8 +156,10 @@ padding-left: 0;
 .side-bar .panel-local .box-one, .side-bar .panel-local .box-two {
 margin-bottom: 20px;
 }
-
-.panel-local .box-one dl {
+.panel-local dd, .panel-local dt {
+line-height: 1.529;
+}
+.panel-local .box-one dl.box-image {
 margin-left: 95px;
 }
 .side-bar .panel-local .box-one img {

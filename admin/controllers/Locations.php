@@ -13,7 +13,6 @@ class Locations extends Admin_Controller {
         $this->load->model('Countries_model');
         $this->load->model('Extensions_model');
 
-        $this->load->library('location'); // load the location library
         $this->load->library('permalink');
         $this->load->library('pagination');
 
@@ -152,7 +151,6 @@ class Locations extends Admin_Controller {
 			'links'		=> $this->pagination->create_links()
 		);
 
-        $this->template->setPartials(array('header', 'footer'));
         $this->template->render('locations', $data);
     }
 
@@ -174,9 +172,9 @@ class Locations extends Admin_Controller {
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('locations')));
 
-		$this->template->setStyleTag(root_url('assets/js/datepicker/bootstrap-timepicker.css'), 'bootstrap-timepicker-css');
-		$this->template->setScriptTag(root_url("assets/js/datepicker/bootstrap-timepicker.js"), 'bootstrap-timepicker-js');
-		$this->template->setScriptTag(root_url("assets/js/jquery-sortable.js"), 'jquery-sortable-js');
+		$this->template->setStyleTag(assets_url('js/datepicker/bootstrap-timepicker.css'), 'bootstrap-timepicker-css');
+		$this->template->setScriptTag(assets_url("js/datepicker/bootstrap-timepicker.js"), 'bootstrap-timepicker-js');
+		$this->template->setScriptTag(assets_url("js/jquery-sortable.js"), 'jquery-sortable-js');
 
 		if ($this->config->item('maps_api_key')) {
 			$data['map_key'] = '&key='. $this->config->item('maps_api_key');
@@ -206,12 +204,12 @@ class Locations extends Admin_Controller {
 		$data['description'] 			= $location_info['description'];
 		$data['location_lat'] 			= $location_info['location_lat'];
 		$data['location_lng'] 			= $location_info['location_lng'];
-		$data['location_status'] 		= $location_info['location_status'];
-		$data['last_order_time'] 		= $location_info['last_order_time'];
+		$data['location_status'] 		= isset($location_info['location_status']) ? $location_info['location_status'] : '1';
 		$data['offer_delivery'] 		= $location_info['offer_delivery'];
 		$data['offer_collection'] 		= $location_info['offer_collection'];
-		$data['delivery_time'] 			= $location_info['delivery_time'];
-		$data['collection_time'] 		= $location_info['collection_time'];
+		$data['delivery_time'] 			= isset($location_info['delivery_time']) ? $location_info['delivery_time'] : '0';
+		$data['collection_time'] 		= isset($location_info['collection_time']) ? $location_info['collection_time'] : '0';
+		$data['last_order_time'] 		= isset($location_info['last_order_time']) ? $location_info['last_order_time'] : '0';
 		$data['reservation_time_interval'] 	= $location_info['reservation_time_interval'];
 		$data['reservation_stay_time'] 		= $location_info['reservation_stay_time'];
 
@@ -229,8 +227,8 @@ class Locations extends Admin_Controller {
             $data['location_image_name'] = basename($location_info['location_image']);
             $data['location_image_url'] = $this->Image_tool_model->resize($location_info['location_image']);
         } else {
-            $data['location_image'] = 'data/no_photo.png';
-            $data['location_image_name'] = 'no_photo.png';
+            $data['location_image'] = '';
+            $data['location_image_name'] = '';
             $data['location_image_url'] = $this->Image_tool_model->resize('data/no_photo.png');
         }
 
@@ -240,10 +238,8 @@ class Locations extends Admin_Controller {
 			$data['country_id'] = $this->config->item('country_id');
 		}
 
-		$weekdays_abbr = array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun');
-		$weekdays = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
-		$data['weekdays_abbr'] = $weekdays_abbr;
-		$data['weekdays'] = $weekdays;
+		$data['weekdays_abbr'] = $weekdays_abbr = array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun');
+		$data['weekdays'] = $weekdays = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
 
 		$options = array();
 		if (!empty($location_info['options'])) {
@@ -278,7 +274,7 @@ class Locations extends Admin_Controller {
 
 		if ($this->input->post('daily_hours')) {
 			$data['daily_hours'] = $this->input->post('daily_hours');
-		} else if (isset($options['opening_hours']['daily_days']) AND is_array($options['opening_hours']['daily_days'])) {
+		} else if (isset($options['opening_hours']['daily_hours']) AND is_array($options['opening_hours']['daily_hours'])) {
 			$daily_hours = $options['opening_hours']['daily_hours'];
 			$data['daily_hours']['open'] 	= (empty($daily_hours['open']) OR $daily_hours['open'] === '00:00:00') ? '12:00 AM' : mdate('%h:%i %a', strtotime($daily_hours['open']));
 			$data['daily_hours']['close'] 	= (empty($daily_hours['close']) OR $daily_hours['close'] === '00:00:00') ? '11:59 PM' : mdate('%h:%i %a', strtotime($daily_hours['close']));
@@ -310,6 +306,78 @@ class Locations extends Admin_Controller {
 			);
 		}
 
+		if ($this->input->post('delivery_type')) {
+			$data['delivery_type'] = $this->input->post('delivery_type');
+		} else if (isset($options['opening_hours']['delivery_type'])) {
+			$data['delivery_type'] = $options['opening_hours']['delivery_type'];
+		} else {
+			$data['delivery_type'] = '0';
+		}
+
+		if ($this->input->post('delivery_days')) {
+			$data['delivery_days'] = $this->input->post('delivery_days');
+		} else if (isset($options['opening_hours']['delivery_days']) AND is_array($options['opening_hours']['delivery_days'])) {
+			$data['delivery_days'] = $options['opening_hours']['delivery_days'];
+		} else if (!$this->input->post('delivery_days') AND $data['delivery_type'] === '1' AND !isset($options['opening_hours']['delivery_days'])) {
+			$data['delivery_days'] = array();
+		} else {
+			$data['delivery_days'] = array('0', '1', '2', '3', '4', '5', '6');
+		}
+
+		if ($this->input->post('delivery_hours')) {
+			$data['delivery_hours'] = $this->input->post('delivery_hours');
+		} else if (isset($options['opening_hours']['delivery_hours']) AND is_array($options['opening_hours']['delivery_hours'])) {
+			$delivery_hours = $options['opening_hours']['delivery_hours'];
+			$data['delivery_hours']['open'] 	= (empty($delivery_hours['open']) OR $delivery_hours['open'] === '00:00:00') ? '12:00 AM' : mdate('%h:%i %a', strtotime($delivery_hours['open']));
+			$data['delivery_hours']['close'] 	= (empty($delivery_hours['close']) OR $delivery_hours['close'] === '00:00:00') ? '11:59 PM' : mdate('%h:%i %a', strtotime($delivery_hours['close']));
+		} else {
+			$data['delivery_hours'] = array('open' => '12:00 AM', 'close' => '11:59 PM');
+		}
+
+		if ($this->input->post('collection_type')) {
+			$data['collection_type'] = $this->input->post('collection_type');
+		} else if (isset($options['opening_hours']['collection_type'])) {
+			$data['collection_type'] = $options['opening_hours']['collection_type'];
+		} else {
+			$data['collection_type'] = '0';
+		}
+
+		if ($this->input->post('collection_days')) {
+			$data['collection_days'] = $this->input->post('collection_days');
+		} else if (isset($options['opening_hours']['collection_days']) AND is_array($options['opening_hours']['collection_days'])) {
+			$data['collection_days'] = $options['opening_hours']['collection_days'];
+		} else if (!$this->input->post('collection_days') AND $data['collection_type'] === '1' AND !isset($options['opening_hours']['collection_days'])) {
+			$data['collection_days'] = array();
+		} else {
+			$data['collection_days'] = array('0', '1', '2', '3', '4', '5', '6');
+		}
+
+		if ($this->input->post('collection_hours')) {
+			$data['collection_hours'] = $this->input->post('collection_hours');
+		} else if (isset($options['opening_hours']['collection_hours']) AND is_array($options['opening_hours']['collection_hours'])) {
+			$collection_hours = $options['opening_hours']['collection_hours'];
+			$data['collection_hours']['open'] 	= (empty($collection_hours['open']) OR $collection_hours['open'] === '00:00:00') ? '12:00 AM' : mdate('%h:%i %a', strtotime($collection_hours['open']));
+			$data['collection_hours']['close'] 	= (empty($collection_hours['close']) OR $collection_hours['close'] === '00:00:00') ? '11:59 PM' : mdate('%h:%i %a', strtotime($collection_hours['close']));
+		} else {
+			$data['collection_hours'] = array('open' => '12:00 AM', 'close' => '11:59 PM');
+		}
+
+		if ($this->input->post('future_orders')) {
+			$data['future_orders'] = $this->input->post('future_orders');
+		} else if (isset($options['future_orders'])) {
+			$data['future_orders'] = $options['future_orders'];
+		} else {
+			$data['future_orders'] = $this->config->item('future_orders');
+		}
+
+		if ($this->input->post('future_order_days')) {
+			$data['future_order_days'] = $this->input->post('future_order_days');
+		} else if (isset($options['future_order_days'])) {
+			$data['future_order_days'] = $options['future_order_days'];
+		} else {
+			$data['future_order_days'] = array('delivery' => '5', 'collection' => '5');
+		}
+
 		if ($this->input->post('payments')) {
 			$data['payments'] = $this->input->post('payments');
 		} else if (isset($options['payments'])) {
@@ -326,6 +394,10 @@ class Locations extends Admin_Controller {
 
 		$area_colors = array('#F16745', '#FFC65D', '#7BC8A4', '#4CC3D9', '#93648D', '#404040', '#F16745', '#FFC65D', '#7BC8A4', '#4CC3D9', '#93648D', '#404040', '#F16745', '#FFC65D', '#7BC8A4', '#4CC3D9', '#93648D', '#404040', '#F16745', '#FFC65D');
 		$data['area_colors'] = json_encode($area_colors);
+		$data['delivery_charge_conditions'] = array(
+			'all'   => $this->lang->line('text_all_orders'),
+			'above' => $this->lang->line('text_above_order_total'),
+		);
 
 		if ($this->input->post('delivery_areas')) {
 			$delivery_areas = $this->input->post('delivery_areas');
@@ -337,6 +409,16 @@ class Locations extends Admin_Controller {
 
 		$data['delivery_areas'] = array();
 		foreach ($delivery_areas as $key => $area) {
+
+			// backward compatibility
+			if (isset($area['charge']) AND is_string($area['charge'])) {
+				$area['charge'] = array(array(
+					'amount' => $area['charge'],
+					'condition' => 'above',
+					'total' => (isset($area['min_amount'])) ? $area['min_amount'] : '',
+				));
+			}
+
 			$data['delivery_areas'][] = array(
 				'shape'			=> (isset($area['shape'])) ? htmlspecialchars($area['shape']) : '',
 				'circle'		=> (isset($area['circle'])) ? htmlspecialchars($area['circle']) : '',
@@ -344,8 +426,7 @@ class Locations extends Admin_Controller {
 				'name'			=> (isset($area['name'])) ? $area['name'] : '',
 				'type'			=> (isset($area['type'])) ? $area['type'] : 'shape',
 				'color'			=> (isset($area_colors[$key-1])) ? $area_colors[$key-1] : '#F16745',
-				'charge'		=> (isset($area['charge'])) ? str_replace('.00', '', $area['charge']) : '',
-				'min_amount'	=> (isset($area['min_amount'])) ? str_replace('.00', '', $area['min_amount']) : ''
+				'charge'		=> (empty($area['charge'])) ? array(array('amount' => '', 'condition' => '', 'total' => '')) : $area['charge'],
 			);
 		}
 
@@ -479,8 +560,11 @@ class Locations extends Admin_Controller {
 		$this->form_validation->set_rules('description', 'lang:label_description', 'xss_clean|trim|min_length[2]|max_length[3028]');
 		$this->form_validation->set_rules('offer_delivery', 'lang:label_offer_delivery', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('offer_collection', 'lang:label_offer_collection', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('ready_time', 'lang:label_delivery_time', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('delivery_time', 'lang:label_delivery_time', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('collection_time', 'lang:label_collection_time', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('last_order_time', 'lang:label_last_order_time', 'xss_clean|trim|integer');
+		$this->form_validation->set_rules('future_orders', 'lang:label_future_orders', 'xss_clean|trim|required|integer');
+		$this->form_validation->set_rules('future_order_days[]', 'lang:label_future_order_days', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('payments[]', 'lang:label_payments', 'xss_clean|trim');
 		$this->form_validation->set_rules('tables[]', 'lang:label_tables', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('reservation_time_interval', 'lang:label_interval', 'xss_clean|trim|integer');
@@ -488,19 +572,19 @@ class Locations extends Admin_Controller {
 		$this->form_validation->set_rules('location_status', 'lang:label_status', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('permalink[permalink_id]', 'lang:label_permalink_id', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('permalink[slug]', 'lang:label_permalink_slug', 'xss_clean|trim|alpha_dash|max_length[255]');
-        $this->form_validation->set_rules('location_image', 'lang:label_image', 'xss_clean|trim|required');
+        $this->form_validation->set_rules('location_image', 'lang:label_image', 'xss_clean|trim');
 
 		$this->form_validation->set_rules('opening_type', 'lang:label_opening_type', 'xss_clean|trim|required|alpha_dash|max_length[10]');
 		if ($this->input->post('opening_type') === 'daily' AND $this->input->post('daily_days')) {
 			$this->form_validation->set_rules('daily_days[]', 'lang:label_opening_days', 'xss_clean|trim|required|integer');
-			$this->form_validation->set_rules('daily_hours[open]', 'lang:label_open_hour', 'xss_clean|trim|required|valid_time|callback__less_time['.$_POST['daily_hours']['close'].']');
+			$this->form_validation->set_rules('daily_hours[open]', 'lang:label_open_hour', 'xss_clean|trim|required|valid_time');
 			$this->form_validation->set_rules('daily_hours[close]', 'lang:label_close_hour', 'xss_clean|trim|required|valid_time');
 		}
 
 		if ($this->input->post('opening_type') === 'flexible' AND $this->input->post('flexible_hours')) {
 			foreach ($this->input->post('flexible_hours') as $key => $value) {
 				$this->form_validation->set_rules('flexible_hours['.$key.'][day]', 'lang:label_opening_days', 'xss_clean|trim|required|numeric');
-				$this->form_validation->set_rules('flexible_hours['.$key.'][open]', 'lang:label_open_hour', 'xss_clean|trim|required|valid_time|callback__less_time['.$_POST['flexible_hours'][$key]['close'].']');
+				$this->form_validation->set_rules('flexible_hours['.$key.'][open]', 'lang:label_open_hour', 'xss_clean|trim|required|valid_time');
 				$this->form_validation->set_rules('flexible_hours['.$key.'][close]', 'lang:label_close_hour', 'xss_clean|trim|required|valid_time');
 				$this->form_validation->set_rules('flexible_hours['.$key.'][status]', 'lang:label_opening_status', 'xss_clean|trim|required|integer');
 			}
@@ -508,13 +592,23 @@ class Locations extends Admin_Controller {
 
 		if ($this->input->post('delivery_areas')) {
 			foreach ($this->input->post('delivery_areas') as $key => $value) {
-				$this->form_validation->set_rules('delivery_areas['.$key.'][shape]', 'lang:label_area_shape', 'trim|required');
-				$this->form_validation->set_rules('delivery_areas['.$key.'][circle]', 'lang:label_area_circle', 'trim|required');
-				$this->form_validation->set_rules('delivery_areas['.$key.'][vertices]', 'lang:label_area_vertices', 'trim|required');
-				$this->form_validation->set_rules('delivery_areas['.$key.'][type]', 'lang:label_area_type', 'xss_clean|trim|required');
-				$this->form_validation->set_rules('delivery_areas['.$key.'][name]', 'lang:label_area_name', 'xss_clean|trim|required');
-				$this->form_validation->set_rules('delivery_areas['.$key.'][charge]', 'lang:label_area_charge', 'xss_clean|trim|required|numeric');
-				$this->form_validation->set_rules('delivery_areas['.$key.'][min_amount]', 'lang:label_area_min_amount', 'xss_clean|trim|required|numeric');
+				$this->form_validation->set_rules('delivery_areas['.$key.'][shape]', '['.$key.'] '.$this->lang->line('label_area_shape'), 'trim|required');
+				$this->form_validation->set_rules('delivery_areas['.$key.'][circle]', '['.$key.'] '.$this->lang->line('label_area_circle'), 'trim|required');
+				$this->form_validation->set_rules('delivery_areas['.$key.'][vertices]', '['.$key.'] '.$this->lang->line('label_area_vertices'), 'trim|required');
+				$this->form_validation->set_rules('delivery_areas['.$key.'][type]', '['.$key.'] '.$this->lang->line('label_area_type'), 'xss_clean|trim|required');
+				$this->form_validation->set_rules('delivery_areas['.$key.'][name]', '['.$key.'] '.$this->lang->line('label_area_name'), 'xss_clean|trim|required');
+
+				if ($this->input->post('delivery_areas['.$key.'][charge]')) {
+					foreach ($this->input->post('delivery_areas['.$key.'][charge]') as $k => $v) {
+						$this->form_validation->set_rules('delivery_areas[' . $key . '][charge][' . $k . '][amount]', '['.$key.'] '.$this->lang->line('label_area_charge'), 'xss_clean|trim|required|numeric');
+						$this->form_validation->set_rules('delivery_areas[' . $key . '][charge][' . $k . '][condition]', '['.$key.'] '.$this->lang->line('label_charge_condition'), 'xss_clean|trim|required|alpha_dash');
+						$this->form_validation->set_rules('delivery_areas[' . $key . '][charge][' . $k . '][total]', '[' . $key . '] ' . $this->lang->line('label_area_min_amount'), 'xss_clean|trim|numeric');
+
+						if ($this->input->post('delivery_areas[' . $key . '][charge][' . $k . '][condition]') !== 'all') {
+							$this->form_validation->set_rules('delivery_areas[' . $key . '][charge][' . $k . '][total]', '[' . $key . '] ' . $this->lang->line('label_area_min_amount'), 'required');
+						}
+					}
+				}
 			}
 		}
 
@@ -536,18 +630,6 @@ class Locations extends Admin_Controller {
 		} else {
 			return FALSE;
 		}
-	}
-
-	public function _less_time($open, $close) {
-		$unix_open = strtotime($open);
-		$unix_close = strtotime($close);
-
-		if ($unix_open >= $unix_close) {
-			$this->form_validation->set_message('_less_time', $this->lang->line('error_less_time'));
-			return FALSE;
-		}
-
-		return TRUE;
 	}
 }
 

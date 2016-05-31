@@ -2,13 +2,13 @@
 
 class Admin_newsletter extends Admin_Controller {
 
-	public function index($data = array()) {
+	public function index($module = array()) {
         $this->lang->load('newsletter/newsletter');
 
         $this->user->restrict('Module.Newsletter');
 
-        if (!empty($data)) {
-            $title = (isset($data['title'])) ? $data['title'] : $this->lang->line('_text_title');
+        if (!empty($module)) {
+            $title = (isset($module['title'])) ? $module['title'] : $this->lang->line('_text_title');
 
             $this->template->setTitle('Module: ' . $title);
             $this->template->setHeading('Module: ' . $title);
@@ -18,8 +18,8 @@ class Admin_newsletter extends Admin_Controller {
 
             if ($this->input->post('status')) {
                 $data['status'] = $this->input->post('status');
-            } else if (!empty($data['ext_data']['status'])) {
-                $data['status'] = $data['ext_data']['status'];
+            } else if (!empty($module['ext_data']['status'])) {
+                $data['status'] = $module['ext_data']['status'];
             } else {
                 $data['status'] = '0';
             }

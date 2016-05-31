@@ -50,7 +50,7 @@
 							<div class="col-xs-6">
 								<address>
 									<span class="text-muted"><?php echo lang('text_customer'); ?>:</span><br>
-									<strong><?php echo $first_name; ?> <?php echo $first_name; ?></strong><br>
+									<strong><?php echo $first_name; ?> <?php echo $last_name; ?></strong><br>
 									<?php echo $email; ?>
 								</address>
 								<?php if ($check_order_type === '1') { ?>
@@ -117,8 +117,13 @@
 									<tr>
 										<td class="<?php echo ($total_count === 1) ? 'thick' : 'no'; ?>-line"></td>
 										<td class="<?php echo ($total_count === 1) ? 'thick' : 'no'; ?>-line"></td>
-										<td class="<?php echo ($total_count === 1) ? 'thick' : 'no'; ?>-line text-left"><b><?php echo $total['title']; ?></b></td>
-										<td class="<?php echo ($total_count === 1) ? 'thick' : 'no'; ?>-line text-right"><b><?php echo $total['value']; ?></b></td>
+										<?php if ($total['code'] === 'order_total') { ?>
+											<td class="thick-line text-left"><b><?php echo $total['title']; ?></b></td>
+											<td class="thick-line text-right"><b><?php echo $total['value']; ?></b></td>
+										<?php } else { ?>
+											<td class="<?php echo ($total_count === 1) ? 'thick' : 'no'; ?>-line text-left"><?php echo $total['title']; ?></td>
+											<td class="<?php echo ($total_count === 1) ? 'thick' : 'no'; ?>-line text-right"><?php echo $total['value']; ?></td>
+										<?php } ?>
 									</tr>
 									<?php $total_count++; ?>
 								<?php } ?>

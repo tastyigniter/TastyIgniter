@@ -32,13 +32,16 @@ class Admin_Controller extends Base_Controller {
 
 		log_message('info', 'Admin Controller Class Initialized');
 
+        // Load template library
+        $this->load->library('template');
+
         $this->load->library('user');
 
 		$uri = $this->uri->rsegment(1);
         if (!$this->user->isLogged() AND $uri !== 'login' AND $uri !== 'logout') {
             $this->alert->set('danger', $this->lang->line('alert_user_not_logged_in'));
             $prepend = empty($uri) ? '' : '?redirect=' . current_url();
-            redirect(root_url(ADMINDIR.'/login'.$prepend));
+            redirect(admin_url('login'.$prepend));
         }
     }
 }

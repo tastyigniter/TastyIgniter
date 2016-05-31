@@ -189,6 +189,12 @@ class Customers_model extends TI_Model {
 		if ($query->num_rows() > 0) {
 			foreach ($query->result_array() as $row)
 				$result[] = ($type === 'email') ? $row['email'] : $row['customer_id'];
+
+			$this->load->model('Extensions_model');
+			$newsletter = $this->Extensions_model->getModule('newsletter');
+			if ($type === 'email' AND !empty($newsletter['ext_data']['subscribe_list'])) {
+				$result = array_merge($result, $newsletter['ext_data']['subscribe_list']);
+			}
 		}
 
 		return $result;
@@ -249,7 +255,7 @@ class Customers_model extends TI_Model {
 
 					$this->load->model('Mail_templates_model');
 					$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'),
-					                                                              'password_reset');
+																				  'password_reset');
 
 					$this->sendMail($row['email'], $mail_template, $mail_data);
 
@@ -349,16 +355,8 @@ class Customers_model extends TI_Model {
 		}
 
 		if ($query === TRUE AND is_numeric($customer_id)) {
-			if ( ! empty($save['address'])) {
-				$this->load->model('Addresses_model');
-
-				foreach ($save['address'] as $address) {
-					if ( ! empty($address['address_id'])) {
-						$this->Addresses_model->saveAddress($customer_id, $address['address_id'], $address);
-					} else {
-						$this->Addresses_model->saveAddress($customer_id, '', $address);
-					}
-				}
+			if (isset($save['address'])) {
+				$this->saveAddress($customer_id, $save['address']);
 			}
 
 			if ($action === 'added') {
@@ -427,6 +425,21 @@ class Customers_model extends TI_Model {
 		}
 
 		return $query;
+	}
+
+	public function saveAddress($customer_id, $addresses = array()) {
+		if ( is_numeric($customer_id) AND ! empty($addresses)) {
+			$this->db->where('customer_id', $customer_id);
+			$this->db->delete('addresses');
+
+			$this->load->model('Addresses_model');
+
+			foreach ($addresses as $key => $address) {
+				if (!empty($address['address_1'])) {
+					$this->Addresses_model->saveAddress($customer_id, '', $address);
+				}
+			}
+		}
 	}
 
 	public function deleteCustomer($customer_id) {

@@ -6,7 +6,7 @@
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014 - 2015, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2016, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (http://ellislab.com/)
- * @copyright	Copyright (c) 2014 - 2015, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link	http://codeigniter.com
+ * @link    https://codeigniter.com
  * @since	Version 1.3.0
  * @filesource
  */
@@ -48,7 +48,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Drivers
  * @category	Database
  * @author		EllisLab Dev Team
- * @link		http://codeigniter.com/user_guide/database/
+ * @link           https://codeigniter.com/user_guide/database/
  */
 class CI_DB_mysqli_driver extends CI_DB {
 
@@ -84,7 +84,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 	 *
 	 * @var	bool
 	 */
-	public $stricton = FALSE;
+	public $stricton;
 
 	// --------------------------------------------------------------------
 
@@ -98,11 +98,21 @@ class CI_DB_mysqli_driver extends CI_DB {
 	// --------------------------------------------------------------------
 
 	/**
+	 * MySQLi object
+	 *
+	 * Has to be preserved without being assigned to $conn_id.
+	 *
+	 * @var    MySQLi
+	 */
+	protected $_mysqli;
+
+	// --------------------------------------------------------------------
+
+	/**
 	 * Database connection
 	 *
 	 * @param	bool	$persistent
 	 * @return	object
-	 * @todo	SSL support
 	 */
 	public function db_connect($persistent = FALSE)
 	{
@@ -123,17 +133,82 @@ class CI_DB_mysqli_driver extends CI_DB {
 		}
 
 		$client_flags = ($this->compress === TRUE) ? MYSQLI_CLIENT_COMPRESS : 0;
-		$mysqli = mysqli_init();
+		$this->_mysqli = mysqli_init();
 
-		$mysqli->options(MYSQLI_OPT_CONNECT_TIMEOUT, 10);
+		$this->_mysqli->options(MYSQLI_OPT_CONNECT_TIMEOUT, 10);
 
-		if ($this->stricton)
+		if (isset($this->stricton))
 		{
-			$mysqli->options(MYSQLI_INIT_COMMAND, 'SET SESSION sql_mode="STRICT_ALL_TABLES"');
+			if ($this->stricton) {
+				$this->_mysqli->options(MYSQLI_INIT_COMMAND, 'SET SESSION sql_mode = CONCAT(@@sql_mode, ",", "STRICT_ALL_TABLES")');
+			} else {
+				$this->_mysqli->options(MYSQLI_INIT_COMMAND,
+					'SET SESSION sql_mode =
+					REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+					@@sql_mode,
+					"STRICT_ALL_TABLES,", ""),
+					",STRICT_ALL_TABLES", ""),
+					"STRICT_ALL_TABLES", ""),
+					"STRICT_TRANS_TABLES,", ""),
+					",STRICT_TRANS_TABLES", ""),
+					"STRICT_TRANS_TABLES", "")'
+				);
+			}
 		}
 
-		return @$mysqli->real_connect($hostname, $this->username, $this->password, $this->database, $port, $socket, $client_flags)
-			? $mysqli : FALSE;
+		if (is_array($this->encrypt)) {
+			$ssl = array();
+			empty($this->encrypt['ssl_key']) OR $ssl['key'] = $this->encrypt['ssl_key'];
+			empty($this->encrypt['ssl_cert']) OR $ssl['cert'] = $this->encrypt['ssl_cert'];
+			empty($this->encrypt['ssl_ca']) OR $ssl['ca'] = $this->encrypt['ssl_ca'];
+			empty($this->encrypt['ssl_capath']) OR $ssl['capath'] = $this->encrypt['ssl_capath'];
+			empty($this->encrypt['ssl_cipher']) OR $ssl['cipher'] = $this->encrypt['ssl_cipher'];
+
+			if (!empty($ssl)) {
+				if (isset($this->encrypt['ssl_verify'])) {
+					if ($this->encrypt['ssl_verify']) {
+						defined('MYSQLI_OPT_SSL_VERIFY_SERVER_CERT') && $this->_mysqli->options(MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, TRUE);
+					}
+					// Apparently (when it exists), setting MYSQLI_OPT_SSL_VERIFY_SERVER_CERT
+					// to FALSE didn't do anything, so PHP 5.6.16 introduced yet another
+					// constant ...
+					//
+					// https://secure.php.net/ChangeLog-5.php#5.6.16
+					// https://bugs.php.net/bug.php?id=68344
+					elseif (defined('MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT')) {
+						$this->_mysqli->options(MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT, TRUE);
+					}
+				}
+
+				$client_flags |= MYSQLI_CLIENT_SSL;
+				$this->_mysqli->ssl_set(
+					isset($ssl['key']) ? $ssl['key'] : NULL,
+					isset($ssl['cert']) ? $ssl['cert'] : NULL,
+					isset($ssl['ca']) ? $ssl['ca'] : NULL,
+					isset($ssl['capath']) ? $ssl['capath'] : NULL,
+					isset($ssl['cipher']) ? $ssl['cipher'] : NULL
+				);
+			}
+		}
+
+		if (@$this->_mysqli->real_connect($hostname, $this->username, $this->password, $this->database, $port, $socket, $client_flags)) {
+			// Prior to version 5.7.3, MySQL silently downgrades to an unencrypted connection if SSL setup fails
+			if (
+				($client_flags & MYSQLI_CLIENT_SSL)
+				&& version_compare($this->_mysqli->client_info, '5.7.3', '<=')
+				&& empty($this->_mysqli->query("SHOW STATUS LIKE 'ssl_cipher'")->fetch_object()->Value)
+			) {
+				$this->_mysqli->close();
+				$message = 'MySQLi was configured for an SSL connection, but got an unencrypted connection instead!';
+				log_message('error', $message);
+
+				return ($this->db->db_debug) ? $this->db->display_error($message, '', TRUE) : FALSE;
+			}
+
+			return $this->_mysqli;
+		}
+
+		return FALSE;
 	}
 
 	// --------------------------------------------------------------------
@@ -248,22 +323,10 @@ class CI_DB_mysqli_driver extends CI_DB {
 	/**
 	 * Begin Transaction
 	 *
-	 * @param	bool	$test_mode
 	 * @return	bool
 	 */
-	public function trans_begin($test_mode = FALSE)
+	protected function _trans_begin()
 	{
-		// When transactions are nested we only begin/commit/rollback the outermost ones
-		if ( ! $this->trans_enabled OR $this->_trans_depth > 0)
-		{
-			return TRUE;
-		}
-
-		// Reset the transaction failure flag.
-		// If the $test_mode flag is set to TRUE transactions will be rolled back
-		// even if the queries produce a successful result.
-		$this->_trans_failure = ($test_mode === TRUE);
-
 		$this->conn_id->autocommit(FALSE);
 		return is_php('5.5')
 			? $this->conn_id->begin_transaction()
@@ -277,14 +340,8 @@ class CI_DB_mysqli_driver extends CI_DB {
 	 *
 	 * @return	bool
 	 */
-	public function trans_commit()
+	protected function _trans_commit()
 	{
-		// When transactions are nested we only begin/commit/rollback the outermost ones
-		if ( ! $this->trans_enabled OR $this->_trans_depth > 0)
-		{
-			return TRUE;
-		}
-
 		if ($this->conn_id->commit())
 		{
 			$this->conn_id->autocommit(TRUE);
@@ -301,14 +358,8 @@ class CI_DB_mysqli_driver extends CI_DB {
 	 *
 	 * @return	bool
 	 */
-	public function trans_rollback()
+	protected function _trans_rollback()
 	{
-		// When transactions are nested we only begin/commit/rollback the outermost ones
-		if ( ! $this->trans_enabled OR $this->_trans_depth > 0)
-		{
-			return TRUE;
-		}
-
 		if ($this->conn_id->rollback())
 		{
 			$this->conn_id->autocommit(TRUE);
@@ -438,11 +489,11 @@ class CI_DB_mysqli_driver extends CI_DB {
 	 */
 	public function error()
 	{
-		if ( ! empty($this->conn_id->connect_errno))
+		if (!empty($this->_mysqli->connect_errno))
 		{
 			return array(
-				'code' => $this->conn_id->connect_errno,
-				'message' => is_php('5.2.9') ? $this->conn_id->connect_error : mysqli_connect_error()
+				'code'    => $this->_mysqli->connect_errno,
+				'message' => is_php('5.2.9') ? $this->_mysqli->connect_error : mysqli_connect_error(),
 			);
 		}
 

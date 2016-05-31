@@ -17,6 +17,8 @@ class Security_questions extends Admin_Controller {
         $this->template->setHeading($this->lang->line('text_heading'));
 		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 
+		$this->template->setScriptTag(assets_url('js/jquery-sortable.js'), 'jquery-sortable-js');
+
 		if ($this->input->post() AND $this->_updateSecurityQuestion() === TRUE){
 			redirect('security_questions');
 		}

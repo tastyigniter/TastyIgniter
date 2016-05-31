@@ -3,9 +3,15 @@
 class Reservation_module extends Main_Controller {
 
 	public function index() {
+        if ($this->config->item('reservation_mode') !== '1') {
+            $this->alert->set('alert', $this->lang->line('alert_reservation_disabled'));
+            redirect('home');
+        }
+
         $this->load->model('Reservations_model');
 
         $this->load->library('location'); // load the location library
+        $this->location->initialize();
 
         $this->lang->load('reservation_module/reservation_module');
 
@@ -14,15 +20,10 @@ class Reservation_module extends Main_Controller {
 		}
 
         $this->template->setStyleTag(extension_url('reservation_module/views/stylesheet.css'), 'reservation-module-css', '154000');
-        $this->template->setStyleTag(base_url('assets/js/datepicker/datepicker.css'), 'datepicker-css', '124000');
-        $this->template->setScriptTag(base_url("assets/js/datepicker/bootstrap-datepicker.js"), 'bootstrap-datepicker-js', '12000');
-        $this->template->setStyleTag(base_url('assets/js/datepicker/bootstrap-timepicker.css'), 'bootstrap-timepicker-css', '124440');
-        $this->template->setScriptTag(base_url("assets/js/datepicker/bootstrap-timepicker.js"), 'bootstrap-timepicker-js', '12550');
-
-        if ($this->config->item('reservation_mode') !== '1') {
-            $this->alert->set('alert', $this->lang->line('alert_reservation_disabled'));
-            redirect('home');
-        }
+        $this->template->setStyleTag(assets_url('js/datepicker/datepicker.css'), 'datepicker-css', '124000');
+        $this->template->setScriptTag(assets_url("js/datepicker/bootstrap-datepicker.js"), 'bootstrap-datepicker-js', '12000');
+        $this->template->setStyleTag(assets_url('js/datepicker/bootstrap-timepicker.css'), 'bootstrap-timepicker-css', '124440');
+        $this->template->setScriptTag(assets_url("js/datepicker/bootstrap-timepicker.js"), 'bootstrap-timepicker-js', '12550');
 
         $date_format = ($this->config->item('date_format')) ? $this->config->item('date_format') : '%d %M %y';
         $time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
@@ -46,12 +47,13 @@ class Reservation_module extends Main_Controller {
             $date_format = '%d-%m-%Y';
         }
 
-		$data['current_url'] 			= page_url().'?action=find_table&';
+        $page_url = $this->uri->rsegment('1') === 'reservation' ? page_url() : site_url('reservation');
+        $data['current_url'] 			= $page_url.'?action=find_table&';
 		$data['reset_url'] 				= site_url('reservation');
 
         $data['find_table_action'] = 'find_table';
 
-        if ($this->input->get() AND ($response = $this->findTable()) !== FALSE) {
+        if ($this->uri->rsegment('1') === 'reservation' AND $this->input->get() AND ($response = $this->findTable()) !== FALSE) {
             if ($this->input->get('action') === 'select_time' AND $this->input->get('selected_time')) {
                 $data['find_table_action'] = 'view_summary';
                 $data['current_url'] = page_url().'?action=select_time&';
@@ -106,11 +108,15 @@ class Reservation_module extends Main_Controller {
 		}
 
         $data['reservation_times'] = array();
-        $start_time = mdate('%H:%i', strtotime($this->location->openingTime()) + $this->location->getReservationInterval() * 60);
+        $opening_time = mdate("{$date_format} {$time_format}", $this->location->workingTime('opening', 'open', FALSE));
+        $closing_time = mdate("{$date_format} {$time_format}", $this->location->workingTime('opening', 'close', FALSE));
+        $start_time = mdate('%H:%i', strtotime($opening_time) + $this->location->getReservationInterval() * 60);
 
-        $reservation_times = time_range($start_time, $this->location->closingTime(), $this->location->getReservationInterval());    // retrieve the location delivery times from location library
-        foreach ($reservation_times as $key => $value) {                                            // loop through delivery times
-            $data['reservation_times'][$value] = mdate($time_format, strtotime($value));
+        $reservation_times = time_range($start_time, $closing_time, $this->location->getReservationInterval());    // retrieve the location delivery times from location library
+        if (!empty($reservation_times)) {
+            foreach ($reservation_times as $key => $value) {                                            // loop through delivery times
+                $data['reservation_times'][$value] = mdate($time_format, strtotime($value));
+            }
         }
 
         $data['time_slots'] = array();
@@ -129,7 +135,7 @@ class Reservation_module extends Main_Controller {
 
         $data['reservation_alert'] = $this->alert->display('reservation_module');
 
-		$this->load->view('reservation_module/reservation_module', $data);
+		return $this->load->view('reservation_module/reservation_module', $data);
 	}
 
 
@@ -183,7 +189,7 @@ class Reservation_module extends Main_Controller {
         $this->form_validation->set_rules('reserve_date', 'lang:label_date', 'xss_clean|trim|required|valid_date|callback__validate_date');
         $this->form_validation->set_rules('reserve_time', 'lang:label_time', 'xss_clean|trim|required|valid_time|callback__validate_time');
 
-        if ($this->input->get('selected_time')) {
+        if ($this->input->get('action') === 'select_time') {
             $this->form_validation->set_rules('selected_time', 'lang:label_time', 'xss_clean|trim|required|valid_time|callback__validate_time');
         }
 

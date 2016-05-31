@@ -50,7 +50,7 @@ class Paypal_express extends Main_Controller {
             $this->load->model('paypal_express/Paypal_model');
             $response = $this->Paypal_model->setExpressCheckout($order_data, $this->cart->contents());
 
-            if (strtoupper($response['ACK']) === 'SUCCESS' OR strtoupper($response['ACK']) === 'SUCCESSWITHWARNING') {
+            if (isset($response['ACK']) AND (strtoupper($response['ACK']) === 'SUCCESS' OR strtoupper($response['ACK']) === 'SUCCESSWITHWARNING')) {
                 $payment = isset($order_data['ext_payment']) ? $order_data['ext_payment'] : array();
                 if (isset($payment['ext_data']['api_mode']) AND $payment['ext_data']['api_mode'] === 'sandbox') {
                     $api_mode = '.sandbox';
@@ -101,6 +101,19 @@ class Paypal_express extends Main_Controller {
         $order_data = $this->session->userdata('order_data'); 							// retrieve order details from session userdata
 
         if (!empty($order_data) AND $this->input->get('token')) { 						// check if token and PayerID is in $_GET data
+
+            $this->load->model('Statuses_model');
+            $status = $this->Statuses_model->getStatus($this->config->item('canceled_order_status'));
+
+            $order_history = array(
+                'object_id'  => $order_data['order_id'],
+                'status_id'  => $status['status_id'],
+                'notify'     => '0',
+                'comment'    => $status['comment'],
+                'date_added' => mdate('%Y-%m-%d %H:%i:%s', time()),
+            );
+
+            $this->Statuses_model->addStatusHistory('order', $order_history);
 
             $token = $this->input->get('token'); 												// retrieve token from $_GET data
 

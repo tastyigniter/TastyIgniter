@@ -1,3 +1,10 @@
+#category-box-affix.affix {
+position: fixed !important;
+top: 15px;
+/*width: 15.76%;*/
+z-index: 99;
+}
+
 #category-box .panel {
 padding-left: 15px;
 }
@@ -7,6 +14,7 @@ float: none;
 #category-box .list-group-item {
 border: 0 none;
 padding: 0;
+margin-bottom: 0;
 }
 #category-box .list-group-item a {
 padding: 10px 15px;
@@ -22,6 +30,9 @@ margin-bottom: 0;
 }
 #category-box .list-group .list-group-item .list-group .list-group-item a {
 padding-left: 30px;
+}
+#category-box .list-group .list-group-item .list-group .list-group-item .list-group .list-group-item a {
+padding-left: 50px;
 }
 @media screen and (min-width: 768px) {
 #category-box .panel {

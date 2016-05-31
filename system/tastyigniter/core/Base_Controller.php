@@ -42,7 +42,7 @@ class Base_Controller extends MX_Controller {
 
         // If 'config/updated.txt' exists, system needs upgrade
         if (is_file(IGNITEPATH . 'config/updated.txt')) {
-            if ($this->installer->upgrade()) redirect(root_url(ADMINDIR.'/dashboard'));
+            if ($this->installer->upgrade()) redirect(admin_url('dashboard'));
         }
 
         // Redirect to setup if app requires setup
@@ -59,9 +59,6 @@ class Base_Controller extends MX_Controller {
             // Load events library
             $this->load->library('events');
 
-            // Load template library
-            $this->load->library('template');
-
             // If the requested controller is a module controller then load the module config
             if (ENVIRONMENT !== 'testing') {
                 if ($this->extension AND $this->router AND $_module = $this->router->fetch_module()) {
@@ -69,13 +66,6 @@ class Base_Controller extends MX_Controller {
                     // Shows 404 error message on failure to load
                     $this->extension->loadConfig($_module, TRUE);
                 }
-            }
-
-            // Saving queries can vastly increase the memory usage, so better to turn off in production
-            if (ENVIRONMENT === 'production') {
-                $this->db->save_queries = FALSE;
-            } else if (ENVIRONMENT === 'development') {
-                $this->db->db_debug = TRUE;
             }
         }
 

@@ -48,7 +48,7 @@ $(function() {
             }
         })
     });
-})
+});
 
 $(function () {
 
@@ -64,8 +64,6 @@ $(function () {
 
         btn.addClass(activeClass);
     });
-
-    $('.btn-group-toggle .active input[type="radio"], .btn-group .active input[type="radio"]').trigger('change');
 
     $('.button-checkbox').each(function () {
 
@@ -129,5 +127,33 @@ $(function () {
             }
         }
         init();
+    });
+});
+
+function displayRatings(ratings) {
+    $('.rating-star').raty({
+        score: function () {
+            return $(this).attr('data-score');
+        },
+        scoreName: function () {
+            return $(this).attr('data-score-name');
+        },
+        readOnly: function () {
+            return $(this).attr('data-readonly') == 'true';
+        },
+        hints: ratings,
+        starOff: 'fa fa-star-o',
+        starOn: 'fa fa-star',
+        cancel: false, half: false, starType: 'i'
+    });
+
+    $('.rating-star i[title]').tooltip({placement: 'bottom'});
+}
+
+$(function () {
+    $(window).bind("load resize", function() {
+        $('.affix-module').each(function() {
+            $(this).find('[data-spy="affix"]:first-child').css('width', $(this).width());
+        });
     });
 });

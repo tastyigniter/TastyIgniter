@@ -12,6 +12,11 @@ class Register extends Main_Controller {
 	public function index() {
 		if ($this->input->post() AND $this->_addCustomer() === TRUE) {							// checks if $_POST data is set and if registration validation was successful
 			$this->alert->set('alert', $this->lang->line('alert_account_created'));	// display success message and redirect to account login page
+
+			if ($redirect_url = $this->input->get('redirect')) {
+				redirect($redirect_url);
+			}
+
 			redirect('account/login');
 		}
 

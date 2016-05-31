@@ -6,7 +6,7 @@
 | -------------------------------------------------------------------------
 | Your Memcached servers can be specified below.
 |
-|	See: http://codeigniter.com/user_guide/libraries/caching.html#memcached
+|	See: https://codeigniter.com/user_guide/libraries/caching.html#memcached
 |
 */
 $config = array(
@@ -16,6 +16,3 @@ $config = array(
 		'weight'   => '1',
 	),
 );
-
-/* End of file memcached.php */
-/* Location: ./system/tastyigniter/config/memcached.php */

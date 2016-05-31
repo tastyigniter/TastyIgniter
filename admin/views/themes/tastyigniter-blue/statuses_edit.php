@@ -74,8 +74,6 @@
 		</form>
 	</div>
 </div>
-<link type="text/css" rel="stylesheet" href="<?php echo root_url("assets/js/colorpicker/css/bootstrap-colorpicker.min.css"); ?>">
-<script src="<?php echo root_url("assets/js/colorpicker/js/bootstrap-colorpicker.min.js"); ?>"></script>
 <script type="text/javascript"><!--
 $(document).ready(function() {
     $('.ti-color-picker').colorpicker();

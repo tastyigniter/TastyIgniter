@@ -2,16 +2,12 @@
 
 class Slideshow extends Main_Controller {
 
-	public function index($ext_data = array()) {
+	public function index($module = array()) {
 		if ( ! file_exists(EXTPATH .'slideshow/views/slideshow.php')) { 			//check if file exists in views folder
 			show_404(); 																		// Whoops, show 404 error page!
 		}
 
-		if (!empty($ext_data)) {
-			$result = $ext_data;
-		} else {
-			$result = array();
-		}
+		$result = (!empty($module['data']) AND is_array($module['data'])) ? $module['data'] : array();
 
 		$this->template->setStyleTag(extension_url('slideshow/views/assets/flexslider/flexslider.css'), 'flexslider-css', '155000');
 		$this->template->setStyleTag(extension_url('slideshow/views/css/stylesheet.css'), 'slideshow-css', '155600');

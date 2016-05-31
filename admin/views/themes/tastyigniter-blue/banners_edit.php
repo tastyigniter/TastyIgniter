@@ -115,7 +115,9 @@
 					</div>
 					<div class="clearfix"></div>
 					<div class="form-group">
-						<label for="input-click-url" class="col-sm-3 control-label"><?php echo lang('label_click_url'); ?></label>
+						<label for="input-click-url" class="col-sm-3 control-label"><?php echo lang('label_click_url'); ?>
+							<span class="help-block"><?php echo lang('help_click_url') ?></span>
+						</label>
 						<div class="col-sm-5">
 							<input type="text" name="click_url" id="input-click-url" class="form-control" value="<?php echo set_value('click_url', $click_url); ?>" />
 							<?php echo form_error('click_url', '<span class="text-danger">', '</span>'); ?>

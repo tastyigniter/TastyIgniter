@@ -9,6 +9,7 @@ $lang['text_delivery'] 			        = 'Delivery';
 $lang['text_collection'] 		        = 'Pick-up';
 $lang['text_reorder'] 			        = 'Re-order';
 $lang['text_leave_review'] 		        = 'Leave review';
+$lang['text_no_payment'] 		        = 'No Payment';
 
 $lang['column_id'] 				        = 'ID';
 $lang['column_status'] 			        = 'Status';
@@ -16,6 +17,7 @@ $lang['column_delivery'] 		        = 'Delivery';
 $lang['column_payment'] 		        = 'Payment';
 $lang['column_location'] 		        = 'Location';
 $lang['column_date'] 			        = 'Ready Time - Date';
+$lang['column_date_added'] 			    = 'Date Added';
 $lang['column_order'] 			        = 'Order Type';
 $lang['column_items'] 			        = 'Total Items';
 $lang['column_total'] 			        = 'Order Total';

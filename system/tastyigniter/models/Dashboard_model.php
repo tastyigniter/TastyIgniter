@@ -45,6 +45,7 @@ class Dashboard_model extends TI_Model {
 		$results['delivery_orders'] = $this->getTotalDeliveryOrders($range_query);
 		$results['collection_orders'] = $this->getTotalCollectionOrders($range_query);
 		$results['tables_reserved'] = $this->getTotalTablesReserved($range_query);
+		$results['cash_payments'] = $this->getTotalCashPayments($range_query);
 
 		return $results;
 	}
@@ -92,6 +93,25 @@ class Dashboard_model extends TI_Model {
 		}
 
 		return $total_lost_sales;
+	}
+
+	public function getTotalCashPayments($range_query = '') {
+		$cash_payments = 0;
+
+		if (is_array($range_query) AND ! empty($range_query)) {
+			$this->db->select_sum('order_total', 'cash_payments');
+			$this->db->where('status_id >', '0');
+			$this->db->where('payment', 'cod');
+			$this->db->where($range_query);
+			$query = $this->db->get('orders');
+
+			if ($query->num_rows() > 0) {
+				$row = $query->row_array();
+				$cash_payments = $row['cash_payments'];
+			}
+		}
+
+		return $cash_payments;
 	}
 
 	public function getTotalCustomers($range_query) {
