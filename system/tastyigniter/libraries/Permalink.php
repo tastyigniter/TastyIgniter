@@ -23,95 +23,100 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Permalink {
 	var $permalinks = array();
-    var $slugs = array();
+	var $slugs = array();
 
-    public function __construct() {
+	public function __construct() {
 		$this->CI =& get_instance();
-        $this->CI->load->model('Permalink_model');
+		$this->CI->load->model('Permalink_model');
 
-        $this->getPermalinks();
+		$this->getPermalinks();
 
-        if ($this->CI->config->item('permalink') == '1') {
-            $this->slugs = $this->getSlugs();
-            $this->_setRequestQuery();
-        }
+		if ($this->CI->config->item('permalink') == '1') {
+			$this->slugs = $this->getSlugs();
+			$this->_setRequestQuery();
+		}
 	}
 
-    public function getPermalinks() {
-        if (empty($this->permalinks)) {
-            $this->permalinks = $this->CI->Permalink_model->getPermalinks();
-        }
+	public function getPermalinks() {
+		if (empty($this->permalinks)) {
+			$this->permalinks = $this->CI->Permalink_model->getPermalinks();
+		}
 
-        return $this->permalinks;
-    }
+		return $this->permalinks;
+	}
 
-    public function getPermalink($query) {
-        $result = array('permalink_id' => 0, 'slug' => '', 'controller' => '', 'url' => '', 'query' => $query);
+	public function getPermalink($query) {
+		$result = array('permalink_id' => 0, 'slug' => '', 'controller' => '', 'url' => '', 'query' => $query);
 
-        if (!empty($query) AND !empty($this->permalinks)) {
-            foreach ($this->permalinks as $permalink) {
-                if ($query === $permalink['query']) {
-                    $result = $permalink;
-                }
-            }
-        }
+		if (!empty($query) AND !empty($this->permalinks)) {
+			foreach ($this->permalinks as $permalink) {
+				if ($query === $permalink['query']) {
+					$result = $permalink;
+				}
+			}
+		}
 
-        return $result;
-    }
+		return $result;
+	}
 
-    public function getSlugs() {
-        $result = array();
+	public function getSlugs() {
+		$result = array();
 
-        if (!empty($this->permalinks)) {
-            foreach ($this->permalinks as $permalink) {
-                if (isset($permalink['slug']) AND isset($permalink['query'])) {
-                    $result[$permalink['slug']] = $permalink['query'];
-                }
-            }
-        }
+		if (!empty($this->permalinks)) {
+			foreach ($this->permalinks as $permalink) {
+				if (isset($permalink['slug']) AND isset($permalink['query'])) {
+					$result[$permalink['slug']] = $permalink['query'];
+				}
+			}
+		}
 
-        return $result;
-    }
+		return $result;
+	}
 
 
-    public function getQuerySlug($query = '') {
-        $query_arr = array();
+	public function getQuerySlug($query = '', $controller = 'pages') {
+		$query_arr = array();
 
-        $slugs = array_flip($this->slugs);
+        $controller = strtolower($controller);
+        if (!isset($this->slugs[$controller])) return NULL;
 
-        parse_str($query, $query_arr);
+		$slugs = array_flip($this->slugs[$controller]);
 
-        foreach ($query_arr as $key => $val) {
-            if (isset($slugs[$key.'='.$val])) {
-                $slug = $slugs[$key.'='.$val];
+		parse_str($query, $query_arr);
 
-                unset($query_arr[$key]);
-                return ! empty($query_arr) ? $slug . '?' . http_build_query($query_arr) : $slug;
-            }
-        }
-    }
+		foreach ($query_arr as $key => $val) {
+			if (isset($slugs[$key.'='.$val])) {
+				$slug = $slugs[$key.'='.$val];
 
-    public function savePermalink($controller, $permalink = array(), $query = '') {
-        return $this->CI->Permalink_model->savePermalink($controller, $permalink, $query);
-    }
+				unset($query_arr[$key]);
+				return ! empty($query_arr) ? $slug . '?' . http_build_query($query_arr) : $slug;
+			}
+		}
+	}
 
-    public function deletePermalink($controller, $query = '') {
-        return $this->CI->Permalink_model->deletePermalink($controller, $query);
-    }
+	public function savePermalink($controller, $permalink = array(), $query = '') {
+		return $this->CI->Permalink_model->savePermalink($controller, $permalink, $query);
+	}
 
-    private function _setRequestQuery() {
-        if ($this->CI->config->item('permalink') === '1') {
+	public function deletePermalink($controller, $query = '') {
+		return $this->CI->Permalink_model->deletePermalink($controller, $query);
+	}
 
-            if ($this->CI->uri->segment(2)) {
-                $slug = $this->CI->uri->segment(2);
-            } else if ($this->CI->uri->segment(1)) {
-                $slug = $this->CI->uri->segment(1);
-            } else {
-                $slug = '';
-            }
+	private function _setRequestQuery() {
+		if ($this->CI->config->item('permalink') === '1') {
 
-            if (isset($this->slugs[$slug])) {
-				$query = $this->slugs[$slug];
+            $controller = strtolower($this->CI->uri->rsegment(1) ? $this->CI->uri->rsegment(1) : 'pages');
+
+			if ($this->CI->uri->segment(2)) {
+				$slug = $this->CI->uri->segment(2);
+			} else if ($this->CI->uri->segment(1)) {
+				$slug = $this->CI->uri->segment(1);
+			} else {
+				$slug = '';
+			}
+
+            if (isset($this->slugs[$controller][$slug])) {
+                $query = $this->slugs[$controller][$slug];
 				$query = explode('=', $query);
 
 				if (isset($query[1])) {
