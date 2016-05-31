@@ -118,6 +118,7 @@ class Layouts_model extends TI_Model {
 		$this->db->from('layout_modules');
 		$this->db->where('module_code', $module_code);
 		$this->db->join('layouts', 'layouts.layout_id = layout_modules.layout_id', 'left');
+		$this->db->order_by('priority', 'ASC');
 
 		$query = $this->db->get();
 
@@ -342,7 +343,8 @@ class Layouts_model extends TI_Model {
 
 		if (is_array($partial_modules)) {
 			foreach ($partial_modules as $partial => $modules) {
-				foreach ($modules as $priority => $module) {
+				$priority = 1;
+				foreach ($modules as $module) {
 					if ( ! empty($module) AND is_array($module)) {
 						$this->db->set('layout_id', $layout_id);
 						$this->db->set('module_code', $module['module_code']);
@@ -359,6 +361,8 @@ class Layouts_model extends TI_Model {
 
 						$this->db->set('status', $module['status']);
 						$query = $this->db->insert('layout_modules');
+
+						$priority++;
 					}
 				}
 			}
