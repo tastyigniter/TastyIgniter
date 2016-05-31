@@ -24,13 +24,13 @@
 
 								<div id="menu<?php echo $menu['menu_id']; ?>" class="menu-item">
 									<div class="menu-item-wrapper row">
-										<?php if ($show_menu_images === '1') { ?>
-											<div class="menu-thumb col-xs-2 col-sm-2 wrap-none">
+										<?php if ($show_menu_images === '1' AND !empty($menu['menu_photo'])) { ?>
+											<div class="menu-thumb col-xs-2 col-sm-2 wrap-none wrap-right">
 												<img class="img-responsive img-thumbnail" alt="<?php echo $menu['menu_name']; ?>" src="<?php echo $menu['menu_photo']; ?>">
 											</div>
 										<?php } ?>
 
-										<div class="menu-content <?php echo ($show_menu_images === '1') ? 'col-xs-6 col-sm-6' : 'col-xs-8'; ?>">
+										<div class="menu-content <?php echo ($show_menu_images === '1' AND !empty($menu['menu_photo'])) ? 'col-xs-6 col-sm-6' : 'col-xs-8'; ?> wrap-none wrap-right">
 											<span class="menu-name"><b><?php echo $menu['menu_name']; ?></b></span>
 											<span class="menu-desc small">
 												<?php echo $menu['menu_description']; ?>

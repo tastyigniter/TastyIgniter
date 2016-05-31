@@ -159,7 +159,7 @@ margin-bottom: 20px;
 .panel-local dd, .panel-local dt {
 line-height: 1.529;
 }
-.panel-local .box-one dl {
+.panel-local .box-one dl.box-image {
 margin-left: 95px;
 }
 .side-bar .panel-local .box-one img {

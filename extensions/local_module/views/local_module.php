@@ -74,8 +74,10 @@
 						<div class="panel-body">
 							<div class="row boxes">
 								<div class="box-one col-xs-12 col-sm-5 col-md-5">
-									<img class="img-responsive pull-left" src="<?php echo $location_image; ?>">
-									<dl>
+									<?php if (!empty($location_image)) { ?>
+										<img class="img-responsive pull-left" src="<?php echo $location_image; ?>">
+									<?php } ?>
+									<dl <?php echo (!empty($location_image)) ? 'class="box-image"' : ''; ?>>
 										<dd><h4><?php echo $location_name; ?></h4></dd>
 										<?php if (config_item('allow_reviews') !== '1') { ?>
 											<dd class="text-muted">

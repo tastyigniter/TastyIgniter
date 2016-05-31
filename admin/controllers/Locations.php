@@ -227,8 +227,8 @@ class Locations extends Admin_Controller {
             $data['location_image_name'] = basename($location_info['location_image']);
             $data['location_image_url'] = $this->Image_tool_model->resize($location_info['location_image']);
         } else {
-            $data['location_image'] = 'data/no_photo.png';
-            $data['location_image_name'] = 'no_photo.png';
+            $data['location_image'] = '';
+            $data['location_image_name'] = '';
             $data['location_image_url'] = $this->Image_tool_model->resize('data/no_photo.png');
         }
 
@@ -572,7 +572,7 @@ class Locations extends Admin_Controller {
 		$this->form_validation->set_rules('location_status', 'lang:label_status', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('permalink[permalink_id]', 'lang:label_permalink_id', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('permalink[slug]', 'lang:label_permalink_slug', 'xss_clean|trim|alpha_dash|max_length[255]');
-        $this->form_validation->set_rules('location_image', 'lang:label_image', 'xss_clean|trim|required');
+        $this->form_validation->set_rules('location_image', 'lang:label_image', 'xss_clean|trim');
 
 		$this->form_validation->set_rules('opening_type', 'lang:label_opening_type', 'xss_clean|trim|required|alpha_dash|max_length[10]');
 		if ($this->input->post('opening_type') === 'daily' AND $this->input->post('daily_days')) {

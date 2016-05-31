@@ -107,8 +107,6 @@ class Menus_model extends TI_Model {
 				if ($show_menu_images === '1') {
 					if ( ! empty($row['menu_photo'])) {
 						$menu_photo_src = $this->Image_tool_model->resize($row['menu_photo'], $menu_images_w, $menu_images_h);
-					} else {
-						$menu_photo_src = $this->Image_tool_model->resize('data/no_photo.png', $menu_images_w, $menu_images_h);
 					}
 				}
 

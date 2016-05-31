@@ -153,8 +153,8 @@ class Categories extends Admin_Controller {
 			$data['image_name'] = basename($category_info['image']);
 			$data['image_url'] = $this->Image_tool_model->resize($category_info['image']);
 		} else {
-			$data['image'] = 'data/no_photo.png';
-			$data['image_name'] = 'no_photo.png';
+			$data['image'] = '';
+			$data['image_name'] = '';
 			$data['image_url'] = $data['no_image'];
 		}
 
@@ -205,7 +205,7 @@ class Categories extends Admin_Controller {
 		$this->form_validation->set_rules('permalink[permalink_id]', 'lang:label_permalink_id', 'xss_clean|trim|integer');
 		$this->form_validation->set_rules('permalink[slug]', 'lang:label_permalink_slug', 'xss_clean|trim|alpha_dash|max_length[255]');
 		$this->form_validation->set_rules('parent_id', 'lang:label_parent', 'xss_clean|trim|integer');
-		$this->form_validation->set_rules('image', 'lang:label_image', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('image', 'lang:label_image', 'xss_clean|trim');
 		$this->form_validation->set_rules('priority', 'lang:label_priority', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('status', 'lang:label_status', 'xss_clean|trim|required|integer');
 

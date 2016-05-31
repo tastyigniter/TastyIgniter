@@ -25,7 +25,9 @@
 									<div class="panel-body">
 										<div class="row">
 											<div class="box-one col-xs-12 col-sm-5">
-												<img class="img-responsive pull-left" src="<?php echo $location['location_image']; ?>">
+												<?php if (!empty($location['location_image'])) { ?>
+													<img class="img-responsive pull-left" src="<?php echo $location['location_image']; ?>">
+												<?php } ?>
 												<dl>
 													<dd><h4><?php echo $location['location_name']; ?></h4></dd>
 													<?php if (config_item('allow_reviews') !== '1') { ?>

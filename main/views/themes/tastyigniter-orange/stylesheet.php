@@ -238,7 +238,7 @@ if ( ! empty($link['hover'])) {
 
 $button_color_step = '-20';
 // Button Default
-$style .= ".btn-default, .panel-default, .panel-default .panel-heading, .panel-nav-tabs.panel-default .panel-heading {";
+$style .= ".btn-default, .panel-default .panel-heading, .panel-nav-tabs.panel-default .panel-heading {";
 if ( ! empty($button['default']['background']))
 	$style .= "background-color: {$button['default']['background']};";
 
@@ -261,7 +261,7 @@ if ( ! empty($button['default']['font']))
 $style .= "}";
 
 // Button Primary
-$style .= ".btn-primary, .panel-primary, .panel-primary .panel-heading, .panel-nav-tabs.panel-primary .panel-heading {";
+$style .= ".btn-primary, .panel-primary .panel-heading, .panel-nav-tabs.panel-primary .panel-heading {";
 if ( ! empty($button['primary']['background']))
 	$style .= "background-color: {$button['primary']['background']};";
 
@@ -291,7 +291,7 @@ if ( ! empty($button['primary']['font']))
 $style .= "}";
 
 // Button Success
-$style .= ".btn-success, .panel-success, .panel-success .panel-heading, .panel-nav-tabs.panel-success .panel-heading {";
+$style .= ".btn-success, .panel-success .panel-heading, .panel-nav-tabs.panel-success .panel-heading {";
 if ( ! empty($button['success']['background']))
 	$style .= "background-color: {$button['success']['background']};";
 
@@ -314,7 +314,7 @@ if ( ! empty($button['success']['font']))
 $style .= "}";
 
 // Button Danger
-$style .= ".btn-danger, .panel-danger, .panel-danger .panel-heading, .panel-nav-tabs.panel-danger .panel-heading {";
+$style .= ".btn-danger, .panel-danger .panel-heading, .panel-nav-tabs.panel-danger .panel-heading {";
 if ( ! empty($button['danger']['background']))
 	$style .= "background-color: {$button['danger']['background']};";
 
@@ -337,7 +337,7 @@ if ( ! empty($button['danger']['font']))
 $style .= "}";
 
 // Button Warning
-$style .= ".btn-warning, .panel-warning, .panel-warning .panel-heading, .panel-nav-tabs.panel-warning .panel-heading {";
+$style .= ".btn-warning, .panel-warning .panel-heading, .panel-nav-tabs.panel-warning .panel-heading {";
 if ( ! empty($button['warning']['background']))
 	$style .= "background-color: {$button['warning']['background']};";
 
@@ -360,7 +360,7 @@ if ( ! empty($button['warning']['font']))
 $style .= "}";
 
 // Button Info
-$style .= ".btn-info, .panel-info, .panel-info .panel-heading, .panel-nav-tabs.panel-info .panel-heading {";
+$style .= ".btn-info, .panel-info .panel-heading, .panel-nav-tabs.panel-info .panel-heading {";
 if ( ! empty($button['info']['background']))
 	$style .= "background-color: {$button['info']['background']};";
 

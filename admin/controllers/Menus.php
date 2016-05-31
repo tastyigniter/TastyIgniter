@@ -174,8 +174,8 @@ class Menus extends Admin_Controller {
 			$data['image_name'] = basename($menu_info['menu_photo']);
 			$data['menu_image_url'] = $this->Image_tool_model->resize($menu_info['menu_photo']);
 		} else {
-			$data['menu_image'] = 'data/no_photo.png';
-			$data['image_name'] = 'no_photo.png';
+			$data['menu_image'] = '';
+			$data['image_name'] = '';
 			$data['menu_image_url'] = $this->Image_tool_model->resize('data/no_photo.png');
 		}
 
@@ -323,7 +323,7 @@ class Menus extends Admin_Controller {
 		$this->form_validation->set_rules('menu_description', 'lang:label_description', 'xss_clean|trim|min_length[2]|max_length[1028]');
 		$this->form_validation->set_rules('menu_price', 'lang:label_price', 'xss_clean|trim|required|numeric');
 		$this->form_validation->set_rules('menu_category', 'lang:label_category', 'xss_clean|trim|required|integer');
-		$this->form_validation->set_rules('menu_photo', 'lang:label_photo', 'xss_clean|trim|required');
+		$this->form_validation->set_rules('menu_photo', 'lang:label_photo', 'xss_clean|trim');
 		$this->form_validation->set_rules('stock_qty', 'lang:label_stock_qty', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('minimum_qty', 'lang:label_minimum_qty', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('subtract_stock', 'lang:label_subtract_stock', 'xss_clean|trim|required|integer');
