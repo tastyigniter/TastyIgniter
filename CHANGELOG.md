@@ -71,6 +71,10 @@ Release Date: May 2016
 * Issue with storefront menu list and sidebar modules widths
 * Missing category module admin fixed position settings
 * Default language from being deleted accidentally
+* Issue where core modules are not displaying on fresh install
+* Storefront multi-level categories list to have more than one level
+* Issue with clearing images and removed required validation rule to make field optional
+* Issue to allow duplicate permalink slug
 
 ### v2.0.0 (stable)
 

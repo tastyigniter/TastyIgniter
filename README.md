@@ -21,7 +21,7 @@ If you like this software and you'd like to help keep this project you can help 
 Community and Support
 =====================
 Bug fixes and feature patches may be submitted using github pull requests, and bug reports or feature requests as github issues.
-Visit the [TastyIgniter Community Forums](http://forums.tastyigniter.com) or [Documentation](http://docs.tastyigniter.com) for support.
+Visit the [TastyIgniter Community Forums](http://forum.tastyigniter.com) or [Documentation](http://docs.tastyigniter.com) for support.
 
 [Broswerstack](http://www.browserstack.com/) provides an amazing tool for testing across all major browsers
 
