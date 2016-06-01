@@ -505,7 +505,7 @@ $insert_extensions_data = "
   REPLACE INTO `".$this->db->dbprefix."extensions` (`extension_id`, `type`, `name`, `data`, `serialized`, `status`, `title`)
   VALUES
   (11, 'module', 'account_module', 'a:1:{s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"11\";s:8:\"position\";s:4:\"left\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}}', 1, 1, 'Account'),
-  (12, 'module', 'local_module', 'a:1:{s:7:\"layouts\";N;}', 1, 1, 'Local'),
+  (12, 'module', 'local_module', 'a:3:{s:20:\"location_search_mode\";s:5:\"multi\";s:12:\"use_location\";s:1:\"0\";s:6:\"status\";s:1:\"1\";}', 1, 1, 'Local'),
   (13, 'module', 'categories_module', 'a:1:{s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"12\";s:8:\"position\";s:4:\"left\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}}', 1, 1, 'Categories'),
   (14, 'module', 'cart_module', 'a:3:{s:16:\"show_cart_images\";s:1:\"0\";s:13:\"cart_images_h\";s:0:\"\";s:13:\"cart_images_w\";s:0:\"\";}', 1, 1, 'Cart'),
   (15, 'module', 'reservation_module', 'a:1:{s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"16\";s:8:\"position\";s:4:\"left\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}}', 1, 1, 'Reservation'),
