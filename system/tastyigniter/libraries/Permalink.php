@@ -65,7 +65,7 @@ class Permalink {
 		if (!empty($this->permalinks)) {
 			foreach ($this->permalinks as $permalink) {
 				if (isset($permalink['slug']) AND isset($permalink['query'])) {
-					$result[$permalink['slug']] = $permalink['query'];
+					$result[$permalink['controller']][$permalink['slug']] = $permalink['query'];
 				}
 			}
 		}

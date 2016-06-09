@@ -12,6 +12,7 @@ if (APPDIR === ADMINDIR) {
     $controller_exceptions = array('home', 'menus', 'reservation', 'contact', 'local', 'cart', 'checkout', 'pages');
 
     $route['default_controller'] = $default_controller;
+    $route['menus/(.+)'] = 'menus';
     $route['local/reviews'] = 'local/reviews';
     $route['locations'] = 'local/all';
     $route['local/(.+)'] = 'local';
