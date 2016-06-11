@@ -194,9 +194,9 @@ class ExtraPackage
                 continue;
             }
             if ($prepend) {
-                $this->logger->info("Adding {$repoJson['type']} repository");
-            } else {
                 $this->logger->info("Prepending {$repoJson['type']} repository");
+            } else {
+                $this->logger->info("Adding {$repoJson['type']} repository");
             }
             $repo = $repoManager->createRepository(
                 $repoJson['type'],
