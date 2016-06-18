@@ -84,6 +84,8 @@ class Menus extends Main_Controller {
 
         $list_data['categories'] = array();
         foreach (sort_array($categories) as $category) {
+            if (!empty($filter['filter_category']) AND $filter['filter_category'] != $category['category_id']) continue;
+
             $category_image = '';
             if ( ! empty($category['image'])) {
                 $category_image = $this->Image_tool_model->resize($category['image'], '800', '115');
