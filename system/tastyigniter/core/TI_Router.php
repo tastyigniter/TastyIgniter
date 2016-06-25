@@ -166,8 +166,7 @@ class TI_Router extends MX_Router {
                 $this->CI->load->library('permalink');
 
 				if ($slug = $this->CI->permalink->getQuerySlug($query[1], $uri)) {
-                    $uri = ($uri === 'pages') ? str_replace('pages', '', $uri) : $uri.'/';
-                    return $uri.$slug;
+                    return $slug;
                 }
             }
 

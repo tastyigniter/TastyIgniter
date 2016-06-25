@@ -142,7 +142,6 @@ class Categories extends Admin_Controller {
 		$data['no_image'] 			= $this->Image_tool_model->resize('data/no_photo.png');
 
 		$data['permalink'] = $this->permalink->getPermalink('category_id='.$category_info['category_id']);
-        $data['permalink']['url'] = root_url('menus').'/';
 
         if ($this->input->post('image')) {
 			$data['image'] = $this->input->post('image');

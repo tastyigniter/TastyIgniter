@@ -75,11 +75,15 @@ class Categories_module extends Main_Controller {
 	protected function categoryTree($categories, $mix_it_up, $is_child = FALSE) {
 		$category_id = $this->input->get('category_id');
 
+		$url = 'menus';
+		if ($location_id = $this->input->get('location_id')) {
+			$url = "local?location_id={$location_id}";
+		}
+
 		$tree = '<ul class="list-group list-group-responsive">';
 
 		if (!$is_child) {
-			$attr = $mix_it_up ? ' class="filter" data-filter="all" ' : ' class="" href="'.site_url('menus').'" ';
-			$tree .= '<li class="list-group-item"><a' . $attr . '><i class="fa fa-angle-right"></i>&nbsp;&nbsp;'.$this->lang->line('text_show_all').'</a>';
+			$tree .= '<li class="list-group-item"><a class="" href="'.site_url($url).'"><i class="fa fa-angle-right"></i>&nbsp;&nbsp;'.$this->lang->line('text_show_all').'</a>';
 		}
 
 		if ( ! empty($categories)) {
@@ -89,7 +93,8 @@ class Categories_module extends Main_Controller {
 				if ($mix_it_up) {
 					$attr = ' class="filter" data-filter="'.$selector.'" ';
 				} else {
-					$attr = ($category['category_id'] === $category_id) ? ' class="" href="#'.$selector.'" ' : ' class="active" href="#'.$selector.'" ';
+					$attr = ($category['category_id'] === $category_id) ? ' class="" ' : ' class="active" ';
+					$attr .= 'href="' . site_url($url . (($location_id) ? '&' : '?') . 'category_id=' . $category['category_id']) . '" ';
 				}
 
 				if (!empty($category['children'])) {
