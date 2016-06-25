@@ -6,6 +6,7 @@ $lang['text_edit_heading'] 		        = 'Category: %s';
 $lang['text_list'] 		                = 'Category List';
 $lang['text_tab_general'] 		        = 'Category Details';
 $lang['text_filter_search'] 		    = 'Search category name, description or status.';
+$lang['text_filter_status'] 		    = 'View all status';
 $lang['text_empty'] 		            = 'There are no categories available.';
 
 $lang['column_name'] 		            = 'Name';
