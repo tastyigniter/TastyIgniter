@@ -243,3 +243,7 @@ border-radius: 3px;
 #cart-buttons .order-total {
 font-weight: bold;
 }
+
+.modal-menu-options .media-object {
+    width: 150px;
+}
