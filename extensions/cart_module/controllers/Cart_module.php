@@ -113,7 +113,6 @@ class Cart_module extends Main_Controller {
 		$data['menu_id'] 				= $this->input->get('menu_id');
 		$data['row_id'] 				= $this->input->get('row_id');
 		$data['menu_name'] 				= $menu_data['menu_name'];
-		$data['menu_name'] 				= $menu_data['menu_name'];
 		$data['menu_price'] 			= $this->currency->format($menu_data['menu_price']);
 		$data['description'] 			= $menu_data['menu_description'];
 		$data['quantities'] 			= array('1', '2', '3', '4', '5', '6', '7', '8', '9', '10');
@@ -121,7 +120,9 @@ class Cart_module extends Main_Controller {
 		$data['comment']                = isset($cart_item['comment']) ? $cart_item['comment'] : '';
 
 		$menu_photo = (!empty($menu_data['menu_photo'])) ? $menu_data['menu_photo'] : 'data/no_photo.png';
-		$data['menu_image'] = $this->Image_tool_model->resize($menu_photo, '154', '154');
+		$menu_images_w = (is_numeric($this->config->item('menu_images_w'))) ? $this->config->item('menu_images_w') : '154';
+		$menu_images_h = (is_numeric($this->config->item('menu_images_h'))) ? $this->config->item('menu_images_h') : '154';
+		$data['menu_image'] = $this->Image_tool_model->resize($menu_photo, $menu_images_w, $menu_images_h);
 
 		$data['cart_option_value_ids'] = (!empty($cart_item['options'])) ?
 			$this->cart->product_options_ids($this->input->get('row_id')) : array();
