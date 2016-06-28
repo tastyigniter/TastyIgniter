@@ -243,7 +243,7 @@ class Customizer {
             $markup['error'] = $this->getFieldError($field['name']);
             $this->rules[$field['name']] = array('field' => $field['name'], 'label' => $field['label'], 'rules' => $field['rules']);
 
-            if ((isset($field['type']) AND !in_array($field['type'], array('radio', 'checkbox')))) {
+            if (isset($field['value']) AND isset($field['type']) AND !in_array($field['type'], array('radio', 'checkbox'))) {
                 $field['value'] = $this->getFieldValue($field['name'], $field['value']);
             }
         }
@@ -484,11 +484,10 @@ class Customizer {
         foreach ($field['group'] as $button) {
             if ($button['type'] !== 'hidden') $group_count++;
 
+            $button['checked'] = FALSE;
             $value = $this->getFieldValue($button['name']);
-            if ($value === $button['value']) {
+            if (isset($button['value']) AND $value === $button['value']) {
                 $button['checked'] = TRUE;
-            } else if (!empty($value)) {
-                unset($button['checked']);
             }
 
             $button['id'] = $field['id'].'-'.$group_count;
@@ -497,7 +496,7 @@ class Customizer {
             $temp_names[] = $temp_fields['name'];
             $temp_errors[] = $temp_fields['error'];
 
-            $button_label = (isset($button['checked'])) ? str_replace('{active}', 'active', $this->_styles['button_label'][0]) : str_replace('{active}', '', $this->_styles['button_label'][0]);
+            $button_label = ($button['checked'] == TRUE) ? str_replace('{active}', 'active', $this->_styles['button_label'][0]) : str_replace('{active}', '', $this->_styles['button_label'][0]);
             $button_label = str_replace('{data_btn}', $button['data-btn'], $button_label);
 
             $temp_html .= $button_label . $temp_fields['html'] . $this->_styles['button_label'][1];
@@ -562,8 +561,6 @@ class Customizer {
     }
 
     private function getFieldData($name) {
-        $temp_data = NULL;
-
         if (preg_match_all('/\[(.*?)\]/', $name, $matches)) {
             $indexes = array();
             sscanf($name, '%[^[][', $indexes[0]);
@@ -589,10 +586,10 @@ class Customizer {
 
     private function reduceArray($array, $keys, $i = 0) {
         if (is_array($array) AND isset($keys[$i])) {
-            return isset($array[$keys[$i]]) ? $this->reduceArray($array[$keys[$i]], $keys, ($i+1)) : NULL;
+            return isset($array[$keys[$i]]) ? $this->reduceArray($array[$keys[$i]], $keys, ($i+1)) : '';
         }
 
-        return ($array === '') ? NULL : $array;
+        return ($array === '') ? '' : $array;
     }
 }
 

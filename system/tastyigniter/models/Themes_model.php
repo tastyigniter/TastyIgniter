@@ -165,7 +165,6 @@ class Themes_model extends TI_Model {
 			$active_theme_options[MAINDIR] = array($update['name'], $update['data']);
 
 			if ($this->config->item(MAINDIR, 'default_themes') === $update['name'] . '/') {
-				$this->Settings_model->deleteSettings('prefs', 'customizer_active_style');  //@to-do remove in next version release
 				$this->Settings_model->addSetting('prefs', 'active_theme_options', $active_theme_options, '1');
 			}
 		}
