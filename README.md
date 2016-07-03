@@ -92,7 +92,7 @@ in the top-level composer.json file:
 
 ### require
 
-The `require` setting is identical to `[include](#include)` except when
+The `require` setting is identical to [`include`](#include) except when
 a pattern fails to match at least one file then it will cause an error.
 
 ### recurse
