@@ -279,7 +279,12 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
             );
             $request->install($link->getTarget(), $link->getConstraint());
         }
-        if ($this->state->isDevMode()) {
+
+        // Issue #113: Check devMode of event rather than our global state.
+        // Composer fires the PRE_DEPENDENCIES_SOLVING event twice for
+        // `--no-dev` operations to decide which packages are dev only
+        // requirements.
+        if ($this->state->shouldMergeDev() && $event->isDevMode()) {
             foreach ($this->state->getDuplicateLinks('require-dev') as $link) {
                 $this->logger->info(
                     "Adding dev dependency <comment>{$link}</comment>"

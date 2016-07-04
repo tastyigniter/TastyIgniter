@@ -246,7 +246,17 @@ class PluginState
      */
     public function isDevMode()
     {
-        return $this->mergeDev && $this->devMode;
+        return $this->shouldMergeDev() && $this->devMode;
+    }
+
+    /**
+     * Should devMode settings be merged?
+     *
+     * @return bool
+     */
+    public function shouldMergeDev()
+    {
+        return $this->mergeDev;
     }
 
     /**
