@@ -206,13 +206,13 @@ class Languages extends Admin_Controller {
 			if ($language_id = $this->Languages_model->saveLanguage($this->input->get('id'), $this->input->post())) {
                 $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Language '.$save_type));
 
-                if ($save_type === 'added' AND $this->input->post('clone_language') === '1') {
+                if ($save_type === $this->lang->line('text_added') AND $this->input->post('clone_language') === '1') {
                     if ( ! clone_language($this->input->post('idiom'), $this->input->post('language_to_clone'))) {
                         $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_cloned')));
                     }
                 }
 
-                if ($save_type === 'updated' AND $this->input->get('file')) {
+                if ($save_type === $this->lang->line('text_updated') AND $this->input->get('file')) {
                     if ( ! save_lang_file($this->input->get('file'), $this->input->post('idiom'), $this->input->get('location'), $this->input->post('lang'))) {
                         $this->alert->set('warning', sprintf($this->lang->line('alert_warning_file'), $save_type));
                     }
