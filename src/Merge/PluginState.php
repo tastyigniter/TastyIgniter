@@ -75,13 +75,6 @@ class PluginState
     protected $mergeExtra = false;
 
     /**
-     * Whether to prepend repositories to repository manager.
-     *
-     * @var bool $prependRepositories
-     */
-    protected $prependRepositories = false;
-
-    /**
      * Whether to merge the extra section in a deep / recursive way.
      *
      * By default the extra section is merged with array_merge() and duplicate
@@ -139,7 +132,6 @@ class PluginState
                 'require' => array(),
                 'recurse' => true,
                 'replace' => false,
-                'prepend-repositories' => false,
                 'merge-dev' => true,
                 'merge-extra' => false,
                 'merge-extra-deep' => false,
@@ -153,7 +145,6 @@ class PluginState
             $config['require'] : array($config['require']);
         $this->recurse = (bool)$config['recurse'];
         $this->replace = (bool)$config['replace'];
-        $this->prependRepositories = (bool)$config['prepend-repositories'];
         $this->mergeDev = (bool)$config['merge-dev'];
         $this->mergeExtra = (bool)$config['merge-extra'];
         $this->mergeExtraDeep = (bool)$config['merge-extra-deep'];
@@ -351,16 +342,6 @@ class PluginState
     public function shouldMergeExtra()
     {
         return $this->mergeExtra;
-    }
-
-    /**
-     * Should the merger prepend repositories to repository manager (instead of adding them to end of the list).
-     *
-     * @return bool
-     */
-    public function shouldPrependRepositories()
-    {
-        return $this->prependRepositories;
     }
 
     /**

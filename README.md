@@ -24,6 +24,8 @@ extensions which may be managed via Composer.
 Installation
 ------------
 
+Composer Merge Plugin requires Composer 1.0.0 or newer.
+
 ```
 $ composer require wikimedia/composer-merge-plugin
 ```

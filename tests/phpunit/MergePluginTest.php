@@ -348,7 +348,7 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
                 );
             }
         );
-        $repoManager->addRepository(Argument::any())->will(
+        $repoManager->prependRepository(Argument::any())->will(
             function ($args) use ($that) {
                 $that->assertInstanceOf(
                     'Composer\Repository\VcsRepository',
@@ -396,7 +396,6 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Given a root package with an extra section
-     *   and prepend-repositories mode is active
      *   and a composer.local.json with a repository
      * When the plugin is run
      * Then the repository from composer.local.json should be prepended to root package repository list
@@ -857,7 +856,7 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
                 new \Composer\Config()
             );
         });
-        $repoManager->addRepository(Argument::any())->shouldBeCalled();
+        $repoManager->prependRepository(Argument::any())->shouldBeCalled();
         $this->composer->getRepositoryManager()->will(
             function () use ($repoManager) {
                 return $repoManager->reveal();
