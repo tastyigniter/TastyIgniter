@@ -152,7 +152,7 @@ class ExtraPackage
      */
     public function mergeInto(RootPackageInterface $root, PluginState $state)
     {
-        $this->addRepositories($root);
+        $this->addRepositories($root, $state->shouldPrependRepositories());
 
         $this->mergeRequires('require', $root, $state);
         if ($state->isDevMode()) {
@@ -179,8 +179,9 @@ class ExtraPackage
      * to the given package and the global repository manager.
      *
      * @param RootPackageInterface $root
+     * @param bool $prepend Should repositories be prepended to repository manager.
      */
-    protected function addRepositories(RootPackageInterface $root)
+    protected function addRepositories(RootPackageInterface $root, $prepend)
     {
         if (!isset($this->json['repositories'])) {
             return;
@@ -192,20 +193,35 @@ class ExtraPackage
             if (!isset($repoJson['type'])) {
                 continue;
             }
-            $this->logger->info("Adding {$repoJson['type']} repository");
+            if ($prepend) {
+                $this->logger->info("Prepending {$repoJson['type']} repository");
+            } else {
+                $this->logger->info("Adding {$repoJson['type']} repository");
+            }
             $repo = $repoManager->createRepository(
                 $repoJson['type'],
                 $repoJson
             );
-            $repoManager->addRepository($repo);
+            if ($prepend) {
+                $repoManager->prependRepository($repo);
+            } else {
+                $repoManager->addRepository($repo);
+            }
             $newRepos[] = $repo;
         }
 
         $unwrapped = self::unwrapIfNeeded($root, 'setRepositories');
-        $unwrapped->setRepositories(array_merge(
-            $newRepos,
-            $root->getRepositories()
-        ));
+        if ($prepend) {
+            $unwrapped->setRepositories(array_merge(
+                $newRepos,
+                $root->getRepositories()
+            ));
+        } else {
+            $unwrapped->setRepositories(array_merge(
+                $root->getRepositories(),
+                $newRepos
+            ));
+        }
     }
 
     /**

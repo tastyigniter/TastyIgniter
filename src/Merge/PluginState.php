@@ -75,6 +75,13 @@ class PluginState
     protected $mergeExtra = false;
 
     /**
+     * Whether to prepend repositories to repository manager.
+     *
+     * @var bool $prependRepositories
+     */
+    protected $prependRepositories = false;
+
+    /**
      * @var bool $firstInstall
      */
     protected $firstInstall = false;
@@ -114,6 +121,7 @@ class PluginState
                 'require' => array(),
                 'recurse' => true,
                 'replace' => false,
+                'prepend-repositories' => false,
                 'merge-dev' => true,
                 'merge-extra' => false,
             ),
@@ -126,6 +134,7 @@ class PluginState
             $config['require'] : array($config['require']);
         $this->recurse = (bool)$config['recurse'];
         $this->replace = (bool)$config['replace'];
+        $this->prependRepositories = (bool)$config['prepend-repositories'];
         $this->mergeDev = (bool)$config['merge-dev'];
         $this->mergeExtra = (bool)$config['merge-extra'];
     }
@@ -322,6 +331,16 @@ class PluginState
     public function shouldMergeExtra()
     {
         return $this->mergeExtra;
+    }
+
+    /**
+     * Should the merger prepend repositories to repository manager (instead of adding them to end of the list).
+     *
+     * @return bool
+     */
+    public function shouldPrependRepositories()
+    {
+        return $this->prependRepositories;
     }
 }
 // vim:sw=4:ts=4:sts=4:et:
