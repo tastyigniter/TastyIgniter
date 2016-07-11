@@ -34,6 +34,7 @@ use ReflectionProperty;
 /**
  * @covers Wikimedia\Composer\Logger
  * @covers Wikimedia\Composer\Merge\ExtraPackage
+ * @covers Wikimedia\Composer\Merge\NestedArray
  * @covers Wikimedia\Composer\Merge\PluginState
  * @covers Wikimedia\Composer\Merge\StabilityFlags
  * @covers Wikimedia\Composer\MergePlugin
@@ -267,8 +268,11 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
      * When the plugin is run
      * Then the root package should inherit the non-conflicting requires
      *   and extra installs should be proposed by the pre-dependency hook.
+     *
+     * @param bool $fireInit Fire the INIT event?
+     * @dataProvider provideFireInit
      */
-    public function testOneMergeWithConflicts()
+    public function testOneMergeWithConflicts($fireInit)
     {
         $that = $this;
         $dir = $this->fixtureDir(__FUNCTION__);
@@ -303,18 +307,11 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
         $root->getProvides()->shouldNotBeCalled();
         $root->getSuggests()->shouldNotBeCalled();
 
-        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
+        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir, $fireInit);
 
         $this->assertEquals(2, count($extraInstalls));
         $this->assertEquals('monolog/monolog', $extraInstalls[0][0]);
         $this->assertEquals('foo', $extraInstalls[1][0]);
-
-        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir, true);
-
-        $this->assertEquals(2, count($extraInstalls));
-        $this->assertEquals('monolog/monolog', $extraInstalls[0][0]);
-        $this->assertEquals('foo', $extraInstalls[1][0]);
-
     }
 
 
@@ -479,8 +476,11 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
      *   and a composer.local.json with required packages
      * When the plugin is run
      * Then the root package should be updated with stability flags.
+     *
+     * @param bool $fireInit Fire the INIT event?
+     * @dataProvider provideFireInit
      */
-    public function testUpdateStabilityFlags()
+    public function testUpdateStabilityFlags($fireInit)
     {
         $that = $this;
         $dir = $this->fixtureDir(__FUNCTION__);
@@ -526,11 +526,7 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
         $root->getSuggests()->shouldNotBeCalled();
         $root->setSuggests(Argument::any())->shouldNotBeCalled();
 
-        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
-
-        $this->assertEquals(0, count($extraInstalls));
-
-        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir, true);
+        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir, $fireInit);
 
         $this->assertEquals(0, count($extraInstalls));
     }
@@ -620,8 +616,11 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
      *   and a composer.local.json with an extra section with no conflicting keys
      * When the plugin is run
      * Then the root package extra section should be extended with content from the local config.
+     *
+     * @param bool $fireInit Fire the INIT event?
+     * @dataProvider provideFireInit
      */
-    public function testMergeExtra()
+    public function testMergeExtra($fireInit)
     {
         $that = $this;
         $dir = $this->fixtureDir(__FUNCTION__);
@@ -644,11 +643,7 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
         $root->getProvides()->shouldNotBeCalled();
         $root->getSuggests()->shouldNotBeCalled();
 
-        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
-
-        $this->assertEquals(0, count($extraInstalls));
-
-        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir, true);
+        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir, $fireInit);
 
         $this->assertEquals(0, count($extraInstalls));
     }
@@ -832,8 +827,11 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
      * Given a root package with a branch alias
      * When the plugin is run
      * Then the alias is used directly for some calls.
+     *
+     * @param bool $fireInit Fire the INIT event?
+     * @dataProvider provideFireInit
      */
-    public function testHasBranchAlias()
+    public function testHasBranchAlias($fireInit)
     {
         $that = $this;
         $io = $this->io;
@@ -903,8 +901,7 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
 
         $alias = $alias->reveal();
 
-        $this->triggerPlugin($alias, $dir);
-        $this->triggerPlugin($alias, $dir, true);
+        $this->triggerPlugin($alias, $dir, $fireInit);
     }
 
 
@@ -990,8 +987,11 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test replace link with self.version as version constraint.
+     *
+     * @param bool $fireInit Fire the INIT event?
+     * @dataProvider provideFireInit
      */
-    public function testSelfVersionNoRootVersion()
+    public function testSelfVersionNoRootVersion($fireInit)
     {
         $that = $this;
         $dir = $this->fixtureDir(__FUNCTION__);
@@ -1025,12 +1025,8 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
             }
         );
 
-        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
+        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir, $fireInit);
         $this->assertEquals(0, count($extraInstalls));
-
-        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir, true);
-        $this->assertEquals(0, count($extraInstalls));
-
     }
 
 
@@ -1142,7 +1138,11 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testVersionConstraintWithRevision()
+    /**
+     * @param bool $fireInit Fire the INIT event?
+     * @dataProvider provideFireInit
+     */
+    public function testVersionConstraintWithRevision($fireInit)
     {
         $that = $this;
         $dir = $this->fixtureDir(__FUNCTION__);
@@ -1173,12 +1173,8 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
             $that->assertSame($references['foo/baz'], 'abc1234');
         };
 
-        $root->setReferences(Argument::type('array'))->will($checkRefsWithDev);
-        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
-
-        // Test with onInit event.
-        $root->setReferences(Argument::type('array'))->will(
-            function ($args) use ($that, $root, $checkRefsWithDev) {
+        if ($fireInit) {
+            $checkRefs = function ($args) use ($that, $root, $checkRefsWithDev) {
                 $references = $args[0];
                 $that->assertEquals(2, count($references));
 
@@ -1192,12 +1188,26 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
                 // second time when onInstallUpdateOrDump() fires with the dev
                 // section parsed as well.
                 $root->setReferences(Argument::type('array'))->will($checkRefsWithDev);
-            }
-        );
+            };
+        } else {
+            $checkRefs = $checkRefsWithDev;
+        }
 
-        $extraInstalls = $this->triggerPlugin($root->reveal(), $dir, true);
+        $root->setReferences(Argument::type('array'))->will($checkRefs);
+        $this->triggerPlugin($root->reveal(), $dir, $fireInit);
     }
 
+    /**
+     * Generic provider for tests that should be tried with and without an
+     * INIT event.
+     */
+    public function provideFireInit()
+    {
+        return array(
+            "with INIT event" => array(true),
+            "without INIT event" => array(true),
+        );
+    }
 
     /**
      * @param RootPackage $package

@@ -72,7 +72,7 @@ class NestedArray
      *
      * @param array $arrays
      *   An arrays of arrays to merge.
-     * @param bool  $preserve_integer_keys
+     * @param bool  $preserveIntegerKeys
      *   (optional) If given, integer keys will be preserved and merged
      *   instead of appended. Defaults to false.
      *
@@ -83,23 +83,26 @@ class NestedArray
      */
     public static function mergeDeepArray(
         array $arrays,
-        $preserve_integer_keys = false
+        $preserveIntegerKeys = false
     ) {
         $result = array();
         foreach ($arrays as $array) {
             foreach ($array as $key => $value) {
                 // Renumber integer keys as array_merge_recursive() does
-                // unless $preserve_integer_keys is set to TRUE. Note that PHP
+                // unless $preserveIntegerKeys is set to TRUE. Note that PHP
                 // automatically converts array keys that are integer strings
                 // (e.g., '1') to integers.
-                if (is_integer($key) && !$preserve_integer_keys) {
+                if (is_integer($key) && !$preserveIntegerKeys) {
                     $result[] = $value;
                 } elseif (isset($result[$key]) &&
                     is_array($result[$key]) &&
                     is_array($value)
                 ) {
                     // Recurse when both values are arrays.
-                    $result[$key] = self::mergeDeepArray(array($result[$key], $value), $preserve_integer_keys);
+                    $result[$key] = self::mergeDeepArray(
+                        array($result[$key], $value),
+                        $preserveIntegerKeys
+                    );
                 } else {
                     // Otherwise, use the latter value, overriding any
                     // previous value.

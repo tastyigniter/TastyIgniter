@@ -126,10 +126,10 @@ class ExtraPackage
     }
 
     /**
-     * @param string $json
+     * @param array $json
      * @return CompletePackage
      */
-    protected function loadPackage($json)
+    protected function loadPackage(array $json)
     {
         $loader = new ArrayLoader();
         $package = $loader->load($json);
