@@ -110,16 +110,16 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     /**
      * Files that have already been fully processed
      *
-     * @var string[] $loadedFiles
+     * @var string[] $loaded
      */
-    protected $loadedFiles = array();
+    protected $loaded = array();
 
     /**
      * Files that have already been partially processed
      *
-     * @var string[] $partiallyLoadedFiles
+     * @var string[] $loadedNoDev
      */
-    protected $partiallyLoadedFiles = array();
+    protected $loadedNoDev = array();
 
     /**
      * {@inheritdoc}
@@ -229,27 +229,31 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
      */
     protected function mergeFile(RootPackageInterface $root, $path)
     {
-        if (isset($this->loadedFiles[$path]) ||
-            (isset($this->partiallyLoadedFiles[$path]) && !$this->state->isDevMode())) {
-            $this->logger->debug("Already merged <comment>$path</comment> completely");
+        if (isset($this->loaded[$path]) ||
+            (isset($this->loadedNoDev[$path]) && !$this->state->isDevMode())
+        ) {
+            $this->logger->debug(
+                "Already merged <comment>$path</comment> completely"
+            );
             return;
         }
 
         $package = new ExtraPackage($path, $this->composer, $this->logger);
 
-        // If something was already loaded, merge just the dev section.
-        if (isset($this->partiallyLoadedFiles[$path])) {
-            $this->logger->info("Loading -dev sections of <comment>{$path}</comment>...");
-            $package->mergeDev($root, $this->state);
+        if (isset($this->loadedNoDev[$path])) {
+            $this->logger->info(
+                "Loading -dev sections of <comment>{$path}</comment>..."
+            );
+            $package->mergeDevInto($root, $this->state);
         } else {
             $this->logger->info("Loading <comment>{$path}</comment>...");
             $package->mergeInto($root, $this->state);
         }
 
         if ($this->state->isDevMode()) {
-            $this->loadedFiles[$path] = true;
+            $this->loaded[$path] = true;
         } else {
-            $this->partiallyLoadedFiles[$path] = true;
+            $this->loadedNoDev[$path] = true;
         }
 
         if ($this->state->recurseIncludes()) {

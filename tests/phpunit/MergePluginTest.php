@@ -1096,7 +1096,7 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
             }
         )->shouldBeCalled();
 
-        $second_call = function ($args) use ($that) {
+        $checkRefsWithDev = function ($args) use ($that) {
             $references = $args[0];
             $that->assertEquals(3, count($references));
 
@@ -1109,12 +1109,12 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
             $that->assertSame($references['foo/baz'], 'abc1234');
         };
 
-        $root->setReferences(Argument::type('array'))->will($second_call);
+        $root->setReferences(Argument::type('array'))->will($checkRefsWithDev);
         $extraInstalls = $this->triggerPlugin($root->reveal(), $dir);
 
         // Test with onInit event.
         $root->setReferences(Argument::type('array'))->will(
-            function ($args) use ($that, $root, $second_call) {
+            function ($args) use ($that, $root, $checkRefsWithDev) {
                 $references = $args[0];
                 $that->assertEquals(2, count($references));
 
@@ -1127,7 +1127,7 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
                 // onInit does parse without require-dev, so this is called a
                 // second time when onInstallUpdateOrDump() fires with the dev
                 // section parsed as well.
-                $root->setReferences(Argument::type('array'))->will($second_call);
+                $root->setReferences(Argument::type('array'))->will($checkRefsWithDev);
             }
         );
 
@@ -1138,19 +1138,19 @@ class MergePluginTest extends \PHPUnit_Framework_TestCase
     /**
      * @param RootPackage $package
      * @param string $directory Working directory for composer run
-     * @param bool $use_init_event If the init event should be triggered.
+     * @param bool $fireInit Should the init event should be triggered?
      * @return array Constrains added by MergePlugin::onDependencySolve
      */
-    protected function triggerPlugin($package, $directory, $use_init_event = false)
+    protected function triggerPlugin($package, $directory, $fireInit = false)
     {
         chdir($directory);
         $this->composer->getPackage()->willReturn($package);
 
-        $event = new \Composer\EventDispatcher\Event(
-            MergePlugin::COMPAT_PLUGINEVENTS_INIT
-        );
-        if ($use_init_event) {
-            $this->fixture->onInit($event);
+        if ($fireInit) {
+            $init = new \Composer\EventDispatcher\Event(
+                MergePlugin::COMPAT_PLUGINEVENTS_INIT
+            );
+            $this->fixture->onInit($init);
         }
 
         $event = new Event(
