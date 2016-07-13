@@ -100,11 +100,7 @@ class User {
 
 			$this->CI->session->set_userdata('user_info', $user_data);
 
-			$this->user_id 		= $row['user_id'];
-			$this->username 	= $row['username'];
-			$this->staff_id 	= $row['staff_id'];
-			$this->staff_name 	= $row['staff_name'];
-			$this->staff_email 	= $row['staff_email'];
+			$this->initialize();
 
 	  		return TRUE;
 		} else {

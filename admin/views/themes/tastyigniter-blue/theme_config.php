@@ -18,7 +18,8 @@ $theme['nav_menu'] = array(
 		'class' => 'dashboard admin',
 		'href' => site_url('dashboard'),
 		'icon' => 'fa-dashboard',
-		'title' => lang('menu_dashboard')
+		'title' => lang('menu_dashboard'),
+		'permission' => 'Admin.Dashboard',
 	),
 	'kitchen' => array(
 		'class' => 'kitchen',
@@ -118,6 +119,7 @@ $theme['nav_menu'] = array(
 		'permission' => 'Admin.Permissions|Admin.ErrorLogs|Site.Settings',
 		'child' => array(
 			'settings' => array('class' => 'settings', 'href' => site_url('settings'), 'title' => lang('menu_setting'), 'permission' => 'Site.Settings'),
+			'updates' => array('class' => 'updates', 'href' => site_url('updates'), 'title' => lang('menu_updates'), 'permission' => 'Site.Updates'),
 			'permissions' => array('class' => 'permissions', 'href' => site_url('permissions'), 'title' => lang('menu_permission'), 'permission' => 'Admin.Permissions'),
 //			'uri_routes' => array('class' => 'uri_routes', 'href' => site_url('uri_routes'), 'title' => lang('menu_uri_route')),
 			'error_logs' => array('class' => 'error_logs', 'href' => site_url('error_logs'), 'title' => lang('menu_error_log'), 'permission' => 'Admin.ErrorLogs'),
