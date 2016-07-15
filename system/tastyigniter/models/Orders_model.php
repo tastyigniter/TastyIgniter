@@ -657,9 +657,9 @@ class Orders_model extends TI_Model {
             $notify = $this->sendMail($mail_data['email'], $mail_template, $mail_data);
         }
 
-        if ($this->location->getEmail() AND ($this->config->item('location_order_email') === '1' OR in_array('location', $config_order_email))) {
+        if (!empty($mail_data['location_email']) AND ($this->config->item('location_order_email') === '1' OR in_array('location', $config_order_email))) {
             $mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'order_alert');
-            $this->sendMail($this->location->getEmail(), $mail_template, $mail_data);
+            $this->sendMail($mail_data['location_email'], $mail_template, $mail_data);
         }
 
         if (in_array('admin', $config_order_email)) {
@@ -744,6 +744,7 @@ class Orders_model extends TI_Model {
                 $this->load->model('Locations_model');
                 $location = $this->Locations_model->getLocation($result['location_id']);
                 $data['location_name'] = $location['location_name'];
+                $data['location_email'] = $location['location_email'];
             }
         }
 
