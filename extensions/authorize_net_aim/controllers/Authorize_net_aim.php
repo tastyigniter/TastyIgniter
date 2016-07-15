@@ -7,7 +7,10 @@ class Authorize_net_aim extends Main_Controller {
         $this->load->model('Orders_model');
         $this->load->model('Addresses_model');
         $this->load->model('Countries_model');
-    }
+
+		$this->load->library('location'); 														// load the location library
+		$this->location->initialize();
+	}
 
     public function index() {
         if ( ! file_exists(EXTPATH .'authorize_net_aim/views/authorize_net_aim.php')) { 								//check if file exists in views folder
