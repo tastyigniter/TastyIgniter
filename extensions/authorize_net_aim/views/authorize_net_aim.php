@@ -83,7 +83,6 @@
 							<?php } else { ?>
 								<option value="<?php echo $address['address_id']; ?>"><?php echo $address['address']; ?></option>
 							<?php } ?>
-							<?php $address_row++; ?>
 						<?php } ?>
 					</select>
 				</div>
