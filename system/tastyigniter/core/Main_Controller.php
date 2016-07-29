@@ -20,32 +20,55 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @package        TastyIgniter\Core\Main_Controller.php
  * @link           http://docs.tastyigniter.com
  */
-class Main_Controller extends Base_Controller {
+class Main_Controller extends Base_Controller
+{
 
-    /**
-     * Class constructor
-     *
-     */
-	public function __construct()
-	{
-        parent::__construct();
+	/**
+	 * Class constructor
+	 *
+	 */
+	public function __construct() {
+		$this->libraries[] = 'form_validation';
+
+		parent::__construct();
+
+		Events::trigger('before_main_controller');
 
 		log_message('info', 'Main Controller Class Initialized');
 
-        // Load permalink
-        $this->load->library('permalink');
+		// Check app for maintenance in production environments.
+		if (ENVIRONMENT === 'production') {
+			// Show maintenance message if maintenance is enabled
+			$this->showMaintenance();
+		}
 
-        // Load template library
-        $this->load->library('template');
+		// Load permalink
+		$this->load->library('permalink');
 
-        $this->load->library('customer');
+		// Load template library
+		$this->load->library('template');
 
-        $this->load->library('customer_online');
+		$this->load->library('customer');
 
-        $this->load->model('Pages_model');
+		$this->load->library('customer_online');
+
+		$this->load->model('Pages_model');
 
 		$this->load->library('location');
-    }
+
+		$this->form_validation->CI =& $this;
+
+		Events::trigger('after_main_controller');
+	}
+
+	protected function showMaintenance() {
+		if ($this->config->item('maintenance_mode') === '1') {
+			$this->load->library('user');
+			if ($this->uri->rsegment(1) !== 'maintenance' AND !$this->user->isLogged()) {
+				show_error($this->config->item('maintenance_message'), '503', 'Maintenance Enabled');
+			}
+		}
+	}
 }
 
 /* End of file Main_Controller.php */

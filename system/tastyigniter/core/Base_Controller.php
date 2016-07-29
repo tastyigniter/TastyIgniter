@@ -20,83 +20,136 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @package        TastyIgniter\Core\Base_Controller.php
  * @link           http://docs.tastyigniter.com
  */
-class Base_Controller extends MX_Controller {
+class Base_Controller extends MX_Controller
+{
+	/**
+	 * @var string Link URL for the index page
+	 */
+	public $index_url = NULL;
 
-    /**
-     * Class constructor
-     *
-     */
-    public function __construct()
-    {
-        parent::__construct();
+	/**
+	 * @var string Link URL for the create page
+	 */
+	public $create_url = NULL;
 
-        log_message('info', 'Base Controller Class Initialized');
+	/**
+	 * @var string Link URL for the edit page
+	 */
+	public $edit_url = NULL;
 
-        // Load session
-        $this->load->library('session');
+	/**
+	 * @var string Link URL for the edit page
+	 */
+	public $delete_url = NULL;
 
-        $this->load->library('alert');
+	/**
+	 * @var string Page controller being called.
+	 */
+	protected $controller;
 
-        // Load installer library and database config items
-        $this->load->library('installer');
+	/**
+	 * @var string Page method being called.
+	 */
+	protected $method;
 
-        // If 'config/updated.txt' exists, system needs upgrade
-        if (is_file(IGNITEPATH . 'config/updated.txt')) {
-            if ($this->installer->upgrade()) redirect(admin_url('dashboard'));
-        }
+	/**
+	 * @var bool If TRUE, this class requires the user to be logged in before
+	 * accessing any method.
+	 */
+	protected $authentication = FALSE;
 
-        // Redirect to setup if app requires setup
-        if (($installed = $this->installer->isInstalled()) !== TRUE AND APPDIR !== 'setup') {
-            redirect(root_url('setup'));
-        }
+	/**
+	 * A list of models to be auto-loaded
+	 */
+	protected $models = array();
 
-        // If database is connected, then app is ready
-        if ($this->installer->db_exists === TRUE) {
+	/**
+	 * A list of libraries to be auto-loaded
+	 */
+	protected $libraries = array();
 
-            // Load extension library
-            $this->load->library('extension');
+	/**
+	 * A list of helpers to be auto-loaded
+	 */
+	protected $helpers = array();
 
-            // Load events library
-            $this->load->library('events');
+	/**
+	 * A list of languages to be auto-loaded
+	 */
+	protected $languages = array();
 
-            // If the requested controller is a module controller then load the module config
-            if (ENVIRONMENT !== 'testing') {
-                if ($this->extension AND $this->router AND $_module = $this->router->fetch_module()) {
-                    // Load the module configuration file and retrieve its items.
-                    // Shows 404 error message on failure to load
-                    $this->extension->loadConfig($_module, TRUE);
-                }
-            }
-        }
+	/**
+	 * @var object Stores the logged in admin user.
+	 */
+	protected $current_user;
 
-        // Check app for maintenance in production environments.
-        if (ENVIRONMENT === 'production') {
+	/**
+	 * Class constructor
+	 */
+	public function __construct() {
+		// Handle any auto-loading here...
+		$this->autoload = array(
+			'model'    => $this->models,
+			'libraries' => array_merge(array('session', 'alert', 'installer', 'extension', 'events'), $this->libraries),
+			'helper' => array_merge(array('inflector', 'text', 'number'), $this->helpers),
+			'language' => $this->languages,
+		);
 
-            // Show maintenance message if maintenance is enabled
-            if ($this->maintenanceEnabled()) {
-                show_error($this->config->item('maintenance_message'), '503', 'Maintenance Enabled');
-            }
-        }
+		parent::__construct();
 
-        // Enable profiler for development environments.
-        if ( ! $this->input->is_ajax_request()) {
-            $this->output->enable_profiler(TI_DEBUG);
-        }
+		log_message('info', 'Base Controller Class Initialized');
 
-        $this->form_validation->CI =& $this;
-    }
+		$this->controller = strtolower($this->router->class);
+		$this->method = $this->router->method;
 
-    private function maintenanceEnabled() {
-        if ($this->config->item('maintenance_mode') === '1') {
-            $this->load->library('user');
-            if (APPDIR === MAINDIR
-                AND $this->uri->rsegment(1) !== 'maintenance'
-                AND !$this->user->isLogged()
-            ) {
-                return TRUE;
-            }
-        }
-    }
+		Events::trigger('before_controller', $this->controller);
+
+		// If database is connected, then app is ready
+		if ($this->installer->db_exists === TRUE) {
+
+			// If the requested controller is a module controller then load the module config
+			if (ENVIRONMENT !== 'testing') {
+				if ($this->extension AND $this->router AND $_module = $this->router->fetch_module()) {
+					// Load the module configuration file and retrieve its items.
+					// Shows 404 error message on failure to load
+					$this->extension->loadConfig($_module, TRUE);
+				}
+			}
+		}
+
+		// Ensures that a user is logged in, if required
+		if ($this->authentication) {
+			$this->setUser();
+		}
+
+		// Enable profiler for development environments.
+		if (TI_DEBUG) $this->showProfiler();
+
+		// After-Controller Constructor Event
+		Events::trigger('after_controller_constructor', $this->controller);
+	}
+
+	protected function showProfiler() {
+		if (!is_cli() AND !$this->input->is_ajax_request()) {
+			if (!class_exists('Console', FALSE)) {
+				$this->load->library('Console');
+			}
+
+			$this->output->enable_profiler(TI_DEBUG);
+		}
+	}
+
+	protected function setUser() {
+		if (class_exists('User', FALSE)) {
+			$this->user->auth();
+
+			// Load the currently logged-in user for convenience
+			if ($this->user->isLogged()) {
+				$this->current_user = $this->user;
+			}
+		}
+	}
+
 }
 
 /* End of file Base_Controller.php */

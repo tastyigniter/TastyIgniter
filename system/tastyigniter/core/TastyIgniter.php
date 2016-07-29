@@ -295,7 +295,7 @@ if ($composer_autoload = config_item('composer_autoload') AND file_exists(BASEPA
  *  Instantiate the routing class and set the routing
  * ------------------------------------------------------
  */
-$RTR =& load_class('Router', 'core', isset($routing) ? $routing : NULL);
+	$RTR =& load_class('Router', 'core', isset($routing) ? $routing : NULL);
 
 /*
  * ------------------------------------------------------
@@ -366,6 +366,7 @@ $RTR =& load_class('Router', 'core', isset($routing) ? $routing : NULL);
 
 	// Load the main or admin base controller class
 	if (APPDIR === ADMINDIR) {
+		require_once IGNITEPATH.'core/Authenticated_Controller.php';
 		require_once IGNITEPATH.'core/Admin_Controller.php';
 	} else if (APPDIR === MAINDIR) {
 		require_once IGNITEPATH.'core/Main_Controller.php';
