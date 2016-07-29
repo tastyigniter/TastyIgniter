@@ -89,24 +89,6 @@ if ( ! function_exists('sort_array'))
     }
 }
 
-if ( ! function_exists('currency_format'))
-{
-    /**
-     * Append or Prepend the default currency symbol to amounts
-     *
-     * @param string $num
-     *
-     * @return string
-     */
-    function currency_format($num = '')
-    {
-        $CI =& get_instance();
-        return $CI->currency->format($num);
-    }
-}
-// ------------------------------------------------------------------------
-
-
 // ------------------------------------------------------------------------
 
 if ( ! function_exists('flush_output'))
