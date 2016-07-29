@@ -186,6 +186,25 @@ if ( ! function_exists('get_remote_data'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('console_log'))
+{
+    /**
+     * Logs a variable to the console.
+     *
+     * @param null $data
+     *
+     */
+    function console_log($data = NULL) {
+        if (!class_exists('Console', FALSE)) {
+            get_instance()->load->library('console');
+        }
+
+        get_instance()->console->log($data);
+    }
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('get_context_help'))
 {
     /**
