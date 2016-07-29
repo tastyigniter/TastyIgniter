@@ -35,21 +35,6 @@ class TI_Loader extends MX_Loader {
 
     protected $_db_config_loaded =	FALSE;
 
-	/**
-     * Initializer
-     *
-     * @param null $controller
-     */
-    public function initialize($controller = NULL)
-    {
-        // Load system configuration from database
-        $this->_load_db_config();
-
-        parent::initialize($controller);
-    }
-
-    // --------------------------------------------------------------------
-
     /**
      * Remove later
      * @param $class
@@ -189,19 +174,15 @@ class TI_Loader extends MX_Loader {
             return;
         }
 
-        $this->database();
+        $this->model('Settings_model');
 
         // Make sure the database is connected and settings table exists
-        if ($this->db->conn_id !== FALSE AND $this->db->table_exists('settings')) {
+        if ($this->Settings_model->table_exists()) {
 
-            $this->db->query("SET SESSION sql_mode=''");
+            $this->Settings_model->query("SET SESSION sql_mode=''");
 
-            $this->db->from('settings');
-
-            $query = $this->db->get();
-
-            if ($query->num_rows() > 0) {
-                foreach ($query->result_array() as $setting) {
+            if ($settings = $this->Settings_model->getAll()) {
+                foreach ($settings as $setting) {
                     if ( ! empty($setting['serialized'])) {
                         $this->config->set_item($setting['item'], unserialize($setting['value']));
                     } else {
