@@ -130,6 +130,17 @@ class User {
 	    }
     }
 
+	public function auth() {
+		$uri = $this->CI->uri->rsegment(1);
+		
+		if (!$this->isLogged() AND $uri !== 'login' AND $uri !== 'logout') {
+			$this->CI->alert->set('danger', $this->CI->lang->line('alert_user_not_logged_in'));
+			$prepend = empty($uri) ? '' : '?redirect=' . current_url();
+			redirect(admin_url('login' . $prepend));
+		}
+
+	}
+
   	public function isLogged() {
         return $this->is_logged;
 	}
@@ -181,8 +192,9 @@ class User {
     public function unreadMessageTotal() {
         if (empty($this->unread)) {
             $this->CI->load->model('Messages_model');
-            $this->unread = $this->CI->Messages_model->getUnreadCount($this->staff_id);
-        }
+            $unread = $this->CI->Messages_model->getUnreadCount($this->staff_id);
+			$this->unread = ($unread < 1) ? '' : $unread;
+		}
 
         return $this->unread;
     }
