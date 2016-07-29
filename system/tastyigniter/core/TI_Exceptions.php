@@ -137,20 +137,10 @@ class TI_Exceptions extends CI_Exceptions {
 	protected function getErrorViewsPath() {
 		$default_themes = config_item('default_themes');
 
-		if (empty($default_themes)) {
-			$CI =& get_instance();
-
-			if ( ! isset($CI->db)) {
-				$CI->load->database();
-
-				$query = $CI->db->get_where('settings', array('item' => 'default_themes'));
-				if (is_string($query->row()->value)) {
-					$default_themes = unserialize($query->row()->value);
-				}
-			}
+		if (!empty($default_themes)) {
+			$default_theme = isset($default_themes[APPDIR]) ? $default_themes[APPDIR] : '';
 		}
 
-		$default_theme = isset($default_themes[APPDIR]) ? $default_themes[APPDIR] : '';
 		$templates_path = config_item('error_views_path');
 
 		// set the error views path for the theme if it exists
