@@ -527,7 +527,7 @@ class Extensions_model extends TI_Model
 		if (!empty($type) AND $this->extensionExists($name)) {
 
 			$get_installed = $this->find(array('type' => $type, 'name' => $name, 'status' => '1'));
-			if (!empty($get_installed)) {
+			if (empty($get_installed)) {
 				$this->load->helper('file');
 				delete_files(ROOTPATH . EXTPATH . $name, TRUE);
 				rmdir(ROOTPATH . EXTPATH . $name);
@@ -535,7 +535,7 @@ class Extensions_model extends TI_Model
 			}
 
 			if ($delete_data) {
-				$affected_rows = $this->delete(array('type' => $type, 'name' => $name, 'status' => '0'));
+				$affected_rows = parent::delete(array('type' => $type, 'name' => $name, 'status' => '0'));
 				if ($affected_rows > 0) {
 
 					// downgrade extension migration
