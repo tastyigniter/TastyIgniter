@@ -20,22 +20,46 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Themes_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Themes_model extends TI_Model {
+class Themes_model extends TI_Model
+{
+	/**
+	 * @var string The database table name
+	 */
+	protected $table_name = 'extensions';
 
+	/**
+	 * @var string The database table primary key
+	 */
+	protected $primary_key = 'extension_id';
+
+	/**
+	 * Count the number of records
+	 *
+	 * @return int
+	 */
+	public function getCount() {
+		return $this->count_all();
+	}
+
+	/**
+	 * List all themes matching the filter
+	 *
+	 * @return array|bool
+	 */
 	public function getList() {
 		$themes = $this->getThemes();
 		$themes_list = list_themes();
 
 		$results = array();
 
-		if ( ! empty($themes) AND ! empty($themes_list)) {
+		if (!empty($themes) AND !empty($themes_list)) {
 			foreach ($themes_list as $theme) {
 				if ($theme['location'] === ADMINDIR) continue;
 
-				$db_theme = (isset($themes[$theme['basename']]) AND ! empty($themes[$theme['basename']])) ? $themes[$theme['basename']] : array();
+				$db_theme = (isset($themes[$theme['basename']]) AND !empty($themes[$theme['basename']])) ? $themes[$theme['basename']] : array();
 
-				$extension_id = ( ! empty($db_theme['extension_id'])) ? $db_theme['extension_id'] : 0;
-				$theme_name = ( ! empty($db_theme['name'])) ? $db_theme['name'] : $theme['basename'];
+				$extension_id = (!empty($db_theme['extension_id'])) ? $db_theme['extension_id'] : 0;
+				$theme_name = (!empty($db_theme['name'])) ? $db_theme['name'] : $theme['basename'];
 
 				$results[$theme['basename']] = array(
 					'extension_id' => $extension_id,
@@ -47,11 +71,11 @@ class Themes_model extends TI_Model {
 					'screenshot'   => root_url($theme['path'] . '/screenshot.png'),
 					'path'         => $theme['path'],
 					'is_writable'  => is_writable($theme['path']),
-					'child'        => ! empty($theme['config']['child']) ? $theme['config']['child'] : '',
-					'parent'       => ! empty($theme['config']['parent']) ? $theme['config']['parent'] : '',
-					'data'         => ! empty($db_theme['data']) ? $db_theme['data'] : array(),
+					'child'        => !empty($theme['config']['child']) ? $theme['config']['child'] : '',
+					'parent'       => !empty($theme['config']['parent']) ? $theme['config']['parent'] : '',
+					'data'         => !empty($db_theme['data']) ? $db_theme['data'] : array(),
 					'config'       => $theme['config'],
-					'customize'    => (isset($theme['config']['customize']) AND ! empty($theme['config']['customize'])) ? TRUE : FALSE,
+					'customize'    => (isset($theme['config']['customize']) AND !empty($theme['config']['customize'])) ? TRUE : FALSE,
 				);
 			}
 
@@ -66,30 +90,37 @@ class Themes_model extends TI_Model {
 		return $results;
 	}
 
+	/**
+	 * Return all themes
+	 *
+	 * @return array
+	 */
 	public function getThemes() {
-		$this->db->from('extensions');
-		$this->db->where('type', 'theme');
-		$query = $this->db->get();
-
 		$results = array();
 
-		if ($query->num_rows() > 0) {
-			foreach ($query->result_array() as $row) {
-				$row['data'] = ($row['serialized'] === '1' AND ! empty($row['data'])) ? unserialize($row['data']) : array();
-				$results[$row['name']] = $row;
-			}
+		$this->where('type', 'theme');
+		foreach ($this->find_all() as $row) {
+			$row['data'] = ($row['serialized'] === '1' AND !empty($row['data'])) ? unserialize($row['data']) : array();
+			$results[$row['name']] = $row;
 		}
 
 		return $results;
 	}
 
+	/**
+	 * Find a single theme by name
+	 *
+	 * @param string $name
+	 *
+	 * @return array
+	 */
 	public function getTheme($name = '') {
 		$results = array();
 
-		if ( ! empty($name)) {
+		if (!empty($name)) {
 			$themes_list = $this->getList();
 
-			if ( ! empty($themes_list) AND is_array($themes_list)) {
+			if (!empty($themes_list) AND is_array($themes_list)) {
 				if (isset($themes_list[$name]) AND is_array($themes_list[$name])) {
 					$results = $themes_list[$name];
 				}
@@ -99,16 +130,23 @@ class Themes_model extends TI_Model {
 		return $results;
 	}
 
+	/**
+	 * Activate theme
+	 *
+	 * @param string $name
+	 *
+	 * @return bool|mixed
+	 */
 	public function activateTheme($name) {
 		$query = FALSE;
 
-		if ( ! empty($name) AND $theme = $this->getTheme($name)) {
+		if (!empty($name) AND $theme = $this->getTheme($name)) {
 			$default_themes = $this->config->item('default_themes');
 			$default_themes[MAINDIR] = $name . '/';
 
-			unset($default_themes[MAINDIR.'_parent']);
+			unset($default_themes[MAINDIR . '_parent']);
 			if (!empty($theme['parent'])) {
-				$default_themes[MAINDIR.'_parent'] = $theme['parent'] . '/';
+				$default_themes[MAINDIR . '_parent'] = $theme['parent'] . '/';
 			}
 
 			$this->load->model('Settings_model');
@@ -129,38 +167,40 @@ class Themes_model extends TI_Model {
 		return $query;
 	}
 
+	/**
+	 * Create a new or update existing theme
+	 *
+	 * @param array $update
+	 *
+	 * @return bool
+	 */
 	public function updateTheme($update = array()) {
 		if (empty($update)) return FALSE;
 
-		$this->db->set('status', '1');
+		$update['status'] = '1';
 
-		if ( ! empty($update['data'])) {
-			$this->db->set('data', serialize($update['data']));
-			$this->db->set('serialized', '1');
+		if (!empty($update['data'])) {
+			$update['data'] = serialize($update['data']);
+			$update['serialized'] = '1';
 		} else {
 			$update['data'] = array();
 		}
 
-		if (isset($update['title'])) {
-			$this->db->set('title', $update['title']);
+		$query = FALSE;
+		if (!empty($update['extension_id']) AND !empty($update['name'])) {
+			$query = $this->update(array(
+				'type'         => 'theme',
+				'name'         => $update['name'],
+				'extension_id' => $update['extension_id'],
+			), $update);
+		} else if (!empty($update['name'])) {
+			$query = $this->insert(array_merge($update, array(
+				'type' => 'theme',
+				'name' => $update['name'],
+			)));
 		}
 
-		if (isset($update['version'])) {
-			$this->db->set('version', $update['version']);
-		}
-
-		if ( ! empty($update['extension_id']) AND ! empty($update['name'])) {
-			$this->db->where('type', 'theme');
-			$this->db->where('name', $update['name']);
-			$this->db->where('extension_id', $update['extension_id']);
-			$query = $this->db->update('extensions');
-		} else if ( ! empty($update['name'])) {
-			$this->db->set('type', 'theme');
-			$this->db->set('name', $update['name']);
-			$query = $this->db->insert('extensions');
-		}
-
-		if ($query === TRUE) {
+		if ($query) {
 			$active_theme_options = $this->config->item('active_theme_options');
 			$active_theme_options[MAINDIR] = array($update['name'], $update['data']);
 
@@ -172,6 +212,14 @@ class Themes_model extends TI_Model {
 		return $query;
 	}
 
+	/**
+	 * Extract uploaded theme zip folder
+	 *
+	 * @param array  $file
+	 * @param string $domain
+	 *
+	 * @return bool
+	 */
 	public function extractTheme($file = array(), $domain = MAINDIR) {
 		if (isset($file['tmp_name']) AND class_exists('ZipArchive')) {
 
@@ -184,7 +232,7 @@ class Themes_model extends TI_Model {
 			if ($zip->open($file['tmp_name']) === TRUE) {
 				$theme_dir = $zip->getNameIndex(0);
 
-				if (preg_match('/\s/', $theme_dir) OR file_exists($THEMEPATH .'/'. $theme_dir)) {
+				if (preg_match('/\s/', $theme_dir) OR file_exists($THEMEPATH . '/' . $theme_dir)) {
 					return $this->lang->line('error_theme_exists');
 				}
 
@@ -198,18 +246,24 @@ class Themes_model extends TI_Model {
 		return FALSE;
 	}
 
+	/**
+	 * Create child theme from existing theme files and data
+	 *
+	 * @param string $theme_name
+	 * @param array  $files
+	 * @param bool   $copy_data
+	 *
+	 * @return bool
+	 */
 	public function copyTheme($theme_name = NULL, $files = array(), $copy_data = TRUE) {
 		$query = FALSE;
 
-		if ( ! empty($theme_name)) {
+		if (!empty($theme_name)) {
 
-			$this->db->where('type', 'theme');
-			$this->db->where('name', $theme_name);
+			$this->where('type', 'theme');
+			$this->where('name', $theme_name);
 
-			$query = $this->db->get('extensions');
-			if ($query->num_rows() === 1) {
-				$row = $query->row_array();
-
+			if ($row = $this->find()) {
 				unset($row['extension_id']);
 				$row['name'] = $this->findThemeName("{$row['name']}-child");
 				$row['old_title'] = $row['title'];
@@ -225,36 +279,52 @@ class Themes_model extends TI_Model {
 		return $query;
 	}
 
+	/**
+	 * Create a unique theme name
+	 *
+	 * @param string $theme_name
+	 * @param int    $count
+	 *
+	 * @return string
+	 */
 	protected function findThemeName($theme_name, $count = 0) {
 		$tmp_name = ($count > 0) ? "{$theme_name}-{$count}" : $theme_name;
-		$theme = $this->db->where('type', 'theme')->where('name', $tmp_name)->get('extensions')->num_rows();
+		$theme = $this->where('type', 'theme')->where('name', $tmp_name)->find();
 
-		if (!empty($theme) OR is_dir(ROOTPATH . MAINDIR ."/views/themes/{$tmp_name}")) {
+		if (!empty($theme) OR is_dir(ROOTPATH . MAINDIR . "/views/themes/{$tmp_name}")) {
 			$count++;
+
 			return $this->findThemeName($theme_name, $count);
 		}
 
 		return $tmp_name;
 	}
 
+	/**
+	 * Delete a single theme by name
+	 *
+	 * @param string $theme_name
+	 * @param bool   $delete_data
+	 *
+	 * @return bool
+	 */
 	public function deleteTheme($theme_name = NULL, $delete_data = TRUE) {
 		$query = FALSE;
 
-		if ( ! empty($theme_name)) {
+		if (!empty($theme_name)) {
 
 			if ($delete_data) {
-				$this->db->where('type', 'theme');
-				$this->db->where('name', $theme_name);
+				$this->where('type', 'theme')->where('name', $theme_name);
 
-				$this->db->delete('extensions');
-				if ($this->db->affected_rows() > 0) {
-					$query = TRUE;
-				}
+				$query = $this->delete('extensions');
 			}
 
-			return delete_theme($theme_name);
+			$query = delete_theme($theme_name);
 		}
 
 		return $query;
 	}
 }
+
+/* End of file Themes_model.php */
+/* Location: ./system/tastyigniter/models/Themes_model.php */

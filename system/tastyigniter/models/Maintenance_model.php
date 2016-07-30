@@ -20,8 +20,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Maintenance_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Maintenance_model extends TI_Model {
+class Maintenance_model extends TI_Model
+{
 
+	/**
+	 * List all database tables
+	 *
+	 * @return array
+	 */
 	public function getdbTables() {
 		$result = array();
 
@@ -29,9 +35,8 @@ class Maintenance_model extends TI_Model {
 		$query = $this->db->query($sql, $this->db->database);
 
 		if ($query->num_rows() > 0) {
-			;
 			foreach ($query->result_array() as $row) {
-				if ($this->db->table_exists($row['table_name'])) {
+				if ($this->table_exists($row['table_name'])) {
 					$result[] = $row;
 				}
 			}
@@ -40,6 +45,11 @@ class Maintenance_model extends TI_Model {
 		return $result;
 	}
 
+	/**
+	 * Return all backed up SQL files
+	 *
+	 * @return array
+	 */
 	public function getBackupFiles() {
 		$result = array();
 
@@ -50,9 +60,6 @@ class Maintenance_model extends TI_Model {
 				$result[] = array(
 					'filename' => $basename,
 					'size'     => filesize($backup_file),
-					'download' => site_url('maintenance/backup?download=' . $basename),
-					'restore'  => site_url('maintenance/backup?restore=' . $basename),
-					'delete'   => site_url('maintenance/backup?delete=' . $basename)
 				);
 			}
 		}
@@ -60,14 +67,19 @@ class Maintenance_model extends TI_Model {
 		return $result;
 	}
 
+	/**
+	 * List all database table records matching filter
+	 *
+	 * @param array $filter
+	 *
+	 * @return array
+	 */
 	public function browseTable($filter = array()) {
-		if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
+		if (!empty($filter['page']) AND $filter['page'] !== 0) {
 			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
 		}
 
-		if ( ! empty($filter['table']) AND is_string($filter['table']) AND $this->db->limit($filter['limit'],
-		                                                                                    $filter['page'])
-		) {
+		if (!empty($filter['table']) AND is_string($filter['table']) AND $this->db->limit($filter['limit'], $filter['page'])) {
 			$this->db->from($filter['table']);
 
 			$query = $this->db->get();
@@ -78,10 +90,17 @@ class Maintenance_model extends TI_Model {
 		}
 	}
 
+	/**
+	 * Check if a table exist in the database
+	 *
+	 * @param array $tables
+	 *
+	 * @return bool TRUE on success, or FALSE on failure
+	 */
 	public function checkTables($tables = array()) {
-		if ( ! empty($tables)) {
+		if (!empty($tables)) {
 			foreach ($tables as $table) {
-				if ( ! $this->db->table_exists($table)) {
+				if (!$this->table_exists($table)) {
 					return FALSE;
 				}
 			}
@@ -92,18 +111,25 @@ class Maintenance_model extends TI_Model {
 		return FALSE;
 	}
 
+	/**
+	 * Backup database and save backup file
+	 *
+	 * @param array $backup an array containing backup options
+	 *
+	 * @return bool
+	 */
 	public function backupDatabase($backup = array()) {
-		if ( ! empty($backup)) {
+		if (!empty($backup)) {
 			$this->load->dbutil();
 			$this->load->helper('file');
 
 			$timestamp = mdate('%Y-%m-%d-%H-%i-%s', now());
 
-			$file_name = ! empty($backup['file_name']) ? $backup['file_name'] : 'tastyigniter-' . $timestamp;
+			$file_name = !empty($backup['file_name']) ? $backup['file_name'] : 'tastyigniter-' . $timestamp;
 
 			$prefs = array(
 				// Array of tables to backup.
-				'tables'     => ! empty($backup['tables']) ? $backup['tables'] : array(),
+				'tables'     => !empty($backup['tables']) ? $backup['tables'] : array(),
 				// gzip, zip, txt
 				'format'     => isset($backup['compression']) OR $backup['compression'] !== 'none' ? $backup['compression'] : 'txt',
 				// File name - NEEDED ONLY WITH ZIP FILES
@@ -118,7 +144,7 @@ class Maintenance_model extends TI_Model {
 
 			$back_up = $this->dbutil->backup($prefs);
 
-			if ( ! is_dir(IGNITEPATH . 'migrations/backups')) {
+			if (!is_dir(IGNITEPATH . 'migrations/backups')) {
 				mkdir(IGNITEPATH . 'migrations/backups', DIR_WRITE_MODE);
 			}
 
@@ -130,6 +156,13 @@ class Maintenance_model extends TI_Model {
 		return FALSE;
 	}
 
+	/**
+	 * Restore database from existing backup file
+	 *
+	 * @param $backup_file
+	 *
+	 * @return bool
+	 */
 	public function restoreDatabase($backup_file) {
 		$file = pathinfo($this->security->sanitize_filename($backup_file));
 		$file_path = IGNITEPATH . "migrations/backups/" . $file['filename'] . ".sql";
@@ -151,6 +184,13 @@ class Maintenance_model extends TI_Model {
 		}
 	}
 
+	/**
+	 * Read the database backup file from backup folder
+	 *
+	 * @param $backup_file
+	 *
+	 * @return array
+	 */
 	public function readBackupFile($backup_file) {
 		$file = pathinfo($this->security->sanitize_filename($backup_file));
 		$file_path = IGNITEPATH . "migrations/backups/" . $file['filename'] . ".sql";
@@ -159,22 +199,30 @@ class Maintenance_model extends TI_Model {
 			if (is_file($file_path)) {
 				return array(
 					'filename' => $file['basename'],
-					'content' => file_get_contents($file_path),
+					'content'  => file_get_contents($file_path),
 				);
 			}
 		}
 	}
 
+	/**
+	 * Delete a single or multiple database file
+	 *
+	 * @param $backup_file
+	 *
+	 * @return bool TRUE on success, or FALSE on failure
+	 */
 	public function deleteBackupFile($backup_file) {
 		$file = pathinfo($this->security->sanitize_filename($backup_file));
 		$file_path = IGNITEPATH . "migrations/backups/" . $file['filename'] . ".sql";
 
 		if ($file['extension'] === 'sql' AND is_file($file_path)) {
 			unlink($file_path);
+
 			return TRUE;
 		}
 	}
 }
 
-/* End of file maintenance_model.php */
-/* Location: ./system/tastyigniter/models/maintenance_model.php */
+/* End of file Maintenance_model.php */
+/* Location: ./system/tastyigniter/models/Maintenance_model.php */

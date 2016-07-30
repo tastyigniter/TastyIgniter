@@ -20,160 +20,147 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Tables_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Tables_model extends TI_Model {
+class Tables_model extends TI_Model
+{
+	/**
+	 * @var string The database table name
+	 */
+	protected $table_name = 'tables';
 
-	public function getCount($filter) {
-		if ( ! empty($filter['filter_search'])) {
-			$this->db->like('table_name', $filter['filter_search']);
+	/**
+	 * @var string The database table primary key
+	 */
+	protected $primary_key = 'table_id';
+
+	/**
+	 * Count the number of records
+	 *
+	 * @param array $filter
+	 *
+	 * @return int
+	 */
+	public function getCount($filter = array()) {
+		return $this->filter($filter)->count();
+	}
+
+	/**
+	 * List all tables matching the filter
+	 *
+	 * @param array $filter
+	 *
+	 * @return array|bool
+	 */
+	public function getList($filter = array()) {
+		return $this->filter($filter)->find_all();
+	}
+
+	/**
+	 * Filter database records
+	 *
+	 * @param array $filter an associative array of field/value pairs
+	 *
+	 * @return $this
+	 */
+	public function filter($filter = array()) {
+		if (!empty($filter['filter_search'])) {
+			$this->like('table_name', $filter['filter_search']);
 		}
 
 		if (is_numeric($filter['filter_status'])) {
-			$this->db->where('table_status', $filter['filter_status']);
+			$this->where('table_status', $filter['filter_status']);
 		}
 
-		$this->db->from('tables');
-
-		return $this->db->count_all_results();
+		return $this;
 	}
 
-	public function getList($filter = array()) {
-		if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
-			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
-		}
-
-		if ($this->db->limit($filter['limit'], $filter['page'])) {
-			$this->db->from('tables');
-
-			if ( ! empty($filter['sort_by']) AND ! empty($filter['order_by'])) {
-				$this->db->order_by($filter['sort_by'], $filter['order_by']);
-			}
-
-			if ( ! empty($filter['filter_search'])) {
-				$this->db->like('table_name', $filter['filter_search']);
-			}
-
-			if (is_numeric($filter['filter_status'])) {
-				$this->db->where('table_status', $filter['filter_status']);
-			}
-
-			$query = $this->db->get();
-			$result = array();
-
-			if ($query->num_rows() > 0) {
-				$result = $query->result_array();
-			}
-
-			return $result;
-		}
-	}
-
+	/**
+	 * Return all tables
+	 *
+	 * @return array
+	 */
 	public function getTables() {
-		$this->db->from('tables');
-		//$this->db->join('locations', 'locations.location_id = tables.location_id', 'left');
-
-		$query = $this->db->get();
-		$result = array();
-
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
-
-		return $result;
+		return $this->find_all();
 	}
 
+	/**
+	 * Find a single table by table_id
+	 *
+	 * @param int $table_id
+	 *
+	 * @return array
+	 */
 	public function getTable($table_id) {
-		$this->db->from('tables');
-		$this->db->where('table_id', $table_id);
-
-		$query = $this->db->get();
-
-		if ($query->num_rows() > 0) {
-			return $query->row_array();
-		}
+		return $this->find($table_id);
 	}
 
-	public function getTablesByLocation($location_id = FALSE) {
-		$this->db->from('location_tables');
-
-		$this->db->where('location_id', $location_id);
-
-		$query = $this->db->get();
-
+	/**
+	 * Return all tables by location
+	 *
+	 * @param int $location_id
+	 *
+	 * @return array
+	 */
+	public function getTablesByLocation($location_id = NULL) {
 		$location_tables = array();
-
-		if ($query->num_rows() > 0) {
-
-			foreach ($query->result_array() as $row) {
-				$location_tables[] = $row['table_id'];
-			}
+		$this->load->model('Location_tables_model');
+		$this->Location_tables_model->where('location_id', $location_id);
+		foreach ($this->Location_tables_model->find_all() as $row) {
+			$location_tables[] = $row['table_id'];
 		}
 
 		return $location_tables;
 	}
 
-	public function getAutoComplete($filter_data = array()) {
-		if (is_array($filter_data) && ! empty($filter_data)) {
+	/**
+	 * List all tables matching the filter,
+	 * to fill select auto-complete options
+	 *
+	 * @param array $filter
+	 *
+	 * @return array
+	 */
+	public function getAutoComplete($filter = array()) {
+		if (is_array($filter) && !empty($filter)) {
 
-			if ( ! empty($filter_data['table_name'])) {
-				$this->db->from('tables');
-				$this->db->where('table_status >', '0');
-				$this->db->like('table_name', $filter_data['table_name']);
+			$this->where('table_status >', '0');
+
+			if (!empty($filter['table_name'])) {
+				$this->like('table_name', $filter['table_name']);
 			}
 
-			$query = $this->db->get();
-			$result = array();
-
-			if ($query->num_rows() > 0) {
-				$result = $query->result_array();
-			}
-
-			return $result;
+			return $this->find_all();
 		}
 	}
 
+	/**
+	 * Create a new or update existing table
+	 *
+	 * @param int   $table_id
+	 * @param array $save
+	 *
+	 * @return bool|int The $table_id of the affected row, or FALSE on failure
+	 */
 	public function saveTable($table_id, $save = array()) {
 		if (empty($save)) return FALSE;
 
-		if (isset($save['table_name'])) {
-			$this->db->set('table_name', $save['table_name']);
-		}
-
-		if (isset($save['min_capacity'])) {
-			$this->db->set('min_capacity', $save['min_capacity']);
-		}
-
-		if (isset($save['max_capacity'])) {
-			$this->db->set('max_capacity', $save['max_capacity']);
-		}
-
-		if (isset($save['table_status']) AND $save['table_status'] === '1') {
-			$this->db->set('table_status', $save['table_status']);
-		} else {
-			$this->db->set('table_status', '0');
-		}
-
-		if (is_numeric($table_id)) {
-			$this->db->where('table_id', $table_id);
-			$query = $this->db->update('tables');
-		} else {
-			$query = $this->db->insert('tables');
-			$table_id = $this->db->insert_id();
-		}
-
-		return $table_id;
+		return $this->skip_validation(TRUE)->save($save, $table_id);
 	}
 
+	/**
+	 * Delete a single or multiple table by table_id
+	 *
+	 * @param string|array $table_id
+	 *
+	 * @return int  The number of deleted rows
+	 */
 	public function deleteTable($table_id) {
 		if (is_numeric($table_id)) $table_id = array($table_id);
 
-		if ( ! empty($table_id) AND ctype_digit(implode('', $table_id))) {
-			$this->db->where_in('table_id', $table_id);
-			$this->db->delete('tables');
-
-			return $this->db->affected_rows();
+		if (!empty($table_id) AND ctype_digit(implode('', $table_id))) {
+			return $this->delete('table_id', $table_id);
 		}
 	}
 }
 
-/* End of file tables_model.php */
-/* Location: ./system/tastyigniter/models/tables_model.php */
+/* End of file Tables_model.php */
+/* Location: ./system/tastyigniter/models/Tables_model.php */
