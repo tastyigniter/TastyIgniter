@@ -20,14 +20,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Setup_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Setup_model extends TI_Model {
-
+class Setup_model extends TI_Model
+{
 	public function loadDemoSchema($demo_data) {
 		$query = TRUE;
 
 		if (isset($demo_data) AND $demo_data === '1' AND $this->db->count_all('coupons') <= 0) {
 			$file = IGNITEPATH . '/migrations/demo_schema.sql';
-			if ( ! file_exists($file)) {
+			if (!file_exists($file)) {
 				return FALSE;
 			}
 
@@ -41,11 +41,11 @@ class Setup_model extends TI_Model {
 
 						if (preg_match('/;\s*$/', $line)) {
 							$sql = str_replace('INSERT INTO ti_', 'INSERT INTO ' . $this->db->dbprefix,
-							                   str_replace('INSERT INTO `ti_', 'INSERT INTO `' . $this->db->dbprefix,
-							                               $sql));
+								str_replace('INSERT INTO `ti_', 'INSERT INTO `' . $this->db->dbprefix,
+									$sql));
 							$sql = str_replace('REPLACE INTO ti_', 'REPLACE INTO ' . $this->db->dbprefix,
-							                   str_replace('REPLACE INTO `ti_', 'REPLACE INTO `' . $this->db->dbprefix,
-							                               $sql));
+								str_replace('REPLACE INTO `ti_', 'REPLACE INTO `' . $this->db->dbprefix,
+									$sql));
 							$this->db->query($sql);
 							$sql = '';
 						}

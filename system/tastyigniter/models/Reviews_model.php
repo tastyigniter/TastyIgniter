@@ -20,130 +20,120 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Reviews_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Reviews_model extends TI_Model {
+class Reviews_model extends TI_Model
+{
+	/**
+	 * @var string The database table name
+	 */
+	protected $table_name = 'reviews';
 
+	/**
+	 * @var string The database table primary key
+	 */
+	protected $primary_key = 'review_id';
+
+	/**
+	 * @var array The model table column to convert to dates on insert/update
+	 */
+	protected $timestamps = array('created');
+
+	protected $belongs_to = array(
+		'locations' => 'Locations_model',
+	);
+
+	/**
+	 * Count the number of records
+	 *
+	 * @param array $filter
+	 *
+	 * @return int
+	 */
 	public function getCount($filter = array()) {
-		if ( ! empty($filter['filter_search'])) {
-			$this->db->like('author', $filter['filter_search']);
-			$this->db->or_like('location_name', $filter['filter_search']);
-			$this->db->or_like('order_id', $filter['filter_search']);
+		return $this->filter($filter)->with('locations')->count();
+	}
+
+	/**
+	 * List all reviews matching the filter
+	 *
+	 * @param array $filter
+	 *
+	 * @return array
+	 */
+	public function getList($filter = array()) {
+		return $this->filter($filter)->with('locations')->find_all();
+	}
+
+	/**
+	 * Filter database records
+	 *
+	 * @param array $filter an associative array of field/value pairs
+	 *
+	 * @return $this
+	 */
+	public function filter($filter = array()) {
+		if (!empty($filter['filter_search'])) {
+			$this->like('author', $filter['filter_search']);
+			$this->or_like('location_name', $filter['filter_search']);
+			$this->or_like('order_id', $filter['filter_search']);
 		}
 
-		if ( ! empty($filter['filter_location'])) {
-			$this->db->where('reviews.location_id', $filter['filter_location']);
+		if (!empty($filter['filter_location'])) {
+			$this->where('reviews.location_id', $filter['filter_location']);
 		}
 
-		if ( ! empty($filter['customer_id'])) {
-			$this->db->where('customer_id', $filter['customer_id']);
-		}
-
-		if ( ! empty($filter['location_id'])) {
-			$this->db->where('reviews.location_id', $filter['location_id']);
+		if (!empty($filter['customer_id'])) {
+			$this->where('customer_id', $filter['customer_id']);
 		}
 
 		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-			$this->db->where('review_status', $filter['filter_status']);
+			$this->where('review_status', $filter['filter_status']);
 		}
 
-		if ( ! empty($filter['filter_date'])) {
+		if (!empty($filter['filter_date'])) {
 			$date = explode('-', $filter['filter_date']);
-			$this->db->where('YEAR(date_added)', $date[0]);
-			$this->db->where('MONTH(date_added)', $date[1]);
+			$this->where('YEAR(date_added)', $date[0]);
+			$this->where('MONTH(date_added)', $date[1]);
 		}
 
-		$this->db->from('reviews');
-		$this->db->join('locations', 'locations.location_id = reviews.location_id', 'left');
-
-		return $this->db->count_all_results();
+		return $this;
 	}
 
-	public function getList($filter = array()) {
-		if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
-			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
-		}
+	/**
+	 * Return all reviews by customer_id
+	 *
+	 * @param int $customer_id
+	 *
+	 * @return array
+	 */
+	public function getReviews($customer_id = NULL) {
+		if ($customer_id !== NULL) {
+			$this->where('review_status', '1');
+			$this->where('customer_id', $customer_id);
 
-		if ($this->db->limit($filter['limit'], $filter['page'])) {
-			$this->db->from('reviews');
-			$this->db->join('locations', 'locations.location_id = reviews.location_id', 'left');
-
-			if ( ! empty($filter['sort_by']) AND ! empty($filter['order_by'])) {
-				$this->db->order_by($filter['sort_by'], $filter['order_by']);
-			}
-
-			if ( ! empty($filter['filter_location'])) {
-				$this->db->where('reviews.location_id', $filter['filter_location']);
-			}
-
-			if ( ! empty($filter['filter_search'])) {
-				$this->db->like('author', $filter['filter_search']);
-				$this->db->or_like('location_name', $filter['filter_search']);
-				$this->db->or_like('order_id', $filter['filter_search']);
-			}
-
-			if ( ! empty($filter['customer_id'])) {
-				$this->db->where('customer_id', $filter['customer_id']);
-			}
-
-			if ( ! empty($filter['location_id'])) {
-				$this->db->where('reviews.location_id', $filter['location_id']);
-			}
-
-			if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-				$this->db->where('review_status', $filter['filter_status']);
-			}
-
-			if ( ! empty($filter['filter_date'])) {
-				$date = explode('-', $filter['filter_date']);
-				$this->db->where('YEAR(date_added)', $date[0]);
-				$this->db->where('MONTH(date_added)', $date[1]);
-			}
-
-			$query = $this->db->get();
-			$result = array();
-
-			if ($query->num_rows() > 0) {
-				$result = $query->result_array();
-			}
-
-			return $result;
+			return $this->with('locations')->find_all();
 		}
 	}
 
-	public function getReviews($customer_id = FALSE) {
-		if ($customer_id !== FALSE) {
-			$this->db->from('reviews');
-			$this->db->join('locations', 'locations.location_id = reviews.location_id', 'left');
+	/**
+	 * Return all reviews grouped by location_id
+	 *
+	 * @param int $location_id
+	 *
+	 * @return array
+	 */
+	public function getTotalsbyId($location_id = NULL) {
+		$this->select('location_id, COUNT(location_id) as review_total');
+		$this->group_by('location_id');
+		$this->order_by('review_total');
+		$this->where('review_status', '1');
 
-			$this->db->where('review_status', '1');
-			$this->db->where('customer_id', $customer_id);
-
-			$query = $this->db->get();
-			$result = array();
-
-			if ($query->num_rows() > 0) {
-				$result = $query->result_array();
-			}
-
-			return $result;
-		}
-	}
-
-	public function getTotalsbyId($location_id = FALSE) {
-		$this->db->select('location_id, COUNT(location_id) as review_total');
-		$this->db->from('reviews');
-		$this->db->group_by('location_id');
-		$this->db->order_by('review_total');
-		$this->db->where('review_status', '1');
-
-		if ($location_id !== FALSE) {
-			$this->db->where('location_id', $location_id);
+		if ($location_id !== NULL) {
+			$this->where('location_id', $location_id);
 		}
 
-		$query = $this->db->get();
 		$result = array();
-
-		if ($query->num_rows() > 0) {
-			foreach ($query->result_array() as $row) {
+		if ($rows = $this->find_all()) {
+			foreach ($rows as $row) {
 				$result[$row['location_id']] = $row['review_total'];
 			}
 		}
@@ -151,152 +141,140 @@ class Reviews_model extends TI_Model {
 		return $result;
 	}
 
-	public function getReview($review_id, $customer_id = FALSE, $sale_type = FALSE) {
-		if ( ! empty($review_id)) {
-			$this->db->from('reviews');
-			$this->db->join('locations', 'locations.location_id = reviews.location_id', 'left');
-
-			if ( ! empty($customer_id)) {
-				$this->db->where('customer_id', $customer_id);
+	/**
+	 * Find a single review by review_id
+	 *
+	 * @param int    $review_id
+	 * @param int    $customer_id
+	 * @param string $sale_type
+	 *
+	 * @return array
+	 */
+	public function getReview($review_id, $customer_id = NULL, $sale_type = '') {
+		if (!empty($review_id)) {
+			if (!empty($customer_id)) {
+				$this->where('customer_id', $customer_id);
 			}
 
-			$this->db->where('review_id', $review_id);
-
-			if ($sale_type !== FALSE) {
-				$this->db->where('sale_type', $sale_type);
+			if (!empty($sale_type)) {
+				$this->where('sale_type', $sale_type);
 			}
 
-			$query = $this->db->get();
-
-			if ($query->num_rows() > 0) {
-				return $query->row_array();
-			}
+			return $this->with('locations')->find($review_id);
 		}
 	}
 
+	/**
+	 * Return the dates of all reviews
+	 *
+	 * @return array
+	 */
 	public function getReviewDates() {
-		$this->db->select('date_added, MONTH(date_added) as month, YEAR(date_added) as year');
-		$this->db->from('reviews');
-		$this->db->group_by('MONTH(date_added)');
-		$this->db->group_by('YEAR(date_added)');
-		$query = $this->db->get();
-		$result = array();
+		$this->select('date_added, MONTH(date_added) as month, YEAR(date_added) as year');
+		$this->group_by('MONTH(date_added)');
+		$this->group_by('YEAR(date_added)');
 
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
-
-		return $result;
+		return $this->find_all();
 	}
 
+	/**
+	 * Return the total number of reviews by location_id
+	 *
+	 * @param int $location_id
+	 *
+	 * @return int
+	 */
 	public function getTotalLocationReviews($location_id) {
-		$this->db->where('location_id', $location_id);
-		$this->db->where('review_status', '1');
-		$this->db->from('reviews');
-		$total_reviews = $this->db->count_all_results();
+		$this->where('location_id', $location_id);
+		$this->where('review_status', '1');
 
-		return $total_reviews;
+		return $this->count();
 	}
 
+	/**
+	 * Check if review already exist for an order or reservation
+	 *
+	 * @param string $sale_type
+	 * @param string $sale_id
+	 * @param string $customer_id
+	 *
+	 * @return bool TRUE if already exist, or FALSE if not
+	 */
 	public function checkReviewed($sale_type = 'order', $sale_id = '', $customer_id = '') {
 		if ($sale_type === 'reservation') {
-			$check_query = $this->db->get_where('reservations', array('reservation_id' => $sale_id, 'customer_id' => $customer_id));
+			$this->load->model('Reservations_model');
+			$check_query = $this->Reservations_model->find(array('reservation_id' => $sale_id, 'customer_id' => $customer_id));
 		} else {
-			$check_query = $this->db->get_where('orders', array('order_id' => $sale_id, 'customer_id' => $customer_id));
+			$this->load->model('Orders_model');
+			$check_query = $this->Orders_model->find(array('order_id' => $sale_id, 'customer_id' => $customer_id));
 		}
 
-		if ($check_query->num_rows() > 0) {
-			$this->db->from('reviews');
+		if (empty($check_query)) {
+			return TRUE;
+		}
 
-			$this->db->where('customer_id', $customer_id);
+		$this->where('customer_id', $customer_id);
+		$this->where('sale_type', $sale_type);
+		$this->where('sale_id', $sale_id);
 
-			$this->db->where('sale_type', $sale_type);
-			$this->db->where('sale_id', $sale_id);
-
-			$query = $this->db->get();
-
-			if ($query->num_rows() > 0) {
-				return TRUE;
-			}
-		} else {
+		if ($this->find()) {
 			return TRUE;
 		}
 
 		return FALSE;
 	}
 
+	/**
+	 * Create a new or update existing review
+	 *
+	 * @param int   $review_id
+	 * @param array $save
+	 *
+	 * @return bool|int The $review_id of the affected row, or FALSE on failure
+	 */
 	public function saveReview($review_id, $save = array()) {
 		if (empty($save)) return FALSE;
 
-		if (isset($save['sale_type'])) {
-			$this->db->set('sale_type', $save['sale_type']);
-		}
-
-		if (isset($save['sale_id'])) {
-			$this->db->set('sale_id', $save['sale_id']);
-		}
-
-		if (isset($save['location_id'])) {
-			$this->db->set('location_id', $save['location_id']);
-		}
-
-		if (isset($save['customer_id'])) {
-			$this->db->set('customer_id', $save['customer_id']);
-		}
-
-		if (isset($save['author'])) {
-			$this->db->set('author', $save['author']);
-		}
-
 		if (isset($save['rating'])) {
 			if (isset($save['rating']['quality'])) {
-				$this->db->set('quality', $save['rating']['quality']);
+				$save['quality'] = $save['rating']['quality'];
 			}
 
 			if (isset($save['rating']['delivery'])) {
-				$this->db->set('delivery', $save['rating']['delivery']);
+				$save['delivery'] = $save['rating']['delivery'];
 			}
 
 			if (isset($save['rating']['service'])) {
-				$this->db->set('service', $save['rating']['service']);
+				$save['service'] = $save['rating']['service'];
 			}
 		}
 
-		if (isset($save['review_text'])) {
-			$this->db->set('review_text', $save['review_text']);
-		}
-
 		if (APPDIR === ADMINDIR AND isset($save['review_status']) AND $save['review_status'] === '1') {
-			$this->db->set('review_status', '1');
+			$save['review_status'] = '1';
 		} else if ($this->config->item('approve_reviews') !== '1') {
-			$this->db->set('review_status', '1');
+			$save['review_status'] = '1';
 		} else {
-			$this->db->set('review_status', '0');
+			$save['review_status'] = '0';
 		}
 
-		if (is_numeric($review_id)) {
-			$this->db->where('review_id', $review_id);
-			$query = $this->db->update('reviews');
-		} else {
-			$this->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', time()));
-			$query = $this->db->insert('reviews');
-			$review_id = $this->db->insert_id();
-		}
-
-		return $review_id;
+		return $this->skip_validation(TRUE)->save($save, $review_id);
 	}
 
+	/**
+	 * Delete a single or multiple review by review_id
+	 *
+	 * @param string|array $review_id
+	 *
+	 * @return int  The number of deleted rows
+	 */
 	public function deleteReview($review_id) {
 		if (is_numeric($review_id)) $review_id = array($review_id);
 
-		if ( ! empty($review_id) AND ctype_digit(implode('', $review_id))) {
-			$this->db->where_in('review_id', $review_id);
-			$this->db->delete('reviews');
-
-			return $this->db->affected_rows();
+		if (!empty($review_id) AND ctype_digit(implode('', $review_id))) {
+			return $this->delete('review_id', $review_id);
 		}
 	}
 }
 
-/* End of file reviews_model.php */
-/* Location: ./system/tastyigniter/models/reviews_model.php */
+/* End of file Reviews_model.php */
+/* Location: ./system/tastyigniter/models/Reviews_model.php */

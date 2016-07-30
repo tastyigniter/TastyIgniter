@@ -21,46 +21,53 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @link           http://docs.tastyigniter.com
  */
 class Mealtimes_model extends TI_Model {
+	/**
+	 * @var string The database table name
+	 */
+	protected $table_name = 'mealtimes';
 
+	/**
+	 * @var string The database table primary key
+	 */
+	protected $primary_key = 'mealtime_id';
+
+	protected $casts = array(
+		'start_time' => 'time',
+		'end_time'   => 'time',
+	);
+
+	/**
+	 * Return all enabled mealtimes
+	 * @return array
+	 */
 	public function getMealtimes() {
-		$this->db->from('mealtimes');
-
-		$query = $this->db->get();
-		$result = array();
-
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
-
-		return $result;
+		return $this->find_all();
 	}
 
+	/**
+	 * Find a single mealtime by mealtime_id
+	 *
+	 * @param $mealtime_id
+	 *
+	 * @return object
+	 */
 	public function getMealtime($mealtime_id) {
-		$this->db->from('mealtimes');
-
-		$this->db->where('mealtime_id', $mealtime_id);
-		$query = $this->db->get();
-
-		return $query->row_array();
+		return $this->find($mealtime_id);
 	}
 
+	/**
+	 * Create a new or update existing mealtimes
+	 *
+	 * @param array $mealtimes
+	 *
+	 * @return bool
+	 */
 	public function updateMealtimes($mealtimes = array()) {
 		$query = FALSE;
 
 		if ( ! empty($mealtimes)) {
 			foreach ($mealtimes as $mealtime) {
-
-				$this->db->set('mealtime_name', $mealtime['mealtime_name']);
-				$this->db->set('start_time', mdate('%H:%i', strtotime($mealtime['start_time'])));
-				$this->db->set('end_time', mdate('%H:%i', strtotime($mealtime['end_time'])));
-				$this->db->set('mealtime_status', $mealtime['mealtime_status']);
-
-				if ( ! empty($mealtime['mealtime_id']) AND $mealtime['mealtime_id'] > 0) {
-					$this->db->where('mealtime_id', $mealtime['mealtime_id']);
-					$this->db->update('mealtimes');
-				} else {
-					$this->db->insert('mealtimes');
-				}
+				$this->skip_validation(TRUE)->save($mealtime, $mealtime['mealtime_id']);
 			}
 
 			$query = TRUE;

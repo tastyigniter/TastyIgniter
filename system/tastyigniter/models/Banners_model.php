@@ -20,103 +20,117 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Banners_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Banners_model extends TI_Model {
+class Banners_model extends TI_Model
+{
+	/**
+	 * @var string The database table name
+	 */
+	protected $table_name = 'banners';
 
+	/**
+	 * @var string The database table primary key
+	 */
+	protected $primary_key = 'banner_id';
+
+	/**
+	 * Count the number of records
+	 *
+	 * @param array $filter
+	 *
+	 * @return int
+	 */
+	public function getCount($filter = array()) {
+		return $this->filter($filter)->count();
+	}
+
+	/**
+	 * List all coupons matching the filter
+	 *
+	 * @param array $filter
+	 *
+	 * @return array
+	 */
+	public function getList($filter = array()) {
+		return $this->filter($filter)->find_all();
+	}
+
+	/**
+	 * Filter database records
+	 *
+	 * @param array $filter an associative array of field/value pairs
+	 *
+	 * @return $this
+	 */
+	public function filter($filter = array()) {
+		if (!empty($filter['filter_search'])) {
+			$this->like('name', $filter['filter_search']);
+		}
+
+		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
+			$this->where('status', $filter['filter_status']);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Return all banners from the database
+	 *
+	 * @return array
+	 */
 	public function getBanners() {
-		$this->db->from('banners');
-
-		$query = $this->db->get();
-
-		$result = array();
-
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
-
-		return $result;
+		return $this->find_all();
 	}
 
+	/**
+	 * Find a single banner by banner_id
+	 *
+	 * @param int $banner_id
+	 *
+	 * @return array
+	 */
 	public function getBanner($banner_id) {
-		$this->db->from('banners');
-
-		$this->db->where('banner_id', $banner_id);
-
-		$query = $this->db->get();
-
-		if ($query->num_rows() > 0) {
-			return $query->row_array();
-		}
+		return $this->find($banner_id);
 	}
 
+	/**
+	 * Create a new or update existing banner
+	 *
+	 * @param int   $banner_id
+	 * @param array $save input post data
+	 *
+	 * @return bool|int The $banner_id of the affected row, or FALSE on failure
+	 */
 	public function saveBanner($banner_id, $save = array()) {
 		if (empty($save)) return FALSE;
 
-		if (isset($save['name'])) {
-			$this->db->set('name', $save['name']);
-		}
-
-		if (isset($save['type'])) {
-			$this->db->set('type', $save['type']);
-		}
-
-		if (isset($save['click_url'])) {
-			$this->db->set('click_url', $save['click_url']);
-		}
-
-		if (isset($save['language_id'])) {
-			$this->db->set('language_id', $save['language_id']);
-		}
-
-		if (isset($save['alt_text'])) {
-			$this->db->set('alt_text', $save['alt_text']);
-		}
-
-		if (isset($save['type']) AND $save['type'] === 'custom' AND isset($save['custom_code'])) {
-
-			$this->db->set('custom_code', $save['custom_code']);
-		} else if (isset($save['type']) AND $save['type'] === 'image' AND isset($save['image_path'])) {
-
+		$save['image_code'] = array();
+		if ($save['type'] === 'image' AND isset($save['image_path'])) {
 			$save['image_code']['path'] = $save['image_path'];
-
-			$this->db->set('image_code', serialize($save['image_code']));
-		} else if (isset($save['type']) AND $save['type'] === 'carousel') {
-			if (isset($save['carousels']) AND is_array($save['carousels'])) {
-				foreach ($save['carousels'] as $key => $value) {
-					$save['image_code']['paths'][] = $value;
-				}
-
-				$this->db->set('image_code', serialize($save['image_code']));
-			}
+		} else if ($save['type'] === 'carousel' AND isset($save['carousels']) AND is_array($save['carousels'])) {
+			$save['image_code']['paths'] = array_values($save['carousels']);
 		}
 
-		if (isset($save['status'])) {
-			$this->db->set('status', $save['status']);
-		} else {
-			$this->db->set('status', '0');
-		}
-
-		if (is_numeric($banner_id)) {
-			$this->db->where('banner_id', $banner_id);
-			$query = $this->db->update('banners');
-		} else {
-			$query = $this->db->insert('banners');
-			$banner_id = $this->db->insert_id();
-		}
-
-		return ($query === TRUE AND is_numeric($banner_id)) ? $banner_id : FALSE;
+		return $this->skip_validation(TRUE)->save(array_merge($save, array(
+			'image_code' => serialize($save['image_code']),
+		)), $banner_id);
 	}
 
+	/**
+	 * Delete a single or multiple banner by banner_id
+	 *
+	 * @param string|array $banner_id
+	 *
+	 * @return int The number of deleted rows
+	 */
 	public function deleteBanner($banner_id) {
 		if (is_numeric($banner_id)) $banner_id = array($banner_id);
 
 		if (isset($banner_id) AND ctype_digit(implode('', $banner_id))) {
-			$this->db->where_in('banner_id', $banner_id);
-			$this->db->delete('banners');
-
-			return $this->db->affected_rows();
+			return $this->delete('banner_id', $banner_id);
 		}
 	}
 }
 
-/* End of file banners_model.php */
-/* Location: ./system/tastyigniter/models/banners_model.php */
+/* End of file Banners_model.php */
+/* Location: ./system/tastyigniter/models/Banners_model.php */

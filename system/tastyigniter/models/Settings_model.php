@@ -20,34 +20,47 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Settings_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Settings_model extends TI_Model {
+class Settings_model extends TI_Model
+{
+	/**
+	 * @var string The database table name
+	 */
+	protected $table_name = 'settings';
 
+	/**
+	 * @var string The database table primary key
+	 */
+	protected $primary_key = 'setting_id';
+
+	/**
+	 * Return all settings
+	 *
+	 * @return array
+	 */
 	public function getAll() {
-		$this->db->from('settings');
-
-		$query = $this->db->get();
-		$result = array();
-
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
-
-		return $result;
+		return $this->find_all();
 	}
 
+	/**
+	 * Insert new or update multiple existing settings
+	 *
+	 * @param string $sort
+	 * @param array  $update
+	 * @param bool   $flush
+	 *
+	 * @return bool
+	 */
 	public function updateSettings($sort, $update = array(), $flush = FALSE) {
-		if ( ! empty($update) && ! empty($sort)) {
+		if (!empty($update) && !empty($sort)) {
 			if ($flush === TRUE) {
-				$this->db->where('sort', $sort);
-				$this->db->delete('settings');
+				$this->delete('sort', $sort);
 			}
 
+			$data = array();
 			foreach ($update as $item => $value) {
-				if ( ! empty($item)) {
+				if (!empty($item)) {
 					if ($flush === FALSE) {
-						$this->db->where('sort', $sort);
-						$this->db->where('item', $item);
-						$this->db->delete('settings');
+						$this->delete(array('sort' => $sort, 'item' => $item));
 					}
 
 					if (isset($value)) {
@@ -57,57 +70,62 @@ class Settings_model extends TI_Model {
 							$serialized = '1';
 						}
 
-						$this->db->set('sort', $sort);
-						$this->db->set('item', $item);
-						$this->db->set('value', $value);
-						$this->db->set('serialized', $serialized);
-						$this->db->insert('settings');
+						$data[] = array('sort' => $sort, 'item' => $item, 'value' => $value, 'serialized' => $serialized);
 					}
 				}
 			}
 
-			return TRUE;
+			return $this->insert_batch($data);
 		}
 	}
 
+	/**
+	 * Insert new single setting
+	 *
+	 * @param string $sort
+	 * @param string $item
+	 * @param string $value
+	 * @param string $serialized
+	 *
+	 * @return bool
+	 */
 	public function addSetting($sort, $item, $value, $serialized = '0') {
 		$query = FALSE;
 
 		if (isset($sort, $item, $value, $serialized)) {
-			$this->db->where('sort', $sort);
-			$this->db->where('item', $item);
-			$this->db->delete('settings');
+			$this->delete(array('sort' => $sort, 'item' => $item));
 
-			$this->db->set('sort', $sort);
-			$this->db->set('item', $item);
-
+			$serialized = '0';
 			if (is_array($value)) {
-				$this->db->set('value', serialize($value));
-			} else {
-				$this->db->set('value', $value);
+				$value = serialize($value);
+				$serialized = '1';
 			}
 
-			$this->db->set('serialized', $serialized);
-			if ($this->db->insert('settings')) {
-				$query = $this->db->insert_id();
-			}
+			$query = $this->insert(array(
+				'sort'       => $sort,
+				'item'       => $item,
+				'value'      => $value,
+				'serialized' => $serialized,
+			));
 		}
 
 		return $query;
 	}
 
+	/**
+	 * Delete a single setting
+	 *
+	 * @param string $sort
+	 * @param string $item
+	 *
+	 * @return bool
+	 */
 	public function deleteSettings($sort, $item) {
-		if ( ! empty($sort) AND ! empty($item)) {
-			$this->db->where('sort', $sort);
-			$this->db->where('item', $item);
-			$this->db->delete('settings');
-
-			if ($this->db->affected_rows() > 0) {
-				return TRUE;
-			}
+		if (!empty($sort) AND !empty($item)) {
+			return $this->delete(array('sort' => $sort, 'item' => $item));
 		}
 	}
 }
 
-/* End of file settings_model.php */
-/* Location: ./system/tastyigniter/models/settings_model.php */
+/* End of file Settings_model.php */
+/* Location: ./system/tastyigniter/models/Settings_model.php */
