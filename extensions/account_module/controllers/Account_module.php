@@ -20,8 +20,9 @@ class Account_module extends Main_Controller {
 		$data['heading'] = (!empty($ext_data['heading'])) ? $ext_data['heading'] : $this->lang->line('text_heading');
 
 		$this->load->model('Messages_model');													// load the customers model
-        $data['inbox_total'] = $this->Messages_model->getUnreadCount($this->customer->getId());					// retrieve total number of customer messages from getUnreadCount method in Messages model
-
+        $total = $this->Messages_model->getUnreadCount($this->customer->getId());					// retrieve total number of customer messages from getUnreadCount method in Messages model
+		$data['inbox_total'] = ($total < 1) ? '' : $total;
+		
 		// pass array $data and load view files
 		return $this->load->view('account_module/account_module', $data, TRUE);
 	}

@@ -89,7 +89,7 @@ class Admin_slideshow extends Admin_Controller {
         return $this->load->view('slideshow/admin_slideshow', $data, TRUE);
 	}
 
-	private function _updateModule() {
+	protected function _updateModule() {
     	if ($this->validateForm() === TRUE) {
 
 		    if ($this->Extensions_model->updateExtension('module', 'slideshow', $this->input->post())) {
@@ -102,7 +102,7 @@ class Admin_slideshow extends Admin_Controller {
 		}
 	}
 
- 	private function validateForm() {
+ 	protected function validateForm() {
 		$this->form_validation->set_rules('dimension_h', 'lang:label_dimension_h', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('dimension_w', 'lang:label_dimension_w', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('effect', 'lang:label_effect', 'xss_clean|trim|required');

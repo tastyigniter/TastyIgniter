@@ -52,7 +52,7 @@ class Admin_categories_module extends Admin_Controller {
         }
 	}
 
-    private function _updateModule() {
+    protected function _updateModule() {
         $this->user->restrict('Module.CategoriesModule.Manage');
 
         if ($this->validateForm() === TRUE) {
@@ -67,7 +67,7 @@ class Admin_categories_module extends Admin_Controller {
         }
     }
 
-    private function validateForm() {
+    protected function validateForm() {
         $this->form_validation->set_rules('fixed_categories', 'lang:label_fixed_categories', 'xss_clean|trim|required|integer');
 
         if ($this->input->post('fixed_categories') === '1') {

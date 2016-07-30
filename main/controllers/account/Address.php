@@ -136,7 +136,7 @@ class Address extends Main_Controller {
 		redirect('account/address');
 	}
 
-	private function _updateAddress() {
+	protected function _updateAddress() {
 		if ($this->validateForm() === TRUE AND $this->input->post('address')) {
 			$address = $this->input->post('address');
 
@@ -148,7 +148,7 @@ class Address extends Main_Controller {
 		}
 	}
 
-	private function validateForm() {
+	protected function validateForm() {
 		// START of form validation rules
 		$this->form_validation->set_rules('address[address_1]', 'lang:label_address_1', 'xss_clean|trim|required|min_length[3]|max_length[128]|get_lat_lng[address]');
 		$this->form_validation->set_rules('address[address_2]', 'lang:label_address_2', 'xss_clean|trim|max_length[128]');

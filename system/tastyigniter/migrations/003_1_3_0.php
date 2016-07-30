@@ -77,7 +77,7 @@ class Migration_1_3_0 extends CI_Migration {
         $this->dbforge->drop_table('notifications');
 	}
 
-	private function _notifications() {
+	protected function _notifications() {
 		$fields = array(
             'notification_id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY',
 			'action VARCHAR(255) NOT NULL',

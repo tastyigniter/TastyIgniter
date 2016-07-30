@@ -36,7 +36,7 @@ class Admin_pages_module extends Admin_Controller {
         }
 	}
 
-	private function _updateModule() {
+	protected function _updateModule() {
     	if ($this->validateForm() === TRUE) {
 
 		    if ($this->Extensions_model->updateExtension('module', 'pages_module', $this->input->post())) {
@@ -49,7 +49,7 @@ class Admin_pages_module extends Admin_Controller {
 		}
 	}
 
- 	private function validateForm() {
+ 	protected function validateForm() {
 		$this->form_validation->set_rules('heading', 'lang:label_heading', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 
 		if ($this->form_validation->run() === TRUE) {

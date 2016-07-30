@@ -120,7 +120,7 @@ class Admin_paypal_express extends Admin_Controller {
 		return $this->load->view('paypal_express/admin_paypal_express', $data, TRUE);
 	}
 
-	private function _updatePayPalExpress() {
+	protected function _updatePayPalExpress() {
 		$this->user->restrict('Payment.PaypalExpress.Manage');
 
 		if ($this->input->post() AND $this->validateForm() === TRUE) {
@@ -135,7 +135,7 @@ class Admin_paypal_express extends Admin_Controller {
 		}
 	}
 
-	private function validateForm() {
+	protected function validateForm() {
 		$this->form_validation->set_rules('title', 'lang:label_title', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 		$this->form_validation->set_rules('api_user', 'lang:label_api_user', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('api_pass', 'lang:label_api_pass', 'xss_clean|trim|required');

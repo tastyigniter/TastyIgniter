@@ -60,7 +60,7 @@ class Customer_online {
         $this->_saveActivity($input_data);
     }
 
-    private function getTimeout() {
+	protected function getTimeout() {
         return ($this->CI->config->item('customer_online_time_out') > 120) ? $this->CI->config->item('customer_online_time_out') : 120;
     }
 
@@ -109,7 +109,7 @@ class Customer_online {
 		return $last_activities;
 	}
 
-	private function _saveActivity($input_data = array()) {
+	protected function _saveActivity($input_data = array()) {
         $save = TRUE;
 
         is_array($input_data) OR $input_data = array();

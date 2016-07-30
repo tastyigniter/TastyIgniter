@@ -119,7 +119,7 @@ class Authorize_net_aim_model extends TI_Model {
 		return $response;
 	}
 
-	private function sendToAuthorizeNet($data = array()) {
+	protected function sendToAuthorizeNet($data = array()) {
 		$payment = $this->extension->getPayment('authorize_net_aim');
 		$settings = $payment['ext_data'];
 

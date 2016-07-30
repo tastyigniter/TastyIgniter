@@ -84,7 +84,7 @@ class Admin_cod extends Admin_Controller {
         }
 	}
 
-	private function _updateCod() {
+	protected function _updateCod() {
 		$this->user->restrict('Payment.Cod.Manage');
 
     	if ($this->validateForm() === TRUE) {
@@ -99,7 +99,7 @@ class Admin_cod extends Admin_Controller {
 		}
 	}
 
-	private function validateForm() {
+	protected function validateForm() {
 		$this->form_validation->set_rules('title', 'lang:label_title', 'xss_clean|trim|required|max_length[128]');
 		$this->form_validation->set_rules('order_total', 'lang:label_order_total', 'xss_clean|trim|required|numeric');
 		$this->form_validation->set_rules('order_status', 'lang:label_order_status', 'xss_clean|trim|required|integer');

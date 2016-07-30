@@ -142,7 +142,7 @@ class Alert {
 	 * @return void
 	 * @access private
 	 */
-	private function _initialize(array $config = array())
+	protected function _initialize(array $config = array())
 	{
 		foreach ($config as $config_key => $config_value) {
 			if (in_array($config_key, $this->_config_whitelist)) {
@@ -167,7 +167,7 @@ class Alert {
 	 * @return object $this
 	 * @access private
 	 */
-	private function _add_message($message, $group = '', $type = 'default', $display_now = FALSE)
+	protected function _add_message($message, $group = '', $type = 'default', $display_now = FALSE)
 	{
 		// all messages must be scalar types (int, float, string or boolean)
 		// and the type must be a string, if either invalid an exception is raised
@@ -410,6 +410,5 @@ class Alert {
 
 }
 
-
-/* End of file flash.php */
-/* Location: ./sparks/flash/1.0.0/libraries/flash.php */
+/* End of file Alert.php */
+/* Location: ./system/tastyigniter/libraries/Alert.php */

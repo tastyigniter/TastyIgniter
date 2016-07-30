@@ -62,7 +62,7 @@ class Admin_local_module extends Admin_Controller {
         }
 	}
 
-	private function _updateModule() {
+	protected function _updateModule() {
 		$this->user->restrict('Module.LocalModule.Manage');
 
     	if ($this->validateForm() === TRUE) {
@@ -77,7 +77,7 @@ class Admin_local_module extends Admin_Controller {
 		}
 	}
 
- 	private function validateForm() {
+ 	protected function validateForm() {
 		$this->form_validation->set_rules('location_search_mode', 'lang:label_location_search_mode', 'xss_clean|trim|required|alpha');
 		$this->form_validation->set_rules('use_location', 'lang:label_use_location', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('status', 'lang:label_status', 'xss_clean|trim|required|integer');

@@ -36,7 +36,7 @@ class Admin_newsletter extends Admin_Controller {
         }
 	}
 
-    private function _updateModule() {
+    protected function _updateModule() {
         $this->user->restrict('Module.Newsletter.Manage');
 
         if ($this->validateForm() === TRUE) {
@@ -51,7 +51,7 @@ class Admin_newsletter extends Admin_Controller {
         }
     }
 
-    private function validateForm() {
+    protected function validateForm() {
         $this->form_validation->set_rules('status', 'lang:label_status', 'xss_clean|trim|required|integer');
 
         if ($this->form_validation->run() === TRUE) {

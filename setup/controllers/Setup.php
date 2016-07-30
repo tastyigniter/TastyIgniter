@@ -107,7 +107,7 @@ class Setup extends Base_Controller {
         }
 
         $this->load->helper('string');
-        $data['dbprefix'] = strtolower(random_string('alnum', '9').'_');
+        $data['dbprefix'] = strtolower(random_string('alnum', '5').'_');
 
         if ( ! file_exists(VIEWPATH .'/database.php')) {
             show_404();
@@ -176,7 +176,7 @@ class Setup extends Base_Controller {
         $this->load->view('footer', $data);
     }
 
-    private function _validateDatabase() {
+    protected function _validateDatabase() {
         if ($this->input->post()) {
             $this->form_validation->set_rules('database', 'lang:label_database', 'xss_clean|trim|required');
             $this->form_validation->set_rules('hostname', 'lang:label_hostname', 'xss_clean|trim|required');
@@ -196,7 +196,7 @@ class Setup extends Base_Controller {
         return FALSE;
     }
 
-    private function _validateSettings() {
+    protected function _validateSettings() {
         if ($this->input->post()) {
             $this->form_validation->set_rules('site_name', 'lang:label_site_name', 'xss_clean|trim|required|min_length[2]|max_length[128]');
             $this->form_validation->set_rules('site_email', 'lang:label_site_email', 'xss_clean|trim|required|valid_email');

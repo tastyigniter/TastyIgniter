@@ -89,7 +89,7 @@ class Admin_featured_menus extends Admin_Controller {
         return $this->load->view('featured_menus/admin_featured_menus', $data, TRUE);
     }
 
-    private function _updateModule() {
+    protected function _updateModule() {
         $this->user->restrict('Module.FeaturedMenus.Manage');
 
         if ($this->validateForm() === TRUE) {
@@ -104,7 +104,7 @@ class Admin_featured_menus extends Admin_Controller {
         }
     }
 
-    private function validateForm() {
+    protected function validateForm() {
         $this->form_validation->set_rules('title', 'lang:label_title', 'xss_clean|trim|required|min_length[2]|max_length[128]');
         $this->form_validation->set_rules('featured_menu[]', 'lang:label_menus', 'xss_clean|trim|required|integer');
         $this->form_validation->set_rules('limit', 'lang:label_limit', 'xss_clean|trim|required|integer');

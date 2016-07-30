@@ -193,7 +193,7 @@ class Checkout extends Main_Controller {
 		$this->template->render('checkout_success', $data);
 	}
 
-    private function getFormData($order_data, $data = array()) {
+    protected function getFormData($order_data, $data = array()) {
 
         if ($this->input->post('checkout_step')) {
             $data['checkout_step'] = $this->input->post('checkout_step');
@@ -407,7 +407,7 @@ class Checkout extends Main_Controller {
         return $data;
     }
 
-	private function _validateCheckout() {														// method to validate checkout form fields
+	protected function _validateCheckout() {														// method to validate checkout form fields
         if ($this->input->post() AND $this->validateForm() === TRUE) {
             $order_data = $this->session->userdata('order_data');
 
@@ -468,7 +468,7 @@ class Checkout extends Main_Controller {
         }
     }
 
-	private function _confirmPayment($order_data, $cart_contents) {
+	protected function _confirmPayment($order_data, $cart_contents) {
 
         if (!empty($order_data) AND !empty($cart_contents) AND $this->input->post('payment')) {
 
@@ -492,7 +492,7 @@ class Checkout extends Main_Controller {
 		}
 	}
 
-	private function validateForm() {
+	protected function validateForm() {
 		// START of form validation rules
 		$this->form_validation->set_rules('first_name', 'lang:label_first_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		$this->form_validation->set_rules('last_name', 'lang:label_last_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
