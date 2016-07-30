@@ -128,7 +128,7 @@ class Admin_authorize_net_aim extends Admin_Controller {
 		return $this->load->view('authorize_net_aim/admin_authorize_net_aim', $data, TRUE);
 	}
 
-	private function _updateAuthorizeNetAIM() {
+	protected function _updateAuthorizeNetAIM() {
 		$this->user->restrict('Payment.AuthorizeNetAIM.Manage');
 
 		if ($this->input->post() AND $this->validateForm() === TRUE) {
@@ -143,7 +143,7 @@ class Admin_authorize_net_aim extends Admin_Controller {
 		}
 	}
 
-	private function validateForm() {
+	protected function validateForm() {
 		$this->form_validation->set_rules('title', 'lang:label_title', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 		$this->form_validation->set_rules('api_login_id', 'lang:label_api_login_id', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('transaction_key', 'lang:label_transaction_key', 'xss_clean|trim|required');

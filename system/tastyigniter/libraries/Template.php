@@ -247,7 +247,7 @@ class Template {
 		return $this;
 	}
 
-	private function setHeadTags($head_tags = array()) {
+	protected function setHeadTags($head_tags = array()) {
 		$head_tags['meta'][] = array('name' => 'description', 'content' => config_item('meta_description'));
 		$head_tags['meta'][] = array('name' => 'keywords', 'content' => config_item('meta_keywords'));
 
@@ -564,7 +564,7 @@ class Template {
 		}
 	}
 
-	private function fetchPartials($partial = '') {
+	protected function fetchPartials($partial = '') {
 		$partial_areas = array_merge($this->_partial_areas, $this->_layouts);
 
 		if (!empty($partial)) $partial_areas = array($partial => isset($partial_areas[$partial]) ? $partial_areas[$partial] : array());
@@ -602,7 +602,7 @@ class Template {
 		}
 	}
 
-	private function _getLayoutModules() {
+	protected function _getLayoutModules() {
 		$routes = array($this->CI->uri->segment_array(), $this->CI->uri->uri_string(),
 			$this->CI->uri->rsegment_array(), $this->CI->uri->ruri_string());
 
@@ -642,7 +642,7 @@ class Template {
 		return array(NULL, array());
 	}
 
-	private function _find_view_path($view = '') {
+	protected function _find_view_path($view = '') {
 		if ( ! empty($this->_theme)) {
 			$theme_views = array('/', '/layouts/', '/partials/');
 
@@ -664,7 +664,7 @@ class Template {
 		return array($view, NULL);
 	}
 
-	private function _load_view($view, array $data, $override_view_path = NULL, $return = TRUE) {
+	protected function _load_view($view, array $data, $override_view_path = NULL, $return = TRUE) {
 		list($view, $location) = self::_find_view_path($view);
 
 		if (!empty($location)) $override_view_path = $location;
@@ -684,7 +684,7 @@ class Template {
 		return $content;
 	}
 
-	private function _compileActiveStyle($content = '') {
+	protected function _compileActiveStyle($content = '') {
 		if ($this->CI->config->item(strtolower(APPDIR), 'active_theme_options')) {
 			$active_theme_options = $this->CI->config->item(strtolower(APPDIR), 'active_theme_options');
 		} else if ($this->CI->config->item(strtolower(APPDIR), 'customizer_active_style')) {
@@ -699,7 +699,7 @@ class Template {
 		return $content;
 	}
 
-	private function prepUrl($href, $suffix = '') {
+	protected function prepUrl($href, $suffix = '') {
 		if (!preg_match('#^(\w+:)?//#i', $href)) {
 			list($href, $location) = self::_find_view_path($href);
 			$href = theme_url($href);
@@ -716,7 +716,7 @@ class Template {
 		return isset($this->_data[$name]) ? $this->_data[$name] : NULL;
 	}
 
-	private function sortModules($partial_name) {
+	protected function sortModules($partial_name) {
 		if (!empty($partial_name)) {
 			foreach ($this->_modules[$partial_name] as $key => $module) {
 				$modules[$key] = $module['priority'];

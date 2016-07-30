@@ -36,7 +36,7 @@ class Reset extends Main_Controller {
 		$this->template->render('account/reset', $data);
 	}
 
-	private function _resetPassword() {															// method to validate password reset
+	protected function _resetPassword() {															// method to validate password reset
 		if ($this->validateForm() === TRUE) {
             $reset['email'] 				= $this->input->post('email');
             $reset['security_question_id']	= $this->input->post('security_question');
@@ -53,7 +53,7 @@ class Reset extends Main_Controller {
 		}
 	}
 
-	private function validateForm() {
+	protected function validateForm() {
 		$this->form_validation->set_rules('email', 'lang:label_email', 'xss_clean|trim|required|valid_email|callback__check_reset');	//validate form
 		$this->form_validation->set_rules('security_question', 'lang:label_s_question', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('security_answer', 'lang:label_s_answer', 'xss_clean|trim|required|min_length[2]');

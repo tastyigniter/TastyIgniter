@@ -97,7 +97,7 @@ class Admin_cart_module extends Admin_Controller {
         }
 	}
 
-	private function _updateModule() {
+	protected function _updateModule() {
 		$this->user->restrict('Module.CartModule.Manage');
 
     	if ($this->validateForm() === TRUE) {
@@ -113,7 +113,7 @@ class Admin_cart_module extends Admin_Controller {
 		}
 	}
 
- 	private function validateForm() {
+ 	protected function validateForm() {
 		$this->form_validation->set_rules('show_cart_images', 'lang:label_show_cart_images', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('fixed_cart', 'lang:label_fixed_cart', 'xss_clean|trim|required|integer');
 

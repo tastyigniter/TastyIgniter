@@ -85,7 +85,7 @@ class Admin_banners_module extends Admin_Controller {
         }
 	}
 
-	private function _updateModule() {
+	protected function _updateModule() {
 		$this->user->restrict('Module.BannersModule.Manage');
 
     	if ($this->validateForm() === TRUE) {
@@ -100,7 +100,7 @@ class Admin_banners_module extends Admin_Controller {
 		}
 	}
 
- 	private function validateForm() {
+ 	protected function validateForm() {
         foreach ($this->input->post('banners') as $key => $value) {
             $this->form_validation->set_rules('banners['.$key.'][banner_id]', 'lang:label_banner', 'xss_clean|trim|required|integer');
             $this->form_validation->set_rules('banners['.$key.'][layout_partial]', 'lang:label_layout_partial', 'xss_clean|trim|required');

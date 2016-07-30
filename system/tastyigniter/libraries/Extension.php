@@ -151,7 +151,7 @@ class Extension {
 		}
 	}
 
-	private function checkConfig($module, $config = array()) {
+	protected function checkConfig($module, $config = array()) {
 		if ( $config === NULL) {
 			return sprintf($this->CI->lang->line('error_config_not_found'), $module);
 		}

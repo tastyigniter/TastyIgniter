@@ -144,7 +144,7 @@ class Customizer {
         return $post_data;
     }
 
-    private function setRules() {
+    protected function setRules() {
         if (empty($this->sections) AND !is_array($this->sections)) return FALSE;
 
         foreach ($this->sections as $key => $section) {
@@ -167,7 +167,7 @@ class Customizer {
         }
     }
 
-    private function buildSections() {
+    protected function buildSections() {
         if (empty($this->sections) OR !is_array($this->sections)) return FALSE;
 
         foreach ($this->sections as $section_key => $section) {
@@ -187,7 +187,7 @@ class Customizer {
         }
     }
 
-    private function buildFieldset($fieldsets = array()) {
+    protected function buildFieldset($fieldsets = array()) {
         $temp_fields = array();
 
         if (isset($fieldsets['fields'])) {
@@ -203,7 +203,7 @@ class Customizer {
         return $temp_fields;
     }
 
-    private function buildFields($fields = array()) {
+    protected function buildFields($fields = array()) {
         $temp_fields = array();
 
         if (isset($fields['type'])) {
@@ -217,7 +217,7 @@ class Customizer {
         return $temp_fields;
     }
 
-    private function buildField($field = array()) {
+    protected function buildField($field = array()) {
         if (!empty($field) AND isset($field['id'], $field['type'])) {
             $temp_field = $this->buildFieldMarkup($field);
 
@@ -233,7 +233,7 @@ class Customizer {
         return $field;
     }
 
-    private function buildFieldMarkup($field = array()) {
+    protected function buildFieldMarkup($field = array()) {
         $markup = array();
 
         $field = $this->parseField($field);
@@ -282,7 +282,7 @@ class Customizer {
         return $markup;
     }
 
-    private function buildTable($table = array()) {
+    protected function buildTable($table = array()) {
         if (!empty($table) AND isset($table['type'], $table['thead'], $table['rows'])) {
 
             $this->CI->load->library('table');
@@ -305,7 +305,7 @@ class Customizer {
         }
     }
 
-    private function getTableTag($table) {
+    protected function getTableTag($table) {
         if (isset($table['type'])) switch ($table['type']) {
             case 'table':
                 $table_tag = $this->_styles['table_sortable'];
@@ -324,7 +324,7 @@ class Customizer {
         return $table_tag;
     }
 
-    private function getFieldMarkup($temp_field, $remove_style = FALSE) {
+    protected function getFieldMarkup($temp_field, $remove_style = FALSE) {
         $field_markup = '';
 
         if (!empty($temp_field)) {
@@ -346,7 +346,7 @@ class Customizer {
         return $field_markup;
     }
 
-    private function getErrorMarkup($field_error, $error_markup = '') {
+    protected function getErrorMarkup($field_error, $error_markup = '') {
         if (!empty($field_error)) {
             if (is_array($field_error)) {
                 $last_err = '';
@@ -362,7 +362,7 @@ class Customizer {
         return $error_markup;
     }
 
-    private function createLabel($field = array()) {
+    protected function createLabel($field = array()) {
         if (isset($field['label'])) {
             $label = str_replace('{id}', $field['id'], $this->_styles['label'][0]) . $field['label'];
 
@@ -374,13 +374,13 @@ class Customizer {
         }
     }
 
-    private function createTextarea($field = array()) {
+    protected function createTextarea($field = array()) {
         if (empty($field['type']) OR $field['type'] !== 'textarea') return FALSE;
 
         return form_textarea(array('id' => $field['id'], 'name' => $field['name'], 'class' => $this->_form_classes['textarea'], 'value' => $field['value'], 'rows' => $field['rows']));
     }
 
-    private function createInput($field = array()) {
+    protected function createInput($field = array()) {
         if (empty($field['type'])) return FALSE;
 
         $input = '';
@@ -404,7 +404,7 @@ class Customizer {
         return $input;
     }
 
-    private function createColorInput($field = array()) {
+    protected function createColorInput($field = array()) {
         if (empty($field['type']) AND $field['type'] !== 'color') return FALSE;
 
         $input = form_input(array('id' => $field['id'], 'name' => $field['name'], 'class' => $this->_form_classes['color'], 'value' => $field['value']));
@@ -413,7 +413,7 @@ class Customizer {
         return $this->_styles['color_addon'][0] . $field['l_addon'] . $input . $this->_styles['color_addon'][1];
     }
 
-    private function createMediaInput($field = array()) {
+    protected function createMediaInput($field = array()) {
         if (empty($field['type']) AND $field['type'] !== 'media') return FALSE;
 
         $this->CI->load->model('Image_tool_model');
@@ -434,7 +434,7 @@ class Customizer {
         return $this->_styles['media_addon'][0] . $field['l_addon'] . $input . $field['r_addon'] . $this->_styles['media_addon'][1];
     }
 
-    private function createDropdown($field = array()) {
+    protected function createDropdown($field = array()) {
         if (empty($field['type'])) return FALSE;
 
         $extra = 'id="' . $field['id'] . '" class="' . $this->_form_classes['dropdown'] . '"';
@@ -446,7 +446,7 @@ class Customizer {
         }
     }
 
-    private function createCheckboxOrRadio($field = array()) {
+    protected function createCheckboxOrRadio($field = array()) {
         if (empty($field['type'])) return FALSE;
 
         if ($field['type'] === 'checkbox') {
@@ -456,7 +456,7 @@ class Customizer {
         }
     }
 
-    private function createInputGroup($field = array()) {
+    protected function createInputGroup($field = array()) {
         if (empty($field['type']) AND $field['type'] !== 'input-group' AND empty($field['group'])) return FALSE;
 
         $group_count = 0;
@@ -475,7 +475,7 @@ class Customizer {
         return array('name' => $temp_names, 'html' => $control, 'error' => $temp_errors);
     }
 
-    private function createButtonGroup($field = array()) {
+    protected function createButtonGroup($field = array()) {
         if (empty($field['type']) AND $field['type'] !== 'button-group' AND empty($field['group'])) return FALSE;
 
         $group_count = 0;
@@ -508,7 +508,7 @@ class Customizer {
         return array('name' => $temp_names, 'html' => $control, 'error' => $temp_errors);
     }
 
-    private function createTableRow($row = array()) {
+    protected function createTableRow($row = array()) {
         $parsed_row = array();
 
         if (!empty($row)) {
@@ -534,7 +534,7 @@ class Customizer {
         return $parsed_row;
     }
 
-    private function parseField($field = array()) {
+    protected function parseField($field = array()) {
         if (empty($field['name'])) return $field;
 
         $temp_item = array('id' => '', 'name' => '', 'label' => '', 'value' => '', 'type' => '', 'l_addon' => '', 'r_addon' => '', 'rows' => '', 'group' => array(), 'rules' => '', 'temp_fields' => array(), 'error' => '', 'options' => array(), 'checked' => FALSE);
@@ -551,7 +551,7 @@ class Customizer {
         return $field;
     }
 
-    private function getFieldError($name) {
+    protected function getFieldError($name) {
         $error_array = $this->CI->form_validation->error_array();
 
         if (!empty($name) AND !empty($error_array)) {
@@ -561,7 +561,7 @@ class Customizer {
         }
     }
 
-    private function getFieldData($name) {
+    protected function getFieldData($name) {
         $temp_data = NULL;
 
         if (preg_match_all('/\[(.*?)\]/', $name, $matches)) {
@@ -581,13 +581,13 @@ class Customizer {
         return $temp_data;
     }
 
-    private function getFieldValue($name, $default = '') {
+    protected function getFieldValue($name, $default = '') {
         $temp_value = $this->getFieldData($name);
         $temp_value = ($temp_value !== NULL) ? $temp_value : $default;
         return $this->CI->form_validation->set_value($name, $temp_value);
     }
 
-    private function reduceArray($array, $keys, $i = 0) {
+    protected function reduceArray($array, $keys, $i = 0) {
         if (is_array($array) AND isset($keys[$i])) {
             return isset($array[$keys[$i]]) ? $this->reduceArray($array[$keys[$i]], $keys, ($i+1)) : NULL;
         }

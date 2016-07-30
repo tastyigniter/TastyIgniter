@@ -780,7 +780,7 @@ class Location {
 		return "FAILED";
     }
 
-	private function getLocations() {
+	protected function getLocations() {
 		if (empty($this->locations)) {
 			$this->CI->load->model('Locations_model');
 			$locations = $this->CI->Locations_model->getLocations();
@@ -793,7 +793,7 @@ class Location {
 		return $this->locations;
 	}
 
-	private function getWorkingHours($location_id = FALSE) {
+	protected function getWorkingHours($location_id = FALSE) {
 		if (empty($this->working_hours)) {
 			$this->CI->load->model('Locations_model');
 			$working_hours = $this->CI->Locations_model->getWorkingHours();
@@ -819,7 +819,7 @@ class Location {
 		return (!empty($location_id) AND isset($this->working_hours[$location_id])) ? $this->working_hours[$location_id] : $this->working_hours;
 	}
 
-	private function setWorkingHours() {
+	protected function setWorkingHours() {
 		$working_hours = $this->getWorkingHours($this->location_id);
 
 		foreach (array('opening', 'delivery', 'collection') as $type) {
@@ -835,7 +835,7 @@ class Location {
 		$this->working_hours[$this->location_id] = $working_hours;
 	}
 
-	private function parseWorkingHours($type, $start_date, $end_date, $working_hours, $return = FALSE) {
+	protected function parseWorkingHours($type, $start_date, $end_date, $working_hours, $return = FALSE) {
 		$result = array();
 
 		while (strtotime($start_date) <= strtotime($end_date)) {
@@ -861,7 +861,7 @@ class Location {
 		return $result;
 	}
 
-	private function setDeliveryAreas() {
+	protected function setDeliveryAreas() {
 		if (isset($this->local_options['delivery_areas']) AND is_array($this->local_options['delivery_areas'])) {
 			foreach ($this->local_options['delivery_areas'] as $area_id => $area) {
 

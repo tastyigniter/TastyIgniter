@@ -102,7 +102,7 @@ class Reservation extends Main_Controller {
 		$this->template->render('reservation_success', $data);
 	}
 
-	private function _reserveTable() {
+	protected function _reserveTable() {
 
 		if ($this->session->userdata('reservation_data') AND $this->validateForm() === TRUE) {
 			$reserve = array();
@@ -152,7 +152,7 @@ class Reservation extends Main_Controller {
         }
     }
 
-	private function validateForm() {
+	protected function validateForm() {
 		$this->form_validation->set_rules('first_name', 'lang:label_first_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		$this->form_validation->set_rules('last_name', 'lang:label_last_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		$this->form_validation->set_rules('email', 'lang:label_email', 'xss_clean|trim|required|valid_email');
@@ -179,7 +179,7 @@ class Reservation extends Main_Controller {
         }
     }
 
-	private function createCaptcha() {
+	protected function createCaptcha() {
         $this->load->helper('captcha');
 
         $captcha = create_captcha();

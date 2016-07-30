@@ -36,7 +36,7 @@ class Admin_account_module extends Admin_Controller {
         }
 	}
 
-	private function _updateModule() {
+	protected function _updateModule() {
 		$this->user->restrict('Module.AccountModule.Manage');
 
     	if ($this->validateForm() === TRUE) {
@@ -51,7 +51,7 @@ class Admin_account_module extends Admin_Controller {
 		}
 	}
 
- 	private function validateForm() {
+ 	protected function validateForm() {
 		$this->form_validation->set_rules('heading', 'lang:label_heading', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 
 		if ($this->form_validation->run() === TRUE) {

@@ -29,7 +29,7 @@ class Stripe_model extends TI_Model {
 		return $this->sendToStripe('charges', $data, $order_data);
 	}
 
-	private function sendToStripe($end_point, $data = array(), $order_data = array()) {
+	protected function sendToStripe($end_point, $data = array(), $order_data = array()) {
 		$payment = $this->extension->getPayment('stripe');
 		$settings = !empty($payment['ext_data']) ? $payment['ext_data'] : array();
 

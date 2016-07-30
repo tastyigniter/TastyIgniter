@@ -36,7 +36,7 @@ class Admin_reservation_module extends Admin_Controller {
         }
 	}
 
-	private function _updateModule() {
+	protected function _updateModule() {
     	if ($this->validateForm() === TRUE) {
 
 		    if ($this->Extensions_model->updateExtension('module', 'reservation_module', $this->input->post())) {
@@ -49,7 +49,7 @@ class Admin_reservation_module extends Admin_Controller {
 		}
 	}
 
- 	private function validateForm() {
+ 	protected function validateForm() {
 		$this->form_validation->set_rules('status', 'lang:label_status', 'xss_clean|trim|required|integer');
 
 		if ($this->form_validation->run() === TRUE) {

@@ -59,7 +59,7 @@ class Contact extends Main_Controller {
 		$this->template->render('contact', $data);
 	}
 
-	private function _sendContact() {
+	protected function _sendContact() {
 
 		if ($this->validateForm() === TRUE) {
 			$this->load->library('email');														//loading upload library
@@ -91,7 +91,7 @@ class Contact extends Main_Controller {
         }
 	}
 
-	private function validateForm() {
+	protected function validateForm() {
 		// START of form validation rules
 		$this->form_validation->set_rules('subject', 'lang:label_subject', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('full_name', 'lang:label_full_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
@@ -119,7 +119,7 @@ class Contact extends Main_Controller {
         }
     }
 
-	private function createCaptcha() {
+	protected function createCaptcha() {
         $this->load->helper('captcha');
         $captcha = create_captcha();
         $this->session->set_tempdata('captcha', array('word' => $captcha['word'], 'image' => $captcha['image']), '300'); //set data to session for compare

@@ -177,7 +177,7 @@ class Reviews extends Main_Controller {
 		$this->template->render('account/review_add', $data);
 	}
 
-	private function _addReview() {
+	protected function _addReview() {
 		$add = array();
 
 		if ($this->validateForm() === TRUE) {
@@ -201,7 +201,7 @@ class Reviews extends Main_Controller {
 		}
 	}
 
-	private function validateForm() {
+	protected function validateForm() {
 		$this->form_validation->set_rules('location_id', 'lang:label_restaurant', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('customer_id', 'lang:label_author', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('rating[quality]', 'lang:label_quality', 'xss_clean|trim|required|integer');

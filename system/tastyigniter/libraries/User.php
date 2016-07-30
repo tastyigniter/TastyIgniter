@@ -205,7 +205,7 @@ class User {
 	    return $this->checkPermittedActions($permission);
     }
 
-    private function setPermissions() {
+	protected function setPermissions() {
         $group_permissions = (!empty($this->permissions)) ? @unserialize($this->permissions) : NULL;
 
         if (is_array($group_permissions)) {
@@ -225,7 +225,7 @@ class User {
         }
     }
 
-    private function checkPermittedActions($perm, $display_error = FALSE) {
+	protected function checkPermittedActions($perm, $display_error = FALSE) {
 	    $action = $this->getPermissionAction($perm);
 
 	    // Ensure the permission string is matches pattern Domain.Context
@@ -254,7 +254,7 @@ class User {
 	    return TRUE;
     }
 
-	private function getPermissionAction($permission) {
+	protected function getPermissionAction($permission) {
 		$action = array();
 
 		if (substr_count($permission, '.') === 2) {

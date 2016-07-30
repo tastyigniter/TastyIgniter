@@ -199,7 +199,7 @@ class TI_Profiler extends CI_Profiler {
         return $output;
     }
 
-    private function _compile_var() {
+    protected function _compile_var() {
         return "\n\n"
         . '<fieldset id="ci_profiler_vars" style="border:1px solid #000;padding:6px 10px 10px 10px;margin:20px 0 20px 0;background-color:#eee;">'
         . "\n"

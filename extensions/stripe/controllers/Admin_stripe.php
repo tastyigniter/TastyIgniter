@@ -136,7 +136,7 @@ class Admin_stripe extends Admin_Controller {
 		return $this->load->view('stripe/admin_stripe', $data, TRUE);
 	}
 
-	private function _updateStripe() {
+	protected function _updateStripe() {
 		if ($this->input->post() AND $this->validateForm() === TRUE) {
 
 			if ($this->Extensions_model->updateExtension('payment', 'stripe', $this->input->post())) {
@@ -149,7 +149,7 @@ class Admin_stripe extends Admin_Controller {
 		}
 	}
 
-	private function validateForm() {
+	protected function validateForm() {
 		$this->form_validation->set_rules('title', 'lang:label_title', 'xss_clean|trim|required|min_length[2]|max_length[128]');
 		$this->form_validation->set_rules('description', 'lang:label_description', 'xss_clean|trim|required|max_length[128]');
 		$this->form_validation->set_rules('transaction_mode', 'lang:label_transaction_mode', 'xss_clean|trim|required');

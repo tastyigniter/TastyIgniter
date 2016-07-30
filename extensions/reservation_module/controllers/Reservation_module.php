@@ -139,7 +139,7 @@ class Reservation_module extends Main_Controller {
 	}
 
 
-	private function findTable() {
+	protected function findTable() {
         if ($this->validateForm() === TRUE) {
 
             $this->location->setLocation($this->input->get('location'));
@@ -180,7 +180,7 @@ class Reservation_module extends Main_Controller {
         return FALSE;
     }
 
-    private function validateForm() {
+    protected function validateForm() {
         $this->form_validation->reset_validation();
         $this->form_validation->set_data($_GET);
 
