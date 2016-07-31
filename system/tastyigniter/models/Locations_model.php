@@ -37,6 +37,15 @@ class Locations_model extends TI_Model
 	);
 
 	/**
+	 * Scope a query to only include enabled location
+	 *
+	 * @return $this
+	 */
+	public function isEnabled() {
+		return $this->where('location_status', '1');
+	}
+
+	/**
 	 * Count the number of records
 	 *
 	 * @param array $filter

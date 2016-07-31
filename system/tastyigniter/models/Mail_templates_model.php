@@ -38,6 +38,15 @@ class Mail_templates_model extends TI_Model
 	protected $timestamps = array('created', 'updated');
 
 	/**
+	 * Scope a query to only include enabled mail template
+	 *
+	 * @return $this
+	 */
+	public function isEnabled() {
+		return $this->where('status', '1');
+	}
+
+	/**
 	 * Count the number of records
 	 *
 	 * @param array $filter

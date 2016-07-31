@@ -42,6 +42,15 @@ class Pages_model extends TI_Model
 	);
 
 	/**
+	 * Scope a query to only include enabled page
+	 *
+	 * @return $this
+	 */
+	public function isEnabled() {
+		return $this->where('status', '1');
+	}
+
+	/**
 	 * Count the number of records
 	 *
 	 * @param array $filter

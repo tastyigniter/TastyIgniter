@@ -44,6 +44,15 @@ class Staffs_model extends TI_Model
 	);
 
 	/**
+	 * Scope a query to only include enabled staff
+	 *
+	 * @return $this
+	 */
+	public function isEnabled() {
+		return $this->where('staff_status', '1');
+	}
+
+	/**
 	 * Count the number of records
 	 *
 	 * @param array $filter

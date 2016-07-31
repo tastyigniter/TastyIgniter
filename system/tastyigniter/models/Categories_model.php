@@ -33,6 +33,15 @@ class Categories_model extends TI_Model
 	protected $primary_key = 'category_id';
 
 	/**
+	 * Scope a query to only include enabled category
+	 *
+	 * @return $this
+	 */
+	public function isEnabled() {
+		return $this->where('status', '1');
+	}
+
+	/**
 	 * Count the number of records
 	 *
 	 * @param array $filter
