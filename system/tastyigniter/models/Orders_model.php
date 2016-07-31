@@ -642,8 +642,8 @@ class Orders_model extends TI_Model {
         }
     }
 
-    public function subtractStock($order_id) {
-        $this->load->model('Menus_model');
+	public function subtractStock($order_id) {
+		$this->load->model('Menus_model');
 
         $order_menus = $this->getOrderMenus($order_id);
 
