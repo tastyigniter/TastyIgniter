@@ -100,7 +100,7 @@ class Orders_model extends TI_Model {
                 $this->db->where('order_type', $filter['filter_type']);
             }
 
-            if ( ! empty($filter['filter_payment'])) {
+            if (!empty($filter['filter_payment'])) {
                 $this->db->where('payment', $filter['filter_payment']);
             }
 
@@ -311,10 +311,11 @@ class Orders_model extends TI_Model {
                     $update['status_notify'] = $this->sendMail($mail_data['email'], $mail_template, $mail_data);
                 }
 
-                if ((int) $update['old_status_id'] !== (int) $update['order_status']) {
-                    if (APPDIR === ADMINDIR) {
-                        $status_update['staff_id'] = $this->user->getStaffId();
-                    }
+			if ((int)$update['old_status_id'] !== (int)$update['order_status']) {
+				$status_update = array();
+				if (APPDIR === ADMINDIR) {
+					$status_update['staff_id'] = $this->user->getStaffId();
+				}
 
                     $status_update['object_id']    = (int) $order_id;
                     $status_update['status_id']    = (int) $update['order_status'];
@@ -330,8 +331,13 @@ class Orders_model extends TI_Model {
                     $this->createInvoiceNo($order_id);
                 }
 
-                if (in_array($update['order_status'], (array) $this->config->item('processing_order_status'))) {
-                    $this->subtractStock($order_id);
+			// Make sure order status has not been previously updated
+			// to one of the processing order status. If so,
+			// skip to avoid updating stock twice.
+			$order_status_exists = $this->Statuses_model->statusExists('order', $order_id, $this->config->item('processing_order_status'));
+
+			if (!$order_status_exists AND in_array($update['order_status'], (array)$this->config->item('processing_order_status'))) {
+				$this->subtractStock($order_id);
 
                     $this->load->model('Coupons_model');
                     $this->Coupons_model->redeemCoupon($order_id);
@@ -411,7 +417,7 @@ class Orders_model extends TI_Model {
 
         if (isset($order_info['order_time'])) {
             $current_time = time();
-            $order_time = (strtotime($order_info['order_time']) < $current_time) ? $current_time : $order_info['order_time'];
+            $order_time = (strtotime($order_info['order_time']) < strtotime($current_time)) ? $current_time : $order_info['order_time'];
             $this->db->set('order_time', mdate('%H:%i', strtotime($order_time)));
             $this->db->set('order_date', mdate('%Y-%m-%d', strtotime($order_time)));
             $this->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', $current_time));
@@ -463,7 +469,7 @@ class Orders_model extends TI_Model {
                 $this->addOrderTotals($order_id, $cart_contents);
 
                 if ( ! empty($cart_contents['coupon'])) {
-                    $this->addOrderCoupon($order_id, $order_info['customer_id'], $cart_contents['totals']['coupon']);
+                    $this->addOrderCoupon($order_id, $order_info['customer_id'], $cart_contents['coupon']);
                 }
 
                 return $order_id;
@@ -627,7 +633,6 @@ class Orders_model extends TI_Model {
             $this->db->set('customer_id', empty($customer_id) ? '0' : $customer_id);
             $this->db->set('coupon_id', $temp_coupon['coupon_id']);
             $this->db->set('code', $temp_coupon['code']);
-            $this->db->set('min_total', $temp_coupon['min_total']);
             $this->db->set('amount', '-' . $coupon['amount']);
             $this->db->set('date_used', mdate('%Y-%m-%d %H:%i:%s', time()));
 
