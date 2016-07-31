@@ -37,6 +37,24 @@ class Statuses_model extends TI_Model
 	);
 
 	/**
+	 * Scope a query to only include order statuses
+	 *
+	 * @return $this
+	 */
+	public function isForOrder() {
+		return $this->where('status_for', 'order');
+	}
+
+	/**
+	 * Scope a query to only include reservation statuses
+	 *
+	 * @return $this
+	 */
+	public function isForReservation() {
+		return $this->where('status_for', 'reserve');
+	}
+
+	/**
 	 * Count the number of records
 	 *
 	 * @param array $filter

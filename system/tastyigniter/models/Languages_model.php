@@ -33,6 +33,15 @@ class Languages_model extends TI_Model
 	protected $primary_key = 'language_id';
 
 	/**
+	 * Scope a query to only include enabled language
+	 * 
+	 * @return $this
+	 */
+	public function isEnabled() {
+		return $this->where('status', '1');
+	}
+	
+	/**
 	 * Count the number of records
 	 *
 	 * @param array $filter
