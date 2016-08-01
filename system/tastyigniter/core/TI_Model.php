@@ -166,7 +166,7 @@ class TI_Model extends CI_Model
 		// Check the auto-set features and make sure they are loaded into the
 		// observer system.
 		if (isset($this->get_timestamps()['created'])) {
-			array_unshift($this->before_create, 'created_on', 'updated_on');
+			array_unshift($this->before_create, 'created_on');
 		}
 
 		if (isset($this->get_timestamps()['updated'])) {
@@ -397,14 +397,17 @@ class TI_Model extends CI_Model
 	public function insert_into($table_name, $data, $skip_validation = FALSE) {
 		$original_table = $this->table_name;
 		$original_fields = $this->fields;
+		$original_key = $this->primary_key;
 
 		$this->table_name = $table_name;
 		$this->fields = array();
+		$this->primary_key = NULL;
 
 		$result = $this->insert($data, $skip_validation);
 
 		$this->table_name = $original_table;
 		$this->fields = $original_fields;
+		$this->primary_key = $original_key;
 
 		return $result;
 	}
@@ -429,7 +432,8 @@ class TI_Model extends CI_Model
 			return FALSE;
 		}
 
-		$this->_set_where(array($where));
+		$this->_set_where(isset($where[0]) ? $where : array($where));
+//		$this->_set_where(array($where));
 
 		$data = $this->trigger('before_update', array($data, $where));
 
@@ -491,14 +495,17 @@ class TI_Model extends CI_Model
 	public function update_into($table_name, $where = NULL, $data, $skip_validation = FALSE) {
 		$original_table = $this->table_name;
 		$original_fields = $this->fields;
+		$original_key = $this->primary_key;
 
 		$this->table_name = $table_name;
 		$this->fields = array();
+		$this->primary_key = NULL;
 
 		$result = $this->update($where, $data, $skip_validation);
 
 		$this->table_name = $original_table;
 		$this->fields = $original_fields;
+		$this->primary_key = $original_key;
 
 		return $result;
 	}
@@ -552,14 +559,17 @@ class TI_Model extends CI_Model
 	public function save_into($table_name, $data = NULL, $where = NULL, $skip_validation = FALSE) {
 		$original_table = $this->table_name;
 		$original_fields = $this->fields;
+		$original_key = $this->primary_key;
 
 		$this->table_name = $table_name;
 		$this->fields = array();
+		$this->primary_key = NULL;
 
 		$result = $this->save($data, $where, $skip_validation);
 
 		$this->table_name = $original_table;
 		$this->fields = $original_fields;
+		$this->primary_key = $original_key;
 
 		return $result;
 	}
@@ -607,7 +617,8 @@ class TI_Model extends CI_Model
 
 		$this->table_name = $table;
 
-		$affected_rows = $this->delete($where);
+		$this->_set_where(isset($where[0]) ? $where : array($where));
+		$affected_rows = $this->delete();
 
 		$this->table_name = $original_table;
 
@@ -1093,7 +1104,7 @@ class TI_Model extends CI_Model
 			$row[$created_field] = $this->set_date();
 		}
 
-		return $row;
+		return $this->updated_on($row);
 	}
 
 	/**
@@ -1280,6 +1291,24 @@ class TI_Model extends CI_Model
 	}
 
 	/**
+	 * Return the pagination links url
+	 *
+	 * @param $index_url
+	 * @param $get_data
+	 *
+	 * @return string
+	 */
+	protected function get_paginate_url($index_url, $get_data) {
+		if (empty($get_data)) {
+			return site_url($index_url);
+		}
+
+		$query_sep = (strpos($index_url, '?') !== FALSE) ? '&' : '?';
+
+		return site_url($index_url . $query_sep . http_build_query(array_filter($get_data)));
+	}
+
+	/**
 	 * Paginated list matching the filter array
 	 *
 	 * @param array  $filter
@@ -1291,7 +1320,6 @@ class TI_Model extends CI_Model
 		$result = new stdClass;
 		$result->pagination = $result->list = array();
 
-		$filter['limit'] = isset($filter['limit']) ? $filter['limit'] : $this->config->item('page_limit');
 		if (isset($filter['limit']) AND isset($filter['page'])) {
 			$this->limit($filter['limit'], $filter['page']);
 		}
@@ -1312,9 +1340,9 @@ class TI_Model extends CI_Model
 		// find a better way to persist the join query after find_all() call
 		if (!empty($this->with)) $this->relate();
 
-		$config['base_url'] = empty($get_data) ? site_url($index_url) : site_url($index_url . '?' . http_build_query(array_filter($get_data)));
+		$config['base_url'] = $this->get_paginate_url($index_url, $get_data);
 		$config['total_rows'] = (method_exists($this, 'getCount')) ? $this->getCount($filter) : $this->filter($filter)->count();
-		$config['per_page'] = $filter['limit'];
+		$config['per_page'] = isset($filter['limit']) ? $filter['limit'] : $this->config->item('page_limit');
 
 		$result->pagination = $this->paginate_list($config);
 
@@ -1678,8 +1706,6 @@ class TI_Model extends CI_Model
 	 * @return bool
 	 */
 	public function is_field($key) {
-//		if (static::$unguarded) return TRUE;
-
 		$fields = $this->_fields();
 		if (in_array($key, $fields)) return TRUE;
 

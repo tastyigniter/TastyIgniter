@@ -23,14 +23,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Admin_Controller extends Authenticated_Controller
 {
 	/**
-	 * @var array Filters for list columns
+	 * @var string Link URL for the create page
 	 */
-	public $list_filters = array();
+	public $create_url = NULL;
 
 	/**
-	 * @var array Sorting columns
+	 * @var string Link URL for the edit page
 	 */
-	public $sort_columns = array();
+	public $edit_url = NULL;
+
+	/**
+	 * @var string Link URL for the edit page
+	 */
+	public $delete_url = NULL;
 
 	/**
 	 * Class constructor
@@ -54,41 +59,7 @@ class Admin_Controller extends Authenticated_Controller
 		if (!isset($this->delete_url)) $this->delete_url = $this->controller;
 
 		$this->createFilter();
-	}
-
-	public function createFilter() {
-		if (is_array($this->list_filters)) {
-			foreach ($this->list_filters as $item => $value) {
-				$this->list_filters[$item] = ($this->input->get($item)) ? $this->input->get($item) : $value;
-			}
-		}
-
-		if (is_array($this->sort_columns)) {
-			$order_by = (isset($this->list_filters['order_by']) AND $this->list_filters['order_by'] == 'ASC') ? 'DESC' : 'ASC';
-			foreach ($this->sort_columns as $sort) {
-				$url = array_merge(array_filter($this->input->get()), array('sort_by' => $sort, 'order_by' => $order_by));
-				if (strpos($sort, '.') !== FALSE) {
-					$sort = explode('.', $sort);
-					$sort = end($sort);
-				}
-				$this->sort_columns['sort_' . $sort] = site_url($this->index_url . '?' . http_build_query($url));
-			}
-		}
-	}
-
-	protected function pageUrl($uri = NULL, $params = array()) {
-		return site_url($this->pageUri($uri, $params));
-	}
-
-	protected function pageUri($uri = NULL, $params = array()) {
-		if (!empty($params)) {
-			$uri = preg_replace_callback('/{(.*?)}/', function ($preg) use ($params) {
-				$preg[1] = ($preg[1] == 'id' AND !isset($params[$preg[1]])) ? singular($this->controller).'_'.$preg[1] : $preg[1];
-				return isset($params[$preg[1]]) ? $params[$preg[1]] : '';
-			}, $uri);
-		}
-
-		return ($uri === NULL) ? $this->index_url : $uri;
+		$this->createSorting();
 	}
 
 	protected function redirect($uri = NULL) {
@@ -96,7 +67,7 @@ class Admin_Controller extends Authenticated_Controller
 			$uri = ($this->input->post('save_close') !== '1') ? str_replace('{id}', $uri, $this->edit_url) : NULL;
 		}
 
-		redirect(($uri === NULL) ? $this->index_url : $uri);
+		parent::redirect($uri);
 	}
 }
 
