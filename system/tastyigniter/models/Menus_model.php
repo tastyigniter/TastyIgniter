@@ -146,8 +146,8 @@ class Menus_model extends TI_Model
 		$update = FALSE;
 
 		if (is_numeric($menu_id)) {
-			$this->select('menus.menu_id, menu_name, stock_qty, minimum_qty, subtract_stock, menu_status');
-			if ($row = $this->find('menus.menu_id', $menu_id)) {
+			$this->select('menus.menu_id, stock_qty, subtract_stock');
+			if ($row = $this->find($menu_id)) {
 				if ($row['subtract_stock'] === '1' AND !empty($quantity)) {
 					$stock_qty = $row['stock_qty'] + $quantity;
 
@@ -271,9 +271,7 @@ class Menus_model extends TI_Model
 			}
 
 			$result[$row['menu_category_id']][] = array_merge($row, array(                                                            // create array of menu data to be sent to view
-//				'menu_name'        => (strlen($row['menu_name']) > 80) ? strtolower(substr($row['menu_name'], 0, 80)) . '...' : strtolower($row['menu_name']),
-//				'menu_description' => (strlen($row['menu_description']) > 120) ? substr($row['menu_description'], 0, 120) . '...' : $row['menu_description'],
-//				'category_id'      => $row['menu_category_id'],
+				'category_id'      => $row['menu_category_id'],
 				'minimum_qty'     => !empty($row['minimum_qty']) ? $row['minimum_qty'] : '1',
 				'mealtime_status' => (!empty($row['mealtime_id']) AND !empty($row['mealtime_status'])) ? '1' : '0',
 				'end_date'        => $end_date,

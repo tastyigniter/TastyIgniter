@@ -36,7 +36,7 @@ class Maintenance_model extends TI_Model
 
 		if ($query->num_rows() > 0) {
 			foreach ($query->result_array() as $row) {
-				if ($this->table_exists($row['table_name'])) {
+				if ($this->db->table_exists($row['table_name'])) {
 					$result[] = $row;
 				}
 			}
@@ -100,7 +100,7 @@ class Maintenance_model extends TI_Model
 	public function checkTables($tables = array()) {
 		if (!empty($tables)) {
 			foreach ($tables as $table) {
-				if (!$this->table_exists($table)) {
+				if (!$this->db->table_exists($table)) {
 					return FALSE;
 				}
 			}

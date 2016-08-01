@@ -144,7 +144,10 @@ class Extensions_model extends TI_Model
 	}
 
 	public function filter($filter = array()) {
-		$filter['filter_type'] = is_string($filter['filter_type']) ? array('module', 'payment', 'widget') : $filter['filter_type'];
+		if (!isset($filter['filter_type']) OR is_string($filter['filter_type'])) {
+			$filter['filter_type'] = array('module', 'payment', 'widget');
+		}
+
 		if (!empty($filter['filter_type']) AND is_array($filter['filter_type'])) {
 			$this->where_in('type', $filter['filter_type']);
 		}

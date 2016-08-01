@@ -189,6 +189,7 @@ class Menu_options_model extends TI_Model
 		if (empty($save)) return FALSE;
 
 		if ($option_id = $this->skip_validation(TRUE)->save($save, $option_id)) {
+			$save['option_values'] = isset($save['option_values']) ? $save['option_values'] : array();
 			$this->addOptionValues($option_id, $save['option_values']);
 
 			return $option_id;
