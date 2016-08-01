@@ -95,9 +95,8 @@ class Events {
 	 * @return void
 	 */
 	public static function trigger($event_name = NULL, $payload = NULL) {
-		if (empty($event_name)
-			|| ! is_string($event_name)
-			|| ! array_key_exists($event_name, self::$events)
+		if (empty($event_name) OR ! is_string($event_name)
+			OR ! array_key_exists($event_name, self::$events)
 		) {
 			return;
 		}
@@ -134,6 +133,13 @@ class Events {
 
 			$class->{$subscriber['method']}($payload);
 			unset($class);
+		}
+	}
+
+	protected static function setExtensions() {
+		if (empty(self::$extensions)) {
+			self::$CI =& get_instance();
+			self::$extensions = self::$CI->extension->getInstalledExtensions();
 		}
 	}
 }
