@@ -61,6 +61,7 @@ $lang['label_customer_name'] 		    = 'Name';
 $lang['label_customer_email'] 		    = 'Email';
 $lang['label_customer_telephone'] 		= 'Telephone';
 
+$lang['error_status_exists'] 			= 'The reservation can not be updated twice with the same reservation status';
 
 /* End of file reservations_lang.php */
 /* Location: ./admin/language/english/reservations_lang.php */

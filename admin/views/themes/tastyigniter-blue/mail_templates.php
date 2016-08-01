@@ -32,7 +32,7 @@
 								<td><?php echo $template['name']; ?></td>
 								<td class="text-right"><?php echo $template['date_added']; ?></td>
 								<td class="text-right"><?php echo $template['date_updated']; ?></td>
-								<td class="text-right"><?php echo $template['status']; ?></td>
+								<td class="text-center"><?php echo ($template['status'] === '1') ? lang('text_enabled') : lang('text_disabled'); ?></td>
 							</tr>
 							<?php } ?>
 							<?php } else {?>
@@ -44,6 +44,11 @@
 					</table>
 				</div>
 			</form>
+
+			<div class="pagination-bar clearfix">
+				<div class="links"><?php echo $pagination['links']; ?></div>
+				<div class="info"><?php echo $pagination['info']; ?></div>
+			</div>
 		</div>
 	</div>
 </div>

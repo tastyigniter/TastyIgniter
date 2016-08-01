@@ -9,7 +9,7 @@
                             <span><?php echo $date_added; ?></span>
                         </li>
                         <?php foreach ($activities as $activity) { ?>
-                            <li class="timeline-item <?php echo $activity['status']; ?>">
+                            <li class="timeline-item <?php echo ($activity['status'] == '1') ? 'read' : 'unread'; ?>">
                                 <time class="timeline-time" datetime="">
                                     <span><?php echo $activity['time']; ?></span>
                                     <span><?php echo $activity['time_elapsed']; ?></span>

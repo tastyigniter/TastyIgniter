@@ -118,9 +118,9 @@ $(function(){
 $(function(){
     var displayFilterPanel = Cookies.set('ti_displayFilterPanel');
 
-	$('#page-wrapper').on('click', '.panel-table .btn-filter', function(e) {
+	$('#page-wrapper').on('click', '.panel-table .btn-filter, .page-action .btn-filter', function(e) {
 		var $this = $(this),
-		$panel = $this.parents('.panel'),
+		$panel = $('.panel-table'),
         $panelFilter = $panel.find('.panel-filter');
 
         $panel.find('.panel-filter').slideToggle(function() {
@@ -137,7 +137,7 @@ $(function(){
 	});
 
     if (displayFilterPanel == 'true') {
-        $('.btn-filter').trigger('click');
+        $('.page-action .btn-filter').trigger('click');
     }
 });
 

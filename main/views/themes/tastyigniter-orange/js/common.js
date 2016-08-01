@@ -1,47 +1,47 @@
-$.fn.tabs = function() {
-	var selector = this;
+$.fn.tabs = function () {
+    var selector = this;
 
-	this.each(function() {
-		var obj = $(this);
+    this.each(function () {
+        var obj = $(this);
 
-		$(obj.attr('rel')).hide();
+        $(obj.attr('rel')).hide();
 
-		$(obj).click(function() {
-			$(selector).removeClass('active');
+        $(obj).click(function () {
+            $(selector).removeClass('active');
 
-			$(selector).each(function(i, element) {
-				$($(element).attr('rel')).hide();
-			});
+            $(selector).each(function (i, element) {
+                $($(element).attr('rel')).hide();
+            });
 
-			$(this).addClass('active');
+            $(this).addClass('active');
 
-			$($(this).attr('rel')).show();
+            $($(this).attr('rel')).show();
 
-			return false;
-		});
-	});
+            return false;
+        });
+    });
 
-	$(this).show();
+    $(this).show();
 
-	$(this).first().click();
+    $(this).first().click();
 };
 
-$(function() {
+$(function () {
     var alertMsgs = $('.alert-collapsible .alert-hide');
     var dropdownButton = $('.btn-dropdown');
     alertMsgs.hide();
 
     //Click dropdown
-    dropdownButton.click(function() {
+    dropdownButton.click(function () {
         //get data-for attribute
         //var dataFor = $(this).attr('data-for');
         //var idFor = $(dataFor);
 
         //current button
         var currentButton = $(this);
-        alertMsgs.slideToggle(function() {
+        alertMsgs.slideToggle(function () {
             //Completed slidetoggle
-            if(alertMsgs.is(':visible')) {
+            if (alertMsgs.is(':visible')) {
                 currentButton.html('<i class="fa fa-chevron-up text-muted"></i>');
             } else {
                 currentButton.html('<i class="fa fa-chevron-down text-muted"></i>');
@@ -52,12 +52,12 @@ $(function() {
 
 $(function () {
 
-    $(document).on('change', '.btn-group-toggle input[type="radio"], .btn-group input[type="radio"]', function() {
+    $(document).on('change', '.btn-group-toggle input[type="radio"], .btn-group input[type="radio"]', function () {
         var btn = $(this).parent();
         var parent = btn.parent();
-        var activeClass = (btn.attr('data-btn')) ? btn.attr('data-btn'): 'btn-default';
+        var activeClass = (btn.attr('data-btn')) ? btn.attr('data-btn') : 'btn-default';
 
-        parent.find('.btn').each(function() {
+        parent.find('.btn').each(function () {
             removeClass = ($(this).attr('data-btn')) ? $(this).attr('data-btn') : activeClass;
             $(this).removeClass(removeClass);
         });
@@ -126,6 +126,7 @@ $(function () {
                 $button.prepend('<i class="state-icon ' + settings[$button.data('state')].icon + '"></i>');
             }
         }
+
         init();
     });
 });
@@ -151,8 +152,8 @@ function displayRatings(ratings) {
 }
 
 $(function () {
-    $(window).bind("load resize", function() {
-        $('.affix-module').each(function() {
+    $(window).bind("load resize", function () {
+        $('.affix-module').each(function () {
             $(this).find('[data-spy="affix"]:first-child').css('width', $(this).width());
         });
     });

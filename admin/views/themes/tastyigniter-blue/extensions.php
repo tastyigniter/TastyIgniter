@@ -1,12 +1,17 @@
 <?php echo get_header(); ?>
 <div class="row content">
 	<div class="col-md-12">
-		<div class="panel panel-default panel-table">
+		<div class="panel panel-default panel-table panel-tabs">
 			<div class="panel-heading">
-				<h3 class="panel-title"><?php echo lang('text_list'); ?></h3>
-                <div class="pull-right">
-                    <button class="btn btn-filter btn-xs"><i class="fa fa-filter"></i></button>
-                </div>
+				<ul id="nav-tabs" class="nav nav-tabs">
+					<?php if ($filter_type === 'payment') { ?>
+						<li><a href="<?php echo site_url('extensions?filter_type=module'); ?>"><?php echo lang('text_tab_module'); ?></a></li>
+						<li class="active"><a href="<?php echo site_url('extensions?filter_type=payment'); ?>"><?php echo lang('text_tab_payment'); ?></a></li>
+					<?php } else { ?>
+						<li class="active"><a href="<?php echo site_url('extensions?filter_type=module'); ?>"><?php echo lang('text_tab_module'); ?></a></li>
+						<li><a href="<?php echo site_url('extensions?filter_type=payment'); ?>"><?php echo lang('text_tab_payment'); ?></a></li>
+					<?php } ?>
+				</ul>
             </div>
 
             <div class="panel-body panel-filter">
@@ -43,20 +48,6 @@
                         </div>
                     </div>
                 </form>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12 wrap-vertical">
-                    <ul id="nav-tabs" class="nav nav-tabs">
-                        <?php if ($filter_type === 'payment') { ?>
-                            <li><a href="<?php echo site_url('extensions?filter_type=module'); ?>"><?php echo lang('text_tab_module'); ?></a></li>
-                            <li class="active"><a href="<?php echo site_url('extensions?filter_type=payment'); ?>"><?php echo lang('text_tab_payment'); ?></a></li>
-                        <?php } else { ?>
-                            <li class="active"><a href="<?php echo site_url('extensions?filter_type=module'); ?>"><?php echo lang('text_tab_module'); ?></a></li>
-                            <li><a href="<?php echo site_url('extensions?filter_type=payment'); ?>"><?php echo lang('text_tab_payment'); ?></a></li>
-                        <?php } ?>
-                    </ul>
-                </div>
             </div>
 
             <form role="form" id="list-form" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
@@ -111,12 +102,12 @@
 					</table>
 				</div>
 			</form>
+
+			<div class="pagination-bar clearfix">
+				<div class="links"><?php echo $pagination['links']; ?></div>
+				<div class="info"><?php echo $pagination['info']; ?></div>
+			</div>
 		</div>
 	</div>
 </div>
-<script type="text/javascript"><!--
-    function filterList() {
-        $('#filter-form').submit();
-    }
-//--></script>
 <?php echo get_footer(); ?>

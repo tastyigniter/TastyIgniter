@@ -27,7 +27,7 @@
                                 <div class="col-sm-9">
                                     <select name="recipient" id="input-recipient" class="form-control">
                                         <?php foreach ($recipients as $key => $value) { ?>
-                                            <?php if ($key === $recipient) { ?>
+                                            <?php if ($key == $recipient) { ?>
                                                 <option value="<?php echo $key; ?>" selected="selected"><?php echo $value; ?></option>
                                             <?php } else { ?>
                                                 <option value="<?php echo $key; ?>"><?php echo $value; ?></option>

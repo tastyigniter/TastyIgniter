@@ -18,7 +18,7 @@
 
         <form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo $_action; ?>">
             <div class="tab-content">
-                <div id="general" class="tab-pane row wrap-all <?php echo (!empty($lang_files)) ? '' : 'active'?>">
+                <div id="general" class="tab-pane <?php echo (!empty($lang_files)) ? '' : 'active'?>">
                     <div class="form-group">
                         <label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_name'); ?></label>
 
@@ -82,8 +82,8 @@
                             <label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_language'); ?></label>
                             <div class="col-sm-5">
                                 <select name="language_to_clone" id="" class="form-control">
-                                    <?php foreach ($languages as $language) { ?>
-                                        <option value="<?php echo $language['idiom']; ?>" <?php echo set_select('language_to_clone', $language['idiom']); ?> ><?php echo $language['name']; ?></option>
+                                    <?php foreach ($languages as $key => $value) { ?>
+                                        <option value="<?php echo $key; ?>" <?php echo set_select('language_to_clone', $key); ?> ><?php echo $value; ?></option>
                                     <?php } ?>
                                 </select>
                                 <?php echo form_error('language_to_clone', '<span class="text-danger">', '</span>'); ?>
@@ -124,7 +124,7 @@
                     </div>
                 </div>
 
-                <div id="files" class="tab-pane row wrap-all <?php echo (!empty($lang_files) AND empty($lang_file)) ? 'active' : ''?>">
+                <div id="files" class="tab-pane <?php echo (!empty($lang_files) AND empty($lang_file)) ? 'active' : ''?>">
                     <?php if (!empty($lang_file)) { ?>
                         <div class="alert alert-warning">
                             <p><?php echo lang('alert_save_changes'); ?></p>
@@ -143,7 +143,7 @@
                     <?php } ?>
                 </div>
 
-                <div id="edit-lang-values" class="tab-pane row wrap-all <?php echo (!empty($lang_file)) ? 'active': ''?>">
+                <div id="edit-lang-values" class="tab-pane <?php echo (!empty($lang_file)) ? 'active': ''?>">
                     <div class="table-responsive">
                         <table class="table table-striped table-border table-no-spacing">
                             <thead>

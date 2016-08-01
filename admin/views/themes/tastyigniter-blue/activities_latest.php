@@ -1,7 +1,7 @@
 <ul class="menu activities-list">
     <?php if ($activities) {?>
         <?php foreach ($activities as $activity) { ?>
-            <li class="<?php echo $activity['state']; ?>">
+            <li class="<?php echo $activity['status']; ?>">
                 <div class="clearfix">
                     <div class="activity-body"><i class="<?php echo $activity['icon']; ?> fa-fw bg-primary"></i>
                         <?php echo $activity['message']; ?>

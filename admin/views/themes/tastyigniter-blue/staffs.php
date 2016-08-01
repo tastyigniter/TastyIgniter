@@ -2,12 +2,6 @@
 <div class="row content">
 	<div class="col-md-12">
 		<div class="panel panel-default panel-table">
-			<div class="panel-heading">
-				<h3 class="panel-title"><?php echo lang('text_list'); ?></h3>
-				<div class="pull-right">
-					<button class="btn btn-filter btn-xs"><i class="fa fa-filter"></i></button>
-				</div>
-			</div>
 			<div class="panel-body panel-filter">
 				<form role="form" id="filter-form" accept-charset="utf-8" method="GET" action="<?php echo current_url(); ?>">
 					<div class="filter-bar">
@@ -24,11 +18,11 @@
 									<div class="form-group">
 										<select name="filter_group" class="form-control input-sm">
 											<option value=""><?php echo lang('text_filter_group'); ?></option>
-											<?php foreach ($staff_groups as $group) { ?>
-											<?php if ($group['staff_group_id'] === $filter_group) { ?>
-												<option value="<?php echo $group['staff_group_id']; ?>" <?php echo set_select('filter_group', $group['staff_group_id'], TRUE); ?> ><?php echo $group['staff_group_name']; ?></option>
+											<?php foreach ($staff_groups as $key => $value) { ?>
+											<?php if ($key == $filter_group) { ?>
+												<option value="<?php echo $key; ?>" <?php echo set_select('filter_group', $key, TRUE); ?> ><?php echo $value; ?></option>
 											<?php } else { ?>
-												<option value="<?php echo $group['staff_group_id']; ?>" <?php echo set_select('filter_group', $group['staff_group_id']); ?> ><?php echo $group['staff_group_name']; ?></option>
+												<option value="<?php echo $key; ?>" <?php echo set_select('filter_group', $key); ?> ><?php echo $value; ?></option>
 											<?php } ?>
 											<?php } ?>
 										</select>&nbsp;
@@ -36,11 +30,11 @@
 									<div class="form-group">
 										<select name="filter_location" class="form-control input-sm">
 											<option value=""><?php echo lang('text_filter_location'); ?></option>
-											<?php foreach ($locations as $location) { ?>
-											<?php if ($location['location_id'] === $filter_location) { ?>
-												<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('filter_location', $location['location_id'], TRUE); ?> ><?php echo $location['location_name']; ?></option>
+											<?php foreach ($locations as $key => $value) { ?>
+											<?php if ($key == $filter_location) { ?>
+												<option value="<?php echo $key; ?>" <?php echo set_select('filter_location', $key, TRUE); ?> ><?php echo $value; ?></option>
 											<?php } else { ?>
-												<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('filter_location', $location['location_id']); ?> ><?php echo $location['location_name']; ?></option>
+												<option value="<?php echo $key; ?>" <?php echo set_select('filter_location', $key); ?> ><?php echo $value; ?></option>
 											<?php } ?>
 											<?php } ?>
 										</select>&nbsp;
@@ -49,7 +43,7 @@
 										<select name="filter_date" class="form-control input-sm">
 											<option value=""><?php echo lang('text_filter_date'); ?></option>
 											<?php foreach ($staff_dates as $key => $value) { ?>
-											<?php if ($key === $filter_date) { ?>
+											<?php if ($key == $filter_date) { ?>
 												<option value="<?php echo $key; ?>" <?php echo set_select('filter_date', $key, TRUE); ?> ><?php echo $value; ?></option>
 											<?php } else { ?>
 												<option value="<?php echo $key; ?>" <?php echo set_select('filter_date', $key); ?> ><?php echo $value; ?></option>
@@ -87,14 +81,13 @@
 						<thead>
 							<tr>
 								<th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
-								<!--<th><a class="sort" href="<?php echo $sort_location; ?>"><?php echo lang('column_location'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'location_name') ? $order_by_active : $order_by; ?>"></i></a></th>-->
-								<th><a class="sort" href="<?php echo $sort_name; ?>"><?php echo lang('column_name'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'staff_name') ? $order_by_active : $order_by; ?>"></i></a></th>
+								<th><a class="sort" href="<?php echo $sort_staff_name; ?>"><?php echo lang('column_name'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'staff_name') ? $order_by_active : $order_by; ?>"></i></a></th>
 								<th><?php echo lang('column_email'); ?></th>
-								<th><a class="sort" href="<?php echo $sort_group; ?>"><?php echo lang('column_group'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'staff_group_name') ? $order_by_active : $order_by; ?>"></i></a></th>
-								<th><a class="sort" href="<?php echo $sort_location; ?>"><?php echo lang('column_location'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'location_name') ? $order_by_active : $order_by; ?>"></i></a></th>
-								<th><a class="sort" href="<?php echo $sort_date; ?>"><?php echo lang('column_date_added'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'date_added') ? $order_by_active : $order_by; ?>"></i></a></th>
+								<th><a class="sort" href="<?php echo $sort_staff_group_name; ?>"><?php echo lang('column_group'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'staff_group_name') ? $order_by_active : $order_by; ?>"></i></a></th>
+								<th><a class="sort" href="<?php echo $sort_location_name; ?>"><?php echo lang('column_location'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'location_name') ? $order_by_active : $order_by; ?>"></i></a></th>
+								<th><a class="sort" href="<?php echo $sort_date_added; ?>"><?php echo lang('column_date_added'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'date_added') ? $order_by_active : $order_by; ?>"></i></a></th>
 								<th class="text-center"><?php echo lang('column_status'); ?></th>
-								<th><a class="sort" href="<?php echo $sort_id; ?>"><?php echo lang('column_id'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'staff_id') ? $order_by_active : $order_by; ?>"></i></a></th>
+								<th><a class="sort" href="<?php echo $sort_staff_id; ?>"><?php echo lang('column_id'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'staff_id') ? $order_by_active : $order_by; ?>"></i></a></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -103,13 +96,12 @@
 							<tr>
 								<td class="action"><input type="checkbox" value="<?php echo $staff['staff_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
 									<a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $staff['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
-								<!--<td><?php echo $staff['location_name']; ?></td>-->
 								<td><?php echo $staff['staff_name']; ?></td>
 								<td><?php echo $staff['staff_email']; ?></td>
 								<td><?php echo $staff['staff_group_name']; ?></td>
 								<td><?php echo $staff['location_name']; ?></td>
 								<td><?php echo $staff['date_added']; ?></td>
-								<td class="text-center"><?php echo $staff['staff_status']; ?></td>
+								<td class="text-center"><?php echo ($staff['staff_status'] === '1') ? lang('text_enabled') : lang('text_disabled'); ?></td>
 								<td class="id"><?php echo $staff['staff_id']; ?></td>
 							</tr>
 							<?php } ?>
@@ -130,9 +122,4 @@
 		</div>
 	</div>
 </div>
-<script type="text/javascript"><!--
-function filterList() {
-	$('#filter-form').submit();
-}
-//--></script>
 <?php echo get_footer(); ?>

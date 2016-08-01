@@ -11,7 +11,7 @@
 		</div>
 
 			<div class="tab-content">
-				<div id="backup" class="tab-pane row wrap-all active">
+				<div id="backup" class="tab-pane active">
 					<div class="panel panel-default panel-table">
                         <form role="form" id="tables-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo site_url('maintenance'); ?>">
                             <div class="table-responsive">
@@ -46,7 +46,7 @@
                     </div>
 				</div>
 
-                <div id="existing-backup" class="tab-pane row wrap-all">
+                <div id="existing-backup" class="tab-pane">
                     <div class="table-responsive">
                         <table class="table table-striped table-border">
                             <thead>
@@ -77,7 +77,7 @@
                     </div>
                 </div>
 
-                <div id="migrations" class="tab-pane row wrap-all">
+                <div id="migrations" class="tab-pane">
                     <form role="form" id="migrate-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo site_url('maintenance'); ?>" id="backup-database">
                         <div class="alert alert-danger">
                             <p><?php echo lang('alert_warning_migration'); ?></p>
@@ -114,7 +114,7 @@
 
         <form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo site_url('maintenance/backup'); ?>">
             <div class="tab-content">
-                <div id="backup-details" class="tab-pane row wrap-all active">
+                <div id="backup-details" class="tab-pane active">
                     <div class="alert alert-info">
                         <?php echo lang('alert_info_memory_limit'); ?>
                     </div>

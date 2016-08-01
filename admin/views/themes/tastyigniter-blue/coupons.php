@@ -2,12 +2,6 @@
 <div class="row content">
 	<div class="col-md-12">
 		<div class="panel panel-default panel-table">
-			<div class="panel-heading">
-				<h3 class="panel-title"><?php echo lang('text_list'); ?></h3>
-				<div class="pull-right">
-					<button class="btn btn-filter btn-xs"><i class="fa fa-filter"></i></button>
-				</div>
-			</div>
 			<div class="panel-body panel-filter">
 				<form role="form" id="filter-form" accept-charset="utf-8" method="GET" action="<?php echo current_url(); ?>">
 					<div class="filter-bar">
@@ -82,10 +76,10 @@
 								<a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $coupon['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
 							<td><?php echo $coupon['name']; ?></td>
 							<td><?php echo $coupon['code']; ?></td>
-							<td><?php echo $coupon['type']; ?></td>
-							<td><?php echo $coupon['discount']; ?></td>
-							<td><?php echo $coupon['validity']; ?></td>
-							<td class="text-center"><?php echo $coupon['status']; ?></td>
+							<td><?php echo ($coupon['type'] === 'P') ? lang('text_percentage') : lang('text_fixed_amount'); ?></td>
+							<td><?php echo ($coupon['type'] === 'P') ? round($coupon['discount']) .'%' : format_number($coupon['discount']); ?></td>
+							<td><?php echo ucwords($coupon['validity']); ?></td>
+							<td class="text-center"><?php echo ($coupon['status'] === '1') ? lang('text_enabled') : lang('text_disabled'); ?></td>
 						</tr>
 						<?php } ?>
 						<?php } else { ?>
@@ -105,9 +99,4 @@
 		</div>
 	</div>
 </div>
-<script type="text/javascript"><!--
-function filterList() {
-	$('#filter-form').submit();
-}
-//--></script>
 <?php echo get_footer(); ?>
