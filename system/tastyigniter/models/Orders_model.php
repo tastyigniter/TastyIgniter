@@ -284,20 +284,7 @@ class Orders_model extends TI_Model
 				$update['status_notify'] = $this->sendMail($mail_data['email'], $mail_template, $mail_data);
 			}
 
-			if ((int)$update['old_status_id'] !== (int)$update['order_status']) {
-				$status_update = array();
-				if (APPDIR === ADMINDIR) {
-					$status_update['staff_id'] = $this->user->getStaffId();
-				}
-
-				$status_update['object_id'] = (int)$order_id;
-				$status_update['status_id'] = (int)$update['order_status'];
-				$status_update['comment'] = isset($update['status_comment']) ? $update['status_comment'] : $status['status_comment'];
-				$status_update['notify'] = isset($update['status_notify']) ? $update['status_notify'] : $status['notify_customer'];
-				$status_update['date_added'] = mdate('%Y-%m-%d %H:%i:%s', time());
-
-				$this->Statuses_model->addStatusHistory('order', $status_update);
-			}
+			$this->addStatusHistory($order_id, $update, $status);
 
 			if ($this->config->item('auto_invoicing') === '1' AND in_array($update['order_status'], (array)$this->config->item('completed_order_status'))) {
 				$this->createInvoiceNo($order_id);
@@ -306,9 +293,9 @@ class Orders_model extends TI_Model
 			// Make sure order status has not been previously updated
 			// to one of the processing order status. If so,
 			// skip to avoid updating stock twice.
-			$order_status_exists = $this->Statuses_model->statusExists('order', $order_id, $this->config->item('processing_order_status'));
+			$processing_status_exists = $this->Statuses_model->statusExists('order', $order_id, $this->config->item('processing_order_status'));
 
-			if (!$order_status_exists AND in_array($update['order_status'], (array)$this->config->item('processing_order_status'))) {
+			if (!$processing_status_exists AND in_array($update['order_status'], (array)$this->config->item('processing_order_status'))) {
 				$this->subtractStock($order_id);
 
 				$this->load->model('Coupons_model');
@@ -577,9 +564,35 @@ class Orders_model extends TI_Model
 	}
 
 	/**
+	 * Add order status to status history
+	 *
+	 * @param int $order_id
+	 * @param array $update
+	 * @param array $status
+	 *
+	 * @return mixed
+	 */
+	protected function addStatusHistory($order_id, $update, $status) {
+		$status_update = array();
+		if (APPDIR === ADMINDIR) {
+			$status_update['staff_id'] = $this->user->getStaffId();
+		}
+
+		$status_update['object_id'] = (int)$order_id;
+		$status_update['status_id'] = (int)$update['order_status'];
+		$status_update['comment'] = isset($update['status_comment']) ? $update['status_comment'] : $status['status_comment'];
+		$status_update['notify'] = isset($update['status_notify']) ? $update['status_notify'] : $status['notify_customer'];
+		$status_update['date_added'] = mdate('%Y-%m-%d %H:%i:%s', time());
+
+		return $this->Statuses_model->addStatusHistory('order', $status_update);
+	}
+
+	/**
 	 * Subtract cart item quantity from menu stock quantity
 	 *
 	 * @param int $order_id
+	 *
+	 * @return bool
 	 */
 	public function subtractStock($order_id) {
 		$this->load->model('Menus_model');

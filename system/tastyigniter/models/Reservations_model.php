@@ -190,7 +190,7 @@ class Reservations_model extends TI_Model
 			$this->Location_tables_model->where('location_id', $location_id);
 		}
 
-		if ($row = $this->Location_tables_model->with('tables')->get()) {
+		if ($row = $this->Location_tables_model->with('tables')->find()) {
 			$result = $row['total_seats'];
 		}
 
@@ -201,28 +201,31 @@ class Reservations_model extends TI_Model
 	 * Return total reserved guest by location_id
 	 *
 	 * @param int    $location_id
-	 * @param string $date
+	 * @param string|array $dates
 	 *
 	 * @return int
 	 */
-	public function getTotalGuestsByLocation($location_id = NULL, $date = NULL) {
-		$result = 0;
+	public function getTotalGuestsByLocation($location_id = NULL, $dates = NULL) {
+		$result = array();
 
-		$this->select_sum('reservations.guest_num', 'total_guest');
+		$this->select('reserve_date')->select_sum('reservations.guest_num', 'total_guest');
 		//$this->where('status', (int)$this->config->item('default_reservation_status'));
 
 		if (!empty($location_id)) {
 			$this->where('location_id', $location_id);
 		}
 
-		if (!empty($date)) {
-			$this->where('DATE(reserve_date)', $date);
+		if (!empty($dates)) {
+			$dates = !is_array($dates) ? array($dates) : $dates;
+			$this->where_in('DATE(reserve_date)', $dates);
 		}
 
 		$this->group_by('DAY(reserve_date)');
 
-		if ($row = $this->find()) {
-			$result = $row['total_guest'];
+		if ($rows = $this->find_all()) {
+			foreach ($rows as $row) {
+				$result[$row['reserve_date']] = $row['total_guest'];
+			}
 		}
 
 		return $result;

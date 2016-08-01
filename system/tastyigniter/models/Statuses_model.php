@@ -222,7 +222,7 @@ class Statuses_model extends TI_Model
 	 * @return bool
 	 */
 	public function addStatusHistory($for = '', $add = array()) {
-		if (!empty($add)) return FALSE;
+		if (empty($add)) return FALSE;
 
 		if ($for !== '') {
 			$add['status_for'] = $for;

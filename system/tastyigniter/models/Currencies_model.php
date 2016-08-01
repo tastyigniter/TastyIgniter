@@ -119,14 +119,13 @@ class Currencies_model extends TI_Model
 	 */
 	public function updateAcceptedCurrencies($accepted_currencies) {
 		$update = $this->update(array(
-			'currency_id !=', $this->config->item('currency_id')), array(
+			'currency_id !=' => $this->config->item('currency_id')), array(
 				'currency_status' => '0',
 			)
 		);
 
 		if (is_array($accepted_currencies)) {
-			$this->where_in('currency_id', $accepted_currencies);
-			$update = $this->update(NULL, array(
+			$update = $this->update(array('currency_id', $accepted_currencies), array(
 					'currency_status' => '1',
 				)
 			);
