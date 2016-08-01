@@ -2,7 +2,7 @@
 Options +FollowSymlinks
 
 # Prevent Directoy listing
-Options -Indexes
+Options All -Indexes
 
 <IfModule mod_rewrite.c>
 	# Turn on URL rewriting
@@ -12,9 +12,9 @@ Options -Indexes
 	# If your page resides at http://www.example.com/mypage then use
 	# RewriteBase /mypage
 
-    RewriteBase /
-    RewriteRule ^assets/downloads/(.*) not_found [L]
+    #RewriteBase /
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteRule ^(.*)$ index.php?/$1 [L]
+    RewriteRule ^assets/downloads/(.*) not_found [L]
 </IfModule>

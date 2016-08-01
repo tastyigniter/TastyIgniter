@@ -1,3 +1,26 @@
+### v2.2.0
+
+Release Date: August 2016
+
+#### Added
+
+#### Changed
+* Admin Locations to Restaurant settings in prep for improved multi location feature
+
+#### Fixed
+* Avoid duplicate order/reservation status history
+
+### v2.1.1
+
+Release Date: June 2016
+
+#### Fixed
+* Fixed issue with saving new menu option
+* Fixed issue with adding new customer from admin
+* Fixed issue with permalink reverse routing
+* Fixed faulty backend url #121 
+* Fixed menu category permalinks and reverse routing 
+
 ### v2.1.0
 
 Release Date: May 2016

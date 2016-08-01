@@ -28,21 +28,6 @@ class Base_Controller extends MX_Controller
 	public $index_url = NULL;
 
 	/**
-	 * @var string Link URL for the create page
-	 */
-	public $create_url = NULL;
-
-	/**
-	 * @var string Link URL for the edit page
-	 */
-	public $edit_url = NULL;
-
-	/**
-	 * @var string Link URL for the edit page
-	 */
-	public $delete_url = NULL;
-
-	/**
 	 * @var string Page controller being called.
 	 */
 	protected $controller;
@@ -82,6 +67,16 @@ class Base_Controller extends MX_Controller
 	 * @var object Stores the logged in admin user.
 	 */
 	protected $current_user;
+
+	/**
+	 * @var array Filters for list columns
+	 */
+	public $list_filters = array();
+
+	/**
+	 * @var array Sorting columns
+	 */
+	public $sort_columns = array();
 
 	/**
 	 * Class constructor
@@ -146,6 +141,50 @@ class Base_Controller extends MX_Controller
 			// Load the currently logged-in user for convenience
 			if ($this->user->isLogged()) {
 				$this->current_user = $this->user;
+			}
+		}
+	}
+
+	protected function pageUrl($uri = NULL, $params = array()) {
+		return site_url($this->pageUri($uri, $params));
+	}
+
+	protected function pageUri($uri = NULL, $params = array()) {
+		if (!empty($params)) {
+			$uri = preg_replace_callback('/{(.*?)}/', function ($preg) use ($params) {
+				$preg[1] = ($preg[1] == 'id' AND !isset($params[$preg[1]])) ? singular($this->controller).'_'.$preg[1] : $preg[1];
+				return isset($params[$preg[1]]) ? $params[$preg[1]] : '';
+			}, $uri);
+		}
+
+		return ($uri === NULL) ? $this->index_url : $uri;
+	}
+
+	protected function redirect($uri = NULL) {
+		redirect(($uri === NULL) ? $this->index_url : $uri);
+	}
+
+	public function createFilter() {
+		if (is_array($this->list_filters)) {
+			if (!isset($this->list_filters['page'])) $this->list_filters['page'] = '';
+			if (!isset($this->list_filters['limit'])) $this->list_filters['limit'] = $this->config->item('page_limit');
+
+			foreach ($this->list_filters as $item => $value) {
+				$this->list_filters[$item] = ($this->input->get($item)) ? $this->input->get($item) : $value;
+			}
+		}
+	}
+
+	protected function createSorting() {
+		if (is_array($this->sort_columns)) {
+			$order_by = (isset($this->list_filters['order_by']) AND $this->list_filters['order_by'] == 'ASC') ? 'DESC' : 'ASC';
+			foreach ($this->sort_columns as $sort) {
+				$url = array_merge(array_filter($this->input->get()), array('sort_by' => $sort, 'order_by' => $order_by));
+				if ((strpos($sort, '.') !== FALSE)) {
+					$sort = explode('.', $sort);
+					$sort = end($sort);
+				}
+				$this->sort_columns['sort_' . $sort] = site_url($this->index_url . '?' . http_build_query($url));
 			}
 		}
 	}

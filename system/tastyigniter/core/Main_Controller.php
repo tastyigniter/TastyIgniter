@@ -58,6 +58,11 @@ class Main_Controller extends Base_Controller
 
 		$this->form_validation->CI =& $this;
 
+		if (!isset($this->index_url)) $this->index_url = $this->controller;
+
+		$this->createFilter();
+		$this->createSorting();
+
 		Events::trigger('after_main_controller');
 	}
 

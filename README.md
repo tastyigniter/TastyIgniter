@@ -3,6 +3,9 @@ TastyIgniter
 
 [TastyIgniter](http://tastyigniter.com/) is a free open source restaurant ordering and management system. TastyIgniter provides a professional and reliable platform for restaurants wanting to offer online ordering to their customers.
 
+[![License](https://img.shields.io/packagist/l/tastyigniter/tastyigniter.svg?style=flat-square)](LICENSE)
+[![Stable Version](https://img.shields.io/packagist/v/tastyigniter/tastyigniter.svg?style=flat-square)](https://packagist.org/packages/tastyigniter/tastyigniter)
+
 Installation
 ============
 1. Download and unzip the TastyIgniter package.
