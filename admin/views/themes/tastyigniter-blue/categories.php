@@ -2,12 +2,6 @@
 <div class="row content">
 	<div class="col-md-12">
 		<div class="panel panel-default panel-table">
-			<div class="panel-heading">
-				<h3 class="panel-title"><?php echo lang('text_list'); ?></h3>
-				<div class="pull-right">
-					<button class="btn btn-filter btn-xs"><i class="fa fa-filter"></i></button>
-				</div>
-			</div>
 			<div class="panel-body panel-filter">
 				<form role="form" id="filter-form" accept-charset="utf-8" method="GET" action="<?php echo current_url(); ?>">
 					<div class="filter-bar">
@@ -55,7 +49,7 @@
                             <th><?php echo lang('column_parent'); ?> </th>
 							<th class="text-center"><a class="sort" href="<?php echo $sort_priority; ?>"><?php echo lang('column_priority'); ?> <i class="fa fa-sort-<?php echo ($sort_by === 'priority') ? $order_by_active : $order_by; ?>"></i></a></th>
 							<th class="text-center"><?php echo lang('column_status'); ?></th>
-							<th class="id"><a class="sort" href="<?php echo $sort_id; ?>"><?php echo lang('column_id'); ?> <i class="fa fa-sort-<?php echo ($sort_by === 'category_id') ? $order_by_active : $order_by; ?>"></i></a></th>
+							<th class="id"><a class="sort" href="<?php echo $sort_category_id; ?>"><?php echo lang('column_id'); ?> <i class="fa fa-sort-<?php echo ($sort_by === 'category_id') ? $order_by_active : $order_by; ?>"></i></a></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -65,7 +59,7 @@
 							<td class="action"><input type="checkbox" name="delete[]" value="<?php echo $category['category_id']; ?>" />&nbsp;&nbsp;&nbsp;
 								<a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $category['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
 							<td><?php echo $category['name']; ?></td>
-                            <td><?php echo $category['description']; ?></td>
+                            <td><?php echo character_limiter($category['description']); ?></td>
                             <td>
                                 <?php foreach ($categories as $cat) { ?>
                                     <?php if ($category['parent_id'] === $cat['category_id']) { ?>
@@ -74,7 +68,7 @@
                                 <?php } ?>
                             </td>
 							<td class="text-center"><?php echo $category['priority']; ?></td>
-							<td class="text-center"><?php echo $category['status']; ?></td>
+							<td class="text-center"><?php echo ($category['status'] === '1') ? lang('text_enabled') : lang('text_disabled'); ?></td>
 							<td class="id"><?php echo $category['category_id']; ?></td>
 						</tr>
 
@@ -96,9 +90,4 @@
 		</div>
 	</div>
 </div>
-<script type="text/javascript"><!--
-function filterList() {
-	$('#filter-form').submit();
-}
-//--></script>
 <?php echo get_footer(); ?>

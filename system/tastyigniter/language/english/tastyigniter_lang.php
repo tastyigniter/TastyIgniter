@@ -19,5 +19,7 @@ $lang['tastyigniter_system_powered']    = '<a target="_blank" href="http://tasty
 $lang['tastyigniter_copyright']         = 'Thank you for using <a target="_blank" href="http://tastyigniter.com">TastyIgniter</a>';
 $lang['tastyigniter_version']           = 'Version %s';
 
+$lang['ti_model_db_error']		        = 'DB Error: %s';
+
 /* End of file tastyigniter_lang.php */
 /* Location: ./system/tastyigniter/language/english/tastyigniter_lang.php */

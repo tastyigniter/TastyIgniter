@@ -34,6 +34,7 @@ $lang['button_edit'] 		                = 'Edit';
 $lang['button_save'] 		                = '<i class="fa fa-save"></i> Save';
 $lang['button_save_close'] 		            = '<i class="fa fa-save"></i> Save & Close';
 $lang['button_icon_back'] 		            = '<i class="fa fa-angle-double-left"></i>';
+$lang['button_icon_filter'] 		        = '<i class="fa fa-filter"></i>';
 $lang['button_close'] 		                = 'Close';
 $lang['button_option'] 		                = 'Options';
 

@@ -52,8 +52,8 @@
 						</div>
 						<div class="form-group">
 							<select name="security_question" id="security-question" class="form-control input-lg" placeholder="<?php echo lang('label_s_question'); ?>">
-							<?php foreach ($questions as $question) { ?>
-								<option value="<?php echo $question['id']; ?>"><?php echo $question['text']; ?></option>
+							<?php foreach ($questions as $key => $value) { ?>
+								<option value="<?php echo $key; ?>" <?php echo set_select('security_question', $key) ?>><?php echo $value; ?></option>
 							<?php } ?>
 							</select>
 							<?php echo form_error('security_question', '<span class="text-danger">', '</span>'); ?>

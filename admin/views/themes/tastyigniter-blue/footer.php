@@ -39,6 +39,10 @@ function saveClose() {
 	$('#edit-form').append('<input type="hidden" name="save_close" value="1" />');
 	$('#edit-form').submit();
 }
+
+function filterList() {
+	$('#filter-form').submit();
+}
 </script>
 </body>
 </html>

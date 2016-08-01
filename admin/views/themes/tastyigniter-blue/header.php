@@ -164,15 +164,10 @@
 						</ul>
 					</li>
 					<li class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown">
-							<i class="fa fa-user"></i>
-						</a>
+						<img class="img-rounded dropdown-toggle" data-toggle="dropdown" src="<?php echo '//www.gravatar.com/avatar/'.$staff_avatar.'.png?s=128&d=mm'; ?>">
 						<ul class="dropdown-menu  dropdown-user">
 							<li>
 								<div class="row wrap-vertical text-center">
-									<div class="col-xs-12 wrap-top">
-										<img class="img-rounded" src="<?php echo 'https://www.gravatar.com/avatar/'.$staff_avatar.'.png?s=48&d=mm'; ?>">
-									</div>
 									<div class="col-xs-12 wrap-none wrap-top wrap-right">
 										<span><strong><?php echo $staff_name; ?></strong></span>
 										<span class="small"><i>(<?php echo $username; ?>)</i></span><br>
@@ -207,13 +202,13 @@
 
 		<div id="page-wrapper">
 			<?php if ($islogged) { ?>
-				<div class="page-header clearfix">
-                    <?php
-                        $button_list = get_button_list();
-                        $icon_list = get_icon_list();
-                    ?>
+				<?php
+				$button_list = get_button_list();
+				$icon_list = get_icon_list();
+				?>
 
-                   <?php if (!empty($button_list) OR !empty($icon_list)) { ?>
+				<?php if (!empty($button_list) OR !empty($icon_list)) { ?>
+					<div class="page-header clearfix">
 						<div class="page-action">
                             <?php if (!empty($icon_list)) { ?>
                                 <?php echo $icon_list; ?>
@@ -223,8 +218,8 @@
                                 <?php echo $button_list; ?>
                             <?php } ?>
 						</div>
-					<?php } ?>
-				</div>
+					</div>
+				<?php } ?>
 
 				<?php if (!empty($context_help)) { ?>
 					<div class="collapse" id="context-help-wrap">

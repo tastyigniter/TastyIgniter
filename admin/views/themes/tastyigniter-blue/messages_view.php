@@ -11,7 +11,7 @@
                     <div class="panel-body wrap-none">
                         <div class="list-group list-group-hover">
                             <?php foreach ($folders as $key => $folder) { ?>
-                                <a class="list-group-item <?php echo ($key === $message_folder) ? 'active' : ''; ?>" href="<?php echo $folder['url']; ?>"><i class="fa <?php echo $folder['icon']; ?>"></i>&nbsp;&nbsp;<?php echo $folder['title']; ?>&nbsp;&nbsp;
+                                <a class="list-group-item <?php echo ($key == $message_folder) ? 'active' : ''; ?>" href="<?php echo $folder['url']; ?>"><i class="fa <?php echo $folder['icon']; ?>"></i>&nbsp;&nbsp;<?php echo $folder['title']; ?>&nbsp;&nbsp;
                                     <span class="label label-primary pull-right"><?php echo $folder['badge']; ?></span></a>
                             <?php } ?>
                         </div>

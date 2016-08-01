@@ -9,7 +9,7 @@
 
 		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo $_action; ?>">
 			<div class="tab-content">
-				<div id="permission-details" class="tab-pane row wrap-all active">
+				<div id="permission-details" class="tab-pane active">
 					<div class="form-group">
 						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_name'); ?>
                             <span class="help-block"><?php echo lang('help_name'); ?></span>

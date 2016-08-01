@@ -12,7 +12,7 @@
 
         <form role="form" id="edit-form" class="form-horizontal" enctype="multipart/form-data" accept-charset="utf-8" method="POST" action="<?php echo $_action; ?>">
             <div class="tab-content">
-                <div id="general" class="tab-pane row wrap-all active">
+                <div id="general" class="tab-pane active">
                     <div class="form-group">
                         <label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_name'); ?></label>
                         <div class="col-sm-5">
@@ -40,17 +40,17 @@
                     <div class="form-group">
                         <label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_category'); ?></label>
                         <div class="col-sm-5">
-                            <select name="menu_category" id="category" class="form-control">
+                            <select name="menu_category_id" id="category" class="form-control">
                                 <option value=""><?php echo lang('text_select_category'); ?></option>
-                                <?php foreach ($categories as $category) { ?>
-                                    <?php if ($menu_category === $category['category_id']) { ?>
-                                        <option value="<?php echo $category['category_id']; ?>" <?php echo set_select('menu_category', $category['category_id'], TRUE); ?> ><?php echo $category['category_name']; ?></option>
+                                <?php foreach ($categories as $key => $value) { ?>
+                                    <?php if ($key == $menu_category_id) { ?>
+                                        <option value="<?php echo $key; ?>" <?php echo set_select('menu_category_id', $key, TRUE); ?> ><?php echo $value; ?></option>
                                     <?php } else { ?>
-                                        <option value="<?php echo $category['category_id']; ?>" <?php echo set_select('menu_category', $category['category_id']); ?> ><?php echo $category['category_name']; ?></option>
+                                        <option value="<?php echo $key; ?>" <?php echo set_select('menu_category_id', $key); ?> ><?php echo $value; ?></option>
                                     <?php } ?>
                                 <?php } ?>
                             </select>
-                            <?php echo form_error('menu_category', '<span class="text-danger">', '</span>'); ?>
+                            <?php echo form_error('menu_category_id', '<span class="text-danger">', '</span>'); ?>
                         </div>
                     </div>
                     <div class="form-group">
@@ -76,7 +76,7 @@
                     </div>
                 </div>
 
-                <div id="menu-details" class="tab-pane row wrap-all">
+                <div id="menu-details" class="tab-pane">
                     <div class="form-group">
                         <label for="input-mealtime" class="col-sm-3 control-label"><?php echo lang('label_mealtime'); ?>
                             <span class="help-block"><?php echo lang('help_mealtime'); ?></span>
@@ -152,7 +152,7 @@
                     </div>
                 </div>
 
-                <div id="menu-options" class="tab-pane row wrap-all">
+                <div id="menu-options" class="tab-pane">
                     <div class="form-group">
                         <label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_option'); ?></label>
                         <div class="col-sm-5">
@@ -180,7 +180,7 @@
                             <?php $option_value_row = 1; ?>
                             <?php if ($menu_options) { ?>
                                 <?php foreach ($menu_options as $menu_option) { ?>
-                                    <div id="option<?php echo $option_row; ?>" class="tab-pane row wrap-all">
+                                    <div id="option<?php echo $option_row; ?>" class="tab-pane">
                                         <input type="hidden" name="menu_options[<?php echo $option_row; ?>][menu_option_id]" value="<?php echo $menu_option['menu_option_id']; ?>" />
                                         <input type="hidden" name="menu_options[<?php echo $option_row; ?>][option_id]" value="<?php echo $menu_option['option_id']; ?>" />
                                         <input type="hidden" name="menu_options[<?php echo $option_row; ?>][option_name]" value="<?php echo $menu_option['option_name']; ?>" />
@@ -275,7 +275,7 @@
                                                     <tfoot>
                                                     <tr id="tfoot">
                                                         <td class="action action-one"><a class="btn btn-primary btn-lg" onclick="addOptionValue(<?php echo $option_row; ?>);"><i class="fa fa-plus"></i></a></td>
-                                                        <td colspan="5"></td>
+                                                        <td colspan="6"></td>
                                                     </tr>
                                                     </tfoot>
                                                 </table>
@@ -297,7 +297,7 @@
                     </div>
                 </div>
 
-                <div id="specials" class="tab-pane row wrap-all">
+                <div id="specials" class="tab-pane">
                     <div class="form-group">
                         <label for="input-special-status" class="col-sm-3 control-label"><?php echo lang('label_special'); ?></label>
                         <div class="col-sm-5">
@@ -400,7 +400,7 @@
     var option_value_row = <?php echo $option_value_row; ?>;
 
     function addOption(data) {
-        html  = '<div id="option' + option_row + '" class="tab-pane row wrap-all">';
+        html  = '<div id="option' + option_row + '" class="tab-pane">';
         html += '	<input type="hidden" name="menu_options[' + option_row + '][menu_option_id]" id="" value="" />';
         html += '	<input type="hidden" name="menu_options[' + option_row + '][option_id]" id="" value="' + data.id + '" />';
         html += '	<input type="hidden" name="menu_options[' + option_row + '][option_name]" id="" value="' + data.text + '" />';

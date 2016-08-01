@@ -8,7 +8,7 @@
 		</div>
 
         <div class="tab-content">
-            <div id="backup" class="tab-pane row wrap-all active">
+            <div id="backup" class="tab-pane active">
                 <div class="panel panel-default panel-table">
                     <?php if (!empty($query_table)) { ?>
                         <form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo site_url('maintenance'); ?>">

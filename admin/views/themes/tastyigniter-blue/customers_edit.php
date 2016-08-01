@@ -10,7 +10,7 @@
 
 		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo $_action; ?>">
 			<div class="tab-content">
-				<div id="general" class="tab-pane row wrap-all active">
+				<div id="general" class="tab-pane active">
 					<div class="form-group">
 						<label for="input-first-name" class="col-sm-3 control-label"><?php echo lang('label_first_name'); ?></label>
 						<div class="col-sm-5">
@@ -28,7 +28,7 @@
 					<div class="form-group">
 						<label for="input-email" class="col-sm-3 control-label"><?php echo lang('label_email'); ?></label>
 						<div class="col-sm-5">
-							<input type="text" name="email" id="input-email" class="form-control" value="<?php echo set_value('email', $email); ?>" />
+							<input type="text" name="email" id="input-email" class="form-control" value="<?php echo set_value('email', $email); ?>" autocomplete="off" />
 							<?php echo form_error('email', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
@@ -51,7 +51,7 @@
 					<div class="form-group">
 						<label for="input-confirm-password" class="col-sm-3 control-label"><?php echo lang('label_confirm_password'); ?></label>
 						<div class="col-sm-5">
-							<input type="password" name="confirm_password" id="input-confirm-password" class="form-control" value="" />
+							<input type="password" name="confirm_password" id="input-confirm-password" class="form-control" value="" autocomplete="off" />
 							<?php echo form_error('confirm_password', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
@@ -60,11 +60,11 @@
 						<div class="col-sm-5">
 							<select name="security_question_id" id="input-security-question" class="form-control">
 								<option value="">— Select —</option>
-								<?php foreach ($questions as $question) { ?>
-									<?php if ($question['id'] === $security_question) { ?>
-										<option value="<?php echo $question['id']; ?>" selected="selected"><?php echo $question['text']; ?></option>
+								<?php foreach ($questions as $key => $value) { ?>
+									<?php if ($key == $security_question) { ?>
+										<option value="<?php echo $key; ?>" selected="selected"><?php echo $value; ?></option>
 									<?php } else { ?>
-										<option value="<?php echo $question['id']; ?>"><?php echo $question['text']; ?></option>
+										<option value="<?php echo $key; ?>"><?php echo $value; ?></option>
 									<?php } ?>
 								<?php } ?>
 							</select>
@@ -82,11 +82,11 @@
 						<label for="input-customer-group-id" class="col-sm-3 control-label"><?php echo lang('label_customer_group'); ?></label>
 						<div class="col-sm-5">
 							<select name="customer_group_id" id="input-customer-group-id" class="form-control">
-							<?php foreach ($customer_groups as $customer_group) { ?>
-								<?php if ($customer_group['customer_group_id'] === $customer_group_id) { ?>
-									<option value="<?php echo $customer_group['customer_group_id']; ?>" <?php echo set_select('customer_group_id', $customer_group['customer_group_id'], TRUE); ?> ><?php echo $customer_group['group_name']; ?></option>
+							<?php foreach ($customer_groups as $key => $value) { ?>
+								<?php if ($key == $customer_group_id) { ?>
+									<option value="<?php echo $key; ?>" <?php echo set_select('customer_group_id', $key, TRUE); ?> ><?php echo $value; ?></option>
 								<?php } else { ?>
-									<option value="<?php echo $customer_group['customer_group_id']; ?>" <?php echo set_select('customer_group_id', $customer_group['customer_group_id']); ?> ><?php echo $customer_group['group_name']; ?></option>
+									<option value="<?php echo $key; ?>" <?php echo set_select('customer_group_id', $key); ?> ><?php echo $value; ?></option>
 								<?php } ?>
 							<?php } ?>
 							</select>
@@ -125,7 +125,7 @@
 					</div>
 				</div>
 
-				<div id="addresses" class="tab-pane row wrap-all">
+				<div id="addresses" class="tab-pane">
 					<ul id="sub-tabs" class="nav nav-tabs">
 						<?php $table_row = 1; ?>
 						<?php foreach ($addresses as $address) { ?>
@@ -139,7 +139,7 @@
 					<?php $table_row = 1; ?>
 					<?php if ($addresses) { ?>
 						<?php foreach ($addresses as $address) { ?>
-						<div id="address<?php echo $table_row; ?>" class="tab-pane row wrap-all">
+						<div id="address<?php echo $table_row; ?>" class="tab-pane">
 							<input type="hidden" name="address[<?php echo $table_row; ?>][address_id]" value="<?php echo set_value('address[<?php echo $table_row; ?>][address_id]', $address['address_id']); ?>" />
 							<div class="form-group">
 								<label for="" class="col-sm-3 control-label"><?php echo lang('label_address_1'); ?></label>
@@ -180,11 +180,11 @@
 								<label for="" class="col-sm-3 control-label"><?php echo lang('label_country'); ?></label>
 								<div class="col-sm-5">
 									<select name="address[<?php echo $table_row; ?>][country_id]" id="" class="form-control">
-									<?php foreach ($countries as $country) { ?>
-										<?php if ($country['country_id'] === $address['country_id']) { ?>
-											<option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
+									<?php foreach ($countries as $key => $value) { ?>
+										<?php if ($key == $address['country_id']) { ?>
+											<option value="<?php echo $key; ?>" selected="selected"><?php echo $value; ?></option>
 										<?php } else { ?>
-											<option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
+											<option value="<?php echo $key; ?>"><?php echo $value; ?></option>
 										<?php } ?>
 									<?php } ?>
 									</select>
@@ -205,7 +205,7 @@
 var table_row = <?php echo $table_row; ?>;
 
 function addAddress() {
-	html  = '<div id="address' + table_row + '" class="tab-pane row wrap-all">';
+	html  = '<div id="address' + table_row + '" class="tab-pane">';
 	html += '<input type="hidden" name="address[' + table_row + '][address_id]" id="" class="form-control" value="<?php echo set_value("address[' + table_row + '][address_id]"); ?>" />';
 	html += '<div class="form-group">';
 	html += '	<label for="" class="col-sm-3 control-label"><?php echo lang('label_address_1'); ?></label>';
@@ -241,11 +241,11 @@ function addAddress() {
 	html += '	<label for="" class="col-sm-3 control-label"><?php echo lang('label_country'); ?></label>';
 	html += '	<div class="col-sm-5">';
 	html += '		<select name="address[' + table_row + '][country_id]" id="" class="form-control">';
-				<?php foreach ($countries as $country) { ?>
-				<?php if ($country['country_id'] === $country_id) { ?>
-	html += '			<option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo addslashes($country['name']); ?></option>';
+				<?php foreach ($countries as $key => $value) { ?>
+				<?php if ($key == $country_id) { ?>
+	html += '			<option value="<?php echo $key; ?>" selected="selected"><?php echo addslashes($value); ?></option>';
 				<?php } else { ?>
-	html += '			<option value="<?php echo $country['country_id']; ?>"><?php echo addslashes($country['name']); ?></option>';
+	html += '			<option value="<?php echo $key; ?>"><?php echo addslashes($value); ?></option>';
 				<?php } ?>
 				<?php } ?>
 	html += '		</select>';

@@ -5,6 +5,9 @@ $lang['text_summary']			            = 'Feel free to send a message';
 $lang['text_find_us']			            = 'Find Us On Map';
 $lang['text_select_subject'] 				= 'select a subject';
 $lang['text_contact_us'] 			        = 'Contact Us';
+$lang['text_general_enquiry'] 				= 'General enquiry';
+$lang['text_comment'] 			        	= 'Comment';
+$lang['text_technical_issues'] 				= 'Technical Issues';
 
 $lang['label_subject'] 			            = 'Enquiry Subject:';
 $lang['label_full_name'] 		            = 'Full Name:';

@@ -31,9 +31,9 @@
 										<?php } ?>
 
 										<div class="menu-content <?php echo ($show_menu_images === '1' AND !empty($menu['menu_photo'])) ? 'col-xs-6 col-sm-6' : 'col-xs-8'; ?> wrap-none wrap-right">
-											<span class="menu-name"><b><?php echo $menu['menu_name']; ?></b></span>
+											<span class="menu-name"><b><?php echo character_limiter($menu['menu_name'], 80); ?></b></span>
 											<span class="menu-desc small">
-												<?php echo $menu['menu_description']; ?>
+												<?php echo character_limiter($menu['menu_description'], 120); ?>
 											</span>
 										</div>
 										<div class="menu-right col-xs-4 wrap-none">

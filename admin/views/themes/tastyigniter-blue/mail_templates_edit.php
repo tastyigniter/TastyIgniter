@@ -9,7 +9,7 @@
 
 		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo $_action; ?>">
 			<div class="tab-content">
-				<div id="general" class="tab-pane row wrap-all active">
+				<div id="general" class="tab-pane active">
 					<div class="form-group">
 						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_name'); ?></label>
 						<div class="col-sm-5">
@@ -31,8 +31,8 @@
 						<label for="input-clone_template" class="col-sm-3 control-label"><?php echo lang('label_clone'); ?></label>
 						<div class="col-sm-5">
 							<select name="clone_template_id" id="input-clone_template" class="form-control">
-								<?php foreach ($templates as $template) { ?>
-									<option value="<?php echo $template['template_id']; ?>" <?php echo set_select('clone_template_id', $template['template_id']); ?> ><?php echo $template['name']; ?></option>
+								<?php foreach ($templates as $key => $value) { ?>
+									<option value="<?php echo $key; ?>" <?php echo set_select('clone_template_id', $key); ?> ><?php echo $value; ?></option>
 								<?php } ?>
 							</select>
 							<?php echo form_error('clone_template_id', '<span class="text-danger">', '</span>'); ?>

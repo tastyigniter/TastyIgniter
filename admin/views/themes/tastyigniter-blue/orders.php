@@ -2,12 +2,6 @@
 <div class="row content">
 	<div class="col-md-12">
 		<div class="panel panel-default panel-table">
-			<div class="panel-heading">
-				<h3 class="panel-title"><?php echo lang('text_list'); ?></h3>
-				<div class="pull-right">
-					<button class="btn btn-filter btn-xs"><i class="fa fa-filter"></i></button>
-				</div>
-			</div>
 			<div class="panel-body panel-filter">
 				<form role="form" id="filter-form" accept-charset="utf-8" method="GET" action="<?php echo current_url(); ?>">
 					<div class="filter-bar">
@@ -25,11 +19,11 @@
 										<div class="form-group">
 											<select name="filter_location" class="form-control input-sm" class="form-control input-sm">
 												<option value=""><?php echo lang('text_filter_location'); ?></option>
-												<?php foreach ($locations as $location) { ?>
-													<?php if ($location['location_id'] === $filter_location) { ?>
-														<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('filter_location', $location['location_id'], TRUE); ?> ><?php echo $location['location_name']; ?></option>
+												<?php foreach ($locations as $key => $value) { ?>
+													<?php if ($key == $filter_location) { ?>
+														<option value="<?php echo $key; ?>" <?php echo set_select('filter_location', $key, TRUE); ?> ><?php echo $value; ?></option>
 													<?php } else { ?>
-														<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('filter_location', $location['location_id']); ?> ><?php echo $location['location_name']; ?></option>
+														<option value="<?php echo $key; ?>" <?php echo set_select('filter_location', $key); ?> ><?php echo $value; ?></option>
 													<?php } ?>
 												<?php } ?>
 											</select>&nbsp;
@@ -38,11 +32,11 @@
 									<div class="form-group">
 										<select name="filter_status" class="form-control input-sm">
 											<option value=""><?php echo lang('text_filter_status'); ?></option>
-											<?php foreach ($statuses as $status) { ?>
-											<?php if ($status['status_id'] === $filter_status) { ?>
-												<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('filter_status', $status['status_id'], TRUE); ?> ><?php echo $status['status_name']; ?></option>
+											<?php foreach ($statuses as $key => $value) { ?>
+											<?php if ($key == $filter_status) { ?>
+												<option value="<?php echo $key; ?>" <?php echo set_select('filter_status', $key, TRUE); ?> ><?php echo $value; ?></option>
 											<?php } else { ?>
-												<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('filter_status', $status['status_id']); ?> ><?php echo $status['status_name']; ?></option>
+												<option value="<?php echo $key; ?>" <?php echo set_select('filter_status', $key); ?> ><?php echo $value; ?></option>
 											<?php } ?>
 											<?php } ?>
 											<option value="0" <?php echo ($filter_status === '0') ? 'selected' : ''; ?>><?php echo lang('text_lost_orders'); ?></option>
@@ -79,7 +73,7 @@
 										<select name="filter_date" class="form-control input-sm">
 											<option value=""><?php echo lang('text_filter_date'); ?></option>
 											<?php foreach ($order_dates as $key => $value) { ?>
-											<?php if ($key === $filter_date) { ?>
+											<?php if ($key == $filter_date) { ?>
 												<option value="<?php echo $key; ?>" <?php echo set_select('filter_date', $key, TRUE); ?> ><?php echo $value; ?></option>
 											<?php } else { ?>
 												<option value="<?php echo $key; ?>" <?php echo set_select('filter_date', $key); ?> ><?php echo $value; ?></option>
@@ -102,14 +96,14 @@
 					<thead>
 						<tr>
 							<th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
-							<th><a class="sort" href="<?php echo $sort_id; ?>"><?php echo lang('column_id'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'order_id') ? $order_by_active : $order_by; ?>"></i></a></th>
-							<th><a class="sort" href="<?php echo $sort_location; ?>"><?php echo lang('column_location'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'location_name') ? $order_by_active : $order_by; ?>"></i></a></th>
-							<th><a class="sort" href="<?php echo $sort_customer; ?>"><?php echo lang('column_customer_name'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'first_name') ? $order_by_active : $order_by; ?>"></i></a></th>
-							<th><a class="sort" href="<?php echo $sort_status; ?>"><?php echo lang('column_status'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'status_name') ? $order_by_active : $order_by; ?>"></i></a></th>
-							<th><a class="sort" href="<?php echo $sort_type; ?>"><?php echo lang('column_type'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'order_type') ? $order_by_active : $order_by; ?>"></i></a></th>
+							<th><a class="sort" href="<?php echo $sort_order_id; ?>"><?php echo lang('column_id'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'order_id') ? $order_by_active : $order_by; ?>"></i></a></th>
+							<th><a class="sort" href="<?php echo $sort_location_name; ?>"><?php echo lang('column_location'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'location_name') ? $order_by_active : $order_by; ?>"></i></a></th>
+							<th><a class="sort" href="<?php echo $sort_first_name; ?>"><?php echo lang('column_customer_name'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'first_name') ? $order_by_active : $order_by; ?>"></i></a></th>
+							<th><a class="sort" href="<?php echo $sort_status_name; ?>"><?php echo lang('column_status'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'status_name') ? $order_by_active : $order_by; ?>"></i></a></th>
+							<th><a class="sort" href="<?php echo $sort_order_type; ?>"><?php echo lang('column_type'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'order_type') ? $order_by_active : $order_by; ?>"></i></a></th>
 							<th><a class="sort" href="<?php echo $sort_payment; ?>"><?php echo lang('column_payment'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'payment') ? $order_by_active : $order_by; ?>"></i></a></th>
-							<th><a class="sort" href="<?php echo $sort_total; ?>"><?php echo lang('column_total'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'order_total') ? $order_by_active : $order_by; ?>"></i></a></th>
-							<th class="text-center"><a class="sort" href="<?php echo $sort_date; ?>"><?php echo lang('column_time_date'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'date_added') ? $order_by_active : $order_by; ?>"></i></a></th>
+							<th><a class="sort" href="<?php echo $sort_order_total; ?>"><?php echo lang('column_total'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'order_total') ? $order_by_active : $order_by; ?>"></i></a></th>
+							<th class="text-center"><a class="sort" href="<?php echo $sort_date_added; ?>"><?php echo lang('column_time_date'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'date_added') ? $order_by_active : $order_by; ?>"></i></a></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -122,7 +116,7 @@
 							<td><?php echo $order['location_name']; ?></td>
 							<td><?php echo $order['first_name'] .' '. $order['last_name']; ?></td>
                             <td><span class="label label-default" style="background-color: <?php echo $order['status_color']; ?>;"><?php echo $order['order_status']; ?></span></td>
-							<td><?php echo $order['order_type']; ?></td>
+							<td class="text-center"><?php echo ($order['order_type'] === '1') ? lang('text_delivery') : lang('text_collection'); ?></td>
 							<td><?php echo $order['payment']; ?></td>
 							<td><?php echo $order['order_total']; ?></td>
 							<td class="text-center"><?php echo $order['order_time']; ?> - <?php echo $order['order_date']; ?></td>
@@ -145,9 +139,4 @@
 		</div>
 	</div>
 </div>
-<script type="text/javascript"><!--
-function filterList() {
-	$('#filter-form').submit();
-}
-//--></script>
 <?php echo get_footer(); ?>

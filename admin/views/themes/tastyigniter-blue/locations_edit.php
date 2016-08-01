@@ -16,7 +16,7 @@
 
 		<form role="form" id="edit-form" name="edit_form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo $_action; ?>">
 			<div class="tab-content">
-				<div id="general" class="tab-pane row wrap-all active">
+				<div id="general" class="tab-pane active">
 					<h4 class="tab-pane-title"><?php echo lang('text_tab_title_basic'); ?></h4>
 					<div class="form-group">
 						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_name'); ?></label>
@@ -80,12 +80,12 @@
 						<label for="input-country" class="col-sm-3 control-label"><?php echo lang('label_country'); ?></label>
 						<div class="col-sm-5">
 							<select name="address[country]" id="input-country" class="form-control">
-								<?php foreach ($countries as $country) { ?>
-								<?php if ($country['country_id'] === $country_id) { ?>
-									<option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
-								<?php } else { ?>
-									<option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
-								<?php } ?>
+								<?php foreach ($countries as $key => $value) { ?>
+									<?php if ($key == $country_id) { ?>
+										<option value="<?php echo $key; ?>" selected="selected"><?php echo $value; ?></option>
+									<?php } else { ?>
+										<option value="<?php echo $key; ?>"><?php echo $value; ?></option>
+									<?php } ?>
 								<?php } ?>
 							</select>
 							<?php echo form_error('address[country]', '<span class="text-danger">', '</span>'); ?>
@@ -126,7 +126,7 @@
 					</div>
 				</div>
 
-				<div id="data" class="tab-pane row wrap-all">
+				<div id="data" class="tab-pane">
 					<div class="form-group">
 						<label for="input-description" class="col-sm-3 control-label"><?php echo lang('label_description'); ?></label>
 						<div class="col-sm-5">
@@ -186,7 +186,7 @@
 					</div>
 				</div>
 
-				<div id="opening-hours" class="tab-pane row wrap-all">
+				<div id="opening-hours" class="tab-pane">
 					<div id="opening-type" class="form-group">
 						<label for="" class="col-sm-3 control-label"><?php echo lang('label_opening_type'); ?></label>
 						<div class="col-sm-5">
@@ -400,7 +400,7 @@
 					</div>
 				</div>
 
-				<div id="order" class="tab-pane row wrap-all">
+				<div id="order" class="tab-pane">
 					<div class="form-group">
 						<label for="input-offer-delivery" class="col-sm-3 control-label"><?php echo lang('label_offer_delivery'); ?></label>
 						<div class="col-sm-5">
@@ -531,7 +531,7 @@
 					</div>
 				</div>
 
-				<div id="reservation" class="tab-pane row wrap-all">
+				<div id="reservation" class="tab-pane">
 					<div class="form-group">
 						<label for="input-reserve-interval" class="col-sm-3 control-label"><?php echo lang('label_reservation_time_interval'); ?>
 							<span class="help-block"><?php echo lang('help_reservation_time_interval'); ?></span>
@@ -726,7 +726,7 @@
 					<?php } ?>
 				</div>
 
-				<div id="gallery" class="tab-pane row wrap-all">
+				<div id="gallery" class="tab-pane">
 					<div class="form-group">
 						<label for="input-gallery-title" class="col-sm-3 control-label"><?php echo lang('label_gallery_title'); ?></label>
 						<div class="col-sm-5">

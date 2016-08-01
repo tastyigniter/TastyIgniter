@@ -63,11 +63,11 @@
                                 <div class="col-xs-12 col-sm-6 col-md-6">
                                     <div class="form-group">
                                         <select name="security_question_id" id="security-question" class="form-control" placeholder="<?php echo lang('label_s_question'); ?>">
-                                            <?php foreach ($questions as $question) { ?>
-                                                <?php if ($question['question_id'] === $security_question) { ?>
-                                                    <option value="<?php echo $question['question_id']; ?>" selected="selected"><?php echo $question['text']; ?></option>
+                                            <?php foreach ($questions as $key => $value) { ?>
+                                                <?php if ($key == $security_question) { ?>
+                                                    <option value="<?php echo $key; ?>" selected="selected"><?php echo $value; ?></option>
                                                 <?php } else { ?>
-                                                    <option value="<?php echo $question['question_id']; ?>"><?php echo $question['text']; ?></option>
+                                                    <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
                                                 <?php } ?>
                                             <?php } ?>
                                         </select>
