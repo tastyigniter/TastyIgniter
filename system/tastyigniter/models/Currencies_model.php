@@ -55,7 +55,9 @@ class Currencies_model extends TI_Model
 	 * @return int
 	 */
 	public function getCount($filter = array()) {
-		return $this->filter($filter)->with('countries')->count();
+		$this->with('countries');
+
+		return parent::getCount($filter);
 	}
 
 	/**
@@ -66,7 +68,9 @@ class Currencies_model extends TI_Model
 	 * @return array
 	 */
 	public function getList($filter = array()) {
-		return $this->filter($filter)->with('countries')->find_all();
+		$this->with('countries');
+
+		return parent::getList($filter);
 	}
 
 	/**

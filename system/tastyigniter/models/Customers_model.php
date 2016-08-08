@@ -44,28 +44,6 @@ class Customers_model extends TI_Model
 	protected $after_create = array('sendRegistrationEmail', 'saveCustomerGuestOrder');
 
 	/**
-	 * Count the number of records
-	 *
-	 * @param array $filter
-	 *
-	 * @return int
-	 */
-	public function getCount($filter = array()) {
-		return $this->filter($filter)->count();
-	}
-
-	/**
-	 * List all customers matching the filter
-	 *
-	 * @param array $filter
-	 *
-	 * @return array
-	 */
-	public function getList($filter = array()) {
-		return $this->filter($filter)->find_all();
-	}
-
-	/**
 	 * Filter database records
 	 *
 	 * @param array $filter an associative array of field/value pairs

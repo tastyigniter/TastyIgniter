@@ -35,18 +35,24 @@ class Themes_model extends TI_Model
 	/**
 	 * Count the number of records
 	 *
+	 * @param array $filter
+	 *
 	 * @return int
 	 */
-	public function getCount() {
-		return $this->count_all();
+	public function getCount($filter = array()) {
+		$this->where('type', 'theme');
+
+		return parent::getCount($filter);
 	}
 
 	/**
 	 * List all themes matching the filter
 	 *
+	 * @param array $filter
+	 *
 	 * @return array|bool
 	 */
-	public function getList() {
+	public function getList($filter = array()) {
 		$themes = $this->getThemes();
 		$themes_list = list_themes();
 

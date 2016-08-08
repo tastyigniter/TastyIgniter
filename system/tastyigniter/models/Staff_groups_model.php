@@ -33,26 +33,6 @@ class Staff_groups_model extends TI_Model
 	protected $primary_key = 'staff_group_id';
 
 	/**
-	 * Count the number of records
-	 *
-	 * @param array $filter
-	 *
-	 * @return int
-	 */
-	public function getCount($filter = array()) {
-		return $this->filter($filter)->count();
-	}
-
-	/**
-	 * @param array $filter
-	 *
-	 * @return array|bool
-	 */
-	public function getList($filter = array()) {
-		return $this->filter($filter)->find_all();
-	}
-
-	/**
 	 * Return all staff groups
 	 *
 	 * @return array

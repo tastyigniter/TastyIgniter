@@ -42,28 +42,6 @@ class Categories_model extends TI_Model
 	}
 
 	/**
-	 * Count the number of records
-	 *
-	 * @param array $filter
-	 *
-	 * @return int
-	 */
-	public function getCount($filter = array()) {
-		return $this->filter($filter)->count();
-	}
-
-	/**
-	 * List all categories matching the filter
-	 *
-	 * @param array $filter
-	 *
-	 * @return array
-	 */
-	public function getList($filter = array()) {
-		return $this->filter($filter)->find_all();
-	}
-
-	/**
 	 * Filter database records
 	 *
 	 * @param array $filter an associative array of field/value pairs

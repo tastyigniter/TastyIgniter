@@ -38,28 +38,6 @@ class Activities_model extends TI_Model
 	protected $timestamps = array('created');
 
 	/**
-	 * Count the number of records
-	 *
-	 * @param array $filter
-	 *
-	 * @return int
-	 */
-	public function getCount($filter = array()) {
-		return $this->filter($filter)->count();
-	}
-
-	/**
-	 * List all activities matching the filter array
-	 *
-	 * @param array $filter
-	 *
-	 * @return mixed An array of arrays representing the results, or FALSE on failure.
-	 */
-	public function getList($filter = array()) {
-		return $this->filter($filter)->find_all();
-	}
-
-	/**
 	 * Filter database records
 	 *
 	 * @param array $filter an associative array of field/value pairs

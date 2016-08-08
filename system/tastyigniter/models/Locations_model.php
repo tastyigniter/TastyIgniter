@@ -46,28 +46,6 @@ class Locations_model extends TI_Model
 	}
 
 	/**
-	 * Count the number of records
-	 *
-	 * @param array $filter
-	 *
-	 * @return int
-	 */
-	public function getCount($filter = array()) {
-		return $this->filter($filter)->count();
-	}
-
-	/**
-	 * List all locations matching the filter
-	 *
-	 * @param array $filter
-	 *
-	 * @return array
-	 */
-	public function getList($filter = array()) {
-		return $this->filter($filter)->find_all();
-	}
-
-	/**
 	 * Filter database records
 	 *
 	 * @param array $filter an associative array of field/value pairs
@@ -396,7 +374,7 @@ class Locations_model extends TI_Model
 	 */
 	public function addLocationTables($location_id, $tables = array()) {
 		$this->load->model('Location_tables_model');
-		$this->Location_tables_model->delete('location_id', $location_id);
+		$affected_rows = $this->Location_tables_model->delete('location_id', $location_id);
 
 		if (is_array($tables) && !empty($tables)) {
 			foreach ($tables as $key => $table_id) {
@@ -407,7 +385,7 @@ class Locations_model extends TI_Model
 			}
 		}
 
-		if ($this->Location_tables_model->affected_rows() > 0) {
+		if (!empty($tables) AND $affected_rows > 0) {
 			return TRUE;
 		}
 	}

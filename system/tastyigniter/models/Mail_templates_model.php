@@ -47,17 +47,6 @@ class Mail_templates_model extends TI_Model
 	}
 
 	/**
-	 * Count the number of records
-	 *
-	 * @param array $filter
-	 *
-	 * @return int
-	 */
-	public function getCount($filter = array()) {
-		return $this->filter($filter)->count_all();
-	}
-
-	/**
 	 * List all coupons matching the filter
 	 *
 	 * @param array $filter
@@ -65,7 +54,8 @@ class Mail_templates_model extends TI_Model
 	 * @return array
 	 */
 	public function getList($filter = array()) {
-		return $this->filter($filter)->order_by('template_id')->find_all();
+		$this->order_by('template_id');
+		return parent::getList($filter);
 	}
 
 	/**

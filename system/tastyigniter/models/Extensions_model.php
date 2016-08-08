@@ -85,17 +85,6 @@ class Extensions_model extends TI_Model
 	}
 
 	/**
-	 * Count the number of records
-	 *
-	 * @param array $filter
-	 *
-	 * @return int
-	 */
-	public function getCount($filter = array()) {
-		return $this->filter($filter)->count();
-	}
-
-	/**
 	 * List all extensions matching the filter
 	 *
 	 * @param array $filter

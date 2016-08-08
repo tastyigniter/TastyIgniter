@@ -56,7 +56,9 @@ class Menus_model extends TI_Model
 	 * @return int
 	 */
 	public function getCount($filter = array()) {
-		return $this->filter($filter)->with('categories', 'menus_specials', 'mealtimes')->count();
+		$this->with('categories', 'menus_specials', 'mealtimes');
+
+		return parent::getCount($filter);
 	}
 
 	/**
@@ -67,7 +69,8 @@ class Menus_model extends TI_Model
 	 * @return array|mixed
 	 */
 	public function getList($filter = array()) {
-		$result = $this->filter($filter)->with('categories', 'menus_specials', 'mealtimes')->find_all();
+		$this->with('categories', 'menus_specials', 'mealtimes');
+		$result = parent::getList($filter);
 
 		if (APPDIR === ADMINDIR) {
 			return $result;

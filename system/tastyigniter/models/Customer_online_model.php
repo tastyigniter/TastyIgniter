@@ -51,7 +51,9 @@ class Customer_online_model extends TI_Model
 	 */
 
 	public function getCount($filter = array()) {
-		return $this->filter($filter)->with('customers', 'countries')->count();
+		$this->with('customers', 'countries');
+
+		return parent::getCount($filter);
 	}
 
 	/**
@@ -63,8 +65,9 @@ class Customer_online_model extends TI_Model
 	 */
 	public function getList($filter = array()) {
 		$this->select('*, customers_online.ip_address, customers_online.date_added, customers.first_name, customers.last_name');
+		$this->with('customers', 'countries');
 
-		return $this->filter($filter)->with('customers', 'countries')->find_all();
+		return parent::getList($filter);
 	}
 
 	/**
