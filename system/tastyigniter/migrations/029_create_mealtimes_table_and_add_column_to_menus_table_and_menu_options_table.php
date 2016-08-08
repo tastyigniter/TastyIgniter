@@ -8,6 +8,8 @@
 class Migration_create_mealtimes_table_and_add_column_to_menus_table_and_menu_options_table extends CI_Migration {
 
     public function up() {
+        if ($this->db->table_exists('mealtimes')) return;
+        
         $this->_mealtimes();
 
         $this->dbforge->add_column('menus', array('mealtime_id INT(11) NOT NULL AFTER subtract_stock'));
@@ -24,6 +26,8 @@ class Migration_create_mealtimes_table_and_add_column_to_menus_table_and_menu_op
     }
 
     public function down() {
+        if (!$this->db->table_exists('mealtimes')) return;
+
         $this->dbforge->drop_table('mealtimes');
 
         $this->dbforge->drop_column('menus', 'mealtime_id');
