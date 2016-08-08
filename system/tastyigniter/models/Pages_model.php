@@ -58,7 +58,9 @@ class Pages_model extends TI_Model
 	 * @return int
 	 */
 	public function getCount($filter = array()) {
-		return $this->filter($filter)->with('languages')->count();
+		$this->with('languages');
+
+		return parent::getCount($filter);
 	}
 
 	/**
@@ -70,8 +72,9 @@ class Pages_model extends TI_Model
 	 */
 	public function getList($filter = array()) {
 		$this->select('*, languages.name AS language_name, pages.name AS name');
+		$this->with('languages');
 
-		return $this->filter($filter)->with('languages')->find_all();
+		return parent::getList($filter);
 	}
 
 	/**

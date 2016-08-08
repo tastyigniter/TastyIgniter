@@ -50,7 +50,9 @@ class Orders_model extends TI_Model
 	 * @return int
 	 */
 	public function getCount($filter = array()) {
-		return $this->filter($filter)->with('locations', 'statuses')->count();
+		$this->with('locations', 'statuses');
+
+		return parent::getCount($filter);
 	}
 
 	/**
@@ -62,8 +64,9 @@ class Orders_model extends TI_Model
 	 */
 	public function getList($filter = array()) {
 		$this->select('*, orders.status_id, status_name, status_color, orders.date_added, orders.date_modified');
+		$this->with('locations', 'statuses');
 
-		return $this->filter($filter)->with('locations', 'statuses')->find_all();
+		return parent::getList($filter);
 	}
 
 	/**
@@ -566,7 +569,7 @@ class Orders_model extends TI_Model
 	/**
 	 * Add order status to status history
 	 *
-	 * @param int $order_id
+	 * @param int   $order_id
 	 * @param array $update
 	 * @param array $status
 	 *

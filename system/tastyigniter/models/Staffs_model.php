@@ -39,7 +39,7 @@ class Staffs_model extends TI_Model
 
 	protected $belongs_to = array(
 		'locations'    => array('Locations_model', 'staff_location_id'),
-		'users'        => 'Users_model',
+		'users'        => array('Users_model', 'staff_id', 'staff_id'),
 		'staff_groups' => 'Staff_groups_model',
 	);
 
@@ -60,7 +60,9 @@ class Staffs_model extends TI_Model
 	 * @return int
 	 */
 	public function getCount($filter = array()) {
-		return $this->filter($filter)->with('users', 'staff_groups', 'locations')->count();
+		$this->with('users', 'staff_groups', 'locations');
+
+		return parent::getCount($filter);
 	}
 
 	/**
@@ -72,8 +74,9 @@ class Staffs_model extends TI_Model
 	 */
 	public function getList($filter = array()) {
 		$this->select('staffs.staff_id, staff_name, staff_email, staff_group_name, location_name, date_added, staff_status');
+		$this->with('users', 'staff_groups', 'locations');
 
-		return $this->filter($filter)->with('users', 'staff_groups', 'locations')->find_all();
+		return parent::getList($filter);
 	}
 
 	/**

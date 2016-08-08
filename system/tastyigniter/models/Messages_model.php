@@ -42,17 +42,6 @@ class Messages_model extends TI_Model
 	);
 
 	/**
-	 * Count the number of records
-	 *
-	 * @param array $filter
-	 *
-	 * @return int
-	 */
-	public function getCount($filter = array()) {
-		return $this->filter($filter)->count();
-	}
-
-	/**
 	 * List all options matching the filter
 	 *
 	 * @param array $filter
@@ -62,7 +51,7 @@ class Messages_model extends TI_Model
 	public function getList($filter = array()) {
 		$this->select('*, messages.date_added, messages.status AS message_status');
 
-		return $this->filter($filter)->find_all();
+		return parent::getList($filter);
 	}
 
 	/**

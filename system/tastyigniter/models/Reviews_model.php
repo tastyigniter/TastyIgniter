@@ -49,7 +49,9 @@ class Reviews_model extends TI_Model
 	 * @return int
 	 */
 	public function getCount($filter = array()) {
-		return $this->filter($filter)->with('locations')->count();
+		$this->with('locations');
+
+		return parent::getCount($filter);
 	}
 
 	/**
@@ -60,7 +62,9 @@ class Reviews_model extends TI_Model
 	 * @return array
 	 */
 	public function getList($filter = array()) {
-		return $this->filter($filter)->with('locations')->find_all();
+		$this->with('locations');
+
+		return parent::getList($filter);
 	}
 
 	/**

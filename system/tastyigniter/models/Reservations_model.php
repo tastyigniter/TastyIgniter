@@ -56,8 +56,9 @@ class Reservations_model extends TI_Model
 		if (APPDIR === ADMINDIR) {
 			$with[] = 'staffs';
 		}
+		$this->with($with);
 
-		return $this->filter($filter)->with($with)->count();
+		return parent::getCount($filter);
 	}
 
 	/**
@@ -72,8 +73,9 @@ class Reservations_model extends TI_Model
 		if (APPDIR === ADMINDIR) {
 			$with[] = 'staffs';
 		}
+		$this->with($with);
 
-		return $this->filter($filter)->with($with)->find_all();
+		return parent::getList($filter);
 	}
 
 	/**

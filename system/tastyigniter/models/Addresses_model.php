@@ -45,7 +45,9 @@ class Addresses_model extends TI_Model
 	 */
 	public function getCount($filter = array()) {
 		if (!empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
-			return $this->filter($filter)->with('countries')->count();
+			$this->with('countries');
+
+			return parent::getCount($filter);
 		}
 	}
 
