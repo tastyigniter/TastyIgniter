@@ -22,6 +22,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @link           http://docs.tastyigniter.com
  */
 
+if ( ! function_exists('is_single_location'))
+{
+    /**
+     * Is Single Location Mode
+     * 
+     * Test to see system config multi location mode is set to single.
+     *
+     * @return bool
+     */
+    function is_single_location() 
+    {
+        return (config_item('site_location_mode') === 'single');
+    }
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('log_activity'))
 {
     /**
