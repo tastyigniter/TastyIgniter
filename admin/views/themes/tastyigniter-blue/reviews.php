@@ -83,11 +83,16 @@
                         <thead>
                         <tr>
                             <th class="action">
-                                <input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);">
+                                <div class="checkbox checkbox-primary">
+                                    <input type="checkbox" id="checkbox-all" class="styled" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);">
+                                    <label for="checkbox-all"></label>
+                                </div>
                             </th>
-                            <th>
-                                <a class="sort" href="<?php echo $sort_location_name; ?>"><?php echo lang('column_location'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'location_name') ? $order_by_active : $order_by; ?>"></i></a>
-                            </th>
+                            <?php if (!$user_strict_location) { ?>
+                                <th>
+                                    <a class="sort" href="<?php echo $sort_location_name; ?>"><?php echo lang('column_location'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'location_name') ? $order_by_active : $order_by; ?>"></i></a>
+                                </th>
+                            <?php } ?>
                             <th>
                                 <a class="sort" href="<?php echo $sort_author; ?>"><?php echo lang('column_author'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'author') ? $order_by_active : $order_by; ?>"></i></a>
                             </th>
@@ -107,10 +112,15 @@
                             <?php foreach ($reviews as $review) { ?>
                                 <tr>
                                     <td class="action">
-                                        <input type="checkbox" name="delete[]" value="<?php echo $review['review_id']; ?>"/>&nbsp;&nbsp;&nbsp;
+                                        <div class="checkbox checkbox-primary">
+                                            <input type="checkbox" class="styled" id="checkbox-<?php echo $review['review_id']; ?>" value="<?php echo $review['review_id']; ?>" name="delete[]"/>
+                                            <label for="checkbox-<?php echo $review['review_id']; ?>"></label>
+                                        </div>
                                         <a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $review['edit']; ?>"><i class="fa fa-pencil"></i></a>
                                     </td>
-                                    <td><?php echo $review['location_name']; ?></td>
+                                    <?php if (!$user_strict_location) { ?>
+                                        <td><?php echo $review['location_name']; ?></td>
+                                    <?php } ?>
                                     <td><?php echo $review['author']; ?></td>
                                     <td><?php echo $review['sale_id']; ?></td>
                                     <td><?php echo ucwords($review['sale_type']); ?></td>
@@ -135,9 +145,9 @@
                 </div>
             </form>
 
-            <div class="pagination-bar clearfix">
-                <div class="links"><?php echo $pagination['links']; ?></div>
-                <div class="info"><?php echo $pagination['info']; ?></div>
+            <div class="pagination-bar row">
+                <div class="links col-sm-8"><?php echo $pagination['links']; ?></div>
+                <div class="info col-sm-4"><?php echo $pagination['info']; ?></div>
             </div>
         </div>
     </div>

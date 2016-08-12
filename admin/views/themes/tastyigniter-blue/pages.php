@@ -17,7 +17,7 @@
 								<div class="col-md-8 pull-left">
 									<div class="form-group">
 										<select name="filter_status" class="form-control input-sm">
-											<option value=""><?php echo lang('text_filter_search'); ?></option>
+											<option value=""><?php echo lang('text_filter_status'); ?></option>
 											<?php if ($filter_status === '1') { ?>
 												<option value="1" <?php echo set_select('filter_status', '1', TRUE); ?> ><?php echo lang('text_enabled'); ?></option>
 												<option value="0" <?php echo set_select('filter_status', '0'); ?> ><?php echo lang('text_disabled'); ?></option>
@@ -44,7 +44,12 @@
 				<table class="table table-striped table-border">
 					<thead>
 						<tr>
-							<th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
+							<th class="action">
+								<div class="checkbox checkbox-primary">
+									<input type="checkbox" id="checkbox-all" class="styled" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);">
+									<label for="checkbox-all"></label>
+								</div>
+							</th>
 							<th width="40%"><?php echo lang('column_name'); ?></th>
 							<th class="text-center"><?php echo lang('column_preview'); ?></th>
 							<th class="text-center"><?php echo lang('column_language'); ?></th>
@@ -56,7 +61,11 @@
 						<?php if ($pages) {?>
 						<?php foreach ($pages as $page) { ?>
 						<tr>
-							<td class="action"><input type="checkbox" value="<?php echo $page['page_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
+							<td class="action">
+								<div class="checkbox checkbox-primary">
+									<input type="checkbox" class="styled" id="checkbox-<?php echo $page['page_id']; ?>" value="<?php echo $page['page_id']; ?>" name="delete[]" />
+									<label for="checkbox-<?php echo $page['page_id']; ?>"></label>
+								</div>
 								<a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $page['edit']; ?>"><i class="fa fa-pencil"></i></a>
 							</td>
 							<td width="40%"><?php echo $page['name']; ?></td>
@@ -76,9 +85,9 @@
 				</div>
 			</form>
 
-			<div class="pagination-bar clearfix">
-				<div class="links"><?php echo $pagination['links']; ?></div>
-				<div class="info"><?php echo $pagination['info']; ?></div>
+			<div class="pagination-bar row">
+				<div class="links col-sm-8"><?php echo $pagination['links']; ?></div>
+				<div class="info col-sm-4"><?php echo $pagination['info']; ?></div>
 			</div>
 		</div>
 	</div>

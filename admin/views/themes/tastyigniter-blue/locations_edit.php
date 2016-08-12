@@ -128,8 +128,8 @@
 
 				<div id="data" class="tab-pane">
 					<div class="form-group">
-						<label for="input-description" class="col-sm-3 control-label"><?php echo lang('label_description'); ?></label>
-						<div class="col-sm-5">
+						<label for="input-description" class="col-sm-12"><?php echo lang('label_description'); ?></label>
+						<div class="col-sm-12">
 							<textarea name="description" id="input-description" class="form-control" rows="5"><?php echo set_value('description', $description); ?></textarea>
 							<?php echo form_error('description', '<span class="text-danger">', '</span>'); ?>
 						</div>
@@ -138,17 +138,24 @@
 						<label for="input-slug" class="col-sm-3 control-label"><?php echo lang('label_permalink_slug'); ?>
 							<span class="help-block"><?php echo lang('help_permalink'); ?></span>
 						</label>
-						<div class="col-sm-5">
-                            <div class="input-group">
+						<?php if (!is_single_location()) { ?>
+						<div class="col-sm-7">
+							<div class="input-group">
                                 <span class="input-group-addon text-sm"><?php echo $permalink['url']; ?></span>
-                                <input type="hidden" name="permalink[permalink_id]" value="<?php echo set_value('permalink[permalink_id]', $permalink['permalink_id']); ?>"/>
+								<input type="hidden" name="permalink[permalink_id]" value="<?php echo set_value('permalink[permalink_id]', $permalink['permalink_id']); ?>"/>
                                 <input type="text" name="permalink[slug]" id="input-slug" class="form-control" value="<?php echo set_value('permalink[slug]', $permalink['slug']); ?>"/>
-                            </div>
-                            <?php echo form_error('permalink[permalink_id]', '<span class="text-danger">', '</span>'); ?>
+								<span class="input-group-addon text-sm">/menus</span>
+							</div>
+							<?php echo form_error('permalink[permalink_id]', '<span class="text-danger">', '</span>'); ?>
                             <?php echo form_error('permalink[slug]', '<span class="text-danger">', '</span>'); ?>
 						</div>
+						<?php } else { ?>
+						<div class="col-sm-5">
+							<input type="text" class="form-control" value="<?php echo $permalink['url']; ?>" readonly>
+						</div>
+						<?php } ?>
 					</div>
-                    <div class="form-group">
+					<div class="form-group">
                         <label for="" class="col-sm-3 control-label"><?php echo lang('label_image'); ?>
                             <span class="help-block"><?php echo lang('help_image'); ?></span>
                         </label>
@@ -811,6 +818,10 @@
 </div>
 <script type="text/javascript"><!--
 $(document).ready(function() {
+	$('textarea#input-description').summernote({
+		height: 100,
+	});
+
 	$('#delivery-areas select.form-control').select2({
 		minimumResultsForSearch: Infinity
 	});
