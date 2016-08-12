@@ -18,24 +18,24 @@ class Admin_local_module extends Admin_Controller {
 
 	        if ($this->input->post('location_search_mode')) {
 		        $data['location_search_mode'] = $this->input->post('location_search_mode');
-	        } else if (isset($data['ext_data']['location_search_mode'])) {
-		        $data['location_search_mode'] = $data['ext_data']['location_search_mode'];
+	        } else if (isset($module['ext_data']['location_search_mode'])) {
+		        $data['location_search_mode'] = $module['ext_data']['location_search_mode'];
 	        } else {
 		        $data['location_search_mode'] = 'multi';
 	        }
 
 	        if ($this->input->post('use_location')) {
 		        $data['use_location'] = $this->input->post('use_location');
-	        } else if (isset($data['ext_data']['use_location'])) {
-		        $data['use_location'] = $data['ext_data']['use_location'];
+	        } else if (isset($module['ext_data']['use_location'])) {
+		        $data['use_location'] = $module['ext_data']['use_location'];
 	        } else {
 		        $data['use_location'] = '0';
 	        }
 
 	        if ($this->input->post('status')) {
 		        $data['status'] = $this->input->post('status');
-	        } else if (isset($data['ext_data']['status'])) {
-		        $data['status'] = $data['ext_data']['status'];
+	        } else if (isset($module['ext_data']['status'])) {
+		        $data['status'] = $module['ext_data']['status'];
 	        } else {
 		        $data['status'] = '1';
 	        }

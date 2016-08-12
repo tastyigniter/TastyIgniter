@@ -11,7 +11,7 @@ class Local_module extends Main_Controller {
 		$this->lang->load('local_module/local_module');
 
 		$referrer_uri = explode('/', str_replace(site_url(), '', $this->agent->referrer()));
-		$this->referrer_uri = (!empty($referrer_uri[0]) AND $referrer_uri[0] !== 'local_module') ? $referrer_uri[0] : 'home';
+		$this->referrer_uri = (!empty($referrer_uri[0]) AND $referrer_uri[0] !== 'local_module') ? $referrer_uri[0] : '';
 	}
 
 	public function index($module = array()) {
@@ -33,15 +33,17 @@ class Local_module extends Main_Controller {
 
 			if (!empty($ext_data['use_location'])) {
 				$use_location = $ext_data['use_location'];
+			} else if ($this->input->get('location_id')) {
+				$use_location = $this->input->get('location_id');
 			} else {
 				$use_location = $this->config->item('default_location_id');
 			}
 
 			if (!empty($use_location) AND is_numeric($use_location)) {
 				$this->location->setLocation($use_location);
-				$data['single_location_url'] = site_url('local?location_id=' . $use_location);
+				$data['single_location_url'] = restaurant_url('menus?location_id=' . $use_location);
 			} else {
-				$data['single_location_url'] = site_url('local/all');
+				$data['single_location_url'] = restaurant_url('local/all');
 			}
 		}
 
@@ -177,7 +179,7 @@ class Local_module extends Main_Controller {
 
 		$redirect = '';
 		if (!isset($json['error'])) {
-			$redirect = $json['redirect'] = site_url('local?location_id='.$this->location->getId());
+			$redirect = $json['redirect'] = restaurant_url();
 		}
 
 		if ($redirect === '') {
