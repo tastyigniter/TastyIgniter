@@ -60,9 +60,9 @@ class Main_Controller extends Base_Controller
 
 		if (!isset($this->index_url)) $this->index_url = $this->controller;
 
-		$this->createFilter();
-		$this->createSorting();
-
+		if (!empty($this->filter)) $this->setFilter();
+		if (!empty($this->sort)) $this->setSort();
+		
 		Events::trigger('after_main_controller');
 	}
 
