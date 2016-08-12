@@ -131,7 +131,7 @@ class Permalink {
 
                     $slug = $context;
                     if (isset($_slugs[$key . '=' . $val])) {
-                        $context = ($context === 'pages') ? '' : $context . '/';
+                        $context = (in_array($context, array('pages', 'local'))) ? '' : $context . '/';
                         $slug = $context . $_slugs[$key . '=' . $val];
                         unset($query_arr[$key]);
                     }
