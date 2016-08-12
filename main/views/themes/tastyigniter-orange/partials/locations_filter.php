@@ -6,7 +6,7 @@
 		<div class="panel-body">
 			<form id="filter-search-form" method="GET" class="form-search form-horizontal" action="<?php echo $search_action; ?>">
 				<div class="input-group">
-					<input type="text" class="form-control" name="search" value="<?php echo $search; ?>" placeholder="<?php echo lang('text_filter_search'); ?>" />
+					<input type="text" class="form-control" name="filter_search" value="<?php echo $search; ?>" placeholder="<?php echo lang('text_filter_search'); ?>" />
 					<span class="input-group-btn">
 						<button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
 					</span>

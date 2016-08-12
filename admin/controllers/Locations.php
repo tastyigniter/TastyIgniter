@@ -3,14 +3,16 @@
 class Locations extends Admin_Controller
 {
 
-	public $list_filters = array(
+	public $filter = array(
 		'filter_search' => '',
 		'filter_status' => '',
-		'sort_by'       => 'location_id',
-		'order_by'      => 'DESC',
 	);
 
-	public $sort_columns = array('location_name', 'location_city', 'location_state', 'location_postcode', 'location_id');
+	public $default_sort = array('location_id', 'DESC');
+
+	public $sort = array('location_name', 'location_city', 'location_state', 'location_postcode', 'location_id');
+	
+	protected $single_location = FALSE;
 
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
@@ -26,9 +28,14 @@ class Locations extends Admin_Controller
 		$this->load->library('permalink');
 
 		$this->lang->load('locations');
+
+		$this->single_location = ($this->user->isStrictLocation() OR is_single_location());
+		if ($this->single_location) $this->edit_url = $this->controller . '/edit';
 	}
 
 	public function index() {
+		if ($this->single_location) $this->redirect($this->create_url);
+
 		if ($this->input->get('default') === '1' AND $this->input->get('location_id')) {
 			if ($this->Locations_model->updateDefault($this->Locations_model->getAddress($this->input->get('location_id')))) {
 				$this->alert->set('success', sprintf($this->lang->line('alert_success'), $this->lang->line('alert_set_default')));
@@ -58,33 +65,39 @@ class Locations extends Admin_Controller
 			$this->redirect($location_id);
 		}
 
-		$location_info = $this->Locations_model->getLocation((int)$this->input->get('id'));
+		$location_id = ($this->single_location) ? $this->user->getLocationId() : $this->input->get('id');
+
+		$location_info = $this->Locations_model->getLocation((int)$location_id);
 
 		$title = (isset($location_info['location_name'])) ? $location_info['location_name'] : $this->lang->line('text_new');
 		$this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $title));
 		$this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
 		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
-		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('locations')));
+		if ($this->config->item('site_location_mode') === 'multi') {
+			$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
+			$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('locations')));
+		}
 
 		$this->template->setStyleTag(assets_url('js/datepicker/bootstrap-timepicker.css'), 'bootstrap-timepicker-css');
 		$this->template->setScriptTag(assets_url("js/datepicker/bootstrap-timepicker.js"), 'bootstrap-timepicker-js');
 		$this->template->setScriptTag(assets_url("js/jquery-sortable.js"), 'jquery-sortable-js');
+
+		$this->template->setStyleTag(assets_url('js/summernote/summernote.css'), 'summernote-css');
+		$this->template->setScriptTag(assets_url('js/summernote/summernote.min.js'), 'summernote-js');
 
 		$data = $this->getForm($location_info);
 
 		$this->template->render('locations_edit', $data);
 	}
 
-	protected function getList() {
-		$data = array_merge($this->list_filters, $this->sort_columns);
-		$data['order_by_active'] = $this->list_filters['order_by'] . ' active';
+	public function getList() {
+		$data = array_merge($this->getFilter(), $this->getSort());
 
 		$data['country_id'] = $this->config->item('country_id');
 		$data['default_location_id'] = $this->config->item('default_location_id');
 
 		$data['locations'] = array();
-		$results = $this->Locations_model->paginate($this->list_filters, $this->index_url);
+		$results = $this->Locations_model->paginate($this->getFilter());
 		foreach ($results->list as $result) {
 			$default = ($result['location_id'] !== $this->config->item('default_location_id')) ? $this->pageUrl($this->index_url . '?default=1&location_id=' . $result['location_id']) : '1';
 			$data['locations'][] = array_merge($result, array(
@@ -98,14 +111,13 @@ class Locations extends Admin_Controller
 		return $data;
 	}
 
-	protected function getForm($location_info = array()) {
+	public function getForm($location_info = array()) {
 		$data = $location_info;
 
 		$location_id = 0;
-		$data['_action'] = $this->pageUrl($this->create_url);
+		$data['_action'] = current_url();
 		if (!empty($location_info['location_id'])) {
 			$location_id = $location_info['location_id'];
-			$data['_action'] = $this->pageUrl($this->edit_url, array('id' => $location_id));
 		}
 
 		$data['map_key'] = ($this->config->item('maps_api_key')) ? '&key=' . $this->config->item('maps_api_key') : '';
@@ -125,33 +137,31 @@ class Locations extends Admin_Controller
 		$data['location_lat'] = $location_info['location_lat'];
 		$data['location_lng'] = $location_info['location_lng'];
 		$data['location_status'] = isset($location_info['location_status']) ? $location_info['location_status'] : '1';
-		$data['offer_delivery'] = $location_info['offer_delivery'];
-		$data['offer_collection'] = $location_info['offer_collection'];
+		$data['offer_delivery'] = isset($location_info['offer_delivery']) ? $location_info['offer_delivery'] : '1';
+		$data['offer_collection'] = isset($location_info['offer_collection']) ? $location_info['offer_collection'] : '1';
 		$data['delivery_time'] = isset($location_info['delivery_time']) ? $location_info['delivery_time'] : '0';
 		$data['collection_time'] = isset($location_info['collection_time']) ? $location_info['collection_time'] : '0';
 		$data['last_order_time'] = isset($location_info['last_order_time']) ? $location_info['last_order_time'] : '0';
-		$data['reservation_time_interval'] = $location_info['reservation_time_interval'];
-		$data['reservation_stay_time'] = $location_info['reservation_stay_time'];
+		$data['reservation_time_interval'] = isset($location_info['reservation_time_interval']) ? $location_info['reservation_time_interval'] : '0';
+		$data['reservation_stay_time'] = isset($location_info['reservation_stay_time']) ? $location_info['reservation_stay_time'] : '0';
 
 		$data['permalink'] = $this->permalink->getPermalink('location_id=' . $location_info['location_id']);
-		$data['permalink']['url'] = root_url('local') . '/';
-
-		$this->load->model('Image_tool_model');
-		$data['no_location_image'] = $this->Image_tool_model->resize('data/no_photo.png');
-		if ($this->input->post('location_image')) {
-			$data['location_image'] = $this->input->post('location_image');
-			$data['location_image_name'] = basename($this->input->post('location_image'));
-			$data['location_image_url'] = $this->Image_tool_model->resize($this->input->post('location_image'));
-		} else if (!empty($location_info['location_image'])) {
-			$data['location_image'] = $location_info['location_image'];
-			$data['location_image_name'] = basename($location_info['location_image']);
-			$data['location_image_url'] = $this->Image_tool_model->resize($location_info['location_image']);
-		} else {
-			$data['location_image'] = '';
-			$data['location_image_name'] = '';
-			$data['location_image_url'] = $this->Image_tool_model->resize('data/no_photo.png');
+		$data['permalink']['url'] = root_url();
+		if ($this->single_location) {
+			$data['permalink']['url'] = restaurant_url();
 		}
 
+		$this->load->model('Image_tool_model');
+		$data['no_location_image'] = $data['location_image_url'] = $this->Image_tool_model->resize('data/no_photo.png');
+
+			$data['location_image'] = '';
+			$data['location_image_name'] = '';
+		if (!empty($data['location_image'])) {
+			$data['location_image_name'] = basename($data['location_image']);
+			$data['location_image_url'] = $this->Image_tool_model->resize($data['location_image']);
+		}
+
+		$data['country_id'] = '';
 		if ($location_info['location_country_id']) {
 			$data['country_id'] = $location_info['location_country_id'];
 		} else if ($this->config->item('country_id')) {
@@ -166,11 +176,7 @@ class Locations extends Admin_Controller
 			$options = unserialize($location_info['options']);
 		}
 
-		if ($location_info['location_lat'] AND $location_info['location_lng']) {
-			$data['has_lat_lng'] = TRUE;
-		} else {
-			$data['has_lat_lng'] = FALSE;
-		}
+		$data['has_lat_lng'] = ($location_info['location_lat'] AND $location_info['location_lng']) ? TRUE : FALSE;
 
 		if ($this->input->post('auto_lat_lng')) {
 			$data['auto_lat_lng'] = $this->input->post('auto_lat_lng');
@@ -309,7 +315,7 @@ class Locations extends Admin_Controller
 		} else if (isset($options['payments'])) {
 			$data['payments'] = $options['payments'];
 		} else {
-			$data['payments'] = array();
+			$data['payments'] = array('cod');
 		}
 
 		if ($this->input->post('tables')) {
@@ -409,7 +415,9 @@ class Locations extends Admin_Controller
 	protected function _saveLocation() {
 		if ($this->validateForm() === TRUE) {
 			$save_type = (!is_numeric($this->input->get('id'))) ? $this->lang->line('text_added') : $this->lang->line('text_updated');
-			if ($location_id = $this->Locations_model->saveLocation($this->input->get('id'), $this->input->post())) {
+
+			$location_id = ($this->single_location) ? $this->user->getLocationId() : $this->input->get('id');
+			if ($location_id = $this->Locations_model->saveLocation($location_id, $this->input->post())) {
 				log_activity($this->user->getStaffId(), $save_type, 'locations', get_activity_message('activity_custom',
 					array('{staff}', '{action}', '{context}', '{link}', '{item}'),
 					array($this->user->getStaffName(), $save_type, 'location', $this->pageUrl($this->edit_url, array('id' => $location_id)), $this->input->post('location_name'))
@@ -438,7 +446,7 @@ class Locations extends Admin_Controller
 		}
 	}
 
-	protected function validateForm() {
+	public function validateForm() {
 		$rules[] = array('location_name', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		$rules[] = array('email', 'lang:label_email', 'xss_clean|trim|required|valid_email');
 		$rules[] = array('telephone', 'lang:label_telephone', 'xss_clean|trim|required|min_length[2]|max_length[15]');

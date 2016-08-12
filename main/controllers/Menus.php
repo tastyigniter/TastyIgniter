@@ -3,11 +3,11 @@
 class Menus extends Main_Controller
 {
 
-	public $list_filters = array(
+	public $filter = array(
 		'filter_status' => '1',
-		'sort_by'       => 'menus.menu_priority',
-		'order_by'      => 'ASC',
 	);
+
+	public $default_sort = array('menus.menu_priority', 'ASC');
 
 	public function __construct() {
 		parent::__construct();                                                                    // calls the constructor
@@ -18,7 +18,6 @@ class Menus extends Main_Controller
 		$this->load->model('Pages_model');
 
 		$this->load->library('location');                                                        // load the location library
-		$this->location->initialize();
 
 		$this->load->library('currency');                                                        // load the currency library
 
@@ -26,10 +25,10 @@ class Menus extends Main_Controller
 	}
 
 	public function index() {
-		$categories = $this->Categories_model->getCategory($this->input->get('category_id'));
-		if (!$categories AND $this->input->get('category_id')) {
+//		$categories = $this->Categories_model->getCategory($this->input->get('category_id'));
+//		if (!$categories AND $this->input->get('category_id')) {
 			show_404();
-		}
+//		}
 
 		$this->template->setTitle($this->lang->line('text_heading'));
 
@@ -38,15 +37,9 @@ class Menus extends Main_Controller
 
 		$this->template->setScriptTag('js/jquery.mixitup.js', 'jquery-mixitup-css', '100330');
 
-		$filter = array();
-		$filter['filter_category'] = $data['category_id'] = (int)$this->input->get('category_id');                                    // retrieve 3rd uri segment else set FALSE if unavailable.
-
-		$data['menu_list'] = $this->getList($this->list_filters + $filter);
+		$data['menu_list'] = $this->getList();
 
 		$data['menu_total'] = $this->Menus_model->getCount();
-		if (is_numeric($data['menu_total']) AND $data['menu_total'] < 150) {
-			$filter['category_id'] = 0;
-		}
 
 		$this->load->module('local');
 
@@ -57,50 +50,51 @@ class Menus extends Main_Controller
 		$data['local_reviews'] = $this->local->reviews();
 
 		$data['local_gallery'] = $this->local->gallery();
-
-
-		$this->template->render('local', $data);
+		
+		$this->template->render('menus', $data);
 	}
 
 	public function category() {
 		$this->index();
 	}
 
-	public function getList($filter, $list_data = array()) {
+	public function getList() {
 		$url = '?';
 
-		$list_data['quantities'] = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10');
+		$data['quantities'] = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10');
+		$data['show_menu_images'] = $this->config->item('show_menu_images');
+		$data['category_id'] = $this->input->get('category_id');
 
-		$list_data['show_menu_images'] = $this->config->item('show_menu_images');
+		$data['menu_total'] = $this->Menus_model->getCount();
+		$mix_it_up = (!empty($menu_total) AND $menu_total < 500) ? TRUE : FALSE;
 
-		if ($this->input->get('category_id')) {
-			$index_url = 'menus?category_id=' . $this->input->get('category_id') . $url;
-		} else {
-			$index_url = 'menus' . $url;
+		if (!$mix_it_up AND $this->input->get('category_id')) {
+			$this->setFilter('filter_category', (int)$this->input->get('category_id'));
 		}
 
-		$results = $this->Menus_model->paginate($filter, $index_url);
-		$list_data['menus'] = $results->list;
-
-		$list_data['pagination'] = $results->pagination;
-
+		$results = $this->Menus_model->paginate($this->getFilter(), current_url());
+		$data['menus'] = $results->list;
+		$data['pagination'] = $results->pagination;
+		
+		$data['categories'] = array();
 		$categories = $this->Categories_model->getCategories();
-
-		$list_data['categories'] = array();
 		foreach (sort_array($categories) as $category) {
-			if (!empty($filter['filter_category']) AND $filter['filter_category'] != $category['category_id']) continue;
+			if (!empty($data['category_id']) AND !$mix_it_up AND $data['category_id'] != $category['category_id']) continue;
 
 			$category_image = '';
 			if (!empty($category['image'])) {
 				$category_image = $this->Image_tool_model->resize($category['image'], '800', '115');
 			}
 
-			$list_data['categories'][$category['category_id']] = array_merge($category, array(
+			$permalink = $this->permalink->getPermalink('category_id=' . $category['category_id']);
+			$permalink['slug'] = (!empty($permalink['slug'])) ? $permalink['slug'] : strtolower(str_replace(' ', '-', str_replace('&', '_', $category['name'])));
+			$data['categories'][$category['category_id']] = array_merge($category, array(
 				'image' => $category_image,
+				'slug' => $permalink['slug'],
 			));
 		}
 
-		$list_data['menu_options'] = array();
+		$data['menu_options'] = array();
 		$menu_options = $this->Menu_options_model->getMenuOptions();
 		foreach ($menu_options as $menu_id => $option) {
 			$option_values = array();
@@ -110,20 +104,20 @@ class Menus extends Main_Controller
 				));
 			}
 
-			$list_data['menu_options'][$option['menu_id']][] = array_merge($option, array(
+			$data['menu_options'][$option['menu_id']][] = array_merge($option, array(
 				'default_value_id' => isset($option['default_value_id']) ? $option['default_value_id'] : 0,
 				'option_values'    => $option_values,
 			));
 		}
 
-		$list_data['option_values'] = array();
+		$data['option_values'] = array();
 		foreach ($menu_options as $option) {
-			if (!isset($list_data['option_values'][$option['option_id']])) {
-				$list_data['option_values'][$option['option_id']] = $this->Menu_options_model->getOptionValues($option['option_id']);
+			if (!isset($data['option_values'][$option['option_id']])) {
+				$data['option_values'][$option['option_id']] = $this->Menu_options_model->getOptionValues($option['option_id']);
 			}
 		}
 
-		return $list_data;
+		return $data;
 	}
 }
 

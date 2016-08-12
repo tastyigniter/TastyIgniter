@@ -84,7 +84,7 @@ class Settings extends Admin_Controller
 		}
 	}
 
-	protected function getForm() {
+	public function getForm() {
 		$post_data = $this->input->post();
 
 		foreach ($this->config->config as $key => $value) {
@@ -94,6 +94,8 @@ class Settings extends Admin_Controller
 				$data[$key] = $value;
 			}
 		}
+
+		if (!isset($data['site_url'])) $this->config->set_item('site_url', root_url());
 
 		$this->load->model('Image_tool_model');
 		$data['no_photo'] = $this->Image_tool_model->resize('data/no_photo.png');
@@ -109,6 +111,8 @@ class Settings extends Admin_Controller
 		if (!isset($data['auto_lat_lng'])) {
 			$data['auto_lat_lng'] = '1';
 		}
+
+		if (!isset($data['site_location_mode'])) $this->config->set_item('site_location_mode', 'single');
 
 		$image_manager = is_array($data['image_manager']) ? $data['image_manager'] : array();
 		$image_manager_defs = array(

@@ -36,7 +36,9 @@
 								<tr>
 									<th><?php echo lang('column_sale_id'); ?></th>
 									<th><?php echo lang('column_sale_type'); ?></th>
-									<th><?php echo lang('column_restaurant'); ?></th>
+									<?php if (!is_single_location()) { ?>
+										<th><?php echo lang('column_restaurant'); ?></th>
+									<?php } ?>
 									<th class="text-center"><?php echo lang('column_rating'); ?></th>
 									<th><?php echo lang('column_date'); ?></th>
 								</tr>
@@ -47,7 +49,9 @@
 									<tr>
 										<td><a href="<?php echo $review['view']; ?>"><?php echo $review['sale_id']; ?></a></td>
 										<td><?php echo ucwords($review['sale_type']); ?></td>
-										<td><?php echo $review['location_name']; ?></td>
+										<?php if (!is_single_location()) { ?>
+											<td><?php echo $review['location_name']; ?></td>
+										<?php } ?>
 										<td>
 											<dl class="dl-horizontal dl-horizontal-rating">
 												<dt><b>Quality:</b></dt>
