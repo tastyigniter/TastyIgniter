@@ -1,4 +1,4 @@
-<form accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>" />
+<form role="form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>" />
 	<input type="hidden" name="licence_agreed" value="1" />
 	<div class="terms"><?php echo lang('text_license_terms'); ?></div>
 	<div class="buttons">

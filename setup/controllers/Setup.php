@@ -3,21 +3,22 @@
 class Setup extends Base_Controller {
 
     protected $setup_step;
-    protected $setup_timeout = '120';
+    protected $setup_timeout = '900';
     protected $setup_proceed = FALSE;
 
     public function __construct() {
 		parent::__construct();
 
         $this->load->model('Setup_model');
+        $this->load->library('form_validation');
 
-        $this->setup_step = $this->uri->segment(1);
+        $this->setup_step = $this->uri->segment(1) ? $this->uri->segment(1) : 'license';
 
         if ($this->setup_step !== 'success' AND $this->installer->isInstalled()) {
-            redirect('success');
+            $this->redirect('success');
         }
 
-        if ($this->session->tempdata('setup_step') === $this->setup_step) {
+        if ($this->session->tempdata('setup_step') == $this->setup_step) {
             $this->setup_proceed = TRUE;
         }
     }
@@ -33,7 +34,7 @@ class Setup extends Base_Controller {
 
         if ($this->input->post('licence_agreed')) {
             $this->session->set_tempdata('setup_step', 'requirements', $this->setup_timeout);
-            redirect('requirements');
+            $this->redirect('requirements');
         }
 
         if ( ! file_exists(VIEWPATH .'/license.php')) {
@@ -49,7 +50,7 @@ class Setup extends Base_Controller {
 	public function requirements() {
         if ($this->setup_proceed === FALSE) {
             $this->alert->set('danger', $this->lang->line('alert_license_error'));
-            redirect('license');
+            $this->redirect('license');
         }
 
         $data['text_heading'] 		    = $this->lang->line('text_requirement_heading');
@@ -60,12 +61,12 @@ class Setup extends Base_Controller {
         $data['writables']              = $this->installer->checkWritable();
         $data['setup_step'] 	    = $this->setup_step;
 
-        $data['back_url'] 		        = site_url('license');
+        $data['back_url'] 		        = $this->pageUrl('license');
 
         if ($this->input->post('requirements')) {
             if (!in_array(FALSE, $data['requirements'], TRUE) AND !in_array(FALSE, $data['writables'], TRUE)) {
                 $this->session->set_tempdata('setup_step', 'database', $this->setup_timeout);
-                redirect('database');
+                $this->redirect('database');
             }
 
             $this->alert->set('danger_now', $this->lang->line('alert_requirement_error'));
@@ -83,18 +84,18 @@ class Setup extends Base_Controller {
 	public function database() {
         if ($this->setup_proceed === FALSE) {
             $this->alert->set('danger', $this->lang->line('alert_requirement_error'));
-            redirect('requirements');
+            $this->redirect('requirements');
         }
 
         if ($this->installer->db_exists === TRUE OR $this->_validateDatabase() === TRUE) {
             $this->session->set_tempdata('setup_step', 'settings', $this->setup_timeout);
-            redirect('settings');
+            $this->redirect('settings');
         }
 
         $data['text_heading'] 		= $this->lang->line('text_database_heading');
         $data['text_sub_heading'] 	= $this->lang->line('text_database_sub_heading');
         $data['setup_step'] 	    = $this->setup_step;
-        $data['back_url'] 		    = site_url('requirements');
+        $data['back_url'] 		    = $this->pageUrl('requirements');
 
         foreach (array('database', 'hostname', 'username', 'password', 'dbprefix') as $item) {
             if ($this->input->post($item)) {
@@ -121,20 +122,20 @@ class Setup extends Base_Controller {
 	public function settings() {
         if ($this->installer->db_exists === FALSE OR $this->setup_proceed === FALSE) {
             $this->alert->set('danger', $this->lang->line('alert_database_error'));
-            redirect('database');
+            $this->redirect('database');
         }
 
         if ($this->installer->checkSettings() === TRUE OR $this->_validateSettings() === TRUE) {
             $this->session->set_tempdata('setup_step', 'success', $this->setup_timeout);
-            redirect('success');
+            $this->redirect('success');
         }
 
         $data['text_heading'] 		= $this->lang->line('text_settings_heading');
         $data['text_sub_heading'] 	= $this->lang->line('text_settings_sub_heading');
         $data['setup_step'] 	    = $this->setup_step;
-        $data['back_url'] 		    = site_url('database');
+        $data['back_url'] 		    = $this->pageUrl('database');
 
-        foreach (array('site_name', 'site_email', 'staff_name', 'username', 'password') as $item) {
+        foreach (array('site_location_mode', 'site_name', 'site_email', 'staff_name', 'username', 'password', 'demo_data') as $item) {
             if ($this->input->post($item)) {
                 $data[$item] = $this->input->post($item);
             } else if ($this->config->item($item)) {
@@ -159,14 +160,14 @@ class Setup extends Base_Controller {
         }
 
         if ( ! ($this->setup_proceed === TRUE OR $this->installer->checkSettings() === TRUE)) {
-            redirect('requirements');
+            $this->redirect('requirements');
         }
 
         $data['text_heading'] 		= $this->lang->line('text_success_heading');
         $data['text_sub_heading'] 	= $this->lang->line('text_success_sub_heading');
         $data['setup_step'] 	    = $this->setup_step;
         $data['admin_url'] 	        = admin_url();
-        $data['site_url'] 	        = root_url();
+        $data['site_url']           = root_url();
 
         $this->load->library('user');
         $this->user->logout();
