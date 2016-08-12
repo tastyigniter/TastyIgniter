@@ -215,16 +215,16 @@ if ( ! function_exists('restaurant_url'))
 	 * Returns the full URL (including segments) of the local restaurant if any,
 	 * else locations URL is returned
 	 *
-	 * @return	string
+	 * @param string $uri
+	 * @param string   $protocol
+	 *
+	 * @return string
 	 */
-	function restaurant_url()
+	function restaurant_url($uri = '', $protocol = NULL)
 	{
 		$CI =& get_instance();
-        if (isset($CI->location) AND is_numeric($CI->location->getId())) {
-            return site_url('local?location_id='.$CI->location->getId());
-        } else {
-            return site_url('locations');
-        }
+
+		return $CI->config->restaurant_url($uri, $protocol);
 	}
 }
 
