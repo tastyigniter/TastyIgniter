@@ -3,16 +3,16 @@
 class Reviews extends Admin_Controller
 {
 
-	public $list_filters = array(
+	public $filter = array(
 		'filter_search'   => '',
 		'filter_location' => '',
 		'filter_date'     => '',
 		'filter_status'   => '',
-		'sort_by'         => 'reviews.date_added',
-		'order_by'        => 'DESC',
 	);
 
-	public $sort_columns = array('location_name', 'author', 'sale_id', 'sale_type', 'review_status', 'date_added');
+	public $default_sort = array('reviews.date_added', 'DESC');
+
+	public $sort = array('location_name', 'author', 'sale_id', 'sale_type', 'review_status', 'date_added');
 
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
@@ -59,19 +59,18 @@ class Reviews extends Admin_Controller
 		$this->template->render('reviews_edit', $data);
 	}
 
-	protected function getList() {
+	public function getList() {
 		if ($data['user_strict_location'] = $this->user->isStrictLocation()) {
-			$this->list_filters['filter_location'] = $this->user->getLocationId();
+			$this->filter['filter_location'] = $this->user->getLocationId();
 		}
 
-		$data = array_merge($this->list_filters, $this->sort_columns, $data);
-		$data['order_by_active'] = $this->list_filters['order_by'] . ' active';
+		$data = array_merge($this->getFilter(), $this->getSort(), $data);
 
 		$ratings = $this->config->item('ratings');
 		$data['ratings'] = $ratings['ratings'];
 
 		$data['reviews'] = array();
-		$results = $this->Reviews_model->paginate($this->list_filters, $this->index_url);
+		$results = $this->Reviews_model->paginate($this->getFilter());
 		foreach ($results->list as $review) {
 			$data['reviews'][] = array_merge($review, array(
 				'date_added' => mdate('%d %M %y', strtotime($review['date_added'])),
@@ -94,7 +93,7 @@ class Reviews extends Admin_Controller
 		return $data;
 	}
 
-	protected function getForm($review_info) {
+	public function getForm($review_info) {
 		$data = $review_info;
 
 		$review_id = 0;
@@ -103,6 +102,8 @@ class Reviews extends Admin_Controller
 			$review_id = $review_info['review_id'];
 			$data['_action'] = $this->pageUrl($this->edit_url, array('id' => $review_id));
 		}
+
+		$this->user->restrictLocation($review_info['location_id'], 'Admin.Reviews', $this->index_url);
 
 		$data['review_id'] = $review_info['review_id'];
 		$data['location_id'] = $review_info['location_id'];
@@ -129,7 +130,6 @@ class Reviews extends Admin_Controller
 	protected function _saveReview() {
 		if ($this->validateForm() === TRUE) {
 			$save_type = (!is_numeric($this->input->get('id'))) ? $this->lang->line('text_added') : $this->lang->line('text_updated');
-
 			if ($review_id = $this->Reviews_model->saveReview($this->input->get('id'), $this->input->post())) {
 				log_activity($this->user->getStaffId(), $save_type, 'reviews', get_activity_message('activity_custom',
 					array('{staff}', '{action}', '{context}', '{link}', '{item}'),

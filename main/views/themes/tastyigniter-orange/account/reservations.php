@@ -36,7 +36,9 @@
 								<tr>
 									<th><?php echo lang('column_id'); ?></th>
 									<th><?php echo lang('column_status'); ?></th>
-									<th><?php echo lang('column_location'); ?></th>
+									<?php if (!is_single_location()) { ?>
+										<th><?php echo lang('column_location'); ?></th>
+									<?php } ?>
 									<th><?php echo lang('column_date'); ?></th>
 									<th><?php echo lang('column_table'); ?></th>
 									<th><?php echo lang('column_guest'); ?></th>
@@ -49,7 +51,9 @@
 								<tr>
 									<td><a href="<?php echo $reservation['view']; ?>"><?php echo $reservation['reservation_id']; ?></a></td>
 									<td><?php echo $reservation['status_name']; ?></td>
-									<td><?php echo $reservation['location_name']; ?></td>
+									<?php if (!is_single_location()) { ?>
+										<td><?php echo $reservation['location_name']; ?></td>
+									<?php } ?>
 									<td><?php echo $reservation['reserve_time']; ?> - <?php echo $reservation['reserve_date']; ?></td>
 									<td><?php echo $reservation['table_name']; ?></td>
 									<td><?php echo $reservation['guest_num']; ?></td>

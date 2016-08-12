@@ -3,7 +3,7 @@
 class Reservations extends Admin_Controller
 {
 
-	public $list_filters = array(
+	public $filter = array(
 		'show_calendar'   => '',
 		'filter_search'   => '',
 		'filter_location' => '',
@@ -12,11 +12,11 @@ class Reservations extends Admin_Controller
 		'filter_month'    => '',
 		'filter_day'      => '',
 		'filter_status'   => '',
-		'sort_by'         => 'reserve_date',
-		'order_by'        => 'ASC',
 	);
 
-	public $sort_columns = array('reservation_id', 'location_name', 'first_name', 'guest_num',
+	public $default_sort = array('reserve_date', 'ASC');
+
+	public $sort = array('reservation_id', 'location_name', 'first_name', 'guest_num',
 		'table_name', 'status_name', 'staff_name', 'reserve_date');
 
 	public function __construct() {
@@ -70,17 +70,15 @@ class Reservations extends Admin_Controller
 		$this->template->render('reservations_edit', $data);
 	}
 
-	protected function getList() {
-		$data = $this->getCalendar();
+	public function getList() {
 		if ($data['user_strict_location'] = $this->user->isStrictLocation()) {
-			$this->list_filters['filter_location'] = $this->user->getLocationId();
+			$this->setFilter('filter_location', $this->user->getLocationId());
 		}
 
-		$data = array_merge($this->list_filters, $this->sort_columns, $data);
-		$data['order_by_active'] = $this->list_filters['order_by'] . ' active';
+		$data = array_merge($this->getFilter(), $this->getSort(), $data, $this->getCalendar());
 
 		$data['reservations'] = array();
-		$results = $this->Reservations_model->paginate($this->list_filters, $this->index_url);
+		$results = $this->Reservations_model->paginate($this->getFilter());
 		foreach ($results->list as $result) {
 			$data['reservations'][] = array_merge($result, array(
 				'reserve_date' => day_elapsed($result['reserve_date']),
@@ -105,7 +103,7 @@ class Reservations extends Admin_Controller
 		return $data;
 	}
 
-	protected function getForm($reservation_info = array()) {
+	public function getForm($reservation_info = array()) {
 		$data = $reservation_info;
 
 		if (!empty($reservation_info['reservation_id'])) {
@@ -116,6 +114,8 @@ class Reservations extends Admin_Controller
 			//$data['_action']	= $this->pageUrl($this->create_url);
 			$this->redirect();
 		}
+
+		$this->user->restrictLocation($reservation_info['location_id'], 'Admin.Reservations', $this->index_url);
 
 		$data['reservation_id'] = $reservation_info['reservation_id'];
 		$data['location_name'] = $reservation_info['location_name'];
@@ -174,9 +174,9 @@ class Reservations extends Admin_Controller
 		$data['calendar'] = '';
 
 		if ($this->input->get('show_calendar') === '1') {
-			$day = ($this->list_filters['filter_day'] === '') ? date('d', time()) : $this->list_filters['filter_day'];
-			$month = ($this->list_filters['filter_month'] === '') ? date('m', time()) : $this->list_filters['filter_month'];
-			$year = ($this->list_filters['filter_year'] === '') ? date('Y', time()) : $this->list_filters['filter_year'];
+			$day = (!$this->getFilter('filter_day')) ? date('d', time()) : $this->getFilter('filter_day');
+			$month = (!$this->getFilter('filter_month')) ? date('m', time()) : $this->getFilter('filter_month');
+			$year = (!$this->getFilter('filter_year')) ? date('Y', time()) : $this->getFilter('filter_year');
 
 			$data['days'] = $this->calendar->get_total_days($month, $year);
 			$data['months'] = array('01' => 'January', '02' => 'February', '03' => 'March', '04' => 'April', '05' => 'May', '06' => 'June', '07' => 'July', '08' => 'August', '09' => 'September', '10' => 'October', '11' => 'November', '12' => 'December');
@@ -194,7 +194,7 @@ class Reservations extends Admin_Controller
 	}
 
 	protected function getCalendarData($days, $month, $year, $day) {
-		$total_tables = $this->Reservations_model->getTotalCapacityByLocation($this->list_filters['filter_location']);
+		$total_tables = $this->Reservations_model->getTotalCapacityByLocation($this->filter['filter_location']);
 
 		$reserve_dates = array();
 		for ($i = 1; $i <= $days; $i++) {
@@ -202,25 +202,22 @@ class Reservations extends Admin_Controller
 		}
 
 		$calendar_data = array();
-		$total_guests = $this->Reservations_model->getTotalGuestsByLocation($this->list_filters['filter_location'], $reserve_dates);
+		$total_guests = $this->Reservations_model->getTotalGuestsByLocation($this->filter['filter_location'], $reserve_dates);
 		foreach ($reserve_dates as $date) {
-			$state = '';
+			$state = 'no_booking';
 			if (isset($total_guests[$date]) AND $total_guest = $total_guests[$date]) {
-				if ($total_guest < 1) {
-					$state = 'no_booking';
-				} else if ($total_guest > 0 AND $total_guest < $total_tables) {
+				if ($total_guest > 0 AND $total_guest < $total_tables) {
 					$state = 'half_booked';
 				} else if ($total_guest >= $total_tables) {
 					$state = 'booked';
 				}
 			}
 
-			$fmt_day = mdate('%d', strtotime($date));
-			if ($fmt_day == $day) {
+			if (mdate('%d', strtotime($date)) == $day) {
 				$state .= ' selected';
 			}
 
-			$calendar_data[$fmt_day] = $state;
+			$calendar_data[mdate('%j', strtotime($date))] = $state;
 		}
 
 		$url = array_diff_key(array_filter($this->input->get()), array_flip(array('filter_day', 'filter_month', 'filter_year')));

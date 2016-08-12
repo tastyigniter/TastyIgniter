@@ -99,6 +99,11 @@
 									</div>
 								</div>
 							<?php } ?>
+
+							<div class="pagination-bar text-right">
+								<div class="links"><?php echo $pagination['links']; ?></div>
+								<div class="info"><?php echo $pagination['info']; ?></div>
+							</div>
 						<?php } else { ?>
 							<div class="panel panel-local">
 								<div class="panel-body">
@@ -107,11 +112,6 @@
 							</div>
 						<?php } ?>
 					</div>
-				</div>
-
-				<div class="pagination-bar text-right">
-					<div class="links"><?php echo $pagination['links']; ?></div>
-					<div class="info"><?php echo $pagination['info']; ?></div>
 				</div>
 			</div>
 			<?php echo get_partial('content_right', 'col-sm-3'); ?>
