@@ -3,7 +3,7 @@
 /**
  * Add type column to the working_hours table
  */
-class Migration_add_column_type_to_working_hours_table extends CI_Migration {
+class Migration_add_column_type_to_working_hours_table extends TI_Migration {
 
 	public function up() {
 		$this->dbforge->add_column('working_hours', array('type VARCHAR(32) NOT NULL'));
@@ -24,4 +24,4 @@ class Migration_add_column_type_to_working_hours_table extends CI_Migration {
 }
 
 /* End of file 023_add_column_type_to_working_hours_table.php */
-/* Location: ./setup/migrations/023_add_column_type_to_working_hours_table.php */
+/* Location: ./system/tastyigniter/migrations/023_add_column_type_to_working_hours_table.php */

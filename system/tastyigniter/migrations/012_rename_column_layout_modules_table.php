@@ -3,7 +3,7 @@
 /**
  * Rename column position to partial in the layout_modules table
  */
-class Migration_rename_column_layout_modules_table extends CI_Migration {
+class Migration_rename_column_layout_modules_table extends TI_Migration {
 
     public function up() {
         $this->db->query("ALTER TABLE ".$this->db->dbprefix('layout_modules')." CHANGE `position` `partial` VARCHAR(32) NOT NULL;");
@@ -15,4 +15,4 @@ class Migration_rename_column_layout_modules_table extends CI_Migration {
 }
 
 /* End of file 012_rename_column_layout_modules_table.php */
-/* Location: ./setup/migrations/012_rename_column_layout_modules_table.php */
+/* Location: ./system/tastyigniter/migrations/012_rename_column_layout_modules_table.php */

@@ -3,7 +3,7 @@
 /**
  * Update all columns with type DECIMAL(15,2) to DECIMAL(15,4)
  */
-class Migration_update_columns_with_decimal_type extends CI_Migration {
+class Migration_update_columns_with_decimal_type extends TI_Migration {
 
 	public function up() {
 		$this->db->query("ALTER TABLE ".$this->db->dbprefix('order_options')." MODIFY `order_option_price` DECIMAL(15,4);");
@@ -53,4 +53,4 @@ class Migration_update_columns_with_decimal_type extends CI_Migration {
 }
 
 /* End of file 020_update_columns_with_decimal_type.php */
-/* Location: ./setup/migrations/020_update_columns_with_decimal_type.php */
+/* Location: ./system/tastyigniter/migrations/020_update_columns_with_decimal_type.php */

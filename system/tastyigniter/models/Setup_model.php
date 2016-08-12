@@ -20,43 +20,32 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Setup_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Setup_model extends TI_Model {
+class Setup_model extends TI_Model
+{
+	protected $schema = array();
 
-	public function loadDemoSchema($demo_data) {
-		$query = TRUE;
-
-		if (isset($demo_data) AND $demo_data === '1' AND $this->db->count_all('coupons') <= 0) {
-			$file = IGNITEPATH . '/migrations/demo_schema.sql';
-			if ( ! file_exists($file)) {
-				return FALSE;
-			}
-
-			$lines = file($file);
-			if ($lines) {
-				$sql = '';
-
-				foreach ($lines as $line) {
-					if ($line AND (substr($line, 0, 1) != '#')) {
-						$sql .= $line;
-
-						if (preg_match('/;\s*$/', $line)) {
-							$sql = str_replace('INSERT INTO ti_', 'INSERT INTO ' . $this->db->dbprefix,
-							                   str_replace('INSERT INTO `ti_', 'INSERT INTO `' . $this->db->dbprefix,
-							                               $sql));
-							$sql = str_replace('REPLACE INTO ti_', 'REPLACE INTO ' . $this->db->dbprefix,
-							                   str_replace('REPLACE INTO `ti_', 'REPLACE INTO `' . $this->db->dbprefix,
-							                               $sql));
-							$this->db->query($sql);
-							$sql = '';
-						}
-					}
-				}
-
-				$query = TRUE;
-			}
+	protected function querySchema($table, $schema = 'initial') {
+		if (!empty($this->schema[$schema][$table])) {
+			$this->db->query($this->schema[$schema][$table]);
 		}
 
-		return $query;
+		if ($this->input->post('site_location_mode') === 'multi' AND !empty($this->schema[$schema][$table.'_for_multi'])) {
+			$this->db->query($this->schema[$schema][$table.'_for_multi']);
+		}
+	}
+
+	// --------------------------------------------------------------------
+
+	protected function loadSchema($schema_type = 'initial') {
+		include(IGNITEPATH . '/migrations/'.$schema_type.'_schema.php');
+
+		if (!empty($schema)) {
+			$this->schema[$schema_type] = $schema;
+		}
+
+		if ($schema_type === 'initial' AND $this->input->post('demo_data') === '1') {
+			$this->loadSchema('demo');
+		}
 	}
 
 	public function addUser($add = array()) {
@@ -70,7 +59,7 @@ class Setup_model extends TI_Model {
 		$this->db->set('staff_email', strtolower($add['site_email']));
 		$this->db->set('staff_name', $add['staff_name']);
 		$this->db->set('staff_group_id', '11');
-		$this->db->set('staff_location_id', '0');
+		$this->db->set('staff_location_id', '11');
 		$this->db->set('language_id', '11');
 		$this->db->set('timezone', '0');
 		$this->db->set('staff_status', '1');
@@ -87,7 +76,6 @@ class Setup_model extends TI_Model {
 
 			$this->db->set('username', $add['username']);
 			$this->db->set('staff_id', $staff_id);
-
 			$this->db->set('salt', $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9));
 			$this->db->set('password', sha1($salt . sha1($salt . sha1($add['password']))));
 
@@ -118,16 +106,33 @@ class Setup_model extends TI_Model {
 		return TRUE;
 	}
 
-	public function updateVersion($version = NULL) {
-		$this->db->where('sort', 'prefs');
-		$this->db->where('item', 'ti_version');
-		$this->db->delete('settings');
+	public function updateLocation($setting = array()) {
+		$this->load->model('Locations_model');
+		$this->Locations_model->save(array(
+			'location_name' => $setting['site_name'],
+			'location_email' => $setting['site_email'],
+		), '11');
 
-		$this->db->set('sort', 'prefs');
-		$this->db->set('item', 'ti_version');
-		$this->db->set('value', (empty($version)) ? TI_VERSION : $version);
-		$this->db->set('serialized', '0');
-		$this->db->insert('settings');
+		$this->load->model('Settings_model');
+		$this->Settings_model->addSetting('prefs', 'main_address', $this->Locations_model->getAddress(11), '1');
+
+		$this->load->model('Permalink_model');
+		$permalink = array('permalink_id' => '22', 'slug' => $setting['site_name']);
+		$this->Permalink_model->savePermalink('local', $permalink, 'location_id=11');
+	}
+
+	public function updateVersion($version = NULL) {
+		$this->load->model('Settings_model');
+		$this->Settings_model->where('sort', 'prefs');
+		$this->Settings_model->where('item', 'ti_version');
+		$this->Settings_model->delete();
+
+		$this->Settings_model->insert(array(
+			'sort' => 'prefs',
+			'item' => 'ti_version',
+			'value' => (empty($version)) ? TI_VERSION : $version,
+			'serialized' => '0'
+		));
 	}
 }
 

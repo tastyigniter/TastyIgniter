@@ -3,7 +3,7 @@
 /**
  * Add messages recipient to the database
  */
-class Migration_edit_messages_columns extends CI_Migration {
+class Migration_edit_messages_columns extends TI_Migration {
 
     public function up() {
         $this->dbforge->drop_column('messages', 'location_id');
@@ -35,4 +35,4 @@ class Migration_edit_messages_columns extends CI_Migration {
 }
 
 /* End of file 005_edit_messages_columns.php */
-/* Location: ./setup/migrations/005_edit_messages_columns.php */
+/* Location: ./system/tastyigniter/migrations/005_edit_messages_columns.php */

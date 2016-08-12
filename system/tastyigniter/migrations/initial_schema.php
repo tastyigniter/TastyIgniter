@@ -3,13 +3,13 @@
 /**
  * Install the initial data structure for tables:
  *	countries, currencies, customer_groups, extensions,
- *  languages, layout_modules, layout_routes, layouts,
+ *  languages, layout_modules, layout_routes, layouts, locations, location_tables
  *  mail_templates, mail_templates_data, pages, permalinks,
  *  permissions, security_questions, settings, staff_groups,
- *  statuses, uri_routes
+ *  statuses, uri_routes, working_hours
  */
 
-$insert_countries_data = "
+$schema['countries'] = "
   REPLACE INTO `".$this->db->dbprefix."countries` (`country_id`, `country_name`, `iso_code_2`, `iso_code_3`, `flag`, `format`, `status`) VALUES
   (1, 'Afghanistan', 'AF', 'AFG', 'data/flags/af.png', '', 1),
   (2, 'Albania', 'AL', 'ALB', 'data/flags/al.png', '', 1),
@@ -252,7 +252,7 @@ $insert_countries_data = "
   (239, 'Zimbabwe', 'ZW', 'ZWE', 'data/flags/zw.png', '', 1);
 ";
 
-$insert_currencies_data = "
+$schema['currencies'] = "
   REPLACE INTO `".$this->db->dbprefix."currencies` (`currency_id`, `country_id`, `currency_name`, `currency_code`, `currency_symbol`, `iso_alpha2`, `iso_alpha3`, `iso_numeric`, `flag`, `currency_status`)
   VALUES
     (1, 1, 'Afghani', 'AFN', '؋', 'AF', 'AFG', 4, 'AF.png', 0),
@@ -496,12 +496,12 @@ $insert_currencies_data = "
     (239, 239, 'Dollar', 'ZWD', 'Z$', 'ZW', 'ZWE', 716, 'ZW.png', 0);
 ";
 
-$insert_customer_groups_data = "
+$schema['customer_groups'] = "
   REPLACE INTO `".$this->db->dbprefix."customer_groups` (`customer_group_id`, `group_name`, `description`, `approval`) VALUES
   (11, 'Default', '', 0);
 ";
 
-$insert_extensions_data = "
+$schema['extensions'] = "
   REPLACE INTO `".$this->db->dbprefix."extensions` (`extension_id`, `type`, `name`, `data`, `serialized`, `status`, `title`)
   VALUES
   (11, 'module', 'account_module', 'a:1:{s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"11\";s:8:\"position\";s:4:\"left\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}}', 1, 1, 'Account'),
@@ -518,13 +518,13 @@ $insert_extensions_data = "
   (25, 'module', 'banners_module', 'a:1:{s:7:\"banners\";a:1:{i:1;a:3:{s:9:\"banner_id\";s:1:\"1\";s:5:\"width\";s:0:\"\";s:6:\"height\";s:0:\"\";}}}', 1, 0, 'Banners');
 ";
 
-$insert_languages_data = "
+$schema['languages'] = "
   REPLACE INTO `".$this->db->dbprefix."languages` (`language_id`, `code`, `name`, `image`, `directory`, `status`)
   VALUES
     (11, 'en', 'English', 'data/flags/gb.png', 'english', 1);
 ";
 
-$insert_layout_modules_data = "
+$schema['layout_modules'] = "
   REPLACE INTO `".$this->db->dbprefix."layout_modules` (`layout_module_id`, `layout_id`, `module_code`, `position`, `priority`, `status`) VALUES
     (60, 17, 'pages_module', 'content_right', 1, 1),
     (65, 11, 'slideshow', 'content_top', 1, 1),
@@ -541,7 +541,7 @@ $insert_layout_modules_data = "
     (76, 18, 'cart_module', 'content_right', 1, 1);
 ";
 
-$insert_layout_routes_data = "
+$schema['layout_routes'] = "
   REPLACE INTO `".$this->db->dbprefix."layout_routes` (`layout_route_id`, `layout_id`, `uri_route`) VALUES
     (19, 13, 'checkout'),
     (41, 16, 'reservation'),
@@ -559,7 +559,7 @@ $insert_layout_routes_data = "
     (106, 15, 'account/reviews');
 ";
 
-$insert_layouts_data = "
+$schema['layouts'] = "
   REPLACE INTO `".$this->db->dbprefix."layouts` (`layout_id`, `name`) VALUES
     (11, 'Home'),
     (12, 'Menus'),
@@ -571,11 +571,17 @@ $insert_layouts_data = "
     (19, 'Locations');
 ";
 
-$insert_mail_templates_data = "
+$schema['locations'] = "
+REPLACE INTO `" . $this->db->dbprefix . "locations` (`location_id`, `location_name`, `location_email`, `description`, `location_address_1`, `location_address_2`, `location_city`, `location_state`, `location_postcode`, `location_country_id`, `location_telephone`, `location_lat`, `location_lng`, `location_radius`, `offer_delivery`, `offer_collection`, `delivery_time`, `last_order_time`, `reservation_time_interval`, `reservation_stay_time`, `location_status`, `collection_time`, `options`, `location_image`)
+VALUES
+	(11, '', '', '', '', '', '', '', '', 0, '', 0.000000, 0.000000, 0, 1, 1, 0, 0, 0, 0, 1, 0, '', '');
+";
+
+$schema['mail_templates'] = "
     REPLACE INTO `".$this->db->dbprefix."mail_templates` (`template_id`, `name`, `language_id`, `date_added`, `date_updated`, `status`) VALUES ('11', 'Default', '1', '2014-04-16 01:49:52', '2014-06-16 14:44:13', '1');
 ";
 
-$insert_mail_templates_data_data = "
+$schema['mail_templates_data'] = "
   REPLACE INTO `".$this->db->dbprefix."mail_templates_data` (`template_data_id`, `template_id`, `code`, `subject`, `body`, `date_added`, `date_updated`) VALUES
   (11, 11, 'registration', 'Account Created at {site_name}', '<p>Hello {first_name} {last_name},</p><p>Your account has now been created and you can log in using your email address and password by visiting our website or at the following URL: <a href=\"{login_link}\">Click Here</a></p><p>Thank you for using.<br /> {signature}</p>', '2014-04-16 00:56:00', '2014-05-15 15:24:56'),
   (12, 11, 'password_reset', 'Password Reset at {site_name}', '<p>Dear {first_name} {last_name},</p><p>Your password has been reset successfull! Please <a href=\"{login_link}\" target=\"_blank\">login</a> using your new password: {created_password}.</p><p>Thank you for using.<br /> {signature}</p>', '2014-04-16 00:56:00', '2014-05-15 15:46:30'),
@@ -587,19 +593,20 @@ $insert_mail_templates_data_data = "
   (18, 11, 'reservation_alert', 'Subject here', '<p>Body here</p>', '2014-04-16 00:56:00', '2014-04-16 00:59:00');
 ";
 
-$insert_pages_data = "
+$schema['pages'] = "
   REPLACE INTO `".$this->db->dbprefix."pages` (`page_id`, `language_id`, `name`, `title`, `heading`, `content`, `meta_description`, `meta_keywords`, `layout_id`, `navigation`, `date_added`, `date_updated`, `status`)
   VALUES
     (11, 11, 'About Us', 'About Us', 'About Us', '<h3 style=\"text-align: center;\"><span style=\"color: #993300;\">Aim</span></h3>\r\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In venenatis massa ac magna sagittis, sit amet gravida metus gravida. Aenean dictum pellentesque erat, vitae adipiscing libero semper sit amet. Vestibulum nec nunc lorem. Duis vitae libero a libero hendrerit tincidunt in eu tellus. Aliquam consequat ultrices felis ut dictum. Nulla euismod felis a sem mattis ornare. Aliquam ut diam sit amet dolor iaculis molestie ac id nisl. Maecenas hendrerit convallis mi feugiat gravida. Quisque tincidunt, leo a posuere imperdiet, metus leo vestibulum orci, vel volutpat justo ligula id quam. Cras placerat tincidunt lorem eu interdum.</p>\r\n<h3 style=\"text-align: center;\"><span style=\"color: #993300;\">Mission</span></h3>\r\n<p>Ut eu pretium urna. In sed consectetur neque. In ornare odio erat, id ornare arcu euismod a. Ut dapibus sit amet erat commodo vestibulum. Praesent vitae lacus faucibus, rhoncus tortor et, bibendum justo. Etiam pharetra congue orci, eget aliquam orci. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eleifend justo eros, sit amet fermentum tellus ullamcorper quis. Cras cursus mi at imperdiet faucibus. Proin iaculis, felis vitae luctus venenatis, ante tortor porta nisi, et ornare magna metus sit amet enim. Phasellus et turpis nec metus aliquet adipiscing. Etiam at augue nec odio lacinia tincidunt. Suspendisse commodo commodo ipsum ac sollicitudin. Nunc nec consequat lacus. Donec gravida rhoncus justo sed elementum.</p>\r\n<h3 style=\"text-align: center;\"><span style=\"color: #a52a2a;\">Vision</span></h3>\r\n<p>Praesent erat massa, consequat a nulla et, eleifend facilisis risus. Nullam libero mi, bibendum id eleifend vitae, imperdiet a nulla. Fusce congue porta ultricies. Vivamus felis lectus, egestas at pretium vitae, posuere a nibh. Mauris lobortis urna nec rhoncus consectetur. Fusce sed placerat sem. Nulla venenatis elit risus, non auctor arcu lobortis eleifend. Ut aliquet vitae velit a faucibus. Suspendisse quis risus sit amet arcu varius malesuada. Vestibulum vitae massa consequat, euismod lorem a, euismod lacus. Duis sagittis dolor risus, ac vehicula mauris lacinia quis. Nulla facilisi. Duis tristique ipsum nec egestas auctor. Nullam in felis vel ligula dictum tincidunt nec a neque. Praesent in egestas elit.</p>', '', '', 17, 'a:2:{i:0;s:8:\"side_bar\";i:1;s:6:\"footer\";}', '2014-04-19 16:57:21', '2015-05-07 12:39:52', 1),
     (12, 11, 'Policy', 'Policy', 'Policy', '<div id=\"lipsum\">\r\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ligula eros, semper a lorem et, venenatis volutpat dolor. Pellentesque hendrerit lectus feugiat nulla cursus, quis dapibus dolor porttitor. Donec velit enim, adipiscing ac orci id, congue tincidunt arcu. Proin egestas nulla eget leo scelerisque, et semper diam ornare. Suspendisse potenti. Suspendisse vitae bibendum enim. Duis eu ligula hendrerit, lacinia felis in, mollis nisi. Sed gravida arcu in laoreet dictum. Nulla faucibus lectus a mollis dapibus. Fusce vehicula convallis urna, et congue nulla ultricies in. Nulla magna velit, bibendum eu odio et, euismod rhoncus sem. Nullam quis magna fermentum, ultricies neque nec, blandit neque. Etiam nec congue arcu. Curabitur sed tellus quam. Cras adipiscing odio odio, et porttitor dui suscipit eget. Aliquam non est commodo, elementum turpis at, pellentesque lorem.</p>\r\n<p>Duis nec diam diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vulputate est et lorem sagittis, et mollis libero ultricies. Nunc ultrices tortor vel convallis varius. In dolor dolor, scelerisque ac faucibus ut, aliquet ac sem. Praesent consectetur lacus quis tristique posuere. Nulla sed ultricies odio. Cras tristique vulputate facilisis.</p>\r\n<p>Mauris at metus in magna condimentum gravida eu tincidunt urna. Praesent sodales vel mi eu condimentum. Suspendisse in luctus purus. Vestibulum dignissim, metus non luctus accumsan, odio ligula pharetra massa, in eleifend turpis risus in diam. Sed non lorem nibh. Nam at feugiat urna. Curabitur interdum, diam sit amet pulvinar blandit, mauris ante scelerisque nisi, sit amet placerat mi nunc eget orci. Nulla eget quam sit amet risus rhoncus lacinia a ut eros. Praesent non libero nisi. Mauris tincidunt at purus sit amet adipiscing. Donec interdum, velit nec dignissim vehicula, libero ipsum imperdiet ligula, lacinia mattis augue dui ac lacus. Aenean molestie sed nunc at pulvinar. Fusce ornare lacus non venenatis rhoncus.</p>\r\n<p>Aenean at enim luctus ante commodo consequat nec ut mi. Sed porta adipiscing tempus. Aliquam sit amet ullamcorper ipsum, id adipiscing quam. Fusce iaculis odio ut nisi convallis hendrerit. Morbi auctor adipiscing ligula, sit amet aliquet ante consectetur at. Donec vulputate neque eleifend libero pellentesque, vitae lacinia enim ornare. Vestibulum fermentum erat blandit, ultricies felis ac, facilisis augue. Nulla facilisis mi porttitor, interdum diam in, lobortis ipsum. In molestie quam nisl, lacinia convallis tellus fermentum ac. Nulla quis velit augue. Fusce accumsan, lacus et lobortis blandit, neque magna gravida enim, dignissim ultricies tortor dui in dolor. Vestibulum vel convallis justo, quis venenatis elit. Aliquam erat volutpat. Nunc quis iaculis ligula. Suspendisse dictum sodales neque vitae faucibus. Fusce id tellus pretium, varius nunc et, placerat metus.</p>\r\n<p>Pellentesque quis facilisis mauris. Phasellus porta, metus a dignissim viverra, est elit luctus erat, nec ultricies ligula lorem eget sapien. Pellentesque ac justo velit. Maecenas semper accumsan nulla eget rhoncus. Aliquam vel urna sed nibh dignissim auctor. Integer volutpat lacus ac purus convallis, at lobortis nisi tincidunt. Vestibulum condimentum elit ac sapien placerat, at ornare libero hendrerit. Cras tincidunt nunc sit amet ante bibendum tempor. Fusce quam orci, suscipit sed eros quis, vulputate molestie metus. Nam hendrerit vitae felis et porttitor. Proin et commodo velit, id porta erat. Donec eu consectetur odio. Fusce porta odio risus. Aliquam vel erat feugiat, vestibulum elit eget, ornare sapien. Sed sed nulla justo. Sed a dolor eu justo lacinia blandit</p>\r\n</div>', '', '', 17, 'a:2:{i:0;s:8:\"side_bar\";i:1;s:6:\"footer\";}', '2014-04-19 17:21:23', '2015-05-16 09:18:39', 1);
 ";
 
-$insert_permalinks_data = "
+$schema['permalinks'] = "
   REPLACE INTO `".$this->db->dbprefix."permalinks` (`permalink_id`, `slug`, `controller`, `query`) VALUES
-  (11, 'about-us', 'pages', 'page_id=11');
+  (11, 'about-us', 'pages', 'page_id=11'),
+  (22, 'lewisham', 'local', 'location_id=11');
 ";
 
-$insert_permissions_data = "
+$schema['permissions'] = "
   REPLACE INTO `".$this->db->dbprefix."permissions` (`permission_id`, `name`, `description`, `action`, `status`)
   VALUES
     (11, 'Admin.Banners', 'Ability to access, manage, add and delete banners', 'a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}', 1),
@@ -647,7 +654,7 @@ $insert_permissions_data = "
     (54, 'Payment.PaypalExpress', 'Ability to manage paypal express payment', 'a:1:{i:0;s:6:\"manage\";}', 1);
 ";
 
-$insert_security_questions_data = "
+$schema['security_questions'] = "
   REPLACE INTO `".$this->db->dbprefix."security_questions` (`question_id`, `text`, `priority`)
   VALUES
     (11, 'Whats your pets name?', 1),
@@ -684,10 +691,9 @@ $insert_settings_data = "
   (10854, 'config', 'checkout_terms', '0', 0),
   (10855, 'config', 'stock_warning', '0', 0),
   (10856, 'config', 'stock_qty_warning', '0', 0),
-  (10857, 'config', 'registration_email', '1', 0),
-  (10858, 'config', 'customer_order_email', '1', 0),
-  (10859, 'config', 'customer_reserve_email', '1', 0),
-  (10860, 'config', 'main_address', 'a:6:{s:9:\"address_1\";s:0:\"\";s:9:\"address_2\";s:0:\"\";s:4:\"city\";s:0:\"\";s:8:\"postcode\";s:0:\"\";s:11:\"location_id\";s:0:\"\";s:10:\"country_id\";s:1:\"1\";}', 1),
+  (10857, 'config', 'registration_email', 'a:1:{i:0;s:8:\"customer\";}', 1),
+  (10858, 'config', 'order_email', 'a:2:{i:0;s:8:\"customer\";i:1;s:5:\"admin\";}', 1),
+  (10859, 'config', 'reservation_email', 'a:2:{i:0;s:8:\"customer\";i:1;s:5:\"admin\";}', 1),
   (10861, 'config', 'maps_api_key', '', 0),
   (10863, 'config', 'distance_unit', 'mi', 0),
   (10864, 'config', 'future_orders', '0', 0),
@@ -725,12 +731,12 @@ $insert_settings_data = "
   (10899, 'config', 'cache_time', '0', 0);
 ";
 
-$insert_staff_groups_data = "
+$schema['staff_groups'] = "
   REPLACE INTO `".$this->db->dbprefix."staff_groups` (`staff_group_id`, `staff_group_name`, `location_access`, `permission`) VALUES
     (11, 'Administrator', 0, 'a:44:{i:11;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:12;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:13;a:3:{i:0;s:6:\"manage\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}i:14;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:15;a:3:{i:0;s:6:\"manage\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}i:16;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:17;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:18;a:1:{i:0;s:6:\"access\";}i:19;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:20;a:2:{i:0;s:6:\"access\";i:1;s:6:\"delete\";}i:21;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:22;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:25;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:26;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:27;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:28;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:29;a:2:{i:0;s:3:\"add\";i:1;s:6:\"delete\";}i:30;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:32;a:3:{i:0;s:6:\"access\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}i:33;a:3:{i:0;s:6:\"manage\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}i:34;a:2:{i:0;s:3:\"add\";i:1;s:6:\"delete\";}i:35;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:36;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:37;a:2:{i:0;s:3:\"add\";i:1;s:6:\"delete\";}i:39;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:40;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:41;a:2:{i:0;s:6:\"access\";i:1;s:6:\"manage\";}i:42;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:43;a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}i:23;a:3:{i:0;s:6:\"manage\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}i:24;a:3:{i:0;s:6:\"manage\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}i:31;a:3:{i:0;s:6:\"manage\";i:1;s:3:\"add\";i:2;s:6:\"delete\";}i:38;a:1:{i:0;s:6:\"manage\";}i:44;a:2:{i:0;s:6:\"access\";i:1;s:6:\"manage\";}i:45;a:1:{i:0;s:6:\"manage\";}i:46;a:1:{i:0;s:6:\"manage\";}i:47;a:1:{i:0;s:6:\"manage\";}i:48;a:1:{i:0;s:6:\"manage\";}i:49;a:1:{i:0;s:6:\"manage\";}i:50;a:1:{i:0;s:6:\"manage\";}i:51;a:1:{i:0;s:6:\"manage\";}i:52;a:1:{i:0;s:6:\"manage\";}i:53;a:1:{i:0;s:6:\"manage\";}i:54;a:1:{i:0;s:6:\"manage\";}}');
 ";
 
-$insert_statuses_data = "
+$schema['statuses'] = "
   REPLACE INTO `".$this->db->dbprefix."statuses` (`status_id`, `status_name`, `status_comment`, `notify_customer`, `status_for`, `status_color`)
   VALUES
     (11, 'Received', 'Your order has been received.', 1, 'order', '#686663'),
@@ -744,10 +750,20 @@ $insert_statuses_data = "
     (19, 'Canceled', '', 0, 'order', '#ea0b29');
 ";
 
-$insert_uri_routes_data = "
+$schema['uri_routes'] = "
   REPLACE INTO `".$this->db->dbprefix."uri_routes` (`uri_route_id`, `uri_route`, `controller`, `priority`)
   VALUES
     (1, 'locations', 'local/locations', 1),
     (2, 'account', 'account/account', 2),
     (3, '(:any)', 'pages', 3);
+";
+
+$schema['working_hours'] = "REPLACE INTO `" . $this->db->dbprefix . "working_hours` (`location_id`, `weekday`, `opening_time`, `closing_time`, `status`) VALUES
+  (11, 0, '00:00:00', '23:59:00', 1),
+  (11, 1, '00:00:00', '23:59:00', 1),
+  (11, 2, '00:00:00', '23:59:00', 1),
+  (11, 3, '00:00:00', '23:59:00', 1),
+  (11, 4, '00:00:00', '23:59:00', 1),
+  (11, 5, '00:00:00', '23:59:00', 1),
+  (11, 6, '00:00:00', '23:59:00', 1);
 ";

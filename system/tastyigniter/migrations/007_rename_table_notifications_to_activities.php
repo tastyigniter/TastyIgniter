@@ -4,7 +4,7 @@
  * Drop notifications table
  * Create activities table
  */
-class Migration_rename_table_notifications_to_activities extends CI_Migration {
+class Migration_rename_table_notifications_to_activities extends TI_Migration {
 
     public function up() {
         $this->dbforge->drop_table('notifications');
@@ -48,4 +48,4 @@ class Migration_rename_table_notifications_to_activities extends CI_Migration {
 }
 
 /* End of file 007_rename_table_notifications_to_activities.php */
-/* Location: ./setup/migrations/007_rename_table_notifications_to_activities.php */
+/* Location: ./system/tastyigniter/migrations/007_rename_table_notifications_to_activities.php */

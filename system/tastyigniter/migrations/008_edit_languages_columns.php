@@ -4,7 +4,7 @@
  * Drop column can_delete from the languages table
  * Rename column directory to idiom in the staff_groups table
  */
-class Migration_edit_languages_columns extends CI_Migration {
+class Migration_edit_languages_columns extends TI_Migration {
 
     public function up() {
         $this->db->query("ALTER TABLE ".$this->db->dbprefix('languages')." CHANGE `directory` `idiom` VARCHAR(32) NOT NULL;");
@@ -24,4 +24,4 @@ class Migration_edit_languages_columns extends CI_Migration {
 }
 
 /* End of file 008_edit_languages_columns.php */
-/* Location: ./setup/migrations/008_edit_languages_columns.php */
+/* Location: ./system/tastyigniter/migrations/008_edit_languages_columns.php */
