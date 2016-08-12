@@ -14,13 +14,13 @@
 							<span class="help-block"><?php echo lang('help_location_search_mode'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
 								<?php if ($location_search_mode == 'multi') { ?>
-									<label class="btn btn-default"><input type="radio" name="location_search_mode" value="single" <?php echo set_radio('location_search_mode', 'single'); ?>><?php echo lang('text_single'); ?></label>
-									<label class="btn btn-default active"><input type="radio" name="location_search_mode" value="multi" <?php echo set_radio('location_search_mode', 'multi', TRUE); ?>><?php echo lang('text_multi'); ?></label>
+									<label class="btn btn-default"><input type="radio" name="location_search_mode" value="single" <?php echo set_radio('location_search_mode', 'single'); ?>><?php echo lang('text_no'); ?></label>
+									<label class="btn btn-default active"><input type="radio" name="location_search_mode" value="multi" <?php echo set_radio('location_search_mode', 'multi', TRUE); ?>><?php echo lang('text_yes'); ?></label>
 								<?php } else { ?>
-									<label class="btn btn-default active"><input type="radio" name="location_search_mode" value="single" <?php echo set_radio('location_search_mode', 'single', TRUE); ?>><?php echo lang('text_single'); ?></label>
-									<label class="btn btn-default"><input type="radio" name="location_search_mode" value="multi" <?php echo set_radio('location_search_mode', 'multi'); ?>><?php echo lang('text_multi'); ?></label>
+									<label class="btn btn-default active"><input type="radio" name="location_search_mode" value="single" <?php echo set_radio('location_search_mode', 'single', TRUE); ?>><?php echo lang('text_no'); ?></label>
+									<label class="btn btn-default"><input type="radio" name="location_search_mode" value="multi" <?php echo set_radio('location_search_mode', 'multi'); ?>><?php echo lang('text_yes'); ?></label>
 								<?php } ?>
 							</div>
 							<?php echo form_error('location_search_mode', '<span class="text-danger">', '</span>'); ?>
@@ -33,12 +33,14 @@
 						<div class="col-sm-5">
 							<select name="use_location" class="form-control">
 								<option value="0"><?php echo lang('text_use_default'); ?></option>
+								<?php if (!is_single_location()) { ?>
 								<?php foreach ($locations as $location) { ?>
 									<?php if ($location['location_id'] === $use_location) { ?>
 										<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('use_location', $location['location_id'], TRUE); ?> ><?php echo $location['location_name']; ?></option>
 									<?php } else { ?>
 										<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('use_location', $location['location_id']); ?> ><?php echo $location['location_name']; ?></option>
 									<?php } ?>
+								<?php } ?>
 								<?php } ?>
 							</select>
 							<?php echo form_error('use_location', '<span class="text-danger">', '</span>'); ?>
