@@ -45,10 +45,10 @@ class Register extends Main_Controller
 	}
 
 	protected function _addCustomer() {
-		if ($this->validateForm() === TRUE) {
-			$this->load->model('Customers_model');                                                    // load the customers model
-			$this->load->model('Customer_groups_model');
+		$this->load->model('Customers_model');                                                    // load the customers model
+		$this->load->model('Customer_groups_model');
 
+		if ($this->validateForm() === TRUE) {
 			// if successful CREATE an array with the following $_POST data values
 			$add['first_name'] = $this->input->post('first_name');
 			$add['last_name'] = $this->input->post('last_name');

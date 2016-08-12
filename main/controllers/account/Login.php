@@ -13,8 +13,12 @@ class Login extends Main_Controller
 
 		$this->template->setTitle($this->lang->line('text_heading'));
 
-		$data['reset_url'] = site_url('account/reset');
-		$data['register_url'] = site_url('account/register');
+		if ($this->input->get('redirect')) {
+			$prepend = '?redirect=' . $this->input->get('redirect');
+		}
+
+		$data['reset_url'] = site_url('account/reset' . $prepend);
+		$data['register_url'] = site_url('account/register' . $prepend);
 
 		if ($this->input->post()) {                                                                // checks if $_POST data is set
 			if ($this->validateForm() === TRUE) {

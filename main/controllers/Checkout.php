@@ -47,7 +47,7 @@ class Checkout extends Main_Controller
 			redirect(restaurant_url());                                                                    // redirect to previous page and display error
 		}
 
-		$prepend = '?redirect=' . current_url();
+		$prepend = '?redirect=' . str_replace(site_url(), '/', current_url());
 		if (!$this->customer->islogged() AND $this->config->item('guest_order') !== '1') {                                            // else if customer is not logged in
 			$this->alert->set('alert', $this->lang->line('alert_customer_not_logged'));
 			redirect('account/login' . $prepend);                                                            // redirect to account register page and display error
