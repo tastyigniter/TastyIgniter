@@ -8,16 +8,17 @@ class Messages extends Admin_Controller
 	public $edit_url = 'messages/compose?id={id}';
 	public $view_url = 'messages/view?id={id}&folder={folder}';
 
-	public $list_filters = array(
+	public $filter = array(
 		'filter_search'    => '',
 		'filter_recipient' => '',
 		'filter_type'      => '',
 		'filter_date'      => '',
-		'sort_by'          => 'messages.date_added',
-		'order_by'         => 'DESC',
+		'filter_folder'    => 'inbox',
 	);
 
-	public $sort_columns = array('send_type', 'date_added');
+	public $default_sort = array('messages.date_added', 'DESC');
+
+	public $sort = array('send_type', 'date_added');
 
 	public $folders = array();
 	public $labels = array();
@@ -46,8 +47,6 @@ class Messages extends Admin_Controller
 	}
 
 	public function index() {
-		$this->list_filters['filter_folder'] = 'inbox';
-
 		$this->template->setTitle($this->lang->line('text_title'));
 		$this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $this->lang->line('text_inbox')));
 		$this->template->setButton($this->lang->line('button_compose'), array('class' => 'btn btn-primary', 'href' => site_url('messages/compose')));
@@ -61,7 +60,7 @@ class Messages extends Admin_Controller
 	public function all() {
 		$this->user->restrict('Admin.Messages');
 
-		$this->list_filters['filter_folder'] = 'all';
+		$this->setFilter(array('filter_folder' => 'all'));
 		$this->index_url = 'messages/all';
 
 		$this->template->setTitle($this->lang->line('text_title'));
@@ -77,7 +76,7 @@ class Messages extends Admin_Controller
 	public function draft() {
 		$this->user->restrict('Admin.Messages');
 
-		$this->list_filters['filter_folder'] = 'draft';
+		$this->setFilter(array('filter_folder' => 'draft'));
 		$this->index_url = 'messages/draft';
 
 		$this->template->setTitle($this->lang->line('text_title'));
@@ -91,7 +90,6 @@ class Messages extends Admin_Controller
 	}
 
 	public function sent() {
-		$this->list_filters['filter_folder'] = 'sent';
 		$this->index_url = 'messages/sent';
 
 		$this->template->setTitle($this->lang->line('text_title'));
@@ -99,13 +97,13 @@ class Messages extends Admin_Controller
 		$this->template->setButton($this->lang->line('button_compose'), array('class' => 'btn btn-primary', 'href' => site_url('messages/compose')));
 		$this->template->setButton($this->lang->line('button_icon_filter'), array('class' => 'btn btn-default btn-filter pull-right', 'data-toggle' => 'button'));
 
+		$this->setFilter(array('filter_folder' => 'sent'));
 		$data = $this->getList();
 
 		$this->template->render('messages', $data);
 	}
 
 	public function archive() {
-		$this->list_filters['filter_folder'] = 'archive';
 		$this->index_url = 'messages/archive';
 
 		$this->template->setTitle($this->lang->line('text_title'));
@@ -113,6 +111,7 @@ class Messages extends Admin_Controller
 		$this->template->setButton($this->lang->line('button_compose'), array('class' => 'btn btn-primary', 'href' => site_url('messages/compose')));
 		$this->template->setButton($this->lang->line('button_icon_filter'), array('class' => 'btn btn-default btn-filter pull-right', 'data-toggle' => 'button'));
 
+		$this->setFilter(array('filter_folder' => 'archive'));
 		$data = $this->getList();
 
 		$this->template->render('messages', $data);
@@ -121,7 +120,7 @@ class Messages extends Admin_Controller
 	public function view() {
 		$message_info = $this->Messages_model->viewMessage((int)$this->input->get('id'), $this->user->getStaffId());
 
-		if (empty($message_info)) $this->redirect($this->index_url);
+		if (empty($message_info)) $this->redirect();
 
 		$message_folder = $this->input->get('folder');
 		$previous_uri = (empty($message_folder) OR $message_folder === 'inbox') ? 'messages' : 'messages/' . $message_folder;
@@ -171,7 +170,7 @@ class Messages extends Admin_Controller
 	}
 
 	public function latest() {
-		$this->list_filters = array_merge($this->list_filters, array('filter_folder' => 'inbox', 'limit' => '10'));
+		$this->setFilter(array('filter_folder' => 'inbox', 'limit' => '10'));
 		$this->index_url = 'messages/latest';
 
 		$data = $this->getList();
@@ -179,25 +178,22 @@ class Messages extends Admin_Controller
 		$this->template->render('messages_latest', $data);
 	}
 
-	protected function getList() {
-		$data = $filter = array_merge($this->list_filters, $this->sort_columns);
+	public function getList() {
+		$this->setFilter('filter_staff', $this->user->getStaffId());
+		$data = $filter = array_merge($this->getFilter(), $this->getSort());
 
 		if ($this->input->post('message_state')) {
 			if ($this->_updateMessageState($this->input->post('message_state'), $this->user->getStaffId(), $data['filter_folder']) === TRUE) {
 				$this->redirect(current_url());
 			}
 		}
-
-		$data['order_by_active'] = $this->list_filters['order_by'] . ' active';
-		$this->list_filters['filter_staff'] = $this->user->getStaffId();
-
-		$message_state = ($data['filter_folder'] === 'inbox') ? 'message message-unread active' : 'message';
-
+		
 		$data['folders'] = $this->folders;
 		$data['labels'] = $this->labels;
+		$message_state = ($data['filter_folder'] === 'inbox') ? 'message message-unread active' : 'message';
 
 		$data['messages'] = array();
-		$results = $this->Messages_model->paginate($this->list_filters, $this->index_url);
+		$results = $this->Messages_model->paginate($this->getFilter());
 		foreach ($results->list as $result) {
 			$date_added = time_elapsed($result['date_added']);
 			if (strpos($date_added, 'month') !== 'FALSE' OR strpos($date_added, 'year') !== 'FALSE') {
@@ -293,7 +289,7 @@ class Messages extends Admin_Controller
 		return $data;
 	}
 
-	protected function getForm($message_info = array()) {
+	public function getForm($message_info = array()) {
 		$data = $message_info;
 
 		$message_id = 0;

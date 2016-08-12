@@ -3,14 +3,14 @@
 class Pages extends Admin_Controller
 {
 
-	public $list_filters = array(
+	public $filter = array(
 		'filter_search' => '',
 		'filter_status' => '',
-		'sort_by'       => '',
-		'order_by'      => 'DESC',
 	);
 
-	public $sort_columns = array('order_id', 'location_name', 'first_name', 'status_name',
+	public $default_sort = array('page_id', 'DESC');
+
+	public $sort = array('order_id', 'location_name', 'first_name', 'status_name',
 		'order_type', 'payment', 'order_total', 'order_time', 'date_added');
 
 	public function __construct() {
@@ -64,12 +64,11 @@ class Pages extends Admin_Controller
 		$this->template->render('pages_edit', $data);
 	}
 
-	protected function getList() {
-		$data = array_merge($this->list_filters, $this->sort_columns);
-		$data['order_by_active'] = $this->list_filters['order_by'] . ' active';
+	public function getList() {
+		$data = array_merge($this->getFilter(), $this->getSort());
 
 		$data['pages'] = array();
-		$results = $this->Pages_model->paginate($this->list_filters, $this->index_url);
+		$results = $this->Pages_model->paginate($this->getFilter());
 		foreach ($results->list as $result) {
 			$data['pages'][] = array_merge($result, array(
 				'preview' => root_url('pages?page_id=' . $result['page_id']),
@@ -82,7 +81,7 @@ class Pages extends Admin_Controller
 		return $data;
 	}
 
-	protected function getForm($page_info) {
+	public function getForm($page_info) {
 		$data = $page_info;
 
 		$page_id = 0;

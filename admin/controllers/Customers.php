@@ -2,15 +2,15 @@
 
 class Customers extends Admin_Controller
 {
-	public $list_filters = array(
+	public $filter = array(
 		'filter_search' => '',
 		'filter_date'   => '',
 		'filter_status' => '',
-		'sort_by'       => 'date_added',
-		'order_by'      => 'DESC',
 	);
 
-	public $sort_columns = array('first_name', 'last_name', 'email', 'date_added', 'customer_id');
+	public $default_sort = array('date_added', 'DESC');
+
+	public $sort = array('first_name', 'last_name', 'email', 'date_added', 'customer_id');
 
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
@@ -108,15 +108,14 @@ class Customers extends Admin_Controller
 		$this->output->set_output(json_encode($json));
 	}
 
-	protected function getList() {
-		$data = array_merge($this->list_filters, $this->sort_columns);
-		$data['order_by_active'] = $this->list_filters['order_by'] . ' active';
+	public function getList() {
+		$data = array_merge($this->getFilter(), $this->getSort());
 
 		$data['country_id'] = $this->config->item('country_id');
 		$data['access_customer_account'] = $this->user->canAccessCustomerAccount();
 
 		$data['customers'] = array();
-		$results = $this->Customers_model->paginate($this->list_filters, $this->index_url);
+		$results = $this->Customers_model->paginate($this->getFilter());
 		foreach ($results->list as $result) {
 			$data['customers'][] = array_merge($result, array(
 				'date_added' => day_elapsed($result['date_added']),
@@ -136,7 +135,7 @@ class Customers extends Admin_Controller
 		return $data;
 	}
 
-	protected function getForm($customer_info = array()) {
+	public function getForm($customer_info = array()) {
 		$data = $customer_info;
 
 		$data['_action'] = $this->pageUrl($this->create_url);

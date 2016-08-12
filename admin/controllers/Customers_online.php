@@ -3,17 +3,17 @@
 class Customers_online extends Admin_Controller
 {
 
-	public $list_filters = array(
+	public $filter = array(
 		'filter_search' => '',
 		'filter_access' => '',
 		'filter_date'   => '',
 		'filter_type'   => 'online',
 		'time_out'      => '',
-		'sort_by'       => 'customers_online.date_added',
-		'order_by'      => 'DESC',
 	);
 
-	public $sort_columns = array('date_added');
+	public $default_sort = array('customers_online.date_added', 'DESC');
+
+	public $sort = array('date_added');
 
 	public function __construct() {
 		parent::__construct();
@@ -31,11 +31,8 @@ class Customers_online extends Admin_Controller
 		$this->template->setButton($this->lang->line('button_icon_filter'), array('class' => 'btn btn-default btn-filter pull-right', 'data-toggle' => 'button'));
 		$this->template->setButton($this->lang->line('button_option'), array('class' => 'btn btn-default pull-right', 'href' => site_url('settings#system')));
 
-		$filter = array();
 		$online_time_out = ($this->config->item('customer_online_time_out') > 120) ? $this->config->item('customer_online_time_out') : 120;
-		$filter['time_out'] = mdate('%Y-%m-%d %H:%i:%s', time() - $online_time_out);
-
-		$this->list_filters = array_merge($this->list_filters, $filter);
+		$this->setFilter(array('time_out' => mdate('%Y-%m-%d %H:%i:%s', time() - $online_time_out)));
 
 		$data = $this->getList();
 
@@ -48,16 +45,15 @@ class Customers_online extends Admin_Controller
 		$this->template->setButton($this->lang->line('button_icon_filter'), array('class' => 'btn btn-default btn-filter pull-right', 'data-toggle' => 'button'));
 		$this->template->setButton($this->lang->line('button_option'), array('class' => 'btn btn-default pull-right', 'href' => site_url('settings#system')));
 
-		$this->list_filters = array_merge($this->list_filters, array('filter_type' => 'all'));
+		$this->setFilter(array('filter_type' => 'all'));
 
 		$data = $this->getList();
 
 		$this->template->render('customers_online', $data);
 	}
 
-	protected function getList() {
-		$data = array_merge($this->list_filters, $this->sort_columns);
-		$data['order_by_active'] = $this->list_filters['order_by'] . ' active';
+	public function getList() {
+		$data = array_merge($this->getFilter(), $this->getSort());
 
 		if ($data['filter_type'] === 'online') {
 			$data['text_empty'] = $this->lang->line('text_empty');
@@ -66,7 +62,7 @@ class Customers_online extends Admin_Controller
 		}
 
 		$data['customers_online'] = array();
-		$results = $this->Customer_online_model->with('customers', 'countries')->paginate($this->list_filters, $this->index_url);
+		$results = $this->Customer_online_model->paginate($this->getFilter());
 		foreach ($results->list as $online) {
 			$country_code = ($online['country_code']) ? strtolower($online['country_code']) : 'no_flag';
 			$data['customers_online'][] = array_merge($online, array(

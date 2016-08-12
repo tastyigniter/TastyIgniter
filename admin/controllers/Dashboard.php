@@ -2,12 +2,7 @@
 
 class Dashboard extends Admin_Controller
 {
-
-	public $list_filters = array(
-		'sort_by'  => '',
-		'order_by' => '',
-	);
-
+	
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
 
@@ -122,8 +117,8 @@ class Dashboard extends Admin_Controller
 	protected function getActivities() {
 		$activities = array();
 		$this->load->model('Activities_model');
-		$this->list_filters = array_merge($this->list_filters, array('page' => '1', 'limit' => '5'));
-		$results = $this->Activities_model->paginate($this->list_filters);
+		$this->setFilter(array('page' => '1', 'limit' => '5'));
+		$results = $this->Activities_model->paginate($this->getFilter());
 		foreach ($results->list as $result) {
 			$activities[] = array(
 				'activity_id'  => $result['activity_id'],
@@ -140,8 +135,8 @@ class Dashboard extends Admin_Controller
 
 	protected function getTopCustomers() {
 		$top_customers = array();
-		$this->list_filters = array_merge($this->list_filters, array('limit' => '6'));
-		$results = $this->Dashboard_model->getTopCustomers($this->list_filters);
+		$this->setFilter(array('limit' => '6'));
+		$results = $this->Dashboard_model->getTopCustomers($this->getFilter());
 		foreach ($results as $result) {
 			$top_customers[] = array(
 				'first_name'   => $result['first_name'],
@@ -164,11 +159,11 @@ class Dashboard extends Admin_Controller
 			$filter['filter_location'] = $this->user->getLocationId();
 		}
 
-		$this->list_filters = array_merge($this->list_filters, $filter);
+		$this->setFilter($filter);
 
 		$orders = array();
 		$this->load->model('Orders_model');
-		$results = $this->Orders_model->with('locations', 'statuses')->paginate($this->list_filters);
+		$results = $this->Orders_model->paginate($this->getFilter());
 		foreach ($results->list as $result) {
 			$current_date = mdate('%d-%m-%Y', time());
 			$date_added = mdate('%d-%m-%Y', strtotime($result['date_added']));

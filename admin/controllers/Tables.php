@@ -6,14 +6,14 @@
 class Tables extends Admin_Controller
 {
 
-	public $list_filters = array(
+	public $filter = array(
 		'filter_search' => '',
 		'filter_status' => '',
-		'sort_by'       => 'table_id',
-		'order_by'      => 'ASC',
 	);
 
-	public $sort_columns = array('table_name', 'min_capacity', 'max_capacity', 'table_id');
+	public $default_sort = array('table_id', 'ASC');
+	
+	public $sort = array('table_name', 'min_capacity', 'max_capacity', 'table_id');
 
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
@@ -83,12 +83,11 @@ class Tables extends Admin_Controller
 		$this->output->set_output(json_encode($json));
 	}
 
-	protected function getList() {
-		$data = array_merge($this->list_filters, $this->sort_columns);
-		$data['order_by_active'] = $this->list_filters['order_by'] . ' active';
+	public function getList() {
+		$data = array_merge($this->getFilter(), $this->getSort());
 
 		$data['tables'] = array();
-		$results = $this->Tables_model->paginate($this->list_filters, $this->index_url);
+		$results = $this->Tables_model->paginate($this->getFilter());
 		foreach ($results->list as $result) {
 			$data['tables'][] = array_merge($result, array(
 				'edit' => $this->pageUrl($this->edit_url, array('id' => $result['table_id'])),
@@ -100,7 +99,7 @@ class Tables extends Admin_Controller
 		return $data;
 	}
 
-	protected function getForm($table_info) {
+	public function getForm($table_info) {
 		$table_id = 0;
 		$data['_action'] = $this->pageUrl($this->create_url);
 		if (!empty($table_info['table_id'])) {

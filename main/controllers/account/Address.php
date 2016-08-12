@@ -3,11 +3,6 @@
 class Address extends Main_Controller
 {
 
-	public $list_filters = array(
-		'sort_by'  => '',
-		'order_by' => '',
-	);
-
 	public function __construct() {
 		parent::__construct();                                                                    //  calls the constructor
 
@@ -30,7 +25,7 @@ class Address extends Main_Controller
 		$this->template->setTitle($this->lang->line('text_heading'));
 		$this->template->setHeading($this->lang->line('text_heading'));
 
-		$this->list_filters['customer_id'] = (int)$this->customer->getId();
+		$this->filter['customer_id'] = (int)$this->customer->getId();
 
 		$data['continue_url'] = $this->pageUrl('account/address/edit');
 		$data['back_url'] = $this->pageUrl('account/account');
@@ -39,7 +34,7 @@ class Address extends Main_Controller
 
 		$this->load->library('country');
 		$data['addresses'] = array();
-		$results = $this->Addresses_model->paginate($this->list_filters, 'account/address');                                // retrieve customer address data from getAddresses method in Customers model
+		$results = $this->Addresses_model->paginate($this->filter, current_url());                                // retrieve customer address data from getAddresses method in Customers model
 		if ($results->list) {
 			foreach ($results->list as $result) {                                                        // loop through the customer address data
 				$data['addresses'][] = array_merge($result, array(                                                    // create array of customer address data to pass to view

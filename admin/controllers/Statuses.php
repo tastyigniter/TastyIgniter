@@ -3,14 +3,14 @@
 class Statuses extends Admin_Controller
 {
 
-	public $list_filters = array(
+	public $filter = array(
 		'filter_search' => '',
 		'filter_type'   => '',
-		'sort_by'       => 'status_for',
-		'order_by'      => 'ASC',
 	);
 
-	public $sort_columns = array('status_id', 'status_name', 'status_for', 'notify_customer');
+	public $default_sort = array('status_for', 'ASC');
+	
+	public $sort = array('status_id', 'status_name', 'status_for', 'notify_customer');
 
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
@@ -71,12 +71,11 @@ class Statuses extends Admin_Controller
 		}
 	}
 
-	protected function getList() {
-		$data = array_merge($this->list_filters, $this->sort_columns);
-		$data['order_by_active'] = $this->list_filters['order_by'] . ' active';
+	public function getList() {
+		$data = array_merge($this->getFilter(), $this->getSort());
 
 		$data['statuses'] = array();
-		$results = $this->Statuses_model->paginate($this->list_filters, $this->index_url);
+		$results = $this->Statuses_model->paginate($this->getFilter());
 		foreach ($results->list as $result) {
 			$data['statuses'][] = array_merge($result, array(
 				'edit' => $this->pageUrl($this->edit_url, array('id' => $result['status_id'])),
@@ -88,7 +87,7 @@ class Statuses extends Admin_Controller
 		return $data;
 	}
 
-	protected function getForm($status_info) {
+	public function getForm($status_info) {
 		$data = $status_info;
 
 		$status_id = 0;

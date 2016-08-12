@@ -10,15 +10,15 @@ class Extensions extends Admin_Controller
 
 	public $create_url = 'extensions/add';
 
-	public $list_filters = array(
+	public $filter = array(
 		'filter_search' => '',
 		'filter_type'   => 'module',
 		'filter_status' => '',
-		'sort_by'       => 'name',
-		'order_by'      => 'ASC',
 	);
 
-	public $sort_columns = array('name', 'type');
+	public $default_sort = array('name', 'ASC');
+
+	public $sort = array('name', 'type');
 
 	public function __construct() {
 		parent::__construct();
@@ -185,12 +185,11 @@ class Extensions extends Admin_Controller
 		$this->template->render('extensions_delete', $data);
 	}
 
-	protected function getList() {
-		$data = array_merge($this->list_filters, $this->sort_columns);
-		$data['order_by_active'] = $this->list_filters['order_by'] . ' active';
+	public function getList() {
+		$data = array_merge($this->getFilter(), $this->getSort());
 
 		$data['extensions'] = array();
-		$results = $this->Extensions_model->paginate($this->list_filters, $this->index_url);
+		$results = $this->Extensions_model->paginate($this->getFilter());
 		foreach ($results->list as $result) {
 			if (!is_array($result['config'])) {
 				$this->alert->warning_now($result['config']);
@@ -214,7 +213,7 @@ class Extensions extends Admin_Controller
 		return $data;
 	}
 
-	protected function getForm($data = array()) {
+	public function getForm($data = array()) {
 		$extension_name = ($this->input->get('name')) ? $this->input->get('name') : $this->uri->rsegment(4);
 		$extension_type = $this->uri->rsegment(3);
 		$loaded = $error_msg = FALSE;

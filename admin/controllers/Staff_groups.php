@@ -3,10 +3,7 @@
 class Staff_groups extends Admin_Controller
 {
 
-	public $list_filters = array(
-		'sort_by'  => 'staff_group_id',
-		'order_by' => 'DESC',
-	);
+	public $default_sort = array('staff_group_id', 'DESC');
 
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
@@ -53,12 +50,11 @@ class Staff_groups extends Admin_Controller
 		$this->template->render('staff_groups_edit', $data);
 	}
 
-	protected function getList() {
-		$data = array_merge($this->list_filters, $this->sort_columns);
-		$data['order_by_active'] = $this->list_filters['order_by'] . ' active';
+	public function getList() {
+		$data = array_merge($this->getFilter(), $this->getSort());
 
 		$data['staff_groups'] = array();
-		$results = $this->Staff_groups_model->paginate($this->list_filters, $this->index_url);
+		$results = $this->Staff_groups_model->paginate($this->getFilter());
 		foreach ($results->list as $result) {
 			$data['staff_groups'][] = array_merge($result, array(
 				'users_count' => $this->Staff_groups_model->getUsersCount($result['staff_group_id']),
@@ -71,7 +67,7 @@ class Staff_groups extends Admin_Controller
 		return $data;
 	}
 
-	protected function getForm($group_info) {
+	public function getForm($group_info) {
 		$data = $group_info;
 
 		$staff_group_id = 0;

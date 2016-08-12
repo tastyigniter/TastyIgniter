@@ -3,17 +3,17 @@
 class Staffs extends Admin_Controller
 {
 
-	public $list_filters = array(
+	public $filter = array(
 		'filter_search'   => '',
 		'filter_group'    => '',
 		'filter_location' => '',
 		'filter_date'     => '',
 		'filter_status'   => '',
-		'sort_by'         => 'staffs.date_added',
-		'order_by'        => 'DESC',
 	);
 
-	public $sort_columns = array('staff_name', 'staff_group_name', 'location_name', 'date_added', 'staff_id');
+	public $default_sort = array('staffs.date_added', 'DESC');
+
+	public $sort = array('staff_name', 'staff_group_name', 'location_name', 'date_added', 'staff_id');
 
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
@@ -95,12 +95,15 @@ class Staffs extends Admin_Controller
 		$this->output->set_output(json_encode($json));
 	}
 
-	protected function getList() {
-		$data = array_merge($this->list_filters, $this->sort_columns);
-		$data['order_by_active'] = $this->list_filters['order_by'] . ' active';
+	public function getList() {
+		if ($data['user_strict_location'] = $this->user->isStrictLocation()) {
+			$this->setFilter('filter_location', $this->user->getLocationId());
+		}
+
+		$data = array_merge($this->getFilter(), $this->getSort(), $data);
 
 		$data['staffs'] = array();
-		$results = $this->Staffs_model->paginate($this->list_filters, $this->index_url);
+		$results = $this->Staffs_model->paginate($this->getFilter());
 		foreach ($results->list as $result) {
 			$data['staffs'][] = array_merge($result, array(
 				'date_added' => day_elapsed($result['date_added']),
@@ -125,7 +128,7 @@ class Staffs extends Admin_Controller
 		return $data;
 	}
 
-	protected function getForm($staff_info, $user_info) {
+	public function getForm($staff_info, $user_info) {
 		$staff_id = 0;
 		$data['_action'] = $this->pageUrl($this->create_url);
 		if (!empty($staff_info['staff_id'])) {

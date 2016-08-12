@@ -29,7 +29,7 @@ class Uri_routes extends Admin_Controller
 		$this->template->render('uri_routes', $data);
 	}
 
-	protected function getList() {
+	public function getList() {
 		if ($this->input->post('routes')) {
 			$data['routes'] = $this->input->post('routes');
 		} else {

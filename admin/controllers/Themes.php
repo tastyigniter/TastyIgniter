@@ -200,7 +200,7 @@ class Themes extends Admin_Controller
 		$this->template->render('themes_delete', $data);
 	}
 
-	protected function getList() {
+	public function getList() {
 		$data['themes'] = array();
 		$results = $this->Themes_model->paginate();
 		foreach ($results->list as $name => $theme) {
@@ -225,7 +225,7 @@ class Themes extends Admin_Controller
 		return $data;
 	}
 
-	protected function getForm($theme_info) {
+	public function getForm($theme_info) {
 		$url = '?';
 
 		$_GET['extension_id'] = $theme_info['extension_id'];

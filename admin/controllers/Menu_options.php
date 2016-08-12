@@ -3,14 +3,14 @@
 class Menu_options extends Admin_Controller
 {
 
-	public $list_filters = array(
+	public $filter = array(
 		'filter_search'       => '',
 		'filter_display_type' => '',
-		'sort_by'             => 'option_id',
-		'order_by'            => 'DESC',
 	);
 
-	public $sort_columns = array('option_name', 'priority', 'display_type', 'option_id');
+	public $default_sort = array('option_id', 'DESC');
+
+	public $sort = array('option_name', 'priority', 'display_type', 'option_id');
 
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
@@ -86,12 +86,11 @@ class Menu_options extends Admin_Controller
 		$this->output->set_output(json_encode($json));
 	}
 
-	protected function getList() {
-		$data = array_merge($this->list_filters, $this->sort_columns);
-		$data['order_by_active'] = $this->list_filters['order_by'] . ' active';
+	public function getList() {
+		$data = array_merge($this->getFilter(), $this->getSort());
 
 		$data['menu_options'] = array();
-		$results = $this->Menu_options_model->paginate($this->list_filters, $this->index_url);
+		$results = $this->Menu_options_model->paginate($this->getFilter());
 		foreach ($results->list as $result) {
 			$data['menu_options'][] = array_merge($result, array(
 				'display_type' => ucwords($result['display_type']),
@@ -104,7 +103,7 @@ class Menu_options extends Admin_Controller
 		return $data;
 	}
 
-	protected function getForm($option_info = array()) {
+	public function getForm($option_info = array()) {
 		$data = $option_info;
 
 		$option_id = 0;

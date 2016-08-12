@@ -65,7 +65,7 @@ class Account extends Main_Controller
 		$filter = array('customer_id' => $this->customer->getId(), 'limit' => '5', 'page' => '', 'order_by' => 'DESC');
 
 		$data['orders'] = array();
-		$results = $this->Orders_model->paginate($filter + array('sort_by' => 'order_id'));                                    // retrieve customer orders based on customer id from getMainOrders method in Orders model
+		$results = $this->Orders_model->paginate($filter + array('sort_by' => 'order_id'), current_url());                                    // retrieve customer orders based on customer id from getMainOrders method in Orders model
 		foreach ($results->list as $result) {
 			$data['orders'][] = array_merge($result, array(                                                            // create array of customer orders to pass to view
 				'order_date' => day_elapsed($result['order_date']),
@@ -75,7 +75,7 @@ class Account extends Main_Controller
 		}
 
 		$data['reservations'] = array();
-		$results = $this->Reservations_model->paginate($filter + array('sort_by' => 'reserve_date'));                                // retrieve customer reservations based on customer id from getMainReservations method in Reservations model
+		$results = $this->Reservations_model->paginate($filter + array('sort_by' => 'reserve_date'), current_url());                                // retrieve customer reservations based on customer id from getMainReservations method in Reservations model
 		foreach ($results->list as $result) {
 			$data['reservations'][] = array_merge($result, array(                                                            // create array of customer reservations to pass to view
 				'reserve_date' => day_elapsed($result['reserve_date']),
@@ -85,7 +85,7 @@ class Account extends Main_Controller
 		}
 
 		$data['messages'] = array();
-		$results = $this->Messages_model->paginate($filter + array('sort_by' => 'messages.date_added'));                                    // retrieve all customer messages from getMainInbox method in Messages model
+		$results = $this->Messages_model->paginate($filter + array('sort_by' => 'messages.date_added'), current_url());                                    // retrieve all customer messages from getMainInbox method in Messages model
 		foreach ($results->list as $result) {
 			$data['messages'][] = array_merge($result, array(                                                        // create array of customer messages to pass to view
 				'date_added' => day_elapsed($result['date_added']),

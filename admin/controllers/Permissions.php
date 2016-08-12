@@ -3,15 +3,15 @@
 class Permissions extends Admin_Controller
 {
 
-	public $list_filters = array(
+	public $filter = array(
 		'page' => '',
 		'filter_search' => '',
 		'filter_status' => '',
-		'sort_by'       => 'permission_id',
-		'order_by'      => 'DESC',
 	);
 
-	public $sort_columns = array('name', 'status', 'permission_id');
+	public $default_sort = array('permission_id', 'DESC');
+
+	public $sort = array('name', 'status', 'permission_id');
 
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
@@ -59,12 +59,11 @@ class Permissions extends Admin_Controller
 		$this->template->render('permissions_edit', $data);
 	}
 
-	protected function getList() {
-		$data = array_merge($this->list_filters, $this->sort_columns);
-		$data['order_by_active'] = $this->list_filters['order_by'] . ' active';
+	public function getList() {
+		$data = array_merge($this->getFilter(), $this->getSort());
 
 		$data['permissions'] = array();
-		$results = $this->Permissions_model->paginate($this->list_filters, $this->index_url);
+		$results = $this->Permissions_model->paginate($this->getFilter());
 		foreach ($results->list as $result) {
 			$data['permissions'][] = array_merge($result, array(
 				'action' => (!empty($result['action'])) ? ucwords(implode(' | ', unserialize($result['action']))) : '',
@@ -77,7 +76,7 @@ class Permissions extends Admin_Controller
 		return $data;
 	}
 
-	protected function getForm($permission_info = array()) {
+	public function getForm($permission_info = array()) {
 		$data = $permission_info;
 
 		$permission_id = 0;

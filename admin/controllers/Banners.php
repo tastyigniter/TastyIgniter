@@ -3,14 +3,14 @@
 class Banners extends Admin_Controller
 {
 
-	public $list_filters = array(
+	public $filter = array(
 		'filter_search' => '',
 		'filter_status' => '',
-		'sort_by'       => 'banner_id',
-		'order_by'      => 'DESC',
 	);
 
-	public $sort_columns = array('name', 'type', 'status', 'banner_id');
+	public $default_sort = array('banner_id', 'DESC');
+
+	public $sort = array('name', 'type', 'status', 'banner_id');
 
 	public function __construct() {
 		parent::__construct();
@@ -61,13 +61,11 @@ class Banners extends Admin_Controller
 		$this->template->render('banners_edit', $data);
 	}
 
-	protected function getList() {
-		$data = array_merge($this->list_filters, $this->sort_columns);
-		$data['order_by_active'] = $this->list_filters['order_by'] . ' active';
-
-		$results = $this->Banners_model->paginate($this->list_filters, $this->index_url);
+	public function getList() {
+		$data = array_merge($this->getFilter(), $this->getSort());
 
 		$data['banners'] = array();
+		$results = $this->Banners_model->paginate($this->getFilter());
 		foreach ($results->list as $result) {
 			$data['banners'][] = array_merge($result, array(
 				'edit' => $this->pageUrl($this->edit_url, array('id' => $result['banner_id'])),

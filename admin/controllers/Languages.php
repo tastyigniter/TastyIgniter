@@ -3,14 +3,14 @@
 class Languages extends Admin_Controller
 {
 
-	public $list_filters = array(
+	public $filter = array(
 		'filter_search' => '',
 		'filter_status' => '',
-		'sort_by'       => 'language_id',
-		'order_by'      => 'DESC',
 	);
 
-	public $sort_columns = array('name', 'code');
+	public $default_sort = array('language_id', 'DESC');
+
+	public $sort = array('name', 'code');
 
 	public function __construct() {
 		parent::__construct();
@@ -61,14 +61,13 @@ class Languages extends Admin_Controller
 		$this->template->render('languages_edit', $data);
 	}
 
-	protected function getList() {
-		$data = array_merge($this->list_filters, $this->sort_columns);
-		$data['order_by_active'] = $this->list_filters['order_by'] . ' active';
+	public function getList() {
+		$data = array_merge($this->getFilter(), $this->getSort());
 
 		$data['language_id'] = $this->config->item('language_id');
 
 		$data['languages'] = array();
-		$results = $this->Languages_model->paginate($this->list_filters, $this->index_url);
+		$results = $this->Languages_model->paginate($this->getFilter());
 		foreach ($results->list as $result) {
 			$data['languages'][] = array_merge($result, array(
 				'image' => (!empty($result['image'])) ? $this->Image_tool_model->resize($result['image']) : $this->Image_tool_model->resize('data/flags/no_flag.png'),
@@ -81,7 +80,7 @@ class Languages extends Admin_Controller
 		return $data;
 	}
 
-	protected function getForm($language_info = array()) {
+	public function getForm($language_info = array()) {
 		$data = $language_info;
 
 		$language_id = 0;

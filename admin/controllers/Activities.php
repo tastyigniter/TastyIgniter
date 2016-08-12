@@ -3,11 +3,11 @@
 class Activities extends Admin_Controller
 {
 
-	public $list_filters = array(
+	public $filter = array(
 		'filter_status' => '',
-		'sort_by'       => 'date_added',
-		'order_by'      => 'DESC',
 	);
+
+	public $default_sort = array('date_added', 'DESC');
 
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
@@ -29,7 +29,7 @@ class Activities extends Admin_Controller
 	}
 
 	public function latest() {
-		$this->list_filters = array_merge($this->list_filters, array('page' => '1', 'limit' => '10'));
+		$this->setFilter(array('page' => '1', 'limit' => '10'));
 
 		$data['activities'] = array();
 		foreach ($this->getList()['activities'] as $activities) {
@@ -42,7 +42,7 @@ class Activities extends Admin_Controller
 	}
 
 	public function recent() {
-		$this->list_filters = array_merge($this->list_filters, array('page' => '1', 'limit' => '10'));
+		$this->setFilter(array('page' => '1', 'limit' => '10'));
 
 		$data['activities'] = array();
 		foreach ($this->getList()['activities'] as $activities) {
@@ -54,11 +54,11 @@ class Activities extends Admin_Controller
 		$this->template->render('activities', $data);
 	}
 
-	protected function getList() {
-		$data = $this->list_filters;
+	public function getList() {
+		$data = $this->getFilter();
 
 		$data['activities'] = array();
-		$results = $this->Activities_model->paginate($this->list_filters, $this->index_url);
+		$results = $this->Activities_model->paginate($this->getFilter());
 		foreach ($results->list as $result) {
 			$result['day_elapsed'] = day_elapsed($result['date_added']);
 			$data['activities'][$result['day_elapsed']][] = array_merge($result, array(

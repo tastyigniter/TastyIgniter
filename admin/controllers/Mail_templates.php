@@ -73,7 +73,7 @@ class Mail_templates extends Admin_Controller
 		$this->template->render('mail_templates_variables', $data);
 	}
 
-	protected function getList() {
+	public function getList() {
 		$data['templates'] = array();
 		$results = $this->Mail_templates_model->paginate();
 		foreach ($results->list as $result) {
@@ -91,7 +91,7 @@ class Mail_templates extends Admin_Controller
 		return $data;
 	}
 
-	protected function getForm($template_info = array()) {
+	public function getForm($template_info = array()) {
 		$data = $template_info;
 
 		$template_id = 0;

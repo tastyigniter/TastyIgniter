@@ -3,10 +3,8 @@
 class Reviews extends Main_Controller
 {
 
-	public $list_filters = array(
+	public $filter = array(
 		'filter_status' => '1',
-		'sort_by'       => '',
-		'order_by'      => '',
 	);
 
 	public function __construct() {
@@ -35,7 +33,7 @@ class Reviews extends Main_Controller
 		$this->template->setTitle($this->lang->line('text_heading'));
 		$this->template->setHeading($this->lang->line('text_heading'));
 
-		$this->list_filters['customer_id'] = (int)$this->customer->getId();
+		$this->filter['customer_id'] = (int)$this->customer->getId();
 
 		$data['back_url'] = $this->pageUrl('account/account');
 
@@ -46,7 +44,7 @@ class Reviews extends Main_Controller
 		$date_format = ($this->config->item('date_format')) ? $this->config->item('date_format') : '%d %M %y';
 
 		$data['reviews'] = array();
-		$results = $this->Reviews_model->paginate($this->list_filters, 'account/reviews');                                    // retrieve all customer reviews from getMainList method in Reviews model
+		$results = $this->Reviews_model->paginate($this->filter, current_url());                                    // retrieve all customer reviews from getMainList method in Reviews model
 		foreach ($results->list as $result) {
 			$data['reviews'][] = array_merge($result, array(                                                            // create array of customer reviews to pass to view
 				'date' => mdate($date_format, strtotime($result['date_added'])),

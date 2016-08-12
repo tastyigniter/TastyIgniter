@@ -3,11 +3,8 @@
 class Inbox extends Main_Controller
 {
 
-	public $list_filters = array(
-		'sort_by'  => 'messages.date_added',
-		'order_by' => 'DESC',
-	);
-
+	public $default_sort = array('messages.date_added', 'DESC');
+	
 	public function __construct() {
 		parent::__construct();                                                                    //  calls the constructor
 
@@ -28,12 +25,12 @@ class Inbox extends Main_Controller
 		$this->template->setTitle($this->lang->line('text_heading'));
 		$this->template->setHeading($this->lang->line('text_heading'));
 
-		$this->list_filters['customer_id'] = (int)$this->customer->getId();
+		$this->filter['customer_id'] = (int)$this->customer->getId();
 
 		$data['back_url'] = $this->pageUrl('account/account');
 
 		$data['messages'] = array();
-		$results = $this->Messages_model->paginate($this->list_filters, 'account/inbox');                                    // retrieve all customer messages from getMainInbox method in Messages model
+		$results = $this->Messages_model->paginate($this->filter, current_url());                                    // retrieve all customer messages from getMainInbox method in Messages model
 		foreach ($results->list as $result) {
 			$data['messages'][] = array_merge($result, array(                                                        // create array of customer messages to pass to view
 				'date_added' => time_elapsed($result['date_added']),

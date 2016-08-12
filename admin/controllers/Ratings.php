@@ -23,7 +23,7 @@ class Ratings extends Admin_Controller
 		$this->template->render('ratings', $data);
 	}
 
-	protected function getList() {
+	public function getList() {
 		if ($this->input->post('ratings')) {
 			$results = $this->input->post('ratings');
 		} else if ($this->config->item('ratings')) {

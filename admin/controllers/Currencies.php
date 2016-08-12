@@ -2,15 +2,15 @@
 
 class Currencies extends Admin_Controller
 {
-	public $list_filters = array(
+	public $filter = array(
 		'filter_search' => '',
 		'filter_type'   => '',
 		'filter_status' => '',
-		'sort_by'       => 'currency_name',
-		'order_by'      => 'ASC',
 	);
 
-	public $sort_columns = array('country_name', 'currency_name', 'currency_code');
+	public $default_sort = array('currency_name', 'ASC');
+
+	public $sort = array('country_name', 'currency_name', 'currency_code');
 
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
@@ -69,14 +69,13 @@ class Currencies extends Admin_Controller
 		$this->template->render('currencies_edit', $data);
 	}
 
-	protected function getList() {
-		$data = array_merge($this->list_filters, $this->sort_columns);
-		$data['order_by_active'] = $this->list_filters['order_by'] . ' active';
+	public function getList() {
+		$data = array_merge($this->getFilter(), $this->getSort());
 
 		$data['currency_id'] = $this->config->item('currency_id');
 
 		$data['currencies'] = array();
-		$results = $this->Currencies_model->paginate($this->list_filters, $this->index_url);
+		$results = $this->Currencies_model->paginate($this->getFilter());
 		foreach ($results->list as $result) {
 			$data['currencies'][] = array_merge($result, array(
 				'edit' => $this->pageUrl($this->edit_url, array('id' => $result['currency_id'])),
@@ -88,7 +87,7 @@ class Currencies extends Admin_Controller
 		return $data;
 	}
 
-	protected function getForm($currency_info = array()) {
+	public function getForm($currency_info = array()) {
 		$data = $currency_info;
 
 		$data['_action'] = $this->pageUrl($this->create_url);
