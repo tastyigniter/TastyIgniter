@@ -143,6 +143,23 @@ class Template {
 		}
 	}
 
+	public function addNavMenuItem($item, $options = array(), $parent = NULL) {
+		if (!empty($parent)) {
+			$this->_theme_config['nav_menu'][$parent]['child'][$item] = $options;
+		} else {
+			$this->_theme_config['nav_menu'][$item] = $options;
+		}
+
+	}
+
+	public function removeNavMenuItem($item, $parent = NULL) {
+		if (!empty($parent)) {
+			unset($this->_theme_config['nav_menu'][$parent]['child'][$item]);
+		} else {
+			unset($this->_theme_config['nav_menu'][$item]);
+		}
+	}
+
 	public function navMenu($prefs = array()) {
 		$container_open = '<ul class="nav" id="side-menu">';
 		$container_close = '</ul>';
@@ -154,11 +171,18 @@ class Template {
 			return NULL;
 		}
 
+
 		return $container_open . $this->_buildNavMenu($this->_theme_config['nav_menu']) . $container_close;
 	}
 
 	protected function _buildNavMenu($nav_menu = array(), $has_child = 0) {
 		$levels = array('', 'nav-second-level', 'nav-third-level');
+
+		foreach ($nav_menu as $key => $value) {
+			$sort_array[$key] = isset($value['priority']) ? $value['priority'] : '1111';
+		}
+
+		array_multisort($sort_array, SORT_ASC, $nav_menu);
 
 		$out = '';
 		foreach ($nav_menu as $menu) {
