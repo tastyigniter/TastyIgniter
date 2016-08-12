@@ -3,11 +3,8 @@
 class Orders extends Main_Controller
 {
 
-	public $list_filters = array(
-		'sort_by'  => 'date_added',
-		'order_by' => 'DESC',
-	);
-
+	public $default_sort = array('date_added', 'DESC');
+	
 	public function __construct() {
 		parent::__construct();                                                                    //  calls the constructor
 
@@ -34,7 +31,7 @@ class Orders extends Main_Controller
 		$this->template->setTitle($this->lang->line('text_heading'));
 		$this->template->setHeading($this->lang->line('text_heading'));
 
-		$this->list_filters['customer_id'] = (int)$this->customer->getId();
+		$this->filter['customer_id'] = (int)$this->customer->getId();
 
 		$data['back_url'] = $this->pageUrl('account/account');
 
@@ -47,7 +44,7 @@ class Orders extends Main_Controller
 		$time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
 
 		$data['orders'] = array();
-		$results = $this->Orders_model->paginare($this->list_filters);            // retrieve customer orders based on customer id from getMainOrders method in Orders model
+		$results = $this->Orders_model->paginate($this->filter, current_url());            // retrieve customer orders based on customer id from getMainOrders method in Orders model
 		foreach ($results->list as $result) {
 
 			// if order type is equal to 1, order type is delivery else collection

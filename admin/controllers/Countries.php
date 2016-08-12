@@ -5,14 +5,14 @@
  */
 class Countries extends Admin_Controller
 {
-	public $list_filters = array(
+	public $filter = array(
 		'filter_search' => '',
 		'filter_status' => '',
-		'sort_by'       => 'country_name',
-		'order_by'      => 'ASC',
 	);
 
-	public $sort_columns = array('country_name', 'iso_code_2', 'iso_code_3');
+	public $default_sort = array('country_name', 'ASC');
+
+	public $sort = array('country_name', 'iso_code_2', 'iso_code_3');
 
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
@@ -61,16 +61,15 @@ class Countries extends Admin_Controller
 		$this->template->render('countries_edit', $data);
 	}
 
-	protected function getList() {
-		$data = array_merge($this->list_filters, $this->sort_columns);
-		$data['order_by_active'] = $this->list_filters['order_by'] . ' active';
+	public function getList() {
+		$data = array_merge($this->getFilter(), $this->getSort());
 		
 		$data['country_id'] = $this->config->item('country_id');
 
 		$no_country_flag = $this->Image_tool_model->resize('data/flags/no_flag.png');
 
 		$data['countries'] = array();
-		$results = $this->Countries_model->paginate($this->list_filters, $this->index_url);
+		$results = $this->Countries_model->paginate($this->getFilter());
 		foreach ($results->list as $result) {
 			$data['countries'][] = array_merge($result, array(
 				'flag' => (!empty($result['flag'])) ? $this->Image_tool_model->resize($result['flag']) : $no_country_flag,

@@ -29,7 +29,7 @@ class Security_questions extends Admin_Controller
 		$this->template->render('security_questions', $data);
 	}
 
-	protected function getList() {
+	public function getList() {
 		if ($this->input->post('questions')) {
 			$results = $this->input->post('questions');
 		} else {

@@ -53,7 +53,7 @@ class Mealtimes extends Admin_Controller
 		}
 	}
 
-	protected function getList() {
+	public function getList() {
 		if ($this->input->post() AND $this->_updateMealtimes() === TRUE) {
 			$this->redirect();
 		}

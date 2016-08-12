@@ -2,12 +2,9 @@
 
 class Customer_groups extends Admin_Controller
 {
-	public $list_filters = array(
-		'sort_by'  => 'customer_group_id',
-		'order_by' => 'DESC',
-	);
+	public $default_sort = array('customer_group_id', 'DESC');
 
-	public $sort_columns = array('customer_group_id');
+	public $sort = array('customer_group_id');
 
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
@@ -55,13 +52,12 @@ class Customer_groups extends Admin_Controller
 	}
 
 	public function getList() {
-		$data = array_merge($this->list_filters, $this->sort_columns);
-		$data['order_by_active'] = $this->list_filters['order_by'] . ' active';
+		$data = array_merge($this->getFilter(), $this->getSort());
 
 		$data['customer_group_id'] = $this->config->item('customer_group_id');
 
 		$data['customer_groups'] = array();
-		$results = $this->Customer_groups_model->paginate($this->list_filters, $this->index_url);
+		$results = $this->Customer_groups_model->paginate($this->getFilter());
 		foreach ($results->list as $result) {
 			$data['customer_groups'][] = array_merge($result, array(
 				'edit' => $this->pageUrl($this->edit_url, array('id' => $result['customer_group_id'])),
@@ -73,7 +69,7 @@ class Customer_groups extends Admin_Controller
 		return $data;
 	}
 
-	protected function getForm($group_info = array()) {
+	public function getForm($group_info = array()) {
 		$data = $group_info;
 
 		$data['_action'] = $this->pageUrl($this->create_url);

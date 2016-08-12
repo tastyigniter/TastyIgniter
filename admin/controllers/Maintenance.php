@@ -3,11 +3,11 @@
 class Maintenance extends Admin_Controller
 {
 	public $create_url = 'maintenance/backup';
-	public $browse_url = 'maintenance/browse';
+	public $browse_url = 'maintenance/browse_table';
 
 	public $edit_url = 'maintenance/backup?{action}={name}';
 
-	public $list_filters = array(
+	public $filter = array(
 		'table' => '',
 	);
 
@@ -77,11 +77,11 @@ class Maintenance extends Admin_Controller
 		$this->user->restrict('Admin.Maintenance.Manage');
 
 		if ($this->uri->rsegment(3)) {
-			$this->list_filters['table'] = $this->uri->rsegment(3);
+			$this->setFilter('table', $this->uri->rsegment(3));
 		}
 
-		$this->template->setTitle(sprintf($this->lang->line('text_browse_heading'), $this->list_filters['table']));
-		$this->template->setHeading(sprintf($this->lang->line('text_browse_heading'), $this->list_filters['table']));
+		$this->template->setTitle(sprintf($this->lang->line('text_browse_heading'), $this->getFilter('table')));
+		$this->template->setHeading(sprintf($this->lang->line('text_browse_heading'), $this->getFilter('table')));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('maintenance')));
 
 		$data = $this->getTableList();
@@ -90,7 +90,7 @@ class Maintenance extends Admin_Controller
 
 	}
 
-	protected function getList() {
+	public function getList() {
 		$this->load->helper('number');
 
 		$data['backup_tables'] = FALSE;
@@ -135,7 +135,7 @@ class Maintenance extends Admin_Controller
 		return $data;
 	}
 
-	protected function getForm() {
+	public function getForm() {
 		$data['backup_tables'] = TRUE;
 
 		$timestamp = mdate('%Y-%m-%d-%H-%i-%s', now());
@@ -171,6 +171,29 @@ class Maintenance extends Admin_Controller
 		} else {
 			$data['tables'] = array();
 		}
+
+		return $data;
+	}
+
+	protected function getTableList() {
+		$table_info = $this->Maintenance_model->browseTable($this->getFilter());
+
+		$data['sql_query'] = 'SELECT * FROM (' . $this->filter['table'] . ')';
+
+		if (!empty($table_info['query'])) {
+			$this->load->library('table');
+			$template = array('table_open' => '<table class="table table-striped table-border">');
+			$this->table->set_template($template);
+			$data['query_table'] = $this->table->generate($table_info['query']);
+		} else {
+			$data['query_table'] = '';
+		}
+
+		$config['base_url'] = $this->pageUrl($this->browse_url . '/' . $this->filter['table']);
+		$config['total_rows'] = !empty($table_info['total_rows']) ? $table_info['total_rows'] : '0';
+		$config['per_page'] = $this->filter['limit'];
+
+		$data['pagination'] = $this->Maintenance_model->paginate_list($config);
 
 		return $data;
 	}
@@ -260,29 +283,6 @@ class Maintenance extends Admin_Controller
 		}
 
 		return $this->Maintenance_model->set_rules($rules)->validate();
-	}
-
-	protected function getTableList() {
-		$table_info = $this->Maintenance_model->browseTable($this->list_filters);
-
-		$data['sql_query'] = 'SELECT * FROM (' . $this->list_filters['table'] . ')';
-
-		if (!empty($table_info['query'])) {
-			$this->load->library('table');
-			$template = array('table_open' => '<table class="table table-striped table-border">');
-			$this->table->set_template($template);
-			$data['query_table'] = $this->table->generate($table_info['query']);
-		} else {
-			$data['query_table'] = '';
-		}
-
-		$config['base_url'] = $this->pageUrl($this->browse_url . '/' . $this->list_filters['table']);
-		$config['total_rows'] = !empty($table_info['total_rows']) ? $table_info['total_rows'] : '0';
-		$config['per_page'] = $this->list_filters['limit'];
-
-		$data['pagination'] = $this->Maintenance_model->paginate_list($config);
-
-		return $data;
 	}
 }
 

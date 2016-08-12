@@ -3,17 +3,17 @@
 class Orders extends Admin_Controller
 {
 
-	public $list_filters = array(
+	public $filter = array(
 		'filter_search'   => '',
 		'filter_location' => '',
 		'filter_status'   => '',
 		'filter_type'     => '',
 		'filter_payment'  => '',
-		'sort_by'         => 'date_added',
-		'order_by'        => 'DESC',
 	);
 
-	public $sort_columns = array('order_id', 'location_name', 'first_name', 'status_name',
+	public $default_sort = array('date_added', 'DESC');
+
+	public $sort = array('order_id', 'location_name', 'first_name', 'status_name',
 		'order_type', 'payment', 'order_total', 'order_time', 'date_added');
 
 	public function __construct() {
@@ -103,16 +103,15 @@ class Orders extends Admin_Controller
 		}
 	}
 
-	protected function getList() {
+	public function getList() {
 		if ($data['user_strict_location'] = $this->user->isStrictLocation()) {
-			$this->list_filters['filter_location'] = $this->user->getLocationId();
+			$this->setFilter('filter_location', $this->user->getLocationId());
 		}
 
-		$data = array_merge($this->list_filters, $this->sort_columns, $data);
-		$data['order_by_active'] = $this->list_filters['order_by'] . ' active';
+		$data = array_merge($this->getFilter(), $this->getSort(), $data);
 
 		$data['orders'] = array();
-		$results = $this->Orders_model->paginate($this->list_filters, $this->index_url);
+		$results = $this->Orders_model->paginate($this->getFilter());
 		foreach ($results->list as $result) {
 			$payment_title = '--';
 			if ($payment = $this->extension->getPayment($result['payment'])) {
@@ -154,7 +153,7 @@ class Orders extends Admin_Controller
 		return $data;
 	}
 
-	protected function getForm($order_info = array()) {
+	public function getForm($order_info = array()) {
 		$data = $order_info;
 
 		if (!empty($order_info['order_id'])) {
@@ -165,6 +164,8 @@ class Orders extends Admin_Controller
 			//$data['_action']	= $this->pageUrl($this->create_url);
 			$this->redirect();
 		}
+
+		$this->user->restrictLocation($order_info['location_id'], 'Admin.Orders', $this->index_url);
 
 		$data['order_id'] = $order_info['order_id'];
 		$data['invoice_no'] = !empty($order_info['invoice_no']) ? $order_info['invoice_prefix'] . $order_info['invoice_no'] : '';
@@ -310,7 +311,7 @@ class Orders extends Admin_Controller
 				$this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), 'updated'));
 			}
 
-			return $order_id;
+			return $this->input->get('id');
 		}
 	}
 

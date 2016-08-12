@@ -3,15 +3,15 @@
 class Menus extends Admin_Controller
 {
 
-	public $list_filters = array(
+	public $filter = array(
 		'filter_search'   => '',
 		'filter_category' => '',
 		'filter_status'   => '',
-		'sort_by'         => 'menus.menu_id',
-		'order_by'        => 'DESC',
 	);
 
-	public $sort_columns = array('menu_name', 'menu_price', 'stock_qty', 'menus.menu_id');
+	public $default_sort = array('menus.menu_id', 'DESC');
+
+	public $sort = array('menu_name', 'menu_price', 'stock_qty', 'menus.menu_id');
 
 	public function __construct() {
 		parent::__construct(); //  calls the constructor
@@ -88,12 +88,11 @@ class Menus extends Admin_Controller
 		$this->output->set_output(json_encode($json));
 	}
 
-	protected function getList() {
-		$data = array_merge($this->list_filters, $this->sort_columns);
-		$data['order_by_active'] = $this->list_filters['order_by'] . ' active';
+	public function getList() {
+		$data = array_merge($this->getFilter(), $this->getSort());
 
 		$data['menus'] = array();
-		$results = $this->Menus_model->paginate($this->list_filters, $this->index_url);
+		$results = $this->Menus_model->paginate($this->getFilter());
 		foreach ($results->list as $result) {
 			$price = ($result['special_status'] === '1' AND $result['is_special'] === '1') ? $result['special_price'] : $result['menu_price'];
 			$data['menus'][] = array_merge($result, array(
@@ -110,7 +109,7 @@ class Menus extends Admin_Controller
 		return $data;
 	}
 
-	protected function getForm($menu_info = array()) {
+	public function getForm($menu_info = array()) {
 		$menu_id = 0;
 		$data['_action'] = $this->pageUrl($this->create_url);
 		if (!empty($menu_info['menu_id'])) {

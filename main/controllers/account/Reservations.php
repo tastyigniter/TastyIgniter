@@ -3,11 +3,8 @@
 class Reservations extends Main_Controller
 {
 
-	public $list_filters = array(
-		'sort_by'  => 'reserve_date',
-		'order_by' => 'DESC',
-	);
-
+	public $default_sort = array('reserve_date', 'DESC');
+	
 	public function __construct() {
 		parent::__construct();                                                                    //  calls the constructor
 
@@ -35,7 +32,7 @@ class Reservations extends Main_Controller
 		$this->template->setTitle($this->lang->line('text_heading'));
 		$this->template->setHeading($this->lang->line('text_heading'));
 
-		$this->list_filters['customer_id'] = (int)$this->customer->getId();
+		$this->filter['customer_id'] = (int)$this->customer->getId();
 
 		$data['back_url'] = $this->pageUrl('account/account');
 		$data['new_reservation_url'] = $this->pageUrl('reservation');
@@ -43,7 +40,7 @@ class Reservations extends Main_Controller
 		$time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
 
 		$data['reservations'] = array();
-		$results = $this->Reservations_model->paginate($this->list_filters, 'account/reservations');                                // retrieve customer reservations based on customer id from getMainReservations method in Reservations model
+		$results = $this->Reservations_model->paginate($this->filter, current_url());                                // retrieve customer reservations based on customer id from getMainReservations method in Reservations model
 		foreach ($results->list as $result) {
 			$data['reservations'][] = array_merge($result, array(                                                    // create array of customer reservations to pass to view
 				'reserve_date' => day_elapsed($result['reserve_date']),

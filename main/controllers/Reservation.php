@@ -18,7 +18,7 @@ class Reservation extends Main_Controller
 	}
 
 	public function index() {
-		$prepend = '?redirect=' . current_url();
+		$prepend = '?redirect=' . str_replace(site_url(), '/', current_url());
 
 		if ($this->input->post() AND $this->_reserveTable() === TRUE) {
 			redirect('reservation/success');
