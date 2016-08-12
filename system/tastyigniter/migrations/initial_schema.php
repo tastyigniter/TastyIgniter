@@ -665,14 +665,15 @@ $schema['security_questions'] = "
     (16, 'Whats your favourite teacher\'s name?', 5);
 ";
 
-$insert_settings_data = "
+$schema['settings'] = "
   REPLACE INTO `".$this->db->dbprefix."settings` (`setting_id`, `sort`, `item`, `value`, `serialized`) VALUES
   (7870, 'prefs', 'mail_template_id', '11', 0),
   (8500, 'ratings', 'ratings', 'a:1:{s:7:\"ratings\";a:5:{i:1;s:3:\"Bad\";i:2;s:5:\"Worse\";i:3;s:4:\"Good\";i:4;s:7:\"Average\";i:5;s:9:\"Excellent\";}}', 1),
   (9225, 'config', 'site_desc', '', 0),
   (9241, 'config', 'search_radius', '20', 0),
   (9249, 'config', 'ready_time', '45', 0),
-  (10836, 'prefs', 'default_location_id', '', 0),
+  (10836, 'prefs', 'default_location_id', '11', 0),
+  (10837, 'prefs', 'main_address', 'a:6:{s:9:\"address_1\";s:0:\"\";s:9:\"address_2\";s:0:\"\";s:4:\"city\";s:0:\"\";s:8:\"postcode\";s:0:\"\";s:11:\"location_id\";s:2:\"11\";s:10:\"country_id\";s:1:\"1\";}', 1),
   (10839, 'config', 'site_logo', 'data/no_photo.png', 0),
   (10840, 'config', 'country_id', '222', 0),
   (10841, 'config', 'timezone', 'Europe/London', 0),
