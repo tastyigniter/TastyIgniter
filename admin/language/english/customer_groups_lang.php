@@ -8,6 +8,7 @@ $lang['text_tab_general'] 	            = 'Customer Group Details';
 $lang['text_empty'] 		            = 'There are no customer groups available.';
 
 $lang['column_name'] 		            = 'Name';
+$lang['column_customerss'] 		    	= '# Customers';
 $lang['column_id'] 		                = 'ID';
 
 $lang['label_name'] 		            = 'Name';
