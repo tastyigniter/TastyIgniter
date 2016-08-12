@@ -209,9 +209,9 @@ class TI_Calendar extends CI_Calendar
 		return array(
 			'table_open'                 => '<table class="table table-calendar" border="0" cellpadding="4" cellspacing="0">',
 			'heading_row_start'          => '<tr>',
-			'heading_previous_cell'      => '<th class="prev"><a class="calender-nav" href="{previous_url}"><i class="fa fa-caret-square-o-left fa-3x"></i></a></th>',
+			'heading_previous_cell'      => '<th class="prev"><a class="calender-nav" href="{previous_url}"><i class="fa fa-caret-left fa-3x"></i></a></th>',
 			'heading_title_cell'         => '<th class="title" colspan="{colspan}">{heading}</th>',
-			'heading_next_cell'          => '<th class="next"><a class="calender-nav" href="{next_url}"><i class="fa fa-caret-square-o-right fa-3x"></i></a></th>',
+			'heading_next_cell'          => '<th class="next"><a class="calender-nav" href="{next_url}"><i class="fa fa-caret-right fa-3x"></i></a></th>',
 			'heading_row_end'            => '</tr>',
 			'week_row_start'             => '<tr>',
 			'week_day_cell'              => '<td class="week">{week_day}</td>',
