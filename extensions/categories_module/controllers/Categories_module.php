@@ -19,8 +19,6 @@ class Categories_module extends Main_Controller {
 
 		$this->template->setStyleTag(extension_url('categories_module/views/stylesheet.css'), 'categories-module-css', '155000');
 
-		$data['menu_total'] 			= $this->Menus_model->getCount();
-
 		$data['categories'] = array();
 		$results = $this->Categories_model->getCategories(0); 										// retrieve all menu categories from getCategories method in Menus model
 		foreach (sort_array($results) as $result) {															// loop through menu categories array
@@ -60,8 +58,9 @@ class Categories_module extends Main_Controller {
 				'children'		=>	$children_data,
 			);
 		}
-
-		$mix_it_up = (!empty($menu_total) AND $menu_total > 500) ? FALSE : TRUE;
+		
+		$data['menu_total'] = $this->Menus_model->getCount();
+		$mix_it_up = ($data['menu_total'] < 500) ? TRUE : FALSE;
 		$data['category_tree'] = $this->categoryTree($data['categories'], $mix_it_up);
 
 		$fixed_top_offset = isset($ext_data['fixed_top_offset']) ? $ext_data['fixed_top_offset'] : '350';
@@ -77,24 +76,26 @@ class Categories_module extends Main_Controller {
 
 		$url = 'menus';
 		if ($location_id = $this->input->get('location_id')) {
-			$url = "local?location_id={$location_id}";
+			$url .= "?location_id={$location_id}";
 		}
 
 		$tree = '<ul class="list-group list-group-responsive">';
 
 		if (!$is_child) {
-			$tree .= '<li class="list-group-item"><a class="" href="'.site_url($url).'"><i class="fa fa-angle-right"></i>&nbsp;&nbsp;'.$this->lang->line('text_show_all').'</a>';
+			$tree .= '<li class="list-group-item"><a class="" href="'.restaurant_url($url).'"><i class="fa fa-angle-right"></i>&nbsp;&nbsp;'.$this->lang->line('text_show_all').'</a>';
 		}
 
 		if ( ! empty($categories)) {
 			foreach ($categories as $category) {
-				$selector = '.'.strtolower(str_replace(' ', '-', str_replace('&', '_', $category['category_name'])));
+				$permalink = $this->permalink->getPermalink('category_id=' . $category['category_id']);
+				$selector = !empty($permalink['slug']) ? $permalink['slug'] : strtolower(str_replace(' ', '-', str_replace('&', '_', $category['category_name'])));
 
 				if ($mix_it_up) {
-					$attr = ' class="filter" data-filter="'.$selector.'" ';
+					$active = ($category_id == $category['category_id']) ? 'selected' : '';
+					$attr = ' class="filter '.$active.'" data-filter=".'.$selector.'" ';
 				} else {
-					$attr = ($category['category_id'] === $category_id) ? ' class="" ' : ' class="active" ';
-					$attr .= 'href="' . site_url($url . (($location_id) ? '&' : '?') . 'category_id=' . $category['category_id']) . '" ';
+					$active = ($category_id == $category['category_id']) ? 'active' : '';
+					$attr = ' class="'.$active.'" href="' . restaurant_url($url . ($location_id ? '&' : '?') . 'category_id=' . $category['category_id']) . '" ';
 				}
 
 				if (!empty($category['children'])) {

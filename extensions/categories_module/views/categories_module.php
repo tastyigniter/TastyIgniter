@@ -22,10 +22,11 @@
 		$(function(){
 
 			var layout = 'list', // Store the current layout as a variable
+				filter = $('a.selected').length ? $('a.selected').data('filter') : 'all',
 				$container = $('#Container'), // Cache the MixItUp container
-				$changeLayout = $('#viewcontrols .btn'); // Cache the changeLayout button
-			$listButton = $('#viewcontrols .listview'); // Cache the list button
-			$gridButton = $('#viewcontrols .gridview'); // Cache the grid button
+				$changeLayout = $('#viewcontrols .btn'), // Cache the changeLayout button
+				$listButton = $('#viewcontrols .listview'), // Cache the list button
+				$gridButton = $('#viewcontrols .gridview'); // Cache the grid button
 
 			// Instantiate MixItUp with some custom options:
 			$container.mixItUp({
@@ -43,7 +44,8 @@
 						alert('<?php echo lang('text_no_match'); ?>');
 						$container.mixItUp('filter', 'all');
 					},
-				}
+				},
+				load: {filter: filter}
 			});
 
 			// MixItUp does not provide a default "change layout" button, so we need to make our own and bind it with a click handler:
@@ -61,7 +63,6 @@
 					});
 
 					// Else if the current layout is a grid, change to list:
-
 				} else {
 					layout = 'list';
 
