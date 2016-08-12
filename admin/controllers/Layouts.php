@@ -51,11 +51,26 @@ class Layouts extends Admin_Controller
 		$this->template->render('layouts_edit', $data);
 	}
 
-	protected function getList() {
+	public function getList() {
+		$_modules = $this->Extensions_model->getModules();
+
+		$this->load->model('Layout_modules_model');
+		$modules = $this->Layout_modules_model->getLayoutModules();
+
 		$data['layouts'] = array();
 		$results = $this->Layouts_model->paginate();
 		foreach ($results->list as $result) {
+			$layout_modules = array();
+			if (isset($modules[$result['layout_id']])) foreach ($modules[$result['layout_id']] as $module) {
+				foreach ($_modules as $mod) {
+					if ($mod['name'] === $module['module_code']) {
+						$layout_modules[] = $mod['title'];
+					}
+				}
+			}
+
 			$data['layouts'][] = array_merge($result, array(
+				'modules' => implode(', ', $layout_modules),
 				'edit' => $this->pageUrl($this->edit_url, array('id' => $result['layout_id'])),
 			));
 		}
@@ -65,7 +80,7 @@ class Layouts extends Admin_Controller
 		return $data;
 	}
 
-	protected function getForm($layout_info) {
+	public function getForm($layout_info) {
 		$data = $layout_info;
 
 		$layout_id = 0;
