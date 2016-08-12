@@ -272,9 +272,21 @@ class Orders_model extends TI_Model
 			$update['status_id'] = $update['order_status'];
 		}
 
-		if ($query = $this->update($order_id, $update)) {
+		if ($query = $this->update(array('order_id' => $order_id), $update)) {
 			$this->load->model('Statuses_model');
 			$status = $this->Statuses_model->getStatus($update['order_status']);
+
+			// Make sure order status has not been previously updated
+			// to one of the processing order status. If so,
+			// skip to avoid updating stock twice.
+			$processing_status_exists = $this->Statuses_model->statusExists('order', $order_id, $this->config->item('processing_order_status'));
+
+			if (!$processing_status_exists AND in_array($update['order_status'], (array)$this->config->item('processing_order_status'))) {
+				$this->subtractStock($order_id);
+
+				$this->load->model('Coupons_model');
+				$this->Coupons_model->redeemCoupon($order_id);
+			}
 
 			if (isset($update['status_notify']) AND $update['status_notify'] === '1') {
 				$mail_data = $this->getMailData($order_id);
@@ -291,18 +303,6 @@ class Orders_model extends TI_Model
 
 			if ($this->config->item('auto_invoicing') === '1' AND in_array($update['order_status'], (array)$this->config->item('completed_order_status'))) {
 				$this->createInvoiceNo($order_id);
-			}
-
-			// Make sure order status has not been previously updated
-			// to one of the processing order status. If so,
-			// skip to avoid updating stock twice.
-			$processing_status_exists = $this->Statuses_model->statusExists('order', $order_id, $this->config->item('processing_order_status'));
-
-			if (!$processing_status_exists AND in_array($update['order_status'], (array)$this->config->item('processing_order_status'))) {
-				$this->subtractStock($order_id);
-
-				$this->load->model('Coupons_model');
-				$this->Coupons_model->redeemCoupon($order_id);
 			}
 		}
 
@@ -363,7 +363,15 @@ class Orders_model extends TI_Model
 			$order_info['user_agent'] = $this->input->user_agent();
 		}
 
-		$order_id = is_numeric($order_info['order_id']) ? $order_info['order_id'] : NULL;
+		if (isset($cart_contents['order_total'])) {
+			$order_info['order_total'] = $cart_contents['order_total'];
+		}
+
+		if (isset($cart_contents['total_items'])) {
+			$order_info['total_items'] = $cart_contents['total_items'];
+		}
+
+		$order_id = (isset($order_info['order_id']) AND is_numeric($order_info['order_id'])) ? $order_info['order_id'] : NULL;
 		if ($order_id = $this->skip_validation(TRUE)->save($order_info, $order_id)) {
 			if (isset($order_info['address_id'])) {
 				$this->load->model('Addresses_model');
@@ -374,8 +382,8 @@ class Orders_model extends TI_Model
 
 			$this->addOrderTotals($order_id, $cart_contents);
 
-			if (!empty($cart_contents['coupon'])) {
-				$this->addOrderCoupon($order_id, $order_info['customer_id'], $cart_contents['coupon']);
+			if (!empty($cart_contents['totals']['coupon'])) {
+				$this->addOrderCoupon($order_id, $order_info['customer_id'], $cart_contents['totals']['coupon']);
 			}
 
 			return $order_id;
@@ -429,7 +437,8 @@ class Orders_model extends TI_Model
 	 */
 	public function addOrderMenus($order_id, $cart_contents = array()) {
 		if (is_array($cart_contents) AND !empty($cart_contents) AND $order_id) {
-			$this->delete_from('order_menus', array('order_id', $order_id));
+			$this->where('order_id', $order_id);
+			$this->delete_from('order_menus');
 
 			foreach ($cart_contents as $key => $item) {
 				if (is_array($item) AND isset($item['rowid']) AND $key === $item['rowid']) {
@@ -470,11 +479,12 @@ class Orders_model extends TI_Model
 	 */
 	public function addOrderMenuOptions($order_menu_id, $order_id, $menu_id, $menu_options) {
 		if (!empty($order_id) AND !empty($menu_id) AND !empty($menu_options)) {
-			$this->delete_from('order_options', array(
+			$this->where(array(
 				'order_id', $order_id,
 				'order_menu_id' => $order_menu_id,
 				'menu_id'       => $menu_id,
 			));
+			$this->delete_from('order_options');
 
 			foreach ($menu_options as $menu_option_id => $options) {
 				foreach ($options as $option) {
@@ -502,7 +512,8 @@ class Orders_model extends TI_Model
 	 */
 	public function addOrderTotals($order_id, $cart_contents = array()) {
 		if (is_numeric($order_id) AND !empty($cart_contents['totals'])) {
-			$this->delete_from('order_totals', array('order_id', $order_id));
+			$this->where('order_id', $order_id);
+			$this->delete_from('order_totals');
 
 			$this->load->model('cart_module/Cart_model');
 			$order_totals = $this->Cart_model->getTotals();
@@ -559,6 +570,7 @@ class Orders_model extends TI_Model
 				'coupon_id'   => $temp_coupon['coupon_id'],
 				'code'        => $temp_coupon['code'],
 				'amount'      => '-' . $coupon['amount'],
+				'min_total'   => $temp_coupon['min_total'],
 				'date_used'   => mdate('%Y-%m-%d %H:%i:%s', time()),
 			);
 
@@ -788,11 +800,14 @@ class Orders_model extends TI_Model
 			$affected_rows = $this->delete('order_id', $order_id);
 
 			if ($affected_rows > 0) {
-				$this->delete_from('order_menus', array('order_id', $order_id));
+				$this->where('order_id', $order_id);
+				$this->delete_from('order_menus');
 
-				$this->delete_from('order_options', array('order_id', $order_id));
+				$this->where('order_id', $order_id);
+				$this->delete_from('order_options');
 
-				$this->delete_from('order_totals', array('order_id', $order_id));
+				$this->where('order_id', $order_id);
+				$this->delete_from('order_totals');
 
 				$this->load->model('Coupons_history_model');
 				$this->Coupons_history_model->delete('order_id', $order_id);

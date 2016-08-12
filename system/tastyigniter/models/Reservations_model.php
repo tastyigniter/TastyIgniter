@@ -382,7 +382,7 @@ class Reservations_model extends TI_Model
 		if (empty($update)) return FALSE;
 
 		if (is_numeric($reservation_id)) {
-			$query = $this->update($reservation_id, $update);
+			$query = $this->update(array('reservation_id' => $reservation_id), $update);
 
 			$status = $this->Statuses_model->getStatus($update['status']);
 
@@ -438,7 +438,7 @@ class Reservations_model extends TI_Model
 				'status' => $this->config->item('default_reservation_status'),
 			);
 
-			if ($this->update($reservation_id, $update)) {
+			if ($this->update(array('reservation_id' => $reservation_id), $update)) {
 				$this->load->model('Statuses_model');
 				$status = $this->Statuses_model->getStatus($this->config->item('default_reservation_status'));
 				$reserve_history = array(

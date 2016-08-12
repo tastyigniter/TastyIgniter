@@ -271,7 +271,7 @@ class Staffs_model extends TI_Model
 					$user['staff_id'] = $staff_id;
 					$this->Users_model->insert($user);
 				} else {
-					$this->Users_model->update($staff_id, $user);
+					$this->Users_model->update(array('staff_id' => $staff_id), $user);
 				}
 			}
 
@@ -304,7 +304,7 @@ class Staffs_model extends TI_Model
 
 				$password = implode('', $pass);
 				$this->load->model('Users_model');
-				$this->Users_model->update($row['staff_id'], array(
+				$this->Users_model->update(array('staff_id' => $row['staff_id']), array(
 					'salt'     => $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9),
 					'password' => sha1($salt . sha1($salt . sha1($password))),
 				));

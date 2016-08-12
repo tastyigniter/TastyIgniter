@@ -270,6 +270,10 @@ class Locations_model extends TI_Model
 		if (is_numeric($location_id) AND $default_address = $this->getAddress($location_id)) {
 			$this->Settings_model->addSetting('prefs', 'main_address', $default_address, '1');
 			$this->Settings_model->addSetting('prefs', 'default_location_id', $location_id, '0');
+
+			if (is_single_location()) {
+				$this->update(array('location_id !=', $location_id), array('location_status', '0'));
+			}
 		}
 
 		return $location_id;
@@ -293,6 +297,10 @@ class Locations_model extends TI_Model
 				$this->Settings_model->addSetting('prefs', 'main_address', $this->getAddress($location_id), '1');
 			}
 
+			if (is_single_location()) {
+				$this->update(array('location_id !=', $location_id), array('location_status', '0'));
+			}
+
 			if (!empty($save['options']['opening_hours'])) {
 				$this->addOpeningHours($location_id, $save['options']['opening_hours']);
 			}
@@ -301,7 +309,7 @@ class Locations_model extends TI_Model
 				$this->addLocationTables($location_id, $save['tables']);
 			}
 
-			if (!empty($save['permalink'])) {
+			if (!empty($save['permalink']) AND !is_single_location()) {
 				$this->permalink->savePermalink('local', $save['permalink'], 'location_id=' . $location_id);
 			}
 

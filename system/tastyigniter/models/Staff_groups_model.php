@@ -116,7 +116,7 @@ class Staff_groups_model extends TI_Model
 
 			$group_permissions[$permission_id] = $permission_rule['action'];
 
-			$query = $this->update($staff_group_id, array('permissions' => serialize($group_permissions)));
+			$query = $this->update(array('staff_group_id' => $staff_group_id), array('permissions' => serialize($group_permissions)));
 		}
 
 		return $query;
