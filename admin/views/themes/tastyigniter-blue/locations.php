@@ -2,12 +2,6 @@
 <div class="row content">
 	<div class="col-md-12">
 		<div class="panel panel-default panel-table">
-			<div class="panel-heading">
-				<h3 class="panel-title"><?php echo lang('text_list'); ?></h3>
-				<div class="pull-right">
-					<button class="btn btn-filter btn-xs"><i class="fa fa-filter"></i></button>
-				</div>
-			</div>
 			<div class="panel-body panel-filter">
 				<form role="form" id="filter-form" accept-charset="utf-8" method="GET" action="<?php echo current_url(); ?>">
 					<div class="filter-bar">
@@ -50,21 +44,30 @@
 				<table border="0" class="table table-striped table-border">
 					<thead>
 						<tr>
-							<th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
-							<th><a class="sort" href="<?php echo $sort_name; ?>"><?php echo lang('column_name'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'location_name') ? $order_by_active : $order_by; ?>"></i></a></th>
-							<th><a class="sort" href="<?php echo $sort_city; ?>"><?php echo lang('column_city'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'location_city') ? $order_by_active : $order_by; ?>"></i></a></th>
-							<th><a class="sort" href="<?php echo $sort_state; ?>"><?php echo lang('column_state'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'location_state') ? $order_by_active : $order_by; ?>"></i></a></th>
-							<th><a class="sort" href="<?php echo $sort_postcode; ?>"><?php echo lang('column_postcode'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'location_postcode') ? $order_by_active : $order_by; ?>"></i></a></th>
+							<th class="action">
+								<div class="checkbox checkbox-primary">
+									<input type="checkbox" id="checkbox-all" class="styled" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);">
+									<label for="checkbox-all"></label>
+								</div>
+							</th>
+							<th><a class="sort" href="<?php echo $sort_location_name; ?>"><?php echo lang('column_name'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'location_name') ? $order_by_active : $order_by; ?>"></i></a></th>
+							<th><a class="sort" href="<?php echo $sort_location_city; ?>"><?php echo lang('column_city'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'location_city') ? $order_by_active : $order_by; ?>"></i></a></th>
+							<th><a class="sort" href="<?php echo $sort_location_state; ?>"><?php echo lang('column_state'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'location_state') ? $order_by_active : $order_by; ?>"></i></a></th>
+							<th><a class="sort" href="<?php echo $sort_location_postcode; ?>"><?php echo lang('column_postcode'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'location_postcode') ? $order_by_active : $order_by; ?>"></i></a></th>
 							<th><?php echo lang('column_telephone'); ?></th>
 							<th class="text-center"><?php echo lang('column_status'); ?></th>
-							<th class="id"><a class="sort" href="<?php echo $sort_id; ?>"><?php echo lang('column_id'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'location_id') ? $order_by_active : $order_by; ?>"></i></a></th>
+							<th class="id"><a class="sort" href="<?php echo $sort_location_id; ?>"><?php echo lang('column_id'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'location_id') ? $order_by_active : $order_by; ?>"></i></a></th>
 						</tr>
 					</thead>
 					<tbody>
 						<?php if ($locations) { ?>
 						<?php foreach ($locations as $location) { ?>
 						<tr>
-							<td class="action action-three"><input type="checkbox" value="<?php echo $location['location_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
+							<td class="action action-three">
+								<div class="checkbox checkbox-primary">
+									<input type="checkbox" class="styled" id="checkbox-<?php echo $location['location_id']; ?>" value="<?php echo $location['location_id']; ?>" name="delete[]" />
+									<label for="checkbox-<?php echo $location['location_id']; ?>"></label>
+								</div>
 								<a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $location['edit']; ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;
 								<?php if ($location['default'] === '1') { ?>
 									<a class="btn btn-warning" disabled="disabled" title="Default"><i class="fa fa-star"></i></a>
@@ -72,7 +75,8 @@
 									<a class="btn btn-warning" title="Set Default" href="<?php echo $location['default']; ?>"><i class="fa fa-star-o"></i></a>
 								<?php } ?>
 							</td>
-							<td><?php echo $location['location_name']; ?>
+							<td>
+								<?php echo $location['location_name']; ?>
 								<?php if ($default_location_id === $location['location_id']) { ?>
 								<?php echo lang('text_default'); ?>
 								<?php } ?>
@@ -81,7 +85,7 @@
 							<td><?php echo $location['location_state']; ?></td>
 							<td><?php echo $location['location_postcode']; ?></td>
 							<td><?php echo $location['location_telephone']; ?></td>
-							<td class="text-center"><?php echo $location['location_status']; ?></td>
+							<td class="text-center"><?php echo ($location['location_status'] === '1') ? lang('text_enabled') : lang('text_disabled'); ?></td>
 							<td class="id"><?php echo $location['location_id']; ?></td>
 						</tr>
 						<?php } ?>
@@ -95,16 +99,11 @@
 				</div>
 			</form>
 
-			<div class="pagination-bar clearfix">
-				<div class="links"><?php echo $pagination['links']; ?></div>
-				<div class="info"><?php echo $pagination['info']; ?></div>
+			<div class="pagination-bar row">
+				<div class="links col-sm-8"><?php echo $pagination['links']; ?></div>
+				<div class="info col-sm-4"><?php echo $pagination['info']; ?></div>
 			</div>
 		</div>
 	</div>
 </div>
-<script type="text/javascript"><!--
-function filterList() {
-	$('#filter-form').submit();
-}
-//--></script>
 <?php echo get_footer(); ?>

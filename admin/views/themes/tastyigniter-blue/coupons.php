@@ -65,7 +65,12 @@
 				<table class="table table-striped table-border">
 					<thead>
 						<tr>
-							<th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
+							<th class="action">
+								<div class="checkbox checkbox-primary">
+									<input type="checkbox" id="checkbox-all" class="styled" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);">
+									<label for="checkbox-all"></label>
+								</div>
+							</th>
 							<th><a class="sort" href="<?php echo $sort_name; ?>"><?php echo lang('column_name'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'name') ? $order_by_active : $order_by; ?>"></i></a></th>
 							<th><a class="sort" href="<?php echo $sort_code; ?>"><?php echo lang('column_code'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'code') ? $order_by_active : $order_by; ?>"></i></a></th>
 							<th><a class="sort" href="<?php echo $sort_type; ?>"><?php echo lang('column_type'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'type') ? $order_by_active : $order_by; ?>"></i></a></th>
@@ -78,7 +83,11 @@
 						<?php if ($coupons) {?>
 						<?php foreach ($coupons as $coupon) { ?>
 						<tr>
-							<td class="action"><input type="checkbox" value="<?php echo $coupon['coupon_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
+							<td class="action">
+								<div class="checkbox checkbox-primary">
+									<input type="checkbox" class="styled" id="checkbox-<?php echo $coupon['coupon_id']; ?>" value="<?php echo $coupon['coupon_id']; ?>" name="delete[]" />
+									<label for="checkbox-<?php echo $coupon['coupon_id']; ?>"></label>
+								</div>
 								<a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $coupon['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
 							<td><?php echo $coupon['name']; ?></td>
 							<td><?php echo $coupon['code']; ?></td>
@@ -98,9 +107,9 @@
 				</div>
 			</form>
 
-			<div class="pagination-bar clearfix">
-				<div class="links"><?php echo $pagination['links']; ?></div>
-				<div class="info"><?php echo $pagination['info']; ?></div>
+			<div class="pagination-bar row">
+				<div class="links col-sm-8"><?php echo $pagination['links']; ?></div>
+				<div class="info col-sm-4"><?php echo $pagination['info']; ?></div>
 			</div>
 		</div>
 	</div>

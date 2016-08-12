@@ -95,7 +95,11 @@
 
                     <form role="form" id="message-form" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
                         <div class="message-controls">
-                            <input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);">&nbsp;&nbsp;
+
+                            <div class="checkbox checkbox-primary">
+                                <input type="checkbox" id="checkbox-all" class="styled" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);">
+                                <label for="checkbox-all"></label>
+                            </div>
                             <?php if ($filter_folder === 'archive') { ?>
                                 <button class="btn btn-default" title="<?php echo lang('text_move_to_inbox'); ?>" onclick="moveToInbox()"><i class="fa fa-inbox"></i>&nbsp;&nbsp;&nbsp;<i class="fa fa-arrow-left"></i></button>
                             <?php } else if ($filter_folder === 'inbox' OR $filter_folder === 'sent') { ?>
@@ -126,7 +130,10 @@
                                         <?php foreach ($messages as $message) { ?>
                                             <tr class="<?php echo $message['state']; ?>">
                                                 <td class="action">
-                                                    <input type="checkbox" value="<?php echo ($filter_folder === 'draft') ? $message['message_id'] : $message['message_meta_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
+                                                    <div class="checkbox checkbox-primary">
+                                                        <input type="checkbox" class="styled" id="checkbox-<?php echo ($filter_folder === 'draft') ? $message['message_id'] : $message['message_meta_id']; ?>" value="<?php echo ($filter_folder === 'draft') ? $message['message_id'] : $message['message_meta_id']; ?>" name="delete[]" />
+                                                        <label for="checkbox-<?php echo ($filter_folder === 'draft') ? $message['message_id'] : $message['message_meta_id']; ?>"></label>
+                                                    </div>                                                     
                                                     <i class="fa fa-star-o text-warning"></i>
                                                 </td>
                                                 <td><?php echo $message['recipient']; ?></a></td>
@@ -153,9 +160,9 @@
                         </div>
                     </form>
 
-                    <div class="pagination-bar clearfix">
-                        <div class="links"><?php echo $pagination['links']; ?></div>
-                        <div class="info"><?php echo $pagination['info']; ?></div>
+                    <div class="pagination-bar row">
+                        <div class="links col-sm-8"><?php echo $pagination['links']; ?></div>
+                        <div class="info col-sm-4"><?php echo $pagination['info']; ?></div>
                     </div>
                 </div>
             </div>

@@ -18,7 +18,12 @@
                                 <table class="table table-striped table-border table-no-spacing">
                                     <thead>
                                         <tr>
-                                            <th width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'tables\']').prop('checked', this.checked);"></th>
+                                            <th width="1" style="text-align:center;">
+                                                <div class="checkbox checkbox-primary">
+                                                    <input type="checkbox" id="checkbox-all" class="styled" onclick="$('input[name*=\'tables\']').prop('checked', this.checked);">
+                                                    <label for="checkbox-all"></label>
+                                                </div>
+                                            </th>
                                             <th><?php echo lang('column_select_tables'); ?></th>
                                             <th><?php echo lang('column_records'); ?></th>
                                             <th><?php echo lang('column_data_size'); ?></th>
@@ -30,7 +35,12 @@
                                     <tbody>
                                         <?php foreach ($db_tables as $key => $db_table) { ?>
                                         <tr>
-                                            <td><input type="checkbox" name="tables[]" id="input-table-<?php echo $key; ?>" value="<?php echo $db_table['name']; ?>" <?php echo set_checkbox('tables[]', $db_table['name']); ?> /></td>
+                                            <td>
+                                                <div class="checkbox checkbox-primary">
+                                                    <input type="checkbox" class="styled" value="<?php echo $db_table['name']; ?>" name="tables[]" id="input-table-<?php echo $key; ?>" <?php echo set_checkbox('tables[]', $db_table['name']); ?> />
+                                                    <label for="input-table-<?php echo $key; ?>"></label>
+                                                </div>
+                                            </td>
                                             <td><a href="<?php echo $db_table['browse']; ?>"><i><?php echo $db_table['name']; ?></i></a></td>
                                             <td><i><?php echo $db_table['records']; ?></i></td>
                                             <td><?php echo $db_table['data_length']; ?></td>

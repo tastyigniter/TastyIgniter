@@ -63,9 +63,9 @@
                                         <tr>
                                             <th><b><?php echo $key; ?></b></th>
                                             <th class="action text-center"><a class="clickable" onclick="var $checkbox = $('input[value*=\'access\']');$checkbox.prop('checked', !$checkbox[0].checked);"><?php echo lang('column_access'); ?></a></th>
-                                            <th class="action text-center success"><a class="clickable" onclick="var $checkbox = $('input[value*=\'manage\']');$checkbox.prop('checked', !$checkbox[0].checked);"><?php echo lang('column_manage'); ?></a></th>
-                                            <th class="action text-center info"><a class="clickable" onclick="var $checkbox = $('input[value*=\'add\']');$checkbox.prop('checked', !$checkbox[0].checked);"><?php echo lang('column_add'); ?></a></th>
-                                            <th class="action text-center danger"><a class="clickable" onclick="var $checkbox = $('input[value*=\'delete\']');$checkbox.prop('checked', !$checkbox[0].checked);"><?php echo lang('column_delete'); ?></a></th>
+                                            <th class="action text-center bg-success"><a class="clickable" onclick="var $checkbox = $('input[value*=\'manage\']');$checkbox.prop('checked', !$checkbox[0].checked);"><?php echo lang('column_manage'); ?></a></th>
+                                            <th class="action text-center bg-info"><a class="clickable" onclick="var $checkbox = $('input[value*=\'add\']');$checkbox.prop('checked', !$checkbox[0].checked);"><?php echo lang('column_add'); ?></a></th>
+                                            <th class="action text-center bg-danger"><a class="clickable" onclick="var $checkbox = $('input[value*=\'delete\']');$checkbox.prop('checked', !$checkbox[0].checked);"><?php echo lang('column_delete'); ?></a></th>
                                             <th><?php echo lang('column_description'); ?></th>
                                         </tr>
                                     </thead>
@@ -76,34 +76,18 @@
                                                         <?php echo $permission['name']; ?>
                                                     </a>
                                                 </td>
-                                                <?php if (!in_array('access', $permission['action'])) { ?>
-                                                    <td class="action text-center"><span class="small text-muted">--</span></td>
-                                                <?php } else if (in_array('access', $permission['group_permissions'])) { ?>
-                                                    <td class="action text-center"><input type="checkbox" name="permissions[<?php echo $permission['permission_id']; ?>][]" value="access" checked="checked" /></td>
-                                                <?php } else { ?>
-                                                    <td class="action text-center"><input type="checkbox" name="permissions[<?php echo $permission['permission_id']; ?>][]" value="access" /></td>
-                                                <?php } ?>
-                                                <?php if (!in_array('manage', $permission['action'])) { ?>
-                                                    <td class="action text-center"><span class="small text-muted">--</span></td>
-                                                <?php } else if (in_array('manage', $permission['group_permissions'])) { ?>
-                                                    <td class="action text-center success"><input type="checkbox" name="permissions[<?php echo $permission['permission_id']; ?>][]" value="manage" checked="checked" /></td>
-                                                <?php } else { ?>
-                                                    <td class="action text-center success"><input type="checkbox" name="permissions[<?php echo $permission['permission_id']; ?>][]" value="manage" /></td>
-                                                <?php } ?>
-                                                <?php if (!in_array('add', $permission['action'])) { ?>
-                                                    <td class="action text-center"><span class="small text-muted">--</span></td>
-                                                <?php } else if (in_array('add', $permission['group_permissions'])) { ?>
-                                                    <td class="action text-center info"><input type="checkbox" name="permissions[<?php echo $permission['permission_id']; ?>][]" value="add" checked="checked" /></td>
-                                                <?php } else { ?>
-                                                    <td class="action text-center info"><input type="checkbox" name="permissions[<?php echo $permission['permission_id']; ?>][]" value="add" /></td>
-                                                <?php } ?>
-                                                <?php if (!in_array('delete', $permission['action'])) { ?>
-                                                <td class="action text-center"><span class="small text-muted">--</span></td>
-                                                <?php } else if (in_array('delete', $permission['group_permissions'])) { ?>
-                                                    <td class="action text-center danger"><input type="checkbox" name="permissions[<?php echo $permission['permission_id']; ?>][]" value="delete" checked="checked" /></td>
-                                                <?php } else { ?>
-                                                    <td class="action text-center danger"><input type="checkbox" name="permissions[<?php echo $permission['permission_id']; ?>][]" value="delete" /></td>
-                                                <?php } ?>
+												<?php foreach (array('access' => 'default', 'manage' => 'success', 'add' => 'info', 'delete' => 'danger') as $action => $class) { ?>
+													<td class="action text-center">
+														<?php if (!in_array($action, $permission['action'])) { ?>
+															<span class="small text-muted">--</span>
+														<?php } else { ?>
+															<div class="checkbox checkbox-<?php echo $class; ?>">
+																<input type="checkbox" class="styled" id="checkbox-<?php echo $action; ?>" value="<?php echo $action; ?>" name="permissions[<?php echo $permission['permission_id']; ?>][]" <?php echo (in_array($action, $permission['group_permissions'])) ? 'checked="checked"' : ''; ?>/>
+																<label for="checkbox-<?php echo $action; ?>"></label>
+															</div>
+														<?php } ?>
+													</td>
+												<?php } ?>
                                                 <td><?php echo $permission['description']; ?></td>
                                             </tr>
                                         <?php } ?>

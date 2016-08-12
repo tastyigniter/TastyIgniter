@@ -2,9 +2,6 @@
 <div class="row content">
 	<div class="col-md-12">
 		<div class="panel panel-default panel-themes">
-			<div class="panel-heading">
-				<h3 class="panel-title"><?php echo lang('text_list'); ?></h3>
-			</div>
 			<div class="panel-body">
 				<div class="row wrap-none wrap-left">
 					<?php if ($themes) { ?>
