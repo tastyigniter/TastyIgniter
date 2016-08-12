@@ -1,103 +1,114 @@
 #codeigniter_profiler .profiler {
-    background-color: #fff;
-    position: fixed;
-    z-index: 99999;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: 0 !important;
+background-color: #FFF;
+position: fixed;
+z-index: 99999;
+bottom: 0;
+left: 0;
+right: 0;
+margin: 0 !important;
+font-family: "Lato", Arial, sans-serif;
 }
 #codeigniter_profiler .profiler-sections {
-    background-color: transparent;
-    font-family: "Helvetica Neue";
-    height: 200px;
-    overflow: auto;
-    padding: 0;
+background-color: transparent;
+font-family: "Helvetica Neue";
+height: 200px;
+overflow: auto;
+padding: 0;
 }
 #codeigniter_profiler .profiler-menu {
-    background-color: #e2e8f0;
-    border-top: 1px solid #c4d0e1;
-    border-bottom: 1px solid #c4d0e1;
+background-color: #E2E8F0;
+border-top: 1px solid #C4D0E1;
+border-bottom: 1px solid #C4D0E1;
 }
 #codeigniter_profiler .profiler-menu .nav-tabs {
-    border-bottom:0;
-    padding-bottom: 1px;
+border-bottom: 0;
+padding-bottom: 1px;
 }
 #codeigniter_profiler .profiler-menu a {
-    border-radius: 0;
-    padding: 6px 15px;
+border-radius: 0;
+padding: 6px 15px;
 }
 #codeigniter_profiler .profiler-menu li.disabled > a:focus,
 #codeigniter_profiler .profiler-menu li.disabled > a:hover {
-    background-color: #47a447;
+background-color: #47A447;
 }
 #codeigniter_profiler .profiler-menu #profiler-menu-icon .fa {
-    color: #fff;
+color: #FFF;
 }
 #codeigniter_profiler #ci_profiler_benchmarks,
 #codeigniter_profiler #ci_profiler_benchmarks td {
-    background-color: transparent !important;
+background-color: transparent !important;
 }
-
 #codeigniter_profiler #ci_profiler_memory_usage,
 #codeigniter_profiler #ci_profiler_memory_usage td {
-    background-color: #EDD4FF !important
+background-color: #EDD4FF !important
 }
 #codeigniter_profiler fieldset {
-    background-color: transparent !important;
-    border: 0 none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow-x: auto;
-    overflow-y: hidden;
-    width: 100%;
+background-color: transparent !important;
+border: 0 none !important;
+margin: 0 !important;
+padding: 0 !important;
+overflow-x: auto;
+overflow-y: hidden;
+width: 100%;
 }
 #codeigniter_profiler legend {
-    border: 0;
-    width: auto !important;
-    margin-bottom: 4px;
-    display: none;
+border: 0;
+width: auto !important;
+margin-bottom: 4px;
+display: none;
 }
 #codeigniter_profiler fieldset > table {
-    display: block !important;
+display: block !important;
 }
 #codeigniter_profiler td {
-    background-color: transparent !important;
-    border-bottom: 1px solid #dadada
+background-color: transparent !important;
+border-bottom: 1px solid #DADADA
 }
 #codeigniter_profiler td pre {
-    background-color: #eee;
-    border-color: #e7e7e7;
-    line-height: 1;
-    font-size: 11px;
+background-color: #EEE;
+border-color: #E7E7E7;
+line-height: 1;
+font-size: 11px;
 }
 #codeigniter_profiler td:first-child {
-    border-right: 2px solid #dadada
+border-right: 2px solid #DADADA
 }
 #codeigniter_profiler #ci_profiler_benchmarks td:first-child,
 #codeigniter_profiler #ci_profiler_vars td:first-child,
 #codeigniter_profiler #ci_profiler_http_headers td:first-child,
 #codeigniter_profiler #ci_profiler_session_data td:first-child {
-    width: 10% !important
+width: 10% !important
 }
 #codeigniter_profiler code {
-    background-color: transparent !important;
-    display: inline-block;
-    width: 100%;
-    word-wrap: break-word;
-    font-size: 80%;
+background-color: transparent !important;
+display: inline-block;
+width: 100%;
+word-wrap: break-word;
+font-size: 80%;
 }
 #codeigniter_profiler #ci_profiler_get td:first-child,
 #codeigniter_profiler #ci_profiler_post td:first-child {
-    width: 30% !important
+width: 30% !important
 }
 #codeigniter_profiler #ci_profiler_get td:last-child,
 #codeigniter_profiler #ci_profiler_post td:last-child {
-    width: 70% !important
+width: 70% !important
 }
 .btn-profiler {
-    position: fixed;
-    bottom: 0px;
-    left: 0px;
-    z-index: 99999;
+position: fixed;
+bottom: 0px;
+left: 0px;
+z-index: 99999;
+border-radius: 0;
+}
+.nav-tabs > li > a {
+color: #484848;
+font-size: 13px;
+}
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+color: #333;
+font-weight: 400;
 }

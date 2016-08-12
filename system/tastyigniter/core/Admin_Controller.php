@@ -57,7 +57,7 @@ class Admin_Controller extends Authenticated_Controller
 		if (!isset($this->edit_url)) $this->edit_url = $this->controller . '/edit?id={id}';
 		if (!isset($this->delete_url)) $this->delete_url = $this->controller;
 
-		if (!empty($this->filter)) $this->setFilter();
+		if (!empty($this->filter) OR !empty($this->default_sort)) $this->setFilter();
 		if (!empty($this->sort)) $this->setSort();
 
 		// Change nav menu if single location mode is activated
