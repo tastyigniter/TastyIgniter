@@ -260,6 +260,10 @@ class Staffs_model extends TI_Model
 
 		$_action = is_numeric($staff_id) ? 'updated' : 'added';
 
+		if (is_single_location()) {
+			$save['staff_location_id'] = $this->config->item('default_location_id');
+		}
+
 		if ($staff_id = $this->skip_validation(TRUE)->save($save, $staff_id)) {
 			$this->load->model('Users_model');
 			if (!empty($save['password'])) {

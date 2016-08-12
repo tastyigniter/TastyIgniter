@@ -112,7 +112,7 @@ class Settings extends Admin_Controller
 			$data['auto_lat_lng'] = '1';
 		}
 
-		if (!isset($data['site_location_mode'])) $this->config->set_item('site_location_mode', 'single');
+		if (!isset($data['site_location_mode'])) $this->config->set_item('site_location_mode', 'multiple');
 
 		$image_manager = is_array($data['image_manager']) ? $data['image_manager'] : array();
 		$image_manager_defs = array(
