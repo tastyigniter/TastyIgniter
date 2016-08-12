@@ -44,7 +44,12 @@
 				<table class="table table-striped table-border">
 					<thead>
 						<tr>
-							<th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
+							<th class="action">
+								<div class="checkbox checkbox-primary">
+									<input type="checkbox" id="checkbox-all" class="styled" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);">
+									<label for="checkbox-all"></label>
+								</div>
+							</th>
 							<th class="sorter"><a class="sort" href="<?php echo $sort_name; ?>"><?php echo lang('column_name'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'name') ? $order_by_active : $order_by; ?>"></i></a></th>
                             <th><?php echo lang('column_actions'); ?></th>
                             <th><?php echo lang('column_description'); ?></th>
@@ -56,8 +61,12 @@
 						<?php if ($permissions) {?>
                             <?php foreach ($permissions as $permission) { ?>
                                 <tr>
-                                    <td class="action"><input type="checkbox" value="<?php echo $permission['permission_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
-                                        <a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $permission['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
+                                    <td class="action">
+										<div class="checkbox checkbox-primary">
+											<input type="checkbox" class="styled" id="checkbox-<?php echo $permission['permission_id']; ?>" value="<?php echo $permission['permission_id']; ?>" name="delete[]" />
+											<label for="checkbox-<?php echo $permission['permission_id']; ?>"></label>
+										</div>
+										<a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $permission['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
                                     <td class="sorter"><?php echo $permission['name']; ?></td>
                                     <td><span class="small"><?php echo $permission['action']; ?></span></td>
                                     <td><?php echo $permission['description']; ?></td>
@@ -75,9 +84,9 @@
 				</div>
 			</form>
 
-			<div class="pagination-bar clearfix">
-				<div class="links"><?php echo $pagination['links']; ?></div>
-				<div class="info"><?php echo $pagination['info']; ?></div>
+			<div class="pagination-bar row">
+				<div class="links col-sm-8"><?php echo $pagination['links']; ?></div>
+				<div class="info col-sm-4"><?php echo $pagination['info']; ?></div>
 			</div>
 		</div>
 	</div>

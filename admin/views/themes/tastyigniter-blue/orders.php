@@ -95,9 +95,16 @@
 				<table border="0" class="table table-striped table-border">
 					<thead>
 						<tr>
-							<th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
+							<th class="action">
+								<div class="checkbox checkbox-primary">
+									<input type="checkbox" id="checkbox-all" class="styled" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);">
+									<label for="checkbox-all"></label>
+								</div>
+							</th>
 							<th><a class="sort" href="<?php echo $sort_order_id; ?>"><?php echo lang('column_id'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'order_id') ? $order_by_active : $order_by; ?>"></i></a></th>
-							<th><a class="sort" href="<?php echo $sort_location_name; ?>"><?php echo lang('column_location'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'location_name') ? $order_by_active : $order_by; ?>"></i></a></th>
+							<?php if (!$user_strict_location) { ?>
+								<th><a class="sort" href="<?php echo $sort_location_name; ?>"><?php echo lang('column_location'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'location_name') ? $order_by_active : $order_by; ?>"></i></a></th>
+							<?php } ?>
 							<th><a class="sort" href="<?php echo $sort_first_name; ?>"><?php echo lang('column_customer_name'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'first_name') ? $order_by_active : $order_by; ?>"></i></a></th>
 							<th><a class="sort" href="<?php echo $sort_status_name; ?>"><?php echo lang('column_status'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'status_name') ? $order_by_active : $order_by; ?>"></i></a></th>
 							<th><a class="sort" href="<?php echo $sort_order_type; ?>"><?php echo lang('column_type'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'order_type') ? $order_by_active : $order_by; ?>"></i></a></th>
@@ -110,13 +117,19 @@
 						<?php if ($orders) { ?>
 						<?php foreach ($orders as $order) { ?>
 						<tr>
-							<td class="action"><input type="checkbox" value="<?php echo $order['order_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
+							<td class="action">
+								<div class="checkbox checkbox-primary">
+									<input type="checkbox" class="styled" id="checkbox-<?php echo $order['order_id']; ?>" value="<?php echo $order['order_id']; ?>" name="delete[]" />
+									<label for="checkbox-<?php echo $order['order_id']; ?>"></label>
+								</div>
 								<a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $order['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
 							<td><?php echo $order['order_id']; ?></td>
-							<td><?php echo $order['location_name']; ?></td>
+							<?php if (!$user_strict_location) { ?>
+								<td><?php echo $order['location_name']; ?></td>
+							<?php } ?>
 							<td><?php echo $order['first_name'] .' '. $order['last_name']; ?></td>
                             <td><span class="label label-default" style="background-color: <?php echo $order['status_color']; ?>;"><?php echo $order['order_status']; ?></span></td>
-							<td class="text-center"><?php echo ($order['order_type'] === '1') ? lang('text_delivery') : lang('text_collection'); ?></td>
+							<td><?php echo ($order['order_type'] === '1') ? lang('text_delivery') : lang('text_collection'); ?></td>
 							<td><?php echo $order['payment']; ?></td>
 							<td><?php echo $order['order_total']; ?></td>
 							<td class="text-center"><?php echo $order['order_time']; ?> - <?php echo $order['order_date']; ?></td>
@@ -132,9 +145,9 @@
 				</div>
 			</form>
 
-			<div class="pagination-bar clearfix">
-				<div class="links"><?php echo $pagination['links']; ?></div>
-				<div class="info"><?php echo $pagination['info']; ?></div>
+			<div class="pagination-bar row">
+				<div class="links col-sm-8"><?php echo $pagination['links']; ?></div>
+				<div class="info col-sm-4"><?php echo $pagination['info']; ?></div>
 			</div>
 		</div>
 	</div>

@@ -18,7 +18,7 @@
 										<select name="filter_category" class="form-control input-sm">
 											<option value=""><?php echo lang('text_filter_category'); ?></option>
 											<?php foreach ($categories as $key => $value) { ?>
-												<?php if ($key == $category_id) { ?>
+												<?php if ($key == $filter_category) { ?>
 													<option value="<?php echo $key; ?>" <?php echo set_select('filter_category', $key, TRUE); ?> ><?php echo $value; ?></option>
 												<?php } else { ?>
 													<option value="<?php echo $key; ?>" <?php echo set_select('filter_category', $key); ?> ><?php echo $value; ?></option>
@@ -56,7 +56,10 @@
 						<thead>
 						<tr>
 							<th class="action">
-								<input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);">
+								<div class="checkbox checkbox-primary">
+									<input type="checkbox" id="checkbox-all" class="styled" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);">
+									<label for="checkbox-all"></label>
+								</div>
 							</th>
 							<!--<th>Photo</th>-->
 							<th class="name">
@@ -84,7 +87,10 @@
 							<?php foreach ($menus as $menu) { ?>
 								<tr id="<?php echo $menu['menu_id']; ?>">
 									<td class="action">
-										<input type="checkbox" value="<?php echo $menu['menu_id']; ?>" name="delete[]"/>&nbsp;&nbsp;&nbsp;
+										<div class="checkbox checkbox-primary">
+											<input type="checkbox" class="styled" id="checkbox-<?php echo $menu['menu_id']; ?>" value="<?php echo $menu['menu_id']; ?>" name="delete[]"/>
+											<label for="checkbox-<?php echo $menu['menu_id']; ?>"></label>
+										</div>
 										<a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $menu['edit']; ?>"><i class="fa fa-pencil"></i></a>
 									</td>
 									<!--<td class="left"><img src="<?php echo $menu['menu_photo']; ?>"></td>-->
@@ -114,9 +120,9 @@
 				</div>
 			</form>
 
-			<div class="pagination-bar clearfix">
-				<div class="links"><?php echo $pagination['links']; ?></div>
-				<div class="info"><?php echo $pagination['info']; ?></div>
+			<div class="pagination-bar row">
+				<div class="links col-sm-8"><?php echo $pagination['links']; ?></div>
+				<div class="info col-sm-4"><?php echo $pagination['info']; ?></div>
 			</div>
 		</div>
 	</div>
