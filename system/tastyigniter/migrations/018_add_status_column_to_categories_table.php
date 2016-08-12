@@ -3,7 +3,7 @@
 /**
  * Add status column to categories table
  */
-class Migration_add_status_column_to_categories_table extends CI_Migration {
+class Migration_add_status_column_to_categories_table extends TI_Migration {
 
 	public function up() {
 		$this->dbforge->add_column('categories', array('status TINYINT(4) NOT NULL DEFAULT "1"'));
@@ -18,4 +18,4 @@ class Migration_add_status_column_to_categories_table extends CI_Migration {
 }
 
 /* End of file 018_add_status_column_to_categories_table.php */
-/* Location: ./setup/migrations/018_add_status_column_to_categories_table.php */
+/* Location: ./system/tastyigniter/migrations/018_add_status_column_to_categories_table.php */

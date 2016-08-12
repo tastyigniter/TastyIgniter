@@ -3,7 +3,7 @@
 /**
  * Add column status to the coupons_history table
  */
-class Migration_add_column_status_to_coupons_history_table extends CI_Migration {
+class Migration_add_column_status_to_coupons_history_table extends TI_Migration {
 
 	public function up() {
 		$this->dbforge->add_column('coupons_history', array('status TINYINT NOT NULL'));
@@ -18,4 +18,4 @@ class Migration_add_column_status_to_coupons_history_table extends CI_Migration 
 }
 
 /* End of file 021_add_column_status_to_coupons_history_table.php */
-/* Location: ./setup/migrations/021_add_column_status_to_coupons_history_table.php */
+/* Location: ./system/tastyigniter/migrations/021_add_column_status_to_coupons_history_table.php */

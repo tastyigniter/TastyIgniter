@@ -157,16 +157,6 @@ class TI_Migration extends CI_Migration {
 			return FALSE;
 		}
 
-		$this->load->model('Setup_model');
-
-		if ($this->input->post('demo_data') === '1'
-			AND ! $this->Setup_model->loadDemoSchema($this->input->post('demo_data'))) {
-
-			$this->_error_string = 'Migration: demo_schema execution failed';
-
-			return FALSE;
-		}
-
 		return TRUE;
 	}
 

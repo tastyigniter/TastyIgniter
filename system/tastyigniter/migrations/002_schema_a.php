@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-class Migration_Schema_a extends CI_Migration {
+class Migration_Schema_a extends TI_Migration {
 
 	public function up() {
 		$this->_countries();
@@ -183,4 +183,4 @@ class Migration_Schema_a extends CI_Migration {
 }
 
 /* End of file 002_schema.php */
-/* Location: ./setup/migrations/002_schema.php */
+/* Location: ./system/tastyigniter/migrations/002_schema.php */

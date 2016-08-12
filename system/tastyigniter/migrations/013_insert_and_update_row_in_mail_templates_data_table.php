@@ -3,7 +3,7 @@
 /**
  * Update the mail templates to responsive design
  */
-class Migration_insert_and_update_row_in_mail_templates_data_table extends CI_Migration {
+class Migration_insert_and_update_row_in_mail_templates_data_table extends TI_Migration {
 
     public function up() {
         $this->db->insert('mail_templates_data', array(
@@ -132,4 +132,4 @@ class Migration_insert_and_update_row_in_mail_templates_data_table extends CI_Mi
 }
 
 /* End of file 013_insert_and_update_row_in_mail_templates_data_table.php */
-/* Location: ./setup/migrations/013_insert_and_update_row_in_mail_templates_data_table.php */
+/* Location: ./system/tastyigniter/migrations/013_insert_and_update_row_in_mail_templates_data_table.php */

@@ -3,7 +3,7 @@
 /**
  * Create the layouts and modules relationship table
  */
-class Migration_create_layout_modules_table extends CI_Migration {
+class Migration_create_layout_modules_table extends TI_Migration {
 
     public function up() {
         $fields = array(
@@ -17,11 +17,8 @@ class Migration_create_layout_modules_table extends CI_Migration {
 
         $this->dbforge->add_field($fields);
         $this->dbforge->create_table('layout_modules');
-
-        include(IGNITEPATH . '/migrations/initial_schema.php');
-        if (!empty($insert_layout_modules_data)) {
-            $this->db->query($insert_layout_modules_data);
-        }
+        
+        $this->Setup_model->querySchema('layout_modules', 'initial');
     }
 
     public function down() {
@@ -30,4 +27,4 @@ class Migration_create_layout_modules_table extends CI_Migration {
 }
 
 /* End of file 004_create_layout_modules_table.php */
-/* Location: ./setup/migrations/004_create_layout_modules_table.php */
+/* Location: ./system/tastyigniter/migrations/004_create_layout_modules_table.php */

@@ -5,7 +5,7 @@
  * Add priority column to menus table
  * Add is_default column to menu_options table
  */
-class Migration_create_mealtimes_table_and_add_column_to_menus_table_and_menu_options_table extends CI_Migration {
+class Migration_create_mealtimes_table_and_add_column_to_menus_table_and_menu_options_table extends TI_Migration {
 
     public function up() {
         if ($this->db->table_exists('mealtimes')) return;
@@ -74,4 +74,4 @@ class Migration_create_mealtimes_table_and_add_column_to_menus_table_and_menu_op
 }
 
 /* End of file 029_create_mealtimes_table_and_add_column_to_menus_table_and_menu_options_table.php */
-/* Location: ./setup/migrations/029_create_mealtimes_table_and_add_column_to_menus_table_and_menu_options_table.php */
+/* Location: ./system/tastyigniter/migrations/029_create_mealtimes_table_and_add_column_to_menus_table_and_menu_options_table.php */
