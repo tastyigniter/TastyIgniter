@@ -69,14 +69,24 @@ class Base_Controller extends MX_Controller
 	protected $current_user;
 
 	/**
+	 * @var array Default methods which cannot be called as actions.
+	 */
+	public $hidden_methods = array('getList', 'getForm');
+
+	/**
 	 * @var array Filters for list columns
 	 */
-	public $list_filters = array();
+	public $filter = array();
+
+	/**
+	 * @var array Default sort
+	 */
+	public $default_sort = array();
 
 	/**
 	 * @var array Sorting columns
 	 */
-	public $sort_columns = array();
+	public $sort = array();
 
 	/**
 	 * Class constructor
@@ -136,10 +146,8 @@ class Base_Controller extends MX_Controller
 
 	protected function setUser() {
 		if (class_exists('User', FALSE)) {
-			$this->user->auth();
-
 			// Load the currently logged-in user for convenience
-			if ($this->user->isLogged()) {
+			if ($this->user->auth() AND $this->user->isLogged()) {
 				$this->current_user = $this->user;
 			}
 		}
@@ -164,31 +172,67 @@ class Base_Controller extends MX_Controller
 		redirect(($uri === NULL) ? $this->index_url : $uri);
 	}
 
-	public function createFilter() {
-		if (is_array($this->list_filters)) {
-			if (!isset($this->list_filters['page'])) $this->list_filters['page'] = '';
-			if (!isset($this->list_filters['limit'])) $this->list_filters['limit'] = $this->config->item('page_limit');
+	public function setFilter($filter = '', $value = NULL) {
+		if (!isset($this->filter['page'])) $this->filter['page'] = '';
+		if (!isset($this->filter['limit'])) $this->filter['limit'] = $this->config->item('page_limit');
+		$this->filter['order_by'] = (isset($this->default_sort[1])) ? $this->default_sort[1] : 'ASC';
+		$this->filter['sort_by'] = (isset($this->default_sort[0])) ? $this->default_sort[0] : '';
 
-			foreach ($this->list_filters as $item => $value) {
-				$this->list_filters[$item] = ($this->input->get($item)) ? $this->input->get($item) : $value;
-			}
+		if (is_string($filter)) {
+			$filter = array($filter => $value);
+		}
+
+		foreach (array_merge($this->filter, $filter) as $name => $value) {
+			$this->filter[$name] = $this->input->get($name) !== NULL ? $this->input->get($name) : $value;
 		}
 	}
 
-	protected function createSorting() {
-		if (is_array($this->sort_columns)) {
-			$order_by = (isset($this->list_filters['order_by']) AND $this->list_filters['order_by'] == 'ASC') ? 'DESC' : 'ASC';
-			foreach ($this->sort_columns as $sort) {
-				$url = array_merge(array_filter($this->input->get()), array('sort_by' => $sort, 'order_by' => $order_by));
-				if ((strpos($sort, '.') !== FALSE)) {
-					$sort = explode('.', $sort);
-					$sort = end($sort);
+	public function getFilter($filter = NULL) {
+		if ($filter === NULL) {
+			return $this->filter;
+		} else if ($filter AND $this->input->get($filter)) {
+			return $this->input->get($filter);
+		} else if (isset($this->filter[$filter])) {
+			return $this->filter[$filter];
+		} else {
+			return NULL;
+		}
+	}
+
+	public function setSort($sort = array()) {
+		if (is_array($this->sort)) {
+			$order_by = (isset($this->filter['order_by']) AND $this->filter['order_by'] == 'ASC') ? 'DESC' : 'ASC';
+			$this->sort['order_by_active'] = $order_by . ' active';
+			foreach (array_merge($this->sort, $sort) as $sort_by) {
+				$url = array_merge(array_filter($this->input->get()), array('sort_by' => $sort_by, 'order_by' => $order_by));
+				if ((strpos($sort_by, '.') !== FALSE)) {
+					$sort_by = explode('.', $sort_by);
+					$sort_by = end($sort_by);
 				}
-				$this->sort_columns['sort_' . $sort] = site_url($this->index_url . '?' . http_build_query($url));
+				$this->sort['sort_' . $sort_by] = site_url($this->uri->uri_string() . '?' . http_build_query($url));
 			}
 		}
 	}
 
+	protected function getSort($sort_by = NULL) {
+		if ($sort_by === NULL) {
+			return $this->sort;
+		} else if (isset($this->sort[$sort_by])) {
+			return $this->sort[$sort_by];
+		} else if (isset($this->sort['sort_'.$sort_by])) {
+			return $this->sort['sort_'.$sort_by];
+		}
+	}
+
+	public function _remap($method) {
+		if (in_array(strtolower($method), array_map('strtolower', $this->hidden_methods))) {
+			$this->index();
+		} else if (method_exists($this, $method)) {
+			$this->$method();
+		} else {
+			show_404(strtolower($this->controller).'/'.$method);
+		}
+	}
 }
 
 /* End of file Base_Controller.php */

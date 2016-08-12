@@ -43,6 +43,7 @@ class Admin_Controller extends Authenticated_Controller
 	 */
 	public function __construct() {
 		$this->libraries[] = 'form_validation';
+		$this->models[] = 'Locations_model';
 
 		parent::__construct();
 
@@ -51,15 +52,22 @@ class Admin_Controller extends Authenticated_Controller
 		// Load template library
 		$this->load->library('template');
 
-		$this->form_validation->CI =& $this;
-
 		if (!isset($this->index_url)) $this->index_url = $this->controller;
 		if (!isset($this->create_url)) $this->create_url = $this->controller . '/edit';
 		if (!isset($this->edit_url)) $this->edit_url = $this->controller . '/edit?id={id}';
 		if (!isset($this->delete_url)) $this->delete_url = $this->controller;
 
-		$this->createFilter();
-		$this->createSorting();
+		if (!empty($this->filter)) $this->setFilter();
+		if (!empty($this->sort)) $this->setSort();
+
+		// Change nav menu if single location mode is activated
+		if (($this->user AND $this->user->isStrictLocation()) OR $this->config->item('site_location_mode') === 'single') {
+			$this->template->removeNavMenuItem('locations', 'restaurant');
+			$menu = array('priority' => '1', 'class' => 'locations', 'href' => site_url('locations/edit'), 'title' => lang('menu_setting'), 'permission' => 'Admin.Locations');
+			$this->template->addNavMenuItem('locations', $menu, 'restaurant');
+		}
+
+		$this->form_validation->CI =& $this;
 	}
 
 	protected function redirect($uri = NULL) {
