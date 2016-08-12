@@ -11,6 +11,7 @@ $lang['text_tab_details'] 		        = 'Details';
 $lang['text_modules'] 		            = 'Modules';
 
 $lang['column_name'] 		            = 'Layout';
+$lang['column_active_modules'] 		    = 'Active Modules';
 $lang['column_module'] 		            = 'Module';
 $lang['column_partial'] 		        = 'Partial Area';
 $lang['column_priority'] 		        = 'Priority';
