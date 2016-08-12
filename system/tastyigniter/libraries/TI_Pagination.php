@@ -21,61 +21,76 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @package        TastyIgniter\Libraries\TI_Pagination.php
  * @link           http://docs.tastyigniter.com
  */
-class TI_Pagination extends CI_Pagination {
+class TI_Pagination extends CI_Pagination
+{
 
-    protected $text = '';
+	/**
+	 * Constructor
+	 *
+	 * @param	array	$params	Initialization parameters
+	 * @return	void
+	 */
+	public function __construct($params = array())
+	{
+		$this->CI =& get_instance();
+		$this->CI->load->language('pagination');
+		foreach (array('first_link', 'next_link', 'prev_link', 'last_link', 'info_text', 'per_page_text') as $key)
+		{
+			if (($val = $this->CI->lang->line('pagination_'.$key)) !== FALSE)
+			{
+				$this->$key = $val;
+			}
+		}
 
-    /**
-     * Initialize Preferences
-     *
-     * @param	array	$params	Initialization parameters
-     * @return	TI_Pagination
-     */
-    public function initialize(array $params = array())
-    {
-        isset($params['attributes']) OR $params['attributes'] = array();
-        if (is_array($params['attributes']))
-        {
-            $this->_parse_attributes($params['attributes']);
-            unset($params['attributes']);
-        }
+		$this->initialize($params);
+		log_message('info', 'Pagination Class Initialized');
+	}
 
-        // Deprecated legacy support for the anchor_class option
-        // Should be removed in CI 3.1+
-        if (isset($params['anchor_class']))
-        {
-            empty($params['anchor_class']) OR $attributes['class'] = $params['anchor_class'];
-            unset($params['anchor_class']);
-        }
+	/**
+	 * Initialize Preferences
+	 *
+	 * @param    array $params Initialization parameters
+	 *
+	 * @return    TI_Pagination
+	 */
+	public function initialize(array $params = array()) {
+		isset($params['attributes']) OR $params['attributes'] = array();
+		if (is_array($params['attributes'])) {
+			$this->_parse_attributes($params['attributes']);
+			unset($params['attributes']);
+		}
 
-        foreach ($params as $key => $val)
-        {
-            if (property_exists($this, $key))
-            {
-                $this->$key = $val;
-            }
-        }
+		// Deprecated legacy support for the anchor_class option
+		// Should be removed in CI 3.1+
+		if (isset($params['anchor_class'])) {
+			empty($params['anchor_class']) OR $attributes['class'] = $params['anchor_class'];
+			unset($params['anchor_class']);
+		}
 
-        if ($this->CI->config->item('enable_query_strings') === TRUE)
-        {
-            $this->page_query_string = TRUE;
-        }
+		foreach ($params as $key => $val) {
+			if (property_exists($this, $key)) {
+				$this->$key = $val;
+			}
+		}
 
-        if ($this->use_global_url_suffix === TRUE) {
-            $this->suffix = $this->CI->config->item('url_suffix');
-        }
+		if ($this->CI->config->item('enable_query_strings') === TRUE) {
+			$this->page_query_string = TRUE;
+		}
 
-        return $this;
-    }
+		if ($this->use_global_url_suffix === TRUE) {
+			$this->suffix = $this->CI->config->item('url_suffix');
+		}
 
-    // --------------------------------------------------------------------
+		return $this;
+	}
+
+	// --------------------------------------------------------------------
 	/**
 	 * Generate the pagination info
 	 *
-	 * @return	string
+	 * @return    string
 	 */
-	function create_infos()
-	{
+	function create_infos() {
 		$num_pages = ceil($this->total_rows / $this->per_page);
 
 		if ($this->CI->input->get($this->query_string_segment)) {
@@ -88,17 +103,34 @@ class TI_Pagination extends CI_Pagination {
 			'{start}',
 			'{end}',
 			'{total}',
-			'{pages}'
+			'{pages}',
 		);
 
 		$replace = array(
 			($this->total_rows) ? (($page - 1) * $this->per_page) + 1 : 0,
 			((($page - 1) * $this->per_page) > ($this->total_rows - $this->per_page)) ? $this->total_rows : ((($page - 1) * $this->per_page) + $this->per_page),
 			$this->total_rows,
-			$num_pages
+			$num_pages,
 		);
 
-		return ('<span>' . str_replace($find, $replace, $this->text) . '</span>');
+		$per_page = array('20', '50', '100', '250', '500', '1000', '2500');
+		if (APPDIR === MAINDIR) {
+			$info = '<span>' . str_replace($find, $replace, $this->info_text) . '</span>';
+		} else {
+			$info = '<div class="input-group">';
+			$info .= '<span class="input-group-addon">' . str_replace($find, $replace, $this->info_text) . '</span>';
+			if ($this->total_rows > $this->per_page) {
+				$info .= '<select id="per-page-limit" class="form-control per-page-limit" onchange="filterList()">';
+				foreach ($per_page as $num) {
+					$selected = ($this->per_page == $num) ? 'selected' : '';
+					$info .= '<option value="' . $num . '" ' . $selected . '>' . str_replace('{per_page}', $num, $this->per_page_text) . '</option>';
+				}
+				$info .= '</select>';
+			}
+			$info .= '</div>';
+		}
+
+		return $info;
 	}
 
 	// --------------------------------------------------------------------
