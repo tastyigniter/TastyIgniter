@@ -13,6 +13,7 @@ class Login extends Main_Controller
 
 		$this->template->setTitle($this->lang->line('text_heading'));
 
+		$prepend = '';
 		if ($this->input->get('redirect')) {
 			$prepend = '?redirect=' . $this->input->get('redirect');
 		}

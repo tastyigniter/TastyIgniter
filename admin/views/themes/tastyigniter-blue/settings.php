@@ -80,12 +80,12 @@
 						</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-switch" data-toggle="buttons">
-								<label class="btn btn-default active">
+								<label class="btn btn-default <?php echo config_item('site_location_mode') === 'single' ? 'active' : ''; ?>">
 									<input type="radio" name="site_location_mode" value="single" <?php echo set_radio('site_location_mode', 'single', (config_item('site_location_mode') === 'single')); ?>>
 									<?php echo lang('text_single'); ?>
 								</label>
-								<label class="btn btn-default">
-									<input type="radio" name="site_location_mode" value="multiple" <?php echo set_radio('site_location_mode', 'multiple', (config_item('site_location_mode') === 'multiple')); ?>>
+								<label class="btn btn-default <?php echo config_item('site_location_mode') !== 'single' ? 'active' : ''; ?>">
+									<input type="radio" name="site_location_mode" value="multiple" <?php echo set_radio('site_location_mode', 'multiple', (config_item('site_location_mode') !== 'single')); ?>>
 									<?php echo lang('text_multiple'); ?>
 								</label>
 							</div>
@@ -97,7 +97,7 @@
 							<span class="help-block"><?php echo lang('help_default_location'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<?php if (!empty($locations) AND $site_location_mode === 'single') { ?>
+							<?php if (!empty($locations) AND config_item('site_location_mode') === 'single') { ?>
 								<select name="default_location_id" id="input-default-location" class="form-control">
 									<?php if (!empty($locations)) { ?>
 										<option value=""><?php echo lang('text_please_select'); ?></option>

@@ -107,6 +107,10 @@ class Setup_model extends TI_Model
 	}
 
 	public function updateLocation($setting = array()) {
+		if (empty($setting['site_name']) AND empty($setting['site_email'])) {
+			return TRUE;
+		}
+
 		$this->load->model('Locations_model');
 		$this->Locations_model->save(array(
 			'location_name' => $setting['site_name'],

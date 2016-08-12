@@ -25,7 +25,7 @@ class Login extends Admin_Controller
 					array($this->user->getStaffName(), admin_url('staffs/edit?id=' . $this->user->getStaffId()))
 				));
 
-				if (!$this->config->item('default_location_id')) {
+				if (!$this->config->item('address_1', 'main_address')) {
 					$this->redirect('settings');
 				}
 

@@ -8,6 +8,7 @@ class Orders extends Admin_Controller
 		'filter_location' => '',
 		'filter_status'   => '',
 		'filter_type'     => '',
+		'filter_date'     => '',
 		'filter_payment'  => '',
 	);
 

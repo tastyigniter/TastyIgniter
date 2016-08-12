@@ -253,6 +253,10 @@ class Reviews_model extends TI_Model
 			}
 		}
 
+		if (is_single_location()) {
+			$save['location_id'] = $this->config->item('default_location_id');
+		}
+
 		if (APPDIR === ADMINDIR AND isset($save['review_status']) AND $save['review_status'] === '1') {
 			$save['review_status'] = '1';
 		} else if ($this->config->item('approve_reviews') !== '1') {

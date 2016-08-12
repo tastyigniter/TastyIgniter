@@ -85,22 +85,24 @@
 								<?php echo form_error('staff_group_id', '<span class="text-danger">', '</span>'); ?>
 							</div>
 						</div>
-						<div class="form-group">
-							<label for="input-location" class="col-sm-3 control-label"><?php echo lang('label_location'); ?></label>
-							<div class="col-sm-5">
-								<select name="staff_location_id" id="input-location" class="form-control">
-									<option value="0"><?php echo lang('text_use_default'); ?></option>
-									<?php foreach ($locations as $key => $value) { ?>
-									<?php if ($key == $staff_location_id) { ?>
-										<option value="<?php echo $key; ?>" <?php echo set_select('staff_location_id', $key, TRUE); ?> ><?php echo $value; ?></option>
-									<?php } else { ?>
-										<option value="<?php echo $key; ?>" <?php echo set_select('staff_location_id', $key); ?> ><?php echo $value; ?></option>
-									<?php } ?>
-									<?php } ?>
-								</select>
-								<?php echo form_error('staff_location_id', '<span class="text-danger">', '</span>'); ?>
+						<?php if (!is_single_location()) { ?>
+							<div class="form-group">
+								<label for="input-location" class="col-sm-3 control-label"><?php echo lang('label_location'); ?></label>
+								<div class="col-sm-5">
+									<select name="staff_location_id" id="input-location" class="form-control">
+										<option value="0"><?php echo lang('text_use_default'); ?></option>
+										<?php foreach ($locations as $key => $value) { ?>
+										<?php if ($key == $staff_location_id) { ?>
+											<option value="<?php echo $key; ?>" <?php echo set_select('staff_location_id', $key, TRUE); ?> ><?php echo $value; ?></option>
+										<?php } else { ?>
+											<option value="<?php echo $key; ?>" <?php echo set_select('staff_location_id', $key); ?> ><?php echo $value; ?></option>
+										<?php } ?>
+										<?php } ?>
+									</select>
+									<?php echo form_error('staff_location_id', '<span class="text-danger">', '</span>'); ?>
+								</div>
 							</div>
-						</div>
+						<?php } ?>
 					<?php } ?>
 				</div>
 			</div>
