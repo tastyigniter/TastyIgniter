@@ -53,6 +53,22 @@ class Customer_groups_model extends TI_Model
 	}
 
 	/**
+	 * Return total number of customers in group
+	 *
+	 * @param int $customer_group_id
+	 *
+	 * @return int
+	 */
+	public function getCustomersCount($customer_group_id) {
+		if ($customer_group_id) {
+			$this->load->model('Customers_model');
+			$this->Customers_model->where('customer_group_id', $customer_group_id);
+
+			return $this->Customers_model->count();
+		}
+	}
+
+	/**
 	 * Create a new or update existing currency
 	 *
 	 * @param int   $customer_group_id

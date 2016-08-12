@@ -60,6 +60,7 @@ class Customer_groups extends Admin_Controller
 		$results = $this->Customer_groups_model->paginate($this->getFilter());
 		foreach ($results->list as $result) {
 			$data['customer_groups'][] = array_merge($result, array(
+				'customers_count' => $this->Customer_groups_model->getCustomersCount($result['customer_group_id']),
 				'edit' => $this->pageUrl($this->edit_url, array('id' => $result['customer_group_id'])),
 			));
 		}

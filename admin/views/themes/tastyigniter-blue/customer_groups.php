@@ -14,6 +14,7 @@
 									</div>
 								</th>
 								<th><?php echo lang('column_name'); ?></th>
+								<th class="text-center"><?php echo lang('column_customerss'); ?></th>
 								<th class="id"><a class="sort" href="<?php echo $sort_customer_group_id; ?>"><?php echo lang('column_id'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'customer_group_id') ? $order_by_active : $order_by; ?>"></i></a></th>
 							</tr>
 						</thead>
@@ -32,6 +33,7 @@
 										<?php echo lang('text_default'); ?>
 									<?php } ?>
 								</td>
+								<td class="text-center"><?php echo $customer_group['customers_count']; ?></td>
 								<td class="id"><?php echo $customer_group['customer_group_id']; ?></td>
 							</tr>
 							<?php } ?>
