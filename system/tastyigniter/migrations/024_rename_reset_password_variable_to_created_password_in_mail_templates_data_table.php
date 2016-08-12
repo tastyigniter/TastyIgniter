@@ -4,7 +4,7 @@
  * Rename reset_password mail template variable to
  * created_password in mail_templates_data
  */
-class Migration_rename_reset_password_variable_to_created_password_in_mail_templates_data_table extends CI_Migration {
+class Migration_rename_reset_password_variable_to_created_password_in_mail_templates_data_table extends TI_Migration {
 
     public function up() {
         $this->db->update('mail_templates_data', array(
@@ -32,4 +32,4 @@ class Migration_rename_reset_password_variable_to_created_password_in_mail_templ
 }
 
 /* End of file 024_rename_reset_password_variable_to_created_password_in_mail_templates_data_table.php */
-/* Location: ./setup/migrations/024_rename_reset_password_variable_to_created_password_in_mail_templates_data_table.php */
+/* Location: ./system/tastyigniter/migrations/024_rename_reset_password_variable_to_created_password_in_mail_templates_data_table.php */

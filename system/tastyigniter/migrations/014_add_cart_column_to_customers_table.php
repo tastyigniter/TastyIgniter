@@ -3,7 +3,7 @@
 /**
  * Add column cart to the customers table
  */
-class Migration_add_cart_column_to_customers_table extends CI_Migration {
+class Migration_add_cart_column_to_customers_table extends TI_Migration {
 
 	public function up() {
 		$this->dbforge->add_column('customers', array('cart TEXT NOT NULL'));
@@ -15,4 +15,4 @@ class Migration_add_cart_column_to_customers_table extends CI_Migration {
 }
 
 /* End of file 014_add_cart_column_to_customers_table.php */
-/* Location: ./setup/migrations/014_add_cart_column_to_customers_table.php */
+/* Location: ./system/tastyigniter/migrations/014_add_cart_column_to_customers_table.php */

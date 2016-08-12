@@ -3,7 +3,7 @@
 /**
  * Add 'currency_rate, symbol_position, thousand_sign...' columns to 'currencies' table
  */
-class Migration_add_columns_to_currencies_table extends CI_Migration {
+class Migration_add_columns_to_currencies_table extends TI_Migration {
 
 	public function up() {
 		$this->dbforge->add_column('currencies', array('currency_rate DECIMAL(15,8) NOT NULL AFTER currency_symbol'));
@@ -32,4 +32,4 @@ class Migration_add_columns_to_currencies_table extends CI_Migration {
 }
 
 /* End of file 019_add_columns_to_currencies_table.php */
-/* Location: ./setup/migrations/019_add_columns_to_currencies_table.php */
+/* Location: ./system/tastyigniter/migrations/019_add_columns_to_currencies_table.php */

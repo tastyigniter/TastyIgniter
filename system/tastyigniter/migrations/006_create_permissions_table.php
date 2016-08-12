@@ -4,7 +4,7 @@
  * Create permissions table
  * Rename column permission to permissions in the staff_groups table
  */
-class Migration_create_permissions_table extends CI_Migration {
+class Migration_create_permissions_table extends TI_Migration {
 
     public function up() {
         $fields = array(
@@ -21,11 +21,7 @@ class Migration_create_permissions_table extends CI_Migration {
 
         $this->db->query("ALTER TABLE ".$this->db->dbprefix('staff_groups')." CHANGE `permission` `permissions` TEXT  NOT NULL;");
 
-        include(IGNITEPATH . '/migrations/initial_schema.php');
-
-        if ( ! empty($insert_permissions_data)) {
-            $this->db->query($insert_permissions_data);
-        }
+        $this->Setup_model->querySchema('permissions', 'initial');
     }
 
     public function down() {
@@ -36,4 +32,4 @@ class Migration_create_permissions_table extends CI_Migration {
 }
 
 /* End of file 006_create_permissions_table.php */
-/* Location: ./setup/migrations/006_create_permissions_table.php */
+/* Location: ./system/tastyigniter/migrations/006_create_permissions_table.php */

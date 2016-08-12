@@ -3,7 +3,7 @@
 /**
  * Update the order mail templates to include order and menu comment
  */
-class Migration_add_order_and_menu_comment_to_mail_templates_data_table extends CI_Migration {
+class Migration_add_order_and_menu_comment_to_mail_templates_data_table extends TI_Migration {
 
     public function up() {
         $this->db->update('mail_templates_data', array(
@@ -31,4 +31,4 @@ class Migration_add_order_and_menu_comment_to_mail_templates_data_table extends 
 }
 
 /* End of file 023_add_order_and_menu_comment_to_mail_templates_data_table.php */
-/* Location: ./setup/migrations/023_add_order_and_menu_comment_to_mail_templates_data_table.php */
+/* Location: ./system/tastyigniter/migrations/023_add_order_and_menu_comment_to_mail_templates_data_table.php */

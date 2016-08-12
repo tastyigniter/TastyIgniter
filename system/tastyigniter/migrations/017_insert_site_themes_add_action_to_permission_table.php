@@ -3,7 +3,7 @@
 /**
  * Update 'Site.Themes' rule to include 'Add' action
  */
-class Migration_insert_site_themes_add_action_to_permission_table extends CI_Migration {
+class Migration_insert_site_themes_add_action_to_permission_table extends TI_Migration {
 
 	public function up() {
 		$this->db->update('permissions', array(
@@ -55,4 +55,4 @@ class Migration_insert_site_themes_add_action_to_permission_table extends CI_Mig
 }
 
 /* End of file 017_insert_site_themes_add_action_to_permission_table.php */
-/* Location: ./setup/migrations/017_insert_site_themes_add_action_to_permission_table.php */
+/* Location: ./system/tastyigniter/migrations/017_insert_site_themes_add_action_to_permission_table.php */

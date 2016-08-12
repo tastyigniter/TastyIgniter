@@ -3,7 +3,7 @@
 /**
  * Add columns invoice_no, invoice_prefix and invoice_date to the orders table
  */
-class Migration_add_invoice_fields_to_orders_table extends CI_Migration {
+class Migration_add_invoice_fields_to_orders_table extends TI_Migration {
 
 	public function up() {
 		$this->dbforge->add_column('orders', array('invoice_no INT(11) NOT NULL'));
@@ -19,4 +19,4 @@ class Migration_add_invoice_fields_to_orders_table extends CI_Migration {
 }
 
 /* End of file 015_add_invoice_fields_to_orders_table.php */
-/* Location: ./setup/migrations/015_add_invoice_fields_to_orders_table.php */
+/* Location: ./system/tastyigniter/migrations/015_add_invoice_fields_to_orders_table.php */
