@@ -59,9 +59,6 @@ class Installer
 	public function initialize($config = array()) {
 		$this->checkDatabase();
 
-		// Load system configuration from database
-		$this->_loadDbConfig();
-
 		$this->is_installed = $this->isInstalled();
 
 		// If 'config/updated.txt' exists, system needs upgrade
@@ -70,12 +67,18 @@ class Installer
 		}
 
 		// Redirect to setup if app requires setup
-		if ($this->db_settings_exist !== TRUE AND $this->is_installed !== TRUE AND APPDIR !== 'setup') {
-			redirect(root_url('setup'));
-		}
+		if (APPDIR !== 'setup') {
+			if ($this->db_settings_exist !== TRUE OR ($this->db_exists AND $this->is_installed !== TRUE)) {
+				if (!file_exists(ROOTPATH.'/setup/controllers/Setup.php')) {
+					show_error('Upload missing setup folder', 500, 'Error Was Encountered');
+				} else {
+					redirect(root_url('setup'));
+				}
+			}
 
-		if ($this->db_exists !== TRUE AND $this->db_settings_exist AND $this->is_installed !== TRUE) {
-			show_error('Unable to connect to the database', 500, 'Database Error Was Encountered');
+			if ($this->db_exists !== TRUE AND $this->db_settings_exist AND $this->is_installed !== TRUE) {
+				show_error('Unable to connect to the database', 500, 'Database Error Was Encountered');
+			}
 		}
 	}
 
@@ -158,19 +161,11 @@ class Installer
 	}
 
 	public function isInstalled() {
-		// If config ti_version is same with TI_VERSION const, the app is installed
-		if (TI_VERSION !== $this->CI->config->item('ti_version')) {
-			return FALSE;
-		}
-
-		if (!$this->CI->db->table_exists('settings')) {
-			return FALSE;
-		}
-
 		if (!$this->CI->config->item('encryption_key')) {
 			return FALSE;
 		}
 
+		// If config ti_version is not same with TI_VERSION const, the app is not installed
 		if (TI_VERSION !== $this->CI->config->item('ti_version')) {
 			return FALSE;
 		}
@@ -199,7 +194,7 @@ class Installer
 		}
 
 		// Make sure the database name is specified
-		if (empty($db['default']['database']) OR $db['default']['database'] === 'your database name') {
+		if (empty($db['default']['database']) OR $db['default']['dbprefix'] === 'ti_') {
 			$this->db_settings_exist = FALSE;
 
 			return FALSE;
@@ -213,6 +208,12 @@ class Installer
 		if ($this->CI->db->conn_id === FALSE) {
 			$this->db_exists = FALSE;
 
+			return FALSE;
+		}
+
+		$this->CI->db->query("SET SESSION sql_mode=''");
+
+		if (!$this->CI->db->table_exists('settings')) {
 			return FALSE;
 		}
 
@@ -279,7 +280,7 @@ class Installer
 				$content .= "$" . "db['default']['dbdriver'] = 'mysqli';\n";
 				$content .= "$" . "db['default']['dbprefix'] = '" . $dbprefix . "';\n";
 				$content .= "$" . "db['default']['pconnect'] = TRUE;\n";
-				$content .= "$" . "db['default']['db_debug'] = FALSE;\n";
+				$content .= "$" . "db['default']['db_debug'] = (ENVIRONMENT !== 'production');\n";
 				$content .= "$" . "db['default']['cache_on'] = FALSE;\n";
 				$content .= "$" . "db['default']['cachedir'] = '';\n";
 				$content .= "$" . "db['default']['char_set'] = 'utf8';\n";
@@ -290,7 +291,7 @@ class Installer
 				$content .= "$" . "db['default']['compress'] = FALSE;\n";
 				$content .= "$" . "db['default']['stricton'] = FALSE;\n";
 				$content .= "$" . "db['default']['failover'] = array();\n";
-				$content .= "$" . "db['default']['save_queries'] = TRUE;\n\n";
+				$content .= "$" . "db['default']['save_queries'] = (ENVIRONMENT !== 'production');\n\n";
 
 				$content .= "/* End of file database.php */\n";
 				$content .= "/* Location: ./system/tastyigniter/config/database.php */\n";
@@ -322,9 +323,10 @@ class Installer
 	public function setup() {
 		$this->CI->load->model('Setup_model');
 
-		// Install the database tables.
-		$this->CI->load->library('migration');
+		$this->CI->Setup_model->loadSchema();
 
+		// Install the database tables and demo data if necessary.
+		$this->CI->load->library('migration');
 		if (!$this->CI->migration->install()) {
 			show_error($this->CI->migration->error_string());
 		}
@@ -336,9 +338,11 @@ class Installer
 
 		// Save the site configuration to the settings table
 		$settings = array(
-			'ti_setup'   => 'installed',
-			'site_name'  => $this->CI->input->post('site_name'),
-			'site_email' => $this->CI->input->post('site_email'),
+			'ti_setup'           => 'installed',
+			'site_location_mode' => $this->CI->input->post('site_location_mode'),
+			'site_url'           => root_url(),
+			'site_name'          => $this->CI->input->post('site_name'),
+			'site_email'         => $this->CI->input->post('site_email'),
 		);
 
 		if (!$this->CI->Setup_model->updateSettings($settings)) {
@@ -348,6 +352,9 @@ class Installer
 		// Add an item to db configuration as a simple check whether it's installed,
 		// so development doesn't require removing the setup folder.
 		$this->CI->Setup_model->updateVersion();
+		
+		// Create the default location
+		$this->CI->Setup_model->updateLocation($settings);
 
 		// Create the encryption key used for sessions and encryption
 		$this->createEncryptionKey();
@@ -388,7 +395,7 @@ class Installer
 				$this->CI->Setup_model->updateVersion($update_version);
 
 				// Save the site configuration to the settings table
-				if (!$this->CI->Setup_model->updateSettings(array('ti_setup' => 'updated'), TRUE)) {
+				if (!$this->CI->Setup_model->updateSettings(array('ti_setup' => 'updated', 'site_url' => root_url()), TRUE)) {
 					return FALSE;
 				}
 
@@ -399,51 +406,6 @@ class Installer
 			unlink(IGNITEPATH . 'config/updated.txt');
 
 			return TRUE;
-		}
-	}
-
-	/**
-	 * Load config from database
-	 *
-	 * Fetches the config values from the database and adds them to config array
-	 *
-	 */
-	protected function _loadDbConfig() {
-		if ($this->_db_config_loaded === TRUE) {
-			return;
-		}
-
-		// Make sure the database is connected and settings table exists
-		if ($this->db_exists) {
-
-//        $this->database();
-			$this->CI->load->model('Settings_model');
-
-			$this->CI->Settings_model->query("SET SESSION sql_mode=''");
-
-//            $this->db->from('settings');
-
-			if ($settings = $this->CI->Settings_model->getAll()) {
-				foreach ($settings as $setting) {
-					if (!empty($setting['serialized'])) {
-						$this->CI->config->set_item($setting['item'], unserialize($setting['value']));
-					} else {
-						$this->CI->config->set_item($setting['item'], $setting['value']);
-					}
-				}
-
-				if ($this->CI->config->item('timezone')) {
-					date_default_timezone_set($this->CI->config->item('timezone'));
-				}
-
-				if ($this->CI->config->item('site_url')) {
-					$this->CI->config->set_item('base_url', trim($this->CI->config->item('site_url'), '/') . '/' . (APPDIR === MAINDIR) ? '' : APPDIR);
-				}
-
-				$this->_db_config_loaded = TRUE;
-
-				log_message('info', 'Database Config Loaded');
-			}
 		}
 	}
 

@@ -49,6 +49,11 @@ class Events {
 	 *
 	 */
 	public function __construct() {
+		// get all installed extensions
+		if (config_item('ti_version')) {
+			self::setExtensions();
+		}
+
 		self::initialize();
 	}
 
@@ -58,12 +63,6 @@ class Events {
 	 * @return void
 	 */
 	public static function initialize() {
-		// get all installed extensions
-		if (empty(self::$extensions)) {
-			self::$CI =& get_instance();
-			self::$extensions = self::$CI->extension->getInstalledExtensions();
-		}
-
 		// Merge events from indivdual modules.
 		foreach (Modules::list_modules() as $module) {
 			// Skip if module is not installed
