@@ -128,7 +128,6 @@ class TI_Model extends CI_Model
 	protected $belongs_to_many = array();
 	protected $has_one = array();
 	protected $has_many = array();
-
 	protected $with = array();
 
 	/**
@@ -390,26 +389,11 @@ class TI_Model extends CI_Model
 	 *
 	 * @param string $table_name
 	 * @param array  $data
-	 * @param bool   $skip_validation
 	 *
 	 * @return int
 	 */
-	public function insert_into($table_name, $data, $skip_validation = FALSE) {
-		$original_table = $this->table_name;
-		$original_fields = $this->fields;
-		$original_key = $this->primary_key;
-
-		$this->table_name = $table_name;
-		$this->fields = array();
-		$this->primary_key = NULL;
-
-		$result = $this->insert($data, $skip_validation);
-
-		$this->table_name = $original_table;
-		$this->fields = $original_fields;
-		$this->primary_key = $original_key;
-
-		return $result;
+	public function insert_into($table_name, $data) {
+		return $this->db->insert($table_name, $data);
 	}
 
 	/**
@@ -488,26 +472,11 @@ class TI_Model extends CI_Model
 	 * @param string $table_name
 	 * @param mixed  $where
 	 * @param array  $data
-	 * @param bool   $skip_validation
 	 *
 	 * @return int
 	 */
-	public function update_into($table_name, $where = NULL, $data, $skip_validation = FALSE) {
-		$original_table = $this->table_name;
-		$original_fields = $this->fields;
-		$original_key = $this->primary_key;
-
-		$this->table_name = $table_name;
-		$this->fields = array();
-		$this->primary_key = NULL;
-
-		$result = $this->update($where, $data, $skip_validation);
-
-		$this->table_name = $original_table;
-		$this->fields = $original_fields;
-		$this->primary_key = $original_key;
-
-		return $result;
+	public function update_into($table_name, $where = NULL, $data) {
+		return $this->db->update($table_name, $data, $where);
 	}
 
 	/**
@@ -544,34 +513,6 @@ class TI_Model extends CI_Model
 		} else {
 			return $result;
 		}
-	}
-
-	/**
-	 * Save a record, insert or update into a specified database table.
-	 *
-	 * @param string $table_name
-	 * @param array  $data
-	 * @param mixed  $where
-	 * @param bool   $skip_validation
-	 *
-	 * @return int
-	 */
-	public function save_into($table_name, $data = NULL, $where = NULL, $skip_validation = FALSE) {
-		$original_table = $this->table_name;
-		$original_fields = $this->fields;
-		$original_key = $this->primary_key;
-
-		$this->table_name = $table_name;
-		$this->fields = array();
-		$this->primary_key = NULL;
-
-		$result = $this->save($data, $where, $skip_validation);
-
-		$this->table_name = $original_table;
-		$this->fields = $original_fields;
-		$this->primary_key = $original_key;
-
-		return $result;
 	}
 
 	/**
@@ -613,16 +554,7 @@ class TI_Model extends CI_Model
 	 * @return bool
 	 */
 	public function delete_from($table, $where = array()) {
-		$original_table = $this->table_name;
-
-		$this->table_name = $table;
-
-		$this->_set_where(isset($where[0]) ? $where : array($where));
-		$affected_rows = $this->delete();
-
-		$this->table_name = $original_table;
-
-		return $affected_rows;
+		return $this->db->delete($table, $where);
 	}
 
 	//--------------------------------------------------------------------------
@@ -846,20 +778,14 @@ class TI_Model extends CI_Model
 	/**
 	 * Build relations to join on the modal.
 	 *
-	 * @param string|array $relationship
+	 * @param string|array $relations
 	 *
 	 * @return $this
 	 */
-	public function with($relationship) {
-		$relationship = (is_string($relationship)) ? func_get_args() : $relationship;
+	public function with($relations) {
+		$relations = is_string($relations) ? func_get_args() : $relations;
 
-		if (array_intersect_key($relationship, $this->with)) {
-			return $this;
-		}
-
-		$this->with = array_merge($this->with, $relationship);
-
-		$this->relate();
+		$this->relate($relations);
 
 		return $this;
 	}
@@ -871,15 +797,15 @@ class TI_Model extends CI_Model
 	 *
 	 * @return mixed
 	 */
-	public function relate() {
-		if (empty($this->with)) {
+	public function relate($relations) {
+		if (empty($relations)) {
 			return $this;
 		}
 
 		foreach ($this->belongs_to as $key => $value) {
 			list($relation, $options) = $this->get_relation($key, $value);
 
-			if (in_array($relation, $this->with)) {
+			if (in_array($relation, $relations)) {
 				$this->_relate($options);
 			}
 		}
@@ -887,7 +813,7 @@ class TI_Model extends CI_Model
 		foreach ($this->has_one as $key => $value) {
 			list($relation, $options) = $this->get_relation($key, $value);
 
-			if (in_array($relation, $this->with)) {
+			if (in_array($relation, $relations)) {
 				$this->_relate($options);
 			}
 		}
@@ -895,7 +821,7 @@ class TI_Model extends CI_Model
 		foreach ($this->has_many as $key => $value) {
 			list($relation, $options) = $this->get_relation($key, $value);
 
-			if (in_array($relation, $this->with)) {
+			if (in_array($relation, $relations)) {
 				$this->_relate($options);
 			}
 		}
@@ -906,8 +832,8 @@ class TI_Model extends CI_Model
 	/**
 	 * Get the joining table/model name for relation.
 	 * array('categories')
-	 * array('categories' => 'Categ_model')
-	 * array('categories' => array('Categ_model'))
+	 * array('categories' => 'Category_model')
+	 * array('categories' => array('Category_model', 'foreign_key', 'primary_key'))
 	 *
 	 * @param  string $relation
 	 * @param array   $options
@@ -1043,17 +969,6 @@ class TI_Model extends CI_Model
 	 */
 	public function from_json($value, $as_object = FALSE) {
 		return json_decode($value, $as_object);
-	}
-
-	/**
-	 * Filter database records
-	 *
-	 * @param array $filter an associative array of field/value pairs
-	 *
-	 * @return $this
-	 */
-	public function filter($filter = array()) {
-		return $this;
 	}
 
 	/**
@@ -1277,13 +1192,35 @@ class TI_Model extends CI_Model
 		return $this->fields;
 	}
 
+	//--------------------------------------------------------------------------
+	// PAGINATION
+	//--------------------------------------------------------------------------
+
+	public function getCount($filter = array()) {
+		return $this->filter($filter)->count();
+	}
+
+	public function getList($filter = array()) {
+		return $this->filter($filter)->find_all();
+	}
+
+	/**
+	 * Filter database records
+	 *
+	 * @param array $filter an associative array of field/value pairs
+	 *
+	 * @return $this
+	 */
+	public function filter($filter = array()) {
+		return $this;
+	}
+
 	public function paginate_list($config = array()) {
 		if (!isset($this->pagination)) {
 			$this->load->library('pagination');
 		}
 
 		$this->pagination->initialize($config);
-
 		return array(
 			'info'  => $this->pagination->create_infos(),
 			'links' => $this->pagination->create_links(),
@@ -1291,32 +1228,34 @@ class TI_Model extends CI_Model
 	}
 
 	/**
-	 * Return the pagination links url
+	 * Return the pagination links base url
 	 *
-	 * @param $index_url
-	 * @param $get_data
+	 * @param $url
 	 *
 	 * @return string
 	 */
-	protected function get_paginate_url($index_url, $get_data) {
-		if (empty($get_data)) {
-			return site_url($index_url);
+	protected function get_paginate_url() {
+		$current_url = current_url();
+
+		if (strpos($current_url, '?') !== FALSE) {
+			$current_url = explode('?', $current_url);
+			parse_str($current_url[1], $get_data);
+			unset($get_data['limit'], $get_data['page']);
+			$current_url = $current_url[0] . '?' . http_build_query($get_data);
 		}
 
-		$query_sep = (strpos($index_url, '?') !== FALSE) ? '&' : '?';
-
-		return site_url($index_url . $query_sep . http_build_query(array_filter($get_data)));
+		return $current_url;
 	}
 
 	/**
 	 * Paginated list matching the filter array
 	 *
 	 * @param array  $filter
-	 * @param string $index_url
+	 * @param string $base_url
 	 *
 	 * @return object An object of list and pagination array.
 	 */
-	public function paginate($filter = array(), $index_url = '') {
+	public function paginate($filter = array(), $base_url = NULL) {
 		$result = new stdClass;
 		$result->pagination = $result->list = array();
 
@@ -1328,21 +1267,11 @@ class TI_Model extends CI_Model
 			$this->order_by($filter['sort_by'], $filter['order_by']);
 		}
 
-		if (method_exists($this, 'getList')) {
-			$result->list = $this->getList($filter);
-		} else {
-			$result->list = $this->filter($filter)->find_all();
-		}
+		$result->list = $this->getList($filter);
 
-		$get_data = $this->input->get();
-		unset($get_data['page']);
-
-		// find a better way to persist the join query after find_all() call
-		if (!empty($this->with)) $this->relate();
-
-		$config['base_url'] = $this->get_paginate_url($index_url, $get_data);
-		$config['total_rows'] = (method_exists($this, 'getCount')) ? $this->getCount($filter) : $this->filter($filter)->count();
-		$config['per_page'] = isset($filter['limit']) ? $filter['limit'] : $this->config->item('page_limit');
+		$config['base_url'] = ($base_url) ? $base_url : $this->get_paginate_url();
+		$config['total_rows'] = $this->getCount($filter);
+		$config['per_page'] =  isset($filter['limit']) ? $filter['limit'] : $this->config->item('page_limit');
 
 		$result->pagination = $this->paginate_list($config);
 
