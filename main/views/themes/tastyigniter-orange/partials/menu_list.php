@@ -2,14 +2,13 @@
 	<div id="Container" class="menu-list">
 		<?php $category_count = 1; ?>
 		<?php foreach ($categories as $category_id => $category) { ?>
-			<?php $category_name = strtolower(str_replace(' ', '-', str_replace('&', '_', $category['name']))); ?>
-			<div class="menu-container mix <?php echo $category_name; ?>">
-				<a class="menu-toggle visible-xs visible-sm collapsed" href="#<?php echo $category_name; ?>" role="button" data-toggle="collapse" data-parent=".menu-list" aria-expanded="<?php echo ($category_count === 1) ? 'true' : 'false'; ?>" aria-controls="<?php echo $category_name; ?>">
+			<div class="menu-container mix <?php echo $category['slug']; ?>">
+				<a class="menu-toggle visible-xs visible-sm collapsed" href="#<?php echo $category['slug']; ?>" role="button" data-toggle="collapse" data-parent=".menu-list" aria-expanded="<?php echo ($category_count === 1) ? 'true' : 'false'; ?>" aria-controls="<?php echo $category['slug']; ?>">
 					<?php echo $category['name']; ?>
 					<i class="fa fa-angle-down fa-2x fa-pull-right text-muted"></i>
 					<i class="fa fa-angle-up fa-2x fa-pull-right text-muted"></i>
 				</a>
-				<div id="<?php echo $category_name; ?>" class="navbar-collapse collapse <?php echo ($category_count === 1) ? 'in' : ''; ?> wrap-none">
+				<div id="<?php echo $category['slug']; ?>" class="navbar-collapse collapse <?php echo ($category_count === 1) ? 'in' : ''; ?> wrap-none">
 					<div class="menu-category">
 						<h3 class="hidden-xs hidden-sm"><?php echo $category['name']; ?></h3>
 						<p><?php echo $category['description']; ?></p>
