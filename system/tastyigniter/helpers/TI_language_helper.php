@@ -144,9 +144,15 @@ if ( ! function_exists('find_lang_file')) {
 
 		$modules = Modules::list_modules();
 		foreach ($modules as $module) {
-            list($path, $_langfile) = Modules::find($langfile.'_lang', $module, 'language/'.$lang.'/');
-            if ($path !== FALSE)
-                return TRUE;
+			$moduleLangs = Modules::files($module, 'language');
+
+			if (isset($moduleLangs[$module]['language'][$lang])) {
+				$path = Modules::file_path($module, 'language', "{$lang}/" . basename($langfile) . '_lang.php');
+
+				if (is_file($path)) {
+					return TRUE;
+				}
+			}
 		}
 
 		return FALSE;
