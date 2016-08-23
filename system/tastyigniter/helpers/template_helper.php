@@ -29,7 +29,7 @@ if ( ! function_exists('get_header')) {
 	 * @return    string
 	 */
 	function get_header() {
-		return get_instance()->template->getPartialView('header');
+		return get_instance()->template->get_partial('header');
 	}
 }
 
@@ -42,7 +42,7 @@ if ( ! function_exists('get_footer')) {
 	 * @return    string
 	 */
 	function get_footer() {
-		return get_instance()->template->getPartialView('footer');
+		return get_instance()->template->get_partial('footer');
 	}
 }
 
@@ -58,7 +58,7 @@ if ( ! function_exists('get_partial')) {
 	 * @return string
 	 */
 	function get_partial($partial = '', $class = '') {
-		return get_instance()->template->getPartialView($partial, array('class' => $class));
+		return get_instance()->template->get_partial($partial, array('class' => $class));
 	}
 }
 
@@ -74,7 +74,7 @@ if ( ! function_exists('load_partial')) {
 	 * @return string
 	 */
 	function load_partial($partial = '', $data = array()) {
-		echo get_instance()->template->loadView($partial, $data);
+		echo get_instance()->template->load_view($partial, $data);
 	}
 }
 
@@ -89,83 +89,7 @@ if ( ! function_exists('partial_exists')) {
 	 * @return string
 	 */
 	function partial_exists($partial = '') {
-		return (get_instance()->template->getPartialView($partial)) ? TRUE : FALSE;
-	}
-}
-
-// ------------------------------------------------------------------------
-
-if ( ! function_exists('get_doctype')) {
-	/**
-	 * Get Doctype
-	 *
-	 * @return    string
-	 */
-	function get_doctype() {
-		return get_instance()->template->getDocType();
-	}
-}
-
-// ------------------------------------------------------------------------
-
-if ( ! function_exists('set_doctype')) {
-	/**
-	 * Set Doctype
-	 *
-	 * @param string $doctype
-	 */
-	function set_doctype($doctype = '') {
-		get_instance()->template->setHeadTag('doctype', $doctype);
-	}
-}
-
-// ------------------------------------------------------------------------
-
-if ( ! function_exists('get_metas')) {
-	/**
-	 * Get metas html tags
-	 *
-	 * @return    string
-	 */
-	function get_metas() {
-		return get_instance()->template->getMetas();
-	}
-}
-
-// ------------------------------------------------------------------------
-
-if ( ! function_exists('set_meta')) {
-	/**
-	 * Set metas html tags
-	 */
-	function set_meta($meta = array()) {
-		get_instance()->template->setHeadTag('meta', $meta);
-	}
-}
-
-// ------------------------------------------------------------------------
-
-if ( ! function_exists('get_favicon')) {
-	/**
-	 * Get favicon html tag
-	 *
-	 * @return    string
-	 */
-	function get_favicon() {
-		return get_instance()->template->getFavIcon();
-	}
-}
-
-// ------------------------------------------------------------------------
-
-if ( ! function_exists('set_favicon')) {
-	/**
-	 * Set favicon html tag
-	 *
-	 * @param string $href
-	 */
-	function set_favicon($href = '') {
-		get_instance()->template->setHeadTag('favicon', $href);
+		return (get_instance()->template->partial_exists($partial)) ? TRUE : FALSE;
 	}
 }
 
@@ -227,96 +151,6 @@ if ( ! function_exists('set_heading')) {
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('get_style_tags')) {
-	/**
-	 * Get multiple stylesheet html tags
-	 *
-	 * @return    string
-	 */
-	function get_style_tags() {
-		return get_instance()->template->getStyleTags();
-	}
-}
-
-// ------------------------------------------------------------------------
-
-if ( ! function_exists('set_style_tag')) {
-	/**
-	 * Set single stylesheet html tag
-	 *
-	 * @param string $href
-	 * @param string $name
-	 * @param null   $priority
-	 *
-	 * @return string
-	 */
-	function set_style_tag($href = '', $name = '', $priority = NULL) {
-		get_instance()->template->setStyleTag($href, $name, $priority);
-	}
-}
-
-// ------------------------------------------------------------------------
-
-if ( ! function_exists('set_style_tags')) {
-	/**
-	 * Set multiple stylesheet html tags
-	 *
-	 * @param array $tags
-	 *
-	 * @return string
-	 */
-	function set_style_tags($tags = array()) {
-		get_instance()->template->setStyleTag($tags);
-	}
-}
-
-// ------------------------------------------------------------------------
-
-if ( ! function_exists('get_script_tags')) {
-	/**
-	 * Get multiple scripts html tags
-	 *
-	 * @return    string
-	 */
-	function get_script_tags() {
-		return get_instance()->template->getScriptTags();
-	}
-}
-
-// ------------------------------------------------------------------------
-
-if ( ! function_exists('set_script_tag')) {
-	/**
-	 * Set single scripts html tags
-	 *
-	 * @param string $href
-	 * @param string $name
-	 * @param null   $priority
-	 *
-	 * @return string
-	 */
-	function set_script_tag($href = '', $name = '', $priority = NULL) {
-		get_instance()->template->setScriptTag($href, $name, $priority);
-	}
-}
-
-// ------------------------------------------------------------------------
-
-if ( ! function_exists('set_script_tags')) {
-	/**
-	 * Set multiple scripts html tags
-	 *
-	 * @param array $tags
-	 *
-	 * @return string
-	 */
-	function set_script_tags($tags = array()) {
-		get_instance()->template->setScriptTag($tags);
-	}
-}
-
-// ------------------------------------------------------------------------
-
 if ( ! function_exists('get_active_styles')) {
 	/**
 	 * Get the active theme custom stylesheet html tag,
@@ -325,7 +159,7 @@ if ( ! function_exists('get_active_styles')) {
 	 * @return    string
 	 */
 	function get_active_styles() {
-		return get_instance()->template->getActiveStyle();
+		return get_instance()->assets->getActiveStyle();
 	}
 }
 
@@ -340,7 +174,7 @@ if ( ! function_exists('get_theme_options')) {
 	 * @return string
 	 */
 	function get_theme_options($item = '') {
-		return get_instance()->template->getActiveThemeOptions($item);
+		return get_instance()->assets->getActiveThemeOptions($item);
 	}
 }
 
