@@ -459,32 +459,32 @@ class Image_manager extends Admin_Controller
 	protected function setTemplateTags($popup) {
 		if ($popup == 'iframe') {
 			$this->template->setDocType('html5');
-			$this->template->setMeta(array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'));
-			$this->template->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=edge,chrome=1', 'type' => 'equiv'));
-			$this->template->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=9; IE=8; IE=7', 'type' => 'equiv'));
-			$this->template->setMeta(array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1', 'type' => 'name'));
-			$this->template->setMeta(array('name' => 'robots', 'content' => 'noindex,nofollow', 'type' => 'name'));
+			$this->assets->setMeta(array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'));
+			$this->assets->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=edge,chrome=1', 'type' => 'equiv'));
+			$this->assets->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=9; IE=8; IE=7', 'type' => 'equiv'));
+			$this->assets->setMeta(array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1', 'type' => 'name'));
+			$this->assets->setMeta(array('name' => 'robots', 'content' => 'noindex,nofollow', 'type' => 'name'));
 
-			$this->template->setFavIcon('images/favicon.ico', 'shortcut icon', 'image/ico');
+			$this->assets->setFavIcon('images/favicon.ico', 'shortcut icon', 'image/ico');
 
-			$this->template->setStyleTag('css/bootstrap.min.css', 'bootstrap-css', '10');
-			$this->template->setStyleTag('css/font-awesome.min.css', 'font-awesome-css', '11');
-			$this->template->setStyleTag('css/metisMenu.min.css', 'metis-menu-css', '12');
-			$this->template->setStyleTag('css/select2.css', 'select2-css', '13');
-			$this->template->setStyleTag('css/select2-bootstrap.css', 'select2-bootstrap-css', '14');
-			$this->template->setStyleTag(assets_url('css/imagemanager/dropzone.min.css'), 'dropzone-css', '15');
-			$this->template->setStyleTag('css/fonts.css', 'fonts-css', '16');
-			$this->template->setStyleTag(assets_url('css/imagemanager/image-manager.css'), 'image-manager-css', '100');
+			$this->assets->setStyleTag('css/bootstrap.min.css', 'bootstrap-css', '10');
+			$this->assets->setStyleTag('css/font-awesome.min.css', 'font-awesome-css', '11');
+			$this->assets->setStyleTag('css/metisMenu.min.css', 'metis-menu-css', '12');
+			$this->assets->setStyleTag('css/select2.css', 'select2-css', '13');
+			$this->assets->setStyleTag('css/select2-bootstrap.css', 'select2-bootstrap-css', '14');
+			$this->assets->setStyleTag(assets_url('css/imagemanager/dropzone.min.css'), 'dropzone-css', '15');
+			$this->assets->setStyleTag('css/fonts.css', 'fonts-css', '16');
+			$this->assets->setStyleTag(assets_url('css/imagemanager/image-manager.css'), 'image-manager-css', '100');
 
-			$this->template->setScriptTag('js/jquery-1.11.2.min.js', 'jquery-js', '1');
-			$this->template->setScriptTag('js/bootstrap.min.js', 'bootstrap-js', '99');
-			$this->template->setScriptTag(assets_url('js/js.cookie.js'), 'js-cookie-js', '100');
-			$this->template->setScriptTag('js/metisMenu.min.js', 'metis-menu-js', '101');
-			$this->template->setScriptTag(assets_url('js/imagemanager/bootbox.min.js'), 'bootbox-js', '102');
-			$this->template->setScriptTag('js/select2.js', 'select-2-js', '103');
-			$this->template->setScriptTag(assets_url('js/imagemanager/dropzone.min.js'), 'dropzone-js', '104');
-			$this->template->setScriptTag(assets_url('js/imagemanager/selectonic.min.js'), 'selectonic-js', '107');
-			$this->template->setScriptTag('js/common.js', 'common-js');
+			$this->assets->setScriptTag('js/jquery-1.11.2.min.js', 'jquery-js', '1');
+			$this->assets->setScriptTag('js/bootstrap.min.js', 'bootstrap-js', '99');
+			$this->assets->setScriptTag(assets_url('js/js.cookie.js'), 'js-cookie-js', '100');
+			$this->assets->setScriptTag('js/metisMenu.min.js', 'metis-menu-js', '101');
+			$this->assets->setScriptTag(assets_url('js/imagemanager/bootbox.min.js'), 'bootbox-js', '102');
+			$this->assets->setScriptTag('js/select2.js', 'select-2-js', '103');
+			$this->assets->setScriptTag(assets_url('js/imagemanager/dropzone.min.js'), 'dropzone-js', '104');
+			$this->assets->setScriptTag(assets_url('js/imagemanager/selectonic.min.js'), 'selectonic-js', '107');
+			$this->assets->setScriptTag('js/common.js', 'common-js');
 		}
 
 		$this->template->setTitle($this->lang->line('text_title'));

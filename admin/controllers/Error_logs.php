@@ -10,7 +10,7 @@ class Error_logs extends Admin_Controller
 
 		$this->template->setTitle($this->lang->line('text_title'));
 		$this->template->setHeading($this->lang->line('text_heading'));
-		$this->template->setButton($this->lang->line('text_clear'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
+		$this->template->setButton($this->lang->line('text_clear_logs'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
 
 		$log_path = $this->config->item('log_path');
 

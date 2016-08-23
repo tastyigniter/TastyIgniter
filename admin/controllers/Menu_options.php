@@ -56,7 +56,7 @@ class Menu_options extends Admin_Controller
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('menu_options')));
 
-		$this->template->setScriptTag(assets_url('js/jquery-sortable.js'), 'jquery-sortable-js');
+		$this->assets->setScriptTag(assets_url('js/jquery-sortable.js'), 'jquery-sortable-js');
 
 		$data = $this->getForm($option_info);
 

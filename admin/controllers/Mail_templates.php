@@ -55,8 +55,8 @@ class Mail_templates extends Admin_Controller
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('mail_templates')));
 
-		$this->template->setStyleTag(assets_url('js/summernote/summernote.css'), 'summernote-css');
-		$this->template->setScriptTag(assets_url('js/summernote/summernote.min.js'), 'summernote-js');
+		$this->assets->setStyleTag(assets_url('js/summernote/summernote.css'), 'summernote-css');
+		$this->assets->setScriptTag(assets_url('js/summernote/summernote.min.js'), 'summernote-js');
 
 		$data = $this->getForm($template_info);
 

@@ -22,7 +22,7 @@ class Contact extends Main_Controller
 			$map_key = '';
 		}
 
-		$this->template->setScriptTag('https://maps.googleapis.com/maps/api/js?v=3' . $map_key . '&sensor=false&region=GB', 'google-maps-js', '104330');
+		$this->assets->setScriptTag('https://maps.googleapis.com/maps/api/js?v=3' . $map_key . '&sensor=false&region=GB', 'google-maps-js', '104330');
 
 		$this->template->setBreadcrumb('<i class="fa fa-home"></i>', '/');
 		$this->template->setBreadcrumb($this->lang->line('text_heading'), 'contact');

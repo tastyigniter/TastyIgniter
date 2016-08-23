@@ -1,26 +1,26 @@
 <?php
-    $this->template->setDocType('html5');
-    $this->template->setMeta(array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'));
-    $this->template->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=edge', 'type' => 'equiv'));
-    $this->template->setMeta(array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no', 'type' => 'name'));
-    $this->template->setFavIcon('images/favicon.ico');
-    $this->template->setStyleTag('css/bootstrap.min.css', 'bootstrap-css', '10');
-    $this->template->setStyleTag('css/font-awesome.min.css', 'font-awesome-css', '11');
-    $this->template->setStyleTag('css/metisMenu.min.css', 'metis-menu-css', '12');
-    $this->template->setStyleTag('css/select2.css', 'select2-css', '13');
-    $this->template->setStyleTag('css/select2-bootstrap.css', 'select2-bootstrap-css', '14');
-    $this->template->setStyleTag('css/jquery.raty.css', 'jquery-raty-css', '15');
-    $this->template->setStyleTag('css/fonts.css', 'fonts-css', '16');
-    $this->template->setStyleTag(assets_url('css/awesome-checkbox.css'), 'awesome-checkbox-css', '17');
-    $this->template->setStyleTag('css/stylesheet.css', 'stylesheet-css', '1000000');
+    $this->assets->setDocType('html5');
+    $this->assets->setMeta(array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'));
+    $this->assets->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=edge', 'type' => 'equiv'));
+    $this->assets->setMeta(array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no', 'type' => 'name'));
+    $this->assets->setFavIcon('images/favicon.ico');
+    $this->assets->setStyleTag('css/bootstrap.min.css', 'bootstrap-css', '10');
+    $this->assets->setStyleTag('css/font-awesome.min.css', 'font-awesome-css', '11');
+    $this->assets->setStyleTag('css/metisMenu.min.css', 'metis-menu-css', '12');
+    $this->assets->setStyleTag('css/select2.css', 'select2-css', '13');
+    $this->assets->setStyleTag('css/select2-bootstrap.css', 'select2-bootstrap-css', '14');
+    $this->assets->setStyleTag('css/jquery.raty.css', 'jquery-raty-css', '15');
+    $this->assets->setStyleTag('css/fonts.css', 'fonts-css', '16');
+    $this->assets->setStyleTag(assets_url('css/awesome-checkbox.css'), 'awesome-checkbox-css', '17');
+    $this->assets->setStyleTag('css/stylesheet.css', 'stylesheet-css', '1000000');
 
-    $this->template->setScriptTag('js/jquery-1.11.2.min.js', 'jquery-js', '1');
-    $this->template->setScriptTag('js/bootstrap.min.js', 'bootstrap-js', '10');
-	$this->template->setScriptTag('js/metisMenu.min.js', 'metis-menu-js', '11');
-	$this->template->setScriptTag('js/select2.js', 'select-2-js', '12');
-	$this->template->setScriptTag('js/jquery.raty.js', 'jquery-raty-js', '13');
-	$this->template->setScriptTag(assets_url('js/js.cookie.js'), 'js-cookie-js', '14');
-	$this->template->setScriptTag('js/common.js', 'common-js');
+    $this->assets->setScriptTag('js/jquery-1.11.2.min.js', 'jquery-js', '1');
+    $this->assets->setScriptTag('js/bootstrap.min.js', 'bootstrap-js', '10');
+	$this->assets->setScriptTag('js/metisMenu.min.js', 'metis-menu-js', '11');
+	$this->assets->setScriptTag('js/select2.js', 'select-2-js', '12');
+	$this->assets->setScriptTag('js/jquery.raty.js', 'jquery-raty-js', '13');
+	$this->assets->setScriptTag(assets_url('js/js.cookie.js'), 'js-cookie-js', '14');
+	$this->assets->setScriptTag('js/common.js', 'common-js');
 
 	$tastyigniter_logo  = base_url('views/themes/tastyigniter-blue/images/tastyigniter-logo.png');
 	$site_logo          = base_url('views/themes/tastyigniter-blue/images/tastyigniter-logo-text.png');

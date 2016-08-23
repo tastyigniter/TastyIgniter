@@ -16,7 +16,7 @@ class Ratings extends Admin_Controller
 		$this->template->setHeading($this->lang->line('text_heading'));
 		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 
-		$this->template->setScriptTag(assets_url('js/jquery-sortable.js'), 'jquery-sortable-js');
+		$this->assets->setScriptTag(assets_url('js/jquery-sortable.js'), 'jquery-sortable-js');
 
 		$data = $this->getList();
 
