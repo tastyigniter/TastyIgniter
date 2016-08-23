@@ -29,6 +29,7 @@ class Main_Controller extends Base_Controller
 	 */
 	public function __construct() {
 		$this->libraries[] = 'form_validation';
+		$this->models[] = 'Extensions_model';
 
 		parent::__construct();
 
@@ -64,15 +65,6 @@ class Main_Controller extends Base_Controller
 		if (!empty($this->sort)) $this->setSort();
 		
 		Events::trigger('after_main_controller');
-	}
-
-	protected function showMaintenance() {
-		if ($this->config->item('maintenance_mode') === '1') {
-			$this->load->library('user');
-			if ($this->uri->rsegment(1) !== 'maintenance' AND !$this->user->isLogged()) {
-				show_error($this->config->item('maintenance_message'), '503', 'Maintenance Enabled');
-			}
-		}
 	}
 }
 
