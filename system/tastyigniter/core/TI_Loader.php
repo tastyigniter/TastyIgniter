@@ -23,143 +23,151 @@ require IGNITEPATH . 'third_party/MX/Loader.php';
  * @package        TastyIgniter\Core\TI_Loader.php
  * @link           http://docs.tastyigniter.com
  */
-class TI_Loader extends MX_Loader {
+class TI_Loader extends MX_Loader
+{
 
-    protected $_ci_view_paths =	array(VIEWPATH	=> TRUE, THEMEPATH => TRUE);
+	protected $_ci_view_paths = array(VIEWPATH => TRUE, THEMEPATH => TRUE);
 
-    protected $_ci_library_paths =	array(IGNITEPATH, BASEPATH, APPPATH);
+	protected $_ci_library_paths = array(IGNITEPATH, BASEPATH, APPPATH);
 
-    protected $_ci_model_paths =	array(IGNITEPATH, APPPATH);
+	protected $_ci_model_paths = array(IGNITEPATH, APPPATH);
 
-    protected $_ci_helper_paths =	array(IGNITEPATH, BASEPATH);
+	protected $_ci_helper_paths = array(IGNITEPATH, BASEPATH);
 
-    protected $_db_config_loaded =	FALSE;
+	protected $_db_config_loaded = FALSE;
 
-    /**
-     * Remove later
-     * @param $class
-     * @param null $params
-     * @param null $object_name
-     */
-    protected function _ci_load_class($class, $params = NULL, $object_name = NULL) {
-        return $this->_ci_load_library($class, $params, $object_name);
-    }
+	/**
+	 * Remove later
+	 *
+	 * @param      $class
+	 * @param null $params
+	 * @param null $object_name
+	 */
+	protected function _ci_load_class($class, $params = NULL, $object_name = NULL) {
+		return $this->_ci_load_library($class, $params, $object_name);
+	}
 
-    // --------------------------------------------------------------------
+	public function component($module, $params = NULL) {
+		return $this->module($module, $params);
+	}
 
-    /** Load a module view **/
-    public function view($view, $vars = array(), $return = FALSE)
-    {
-        $theme_paths = array(
-            $this->config->item(APPDIR, 'default_themes'), $this->config->item(APPDIR.'_parent', 'default_themes')
-        );
+	public function controller($module, $params = NULL) {
+		return $this->module($module, $params);
+	}
 
-        foreach (array_filter($theme_paths) as $theme_path) {
-            $theme_path = rtrim($theme_path, '/');
+	// --------------------------------------------------------------------
 
-            foreach (array('/', '/layouts/', '/partials/') as $folder) {
-                $t_view = (pathinfo($view, PATHINFO_EXTENSION)) ? $view : $view.EXT;
+	/** Load a module view **/
+	public function view($view, $vars = array(), $return = FALSE) {
+		$theme_paths = array(
+			$this->config->item(APPDIR, 'default_themes'), $this->config->item(APPDIR . '_parent', 'default_themes'),
+		);
 
-                if (file_exists(THEMEPATH . $theme_path . $folder . $t_view)) {
-                    $path = THEMEPATH . $theme_path . $folder;
-                    $this->_ci_view_paths = array($path => TRUE) + $this->_ci_view_paths;
-                    break;
-                }
-            }
-        }
+		foreach (array_filter($theme_paths) as $theme_path) {
+			$theme_path = rtrim($theme_path, '/');
 
-        if (empty($path)) {
-            list($path, $_view) = Modules::find($view, $this->_module, 'views/');
+			foreach (array('/', '/layouts/', '/partials/') as $folder) {
+				$t_view = (pathinfo($view, PATHINFO_EXTENSION)) ? $view : $view . EXT;
 
-            if ($path != FALSE) {
-                $this->_ci_view_paths = array($path => TRUE) + $this->_ci_view_paths;
-                $view = $_view;
-            }
-        }
+				if (file_exists(THEMEPATH . $theme_path . $folder . $t_view)) {
+					$path = THEMEPATH . $theme_path . $folder;
+					$this->_ci_view_paths = array($path => TRUE) + $this->_ci_view_paths;
+					break;
+				}
+			}
+		}
 
-        return $this->_ci_load(array('_ci_view' => $view, '_ci_vars' => $this->_ci_object_to_array($vars), '_ci_return' => $return));
-    }
+		if (empty($path)) {
+			$base = (APPDIR === ADMINDIR ) ? 'views/' : 'components/views/';
+			list($path, $_view) = Modules::find($view, $this->_module, $base);
 
-    // --------------------------------------------------------------------
+			if ($path != FALSE) {
+				$this->_ci_view_paths = array($path => TRUE) + $this->_ci_view_paths;
+				$view = $_view;
+			}
+		}
 
-    /**
-     * CI Autoloader
-     *
-     * Loads component listed in the config/autoload.php file.
-     *
-     * @used-by CI_Loader::initialize()
-     * @return  void
-     */
-    protected function _ci_autoloader()
-    {
-        if (file_exists(IGNITEPATH.'config/autoload.php'))
-        {
-            include(IGNITEPATH.'config/autoload.php');
-        }
+		return $this->_ci_load(array('_ci_view' => $view, '_ci_vars' => $this->_ci_object_to_array($vars), '_ci_return' => $return));
+	}
 
-        if (file_exists(IGNITEPATH.'config/'.ENVIRONMENT.'/autoload.php'))
-        {
-            include(IGNITEPATH.'config/'.ENVIRONMENT.'/autoload.php');
-        }
+	// --------------------------------------------------------------------
 
-        if ( ! isset($autoload))
-        {
-            return;
-        }
+	/** Autoload module items *
+	 *
+	 * @param $autoload
+	 */
+	public function _autoloader($autoload) {
+		parent::_autoloader($autoload);
 
-        // Autoload packages
-        if (isset($autoload['packages']))
-        {
-            foreach ($autoload['packages'] as $package_path)
-            {
-                $this->add_package_path($package_path);
-            }
-        }
+		Modules::autoload_extensions();
+	}
 
-        // Load any custom config file
-        if (count($autoload['config']) > 0)
-        {
-            foreach ($autoload['config'] as $val)
-            {
-                $this->config($val);
-            }
-        }
+	// --------------------------------------------------------------------
 
-        // Autoload helpers and languages
-        foreach (array('helper', 'language') as $type)
-        {
-            if (isset($autoload[$type]) && count($autoload[$type]) > 0)
-            {
-                $this->$type($autoload[$type]);
-            }
-        }
+	/**
+	 * CI Autoloader
+	 *
+	 * Loads component listed in the config/autoload.php file.
+	 *
+	 * @used-by CI_Loader::initialize()
+	 * @return  void
+	 */
+	protected function _ci_autoloader() {
+		if (file_exists(IGNITEPATH . 'config/autoload.php')) {
+			include(IGNITEPATH . 'config/autoload.php');
+		}
 
-        // Autoload drivers
-        if (isset($autoload['drivers']))
-        {
-            $this->driver($autoload['drivers']);
-        }
+		if (file_exists(IGNITEPATH . 'config/' . ENVIRONMENT . '/autoload.php')) {
+			include(IGNITEPATH . 'config/' . ENVIRONMENT . '/autoload.php');
+		}
 
-        // Load libraries
-        if (isset($autoload['libraries']) && count($autoload['libraries']) > 0)
-        {
-            // Load the database driver.
-            if (in_array('database', $autoload['libraries']))
-            {
-                $this->database();
-                $autoload['libraries'] = array_diff($autoload['libraries'], array('database'));
-            }
+		if (!isset($autoload)) {
+			return;
+		}
 
-            // Load all other libraries
-            $this->library($autoload['libraries']);
-        }
+		// Autoload packages
+		if (isset($autoload['packages'])) {
+			foreach ($autoload['packages'] as $package_path) {
+				$this->add_package_path($package_path);
+			}
+		}
 
-        // Autoload models
-        if (isset($autoload['model']))
-        {
-            $this->model($autoload['model']);
-        }
-    }
+		// Load any custom config file
+		if (count($autoload['config']) > 0) {
+			foreach ($autoload['config'] as $val) {
+				$this->config($val);
+			}
+		}
+
+		// Autoload helpers and languages
+		foreach (array('helper', 'language') as $type) {
+			if (isset($autoload[$type]) && count($autoload[$type]) > 0) {
+				$this->$type($autoload[$type]);
+			}
+		}
+
+		// Autoload drivers
+		if (isset($autoload['drivers'])) {
+			$this->driver($autoload['drivers']);
+		}
+
+		// Load libraries
+		if (isset($autoload['libraries']) && count($autoload['libraries']) > 0) {
+			// Load the database driver.
+			if (in_array('database', $autoload['libraries'])) {
+				$this->database();
+				$autoload['libraries'] = array_diff($autoload['libraries'], array('database'));
+			}
+
+			// Load all other libraries
+			$this->library($autoload['libraries']);
+		}
+
+		// Autoload models
+		if (isset($autoload['model'])) {
+			$this->model($autoload['model']);
+		}
+	}
 }
 
 /* End of file TI_Loader.php */

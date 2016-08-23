@@ -2,6 +2,8 @@
 
 $lang['_text_title'] 		    = 'Banners';
 $lang['text_tab_general'] 		= 'General';
+$lang['text_component_title']	= 'Banner Component';
+$lang['text_component_desc'] 	= 'Displays banners';
 $lang['text_edit_banner'] 		= 'Edit Banner';
 
 $lang['column_banner'] 		    = 'Banner';

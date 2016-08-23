@@ -2,6 +2,8 @@
 
 $lang['_text_title'] 			        = 'Featured Menu Item';
 $lang['text_tab_general'] 		        = 'General';
+$lang['text_component_title']			= 'Featured Menu Component';
+$lang['text_component_desc'] 			= 'Displays list of featured menus on the store front';
 $lang['text_subscribe'] 			    = 'Subscribe to our newsletter';
 $lang['text_featured_menus'] 		    = 'Featured Menu';
 

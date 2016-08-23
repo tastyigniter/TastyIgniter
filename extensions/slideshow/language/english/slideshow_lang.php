@@ -1,7 +1,10 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
 
-$lang['_text_title'] 		    = 'Slideshow';
+$lang['_text_title'] 		    = 'Slider';
 $lang['text_tab_general'] 	    = 'General';
+$lang['text_component_title']	= 'Slider Component';
+$lang['text_component_desc'] 	= 'Displays images slider on homepage';
+
 $lang['text_tab_slides'] 	    = 'Slides';
 
 $lang['label_display'] 			= 'Display';

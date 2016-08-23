@@ -2,6 +2,9 @@
 
 $lang['_text_title'] 		                    = 'Stripe';
 $lang['text_tab_general'] 	                    = 'General';
+$lang['text_component_title']					= 'Stripe Payment';
+$lang['text_component_desc'] 					= 'Accept credit card payments using Stripe';
+
 $lang['text_description'] 	                    = 'Pay by Credit Card using Stripe';
 $lang['text_live'] 	                            = 'Live';
 $lang['text_test'] 	                            = 'Test';

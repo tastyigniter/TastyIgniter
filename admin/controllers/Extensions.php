@@ -3,9 +3,9 @@
 class Extensions extends Admin_Controller
 {
 
-	public $edit_url = 'extensions/edit/{type}/{name}';
-	public $delete_url = 'extensions/delete/{type}/{name}';
-	public $manage_url = 'extensions/{manage}/{type}/{name}';
+	public $edit_url = 'extensions/{code}/settings';
+	public $delete_url = 'extensions/delete/{code}';
+	public $manage_url = 'extensions/{manage}/{code}';
 	public $browse_url = 'extensions/browse';
 
 	public $create_url = 'extensions/add';
@@ -27,6 +27,16 @@ class Extensions extends Admin_Controller
 		$this->load->model('Layouts_model');
 
 		$this->lang->load('extensions');
+	}
+
+	public function _remap($method) {
+		if ($method !== 'edit' AND method_exists($this, $method)) {
+			$this->$method();
+		} else if (strtolower($this->uri->segment(3)) === 'settings') {
+			$this->edit();
+		} else {
+			show_404();
+		}
 	}
 
 	public function index() {
@@ -87,23 +97,22 @@ class Extensions extends Admin_Controller
 		$this->user->restrict('Admin.Extensions.Access');
 		$this->user->restrict('Admin.Extensions.Manage');
 
-		$extension_name = ($this->input->get('name')) ? $this->input->get('name') : $this->uri->rsegment(4);
+		$extension_code = $this->uri->rsegment(3);
 
-		if ($this->Extensions_model->extensionExists($extension_name)) {
+		if ($extension = Modules::find_extension($extension_code)) {
 
-			$config = $this->extension->loadConfig($extension_name, FALSE, TRUE);
-			$extension_title = isset($config['extension_meta']['title']) ? $config['extension_meta']['title'] : '';
-			$extension_type = isset($config['extension_meta']['type']) ? $config['extension_meta']['type'] : '';
+			$meta = $extension->extensionMeta();
+			$extension_name = isset($meta['name']) ? $meta['name'] : '';
 
-			if ($this->Extensions_model->install($this->uri->rsegment(3), $extension_name, $config)) {
+			if ($this->Extensions_model->install($extension_code, $extension)) {
 				$success = TRUE;
 
 				log_activity($this->user->getStaffId(), 'installed', 'extensions', get_activity_message('activity_custom_no_link',
 					array('{staff}', '{action}', '{context}', '{item}'),
-					array($this->user->getStaffName(), 'installed', $extension_type . ' extension', $extension_title)
+					array($this->user->getStaffName(), 'installed', 'extension', $extension_name)
 				));
 
-				$this->alert->set('success', sprintf($this->lang->line('alert_success'), "Extension {$extension_title} installed "));
+				$this->alert->set('success', sprintf($this->lang->line('alert_success'), "Extension {$extension_name} installed "));
 				if ((isset($config['layout_ready']) AND $config['layout_ready'] === TRUE)) {
 					$this->alert->set('info', sprintf($this->lang->line('alert_info_layouts'), site_url('layouts')));
 				}
@@ -118,20 +127,20 @@ class Extensions extends Admin_Controller
 		$this->user->restrict('Admin.Extensions.Access');
 		$this->user->restrict('Admin.Extensions.Manage');
 
-		$extension_name = ($this->input->get('name')) ? $this->input->get('name') : $this->uri->rsegment(4);
+		$extension_code = $this->uri->rsegment(3);
 
-		if ($this->Extensions_model->extensionExists($extension_name)) {
-			$config = $this->extension->loadConfig($extension_name, FALSE, TRUE);
-			$extension_title = isset($config['extension_meta']['title']) ? $config['extension_meta']['title'] : '';
-			$extension_type = isset($config['extension_meta']['type']) ? $config['extension_meta']['type'] : '';
+		if ($extension = Modules::find_extension($extension_code)) {
 
-			if ($this->Extensions_model->uninstall($this->uri->rsegment(3), $extension_name)) {
+			$meta = $extension->extensionMeta();
+			$extension_name = isset($meta['name']) ? $meta['name'] : '';
+
+			if ($this->Extensions_model->uninstall($extension_code, $extension)) {
 				log_activity($this->user->getStaffId(), 'uninstalled', 'extensions', get_activity_message('activity_custom_no_link',
 					array('{staff}', '{action}', '{context}', '{item}'),
-					array($this->user->getStaffName(), 'uninstalled', $extension_type . ' extension', $extension_title)
+					array($this->user->getStaffName(), 'uninstalled', 'extension', $extension_name)
 				));
 
-				$this->alert->set('success', sprintf($this->lang->line('alert_success'), "Extension {$extension_title} uninstalled "));
+				$this->alert->set('success', sprintf($this->lang->line('alert_success'), "Extension {$extension_name} uninstalled "));
 			} else {
 				$this->alert->danger_now($this->lang->line('alert_error_try_again'));
 			}
@@ -147,28 +156,26 @@ class Extensions extends Admin_Controller
 		$this->template->setTitle($this->lang->line('text_delete_heading'));
 		$this->template->setHeading($this->lang->line('text_delete_heading'));
 
-		$data['extension_name'] = ($this->input->get('name')) ? $this->input->get('name') : $this->uri->rsegment(4);
+		$data['extension_code'] = $this->uri->rsegment(3);
 
-		if (!$this->uri->rsegment(3) OR !$this->Extensions_model->extensionExists($data['extension_name'])) {
+		if (!($extension = Modules::find_extension($data['extension_code']))) {
 			$this->redirect(referrer_url());
 		}
 
-		$extension = $this->Extensions_model->getExtension($data['extension_name'], FALSE);
+		$meta = $extension->extensionMeta();
+		$extension = $this->Extensions_model->getExtension($data['extension_code'], FALSE);
 
-		$config = $this->extension->loadConfig($data['extension_name'], FALSE, TRUE);
-		$data['extension_title'] = isset($config['extension_meta']['title']) ? $config['extension_meta']['title'] : '';
-		$data['extension_type'] = isset($config['extension_meta']['type']) ? $config['extension_meta']['type'] : '';
+		$data['extension_name'] = isset($meta['name']) ? $meta['name'] : '';
 		$data['extension_data'] = !empty($extension['ext_data']) ? TRUE : FALSE;
 		$data['delete_action'] = !empty($extension['ext_data']) ? $this->lang->line('text_files_data') : $this->lang->line('text_files');
 
-		if ($this->input->post('confirm_delete') === $data['extension_name']) {
-
+		if ($this->input->post('confirm_delete') === $data['extension_code']) {
 			$delete_data = ($this->input->post('delete_data') === '1') ? TRUE : FALSE;
 
-			if ($this->Extensions_model->delete($this->uri->rsegment(3), $data['extension_name'], $delete_data)) {
+			if ($this->Extensions_model->delete($data['extension_code'], $delete_data)) {
 				log_activity($this->user->getStaffId(), 'deleted', 'extensions', get_activity_message('activity_custom_no_link',
 					array('{staff}', '{action}', '{context}', '{item}'),
-					array($this->user->getStaffName(), 'deleted', $data['extension_type'] . ' extension', $data['extension_title'])
+					array($this->user->getStaffName(), 'deleted', $data['extension_type'] . ' extension', $data['extension_name'])
 				));
 
 				$this->alert->set('success', sprintf($this->lang->line('alert_success'), "Extension {$data['extension_name']} deleted "));
@@ -176,10 +183,10 @@ class Extensions extends Admin_Controller
 				$this->alert->danger_now($this->lang->line('alert_error_try_again'));
 			}
 
-			$this->redirect('extensions?filter_type=' . $data['extension_type']);
+			$this->redirect(referrer_url());
 		}
 
-		$files = $this->Extensions_model->getExtensionFiles($data['extension_name']);
+		$files = $this->Extensions_model->getExtensionFiles($data['extension_code']);
 		$data['files_to_delete'] = $files;
 
 		$this->template->render('extensions_delete', $data);
@@ -191,18 +198,12 @@ class Extensions extends Admin_Controller
 		$data['extensions'] = array();
 		$results = $this->Extensions_model->paginate($this->getFilter());
 		foreach ($results->list as $result) {
-			if (!is_array($result['config'])) {
-				$this->alert->warning_now($result['config']);
-				continue;
-			}
-
 			$result['manage'] = ($result['installed'] === TRUE AND $result['status'] === '1') ? 'uninstall' : 'install';
 			$data['extensions'][] = array_merge($result, array(
 				'author'      => isset($result['author']) ? $result['author'] : '--',
-				'version'     => !empty($result['meta']['version']) ? $result['meta']['version'] : '',
-				'type'        => ucfirst($result['type']),
+				'version'     => !empty($result['version']) ? $result['version'] : '',
 				'description' => isset($result['description']) ? character_limiter($result['description'], 128) : '',
-				'edit'        => $this->pageUrl($this->edit_url, $result),
+				'edit'        => $result['settings'],
 				'delete'      => $this->pageUrl($this->delete_url, $result),
 				'manage'      => $this->pageUrl($this->manage_url, $result),
 			));
@@ -214,45 +215,47 @@ class Extensions extends Admin_Controller
 	}
 
 	public function getForm($data = array()) {
-		$extension_name = ($this->input->get('name')) ? $this->input->get('name') : $this->uri->rsegment(4);
-		$extension_type = $this->uri->rsegment(3);
+		$extension_code = $this->uri->rsegment(2);
 		$loaded = $error_msg = FALSE;
 
-		if ($extension = $this->Extensions_model->getExtension($extension_name)) {
+		$extension = Modules::find_extension($extension_code);
+		if (!Modules::is_disabled($extension_code)) {
+			$meta = $extension->extensionMeta();
+			$db_extension = $this->Extensions_model->getExtension($extension_code);
+			$module_layouts = $this->Layouts_model->getModuleLayouts($extension_code);
+			$components = $extension->registerComponents();
 
-			$data['extension_name'] = $extension_name;
-			$ext_controller = $extension['name'] . '/admin_' . $extension['name'];
-			$ext_class = ucfirst('admin_' . $extension['name']);
-
-			$module_layouts = $this->Layouts_model->getModuleLayouts($extension_name);
-			if (empty($module_layouts) AND isset($extension['config']['layout_ready']) AND $extension['config']['layout_ready'] === TRUE) {
+			if (!empty($components) AND empty($module_layouts)) {
 				$this->alert->set('info', sprintf($this->lang->line('alert_warning_layouts'), site_url('layouts')));
 			}
 
-			if (isset($extension['config'], $extension['installed'], $extension['settings'])) {
-				if (!is_array($extension['config'])) {
-					$error_msg = $this->lang->line('error_config');
-				} else if ($extension['settings'] === FALSE) {
+			$ext_controller = $meta['code'] . '/settings';
+			$ext_class = 'Settings';
+
+			if ($settings = $extension->registerSettings()) {
+				if (empty($settings)) {
 					$error_msg = $this->lang->line('error_options');
-				} else if ($extension['installed'] === FALSE) {
+				} else if ($db_extension['installed'] === FALSE) {
 					$error_msg = $this->lang->line('error_installed');
 				} else {
 					$this->load->module($ext_controller);
 					if (class_exists($ext_class, FALSE)) {
 						if ($this->input->post()) $this->user->restrict("Admin.Extensions.Manage");
 
-						$data['extension'] = $this->{strtolower($ext_class)}->index($extension);
+						$data['extension'] = $this->{strtolower($ext_class)}->index($db_extension);
 						$loaded = TRUE;
 					} else {
 						$error_msg = sprintf($this->lang->line('error_failed'), $ext_class);
 					}
 				}
+			} else {
+				show_404($ext_controller);
 			}
 		}
 
 		if (!$loaded OR $error_msg !== FALSE) {
 			$this->alert->set('warning', $error_msg);
-			$this->redirect(referrer_url());
+			$this->redirect('extensions');
 		}
 
 		return $data;
@@ -263,21 +266,22 @@ class Extensions extends Admin_Controller
 
 		if (isset($_FILES['extension_zip'])) {
 			if ($this->validateUpload() === TRUE) {
-				$message = $this->Extensions_model->extractExtension($_FILES['extension_zip']);
+				$extension_name = $_FILES['extension_zip']['name'];
 
-				if ($message === TRUE) {
-					$extension_name = $_FILES['extension_zip']['name'];
+				Modules::extract_extension($_FILES['extension_zip']['tmp_name']);
 
-					$config = $this->extension->loadConfig($extension_name, FALSE, TRUE);
-					$extension_title = isset($config['extension_meta']['title']) ? $config['extension_meta']['title'] : '';
-					$extension_type = isset($config['extension_meta']['type']) ? $config['extension_meta']['type'] : '';
+				$path = Modules::path($extension_name);
+				if ($extension = Modules::load_extension($extension_name, $path)) {
+					$meta = $extension->extensionMeta();
 
-					$alert = "Extension {$extension_title} uploaded ";
+					$extension_name = isset($meta['name']) ? $meta['name'] : '';
+					$extension_type = isset($meta['type']) ? $meta['type'] : '';
+					$alert = "Extension {$extension_name} uploaded ";
 
-					if ($this->Extensions_model->install($extension_type, $extension_name, $config)) {
+					if ($this->Extensions_model->install($extension_name, $extension)) {
 						log_activity($this->user->getStaffId(), 'installed', 'extensions', get_activity_message('activity_custom_no_link',
 							array('{staff}', '{action}', '{context}', '{item}'),
-							array($this->user->getStaffName(), 'installed', $extension_type . ' extension', $extension_title)
+							array($this->user->getStaffName(), 'installed', $extension_type . ' extension', $extension_name)
 						));
 
 						$alert .= "and installed ";
@@ -288,7 +292,7 @@ class Extensions extends Admin_Controller
 					return TRUE;
 				}
 
-				$this->alert->danger_now(sprintf($this->lang->line('alert_error'), $message));
+				$this->alert->danger_now(sprintf($this->lang->line('alert_error'), $this->lang->line('error_config_no_found')));
 			}
 		}
 

@@ -442,21 +442,33 @@ class Orders_model extends TI_Model
 
 			foreach ($cart_contents as $key => $item) {
 				if (is_array($item) AND isset($item['rowid']) AND $key === $item['rowid']) {
-					$item['order_id'] = $order_id;
+					$insert['order_id'] = $order_id;
 
 					if (isset($item['id'])) {
-						$item['menu_id'] = $item['id'];
+						$insert['menu_id'] = $item['id'];
+					}
+
+					if (isset($item['name'])) {
+						$insert['name'] = $item['name'];
 					}
 
 					if (isset($item['qty'])) {
-						$item['quantity'] = $item['qty'];
+						$insert['quantity'] = $item['qty'];
+					}
+
+					if (isset($item['price'])) {
+						$insert['price'] = $item['price'];
+					}
+
+					if (isset($item['subtotal'])) {
+						$insert['subtotal'] = $item['subtotal'];
 					}
 
 					if (!empty($item['options'])) {
-						$item['option_values'] = serialize($item['options']);
+						$insert['option_values'] = serialize($item['options']);
 					}
 
-					if ($order_menu_id = $this->insert_into('order_menus', $item)) {
+					if ($order_menu_id = $this->insert_into('order_menus', $insert)) {
 						if (!empty($item['options'])) {
 							$this->addOrderMenuOptions($order_menu_id, $order_id, $item['id'], $item['options']);
 						}
@@ -676,8 +688,9 @@ class Orders_model extends TI_Model
 			$data['telephone'] = $result['telephone'];
 			$data['order_comment'] = $result['comment'];
 
-			if ($payment = $this->extension->getPayment($result['payment'])) {
-				$data['order_payment'] = !empty($payment['ext_data']['title']) ? $payment['ext_data']['title'] : $payment['title'];
+			$payments = Components::list_payment_gateways();
+			if (isset($payments[$result['payment']]) AND $payment = $payments[$result['payment']]) {
+				$data['order_payment'] = !empty($payment['name']) ? $this->lang->line($payment['name']) : $payment['code'];
 			} else {
 				$data['order_payment'] = $this->lang->line('text_no_payment');
 			}

@@ -44,7 +44,7 @@ class Layouts extends Admin_Controller
 		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('layouts')));
 
-		$this->template->setScriptTag(assets_url('js/jquery-sortable.js'), 'jquery-sortable-js');
+		$this->assets->setScriptTag(assets_url('js/jquery-sortable.js'), 'jquery-sortable-js');
 
 		$data = $this->getForm($layout_info);
 
@@ -52,25 +52,25 @@ class Layouts extends Admin_Controller
 	}
 
 	public function getList() {
-		$_modules = $this->Extensions_model->getModules();
-
 		$this->load->model('Layout_modules_model');
-		$modules = $this->Layout_modules_model->getLayoutModules();
+		$_layout_components = $this->Layout_modules_model->getLayoutModules();
+		$components = Components::list_components();
 
 		$data['layouts'] = array();
 		$results = $this->Layouts_model->paginate();
 		foreach ($results->list as $result) {
-			$layout_modules = array();
-			if (isset($modules[$result['layout_id']])) foreach ($modules[$result['layout_id']] as $module) {
-				foreach ($_modules as $mod) {
-					if ($mod['name'] === $module['module_code']) {
-						$layout_modules[] = $mod['title'];
+			$layout_components = array();
+			if (isset($_layout_components[$result['layout_id']])) {
+				foreach ($_layout_components[$result['layout_id']] as $layout_component) {
+					$module_code = $layout_component['module_code'];
+					if (!empty($components[$module_code]['name'])) {
+						$layout_components[] = $this->lang->line($components[$module_code]['name']);
 					}
 				}
 			}
 
 			$data['layouts'][] = array_merge($result, array(
-				'modules' => implode(', ', $layout_modules),
+				'components' => $layout_components,
 				'edit' => $this->pageUrl($this->edit_url, array('id' => $result['layout_id'])),
 			));
 		}
@@ -102,36 +102,35 @@ class Layouts extends Admin_Controller
 			$data['theme_partials'][] = $partial;
 		}
 
-		$data['modules'] = array();
-		$results = $this->Extensions_model->getModules();
-		foreach ($results as $result) {
-			$config = $this->extension->loadConfig($result['name'], FALSE, TRUE);
-
-			if (empty($config['layout_ready'])) continue;
-
-			$meta = $this->extension->getMeta($result['name'], $config);
-			$data['modules'][$result['name']] = array_merge($result, array(
-				'module_code'	=> $result['name'],
+		$data['components'] = array();
+		$components = Components::list_components();
+		foreach ($components as $code => $meta) {
+			$meta['name'] = isset($meta['name']) ? $this->lang->line($meta['name']) : '';
+			$meta['description'] = isset($meta['description']) ? $this->lang->line($meta['description']) : '';
+			$data['components'][$code] = array_merge($meta, array(
+				'module_code'	=> $code,
 				'description' => (strlen($meta['description']) > 70) ? character_limiter($meta['description'], 70) : $meta['description'],
 			));
 		}
 
-		if ($this->input->post('modules')) {
-			$modules = $this->input->post('modules');
+		if ($this->input->post('components')) {
+			$layout_components = $this->input->post('components');
 		} else {
-			$modules = $this->Layouts_model->getLayoutModules($layout_id);
+			$layout_components = $this->Layouts_model->getLayoutModules($layout_id);
 		}
 
-		$data['partial_modules'] = array();
-		foreach ($modules as $partial => $partial_modules) {
-			$partial_modules = (is_numeric($partial)) ? $partial_modules : $partial_modules;
-			foreach ($partial_modules as $priority => $module) {
-				$data['partial_modules'][$partial][] = array_merge($module, array(
-					'name'     => isset($data['modules'][$module['module_code']]['title']) ? $data['modules'][$module['module_code']]['title'] : $module['module_code'],
-					'partial'  => !empty($module['partial']) ? $module['partial'] : $partial,
-					'priority' => !empty($module['priority']) ? $module['priority'] : $priority,
-					'fixed'    => isset($module['fixed']) ? $module['fixed'] : '0',
-					'status'   => isset($module['status']) ? $module['status'] : '1',
+		$data['layout_components'] = array();
+		foreach ($layout_components as $partial => $components) {
+			$components = (is_numeric($partial)) ? $components : $components;
+			foreach ($components as $priority => $component) {
+				if (!Components::has_component($component['module_code'])) continue;
+
+				$data['layout_components'][$partial][] = array_merge($component, array(
+					'name'     => isset($data['components'][$component['module_code']]['name']) ? $data['components'][$component['module_code']]['name'] : $component['module_code'],
+					'partial'  => !empty($component['partial']) ? $component['partial'] : $partial,
+					'priority' => !empty($component['priority']) ? $component['priority'] : $priority,
+					'fixed'    => isset($component['fixed']) ? $component['fixed'] : '0',
+					'status'   => isset($component['status']) ? $component['status'] : '1',
 				));
 			}
 		}
@@ -192,20 +191,20 @@ class Layouts extends Admin_Controller
 			}
 		}
 
-		if ($this->input->post('modules')) {
-			foreach ($this->input->post('modules') as $partial => $modules) {
-				foreach ($modules as $key => $value) {
-					$rules[] = array('modules[' . $partial . '][' . $key . '][module_code]', '[' . $partial . '] ' . $this->lang->line('label_module_code'), 'xss_clean|trim|required|alpha_dash');
-					$rules[] = array('modules[' . $partial . '][' . $key . '][partial]', '[' . $partial . '] ' . $this->lang->line('label_module_partial'), 'xss_clean|trim|required|alpha_dash');
-					$rules[] = array('modules[' . $partial . '][' . $key . '][title]', '[' . $partial . '] ' . $this->lang->line('label_module_title'), 'xss_clean|trim|min_length[2]');
-					$rules[] = array('modules[' . $partial . '][' . $key . '][fixed]', '[' . $partial . '] ' . $this->lang->line('label_module_fixed'), 'xss_clean|trim|required|integer');
+		if ($this->input->post('components')) {
+			foreach ($this->input->post('components') as $partial => $layout_components) {
+				foreach ($layout_components as $key => $value) {
+					$rules[] = array('components[' . $partial . '][' . $key . '][module_code]', '[' . $partial . '] ' . $this->lang->line('label_module_code'), 'xss_clean|trim|required|alpha_dash');
+					$rules[] = array('components[' . $partial . '][' . $key . '][partial]', '[' . $partial . '] ' . $this->lang->line('label_module_partial'), 'xss_clean|trim|required|alpha_dash');
+					$rules[] = array('components[' . $partial . '][' . $key . '][title]', '[' . $partial . '] ' . $this->lang->line('label_module_title'), 'xss_clean|trim|min_length[2]');
+					$rules[] = array('components[' . $partial . '][' . $key . '][fixed]', '[' . $partial . '] ' . $this->lang->line('label_module_fixed'), 'xss_clean|trim|required|integer');
 
-					if ($this->input->post('modules[' . $partial . '][' . $key . '][fixed]') === '1') {
-						$rules[] = array('modules[' . $partial . '][' . $key . '][fixed_top_offset]', '[' . $partial . '] ' . $this->lang->line('label_fixed_offset'), 'xss_clean|trim|required|integer');
-						$rules[] = array('modules[' . $partial . '][' . $key . '][fixed_bottom_offset]', '[' . $partial . '] ' . $this->lang->line('label_fixed_offset'), 'xss_clean|trim|required|integer');
+					if ($this->input->post('components[' . $partial . '][' . $key . '][fixed]') === '1') {
+						$rules[] = array('components[' . $partial . '][' . $key . '][fixed_top_offset]', '[' . $partial . '] ' . $this->lang->line('label_fixed_offset'), 'xss_clean|trim|required|integer');
+						$rules[] = array('components[' . $partial . '][' . $key . '][fixed_bottom_offset]', '[' . $partial . '] ' . $this->lang->line('label_fixed_offset'), 'xss_clean|trim|required|integer');
 					}
 
-					$rules[] = array('modules[' . $partial . '][' . $key . '][status]', '[' . $partial . '] ' . $this->lang->line('label_module_status'), 'xss_clean|trim|required|integer');
+					$rules[] = array('components[' . $partial . '][' . $key . '][status]', '[' . $partial . '] ' . $this->lang->line('label_module_status'), 'xss_clean|trim|required|integer');
 				}
 			}
 		}
