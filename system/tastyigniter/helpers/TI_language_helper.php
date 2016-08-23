@@ -147,7 +147,7 @@ if ( ! function_exists('find_lang_file')) {
 			$moduleLangs = Modules::files($module, 'language');
 
 			if (isset($moduleLangs[$module]['language'][$lang])) {
-				$path = Modules::file_path($module, 'language', "{$lang}/" . basename($langfile));
+				$path = Modules::file_path($module, 'language', "{$lang}/" . basename($langfile) . '_lang.php');
 
 				if (is_file($path)) {
 					return TRUE;
