@@ -43,7 +43,7 @@ class Admin_Controller extends Authenticated_Controller
 	 */
 	public function __construct() {
 		$this->libraries[] = 'form_validation';
-		$this->models[] = 'Locations_model';
+		$this->models[] = array('Settings_model', 'Locations_model');
 
 		parent::__construct();
 

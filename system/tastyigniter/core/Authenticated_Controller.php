@@ -1,6 +1,15 @@
 <?php
 /**
- * Copyright (c) 2016. Igniter Labs
+ * TastyIgniter
+ *
+ * An open source online ordering, reservation and management system for restaurants.
+ *
+ * @package   TastyIgniter
+ * @author    SamPoyigi
+ * @copyright TastyIgniter
+ * @link      http://tastyigniter.com
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 2.2
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 

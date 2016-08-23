@@ -95,8 +95,8 @@ class Base_Controller extends MX_Controller
 		// Handle any auto-loading here...
 		$this->autoload = array(
 			'model'    => $this->models,
-			'libraries' => array_merge(array('session', 'alert', 'installer', 'extension', 'events'), $this->libraries),
-			'helper' => array_merge(array('inflector', 'text', 'number'), $this->helpers),
+			'libraries' => $this->libraries,
+			'helper' => $this->helpers,
 			'language' => $this->languages,
 		);
 
@@ -109,17 +109,9 @@ class Base_Controller extends MX_Controller
 
 		Events::trigger('before_controller', $this->controller);
 
-		// If database is connected, then app is ready
-		if ($this->installer->db_exists === TRUE) {
-
-			// If the requested controller is a module controller then load the module config
-			if (ENVIRONMENT !== 'testing') {
-				if ($this->extension AND $this->router AND $_module = $this->router->fetch_module()) {
-					// Load the module configuration file and retrieve its items.
-					// Shows 404 error message on failure to load
-					$this->extension->loadConfig($_module, TRUE);
-				}
-			}
+		// Make sure extensions are directed to the appropriate controller
+		if (APPDIR === ADMINDIR) {
+			$this->redirectExtension();
 		}
 
 		// Ensures that a user is logged in, if required
@@ -231,6 +223,23 @@ class Base_Controller extends MX_Controller
 			$this->$method();
 		} else {
 			show_404(strtolower($this->controller).'/'.$method);
+		}
+	}
+
+	protected function showMaintenance() {
+		if ($this->config->item('maintenance_mode') === '1') {
+			$this->load->library('user');
+			if ($this->uri->rsegment(1) !== 'maintenance' AND !$this->user->isLogged()) {
+				show_error($this->config->item('maintenance_message'), '503', 'Maintenance Enabled');
+			}
+		}
+	}
+
+	private function redirectExtension() {
+		if ($_module = $this->router->fetch_module()) {
+			if ($_module AND strtolower($this->uri->rsegment(1)) !== 'extensions') {
+				redirect('extensions/'.$this->uri->uri_string());
+			}
 		}
 	}
 }
