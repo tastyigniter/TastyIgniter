@@ -3,6 +3,8 @@
 $lang['_text_title'] 			            = 'Local';
 $lang['text_tab_general'] 		            = 'General';
 $lang['text_tab_texts'] 		            = 'Text';
+$lang['text_component_title']				= 'Local Component';
+$lang['text_component_desc'] 				= 'Displays local information box';
 
 $lang['text_find'] 				            = 'View menu';
 $lang['text_order_summary'] 	            = 'Order delicious food online';

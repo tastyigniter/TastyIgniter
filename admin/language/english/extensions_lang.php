@@ -24,6 +24,7 @@ $lang['text_upload_title'] 		        = 'Upload the extension .zip file and it wi
 $lang['text_browse_title'] 		        = 'Freshly baked from the oven...coming soon  <i class="fa fa-smile-o"></i>';
 $lang['text_files'] 		            = 'files';
 $lang['text_files_data'] 		        = 'files and data';
+$lang['text_settings'] 		     		= 'Settings';
 
 $lang['button_upload'] 		            = 'Upload & Install';
 $lang['button_choose'] 		            = 'Choose';
@@ -43,6 +44,7 @@ $lang['column_id'] 		                = 'ID';
 $lang['label_delete_data'] 		        = 'Delete Data';
 
 $lang['error_config'] 		            = 'An error occurred, extension config file failed to load';
+$lang['error_config_no_found'] 			= 'An error occurred, extension registration file could not be found';
 $lang['error_options'] 		            = 'An error occurred, extension admin options disabled';
 $lang['error_failed'] 		            = 'An error occurred, extension admin setting class failed to load: %s';
 $lang['error_installed'] 		        = 'An error occurred, extension is not installed properly';

@@ -30,14 +30,6 @@ class Local extends Main_Controller
 
 	public function index($method = 'menus') {
 		$method = in_array($method, array('menus', 'info', 'reviews', 'gallery')) ? $method : 'menus';
-		
-		if (is_single_location()) {
-//			$this->redirect('menus');
-		}
-
-		if (!is_single_location() AND $this->uri->segment(1) == $method) {
-//			$this->redirect('local/menus?location_id='.$this->input->get('location_id'));
-		}
 
 		if ($this->input->get('location_id') OR $this->uri->segment(1) !== $method) {
 			if ($location = $this->Locations_model->getLocation($this->input->get('location_id'))) {
@@ -55,7 +47,7 @@ class Local extends Main_Controller
 
 		$text_heading = sprintf($this->lang->line('text_local_heading'), $this->location->getName());
 		$this->template->setTitle($text_heading);
-		$this->template->setScriptTag('js/jquery.mixitup.js', 'jquery-mixitup-js', '100330');
+		$this->assets->setScriptTag('js/jquery.mixitup.js', 'jquery-mixitup-js', '100330');
 
 		$data = $this->$method();
 
@@ -74,7 +66,7 @@ class Local extends Main_Controller
 
 		$this->load->module('menus');
 		$data['menu_list'] = $this->menus->getList();
-
+		
 		return $data;
 	}
 
@@ -87,7 +79,7 @@ class Local extends Main_Controller
 			$map_key = '';
 		}
 
-		$this->template->setScriptTag('https://maps.googleapis.com/maps/api/js?v=3' . $map_key . '&sensor=false&region=GB&libraries=geometry', 'google-maps-js', '104330');
+		$this->assets->setScriptTag('https://maps.googleapis.com/maps/api/js?v=3' . $map_key . '&sensor=false&region=GB&libraries=geometry', 'google-maps-js', '104330');
 
 		$data['has_delivery'] = $this->location->hasDelivery();
 		$data['has_collection'] = $this->location->hasCollection();
@@ -97,6 +89,7 @@ class Local extends Main_Controller
 		$data['last_order_time'] = mdate($time_format, strtotime($this->location->lastOrderTime()));
 		$data['local_description'] = $this->location->getDescription();
 		$data['map_address'] = $this->location->getAddress();                                        // retrieve local location data
+		$data['location_name'] = $this->location->getName();
 		$data['location_telephone'] = $this->location->getTelephone();                                        // retrieve local location data
 
 		$data['working_hours'] = $this->location->workingHours();                                //retrieve local restaurant opening hours from location library
@@ -124,14 +117,10 @@ class Local extends Main_Controller
 			$data['collection_time'] = $this->location->workingTime('collection', 'open');
 		}
 
-		$local_payments = $this->location->payments();
-		$payments = $this->extension->getAvailablePayments(FALSE);
-
 		$payment_list = '';
+		$payments = $this->location->payments();
 		foreach ($payments as $code => $payment) {
-			if (empty($local_payments) OR in_array($code, $local_payments)) {
-				$payment_list[] = $payment['name'];
-			}
+			$payment_list[] = isset($payment['name']) ? $payment['name'] : $code;
 		}
 
 		$data['payments'] = implode(', ', $payment_list);
@@ -222,7 +211,7 @@ class Local extends Main_Controller
 			return $data;
 		}
 
-		$this->template->setScriptTag('js/jquery.bsPhotoGallery.js', 'jquery-bsPhotoGallery-js', '99330');
+		$this->assets->setScriptTag('js/jquery.bsPhotoGallery.js', 'jquery-bsPhotoGallery-js', '99330');
 
 		$data['title'] = isset($gallery['title']) ? $gallery['title'] : '';
 		$data['description'] = isset($gallery['description']) ? $gallery['description'] : '';

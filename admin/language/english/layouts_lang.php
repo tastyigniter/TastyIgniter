@@ -5,13 +5,13 @@ $lang['text_heading'] 		            = 'Layouts';
 $lang['text_edit_heading'] 		        = 'Layout: %s';
 $lang['text_list'] 		                = 'Layout List';
 $lang['text_empty'] 		            = 'There are no layouts available.';
-$lang['text_partial_empty'] 		    = 'There are no modules added.';
-$lang['text_tab_general'] 		        = 'Layout Modules';
+$lang['text_partial_empty'] 		    = 'There are no components added.';
+$lang['text_tab_general'] 		        = 'Layout Components';
 $lang['text_tab_details'] 		        = 'Details';
 $lang['text_modules'] 		            = 'Modules';
 
 $lang['column_name'] 		            = 'Layout';
-$lang['column_active_modules'] 		    = 'Active Modules';
+$lang['column_active_components'] 		= 'Active Components';
 $lang['column_module'] 		            = 'Module';
 $lang['column_partial'] 		        = 'Partial Area';
 $lang['column_priority'] 		        = 'Priority';

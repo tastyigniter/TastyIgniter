@@ -72,18 +72,19 @@ class Locations extends Admin_Controller
 		$title = (isset($location_info['location_name'])) ? $location_info['location_name'] : $this->lang->line('text_new');
 		$this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $title));
 		$this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
+		
 		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
 		if ($this->config->item('site_location_mode') === 'multi') {
 			$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
 			$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('locations')));
 		}
 
-		$this->template->setStyleTag(assets_url('js/datepicker/bootstrap-timepicker.css'), 'bootstrap-timepicker-css');
-		$this->template->setScriptTag(assets_url("js/datepicker/bootstrap-timepicker.js"), 'bootstrap-timepicker-js');
-		$this->template->setScriptTag(assets_url("js/jquery-sortable.js"), 'jquery-sortable-js');
+		$this->assets->setStyleTag(assets_url('js/datepicker/bootstrap-timepicker.css'), 'bootstrap-timepicker-css');
+		$this->assets->setScriptTag(assets_url("js/datepicker/bootstrap-timepicker.js"), 'bootstrap-timepicker-js');
+		$this->assets->setScriptTag(assets_url("js/jquery-sortable.js"), 'jquery-sortable-js');
 
-		$this->template->setStyleTag(assets_url('js/summernote/summernote.css'), 'summernote-css');
-		$this->template->setScriptTag(assets_url('js/summernote/summernote.min.js'), 'summernote-js');
+		$this->assets->setStyleTag(assets_url('js/summernote/summernote.css'), 'summernote-css');
+		$this->assets->setScriptTag(assets_url('js/summernote/summernote.min.js'), 'summernote-js');
 
 		$data = $this->getForm($location_info);
 
@@ -122,7 +123,7 @@ class Locations extends Admin_Controller
 
 		$data['map_key'] = ($this->config->item('maps_api_key')) ? '&key=' . $this->config->item('maps_api_key') : '';
 
-		$this->template->setScriptTag('https://maps.googleapis.com/maps/api/js?v=3' . $data['map_key'] . '&sensor=false&region=GB&libraries=geometry', 'google-maps-js', '104330');
+		$this->assets->setScriptTag('https://maps.googleapis.com/maps/api/js?v=3' . $data['map_key'] . '&sensor=false&region=GB&libraries=geometry', 'google-maps-js', '104330');
 
 		$data['location_id'] = $location_info['location_id'];
 		$data['location_name'] = $location_info['location_name'];
@@ -394,19 +395,22 @@ class Locations extends Admin_Controller
 		$data['countries'] = $this->Countries_model->isEnabled()->dropdown('country_name');
 
 		$data['payment_list'] = array();
-		$payments = $this->Extensions_model->getPayments();
+		$payments = Components::list_payment_gateways();
 		foreach ($payments as $payment) {
-			if (!empty($payment['ext_data'])) {
-				if ($payment['ext_data']['status'] === '1') {
-					$data['payment_list'][] = array(
-						'name'     => $payment['title'],
-						'code'     => $payment['name'],
-						'priority' => $payment['ext_data']['priority'],
-						'status'   => $payment['ext_data']['status'],
-						'edit'     => $this->pageUrl("extensions/edit/payment/{$payment['name']}"),
-					);
-				}
+			$extension = Components::find_component_extension($payment['code']);
+			if (!$extension) {
+				continue;
 			}
+
+			$payment['name'] = isset($payment['name']) ? $this->lang->line($payment['name']) : '';
+			$payment['description'] = isset($payment['description']) ? $this->lang->line($payment['description']) : '';
+
+			$payment['edit'] = '';
+			if (method_exists($extension, 'registerSettings')) {
+				$payment['edit'] = $extension->registerSettings();
+			}
+
+			$data['payment_list'][] = $payment;
 		}
 
 		return $data;

@@ -61,7 +61,7 @@ class Location {
 	public function initialize($local_info = array()) {
 		$local_info = empty($local_info) ? $this->CI->session->userdata('local_info') : $local_info;
 
-		if (!isset($local_info['location_id']) AND $this->CI->config->item('location_order') !== '1') {
+		if (is_single_location() OR (!isset($local_info['location_id']) AND $this->CI->config->item('location_order') !== '1')) {
 			$local_info['location_id'] = $this->CI->config->item('default_location_id');
 		}
 
@@ -339,9 +339,23 @@ class Location {
 	}
 
 	public function payments($split = '') {
-		$payments = (!empty($this->local_options['payments'])) ? $this->local_options['payments'] : NULL;
+		$local_payments = (!empty($this->local_options['payments'])) ? $this->local_options['payments'] : NULL;
 
-        return ($payments AND $split !== '') ? implode($payments, $split) : $payments;
+		$payments = array();
+		foreach (Components::list_payment_gateways() as $code => $payment) {
+			if (!empty($local_payments) AND !in_array($code, $local_payments)) continue;
+
+			$settings = $this->CI->Extensions_model->getSettings($code);
+			$payments[$code] = array_merge($payment, array(
+				'name' => isset($payment['name']) ? $this->CI->lang->line($payment['name']) : '',
+				'description' => isset($payment['description']) ? $this->CI->lang->line($payment['description']) : '',
+				'priority' => !empty($settings['priority']) ? $settings['priority'] : '0',
+				'status' => empty($settings['status']) ? '0' : '1'
+			));
+		}
+
+		sort_array($payments);
+        return ($payments AND $split !== '') ? implode(array_column($payments, 'name'), $split) : $payments;
 	}
 
 	public function workingType($type = '') {

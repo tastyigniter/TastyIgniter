@@ -302,8 +302,8 @@ class Layouts_model extends TI_Model
 			$routes = (isset($save['routes'])) ? $save['routes'] : array();
 			$this->addLayoutRoutes($layout_id, $routes);
 
-			$modules = (isset($save['modules'])) ? $save['modules'] : array();
-			$this->addLayoutModules($layout_id, $modules);
+			$components = (isset($save['components'])) ? $save['components'] : array();
+			$this->addLayoutModules($layout_id, $components);
 
 			return $layout_id;
 		}

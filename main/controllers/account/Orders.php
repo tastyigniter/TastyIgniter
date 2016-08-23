@@ -144,8 +144,9 @@ class Orders extends Main_Controller
 		$data['order_total'] = $this->currency->format($result['order_total']);
 		$data['total_items'] = $result['total_items'];
 
-		if ($payment = $this->extension->getPayment($result['payment'])) {
-			$data['payment'] = !empty($payment['ext_data']['title']) ? $payment['ext_data']['title'] : $payment['title'];
+		$payments = Components::list_payment_gateways();
+		if (isset($payments[$result['payment']]) AND $payment = $payments[$result['payment']]) {
+			$data['payment'] = !empty($payment['name']) ? $this->lang->line($payment['name']) : $payment['code'];
 		} else {
 			$data['payment'] = $this->lang->line('text_no_payment');
 		}

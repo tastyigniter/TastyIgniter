@@ -27,24 +27,24 @@ class Checkout extends Main_Controller
 	public function index() {
 		if (!$this->cart->contents()) {                                                        // checks if cart contents is empty
 			$this->alert->set('alert', $this->lang->line('alert_no_menu_to_order'));
-			redirect(restaurant_url());                                                                    // redirect to menus page and display error
+			$this->redirect(restaurant_url());                                                                    // redirect to menus page and display error
 		}
 
 		if ($this->config->item('location_order') === '1' AND !$this->location->hasSearchQuery()) {                                                        // else if local restaurant is not selected
 			$this->alert->set('alert', $this->lang->line('alert_no_selected_local'));
-			redirect(restaurant_url());                                                                    // redirect to menus page and display error
+			$this->redirect(restaurant_url());                                                                    // redirect to menus page and display error
 		}
 
 		if ($this->location->isClosed()) {                                                    // else if local restaurant is not open
-			redirect(restaurant_url());                                                                    // redirect to previous page and display error
+			$this->redirect(restaurant_url());                                                                    // redirect to previous page and display error
 		}
 
 		if (!$this->location->checkOrderType()) {
-			redirect(restaurant_url());                                                                    // redirect to previous page and display error
+			$this->redirect(restaurant_url());                                                                    // redirect to previous page and display error
 		}
 
 		if ($this->location->orderType() === '1' AND !$this->location->checkMinimumOrder($this->cart->total())) {                            // checks if cart contents is empty
-			redirect(restaurant_url());                                                                    // redirect to previous page and display error
+			$this->redirect(restaurant_url());                                                                    // redirect to previous page and display error
 		}
 
 		$prepend = '?redirect=' . str_replace(site_url(), '/', current_url());
@@ -62,10 +62,10 @@ class Checkout extends Main_Controller
 
 		$this->template->setTitle($this->lang->line('text_heading'));
 
-		$this->template->setStyleTag(assets_url('js/datepicker/datepicker.css'), 'datepicker-css');
-		$this->template->setScriptTag(assets_url("js/datepicker/bootstrap-datepicker.js"), 'bootstrap-datepicker-js');
-		$this->template->setStyleTag(assets_url('js/datepicker/bootstrap-timepicker.css'), 'bootstrap-timepicker-css');
-		$this->template->setScriptTag(assets_url("js/datepicker/bootstrap-timepicker.js"), 'bootstrap-timepicker-js');
+		$this->assets->setStyleTag(assets_url('js/datepicker/datepicker.css'), 'datepicker-css');
+		$this->assets->setScriptTag(assets_url("js/datepicker/bootstrap-datepicker.js"), 'bootstrap-datepicker-js');
+		$this->assets->setStyleTag(assets_url('js/datepicker/bootstrap-timepicker.css'), 'bootstrap-timepicker-css');
+		$this->assets->setScriptTag(assets_url("js/datepicker/bootstrap-timepicker.js"), 'bootstrap-timepicker-js');
 
 		$data['text_login_register'] = $this->customer->isLogged() ? sprintf($this->lang->line('text_logout'), $this->customer->getFirstName(), site_url('account/logout' . $prepend)) : sprintf($this->lang->line('text_registered'), site_url('account/login' . $prepend));
 
@@ -122,8 +122,9 @@ class Checkout extends Main_Controller
 		// checks if order type is delivery or collection
 		$order_type = ($order_info['order_type'] === '1') ? 'delivery' : 'collection';
 
-		if ($payment = $this->extension->getPayment($order_info['payment'])) {
-			$payment_method = !empty($payment['ext_data']['title']) ? $payment['ext_data']['title'] : $payment['title'];
+		$payments = Components::list_payment_gateways();
+		if (isset($payments[$order_info['payment']]) AND $payment = $payments[$order_info['payment']]) {
+			$payment_method = !empty($payment['name']) ? $this->lang->line($payment['name']) : $payment['code'];
 		} else {
 			$payment_method = $this->lang->line('text_no_payment');
 		}
@@ -399,11 +400,12 @@ class Checkout extends Main_Controller
 		}
 
 		$data['payments'] = array();
-		$local_payments = $this->location->payments();
-		$payments = $this->extension->getAvailablePayments();
-		foreach (sort_array($payments) as $code => $payment) {
-			if (!empty($local_payments) AND !in_array($payment['code'], $local_payments)) continue;
-			$data['payments'][] = $payment;
+		$payments = $this->location->payments();
+		foreach ($payments as $code => $payment) {
+			unset($payment['path']);
+			$data['payments'][] = array_merge($payment, array(
+				'data' => Components::run($payment['code'] . '/index', $this, $payment),
+			));
 		}
 
 		return $data;
@@ -455,7 +457,7 @@ class Checkout extends Main_Controller
 
 			if ($this->input->post('checkout_step') === 'two' AND $order_data['checkout_step'] === 'two' AND $this->input->post('payment')) {
 				$order_data['payment'] = $this->input->post('payment');
-				$order_data['ext_payment'] = $this->extension->getPayment($order_data['payment']);
+				$order_data['payment_settings'] = $this->Extensions_model->getSettings($order_data['payment']);
 
 				if ($this->config->item('checkout_terms') > 0) {
 					$order_data['terms_condition'] = $this->input->post('terms_condition');
@@ -480,14 +482,9 @@ class Checkout extends Main_Controller
 
 			if ($order_info = $this->Orders_model->getOrder($order_data['order_id'], $order_data['customer_id'])) {    // retrieve order details array from getMainOrder method in Orders model
 
-				if (!empty($order_info['order_id']) AND !empty($order_data['ext_payment'])) {
-
-					$payment = $order_data['ext_payment'];
-
-					$payment_class = strtolower($payment['name']);
-					$payment_controller = $payment_class . '/' . $payment_class;
-
-					$this->load->module($payment_controller);
+				if (!empty($order_info['order_id']) AND !empty($order_data['payment_settings'])) {
+					$payment_class = strtolower($order_info['payment']);
+					$this->load->module($payment_class . '/' . $payment_class);
 
 					return $this->{$payment_class}->confirm();
 				}

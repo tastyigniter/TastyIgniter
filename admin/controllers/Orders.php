@@ -94,8 +94,8 @@ class Orders extends Admin_Controller
 		$this->output->enable_profiler(FALSE);
 		$action = $this->uri->rsegment('3');
 
-		$this->template->setStyleTag('css/bootstrap.min.css', 'bootstrap-css', '1');
-		$this->template->setStyleTag('css/fonts.css', 'fonts-css', '2');
+		$this->assets->setStyleTag('css/bootstrap.min.css', 'bootstrap-css', '1');
+		$this->assets->setStyleTag('css/fonts.css', 'fonts-css', '2');
 
 		$data = $this->getInvoice();
 
@@ -111,12 +111,14 @@ class Orders extends Admin_Controller
 
 		$data = array_merge($this->getFilter(), $this->getSort(), $data);
 
+		$payments = Components::list_payment_gateways();
+
 		$data['orders'] = array();
 		$results = $this->Orders_model->paginate($this->getFilter());
 		foreach ($results->list as $result) {
 			$payment_title = '--';
-			if ($payment = $this->extension->getPayment($result['payment'])) {
-				$payment_title = !empty($payment['ext_data']['title']) ? $payment['ext_data']['title'] : $payment['title'];
+			if (isset($payments[$result['payment']]) AND $payment = $payments[$result['payment']]) {
+				$payment_title = !empty($payment['name']) ? $this->lang->line($payment['name']) : $payment['code'];
 			}
 
 			$data['orders'][] = array_merge($result, array(
@@ -136,11 +138,10 @@ class Orders extends Admin_Controller
 		$data['statuses'] = $this->Statuses_model->dropdown('status_name');
 
 		$data['payments'] = array();
-		$payments = $this->extension->getPayments();
 		foreach ($payments as $payment) {
 			$data['payments'][] = array(
-				'name'  => $payment['name'],
-				'title' => $payment['title'],
+				'code' => $payment['code'],
+				'name'  => !empty($payment['name']) ? $this->lang->line($payment['name']) : $payment['code'],
 			);
 		}
 
@@ -188,17 +189,17 @@ class Orders extends Admin_Controller
 		$data['ip_address'] = $order_info['ip_address'];
 		$data['user_agent'] = $order_info['user_agent'];
 		$data['check_order_type'] = $order_info['order_type'];
-
+		
 		$data['paypal_details'] = array();
-		if ($payment = $this->extension->getPayment($order_info['payment'])) {
-			if ($payment['name'] === 'paypal_express') {
+		$data['payment'] = $this->lang->line('text_no_payment');
+		$payments = Components::list_payment_gateways();
+		if (isset($payments[$order_info['payment']]) AND $payment = $payments[$order_info['payment']]) {
+			if ($payment['code'] === 'paypal_express') {
 				$this->load->model('paypal_express/Paypal_model');
 				$data['paypal_details'] = (isset($this->Paypal_model)) ? $this->Paypal_model->getPaypalDetails($order_info['order_id'], $order_info['customer_id']) : array();
 			}
 
-			$data['payment'] = !empty($payment['ext_data']['title']) ? $payment['ext_data']['title'] : $payment['title'];
-		} else {
-			$data['payment'] = $this->lang->line('text_no_payment');
+			$data['payment'] = !empty($payment['name']) ? $this->lang->line($payment['name']) : $payment['code'];
 		}
 
 		$data['staffs'] = $this->Staffs_model->isEnabled()->dropdown('staff_name');

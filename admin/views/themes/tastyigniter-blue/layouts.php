@@ -14,7 +14,7 @@
 									</div>
 								</th>
 								<th><?php echo lang('column_name'); ?></th>
-								<th><?php echo lang('column_active_modules'); ?></th>
+								<th><?php echo lang('column_active_components'); ?></th>
 								<th></th>
 							</tr>
 						</thead>
@@ -29,7 +29,11 @@
 									</div>
 									<a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $layout['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
 								<td><?php echo $layout['name']; ?></td>
-								<td><?php echo $layout['modules']; ?></td>
+								<td>
+									<?php foreach ($layout['components'] as $component) { ?>
+										<span class="label label-primary"><?php echo $component; ?></span>
+									<?php } ?>
+								</td>
 								<td></td>
 							</tr>
 							<?php } ?>

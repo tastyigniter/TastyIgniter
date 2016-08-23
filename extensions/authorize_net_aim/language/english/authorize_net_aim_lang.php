@@ -2,6 +2,8 @@
 
 $lang['_text_title'] 		    = 'Authorize.Net';
 $lang['text_tab_general'] 	    = 'General';
+$lang['text_component_title']	= 'Authorize.Net (AIM)';
+$lang['text_component_desc'] 	= 'Accept credit card payments though Authorize.Net';
 $lang['text_go_live'] 	        = 'Go Live';
 $lang['text_test'] 	            = 'Test';
 $lang['text_test_live'] 	    = 'Test Live';

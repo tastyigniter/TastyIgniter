@@ -272,7 +272,7 @@ class Locations_model extends TI_Model
 			$this->Settings_model->addSetting('prefs', 'default_location_id', $location_id, '0');
 
 			if (is_single_location()) {
-				$this->update(array('location_id !=', $location_id), array('location_status', '0'));
+				$this->update(array('location_id !=' => $location_id), array('location_status' => '0'));
 			}
 		}
 
@@ -298,7 +298,7 @@ class Locations_model extends TI_Model
 			}
 
 			if (is_single_location()) {
-				$this->update(array('location_id !=', $location_id), array('location_status', '0'));
+				$this->update(array('location_id !=' => $location_id), array('location_status' => '0'));
 			}
 
 			if (!empty($save['options']['opening_hours'])) {

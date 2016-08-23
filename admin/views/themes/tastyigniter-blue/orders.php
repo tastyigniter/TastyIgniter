@@ -62,9 +62,9 @@
 											<option value=""><?php echo lang('text_filter_payment'); ?></option>
 											<?php foreach ($payments as $payment) { ?>
 												<?php if ($payment['name'] === $filter_payment) { ?>
-													<option value="<?php echo $payment['name']; ?>" <?php echo set_select('filter_payment', $payment['name'], TRUE); ?> ><?php echo $payment['title']; ?></option>
+													<option value="<?php echo $payment['code']; ?>" <?php echo set_select('filter_payment', $payment['code'], TRUE); ?> ><?php echo $payment['name']; ?></option>
 												<?php } else { ?>
-													<option value="<?php echo $payment['name']; ?>" <?php echo set_select('filter_payment', $payment['name']); ?> ><?php echo $payment['title']; ?></option>
+													<option value="<?php echo $payment['code']; ?>" <?php echo set_select('filter_payment', $payment['code']); ?> ><?php echo $payment['name']; ?></option>
 												<?php } ?>
 											<?php } ?>
 										</select>&nbsp;

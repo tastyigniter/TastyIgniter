@@ -2,6 +2,8 @@
 
 $lang['_text_title'] 		                = 'Cart';
 $lang['text_tab_general'] 		            = 'General';
+$lang['text_component_title']				= 'Cart Component';
+$lang['text_component_desc'] 				= 'Displays cart for menu to be added';
 $lang['text_tab_totals'] 		            = 'Cart Totals';
 
 $lang['text_heading'] 			            = 'My Order';

@@ -2,18 +2,6 @@
 <div class="row content">
 	<div class="col-md-12">
 		<div class="panel panel-default panel-table panel-tabs">
-			<div class="panel-heading">
-				<ul id="nav-tabs" class="nav nav-tabs">
-					<?php if ($filter_type === 'payment') { ?>
-						<li><a href="<?php echo site_url('extensions?filter_type=module'); ?>"><?php echo lang('text_tab_module'); ?></a></li>
-						<li class="active"><a href="<?php echo site_url('extensions?filter_type=payment'); ?>"><?php echo lang('text_tab_payment'); ?></a></li>
-					<?php } else { ?>
-						<li class="active"><a href="<?php echo site_url('extensions?filter_type=module'); ?>"><?php echo lang('text_tab_module'); ?></a></li>
-						<li><a href="<?php echo site_url('extensions?filter_type=payment'); ?>"><?php echo lang('text_tab_payment'); ?></a></li>
-					<?php } ?>
-				</ul>
-            </div>
-
             <div class="panel-body panel-filter">
                 <form role="form" id="filter-form" accept-charset="utf-8" method="GET" action="<?php echo current_url(); ?>">
                     <div class="filter-bar">
@@ -55,7 +43,8 @@
 					<table border="0" class="table table-striped table-border">
 						<thead>
 							<tr>
-								<th class="action action-three"></th>
+								<th class="action action-two"></th>
+								<th></th>
                                 <th class="name sorter"><a class="sort" href="<?php echo $sort_name; ?>"><?php echo lang('column_name'); ?> / <?php echo lang('column_desc'); ?> <i class="fa fa-sort-<?php echo ($sort_by === 'name') ? $order_by_active : $order_by; ?>"></i></a></th>
 							</tr>
 						</thead>
@@ -63,12 +52,12 @@
 							<?php if ($extensions) { ?>
 							<?php foreach ($extensions as $extension) { ?>
 							<tr>
-								<td class="action action-three">
-                                    <?php if ($extension['settings'] === TRUE AND $extension['status'] === '1') { ?>
-                                        <a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $extension['edit']; ?>"><i class="fa fa-pencil"></i></a>
+								<td class="action action-two">
+                                    <?php if (!empty($extension['settings']) AND $extension['status'] === '1') { ?>
+                                        <a class="btn btn-edit" title="<?php echo lang('text_settings'); ?>" href="<?php echo $extension['edit']; ?>"><i class="fa fa-gear"></i></a>
                                         &nbsp;&nbsp;&nbsp;
                                     <?php } else if ($extension['installed'] === TRUE AND $extension['status'] === '1') { ?>
-	                                    <a class="btn btn-edit disabled" title="<?php echo lang('text_edit'); ?>"><i class="fa fa-pencil"></i></a>
+	                                    <a class="btn btn-edit disabled" title="<?php echo lang('text_settings'); ?>"><i class="fa fa-gear"></i></a>
 	                                    &nbsp;&nbsp;&nbsp;
                                     <?php } ?>
 									<?php if ($extension['installed'] === TRUE AND $extension['status'] === '1') { ?>
@@ -82,15 +71,19 @@
                                     <?php } ?>
 								</td>
 								<td>
-									<strong><?php echo $extension['title']; ?></strong>
-                                    <div class="extension_desc text-muted"><?php echo $extension['description']; ?></div>
-                                    <div class="extension_meta text-muted small">
+									<?php if (!empty($extension['icon'])) { ?>
+										<i class="fa fa-2x extension-icon <?php echo $extension['icon']; ?>"></i>
+									<?php } ?>
+								</td>
+								<td>
+									<span class="extension-name"><strong><?php echo $extension['name']; ?></strong></span>
+                                    <div class="extension-desc text-muted"><?php echo $extension['description']; ?></div>
+                                    <div class="extension-meta text-muted small">
                                         <span><?php echo lang('column_version'); ?>: <?php echo $extension['version']; ?></span>
                                         &nbsp;&nbsp;|&nbsp;&nbsp;
                                         <span><?php echo lang('column_author'); ?>: <?php echo $extension['author']; ?></span>
                                     </div>
-
-                                </td>
+								</td>
 							</tr>
 							<?php } ?>
 							<?php } else {?>

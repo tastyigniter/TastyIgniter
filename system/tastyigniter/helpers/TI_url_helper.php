@@ -168,6 +168,27 @@ if ( ! function_exists('extension_url'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('admin_extension_url'))
+{
+	/**
+	 * Admin Extensions URL
+	 *
+	 * Create a local URL based on your extensions path.
+	 * Segments can be passed in as a string.
+	 *
+	 * @param	string	$uri
+	 * @param	string	$protocol
+	 *
+	 * @return	string
+	 */
+	function admin_extension_url($uri = '', $protocol = NULL)
+	{
+		return get_instance()->config->root_url(ADMINDIR.'/'.EXTPATH.$uri, $protocol);
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('theme_url'))
 {
 	/**

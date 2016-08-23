@@ -363,14 +363,15 @@ if ($composer_autoload = config_item('composer_autoload') AND file_exists(BASEPA
 
     // Load the base controller class
     require_once IGNITEPATH.'core/Base_Controller.php';
+	require_once IGNITEPATH.'core/Authenticated_Controller.php';
 
 	// Load the main or admin base controller class
 	if (APPDIR === ADMINDIR) {
-		require_once IGNITEPATH.'core/Authenticated_Controller.php';
 		require_once IGNITEPATH.'core/Admin_Controller.php';
 	} else if (APPDIR === MAINDIR) {
 		require_once IGNITEPATH.'core/Main_Controller.php';
-    }
+		require_once IGNITEPATH . 'core/Base_Component.php';
+	}
 
     // Set a mark point for benchmarking
 	$BM->mark('loading_time:_base_classes_end');
