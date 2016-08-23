@@ -35,7 +35,7 @@ class Menus extends Main_Controller
 		$this->template->setBreadcrumb('<i class="fa fa-home"></i>', '/');
 		$this->template->setBreadcrumb($this->lang->line('text_heading'), 'menus');
 
-		$this->template->setScriptTag('js/jquery.mixitup.js', 'jquery-mixitup-css', '100330');
+		$this->assets->setScriptTag('js/jquery.mixitup.js', 'jquery-mixitup-css', '100330');
 
 		$data['menu_list'] = $this->getList();
 

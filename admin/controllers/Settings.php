@@ -186,7 +186,7 @@ class Settings extends Admin_Controller
 			unset($data['default_location_id']);
 
 			if ($this->Settings_model->updateSettings('config', $data, TRUE)) {
-				if ($this->input->post('default_location_id') !== $this->config->item('location_id', 'main_address')) {
+				if ($this->input->post('default_location_id')) {
 					$this->load->model('Locations_model');
 					$this->Locations_model->updateDefault($this->Locations_model->getAddress($this->input->post('default_location_id')));
 				}

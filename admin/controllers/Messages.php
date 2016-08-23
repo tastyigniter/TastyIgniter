@@ -158,8 +158,8 @@ class Messages extends Admin_Controller
 		$this->template->setButton($this->lang->line('button_save_draft'), array('class' => 'btn btn-default', 'onclick' => 'saveAsDraft();'));
 		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('messages')));
 
-		$this->template->setStyleTag(assets_url('js/summernote/summernote.css'), 'summernote-css', '111');
-		$this->template->setScriptTag(assets_url('js/summernote/summernote.min.js'), 'summernote-js', '111');
+		$this->assets->setStyleTag(assets_url('js/summernote/summernote.css'), 'summernote-css', '111');
+		$this->assets->setScriptTag(assets_url('js/summernote/summernote.min.js'), 'summernote-js', '111');
 
 		$data = $this->getForm($message_info);
 

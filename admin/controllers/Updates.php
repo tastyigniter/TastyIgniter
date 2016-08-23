@@ -128,20 +128,20 @@ class Updates extends Admin_Controller
 		header('Cache-Control: no-cache, must-revalidate');
 
 		$this->template->setDocType('html5');
-		$this->template->setMeta(array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'));
-		$this->template->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=edge,chrome=1', 'type' => 'equiv'));
-		$this->template->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=9; IE=8; IE=7', 'type' => 'equiv'));
-		$this->template->setMeta(array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1', 'type' => 'name'));
-		$this->template->setMeta(array('name' => 'robots', 'content' => 'noindex,nofollow', 'type' => 'name'));
+		$this->assets->setMeta(array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'));
+		$this->assets->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=edge,chrome=1', 'type' => 'equiv'));
+		$this->assets->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=9; IE=8; IE=7', 'type' => 'equiv'));
+		$this->assets->setMeta(array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1', 'type' => 'name'));
+		$this->assets->setMeta(array('name' => 'robots', 'content' => 'noindex,nofollow', 'type' => 'name'));
 
-		$this->template->setFavIcon('images/favicon.ico', 'shortcut icon', 'image/ico');
+		$this->assets->setFavIcon('images/favicon.ico', 'shortcut icon', 'image/ico');
 
-		$this->template->setStyleTag('css/bootstrap.min.css', 'bootstrap-css', '10');
-		$this->template->setStyleTag('css/font-awesome.min.css', 'font-awesome-css', '11');
-		$this->template->setStyleTag('css/fonts.css', 'fonts-css', '16');
-		$this->template->setStyleTag('css/stylesheet.css', 'stylesheet-css', '100');
+		$this->assets->setStyleTag('css/bootstrap.min.css', 'bootstrap-css', '10');
+		$this->assets->setStyleTag('css/font-awesome.min.css', 'font-awesome-css', '11');
+		$this->assets->setStyleTag('css/fonts.css', 'fonts-css', '16');
+		$this->assets->setStyleTag('css/stylesheet.css', 'stylesheet-css', '100');
 
-		$this->template->setScriptTag('js/jquery-1.11.2.min.js', 'jquery-js', '1');
+		$this->assets->setScriptTag('js/jquery-1.11.2.min.js', 'jquery-js', '1');
 	}
 }
 

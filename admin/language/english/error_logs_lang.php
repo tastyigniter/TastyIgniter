@@ -2,6 +2,7 @@
 
 $lang['text_title'] 		            = 'Error Logs';
 $lang['text_heading'] 		            = 'Error Logs';
+$lang['text_clear_logs'] 		    	= 'Clear Logs';
 
 /* End of file error_logs_lang.php */
 /* Location: ./admin/language/english/error_logs_lang.php */
