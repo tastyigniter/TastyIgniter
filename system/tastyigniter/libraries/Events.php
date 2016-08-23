@@ -40,20 +40,10 @@ class Events {
 	private static $events = array();
 
 	/**
-	 * @var array Holds the installed extensions.
-	 */
-	private static $extensions = array();
-
-	/**
 	 * This if here solely for CI loading to work. Just calls the initialize() method.
 	 *
 	 */
 	public function __construct() {
-		// get all installed extensions
-		if (config_item('ti_version')) {
-			self::setExtensions();
-		}
-
 		self::initialize();
 	}
 
@@ -66,12 +56,13 @@ class Events {
 		// Merge events from indivdual modules.
 		foreach (Modules::list_modules() as $module) {
 			// Skip if module is not installed
-			if ( ! isset(self::$extensions[$module])) {
+			if ( Modules::is_disabled($module)) {
 				continue;
 			}
 
-			$path = ROOTPATH . EXTPATH . "{$module}/config/";
-			if (is_file($path . 'events.php')) {
+			list($path, $file) = Modules::find('events', $module, 'config/');
+			
+			if ($path) {
 				$module_events = Modules::load_file('events', $path, 'config');
 
 				if (is_array($module_events)) {
@@ -132,13 +123,6 @@ class Events {
 
 			$class->{$subscriber['method']}($payload);
 			unset($class);
-		}
-	}
-
-	protected static function setExtensions() {
-		if (empty(self::$extensions)) {
-			self::$CI =& get_instance();
-			self::$extensions = self::$CI->extension->getInstalledExtensions();
 		}
 	}
 }
