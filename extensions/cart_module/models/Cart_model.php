@@ -6,7 +6,7 @@ class Cart_model extends TI_Model {
         parent::__construct();
 
         if ($this->db->where('type', 'cart_total')->get('extensions')->num_rows() <= 0) {
-            $this->extension->runMigration('cart_module');
+            Modules::run_migration('cart_module');
         }
     }
 

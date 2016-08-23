@@ -30,8 +30,7 @@ class Stripe_model extends TI_Model {
 	}
 
 	protected function sendToStripe($end_point, $data = array(), $order_data = array()) {
-		$payment = $this->extension->getPayment('stripe');
-		$settings = !empty($payment['ext_data']) ? $payment['ext_data'] : array();
+		$settings = $this->Extensions_model->getSettings('stripe');
 
 		$url = 'https://api.stripe.com/v1/'. $end_point;
 
