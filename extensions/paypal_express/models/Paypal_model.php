@@ -163,8 +163,7 @@ class Paypal_model extends TI_Model {
 	}
 
 	public function callPayPal($method, $nvp_data) {
-		$payment = $this->extension->getPayment('paypal_express');
-		$settings = $payment['ext_data'];
+		$settings = $this->Extensions_model->getSettings('paypal_express');
 		$api_user = (isset($settings['api_user'])) ? $settings['api_user'] : '';
 		$api_pass = (isset($settings['api_pass'])) ? $settings['api_pass'] : '';
 		$api_signature = (isset($settings['api_signature'])) ? $settings['api_signature'] : '';
