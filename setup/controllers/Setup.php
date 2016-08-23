@@ -48,7 +48,7 @@ class Setup extends Base_Controller {
     }
 
 	public function requirements() {
-        if ($this->setup_proceed === FALSE) {
+        if ($this->setup_proceed === FALSE AND $this->session->tempdata('setup_step') !== 'database') {
             $this->alert->set('danger', $this->lang->line('alert_license_error'));
             $this->redirect('license');
         }
@@ -64,7 +64,7 @@ class Setup extends Base_Controller {
         $data['back_url'] 		        = $this->pageUrl('license');
 
         if ($this->input->post('requirements')) {
-            if (!in_array(FALSE, $data['requirements'], TRUE) AND !in_array(FALSE, $data['writables'], TRUE)) {
+            if (!in_array(FALSE, $data['requirements'], TRUE) OR !in_array(FALSE, array_column($data['writables'], 'status'), TRUE)) {
                 $this->session->set_tempdata('setup_step', 'database', $this->setup_timeout);
                 $this->redirect('database');
             }
@@ -82,7 +82,7 @@ class Setup extends Base_Controller {
 	}
 
 	public function database() {
-        if ($this->setup_proceed === FALSE) {
+        if ($this->setup_proceed === FALSE AND $this->session->tempdata('setup_step') !== 'settings') {
             $this->alert->set('danger', $this->lang->line('alert_requirement_error'));
             $this->redirect('requirements');
         }
