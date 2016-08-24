@@ -311,10 +311,12 @@ class Themes extends Admin_Controller {
 		return $theme_tree;
 	}
 
-	private function _addTheme() {
+	protected function _addTheme() {
 		$this->user->restrict('Site.Themes.Add', site_url('themes/add'));
 
 		if (isset($_FILES['theme_zip'])) {
+			$this->user->restrict('Site.Themes.Add', site_url('themes/add'));
+
 			if ($this->validateUpload() === TRUE) {
 				$message = $this->Themes_model->extractTheme($_FILES['theme_zip']);
 
