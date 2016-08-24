@@ -37,7 +37,7 @@ class Cart_module extends Base_Component
 
 			$json['error'] = $this->lang->line('alert_bad_request');
 
-		} else if ($this->config->item('location_order') === '1' AND !$this->location->hasSearchQuery()) {                                                        // if local restaurant is not selected
+		} else if ($this->location->orderType() === '1' AND $this->config->item('location_order') === '1' AND !$this->location->hasSearchQuery()) {                                                        // if local restaurant is not selected
 
 			$json['error'] = $this->lang->line('alert_no_search_query');
 
