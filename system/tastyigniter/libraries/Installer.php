@@ -349,12 +349,14 @@ class Installer
 			return FALSE;
 		}
 
-		// Add an item to db configuration as a simple check whether it's installed,
-		// so development doesn't require removing the setup folder.
 		$this->CI->Setup_model->updateVersion();
-		
+
 		// Create the default location
 		$this->CI->Setup_model->updateLocation($settings);
+
+		// Create config array item containing all installed extensions
+		$this->CI->load->model('Extensions_model');
+		$this->CI->Extensions_model->updateInstalledExtensions();
 
 		// Create the encryption key used for sessions and encryption
 		$this->createEncryptionKey();
@@ -395,9 +397,14 @@ class Installer
 				$this->CI->Setup_model->updateVersion($update_version);
 
 				// Save the site configuration to the settings table
-				if (!$this->CI->Setup_model->updateSettings(array('ti_setup' => 'updated', 'site_url' => root_url()), TRUE)) {
+				$settings = array('ti_setup' => 'updated', 'site_url' => root_url());
+				if (!$this->CI->Setup_model->updateSettings($settings, TRUE)) {
 					return FALSE;
 				}
+
+				// Create config array item containing all installed extensions
+				$this->CI->load->model('Extensions_model');
+				$this->CI->Extensions_model->updateInstalledExtensions();
 
 				// Create the encryption key used for sessions and encryption
 				$this->createEncryptionKey();
