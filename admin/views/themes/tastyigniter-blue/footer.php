@@ -41,8 +41,9 @@ function saveClose() {
 }
 
 function filterList() {
-	var perPage = !$('#per-page-limit').val() ? <?php echo config_item('page_limit'); ?> : $('#per-page-limit').val();
-	$('#filter-form').append('<input type="hidden" name="limit" value="'+perPage+'" />');
+	if ($('#per-page-limit').val()) {
+		$('#filter-form').append('<input type="hidden" name="limit" value="' + $('#per-page-limit').val() + '" />');
+	}
 	$('#filter-form').submit();
 }
 </script>

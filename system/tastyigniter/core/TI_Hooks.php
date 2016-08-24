@@ -9,7 +9,7 @@
  * @copyright TastyIgniter
  * @link      http://tastyigniter.com
  * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
+ * @since     File available since Release 2.2
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 

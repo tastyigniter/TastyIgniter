@@ -1,4 +1,4 @@
-<?php if ($categories) {?>
+<?php if ($categories) { ?>
 	<div id="Container" class="menu-list">
 		<?php $category_count = 1; ?>
 		<?php foreach ($categories as $category_id => $category) { ?>

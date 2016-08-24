@@ -43,9 +43,9 @@ class Extensions_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function find_all() {
+	public function find_all_by_path() {
 		$result = $db_extensions = array();
-		foreach (parent::find_all() as $row) {
+		foreach ($this->find_all() as $row) {
 			if (preg_match('/\s/', $row['name']) > 0 OR !$this->extensionExists($row['name'])) {
 				$this->uninstall($row['name']);
 				continue;
@@ -88,7 +88,7 @@ class Extensions_model extends TI_Model
 		$result = array();
 
 		if (empty($this->extensions)) {
-			$this->extensions = $this->filter($filter)->find_all();
+			$this->extensions = $this->filter($filter)->find_all_by_path();
 		}
 
 		foreach ($this->extensions as $code => $extension) {
@@ -200,6 +200,32 @@ class Extensions_model extends TI_Model
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Return all files within an extension folder
+	 *
+	 * @param string $code
+	 * @param array  $files
+	 *
+	 * @return array|null
+	 */
+	public function getExtensionFiles($code = NULL, $files = array()) {
+		if (!is_dir(ROOTPATH . EXTPATH . $code)) {
+			return NULL;
+		}
+
+		foreach (glob(ROOTPATH . EXTPATH . $code . '/*') as $filepath) {
+			$filename = str_replace(ROOTPATH . EXTPATH, '', $filepath);
+
+			if (is_dir($filepath)) {
+				$files = $this->getExtensionFiles($filename, $files);
+			} else {
+				$files[] = EXTPATH . $filename;
+			}
+		}
+
+		return $files;
 	}
 
 	/**
@@ -325,6 +351,40 @@ class Extensions_model extends TI_Model
 	}
 
 	/**
+	 * Update installed extensions config value
+	 *
+	 * @param string $extension
+	 * @param bool $install
+	 *
+	 * @return bool TRUE on success, FALSE on failure
+	 */
+	public function updateInstalledExtensions($extension = NULL, $install = TRUE) {
+		$installed_extensions = $this->config->item('installed_extensions');
+
+		if (empty($installed_extensions) OR !is_array($installed_extensions)) {
+			$this->load->model('Extensions_model');
+			$this->Extensions_model->select('name')->where_in('type', array('module', 'payment'));
+			$this->Extensions_model->where('extensions', array('status' => '1'));
+			if ($installed_extensions = $this->Extensions_model->find_all()) {
+				$installed_extensions = array_flip(array_column($installed_extensions, 'name'));
+				$installed_extensions = array_fill_keys(array_keys($installed_extensions), TRUE);
+			}
+		}
+
+		if (!is_null($extension) AND $this->extensionExists($extension)) {
+			if ($install) {
+				$installed_extensions[$extension] = TRUE;
+			} else {
+				unset($installed_extensions[$extension]);
+			}
+		}
+
+		$this->load->model('Settings_model');
+		$this->Settings_model->addSetting('prefs', 'installed_extensions', $installed_extensions, '1');
+
+	}
+
+	/**
 	 * Find an existing extension in filesystem by folder name
 	 *
 	 * @param string $code
@@ -333,32 +393,6 @@ class Extensions_model extends TI_Model
 	 */
 	public function extensionExists($code) {
 		return Modules::has_extension($code);
-	}
-
-	/**
-	 * Return all files within an extension folder
-	 *
-	 * @param string $code
-	 * @param array  $files
-	 *
-	 * @return array|null
-	 */
-	public function getExtensionFiles($code = NULL, $files = array()) {
-		if (!is_dir(ROOTPATH . EXTPATH . $code)) {
-			return NULL;
-		}
-
-		foreach (glob(ROOTPATH . EXTPATH . $code . '/*') as $filepath) {
-			$filename = str_replace(ROOTPATH . EXTPATH, '', $filepath);
-
-			if (is_dir($filepath)) {
-				$files = $this->getExtensionFiles($filename, $files);
-			} else {
-				$files[] = EXTPATH . $filename;
-			}
-		}
-
-		return $files;
 	}
 
 	/**
@@ -392,9 +426,7 @@ class Extensions_model extends TI_Model
 			}
 
 			if (is_numeric($extension_id)) {
-				$disabled_extensions = $this->config->item('disabled_extensions');
-				unset($disabled_extensions[$code]);
-				$this->Settings_model->addSetting('prefs', 'disabled_extensions', $disabled_extensions, '1');
+				$this->updateInstalledExtensions($code);
 
 				$permissions = $extension->registerPermissions();
 				$this->savePermissions($permissions);
@@ -428,9 +460,7 @@ class Extensions_model extends TI_Model
 				$this->where_in('type', array('module', 'payment'));
 				$query = $this->update(array('name' => $code), array('status' => '0'));
 
-				$disabled_extensions = $this->config->item('disabled_extensions');
-				$disabled_extensions[$code] = TRUE;
-				$this->Settings_model->addSetting('prefs', 'disabled_extensions', $disabled_extensions, '1');
+				$this->updateInstalledExtensions($code, FALSE);
 
 				if ($query AND $extension instanceof Base_Extension) {
 					$permissions = $extension->registerPermissions();

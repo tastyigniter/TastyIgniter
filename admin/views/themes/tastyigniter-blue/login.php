@@ -4,7 +4,11 @@
 		<div class="col-md-4 center-block float-none">
 			<div class="panel panel-default panel-login">
 				<div class="thumbnail">
-					<img alt="<?php echo $this->config->item('site_name'); ?>" src="<?php echo image_url($this->config->item('site_logo')) ?>" height="64px">
+					<?php if ($this->config->item('site_logo') === 'data/no_photo.png') { ?>
+						<img src="<?php echo base_url('views/themes/tastyigniter-blue/images/tastyigniter-logo.png'); ?>" width="64px">
+					<?php } else { ?>
+						<img alt="<?php echo $this->config->item('site_name'); ?>" src="<?php echo image_url($this->config->item('site_logo')) ?>" height="64px">
+					<?php } ?>
 				</div>
 				<div class="panel-body">
 					<div id="notification">
