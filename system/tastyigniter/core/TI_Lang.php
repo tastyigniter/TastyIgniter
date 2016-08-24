@@ -192,7 +192,7 @@ class TI_Lang extends MX_Lang
 	}
 
 	protected function value($line) {
-		if (!($value = array_get($this->language, $line, NULL))) {
+		if (!($value = array_get($this->language, $line, FALSE))) {
 			if (isset($this->language[$line])) {
 				$value = $this->language[$line];
 			} else {
