@@ -289,8 +289,12 @@ class Installer {
         // so development doesn't require removing the setup folder.
         $this->CI->Setup_model->updateVersion();
 
-        // Create the encryption key used for sessions and encryption
-        $this->createEncryptionKey();
+		// Create config array item containing all installed extensions
+		$this->CI->load->model('Extensions_model');
+		$this->CI->Extensions_model->updateInstalledExtensions();
+
+		// Create the encryption key used for sessions and encryption
+		$this->createEncryptionKey();
 
         return TRUE;
     }
@@ -330,9 +334,13 @@ class Installer {
                     return FALSE;
                 }
 
-                // Create the encryption key used for sessions and encryption
-                $this->createEncryptionKey();
-            }
+				// Create config array item containing all installed extensions
+				$this->CI->load->model('Extensions_model');
+				$this->CI->Extensions_model->updateInstalledExtensions();
+
+				// Create the encryption key used for sessions and encryption
+				$this->createEncryptionKey();
+			}
 
             unlink(IGNITEPATH . 'config/updated.txt');
             return TRUE;
