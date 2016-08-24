@@ -162,6 +162,10 @@ class TI_Model extends CI_Model
 		// Always convert attributes.
 		array_unshift($this->after_get, 'convert_attributes');
 
+		// Always protect attributes.
+		array_unshift($this->before_create, 'protect_attributes');
+		array_unshift($this->before_update, 'protect_attributes');
+
 		// Check the auto-set features and make sure they are loaded into the
 		// observer system.
 		if (isset($this->get_timestamps()['created'])) {
@@ -337,7 +341,7 @@ class TI_Model extends CI_Model
 			return FALSE;
 		}
 
-		$data = $this->trigger('before_create', array($data));
+		$data = $this->trigger('before_create', $data);
 
 		$this->fill($data);
 
@@ -419,13 +423,13 @@ class TI_Model extends CI_Model
 		$this->_set_where(isset($where[0]) ? $where : array($where));
 //		$this->_set_where(array($where));
 
-		$data = $this->trigger('before_update', array($data, $where));
+		$data = $this->trigger('before_update', $data);
 
 		$this->fill($data);
 
 		$result = $this->db->update($this->table_name);
 
-		$this->trigger('after_update', array($data, $where, $result));
+		$this->trigger('after_update', array($data, $result));
 
 		if ($result === FALSE) {
 			$this->error = sprintf(lang('ti_model_db_error'), $this->get_db_error_message());
@@ -1046,17 +1050,17 @@ class TI_Model extends CI_Model
 	 * Run the specific callbacks, each callback taking a $data
 	 * variable and returning it
 	 *
-	 * @param       $name
-	 * @param array $params
+	 * @param string $event The name of the event to trigger.
+	 * @param array  $data
 	 *
 	 * @return bool|mixed
 	 */
-	public function trigger($name, $params = array()) {
-		$data = (isset($params[0])) ? $params[0] : FALSE;
+	public function trigger($event, $data = array()) {
+		$data = (isset($data[0])) ? $data[0] : $data;
 
-		if (!empty($this->$name)) {
-			foreach ($this->$name as $method) {
-				$data = call_user_func_array(array($this, $method), $params);
+		if (!empty($this->$event)) {
+			foreach ($this->$event as $method) {
+				$data = call_user_func_array(array($this, $method), array($data));
 			}
 		}
 
@@ -1221,6 +1225,7 @@ class TI_Model extends CI_Model
 		}
 
 		$this->pagination->initialize($config);
+
 		return array(
 			'info'  => $this->pagination->create_infos(),
 			'links' => $this->pagination->create_links(),
@@ -1271,12 +1276,11 @@ class TI_Model extends CI_Model
 
 		$config['base_url'] = ($base_url) ? $base_url : $this->get_paginate_url();
 		$config['total_rows'] = $this->getCount($filter);
-		$config['per_page'] =  isset($filter['limit']) ? $filter['limit'] : $this->config->item('page_limit');
+		$config['per_page'] = isset($filter['limit']) ? $filter['limit'] : $this->config->item('page_limit');
 
 		$result->pagination = $this->paginate_list($config);
 
 		return $result;
-
 	}
 
 	/**
@@ -1582,10 +1586,9 @@ class TI_Model extends CI_Model
 	 * @return string The name of the field if $soft_deletes is enabled, else an
 	 * empty string.
 	 */
-	public function get_deleted_field()
-	{
+	public function get_deleted_field() {
 		if ($this->soft_delete) {
-			return $this->table_name. '.'. $this->deleted_field;
+			return $this->table_name . '.' . $this->deleted_field;
 		}
 
 		return '';
