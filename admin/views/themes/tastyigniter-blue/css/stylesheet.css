@@ -669,14 +669,10 @@ margin-left: 46px;
 margin-left: 0px;
 }
 /** PAGE HEADER **/
-.header {
-border-bottom: 0 solid #DDDBDB;
-}
 .page-header {
 margin-bottom: 15px;
-padding-bottom: 5px;
-padding-top: 20px;
 margin-top: 0;
+padding-bottom: 0;
 }
 .page-header h1 {
 border-bottom: 0 solid #D3D3D3;
@@ -694,6 +690,10 @@ margin-top: 0;
 width: auto;
 margin: 0;
 }
+}
+.page-header .page-action {
+padding-bottom: 5px;
+padding-top: 20px;
 }
 .page-header .btn {
 padding: 6px 15px;
@@ -1776,6 +1776,9 @@ padding: 5px 0 7px 7px;
 table .action-one {
 width: 4.33% !important;
 }
+table .action-two {
+width: 11.23% !important;
+}
 table .action-three {
 width: 14.23% !important;
 }
@@ -1878,6 +1881,11 @@ content: "\f062";
 table thead .fa-sort-DESC:before,
 table thead th .sort:hover .fa-sort-ASC:before {
 content: "\f063";
+}
+/** EXTENSIONS **/
+table td .extension-icon {
+color: #bac8dc;
+font-size: 1.7em;
 }
 /** THEMES **/
 .panel-theme {
@@ -2614,16 +2622,18 @@ display: none !important;
 .panel-heading:not(.collapsed) .area-toggle .down {
 display: block !important;
 }
-/** LAYOUT MODULES DRAG & DROP **/
-.modules-row {
+/** LAYOUT COMPONENT DRAG & DROP **/
+.components-row {
 padding-left: 10px;
 padding-right: 10px;
 }
-.modules-row > div {
+.components-row > div {
 padding-left: 5px;
 padding-right: 5px;
+min-height: 110px;
+max-height: 110px;
 }
-.modules-row .btn,
+.components-row .btn,
 .panel-partials .btn {
 text-align: left;
 }

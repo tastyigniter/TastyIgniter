@@ -251,7 +251,7 @@ class Assets
 			return NULL;
 		}
 
-		if ($active_theme_options[0] !== $this->CI->template->theme) {
+		if ($active_theme_options[0] !== $this->CI->template->getTheme()) {
 			return NULL;
 		}
 
@@ -276,7 +276,7 @@ class Assets
 			$active_theme_options = $this->CI->config->item(strtolower(APPDIR), 'customizer_active_style');
 		}
 
-		if (!empty($active_theme_options) AND isset($active_theme_options[0]) AND $active_theme_options[0] === $this->CI->template->theme) {
+		if (!empty($active_theme_options) AND isset($active_theme_options[0]) AND $active_theme_options[0] === $this->CI->template->getTheme()) {
 			$data = (isset($active_theme_options[1]) AND is_array($active_theme_options[1])) ? $active_theme_options[1] : array();
 			$content = $this->CI->template->load_view('stylesheet', $data);
 		}

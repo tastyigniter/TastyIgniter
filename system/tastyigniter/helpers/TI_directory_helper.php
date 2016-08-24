@@ -53,7 +53,7 @@ if ( ! function_exists('directory_map'))
                 if ($file === '.' OR $file === '..' OR ($hidden === FALSE && $file[0] === '.') OR $file === $hide_file)
                 {
                     continue;
-                }
+        }
 
                 if (($directory_depth < 1 OR $new_depth > 0) && is_dir($source_dir.$file))
                 {

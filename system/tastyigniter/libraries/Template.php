@@ -143,6 +143,10 @@ class Template {
 	// GETTER METHODS
 	//--------------------------------------------------------------------------
 
+	public function getTheme() {
+		return $this->theme;
+	}
+
 	public function getTitle() {
 		return isset($this->data['title']) ? $this->data['title'] : '';
 	}
@@ -161,11 +165,11 @@ class Template {
 	}
 
 	public function getButtonList() {
-		return is_array($this->data['buttons']) ? implode("\n\t\t", $this->data['buttons']) : '';
+		return (isset($this->data['buttons']) AND is_array($this->data['buttons'])) ? implode("\n\t\t", $this->data['buttons']) : '';
 	}
 
 	public function getIconList() {
-		return isset($this->data['icons']) AND is_array($this->data['icons']) ? implode("\n\t\t", $this->data['icons']) : '';
+		return (isset($this->data['icons']) AND is_array($this->data['icons'])) ? implode("\n\t\t", $this->data['icons']) : '';
 	}
 
 	public function getBreadcrumb($tag_open = '<li class="{class}">', $link_open = '<a href="{link}">', $link_close = ' </a>', $tag_close = '</li>') {

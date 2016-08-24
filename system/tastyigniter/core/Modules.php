@@ -48,7 +48,7 @@ class Modules
 	/**
 	 * @var array of disabled extensions.
 	 */
-	protected static $disabled_extensions = array();
+	protected static $installed_extensions = array();
 
 	/**
 	 * @var array of extensions and their directory paths.
@@ -61,7 +61,7 @@ class Modules
 	protected static $auto_loaded = FALSE;
 
 	public static function initialize() {
-		self::load_disabled();
+		self::load_installed();
 		self::load_extensions();
 	}
 
@@ -617,7 +617,12 @@ class Modules
 	 * The index is the extension name, the value is the extension object.
 	 */
 	public static function get_extensions() {
-		return array_diff_key(self::$extensions, self::$disabled_extensions);
+		$extensions = array();
+		foreach (self::$extensions as $name => $extension) {
+			if (!self::is_disabled($name))
+				$extensions[$name] = $extension;
+		}
+		return $extensions;
 	}
 
 	/**
@@ -658,14 +663,14 @@ class Modules
 	}
 
 	/**
-	 * Loads all disables extension from application config.
+	 * Determines if an extension is disabled by looking at the installed extensions config.
 	 *
 	 * @param $name
 	 *
 	 * @return bool
 	 */
 	public static function is_disabled($name) {
-		if (!self::check_name($name) OR array_key_exists($name, self::$disabled_extensions)) {
+		if (!self::check_name($name) OR !array_key_exists($name, self::$installed_extensions)) {
 			return TRUE;
 		}
 
@@ -673,11 +678,11 @@ class Modules
 	}
 
 	/**
-	 * Determines if an extension is disabled by looking at the  application config.
+	 * Loads all installed extension from application config.
 	 */
-	public static function load_disabled() {
-		if (($disabled_extensions = config_item('disabled_extensions')) AND is_array($disabled_extensions)) {
-			self::$disabled_extensions = config_item('disabled_extensions');
+	public static function load_installed() {
+		if (($installed_extensions = config_item('installed_extensions')) AND is_array($installed_extensions)) {
+			self::$installed_extensions = config_item('installed_extensions');
 		}
 	}
 

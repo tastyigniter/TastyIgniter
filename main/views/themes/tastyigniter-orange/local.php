@@ -49,7 +49,7 @@
                         <div id="local-reviews" class="tab-pane row wrap-all active">
                             <div class="col-md-12">
                                 <div class="heading-section">
-                                    <h4><?php echo sprintf(lang('text_review_heading'), $location_name); ?></h4>
+                                    <h4><?php echo sprintf(lang('text_review_heading'), $local_reviews['location_name']); ?></h4>
                                     <span class="under-heading"></span>
                                 </div>
                             </div>

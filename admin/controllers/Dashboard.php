@@ -18,7 +18,6 @@ class Dashboard extends Admin_Controller
 	public function index() {
 		$this->template->setTitle($this->lang->line('text_title'));
 		$this->template->setHeading($this->lang->line('text_heading'));
-		$this->template->setButton($this->lang->line('button_check_updates'), array('class' => 'btn btn-default', 'href' => site_url('updates')));
 
 		$this->assets->setStyleTag(assets_url('js/daterange/daterangepicker-bs3.css'), 'daterangepicker-css', '100400');
 		$this->assets->setScriptTag(assets_url('js/daterange/moment.min.js'), 'daterange-moment-js', '1000451');

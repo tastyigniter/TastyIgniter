@@ -242,19 +242,19 @@
 				$icon_list = get_icon_list();
 				?>
 
-				<?php if (!empty($button_list) OR !empty($icon_list)) { ?>
-					<div class="page-header clearfix">
+				<div class="page-header clearfix">
+					<?php if (!empty($button_list) OR !empty($icon_list)) { ?>
 						<div class="page-action">
-                            <?php if (!empty($icon_list)) { ?>
-                                <?php echo $icon_list; ?>
-                            <?php } ?>
+							<?php if (!empty($icon_list)) { ?>
+								<?php echo $icon_list; ?>
+							<?php } ?>
 
-                            <?php if (!empty($button_list)) { ?>
-                                <?php echo $button_list; ?>
-                            <?php } ?>
+							<?php if (!empty($button_list)) { ?>
+								<?php echo $button_list; ?>
+							<?php } ?>
 						</div>
-					</div>
-				<?php } ?>
+					<?php } ?>
+				</div>
 
 				<?php if (!empty($context_help)) { ?>
 					<div class="collapse" id="context-help-wrap">

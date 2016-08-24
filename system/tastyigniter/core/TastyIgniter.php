@@ -19,7 +19,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @var	string
  *
  */
-	define('TI_VERSION', '2.2.0');
+	define('TI_VERSION', '2.2.0-dev');
 
 	// Path to the root folder
 	defined('ROOTPATH') OR define('ROOTPATH', str_replace(SYSDIR.'/', '', BASEPATH));
