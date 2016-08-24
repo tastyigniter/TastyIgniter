@@ -363,8 +363,7 @@ class Extensions_model extends TI_Model
 
 		if (empty($installed_extensions) OR !is_array($installed_extensions)) {
 			$this->load->model('Extensions_model');
-			$this->Extensions_model->select('name')->where_in('type', array('module', 'payment'));
-			$this->Extensions_model->where('extensions', array('status' => '1'));
+			$this->Extensions_model->select('name')->where_in('type', array('module', 'payment'))->where('status', '1');
 			if ($installed_extensions = $this->Extensions_model->find_all()) {
 				$installed_extensions = array_flip(array_column($installed_extensions, 'name'));
 				$installed_extensions = array_fill_keys(array_keys($installed_extensions), TRUE);
