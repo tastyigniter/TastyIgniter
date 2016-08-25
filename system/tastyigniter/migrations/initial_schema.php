@@ -504,14 +504,14 @@ $schema['customer_groups'] = "
 $schema['extensions'] = "
   REPLACE INTO `".$this->db->dbprefix."extensions` (`extension_id`, `type`, `name`, `data`, `serialized`, `status`, `title`)
   VALUES
-  (11, 'module', 'account_module', 'a:1:{s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"11\";s:8:\"position\";s:4:\"left\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}}', 1, 1, 'Account'),
+  (11, 'module', 'account_module', '', 1, 1, 'Account'),
   (12, 'module', 'local_module', 'a:3:{s:20:\"location_search_mode\";s:5:\"multi\";s:12:\"use_location\";s:1:\"0\";s:6:\"status\";s:1:\"1\";}', 1, 1, 'Local'),
-  (13, 'module', 'categories_module', 'a:1:{s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"12\";s:8:\"position\";s:4:\"left\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}}', 1, 1, 'Categories'),
+  (13, 'module', 'categories_module', '', 1, 1, 'Categories'),
   (14, 'module', 'cart_module', 'a:3:{s:16:\"show_cart_images\";s:1:\"0\";s:13:\"cart_images_h\";s:0:\"\";s:13:\"cart_images_w\";s:0:\"\";}', 1, 1, 'Cart'),
-  (15, 'module', 'reservation_module', 'a:1:{s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"16\";s:8:\"position\";s:4:\"left\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}}', 1, 1, 'Reservation'),
-  (16, 'module', 'slideshow', 'a:6:{s:11:\"dimension_h\";s:3:\"420\";s:11:\"dimension_w\";s:4:\"1170\";s:6:\"effect\";s:4:\"fade\";s:5:\"speed\";s:3:\"500\";s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"15\";s:8:\"position\";s:3:\"top\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}s:6:\"slides\";a:3:{i:0;a:3:{s:4:\"name\";s:9:\"slide.png\";s:9:\"image_src\";s:14:\"data/slide.jpg\";s:7:\"caption\";s:0:\"\";}i:1;a:3:{s:4:\"name\";s:10:\"slide1.png\";s:9:\"image_src\";s:15:\"data/slide1.jpg\";s:7:\"caption\";s:0:\"\";}i:2;a:3:{s:4:\"name\";s:10:\"slide2.png\";s:9:\"image_src\";s:15:\"data/slide2.jpg\";s:7:\"caption\";s:0:\"\";}}}', 1, 1, 'Slideshow'),
+  (15, 'module', 'reservation_module', '', 1, 1, 'Reservation'),
+  (16, 'module', 'slideshow', 'a:6:{s:11:\"dimension_w\";s:4:\"1170\";s:11:\"dimension_h\";s:3:\"420\";s:6:\"effect\";s:4:\"fade\";s:5:\"speed\";s:3:\"500\";s:7:\"display\";s:1:\"1\";s:6:\"slides\";a:1:{i:0;a:2:{s:9:\"image_src\";s:14:\"data/slide.jpg\";s:7:\"caption\";s:0:\"\";}}}', 1, 1, 'Slideshow'),
   (18, 'payment', 'cod', 'a:5:{s:4:\"name\";N;s:11:\"order_total\";s:4:\"0.00\";s:12:\"order_status\";s:2:\"11\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}', 1, 1, 'Cash On Delivery'),
-  (20, 'module', 'pages_module', 'a:1:{s:7:\"layouts\";a:1:{i:0;a:4:{s:9:\"layout_id\";s:2:\"17\";s:8:\"position\";s:5:\"right\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}}}', 1, 1, 'Pages'),
+  (20, 'module', 'pages_module', '', 1, 1, 'Pages'),
   (21, 'payment', 'paypal_express', 'a:11:{s:8:\"priority\";s:0:\"\";s:6:\"status\";s:1:\"0\";s:8:\"api_mode\";s:7:\"sandbox\";s:8:\"api_user\";s:0:\"\";s:8:\"api_pass\";s:0:\"\";s:13:\"api_signature\";s:0:\"\";s:10:\"api_action\";s:4:\"sale\";s:10:\"return_uri\";s:24:\"paypal_express/authorize\";s:10:\"cancel_uri\";s:21:\"paypal_express/cancel\";s:11:\"order_total\";s:4:\"0.00\";s:12:\"order_status\";s:2:\"11\";}', 1, 0, 'PayPal Express'),
   (23, 'theme', 'tastyigniter-orange', '', 1, 1, 'TastyIgniter Orange'),
   (24, 'theme', 'tastyigniter-blue', '', 1, 0, 'TastyIgniter Blue'),

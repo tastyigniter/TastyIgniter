@@ -127,7 +127,7 @@ class Updates extends Admin_Controller
 	protected function setHTMLHead() {
 		header('Cache-Control: no-cache, must-revalidate');
 
-		$this->template->setDocType('html5');
+		$this->assets->setDocType('html5');
 		$this->assets->setMeta(array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'));
 		$this->assets->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=edge,chrome=1', 'type' => 'equiv'));
 		$this->assets->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=9; IE=8; IE=7', 'type' => 'equiv'));

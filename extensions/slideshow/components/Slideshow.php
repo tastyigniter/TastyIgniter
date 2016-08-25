@@ -24,7 +24,9 @@ class Slideshow extends Base_Component
 				$caption = (isset($slide['caption'])) ? $slide['caption'] : '';
 
 				$data['slides'][] = array(
-					'image_src' => $this->Image_tool_model->resize($image_src, $data['dimension_w'], $data['dimension_h']),
+					'image_src' => image_url($image_src),
+					'width'   => $data['dimension_w'],
+					'height'   => $data['dimension_h'],
 					'caption'   => $caption,
 				);
 			}

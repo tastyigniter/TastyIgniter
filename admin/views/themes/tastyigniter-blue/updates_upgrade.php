@@ -1,10 +1,10 @@
-<?php echo $this->template->getDocType() ?>
+<?php echo $this->assets->getDocType() ?>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
-	<?php echo $this->template->getMetas() ?>
+	<?php echo $this->assets->getMetas() ?>
 	<title><?php echo lang('text_title'); ?></title>
-	<?php echo $this->template->getStyleTags() ?>
-	<?php echo $this->template->getScriptTags() ?>
+	<?php echo $this->assets->getStyleTags() ?>
+	<?php echo $this->assets->getScriptTags() ?>
 	<style>
 		html, body {
 			height: auto;

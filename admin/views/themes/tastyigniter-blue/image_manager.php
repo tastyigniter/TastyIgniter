@@ -9,13 +9,13 @@
     </div>
     <?php echo get_footer(); ?>
 <?php } else { ?>
-    <?php echo $this->template->getDocType() ?>
+    <?php echo $this->assets->getDocType() ?>
     <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
     <head>
-        <?php echo $this->template->getMetas() ?>
+        <?php echo $this->assets->getMetas() ?>
         <title><?php echo $title ?></title>
-        <?php echo $this->template->getStyleTags() ?>
-        <?php echo $this->template->getScriptTags() ?>
+        <?php echo $this->assets->getStyleTags() ?>
+        <?php echo $this->assets->getScriptTags() ?>
         <script type="text/javascript">
             var js_site_url = function (str) {
                 var strTmp = "<?php echo site_url('" + str + "'); ?>";
