@@ -22,7 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	define('TI_VERSION', '2.1.1');
 
 	// Path to the root folder
-	defined('ROOTPATH') OR define('ROOTPATH', str_replace(SYSDIR.'/', '', BASEPATH));
+	defined('ROOTPATH') OR define('ROOTPATH', rtrim(dirname(BASEPATH), '/') . '/');
 
 	// Path to the tastyigniter system core folder
 	defined('IGNITEPATH') OR define('IGNITEPATH', BASEPATH.'tastyigniter/');
