@@ -605,7 +605,7 @@ class Checkout extends Main_Controller
 
 	public function _validate_payment($payment) {
 		$local_payments = $this->location->payments();
-		if (is_array($local_payments) AND !in_array($payment, $local_payments)) {
+		if (is_array($local_payments) AND !array_key_exists($payment, $local_payments)) {
 			$this->form_validation->set_message('_validate_payment', $this->lang->line('error_invalid_payment'));
 
 			return FALSE;
