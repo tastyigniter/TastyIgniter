@@ -654,6 +654,15 @@ class TI_Model extends CI_Model
 	}
 
 	/**
+	 * An easier affected_rows function
+	 *
+	 * @return int number of affected rows
+	 */
+	public function affected_rows() {
+		return $this->db->affected_rows();
+	}
+
+	/**
 	 * An easier order_by function
 	 *
 	 * @param string|array $sort_by
