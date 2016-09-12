@@ -202,6 +202,16 @@ class User {
 
         if (is_array($group_permissions)) {
             $this->CI->load->model('Permissions_model');
+            
+             //Modified funciton to convert permissions to their IDs after reading from database
+
+            foreach($group_permissions as $permission_name=>$permission_action){
+                $permission_info=$this->CI->Permissions_model->getPermissionByName($permission_name);
+                if(!empty($permission_info)){
+                $group_permissions[$permission_info['permission_id']]=$group_permissions[$permission_name];
+                unset($group_permissions[$permission_name]);
+                 }
+            }
             $permissions = $this->CI->Permissions_model->getPermissionsByIds();
 
             foreach ($permissions as $permission_id => $permission) {
