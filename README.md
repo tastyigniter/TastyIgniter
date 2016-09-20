@@ -24,7 +24,7 @@ extensions which may be managed via Composer.
 Installation
 ------------
 
-Composer Merge Plugin requires Composer 1.0.0 or newer.
+Composer Merge Plugin requires [Composer 1.0.0](https://getcomposer.org/) or newer.
 
 ```
 $ composer require wikimedia/composer-merge-plugin
@@ -34,7 +34,7 @@ $ composer require wikimedia/composer-merge-plugin
 Usage
 -----
 
-```
+```json
 {
     "require": {
         "wikimedia/composer-merge-plugin": "dev-master"
@@ -173,7 +173,7 @@ GitHub as well.
 License
 -------
 
-Composer Merge plugin is licensed under the MIT license. See the `LICENSE`
+Composer Merge plugin is licensed under the MIT license. See the [`LICENSE`](LICENSE)
 file for more details.
 
 
