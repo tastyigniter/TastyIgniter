@@ -20,102 +20,83 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Customer_groups_model.php
  * @link           http://docs.tastyigniter.com
  */
+class Customer_groups_model extends TI_Model
+{
+	/**
+	 * @var string The database table name
+	 */
+	protected $table_name = 'customer_groups';
 
-class Customer_groups_model extends TI_Model {
+	/**
+	 * @var string The database table primary key
+	 */
+	protected $primary_key = 'customer_group_id';
 
-	public function getCount($filter = array()) {
-		$this->db->from('customer_groups');
-
-		return $this->db->count_all_results();
-	}
-
-	public function getList($filter = array()) {
-		if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
-			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
-		}
-
-		if ($this->db->limit($filter['limit'], $filter['page'])) {
-			$this->db->from('customer_groups');
-
-			if ( ! empty($filter['sort_by']) AND ! empty($filter['order_by'])) {
-				$this->db->order_by($filter['sort_by'], $filter['order_by']);
-			}
-
-			$query = $this->db->get();
-			$result = array();
-
-			if ($query->num_rows() > 0) {
-				$result = $query->result_array();
-			}
-
-			return $result;
-		}
-	}
-
+	/**
+	 * Return all customer groups
+	 *
+	 * @return array
+	 */
 	public function getCustomerGroups() {
-		$this->db->from('customer_groups');
-
-		$query = $this->db->get();
-		$result = array();
-
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
-
-		return $result;
+		return $this->find_all();
 	}
 
+	/**
+	 * Find a single customer group by customer_group_id
+	 *
+	 * @param int $customer_group_id
+	 *
+	 * @return array
+	 */
 	public function getCustomerGroup($customer_group_id) {
-		$this->db->from('customer_groups');
+		return $this->find($customer_group_id);
+	}
 
-		$this->db->where('customer_group_id', $customer_group_id);
+	/**
+	 * Return total number of customers in group
+	 *
+	 * @param int $customer_group_id
+	 *
+	 * @return int
+	 */
+	public function getCustomersCount($customer_group_id) {
+		if ($customer_group_id) {
+			$this->load->model('Customers_model');
+			$this->Customers_model->where('customer_group_id', $customer_group_id);
 
-		$query = $this->db->get();
-
-		if ($query->num_rows() > 0) {
-			return $query->row_array();
+			return $this->Customers_model->count();
 		}
 	}
 
+	/**
+	 * Create a new or update existing currency
+	 *
+	 * @param int   $customer_group_id
+	 * @param array $save
+	 *
+	 * @return bool|int The $customer_group_id of the affected row, or FALSE on failure
+	 */
 	public function saveCustomerGroup($customer_group_id, $save = array()) {
 		if (empty($save)) return FALSE;
 
-		if (isset($save['group_name'])) {
-			$this->db->set('group_name', $save['group_name']);
-		}
-
-		if (isset($save['description'])) {
-			$this->db->set('description', $save['description']);
-		}
-
-		if (isset($save['approval']) AND $save['approval'] === '1') {
-			$this->db->set('approval', $save['approval']);
-		} else {
-			$this->db->set('approval', '0');
-		}
-
-		if (is_numeric($customer_group_id)) {
-			$this->db->where('customer_group_id', $customer_group_id);
-			$query = $this->db->update('customer_groups');
-		} else {
-			$query = $this->db->insert('customer_groups');
-			$customer_group_id = $this->db->insert_id();
-		}
-
-		return ($query === TRUE AND is_numeric($customer_group_id)) ? $customer_group_id : FALSE;
+		return $this->skip_validation(TRUE)->save($save, $customer_group_id);
 	}
 
+	/**
+	 * Delete a single or multiple customer group by customer_group_id
+	 *
+	 * @param string|array $customer_group_id
+	 *
+	 * @return int  The number of deleted rows
+	 */
 	public function deleteCustomerGroup($customer_group_id) {
 		if (is_numeric($customer_group_id)) $customer_group_id = array($customer_group_id);
 
-		if ( ! empty($customer_group_id) AND ctype_digit(implode('', $customer_group_id))) {
-			$this->db->where_in('customer_group_id', $customer_group_id);
-			$this->db->delete('customer_groups');
-
-			return $this->db->affected_rows();
+		if (!empty($customer_group_id) AND ctype_digit(implode('', $customer_group_id))) {
+			return $this->delete('customer_group_id', $customer_group_id);
 		}
 	}
 }
 
-/* End of file customer_groups_model.php */
-/* Location: ./system/tastyigniter/models/customer_groups_model.php */
+/* End of file Customer_groups_model.php */
+/* Location: ./system/tastyigniter/models/Customer_groups_model.php */

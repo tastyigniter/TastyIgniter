@@ -165,7 +165,7 @@
 		parseFloat("<?php echo $location_lng; ?>")
 	);
 
-    jQuery('a[href="#local-information"]').click(function() {
+    jQuery('document').ready(function() {
         if (map === null) {
             initializeMap();
         }

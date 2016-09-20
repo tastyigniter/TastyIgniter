@@ -168,6 +168,27 @@ if ( ! function_exists('extension_url'))
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists('admin_extension_url'))
+{
+	/**
+	 * Admin Extensions URL
+	 *
+	 * Create a local URL based on your extensions path.
+	 * Segments can be passed in as a string.
+	 *
+	 * @param	string	$uri
+	 * @param	string	$protocol
+	 *
+	 * @return	string
+	 */
+	function admin_extension_url($uri = '', $protocol = NULL)
+	{
+		return get_instance()->config->root_url(ADMINDIR.'/'.EXTPATH.$uri, $protocol);
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('theme_url'))
 {
 	/**
@@ -215,16 +236,16 @@ if ( ! function_exists('restaurant_url'))
 	 * Returns the full URL (including segments) of the local restaurant if any,
 	 * else locations URL is returned
 	 *
-	 * @return	string
+	 * @param string $uri
+	 * @param string   $protocol
+	 *
+	 * @return string
 	 */
-	function restaurant_url()
+	function restaurant_url($uri = '', $protocol = NULL)
 	{
 		$CI =& get_instance();
-        if (isset($CI->location) AND is_numeric($CI->location->getId())) {
-            return site_url('local?location_id='.$CI->location->getId());
-        } else {
-            return site_url('locations');
-        }
+
+		return $CI->config->restaurant_url($uri, $protocol);
 	}
 }
 

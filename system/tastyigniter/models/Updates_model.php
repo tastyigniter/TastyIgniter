@@ -20,7 +20,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Updates_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Updates_model extends TI_Model {
+class Updates_model extends TI_Model
+{
 
 	protected $updated_files = array('modified' => array(), 'added' => array());
 
@@ -50,7 +51,7 @@ class Updates_model extends TI_Model {
 				}
 			} else if (is_array($version)) {
 				foreach ($version as $name => $stable_tag) {
-					if ( ! isset($extensions[$name])) continue;
+					if (!isset($extensions[$name])) continue;
 
 					$extension = $extensions[$name];
 					if (version_compare($extension['version'], $stable_tag) !== 0) {
@@ -82,17 +83,17 @@ class Updates_model extends TI_Model {
 		$info = $this->installer->getSysInfo();
 
 		// Check core stable version first
-		$url = $this->endpoint . '/core/version/'. $info['version'] .'/'. $info['php_version'] .'/'. $info['mysql_version'];
+		$url = $this->endpoint . '/core/version/' . $info['version'] . '/' . $info['php_version'] . '/' . $info['mysql_version'];
 
 		$result['core'] = $this->getRemoteVersion($url);
 
 		// Then extensions, themes and translations
-		if ( ! empty($extensions)) {
+		if (!empty($extensions)) {
 			foreach ($extensions as $extension) {
 				if (in_array($extension['type'], array('module', 'payment'))) {
-					$url = $this->endpoint . '/extension/version/' . $extension['name'] . '/' .$extension['version'] .'/'. $info['version'];
+					$url = $this->endpoint . '/extension/version/' . $extension['name'] . '/' . $extension['version'] . '/' . $info['version'];
 				} else {
-					$url = $this->endpoint . '/theme/version/'. $extension['name'] .'/'. $extension['version'] .'/'. $info['version'];
+					$url = $this->endpoint . '/theme/version/' . $extension['name'] . '/' . $extension['version'] . '/' . $info['version'];
 				}
 
 				$result[$extension['type']][$extension['name']] = $this->getRemoteVersion($url);
@@ -156,7 +157,7 @@ class Updates_model extends TI_Model {
 		$remote_data = $this->downloadUpdate($update_type, $update_name);
 
 		if ($remote_data) {
-			if ( ! is_dir(ROOTPATH . $update_path)) {
+			if (!is_dir(ROOTPATH . $update_path)) {
 				$oldumask = umask(0);
 				mkdir(ROOTPATH . $update_path, DIR_WRITE_MODE, TRUE);
 				umask($oldumask);
@@ -169,14 +170,14 @@ class Updates_model extends TI_Model {
 				flush_output($this->lang->line('progress_extract_update'));
 
 				$this->load->helper('file');
-				if ( ! ($filename = unzip_file($update_file))) {
+				if (!($filename = unzip_file($update_file))) {
 					flush_output($this->lang->line('progress_extract_failed'));
 				} else {
 					flush_output($this->lang->line('progress_install_update'));
 
 					// Install Update
 					if ($update_type === 'core') {
-						$message = $this->installCoreUpdate($update_version, $update_path .'/'. $filename);
+						$message = $this->installCoreUpdate($update_version, $update_path . '/' . $filename);
 
 						if ($message !== TRUE) {
 							flush_output($message);
@@ -204,7 +205,7 @@ class Updates_model extends TI_Model {
 
 		// Check core version first
 		if ($update_type == 'core') {
-			$url = $this->endpoint . '/core/update/'.$info['version'].'/'. $info['php_version'] .'/'. $info['mysql_version'];
+			$url = $this->endpoint . '/core/update/' . $info['version'] . '/' . $info['php_version'] . '/' . $info['mysql_version'];
 		} else {
 			// Then extensions, themes and languages
 			$update = explode('|', $update);
@@ -216,13 +217,14 @@ class Updates_model extends TI_Model {
 		}
 
 		$options['TIMEOUT'] = 60;
+
 		return $this->getRemoteData($url, $options);
 	}
 
 	public function installCoreUpdate($update_version, $update_file) {
 		$temp_path = ROOTPATH . $update_file;
 
-		if ( ! is_dir($temp_path)) {
+		if (!is_dir($temp_path)) {
 			return $this->lang->line('progress_archive_not_found');
 		} else {
 			$remove_files = array(
@@ -235,13 +237,13 @@ class Updates_model extends TI_Model {
 			// Remove the themes, languages, extensions, logs and sessions folder
 			if ($this->removeTempFiles($remove_files, $temp_path)) {
 				// Copy all files/folders from temp path
-			    $updated_files = $this->copyTempFiles($temp_path, ROOTPATH);
+				$updated_files = $this->copyTempFiles($temp_path, ROOTPATH);
 
-				if ( ! empty($updated_files)) {
+				if (!empty($updated_files)) {
 					$msg = 'Installed On: ' . date('r') . PHP_EOL;
 					$msg .= 'Installed Version: ' . $update_version . PHP_EOL;
 					$msg .= 'Uninstalled Version: ' . TI_VERSION . PHP_EOL;
-					if ( ! write_file(IGNITEPATH .'config/updated.txt', $msg)) {
+					if (!write_file(IGNITEPATH . 'config/updated.txt', $msg)) {
 						return FALSE;
 					}
 				}
@@ -255,7 +257,7 @@ class Updates_model extends TI_Model {
 
 		if (empty($files)) return FALSE;
 
-		if ( ! is_dir($from_folder)) return FALSE;
+		if (!is_dir($from_folder)) return FALSE;
 
 		foreach ($files as $file) {
 			if (is_dir($from_folder . $file)) {
@@ -276,7 +278,7 @@ class Updates_model extends TI_Model {
 		$parent_path = str_replace(rtrim(ROOTPATH, '/'), '', $destination);
 
 		// Creating the destination directory
-		if ( ! is_dir($destination)) {
+		if (!is_dir($destination)) {
 			$oldumask = umask(0);
 			mkdir($destination, DIR_WRITE_MODE, TRUE);
 			umask($oldumask);
@@ -287,21 +289,21 @@ class Updates_model extends TI_Model {
 		$source_dir_map = directory_map($source, 0, TRUE);
 
 		foreach ($source_dir_map as $key => $value) {
-			if (is_numeric($key) AND ! is_dir($source . '/' . $value)) {
+			if (is_numeric($key) AND !is_dir($source . '/' . $value)) {
 
 				if (file_exists($destination . '/' . $value)) {
 					if ($this->isFilesIdentical($source . '/' . $value, $destination . '/' . $value) === FALSE) {
-						$this->updated_files['modified'][] = trim($parent_path .'/'. $value, '/');
+						$this->updated_files['modified'][] = trim($parent_path . '/' . $value, '/');
 					} else {
-						$this->updated_files['unchanged'][] = trim($parent_path .'/'. $value, '/');
+						$this->updated_files['unchanged'][] = trim($parent_path . '/' . $value, '/');
 						continue;
 					}
 				} else {
-					$this->updated_files['added'][] = trim($parent_path .'/'. $value, '/');
+					$this->updated_files['added'][] = trim($parent_path . '/' . $value, '/');
 				}
 
-				if ( ! @copy($source . '/' . $value, $destination . '/' . $value)) { //This is a file so copy
-					$this->updated_files['failed'][] = $parent_path .'/'. $value;
+				if (!@copy($source . '/' . $value, $destination . '/' . $value)) { //This is a file so copy
+					$this->updated_files['failed'][] = $parent_path . '/' . $value;
 				}
 			} else {
 				$this->copyTempFiles($source . '/' . $key, $destination . '/' . $key); //this is a directory
@@ -322,7 +324,7 @@ class Updates_model extends TI_Model {
 		$open_file_two = @fopen($file_two, 'rb');
 
 		$result = TRUE;
-		while( ! @feof($open_file_one)) {
+		while (!@feof($open_file_one)) {
 			if (@fread($open_file_one, 8192) != @fread($open_file_two, 8192)) {
 				$result = FALSE;
 				break;
@@ -341,24 +343,24 @@ class Updates_model extends TI_Model {
 		$html = "<p>{$this->lang->line('progress_modified_files')}</p><div id=\"updatedFiles\" style=\"width:70%;display: none;\">";
 
 		if (!empty($this->updated_files['failed'])) {
-			$html .= sprintf($this->lang->line('text_files_failed'), count($this->updated_files['failed'])) .'<br />';
+			$html .= sprintf($this->lang->line('text_files_failed'), count($this->updated_files['failed'])) . '<br />';
 			$html .= '<textarea class="form-control" readonly>' . implode(PHP_EOL, $this->updated_files['failed']) . '</textarea><br />';
 		}
 
 		if (!empty($this->updated_files['added'])) {
-			$html .= sprintf($this->lang->line('text_files_added'), count($this->updated_files['added'])) .'<br />';
+			$html .= sprintf($this->lang->line('text_files_added'), count($this->updated_files['added'])) . '<br />';
 			$html .= '<textarea class="form-control" readonly>' . implode(PHP_EOL, $this->updated_files['added']) . '</textarea><br>';
 		}
 		if (!empty($this->updated_files['modified'])) {
-			$html .= sprintf($this->lang->line('text_files_modified'), count($this->updated_files['modified'])) .'<br />';
+			$html .= sprintf($this->lang->line('text_files_modified'), count($this->updated_files['modified'])) . '<br />';
 			$html .= '<textarea class="form-control" readonly>' . implode(PHP_EOL, $this->updated_files['modified']) . '</textarea><br>';
 		}
 		if (!empty($this->updated_files['unchanged'])) {
-			$html .= sprintf($this->lang->line('text_files_unchanged'), count($this->updated_files['unchanged'])) .'<br />';
+			$html .= sprintf($this->lang->line('text_files_unchanged'), count($this->updated_files['unchanged'])) . '<br />';
 			$html .= '<textarea class="form-control" readonly>' . implode(PHP_EOL, $this->updated_files['unchanged']) . '</textarea><br>';
 		}
 		$html .= '</div><script type="text/javascript">jQuery(\'#toggleUpdatedFiles\').on(\'click\', function () { jQuery(\'#updatedFiles\').slideToggle(); });</script>';
-		$html .= '<p>'.sprintf($this->lang->line('progress_update_success'), 'TastyIgniter').'</p>';
+		$html .= '<p>' . sprintf($this->lang->line('progress_update_success'), 'TastyIgniter') . '</p>';
 		flush_output($html, FALSE);
 	}
 }

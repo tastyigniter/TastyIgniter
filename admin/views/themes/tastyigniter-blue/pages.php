@@ -2,12 +2,6 @@
 <div class="row content">
 	<div class="col-md-12">
 		<div class="panel panel-default panel-table">
-			<div class="panel-heading">
-				<h3 class="panel-title"><?php echo lang('text_list'); ?></h3>
-				<div class="pull-right">
-					<button class="btn btn-filter btn-xs"><i class="fa fa-filter"></i></button>
-				</div>
-			</div>
 			<div class="panel-body panel-filter">
 				<form role="form" id="filter-form" accept-charset="utf-8" method="GET" action="<?php echo current_url(); ?>">
 					<div class="filter-bar">
@@ -23,7 +17,7 @@
 								<div class="col-md-8 pull-left">
 									<div class="form-group">
 										<select name="filter_status" class="form-control input-sm">
-											<option value=""><?php echo lang('text_filter_search'); ?></option>
+											<option value=""><?php echo lang('text_filter_status'); ?></option>
 											<?php if ($filter_status === '1') { ?>
 												<option value="1" <?php echo set_select('filter_status', '1', TRUE); ?> ><?php echo lang('text_enabled'); ?></option>
 												<option value="0" <?php echo set_select('filter_status', '0'); ?> ><?php echo lang('text_disabled'); ?></option>
@@ -50,7 +44,12 @@
 				<table class="table table-striped table-border">
 					<thead>
 						<tr>
-							<th class="action"><input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);"></th>
+							<th class="action">
+								<div class="checkbox checkbox-primary">
+									<input type="checkbox" id="checkbox-all" class="styled" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);">
+									<label for="checkbox-all"></label>
+								</div>
+							</th>
 							<th width="40%"><?php echo lang('column_name'); ?></th>
 							<th class="text-center"><?php echo lang('column_preview'); ?></th>
 							<th class="text-center"><?php echo lang('column_language'); ?></th>
@@ -62,14 +61,18 @@
 						<?php if ($pages) {?>
 						<?php foreach ($pages as $page) { ?>
 						<tr>
-							<td class="action"><input type="checkbox" value="<?php echo $page['page_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
+							<td class="action">
+								<div class="checkbox checkbox-primary">
+									<input type="checkbox" class="styled" id="checkbox-<?php echo $page['page_id']; ?>" value="<?php echo $page['page_id']; ?>" name="delete[]" />
+									<label for="checkbox-<?php echo $page['page_id']; ?>"></label>
+								</div>
 								<a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $page['edit']; ?>"><i class="fa fa-pencil"></i></a>
 							</td>
 							<td width="40%"><?php echo $page['name']; ?></td>
 							<td class="text-center"><a class="btn btn-info" title="Preview" target="_blank" href="<?php echo $page['preview']; ?>"><i class="fa fa-eye"></i></a></td>
-							<td class="text-center"><?php echo $page['language']; ?></td>
-							<td class="text-center"><?php echo $page['date_updated']; ?></td>
-							<td class="text-center"><?php echo $page['status']; ?></td>
+							<td class="text-center"><?php echo $page['language_name']; ?></td>
+							<td class="text-center"><?php echo day_elapsed($page['date_updated']); ?></td>
+							<td class="text-center"><?php echo ($page['status'] === '1') ? lang('text_enabled') : lang('text_disabled'); ?></td>
 						</tr>
 						<?php } ?>
 						<?php } else { ?>
@@ -82,16 +85,11 @@
 				</div>
 			</form>
 
-			<div class="pagination-bar clearfix">
-				<div class="links"><?php echo $pagination['links']; ?></div>
-				<div class="info"><?php echo $pagination['info']; ?></div>
+			<div class="pagination-bar row">
+				<div class="links col-sm-8"><?php echo $pagination['links']; ?></div>
+				<div class="info col-sm-4"><?php echo $pagination['info']; ?></div>
 			</div>
 		</div>
 	</div>
 </div>
-<script type="text/javascript"><!--
-function filterList() {
-	$('#filter-form').submit();
-}
-//--></script>
 <?php echo get_footer(); ?>

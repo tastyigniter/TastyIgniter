@@ -389,7 +389,7 @@ class Media_manager {
         return $folder_tree;
     }
 
-    private function sortFiles($sort, $u_files) {
+    protected function sortFiles($sort, $u_files) {
         if (isset($sort['by'])) {
             switch ($sort['by']) {
                 case 'name':

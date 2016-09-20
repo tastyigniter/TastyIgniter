@@ -19,7 +19,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @var	string
  *
  */
-	define('TI_VERSION', '2.1.1');
+	define('TI_VERSION', '2.2.0-dev');
 
 	// Path to the root folder
 	defined('ROOTPATH') OR define('ROOTPATH', str_replace(SYSDIR.'/', '', BASEPATH));
@@ -295,7 +295,7 @@ if ($composer_autoload = config_item('composer_autoload') AND file_exists(BASEPA
  *  Instantiate the routing class and set the routing
  * ------------------------------------------------------
  */
-$RTR =& load_class('Router', 'core', isset($routing) ? $routing : NULL);
+	$RTR =& load_class('Router', 'core', isset($routing) ? $routing : NULL);
 
 /*
  * ------------------------------------------------------
@@ -363,13 +363,15 @@ $RTR =& load_class('Router', 'core', isset($routing) ? $routing : NULL);
 
     // Load the base controller class
     require_once IGNITEPATH.'core/Base_Controller.php';
+	require_once IGNITEPATH.'core/Authenticated_Controller.php';
 
 	// Load the main or admin base controller class
 	if (APPDIR === ADMINDIR) {
 		require_once IGNITEPATH.'core/Admin_Controller.php';
 	} else if (APPDIR === MAINDIR) {
 		require_once IGNITEPATH.'core/Main_Controller.php';
-    }
+		require_once IGNITEPATH . 'core/Base_Component.php';
+	}
 
     // Set a mark point for benchmarking
 	$BM->mark('loading_time:_base_classes_end');

@@ -20,57 +20,46 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Activities_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Activities_model extends TI_Model {
+class Activities_model extends TI_Model
+{
+	/**
+	 * @var string The database table name
+	 */
+	protected $table_name = 'activities';
 
-	public function getCount($filter = array()) {
+	/**
+	 * @var string The database table primary key
+	 */
+	protected $primary_key = 'activity_id';
+
+	/**
+	 * @var array Auto-fill the created date field on insert
+	 */
+	protected $timestamps = array('created');
+
+	/**
+	 * Filter database records
+	 *
+	 * @param array $filter an associative array of field/value pairs
+	 *
+	 * @return $this
+	 */
+	public function filter($filter = array()) {
 		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-			$this->db->where('status', $filter['filter_status']);
+			$this->where('status', $filter['filter_status']);
 		}
 
-		$this->db->from('activities');
-
-		return $this->db->count_all_results();
+		return $this;
 	}
 
-	public function getList($filter = array()) {
-		if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
-			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
-		}
-
-		if ($this->db->limit($filter['limit'], $filter['page'])) {
-			$this->db->from('activities');
-
-			if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-				$this->db->where('status', $filter['filter_status']);
-			}
-
-			$this->db->order_by('date_added', 'DESC');
-
-			$query = $this->db->get();
-			$result = $sort_result = array();
-
-			if ($query->num_rows() > 0) {
-				return $query->result_array();
-			}
-
-			return $result;
-		}
-	}
-
-	public function getActivities() {
-		$this->db->from('activities');
-		$this->db->order_by('date_added', 'DESC');
-
-		$query = $this->db->get();
-		$activities = array();
-
-		if ($query->num_rows() > 0) {
-			$activities = $query->result_array();
-		}
-
-		return $activities;
-	}
-
+	/**
+	 * Log activity to database
+	 *
+	 * @param int    $user_id the logged in admin or customer id
+	 * @param string $action  the activity action taken e.g (added, updated, assigned, custom,...)
+	 * @param string $context where the activity occurred, the controller name
+	 * @param string $message the activity message to record
+	 */
 	public function logActivity($user_id, $action, $context, $message) {
 		if (method_exists($this->router, 'fetch_module')) {
 			$this->_module = $this->router->fetch_module();
@@ -78,7 +67,7 @@ class Activities_model extends TI_Model {
 
 		if (is_numeric($user_id) AND is_string($action) AND is_string($message)) {
 			// set the current domain (e.g admin, main, module)
-			$domain = ( ! empty($this->_module)) ? 'module' : APPDIR;
+			$domain = (!empty($this->_module)) ? 'module' : APPDIR;
 
 			// set user if customer is logged in and the domain is not admin
 			$user = 'staff';
@@ -89,28 +78,35 @@ class Activities_model extends TI_Model {
 				}
 			}
 
-			$this->db->set('user', $user);
-			$this->db->set('domain', $domain);
-			$this->db->set('context', $context);
+			$data['user'] = $user;
+			$data['domain'] = $domain;
+			$data['context'] = $context;
 
 			if (is_numeric($user_id)) {
-				$this->db->set('user_id', $user_id);
+				$data['user_id'] = $user_id;
 			}
 
 			if (is_string($action)) {
-				$this->db->set('action', $action);
+				$data['action'] = $action;
 			}
 
 			if (is_string($message)) {
-				$this->db->set('message', $message);
+				$data['message'] = $message;
 			}
 
-			$this->db->set('date_added', mdate('%Y-%m-%d %H:%i:%s', time()));
-
-			$this->db->insert('activities');
+			$this->insert($data);
 		}
 	}
 
+	/**
+	 * Return the activity message language text
+	 *
+	 * @param string $lang
+	 * @param array  $search
+	 * @param array  $replace
+	 *
+	 * @return string
+	 */
 	public function getMessage($lang, $search = array(), $replace = array()) {
 		$this->lang->load('activities');
 
@@ -118,5 +114,5 @@ class Activities_model extends TI_Model {
 	}
 }
 
-/* End of file activities_model.php */
-/* Location: ./system/tastyigniter/models/activities_model.php */
+/* End of file Activities_model.php */
+/* Location: ./system/tastyigniter/models/Activities_model.php */

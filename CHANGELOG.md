@@ -1,3 +1,61 @@
+### v2.2.0
+
+Release Date: August 2016
+
+#### Added
+* Admin dashboard permission in theme config
+* New Authenticated Controller to create admin only accessible pages (435b2ce)
+* User Library: `auth()` method to redirect unauthorised users (4802e01)
+* Template Library: new methods to add and remove nav menu items (24a521e)
+
+#### Changed
+* Improve nav menu to switch between single and multi location settings
+* Removed all index.html files, use htaccess to block access instead (2bf9172)
+* Improved TI base model with CRUD methods to remove repetition and increase productivity (232c012 & 232c012 & 7772f24)
+* Removed direct calls to `$this->db` from Models and add model properties (43b5a98 & 2a9401e & 86ce6d5 & fe1ef4a)
+* Remove getList and getCount methods from models to use parent method or override instead (c63fc9b)
+* Moved `currency_format` function from `tastyigniter_helper` to new `TI_number_helper` (d3365e4)
+* Improved debug profiler: new Console library to log message to console and new profiler interface (8cb4f51)
+* Code consistency: changed all controllers, models and libraries private methods to protected (579e7e6)
+* Improved BASE controller (c34a825 & e288175)
+* Improved Installer library (81c202e)
+* Improved Controllers - reduced code (747e758 & dafb154 & a4300da)
+* Migration files extends TI_Migration library, and load demo data within migration like initial data (86c0e0b)
+* Display active modules on admin layout list page (76ad3fd)
+* Display number of customers in customer group (8dab2e1)
+* Enforce split single and multi location functions (937dd7a)
+* Improve local module display search box functionality (f987e8f)
+* Improved pagination and calendar libraries (92fde25)
+* Improve app setup and installer library (5504683)
+* Admin theme changes (775b214)
+* Moved load_db_config to Config library and new restaurant_url method (b85f32c)
+* New is_single_location method to check if config site location mode (4aa38c4)
+
+#### Fixed
+* Fix module lang file check (ae7e5e2) thanks @behigh
+* Fix save on translate phrase (012a290) thanks @behigh
+* Hardcoded menu image dimension in storefront
+* Avoid duplicate order/reservation status history
+* Issue with adding order coupon and avoid multiple stock update on update order status
+* Paypal orders not sending email to location
+* Fixed extension delete functionality (2dffaaa)
+* Ensure mealtimes migration does not duplicate records (a1406fb)
+* Redirect url to use relative url (05a1a1b)
+* Fixed categories link on storefront, menu list category filter and location slug (2e640e6)
+* Minor changes (be8f975 & 00983ad)
+
+### v2.1.1
+
+Release Date: June 2016
+
+#### Fixed
+* Issue with saving new menu option
+* Issue with adding new customer from admin
+* Issue with permalink reverse routing
+* Fixed faulty backend url #121 
+* Fixed menu category permalinks and reverse routing 
+* Issue saving theme customizer options
+
 ### v2.1.0
 
 Release Date: May 2016
@@ -216,7 +274,7 @@ Release Date: 09 September 2015
 * Fixed php version backward-compatibility issues of empty()
 * Changed google maps api request from http to https for location search
 * Fixed adding comment to menu item added to cart
-* Fixed issue with escaping htmlspecialchars when saving lanugaue line to database
+* Issue with escaping htmlspecialchars when saving lanugaue line to database
 * Fixed issue with saving state in customer and location addresses
 * Added order restriction option to coupons. Coupon is restricted by order types
 * Improved template library, and loading theme config file

@@ -10,7 +10,7 @@
                     <div class="panel-body wrap-none">
                         <div class="list-group list-group-hover">
                             <?php foreach ($folders as $key => $folder) { ?>
-                                <?php if ($key === $filter_folder) { ?>
+                                <?php if ($key == $filter_folder) { ?>
                                     <a class="list-group-item active" href="<?php echo $folder['url']; ?>"><i class="fa <?php echo $folder['icon']; ?>"></i>&nbsp;&nbsp;<?php echo $folder['title']; ?>&nbsp;&nbsp;<span class="label label-primary pull-right"><?php echo $folder['badge']; ?></span></a>
                                 <?php } else { ?>
                                     <a class="list-group-item" href="<?php echo $folder['url']; ?>"><i class="fa <?php echo $folder['icon']; ?>"></i>&nbsp;&nbsp;<?php echo $folder['title']; ?>&nbsp;&nbsp;<span class="label label-primary pull-right"><?php echo $folder['badge']; ?></span></a>
@@ -26,7 +26,7 @@
                     <div class="panel-body wrap-none">
                         <div class="list-group list-group-hover">
                             <?php foreach ($labels as $key => $label) { ?>
-                                <?php if ($key === $filter_type) { ?>
+                                <?php if ($key == $filter_type) { ?>
                                     <a class="list-group-item active" href="<?php echo $label['url']; ?>"><i class="fa <?php echo $label['icon']; ?>"></i>&nbsp;&nbsp;<?php echo $label['title']; ?></a>
                                 <?php } else { ?>
                                     <a class="list-group-item" href="<?php echo $label['url']; ?>"><i class="fa <?php echo $label['icon']; ?>"></i>&nbsp;&nbsp;<?php echo $label['title']; ?></a>
@@ -39,12 +39,6 @@
 
             <div class="col-xs-12 col-md-10">
                 <div class="panel panel-default panel-table">
-                    <div class="panel-heading">
-                        <h3 class="panel-title"><?php echo (isset($folders[$filter_folder]['title'])) ? $folders[$filter_folder]['title'] : ucwords($filter_folder); ?></h3>
-                        <div class="pull-right">
-                            <button class="btn btn-filter btn-xs"><i class="fa fa-filter"></i></button>
-                        </div>
-                    </div>
                     <div class="panel-body panel-filter">
                         <form role="form" id="filter-form" accept-charset="utf-8" method="GET" action="<?php echo current_url(); ?>">
                             <div class="filter-bar">
@@ -76,7 +70,7 @@
                                                 <select name="filter_date" class="form-control input-sm">
                                                     <option value=""><?php echo lang('text_filter_date'); ?></option>
                                                     <?php foreach ($message_dates as $key => $value) { ?>
-                                                        <?php if ($key === $filter_date) { ?>
+                                                        <?php if ($key == $filter_date) { ?>
                                                             <option value="<?php echo $key; ?>" <?php echo set_select('filter_date', $key, TRUE); ?> ><?php echo $value; ?></option>
                                                         <?php } else { ?>
                                                             <option value="<?php echo $key; ?>" <?php echo set_select('filter_date', $key); ?> ><?php echo $value; ?></option>
@@ -95,7 +89,11 @@
 
                     <form role="form" id="message-form" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
                         <div class="message-controls">
-                            <input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);">&nbsp;&nbsp;
+
+                            <div class="checkbox checkbox-primary">
+                                <input type="checkbox" id="checkbox-all" class="styled" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);">
+                                <label for="checkbox-all"></label>
+                            </div>
                             <?php if ($filter_folder === 'archive') { ?>
                                 <button class="btn btn-default" title="<?php echo lang('text_move_to_inbox'); ?>" onclick="moveToInbox()"><i class="fa fa-inbox"></i>&nbsp;&nbsp;&nbsp;<i class="fa fa-arrow-left"></i></button>
                             <?php } else if ($filter_folder === 'inbox' OR $filter_folder === 'sent') { ?>
@@ -126,13 +124,16 @@
                                         <?php foreach ($messages as $message) { ?>
                                             <tr class="<?php echo $message['state']; ?>">
                                                 <td class="action">
-                                                    <input type="checkbox" value="<?php echo ($filter_folder === 'draft') ? $message['message_id'] : $message['message_meta_id']; ?>" name="delete[]" />&nbsp;&nbsp;&nbsp;
+                                                    <div class="checkbox checkbox-primary">
+                                                        <input type="checkbox" class="styled" id="checkbox-<?php echo ($filter_folder === 'draft') ? $message['message_id'] : $message['message_meta_id']; ?>" value="<?php echo ($filter_folder === 'draft') ? $message['message_id'] : $message['message_meta_id']; ?>" name="delete[]" />
+                                                        <label for="checkbox-<?php echo ($filter_folder === 'draft') ? $message['message_id'] : $message['message_meta_id']; ?>"></label>
+                                                    </div>                                                     
                                                     <i class="fa fa-star-o text-warning"></i>
                                                 </td>
                                                 <td><?php echo $message['recipient']; ?></a></td>
                                                 <td width="65%">
                                                     <?php if ($filter_folder === 'all') foreach ($folders as $key => $folder) { ?>
-                                                        <?php if ($key === $message['folder']) { ?>
+                                                        <?php if ($key == $message['folder']) { ?>
                                                             <i class="fa <?php echo $folder['icon']; ?> text-muted"></i>&nbsp;&nbsp;&nbsp;
                                                         <?php } ?>
                                                     <?php } ?>
@@ -153,20 +154,15 @@
                         </div>
                     </form>
 
-                    <div class="pagination-bar clearfix">
-                        <div class="links"><?php echo $pagination['links']; ?></div>
-                        <div class="info"><?php echo $pagination['info']; ?></div>
+                    <div class="pagination-bar row">
+                        <div class="links col-sm-8"><?php echo $pagination['links']; ?></div>
+                        <div class="info col-sm-4"><?php echo $pagination['info']; ?></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<script type="text/javascript"><!--
-function filterList() {
-	$('#filter-form').submit();
-}
-//--></script>
 <script type="text/javascript">
 function markAsRead() {
 	if ($('#message-form input:checkbox:checked').length > 0) {

@@ -85,6 +85,8 @@ $lang['label_restaurant_name'] 		    = 'Name';
 $lang['label_restaurant_address'] 		= 'Address';
 $lang['label_payment_method'] 		    = 'Payment Method';
 
+$lang['error_status_exists'] 			= 'The order can not be updated twice with the same order status';
+
 $lang['alert_order_not_completed'] 		= 'The order must reach the completed order status before generating an invoice';
 
 

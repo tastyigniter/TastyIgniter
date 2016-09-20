@@ -2,6 +2,9 @@
 
 $lang['_text_title'] 		            = 'Reservation';
 $lang['text_tab_general'] 	            = 'General';
+$lang['text_component_title']			= 'Reservation Component';
+$lang['text_component_desc'] 			= 'Displays the reservation form';
+
 $lang['text_heading'] 			        = 'Find A Table';
 $lang['text_time_heading'] 		        = 'Select Time';
 $lang['text_reservation'] 		        = 'My Reservation';

@@ -10,7 +10,7 @@
 
 		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo $_action; ?>">
 			<div class="tab-content">
-				<div id="staff-details" class="tab-pane row wrap-all active">
+				<div id="staff-details" class="tab-pane active">
 					<div class="form-group">
 						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_name'); ?></label>
 						<div class="col-sm-5">
@@ -67,40 +67,42 @@
 					</div>
 				</div>
 
-				<div id="basic-settings" class="tab-pane row wrap-all">
+				<div id="basic-settings" class="tab-pane">
 					<?php if ($display_staff_group) { ?>
 						<div class="form-group">
 							<label for="input-group" class="col-sm-3 control-label"><?php echo lang('label_group'); ?></label>
 							<div class="col-sm-5">
 								<select name="staff_group_id" id="input-group" class="form-control">
 								<option value=""><?php echo lang('text_please_select'); ?></option>
-								<?php foreach ($staff_groups as $staff_group) { ?>
-									<?php if ($staff_group['staff_group_id'] === $staff_group_id) { ?>
-										<option value="<?php echo $staff_group['staff_group_id']; ?>" <?php echo set_select('staff_group_id', $staff_group['staff_group_id'], TRUE); ?> ><?php echo $staff_group['staff_group_name']; ?></option>
+								<?php foreach ($staff_groups as $key => $value) { ?>
+									<?php if ($key == $staff_group_id) { ?>
+										<option value="<?php echo $key; ?>" <?php echo set_select('staff_group_id', $key, TRUE); ?> ><?php echo $value; ?></option>
 									<?php } else { ?>
-										<option value="<?php echo $staff_group['staff_group_id']; ?>" <?php echo set_select('staff_group_id', $staff_group['staff_group_id']); ?> ><?php echo $staff_group['staff_group_name']; ?></option>
+										<option value="<?php echo $key; ?>" <?php echo set_select('staff_group_id', $key); ?> ><?php echo $value; ?></option>
 									<?php } ?>
 								<?php } ?>
 								</select>
 								<?php echo form_error('staff_group_id', '<span class="text-danger">', '</span>'); ?>
 							</div>
 						</div>
-						<div class="form-group">
-							<label for="input-location" class="col-sm-3 control-label"><?php echo lang('label_location'); ?></label>
-							<div class="col-sm-5">
-								<select name="staff_location_id" id="input-location" class="form-control">
-									<option value="0"><?php echo lang('text_use_default'); ?></option>
-									<?php foreach ($locations as $location) { ?>
-									<?php if ($location['location_id'] === $staff_location_id) { ?>
-										<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('staff_location_id', $location['location_id'], TRUE); ?> ><?php echo $location['location_name']; ?></option>
-									<?php } else { ?>
-										<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('staff_location_id', $location['location_id']); ?> ><?php echo $location['location_name']; ?></option>
-									<?php } ?>
-									<?php } ?>
-								</select>
-								<?php echo form_error('staff_location_id', '<span class="text-danger">', '</span>'); ?>
+						<?php if (!is_single_location()) { ?>
+							<div class="form-group">
+								<label for="input-location" class="col-sm-3 control-label"><?php echo lang('label_location'); ?></label>
+								<div class="col-sm-5">
+									<select name="staff_location_id" id="input-location" class="form-control">
+										<option value="0"><?php echo lang('text_use_default'); ?></option>
+										<?php foreach ($locations as $key => $value) { ?>
+										<?php if ($key == $staff_location_id) { ?>
+											<option value="<?php echo $key; ?>" <?php echo set_select('staff_location_id', $key, TRUE); ?> ><?php echo $value; ?></option>
+										<?php } else { ?>
+											<option value="<?php echo $key; ?>" <?php echo set_select('staff_location_id', $key); ?> ><?php echo $value; ?></option>
+										<?php } ?>
+										<?php } ?>
+									</select>
+									<?php echo form_error('staff_location_id', '<span class="text-danger">', '</span>'); ?>
+								</div>
 							</div>
-						</div>
+						<?php } ?>
 					<?php } ?>
 				</div>
 			</div>

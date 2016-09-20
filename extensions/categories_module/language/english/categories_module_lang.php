@@ -2,6 +2,8 @@
 
 $lang['_text_title'] 		    = 'Categories';
 $lang['text_tab_general'] 	    = 'General';
+$lang['text_component_title']	= 'Categories Component';
+$lang['text_component_desc'] 	= 'Displays list of all categories';
 
 $lang['text_categories'] 		= 'Categories';
 $lang['text_view_categories']   = 'View categories';

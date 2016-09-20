@@ -9,7 +9,7 @@
 
 		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo $_action; ?>">
 			<div class="tab-content">
-				<div id="general" class="tab-pane row wrap-all active">
+				<div id="general" class="tab-pane active">
 					<div class="form-group">
 						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_name'); ?></label>
 						<div class="col-sm-5">
@@ -33,13 +33,13 @@
 						<div class="col-sm-5">
 							<select name="parent_id" id="category" class="form-control">
 								<option value=""><?php echo lang('text_none'); ?></option>
-							<?php foreach ($categories as $category) { ?>
-							<?php if ($category['category_id'] === $parent_id) { ?>
-								<option value="<?php echo $category['category_id']; ?>" <?php echo set_select('parent', $category['category_id'], TRUE); ?> ><?php echo $category['category_name']; ?></option>
-							<?php } else { ?>
-								<option value="<?php echo $category['category_id']; ?>" <?php echo set_select('parent', $category['category_id']); ?> ><?php echo $category['category_name']; ?></option>
-							<?php } ?>
-							<?php } ?>
+								<?php foreach ($categories as $key => $value) { ?>
+								<?php if ($key == $parent_id) { ?>
+									<option value="<?php echo $key; ?>" <?php echo set_select('parent', $key, TRUE); ?> ><?php echo $value; ?></option>
+								<?php } else { ?>
+									<option value="<?php echo $key; ?>" <?php echo set_select('parent', $key); ?> ><?php echo $value; ?></option>
+								<?php } ?>
+								<?php } ?>
 							</select>
 							<?php echo form_error('parent', '<span class="text-danger">', '</span>'); ?>
 						</div>

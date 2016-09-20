@@ -36,7 +36,9 @@
                                 <tr>
                                     <th><?php echo lang('column_id'); ?></th>
                                     <th><?php echo lang('column_status'); ?></th>
-                                    <th><?php echo lang('column_location'); ?></th>
+                                    <?php if (!is_single_location()) { ?>
+                                        <th><?php echo lang('column_location'); ?></th>
+                                    <?php } ?>
                                     <th><?php echo lang('column_date'); ?></th>
                                     <th><?php echo lang('column_order'); ?></th>
                                     <th><?php echo lang('column_items'); ?></th>
@@ -53,7 +55,9 @@
                                         <tr>
                                             <td><a href="<?php echo $order['view']; ?>"><?php echo $order['order_id']; ?></a></td>
                                             <td><?php echo $order['status_name']; ?></td>
-                                            <td><?php echo $order['location_name']; ?></td>
+                                            <?php if (!is_single_location()) { ?>
+                                                <td><?php echo $order['location_name']; ?></td>
+                                            <?php } ?>
                                             <td><?php echo $order['order_time']; ?> - <?php echo $order['order_date']; ?></td>
                                             <td><?php echo $order['order_type']; ?></td>
                                             <td><?php echo $order['total_items']; ?></td>

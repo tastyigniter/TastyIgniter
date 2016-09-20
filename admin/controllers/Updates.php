@@ -1,6 +1,7 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct access allowed');
 
-class Updates extends Admin_Controller {
+class Updates extends Admin_Controller
+{
 
 	public function __construct() {
 		parent::__construct();
@@ -13,7 +14,7 @@ class Updates extends Admin_Controller {
 
 	public function index() {
 
-		if ( ! $this->input->post()) {
+		if (!$this->input->post()) {
 
 			$this->template->setTitle($this->lang->line('text_title'));
 			$this->template->setHeading($this->lang->line('text_heading'));
@@ -30,16 +31,16 @@ class Updates extends Admin_Controller {
 			$this->template->setHeading(sprintf($this->lang->line('text_upgrade_heading'), ucwords($update_type)));
 
 			if ($update_type === 'core' AND $this->input->post('version')) {
-				$data['upgrade_url'] = site_url("updates/upgrade/{$update_type}?version={$this->input->post('version')}");
+				$data['upgrade_url'] = $this->pageUrl("{$this->index_url}/upgrade/{$update_type}?version={$this->input->post('version')}");
 			} else {
 
 				if ($this->validateUpdate() === TRUE) {
 					if (is_array($updates = $this->input->post('updates'))) {
-						$data['upgrade_url'] = site_url("updates/upgrade/{$update_type}?action=do_update&updates=". implode(',', $updates));
+						$data['upgrade_url'] = $this->pageUrl("{$this->index_url}/upgrade/{$update_type}?action=do_update&updates=" . implode(',', $updates));
 					}
 				} else {
 					$this->alert->set('warning', validation_errors());
-					redirect('updates');
+					$this->redirect();
 				}
 			}
 		}
@@ -52,15 +53,15 @@ class Updates extends Admin_Controller {
 
 		if (!extension_loaded('zip')) {
 			$this->alert->set('warning', $this->lang->line('alert_zip_warning'));
-			redirect('updates');
+			$this->redirect();
 		}
 
-		if ( ! $this->uri->rsegment(3)) {
+		if (!$this->uri->rsegment(3)) {
 			$this->alert->set('warning', $this->lang->line('alert_bad_request'));
-			redirect('updates');
-		} else if ( ! $this->user->hasPermission('Site.Updates.Add')) {
+			$this->redirect();
+		} else if (!$this->user->hasPermission('Site.Updates.Add')) {
 			$this->alert->set('warning', $this->lang->line('alert_permission_warning'));
-			redirect('updates');
+			$this->redirect();
 		}
 
 		$update_type = $this->uri->rsegment(3);
@@ -115,36 +116,32 @@ class Updates extends Admin_Controller {
 
 	protected function validateUpdate() {
 		if ($this->input->post('update') === 'core') {
-			$this->form_validation->set_rules('version', ucwords($this->input->post('update')), 'xss_clean|trim|required');
+			$rules[] = array('version', ucwords($this->input->post('update')), 'xss_clean|trim|required');
 		} else {
-			$this->form_validation->set_rules('updates[]', ucwords($this->input->post('update')), 'xss_clean|trim|required');
+			$rules[] = array('updates[]', ucwords($this->input->post('update')), 'xss_clean|trim|required');
 		}
 
-		if ($this->form_validation->run() === TRUE) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
+		return $this->Updates_model->set_rules($rules)->validate();
 	}
 
 	protected function setHTMLHead() {
 		header('Cache-Control: no-cache, must-revalidate');
 
 		$this->template->setDocType('html5');
-		$this->template->setMeta(array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'));
-		$this->template->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=edge,chrome=1', 'type' => 'equiv'));
-		$this->template->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=9; IE=8; IE=7', 'type' => 'equiv'));
-		$this->template->setMeta(array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1', 'type' => 'name'));
-		$this->template->setMeta(array('name' => 'robots', 'content' => 'noindex,nofollow', 'type' => 'name'));
+		$this->assets->setMeta(array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'));
+		$this->assets->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=edge,chrome=1', 'type' => 'equiv'));
+		$this->assets->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=9; IE=8; IE=7', 'type' => 'equiv'));
+		$this->assets->setMeta(array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1', 'type' => 'name'));
+		$this->assets->setMeta(array('name' => 'robots', 'content' => 'noindex,nofollow', 'type' => 'name'));
 
-		$this->template->setFavIcon('images/favicon.ico', 'shortcut icon', 'image/ico');
+		$this->assets->setFavIcon('images/favicon.ico', 'shortcut icon', 'image/ico');
 
-		$this->template->setStyleTag('css/bootstrap.min.css', 'bootstrap-css', '10');
-		$this->template->setStyleTag('css/font-awesome.min.css', 'font-awesome-css', '11');
-		$this->template->setStyleTag('css/fonts.css', 'fonts-css', '16');
-		$this->template->setStyleTag('css/stylesheet.css', 'stylesheet-css', '100');
+		$this->assets->setStyleTag('css/bootstrap.min.css', 'bootstrap-css', '10');
+		$this->assets->setStyleTag('css/font-awesome.min.css', 'font-awesome-css', '11');
+		$this->assets->setStyleTag('css/fonts.css', 'fonts-css', '16');
+		$this->assets->setStyleTag('css/stylesheet.css', 'stylesheet-css', '100');
 
-		$this->template->setScriptTag('js/jquery-1.11.2.min.js', 'jquery-js', '1');
+		$this->assets->setScriptTag('js/jquery-1.11.2.min.js', 'jquery-js', '1');
 	}
 }
 

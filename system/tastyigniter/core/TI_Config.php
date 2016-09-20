@@ -14,7 +14,7 @@
 defined('BASEPATH') OR exit('No direct access allowed');
 
 /* load the MX_Router class */
-require IGNITEPATH."third_party/MX/Config.php";
+require IGNITEPATH . "third_party/MX/Config.php";
 
 /**
  * TastyIgniter Config Class
@@ -23,9 +23,11 @@ require IGNITEPATH."third_party/MX/Config.php";
  * @package        TastyIgniter\Core\TI_Config.php
  * @link           http://docs.tastyigniter.com
  */
-class TI_Config extends MX_Config {
+class TI_Config extends MX_Config
+{
 
-    public $_config_paths =	array(IGNITEPATH, APPPATH);
+	public $_config_paths = array(IGNITEPATH, APPPATH);
+	protected $_db_config_loaded;
 
 	// -------------------------------------------------------------
 
@@ -38,6 +40,7 @@ class TI_Config extends MX_Config {
 	 */
 	public function __construct() {
 		$this->config =& get_config();
+		$this->get_db_config();
 
 		// Set the base_url automatically if none was provided
 		if (empty($this->config['base_url'])) {
@@ -58,12 +61,10 @@ class TI_Config extends MX_Config {
 
 	// --------------------------------------------------------------------
 
-	public function site_url($uri = '', $protocol = NULL)
-	{
-        $base_url = $this->slash_item('base_url');
+	public function site_url($uri = '', $protocol = NULL) {
+		$base_url = $this->slash_item('base_url');
 
-		if (isset($protocol))
-		{
+		if (isset($protocol)) {
 			// For protocol-relative links
 			if ($protocol === '') {
 				$base_url = substr($base_url, strpos($base_url, '//'));
@@ -72,42 +73,73 @@ class TI_Config extends MX_Config {
 			}
 		}
 
-		if (empty($uri))
-		{
-			return $base_url.$this->item('index_page');
+		if (empty($uri)) {
+			return $base_url . $this->item('index_page');
 		}
 
-        if (APPDIR === MAINDIR) {
-            $uri = get_instance()->router->_reverse_routing($uri);
-            $base_url = str_replace(ADMINDIR.'/', '', $base_url);
-        } else {
-            $uri = $this->_uri_string($uri);
+		if (APPDIR === MAINDIR) {
+			$uri = get_instance()->router->_reverse_routing($uri);
+			$base_url = str_replace(ADMINDIR . '/', '', $base_url);
+		} else {
+			$uri = $this->_uri_string($uri);
 		}
 
-		if ($this->item('enable_query_strings') === FALSE)
-		{
+		if ($this->item('enable_query_strings') === FALSE) {
 			$suffix = isset($this->config['url_suffix']) ? $this->config['url_suffix'] : '';
 
-			if ($suffix !== '')
-			{
-				if (($offset = strpos($uri, '?')) !== FALSE)
-				{
-					$uri = substr($uri, 0, $offset).$suffix.substr($uri, $offset);
-				}
-				else
-				{
+			if ($suffix !== '') {
+				if (($offset = strpos($uri, '?')) !== FALSE) {
+					$uri = substr($uri, 0, $offset) . $suffix . substr($uri, $offset);
+				} else {
 					$uri .= $suffix;
 				}
 			}
 
-			return $base_url.$this->slash_item('index_page').$uri;
-		}
-		elseif (strpos($uri, '?') === FALSE)
-		{
-			$uri = '?'.$uri;
+			return $base_url . $this->slash_item('index_page') . $uri;
+		} elseif (strpos($uri, '?') === FALSE) {
+			$uri = '?' . $uri;
 		}
 
-		return $base_url.$this->item('index_page').$uri;
+		return $base_url . $this->item('index_page') . $uri;
+	}
+
+	// --------------------------------------------------------------------
+
+	public function restaurant_url($uri = '', $protocol = NULL) {
+		if ($uri === '') $uri = 'menus';
+
+		$query = explode('?', $uri);
+		$uri = trim($query[0], '/');
+
+		$query_arr = array();
+		if (isset($query[1])) parse_str($query[1], $query_arr);
+
+		if (!isset($query_arr['location_id'])) {
+			$location_id = isset(get_instance()->location) ? get_instance()->location->getId() : NULL;
+			if ($this->item('site_location_mode') === 'multiple' AND is_numeric($location_id)) {
+				$query_arr['location_id'] = $location_id;
+			}
+		}
+
+		if ($this->item('site_location_mode') === 'single') unset($query_arr['location_id']);
+
+		$temp_uri = str_replace(array('menus', 'info', 'reviews', 'gallery'), 'local', $query[0]);
+		if (!empty($query_arr)) {
+			$url = $this->site_url($temp_uri . '?' . http_build_query($query_arr), $protocol);
+		} else {
+			$url = $this->site_url($uri, $protocol);
+		}
+
+		$url = str_replace(array('setup/', ADMINDIR . '/'), '', $url);
+
+		if (strpos($url, '/menus') === FALSE AND !empty($query_arr)) {
+			$_query = explode('?', $url);
+			$_uri = trim($_query[0], '/');
+
+			$url = $_uri . '/' . (isset($_query[1]) ? $uri . '?' . $_query[1] : $uri);
+		}
+
+		return $url;
 	}
 
 	// -------------------------------------------------------------
@@ -120,16 +152,15 @@ class TI_Config extends MX_Config {
 	 * @uses    CI_Config::_uri_string()
 	 *
 	 * @param    string|string[] $uri URI string or an array of segments
-	 * @param    string $protocol
-	 * @param 	 bool $reserve_routing
+	 * @param    string          $protocol
+	 * @param     bool           $reserve_routing
+	 *
 	 * @return string
 	 */
-    public function root_url($uri = '', $protocol = NULL, $reserve_routing = FALSE)
-    {
-        $root_url = str_replace(array('setup/', ADMINDIR.'/'), '', $this->slash_item('base_url'));
+	public function root_url($uri = '', $protocol = NULL, $reserve_routing = FALSE) {
+		$root_url = str_replace(array('setup/', ADMINDIR . '/'), '', $this->slash_item('base_url'));
 
-        if (isset($protocol))
-        {
+		if (isset($protocol)) {
 			// For protocol-relative links
 			if ($protocol === '') {
 				$root_url = substr($root_url, strpos($root_url, '//'));
@@ -142,9 +173,48 @@ class TI_Config extends MX_Config {
 			$uri = get_instance()->router->_reverse_routing($uri);
 		}
 
-		return $root_url.ltrim($this->_uri_string($uri), '/');
-    }
+		return $root_url . ltrim($this->_uri_string($uri), '/');
+	}
 
-    // -------------------------------------------------------------
+	// -------------------------------------------------------------
+
+	/**
+	 * Load config from database
+	 *
+	 * Fetches the config values from the database and adds them to config array
+	 */
+	public function get_db_config() {
+		if ($this->_db_config_loaded === TRUE) {
+			return;
+		}
+
+		require_once BASEPATH . 'database/DB.php';
+		$DB = DB('', NULL);
+
+		// Make sure the database is connected and settings table exists
+		if ($DB->conn_id !== FALSE AND $DB->table_exists('settings')) {
+			if ($settings = $DB->get('settings')->result_array()) {
+				foreach ($settings as $setting) {
+					if (!empty($setting['serialized'])) {
+						$this->set_item($setting['item'], unserialize($setting['value']));
+					} else {
+						$this->set_item($setting['item'], $setting['value']);
+					}
+				}
+
+				if ($this->item('timezone')) {
+					date_default_timezone_set($this->item('timezone'));
+				}
+
+				if ($this->item('site_url')) {
+					$this->set_item('base_url', trim($this->item('site_url'), '/') . '/' . (APPDIR === MAINDIR ? '' : APPDIR));
+				}
+
+				$this->_db_config_loaded = TRUE;
+
+				log_message('info', 'Database Config Loaded');
+			}
+		}
+	}
 
 }

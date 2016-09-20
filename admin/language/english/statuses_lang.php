@@ -9,7 +9,7 @@ $lang['text_filter_search'] 		    = 'Search name or code.';
 $lang['text_filter_status'] 		    = 'View all status types';
 $lang['text_empty'] 		            = 'There are no statuses available.';
 $lang['text_order'] 		            = 'Order';
-$lang['text_reservation'] 		        = 'Reservations';
+$lang['text_reservation'] 		        = 'Reservation';
 
 $lang['column_name'] 		            = 'Name';
 $lang['column_comment'] 		        = 'Status Comment';

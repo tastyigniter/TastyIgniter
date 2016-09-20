@@ -1,25 +1,26 @@
 <?php
-    $this->template->setDocType('html5');
-    $this->template->setMeta(array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'));
-    $this->template->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=edge', 'type' => 'equiv'));
-    $this->template->setMeta(array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no', 'type' => 'name'));
-    $this->template->setFavIcon('images/favicon.ico');
-    $this->template->setStyleTag('css/bootstrap.min.css', 'bootstrap-css', '10');
-    $this->template->setStyleTag('css/font-awesome.min.css', 'font-awesome-css', '11');
-    $this->template->setStyleTag('css/metisMenu.min.css', 'metis-menu-css', '12');
-    $this->template->setStyleTag('css/select2.css', 'select2-css', '13');
-    $this->template->setStyleTag('css/select2-bootstrap.css', 'select2-bootstrap-css', '14');
-    $this->template->setStyleTag('css/jquery.raty.css', 'jquery-raty-css', '15');
-    $this->template->setStyleTag('css/fonts.css', 'fonts-css', '16');
-    $this->template->setStyleTag('css/stylesheet.css', 'stylesheet-css', '1000000');
+    $this->assets->setDocType('html5');
+    $this->assets->setMeta(array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'));
+    $this->assets->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=edge', 'type' => 'equiv'));
+    $this->assets->setMeta(array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no', 'type' => 'name'));
+    $this->assets->setFavIcon('images/favicon.ico');
+    $this->assets->setStyleTag('css/bootstrap.min.css', 'bootstrap-css', '10');
+    $this->assets->setStyleTag('css/font-awesome.min.css', 'font-awesome-css', '11');
+    $this->assets->setStyleTag('css/metisMenu.min.css', 'metis-menu-css', '12');
+    $this->assets->setStyleTag('css/select2.css', 'select2-css', '13');
+    $this->assets->setStyleTag('css/select2-bootstrap.css', 'select2-bootstrap-css', '14');
+    $this->assets->setStyleTag('css/jquery.raty.css', 'jquery-raty-css', '15');
+    $this->assets->setStyleTag('css/fonts.css', 'fonts-css', '16');
+    $this->assets->setStyleTag(assets_url('css/awesome-checkbox.css'), 'awesome-checkbox-css', '17');
+    $this->assets->setStyleTag('css/stylesheet.css', 'stylesheet-css', '1000000');
 
-    $this->template->setScriptTag('js/jquery-1.11.2.min.js', 'jquery-js', '1');
-    $this->template->setScriptTag('js/bootstrap.min.js', 'bootstrap-js', '10');
-	$this->template->setScriptTag(assets_url('js/js.cookie.js'), 'js-cookie-js', '14');
-	$this->template->setScriptTag('js/metisMenu.min.js', 'metis-menu-js', '11');
-	$this->template->setScriptTag('js/select2.js', 'select-2-js', '12');
-	$this->template->setScriptTag('js/jquery.raty.js', 'jquery-raty-js', '13');
-	$this->template->setScriptTag('js/common.js', 'common-js');
+    $this->assets->setScriptTag('js/jquery-1.11.2.min.js', 'jquery-js', '1');
+    $this->assets->setScriptTag('js/bootstrap.min.js', 'bootstrap-js', '10');
+	$this->assets->setScriptTag('js/metisMenu.min.js', 'metis-menu-js', '11');
+	$this->assets->setScriptTag('js/select2.js', 'select-2-js', '12');
+	$this->assets->setScriptTag('js/jquery.raty.js', 'jquery-raty-js', '13');
+	$this->assets->setScriptTag(assets_url('js/js.cookie.js'), 'js-cookie-js', '14');
+	$this->assets->setScriptTag('js/common.js', 'common-js');
 
 	$tastyigniter_logo  = base_url('views/themes/tastyigniter-blue/images/tastyigniter-logo.png');
 	$site_logo          = base_url('views/themes/tastyigniter-blue/images/tastyigniter-logo-text.png');
@@ -29,24 +30,23 @@
     $base_url 			= base_url();
     $active_menu 		= ($this->uri->rsegment(1)) ? $this->uri->rsegment(1) : ADMINDIR;
     $message_unread 	= $this->user->unreadMessageTotal();
-    $islogged 			= $this->user->islogged();
+    $isLogged 			= $this->user->isLogged();
     $username 			= $this->user->getUsername();
 	$staff_name 		= $this->user->getStaffName();
 	$staff_email 		= $this->user->getStaffEmail();
 	$staff_avatar 		= md5(strtolower(trim($staff_email)));
     $staff_group 		= $this->user->staffGroup();
     $staff_location		= $this->user->getLocationName();
+    $staff_location_id	= $this->user->getLocationId();
+    $is_strict_location = $this->user->isStrictLocation();
     $staff_edit 		= site_url('staffs/edit?id='. $this->user->getStaffId());
     $logout 			= site_url('logout');
 
 	$wrapper_class = '';
-	if (!$this->user->islogged()) {
-		$wrapper_class .= 'wrap-none';
-	}
+	if (!$this->user->islogged()) $wrapper_class .= 'wrap-none';
+	if ($this->input->cookie('ti_sidebarToggleState') == 'hide') $wrapper_class .= ' hide-sidebar';
 
-	if ($this->input->cookie('ti_sidebarToggleState') == 'hide') {
-		$wrapper_class .= ' hide-sidebar';
-	}
+	$locations = $this->Locations_model->isEnabled()->dropdown('location_name');
 ?>
 <?php echo get_doctype(); ?>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
@@ -108,7 +108,7 @@
 				</button>
             </div>
 
-			<?php if ($islogged) { ?>
+			<?php if ($isLogged) { ?>
 				<div class="navbar-default sidebar" role="navigation">
 					<div class="sidebar-nav navbar-collapse">
 						<?php echo get_nav_menu(array(
@@ -119,6 +119,38 @@
 				</div>
 
 				<ul class="nav navbar-top-links navbar-right">
+					<?php if ($is_strict_location AND !is_single_location()) { ?>
+					<li class="dropdown">
+						<a class="dropdown-toggle btn-location" data-toggle="dropdown">
+							<i class="fa fa-bank fa-fw visible-xs-inline-block"></i>
+							<span class="text-nowrap hidden-xs"><strong><?php echo $staff_location; ?></strong></span>
+							<i class="fa fa-angle-down"></i>
+						</a>
+						<ul class="dropdown-menu dropdown-locations">
+							<li class="menu-header"><strong><?php echo sprintf(lang('text_locations'), count($locations)); ?></strong></li>
+							<li class="menu-body">
+								<?php if ($locations) { ?>
+									<ul class="menu locations-list">
+										<?php foreach ($locations as $key => $value) { ?>
+											<li class="<?php echo ($staff_location_id == $key) ? 'active' : ''; ?>">
+												<a class="clickable" data-location="<?php echo $key; ?>"><?php echo $value; ?></a>
+											</li>
+											<li class="divider"></li>
+										<?php } ?>
+									</ul>
+								<?php } ?>
+							</li>
+							<li class="menu-footer"></li>
+						</ul>
+					</li>
+					<?php } else if ($is_strict_location AND !is_single_location() AND count($locations) === 1) { ?>
+						<li>
+							<span class="btn-location">
+								<i class="fa fa-bank fa-fw visible-xs-inline-block"></i>
+								<span class="text-nowrap hidden-xs"><strong><?php echo $staff_location; ?></strong></span>
+							</span>
+						</li>
+					<?php } ?>
 					<li class="dropdown">
 						<a class="front-end" title="<?php echo lang('menu_storefront'); ?>" href="<?php echo root_url(); ?>" target="_blank">
 							<i class="fa fa-home"></i>
@@ -164,20 +196,17 @@
 						</ul>
 					</li>
 					<li class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown">
-							<i class="fa fa-user"></i>
-						</a>
+						<img class="img-rounded dropdown-toggle" data-toggle="dropdown" src="<?php echo '//www.gravatar.com/avatar/'.$staff_avatar.'.png?s=128&d=mm'; ?>">
 						<ul class="dropdown-menu  dropdown-user">
 							<li>
 								<div class="row wrap-vertical text-center">
 									<div class="col-xs-12 wrap-top">
-										<img class="img-rounded" src="<?php echo 'https://www.gravatar.com/avatar/'.$staff_avatar.'.png?s=48&d=mm'; ?>">
-									</div>
-									<div class="col-xs-12 wrap-none wrap-top wrap-right">
-										<span><strong><?php echo $staff_name; ?></strong></span>
-										<span class="small"><i>(<?php echo $username; ?>)</i></span><br>
-										<span class="small text-uppercase"><?php echo $staff_group; ?></span>
-										<span><?php echo $staff_location; ?></span>
+										<p class="small text-uppercase"><?php echo $staff_group; ?></p>
+										<h5>
+											<strong><?php echo $staff_name; ?></strong>&nbsp;&nbsp;
+											<span class="small">(<?php echo $username; ?>)</span>
+										</h5>
+										<p class="small"><i class="fa fa-map-marker"></i>&nbsp;&nbsp;<?php echo $staff_location; ?></p>
 									</div>
 								</div>
 							</li>
@@ -188,6 +217,7 @@
 							<li><a href="http://tastyigniter.com/about/" target="_blank"><i class="fa fa-info-circle fa-fw"></i>&nbsp;&nbsp;<?php echo lang('text_about_tastyigniter'); ?></a></li>
 							<li><a href="http://docs.tastyigniter.com" target="_blank"><i class="fa fa-book fa-fw"></i>&nbsp;&nbsp;<?php echo lang('text_documentation'); ?></a></li>
 							<li><a href="http://forum.tastyigniter.com" target="_blank"><i class="fa fa-users fa-fw"></i>&nbsp;&nbsp;<?php echo lang('text_community_support'); ?></a></li>
+							<li class="divider"></li>
 							<li class="menu-footer"></li>
 						</ul>
 					</li>
@@ -206,22 +236,22 @@
 		</nav>
 
 		<div id="page-wrapper">
-			<?php if ($islogged) { ?>
+			<?php if ($isLogged) { ?>
+				<?php
+				$button_list = get_button_list();
+				$icon_list = get_icon_list();
+				?>
+
 				<div class="page-header clearfix">
-                    <?php
-                        $button_list = get_button_list();
-                        $icon_list = get_icon_list();
-                    ?>
-
-                   <?php if (!empty($button_list) OR !empty($icon_list)) { ?>
+					<?php if (!empty($button_list) OR !empty($icon_list)) { ?>
 						<div class="page-action">
-                            <?php if (!empty($icon_list)) { ?>
-                                <?php echo $icon_list; ?>
-                            <?php } ?>
+							<?php if (!empty($icon_list)) { ?>
+								<?php echo $icon_list; ?>
+							<?php } ?>
 
-                            <?php if (!empty($button_list)) { ?>
-                                <?php echo $button_list; ?>
-                            <?php } ?>
+							<?php if (!empty($button_list)) { ?>
+								<?php echo $button_list; ?>
+							<?php } ?>
 						</div>
 					<?php } ?>
 				</div>

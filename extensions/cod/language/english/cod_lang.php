@@ -2,6 +2,8 @@
 
 $lang['_text_title'] 			= 'Cash On Delivery';
 $lang['text_tab_general'] 	    = 'General';
+$lang['text_component_title']	= 'Cash On Delivery';
+$lang['text_component_desc'] 	= 'Accept cash on delivery during checkout';
 
 $lang['label_title'] 			= 'Title';
 $lang['label_order_total'] 	    = 'Minimum Total';

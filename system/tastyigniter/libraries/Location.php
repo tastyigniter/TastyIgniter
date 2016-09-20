@@ -61,7 +61,7 @@ class Location {
 	public function initialize($local_info = array()) {
 		$local_info = empty($local_info) ? $this->CI->session->userdata('local_info') : $local_info;
 
-		if (!isset($local_info['location_id']) AND $this->CI->config->item('location_order') !== '1') {
+		if (is_single_location() OR (!isset($local_info['location_id']) AND $this->CI->config->item('location_order') !== '1')) {
 			$local_info['location_id'] = $this->CI->config->item('default_location_id');
 		}
 
@@ -339,9 +339,23 @@ class Location {
 	}
 
 	public function payments($split = '') {
-		$payments = (!empty($this->local_options['payments'])) ? $this->local_options['payments'] : NULL;
+		$local_payments = (!empty($this->local_options['payments'])) ? $this->local_options['payments'] : NULL;
 
-        return ($payments AND $split !== '') ? implode($payments, $split) : $payments;
+		$payments = array();
+		foreach (Components::list_payment_gateways() as $code => $payment) {
+			if (!empty($local_payments) AND !in_array($code, $local_payments)) continue;
+
+			$settings = $this->CI->Extensions_model->getSettings($code);
+			$payments[$code] = array_merge($payment, array(
+				'name' => isset($payment['name']) ? $this->CI->lang->line($payment['name']) : '',
+				'description' => isset($payment['description']) ? $this->CI->lang->line($payment['description']) : '',
+				'priority' => !empty($settings['priority']) ? $settings['priority'] : '0',
+				'status' => empty($settings['status']) ? '0' : '1'
+			));
+		}
+
+		sort_array($payments);
+        return ($payments AND $split !== '') ? implode(array_column($payments, 'name'), $split) : $payments;
 	}
 
 	public function workingType($type = '') {
@@ -780,7 +794,7 @@ class Location {
 		return "FAILED";
     }
 
-	private function getLocations() {
+	protected function getLocations() {
 		if (empty($this->locations)) {
 			$this->CI->load->model('Locations_model');
 			$locations = $this->CI->Locations_model->getLocations();
@@ -793,7 +807,7 @@ class Location {
 		return $this->locations;
 	}
 
-	private function getWorkingHours($location_id = FALSE) {
+	protected function getWorkingHours($location_id = FALSE) {
 		if (empty($this->working_hours)) {
 			$this->CI->load->model('Locations_model');
 			$working_hours = $this->CI->Locations_model->getWorkingHours();
@@ -819,7 +833,7 @@ class Location {
 		return (!empty($location_id) AND isset($this->working_hours[$location_id])) ? $this->working_hours[$location_id] : $this->working_hours;
 	}
 
-	private function setWorkingHours() {
+	protected function setWorkingHours() {
 		$working_hours = $this->getWorkingHours($this->location_id);
 
 		foreach (array('opening', 'delivery', 'collection') as $type) {
@@ -835,7 +849,7 @@ class Location {
 		$this->working_hours[$this->location_id] = $working_hours;
 	}
 
-	private function parseWorkingHours($type, $start_date, $end_date, $working_hours, $return = FALSE) {
+	protected function parseWorkingHours($type, $start_date, $end_date, $working_hours, $return = FALSE) {
 		$result = array();
 
 		while (strtotime($start_date) <= strtotime($end_date)) {
@@ -861,7 +875,7 @@ class Location {
 		return $result;
 	}
 
-	private function setDeliveryAreas() {
+	protected function setDeliveryAreas() {
 		if (isset($this->local_options['delivery_areas']) AND is_array($this->local_options['delivery_areas'])) {
 			foreach ($this->local_options['delivery_areas'] as $area_id => $area) {
 

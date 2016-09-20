@@ -20,7 +20,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Image_tool_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Image_tool_model extends TI_Model {
+class Image_tool_model extends TI_Model
+{
 
 	public function resize($img_path, $width = NULL, $height = NULL) {
 		$setting = $this->config->item('image_tool');
@@ -35,7 +36,7 @@ class Image_tool_model extends TI_Model {
 			$img_path = str_replace($root_folder, '', $img_path);
 		}
 
-		if ( ! file_exists(IMAGEPATH . $root_folder . $img_path) OR ! is_file(IMAGEPATH . $root_folder . $img_path) OR strpos($img_path, '/') === 0) {
+		if (!file_exists(IMAGEPATH . $root_folder . $img_path) OR !is_file(IMAGEPATH . $root_folder . $img_path) OR strpos($img_path, '/') === 0) {
 			$img_path = 'no_photo.png';
 		}
 
@@ -45,11 +46,11 @@ class Image_tool_model extends TI_Model {
 
 		$thumbs_path = IMAGEPATH . 'thumbs';
 
-		if ( ! is_dir($thumbs_path)) {
+		if (!is_dir($thumbs_path)) {
 			$this->_createFolder($thumbs_path);
 		}
 
-		if (is_dir(IMAGEPATH . $root_folder . $img_path) AND ! is_dir($thumbs_path . '/' . $img_path)) {
+		if (is_dir(IMAGEPATH . $root_folder . $img_path) AND !is_dir($thumbs_path . '/' . $img_path)) {
 			$this->_createFolder($thumbs_path . '/' . $img_path);
 		}
 
@@ -61,7 +62,7 @@ class Image_tool_model extends TI_Model {
 		$new_path = IMAGEPATH . 'thumbs/' . substr($img_path, 0, strrpos($img_path, '.')) . '-' . $width . 'x' . $height . '.' . $extension;
 		$new_image = 'thumbs/' . substr($img_path, 0, strrpos($img_path, '.')) . '-' . $width . 'x' . $height . '.' . $extension;
 
-		if (file_exists($old_path) AND ! file_exists($new_path)) {
+		if (file_exists($old_path) AND !file_exists($new_path)) {
 			$this->load->library('image_lib');
 			$this->image_lib->clear();
 			$config['image_library'] = 'gd2';
@@ -71,7 +72,7 @@ class Image_tool_model extends TI_Model {
 			$config['height'] = $height;
 
 			$this->image_lib->initialize($config);
-			if ( ! $this->image_lib->resize()) {
+			if (!$this->image_lib->resize()) {
 				return FALSE;
 			}
 		}
@@ -79,10 +80,10 @@ class Image_tool_model extends TI_Model {
 		return image_url($new_image);
 	}
 
-	public function _createFolder($thumb_path = FALSE) {
+	protected function _createFolder($thumb_path = FALSE) {
 		$oldumask = umask(0);
 
-		if ($thumb_path AND ! file_exists($thumb_path)) {
+		if ($thumb_path AND !file_exists($thumb_path)) {
 			mkdir($thumb_path, DIR_WRITE_MODE, TRUE);
 		}
 
@@ -90,5 +91,5 @@ class Image_tool_model extends TI_Model {
 	}
 }
 
-/* End of file image_tool_model.php */
-/* Location: ./system/tastyigniter/models/image_tool_model.php */
+/* End of file Image_tool_model.php */
+/* Location: ./system/tastyigniter/models/Image_tool_model.php */

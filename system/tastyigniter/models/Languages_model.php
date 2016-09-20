@@ -20,153 +20,107 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Languages_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Languages_model extends TI_Model {
+class Languages_model extends TI_Model
+{
+	/**
+	 * @var string The database table name
+	 */
+	protected $table_name = 'languages';
 
-	public function getCount($filter = array()) {
-		if ( ! empty($filter['filter_search'])) {
-			$this->db->like('name', $filter['filter_search']);
-			$this->db->or_like('code', $filter['filter_search']);
+	/**
+	 * @var string The database table primary key
+	 */
+	protected $primary_key = 'language_id';
+
+	/**
+	 * Scope a query to only include enabled language
+	 * 
+	 * @return $this
+	 */
+	public function isEnabled() {
+		return $this->where('status', '1');
+	}
+
+	/**
+	 * Filter database records
+	 *
+	 * @param array $filter an associative array of field/value pairs
+	 *
+	 * @return $this
+	 */
+	public function filter($filter = array()) {
+		if (!empty($filter['filter_search'])) {
+			$this->like('name', $filter['filter_search']);
+			$this->or_like('code', $filter['filter_search']);
 		}
 
 		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-			$this->db->where('status', $filter['filter_status']);
+			$this->where('status', $filter['filter_status']);
 		}
 
-		$this->db->from('languages');
-
-		return $this->db->count_all_results();
+		return $this;
 	}
 
-	public function getList($filter = array()) {
-		if ( ! empty($filter['page']) AND $filter['page'] !== 0) {
-			$filter['page'] = ($filter['page'] - 1) * $filter['limit'];
-		}
-
-		if ($this->db->limit($filter['limit'], $filter['page'])) {
-			$this->db->from('languages');
-
-			if ( ! empty($filter['sort_by']) AND ! empty($filter['order_by'])) {
-				$this->db->order_by($filter['sort_by'], $filter['order_by']);
-			}
-
-			if ( ! empty($filter['filter_search'])) {
-				$this->db->like('name', $filter['filter_search']);
-				$this->db->or_like('code', $filter['filter_search']);
-			}
-
-			if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-				$this->db->where('status', $filter['filter_status']);
-			}
-
-			$query = $this->db->get();
-
-			$result = array();
-
-			if ($query->num_rows() > 0) {
-				$result = $query->result_array();
-			}
-
-			return $result;
-		}
-	}
-
+	/**
+	 * Return all enabled languages
+	 *
+	 * @return array
+	 */
 	public function getLanguages() {
-		$this->db->from('languages');
-
-		$this->db->where('status', '1');
-
-		$query = $this->db->get();
-
-		$result = array();
-
-		if ($query->num_rows() > 0) {
-			$result = $query->result_array();
-		}
-
-		return $result;
+		return $this->find_all('status', '1');
 	}
 
+	/**
+	 * Find a single language by language_id
+	 *
+	 * @param int $language_id
+	 *
+	 * @return mixed
+	 */
 	public function getLanguage($language_id) {
-		if ($language_id !== '') {
-			$this->db->from('languages');
-
-			$this->db->where('language_id', $language_id);
-
-			$query = $this->db->get();
-
-			if ($query->num_rows() > 0) {
-				return $query->row_array();
-			}
-		}
+		return $this->find($language_id);
 	}
 
+	/**
+	 * Create a new or update existing language, skips validation
+	 *
+	 * @param int   $language_id
+	 * @param array $save
+	 *
+	 * @return bool|int The $language_id of the affected row, or FALSE on failure
+	 */
 	public function saveLanguage($language_id, $save = array()) {
 		if (empty($save)) return FALSE;
 
-		if (isset($save['name'])) {
-			$this->db->set('name', $save['name']);
-		}
-
-		if (isset($save['code'])) {
-			$this->db->set('code', $save['code']);
-		}
-
-		if (isset($save['image'])) {
-			$this->db->set('image', $save['image']);
-		}
-
-		if (isset($save['idiom'])) {
-			$this->db->set('idiom', $save['idiom']);
-		}
-
-		if (isset($save['can_delete']) AND $save['can_delete'] === '1') {
-			$this->db->set('can_delete', '1');
-		} else {
-			$this->db->set('can_delete', '0');
-		}
-
-		if (isset($save['status']) AND $save['status'] === '1') {
-			$this->db->set('status', '1');
-		} else {
-			$this->db->set('status', '0');
-		}
-
-		if (is_numeric($language_id)) {
-			$this->db->where('language_id', $language_id);
-			$query = $this->db->update('languages');
-		} else {
-			$query = $this->db->insert('languages');
-			$language_id = $this->db->insert_id();
-		}
-
-		return ($query === TRUE AND is_numeric($language_id)) ? $language_id : FALSE;
+		return $this->skip_validation(TRUE)->save($save, $language_id);
 	}
 
+	/**
+	 * Delete a single or multiple language by language_id
+	 *
+	 * @param string|array $language_id
+	 *
+	 * @return int The number of deleted rows
+	 */
 	public function deleteLanguage($language_id) {
 		if (is_numeric($language_id)) $language_id = array($language_id);
 
-		if ( ! empty($language_id) AND ctype_digit(implode('', $language_id))) {
-			$this->db->from('languages');
-			$this->db->where('can_delete', '0');
-			$this->db->where_in('language_id', $language_id);
-			$this->db->where('language_id !=', '11');
-			$query = $this->db->get();
+		if (!empty($language_id) AND ctype_digit(implode('', $language_id))) {
+			$this->where_in('language_id', $language_id);
+			$this->where('language_id !=', '11')->where('can_delete', '0');
 
-			if ($query->num_rows() > 0) {
-				foreach ($query->result_array() as $row) {
+			if ($result = $this->find_all()) {
+				foreach ($result as $row) {
 					delete_language($row['idiom']);
 				}
 			}
 
-			$this->db->where('can_delete', '0');
-			$this->db->where_in('language_id', $language_id);
-			$this->db->where('language_id !=', '11');
-			$this->db->delete('languages');
+			$this->where('language_id !=', '11')->where('can_delete', '0');
 
-			return $this->db->affected_rows();
+			return $this->delete('language_id', $language_id);
 		}
 	}
 }
 
-/* End of file languages_model.php */
-/* Location: ./system/tastyigniter/models/languages_model.php */
+/* End of file Languages_model.php */
+/* Location: ./system/tastyigniter/models/Languages_model.php */

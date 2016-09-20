@@ -58,11 +58,11 @@
 								<div class="form-group">
 									<label for=""><?php echo lang('label_country'); ?></label>
 									<select name="address[country]" class="form-control">
-									<?php foreach ($countries as $country) { ?>
-                                        <?php if ($country['country_id'] === $address['country_id']) { ?>
-                                            <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
+									<?php foreach ($countries as $key => $value) { ?>
+                                        <?php if ($key == $address['country_id']) { ?>
+                                            <option value="<?php echo $key; ?>" selected="selected"><?php echo $value; ?></option>
                                         <?php } else { ?>
-                                            <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
+                                            <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
                                         <?php } ?>
 									<?php } ?>
 									</select>
@@ -109,11 +109,11 @@
 								<div class="form-group">
 									<label for=""><?php echo lang('label_country'); ?></label>
 									<select name="address[country]" class="form-control">
-									<?php foreach ($countries as $country) { ?>
-                                        <?php if ($country['country_id'] === $country_id) { ?>
-                                            <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
+									<?php foreach ($countries as $key => $value) { ?>
+                                        <?php if ($key == $country_id) { ?>
+                                            <option value="<?php echo $key; ?>" selected="selected"><?php echo $value; ?></option>
                                         <?php } else { ?>
-                                            <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
+                                            <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
                                         <?php } ?>
 									<?php } ?>
 									</select>

@@ -10,7 +10,7 @@
 
 		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo $_action; ?>">
 			<div class="tab-content">
-				<div id="general" class="tab-pane row wrap-all active">
+				<div id="general" class="tab-pane active">
 					<div class="row">
 						<div class="col-xs-12 col-sm-4">
 							<div class="panel panel-default">
@@ -225,9 +225,9 @@
 														<td><?php echo $history['date_time']; ?></td>
 														<td><?php echo $history['staff_name']; ?></td>
 														<td>
-															<?php foreach ($staffs as $staff) { ?>
-																<?php if ($staff['staff_id'] === $history['assignee_id']) { ?>
-																	<?php echo $staff['staff_name']; ?>
+															<?php foreach ($staffs as $key => $value) { ?>
+																<?php if ($key == $history['assignee_id']) { ?>
+																	<?php echo $value; ?>
 																<?php } ?>
 															<?php } ?>
 														</td>
@@ -261,11 +261,11 @@
 											<input type="hidden" name="old_status_id" value="<?php echo $status_id; ?>" />
 											<select name="assignee_id" class="form-control">
 												<option value=""><?php echo lang('text_please_select'); ?></option>
-												<?php foreach ($staffs as $staff) { ?>
-													<?php if ($staff['staff_id'] === $assignee_id) { ?>
-														<option value="<?php echo $staff['staff_id']; ?>" <?php echo set_select('assignee_id', $staff['staff_id'], TRUE); ?> ><?php echo $staff['staff_name']; ?></option>
+												<?php foreach ($staffs as $key => $value) { ?>
+													<?php if ($key == $assignee_id) { ?>
+														<option value="<?php echo $key; ?>" <?php echo set_select('assignee_id', $key, TRUE); ?> ><?php echo $value; ?></option>
 													<?php } else { ?>
-														<option value="<?php echo $staff['staff_id']; ?>" <?php echo set_select('assignee_id', $staff['staff_id']); ?> ><?php echo $staff['staff_name']; ?></option>
+														<option value="<?php echo $key; ?>" <?php echo set_select('assignee_id', $key); ?> ><?php echo $value; ?></option>
 													<?php } ?>
 												<?php } ?>
 											</select>
@@ -310,7 +310,7 @@
 					</div>
 				</div>
 
-				<div id="menus" class="tab-pane row wrap-all">
+				<div id="menus" class="tab-pane">
 					<div class="panel panel-default panel-table">
 						<div class="table-responsive">
 							<table height="auto" class="table table-condensed table-border">

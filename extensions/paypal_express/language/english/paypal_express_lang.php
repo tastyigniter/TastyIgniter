@@ -2,6 +2,9 @@
 
 $lang['_text_title'] 		    = 'PayPal Express';
 $lang['text_tab_general'] 	    = 'General';
+$lang['text_component_title']	= 'PayPal Express';
+$lang['text_component_desc'] 	= 'Allows your customers to make payment using PayPal';
+
 $lang['text_sandbox'] 	        = 'Sandbox';
 $lang['text_go_live'] 	        = 'Go Live';
 $lang['text_sale'] 	            = 'SALE';

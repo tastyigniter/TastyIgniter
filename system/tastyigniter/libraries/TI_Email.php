@@ -83,7 +83,7 @@ class TI_Email extends CI_Email {
         return $this->CI->parser->parse_string($template, $data);
     }
 
-    private function _build_html_mail($body = '') {
+    protected function _build_html_mail($body = '') {
         $build  = '';
         $build .= '<!DOCTYPE html>';
         $build .= '<html xmlns="http://www.w3.org/1999/xhtml">';

@@ -1,22 +1,29 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct access allowed');
 
-class Ratings extends Admin_Controller {
+class Ratings extends Admin_Controller
+{
 
 	public function index() {
-        $this->user->restrict('Admin.Ratings');
+		$this->user->restrict('Admin.Ratings');
 
-        $this->lang->load('ratings');
-
-        $this->template->setTitle($this->lang->line('text_title'));
-        $this->template->setHeading($this->lang->line('text_heading'));
-		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-
-		$this->template->setScriptTag(assets_url('js/jquery-sortable.js'), 'jquery-sortable-js');
+		$this->lang->load('ratings');
 
 		if ($this->input->post() AND $this->_updateRating() === TRUE) {
-			redirect('ratings');
+			$this->redirect();
 		}
 
+		$this->template->setTitle($this->lang->line('text_title'));
+		$this->template->setHeading($this->lang->line('text_heading'));
+		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+
+		$this->assets->setScriptTag(assets_url('js/jquery-sortable.js'), 'jquery-sortable-js');
+
+		$data = $this->getList();
+
+		$this->template->render('ratings', $data);
+	}
+
+	public function getList() {
 		if ($this->input->post('ratings')) {
 			$results = $this->input->post('ratings');
 		} else if ($this->config->item('ratings')) {
@@ -33,39 +40,36 @@ class Ratings extends Admin_Controller {
 			}
 		}
 
-		$this->template->render('ratings', $data);
+		return $data;
 	}
 
-	private function _updateRating() {
-    	if ($this->input->post('ratings') AND $this->validateForm() === TRUE) {
-			$this->load->model('Settings_model');
+	protected function _updateRating() {
+		if ($this->input->post('ratings') AND $this->validateForm() === TRUE) {
 			$update = array();
 			$update['ratings'] = $this->input->post('ratings');
 
+			$this->load->model('Settings_model');
 			if ($this->Settings_model->addSetting('ratings', 'ratings', $update, '1')) {
-                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Rating updated '));
-            } else {
-                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), 'updated'));
+				$this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Rating updated '));
+			} else {
+				$this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), 'updated'));
 			}
 
 			return TRUE;
 		}
 	}
 
-	private function validateForm() {
+	protected function validateForm() {
 		if ($this->input->post('ratings')) {
+			$rules = array();
 			foreach ($this->input->post('ratings') as $key => $value) {
-				$this->form_validation->set_rules('ratings['.$key.']', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
+				$rules[] = array('ratings[' . $key . ']', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 			}
 		}
 
-		if ($this->form_validation->run() === TRUE) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
+		return $this->Settings_model->set_rules($rules)->validate();
 	}
 }
 
-/* End of file ratings.php */
-/* Location: ./admin/controllers/ratings.php */
+/* End of file Ratings.php */
+/* Location: ./admin/controllers/Ratings.php */

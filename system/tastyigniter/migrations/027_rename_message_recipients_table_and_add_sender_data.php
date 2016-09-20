@@ -4,7 +4,7 @@
  * Rename message_recipients table to message_meta_data
  * Add existing sender data from messages table
  */
-class Migration_rename_message_recipients_table_and_add_sender_data extends CI_Migration {
+class Migration_rename_message_recipients_table_and_add_sender_data extends TI_Migration {
 
     public function up() {
         $this->db->query("ALTER TABLE " . $this->db->dbprefix('message_recipients') . " RENAME " . $this->db->dbprefix('message_meta') . ";");
@@ -43,4 +43,4 @@ class Migration_rename_message_recipients_table_and_add_sender_data extends CI_M
 }
 
 /* End of file 027_rename_message_recipients_table_and_add_sender_data.php */
-/* Location: ./setup/migrations/027_rename_message_recipients_table_and_add_sender_data.php */
+/* Location: ./system/tastyigniter/migrations/027_rename_message_recipients_table_and_add_sender_data.php */

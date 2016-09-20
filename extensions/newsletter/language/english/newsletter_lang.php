@@ -2,6 +2,8 @@
 
 $lang['_text_title'] 			        = 'Newsletter';
 $lang['text_tab_general'] 		        = 'General';
+$lang['text_component_title']			= 'Newsletter Component';
+$lang['text_component_desc'] 			= 'Displays the subscribe to newsletter form';
 
 $lang['text_subscribe'] 			    = 'Subscribe to our newsletter';
 

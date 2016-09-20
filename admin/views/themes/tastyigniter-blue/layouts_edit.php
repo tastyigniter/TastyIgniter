@@ -12,20 +12,20 @@
 			<div class="tab-content">
 				<div id="general" class="tab-pane row wrap-bottom active">
 					<div class="col-sm-12 col-md-5">
-						<div class="row modules-row">
-							<?php foreach ($modules as $mod) { ?>
+						<div class="row components-row">
+							<?php foreach ($components as $component) { ?>
 								<div class="col-sm-12 col-md-6 wrap-bottom">
 									<div class="dropdown">
-										<button class="btn btn-default btn-block btn-lg dropdown-toggle" type="button" id="<?php echo $mod['module_code']; ?>" data-toggle="dropdown"><?php echo $mod['title']; ?></button>
+										<button class="btn btn-default btn-block btn-lg dropdown-toggle" type="button" id="<?php echo $component['module_code']; ?>" data-toggle="dropdown"><?php echo $component['name']; ?></button>
 										<ul class="dropdown-menu" role="menu">
 											<li role="presentation" class="dropdown-header"><?php echo lang('column_partial'); ?></li>
 											<li class="divider"></li>
 											<?php foreach ($theme_partials as $partial) { ?>
-												<li><a class="module-toggle" data-partial="<?php echo $partial['id']; ?>" data-module-title="<?php echo $mod['title']; ?>" data-module-code="<?php echo $mod['module_code']; ?>" data-module-row="<?php echo (!empty($partial_modules[$partial['id']])) ? count($partial_modules[$partial['id']]) : '0'; ?>"><?php echo $partial['name']; ?></a></li>
+												<li><a class="module-toggle" data-partial="<?php echo $partial['id']; ?>" data-module-title="<?php echo $component['name']; ?>" data-module-code="<?php echo $component['module_code']; ?>" data-module-row="<?php echo (!empty($layout_components[$partial['id']])) ? count($layout_components[$partial['id']]) : '0'; ?>"><?php echo $partial['name']; ?></a></li>
 											<?php } ?>
 										</ul>
 									</div>
-									<p class="text-muted small wrap-top"><?php echo $mod['description']; ?></p>
+									<p class="text-muted small wrap-top"><?php echo $component['description']; ?></p>
 								</div>
 							<?php } ?>
 						</div>
@@ -39,62 +39,62 @@
 									<div class="panel-heading" data-toggle="collapse" data-target="#partial-<?php echo $partial['id']; ?>" aria-expanded="true" aria-controls="partial-<?php echo $partial['id']; ?>">
 										<h4 class="panel-title"><b><?php echo $partial['name']; ?></b></h4>
 									</div>
-									<div class="panel-body collapse in border-top partial-modules" id="partial-<?php echo $partial['id']; ?>" data-partial="<?php echo $partial['id']; ?>">
-										<?php if (!empty($partial_modules[$partial['id']])) { ?>
-											<?php $module_row = 1; ?>
-											<?php foreach ($partial_modules[$partial['id']] as $module) { ?>
-												<?php if ($partial['id'] === $module['partial']) { ?>
+									<div class="panel-body collapse in border-top layout-components" id="partial-<?php echo $partial['id']; ?>" data-partial="<?php echo $partial['id']; ?>">
+										<?php if (!empty($layout_components[$partial['id']])) { ?>
+											<?php $component_row = 1; ?>
+											<?php foreach ($layout_components[$partial['id']] as $component) { ?>
+												<?php if ($partial['id'] === $component['partial']) { ?>
 													<div class="panel panel-default panel-partial-module">
-														<div class="panel-heading handle clickable" data-toggle="collapse" data-target="#partial-<?php echo $module['partial']; ?>-module-<?php echo $module_row; ?>" aria-expanded="false" aria-controls="partial-<?php echo $module['partial']; ?>-module-<?php echo $module_row; ?>">
+														<div class="panel-heading handle clickable" data-toggle="collapse" data-target="#partial-<?php echo $component['partial']; ?>-module-<?php echo $component_row; ?>" aria-expanded="false" aria-controls="partial-<?php echo $component['partial']; ?>-module-<?php echo $component_row; ?>">
 															<i class="fa fa-arrows"></i>&nbsp;&nbsp;
-															<b><?php echo $module['name']; ?></b>
+															<b><?php echo $component['name']; ?></b>
 															<a class="pull-right" onclick="confirm('<?php echo lang('alert_warning_confirm'); ?>') ? $(this).parent().parent().remove() : false;" title="<?php echo lang('text_remove'); ?>"><i class="fa fa-times-circle text-danger"></i></a>
 														</div>
-														<div class="panel-body collapse border-top" id="partial-<?php echo $module['partial']; ?>-module-<?php echo $module_row; ?>">
-															<input type="hidden" name="modules[<?php echo $module['partial']; ?>][<?php echo $module_row; ?>][module_code]" value="<?php echo set_value('modules['.$module['partial'].']['.$module_row.'][module_code]', $module['module_code']); ?>" />
-															<input type="hidden" name="modules[<?php echo $module['partial']; ?>][<?php echo $module_row; ?>][partial]" class="module-partial" value="<?php echo set_value('modules['.$module['partial'].']['.$module_row.'][partial]', $module['partial']); ?>" />
-															<?php echo form_error('modules['.$module['partial'].']['.$module_row.'][module_code]', '<span class="text-danger small">', '</span>'); ?>
-															<?php echo form_error('modules['.$module['partial'].']['.$module_row.'][partial]', '<span class="text-danger small">', '</span>'); ?>
+														<div class="panel-body collapse border-top" id="partial-<?php echo $component['partial']; ?>-module-<?php echo $component_row; ?>">
+															<input type="hidden" name="components[<?php echo $component['partial']; ?>][<?php echo $component_row; ?>][module_code]" value="<?php echo set_value('components['.$component['partial'].']['.$component_row.'][module_code]', $component['module_code']); ?>" />
+															<input type="hidden" name="components[<?php echo $component['partial']; ?>][<?php echo $component_row; ?>][partial]" class="module-partial" value="<?php echo set_value('components['.$component['partial'].']['.$component_row.'][partial]', $component['partial']); ?>" />
+															<?php echo form_error('components['.$component['partial'].']['.$component_row.'][module_code]', '<span class="text-danger small">', '</span>'); ?>
+															<?php echo form_error('components['.$component['partial'].']['.$component_row.'][partial]', '<span class="text-danger small">', '</span>'); ?>
 															<div class="form-group">
-																<input type="text" name="modules[<?php echo $module['partial']; ?>][<?php echo $module_row; ?>][title]" id="input-module-title" class="form-control" placeholder="<?php echo lang('label_module_title'); ?>" value="<?php echo set_value('modules['.$module['partial'].']['.$module_row.'][title]', $module['title']); ?>" />
-																<?php echo form_error('modules['.$module['partial'].']['.$module_row.'][title]', '<span class="text-danger">', '</span>'); ?>
+																<input type="text" name="components[<?php echo $component['partial']; ?>][<?php echo $component_row; ?>][title]" id="input-module-title" class="form-control" placeholder="<?php echo lang('label_module_title'); ?>" value="<?php echo set_value('components['.$component['partial'].']['.$component_row.'][title]', $component['title']); ?>" />
+																<?php echo form_error('components['.$component['partial'].']['.$component_row.'][title]', '<span class="text-danger">', '</span>'); ?>
 															</div>
 															<div class="form-group">
-																<div class="btn-group btn-group-switch btn-module-fixed" data-toggle="buttons" data-partial-module="#partial-<?php echo $module['partial']; ?>-module-<?php echo $module_row; ?>">
-																	<?php if ($module['fixed'] == '1') { ?>
-																		<label class="btn btn-default"><input type="radio" name="modules[<?php echo $module['partial']; ?>][<?php echo $module_row; ?>][fixed]" value="0" <?php echo set_radio('modules['.$module['partial'].']['.$module_row.'][fixed]', '0'); ?>><b class="pull-left"><?php echo lang('label_module_fixed'); ?></b>  <?php echo lang('text_no'); ?></label>
-																		<label class="btn btn-default active"><input type="radio" name="modules[<?php echo $module['partial']; ?>][<?php echo $module_row; ?>][fixed]" value="1" <?php echo set_radio('modules['.$module['partial'].']['.$module_row.'][fixed]', '1', TRUE); ?>><b class="pull-left"><?php echo lang('label_module_fixed'); ?></b>  <?php echo lang('text_yes'); ?></label>
+																<div class="btn-group btn-group-switch btn-module-fixed" data-toggle="buttons" data-partial-module="#partial-<?php echo $component['partial']; ?>-module-<?php echo $component_row; ?>">
+																	<?php if ($component['fixed'] == '1') { ?>
+																		<label class="btn btn-default"><input type="radio" name="components[<?php echo $component['partial']; ?>][<?php echo $component_row; ?>][fixed]" value="0" <?php echo set_radio('components['.$component['partial'].']['.$component_row.'][fixed]', '0'); ?>><b class="pull-left"><?php echo lang('label_module_fixed'); ?></b>  <?php echo lang('text_no'); ?></label>
+																		<label class="btn btn-default active"><input type="radio" name="components[<?php echo $component['partial']; ?>][<?php echo $component_row; ?>][fixed]" value="1" <?php echo set_radio('components['.$component['partial'].']['.$component_row.'][fixed]', '1', TRUE); ?>><b class="pull-left"><?php echo lang('label_module_fixed'); ?></b>  <?php echo lang('text_yes'); ?></label>
 																	<?php } else { ?>
-																		<label class="btn btn-default active"><input type="radio" name="modules[<?php echo $module['partial']; ?>][<?php echo $module_row; ?>][fixed]" value="0" <?php echo set_radio('modules['.$module['partial'].']['.$module_row.'][fixed]', '0', TRUE); ?>><b class="pull-left"><?php echo lang('label_module_fixed'); ?></b>  <?php echo lang('text_no'); ?></label>
-																		<label class="btn btn-default"><input type="radio" name="modules[<?php echo $module['partial']; ?>][<?php echo $module_row; ?>][fixed]" value="1" <?php echo set_radio('modules['.$module['partial'].']['.$module_row.'][fixed]', '1'); ?>><b class="pull-left"><?php echo lang('label_module_fixed'); ?></b>  <?php echo lang('text_yes'); ?></label>
+																		<label class="btn btn-default active"><input type="radio" name="components[<?php echo $component['partial']; ?>][<?php echo $component_row; ?>][fixed]" value="0" <?php echo set_radio('components['.$component['partial'].']['.$component_row.'][fixed]', '0', TRUE); ?>><b class="pull-left"><?php echo lang('label_module_fixed'); ?></b>  <?php echo lang('text_no'); ?></label>
+																		<label class="btn btn-default"><input type="radio" name="components[<?php echo $component['partial']; ?>][<?php echo $component_row; ?>][fixed]" value="1" <?php echo set_radio('components['.$component['partial'].']['.$component_row.'][fixed]', '1'); ?>><b class="pull-left"><?php echo lang('label_module_fixed'); ?></b>  <?php echo lang('text_yes'); ?></label>
 																	<?php } ?>
 																</div>
-																<?php echo form_error('modules['.$module['partial'].']['.$module_row.'][fixed]', '<span class="text-danger">', '</span>'); ?>
+																<?php echo form_error('components['.$component['partial'].']['.$component_row.'][fixed]', '<span class="text-danger">', '</span>'); ?>
 															</div>
 															<div class="form-group module-fixed-offset">
 																<label for="input-fixed-top-offset" class="control-label"><?php echo lang('label_fixed_offset'); ?></label>
 																<div class="control-group control-group-2">
-																	<input type="text" name="modules[<?php echo $module['partial']; ?>][<?php echo $module_row; ?>][fixed_top_offset]" class="form-control" value="<?php echo set_value('modules['.$module['partial'].']['.$module_row.'][fixed_top_offset]', $module['fixed_top_offset']); ?>" />
-																	<input type="text" name="modules[<?php echo $module['partial']; ?>][<?php echo $module_row; ?>][fixed_bottom_offset]" class="form-control" value="<?php echo set_value('modules['.$module['partial'].']['.$module_row.'][fixed_bottom_offset]', $module['fixed_bottom_offset']); ?>" />
+																	<input type="text" name="components[<?php echo $component['partial']; ?>][<?php echo $component_row; ?>][fixed_top_offset]" class="form-control" value="<?php echo set_value('components['.$component['partial'].']['.$component_row.'][fixed_top_offset]', $component['fixed_top_offset']); ?>" />
+																	<input type="text" name="components[<?php echo $component['partial']; ?>][<?php echo $component_row; ?>][fixed_bottom_offset]" class="form-control" value="<?php echo set_value('components['.$component['partial'].']['.$component_row.'][fixed_bottom_offset]', $component['fixed_bottom_offset']); ?>" />
 																</div>
-																<?php echo form_error('modules['.$module['partial'].']['.$module_row.'][fixed_top_offset]', '<span class="text-danger">', '</span>'); ?>
-																<?php echo form_error('modules['.$module['partial'].']['.$module_row.'][fixed_bottom_offset]', '<span class="text-danger">', '</span>'); ?>
+																<?php echo form_error('components['.$component['partial'].']['.$component_row.'][fixed_top_offset]', '<span class="text-danger">', '</span>'); ?>
+																<?php echo form_error('components['.$component['partial'].']['.$component_row.'][fixed_bottom_offset]', '<span class="text-danger">', '</span>'); ?>
 															</div>
 															<div class="form-group">
 																<div class="btn-group btn-group-switch" data-toggle="buttons">
-																	<?php if ($module['status'] === '1') { ?>
-																		<label class="btn btn-danger"><input type="radio" name="modules[<?php echo $module['partial']; ?>][<?php echo $module_row; ?>][status]" value="0" <?php echo set_radio('modules['.$module['partial'].']['.$module_row.'][status]', '0'); ?>><b class="pull-left"><?php echo lang('label_module_status'); ?></b>  <?php echo lang('text_disabled'); ?></label>
-																		<label class="btn btn-success active"><input type="radio" name="modules[<?php echo $module['partial']; ?>][<?php echo $module_row; ?>][status]" value="1" <?php echo set_radio('modules['.$module['partial'].']['.$module_row.'][status]', '1', TRUE); ?>><b class="pull-left"><?php echo lang('label_module_status'); ?></b>  <?php echo lang('text_enabled'); ?></label>
+																	<?php if ($component['status'] === '1') { ?>
+																		<label class="btn btn-danger"><input type="radio" name="components[<?php echo $component['partial']; ?>][<?php echo $component_row; ?>][status]" value="0" <?php echo set_radio('components['.$component['partial'].']['.$component_row.'][status]', '0'); ?>><b class="pull-left"><?php echo lang('label_module_status'); ?></b>  <?php echo lang('text_disabled'); ?></label>
+																		<label class="btn btn-success active"><input type="radio" name="components[<?php echo $component['partial']; ?>][<?php echo $component_row; ?>][status]" value="1" <?php echo set_radio('components['.$component['partial'].']['.$component_row.'][status]', '1', TRUE); ?>><b class="pull-left"><?php echo lang('label_module_status'); ?></b>  <?php echo lang('text_enabled'); ?></label>
 																	<?php } else { ?>
-																		<label class="btn btn-danger active"><input type="radio" name="modules[<?php echo $module['partial']; ?>][<?php echo $module_row; ?>][status]" value="0" <?php echo set_radio('modules['.$module['partial'].']['.$module_row.'][status]', '0', TRUE); ?>><b class="pull-left"><?php echo lang('label_module_status'); ?></b>  <?php echo lang('text_disabled'); ?></label>
-																		<label class="btn btn-success"><input type="radio" name="modules[<?php echo $module['partial']; ?>][<?php echo $module_row; ?>][status]" value="1" <?php echo set_radio('modules['.$module['partial'].']['.$module_row.'][status]', '1'); ?>><b class="pull-left"><?php echo lang('label_module_status'); ?></b>  <?php echo lang('text_enabled'); ?></label>
+																		<label class="btn btn-danger active"><input type="radio" name="components[<?php echo $component['partial']; ?>][<?php echo $component_row; ?>][status]" value="0" <?php echo set_radio('components['.$component['partial'].']['.$component_row.'][status]', '0', TRUE); ?>><b class="pull-left"><?php echo lang('label_module_status'); ?></b>  <?php echo lang('text_disabled'); ?></label>
+																		<label class="btn btn-success"><input type="radio" name="components[<?php echo $component['partial']; ?>][<?php echo $component_row; ?>][status]" value="1" <?php echo set_radio('components['.$component['partial'].']['.$component_row.'][status]', '1'); ?>><b class="pull-left"><?php echo lang('label_module_status'); ?></b>  <?php echo lang('text_enabled'); ?></label>
 																	<?php } ?>
 																</div>
-																<?php echo form_error('modules['.$module['partial'].']['.$module_row.'][status]', '<span class="text-danger small">', '</span>'); ?>
+																<?php echo form_error('components['.$component['partial'].']['.$component_row.'][status]', '<span class="text-danger small">', '</span>'); ?>
 															</div>
 														</div>
 													</div>
-													<?php $module_row++; ?>
+													<?php $component_row++; ?>
 												<?php } ?>
 											<?php } ?>
 										<?php } else { ?>
@@ -198,28 +198,28 @@ function addModule(data) {
 	html += '<i class="fa fa-arrows clickable"></i>&nbsp;&nbsp;' + data.moduleTitle + '<a class="pull-right" onclick="confirm(\'<?php echo lang('alert_warning_confirm'); ?>\') ? $(this).parent().parent().remove() : false;" title="<?php echo lang('text_remove'); ?>"><i class="fa fa-times-circle text-danger"></i></a>';
 	html += '	</div>';
 	html += '	<div class="panel-body collapse border-top" id="partial-' + data.partial + '-module-' + data.moduleRow + '">';
-	html += '		<input type="hidden" name="modules[' + data.partial + '][' + data.moduleRow + '][module_code]" value="' + data.moduleCode + '" />';
-	html += '		<input type="hidden" name="modules[' + data.partial + '][' + data.moduleRow + '][partial]" class="module-partial" value="' + data.partial + '" />';
+	html += '		<input type="hidden" name="components[' + data.partial + '][' + data.moduleRow + '][module_code]" value="' + data.moduleCode + '" />';
+	html += '		<input type="hidden" name="components[' + data.partial + '][' + data.moduleRow + '][partial]" class="module-partial" value="' + data.partial + '" />';
 	html += '		<div class="form-group">';
-	html += '			<input type="text" name="modules[' + data.partial + '][' + data.moduleRow + '][title]" id="input-module-title" class="form-control" placeholder="<?php echo lang('label_module_title'); ?>" value="" />';
+	html += '			<input type="text" name="components[' + data.partial + '][' + data.moduleRow + '][title]" id="input-module-title" class="form-control" placeholder="<?php echo lang('label_module_title'); ?>" value="" />';
 	html += '		</div>';
 	html += '		<div class="form-group">';
 	html += '			<div class="btn-group btn-group-switch btn-module-fixed" data-toggle="buttons" data-partial-module="#partial-' + data.partial + '-module-' + data.moduleRow + '">';
-	html += '				<label class="btn btn-default active"><input type="radio" name="modules[' + data.partial + '][' + data.moduleRow + '][fixed]" value="0" checked="checked"><b class="pull-left"><?php echo lang('label_module_fixed'); ?></b>  <?php echo lang('text_no'); ?></label>';
-	html += '				<label class="btn btn-default"><input type="radio" name="modules[' + data.partial + '][' + data.moduleRow + '][fixed]" value="1"><b class="pull-left"><?php echo lang('label_module_fixed'); ?></b>  <?php echo lang('text_yes'); ?></label>';
+	html += '				<label class="btn btn-default active"><input type="radio" name="components[' + data.partial + '][' + data.moduleRow + '][fixed]" value="0" checked="checked"><b class="pull-left"><?php echo lang('label_module_fixed'); ?></b>  <?php echo lang('text_no'); ?></label>';
+	html += '				<label class="btn btn-default"><input type="radio" name="components[' + data.partial + '][' + data.moduleRow + '][fixed]" value="1"><b class="pull-left"><?php echo lang('label_module_fixed'); ?></b>  <?php echo lang('text_yes'); ?></label>';
 	html += '			</div>';
 	html += '		</div>';
 	html += '		<div class="form-group module-fixed-offset">';
 	html += '			<label for="input-fixed-top-offset" class="control-label"><?php echo lang('label_fixed_offset'); ?></label>';
 	html += '			<div class="control-group control-group-2">';
-	html += '				<input type="text" name="modules[' + data.partial + '][' + data.moduleRow + '][fixed_top_offset]" class="form-control" value="" />';
-	html += '				<input type="text" name="modules[' + data.partial + '][' + data.moduleRow + '][fixed_bottom_offset]" class="form-control" value="" />';
+	html += '				<input type="text" name="components[' + data.partial + '][' + data.moduleRow + '][fixed_top_offset]" class="form-control" value="" />';
+	html += '				<input type="text" name="components[' + data.partial + '][' + data.moduleRow + '][fixed_bottom_offset]" class="form-control" value="" />';
 	html += '			</div>';
 	html += '		</div>';
 	html += '		<div class="form-group">';
 	html += '			<div class="btn-group btn-group-switch" data-toggle="buttons">';
-	html += '				<label class="btn btn-danger"><input type="radio" name="modules[' + data.partial + '][' + data.moduleRow + '][status]" value="0" ><b class="pull-left"><?php echo lang('label_module_status'); ?></b>  <?php echo lang('text_disabled'); ?></label>';
-	html += '				<label class="btn btn-success active"><input type="radio" name="modules[' + data.partial + '][' + data.moduleRow + '][status]" value="1" checked="checked"><b class="pull-left"><?php echo lang('label_module_status'); ?></b>  <?php echo lang('text_enabled'); ?></label>';
+	html += '				<label class="btn btn-danger"><input type="radio" name="components[' + data.partial + '][' + data.moduleRow + '][status]" value="0" ><b class="pull-left"><?php echo lang('label_module_status'); ?></b>  <?php echo lang('text_disabled'); ?></label>';
+	html += '				<label class="btn btn-success active"><input type="radio" name="components[' + data.partial + '][' + data.moduleRow + '][status]" value="1" checked="checked"><b class="pull-left"><?php echo lang('label_module_status'); ?></b>  <?php echo lang('text_enabled'); ?></label>';
 	html += '			</div>';
 	html += '		</div>';
 	html += '	</div>';
@@ -231,9 +231,9 @@ function addModule(data) {
 }
 
 $(function () {
-	$('.partial-modules').sortable({
-		group: 'partial-modules',
-		containerSelector: '.partial-modules',
+$('.layout-components').sortable({
+		group: 'layout-components',
+		containerSelector: '.layout-components',
 		itemPath: '> .panel-body',
 		itemSelector: '.panel-partial-module',
 		placeholder: '<div class="panel-partial-module placeholder"></div>',

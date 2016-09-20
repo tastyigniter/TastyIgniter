@@ -1,5 +1,5 @@
 <?php echo get_header(); ?>
-<div class="row content">
+<div class="row content wrap-top">
 	<div class="col-md-12">
         <form role="form" id="list-form" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
             <?php if ($activities) { ?>
@@ -9,7 +9,7 @@
                             <span><?php echo $date_added; ?></span>
                         </li>
                         <?php foreach ($activities as $activity) { ?>
-                            <li class="timeline-item <?php echo $activity['status']; ?>">
+                            <li class="timeline-item <?php echo ($activity['status'] == '1') ? 'read' : 'unread'; ?>">
                                 <time class="timeline-time" datetime="">
                                     <span><?php echo $activity['time']; ?></span>
                                     <span><?php echo $activity['time_elapsed']; ?></span>
@@ -26,9 +26,9 @@
         </form>
 
         <div class="panel">
-            <div class="pagination-bar clearfix">
-                <div class="links"><?php echo $pagination['links']; ?></div>
-                <div class="info"><?php echo $pagination['info']; ?></div>
+            <div class="pagination-bar row">
+                <div class="links col-sm-8"><?php echo $pagination['links']; ?></div>
+                <div class="info col-sm-4"><?php echo $pagination['info']; ?></div>
             </div>
         </div>
 	</div>

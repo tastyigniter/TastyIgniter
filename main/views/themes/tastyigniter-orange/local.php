@@ -30,51 +30,44 @@
             ?>
 
             <div class="<?php echo $class; ?>">
-
                 <div class="row wrap-vertical">
-                    <ul id="nav-tabs" class="nav nav-tabs nav-tabs-line nav-menus">
-                        <li class="active"><a href="#local-menus" data-toggle="tab"><?php echo lang('text_tab_menu'); ?></a></li>
-                        <?php if (config_item('allow_reviews') !== '1') { ?>
-                        <li><a href="#local-reviews" data-toggle="tab"><?php echo lang('text_tab_review'); ?></a></li>
-                        <?php } ?>
-                        <li><a href="#local-information" data-toggle="tab"><?php echo lang('text_tab_info'); ?></a></li>
-                        <?php if (!empty($local_gallery)) { ?>
-                            <li><a href="#local-gallery" data-toggle="tab"><?php echo lang('text_tab_gallery'); ?></a></li>
-                        <?php } ?>
-                    </ul>
+                    <?php echo load_partial('local_tabs'); ?>
                 </div>
 
                 <div class="tab-content tab-content-line content">
-                    <div id="local-menus" class="tab-pane row wrap-all active">
+                    <?php if ($active_tab === 'menus') { ?>
+                        <div id="local-menus" class="tab-pane row wrap-all active">
 
-                        <?php echo get_partial('content_left', 'col-md-3 hidden-xs hidden-sm'); ?>
+                            <?php echo get_partial('content_left', 'col-md-3 hidden-xs hidden-sm'); ?>
 
-                        <div class="<?php echo $menu_class; ?>">
-                            <?php echo load_partial('menu_list', $menu_list); ?>
-                        </div>
-                    </div>
-
-                    <?php if (config_item('allow_reviews') !== '1') { ?>
-                    <div id="local-reviews" class="tab-pane row wrap-all">
-                        <div class="col-md-12">
-                            <div class="heading-section">
-                                <h4><?php echo sprintf(lang('text_review_heading'), $location_name); ?></h4>
-                                <span class="under-heading"></span>
+                            <div class="<?php echo $menu_class; ?>">
+                                <?php echo load_partial('menu_list', $menu_list); ?>
                             </div>
                         </div>
 
-                        <?php echo load_partial('local_reviews', $local_reviews); ?>
-                    </div>
-                    <?php } ?>
+                    <?php } else if ($active_tab === 'reviews' AND config_item('allow_reviews') !== '1') { ?>
+                        <div id="local-reviews" class="tab-pane row wrap-all active">
+                            <div class="col-md-12">
+                                <div class="heading-section">
+                                    <h4><?php echo sprintf(lang('text_review_heading'), $local_reviews['location_name']); ?></h4>
+                                    <span class="under-heading"></span>
+                                </div>
+                            </div>
 
-                    <div id="local-information" class="tab-pane row wrap-all">
-                        <?php echo load_partial('local_info', $local_info); ?>
-                    </div>
+                            <?php echo load_partial('local_reviews', $local_reviews); ?>
+                        </div>
+                    <?php } else if ($active_tab === 'info') { ?>
 
-                    <?php if (!empty($local_gallery)) { ?>
-                        <div id="local-gallery" class="tab-pane row wrap-all">
+                        <div id="local-information" class="tab-pane row wrap-all active">
+                            <?php echo load_partial('local_info', $local_info); ?>
+                        </div>
+
+                    <?php } else if ($active_tab === 'gallery' AND !empty($local_gallery)) { ?>
+
+                        <div id="local-gallery" class="tab-pane row wrap-all active">
                             <?php echo load_partial('local_gallery', $local_gallery); ?>
                         </div>
+
                     <?php } ?>
                 </div>
             </div>

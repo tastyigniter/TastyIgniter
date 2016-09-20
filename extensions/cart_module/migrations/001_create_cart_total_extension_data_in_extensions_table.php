@@ -90,4 +90,4 @@ class Migration_create_cart_total_extension_data_in_extensions_table extends CI_
 }
 
 /* End of file 001_create_cart_total_extension_data_in_extensions_table.php */
-/* Location: ./setup/migrations/001_create_cart_total_extension_data_in_extensions_table.php */
+/* Location: ./extensions/cart_module/migrations/001_create_cart_total_extension_data_in_extensions_table.php */

@@ -5,16 +5,13 @@
             <div class="panel-heading">
                 <ul id="nav-tabs" class="nav nav-tabs">
                     <?php foreach ($types as $key => $value) { ?>
-                        <?php if ($key === $filter_type) { ?>
+                        <?php if ($key == $filter_type) { ?>
                             <li class="active"><a href="<?php echo $value['url']; ?>"><?php echo $value['title']; ?> &nbsp;<span class="badge"><?php echo $value['badge']; ?></span></a></li>
                         <?php } else { ?>
                             <li><a href="<?php echo $value['url']; ?>"><?php echo $value['title']; ?> &nbsp;<span class="badge"><?php echo $value['badge']; ?></span></a></li>
                         <?php } ?>
                     <?php } ?>
                 </ul>
-                <div class="pull-right">
-                    <button class="btn btn-filter btn-xs"><i class="fa fa-filter"></i></button>
-                </div>
             </div>
 
             <div class="panel-body panel-filter">
@@ -57,7 +54,7 @@
                                         <select name="filter_date" class="form-control input-sm">
                                             <option value=""><?php echo lang('text_filter_date'); ?></option>
                                             <?php foreach ($online_dates as $key => $value) { ?>
-                                                <?php if ($key === $filter_date) { ?>
+                                                <?php if ($key == $filter_date) { ?>
                                                     <option value="<?php echo $key; ?>" <?php echo set_select('filter_date', $key, TRUE); ?> ><?php echo $value; ?></option>
                                                 <?php } else { ?>
                                                     <option value="<?php echo $key; ?>" <?php echo set_select('filter_date', $key); ?> ><?php echo $value; ?></option>
@@ -87,7 +84,7 @@
 <!--                            <th class="text-center"><?php echo lang('column_agent'); ?></th>-->
                             <th style="width:22%;"><?php echo lang('column_request_uri'); ?></th>
                             <th style="width:22%;"><?php echo lang('column_referrer_url'); ?></th>
-                            <th><a class="sort" href="<?php echo $sort_date; ?>"><?php echo lang('column_last_activity'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'date_added') ? $order_by_active : $order_by; ?>"></i></a></th>
+                            <th><a class="sort" href="<?php echo $sort_date_added; ?>"><?php echo lang('column_last_activity'); ?><i class="fa fa-sort-<?php echo ($sort_by == 'date_added') ? $order_by_active : $order_by; ?>"></i></a></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -115,9 +112,9 @@
                 </div>
             </form>
 
-            <div class="pagination-bar clearfix">
-                <div class="links"><?php echo $pagination['links']; ?></div>
-                <div class="info"><?php echo $pagination['info']; ?></div>
+            <div class="pagination-bar row">
+                <div class="links col-sm-8"><?php echo $pagination['links']; ?></div>
+                <div class="info col-sm-4"><?php echo $pagination['info']; ?></div>
             </div>
         </div>
 	</div>

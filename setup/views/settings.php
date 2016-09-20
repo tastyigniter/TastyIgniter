@@ -1,6 +1,23 @@
 <form role="form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>" >
-	<h4 class="text-center"><?php echo lang('text_restaurant_details'); ?></h4>
+	<h5><?php echo lang('text_restaurant_details'); ?></h5>
 	<hr>
+	<div class="form-group">
+		<label for="input-site-location-mode" class="col-sm-3 control-label"><?php echo lang('label_site_location_mode'); ?></label>
+		<div class="col-sm-9">
+			<div class="btn-group" data-toggle="buttons">
+				<label class="btn btn-default <?php echo ($site_location_mode === 'single') ? 'active' : '' ?>">
+					<input type="radio" name="site_location_mode" value="single" <?php echo set_radio('site_location_mode', 'single', ($site_location_mode === 'single')); ?>>
+					<?php echo lang('text_single_location'); ?>
+				</label>
+				<label class="btn btn-default <?php echo ($site_location_mode !== 'single') ? 'active' : '' ?>">
+					<input type="radio" name="site_location_mode" value="multiple" <?php echo set_radio('site_location_mode', 'multiple', ($site_location_mode !== 'single')); ?>>
+					<?php echo lang('text_multi_location'); ?>
+				</label>
+			</div>
+			<span class="help-block"><?php echo lang('help_site_location_mode'); ?></span>
+			<?php echo form_error('site_location_mode', '<span class="text-danger">', '</span>'); ?>
+		</div>
+	</div>
 	<div class="form-group">
 		<label for="input-site-name" class="col-sm-3 control-label"><?php echo lang('label_site_name'); ?></label>
 		<div class="col-sm-9">
@@ -17,7 +34,7 @@
 	</div>
 	<br />
 
-	<h4 class="text-center"><?php echo lang('text_admin_details'); ?></h4>
+	<h5><?php echo lang('text_admin_details'); ?></h5>
 	<hr>
 	<div class="form-group">
 		<label for="input-staff-name" class="col-sm-3 control-label"><?php echo lang('label_staff_name'); ?></label>
@@ -50,7 +67,16 @@
 	<div class="form-group">
 		<label for="input-demo-data" class="col-sm-3 control-label"><?php echo lang('label_demo_data'); ?></label>
 		<div class="col-sm-9">
-			<input type="checkbox" name="demo_data" value="1">
+			<div class="btn-group" data-toggle="buttons">
+				<label class="btn btn-default <?php echo ($demo_data != '1') ? 'active' : '' ?>">
+					<input type="radio" name="demo_data" value="0" <?php echo set_radio('demo_data', '0', ($demo_data != '1')); ?>>
+					<?php echo lang('text_no'); ?>
+				</label>
+				<label class="btn btn-default <?php echo ($demo_data == '1') ? 'active' : '' ?>">
+					<input type="radio" name="demo_data" value="1" <?php echo set_radio('demo_data', '1', ($demo_data == '1')); ?>>
+					<?php echo lang('text_yes'); ?>
+				</label>
+			</div>
 			<?php echo form_error('demo_data', '<span class="text-danger">', '</span>'); ?>
 		</div>
 	</div>

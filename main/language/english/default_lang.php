@@ -12,7 +12,7 @@ $lang['text_information'] 			                = 'Information';
 $lang['text_follow_us'] 			                = 'Follow us on:';
 
 $lang['menu_home'] 		                            = 'Home';
-$lang['menu_menu'] 		                            = 'Menu';
+$lang['menu_menu'] 		                            = 'View Menu';
 $lang['menu_reservation'] 		                    = 'Reservation';
 $lang['menu_login'] 		                        = 'Login';
 $lang['menu_logout'] 		                        = 'Logout';

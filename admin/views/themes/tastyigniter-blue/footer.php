@@ -39,6 +39,13 @@ function saveClose() {
 	$('#edit-form').append('<input type="hidden" name="save_close" value="1" />');
 	$('#edit-form').submit();
 }
+
+function filterList() {
+	if ($('#per-page-limit').val()) {
+		$('#filter-form').append('<input type="hidden" name="limit" value="' + $('#per-page-limit').val() + '" />');
+	}
+	$('#filter-form').submit();
+}
 </script>
 </body>
 </html>

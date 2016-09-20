@@ -2,9 +2,6 @@
 <div class="row content">
 	<div class="col-md-12">
 		<div class="panel panel-default panel-table">
-			<div class="panel-heading">
-				<h3 class="panel-title"><?php echo lang('text_list'); ?></h3>
-			</div>
 			<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
 				<table class="table table-striped table-border table-sortable">
 					<thead>
@@ -25,7 +22,7 @@
 									<?php echo form_error('ratings['.$table_row.']', '<span class="text-danger">', '</span>'); ?>
 								</td>
 							</tr>
-						<?php $table_row++; ?>
+							<?php $table_row++; ?>
 						<?php } ?>
 					</tbody>
 					<tfoot>
@@ -45,7 +42,7 @@ var table_row = <?php echo $table_row; ?>;
 
 function addRating() {
 	html  = '<tr id="table-row' + table_row + '">';
-    html += '	<td class="action action-one handle"><i class="fa fa-sort"></i></td>';
+    html += '	<td class="action action-one text-center handle"><i class="fa fa-sort"></i></td>';
 	html += '	<td class="action action-one handle"><a class="btn btn-danger" onclick="confirm(\'<?php echo lang('alert_warning_confirm'); ?>\') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a></td>';
 	html += '	<td><input type="text" name="ratings[' + table_row + ']" class="form-control" value="<?php echo set_value("ratings[' + table_row + ']"); ?>" /></td>';
 	html += '</tr>';

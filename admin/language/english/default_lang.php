@@ -34,6 +34,7 @@ $lang['button_edit'] 		                = 'Edit';
 $lang['button_save'] 		                = '<i class="fa fa-save"></i> Save';
 $lang['button_save_close'] 		            = '<i class="fa fa-save"></i> Save & Close';
 $lang['button_icon_back'] 		            = '<i class="fa fa-angle-double-left"></i>';
+$lang['button_icon_filter'] 		        = '<i class="fa fa-filter"></i>';
 $lang['button_close'] 		                = 'Close';
 $lang['button_option'] 		                = 'Options';
 
@@ -45,7 +46,9 @@ $lang['alert_warning_confirm'] 		        = 'This cannot be undone! Are you sure 
 $lang['alert_rates_updated'] 		        = 'Currency rates has been updated automatically';
 $lang['alert_user_not_logged_in'] 		    = 'You must be logged in to access that page.';
 $lang['alert_user_restricted'] 		        = 'Warning: You do not have the right permission to <b>%s</b> [%s] context, please contact system administrator.';
+$lang['alert_location_restricted'] 		    = 'Warning: You do not have the right permission to <b>%s</b> [%s] context outside your location, please contact system administrator.';
 
+$lang['text_locations'] 		        	= 'Locations&nbsp;&nbsp;&nbsp;<span class="badge">%s</span>';
 $lang['text_message_count'] 		        = 'You have %s messages';
 $lang['text_activity_count'] 		        = 'Recent activities';
 $lang['text_see_all_message'] 		        = 'See all messages';

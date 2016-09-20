@@ -119,9 +119,8 @@ class Authorize_net_aim_model extends TI_Model {
 		return $response;
 	}
 
-	private function sendToAuthorizeNet($data = array()) {
-		$payment = $this->extension->getPayment('authorize_net_aim');
-		$settings = $payment['ext_data'];
+	protected function sendToAuthorizeNet($data = array()) {
+		$settings = $this->Extensions_model->getSettings('authorize_net_aim');
 
 		$data['x_login']            = (isset($settings['api_login_id'])) ? $settings['api_login_id'] : '';
 		$data['x_tran_key']         = (isset($settings['transaction_key'])) ? $settings['transaction_key'] : '';

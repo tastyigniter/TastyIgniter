@@ -9,22 +9,24 @@
 
 		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo $_action; ?>">
 			<div class="tab-content">
-				<div id="general" class="tab-pane row wrap-all active">
-					<div class="form-group">
-						<label for="input-location" class="col-sm-3 control-label"><?php echo lang('label_location'); ?></label>
-						<div class="col-sm-5">
-							<select name="location_id" id="input-location" class="form-control">
-								<?php foreach ($locations as $location) { ?>
-								<?php if ($location['location_id'] === $location_id) { ?>
-									<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('staff_location_id', $location['location_id'], TRUE); ?> ><?php echo $location['location_name']; ?></option>
-								<?php } else { ?>
-									<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('staff_location_id', $location['location_id']); ?> ><?php echo $location['location_name']; ?></option>
-								<?php } ?>
-								<?php } ?>
-							</select>
-							<?php echo form_error('location_id', '<span class="text-danger">', '</span>'); ?>
+				<div id="general" class="tab-pane active">
+					<?php if (!is_single_location()) { ?>
+						<div class="form-group">
+							<label for="input-location" class="col-sm-3 control-label"><?php echo lang('label_location'); ?></label>
+							<div class="col-sm-5">
+								<select name="location_id" id="input-location" class="form-control">
+									<?php foreach ($locations as $key => $value) { ?>
+									<?php if ($key == $location_id) { ?>
+										<option value="<?php echo $key; ?>" <?php echo set_select('staff_location_id', $key, TRUE); ?> ><?php echo $value; ?></option>
+									<?php } else { ?>
+										<option value="<?php echo $key; ?>" <?php echo set_select('staff_location_id', $key); ?> ><?php echo $value; ?></option>
+									<?php } ?>
+									<?php } ?>
+								</select>
+								<?php echo form_error('location_id', '<span class="text-danger">', '</span>'); ?>
+							</div>
 						</div>
-					</div>
+					<?php } ?>
 					<div class="form-group">
 						<label for="input-sale-type" class="col-sm-3 control-label"><?php echo lang('label_sale_type'); ?></label>
 						<div class="col-sm-5">

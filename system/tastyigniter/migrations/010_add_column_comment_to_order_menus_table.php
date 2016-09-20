@@ -3,7 +3,7 @@
 /**
  * Add column comment to the order_menus table
  */
-class Migration_add_column_comment_to_order_menus_table extends CI_Migration {
+class Migration_add_column_comment_to_order_menus_table extends TI_Migration {
 
     public function up() {
         $this->dbforge->add_column('order_menus', array('comment TEXT NOT NULL'));
@@ -15,4 +15,4 @@ class Migration_add_column_comment_to_order_menus_table extends CI_Migration {
 }
 
 /* End of file 010_add_column_comment_to_order_menus_table.php */
-/* Location: ./setup/migrations/010_add_column_comment_to_order_menus_table.php */
+/* Location: ./system/tastyigniter/migrations/010_add_column_comment_to_order_menus_table.php */

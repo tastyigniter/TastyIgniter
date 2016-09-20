@@ -3,7 +3,7 @@
 /**
  * Add order_date column to the orders table
  */
-class Migration_change_order_time_column_to_date_time_in_orders_table extends CI_Migration {
+class Migration_change_order_time_column_to_date_time_in_orders_table extends TI_Migration {
 
 	public function up() {
 		$this->dbforge->add_column('orders', array('order_date DATE NOT NULL AFTER order_time'));
@@ -25,4 +25,4 @@ class Migration_change_order_time_column_to_date_time_in_orders_table extends CI
 }
 
 /* End of file 026_change_order_time_column_to_date_time_in_orders_table.php */
-/* Location: ./setup/migrations/026_change_order_time_column_to_date_time_in_orders_table.php */
+/* Location: ./system/tastyigniter/migrations/026_change_order_time_column_to_date_time_in_orders_table.php */

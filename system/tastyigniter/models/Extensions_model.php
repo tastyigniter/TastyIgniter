@@ -1,4 +1,4 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct access allowed');
 
 /**
  * TastyIgniter
@@ -21,84 +21,95 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Extensions_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Extensions_model extends TI_Model {
+class Extensions_model extends TI_Model
+{
+	/**
+	 * @var string The database table name
+	 */
+	protected $table_name = 'extensions';
 
-	private $extensions = array();
+	/**
+	 * @var string The database table primary key
+	 */
+	protected $primary_key = 'extension_id';
 
-	private function extensions() {
-		$extensions = array();
+	/**
+	 * @var array The database records
+	 */
+	protected $extensions = array();
 
-		$installed_extensions = $this->getInstalledExtensions(NULL, FALSE);
-		$extension_paths = $this->fetchExtensionsPath();
+	/**
+	 * Return all extensions and build extension array
+	 *
+	 * @return array
+	 */
+	public function find_all_by_path() {
+		$result = $db_extensions = array();
+		foreach ($this->find_all() as $row) {
+			if (preg_match('/\s/', $row['name']) > 0 OR !$this->extensionExists($row['name'])) {
+				$this->uninstall($row['name']);
+				continue;
+			}
 
-		foreach ($extension_paths as $extension_path) {
-			$extension = array();
+			$row['title'] = !empty($row['title']) ? $row['title'] : '';
+			$row['ext_data'] = ($row['serialized'] === '1' AND !empty($row['data'])) ? unserialize($row['data']) : array();
+			unset($row['data']);
 
-			$basename = basename($extension_path);
-
-			$installed_ext = isset($installed_extensions[$basename]) ? $installed_extensions[$basename] : array();
-
-			$config = $this->extension->loadConfig($basename, FALSE, TRUE);
-
-			$extension['extension_id'] = isset($installed_ext['extension_id']) ? $installed_ext['extension_id'] : 0;
-			$extension['name'] = $basename;
-			$extension['title'] = ( ! empty($installed_ext['title'])) ? $installed_ext['title'] : ucwords(str_replace('_module', '', $basename));
-
-			$extension_meta = $this->extension->getMeta($basename, $config);
-			$extension = array_merge($extension, $extension_meta);
-
-			$extension['ext_data'] = isset($installed_ext['ext_data']) ? $installed_ext['ext_data'] : '';
-
-			$extension['settings'] = ! empty($extension_meta['settings'])
-			AND file_exists($extension_path . '/controllers/admin_' . $basename . '.php') ? TRUE : FALSE;
-
-			$extension['config'] = $config;
-
-			$extension['meta'] = ( ! empty($extension_meta) AND is_array($extension_meta)) ? $extension_meta : array();
-
-			$extension['installed'] = ( ! empty($installed_ext) AND $installed_ext['extension_id'] > 0) ? TRUE : FALSE;
-
-			$extension['status'] = (isset($installed_ext['status']) AND $installed_ext['status'] === '1') ? '1' : '0';
-
-			$extension_type = ! empty($extension_meta['type']) ? $extension_meta['type'] : 'module';
-			$extensions[$extension_type][$basename] = $extension;
+			$db_extensions[$row['name']] = $row;
 		}
 
-		return $extensions;
+		foreach (Modules::paths() as $code => $path) {
+			if (!($_extension = Modules::find_extension($code))) continue;
+
+			$db_extension = isset($db_extensions[$code]) ? $db_extensions[$code] : array();
+
+			$extension = $_extension->extensionMeta();
+			$result[$code] = array_merge($extension, array(
+				'code'         => $code,
+				'extension_id' => isset($db_extension['extension_id']) ? $db_extension['extension_id'] : 0,
+				'ext_data'     => isset($db_extension['ext_data']) ? $db_extension['ext_data'] : '',
+				'settings'     => $_extension->registerSettings(),
+				'installed'    => (!empty($db_extension) AND !Modules::is_disabled($code)) ? TRUE : FALSE,
+				'status'       => (isset($db_extension['status']) AND $db_extension['status'] === '1') ? '1' : '0',
+			));
+		}
+
+		return $result;
 	}
 
+	/**
+	 * List all extensions matching the filter
+	 *
+	 * @param array $filter
+	 *
+	 * @return array
+	 */
 	public function getList($filter = array()) {
 		$result = array();
 
-		foreach ($this->extensions() as $type => $extensions) {
-
-			if ( ! empty($filter['filter_type']) AND $type !== $filter['filter_type']) continue;
-
-			foreach ($extensions as $name => $ext) {
-				// filter extensions by enabled only
-				if ( ! empty($filter['filter_status']) AND $ext['status'] !== $filter['filter_status']) continue;
-
-				if ( ! empty($filter['filter_installed']) AND $ext['installed'] !== TRUE) continue;
-
-				$result[$name] = $ext;
-			}
+		if (empty($this->extensions)) {
+			$this->extensions = $this->filter($filter)->find_all_by_path();
 		}
 
-		if ( ! empty($filter['sort_by'])) {
+		foreach ($this->extensions as $code => $extension) {
+			// filter extensions by enabled only
+			if (isset($filter['filter_status']) AND $filter['filter_status'] !== '' AND $extension['status'] !== $filter['filter_status']) continue;
+
+			if (!empty($filter['filter_installed']) AND $extension['installed'] !== TRUE) continue;
+
+			$result[$code] = $extension;
+		}
+
+		if (!empty($filter['sort_by'])) {
 			switch ($filter['sort_by']) {
 				case 'name':
 					usort($result, function ($x, $y) {
 						return $x['name'] > $y['name'];
 					});
 					break;
-				case 'type':
-					usort($result, function ($x, $y) {
-						return $x['type'] > $y['type'];
-					});
-					break;
 			}
 
-			if ( ! empty($filter['order_by']) AND $filter['order_by'] === 'DESC') {
+			if (!empty($filter['order_by']) AND $filter['order_by'] === 'DESC') {
 				$result = array_reverse($result);
 
 				return $result;
@@ -108,187 +119,103 @@ class Extensions_model extends TI_Model {
 		return $result;
 	}
 
-	public function getExtension($name = '', $filter = array('filter_status' => '1')) {
+	public function filter($filter = array()) {
+		if (!isset($filter['filter_type']) OR is_string($filter['filter_type'])) {
+			$filter['filter_type'] = array('module', 'payment', 'widget');
+		}
+
+		if (!empty($filter['filter_type']) AND is_array($filter['filter_type'])) {
+			$this->where_in('type', $filter['filter_type']);
+		}
+
+		return $this;
+	}
+
+	public function paginate($filter = array(), $base_url = NULL) {
+		$result = new stdClass;
+		$result->pagination = $result->list = array();
+
+		$result->list = $this->getList($filter);
+
+		if (isset($filter['limit']) AND isset($filter['page'])) {
+			$result->list = array_slice($result->list, ($filter['page'] - 1) * $filter['page'], $filter['limit']);
+		}
+
+		$config['base_url'] = $this->get_paginate_url();
+		$config['total_rows'] = count($result->list);
+		$config['per_page'] = isset($filter['limit']) ? $filter['limit'] : $this->config->item('page_limit');
+
+		$result->pagination = $this->paginate_list($config);
+
+		return $result;
+	}
+
+	/**
+	 * Return all extensions MATCHING filter
+	 *
+	 * @param array $filter
+	 *
+	 * @return array
+	 */
+	public function getExtensions($filter = array()) {
+		return $this->getList($filter);
+	}
+
+	/**
+	 * Find a single extension by code
+	 *
+	 * @param string $code
+	 * @param array  $filter
+	 *
+	 * @return array
+	 */
+	public function getExtension($code = '', $filter = array('filter_status' => '1')) {
 		$result = array();
 
-		if ( ! empty($name)) {
+		if (!empty($code)) {
 			$extensions = $this->getList($filter);
-
-			if ($extensions AND is_array($extensions)) {
-				if (isset($extensions[$name]) AND is_array($extensions[$name])) {
-					$result = $extensions[$name];
-				}
+			if (!empty($extensions[$code]) AND is_array($extensions[$code])) {
+				$result = $extensions[$code];
 			}
 		}
 
 		return $result;
 	}
 
-	public function getInstalledExtensions($type = '', $is_enabled = TRUE) {
-
-		if (empty($this->extensions)) {
-			$this->db->from('extensions');
-
-			$query = $this->db->get();
-			$this->extensions = $query->result_array();
-		}
-
-		$type = empty($type) ? array('module', 'payment', 'widget') : array($type);
-
+	/**
+	 * Find a single extension by code
+	 *
+	 * @param string $code
+	 *
+	 * @return array
+	 */
+	public function getSettings($code = '') {
 		$result = array();
 
-		if (!empty($this->extensions)) {
-			foreach ($this->extensions as $name => $row) {
-				if (preg_match('/\s/', $row['name']) > 0 OR ! $this->extensionExists($row['name'])) {
-					$this->uninstall($row['type'], $row['name']);
-					continue;
-				}
-
-				if ( ! in_array($row['type'], $type)) continue;
-
-				if ($is_enabled === TRUE AND $row['status'] !== '1') continue;
-
-				$row['ext_data'] = ($row['serialized'] === '1' AND ! empty($row['data'])) ? unserialize($row['data']) : array();
-				unset($row['data']);
-				$row['title'] = ! empty($row['title']) ? $row['title'] : ucwords(str_replace('_module', '',
-																							 $row['name']));
-				$result[$row['name']] = $row;
+		if (!empty($code)) {
+			$extensions = $this->getList();
+			if (!empty($extensions[$code]['ext_data']) AND is_array($extensions[$code]['ext_data'])) {
+				$result = $extensions[$code]['ext_data'];
 			}
 		}
 
 		return $result;
 	}
 
-	public function getModules() {
-		return $this->getInstalledExtensions('module', TRUE);
-	}
-
-	public function getPayments() {
-		return $this->getInstalledExtensions('payment', TRUE);
-	}
-
-	public function getModule($name = '') {
-		$result = array();
-
-		if ( ! empty($name) AND is_string($name)) {
-			$extensions = $this->getInstalledExtensions('module', TRUE);
-
-			if ($extensions AND is_array($extensions)) {
-				if (isset($extensions[$name]) AND is_array($extensions[$name])) {
-					$result = $extensions[$name];
-				}
-			}
-		}
-
-		return $result;
-	}
-
-	public function getPayment($name = '') {
-		$result = array();
-
-		if ( ! empty($name) AND is_string($name)) {
-			$extensions = $this->getInstalledExtensions('payment', TRUE);
-
-			if ($extensions AND is_array($extensions)) {
-				if (isset($extensions[$name]) AND is_array($extensions[$name])) {
-					$result = $extensions[$name];
-				}
-			}
-		}
-
-		return $result;
-	}
-
-	public function saveExtensionData($name = NULL, $data = array(), $log_activity = FALSE) {
-		if (empty($data)) return FALSE;
-
-		! isset($data['ext_data']) OR $data = $data['ext_data'];
-
-		return $this->updateExtension(FALSE, $name, $data, $log_activity);
-	}
-
-	public function updateExtension($type = 'module', $name = NULL, $data = array(), $log_activity = TRUE) {
-		if ($name === NULL) return FALSE;
-
-		$name = url_title(strtolower($name), '-');
-
-		! isset($data['data']) OR $data = $data['data'];
-		unset($data['save_close']);
-
-		$query = FALSE;
-
-		if ($this->extensionExists($name)) {
-			$config = $this->extension->loadConfig($name, FALSE, TRUE);
-			$meta = $this->extension->getMeta($name, $config);
-
-			if ($type === FALSE) $type = $meta['type'];
-
-			if (isset($meta['type'], $meta['title']) AND $type === $meta['type']) {
-				$this->db->set('data', (is_array($data)) ? serialize($data) : $data);
-
-				$this->db->set('serialized', '1');
-
-				$this->db->where('type', $meta['type']);
-				$this->db->where('name', $name);
-
-				$query = $this->db->update('extensions');
-
-				if ($log_activity) {
-					log_activity($this->user->getStaffId(), 'updated', 'extensions', get_activity_message('activity_custom_no_link', array('{staff}', '{action}', '{context}',
-						'{item}'), array($this->user->getStaffName(), 'updated', $meta['type'].' extension', $meta['title'])
-					));
-				}
-			}
-		}
-
-		return $query;
-	}
-
-	public function extensionExists($extension_name) {
-
-		if ( ! empty($extension_name) AND $modules_locations = $this->config->item('modules_locations')) {
-			foreach ($modules_locations as $location => $offset) {
-				if (is_dir($location . $extension_name)) {
-					return TRUE;
-				}
-			}
-		}
-
-		return FALSE;
-	}
-
-	public function extractExtension($file = array(), $module = NULL) {
-		if (isset($file['tmp_name']) AND class_exists('ZipArchive')) {
-
-			$zip = new ZipArchive;
-
-			chmod($file['tmp_name'], DIR_READ_MODE);
-
-			$EXTPATH = ROOTPATH . EXTPATH;
-
-			if ($zip->open($file['tmp_name']) === TRUE) {
-				$extension_dir = $zip->getNameIndex(0);
-
-				if (preg_match('/\s/', $extension_dir) OR file_exists($EXTPATH .'/'. $extension_dir)) {
-					return $this->lang->line('error_extension_exists');
-				}
-
-				$zip->extractTo($EXTPATH);
-				$zip->close();
-
-				return TRUE;
-			}
-		}
-
-		return FALSE;
-	}
-
-	public function getExtensionFiles($extension_name = NULL, $files = array()) {
-		if ( ! is_dir(ROOTPATH . EXTPATH . $extension_name)) {
+	/**
+	 * Return all files within an extension folder
+	 *
+	 * @param string $code
+	 * @param array  $files
+	 *
+	 * @return array|null
+	 */
+	public function getExtensionFiles($code = NULL, $files = array()) {
+		if (!is_dir(ROOTPATH . EXTPATH . $code)) {
 			return NULL;
 		}
 
-		foreach (glob(ROOTPATH . EXTPATH . $extension_name . '/*') as $filepath) {
+		foreach (glob(ROOTPATH . EXTPATH . $code . '/*') as $filepath) {
 			$filename = str_replace(ROOTPATH . EXTPATH, '', $filepath);
 
 			if (is_dir($filepath)) {
@@ -301,73 +228,243 @@ class Extensions_model extends TI_Model {
 		return $files;
 	}
 
-	public function install($type = '', $name = '', $config = NULL) {
+	/**
+	 * Save extension permission to database
+	 *
+	 * @param array $permissions
+	 *
+	 * @return bool TRUE on success, FALSE on failure
+	 */
+	public function savePermissions($permissions) {
+		if (empty($permissions)) return FALSE;
 
-		if ( ! empty($type) AND ! empty($name)) {
-			$name = url_title(strtolower($name), '-');
+		$this->load->model('Permissions_model');
+		$permissions = isset($permissions[0]) ? $permissions : array($permissions);
 
-			if ($this->extensionExists($name) AND is_array($config)) {
-				$extension_id = NULL;
+		foreach ($permissions as $name => $permission) {
+			if (strstr($name, '.') AND !empty($permission['action'])) {
+				$permission['name'] = $name;
+				$permission['status'] = '1';
+				$this->Permissions_model->savePermission(NULL, $permission);
 
-				$title = !empty($config['extension_meta']['title']) ? $config['extension_meta']['title'] : NULL;
-
-				$query = $this->db->where('type', $type)->where('name', $name)->get('extensions');
-
-				if ($query->num_rows() === 1) {
-					$row = $query->row_array();
-					$this->db->set('title', $title);
-					$this->db->set('status', '1');
-					$this->db->where('type', $type);
-					$this->db->where('name', $name);
-					if ($query = $this->db->update('extensions')) $extension_id = $row['extension_id'];
-				} else {
-					$this->db->set('title', $title);
-					$this->db->set('status', '1');
-					$this->db->set('type', $type);
-					$this->db->set('name', $name);
-					if ($query = $this->db->insert('extensions')) $extension_id = $this->db->insert_id();
-				}
-
-				if ($query === TRUE) {
-					if ( ! empty($config['extension_permission']) AND ! empty($config['extension_permission']['name'])) {
-						$config['extension_permission']['status'] = '1';
-						$this->Permissions_model->savePermission(NULL, $config['extension_permission']);
-
-						$this->load->model('Staff_groups_model');
-						$this->Staff_groups_model->assignPermissionRule($this->user->getStaffGroupId(), $config['extension_permission']);
-					}
-
-					// set extension migration to the latest version
-					$this->extension->runMigration($name);
-				}
-
-				return $extension_id;
+				$this->load->model('Staff_groups_model');
+				$this->Staff_groups_model->assignPermissionRule($this->user->getStaffGroupId(), $permission);
 			}
+		}
+	}
+
+	/**
+	 * Delete extension permission from database
+	 *
+	 * @param array $permissions
+	 *
+	 * @return bool TRUE on success, FALSE on failure
+	 */
+	public function deletePermissions($permissions) {
+		if (empty($permissions)) return FALSE;
+
+		$this->load->model('Permissions_model');
+		$permissions = isset($permissions[0]) ? $permissions : array($permissions);
+		foreach ($permissions as $name => $permission) {
+			if (strstr($name, '.') AND !empty($permission['action'])) {
+				$this->Permissions_model->deletePermissionByName($permission['name']);
+			}
+		}
+	}
+
+	/**
+	 * Create a new or update existing extension
+	 *
+	 * @param null  $code
+	 * @param array $data
+	 * @param bool  $log_activity
+	 *
+	 * @return bool TRUE on success, FALSE on failure
+	 */
+	public function saveExtensionData($code = NULL, $data = array(), $log_activity = FALSE) {
+		if (empty($data)) return FALSE;
+
+		!isset($data['ext_data']) OR $data = $data['ext_data'];
+
+		return $this->updateSettings($code, $data, $log_activity);
+	}
+
+	/**
+	 * Update existing extension
+	 *
+	 * @deprecated method, use updateSettings instead
+	 *
+	 * @param string $type
+	 * @param null   $code
+	 * @param array  $data
+	 * @param bool   $log_activity
+	 *
+	 * @return bool TRUE on success, FALSE on failure
+	 */
+	public function updateExtension($type = 'module', $code = NULL, $data = array(), $log_activity = TRUE) {
+		return $this->updateSettings($code, $data, $log_activity);
+	}
+
+	/**
+	 * Update extension settings
+	 *
+	 * @param null  $code
+	 * @param array $data
+	 * @param bool  $log_activity
+	 *
+	 * @return bool TRUE on success, FALSE on failure
+	 */
+	public function updateSettings($code = NULL, $data = array(), $log_activity = TRUE) {
+		$code = Modules::check_name($code);
+
+		if ($code === NULL) return FALSE;
+
+		!isset($data['data']) OR $data = $data['data'];
+		unset($data['save_close']);
+
+		$query = FALSE;
+
+		if ($this->extensionExists($code)) {
+			$extension = Modules::find_extension($code);
+
+			if (!$extension instanceof Base_Extension) {
+				return $query;
+			}
+
+			$this->where_in('type', array('module', 'payment'));
+			$query = $this->update(array('name' => $code), array(
+				'data'       => (is_array($data)) ? serialize($data) : $data,
+				'serialized' => '1',
+				'type'       => 'module',
+			));
+
+			if ($log_activity) {
+				$meta = $extension->extensionMeta();
+				log_activity($this->user->getStaffId(), 'updated', 'extensions', get_activity_message('activity_custom_no_link',
+					array('{staff}', '{action}', '{context}', '{item}'),
+					array($this->user->getStaffName(), 'updated', 'extension', $meta['name'])
+				));
+			}
+		}
+
+		return $query;
+	}
+
+	/**
+	 * Update installed extensions config value
+	 *
+	 * @param string $extension
+	 * @param bool $install
+	 *
+	 * @return bool TRUE on success, FALSE on failure
+	 */
+	public function updateInstalledExtensions($extension = NULL, $install = TRUE) {
+		$installed_extensions = $this->config->item('installed_extensions');
+
+		if (empty($installed_extensions) OR !is_array($installed_extensions)) {
+			$this->load->model('Extensions_model');
+			$this->Extensions_model->select('name')->where_in('type', array('module', 'payment'))->where('status', '1');
+			if ($installed_extensions = $this->Extensions_model->find_all()) {
+				$installed_extensions = array_flip(array_column($installed_extensions, 'name'));
+				$installed_extensions = array_fill_keys(array_keys($installed_extensions), TRUE);
+			}
+		}
+
+		if (!is_null($extension) AND $this->extensionExists($extension)) {
+			if ($install) {
+				$installed_extensions[$extension] = TRUE;
+			} else {
+				unset($installed_extensions[$extension]);
+			}
+		}
+
+		$this->load->model('Settings_model');
+		$this->Settings_model->addSetting('prefs', 'installed_extensions', $installed_extensions, '1');
+
+	}
+
+	/**
+	 * Find an existing extension in filesystem by folder name
+	 *
+	 * @param string $code
+	 *
+	 * @return bool TRUE on success, FALSE on failure
+	 */
+	public function extensionExists($code) {
+		return Modules::has_extension($code);
+	}
+
+	/**
+	 * Install a new or existing extension by code
+	 *
+	 * @param string $code
+	 * @param object $extension Extension
+	 *
+	 * @return bool|null
+	 */
+	public function install($code = '', $extension) {
+		$code = url_title(strtolower($code), '-');
+
+		if ($this->extensionExists($code) AND $extension instanceof Base_Extension) {
+			$extension_id = NULL;
+			$meta = $extension->extensionMeta();
+			$title = !empty($meta['title']) ? $meta['title'] : NULL;
+
+			$this->where_in('type', array('module', 'payment'));
+			if ($row = $this->find('name', $code)) {
+				$this->where_in('type', array('module', 'payment'));
+				$query = $this->update(
+					array('name' => $code),
+					array('type' => 'module', 'title' => $title, 'status' => '1')
+				);
+				if ($query) $extension_id = $row['extension_id'];
+			} else {
+				$extension_id = $this->insert(
+					array('title' => $title, 'status' => '1', 'type' => 'module', 'name' => $code)
+				);
+			}
+
+			if (is_numeric($extension_id)) {
+				$this->updateInstalledExtensions($code);
+
+				$permissions = $extension->registerPermissions();
+				$this->savePermissions($permissions);
+
+				// set extension migration to the latest version
+				Modules::run_migration($code);
+			}
+
+			return $extension_id;
 		}
 
 		return FALSE;
 	}
 
-	public function uninstall($type = '', $name = '', $config = NULL) {
+	/**
+	 * Uninstall a new or existing extension by code
+	 *
+	 * @param string $code
+	 * @param object $extension Extension
+	 *
+	 * @return bool|null
+	 */
+	public function uninstall($code = '', $extension = NULL) {
 		$query = FALSE;
 
-		if ( ! empty($type) AND $this->extensionExists($name)) {
-
-			$this->db->set('status', '0');
-			$this->db->where('type', $type);
-			$this->db->where('name', $name);
-
-			if (preg_match('/\s/', $name) > 0) {
-				$query = $this->delete($name);
+		if ($this->extensionExists($code)) {
+			if (preg_match('/\s/', $code) > 0) {
+				$this->where_in('type', array('module', 'payment'));
+				$query = $this->delete(array('name' => $code));
 			} else {
-				$this->db->update('extensions');
-				if ($this->db->affected_rows() > 0) {
+				$this->where_in('type', array('module', 'payment'));
+				$query = $this->update(array('name' => $code), array('status' => '0'));
 
-					is_array($config) OR $config = $this->extension->loadConfig($name, FALSE, TRUE);
+				$this->updateInstalledExtensions($code, FALSE);
 
-					if ( ! empty($config['extension_permission']['name'])) {
-						$this->Permissions_model->deletePermissionByName($config['extension_permission']['name']);
-					}
+				if ($query AND $extension instanceof Base_Extension) {
+					$permissions = $extension->registerPermissions();
+
+					$this->deletePermissions($permissions);
 
 					$query = TRUE;
 				}
@@ -377,31 +474,35 @@ class Extensions_model extends TI_Model {
 		return $query;
 	}
 
-	public function delete($type = '', $name = '', $delete_data = TRUE) {
+	/**
+	 * Delete a single extension by code
+	 *
+	 * @param string $code
+	 * @param bool   $delete_data whether to delete extension data
+	 *
+	 * @return bool
+	 */
+	public function delete($code = '', $delete_data = TRUE) {
 		$query = FALSE;
 
-		if ( ! empty($type) AND $this->extensionExists($name)) {
+		if ($this->extensionExists($code)) {
 
-			$get_installed = $this->db->where('status', '1')->where('type', $type)->where('name', $name)->get('extensions')->row();
+			$this->where_in('type', array('module', 'payment'));
+			$get_installed = $this->find(array('name' => $code, 'status' => '1'));
 			if (empty($get_installed)) {
 				$this->load->helper('file');
-				delete_files(ROOTPATH . EXTPATH . $name, TRUE);
-				rmdir(ROOTPATH . EXTPATH . $name);
-
+				delete_files(ROOTPATH . EXTPATH . $code, TRUE);
+				rmdir(ROOTPATH . EXTPATH . $code);
 				$query = TRUE;
 			}
 
 			if ($delete_data) {
-				$this->db->where('status', '0');
-				$this->db->where('type', $type);
-				$this->db->where('name', $name);
-
-				$this->db->delete('extensions');
-				if ($this->db->affected_rows() > 0) {
+				$this->where_in('type', array('module', 'payment'));
+				$affected_rows = parent::delete(array('name' => $code, 'status' => '0'));
+				if ($affected_rows > 0) {
 
 					// downgrade extension migration
-					$this->extension->runMigration($name, TRUE);
-
+					Modules::run_migration($code);
 					$query = TRUE;
 				}
 			}
@@ -410,16 +511,17 @@ class Extensions_model extends TI_Model {
 		return $query;
 	}
 
-	private function fetchExtensionsPath() {
+	/**
+	 * Return all extension paths
+	 *
+	 * @return array
+	 */
+	protected function fetchExtensionsPath() {
 		$results = array();
 
-		if ($modules_locations = $this->config->item('modules_locations')) {
-			foreach ($modules_locations as $location => $offset) {
-				foreach (glob($location . '*', GLOB_ONLYDIR) as $extension_path) {
-					if (is_dir($extension_path) OR is_file($extension_path . '/config/' . basename($extension_path) . '.php')) {
-						$results[] = $extension_path;
-					}
-				}
+		foreach (Modules::paths() as $code => $path) {
+			if (!Modules::has_extension($code)) {
+				$results[] = $path;
 			}
 		}
 
@@ -427,5 +529,5 @@ class Extensions_model extends TI_Model {
 	}
 }
 
-/* End of file extensions_model.php */
-/* Location: ./system/tastyigniter/models/extensions_model.php */
+/* End of file Extensions_model.php */
+/* Location: ./system/tastyigniter/models/Extensions_model.php */

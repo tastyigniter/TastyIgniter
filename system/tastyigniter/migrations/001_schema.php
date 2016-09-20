@@ -12,7 +12,7 @@
  *  staffs, staff_groups, statuses, status_history, tables, uri_routes,
  *  users, working_hours
  */
-class Migration_Schema extends CI_Migration {
+class Migration_Schema extends TI_Migration {
 
 	public function up() {
 		$this->load->database();
@@ -822,4 +822,4 @@ class Migration_Schema extends CI_Migration {
 }
 
 /* End of file 001_schema.php */
-/* Location: ./setup/migrations/001_schema.php */
+/* Location: ./system/tastyigniter/migrations/001_schema.php */

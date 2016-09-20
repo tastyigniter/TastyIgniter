@@ -8,7 +8,7 @@
 		</div>
 
         <div class="tab-content">
-            <div id="backup" class="tab-pane row wrap-all active">
+            <div id="backup" class="tab-pane active">
                 <div class="panel panel-default panel-table">
                     <?php if (!empty($query_table)) { ?>
                         <form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo site_url('maintenance'); ?>">
@@ -17,9 +17,9 @@
                             </div>
                         </form>
 
-                        <div class="pagination-bar wrap-none wrap-top wrap-bottom">
-                            <div class="links"><?php echo $pagination['links']; ?></div>
-                            <div class="info"><?php echo $pagination['info']; ?></div>
+                        <div class="pagination-bar row">
+                            <div class="links col-sm-8"><?php echo $pagination['links']; ?></div>
+                            <div class="info col-sm-4"><?php echo $pagination['info']; ?></div>
                         </div>
                     <?php } else { ?>
                         <?php echo lang('text_no_row'); ?>

@@ -9,7 +9,7 @@
 
 		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo $_action; ?>">
 			<div class="tab-content">
-				<div id="general" class="tab-pane row wrap-all active">
+				<div id="general" class="tab-pane active">
 					<div class="form-group">
 						<label for="input-name" class="col-sm-3 control-label"><?php echo lang('label_title'); ?></label>
 						<div class="col-sm-5">
@@ -21,11 +21,11 @@
 						<label for="input-country" class="col-sm-3 control-label"><?php echo lang('label_country'); ?></label>
 						<div class="col-sm-5">
 							<select name="country_id" id="input-country" class="form-control">
-								<?php foreach ($countries as $country) { ?>
-								<?php if ($country['country_id'] === $country_id) { ?>
-									<option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
+								<?php foreach ($countries as $key => $value) { ?>
+								<?php if ($key == $country_id) { ?>
+									<option value="<?php echo $key; ?>" selected="selected"><?php echo $value; ?></option>
 								<?php } else { ?>
-									<option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
+									<option value="<?php echo $key; ?>"><?php echo $value; ?></option>
 								<?php } ?>
 								<?php } ?>
 							</select>

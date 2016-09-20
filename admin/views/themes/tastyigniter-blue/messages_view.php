@@ -11,7 +11,7 @@
                     <div class="panel-body wrap-none">
                         <div class="list-group list-group-hover">
                             <?php foreach ($folders as $key => $folder) { ?>
-                                <a class="list-group-item <?php echo ($key === $message_folder) ? 'active' : ''; ?>" href="<?php echo $folder['url']; ?>"><i class="fa <?php echo $folder['icon']; ?>"></i>&nbsp;&nbsp;<?php echo $folder['title']; ?>&nbsp;&nbsp;
+                                <a class="list-group-item <?php echo ($key == $message_folder) ? 'active' : ''; ?>" href="<?php echo $folder['url']; ?>"><i class="fa <?php echo $folder['icon']; ?>"></i>&nbsp;&nbsp;<?php echo $folder['title']; ?>&nbsp;&nbsp;
                                     <span class="label label-primary pull-right"><?php echo $folder['badge']; ?></span></a>
                             <?php } ?>
                         </div>
@@ -72,7 +72,10 @@
                                     <thead>
                                     <tr>
                                         <th class="action action-one">
-                                            <input type="checkbox" onclick="$('input[name*=\'delete\']').prop('checked', this.checked);">
+                                            <div class="checkbox checkbox-primary">
+                                                <input type="checkbox" id="checkbox-all" class="styled" onclick="$('input[name*=\'resend\']').prop('checked', this.checked);">
+                                                <label for="checkbox-all"></label>
+                                            </div>
                                         </th>
                                         <?php if ($send_type === 'email') { ?>
                                             <th><?php echo lang('text_email'); ?></th>
@@ -89,9 +92,12 @@
                                     <tbody>
                                     <?php foreach ($recipients as $recipient) { ?>
                                         <tr>
-                                            <td class="action action-one"><input type="checkbox"
-                                                                                 value="<?php echo $recipient['message_meta_id']; ?>"
-                                                                                 name="resend[]"/></td>
+                                            <td class="action action-one">
+                                                <div class="checkbox checkbox-primary">
+                                                    <input type="checkbox" class="styled" id="checkbox-<?php echo $recipient['message_meta_id']; ?>" value="<?php echo $recipient['message_meta_id']; ?>" name="resend[]"/>
+                                                    <label for="checkbox-<?php echo $recipient['message_meta_id']; ?>"></label>
+                                                </div>
+                                            </td>
                                             <?php if ($send_type === 'email') { ?>
                                                 <td><?php echo $recipient['recipient_email']; ?></td>
                                             <?php } else if ($send_type === 'account') { ?>

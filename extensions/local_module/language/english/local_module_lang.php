@@ -3,6 +3,8 @@
 $lang['_text_title'] 			            = 'Local';
 $lang['text_tab_general'] 		            = 'General';
 $lang['text_tab_texts'] 		            = 'Text';
+$lang['text_component_title']				= 'Local Component';
+$lang['text_component_desc'] 				= 'Displays local information box';
 
 $lang['text_find'] 				            = 'View menu';
 $lang['text_order_summary'] 	            = 'Order delicious food online';
@@ -45,15 +47,15 @@ $lang['button_change_location']             = 'Change Location';
 $lang['button_search_location']             = 'GO';
 $lang['button_enter_location']              = 'Enter Location';
 
-$lang['label_location_search_mode'] 		= 'Restaurant mode';
+$lang['label_location_search_mode'] 		= 'Display Location Search';
 $lang['label_use_location'] 		        = 'Use Location';
 $lang['label_display_min_order_amount'] 	= 'Display Min. Order Amount';
 $lang['label_lang'] 			            = 'Language Line';
 $lang['label_status'] 			            = 'Status';
 $lang['label_search_query'] 			    = 'Enter your address/postcode to order';
 
-$lang['help_location_search_mode'] 		    = 'Set whether to enable single or multi location search functionality. Single means search is disabled and the chosen location is used automatically.';
-$lang['help_use_location'] 		            = 'You can choose which location used by the system when taking orders in single restaurant mode';
+$lang['help_location_search_mode'] 		    = 'Set whether to display the local search box or view menu button on the storefront. If no, the view menu button is linked to the selected location below.';
+$lang['help_use_location'] 		            = 'You can choose which location the view menu button will be linked to or use the default location. Disabling <b>Require Location To Order</b> in <i>System -> Settings -> Order</i> is required';
 
 $lang['alert_unknown_error'] 			    = '<p class="alert-danger">Error occurred, please check and try again.</p>';
 $lang['alert_no_search_setting'] 		    = '<p class="alert-danger">Location Search By setting has not been specified.</p>';

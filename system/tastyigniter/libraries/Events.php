@@ -40,11 +40,6 @@ class Events {
 	private static $events = array();
 
 	/**
-	 * @var array Holds the installed extensions.
-	 */
-	private static $extensions = array();
-
-	/**
 	 * This if here solely for CI loading to work. Just calls the initialize() method.
 	 *
 	 */
@@ -58,21 +53,16 @@ class Events {
 	 * @return void
 	 */
 	public static function initialize() {
-		// get all installed extensions
-		if (empty(self::$extensions)) {
-			self::$CI =& get_instance();
-			self::$extensions = self::$CI->extension->getInstalledExtensions();
-		}
-
 		// Merge events from indivdual modules.
 		foreach (Modules::list_modules() as $module) {
 			// Skip if module is not installed
-			if ( ! isset(self::$extensions[$module])) {
+			if ( Modules::is_disabled($module)) {
 				continue;
 			}
 
-			$path = ROOTPATH . EXTPATH . "{$module}/config/";
-			if (is_file($path . 'events.php')) {
+			list($path, $file) = Modules::find('events', $module, 'config/');
+			
+			if ($path) {
 				$module_events = Modules::load_file('events', $path, 'config');
 
 				if (is_array($module_events)) {
@@ -95,9 +85,8 @@ class Events {
 	 * @return void
 	 */
 	public static function trigger($event_name = NULL, $payload = NULL) {
-		if (empty($event_name)
-			|| ! is_string($event_name)
-			|| ! array_key_exists($event_name, self::$events)
+		if (empty($event_name) OR ! is_string($event_name)
+			OR ! array_key_exists($event_name, self::$events)
 		) {
 			return;
 		}

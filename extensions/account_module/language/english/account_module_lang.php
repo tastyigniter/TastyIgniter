@@ -2,6 +2,8 @@
 
 $lang['_text_title'] 		    = 'Account';
 $lang['text_tab_general'] 		= 'General';
+$lang['text_component_title']	= 'Account Component';
+$lang['text_component_desc'] 	= 'Displays account side bar menu';
 
 $lang['text_heading'] 			= 'Account';
 $lang['text_account'] 			= 'My Account';

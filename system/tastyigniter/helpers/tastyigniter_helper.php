@@ -22,6 +22,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @link           http://docs.tastyigniter.com
  */
 
+if ( ! function_exists('is_single_location'))
+{
+    /**
+     * Is Single Location Mode
+     * 
+     * Test to see system config multi location mode is set to single.
+     *
+     * @return bool
+     */
+    function is_single_location() 
+    {
+        return (config_item('site_location_mode') === 'single');
+    }
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists('log_activity'))
 {
     /**
@@ -88,24 +105,6 @@ if ( ! function_exists('sort_array'))
         return $array;
     }
 }
-
-if ( ! function_exists('currency_format'))
-{
-    /**
-     * Append or Prepend the default currency symbol to amounts
-     *
-     * @param string $num
-     *
-     * @return string
-     */
-    function currency_format($num = '')
-    {
-        $CI =& get_instance();
-        return $CI->currency->format($num);
-    }
-}
-// ------------------------------------------------------------------------
-
 
 // ------------------------------------------------------------------------
 
@@ -199,6 +198,25 @@ if ( ! function_exists('get_remote_data'))
         curl_close($curl);
 
         return $response;
+    }
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('console_log'))
+{
+    /**
+     * Logs a variable to the console.
+     *
+     * @param null $data
+     *
+     */
+    function console_log($data = NULL) {
+        if (!class_exists('Console', FALSE)) {
+            get_instance()->load->library('console');
+        }
+
+        get_instance()->console->log($data);
     }
 }
 

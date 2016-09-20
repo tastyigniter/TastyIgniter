@@ -20,32 +20,52 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @package        TastyIgniter\Core\Main_Controller.php
  * @link           http://docs.tastyigniter.com
  */
-class Main_Controller extends Base_Controller {
+class Main_Controller extends Base_Controller
+{
 
-    /**
-     * Class constructor
-     *
-     */
-	public function __construct()
-	{
-        parent::__construct();
+	/**
+	 * Class constructor
+	 *
+	 */
+	public function __construct() {
+		$this->libraries[] = 'form_validation';
+		$this->models[] = 'Extensions_model';
+
+		parent::__construct();
+
+		Events::trigger('before_main_controller');
 
 		log_message('info', 'Main Controller Class Initialized');
 
-        // Load permalink
-        $this->load->library('permalink');
+		// Check app for maintenance in production environments.
+		if (ENVIRONMENT === 'production') {
+			// Show maintenance message if maintenance is enabled
+			$this->showMaintenance();
+		}
 
-        // Load template library
-        $this->load->library('template');
+		// Load permalink
+		$this->load->library('permalink');
 
-        $this->load->library('customer');
+		// Load template library
+		$this->load->library('template');
 
-        $this->load->library('customer_online');
+		$this->load->library('customer');
 
-        $this->load->model('Pages_model');
+		$this->load->library('customer_online');
+
+		$this->load->model('Pages_model');
 
 		$this->load->library('location');
-    }
+
+		$this->form_validation->CI =& $this;
+
+		if (!isset($this->index_url)) $this->index_url = $this->controller;
+
+		if (!empty($this->filter)) $this->setFilter();
+		if (!empty($this->sort)) $this->setSort();
+		
+		Events::trigger('after_main_controller');
+	}
 }
 
 /* End of file Main_Controller.php */

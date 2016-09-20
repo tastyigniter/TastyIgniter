@@ -74,7 +74,7 @@ $lang['label_email'] 		            = 'Email';
 $lang['label_telephone'] 		        = 'Telephone';
 $lang['label_description'] 		        = 'Description';
 $lang['label_permalink_id'] 		    = 'Permalink ID';
-$lang['label_permalink_slug'] 		    = 'Permalink Slug';
+$lang['label_permalink_slug'] 		    = 'Menus Page Slug';
 $lang['label_image'] 		            = 'Image';
 $lang['label_offer_delivery'] 		    = 'Offer Delivery';
 $lang['label_offer_collection'] 		= 'Offer Pick-up';
@@ -118,6 +118,7 @@ $lang['alert_delivery_area'] 		    = 'Delivery area map will be visible after lo
 $lang['alert_set_default'] 		        = 'Location set as default';
 
 $lang['help_permalink'] 		        = 'Use ONLY alpha-numeric lowercase characters, underscores or dashes and make sure it is unique GLOBALLY.';
+$lang['help_permalink_disabled'] 		= 'Permalink is disabled while single location mode is activated.';
 $lang['help_image'] 		            = 'Select an image to use as the location logo, this image is displayed in the restaurant list.';
 $lang['help_delivery_time'] 		    = 'Set number of minutes an order will be delivered after being placed, or set to 0 to use default';
 $lang['help_collection_time'] 		    = 'Set number of minutes an order will be ready for pick-up after being placed, or set to 0 to use default';
