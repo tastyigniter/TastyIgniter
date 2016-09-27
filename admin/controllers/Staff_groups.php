@@ -162,17 +162,14 @@ class Staff_groups extends Admin_Controller {
 	}
 
 	private function _saveStaffGroup() {
-                $input_post=$this->input->post();
-                 
-                    $permissions=$this->Permissions_model->getPermissionsByIds();
-                    
-                     
-                    foreach($input_post['permissions'] as $permission_id=>$permission_access){
-                        $input_post['permissions'][$permissions[$permission_id]['name']]= $input_post['permissions'][$permission_id];
-                        //$group_permissions[$permission_info['permission_id']]=$group_permissions[$permission_name];
-                        log_message('info',print_r( $input_post['permissions'],true).'@@@@@@@@@@@ permissions assigned to the staff groups of the user');
-                        unset($input_post['permissions'][$permission_id]);
-                    }
+		$input_post=$this->input->post();
+		$permissions=$this->Permissions_model->getPermissionsByIds();
+                                         
+	foreach($input_post['permissions'] as $permission_id=>$permission_access) {
+
+	    $input_post['permissions'][$permissions[$permission_id]['name']]= $input_post['permissions'][$permission_id];
+	    unset($input_post['permissions'][$permission_id]);
+	}
     	if ($this->validateForm() === TRUE) {
             $save_type = ( ! is_numeric($this->input->get('id'))) ? $this->lang->line('text_added') : $this->lang->line('text_updated');
 

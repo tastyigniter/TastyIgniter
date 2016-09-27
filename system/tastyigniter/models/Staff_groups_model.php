@@ -136,7 +136,8 @@ class Staff_groups_model extends TI_Model {
 		if (isset($permission_rule['name']) AND ! ($permission = $this->Permissions_model->getPermissionByName($permission_rule['name']))) {
 			return $query;
 		}
-                $permission_name=isset($permission['name']) ? $permission['name'] : NULL;
+
+		$permission_name=isset($permission['name']) ? $permission['name'] : NULL;
 		$staff_group = $this->db->get_where('staff_groups', array('staff_group_id' => $staff_group_id));
 
 		if ($staff_group->num_rows() > 0) {
@@ -144,6 +145,7 @@ class Staff_groups_model extends TI_Model {
 			$group_permissions = ( ! empty($row['permissions'])) ? unserialize($row['permissions']) : array();
 
 			is_array($permission_rule['action']) OR (array) $permission_rule['action'];
+
                         // Add new permission to group_permissions, Add new permission by name instead of id
 			$group_permissions[$permission_name] = $permission_rule['action'];
 
