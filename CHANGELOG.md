@@ -4,9 +4,12 @@ Release Date: August 2016
 
 #### Added
 * Admin dashboard permission in theme config
-* New Authenticated Controller to create admin only accessible pages (435b2ce)
+* New Authenticated Controller to provide a base class for all controllers that must check authenticated user. (435b2ce)
 * User Library: `auth()` method to redirect unauthorised users (4802e01)
 * Template Library: new methods to add and remove nav menu items (24a521e)
+* New Event hook points: before_controller, after_controller_constructor, before_main_controller, after_main_controller
+* New Assets library to handle head html tags, css and js (71e09e2)
+* New array helper with array_get method to get array item using dot notation (bd02bb9)
 
 #### Changed
 * Improve nav menu to switch between single and multi location settings
@@ -15,11 +18,11 @@ Release Date: August 2016
 * Removed direct calls to `$this->db` from Models and add model properties (43b5a98 & 2a9401e & 86ce6d5 & fe1ef4a)
 * Remove getList and getCount methods from models to use parent method or override instead (c63fc9b)
 * Moved `currency_format` function from `tastyigniter_helper` to new `TI_number_helper` (d3365e4)
-* Improved debug profiler: new Console library to log message to console and new profiler interface (8cb4f51)
+* Improved debug profiler: new Console library to log message to console and new profiler interface (8cb4f51 & 9e10c3b)
 * Code consistency: changed all controllers, models and libraries private methods to protected (579e7e6)
 * Improved BASE controller (c34a825 & e288175)
 * Improved Installer library (81c202e)
-* Improved Controllers - reduced code (747e758 & dafb154 & a4300da)
+* Improved Controllers - reduced code (747e758 & dafb154 & a4300da & fd260bb)
 * Migration files extends TI_Migration library, and load demo data within migration like initial data (86c0e0b)
 * Display active modules on admin layout list page (76ad3fd)
 * Display number of customers in customer group (8dab2e1)
@@ -30,6 +33,13 @@ Release Date: August 2016
 * Admin theme changes (775b214)
 * Moved load_db_config to Config library and new restaurant_url method (b85f32c)
 * New is_single_location method to check if config site location mode (4aa38c4)
+* Moved extractExtension from Extensions_model to Modules::extract_extension
+* Moved runMigration from extension_manager library to Modules::run_migration
+* Removed Extension library, use Extensions_model or Modules class instead (7a59677)
+* Improved Extensions api (2d0e759 & 162a72a & ece3167 & 4ad6da5 & 84c552d)
+* Use Modules class instead of Extensions model ()
+* Improve Template library: move html tags methods to Assets library (1532de9)
+* Improved Lang: line() method accepts dotted array module.line_key_name or line_key_name (87a40bb)
 
 #### Fixed
 * Fix module lang file check (ae7e5e2) thanks @behigh
@@ -43,6 +53,7 @@ Release Date: August 2016
 * Redirect url to use relative url (05a1a1b)
 * Fixed categories link on storefront, menu list category filter and location slug (2e640e6)
 * Minor changes (be8f975 & 00983ad)
+Fix issue with going back to previous setup step (debca3c)
 
 ### v2.1.1
 

@@ -9,23 +9,32 @@
  * @copyright TastyIgniter
  * @link      http://tastyigniter.com
  * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
+ * @since     File available since Release 2.2
+ * @filesource
  */
-defined('BASEPATH') or exit('No direct script access allowed');
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * Updates Model Class
+ * TastyIgniter Updates Class
  *
- * @category       Models
- * @package        TastyIgniter\Models\Updates_model.php
+ * @category       Libraries
+ * @package        TastyIgniter\Libraries\Updates.php
  * @link           http://docs.tastyigniter.com
  */
-class Updates_model extends TI_Model
+class Updates
 {
 
 	protected $updated_files = array('modified' => array(), 'added' => array());
 
 	protected $endpoint = 'https://api.tastyigniter.com/v1';
+
+	public function __construct() {
+		$this->CI =& get_instance();
+
+		$this->CI->load->model('Updates_model');
+		$this->CI->load->model('Extensions_model');
+		$this->CI->load->model('Themes_model');
+	}
 
 	public function lastVersionCheck() {
 		$version = $this->config->item('last_version_check');
@@ -37,34 +46,55 @@ class Updates_model extends TI_Model
 		return TRUE;
 	}
 
-	public function getUpdates($refresh) {
-		$result = array();
+	public function getUpdates($force) {
+		$_extensions = $this->CI->Extensions_model->getExtensions();
+		$extension_versions = $this->CI->Extensions_model->where_in('type', array('module', 'payment'))->lists('name', 'version');
+		$extension_titles = $this->CI->Extensions_model->where_in('type', array('module', 'payment'))->lists('name', 'title');
+		$theme_versions = $this->CI->Themes_model->where('type', 'theme')->lists('name', 'version');
+		$theme_titles = $this->CI->Themes_model->where('type', 'theme')->lists('name', 'title');
 
-		$extensions = array(); //@TO-DO: use $this->Extensions_model->getList(); instead
-		$versions = $this->getVersions($extensions, $refresh);
+		$info = $this->installer->getSysInfo();
 
-		foreach ($versions as $key => $version) {
-			if ($key == 'core' AND !empty($version->stable_tag)) {
-				if (version_compare(TI_VERSION, $version->stable_tag) !== 0) {
-					$result['core']['version_name'] = $version->version;
-					$result['core']['stable_tag'] = $version->stable_tag;
-				}
-			} else if (is_array($version)) {
-				foreach ($version as $name => $stable_tag) {
-					if (!isset($extensions[$name])) continue;
+		$params = array(
+			'sys_hash'   => $info['sys_hash'],
+			'version'    => $info['version'],
+			'extensions' => serialize($extension_versions),
+			'themes'     => serialize($theme_versions),
+			'force'      => $force,
+		);
 
-					$extension = $extensions[$name];
-					if (version_compare($extension['version'], $stable_tag) !== 0) {
-						$result[$extension['type']][$extension['name']] = array(
-							'name'       => $extension['name'],
-							'stable_tag' => $stable_tag,
-						);
-					}
-				}
-			}
+		$result = $this->getRemoteData('core/update', $params);
+		$update_count = (int) array_get($result, 'update_count', 0);
+
+		if ($core = array_get($result, 'core')) {
+			$core['last_version'] = $info['version'];
+			$result['core'] = $core;
 		}
 
-		$result['last_version_check'] = $versions['last_version_check'];
+		$extensions = array();
+		foreach (array_get($result, 'extensions', []) as $code => $info) {
+			$info['title'] = isset($extension_titles[$code]) ? $extension_titles[$code] : $code;
+			$info['last_version'] = isset($extension_versions[$code]) ? $extension_versions[$code] : FALSE;
+			$info['icon'] = !empty($_extensions[$code]['icon']) ? $_extensions[$code]['icon'] : FALSE;
+
+			if (!Modules::is_disabled($code)) {
+				$extensions[$code] = $info;
+			} else {
+				$update_count = max(0, --$update_count);
+			}
+		}
+		$result['extensions'] = $extensions;
+
+		$themes = array();
+		foreach (array_get($result, 'themes', []) as $code => $info) {
+			$info['title'] = isset($theme_titles[$code]) ? $theme_titles[$code] : $code;
+			$info['last_version'] = isset($theme_versions[$code]) ? $theme_versions[$code] : FALSE;
+		}
+		$result['themes'] = $themes;
+
+		$result['update_count'] = $update_count;
+		$this->load->model('Settings_model');
+		$this->Settings_model->addSetting('prefs', 'update_count', $update_count, '1');
 
 		return $result;
 	}
@@ -86,23 +116,23 @@ class Updates_model extends TI_Model
 		$url = $this->endpoint . '/core/version/' . $info['version'] . '/' . $info['php_version'] . '/' . $info['mysql_version'];
 
 		$params = array(
-			'sys_hash' => $info['sys_hash'],
+			'sys_hash'   => $info['sys_hash'],
 			'ti_version' => $info['version'],
 		);
-		$result['core'] = $this->getRemoteVersion($url);
+		$result['core'] = $this->getRemoteData($url);
 
 		// Then extensions, themes and translations
-		if (!empty($extensions)) {
-			foreach ($extensions as $extension) {
-				if (in_array($extension['type'], array('module', 'payment'))) {
-					$url = $this->endpoint . '/extension/version/' . $extension['name'] . '/' . $extension['version'] . '/' . $info['version'];
-				} else {
-					$url = $this->endpoint . '/theme/version/' . $extension['name'] . '/' . $extension['version'] . '/' . $info['version'];
-				}
-
-				$result[$extension['type']][$extension['name']] = $this->getRemoteVersion($url);
-			}
-		}
+//		if (!empty($extensions)) {
+//			foreach ($extensions as $extension) {
+//				if (in_array($extension['type'], array('module', 'payment'))) {
+//					$url = $this->endpoint . '/extension/version/' . $extension['name'] . '/' . $extension['version'] . '/' . $info['version'];
+//				} else {
+//					$url = $this->endpoint . '/theme/version/' . $extension['name'] . '/' . $extension['version'] . '/' . $info['version'];
+//				}
+//
+//				$result[$extension['type']][$extension['name']] = $this->getRemoteVersion($url);
+//			}
+//		}
 
 		$this->load->model('Settings_model');
 		$this->Settings_model->addSetting('prefs', 'last_version_check', $result, '1');
@@ -110,8 +140,15 @@ class Updates_model extends TI_Model
 		return $result;
 	}
 
-	public function getRemoteVersion($url) {
-		$remote_data = $this->getRemoteData($url);
+	protected function getRemoteData($url, $params = array()) {
+
+		return get_remote_data($this->endpoint . $url, $this->buildPostData($params));
+	}
+
+	protected function getRemoteFile($url, $params = array()) {
+		$options['TIMEOUT'] = 60;
+
+		$remote_data = get_remote_data($this->endpoint . $url, $this->buildPostData($params, $options));
 
 		if (is_string($remote_data)) {
 			return json_decode($remote_data);
@@ -120,7 +157,7 @@ class Updates_model extends TI_Model
 		return NULL;
 	}
 
-	public function getRemoteData($url, $options = array(), $params = array()) {
+	protected function buildPostData($params = array(), $options = array()) {
 		$options['USERAGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:43.0) Gecko/20100101 Firefox/43.0';
 		$options['AUTOREFERER'] = TRUE;
 		$options['FAILONERROR'] = TRUE;
@@ -134,7 +171,7 @@ class Updates_model extends TI_Model
 			$options['POSTFIELDS'] = $params;
 		}
 
-		return get_remote_data($url, $options);
+		return $options;
 	}
 
 	public function update($update_type, $update_name = '', $update_version = '') {
@@ -368,6 +405,3 @@ class Updates_model extends TI_Model
 		flush_output($html, FALSE);
 	}
 }
-
-/* End of file Updates_model.php */
-/* Location: ./system/tastyigniter/models/Updates_model.php */
