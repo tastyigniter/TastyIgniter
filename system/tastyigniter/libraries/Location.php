@@ -63,6 +63,7 @@ class Location {
 
 		if (is_single_location() OR (!isset($local_info['location_id']) AND $this->CI->config->item('location_order') !== '1')) {
 			$local_info['location_id'] = $this->CI->config->item('default_location_id');
+			$this->CI->session->set_userdata('local_info', $local_info);
 		}
 
 		$is_loaded = TRUE;
@@ -197,11 +198,11 @@ class Location {
 	public function formatAddress($address = array(), $format = TRUE) {
 		if (!empty($address) AND is_array($address)) {
 			$location_address = array(
-				'address_1'      => $address['location_address_1'],
-				'address_2'      => $address['location_address_2'],
-				'city'           => $address['location_city'],
-				'state'          => $address['location_state'],
-				'postcode'       => $address['location_postcode']
+				'address_1'      => isset($address['location_address_1']) ? $address['location_address_1'] : $address['address_1'],
+				'address_2'      => isset($address['location_address_2']) ? $address['location_address_2'] : $address['address_2'],
+				'city'           => isset($address['location_city']) ? $address['location_city'] : $address['city'],
+				'state'          => isset($address['location_state']) ? $address['location_state'] : $address['state'],
+				'postcode'       => isset($address['location_postcode']) ? $address['location_postcode'] : $address['postcode']
 			);
 
 			$this->CI->load->library('country');
@@ -259,7 +260,7 @@ class Location {
 	}
 
 	public function searchQuery() {
-		return $this->search_query;
+		return is_array($this->search_query) ? $this->formatAddress($this->search_query, FALSE) : $this->search_query;
 	}
 
 	public function deliveryAreas() {
@@ -507,16 +508,23 @@ class Location {
 		}
 	}
 
-	public function setDeliveryArea($area = array()) {
+	public function setDeliveryArea($area = array(), $search_query = NULL) {
 		$area = is_numeric($area) ? array('location_id' => $this->location_id, 'area_id' => $area) : $area;
 
 		if ($area !== 'outside' AND count($area) == 2) {
 			$local_info = $this->CI->session->userdata('local_info');
 
 			$local_info['location_id'] = $area['location_id'];
+
+			if (!empty($search_query)) {
+				$local_info['geocode']['search_query'] = $search_query;
+			}
+
 			$local_info['area_id'] = $this->area_id = $area['area_id'];
 
 			$this->CI->session->set_userdata('local_info', $local_info);
+
+			$this->initialize($local_info);
 		}
 	}
 
@@ -591,7 +599,6 @@ class Location {
 	}
 
     public function checkDeliveryCoverage($search_query = FALSE) {
-
 		$search_query = ($search_query === FALSE) ? $this->search_query : $search_query;
 
 		$coords = $this->getLatLng($search_query);

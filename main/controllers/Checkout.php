@@ -583,12 +583,12 @@ class Checkout extends Main_Controller
 
 					if ($area = $this->location->checkDeliveryCoverage($address)) {
 						if (isset($area['area_id']) AND ($area['area_id'] != $area_id OR $area['location_id'] != $location_id)) {
-							$this->location->setDeliveryArea($area);
+							$this->location->setDeliveryArea($area, $address);
 
 							$this->alert->set('alert', $this->lang->line('alert_delivery_area_changed'));
 
 							if ($this->input->post('checkout_step') === 'two') {
-								redirect('checkout');
+								return FALSE;
 							}
 						}
 
