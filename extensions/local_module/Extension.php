@@ -9,7 +9,7 @@ class Extension extends \Base_Extension
 		return array(
 			'code'        => 'local_module',
 			'name'       => 'Local',
-			'description' => 'This extension will allow you to place a local module around your website.',
+			'description' => 'This extension allows your customers to find the nearest location',
 			'author'      => 'SamPoyigi',
 			'icon'        => 'fa-map-marker',
 			'version'     => '1.2',

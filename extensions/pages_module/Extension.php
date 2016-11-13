@@ -8,8 +8,8 @@ class Extension extends \Base_Extension
 	public function extensionMeta() {
 		return array(
 			'code'        => 'pages_module',
-			'name'       => 'Pages',
-			'description' => 'This extension will allow you to place a pages links module around your website.',
+			'name'       => 'Pages Links',
+			'description' => 'Allows you to place pages links on any page.',
 			'author'      => 'SamPoyigi',
 			'icon'        => 'fa-files-o',
 			'version'     => '1.2',

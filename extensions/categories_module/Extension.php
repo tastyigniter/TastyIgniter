@@ -9,7 +9,7 @@ class Extension extends \Base_Extension
 		return array(
 			'code'        => 'categories_module',
 			'name'       => 'Categories',
-			'description' => 'This extension will allow you to place a list of categories around your website.',
+			'description' => 'This extension will allows you to place menu categories links on any page.',
 			'author'      => 'SamPoyigi',
 			'icon'		  => 'fa-cubes',
 			'version'     => '1.2',

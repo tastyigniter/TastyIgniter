@@ -9,7 +9,7 @@ class Extension extends \Base_Extension
 		return array(
 			'code'        => 'authorize_net_aim',
 			'name'       => 'Authorize.Net (AIM)',
-			'description' => 'This extension will attach the Authorize.Net payment gateway to the checkout page.',
+			'description' => 'This extension allows customers to choose Authorize.Net (AIM) payment method during checkout.',
 			'author'      => 'SamPoyigi',
 			'icon'        => 'fa-credit-card',
 			'version'     => '1.1',

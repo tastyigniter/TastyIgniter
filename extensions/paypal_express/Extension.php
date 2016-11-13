@@ -7,7 +7,7 @@ class Extension extends \Base_Extension
 		return array(
 			'code'        => 'paypal_express',
 			'name'       => 'PayPal Express',
-			'description' => 'This extension will allow you to accept PayPal Express payment method during checkout.',
+			'description' => 'Allows you to accept credit card payments using PayPal payment gateway during checkout.',
 			'author'      => 'SamPoyigi',
 			'icon'        => 'fa-paypal',
 			'version'     => '1.1',

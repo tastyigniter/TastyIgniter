@@ -9,7 +9,7 @@ class Extension extends \Base_Extension
 		return array(
 			'code'        => 'reservation_module',
 			'name'       => 'Reservation',
-			'description' => 'This extension will allow you to place a reservation module around your website.',
+			'description' => 'Accept restaurant reservations and table bookings online. Confirm or reject your reservations.',
 			'author'      => 'SamPoyigi',
 			'icon'        => 'fa-calendar',
 			'version'     => '1.2',

@@ -9,7 +9,7 @@ class Extension extends \Base_Extension
 		return array(
 			'code'        => 'featured_menus',
 			'name'       => 'Featured Menu Items',
-			'description' => 'This extension will allow you to attach a featured menu component to any page or layout.',
+			'description' => 'Select the featured menu items you want to show at any time and on any page.',
 			'author'      => 'SamPoyigi',
 			'icon'        => 'fa-cutlery',
 			'version'     => '1.2',

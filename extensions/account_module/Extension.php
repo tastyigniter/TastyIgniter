@@ -9,7 +9,7 @@ class Extension extends \Base_Extension
 		return array(
 			'code'        => 'account_module',
 			'name'        => 'Account',
-			'description' => 'This extension will allow you to attach the account component to any page or layout.',
+			'description' => 'This extension will allows you to place account links on any page.',
 			'author'      => 'SamPoyigi',
 			'icon'        => 'fa-plug',
 			'version'     => '1.1',

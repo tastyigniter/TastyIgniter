@@ -9,7 +9,7 @@ class Extension extends \Base_Extension
 		return array(
 			'code'        => 'stripe',
 			'name'       => 'Stripe (Requires SSL)',
-			'description' => 'This extension will allow you to accept credit card payments using Stripe payment gateway during checkout.',
+			'description' => 'Allows you to accept credit card payments using Stripe payment gateway during checkout.',
 			'author'      => 'SamPoyigi',
 			'icon'		  => 'fa-cc-stripe',
 			'version'     => '1.1',

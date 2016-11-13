@@ -9,7 +9,7 @@ class Extension extends \Base_Extension
 		return array(
 			'code'        => 'slideshow',
 			'name'       => 'Slideshow',
-			'description' => 'This extension will allow you to place a slide show on your homepage.',
+			'description' => 'Add a responsive image slider to your homepage or any page',
 			'author'      => 'SamPoyigi',
 			'icon'        => 'fa-film',
 			'version'     => '1.2',

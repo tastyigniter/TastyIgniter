@@ -10,7 +10,7 @@ class Extension extends \Base_Extension
 			'code'        => 'banners_module',
 			'name'       => 'Banners',
 			'author'      => 'SamPoyigi',
-			'description' => 'This extension will allow you to place a banner module around your website.',
+			'description' => 'Easy way to display the different size of banner advertisements on any page.',
 			'icon'        => 'fa-plug',
 			'version'     => '1.1',
 		);

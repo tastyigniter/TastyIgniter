@@ -9,7 +9,7 @@ class Extension extends \Base_Extension
 		return array(
 			'code'        => 'newsletter',
 			'name'       => 'Newsletter',
-			'description' => 'This extension will allow you to place a newsletter subscribe module around your website.',
+			'description' => 'Simple newsletter sign up form to show on any page.',
 			'author'      => 'SamPoyigi',
 			'icon'        => 'fa-newspaper-o',
 			'version'     => '1.2',

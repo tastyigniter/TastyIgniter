@@ -9,7 +9,7 @@ class Extension extends \Base_Extension
 		return array(
 			'code'        => 'cod',
 			'name'       => 'Cash On Delivery',
-			'description' => 'This extension will allow you to accept Cash On Delivery payment method during checkout.',
+			'description' => 'This extension allows customers to choose Cash On Delivery payment method during checkout.',
 			'author'      => 'SamPoyigi',
 			'icon'        => 'fa-money',
 			'version'     => '1.1',
