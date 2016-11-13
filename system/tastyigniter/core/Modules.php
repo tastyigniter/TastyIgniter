@@ -490,9 +490,9 @@ class Modules
 	 * @return array A list of all extensions in the system.
 	 */
 	public static function paths() {
+		$filedata = array();
 		foreach (self::folders() as $folder) {
 			if ($fp = @opendir($folder)) {
-				$filedata = array();
 				$folder = rtrim($folder, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
 				while (FALSE !== ($extension = readdir($fp))) {
@@ -507,10 +507,10 @@ class Modules
 				}
 
 				closedir($fp);
-
-				return $filedata;
 			}
 		}
+
+		return $filedata;
 
 		return FALSE;
 	}

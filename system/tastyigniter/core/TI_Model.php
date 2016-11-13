@@ -784,6 +784,18 @@ class TI_Model extends CI_Model
 		return $options;
 	}
 
+	/**
+	 * Friendly alias for dropdown()
+	 *
+	 * @param $key
+	 * @param $value
+	 *
+	 * @return array
+	 */
+	public function lists($key, $value) {
+		return $this->dropdown($key, $value);
+	}
+
 	//--------------------------------------------------------------------------
 	// RELATIONSHIPS
 	// ------------------------------------------------------------

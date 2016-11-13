@@ -396,9 +396,12 @@ class Components
 			}
 
 			$class_name = ucfirst(basename($class_path));
+			$module = dirname(dirname($class_path));
+			list($path, $file) = Modules::find($class_name, $module, 'components/');
 
-			$class_path = ROOTPATH . EXTPATH . dirname($class_path);
-			Modules::load_file($class_name, $class_path);
+			if ($path != FALSE) {
+				Modules::load_file($class_name, $path);
+			}
 
 			if (!class_exists($class_name, FALSE)) {
 				show_error(sprintf('Component class not found "%s". Check the component extension.', $class_name));

@@ -270,7 +270,7 @@ class Cart_module extends Base_Component
 		}
 
 		if ($this->location->isClosed() OR !$this->location->checkOrderType()) {
-			$data['button_order'] = '<a class="btn btn-default btn-block btn-lg" href="' . site_url('checkout') . '"><b>' . $this->lang->line('text_is_closed') . '</b></a>';
+			$data['button_order'] = '<a class="btn btn-default btn-block btn-lg" href="' . site_url('checkout') . '"><b>' . $this->lang->line('cart_module.text_is_closed') . '</b></a>';
 		}
 
 		$menus = $this->Cart_model->getMenus();

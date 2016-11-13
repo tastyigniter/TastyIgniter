@@ -30,6 +30,9 @@ class Local extends Main_Controller
 
 	public function index($method = 'menus') {
 		$method = in_array($method, array('menus', 'info', 'reviews', 'gallery')) ? $method : 'menus';
+		if (!is_single_location() AND $this->uri->rsegment(1) == $method) {
+			$this->redirect(restaurant_url());
+		}
 
 		if ($this->input->get('location_id') OR $this->uri->segment(1) !== $method) {
 			if ($location = $this->Locations_model->getLocation($this->input->get('location_id'))) {

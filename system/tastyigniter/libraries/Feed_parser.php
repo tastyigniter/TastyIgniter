@@ -135,7 +135,6 @@ class Feed_parser {
 		// Do we need to write the cache file?
 		if ($this->write_cache_flag) {
 			if ( ! $fp = @fopen($filename, FOPEN_WRITE_CREATE_DESTRUCTIVE)) {
-				echo "RSSParser error";
 				log_message('error', "Unable to write cache file: " . $filename);
 
 				return;

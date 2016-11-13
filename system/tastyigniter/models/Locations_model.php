@@ -293,6 +293,8 @@ class Locations_model extends TI_Model
 		$save = $this->postData($save);
 
 		if ($location_id = $this->skip_validation(TRUE)->save($save, $location_id)) {
+			$save['options'] = unserialize($save['options']);
+
 			if ($location_id === $this->config->item('default_location_id')) {
 				$this->Settings_model->addSetting('prefs', 'main_address', $this->getAddress($location_id), '1');
 			}
@@ -364,11 +366,11 @@ class Locations_model extends TI_Model
 						));
 					}
 				}
-			}
-		}
 
-		if ($this->Working_hours_model->affected_rows() > 0) {
-			return TRUE;
+				if ($this->Working_hours_model->affected_rows() > 0) {
+					return TRUE;
+				}
+			}
 		}
 	}
 
