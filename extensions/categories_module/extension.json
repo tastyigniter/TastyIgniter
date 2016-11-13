@@ -1,0 +1,16 @@
+{
+  "code": "categories_module",
+  "name": "Categories Links",
+  "description": "Allows you to place menu categories links on any page.",
+  "version": "1.1",
+  "author": "SamPoyigi",
+  "icon": "fa-cubes",
+  "homepage": "https://github.com/igniter-labs/ti-categories-extension",
+  "tags": {
+    "1.0.0": "Initial tag of categories links extension",
+    "1.0.1": "Fixed issue where unrecognised character stops category collapse on mobile",
+    "1.0.2": "Fixed issue with storefront menu list and sidebar modules widths",
+    "1.0.3": "Fixed menu category permalinks and reverse routing",
+    "1.2.0": "Update code to use latest Extension API"
+  }
+}

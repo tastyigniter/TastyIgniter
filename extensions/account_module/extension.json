@@ -1,0 +1,13 @@
+{
+  "code": "account_module",
+  "name": "Account Links",
+  "description": "Allows you to place account links on any page.",
+  "version": "1.1",
+  "author": "SamPoyigi",
+  "icon": "fa-plug",
+  "homepage": "https://github.com/igniter-labs/ti-account-extension",
+  "tags": {
+    "1.0.0": "Initial tag of account links extension",
+    "1.1.0": "Update code to use latest Extension API"
+  }
+}

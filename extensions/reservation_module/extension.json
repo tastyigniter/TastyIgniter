@@ -1,0 +1,15 @@
+{
+  "code": "reservation_module",
+  "name": "Reservations",
+  "description": "Accept restaurant reservations and table bookings online. Confirm or reject your reservations.",
+  "version": "1.1",
+  "author": "SamPoyigi",
+  "icon": "fa-calendar",
+  "homepage": "https://github.com/igniter-labs/ti-reservations-extension",
+  "tags": {
+    "1.0.0": "Initial tag of reservations extension",
+    "1.0.1": "Fixed issue with displaying available reservation time",
+    "1.0.2": "Fixed display of duplicate modules on layout",
+    "1.1.0": "Update code to use latest Extension API"
+  }
+}

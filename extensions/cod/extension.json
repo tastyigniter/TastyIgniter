@@ -1,0 +1,15 @@
+{
+  "code": "cod",
+  "name": "Cash On Delivery",
+  "description": "Allows customers to choose Cash On Delivery payment method during checkout.",
+  "version": "1.1",
+  "author": "SamPoyigi",
+  "icon": "fa-money",
+  "homepage": "https://github.com/igniter-labs/ti-cod-extension",
+  "tags": {
+    "1.0.0": "Initial tag of cash on delivery payment extension",
+    "1.0.1": "Fixed issue where payment method should be disabled when order total is below the payments minimum order total",
+    "1.0.2": "Fixed payment extension title",
+    "1.1.0": "Update code to use latest Extension API"
+  }
+}

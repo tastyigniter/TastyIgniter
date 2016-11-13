@@ -1,0 +1,16 @@
+{
+  "code": "authorize_net_aim",
+  "name": "Authorize.Net (AIM)",
+  "description": "Allows customers to choose Authorize.Net (AIM) payment method during checkout.",
+  "version": "1.1",
+  "author": "SamPoyigi",
+  "icon": "fa-credit-card",
+  "homepage": "https://github.com/igniter-labs/ti-authorize-net-aim-payment",
+  "tags": {
+    "1.0.0": "Initial tag of authorize net (AIM) extension",
+    "1.0.1": "Added option to enter billing address during checkout when authorize.net is selected as payment method",
+    "1.0.2": "Fixed issue where authorize.net orders show as canceled",
+    "1.0.3": "Fixed issue with authorize billing address",
+    "1.1.0": "Update code to use latest Extension API"
+  }
+}

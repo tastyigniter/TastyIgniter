@@ -1,0 +1,20 @@
+{
+  "code": "cart_module",
+  "name": "Cart",
+  "description": "Easily add a shopping cart to your site. The most powerful way to sell your menu items.",
+  "version": "2.0",
+  "author": "SamPoyigi",
+  "icon": "fa-shopping-cart",
+  "homepage": "https://github.com/igniter-labs/ti-cart-extension",
+  "tags": {
+    "1.0.0": "Initial tag of cart extension",
+    "1.0.1": "Renamed language text collection to Pick-up",
+    "1.0.2": "Fixed cart rounds thousands to the nearest unit",
+    "1.0.3": "Improved coupons so that it is redeemed after order status is updated to the selected processing order statuses",
+    "1.1.0": "New getCart() method to load cart_module within Cart controller",
+    "1.1.1": "Improved locations delivery area with conditions such as free delivery if total over certain amount",
+    "1.1.2": "Improved menu items, added priority field and default_value on menu options and option to create and select mealtimes",
+    "1.1.3": "Fixed issue with storefront menu list and sidebar modules widths",
+    "2.0.0": "Update code to use latest Extension API"
+  }
+}
