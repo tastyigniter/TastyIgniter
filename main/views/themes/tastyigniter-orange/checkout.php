@@ -110,7 +110,8 @@
 											<?php } else { ?>
 												<br /><?php echo lang('text_location_closed'); ?><br />
 											<?php } ?>
-											<?php echo form_error('order_time', '<span class="text-danger">', '</span>'); ?>
+											<?php echo form_error('order_asap_time', '<span class="text-danger">', '</span>'); ?>
+											<?php echo form_error('order_hour', '<span class="text-danger">', '</span>'); ?>
 										</div>
 									</div>
 									<?php if ($order_times) { ?>

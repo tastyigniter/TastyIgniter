@@ -359,7 +359,11 @@ class Location {
 			if ($this->working_hour[$type]['day'] === $this->current_day) {
 				$working_time = mdate($this->timeFormat, $this->working_hour[$type][$hour]);
 			} else {
-				$working_time = mdate('%D ' . $this->timeFormat, $this->working_hour[$type][$hour]);
+				if ($hour == 'close' AND $this->working_hour[$type]['open'] > $this->working_hour[$type]['close']) {
+					$working_time = mdate('%D ' . $this->timeFormat, $this->working_hour[$type][$hour] + 86400);
+				} else {
+					$working_time = mdate('%D ' . $this->timeFormat, $this->working_hour[$type][$hour]);
+				}
 			}
 
 			$working_time = (!$format) ? strtotime($working_time) : $working_time;
@@ -452,9 +456,9 @@ class Location {
 			array_pop($time_ranges);
 
 			foreach ($time_ranges as $time) {
-				if (strtotime($time) >= ($this->current_time + ($time_interval * 60))) {
+				if (strtotime($time) >= $this->current_time + ($time_interval * 60)) {
 					if ($hour['working_status'] === 'open' AND $count === 1) {
-						$order_times['asap'] = $time;
+						$order_times['asap'] = mdate('%d-%m-%Y %H:%i', $this->current_time + ($time_interval * 60));
 					} else {
 						$dt = mdate('%d-%m-%Y', strtotime($time));
 						$hr = mdate('%H', strtotime($time));

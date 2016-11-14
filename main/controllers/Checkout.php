@@ -556,10 +556,10 @@ class Checkout extends Main_Controller {
         $order_type = ($this->location->orderType() === '1') ? 'delivery' : 'collection';
 
         if (strtotime($str) < time()) {
-        	$this->form_validation->set_message('_validate_time', $this->lang->line('error_delivery_less_current_time'));
+        	$this->form_validation->set_message('_validate_time', sprintf($this->lang->line('error_delivery_less_current_time'), $this->lang->line('text_'.$order_type)));
       		return FALSE;
     	} else if ( ! $this->location->checkOrderTime($str, $order_type)) {
-        	$this->form_validation->set_message('_validate_time', $this->lang->line('error_no_delivery_time'));
+			$this->form_validation->set_message('_validate_time', sprintf($this->lang->line('error_delivery_less_current_time'), strtolower($this->lang->line('text_'.$order_type))));
       		return FALSE;
         }
 
