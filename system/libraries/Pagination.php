@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link    https://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 1.0.0
  * @filesource
  */
@@ -44,7 +44,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Libraries
  * @category	Pagination
  * @author		EllisLab Dev Team
- * @link           https://codeigniter.com/user_guide/libraries/pagination.html
+ * @link		https://codeigniter.com/user_guide/libraries/pagination.html
  */
 class CI_Pagination {
 
@@ -301,7 +301,7 @@ class CI_Pagination {
 	/**
 	 * Use global URL suffix flag
 	 *
-	 * @var    bool
+	 * @var	bool
 	 */
 	protected $use_global_url_suffix = FALSE;
 
@@ -349,10 +349,10 @@ class CI_Pagination {
 	 * Initialize Preferences
 	 *
 	 * @param	array	$params	Initialization parameters
-	 *
-	 * @return    CI_Pagination
+	 * @return	CI_Pagination
 	 */
-	public function initialize(array $params = array()) {
+	public function initialize(array $params = array())
+	{
 		isset($params['attributes']) OR $params['attributes'] = array();
 		if (is_array($params['attributes']))
 		{
@@ -381,7 +381,8 @@ class CI_Pagination {
 			$this->page_query_string = TRUE;
 		}
 
-		if ($this->use_global_url_suffix === TRUE) {
+		if ($this->use_global_url_suffix === TRUE)
+		{
 			$this->suffix = $this->CI->config->item('url_suffix');
 		}
 
@@ -495,7 +496,8 @@ class CI_Pagination {
 		if ($this->page_query_string === TRUE)
 		{
 			$this->cur_page = $this->CI->input->get($this->query_string_segment);
-		} elseif (empty($this->cur_page))
+		}
+		elseif (empty($this->cur_page))
 		{
 			// Default to the last segment number if one hasn't been defined.
 			if ($this->uri_segment === 0)
@@ -510,8 +512,10 @@ class CI_Pagination {
 			{
 				$this->cur_page = str_replace(array($this->prefix, $this->suffix), '', $this->cur_page);
 			}
-		} else {
-			$this->cur_page = (string)$this->cur_page;
+		}
+		else
+		{
+			$this->cur_page = (string) $this->cur_page;
 		}
 
 		// If something isn't quite right, back to the default base page.
@@ -614,7 +618,7 @@ class CI_Pagination {
 					else
 					{
 						$append = $this->prefix.$i.$this->suffix;
-						$output .= $this->num_tag_open . '<a href="' . $base_url . $append . '"' . $attributes . '>'
+						$output .= $this->num_tag_open.'<a href="'.$base_url.$append.'"'.$attributes.'>'
 							.$loop.'</a>'.$this->num_tag_close;
 					}
 				}

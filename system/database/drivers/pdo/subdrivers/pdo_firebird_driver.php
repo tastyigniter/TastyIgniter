@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link    https://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 3.0.0
  * @filesource
  */
@@ -48,7 +48,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Drivers
  * @category	Database
  * @author		EllisLab Dev Team
- * @link           https://codeigniter.com/user_guide/database/
+ * @link		https://codeigniter.com/user_guide/database/
  */
 class CI_DB_pdo_firebird_driver extends CI_DB_pdo_driver {
 
@@ -210,8 +210,7 @@ class CI_DB_pdo_firebird_driver extends CI_DB_pdo_driver {
 	 * then this method maps to 'DELETE FROM table'
 	 *
 	 * @param	string	$table
-	 *
-*@return	string
+	 * @return	string
 	 */
 	protected function _truncate($table)
 	{
@@ -261,4 +260,20 @@ class CI_DB_pdo_firebird_driver extends CI_DB_pdo_driver {
 		return preg_replace('`SELECT`i', 'SELECT '.$select, $sql);
 	}
 
+	// --------------------------------------------------------------------
+
+	/**
+	 * Insert batch statement
+	 *
+	 * Generates a platform-specific insert string from the supplied data.
+	 *
+	 * @param	string	$table	Table name
+	 * @param	array	$keys	INSERT keys
+	 * @param	array	$values	INSERT values
+	 * @return	string|bool
+	 */
+	protected function _insert_batch($table, $keys, $values)
+	{
+		return ($this->db->db_debug) ? $this->db->display_error('db_unsupported_feature') : FALSE;
+	}
 }

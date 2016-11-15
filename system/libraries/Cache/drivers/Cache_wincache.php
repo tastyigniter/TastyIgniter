@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link    https://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 3.0.0
  * @filesource
  */
@@ -57,10 +57,12 @@ class CI_Cache_wincache extends CI_Driver {
 	 * Only present so that an error message is logged
 	 * if APC is not available.
 	 *
-	 * @return    void
+	 * @return	void
 	 */
-	public function __construct() {
-		if (!$this->is_supported()) {
+	public function __construct()
+	{
+		if ( ! $this->is_supported())
+		{
 			log_message('error', 'Cache: Failed to initialize Wincache; extension not loaded/enabled?');
 		}
 	}

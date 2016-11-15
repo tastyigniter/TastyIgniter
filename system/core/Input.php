@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link    https://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 1.0.0
  * @filesource
  */
@@ -46,14 +46,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Libraries
  * @category	Input
  * @author		EllisLab Dev Team
- * @link           https://codeigniter.com/user_guide/libraries/input.html
+ * @link		https://codeigniter.com/user_guide/libraries/input.html
  */
 class CI_Input {
 
 	/**
 	 * IP address of the current user
 	 *
-	 * @var    string
+	 * @var	string
 	 */
 	protected $ip_address = FALSE;
 
@@ -62,7 +62,7 @@ class CI_Input {
 	 *
 	 * If set to FALSE, then $_GET will be set to an empty array.
 	 *
-	 * @var    bool
+	 * @var	bool
 	 */
 	protected $_allow_get_array = TRUE;
 
@@ -71,7 +71,7 @@ class CI_Input {
 	 *
 	 * If set to TRUE, then newlines are standardized.
 	 *
-	 * @var    bool
+	 * @var	bool
 	 */
 	protected $_standardize_newlines;
 
@@ -82,7 +82,7 @@ class CI_Input {
 	 * GET, POST or COOKIE data is encountered.
 	 * Set automatically based on config setting.
 	 *
-	 * @var    bool
+	 * @var	bool
 	 */
 	protected $_enable_xss = FALSE;
 
@@ -92,7 +92,7 @@ class CI_Input {
 	 * Enables a CSRF cookie token to be set.
 	 * Set automatically based on config setting.
 	 *
-	 * @var    bool
+	 * @var	bool
 	 */
 	protected $_enable_csrf = FALSE;
 
@@ -108,7 +108,7 @@ class CI_Input {
 	 *
 	 * Holds a cache of php://input contents
 	 *
-	 * @var    string
+	 * @var	string
 	 */
 	protected $_raw_input_stream;
 
@@ -117,8 +117,8 @@ class CI_Input {
 	 *
 	 * Parsed from php://input at runtime
 	 *
-	 * @see    CI_Input::input_stream()
-	 * @var    array
+	 * @see	CI_Input::input_stream()
+	 * @var	array
 	 */
 	protected $_input_stream;
 
@@ -133,18 +133,20 @@ class CI_Input {
 	 * Determines whether to globally enable the XSS processing
 	 * and whether to allow the $_GET array.
 	 *
-	 * @return    void
+	 * @return	void
 	 */
-	public function __construct() {
-		$this->_allow_get_array = (config_item('allow_get_array') === TRUE);
-		$this->_enable_xss = (config_item('global_xss_filtering') === TRUE);
-		$this->_enable_csrf = (config_item('csrf_protection') === TRUE);
-		$this->_standardize_newlines = (bool)config_item('standardize_newlines');
+	public function __construct()
+	{
+		$this->_allow_get_array		= (config_item('allow_get_array') === TRUE);
+		$this->_enable_xss		= (config_item('global_xss_filtering') === TRUE);
+		$this->_enable_csrf		= (config_item('csrf_protection') === TRUE);
+		$this->_standardize_newlines	= (bool) config_item('standardize_newlines');
 
 		$this->security =& load_class('Security', 'core');
 
 		// Do we need the UTF-8 class?
-		if (UTF8_ENABLED === TRUE) {
+		if (UTF8_ENABLED === TRUE)
+		{
 			$this->uni =& load_class('Utf8', 'core');
 		}
 

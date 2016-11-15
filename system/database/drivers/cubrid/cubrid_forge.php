@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link    https://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 2.1.0
  * @filesource
  */
@@ -42,7 +42,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  *
  * @category	Database
  * @author		Esen Sagynov
- * @link        https://codeigniter.com/user_guide/database/
+ * @link		https://codeigniter.com/user_guide/database/
  */
 class CI_DB_cubrid_forge extends CI_DB_forge {
 
@@ -177,6 +177,9 @@ class CI_DB_cubrid_forge extends CI_DB_forge {
 			case 'MEDIUMINT':
 				$attributes['TYPE'] = 'INTEGER';
 				$attributes['UNSIGNED'] = FALSE;
+				return;
+			case 'LONGTEXT':
+				$attributes['TYPE'] = 'STRING';
 				return;
 			default: return;
 		}

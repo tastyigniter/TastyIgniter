@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link    https://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 3.0.0
  * @filesource
  */
@@ -44,7 +44,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Libraries
  * @category	Sessions
  * @author	Andrey Andreev
- * @link    https://codeigniter.com/user_guide/libraries/sessions.html
+ * @link	https://codeigniter.com/user_guide/libraries/sessions.html
  */
 class CI_Session_database_driver extends CI_Session_driver implements SessionHandlerInterface {
 
@@ -109,7 +109,10 @@ class CI_Session_database_driver extends CI_Session_driver implements SessionHan
 		}
 
 		// Note: BC work-around for the old 'sess_table_name' setting, should be removed in the future.
-		isset($this->_config['save_path']) OR $this->_config['save_path'] = config_item('sess_table_name');
+		if ( ! isset($this->_config['save_path']) && ($this->_config['save_path'] = config_item('sess_table_name')))
+		{
+			log_message('debug', 'Session: "sess_save_path" is empty; using BC fallback to "sess_table_name".');
+		}
 	}
 
 	// ------------------------------------------------------------------------
@@ -125,7 +128,8 @@ class CI_Session_database_driver extends CI_Session_driver implements SessionHan
 	 */
 	public function open($save_path, $name)
 	{
-		if (empty($this->_db->conn_id) && !$this->_db->db_connect()) {
+		if (empty($this->_db->conn_id) && ! $this->_db->db_connect())
+		{
 			return $this->_fail();
 		}
 
@@ -162,7 +166,7 @@ class CI_Session_database_driver extends CI_Session_driver implements SessionHan
 				$this->_db->where('ip_address', $_SERVER['REMOTE_ADDR']);
 			}
 
-			if (!($result = $this->_db->get()) OR ($result = $result->row()) === NULL)
+			if ( ! ($result = $this->_db->get()) OR ($result = $result->row()) === NULL)
 			{
 				// PHP7 will reuse the same SessionHandler object after
 				// ID regeneration, so we need to explicitly set this to
@@ -233,7 +237,6 @@ class CI_Session_database_driver extends CI_Session_driver implements SessionHan
 			{
 				$this->_fingerprint = md5($session_data);
 				$this->_row_exists = TRUE;
-
 				return $this->_success;
 			}
 
@@ -257,7 +260,6 @@ class CI_Session_database_driver extends CI_Session_driver implements SessionHan
 		if ($this->_db->update($this->_config['save_path'], $update_data))
 		{
 			$this->_fingerprint = md5($session_data);
-
 			return $this->_success;
 		}
 
@@ -275,7 +277,7 @@ class CI_Session_database_driver extends CI_Session_driver implements SessionHan
 	 */
 	public function close()
 	{
-		return ($this->_lock && !$this->_release_lock())
+		return ($this->_lock && ! $this->_release_lock())
 			? $this->_fail()
 			: $this->_success;
 	}
@@ -303,14 +305,15 @@ class CI_Session_database_driver extends CI_Session_driver implements SessionHan
 				$this->_db->where('ip_address', $_SERVER['REMOTE_ADDR']);
 			}
 
-			if (!$this->_db->delete($this->_config['save_path'])) {
+			if ( ! $this->_db->delete($this->_config['save_path']))
+			{
 				return $this->_fail();
 			}
 		}
 
-		if ($this->close() === $this->_success) {
+		if ($this->close() === $this->_success)
+		{
 			$this->_cookie_destroy();
-
 			return $this->_success;
 		}
 
@@ -332,7 +335,7 @@ class CI_Session_database_driver extends CI_Session_driver implements SessionHan
 		// Prevent previous QB calls from messing with our queries
 		$this->_db->reset_query();
 
-		return ($this->_db->delete($this->_config['save_path'], 'timestamp < ' . (time() - $maxlifetime)))
+		return ($this->_db->delete($this->_config['save_path'], 'timestamp < '.(time() - $maxlifetime)))
 			? $this->_success
 			: $this->_fail();
 	}

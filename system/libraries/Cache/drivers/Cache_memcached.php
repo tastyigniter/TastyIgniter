@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link    https://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 2.0
  * @filesource
  */
@@ -75,33 +75,41 @@ class CI_Cache_memcached extends CI_Driver {
 	 *
 	 * Setup Memcache(d)
 	 *
-	 * @return    void
+	 * @return	void
 	 */
-	public function __construct() {
+	public function __construct()
+	{
 		// Try to load memcached server info from the config file.
 		$CI =& get_instance();
 		$defaults = $this->_config['default'];
 
-		if ($CI->config->load('memcached', TRUE, TRUE)) {
+		if ($CI->config->load('memcached', TRUE, TRUE))
+		{
 			$this->_config = $CI->config->config['memcached'];
 		}
 
-		if (class_exists('Memcached', FALSE)) {
+		if (class_exists('Memcached', FALSE))
+		{
 			$this->_memcached = new Memcached();
-		} elseif (class_exists('Memcache', FALSE)) {
+		}
+		elseif (class_exists('Memcache', FALSE))
+		{
 			$this->_memcached = new Memcache();
-		} else {
+		}
+		else
+		{
 			log_message('error', 'Cache: Failed to create Memcache(d) object; extension not loaded?');
-
 			return;
 		}
 
-		foreach ($this->_config as $cache_server) {
+		foreach ($this->_config as $cache_server)
+		{
 			isset($cache_server['hostname']) OR $cache_server['hostname'] = $defaults['host'];
 			isset($cache_server['port']) OR $cache_server['port'] = $defaults['port'];
 			isset($cache_server['weight']) OR $cache_server['weight'] = $defaults['weight'];
 
-			if ($this->_memcached instanceof Memcache) {
+			if ($this->_memcached instanceof Memcache)
+			{
 				// Third parameter is persistance and defaults to TRUE.
 				$this->_memcached->addServer(
 					$cache_server['hostname'],
@@ -109,7 +117,9 @@ class CI_Cache_memcached extends CI_Driver {
 					TRUE,
 					$cache_server['weight']
 				);
-			} elseif ($this->_memcached instanceof Memcached) {
+			}
+			elseif ($this->_memcached instanceof Memcached)
+			{
 				$this->_memcached->addServer(
 					$cache_server['hostname'],
 					$cache_server['port'],
@@ -155,7 +165,8 @@ class CI_Cache_memcached extends CI_Driver {
 		if ($this->_memcached instanceof Memcached)
 		{
 			return $this->_memcached->set($id, $data, $ttl);
-		} elseif ($this->_memcached instanceof Memcache)
+		}
+		elseif ($this->_memcached instanceof Memcache)
 		{
 			return $this->_memcached->set($id, $data, 0, $ttl);
 		}
@@ -168,9 +179,8 @@ class CI_Cache_memcached extends CI_Driver {
 	/**
 	 * Delete from Cache
 	 *
-	 * @param    mixed $id key to be deleted.
-	 *
-*@return	bool	true on success, false on failure
+	 * @param	mixed	$id	key to be deleted.
+	 * @return	bool	true on success, false on failure
 	 */
 	public function delete($id)
 	{
@@ -234,9 +244,8 @@ class CI_Cache_memcached extends CI_Driver {
 	/**
 	 * Get Cache Metadata
 	 *
-	 * @param    mixed $id key to get cache metadata on
-	 *
-*@return	mixed	FALSE on failure, array on success.
+	 * @param	mixed	$id	key to get cache metadata on
+	 * @return	mixed	FALSE on failure, array on success.
 	 */
 	public function get_metadata($id)
 	{
@@ -266,7 +275,8 @@ class CI_Cache_memcached extends CI_Driver {
 	 *
 	 * @return	bool
 	 */
-	public function is_supported() {
+	public function is_supported()
+	{
 		return (extension_loaded('memcached') OR extension_loaded('memcache'));
 	}
 
@@ -277,12 +287,16 @@ class CI_Cache_memcached extends CI_Driver {
 	 *
 	 * Closes the connection to Memcache(d) if present.
 	 *
-	 * @return    void
+	 * @return	void
 	 */
-	public function __destruct() {
-		if ($this->_memcached instanceof Memcache) {
+	public function __destruct()
+	{
+		if ($this->_memcached instanceof Memcache)
+		{
 			$this->_memcached->close();
-		} elseif ($this->_memcached instanceof Memcached) {
+		}
+		elseif ($this->_memcached instanceof Memcached && method_exists($this->_memcached, 'quit'))
+		{
 			$this->_memcached->quit();
 		}
 	}

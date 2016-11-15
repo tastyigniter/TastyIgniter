@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link    https://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 1.0.0
  * @filesource
  */
@@ -46,7 +46,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Libraries
  * @category	Libraries
  * @author		EllisLab Dev Team
- * @link           https://codeigniter.com/user_guide/general/routing.html
+ * @link		https://codeigniter.com/user_guide/general/routing.html
  */
 class CI_Router {
 
@@ -118,9 +118,8 @@ class CI_Router {
 	 *
 	 * Runs the route mapping function.
 	 *
-	 * @param    array $routing
-	 *
-*@return	void
+	 * @param	array	$routing
+	 * @return	void
 	 */
 	public function __construct($routing = NULL)
 	{
@@ -134,9 +133,10 @@ class CI_Router {
 		$this->_set_routing();
 
 		// Set any routing overrides that may exist in the main index file
-		if (is_array($routing)) {
+		if (is_array($routing))
+		{
 			empty($routing['controller']) OR $this->set_class($routing['controller']);
-			empty($routing['function']) OR $this->set_method($routing['function']);
+			empty($routing['function'])   OR $this->set_method($routing['function']);
 		}
 
 		log_message('info', 'Router Class Initialized');
@@ -152,20 +152,24 @@ class CI_Router {
 	 *
 	 * @return	void
 	 */
-	protected function _set_routing() {
+	protected function _set_routing()
+	{
 		// Load the routes.php file. It would be great if we could
 		// skip this for enable_query_strings = TRUE, but then
 		// default_controller would be empty ...
-		if (file_exists(APPPATH . 'config/routes.php')) {
-			include(APPPATH . 'config/routes.php');
+		if (file_exists(APPPATH.'config/routes.php'))
+		{
+			include(APPPATH.'config/routes.php');
 		}
 
-		if (file_exists(APPPATH . 'config/' . ENVIRONMENT . '/routes.php')) {
-			include(APPPATH . 'config/' . ENVIRONMENT . '/routes.php');
+		if (file_exists(APPPATH.'config/'.ENVIRONMENT.'/routes.php'))
+		{
+			include(APPPATH.'config/'.ENVIRONMENT.'/routes.php');
 		}
 
 		// Validate & get reserved routes
-		if (isset($route) && is_array($route)) {
+		if (isset($route) && is_array($route))
+		{
 			isset($route['default_controller']) && $this->default_controller = $route['default_controller'];
 			isset($route['translate_uri_dashes']) && $this->translate_uri_dashes = $route['translate_uri_dashes'];
 			unset($route['default_controller'], $route['translate_uri_dashes']);
@@ -175,13 +179,16 @@ class CI_Router {
 		// Are query strings enabled in the config file? Normally CI doesn't utilize query strings
 		// since URI segments are more search-engine friendly, but they can optionally be used.
 		// If this feature is enabled, we will gather the directory/class/method a little differently
-		if ($this->enable_query_strings) {
+		if ($this->enable_query_strings)
+		{
 			// If the directory is set at this time, it means an override exists, so skip the checks
-			if (!isset($this->directory)) {
+			if ( ! isset($this->directory))
+			{
 				$_d = $this->config->item('directory_trigger');
 				$_d = isset($_GET[$_d]) ? trim($_GET[$_d], " \t\n\r\0\x0B/") : '';
 
-				if ($_d !== '') {
+				if ($_d !== '')
+				{
 					$this->uri->filter_uri($_d);
 					$this->set_directory($_d);
 				}
@@ -334,9 +341,9 @@ class CI_Router {
 			$test = $this->directory
 				.ucfirst($this->translate_uri_dashes === TRUE ? str_replace('-', '_', $segments[0]) : $segments[0]);
 
-			if (!file_exists(APPPATH . 'controllers/' . $test . '.php')
+			if ( ! file_exists(APPPATH.'controllers/'.$test.'.php')
 				&& $directory_override === FALSE
-				&& is_dir(APPPATH . 'controllers/' . $this->directory . $segments[0])
+				&& is_dir(APPPATH.'controllers/'.$this->directory.$segments[0])
 			)
 			{
 				$this->set_directory(array_shift($segments), TRUE);
@@ -369,9 +376,11 @@ class CI_Router {
 		$http_verb = isset($_SERVER['REQUEST_METHOD']) ? strtolower($_SERVER['REQUEST_METHOD']) : 'cli';
 
 		// Loop through the route array looking for wildcards
-		foreach ($this->routes as $key => $val) {
+		foreach ($this->routes as $key => $val)
+		{
 			// Check if route format is using HTTP verbs
-			if (is_array($val)) {
+			if (is_array($val))
+			{
 				$val = array_change_key_case($val, CASE_LOWER);
 				if (isset($val[$http_verb]))
 				{
@@ -472,9 +481,8 @@ class CI_Router {
 	 * Set directory name
 	 *
 	 * @param	string	$dir	Directory name
-	 * @param    bool      $append Whether we're appending rather than setting the full value
-	 *
-*@return	void
+	 * @param	bool	$append	Whether we're appending rather than setting the full value
+	 * @return	void
 	 */
 	public function set_directory($dir, $append = FALSE)
 	{

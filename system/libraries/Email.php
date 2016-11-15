@@ -147,14 +147,7 @@ class CI_Email {
 	 *
 	 * @var	string
 	 */
-	public $charset		= 'utf-8';
-
-	/**
-	 * Multipart message
-	 *
-	 * @var	string	'mixed' (in the body) or 'related' (separate)
-	 */
-	public $multipart	= 'mixed';		// "mixed" (in the body) or "related" (separate)
+	public $charset		= 'UTF-8';
 
 	/**
 	 * Alternative message (for HTML messages only)
@@ -259,20 +252,6 @@ class CI_Email {
 	 * @var	string
 	 */
 	protected $_finalbody		= '';
-
-	/**
-	 * multipart/alternative boundary
-	 *
-	 * @var	string
-	 */
-	protected $_alt_boundary	= '';
-
-	/**
-	 * Attachment boundary
-	 *
-	 * @var	string
-	 */
-	protected $_atc_boundary	= '';
 
 	/**
 	 * Final headers to send
@@ -394,6 +373,13 @@ class CI_Email {
 		4 => '4 (Low)',
 		5 => '5 (Lowest)'
 	);
+
+	/**
+	 * mbstring.func_override flag
+	 *
+	 * @var	bool
+	 */
+	protected static $func_override;
 
 	// --------------------------------------------------------------------
 

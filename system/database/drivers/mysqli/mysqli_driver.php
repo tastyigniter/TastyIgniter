@@ -125,8 +125,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 		}
 		else
 		{
-			// Persistent connection support was added in PHP 5.3.0
-			$hostname = ($persistent === TRUE && is_php('5.3'))
+			$hostname = ($persistent === TRUE)
 				? 'p:'.$this->hostname : $this->hostname;
 			$port = empty($this->port) ? NULL : $this->port;
 			$socket = NULL;
@@ -175,8 +174,9 @@ class CI_DB_mysqli_driver extends CI_DB {
 					//
 					// https://secure.php.net/ChangeLog-5.php#5.6.16
 					// https://bugs.php.net/bug.php?id=68344
-					elseif (defined('MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT')) {
-						$this->_mysqli->options(MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT, TRUE);
+					elseif (defined('MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT'))
+					{
+						$client_flags |= MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT;
 					}
 				}
 
@@ -247,6 +247,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 		if ($this->conn_id->select_db($database))
 		{
 			$this->database = $database;
+			$this->data_cache = array();
 			return TRUE;
 		}
 
@@ -493,7 +494,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 		{
 			return array(
 				'code'    => $this->_mysqli->connect_errno,
-				'message' => is_php('5.2.9') ? $this->_mysqli->connect_error : mysqli_connect_error(),
+				'message' => $this->_mysqli->connect_error
 			);
 		}
 
