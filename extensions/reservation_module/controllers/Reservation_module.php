@@ -30,21 +30,16 @@ class Reservation_module extends Main_Controller {
 
         if (strpos($time_format, '%h') !== FALSE) {
             $data['time_format'] = '12hr';
-            $time_format = '%g:%i %A';
         } else {
             $data['time_format'] = '24hr';
-            $time_format = '%H:%i';
         }
 
         if (strpos($date_format, 'm') === 1) {
             $data['date_format'] = 'month_first';
-            $date_format = '%m-%d-%Y';
         } else if (strpos($date_format, 'Y') === 1) {
             $data['date_format'] = 'year_first';
-            $date_format = '%Y-%m-%d';
         } else {
             $data['date_format'] = 'day_first';
-            $date_format = '%d-%m-%Y';
         }
 
         $page_url = $this->uri->rsegment('1') === 'reservation' ? page_url() : site_url('reservation');

@@ -149,7 +149,7 @@
                 </div>
                 <div class="col-xs-12 col-sm-2 wrap-none">
                     <label class="text-muted text-uppercase small"><?php echo lang('label_date'); ?></label><br />
-                    <span class="form-control-static"><?php echo mdate('%D, %M %j, %Y', strtotime($date)); ?></span>
+                    <span class="form-control-static"><?php echo mdate(lang('text_date_format'), strtotime($date)); ?></span>
                 </div>
                 <div class="col-xs-12 col-sm-1 wrap-none">
                     <label class="text-muted text-uppercase small"><?php echo lang('label_time'); ?></label><br />
