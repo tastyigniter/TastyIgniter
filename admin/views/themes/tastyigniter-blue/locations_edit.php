@@ -817,7 +817,6 @@ $(document).ready(function() {
 
 	$('.timepicker').timepicker({
 		defaultTime: '11:45 AM',
-		<?php echo ($time_format === '24hr') ? 'showMeridian: false' : 'showMeridian: true'; ?>
 	});
 
 	$('input[name="auto_lat_lng"]').on('change', function() {

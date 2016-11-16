@@ -363,19 +363,6 @@ class Locations extends Admin_Controller {
 			$data['collection_hours'] = array('open' => '12:00 AM', 'close' => '11:59 PM');
 		}
 
-		$date_format = ($this->config->item('date_format')) ? $this->config->item('date_format') : '%d %M %y';
-		$time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
-
-		$data['time_format'] = (strpos($time_format, '%h') !== FALSE) ? '12hr' : '24hr';
-
-		if (strpos($date_format, 'm') === 1) {
-			$data['date_format'] = 'month_first';
-		} else if (strpos($date_format, 'Y') === 1) {
-			$data['date_format'] = 'year_first';
-		} else {
-			$data['date_format'] = 'day_first';
-		}
-
 		if ($this->input->post('future_orders')) {
 			$data['future_orders'] = $this->input->post('future_orders');
 		} else if (isset($options['future_orders'])) {

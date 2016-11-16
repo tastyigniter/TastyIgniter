@@ -103,11 +103,11 @@
                                 <?php foreach ($time_slots as $key => $slot) { ?>
                                     <?php if ($slot['time'] === $time) { ?>
                                         <label class="btn btn-default col-xs-4 col-sm-2 active <?php echo $slot['state']; ?>" data-btn="btn-primary">
-                                            <input type="radio" name="selected_time" id="reserve_time<?php echo $key; ?>" value="<?php echo $slot['time']; ?>" <?php echo set_radio('selected_time', $slot['time'], TRUE); ?>/><?php echo $slot['time']; ?>
+                                            <input type="radio" name="selected_time" id="reserve_time<?php echo $key; ?>" value="<?php echo $slot['time']; ?>" <?php echo set_radio('selected_time', $slot['time'], TRUE); ?>/><?php echo $slot['formatted_time']; ?>
                                         </label>
                                     <?php } else { ?>
                                         <label class="btn btn-default col-xs-4 col-sm-2 <?php echo $slot['state']; ?>" data-btn="btn-primary">
-                                            <input type="radio" name="selected_time" id="reserve_time<?php echo $key; ?>" value="<?php echo $slot['time']; ?>" <?php echo set_radio('selected_time', $slot['time']); ?>/><?php echo $slot['time']; ?>
+                                            <input type="radio" name="selected_time" id="reserve_time<?php echo $key; ?>" value="<?php echo $slot['time']; ?>" <?php echo set_radio('selected_time', $slot['time']); ?>/><?php echo $slot['formatted_time']; ?>
                                         </label>
                                     <?php } ?>
                                 <?php } ?>
@@ -176,19 +176,8 @@
             $('.display-local').fadeOut();
         });
 
-//        $('#time').timepicker({
-//            <?php //echo ($time_format === '24hr') ? 'showMeridian: false' : 'showMeridian: true'; ?>
-//        });
-
         $('#date').datepicker({
-            <?php if ($date_format === 'year_first') { ?>
-                <?php echo "format: 'yyyy-mm-dd'" ?>
-            <?php } else if ($date_format === 'month_first') { ?>
-                <?php echo "format: 'mm-dd-yyyy'" ?>
-            <?php } else { ?>
-                <?php echo "format: 'dd-mm-yyyy'" ?>
-            <?php } ?>
-
+            <?php echo "format: '{$date_format}'" ?>
         });
 
         if ($('input[name="action"]').val() == 'view_summary') {

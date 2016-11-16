@@ -28,19 +28,14 @@ class Reservation_module extends Main_Controller {
         $date_format = ($this->config->item('date_format')) ? $this->config->item('date_format') : '%d %M %y';
         $time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
 
-        if (strpos($time_format, '%h') !== FALSE) {
-            $data['time_format'] = '12hr';
-        } else {
-            $data['time_format'] = '24hr';
-        }
+		$data['date_formats'] = array(
+			'%j%S %F %Y' => 'dd mm yyyy',
+			'%d/%m/%Y' => 'dd/mm/yyyy',
+			'%m/%d/%Y' => 'mm/dd/yyyy',
+			'%Y-%m-%d' => 'yyyy-mm-dd',
+		);
 
-        if (strpos($date_format, 'm') === 1) {
-            $data['date_format'] = 'month_first';
-        } else if (strpos($date_format, 'Y') === 1) {
-            $data['date_format'] = 'year_first';
-        } else {
-            $data['date_format'] = 'day_first';
-        }
+		$data['date_format'] = isset($data['date_formats'][$date_format]) ? $data['date_formats'][$date_format] : $date_format;
 
         $page_url = $this->uri->rsegment('1') === 'reservation' ? page_url() : site_url('reservation');
         $data['current_url'] 			= $page_url.'?action=find_table&';
@@ -102,12 +97,12 @@ class Reservation_module extends Main_Controller {
 			$data['time'] 	= '';
 		}
 
-        $data['reservation_times'] = array();
-        $opening_time = mdate("{$date_format} {$time_format}", $this->location->workingTime('opening', 'open', FALSE));
-        $closing_time = mdate("{$date_format} {$time_format}", $this->location->workingTime('opening', 'close', FALSE));
+        $opening_time = mdate('%d-%m-%Y %H:%i', $this->location->workingTime('opening', 'open', FALSE));
+        $closing_time = mdate('%d-%m-%Y %H:%i', $this->location->workingTime('opening', 'close', FALSE));
         $start_time = mdate('%H:%i', strtotime($opening_time) + $this->location->getReservationInterval() * 60);
 
-        $reservation_times = time_range($start_time, $closing_time, $this->location->getReservationInterval());    // retrieve the location delivery times from location library
+		$data['reservation_times'] = array();
+		$reservation_times = time_range($start_time, $closing_time, $this->location->getReservationInterval());    // retrieve the location delivery times from location library
         if (!empty($reservation_times)) {
             foreach ($reservation_times as $key => $value) {                                            // loop through delivery times
                 $data['reservation_times'][$value] = mdate($time_format, strtotime($value));
@@ -118,12 +113,13 @@ class Reservation_module extends Main_Controller {
         if (!empty($response['time_slots'])) {
             for ($i = 0; $i < 5; $i++) {
                 if (isset($response['time_slots'][$i])) {
-                    $time = mdate($time_format, strtotime($response['time_slots'][$i]));
                     $data['time_slots'][$i]['state'] = '';
-                    $data['time_slots'][$i]['time'] = $time;
+                    $data['time_slots'][$i]['time'] = $response['time_slots'][$i];
+                    $data['time_slots'][$i]['formatted_time'] = mdate($time_format, strtotime($response['time_slots'][$i]));
                 } else {
                     $data['time_slots'][$i]['state']    = 'disabled';
                     $data['time_slots'][$i]['time']     = '--';
+                    $data['time_slots'][$i]['formatted_time']     = '--';
                 }
             }
         }
@@ -185,18 +181,18 @@ class Reservation_module extends Main_Controller {
         $this->form_validation->set_rules('reserve_time', 'lang:label_time', 'xss_clean|trim|required|valid_time|callback__validate_time');
 
         if ($this->input->get('action') === 'select_time') {
-            $this->form_validation->set_rules('selected_time', 'lang:label_time', 'xss_clean|trim|required|valid_time|callback__validate_time');
+			$this->form_validation->set_rules('selected_time', 'lang:label_time', 'xss_clean|trim|required|valid_time|callback__validate_time');
         }
 
         if ($this->form_validation->run() === TRUE) {											// checks if form validation routines ran successfully
             return TRUE;
         } else {
-            return FALSE;
+			return FALSE;
         }
     }
 
     public function _validate_date($str) {
-		if (strtotime($str) < time()) {
+		if (strtotime(urldecode($str)) < time()) {
         	$this->form_validation->set_message('_validate_date', $this->lang->line('error_invalid_date'));
       		return FALSE;
 		} else {
@@ -206,11 +202,11 @@ class Reservation_module extends Main_Controller {
 
     public function _validate_time($str) {
 
-        if (!empty($str)) {
+		if (!empty($str)) {
 
             $reserve_time = strtotime(urldecode($str));
 
-            if ($hour = $this->Locations_model->getOpeningHourByDay(urldecode($this->input->get('location')), $this->input->get('reserve_date'))) {
+			if ($hour = $this->Locations_model->getOpeningHourByDay(urldecode($this->input->get('location')), urldecode($this->input->get('reserve_date')))) {
                 if ($hour['status'] === '1' AND (strtotime($hour['open']) <= $reserve_time AND strtotime($hour['close']) >= $reserve_time)) {
                     return TRUE;
                 }
