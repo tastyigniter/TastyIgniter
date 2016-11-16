@@ -828,7 +828,7 @@ $(document).ready(function() {
 	});
 
 	$('.timepicker').timepicker({
-		defaultTime: '11:45 AM'
+		defaultTime: '11:45 AM',
 	});
 
 	$('input[name="auto_lat_lng"]').on('change', function() {

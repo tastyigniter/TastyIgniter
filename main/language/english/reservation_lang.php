@@ -4,6 +4,7 @@ $lang['text_heading'] 			        = 'Reserve A Table';
 $lang['text_success_heading'] 	        = 'Reservation Confirmation';;
 $lang['text_login'] 			        = 'Already have an account? <a href="%s">Login Here</a>';
 $lang['text_logout'] 			        = 'Welcome back <b>%s</b>, Not You? <a href="%s">Logout</a>';
+$lang['text_time_format'] 				= '%l, %F %j, %Y';
 
 $lang['label_first_name'] 		        = 'First Name';
 $lang['label_last_name'] 		        = 'Last Name';

@@ -172,6 +172,7 @@ class Locations extends Admin_Controller
 		$data['weekdays_abbr'] = $weekdays_abbr = array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun');
 		$data['weekdays'] = $weekdays = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
 
+
 		$options = array();
 		if (!empty($location_info['options'])) {
 			$options = unserialize($location_info['options']);
