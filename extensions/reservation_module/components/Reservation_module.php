@@ -25,24 +25,14 @@ class Reservation_module extends Base_Component
 		$date_format = ($this->config->item('date_format')) ? $this->config->item('date_format') : '%d %M %y';
 		$time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
 
-		if (strpos($time_format, '%h') !== FALSE) {
-			$data['time_format'] = '12hr';
-			$time_format = '%g:%i %A';
-		} else {
-			$data['time_format'] = '24hr';
-			$time_format = '%H:%i';
-		}
+		$data['date_formats'] = array(
+			'%j%S %F %Y' => 'dd mm yyyy',
+			'%d/%m/%Y' => 'dd/mm/yyyy',
+			'%m/%d/%Y' => 'mm/dd/yyyy',
+			'%Y-%m-%d' => 'yyyy-mm-dd',
+		);
 
-		if (strpos($date_format, 'm') === 1) {
-			$data['date_format'] = 'month_first';
-			$date_format = '%m-%d-%Y';
-		} else if (strpos($date_format, 'Y') === 1) {
-			$data['date_format'] = 'year_first';
-			$date_format = '%Y-%m-%d';
-		} else {
-			$data['date_format'] = 'day_first';
-			$date_format = '%d-%m-%Y';
-		}
+		$data['date_format'] = isset($data['date_formats'][$date_format]) ? $data['date_formats'][$date_format] : $date_format;
 
 		$page_url = $this->uri->rsegment('1') === 'reservation' ? page_url() : site_url('reservation');
 		$data['current_url'] = $page_url . '?action=find_table&';
@@ -104,11 +94,11 @@ class Reservation_module extends Base_Component
 			$data['time'] = '';
 		}
 
-		$data['reservation_times'] = array();
-		$opening_time = mdate("{$date_format} {$time_format}", $this->location->workingTime('opening', 'open', FALSE));
-		$closing_time = mdate("{$date_format} {$time_format}", $this->location->workingTime('opening', 'close', FALSE));
+		$opening_time = mdate('%d-%m-%Y %H:%i', $this->location->workingTime('opening', 'open', FALSE));
+		$closing_time = mdate('%d-%m-%Y %H:%i', $this->location->workingTime('opening', 'close', FALSE));
 		$start_time = mdate('%H:%i', strtotime($opening_time) + $this->location->getReservationInterval() * 60);
 
+		$data['reservation_times'] = array();
 		$reservation_times = time_range($start_time, $closing_time, $this->location->getReservationInterval());    // retrieve the location delivery times from location library
 		if (!empty($reservation_times)) {
 			foreach ($reservation_times as $key => $value) {                                            // loop through delivery times
@@ -120,12 +110,13 @@ class Reservation_module extends Base_Component
 		if (!empty($response['time_slots'])) {
 			for ($i = 0; $i < 5; $i++) {
 				if (isset($response['time_slots'][$i])) {
-					$time = mdate($time_format, strtotime($response['time_slots'][$i]));
 					$data['time_slots'][$i]['state'] = '';
-					$data['time_slots'][$i]['time'] = $time;
+					$data['time_slots'][$i]['time'] = $response['time_slots'][$i];
+					$data['time_slots'][$i]['formatted_time'] = mdate($time_format, strtotime($response['time_slots'][$i]));
 				} else {
-					$data['time_slots'][$i]['state'] = 'disabled';
-					$data['time_slots'][$i]['time'] = '--';
+					$data['time_slots'][$i]['state']    = 'disabled';
+					$data['time_slots'][$i]['time']     = '--';
+					$data['time_slots'][$i]['formatted_time']     = '--';
 				}
 			}
 		}
