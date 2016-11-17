@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link    https://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 1.4.1
  * @filesource
  */
@@ -48,7 +48,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage  Drivers
  * @category	Database
  * @author		EllisLab Dev Team
- * @link           https://codeigniter.com/user_guide/database/
+ * @link		https://codeigniter.com/user_guide/database/
  */
 
 /**
@@ -252,10 +252,12 @@ class CI_DB_oci8_driver extends CI_DB {
 			return $this->data_cache['version'];
 		}
 
-		if (!$this->conn_id OR ($version_string = oci_server_version($this->conn_id)) === FALSE)
+		if ( ! $this->conn_id OR ($version_string = oci_server_version($this->conn_id)) === FALSE)
 		{
 			return FALSE;
-		} elseif (preg_match('#Release\s(\d+(?:\.\d+)+)#', $version_string, $match)) {
+		}
+		elseif (preg_match('#Release\s(\d+(?:\.\d+)+)#', $version_string, $match))
+		{
 			return $this->data_cache['version'] = $match[1];
 		}
 
@@ -281,7 +283,6 @@ class CI_DB_oci8_driver extends CI_DB {
 		}
 
 		oci_set_prefetch($this->stmt_id, 1000);
-
 		return oci_execute($this->stmt_id, $this->commit_mode);
 	}
 
@@ -305,8 +306,7 @@ class CI_DB_oci8_driver extends CI_DB {
 	 * @param	string	package name in which the stored procedure is in
 	 * @param	string	stored procedure name to execute
 	 * @param	array	parameters
-	 *
-*@return	mixed
+	 * @return	mixed
 	 *
 	 * params array keys
 	 *
@@ -317,7 +317,8 @@ class CI_DB_oci8_driver extends CI_DB {
 	 * type     yes       the type of the parameter
 	 * length   yes       the max size of the parameter
 	 */
-	public function stored_procedure($package, $procedure, array $params) {
+	public function stored_procedure($package, $procedure, array $params)
+	{
 		if ($package === '' OR $procedure === '')
 		{
 			log_message('error', 'Invalid query: '.$package.'.'.$procedure);
@@ -344,7 +345,6 @@ class CI_DB_oci8_driver extends CI_DB {
 		$this->_bind_params($params);
 		$result = $this->query($sql, FALSE, $have_cursor);
 		$this->_reset_stmt_id = TRUE;
-
 		return $result;
 	}
 
@@ -386,7 +386,7 @@ class CI_DB_oci8_driver extends CI_DB {
 	 */
 	protected function _trans_begin()
 	{
-		$this->commit_mode = is_php('5.3.2') ? OCI_NO_AUTO_COMMIT : OCI_DEFAULT;
+		$this->commit_mode = OCI_NO_AUTO_COMMIT;
 		return TRUE;
 	}
 
@@ -559,23 +559,29 @@ class CI_DB_oci8_driver extends CI_DB {
 	 */
 	public function error()
 	{
-		/* oci_error() returns an array that already contains the
-		 * 'code' and 'message' keys, so we can just return it.
-		 */
+		// oci_error() returns an array that already contains
+		// 'code' and 'message' keys, but it can return false
+		// if there was no error ....
 		if (is_resource($this->curs_id))
 		{
-			return oci_error($this->curs_id);
+			$error = oci_error($this->curs_id);
 		}
 		elseif (is_resource($this->stmt_id))
 		{
-			return oci_error($this->stmt_id);
+			$error = oci_error($this->stmt_id);
 		}
 		elseif (is_resource($this->conn_id))
 		{
-			return oci_error($this->conn_id);
+			$error = oci_error($this->conn_id);
+		}
+		else
+		{
+			$error = oci_error();
 		}
 
-		return oci_error();
+		return is_array($error)
+			? $error
+			: array('code' => '', 'message' => '');
 	}
 
 	// --------------------------------------------------------------------
@@ -652,12 +658,14 @@ class CI_DB_oci8_driver extends CI_DB {
 	 * @param	string	$sql	SQL Query
 	 * @return	string
 	 */
-	protected function _limit($sql) {
-		if (version_compare($this->version(), '12.1', '>=')) {
+	protected function _limit($sql)
+	{
+		if (version_compare($this->version(), '12.1', '>='))
+		{
 			// OFFSET-FETCH can be used only with the ORDER BY clause
 			empty($this->qb_orderby) && $sql .= ' ORDER BY 1';
 
-			return $sql . ' OFFSET ' . (int)$this->qb_offset . ' ROWS FETCH NEXT ' . $this->qb_limit . ' ROWS ONLY';
+			return $sql.' OFFSET '.(int) $this->qb_offset.' ROWS FETCH NEXT '.$this->qb_limit.' ROWS ONLY';
 		}
 
 		$this->limit_used = TRUE;

@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link    https://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 1.0.0
  * @filesource
  */
@@ -48,7 +48,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Drivers
  * @category	Database
  * @author		EllisLab Dev Team
- * @link           https://codeigniter.com/user_guide/database/
+ * @link		https://codeigniter.com/user_guide/database/
  */
 class CI_DB_mysql_driver extends CI_DB {
 
@@ -149,9 +149,12 @@ class CI_DB_mysql_driver extends CI_DB {
 
 		if (isset($this->stricton) && is_resource($this->conn_id))
 		{
-			if ($this->stricton) {
+			if ($this->stricton)
+			{
 				$this->simple_query('SET SESSION sql_mode = CONCAT(@@sql_mode, ",", "STRICT_ALL_TABLES")');
-			} else {
+			}
+			else
+			{
 				$this->simple_query(
 					'SET SESSION sql_mode =
 					REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
@@ -205,6 +208,7 @@ class CI_DB_mysql_driver extends CI_DB {
 		if (mysql_select_db($database, $this->conn_id))
 		{
 			$this->database = $database;
+			$this->data_cache = array();
 			return TRUE;
 		}
 
@@ -291,7 +295,6 @@ class CI_DB_mysql_driver extends CI_DB {
 	protected function _trans_begin()
 	{
 		$this->simple_query('SET AUTOCOMMIT=0');
-
 		return $this->simple_query('START TRANSACTION'); // can also be BEGIN or BEGIN WORK
 	}
 

@@ -707,26 +707,7 @@ if ( ! function_exists('date_range'))
 
 		$range = array();
 
-		/* NOTE: Even though the DateTime object has many useful features, it appears that
-		 *	 it doesn't always handle properly timezones, when timestamps are passed
-		 *	 directly to its constructor. Neither of the following gave proper results:
-		 *
-		 *		new DateTime('<timestamp>')
-		 *		new DateTime('<timestamp>', '<timezone>')
-		 *
-		 *	 --- available in PHP 5.3:
-		 *
-		 *		DateTime::createFromFormat('<format>', '<timestamp>')
-		 *		DateTime::createFromFormat('<format>', '<timestamp>', '<timezone')
-		 *
-		 *	 ... so we'll have to set the timestamp after the object is instantiated.
-		 *	 Furthermore, in PHP 5.3 we can use DateTime::setTimestamp() to do that and
-		 *	 given that we have UNIX timestamps - we should use it.
-		*/
 		$from = new DateTime();
-
-		if (is_php('5.3'))
-		{
 			$from->setTimestamp($unix_start);
 			if ($is_unix)
 			{
@@ -753,43 +734,6 @@ if ( ! function_exists('date_range'))
 			{
 				$range[] = $arg->format($format);
 			}
-
-			return $range;
-		}
-
-		$from->setDate(date('Y', $unix_start), date('n', $unix_start), date('j', $unix_start));
-		$from->setTime(date('G', $unix_start), date('i', $unix_start), date('s', $unix_start));
-		if ($is_unix)
-		{
-			$arg = new DateTime();
-			$arg->setDate(date('Y', $mixed), date('n', $mixed), date('j', $mixed));
-			$arg->setTime(date('G', $mixed), date('i', $mixed), date('s', $mixed));
-		}
-		else
-		{
-			$arg = (int) $mixed;
-		}
-		$range[] = $from->format($format);
-
-		if (is_int($arg)) // Day intervals
-		{
-			do
-			{
-				$from->modify('+1 day');
-				$range[] = $from->format($format);
-			}
-			while (--$arg > 0);
-		}
-		else // end date UNIX timestamp
-		{
-			for ($from->modify('+1 day'), $end_check = $arg->format('Ymd'); $from->format('Ymd') < $end_check; $from->modify('+1 day'))
-			{
-				$range[] = $from->format($format);
-			}
-
-			// Our loop only appended dates prior to our end date
-			$range[] = $arg->format($format);
-		}
 
 		return $range;
 	}

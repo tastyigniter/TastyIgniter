@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link    https://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 1.3.1
  * @filesource
  */
@@ -46,7 +46,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Libraries
  * @category	UnitTesting
  * @author		EllisLab Dev Team
- * @link           https://codeigniter.com/user_guide/libraries/unit_testing.html
+ * @link		https://codeigniter.com/user_guide/libraries/unit_testing.html
  */
 class CI_Unit_test {
 
@@ -99,7 +99,7 @@ class CI_Unit_test {
 		'result',
 		'file',
 		'line',
-		'notes',
+		'notes'
 	);
 
 	// --------------------------------------------------------------------
@@ -154,7 +154,6 @@ class CI_Unit_test {
 
 		if (in_array($expected, array('is_object', 'is_string', 'is_bool', 'is_true', 'is_false', 'is_int', 'is_numeric', 'is_float', 'is_double', 'is_array', 'is_null', 'is_resource'), TRUE))
 		{
-			$expected = str_replace('is_double', 'is_float', $expected);
 			$result = $expected($test);
 			$extype = str_replace(array('true', 'false'), 'bool', str_replace('is_', '', $expected));
 		}
@@ -173,7 +172,7 @@ class CI_Unit_test {
 			'result'        => ($result === TRUE) ? 'passed' : 'failed',
 			'file'          => $back['file'],
 			'line'          => $back['line'],
-			'notes'         => $notes,
+			'notes'         => $notes
 		);
 
 		$this->results[] = $report;
@@ -290,9 +289,11 @@ class CI_Unit_test {
 				if ( ! in_array($key, $this->_test_items_visible))
 				{
 					continue;
-				} elseif (in_array($key, array('test_name', 'test_datatype', 'test_res_datatype', 'result'), TRUE))
+				}
+				elseif (in_array($key, array('test_name', 'test_datatype', 'res_datatype', 'result'), TRUE))
 				{
-					if (FALSE !== ($line = $CI->lang->line(strtolower('ut_' . $val), FALSE))) {
+					if (FALSE !== ($line = $CI->lang->line(strtolower('ut_'.$val), FALSE)))
+					{
 						$val = $line;
 					}
 				}
@@ -335,7 +336,7 @@ class CI_Unit_test {
 		$back = debug_backtrace();
 		return array(
 			'file' => (isset($back[1]['file']) ? $back[1]['file'] : ''),
-			'line' => (isset($back[1]['line']) ? $back[1]['line'] : ''),
+			'line' => (isset($back[1]['line']) ? $back[1]['line'] : '')
 		);
 	}
 

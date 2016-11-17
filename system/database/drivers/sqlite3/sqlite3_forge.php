@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link    https://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 3.0.0
  * @filesource
  */
@@ -42,7 +42,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  *
  * @category	Database
  * @author	Andrey Andreev
- * @link        https://codeigniter.com/user_guide/database/
+ * @link	https://codeigniter.com/user_guide/database/
  */
 class CI_DB_sqlite3_forge extends CI_DB_forge {
 
@@ -75,7 +75,7 @@ class CI_DB_sqlite3_forge extends CI_DB_forge {
 		if (version_compare($this->db->version(), '3.3', '<'))
 		{
 			$this->_create_table_if = FALSE;
-			$this->_drop_table_if = FALSE;
+			$this->_drop_table_if   = FALSE;
 		}
 	}
 
@@ -87,7 +87,7 @@ class CI_DB_sqlite3_forge extends CI_DB_forge {
 	 * @param	string	$db_name
 	 * @return	bool
 	 */
-	public function create_database($db_name = '')
+	public function create_database($db_name)
 	{
 		// In SQLite, a database is created when you connect to the database.
 		// We'll return TRUE so that an error isn't generated
@@ -102,7 +102,7 @@ class CI_DB_sqlite3_forge extends CI_DB_forge {
 	 * @param	string	$db_name	(ignored)
 	 * @return	bool
 	 */
-	public function drop_database($db_name = '')
+	public function drop_database($db_name)
 	{
 		// In SQLite, a database is dropped when we delete a file
 		if (file_exists($this->db->database))

@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link    https://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 3.0.0
  * @filesource
  */
@@ -44,7 +44,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	CodeIgniter
  * @category	Compatibility
  * @author		Andrey Andreev
- * @link           https://codeigniter.com/user_guide/
+ * @link		https://codeigniter.com/user_guide/
  * @link		http://php.net/mbstring
  */
 
@@ -92,14 +92,12 @@ if ( ! function_exists('mb_strpos'))
 	 * WARNING: This function WILL fall-back to strpos()
 	 * if iconv is not available!
 	 *
-	 * @link    http://php.net/mb_strpos
-	 *
-	 * @param    string    $haystack
+	 * @link	http://php.net/mb_strpos
+	 * @param	string	$haystack
 	 * @param	string	$needle
 	 * @param	int	$offset
 	 * @param	string	$encoding
-	 *
-	 * @return    mixed
+	 * @return	mixed
 	 */
 	function mb_strpos($haystack, $needle, $offset = 0, $encoding = NULL)
 	{

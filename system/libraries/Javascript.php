@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link    https://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 1.0.0
  * @filesource
  */
@@ -44,7 +44,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Libraries
  * @category	Javascript
  * @author		EllisLab Dev Team
- * @link           https://codeigniter.com/user_guide/libraries/javascript.html
+ * @link		https://codeigniter.com/user_guide/libraries/javascript.html
  * @deprecated	3.0.0	This was never a good idea in the first place.
  */
 class CI_Javascript {
@@ -85,7 +85,7 @@ class CI_Javascript {
 		// make js to refer to current library
 		$this->js =& $this->CI->$js_library_driver;
 
-		log_message('info', 'Javascript Class Initialized and loaded. Driver used: ' . $js_library_driver);
+		log_message('info', 'Javascript Class Initialized and loaded. Driver used: '.$js_library_driver);
 	}
 
 	// --------------------------------------------------------------------

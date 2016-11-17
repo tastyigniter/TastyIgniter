@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link    https://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 3.0.0
  * @filesource
  */
@@ -44,7 +44,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Libraries
  * @category	Sessions
  * @author	Andrey Andreev
- * @link    https://codeigniter.com/user_guide/libraries/sessions.html
+ * @link	https://codeigniter.com/user_guide/libraries/sessions.html
  */
 abstract class CI_Session_driver implements SessionHandlerInterface {
 
@@ -81,8 +81,8 @@ abstract class CI_Session_driver implements SessionHandlerInterface {
 	 * from userspace handlers are not handled properly. PHP 7 fixes the
 	 * bug, so we need to return different values depending on the version.
 	 *
-	 * @see    https://wiki.php.net/rfc/session.user.return-value
-	 * @var    mixed
+	 * @see	https://wiki.php.net/rfc/session.user.return-value
+	 * @var	mixed
 	 */
 	protected $_success, $_failure;
 
@@ -98,10 +98,13 @@ abstract class CI_Session_driver implements SessionHandlerInterface {
 	{
 		$this->_config =& $params;
 
-		if (is_php('7')) {
+		if (is_php('7'))
+		{
 			$this->_success = TRUE;
 			$this->_failure = FALSE;
-		} else {
+		}
+		else
+		{
 			$this->_success = 0;
 			$this->_failure = -1;
 		}
@@ -178,11 +181,11 @@ abstract class CI_Session_driver implements SessionHandlerInterface {
 	 * so that the INI is set just in time for the error message to
 	 * be properly generated.
 	 *
-	 * @return    mixed
+	 * @return	mixed
 	 */
-	protected function _fail() {
+	protected function _fail()
+	{
 		ini_set('session.save_path', config_item('sess_save_path'));
-
 		return $this->_failure;
 	}
 }

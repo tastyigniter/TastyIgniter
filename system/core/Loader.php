@@ -121,7 +121,7 @@ class CI_Loader {
 	 */
 	protected $_ci_varmap = array(
 		'unit_test'  => 'unit',
-		'user_agent' => 'agent',
+		'user_agent' => 'agent'
 	);
 
 	// --------------------------------------------------------------------
@@ -274,9 +274,11 @@ class CI_Loader {
 		//       to cache them for later use and that prevents
 		//       MY_Model from being an abstract class and is
 		//       sub-optimal otherwise anyway.
-		if (!class_exists('CI_Model', FALSE)) {
-			$app_path = IGNITEPATH . 'core' . DIRECTORY_SEPARATOR;
-			if (file_exists($app_path . 'Model.php')) {
+		if ( ! class_exists('CI_Model', FALSE))
+		{
+			$app_path = APPPATH.'core'.DIRECTORY_SEPARATOR;
+			if (file_exists($app_path.'Model.php'))
+			{
 				require_once($app_path . 'Model.php');
 				if (!class_exists('CI_Model', FALSE)) {
 					throw new RuntimeException($app_path . "Model.php exists, but doesn't declare class CI_Model");

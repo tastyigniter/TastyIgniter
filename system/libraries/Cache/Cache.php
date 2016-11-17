@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link    https://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 2.0.0
  * @filesource
  */
@@ -178,7 +178,7 @@ class CI_Cache extends CI_Driver_Library {
 	 */
 	public function increment($id, $offset = 1)
 	{
-		return $this->{$this->_adapter}->increment($this->key_prefix . $id, $offset);
+		return $this->{$this->_adapter}->increment($this->key_prefix.$id, $offset);
 	}
 
 	// ------------------------------------------------------------------------
@@ -192,7 +192,7 @@ class CI_Cache extends CI_Driver_Library {
 	 */
 	public function decrement($id, $offset = 1)
 	{
-		return $this->{$this->_adapter}->decrement($this->key_prefix . $id, $offset);
+		return $this->{$this->_adapter}->decrement($this->key_prefix.$id, $offset);
 	}
 
 	// ------------------------------------------------------------------------
@@ -245,7 +245,7 @@ class CI_Cache extends CI_Driver_Library {
 	{
 		static $support;
 
-		if (!isset($support, $support[$driver]))
+		if ( ! isset($support, $support[$driver]))
 		{
 			$support[$driver] = $this->{$driver}->is_supported();
 		}

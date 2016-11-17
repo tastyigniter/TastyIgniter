@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link    https://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 1.0.0
  * @filesource
  */
@@ -56,7 +56,7 @@ if ( ! class_exists('CI_Xmlrpc', FALSE))
  * @subpackage	Libraries
  * @category	XML-RPC
  * @author		EllisLab Dev Team
- * @link           https://codeigniter.com/user_guide/libraries/xmlrpc.html
+ * @link		https://codeigniter.com/user_guide/libraries/xmlrpc.html
  */
 class CI_Xmlrpcs extends CI_Xmlrpc {
 
@@ -233,15 +233,15 @@ class CI_Xmlrpcs extends CI_Xmlrpc {
 
 		$parser = xml_parser_create($this->xmlrpc_defencoding);
 		$parser_object = new XML_RPC_Message('filler');
-		$pname = (string)$parser;
+		$pname = (string) $parser;
 
 		$parser_object->xh[$pname] = array(
-			'isf'        => 0,
+			'isf' => 0,
 			'isf_reason' => '',
-			'params'     => array(),
-			'stack'      => array(),
+			'params' => array(),
+			'stack' => array(),
 			'valuestack' => array(),
-			'method'     => '',
+			'method' => ''
 		);
 
 		xml_set_object($parser, $parser_object);
@@ -263,7 +263,8 @@ class CI_Xmlrpcs extends CI_Xmlrpc {
 				xml_error_string(xml_get_error_code($parser)),
 				xml_get_current_line_number($parser)));
 			xml_parser_free($parser);
-		} elseif ($parser_object->xh[$pname]['isf'])
+		}
+		elseif ($parser_object->xh[$pname]['isf'])
 		{
 			return new XML_RPC_Response(0, $this->xmlrpcerr['invalid_return'], $this->xmlrpcstr['invalid_return']);
 		}
@@ -278,7 +279,7 @@ class CI_Xmlrpcs extends CI_Xmlrpc {
 			{
 				if ($this->debug === TRUE)
 				{
-					$plist .= $i . ' - ' . print_r(get_object_vars($parser_object->xh[$pname]['params'][$i]), TRUE) . ";\n";
+					$plist .= $i.' - '.print_r(get_object_vars($parser_object->xh[$pname]['params'][$i]), TRUE).";\n";
 				}
 
 				$m->addParam($parser_object->xh[$pname]['params'][$i]);

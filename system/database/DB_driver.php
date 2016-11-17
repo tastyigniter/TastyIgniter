@@ -814,7 +814,6 @@ abstract class CI_DB_driver {
 	 * meaning a failure of one group will not affect any others
 	 *
 	 * @param	bool	$mode = TRUE
-	 *
 *@return	void
 	 */
 	public function trans_strict($mode = TRUE)
@@ -828,7 +827,6 @@ abstract class CI_DB_driver {
 	 * Start Transaction
 	 *
 	 * @param	bool	$test_mode = FALSE
-	 *
 	 * @return    bool
 	 */
 	public function trans_start($test_mode = FALSE)
@@ -892,7 +890,6 @@ abstract class CI_DB_driver {
 	 * Begin Transaction
 	 *
 	 * @param    bool $test_mode
-	 *
 	 * @return    bool
 	 */
 	public function trans_begin($test_mode = FALSE) {
@@ -970,7 +967,7 @@ abstract class CI_DB_driver {
 	 */
 	public function compile_binds($sql, $binds)
 	{
-		if (empty($binds) OR empty($this->bind_marker) OR strpos($sql, $this->bind_marker) === FALSE)
+		if (empty($this->bind_marker) OR strpos($sql, $this->bind_marker) === FALSE)
 		{
 			return $sql;
 		}
@@ -1798,7 +1795,6 @@ abstract class CI_DB_driver {
 	 * @param	bool
 	 * @param	mixed
 	 * @param	bool
-	 *
 *@return	string
 	 */
 	public function protect_identifiers($item, $prefix_single = FALSE, $protect_identifiers = NULL, $field_exists = TRUE)

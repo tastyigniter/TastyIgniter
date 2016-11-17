@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link    https://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 1.3.0
  * @filesource
  */
@@ -48,7 +48,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Drivers
  * @category	Database
  * @author		EllisLab Dev Team
- * @link           https://codeigniter.com/user_guide/database/
+ * @link		https://codeigniter.com/user_guide/database/
  */
 class CI_DB_mssql_driver extends CI_DB {
 
@@ -158,6 +158,7 @@ class CI_DB_mssql_driver extends CI_DB {
 		if (mssql_select_db('['.$database.']', $this->conn_id))
 		{
 			$this->database = $database;
+			$this->data_cache = array();
 			return TRUE;
 		}
 
@@ -363,8 +364,9 @@ class CI_DB_mssql_driver extends CI_DB {
 		static $error = array('code' => 0, 'message' => NULL);
 
 		$message = mssql_get_last_message();
-		if (!empty($message)) {
-			$error['code'] = $this->query('SELECT @@ERROR AS code')->row()->code;
+		if ( ! empty($message))
+		{
+			$error['code']    = $this->query('SELECT @@ERROR AS code')->row()->code;
 			$error['message'] = $message;
 		}
 

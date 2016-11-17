@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link    https://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 1.0.0
  * @filesource
  */
@@ -44,7 +44,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Helpers
  * @category	Helpers
  * @author		EllisLab Dev Team
- * @link           https://codeigniter.com/user_guide/helpers/url_helper.html
+ * @link		https://codeigniter.com/user_guide/helpers/url_helper.html
  */
 
 // ------------------------------------------------------------------------
@@ -355,7 +355,7 @@ if ( ! function_exists('safe_mailto'))
 
 		$output = "<script type=\"text/javascript\">\n"
 			."\t//<![CDATA[\n"
-			. "\tvar l=[];\n";
+			."\tvar l=new Array();\n";
 
 		for ($i = 0, $c = count($x); $i < $c; $i++)
 		{
@@ -491,16 +491,16 @@ if ( ! function_exists('url_title'))
 		$q_separator = preg_quote($separator, '#');
 
 		$trans = array(
-			'&.+?;'               => '',
-			'[^\w\d _-]'          => '',
-			'\s+'                 => $separator,
-			'('.$q_separator.')+' => $separator
+			'&.+?;'			=> '',
+			'[^\w\d _-]'		=> '',
+			'\s+'			=> $separator,
+			'('.$q_separator.')+'	=> $separator
 		);
 
 		$str = strip_tags($str);
 		foreach ($trans as $key => $val)
 		{
-			$str = preg_replace('#' . $key . '#i' . (UTF8_ENABLED ? 'u' : ''), $val, $str);
+			$str = preg_replace('#'.$key.'#i'.(UTF8_ENABLED ? 'u' : ''), $val, $str);
 		}
 
 		if ($lowercase === TRUE)

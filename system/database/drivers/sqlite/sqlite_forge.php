@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link    https://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 1.3.0
  * @filesource
  */
@@ -42,7 +42,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  *
  * @category	Database
  * @author		EllisLab Dev Team
- * @link        https://codeigniter.com/user_guide/database/
+ * @link		https://codeigniter.com/user_guide/database/
  */
 class CI_DB_sqlite_forge extends CI_DB_forge {
 
@@ -75,7 +75,7 @@ class CI_DB_sqlite_forge extends CI_DB_forge {
 	 * @param	string	$db_name	(ignored)
 	 * @return	bool
 	 */
-	public function create_database($db_name = '')
+	public function create_database($db_name)
 	{
 		// In SQLite, a database is created when you connect to the database.
 		// We'll return TRUE so that an error isn't generated
@@ -90,7 +90,7 @@ class CI_DB_sqlite_forge extends CI_DB_forge {
 	 * @param	string	$db_name	(ignored)
 	 * @return	bool
 	 */
-	public function drop_database($db_name = '')
+	public function drop_database($db_name)
 	{
 		if ( ! file_exists($this->db->database) OR ! @unlink($this->db->database))
 		{
