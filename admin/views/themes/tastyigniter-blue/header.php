@@ -54,6 +54,7 @@
 	<?php echo get_metas(); ?>
 	<?php echo get_favicon(); ?>
 	<title><?php echo sprintf(lang('site_title'), get_title(), $site_name, $system_name); ?></title>
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 	<?php echo get_style_tags(); ?>
 	<?php echo get_script_tags(); ?>
 	<script type="text/javascript">
@@ -92,12 +93,10 @@
 		<nav class="navbar navbar-static-top navbar-top" role="navigation" style="margin-bottom: 0">
 			<div class="navbar-header">
 				<div class="navbar-brand">
-					<div class="navbar-logo col-xs-3">
-						<img class="logo-image" alt="<?php echo $system_name; ?>" title="<?php echo $system_name; ?>" src="<?php echo $tastyigniter_logo; ?>"/>
-					</div>
-					<div class="navbar-logo col-xs-9">
-						<img class="logo-text" alt="<?php echo $system_name; ?>" title="<?php echo $system_name; ?>" src="<?php echo $site_logo; ?>"/>
-<!--						<a class="logo-text" href="--><?php //echo site_url('dashboard'); ?><!--">--><?php //echo $site_name; ?><!--</a>-->
+					<div class="navbar-logo">
+						<a class="logo-text" href="<?php echo site_url('dashboard'); ?>">
+							<img class="logo-image" alt="<?php echo $system_name; ?>" title="<?php echo $system_name; ?>" src="<?php echo $site_logo; ?>"/>
+						</a>
 					</div>
 				</div>
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
