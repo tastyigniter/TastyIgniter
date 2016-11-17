@@ -137,7 +137,7 @@ class Staff_groups_model extends TI_Model {
 			return $query;
 		}
 
-		$permission_id = isset($permission['permission_id']) ? $permission['permission_id'] : NULL;
+		$permission_name = isset($permission['name']) ? $permission['name'] : NULL;
 
 		$staff_group = $this->db->get_where('staff_groups', array('staff_group_id' => $staff_group_id));
 
@@ -147,7 +147,8 @@ class Staff_groups_model extends TI_Model {
 
 			is_array($permission_rule['action']) OR (array) $permission_rule['action'];
 
-			$group_permissions[$permission_id] = $permission_rule['action'];
+			// Add new permission to group_permissions, Add new permission by name instead of id
+			$group_permissions[$permission_name] = $permission_rule['action'];
 
 			$this->db->set('permissions', serialize($group_permissions));
 			$this->db->where('staff_group_id', $staff_group_id);

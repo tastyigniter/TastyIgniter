@@ -143,32 +143,31 @@ class Staff_groups extends Admin_Controller {
         $results = $this->Permissions_model->getPermissions();
         foreach ($results as $domain => $permissions) {
 
-            foreach ($permissions as $permission) {
-
-                $data['permissions_list'][$domain][] = array(
-                    'permission_id'     => $permission['permission_id'],
-                    'name'              => $permission['name'],
-                    'domain'            => $permission['domain'],
-                    'controller'        => $permission['controller'],
-                    'description'       => $permission['description'],
-                    'action'            => $permission['action'],
-                    'group_permissions' => (!empty($group_permissions[$permission['permission_id']])) ? $group_permissions[$permission['permission_id']] : array(),
-                    'status'            => $permission['status']
-                );
-            }
-        }
+			foreach ($permissions as $permission) {
+				$data['permissions_list'][$domain][] = array_merge($permission, array(
+					'group_permissions' => (!empty($group_permissions[$permission['name']])) ? $group_permissions[$permission['name']] : array(),
+				));
+			}
+		}
 
 		$this->template->render('staff_groups_edit', $data);
 	}
 
-	private function _saveStaffGroup() {
-    	if ($this->validateForm() === TRUE) {
-            $save_type = ( ! is_numeric($this->input->get('id'))) ? $this->lang->line('text_added') : $this->lang->line('text_updated');
+	protected function _saveStaffGroup() {
+		$data = $this->input->post();
+		$permissions = $this->Permissions_model->getPermissionsByIds();
 
-			if ($staff_group_id = $this->Staff_groups_model->saveStaffGroup($this->input->get('id'), $this->input->post())) { // calls model to save data to SQL
-                $this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Staff Groups '.$save_type));
-            } else {
-                $this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $save_type));
+		foreach ($data['permissions'] as $permission_id => $permission_access) {
+			$data['permissions'][$permissions[$permission_id]['name']] = $data['permissions'][$permission_id];
+			unset($data['permissions'][$permission_id]);
+		}
+
+		if ($this->validateForm() === TRUE) {
+			$save_type = (!is_numeric($this->input->get('id'))) ? $this->lang->line('text_added') : $this->lang->line('text_updated');
+			if ($staff_group_id = $this->Staff_groups_model->saveStaffGroup($this->input->get('id'), $data)) { // calls model to save data to SQL
+				$this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Staff Groups ' . $save_type));
+			} else {
+				$this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $save_type));
 			}
 
 			return $staff_group_id;
