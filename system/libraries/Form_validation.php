@@ -28,10 +28,10 @@
  *
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
- * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright    Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
- * @link    https://codeigniter.com
+ * @link	https://codeigniter.com
  * @since	Version 1.0.0
  * @filesource
  */
@@ -44,7 +44,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Libraries
  * @category	Validation
  * @author		EllisLab Dev Team
- * @link           https://codeigniter.com/user_guide/libraries/form_validation.html
+ * @link		https://codeigniter.com/user_guide/libraries/form_validation.html
  */
 class CI_Form_validation {
 
@@ -199,14 +199,14 @@ class CI_Form_validation {
 		}
 
 		// No fields or no rules? Nothing to do...
-		if (!is_string($field) OR $field === '' OR empty($rules))
+		if ( ! is_string($field) OR $field === '' OR empty($rules))
 		{
 			return $this;
 		}
 		elseif ( ! is_array($rules))
 		{
 			// BC: Convert pipe-separated rules string to an array
-			if (!is_string($rules))
+			if ( ! is_string($rules))
 			{
 				return $this;
 			}
@@ -457,7 +457,8 @@ class CI_Form_validation {
 			if ($row['is_array'] === TRUE)
 			{
 				$this->_field_data[$field]['postdata'] = $this->_reduce_array($validation_array, $row['keys']);
-			} elseif (isset($validation_array[$field]))
+			}
+			elseif (isset($validation_array[$field]))
 			{
 				$this->_field_data[$field]['postdata'] = $validation_array[$field];
 			}
@@ -492,7 +493,7 @@ class CI_Form_validation {
 
 	// --------------------------------------------------------------------
 
-	/**
+ 	/**
 	 * Prepare rules
 	 *
 	 * Re-orders the provided rules in order of importance, so that
@@ -626,7 +627,7 @@ class CI_Form_validation {
 		//
 		// Note: We MUST check if the array is empty or not!
 		//       Otherwise empty arrays will always pass validation.
-		if (is_array($postdata) && !empty($postdata))
+		if (is_array($postdata) && ! empty($postdata))
 		{
 			foreach ($postdata as $key => $val)
 			{
@@ -789,7 +790,7 @@ class CI_Form_validation {
 				// Callable rules might not have named error messages
 				if ( ! is_string($rule))
 				{
-					$line = $this->CI->lang->line('form_validation_error_message_not_set') . '(Anonymous function)';
+					$line = $this->CI->lang->line('form_validation_error_message_not_set').'(Anonymous function)';
 				}
 				else
 				{
@@ -824,25 +825,33 @@ class CI_Form_validation {
 	/**
 	 * Get the error message for the rule
 	 *
-	 * @param    string $rule  The rule name
-	 * @param    string $field The field name
-	 * @return    string
+	 * @param 	string $rule 	The rule name
+	 * @param 	string $field	The field name
+	 * @return 	string
 	 */
-	protected function _get_error_message($rule, $field) {
+	protected function _get_error_message($rule, $field)
+	{
 		// check if a custom message is defined through validation config row.
-		if (isset($this->_field_data[$field]['errors'][$rule])) {
+		if (isset($this->_field_data[$field]['errors'][$rule]))
+		{
 			return $this->_field_data[$field]['errors'][$rule];
-		} // check if a custom message has been set using the set_message() function
-		elseif (isset($this->_error_messages[$rule])) {
+		}
+		// check if a custom message has been set using the set_message() function
+		elseif (isset($this->_error_messages[$rule]))
+		{
 			return $this->_error_messages[$rule];
-		} elseif (FALSE !== ($line = $this->CI->lang->line('form_validation_' . $rule))) {
+		}
+		elseif (FALSE !== ($line = $this->CI->lang->line('form_validation_'.$rule)))
+		{
 			return $line;
-		} // DEPRECATED support for non-prefixed keys, lang file again
-		elseif (FALSE !== ($line = $this->CI->lang->line($rule, FALSE))) {
+		}
+		// DEPRECATED support for non-prefixed keys, lang file again
+		elseif (FALSE !== ($line = $this->CI->lang->line($rule, FALSE)))
+		{
 			return $line;
 		}
 
-		return $this->CI->lang->line('form_validation_error_message_not_set') . '(' . $rule . ')';
+		return $this->CI->lang->line('form_validation_error_message_not_set').'('.$rule.')';
 	}
 
 	// --------------------------------------------------------------------
@@ -1168,7 +1177,7 @@ class CI_Form_validation {
 			return FALSE;
 		}
 
-		return (mb_strlen($str) === (int)$val);
+		return (mb_strlen($str) === (int) $val);
 	}
 
 	// --------------------------------------------------------------------
@@ -1202,8 +1211,9 @@ class CI_Form_validation {
 		// PHP 7 accepts IPv6 addresses within square brackets as hostnames,
 		// but it appears that the PR that came in with https://bugs.php.net/bug.php?id=68039
 		// was never merged into a PHP 5 branch ... https://3v4l.org/8PsSN
-		if (preg_match('/^\[([^\]]+)\]/', $str, $matches) && !is_php('7') && filter_var($matches[1], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== FALSE) {
-			$str = 'ipv6.host' . substr($str, strlen($matches[1]) + 2);
+		if (preg_match('/^\[([^\]]+)\]/', $str, $matches) && ! is_php('7') && filter_var($matches[1], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== FALSE)
+		{
+			$str = 'ipv6.host'.substr($str, strlen($matches[1]) + 2);
 		}
 
 		return (filter_var('http://'.$str, FILTER_VALIDATE_URL) !== FALSE);
@@ -1420,11 +1430,12 @@ class CI_Form_validation {
 	/**
 	 * Value should be within an array of values
 	 *
-	 * @param    string
-	 * @param    string
-	 * @return    bool
+	 * @param	string
+	 * @param	string
+	 * @return	bool
 	 */
-	public function in_list($value, $list) {
+	public function in_list($value, $list)
+	{
 		return in_array($value, explode(',', $list), TRUE);
 	}
 
@@ -1478,9 +1489,9 @@ class CI_Form_validation {
 	 * This function allows HTML to be safely shown in a form.
 	 * Special characters are converted.
 	 *
-	 * @deprecated    3.0.6    Not used anywhere within the framework and pretty much useless
-	 * @param    mixed $data Input data
-	 * @return    mixed
+	 * @deprecated	3.0.6	Not used anywhere within the framework and pretty much useless
+	 * @param	mixed	$data	Input data
+	 * @return	mixed
 	 */
 	public function prep_for_form($data)
 	{
