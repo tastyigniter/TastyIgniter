@@ -93,6 +93,11 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     const COMPAT_PLUGINEVENTS_INIT = 'init';
 
     /**
+     * Priority that plugin uses to register callbacks.
+     */
+    const CALLBACK_PRIORITY = 50000;
+
+    /**
      * @var Composer $composer
      */
     protected $composer;
@@ -140,14 +145,22 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
             // Use our own constant to make this event optional. Once
             // composer-1.1 is required, this can use PluginEvents::INIT
             // instead.
-            self::COMPAT_PLUGINEVENTS_INIT => 'onInit',
-            InstallerEvents::PRE_DEPENDENCIES_SOLVING => 'onDependencySolve',
-            PackageEvents::POST_PACKAGE_INSTALL => 'onPostPackageInstall',
-            ScriptEvents::POST_INSTALL_CMD => 'onPostInstallOrUpdate',
-            ScriptEvents::POST_UPDATE_CMD => 'onPostInstallOrUpdate',
-            ScriptEvents::PRE_AUTOLOAD_DUMP => 'onInstallUpdateOrDump',
-            ScriptEvents::PRE_INSTALL_CMD => 'onInstallUpdateOrDump',
-            ScriptEvents::PRE_UPDATE_CMD => 'onInstallUpdateOrDump',
+            self::COMPAT_PLUGINEVENTS_INIT =>
+                array('onInit', self::CALLBACK_PRIORITY),
+            InstallerEvents::PRE_DEPENDENCIES_SOLVING =>
+                array('onDependencySolve', self::CALLBACK_PRIORITY),
+            PackageEvents::POST_PACKAGE_INSTALL =>
+                array('onPostPackageInstall', self::CALLBACK_PRIORITY),
+            ScriptEvents::POST_INSTALL_CMD =>
+                array('onPostInstallOrUpdate', self::CALLBACK_PRIORITY),
+            ScriptEvents::POST_UPDATE_CMD =>
+                array('onPostInstallOrUpdate', self::CALLBACK_PRIORITY),
+            ScriptEvents::PRE_AUTOLOAD_DUMP =>
+                array('onInstallUpdateOrDump', self::CALLBACK_PRIORITY),
+            ScriptEvents::PRE_INSTALL_CMD =>
+                array('onInstallUpdateOrDump', self::CALLBACK_PRIORITY),
+            ScriptEvents::PRE_UPDATE_CMD =>
+                array('onInstallUpdateOrDump', self::CALLBACK_PRIORITY),
         );
     }
 
