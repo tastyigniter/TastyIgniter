@@ -79,7 +79,7 @@ class Settings extends Admin_Controller {
 		$data['no_photo'] = $this->Image_tool_model->resize('data/no_photo.png');
 
 		if ($this->input->post() AND $this->_updateModule() === TRUE) {
-			if ($this->input->post('save_close') === '1') {
+			if ($this->input->post('save_close') == '1') {
 				$this->redirect('extensions');
 			}
 

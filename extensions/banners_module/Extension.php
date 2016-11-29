@@ -34,9 +34,9 @@ class Extension extends \Base_Extension
 		);
 	}
 
-//	public function registerSettings() {
-//		return admin_extension_url('banners_module/settings');
-//	}
+	public function registerSettings() {
+		return admin_extension_url('banners_module/settings');
+	}
 }
 
 /* End of file Extension.php */

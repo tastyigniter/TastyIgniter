@@ -26,7 +26,7 @@ class Paypal_model extends TI_Model {
 		if ($cart_items) {
 
 			$nvp_data = '';
-			if ($order_info['order_type'] === '1' AND (!empty($order_info['address_id']) OR !empty($order_info['customer_id']))) {
+			if ($order_info['order_type'] == '1' AND (!empty($order_info['address_id']) OR !empty($order_info['customer_id']))) {
 
 				$this->load->model('Addresses_model');
 				$address = $this->Addresses_model->getAddress($order_info['customer_id'], $order_info['address_id']);
@@ -42,7 +42,7 @@ class Paypal_model extends TI_Model {
 
 			foreach (array_keys($cart_items) as $key => $rowid) {							// loop through cart items to create items name-value pairs data to be sent to paypal
 				foreach ($cart_items as $cart_item) {
-					if (isset($cart_item['rowid']) AND $rowid === $cart_item['rowid']) {
+					if (isset($cart_item['rowid']) AND $rowid == $cart_item['rowid']) {
 						if (!empty($cart_item['options']['option_id'])) {
 							$cart_options = $cart_item['name'] .': '. $this->currency->format($cart_item['price']);
 						} else {

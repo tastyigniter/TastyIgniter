@@ -21,7 +21,7 @@ class Settings extends Admin_Controller {
 			$this->assets->setScriptTag(assets_url('js/jquery-sortable.js'), 'jquery-sortable-js');
 
 			if ($this->input->post() AND $this->_updateModule() === TRUE) {
-				if ($this->input->post('save_close') === '1') {
+				if ($this->input->post('save_close') == '1') {
 					$this->redirect('extensions');
 				}
 
@@ -117,12 +117,12 @@ class Settings extends Admin_Controller {
 		$this->form_validation->set_rules('show_cart_images', 'lang:label_show_cart_images', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('fixed_cart', 'lang:label_fixed_cart', 'xss_clean|trim|required|integer');
 
-	    if ($this->input->post('fixed_cart') === '1') {
+	    if ($this->input->post('fixed_cart') == '1') {
 		    $this->form_validation->set_rules('fixed_top_offset', 'lang:label_fixed_top_offset', 'xss_clean|trim|required|integer');
 		    $this->form_validation->set_rules('fixed_bottom_offset', 'lang:label_fixed_bottom_offset', 'xss_clean|trim|required|integer');
 	    }
 
-        if ($this->input->post('show_cart_images') === '1')
+        if ($this->input->post('show_cart_images') == '1')
         {
             $this->form_validation->set_rules('cart_images_h', 'lang:label_cart_images_h', 'xss_clean|trim|required|integer');
             $this->form_validation->set_rules('cart_images_w', 'lang:label_cart_images_w', 'xss_clean|trim|required|integer');

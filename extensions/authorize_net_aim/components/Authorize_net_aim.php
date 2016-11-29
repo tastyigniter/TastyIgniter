@@ -119,7 +119,7 @@ class Authorize_net_aim extends Base_Component
 		$this->form_validation->set_rules('authorize_cc_cvc', 'lang:label_card_cvc', 'xss_clean|trim|required|integer|max_length[4]');
 		$this->form_validation->set_rules('authorize_same_address', 'lang:label_same_address', 'xss_clean|trim');
 
-		if ($this->input->post('authorize_same_address') !== '1') {
+		if ($this->input->post('authorize_same_address') != '1') {
 			if ($this->input->post('authorize_address_id') === 'new') {
 				$this->form_validation->set_rules('authorize_address_id', 'lang:label_address_id', 'xss_clean|trim');
 				$this->form_validation->set_rules('authorize_address_1', 'lang:label_address_1', 'xss_clean|trim|required|min_length[3]|max_length[128]');
@@ -163,16 +163,16 @@ class Authorize_net_aim extends Base_Component
 			$this->load->model('authorize_net_aim/Authorize_net_aim_model');
 			$response = $this->Authorize_net_aim_model->authorizeAndCapture($order_data);
 
-			if (isset($response[1], $response[4], $response[8]) AND (int)$response[8] === $order_data['order_id']) {
+			if (isset($response[1], $response[4], $response[8]) AND (int)$response[8] == $order_data['order_id']) {
 
-				if ($response[1] === '2' OR $response[1] === '3') {
+				if ($response[1] == '2' OR $response[1] == '3') {
 					$order_data['status_id'] = $this->config->item('canceled_order_status');
 				} else if (isset($payment_settings['order_status']) AND is_numeric($payment_settings['order_status'])) {
 					$order_data['status_id'] = $payment_settings['order_status'];
 				}
 
 				$success = FALSE;
-				if (($response[1] === '1' OR $response[1] === '4') AND $this->Orders_model->completeOrder($order_data['order_id'], $order_data, $cart_contents)) {
+				if (($response[1] == '1' OR $response[1] == '4') AND $this->Orders_model->completeOrder($order_data['order_id'], $order_data, $cart_contents)) {
 					$success = TRUE;
 				}
 

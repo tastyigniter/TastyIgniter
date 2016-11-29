@@ -54,7 +54,7 @@ class Cart_module_lib {
     public function validateDeliveryCharge($cart_total) {
         $delivery_charge = $this->CI->location->deliveryCharge($cart_total);
 
-        if ($this->CI->location->orderType() === '1') {
+        if ($this->CI->location->orderType() == '1') {
             $this->CI->cart->set_delivery($delivery_charge);
         } else {
             $this->CI->cart->set_delivery(0);
@@ -71,7 +71,7 @@ class Cart_module_lib {
 
             return $this->CI->lang->line('alert_order_unavailable');
 
-        } else if ($order_type === '1') {
+        } else if ($order_type == '1') {
             if ( ! $this->CI->location->checkOrderType($order_type)) {
 
                 return $this->CI->lang->line('alert_delivery_unavailable');
@@ -81,7 +81,7 @@ class Cart_module_lib {
                 return sprintf($this->CI->lang->line('alert_min_delivery_order_total'), $this->CI->currency->format($this->CI->location->minimumOrder($cart_total)));
             }
 
-        } else if ($order_type === '2') {
+        } else if ($order_type == '2') {
             if ( ! $this->CI->location->checkOrderType($order_type)) {
                 return $this->CI->lang->line('alert_collection_unavailable');
             }
@@ -97,7 +97,7 @@ class Cart_module_lib {
         }
 
         // if menu mealtime is enable and menu is outside mealtime
-        if ($menu_data['mealtime_status'] === '1' AND empty($menu_data['is_mealtime'])) {
+        if ($menu_data['mealtime_status'] == '1' AND empty($menu_data['is_mealtime'])) {
             return sprintf($this->CI->lang->line('alert_menu_not_within_mealtime'), $menu_data['menu_name'], $menu_data['mealtime_name'], $menu_data['start_time'], $menu_data['end_time']);
         }
 
@@ -106,7 +106,7 @@ class Cart_module_lib {
             return sprintf($this->CI->lang->line('alert_qty_is_below_min_qty'), $menu_data['minimum_qty']);
         }
 
-        if ($this->CI->config->item('show_stock_warning') === '1' AND $menu_data['subtract_stock'] === '1') {
+        if ($this->CI->config->item('show_stock_warning') == '1' AND $menu_data['subtract_stock'] == '1') {
             // checks if stock quantity is less than or equal to zero
             if ($menu_data['stock_qty'] <= 0) {
                 $stock_warning = sprintf($this->CI->lang->line('alert_out_of_stock'), $menu_data['menu_name']);
@@ -119,7 +119,7 @@ class Cart_module_lib {
 
             // Return warning if stock checkout is disabled, else skip
             if (!empty($stock_warning)) {
-                return ($this->CI->config->item('stock_checkout') !== '1') ? $stock_warning : TRUE;
+                return ($this->CI->config->item('stock_checkout') != '1') ? $stock_warning : TRUE;
             }
         }
 
@@ -134,7 +134,7 @@ class Cart_module_lib {
             $option_price = 0;
             foreach ($this->CI->input->post('menu_options') as $menu_option_id => $menu_option) {
                 if ($cart_option_required === FALSE AND isset($menu_options[$menu_option_id])) {
-                    if ($menu_options[$menu_option_id]['required'] === '1'
+                    if ($menu_options[$menu_option_id]['required'] == '1'
                         AND (empty($menu_option['option_values']) OR ! is_array($menu_option['option_values']))
                     ) {
                         $cart_option_required = $menu_options[$menu_option_id]['option_name'];
@@ -178,7 +178,7 @@ class Cart_module_lib {
             $error = $this->CI->lang->line('alert_coupon_expired');								// display error message
         } else {
             if (!empty($coupon['order_restriction']) AND $coupon['order_restriction'] !== $this->CI->location->orderType()) {
-                $order_type = ($coupon['order_restriction'] === '1') ? $this->CI->lang->line('text_delivery') : $this->CI->lang->line('text_collection');
+                $order_type = ($coupon['order_restriction'] == '1') ? $this->CI->lang->line('text_delivery') : $this->CI->lang->line('text_collection');
                 $error = sprintf($this->CI->lang->line('alert_coupon_order_restriction'), strtolower($order_type));
             }
 
@@ -192,7 +192,7 @@ class Cart_module_lib {
                 $error = $this->CI->lang->line('alert_coupon_maximum_reached');
             }
 
-            if ($coupon['customer_redemptions'] === '1' AND $this->CI->customer->getId()) {
+            if ($coupon['customer_redemptions'] == '1' AND $this->CI->customer->getId()) {
                 $customer_used = $this->CI->Cart_model->checkCustomerCouponHistory($coupon['coupon_id'], $this->CI->customer->getId());
 
                 if ($coupon['customer_redemptions'] <= $customer_used) {

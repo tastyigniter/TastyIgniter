@@ -37,7 +37,7 @@ class Cart_module extends Base_Component
 
 			$json['error'] = $this->lang->line('alert_bad_request');
 
-		} else if ($this->location->orderType() === '1' AND $this->config->item('location_order') === '1' AND !$this->location->hasSearchQuery()) {                                                        // if local restaurant is not selected
+		} else if ($this->location->orderType() == '1' AND $this->config->item('location_order') == '1' AND !$this->location->hasSearchQuery()) {                                                        // if local restaurant is not selected
 
 			$json['error'] = $this->lang->line('alert_no_search_query');
 
@@ -70,7 +70,7 @@ class Cart_module extends Base_Component
 				$quantity = ($quantity <= 0) ? $cart_item['qty'] + $quantity : $quantity;
 			}
 
-			$price = (!empty($menu_data['special_status']) AND $menu_data['is_special'] === '1') ? $menu_data['special_price'] : $menu_data['menu_price'];
+			$price = (!empty($menu_data['special_status']) AND $menu_data['is_special'] == '1') ? $menu_data['special_price'] : $menu_data['menu_price'];
 
 			$cart_data = array(                                                                // create an array of item to be added to cart with id, name, qty, price and options as keys
 				'rowid'   => !empty($cart_item['rowid']) ? $cart_item['rowid'] : NULL,
@@ -282,7 +282,7 @@ class Cart_module extends Base_Component
 
 				if (($alert_msg = $this->cart_module_lib->validateCartMenu($menu_data, $cart_item)) === TRUE) {
 					$cart_image = '';
-					if (isset($data['show_cart_images']) AND $data['show_cart_images'] === '1') {
+					if (isset($data['show_cart_images']) AND $data['show_cart_images'] == '1') {
 						$menu_photo = (!empty($menu_data['menu_photo'])) ? $menu_data['menu_photo'] : 'data/no_photo.png';
 						$cart_image = $this->Image_tool_model->resize($menu_photo, $data['cart_images_h'], $data['cart_images_w']);
 					}

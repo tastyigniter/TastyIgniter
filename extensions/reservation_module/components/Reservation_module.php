@@ -4,7 +4,7 @@ class Reservation_module extends Base_Component
 {
 
 	public function index() {
-		if ($this->config->item('reservation_mode') !== '1') {
+		if ($this->config->item('reservation_mode') != '1') {
 			$this->alert->set('alert', $this->lang->line('alert_reservation_disabled'));
 			$this->redirect('home');
 		}
@@ -206,7 +206,7 @@ class Reservation_module extends Base_Component
 			$reserve_time = strtotime(urldecode($str));
 
 			if ($hour = $this->Locations_model->getOpeningHourByDay(urldecode($this->input->get('location')), $this->input->get('reserve_date'))) {
-				if ($hour['status'] === '1' AND (strtotime($hour['open']) <= $reserve_time AND strtotime($hour['close']) >= $reserve_time)) {
+				if ($hour['status'] == '1' AND (strtotime($hour['open']) <= $reserve_time AND strtotime($hour['close']) >= $reserve_time)) {
 					return TRUE;
 				}
 			}

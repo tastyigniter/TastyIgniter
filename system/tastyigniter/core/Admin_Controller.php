@@ -72,7 +72,7 @@ class Admin_Controller extends Authenticated_Controller
 
 	protected function redirect($uri = NULL) {
 		if (is_numeric($uri)) {
-			$uri = ($this->input->post('save_close') !== '1') ? str_replace('{id}', $uri, $this->edit_url) : NULL;
+			$uri = ($this->input->post('save_close') != '1') ? str_replace('{id}', $uri, $this->edit_url) : NULL;
 		}
 
 		parent::redirect($uri);

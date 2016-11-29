@@ -18,7 +18,7 @@ class Settings extends Admin_Controller {
         $this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('extensions')));
 
         if ($this->input->post() AND $this->_updateModule() === TRUE) {
-            if ($this->input->post('save_close') === '1') {
+            if ($this->input->post('save_close') == '1') {
                 $this->redirect('extensions');
             }
 

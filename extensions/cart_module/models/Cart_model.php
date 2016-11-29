@@ -151,7 +151,7 @@ class Cart_model extends TI_Model {
 
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
-                $row['data'] = ($row['serialized'] === '1' AND ! empty($row['data'])) ? unserialize($row['data']) : array();
+                $row['data'] = ($row['serialized'] == '1' AND ! empty($row['data'])) ? unserialize($row['data']) : array();
 
                 $results[$row['name']] = array(
                     'name'        => $row['name'],
@@ -189,7 +189,7 @@ class Cart_model extends TI_Model {
                     $current_date = mdate('%Y-%m-%d', time());
                     $current_time = mdate('%H:%i', time());
 
-                    if ($fixed_date === $current_date AND ($fixed_from_time <= $current_time AND $fixed_to_time >= $current_time)) {
+                    if ($fixed_date == $current_date AND ($fixed_from_time <= $current_time AND $fixed_to_time >= $current_time)) {
                         $result = $row;
                     }
                 } else if ($row['validity'] === 'period') {

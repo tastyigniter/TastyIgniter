@@ -70,7 +70,7 @@ class Authorize_net_aim_model extends TI_Model {
 
 		$this->load->model('Addresses_model');
 
-		if ($order_data['order_type'] === '1' AND (!empty($order_data['address_id']) OR !empty($order_data['customer_id']))) {
+		if ($order_data['order_type'] == '1' AND (!empty($order_data['address_id']) OR !empty($order_data['customer_id']))) {
 			$address = $this->Addresses_model->getAddress($order_data['customer_id'], $order_data['address_id']);
 
 			$data['x_ship_to_first_name'] = $order_data['first_name'];
@@ -112,7 +112,7 @@ class Authorize_net_aim_model extends TI_Model {
 
 		$response = $this->sendToAuthorizeNet($data);
 
-		if (isset($response[1]) AND $response[1] !== '1') {
+		if (isset($response[1]) AND $response[1] != '1') {
 			log_message('debug', 'Authorize.Net Debug -> ' . $order_data['order_id'] . ': '  . $response[3] . ' :  ' . $response[8] . ' :  ' . $response[4]);
 		}
 
