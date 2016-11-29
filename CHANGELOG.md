@@ -10,6 +10,8 @@ Release Date: August 2016
 * New Event hook points: before_controller, after_controller_constructor, before_main_controller, after_main_controller
 * New Assets library to handle head html tags, css and js (71e09e2)
 * New array helper with array_get method to get array item using dot notation (bd02bb9)
+* Eloquent ORM library for models and other subclass to provide extra functions
+* New Location_hours, Location_delivery, Location_geocode libraries to extend and extract Location library functions
 
 #### Changed
 * Improve nav menu to switch between single and multi location settings
@@ -37,9 +39,14 @@ Release Date: August 2016
 * Moved runMigration from extension_manager library to Modules::run_migration
 * Removed Extension library, use Extensions_model or Modules class instead (7a59677)
 * Improved Extensions api (2d0e759 & 162a72a & ece3167 & 4ad6da5 & 84c552d)
-* Use Modules class instead of Extensions model ()
+* Use Modules class instead of Extensions model inside controllers ()
 * Improve Template library: move html tags methods to Assets library (1532de9)
 * Improved Lang: line() method accepts dotted array module.line_key_name or line_key_name (87a40bb)
+* Use Eloquent ORM instead of custom-CRUD library
+* Improved design patterns: Use Fat model thin controller
+* Improve Location Library: extract functions to new libraries Location_hours, Location_delivery, Location_geocode
+* Use loose comparision on numeric values
+
 
 #### Fixed
 * Fix module lang file check (ae7e5e2) thanks @behigh

@@ -19,6 +19,15 @@
     "source": "https://github.com/tastyigniter/TastyIgniter"
   },
   "require": {
-    "php": ">=5.4.0"
+    "php": ">=5.4.0",
+    "illuminate/database": "5.3.*",
+    "illuminate/events": "5.3.*"
+  },
+  "autoload": {
+    "classmap": [
+      "system/tastyigniter"
+    ],
+    "psr-4": {"TastyIgniter\\": "system/tastyigniter/"},
+    "exclude-from-classmap": ["system/tastyigniter/third_party/"]
   }
 }
