@@ -160,11 +160,11 @@ if ( ! is_php('5.4'))
  *  Should we use a Composer autoloader?
  * ------------------------------------------------------
  */
-if ($composer_autoload = config_item('composer_autoload') AND file_exists(BASEPATH . 'vendor')) {
+if ($composer_autoload = config_item('composer_autoload') AND file_exists(ROOTPATH . 'vendor')) {
 	if ($composer_autoload === TRUE) {
-		file_exists(BASEPATH . 'vendor/autoload.php')
-			? require_once(BASEPATH . 'vendor/autoload.php')
-			: log_message('error', '$config[\'composer_autoload\'] is set to TRUE but ' . BASEPATH . 'vendor/autoload.php was not found.');
+		file_exists(ROOTPATH . 'vendor/autoload.php')
+			? require_once(ROOTPATH . 'vendor/autoload.php')
+			: log_message('error', '$config[\'composer_autoload\'] is set to TRUE but ' . ROOTPATH . 'vendor/autoload.php was not found.');
 	} else {
 		log_message('error', 'Could not find the specified $config[\'composer_autoload\'] path: ' . $composer_autoload);
 	}
@@ -356,10 +356,10 @@ if ($composer_autoload = config_item('composer_autoload') AND file_exists(BASEPA
 		return CI_Controller::get_instance();
 	}
 
-	if (file_exists(IGNITEPATH.'core/'.$CFG->config['subclass_prefix'].'Controller.php'))
-	{
-		require_once IGNITEPATH.'core/'.$CFG->config['subclass_prefix'].'Controller.php';
-	}
+//	if (file_exists(IGNITEPATH.'core/'.$CFG->config['subclass_prefix'].'Controller.php'))
+//	{
+//		require_once IGNITEPATH.'core/'.$CFG->config['subclass_prefix'].'Controller.php';
+//	}
 
     // Load the base controller class
     require_once IGNITEPATH.'core/Base_Controller.php';

@@ -4,13 +4,12 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- * @filesource
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -21,9 +20,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @package        TastyIgniter\Libraries\Country.php
  * @link           http://docs.tastyigniter.com
  */
-class Country {
+class Country
+{
 
-	public function addressFormat($address = array()) {
+	public function addressFormat($address = [])
+	{
 		if (!empty($address) AND is_array($address)) {
 			if (!empty($address['format'])) {
 				$format = $address['format'];
@@ -31,26 +32,43 @@ class Country {
 				$format = '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}' . "\n" . '{state}' . "\n" . '{country}';
 			}
 
-			$find = array(
+			$find = [
 				'{address_1}',
 				'{address_2}',
 				'{city}',
 				'{postcode}',
 				'{state}',
-				'{country}'
-			);
+				'{country}',
+			];
 
-			$replace = array(
-				'address_1' 	=> (isset($address['address_1'])) ? $address['address_1'] : '',
-				'address_2' 	=> (isset($address['address_2'])) ? $address['address_2'] : '',
-				'city'      	=> (isset($address['city'])) ? $address['city'] : '',
-				'postcode'  	=> (isset($address['postcode'])) ? $address['postcode'] : '',
-				'state'     	=> (isset($address['state'])) ? $address['state'] : '',
-				'country' 		=> (isset($address['country'])) ? $address['country'] : ''
-			);
+			$replace = [
+				'address_1' => (isset($address['address_1'])) ? $address['address_1'] : '',
+				'address_2' => (isset($address['address_2'])) ? $address['address_2'] : '',
+				'city'      => (isset($address['city'])) ? $address['city'] : '',
+				'postcode'  => (isset($address['postcode'])) ? $address['postcode'] : '',
+				'state'     => (isset($address['state'])) ? $address['state'] : '',
+				'country'   => (isset($address['country'])) ? $address['country'] : '',
+			];
 
-			return str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format))));
+			return str_replace(["\r\n", "\r", "\n"], '<br />', preg_replace(["/\s\s+/", "/\r\r+/", "/\n\n+/"], '<br />', trim(str_replace($find, $replace, $format))));
 		}
+	}
+
+	public function getCountryNameById($id = null)
+	{
+		$CI =& get_instance();
+		$CI->load->model('Countries_model');
+
+		return $CI->Countries_model->findOrNew($id)->country_name;
+	}
+
+	public function getCountryCodeById($id = null, $codeType = 2)
+	{
+		$CI =& get_instance();
+		$CI->load->model('Countries_model');
+		$countryModel = $CI->Countries_model->findOrNew($id);
+
+		return $codeType == 2 ? $countryModel->iso_code_2 : $countryModel->iso_code_3;
 	}
 }
 // END Country Class

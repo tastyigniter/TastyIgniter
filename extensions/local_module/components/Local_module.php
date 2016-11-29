@@ -7,7 +7,6 @@ class Local_module extends Base_Component
 		parent::__construct();                                                                    // calls the constructor
 		$this->load->library('user_agent');                                                        // load the user agent library
 		$this->load->library('location');                                                        // load the location library
-		$this->location->initialize();
 
 		$this->load->library('currency');                                                        // load the location library
 		$this->lang->load('local_module/local_module');
@@ -17,7 +16,9 @@ class Local_module extends Base_Component
 	}
 
 	public function index() {
-		if ($this->setting('status') !== '1') {
+		$this->location->initialize();
+
+		if ($this->setting('status') != '1') {
 			return;
 		}
 
@@ -96,38 +97,16 @@ class Local_module extends Base_Component
 			$data['collection_time'] = $this->location->workingTime('collection', 'open');
 		}
 
-		$conditions = array(
+		$this->location->locationDelivery()->setChargeSummaryText(array(
 			'all'   => $this->lang->line('text_condition_all_orders'),
 			'above' => $this->lang->line('text_condition_above_total'),
 			'below' => $this->lang->line('text_condition_below_total'),
-		);
+			'free' => $this->lang->line('text_free_delivery'),
+			'min_total' => $this->lang->line('text_no_min_total'),
+			'prefix' => $this->lang->line('text_delivery_charge'),
+		));
 
-		$count = 1;
-		$data['text_delivery_condition'] = '';
-		$delivery_condition = $this->location->deliveryCondition();
-		foreach ($delivery_condition as $condition) {
-			$condition = explode('|', $condition);
-
-			$delivery = (isset($condition[0]) AND $condition[0] > 0) ? $this->currency->format($condition[0]) : $this->lang->line('text_free_delivery');
-			$con = (isset($condition[1])) ? $condition[1] : 'above';
-			$total = (isset($condition[2]) AND $condition[2] > 0) ? $this->currency->format($condition[2]) : $this->lang->line('text_no_min_total');
-
-			if ($count === 1 AND isset($condition[0]) AND $condition[0] > 0) {
-				$data['text_delivery_condition'] .= sprintf($this->lang->line('text_delivery_charge'), '');
-			}
-
-			if ($con === 'all') {
-				$data['text_delivery_condition'] .= sprintf($conditions['all'], $delivery);
-			} else if ($con === 'above') {
-				$data['text_delivery_condition'] .= sprintf($conditions[$con], $delivery, $total) . ', ';
-			} else if ($con === 'below') {
-				$data['text_delivery_condition'] .= sprintf($conditions[$con], $total) . ', ';
-			}
-
-			$count++;
-		}
-
-		$data['text_delivery_condition'] = trim($data['text_delivery_condition'], ', ');
+		$data['text_delivery_condition'] = $this->location->getAreaChargeSummary();
 
 		if ($this->location->deliveryCharge($cart_total) > 0) {
 			$data['text_delivery_charge'] = sprintf($this->lang->line('text_delivery_charge'), $this->currency->format($this->location->deliveryCharge($cart_total)));

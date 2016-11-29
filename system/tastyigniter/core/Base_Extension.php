@@ -131,7 +131,7 @@ class Base_Extension
 	 */
 	public function registerPermissions() {
 		$config = $this->getConfigFromFile();
-		if (array_key_exists('extension_permission', $config)) {
+		if (is_array($config) AND array_key_exists('extension_permission', $config)) {
 			return $config['extension_permission'];
 		}
 	}

@@ -37,7 +37,7 @@ $lang['text_no_search_query'] 		        = '<span class="text-muted">Please type 
 $lang['text_no_min_total'] 		            = 'No Min. Order Amount';
 $lang['text_condition_all_orders'] 		    = '%s on all orders';
 $lang['text_condition_above_total'] 		= '%s above %s';
-$lang['text_condition_below_total'] 		= 'not available below %s ';
+$lang['text_condition_below_total'] 		= '%s below %s';
 
 $lang['column_language'] 		            = 'Language';
 $lang['column_replace'] 		            = 'Replace with';

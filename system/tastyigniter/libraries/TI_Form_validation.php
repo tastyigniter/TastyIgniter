@@ -4,13 +4,12 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- * @filesource
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -24,10 +23,32 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class TI_Form_validation extends CI_Form_validation
 {
 	public $CI;
-	protected $_old_field_data = array();
-	protected $_old_error_array = array();
-	protected $_old_error_messages = array();
+	protected $_old_field_data = [];
+	protected $_old_error_array = [];
+	protected $_old_error_messages = [];
 	protected $old_error_string = '';
+
+	public function set_rules($field, $label = '', $rules = [], $errors = [])
+	{
+		if (is_array($field)) {
+			foreach ($field as $rule) {
+				if (!isset($rule['field'])) {
+					if (isset($rule[0]))
+						$temp_rule['field'] = $rule[0];
+					if (isset($rule[1]))
+						$temp_rule['label'] = $rule[1];
+					if (isset($rule[2]))
+						$temp_rule['rules'] = $rule[2];
+
+					$_field[] = $temp_rule;
+				}
+			}
+
+			$field = !empty($_field) ? $_field : $field;
+		}
+
+		return parent::set_rules($field, $label, $rules, $errors);
+	}
 
 	/**
 	 * Is Unique
@@ -40,11 +61,13 @@ class TI_Form_validation extends CI_Form_validation
 	 *
 	 * @return    bool
 	 */
-	public function is_unique($str, $field) {
+	public function is_unique($str, $field)
+	{
 		sscanf($field, '%[^.].%[^.]', $table, $field);
-		$query = $this->CI->db->limit(1)->get_where($table, array($field => $str));
 
-		return $query->num_rows() === 0;
+		return isset($this->CI->db)
+			? ($this->CI->db->limit(1)->get_where($table, [$field => $str])->num_rows() === 0)
+			: FALSE;
 	}
 
 	// --------------------------------------------------------------------
@@ -58,7 +81,8 @@ class TI_Form_validation extends CI_Form_validation
 	 *
 	 * @return  bool
 	 */
-	public function valid_time($str) {
+	public function valid_time($str)
+	{
 		return (!preg_match('/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/', $str) AND !preg_match('/^(1[012]|[1-9]):[0-5][0-9](\s)?(?i)(am|pm)$/', $str)) ? FALSE : TRUE;
 	}
 
@@ -73,7 +97,8 @@ class TI_Form_validation extends CI_Form_validation
 	 *
 	 * @return  bool
 	 */
-	public function valid_date($str) {
+	public function valid_date($str)
+	{
 		if ($str != '0000-00-00' AND $str != '00-00-0000') {
 			return (!preg_match('/^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-[0-9]{4}$/', $str) AND !preg_match('/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', $str)) ? FALSE : TRUE;
 		}
@@ -91,22 +116,20 @@ class TI_Form_validation extends CI_Form_validation
 	 *
 	 * @return bool
 	 */
-	public function get_lat_lng($str, $post_item = 'address') {
+	public function get_lat_lng($str, $post_item = 'address')
+	{
 		if (!empty($str) AND $post_data = $this->CI->input->post($post_item)) {
 			if (is_array($post_data) AND !empty($post_data['address_1'])) {
-				$url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode(implode(", ", $post_data)) . '&sensor=false'; //encode $postcode string and construct the url query
-				$ch = curl_init();
-				curl_setopt($ch, CURLOPT_URL, $url);
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
-				curl_setopt($ch, CURLOPT_USERAGENT, $this->CI->agent->agent_string());
-				$geocode = curl_exec($ch);
-				curl_close($ch);
-				$output = json_decode($geocode);
+				$this->CI->load->library('country');
+				$post_data['country'] = $this->CI->country->getCountryNameById($post_data['country']);
+				unset($post_data['location_lat'], $post_data['location_lng']);
 
-				if (!empty($output->status) AND $output->status === 'OK') {
-					$_POST[$post_item]['location_lat'] = $output->results[0]->geometry->location->lat;
-					$_POST[$post_item]['location_lng'] = $output->results[0]->geometry->location->lng;
+				$this->CI->load->library('location_geocode');
+				$position = $this->CI->location_geocode->geocodePosition(implode(", ", $post_data));
+
+				if (!empty($position->status) AND $position->status == 'OK') {
+					$_POST[$post_item]['location_lat'] = $position->lat;
+					$_POST[$post_item]['location_lng'] = $position->lng;
 
 					return TRUE;
 				}
@@ -125,7 +148,8 @@ class TI_Form_validation extends CI_Form_validation
 	 *
 	 * @return    string
 	 */
-	public function xss_clean($str) {
+	public function xss_clean($str)
+	{
 		return $this->CI->security->xss_clean($str);
 	}
 
@@ -138,7 +162,8 @@ class TI_Form_validation extends CI_Form_validation
 	 *
 	 * @return    string
 	 */
-	protected function _translate_fieldname($fieldname) {
+	protected function _translate_fieldname($fieldname)
+	{
 		// Do we need to translate the field name?
 		// We look for the prefix lang: to determine this
 		if (sscanf($fieldname, 'lang:%s', $line) === 1) {
@@ -156,7 +181,8 @@ class TI_Form_validation extends CI_Form_validation
 
 	// --------------------------------------------------------------------
 
-	public function error($field, $prefix = '', $suffix = '') {
+	public function error($field, $prefix = '', $suffix = '')
+	{
 		if (!empty($this->_old_field_data[$field]['error'])) {
 			if ($prefix === '') {
 				$prefix = $this->_error_prefix;
@@ -182,16 +208,17 @@ class TI_Form_validation extends CI_Form_validation
 	 *
 	 * @return    CI_Form_validation
 	 */
-	public function reset_validation() {
+	public function reset_validation()
+	{
 		$this->_old_field_data = $this->_field_data;
 		$this->_old_error_array = $this->_error_array;
 		$this->_old_error_messages = $this->_error_messages;
 		$this->old_error_string = $this->error_string;
 
-		$this->_field_data = array();
-		$this->_config_rules = array();
-		$this->_error_array = array();
-		$this->_error_messages = array();
+		$this->_field_data = [];
+		$this->_config_rules = [];
+		$this->_error_array = [];
+		$this->_error_messages = [];
 		$this->error_string = '';
 
 		return $this;

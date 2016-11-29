@@ -90,7 +90,7 @@ width: 100%;
 float: right;
 font-size: 32px;
 line-height: 24px;
-position: absolute;
+position: relative;
 right: 20px;
 top: 5px;
 }
@@ -103,12 +103,12 @@ top: 5px;
 /*** Location Bar ***/
 .panel-local {
 background-color: #FFFFFF;
-border: 1px solid #dddddd;
+border: 1px solid #E7E7E7;
 box-shadow: none;
 margin-bottom: 0;
 }
 .panel-local .panel-heading {
-border-color: #EEEEEE;
+border-color: #E7E7E7;
 overflow: visible;
 padding: 0 15px;
 display: block;
@@ -127,7 +127,7 @@ font-size: 24px;
 font-size: 14px;
 }
 .box-divider {
-border-bottom: 1px solid #e7e7e7;
+border-bottom: 1px solid #E7E7E7;
 padding-bottom: 8px;
 margin-bottom: 8px;
 }
@@ -175,7 +175,9 @@ margin-left: 110px;
 width: 100px;
 text-align: left;
 }
-
+#content-top #local-info .panel-local {
+    margin-top: 30px;
+}
 
 /*** End Location Bar ***/
 
