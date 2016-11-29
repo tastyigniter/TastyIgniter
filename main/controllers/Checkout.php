@@ -30,7 +30,7 @@ class Checkout extends Main_Controller
 			$this->redirect(restaurant_url());                                                                    // redirect to menus page and display error
 		}
 
-		if ($this->config->item('location_order') === '1' AND !$this->location->hasSearchQuery()) {                                                        // else if local restaurant is not selected
+		if ($this->config->item('location_order') == '1' AND !$this->location->hasSearchQuery()) {                                                        // else if local restaurant is not selected
 			$this->alert->set('alert', $this->lang->line('alert_no_selected_local'));
 			$this->redirect(restaurant_url());                                                                    // redirect to menus page and display error
 		}
@@ -43,12 +43,12 @@ class Checkout extends Main_Controller
 			$this->redirect(restaurant_url());                                                                    // redirect to previous page and display error
 		}
 
-		if ($this->location->orderType() === '1' AND !$this->location->checkMinimumOrder($this->cart->total())) {                            // checks if cart contents is empty
+		if ($this->location->orderType() == '1' AND !$this->location->checkMinimumOrder($this->cart->total())) {                            // checks if cart contents is empty
 			$this->redirect(restaurant_url());                                                                    // redirect to previous page and display error
 		}
 
 		$prepend = '?redirect=' . str_replace(site_url(), '/', current_url());
-		if (!$this->customer->islogged() AND $this->config->item('guest_order') !== '1') {                                            // else if customer is not logged in
+		if (!$this->customer->islogged() AND $this->config->item('guest_order') != '1') {                                            // else if customer is not logged in
 			$this->alert->set('alert', $this->lang->line('alert_customer_not_logged'));
 			redirect('account/login' . $prepend);                                                            // redirect to account register page and display error
 		}
@@ -120,7 +120,7 @@ class Checkout extends Main_Controller
 		$data['text_success_message'] = sprintf($this->lang->line('text_success_message'), $order_info['order_id'], site_url('account/orders'));
 
 		// checks if order type is delivery or collection
-		$order_type = ($order_info['order_type'] === '1') ? 'delivery' : 'collection';
+		$order_type = ($order_info['order_type'] == '1') ? 'delivery' : 'collection';
 
 		$payments = Components::list_payment_gateways();
 		if (isset($payments[$order_info['payment']]) AND $payment = $payments[$order_info['payment']]) {
@@ -141,7 +141,7 @@ class Checkout extends Main_Controller
 
 			if (!empty($menu_options)) {
 				foreach ($menu_options as $menu_option) {
-					if ($menu['order_menu_id'] === $menu_option['order_menu_id']) {
+					if ($menu['order_menu_id'] == $menu_option['order_menu_id']) {
 						$option_data[] = $menu_option['order_option_name'] . $this->lang->line('text_equals') . $this->currency->format($menu_option['order_option_price']);
 					}
 				}
@@ -254,10 +254,10 @@ class Checkout extends Main_Controller
 			$data['order_type'] = '1';
 		}
 
-		$data['order_type_text'] = ($data['order_type'] === '1') ? $this->lang->line('label_delivery') : $this->lang->line('label_collection');
+		$data['order_type_text'] = ($data['order_type'] == '1') ? $this->lang->line('label_delivery') : $this->lang->line('label_collection');
 
 		$data['order_times'] = $this->location->orderTimeRange();
-		$data['order_time_interval'] = ($data['order_type'] === '1') ? $this->location->deliveryTime() : $this->location->collectionTime();
+		$data['order_time_interval'] = ($data['order_type'] == '1') ? $this->location->deliveryTime() : $this->location->collectionTime();
 
 		$count = 1;
 		$order_date = $order_hour = $order_minute = '';
@@ -436,7 +436,7 @@ class Checkout extends Main_Controller
 			$order_data['address_id'] = (int)$this->input->post('address_id');                // retrieve address_id value from $_POST data if set and convert to integer then add to order_data array
 			$order_data['comment'] = $this->input->post('comment');                        // retrieve comment value from $_POST data if set and convert to integer then add to order_data array
 
-			if ($this->location->orderType() === '1') {
+			if ($this->location->orderType() == '1') {
 				foreach ($this->input->post('address') as $key => $address) {
 					$_POST['address'][$key]['country'] = $address['country_id'];
 
@@ -444,7 +444,7 @@ class Checkout extends Main_Controller
 
 					$_POST['address'][$key]['address_id'] = $address['address_id'] = $this->Addresses_model->saveAddress($order_data['customer_id'], $address['address_id'], $address);    // send new-address $_POST data and customer id to saveAddress method in Customers model
 
-					if (empty($order_data['address_id']) OR $address['address_id'] === $order_data['address_id']) {
+					if (empty($order_data['address_id']) OR $address['address_id'] == $order_data['address_id']) {
 						$order_data['address_id'] = $address['address_id'];
 						$order_data['address'] = $address;
 					}
@@ -503,7 +503,7 @@ class Checkout extends Main_Controller
 			$this->form_validation->set_message('is_unique', 'Warning: E-Mail Address is already registered!');
 		}
 
-		$order_type_text = ($this->location->orderType() === '1') ? $this->lang->line('label_delivery') : $this->lang->line('label_collection');
+		$order_type_text = ($this->location->orderType() == '1') ? $this->lang->line('label_delivery') : $this->lang->line('label_collection');
 
 		$this->form_validation->set_rules('telephone', 'lang:label_telephone', 'xss_clean|trim|required|numeric|max_length[20]');
 		$this->form_validation->set_rules('order_time_type', sprintf(lang('label_order_time_type'), $order_type_text), 'xss_clean|trim|required|alpha');
@@ -516,7 +516,7 @@ class Checkout extends Main_Controller
 			$this->form_validation->set_rules('order_minute', 'lang:label_minute', 'xss_clean|trim|required|numeric');
 		}
 
-		if ($this->location->orderType() === '1' AND $this->input->post('address')) {
+		if ($this->location->orderType() == '1' AND $this->input->post('address')) {
 			$this->form_validation->set_rules('address_id', 'lang:label_address', 'xss_clean|trim|integer|callback__validate_address');
 
 			foreach ($this->input->post('address') as $key => $address) {
@@ -553,7 +553,7 @@ class Checkout extends Main_Controller
 			$str = "{$this->input->post('order_date')} {$this->input->post('order_hour')}:{$this->input->post('order_minute')}";
 		}
 
-		$order_type = ($this->location->orderType() === '1') ? 'delivery' : 'collection';
+		$order_type = ($this->location->orderType() == '1') ? 'delivery' : 'collection';
 
         if (strtotime($str) < time()) {
         	$this->form_validation->set_message('_validate_time', sprintf($this->lang->line('error_delivery_less_current_time'), $this->lang->line('text_'.$order_type)));
@@ -571,19 +571,19 @@ class Checkout extends Main_Controller
 	public function _validate_address($address_id) {
 		$addresses = $this->input->post('address');
 
-		if ($this->location->orderType() === '1' AND !empty($addresses[0]['address_1'])) {
+		if ($this->location->orderType() == '1' AND !empty($addresses[0]['address_1'])) {
 			$location_id = $this->location->getId();
 			$area_id = $this->location->getAreaId();
 
 			foreach ($addresses as $address) {
-				if (empty($address_id) OR $address['address_id'] === $address_id) {
+				if (empty($address_id) OR $address['address_id'] == $address_id) {
 					$country = $this->Countries_model->getCountry($address['country_id']);
 					$address['country'] = $country['country_name'];
 					unset($address['address_id'], $address['country_id']);
 
 					if ($area = $this->location->checkDeliveryCoverage($address)) {
 						if (isset($area['area_id']) AND ($area['area_id'] != $area_id OR $area['location_id'] != $location_id)) {
-							$this->location->setDeliveryArea($area, $address);
+							$this->location->setDeliveryArea($area);
 
 							$this->alert->set('alert', $this->lang->line('alert_delivery_area_changed'));
 

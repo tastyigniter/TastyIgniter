@@ -44,11 +44,11 @@ class Orders extends Main_Controller
 		$time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
 
 		$data['orders'] = array();
-		$results = $this->Orders_model->paginate($this->filter, current_url());            // retrieve customer orders based on customer id from getMainOrders method in Orders model
+		$results = $this->Orders_model->paginateWithFilter($this->filter);            // retrieve customer orders based on customer id from getMainOrders method in Orders model
 		foreach ($results->list as $result) {
 
 			// if order type is equal to 1, order type is delivery else collection
-			$order_type = ($result['order_type'] === '1') ? $this->lang->line('text_delivery') : $this->lang->line('text_collection');
+			$order_type = ($result['order_type'] == '1') ? $this->lang->line('text_delivery') : $this->lang->line('text_collection');
 
 			$data['orders'][] = array_merge($result, array(                                                            // create array of customer orders to pass to view
 				'date_added'   => day_elapsed($result['date_added']),
@@ -111,7 +111,7 @@ class Orders extends Main_Controller
 			$option_data = array();
 			if (!empty($order_menu_options)) {
 				foreach ($order_menu_options as $menu_option) {
-					if ($order_menu['order_menu_id'] === $menu_option['order_menu_id']) {
+					if ($order_menu['order_menu_id'] == $menu_option['order_menu_id']) {
 						$option_data[] = $menu_option['order_option_name'] . $this->lang->line('text_equals') . $this->currency->format($menu_option['order_option_price']);
 					}
 				}
@@ -131,7 +131,7 @@ class Orders extends Main_Controller
 		$data['totals'] = array();
 		$order_totals = $this->Orders_model->getOrderTotals($result['order_id']);
 		foreach ($order_totals as $order_total) {
-			if ($data['order_type'] !== '1' AND $order_total['code'] === 'delivery') continue;
+			if ($data['order_type'] != '1' AND $order_total['code'] === 'delivery') continue;
 
 			$data['totals'][] = array(
 				'code'     => $order_total['code'],
@@ -169,7 +169,7 @@ class Orders extends Main_Controller
 			}
 
 			$this->alert->set('alert', sprintf($this->lang->line('alert_reorder_success'), $this->uri->rsegment(3)));
-			$this->redirect('local?location_id=' . $this->uri->rsegment(4));
+			$this->redirect(restaurant_url('menus?location_id=' . $this->uri->rsegment(4)));
 		} else {
 			$this->redirect('account/orders');
 		}

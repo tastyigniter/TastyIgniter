@@ -12,7 +12,7 @@ class Pages extends Main_Controller
 	}
 
 	public function index() {
-		if (!$result = $this->Pages_model->getPage((int)$this->input->get('page_id'))) {
+		if (!$result = $this->Pages_model->find((int)$this->input->get('page_id'))) {
 			show_404();
 		}
 

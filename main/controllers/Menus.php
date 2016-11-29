@@ -16,6 +16,7 @@ class Menus extends Main_Controller
 		$this->load->model('Categories_model');                                                        // load the menus model
 		$this->load->model('Menu_options_model');                                                        // load the menus model
 		$this->load->model('Pages_model');
+		$this->load->model('Image_tool_model');
 
 		$this->load->library('location');                                                        // load the location library
 
@@ -65,17 +66,18 @@ class Menus extends Main_Controller
 		$data['show_menu_images'] = $this->config->item('show_menu_images');
 		$data['category_id'] = $this->input->get('category_id');
 
-		$data['menu_total'] = $this->Menus_model->getCount();
+		$data['menu_total'] = 1000; //$this->Menus_model->getCount();
 		$mix_it_up = (!empty($menu_total) AND $menu_total < 500) ? TRUE : FALSE;
 
 		if (!$mix_it_up AND $this->input->get('category_id')) {
 			$this->setFilter('filter_category', (int)$this->input->get('category_id'));
 		}
 
-		$results = $this->Menus_model->paginate($this->getFilter(), current_url());
-		$data['menus'] = $results->list;
+		$this->setFilter('base_url', current_url());
+		$results = $this->Menus_model->paginateWithFilter($this->getFilter());
+		$data['menus'] = $this->Menus_model->buildMenuList($results->list);
 		$data['pagination'] = $results->pagination;
-		
+
 		$data['categories'] = array();
 		$categories = $this->Categories_model->getCategories();
 		foreach (sort_array($categories) as $category) {

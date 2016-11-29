@@ -3,7 +3,8 @@
 class Ratings extends Admin_Controller
 {
 
-	public function index() {
+	public function index()
+	{
 		$this->user->restrict('Admin.Ratings');
 
 		$this->lang->load('ratings');
@@ -14,7 +15,7 @@ class Ratings extends Admin_Controller
 
 		$this->template->setTitle($this->lang->line('text_title'));
 		$this->template->setHeading($this->lang->line('text_heading'));
-		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
+		$this->template->setButton($this->lang->line('button_save'), ['class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();']);
 
 		$this->assets->setScriptTag(assets_url('js/jquery-sortable.js'), 'jquery-sortable-js');
 
@@ -23,7 +24,8 @@ class Ratings extends Admin_Controller
 		$this->template->render('ratings', $data);
 	}
 
-	public function getList() {
+	public function getList()
+	{
 		if ($this->input->post('ratings')) {
 			$results = $this->input->post('ratings');
 		} else if ($this->config->item('ratings')) {
@@ -33,7 +35,7 @@ class Ratings extends Admin_Controller
 			$results = '';
 		}
 
-		$data['ratings'] = array();
+		$data['ratings'] = [];
 		if (is_array($results)) {
 			foreach ($results as $key => $value) {
 				$data['ratings'][$key] = $value;
@@ -43,9 +45,10 @@ class Ratings extends Admin_Controller
 		return $data;
 	}
 
-	protected function _updateRating() {
+	protected function _updateRating()
+	{
 		if ($this->input->post('ratings') AND $this->validateForm() === TRUE) {
-			$update = array();
+			$update = [];
 			$update['ratings'] = $this->input->post('ratings');
 
 			$this->load->model('Settings_model');
@@ -59,15 +62,16 @@ class Ratings extends Admin_Controller
 		}
 	}
 
-	protected function validateForm() {
+	protected function validateForm()
+	{
 		if ($this->input->post('ratings')) {
-			$rules = array();
+			$rules = [];
 			foreach ($this->input->post('ratings') as $key => $value) {
-				$rules[] = array('ratings[' . $key . ']', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
+				$rules[] = ['ratings[' . $key . ']', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[32]'];
 			}
 		}
 
-		return $this->Settings_model->set_rules($rules)->validate();
+		return $this->form_validation->set_rules($rules)->run();
 	}
 }
 

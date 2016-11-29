@@ -3,7 +3,8 @@
 class Login extends Admin_Controller
 {
 
-	public function index() {
+	public function index()
+	{
 		$this->lang->load('login');
 
 		if ($this->user->islogged()) {
@@ -21,8 +22,8 @@ class Login extends Admin_Controller
 				$this->redirect(current_url());
 			} else {
 				log_activity($this->user->getStaffId(), 'logged in', 'staffs', get_activity_message('activity_logged_in',
-					array('{staff}', '{link}'),
-					array($this->user->getStaffName(), admin_url('staffs/edit?id=' . $this->user->getStaffId()))
+					['{staff}', '{link}'],
+					[$this->user->getStaffName(), admin_url('staffs/edit?id=' . $this->user->getStaffId())]
 				));
 
 				if (!$this->config->item('address_1', 'main_address')) {
@@ -40,7 +41,8 @@ class Login extends Admin_Controller
 		$this->template->render('login', $data);
 	}
 
-	public function reset() {
+	public function reset()
+	{
 		$this->lang->load('login');
 
 		$this->load->model('Staffs_model');
@@ -59,7 +61,8 @@ class Login extends Admin_Controller
 		$this->template->render('login_reset', $data);
 	}
 
-	protected function _resetPassword() {
+	protected function _resetPassword()
+	{
 		if ($this->validateResetForm() === TRUE) {
 			$reset['email'] = $this->input->post('user_email');
 
@@ -74,7 +77,8 @@ class Login extends Admin_Controller
 		}
 	}
 
-	protected function validateLoginForm() {
+	protected function validateLoginForm()
+	{
 		// START of form validation rules
 		$this->form_validation->set_rules('user', 'lang:label_username', 'xss_clean|trim|required');
 		$this->form_validation->set_rules('password', 'lang:label_password', 'xss_clean|trim|required|min_length[6]|max_length[32]');
@@ -87,7 +91,8 @@ class Login extends Admin_Controller
 		}
 	}
 
-	protected function validateResetForm() {
+	protected function validateResetForm()
+	{
 		$this->form_validation->set_rules('user_email', 'lang:label_username_email', 'xss_clean|trim|required|callback__check_user');    //validate form
 
 		if ($this->form_validation->run() === TRUE) {                                        // checks if form validation routines ran successfully
@@ -97,7 +102,8 @@ class Login extends Admin_Controller
 		}
 	}
 
-	public function _check_user($str) {
+	public function _check_user($str)
+	{
 		if (!$this->Staffs_model->validateStaff($str)) {
 			$this->form_validation->set_message('_check_user', $this->lang->line('error_no_user_found'));
 

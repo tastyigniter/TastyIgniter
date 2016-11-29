@@ -18,7 +18,7 @@ class Reservations extends Main_Controller
 
 		$this->lang->load('account/reservations');
 
-		if ($this->config->item('reservation_mode') !== '1') {
+		if ($this->config->item('reservation_mode') != '1') {
 			$this->alert->set('alert', $this->lang->line('alert_reservation_disabled'));
 			$this->redirect('account/account');
 		}
@@ -40,7 +40,7 @@ class Reservations extends Main_Controller
 		$time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
 
 		$data['reservations'] = array();
-		$results = $this->Reservations_model->paginate($this->filter, current_url());                                // retrieve customer reservations based on customer id from getMainReservations method in Reservations model
+		$results = $this->Reservations_model->paginateWithFilter($this->filter);                                // retrieve customer reservations based on customer id from getMainReservations method in Reservations model
 		foreach ($results->list as $result) {
 			$data['reservations'][] = array_merge($result, array(                                                    // create array of customer reservations to pass to view
 				'reserve_date' => day_elapsed($result['reserve_date']),

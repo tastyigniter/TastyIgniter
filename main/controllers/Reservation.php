@@ -11,7 +11,7 @@ class Reservation extends Main_Controller
 
 		$this->lang->load('reservation');
 
-		if ($this->config->item('reservation_mode') !== '1') {
+		if ($this->config->item('reservation_mode') != '1') {
 			$this->alert->set('alert', $this->lang->line('alert_reservation_disabled'));
 			redirect('home');
 		}
@@ -91,7 +91,7 @@ class Reservation extends Main_Controller
 			redirect('reservation');
 		}
 
-		$guest_num = $result['guest_num'] . ' person(s)';
+		$guest_num = $result['guest_num'] . ' person(s)' . $this->lang->line('');;
 
 		$time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
 

@@ -64,12 +64,12 @@ class Local extends Main_Controller
 			'sort_by' => 'menus.menu_priority',
 			'order_by' => 'ASC',
 		);
-		
+
 		$this->setFilter($filter);
 
 		$this->load->module('menus');
 		$data['menu_list'] = $this->menus->getList();
-		
+
 		return $data;
 	}
 
@@ -140,39 +140,7 @@ class Local extends Main_Controller
 		$data['delivery_areas'] = array();
 		$delivery_areas = $this->location->deliveryAreas();
 		foreach ($delivery_areas as $area_id => $area) {
-			if (isset($area['charge']) AND is_string($area['charge'])) {
-				$area['charge'] = array(array(
-					'amount'    => $area['charge'],
-					'condition' => 'above',
-					'total'     => (isset($area['min_amount'])) ? $area['min_amount'] : '0',
-				));
-			}
-
-			$text_condition = '';
-			foreach ($area['condition'] as $condition) {
-				$condition = explode('|', $condition);
-				$delivery = (isset($condition[0]) AND $condition[0] > 0) ? $this->currency->format($condition[0]) : $this->lang->line('text_free_delivery');
-				$con = (isset($condition[1])) ? $condition[1] : 'above';
-				$total = (isset($condition[2]) AND $condition[2] > 0) ? $this->currency->format($condition[2]) : $this->lang->line('text_no_min_total');
-
-				if ($con === 'all') {
-					$text_condition .= sprintf($conditions['all'], $delivery);
-				} else if ($con === 'above') {
-					$text_condition .= sprintf($conditions[$con], $delivery, $total) . ', ';
-				} else if ($con === 'below') {
-					$text_condition .= sprintf($conditions[$con], $total) . ', ';
-				}
-			}
-
-			$data['delivery_areas'][] = array(
-				'area_id'   => $area['area_id'],
-				'name'      => $area['name'],
-				'type'      => $area['type'],
-				'color'     => $area_colors[(int)$area_id - 1],
-				'shape'     => $area['shape'],
-				'circle'    => $area['circle'],
-				'condition' => trim($text_condition, ', '),
-			);
+			$data['delivery_areas'][] = $area;
 		}
 
 		$data['location_lat'] = $data['location_lng'] = '';
@@ -194,7 +162,7 @@ class Local extends Main_Controller
 
 		$data['reviews'] = array();
 
-		$results = $this->Reviews_model->paginate($this->getFilter(), current_url());                                    // retrieve all customer reviews from getMainList method in Reviews model
+		$results = $this->Reviews_model->paginateWithFilter($this->getFilter());                                    // retrieve all customer reviews from getMainList method in Reviews model
 		foreach ($results->list as $result) {
 			$data['reviews'][] = array_merge($result, array(                                                            // create array of customer reviews to pass to view
 				'city' => $result['location_city'],
@@ -220,7 +188,7 @@ class Local extends Main_Controller
 		$data['description'] = isset($gallery['description']) ? $gallery['description'] : '';
 
 		foreach ($gallery['images'] as $key => $image) {
-			if (isset($image['status']) AND $image['status'] !== '1') {
+			if (isset($image['status']) AND $image['status'] != '1') {
 				$data['images'][$key] = array(
 					'name'     => isset($image['name']) ? $image['name'] : '',
 					'path'     => isset($image['path']) ? $image['path'] : '',
@@ -316,7 +284,7 @@ class Local extends Main_Controller
 		$review_totals = $this->Reviews_model->getTotalsbyId();                                    // retrieve all customer reviews from getMainList method in Reviews model
 
 		$data['locations'] = array();
-		$results = $this->Locations_model->paginate($this->getFilter(), current_url());
+		$results = $this->Locations_model->paginateWithFilter($this->getFilter());
 		foreach ($results->list as $location) {
 			$this->location->setLocation($location['location_id'], FALSE);
 
@@ -361,7 +329,7 @@ class Local extends Main_Controller
 				'has_delivery'      => $this->location->hasDelivery(),
 				'has_collection'    => $this->location->hasCollection(),
 				'last_order_time'   => $this->location->lastOrderTime(),
-				'distance'          => round($this->location->checkDistance()),
+				'distance'          => $this->location->checkDistance(1),
 				'distance_unit'     => $this->config->item('distance_unit') === 'km' ? $this->lang->line('text_kilometers') : $this->lang->line('text_miles'),
 				'href'              => restaurant_url('menus?location_id=' . $location['location_id']),
 			);

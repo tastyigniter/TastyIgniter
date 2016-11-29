@@ -7,11 +7,12 @@ class Maintenance extends Admin_Controller
 
 	public $edit_url = 'maintenance/backup?{action}={name}';
 
-	public $filter = array(
+	public $filter = [
 		'table' => '',
-	);
+	];
 
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct(); //  calls the constructor
 
 		$this->load->model('Maintenance_model');
@@ -19,7 +20,8 @@ class Maintenance extends Admin_Controller
 		$this->lang->load('maintenance');
 	}
 
-	public function index() {
+	public function index()
+	{
 		$this->user->restrict('Admin.Maintenance.Access');
 
 		if ($this->input->post('migrate') AND $this->_migrate() === TRUE) {
@@ -34,15 +36,16 @@ class Maintenance extends Admin_Controller
 		$this->template->setTitle($this->lang->line('text_title'));
 		$this->template->setHeading($this->lang->line('text_heading'));
 
-		$this->template->setButton($this->lang->line('button_backup'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#tables-form\').submit();'));
-		$this->template->setButton($this->lang->line('button_migrate'), array('class' => 'btn btn-success', 'onclick' => '$(\'#migrate-form\').submit();'));
+		$this->template->setButton($this->lang->line('button_backup'), ['class' => 'btn btn-primary', 'onclick' => '$(\'#tables-form\').submit();']);
+		$this->template->setButton($this->lang->line('button_migrate'), ['class' => 'btn btn-success', 'onclick' => '$(\'#migrate-form\').submit();']);
 
 		$data = $this->getList();
 
 		$this->template->render('maintenance', $data);
 	}
 
-	public function backup() {
+	public function backup()
+	{
 		$this->user->restrict('Admin.Maintenance.Manage');
 
 		if ($this->input->get('restore') AND $this->_restore() === TRUE) {
@@ -63,16 +66,17 @@ class Maintenance extends Admin_Controller
 		$this->template->setTitle($this->lang->line('text_backup_heading'));
 		$this->template->setHeading($this->lang->line('text_backup_heading'));
 
-		$this->template->setButton($this->lang->line('button_backup'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-		$this->template->setButton($this->lang->line('button_migrate'), array('class' => 'btn btn-success', 'onclick' => '$(\'#migrate-form\').submit();'));
-		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('maintenance')));
+		$this->template->setButton($this->lang->line('button_backup'), ['class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();']);
+		$this->template->setButton($this->lang->line('button_migrate'), ['class' => 'btn btn-success', 'onclick' => '$(\'#migrate-form\').submit();']);
+		$this->template->setButton($this->lang->line('button_icon_back'), ['class' => 'btn btn-default', 'href' => site_url('maintenance')]);
 
 		$data = $this->getForm();
 
 		$this->template->render('maintenance', $data);
 	}
 
-	public function browse_table() {
+	public function browse_table()
+	{
 		$this->user->restrict('Admin.Maintenance.Access');
 		$this->user->restrict('Admin.Maintenance.Manage');
 
@@ -82,22 +86,22 @@ class Maintenance extends Admin_Controller
 
 		$this->template->setTitle(sprintf($this->lang->line('text_browse_heading'), $this->getFilter('table')));
 		$this->template->setHeading(sprintf($this->lang->line('text_browse_heading'), $this->getFilter('table')));
-		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('maintenance')));
+		$this->template->setButton($this->lang->line('button_icon_back'), ['class' => 'btn btn-default', 'href' => site_url('maintenance')]);
 
 		$data = $this->getTableList();
 
 		$this->template->render('maintenance_browse', $data);
-
 	}
 
-	public function getList() {
+	public function getList()
+	{
 		$this->load->helper('number');
 
 		$data['backup_tables'] = FALSE;
-		$data['db_tables'] = array();
+		$data['db_tables'] = [];
 		$db_tables = $this->Maintenance_model->getdbTables();
 		foreach ($db_tables as $db_table) {
-			$data['db_tables'][] = array(
+			$data['db_tables'][] = [
 				'name'         => $db_table['table_name'],
 				'records'      => $db_table['table_rows'],
 				'data_length'  => byte_format($db_table['data_length']),
@@ -105,17 +109,17 @@ class Maintenance extends Admin_Controller
 				'data_free'    => byte_format($db_table['data_free']),
 				'engine'       => $db_table['engine'],
 				'browse'       => $this->pageUrl($this->browse_url . '/' . $db_table['table_name']),
-			);
+			];
 		}
 
-		$data['backup_files'] = array();
+		$data['backup_files'] = [];
 		$backup_files = $this->Maintenance_model->getBackupFiles();
 		foreach ($backup_files as $file) {
-			$data['backup_files'][] = array_merge($file, array(
-				'download' => $this->pageUrl($this->edit_url, array('action' => 'download', 'name' => $file['filename'])),
-				'restore'  => $this->pageUrl($this->edit_url, array('action' => 'restore', 'name' => $file['filename'])),
-				'delete'   => $this->pageUrl($this->edit_url, array('action' => 'delete', 'name' => $file['filename'])),
-			));
+			$data['backup_files'][] = array_merge($file, [
+				'download' => $this->pageUrl($this->edit_url, ['action' => 'download', 'name' => $file['filename']]),
+				'restore'  => $this->pageUrl($this->edit_url, ['action' => 'restore', 'name' => $file['filename']]),
+				'delete'   => $this->pageUrl($this->edit_url, ['action' => 'delete', 'name' => $file['filename']]),
+			]);
 		}
 
 		$migrate_type = 'core';
@@ -123,7 +127,7 @@ class Maintenance extends Admin_Controller
 		$data['installed_version'] = $this->migration->get_version($migrate_type);
 		$data['latest_version'] = (int)$this->migration->get_latest_version($migrate_type);
 
-		$data['migration_files'] = array();
+		$data['migration_files'] = [];
 		if ($migration_files = $this->migration->find_migrations($migrate_type)) {
 			foreach ($migration_files as $version => $migration_file) {
 				$migration_file = basename($migration_file);
@@ -135,7 +139,8 @@ class Maintenance extends Admin_Controller
 		return $data;
 	}
 
-	public function getForm() {
+	public function getForm()
+	{
 		$data['backup_tables'] = TRUE;
 
 		$timestamp = mdate('%Y-%m-%d-%H-%i-%s', now());
@@ -169,20 +174,21 @@ class Maintenance extends Admin_Controller
 		} else if ($this->input->post('tables')) {
 			$data['tables'] = $this->input->post('tables');
 		} else {
-			$data['tables'] = array();
+			$data['tables'] = [];
 		}
 
 		return $data;
 	}
 
-	protected function getTableList() {
+	protected function getTableList()
+	{
 		$table_info = $this->Maintenance_model->browseTable($this->getFilter());
 
 		$data['sql_query'] = 'SELECT * FROM (' . $this->filter['table'] . ')';
 
 		if (!empty($table_info['query'])) {
 			$this->load->library('table');
-			$template = array('table_open' => '<table class="table table-striped table-border">');
+			$template = ['table_open' => '<table class="table table-striped table-border">'];
 			$this->table->set_template($template);
 			$data['query_table'] = $this->table->generate($table_info['query']);
 		} else {
@@ -193,12 +199,13 @@ class Maintenance extends Admin_Controller
 		$config['total_rows'] = !empty($table_info['total_rows']) ? $table_info['total_rows'] : '0';
 		$config['per_page'] = $this->filter['limit'];
 
-		$data['pagination'] = $this->Maintenance_model->paginate_list($config);
+		$data['pagination'] = $this->Maintenance_model->buildPaginateHtml($config);
 
 		return $data;
 	}
 
-	protected function _backup() {
+	protected function _backup()
+	{
 		if ($this->input->post('tables') AND $this->validateForm() === TRUE) {
 
 			if ($this->Maintenance_model->backupDatabase($this->input->post())) {
@@ -209,11 +216,12 @@ class Maintenance extends Admin_Controller
 		}
 	}
 
-	protected function _restore() {
+	protected function _restore()
+	{
 		$this->user->restrict('Admin.Maintenance.Add');
 
 		if ($this->input->get('restore')) {
-			if ($this->config->item('maintenance_mode') !== '1') {
+			if ($this->config->item('maintenance_mode') != '1') {
 				$this->alert->set('warning', sprintf($this->lang->line('alert_warning_maintenance'), 'restore'));
 			} else if ($this->Maintenance_model->restoreDatabase($this->input->get('restore'))) { // calls model to save data to SQL
 				$this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Database restored '));
@@ -225,7 +233,8 @@ class Maintenance extends Admin_Controller
 		}
 	}
 
-	protected function _download() {
+	protected function _download()
+	{
 		$this->user->restrict('Admin.Maintenance.Manage');
 
 		if ($this->input->get('download') AND $result = $this->Maintenance_model->readBackupFile($this->input->get('download'))) {
@@ -235,7 +244,8 @@ class Maintenance extends Admin_Controller
 		}
 	}
 
-	protected function _delete() {
+	protected function _delete()
+	{
 		$this->user->restrict('Admin.Maintenance.Delete');
 
 		if ($this->input->get('delete')) {
@@ -247,11 +257,12 @@ class Maintenance extends Admin_Controller
 		}
 	}
 
-	protected function _migrate() {
+	protected function _migrate()
+	{
 		$this->user->restrict('Admin.Maintenance.Manage');
 
 		if ($this->input->post('migrate') AND is_numeric($this->input->post('migrate'))) {
-			if (ENVIRONMENT === 'production' AND $this->config->item('maintenance_mode') !== '1') {
+			if (ENVIRONMENT === 'production' AND $this->config->item('maintenance_mode') != '1') {
 				$this->alert->set('warning', sprintf($this->lang->line('alert_warning_maintenance'), 'migrate'));
 			} else {
 				$this->load->library('migration');
@@ -268,21 +279,22 @@ class Maintenance extends Admin_Controller
 		return TRUE;
 	}
 
-	protected function validateForm() {
-		$rules[] = array('file_name', 'lang:label_file_name', 'xss_clean|trim|required');
-		$rules[] = array('drop_tables', 'lang:label_drop_tables', 'xss_clean|trim|required|alpha_dash');
-		$rules[] = array('add_inserts', 'lang:label_add_inserts', 'xss_clean|trim|required|alpha_dash');
-		$rules[] = array('compression', 'lang:label_compression', 'xss_clean|trim|required|alpha_dash');
-		$rules[] = array('tables[]', 'lang:label_backup_table', 'xss_clean|trim|required|alpha_dash');
+	protected function validateForm()
+	{
+		$rules[] = ['file_name', 'lang:label_file_name', 'xss_clean|trim|required'];
+		$rules[] = ['drop_tables', 'lang:label_drop_tables', 'xss_clean|trim|required|alpha_dash'];
+		$rules[] = ['add_inserts', 'lang:label_add_inserts', 'xss_clean|trim|required|alpha_dash'];
+		$rules[] = ['compression', 'lang:label_compression', 'xss_clean|trim|required|alpha_dash'];
+		$rules[] = ['tables[]', 'lang:label_backup_table', 'xss_clean|trim|required|alpha_dash'];
 
 		if (!empty($_POST['file_name'])) {
 			$_POST['file_name'] = html_entity_decode($_POST['file_name'], ENT_QUOTES, 'UTF-8');
-			$_POST['file_name'] = str_replace(array('"', "'", "/", "\\"), "", $_POST['file_name']);
+			$_POST['file_name'] = str_replace(['"', "'", "/", "\\"], "", $_POST['file_name']);
 			$filename = $this->security->sanitize_filename($_POST['file_name']);
 			$_POST['file_name'] = basename($filename);
 		}
 
-		return $this->Maintenance_model->set_rules($rules)->validate();
+		return $this->form_validation->set_rules($rules)->run();
 	}
 }
 

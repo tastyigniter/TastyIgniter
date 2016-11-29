@@ -3,13 +3,14 @@
 class Activities extends Admin_Controller
 {
 
-	public $filter = array(
+	public $filter = [
 		'filter_status' => '',
-	);
+	];
 
-	public $default_sort = array('date_added', 'DESC');
+	public $default_sort = ['date_added', 'DESC'];
 
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct(); //  calls the constructor
 
 		$this->user->restrict('Admin.Activities');
@@ -19,7 +20,8 @@ class Activities extends Admin_Controller
 		$this->lang->load('activities');
 	}
 
-	public function index() {
+	public function index()
+	{
 		$this->template->setTitle($this->lang->line('text_title'));
 		$this->template->setHeading($this->lang->line('text_heading'));
 
@@ -28,10 +30,11 @@ class Activities extends Admin_Controller
 		$this->template->render('activities', $data);
 	}
 
-	public function latest() {
-		$this->setFilter(array('page' => '1', 'limit' => '10'));
+	public function latest()
+	{
+		$this->setFilter(['page' => '1', 'limit' => '10']);
 
-		$data['activities'] = array();
+		$data['activities'] = [];
 		foreach ($this->getList()['activities'] as $activities) {
 			foreach ($activities as $activity) {
 				$data['activities'][] = $activity;
@@ -41,10 +44,11 @@ class Activities extends Admin_Controller
 		$this->template->render('activities_latest', $data);
 	}
 
-	public function recent() {
-		$this->setFilter(array('page' => '1', 'limit' => '10'));
+	public function recent()
+	{
+		$this->setFilter(['page' => '1', 'limit' => '10']);
 
-		$data['activities'] = array();
+		$data['activities'] = [];
 		foreach ($this->getList()['activities'] as $activities) {
 			foreach ($activities as $activity) {
 				$data['activities'][] = $activity;
@@ -54,19 +58,20 @@ class Activities extends Admin_Controller
 		$this->template->render('activities', $data);
 	}
 
-	public function getList() {
+	public function getList()
+	{
 		$data = $this->getFilter();
 
-		$data['activities'] = array();
-		$results = $this->Activities_model->paginate($this->getFilter());
+		$data['activities'] = [];
+		$results = $this->Activities_model->paginateWithFilter($this->getFilter());
 		foreach ($results->list as $result) {
 			$result['day_elapsed'] = day_elapsed($result['date_added']);
-			$data['activities'][$result['day_elapsed']][] = array_merge($result, array(
+			$data['activities'][$result['day_elapsed']][] = array_merge($result, [
 				'time'         => mdate('%h:%i %A', strtotime($result['date_added'])),
 				'time_elapsed' => time_elapsed($result['date_added']),
 				'icon'         => 'fa fa-tasks',
-				'state'        => $result['status'] === '1' ? 'read' : 'unread',
-			));
+				'state'        => $result['status'] == '1' ? 'read' : 'unread',
+			]);
 		}
 
 		$data['pagination'] = $results->pagination;

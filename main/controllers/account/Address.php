@@ -34,7 +34,7 @@ class Address extends Main_Controller
 
 		$this->load->library('country');
 		$data['addresses'] = array();
-		$results = $this->Addresses_model->paginate($this->filter, current_url());                                // retrieve customer address data from getAddresses method in Customers model
+		$results = $this->Addresses_model->paginateWithFilter($this->filter);                                // retrieve customer address data from getAddresses method in Customers model
 		if ($results->list) {
 			foreach ($results->list as $result) {                                                        // loop through the customer address data
 				$data['addresses'][] = array_merge($result, array(                                                    // create array of customer address data to pass to view
@@ -118,7 +118,7 @@ class Address extends Main_Controller
 
 		// END of form validation rules
 
-		return $this->Addresses_model->set_rules($rules)->validate();
+		return $this->form_validation->set_rules($rules)->run();
 	}
 }
 

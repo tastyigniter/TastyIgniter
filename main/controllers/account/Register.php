@@ -63,7 +63,7 @@ class Register extends Main_Controller
 			$add['date_added'] = mdate('%Y-%m-%d', time());
 
 			$result = $this->Customer_groups_model->getCustomerGroup($this->config->item('customer_group_id'));
-			if ($result['approval'] === '1') {
+			if ($result['approval'] == '1') {
 				$add['status'] = '0';
 			} else {
 				$add['status'] = '1';
@@ -93,13 +93,13 @@ class Register extends Main_Controller
 		$rules[] = array('newsletter', 'lang:label_subscribe', 'xss_clean|trim|integer');
 		$rules[] = array('captcha', 'lang:label_captcha', 'xss_clean|trim|required|callback__validate_captcha');
 
-		if ($this->config->item('registration_terms') === '1') {
+		if ($this->config->item('registration_terms') == '1') {
 			$rules[] = array('terms_condition', 'lang:label_i_agree', 'xss_clean|trim|integer|required');
 		}
 
 		// END of form validation rules
 
-		return $this->Customers_model->set_rules($rules)->validate();
+		return $this->form_validation->set_rules($rules)->run();
 	}
 
 	public function _validate_captcha($word) {

@@ -100,7 +100,7 @@ class Details extends Main_Controller
 
 		// END of form validation rules
 
-		return $this->Customers_model->set_rules($rules)->validate();
+		return $this->form_validation->set_rules($rules)->run();
 	}
 
 	public function _check_old_password($pwd) {                                                    // validation callback function to check if old password is valid

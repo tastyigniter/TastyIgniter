@@ -30,12 +30,12 @@ class Inbox extends Main_Controller
 		$data['back_url'] = $this->pageUrl('account/account');
 
 		$data['messages'] = array();
-		$results = $this->Messages_model->paginate($this->filter, current_url());                                    // retrieve all customer messages from getMainInbox method in Messages model
+		$results = $this->Messages_model->paginateWithFilter($this->filter);                                    // retrieve all customer messages from getMainInbox method in Messages model
 		foreach ($results->list as $result) {
 			$data['messages'][] = array_merge($result, array(                                                        // create array of customer messages to pass to view
 				'date_added' => time_elapsed($result['date_added']),
 				'body'       => substr(strip_tags(html_entity_decode($result['body'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..',
-				'state'      => ($result['state'] === '0') ? 'unread' : 'read',
+				'state'      => ($result['state'] == '0') ? 'unread' : 'read',
 				'view'       => $this->pageUrl('account/inbox/view/' . $result['message_id']),
 			));
 		}

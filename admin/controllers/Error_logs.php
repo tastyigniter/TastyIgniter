@@ -3,14 +3,15 @@
 class Error_logs extends Admin_Controller
 {
 
-	public function index() {
+	public function index()
+	{
 		$this->lang->load('error_logs');
 
 		$this->user->restrict('Admin.ErrorLogs.Access');
 
 		$this->template->setTitle($this->lang->line('text_title'));
 		$this->template->setHeading($this->lang->line('text_heading'));
-		$this->template->setButton($this->lang->line('text_clear_logs'), array('class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();'));
+		$this->template->setButton($this->lang->line('text_clear_logs'), ['class' => 'btn btn-danger', 'onclick' => '$(\'#list-form\').submit();']);
 
 		$log_path = $this->config->item('log_path');
 
@@ -32,7 +33,8 @@ class Error_logs extends Admin_Controller
 		$this->template->render('error_logs', $data);
 	}
 
-	protected function _clearLog() {
+	protected function _clearLog()
+	{
 		$this->user->restrict('Admin.ErrorLogs.Delete');
 
 		$log_path = IGNITEPATH . '/logs/';

@@ -3,16 +3,17 @@
 class Languages extends Admin_Controller
 {
 
-	public $filter = array(
+	public $filter = [
 		'filter_search' => '',
 		'filter_status' => '',
-	);
+	];
 
-	public $default_sort = array('language_id', 'DESC');
+	public $default_sort = ['language_id', 'DESC'];
 
-	public $sort = array('name', 'code');
+	public $sort = ['name', 'code'];
 
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct();
 
 		$this->user->restrict('Site.Languages');
@@ -25,54 +26,57 @@ class Languages extends Admin_Controller
 		$this->lang->load('languages');
 	}
 
-	public function index() {
+	public function index()
+	{
 		if ($this->input->post('delete') AND $this->_deleteLanguage() === TRUE) {
 			$this->redirect();
 		}
 
 		$this->template->setTitle($this->lang->line('text_title'));
 		$this->template->setHeading($this->lang->line('text_heading'));
-		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() . '/edit'));
-		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => 'confirmDelete();'));;
-		$this->template->setButton($this->lang->line('button_icon_filter'), array('class' => 'btn btn-default btn-filter pull-right', 'data-toggle' => 'button'));
+		$this->template->setButton($this->lang->line('button_new'), ['class' => 'btn btn-primary', 'href' => page_url() . '/edit']);
+		$this->template->setButton($this->lang->line('button_delete'), ['class' => 'btn btn-danger', 'onclick' => 'confirmDelete();']);;
+		$this->template->setButton($this->lang->line('button_icon_filter'), ['class' => 'btn btn-default btn-filter pull-right', 'data-toggle' => 'button']);
 
 		$data = $this->getList();
 
 		$this->template->render('languages', $data);
 	}
 
-	public function edit() {
+	public function edit()
+	{
 		if ($this->input->post() AND $language_id = $this->_saveLanguage()) {
 			$this->redirect($language_id);
 		}
 
-		$language_info = $this->Languages_model->getLanguage((int)$this->input->get('id'));
+		$languageModel = $this->Languages_model->findOrNew((int)$this->input->get('id'));
 
-		$title = (isset($language_info['name'])) ? $language_info['name'] : $this->lang->line('text_new');
+		$title = (isset($languageModel->name)) ? $languageModel->name : $this->lang->line('text_new');
 		$this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $title));
 		$this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
 
-		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
-		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('languages')));
+		$this->template->setButton($this->lang->line('button_save'), ['class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();']);
+		$this->template->setButton($this->lang->line('button_save_close'), ['class' => 'btn btn-default', 'onclick' => 'saveClose();']);
+		$this->template->setButton($this->lang->line('button_icon_back'), ['class' => 'btn btn-default', 'href' => site_url('languages')]);
 
-		$data = $this->getForm($language_info);
+		$data = $this->getForm($languageModel);
 
 		$this->template->render('languages_edit', $data);
 	}
 
-	public function getList() {
+	public function getList()
+	{
 		$data = array_merge($this->getFilter(), $this->getSort());
 
 		$data['language_id'] = $this->config->item('language_id');
 
-		$data['languages'] = array();
-		$results = $this->Languages_model->paginate($this->getFilter());
+		$data['languages'] = [];
+		$results = $this->Languages_model->paginateWithFilter($this->getFilter());
 		foreach ($results->list as $result) {
-			$data['languages'][] = array_merge($result, array(
-				'image' => (!empty($result['image'])) ? $this->Image_tool_model->resize($result['image']) : $this->Image_tool_model->resize('data/flags/no_flag.png'),
-				'edit'  => $this->pageUrl($this->edit_url, array('id' => $result['language_id'])),
-			));
+			$data['languages'][] = array_merge($result, [
+				'image' => $this->Image_tool_model->resize((!empty($result['image']) ? $result['image'] : 'data/flags/no_flag.png')),
+				'edit'  => $this->pageUrl($this->edit_url, ['id' => $result['language_id']]),
+			]);
 		}
 
 		$data['pagination'] = $results->pagination;
@@ -80,29 +84,24 @@ class Languages extends Admin_Controller
 		return $data;
 	}
 
-	public function getForm($language_info = array()) {
-		$data = $language_info;
+	public function getForm(Languages_model $languageModel)
+	{
+		$data = $language_info = $languageModel->toArray();
 
 		$language_id = 0;
 		$data['_action'] = $this->pageUrl($this->create_url);
 		if (!empty($language_info['language_id'])) {
 			$language_id = $language_info['language_id'];
-			$data['_action'] = $this->pageUrl($this->edit_url, array('id' => $language_info['language_id']));
+			$data['_action'] = $this->pageUrl($this->edit_url, ['id' => $language_info['language_id']]);
 		}
 
 		if ($language_id === '11') {
 			$this->alert->set('info', $this->lang->line('alert_caution_edit'));
 		}
 
-		$data['language_id'] = $language_info['language_id'];
-		$data['name'] = $language_info['name'];
-		$data['code'] = $language_info['code'];
-		$data['idiom'] = $language_info['idiom'];
-		$data['can_delete'] = $language_info['can_delete'];
-		$data['status'] = $language_info['status'];
 		$data['no_photo'] = $this->Image_tool_model->resize('data/flags/no_flag.png');
 
-		$data['image'] = array();
+		$data['image'] = [];
 		if ($this->input->post('image')) {
 			$data['image']['path'] = $this->Image_tool_model->resize($this->input->post('image'));
 			$data['image']['name'] = basename($this->input->post('image'));
@@ -117,19 +116,19 @@ class Languages extends Admin_Controller
 			$data['image']['input'] = 'data/flags/no_flag.png';
 		}
 
-		$data['close_edit_link'] = $this->pageUrl($this->edit_url, array('id' => $language_info['language_id']));
+		$data['close_edit_link'] = $this->pageUrl($this->edit_url, ['id' => $language_info['language_id']]);
 		$data['lang_file'] = $this->input->get('file');
 		$data['lang_location'] = $this->input->get('location');
 
-		$data['lang_files'] = array();
-		$data['lang_file_values'] = array();
+		$data['lang_files'] = [];
+		$data['lang_file_values'] = [];
 		if (!empty($language_info['idiom']) AND $lang_files = list_lang_files($language_info['idiom'])) {
 			foreach ($lang_files as $location => $files) {
 				if (!empty($files)) foreach ($files as $file) {
-					$data['lang_files'][$location][] = array(
+					$data['lang_files'][$location][] = [
 						'name' => $file,
 						'edit' => $this->pageUrl($this->create_url . '?id=' . $language_id . '&location=' . $location . '&file=' . $file),
-					);
+					];
 				}
 			}
 
@@ -142,19 +141,20 @@ class Languages extends Admin_Controller
 			}
 		}
 
-		$data['languages'] = $this->Languages_model->isEnabled()->dropdown('idiom', 'name');
+		$data['languages'] = $this->Languages_model->isEnabled()->dropdown('name', 'idiom');
 
 		return $data;
 	}
 
-	protected function _saveLanguage() {
+	protected function _saveLanguage()
+	{
 		if ($this->validateForm() === TRUE) {
 			$save_type = (!is_numeric($this->input->get('id'))) ? $this->lang->line('text_added') : $this->lang->line('text_updated');
 
 			if ($language_id = $this->Languages_model->saveLanguage($this->input->get('id'), $this->input->post())) {
 				$this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Language ' . $save_type));
 
-				if ($this->input->post('clone_language') === '1') {
+				if ($this->input->post('clone_language') == '1') {
 					if (!clone_language($this->input->post('idiom'), $this->input->post('language_to_clone'))) {
 						$this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_cloned')));
 					}
@@ -173,7 +173,8 @@ class Languages extends Admin_Controller
 		}
 	}
 
-	protected function _deleteLanguage() {
+	protected function _deleteLanguage()
+	{
 		if ($this->input->post('delete')) {
 			$deleted_rows = $this->Languages_model->deleteLanguage($this->input->post('delete'));
 
@@ -188,25 +189,27 @@ class Languages extends Admin_Controller
 		}
 	}
 
-	protected function validateForm() {
-		$rules[] = array('name', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
-		$rules[] = array('code', 'lang:label_code', 'xss_clean|trim|required|min_length[2]');
-		$rules[] = array('image', 'lang:label_image', 'xss_clean|trim|required|min_length[2]|max_length[32]');
+	protected function validateForm()
+	{
+		$rules[] = ['name', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[32]'];
+		$rules[] = ['code', 'lang:label_code', 'xss_clean|trim|required|min_length[2]'];
+		$rules[] = ['image', 'lang:label_image', 'xss_clean|trim|required|min_length[2]|max_length[32]'];
 
-		if ($this->input->post('clone_language') === '1') {
-			$rules[] = array('idiom', 'lang:label_idiom', 'xss_clean|trim|required|min_length[2]|max_length[32]');
-			$rules[] = array('language_to_clone', 'lang:label_language', 'xss_clean|trim|required|alpha');
+		if ($this->input->post('clone_language') == '1') {
+			$rules[] = ['idiom', 'lang:label_idiom', 'xss_clean|trim|required|min_length[2]|max_length[32]'];
+			$rules[] = ['language_to_clone', 'lang:label_language', 'xss_clean|trim|required|alpha'];
 		} else {
-			$rules[] = array('idiom', 'lang:label_idiom', 'xss_clean|trim|required|min_length[2]|max_length[32]|callback__valid_idiom');
+			$rules[] = ['idiom', 'lang:label_idiom', 'xss_clean|trim|required|min_length[2]|max_length[32]|callback__valid_idiom'];
 		}
 
-		$rules[] = array('can_delete', 'lang:label_can_delete', 'xss_clean|trim|required|integer');
-		$rules[] = array('status', 'lang:label_status', 'xss_clean|trim|required|integer');
+		$rules[] = ['can_delete', 'lang:label_can_delete', 'xss_clean|trim|required|integer'];
+		$rules[] = ['status', 'lang:label_status', 'xss_clean|trim|required|integer'];
 
-		return $this->Languages_model->set_rules($rules)->validate();
+		return $this->form_validation->set_rules($rules)->run();
 	}
 
-	public function _valid_idiom($str) {
+	public function _valid_idiom($str)
+	{
 		$lang_files = list_lang_files($str);
 		if (empty($lang_files['admin']) AND empty($lang_files['main']) AND empty($lang_files['module'])) {
 			$this->form_validation->set_message('_valid_idiom', $this->lang->line('error_invalid_idiom'));

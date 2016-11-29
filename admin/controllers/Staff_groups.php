@@ -3,9 +3,10 @@
 class Staff_groups extends Admin_Controller
 {
 
-	public $default_sort = array('staff_group_id', 'DESC');
+	public $default_sort = ['staff_group_id', 'DESC'];
 
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct(); //  calls the constructor
 
 		$this->user->restrict('Admin.StaffGroups');
@@ -16,22 +17,24 @@ class Staff_groups extends Admin_Controller
 		$this->lang->load('staff_groups');
 	}
 
-	public function index() {
+	public function index()
+	{
 		if ($this->input->post('delete') AND $this->_deleteStaffGroup() === TRUE) {
 			$this->redirect();
 		}
 
 		$this->template->setTitle($this->lang->line('text_title'));
 		$this->template->setHeading($this->lang->line('text_heading'));
-		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() . '/edit'));
-		$this->template->setButton($this->lang->line('button_delete'), array('class' => 'btn btn-danger', 'onclick' => 'confirmDelete();'));;
+		$this->template->setButton($this->lang->line('button_new'), ['class' => 'btn btn-primary', 'href' => page_url() . '/edit']);
+		$this->template->setButton($this->lang->line('button_delete'), ['class' => 'btn btn-danger', 'onclick' => 'confirmDelete();']);;
 
 		$data = $this->getList();
 
 		$this->template->render('staff_groups', $data);
 	}
 
-	public function edit() {
+	public function edit()
+	{
 		if ($this->input->post() AND $staff_group_id = $this->_saveStaffGroup()) {
 			$this->redirect($staff_group_id);
 		}
@@ -41,25 +44,26 @@ class Staff_groups extends Admin_Controller
 		$title = (isset($group_info['staff_group_name'])) ? $group_info['staff_group_name'] : $this->lang->line('text_new');
 		$this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $title));
 		$this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $title));
-		$this->template->setButton($this->lang->line('button_save'), array('class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();'));
-		$this->template->setButton($this->lang->line('button_save_close'), array('class' => 'btn btn-default', 'onclick' => 'saveClose();'));
-		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('staff_groups')));
+		$this->template->setButton($this->lang->line('button_save'), ['class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();']);
+		$this->template->setButton($this->lang->line('button_save_close'), ['class' => 'btn btn-default', 'onclick' => 'saveClose();']);
+		$this->template->setButton($this->lang->line('button_icon_back'), ['class' => 'btn btn-default', 'href' => site_url('staff_groups')]);
 
 		$data = $this->getForm($group_info);
 
 		$this->template->render('staff_groups_edit', $data);
 	}
 
-	public function getList() {
+	public function getList()
+	{
 		$data = array_merge($this->getFilter(), $this->getSort());
 
-		$data['staff_groups'] = array();
-		$results = $this->Staff_groups_model->paginate($this->getFilter());
+		$data['staff_groups'] = [];
+		$results = $this->Staff_groups_model->paginateWithFilter($this->getFilter());
 		foreach ($results->list as $result) {
-			$data['staff_groups'][] = array_merge($result, array(
+			$data['staff_groups'][] = array_merge($result, [
 				'users_count' => $this->Staff_groups_model->getUsersCount($result['staff_group_id']),
-				'edit'        => $this->pageUrl($this->edit_url, array('id' => $result['staff_group_id'])),
-			));
+				'edit'        => $this->pageUrl($this->edit_url, ['id' => $result['staff_group_id']]),
+			]);
 		}
 
 		$data['pagination'] = $results->pagination;
@@ -67,14 +71,15 @@ class Staff_groups extends Admin_Controller
 		return $data;
 	}
 
-	public function getForm($group_info) {
+	public function getForm($group_info)
+	{
 		$data = $group_info;
 
 		$staff_group_id = 0;
 		$data['_action'] = $this->pageUrl($this->create_url);
 		if (!empty($group_info['staff_group_id'])) {
 			$staff_group_id = $group_info['staff_group_id'];
-			$data['_action'] = $this->pageUrl($this->edit_url, array('id' => $staff_group_id));
+			$data['_action'] = $this->pageUrl($this->edit_url, ['id' => $staff_group_id]);
 		}
 
 		if (isset($this->input->post['staff_group_name'])) {
@@ -103,34 +108,35 @@ class Staff_groups extends Admin_Controller
 
 		if ($this->input->post('permissions')) {
 			$group_permissions = $this->input->post('permissions');
-		} else if (isset($group_info['permissions'])) {
-			$group_permissions = unserialize($group_info['permissions']);
+		} else if (is_array($group_info['permissions'])) {
+			$group_permissions = $group_info['permissions'];
 		}
 
-		$data['permissions_list'] = array();
+		$data['permissions_list'] = [];
 		$results = $this->Permissions_model->getPermissions();
 		foreach ($results as $domain => $permissions) {
-
 			foreach ($permissions as $permission) {
-				$data['permissions_list'][$domain][] = array_merge($permission, array(
-					'group_permissions' => (!empty($group_permissions[$permission['name']])) ? $group_permissions[$permission['name']] : array(),
-				));
+				$data['permissions_list'][$domain][] = array_merge($permission, [
+					'action'            => empty($permission['action']) ? [] : $permission['action'],
+					'group_permissions' => (!empty($group_permissions[$permission['name']])) ? $group_permissions[$permission['name']] : [],
+				]);
 			}
 		}
 
 		return $data;
 	}
 
-	protected function _saveStaffGroup() {
-		$data = $this->input->post();
-		$permissions = $this->Permissions_model->getPermissionsByIds();
-
-		foreach ($data['permissions'] as $permission_id => $permission_access) {
-			$data['permissions'][$permissions[$permission_id]['name']] = $data['permissions'][$permission_id];
-			unset($data['permissions'][$permission_id]);
-		}
-		
+	protected function _saveStaffGroup()
+	{
 		if ($this->validateForm() === TRUE) {
+			$data = $this->input->post();
+
+			$permissions = $this->Permissions_model->getPermissionsByIds();
+			foreach ($data['permissions'] as $permission_id => $permission_access) {
+				$data['permissions'][$permissions[$permission_id]['name']] = $data['permissions'][$permission_id];
+				unset($data['permissions'][$permission_id]);
+			}
+
 			$save_type = (!is_numeric($this->input->get('id'))) ? $this->lang->line('text_added') : $this->lang->line('text_updated');
 			if ($staff_group_id = $this->Staff_groups_model->saveStaffGroup($this->input->get('id'), $data)) { // calls model to save data to SQL
 				$this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Staff Groups ' . $save_type));
@@ -142,7 +148,8 @@ class Staff_groups extends Admin_Controller
 		}
 	}
 
-	protected function _deleteStaffGroup() {
+	protected function _deleteStaffGroup()
+	{
 		if ($this->input->post('delete')) {
 			$deleted_rows = $this->Staff_groups_model->deleteStaffGroup($this->input->post('delete'));
 			if ($deleted_rows > 0) {
@@ -156,20 +163,21 @@ class Staff_groups extends Admin_Controller
 		}
 	}
 
-	protected function validateForm() {
-		$rules[] = array('staff_group_name', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
-		$rules[] = array('customer_account_access', 'lang:label_customer_account_access', 'xss_clean|trim|required|integer');
-		$rules[] = array('location_access', 'lang:label_location_access', 'xss_clean|trim|required|integer');
+	protected function validateForm()
+	{
+		$rules[] = ['staff_group_name', 'lang:label_name', 'xss_clean|trim|required|min_length[2]|max_length[32]'];
+		$rules[] = ['customer_account_access', 'lang:label_customer_account_access', 'xss_clean|trim|required|integer'];
+		$rules[] = ['location_access', 'lang:label_location_access', 'xss_clean|trim|required|integer'];
 
 		if ($this->input->post('permissions')) {
 			foreach ($this->input->post('permissions') as $key => $permissions) {
 				foreach ($permissions as $k => $permission) {
-					$rules[] = array('permissions[' . $key . '][' . $k . ']', ucfirst($permission) . ' Permission', 'xss_clean|trim|alpha|max_length[6]');
+					$rules[] = ['permissions[' . $key . '][' . $k . ']', ucfirst($permission) . ' Permission', 'xss_clean|trim|alpha|max_length[6]'];
 				}
 			}
 		}
 
-		return $this->Staff_groups_model->set_rules($rules)->validate();
+		return $this->form_validation->set_rules($rules)->run();
 	}
 }
 

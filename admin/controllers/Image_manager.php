@@ -10,9 +10,10 @@ class Image_manager extends Admin_Controller
 	protected $_rename = FALSE;
 	protected $_delete = FALSE;
 	protected $_remember_days;
-	protected $_allowed_ext = array('jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'svg', 'ico');
+	protected $_allowed_ext = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'svg', 'ico'];
 
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct(); //  calls the constructor
 
 		$this->load->library('media_manager', $this->config->item('image_manager'));
@@ -21,11 +22,12 @@ class Image_manager extends Admin_Controller
 
 		$setting = $this->media_manager->getOptions();
 		foreach ($setting as $key => $value) {
-			$this->{'_' . $key} = ($value === '0') ? FALSE : $value;
+			$this->{'_' . $key} = ($value == '0') ? FALSE : $value;
 		}
 	}
 
-	public function index() {
+	public function index()
+	{
 		$this->user->restrict('Admin.MediaManager.Access');
 
 		$this->output->enable_profiler(FALSE);
@@ -44,11 +46,11 @@ class Image_manager extends Admin_Controller
 		$sort_order = $data['sort_order'] = ($this->input->get('sort_order')) ? $this->_fixGetParams($this->input->get('sort_order')) : 'ascending';
 		$data['sort_icon'] = ($sort_order === 'ascending') ? '<i class="fa fa-caret-up"></i>' : '<i class="fa fa-caret-down"></i>';
 
-		$get_params = http_build_query(array(
+		$get_params = http_build_query([
 			'popup'      => $popup,
 			'field_id'   => $field_id,
 			'sub_folder' => '',
-		));
+		]);
 
 		$root_folder = $this->media_manager->getRootFolder();
 		$open_file = '';
@@ -102,14 +104,14 @@ class Image_manager extends Admin_Controller
 		$data['rename_folder'] = FALSE;
 		$data['current_folder'] = '';
 
-		$data['breadcrumbs'] = array();
+		$data['breadcrumbs'] = [];
 		if ($sub_folder_array = explode('/', $sub_folder)) {
 			$tmp_path = '';
-			$data['breadcrumbs'][] = array('name' => '<i class="fa fa-home"></i>', 'link' => $data['link'] . '/');
+			$data['breadcrumbs'][] = ['name' => '<i class="fa fa-home"></i>', 'link' => $data['link'] . '/'];
 			foreach ($sub_folder_array as $key => $p_dir) {
 				$tmp_path .= $p_dir . '/';
 				if ($p_dir != '') {
-					$data['breadcrumbs'][] = array('name' => $p_dir, 'link' => $data['link'] . $tmp_path);
+					$data['breadcrumbs'][] = ['name' => $p_dir, 'link' => $data['link'] . $tmp_path];
 
 					$data['current_folder'] = $p_dir;
 				}
@@ -125,8 +127,8 @@ class Image_manager extends Admin_Controller
 
 		$data['total_files'] = $total_size = 0;
 
-		$data['files'] = array();
-		$files = $this->media_manager->fetchFiles($sub_folder, array('by' => $sort_by, 'order' => $sort_order, 'filter' => $filter));
+		$data['files'] = [];
+		$files = $this->media_manager->fetchFiles($sub_folder, ['by' => $sort_by, 'order' => $sort_order, 'filter' => $filter]);
 		foreach ($files as $k => $file) {
 
 			$file_ext = (!empty($file['ext'])) ? $file['ext'] : '';
@@ -136,7 +138,7 @@ class Image_manager extends Admin_Controller
 			$human_name = ($file['type'] === 'img' OR $file['type'] === 'file') ? substr($file_name, 0, '-' . (strlen($file_ext) + 1)) : $file_name;
 			$html_class = ($file['type'] === 'img') ? 'ff-item-type-2 file' : 'ff-item-type-1 file';
 
-			if ($open_file === $file['name']) {
+			if ($open_file == $file['name']) {
 				$html_class .= ' selected-on-open';
 			}
 
@@ -158,7 +160,7 @@ class Image_manager extends Admin_Controller
 
 			$total_size += $file['size'];
 
-			$data['files'][] = array(
+			$data['files'][] = [
 				'name'          => $file_name,
 				'human_name'    => $human_name,
 				'type'          => $file['type'],
@@ -172,7 +174,7 @@ class Image_manager extends Admin_Controller
 				'thumb_url'     => $thumb_url,
 				'img_dimension' => $img_dimension,
 				'html_class'    => $html_class,
-			);
+			];
 		}
 
 		$data['galleries'] = $this->media_manager->fetchGalleries();
@@ -195,7 +197,8 @@ class Image_manager extends Admin_Controller
 		}
 	}
 
-	public function resize() {
+	public function resize()
+	{
 		$this->load->model('Image_tool_model');
 
 		if ($this->input->get('image')) {
@@ -207,8 +210,9 @@ class Image_manager extends Admin_Controller
 		}
 	}
 
-	public function new_folder() {
-		$json = array();
+	public function new_folder()
+	{
+		$json = [];
 
 		if (!$this->user->hasPermission('Admin.MediaManager.Add')) {
 			$json['alert'] = sprintf($this->lang->line('alert_permission'), '<b>add</b> folder');
@@ -236,8 +240,9 @@ class Image_manager extends Admin_Controller
 		$this->output->set_output(json_encode($json));
 	}
 
-	public function rename() {
-		$json = array();
+	public function rename()
+	{
+		$json = [];
 
 		if (!$this->user->hasPermission('Admin.MediaManager.Manage')) {
 			$json['alert'] = sprintf($this->lang->line('alert_permission'), '<b>manage</b> files');
@@ -276,8 +281,9 @@ class Image_manager extends Admin_Controller
 		$this->output->set_output(json_encode($json));
 	}
 
-	public function copy() {
-		$json = array();
+	public function copy()
+	{
+		$json = [];
 
 		if (!$this->user->hasPermission('Admin.MediaManager.Manage')) {
 			$json['alert'] = sprintf($this->lang->line('alert_permission'), '<b>manage</b> files');
@@ -313,8 +319,9 @@ class Image_manager extends Admin_Controller
 		$this->output->set_output(json_encode($json));
 	}
 
-	public function move() {
-		$json = array();
+	public function move()
+	{
+		$json = [];
 
 		if (!$this->user->hasPermission('Admin.MediaManager.Manage')) {
 			$json['alert'] = sprintf($this->lang->line('alert_permission'), '<b>manage</b> files');
@@ -350,8 +357,9 @@ class Image_manager extends Admin_Controller
 		$this->output->set_output(json_encode($json));
 	}
 
-	public function delete() {
-		$json = array();
+	public function delete()
+	{
+		$json = [];
 
 		if (!$this->user->hasPermission('Admin.MediaManager.Delete')) {
 			$json['alert'] = sprintf($this->lang->line('alert_permission'), '<b>delete</b> files');
@@ -370,7 +378,7 @@ class Image_manager extends Admin_Controller
 			}
 
 			if ($file_name AND empty($file_names)) {
-				$file_names = array($file_name);
+				$file_names = [$file_name];
 			}
 
 			if (!isset($json['alert'])) {
@@ -390,8 +398,9 @@ class Image_manager extends Admin_Controller
 		$this->output->set_output(json_encode($json));
 	}
 
-	public function upload() {
-		$json = array();
+	public function upload()
+	{
+		$json = [];
 
 		if (!$this->user->hasPermission('Admin.MediaManager.Manage')) {
 			$json['alert'] = sprintf($this->lang->line('alert_permission'), '<b>add</b> file');
@@ -431,10 +440,11 @@ class Image_manager extends Admin_Controller
 		$this->output->set_output($response);
 	}
 
-	protected function _makeSize($size) {
+	protected function _makeSize($size)
+	{
 		if (empty($size)) return '0 B';
 
-		$units = array('B', 'KB', 'MB', 'GB', 'TB');
+		$units = ['B', 'KB', 'MB', 'GB', 'TB'];
 
 		$u = 0;
 		while ((round($size / 1024) > 0) AND ($u < 4)) {
@@ -445,25 +455,28 @@ class Image_manager extends Admin_Controller
 		return (number_format($size, 0) . " " . $units[$u]);
 	}
 
-	protected function _fixGetParams($str) {
+	protected function _fixGetParams($str)
+	{
 		return strip_tags(preg_replace("/[^a-zA-Z0-9\.\[\]_| -]/", '', $str));
 	}
 
-	protected function _fixDirName($str) {
+	protected function _fixDirName($str)
+	{
 		return str_replace('~', ' ', dirname(str_replace(' ', '~', $str)));
 	}
 
 	/**
 	 * @param $popup
 	 */
-	protected function setTemplateTags($popup) {
+	protected function setTemplateTags($popup)
+	{
 		if ($popup == 'iframe') {
 			$this->assets->setDocType('html5');
-			$this->assets->setMeta(array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'));
-			$this->assets->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=edge,chrome=1', 'type' => 'equiv'));
-			$this->assets->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=9; IE=8; IE=7', 'type' => 'equiv'));
-			$this->assets->setMeta(array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1', 'type' => 'name'));
-			$this->assets->setMeta(array('name' => 'robots', 'content' => 'noindex,nofollow', 'type' => 'name'));
+			$this->assets->setMeta(['name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv']);
+			$this->assets->setMeta(['name' => 'X-UA-Compatible', 'content' => 'IE=edge,chrome=1', 'type' => 'equiv']);
+			$this->assets->setMeta(['name' => 'X-UA-Compatible', 'content' => 'IE=9; IE=8; IE=7', 'type' => 'equiv']);
+			$this->assets->setMeta(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1', 'type' => 'name']);
+			$this->assets->setMeta(['name' => 'robots', 'content' => 'noindex,nofollow', 'type' => 'name']);
 
 			$this->assets->setFavIcon('images/favicon.ico', 'shortcut icon', 'image/ico');
 

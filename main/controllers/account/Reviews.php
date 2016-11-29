@@ -18,9 +18,9 @@ class Reviews extends Main_Controller
 
 		$this->lang->load('account/reviews');
 
-		if ($this->config->item('allow_reviews') === '1') {
+		if ($this->config->item('allow_reviews') == '1') {
 			$this->alert->set('alert', $this->lang->line('alert_review_disabled'));
-			redirect('account/account');
+//			redirect('account/account');
 		}
 	}
 
@@ -44,7 +44,7 @@ class Reviews extends Main_Controller
 		$date_format = ($this->config->item('date_format')) ? $this->config->item('date_format') : '%d %M %y';
 
 		$data['reviews'] = array();
-		$results = $this->Reviews_model->paginate($this->filter, current_url());                                    // retrieve all customer reviews from getMainList method in Reviews model
+		$results = $this->Reviews_model->paginateWithFilter($this->filter);                                    // retrieve all customer reviews from getMainList method in Reviews model
 		foreach ($results->list as $result) {
 			$data['reviews'][] = array_merge($result, array(                                                            // create array of customer reviews to pass to view
 				'date' => mdate($date_format, strtotime($result['date_added'])),
@@ -184,7 +184,7 @@ class Reviews extends Main_Controller
 		$rules[] = array('rating[service]', 'lang:label_service', 'xss_clean|trim|required|integer');
 		$rules[] = array('review_text', 'lang:label_review', 'xss_clean|trim|required|min_length[2]|max_length[1028]');
 
-		return $this->Reviews_model->set_rules($rules)->validate();
+		return $this->form_validation->set_rules($rules)->run();
 	}
 }
 

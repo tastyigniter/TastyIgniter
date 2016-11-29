@@ -3,7 +3,8 @@
 class Updates extends Admin_Controller
 {
 
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct();
 
 		$this->user->restrict('Site.Updates');
@@ -12,17 +13,17 @@ class Updates extends Admin_Controller
 		$this->load->model('Updates_model');
 	}
 
-	public function index() {
+	public function index()
+	{
 
 		if (!$this->input->post()) {
 
 			$this->template->setTitle($this->lang->line('text_title'));
 			$this->template->setHeading($this->lang->line('text_heading'));
-			$this->template->setButton($this->lang->line('button_check_again'), array('class' => 'btn btn-default', 'href' => site_url('updates?check=force')));
+			$this->template->setButton($this->lang->line('button_check_again'), ['class' => 'btn btn-default', 'href' => site_url('updates?check=force')]);
 
 			$refresh = $this->input->get('check') === 'force' ? TRUE : FALSE;
 			$data['updates'] = $this->Updates_model->getUpdates($refresh);
-
 		} else {
 
 			$update_type = $this->input->post('update');
@@ -48,7 +49,8 @@ class Updates extends Admin_Controller
 		$this->template->render('updates', $data);
 	}
 
-	public function upgrade() {
+	public function upgrade()
+	{
 		$this->output->enable_profiler(FALSE);
 
 		if (!extension_loaded('zip')) {
@@ -94,7 +96,6 @@ class Updates extends Admin_Controller
 			$this->config->set_item('maintenance_mode', $maintenance_mode);
 
 			flush_output(sprintf($this->lang->line('text_complete_installation'), base_url()));
-
 		} else if ($updates = $this->input->get('updates')) {
 			foreach ($updates as $update) {
 				$update = explode('|', $update);
@@ -114,25 +115,27 @@ class Updates extends Admin_Controller
 		ob_end_flush();
 	}
 
-	protected function validateUpdate() {
+	protected function validateUpdate()
+	{
 		if ($this->input->post('update') === 'core') {
-			$rules[] = array('version', ucwords($this->input->post('update')), 'xss_clean|trim|required');
+			$rules[] = ['version', ucwords($this->input->post('update')), 'xss_clean|trim|required'];
 		} else {
-			$rules[] = array('updates[]', ucwords($this->input->post('update')), 'xss_clean|trim|required');
+			$rules[] = ['updates[]', ucwords($this->input->post('update')), 'xss_clean|trim|required'];
 		}
 
-		return $this->Updates_model->set_rules($rules)->validate();
+		return $this->form_validation->set_rules($rules)->run();
 	}
 
-	protected function setHTMLHead() {
+	protected function setHTMLHead()
+	{
 		header('Cache-Control: no-cache, must-revalidate');
 
 		$this->assets->setDocType('html5');
-		$this->assets->setMeta(array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'));
-		$this->assets->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=edge,chrome=1', 'type' => 'equiv'));
-		$this->assets->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=9; IE=8; IE=7', 'type' => 'equiv'));
-		$this->assets->setMeta(array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1', 'type' => 'name'));
-		$this->assets->setMeta(array('name' => 'robots', 'content' => 'noindex,nofollow', 'type' => 'name'));
+		$this->assets->setMeta(['name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv']);
+		$this->assets->setMeta(['name' => 'X-UA-Compatible', 'content' => 'IE=edge,chrome=1', 'type' => 'equiv']);
+		$this->assets->setMeta(['name' => 'X-UA-Compatible', 'content' => 'IE=9; IE=8; IE=7', 'type' => 'equiv']);
+		$this->assets->setMeta(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1', 'type' => 'name']);
+		$this->assets->setMeta(['name' => 'robots', 'content' => 'noindex,nofollow', 'type' => 'name']);
 
 		$this->assets->setFavIcon('images/favicon.ico', 'shortcut icon', 'image/ico');
 

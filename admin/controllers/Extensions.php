@@ -10,17 +10,18 @@ class Extensions extends Admin_Controller
 
 	public $create_url = 'extensions/add';
 
-	public $filter = array(
+	public $filter = [
 		'filter_search' => '',
 		'filter_type'   => 'module',
 		'filter_status' => '',
-	);
+	];
 
-	public $default_sort = array('name', 'ASC');
+	public $default_sort = ['name', 'ASC'];
 
-	public $sort = array('name', 'type');
+	public $sort = ['name', 'type'];
 
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct();
 
 		$this->load->model('Extensions_model');
@@ -29,7 +30,8 @@ class Extensions extends Admin_Controller
 		$this->lang->load('extensions');
 	}
 
-	public function _remap($method) {
+	public function _remap($method)
+	{
 		if ($method !== 'edit' AND method_exists($this, $method)) {
 			$this->$method();
 		} else if (strtolower($this->uri->segment(3)) === 'settings') {
@@ -39,20 +41,22 @@ class Extensions extends Admin_Controller
 		}
 	}
 
-	public function index() {
+	public function index()
+	{
 		$this->user->restrict('Admin.Extensions');
 
 		$this->template->setTitle($this->lang->line('text_title'));
 		$this->template->setHeading($this->lang->line('text_heading'));
-		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => page_url() . '/add'));
-		$this->template->setButton($this->lang->line('button_icon_filter'), array('class' => 'btn btn-default btn-filter pull-right', 'data-toggle' => 'button'));
+		$this->template->setButton($this->lang->line('button_new'), ['class' => 'btn btn-primary', 'href' => page_url() . '/add']);
+		$this->template->setButton($this->lang->line('button_icon_filter'), ['class' => 'btn btn-default btn-filter pull-right', 'data-toggle' => 'button']);
 
 		$data = $this->getList();
 
 		$this->template->render('extensions', $data);
 	}
 
-	public function edit() {
+	public function edit()
+	{
 		$this->user->restrict('Admin.Extensions.Access');
 
 		$data = $this->getForm();
@@ -60,14 +64,15 @@ class Extensions extends Admin_Controller
 		$this->template->render('extensions_edit', $data);
 	}
 
-	public function add() {
+	public function add()
+	{
 		$this->user->restrict('Admin.Extensions.Access');
 
 		$this->template->setTitle($this->lang->line('text_add_heading'));
 		$this->template->setHeading($this->lang->line('text_add_heading'));
 
-		$this->template->setButton($this->lang->line('button_browse'), array('class' => 'btn btn-default disabled', 'href' => site_url('extensions/browse')));
-		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('extensions')));
+		$this->template->setButton($this->lang->line('button_browse'), ['class' => 'btn btn-default disabled', 'href' => site_url('extensions/browse')]);
+		$this->template->setButton($this->lang->line('button_icon_back'), ['class' => 'btn btn-default', 'href' => site_url('extensions')]);
 
 		$data['_action'] = $this->pageUrl($this->create_url);
 
@@ -78,21 +83,23 @@ class Extensions extends Admin_Controller
 		$this->template->render('extensions_add', $data);
 	}
 
-	public function browse() {
+	public function browse()
+	{
 		$this->user->restrict('Admin.Extensions.Access');
 
 		$this->template->setTitle($this->lang->line('text_browse_heading'));
 		$this->template->setHeading($this->lang->line('text_browse_heading'));
 
-		$this->template->setButton($this->lang->line('button_new'), array('class' => 'btn btn-primary', 'href' => site_url('extensions/add')));
-		$this->template->setButton($this->lang->line('button_icon_back'), array('class' => 'btn btn-default', 'href' => site_url('extensions')));
+		$this->template->setButton($this->lang->line('button_new'), ['class' => 'btn btn-primary', 'href' => site_url('extensions/add')]);
+		$this->template->setButton($this->lang->line('button_icon_back'), ['class' => 'btn btn-default', 'href' => site_url('extensions')]);
 
 		$data['_action'] = $this->pageUrl($this->browse_url);
 
 		$this->template->render('extensions_browse', $data);
 	}
 
-	public function install() {
+	public function install()
+	{
 		$this->user->restrict('Admin.Extensions.Access');
 		$this->user->restrict('Admin.Extensions.Manage');
 
@@ -107,8 +114,8 @@ class Extensions extends Admin_Controller
 				$success = TRUE;
 
 				log_activity($this->user->getStaffId(), 'installed', 'extensions', get_activity_message('activity_custom_no_link',
-					array('{staff}', '{action}', '{context}', '{item}'),
-					array($this->user->getStaffName(), 'installed', 'extension', $extension_name)
+					['{staff}', '{action}', '{context}', '{item}'],
+					[$this->user->getStaffName(), 'installed', 'extension', $extension_name]
 				));
 
 				$this->alert->set('success', sprintf($this->lang->line('alert_success'), "Extension {$extension_name} installed "));
@@ -122,7 +129,8 @@ class Extensions extends Admin_Controller
 		$this->redirect(referrer_url());
 	}
 
-	public function uninstall() {
+	public function uninstall()
+	{
 		$this->user->restrict('Admin.Extensions.Access');
 		$this->user->restrict('Admin.Extensions.Manage');
 
@@ -135,8 +143,8 @@ class Extensions extends Admin_Controller
 
 			if ($this->Extensions_model->uninstall($extension_code, $extension)) {
 				log_activity($this->user->getStaffId(), 'uninstalled', 'extensions', get_activity_message('activity_custom_no_link',
-					array('{staff}', '{action}', '{context}', '{item}'),
-					array($this->user->getStaffName(), 'uninstalled', 'extension', $extension_name)
+					['{staff}', '{action}', '{context}', '{item}'],
+					[$this->user->getStaffName(), 'uninstalled', 'extension', $extension_name]
 				));
 
 				$this->alert->set('success', sprintf($this->lang->line('alert_success'), "Extension {$extension_name} uninstalled "));
@@ -148,7 +156,8 @@ class Extensions extends Admin_Controller
 		$this->redirect(referrer_url());
 	}
 
-	public function delete() {
+	public function delete()
+	{
 		$this->user->restrict('Admin.Extensions.Access');
 		$this->user->restrict('Admin.Extensions.Delete');
 
@@ -168,13 +177,13 @@ class Extensions extends Admin_Controller
 		$data['extension_data'] = !empty($extension['ext_data']) ? TRUE : FALSE;
 		$data['delete_action'] = !empty($extension['ext_data']) ? $this->lang->line('text_files_data') : $this->lang->line('text_files');
 
-		if ($this->input->post('confirm_delete') === $data['extension_code']) {
-			$delete_data = ($this->input->post('delete_data') === '1') ? TRUE : FALSE;
+		if ($this->input->post('confirm_delete') == $data['extension_code']) {
+			$delete_data = ($this->input->post('delete_data') == '1') ? TRUE : FALSE;
 
 			if ($this->Extensions_model->delete($data['extension_code'], $delete_data)) {
 				log_activity($this->user->getStaffId(), 'deleted', 'extensions', get_activity_message('activity_custom_no_link',
-					array('{staff}', '{action}', '{context}', '{item}'),
-					array($this->user->getStaffName(), 'deleted', $data['extension_type'] . ' extension', $data['extension_name'])
+					['{staff}', '{action}', '{context}', '{item}'],
+					[$this->user->getStaffName(), 'deleted', $data['extension_type'] . ' extension', $data['extension_name']]
 				));
 
 				$this->alert->set('success', sprintf($this->lang->line('alert_success'), "Extension {$data['extension_name']} deleted "));
@@ -191,21 +200,22 @@ class Extensions extends Admin_Controller
 		$this->template->render('extensions_delete', $data);
 	}
 
-	public function getList() {
+	public function getList()
+	{
 		$data = array_merge($this->getFilter(), $this->getSort());
 
-		$data['extensions'] = array();
-		$results = $this->Extensions_model->paginate($this->getFilter());
+		$data['extensions'] = [];
+		$results = $this->Extensions_model->paginateWithFilter($this->getFilter());
 		foreach ($results->list as $result) {
-			$result['manage'] = ($result['installed'] === TRUE AND $result['status'] === '1') ? 'uninstall' : 'install';
-			$data['extensions'][] = array_merge($result, array(
+			$result['manage'] = ($result['installed'] === TRUE AND $result['status'] == '1') ? 'uninstall' : 'install';
+			$data['extensions'][] = array_merge($result, [
 				'author'      => isset($result['author']) ? $result['author'] : '--',
 				'version'     => !empty($result['version']) ? $result['version'] : '',
 				'description' => isset($result['description']) ? character_limiter($result['description'], 128) : '',
 				'edit'        => $result['settings'],
 				'delete'      => $this->pageUrl($this->delete_url, $result),
 				'manage'      => $this->pageUrl($this->manage_url, $result),
-			));
+			]);
 		}
 
 		$data['pagination'] = $results->pagination;
@@ -213,7 +223,8 @@ class Extensions extends Admin_Controller
 		return $data;
 	}
 
-	public function getForm($data = array()) {
+	public function getForm($data = [])
+	{
 		$extension_code = $this->uri->rsegment(2);
 		$loaded = $error_msg = FALSE;
 
@@ -260,7 +271,8 @@ class Extensions extends Admin_Controller
 		return $data;
 	}
 
-	protected function _addExtension() {
+	protected function _addExtension()
+	{
 		$this->user->restrict('Admin.Extensions.Add', site_url('extensions/add'));
 
 		if (isset($_FILES['extension_zip'])) {
@@ -279,8 +291,8 @@ class Extensions extends Admin_Controller
 
 					if ($this->Extensions_model->install($extension_name, $extension)) {
 						log_activity($this->user->getStaffId(), 'installed', 'extensions', get_activity_message('activity_custom_no_link',
-							array('{staff}', '{action}', '{context}', '{item}'),
-							array($this->user->getStaffName(), 'installed', $extension_type . ' extension', $extension_name)
+							['{staff}', '{action}', '{context}', '{item}'],
+							[$this->user->getStaffName(), 'installed', $extension_type . ' extension', $extension_name]
 						));
 
 						$alert .= "and installed ";
@@ -298,7 +310,8 @@ class Extensions extends Admin_Controller
 		return FALSE;
 	}
 
-	protected function validateUpload() {
+	protected function validateUpload()
+	{
 		if (!empty($_FILES['extension_zip']['name']) AND !empty($_FILES['extension_zip']['tmp_name'])) {
 
 			if (preg_match('/\s/', $_FILES['extension_zip']['name'])) {
@@ -314,7 +327,7 @@ class Extensions extends Admin_Controller
 			}
 
 			$_FILES['extension_zip']['name'] = html_entity_decode($_FILES['extension_zip']['name'], ENT_QUOTES, 'UTF-8');
-			$_FILES['extension_zip']['name'] = str_replace(array('"', "'", "/", "\\"), "", $_FILES['extension_zip']['name']);
+			$_FILES['extension_zip']['name'] = str_replace(['"', "'", "/", "\\"], "", $_FILES['extension_zip']['name']);
 			$filename = $this->security->sanitize_filename($_FILES['extension_zip']['name']);
 			$_FILES['extension_zip']['name'] = basename($filename, '.zip');
 

@@ -2,8 +2,9 @@
 
 class Dashboard extends Admin_Controller
 {
-	
-	public function __construct() {
+
+	public function __construct()
+	{
 		parent::__construct(); //  calls the constructor
 
 		$this->load->model('Dashboard_model');
@@ -15,7 +16,8 @@ class Dashboard extends Admin_Controller
 		$this->lang->load('dashboard');
 	}
 
-	public function index() {
+	public function index()
+	{
 		$this->template->setTitle($this->lang->line('text_title'));
 		$this->template->setHeading($this->lang->line('text_heading'));
 
@@ -34,7 +36,7 @@ class Dashboard extends Admin_Controller
 
 		$data['news_feed'] = $this->Dashboard_model->getNewsFeed();  // Get four items from the feed
 
-		if ($this->config->item('auto_update_currency_rates') === '1') {
+		if ($this->config->item('auto_update_currency_rates') == '1') {
 			$this->load->model('Currencies_model');
 			if ($this->Currencies_model->updateRates()) {
 				$this->alert->set('success_now', $this->lang->line('alert_rates_updated'));
@@ -48,8 +50,9 @@ class Dashboard extends Admin_Controller
 		$this->template->render('dashboard', $data);
 	}
 
-	public function statistics() {
-		$json = array();
+	public function statistics()
+	{
+		$json = [];
 
 		$stat_range = 'today';
 		if ($this->input->get('stat_range')) {
@@ -70,12 +73,13 @@ class Dashboard extends Admin_Controller
 		$this->output->set_output(json_encode($json));
 	}
 
-	public function chart() {
-		$json = array();
-		$results = array();
+	public function chart()
+	{
+		$json = [];
+		$results = [];
 
-		$json['labels'] = array('Total Customers', 'Total Orders', 'Total Reservations', 'Total Reviews');
-		$json['colors'] = array('#63ADD0', '#5CB85C', '#337AB7', '#D9534F');
+		$json['labels'] = ['Total Customers', 'Total Orders', 'Total Reservations', 'Total Reviews'];
+		$json['colors'] = ['#63ADD0', '#5CB85C', '#337AB7', '#D9534F'];
 
 		$dateRanges = '1';
 		if ($this->input->get('start_date') AND $this->input->get('start_date') !== 'undefined') {
@@ -109,47 +113,51 @@ class Dashboard extends Admin_Controller
 		$this->output->set_output(json_encode($json));
 	}
 
-	public function admin() {
+	public function admin()
+	{
 		$this->index();
 	}
 
-	protected function getActivities() {
-		$activities = array();
+	protected function getActivities()
+	{
+		$activities = [];
 		$this->load->model('Activities_model');
-		$this->setFilter(array('page' => '1', 'limit' => '5'));
-		$results = $this->Activities_model->paginate($this->getFilter());
+		$this->setFilter(['page' => '1', 'limit' => '5']);
+		$results = $this->Activities_model->paginateWithFilter($this->getFilter());
 		foreach ($results->list as $result) {
-			$activities[] = array(
+			$activities[] = [
 				'activity_id'  => $result['activity_id'],
 				'icon'         => 'fa fa-tasks',
 				'message'      => $result['message'],
 				'time'         => mdate('%h:%i %A', strtotime($result['date_added'])),
 				'time_elapsed' => time_elapsed($result['date_added']),
-				'state'        => $result['status'] === '1' ? 'read' : 'unread',
-			);
+				'state'        => $result['status'] == '1' ? 'read' : 'unread',
+			];
 		}
 
 		return $activities;
 	}
 
-	protected function getTopCustomers() {
-		$top_customers = array();
-		$this->setFilter(array('limit' => '6'));
+	protected function getTopCustomers()
+	{
+		$top_customers = [];
+		$this->setFilter(['limit' => '6']);
 		$results = $this->Dashboard_model->getTopCustomers($this->getFilter());
 		foreach ($results as $result) {
-			$top_customers[] = array(
+			$top_customers[] = [
 				'first_name'   => $result['first_name'],
 				'last_name'    => $result['last_name'],
 				'total_orders' => $result['total_orders'],
 				'total_sale'   => $this->currency->format($result['total_sale']),
-			);
+			];
 		}
 
 		return $top_customers;
 	}
 
-	protected function getRecentOrders() {
-		$filter = array();
+	protected function getRecentOrders()
+	{
+		$filter = [];
 		$filter['limit'] = 10;
 		$filter['sort_by'] = 'orders.date_added';
 		$filter['order_by'] = 'DESC';
@@ -160,16 +168,16 @@ class Dashboard extends Admin_Controller
 
 		$this->setFilter($filter);
 
-		$orders = array();
+		$orders = [];
 		$this->load->model('Orders_model');
-		$results = $this->Orders_model->paginate($this->getFilter());
+		$results = $this->Orders_model->paginateWithFilter($this->getFilter());
 		foreach ($results->list as $result) {
 			$current_date = mdate('%d-%m-%Y', time());
 			$date_added = mdate('%d-%m-%Y', strtotime($result['date_added']));
 
-			$date_added = $current_date === $date_added ? $this->lang->line('text_today') : mdate('%d %M %y', strtotime($date_added));
+			$date_added = $current_date == $date_added ? $this->lang->line('text_today') : mdate('%d %M %y', strtotime($date_added));
 
-			$orders[] = array(
+			$orders[] = [
 				'order_id'      => $result['order_id'],
 				'location_name' => $result['location_name'],
 				'first_name'    => $result['first_name'],
@@ -177,16 +185,17 @@ class Dashboard extends Admin_Controller
 				'order_status'  => $result['status_name'],
 				'status_color'  => $result['status_color'],
 				'order_time'    => mdate('%H:%i', strtotime($result['order_time'])),
-				'order_type'    => ($result['order_type'] === '1') ? $this->lang->line('text_delivery') : $this->lang->line('text_collection'),
+				'order_type'    => ($result['order_type'] == '1') ? $this->lang->line('text_delivery') : $this->lang->line('text_collection'),
 				'date_added'    => $date_added,
 				'edit'          => $this->pageUrl('orders/edit?id=' . $result['order_id']),
-			);
+			];
 		}
 
 		return $orders;
 	}
 
-	protected function getDatesFromRange($start, $end) {
+	protected function getDatesFromRange($start, $end)
+	{
 		$interval = new DateInterval('P1D');
 
 		$realEnd = new DateTime($end);
