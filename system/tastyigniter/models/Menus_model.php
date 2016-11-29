@@ -4,14 +4,16 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') or exit('No direct script access allowed');
+
+use TastyIgniter\Database\Model;
 
 /**
  * Menus Model Class
@@ -20,104 +22,88 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Menus_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Menus_model extends TI_Model
+class Menus_model extends Model
 {
 	/**
 	 * @var string The database table name
 	 */
-	protected $table_name = 'menus';
+	protected $table = 'menus';
 
 	/**
 	 * @var string The database table primary key
 	 */
-	protected $primary_key = 'menu_id';
+	protected $primaryKey = 'menu_id';
 
-	protected $has_one = array(
-		'menus_specials' => array('Menus_specials_model', 'menu_id'),
-	);
+	protected $fillable = ['menu_id', 'menu_name', 'menu_description', 'menu_price', 'menu_photo', 'menu_category_id',
+		'stock_qty', 'minimum_qty', 'subtract_stock', 'mealtime_id', 'menu_status', 'menu_priority'];
 
-	protected $belongs_to = array(
-		'categories' => array('Categories_model', 'menu_category_id'),
-		'mealtimes'  => array('Mealtimes_model'),
-	);
+	public $hasOne = [
+		'menus_special' => ['Menus_specials_model', 'menu_id'],
+	];
 
-	protected $casts = array(
+	public $belongsTo = [
+		'category' => ['Categories_model', 'menu_category_id'],
+		'mealtime' => ['Mealtimes_model'],
+	];
+
+	protected $casts = [
 		'start_time' => 'time',
 		'end_time'   => 'time',
 		'start_date' => 'date',
 		'end_date'   => 'date',
-	);
-
-	/**
-	 * Count the number of records
-	 *
-	 * @param array $filter
-	 *
-	 * @return int
-	 */
-	public function getCount($filter = array()) {
-		$this->with('categories', 'menus_specials', 'mealtimes');
-
-		return parent::getCount($filter);
-	}
-
-	/**
-	 * List all options matching the filter
-	 *
-	 * @param array $filter
-	 *
-	 * @return array|mixed
-	 */
-	public function getList($filter = array()) {
-		$this->with('categories', 'menus_specials', 'mealtimes');
-		$result = parent::getList($filter);
-
-		if (APPDIR === ADMINDIR) {
-			return $result;
-		}
-
-		return $this->buildMenuArray($result);
-	}
+	];
 
 	/**
 	 * Filter database records
 	 *
+	 * @param $query
 	 * @param array $filter an associative array of field/value pairs
 	 *
 	 * @return $this
 	 */
-	public function filter($filter = array()) {
+	public function scopeFilter($query, $filter = [])
+	{
 		$current_date = $this->escape(mdate('%Y-%m-%d', time()));
 		$current_time = $this->escape(mdate('%H:%i:%s', time()));
 
+		$menusTable = $this->tablePrefix('menus');
+		$categoriesTable = $this->tablePrefix('categories');
+		$menusSpecialsTable = $this->tablePrefix('menus_specials');
+		$mealtimesTable = $this->tablePrefix('mealtimes');
+
 		if (APPDIR === ADMINDIR) {
-			$this->select('*, menus.menu_id, IF(start_date <= ' . $current_date . ', IF(end_date >= ' . $current_date . ', "1", "0"), "0") AS is_special', FALSE);
+			$queryBuilder = "*, {$menusTable}.menu_id, IF(start_date <= {$current_date}, IF(end_date >= {$current_date}, \"1\", \"0\"), \"0\") AS is_special";
 		} else {
-			$this->select('menus.menu_id, menu_name, menu_description, menu_photo, menu_price, minimum_qty,
-				menu_category_id, menu_priority, categories.name AS category_name, special_status, start_date, end_date, special_price,
-				menus.mealtime_id, mealtimes.mealtime_name, mealtimes.start_time, mealtimes.end_time, mealtime_status'
-			);
-			$this->select('IF(start_date <= ' . $current_date . ', IF(end_date >= ' . $current_date . ', "1", "0"), "0") AS is_special', FALSE);
-			$this->select('IF(start_time <= ' . $current_time . ', IF(end_time >= ' . $current_time . ', "1", "0"), "0") AS is_mealtime', FALSE);
+			$queryBuilder = "{$menusTable}.menu_id, menu_name, menu_description, menu_photo, menu_price, minimum_qty,
+				menu_category_id, menu_priority, {$categoriesTable}.name AS category_name, special_status, 
+				start_date, end_date, special_price, {$menusTable}.mealtime_id, {$mealtimesTable}.mealtime_name, 
+				{$mealtimesTable}.start_time, {$mealtimesTable}.end_time, mealtime_status, " .
+				"IF({$menusSpecialsTable}.start_date <= {$current_date}, IF({$menusSpecialsTable}.end_date >= {$current_date}, \"1\", \"0\"), \"0\") AS is_special, " .
+				"IF({$mealtimesTable}.start_time <= {$current_time}, IF({$mealtimesTable}.end_time >= {$current_time}, \"1\", \"0\"), \"0\") AS is_mealtime";
 		}
+
+		$query->selectRaw($queryBuilder);
+		$query->leftJoin('categories', 'categories.category_id', '=', 'menus.menu_category_id');
+		$query->leftJoin('menus_specials', 'menus_specials.menu_id', '=', 'menus.menu_id');
+		$query->leftJoin('mealtimes', 'mealtimes.mealtime_id', '=', 'menus.mealtime_id');
 
 		if (APPDIR === ADMINDIR) {
 			if (!empty($filter['filter_search'])) {
-				$this->like('menu_name', $filter['filter_search']);
-				$this->or_like('menu_price', $filter['filter_search']);
-				$this->or_like('stock_qty', $filter['filter_search']);
+				$query->like('menu_name', $filter['filter_search']);
+				$query->orLike('menu_price', $filter['filter_search']);
+				$query->orLike('stock_qty', $filter['filter_search']);
 			}
 
 			if (is_numeric($filter['filter_status'])) {
-				$this->where('menu_status', $filter['filter_status']);
+				$query->where('menu_status', $filter['filter_status']);
 			}
 		}
 
 		if (!empty($filter['filter_category'])) {
-			$this->where('menu_category_id', $filter['filter_category']);
+			$query->where('menu_category_id', $filter['filter_category']);
 		}
 
-		return $this;
+		return $query;
 	}
 
 	/**
@@ -127,38 +113,50 @@ class Menus_model extends TI_Model
 	 *
 	 * @return mixed
 	 */
-	public function getMenu($menu_id) {
-		$this->select('menus.menu_id, menu_name, menu_description, menu_price, menu_photo, menu_category_id, stock_qty,
-			minimum_qty, subtract_stock, menu_status, menu_priority, category_id, categories.name, description, special_id, start_date,
-			end_date, special_price, special_status, menus.mealtime_id, mealtimes.mealtime_name, mealtimes.start_time, mealtimes.end_time, mealtime_status');
-		$this->where('menus.menu_id', $menu_id);
+	public function getMenu($menu_id)
+	{
+		$menusTable = $this->tablePrefix('menus');
+		$categoriesTable = $this->tablePrefix('categories');
+		$menusSpecialsTable = $this->tablePrefix('menus_specials');
+		$mealtimesTable = $this->tablePrefix('mealtimes');
 
-		return $this->with('categories', 'menus_specials', 'mealtimes')->find();
+		$result = $this->selectRaw("*, {$menusTable}.menu_id, menu_name, " .
+			"menu_description, menu_price, menu_photo, menu_category_id, stock_qty, minimum_qty, subtract_stock, " .
+			"menu_status, menu_priority, category_id, {$categoriesTable}.name, description, special_id, start_date, " .
+			"end_date, {$menusSpecialsTable}.special_id, special_price, special_status, {$menusTable}.mealtime_id, {$mealtimesTable}.mealtime_name, " .
+			"{$mealtimesTable}.start_time, {$mealtimesTable}.end_time, mealtime_status")
+					   ->leftJoin('categories', 'categories.category_id', '=', 'menus.menu_category_id')
+					   ->leftJoin('menus_specials', 'menus_specials.menu_id', '=', 'menus.menu_id')
+					   ->leftJoin('mealtimes', 'mealtimes.mealtime_id', '=', 'menus.mealtime_id')
+					   ->findOrNew($menu_id);
+
+		return $result;
 	}
 
 	/**
 	 * Subtract or add to menu stock quantity
 	 *
-	 * @param int    $menu_id
-	 * @param int    $quantity
+	 * @param int $menu_id
+	 * @param int $quantity
 	 * @param string $action
 	 *
 	 * @return bool TRUE on success, or FALSE on failure
 	 */
-	public function updateStock($menu_id, $quantity = 0, $action = 'subtract') {
+	public function updateStock($menu_id, $quantity = 0, $action = 'subtract')
+	{
 		$update = FALSE;
 
 		if (is_numeric($menu_id)) {
-			$this->select('menus.menu_id, stock_qty, subtract_stock');
-			if ($row = $this->find($menu_id)) {
-				if ($row['subtract_stock'] === '1' AND !empty($quantity)) {
+			$menuModel = $this->find($menu_id);
+			if ($menuModel AND $row = $menuModel->toArray()) {
+				if ($row['subtract_stock'] == '1' AND !empty($quantity)) {
 					$stock_qty = $row['stock_qty'] + $quantity;
 
 					if ($action === 'subtract') {
 						$stock_qty = $row['stock_qty'] - $quantity;
 					}
 
-					$update = $this->update(array('menu_id' => $menu_id), array('stock_qty' => $stock_qty));
+					$update = $menuModel->update(['stock_qty' => $stock_qty]);
 				}
 			}
 		}
@@ -174,43 +172,49 @@ class Menus_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getAutoComplete($filter = array()) {
+	public function getAutoComplete($filter = [])
+	{
 		if (is_array($filter) AND !empty($filter)) {
 			//selecting all records from the menu and categories tables.
-			$this->where('menu_status', '1');
+			$queryBuilder = $this->where('menu_status', '1');
 
 			if (!empty($filter['menu_name'])) {
-				$this->like('menu_name', $filter['menu_name']);
+				$queryBuilder->like('menu_name', $filter['menu_name']);
 			}
 
-			return $this->find_all();
+			return $queryBuilder->getAsArray();
 		}
 	}
 
 	/**
 	 * Create a new or update existing menu
 	 *
-	 * @param int   $menu_id
+	 * @param int $menu_id
 	 * @param array $save
 	 *
 	 * @return bool|int The $menu_id of the affected row, or FALSE on failure
 	 */
-	public function saveMenu($menu_id, $save = array()) {
+	public function saveMenu($menu_id, $save = [])
+	{
 		if (empty($save) AND !is_array($save)) return FALSE;
 
-		if (isset($save['special_status']) AND $save['special_status'] === '1') {
+		if (isset($save['special_status']) AND $save['special_status'] == '1' AND empty($save['menu_category_id'])) {
 			$save['menu_category_id'] = (int)$this->config->item('special_category_id');
 		}
 
-		if ($menu_id = $this->skip_validation(TRUE)->save($save, $menu_id)) {
+		$menuModel = $this->findOrNew($menu_id);
+
+		if ($saved = $menuModel->fill($save)->save()) {
+			$menu_id = $menuModel->getKey();
+
 			$this->load->model('Menu_options_model');
-			$save['menu_options'] = isset($save['menu_options']) ? $save['menu_options'] : array();
+			$save['menu_options'] = isset($save['menu_options']) ? $save['menu_options'] : [];
 			$this->Menu_options_model->addMenuOption($menu_id, $save['menu_options']);
 
 			if (!empty($save['start_date']) AND !empty($save['end_date']) AND isset($save['special_price'])) {
 				$save['menu_id'] = $menu_id;
 				$this->load->model('Menus_specials_model');
-				$this->Menus_specials_model->save($save, $save['special_id']);
+				$this->Menus_specials_model->findOrNew($save['special_id'])->fill($save)->save();
 			}
 
 			return $menu_id;
@@ -224,18 +228,19 @@ class Menus_model extends TI_Model
 	 *
 	 * @return int The number of deleted rows
 	 */
-	public function deleteMenu($menu_id) {
-		if (is_numeric($menu_id)) $menu_id = array($menu_id);
+	public function deleteMenu($menu_id)
+	{
+		if (is_numeric($menu_id)) $menu_id = [$menu_id];
 
 		if (!empty($menu_id) AND ctype_digit(implode('', $menu_id))) {
-			$affected_rows = $this->delete('menu_id', $menu_id);
+			$affected_rows = $this->whereIn('menu_id', $menu_id)->delete();
 
 			if ($affected_rows > 0) {
 				$this->load->model('Menu_options_model');
-				$this->Menu_options_model->delete('menu_id', $menu_id);
+				$this->Menu_options_model->deleteMenuOption($menu_id);
 
 				$this->load->model('Menus_specials_model');
-				$this->Menus_specials_model->delete('menu_id', $menu_id);
+				$this->Menus_specials_model->whereIn('menu_id', $menu_id)->delete();
 
 				return $affected_rows;
 			}
@@ -249,21 +254,22 @@ class Menus_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	protected function buildMenuArray($rows = array()) {
+	public function buildMenuList($rows = [])
+	{
 		$this->load->model('Image_tool_model');
 
 		$show_menu_images = (is_numeric($this->config->item('show_menu_images'))) ? $this->config->item('show_menu_images') : '';
 		$menu_images_h = (is_numeric($this->config->item('menu_images_h'))) ? $this->config->item('menu_images_h') : '50';
 		$menu_images_w = (is_numeric($this->config->item('menu_images_w'))) ? $this->config->item('menu_images_w') : '50';
 
-		$result = array();
+		$result = [];
 		foreach ($rows as $row) {                                                            // loop through menus array
-			if ($show_menu_images === '1' AND !empty($row['menu_photo'])) {
+			if ($show_menu_images == '1' AND !empty($row['menu_photo'])) {
 				$row['menu_photo'] = $this->Image_tool_model->resize($row['menu_photo'], $menu_images_w, $menu_images_h);
 			}
 
 			$end_days = $end_date = '';
-			if ($row['special_status'] === '1' AND $row['is_special'] === '1') {
+			if ($row['special_status'] == '1' AND $row['is_special'] == '1') {
 				$row['menu_price'] = $row['special_price'];
 				$end_date = mdate('%d %M', strtotime($row['end_date']));
 
@@ -273,14 +279,14 @@ class Menus_model extends TI_Model
 				}
 			}
 
-			$result[$row['menu_category_id']][] = array_merge($row, array(                                                            // create array of menu data to be sent to view
-				'category_id'      => $row['menu_category_id'],
+			$result[$row['menu_category_id']][] = array_merge($row, [                                                            // create array of menu data to be sent to view
+				'category_id'     => $row['menu_category_id'],
 				'minimum_qty'     => !empty($row['minimum_qty']) ? $row['minimum_qty'] : '1',
 				'mealtime_status' => (!empty($row['mealtime_id']) AND !empty($row['mealtime_status'])) ? '1' : '0',
 				'end_date'        => $end_date,
 				'end_days'        => $end_days,
 				'menu_price'      => $this->currency->format($row['menu_price']),        //add currency symbol and format price to two decimal places
-			));
+			]);
 		}
 
 		return $result;

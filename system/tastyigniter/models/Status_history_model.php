@@ -1,8 +1,19 @@
 <?php
 /**
- * Copyright (c) 2016. Igniter Labs
+ * TastyIgniter
+ *
+ * An open source online ordering, reservation and management system for restaurants.
+ *
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') or exit('No direct script access allowed');
+
+use TastyIgniter\Database\Model;
 
 /**
  * Status History Model Class
@@ -11,21 +22,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Status_history_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Status_history_model extends TI_Model
+class Status_history_model extends Model
 {
 	/**
 	 * @var string The database table name
 	 */
-	protected $table_name = 'status_history';
-	
-	protected $primary_key = 'status_history_id';
+	protected $table = 'status_history';
 
-	protected $belongs_to = array(
-		'staffs' => 'Staffs_model',
-		'statuses' => array('Statuses_model', 'status_id'),
-	);
+	protected $primaryKey = 'status_history_id';
 
-	protected $timestamps = array('created');
+	public $belongsTo = [
+		'staffs'   => 'Staffs_model',
+		'statuses' => ['Statuses_model', 'status_id'],
+	];
+
+	public $timestamps = TRUE;
+
+	const CREATED_AT = 'date_added';
 
 }
 

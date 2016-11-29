@@ -4,14 +4,16 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') or exit('No direct script access allowed');
+
+use TastyIgniter\Database\Model;
 
 /**
  * Permalink Model Class
@@ -20,24 +22,37 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Permalink_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Permalink_model extends TI_Model
+class Permalink_model extends Model
 {
 	/**
 	 * @var string The database table name
 	 */
-	protected $table_name = 'permalinks';
+	protected $table = 'permalinks';
 
 	/**
 	 * @var string The database table primary key
 	 */
-	protected $primary_key = 'permalink_id';
+	protected $primaryKey = 'permalink_id';
+
+	protected $fillable = ['permalink_id', 'slug', 'controller', 'query'];
+
+	public function scopeWhereQueryAndController($query, $httpQuery, $controller)
+	{
+		return $query->where('query', $httpQuery)->where('controller', $controller);
+	}
+
+	public function scopeWhereSlugAndController($q, $slug, $controller)
+	{
+		return $q->where('slug', $slug)->where('controller', $controller);
+	}
 
 	/**
 	 * Check is permalink is enabled
 	 *
 	 * @return bool TRUE if enabled, or FALSE if disabled
 	 */
-	public function isPermalinkEnabled() {
+	public function isPermalinkEnabled()
+	{
 		return ($this->config->item('permalink') == '1') ? TRUE : FALSE;
 	}
 
@@ -46,12 +61,13 @@ class Permalink_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getPermalinks() {
+	public function getPermalinks()
+	{
 		if (!$this->isPermalinkEnabled()) {
-			return array();
+			return [];
 		}
 
-		return $this->find_all();
+		return $this->getAsArray();
 	}
 
 	/**
@@ -61,38 +77,40 @@ class Permalink_model extends TI_Model
 	 *
 	 * @return array|bool
 	 */
-	public function getPermalink($query) {
-		if (!$this->isPermalinkEnabled()) return array();
+	public function getPermalink($query)
+	{
+		if (!$this->isPermalinkEnabled()) return [];
 
-		return $this->find('query', $query);
+		return $this->firstOrNew('query', $query)->toArray();
 	}
 
 	/**
 	 * Create a new or update an existing permalink
 	 *
 	 * @param string $controller
-	 * @param array  $permalink
+	 * @param array $permalink
 	 * @param string $query
 	 *
 	 * @return bool|int The $page_id of the affected row, or FALSE on failure
 	 */
-	public function savePermalink($controller, $permalink = array(), $query = '') {
+	public function savePermalink($controller, $permalink = [], $query = '')
+	{
 		if (!$this->isPermalinkEnabled()) return FALSE;
 
 		if (empty($controller)) return FALSE;
 
-		$permalink_id = !empty($permalink['permalink_id']) ? $permalink['permalink_id'] : NULL;
+		$permalink_id = !empty($permalink['permalink_id']) ? $permalink['permalink_id'] : null;
 
 		if (!empty($permalink['slug']) AND !empty($query)) {
 			$slug = $this->_checkDuplicate($controller, $permalink);
 
 			if ($permalink_id) {
-				$this->update(array('permalink_id' => $permalink['permalink_id'], 'query' => $query),
-					array('slug' => $slug, 'controller' => $controller));
+				$this->where('permalink_id', $permalink['permalink_id'])->where('query', $query)
+					 ->update(['slug' => $slug, 'controller' => $controller]);
 			} else {
-				$this->delete(array('query' => $query, 'controller' => $controller));
+				$this->whereQueryAndController($query, $controller)->delete();
 
-				$permalink_id = $this->insert(array('slug' => $slug, 'controller' => $controller, 'query' => $query));
+				$permalink_id = $this->insertGetId(['slug' => $slug, 'controller' => $controller, 'query' => $query]);
 			}
 		}
 
@@ -103,21 +121,22 @@ class Permalink_model extends TI_Model
 	 * Makes sure permalink slug does not already exist
 	 *
 	 * @param string $controller
-	 * @param array  $permalink
+	 * @param array $permalink
 	 * @param string $duplicate
 	 *
 	 * @return mixed|string
 	 */
-	protected function _checkDuplicate($controller, $permalink = array(), $duplicate = '0') {
+	protected function _checkDuplicate($controller, $permalink = [], $duplicate = '0')
+	{
 		if (!empty($controller) AND !empty($permalink['slug'])) {
 
 			$slug = ($duplicate > 0) ? $permalink['slug'] . '-' . $duplicate : $permalink['slug'];
 			$slug = url_title($slug, '-', TRUE);
 
-			$row = $this->find(array('slug' => $slug, 'controller' => $controller));
+			$row = $this->whereSlugAndController($slug, $controller)->first();
 
 			if ($row) {
-				if (!empty($permalink['permalink_id']) AND $permalink['permalink_id'] === $row['permalink_id']) {
+				if (!empty($permalink['permalink_id']) AND $permalink['permalink_id'] == $row->permalink_id) {
 					return $slug;
 				}
 
@@ -137,9 +156,10 @@ class Permalink_model extends TI_Model
 	 *
 	 * @return int  The number of deleted rows
 	 */
-	public function deletePermalink($controller, $query) {
+	public function deletePermalink($controller, $query)
+	{
 		if (is_string($controller) AND is_string($query)) {
-			$affected_rows = $this->delete(array('query' => $query, 'controller' => $controller));
+			$affected_rows = $this->whereQueryAndController($query, $controller)->delete();
 
 			return ($affected_rows > 0);
 		}

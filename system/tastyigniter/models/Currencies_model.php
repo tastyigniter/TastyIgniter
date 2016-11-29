@@ -4,14 +4,16 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') or exit('No direct script access allowed');
+
+use TastyIgniter\Database\Model;
 
 /**
  * Currencies Model Class
@@ -20,78 +22,66 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Currencies_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Currencies_model extends TI_Model
+class Currencies_model extends Model
 {
 	/**
 	 * @var string The database table name
 	 */
-	protected $table_name = 'currencies';
+	protected $table = 'currencies';
 
 	/**
 	 * @var string The database table primary key
 	 */
-	protected $primary_key = 'currency_id';
+	protected $primaryKey = 'currency_id';
 
 	/**
 	 * @var array The model table column to convert to dates on insert/update
 	 */
-	protected $timestamps = array('updated' => 'date_modified');
+	public $timestamps = TRUE;
+
+	const UPDATED_AT = 'date_modified';
 
 	/**
 	 * @var string[] The names of callback methods which
 	 * will be called after the insert method.
 	 */
-	protected $after_create = array('autoUpdateRates');
+	protected $afterCreate = ['autoUpdateRates'];
 
-	protected $belongs_to = array(
-		'countries' => 'Countries_model',
-	);
+	public $belongsTo = [
+		'country' => 'Countries_model',
+	];
 
-	/**
-	 * Count the number of records
-	 *
-	 * @param array $filter
-	 *
-	 * @return int
-	 */
-	public function getCount($filter = array()) {
-		$this->with('countries');
-
-		return parent::getCount($filter);
-	}
-
-	/**
-	 * List all currencies matching the filter
-	 *
-	 * @param array $filter
-	 *
-	 * @return array
-	 */
-	public function getList($filter = array()) {
-		$this->with('countries');
-
-		return parent::getList($filter);
+	public function scopeJoinCountryTable($query)
+	{
+		return $query->join('countries', 'countries.iso_code_3', '=', 'currencies.iso_alpha3', 'left');
 	}
 
 	/**
 	 * Filter database records
 	 *
+	 * @param $query
 	 * @param array $filter an associative array of field/value pairs
 	 *
 	 * @return $this
 	 */
-	public function filter($filter = array()) {
+	public function scopeFilter($query, $filter = [])
+	{
+		$query->joinCountryTable();
+
 		if (!empty($filter['filter_search'])) {
-			$this->like('currency_name', $filter['filter_search']);
-			$this->or_like('currency_code', $filter['filter_search']);
-			$this->or_like('country_name', $filter['filter_search']);
+			$query->like('currency_name', $filter['filter_search']);
+			$query->orLike('currency_code', $filter['filter_search']);
+
+			$query->orWhereHas('country', function ($q) use ($filter) {
+				$q->like('country_name', $filter['filter_search']);
+			});
 		}
 
 		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-			$this->where('currency_status', $filter['filter_status']);
+			$query->where('currency_status', $filter['filter_status']);
 		}
 
-		return $this;
+		return $query;
 	}
 
 	/**
@@ -99,8 +89,9 @@ class Currencies_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getCurrencies() {
-		return $this->with('countries')->find_all();
+	public function getCurrencies()
+	{
+		return $this->joinCountryTable()->getAsArray();
 	}
 
 	/**
@@ -110,8 +101,9 @@ class Currencies_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getCurrency($currency_id) {
-		return $this->with('countries')->find($currency_id);
+	public function getCurrency($currency_id)
+	{
+		return $this->joinCountryTable()->findOrNew($currency_id)->toArray();
 	}
 
 	/**
@@ -121,18 +113,14 @@ class Currencies_model extends TI_Model
 	 *
 	 * @return bool TRUE on success, FALSE on failure
 	 */
-	public function updateAcceptedCurrencies($accepted_currencies) {
-		$update = $this->update(array(
-			'currency_id !=' => $this->config->item('currency_id')), array(
-				'currency_status' => '0',
-			)
-		);
+	public function updateAcceptedCurrencies($accepted_currencies)
+	{
+		$update = $this->where('currency_id', '!=', $this->config->item('currency_id'))
+					   ->update(['currency_status' => '0']);
 
 		if (is_array($accepted_currencies)) {
-			$update = $this->update(array('currency_id', $accepted_currencies), array(
-					'currency_status' => '1',
-				)
-			);
+			$update = $this->whereIn('currency_id', $accepted_currencies)
+						   ->update(['currency_status' => '1']);
 		}
 
 		return $update;
@@ -144,8 +132,9 @@ class Currencies_model extends TI_Model
 	 *
 	 * @return void
 	 */
-	public function autoUpdateRates() {
-		if ($this->config->item('auto_update_currency_rates') === '1') {
+	public function autoUpdateRates()
+	{
+		if ($this->config->item('auto_update_currency_rates') == '1') {
 			$this->updateRates(TRUE);
 		}
 	}
@@ -157,16 +146,16 @@ class Currencies_model extends TI_Model
 	 *
 	 * @return bool TRUE on success, FALSE on failure
 	 */
-	public function updateRates($force_refresh = FALSE) {
+	public function updateRates($force_refresh = FALSE)
+	{
+		$currency = $this->getCurrency($this->config->item('currency_id'));
 
-		$currency = $this->find($this->config->item('currency_id'));
-
-		$this->where('currency_id !=', $this->config->item('currency_id'));
+		$queryBuilder = $this->where('currency_id', '!=', $this->config->item('currency_id'));
 		if (!$force_refresh) {
-			$this->where('date_modified <', mdate('%Y-%m-%d %H:%i:%s', strtotime('-1 day')));
+			$queryBuilder->where('date_modified', '<', mdate('%Y-%m-%d %H:%i:%s', strtotime('-1 day')));
 		}
 
-		if ($result = $this->find_all()) {
+		if ($result = $queryBuilder->getAsArray()) {
 			foreach ($result as $row) {
 				if (!empty($currency['currency_code'])) {
 					$currencies[] = $currency['currency_code'] . $row['currency_code'];
@@ -192,18 +181,20 @@ class Currencies_model extends TI_Model
 			if (!empty($json['query']['results']['rate'])) {
 
 				if (!isset($json['query']['results']['rate'][0])) {
-					$json['query']['results']['rate'] = array($json['query']['results']['rate']);
+					$json['query']['results']['rate'] = [$json['query']['results']['rate']];
 				}
 
 				foreach ($json['query']['results']['rate'] as $rate) {
 					if (isset($rate['id']) AND isset($rate['Rate'])) {
 						$currency_code = substr($rate['id'], 3);
 
-						$this->update(array('currency_code' => $currency_code), array('currency_rate' => (float)$rate['Rate']));
+						$this->where('currency_code', $currency_code)
+							 ->update(['currency_rate' => (float)$rate['Rate']]);
 					}
 				}
 
-				$this->update($this->config->item('currency_id'), array('currency_rate' => '1.0000'));
+				$this->where('currency_id', $this->config->item('currency_id'))
+					 ->update(['currency_rate' => '1.0000']);
 
 				return TRUE;
 			}
@@ -213,15 +204,27 @@ class Currencies_model extends TI_Model
 	/**
 	 * Create a new or update existing currency
 	 *
-	 * @param int   $currency_id
+	 * @param int $currency_id
 	 * @param array $save
 	 *
 	 * @return bool|int The $currency_id of the affected row, or FALSE on failure
 	 */
-	public function saveCurrency($currency_id, $save = array()) {
+	public function saveCurrency($currency_id, $save = [])
+	{
 		if (empty($save)) return FALSE;
 
-		return $this->skip_validation(TRUE)->save($save, $currency_id);
+		$currencyModel = $this->joinCountryTable()->findOrNew($currency_id);
+
+		$save = array_merge([
+			'iso_alpha2'  => isset($currencyModel->country->iso_code_2) ? $currencyModel->country->iso_code_2 : '',
+			'iso_alpha3'  => isset($currencyModel->country->iso_code_3) ? $currencyModel->country->iso_code_3 : '',
+			'iso_numeric' => isset($currencyModel->country->iso_numeric) ? $currencyModel->country->iso_numeric : '',
+			'flag'        => isset($currencyModel->country->flag) ? $currencyModel->country->flag : '',
+		], $save);
+
+		$saved = $currencyModel->fill($save)->save();
+
+		return $saved ? $currencyModel->getKey() : $saved;
 	}
 
 	/**
@@ -231,11 +234,12 @@ class Currencies_model extends TI_Model
 	 *
 	 * @return int  The number of deleted rows
 	 */
-	public function deleteCurrency($currency_id) {
-		if (is_numeric($currency_id)) $currency_id = array($currency_id);
+	public function deleteCurrency($currency_id)
+	{
+		if (is_numeric($currency_id)) $currency_id = [$currency_id];
 
 		if (!empty($currency_id) AND ctype_digit(implode('', $currency_id))) {
-			return $this->delete('currency_id', $currency_id);
+			return $this->whereIn('currency_id', $currency_id)->delete();
 		}
 	}
 }

@@ -4,14 +4,16 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') or exit('No direct script access allowed');
+
+use TastyIgniter\Database\Model;
 
 /**
  * Tables Model Class
@@ -20,35 +22,37 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Tables_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Tables_model extends TI_Model
+class Tables_model extends Model
 {
 	/**
 	 * @var string The database table name
 	 */
-	protected $table_name = 'tables';
+	protected $table = 'tables';
 
 	/**
 	 * @var string The database table primary key
 	 */
-	protected $primary_key = 'table_id';
+	protected $primaryKey = 'table_id';
 
 	/**
 	 * Filter database records
 	 *
+	 * @param $query
 	 * @param array $filter an associative array of field/value pairs
 	 *
 	 * @return $this
 	 */
-	public function filter($filter = array()) {
+	public function scopeFilter($query, $filter = [])
+	{
 		if (!empty($filter['filter_search'])) {
-			$this->like('table_name', $filter['filter_search']);
+			$query->like('table_name', $filter['filter_search']);
 		}
 
 		if (is_numeric($filter['filter_status'])) {
-			$this->where('table_status', $filter['filter_status']);
+			$query->where('table_status', $filter['filter_status']);
 		}
 
-		return $this;
+		return $query;
 	}
 
 	/**
@@ -56,8 +60,9 @@ class Tables_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getTables() {
-		return $this->find_all();
+	public function getTables()
+	{
+		return $this->getAsArray();
 	}
 
 	/**
@@ -67,8 +72,9 @@ class Tables_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getTable($table_id) {
-		return $this->find($table_id);
+	public function getTableById($table_id)
+	{
+		return $this->findOrNew($table_id)->toArray();
 	}
 
 	/**
@@ -78,11 +84,12 @@ class Tables_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getTablesByLocation($location_id = NULL) {
-		$location_tables = array();
+	public function getTablesByLocation($location_id = null)
+	{
+		$location_tables = [];
 		$this->load->model('Location_tables_model');
-		$this->Location_tables_model->where('location_id', $location_id);
-		foreach ($this->Location_tables_model->find_all() as $row) {
+		$tables = $this->Location_tables_model->where('location_id', $location_id)->getAsArray();
+		foreach ($tables as $row) {
 			$location_tables[] = $row['table_id'];
 		}
 
@@ -97,31 +104,37 @@ class Tables_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getAutoComplete($filter = array()) {
+	public function getAutoComplete($filter = [])
+	{
 		if (is_array($filter) && !empty($filter)) {
 
-			$this->where('table_status >', '0');
+			$queryBuilder = $this->where('table_status', '>', '0');
 
 			if (!empty($filter['table_name'])) {
-				$this->like('table_name', $filter['table_name']);
+				$queryBuilder->like('table_name', $filter['table_name']);
 			}
 
-			return $this->find_all();
+			return $queryBuilder->getAsArray();
 		}
 	}
 
 	/**
 	 * Create a new or update existing table
 	 *
-	 * @param int   $table_id
+	 * @param int $table_id
 	 * @param array $save
 	 *
 	 * @return bool|int The $table_id of the affected row, or FALSE on failure
 	 */
-	public function saveTable($table_id, $save = array()) {
+	public function saveTable($table_id, $save = [])
+	{
 		if (empty($save)) return FALSE;
 
-		return $this->skip_validation(TRUE)->save($save, $table_id);
+		$tableModel = $this->findOrNew($table_id);
+
+		$saved = $tableModel->fill($save)->save();
+
+		return $saved ? $tableModel->getKey() : $saved;
 	}
 
 	/**
@@ -131,11 +144,12 @@ class Tables_model extends TI_Model
 	 *
 	 * @return int  The number of deleted rows
 	 */
-	public function deleteTable($table_id) {
-		if (is_numeric($table_id)) $table_id = array($table_id);
+	public function deleteTable($table_id)
+	{
+		if (is_numeric($table_id)) $table_id = [$table_id];
 
 		if (!empty($table_id) AND ctype_digit(implode('', $table_id))) {
-			return $this->delete('table_id', $table_id);
+			return $this->whereIn('table_id', $table_id)->delete();
 		}
 	}
 }

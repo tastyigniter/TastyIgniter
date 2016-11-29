@@ -4,14 +4,16 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') or exit('No direct script access allowed');
+
+use TastyIgniter\Database\Model;
 
 /**
  * Mail_templates Model Class
@@ -20,42 +22,37 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Mail_templates_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Mail_templates_model extends TI_Model
+class Mail_templates_model extends Model
 {
 	/**
 	 * @var string The database table name
 	 */
-	protected $table_name = 'mail_templates';
+	protected $table = 'mail_templates';
 
 	/**
 	 * @var string The database table primary key
 	 */
-	protected $primary_key = 'template_id';
+	protected $primaryKey = 'template_id';
+
+	protected $fillable = ['template_id', 'name', 'language_id', 'date_added', 'date_updated', 'status'];
 
 	/**
 	 * @var array The model table column to convert to dates on insert/update
 	 */
-	protected $timestamps = array('created', 'updated');
+	public $timestamps = TRUE;
+
+	const CREATED_AT = 'date_added';
+
+	const UPDATED_AT = 'date_updated';
 
 	/**
 	 * Scope a query to only include enabled mail template
 	 *
 	 * @return $this
 	 */
-	public function isEnabled() {
-		return $this->where('status', '1');
-	}
-
-	/**
-	 * List all coupons matching the filter
-	 *
-	 * @param array $filter
-	 *
-	 * @return array
-	 */
-	public function getList($filter = array()) {
-		$this->order_by('template_id');
-		return parent::getList($filter);
+	public function scopeIsEnabled($query)
+	{
+		return $query->where('status', '1');
 	}
 
 	/**
@@ -63,8 +60,9 @@ class Mail_templates_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getTemplates() {
-		return $this->find_all();
+	public function getTemplates()
+	{
+		return $this->getAsArray();
 	}
 
 	/**
@@ -74,8 +72,9 @@ class Mail_templates_model extends TI_Model
 	 *
 	 * @return bool
 	 */
-	public function getTemplate($template_id) {
-		return $this->find($template_id);
+	public function getTemplate($template_id)
+	{
+		return $this->findOrNew($template_id)->toArray();
 	}
 
 	/**
@@ -85,14 +84,14 @@ class Mail_templates_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getAllTemplateData($template_id) {
-		$result = array();
+	public function getAllTemplateData($template_id)
+	{
+		$result = [];
 
 		if ($template_id) {
 			$this->load->model('Mail_templates_data_model');
-			$this->Mail_templates_data_model->where('template_id', $template_id);
-
-			$result = $this->Mail_templates_data_model->order_by('template_data_id')->find_all();
+			$result = $this->Mail_templates_data_model->where('template_id', $template_id)
+													  ->orderBy('template_data_id')->getAsArray();
 		}
 
 		return $result;
@@ -106,15 +105,16 @@ class Mail_templates_model extends TI_Model
 	 *
 	 * @return mixed
 	 */
-	public function getTemplateData($template_id, $template_code) {
+	public function getTemplateData($template_id, $template_code)
+	{
 		if (is_numeric($template_id) AND is_string($template_code)) {
 			$this->load->model('Mail_templates_data_model');
-			$this->Mail_templates_data_model->join('mail_templates', 'mail_templates.template_id = mail_templates_data.template_id', 'left');
-			$this->Mail_templates_data_model->where('mail_templates_data.template_id', $template_id);
-			$this->Mail_templates_data_model->where('mail_templates_data.code', $template_code);
-			$this->Mail_templates_data_model->where('mail_templates.status', '1');
+			$query = $this->Mail_templates_data_model->leftJoin('mail_templates', 'mail_templates.template_id', '=', 'mail_templates_data.template_id');
+			$query->where('mail_templates_data.template_id', $template_id);
+			$query->where('mail_templates_data.code', $template_code);
+			$query->where('mail_templates.status', '1');
 
-			return $this->Mail_templates_data_model->find();
+			return $query->firstAsArray();
 		}
 	}
 
@@ -126,16 +126,19 @@ class Mail_templates_model extends TI_Model
 	 *
 	 * @return bool|int The $template_id of the affected row, or FALSE on failure
 	 */
-	public function saveTemplate($template_id, $save = array()) {
+	public function saveTemplate($template_id, $save = [])
+	{
 		if (empty($save)) return FALSE;
 
-		if ($template_id = $this->save($save, $template_id)) {
-			if (!empty($save['clone_template_id'])) {
-				$templates = $this->getAllTemplateData($save['clone_template_id']);
-				$this->updateTemplateData($template_id, $templates, $save['clone_template_id']);
-			} else if (!empty($save['templates'])) {
-				$this->updateTemplateData($template_id, $save['templates']);
-			}
+		$templateModel = $this->findOrNew($template_id);
+
+		$saved = $templateModel->fill($save)->save();
+
+		if ($saved AND $template_id = $templateModel->getKey()) {
+
+			$templates = (!empty($save['clone_template_id'])) ? $this->getAllTemplateData($save['clone_template_id']) : $save['templates'];
+
+			$this->updateTemplateData($template_id, $templates);
 
 			return $template_id;
 		}
@@ -146,35 +149,24 @@ class Mail_templates_model extends TI_Model
 	 *
 	 * @param       $template_id
 	 * @param array $templates
-	 * @param bool  $clone_template_id
 	 *
 	 * @return bool TRUE on success, or FALSE on failure
 	 */
-	public function updateTemplateData($template_id, $templates = array(), $clone_template_id = FALSE) {
+	public function updateTemplateData($template_id, $templates = [])
+	{
 		$query = FALSE;
 
-		if (empty($templates)) return FALSE;
+		if (empty($template_id) OR empty($templates)) return FALSE;
 
 		$this->load->model('Mail_templates_data_model');
 
 		foreach ($templates as $template) {
-			if (isset($template['body'])) {
-				$template['body'] = preg_replace('~>\s+<~m', '><', $template['body']);
-			}
+			$templateDataModel = $this->Mail_templates_data_model
+				->firstOrNew(['template_id' => $template_id, 'code' => $template['code']]);
 
-			if (!empty($template_id)) {
-				if (!$clone_template_id AND !empty($template['code'])) {
-					$query = $this->Mail_templates_data_model->update(array(
-						'template_id' => $template_id,
-						'code'        => $template['code'],
-					), $template);
-				} else if (!empty($template['code'])) {
-					$query = $this->Mail_templates_data_model->insert(array_merge($template, array(
-						'template_id' => $template_id,
-						'code'        => $template['code'],
-					)));
-				}
-			}
+			$query = $templateDataModel->fill(array_merge($template, [
+				'template_id' => $template_id, 'code' => $template['code'],
+			]))->save();
 		}
 
 		return $query;
@@ -187,24 +179,24 @@ class Mail_templates_model extends TI_Model
 	 *
 	 * @return int The number of deleted rows
 	 */
-	public function deleteTemplate($template_id) {
-		if (is_numeric($template_id)) $template_id = array($template_id);
+	public function deleteTemplate($template_id)
+	{
+		if (is_numeric($template_id)) $template_id = [$template_id];
 
 		foreach ($template_id as $key => $value) {
-			if ($value === $this->config->item('mail_template_id')) {
+			if ($value == $this->config->item('mail_template_id')) {
 				unset($template_id[$key]);
 			}
 		}
 
 		if (!empty($template_id) AND ctype_digit(implode('', $template_id))) {
-			$this->where('template_id !=', '11');
-			$affected_rows = $this->delete('template_id', $template_id);
+			$affected_rows = $this->where('template_id', '!=', '11')->whereIn('template_id', $template_id)->delete();
 
 			if ($affected_rows > 0) {
 				$this->load->model('Mail_templates_data_model');
 
-				$this->where('template_id !=', '11');
-				$this->Mail_templates_data_model->delete('template_id', $template_id);
+				$this->Mail_templates_data_model->where('template_id', '!=', '11')
+												->whereIn('template_id', $template_id)->delete();
 
 				return $affected_rows;
 			}

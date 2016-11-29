@@ -4,14 +4,16 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') or exit('No direct script access allowed');
+
+use TastyIgniter\Database\Model;
 
 /**
  * Customers Model Class
@@ -20,54 +22,87 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Customers_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Customers_model extends TI_Model
+class Customers_model extends Model
 {
 	/**
 	 * @var string The database table name
 	 */
-	protected $table_name = 'customers';
+	protected $table = 'customers';
 
 	/**
 	 * @var string The database table primary key
 	 */
-	protected $primary_key = 'customer_id';
+	protected $primaryKey = 'customer_id';
 
-	/**
-	 * @var array The model table column to convert to dates on insert/update
-	 */
-	protected $timestamps = array('created');
+	protected $fillable = ['customer_id', 'first_name', 'last_name', 'email', 'password', 'salt', 'telephone', 'address_id',
+		'security_question_id', 'security_answer', 'newsletter', 'customer_group_id', 'ip_address', 'date_added', 'status', 'cart'];
+
+	public $timestamps = TRUE;
+
+	const CREATED_AT = 'date_added';
+
+	public $belongsTo = [
+		'security_question' => 'Security_questions_model',
+	];
+
+	public function security_question()
+	{
+		return $this->belongsTo('Security_questions_model');
+	}
 
 	/**
 	 * @var string[] The names of callback methods which
 	 * will be called after the insert method.
 	 */
-	protected $after_create = array('sendRegistrationEmail', 'saveCustomerGuestOrder');
+//	protected $after_create = array('sendRegistrationEmail', 'saveCustomerGuestOrder');
 
 	/**
 	 * Filter database records
 	 *
+	 * @param $query
 	 * @param array $filter an associative array of field/value pairs
 	 *
 	 * @return $this
 	 */
-	public function filter($filter = array()) {
+	public function scopeFilter($query, $filter = [])
+	{
 		if (!empty($filter['filter_search'])) {
-			$this->like('first_name', $filter['filter_search']);
-			$this->or_like('last_name', $filter['filter_search']);
-			$this->or_like('email', $filter['filter_search']);
+			$query->like('first_name', $filter['filter_search']);
+			$query->orLike('last_name', $filter['filter_search']);
+			$query->orLike('email', $filter['filter_search']);
 		}
 
 		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-			$this->where('status', $filter['filter_status']);
+			$query->where('status', $filter['filter_status']);
 		}
 
 		if (!empty($filter['filter_date'])) {
 			$date = explode('-', $filter['filter_date']);
-			$this->where('YEAR(date_added)', $date[0]);
-			$this->where('MONTH(date_added)', $date[1]);
+			$query->whereRaw('YEAR(date_added) = ?', $date[0]);
+			$query->whereRaw('MONTH(date_added) = ?', $date[1]);
 		}
 
-		return $this;
+		return $query;
+	}
+
+	public function scopeIsEnabled($query)
+	{
+		return $query->where('status', 1);
+	}
+
+	public function getCustomerName()
+	{
+		return $this->first_name . ' ' . $this->last_name;
+	}
+
+	public function getEmailAttribute($value)
+	{
+		return strtolower($value);
+	}
+
+	public function getDateAddedAttribute($value)
+	{
+		return day_elapsed($value);
 	}
 
 	/**
@@ -75,8 +110,9 @@ class Customers_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getCustomers() {
-		return $this->find_all();
+	public function getCustomers()
+	{
+		return $this->getAsArray();
 	}
 
 	/**
@@ -86,9 +122,10 @@ class Customers_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getCustomer($customer_id) {
+	public function getCustomer($customer_id)
+	{
 		if (is_numeric($customer_id)) {
-			return $this->find($customer_id);
+			return $this->findOrNew($customer_id)->toArray();
 		}
 	}
 
@@ -97,12 +134,9 @@ class Customers_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getCustomerDates() {
-		$this->select('date_added, MONTH(date_added) as month, YEAR(date_added) as year');
-		$this->group_by('MONTH(date_added)');
-		$this->group_by('YEAR(date_added)');
-
-		return $this->find_all();
+	public function getCustomerDates()
+	{
+		return $this->pluckDates('date_added');
 	}
 
 	/**
@@ -113,15 +147,11 @@ class Customers_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getCustomersForMessages($type) {
-		$result = array();
+	public function getCustomersForMessages($type)
+	{
+		$result = $this->select('customer_id, email, status')->isEnabled()->getAsArray();
 
-		$this->select('customer_id, email, status');
-		foreach ($this->find_all('status', '1') as $row) {
-			$result[] = ($type === 'email') ? $row['email'] : $row['customer_id'];
-		}
-
-		return $result;
+		return $this->getEmailOrIdFromResult($result, $type);
 	}
 
 	/**
@@ -133,15 +163,13 @@ class Customers_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getCustomerForMessages($type, $customer_id) {
+	public function getCustomerForMessages($type, $customer_id)
+	{
 		if (!empty($customer_id) AND is_array($customer_id)) {
-			$result = array();
+			$result = $this->select('customer_id, email, status')
+						   ->whereIn('customer_id', $customer_id)->isEnabled()->getAsArray();
 
-			$this->select('customer_id, email, status');
-			$this->where_in('customer_id', $customer_id);
-			foreach ($this->find_all('status', '1') as $row) {
-				$result[] = ($type === 'email') ? $row['email'] : $row['customer_id'];
-			}
+			$result = $this->getEmailOrIdFromResult($result, $type);
 
 			return $result;
 		}
@@ -156,17 +184,13 @@ class Customers_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getCustomersByGroupIdForMessages($type, $customer_group_id) {
+	public function getCustomersByGroupIdForMessages($type, $customer_group_id)
+	{
 		if (is_numeric($customer_group_id)) {
-			$result = array();
+			$result = $this->selectRaw('customer_id, email, customer_group_id, status')
+						   ->where('customer_group_id', $customer_group_id)->isEnabled()->getAsArray();
 
-			$this->select('customer_id, email, customer_group_id, status');
-			$this->where('customer_group_id', $customer_group_id);
-			foreach ($this->find_all('status', '1') as $row) {
-				$result[] = ($type === 'email') ? $row['email'] : $row['customer_id'];
-			}
-
-			return $result;
+			return $this->getEmailOrIdFromResult($result, $type);
 		}
 	}
 
@@ -178,19 +202,36 @@ class Customers_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getCustomersByNewsletterForMessages($type) {
-		$result = array();
+	public function getCustomersByNewsletterForMessages($type)
+	{
+		$result = $this->selectRaw('customer_id, email, newsletter, status')
+					   ->where('newsletter', '1')->isEnabled()->getAsArray();
 
-		$this->select('customer_id, email, newsletter, status');
-		$this->where('newsletter', '1');
-		foreach ($this->find_all('status', '1') as $row) {
-			$result[] = ($type === 'email') ? $row['email'] : $row['customer_id'];
-		}
+		$result = $this->getEmailOrIdFromResult($result, $type);
 
 		$this->load->model('Extensions_model');
-		$newsletter = $this->Extensions_model->getModule('newsletter');
+		$newsletter = $this->Extensions_model->getExtension('newsletter');
 		if ($type === 'email' AND !empty($newsletter['ext_data']['subscribe_list'])) {
 			$result = array_merge($result, $newsletter['ext_data']['subscribe_list']);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * @param $query
+	 *
+	 * @param $type
+	 * @param array $result
+	 *
+	 * @return array
+	 */
+	protected function getEmailOrIdFromResult($result, $type)
+	{
+		if (!empty($result)) {
+			foreach ($result as $row) {
+				$result[] = ($type == 'email') ? $row['email'] : $row['customer_id'];
+			}
 		}
 
 		return $result;
@@ -203,35 +244,37 @@ class Customers_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getCustomerByEmail($email) {
-		return $this->find('email', strtolower($email));
+	public function getCustomerByEmail($email)
+	{
+		return $this->where('email', strtolower($email))->firstAsArray();
 	}
 
 	/**
 	 * Reset a customer password,
 	 * new password is sent to registered email
 	 *
-	 * @param int   $customer_id
+	 * @param int $customer_id
 	 * @param array $reset
 	 *
 	 * @return bool
 	 */
-	public function resetPassword($customer_id, $reset = array()) {
+	public function resetPassword($customer_id, $reset = [])
+	{
 		if (is_numeric($customer_id) AND !empty($reset)) {
-			$this->where('customer_id', $customer_id);
-			$this->where('email', strtolower($reset['email']));
+			$queryBuilder = $this->where('customer_id', $customer_id);
+			$queryBuilder->where('email', strtolower($reset['email']));
 			if (!empty($reset['security_question_id']) AND !empty($reset['security_answer'])) {
-				$this->where('security_question_id', $reset['security_question_id']);
-				$this->where('security_answer', $reset['security_answer']);
+				$queryBuilder->where('security_question_id', $reset['security_question_id']);
+				$queryBuilder->where('security_answer', $reset['security_answer']);
 			}
 
-			if ($row = $this->find('status', '1')) {
+			if ($row = $queryBuilder->isEnabled()->firstAsArray()) {
 				$password = $this->getRandomString();
 				$data['salt'] = $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9);
 				$data['password'] = sha1($salt . sha1($salt . sha1($password)));
 
-				$this->where('email', $row['email']);
-				if ($this->update($row['customer_id'], $data, TRUE) AND $this->affected_rows() > 0) {
+				$queryBuilder = $this->where('email', $row['email'])->where('customer_id', $row['customer_id']);
+				if ($queryBuilder->update($data) > 0) {
 					$mail_data['first_name'] = $row['first_name'];
 					$mail_data['last_name'] = $row['last_name'];
 					$mail_data['created_password'] = $password;
@@ -258,60 +301,63 @@ class Customers_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getAutoComplete($filter = array()) {
+	public function getAutoComplete($filter = [])
+	{
 		if (is_array($filter) AND !empty($filter)) {
-			$this->select('customer_id, first_name, last_name');
+			$queryBuilder = $this->select('customer_id', 'first_name', 'last_name');
 
 			if (!empty($filter['customer_name'])) {
-				$this->like('CONCAT(first_name, last_name)', $filter['customer_name']);
+				$queryBuilder->like('CONCAT(first_name, last_name)', $filter['customer_name']);
 			}
 
 			if (!empty($filter['customer_id'])) {
-				$this->where('customer_id', $filter['customer_id']);
+				$queryBuilder->where('customer_id', $filter['customer_id']);
 			}
 
-			return $this->find_all();
+			return $queryBuilder->getAsArray();
 		}
 	}
 
 	/**
 	 * Create a new or update existing customer
 	 *
-	 * @param int   $customer_id
+	 * @param int $customer_id
 	 * @param array $save
 	 *
 	 * @return bool|int The $customer_id of the affected row, or FALSE on failure
 	 */
-	public function saveCustomer($customer_id, $save = array()) {
+	public function saveCustomer($customer_id, $save = [])
+	{
 		if (empty($save)) return FALSE;
 
-		if (isset($save['email'])) {
-			$save['email'] = strtolower($save['email']);
-		}
+		$save['address_id'] = isset($save['address_id']) ? $save['address_id'] : '';
 
 		if (isset($save['password'])) {
 			$save['salt'] = $salt = substr(md5(uniqid(rand(), TRUE)), 0, 9);
 			$save['password'] = sha1($salt . sha1($salt . sha1($save['password'])));
 		}
 
-		if ($customer_id = $this->skip_validation(TRUE)->save($save, $customer_id)) {
+		$customerModel = $this->findOrNew($customer_id);
+
+		if ($saved = $customerModel->fill($save)->save()) {
 			if (isset($save['address'])) {
 				$this->saveAddress($customer_id, $save['address']);
 			}
 		}
 
-		return $customer_id;
+		return $saved ? $customerModel->getKey() : $saved;
 	}
 
 	/**
 	 * Send the registration confirmation email
 	 *
 	 * @param array $save
-	 * @param int   $customer_id
+	 * @param int $customer_id
 	 *
 	 * @return bool FALSE on failure
 	 */
-	public function sendRegistrationEmail($save = array(), $customer_id) {
+	public function sendRegistrationEmail($save = [], $customer_id)
+	{
 		if (!is_numeric($customer_id) OR empty($save)) return FALSE;
 
 		if (!is_array($this->config->item('registration_email'))) return FALSE;
@@ -341,55 +387,46 @@ class Customers_model extends TI_Model
 	 * matching customer email
 	 *
 	 * @param array $save
-	 * @param int   $customer_id
+	 * @param int $customer_id
 	 *
 	 * @return bool TRUE on success, or FALSE on failure
 	 */
-	public function saveCustomerGuestOrder($save = array(), $customer_id) {
+	public function saveCustomerGuestOrder($save = [], $customer_id)
+	{
 		$query = FALSE;
 
 		if (is_numeric($customer_id) AND !empty($save['email'])) {
 			$customer_email = $save['email'];
-			$this->load->model('Orders_model');
 			$this->load->model('Addresses_model');
 			$this->load->model('Coupons_model');
 			$this->load->model('Coupons_history_model');
+			$this->load->model('Orders_model');
 			$this->load->model('Reservations_model');
 
-			if ($orders = $this->Orders_model->find_all('email', $customer_email)) {
+			$update = ['customer_id' => $customer_id];
+
+			if ($orders = $this->Orders_model->where('email', $customer_email)->getAsArray()) {
 				foreach ($orders as $row) {
 					if (empty($row['order_id'])) continue;
 
-					$this->where('email', $customer_email);
-					$this->Orders_model->update($row['order_id'],
-						array('customer_id' => $customer_id)
-					);
+					$this->Orders_model->where('email', $customer_email)
+									   ->where('order_id', $row['order_id'])->update($update);
 
-					if ($row['order_type'] === '1' AND !empty($row['address_id'])) {
-						$this->Addresses_model->update($row['address_id'],
-							array('customer_id' => $customer_id)
-						);
+					if ($row['order_type'] == '1' AND !empty($row['address_id'])) {
+						$this->Addresses_model->where('address_id', $row['address_id'])->update($update);
 					}
 
 					if (!empty($row['payment'])) {
-						$this->update_into('pp_payments',
-							array('order_id' => $row['order_id']),
-							array('customer_id' => $customer_id)
-						);
+						$this->queryBuilder()->table('pp_payments')->where('order_id', $row['order_id'])
+							 ->update(['customer_id' => $customer_id]);
 					}
 
-					$this->Coupons_history_model->update(
-						array('order_id' => $row['order_id']),
-						array('customer_id' => $customer_id)
-					);
+					$this->Coupons_history_model->where('order_id', $row['order_id'])->update($update);
 				}
 			}
 
-			if ($reservation = $this->Reservations_model->find('email', $customer_email)) {
-				$this->Reservations_model->update(
-					array('email' => $customer_email),
-					array('customer_id' => $customer_id), TRUE
-				);
+			if ($reservation = $this->Reservations_model->where('email', $customer_email)->first()) {
+				$this->Reservations_model->where('email', $customer_email)->update($update);
 			}
 
 			$query = TRUE;
@@ -401,17 +438,18 @@ class Customers_model extends TI_Model
 	/**
 	 * Create a new or update existing customer address
 	 *
-	 * @param int   $customer_id
+	 * @param int $customer_id
 	 * @param array $addresses an array of one or multiple address array
 	 */
-	public function saveAddress($customer_id, $addresses = array()) {
+	public function saveAddress($customer_id, $addresses = [])
+	{
 		if (is_numeric($customer_id) AND !empty($addresses)) {
 			$this->load->model('Addresses_model');
-			$this->Addresses_model->delete($customer_id);
+			$this->Addresses_model->find($customer_id)->delete();
 
 			foreach ($addresses as $key => $address) {
 				if (!empty($address['address_1'])) {
-					$this->Addresses_model->save($address, array('customer_id' => $customer_id));
+					$this->Addresses_model->saveAddress($customer_id, $address);
 				}
 			}
 		}
@@ -424,13 +462,14 @@ class Customers_model extends TI_Model
 	 *
 	 * @return int  The number of deleted rows
 	 */
-	public function deleteCustomer($customer_id) {
-		if (is_numeric($customer_id)) $customer_id = array($customer_id);
+	public function deleteCustomer($customer_id)
+	{
+		if (is_numeric($customer_id)) $customer_id = [$customer_id];
 
 		if (!empty($customer_id) AND ctype_digit(implode('', $customer_id))) {
-			if ($affected_rows = $this->delete('customer_id', $customer_id)) {
+			if ($affected_rows = $this->whereIn('customer_id', $customer_id)->delete()) {
 				$this->load->model('Addresses_model');
-				$this->Addresses_model->delete('customer_id', $customer_id);
+				$this->Addresses_model->whereIn('customer_id', $customer_id)->delete();
 
 				return $affected_rows;
 			}
@@ -441,12 +480,13 @@ class Customers_model extends TI_Model
 	 * Send email to customer
 	 *
 	 * @param string $email
-	 * @param array  $template
-	 * @param array  $data
+	 * @param array $template
+	 * @param array $data
 	 *
 	 * @return bool
 	 */
-	public function sendMail($email, $template = array(), $data = array()) {
+	public function sendMail($email, $template = [], $data = [])
+	{
 		if (empty($template) OR empty($email) OR !isset($template['subject'], $template['body']) OR empty($data)) {
 			return FALSE;
 		}
@@ -461,7 +501,7 @@ class Customers_model extends TI_Model
 		if ($this->email->send()) {
 			return TRUE;
 		} else {
-			log_message('debug', $this->email->print_debugger(array('headers')));
+			log_message('debug', $this->email->print_debugger(['headers']));
 		}
 	}
 
@@ -472,7 +512,8 @@ class Customers_model extends TI_Model
 	 *
 	 * @return bool
 	 */
-	public function validateCustomer($customer_id) {
+	public function validateCustomer($customer_id)
+	{
 		return (is_numeric($customer_id) AND $this->find($customer_id)) ? TRUE : FALSE;
 	}
 
@@ -481,10 +522,11 @@ class Customers_model extends TI_Model
 	 *
 	 * @return string
 	 */
-	protected function getRandomString() {
+	protected function getRandomString()
+	{
 		//Random Password
 		$alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
-		$pass = array();
+		$pass = [];
 		for ($i = 0; $i < 8; $i++) {
 			$n = rand(0, strlen($alphabet) - 1);
 			$pass[$i] = $alphabet[$n];

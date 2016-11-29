@@ -4,14 +4,16 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') or exit('No direct script access allowed');
+
+use TastyIgniter\Database\Model;
 
 /**
  * Settings Model Class
@@ -20,47 +22,52 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Settings_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Settings_model extends TI_Model
+class Settings_model extends Model
 {
 	/**
 	 * @var string The database table name
 	 */
-	protected $table_name = 'settings';
+	protected $table = 'settings';
 
 	/**
 	 * @var string The database table primary key
 	 */
-	protected $primary_key = 'setting_id';
+	protected $primaryKey = 'setting_id';
 
 	/**
 	 * Return all settings
 	 *
 	 * @return array
 	 */
-	public function getAll() {
-		return $this->find_all();
+	public function getAll()
+	{
+		return $this->getAsArray();
 	}
 
 	/**
 	 * Insert new or update multiple existing settings
 	 *
 	 * @param string $sort
-	 * @param array  $update
-	 * @param bool   $flush
+	 * @param array $update
+	 * @param bool $flush
 	 *
 	 * @return bool
 	 */
-	public function updateSettings($sort, $update = array(), $flush = FALSE) {
+	public function updateSettings($sort, $update = [], $flush = FALSE)
+	{
 		if (!empty($update) && !empty($sort)) {
 			if ($flush === TRUE) {
-				$this->delete('sort', $sort);
+				$this->where('sort', $sort)->delete();
 			}
 
-			$data = array();
+			$data = [];
 			foreach ($update as $item => $value) {
 				if (!empty($item)) {
 					if ($flush === FALSE) {
-						$this->delete(array('sort' => $sort, 'item' => $item));
+						$this->where([
+							['sort', '=', $sort],
+							['item', '=', $item],
+						])->delete();
 					}
 
 					if (isset($value)) {
@@ -70,12 +77,12 @@ class Settings_model extends TI_Model
 							$serialized = '1';
 						}
 
-						$data[] = array('sort' => $sort, 'item' => $item, 'value' => $value, 'serialized' => $serialized);
+						$data[] = ['sort' => $sort, 'item' => $item, 'value' => $value, 'serialized' => $serialized];
 					}
 				}
 			}
 
-			return $this->insert_batch($data);
+			return $this->insert($data);
 		}
 	}
 
@@ -89,11 +96,15 @@ class Settings_model extends TI_Model
 	 *
 	 * @return bool
 	 */
-	public function addSetting($sort, $item, $value, $serialized = '0') {
+	public function addSetting($sort, $item, $value, $serialized = '0')
+	{
 		$query = FALSE;
 
 		if (isset($sort, $item, $value, $serialized)) {
-			$this->delete(array('sort' => $sort, 'item' => $item));
+			$this->where([
+				['sort', '=', $sort],
+				['item', '=', $item],
+			])->delete();
 
 			$serialized = '0';
 			if (is_array($value)) {
@@ -101,12 +112,12 @@ class Settings_model extends TI_Model
 				$serialized = '1';
 			}
 
-			$query = $this->insert(array(
+			$query = $this->insert([
 				'sort'       => $sort,
 				'item'       => $item,
 				'value'      => $value,
 				'serialized' => $serialized,
-			));
+			]);
 		}
 
 		return $query;
@@ -120,9 +131,13 @@ class Settings_model extends TI_Model
 	 *
 	 * @return bool
 	 */
-	public function deleteSettings($sort, $item) {
+	public function deleteSettings($sort, $item)
+	{
 		if (!empty($sort) AND !empty($item)) {
-			return $this->delete(array('sort' => $sort, 'item' => $item));
+			return $this->where(
+				['sort', '=', $sort],
+				['item', '=', $item]
+			)->delete();
 		}
 	}
 }

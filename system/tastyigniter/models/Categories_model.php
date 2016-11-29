@@ -4,14 +4,16 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') or exit('No direct script access allowed');
+
+use TastyIgniter\Database\Model;
 
 /**
  * Categories Model Class
@@ -20,44 +22,56 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Categories_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Categories_model extends TI_Model
+class Categories_model extends Model
 {
 	/**
 	 * @var string The database table name
 	 */
-	protected $table_name = 'categories';
+	protected $table = 'categories';
 
 	/**
 	 * @var string The database table primary key
 	 */
-	protected $primary_key = 'category_id';
+	protected $primaryKey = 'category_id';
+
+	protected $fillable = ['name', 'description', 'parent_id', 'priority', 'image', 'status'];
 
 	/**
 	 * Scope a query to only include enabled category
 	 *
+	 * @param $query
+	 *
 	 * @return $this
 	 */
-	public function isEnabled() {
-		return $this->where('status', '1');
+	public function scopeIsEnabled($query)
+	{
+		return $query->where('status', '1');
 	}
 
 	/**
 	 * Filter database records
 	 *
+	 * @param $query
 	 * @param array $filter an associative array of field/value pairs
 	 *
 	 * @return $this
 	 */
-	public function filter($filter = array()) {
+	public function scopeFilter($query, $filter = [])
+	{
 		if (!empty($filter['filter_search'])) {
-			$this->like('name', $filter['filter_search']);
+			$query->like('name', $filter['filter_search']);
 		}
 
 		if (is_numeric($filter['filter_status'])) {
-			$this->where('menu_status', $filter['filter_status']);
+			$query->where('menu_status', $filter['filter_status']);
 		}
 
-		return $this;
+		return $query;
+	}
+
+	public function getDescriptionAttribute($value)
+	{
+		return strip_tags(html_entity_decode($value, ENT_QUOTES, 'UTF-8'));
 	}
 
 	/**
@@ -67,33 +81,40 @@ class Categories_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getCategories($parent = NULL) {
-		$sql = "SELECT cat1.category_id, cat1.name, cat1.description, cat1.image, ";
-		$sql .= "cat1.priority, cat1.status, child.category_id as child_id, sibling.category_id as sibling_id ";
-		$sql .= "FROM {$this->table_prefix('categories')} AS cat1 ";
-		$sql .= "LEFT JOIN {$this->table_prefix('categories')} AS child ON child.parent_id = cat1.category_id ";
-		$sql .= "LEFT JOIN {$this->table_prefix('categories')} AS sibling ON sibling.parent_id = child.category_id ";
+	public function getCategories($parent = null)
+	{
+		$categoriesTable = $this->tablePrefix('categories');
+		$catOneTable = $this->tablePrefix('cat1');
+		$childTable = $this->tablePrefix('child');
+		$siblingTable = $this->tablePrefix('sibling');
 
-		if ($parent === NULL) {
-			$sql .= "WHERE cat1.parent_id >= 0 ";
+		$query = $this->selectRaw("{$catOneTable}.category_id, {$catOneTable}.name, {$catOneTable}.description, {$catOneTable}.image, " .
+			"{$catOneTable}.priority, {$catOneTable}.status, {$childTable}.category_id as child_id, {$siblingTable}.category_id as sibling_id");
+		$query->from("categories AS cat1");
+		$query->leftJoin("categories AS child", function ($join) {
+			$join->on('child.parent_id', '=', 'cat1.category_id');
+		})->leftJoin("categories AS sibling", function ($join) {
+			$join->on('sibling.parent_id', '=', 'child.category_id');
+		});
+
+		if ($parent === null) {
+			$query->where('cat1.parent_id', '>=', '0');
 		} else if (empty($parent)) {
-			$sql .= "WHERE cat1.parent_id = 0 ";
+			$query->where('cat1.parent_id', '=', '0');
 		} else {
-			$sql .= "WHERE cat1.parent_id = ? ";
+			$query->where('cat1.parent_id', '=', $parent);
 		}
 
 		if (APPDIR === MAINDIR) {
-			$sql .= "AND cat1.status = 1 ";
+			$query->where('cat1.status', '=', '1');
 		}
 
-		$query = $this->db->query($sql, $parent);
+//		$query->addBinding($parent);
 
-		$result = array();
+		$result = [];
 
-		if ($query->num_rows() > 0) {
-			foreach ($query->result_array() as $row) {
-				$result[$row['category_id']] = $row;
-			}
+		foreach ($query->getAsArray() as $row) {
+			$result[$row['category_id']] = $row;
 		}
 
 		return $result;
@@ -106,33 +127,39 @@ class Categories_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getCategory($category_id) {
+	public function getCategory($category_id)
+	{
 		if (is_numeric($category_id)) {
+			$query = $this->query();
+
 			if (APPDIR === MAINDIR) {
-				$this->where('status', '1');
+				$query->where('status', '1');
 			}
 
-			return $this->find($category_id);
+			return $query->findOrNew($category_id)->toArray();
 		}
 	}
 
 	/**
 	 * Create a new or update existing menu category
 	 *
-	 * @param int   $category_id
+	 * @param int $category_id
 	 * @param array $save
 	 *
 	 * @return bool|int The $category_id of the affected row, or FALSE on failure
 	 */
-	public function saveCategory($category_id, $save = array()) {
+	public function saveCategory($category_id, $save = [])
+	{
 		if (empty($save)) return FALSE;
 
-		if ($category_id = $this->skip_validation(TRUE)->save($save, $category_id)) {
+		$categoryModel = $this->findOrNew($category_id);
+
+		if ($saved = $categoryModel->fill($save)->save()) {
 			if (!empty($save['permalink'])) {
-				$this->permalink->savePermalink('menus', $save['permalink'], 'category_id=' . $category_id);
+				$this->permalink->savePermalink('menus', $save['permalink'], 'category_id=' . $categoryModel->getKey());
 			}
 
-			return $category_id;
+			return $saved ? $categoryModel->getKey() : $saved;
 		}
 	}
 
@@ -143,11 +170,12 @@ class Categories_model extends TI_Model
 	 *
 	 * @return int The number of deleted rows
 	 */
-	public function deleteCategory($category_id) {
-		if (is_numeric($category_id)) $category_id = array($category_id);
+	public function deleteCategory($category_id)
+	{
+		if (is_numeric($category_id)) $category_id = [$category_id];
 
 		if (!empty($category_id) AND ctype_digit(implode('', $category_id))) {
-			$affected_rows = $this->delete('category_id', $category_id);
+			$affected_rows = $this->whereIn('category_id', $category_id)->delete();
 
 			if ($affected_rows > 0) {
 				foreach ($category_id as $id) {

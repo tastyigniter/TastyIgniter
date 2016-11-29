@@ -4,14 +4,16 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') or exit('No direct script access allowed');
+
+use TastyIgniter\Database\Model;
 
 /**
  * Coupons Model Class
@@ -20,45 +22,92 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Coupons_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Coupons_model extends TI_Model
+class Coupons_model extends Model
 {
 	/**
 	 * @var string The database table name
 	 */
-	protected $table_name = 'coupons';
+	protected $table = 'coupons';
 
 	/**
 	 * @var string The database table primary key
 	 */
-	protected $primary_key = 'coupon_id';
+	protected $primaryKey = 'coupon_id';
 
-	/**
-	 * @var array The model table column to convert to dates on insert/update
-	 */
-	protected $timestamps = array('created');
+	public $timestamps = TRUE;
+
+	const CREATED_AT = 'date_added';
 
 	/**
 	 * Filter database records
 	 *
+	 * @param $query
 	 * @param array $filter an associative array of field/value pairs
 	 *
 	 * @return $this
 	 */
-	public function filter($filter = array()) {
+	public function scopeFilter($query, $filter = [])
+	{
 		if (!empty($filter['filter_search'])) {
-			$this->like('name', $filter['filter_search']);
-			$this->or_like('code', $filter['filter_search']);
+			$query->like('name', $filter['filter_search']);
+			$query->orLike('code', $filter['filter_search']);
 		}
 
 		if (!empty($filter['filter_type'])) {
-			$this->where('type', $filter['filter_type']);
+			$query->where('type', $filter['filter_type']);
 		}
 
 		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-			$this->where('status', $filter['filter_status']);
+			$query->where('status', $filter['filter_status']);
 		}
 
-		return $this;
+		return $query;
+	}
+
+	public function getAttribute($key)
+	{
+		$value = parent::getAttribute($key);
+
+		if (in_array($key, ['fixed_date', 'period_start_date', 'period_end_date'])) {
+			$value = mdate('%d-%m-%Y', strtotime($value));
+		}
+
+		if (in_array($key, ['fixed_from_time', 'recurring_from_time'])) {
+			$value = mdate('%h:%i %a', strtotime((empty($value) ? '12:00 AM' : $value)));
+		}
+
+		if (in_array($key, ['fixed_to_time', 'recurring_to_time'])) {
+			$value = mdate('%h:%i %a', strtotime((empty($value) ? '11:59 PM' : $value)));
+		}
+
+		return $value;
+	}
+
+	public function setAttribute($key, $value)
+	{
+		if (in_array($key, ['fixed_date', 'period_start_date', 'period_end_date'])) {
+			$value = mdate('%Y-%m-%d', strtotime($value));
+		}
+
+		if (in_array($key, ['fixed_from_time', 'recurring_from_time'])) {
+			$value = mdate('%H:%i', strtotime((empty($value) ? '12:00 AM' : $value)));
+		}
+
+		if (in_array($key, ['fixed_to_time', 'recurring_to_time'])) {
+			$value = mdate('%H:%i', strtotime((empty($value) ? '11:59 PM' : $value)));
+		}
+
+		return parent::setAttribute($key, $value);
+	}
+
+	public function getRecurringEveryAttribute($value)
+	{
+		return (empty($value)) ? [] : explode(', ', $value);
+	}
+
+	public function setRecurringEveryAttribute($value)
+	{
+		return (empty($value)) ? [] : implode(', ', $value);
 	}
 
 	/**
@@ -66,8 +115,9 @@ class Coupons_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getCoupons() {
-		return $this->find_all();
+	public function getCoupons()
+	{
+		return $this->getAsArray();
 	}
 
 	/**
@@ -77,8 +127,9 @@ class Coupons_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getCoupon($coupon_id) {
-		return $this->find($coupon_id);
+	public function getCoupon($coupon_id)
+	{
+		return $this->findOrNew($coupon_id)->toArray();
 	}
 
 	/**
@@ -88,25 +139,25 @@ class Coupons_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getCouponByCode($code) {
-		return $this->find(array('code' => $code));
+	public function getCouponByCode($code)
+	{
+		return $this->firstOrNew(['code' => $code])->toArray();
 	}
 
 	/**
 	 * Return all coupon history by coupon_id
 	 *
-	 * @param int $coupon_id
-	 *
 	 * @return array
 	 */
-	public function getCouponHistories($coupon_id) {
+	public function getCouponHistories()
+	{
 		$this->load->model('Coupons_history_model');
-		$this->Coupons_history_model->join('orders', 'orders.order_id = coupons_history.order_id', 'left');
-		$this->Coupons_history_model->where('coupons_history.coupon_id', $coupon_id);
+		$couponHistoryModel = $this->Coupons_history_model->join('orders', 'orders.order_id', '=', 'coupons_history.order_id', 'left');
+		$couponHistoryModel->groupBy('customers.customer_id');
+		$couponHistoryModel->join('customers', 'customers.customer_id', '=', 'coupons_history.customer_id', 'left');
+		$couponHistoryModel->where('coupon_id', $this->getKey());
 
-		//$this->Coupons_history_model->group_by('coupons_history.customer_id');
-
-		return $this->Coupons_history_model->order_by('coupons_history.date_used', 'DESC')->find_all();
+		return $couponHistoryModel->orderBy('date_used', 'DESC')->getAsArray();
 	}
 
 	/**
@@ -116,66 +167,38 @@ class Coupons_model extends TI_Model
 	 *
 	 * @return bool TRUE on success, or FALSE on failure
 	 */
-	public function redeemCoupon($order_id) {
+	public function redeemCoupon($order_id)
+	{
 		$this->load->model('Coupons_history_model');
-		if ($this->Coupons_history_model->find(array('order_id' => $order_id, 'status !=' => '1'))) {
-			return $this->Coupons_history_model->update(array('order_id' => $order_id), array('status' => '1'));
+		$couponModel = $this->Coupons_history_model->where([['status !=', '=', '1'], ['order_id', '=', $order_id]])->first();
+		if ($couponModel) {
+			return $couponModel->touchStatus();
 		}
 	}
 
 	/**
 	 * Create a new or update existing coupon
 	 *
-	 * @param int   $coupon_id
+	 * @param int $coupon_id
 	 * @param array $save
 	 *
 	 * @return bool|int The $coupon_id of the affected row, or FALSE on failure
 	 */
-	public function saveCoupon($coupon_id, $save = array()) {
+	public function saveCoupon($coupon_id, $save = [])
+	{
 		if (empty($save)) return FALSE;
 
 		if (!empty($save['validity']) AND !empty($save['validity_times'])) {
 
-			if ($save['validity'] == 'fixed') {
-				if (isset($save['validity_times']['fixed_date'])) {
-					$save['fixed_date'] = mdate('%Y-%m-%d', strtotime($save['validity_times']['fixed_date']));
-				}
-
-				$save['fixed_from_time'] = mdate('%H:%i', strtotime('12:00 AM'));
-				if (isset($save['validity_times']['fixed_from_time'])) {
-					$save['fixed_from_time'] = mdate('%H:%i', strtotime($save['validity_times']['fixed_from_time']));
-				}
-
-				$save['fixed_to_time'] = mdate('%H:%i', strtotime('11:59 PM'));
-				if (isset($save['validity_times']['fixed_to_time'])) {
-					$save['fixed_to_time'] = mdate('%H:%i', strtotime($save['validity_times']['fixed_to_time']));
-				}
-			} else if ($save['validity'] == 'period') {
-				if (isset($save['validity_times']['period_start_date'])) {
-					$save['period_start_date'] = mdate('%Y-%m-%d', strtotime($save['validity_times']['period_start_date']));
-				}
-
-				if (isset($save['validity_times']['period_end_date'])) {
-					$save['period_end_date'] = mdate('%Y-%m-%d', strtotime($save['validity_times']['period_end_date']));
-				}
-			} else if ($save['validity'] == 'recurring') {
-				if (isset($save['validity_times']['recurring_every'])) {
-					$save['recurring_every'] = implode(', ', $save['validity_times']['recurring_every']);
-				}
-
-				$save['recurring_from_time'] = mdate('%H:%i', strtotime('12:00 AM'));
-				if (isset($save['validity_times']['recurring_from_time'])) {
-					$save['recurring_from_time'] = mdate('%H:%i', strtotime($save['validity_times']['recurring_from_time']));
-				}
-
-				$save['recurring_to_time'] = mdate('%H:%i', strtotime('11:59 PM'));
-				if (isset($save['validity_times']['recurring_to_time'])) {
-					$save['recurring_to_time'] = mdate('%H:%i', strtotime($save['validity_times']['recurring_to_time']));
-				}
-			}
+			$save = array_merge($save, $save['validity_times']);
+			unset($save['validity_times'], $save['fixed_time'], $save['recurring_time']);
 		}
 
-		return $this->skip_validation(TRUE)->save($save, $coupon_id);
+		$couponModel = $this->findOrNew($coupon_id);
+
+		$saved = $couponModel->fill($save)->save();
+
+		return $saved ? $couponModel->getKey() : $saved;
 	}
 
 	/**
@@ -185,11 +208,12 @@ class Coupons_model extends TI_Model
 	 *
 	 * @return int The number of deleted rows
 	 */
-	public function deleteCoupon($coupon_id) {
-		if (is_numeric($coupon_id)) $coupon_id = array($coupon_id);
+	public function deleteCoupon($coupon_id)
+	{
+		if (is_numeric($coupon_id)) $coupon_id = [$coupon_id];
 
 		if (!empty($coupon_id) AND ctype_digit(implode('', $coupon_id))) {
-			return $this->delete('coupon_id', $coupon_id);
+			return $this->whereIn('coupon_id', $coupon_id)->delete();
 		}
 	}
 }

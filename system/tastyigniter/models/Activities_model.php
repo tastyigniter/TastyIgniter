@@ -4,14 +4,16 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') or exit('No direct script access allowed');
+
+use TastyIgniter\Database\Model;
 
 /**
  * Activities Model Class
@@ -20,54 +22,57 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Activities_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Activities_model extends TI_Model
+class Activities_model extends Model
 {
 	/**
 	 * @var string The database table name
 	 */
-	protected $table_name = 'activities';
+	public $table = 'activities';
 
 	/**
 	 * @var string The database table primary key
 	 */
-	protected $primary_key = 'activity_id';
+	public $primaryKey = 'activity_id';
+
+	protected $fillable = ['domain', 'context', 'user', 'user_id', 'action', 'message', 'status', 'date_added'];
+
+	public $timestamps = TRUE;
 
 	/**
 	 * @var array Auto-fill the created date field on insert
 	 */
-	protected $timestamps = array('created');
+	const CREATED_AT = 'date_added';
 
 	/**
 	 * Filter database records
 	 *
+	 * @param $query
 	 * @param array $filter an associative array of field/value pairs
 	 *
 	 * @return $this
 	 */
-	public function filter($filter = array()) {
+	public function scopeFilter($query, $filter = [])
+	{
 		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-			$this->where('status', $filter['filter_status']);
+			$query->where('status', $filter['filter_status']);
 		}
 
-		return $this;
+		return $query;
 	}
 
 	/**
 	 * Log activity to database
 	 *
-	 * @param int    $user_id the logged in admin or customer id
+	 * @param int $user_id    the logged in admin or customer id
 	 * @param string $action  the activity action taken e.g (added, updated, assigned, custom,...)
 	 * @param string $context where the activity occurred, the controller name
 	 * @param string $message the activity message to record
 	 */
-	public function logActivity($user_id, $action, $context, $message) {
-		if (method_exists($this->router, 'fetch_module')) {
-			$this->_module = $this->router->fetch_module();
-		}
-
+	public function logActivity($user_id, $action, $context, $message)
+	{
 		if (is_numeric($user_id) AND is_string($action) AND is_string($message)) {
 			// set the current domain (e.g admin, main, module)
-			$domain = (!empty($this->_module)) ? 'module' : APPDIR;
+			$domain = (!empty($this->router->fetch_module())) ? 'module' : APPDIR;
 
 			// set user if customer is logged in and the domain is not admin
 			$user = 'staff';
@@ -82,19 +87,16 @@ class Activities_model extends TI_Model
 			$data['domain'] = $domain;
 			$data['context'] = $context;
 
-			if (is_numeric($user_id)) {
+			if (is_numeric($user_id))
 				$data['user_id'] = $user_id;
-			}
 
-			if (is_string($action)) {
+			if (is_string($action))
 				$data['action'] = $action;
-			}
 
-			if (is_string($message)) {
+			if (is_string($message))
 				$data['message'] = $message;
-			}
 
-			$this->insert($data);
+			$this->create($data);
 		}
 	}
 
@@ -102,12 +104,13 @@ class Activities_model extends TI_Model
 	 * Return the activity message language text
 	 *
 	 * @param string $lang
-	 * @param array  $search
-	 * @param array  $replace
+	 * @param array $search
+	 * @param array $replace
 	 *
 	 * @return string
 	 */
-	public function getMessage($lang, $search = array(), $replace = array()) {
+	public function getMessage($lang, $search = [], $replace = [])
+	{
 		$this->lang->load('activities');
 
 		return str_replace($search, $replace, $this->lang->line($lang));

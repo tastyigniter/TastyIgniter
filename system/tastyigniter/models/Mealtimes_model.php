@@ -4,14 +4,16 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') or exit('No direct script access allowed');
+
+use TastyIgniter\Database\Model;
 
 /**
  * Mealtimes Model Class
@@ -20,28 +22,30 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Mealtimes_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Mealtimes_model extends TI_Model {
+class Mealtimes_model extends Model
+{
 	/**
 	 * @var string The database table name
 	 */
-	protected $table_name = 'mealtimes';
+	protected $table = 'mealtimes';
 
 	/**
 	 * @var string The database table primary key
 	 */
-	protected $primary_key = 'mealtime_id';
+	protected $primaryKey = 'mealtime_id';
 
-	protected $casts = array(
-		'start_time' => 'time',
-		'end_time'   => 'time',
-	);
+	protected $casts = [
+//		'start_time' => 'time',
+//		'end_time'   => 'time',
+	];
 
 	/**
 	 * Return all enabled mealtimes
 	 * @return array
 	 */
-	public function getMealtimes() {
-		return $this->find_all();
+	public function getMealtimes()
+	{
+		return $this->getAsArray();
 	}
 
 	/**
@@ -51,8 +55,9 @@ class Mealtimes_model extends TI_Model {
 	 *
 	 * @return object
 	 */
-	public function getMealtime($mealtime_id) {
-		return $this->find($mealtime_id);
+	public function getMealtime($mealtime_id)
+	{
+		return $this->findOrNew($mealtime_id)->toArray();
 	}
 
 	/**
@@ -62,12 +67,13 @@ class Mealtimes_model extends TI_Model {
 	 *
 	 * @return bool
 	 */
-	public function updateMealtimes($mealtimes = array()) {
+	public function updateMealtimes($mealtimes = [])
+	{
 		$query = FALSE;
 
-		if ( ! empty($mealtimes)) {
+		if (!empty($mealtimes)) {
 			foreach ($mealtimes as $mealtime) {
-				$this->skip_validation(TRUE)->save($mealtime, $mealtime['mealtime_id']);
+				$this->findOrNew($mealtime['mealtime_id'])->fill($mealtime)->save();
 			}
 
 			$query = TRUE;

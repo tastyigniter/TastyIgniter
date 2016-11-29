@@ -4,14 +4,16 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') or exit('No direct script access allowed');
+
+use TastyIgniter\Database\Model;
 
 /**
  * Countries Model Class
@@ -20,48 +22,53 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Countries_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Countries_model extends TI_Model
+class Countries_model extends Model
 {
 	/**
 	 * @var string The database table name
 	 */
-	protected $table_name = 'countries';
+	protected $table = 'countries';
 
 	/**
 	 * @var string The database table primary key
 	 */
-	protected $primary_key = 'country_id';
+	protected $primaryKey = 'country_id';
 
-	protected $has_one = array(
+	protected $fillable = ['country_id', 'country_name', 'iso_code_2', 'iso_code_3', 'format', 'status', 'flag'];
+
+	public $hasOne = [
 		'currency' => 'Currencies_model',
-	);
+	];
 
 	/**
 	 * Scope a query to only include enabled country
 	 *
 	 * @return $this
 	 */
-	public function isEnabled() {
+	public function scopeIsEnabled()
+	{
 		return $this->where('status', '1');
 	}
 
 	/**
 	 * Filter database records
 	 *
+	 * @param $query
 	 * @param array $filter an associative array of field/value pairs
 	 *
 	 * @return $this
 	 */
-	public function filter($filter = array()) {
+	public function scopeFilter($query, $filter = [])
+	{
 		if (!empty($filter['filter_search'])) {
-			$this->like('country_name', $filter['filter_search']);
+			$query->like('country_name', $filter['filter_search']);
 		}
 
 		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-			$this->where('status', $filter['filter_status']);
+			$query->where('status', $filter['filter_status']);
 		}
 
-		return $this;
+		return $query;
 	}
 
 	/**
@@ -69,8 +76,9 @@ class Countries_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getCountries() {
-		return $this->order_by('country_name')->find_all();
+	public function getCountries()
+	{
+		return $this->orderBy('country_name')->getAsArray();
 	}
 
 	/**
@@ -80,22 +88,28 @@ class Countries_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getCountry($country_id) {
-		return $this->find($country_id);
+	public function getCountry($country_id)
+	{
+		return $this->findOrNew($country_id)->toArray();
 	}
 
 	/**
 	 * Create a new or update existing country
 	 *
-	 * @param int   $country_id
+	 * @param int $country_id
 	 * @param array $save
 	 *
 	 * @return bool|int The $country_id of the affected row, or FALSE on failure
 	 */
-	public function saveCountry($country_id, $save = array()) {
+	public function saveCountry($country_id, $save = [])
+	{
 		if (empty($save)) return FALSE;
 
-		return $this->skip_validation(TRUE)->save($save, $country_id);
+		$countryModel = $this->findOrNew($country_id);
+
+		$saved = $countryModel->fill($save)->save();
+
+		return $saved ? $countryModel->getKey() : $saved;
 	}
 
 	/**
@@ -105,11 +119,12 @@ class Countries_model extends TI_Model
 	 *
 	 * @return int The number of deleted rows
 	 */
-	public function deleteCountry($country_id) {
-		if (is_numeric($country_id)) $country_id = array($country_id);
+	public function deleteCountry($country_id)
+	{
+		if (is_numeric($country_id)) $country_id = [$country_id];
 
 		if (!empty($country_id) AND ctype_digit(implode('', $country_id))) {
-			return $this->delete('country_id', $country_id);
+			return $this->whereIn('country_id', $country_id)->delete();
 		}
 	}
 }

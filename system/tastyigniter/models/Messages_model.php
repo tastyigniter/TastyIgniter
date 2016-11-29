@@ -4,14 +4,16 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') or exit('No direct script access allowed');
+
+use TastyIgniter\Database\Model;
 
 /**
  * Messages Model Class
@@ -20,26 +22,32 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Messages_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Messages_model extends TI_Model
+class Messages_model extends Model
 {
 	/**
 	 * @var string The database table name
 	 */
-	protected $table_name = 'messages';
+	protected $table = 'messages';
 
 	/**
 	 * @var string The database table primary key
 	 */
-	protected $primary_key = 'message_id';
+	protected $primaryKey = 'message_id';
 
-	protected $belongs_to = array(
-		'staffs'    => array('Staffs_model', 'sender_id'),
-		'customers' => array('Customers_model', 'message_meta.value'),
-	);
+	protected $fillable = ['sender_id', 'date_added', 'send_type', 'recipient', 'subject', 'body', 'status'];
 
-	protected $has_many = array(
-		'message_meta' => array('Message_meta_model'),
-	);
+	public $belongsTo = [
+		'staffs'    => ['Staffs_model', 'sender_id'],
+		'customers' => ['Customers_model', 'message_meta.value'],
+	];
+
+	public $hasMany = [
+		'message_meta' => ['Message_meta_model'],
+	];
+
+	public $timestamps = TRUE;
+
+	const CREATED_AT = 'date_added';
 
 	/**
 	 * List all options matching the filter
@@ -48,62 +56,70 @@ class Messages_model extends TI_Model
 	 *
 	 * @return int
 	 */
-	public function getList($filter = array()) {
+	public function getList($filter = [])
+	{
 		$this->select('*, messages.date_added, messages.status AS message_status');
 
 		return parent::getList($filter);
 	}
 
+	public function scopeSelectRecipientStatus($query)
+	{
+		return $query->selectRaw('*, ' . $this->tablePrefix('message_meta') . '.status AS recipient_status');
+	}
+
 	/**
 	 * Filter database records
 	 *
+	 * @param $query
 	 * @param array $filter an associative array of field/value pairs
 	 *
 	 * @return $this
 	 */
-	public function filter($filter = array()) {
+	public function scopeFilter($query, $filter = [])
+	{
 		if (!empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
-			$this->queryCustomerInboxMessages($filter);
-		} else if (APPDIR === ADMINDIR) {
+			$query = $this->queryCustomerInboxMessages($query, $filter);
+		} else if (APPDIR == ADMINDIR) {
 
-			if ($filter['filter_folder'] === 'inbox') {
-				$this->queryInboxMessages($filter);
-			} else if ($filter['filter_folder'] === 'draft') {
-				$this->queryDraftMessages($filter);
-			} else if ($filter['filter_folder'] === 'sent') {
-				$this->querySentMessages($filter);
-			} else if ($filter['filter_folder'] === 'archive') {
-				$this->queryArchiveMessages($filter);
-			} else if ($filter['filter_folder'] === 'all') {
-				$this->queryAllMessages($filter);
+			if ($filter['filter_folder'] == 'inbox') {
+				$query = $this->queryInboxMessages($query, $filter);
+			} else if ($filter['filter_folder'] == 'draft') {
+				$query = $this->queryDraftMessages($query, $filter);
+			} else if ($filter['filter_folder'] == 'sent') {
+				$query = $this->querySentMessages($query, $filter);
+			} else if ($filter['filter_folder'] == 'archive') {
+				$query = $this->queryArchiveMessages($query, $filter);
+			} else if ($filter['filter_folder'] == 'all') {
+				$query = $this->queryAllMessages($query, $filter);
 			}
 
 			if (!empty($filter['filter_search']) OR !empty($filter['filter_recipient'])
 				OR !empty($filter['filter_type']) OR !empty($filter['filter_date'])
 			) {
-				$this->group_start();
-				if (!empty($filter['filter_search'])) {
-					$this->like('staff_name', $filter['filter_search']);
-					$this->or_like('subject', $filter['filter_search']);
-				}
+				$query->where(function ($query) use ($filter) {
+					if (!empty($filter['filter_search'])) {
+						$query->like('staff_name', $filter['filter_search']);
+						$query->orLike('subject', $filter['filter_search']);
+					}
 
-				if (!empty($filter['filter_recipient'])) {
-					$this->where('recipient', $filter['filter_recipient']);
-				}
+					if (!empty($filter['filter_recipient'])) {
+						$query->where('recipient', $filter['filter_recipient']);
+					}
 
-				if (!empty($filter['filter_type'])) {
-					$this->where('send_type', $filter['filter_type']);
-				}
+					if (!empty($filter['filter_type'])) {
+						$query->where('send_type', $filter['filter_type']);
+					}
 
-				if (!empty($filter['filter_date'])) {
-					$date = mdate('%Y-%m', strtotime($filter['filter_date']));
-					$this->like('messages.date_added', $date, 'after');
-				}
-				$this->group_end();
+					if (!empty($filter['filter_date'])) {
+						$date = mdate('%Y-%m', strtotime($filter['filter_date']));
+						$query->like('messages.date_added', $date, 'after');
+					}
+				});
 			}
 		}
 
-		return $this;
+		return $query;
 	}
 
 	/**
@@ -111,17 +127,23 @@ class Messages_model extends TI_Model
 	 *
 	 * @param array $filter
 	 */
-	protected function queryCustomerInboxMessages($filter = array()) {
+	protected function queryCustomerInboxMessages($query, $filter = [])
+	{
 		if (isset($filter['customer_id'])) {
-			$this->join('message_meta', 'message_meta.message_id = messages.message_id', 'left');
-			$this->join('customers', 'customers.customer_id = message_meta.value AND message_meta.item = ' . $this->escape('customer_id'), 'left');
+			$query->join('message_meta', 'message_meta.message_id', '=', 'messages.message_id', 'left');
+			$query->leftJoin('customers', function ($join) {
+				$join->on('customers.customer_id', '=', 'message_meta.value')
+					 ->where('message_meta.item', 'customer_id');
+			});
 
-			$this->where('message_meta.status', '1');
-			$this->where('message_meta.deleted', '0');
-			$this->where('messages.send_type', 'account');
-			$this->where('message_meta.item', 'customer_id');
-			$this->where('message_meta.value', $filter['customer_id']);
+			$query->where('message_meta.status', '1');
+			$query->where('message_meta.deleted', '0');
+			$query->where('messages.send_type', 'account');
+			$query->where('message_meta.item', 'customer_id');
+			$query->where('message_meta.value', $filter['customer_id']);
 		}
+
+		return $query;
 	}
 
 	/**
@@ -129,20 +151,25 @@ class Messages_model extends TI_Model
 	 *
 	 * @param array $filter
 	 */
-	protected function queryInboxMessages($filter = array()) {
+	protected function queryInboxMessages($query, $filter = [])
+	{
 		if (isset($filter['filter_staff'])) {
-			$this->select('message_meta.status AS recipient_status');
+			$query->selectRecipientStatus();
 
-			$this->join('staffs', 'staffs.staff_id = messages.sender_id', 'left');
-			$this->join('message_meta', 'message_meta.message_id = messages.message_id', 'left');
+			$query->join('staffs', 'staffs.staff_id', '=', 'messages.sender_id', 'left');
+			$query->join('message_meta', 'message_meta.message_id', '=', 'messages.message_id', 'left');
 
-			$this->where('messages.status >=', '1');
-			$this->where('message_meta.status', '1');
-			$this->where('message_meta.deleted', '0');
-			$this->where('messages.send_type', 'account');
-			$this->where('message_meta.item', 'staff_id');
-			$this->where('message_meta.value', $filter['filter_staff']);
+			$query->where(function ($query) use ($filter) {
+				$query->where('messages.status', '>=', '1');
+				$query->where('message_meta.status', '1');
+				$query->where('message_meta.deleted', '0');
+				$query->where('messages.send_type', 'account');
+				$query->where('message_meta.item', 'staff_id');
+				$query->where('message_meta.value', $filter['filter_staff']);
+			});
 		}
+
+		return $query;
 	}
 
 	/**
@@ -150,13 +177,16 @@ class Messages_model extends TI_Model
 	 *
 	 * @param array $filter
 	 */
-	protected function queryDraftMessages($filter = array()) {
+	protected function queryDraftMessages($query, $filter = [])
+	{
 		if (isset($filter['filter_staff'])) {
-			$this->join('staffs', 'staffs.staff_id = messages.sender_id', 'left');
+			$query->join('staffs', 'staffs.staff_id', '=', 'messages.sender_id', 'left');
 
-			$this->where('messages.status', '0');
-			$this->where('messages.sender_id', $filter['filter_staff']);
+			$query->where('messages.status', '0');
+			$query->where('messages.sender_id', $filter['filter_staff']);
 		}
+
+		return $query;
 	}
 
 	/**
@@ -164,18 +194,26 @@ class Messages_model extends TI_Model
 	 *
 	 * @param array $filter
 	 */
-	protected function querySentMessages($filter = array()) {
+	protected function querySentMessages($query, $filter = [])
+	{
 		if (isset($filter['filter_staff'])) {
-			$this->select('message_meta.status AS recipient_status');
-			$this->join('staffs', 'staffs.staff_id = messages.sender_id', 'left');
-			$this->join('message_meta', 'message_meta.message_id = messages.message_id AND message_meta.item = ' . $this->escape('sender_id'), 'left');
+			$query->selectRecipientStatus();
+			$query->join('staffs', 'staffs.staff_id', '=', 'messages.sender_id', 'left');
+			$query->join('message_meta', function ($join) {
+				$join->on('message_meta.message_id', '=', 'messages.message_id')
+					 ->where('message_meta.item', 'sender_id');
+			});
 
-			$this->where('messages.status', '1');
-			$this->where('message_meta.status', '1');
-			$this->where('message_meta.deleted', '0');
-			$this->where('message_meta.item', 'sender_id');
-			$this->where('message_meta.value', $filter['filter_staff']);
+			$query->where(function ($query) use ($filter) {
+				$query->where('messages.status', '1');
+				$query->where('message_meta.status', '1');
+				$query->where('message_meta.deleted', '0');
+				$query->where('message_meta.item', 'sender_id');
+				$query->where('message_meta.value', $filter['filter_staff']);
+			});
 		}
+
+		return $query;
 	}
 
 	/**
@@ -183,21 +221,24 @@ class Messages_model extends TI_Model
 	 *
 	 * @param array $filter
 	 */
-	protected function queryArchiveMessages($filter = array()) {
+	protected function queryArchiveMessages($query, $filter = [])
+	{
 		if (isset($filter['filter_staff'])) {
-			$this->select('message_meta.status AS recipient_status');
-			$this->join('staffs', 'staffs.staff_id = messages.sender_id', 'left');
-			$this->join('message_meta', 'message_meta.message_id = messages.message_id', 'left');
+			$query->selectRecipientStatus();
+			$query->join('staffs', 'staffs.staff_id', '=', 'messages.sender_id', 'left');
+			$query->join('message_meta', 'message_meta.message_id', '=', 'messages.message_id', 'left');
 
-			$this->where('messages.status', '1');
-			$this->where('message_meta.deleted', '1');
-			$this->where('message_meta.value', $filter['filter_staff']);
+			$query->where('messages.status', '1');
+			$query->where('message_meta.deleted', '1');
+			$query->where('message_meta.value', $filter['filter_staff']);
 
-			$this->group_start();
-			$this->where('message_meta.item', 'staff_id');
-			$this->or_where('message_meta.item', 'sender_id');
-			$this->group_end();
+			$query->where(function ($query) use ($filter) {
+				$query->where('message_meta.item', 'staff_id');
+				$query->orWhere('message_meta.item', 'sender_id');
+			});
 		}
+
+		return $query;
 	}
 
 	/**
@@ -205,20 +246,21 @@ class Messages_model extends TI_Model
 	 *
 	 * @param array $filter
 	 */
-	protected function queryAllMessages($filter = array()) {
+	protected function queryAllMessages($query, $filter = [])
+	{
 		if (isset($filter['filter_staff'])) {
-			$this->select('message_meta.status AS recipient_status');
-			$this->join('staffs', 'staffs.staff_id = messages.sender_id', 'left');
-			$this->join('message_meta', 'message_meta.message_id = messages.message_id', 'left');
+			$query->selectRecipientStatus();
+			$query->join('staffs', 'staffs.staff_id', '=', 'messages.sender_id', 'left');
+			$query->join('message_meta', 'message_meta.message_id', '=', 'messages.message_id', 'left');
 
-			$this->where('messages.status', '1');
-			$this->where('message_meta.value', $filter['filter_staff']);
-			$this->where('message_meta.deleted !=', '2');
+			$query->where(function ($query) use ($filter) {
+				$query->where('messages.status', '1');
+				$query->where('message_meta.value', $filter['filter_staff']);
+				$query->where('message_meta.deleted', '!=', '2');
 
-			$this->group_start();
-			$this->where('message_meta.item', 'staff_id');
-			$this->or_where('message_meta.item', 'sender_id');
-			$this->group_end();
+				$query->where('message_meta.item', 'staff_id');
+				$query->orWhere('message_meta.item', 'sender_id');
+			});
 		}
 	}
 
@@ -229,8 +271,9 @@ class Messages_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getMessage($message_id) {
-		return $this->find($message_id);
+	public function getMessage($message_id)
+	{
+		return $this->findOrNew($message_id)->toArray();
 	}
 
 	/**
@@ -240,12 +283,11 @@ class Messages_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getDraftMessage($message_id) {
-		$this->where('sender_id', $this->user->getStaffId());
-		$this->where('message_id', $message_id);
-		$this->where('status', '0');
-
-		return $this->find();
+	public function getDraftMessage($message_id)
+	{
+		return $this->where('sender_id', $this->user->getStaffId())
+					->where('message_id', $message_id)
+					->where('status', '0')->firstAsArray();
 	}
 
 	/**
@@ -255,16 +297,29 @@ class Messages_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getRecipients($message_id) {
+	public function getRecipients($message_id)
+	{
+		$staffTable = $this->tablePrefix('staffs');
+		$customersTable = $this->tablePrefix('customers');
+		$metaTable = $this->tablePrefix('message_meta');
+
 		$this->load->model('Message_meta_model');
-		$this->Message_meta_model->select('message_meta.*, staffs.staff_id, staffs.staff_name, staffs.staff_email, customers.customer_id, customers.first_name, customers.last_name, customers.email');
-		$this->Message_meta_model->join('staffs', "staffs.staff_id = message_meta.value OR staffs.staff_email = message_meta.value", 'left');
-		$this->Message_meta_model->join('customers', "customers.customer_id = message_meta.value OR customers.email = message_meta.value", 'left');
+		$query = $this->Message_meta_model->selectRaw("{$metaTable}.*, {$staffTable}.staff_id, {$staffTable}.staff_name, " .
+			"{$staffTable}.staff_email, {$customersTable}.customer_id, {$customersTable}.first_name, {$customersTable}.last_name, {$customersTable}.email");
 
-		$this->Message_meta_model->where('item !=', 'sender_id');
-		$this->Message_meta_model->where('message_id', $message_id);
+		$query->leftJoin('staffs', function ($join) {
+			$join->on('staffs.staff_id', '=', 'message_meta.value')
+				 ->orOn('staffs.staff_email', '=', 'message_meta.value');
+		});
+		$query->leftJoin('customers', function ($join) {
+			$join->on('customers.customer_id', '=', 'message_meta.value')
+				 ->orOn('customers.email', '=', 'message_meta.value');
+		});
 
-		return $this->Message_meta_model->find_all();
+		$query->where('item', '!=', 'sender_id');
+		$query->where('message_id', $message_id);
+
+		return $query->getAsArray();
 	}
 
 	/**
@@ -272,51 +327,55 @@ class Messages_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getMessageDates() {
-		$this->select('date_added, MONTH(date_added) as month, YEAR(date_added) as year');
-		$this->group_by('MONTH(date_added)');
-		$this->group_by('YEAR(date_added)');
-
-		return $this->find_all();
+	public function getMessageDates()
+	{
+		return $this->pluckDates('date_added');
 	}
 
 	/**
 	 * Find a single message by message_id and user_id
 	 *
-	 * @param int    $message_id
+	 * @param int $message_id
 	 * @param string $user_id
 	 *
 	 * @return array
 	 */
-	public function viewMessage($message_id, $user_id = '') {
+	public function viewMessage($message_id, $user_id = '')
+	{
 		if (is_numeric($message_id) AND is_numeric($user_id)) {
-			$this->select('*, message_meta.status, messages.date_added, message_meta.status AS recipient_status, messages.status AS message_status');
-			$this->group_by('messages.message_id');
-			$this->where('messages.message_id', $message_id);
+			$messageTable = $this->tablePrefix('messages');
+			$metaTable = $this->tablePrefix('message_meta');
 
-			if (APPDIR === ADMINDIR) {
-				$this->join('staffs', 'staffs.staff_id = messages.sender_id', 'left');
+			$query = $this->selectRaw("*, {$metaTable}.status, {$messageTable}.date_added, {$metaTable}.status AS recipient_status, " .
+				"{$messageTable}.status AS message_status");
+			$query->groupBy('messages.message_id');
+			$query->where('messages.message_id', $message_id);
 
-				$this->group_start();
-				$this->where('message_meta.item', 'sender_id');
-				$this->or_where('message_meta.item', 'staff_id');
-				$this->group_end();
+			if (APPDIR == ADMINDIR) {
+				$query->join('staffs', 'staffs.staff_id', '=', 'messages.sender_id', 'left');
 
-				$this->where('message_meta.value', $user_id);
+				$query->where(function ($query) {
+					$query->where('message_meta.item', 'sender_id');
+					$query->orWhere('message_meta.item', 'staff_id');
+				});
+
+				$query->where('message_meta.value', $user_id);
 			} else {
-				$this->join('customers', 'customers.customer_id = message_meta.value', 'left');
+				$query->join('customers', 'customers.customer_id', '=', 'message_meta.value', 'left');
 
-				$this->where('messages.status', '1');
-				$this->where('message_meta.status', '1');
-				$this->where('message_meta.deleted', '0');
-				$this->where('messages.send_type', 'account');
-				$this->where('message_meta.item', 'customer_id');
-				$this->where('message_meta.value', $user_id);
+				$query->where(function ($query) use ($user_id) {
+					$query->where('messages.status', '1');
+					$query->where('message_meta.status', '1');
+					$query->where('message_meta.deleted', '0');
+					$query->where('messages.send_type', 'account');
+					$query->where('message_meta.item', 'customer_id');
+					$query->where('message_meta.value', $user_id);
+				});
 			}
 
-			$this->join('message_meta', 'message_meta.message_id = messages.message_id', 'left');
+			$query->join('message_meta', 'message_meta.message_id', '=', 'messages.message_id', 'left');
 
-			return $this->find();
+			return $query->firstAsArray();
 		}
 	}
 
@@ -327,77 +386,79 @@ class Messages_model extends TI_Model
 	 *
 	 * @return string
 	 */
-	public function getUnreadCount($user_id = '') {
-		if (is_numeric($user_id) AND $this->table_exists('message_meta')) {
-			$this->where('messages.status', '1');
-			$this->where('message_meta.status', '1');
-			$this->where('message_meta.deleted', '0');
-			$this->where('message_meta.state', '0');
-			$this->where('messages.send_type', 'account');
-			$this->where('message_meta.value', $user_id);
+	public function getUnreadCount($user_id = '')
+	{
+		if (is_numeric($user_id) AND $this->hasTable('message_meta')) {
+			$query = $this->where('messages.status', '1')
+						  ->where('message_meta.status', '1')
+						  ->where('message_meta.deleted', '0')
+						  ->where('message_meta.state', '0')
+						  ->where('messages.send_type', 'account')
+						  ->where('message_meta.value', $user_id);
 
-			if (APPDIR === ADMINDIR) {
-				$this->where('message_meta.item', 'staff_id');
+			if (APPDIR == ADMINDIR) {
+				$query->where('message_meta.item', 'staff_id');
 			} else {
-				$this->where('message_meta.item', 'customer_id');
+				$query->where('message_meta.item', 'customer_id');
 			}
 
-			$this->join('message_meta', 'message_meta.message_id = messages.message_id', 'left');
+			$query->join('message_meta', 'message_meta.message_id', '=', 'messages.message_id', 'left');
 
-			return $this->count();
+			return $query->count();
 		}
 	}
 
 	/**
 	 * Update a message state or status
 	 *
-	 * @param int    $message_meta_id
-	 * @param int    $user_id
+	 * @param int $message_meta_id
+	 * @param int $user_id
 	 * @param string $state
 	 * @param string $folder
 	 *
 	 * @return bool
 	 */
-	public function updateState($message_meta_id, $user_id, $state, $folder = '') {
+	public function updateState($message_meta_id, $user_id, $state, $folder = '')
+	{
 		$query = FALSE;
 
-		if (!is_array($message_meta_id)) $message_meta_id = array($message_meta_id);
+		if (!is_array($message_meta_id)) $message_meta_id = [$message_meta_id];
 
 		if (is_numeric($user_id)) {
-			$update = array();
-			if ($state === 'unread') {
+			$update = [];
+			if ($state == 'unread') {
 				$update['state'] = '0';
-			} else if ($state === 'read') {
+			} else if ($state == 'read') {
 				$update['state'] = '1';
-			} else if ($state === 'restore') {
+			} else if ($state == 'restore') {
 				$update['status'] = '1';
 				$update['deleted'] = '0';
-			} else if ($state === 'archive') {
+			} else if ($state == 'archive') {
 				$update['deleted'] = '1';
-			} else if ($state === 'trash') {
+			} else if ($state == 'trash') {
 				$update['deleted'] = '2';
 			}
 
 			$where['value'] = $user_id;
 			$this->load->model('Message_meta_model');
-			$this->Message_meta_model->where_in('message_meta_id', $message_meta_id);
+			$queryBuilder = $this->Message_meta_model->whereIn('message_meta_id', $message_meta_id);
 
-			if (APPDIR === ADMINDIR) {
-				if ($folder === 'inbox') {
-					$this->Message_meta_model->where('item', 'staff_id');
-				} else if ($folder === 'sent') {
-					$this->Message_meta_model->where('item', 'sender_id');
+			if (APPDIR == ADMINDIR) {
+				if ($folder == 'inbox') {
+					$queryBuilder->where('item', 'staff_id');
+				} else if ($folder == 'sent') {
+					$queryBuilder->where('item', 'sender_id');
 				} else {
-					$this->Message_meta_model->group_start();
-					$this->Message_meta_model->where('item', 'sender_id');
-					$this->Message_meta_model->or_where('item', 'staff_id');
-					$this->Message_meta_model->group_end();
+					$queryBuilder->where(function ($query) {
+						$query->where('item', 'sender_id');
+						$query->orWhere('item', 'staff_id');
+					});
 				}
 			} else {
-				$this->Message_meta_model->where('item', 'customer_id');
+				$queryBuilder->where('item', 'customer_id');
 			}
 
-			$query = $this->Message_meta_model->update($where, $update);
+			$query = $queryBuilder->update($update);
 		}
 
 		return $query;
@@ -406,24 +467,29 @@ class Messages_model extends TI_Model
 	/**
 	 * Create a new or update existing message
 	 *
-	 * @param int   $message_id
+	 * @param int $message_id
 	 * @param array $save
 	 *
 	 * @return bool|int The $message_id of the affected row, or FALSE on failure
 	 */
-	public function saveMessage($message_id, $save = array()) {
+	public function saveMessage($message_id, $save = [])
+	{
 		if (empty($save)) return FALSE;
 
-		if (isset($save['save_as_draft']) AND $save['save_as_draft'] === '1') {
+		if (isset($save['save_as_draft']) AND $save['save_as_draft'] == '1') {
 			$save['status'] = '0';
 		} else {
 			$save['status'] = '1';
 		}
 
 		$save['sender_id'] = $this->user->getStaffId();
-		$save['date_added'] = mdate('%Y-%m-%d %H:%i:%s', time());
 
-		$message_id = $this->skip_validation(TRUE)->save($save, $message_id);
+		$messageModel = $this->findOrNew($message_id);
+
+		$saved = $messageModel->fill($save)->save();
+
+		$message_id = $saved ? $messageModel->getKey() : $saved;
+
 		if (is_numeric($message_id) AND empty($save['save_as_draft'])
 			AND !empty($save['recipient']) AND !empty($save['send_type'])
 		) {
@@ -441,12 +507,13 @@ class Messages_model extends TI_Model
 	 *
 	 * @return bool
 	 */
-	protected function sendMessage($message_id, $send = array()) {
-		$results = array();
+	protected function sendMessage($message_id, $send = [])
+	{
+		$results = [];
 
-		$column = ($send['send_type'] === 'email') ? 'email' : 'id';
+		$column = ($send['send_type'] == 'email') ? 'email' : 'id';
 
-		if (empty($send['save_as_draft']) OR $send['save_as_draft'] !== '1') {
+		if (empty($send['save_as_draft']) OR $send['save_as_draft'] != '1') {
 			$this->load->model('Customers_model');
 
 			switch ($send['recipient']) {
@@ -497,33 +564,36 @@ class Messages_model extends TI_Model
 	 *
 	 * @return bool
 	 */
-	public function addRecipients($message_id, $send, $recipients) {
+	public function addRecipients($message_id, $send, $recipients)
+	{
 		$this->load->model('Message_meta_model');
-		$this->Message_meta_model->delete('message_id', $message_id);
+		$this->Message_meta_model->where('message_id', $message_id)->delete();
 
-		$suffix = ($send['send_type'] === 'email') ? 'email' : 'id';
+		$suffix = ($send['send_type'] == 'email') ? 'email' : 'id';
 
 		if ($recipients) {
-			$insert = array();
+			$insert = [];
 			foreach ($recipients as $key => $recipient) {
 				if (!empty($recipient)) {
 					$status = (is_numeric($recipient)) ? '1' : $this->_sendMail($message_id, $recipient);
 
-					$insert[]['value'] = $recipient;
-					$insert[]['message_id'] = $message_id;
-					$insert[]['status'] = $status;
+					$meta['value'] = $recipient;
+					$meta['message_id'] = $message_id;
+					$meta['status'] = $status;
 
 					if ($key === 'sender_id') {
-						$insert[]['item'] = 'sender_id';
-					} else if (in_array($send['recipient'], array('all_staffs', 'staff_group', 'staffs'))) {
-						$insert[]['item'] = 'staff_' . $suffix;
+						$meta['item'] = 'sender_id';
+					} else if (in_array($send['recipient'], ['all_staffs', 'staff_group', 'staffs'])) {
+						$meta['item'] = 'staff_' . $suffix;
 					} else {
-						$insert[]['item'] = 'customer_' . $suffix;
+						$meta['item'] = 'customer_' . $suffix;
 					}
+
+					$insert[] = $meta;
 				}
 			}
 
-			if (!($query = $this->Message_meta_model->insert('message_meta', $insert))) {
+			if (!($query = $this->Message_meta_model->insert($insert))) {
 				return FALSE;
 			}
 
@@ -534,32 +604,32 @@ class Messages_model extends TI_Model
 	/**
 	 * Delete a single or multiple message by message_id
 	 *
-	 * @param int    $message_id
+	 * @param int $message_id
 	 * @param string $user_id
 	 *
 	 * @return mixed
 	 */
-	public function deleteMessage($message_id, $user_id = '') {
-		if (is_numeric($message_id)) $message_id = array($message_id);
+	public function deleteMessage($message_id, $user_id = '')
+	{
+		if (is_numeric($message_id)) $message_id = [$message_id];
 
 		if (!empty($message_id) AND ctype_digit(implode('', $message_id))) {
 			// Delete draft messages
-			$this->where('sender_id', $user_id);
-			$this->where('status', '0');
-
-			return $this->delete('message_id', $message_id);
+			return $this->where('sender_id', $user_id)
+						->where('status', '0')->whereIn('message_id', $message_id)->delete();
 		}
 	}
 
 	/**
 	 * Send a message to recipient email or account
 	 *
-	 * @param int    $message_id
+	 * @param int $message_id
 	 * @param string $email
 	 *
 	 * @return string
 	 */
-	public function _sendMail($message_id, $email) {
+	public function _sendMail($message_id, $email)
+	{
 		if (!empty($message_id) AND !empty($email)) {
 			$this->load->library('email');
 
@@ -574,7 +644,7 @@ class Messages_model extends TI_Model
 				$this->email->message($mail_data['body']);
 
 				if (!$this->email->send()) {
-					log_message('debug', $this->email->print_debugger(array('headers')));
+					log_message('debug', $this->email->print_debugger(['headers']));
 					$notify = '0';
 				} else {
 					$notify = '1';

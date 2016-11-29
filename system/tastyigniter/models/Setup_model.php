@@ -4,12 +4,12 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -22,33 +22,36 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Setup_model extends TI_Model
 {
-	protected $schema = array();
+	protected $schema = [];
 
-	protected function querySchema($table, $schema = 'initial') {
+	protected function querySchema($table, $schema = 'initial')
+	{
 		if (!empty($this->schema[$schema][$table])) {
 			$this->db->query($this->schema[$schema][$table]);
 		}
 
-		if ($this->input->post('site_location_mode') === 'multi' AND !empty($this->schema[$schema][$table.'_for_multi'])) {
-			$this->db->query($this->schema[$schema][$table.'_for_multi']);
+		if ($this->input->post('site_location_mode') === 'multi' AND !empty($this->schema[$schema][$table . '_for_multi'])) {
+			$this->db->query($this->schema[$schema][$table . '_for_multi']);
 		}
 	}
 
 	// --------------------------------------------------------------------
 
-	protected function loadSchema($schema_type = 'initial') {
-		include(IGNITEPATH . '/migrations/'.$schema_type.'_schema.php');
+	protected function loadSchema($schema_type = 'initial')
+	{
+		include(IGNITEPATH . '/migrations/' . $schema_type . '_schema.php');
 
 		if (!empty($schema)) {
 			$this->schema[$schema_type] = $schema;
 		}
 
-		if ($schema_type === 'initial' AND $this->input->post('demo_data') === '1') {
+		if ($schema_type === 'initial' AND $this->input->post('demo_data') == '1') {
 			$this->loadSchema('demo');
 		}
 	}
 
-	public function addUser($add = array()) {
+	public function addUser($add = [])
+	{
 		if (empty($add['staff_name']) AND empty($add['username']) AND empty($add['password'])) {
 			return TRUE;
 		}
@@ -85,18 +88,19 @@ class Setup_model extends TI_Model
 		return $query;
 	}
 
-	public function updateSettings($setting = array(), $upgrade = FALSE) {
+	public function updateSettings($setting = [], $upgrade = FALSE)
+	{
 		if ($upgrade === FALSE AND empty($setting['site_name']) AND empty($setting['site_email'])) {
 			return TRUE;
 		}
 
 		foreach ($setting as $key => $value) {
-			$setting_row = array(
+			$setting_row = [
 				'sort'       => ($key === 'ti_setup') ? 'prefs' : 'config',
 				'item'       => $key,
 				'value'      => $value,
 				'serialized' => '0',
-			);
+			];
 
 			if ($this->db->replace('settings', $setting_row) === FALSE) {
 				return FALSE;
@@ -106,37 +110,39 @@ class Setup_model extends TI_Model
 		return TRUE;
 	}
 
-	public function updateLocation($setting = array()) {
+	public function updateLocation($setting = [])
+	{
 		if (empty($setting['site_name']) AND empty($setting['site_email'])) {
 			return TRUE;
 		}
 
 		$this->load->model('Locations_model');
-		$this->Locations_model->save(array(
-			'location_name' => $setting['site_name'],
+		$this->Locations_model->save([
+			'location_name'  => $setting['site_name'],
 			'location_email' => $setting['site_email'],
-		), '11');
+		], '11');
 
 		$this->load->model('Settings_model');
 		$this->Settings_model->addSetting('prefs', 'main_address', $this->Locations_model->getAddress(11), '1');
 
 		$this->load->model('Permalink_model');
-		$permalink = array('permalink_id' => '22', 'slug' => $setting['site_name']);
+		$permalink = ['permalink_id' => '22', 'slug' => $setting['site_name']];
 		$this->Permalink_model->savePermalink('local', $permalink, 'location_id=11');
 	}
 
-	public function updateVersion($version = NULL) {
+	public function updateVersion($version = null)
+	{
 		$this->load->model('Settings_model');
 		$this->Settings_model->where('sort', 'prefs');
 		$this->Settings_model->where('item', 'ti_version');
 		$this->Settings_model->delete();
 
-		$this->Settings_model->insert(array(
-			'sort' => 'prefs',
-			'item' => 'ti_version',
-			'value' => (empty($version)) ? TI_VERSION : $version,
-			'serialized' => '0'
-		));
+		$this->Settings_model->insert([
+			'sort'       => 'prefs',
+			'item'       => 'ti_version',
+			'value'      => (empty($version)) ? TI_VERSION : $version,
+			'serialized' => '0',
+		]);
 	}
 }
 

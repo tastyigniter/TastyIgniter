@@ -4,14 +4,16 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') or exit('No direct script access allowed');
+
+use TastyIgniter\Database\Model;
 
 /**
  * Menu_options Model Class
@@ -20,17 +22,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Menu_options_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Menu_options_model extends TI_Model
+class Menu_options_model extends Model
 {
 	/**
 	 * @var string The database table name
 	 */
-	protected $table_name = 'options';
+	protected $table = 'options';
 
 	/**
 	 * @var string The database table primary key
 	 */
-	protected $primary_key = 'option_id';
+	protected $primaryKey = 'option_id';
+
+//	protected $fillable = ['menu_option_id', 'option_id', 'menu_id', 'required', 'default_value_id', 'option_values'];
+	protected $fillable = ['option_id', 'option_name', 'display_type', 'priority'];
 
 	/**
 	 * Filter database records
@@ -39,16 +44,17 @@ class Menu_options_model extends TI_Model
 	 *
 	 * @return $this
 	 */
-	public function filter($filter = array()) {
+	public function scopeFilter($query, $filter = [])
+	{
 		if (!empty($filter['filter_search'])) {
-			$this->like('option_name', $filter['filter_search']);
+			$query->like('option_name', $filter['filter_search']);
 		}
 
 		if (!empty($filter['filter_display_type'])) {
-			$this->where('display_type', $filter['filter_display_type']);
+			$query->where('display_type', $filter['filter_display_type']);
 		}
 
-		return $this;
+		return $query;
 	}
 
 	/**
@@ -58,12 +64,15 @@ class Menu_options_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getOptionValues($option_id = NULL) {
+	public function getOptionValues($option_id = null)
+	{
+		$query = $this->orderBy('priority')->from('option_values');
+
 		if ($option_id !== FALSE) {
-			$this->where('option_id', $option_id);
+			$query->where('option_id', $option_id);
 		}
 
-		return $this->order_by('priority')->from('option_values')->get_many();
+		return $query->getAsArray();
 	}
 
 	/**
@@ -73,8 +82,9 @@ class Menu_options_model extends TI_Model
 	 *
 	 * @return mixed
 	 */
-	public function getOption($option_id) {
-		return $this->find($option_id);
+	public function getOption($option_id)
+	{
+		return $this->findOrNew($option_id)->toArray();
 	}
 
 	/**
@@ -84,21 +94,24 @@ class Menu_options_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getMenuOptions($menu_id = NULL) {
-		$results = array();
+	public function getMenuOptions($menu_id = null)
+	{
+		$results = [];
 
-		$this->select('*, menu_options.menu_id, menu_options.option_id');
-		$this->join('options', 'options.option_id = menu_options.option_id', 'left');
+		$tablePrefixed = $this->tablePrefix('menu_options');
+
+		$query = $this->selectRaw("*, {$tablePrefixed}.menu_id, {$tablePrefixed}.option_id")
+					  ->leftJoin('options', 'options.option_id', '=', 'menu_options.option_id');
 
 		if (is_numeric($menu_id)) {
-			$this->where('menu_options.menu_id', $menu_id);
+			$query->where('menu_id', $menu_id);
 		}
 
-		if ($result = $this->order_by('options.priority')->from('menu_options')->get_many()) {
+		if ($result = $query->orderBy('options.priority')->from('menu_options')->getAsArray()) {
 			foreach ($result as $row) {
-				$results[] = array_merge($row, array(
+				$results[] = array_merge($row, [
 					'option_values' => $this->getMenuOptionValues($row['menu_option_id'], $row['option_id']),
-				));
+				]);
 			}
 		}
 
@@ -113,16 +126,19 @@ class Menu_options_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getMenuOptionValues($menu_option_id = NULL, $option_id = NULL) {
-		$result = array();
+	public function getMenuOptionValues($menu_option_id = null, $option_id = null)
+	{
+		$result = [];
 
 		if (is_numeric($menu_option_id) AND is_numeric($option_id)) {
-			$this->select('*, menu_option_values.option_id, option_values.option_value_id');
-			$this->join('option_values', 'option_values.option_value_id = menu_option_values.option_value_id', 'left');
-			$this->where('menu_option_values.menu_option_id', $menu_option_id);
-			$this->where('menu_option_values.option_id', $option_id);
+			$valuePrefixed = $this->tablePrefix('menu_option_values');
+			$optionPrefixed = $this->tablePrefix('option_values');
 
-			$result = $this->order_by('option_values.priority')->from('menu_option_values')->get_many();
+			$result = $this->selectRaw("*, {$valuePrefixed}.option_id, {$optionPrefixed}.option_value_id")
+						   ->leftJoin('option_values', 'option_values.option_value_id', '=', 'menu_option_values.option_value_id')
+						   ->where('menu_option_values.menu_option_id', $menu_option_id)
+						   ->where('menu_option_values.option_id', $option_id)
+						   ->orderBy('option_values.priority')->from('menu_option_values')->getAsArray();
 		}
 
 		return $result;
@@ -136,18 +152,21 @@ class Menu_options_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getAutoComplete($filter = array()) {
+	public function getAutoComplete($filter = [])
+	{
 		if (is_array($filter) AND !empty($filter)) {
+			$queryBuilder = $this->query();
+
 			if (!empty($filter['option_name'])) {
-				$this->like('option_name', $filter['option_name']);
+				$queryBuilder->like('option_name', $filter['option_name']);
 			}
 
-			$result = array();
-			if ($rows = $this->find_all()) {
+			$result = [];
+			if ($rows = $queryBuilder->getAsArray()) {
 				foreach ($rows as $row) {
-					$result[] = array_merge($row, array(
+					$result[] = array_merge($row, [
 						'option_values' => $this->getOptionValues($row['option_id']),
-					));
+					]);
 				}
 			}
 
@@ -158,42 +177,47 @@ class Menu_options_model extends TI_Model
 	/**
 	 * Create a new or update existing options
 	 *
-	 * @param int   $option_id
+	 * @param int $option_id
 	 * @param array $save
 	 *
 	 * @return bool|int The $option_id of the affected row, or FALSE on failure
 	 */
-	public function saveOption($option_id, $save = array()) {
+	public function saveOption($option_id, $save = [])
+	{
 		if (empty($save)) return FALSE;
 
-		if ($option_id = $this->skip_validation(TRUE)->save($save, $option_id)) {
-			$save['option_values'] = isset($save['option_values']) ? $save['option_values'] : array();
-			$this->addOptionValues($option_id, $save['option_values']);
+		$menuOptionModel = $this->findOrNew($option_id);
 
-			return $option_id;
+		if ($saved = $menuOptionModel->fill($save)->save()) {
+			$save['option_values'] = isset($save['option_values']) ? $save['option_values'] : [];
+			$this->addOptionValues($menuOptionModel->getKey(), $save['option_values']);
 		}
+
+		return $saved ? $menuOptionModel->getKey() : $saved;
 	}
 
 	/**
 	 * Create a new or update existing option values
 	 *
-	 * @param bool  $option_id
+	 * @param bool $option_id
 	 * @param array $option_values
 	 *
 	 * @return bool
 	 */
-	public function addOptionValues($option_id = FALSE, $option_values = array()) {
+	public function addOptionValues($option_id = FALSE, $option_values = [])
+	{
 		$query = FALSE;
 
 		if ($option_id !== FALSE AND !empty($option_values) AND is_array($option_values)) {
-			$this->delete_from('option_values', array('option_id', $option_id));
+			$queryBuilder = $this->queryBuilder();
+			$queryBuilder->table('option_values')->where('option_id', $option_id)->delete();
 
 			$priority = 1;
 			foreach ($option_values as $key => $value) {
-				$query = $this->insert_into('option_values', array_merge($value, array(
-					'priority'  => $priority,
+				$query = $queryBuilder->table('option_values')->insert(array_merge($value, [
 					'option_id' => $option_id,
-				)));
+					'priority'  => $priority,
+				]));
 
 				$priority++;
 			}
@@ -205,28 +229,34 @@ class Menu_options_model extends TI_Model
 	/**
 	 * Create a new or update existing menu options
 	 *
-	 * @param bool  $menu_id
+	 * @param bool $menu_id
 	 * @param array $menu_options
 	 *
 	 * @return bool
 	 */
-	public function addMenuOption($menu_id = FALSE, $menu_options = array()) {
+	public function addMenuOption($menu_id = FALSE, $menu_options = [])
+	{
 		$query = FALSE;
 
 		if ($menu_id !== FALSE) {
-			$this->delete_from('menu_options', array('menu_id' => $menu_id));
-			$this->delete_from('menu_option_values', array('menu_id' => $menu_id));
+			$queryBuilder = $this->queryBuilder();
+
+			$queryBuilder->table('menu_options')->where('menu_id', $menu_id)->delete();
+			$queryBuilder->table('menu_option_values')->where('menu_id', $menu_id)->delete();
 
 			if (!empty($menu_options)) {
 				foreach ($menu_options as $option) {
 					$option_values = $option['option_values'];
-					$option = array_merge($option, array(
+					$insert = [
+						'menu_option_id'   => $option['menu_option_id'],
 						'menu_id'          => $menu_id,
+						'option_id'        => $option['option_id'],
+						'required'         => $option['required'],
 						'default_value_id' => empty($option['default_value_id']) ? '0' : $option['default_value_id'],
 						'option_values'    => serialize($option['option_values']),
-					));
+					];
 
-					if ($menu_option_id = $this->insert_into('menu_options', $option)) {
+					if ($menu_option_id = $queryBuilder->table('menu_options')->insertGetId($insert)) {
 						$this->addMenuOptionValues($menu_option_id, $menu_id, $option['option_id'], $option_values);
 					}
 				}
@@ -239,22 +269,24 @@ class Menu_options_model extends TI_Model
 	/**
 	 * Create a new or update existing menu option values
 	 *
-	 * @param int   $menu_option_id
-	 * @param int   $menu_id
-	 * @param int   $option_id
+	 * @param int $menu_option_id
+	 * @param int $menu_id
+	 * @param int $option_id
 	 * @param array $option_values
 	 */
-	public function addMenuOptionValues($menu_option_id = NULL, $menu_id = NULL, $option_id = NULL, $option_values = array()) {
-		if ($menu_option_id !== NULL AND $menu_id !== NULL AND $option_id !== NULL AND !empty($option_values)) {
+	public function addMenuOptionValues($menu_option_id = null, $menu_id = null, $option_id = null, $option_values = [])
+	{
+		if ($menu_option_id !== null AND $menu_id !== null AND $option_id !== null AND !empty($option_values)) {
 			foreach ($option_values as $value) {
-				$value = array_merge($value, array(
-					'menu_option_id' => $menu_option_id,
-					'menu_id'        => $menu_id,
-					'option_id'      => $option_id,
-					'new_price'      => $value['price'],
-				));
-
-				$this->insert_into('menu_option_values', $value);
+				$this->queryBuilder()->table('menu_option_values')->insert([
+					'menu_option_id'  => $menu_option_id,
+					'menu_id'         => $menu_id,
+					'option_id'       => $option_id,
+					'option_value_id' => $value['option_value_id'],
+					'new_price'       => $value['price'],
+					'quantity'        => $value['quantity'],
+					'subtract_stock'  => $value['subtract_stock'],
+				]);
 			}
 		}
 	}
@@ -266,18 +298,21 @@ class Menu_options_model extends TI_Model
 	 *
 	 * @return int The number of deleted rows
 	 */
-	public function deleteOption($option_id) {
-		if (is_numeric($option_id)) $option_id = array($option_id);
+	public function deleteOption($option_id)
+	{
+		if (is_numeric($option_id)) $option_id = [$option_id];
 
 		if (!empty($option_id) AND ctype_digit(implode('', $option_id))) {
-			$affected_rows = $this->delete('option_id', $option_id);
+			$affected_rows = $this->whereIn('option_id', $option_id)->delete();
 
 			if ($affected_rows > 0) {
-				$this->delete_from('option_values', array('option_id', $option_id));
+				$queryBuilder = $this->queryBuilder();
 
-				$this->delete_from('menu_options', array('option_id', $option_id));
+				$queryBuilder->table('option_values')->whereIn('option_id', $option_id)->delete();
 
-				$this->delete_from('menu_option_values', array('option_id', $option_id));
+				$queryBuilder->table('menu_options')->whereIn('option_id', $option_id)->delete();
+
+				$queryBuilder->table('menu_option_values')->whereIn('option_id', $option_id)->delete();
 
 				return $affected_rows;
 			}
@@ -291,14 +326,17 @@ class Menu_options_model extends TI_Model
 	 *
 	 * @return int The number of deleted rows
 	 */
-	public function deleteMenuOption($menu_id) {
-		if (is_numeric($menu_id)) $menu_id = array($menu_id);
+	public function deleteMenuOption($menu_id)
+	{
+		if (is_numeric($menu_id)) $menu_id = [$menu_id];
 
 		if (!empty($menu_id) AND ctype_digit(implode('', $menu_id))) {
-			$this->delete_from('menu_options', array('menu_id', $menu_id));
+			$queryBuilder = $this->queryBuilder();
 
-			if (($affected_rows = $this->affected_rows()) > 0) {
-				$this->delete_from('menu_option_values', array('menu_id', $menu_id));
+			$affected_rows = $queryBuilder->table('menu_options')->whereIn('menu_id', $menu_id)->delete();
+
+			if ($affected_rows > 0) {
+				$queryBuilder->table('menu_option_values')->whereIn('menu_id', $menu_id)->delete();
 
 				return $affected_rows;
 			}

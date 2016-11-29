@@ -4,14 +4,16 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') or exit('No direct script access allowed');
+
+use TastyIgniter\Database\Model;
 
 /**
  * Addresses Model Class
@@ -20,69 +22,44 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Addresses_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Addresses_model extends TI_Model
+class Addresses_model extends Model
 {
 	/**
 	 * @var string The database table name
 	 */
-	protected $table_name = 'addresses';
+	protected $table = 'addresses';
 
 	/**
 	 * @var string The database table primary key
 	 */
-	protected $primary_key = 'address_id';
+	protected $primaryKey = 'address_id';
 
-	protected $belongs_to = array(
-		'countries' => 'Countries_model',
-	);
+	protected $fillable = ['address_id', 'customer_id', 'address_1', 'address_2', 'city', 'state', 'postcode', 'country_id'];
 
-	/**
-	 * Count the number of records
-	 *
-	 * @param array $filter
-	 *
-	 * @return int
-	 */
-	public function getCount($filter = array()) {
-		if (!empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
-			$this->with('countries');
+	public $belongsTo = [
+		'country' => 'Countries_model',
+	];
 
-			return parent::getCount($filter);
-		}
-	}
-
-	/**
-	 * List all addresses matching the filter
-	 *
-	 * @param array $filter
-	 *
-	 * @return array
-	 */
-	public function getList($filter = array()) {
-		$result = array();
-
-		if (!empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
-			foreach ($this->filter($filter)->with('countries')->find_all('customer_id', $filter['customer_id']) as $row) {
-				$result[$row['address_id']] = $row;
-			}
-		}
-
-		return $result;
+	public function scopeJoinCountryTable($query)
+	{
+		return $query->join('countries', 'countries.country_id', '=', 'addresses.country_id', 'left');
 	}
 
 	/**
 	 * Filter database records
 	 *
+	 * @param $query
 	 * @param array $filter an associative array of field/value pairs
 	 *
 	 * @return $this
 	 */
-	public function filter($filter = array()) {
+	public function scopeFilter($query, $filter = [])
+	{
 		if (isset($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
-			$this->where('customer_id', $filter['customer_id']);
+			$query->where('customer_id', $filter['customer_id']);
 		}
 
-		return $this;
+		return $query;
 	}
 
 	/**
@@ -92,11 +69,14 @@ class Addresses_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getAddresses($customer_id) {
-		$result = array();
+	public function getAddresses($customer_id)
+	{
+		$result = [];
 
 		if (!empty($customer_id) AND is_numeric($customer_id)) {
-			foreach ($this->with('countries')->find_all('customer_id', $customer_id) as $row) {
+
+			$addresses = self::joinCountryTable()->where('customer_id', $customer_id)->getAsArray();
+			foreach ($addresses as $row) {
 				$result[$row['address_id']] = $row;
 			}
 		}
@@ -112,13 +92,15 @@ class Addresses_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getAddress($customer_id, $address_id) {
+	public function getAddress($customer_id, $address_id)
+	{
 		if (!empty($address_id) AND is_numeric($address_id)) {
+			$query = $this->joinCountryTable();
 			if (!empty($customer_id) AND is_numeric($customer_id)) {
-				$this->where('customer_id', $customer_id);
+				$query->where('customer_id', $customer_id);
 			}
 
-			return $this->with('countries')->find($address_id);
+			return $query->findOrNew($address_id)->toArray();
 		}
 	}
 
@@ -129,10 +111,11 @@ class Addresses_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getGuestAddress($address_id) {
-		$this->where('address_id', $address_id);
+	public function getGuestAddress($address_id)
+	{
+		$queryBuilder = $this->where('address_id', $address_id);
 
-		return $this->with('countries')->find();
+		return $queryBuilder->joinCountryTable()->findOrNew()->toArray();
 	}
 
 	/**
@@ -143,8 +126,9 @@ class Addresses_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getDefault($address_id, $customer_id) {
-		if (($address_id !== '0') AND ($customer_id !== '0')) {
+	public function getDefault($address_id, $customer_id)
+	{
+		if ($address_id AND $customer_id) {
 			return $this->getAddress($customer_id, $address_id);
 		}
 	}
@@ -157,12 +141,13 @@ class Addresses_model extends TI_Model
 	 *
 	 * @return bool
 	 */
-	public function updateDefault($customer_id = NULL, $address_id = NULL) {
+	public function updateDefault($customer_id = null, $address_id = null)
+	{
 		$query = FALSE;
 
-		if ($address_id !== NULL AND $customer_id !== NULL) {
+		if ($address_id !== null AND $customer_id !== null) {
 			$this->load->model('Customers_model');
-			$query = $this->Customers_model->update($customer_id, array('address_id' => $address_id));
+			$query = $this->Customers_model->findOrNew($customer_id)->update(['address_id' => $address_id]);
 		}
 
 		return $query;
@@ -171,21 +156,29 @@ class Addresses_model extends TI_Model
 	/**
 	 * Create a new or update existing customer address
 	 *
-	 * @param int   $customer_id
-	 * @param int   $address_id
+	 * @param int $customer_id
+	 * @param int $address_id
 	 * @param array $address an array of key/value pairs
 	 *
 	 * @return bool|int The $address_id of the affected row, or FALSE on failure
 	 */
-	public function saveAddress($customer_id = NULL, $address_id = NULL, $address = array()) {
-		if (is_array($address_id)) $address = $address_id;
+	public function saveAddress($customer_id = null, $address_id = null, $address = [])
+	{
+		if (is_array($address_id)) {
+			$address = $address_id;
+			$address_id = isset($address['address_id']) ? $address['address_id'] : null;
+		}
 
 		if (empty($address['address_1'])) return FALSE;
 
-		return $this->skip_validation(TRUE)->save(array_merge($address, array(
+		$addressModel = $this->findOrNew($address_id);
+
+		$saved = $addressModel->fill(array_merge($address, [
 			'customer_id' => $customer_id,
 			'country_id'  => isset($address['country']) ? $address['country'] : $address['country_id'],
-		)), $address_id);
+		]))->save();
+
+		return $saved ? $addressModel->getKey() : $saved;
 	}
 
 	/**
@@ -196,8 +189,12 @@ class Addresses_model extends TI_Model
 	 *
 	 * @return int The number of deleted rows
 	 */
-	public function deleteAddress($customer_id, $address_id) {
-		return $this->delete(array('customer_id' => $customer_id, 'address_id' => $address_id));
+	public function deleteAddress($customer_id, $address_id)
+	{
+		return $this->where([
+			['customer_id', '=', $customer_id],
+			['address_id', '=', $address_id],
+		])->delete();
 	}
 }
 

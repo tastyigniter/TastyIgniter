@@ -4,14 +4,16 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') or exit('No direct script access allowed');
+
+use TastyIgniter\Database\Model;
 
 /**
  * Orders Model Class
@@ -20,103 +22,105 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Orders_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Orders_model extends TI_Model
+class Orders_model extends Model
 {
 	/**
 	 * @var string The database table name
 	 */
-	protected $table_name = 'orders';
+	protected $table = 'orders';
 
 	/**
 	 * @var string The database table primary key
 	 */
-	protected $primary_key = 'order_id';
+	protected $primaryKey = 'order_id';
+
+	protected $guarded = ['*'];
+
+	protected $fillable = ['customer_id', 'first_name', 'last_name', 'email', 'telephone', 'location_id', 'address_id', 'cart',
+		'total_items', 'comment', 'payment', 'order_type', 'date_added', 'date_modified', 'order_time', 'order_date', 'order_total',
+		'status_id', 'ip_address', 'user_agent', 'notify', 'assignee_id', 'invoice_no', 'invoice_prefix', 'invoice_date',
+	];
 
 	/**
 	 * @var array The model table column to convert to dates on insert/update
 	 */
-	protected $timestamps = array('created' => 'date_added', 'updated' => 'date_modified');
+	public $timestamps = TRUE;
 
-	protected $belongs_to = array(
+	const CREATED_AT = 'date_added';
+	const UPDATED_AT = 'date_modified';
+
+	protected $casts = [
+		'cart' => 'array',
+	];
+
+	public $belongsTo = [
 		'locations' => 'Locations_model',
 		'statuses'  => 'Statuses_model',
-	);
+	];
 
-	/**
-	 * Count the number of records
-	 *
-	 * @param array $filter
-	 *
-	 * @return int
-	 */
-	public function getCount($filter = array()) {
-		$this->with('locations', 'statuses');
+	public function scopeJoinTables($query)
+	{
+		$query->join('locations', 'locations.location_id', '=', 'orders.location_id', 'left');
+		$query->join('statuses', 'statuses.status_id', '=', 'orders.status_id', 'left');
 
-		return parent::getCount($filter);
-	}
-
-	/**
-	 * List all orders matching the filter
-	 *
-	 * @param array $filter
-	 *
-	 * @return array
-	 */
-	public function getList($filter = array()) {
-		$this->select('*, orders.status_id, status_name, status_color, orders.date_added, orders.date_modified');
-		$this->with('locations', 'statuses');
-
-		return parent::getList($filter);
+		return $query;
 	}
 
 	/**
 	 * Filter database records
 	 *
+	 * @param $query
 	 * @param array $filter an associative array of field/value pairs
 	 *
 	 * @return $this
 	 */
-	public function filter($filter = array()) {
+	public function scopeFilter($query, $filter = [])
+	{
+		$ordersTable = $this->tablePrefix('orders');
+
+		$query->selectRaw("*, {$ordersTable}.status_id, status_name, status_color, {$ordersTable}.date_added, {$ordersTable}.date_modified");
+		$query->joinTables();
+
 		if (!empty($filter['filter_search'])) {
-			$this->like('order_id', $filter['filter_search']);
-			$this->or_like('location_name', $filter['filter_search']);
-			$this->or_like('first_name', $filter['filter_search']);
-			$this->or_like('last_name', $filter['filter_search']);
+			$query->like('order_id', $filter['filter_search']);
+			$query->orLike('location_name', $filter['filter_search']);
+			$query->orLike('first_name', $filter['filter_search']);
+			$query->orLike('last_name', $filter['filter_search']);
 		}
 
 		if (!empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
-			$this->where('customer_id', $filter['customer_id']);
+			$query->where('customer_id', $filter['customer_id']);
 		}
 
 		if (!empty($filter['filter_location'])) {
-			$this->where('orders.location_id', $filter['filter_location']);
+			$query->where('orders.location_id', $filter['filter_location']);
 		}
 
 		if (isset($filter['filter_type']) AND is_numeric($filter['filter_type'])) {
-			$this->where('order_type', $filter['filter_type']);
+			$query->where('order_type', $filter['filter_type']);
 		}
 
 		if (!empty($filter['filter_payment'])) {
-			$this->where('payment', $filter['filter_payment']);
+			$query->where('payment', $filter['filter_payment']);
 		}
 
 		if (APPDIR === MAINDIR) {
-			$this->where('orders.status_id !=', '0');
+			$query->where('orders.status_id', '!=', '0');
 		} else {
 			if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-				$this->where('orders.status_id', $filter['filter_status']);
+				$query->where('orders.status_id', $filter['filter_status']);
 			} else {
-				$this->where('orders.status_id !=', '0');
+				$query->where('orders.status_id', '!=', '0');
 			}
 		}
 
 		if (!empty($filter['filter_date'])) {
 			$date = explode('-', $filter['filter_date']);
-			$this->where('YEAR(date_added)', $date[0]);
-			$this->where('MONTH(date_added)', $date[1]);
+			$query->whereRaw('YEAR(date_added)', $date[0]);
+			$query->whereRaw('MONTH(date_added)', $date[1]);
 		}
 
-		return $this;
+		return $query;
 	}
 
 	/**
@@ -127,13 +131,14 @@ class Orders_model extends TI_Model
 	 *
 	 * @return bool|object
 	 */
-	public function getOrder($order_id = NULL, $customer_id = NULL) {
+	public function getOrder($order_id = null, $customer_id = null)
+	{
 		if (!empty($order_id)) {
 			if (!empty($customer_id)) {
 				$this->where('customer_id', $customer_id);
 			}
 
-			return $this->with('locations', 'statuses')->find($order_id);
+			return $this->joinTables()->findOrNew($order_id)->toArray();
 		}
 
 		return $order_id;
@@ -146,9 +151,10 @@ class Orders_model extends TI_Model
 	 *
 	 * @return bool|object
 	 */
-	public function getInvoice($order_id = NULL) {
+	public function getInvoice($order_id = null)
+	{
 		if (!empty($order_id) AND is_numeric($order_id)) {
-			return $this->with('locations', 'statuses')->find($order_id);
+			return $this->joinTables()->findOrNew($order_id)->toArray();
 		}
 
 		return FALSE;
@@ -162,12 +168,11 @@ class Orders_model extends TI_Model
 	 *
 	 * @return bool|object
 	 */
-	public function getCheckoutOrder($order_id, $customer_id) {
+	public function getCheckoutOrder($order_id, $customer_id)
+	{
 		if (isset($order_id, $customer_id)) {
-			$this->where('customer_id', $customer_id);
-			$this->where('status_id', NULL);
-
-			return $this->find($order_id);
+			return $this->where('customer_id', $customer_id)
+						->where('status_id', null)->findOrNew($order_id)->toArray();
 		}
 
 		return FALSE;
@@ -180,10 +185,9 @@ class Orders_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getOrderMenus($order_id) {
-		$this->where('order_id', $order_id);
-
-		return $this->from('order_menus')->get_many();
+	public function getOrderMenus($order_id)
+	{
+		return $this->queryBuilder()->table('order_menus')->where('order_id', $order_id)->getAsArray();
 	}
 
 	/**
@@ -193,12 +197,12 @@ class Orders_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getOrderMenuOptions($order_id) {
-		$result = array();
+	public function getOrderMenuOptions($order_id)
+	{
+		$result = [];
 
 		if (!empty($order_id)) {
-			$this->where('order_id', $order_id);
-			$result = $this->from('order_options')->get_many();
+			$result = $this->queryBuilder()->table('order_options')->where('order_id', $order_id)->getAsArray();
 		}
 
 		return $result;
@@ -211,10 +215,9 @@ class Orders_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getOrderTotals($order_id) {
-		$this->where('order_id', $order_id);
-
-		return $this->order_by('priority')->from('order_totals')->get_many();
+	public function getOrderTotals($order_id)
+	{
+		return $this->queryBuilder()->table('order_totals')->where('order_id', $order_id)->orderBy('priority')->getAsArray();
 	}
 
 	/**
@@ -224,11 +227,11 @@ class Orders_model extends TI_Model
 	 *
 	 * @return mixed
 	 */
-	public function getOrderCoupon($order_id) {
+	public function getOrderCoupon($order_id)
+	{
 		$this->load->model('Coupons_history_model');
-		$this->Coupons_history_model->where('order_id', $order_id);
 
-		return $this->Coupons_history_model->find();
+		return $this->Coupons_history_model->where('order_id', $order_id)->firstAsArray();
 	}
 
 	/**
@@ -236,12 +239,9 @@ class Orders_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getOrderDates() {
-		$this->select('date_added, MONTH(date_added) as month, YEAR(date_added) as year');
-		$this->group_by('MONTH(date_added)');
-		$this->group_by('YEAR(date_added)');
-
-		return $this->find_all();
+	public function getOrderDates()
+	{
+		return $this->pluckDates('date_added');
 	}
 
 	/**
@@ -251,44 +251,45 @@ class Orders_model extends TI_Model
 	 *
 	 * @return bool TRUE on success, or FALSE on failure
 	 */
-	public function isOrderPlaced($order_id) {
-		$this->where('status_id >', '0');
-
-		return $this->find($order_id) ? TRUE : FALSE;
+	public function isOrderPlaced($order_id)
+	{
+		return $this->where('status_id', '>', '0')->find($order_id) ? TRUE : FALSE;
 	}
 
 	/**
 	 * Update an existing order by order_id
 	 *
-	 * @param int   $order_id
+	 * @param int $order_id
 	 * @param array $update
 	 *
 	 * @return bool
 	 */
-	public function updateOrder($order_id = NULL, $update = array()) {
+	public function updateOrder($order_id = null, $update = [])
+	{
 		if (!is_numeric($order_id)) return FALSE;
 
 		if (isset($update['order_status']) AND !isset($update['status_id'])) {
 			$update['status_id'] = $update['order_status'];
 		}
 
-		if ($query = $this->update(array('order_id' => $order_id), $update)) {
+		unset($update['old_status_id'], $update['order_status']);
+		if ($query = $this->where('order_id', $order_id)->update($update)) {
 			$this->load->model('Statuses_model');
-			$status = $this->Statuses_model->getStatus($update['order_status']);
+			$status = $this->Statuses_model->getStatus($update['status_id']);
 
 			// Make sure order status has not been previously updated
 			// to one of the processing order status. If so,
 			// skip to avoid updating stock twice.
 			$processing_status_exists = $this->Statuses_model->statusExists('order', $order_id, $this->config->item('processing_order_status'));
 
-			if (!$processing_status_exists AND in_array($update['order_status'], (array)$this->config->item('processing_order_status'))) {
+			if (!$processing_status_exists AND in_array($update['status_id'], (array)$this->config->item('processing_order_status'))) {
 				$this->subtractStock($order_id);
 
 				$this->load->model('Coupons_model');
 				$this->Coupons_model->redeemCoupon($order_id);
 			}
 
-			if (isset($update['status_notify']) AND $update['status_notify'] === '1') {
+			if (isset($update['status_notify']) AND $update['status_notify'] == '1') {
 				$mail_data = $this->getMailData($order_id);
 
 				$mail_data['status_name'] = $status['status_name'];
@@ -301,7 +302,7 @@ class Orders_model extends TI_Model
 
 			$this->addStatusHistory($order_id, $update, $status);
 
-			if ($this->config->item('auto_invoicing') === '1' AND in_array($update['order_status'], (array)$this->config->item('completed_order_status'))) {
+			if ($this->config->item('auto_invoicing') == '1' AND in_array($update['status_id'], (array)$this->config->item('completed_order_status'))) {
 				$this->createInvoiceNo($order_id);
 			}
 		}
@@ -316,7 +317,8 @@ class Orders_model extends TI_Model
 	 *
 	 * @return bool|string invoice number on success, or FALSE on failure
 	 */
-	public function createInvoiceNo($order_id = NULL) {
+	public function createInvoiceNo($order_id = null)
+	{
 
 		$order_status_exists = $this->Statuses_model->statusExists('order', $order_id, $this->config->item('completed_order_status'));
 		if ($order_status_exists !== TRUE) return TRUE;
@@ -326,16 +328,18 @@ class Orders_model extends TI_Model
 		if ($order_info AND empty($order_info['invoice_no'])) {
 			$order_info['invoice_prefix'] = str_replace('{year}', date('Y'), str_replace('{month}', date('m'), str_replace('{day}', date('d'), $this->config->item('invoice_prefix'))));
 
-			$this->select_max('invoice_no');
-			$row = $this->find('invoice_prefix', $order_info['invoice_prefix']);
+			$this;
+			$row = $this->selectRaw('MAX(invoice_no)')->where('invoice_prefix', $order_info['invoice_prefix'])->firstAsArray();
 
-			$invoice_no = $row ? $row['invoice_no'] + 1 : 1;
+			$invoice_no = !empty($row['invoice_no']) ? $row['invoice_no'] + 1 : 1;
 
-			$this->update($order_id, array(
-				'invoice_prefix' => $order_info['invoice_prefix'],
-				'invoice_no'     => $invoice_no,
-				'invoice_date'   => mdate('%Y-%m-%d %H:%i:%s', time()),
-			));
+			if ($orderModel = $this->find($order_id)) {
+				$orderModel->update([
+					'invoice_prefix' => $order_info['invoice_prefix'],
+					'invoice_no'     => $invoice_no,
+					'invoice_date'   => mdate('%Y-%m-%d %H:%i:%s', time()),
+				]);
+			}
 
 			return $order_info['invoice_prefix'] . $invoice_no;
 		}
@@ -351,7 +355,8 @@ class Orders_model extends TI_Model
 	 *
 	 * @return bool|int order_id on success, FALSE on failure
 	 */
-	public function addOrder($order_info = array(), $cart_contents = array()) {
+	public function addOrder($order_info = [], $cart_contents = [])
+	{
 		if (empty($order_info) OR empty($cart_contents)) return FALSE;
 
 		if (isset($order_info['order_time'])) {
@@ -363,6 +368,9 @@ class Orders_model extends TI_Model
 			$order_info['user_agent'] = $this->input->user_agent();
 		}
 
+		$order_info['status_id'] = $order_info['notify'] = $order_info['assignee_id'] = $order_info['invoice_no'] = $order_info['invoice_prefix'] = $order_info['invoice_date'] = '';
+
+		$order_info['cart'] = $cart_contents;
 		if (isset($cart_contents['order_total'])) {
 			$order_info['order_total'] = $cart_contents['order_total'];
 		}
@@ -371,8 +379,13 @@ class Orders_model extends TI_Model
 			$order_info['total_items'] = $cart_contents['total_items'];
 		}
 
-		$order_id = (isset($order_info['order_id']) AND is_numeric($order_info['order_id'])) ? $order_info['order_id'] : NULL;
-		if ($order_id = $this->skip_validation(TRUE)->save($order_info, $order_id)) {
+		$order_id = (isset($order_info['order_id']) AND is_numeric($order_info['order_id'])) ? $order_info['order_id'] : null;
+
+		$orderModel = $this->findOrNew($order_id);
+
+		if ($saved = $orderModel->fill($order_info)->save()) {
+			$order_id = $orderModel->getKey();
+
 			if (isset($order_info['address_id'])) {
 				$this->load->model('Addresses_model');
 				$this->Addresses_model->updateDefault($order_info['customer_id'], $order_info['address_id']);
@@ -394,33 +407,34 @@ class Orders_model extends TI_Model
 	 * Complete order by sending email confirmation and,
 	 * updating order status
 	 *
-	 * @param int   $order_id
+	 * @param int $order_id
 	 * @param array $order_info
 	 * @param array $cart_contents
 	 *
 	 * @return bool
 	 */
-	public function completeOrder($order_id, $order_info, $cart_contents = array()) {
+	public function completeOrder($order_id, $order_info, $cart_contents = [])
+	{
 
 		if ($order_id AND !empty($order_info)) {
 
 			$notify = $this->sendConfirmationMail($order_id);
 
-			$update = array(
+			$update = [
 				'old_status_id' => '',
 				'order_status'  => !empty($order_info['status_id']) ? (int)$order_info['status_id'] : (int)$this->config->item('default_order_status'),
 				'notify'        => $notify,
-			);
+			];
 
 			if ($this->updateOrder($order_id, $update)) {
 				if (APPDIR === MAINDIR) {
 					log_activity($order_info['customer_id'], 'created', 'orders', get_activity_message('activity_created_order',
-						array('{customer}', '{link}', '{order_id}'),
-						array($order_info['first_name'] . ' ' . $order_info['last_name'], admin_url('orders/edit?id=' . $order_id), $order_id)
+						['{customer}', '{link}', '{order_id}'],
+						[$order_info['first_name'] . ' ' . $order_info['last_name'], admin_url('orders/edit?id=' . $order_id), $order_id]
 					));
 				}
 
-				Events::trigger('after_create_order', array('order_id' => $order_id));
+				Events::trigger('after_create_order', ['order_id' => $order_id]);
 
 				return TRUE;
 			}
@@ -430,18 +444,19 @@ class Orders_model extends TI_Model
 	/**
 	 * Add cart menu items to order by order_id
 	 *
-	 * @param int   $order_id
+	 * @param int $order_id
 	 * @param array $cart_contents
 	 *
 	 * @return bool
 	 */
-	public function addOrderMenus($order_id, $cart_contents = array()) {
+	public function addOrderMenus($order_id, $cart_contents = [])
+	{
 		if (is_array($cart_contents) AND !empty($cart_contents) AND $order_id) {
-			$this->where('order_id', $order_id);
-			$this->delete_from('order_menus');
+			$orderMenusTable = $this->queryBuilder()->table('order_menus');
 
+			$orderMenusTable->where('order_id', $order_id)->delete();
 			foreach ($cart_contents as $key => $item) {
-				if (is_array($item) AND isset($item['rowid']) AND $key === $item['rowid']) {
+				if (is_array($item) AND isset($item['rowid']) AND $key == $item['rowid']) {
 					$insert['order_id'] = $order_id;
 
 					if (isset($item['id'])) {
@@ -468,7 +483,7 @@ class Orders_model extends TI_Model
 						$insert['option_values'] = serialize($item['options']);
 					}
 
-					if ($order_menu_id = $this->insert_into('order_menus', $insert)) {
+					if ($order_menu_id = $orderMenusTable->insertGetId($insert)) {
 						if (!empty($item['options'])) {
 							$this->addOrderMenuOptions($order_menu_id, $order_id, $item['id'], $item['options']);
 						}
@@ -484,19 +499,21 @@ class Orders_model extends TI_Model
 	 * Add cart menu item options to menu and order by,
 	 * order_id and menu_id
 	 *
-	 * @param int   $order_menu_id
-	 * @param int   $order_id
-	 * @param int   $menu_id
+	 * @param int $order_menu_id
+	 * @param int $order_id
+	 * @param int $menu_id
 	 * @param array $menu_options
 	 */
-	public function addOrderMenuOptions($order_menu_id, $order_id, $menu_id, $menu_options) {
+	public function addOrderMenuOptions($order_menu_id, $order_id, $menu_id, $menu_options)
+	{
+		$orderOptionsTable = $this->queryBuilder()->table('order_options');
+
 		if (!empty($order_id) AND !empty($menu_id) AND !empty($menu_options)) {
-			$this->where(array(
-				'order_id', $order_id,
-				'order_menu_id' => $order_menu_id,
-				'menu_id'       => $menu_id,
-			));
-			$this->delete_from('order_options');
+			$orderOptionsTable->where([
+				['order_id', '=', $order_id],
+				['order_menu_id', '=', $order_menu_id],
+				['menu_id', '=', $menu_id],
+			])->delete();
 
 			foreach ($menu_options as $menu_option_id => $options) {
 				foreach ($options as $option) {
@@ -508,7 +525,7 @@ class Orders_model extends TI_Model
 					$insert['order_option_name'] = $option['value_name'];
 					$insert['order_option_price'] = $option['value_price'];
 
-					$this->insert_into('order_options', $insert);
+					$orderOptionsTable->insertGetId($insert);
 				}
 			}
 		}
@@ -517,15 +534,17 @@ class Orders_model extends TI_Model
 	/**
 	 * Add cart totals to order by order_id
 	 *
-	 * @param int   $order_id
+	 * @param int $order_id
 	 * @param array $cart_contents
 	 *
 	 * @return bool
 	 */
-	public function addOrderTotals($order_id, $cart_contents = array()) {
+	public function addOrderTotals($order_id, $cart_contents = [])
+	{
+		$orderTotalsTable = $this->queryBuilder()->table('order_totals');
 		if (is_numeric($order_id) AND !empty($cart_contents['totals'])) {
-			$this->where('order_id', $order_id);
-			$this->delete_from('order_totals');
+
+			$orderTotalsTable->where('order_id', $order_id)->delete();
 
 			$this->load->model('cart_module/Cart_model');
 			$order_totals = $this->Cart_model->getTotals();
@@ -535,7 +554,7 @@ class Orders_model extends TI_Model
 
 			foreach ($cart_contents['totals'] as $name => $total) {
 				foreach ($order_totals as $total_name => $order_total) {
-					if ($name === $total_name AND is_numeric($total['amount'])) {
+					if ($name == $total_name AND is_numeric($total['amount'])) {
 						$total['title'] = empty($total['title']) ? $order_total['title'] : $total['title'];
 						if (isset($total['code'])) {
 							$total['title'] = str_replace('{coupon}', $total['code'], $total['title']);
@@ -543,13 +562,13 @@ class Orders_model extends TI_Model
 							$total['title'] = str_replace('{tax}', $total['tax'], $total['title']);
 						}
 
-						$this->insert_into('order_totals', array(
+						$orderTotalsTable->insertGetId([
 							'order_id' => $order_id,
 							'code'     => $name,
 							'title'    => htmlspecialchars($total['title']),
 							'priority' => $order_total['priority'],
 							'value'    => ($name === 'coupon') ? 0 - $total['amount'] : $total['amount'],
-						));
+						]);
 					}
 				}
 			}
@@ -561,22 +580,23 @@ class Orders_model extends TI_Model
 	/**
 	 * Add cart coupon to order by order_id
 	 *
-	 * @param int   $order_id
-	 * @param int   $customer_id
+	 * @param int $order_id
+	 * @param int $customer_id
 	 * @param array $coupon
 	 *
 	 * @return int|bool
 	 */
-	public function addOrderCoupon($order_id, $customer_id, $coupon) {
+	public function addOrderCoupon($order_id, $customer_id, $coupon)
+	{
 		if (is_array($coupon) AND is_numeric($coupon['amount'])) {
 			$this->load->model('Coupons_model');
 			$this->load->model('Coupons_history_model');
 
-			$this->Coupons_history_model->delete('order_id', $order_id);
+			$this->Coupons_history_model->where('order_id', $order_id)->delete();
 
 			$temp_coupon = $this->Coupons_model->getCouponByCode($coupon['code']);
 
-			$insert = array(
+			$insert = [
 				'order_id'    => $order_id,
 				'customer_id' => empty($customer_id) ? '0' : $customer_id,
 				'coupon_id'   => $temp_coupon['coupon_id'],
@@ -584,29 +604,30 @@ class Orders_model extends TI_Model
 				'amount'      => '-' . $coupon['amount'],
 				'min_total'   => $temp_coupon['min_total'],
 				'date_used'   => mdate('%Y-%m-%d %H:%i:%s', time()),
-			);
+			];
 
-			return $this->Coupons_history_model->insert($insert);
+			return $this->Coupons_history_model->insertGetId($insert);
 		}
 	}
 
 	/**
 	 * Add order status to status history
 	 *
-	 * @param int   $order_id
+	 * @param int $order_id
 	 * @param array $update
 	 * @param array $status
 	 *
 	 * @return mixed
 	 */
-	protected function addStatusHistory($order_id, $update, $status) {
-		$status_update = array();
+	protected function addStatusHistory($order_id, $update, $status)
+	{
+		$status_update = [];
 		if (APPDIR === ADMINDIR) {
 			$status_update['staff_id'] = $this->user->getStaffId();
 		}
 
 		$status_update['object_id'] = (int)$order_id;
-		$status_update['status_id'] = (int)$update['order_status'];
+		$status_update['status_id'] = (int)$update['status_id'];
 		$status_update['comment'] = isset($update['status_comment']) ? $update['status_comment'] : $status['status_comment'];
 		$status_update['notify'] = isset($update['status_notify']) ? $update['status_notify'] : $status['notify_customer'];
 		$status_update['date_added'] = mdate('%Y-%m-%d %H:%i:%s', time());
@@ -621,7 +642,8 @@ class Orders_model extends TI_Model
 	 *
 	 * @return bool
 	 */
-	public function subtractStock($order_id) {
+	public function subtractStock($order_id)
+	{
 		$this->load->model('Menus_model');
 
 		$order_menus = $this->getOrderMenus($order_id);
@@ -638,19 +660,20 @@ class Orders_model extends TI_Model
 	 *
 	 * @return string 0 on failure, or 1 on success
 	 */
-	public function sendConfirmationMail($order_id) {
+	public function sendConfirmationMail($order_id)
+	{
 		$this->load->model('Mail_templates_model');
 
 		$mail_data = $this->getMailData($order_id);
-		$config_order_email = is_array($this->config->item('order_email')) ? $this->config->item('order_email') : array();
+		$config_order_email = is_array($this->config->item('order_email')) ? $this->config->item('order_email') : [];
 
 		$notify = '0';
-		if ($this->config->item('customer_order_email') === '1' OR in_array('customer', $config_order_email)) {
+		if ($this->config->item('customer_order_email') == '1' OR in_array('customer', $config_order_email)) {
 			$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'order');
 			$notify = $this->sendMail($mail_data['email'], $mail_template, $mail_data);
 		}
 
-		if (!empty($mail_data['location_email']) AND ($this->config->item('location_order_email') === '1' OR in_array('location', $config_order_email))) {
+		if (!empty($mail_data['location_email']) AND ($this->config->item('location_order_email') == '1' OR in_array('location', $config_order_email))) {
 			$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'order_alert');
 			$this->sendMail($mail_data['location_email'], $mail_template, $mail_data);
 		}
@@ -670,8 +693,9 @@ class Orders_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getMailData($order_id) {
-		$data = array();
+	public function getMailData($order_id)
+	{
+		$data = [];
 
 		if ($result = $this->getOrder($order_id)) {
 			$this->load->library('country');
@@ -679,7 +703,7 @@ class Orders_model extends TI_Model
 
 			$data['order_number'] = $result['order_id'];
 			$data['order_view_url'] = root_url('account/orders/view/' . $result['order_id']);
-			$data['order_type'] = ($result['order_type'] === '1') ? 'delivery' : 'collection';
+			$data['order_type'] = ($result['order_type'] == '1') ? 'delivery' : 'collection';
 			$data['order_time'] = mdate('%H:%i', strtotime($result['order_time'])) . ' ' . mdate('%d %M', strtotime($result['order_date']));
 			$data['order_date'] = mdate('%d %M %y', strtotime($result['date_added']));
 			$data['first_name'] = $result['first_name'];
@@ -695,41 +719,41 @@ class Orders_model extends TI_Model
 				$data['order_payment'] = $this->lang->line('text_no_payment');
 			}
 
-			$data['order_menus'] = array();
+			$data['order_menus'] = [];
 			$menus = $this->getOrderMenus($result['order_id']);
 			$options = $this->getOrderMenuOptions($result['order_id']);
 			if ($menus) {
 				foreach ($menus as $menu) {
-					$option_data = array();
+					$option_data = [];
 
 					if (!empty($options)) {
 						foreach ($options as $key => $option) {
-							if ($menu['order_menu_id'] === $option['order_menu_id']) {
+							if ($menu['order_menu_id'] == $option['order_menu_id']) {
 								$option_data[] = $option['order_option_name'] . $this->lang->line('text_equals') . $this->currency->format($option['order_option_price']);
 							}
 						}
 					}
 
-					$data['order_menus'][] = array(
+					$data['order_menus'][] = [
 						'menu_name'     => $menu['name'],
 						'menu_quantity' => $menu['quantity'],
 						'menu_price'    => $this->currency->format($menu['price']),
 						'menu_subtotal' => $this->currency->format($menu['subtotal']),
 						'menu_options'  => implode('<br /> ', $option_data),
 						'menu_comment'  => $menu['comment'],
-					);
+					];
 				}
 			}
 
-			$data['order_totals'] = array();
+			$data['order_totals'] = [];
 			$order_totals = $this->getOrderTotals($result['order_id']);
 			if ($order_totals) {
 				foreach ($order_totals as $total) {
-					$data['order_totals'][] = array(
+					$data['order_totals'][] = [
 						'order_total_title' => htmlspecialchars_decode($total['title']),
 						'order_total_value' => $this->currency->format($total['value']),
 						'priority'          => $total['priority'],
-					);
+					];
 				}
 			}
 
@@ -754,13 +778,14 @@ class Orders_model extends TI_Model
 	/**
 	 * Send an email
 	 *
-	 * @param int   $email
+	 * @param int $email
 	 * @param array $mail_template
 	 * @param array $mail_data
 	 *
 	 * @return bool|string
 	 */
-	public function sendMail($email, $mail_template = array(), $mail_data = array()) {
+	public function sendMail($email, $mail_template = [], $mail_data = [])
+	{
 		if (empty($mail_template) OR !isset($mail_template['subject'], $mail_template['body']) OR empty($mail_data)) {
 			return FALSE;
 		}
@@ -779,7 +804,7 @@ class Orders_model extends TI_Model
 		$this->email->message($mail_template['body'], $mail_data);
 
 		if (!$this->email->send()) {
-			log_message('error', $this->email->print_debugger(array('headers')));
+			log_message('error', $this->email->print_debugger(['headers']));
 			$notify = '0';
 		} else {
 			$notify = '1';
@@ -795,7 +820,8 @@ class Orders_model extends TI_Model
 	 *
 	 * @return bool
 	 */
-	public function validateOrder($order_id) {
+	public function validateOrder($order_id)
+	{
 		return (is_numeric($order_id) AND $this->find($order_id)) ? TRUE : FALSE;
 	}
 
@@ -806,24 +832,24 @@ class Orders_model extends TI_Model
 	 *
 	 * @return int  The number of deleted rows
 	 */
-	public function deleteOrder($order_id) {
-		if (is_numeric($order_id)) $order_id = array($order_id);
+	public function deleteOrder($order_id)
+	{
+		if (is_numeric($order_id)) $order_id = [$order_id];
 
 		if (!empty($order_id) AND ctype_digit(implode('', $order_id))) {
-			$affected_rows = $this->delete('order_id', $order_id);
+			$affected_rows = $this->whereIn('order_id', $order_id)->delete();
 
 			if ($affected_rows > 0) {
-				$this->where('order_id', $order_id);
-				$this->delete_from('order_menus');
+				$queryBuilder = $this->queryBuilder();
 
-				$this->where('order_id', $order_id);
-				$this->delete_from('order_options');
+				$queryBuilder->table('order_menus')->whereIn('order_id', $order_id)->delete();
 
-				$this->where('order_id', $order_id);
-				$this->delete_from('order_totals');
+				$queryBuilder->table('order_options')->whereIn('order_id', $order_id)->delete();
+
+				$queryBuilder->table('order_totals')->whereIn('order_id', $order_id)->delete();
 
 				$this->load->model('Coupons_history_model');
-				$this->Coupons_history_model->delete('order_id', $order_id);
+				$this->Coupons_history_model->whereIn('order_id', $order_id)->delete();
 
 				return $affected_rows;
 			}

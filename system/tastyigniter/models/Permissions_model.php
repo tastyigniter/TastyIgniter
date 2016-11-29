@@ -4,14 +4,16 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') or exit('No direct script access allowed');
+
+use TastyIgniter\Database\Model;
 
 /**
  * Permissions Model Class
@@ -20,35 +22,52 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Permissions_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Permissions_model extends TI_Model
+class Permissions_model extends Model
 {
 	/**
 	 * @var string The database table name
 	 */
-	protected $table_name = 'permissions';
+	protected $table = 'permissions';
 
 	/**
 	 * @var string The database table primary key
 	 */
-	protected $primary_key = 'permission_id';
+	protected $primaryKey = 'permission_id';
+
+	public function getActionAttribute($value)
+	{
+		return $value ? unserialize($value) : [];
+	}
+
+	public function setActionAttribute($value)
+	{
+		$this->attributes['action'] = serialize($value ? $value : []);
+	}
+
+	public function scopeIsEnabled($query)
+	{
+		return $query->where('status', '1');
+	}
 
 	/**
 	 * Filter database records
 	 *
+	 * @param $query
 	 * @param array $filter an associative array of field/value pairs
 	 *
 	 * @return $this
 	 */
-	public function filter($filter = array()) {
+	public function scopeFilter($query, $filter = [])
+	{
 		if (!empty($filter['filter_search'])) {
-			$this->like('name', $filter['filter_search']);
+			$query->like('name', $filter['filter_search']);
 		}
 
 		if (is_numeric($filter['filter_status'])) {
-			$this->where('status', $filter['filter_status']);
+			$query->where('status', $filter['filter_status']);
 		}
 
-		return $this;
+		return $query;
 	}
 
 	/**
@@ -56,20 +75,20 @@ class Permissions_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getPermissions() {
+	public function getPermissions()
+	{
 		$this->load->helper('string');
 
-		$result = array();
-		$rows = $this->find_all('status', '1');
+		$result = [];
+		$rows = $this->isEnabled()->getAsArray();
 		foreach ($rows as $row) {
 			$permission = explode('.', $row['name']);
 			$domain = isset($permission[0]) ? $permission[0] : 'Admin';
 			$controller = isset($permission[1]) ? $permission[1] : '';
-			$result[$domain][] = array_merge($row, array(
+			$result[$domain][] = array_merge($row, [
 				'domain'     => $domain,
 				'controller' => convert_camelcase_to_underscore($controller, TRUE),
-				'action'     => unserialize($row['action']),
-			));
+			]);
 		}
 
 		return $result;
@@ -82,8 +101,9 @@ class Permissions_model extends TI_Model
 	 *
 	 * @return mixed
 	 */
-	public function getPermission($permission_id) {
-		return $this->find($permission_id);
+	public function getPermission($permission_id)
+	{
+		return $this->findOrNew($permission_id)->toArray();
 	}
 
 	/**
@@ -93,8 +113,9 @@ class Permissions_model extends TI_Model
 	 *
 	 * @return mixed
 	 */
-	public function getPermissionByName($permission_name = NULL) {
-		return $this->find('name', $permission_name);
+	public function getPermissionByName($permission_name = null)
+	{
+		return $this->where('name', $permission_name)->firstAsArray();
 	}
 
 	/**
@@ -104,10 +125,11 @@ class Permissions_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getPermissionsByIds($permission_id = NULL) {
+	public function getPermissionsByIds($permission_id = null)
+	{
 		$permissions_list = $this->getPermissions();
 
-		$results = array();
+		$results = [];
 		foreach ($permissions_list as $domain => $permissions) {
 			foreach ($permissions as $permission) {
 				$results[$permission['permission_id']] = $permission;
@@ -120,31 +142,28 @@ class Permissions_model extends TI_Model
 	/**
 	 * Create a new or update existing permission
 	 *
-	 * @param int   $permission_id
+	 * @param int $permission_id
 	 * @param array $save
 	 *
 	 * @return bool|int The $menu_id of the affected row, or FALSE on failure
 	 */
-	public function savePermission($permission_id, $save = array()) {
+	public function savePermission($permission_id, $save = [])
+	{
 		if (empty($save) OR empty($save['name'])) return FALSE;
 
 		if (isset($save['name'])) {
 			if ($permission = $this->getPermissionByName($save['name'])) {
 				$permission_id = $permission['permission_id'];
 			}
-
-			$name = explode('.', $save['name']);
-			if (!isset($name[0]) OR !in_array(strtolower($name[0]), array('admin', 'site', 'module', 'payment'))) {
-				return FALSE;
-			}
 		}
 
-		if (isset($save['action'])) {
-			if (!is_array($save['action'])) $save['action'] = array($save['action']);
-			$save['action'] = serialize($save['action']);
-		}
+		$save['action'] = empty($save['action']) ? [] : $save['action'];
 
-		return $this->skip_validation(TRUE)->save($save, $permission_id);
+		$permissionModel = $this->findOrNew($permission_id);
+
+		$saved = $permissionModel->fill($save)->save();
+
+		return $saved ? $permissionModel->getKey() : $saved;
 	}
 
 	/**
@@ -154,9 +173,10 @@ class Permissions_model extends TI_Model
 	 *
 	 * @return int The number of deleted row
 	 */
-	public function deletePermissionByName($permission_name) {
+	public function deletePermissionByName($permission_name)
+	{
 		if (is_string($permission_name) AND !ctype_space($permission_name)) {
-			return $this->delete('name', $permission_name);
+			return $this->where('name', $permission_name)->delete();
 		}
 	}
 
@@ -167,11 +187,12 @@ class Permissions_model extends TI_Model
 	 *
 	 * @return int The number of deleted rows
 	 */
-	public function deletePermission($permission_id) {
-		if (is_numeric($permission_id)) $permission_id = array($permission_id);
+	public function deletePermission($permission_id)
+	{
+		if (is_numeric($permission_id)) $permission_id = [$permission_id];
 
 		if (!empty($permission_id) AND ctype_digit(implode('', $permission_id))) {
-			return $this->delete('permission_id', $permission_id);
+			return $this->whereIn('permission_id', $permission_id)->delete();
 		}
 	}
 }

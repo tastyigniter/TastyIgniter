@@ -4,14 +4,16 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') or exit('No direct script access allowed');
+
+use TastyIgniter\Database\Model;
 
 /**
  * Reservations Model Class
@@ -20,111 +22,108 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Reservations_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Reservations_model extends TI_Model
+class Reservations_model extends Model
 {
 	/**
 	 * @var string The database table name
 	 */
-	protected $table_name = 'reservations';
+	protected $table = 'reservations';
 
 	/**
 	 * @var string The database table primary key
 	 */
-	protected $primary_key = 'reservation_id';
+	protected $primaryKey = 'reservation_id';
 
 	/**
 	 * @var array The model table column to convert to dates on insert/update
 	 */
-	protected $timestamps = array('created' => 'date_added', 'updated' => 'date_modified');
+	public $timestamps = TRUE;
 
-	protected $belongs_to = array(
-		'tables' => 'Tables_model',
+	const CREATED_AT = 'date_added';
+	const UPDATED_AT = 'date_modified';
+
+	public $belongsTo = [
+		'tables'    => 'Tables_model',
 		'locations' => 'Locations_model',
-		'statuses' => array('Statuses_model', 'status'),
-		'staffs' => array('Staffs_model', 'assignee_id'),
-	);
+		'statuses'  => ['Statuses_model', 'status'],
+		'staffs'    => ['Staffs_model', 'assignee_id'],
+	];
 
-	/**
-	 * Count the number of records
-	 *
-	 * @param array $filter
-	 *
-	 * @return int
-	 */
-	public function getCount($filter = array()) {
-		$with = array('tables', 'locations', 'statuses');
+	public function scopeSelectQuery($query)
+	{
 		if (APPDIR === ADMINDIR) {
-			$with[] = 'staffs';
+			$query->select('*, reservations.date_added, reservations.date_modified, reservations.status, tables.table_id, staffs.staff_id, locations.location_id');
+		} else {
+			$query->select('reservation_id, table_name, reservations.location_id, location_name, location_address_1, location_address_2, location_city, location_postcode, location_country_id, table_name, min_capacity, max_capacity, guest_num, occasion_id, customer_id, first_name, last_name, telephone, email, reserve_time, reserve_date, status_name, reservations.date_added, reservations.date_modified, reservations.status, comment, notify, ip_address, user_agent');
 		}
-		$this->with($with);
 
-		return parent::getCount($filter);
+		return $query;
 	}
 
-	/**
-	 * List all reservations matching the filter
-	 *
-	 * @param array $filter
-	 *
-	 * @return int
-	 */
-	public function getList($filter = array()) {
-		$with = array('tables', 'locations', 'statuses');
-		if (APPDIR === ADMINDIR) {
-			$with[] = 'staffs';
-		}
-		$this->with($with);
+	public function scopeJoinSelectTables($query)
+	{
+		$query->join('tables', 'tables.table_id', '=', 'reservations.table_id', 'left');
+		$query->join('locations', 'locations.location_id', '=', 'reservations.location_id', 'left');
+		$query->join('statuses', 'statuses.status_id', '=', 'reservations.status', 'left');
 
-		return parent::getList($filter);
+		if (APPDIR === ADMINDIR) {
+			$query->join('staffs', 'staffs.staff_id', '=', 'reservations.assignee_id', 'left');
+		}
+
+		return $query;
 	}
 
 	/**
 	 * Filter database records
 	 *
+	 * @param $query
 	 * @param array $filter an associative array of field/value pairs
 	 *
 	 * @return $this
 	 */
-	public function filter($filter = array()) {
+	public function scopeFilter($query, $filter = [])
+	{
+		$query->joinSelectTables();
+
 		if (APPDIR === ADMINDIR) {
 			if (!empty($filter['filter_search'])) {
-				$this->like('reservation_id', $filter['filter_search']);
-				$this->or_like('LCASE(location_name)', strtolower($filter['filter_search']));
-				$this->or_like('LCASE(first_name)', strtolower($filter['filter_search']));
-				$this->or_like('LCASE(last_name)', strtolower($filter['filter_search']));
-				$this->or_like('LCASE(table_name)', strtolower($filter['filter_search']));
-				$this->or_like('LCASE(staff_name)', strtolower($filter['filter_search']));
+				$query->like('reservation_id', $filter['filter_search']);
+				$query->orLike('location_name', strtolower($filter['filter_search']));
+				$query->orLike('first_name', strtolower($filter['filter_search']));
+				$query->orLike('last_name', strtolower($filter['filter_search']));
+				$query->orLike('table_name', strtolower($filter['filter_search']));
+				$query->orLike('staff_name', strtolower($filter['filter_search']));
 			}
 
 			if (!empty($filter['filter_status'])) {
-				$this->where('reservations.status', $filter['filter_status']);
+				$query->where('reservations.status', $filter['filter_status']);
 			}
 
 			if (!empty($filter['filter_location'])) {
-				$this->where('reservations.location_id', $filter['filter_location']);
+				$query->where('reservations.location_id', $filter['filter_location']);
 			}
 
 			if (!empty($filter['filter_date'])) {
 				$date = explode('-', $filter['filter_date']);
-				$this->where('YEAR(reserve_date)', $date[0]);
-				$this->where('MONTH(reserve_date)', $date[1]);
+				$query->whereRaw('YEAR(reserve_date)', $date[0]);
+				$query->whereRaw('MONTH(reserve_date)', $date[1]);
 
 				if (isset($date[2])) {
-					$this->where('DAY(reserve_date)', (int)$date[2]);
+					$query->where('DAY(reserve_date)', (int)$date[2]);
 				}
 			} else if (!empty($filter['filter_year']) AND !empty($filter['filter_month']) AND !empty($filter['filter_day'])) {
-				$this->where('YEAR(reserve_date)', $filter['filter_year']);
-				$this->where('MONTH(reserve_date)', $filter['filter_month']);
-				$this->where('DAY(reserve_date)', $filter['filter_day']);
+				$query->whereRaw('YEAR(reserve_date)', $filter['filter_year']);
+				$query->whereRaw('MONTH(reserve_date)', $filter['filter_month']);
+				$query->whereRaw('DAY(reserve_date)', $filter['filter_day']);
 			} else if (!empty($filter['filter_year']) AND !empty($filter['filter_month'])) {
-				$this->where('YEAR(reserve_date)', $filter['filter_year']);
-				$this->where('MONTH(reserve_date)', $filter['filter_month']);
+				$query->whereRaw('YEAR(reserve_date)', $filter['filter_year']);
+				$query->whereRaw('MONTH(reserve_date)', $filter['filter_month']);
 			}
 		} else if (!empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
-			$this->where('customer_id', $filter['customer_id']);
+			$query->where('customer_id', $filter['customer_id']);
 		}
 
-		return $this;
+		return $query;
 	}
 
 	/**
@@ -132,8 +131,9 @@ class Reservations_model extends TI_Model
 	 *
 	 * @return array|bool
 	 */
-	public function getReservations() {
-		return $this->order_by('reservation_id')->with('tables', 'statuses', 'locations', 'countries')->find_all();
+	public function getReservations()
+	{
+		return $this->orderBy('reservation_id')->joinSelectTables()->getAsArray();
 	}
 
 	/**
@@ -144,21 +144,16 @@ class Reservations_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getReservation($reservation_id = NULL, $customer_id = NULL) {
+	public function getReservation($reservation_id = null, $customer_id = null)
+	{
 		if ($reservation_id !== FALSE) {
-			$with = array('tables', 'statuses', 'locations', 'countries');
-			if (APPDIR === ADMINDIR) {
-				$with[] = 'staffs';
-				$this->select('*, reservations.date_added, reservations.date_modified, reservations.status, tables.table_id, staffs.staff_id, locations.location_id');
-			} else {
-				$this->select('reservation_id, table_name, reservations.location_id, location_name, location_address_1, location_address_2, location_city, location_postcode, location_country_id, table_name, min_capacity, max_capacity, guest_num, occasion_id, customer_id, first_name, last_name, telephone, email, reserve_time, reserve_date, status_name, reservations.date_added, reservations.date_modified, reservations.status, comment, notify, ip_address, user_agent');
-			}
+			$query = $this->selectQuery()->joinSelectTables();
 
 			if (APPDIR === MAINDIR AND $customer_id !== FALSE) {
-				$this->where('customer_id', $customer_id);
+				$query->where('customer_id', $customer_id);
 			}
 
-			return $this->with($with)->find($reservation_id);
+			return $query->firstOrNew($reservation_id)->toArray();
 		}
 	}
 
@@ -167,12 +162,9 @@ class Reservations_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getReservationDates() {
-		$this->select('reserve_date, MONTH(reserve_date) as month, YEAR(reserve_date) as year');
-		$this->group_by('MONTH(reserve_date)');
-		$this->group_by('YEAR(reserve_date)');
-
-		return $this->find_all();
+	public function getReservationDates()
+	{
+		return $this->pluckDates('reserve_date');
 	}
 
 	/**
@@ -182,17 +174,23 @@ class Reservations_model extends TI_Model
 	 *
 	 * @return int
 	 */
-	public function getTotalCapacityByLocation($location_id = NULL) {
+	public function getTotalCapacityByLocation($location_id = null)
+	{
 		$result = 0;
 
+		$tablesTable = $this->tablePrefix('tables');
+
 		$this->load->model('Location_tables_model');
-		$this->Location_tables_model->select_sum('tables.max_capacity', 'total_seats');
+		$query = $this->Location_tables_model->selectRaw("SUM({$tablesTable}.max_capacity) as total_seats");
 
 		if (!empty($location_id)) {
-			$this->Location_tables_model->where('location_id', $location_id);
+			$query->where('location_id', $location_id);
 		}
 
-		if ($row = $this->Location_tables_model->with('tables')->find()) {
+		$query->join('tables', 'tables.table_id', '=', 'location_tables.table_id', 'left');
+
+		$row = $query->firstAsArray();
+		if (!empty($row['total_seats'])) {
 			$result = $row['total_seats'];
 		}
 
@@ -202,29 +200,30 @@ class Reservations_model extends TI_Model
 	/**
 	 * Return total reserved guest by location_id
 	 *
-	 * @param int    $location_id
+	 * @param int $location_id
 	 * @param string|array $dates
 	 *
 	 * @return int
 	 */
-	public function getTotalGuestsByLocation($location_id = NULL, $dates = NULL) {
-		$result = array();
+	public function getTotalGuestsByLocation($location_id = null, $dates = null)
+	{
+		$result = [];
 
-		$this->select('reserve_date')->select_sum('reservations.guest_num', 'total_guest');
-		//$this->where('status', (int)$this->config->item('default_reservation_status'));
+		$queryBuilder = $this->selectRaw("reserve_date, SUM(reservations.guest_num) as total_guest, DAY(reserve_date) as reserve_day");
+		//$queryBuilder->where('status', (int)$queryBuilder->config->item('default_reservation_status'));
 
 		if (!empty($location_id)) {
-			$this->where('location_id', $location_id);
+			$queryBuilder->where('location_id', $location_id);
 		}
 
 		if (!empty($dates)) {
-			$dates = !is_array($dates) ? array($dates) : $dates;
-			$this->where_in('DATE(reserve_date)', $dates);
+			$dates = !is_array($dates) ? [$dates] : $dates;
+			$queryBuilder->whereInRaw('DATE(reserve_date)', $dates);
 		}
 
-		$this->group_by('DAY(reserve_date)');
+		$queryBuilder->groupBy('reserve_day');
 
-		if ($rows = $this->find_all()) {
+		if ($rows = $queryBuilder->getAsArray()) {
 			foreach ($rows as $row) {
 				$result[$row['reserve_date']] = $row['total_guest'];
 			}
@@ -242,22 +241,25 @@ class Reservations_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getLocationTablesByMinCapacity($location_id, $guest_num) {
-		$tables = array();
+	public function getLocationTablesByMinCapacity($location_id, $guest_num)
+	{
+		$tables = [];
 
 		if (isset($location_id, $guest_num)) {
 			$this->load->model('Location_tables_model');
 
-			$this->Location_tables_model->where('location_id', $location_id);
-			$this->Location_tables_model->where('table_status', '1');
-			$this->Location_tables_model->group_start();
-			$this->Location_tables_model->where('min_capacity <=', $guest_num);
-			$this->Location_tables_model->where('max_capacity >=', $guest_num);
-			$this->Location_tables_model->group_end();
+			$query = $this->Location_tables_model->where('location_id', $location_id)->where('table_status', '1');
 
-			$this->Location_tables_model->order_by('min_capacity');
+			$query->where(function ($query) {
+				$query->where('min_capacity', '<=', $guest_num);
+				$query->where('max_capacity', '>=', $guest_num);
+			});
 
-			if ($rows = $this->Location_tables_model->with('tables')->find_all()) {
+			$query->orderBy('min_capacity');
+
+			$query->join('tables', 'tables.table_id', '=', 'reservations.table_id', 'left');
+
+			if ($rows = $query->getAsArray()) {
 				foreach ($rows as $row) {
 					$tables[$row['table_id']] = $row;
 				}
@@ -274,7 +276,8 @@ class Reservations_model extends TI_Model
 	 *
 	 * @return array|string
 	 */
-	public function findATable($find = array()) {
+	public function findATable($find = [])
+	{
 
 		if (!isset($find['location']) OR !isset($find['guest_num']) OR empty($find['reserve_date']) OR empty($find['reserve_time']) OR empty($find['time_interval'])) {
 			return 'NO_ARGUMENTS';
@@ -310,37 +313,38 @@ class Reservations_model extends TI_Model
 			return 'FULLY_BOOKED';
 		}
 
-		return array('table_found' => $available_tables, 'time_slots' => array_flip($reserve_time_slot));
+		return ['table_found' => $available_tables, 'time_slots' => array_flip($reserve_time_slot)];
 	}
 
 	/**
 	 * Return all reserved tables by specified date
 	 *
 	 * @param array $find
-	 * @param int   $table_id
-	 * @param bool  $group
+	 * @param int $table_id
+	 * @param bool $group
 	 *
 	 * @return array|bool
 	 */
-	public function getReservedTableByDate($find = array(), $table_id, $group = FALSE) {
+	public function getReservedTableByDate($find = [], $table_id, $group = FALSE)
+	{
 		if (!isset($find['location']) OR !is_numeric($find['location']) OR empty($find['reserve_date']) OR empty($table_id)) {
 			return FALSE;
 		}
 
-		$this->where('location_id', $find['location']);
+		$query = $this->where('location_id', $find['location']);
 
-		is_array($table_id) OR $table_id = array($table_id);
+		is_array($table_id) OR $table_id = [$table_id];
 		if (!empty($table_id)) {
-			$this->where_in('table_id', $table_id);
+			$query->whereIn('table_id', $table_id);
 		}
 
-		$this->group_start();
-		$this->where('ADDTIME(reserve_date, reserve_time) >=', mdate('%Y-%m-%d %H:%i:%s', $find['unix_start_time']));
-		$this->where('ADDTIME(reserve_date, reserve_time) <=', mdate('%Y-%m-%d %H:%i:%s', $find['unix_end_time']));
-		$this->group_end();
+		$query->where(function ($query) {
+			$query->whereRaw('ADDTIME(reserve_date, reserve_time) >=', mdate('%Y-%m-%d %H:%i:%s', $find['unix_start_time']));
+			$query->whereRaw('ADDTIME(reserve_date, reserve_time) <=', mdate('%Y-%m-%d %H:%i:%s', $find['unix_end_time']));
+		});
 
-		$results = array();
-		if ($rows = $this->find_all()) {
+		$results = [];
+		if ($rows = $query->getAsArray()) {
 			if ($group) {
 				foreach ($rows as $row) {
 					$results[$row['table_id']][] = $row;
@@ -360,12 +364,16 @@ class Reservations_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getTotalSeats($location_id) {
+	public function getTotalSeats($location_id)
+	{
 		$this->load->model('Location_tables_model');
-		$this->Location_tables_model->select_sum('tables.max_capacity', 'total_seats');
-		$this->Location_tables_model->where('location_id', $location_id);
+		$query = $this->Location_tables_model->selectRaw("SUM(tables.max_capacity) as total_seats")
+											 ->where('location_id', $location_id);
 
-		if ($row = $this->Location_tables_model->with('tables')->find()) {
+		$query->join('tables', 'tables.table_id', '=', 'reservations.table_id', 'left');
+
+		$row = $query->firstAsArray();
+		if (!empty($row['total_seats'])) {
 			return $row['total_seats'];
 		}
 	}
@@ -373,20 +381,21 @@ class Reservations_model extends TI_Model
 	/**
 	 * Update an existing reservation
 	 *
-	 * @param int   $reservation_id
+	 * @param int $reservation_id
 	 * @param array $update
 	 *
 	 * @return bool
 	 */
-	public function updateReservation($reservation_id, $update = array()) {
+	public function updateReservation($reservation_id, $update = [])
+	{
 		if (empty($update)) return FALSE;
 
 		if (is_numeric($reservation_id)) {
-			$query = $this->update(array('reservation_id' => $reservation_id), $update);
+			$query = $this->where('reservation_id', $reservation_id)->update($update);
 
 			$status = $this->Statuses_model->getStatus($update['status']);
 
-			if (isset($update['notify']) AND $update['notify'] === '1') {
+			if (isset($update['notify']) AND $update['notify'] == '1') {
 				$mail_data = $this->getMailData($reservation_id);
 
 				$mail_data['status_name'] = $status['status_name'];
@@ -418,36 +427,37 @@ class Reservations_model extends TI_Model
 	 *
 	 * @return bool
 	 */
-	public function addReservation($add = array()) {
+	public function addReservation($add = [])
+	{
 		if (empty($add)) return FALSE;
 
 		if (isset($add['reserve_date'])) {
 			$add['reserve_date'] = mdate('%Y-%m-%d', strtotime($add['reserve_date']));
 		}
 
-		if ($reservation_id = $this->insert($add)) {
+		if ($reservation_id = $this->insertGetId($add)) {
 
 			if (APPDIR === MAINDIR) {
-				log_activity($add['customer_id'], 'reserved', 'reservations', get_activity_message('activity_reserved_table', array('{customer}', '{link}', '{reservation_id}'), array($add['first_name'] . ' ' . $add['last_name'], admin_url('reservations/edit?id=' . $reservation_id), $reservation_id)));
+				log_activity($add['customer_id'], 'reserved', 'reservations', get_activity_message('activity_reserved_table', ['{customer}', '{link}', '{reservation_id}'], [$add['first_name'] . ' ' . $add['last_name'], admin_url('reservations/edit?id=' . $reservation_id), $reservation_id]));
 			}
 
 			$notify = $this->sendConfirmationMail($reservation_id);
 
-			$update = array(
+			$update = [
 				'notify' => $notify,
 				'status' => $this->config->item('default_reservation_status'),
-			);
+			];
 
-			if ($this->update(array('reservation_id' => $reservation_id), $update)) {
+			if ($this->where('reservation_id', $reservation_id)->update($update)) {
 				$this->load->model('Statuses_model');
 				$status = $this->Statuses_model->getStatus($this->config->item('default_reservation_status'));
-				$reserve_history = array(
+				$reserve_history = [
 					'object_id'  => $reservation_id,
 					'status_id'  => $status['status_id'],
 					'notify'     => $notify,
 					'comment'    => $status['status_comment'],
 					'date_added' => mdate('%Y-%m-%d %H:%i:%s', time()),
-				);
+				];
 
 				$this->Statuses_model->addStatusHistory('reserve', $reserve_history);
 			}
@@ -463,18 +473,19 @@ class Reservations_model extends TI_Model
 	 *
 	 * @return string 0 on failure, or 1 on success
 	 */
-	protected function sendConfirmationMail($reservation_id) {
+	protected function sendConfirmationMail($reservation_id)
+	{
 		$this->load->model('Mail_templates_model');
 		$mail_data = $this->getMailData($reservation_id);
-		$config_reservation_email = is_array($this->config->item('reservation_email')) ? $this->config->item('reservation_email') : array();
+		$config_reservation_email = is_array($this->config->item('reservation_email')) ? $this->config->item('reservation_email') : [];
 
 		$notify = '0';
-		if ($this->config->item('customer_reserve_email') === '1' OR in_array('customer', $config_reservation_email)) {
+		if ($this->config->item('customer_reserve_email') == '1' OR in_array('customer', $config_reservation_email)) {
 			$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'reservation');
 			$notify = $this->sendMail($mail_data['email'], $mail_template, $mail_data);
 		}
 
-		if (!empty($mail_data['location_email']) AND ($this->config->item('location_reserve_email') === '1' OR in_array('location', $config_reservation_email))) {
+		if (!empty($mail_data['location_email']) AND ($this->config->item('location_reserve_email') == '1' OR in_array('location', $config_reservation_email))) {
 			$mail_template = $this->Mail_templates_model->getTemplateData($this->config->item('mail_template_id'), 'reservation_alert');
 			$this->sendMail($mail_data['location_email'], $mail_template, $mail_data);
 		}
@@ -494,8 +505,9 @@ class Reservations_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getMailData($reservation_id) {
-		$data = array();
+	public function getMailData($reservation_id)
+	{
+		$data = [];
 
 		if ($result = $this->getReservation($reservation_id)) {
 			$this->load->library('country');
@@ -521,12 +533,13 @@ class Reservations_model extends TI_Model
 	 * Send an email
 	 *
 	 * @param string $email
-	 * @param array  $mail_template
-	 * @param array  $mail_data
+	 * @param array $mail_template
+	 * @param array $mail_data
 	 *
 	 * @return bool|string
 	 */
-	public function sendMail($email, $mail_template = array(), $mail_data = array()) {
+	public function sendMail($email, $mail_template = [], $mail_data = [])
+	{
 		if (empty($mail_template) OR !isset($mail_template['subject'], $mail_template['body']) OR empty($mail_data)) {
 			return FALSE;
 		}
@@ -545,7 +558,7 @@ class Reservations_model extends TI_Model
 		$this->email->message($mail_template['body'], $mail_data);
 
 		if (!$this->email->send()) {
-			log_message('debug', $this->email->print_debugger(array('headers')));
+			log_message('debug', $this->email->print_debugger(['headers']));
 			$notify = '0';
 		} else {
 			$notify = '1';
@@ -561,7 +574,8 @@ class Reservations_model extends TI_Model
 	 *
 	 * @return bool
 	 */
-	public function validateReservation($reservation_id) {
+	public function validateReservation($reservation_id)
+	{
 		return (is_numeric($reservation_id) AND $this->find($reservation_id)) ? TRUE : FALSE;
 	}
 
@@ -572,11 +586,12 @@ class Reservations_model extends TI_Model
 	 *
 	 * @return int  The number of deleted rows
 	 */
-	public function deleteReservation($reservation_id) {
-		if (is_numeric($reservation_id)) $reservation_id = array($reservation_id);
+	public function deleteReservation($reservation_id)
+	{
+		if (is_numeric($reservation_id)) $reservation_id = [$reservation_id];
 
 		if (!empty($reservation_id) AND ctype_digit(implode('', $reservation_id))) {
-			return $this->delete('reservation_id', $reservation_id);
+			return $this->whereIn('reservation_id', $reservation_id)->delete();
 		}
 	}
 }

@@ -4,14 +4,16 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') or exit('No direct script access allowed');
+
+use TastyIgniter\Database\Model;
 
 /**
  * Customer_online Model Class
@@ -20,87 +22,76 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Customer_online_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Customer_online_model extends TI_Model
+class Customer_online_model extends Model
 {
 	/**
 	 * @var string The database table name
 	 */
-	protected $table_name = 'customers_online';
+	protected $table = 'customers_online';
 
 	/**
 	 * @var string The database table primary key
 	 */
-	protected $primary_key = 'activity_id';
+	protected $primaryKey = 'activity_id';
 
-	/**
-	 * @var array The model table column to convert to dates on insert/update
-	 */
-	protected $timestamps = array('created');
+	public $timestamps = TRUE;
 
-	protected $belongs_to = array(
-		'customers' => array('Customers_model', 'customer_id'),
-		'countries' => array('Countries_model', 'country_code', 'iso_code_2'),
-	);
+	const CREATED_AT = 'date_added';
 
-	/**
-	 * Count the number of records
-	 *
-	 * @param array $filter
-	 *
-	 * @return int
-	 */
+	public $belongsTo = [
+		'customer' => ['Customers_model', 'key' => 'customer_id'],
+		'country'  => ['Countries_model', 'key' => 'country_code', 'otherKey' => 'iso_code_2'],
+	];
 
-	public function getCount($filter = array()) {
-		$this->with('customers', 'countries');
-
-		return parent::getCount($filter);
+	public function getAccessTypeAttribute($value)
+	{
+		return ucwords($value);
 	}
 
-	/**
-	 * List all online and recently online customers
-	 *
-	 * @param array $filter
-	 *
-	 * @return array
-	 */
-	public function getList($filter = array()) {
-		$this->select('*, customers_online.ip_address, customers_online.date_added, customers.first_name, customers.last_name');
-		$this->with('customers', 'countries');
-
-		return parent::getList($filter);
+	public function getDateAddedAttribute($value)
+	{
+		return time_elapsed($value);
 	}
 
 	/**
 	 * Filter database records
 	 *
+	 * @param $query
 	 * @param array $filter an associative array of field/value pairs
 	 *
 	 * @return $this
 	 */
-	public function filter($filter = array()) {
+	public function scopeFilter($query, $filter = [])
+	{
+		$dateAddedColumn = $this->tablePrefix('customers_online.date_added');
+		$query->selectRaw('*, ' . $this->tablePrefix('customers_online.ip_address') . ', ' . $dateAddedColumn);
+
+		$query->leftJoin('customers', 'customers.customer_id', '=', 'customers_online.customer_id');
+		$query->leftJoin('countries', 'countries.iso_code_3', '=', 'customers_online.country_code');
+
 		if (!empty($filter['filter_search'])) {
-			$this->like('first_name', $filter['filter_search']);
-			$this->or_like('last_name', $filter['filter_search']);
-			$this->or_like('browser', $filter['filter_search']);
-			$this->or_like('customers_online.ip_address', $filter['filter_search']);
-			$this->or_like('country_code', $filter['filter_search']);
+			$query->like('first_name', $filter['filter_search']);
+			$query->orLike('last_name', $filter['filter_search']);
+			$query->orLike('browser', $filter['filter_search']);
+			$query->orLike('ip_address', $filter['filter_search']);
+			$query->orLike('country_code', $filter['filter_search']);
 		}
 
 		if (!empty($filter['filter_access'])) {
-			$this->where('access_type', $filter['filter_access']);
+			$query->where('access_type', $filter['filter_access']);
 		}
 
-		if (!empty($filter['filter_type']) AND $filter['filter_type'] === 'online') {
-			$this->where('customers_online.date_added >=', $filter['time_out']);
+		if (!empty($filter['time_out']) AND !empty($filter['filter_type']) AND $filter['filter_type'] === 'online') {
+			$query->whereDate('customers_online.date_added', '>=', $filter['time_out']);
 		}
 
 		if (!empty($filter['filter_date'])) {
 			$date = explode('-', $filter['filter_date']);
-			$this->where('YEAR(' . $this->table_prefix('customers_online.date_added') . ')', $date[0]);
-			$this->where('MONTH(' . $this->table_prefix('customers_online.date_added') . ')', $date[1]);
+			$query->whereRaw('YEAR(' . $dateAddedColumn . ')', $date[0]);
+			$query->whereRaw('MONTH(' . $dateAddedColumn . ')', $date[1]);
 		}
 
-		return $this;
+		return $query;
 	}
 
 	/**
@@ -108,8 +99,9 @@ class Customer_online_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getCustomersOnline() {
-		return $this->find_all();
+	public function getCustomersOnline()
+	{
+		return $this->getAsArray();
 	}
 
 	/**
@@ -119,16 +111,15 @@ class Customer_online_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getCustomerOnline($customer_id) {
-		$result = array();
-
+	public function getCustomerOnline($customer_id)
+	{
 		if ($customer_id) {
-			$this->select('*, customers_online.ip_address, customers_online.date_added');
+			$dateAddedColumn = $this->tablePrefix('customers_online.date_added');
 
-			$result = $this->with('customers')->order_by('customers_online.date_added', 'DESC')->find($customer_id);
+			return $this->selectRaw('*, ' . $this->tablePrefix('customers_online.ip_address') . ', ' . $dateAddedColumn)
+						->leftJoin('customers', 'customers.customer_id', '=', 'customers_online.customer_id')
+						->orderBy($dateAddedColumn, 'DESC')->where('customer_id', $customer_id)->firstAsArray();
 		}
-
-		return $result;
 	}
 
 	/**
@@ -138,11 +129,10 @@ class Customer_online_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getLastOnline($ip) {
+	public function getLastOnline($ip)
+	{
 		if ($this->input->valid_ip($ip)) {
-			$this->select('*')->select_max('date_added');
-
-			return $this->find('ip_address', $ip);
+			return $this->selectRaw('*, MAX(date_added) as date_added')->where('ip_address', $ip)->firstAsArray();
 		}
 	}
 
@@ -151,12 +141,9 @@ class Customer_online_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getOnlineDates() {
-		$this->select('date_added, MONTH(date_added) as month, YEAR(date_added) as year');
-		$this->group_by('MONTH(date_added)');
-		$this->group_by('YEAR(date_added)');
-
-		return $this->find_all();
+	public function getOnlineDates()
+	{
+		return $this->pluckDates('date_added');
 	}
 }
 

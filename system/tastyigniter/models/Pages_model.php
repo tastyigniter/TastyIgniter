@@ -4,14 +4,16 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') or exit('No direct script access allowed');
+
+use TastyIgniter\Database\Model;
 
 /**
  * Pages Model Class
@@ -20,80 +22,79 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Pages_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Pages_model extends TI_Model
+class Pages_model extends Model
 {
 	/**
 	 * @var string The database table name
 	 */
-	protected $table_name = 'pages';
+	protected $table = 'pages';
 
 	/**
 	 * @var string The database table primary key
 	 */
-	protected $primary_key = 'page_id';
+	protected $primaryKey = 'page_id';
+
+	protected $fillable = ['language_id', 'name', 'title', 'heading', 'content', 'meta_description',
+		'meta_keywords', 'layout_id', 'navigation', 'date_added', 'date_updated', 'status'];
 
 	/**
 	 * @var array The model table column to convert to dates on insert/update
 	 */
-	protected $timestamps = array('created', 'updated');
+	public $timestamps = TRUE;
 
-	protected $belongs_to = array(
+	const CREATED_AT = 'date_added';
+	const UPDATED_AT = 'date_updated';
+
+	public $belongs_to = [
 		'languages' => 'Languages_model',
-	);
+	];
+
+	protected $casts = [
+		'navigation' => 'array',
+	];
+
+	public function getContentAttribute($value)
+	{
+		return html_entity_decode($value);
+	}
 
 	/**
 	 * Scope a query to only include enabled page
 	 *
+	 * @param $query
+	 *
 	 * @return $this
 	 */
-	public function isEnabled() {
-		return $this->where('status', '1');
-	}
-
-	/**
-	 * Count the number of records
-	 *
-	 * @param array $filter
-	 *
-	 * @return int
-	 */
-	public function getCount($filter = array()) {
-		$this->with('languages');
-
-		return parent::getCount($filter);
-	}
-
-	/**
-	 * List all pages matching the filter
-	 *
-	 * @param array $filter
-	 *
-	 * @return array|bool
-	 */
-	public function getList($filter = array()) {
-		$this->select('*, languages.name AS language_name, pages.name AS name');
-		$this->with('languages');
-
-		return parent::getList($filter);
+	public function scopeIsEnabled($query)
+	{
+		return $query->where('status', '1');
 	}
 
 	/**
 	 * Filter database records
 	 *
+	 * @param $query
 	 * @param array $filter an associative array of field/value pairs
 	 *
 	 * @return $this
 	 */
-	public function filter($filter = array()) {
+	public function scopeFilter($query, $filter = [])
+	{
+		$languagesTable = $this->tablePrefix('languages');
+		$pagesTable = $this->tablePrefix('pages');
+
+		$query->selectRaw("*, {$languagesTable}.name AS language_name, {$pagesTable}.name AS name");
+		$query->join('languages', 'languages.language_id', '=', 'pages.language_id', 'left');
+
 		if (!empty($filter['filter_search'])) {
-			$this->like('pages.name', $filter['filter_search']);
+			$query->like('pages.name', $filter['filter_search']);
 		}
 
 		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {
-			$this->where('pages.status', $filter['filter_status']);
+			$query->where('pages.status', $filter['filter_status']);
 		}
 
-		return $this;
+		return $query;
 	}
 
 	/**
@@ -101,16 +102,9 @@ class Pages_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getPages() {
-		if ($result = $this->find_all('status', '1')) {
-			foreach ($result as &$row) {
-				if (!empty($row['navigation'])) {
-					$row['navigation'] = unserialize($row['navigation']);
-				}
-			}
-		}
-
-		return $result;
+	public function getPages()
+	{
+		return $this->isEnabled()->getAsArray();
 	}
 
 	/**
@@ -120,19 +114,21 @@ class Pages_model extends TI_Model
 	 *
 	 * @return array
 	 */
-	public function getPage($page_id) {
-		return $this->find($page_id);
+	public function getPage($page_id)
+	{
+		return $this->findOrNew($page_id)->toArray();
 	}
 
 	/**
 	 * Create a new or update existing page
 	 *
-	 * @param int   $page_id
+	 * @param int $page_id
 	 * @param array $save
 	 *
 	 * @return bool|int The $page_id of the affected row, or FALSE on failure
 	 */
-	public function savePage($page_id, $save = array()) {
+	public function savePage($page_id, $save = [])
+	{
 		if (empty($save)) return FALSE;
 
 		if (isset($save['title'])) {
@@ -143,12 +139,14 @@ class Pages_model extends TI_Model
 			$save['navigation'] = serialize($save['navigation']);
 		}
 
-		if ($page_id = $this->skip_validation(TRUE)->save($save, $page_id)) {
+		$pageModel = $this->findOrNew($page_id);
+
+		if ($saved = $pageModel->fill($save)->save()) {
 			if (!empty($save['permalink'])) {
-				$this->permalink->savePermalink('pages', $save['permalink'], 'page_id=' . $page_id);
+				$this->permalink->savePermalink('pages', $save['permalink'], 'page_id=' . $pageModel->getKey());
 			}
 
-			return $page_id;
+			return $pageModel->getKey();
 		}
 	}
 
@@ -159,11 +157,12 @@ class Pages_model extends TI_Model
 	 *
 	 * @return int  The number of deleted rows
 	 */
-	public function deletePage($page_id) {
-		if (is_numeric($page_id)) $page_id = array($page_id);
+	public function deletePage($page_id)
+	{
+		if (is_numeric($page_id)) $page_id = [$page_id];
 
 		if (!empty($page_id) AND ctype_digit(implode('', $page_id))) {
-			$affected_rows = $this->delete('page_id', $page_id);
+			$affected_rows = $this->whereIn('page_id', $page_id)->delete();
 
 			if ($affected_rows > 0) {
 				foreach ($page_id as $id) {

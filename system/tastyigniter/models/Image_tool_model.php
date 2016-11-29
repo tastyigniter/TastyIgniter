@@ -4,14 +4,16 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') or exit('No direct script access allowed');
+
+use TastyIgniter\Database\Model;
 
 /**
  * Image_tool Model Class
@@ -20,10 +22,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @package        TastyIgniter\Models\Image_tool_model.php
  * @link           http://docs.tastyigniter.com
  */
-class Image_tool_model extends TI_Model
+class Image_tool_model extends Model
 {
 
-	public function resize($img_path, $width = NULL, $height = NULL) {
+	public function resize($img_path, $width = null, $height = null)
+	{
 		$setting = $this->config->item('image_tool');
 
 		if (isset($setting['root_folder']) AND (strpos($setting['root_folder'], '/') !== 0 OR strpos($setting['root_folder'], './') === FALSE)) {
@@ -80,7 +83,8 @@ class Image_tool_model extends TI_Model
 		return image_url($new_image);
 	}
 
-	protected function _createFolder($thumb_path = FALSE) {
+	protected function _createFolder($thumb_path = FALSE)
+	{
 		$oldumask = umask(0);
 
 		if ($thumb_path AND !file_exists($thumb_path)) {
