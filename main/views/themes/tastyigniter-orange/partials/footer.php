@@ -94,7 +94,7 @@
                             <?php $pages = $this->Pages_model->getPages(); ?>
                             <?php if ($pages) { ?>
                                 <?php foreach ($pages as $page) { ?>
-                                    <?php if (in_array('footer', $page['navigation'])) { ?>
+                                    <?php if (is_array($page['navigation']) AND in_array('footer', $page['navigation'])) { ?>
                                         <li><a href="<?php echo site_url('pages?page_id='.$page['page_id']); ?>"><?php echo $page['name']; ?></a></li>
                                     <?php } ?>
                                 <?php } ?>

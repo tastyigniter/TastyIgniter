@@ -22,11 +22,11 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-xs-4 stat-icon">
-                                <span class="bg-blue"><i class="stat-icon fa fa-users fa-2x"></i></span>
+                                <span class="bg-green"><i class="stat-icon fa fa-shopping-cart fa-2x"></i></span>
                             </div>
                             <div class="col-xs-8 stat-content">
-                                <span class="stat-text text-blue customers"><?php echo lang('text_dash_dash'); ?></span>
-                                <span class="stat-heading text-blue"><?php echo lang('text_total_customer'); ?></span>
+                                <span class="stat-text text-green orders"><?php echo lang('text_dash_dash'); ?></span>
+                                <span class="stat-heading text-green"><?php echo lang('text_total_order'); ?></span>
                             </div>
                         </div>
                     </div>
@@ -37,11 +37,11 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-xs-4 stat-icon">
-                                <span class="bg-green"><i class="stat-icon fa fa-shopping-cart fa-2x"></i></span>
+                                <span class="bg-blue"><i class="stat-icon fa fa-users fa-2x"></i></span>
                             </div>
                             <div class="col-xs-8 stat-content">
-                                <span class="stat-text text-green orders"><?php echo lang('text_dash_dash'); ?></span>
-                                <span class="stat-heading text-green"><?php echo lang('text_total_order'); ?></span>
+                                <span class="stat-text text-blue customers"><?php echo lang('text_dash_dash'); ?></span>
+                                <span class="stat-heading text-blue"><?php echo lang('text_total_customer'); ?></span>
                             </div>
                         </div>
                     </div>
@@ -122,9 +122,9 @@
                     </div>
                     <div id="statistics">
                         <ul class="list-group">
-                            <li class="list-group-item"><?php echo lang('text_total_sale'); ?> <span class="text-red sales"><?php echo lang('text_zero'); ?></span></li>
-                            <li class="list-group-item"><?php echo lang('text_total_lost_sale'); ?> <span class="text-yellow lost_sales"><?php echo lang('text_zero'); ?></span></li>
-                            <li class="list-group-item"><?php echo lang('text_total_cash_payment'); ?><span class="text-primary cash_payments"><?php echo lang('text_zero'); ?></span></li>
+                            <li class="list-group-item"><?php echo lang('text_total_sale'); ?> <span class="text-primary sales"><?php echo lang('text_zero'); ?></span></li>
+                            <li class="list-group-item"><?php echo lang('text_total_lost_sale'); ?> <span class="text-red lost_sales"><?php echo lang('text_zero'); ?></span></li>
+                            <li class="list-group-item"><?php echo lang('text_total_cash_payment'); ?><span class="text-yellow cash_payments"><?php echo lang('text_zero'); ?></span></li>
                             <li class="list-group-item"><?php echo lang('text_total_customer'); ?> <span class="text-blue customers"><?php echo lang('text_zero'); ?></span></li>
                             <li class="list-group-item"><?php echo lang('text_total_order'); ?> <span class="text-green orders"><?php echo lang('text_zero'); ?></span></li>
                             <li class="list-group-item"><?php echo lang('text_total_delivery_order'); ?> <span class="text-success delivery_orders"><?php echo lang('text_zero'); ?></span></li>

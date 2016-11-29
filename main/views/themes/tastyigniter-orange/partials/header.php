@@ -17,7 +17,6 @@
             <?php echo get_favicon(); ?>
         <?php } ?>
         <title><?php echo sprintf(lang('site_title'), get_title(), config_item('site_name')); ?></title>
-		<link href="https://fonts.googleapis.com/css?family=Amaranth:400,400i,700,700i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i|Titillium+Web:300,300i,400,400i,600,600i,700,700i,900" rel="stylesheet">
         <?php echo get_style_tags(); ?>
         <?php echo get_active_styles(); ?>
         <?php echo get_script_tags(); ?>

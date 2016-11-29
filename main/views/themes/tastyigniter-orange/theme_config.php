@@ -134,7 +134,7 @@ $theme['customize']['sections']['typography'] = array(
 					'label' 		=> 'Font Family',
 					'desc'			=> 'The font family to use for the main body text.',
 					'type' 			=> 'text',
-					'value'			=> '"Oxygen",Arial,sans-serif',
+					'value'			=> '"Titillium Web",Arial,sans-serif',
 		            'rules'         => 'required',
 				),
 				array(
@@ -168,7 +168,7 @@ $theme['customize']['sections']['typography'] = array(
 					'label' 		=> 'Header menu font family',
 					'desc'			=> 'The font family to use for the header menu.',
 					'type' 			=> 'text',
-					'value'			=> '"Oxygen",Arial,sans-serif',
+					'value'			=> '"Titillium Web",Arial,sans-serif',
 		            'rules'         => 'required',
 				),
 				array(

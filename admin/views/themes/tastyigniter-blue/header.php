@@ -53,7 +53,6 @@
 	<?php echo get_metas(); ?>
 	<?php echo get_favicon(); ?>
 	<title><?php echo sprintf(lang('site_title'), get_title(), $site_name, $system_name); ?></title>
-	<link href="https://fonts.googleapis.com/css?family=Roboto|Source+Code+Sans" rel="stylesheet">
 	<?php echo get_style_tags(); ?>
 	<?php echo get_script_tags(); ?>
 	<script type="text/javascript">

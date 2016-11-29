@@ -26,7 +26,7 @@ body {
 	display: none;
 }
 .body-login .panel-login {
-	margin: 30% 0;
+	margin: 20% 0;
 	background-color: transparent;
 	border: 0;
 }
@@ -56,6 +56,9 @@ a, a:hover, a:active {
 }
 .jumbotron p {
 	font-size: 14px;
+}
+b, strong, label {
+	font-weight: 500;
 }
 h1 small, .h1 small, h2 small, .h2 small, h3 small, .h3 small,
 h1 .small, .h1 .small, h2 .small, .h2 .small, h3 .small, .h3 .small {
@@ -240,6 +243,7 @@ h1.block-heading, h2.block-heading, h3.block-heading, h4.block-heading, h5.block
 	font-size: 28px;
 	padding: 0 20px;
 	line-height: 60px;
+	font-weight: 400;
 }
 .navbar-top .navbar-heading small,
 .navbar-top .navbar-heading .small {
@@ -347,6 +351,7 @@ h1.block-heading, h2.block-heading, h3.block-heading, h4.block-heading, h5.block
 .navbar-top-links .dropdown-menu li a {
 	padding: 5px 20px;
 	min-height: 0;
+	line-height: 22px;
 }
 .navbar-top-links .dropdown-menu > li > a:focus,
 .navbar-top-links .dropdown-menu > li > a:hover,
@@ -709,7 +714,7 @@ h1.block-heading, h2.block-heading, h3.block-heading, h4.block-heading, h5.block
 	padding: 8px 15px;
 	border-width: 0px 0px 4px 0px;
 	outline: 0 none;
-	font-weight: 600;
+	font-weight: 500;
 }
 .page-header .btn-default {
 	border-width: 1px 1px 4px 1px;
@@ -822,6 +827,9 @@ form {
 }
 .form-group {
 	margin-bottom: 25px;
+}
+.panel-body > .form-group {
+	margin-bottom: 15px;
 }
 .form-control {
 	border: 1px solid #D2DCE7;
@@ -1007,7 +1015,7 @@ textarea.form-control {
 	width: 49%;
 	border: 0 none;
 	text-shadow: none;
-	font-weight: 600;
+	font-weight: 500;
 	-webkit-transition: all .4s ease;
 	-moz-transition: all .4s ease;
 	-o-transition: all .4s ease;
@@ -1416,6 +1424,11 @@ a:focus {
 }
 .panel-default {
 	border-width: 0;
+}
+.tab-content .panel-default,
+.panel .panel-default {
+	border-width: 1px;
+	border-color: #ECF0F5;
 }
 .panel-default > .panel-heading {
 	background-color: #FFFFFF;
@@ -1852,7 +1865,7 @@ body.dragging, body.dragging * {
 	text-decoration: none;
 	display: inline-block;
 	min-width: 40px;
-	font-weight: 600;
+	font-weight: 500;
 }
 .sort .fa {
 	width: 12px;
@@ -2633,7 +2646,7 @@ a.collapsed .fa-angle-double-down {
 }
 .components-row .btn {
 	font-size: 16px;
-	font-weight: 600;
+	font-weight: 500;
 }
 .partials {
 	background-color: #F6F8FA;
