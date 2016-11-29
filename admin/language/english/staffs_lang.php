@@ -13,6 +13,7 @@ $lang['text_filter_date'] 		        = 'View all dates';
 $lang['text_filter_status'] 		    = 'View all status';
 $lang['text_empty'] 		            = 'There are no staffs available.';
 $lang['text_no_match'] 		            = 'No Matches Found';
+$lang['text_default_location'] 		  	= 'Default';
 
 $lang['column_name'] 		            = 'Name';
 $lang['column_email'] 		            = 'Email';

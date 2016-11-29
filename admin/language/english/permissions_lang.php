@@ -27,5 +27,7 @@ $lang['label_action'] 		            = 'Action';
 $lang['help_name'] 		                = 'Permissions name are made up of (Domain.Context):<br />Domain  - Typically the application domain name (e.g. Admin, Main, Module).<br />Context - The controller class name (e.g. Menus, Orders, Locations, or Settings).';
 $lang['help_action'] 		            = 'The permitted action (Access, Manage, Add, Delete)';
 
+$lang['error_invalid_name']				= 'Invalid name, must contain dot (.)';
+
 /* End of file permissions_lang.php */
 /* Location: ./admin/language/english/permissions_lang.php */
