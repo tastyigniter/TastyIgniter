@@ -3,7 +3,8 @@
 class Checkout extends Main_Controller
 {
 
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct();                                                                    //  calls the constructor
 
 		$this->load->model('Pages_model');
@@ -24,7 +25,8 @@ class Checkout extends Main_Controller
 		$this->lang->load('checkout');
 	}
 
-	public function index() {
+	public function index()
+	{
 		if (!$this->cart->contents()) {                                                        // checks if cart contents is empty
 			$this->alert->set('alert', $this->lang->line('alert_no_menu_to_order'));
 			$this->redirect(restaurant_url());                                                                    // redirect to menus page and display error
@@ -77,7 +79,7 @@ class Checkout extends Main_Controller
 			$is_order_placed = $this->Orders_model->isOrderPlaced($order_data['order_id']);
 
 			if ($is_order_placed === TRUE OR (!empty($order_data['customer_id']) AND $order_data['customer_id'] !== $this->customer->getId())) {
-				$order_data = array();
+				$order_data = [];
 				$this->session->unset_userdata('order_data');
 			}
 		}
@@ -95,7 +97,8 @@ class Checkout extends Main_Controller
 		$this->template->render('checkout', $data);
 	}
 
-	public function success() {
+	public function success()
+	{
 		if ($this->customer->islogged()) {                                                        // checks if customer is logged in
 			$customer_id = $this->customer->getId();                                            // retrieve customer id from customer library
 		} else {
@@ -133,11 +136,11 @@ class Checkout extends Main_Controller
 		$time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
 		$data['order_details'] = sprintf($this->lang->line('text_order_info'), $order_type, mdate($date_format, strtotime($order_info['date_added'])), ucwords($order_type), mdate(lang('text_date_format') . " {$time_format}", strtotime("{$order_info['order_date']} {$order_info['order_time']}")), $payment_method);
 
-		$data['menus'] = array();
+		$data['menus'] = [];
 		$menus = $this->Orders_model->getOrderMenus($order_info['order_id']);
 		$menu_options = $this->Orders_model->getOrderMenuOptions($order_info['order_id']);
 		foreach ($menus as $menu) {
-			$option_data = array();
+			$option_data = [];
 
 			if (!empty($menu_options)) {
 				foreach ($menu_options as $menu_option) {
@@ -147,7 +150,7 @@ class Checkout extends Main_Controller
 				}
 			}
 
-			$data['menus'][] = array(                                                    // load menu data into array
+			$data['menus'][] = [                                                    // load menu data into array
 				'menu_id'  => $menu['menu_id'],
 				'name'     => (strlen($menu['name']) > 120) ? substr($menu['name'], 0, 120) . '...' : $menu['name'],
 				'price'    => $this->currency->format($menu['price']),        //add currency symbol and format item price to two decimal places
@@ -155,21 +158,21 @@ class Checkout extends Main_Controller
 				'subtotal' => $this->currency->format($menu['subtotal']),    //add currency symbol and format item subtotal to two decimal places
 				'comment'  => $menu['comment'],
 				'options'  => implode('<br />', $option_data),
-			);
+			];
 		}
 
-		$data['order_totals'] = array();
+		$data['order_totals'] = [];
 		$order_totals = $this->Orders_model->getOrderTotals($order_info['order_id']);
 		if ($order_totals) {
 			foreach ($order_totals as $total) {
 				if ($order_type === 'collection' AND $total['code'] === 'delivery') continue;
 
-				$data['order_totals'][] = array(
+				$data['order_totals'][] = [
 					'code'     => $total['code'],
 					'title'    => htmlspecialchars_decode($total['title']),
 					'value'    => $this->currency->format($total['value']),
 					'priority' => $total['priority'],
-				);
+				];
 			}
 		}
 
@@ -195,7 +198,8 @@ class Checkout extends Main_Controller
 		$this->template->render('checkout_success', $data);
 	}
 
-	protected function getFormData($order_data, $data = array()) {
+	protected function getFormData($order_data, $data = [])
+	{
 
 		if ($this->input->post('checkout_step')) {
 			$data['checkout_step'] = $this->input->post('checkout_step');
@@ -336,14 +340,14 @@ class Checkout extends Main_Controller
 		} else if ($this->customer->islogged()) {
 			$addresses = $this->Addresses_model->getAddresses($this->customer->getId());                            // retrieve customer addresses array from getAddresses method in Customers model
 		} else if (!empty($order_data['address_id'])) {
-			$addresses = array($this->Addresses_model->getGuestAddress($order_data['address_id']));                            // retrieve customer addresses array from getAddresses method in Customers model
+			$addresses = [$this->Addresses_model->getGuestAddress($order_data['address_id'])];                            // retrieve customer addresses array from getAddresses method in Customers model
 		}
 
 		if (empty($addresses)) {
-			$addresses = array(array('address_id' => '0', 'address_1' => '', 'address_2' => '', 'city' => '', 'state' => '', 'postcode' => '', 'country_id' => $country_id));
+			$addresses = [['address_id' => '0', 'address_1' => '', 'address_2' => '', 'city' => '', 'state' => '', 'postcode' => '', 'country_id' => $country_id]];
 		}
 
-		$data['addresses'] = array();
+		$data['addresses'] = [];
 		if ($addresses) {
 			foreach ($addresses as $address) {                                                    // loop through customer addresses arrary
 				if (empty($address['country'])) {
@@ -351,8 +355,8 @@ class Checkout extends Main_Controller
 					$address['country'] = !empty($address['country']) ? $address['country'] : $country['country_name'];
 				}
 
-				$data['addresses'][] = array(                                                    // create array of address data to pass to view
-					'address_id' => (isset($address['address_id'])) ? $address['address_id'] : NULL,
+				$data['addresses'][] = [                                                    // create array of address data to pass to view
+					'address_id' => (isset($address['address_id'])) ? $address['address_id'] : null,
 					'address_1'  => $address['address_1'],
 					'address_2'  => $address['address_2'],
 					'city'       => $address['city'],
@@ -360,7 +364,7 @@ class Checkout extends Main_Controller
 					'postcode'   => $address['postcode'],
 					'country_id' => $address['country_id'],
 					'address'    => $this->country->addressFormat($address),
-				);
+				];
 			}
 		}
 
@@ -390,28 +394,29 @@ class Checkout extends Main_Controller
 			$data['ip_address'] = $this->input->ip_address();                                    // retrieve ip_address value if set
 		}
 
-		$data['countries'] = array();
+		$data['countries'] = [];
 		$results = $this->Countries_model->getCountries();                                        // retrieve countries array from getCountries method in locations model
 		foreach ($results as $result) {                                                            // loop through crountries array
-			$data['countries'][] = array(                                                        // create array of countries data to pass to view
+			$data['countries'][] = [                                                        // create array of countries data to pass to view
 				'country_id' => $result['country_id'],
 				'name'       => $result['country_name'],
-			);
+			];
 		}
 
-		$data['payments'] = array();
+		$data['payments'] = [];
 		$payments = $this->location->payments();
 		foreach ($payments as $code => $payment) {
 			unset($payment['path']);
-			$data['payments'][] = array_merge($payment, array(
+			$data['payments'][] = array_merge($payment, [
 				'data' => Components::run($payment['code'] . '/index', $this, $payment),
-			));
+			]);
 		}
 
 		return $data;
 	}
 
-	protected function _validateCheckout() {                                                        // method to validate checkout form fields
+	protected function _validateCheckout()
+	{                                                        // method to validate checkout form fields
 		if ($this->input->post() AND $this->validateForm() === TRUE) {
 			$order_data = $this->session->userdata('order_data');
 
@@ -440,7 +445,7 @@ class Checkout extends Main_Controller
 				foreach ($this->input->post('address') as $key => $address) {
 					$_POST['address'][$key]['country'] = $address['country_id'];
 
-					!empty($address['address_id']) OR $address['address_id'] = NULL;
+					!empty($address['address_id']) OR $address['address_id'] = null;
 
 					$_POST['address'][$key]['address_id'] = $address['address_id'] = $this->Addresses_model->saveAddress($order_data['customer_id'], $address['address_id'], $address);    // send new-address $_POST data and customer id to saveAddress method in Customers model
 
@@ -472,7 +477,8 @@ class Checkout extends Main_Controller
 		}
 	}
 
-	protected function _confirmPayment($order_data, $cart_contents) {
+	protected function _confirmPayment($order_data, $cart_contents)
+	{
 
 		if (!empty($order_data) AND !empty($cart_contents) AND $this->input->post('payment')) {
 
@@ -492,7 +498,8 @@ class Checkout extends Main_Controller
 		}
 	}
 
-	protected function validateForm() {
+	protected function validateForm()
+	{
 		// START of form validation rules
 		$this->form_validation->set_rules('first_name', 'lang:label_first_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		$this->form_validation->set_rules('last_name', 'lang:label_last_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
@@ -548,27 +555,31 @@ class Checkout extends Main_Controller
 		}
 	}
 
-	public function _validate_time($str) {    // validation callback function to check if order_time $_POST data is a valid time, is less than the restaurant current time and is within the restaurant opening and closing hour
+	public function _validate_time($str)
+	{    // validation callback function to check if order_time $_POST data is a valid time, is less than the restaurant current time and is within the restaurant opening and closing hour
 		if ($this->input->post('order_time_type') === 'later') {
 			$str = "{$this->input->post('order_date')} {$this->input->post('order_hour')}:{$this->input->post('order_minute')}";
 		}
 
 		$order_type = ($this->location->orderType() == '1') ? 'delivery' : 'collection';
 
-        if (strtotime($str) < time()) {
-        	$this->form_validation->set_message('_validate_time', sprintf($this->lang->line('error_delivery_less_current_time'), $this->lang->line('text_'.$order_type)));
-      		return FALSE;
-    	} else if ( ! $this->location->checkOrderTime($str, $order_type)) {
-			$this->form_validation->set_message('_validate_time', sprintf($this->lang->line('error_delivery_less_current_time'), strtolower($this->lang->line('text_'.$order_type))));
-      		return FALSE;
-        }
+		if (strtotime($str) < time()) {
+			$this->form_validation->set_message('_validate_time', sprintf($this->lang->line('error_delivery_less_current_time'), $this->lang->line('text_' . $order_type)));
+
+			return FALSE;
+		} else if (!$this->location->checkOrderTime($str, $order_type)) {
+			$this->form_validation->set_message('_validate_time', sprintf($this->lang->line('error_delivery_less_current_time'), strtolower($this->lang->line('text_' . $order_type))));
+
+			return FALSE;
+		}
 
 		$_POST['order_time'] = $str;
 
 		return TRUE;
 	}
 
-	public function _validate_address($address_id) {
+	public function _validate_address($address_id)
+	{
 		$addresses = $this->input->post('address');
 
 		if ($this->location->orderType() == '1' AND !empty($addresses[0]['address_1'])) {
@@ -603,7 +614,8 @@ class Checkout extends Main_Controller
 		}
 	}
 
-	public function _validate_payment($payment) {
+	public function _validate_payment($payment)
+	{
 		$local_payments = $this->location->payments();
 		if (is_array($local_payments) AND !array_key_exists($payment, $local_payments)) {
 			$this->form_validation->set_message('_validate_payment', $this->lang->line('error_invalid_payment'));

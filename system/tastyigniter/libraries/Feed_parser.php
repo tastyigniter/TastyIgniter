@@ -4,13 +4,12 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- * @filesource
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -25,29 +24,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @package        TastyIgniter\Libraries\Feed_parser.php
  * @link           http://docs.tastyigniter.com
  */
+class Feed_parser
+{
 
-class Feed_parser {
-
-	public $feed_uri = NULL;                    // Feed URI
+	public $feed_uri = null;                    // Feed URI
 	public $data = FALSE;                    // Associative array containing all the feed items
-	public $channel_data = array();                    // Store RSS Channel Data in an array
-	public $feed_unavailable = NULL;                    // Boolean variable which indicates whether an RSS feed was unavailable
+	public $channel_data = [];                    // Store RSS Channel Data in an array
+	public $feed_unavailable = null;                    // Boolean variable which indicates whether an RSS feed was unavailable
 	public $cache_life = 0;                        // Cache lifetime
 	public $cache_dir;    // Cache directory
 	public $write_cache_flag = FALSE;                    // Flag to write to cache
 	public $callback = FALSE;                    // Callback to read custom data
 
-	function __construct($callback = FALSE) {
+	function __construct($callback = FALSE)
+	{
 		if ($callback) {
 			$this->callback = $callback;
 		}
 
-		$this->cache_dir = APPPATH."cache/";
+		$this->cache_dir = APPPATH . "cache/";
 	}
 
 	// --------------------------------------------------------------------
 
-	function parse() {
+	function parse()
+	{
 		// Are we caching?
 		if ($this->cache_life != 0) {
 			$filename = $this->cache_dir . 'feed_parser_' . md5($this->feed_uri);
@@ -70,11 +71,11 @@ class Feed_parser {
 		}
 
 		// Reset
-		$this->data = array();
-		$this->channel_data = array();
+		$this->data = [];
+		$this->channel_data = [];
 
 		// Parse the document
-		if ( ! isset($rawFeed)) {
+		if (!isset($rawFeed)) {
 			$rawFeed = @file_get_contents($this->feed_uri);
 		}
 
@@ -83,7 +84,8 @@ class Feed_parser {
 		try {
 			$xml = new SimpleXmlElement($rawFeed);
 		} catch (Exception $e) {
-			log_message('error', 'Feed_parser: error --> Exception: '.$e->getMessage().' String could not be parsed as XML');
+			log_message('error', 'Feed_parser: error --> Exception: ' . $e->getMessage() . ' String could not be parsed as XML');
+
 			return FALSE;
 		}
 
@@ -94,13 +96,13 @@ class Feed_parser {
 
 			// Build the item array
 			foreach ($xml->channel->item as $item) {
-				$data = array();
-				$data['title'] = (string) $item->title;
-				$data['description'] = (string) preg_replace('#<img(.*)/>#', '', $item->description);
-				$data['pubDate'] = (string) $item->pubDate;
-				$data['link'] = (string) $item->link;
+				$data = [];
+				$data['title'] = (string)$item->title;
+				$data['description'] = (string)preg_replace('#<img(.*)/>#', '', $item->description);
+				$data['pubDate'] = (string)$item->pubDate;
+				$data['link'] = (string)$item->link;
 				$dc = $item->children('http://purl.org/dc/elements/1.1/');
-				$data['author'] = (string) $dc->creator;
+				$data['author'] = (string)$dc->creator;
 
 				if ($this->callback) {
 					$data = call_user_func($this->callback, $data, $item);
@@ -115,14 +117,14 @@ class Feed_parser {
 
 			// Build the item array
 			foreach ($xml->entry as $item) {
-				$data = array();
-				$data['id'] = (string) $item->id;
-				$data['title'] = (string) $item->title;
-				$data['description'] = (string) preg_replace('#<img(.*)/>#', '', $item->content);
-				$data['pubDate'] = (string) $item->published;
-				$data['link'] = (string) $item->link['href'];
+				$data = [];
+				$data['id'] = (string)$item->id;
+				$data['title'] = (string)$item->title;
+				$data['description'] = (string)preg_replace('#<img(.*)/>#', '', $item->content);
+				$data['pubDate'] = (string)$item->published;
+				$data['link'] = (string)$item->link['href'];
 				$dc = $item->children('http://purl.org/dc/elements/1.1/');
-				$data['author'] = (string) $dc->creator;
+				$data['author'] = (string)$dc->creator;
 
 				if ($this->callback) {
 					$data = call_user_func($this->callback, $data, $item);
@@ -134,7 +136,7 @@ class Feed_parser {
 
 		// Do we need to write the cache file?
 		if ($this->write_cache_flag) {
-			if ( ! $fp = @fopen($filename, FOPEN_WRITE_CREATE_DESTRUCTIVE)) {
+			if (!$fp = @fopen($filename, FOPEN_WRITE_CREATE_DESTRUCTIVE)) {
 				log_message('error', "Unable to write cache file: " . $filename);
 
 				return;
@@ -151,7 +153,8 @@ class Feed_parser {
 
 	// --------------------------------------------------------------------
 
-	function set_cache_life($period = NULL) {
+	function set_cache_life($period = null)
+	{
 		$this->cache_life = $period;
 
 		return $this;
@@ -159,7 +162,8 @@ class Feed_parser {
 
 	// --------------------------------------------------------------------
 
-	function set_feed_url($url = NULL) {
+	function set_feed_url($url = null)
+	{
 		$this->feed_uri = $url;
 
 		return $this;
@@ -171,15 +175,16 @@ class Feed_parser {
 	 * @param No of items to return from the feed
 	 * @return Associative array of items
 	*/
-	function getFeed($num) {
+	function getFeed($num)
+	{
 		$this->parse();
 
 		$c = 0;
-		$return = array();
+		$return = [];
 
 		foreach ($this->data AS $item) {
 			$return[] = $item;
-			$c ++;
+			$c++;
 
 			if ($c == $num) {
 				break;
@@ -192,10 +197,11 @@ class Feed_parser {
 	// --------------------------------------------------------------------
 
 	/* Return channel data for the feed */
-	function & getChannelData() {
+	function & getChannelData()
+	{
 		$flag = FALSE;
 
-		if ( ! empty($this->channel_data)) {
+		if (!empty($this->channel_data)) {
 			return $this->channel_data;
 		} else {
 			return $flag;
@@ -205,17 +211,19 @@ class Feed_parser {
 	// --------------------------------------------------------------------
 
 	/* Were we unable to retreive the feeds ?  */
-	function errorInResponse() {
+	function errorInResponse()
+	{
 		return $this->feed_unavailable;
 	}
 
 	// --------------------------------------------------------------------
 
 	/* Initialize the feed data */
-	function clear() {
-		$this->feed_uri = NULL;
+	function clear()
+	{
+		$this->feed_uri = null;
 		$this->data = FALSE;
-		$this->channel_data = array();
+		$this->channel_data = [];
 		$this->cache_life = 0;
 		$this->callback = FALSE;
 

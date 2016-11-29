@@ -4,13 +4,12 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 2.2
- * @filesource
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -24,11 +23,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Updates
 {
 
-	protected $updated_files = array('modified' => array(), 'added' => array());
+	protected $updated_files = ['modified' => [], 'added' => []];
 
 	protected $endpoint = 'https://api.tastyigniter.com/v1';
 
-	public function __construct() {
+	public function __construct()
+	{
 		$this->CI =& get_instance();
 
 		$this->CI->load->model('Updates_model');
@@ -36,7 +36,8 @@ class Updates
 		$this->CI->load->model('Themes_model');
 	}
 
-	public function lastVersionCheck() {
+	public function lastVersionCheck()
+	{
 		$version = $this->config->item('last_version_check');
 
 		if (isset($version['last_version_check'])) {
@@ -46,32 +47,33 @@ class Updates
 		return TRUE;
 	}
 
-	public function getUpdates($force) {
+	public function getUpdates($force)
+	{
 		$_extensions = $this->CI->Extensions_model->getExtensions();
-		$extension_versions = $this->CI->Extensions_model->where_in('type', array('module', 'payment'))->lists('name', 'version');
-		$extension_titles = $this->CI->Extensions_model->where_in('type', array('module', 'payment'))->lists('name', 'title');
+		$extension_versions = $this->CI->Extensions_model->where_in('type', ['module', 'payment'])->lists('name', 'version');
+		$extension_titles = $this->CI->Extensions_model->where_in('type', ['module', 'payment'])->lists('name', 'title');
 		$theme_versions = $this->CI->Themes_model->where('type', 'theme')->lists('name', 'version');
 		$theme_titles = $this->CI->Themes_model->where('type', 'theme')->lists('name', 'title');
 
 		$info = $this->installer->getSysInfo();
 
-		$params = array(
+		$params = [
 			'sys_hash'   => $info['sys_hash'],
 			'version'    => $info['version'],
 			'extensions' => serialize($extension_versions),
 			'themes'     => serialize($theme_versions),
 			'force'      => $force,
-		);
+		];
 
 		$result = $this->getRemoteData('core/update', $params);
-		$update_count = (int) array_get($result, 'update_count', 0);
+		$update_count = (int)array_get($result, 'update_count', 0);
 
 		if ($core = array_get($result, 'core')) {
 			$core['last_version'] = $info['version'];
 			$result['core'] = $core;
 		}
 
-		$extensions = array();
+		$extensions = [];
 		foreach (array_get($result, 'extensions', []) as $code => $info) {
 			$info['title'] = isset($extension_titles[$code]) ? $extension_titles[$code] : $code;
 			$info['last_version'] = isset($extension_versions[$code]) ? $extension_versions[$code] : FALSE;
@@ -85,7 +87,7 @@ class Updates
 		}
 		$result['extensions'] = $extensions;
 
-		$themes = array();
+		$themes = [];
 		foreach (array_get($result, 'themes', []) as $code => $info) {
 			$info['title'] = isset($theme_titles[$code]) ? $theme_titles[$code] : $code;
 			$info['last_version'] = isset($theme_versions[$code]) ? $theme_versions[$code] : FALSE;
@@ -99,14 +101,15 @@ class Updates
 		return $result;
 	}
 
-	public function getVersions($extensions = array(), $refresh = FALSE) {
+	public function getVersions($extensions = [], $refresh = FALSE)
+	{
 		$version = $this->config->item('last_version_check');
 
 		if (!$refresh AND isset($version['last_version_check']) AND strtotime('-7 day') < strtotime($version['last_version_check'])) {
 			return $version;
 		}
 
-		$result = array();
+		$result = [];
 
 		$result['last_version_check'] = mdate('%d-%m-%Y %H:%i:%s', time());
 
@@ -115,10 +118,10 @@ class Updates
 		// Check core stable version first
 		$url = $this->endpoint . '/core/version/' . $info['version'] . '/' . $info['php_version'] . '/' . $info['mysql_version'];
 
-		$params = array(
+		$params = [
 			'sys_hash'   => $info['sys_hash'],
 			'ti_version' => $info['version'],
-		);
+		];
 		$result['core'] = $this->getRemoteData($url);
 
 		// Then extensions, themes and translations
@@ -140,12 +143,14 @@ class Updates
 		return $result;
 	}
 
-	protected function getRemoteData($url, $params = array()) {
+	protected function getRemoteData($url, $params = [])
+	{
 
 		return get_remote_data($this->endpoint . $url, $this->buildPostData($params));
 	}
 
-	protected function getRemoteFile($url, $params = array()) {
+	protected function getRemoteFile($url, $params = [])
+	{
 		$options['TIMEOUT'] = 60;
 
 		$remote_data = get_remote_data($this->endpoint . $url, $this->buildPostData($params, $options));
@@ -154,10 +159,11 @@ class Updates
 			return json_decode($remote_data);
 		}
 
-		return NULL;
+		return null;
 	}
 
-	protected function buildPostData($params = array(), $options = array()) {
+	protected function buildPostData($params = [], $options = [])
+	{
 		$options['USERAGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:43.0) Gecko/20100101 Firefox/43.0';
 		$options['AUTOREFERER'] = TRUE;
 		$options['FAILONERROR'] = TRUE;
@@ -174,7 +180,8 @@ class Updates
 		return $options;
 	}
 
-	public function update($update_type, $update_name = '', $update_version = '') {
+	public function update($update_type, $update_name = '', $update_version = '')
+	{
 
 		if ($update_type === 'core') {
 			$update_version = $this->input->get('version');
@@ -235,13 +242,13 @@ class Updates
 			// Delete the temp update path
 			delete_files(ROOTPATH . $update_path, TRUE);
 			rmdir(ROOTPATH . $update_path);
-
 		} else {
 			flush_output($this->lang->line('progress_download_failed'));
 		}
 	}
 
-	public function downloadUpdate($update_type, $update = '') {
+	public function downloadUpdate($update_type, $update = '')
+	{
 		$info = $this->installer->getSysInfo();
 
 		// Check core version first
@@ -262,18 +269,19 @@ class Updates
 		return $this->getRemoteData($url, $options);
 	}
 
-	public function installCoreUpdate($update_version, $update_file) {
+	public function installCoreUpdate($update_version, $update_file)
+	{
 		$temp_path = ROOTPATH . $update_file;
 
 		if (!is_dir($temp_path)) {
 			return $this->lang->line('progress_archive_not_found');
 		} else {
-			$remove_files = array(
+			$remove_files = [
 				'/tests',
 				'/system/tastyigniter/logs',
 				'/system/tastyigniter/session',
 				'/system/tastyigniter/config/database.php',
-			);
+			];
 
 			// Remove the themes, languages, extensions, logs and sessions folder
 			if ($this->removeTempFiles($remove_files, $temp_path)) {
@@ -294,7 +302,8 @@ class Updates
 		return TRUE;
 	}
 
-	protected function removeTempFiles($files = array(), $from_folder = '') {
+	protected function removeTempFiles($files = [], $from_folder = '')
+	{
 
 		if (empty($files)) return FALSE;
 
@@ -312,7 +321,8 @@ class Updates
 		return TRUE;
 	}
 
-	protected function copyTempFiles($source, $destination) {
+	protected function copyTempFiles($source, $destination)
+	{
 		//Remove trailing slash
 		$source = rtrim($source, '/');
 		$destination = rtrim($destination, '/');
@@ -354,7 +364,8 @@ class Updates
 		return $this->updated_files;
 	}
 
-	protected function isFilesIdentical($file_one, $file_two) {
+	protected function isFilesIdentical($file_one, $file_two)
+	{
 		// Check if filesize is different
 		if (@filesize($file_one) !== @filesize($file_two)) {
 			return FALSE;
@@ -378,7 +389,8 @@ class Updates
 		return $result;
 	}
 
-	public function flushUpdatedFiles() {
+	public function flushUpdatedFiles()
+	{
 		asort($this->updated_files);
 
 		$html = "<p>{$this->lang->line('progress_modified_files')}</p><div id=\"updatedFiles\" style=\"width:70%;display: none;\">";

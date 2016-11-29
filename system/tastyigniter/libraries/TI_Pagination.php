@@ -4,13 +4,12 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- * @filesource
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -27,17 +26,16 @@ class TI_Pagination extends CI_Pagination
 	/**
 	 * Constructor
 	 *
-	 * @param	array	$params	Initialization parameters
-	 * @return	void
+	 * @param    array $params Initialization parameters
+	 *
+	 * @return    void
 	 */
-	public function __construct($params = array())
+	public function __construct($params = [])
 	{
 		$this->CI =& get_instance();
 		$this->CI->load->language('pagination');
-		foreach (array('first_link', 'next_link', 'prev_link', 'last_link', 'info_text', 'per_page_text') as $key)
-		{
-			if (($val = $this->CI->lang->line('pagination_'.$key)) !== FALSE)
-			{
+		foreach (['first_link', 'next_link', 'prev_link', 'last_link', 'info_text', 'per_page_text'] as $key) {
+			if (($val = $this->CI->lang->line('pagination_' . $key)) !== FALSE) {
 				$this->$key = $val;
 			}
 		}
@@ -53,8 +51,9 @@ class TI_Pagination extends CI_Pagination
 	 *
 	 * @return    TI_Pagination
 	 */
-	public function initialize(array $params = array()) {
-		isset($params['attributes']) OR $params['attributes'] = array();
+	public function initialize(array $params = [])
+	{
+		isset($params['attributes']) OR $params['attributes'] = [];
 		if (is_array($params['attributes'])) {
 			$this->_parse_attributes($params['attributes']);
 			unset($params['attributes']);
@@ -90,7 +89,8 @@ class TI_Pagination extends CI_Pagination
 	 *
 	 * @return    string
 	 */
-	function create_infos() {
+	function create_infos()
+	{
 		$num_pages = ceil($this->total_rows / $this->per_page);
 
 		if ($this->CI->input->get($this->query_string_segment)) {
@@ -99,21 +99,21 @@ class TI_Pagination extends CI_Pagination
 			$page = 1;
 		}
 
-		$find = array(
+		$find = [
 			'{start}',
 			'{end}',
 			'{total}',
 			'{pages}',
-		);
+		];
 
-		$replace = array(
+		$replace = [
 			($this->total_rows) ? (($page - 1) * $this->per_page) + 1 : 0,
 			((($page - 1) * $this->per_page) > ($this->total_rows - $this->per_page)) ? $this->total_rows : ((($page - 1) * $this->per_page) + $this->per_page),
 			$this->total_rows,
 			$num_pages,
-		);
+		];
 
-		$per_page = array('20', '50', '100', '250', '500', '1000', '2500');
+		$per_page = ['20', '50', '100', '250', '500', '1000', '2500'];
 		if (APPDIR === MAINDIR) {
 			$info = '<span>' . str_replace($find, $replace, $this->info_text) . '</span>';
 		} else {

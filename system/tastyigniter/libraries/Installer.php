@@ -4,13 +4,12 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- * @filesource
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -24,10 +23,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Installer
 {
 	/** @var boolean Indicates whether the default database settings were found. */
-	public $db_exists = NULL;
+	public $db_exists = null;
 
 	/** @var boolean Indicates whether the database settings were found. */
-	public $db_settings_exist = NULL;
+	public $db_settings_exist = null;
 
 	protected $is_installed;
 	protected $_db_config_loaded;
@@ -36,19 +35,20 @@ class Installer
 	public $installed_mysql_version;
 	public $required_php_version = '5.4';
 
-	private $writable_folders = array(
+	private $writable_folders = [
 		'admin/cache',
 		'main/cache',
 		'system/tastyigniter/logs',
 		'assets/downloads',
 		'assets/images',
-	);
+	];
 
-	private $writable_files = array(
+	private $writable_files = [
 		'system/tastyigniter/config/database.php',
-	);
+	];
 
-	public function __construct($config = array()) {
+	public function __construct($config = [])
+	{
 		$this->CI =& get_instance();
 
 		$this->installed_php_version = phpversion();
@@ -56,7 +56,8 @@ class Installer
 		$this->initialize($config);
 	}
 
-	public function initialize($config = array()) {
+	public function initialize($config = [])
+	{
 		$this->checkDatabase();
 
 		$this->is_installed = $this->isInstalled();
@@ -69,7 +70,7 @@ class Installer
 		// Redirect to setup if app requires setup
 		if (APPDIR !== 'setup') {
 			if ($this->db_settings_exist !== TRUE OR ($this->db_exists AND $this->is_installed !== TRUE)) {
-				if (!file_exists(ROOTPATH.'/setup/controllers/Setup.php')) {
+				if (!file_exists(ROOTPATH . '/setup/controllers/Setup.php')) {
 					show_error('Upload missing setup folder', 500, 'Error Was Encountered');
 				} else {
 					redirect(root_url('setup'));
@@ -82,8 +83,9 @@ class Installer
 		}
 	}
 
-	public function getSysInfo() {
-		$info = array();
+	public function getSysInfo()
+	{
+		$info = [];
 		$info['version'] = TI_VERSION;
 		$info['php_version'] = $this->installed_php_version;
 		$info['mysql_version'] = $this->db_exists ? $this->CI->db->version() : '';
@@ -100,7 +102,8 @@ class Installer
 		return $info;
 	}
 
-	public function checkRequirements() {
+	public function checkRequirements()
+	{
 		$result['php_status'] = (bool)!($this->installed_php_version < $this->required_php_version);
 		$result['mysqli_status'] = (bool)(extension_loaded('mysqli') AND class_exists('Mysqli'));
 		$result['curl_status'] = (bool)function_exists('curl_init');
@@ -112,23 +115,25 @@ class Installer
 		return $result;
 	}
 
-	public function checkWritable($writables = array()) {
-		$writables = empty($writables) ? array_merge($this->writable_files, $this->writable_folders) : array();
+	public function checkWritable($writables = [])
+	{
+		$writables = empty($writables) ? array_merge($this->writable_files, $this->writable_folders) : [];
 
 		$this->CI->load->helper('file');
 
-		$data = array();
+		$data = [];
 		foreach ($writables as $writable) {
-			$data[$writable] = array(
+			$data[$writable] = [
 				'file'   => $writable,
 				'status' => is_really_writable(ROOTPATH . $writable),
-			);
+			];
 		}
 
 		return $data;
 	}
 
-	public function checkSettings() {
+	public function checkSettings()
+	{
 		// Check if site_name and site_email config item is set
 		if (!$this->CI->config->item('site_name') AND !$this->CI->config->item('site_email')) {
 			return FALSE;
@@ -160,7 +165,8 @@ class Installer
 		return TRUE;
 	}
 
-	public function isInstalled() {
+	public function isInstalled()
+	{
 		if (!$this->CI->config->item('encryption_key')) {
 			return FALSE;
 		}
@@ -173,7 +179,8 @@ class Installer
 		return TRUE;
 	}
 
-	public function checkDatabase() {
+	public function checkDatabase()
+	{
 		if (defined('ENVIRONMENT') && is_file(IGNITEPATH . 'config/' . ENVIRONMENT . '/database.php')) {
 			require(IGNITEPATH . 'config/' . ENVIRONMENT . '/database.php');
 		} elseif (is_file(IGNITEPATH . 'config/development/database.php')) {
@@ -222,7 +229,8 @@ class Installer
 		return TRUE;
 	}
 
-	public function testDbConnection($db = array()) {
+	public function testDbConnection($db = [])
+	{
 		$default['driver'] = 'mysqli';
 		$default['database'] = $this->CI->input->post('database');
 		$default['hostname'] = $this->CI->input->post('hostname');
@@ -252,7 +260,8 @@ class Installer
 		}
 	}
 
-	public function writeDbConfiguration() {
+	public function writeDbConfiguration()
+	{
 		if (!$this->CI->input->post()) {
 			return;
 		}
@@ -308,19 +317,22 @@ class Installer
 		}
 	}
 
-	public function checkFolders($folders = NULL) {
+	public function checkFolders($folders = null)
+	{
 		!is_null($folders) OR $folders = $this->writable_folders;
 
 		return $this->checkWritable($folders);
 	}
 
-	public function checkFiles($files = NULL) {
+	public function checkFiles($files = null)
+	{
 		!is_null($files) OR $files = $this->writable_files;
 
 		return $this->checkWritable($files);
 	}
 
-	public function setup() {
+	public function setup()
+	{
 		$this->CI->load->model('Setup_model');
 
 		$this->CI->Setup_model->loadSchema();
@@ -337,13 +349,13 @@ class Installer
 		}
 
 		// Save the site configuration to the settings table
-		$settings = array(
+		$settings = [
 			'ti_setup'           => 'installed',
 			'site_location_mode' => $this->CI->input->post('site_location_mode'),
 			'site_url'           => root_url(),
 			'site_name'          => $this->CI->input->post('site_name'),
 			'site_email'         => $this->CI->input->post('site_email'),
-		);
+		];
 
 		if (!$this->CI->Setup_model->updateSettings($settings)) {
 			return FALSE;
@@ -364,7 +376,8 @@ class Installer
 		return TRUE;
 	}
 
-	public function upgrade() {
+	public function upgrade()
+	{
 		if (!is_file(IGNITEPATH . 'config/updated.txt')) {
 			return FALSE;
 		}
@@ -397,7 +410,7 @@ class Installer
 				$this->CI->Setup_model->updateVersion($update_version);
 
 				// Save the site configuration to the settings table
-				$settings = array('ti_setup' => 'updated', 'site_url' => root_url());
+				$settings = ['ti_setup' => 'updated', 'site_url' => root_url()];
 				if (!$this->CI->Setup_model->updateSettings($settings, TRUE)) {
 					return FALSE;
 				}
@@ -416,16 +429,17 @@ class Installer
 		}
 	}
 
-	protected function createEncryptionKey() {
+	protected function createEncryptionKey()
+	{
 		$this->CI->load->helper('config_helper');
 
-		$chars = array(
+		$chars = [
 			'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
 			'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
 			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
 			'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
 			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-		);
+		];
 
 		shuffle($chars);
 		$num_chars = count($chars) - 1;
@@ -436,9 +450,9 @@ class Installer
 			$token .= $chars[mt_rand(0, $num_chars)];
 		}
 
-		$config_array = array(
+		$config_array = [
 			'encryption_key' => $token,
-		);
+		];
 
 		return write_config('config', $config_array, '', IGNITEPATH);
 	}

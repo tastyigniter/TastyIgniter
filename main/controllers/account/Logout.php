@@ -3,7 +3,8 @@
 class Logout extends Main_Controller
 {
 
-	public function index() {
+	public function index()
+	{
 		$this->load->model('Pages_model');
 		$this->lang->load('account/login_register');
 
@@ -15,8 +16,8 @@ class Logout extends Main_Controller
 		$this->alert->set('success', $this->lang->line('alert_logout_success'));
 
 		log_activity($this->customer->getId(), 'logged out', 'customers', get_activity_message('activity_logged_out',
-			array('{customer}', '{link}'),
-			array($this->customer->getName(), admin_url('customers/edit?id=' . $this->customer->getId()))
+			['{customer}', '{link}'],
+			[$this->customer->getName(), admin_url('customers/edit?id=' . $this->customer->getId())]
 		));
 
 		$this->customer->logout();

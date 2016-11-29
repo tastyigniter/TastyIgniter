@@ -3,7 +3,8 @@
 class Pages extends Main_Controller
 {
 
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct();                                                                    //  calls the constructor
 
 		$this->load->model('Pages_model');
@@ -11,7 +12,8 @@ class Pages extends Main_Controller
 		$this->load->library('user');                                                        // load the user library
 	}
 
-	public function index() {
+	public function index()
+	{
 		if (!$result = $this->Pages_model->find((int)$this->input->get('page_id'))) {
 			show_404();
 		}
@@ -21,8 +23,8 @@ class Pages extends Main_Controller
 
 		$this->template->setTitle($result['title']);
 		$this->template->setHeading($result['heading']);
-		$this->assets->setMeta(array('name' => 'description', 'content' => $result['meta_description']));
-		$this->assets->setMeta(array('name' => 'keywords', 'content' => $result['meta_keywords']));
+		$this->assets->setMeta(['name' => 'description', 'content' => $result['meta_description']]);
+		$this->assets->setMeta(['name' => 'keywords', 'content' => $result['meta_keywords']]);
 		$data['page_id'] = $result['page_id'];
 		$data['text_heading'] = $result['heading'];
 		$data['page_content'] = $result['content'];

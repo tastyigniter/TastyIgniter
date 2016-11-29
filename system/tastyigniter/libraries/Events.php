@@ -4,13 +4,12 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- * @filesource
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -18,7 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * Events Class
  *
  * Adapted from Bonfire Dev Team's Events Class.
- * @link   http://cibonfire.com
+ * @link           http://cibonfire.com
  *
  * Allows you to create hook points throughout the application that any other
  * module can tap into without hacking core code.
@@ -27,7 +26,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @package        TastyIgniter\Libraries\Customizer.php
  * @link           http://docs.tastyigniter.com
  */
-class Events {
+class Events
+{
 
 	/**
 	 * @var object The CI instance, only retrieved if required in the init() method.
@@ -37,13 +37,14 @@ class Events {
 	/**
 	 * @var array Holds the registered events.
 	 */
-	private static $events = array();
+	private static $events = [];
 
 	/**
 	 * This if here solely for CI loading to work. Just calls the initialize() method.
 	 *
 	 */
-	public function __construct() {
+	public function __construct()
+	{
 		self::initialize();
 	}
 
@@ -52,16 +53,17 @@ class Events {
 	 *
 	 * @return void
 	 */
-	public static function initialize() {
+	public static function initialize()
+	{
 		// Merge events from indivdual modules.
 		foreach (Modules::list_modules() as $module) {
 			// Skip if module is not installed
-			if ( Modules::is_disabled($module)) {
+			if (Modules::is_disabled($module)) {
 				continue;
 			}
 
 			list($path, $file) = Modules::find('events', $module, 'config/');
-			
+
 			if ($path) {
 				$module_events = Modules::load_file('events', $path, 'config');
 
@@ -72,7 +74,7 @@ class Events {
 		}
 
 		if (self::$events === FALSE) {
-			self::$events = array();
+			self::$events = [];
 		}
 	}
 
@@ -80,13 +82,14 @@ class Events {
 	 * Triggers an individual event.
 	 *
 	 * @param string $event_name A string with the name of the event to trigger. Case sensitive.
-	 * @param mixed  $payload    (optional) An array to send to the event method.
+	 * @param mixed $payload     (optional) An array to send to the event method.
 	 *
 	 * @return void
 	 */
-	public static function trigger($event_name = NULL, $payload = NULL) {
-		if (empty($event_name) OR ! is_string($event_name)
-			OR ! array_key_exists($event_name, self::$events)
+	public static function trigger($event_name = null, $payload = null)
+	{
+		if (empty($event_name) OR !is_string($event_name)
+			OR !array_key_exists($event_name, self::$events)
 		) {
 			return;
 		}
@@ -98,13 +101,13 @@ class Events {
 
 			$file_path = Modules::file_path($subscriber['module'], $subscriber['filepath'], $subscriber['filename']);
 
-			if ( ! file_exists($file_path)) {
+			if (!file_exists($file_path)) {
 				continue;
 			}
 
 			include_once($file_path);
 
-			if ( ! class_exists($subscriber['class'])) {
+			if (!class_exists($subscriber['class'])) {
 				// if class doesn't exist check that the function is callable
 				// could be just a helper function
 				if (is_callable($subscriber['method'])) {
@@ -116,7 +119,7 @@ class Events {
 
 			$class = new $subscriber['class'];
 
-			if ( ! is_callable(array($class, $subscriber['method']))) {
+			if (!is_callable([$class, $subscriber['method']])) {
 				unset($class);
 				continue;
 			}

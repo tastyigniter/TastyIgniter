@@ -3,7 +3,8 @@
 class Details extends Main_Controller
 {
 
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct();                                                                    //  calls the constructor
 
 		if (!$this->customer->isLogged()) {                                                    // if customer is not logged in redirect to account login page
@@ -16,7 +17,8 @@ class Details extends Main_Controller
 		$this->lang->load('account/details');
 	}
 
-	public function index() {
+	public function index()
+	{
 		$this->template->setBreadcrumb('<i class="fa fa-home"></i>', '/');
 		$this->template->setBreadcrumb($this->lang->line('text_my_account'), 'account/account');
 		$this->template->setBreadcrumb($this->lang->line('text_heading'), 'account/details');
@@ -47,9 +49,10 @@ class Details extends Main_Controller
 		$this->template->render('account/details', $data);
 	}
 
-	protected function _updateDetails() {                                                            // method to validate update details form fields
+	protected function _updateDetails()
+	{                                                            // method to validate update details form fields
 		if ($this->validateForm() === TRUE) {
-			$update = array();
+			$update = [];
 
 			// START: retrieve $_POST data if $_POST data is not same as existing customer library data
 			$update['first_name'] = $this->input->post('first_name');
@@ -65,14 +68,14 @@ class Details extends Main_Controller
 			if (!empty($update)) {                                                                // if update array is not empty then update customer details and display success message
 				if ($this->Customers_model->saveCustomer($this->customer->getId(), $update)) {
 					log_activity($this->customer->getId(), 'updated', 'customers', get_activity_message('activity_updated_account',
-						array('{customer}', '{link}'),
-						array($this->customer->getName(), admin_url('customers/edit?id=' . $this->customer->getId()))
+						['{customer}', '{link}'],
+						[$this->customer->getName(), admin_url('customers/edit?id=' . $this->customer->getId())]
 					));
 
 					if (!empty($update['password'])) {
 						log_activity($this->customer->getId(), 'updated', 'customers', get_activity_message('activity_changed_password',
-							array('{customer}', '{link}'),
-							array($this->customer->getName(), admin_url('customers/edit?id=' . $this->customer->getId()))
+							['{customer}', '{link}'],
+							[$this->customer->getName(), admin_url('customers/edit?id=' . $this->customer->getId())]
 						));
 					}
 
@@ -84,18 +87,19 @@ class Details extends Main_Controller
 		}
 	}
 
-	protected function validateForm() {
+	protected function validateForm()
+	{
 		// START of form validation rules
-		$rules[] = array('first_name', 'lang:label_first_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
-		$rules[] = array('last_name', 'lang:label_last_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
-		$rules[] = array('telephone', 'lang:label_telephone', 'xss_clean|trim|required|integer');
-		$rules[] = array('security_question_id', 'lang:label_s_question', 'xss_clean|trim|required|integer');
-		$rules[] = array('security_answer', 'lang:label_s_answer', 'xss_clean|trim|required|min_length[2]');
+		$rules[] = ['first_name', 'lang:label_first_name', 'xss_clean|trim|required|min_length[2]|max_length[32]'];
+		$rules[] = ['last_name', 'lang:label_last_name', 'xss_clean|trim|required|min_length[2]|max_length[32]'];
+		$rules[] = ['telephone', 'lang:label_telephone', 'xss_clean|trim|required|integer'];
+		$rules[] = ['security_question_id', 'lang:label_s_question', 'xss_clean|trim|required|integer'];
+		$rules[] = ['security_answer', 'lang:label_s_answer', 'xss_clean|trim|required|min_length[2]'];
 
 		if ($this->input->post('old_password')) {
-			$rules[] = array('old_password', 'lang:label_old_password', 'xss_clean|trim|required|min_length[6]|max_length[32]|callback__check_old_password');
-			$rules[] = array('new_password', 'lang:label_password', 'xss_clean|trim|required|min_length[6]|max_length[32]|matches[confirm_new_password]');
-			$rules[] = array('confirm_new_password', 'lang:label_password_confirm', 'xss_clean|trim|required');
+			$rules[] = ['old_password', 'lang:label_old_password', 'xss_clean|trim|required|min_length[6]|max_length[32]|callback__check_old_password'];
+			$rules[] = ['new_password', 'lang:label_password', 'xss_clean|trim|required|min_length[6]|max_length[32]|matches[confirm_new_password]'];
+			$rules[] = ['confirm_new_password', 'lang:label_password_confirm', 'xss_clean|trim|required'];
 		}
 
 		// END of form validation rules
@@ -103,7 +107,8 @@ class Details extends Main_Controller
 		return $this->form_validation->set_rules($rules)->run();
 	}
 
-	public function _check_old_password($pwd) {                                                    // validation callback function to check if old password is valid
+	public function _check_old_password($pwd)
+	{                                                    // validation callback function to check if old password is valid
 
 		if (!$this->customer->checkPassword($pwd)) {
 			$this->form_validation->set_message('_check_old_password', $this->lang->line('error_password'));

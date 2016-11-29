@@ -3,9 +3,10 @@
 class Reservations extends Main_Controller
 {
 
-	public $default_sort = array('reserve_date', 'DESC');
-	
-	public function __construct() {
+	public $default_sort = ['reserve_date', 'DESC'];
+
+	public function __construct()
+	{
 		parent::__construct();                                                                    //  calls the constructor
 
 		if (!$this->customer->isLogged()) {                                                    // if customer is not logged in redirect to account login page
@@ -24,7 +25,8 @@ class Reservations extends Main_Controller
 		}
 	}
 
-	public function index() {
+	public function index()
+	{
 		$this->template->setBreadcrumb('<i class="fa fa-home"></i>', '/');
 		$this->template->setBreadcrumb($this->lang->line('text_my_account'), 'account/account');
 		$this->template->setBreadcrumb($this->lang->line('text_heading'), 'account/reservations');
@@ -39,15 +41,15 @@ class Reservations extends Main_Controller
 
 		$time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
 
-		$data['reservations'] = array();
+		$data['reservations'] = [];
 		$results = $this->Reservations_model->paginateWithFilter($this->filter);                                // retrieve customer reservations based on customer id from getMainReservations method in Reservations model
 		foreach ($results->list as $result) {
-			$data['reservations'][] = array_merge($result, array(                                                    // create array of customer reservations to pass to view
+			$data['reservations'][] = array_merge($result, [                                                    // create array of customer reservations to pass to view
 				'reserve_date' => day_elapsed($result['reserve_date']),
 				'reserve_time' => mdate($time_format, strtotime($result['reserve_time'])),
 				'view'         => $this->pageUrl('account/reservations/view/' . $result['reservation_id']),
 				'leave_review' => $this->pageUrl('account/reviews/add/reservation/' . $result['reservation_id'] . '/' . $result['location_id']),
-			));
+			]);
 		}
 
 		$data['pagination'] = $results->pagination;
@@ -55,7 +57,8 @@ class Reservations extends Main_Controller
 		$this->template->render('account/reservations', $data);
 	}
 
-	public function view() {
+	public function view()
+	{
 		$this->load->library('country');
 		$this->load->model('Locations_model');                                                        // load locations model
 
@@ -78,14 +81,14 @@ class Reservations extends Main_Controller
 		$date_format = ($this->config->item('date_format')) ? $this->config->item('date_format') : '%d %M %y';
 		$time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
 
-		$data['occasions'] = array(
+		$data['occasions'] = [
 			'0' => 'not applicable',
 			'1' => 'birthday',
 			'2' => 'anniversary',
 			'3' => 'general celebration',
 			'4' => 'hen party',
 			'5' => 'stag party',
-		);
+		];
 
 		$data['reservation_id'] = $result['reservation_id'];
 		$data['guest_num'] = $result['guest_num'] . ' person(s)';

@@ -3,11 +3,12 @@
 class Home extends Main_Controller
 {
 
-	public function index() {
+	public function index()
+	{
 		$this->lang->load('home');
 
 		$this->template->setTitle($this->lang->line('text_heading'));
-		
+
 		$this->template->render('home');
 	}
 }

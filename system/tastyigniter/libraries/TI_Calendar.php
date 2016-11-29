@@ -4,13 +4,12 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- * @filesource
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -37,13 +36,14 @@ class TI_Calendar extends CI_Calendar
 	 *
 	 * @param string $year
 	 * @param string $month
-	 * @param array  $data the data to be shown in the calendar cells
+	 * @param array $data the data to be shown in the calendar cells
 	 *
 	 * @return string
 	 * @internal param the $int year
 	 * @internal param the $int month
 	 */
-	public function generate($year = '', $month = '', $data = array()) {
+	public function generate($year = '', $month = '', $data = [])
+	{
 		$local_time = time();
 
 		// Set and validate the supplied month/year
@@ -70,7 +70,7 @@ class TI_Calendar extends CI_Calendar
 		$total_days = $this->get_total_days($month, $year);
 
 		// Set the starting day of the week
-		$start_days = array('sunday' => 0, 'monday' => 1, 'tuesday' => 2, 'wednesday' => 3, 'thursday' => 4, 'friday' => 5, 'saturday' => 6);
+		$start_days = ['sunday' => 0, 'monday' => 1, 'tuesday' => 2, 'wednesday' => 3, 'thursday' => 4, 'friday' => 5, 'saturday' => 6];
 		$start_day = isset($start_days[$this->start_day]) ? $start_days[$this->start_day] : 0;
 
 		// Set the starting day number
@@ -205,8 +205,9 @@ class TI_Calendar extends CI_Calendar
 	 *
 	 * @return    array
 	 */
-	public function default_template() {
-		return array(
+	public function default_template()
+	{
+		return [
 			'table_open'                 => '<table class="table table-calendar" border="0" cellpadding="4" cellspacing="0">',
 			'heading_row_start'          => '<tr>',
 			'heading_previous_cell'      => '<th class="prev"><a class="calender-nav" href="{previous_url}"><i class="fa fa-caret-left fa-3x"></i></a></th>',
@@ -235,7 +236,7 @@ class TI_Calendar extends CI_Calendar
 			'cal_cell_end_select'        => '</td>',
 			'cal_row_end'                => '</tr>',
 			'table_close'                => '</table>',
-		);
+		];
 	}
 
 	// --------------------------------------------------------------------
@@ -248,7 +249,8 @@ class TI_Calendar extends CI_Calendar
 	 *
 	 * @return    CI_Calendar
 	 */
-	public function parse_template() {
+	public function parse_template()
+	{
 		$this->replacements = $this->default_template();
 
 		if (empty($this->template)) {
@@ -256,10 +258,10 @@ class TI_Calendar extends CI_Calendar
 		}
 
 		if (is_string($this->template)) {
-			$today = array('cal_cell_start_today', 'cal_cell_content_today', 'cal_cell_no_content_today', 'cal_cell_end_today');
-			$select = array('cal_cell_start_select', 'cal_cell_content_select', 'cal_cell_no_content_select', 'cal_cell_end_select');
+			$today = ['cal_cell_start_today', 'cal_cell_content_today', 'cal_cell_no_content_today', 'cal_cell_end_today'];
+			$select = ['cal_cell_start_select', 'cal_cell_content_select', 'cal_cell_no_content_select', 'cal_cell_end_select'];
 
-			foreach (array('table_open', 'table_close', 'heading_row_start', 'heading_previous_cell', 'heading_title_cell', 'heading_next_cell', 'heading_row_end', 'week_row_start', 'week_day_cell', 'week_row_end', 'cal_row_start', 'cal_cell_start', 'cal_cell_content', 'cal_cell_no_content', 'cal_cell_blank', 'cal_cell_end', 'cal_row_end', 'cal_cell_start_today', 'cal_cell_content_today', 'cal_cell_no_content_today', 'cal_cell_end_today', 'cal_cell_start_other', 'cal_cell_other', 'cal_cell_end_other', 'cal_cell_start_select', 'cal_cell_content_select', 'cal_cell_no_content_select', 'cal_cell_end_select') as $val) {
+			foreach (['table_open', 'table_close', 'heading_row_start', 'heading_previous_cell', 'heading_title_cell', 'heading_next_cell', 'heading_row_end', 'week_row_start', 'week_day_cell', 'week_row_end', 'cal_row_start', 'cal_cell_start', 'cal_cell_content', 'cal_cell_no_content', 'cal_cell_blank', 'cal_cell_end', 'cal_row_end', 'cal_cell_start_today', 'cal_cell_content_today', 'cal_cell_no_content_today', 'cal_cell_end_today', 'cal_cell_start_other', 'cal_cell_other', 'cal_cell_end_other', 'cal_cell_start_select', 'cal_cell_content_select', 'cal_cell_no_content_select', 'cal_cell_end_select'] as $val) {
 				if (preg_match('/\{' . $val . '\}(.*?)\{\/' . $val . '\}/si', $this->template, $match)) {
 					$this->replacements[$val] = $match[1];
 				} elseif (in_array($val, $today, TRUE)) {

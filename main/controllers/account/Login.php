@@ -3,7 +3,8 @@
 class Login extends Main_Controller
 {
 
-	public function index() {
+	public function index()
+	{
 		if ($this->customer->islogged()) {                                                        // checks if customer is logged in then redirect to account page.
 			$this->redirect('account/account');
 		}
@@ -31,8 +32,8 @@ class Login extends Main_Controller
 					$this->redirect(current_url());
 				} else {                                                                        // else if login was successful redirect to account page
 					log_activity($this->customer->getId(), 'logged in', 'customers', get_activity_message('activity_logged_in',
-						array('{customer}', '{link}'),
-						array($this->customer->getName(), admin_url('customers/edit?id=' . $this->customer->getId()))
+						['{customer}', '{link}'],
+						[$this->customer->getName(), admin_url('customers/edit?id=' . $this->customer->getId())]
 					));
 
 					if ($redirect_url = $this->input->get('redirect')) {
@@ -47,7 +48,8 @@ class Login extends Main_Controller
 		$this->template->render('account/login', $data);
 	}
 
-	protected function validateForm() {
+	protected function validateForm()
+	{
 		// START of form validation rules
 		$this->form_validation->set_rules('email', 'lang:label_email', 'xss_clean|trim|required|valid_email');
 		$this->form_validation->set_rules('password', 'lang:label_password', 'xss_clean|trim|required|min_length[6]|max_length[32]');

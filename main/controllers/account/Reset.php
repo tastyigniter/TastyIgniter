@@ -3,7 +3,8 @@
 class Reset extends Main_Controller
 {
 
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct();                                                                    // calls the constructor
 
 		if ($this->customer->islogged()) {                                                        // checks if customer is logged in then redirect to account page.
@@ -16,18 +17,19 @@ class Reset extends Main_Controller
 		$this->lang->load('account/reset');
 	}
 
-	public function index() {
+	public function index()
+	{
 		$this->template->setTitle($this->lang->line('text_heading'));
 
 		$data['login_url'] = $this->pageUrl('account/login');
 
-		$data['questions'] = array();
+		$data['questions'] = [];
 		$results = $this->Security_questions_model->getQuestions();                        // retrieve array of security questions from getQuestions method in Security questions model
 		foreach ($results as $result) {                                                            // loop through security questions array
-			$data['questions'][] = array(                                                        // create an array of security questions to pass to view
+			$data['questions'][] = [                                                        // create an array of security questions to pass to view
 				'id'   => $result['question_id'],
 				'text' => $result['text'],
-			);
+			];
 		}
 
 		if ($this->input->post() AND $this->_resetPassword() === TRUE) {
@@ -37,7 +39,8 @@ class Reset extends Main_Controller
 		$this->template->render('account/reset', $data);
 	}
 
-	protected function _resetPassword() {                                                            // method to validate password reset
+	protected function _resetPassword()
+	{                                                            // method to validate password reset
 		if ($this->validateForm() === TRUE) {
 			$reset['email'] = $this->input->post('email');
 			$reset['security_question_id'] = $this->input->post('security_question');
@@ -55,7 +58,8 @@ class Reset extends Main_Controller
 		}
 	}
 
-	protected function validateForm() {
+	protected function validateForm()
+	{
 		$this->form_validation->set_rules('email', 'lang:label_email', 'xss_clean|trim|required|valid_email|callback__check_reset');    //validate form
 		$this->form_validation->set_rules('security_question', 'lang:label_s_question', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('security_answer', 'lang:label_s_answer', 'xss_clean|trim|required|min_length[2]');
@@ -67,7 +71,8 @@ class Reset extends Main_Controller
 		}
 	}
 
-	public function _check_reset() {
+	public function _check_reset()
+	{
 		$customer_data = $this->Customers_model->getCustomerByEmail($this->input->post('email'));            // retrieve customer data based on $_POST email value from getCustomerByEmail method in Customers model
 		if ($customer_data['email'] !== strtolower($this->input->post('email'))) {
 			$this->form_validation->set_message('_check_reset', $this->lang->line('alert_no_email_match'));

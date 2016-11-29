@@ -3,9 +3,10 @@
 class Orders extends Main_Controller
 {
 
-	public $default_sort = array('date_added', 'DESC');
-	
-	public function __construct() {
+	public $default_sort = ['date_added', 'DESC'];
+
+	public function __construct()
+	{
 		parent::__construct();                                                                    //  calls the constructor
 
 		if (!$this->customer->isLogged()) {                                                    // if customer is not logged in redirect to account login page
@@ -20,7 +21,8 @@ class Orders extends Main_Controller
 		$this->lang->load('account/orders');
 	}
 
-	public function index() {
+	public function index()
+	{
 		$this->load->library('location');
 		$this->location->initialize();
 
@@ -43,14 +45,14 @@ class Orders extends Main_Controller
 
 		$time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
 
-		$data['orders'] = array();
+		$data['orders'] = [];
 		$results = $this->Orders_model->paginateWithFilter($this->filter);            // retrieve customer orders based on customer id from getMainOrders method in Orders model
 		foreach ($results->list as $result) {
 
 			// if order type is equal to 1, order type is delivery else collection
 			$order_type = ($result['order_type'] == '1') ? $this->lang->line('text_delivery') : $this->lang->line('text_collection');
 
-			$data['orders'][] = array_merge($result, array(                                                            // create array of customer orders to pass to view
+			$data['orders'][] = array_merge($result, [                                                            // create array of customer orders to pass to view
 				'date_added'   => day_elapsed($result['date_added']),
 				'order_date'   => day_elapsed($result['order_date']),
 				'order_time'   => mdate($time_format, strtotime($result['order_time'])),
@@ -59,7 +61,7 @@ class Orders extends Main_Controller
 				'view'         => $this->pageUrl('account/orders/view/' . $result['order_id']),
 				'reorder'      => $this->pageUrl('account/orders/reorder/' . $result['order_id'] . '/' . $result['location_id']),
 				'leave_review' => $this->pageUrl('account/reviews/add/order/' . $result['order_id'] . '/' . $result['location_id']),
-			));
+			]);
 		}
 
 		$data['pagination'] = $results->pagination;
@@ -67,7 +69,8 @@ class Orders extends Main_Controller
 		$this->template->render('account/orders', $data);
 	}
 
-	public function view() {
+	public function view()
+	{
 		if ($result = $this->Orders_model->getOrder($this->uri->rsegment(3), $this->customer->getId())) {                                                            // check if customer_id is set in uri string
 			$order_id = (int)$this->uri->rsegment(3);
 		} else {
@@ -104,11 +107,11 @@ class Orders extends Main_Controller
 		$delivery_address = $this->Addresses_model->getAddress($result['customer_id'], $result['address_id']);
 		$data['delivery_address'] = $this->country->addressFormat($delivery_address);
 
-		$data['menus'] = array();
+		$data['menus'] = [];
 		$order_menus = $this->Orders_model->getOrderMenus($result['order_id']);
 		$order_menu_options = $this->Orders_model->getOrderMenuOptions($result['order_id']);
 		foreach ($order_menus as $order_menu) {
-			$option_data = array();
+			$option_data = [];
 			if (!empty($order_menu_options)) {
 				foreach ($order_menu_options as $menu_option) {
 					if ($order_menu['order_menu_id'] == $menu_option['order_menu_id']) {
@@ -117,7 +120,7 @@ class Orders extends Main_Controller
 				}
 			}
 
-			$data['menus'][] = array(
+			$data['menus'][] = [
 				'id'       => $order_menu['menu_id'],
 				'name'     => $order_menu['name'],
 				'qty'      => $order_menu['quantity'],
@@ -125,20 +128,20 @@ class Orders extends Main_Controller
 				'subtotal' => $this->currency->format($order_menu['subtotal']),
 				'comment'  => $order_menu['comment'],
 				'options'  => implode(', ', $option_data),
-			);
+			];
 		}
 
-		$data['totals'] = array();
+		$data['totals'] = [];
 		$order_totals = $this->Orders_model->getOrderTotals($result['order_id']);
 		foreach ($order_totals as $order_total) {
 			if ($data['order_type'] != '1' AND $order_total['code'] === 'delivery') continue;
 
-			$data['totals'][] = array(
+			$data['totals'][] = [
 				'code'     => $order_total['code'],
 				'title'    => htmlspecialchars_decode($order_total['title']),
 				'value'    => $this->currency->format($order_total['value']),
 				'priority' => $order_total['priority'],
-			);
+			];
 		}
 
 		$data['order_total'] = $this->currency->format($result['order_total']);
@@ -154,18 +157,19 @@ class Orders extends Main_Controller
 		$this->template->render('account/orders_view', $data);
 	}
 
-	public function reorder() {
+	public function reorder()
+	{
 		$this->load->library('cart');                                                            // load the cart library
 		if ($order_menus = $this->Orders_model->getOrderMenus($this->uri->rsegment(3))) {
 			foreach ($order_menus as $menu) {
-				$this->cart->insert(array(
+				$this->cart->insert([
 					'id'      => $menu['menu_id'],
 					'name'    => $menu['name'],
 					'qty'     => $menu['quantity'],
 					'price'   => $menu['price'],
 					'comment' => $menu['comment'],
-					'options' => (!empty($menu['option_values'])) ? unserialize($menu['option_values']) : array(),
-				));
+					'options' => (!empty($menu['option_values'])) ? unserialize($menu['option_values']) : [],
+				]);
 			}
 
 			$this->alert->set('alert', sprintf($this->lang->line('alert_reorder_success'), $this->uri->rsegment(3)));

@@ -4,13 +4,12 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- * @filesource
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -21,7 +20,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @package        TastyIgniter\Libraries\TI_Cart.php
  * @link           http://docs.tastyigniter.com
  */
-class TI_Cart extends CI_Cart {
+class TI_Cart extends CI_Cart
+{
 
 	/**
 	 * These are the regular expression rules that we use to validate the product ID and product name
@@ -29,29 +29,29 @@ class TI_Cart extends CI_Cart {
 	 *
 	 * @var string
 	 */
-	public $product_name_rules	= '^\/';
+	public $product_name_rules = '^\/';
 
-	protected $_cart_totals = array();
+	protected $_cart_totals = [];
 
-	public function __construct($params = array()) {
+	public function __construct($params = [])
+	{
 		// Set the super object to a local variable for use later
 		$this->CI =& get_instance();
 
 		// Are any config settings being passed manually?  If so, set them
-		$config = is_array($params) ? $params : array();
+		$config = is_array($params) ? $params : [];
 
 		// Load the Sessions class
 		$this->CI->load->driver('session', $config);
 
 		// Grab the shopping cart array from the session table
 		$this->_cart_contents = $this->CI->session->userdata('cart_contents');
-		if ($this->_cart_contents === NULL)
-		{
+		if ($this->_cart_contents === null) {
 			// No cart exists so we'll set some base values
-			$this->_cart_contents = array('cart_total' => 0, 'total_items' => 0, 'order_total' => 0, 'totals' => array());
+			$this->_cart_contents = ['cart_total' => 0, 'total_items' => 0, 'order_total' => 0, 'totals' => []];
 		}
 
-		$this->_cart_totals = isset($this->_cart_contents['totals']) ? $this->_cart_contents['totals'] : array();
+		$this->_cart_totals = isset($this->_cart_contents['totals']) ? $this->_cart_contents['totals'] : [];
 
 		log_message('info', "Cart Class Initialized");
 	}
@@ -64,15 +64,18 @@ class TI_Cart extends CI_Cart {
 	 * This function permits calculates the delivery charge.
 	 *
 	 * @access    private
+	 *
 	 * @param int $charge
+	 *
 	 * @return bool
 	 */
-	public function set_delivery($charge = 0) {
+	public function set_delivery($charge = 0)
+	{
 		if (is_numeric($charge) OR $charge <= 0) {
 			$save_cart = FALSE;
 		}
 
-		$this->_cart_totals['delivery'] = NULL;
+		$this->_cart_totals['delivery'] = null;
 
 		if ($charge > 0) {
 			$this->_cart_totals['delivery']['priority'] = '2';
@@ -97,10 +100,13 @@ class TI_Cart extends CI_Cart {
 	 * This function permits calculates the coupon coupon from code.
 	 *
 	 * @access    private
+	 *
 	 * @param array $coupon
+	 *
 	 * @return bool
 	 */
-	public function add_coupon($coupon = array()) {
+	public function add_coupon($coupon = [])
+	{
 		$save_cart = FALSE;
 
 		if (!isset($coupon['type'])) {
@@ -134,10 +140,13 @@ class TI_Cart extends CI_Cart {
 	 * This function removes coupon from cart.
 	 *
 	 * @access    private
+	 *
 	 * @param string $coupon_code
+	 *
 	 * @return bool
 	 */
-	public function remove_coupon($coupon_code = '') {
+	public function remove_coupon($coupon_code = '')
+	{
 		$coupon = $this->coupon();
 
 		if ($coupon_code !== '' AND isset($coupon['code']) AND $coupon['code'] == $coupon_code) {
@@ -153,8 +162,9 @@ class TI_Cart extends CI_Cart {
 	 *
 	 * @return float
 	 */
-	public function calculate_tax() {
-		$this->_cart_totals['taxes'] = array();
+	public function calculate_tax()
+	{
+		$this->_cart_totals['taxes'] = [];
 
 		// Calculate taxes if enabled
 		if ($this->CI->config->item('tax_mode') == '1' AND $this->CI->config->item('tax_percentage')) {
@@ -202,22 +212,26 @@ class TI_Cart extends CI_Cart {
 	 * This function adds new total to cart totals.
 	 *
 	 * @access    public
+	 *
 	 * @param array $total
 	 *
 	 * @return int
 	 */
-	public function add_total($total = array()) {
-		if ( ! is_array($total) OR ! isset($total['amount'], $total['title'], $total['action'], $total['priority'])) {
+	public function add_total($total = [])
+	{
+		if (!is_array($total) OR !isset($total['amount'], $total['title'], $total['action'], $total['priority'])) {
 			log_message('error', 'The cart total array must contain a total name, title, amount, action, and priority.');
+
 			return FALSE;
 		}
 
-		if ( ! isset($total['name']) OR ! preg_match('/^[a-z0-9_-]+$/i', $total['name'])) {
+		if (!isset($total['name']) OR !preg_match('/^[a-z0-9_-]+$/i', $total['name'])) {
 			log_message('error', 'An invalid name was submitted as the total name: The name can only contain alpha-numeric characters, dashes, underscores');
+
 			return FALSE;
 		}
 
-		$total['amount'] = (float) $total['amount'];
+		$total['amount'] = (float)$total['amount'];
 		$total['title'] = htmlspecialchars_decode($total['title']);
 		$this->_cart_totals[$total['name']] = $total;
 
@@ -234,10 +248,13 @@ class TI_Cart extends CI_Cart {
 	 * This function removes total from totals.
 	 *
 	 * @access    public
+	 *
 	 * @param string $total_name
+	 *
 	 * @return bool
 	 */
-	public function remove_total($total_name = '') {
+	public function remove_total($total_name = '')
+	{
 		if ($total_name !== '' AND isset($this->_cart_totals[$total_name])) {
 			unset($this->_cart_totals[$total_name]);
 			$this->_save_cart();
@@ -249,15 +266,16 @@ class TI_Cart extends CI_Cart {
 	/**
 	 * Save the cart array to the session DB
 	 *
-	 * @access	private
-	 * @return	bool
+	 * @access    private
+	 * @return    bool
 	 */
-	protected function _save_cart() {
+	protected function _save_cart()
+	{
 		// Let's add up the individual prices and set the cart sub-total
 		$this->_cart_contents['total_items'] = $this->_cart_contents['cart_total'] = $this->_cart_contents['order_total'] = 0;
 		foreach ($this->_cart_contents as $key => $val) {
 			// We make sure the array contains the proper indexes
-			if ( ! is_array($val) OR ! isset($val['price'], $val['qty'])) {
+			if (!is_array($val) OR !isset($val['price'], $val['qty'])) {
 				continue;
 			}
 
@@ -270,7 +288,7 @@ class TI_Cart extends CI_Cart {
 
 		$this->_cart_contents['totals'] = sort_array($this->_cart_totals);
 		foreach ($this->_cart_contents['totals'] as $key => $val) {
-			if ( ! is_array($val) OR ! isset($val['amount'], $val['action'], $val['priority'])) {
+			if (!is_array($val) OR !isset($val['amount'], $val['action'], $val['priority'])) {
 				continue;
 			}
 
@@ -293,7 +311,7 @@ class TI_Cart extends CI_Cart {
 
 		// If we made it this far it means that our cart has data.
 		// Let's pass it to the Session class so it can be stored
-		$this->CI->session->set_userdata(array('cart_contents' => $this->_cart_contents));
+		$this->CI->session->set_userdata(['cart_contents' => $this->_cart_contents]);
 
 		// Woot!
 		return TRUE;
@@ -301,13 +319,12 @@ class TI_Cart extends CI_Cart {
 
 	// --------------------------------------------------------------------
 
-
 	/**
 	 * Total Items
 	 *
 	 * Returns the total item count
 	 *
-	 * @return	int
+	 * @return    int
 	 */
 	public function total_items()
 	{
@@ -320,10 +337,13 @@ class TI_Cart extends CI_Cart {
 	 * Cart Contents *** TASTYIGNITER
 	 *
 	 * @access    public
+	 *
 	 * @param bool $newest_first
+	 *
 	 * @return int
 	 */
-	public function contents($newest_first = FALSE) {
+	public function contents($newest_first = FALSE)
+	{
 		// do we want the newest first?
 		$cart = ($newest_first) ? array_reverse($this->_cart_contents) : $this->_cart_contents;
 
@@ -348,10 +368,11 @@ class TI_Cart extends CI_Cart {
 	 *
 	 * Returns the cart totals array
 	 *
-	 * @access	public
-	 * @return	integer
+	 * @access    public
+	 * @return    integer
 	 */
-	public function totals() {
+	public function totals()
+	{
 		$cart_totals = $this->_cart_totals;
 		$cart_totals['cart_total']['amount'] = $this->total();
 		$cart_totals['order_total']['amount'] = $this->order_total();
@@ -366,11 +387,13 @@ class TI_Cart extends CI_Cart {
 	 *
 	 * Returns the total from the cart totals array
 	 *
-	 * @param	string	$total_name
-	 * @return	array
+	 * @param    string $total_name
+	 *
+	 * @return    array
 	 */
-	public function get_total($total_name = '') {
-		$total = array();
+	public function get_total($total_name = '')
+	{
+		$total = [];
 
 		if ($total_name !== '' AND isset($this->_cart_totals[$total_name])) {
 			$total = $this->_cart_totals[$total_name];
@@ -386,13 +409,15 @@ class TI_Cart extends CI_Cart {
 	 *
 	 * Returns the details of a specific item in the cart
 	 *
-	 * @param	string	$id
-	 * @return	array
+	 * @param    string $id
+	 *
+	 * @return    array
 	 */
-	public function get_item_by_id($id) {
+	public function get_item_by_id($id)
+	{
 		$cart = $this->contents();
 
-		$cart_item = array();
+		$cart_item = [];
 		foreach ($cart as $item) {
 			if ($item['id'] == $id) {
 				$cart_item = $item;
@@ -407,10 +432,11 @@ class TI_Cart extends CI_Cart {
 	/**
 	 * Order Total *** TASTYIGNITER
 	 *
-	 * @access	public
-	 * @return	integer
+	 * @access    public
+	 * @return    integer
 	 */
-	public function order_total() {
+	public function order_total()
+	{
 		return $this->_cart_contents['order_total'];
 	}
 
@@ -421,10 +447,11 @@ class TI_Cart extends CI_Cart {
 	 *
 	 * Returns the delivery charge amount
 	 *
-	 * @access	public
-	 * @return	integer
+	 * @access    public
+	 * @return    integer
 	 */
-	public function delivery() {
+	public function delivery()
+	{
 		return isset($this->_cart_totals['delivery']['amount']) ? $this->_cart_totals['delivery']['amount'] : 0;
 	}
 
@@ -435,11 +462,12 @@ class TI_Cart extends CI_Cart {
 	 *
 	 * Returns coupon
 	 *
-	 * @access	public
-	 * @return	integer
+	 * @access    public
+	 * @return    integer
 	 */
-	public function coupon() {
-		return !empty($this->_cart_totals['coupon']) ? $this->_cart_totals['coupon'] : array();
+	public function coupon()
+	{
+		return !empty($this->_cart_totals['coupon']) ? $this->_cart_totals['coupon'] : [];
 	}
 
 	// --------------------------------------------------------------------
@@ -449,12 +477,14 @@ class TI_Cart extends CI_Cart {
 	 *
 	 * Returns the coupon code
 	 *
-	 * @access	public
-	 * @return	integer
+	 * @access    public
+	 * @return    integer
 	 */
-	public function coupon_code() {
+	public function coupon_code()
+	{
 		$coupon = $this->coupon();
-		return !empty($coupon['code']) ? $coupon['code'] : NULL;
+
+		return !empty($coupon['code']) ? $coupon['code'] : null;
 	}
 
 	// --------------------------------------------------------------------
@@ -464,12 +494,14 @@ class TI_Cart extends CI_Cart {
 	 *
 	 * Returns coupon discount
 	 *
-	 * @access	public
-	 * @return	integer
+	 * @access    public
+	 * @return    integer
 	 */
-	public function coupon_discount() {
+	public function coupon_discount()
+	{
 		$coupon = $this->coupon();
-		return (!empty($coupon['amount'])) ? $coupon['amount'] : NULL;
+
+		return (!empty($coupon['amount'])) ? $coupon['amount'] : null;
 	}
 
 	/**
@@ -477,11 +509,12 @@ class TI_Cart extends CI_Cart {
 	 *
 	 * Returns taxes array
 	 *
-	 * @access	public
-	 * @return	integer
+	 * @access    public
+	 * @return    integer
 	 */
-	public function tax_array() {
-		return !empty($this->_cart_totals['taxes']) ? $this->_cart_totals['taxes'] : array();
+	public function tax_array()
+	{
+		return !empty($this->_cart_totals['taxes']) ? $this->_cart_totals['taxes'] : [];
 	}
 
 	// --------------------------------------------------------------------
@@ -491,12 +524,14 @@ class TI_Cart extends CI_Cart {
 	 *
 	 * Returns the taxes title
 	 *
-	 * @access	public
-	 * @return	integer
+	 * @access    public
+	 * @return    integer
 	 */
-	public function tax_title() {
+	public function tax_title()
+	{
 		$taxes = $this->tax_array();
-		return !empty($taxes['title']) ? $taxes['title'] : NULL;
+
+		return !empty($taxes['title']) ? $taxes['title'] : null;
 	}
 
 	// --------------------------------------------------------------------
@@ -506,12 +541,14 @@ class TI_Cart extends CI_Cart {
 	 *
 	 * Returns the taxes percentage
 	 *
-	 * @access	public
-	 * @return	integer
+	 * @access    public
+	 * @return    integer
 	 */
-	public function tax_percent() {
+	public function tax_percent()
+	{
 		$taxes = $this->tax_array();
-		return !empty($taxes['percent']) ? $taxes['percent'] : NULL;
+
+		return !empty($taxes['percent']) ? $taxes['percent'] : null;
 	}
 
 	// --------------------------------------------------------------------
@@ -521,17 +558,20 @@ class TI_Cart extends CI_Cart {
 	 *
 	 * Returns the taxes amount
 	 *
-	 * @access	public
-	 * @return	integer
+	 * @access    public
+	 * @return    integer
 	 */
-	public function tax_amount() {
+	public function tax_amount()
+	{
 		$taxes = $this->tax_array();
-		return !empty($taxes['amount']) ? $taxes['amount'] : NULL;
+
+		return !empty($taxes['amount']) ? $taxes['amount'] : null;
 	}
 
 	// --------------------------------------------------------------------
 
-	public function product_options_string($row_id, $split = '<br />') {
+	public function product_options_string($row_id, $split = '<br />')
+	{
 		$string = '';
 
 		$this->CI->load->library('currency');
@@ -545,8 +585,9 @@ class TI_Cart extends CI_Cart {
 		return trim($string, $split);
 	}
 
-	public function product_options_ids($row_id) {
-		$ids = array();
+	public function product_options_ids($row_id)
+	{
+		$ids = [];
 
 		foreach ($this->product_options($row_id) as $option_id => $options) {
 			foreach ($options as $option) {
@@ -562,11 +603,11 @@ class TI_Cart extends CI_Cart {
 	 *
 	 * Empties the cart and kills the session
 	 *
-	 * @return	void
+	 * @return    void
 	 */
 	public function destroy()
 	{
-		$this->_cart_contents = array('cart_total' => 0, 'total_items' => 0, 'order_total' => 0, 'totals' => array());
+		$this->_cart_contents = ['cart_total' => 0, 'total_items' => 0, 'order_total' => 0, 'totals' => []];
 		$this->CI->session->unset_userdata('cart_contents');
 	}
 }

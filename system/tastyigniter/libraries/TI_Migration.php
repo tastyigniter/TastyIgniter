@@ -4,13 +4,12 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- * @filesource
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') OR exit('No direImproved Migration capability to check and install module migrations ct script access allowed');
 
@@ -21,11 +20,13 @@ defined('BASEPATH') OR exit('No direImproved Migration capability to check and i
  * @package        TastyIgniter\Libraries\TI_Migration.php
  * @link           http://docs.tastyigniter.com
  */
-class TI_Migration extends CI_Migration {
+class TI_Migration extends CI_Migration
+{
 
-	public function __construct($config = array()) {
+	public function __construct($config = [])
+	{
 		// Only run this constructor on main library load
-		if ( ! in_array(get_class($this), array('CI_Migration', config_item('subclass_prefix') . 'Migration'), TRUE)) {
+		if (!in_array(get_class($this), ['CI_Migration', config_item('subclass_prefix') . 'Migration'], TRUE)) {
 			return;
 		}
 
@@ -67,34 +68,34 @@ class TI_Migration extends CI_Migration {
 			: '/^\d{3}_(\w+)$/';
 
 		// Make sure a valid migration numbering type was set.
-		if ( ! in_array($this->_migration_type, array('sequential', 'timestamp'))) {
+		if (!in_array($this->_migration_type, ['sequential', 'timestamp'])) {
 			show_error('An invalid migration numbering type was specified: ' . $this->_migration_type);
 		}
 
 		$this->load->database();
 
 		// If the migrations table is missing, make it
-		if ( ! $this->db->table_exists($this->_migration_table)) {
-			$this->dbforge->add_field(array(
-				'version' => array('type' => 'BIGINT', 'constraint' => 20),
-			));
+		if (!$this->db->table_exists($this->_migration_table)) {
+			$this->dbforge->add_field([
+				'version' => ['type' => 'BIGINT', 'constraint' => 20],
+			]);
 
 			$this->dbforge->create_table($this->_migration_table, TRUE);
 
-			$this->db->insert($this->_migration_table, array('version' => 0));
+			$this->db->insert($this->_migration_table, ['version' => 0]);
 		}
 
 		// If the migrations type column is missing, add it
-		if ( ! $this->db->field_exists('type', $this->_migration_table)) {
-			$this->dbforge->add_column($this->_migration_table, array(
-				'type' => array('type' => 'VARCHAR', 'constraint' => 40, 'first' => TRUE),
-			));
+		if (!$this->db->field_exists('type', $this->_migration_table)) {
+			$this->dbforge->add_column($this->_migration_table, [
+				'type' => ['type' => 'VARCHAR', 'constraint' => 40, 'first' => TRUE],
+			]);
 
-			$this->db->update($this->_migration_table, array('type' => 'core'));
+			$this->db->update($this->_migration_table, ['type' => 'core']);
 		}
 
 		// Do we auto migrate to the latest migration?
-		if ($this->_migration_auto_latest === TRUE && ! $this->latest()) {
+		if ($this->_migration_auto_latest === TRUE && !$this->latest()) {
 			show_error($this->error_string());
 		}
 	}
@@ -111,9 +112,9 @@ class TI_Migration extends CI_Migration {
 	{
 		$migrations = $this->find_migrations($type);
 
-		if (empty($migrations))
-		{
+		if (empty($migrations)) {
 			$this->_error_string = $this->lang->line('migration_none_found');
+
 			return FALSE;
 		}
 
@@ -134,7 +135,8 @@ class TI_Migration extends CI_Migration {
 	 *
 	 * @return mixed TRUE if already current, FALSE if failed, string if upgraded
 	 */
-	public function current($type = '') {
+	public function current($type = '')
+	{
 		$type = ($type === '') ? 'core' : $type;
 
 		$latest_version = $this->get_available_version();
@@ -149,7 +151,8 @@ class TI_Migration extends CI_Migration {
 	 *
 	 * @return mixed TRUE installed, FALSE if failed
 	 */
-	public function install() {
+	public function install()
+	{
 		$latest_version = $this->get_available_version();
 
 		// Core Migrations - this is all that is needed for TastyIgniter install.
@@ -170,8 +173,9 @@ class TI_Migration extends CI_Migration {
 	 *
 	 * @return array list of migration file paths sorted by version
 	 */
-	public function find_migrations($type = '') {
-		$migrations = array();
+	public function find_migrations($type = '')
+	{
+		$migrations = [];
 
 		$migration_path = $this->get_migrations_path($type);
 
@@ -207,7 +211,8 @@ class TI_Migration extends CI_Migration {
 	 *
 	 * @return    string    Numeric portion of a migration filename
 	 */
-	public function get_migration_number($migration) {
+	public function get_migration_number($migration)
+	{
 		return $this->_get_migration_number($migration);
 	}
 
@@ -221,7 +226,8 @@ class TI_Migration extends CI_Migration {
 	 *
 	 * @return string Current migration version
 	 */
-	public function get_version($type = '') {
+	public function get_version($type = '')
+	{
 		return $this->_get_version($type);
 	}
 
@@ -235,7 +241,8 @@ class TI_Migration extends CI_Migration {
 	 *
 	 * @return string Latest migration version
 	 */
-	public function get_latest_version($type = '') {
+	public function get_latest_version($type = '')
+	{
 		$migrations = $this->find_migrations($type);
 
 		if (empty($migrations)) {
@@ -257,7 +264,8 @@ class TI_Migration extends CI_Migration {
 	 *
 	 * @return string Current migration version
 	 */
-	public function get_available_version() {
+	public function get_available_version()
+	{
 		return $this->_migration_version;
 	}
 
@@ -270,7 +278,8 @@ class TI_Migration extends CI_Migration {
 	 *
 	 * @return string migration path
 	 */
-	public function get_migrations_path($type = '') {
+	public function get_migrations_path($type = '')
+	{
 		switch ($type) {
 			// Core migrations
 			case '':
@@ -292,24 +301,25 @@ class TI_Migration extends CI_Migration {
 	 * Calls each migration step required to get to the schema version of
 	 * choice
 	 *
-	 * @param string    $type
+	 * @param string $type
 	 * @param    string $target_version Target schema version
 	 *
 	 * @return mixed TRUE if already latest, FALSE if failed, string if upgraded
 	 */
-	public function version($target_version, $type = '') {
+	public function version($target_version, $type = '')
+	{
 		// Note: We use strings, so that timestamp versions work on 32-bit systems
 		$current_version = $this->_get_version($type);
 
 		if ($this->_migration_type === 'sequential') {
 			$target_version = sprintf('%03d', $target_version);
 		} else {
-			$target_version = (string) $target_version;
+			$target_version = (string)$target_version;
 		}
 
 		$migrations = $this->find_migrations($type);
 
-		if ($target_version > 0 && ! isset($migrations[$target_version])) {
+		if ($target_version > 0 && !isset($migrations[$target_version])) {
 			$this->_error_string = sprintf($this->lang->line('migration_not_found'), $target_version);
 
 			return FALSE;
@@ -341,7 +351,7 @@ class TI_Migration extends CI_Migration {
 			$class = 'Migration_' . ucfirst(strtolower($this->_get_migration_name(basename($file, '.php'))));
 
 			// Validate the migration file structure
-			if ( ! class_exists($class, FALSE)) {
+			if (!class_exists($class, FALSE)) {
 				$this->_error_string = sprintf($this->lang->line('migration_class_doesnt_exist'), $class);
 
 				return FALSE;
@@ -355,14 +365,14 @@ class TI_Migration extends CI_Migration {
 				($method === 'down' && $number <= $current_version && $number > $target_version)
 			) {
 				$instance = new $class();
-				if ( ! is_callable(array($instance, $method))) {
+				if (!is_callable([$instance, $method])) {
 					$this->_error_string = sprintf($this->lang->line('migration_missing_' . $method . '_method'), $class);
 
 					return FALSE;
 				}
 
 				log_message('debug', 'Migrating ' . $type . ' ' . $method . ' from version ' . $current_version . ' to version ' . $number);
-				call_user_func(array($instance, $method));
+				call_user_func([$instance, $method]);
 				$current_version = $number;
 				$this->_update_version($current_version, $type);
 			}
@@ -390,7 +400,8 @@ class TI_Migration extends CI_Migration {
 	 *
 	 * @return string Current migration version
 	 */
-	protected function _get_version($type = '') {
+	protected function _get_version($type = '')
+	{
 		$row = $this->db->select('version')->where('type', $type)->get($this->_migration_table)->row();
 
 		return $row ? $row->version : '0';
@@ -403,16 +414,18 @@ class TI_Migration extends CI_Migration {
 	 * for a given migration type
 	 *
 	 * @param    string $migration Migration reached
-	 * @param string    $type
+	 * @param string $type
 	 */
-	protected function _update_version($migration, $type = '') {
+	protected function _update_version($migration, $type = '')
+	{
 		$row = $this->db->where('type', $type)->get($this->_migration_table)->row();
 
 		if (!empty($row)) {
-	        $this->db->where('type', $type);
-			return $this->db->update($this->_migration_table, array('version' => $migration));
+			$this->db->where('type', $type);
+
+			return $this->db->update($this->_migration_table, ['version' => $migration]);
 		} else {
-			return $this->db->insert($this->_migration_table, array('type' => $type, 'version' => $migration));
+			return $this->db->insert($this->_migration_table, ['type' => $type, 'version' => $migration]);
 		}
 	}
 

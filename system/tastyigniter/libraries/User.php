@@ -4,13 +4,12 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- * @filesource
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -28,10 +27,10 @@ class User
 	private $user_id;
 	private $username;
 	private $staff_id;
-	private $permissions = array();
-	private $permission_action = array();
-	private $permitted_actions = array();
-	private $available_actions = array();
+	private $permissions = [];
+	private $permission_action = [];
+	private $permitted_actions = [];
+	private $available_actions = [];
 	private $staff_name;
 	private $staff_email;
 	private $staff_group_name;
@@ -42,14 +41,16 @@ class User
 	private $location_access;
 	private $unread;
 
-	public function __construct() {
+	public function __construct()
+	{
 		$this->CI =& get_instance();
 		$this->CI->load->database();
 
 		$this->initialize();
 	}
 
-	public function initialize() {
+	public function initialize()
+	{
 		$user_info = $this->CI->session->userdata('user_info');
 
 		if (!empty($user_info['user_id']) AND !empty($user_info['username']) AND !empty($user_info['email'])) {
@@ -80,7 +81,8 @@ class User
 		if (!$this->is_logged) $this->logout();
 	}
 
-	public function login($user, $password) {
+	public function login($user, $password)
+	{
 		$this->CI->db->from('users');
 		$this->CI->db->join('staffs', 'staffs.staff_id = users.staff_id', 'left');
 
@@ -94,11 +96,11 @@ class User
 		if ($query->num_rows() === 1) {
 			$row = $query->row_array();
 
-			$user_data = array(
+			$user_data = [
 				'user_id'  => $row['user_id'],
 				'username' => $row['username'],
 				'email'    => $row['staff_email'],
-			);
+			];
 
 			$this->CI->session->set_userdata('user_info', $user_data);
 
@@ -110,7 +112,8 @@ class User
 		}
 	}
 
-	public function restrict($permission, $uri = '') {
+	public function restrict($permission, $uri = '')
+	{
 		// If user isn't logged in, redirect to the login page.
 		if (!$this->is_logged AND $this->uri->rsegment(1) !== 'login') redirect(admin_url('login'));
 
@@ -132,7 +135,8 @@ class User
 		}
 	}
 
-	public function restrictLocation($location_id, $permission, $redirect = FALSE) {
+	public function restrictLocation($location_id, $permission, $redirect = FALSE)
+	{
 		if ($this->staff_group_id == '11') return FALSE;
 
 		if (empty($location_id)) return FALSE;
@@ -154,7 +158,8 @@ class User
 		return FALSE;
 	}
 
-	public function auth() {
+	public function auth()
+	{
 		$uri = $this->CI->uri->rsegment(1);
 
 		if (!$this->isLogged() AND $uri !== 'login' AND $uri !== 'logout') {
@@ -162,58 +167,70 @@ class User
 			$prepend = empty($uri) ? '' : '?redirect=' . str_replace(site_url(), '/', current_url());
 			redirect(admin_url('login' . $prepend));
 		}
-
 	}
 
-	public function isLogged() {
+	public function isLogged()
+	{
 		return $this->is_logged;
 	}
 
-	public function getId() {
+	public function getId()
+	{
 		return $this->user_id;
 	}
 
-	public function getUserName() {
+	public function getUserName()
+	{
 		return $this->username;
 	}
 
-	public function getStaffId() {
+	public function getStaffId()
+	{
 		return $this->staff_id;
 	}
 
-	public function getStaffName() {
+	public function getStaffName()
+	{
 		return $this->staff_name;
 	}
 
-	public function getStaffEmail() {
+	public function getStaffEmail()
+	{
 		return $this->staff_email;
 	}
 
-	public function getLocationId() {
+	public function getLocationId()
+	{
 		return !empty($this->location_id) ? $this->location_id : $this->CI->config->item('default_location_id');
 	}
 
-	public function getLocationName() {
+	public function getLocationName()
+	{
 		return !empty($this->location_name) ? $this->location_name : $this->CI->config->item('location_name', 'main_address');
 	}
 
-	public function staffGroup() {
+	public function staffGroup()
+	{
 		return $this->staff_group_name;
 	}
 
-	public function getStaffGroupId() {
+	public function getStaffGroupId()
+	{
 		return $this->staff_group_id;
 	}
 
-	public function isStrictLocation() {
+	public function isStrictLocation()
+	{
 		return ($this->location_access == '1' OR $this->CI->config->item('site_location_mode') === 'single') ? TRUE : FALSE;
 	}
 
-	public function canAccessCustomerAccount() {
+	public function canAccessCustomerAccount()
+	{
 		return ($this->customer_account_access == '1') ? TRUE : FALSE;
 	}
 
-	public function unreadMessageTotal() {
+	public function unreadMessageTotal()
+	{
 		if (empty($this->unread)) {
 			$this->CI->load->model('Messages_model');
 			$unread = $this->CI->Messages_model->getUnreadCount($this->staff_id);
@@ -223,14 +240,16 @@ class User
 		return $this->unread;
 	}
 
-	public function hasPermission($permission) {
+	public function hasPermission($permission)
+	{
 		if (!$this->is_logged) return FALSE;
 
 		return $this->checkPermittedActions($permission);
 	}
 
-	protected function setPermissions() {
-		$group_permissions = (!empty($this->permissions)) ? @unserialize($this->permissions) : NULL;
+	protected function setPermissions()
+	{
+		$group_permissions = (!empty($this->permissions)) ? @unserialize($this->permissions) : null;
 
 		if (is_array($group_permissions)) {
 			$this->CI->load->model('Permissions_model');
@@ -249,14 +268,15 @@ class User
 		}
 	}
 
-	protected function checkPermittedActions($perm, $display_error = FALSE) {
+	protected function checkPermittedActions($perm, $display_error = FALSE)
+	{
 		$action = $this->getPermissionAction($perm);
 
 		// Ensure the permission string is matches pattern Domain.Context
 		$perm = (substr_count($perm, '.') === 2) ? substr($perm, 0, strrpos($perm, '.')) : $perm;
 
-		$available_actions = (isset($this->available_actions[$perm]) AND is_array($this->available_actions[$perm])) ? $this->available_actions[$perm] : array();
-		$permitted_actions = (isset($this->permitted_actions[$perm]) AND is_array($this->permitted_actions[$perm])) ? $this->permitted_actions[$perm] : array();
+		$available_actions = (isset($this->available_actions[$perm]) AND is_array($this->available_actions[$perm])) ? $this->available_actions[$perm] : [];
+		$permitted_actions = (isset($this->permitted_actions[$perm]) AND is_array($this->permitted_actions[$perm])) ? $this->permitted_actions[$perm] : [];
 
 		// Success if the staff_group_id is the default one
 		if ($this->staff_group_id === '11') return TRUE;
@@ -278,28 +298,30 @@ class User
 		return TRUE;
 	}
 
-	protected function getPermissionAction($permission) {
+	protected function getPermissionAction($permission)
+	{
 		if (substr_count($permission, '.') === 2) {
 			$this->permission_action[] = strtolower(substr($permission, strrpos($permission, '.') + 1));
 		} else {
 			// Specify the requested action if not present, based on the $_SERVER REQUEST_METHOD
 			if ($this->CI->input->server('REQUEST_METHOD') === 'POST') {
 				if ($this->CI->input->post('delete')) {
-					$this->permission_action = array('access', 'delete');
+					$this->permission_action = ['access', 'delete'];
 				} else if (is_numeric($this->CI->input->get('id'))) {
-					$this->permission_action = array('access', 'manage');
+					$this->permission_action = ['access', 'manage'];
 				} else {
-					$this->permission_action = array('access', 'add');
+					$this->permission_action = ['access', 'add'];
 				}
 			} else if ($this->CI->input->server('REQUEST_METHOD') === 'GET') {
-				$this->permission_action = array('access');
+				$this->permission_action = ['access'];
 			}
 		}
 
 		return $this->permission_action;
 	}
 
-	public function logout() {
+	public function logout()
+	{
 		$this->CI->session->unset_userdata('user_info');
 
 		$this->is_logged = FALSE;

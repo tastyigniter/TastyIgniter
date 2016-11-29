@@ -3,7 +3,8 @@
 class Cart extends Main_Controller
 {
 
-	public function index() {
+	public function index()
+	{
 		$this->lang->load('cart');
 
 		$this->load->module('cart_module');

@@ -3,7 +3,8 @@
 class Reservation extends Main_Controller
 {
 
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct(); //  calls the constructor
 
 		$this->load->model('Reservations_model');
@@ -17,7 +18,8 @@ class Reservation extends Main_Controller
 		}
 	}
 
-	public function index() {
+	public function index()
+	{
 		$prepend = '?redirect=' . str_replace(site_url(), '/', current_url());
 
 		if ($this->input->post() AND $this->_reserveTable() === TRUE) {
@@ -77,7 +79,8 @@ class Reservation extends Main_Controller
 		$this->template->render('reservation', $data);
 	}
 
-	public function success() {
+	public function success()
+	{
 		$this->template->setBreadcrumb('<i class="fa fa-home"></i>', '/');
 		$this->template->setBreadcrumb($this->lang->line('text_heading'), 'reservation');
 		$this->template->setBreadcrumb($this->lang->line('text_success_heading'), 'reservation/success');
@@ -95,18 +98,19 @@ class Reservation extends Main_Controller
 
 		$time_format = ($this->config->item('time_format')) ? $this->config->item('time_format') : '%h:%i %a';
 
-		$data['text_success'] 	= sprintf($this->lang->line('text_success'), $result['location_name'], $guest_num, mdate($this->lang->line('text_time_format'), strtotime($result['reserve_date'])), mdate($time_format, strtotime($result['reserve_time'])));
-		$data['text_greetings'] = sprintf($this->lang->line('text_greetings'), $result['first_name'] .' '. $result['last_name']);
+		$data['text_success'] = sprintf($this->lang->line('text_success'), $result['location_name'], $guest_num, mdate($this->lang->line('text_time_format'), strtotime($result['reserve_date'])), mdate($time_format, strtotime($result['reserve_time'])));
+		$data['text_greetings'] = sprintf($this->lang->line('text_greetings'), $result['first_name'] . ' ' . $result['last_name']);
 		$data['text_signature'] = sprintf($this->lang->line('text_signature'), $this->config->item('site_name'));
 		$this->session->unset_userdata('reservation');
 
 		$this->template->render('reservation_success', $data);
 	}
 
-	protected function _reserveTable() {
+	protected function _reserveTable()
+	{
 
 		if ($this->session->userdata('reservation_data') AND $this->validateForm() === TRUE) {
-			$reserve = array();
+			$reserve = [];
 
 			$reservation_data = $this->session->userdata('reservation_data');
 			if (!empty($reservation_data)) {
@@ -149,12 +153,12 @@ class Reservation extends Main_Controller
 
 					return TRUE;
 				}
-
 			}
 		}
 	}
 
-	protected function validateForm() {
+	protected function validateForm()
+	{
 		$this->form_validation->set_rules('first_name', 'lang:label_first_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		$this->form_validation->set_rules('last_name', 'lang:label_last_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
 		$this->form_validation->set_rules('email', 'lang:label_email', 'xss_clean|trim|required|valid_email');
@@ -170,7 +174,8 @@ class Reservation extends Main_Controller
 		}
 	}
 
-	public function _validate_captcha($word) {
+	public function _validate_captcha($word)
+	{
 		$session_caption = $this->session->tempdata('captcha');
 
 		if (strtolower($word) !== strtolower($session_caption['word'])) {
@@ -182,11 +187,12 @@ class Reservation extends Main_Controller
 		}
 	}
 
-	protected function createCaptcha() {
+	protected function createCaptcha()
+	{
 		$this->load->helper('captcha');
 
 		$captcha = create_captcha();
-		$this->session->set_tempdata('captcha', array('word' => $captcha['word'], 'image' => $captcha['time'] . '.jpg')); //set data to session for compare
+		$this->session->set_tempdata('captcha', ['word' => $captcha['word'], 'image' => $captcha['time'] . '.jpg']); //set data to session for compare
 		return $captcha;
 	}
 }

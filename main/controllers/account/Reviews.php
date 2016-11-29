@@ -3,11 +3,12 @@
 class Reviews extends Main_Controller
 {
 
-	public $filter = array(
+	public $filter = [
 		'filter_status' => '1',
-	);
+	];
 
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct();                                                                    //  calls the constructor
 
 		if (!$this->customer->isLogged()) {                                                    // if customer is not logged in redirect to account login page
@@ -24,7 +25,8 @@ class Reviews extends Main_Controller
 		}
 	}
 
-	public function index() {
+	public function index()
+	{
 		$this->template->setBreadcrumb('<i class="fa fa-home"></i>', '/');
 		$this->template->setBreadcrumb($this->lang->line('text_my_account'), 'account/account');
 		$this->template->setBreadcrumb($this->lang->line('text_heading'), 'account/reviews');
@@ -43,13 +45,13 @@ class Reviews extends Main_Controller
 
 		$date_format = ($this->config->item('date_format')) ? $this->config->item('date_format') : '%d %M %y';
 
-		$data['reviews'] = array();
+		$data['reviews'] = [];
 		$results = $this->Reviews_model->paginateWithFilter($this->filter);                                    // retrieve all customer reviews from getMainList method in Reviews model
 		foreach ($results->list as $result) {
-			$data['reviews'][] = array_merge($result, array(                                                            // create array of customer reviews to pass to view
+			$data['reviews'][] = array_merge($result, [                                                            // create array of customer reviews to pass to view
 				'date' => mdate($date_format, strtotime($result['date_added'])),
 				'view' => $this->pageUrl('account/reviews/view/' . $result['review_id']),
-			));
+			]);
 		}
 
 		$data['pagination'] = $results->pagination;
@@ -57,7 +59,8 @@ class Reviews extends Main_Controller
 		$this->template->render('account/reviews', $data);
 	}
 
-	public function view() {
+	public function view()
+	{
 		$review_id = (int)$this->uri->rsegment(3);
 
 		// retrieve specific customer message based on message id to be passed to view
@@ -95,7 +98,8 @@ class Reviews extends Main_Controller
 		$this->template->render('account/review_view', $data);
 	}
 
-	public function add() {
+	public function add()
+	{
 		$data['_action'] = $this->pageUrl('account/reviews/add/' . $this->uri->rsegment(3) . '/' . $this->uri->rsegment(4) . '/' . $this->uri->rsegment(5));
 
 		if ($this->Reviews_model->checkReviewed($this->uri->rsegment(3), $this->uri->rsegment(4), $this->customer->getId())) {
@@ -142,7 +146,7 @@ class Reviews extends Main_Controller
 		if ($this->input->post('rating')) {
 			$data['rating'] = $this->input->post('rating');
 		} else {
-			$data['rating'] = array('quality' => '0', 'delivery' => '0', 'service' => '0');
+			$data['rating'] = ['quality' => '0', 'delivery' => '0', 'service' => '0'];
 		}
 
 		if ($this->input->post() AND $this->_addReview() === TRUE) {
@@ -152,8 +156,9 @@ class Reviews extends Main_Controller
 		$this->template->render('account/review_add', $data);
 	}
 
-	protected function _addReview() {
-		$add = array();
+	protected function _addReview()
+	{
+		$add = [];
 
 		if ($this->validateForm() === TRUE) {
 			$add['sale_type'] = $this->uri->rsegment(3);
@@ -164,7 +169,7 @@ class Reviews extends Main_Controller
 			$add['rating'] = $this->input->post('rating');
 			$add['review_text'] = $this->input->post('review_text');
 
-			if ($this->Reviews_model->saveReview(NULL, $add)) {
+			if ($this->Reviews_model->saveReview(null, $add)) {
 				$this->alert->set('success', $this->lang->line('alert_review_success'));
 			} else {
 				$this->alert->set('danger', $this->lang->line('alert_review_error'));
@@ -176,13 +181,14 @@ class Reviews extends Main_Controller
 		}
 	}
 
-	protected function validateForm() {
-		$rules[] = array('location_id', 'lang:label_restaurant', 'xss_clean|trim|required|integer');
-		$rules[] = array('customer_id', 'lang:label_author', 'xss_clean|trim|required|integer');
-		$rules[] = array('rating[quality]', 'lang:label_quality', 'xss_clean|trim|required|integer');
-		$rules[] = array('rating[delivery]', 'lang:label_delivery', 'xss_clean|trim|required|integer');
-		$rules[] = array('rating[service]', 'lang:label_service', 'xss_clean|trim|required|integer');
-		$rules[] = array('review_text', 'lang:label_review', 'xss_clean|trim|required|min_length[2]|max_length[1028]');
+	protected function validateForm()
+	{
+		$rules[] = ['location_id', 'lang:label_restaurant', 'xss_clean|trim|required|integer'];
+		$rules[] = ['customer_id', 'lang:label_author', 'xss_clean|trim|required|integer'];
+		$rules[] = ['rating[quality]', 'lang:label_quality', 'xss_clean|trim|required|integer'];
+		$rules[] = ['rating[delivery]', 'lang:label_delivery', 'xss_clean|trim|required|integer'];
+		$rules[] = ['rating[service]', 'lang:label_service', 'xss_clean|trim|required|integer'];
+		$rules[] = ['review_text', 'lang:label_review', 'xss_clean|trim|required|min_length[2]|max_length[1028]'];
 
 		return $this->form_validation->set_rules($rules)->run();
 	}

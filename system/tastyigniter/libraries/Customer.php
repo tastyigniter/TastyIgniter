@@ -4,13 +4,12 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package   TastyIgniter
- * @author    SamPoyigi
- * @copyright TastyIgniter
- * @link      http://tastyigniter.com
- * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 1.0
- * @filesource
+ * @package       TastyIgniter
+ * @author        SamPoyigi
+ * @copyright (c) 2013 - 2016. TastyIgniter
+ * @link          http://tastyigniter.com
+ * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since         File available since Release 1.0
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -21,7 +20,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @package        TastyIgniter\Libraries\Customer.php
  * @link           http://docs.tastyigniter.com
  */
-class Customer {
+class Customer
+{
 
 	private $customer_id;
 	private $firstname;
@@ -33,20 +33,22 @@ class Customer {
 	private $security_answer;
 	private $customer_group_id;
 
-	public function __construct() {
+	public function __construct()
+	{
 		$this->CI =& get_instance();
 		$this->CI->load->database();
-        $this->CI->load->driver('session');
+		$this->CI->load->driver('session');
 		$this->CI->load->library('user_agent');
 		$this->CI->load->library('cart');
 
 		$this->initialize();
 	}
 
-	public function initialize() {
+	public function initialize()
+	{
 		$cust_info = $this->CI->session->userdata('cust_info');
 
-		if (isset($cust_info['customer_id']) AND  isset($cust_info['email'])) {
+		if (isset($cust_info['customer_id']) AND isset($cust_info['email'])) {
 			$this->CI->db->from('customers');
 			$this->CI->db->where('customer_id', $cust_info['customer_id']);
 			$this->CI->db->where('email', $cust_info['email']);
@@ -54,15 +56,15 @@ class Customer {
 			$result = $query->row_array();
 
 			if ($query->num_rows() === 1) {
-				$this->customer_id 			= $result['customer_id'];
-				$this->firstname 			= $result['first_name'];
-				$this->lastname 			= $result['last_name'];
-				$this->email 				= strtolower($result['email']);
-				$this->telephone			= $result['telephone'];
-				$this->address_id 			= $result['address_id'];
+				$this->customer_id = $result['customer_id'];
+				$this->firstname = $result['first_name'];
+				$this->lastname = $result['last_name'];
+				$this->email = strtolower($result['email']);
+				$this->telephone = $result['telephone'];
+				$this->address_id = $result['address_id'];
 				$this->security_question_id = $result['security_question_id'];
-				$this->security_answer 		= $result['security_answer'];
-				$this->customer_group_id 	= $result['customer_group_id'];
+				$this->security_answer = $result['security_answer'];
+				$this->customer_group_id = $result['customer_group_id'];
 
 				$this->updateCart();
 			} else {
@@ -71,7 +73,8 @@ class Customer {
 		}
 	}
 
-	public function login($email, $password, $override_login = FALSE) {
+	public function login($email, $password, $override_login = FALSE)
+	{
 
 		$this->CI->db->from('customers');
 		$this->CI->db->where('email', strtolower($email));
@@ -96,32 +99,33 @@ class Customer {
 				}
 			}
 
-			$this->CI->session->set_userdata('cust_info', array(
-				'customer_id' 	=> $result['customer_id'],
-				'email'			=> $result['email']
-			));
+			$this->CI->session->set_userdata('cust_info', [
+				'customer_id' => $result['customer_id'],
+				'email'       => $result['email'],
+			]);
 
-			$this->customer_id          = $result['customer_id'];
-            $this->firstname            = $result['first_name'];
-            $this->lastname             = $result['last_name'];
-			$this->email 				= strtolower($result['email']);
-			$this->telephone			= $result['telephone'];
-			$this->address_id 			= $result['address_id'];
+			$this->customer_id = $result['customer_id'];
+			$this->firstname = $result['first_name'];
+			$this->lastname = $result['last_name'];
+			$this->email = strtolower($result['email']);
+			$this->telephone = $result['telephone'];
+			$this->address_id = $result['address_id'];
 			$this->security_question_id = $result['security_question_id'];
-			$this->security_answer 		= $result['security_answer'];
-			$this->customer_group_id 	= $result['customer_group_id'];
+			$this->security_answer = $result['security_answer'];
+			$this->customer_group_id = $result['customer_group_id'];
 
 			$this->CI->db->set('ip_address', $this->CI->input->ip_address());
 			$this->CI->db->where('customer_id', $result['customer_id']);
 			$this->CI->db->update('customers');
 
-	  		return TRUE;
+			return TRUE;
 		} else {
-      		return FALSE;
+			return FALSE;
 		}
 	}
 
-  	public function logout() {
+	public function logout()
+	{
 		$this->CI->session->unset_userdata('cust_info');
 
 		$this->customer_id = '0';
@@ -133,33 +137,40 @@ class Customer {
 		$this->security_question_id = '';
 		$this->security_answer = '';
 		$this->customer_group_id = '';
-    }
-
-  	public function isLogged() {
-	    return $this->customer_id;
 	}
 
-  	public function getId() {
+	public function isLogged()
+	{
 		return $this->customer_id;
-  	}
+	}
 
-  	public function getName() {
+	public function getId()
+	{
+		return $this->customer_id;
+	}
+
+	public function getName()
+	{
 		return $this->firstname . ' ' . $this->lastname;
-  	}
+	}
 
-  	public function getFirstName() {
+	public function getFirstName()
+	{
 		return $this->firstname;
-  	}
+	}
 
-  	public function getLastName() {
+	public function getLastName()
+	{
 		return $this->lastname;
-  	}
+	}
 
-  	public function getEmail() {
+	public function getEmail()
+	{
 		return strtolower($this->email);
-  	}
+	}
 
-  	public function checkPassword($password) {
+	public function checkPassword($password)
+	{
 		$this->CI->db->select('*');
 		$this->CI->db->from('customers');
 		$this->CI->db->where('email', $this->email);
@@ -169,31 +180,37 @@ class Customer {
 		if ($query->num_rows() === 1) {
 			return TRUE;
 		} else {
-			return FAlSE;
+			return FALSE;
 		}
-  	}
+	}
 
-  	public function getTelephone() {
+	public function getTelephone()
+	{
 		return $this->telephone;
-  	}
-
-  	public function getAddressId() {
-	    return $this->address_id;
 	}
 
-  	public function getSecurityQuestionId() {
-	    return $this->security_question_id;
+	public function getAddressId()
+	{
+		return $this->address_id;
 	}
 
-  	public function getSecurityAnswer() {
-	    return $this->security_answer;
+	public function getSecurityQuestionId()
+	{
+		return $this->security_question_id;
 	}
 
-  	public function getGroupId() {
-	    return $this->customer_group_id;
+	public function getSecurityAnswer()
+	{
+		return $this->security_answer;
 	}
 
-	public function updateCart() {
+	public function getGroupId()
+	{
+		return $this->customer_group_id;
+	}
+
+	public function updateCart()
+	{
 		$this->CI->db->set('cart', ($cart_contents = $this->CI->cart->contents()) ? serialize($cart_contents) : '');
 		$this->CI->db->where('customer_id', $this->customer_id);
 		$this->CI->db->where('email', $this->email);

@@ -4,7 +4,8 @@ class Register extends Main_Controller
 {
 	var $recaptcha_error = '';
 
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct();                                                                    //  calls the constructor
 
 		if ($this->customer->islogged()) {                                                        // checks if customer is logged in then redirect to account page.
@@ -15,7 +16,8 @@ class Register extends Main_Controller
 		$this->lang->load('account/login_register');
 	}
 
-	public function index() {
+	public function index()
+	{
 		if ($this->input->post() AND $this->_addCustomer() === TRUE) {                            // checks if $_POST data is set and if registration validation was successful
 			$this->alert->set('alert', $this->lang->line('alert_account_created'));    // display success message and redirect to account login page
 
@@ -44,7 +46,8 @@ class Register extends Main_Controller
 		$this->template->render('account/register', $data);
 	}
 
-	protected function _addCustomer() {
+	protected function _addCustomer()
+	{
 		$this->load->model('Customers_model');                                                    // load the customers model
 		$this->load->model('Customer_groups_model');
 
@@ -69,10 +72,10 @@ class Register extends Main_Controller
 				$add['status'] = '1';
 			}
 
-			if (!empty($add) AND $customer_id = $this->Customers_model->saveCustomer(NULL, $add)) {                                // pass add array data to saveCustomer method in Customers model then return TRUE
+			if (!empty($add) AND $customer_id = $this->Customers_model->saveCustomer(null, $add)) {                                // pass add array data to saveCustomer method in Customers model then return TRUE
 				log_activity($customer_id, 'registered', 'customers', get_activity_message('activity_registered_account',
-					array('{customer}', '{link}'),
-					array($this->input->post('first_name') . ' ' . $this->input->post('last_name'), admin_url('customers/edit?id=' . $customer_id))
+					['{customer}', '{link}'],
+					[$this->input->post('first_name') . ' ' . $this->input->post('last_name'), admin_url('customers/edit?id=' . $customer_id)]
 				));
 
 				return TRUE;
@@ -80,21 +83,22 @@ class Register extends Main_Controller
 		}
 	}
 
-	protected function validateForm() {
+	protected function validateForm()
+	{
 		// START of form validation rules
-		$rules[] = array('first_name', 'lang:label_first_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
-		$rules[] = array('last_name', 'lang:label_last_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
-		$rules[] = array('email', 'lang:label_email', 'xss_clean|trim|required|valid_email|is_unique[customers.email]');
-		$rules[] = array('password', 'lang:label_password', 'xss_clean|trim|required|min_length[6]|max_length[32]|matches[password_confirm]');
-		$rules[] = array('password_confirm', 'lang:label_password_confirm', 'xss_clean|trim|required');
-		$rules[] = array('telephone', 'lang:label_telephone', 'xss_clean|trim|required|integer');
-		$rules[] = array('security_question', 'lang:label_s_question', 'xss_clean|trim|required|integer');
-		$rules[] = array('security_answer', 'lang:label_s_answer', 'xss_clean|trim|required|min_length[2]');
-		$rules[] = array('newsletter', 'lang:label_subscribe', 'xss_clean|trim|integer');
-		$rules[] = array('captcha', 'lang:label_captcha', 'xss_clean|trim|required|callback__validate_captcha');
+		$rules[] = ['first_name', 'lang:label_first_name', 'xss_clean|trim|required|min_length[2]|max_length[32]'];
+		$rules[] = ['last_name', 'lang:label_last_name', 'xss_clean|trim|required|min_length[2]|max_length[32]'];
+		$rules[] = ['email', 'lang:label_email', 'xss_clean|trim|required|valid_email|is_unique[customers.email]'];
+		$rules[] = ['password', 'lang:label_password', 'xss_clean|trim|required|min_length[6]|max_length[32]|matches[password_confirm]'];
+		$rules[] = ['password_confirm', 'lang:label_password_confirm', 'xss_clean|trim|required'];
+		$rules[] = ['telephone', 'lang:label_telephone', 'xss_clean|trim|required|integer'];
+		$rules[] = ['security_question', 'lang:label_s_question', 'xss_clean|trim|required|integer'];
+		$rules[] = ['security_answer', 'lang:label_s_answer', 'xss_clean|trim|required|min_length[2]'];
+		$rules[] = ['newsletter', 'lang:label_subscribe', 'xss_clean|trim|integer'];
+		$rules[] = ['captcha', 'lang:label_captcha', 'xss_clean|trim|required|callback__validate_captcha'];
 
 		if ($this->config->item('registration_terms') == '1') {
-			$rules[] = array('terms_condition', 'lang:label_i_agree', 'xss_clean|trim|integer|required');
+			$rules[] = ['terms_condition', 'lang:label_i_agree', 'xss_clean|trim|integer|required'];
 		}
 
 		// END of form validation rules
@@ -102,7 +106,8 @@ class Register extends Main_Controller
 		return $this->form_validation->set_rules($rules)->run();
 	}
 
-	public function _validate_captcha($word) {
+	public function _validate_captcha($word)
+	{
 		$session_caption = $this->session->tempdata('captcha');
 
 		if (strtolower($word) !== strtolower($session_caption['word'])) {
@@ -114,11 +119,12 @@ class Register extends Main_Controller
 		}
 	}
 
-	protected function createCaptcha() {
+	protected function createCaptcha()
+	{
 		$this->load->helper('captcha');
 
 		$captcha = create_captcha();
-		$this->session->set_tempdata('captcha', array('word' => $captcha['word'], 'image' => $captcha['time'] . '.jpg'), '120'); //set data to session for compare
+		$this->session->set_tempdata('captcha', ['word' => $captcha['word'], 'image' => $captcha['time'] . '.jpg'], '120'); //set data to session for compare
 		return $captcha;
 	}
 }

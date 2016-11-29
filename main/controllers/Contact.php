@@ -3,7 +3,8 @@
 class Contact extends Main_Controller
 {
 
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct();                                                                    // calls the constructor
 
 		$this->load->model('Pages_model');
@@ -14,7 +15,8 @@ class Contact extends Main_Controller
 		$this->lang->load('contact');
 	}
 
-	public function index() {
+	public function index()
+	{
 
 		if ($this->config->item('maps_api_key')) {
 			$map_key = '&key=' . $this->config->item('maps_api_key');
@@ -46,10 +48,10 @@ class Contact extends Main_Controller
 			$data['map_key'] = '';
 		}
 
-		$data['subjects'] = array(
+		$data['subjects'] = [
 			'1' => $this->lang->line('text_general_enquiry'),
 			'2' => $this->lang->line('text_comment'),
-			'3' => $this->lang->line('text_technical_issues'));    // array of enquiry subject to pass to view
+			'3' => $this->lang->line('text_technical_issues')];    // array of enquiry subject to pass to view
 
 		if ($this->input->post() AND $this->_sendContact() === TRUE) {                            // checks if $_POST data is set and if contact form validation was successful
 
@@ -63,7 +65,8 @@ class Contact extends Main_Controller
 		$this->template->render('contact', $data);
 	}
 
-	protected function _sendContact() {
+	protected function _sendContact()
+	{
 
 		if ($this->validateForm() === TRUE) {
 			$this->load->library('email');                                                        //loading upload library
@@ -72,7 +75,7 @@ class Contact extends Main_Controller
 
 			$full_name = $this->input->post('full_name');
 			$email = $this->input->post('email');
-			$subjects = array('1' => 'General enquiry', '2' => 'Comment', '3' => 'Technical Issues');
+			$subjects = ['1' => 'General enquiry', '2' => 'Comment', '3' => 'Technical Issues'];
 
 			$mail_data['full_name'] = $this->input->post('full_name');
 			$mail_data['contact_topic'] = $subjects[$this->input->post('subject')];
@@ -90,12 +93,13 @@ class Contact extends Main_Controller
 			if ($this->email->send()) {
 				return TRUE;
 			} else {
-				log_message('debug', $this->email->print_debugger(array('headers')));
+				log_message('debug', $this->email->print_debugger(['headers']));
 			}
 		}
 	}
 
-	protected function validateForm() {
+	protected function validateForm()
+	{
 		// START of form validation rules
 		$this->form_validation->set_rules('subject', 'lang:label_subject', 'xss_clean|trim|required|integer');
 		$this->form_validation->set_rules('full_name', 'lang:label_full_name', 'xss_clean|trim|required|min_length[2]|max_length[32]');
@@ -112,7 +116,8 @@ class Contact extends Main_Controller
 		}
 	}
 
-	public function _validate_captcha($word) {
+	public function _validate_captcha($word)
+	{
 		$session_caption = $this->session->tempdata('captcha');
 
 		if (strtolower($word) !== strtolower($session_caption['word'])) {
@@ -124,10 +129,11 @@ class Contact extends Main_Controller
 		}
 	}
 
-	protected function createCaptcha() {
+	protected function createCaptcha()
+	{
 		$this->load->helper('captcha');
 		$captcha = create_captcha();
-		$this->session->set_tempdata('captcha', array('word' => $captcha['word'], 'image' => $captcha['image']), '300'); //set data to session for compare
+		$this->session->set_tempdata('captcha', ['word' => $captcha['word'], 'image' => $captcha['image']], '300'); //set data to session for compare
 
 		return $captcha['image'];
 	}
