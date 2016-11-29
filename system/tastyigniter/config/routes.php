@@ -14,6 +14,7 @@ if (APPDIR === ADMINDIR) {
     $route['default_controller'] = $default_controller;
     $route['locations'] = 'local/all';
     $route['account'] = 'account/account';
+    $route['account/reviews'] = 'account/reviews'; // added to fix conflict with newly added local/reviews routes
     $route['login'] = 'account/login';
     $route['logout'] = 'account/logout';
     $route['register'] = 'account/register';
