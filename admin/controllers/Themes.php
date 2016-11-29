@@ -52,7 +52,8 @@ class Themes extends Admin_Controller
 			if ($this->input->post('save_close') == '1') {
 				$this->redirect("themes/edit/{$theme_name}");
 			}
-//			$this->redirect(current_url());
+
+			$this->redirect(current_url());
 		}
 
 		$this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $theme_info['title']));
@@ -209,7 +210,7 @@ class Themes extends Admin_Controller
 	public function getList()
 	{
 		$data['themes'] = [];
-		$results = $this->Themes_model->paginate();
+		$results = $this->Themes_model->paginateWithFilter();
 		foreach ($results->list as $name => $theme) {
 			if ($theme['name'] === trim($this->config->item(MAINDIR, 'default_themes'), '/')) {
 				$active = '1';
@@ -385,7 +386,6 @@ class Themes extends Admin_Controller
 			if (isset($theme['customize'])) {
 				$update['data'] = $this->customizer->getPostData();
 			}
-			var_dump($update);
 
 			if ($this->Themes_model->updateTheme($update)) {
 				$this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Theme updated'));

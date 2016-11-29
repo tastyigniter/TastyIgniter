@@ -15,7 +15,7 @@ namespace TastyIgniter\Database;
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-use Illuminate\Database\Eloquent\Builder as BuilderModel;
+use Illuminate\Database\Eloquent\Builder as BuilderBase;
 
 /**
  * TastyIgniter Database Manager Class
@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Builder as BuilderModel;
  * @package        TastyIgniter\Database\Manager.php
  * @link           http://docs.tastyigniter.com
  */
-class Builder extends BuilderModel
+class Builder extends BuilderBase
 {
 
 	/**
@@ -202,5 +202,4 @@ class Builder extends BuilderModel
 			$this->query->getConnection()->getName()
 		);
 	}
-
 }

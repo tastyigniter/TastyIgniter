@@ -140,12 +140,13 @@ class Location_delivery
 	public function checkChargeCondition($by = 'delivery')
 	{
 		$by = $by == 'delivery' ? 'amount' : 'total';
-		$nearestAreaCharge = $this->getNearestAreaCharge();
+		$charge = null;
+		if (!$nearestAreaCharge = $this->getNearestAreaCharge())
+			return $charge;
 
 		$conditions = array_column($nearestAreaCharge, 'condition');
 		$minTotals = array_column($nearestAreaCharge, 'total');
 
-		$charge = null;
 		// use lowest minimum total when ONLY 'above' condition exist
 		if (in_array('above', $conditions) AND !in_array('below', $conditions) AND !in_array('all', $conditions)) {
 			if ($by == 'total') return min($minTotals);

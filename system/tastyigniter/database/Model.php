@@ -15,14 +15,10 @@ namespace TastyIgniter\Database;
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-use \Illuminate\Database\Eloquent\Model as EloquentModel;
-use \TastyIgniter\Database\Manager as DatabaseManager;
-use \TastyIgniter\Database\Builder;
-use Illuminate\Events\Dispatcher;
-use Illuminate\Database\Capsule\Manager as Capsule;
-use \Illuminate\Database\Eloquent\Relations\HasOne;
-use InvalidArgumentException;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Str;
+use InvalidArgumentException;
+use TastyIgniter\Database\Manager as DatabaseManager;
 
 /**
  * TastyIgniter Model Class
@@ -38,7 +34,6 @@ use Illuminate\Support\Str;
 class Model extends EloquentModel
 {
 
-//	protected $controller;
 	public $timestamps = FALSE;
 
 	protected $guarded = [];
@@ -86,14 +81,14 @@ class Model extends EloquentModel
 	 *
 	 * @var string
 	 */
-	const CREATED_AT = NULL;
+	const CREATED_AT = null;
 
 	/**
 	 * The name of the "updated at" column.
 	 *
 	 * @var string
 	 */
-	const UPDATED_AT = NULL;
+	const UPDATED_AT = null;
 
 	public function __construct(array $attributes = [])
 	{
@@ -179,7 +174,7 @@ class Model extends EloquentModel
 	 *
 	 * @return string
 	 */
-	public function getCurrentUrl($url = NULL)
+	public function getCurrentUrl($url = null)
 	{
 		$current_url = ($url != 'page') ? $url : current_url();
 
@@ -198,17 +193,17 @@ class Model extends EloquentModel
 		return $this->getConnection();
 	}
 
-	public function tablePrefix($tableName = NULL)
+	public function tablePrefix($tableName = null)
 	{
 		return $this->queryBuilder()->getTablePrefix() . $tableName;
 	}
 
-	public function hasTable($tableName = NULL)
+	public function hasTable($tableName = null)
 	{
 		return $this->queryBuilder()->getSchemaBuilder()->hasTable($tableName);
 	}
 
-	public function escape($string = NULL)
+	public function escape($string = null)
 	{
 		return $this->queryBuilder()->getPdo()->quote($string);
 	}
@@ -218,7 +213,7 @@ class Model extends EloquentModel
 	 *
 	 * @param  array $attributes
 	 *
-	 * @return $this
+	 * @return \Illuminate\Database\Eloquent\Model
 	 *
 	 * @throws \Illuminate\Database\Eloquent\MassAssignmentException
 	 */
@@ -236,7 +231,7 @@ class Model extends EloquentModel
 	 *
 	 * @return bool
 	 */
-	public function isDirty($attributes = NULL)
+	public function isDirty($attributes = null)
 	{
 		$dirty = $this->getDirty();
 
@@ -262,7 +257,7 @@ class Model extends EloquentModel
 	 *
 	 * @param  \Illuminate\Database\Query\Builder $query
 	 *
-	 * @return \TastyIgniter\Database\Builder|static
+	 * @return \TastyIgniter\Database\Builder
 	 */
 	public function newEloquentBuilder($query)
 	{
@@ -286,6 +281,8 @@ class Model extends EloquentModel
 	 * syntax as controllers.
 	 *
 	 * @param    string $key
+	 *
+	 * @return mixed
 	 */
 	public function __get($key)
 	{
@@ -325,7 +322,7 @@ class Model extends EloquentModel
 
 	public function hasRelation($name)
 	{
-		return $this->getRelationDefinition($name) !== NULL ? TRUE : FALSE;
+		return $this->getRelationDefinition($name) !== null ? TRUE : FALSE;
 	}
 
 	/**
@@ -337,7 +334,7 @@ class Model extends EloquentModel
 	 */
 	public function getRelationDefinition($name)
 	{
-		if (($type = $this->getRelationType($name)) !== NULL) {
+		if (($type = $this->getRelationType($name)) !== null) {
 			return $this->getRelationArray($name, $type);
 		}
 	}
@@ -489,7 +486,7 @@ class Model extends EloquentModel
 
 		foreach (array_merge($optional, $filters) as $key) {
 			if (!array_key_exists($key, $relation)) {
-				$relation[$key] = NULL;
+				$relation[$key] = null;
 			}
 		}
 

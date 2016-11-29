@@ -30,12 +30,6 @@ use Illuminate\Events\Dispatcher;
 class Manager
 {
 	protected static $dbManager;
-	protected static $CI;
-
-	public function __construct()
-	{
-		self::$CI =& get_instance();
-	}
 
 	/**
 	 * Initialize capsule and store reference to connection
@@ -83,7 +77,7 @@ class Manager
 	protected static function getConfiguration()
 	{
 		$CI =& get_instance();
-		if (isset(self::$CI->db)) return self::$CI->db;
+		if (isset($CI->db)) return $CI->db;
 
 		// Is the config file in the environment folder?
 		if (!file_exists($file_path = IGNITEPATH . 'config/' . ENVIRONMENT . '/database.php')
@@ -133,8 +127,9 @@ class Manager
 			$query = str_replace(['%', '?'], ['%%', '%s'], $queryExecuted->sql);
 			$query = vsprintf($query, $bindings);
 
-			self::$CI->db->query_times[] = $queryExecuted->time;
-			self::$CI->db->queries[] = $query;
+			$CI =& get_instance();
+			$CI->db->query_times[] = $queryExecuted->time;
+			$CI->db->queries[] = $query;
 		});
 	}
 }

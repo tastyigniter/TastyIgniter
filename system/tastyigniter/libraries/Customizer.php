@@ -472,7 +472,6 @@ class Customizer
 	protected function createCheckboxOrRadio($field = [])
 	{
 		if (empty($field['type'])) return FALSE;
-		var_dump($field);
 		if ($field['type'] == 'checkbox') {
 			return form_checkbox(['id' => $field['id'], 'name' => $field['name'], 'value' => $field['value'], 'checked' => $field['checked']]) . $field['label'];
 		} else if ($field['type'] == 'radio') {

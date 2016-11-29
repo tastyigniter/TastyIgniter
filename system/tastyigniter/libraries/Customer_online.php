@@ -102,6 +102,7 @@ class Customer_online
 	{
 		$this->CI->load->model('Customer_online_model');
 
+		$last_activities = [];
 		if ($activity = $this->CI->Customer_online_model->getLastOnline($ip)) {
 			$last_activities = [
 				'activity_id'  => $activity['activity_id'],
