@@ -170,7 +170,7 @@ class TI_Cart extends CI_Cart
 		if ($this->CI->config->item('tax_mode') == '1' AND $this->CI->config->item('tax_percentage')) {
 			$tax_percent = $this->CI->config->item('tax_percentage') ? $this->CI->config->item('tax_percentage') : 0;
 
-			$total = $this->_cart_contents['order_total'];
+			$total = $this->_cart_contents['cart_total'];
 
 			// Remove delivery charge from total if its not taxable
 			if (isset($this->_cart_totals['delivery']['amount']) AND $this->CI->config->item('tax_delivery_charge') != '1') {
