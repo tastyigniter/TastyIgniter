@@ -17,6 +17,7 @@
             <?php echo get_favicon(); ?>
         <?php } ?>
         <title><?php echo sprintf(lang('site_title'), get_title(), config_item('site_name')); ?></title>
+		<link href="https://fonts.googleapis.com/css?family=Amaranth:400,400i,700,700i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i|Titillium+Web:300,300i,400,400i,600,600i,700,700i,900" rel="stylesheet">
         <?php echo get_style_tags(); ?>
         <?php echo get_active_styles(); ?>
         <?php echo get_script_tags(); ?>
@@ -91,7 +92,7 @@
 						<div class="collapse navbar-collapse" id="main-header-menu-collapse">
 							<ul class="nav navbar-nav navbar-right">
 								<li><a href="<?php echo restaurant_url(); ?>"><?php echo lang('menu_menu'); ?></a></li>
-								<?php if ($this->config->item('reservation_mode') === '1') { ?>
+								<?php if ($this->config->item('reservation_mode') == '1') { ?>
 									<li><a href="<?php echo site_url('reservation'); ?>"><?php echo lang('menu_reservation'); ?></a></li>
 								<?php } ?>
 
@@ -102,7 +103,7 @@
                                             <li><a role="presentation" href="<?php echo site_url('account/account'); ?>"><?php echo lang('menu_my_account'); ?></a></li>
                                             <li><a role="presentation" href="<?php echo site_url('account/address'); ?>"><?php echo lang('menu_address'); ?></a></li>
 
-											<?php if ($this->config->item('reservation_mode') === '1') { ?>
+											<?php if ($this->config->item('reservation_mode') == '1') { ?>
 												<li><a role="presentation" href="<?php echo site_url('account/reservations'); ?>"><?php echo lang('menu_recent_reservation'); ?></a></li>
 											<?php } ?>
 
@@ -130,7 +131,7 @@
 		</header>
 
 		<div id="page-wrapper" class="content-area">
-			<?php if (get_theme_options('display_crumbs') === '1' AND ($breadcrumbs = get_breadcrumbs()) !== '') { ?>
+			<?php if (get_theme_options('display_crumbs') == '1' AND ($breadcrumbs = get_breadcrumbs()) !== '') { ?>
 	            <div id="breadcrumb">
 	                <div class="container">
 	                    <div class="row">

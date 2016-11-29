@@ -97,8 +97,14 @@
                                     <td><?php echo $online['access_type']; ?></td>
                                     <td><?php echo $online['browser']; ?></td>
 <!--                                    <td class="text-center">--><?php //echo $online['user_agent']; ?><!--</td>-->
-                                    <td><a href="<?php echo $online['request_url']; ?>"><?php echo $online['request_uri']; ?></a></td>
-                                    <td><a href="<?php echo $online['referrer_url']; ?>"><?php echo $online['referrer_uri']; ?></a></td>
+                                    <td><a href="<?php echo (!empty($online['request_uri'])) ? root_url($online['request_uri']) : '#'; ?>">
+                                            <?php echo (!empty($online['request_uri'])) ? $online['request_uri'] : '--'; ?>
+                                        </a>
+                                    </td>
+                                    <td><a href="<?php echo (!empty($online['referrer_uri'])) ? root_url($online['referrer_uri']) : '#'; ?>">
+                                            <?php echo (!empty($online['referrer_uri'])) ? $online['referrer_uri'] : '--'; ?>
+                                        </a>
+                                    </td>
                                     <td><?php echo $online['date_added']; ?></td>
                                 </tr>
                             <?php } ?>

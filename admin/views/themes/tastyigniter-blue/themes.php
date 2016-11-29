@@ -8,7 +8,7 @@
 						<?php foreach ($themes as $theme) { ?>
 							<div class="col-xs-12 col-sm-6 wrap-none wrap-right wrap-bottom">
 								<div class="panel panel-default panel-theme">
-									<?php if ($theme['active'] === '1') { ?>
+									<?php if ($theme['active'] == '1') { ?>
 										<span class="label label-warning label-active text-sm" title="<?php echo lang('text_is_default'); ?>"></span>
 									<?php } ?>
 									<div class="panel-body">
@@ -32,7 +32,7 @@
 												</div>
 												<div class="buttons action">
 													<a class="btn btn-edit" title="<?php echo lang('text_customize'); ?>" href="<?php echo $theme['edit']; ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
-													<?php if ($theme['active'] === '1') { ?>
+													<?php if ($theme['active'] == '1') { ?>
 														<a class="btn btn-warning disabled"><i class="fa fa-star"></i>&nbsp;&nbsp;<?php echo lang('text_is_default'); ?></a>&nbsp;&nbsp;
 													<?php } else {?>
 														<a class="btn btn-warning" href="<?php echo $theme['activate']; ?>"><i class="fa fa-star"></i>&nbsp;&nbsp;<?php echo lang('text_set_default'); ?></a>&nbsp;&nbsp;

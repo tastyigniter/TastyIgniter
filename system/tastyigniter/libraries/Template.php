@@ -441,7 +441,7 @@ class Template {
 				if (isset($layout_module['module_code']) AND !empty($_components[$layout_module['module_code']])) {
 					$component = $_components[$layout_module['module_code']];
 
-					if ($component['code'] === $layout_module['module_code'] AND $layout_module['status'] === '1') {
+					if ($component['code'] == $layout_module['module_code'] AND $layout_module['status'] == '1') {
 						$partial = $layout_module['partial'];
 						if (in_array($layout_module['partial'], array('top', 'left', 'right', 'bottom'))) {
 							$partial = 'content_' . $layout_module['partial'];
@@ -570,7 +570,7 @@ class Template {
 		}
 
 		$module_class = 'module-' . $module['code'] . '';
-		if ($module['fixed'] === '1') {
+		if ($module['fixed'] == '1') {
 			$top_offset = isset($module['fixed_top_offset']) ? $module['fixed_top_offset'] : '';
 			$bottom_offset = isset($module['fixed_bottom_offset']) ? $module['fixed_bottom_offset'] : '';
 			$fixed_tag = '<div data-spy="affix" data-offset-top="' . $top_offset . '" data-offset-bottom="' . $bottom_offset . '">';

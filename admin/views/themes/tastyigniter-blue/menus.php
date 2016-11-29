@@ -29,10 +29,10 @@
 									<div class="form-group">
 										<select name="filter_status" class="form-control input-sm">
 											<option value=""><?php echo lang('text_filter_status'); ?></option>
-											<?php if ($filter_status === '1') { ?>
+											<?php if ($filter_status == '1') { ?>
 												<option value="1" <?php echo set_select('filter_status', '1', TRUE); ?> ><?php echo lang('text_enabled'); ?></option>
 												<option value="0" <?php echo set_select('filter_status', '0'); ?> ><?php echo lang('text_disabled'); ?></option>
-											<?php } else if ($filter_status === '0') { ?>
+											<?php } else if ($filter_status == '0') { ?>
 												<option value="1" <?php echo set_select('filter_status', '1'); ?> ><?php echo lang('text_enabled'); ?></option>
 												<option value="0" <?php echo set_select('filter_status', '0', TRUE); ?> ><?php echo lang('text_disabled'); ?></option>
 											<?php } else { ?>
@@ -96,17 +96,17 @@
 									<!--<td class="left"><img src="<?php echo $menu['menu_photo']; ?>"></td>-->
 									<td class="name"><?php echo $menu['menu_name']; ?></td>
 									<td class="left"><?php echo $menu['menu_price']; ?>&nbsp;&nbsp;
-										<?php if ($menu['special_status'] === '1' AND $menu['is_special'] === '1') { ?>
+										<?php if ($menu['special_status'] == '1' AND $menu['is_special'] == '1') { ?>
 											<a title="<?php echo lang('text_special_enabled'); ?>"><i class="fa fa-star fa-star-special"></i></a>
-										<?php } else if ($menu['special_status'] === '1' AND $menu['is_special'] !== '1') { ?>
+										<?php } else if ($menu['special_status'] == '1' AND $menu['is_special'] != '1') { ?>
 											<a title="<?php echo lang('text_special_expired'); ?>"><i class="fa fa-star fa-star-special disabled"></i></a>
-										<?php } else if ($menu['is_special'] === '1') { ?>
+										<?php } else if ($menu['is_special'] == '1') { ?>
 											<a title="<?php echo lang('text_special_disabled'); ?>"><i class="fa fa-star fa-star-special disabled"></i></a>
 										<?php } ?>
 									</td>
 									<td class="left"><?php echo $menu['category_name']; ?></td>
 									<td class="left"><?php echo ($menu['stock_qty'] < 1) ? '<span class="red">' . $menu['stock_qty'] . '</span>' : $menu['stock_qty']; ?></td>
-									<td class="text-center"><?php echo ($menu['menu_status'] === '1') ? lang('text_enabled') : lang('text_disabled'); ?></td>
+									<td class="text-center"><?php echo ($menu['menu_status'] == '1') ? lang('text_enabled') : lang('text_disabled'); ?></td>
 									<td class="id"><?php echo $menu['menu_id']; ?></td>
 								</tr>
 							<?php } ?>

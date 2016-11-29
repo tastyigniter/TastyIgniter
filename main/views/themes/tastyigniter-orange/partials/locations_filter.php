@@ -15,8 +15,8 @@
 		</div>
 		<ul class="list-group list-group-responsive wrap-bottom">
 			<?php foreach ($filters as $key => $filter) { ?>
-				<li class="list-group-item  <?php echo ($key === $sort_by) ? 'disabled' : '' ?>">
-					<a class="btn-block" <?php echo ($key === $sort_by) ? 'disabled' : 'href="'.$filter['href'].'"'; ?>><i class="fa fa-angle-right"></i>&nbsp;&nbsp;<?php echo $filter['name']; ?></a>
+				<li class="list-group-item  <?php echo ($key == $sort_by) ? 'disabled' : '' ?>">
+					<a class="btn-block" <?php echo ($key == $sort_by) ? 'disabled' : 'href="'.$filter['href'].'"'; ?>><i class="fa fa-angle-right"></i>&nbsp;&nbsp;<?php echo $filter['name']; ?></a>
 				</li>
 			<?php } ?>
 		</ul>

@@ -17,10 +17,10 @@
                                     <div class="form-group">
                                         <select name="filter_status" class="form-control input-sm">
                                             <option value=""><?php echo lang('text_filter_status'); ?></option>
-                                            <?php if ($filter_status === '1') { ?>
+                                            <?php if ($filter_status == '1') { ?>
                                                 <option value="1" <?php echo set_select('filter_status', '1', TRUE); ?> ><?php echo lang('text_installed'); ?></option>
                                                 <option value="0" <?php echo set_select('filter_status', '0'); ?> ><?php echo lang('text_uninstalled'); ?></option>
-                                            <?php } else if ($filter_status === '0') { ?>
+                                            <?php } else if ($filter_status == '0') { ?>
                                                 <option value="1" <?php echo set_select('filter_status', '1'); ?> ><?php echo lang('text_installed'); ?></option>
                                                 <option value="0" <?php echo set_select('filter_status', '0', TRUE); ?> ><?php echo lang('text_uninstalled'); ?></option>
                                             <?php } else { ?>
@@ -53,20 +53,20 @@
 							<?php foreach ($extensions as $extension) { ?>
 							<tr>
 								<td class="action action-two">
-                                    <?php if (!empty($extension['settings']) AND $extension['status'] === '1') { ?>
+                                    <?php if (!empty($extension['settings']) AND $extension['status'] == '1') { ?>
                                         <a class="btn btn-edit" title="<?php echo lang('text_settings'); ?>" href="<?php echo $extension['edit']; ?>"><i class="fa fa-gear"></i></a>
                                         &nbsp;&nbsp;&nbsp;
-                                    <?php } else if ($extension['installed'] === TRUE AND $extension['status'] === '1') { ?>
+                                    <?php } else if ($extension['installed'] === TRUE AND $extension['status'] == '1') { ?>
 	                                    <a class="btn btn-edit disabled" title="<?php echo lang('text_settings'); ?>"><i class="fa fa-gear"></i></a>
 	                                    &nbsp;&nbsp;&nbsp;
                                     <?php } ?>
-									<?php if ($extension['installed'] === TRUE AND $extension['status'] === '1') { ?>
+									<?php if ($extension['installed'] === TRUE AND $extension['status'] == '1') { ?>
 										<a class="btn btn-danger" title="<?php echo lang('text_uninstall'); ?>" href="<?php echo $extension['manage']; ?>"><i class="fa fa-pause"></i></a>
 									<?php } else { ?>
 										<a class="btn btn-success" title="<?php echo lang('text_install'); ?>" href="<?php echo $extension['manage']; ?>"><i class="fa fa-play"></i></a>
                                     <?php } ?>
                                     &nbsp;&nbsp;&nbsp;
-									<?php if ($extension['installed'] !== TRUE OR $extension['status'] !== '1') {?>
+									<?php if ($extension['installed'] !== TRUE OR $extension['status'] != '1') {?>
 										<a class="btn btn-danger delete" title="<?php echo lang('button_delete'); ?>" href="<?php echo $extension['delete']; ?>"><i class="fa fa-trash-o"></i></a>
                                     <?php } ?>
 								</td>

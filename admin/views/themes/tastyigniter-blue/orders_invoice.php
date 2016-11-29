@@ -53,7 +53,7 @@
 									<strong><?php echo $first_name; ?> <?php echo $last_name; ?></strong><br>
 									<?php echo $email; ?>
 								</address>
-								<?php if ($check_order_type === '1') { ?>
+								<?php if ($check_order_type == '1') { ?>
 								<address>
 									<span class="text-muted"><?php echo lang('text_deliver_to'); ?>:</span><br>
 									<?php echo $customer_address; ?>

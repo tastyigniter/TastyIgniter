@@ -35,7 +35,7 @@
 								<option value="0"><?php echo lang('text_use_default'); ?></option>
 								<?php if (!is_single_location()) { ?>
 								<?php foreach ($locations as $location) { ?>
-									<?php if ($location['location_id'] === $use_location) { ?>
+									<?php if ($location['location_id'] == $use_location) { ?>
 										<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('use_location', $location['location_id'], TRUE); ?> ><?php echo $location['location_name']; ?></option>
 									<?php } else { ?>
 										<option value="<?php echo $location['location_id']; ?>" <?php echo set_select('use_location', $location['location_id']); ?> ><?php echo $location['location_name']; ?></option>

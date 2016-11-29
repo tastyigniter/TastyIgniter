@@ -25,7 +25,7 @@
                                 <label class="sr-only" for="location"><?php echo lang('label_location'); ?></label>
                                 <select name="location" id="location" class="form-control">
                                     <?php foreach ($locations as $location) { ?>
-                                        <?php if ($location['id'] === $location_id) { ?>
+                                        <?php if ($location['id'] == $location_id) { ?>
                                             <option value="<?php echo $location['id']; ?>" <?php echo set_select('location', $location['id'], TRUE); ?>><?php echo $location['name']; ?></option>
                                         <?php } else { ?>
                                             <option value="<?php echo $location['id']; ?>" <?php echo set_select('location', $location['id']); ?>><?php echo $location['name']; ?></option>
@@ -38,7 +38,7 @@
                                 <?php if ($guest_numbers) { ?>
                                     <select name="guest_num" id="guest-num" class="form-control">
                                         <?php foreach ($guest_numbers as $key => $value) { ?>
-                                            <?php if ($value === $guest_num) { ?>
+                                            <?php if ($value == $guest_num) { ?>
                                                 <option value="<?php echo $value; ?>" <?php echo set_select('guest_num', $value, TRUE); ?>><?php echo $value; ?></option>
                                             <?php } else { ?>
                                                 <option value="<?php echo $value; ?>" <?php echo set_select('guest_num', $value); ?>><?php echo $value; ?></option>
@@ -101,7 +101,7 @@
                         <div id="time-slots" class="col-xs-12 col-sm-8 wrap-none">
                             <div class="btn-group" data-toggle="buttons">
                                 <?php foreach ($time_slots as $key => $slot) { ?>
-                                    <?php if ($slot['time'] === $time) { ?>
+                                    <?php if ($slot['time'] == $time) { ?>
                                         <label class="btn btn-default col-xs-4 col-sm-2 active <?php echo $slot['state']; ?>" data-btn="btn-primary">
                                             <input type="radio" name="selected_time" id="reserve_time<?php echo $key; ?>" value="<?php echo $slot['time']; ?>" <?php echo set_radio('selected_time', $slot['time'], TRUE); ?>/><?php echo $slot['formatted_time']; ?>
                                         </label>
@@ -159,7 +159,7 @@
                     <label class="text-muted text-uppercase small"><?php echo lang('label_location'); ?></label><br />
                     <span class="form-control-static text-">
                         <?php foreach ($locations as $location) { ?>
-                            <?php if ($location['id'] === $location_id) { ?>
+                            <?php if ($location['id'] == $location_id) { ?>
                                 <?php echo $location['name']; ?>
                             <?php } ?>
                         <?php } ?>

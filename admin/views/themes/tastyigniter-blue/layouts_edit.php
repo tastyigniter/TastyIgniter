@@ -43,7 +43,7 @@
 										<?php if (!empty($layout_components[$partial['id']])) { ?>
 											<?php $component_row = 1; ?>
 											<?php foreach ($layout_components[$partial['id']] as $component) { ?>
-												<?php if ($partial['id'] === $component['partial']) { ?>
+												<?php if ($partial['id'] == $component['partial']) { ?>
 													<div class="panel panel-default panel-partial-module">
 														<div class="panel-heading handle clickable" data-toggle="collapse" data-target="#partial-<?php echo $component['partial']; ?>-module-<?php echo $component_row; ?>" aria-expanded="false" aria-controls="partial-<?php echo $component['partial']; ?>-module-<?php echo $component_row; ?>">
 															<i class="fa fa-arrows"></i>&nbsp;&nbsp;
@@ -82,7 +82,7 @@
 															</div>
 															<div class="form-group">
 																<div class="btn-group btn-group-switch" data-toggle="buttons">
-																	<?php if ($component['status'] === '1') { ?>
+																	<?php if ($component['status'] == '1') { ?>
 																		<label class="btn btn-danger"><input type="radio" name="components[<?php echo $component['partial']; ?>][<?php echo $component_row; ?>][status]" value="0" <?php echo set_radio('components['.$component['partial'].']['.$component_row.'][status]', '0'); ?>><b class="pull-left"><?php echo lang('label_module_status'); ?></b>  <?php echo lang('text_disabled'); ?></label>
 																		<label class="btn btn-success active"><input type="radio" name="components[<?php echo $component['partial']; ?>][<?php echo $component_row; ?>][status]" value="1" <?php echo set_radio('components['.$component['partial'].']['.$component_row.'][status]', '1', TRUE); ?>><b class="pull-left"><?php echo lang('label_module_status'); ?></b>  <?php echo lang('text_enabled'); ?></label>
 																	<?php } else { ?>

@@ -61,7 +61,7 @@
 							<select name="security_question_id" id="input-security-question" class="form-control">
 								<option value="">— Select —</option>
 								<?php foreach ($questions as $key => $value) { ?>
-									<?php if ($key == $security_question) { ?>
+									<?php if ($key == $security_question_id) { ?>
 										<option value="<?php echo $key; ?>" selected="selected"><?php echo $value; ?></option>
 									<?php } else { ?>
 										<option value="<?php echo $key; ?>"><?php echo $value; ?></option>

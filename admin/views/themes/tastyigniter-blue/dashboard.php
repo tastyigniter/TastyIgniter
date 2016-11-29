@@ -121,7 +121,7 @@
                         </div>
                     </div>
                     <div id="statistics">
-                        <ul class="list-group text-sm">
+                        <ul class="list-group">
                             <li class="list-group-item"><?php echo lang('text_total_sale'); ?> <span class="text-red sales"><?php echo lang('text_zero'); ?></span></li>
                             <li class="list-group-item"><?php echo lang('text_total_lost_sale'); ?> <span class="text-yellow lost_sales"><?php echo lang('text_zero'); ?></span></li>
                             <li class="list-group-item"><?php echo lang('text_total_cash_payment'); ?><span class="text-primary cash_payments"><?php echo lang('text_zero'); ?></span></li>

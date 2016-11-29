@@ -146,7 +146,7 @@ class Media_manager {
     }
 
     public function newFolder($name) {
-        if ($this->_new_folder !== '1') return FALSE;
+        if ($this->_new_folder != '1') return FALSE;
 
         $folder_path = $this->_image_path . $this->_root_folder . $name;
         $folder_thumb_path = $this->_image_path . $this->_thumbs_folder . $name;
@@ -169,7 +169,7 @@ class Media_manager {
     }
 
     public function copy($from_path, $to_path, $first_call = FALSE) {
-        if ($this->_copy !== '1') return FALSE;
+        if ($this->_copy != '1') return FALSE;
 
         if (!$first_call) {
             $from_path = $this->_image_path . $this->_root_folder . $from_path;
@@ -200,7 +200,7 @@ class Media_manager {
     }
 
     public function move($file_path, $move_path) {
-        if ($this->_move !== '1') return FALSE;
+        if ($this->_move != '1') return FALSE;
 
         $root_path = $this->_image_path . $this->_root_folder;
 
@@ -216,7 +216,7 @@ class Media_manager {
     }
 
     public function rename($file_path, $new_name) {
-        if ($this->_rename !== '1') return FALSE;
+        if ($this->_rename != '1') return FALSE;
 
         $root_path = $this->_image_path . $this->_root_folder;
 
@@ -235,7 +235,7 @@ class Media_manager {
     }
 
     public function delete($path, $first_call = FALSE) {
-        if ($this->_delete !== '1') return FALSE;
+        if ($this->_delete != '1') return FALSE;
 
         if (!$first_call) {
             $path = $this->_image_path . $this->_root_folder . $path;
@@ -263,7 +263,7 @@ class Media_manager {
     }
 
     public function upload($sub_folder) {
-        if ($this->_uploads !== '1') return FALSE;
+        if ($this->_uploads != '1') return FALSE;
 
         $this->CI->load->library('upload');
         $this->CI->upload->set_upload_path($this->_image_path . $this->_root_folder . $sub_folder);

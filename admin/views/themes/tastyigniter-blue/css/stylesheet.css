@@ -10,7 +10,7 @@ body {
 	font-family: 'Roboto', Arial, sans-serif;
 	font-weight: 400;
 	margin-bottom: 0;
-	font-size: 15px;
+	font-size: 1.5em;
 	color: #3C3C3C;
 }
 .body-login {
@@ -206,19 +206,20 @@ h1.block-heading, h2.block-heading, h3.block-heading, h4.block-heading, h5.block
 	min-height: 50px;
 }
 .navbar-logo {
-	display: inline-block;
-	padding: 9px 7px;
+	display: block;
+	padding: 0 15px;
 }
 .navbar-logo img {
-	height: 32px;
-	line-height: 32px;
+	height: 40px;
 }
 .navbar-logo .logo-image {
 	margin-bottom: -15px;
 }
 .navbar-logo .logo-text {
 	width: 100%;
-	margin-left: -5px;
+	margin-left: 0;
+	line-height: 60px;
+	display: block;
 }
 .navbar-sitename {
 	display: inline-block;
@@ -327,7 +328,7 @@ h1.block-heading, h2.block-heading, h3.block-heading, h4.block-heading, h5.block
 .navbar-top-links > .open > a,
 .navbar-top-links > .open > a:hover,
 .navbar-top-links > .open > a:focus {
-	background-color: #E2E8F0;
+	background-color: #F6F8FA;
 }
 .navbar-top-links .open > a,
 .navbar-top-links .open > a:focus,
@@ -403,7 +404,6 @@ h1.block-heading, h2.block-heading, h3.block-heading, h4.block-heading, h5.block
 	color: #333333;
 }
 .navbar-top-links .dropdown-menu > li .badge {
-	background-color: #E2E8F0;
 	color: #333;
 	display: inline-block;
 	padding: 3px 7px;
@@ -704,7 +704,6 @@ h1.block-heading, h2.block-heading, h3.block-heading, h4.block-heading, h5.block
 }
 .page-header .page-action {
 	padding-bottom: 5px;
-	padding-top: 20px;
 }
 .page-header .btn {
 	padding: 8px 15px;
@@ -716,7 +715,8 @@ h1.block-heading, h2.block-heading, h3.block-heading, h4.block-heading, h5.block
 	border-width: 1px 1px 4px 1px;
 }
 .page-header .btn + .btn {
-	margin-left: 5px;
+	margin-left: 10px;
+	margin-right: 10px;
 }
 .page-header .btn:hover,
 .page-header .btn:focus {
@@ -737,6 +737,12 @@ h1.block-heading, h2.block-heading, h3.block-heading, h4.block-heading, h5.block
 	padding-right: 3px;
 }
 /** ALERT **/
+#notification {
+	padding-top: 20px;
+}
+#notification:empty {
+	padding-top: 0;
+}
 #notification .alert {
 	background-color: #FFFFFF;
 	border-width: 0 0 0 5px;
@@ -1191,6 +1197,7 @@ legend {
 .btn {
 	border-radius: 2px;
 	outline: 0 none;
+	/*padding: 10px 12px;*/
 }
 .btn:focus, .btn:active:focus, .btn.active:focus {
 	outline: 0 none;
@@ -1994,7 +2001,8 @@ table td .extension-icon {
 /** PAGINATION **/
 .pagination-bar {
 	border-top: 1px solid #ECF0F5;
-	padding: 15px;
+	padding: 15px 0;
+	margin: 0;
 }
 .pagination-bar .links,
 .pagination-bar .info {
@@ -2623,6 +2631,10 @@ a.collapsed .fa-angle-double-down {
 .panel-partials .btn {
 	text-align: left;
 }
+.components-row .btn {
+	font-size: 16px;
+	font-weight: 600;
+}
 .partials {
 	background-color: #F6F8FA;
 	border-color: #ECF0F5;
@@ -2635,15 +2647,15 @@ a.collapsed .fa-angle-double-down {
 	padding-left: 5px !important;
 }
 .partials .panel-partial {
+	border-color: #D2DCE7;
 	padding: 5px;
 }
-.panel-partial, .panel-partial-module {
+.panel-group .panel {
 	border-color: #D2DCE7;
-}
-.partials .panel-partial-module {
+	border-width: 1px;
 	margin-bottom: 15px;
 }
-.panel-partial-module .panel-heading {
+.panel-group .panel .panel-heading {
 	background-color: #ECF0F5;
 	border-radius: 3px;
 }
@@ -2828,7 +2840,7 @@ body .datepicker-dropdown.datepicker-orient-bottom:after {
 .timeline > .time-label {
 	margin-bottom: 25px;
 	margin-left: 60px;
-	background-color: #ECF0F5;
+	background-color: #F6F8FA;
 }
 .timeline > .time-label::after {
 	background-color: #337AB7;
@@ -2842,7 +2854,6 @@ body .datepicker-dropdown.datepicker-orient-bottom:after {
 	display: inline-block;
 	padding: 15px 10px 6px;
 	text-align: center;
-	width: 85px;
 }
 .timeline .time-label:first-child > span {
 	padding-top: 0;
@@ -2874,7 +2885,7 @@ body .datepicker-dropdown.datepicker-orient-bottom:after {
 	height: 15px;
 	z-index: 100;
 	border-radius: 50%;
-	border: 3px solid #ECF0F5;
+	border: 3px solid #F6F8FA;
 	margin-top: 10px;
 }
 .timeline-item .timeline-icon .fa {

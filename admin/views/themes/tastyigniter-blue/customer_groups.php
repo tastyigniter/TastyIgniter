@@ -29,7 +29,7 @@
 									</div>
 									<a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $customer_group['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
 								<td><?php echo $customer_group['group_name']; ?>
-									<?php if ($customer_group_id === $customer_group['customer_group_id']) { ?>
+									<?php if ($customer_group_id == $customer_group['customer_group_id']) { ?>
 										<?php echo lang('text_default'); ?>
 									<?php } ?>
 								</td>

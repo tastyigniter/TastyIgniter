@@ -81,7 +81,7 @@
                                 <li><a href="<?php echo site_url('local/all'); ?>"><?php echo lang('menu_locations'); ?></a></li>
                             <?php } ?>
                             <li><a href="<?php echo site_url('contact'); ?>"><?php echo lang('menu_contact'); ?></a></li>
-                            <?php if (get_theme_options('hide_admin_link') !== '1') { ?>
+                            <?php if (get_theme_options('hide_admin_link') != '1') { ?>
                                 <li><a target="_blank" href="<?php echo admin_url(); ?>"><?php echo lang('menu_admin'); ?></a></li>
                             <?php } ?>
                         </ul>

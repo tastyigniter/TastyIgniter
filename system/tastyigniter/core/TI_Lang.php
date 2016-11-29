@@ -132,7 +132,7 @@ class TI_Lang extends MX_Lang
 		$this->CI =& get_instance();
 
 		// Detect the browser language
-		if ($this->CI->config->item('detect_language') === '1') {
+		if ($this->CI->config->item('detect_language') == '1') {
 			$this->CI->load->library('user_agent');
 
 			$http_lang = $this->CI->agent->languages();
@@ -182,9 +182,9 @@ class TI_Lang extends MX_Lang
 
 		if ($language !== '' AND !empty($this->languages)) {
 			foreach ($this->languages as $row) {
-				if (is_numeric($language) AND $row['language_id'] === $language) {
+				if (is_numeric($language) AND $row['language_id'] == $language) {
 					return $row['idiom'];
-				} else if ($row['code'] === $language) {
+				} else if ($row['code'] == $language) {
 					return $row['idiom'];
 				}
 			}

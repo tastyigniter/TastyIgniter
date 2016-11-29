@@ -17,10 +17,10 @@
 									<div class="form-group">
 										<select name="filter_status" class="form-control input-sm">
 											<option value=""><?php echo lang('text_filter_status'); ?></option>
-											<?php if ($filter_status === '1') { ?>
+											<?php if ($filter_status == '1') { ?>
 												<option value="1" <?php echo set_select('filter_status', '1', TRUE); ?> ><?php echo lang('text_enabled'); ?></option>
 												<option value="0" <?php echo set_select('filter_status', '0'); ?> ><?php echo lang('text_disabled'); ?></option>
-											<?php } else if ($filter_status === '0') { ?>
+											<?php } else if ($filter_status == '0') { ?>
 												<option value="1" <?php echo set_select('filter_status', '1'); ?> ><?php echo lang('text_enabled'); ?></option>
 												<option value="0" <?php echo set_select('filter_status', '0', TRUE); ?> ><?php echo lang('text_disabled'); ?></option>
 											<?php } else { ?>
@@ -71,13 +71,13 @@
                             <td><?php echo character_limiter($category['description']); ?></td>
                             <td>
                                 <?php foreach ($categories as $cat) { ?>
-                                    <?php if ($category['parent_id'] === $cat['category_id']) { ?>
+                                    <?php if ($category['parent_id'] == $cat['category_id']) { ?>
                                         <?php echo $cat['name']; ?>
                                     <?php } ?>
                                 <?php } ?>
                             </td>
 							<td class="text-center"><?php echo $category['priority']; ?></td>
-							<td class="text-center"><?php echo ($category['status'] === '1') ? lang('text_enabled') : lang('text_disabled'); ?></td>
+							<td class="text-center"><?php echo ($category['status'] == '1') ? lang('text_enabled') : lang('text_disabled'); ?></td>
 							<td class="id"><?php echo $category['category_id']; ?></td>
 						</tr>
 

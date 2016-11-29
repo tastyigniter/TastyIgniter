@@ -29,7 +29,7 @@
 										<label for="checkbox-<?php echo $template['template_id']; ?>"></label>
 									</div>
 									<a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $template['edit']; ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
-									<?php if ($template['default'] === '1') { ?>
+									<?php if ($template['default'] == '1') { ?>
 										<a class="btn btn-info" title="<?php echo lang('text_is_default'); ?>" disabled="disabled"><i class="fa fa-star"></i></a>
 									<?php } else {?>
 										<a class="btn btn-info" title="<?php echo lang('text_set_default'); ?>" href="<?php echo $template['default']; ?>"><i class="fa fa-star-o"></i></a>
@@ -38,7 +38,7 @@
 								<td><?php echo $template['name']; ?></td>
 								<td class="text-right"><?php echo $template['date_added']; ?></td>
 								<td class="text-right"><?php echo $template['date_updated']; ?></td>
-								<td class="text-center"><?php echo ($template['status'] === '1') ? lang('text_enabled') : lang('text_disabled'); ?></td>
+								<td class="text-center"><?php echo ($template['status'] == '1') ? lang('text_enabled') : lang('text_disabled'); ?></td>
 							</tr>
 							<?php } ?>
 							<?php } else {?>

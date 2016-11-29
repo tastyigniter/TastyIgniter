@@ -62,7 +62,7 @@
                                 <td><?php echo $status['status_name']; ?></td>
                                 <td><?php echo $status['status_comment']; ?></td>
                                 <td><?php echo ($status['status_for'] === 'reserve') ? lang('text_reservation') : lang('text_order'); ?></td>
-                                <td class="text-center"><?php echo ($status['notify_customer'] === '1') ? lang('text_yes') : lang('text_no'); ?></td>
+                                <td class="text-center"><?php echo ($status['notify_customer'] == '1') ? lang('text_yes') : lang('text_no'); ?></td>
                             </tr>
                             <?php } ?>
                             <?php } else { ?>

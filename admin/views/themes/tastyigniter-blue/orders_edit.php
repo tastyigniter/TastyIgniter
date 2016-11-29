@@ -141,7 +141,7 @@
 									<div class="form-group col-xs-12">
 										<label for="input-name" class="control-label"><?php echo lang('column_notify'); ?></label>
 										<div class="">
-											<?php if ($notify === '1') { ?>
+											<?php if ($notify == '1') { ?>
 												<?php echo lang('text_email_sent'); ?>
 											<?php } else { ?>
 												<?php echo lang('text_email_not_sent'); ?>
@@ -168,7 +168,7 @@
 							<div class="panel panel-default">
 								<div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_tab_delivery_address'); ?></h3></div>
 								<div class="panel-body">
-									<?php if ($check_order_type === '1') { ?>
+									<?php if ($check_order_type == '1') { ?>
 									<div class="form-group col-xs-12">
 										<div class="">
 											<span><?php echo $customer_address; ?></span>
@@ -233,7 +233,7 @@
 														</td>
 														<td><span class="label label-default" style="background-color: <?php echo $history['status_color']; ?>;"><?php echo $history['status_name']; ?></span></td>
 														<td class="text-left"><?php echo $history['comment']; ?></td>
-														<td class="text-center"><?php echo ($history['notify'] === '1') ? $this->lang->line('text_yes') : $this->lang->line('text_no'); ?></td>
+														<td class="text-center"><?php echo ($history['notify'] == '1') ? $this->lang->line('text_yes') : $this->lang->line('text_no'); ?></td>
 													</tr>
 												<?php } ?>
 											<?php } else { ?>
@@ -277,7 +277,7 @@
 										<div class="">
 											<select name="order_status" id="" class="form-control" onChange="getStatusComment();">
 												<?php foreach ($statuses as $status) { ?>
-													<?php if ($status['status_id'] === $status_id) { ?>
+													<?php if ($status['status_id'] == $status_id) { ?>
 														<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('order_status', $status['status_id'], TRUE); ?> ><?php echo $status['status_name']; ?></option>
 													<?php } else { ?>
 														<option value="<?php echo $status['status_id']; ?>" <?php echo set_select('order_status', $status['status_id']); ?> ><?php echo $status['status_name']; ?></option>
@@ -396,7 +396,7 @@ function getStatusComment() {
 			success: function(json) {
 				$('textarea[name="status_comment"]').html(json['comment']);
 
-				if (json['notify'] === '1') {
+				if (json['notify'] == '1') {
 					$('input[name="notify"][value="1"]').parent().click();
 				} else {
 					$('input[name="notify"][value="0"]').parent().click();

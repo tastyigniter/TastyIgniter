@@ -18,10 +18,10 @@
 									<div class="form-group">
 										<select name="filter_status" class="form-control input-sm">
 											<option value=""><?php echo lang('text_filter_status'); ?></option>
-											<?php if ($filter_status === '1') { ?>
+											<?php if ($filter_status == '1') { ?>
 												<option value="1" <?php echo set_select('filter_status', '1', TRUE); ?> ><?php echo lang('text_enabled'); ?></option>
 												<option value="0" <?php echo set_select('filter_status', '0'); ?> ><?php echo lang('text_disabled'); ?></option>
-											<?php } else if ($filter_status === '0') { ?>
+											<?php } else if ($filter_status == '0') { ?>
 												<option value="1" <?php echo set_select('filter_status', '1'); ?> ><?php echo lang('text_enabled'); ?></option>
 												<option value="0" <?php echo set_select('filter_status', '0', TRUE); ?> ><?php echo lang('text_disabled'); ?></option>
 											<?php } else { ?>
@@ -67,13 +67,13 @@
 								</div>
 								<a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $language['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
 							<td width="55%"><?php echo $language['name']; ?>
-								<?php if ($language_id === $language['language_id']) { ?>
+								<?php if ($language_id == $language['language_id']) { ?>
 								<?php echo lang('text_default'); ?>
 								<?php } ?>
 							</td>
 							<td><?php echo $language['code']; ?></td>
 							<td class="text-center"><img alt="<?php echo $language['code']; ?>" src="<?php echo $language['image']; ?>" height="12" /></td>
-							<td class="text-center"><?php echo ($language['status'] === '1') ? lang('text_enabled') : lang('text_disabled'); ?></td>
+							<td class="text-center"><?php echo ($language['status'] == '1') ? lang('text_enabled') : lang('text_disabled'); ?></td>
 						</tr>
 						<?php } ?>
 						<?php } else { ?>

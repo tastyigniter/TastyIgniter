@@ -28,7 +28,7 @@
 					<div class="tab-content">
 						<?php foreach (array('opening', 'delivery', 'collection') as $type) { ?>
 							<div id="<?php echo $type ?>-hours" class="tab-pane fade <?php echo ($type === 'opening') ? 'in active': ''; ?>">
-								<div class="list-group">
+								<div class="list-group small">
 									<?php if (!empty($working_hours[$type])) { ?>
 										<?php foreach ($working_hours[$type] as $hour) { ?>
 											<div class="list-group-item">
@@ -36,7 +36,7 @@
 													<div class="col-xs-4"><?php echo $hour['day']; ?>:</div>
 													<div class="col-xs-8">
 														<?php if (!empty($hour['status'])) echo sprintf(lang('text_working_hour'), $hour['open'], $hour['close']); ?>
-														<span class="small text-muted"><?php if (isset($hour['info']) AND $hour['info'] === 'closed') { echo lang('text_closed'); } else if (isset($hour['info']) AND $hour['info'] === '24_hours') { echo lang('text_24h'); }; ?></span>
+														<span class="small text-muted"><?php if ($hour['status'] != '1') { echo lang('text_closed'); } else if (isset($hour['is_24_hours']) AND $hour['is_24_hours'] === TRUE) { echo lang('text_24h'); }; ?></span>
 													</div>
 												</div>
 											</div>
@@ -122,7 +122,7 @@
 												<?php echo $area['name']; ?>
 												<span class="badge" style="background-color: <?php echo $area['color']; ?>">&nbsp;&nbsp;</span>
 											</div>
-											<div class="col-xs-8 wrap-none"><?php echo $area['condition']; ?></div>
+											<div class="col-xs-8 wrap-none"><?php echo $area['full_summary']; ?></div>
 										</div>
 									</div>
 								<?php } ?>

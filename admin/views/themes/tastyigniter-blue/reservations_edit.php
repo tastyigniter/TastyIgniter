@@ -91,7 +91,7 @@
 									<div class="form-group col-xs-12">
 										<label for="" class="control-label"><?php echo lang('column_notify'); ?></label>
 										<div class="">
-											<?php if ($notify === '1') { ?>
+											<?php if ($notify == '1') { ?>
 												<?php echo lang('text_email_sent'); ?>
 											<?php } else { ?>
 												<?php echo lang('text_email_not_sent'); ?>
@@ -208,7 +208,7 @@
 														</td>
 														<td><span class="label label-default" style="background-color: <?php echo $history['status_color']; ?>;"><?php echo $history['status_name']; ?></span></td>
 														<td class="left"><?php echo $history['comment']; ?></td>
-														<td class="text-center"><?php echo ($history['notify'] === '1') ? $this->lang->line('text_yes') : $this->lang->line('text_no'); ?></td>
+														<td class="text-center"><?php echo ($history['notify'] == '1') ? $this->lang->line('text_yes') : $this->lang->line('text_no'); ?></td>
 													</tr>
 												<?php } ?>
 											<?php } else { ?>

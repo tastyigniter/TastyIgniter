@@ -32,7 +32,7 @@
 						<div class="col-sm-5">
 							<select name="order_status" id="input-order-status" class="form-control">
 								<?php foreach ($statuses as $stat) { ?>
-								<?php if ($stat['status_id'] === $order_status) { ?>
+								<?php if ($stat['status_id'] == $order_status) { ?>
 									<option value="<?php echo $stat['status_id']; ?>" selected="selected"><?php echo $stat['status_name']; ?></option>
 								<?php } else { ?>
 									<option value="<?php echo $stat['status_id']; ?>"><?php echo $stat['status_name']; ?></option>

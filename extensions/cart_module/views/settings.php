@@ -100,7 +100,7 @@
 										</td>
 										<td>
 											<div class="btn-group btn-group-switch" data-toggle="buttons">
-												<?php if ($total['status'] === '1') { ?>
+												<?php if ($total['status'] == '1') { ?>
 													<label class="btn btn-default"><input type="radio" name="cart_totals[<?php echo $table_row; ?>][status]" value="0" <?php echo set_radio('cart_totals['.$table_row.'][status]', '0'); ?>><?php echo lang('text_no'); ?></label>
 													<label class="btn btn-default active"><input type="radio" name="cart_totals[<?php echo $table_row; ?>][status]" value="1" <?php echo set_radio('cart_totals['.$table_row.'][status]', '1', TRUE); ?>><?php echo lang('text_yes'); ?></label>
 												<?php } else { ?>

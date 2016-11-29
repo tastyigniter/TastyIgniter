@@ -185,7 +185,7 @@
 						<div class="col-sm-5">
 							<select name="currency_id" id="input-currency" class="form-control">
 								<?php foreach ($currencies as $currency) { ?>
-									<?php if ($currency['currency_id'] === config_item('currency_id')) { ?>
+									<?php if ($currency['currency_id'] == config_item('currency_id')) { ?>
 										<option value="<?php echo $currency['currency_id']; ?>" <?php echo set_select('currency_id', $currency['currency_id'], TRUE); ?>><?php echo $currency['currency_name']; ?></option>
 									<?php } else { ?>
 										<option value="<?php echo $currency['currency_id']; ?>" <?php echo set_select('currency_id', $currency['currency_id']); ?>><?php echo $currency['currency_name']; ?></option>
@@ -201,7 +201,7 @@
 						</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-switch" data-toggle="buttons">
-								<?php if (config_item('auto_update_currency_rates') === '1') { ?>
+								<?php if (config_item('auto_update_currency_rates') == '1') { ?>
 									<label class="btn btn-default"><input type="radio" name="auto_update_currency_rates" value="0" <?php echo set_radio('auto_update_currency_rates', '0'); ?>><?php echo lang('text_manual'); ?></label>
 									<label class="btn btn-default active"><input type="radio" name="auto_update_currency_rates" value="1" <?php echo set_radio('auto_update_currency_rates', '1', TRUE); ?>><?php echo lang('text_auto'); ?></label>
 								<?php } else { ?>
@@ -219,7 +219,7 @@
 						<div class="col-sm-5">
 							<select name="accepted_currencies[]" id="input-accepted-currency" class="form-control" multiple>
 								<?php foreach ($currencies as $currency) { ?>
-									<?php if (in_array($currency['currency_id'], config_item('accepted_currencies')) OR $currency['currency_status'] === '1') { ?>
+									<?php if (in_array($currency['currency_id'], config_item('accepted_currencies')) OR $currency['currency_status'] == '1') { ?>
 										<option value="<?php echo $currency['currency_id']; ?>" <?php echo set_select('currency_id', $currency['currency_id'], TRUE); ?>><?php echo $currency['currency_name']; ?></option>
 									<?php } else { ?>
 										<option value="<?php echo $currency['currency_id']; ?>" <?php echo set_select('currency_id', $currency['currency_id']); ?>><?php echo $currency['currency_name']; ?></option>
@@ -267,7 +267,7 @@
 						</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-switch" data-toggle="buttons">
-								<?php if (config_item('detect_language') === '1') { ?>
+								<?php if (config_item('detect_language') == '1') { ?>
 									<label class="btn btn-default"><input type="radio" name="detect_language" value="0" <?php echo set_radio('detect_language', '0'); ?>><?php echo lang('text_disabled'); ?></label>
 									<label class="btn btn-default active"><input type="radio" name="detect_language" value="1" <?php echo set_radio('detect_language', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
@@ -303,7 +303,7 @@
 						<div class="col-sm-6">
 							<div class="btn-group btn-group-toggle btn-group-<?php echo count($date_formats); ?>" data-toggle="buttons">
 								<?php foreach ($date_formats as $format) { ?>
-									<?php if ($format === $date_format) { ?>
+									<?php if ($format == $date_format) { ?>
 										<label class="btn btn-default active"><input type="radio" name="date_format" value="<?php echo $format; ?>" <?php echo set_radio('date_format', $format, TRUE); ?>><?php echo mdate($format, time()); ?></label>
 									<?php } else { ?>
 										<label class="btn btn-default"><input type="radio" name="date_format" value="<?php echo $format; ?>" <?php echo set_radio('date_format', $format); ?>><?php echo mdate($format, time()); ?></label>
@@ -318,7 +318,7 @@
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle btn-group-<?php echo count($time_formats); ?>" data-toggle="buttons">
 								<?php foreach ($time_formats as $format) { ?>
-									<?php if ($format === $time_format) { ?>
+									<?php if ($format == $time_format) { ?>
 										<label class="btn btn-default active"><input type="radio" name="time_format" value="<?php echo $format; ?>" <?php echo set_radio('time_format', $format, TRUE); ?>><?php echo mdate($format, time()); ?></label>
 									<?php } else { ?>
 										<label class="btn btn-default"><input type="radio" name="time_format" value="<?php echo $format; ?>" <?php echo set_radio('time_format', $format); ?>><?php echo mdate($format, time()); ?></label>
@@ -435,10 +435,10 @@
 							</label>
 							<div class="col-sm-5">
 								<select name="tax_menu_price" id="input-tax-menu-price" class="form-control">
-									<?php if (config_item('tax_menu_price') === '1') { ?>
+									<?php if (config_item('tax_menu_price') == '1') { ?>
 										<option value="0" <?php echo set_select('tax_menu_price', '0'); ?>><?php echo lang('text_menu_price_include_tax'); ?></option>
 										<option value="1" <?php echo set_select('tax_menu_price', '1', TRUE); ?>><?php echo lang('text_apply_tax_on_menu_price'); ?></option>
-									<?php } else if (config_item('tax_menu_price') === '0') { ?>
+									<?php } else if (config_item('tax_menu_price') == '0') { ?>
 										<option value="0" <?php echo set_select('tax_menu_price', '0', TRUE); ?>><?php echo lang('text_menu_price_include_tax'); ?></option>
 										<option value="1" <?php echo set_select('tax_menu_price', '1'); ?>><?php echo lang('text_apply_tax_on_menu_price'); ?></option>
 									<?php } else { ?>
@@ -613,7 +613,7 @@
 						</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-switch" data-toggle="buttons">
-								<?php if (config_item('auto_invoicing') === '1') { ?>
+								<?php if (config_item('auto_invoicing') == '1') { ?>
 									<label class="btn btn-default"><input type="radio" name="auto_invoicing" value="0" <?php echo set_radio('auto_invoicing', '0'); ?>><?php echo lang('text_manual'); ?></label>
 									<label class="btn btn-default active"><input type="radio" name="auto_invoicing" value="1" <?php echo set_radio('auto_invoicing', '1', TRUE); ?>><?php echo lang('text_auto'); ?></label>
 								<?php } else { ?>
@@ -749,7 +749,7 @@
 						</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-switch" data-toggle="buttons">
-								<?php if (config_item('location_order') === '1') { ?>
+								<?php if (config_item('location_order') == '1') { ?>
 									<label class="btn btn-danger"><input type="radio" name="location_order" value="0" <?php echo set_radio('location_order', '0'); ?>><?php echo lang('text_disabled'); ?></label>
 									<label class="btn btn-success active"><input type="radio" name="location_order" value="1" <?php echo set_radio('location_order', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
@@ -766,7 +766,7 @@
 						</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-switch" data-toggle="buttons">
-								<?php if (config_item('future_orders') === '1') { ?>
+								<?php if (config_item('future_orders') == '1') { ?>
 									<label class="btn btn-danger"><input type="radio" name="future_orders" value="0" <?php echo set_radio('future_orders', '0'); ?>><?php echo lang('text_no'); ?></label>
 									<label class="btn btn-success active"><input type="radio" name="future_orders" value="1" <?php echo set_radio('future_orders', '1', TRUE); ?>><?php echo lang('text_yes'); ?></label>
 								<?php } else { ?>
@@ -786,7 +786,7 @@
 						</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-switch" data-toggle="buttons">
-								<?php if (config_item('reservation_mode') === '1') { ?>
+								<?php if (config_item('reservation_mode') == '1') { ?>
 									<label class="btn btn-danger"><input type="radio" name="reservation_mode" value="0" <?php echo set_radio('reservation_mode', '0'); ?>><?php echo lang('text_disabled'); ?></label>
 									<label class="btn btn-success active"><input type="radio" name="reservation_mode" value="1" <?php echo set_radio('reservation_mode', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 								<?php } else { ?>
@@ -1028,22 +1028,22 @@
 						</label>
 						<div class="col-sm-5">
 							<select name="image_manager[remember_days]" id="input-remember-days" class="form-control">
-								<?php if ($image_manager['remember_days'] === '1') { ?>
+								<?php if ($image_manager['remember_days'] == '1') { ?>
 									<option value="1" selected="selected"><?php echo lang('text_24_hour'); ?></option>
 									<option value="3"><?php echo lang('text_3_days'); ?></option>
 									<option value="5"><?php echo lang('text_5_days'); ?></option>
 									<option value="7"><?php echo lang('text_1_week'); ?></option>
-								<?php } else if ($image_manager['remember_days'] === '3') { ?>
+								<?php } else if ($image_manager['remember_days'] == '3') { ?>
 									<option value="1"><?php echo lang('text_24_hour'); ?></option>
 									<option value="3" selected="selected"><?php echo lang('text_3_days'); ?></option>
 									<option value="5"><?php echo lang('text_5_days'); ?></option>
 									<option value="7"><?php echo lang('text_1_week'); ?></option>
-								<?php } else if ($image_manager['remember_days'] === '5') { ?>
+								<?php } else if ($image_manager['remember_days'] == '5') { ?>
 									<option value="1"><?php echo lang('text_24_hour'); ?></option>
 									<option value="3"><?php echo lang('text_3_days'); ?></option>
 									<option value="5" selected="selected"><?php echo lang('text_5_days'); ?></option>
 									<option value="7"><?php echo lang('text_1_week'); ?></option>
-								<?php } else if ($image_manager['remember_days'] === '7') { ?>
+								<?php } else if ($image_manager['remember_days'] == '7') { ?>
 									<option value="1"><?php echo lang('text_24_hour'); ?></option>
 									<option value="3"><?php echo lang('text_3_days'); ?></option>
 									<option value="5"><?php echo lang('text_5_days'); ?></option>
@@ -1266,25 +1266,25 @@
 						</label>
 						<div class="col-sm-5">
 							<select name="customer_online_archive_time_out" id="input-customer-online-archive-time-out" class="form-control">
-								<?php if (config_item('customer_online_archive_time_out') === '1') { ?>
+								<?php if (config_item('customer_online_archive_time_out') == '1') { ?>
 									<option value="0"><?php echo lang('text_never_delete'); ?></option>
 									<option value="1" selected="selected"><?php echo lang('text_1_month'); ?></option>
 									<option value="3"><?php echo lang('text_3_months'); ?></option>
 									<option value="6"><?php echo lang('text_6_months'); ?></option>
 									<option value="12"><?php echo lang('text_12_months'); ?></option>
-								<?php } else if (config_item('customer_online_archive_time_out') === '3') { ?>
+								<?php } else if (config_item('customer_online_archive_time_out') == '3') { ?>
 									<option value="0"><?php echo lang('text_never_delete'); ?></option>
 									<option value="1"><?php echo lang('text_1_month'); ?></option>
 									<option value="3" selected="selected"><?php echo lang('text_3_months'); ?></option>
 									<option value="6"><?php echo lang('text_6_months'); ?></option>
 									<option value="12"><?php echo lang('text_12_months'); ?></option>
-								<?php } else if (config_item('customer_online_archive_time_out') === '6') { ?>
+								<?php } else if (config_item('customer_online_archive_time_out') == '6') { ?>
 									<option value="0"><?php echo lang('text_never_delete'); ?></option>
 									<option value="1"><?php echo lang('text_1_month'); ?></option>
 									<option value="3"><?php echo lang('text_3_months'); ?></option>
 									<option value="6" selected="selected"><?php echo lang('text_6_months'); ?></option>
 									<option value="12"><?php echo lang('text_12_months'); ?></option>
-								<?php } else if (config_item('customer_online_archive_time_out') === '12') { ?>
+								<?php } else if (config_item('customer_online_archive_time_out') == '12') { ?>
 									<option value="0"><?php echo lang('text_never_delete'); ?></option>
 									<option value="1"><?php echo lang('text_1_month'); ?></option>
 									<option value="3"><?php echo lang('text_3_months'); ?></option>

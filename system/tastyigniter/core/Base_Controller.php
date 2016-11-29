@@ -227,7 +227,7 @@ class Base_Controller extends MX_Controller
 	}
 
 	protected function showMaintenance() {
-		if ($this->config->item('maintenance_mode') === '1') {
+		if ($this->config->item('maintenance_mode') == '1') {
 			$this->load->library('user');
 			if ($this->uri->rsegment(1) !== 'maintenance' AND !$this->user->isLogged()) {
 				show_error($this->config->item('maintenance_message'), '503', 'Maintenance Enabled');

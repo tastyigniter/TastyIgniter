@@ -18,10 +18,10 @@
 									<div class="form-group">
 										<select name="filter_status" class="form-control input-sm">
 											<option value=""><?php echo lang('text_filter_status'); ?></option>
-										<?php if ($filter_status === '1') { ?>
+										<?php if ($filter_status == '1') { ?>
 											<option value="1" <?php echo set_select('filter_status', '1', TRUE); ?> ><?php echo lang('text_enabled'); ?></option>
 											<option value="0" <?php echo set_select('filter_status', '0'); ?> ><?php echo lang('text_disabled'); ?></option>
-										<?php } else if ($filter_status === '0') { ?>
+										<?php } else if ($filter_status == '0') { ?>
 											<option value="1" <?php echo set_select('filter_status', '1'); ?> ><?php echo lang('text_enabled'); ?></option>
 											<option value="0" <?php echo set_select('filter_status', '0', TRUE); ?> ><?php echo lang('text_disabled'); ?></option>
 										<?php } else { ?>
@@ -69,7 +69,7 @@
 									<label for="checkbox-<?php echo $location['location_id']; ?>"></label>
 								</div>
 								<a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $location['edit']; ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;
-								<?php if ($location['default'] === '1') { ?>
+								<?php if ($location['default'] == '1') { ?>
 									<a class="btn btn-warning" disabled="disabled" title="Default"><i class="fa fa-star"></i></a>
 								<?php } else {?>
 									<a class="btn btn-warning" title="Set Default" href="<?php echo $location['default']; ?>"><i class="fa fa-star-o"></i></a>
@@ -77,7 +77,7 @@
 							</td>
 							<td>
 								<?php echo $location['location_name']; ?>
-								<?php if ($default_location_id === $location['location_id']) { ?>
+								<?php if ($default_location_id == $location['location_id']) { ?>
 								<?php echo lang('text_default'); ?>
 								<?php } ?>
 							</td>
@@ -85,7 +85,7 @@
 							<td><?php echo $location['location_state']; ?></td>
 							<td><?php echo $location['location_postcode']; ?></td>
 							<td><?php echo $location['location_telephone']; ?></td>
-							<td class="text-center"><?php echo ($location['location_status'] === '1') ? lang('text_enabled') : lang('text_disabled'); ?></td>
+							<td class="text-center"><?php echo ($location['location_status'] == '1') ? lang('text_enabled') : lang('text_disabled'); ?></td>
 							<td class="id"><?php echo $location['location_id']; ?></td>
 						</tr>
 						<?php } ?>

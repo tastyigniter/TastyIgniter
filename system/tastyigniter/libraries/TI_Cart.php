@@ -140,7 +140,7 @@ class TI_Cart extends CI_Cart {
 	public function remove_coupon($coupon_code = '') {
 		$coupon = $this->coupon();
 
-		if ($coupon_code !== '' AND isset($coupon['code']) AND $coupon['code'] === $coupon_code) {
+		if ($coupon_code !== '' AND isset($coupon['code']) AND $coupon['code'] == $coupon_code) {
 			unset($this->_cart_totals['coupon']);
 			$this->_save_cart();
 		}
@@ -157,18 +157,18 @@ class TI_Cart extends CI_Cart {
 		$this->_cart_totals['taxes'] = array();
 
 		// Calculate taxes if enabled
-		if ($this->CI->config->item('tax_mode') === '1' AND $this->CI->config->item('tax_percentage')) {
+		if ($this->CI->config->item('tax_mode') == '1' AND $this->CI->config->item('tax_percentage')) {
 			$tax_percent = $this->CI->config->item('tax_percentage') ? $this->CI->config->item('tax_percentage') : 0;
 
 			$total = $this->_cart_contents['order_total'];
 
 			// Remove delivery charge from total if its not taxable
-			if (isset($this->_cart_totals['delivery']['amount']) AND $this->CI->config->item('tax_delivery_charge') !== '1') {
+			if (isset($this->_cart_totals['delivery']['amount']) AND $this->CI->config->item('tax_delivery_charge') != '1') {
 				$total -= $this->_cart_totals['delivery']['amount'];
 			}
 
 			// If apply taxes on menu price, else
-			if ($this->CI->config->item('tax_menu_price') === '1') {
+			if ($this->CI->config->item('tax_menu_price') == '1') {
 				$tax_title = ' (' . $tax_percent . '%)';
 				$ignore = 'add';
 
@@ -394,7 +394,7 @@ class TI_Cart extends CI_Cart {
 
 		$cart_item = array();
 		foreach ($cart as $item) {
-			if ($item['id'] === $id) {
+			if ($item['id'] == $id) {
 				$cart_item = $item;
 			}
 		}

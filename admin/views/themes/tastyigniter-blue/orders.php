@@ -39,16 +39,16 @@
 												<option value="<?php echo $key; ?>" <?php echo set_select('filter_status', $key); ?> ><?php echo $value; ?></option>
 											<?php } ?>
 											<?php } ?>
-											<option value="0" <?php echo ($filter_status === '0') ? 'selected' : ''; ?>><?php echo lang('text_lost_orders'); ?></option>
+											<option value="0" <?php echo ($filter_status == '0') ? 'selected' : ''; ?>><?php echo lang('text_lost_orders'); ?></option>
 										</select>&nbsp;
 									</div>
 									<div class="form-group">
 										<select name="filter_type" class="form-control input-sm">
 											<option value=""><?php echo lang('text_filter_order_type'); ?></option>
-										<?php if ($filter_type === '1') { ?>
+										<?php if ($filter_type == '1') { ?>
 											<option value="1" <?php echo set_select('filter_type', '1', TRUE); ?> ><?php echo lang('text_delivery'); ?></option>
 											<option value="2" <?php echo set_select('filter_type', '2'); ?> ><?php echo lang('text_collection'); ?></option>
-										<?php } else if ($filter_type === '2') { ?>
+										<?php } else if ($filter_type == '2') { ?>
 											<option value="1" <?php echo set_select('filter_type', '1'); ?> ><?php echo lang('text_delivery'); ?></option>
 											<option value="2" <?php echo set_select('filter_type', '2', TRUE); ?> ><?php echo lang('text_collection'); ?></option>
 										<?php } else { ?>
@@ -61,7 +61,7 @@
 										<select name="filter_payment" class="form-control input-sm">
 											<option value=""><?php echo lang('text_filter_payment'); ?></option>
 											<?php foreach ($payments as $payment) { ?>
-												<?php if ($payment['name'] === $filter_payment) { ?>
+												<?php if ($payment['name'] == $filter_payment) { ?>
 													<option value="<?php echo $payment['code']; ?>" <?php echo set_select('filter_payment', $payment['code'], TRUE); ?> ><?php echo $payment['name']; ?></option>
 												<?php } else { ?>
 													<option value="<?php echo $payment['code']; ?>" <?php echo set_select('filter_payment', $payment['code']); ?> ><?php echo $payment['name']; ?></option>
@@ -129,7 +129,7 @@
 							<?php } ?>
 							<td><?php echo $order['first_name'] .' '. $order['last_name']; ?></td>
                             <td><span class="label label-default" style="background-color: <?php echo $order['status_color']; ?>;"><?php echo $order['order_status']; ?></span></td>
-							<td><?php echo ($order['order_type'] === '1') ? lang('text_delivery') : lang('text_collection'); ?></td>
+							<td><?php echo ($order['order_type'] == '1') ? lang('text_delivery') : lang('text_collection'); ?></td>
 							<td><?php echo $order['payment']; ?></td>
 							<td><?php echo $order['order_total']; ?></td>
 							<td class="text-center"><?php echo $order['order_time']; ?> - <?php echo $order['order_date']; ?></td>

@@ -46,7 +46,7 @@
 	                    </div>
 	                </div>
 
-					<?php if (config_item('allow_reviews') !== '1') { ?>
+					<?php if (config_item('allow_reviews') != '1') { ?>
 						<div id="local-reviews" class="tab-pane row wrap-all">
 							<div class="col-md-12">
 								<div class="heading-section">

@@ -74,7 +74,7 @@ class Currency {
 		$string = number_format($number, $decimal_position, $decimal_sign, $thousand_sign);
 
 		if ($format) {
-			if ($symbol_position === '1') {
+			if ($symbol_position == '1') {
 				$string = $string . $currency_symbol;
 			} else {
 				$string = $currency_symbol . $string;

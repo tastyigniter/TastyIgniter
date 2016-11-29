@@ -41,7 +41,7 @@ text-decoration: none;
 
 /*** NAVBAR TOP ***/
 .navbar-menu {
-background-color: #ECF0F5;
+background-color: #F6F8FA;
 border-top: 0 solid #D2DCE7;
 border-right: 0 solid #D2DCE7;
 border-left: 0 solid #D2DCE7;
@@ -103,7 +103,7 @@ box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
 outline: 0 none;
 }
 .btn-toolbar {
-background-color: #ECF0F5;
+background-color: #F6F8FA;
 margin-left: 0;
 padding: 5px 0;
 }
@@ -206,7 +206,7 @@ font-weight: 400;
 /** SIDEBAR **/
 .media-sidebar {
 height: 100%;
-background-color: #ECF0F5;
+background-color: #F6F8FA;
 border-left: 1px solid #D2DCE7;
 padding: 0;
 overflow: auto;

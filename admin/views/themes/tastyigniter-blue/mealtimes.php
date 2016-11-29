@@ -48,7 +48,7 @@
 								</td>
 								<td>
 									<div class="btn-group btn-group-switch" data-toggle="buttons">
-										<?php if ($mealtime['mealtime_status'] === '1') { ?>
+										<?php if ($mealtime['mealtime_status'] == '1') { ?>
 											<label class="btn btn-danger"><input type="radio" name="mealtimes[<?php echo $table_row; ?>][mealtime_status]" value="0" <?php echo set_radio('mealtimes['.$table_row.'][mealtime_status]', '0'); ?>><?php echo lang('text_disabled'); ?></label>
 											<label class="btn btn-success active"><input type="radio" name="mealtimes[<?php echo $table_row; ?>][mealtime_status]" value="1" <?php echo set_radio('mealtimes['.$table_row.'][mealtime_status]', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
 										<?php } else { ?>

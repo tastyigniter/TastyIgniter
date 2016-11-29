@@ -29,7 +29,7 @@
 						<div class="col-sm-5">
 							<select name="effect" id="input-effect" class="form-control">
 								<?php foreach ($effects as $key => $value) { ?>
-								<?php if ($value === $effect) { ?>
+								<?php if ($value == $effect) { ?>
 									<option value="<?php echo $value; ?>" selected="selected"><?php echo $value; ?></option>
 								<?php } else { ?>
 									<option value="<?php echo $value; ?>"><?php echo $value; ?></option>

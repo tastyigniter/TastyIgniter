@@ -85,7 +85,7 @@
 								<div class="col-xs-9 col-sm-10 col-md-10">
 									<span class="button-checkbox">
 										<button type="button" class="btn" data-color="info" tabindex="7">&nbsp;&nbsp;<?php echo lang('button_subscribe'); ?></button>
-										<?php if ($newsletter === '1') { ?>
+										<?php if ($newsletter == '1') { ?>
 											<input type="checkbox" name="newsletter" id="newsletter" class="hidden" value="1" <?php echo set_checkbox('newsletter', '1', TRUE); ?>>
 										<?php } else { ?>
 											<input type="checkbox" name="newsletter" id="newsletter" class="hidden" value="1" <?php echo set_checkbox('newsletter', '1'); ?>>

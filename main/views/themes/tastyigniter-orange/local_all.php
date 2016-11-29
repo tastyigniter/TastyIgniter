@@ -30,7 +30,7 @@
 												<?php } ?>
 												<dl>
 													<dd><h4><?php echo $location['location_name']; ?></h4></dd>
-													<?php if (config_item('allow_reviews') !== '1') { ?>
+													<?php if (config_item('allow_reviews') != '1') { ?>
 													<dd>
 														<div class="rating rating-sm text-muted">
 															<span class="fa fa-star"></span><span class="fa fa-star"></span><span class="fa fa-star"></span><span class="fa fa-star-half-o"></span><span class="fa fa-star-o"></span>

@@ -56,7 +56,7 @@
 							<input type="hidden" name="checkout_step" class="checkout_step" value="<?php echo set_value('checkout_step', $checkout_step); ?>">
 
 							<div id="checkout" class="content-wrap" style="display: <?php echo ($checkout_step === 'one') ? 'block' : 'none'; ?>">
-								<p class="text-info"><?php echo $text_login_register; ?></p><br />
+								<p><?php echo $text_login_register; ?></p>
 
 								<div class="row">
 									<div class="col-sm-6">
@@ -110,12 +110,11 @@
 											<?php } else { ?>
 												<br /><?php echo lang('text_location_closed'); ?><br />
 											<?php } ?>
-											<?php echo form_error('order_asap_time', '<span class="text-danger">', '</span>'); ?>
-											<?php echo form_error('order_hour', '<span class="text-danger">', '</span>'); ?>
 										</div>
 									</div>
+								</div>
+								<div class="row">
 									<?php if ($order_times) { ?>
-										<div class="clearfix"></div>
 										<div id="choose-order-time" class="col-sm-6" style="display: <?php echo ($order_time_type === 'later') ? 'block' : 'none'; ?>;">
 											<div class="form-group">
 												<label for="choose-order-time"><?php echo sprintf(lang('label_choose_order_time'), $order_type_text); ?></label>
@@ -171,11 +170,16 @@
 												</div>
 											</div>
 										</div>
+										<div class="clearfix"></div>
 									<?php } ?>
+									<div class="col-sm-12">
+										<?php echo form_error('order_asap_time', '<span class="text-danger">', '</span>'); ?>
+										<?php echo form_error('order_hour', '<span class="text-danger">', '</span>'); ?>
+									</div>
 								</div>
 
 								<?php if ($addresses) { ?>
-									<div id="checkout-delivery" class="row wrap-bottom" style="display:<?php echo ($order_type === '1') ? 'block' : 'none'; ?>">
+									<div id="checkout-delivery" class="row wrap-bottom" style="display:<?php echo ($order_type == '1') ? 'block' : 'none'; ?>">
 										<?php $address_row = 0; ?>
 										<div id="address-labels">
 											<div class="btn-group btn-group-md col-xs-12" data-toggle="buttons">
@@ -186,7 +190,7 @@
 															<input type="radio" name="address_id" value="<?php echo $address['address_id']; ?>" <?php echo ($address['address_id'] == $address_id) ? 'checked="checked"' : ''; ?> />
 															<address class="text-left"><?php echo $address['address']; ?></address>
 														</label>
-													<?php } else if ($address['address_id'] === '0') { ?>
+													<?php } else if ($address['address_id'] == '0') { ?>
 														<input type="hidden" name="address_id" value="<?php echo $address['address_id']; ?>" />
 													<?php } ?>
 													<?php $address_row++; ?>
@@ -246,7 +250,7 @@
 														<label for=""><?php echo lang('label_country'); ?></label>
 														<select name="address[<?php echo $address_row; ?>][country_id]" class="form-control">
 															<?php foreach ($countries as $country) { ?>
-																<?php if ($country['country_id'] === $address['country_id']) { ?>
+																<?php if ($country['country_id'] == $address['country_id']) { ?>
 																	<option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
 																<?php } else { ?>
 																	<option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
@@ -284,7 +288,7 @@
 											<label for=""><?php echo lang('label_telephone'); ?></label><br />
 											<?php echo $telephone; ?>
 										</div>
-										<?php if ($order_type === '1' AND $addresses) { ?>
+										<?php if ($order_type == '1' AND $addresses) { ?>
 											<div class="form-group">
 												<label for=""><?php echo lang('label_address'); ?></label><br />
 												<?php foreach ($addresses as $address) { ?>
@@ -297,7 +301,7 @@
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label for=""><?php echo lang('label_order_type'); ?></label><br /><?php echo ($order_type === '1') ? lang('label_delivery') : lang('label_collection'); ?>
+											<label for=""><?php echo lang('label_order_type'); ?></label><br /><?php echo ($order_type == '1') ? lang('label_delivery') : lang('label_collection'); ?>
 										</div>
 										<div class="form-group">
 											<label for=""><?php echo sprintf(lang('label_order_time'), $order_type_text); ?></label><br /><?php echo mdate(lang('text_date_format') .' '. config_item('time_format'), strtotime($order_time)); ?>

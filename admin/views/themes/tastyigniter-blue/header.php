@@ -22,8 +22,7 @@
 	$this->assets->setScriptTag(assets_url('js/js.cookie.js'), 'js-cookie-js', '14');
 	$this->assets->setScriptTag('js/common.js', 'common-js');
 
-	$tastyigniter_logo  = base_url('views/themes/tastyigniter-blue/images/tastyigniter-logo.png');
-	$site_logo          = base_url('views/themes/tastyigniter-blue/images/tastyigniter-logo-text.png');
+	$system_logo  		= base_url('views/themes/tastyigniter-blue/images/tastyigniter-logo.png');
     $system_name 		= lang('tastyigniter_system_name');
     $site_name 		    = config_item('site_name');
     $site_url 			= rtrim(site_url(), '/').'/';
@@ -54,7 +53,7 @@
 	<?php echo get_metas(); ?>
 	<?php echo get_favicon(); ?>
 	<title><?php echo sprintf(lang('site_title'), get_title(), $site_name, $system_name); ?></title>
-	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Roboto|Source+Code+Sans" rel="stylesheet">
 	<?php echo get_style_tags(); ?>
 	<?php echo get_script_tags(); ?>
 	<script type="text/javascript">
@@ -95,7 +94,7 @@
 				<div class="navbar-brand">
 					<div class="navbar-logo">
 						<a class="logo-text" href="<?php echo site_url('dashboard'); ?>">
-							<img class="logo-image" alt="<?php echo $system_name; ?>" title="<?php echo $system_name; ?>" src="<?php echo $site_logo; ?>"/>
+							<img class="logo-image" alt="<?php echo $system_name; ?>" title="<?php echo $system_name; ?>" src="<?php echo $system_logo; ?>"/>
 						</a>
 					</div>
 				</div>
@@ -241,6 +240,10 @@
 				$icon_list = get_icon_list();
 				?>
 
+				<div id="notification">
+					<?php echo $this->alert->display(); ?>
+				</div>
+
 				<div class="page-header clearfix">
 					<?php if (!empty($button_list) OR !empty($icon_list)) { ?>
 						<div class="page-action">
@@ -260,9 +263,5 @@
 						<div class="well"><?php echo $context_help; ?></div>
 					</div>
 				<?php } ?>
-
-				<div id="notification">
-					<?php echo $this->alert->display(); ?>
-				</div>
 			<?php } ?>
 

@@ -50,7 +50,7 @@
 						<label for="input-symbol" class="col-sm-3 control-label"><?php echo lang('label_symbol_position'); ?></label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle btn-group-2" data-toggle="buttons">
-								<?php if ($symbol_position === '1') { ?>
+								<?php if ($symbol_position == '1') { ?>
 									<label class="btn btn-default"><input type="radio" name="symbol_position" value="0" <?php echo set_radio('symbol_position', '0'); ?>><?php echo lang('text_left'); ?></label>
 									<label class="btn btn-default active"><input type="radio" name="symbol_position" value="1" <?php echo set_radio('symbol_position', '1', TRUE); ?>><?php echo lang('text_right'); ?></label>
 								<?php } else { ?>

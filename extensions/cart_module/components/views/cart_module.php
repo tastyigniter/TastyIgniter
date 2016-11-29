@@ -18,8 +18,8 @@
                         <div id="my-postcode" style="display:<?php echo (empty($alert_no_postcode)) ? 'block' : 'none'; ?>">
                             <div class="btn-group btn-group-md text-center order-type" data-toggle="buttons">
                                 <?php if ($has_delivery) { ?>
-                                    <label class="btn <?php echo ($order_type === '1') ? 'btn-default btn-primary active' : 'btn-default'; ?>" data-btn="btn-primary">
-                                        <input type="radio" name="order_type" value="1" <?php echo ($order_type === '1') ? 'checked="checked"' : ''; ?>>&nbsp;&nbsp;<strong><?php echo lang('text_delivery'); ?></strong>
+                                    <label class="btn <?php echo ($order_type == '1') ? 'btn-default btn-primary active' : 'btn-default'; ?>" data-btn="btn-primary">
+                                        <input type="radio" name="order_type" value="1" <?php echo ($order_type == '1') ? 'checked="checked"' : ''; ?>>&nbsp;&nbsp;<strong><?php echo lang('text_delivery'); ?></strong>
                                         <span class="small center-block">
                                             <?php if ($delivery_status === 'open') { ?>
                                                 <?php echo sprintf(lang('cart_module.text_in_minutes'), $delivery_time); ?>
@@ -32,8 +32,8 @@
                                     </label>
                                 <?php } ?>
                                 <?php if ($has_collection) { ?>
-                                    <label class="btn <?php echo ($order_type === '2') ? 'btn-default btn-primary active' : 'btn-default'; ?>" data-btn="btn-primary">
-                                        <input type="radio" name="order_type" value="2" <?php echo ($order_type === '2') ? 'checked="checked"' : ''; ?>>&nbsp;&nbsp;<strong><?php echo lang('text_collection'); ?></strong>
+                                    <label class="btn <?php echo ($order_type == '2') ? 'btn-default btn-primary active' : 'btn-default'; ?>" data-btn="btn-primary">
+                                        <input type="radio" name="order_type" value="2" <?php echo ($order_type == '2') ? 'checked="checked"' : ''; ?>>&nbsp;&nbsp;<strong><?php echo lang('text_collection'); ?></strong>
                                         <span class="small center-block">
                                             <?php if ($collection_status === 'open') { ?>
                                                 <?php echo sprintf(lang('cart_module.text_in_minutes'), $collection_time); ?>

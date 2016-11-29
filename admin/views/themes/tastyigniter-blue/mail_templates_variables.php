@@ -5,7 +5,7 @@
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 				<h4 class="modal-title" id="myModalLabel"><?php echo $this->template->getHeading(); ?></h4>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body text-sm">
 				<?php foreach ($variables as $key => $value) { ?>
 					<?php $filter_class = !empty($filters[$key]) ? implode($filters[$key], ' ') : ''; ?>
 					<div class="panel hide <?php echo $filter_class; ?>">

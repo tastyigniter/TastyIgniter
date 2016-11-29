@@ -37,7 +37,7 @@
 					<div class="panel panel-local display-local">
 						<?php if ($location_search_mode === 'multi') { ?>
 							<div class="panel-heading">
-								<div class="row local-search bg-warning" style="display: <?php echo (empty($search_query) AND $location_order === '1') ? 'block' : 'none'; ?>">
+								<div class="row local-search bg-warning" style="display: <?php echo (empty($search_query) AND $location_order == '1') ? 'block' : 'none'; ?>">
 									<a class="close-search clickable" onclick="toggleLocalSearch();">&times;</a>
 									<div class="col-xs-12 col-sm-6 center-block">
 										<div class="postcode-group text-center">
@@ -50,7 +50,7 @@
 									</div>
 								</div>
 
-								<div class="row local-change" style="display: <?php echo (!empty($search_query) OR (empty($search_query) AND $location_order !== '1')) ? 'block' : 'none'; ?>">
+								<div class="row local-change" style="display: <?php echo (!empty($search_query) OR (empty($search_query) AND $location_order != '1')) ? 'block' : 'none'; ?>">
 									<div class="col-xs-12 col-sm-7">
 										<?php $text_location_summary = ($has_search_query AND $delivery_coverage) ? lang('text_location_summary') : lang('text_delivery_coverage'); ?>
 										<?php $text_search_query = (empty($search_query)) ? lang('text_enter_location') : sprintf($text_location_summary, lang('text_at').$search_query); ?>
@@ -79,7 +79,7 @@
 									<?php } ?>
 									<dl <?php echo (!empty($location_image)) ? 'class="box-image"' : ''; ?>>
 										<dd><h4><?php echo $location_name; ?></h4></dd>
-										<?php if (config_item('allow_reviews') !== '1') { ?>
+										<?php if (config_item('allow_reviews') != '1') { ?>
 											<dd class="text-muted">
 												<div class="rating rating-sm">
 													<span class="fa fa-star"></span><span class="fa fa-star"></span><span class="fa fa-star"></span><span class="fa fa-star-half-o"></span><span class="fa fa-star-o"></span>

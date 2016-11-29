@@ -70,7 +70,7 @@
 						<label for="input-force-ssl" class="col-sm-3 control-label"><?php echo lang('label_force_ssl'); ?></label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-switch" data-toggle="buttons">
-								<?php if ($force_ssl === '1') { ?>
+								<?php if ($force_ssl == '1') { ?>
 									<label class="btn btn-default active"><input type="radio" name="force_ssl" value="1" <?php echo set_radio('transaction_type', '1', TRUE); ?>><?php echo lang('text_yes'); ?></label>
 									<label class="btn btn-danger"><input type="radio" name="force_ssl" value="0" <?php echo set_radio('transaction_type', '0'); ?>><?php echo lang('text_no'); ?></label>
 								<?php } else { ?>
@@ -97,7 +97,7 @@
 						<div class="col-sm-5">
 							<select name="order_status" id="input-order-status" class="form-control">
 								<?php foreach ($statuses as $stat) { ?>
-								<?php if ($stat['status_id'] === $order_status) { ?>
+								<?php if ($stat['status_id'] == $order_status) { ?>
 									<option value="<?php echo $stat['status_id']; ?>" selected="selected"><?php echo $stat['status_name']; ?></option>
 								<?php } else { ?>
 									<option value="<?php echo $stat['status_id']; ?>"><?php echo $stat['status_name']; ?></option>

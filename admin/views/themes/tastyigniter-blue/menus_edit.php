@@ -85,7 +85,7 @@
                             <select name="mealtime_id" id="mealtime" class="form-control">
                                 <option value="0"><?php echo lang('text_mealtime_all'); ?></option>
                                 <?php foreach ($mealtimes as $mealtime) { ?>
-                                    <?php if ($mealtime_id === $mealtime['mealtime_id']) { ?>
+                                    <?php if ($mealtime_id == $mealtime['mealtime_id']) { ?>
                                         <option value="<?php echo $mealtime['mealtime_id']; ?>" <?php echo set_select('mealtime_id', $mealtime['mealtime_id'], TRUE); ?> ><?php echo $mealtime['mealtime_name']; ?> <?php echo $mealtime['label']; ?></option>
                                     <?php } else { ?>
                                         <option value="<?php echo $mealtime['mealtime_id']; ?>" <?php echo set_select('mealtime_id', $mealtime['mealtime_id']); ?> ><?php echo $mealtime['mealtime_name']; ?> <?php echo $mealtime['label']; ?></option>
@@ -193,7 +193,7 @@
                                             </label>
                                             <div class="col-sm-5">
                                                 <div class="btn-group btn-group-switch" data-toggle="buttons">
-                                                    <?php if ($menu_option['required'] === '1') { ?>
+                                                    <?php if ($menu_option['required'] == '1') { ?>
                                                         <label class="btn btn-danger"><input type="radio" name="menu_options[<?php echo $option_row; ?>][required]" value="0" <?php echo set_radio('menu_options['.$option_row.'][required]', '0'); ?>><?php echo lang('text_disabled'); ?></label>
                                                         <label class="btn btn-success active"><input type="radio" name="menu_options[<?php echo $option_row; ?>][required]" value="1" <?php echo set_radio('menu_options['.$option_row.'][required]', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
                                                     <?php } else { ?>
@@ -247,7 +247,7 @@
                                                             </td>
                                                             <td class="text-center">
                                                                 <div class="btn-group btn-group-switch" data-toggle="buttons">
-                                                                    <?php if ($value['subtract_stock'] === '1') { ?>
+                                                                    <?php if ($value['subtract_stock'] == '1') { ?>
                                                                         <label class="btn btn-default"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="0"><?php echo lang('text_no'); ?></label>
                                                                         <label class="btn btn-default active"><input type="radio" name="menu_options[<?php echo $option_row; ?>][option_values][<?php echo $option_value_row; ?>][subtract_stock]" value="1" checked="checked"><?php echo lang('text_yes'); ?></label>
                                                                     <?php } else { ?>
@@ -302,7 +302,7 @@
                         <label for="input-special-status" class="col-sm-3 control-label"><?php echo lang('label_special'); ?></label>
                         <div class="col-sm-5">
                             <div class="btn-group btn-group-switch" data-toggle="buttons">
-                                <?php if ($special_status === '1') { ?>
+                                <?php if ($special_status == '1') { ?>
                                     <label class="btn btn-danger"><input type="radio" name="special_status" value="0"><?php echo lang('text_disabled'); ?></label>
                                     <label class="btn btn-success active"><input type="radio" name="special_status" value="1" checked><?php echo lang('text_enabled'); ?></label>
                                 <?php } else { ?>
@@ -340,7 +340,6 @@
                             <div class="col-sm-5">
                                 <div class="input-group">
                                     <input type="text" name="special_price" id="input-special-price" class="form-control" value="<?php echo set_value('special_price', $special_price); ?>" />
-                                    <span class="input-group-addon">.00</span>
                                     <span class="input-group-addon"><i class="fa fa-money"></i></span>
                                 </div>
                                 <?php echo form_error('special_price', '<span class="text-danger">', '</span>'); ?>

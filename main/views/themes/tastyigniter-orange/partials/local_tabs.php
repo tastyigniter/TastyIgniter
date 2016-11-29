@@ -2,7 +2,7 @@
 	<li class="<?php echo ($active_tab === 'menus') ? 'active':''; ?>">
 		<a href="<?php echo restaurant_url('menus'); ?>"><?php echo lang('text_tab_menu'); ?></a>
 	</li>
-	<?php if (config_item('allow_reviews') !== '1') { ?>
+	<?php if (config_item('allow_reviews') != '1') { ?>
 		<li class="<?php echo ($active_tab === 'reviews') ? 'active':''; ?>">
 			<a href="<?php echo restaurant_url('reviews'); ?>"><?php echo lang('text_tab_review'); ?></a>
 		</li>

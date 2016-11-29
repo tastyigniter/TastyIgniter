@@ -18,10 +18,10 @@
 									<div class="form-group">
 										<select name="filter_status" class="form-control input-sm">
 											<option value=""><?php echo lang('text_filter_status'); ?></option>
-										<?php if ($filter_status === '1') { ?>
+										<?php if ($filter_status == '1') { ?>
 											<option value="1" <?php echo set_select('filter_status', '1', TRUE); ?> ><?php echo lang('text_enabled'); ?></option>
 											<option value="0" <?php echo set_select('filter_status', '0'); ?> ><?php echo lang('text_disabled'); ?></option>
-										<?php } else if ($filter_status === '0') { ?>
+										<?php } else if ($filter_status == '0') { ?>
 											<option value="1" <?php echo set_select('filter_status', '1'); ?> ><?php echo lang('text_enabled'); ?></option>
 											<option value="0" <?php echo set_select('filter_status', '0', TRUE); ?> ><?php echo lang('text_disabled'); ?></option>
 										<?php } else { ?>
@@ -68,13 +68,13 @@
 								<a class="btn btn-edit" title="<?php echo lang('text_edit'); ?>" href="<?php echo $country['edit']; ?>"><i class="fa fa-pencil"></i></a></td>
 							<td><img atl="<?php echo $country['iso_code_2']; ?>" src="<?php echo $country['flag']; ?>" width="16" />&nbsp;&nbsp;&nbsp;
 								<?php echo $country['country_name']; ?>
-								<?php if ($country_id === $country['country_id']) { ?>
+								<?php if ($country_id == $country['country_id']) { ?>
 								<?php echo lang('text_default'); ?>
 								<?php } ?>
 							</td>
 							<td><?php echo $country['iso_code_2']; ?></td>
 							<td><?php echo $country['iso_code_3']; ?></td>
-							<td class="text-right"><?php echo ($country['status'] === '1') ? lang('text_enabled') : lang('text_disabled'); ?></td>
+							<td class="text-right"><?php echo ($country['status'] == '1') ? lang('text_enabled') : lang('text_disabled'); ?></td>
 						</tr>
 						<?php } ?>
 						<?php } else { ?>

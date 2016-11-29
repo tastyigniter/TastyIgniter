@@ -124,16 +124,24 @@
 							</div>
 						</div>
 					</div>
+					<div class="form-group">
+						<label for="input-status" class="col-sm-3 control-label"><?php echo lang('label_status'); ?></label>
+						<div class="col-sm-5">
+							<div class="btn-group btn-group-switch" data-toggle="buttons">
+								<?php if ($location_status == '1') { ?>
+									<label class="btn btn-danger"><input type="radio" name="location_status" value="0" <?php echo set_radio('location_status', '0'); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success active"><input type="radio" name="location_status" value="1" <?php echo set_radio('location_status', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
+								<?php } else { ?>
+									<label class="btn btn-danger active"><input type="radio" name="location_status" value="0" <?php echo set_radio('location_status', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
+									<label class="btn btn-success"><input type="radio" name="location_status" value="1" <?php echo set_radio('location_status', '1'); ?>><?php echo lang('text_enabled'); ?></label>
+								<?php } ?>
+							</div>
+							<?php echo form_error('location_status', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
 				</div>
 
 				<div id="data" class="tab-pane">
-					<div class="form-group">
-						<label for="input-description" class="col-sm-12"><?php echo lang('label_description'); ?></label>
-						<div class="col-sm-12">
-							<textarea name="description" id="input-description" class="form-control" rows="5"><?php echo set_value('description', $description); ?></textarea>
-							<?php echo form_error('description', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
 					<div class="form-group">
 						<label for="input-slug" class="col-sm-3 control-label"><?php echo lang('label_permalink_slug'); ?>
 							<span class="help-block"><?php echo lang('help_permalink'); ?></span>
@@ -156,6 +164,13 @@
 						<?php } ?>
 					</div>
 					<div class="form-group">
+						<label for="input-description" class="col-sm-12"><?php echo lang('label_description'); ?></label>
+						<div class="col-sm-12">
+							<textarea name="description" id="input-description" class="form-control" rows="5"><?php echo set_value('description', $description); ?></textarea>
+							<?php echo form_error('description', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+					<div class="form-group">
                         <label for="" class="col-sm-3 control-label"><?php echo lang('label_image'); ?>
                             <span class="help-block"><?php echo lang('help_image'); ?></span>
                         </label>
@@ -176,21 +191,6 @@
                             <?php echo form_error('location_image', '<span class="text-danger">', '</span>'); ?>
                         </div>
                     </div>
-                    <div class="form-group">
-						<label for="input-status" class="col-sm-3 control-label"><?php echo lang('label_status'); ?></label>
-						<div class="col-sm-5">
-							<div class="btn-group btn-group-switch" data-toggle="buttons">
-								<?php if ($location_status == '1') { ?>
-									<label class="btn btn-danger"><input type="radio" name="location_status" value="0" <?php echo set_radio('location_status', '0'); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-success active"><input type="radio" name="location_status" value="1" <?php echo set_radio('location_status', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
-								<?php } else { ?>
-									<label class="btn btn-danger active"><input type="radio" name="location_status" value="0" <?php echo set_radio('location_status', '0', TRUE); ?>><?php echo lang('text_disabled'); ?></label>
-									<label class="btn btn-success"><input type="radio" name="location_status" value="1" <?php echo set_radio('location_status', '1'); ?>><?php echo lang('text_enabled'); ?></label>
-								<?php } ?>
-							</div>
-							<?php echo form_error('location_status', '<span class="text-danger">', '</span>'); ?>
-						</div>
-					</div>
 				</div>
 
 				<div id="opening-hours" class="tab-pane">
@@ -306,7 +306,7 @@
 						<label for="" class="col-sm-3 control-label"><?php echo lang('label_delivery_type'); ?></label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
-								<?php if ($delivery_type === '1') { ?>
+								<?php if ($delivery_type == '1') { ?>
 									<label class="btn btn-default"><input type="radio" name="delivery_type" value="0" <?php echo set_radio('delivery_type', '0'); ?>><?php echo lang('text_same_as_opening_hours'); ?></label>
 									<label class="btn btn-default active"><input type="radio" name="delivery_type" value="1" <?php echo set_radio('delivery_type', '1', TRUE); ?>><?php echo lang('text_custom'); ?></label>
 								<?php } else { ?>
@@ -359,7 +359,7 @@
 						<label for="" class="col-sm-3 control-label"><?php echo lang('label_collection_type'); ?></label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-toggle" data-toggle="buttons">
-								<?php if ($collection_type === '1') { ?>
+								<?php if ($collection_type == '1') { ?>
 									<label class="btn btn-default"><input type="radio" name="collection_type" value="0" <?php echo set_radio('collection_type', '0'); ?>><?php echo lang('text_same_as_opening_hours'); ?></label>
 									<label class="btn btn-default active"><input type="radio" name="collection_type" value="1" <?php echo set_radio('collection_type', '1', TRUE); ?>><?php echo lang('text_custom'); ?></label>
 								<?php } else { ?>
@@ -480,7 +480,7 @@
 						</label>
 						<div class="col-sm-5">
 							<div class="btn-group btn-group-switch" data-toggle="buttons">
-								<?php if ($future_orders === '1') { ?>
+								<?php if ($future_orders == '1') { ?>
 									<label class="btn btn-danger"><input type="radio" name="future_orders" value="0" <?php echo set_radio('future_orders', '0'); ?>><?php echo lang('text_no'); ?></label>
 									<label class="btn btn-success active"><input type="radio" name="future_orders" value="1" <?php echo set_radio('future_orders', '1', TRUE); ?>><?php echo lang('text_yes'); ?></label>
 								<?php } else { ?>
@@ -607,7 +607,7 @@
 							<div id="map-holder" style="height:550px;"></div>
 						</div>
 						<div class="col-md-5 wrap-none">
-							<div class="panel panel-default panel-delivery-areas border-left-3">
+							<div class="panel panel-group panel-delivery-areas border-left-3">
 								<div class="panel-heading"><h3 class="panel-title"><?php echo lang('text_delivery_area'); ?></h3></div>
 								<div id="delivery-areas" class="panel-body">
 									<?php $panel_row = 1; ?>
@@ -658,7 +658,7 @@
 																	<tr>
 																		<th class="action action-one"></th>
 																		<th><?php echo lang('label_area_charge'); ?></th>
-																		<th><?php echo lang('label_charge_condition'); ?></th>
+																		<th width="50%"><?php echo lang('label_charge_condition'); ?></th>
 																		<th><?php echo lang('label_area_min_amount'); ?></th>
 																	</tr>
 																	</thead>
@@ -787,7 +787,7 @@
 												</td>
 												<td class="text-center">
 													<div class="btn-group btn-group-switch" data-toggle="buttons">
-														<?php if ($image['status'] === '1') { ?>
+														<?php if ($image['status'] == '1') { ?>
 															<label class="btn btn-default"><input type="radio" name="gallery[images][<?php echo $gallery_image_row; ?>][status]" value="0"><?php echo lang('text_included'); ?></label>
 															<label class="btn btn-danger active"><input type="radio" name="gallery[images][<?php echo $gallery_image_row; ?>][status]" value="1" checked="checked"><?php echo lang('text_excluded'); ?></label>
 														<?php } else { ?>
@@ -1338,8 +1338,8 @@ function addDeliveryArea() {
 	html += '	<div class="panel-body">';
 	html += '		<div class="form-group">';
 	html += '			<div class="btn-group btn-group-switch area-types wrap-vertical" data-toggle="buttons">';
-	html += '				<label class="btn btn-success area-type-circle"><input type="radio" name="delivery_areas[' + panel_row + '][type]" value="circle"><?php echo lang('text_circle'); ?></label>';
-	html += '				<label class="btn btn-success active btn-success area-type-shape"><input type="radio" name="delivery_areas[' + panel_row + '][type]" value="shape" checked="checked"><?php echo lang('text_shape'); ?></label>';
+	html += '				<label class="btn btn-default area-type-circle"><input type="radio" name="delivery_areas[' + panel_row + '][type]" value="circle"><?php echo lang('text_circle'); ?></label>';
+	html += '				<label class="btn btn-default active area-type-shape"><input type="radio" name="delivery_areas[' + panel_row + '][type]" value="shape" checked="checked"><?php echo lang('text_shape'); ?></label>';
 	html += '			</div>';
 	html += '		</div>';
 	html += '		<div class="form-group">';
@@ -1359,7 +1359,7 @@ function addDeliveryArea() {
 	html += '						<tr>';
 	html += '							<th class="action action-one"></th>';
 	html += '							<th><?php echo lang('label_area_charge'); ?></th>';
-	html += '							<th><?php echo lang('label_charge_condition'); ?></th>';
+	html += '							<th width="50%"><?php echo lang('label_charge_condition'); ?></th>';
 	html += '							<th><?php echo lang('label_area_min_amount'); ?></th>';
 	html += '						</tr>';
 	html += '						</thead>';

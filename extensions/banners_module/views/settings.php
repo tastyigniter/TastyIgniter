@@ -31,7 +31,7 @@
                                         <div class="input-group">
                                             <select name="banners[<?php echo $banner_row; ?>][banner_id]" class="form-control banners">
                                                 <?php foreach ($banners as $ban) { ?>
-                                                    <?php if ($ban['banner_id'] === $banner['banner_id']) { ?>
+                                                    <?php if ($ban['banner_id'] == $banner['banner_id']) { ?>
                                                         <option value="<?php echo $ban['banner_id']; ?>" selected="selected"><?php echo $ban['name']; ?></option>
                                                     <?php } else { ?>
                                                         <option value="<?php echo $ban['banner_id']; ?>"><?php echo $ban['name']; ?></option>
@@ -47,7 +47,7 @@
                                     <td>
                                         <select name="banners[<?php echo $banner_row; ?>][layout_partial]" class="form-control">
                                             <?php foreach ($layouts as $layout) { ?>
-                                                <?php if ($layout['value'] === $banner['layout_partial']) { ?>
+                                                <?php if ($layout['value'] == $banner['layout_partial']) { ?>
                                                     <option value="<?php echo $layout['value']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
                                                 <?php } else { ?>
                                                     <option value="<?php echo $layout['value']; ?>"><?php echo $layout['name']; ?></option>
@@ -66,7 +66,7 @@
                                     </td>
                                     <td>
                                         <div class="btn-group btn-group-switch" data-toggle="buttons">
-                                            <?php if ($banner['status'] === '1') { ?>
+                                            <?php if ($banner['status'] == '1') { ?>
                                                 <label class="btn btn-danger"><input type="radio" name="banners[<?php echo $banner_row; ?>][status]" value="0" <?php echo set_radio('banners['.$banner_row.'][status]', '0'); ?>><?php echo lang('text_disabled'); ?></label>
                                                 <label class="btn btn-success active"><input type="radio" name="banners[<?php echo $banner_row; ?>][status]" value="1" <?php echo set_radio('banners['.$banner_row.'][status]', '1', TRUE); ?>><?php echo lang('text_enabled'); ?></label>
                                             <?php } else { ?>

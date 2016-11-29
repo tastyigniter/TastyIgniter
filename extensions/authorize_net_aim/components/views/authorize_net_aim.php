@@ -2,7 +2,7 @@
 	<label>
         <?php if ($minimum_order_total >= $order_total) { ?>
             <input type="radio" name="payment" value="" <?php echo set_radio('payment', ''); ?> disabled />
-        <?php } else if ($payment === $code) { ?>
+        <?php } else if ($payment == $code) { ?>
             <input type="radio" name="payment" value="<?php echo $code; ?>" <?php echo set_radio('payment', $code, TRUE); ?> />
         <?php } else { ?>
             <input type="radio" name="payment" value="<?php echo $code; ?>" <?php echo set_radio('payment', $code); ?> />
@@ -60,7 +60,7 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="form-group">
-				<?php if ($order_type === '1') { ?>
+				<?php if ($order_type == '1') { ?>
 				<div class="checkbox">
 					<label>
 						<input type="checkbox" value="1" name="authorize_same_address" <?php echo set_checkbox('authorize_same_address', '1', TRUE) ?> />
@@ -78,7 +78,7 @@
 					<select name="authorize_address_id" class="form-control">
 						<option value="new"><?php echo lang('text_add_new_address'); ?></option>
 						<?php foreach ($addresses as $address) { ?>
-							<?php if ($address['address_id'] === $authorize_address_id) { ?>
+							<?php if ($address['address_id'] == $authorize_address_id) { ?>
 								<option value="<?php echo $address['address_id']; ?>" selected="selected"><?php echo $address['address']; ?></option>
 							<?php } else { ?>
 								<option value="<?php echo $address['address_id']; ?>"><?php echo $address['address']; ?></option>
@@ -128,7 +128,7 @@
 					<div class="form-group">
 						<select name="authorize_country_id" class="form-control">
 							<?php foreach ($countries as $country) { ?>
-								<?php if ($country['country_id'] === $authorize_country_id) { ?>
+								<?php if ($country['country_id'] == $authorize_country_id) { ?>
 									<option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
 								<?php } else { ?>
 									<option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>

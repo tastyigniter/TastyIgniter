@@ -18,10 +18,10 @@
 									<div class="form-group">
 										<select name="filter_status" class="form-control input-sm">
 											<option value=""><?php echo lang('text_filter_status'); ?></option>
-										<?php if ($filter_status === '1') { ?>
+										<?php if ($filter_status == '1') { ?>
 											<option value="1" <?php echo set_select('filter_status', '1', TRUE); ?> ><?php echo lang('text_enabled'); ?></option>
 											<option value="0" <?php echo set_select('filter_status', '0'); ?> ><?php echo lang('text_disabled'); ?></option>
-										<?php } else if ($filter_status === '0') { ?>
+										<?php } else if ($filter_status == '0') { ?>
 											<option value="1" <?php echo set_select('filter_status', '1'); ?> ><?php echo lang('text_enabled'); ?></option>
 											<option value="0" <?php echo set_select('filter_status', '0', TRUE); ?> ><?php echo lang('text_disabled'); ?></option>
 										<?php } else { ?>
@@ -70,7 +70,7 @@
                                     <td class="sorter"><?php echo $permission['name']; ?></td>
                                     <td><span class="small"><?php echo $permission['action']; ?></span></td>
                                     <td><?php echo $permission['description']; ?></td>
-									<td class="sorter"><?php echo ($permission['status'] === '1') ? lang('text_enabled') : lang('text_disabled'); ?></td>
+									<td class="sorter"><?php echo ($permission['status'] == '1') ? lang('text_enabled') : lang('text_disabled'); ?></td>
 									<td class="id"><?php echo $permission['permission_id']; ?></td>
                                 </tr>
                             <?php } ?>
