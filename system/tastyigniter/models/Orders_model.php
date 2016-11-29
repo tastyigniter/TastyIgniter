@@ -187,7 +187,7 @@ class Orders_model extends Model
 	 */
 	public function getOrderMenus($order_id)
 	{
-		return $this->queryBuilder()->table('order_menus')->where('order_id', $order_id)->getAsArray();
+		return $this->queryBuilder()->table('order_menus')->where('order_id', $order_id)->get();
 	}
 
 	/**
@@ -202,7 +202,7 @@ class Orders_model extends Model
 		$result = [];
 
 		if (!empty($order_id)) {
-			$result = $this->queryBuilder()->table('order_options')->where('order_id', $order_id)->getAsArray();
+			$result = $this->queryBuilder()->table('order_options')->where('order_id', $order_id)->get();
 		}
 
 		return $result;
@@ -217,7 +217,7 @@ class Orders_model extends Model
 	 */
 	public function getOrderTotals($order_id)
 	{
-		return $this->queryBuilder()->table('order_totals')->where('order_id', $order_id)->orderBy('priority')->getAsArray();
+		return $this->queryBuilder()->table('order_totals')->where('order_id', $order_id)->orderBy('priority')->get();
 	}
 
 	/**

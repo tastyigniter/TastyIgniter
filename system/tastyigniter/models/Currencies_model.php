@@ -152,7 +152,7 @@ class Currencies_model extends Model
 
 		$queryBuilder = $this->where('currency_id', '!=', $this->config->item('currency_id'));
 		if (!$force_refresh) {
-			$queryBuilder->where('date_modified', '<', mdate('%Y-%m-%d %H:%i:%s', strtotime('-1 day')));
+			$queryBuilder->whereDate('date_modified', '<', mdate('%Y-%m-%d %H:%i:%s', strtotime('-1 day')));
 		}
 
 		if ($result = $queryBuilder->getAsArray()) {

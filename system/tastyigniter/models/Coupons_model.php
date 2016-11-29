@@ -170,7 +170,7 @@ class Coupons_model extends Model
 	public function redeemCoupon($order_id)
 	{
 		$this->load->model('Coupons_history_model');
-		$couponModel = $this->Coupons_history_model->where([['status !=', '=', '1'], ['order_id', '=', $order_id]])->first();
+		$couponModel = $this->Coupons_history_model->where([['status', '!=', '1'], ['order_id', '=', $order_id]])->first();
 		if ($couponModel) {
 			return $couponModel->touchStatus();
 		}

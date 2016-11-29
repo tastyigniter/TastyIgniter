@@ -107,7 +107,7 @@ class Extensions_model extends Model
 		$result = [];
 
 		if (empty($this->extensions)) {
-			$this->extensions = $this->setFilterQuery($this->scopeFilter($filter))->findAllByPath();
+			$this->extensions = $this->setFilterQuery($this->filter($filter))->findAllByPath();
 		}
 
 		foreach ($this->extensions as $code => $extension) {

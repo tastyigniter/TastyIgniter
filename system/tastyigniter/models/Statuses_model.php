@@ -50,14 +50,6 @@ class Statuses_model extends Model
 		return $query->where('status_for', 'order');
 	}
 
-	public function scopeJoinStatusAndStaffTables($query)
-	{
-		$query->join('statuses', 'statuses.status_id', '=', 'status_history.status_id', 'left');
-		$query->join('staffs', 'staffs.staff_id', '=', 'status_history.staff_id', 'left');
-
-		return $query;
-	}
-
 	/**
 	 * Scope a query to only include reservation statuses
 	 *
@@ -117,13 +109,17 @@ class Statuses_model extends Model
 	{
 		$this->load->model('Status_history_model');
 
-		$query = $this->Status_history_model->selectRaw("status_history_id, status_history.date_added, staffs.staff_name," .
-			" status_history.assignee_id, statuses.status_name, statuses.status_color, status_history.notify, status_history.comment")
+		$staffTable = $this->tablePrefix('staffs');
+		$statusHistoryTable = $this->tablePrefix('status_history');
+		$statusesTable = $this->tablePrefix('statuses');
+
+		$query = $this->Status_history_model->selectRaw("status_history_id, {$statusHistoryTable}.date_added, {$staffTable}.staff_name," .
+			" {$statusHistoryTable}.assignee_id, {$statusesTable}.status_name, {$statusesTable}.status_color, ".
+			"{$statusHistoryTable}.notify, {$statusHistoryTable}.comment")
 											->where('object_id', $order_id)
 											->where('status_history.status_for', $for)
 											->orderBy('status_history.date_added', 'DESC')
 											->joinStatusAndStaffTables();
-
 		return $query->getAsArray();
 	}
 

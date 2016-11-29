@@ -65,24 +65,24 @@ class Dashboard_model extends Model
 		if ($stat_range === '') return $results;
 
 		if ($stat_range === 'today') {
-			$range_query = ['DATE(date_added)' => date('Y-m-d')];
+			$range_query = ['DATE(date_added)', date('Y-m-d')];
 		} else if ($stat_range === 'week') {
-			$range_query = ['WEEK(date_added)' => date('W')];
+			$range_query = ['WEEK(date_added)', date('W')];
 		} else if ($stat_range === 'month') {
-			$range_query = ['MONTH(date_added)' => date('m')];
+			$range_query = ['MONTH(date_added)', date('m')];
 		} else if ($stat_range === 'year') {
-			$range_query = ['YEAR(date_added)' => date('Y')];
+			$range_query = ['YEAR(date_added)', date('Y')];
 		}
 
-		$results['sales'] = $this->getTotalSales($range_query);
-		$results['lost_sales'] = $this->getTotalLostSales($range_query);
+//		$results['sales'] = $this->getTotalSales($range_query);
+//		$results['lost_sales'] = $this->getTotalLostSales($range_query);
 		$results['customers'] = $this->getTotalCustomers($range_query);
 		$results['orders'] = $this->getTotalOrders($range_query);
-		$results['orders_completed'] = $this->getTotalOrdersCompleted($range_query);
-		$results['delivery_orders'] = $this->getTotalDeliveryOrders($range_query);
-		$results['collection_orders'] = $this->getTotalCollectionOrders($range_query);
-		$results['tables_reserved'] = $this->getTotalTablesReserved($range_query);
-		$results['cash_payments'] = $this->getTotalCashPayments($range_query);
+//		$results['orders_completed'] = $this->getTotalOrdersCompleted($range_query);
+//		$results['delivery_orders'] = $this->getTotalDeliveryOrders($range_query);
+//		$results['collection_orders'] = $this->getTotalCollectionOrders($range_query);
+//		$results['tables_reserved'] = $this->getTotalTablesReserved($range_query);
+//		$results['cash_payments'] = $this->getTotalCashPayments($range_query);
 
 		return $results;
 	}
@@ -109,11 +109,11 @@ class Dashboard_model extends Model
 		$total_sales = 0;
 
 		if (is_array($range_query) AND !empty($range_query)) {
-			$row = $this->Orders_model->selectSumOrderTotal('total_sales')
-									  ->where('status_id', '>', '0')->whereRaw($range_query)->firstAsArray();
+			$query = $this->Orders_model->where('status_id', '>', '0')->selectRaw("SUM(order_total) as total_sales")
+										->whereRaw($range_query[0], $range_query[1])->firstAsArray();
 
-			if (!is_null($row)) {
-				$total_sales = $row['total_sales'];
+			if (!is_null($query)) {
+				$total_sales = $query['total_sales'];
 			}
 		}
 
@@ -132,11 +132,10 @@ class Dashboard_model extends Model
 		$total_lost_sales = 0;
 
 		if (is_array($range_query) AND !empty($range_query)) {
-			$row = $this->Orders_model->selectSumOrderTotal('total_lost_sales')
-									  ->where(function ($query) {
-										  $query->where('status_id', '<=', '0');
-										  $query->orWhere('status_id', $this->config->item('canceled_order_status'));
-									  })->firstAsArray();
+			$row = $this->Orders_model->selectRaw("SUM(order_total) as total_lost_sales")->where(function ($query) {
+				$query->where('status_id', '<=', '0');
+				$query->orWhere('status_id', $this->config->item('canceled_order_status'));
+			})->firstAsArray();
 
 			if (!is_null($row)) {
 				$total_lost_sales = $row['total_lost_sales'];
@@ -158,8 +157,7 @@ class Dashboard_model extends Model
 		$cash_payments = 0;
 
 		if (is_array($range_query) AND !empty($range_query)) {
-			$row = $this->Orders_model->selectSumOrderTotal('cash_payments')
-									  ->where('status_id', '>', '0')->where('payment', 'cod')->firstAsArray();
+			$row = $this->Orders_model->where('status_id', '>', '0')->selectSumOrderTotal('cash_payments')->where('payment', 'cod')->firstAsArray();
 
 			if (!is_null($row)) {
 				$cash_payments = $row['cash_payments'];
@@ -181,7 +179,7 @@ class Dashboard_model extends Model
 		$total_customers = 0;
 
 		if (is_array($range_query) AND !empty($range_query)) {
-			$total_customers = $this->Customers_model->count($range_query);
+			$total_customers = $this->Customers_model->whereRaw($range_query[0], $range_query[1])->count();
 		}
 
 		return $total_customers;
@@ -199,7 +197,7 @@ class Dashboard_model extends Model
 		$total_orders = 0;
 
 		if (is_array($range_query) AND !empty($range_query)) {
-			$total_orders = $this->Orders_model->count($range_query);
+			$total_orders = $this->Orders_model->whereRaw($range_query[0], $range_query[1])->count();
 		}
 
 		return $total_orders;
@@ -218,7 +216,7 @@ class Dashboard_model extends Model
 
 		if (is_array($range_query) AND !empty($range_query)) {
 			$total_orders_completed = $this->Orders_model->whereIn('status_id', (array)$this->config->item('completed_order_status'))
-														 ->count($range_query);
+														 ->whereRaw($range_query[0], $range_query[1])->count();
 		}
 
 		return $total_orders_completed;
@@ -236,7 +234,7 @@ class Dashboard_model extends Model
 		$total_delivery_orders = 0;
 
 		if (is_array($range_query) AND !empty($range_query)) {
-			$total_delivery_orders = $this->Orders_model->where('order_type', '1')->count($range_query);
+			$total_delivery_orders = $this->Orders_model->where('order_type', '1')->whereRaw($range_query[0], $range_query[1])->count();
 		}
 
 		return $total_delivery_orders;
@@ -254,7 +252,7 @@ class Dashboard_model extends Model
 		$total_collection_orders = 0;
 
 		if (is_array($range_query) AND !empty($range_query)) {
-			$total_collection_orders = $this->Orders_model->where('order_type', '2')->count($range_query);
+			$total_collection_orders = $this->Orders_model->where('order_type', '2')->whereRaw($range_query[0], $range_query[1])->count();
 		}
 
 		return $total_collection_orders;
@@ -282,7 +280,7 @@ class Dashboard_model extends Model
 		$total_tables_reserved = 0;
 
 		if (is_array($range_query) AND !empty($range_query)) {
-			$total_tables_reserved = $this->Reservations_model->where('status', '>', '0')->count($range_query);
+			$total_tables_reserved = $this->Reservations_model->where('status', '>', '0')->whereRaw($range_query[0], $range_query[1])->count();
 		}
 
 		return $total_tables_reserved;
@@ -299,22 +297,20 @@ class Dashboard_model extends Model
 	{
 		$result = [];
 
-		$result['customers'] = $this->Customers_model->whereRaw('DATE(date_added)', 'DATE(NOW())')
+		$result['customers'] = $this->Customers_model->whereDate('date_added', 'DATE(NOW())')
 													 ->whereRaw('HOUR(date_added)', $hour)->orderBy('date_added')->count();
 
 		$result['orders'] = $this->Orders_model->where('status_id', '>', '0')
-											   ->whereRaw('DATE(date_added)', 'DATE(NOW())', FALSE)->whereRaw('HOUR(order_time)', $hour)
-											   ->selectRaw("HOUR(order_time) as order_time")->groupBy('order_time')
+											   ->whereDate('date_added', 'DATE(NOW())', FALSE)->whereRaw('HOUR(order_time)', $hour)
 											   ->orderBy('date_added')->count();
 
 		$result['reservations'] = $this->Reservations_model->where('status', '>', '0')
-														   ->whereRaw('DATE(reserve_date)', 'DATE(NOW())', FALSE)->whereRaw('HOUR(reserve_time)', $hour)
-														   ->selectRaw("HOUR(reserve_time) as reserve_time")->groupBy('reserve_time')
+														   ->whereDate('reserve_date', 'DATE(NOW())', FALSE)->whereRaw('HOUR(reserve_time)', $hour)
 														   ->orderBy('reserve_date')->count();
 
-		$result['reviews'] = $this->Reviews_model->where('DATE(date_added)', 'DATE(NOW())', FALSE)
-												 ->where('HOUR(date_added)', $hour)->orderBy('date_added')
-												 ->count();
+		$result['reviews'] = $this->Reviews_model->whereDate('date_added', 'DATE(NOW())', FALSE)
+												 ->where('HOUR(date_added)', $hour)
+												 ->orderBy('date_added')->count();
 
 		return $result;
 	}
@@ -330,22 +326,24 @@ class Dashboard_model extends Model
 	{
 		$result = [];
 
-		$result['customers'] = $this->Customers_model->whereRaw('DATE(date_added)', $date)
-													 ->selectRaw("date_added, DAY(date_added) as date_added")->groupBy('date_added')
+		$DB = $this->queryBuilder();
+
+		$result['customers'] = $this->Customers_model->whereDate('date_added', $date)
+													 ->selectRaw("date_added")->groupBy($DB->raw('DAY(date_added)'))
 													 ->count();
 
 		$result['orders'] = $this->Orders_model->where('status_id', '>', '0')
-											   ->whereRaw('DATE(date_added)', $date)
-											   ->selectRaw("date_added, DAY(date_added) as date_added")->groupBy('date_added')
+											   ->whereDate('date_added', $date)
+											   ->selectRaw("date_added")->groupBy($DB->raw('DAY(date_added)'))
 											   ->count();
 
 		$result['reservations'] = $this->Reservations_model->where('status', '>', '0')
-														   ->whereRaw('DATE(reserve_date)', $date)
-														   ->selectRaw("date_added, DAY(reserve_date) as reserve_date")->groupBy('reserve_date')
+														   ->whereDate('reserve_date', $date)
+														   ->selectRaw("date_added")->groupBy($DB->raw('DAY(reserve_date)'))
 														   ->count();
 
-		$result['reviews'] = $this->Reviews_model->whereRaw('DATE(date_added)', $date)
-												 ->selectRaw("date_added, DAY(date_added) as date_added")->groupBy('date_added')
+		$result['reviews'] = $this->Reviews_model->whereDate('date_added', $date)
+												 ->selectRaw("date_added")->groupBy($DB->raw('DAY(date_added)'))
 												 ->count();
 
 		return $result;
@@ -363,24 +361,27 @@ class Dashboard_model extends Model
 	{
 		$result = [];
 
-		$result['customers'] = $this->Customers_model->where('YEAR(date_added)', (int)$year)
-													 ->whereRaw('MONTH(date_added)', (int)$month)
-													 ->selectRaw("MONTH(date_added) as date_added")->groupBy('date_added')
+		$DB = $this->queryBuilder();
+		$result['customers'] = $this->Customers_model->whereYear('date_added', (int)$year)
+													 ->whereMonth('date_added', (int)$month)
+													 ->groupBy($DB->raw("MONTH(date_added)"))
 													 ->count();
 
 		$result['orders'] = $this->Orders_model->where('status_id', '>', '0')
-											   ->whereRaw('YEAR(date_added)', (int)$year)->where('MONTH(date_added)', (int)$month)
-											   ->selectRaw("MONTH(date_added) as date_added")->groupBy('date_added')
+											   ->whereYear('date_added', (int)$year)
+											   ->whereMonth('date_added', (int)$month)
+											   ->groupBy($DB->raw("MONTH(date_added)"))
 											   ->count();
 
 		$result['reservations'] = $this->Reservations_model->where('status', '>', '0')
-														   ->whereRaw('YEAR(reserve_date)', (int)$year)->where('MONTH(reserve_date)', (int)$month)
-														   ->selectRaw("MONTH(reserve_date) as reserve_date")->groupBy('reserve_date')
+														   ->whereYear('reserve_date', (int)$year)
+														   ->whereMonth('reserve_date', (int)$month)
+														   ->groupBy($DB->raw("MONTH(reserve_date)"))
 														   ->count();
 
-		$result['reviews'] = $this->Reviews_model->where('YEAR(date_added)', (int)$year)
-												 ->whereRaw('MONTH(date_added)', (int)$month)
-												 ->selectRaw("MONTH(date_added) as date_added")->groupBy('date_added')
+		$result['reviews'] = $this->Reviews_model->whereYear('date_added', (int)$year)
+												 ->whereMonth('date_added', (int)$month)
+												 ->groupBy($DB->raw("MONTH(date_added)"))
 												 ->count();
 
 		return $result;
@@ -417,14 +418,10 @@ class Dashboard_model extends Model
 
 		$customersTable = $this->tablePrefix('customers');
 
-		$query = $this->from('customers')->selectSumOrderTotal('total_sale');
-
-		$query->selectRaw("{$customersTable}.customer_id, {$customersTable}.first_name, {$customersTable}.last_name, " .
-			"COUNT(order_id) AS total_orders");
-		$query->groupBy('customer_id')->orderBy('total_orders', 'DESC');
-		$query->join('orders', 'orders.customer_id', '=', 'customers.customer_id', 'left');
-
-		return $query->getAsArray();
+		return $this->Customers_model->groupBy('customer_id')->orderBy('total_orders', 'DESC')
+									 ->selectRaw("SUM(order_total) as total_sale")->selectRaw("{$customersTable}.customer_id, {$customersTable}.first_name, {$customersTable}.last_name, " .
+				"COUNT(order_id) AS total_orders")
+									 ->join('orders', 'orders.customer_id', '=', 'customers.customer_id', 'left')->getAsArray();
 	}
 
 	/**

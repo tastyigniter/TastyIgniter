@@ -40,6 +40,14 @@ class Status_history_model extends Model
 
 	const CREATED_AT = 'date_added';
 
+	public function scopeJoinStatusAndStaffTables($query)
+	{
+		$query->join('statuses', 'statuses.status_id', '=', 'status_history.status_id', 'left');
+		$query->join('staffs', 'staffs.staff_id', '=', 'status_history.staff_id', 'left');
+
+		return $query;
+	}
+
 }
 
 /* End of file Status_history_model.php */
