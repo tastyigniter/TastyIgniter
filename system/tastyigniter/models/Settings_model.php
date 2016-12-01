@@ -60,7 +60,7 @@ class Settings_model extends Model
 				$this->where('sort', $sort)->delete();
 			}
 
-			$data = [];
+			$query = FALSE;
 			foreach ($update as $item => $value) {
 				if (!empty($item)) {
 					if ($flush === FALSE) {
@@ -77,12 +77,12 @@ class Settings_model extends Model
 							$serialized = '1';
 						}
 
-						$data[] = ['sort' => $sort, 'item' => $item, 'value' => $value, 'serialized' => $serialized];
+						$query = $this->insertGetId(['sort' => $sort, 'item' => $item, 'value' => $value, 'serialized' => $serialized]);
 					}
 				}
 			}
 
-			return $this->insertGetId($data);
+			return $query;
 		}
 	}
 
