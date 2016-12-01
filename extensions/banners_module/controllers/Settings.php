@@ -40,7 +40,7 @@ class Settings extends Admin_Controller
 						'status'         => isset($banner['status']) ? $banner['status'] : '1',
 						'width'          => $banner['width'],
 						'height'         => $banner['height'],
-						'edit'           => admin_url('banners/edit/' . $banner['banner_id']),
+						'edit'           => admin_url('banners/edit?id=' . $banner['banner_id']),
 					);
 				}
 			}
