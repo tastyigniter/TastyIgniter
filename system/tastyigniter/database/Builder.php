@@ -241,7 +241,7 @@ class Builder extends BuilderBase
 	{
 		$model = $this->first($columns);
 
-		return $model->exists() ? [] : $model->toArray();
+		return is_null($model) ? [] : $model->toArray();
 	}
 
 	/**

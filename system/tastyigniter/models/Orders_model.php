@@ -113,8 +113,8 @@ class Orders_model extends Model
 
 		if (!empty($filter['filter_date'])) {
 			$date = explode('-', $filter['filter_date']);
-			$query->whereRaw('YEAR(date_added)', $date[0]);
-			$query->whereRaw('MONTH(date_added)', $date[1]);
+			$query->whereYear('date_added', $date[0]);
+			$query->whereMonth('date_added', $date[1]);
 		}
 
 		return $query;
@@ -269,8 +269,7 @@ class Orders_model extends Model
 			$update['status_id'] = $update['order_status'];
 		}
 
-		unset($update['old_status_id'], $update['order_status']);
-		if ($query = $this->where('order_id', $order_id)->update($update)) {
+		if ($query = $this->find($order_id)->fill($update)->update()) {
 			$this->load->model('Statuses_model');
 			$status = $this->Statuses_model->getStatus($update['status_id']);
 

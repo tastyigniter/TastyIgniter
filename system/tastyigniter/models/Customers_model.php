@@ -76,8 +76,8 @@ class Customers_model extends Model
 
 		if (!empty($filter['filter_date'])) {
 			$date = explode('-', $filter['filter_date']);
-			$query->whereRaw('YEAR(date_added) = ?', $date[0]);
-			$query->whereRaw('MONTH(date_added) = ?', $date[1]);
+			$query->whereYear('date_added', $date[0]);
+			$query->whereMonth('date_added', $date[1]);
 		}
 
 		return $query;

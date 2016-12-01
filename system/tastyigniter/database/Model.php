@@ -331,7 +331,7 @@ class Model extends EloquentModel
 
 	public function fromSerialized($value)
 	{
-		return isset($value) ? unserialize($value) : null;
+		return isset($value) ? @unserialize($value) : null;
 	}
 
 	protected function isSerializedCastable($key)

@@ -103,19 +103,19 @@ class Reservations_model extends Model
 
 			if (!empty($filter['filter_date'])) {
 				$date = explode('-', $filter['filter_date']);
-				$query->whereRaw('YEAR(reserve_date)', $date[0]);
-				$query->whereRaw('MONTH(reserve_date)', $date[1]);
+				$query->whereYear('reserve_date', $date[0]);
+				$query->whereMonth('reserve_date', $date[1]);
 
 				if (isset($date[2])) {
-					$query->whereRaw('DAY(reserve_date)', (int)$date[2]);
+					$query->whereDay('reserve_date', (int)$date[2]);
 				}
 			} else if (!empty($filter['filter_year']) AND !empty($filter['filter_month']) AND !empty($filter['filter_day'])) {
-				$query->whereRaw('YEAR(reserve_date)', $filter['filter_year']);
-				$query->whereRaw('MONTH(reserve_date)', $filter['filter_month']);
-				$query->whereRaw('DAY(reserve_date)', $filter['filter_day']);
+				$query->whereYear('reserve_date', $filter['filter_year']);
+				$query->whereMonth('reserve_date', $filter['filter_year']);
+				$query->whereDay('reserve_date', $filter['filter_day']);
 			} else if (!empty($filter['filter_year']) AND !empty($filter['filter_month'])) {
-				$query->whereRaw('YEAR(reserve_date)', $filter['filter_year']);
-				$query->whereRaw('MONTH(reserve_date)', $filter['filter_month']);
+				$query->whereYear('reserve_date', $filter['filter_year']);
+				$query->whereMonth('reserve_date', $filter['filter_month']);
 			}
 		} else if (!empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {
 			$query->where('customer_id', $filter['customer_id']);
@@ -389,7 +389,7 @@ class Reservations_model extends Model
 		if (empty($update)) return FALSE;
 
 		if (is_numeric($reservation_id)) {
-			$query = $this->where('reservation_id', $reservation_id)->update($update);
+			$query = $this->find($reservation_id)->fill($update)->save();
 
 			$status = $this->Statuses_model->getStatus($update['status']);
 

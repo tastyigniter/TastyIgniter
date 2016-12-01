@@ -83,8 +83,8 @@ class Customer_online_model extends Model
 
 		if (!empty($filter['filter_date'])) {
 			$date = explode('-', $filter['filter_date']);
-			$query->whereRaw('YEAR(' . $dateAddedColumn . ')', $date[0]);
-			$query->whereRaw('MONTH(' . $dateAddedColumn . ')', $date[1]);
+			$query->whereYear('customers_online.date_added', $date[0]);
+			$query->whereMonth('customers_online.date_added', $date[1]);
 		}
 
 		return $query;
