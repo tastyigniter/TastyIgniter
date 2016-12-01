@@ -61,7 +61,7 @@ class Countries_model extends Model
 	public function scopeFilter($query, $filter = [])
 	{
 		if (!empty($filter['filter_search'])) {
-			$query->like('country_name', $filter['filter_search']);
+			$query->search($filter['filter_search'], ['country_name']);
 		}
 
 		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {

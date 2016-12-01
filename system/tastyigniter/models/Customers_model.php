@@ -54,7 +54,7 @@ class Customers_model extends Model
 	 * @var string[] The names of callback methods which
 	 * will be called after the insert method.
 	 */
-//	protected $after_create = array('sendRegistrationEmail', 'saveCustomerGuestOrder');
+//	protected $afterCreate = array('sendRegistrationEmail', 'saveCustomerGuestOrder');
 
 	/**
 	 * Filter database records
@@ -67,9 +67,7 @@ class Customers_model extends Model
 	public function scopeFilter($query, $filter = [])
 	{
 		if (!empty($filter['filter_search'])) {
-			$query->like('first_name', $filter['filter_search']);
-			$query->orLike('last_name', $filter['filter_search']);
-			$query->orLike('email', $filter['filter_search']);
+			$query->search($filter['filter_search'], ['first_name', 'last_name', 'email']);
 		}
 
 		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {

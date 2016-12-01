@@ -70,11 +70,7 @@ class Customer_online_model extends Model
 		$query->leftJoin('countries', 'countries.iso_code_3', '=', 'customers_online.country_code');
 
 		if (!empty($filter['filter_search'])) {
-			$query->like('first_name', $filter['filter_search']);
-			$query->orLike('last_name', $filter['filter_search']);
-			$query->orLike('browser', $filter['filter_search']);
-			$query->orLike('ip_address', $filter['filter_search']);
-			$query->orLike('country_code', $filter['filter_search']);
+			$query->search($filter['filter_search'], ['first_name', 'last_name', 'browser', 'ip_address', 'country_code']);
 		}
 
 		if (!empty($filter['filter_access'])) {

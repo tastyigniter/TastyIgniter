@@ -49,8 +49,7 @@ class Coupons_model extends Model
 	public function scopeFilter($query, $filter = [])
 	{
 		if (!empty($filter['filter_search'])) {
-			$query->like('name', $filter['filter_search']);
-			$query->orLike('code', $filter['filter_search']);
+			$query->search($filter['filter_search'], ['name', 'code']);
 		}
 
 		if (!empty($filter['filter_type'])) {

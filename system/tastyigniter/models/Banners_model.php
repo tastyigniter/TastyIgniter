@@ -47,7 +47,7 @@ class Banners_model extends Model
 	public function scopeFilter($query, $filter = [])
 	{
 		if (!empty($filter['filter_search'])) {
-			$query->like('name', $filter['filter_search']);
+			$query->search($filter['filter_search'], ['name']);
 		}
 
 		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {

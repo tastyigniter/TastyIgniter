@@ -82,10 +82,7 @@ class Orders_model extends Model
 		$query->joinTables();
 
 		if (!empty($filter['filter_search'])) {
-			$query->like('order_id', $filter['filter_search']);
-			$query->orLike('location_name', $filter['filter_search']);
-			$query->orLike('first_name', $filter['filter_search']);
-			$query->orLike('last_name', $filter['filter_search']);
+			$query->search($filter['filter_search'], ['order_id', 'location_name', 'first_name', 'last_name']);
 		}
 
 		if (!empty($filter['customer_id']) AND is_numeric($filter['customer_id'])) {

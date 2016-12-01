@@ -69,11 +69,10 @@ class Currencies_model extends Model
 		$query->joinCountryTable();
 
 		if (!empty($filter['filter_search'])) {
-			$query->like('currency_name', $filter['filter_search']);
-			$query->orLike('currency_code', $filter['filter_search']);
+			$query->search($filter['filter_search'], ['currency_name', 'currency_code']);
 
 			$query->orWhereHas('country', function ($q) use ($filter) {
-				$q->like('country_name', $filter['filter_search']);
+				$q->search($filter['filter_search'], ['country_name']);
 			});
 		}
 

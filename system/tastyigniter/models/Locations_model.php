@@ -77,10 +77,7 @@ class Locations_model extends Model
 	public function scopeFilter($query, $filter = [])
 	{
 		if (!empty($filter['filter_search'])) {
-			$query->like('location_name', $filter['filter_search']);
-			$query->orLike('location_city', $filter['filter_search']);
-			$query->orLike('location_state', $filter['filter_search']);
-			$query->orLike('location_postcode', $filter['filter_search']);
+			$query->search($filter['filter_search'], ['location_name', 'location_city', 'location_state', 'location_postcode']);
 		}
 
 		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {

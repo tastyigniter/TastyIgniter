@@ -99,8 +99,7 @@ class Messages_model extends Model
 			) {
 				$query->where(function ($query) use ($filter) {
 					if (!empty($filter['filter_search'])) {
-						$query->like('staff_name', $filter['filter_search']);
-						$query->orLike('subject', $filter['filter_search']);
+						$query->search($filter['filter_search'], ['staff_name', 'subject']);
 					}
 
 					if (!empty($filter['filter_recipient'])) {

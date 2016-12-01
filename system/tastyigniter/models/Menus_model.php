@@ -89,9 +89,7 @@ class Menus_model extends Model
 
 		if (APPDIR === ADMINDIR) {
 			if (!empty($filter['filter_search'])) {
-				$query->like('menu_name', $filter['filter_search']);
-				$query->orLike('menu_price', $filter['filter_search']);
-				$query->orLike('stock_qty', $filter['filter_search']);
+				$query->search($filter['filter_search'], ['menu_name', 'menu_price', 'stock_qty']);
 			}
 
 			if (is_numeric($filter['filter_status'])) {

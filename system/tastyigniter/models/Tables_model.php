@@ -45,7 +45,7 @@ class Tables_model extends Model
 	public function scopeFilter($query, $filter = [])
 	{
 		if (!empty($filter['filter_search'])) {
-			$query->like('table_name', $filter['filter_search']);
+			$query->search($filter['filter_search'], ['table_name']);
 		}
 
 		if (is_numeric($filter['filter_status'])) {

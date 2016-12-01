@@ -83,11 +83,11 @@ class Pages_model extends Model
 		$languagesTable = $this->tablePrefix('languages');
 		$pagesTable = $this->tablePrefix('pages');
 
-		$query->selectRaw("*, {$languagesTable}.name AS language_name, {$pagesTable}.name AS name");
+		$query->selectRaw("*, {$languagesTable}.name AS language_name, {$pagesTable}.name AS name, {$pagesTable}.status AS status");
 		$query->join('languages', 'languages.language_id', '=', 'pages.language_id', 'left');
 
 		if (!empty($filter['filter_search'])) {
-			$query->like('pages.name', $filter['filter_search']);
+			$query->search($filter['filter_search'], [$pagesTable.'.name']);
 		}
 
 		if (isset($filter['filter_status']) AND is_numeric($filter['filter_status'])) {

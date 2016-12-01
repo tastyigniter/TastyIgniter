@@ -18,8 +18,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
-use Illuminate\Support\Str;
 use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 use TastyIgniter\Database\Manager as DatabaseManager;
 
@@ -231,8 +231,9 @@ class Model extends EloquentModel
 	 * Cast an attribute to a native PHP type.
 	 * Cast an attribute to a native PHP type.
 	 *
-	 * @param  string  $key
-	 * @param  mixed  $value
+	 * @param  string $key
+	 * @param  mixed $value
+	 *
 	 * @return mixed
 	 */
 	protected function castAttribute($key, $value)
@@ -244,18 +245,18 @@ class Model extends EloquentModel
 		switch ($this->getCastType($key)) {
 			case 'int':
 			case 'integer':
-				return (int) $value;
+				return (int)$value;
 			case 'real':
 			case 'float':
 			case 'double':
-				return (float) $value;
+				return (float)$value;
 			case 'string':
-				return (string) $value;
+				return (string)$value;
 			case 'bool':
 			case 'boolean':
-				return (bool) $value;
+				return (bool)$value;
 			case 'object':
-				return $this->fromJson($value, true);
+				return $this->fromJson($value, TRUE);
 			case 'array':
 			case 'json':
 				return $this->fromJson($value);
@@ -278,9 +279,10 @@ class Model extends EloquentModel
 	/**
 	 * Set a given attribute on the model.
 	 *
-	 * @param  string  $key
-	 * @param  mixed  $value
-	 * @return $this
+	 * @param  string $key
+	 * @param  mixed $value
+	 *
+	 * @return self
 	 */
 	public function setAttribute($key, $value)
 	{
@@ -288,7 +290,7 @@ class Model extends EloquentModel
 		// which simply lets the developers tweak the attribute as it is set on
 		// the model, such as "json_encoding" an listing of data for storage.
 		if ($this->hasSetMutator($key)) {
-			$method = 'set'.Str::studly($key).'Attribute';
+			$method = 'set' . Str::studly($key) . 'Attribute';
 
 			return $this->{$method}($value);
 		}
@@ -298,9 +300,7 @@ class Model extends EloquentModel
 		// the connection grammar's date format. We will auto set the values.
 		elseif ($value && (in_array($key, $this->getDates()) || $this->isDateCastable($key))) {
 			$value = $this->fromDateTime($value);
-		}
-
-		elseif ($value && $this->isTimeCastable($key)) {
+		} elseif ($value && $this->isTimeCastable($key)) {
 			$value = $this->fromTime($value);
 		}
 
@@ -308,7 +308,7 @@ class Model extends EloquentModel
 			$value = $this->asSerialized($value);
 		}
 
-		if ($this->isJsonCastable($key) && ! is_null($value)) {
+		if ($this->isJsonCastable($key) && !is_null($value)) {
 			$value = $this->asJson($value);
 		}
 
@@ -380,7 +380,8 @@ class Model extends EloquentModel
 	/**
 	 * Convert a Carbon Time to a storable string.
 	 *
-	 * @param  \Carbon\Carbon|int  $value
+	 * @param  \Carbon\Carbon|int $value
+	 *
 	 * @return string
 	 */
 	public function fromTime($value)
@@ -395,7 +396,8 @@ class Model extends EloquentModel
 	/**
 	 * Determine whether a value is Time castable for inbound manipulation.
 	 *
-	 * @param  string  $key
+	 * @param  string $key
+	 *
 	 * @return bool
 	 */
 	protected function isTimeCastable($key)
@@ -417,8 +419,9 @@ class Model extends EloquentModel
 	/**
 	 * Set the time format used by the model.
 	 *
-	 * @param  string  $format
-	 * @return $this
+	 * @param  string $format
+	 *
+	 * @return self
 	 */
 	public function setTimeFormat($format)
 	{

@@ -87,12 +87,10 @@ class Reservations_model extends Model
 
 		if (APPDIR === ADMINDIR) {
 			if (!empty($filter['filter_search'])) {
-				$query->like('reservation_id', $filter['filter_search']);
-				$query->orLike('location_name', strtolower($filter['filter_search']));
-				$query->orLike('first_name', strtolower($filter['filter_search']));
-				$query->orLike('last_name', strtolower($filter['filter_search']));
-				$query->orLike('table_name', strtolower($filter['filter_search']));
-				$query->orLike('staff_name', strtolower($filter['filter_search']));
+				$query->search($filter['filter_search'], [
+					'reservation_id', 'location_name', 'first_name', 'last_name',
+					'table_name', 'staff_name'
+				]);
 			}
 
 			if (!empty($filter['filter_status'])) {
@@ -109,7 +107,7 @@ class Reservations_model extends Model
 				$query->whereRaw('MONTH(reserve_date)', $date[1]);
 
 				if (isset($date[2])) {
-					$query->where('DAY(reserve_date)', (int)$date[2]);
+					$query->whereRaw('DAY(reserve_date)', (int)$date[2]);
 				}
 			} else if (!empty($filter['filter_year']) AND !empty($filter['filter_month']) AND !empty($filter['filter_day'])) {
 				$query->whereRaw('YEAR(reserve_date)', $filter['filter_year']);

@@ -63,9 +63,7 @@ class Reviews_model extends Model
 		$query->joinLocationsTable();
 
 		if (!empty($filter['filter_search'])) {
-			$query->like('author', $filter['filter_search']);
-			$query->orLike('location_name', $filter['filter_search']);
-			$query->orLike('order_id', $filter['filter_search']);
+			$query->search($filter['filter_search'], ['author', 'location_name', 'order_id']);
 		}
 
 		if (!empty($filter['filter_location'])) {

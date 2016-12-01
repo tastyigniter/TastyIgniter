@@ -47,7 +47,7 @@ class Menu_options_model extends Model
 	public function scopeFilter($query, $filter = [])
 	{
 		if (!empty($filter['filter_search'])) {
-			$query->like('option_name', $filter['filter_search']);
+			$query->search($filter['filter_search'], ['option_name']);
 		}
 
 		if (!empty($filter['filter_display_type'])) {
