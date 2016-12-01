@@ -109,8 +109,6 @@ class Categories_model extends Model
 			$query->where('cat1.status', '=', '1');
 		}
 
-//		$query->addBinding($parent);
-
 		$result = [];
 
 		foreach ($query->getAsArray() as $row) {

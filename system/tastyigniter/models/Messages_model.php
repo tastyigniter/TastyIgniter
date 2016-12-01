@@ -593,7 +593,7 @@ class Messages_model extends Model
 				}
 			}
 
-			if (!($query = $this->Message_meta_model->insert($insert))) {
+			if (!($query = $this->Message_meta_model->insertGetId($insert))) {
 				return FALSE;
 			}
 

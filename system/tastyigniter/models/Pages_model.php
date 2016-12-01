@@ -45,12 +45,12 @@ class Pages_model extends Model
 	const CREATED_AT = 'date_added';
 	const UPDATED_AT = 'date_updated';
 
-	public $belongs_to = [
+	public $belongsTo = [
 		'languages' => 'Languages_model',
 	];
 
 	protected $casts = [
-		'navigation' => 'array',
+		'navigation' => 'serialize',
 	];
 
 	public function getContentAttribute($value)
@@ -133,10 +133,6 @@ class Pages_model extends Model
 
 		if (isset($save['title'])) {
 			$save['name'] = $save['title'];
-		}
-
-		if (isset($save['navigation'])) {
-			$save['navigation'] = serialize($save['navigation']);
 		}
 
 		$pageModel = $this->findOrNew($page_id);

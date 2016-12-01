@@ -24,7 +24,7 @@ class Setup_model extends TI_Model
 {
 	protected $schema = [];
 
-	protected function querySchema($table, $schema = 'initial')
+	public function querySchema($table, $schema = 'initial')
 	{
 		if (!empty($this->schema[$schema][$table])) {
 			$this->db->query($this->schema[$schema][$table]);
@@ -37,7 +37,7 @@ class Setup_model extends TI_Model
 
 	// --------------------------------------------------------------------
 
-	protected function loadSchema($schema_type = 'initial')
+	public function loadSchema($schema_type = 'initial')
 	{
 		include(IGNITEPATH . '/migrations/' . $schema_type . '_schema.php');
 
@@ -117,10 +117,10 @@ class Setup_model extends TI_Model
 		}
 
 		$this->load->model('Locations_model');
-		$this->Locations_model->save([
+		$this->Locations_model->where('location_id', '11')->update([
 			'location_name'  => $setting['site_name'],
 			'location_email' => $setting['site_email'],
-		], '11');
+		]);
 
 		$this->load->model('Settings_model');
 		$this->Settings_model->addSetting('prefs', 'main_address', $this->Locations_model->getAddress(11), '1');
@@ -133,9 +133,7 @@ class Setup_model extends TI_Model
 	public function updateVersion($version = null)
 	{
 		$this->load->model('Settings_model');
-		$this->Settings_model->where('sort', 'prefs');
-		$this->Settings_model->where('item', 'ti_version');
-		$this->Settings_model->delete();
+		$this->Settings_model->where('sort', 'prefs')->where('item', 'ti_version')->delete();
 
 		$this->Settings_model->insert([
 			'sort'       => 'prefs',

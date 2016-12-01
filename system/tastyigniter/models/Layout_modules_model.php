@@ -32,13 +32,11 @@ class Layout_modules_model extends Model
 	protected $primaryKey = 'layout_module_id';
 
 	protected $casts = [
-		'options' => 'array',
+		'options' => 'serialize',
 	];
 
 	/**
 	 * Return all layout modules
-	 *
-	 * @param int $layout_id
 	 *
 	 * @return array
 	 */

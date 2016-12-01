@@ -78,7 +78,7 @@ class Security_questions_model extends Model
 							'priority' => $priority,
 						]);
 					} else if (!empty($question['text'])) {
-						$this->insert([
+						$this->insertGetId([
 							'text'     => $question['text'],
 							'priority' => $priority,
 						]);

@@ -214,7 +214,7 @@ class Menu_options_model extends Model
 
 			$priority = 1;
 			foreach ($option_values as $key => $value) {
-				$query = $queryBuilder->table('option_values')->insert(array_merge($value, [
+				$query = $queryBuilder->table('option_values')->insertGetId(array_merge($value, [
 					'option_id' => $option_id,
 					'priority'  => $priority,
 				]));
@@ -278,7 +278,7 @@ class Menu_options_model extends Model
 	{
 		if ($menu_option_id !== null AND $menu_id !== null AND $option_id !== null AND !empty($option_values)) {
 			foreach ($option_values as $value) {
-				$this->queryBuilder()->table('menu_option_values')->insert([
+				$this->queryBuilder()->table('menu_option_values')->insertGetId([
 					'menu_option_id'  => $menu_option_id,
 					'menu_id'         => $menu_id,
 					'option_id'       => $option_id,

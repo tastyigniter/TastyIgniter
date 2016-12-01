@@ -252,7 +252,7 @@ class Layouts_model extends Model
 				if (!empty($value['uri_route']) AND !empty($value['controller'])) {
 					$write_routes[$priority] = $value;
 
-					$this->queryBuilder()->table('uri_routes')->insert([
+					$this->queryBuilder()->table('uri_routes')->insertGetId([
 						'uri_route'  => $value['uri_route'],
 						'controller' => $value['controller'],
 						'priority'   => $priority,

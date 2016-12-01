@@ -50,6 +50,14 @@ class Builder extends BuilderBase
 		return $results;
 	}
 
+	/**
+	 * Get an array with the values of a given column.
+	 *
+	 * @param  string $column
+	 * @param  string|null $key
+	 *
+	 * @return \Illuminate\Support\Collection
+	 */
 	public function dropdown($column, $key = NULL)
 	{
 		$key = !is_null($key) ? $key : $this->model->getKeyName();
@@ -57,6 +65,15 @@ class Builder extends BuilderBase
 		return $this->lists($column, $key);
 	}
 
+	/**
+	 * Convenient method for where like clause
+	 *
+	 * @param  string $column
+	 * @param $value
+	 * @param string $side
+	 *
+	 * @return \TastyIgniter\Database\Builder
+	 */
 	public function like($column, $value, $side = 'both')
 	{
 		if ($side === 'none') {
@@ -72,6 +89,15 @@ class Builder extends BuilderBase
 		return $this->where($column, 'like', $value);
 	}
 
+	/**
+	 * Convenient method for or where like clause
+	 *
+	 * @param  string $column
+	 * @param $value
+	 * @param string $side
+	 *
+	 * @return \TastyIgniter\Database\Builder
+	 */
 	public function orLike($column, $value, $side = 'both')
 	{
 		if ($side === 'none') {
@@ -87,6 +113,15 @@ class Builder extends BuilderBase
 		return $this->orWhere($column, 'like', $value);
 	}
 
+	/**
+	 * Get an array with the values of dates.
+	 *
+	 * @param  string $column
+	 * @param string $keyFormat
+	 * @param string $valueFormat
+	 *
+	 * @return array
+	 */
 	public function pluckDates($column, $keyFormat = '%Y-%m', $valueFormat = '%F %Y')
 	{
 		$dates = [];
@@ -103,11 +138,10 @@ class Builder extends BuilderBase
 		}
 
 		return $dates;
-
 	}
 
 	/**
-	 * Execute the query as a "select" statement.
+	 * Execute the query as a "select" statement as array.
 	 *
 	 * @param  array  $columns
 	 * @return array
@@ -120,7 +154,7 @@ class Builder extends BuilderBase
 	}
 
 	/**
-	 * Execute the query and get the first result.
+	 * Execute the query and get the first result as array.
 	 *
 	 * @param  array  $columns
 	 * @return array
@@ -140,7 +174,7 @@ class Builder extends BuilderBase
 	 * @param  string $pageName
 	 * @param  int|null $page
 	 *
-	 * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+	 * @return \stdClass
 	 *
 	 * @throws \InvalidArgumentException
 	 */

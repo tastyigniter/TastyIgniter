@@ -82,7 +82,7 @@ class Settings_model extends Model
 				}
 			}
 
-			return $this->insert($data);
+			return $this->insertGetId($data);
 		}
 	}
 
@@ -112,7 +112,7 @@ class Settings_model extends Model
 				$serialized = '1';
 			}
 
-			$query = $this->insert([
+			$query = $this->insertGetId([
 				'sort'       => $sort,
 				'item'       => $item,
 				'value'      => $value,

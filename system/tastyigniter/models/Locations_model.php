@@ -49,7 +49,7 @@ class Locations_model extends Model
 	];
 
 	protected $casts = [
-		'options' => 'array',
+		'options' => 'serialize',
 	];
 
 	public function scopeJoinCountryTable($query)

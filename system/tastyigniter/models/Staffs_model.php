@@ -290,7 +290,7 @@ class Staffs_model extends Model
 				if ($_action === 'added' AND !empty($save['username'])) {
 					$user['username'] = strtolower($save['username']);
 					$user['staff_id'] = $staff_id;
-					$this->Users_model->insert($user);
+					$this->Users_model->insertGetId($user);
 				} else {
 					$this->Users_model->where('staff_id', $staff_id)->update($user);
 				}
