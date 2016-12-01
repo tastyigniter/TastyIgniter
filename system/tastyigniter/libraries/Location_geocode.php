@@ -38,7 +38,7 @@ class Location_geocode
 			return "NO_SEARCH_QUERY";
 
 		$sessionPosition = $this->getSessionPosition();
-		if (isset($sessionPosition->search_query) AND $sessionPosition->search_query == $searchQuery)
+		if (!empty($sessionPosition->search_query) AND $sessionPosition->search_query == $searchQuery)
 			return $sessionPosition;
 
 		$geocodePosition = $this->geocodePosition($searchQuery);

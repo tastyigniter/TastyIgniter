@@ -73,11 +73,10 @@ class Location_delivery
 
 	public function findAndSetNearestArea()
 	{
-		if ($area = $this->findNearestArea())
-			$this->setNearestArea($area);
+		if (!$area = $this->findNearestArea())
+			$area = $this->getDefaultNearestArea();
 
-		if ($this->nearestAreaIsEmpty())
-			$this->setDefaultNearestArea();
+		$this->setNearestArea($area);
 
 		return $area;
 	}
@@ -91,9 +90,9 @@ class Location_delivery
 		if (is_null($userPositionPoint = $this->getUserPositionPoint($userPosition)))
 			return $nearestArea;
 
-		$sessionArea = $this->getSessionNearestArea();
-		if ($this->validateSessionNearestArea($sessionArea, $userPosition))
-			return $sessionArea;
+		$nearestArea = $this->getNearestArea();
+		if (!$this->hasNearestAreaChanged($nearestArea))
+			return $nearestArea;
 
 		foreach ($this->getAllBoundaries() as $locationId => $deliveryArea) {
 			foreach ($deliveryArea as $areaId => $boundaries) {
@@ -102,6 +101,7 @@ class Location_delivery
 					$nearestAreaBoundary->location_id = $locationId;
 					$nearestAreaBoundary->area_id = $areaId;
 					$nearestAreaBoundary->position = $positionBoundary;
+					$nearestAreaBoundary->point = $userPositionPoint;
 					break 2;
 				}
 			}
@@ -115,8 +115,7 @@ class Location_delivery
 		$coverage = null;
 		$locationId = $this->getLocation()->getId();
 
-		if (is_null($nearestArea = $this->getNearestArea()))
-			$nearestArea = $this->findNearestArea();
+		$nearestArea = $this->findNearestArea();
 
 		if (empty($nearestArea->location_id) OR empty($nearestArea->position))
 			return $coverage;
@@ -206,7 +205,7 @@ class Location_delivery
 
 	public function getNearestAreaCharge()
 	{
-		$nearestArea = $this->getNearestArea(TRUE);
+		$nearestArea = $this->getNearestAreaArray();
 		if (!isset($nearestArea['charge']))
 			return null;
 
@@ -215,7 +214,7 @@ class Location_delivery
 
 	public function getNearestAreaChargeSummary()
 	{
-		$nearestArea = $this->getNearestArea(TRUE);
+		$nearestArea = $this->getNearestAreaArray();
 		if (!isset($nearestArea['full_summary']))
 			return null;
 
@@ -224,10 +223,20 @@ class Location_delivery
 
 	public function getAreas()
 	{
+		$allAreas = $this->getAllAreas();
 		$locationId = $this->getLocation()->getId();
 
-		return (isset($this->getAllAreas()[$locationId]) AND is_array($this->getAllAreas()[$locationId])) ?
-			$this->getAllAreas()[$locationId] : [];
+		return (isset($allAreas[$locationId]) AND is_array($allAreas[$locationId])) ?
+			$allAreas[$locationId] : [];
+	}
+
+	public function getBoundaries()
+	{
+		$allBoundaries = $this->getAllBoundaries();
+		$locationId = $this->getLocation()->getId();
+
+		return (isset($allBoundaries[$locationId]) AND is_array($allBoundaries[$locationId])) ?
+			$allBoundaries[$locationId] : [];
 	}
 
 	public function getAllAreas()
@@ -431,9 +440,21 @@ class Location_delivery
 	public function getDefaultAreaBoundary()
 	{
 		$boundary = new \stdClass;
-		$boundary->location_id = $boundary->area_id = $boundary->position = null;
+		$boundary->point = $boundary->position = $boundary->location_id = $boundary->area_id = null;
 
 		return $boundary;
+	}
+
+	public function getDefaultNearestArea()
+	{
+		$nearestArea = $this->getDefaultAreaBoundary();
+
+		$nearestArea->location_id = $this->getLocation()->getId();
+		$nearestArea->area_id = ($deliveryAreas = $this->getAreas()) ? key($deliveryAreas) : 1;
+		$nearestArea->position = 'inside';
+		$nearestArea->point = $this->getLocalPosition();
+
+		return $nearestArea;
 	}
 
 	public function getLocalPosition()
@@ -463,16 +484,16 @@ class Location_delivery
 		return $this;
 	}
 
-	public function getNearestArea($fullArray = FALSE)
+	public function getNearestAreaArray()
 	{
-		if ($fullArray) {
-			$locationId = $this->getLocation()->getId();
-			$areaId = $this->getNearestAreaId();
-			$allAreas = $this->getAllAreas();
+		$areaId = $this->getNearestAreaId();
+		$locationAreas = $this->getAreas();
 
-			return (isset($allAreas[$locationId][$areaId])) ? $allAreas[$locationId][$areaId] : null;
-		}
+		return (isset($locationAreas[$areaId])) ? $locationAreas[$areaId] : null;
+	}
 
+	public function getNearestArea()
+	{
 		return $this->nearestArea;
 	}
 
@@ -493,42 +514,18 @@ class Location_delivery
 		$this->nearestArea = $nearestArea;
 	}
 
-	public function setDefaultNearestArea()
+	public function hasNearestAreaChanged($nearestArea = null)
 	{
-		$this->nearestArea->location_id = $this->getLocation()->getId();
-		$this->nearestArea->area_id = ($deliveryAreas = $this->getAreas()) ? key($deliveryAreas) : 1;
-		$this->nearestArea->position = 'inside';
-	}
+		$nearestArea = is_null($nearestArea) ? $this->getNearestArea() : $nearestArea;
 
-	public function nearestAreaIsEmpty()
-	{
-		foreach ((array)$this->getNearestArea() as $item) {
-			if (!is_null($item))
+		$locationId = $this->getLocation()->getId();
+		$sessionArea = $this->getSessionNearestArea();
+		if (!empty($nearestArea->point) AND !empty($sessionArea->point)) {
+			if ($sessionArea->location_id == $locationId AND $sessionArea->point == $nearestArea->point)
 				return FALSE;
 		}
 
 		return TRUE;
-	}
-
-	public function validateSessionNearestArea($sessionArea, $userPosition)
-	{
-		if (empty($sessionArea->location_id) OR empty($userPosition->search_query))
-			return FALSE;
-
-		$locationId = $this->getLocation()->getId();
-		$sessionPosition = $this->locationGeocode()->getSessionPosition();
-		if (!empty($sessionPosition->search_query) AND $sessionPosition->search_query == $userPosition->search_query)
-			return $sessionArea;
-
-		$nearestArea = $this->getNearestArea();
-
-		if (!is_null($nearestArea->area_id) AND $sessionArea->location_id == $locationId AND $sessionArea->area_id == $nearestArea->area_id)
-			return $sessionArea;
-
-		if (!is_null($sessionArea->location_id) AND $sessionArea == $userPosition)
-			return TRUE;
-
-		return FALSE;
 	}
 
 	protected function getByLocationAreas()

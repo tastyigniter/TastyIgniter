@@ -22,7 +22,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Location
 {
-//	protected $CI = NULL;
 	const DELIVERY = 'delivery';
 	const COLLECTION = 'collection';
 
@@ -32,16 +31,11 @@ class Location
 	public $location_telephone;
 	public $local_options;
 	public $local_info;
-	public $geocode;
-	public $area_id;
 	public $order_type;
-	public $polygons = [];
-	public $delivery_areas = [];
-	public $working_hours = [];
-	public $working_hour = [];
 	public $permalink;
 	protected $locationModels;
 	protected $tempSessionData;
+	protected static $orderTypes = [];
 
 	public function __construct()
 	{
@@ -53,6 +47,8 @@ class Location
 		$this->CI->load->library('location_delivery');
 		$this->CI->load->library('location_geocode');
 		$this->CI->load->model('Locations_model');
+
+		self::$orderTypes = [1 => self::DELIVERY, 2 => self::COLLECTION];
 	}
 
 	public function initialize()
@@ -62,6 +58,148 @@ class Location
 		}
 
 		$this->tempSessionData = null;
+	}
+
+	protected function validateProperties()
+	{
+		$local_info = $this->getSessionData();
+
+		if (is_single_location() OR (!isset($local_info['location_id']) AND $this->CI->config->item('location_order') != '1')) {
+			if (!isset($local_info['location_id']) OR $this->CI->config->item('default_location_id') != $local_info['location_id']) {
+				$local_info['location_id'] = $this->CI->config->item('default_location_id');
+				$this->updateSessionData($local_info);
+			}
+		}
+
+		foreach ($local_info as $item => $value) {
+			if (property_exists($this, $item) AND $this->$item != $value)
+				return TRUE;
+		}
+
+		return FALSE;
+	}
+
+	protected function setProperties()
+	{
+		$local_info = $this->getSessionData();
+
+		if ($local = $this->getLocal($local_info)) {
+			foreach ($local as $key => $value) {
+				if (property_exists($this, $key))
+					$this->$key = $value;
+			}
+
+			if (isset($local['order_type'])) $this->setOrderType($local['order_type']);
+
+			$this->setWorkingSchedule();
+			$this->setNearestArea();
+
+			if (!empty($this->CI->permalink) AND $this->CI->config->item('permalink') == '1')
+				$this->permalink = $this->CI->permalink->getPermalink('location_id=' . $this->getId());
+		} else {
+			$this->clearLocal();
+		}
+	}
+
+	public function getLocal($localInfo)
+	{
+		$allLocations = $this->getLocations();
+		if (!isset($allLocations[$localInfo['location_id']]) OR !is_array($allLocations[$localInfo['location_id']]))
+			return null;
+
+		$location = $allLocations[$localInfo['location_id']];
+		return array_merge($location, [
+			'local_options' => $location['options'],
+			'local_info'    => $location,
+			'order_type'    => (isset($localInfo['order_type'])) ? $localInfo['order_type'] : self::DELIVERY,
+		]);
+	}
+
+	public function setWorkingSchedule()
+	{
+		$this->locationHours()->setWorkingSchedule();
+	}
+
+	public function setNearestArea()
+	{
+		$userPosition = $this->locationGeocode()->findUserPosition();
+
+		$nearestArea = $this->locationDelivery()->setUserPosition($userPosition)->findAndSetNearestArea();
+
+		if ($this->locationDelivery()->hasNearestAreaChanged($nearestArea))
+			$this->updateSessionData(['area' => $nearestArea]);
+	}
+
+	//
+	//	BOOT METHODS
+	//
+
+	public function setLocation($location_id, $update_session = TRUE)
+	{
+		if (is_numeric($location_id) AND $location_id != $this->location_id) {
+
+			$this->updateSessionData(['location_id' => $location_id], $update_session);
+
+			$this->initialize();
+		}
+	}
+
+	public function setDeliveryArea($area = [])
+	{
+		if (is_array($area) AND isset($area['boundary']) AND $area['boundary'] != 'outside') {
+			$this->updateSessionData($area);
+			$this->initialize();
+		}
+	}
+
+	public function setOrderType($orderType = null)
+	{
+		if (is_numeric($orderType))
+			$orderType = self::$orderTypes[$orderType];
+
+		if (!is_string($orderType))
+			$orderType = self::DELIVERY;
+
+		$this->order_type = $orderType;
+		$this->updateSessionData(['order_type' => $orderType]);
+	}
+
+	public function searchRestaurant($search_query = FALSE)
+	{
+		$userPosition = $this->locationGeocode()->setSearchQuery($search_query)->findUserPosition();
+
+		if (is_string($userPosition))
+			return $userPosition;
+
+		$nearestArea = $this->locationDelivery()->setUserPosition($userPosition)->findNearestArea();
+		if (empty($nearestArea->position) OR $nearestArea->position == 'outside')
+			return 'outside';
+
+		$this->updateSessionData([
+			'location_id' => $nearestArea->location_id,
+			'geocode'     => $userPosition,
+			'area'        => $nearestArea,
+		]);
+
+		$this->initialize();
+
+		return (array)$nearestArea;
+	}
+
+	public function updateSessionData($data, $update = TRUE)
+	{
+		$localInfo = $this->getSessionData();
+
+		$updateData = [];
+		foreach (['location_id', 'order_type', 'geocode', 'area'] as $item) {
+			if (isset($data[$item])) {
+				$updateData[$item] = $data[$item];
+			} else if (isset($localInfo[$item])) {
+				$updateData[$item] = $localInfo[$item];
+			}
+		}
+
+		$this->setSessionData($updateData, $update);
 	}
 
 	public function getSessionData()
@@ -83,61 +221,9 @@ class Location
 		return $this;
 	}
 
-	public function updateSessionData($data, $update = TRUE)
-	{
-		$localInfo = $this->getSessionData();
-
-		$updateData = [];
-		foreach (['location_id', 'geocode', 'search_query', 'area', 'order_type'] as $item) {
-			if ($item == 'search_query' AND isset($data[$item]) AND isset($localInfo['geocode'])) {
-				$localInfo['geocode']->search_query = $data[$item];
-				$updateData['geocode'] = $localInfo['geocode'];
-			} else if (isset($data[$item])) {
-				$updateData[$item] = $data[$item];
-			} else if (isset($localInfo[$item])) {
-				$updateData[$item] = $localInfo[$item];
-			}
-		}
-
-		$this->setSessionData($updateData, $update);
-	}
-
-	protected function validateProperties()
-	{
-		$local_info = $this->getSessionData();
-
-		if (is_single_location() OR (!isset($local_info['location_id']) AND $this->CI->config->item('location_order') != '1')) {
-			$local_info['location_id'] = $this->CI->config->item('default_location_id');
-			$this->updateSessionData($local_info);
-		}
-
-		foreach (['location_id', 'order_type', 'geocode', 'area_id'] as $item) {
-			if (isset($local_info[$item]) AND $this->$item != $local_info[$item])
-				return $local_info;
-		}
-
-		return FALSE;
-	}
-
-	protected function setProperties()
-	{
-		$local_info = $this->getSessionData();
-
-		if ($local = $this->getLocal($local_info)) {
-			foreach ($local as $key => $value) {
-				if (property_exists($this, $key))
-					$this->$key = $value;
-			}
-
-			if (!empty($this->CI->permalink) AND $this->CI->config->item('permalink') == '1')
-				$this->permalink = $this->CI->permalink->getPermalink('location_id=' . $this->getId());
-
-			$this->setWorkingSchedule();
-			$this->setNearestArea();
-		} else {
-			$this->clearLocal();
-		}
-	}
+	//
+	//	HELPER METHODS
+	//
 
 	public function currentDate()
 	{
@@ -265,6 +351,25 @@ class Location
 		return ($this->workingStatus('opening') === 'closed' AND $this->workingStatus('delivery') === 'closed' AND $this->workingStatus('collection') === 'closed');
 	}
 
+	public function orderType()
+	{
+		$orderTypes = array_flip(self::$orderTypes);
+		return $orderTypes[$this->order_type];
+	}
+
+	public function getOrderType()
+	{
+		return $this->order_type;
+	}
+
+	public function getOrderTypeName($order_type)
+	{
+		if (is_numeric($order_type) AND isset(self::$orderTypes[$order_type]))
+			$order_type = self::$orderTypes[$order_type];
+
+		return $order_type;
+	}
+
 	public function openingTime()
 	{
 		return $this->workingTime('opening', 'open');
@@ -273,73 +378,6 @@ class Location
 	public function closingTime()
 	{
 		return $this->workingTime('opening', 'close');
-	}
-
-	public function hasDelivery()
-	{
-		return (!empty($this->local_info['offer_delivery']) AND $this->local_info['offer_delivery'] == '1') ? TRUE : FALSE;
-	}
-
-	public function hasCollection()
-	{
-		return (!empty($this->local_info['offer_collection']) AND $this->local_info['offer_collection'] == '1') ? TRUE : FALSE;
-	}
-
-	public function hasOrderType($order_type = null)
-	{
-		return $this->getOrderType($order_type) == self::DELIVERY ? $this->hasDelivery() : $this->hasCollection();
-	}
-
-	public function hasSearchQuery()
-	{
-		return $this->locationGeocode()->hasSearchQuery();
-	}
-
-	public function orderType()
-	{
-		return $this->order_type;
-	}
-
-	public function searchQuery($formatted = FALSE)
-	{
-		$item = ($formatted) ? 'formatted_address' : 'search_query';
-		$userPosition = $this->locationGeocode()->findUserPosition();
-
-		return isset($userPosition->$item) ? $userPosition->$item : null;
-	}
-
-	//
-	//	DELIVERY
-	//
-
-	public function deliveryAreas()
-	{
-		return $this->locationDelivery()->getAreas();
-	}
-
-	public function deliveryCharge($cart_total = '0')
-	{
-		return $this->locationDelivery()->setCartTotal($cart_total)->getChargeDeliveryAmount();
-	}
-
-	public function minimumOrder($cart_total = '0')
-	{
-		return $this->locationDelivery()->setCartTotal($cart_total)->getChargeMinOrderTotal();
-	}
-
-	/**
-	 * @deprecated since v2.1.1 use Location_delivery->checkChargeCondition() method instead
-	 *
-	 * @return array|mixed|null
-	 */
-	public function deliveryCondition($sort_by = 'amounts', $cart_total = FALSE)
-	{
-		return $this->locationDelivery()->setCartTotal($cart_total)->checkChargeCondition($sort_by);
-	}
-
-	public function getAreaChargeSummary()
-	{
-		return $this->locationDelivery()->getNearestAreaChargeSummary();
 	}
 
 	public function getReservationInterval()
@@ -364,6 +402,21 @@ class Location
 		return (is_numeric($this->local_info['last_order_time']) AND $this->local_info['last_order_time'] > 0) ? mdate($timeFormat, strtotime($this->closingTime()) - ($this->local_info['last_order_time'] * 60)) : mdate($timeFormat, strtotime($this->closingTime()));
 	}
 
+	public function futureOrderDays($order_type = 'delivery')
+	{
+		return (!empty($this->local_options['future_order_days'][$order_type])) ? $this->local_options['future_order_days'][$order_type] : '5';
+	}
+
+	public function hasDelivery()
+	{
+		return (!empty($this->local_info['offer_delivery']) AND $this->local_info['offer_delivery'] == '1') ? TRUE : FALSE;
+	}
+
+	public function hasCollection()
+	{
+		return (!empty($this->local_info['offer_collection']) AND $this->local_info['offer_collection'] == '1') ? TRUE : FALSE;
+	}
+
 	public function hasFutureOrder()
 	{
 		$future_orders = (isset($this->local_options['future_orders'])) ? $this->local_options['future_orders'] : $this->CI->config->item('future_orders');
@@ -371,9 +424,34 @@ class Location
 		return ($this->CI->config->item('future_orders') == '1' AND $future_orders == '1') ? TRUE : FALSE;
 	}
 
-	public function futureOrderDays($order_type = 'delivery')
+	public function hasOrderType($order_type = null)
 	{
-		return (!empty($this->local_options['future_order_days'][$order_type])) ? $this->local_options['future_order_days'][$order_type] : '5';
+		return $this->getOrderTypeName($order_type) == self::DELIVERY ? $this->hasDelivery() : $this->hasCollection();
+	}
+
+	public function hasSearchQuery()
+	{
+		return $this->locationGeocode()->hasSearchQuery();
+	}
+
+	public function searchQuery($formatted = FALSE)
+	{
+		$item = ($formatted) ? 'formatted_address' : 'search_query';
+		$userPosition = $this->locationGeocode()->findUserPosition();
+
+		return isset($userPosition->$item) ? $userPosition->$item : null;
+	}
+
+	public function checkOrderType($order_type = '')
+	{
+		$order_type = $this->getOrderTypeName($order_type);
+		$order_type = !empty($order_type) ? $order_type : $this->getOrderType();
+
+		$has_future_orders = $this->hasFutureOrder();
+		$has_order_type = $this->hasOrderType($order_type);
+		$working_status = $this->workingStatus($order_type);
+
+		return !(!$has_order_type OR $working_status === 'closed' OR (!$has_future_orders AND $working_status === 'opening'));
 	}
 
 	public function payments($split = '')
@@ -410,18 +488,23 @@ class Location
 		return $this->CI->location_hours;
 	}
 
-	public function setWorkingSchedule()
+	public function workingType($hourType = '')
 	{
-		$this->locationHours()->setWorkingSchedule();
-	}
-
-	public function workingType($type = '')
-	{
+		$working_types = [];
 		foreach (['opening', 'delivery', 'collection'] as $value) {
 			$working_types[$value] = (empty($this->local_options['opening_hours']["{$value}_type"])) ? '0' : $this->local_options['opening_hours']["{$value}_type"];
 		}
 
 		return (!empty($type) AND isset($working_types[$type])) ? $working_types[$type] : $working_types;
+	}
+
+	public function workingSchedule($type = 'opening')
+	{
+		$workingSchedule = $this->locationHours()->getWorkingSchedule();
+		if (isset($workingSchedule[$type]))
+			$workingSchedule = $workingSchedule[$type];
+
+		return $workingSchedule;
 	}
 
 	public function workingTime($type = 'opening', $hour = 'open', $format = TRUE)
@@ -456,40 +539,15 @@ class Location
 		return $this->locationHours()->setWorkingType($orderType)->getOrderSchedule($startDate, $endDate);
 	}
 
-	public function setLocation($location_id, $update_session = TRUE)
+	public function checkOrderTime($time, $type = self::DELIVERY)
 	{
-		if (is_numeric($location_id) AND $location_id != $this->location_id) {
+		$status = $this->workingStatus($type, $time);
 
-			$this->updateSessionData(['location_id' => $location_id], $update_session);
-
-			$this->initialize();
-		}
-	}
-
-	public function setDeliveryArea($area = [])
-	{
-		if (is_array($area) AND isset($area['boundary']) AND $area['boundary'] != 'outside') {
-			$this->updateSessionData($area);
-			$this->initialize();
-		}
-	}
-
-	public function setOrderType($order_type)
-	{
-		if (is_numeric($order_type)) {
-			$this->updateSessionData(['order_type' => $order_type]);
-		}
-	}
-
-	public function getOrderType($order_type = null)
-	{
-		$order_type = empty($order_type) ? $this->order_type : $order_type;
-
-		return $order_type == '1' ? self::DELIVERY : self::COLLECTION;
+		return ($status === 'open' OR ($this->hasFutureOrder() AND $status !== 'closed'));
 	}
 
 	//
-	//	SEARCH AREAS
+	//	DELIVERY & GEOCODE
 	//
 
 	/**
@@ -500,72 +558,32 @@ class Location
 		return $this->CI->location_delivery;
 	}
 
-	public function setNearestArea($search_query = null)
-	{
-		$userPosition = $this->locationGeocode()->setSearchQuery($search_query)->findUserPosition();
-
-		$nearestArea = $this->locationDelivery()->setUserPosition($userPosition)->findAndSetNearestArea();
-
-		$sessionArea = $this->locationDelivery()->getSessionNearestArea();
-		if (!$this->locationDelivery()->validateSessionNearestArea($sessionArea, $userPosition))
-			$this->updateSessionData(['area' => $nearestArea]);
-	}
-
-	public function searchRestaurant($search_query = FALSE)
-	{
-		$userPosition = $this->locationGeocode()->setSearchQuery($search_query)->findUserPosition();
-
-		if (is_string($userPosition))
-			return $userPosition;
-
-		$nearestArea = $this->locationDelivery()->setUserPosition($userPosition)->findNearestArea();
-		if (empty($nearestArea->position) OR $nearestArea->position == 'outside')
-			return 'outside';
-
-		$this->updateSessionData([
-			'location_id' => $nearestArea->location_id,
-			'geocode'     => $userPosition,
-			'area'        => $nearestArea,
-		]);
-
-		$this->initialize();
-
-		return (array)$nearestArea;
-	}
-
-	public function checkOrderTime($time, $type = self::DELIVERY)
-	{
-		$status = $this->workingStatus($type, $time);
-
-		return ($status === 'open' OR ($this->hasFutureOrder() AND $status !== 'closed'));
-	}
-
-	public function checkOrderType($order_type = '')
-	{
-		$order_type = $this->getOrderType($order_type);
-
-		$has_future_orders = $this->hasFutureOrder();
-		$has_order_type = $this->hasOrderType($order_type);
-		$working_status = $this->workingStatus($order_type);
-
-		return !(!$has_order_type OR $working_status === 'closed' OR (!$has_future_orders AND $working_status === 'opening'));
-	}
-
-	public function checkMinimumOrder($cart_total)
-	{
-		return ($cart_total >= $this->minimumOrder($cart_total));
-	}
-
-	//
-	//	GEOCODE
-	//
-
 	/**
 	 * @return Location_geocode
 	 */
 	public function locationGeocode()
 	{
 		return $this->CI->location_geocode;
+	}
+
+	public function deliveryAreas()
+	{
+		return $this->locationDelivery()->getAreas();
+	}
+
+	public function deliveryCharge($cart_total = '0')
+	{
+		return $this->locationDelivery()->setCartTotal($cart_total)->getChargeDeliveryAmount();
+	}
+
+	public function minimumOrder($cart_total = '0')
+	{
+		return $this->locationDelivery()->setCartTotal($cart_total)->getChargeMinOrderTotal();
+	}
+
+	public function getAreaChargeSummary()
+	{
+		return $this->locationDelivery()->getNearestAreaChargeSummary();
 	}
 
 	public function checkDistance($decimalPoint = null)
@@ -582,7 +600,22 @@ class Location
 	{
 		$currentPosition = $this->locationGeocode()->setSearchQuery($search_query)->findUserPosition();
 
-		return (array) $this->locationDelivery()->setUserPosition($currentPosition)->checkCoverage();
+		return (array)$this->locationDelivery()->setUserPosition($currentPosition)->checkCoverage();
+	}
+
+	public function checkMinimumOrder($cart_total)
+	{
+		return ($cart_total >= $this->minimumOrder($cart_total));
+	}
+
+	/**
+	 * @deprecated since v2.1.1 use Location_delivery->checkChargeCondition() method instead
+	 *
+	 * @return array|mixed|null
+	 */
+	public function deliveryCondition($sort_by = 'amounts', $cart_total = FALSE)
+	{
+		return $this->locationDelivery()->setCartTotal($cart_total)->checkChargeCondition($sort_by);
 	}
 
 	/**
@@ -590,7 +623,7 @@ class Location
 	 *
 	 * @param null $currentPosition
 	 *
-	 * @return array|null
+	 * @return object|null
 	 */
 	public function checkDeliveryArea($currentPosition = null)
 	{
@@ -635,24 +668,6 @@ class Location
 		return $this->locationGeocode()->setSearchQuery($search_query)->findUserPosition();
 	}
 
-	public function getLocal($localInfo)
-	{
-		if (!isset($this->getLocations()[$localInfo['location_id']])
-			OR !is_array($this->getLocations()[$localInfo['location_id']])
-		)
-			return null;
-
-		$location = $this->getLocations()[$localInfo['location_id']];
-		$geocode = !empty($localInfo['geocode']) ? $localInfo['geocode'] : null;
-
-		return array_merge($location, [
-			'local_options' => $location['options'],
-			'local_info'    => $location,
-			'geocode'       => $geocode,
-			'order_type'    => (isset($localInfo['order_type'])) ? $localInfo['order_type'] : '1',
-		]);
-	}
-
 	public function getLocations()
 	{
 		if (empty($this->locationModels)) {
@@ -686,7 +701,6 @@ class Location
 		$this->location_telephone = '';
 		$this->local_options = [];
 		$this->local_info = [];
-		$this->geocode = [];
 		$this->order_type = '';
 		$this->permalink = '';
 

@@ -226,7 +226,7 @@ class Location_hours
 
 	public function getWorkingType()
 	{
-		return is_null($this->workingType) ? 'delivery' : $this->workingType;
+		return is_null($this->workingType) ? 'opening' : $this->workingType;
 	}
 
 	public function setWorkingType($workingType)
