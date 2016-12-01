@@ -11,7 +11,7 @@ body {
 	font-weight: 400;
 	margin-bottom: 0;
 	font-size: 1.5em;
-	color: #3C3C3C;
+	color: #4C4C4C;
 }
 .body-login {
 	background-color: #C5D2E0;
@@ -366,7 +366,7 @@ h1.block-heading, h2.block-heading, h3.block-heading, h4.block-heading, h5.block
 .navbar-top-links .dropdown-menu .menu > .active > a:focus,
 .navbar-top-links .dropdown-menu .menu > .active > a:hover {
 	background-color: #E8EDF3;
-	color: #3C3C3C;
+	color: #4C4C4C;
 }
 .dropdown-menu .menu-body li a {
 	color: #337AB7;
@@ -527,7 +527,7 @@ h1.block-heading, h2.block-heading, h3.block-heading, h4.block-heading, h5.block
 }
 .navbar-top-links .dropdown-menu .menu-body {
 	background-color: #FFFFFF;
-	color: #3C3C3C;
+	color: #4C4C4C;
 	margin: -1px -1px;
 	border-left: 1px solid #DFE6EE;
 	border-right: 1px solid #DFE6EE;
@@ -1079,7 +1079,7 @@ textarea.form-control {
 }
 legend {
 	font-size: 18px;
-	color: #3C3C3C;
+	color: #4C4C4C;
 }
 /** NAV-TABS **/
 .nav-tabs {
@@ -1109,13 +1109,13 @@ legend {
 .nav-tabs > li.active > a:focus {
 	background-color: #FFFFFF;
 	border: 0 none;
-	color: #3C3C3C;
+	color: #4C4C4C;
 }
 .nav-tabs > li > a:focus, .nav-tabs > li > a:hover {
 	background-color: transparent;
 	border-width: 0;
 	text-decoration: none;
-	color: #3C3C3C;
+	color: #4C4C4C;
 }
 @media (max-width: 992px) {
 	.nav-tabs {
@@ -1438,7 +1438,7 @@ a:focus {
 .panel-title {
 	font-size: 16px;
 	line-height: 24px;
-	color: #3C3C3C;
+	color: #4C4C4C;
 }
 .panel-footer {
 	background-color: #FFFFFF;
@@ -1730,7 +1730,7 @@ table {
 .table > thead > tr > th {
 	border-bottom: 2px solid #ECF0F5;
 	font-weight: 400;
-	color: #3C3C3C;
+	color: #4C4C4C;
 }
 .table-striped > tbody > tr:nth-of-type(2n+1) {
 	background-color: transparent;
@@ -1859,7 +1859,7 @@ body.dragging, body.dragging * {
 }
 /** SORTER **/
 .sort, .sort:hover, .sort:focus {
-	color: #3C3C3C;
+	color: #4C4C4C;
 	text-decoration: none;
 	display: inline-block;
 	min-width: 40px;
