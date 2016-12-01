@@ -15,7 +15,7 @@ body {
 }
 body {
 	font-family: 'Titillium Web', sans-serif;
-	font-size: 1.666em;
+	font-size: 1.566em;
 	background-color: #F5F5F5;
 	padding-bottom: 200px;
 }
@@ -154,6 +154,9 @@ color: #ed561a;
 a:hover, a:focus {
 color: #dc4b11;
 }*/
+label {
+	font-weight: 600;
+}
 .center-block {
 	float: none;
 }
@@ -389,7 +392,12 @@ button.btn-dropdown {
 /*** Buttons ***/
 .btn {
 	border-radius: 3px;
-	font-size: 17px;
+	font-size: 16px;
+	font-weight: 600;
+}
+.btn span,
+.btn-group .btn {
+	font-weight: 400;
 }
 .btn-group {
 	width: 100%;
@@ -397,7 +405,6 @@ button.btn-dropdown {
 .btn-default {
 	background-color: #E7E7E7;
 	border-color: #E7E7E7;
-	font-weight: 400;
 }
 .btn-default.active,
 .btn-default.focus,
@@ -759,6 +766,7 @@ a.list-group-item.unread {
 }
 .menu-desc {
 	line-height: 14px;
+	font-size: 90%;
 }
 .menu-price {
 	vertical-align: middle;
@@ -776,11 +784,12 @@ a.list-group-item.unread {
 	color: #FFF;
 	padding: 3px 8px;
 }
-.menu-category > p {
-	font-size: 16px;
-}
+.menu-category > p,
 .menu-items {
 	font-size: 16px;
+}
+.menu-thumb .img-thumbnail {
+	margin-top: 5px;
 }
 .menu-container .menu-toggle {
 	display: block;
@@ -1220,10 +1229,6 @@ body .bootstrap-timepicker-widget table td a i {
 		font-size: 18px;
 		font-weight: 600;
 		text-transform: none;
-	}
-	.menu-price,
-	.menu-name {
-		font-size: 14px;
 	}
 }
 @media screen and (max-width: 990px) {

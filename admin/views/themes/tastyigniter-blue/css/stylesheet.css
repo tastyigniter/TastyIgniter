@@ -6,7 +6,7 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 }
 body {
-	background-color: #F6F8FA;
+	background-color: #E8ECF0;
 	font-family: 'Roboto', Arial, sans-serif;
 	font-weight: 400;
 	margin-bottom: 0;
@@ -132,8 +132,8 @@ h1.block-heading, h2.block-heading, h3.block-heading, h4.block-heading, h5.block
 #page-wrapper {
 	padding: 0 15px 15px;
 	min-height: 568px;
-	background-color: #F6F8FA;
-	border-bottom: 1px solid #F6F8FA;
+	background-color: #E8ECF0;
+	border-bottom: 1px solid #E8ECF0;
 }
 @media (min-width: 768px) {
 	#page-wrapper {
@@ -240,10 +240,10 @@ h1.block-heading, h2.block-heading, h3.block-heading, h4.block-heading, h5.block
 .navbar-top .navbar-heading {
 	display: inline-block;
 	margin: 0px;
+	font-weight: 400;
 	font-size: 28px;
 	padding: 0 20px;
 	line-height: 60px;
-	font-weight: 400;
 }
 .navbar-top .navbar-heading small,
 .navbar-top .navbar-heading .small {
@@ -284,7 +284,7 @@ h1.block-heading, h2.block-heading, h3.block-heading, h4.block-heading, h5.block
 	background-color: rgba(0, 0, 0, 0.1);
 }
 .navbar-top-links {
-	border-bottom: 1px solid #F6F8FA;
+	border-bottom: 1px solid #E8ECF0;
 }
 @media (min-width: 768px) {
 	.navbar-top-links {
@@ -388,13 +388,12 @@ h1.block-heading, h2.block-heading, h3.block-heading, h4.block-heading, h5.block
 	clear: both;
 	color: #333333;
 	display: block;
-	font-weight: 400;
 	line-height: 1.42857;
 	padding: 5px 15px;
 	white-space: nowrap;
 }
 .navbar-top-links .dropdown-menu > .menu-header {
-	border-bottom: 1px solid #F6F8FA;
+	border-bottom: 1px solid #E8ECF0;
 	padding: 6px 15px;
 	position: relative;
 }
@@ -899,7 +898,6 @@ textarea.form-control {
 	background-color: #ECF0F5;
 	border: 1px solid #D2DCE7;
 	border-radius: 3px;
-	font-weight: 400;
 }
 .input-group-more {
 	background-color: #EEEEEE;
@@ -1086,8 +1084,8 @@ legend {
 /** NAV-TABS **/
 .nav-tabs {
 	background-color: transparent;
-	border-radius: 4px 4px 0 0;
-	border-bottom: 2px solid #F6F8FA;
+	border-radius: 3px 3px 0 0;
+	border-bottom: 0 none;
 	padding: 0;
 	margin-top: 0;
 }
@@ -1112,7 +1110,6 @@ legend {
 	background-color: #FFFFFF;
 	border: 0 none;
 	color: #3C3C3C;
-	font-weight: 400;
 }
 .nav-tabs > li > a:focus, .nav-tabs > li > a:hover {
 	background-color: transparent;
@@ -1142,6 +1139,7 @@ legend {
 }
 .tab-content {
 	background-color: #FFFFFF;
+	border-radius: 3px 3px 0 0;
 	padding: 20px 15px;
 }
 .tab-content > div {
@@ -1398,6 +1396,7 @@ a:focus {
 }
 .dropdown-menu > li > a {
 	cursor: pointer;
+	padding: 8px 20px;
 }
 .dropdown-menu > li > a:focus, .dropdown-menu > li > a:hover,
 .dropdown-menu .menu > li > a:focus, .dropdown-menu .menu > li > a:hover {
@@ -1440,7 +1439,6 @@ a:focus {
 	font-size: 16px;
 	line-height: 24px;
 	color: #3C3C3C;
-	font-weight: 400;
 }
 .panel-footer {
 	background-color: #FFFFFF;
@@ -1962,14 +1960,8 @@ table td .extension-icon {
 	background-color: #FFFFFF;
 	padding: 15px;
 }
-.message-list .message {
-	font-weight: 400;
-}
 .message-list .message-unread .message-subject {
-	font-weight: bold;
-}
-.message-list .message-read .message-subject {
-	font-weight: 400;
+	font-weight: 500;
 }
 .message-controls .checkbox {
 	display: inline-block;
@@ -2076,8 +2068,8 @@ table td .extension-icon {
 }
 /** FOOTER **/
 #footer {
-	background-color: #F6F8FA;
-	border-left: 1px solid #F6F8FA;
+	background-color: #E8ECF0;
+	border-left: 1px solid #E8ECF0;
 	font-size: 11px;
 	padding: 5px 20px;
 }
@@ -2221,7 +2213,7 @@ table td .extension-icon {
 }
 .legends .no_booking {
 	background-color: #FFFFFF;
-	border: 1px solid #F6F8FA;
+	border: 1px solid #E8ECF0;
 }
 .legends .booked {
 	background: #FFA59A;
@@ -2369,7 +2361,7 @@ table td .extension-icon {
 	padding: 5px 15px;
 }
 .supported-var a > span {
-	border-radius: 4px;
+	border-radius: 3px;
 	font-weight: normal;
 	padding: 4px 0px;
 	width: 30%;
@@ -2853,7 +2845,7 @@ body .datepicker-dropdown.datepicker-orient-bottom:after {
 .timeline > .time-label {
 	margin-bottom: 25px;
 	margin-left: 60px;
-	background-color: #F6F8FA;
+	background-color: #E8ECF0;
 }
 .timeline > .time-label::after {
 	background-color: #337AB7;
@@ -2898,7 +2890,7 @@ body .datepicker-dropdown.datepicker-orient-bottom:after {
 	height: 15px;
 	z-index: 100;
 	border-radius: 50%;
-	border: 3px solid #F6F8FA;
+	border: 3px solid #E8ECF0;
 	margin-top: 10px;
 }
 .timeline-item .timeline-icon .fa {
@@ -2930,11 +2922,7 @@ body .datepicker-dropdown.datepicker-orient-bottom:after {
 }
 .timeline .timeline-header {
 	font-size: 13px;
-	font-weight: 400;
 	margin: 0;
-}
-.timeline .timeline-header b {
-	font-weight: 400;
 }
 .timeline-body > p,
 .timeline-body > ul {

@@ -43,6 +43,7 @@ padding: 10px 15px;
 }
 .cart-alert-wrap button.close {
 right: 5px;
+position: relative;
 }
 .cart-alert-wrap .list-group-alert p {
 padding: 10px 15px;
@@ -159,7 +160,6 @@ margin-bottom: 10px;
 
 .cart-total .table td {
 color: #666;
-font-size: 14px;
 padding: 3px;
 border-color: #f7f7f7;
 }

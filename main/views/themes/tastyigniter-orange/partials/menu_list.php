@@ -29,13 +29,13 @@
 											</div>
 										<?php } ?>
 
-										<div class="menu-content <?php echo ($show_menu_images == '1' AND !empty($menu['menu_photo'])) ? 'col-xs-6 col-sm-6' : 'col-xs-8'; ?> wrap-none wrap-right">
+										<div class="menu-content <?php echo ($show_menu_images == '1' AND !empty($menu['menu_photo'])) ? 'col-xs-7 col-sm-7' : 'col-xs-9'; ?> wrap-none wrap-right">
 											<span class="menu-name"><b><?php echo character_limiter($menu['menu_name'], 80); ?></b></span>
 											<span class="menu-desc small">
 												<?php echo character_limiter($menu['menu_description'], 120); ?>
 											</span>
 										</div>
-										<div class="menu-right col-xs-4 wrap-none">
+										<div class="menu-right col-xs-3 wrap-none">
 											<span class="menu-price"><?php echo $menu['menu_price']; ?></span>
 											<span class="menu-button">
 												<?php if ($menu['mealtime_status'] == '1' AND empty($menu['is_mealtime'])) { ?>
