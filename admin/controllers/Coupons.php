@@ -118,9 +118,9 @@ class Coupons extends Admin_Controller
 		$coupon_histories = $couponModel->getCouponHistories($coupon_id);
 		foreach ($coupon_histories as $coupon_history) {
 			$data['coupon_histories'][] = array_merge($coupon_history, [
-				'customer_name' => $coupon_history['first_name'] . ' ' . $coupon_history['last_name'],
-				'date_used'     => mdate('%d %M %y', strtotime($coupon_history['date_used'])),
-				'view'          => $this->pageUrl('orders/edit?id=' . $coupon_history['order_id']),
+				'customer_name'  => $coupon_history['first_name'] . ' ' . $coupon_history['last_name'],
+				'date_last_used' => mdate('%d %M %y', strtotime($coupon_history['date_last_used'])),
+				'view'           => $this->pageUrl('orders/edit?id=' . $coupon_history['order_id']),
 			]);
 		}
 

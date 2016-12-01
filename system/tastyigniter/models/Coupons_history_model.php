@@ -39,6 +39,10 @@ class Coupons_history_model extends Model
 		'order'    => 'Orders_model',
 	];
 
+	public $timestamps = TRUE;
+
+	const CREATED_AT = 'date_used';
+
 	public function order()
 	{
 		$this->belongsTo('Orders_model');

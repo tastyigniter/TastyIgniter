@@ -582,7 +582,7 @@ class Location
 	{
 		$currentPosition = $this->locationGeocode()->setSearchQuery($search_query)->findUserPosition();
 
-		return $this->locationDelivery()->setUserPosition($currentPosition)->checkCoverage();
+		return (array) $this->locationDelivery()->setUserPosition($currentPosition)->checkCoverage();
 	}
 
 	/**

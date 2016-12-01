@@ -150,8 +150,12 @@ class Coupons_model extends Model
 	 */
 	public function getCouponHistories()
 	{
+		$couponHistoryTable = $this->tablePrefix('coupons_history');
+
 		$this->load->model('Coupons_history_model');
 		$couponHistoryModel = $this->Coupons_history_model->join('orders', 'orders.order_id', '=', 'coupons_history.order_id', 'left');
+		$couponHistoryModel->selectRaw("*, COUNT({$couponHistoryTable}.customer_id) as total_redemption, SUM(amount) as total_amount, ".
+			"MAX({$couponHistoryTable}.date_used) as date_last_used");
 		$couponHistoryModel->groupBy('customers.customer_id');
 		$couponHistoryModel->join('customers', 'customers.customer_id', '=', 'coupons_history.customer_id', 'left');
 		$couponHistoryModel->where('coupon_id', $this->getKey());

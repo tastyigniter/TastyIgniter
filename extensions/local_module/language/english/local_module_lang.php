@@ -55,7 +55,7 @@ $lang['label_status'] 			            = 'Status';
 $lang['label_search_query'] 			    = 'Enter your address/postcode to order';
 
 $lang['help_location_search_mode'] 		    = 'Set whether to display the local search box or view menu button on the storefront. If no, the view menu button is linked to the selected location below.';
-$lang['help_use_location'] 		            = 'You can choose which location the view menu button will be linked to or use the default location. Disabling <b>Require Location To Order</b> in <i>System -> Settings -> Order</i> is required';
+$lang['help_use_location'] 		            = 'You can choose which location the view menu button will be linked to or use the default location. Disabling <b>Require Location To Order</b> in <i>System -> Settings -> Order Tab</i> is required';
 
 $lang['alert_unknown_error'] 			    = '<p class="alert-danger">Error occurred, please check and try again.</p>';
 $lang['alert_no_search_setting'] 		    = '<p class="alert-danger">Location Search By setting has not been specified.</p>';

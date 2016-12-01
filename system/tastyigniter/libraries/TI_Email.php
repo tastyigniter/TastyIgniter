@@ -34,7 +34,7 @@ class TI_Email extends CI_Email
 	 *
 	 * @return    CI_Email
 	 */
-	public function initialize($config = [])
+	public function initialize(array $config = [])
 	{
 		$this->CI =& get_instance();
 

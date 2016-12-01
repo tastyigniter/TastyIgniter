@@ -16,6 +16,8 @@ $lang['text_fixed_amount'] 		        = 'Fixed Amount';
 $lang['text_percentage'] 		        = 'Percentage';
 $lang['text_24_hour'] 		            = '24 Hours';
 $lang['text_custom'] 		            = 'custom';
+$lang['text_redeemed'] 		            = 'Redeemed';
+$lang['text_not_redeemed'] 		        = 'Not Yet Redeemed';
 $lang['text_leading_zeros'] 		    = '.00';
 
 $lang['column_name'] 		            = 'Name';
@@ -26,8 +28,9 @@ $lang['column_validity'] 		        = 'Validity';
 $lang['column_status'] 		            = 'Status';
 $lang['column_order_id'] 		        = 'Order ID';
 $lang['column_customer'] 		        = 'Customer';
-$lang['column_amount'] 		            = 'Amount';
-$lang['column_date_used'] 		        = 'Date Used';
+$lang['column_amount'] 		            = 'Total Amount';
+$lang['column_date_used'] 		        = 'Date Last Used';
+$lang['column_count'] 		        	= 'Redemption Count';
 
 $lang['label_name'] 		            = 'Coupon Name';
 $lang['label_code'] 		            = 'Code';

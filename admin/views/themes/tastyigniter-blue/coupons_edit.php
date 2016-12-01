@@ -268,21 +268,21 @@
                         <table height="auto" class="table table-striped table-border" id="history">
                             <thead>
                                 <tr>
-                                    <th class=""><?php echo lang('column_order_id'); ?></th>
-                                    <th width="55%"><?php echo lang('column_customer'); ?></th>
+                                    <th width="45%"><?php echo lang('column_customer'); ?></th>
                                     <th class="text-center"><?php echo lang('column_amount'); ?></th>
-                                    <th class="text-right"><?php echo lang('column_date_used'); ?></th>
+									<th class="text-center"><?php echo lang('column_count'); ?></th>
+									<th class="text-right"><?php echo lang('column_date_used'); ?></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php if ($coupon_histories) { ?>
                                 <?php foreach ($coupon_histories as $history) { ?>
                                 <tr>
-                                    <td class=""><a href="<?php echo $history['view']; ?>"><?php echo $history['order_id']; ?></a></td>
                                     <td><?php echo $history['customer_name']; ?></td>
-                                    <td class="text-center"><?php echo $history['amount']; ?></td>
-                                    <td class="text-right"><?php echo $history['date_used']; ?></td>
-                                </tr>
+                                    <td class="text-center"><?php echo currency_format($history['total_amount']); ?></td>
+                                    <td class="text-center"><?php echo $history['total_redemption']; ?></td>
+									<td class="text-right"><?php echo $history['date_last_used']; ?></td>
+								</tr>
                                 <?php } ?>
                                 <?php } else { ?>
                                 <tr>
