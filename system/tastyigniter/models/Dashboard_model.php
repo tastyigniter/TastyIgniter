@@ -39,18 +39,6 @@ class Dashboard_model extends Model
 		$this->load->model('Reviews_model');
 	}
 
-	public function scopeSelectSumOrderTotal($query, $alias = null)
-	{
-		return $query->selectRaw("SUM(order_total) as {$alias}");
-	}
-
-	public function groupByQuery($query, $groupBy)
-	{
-		$query->selectRaw("{$groupBy} as gBy")->groupBy('gBy');
-
-		return $query;
-	}
-
 	/**
 	 * Return the statistics data
 	 *
@@ -65,24 +53,24 @@ class Dashboard_model extends Model
 		if ($stat_range === '') return $results;
 
 		if ($stat_range === 'today') {
-			$range_query = ['DATE(date_added)', date('Y-m-d')];
+			$range_query = ['DATE(date_added) = ?', date('Y-m-d')];
 		} else if ($stat_range === 'week') {
-			$range_query = ['WEEK(date_added)', date('W')];
+			$range_query = ['WEEK(date_added) = ?', date('W')];
 		} else if ($stat_range === 'month') {
-			$range_query = ['MONTH(date_added)', date('m')];
+			$range_query = ['MONTH(date_added) = ?', date('m')];
 		} else if ($stat_range === 'year') {
-			$range_query = ['YEAR(date_added)', date('Y')];
+			$range_query = ['YEAR(date_added) = ?', date('Y')];
 		}
 
-//		$results['sales'] = $this->getTotalSales($range_query);
-//		$results['lost_sales'] = $this->getTotalLostSales($range_query);
+		$results['sales'] = $this->getTotalSales($range_query);
+		$results['lost_sales'] = $this->getTotalLostSales($range_query);
 		$results['customers'] = $this->getTotalCustomers($range_query);
 		$results['orders'] = $this->getTotalOrders($range_query);
-//		$results['orders_completed'] = $this->getTotalOrdersCompleted($range_query);
-//		$results['delivery_orders'] = $this->getTotalDeliveryOrders($range_query);
-//		$results['collection_orders'] = $this->getTotalCollectionOrders($range_query);
-//		$results['tables_reserved'] = $this->getTotalTablesReserved($range_query);
-//		$results['cash_payments'] = $this->getTotalCashPayments($range_query);
+		$results['orders_completed'] = $this->getTotalOrdersCompleted($range_query);
+		$results['delivery_orders'] = $this->getTotalDeliveryOrders($range_query);
+		$results['collection_orders'] = $this->getTotalCollectionOrders($range_query);
+		$results['tables_reserved'] = $this->getTotalTablesReserved($range_query);
+		$results['cash_payments'] = $this->getTotalCashPayments($range_query);
 
 		return $results;
 	}
@@ -109,11 +97,11 @@ class Dashboard_model extends Model
 		$total_sales = 0;
 
 		if (is_array($range_query) AND !empty($range_query)) {
-			$query = $this->Orders_model->where('status_id', '>', '0')->selectRaw("SUM(order_total) as total_sales")
+			$row = $this->Orders_model->where('status_id', '>', '0')->selectRaw("SUM(order_total) as total_sales")
 										->whereRaw($range_query[0], $range_query[1])->firstAsArray();
 
-			if (!is_null($query)) {
-				$total_sales = $query['total_sales'];
+			if (!empty($row)) {
+				$total_sales = $row['total_sales'];
 			}
 		}
 
@@ -132,12 +120,12 @@ class Dashboard_model extends Model
 		$total_lost_sales = 0;
 
 		if (is_array($range_query) AND !empty($range_query)) {
-			$row = $this->Orders_model->selectRaw("SUM(order_total) as total_lost_sales")->where(function ($query) {
+			$row = $this->Orders_model->query()->selectRaw("SUM(order_total) as total_lost_sales")->where(function ($query) {
 				$query->where('status_id', '<=', '0');
 				$query->orWhere('status_id', $this->config->item('canceled_order_status'));
-			})->firstAsArray();
+			})->whereRaw($range_query[0], $range_query[1])->firstAsArray();
 
-			if (!is_null($row)) {
+			if (!empty($row)) {
 				$total_lost_sales = $row['total_lost_sales'];
 			}
 		}
@@ -157,9 +145,10 @@ class Dashboard_model extends Model
 		$cash_payments = 0;
 
 		if (is_array($range_query) AND !empty($range_query)) {
-			$row = $this->Orders_model->where('status_id', '>', '0')->selectSumOrderTotal('cash_payments')->where('payment', 'cod')->firstAsArray();
+			$row = $this->Orders_model->where('status_id', '>', '0')
+				->selectRaw("SUM(order_total) as cash_payments")->where('payment', 'cod')->firstAsArray();
 
-			if (!is_null($row)) {
+			if (!empty($row)) {
 				$cash_payments = $row['cash_payments'];
 			}
 		}
