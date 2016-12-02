@@ -17,15 +17,15 @@ $lang['text_php_version'] 				= 'is version %s supported?';
 $lang['text_php_version'] 				= 'is version %s supported?';
 $lang['text_mysqli_installed'] 			= 'is MySQLi installed?';
 $lang['text_curl_installed'] 			= 'is cURL installed?';
-$lang['text_gd_installed'] 				= 'is GD/GD2 library installed?';
+$lang['text_gd_installed'] 				= 'is GD library installed?';
 $lang['text_register_globals_enabled'] 	= 'is Register Globals turned off?';
 $lang['text_magic_quotes_enabled'] 	    = 'is Magic Quotes GPC turned off?';
 $lang['text_file_uploads_enabled'] 		= 'is File Uploads turned on?';
 $lang['text_is_file_writable'] 		    = 'is file writable?';
 
 $lang['text_license_agreed'] 		    = 'By proceeding further, you will be deemed to have accepted the License agreement.';
-$lang['text_login_to_admin'] 		    = 'Login to your Admin Dashboard';
-$lang['text_goto_storefront'] 		    = 'Go to your Online Restaurant';
+$lang['text_login_to_admin'] 		    = 'Login to Your Admin Dashboard';
+$lang['text_goto_storefront'] 		    = 'View Your Online Restaurant';
 $lang['text_next_step'] 		        = 'Next Step:';
 $lang['text_restaurant_details'] 	    = 'Restaurant settings';
 $lang['text_admin_details'] 		    = 'Administration settings';
@@ -36,6 +36,11 @@ $lang['text_tastyigniter_home'] 	    = 'TastyIgniter Homepage';
 $lang['text_documentation'] 		    = 'Documentation';
 $lang['text_community_forums'] 		    = 'Community Forums';
 $lang['text_feature_request'] 			= 'Feature Requests';
+
+$lang['text_single_location'] 			= 'Single Location';
+$lang['text_multi_location'] 			= 'Multiple Locations';
+$lang['text_no'] 		           		= 'NO';
+$lang['text_yes'] 		           		= 'YES';
 
 $lang['label_php_version'] 				= 'PHP Version (required %s+):';
 $lang['label_register_globals'] 	    = 'Register Globals:';
@@ -51,11 +56,12 @@ $lang['label_username'] 			    = 'Username:';
 $lang['label_password'] 			    = 'Password:';
 $lang['label_prefix'] 				    = 'Table Prefix:';
 
+$lang['label_site_location_mode'] 		= 'Restaurant mode:';
 $lang['label_site_name'] 			    = 'Restaurant name:';
 $lang['label_site_email'] 			    = 'Restaurant email:';
-$lang['label_staff_name'] 			    = 'Administrator\'s name:';
-$lang['label_admin_username'] 	        = 'Administrator\'s username:';
-$lang['label_admin_password'] 	        = 'Administrator\'s password:';
+$lang['label_staff_name'] 			    = 'Full name:';
+$lang['label_admin_username'] 	        = 'Username:';
+$lang['label_admin_password'] 	        = 'Password:';
 $lang['label_confirm_password'] 	    = 'Confirm password:';
 $lang['label_demo_data'] 			    = 'Include demo data:';
 
@@ -64,6 +70,7 @@ $lang['help_hostname'] 				    = 'Enter the database host name.';
 $lang['help_username'] 				    = 'Enter the database username.';
 $lang['help_password'] 				    = 'Enter the database password. Make sure to use a strong password.';
 $lang['help_dbprefix'] 				    = 'The database table prefix. Do not change unless you have to.';
+$lang['help_site_location_mode'] 		= 'You can change this setting later under System -> Setting -> Restaurant Tab';
 
 $lang['button_continue'] 				= 'Continue';
 $lang['button_back'] 				    = 'Back';
