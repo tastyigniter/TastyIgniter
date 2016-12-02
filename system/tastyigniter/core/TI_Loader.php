@@ -240,6 +240,8 @@ class TI_Loader extends MX_Loader
 	}
 
 	/**
+	 * @TODO: clean up method maybe use spl_autoload to load base Model
+	 *
 	 * @param $model
 	 * @param $name
 	 * @param $db_conn
@@ -318,7 +320,11 @@ class TI_Loader extends MX_Loader
 			}
 		}
 
-		require_once(IGNITEPATH . 'database' . DIRECTORY_SEPARATOR . 'Model.php');
+		if (class_exists('Illuminate\Database\Eloquent\Model', FALSE)) {
+			if (!class_exists('TastyIgniter\Database\Model', FALSE)) {
+				require_once(IGNITEPATH . 'database' . DIRECTORY_SEPARATOR . 'Model.php');
+			}
+		}
 
 		$model = ucfirst($model);
 		if (!class_exists($model, FALSE)) {
