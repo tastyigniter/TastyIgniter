@@ -714,13 +714,17 @@ h1.block-heading, h2.block-heading, h3.block-heading, h4.block-heading, h5.block
 	border-width: 0px 0px 4px 0px;
 	outline: 0 none;
 	font-weight: 500;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+.page-header .btn-default:first-child {
+	margin-left: 0;
+}
+.page-header .btn-default:last-child {
+	margin-right: 0;
 }
 .page-header .btn-default {
 	border-width: 1px 1px 4px 1px;
-}
-.page-header .btn + .btn {
-	margin-left: 10px;
-	margin-right: 10px;
 }
 .page-header .btn:hover,
 .page-header .btn:focus {

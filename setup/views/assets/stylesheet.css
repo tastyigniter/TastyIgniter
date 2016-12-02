@@ -32,6 +32,9 @@ border-color: #1A8EED;
 margin: 10px 0px 20px;
 border-color: #C7D2E0;
 }
+.page-header #logo > div {
+	padding: 0 0 15px;
+}
 /** WRAPPER **/
 #wrapper, #footer {
 padding-left: 0;
@@ -57,7 +60,7 @@ font-size: 28px;
 .page-header img {
 width: 100%;
 padding: 8px 0px 0;
-opacity: 0.566;
+opacity: 0.766;
 }
 .page-header .navbar-right {
 margin-right: 0;

@@ -17,7 +17,7 @@ $lang['text_php_version'] 				= 'is version %s supported?';
 $lang['text_php_version'] 				= 'is version %s supported?';
 $lang['text_mysqli_installed'] 			= 'is MySQLi installed?';
 $lang['text_curl_installed'] 			= 'is cURL installed?';
-$lang['text_gd_installed'] 				= 'is GD/GD2 library installed?';
+$lang['text_gd_installed'] 				= 'is GD library installed?';
 $lang['text_register_globals_enabled'] 	= 'is Register Globals turned off?';
 $lang['text_magic_quotes_enabled'] 	    = 'is Magic Quotes GPC turned off?';
 $lang['text_file_uploads_enabled'] 		= 'is File Uploads turned on?';
@@ -70,7 +70,7 @@ $lang['help_hostname'] 				    = 'Enter the database host name.';
 $lang['help_username'] 				    = 'Enter the database username.';
 $lang['help_password'] 				    = 'Enter the database password. Make sure to use a strong password.';
 $lang['help_dbprefix'] 				    = 'The database table prefix. Do not change unless you have to.';
-$lang['help_site_location_mode'] 		= 'You can change this setting later in System -> Setting -> Restaurant';
+$lang['help_site_location_mode'] 		= 'You can change this setting later under System -> Setting -> Restaurant Tab';
 
 $lang['button_continue'] 				= 'Continue';
 $lang['button_back'] 				    = 'Back';
