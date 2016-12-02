@@ -33,7 +33,7 @@ class Installer
 
 	public $installed_php_version;
 	public $installed_mysql_version;
-	public $required_php_version = '5.4';
+	public $required_php_version = '5.6';
 
 	private $writable_folders = [
 		'admin/cache',
@@ -167,7 +167,8 @@ class Installer
 
 	public function isInstalled()
 	{
-		if (!$this->CI->config->item('encryption_key')) {
+		$encryptionKey = $this->CI->config->item('encryption_key');
+		if (!empty($encryptionKey)) {
 			return FALSE;
 		}
 
