@@ -2,35 +2,27 @@
 .idea
 
 admin/cache/*
-!admin/cache/index.html
 !admin/cache/.htaccess
 
 assets/images/captcha/*
-!assets/images/captcha/index.html
 
 assets/images/thumbs/*
-!assets/images/thumbs/index.html
 
 assets/images/data/*
-!assets/images/data/index.html
 !assets/images/data/no_photo.png
 !assets/images/data/flags
 
 assets/downloads/*
-!assets/downloads/index.html
+
+extensions
+!extensions/starter
 
 main/cache/*
-!main/cache/index.html
 !main/cache/.htaccess
 
 system/tastyigniter/logs/*
-!system/tastyigniter/logs/index.html
-
 system/tastyigniter/session/*
-!system/tastyigniter/session/index.html
-
 system/tastyigniter/migrations/backups/*
-!system/tastyigniter/migrations/backups/index.html
 
 # Ignore all vendor files included by composer and the lock file
-/vendor/*
+vendor/*
