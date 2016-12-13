@@ -20,6 +20,7 @@
   },
   "require": {
     "php": ">=5.4.0",
+    "composer/composer": "1.0.0-alpha8",
     "illuminate/database": "5.3.*",
     "illuminate/events": "5.3.*"
   },
