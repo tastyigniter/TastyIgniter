@@ -315,7 +315,7 @@ border: 1px solid #D2DCE7;
 border-bottom: 0 none;
 border-radius:3px 3px 0 0;
 padding: 7px 15px;
-margin: 4px 0 0;
+margin: -3px 0 0;
 z-index:5;
 }
 .breadcrumb > li {
@@ -367,7 +367,7 @@ overflow: scroll;
 .media-list .thumbnail-each {
 border: 0 none;
 display: inline-block;
-margin: 7px;
+margin: 15px;
 padding: 0;
 vertical-align: top;
 width: 160px;
