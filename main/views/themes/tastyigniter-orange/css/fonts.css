@@ -70,28 +70,28 @@
 
 @font-face {
     font-family: 'Amaranth';
-    url('../fonts/Amaranth/Amaranth-Regular.ttf') format('truetype'),
+    url('/assets/fonts/Amaranth/Amaranth-Regular.ttf') format('truetype'),
     font-weight: 400;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Amaranth';
-    src: url('../fonts/Amaranth/Amaranth-Italic.ttf') format('truetype');
+    src: url('/assets/fonts/Amaranth/Amaranth-Italic.ttf') format('truetype');
     font-weight: 400;
     font-style: italic;
 }
 
 @font-face {
     font-family: 'Amaranth';
-    url('../fonts/Amaranth/Amaranth-Bold.ttf') format('truetype'),
+    url('/assets/fonts/Amaranth/Amaranth-Bold.ttf') format('truetype'),
     font-weight: 700;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Amaranth';
-    url('../fonts/Amaranth/Amaranth-BoldItalic.ttf') format('truetype'),
+    url('/assets/fonts/Amaranth/Amaranth-BoldItalic.ttf') format('truetype'),
     font-weight: 700;
     font-style: italic;
 }
