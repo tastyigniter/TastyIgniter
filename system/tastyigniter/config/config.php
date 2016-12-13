@@ -120,23 +120,13 @@ $config['subclass_prefix'] = 'TI_';
 | Composer auto-loading
 |--------------------------------------------------------------------------
 |
-| Enabling this setting will tell CodeIgniter to look for a Composer
+| Enabling this setting will tell TastyIgniter to look for a Composer
 | package auto-loader script in application/vendor/autoload.php.
 |
 |	$config['composer_autoload'] = TRUE;
 |
-| your vendor/ directory is located in the system folder: /system/
-|
-| Or if you have your vendor/ directory located somewhere else, you
-| can opt to set a specific path as well:
-|
-|	$config['composer_autoload'] = '/path/to/vendor/autoload.php';
-|
-| For more information about Composer, please visit http://getcomposer.org/
-|
-| Note: This will NOT disable or override the CodeIgniter-specific
-|	autoloading (application/config/autoload.php)
-*/
+| your vendor/ directory is located in the root folder: /vendor/
+|*/
 $config['composer_autoload'] = TRUE;
 
 /*
@@ -396,7 +386,7 @@ $config['cookie_prefix']	= 'ti_';
 $config['cookie_domain']	= '';
 $config['cookie_path']		= '/';
 $config['cookie_secure']	= FALSE;
-$config['cookie_httponly'] 	= TRUE;
+$config['cookie_httponly'] 	= FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -471,18 +461,6 @@ $config['compress_output'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
-| Minify
-|--------------------------------------------------------------------------
-|
-| Removes extra characters (usually unnecessary spaces) from your
-| output for faster page load speeds.  Makes your outputted HTML source
-| code less readable.
-|
-*/
-$config['minify_output'] = FALSE;
-
-/*
-|--------------------------------------------------------------------------
 | Master Time Reference
 |--------------------------------------------------------------------------
 |
@@ -540,4 +518,23 @@ $config['proxy_ips'] = '';
 
 $config['modules_locations'] = array(
 	ROOTPATH . EXTPATH	 => '../../'.EXTPATH,
+);
+
+/*
+|--------------------------------------------------------------------------
+| Required Extensions
+|--------------------------------------------------------------------------
+|
+| These are the list of required extension this version of TastyIgniter
+| needs to run
+|
+*/
+$config['required_extensions'] = array(
+	'banners_module' => '1.1',
+	'cart_module' => '2.0',
+	'cod' => '1.1',
+	'categories_module' => '1.2',
+	'local_module' => '1.2',
+	'reservation_module' => '1.2',
+	'slideshow' => '1.2',
 );

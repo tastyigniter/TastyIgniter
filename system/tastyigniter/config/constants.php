@@ -2,6 +2,18 @@
 
 /*
 |--------------------------------------------------------------------------
+| TastyIgniter API Endpoint
+|--------------------------------------------------------------------------
+|
+| These modes are used when working with fopen()/popen()
+|
+*/
+defined('TI_ENDPOINT') OR define('TI_ENDPOINT', 'http://api.tastyigniter.io/v2/');
+defined('TI_REST_AUTH') OR define('TI_REST_AUTH', 'TI-Rest-Key');
+defined('TI_CARTE_AUTH') OR define('TI_CARTE_AUTH', 'TI-Carte-Key');
+
+/*
+|--------------------------------------------------------------------------
 | File and Directory Modes
 |--------------------------------------------------------------------------
 |
