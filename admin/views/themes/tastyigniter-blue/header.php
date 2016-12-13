@@ -3,7 +3,7 @@
     $this->assets->setMeta(array('name' => 'Content-type', 'content' => 'text/html; charset=utf-8', 'type' => 'equiv'));
     $this->assets->setMeta(array('name' => 'X-UA-Compatible', 'content' => 'IE=edge', 'type' => 'equiv'));
     $this->assets->setMeta(array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no', 'type' => 'name'));
-    $this->assets->setFavIcon('images/favicon.ico');
+    $this->assets->setFavIcon(root_url('favicon.ico'));
     $this->assets->setStyleTag(assets_url('css/bootstrap.min.css'), 'bootstrap-css', '10');
     $this->assets->setStyleTag(assets_url('css/font-awesome.min.css'), 'font-awesome-css', '11');
     $this->assets->setStyleTag('css/metisMenu.min.css', 'metis-menu-css', '12');
@@ -21,7 +21,7 @@
 	$this->assets->setScriptTag(assets_url('js/js.cookie.js'), 'js-cookie-js', '14');
 	$this->assets->setScriptTag('js/common.js', 'common-js');
 
-	$system_logo  		= base_url('views/themes/tastyigniter-blue/images/tastyigniter-logo.png');
+	$system_logo  		= image_url('tastyigniter-logo.png');
     $system_name 		= lang('tastyigniter_system_name');
     $site_name 		    = config_item('site_name');
     $site_url 			= rtrim(site_url(), '/').'/';
