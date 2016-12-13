@@ -19,12 +19,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @var	string
  *
  */
+	date_default_timezone_set('UTC');
+
 	define('TI_VERSION', '2.2.0-dev');
 
 	// Path to the root folder
 	defined('ROOTPATH') OR define('ROOTPATH', rtrim(dirname(BASEPATH), '/') . '/');
 
-	// Path to the tastyigniter system core folder
+	// Path to the tastyigniter system folder
 	defined('IGNITEPATH') OR define('IGNITEPATH', BASEPATH.'tastyigniter/');
 
 /*
@@ -160,13 +162,9 @@ if ( ! is_php('5.4'))
  *  Should we use a Composer autoloader?
  * ------------------------------------------------------
  */
-if ($composer_autoload = config_item('composer_autoload') AND file_exists(ROOTPATH . 'vendor')) {
-	if ($composer_autoload === TRUE) {
-		file_exists(ROOTPATH . 'vendor/autoload.php')
-			? require_once(ROOTPATH . 'vendor/autoload.php')
-			: log_message('error', '$config[\'composer_autoload\'] is set to TRUE but ' . ROOTPATH . 'vendor/autoload.php was not found.');
-	} else {
-		log_message('error', 'Could not find the specified $config[\'composer_autoload\'] path: ' . $composer_autoload);
+if (file_exists(ROOTPATH . 'vendor/autoload.php')) {
+	if ($composer_autoload = config_item('composer_autoload') AND $composer_autoload === TRUE) {
+		require_once(ROOTPATH . 'vendor/autoload.php');
 	}
 }
 

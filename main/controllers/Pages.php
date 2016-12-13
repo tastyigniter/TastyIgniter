@@ -15,7 +15,7 @@ class Pages extends Main_Controller
 	public function index()
 	{
 		if (!$result = $this->Pages_model->find((int)$this->input->get('page_id'))) {
-			show_404();
+			show_404($this->uri->uri_string());
 		}
 
 		$this->template->setBreadcrumb('<i class="fa fa-home"></i>', '/');

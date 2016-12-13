@@ -29,11 +29,8 @@ class Dashboard extends Admin_Controller
 		$this->assets->setScriptTag(assets_url('js/morris/morris.min.js'), 'morris-min-js', '1000454');
 
 		$data['activities'] = $this->getActivities();
-
 		$data['top_customers'] = $this->getTopCustomers();
-
 		$data['orders'] = $this->getRecentOrders();
-
 		$data['news_feed'] = $this->Dashboard_model->getNewsFeed();  // Get four items from the feed
 
 		if ($this->config->item('auto_update_currency_rates') == '1') {

@@ -2,7 +2,6 @@
 
 class Menus extends Main_Controller
 {
-
 	public $filter = [
 		'filter_status' => '1',
 	];
@@ -26,11 +25,14 @@ class Menus extends Main_Controller
 		$this->lang->load('menus');
 	}
 
+	/**
+	 * @deprecated since 2.2.0, controller index no longer in use, replaced by Local controller index.
+	 */
 	public function index()
 	{
 //		$categories = $this->Categories_model->getCategory($this->input->get('category_id'));
 //		if (!$categories AND $this->input->get('category_id')) {
-		show_404();
+		show_404($this->uri->uri_string());
 //		}
 
 		$this->template->setTitle($this->lang->line('text_heading'));
@@ -64,13 +66,11 @@ class Menus extends Main_Controller
 
 	public function getList()
 	{
-		$url = '?';
-
 		$data['quantities'] = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 		$data['show_menu_images'] = $this->config->item('show_menu_images');
 		$data['category_id'] = $this->input->get('category_id');
 
-		$data['menu_total'] = 1000; //$this->Menus_model->getCount();
+		$data['menu_total'] = $this->Menus_model->getCount();
 		$mix_it_up = (!empty($menu_total) AND $menu_total < 500) ? TRUE : FALSE;
 
 		if (!$mix_it_up AND $this->input->get('category_id')) {
