@@ -368,7 +368,7 @@ class Model extends EloquentModel
 		// Carbon instances from that format. Again, this provides for simple date
 		// fields on the database, while still supporting Carbonized conversion.
 		if (preg_match('/^(\d{1,2}):(\d{2}):(\d{2})$/', $value)) {
-			return Carbon::createFromFormat('h:i:s', $value);
+			return Carbon::createFromFormat('H:i:s', $value);
 		}
 
 		// Finally, we will just assume this date is in the format used by default on
