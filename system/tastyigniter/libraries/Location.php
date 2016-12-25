@@ -751,8 +751,25 @@ class Location {
 		}
 
         $temp_query = (is_array($temp_query)) ? implode(', ', $temp_query) : $temp_query;
+/** Smifis 	************************* 
+			FILE EDIT
+			*************************
+	Desc: 	Added Google Maps API key to the query string, if it has been defined.
+			Perhaps a temp fix until next version? Unable to see if this has been included
+			in the latest dev trunk or not
+			
+	Date: 	2016/12/22 04:49
+	*/
+		if ($this->CI->config->item('maps_api_key')) {
+			$map_key = '&key=' . $this->CI->config->item('maps_api_key');
+		} else {
+			$map_key = '';
+		}
+		
+        $url  = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($temp_query) .'&sensor=false' . $map_key; //encode $postcode string and construct the url query
 
-        $url  = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($temp_query) .'&sensor=false'; //encode $postcode string and construct the url query
+/***********	EDIT END	*********/
+
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -762,7 +779,7 @@ class Location {
 		curl_close($ch);
 
 		$output = json_decode($geocode_data);											// decode the geocode data
-
+ 	
 		if ($output) {
             if ($output->status === 'OK') {														// create variable for geocode data status
                 $this->geocode = array(
