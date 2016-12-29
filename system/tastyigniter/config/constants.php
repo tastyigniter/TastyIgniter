@@ -2,18 +2,6 @@
 
 /*
 |--------------------------------------------------------------------------
-| TastyIgniter API Endpoint
-|--------------------------------------------------------------------------
-|
-| These modes are used when working with fopen()/popen()
-|
-*/
-defined('TI_ENDPOINT') OR define('TI_ENDPOINT', 'http://api.tastyigniter.io/v2/');
-defined('TI_REST_AUTH') OR define('TI_REST_AUTH', 'TI-Rest-Key');
-defined('TI_CARTE_AUTH') OR define('TI_CARTE_AUTH', 'TI-Carte-Key');
-
-/*
-|--------------------------------------------------------------------------
 | File and Directory Modes
 |--------------------------------------------------------------------------
 |
@@ -89,7 +77,7 @@ defined('THEMEPATH') OR define('THEMEPATH', VIEWPATH.'themes/');
  *
  * NOTE: If you change these, also change the error_reporting() code below
  */
-defined('ENVIRONMENT') OR define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'production');
+defined('ENVIRONMENT') OR define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
 
 /*
 |--------------------------------------------------------------------------
@@ -100,7 +88,20 @@ defined('ENVIRONMENT') OR define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SE
 | FALSE, the benchmark will not display
 |
 */
-defined('TI_DEBUG') OR define('TI_DEBUG', FALSE);
+defined('TI_DEBUG') OR define('TI_DEBUG', TRUE);
+
+/*
+|--------------------------------------------------------------------------
+| TastyIgniter API Endpoint
+|--------------------------------------------------------------------------
+|
+| These constants are used when working with TastyIgniter API
+|
+*/
+defined('TI_ENDPOINT') OR define('TI_ENDPOINT', 'http://api.tastyigniter.io/v2/');
+defined('TI_REST_AUTH') OR define('TI_REST_AUTH', 'TI-Rest-Key');
+defined('TI_CARTE_AUTH') OR define('TI_CARTE_AUTH', 'TI-Carte-Key');
+defined('TI_SIGN_REQUEST') OR define('TI_SIGN_REQUEST', 'TI-Sign-Request');
 
 /*
 |--------------------------------------------------------------------------

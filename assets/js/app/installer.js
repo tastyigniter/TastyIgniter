@@ -27,13 +27,17 @@ var Installer = {
     },
 
     init: function () {
-        this.form = $('#completeForm');
-        this.list = $('#extensions-list');
-        this.checkbox = $('#extensions-list .extension');
-        this.submitBtn = $('#btn-continue');
-        this.currentStep = this.form.find('input[name="install_step"]').val();
+        $(document).ready(function() {
+            this.form = $('#completeForm');
+            this.list = $('#extensions-list');
+            this.checkbox = $('#extensions-list .extension');
+            this.submitBtn = $('#btn-continue');
+            this.currentStep = this.form.find('input[name="install_step"]').val();
 
-        this.form.submit(this.submitForm);
+            this.form.submit(this.submitForm);
+
+            Installer.fetchExtensions();
+        });
     },
 
     submitForm: function (e) {
@@ -119,11 +123,10 @@ var Installer = {
     },
 
     sendRequest: function (method, data, message) {
-        console.log('sendRequest:'+ message);
         return $.ajax({
             type: 'POST',
             url: js_site_url(method),
-            data: Installer.form.serialize() + (typeof data == 'undefined' ? '' : '&'+$.param(data)),
+            data: (typeof Installer.form != 'undefined') ? Installer.form.serialize() + (typeof data == 'undefined' ? '' : '&'+$.param(data)) : [],
             beforeSend: message ? Installer.refreshProgress(message) : null,
             dataType: 'json'
         })
@@ -206,7 +209,7 @@ var Installer = {
             if (json['results']) {
                 switch (currStep) {
                     case 'getExtensionMeta':
-                        if (json['results'].extensions) {
+                        if (Object.keys(json['results'].extensions).length > 0) {
                             for (var extCode in json['results'].extensions)
                                 if (json['results'].extensions.hasOwnProperty(extCode))
                                     Installer.dataCache.metas.push(json['results'].extensions[extCode]);
@@ -264,7 +267,7 @@ var Installer = {
             html += '       <div class="panel-heading">';
             if (typeof installedExtensions != 'undefined' && installedExtensions.hasOwnProperty(extension.code)) {
                 html += '<div class="pull-right">';
-                html += '   <span class="small text-muted">Downloaded</span>';
+                html += '   <span class="small text-muted">Skip</span>';
                 html += '</div>';
             } else {
                 Installer.dataCache.extensions.push(extension);
@@ -287,7 +290,4 @@ var Installer = {
         extList.fadeIn();
     }
 };
-
-String.prototype.truncate = String.prototype.truncate || function (n) {
-        return (this.length > n) ? this.substr(0, n - 1) + '&hellip;' : this;
-    };
+Installer.init();

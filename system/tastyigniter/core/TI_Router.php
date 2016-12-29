@@ -229,8 +229,6 @@ class TI_Router extends CI_Router
 		/* get the segments array elements */
 		list($module, $directory, $controller) = array_pad($segments, 3, NULL);
 
-		$where = 'controllers';
-
 		/* check modules */
 		foreach (Modules::$locations as $location => $offset) {
 			/* module exists? check within components if main app is in use */

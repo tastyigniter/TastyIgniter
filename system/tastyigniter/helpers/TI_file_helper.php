@@ -45,7 +45,7 @@ if ( ! function_exists('unzip_file'))
 		chmod($file, 0777);
 
 		if ($zip->open($file) === TRUE) {
-			$dirname = trim($zip->getNameIndex(0), '/');
+			$dirname = trim($zip->getNameIndex(0), DIRECTORY_SEPARATOR);
 
 			$zip->extractTo($extractTo);
 			$zip->close();

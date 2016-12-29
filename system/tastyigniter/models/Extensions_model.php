@@ -445,17 +445,11 @@ class Extensions_model extends Model
 			$meta = $extension->extensionMeta();
 			$title = !empty($meta['name']) ? $meta['name'] : null;
 
-			$extensionModel = $this->whereIn('type', ['module', 'payment'])
-								   ->where('name', $code)->first();
+			$extensionModel = $this->whereIn('type', ['module', 'payment'])->firstOrCreate(['name' => $code]);
 
 			if ($extensionModel) {
-				$extension_id = $this->whereIn('type', ['module', 'payment'])->where('name', $code)
-									 ->update(['type' => 'module', 'title' => $title, 'status' => '1']);
-			} else {
-				$extensionModel = $this->create(
-					['title' => $title, 'status' => '1', 'type' => 'module', 'name' => $code]
-				);
-				if ($extensionModel) $extension_id = $extensionModel->extension_id;
+				$update = $extensionModel->update(['type' => 'module', 'title' => $title, 'status' => '1']);
+				if ($update) $extension_id = $extensionModel->extension_id;
 			}
 
 			if (is_numeric($extension_id)) {

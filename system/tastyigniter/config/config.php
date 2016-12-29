@@ -514,6 +514,8 @@ $config['proxy_ips'] = '';
 | absolute path to the location or a relative path starting from the root
 | directory.
 |
+| NOTE: Only the first location in the array will be used when adding new module
+|
 */
 
 $config['modules_locations'] = array(

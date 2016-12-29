@@ -9,9 +9,9 @@ class Dashboard extends Admin_Controller
 
 		$this->load->model('Dashboard_model');
 		$this->load->model('Locations_model');
-		$this->load->model('Updates_model');
 
 		$this->load->library('currency'); // load the currency library
+		$this->load->model('Updates_manager');
 
 		$this->lang->load('dashboard');
 	}
@@ -40,7 +40,7 @@ class Dashboard extends Admin_Controller
 			}
 		}
 
-		if (!$this->Updates_model->lastVersionCheck()) {
+		if (!$this->updates_manager->isLastCheckDue()) {
 			$this->alert->set('success_now', sprintf($this->lang->line('text_last_version_check'), site_url('updates')));
 		}
 

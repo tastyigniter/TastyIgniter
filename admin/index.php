@@ -146,6 +146,9 @@
 	// Path to the extensions folder
     define('EXTPATH', 'extensions/');
 
+	// Path to the assets folder"
+	define('ASSETPATH', realpath('../assets/') .'/');
+
 	// Path to the images folder"
 	define('IMAGEPATH', realpath('../assets/images/') .'/');
 

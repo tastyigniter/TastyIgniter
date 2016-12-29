@@ -6,7 +6,7 @@
  *
  * @package   TastyIgniter
  * @author    SamPoyigi
- * @copyright TastyIgniter
+ * @copyright (c) 2013 - 2016. TastyIgniter
  * @link      http://tastyigniter.com
  * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
  * @since     File available since Release 1.0

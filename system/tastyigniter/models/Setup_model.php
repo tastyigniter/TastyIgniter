@@ -88,18 +88,15 @@ class Setup_model extends TI_Model
 		return $query;
 	}
 
-	public function updateSettings($setting = [], $upgrade = FALSE)
+	public function updateSettings($setting = [])
 	{
-		if ($upgrade === FALSE AND empty($setting['site_name']) AND empty($setting['site_email'])) {
-			return TRUE;
-		}
-
+		$prefs_keys = ['ti_setup', 'ti_version', 'carte_key'];
 		foreach ($setting as $key => $value) {
 			$setting_row = [
-				'sort'       => ($key === 'ti_setup') ? 'prefs' : 'config',
+				'sort'       => (in_array($key, $prefs_keys)) ? 'prefs' : 'config',
 				'item'       => $key,
-				'value'      => $value,
-				'serialized' => '0',
+				'value'      => is_array($value) ? serialize($value) : $value,
+				'serialized' => is_array($value) ? '1' : '0',
 			];
 
 			if ($this->db->replace('settings', $setting_row) === FALSE) {
@@ -110,39 +107,56 @@ class Setup_model extends TI_Model
 		return TRUE;
 	}
 
-	public function updateLocation($setting = [])
+	public function updateInstalledExtensions()
+	{
+		$installed_extensions = $this->config->item('installed_extensions');
+
+		if (empty($installed_extensions) OR !is_array($installed_extensions)) {
+			$installed_extensions = $this->db->from('extensions')->select('name')->where_in('type', ['module', 'payment'])
+										 ->where('status', '1')->get()->result_array();
+			if ($installed_extensions) {
+				$installed_extensions = array_flip(array_column($installed_extensions, 'name'));
+				$installed_extensions = array_fill_keys(array_keys($installed_extensions), TRUE);
+			}
+		}
+
+		$this->config->set_item('installed_extensions', $installed_extensions);
+		$this->db->replace('settings', [
+			'sort'       => 'prefs',
+			'item'       => 'installed_extensions',
+			'value'      => serialize($installed_extensions),
+			'serialized' => '1',
+		]);
+	}
+
+	public function updateDefaultLocation($setting = [])
 	{
 		if (empty($setting['site_name']) AND empty($setting['site_email'])) {
 			return TRUE;
 		}
 
-		$this->load->model('Locations_model');
-		$this->Locations_model->where('location_id', '11')->update([
+		$this->db->where('location_id', '11')->update('locations', [
 			'location_name'  => $setting['site_name'],
 			'location_email' => $setting['site_email'],
 		]);
 
-		$this->load->model('Settings_model');
-		$this->Settings_model->addSetting('prefs', 'main_address', $this->Locations_model->getAddress(11), '1');
-
-		$this->load->model('Permalink_model');
-		$permalink = ['permalink_id' => '22', 'slug' => $setting['site_name']];
-		$this->Permalink_model->savePermalink('local', $permalink, 'location_id=11');
+		$this->db->replace('permalinks', [
+			'permalink_id' => '22',
+			'slug' => $setting['site_name'],
+			'controller' => 'local',
+			'query' => 'location_id=11',
+		]);
 	}
 
 	public function updateVersion($version = null)
 	{
-		$this->load->model('Settings_model');
-		$this->Settings_model->where('sort', 'prefs')->where('item', 'ti_version')->delete();
+		$settings = [
+			'ti_version' => (empty($version)) ? TI_VERSION : $version,
+		];
 
-		$this->Settings_model->insert([
-			'sort'       => 'prefs',
-			'item'       => 'ti_version',
-			'value'      => (empty($version)) ? TI_VERSION : $version,
-			'serialized' => '0',
-		]);
+		$this->updateSettings($settings, TRUE);
 	}
 }
 
-/* End of file setup_model.php */
-/* Location: ./setup/models/setup_model.php */
+/* End of file Setup_model.php */
+/* Location: ./setup/models/Setup_model.php */

@@ -6,7 +6,8 @@ class Extensions extends Admin_Controller
 	public $edit_url = 'extensions/{code}/settings';
 	public $delete_url = 'extensions/delete/{code}';
 	public $manage_url = 'extensions/{manage}/{code}';
-	public $browse_url = 'extensions/browse';
+	public $browse_url = 'updates/browse/extensions';
+	public $check_url = 'updates';
 
 	public $create_url = 'extensions/add';
 
@@ -37,7 +38,7 @@ class Extensions extends Admin_Controller
 		} else if (strtolower($this->uri->segment(3)) === 'settings') {
 			$this->edit();
 		} else {
-			show_404();
+			show_404($this->uri->uri_string());
 		}
 	}
 
@@ -48,7 +49,9 @@ class Extensions extends Admin_Controller
 		$this->template->setTitle($this->lang->line('text_title'));
 		$this->template->setHeading($this->lang->line('text_heading'));
 		$this->template->setButton($this->lang->line('button_new'), ['class' => 'btn btn-primary', 'href' => page_url() . '/add']);
+		$this->template->setButton($this->lang->line('button_browse'), ['class' => 'btn btn-default', 'href' => $this->pageUrl($this->browse_url)]);
 		$this->template->setButton($this->lang->line('button_icon_filter'), ['class' => 'btn btn-default btn-filter pull-right', 'data-toggle' => 'button']);
+		$this->template->setButton($this->lang->line('button_check'), ['class' => 'btn btn-default', 'href' => $this->pageUrl($this->check_url)]);
 
 		$data = $this->getList();
 
@@ -71,8 +74,8 @@ class Extensions extends Admin_Controller
 		$this->template->setTitle($this->lang->line('text_add_heading'));
 		$this->template->setHeading($this->lang->line('text_add_heading'));
 
-		$this->template->setButton($this->lang->line('button_browse'), ['class' => 'btn btn-default disabled', 'href' => site_url('extensions/browse')]);
 		$this->template->setButton($this->lang->line('button_icon_back'), ['class' => 'btn btn-default', 'href' => site_url('extensions')]);
+		$this->template->setButton($this->lang->line('button_browse'), ['class' => 'btn btn-default', 'href' => $this->pageUrl($this->browse_url)]);
 
 		$data['_action'] = $this->pageUrl($this->create_url);
 
