@@ -146,6 +146,7 @@ $lang['label_test_email'] 		                = 'Test Email';
 $lang['label_customer_online_time_out'] 		= 'Customer Online Timeout';
 $lang['label_customer_online_archive_time_out'] = 'Customer Online Archive Timeout';
 $lang['label_permalink'] 		                = 'Permalink';
+$lang['label_carte_key'] 		        		= 'Carté Key';
 $lang['label_maintenance_mode'] 		        = 'Maintenance Mode';
 $lang['label_maintenance_message'] 		        = 'Maintenance Message';
 $lang['label_cache_mode'] 		                = 'Cache Mode';
@@ -208,6 +209,7 @@ $lang['help_media_remember_days'] 		        = 'How long to save last opened fold
 $lang['help_registration_email'] 		        = 'Send a confirmation mail to the customer and/or admin email after successfully account registration';
 $lang['help_order_email'] 		                = 'Send a confirmation mail to the customer, admin and/or location email after a new order has been created';
 $lang['help_reservation_email'] 		        = 'Send a confirmation mail to the customer, admin and/or location email when a new reservation is received';
+$lang['help_carte_key'] 		        		= 'Carté key is required if you want to add/update item from the Marketplace. You can create a carte on the Sites page in the Account area. <a target="_blank" href="https://docs.tastyigniter.com/tutorial/carte">Read more</a>';
 $lang['help_maintenance'] 		                = 'Enable to prevent customers from viewing your store. The maintenance message will be displayed to customers except logged admin.';
 $lang['help_permalink'] 		                = 'To use SEO URLs, apache module mod-rewrite must be installed.';
 $lang['help_customer_online'] 		            = 'The number of seconds a customer will appear online. Seconds must be more than 120 seconds';

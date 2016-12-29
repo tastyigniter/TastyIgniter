@@ -1202,6 +1202,17 @@
 				</div>
 
 				<div id="system" class="tab-pane">
+					<h4 class="tab-pane-title"><?php echo lang('text_tab_title_updates'); ?></h4>
+					<div class="form-group">
+						<label for="input-carte-key" class="col-sm-3 control-label"><?php echo lang('label_carte_key'); ?>
+							<span class="help-block"><?php echo lang('help_carte_key'); ?></span>
+						</label>
+						<div class="col-sm-5">
+							<input type="text" name="carte_key" class="form-control" value="<?php echo set_value('carte_key', config_item('carte_key')); ?>" />
+							<?php echo form_error('carte_key', '<span class="text-danger">', '</span>'); ?>
+						</div>
+					</div>
+
 					<h4 class="tab-pane-title"><?php echo lang('text_tab_title_maintenance'); ?></h4>
 					<div class="form-group">
 						<label for="input-maintenance-mode" class="col-sm-3 control-label"><?php echo lang('label_maintenance_mode'); ?>
