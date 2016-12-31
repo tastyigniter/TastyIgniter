@@ -30,57 +30,59 @@ class Components
 	/**
 	 * @var array Cache of registration callbacks.
 	 */
-	public static $registry = array();
+	public static $registry = [];
 
 	/**
 	 * @var array Cache of registration components callbacks.
 	 */
-	protected static $components_callbacks = array();
+	protected static $components_callbacks = [];
 
 	/**
 	 * @var array Cache of registration gateways callbacks.
 	 */
-	protected static $gateways_callbacks = array();
+	protected static $gateways_callbacks = [];
 
 	/**
 	 * @var array An array where keys are codes and values are class paths.
 	 */
-	protected static $code_map;
+	protected static $code_map = [];
 
 	/**
 	 * @var array An array where keys are class paths and values are codes.
 	 */
-	protected static $class_path_map;
+	protected static $class_path_map = [];
 
 	/**
 	 * @var array An array containing references to a corresponding extension for each component class.
 	 */
-	protected static $extension_map;
+	protected static $extension_map = [];
 
 	/**
 	 * @var array A cached array of components component_meta.
 	 */
-	protected static $components;
+	protected static $components = [];
 
 	/**
 	 * @var array A cached array of payment gateways meta.
 	 */
-	protected static $payment_gateways;
+	protected static $payment_gateways = [];
 
-	public function __construct() {
+	public function __construct()
+	{
 		self::$instance = $this;
 	}
 
 	/**
 	 * Run a extension component method. Output from component is buffered and returned.
 	 *
-	 * @param string $component  The extension/component/method to run.
-	 * @param string $controller 
-	 * @param array  $module
+	 * @param string $component The extension/component/method to run.
+	 * @param string $controller
+	 * @param array $module
 	 *
 	 * @return mixed The output from the module.
 	 */
-	public static function run($component, $controller, $module) {
+	public static function run($component, $controller, $module)
+	{
 		$method = 'index';
 
 		// If a directory separator is found in $module, use the right side of the
@@ -102,13 +104,13 @@ class Components
 		ob_start();
 
 		// Get the remaining arguments and pass them to $method.
-		$output = call_user_func(array($class, $method));
+		$output = call_user_func([$class, $method]);
 
 		// Get/clean the current buffer.
 		$buffer = ob_get_clean();
 
 		// If $output is not null, return it, otherwise return the buffered content.
-		return $output !== NULL ? $output : $buffer;
+		return $output !== null ? $output : $buffer;
 	}
 
 	/**
@@ -116,7 +118,8 @@ class Components
 	 *
 	 * @return void
 	 */
-	protected static function load_components() {
+	protected static function load_components()
+	{
 		// Load manually registered components
 		foreach (self::$components_callbacks as $callback) {
 			$callback(self::$instance);
@@ -141,7 +144,8 @@ class Components
 	 *
 	 * @return void
 	 */
-	protected static function load_payment_gateways() {
+	protected static function load_payment_gateways()
+	{
 		// Load manually registered components
 		foreach (self::$gateways_callbacks as $callback) {
 			$callback(self::$instance);
@@ -150,7 +154,7 @@ class Components
 		// Load extensions payment gateways
 		$extensions = Modules::get_extensions();
 		foreach ($extensions as $extension) {
-			$payment_gateways = $extension->registerPaymentGateway();
+			$payment_gateways = $extension->registerPaymentGateways();
 			if (!is_array($payment_gateways)) {
 				continue;
 			}
@@ -168,9 +172,9 @@ class Components
 	 *   Components::register_components(function($manager){
 	 *       $manager->register_component('account_module/components/Account_module', array(
 	 *          'name' => 'account_module',
-	 * 			'title' => 'Account Component',
-	 * 			'description' => '..',
-	 * 		);
+	 *            'title' => 'Account Component',
+	 *            'description' => '..',
+	 *        );
 	 *   });
 	 * </pre>
 	 *
@@ -178,7 +182,8 @@ class Components
 	 *
 	 * @return void
 	 */
-	public static function register_components(callable $definitions) {
+	public static function register_components(callable $definitions)
+	{
 		self::$components_callbacks[] = $definitions;
 	}
 
@@ -189,9 +194,9 @@ class Components
 	 *   Components::register_payment_gateways(function($manager){
 	 *       $manager->register_payment_gateway('paypal_express/components/Paypal_express', array(
 	 *          'name' => 'paypal_express',
-	 * 			'title' => 'PayPal Express',
-	 * 			'description' => '..',
-	 * 		);
+	 *            'title' => 'PayPal Express',
+	 *            'description' => '..',
+	 *        );
 	 *   });
 	 * </pre>
 	 *
@@ -199,7 +204,8 @@ class Components
 	 *
 	 * @return void
 	 */
-	public static function register_payment_gateways(callable $definitions) {
+	public static function register_payment_gateways(callable $definitions)
+	{
 		self::$gateways_callbacks[] = $definitions;
 	}
 
@@ -210,13 +216,14 @@ class Components
 	 * @param array $component
 	 * @param object $extension Extension
 	 */
-	public static function register_component($class_path, $component = NULL, $extension = NULL) {
+	public static function register_component($class_path, $component = null, $extension = null)
+	{
 		if (!self::$class_path_map) {
-			self::$class_path_map = array();
+			self::$class_path_map = [];
 		}
 
 		if (!self::$code_map) {
-			self::$code_map = array();
+			self::$code_map = [];
 		}
 
 		$class_path = str_replace('.php', '', $class_path);
@@ -225,9 +232,9 @@ class Components
 
 		self::$code_map[$code] = $class_path;
 		self::$class_path_map[$class_path] = $code;
-		self::$components[$code] = array_merge($component, array('path' => $class_path));
+		self::$components[$code] = array_merge($component, ['path' => $class_path]);
 
-		if ($extension !== NULL) {
+		if ($extension !== null) {
 			self::$extension_map[$class_path] = $extension;
 		}
 	}
@@ -239,13 +246,14 @@ class Components
 	 * @param array $payment_gateway
 	 * @param object $extension Extension
 	 */
-	public static function register_payment_gateway($class_path, $payment_gateway = NULL, $extension = NULL) {
+	public static function register_payment_gateway($class_path, $payment_gateway = null, $extension = null)
+	{
 		if (!self::$class_path_map) {
-			self::$class_path_map = array();
+			self::$class_path_map = [];
 		}
 
 		if (!self::$code_map) {
-			self::$code_map = array();
+			self::$code_map = [];
 		}
 
 		$class_path = str_replace('.php', '', $class_path);
@@ -254,9 +262,9 @@ class Components
 
 		self::$code_map[$code] = $class_path;
 		self::$class_path_map[$class_path] = $code;
-		self::$payment_gateways[$code] = array_merge($payment_gateway, array('path' => $class_path));
+		self::$payment_gateways[$code] = array_merge($payment_gateway, ['path' => $class_path]);
 
-		if ($extension !== NULL) {
+		if ($extension !== null) {
 			self::$extension_map[$class_path] = $extension;
 		}
 	}
@@ -266,8 +274,9 @@ class Components
 	 *
 	 * @return array Array keys are codes, values are component meta array.
 	 */
-	public static function list_components() {
-		if (self::$components === NULL) {
+	public static function list_components()
+	{
+		if (self::$components == null) {
 			self::load_components();
 		}
 
@@ -279,8 +288,9 @@ class Components
 	 *
 	 * @return array Array keys are codes, values are payment gateways meta array.
 	 */
-	public static function list_payment_gateways() {
-		if (self::$payment_gateways === NULL) {
+	public static function list_payment_gateways()
+	{
+		if (self::$payment_gateways == null) {
 			self::load_payment_gateways();
 		}
 
@@ -295,7 +305,8 @@ class Components
 	 *
 	 * @return string The class name resolved, or null.
 	 */
-	public static function resolve($name) {
+	public static function resolve($name)
+	{
 		self::list_components();
 
 		if (isset(self::$code_map[$name])) {
@@ -307,7 +318,7 @@ class Components
 			return $name;
 		}
 
-		return NULL;
+		return null;
 	}
 
 	/**
@@ -317,7 +328,8 @@ class Components
 	 *
 	 * @return bool Returns true if the component is registered, otherwise false.
 	 */
-	public static function has_component($name) {
+	public static function has_component($name)
+	{
 		$class_path = self::resolve($name);
 		if (!$class_path) {
 			return FALSE;
@@ -333,9 +345,10 @@ class Components
 	 *
 	 * @return mixed|null
 	 */
-	public static function find_component($name) {
+	public static function find_component($name)
+	{
 		if (!self::has_component($name)) {
-			return NULL;
+			return null;
 		}
 
 		return self::$components[$name];
@@ -348,9 +361,10 @@ class Components
 	 *
 	 * @return mixed|null
 	 */
-	public static function find_payment_gateway($name) {
+	public static function find_payment_gateway($name)
+	{
 		if (empty(self::$payment_gateways[$name])) {
-			return NULL;
+			return null;
 		}
 
 		return self::$payment_gateways[$name];
@@ -363,11 +377,12 @@ class Components
 	 *
 	 * @return mixed|null
 	 */
-	public static function get_meta($name) {
+	public static function get_meta($name)
+	{
 		if (!self::has_component($name)) {
-			return NULL;
+			return null;
 		}
-		
+
 		if (isset(self::$components[$name])) {
 			return self::$components[$name];
 		}
@@ -376,19 +391,20 @@ class Components
 			return self::$payment_gateways[$name];
 		}
 
-		return NULL;
+		return null;
 	}
 
 	/**
 	 * Makes a component/gateway object with properties set.
 	 *
-	 * @param string          $name       A component/gateway class name or code.
+	 * @param string $name                A component/gateway class name or code.
 	 * @param Main_Controller $controller The controller that spawned this component.
-	 * @param array           $params     The properties set by the Page or Layout.
+	 * @param array $params               The properties set by the Page or Layout.
 	 *
 	 * @return Base_Component The component object.
 	 */
-	public static function make_component($name, $controller = NULL, $params = array()) {
+	public static function make_component($name, $controller = null, $params = [])
+	{
 		if (!isset(self::$registry[$name])) {
 			$class_path = self::resolve($name);
 			if (!$class_path) {
@@ -424,13 +440,14 @@ class Components
 	 *
 	 * @return mixed Returns the extension object or null.
 	 */
-	public static function find_component_extension($component) {
+	public static function find_component_extension($component)
+	{
 		$class_path = self::resolve($component);
 		if (isset(self::$extension_map[$class_path])) {
 			return self::$extension_map[$class_path];
 		}
 
-		return NULL;
+		return null;
 	}
 
 	/**
@@ -440,7 +457,8 @@ class Components
 	 *
 	 * @return string
 	 */
-	public static function convert_code_to_path($alias) {
+	public static function convert_code_to_path($alias)
+	{
 		if (strpos($alias, '/') !== FALSE) {
 			return $alias;
 		}

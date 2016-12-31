@@ -45,44 +45,31 @@ class Themes_model extends Model
 	 */
 	public function getList($filter = [])
 	{
-		$themes = $this->getThemes();
-		$themes_list = list_themes();
-
 		$results = [];
 
-		if (!empty($themes) AND !empty($themes_list)) {
-			foreach ($themes_list as $theme) {
-				if ($theme['location'] === ADMINDIR) continue;
+		$installed_themes = $this->getThemes();
+		foreach ($this->theme_manager->paths() as $name => $themePath) {
 
-				$db_theme = (isset($themes[$theme['basename']]) AND !empty($themes[$theme['basename']])) ? $themes[$theme['basename']] : [];
+			if (!($themeObj = $this->theme_manager->findTheme($name))) continue;
 
-				$extension_id = (!empty($db_theme['extension_id'])) ? $db_theme['extension_id'] : 0;
-				$theme_name = (!empty($db_theme['name'])) ? $db_theme['name'] : $theme['basename'];
+			if ($themeObj->domain === ADMINDIR) continue;
 
-				$results[$theme['basename']] = [
-					'extension_id' => $extension_id,
-					'name'         => $theme_name,
-					'title'        => isset($theme['config']['title']) ? $theme['config']['title'] : $theme_name,
-					'version'      => isset($theme['config']['version']) ? $theme['config']['version'] : '',
-					'description'  => isset($theme['config']['description']) ? $theme['config']['description'] : '',
-					'author'       => isset($theme['config']['author']) ? $theme['config']['author'] : '',
-					'screenshot'   => root_url($theme['path'] . '/screenshot.png'),
-					'path'         => $theme['path'],
-					'is_writable'  => is_writable($theme['path']),
-					'child'        => !empty($theme['config']['child']) ? $theme['config']['child'] : '',
-					'parent'       => !empty($theme['config']['parent']) ? $theme['config']['parent'] : '',
-					'data'         => !empty($db_theme['data']) ? $db_theme['data'] : [],
-					'config'       => $theme['config'],
-					'customize'    => (isset($theme['config']['customize']) AND !empty($theme['config']['customize'])) ? TRUE : FALSE,
-				];
-			}
+			$themePath = ltrim($themePath['path'], DIRECTORY_SEPARATOR);
+			$installed_theme = (isset($installed_themes[$name])) ? $installed_themes[$name] : [];
 
-			foreach ($results as $name => &$theme) {
-				if (!empty($theme['parent'])) {
-					$results[$theme['parent']]['child'] = [];
-					$results[$theme['parent']]['child'][$name] = $theme;
-				}
-			}
+			$theme_config = $this->theme_manager->themeMeta($name);
+			$results[$name] = array_merge($theme_config, [
+				'extension_id' => (!empty($installed_theme['extension_id'])) ? $installed_theme['extension_id'] : 0,
+				'screenshot'   => root_url($themePath . '/screenshot.png'),
+				'path'         => $themePath,
+				'is_writable'  => is_writable($themePath),
+				'is_child'     => $themeObj->isChild,
+				'parent'       => $themeObj->parent,
+				'installed'    => !empty($installed_theme) ? TRUE : FALSE,
+				'activated'    => $themeObj->activated,
+				'data'         => !empty($installed_theme['data']) ? $installed_theme['data'] : [],
+				'customizer'   => $themeObj->customizer,
+			]);
 		}
 
 		return $results;
@@ -151,6 +138,40 @@ class Themes_model extends Model
 	}
 
 	/**
+	 * Update installed extensions config value
+	 *
+	 * @param string $theme
+	 * @param bool $install
+	 *
+	 * @return bool TRUE on success, FALSE on failure
+	 */
+	public function updateInstalledThemes($theme = null, $install = TRUE)
+	{
+		$installed_themes = $this->config->item('installed_themes');
+
+		if (empty($installed_themes) OR !is_array($installed_themes)) {
+			$installed_themes = $this->select('name')->where('type', 'theme')
+									 ->where('status', '1')->getAsArray();
+			if ($installed_themes) {
+				$installed_themes = array_flip(array_column($installed_themes, 'name'));
+				$installed_themes = array_fill_keys(array_keys($installed_themes), TRUE);
+			}
+		}
+
+		if (!is_null($theme) AND $this->theme_manager->hasTheme($theme)) {
+			if ($install) {
+				$installed_themes[$theme] = TRUE;
+			} else {
+				unset($installed_themes[$theme]);
+			}
+		}
+
+		$this->load->model('Settings_model');
+		$this->Settings_model->addSetting('prefs', 'installed_themes', $installed_themes, '1');
+		$this->config->set_item('installed_themes', $installed_themes);
+	}
+
+	/**
 	 * Activate theme
 	 *
 	 * @param string $name
@@ -172,12 +193,14 @@ class Themes_model extends Model
 
 			$this->load->model('Settings_model');
 			if ($this->Settings_model->addSetting('prefs', 'default_themes', $default_themes, '1')) {
-				$query = $theme['title'];
+				$query = $theme['name'];
 			}
 
 			if ($query !== FALSE) {
+				$this->updateInstalledThemes($name);
+
 				$active_theme_options = $this->config->item('active_theme_options');
-				$active_theme_options[MAINDIR] = [$theme['name'], $theme['data']];
+				$active_theme_options[MAINDIR] = [$theme['code'], $theme['data']];
 
 				$this->Settings_model->deleteSettings('prefs', 'customizer_active_style');  //@to-do remove in next version release
 				$this->Settings_model->addSetting('prefs', 'active_theme_options', $active_theme_options, '1');
@@ -203,17 +226,18 @@ class Themes_model extends Model
 		if (!empty($update['data'])) {
 			$update['data'] = serialize($update['data']);
 			$update['serialized'] = '1';
-		} else {
-			$update['data'] = serialize([]);
 		}
 
 		$query = FALSE;
-		if (!empty($update['extension_id']) AND !empty($update['name'])) {
-			$query = $this->where([
-				['type', '=', 'theme'],
-				['name', '=', $update['name']],
-				['extension_id', '=', $update['extension_id']],
-			])->update($update);
+
+		$themeModel = $this->where([
+			['type', '=', 'theme'],
+			['name', '=', $update['name']],
+		])->first();
+
+		if ($themeModel) {
+			$themeModel->fill($update)->save();
+			$query = TRUE;
 		} else if (!empty($update['name'])) {
 			unset($update['old_title']);
 			$query = $this->insertGetId(array_merge($update, [
@@ -223,50 +247,17 @@ class Themes_model extends Model
 		}
 
 		if ($query) {
-			$active_theme_options = $this->config->item('active_theme_options');
-			$active_theme_options[MAINDIR] = [$update['name'], $update['data']];
+			$this->updateInstalledThemes($update['name']);
 
-			if ($this->config->item(MAINDIR, 'default_themes') == $update['name'] . '/') {
+			if (!empty($update['data']) AND $this->config->item(MAINDIR, 'default_themes') == $update['name'] . '/') {
+				$active_theme_options = $this->config->item('active_theme_options');
+				$active_theme_options[MAINDIR] = [$update['name'], $update['data']];
+
 				$this->Settings_model->addSetting('prefs', 'active_theme_options', $active_theme_options, '1');
 			}
 		}
 
 		return $query;
-	}
-
-	/**
-	 * Extract uploaded theme zip folder
-	 *
-	 * @param array $file
-	 * @param string $domain
-	 *
-	 * @return bool
-	 */
-	public function extractTheme($file = [], $domain = MAINDIR)
-	{
-		if (isset($file['tmp_name']) AND class_exists('ZipArchive')) {
-
-			$zip = new ZipArchive;
-
-			chmod($file['tmp_name'], DIR_READ_MODE);
-
-			$THEMEPATH = ROOTPATH . $domain . '/views/themes';
-
-			if ($zip->open($file['tmp_name']) === TRUE) {
-				$theme_dir = $zip->getNameIndex(0);
-
-				if (preg_match('/\s/', $theme_dir) OR file_exists($THEMEPATH . '/' . $theme_dir)) {
-					return $this->lang->line('error_theme_exists');
-				}
-
-				$zip->extractTo($THEMEPATH);
-				$zip->close();
-
-				return TRUE;
-			}
-		}
-
-		return FALSE;
 	}
 
 	/**
@@ -278,7 +269,7 @@ class Themes_model extends Model
 	 *
 	 * @return bool
 	 */
-	public function copyTheme($theme_name = null, $files = [], $copy_data = TRUE)
+	public function copyTheme($theme_name = null, $copy_data = TRUE)
 	{
 		$query = FALSE;
 
@@ -291,16 +282,28 @@ class Themes_model extends Model
 				unset($row['extension_id']);
 				$row['name'] = $this->findThemeName("{$row['name']}-child");
 				$row['old_title'] = $row['title'];
-				$row['title'] = "{$row['title']} Child Theme";
+				$row['title'] = "{$row['title']} Child";
 				$row['data'] = ($copy_data AND $row['serialized'] == '1') ? unserialize($row['data']) : [];
 
 				if ($query = $this->updateTheme($row)) {
-					$query = create_child_theme_files($files, $theme_name, $row);
+					$query = $this->theme_manager->createChild($theme_name, $row);
 				}
 			}
 		}
 
 		return $query;
+	}
+
+	/**
+	 * Find an existing theme in DB by theme code
+	 *
+	 * @param string $code
+	 *
+	 * @return bool TRUE on success, FALSE on failure
+	 */
+	public function themeExists($code)
+	{
+		return $this->where('type', 'theme')->where('name', $code)->first() ? TRUE : FALSE;
 	}
 
 	/**
@@ -313,16 +316,13 @@ class Themes_model extends Model
 	 */
 	protected function findThemeName($theme_name, $count = 0)
 	{
-		$tmp_name = ($count > 0) ? "{$theme_name}-{$count}" : $theme_name;
-		$theme = $this->where('type', 'theme')->where('name', $tmp_name)->first();
-
-		if (!empty($theme) OR is_dir(ROOTPATH . MAINDIR . "/views/themes/{$tmp_name}")) {
+		do {
+			$newThemeCode = ($count > 0) ? "{$theme_name}-{$count}" : $theme_name;
 			$count++;
+		} // Already exist in DB? Try again
+		while ($this->themeExists($newThemeCode));
 
-			return $this->findThemeName($theme_name, $count);
-		}
-
-		return $tmp_name;
+		return $newThemeCode;
 	}
 
 	/**
@@ -333,18 +333,20 @@ class Themes_model extends Model
 	 *
 	 * @return bool
 	 */
-	public function deleteTheme($theme_name = null, $delete_data = TRUE)
+	public function deleteTheme($theme_name, $delete_data = TRUE)
 	{
-		$query = FALSE;
+		$themeModel = $this->where('type', 'theme')->where('name', $theme_name)->first();
 
-		if (!empty($theme_name)) {
-
-			if ($delete_data) {
-				$query = $this->queryBuilder()->table('extensions')->where('type', 'theme')->where('name', $theme_name)->delete();
-			}
-
-			$query = delete_theme($theme_name);
+		if ($delete_data) {
+			$themeModel->delete();
+		} else {
+			$themeModel->status = 0;
+			$themeModel->save();
 		}
+
+		$this->updateInstalledThemes($theme_name, FALSE);
+
+		$query = $this->theme_manager->removeTheme($theme_name);
 
 		return $query;
 	}

@@ -42,16 +42,14 @@ class Customizer
 		log_message('info', 'Customizer Class Initialized');
 	}
 
-	public function initialize($theme = [])
+	public function initialize($config = [])
 	{
-		if (!empty($theme['data'])) $this->data = $theme['data'];
-
-		if (!empty($theme['config']['customize']) AND is_array($theme['config']['customize'])) {
-			$this->config = $theme['config'];
-			$this->sections = $theme['config']['customize']['sections'];
+		if (!empty($config['customize']) AND is_array($config['customize'])) {
+			$this->config = $config;
+			$this->sections = $config['customize']['sections'];
 		}
 
-		unset($theme);
+		unset($config);
 	}
 
 	public function getNavView()
@@ -150,28 +148,45 @@ class Customizer
 		return $post_data;
 	}
 
+	public function setFieldData($data = [])
+	{
+		$this->data = $data;
+	}
+
 	protected function setRules()
 	{
-		if (empty($this->sections) AND !is_array($this->sections)) return FALSE;
+		$fields = $this->getFieldsFromSections();
 
-		foreach ($this->sections as $key => $section) {
-			if (!empty($section['fields'])) {
-				foreach ($section['fields'] as $field) {
-					if (!isset($field['type'])) continue;
+		if (!empty($fields)) {
+			foreach ($fields as $field) {
+				if (!isset($field['type'])) continue;
 
-					$field = $this->parseField($field);
-					if (!empty($field['group'])) {
-						foreach ($field['group'] as $group) {
-							if (!empty($group['rules'])) {
-								$this->rules[$group['name']] = ['field' => $group['name'], 'label' => empty($group['label']) ? $field['label'] : $group['label'], 'rules' => $group['rules']];
-							}
+				$field = $this->parseField($field);
+				if (!empty($field['group'])) {
+					foreach ($field['group'] as $group) {
+						if (!empty($group['rules'])) {
+							$this->rules[$group['name']] = ['field' => $group['name'], 'label' => empty($group['label']) ? $field['label'] : $group['label'], 'rules' => $group['rules']];
 						}
-					} else if (!empty($field['rules'])) {
-						$this->rules[$field['name']] = ['field' => $field['name'], 'label' => $field['label'], 'rules' => $field['rules']];
 					}
+				} else if (!empty($field['rules'])) {
+					$this->rules[$field['name']] = ['field' => $field['name'], 'label' => $field['label'], 'rules' => $field['rules']];
 				}
 			}
 		}
+	}
+
+	protected function getFieldsFromSections()
+	{
+		if (empty($this->sections) AND !is_array($this->sections)) return FALSE;
+
+		$fields = [];
+		foreach ($this->sections as $key => $section) {
+			$_fields = isset($section['fieldset']) ?
+				array_collapse(array_column($section['fieldset'], 'fields')) : array_get($section, 'fields');
+			$fields = array_merge($fields, $_fields);
+		}
+
+		return $fields;
 	}
 
 	protected function buildSections()
@@ -513,7 +528,7 @@ class Customizer
 			$value = $this->getFieldValue($button['name']);
 			if ($value == $button['value']) {
 				$button['checked'] = TRUE;
-			} else if (!empty($value)) {
+			} else {
 				unset($button['checked']);
 			}
 
@@ -615,7 +630,7 @@ class Customizer
 	protected function getFieldValue($name, $default = '')
 	{
 		$temp_value = $this->getFieldData($name);
-		$temp_value = ($temp_value !== null) ? $temp_value : $default;
+		$temp_value = ($temp_value === null) ? $default : $temp_value;
 
 		return $this->CI->form_validation->set_value($name, $temp_value);
 	}
@@ -623,7 +638,13 @@ class Customizer
 	protected function reduceArray($array, $keys, $i = 0)
 	{
 		if (is_array($array) AND isset($keys[$i])) {
-			return isset($array[$keys[$i]]) ? $this->reduceArray($array[$keys[$i]], $keys, ($i + 1)) : null;
+			if (isset($array[$keys[$i]]) AND is_array($array[$keys[$i]])) {
+				return $this->reduceArray($array[$keys[$i]], $keys, ($i + 1));
+			} else if (isset($array[$keys[$i]]) AND is_string($array[$keys[$i]])) {
+				return $array[$keys[$i]];
+			} else {
+				return null;
+			}
 		}
 
 		return ($array === '') ? null : $array;

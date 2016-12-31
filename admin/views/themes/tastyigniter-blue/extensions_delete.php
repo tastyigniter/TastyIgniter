@@ -4,6 +4,7 @@
         <form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
             <div class="panel panel-default">
                 <div class="panel-body">
+                    <?php $delete_action = !empty($extension_data) ? $this->lang->line('text_files_data') : $this->lang->line('text_files'); ?>
                     <p><?php echo sprintf(lang('alert_delete_warning'), $delete_action, $extension_name); ?></p>
                     <p><?php echo sprintf(lang('alert_delete_confirm'), $delete_action); ?></p>
                     <div id="deletedFiles">
@@ -23,7 +24,7 @@
                 </div>
                 <div class="panel-footer">
                     <input type="hidden" name="confirm_delete" value="<?php echo $extension_code; ?>">
-                    <a class="btn btn-default" href="<?php echo site_url('extensions?filter_type='.$extension_type); ?>"><?php echo lang('button_return_to_list'); ?></a>
+                    <a class="btn btn-default" href="<?php echo site_url('extensions'); ?>"><?php echo lang('button_return_to_list'); ?></a>
                     <button type="submit" class="btn btn-danger"><?php echo lang('button_yes_delete'); ?></button>
                     <button type="button" class="btn btn-default" onclick="$('#deletedFiles').slideToggle();"><?php echo lang('text_view_files'); ?></button>
                 </div>

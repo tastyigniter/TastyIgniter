@@ -19,6 +19,7 @@
 	$this->assets->setScriptTag(assets_url('js/select2.js'), 'select-2-js', '12');
 	$this->assets->setScriptTag(assets_url('js/jquery.raty.js'), 'jquery-raty-js', '13');
 	$this->assets->setScriptTag(assets_url('js/js.cookie.js'), 'js-cookie-js', '14');
+	$this->assets->setScriptTag(assets_url('js/app/app.js'), 'app-js', '15');
 	$this->assets->setScriptTag('js/common.js', 'common-js');
 
 	$system_logo  		= image_url('tastyigniter-logo.png');
@@ -182,6 +183,7 @@
 							<i class="fa fa-cog"></i>
 						</a>
 						<ul class="dropdown-menu dropdown-settings">
+							<li><a href="<?php echo site_url('updates'); ?>"><?php echo lang('menu_updates'); ?></a></li>
 							<li><a href="<?php echo site_url('pages'); ?>"><?php echo lang('menu_page'); ?></a></li>
 							<li><a href="<?php echo site_url('banners'); ?>"><?php echo lang('menu_banner'); ?></a></li>
 							<li><a href="<?php echo site_url('layouts'); ?>"><?php echo lang('menu_layout'); ?></a></li>

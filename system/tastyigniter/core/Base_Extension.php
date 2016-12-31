@@ -30,7 +30,7 @@ class Base_Extension
 	/**
 	 * @var array Extension dependencies
 	 */
-	public $require = array();
+	public $require = [];
 
 	/**
 	 * @var boolean Determine if this extension should be loaded (false) or not (true).
@@ -42,20 +42,14 @@ class Base_Extension
 	 *
 	 * @return array
 	 */
-	public function extensionMeta() {
+	public function extensionMeta()
+	{
 		$_module = get_class($this);
 
 		$config = $this->getConfigFromFile(sprintf("The configuration file for extension <b>%s</b> does not exist. " .
 			"Create the file or override extensionMeta() method in the extension class.", $_module));
 
-		if (!array_key_exists('extension_meta', $config)) {
-			show_error(sprintf("The configuration file for extension <b>%s</b> does not appear to contain a valid" .
-				" configuration array.", $_module));
-		}
-
-		unset($config['type'], $config['settings']);
-
-		return $config['extension_meta'];
+		return $config;
 	}
 
 	/**
@@ -64,7 +58,8 @@ class Base_Extension
 	 *
 	 * @return array
 	 */
-	public function autoload() {
+	public function autoload()
+	{
 	}
 
 	/**
@@ -72,7 +67,8 @@ class Base_Extension
 	 *
 	 * @return array
 	 */
-	public function run() {
+	public function run()
+	{
 	}
 
 	/**
@@ -83,7 +79,8 @@ class Base_Extension
 	 *
 	 * @return array
 	 */
-	public function registerComponents() {
+	public function registerComponents()
+	{
 		$config = $this->getConfigFromFile();
 
 		if (isset($config['layout_ready']) AND !empty($config['extension_meta']['type']) AND $config['extension_meta']['type'] == 'module') {
@@ -91,7 +88,7 @@ class Base_Extension
 			$_module = basename(dirname($reflection->getFileName()));
 			$_class = ucfirst($_module);
 
-			return array("{$_module}/components/{$_class}" => $_module);
+			return ["{$_module}/components/{$_class}" => $_module];
 		}
 	}
 
@@ -103,7 +100,8 @@ class Base_Extension
 	 *
 	 * @return array
 	 */
-	public function registerPaymentGateway() {
+	public function registerPaymentGateways()
+	{
 		$config = $this->getConfigFromFile();
 
 		if (isset($config['layout_ready']) AND !empty($config['extension_meta']['type']) AND $config['extension_meta']['type'] == 'payment') {
@@ -111,7 +109,7 @@ class Base_Extension
 			$_module = dirname($reflection->getFileName());
 			$_class = ucfirst($_module);
 
-			return array("{$_module}/components/{$_class}" => $_module);
+			return ["{$_module}/components/{$_class}" => $_module];
 		}
 	}
 
@@ -120,8 +118,9 @@ class Base_Extension
 	 *
 	 * @return array
 	 */
-	public function registerNavigation() {
-		return array();
+	public function registerNavigation()
+	{
+		return [];
 	}
 
 	/**
@@ -129,7 +128,8 @@ class Base_Extension
 	 *
 	 * @return array
 	 */
-	public function registerPermissions() {
+	public function registerPermissions()
+	{
 		$config = $this->getConfigFromFile();
 		if (is_array($config) AND array_key_exists('extension_permission', $config)) {
 			return $config['extension_permission'];
@@ -141,7 +141,8 @@ class Base_Extension
 	 *
 	 * @return array
 	 */
-	public function registerSettings() {
+	public function registerSettings()
+	{
 		$config = $this->getConfigFromFile();
 
 		if (!empty($config['extension_meta']['settings'])) {
@@ -160,8 +161,9 @@ class Base_Extension
 	 *
 	 * @return array
 	 */
-	public function registerMailTemplates() {
-		return array();
+	public function registerMailTemplates()
+	{
+		return [];
 	}
 
 	/**
@@ -171,20 +173,17 @@ class Base_Extension
 	 *
 	 * @return array|bool
 	 */
-	protected function getConfigFromFile($error_message = NULL) {
+	protected function getConfigFromFile($error_message = null)
+	{
 		if ($this->loaded_config !== FALSE) {
 			return $this->loaded_config;
 		}
 
-		list($_module, ) = explode('\\', get_class($this));
+		$config = null;
 
-		list($path, $file) = Modules::find($_module, $_module, 'config/');
+		list($_module,) = explode('\\', get_class($this));
 
-		if ($path != FALSE) {
-			$this->loaded_config = Modules::load_file($file, $path, 'config');
-		} else if ($error_message) {
-			show_error($error_message);
-		}
+		$this->loaded_config = Modules::check_config($_module, $error_message);
 
 		return $this->loaded_config;
 	}

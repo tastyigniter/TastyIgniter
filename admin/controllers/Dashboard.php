@@ -11,7 +11,7 @@ class Dashboard extends Admin_Controller
 		$this->load->model('Locations_model');
 
 		$this->load->library('currency'); // load the currency library
-		$this->load->model('Updates_manager');
+		$this->load->library('updates_manager');
 
 		$this->lang->load('dashboard');
 	}

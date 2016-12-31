@@ -1,0 +1,16 @@
+{
+  "code": "tastyigniter-orange",
+  "name": "TastyIgniter Orange",
+  "description": "Responsive theme for TastyIgniter front-end, customizable, simple, and readable",
+  "version": "2.1.0",
+  "author": "SamPoyigi",
+  "homepage": "https://github.com/igniter-labs/tastyigniter-orange-theme",
+  "tags": {
+    "1.0.0": "Theme initialization",
+    "2.1.0": "Update code to use latest Theme API"
+  },
+  "require": {
+    "local_module": "*",
+    "cart_module": "*"
+  }
+}

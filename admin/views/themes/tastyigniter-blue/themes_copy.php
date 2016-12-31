@@ -4,7 +4,7 @@
         <form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <p><?php echo sprintf(lang('alert_copy_warning'), $copy_action, $theme_title); ?></p>
+                    <p><?php echo sprintf(lang('alert_copy_warning'), $copy_action, $theme_name); ?></p>
                     <p><?php echo sprintf(lang('alert_copy_confirm'), $copy_action); ?></p>
                     <div id="copyFiles">
                         <textarea class="form-control" rows="5" readonly><?php echo implode(PHP_EOL, $files_to_copy); ?></textarea>

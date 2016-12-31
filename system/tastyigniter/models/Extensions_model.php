@@ -4,12 +4,12 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package       TastyIgniter
- * @author        SamPoyigi
+ * @package   TastyIgniter
+ * @author    SamPoyigi
  * @copyright (c) 2013 - 2016. TastyIgniter
- * @link          http://tastyigniter.com
- * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since         File available since Release 1.0
+ * @link      http://tastyigniter.com
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 1.0
  */
 if (!defined('BASEPATH')) exit('No direct access allowed');
 
@@ -77,17 +77,18 @@ class Extensions_model extends Model
 		}
 
 		foreach (Modules::paths() as $code => $path) {
-			if (!($_extension = Modules::find_extension($code))) continue;
+			if (!($extensionClass = Modules::find_extension($code))) continue;
 
 			$db_extension = isset($db_extensions[$code]) ? $db_extensions[$code] : [];
 
-			$extension = $_extension->extensionMeta();
+			$extension = $extensionClass->extensionMeta();
 			$result[$code] = array_merge($extension, [
 				'code'         => $code,
 				'extension_id' => isset($db_extension['extension_id']) ? $db_extension['extension_id'] : 0,
 				'ext_data'     => isset($db_extension['ext_data']) ? $db_extension['ext_data'] : '',
-				'settings'     => $_extension->registerSettings(),
-				'installed'    => (!empty($db_extension) AND !Modules::is_disabled($code)) ? TRUE : FALSE,
+				'settings'     => $extensionClass->registerSettings(),
+				'installed'    => (!empty($db_extension)) ? TRUE : FALSE,
+				'disabled'    	=> $extensionClass->disabled,
 				'status'       => (isset($db_extension['status']) AND $db_extension['status'] == '1') ? '1' : '0',
 			]);
 		}
@@ -151,7 +152,7 @@ class Extensions_model extends Model
 		return $query;
 	}
 
-	public function paginateWithFilter($filter = [], $base_url = null)
+	public function paginateWithFilter($filter = [])
 	{
 		$result = new stdClass;
 		$result->pagination = $result->list = [];
@@ -228,6 +229,7 @@ class Extensions_model extends Model
 
 	/**
 	 * Return all files within an extension folder
+	 * @deprecated since 2.2.0 use Modules::files_path() instead
 	 *
 	 * @param string $code
 	 * @param array $files
@@ -236,21 +238,7 @@ class Extensions_model extends Model
 	 */
 	public function getExtensionFiles($code = null, $files = [])
 	{
-		if (!is_dir(ROOTPATH . EXTPATH . $code)) {
-			return null;
-		}
-
-		foreach (glob(ROOTPATH . EXTPATH . $code . '/*') as $filepath) {
-			$filename = str_replace(ROOTPATH . EXTPATH, '', $filepath);
-
-			if (is_dir($filepath)) {
-				$files = $this->getExtensionFiles($filename, $files);
-			} else {
-				$files[] = EXTPATH . $filename;
-			}
-		}
-
-		return $files;
+		return Modules::files_path($code);
 	}
 
 	/**
@@ -414,6 +402,7 @@ class Extensions_model extends Model
 
 		$this->load->model('Settings_model');
 		$this->Settings_model->addSetting('prefs', 'installed_extensions', $installed_extensions, '1');
+		$this->config->set_item('installed_extensions', $installed_extensions);
 	}
 
 	/**
@@ -448,7 +437,7 @@ class Extensions_model extends Model
 			$extensionModel = $this->whereIn('type', ['module', 'payment'])->firstOrCreate(['name' => $code]);
 
 			if ($extensionModel) {
-				$update = $extensionModel->update(['type' => 'module', 'title' => $title, 'status' => '1']);
+				$update = $extensionModel->fill(['type' => 'module', 'title' => $title, 'status' => '1'])->save();
 				if ($update) $extension_id = $extensionModel->extension_id;
 			}
 
@@ -509,31 +498,30 @@ class Extensions_model extends Model
 	 *
 	 * @return bool
 	 */
-	public function delete($code = '', $delete_data = TRUE)
+	public function deleteExtension($code = '', $delete_data = TRUE)
 	{
 		$query = FALSE;
 
 		if ($this->extensionExists($code)) {
 
-			$get_installed = $this->whereIn('type', ['module', 'payment'])
-								  ->where('name', $code)->where('status', '1')->first();
-			if (empty($get_installed)) {
-				$this->load->helper('file');
-				delete_files(ROOTPATH . EXTPATH . $code, TRUE);
-				rmdir(ROOTPATH . EXTPATH . $code);
-				$query = TRUE;
-			}
+			$extensionModel = $this->whereIn('type', ['module', 'payment'])
+								  ->where('name', $code)->first();
+
+			if (isset($extensionModel->status) AND $extensionModel->status == 1)
+				return FALSE;
 
 			if ($delete_data) {
-				$affected_rows = $this->whereIn('type', ['module', 'payment'])
-									  ->where('name', $code)->where('status', '1')->delete();
+				$affected_rows = $extensionModel->delete();
 
 				if ($affected_rows > 0) {
 					// downgrade extension migration
-					Modules::run_migration($code);
-					$query = TRUE;
+					$query = Modules::run_migration($code, TRUE);
 				}
 			}
+
+			$this->updateInstalledExtensions($code, FALSE);
+
+			$query = Modules::remove_extension($code);
 		}
 
 		return $query;

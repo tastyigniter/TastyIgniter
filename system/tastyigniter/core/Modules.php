@@ -6,10 +6,10 @@
  *
  * @package   TastyIgniter
  * @author    SamPoyigi
- * @copyright TastyIgniter
+ * @copyright (c) 2013 - 2016. TastyIgniter
  * @link      http://tastyigniter.com
  * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since     File available since Release 2.2
+ * @since     File available since Release 1.0
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -19,9 +19,9 @@ global $CFG;
 
 /* get module locations from config settings or use the default module location and offset */
 is_array(Modules::$locations = $CFG->item('modules_locations'))
-OR Modules::$locations = array(
-	ROOTPATH . EXTPATH          => '../../' . EXTPATH,
-);
+OR Modules::$locations = [
+	ROOTPATH . EXTPATH => '../../' . EXTPATH,
+];
 
 /* PHP5 spl_autoload */
 spl_autoload_register('Modules::autoload');
@@ -43,24 +43,25 @@ class Modules
 	/**
 	 * @var array used for storing extension information objects.
 	 */
-	protected static $extensions = array();
+	protected static $extensions = [];
 
 	/**
 	 * @var array of disabled extensions.
 	 */
-	protected static $installed_extensions = array();
+	protected static $installed_extensions = [];
 
 	/**
 	 * @var array of extensions and their directory paths.
 	 */
-	protected static $paths = array();
+	protected static $paths = [];
 
 	/**
 	 * @var array used for storing extension information objects.
 	 */
 	protected static $auto_loaded = FALSE;
 
-	public static function initialize() {
+	public static function initialize()
+	{
 		self::load_installed();
 		self::load_extensions();
 	}
@@ -72,7 +73,8 @@ class Modules
 	 *
 	 * @return mixed The output from the module.
 	 */
-	public static function run($module) {
+	public static function run($module)
+	{
 		$method = 'index';
 
 		// If a directory separator is found in $module, use the right side of the
@@ -95,13 +97,13 @@ class Modules
 
 		// Get the remaining arguments and pass them to $method.
 		$args = func_get_args();
-		$output = call_user_func_array(array($class, $method), array_slice($args, 1));
+		$output = call_user_func_array([$class, $method], array_slice($args, 1));
 
 		// Get/clean the current buffer.
 		$buffer = ob_get_clean();
 
 		// If $output is not null, return it, otherwise return the buffered content.
-		return $output !== NULL ? $output : $buffer;
+		return $output !== null ? $output : $buffer;
 	}
 
 	/**
@@ -111,10 +113,11 @@ class Modules
 	 *
 	 * @return mixed The loaded controller.
 	 */
-	public static function load($module) {
+	public static function load($module)
+	{
 		// If $module is an array, the first item is $module and the remaining items
 		// are $params.
-		is_array($module) ? list($module, $params) = each($module) : $params = NULL;
+		is_array($module) ? list($module, $params) = each($module) : $params = null;
 
 		// Get the requested controller class name.
 		$alias = strtolower(basename($module));
@@ -152,7 +155,8 @@ class Modules
 	 *
 	 * @return void
 	 */
-	public static function autoload($class) {
+	public static function autoload($class)
+	{
 		// Don't autoload CI_ prefixed classes or those using the config subclass_prefix.
 		if (strstr($class, 'CI_') OR strstr($class, config_item('subclass_prefix'))) return;
 
@@ -163,7 +167,7 @@ class Modules
 
 				return;
 			}
-			show_error('Failed to load MX core class: '.$class);
+			show_error('Failed to load MX core class: ' . $class);
 		}
 
 		// Autoload core classes.
@@ -187,11 +191,12 @@ class Modules
 	 * @param string $file The filename.
 	 * @param string $path The path to the file.
 	 * @param string $type The type of file.
-	 * @param mixed  $result
+	 * @param mixed $result
 	 *
 	 * @return mixed
 	 */
-	public static function load_file($file, $path, $type = 'other', $result = TRUE) {
+	public static function load_file($file, $path, $type = 'other', $result = TRUE)
+	{
 		// If $file includes the '.php' extension, remove it.
 		$fileName = explode('.', $file);
 		$ext = array_pop($fileName);
@@ -205,7 +210,6 @@ class Modules
 		$file = ltrim(ltrim($file, '/'), "\\");
 
 		$location = "{$path}/{$file}.php";
-
 
 		if ($type === 'other') {
 			if (class_exists($file, FALSE)) {
@@ -249,33 +253,34 @@ class Modules
 	 *
 	 * @return array
 	 */
-	public static function find($file, $module, $base) {
+	public static function find($file, $module, $base)
+	{
 		$segments = explode('/', $file);
 		$file = array_pop($segments);
 		$file_ext = pathinfo($file, PATHINFO_EXTENSION) ? $file : "{$file}.php";
 
 		$path = ltrim(implode('/', $segments) . '/', '/');
-		$module ? $modules[$module] = $path : $modules = array();
+		$module ? $modules[$module] = $path : $modules = [];
 
 		if (!empty($segments)) {
 			$modules[array_shift($segments)] = ltrim(implode('/', $segments) . '/', '/');
 		}
 
-		foreach (Modules::$locations as $location => $offset) {
+		foreach (Modules::folders() as $location) {
 			foreach ($modules as $module => $subpath) {
 				$fullpath = "{$location}{$module}/{$base}{$subpath}";
 
 				if (is_file($fullpath . $file_ext)) {
-					return array($fullpath, $file);
+					return [$fullpath, $file];
 				}
 
 				if (is_file($fullpath . ucfirst($file_ext))) {
-					return array($fullpath, ucfirst($file));
+					return [$fullpath, ucfirst($file)];
 				}
 			}
 		}
 
-		return array(FALSE, $file);
+		return [FALSE, $file];
 	}
 
 	/**
@@ -286,7 +291,8 @@ class Modules
 	 *
 	 * @return mixed The parsed route or void.
 	 */
-	public static function parse_routes($module, $uri) {
+	public static function parse_routes($module, $uri)
+	{
 		// If the module's route is not already set, load the file and set it.
 		if (!isset(self::$routes[$module])) {
 			if (list($path) = self::find('routes', $module, 'config/') AND $path) {
@@ -302,7 +308,7 @@ class Modules
 		// Parse module routes.
 		foreach (self::$routes[$module] as $key => $val) {
 			// Translate the placeholders for the regEx.
-			$key = str_replace(array(':any', ':num'), array('.+', '[0-9]+'), $key);
+			$key = str_replace([':any', ':num'], ['.+', '[0-9]+'], $key);
 
 			// Parse the route.
 			if (preg_match('#^' . $key . '$#', $uri)) {
@@ -324,7 +330,8 @@ class Modules
 	 *
 	 * @return boolean True if the controller is found, else false.
 	 */
-	public static function controller_exists($controller = NULL, $module = NULL) {
+	public static function controller_exists($controller = null, $module = null)
+	{
 		if (empty($controller) || empty($module)) {
 			return FALSE;
 		}
@@ -351,7 +358,8 @@ class Modules
 	 *
 	 * @return string The full path to the file.
 	 */
-	public static function file_path($module = NULL, $folder = NULL, $file = NULL) {
+	public static function file_path($module = null, $folder = null, $file = null)
+	{
 		if (empty($module) || empty($folder) || empty($file)) {
 			return FALSE;
 		}
@@ -373,7 +381,8 @@ class Modules
 	 *
 	 * @return string The path, relative to the front controller.
 	 */
-	public static function path($module = NULL, $folder = NULL) {
+	public static function path($module = null, $folder = null)
+	{
 		foreach (Modules::folders() as $module_folder) {
 			// Check each folder for the module's folder.
 			if (is_dir("{$module_folder}{$module}")) {
@@ -398,7 +407,7 @@ class Modules
 	 * @param $module_folder string  If not null, will return only files within
 	 *                       that sub-folder of each module (ie 'views').
 	 *
-	 * @return array An associative array, like:
+	 * @return bool|array An associative array, like:
 	 * <code>
 	 * array(
 	 *     'module_name' => array(
@@ -406,13 +415,14 @@ class Modules
 	 *     )
 	 * )
 	 */
-	public static function files($module_name = NULL, $module_folder = NULL) {
+	public static function files($module_name = null, $module_folder = null)
+	{
 		// Ensure the directory_map() function is available.
 		if (!function_exists('directory_map')) {
 			get_instance()->load->helper('directory');
 		}
 
-		$files = array();
+		$files = [];
 		foreach (Modules::folders() as $path) {
 			// Only map the whole modules directory if $module_name isn't passed.
 			if (empty($module_name)) {
@@ -436,9 +446,9 @@ class Modules
 						$files[$modDir] = $values;
 					} elseif (!empty($values[$module_folder])) {
 						// Add just the specified folder for this module.
-						$files[$modDir] = array(
+						$files[$modDir] = [
 							$module_folder => $values[$module_folder],
-						);
+						];
 					}
 				}
 			}
@@ -448,11 +458,40 @@ class Modules
 	}
 
 	/**
+	 * Search a extension folder for files.
+	 *
+	 * @param $module_name   string  If not null, will return only files from that
+	 *                       module.
+	 * @param $path string  If not null, will return only files within
+	 *                       that sub-folder of each module (ie 'views').
+	 *
+	 * @return array
+	 */
+	public static function files_path($module_name, $path = null)
+	{
+		$module_path = $path ? $path : self::path($module_name);
+		$module_path = rtrim($module_path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+
+		foreach (glob($module_path . '*') as $filepath) {
+			$filename = ltrim(substr($filepath, strlen(base_path())), DIRECTORY_SEPARATOR);
+
+			if (is_dir($filepath)) {
+				$files[] = self::files_path($module_name, $filepath);
+			} else {
+				$files[] = $filename;
+			}
+		}
+
+		return array_flatten($files);
+	}
+
+	/**
 	 * Returns an array of the folders in which modules may be stored.
 	 *
 	 * @return array The folders in which modules may be stored.
 	 */
-	public static function folders() {
+	public static function folders()
+	{
 		return array_keys(Modules::$locations);
 	}
 
@@ -461,8 +500,9 @@ class Modules
 	 *
 	 * @return array A list of all modules in the system.
 	 */
-	public static function list_modules() {
-		$map = array();
+	public static function list_modules()
+	{
+		$map = [];
 		foreach (Modules::paths() as $dir => $path) {
 			$map[] = $dir;
 		}
@@ -489,8 +529,9 @@ class Modules
 	 *
 	 * @return array A list of all extensions in the system.
 	 */
-	public static function paths() {
-		$filedata = array();
+	public static function paths()
+	{
+		$filedata = [];
 		foreach (self::folders() as $folder) {
 			if ($fp = @opendir($folder)) {
 				$folder = rtrim($folder, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
@@ -511,8 +552,6 @@ class Modules
 		}
 
 		return $filedata;
-
-		return FALSE;
 	}
 
 	/**
@@ -520,7 +559,8 @@ class Modules
 	 *
 	 * @return array
 	 */
-	public static function load_extensions() {
+	public static function load_extensions()
+	{
 		self::$extensions = [];
 
 		foreach (self::paths() as $name => $path) {
@@ -538,7 +578,8 @@ class Modules
 	 *
 	 * @return object|void
 	 */
-	public static function load_extension($name, $path) {
+	public static function load_extension($name, $path)
+	{
 		if (!self::check_name($name)) return;
 
 		if (isset(self::$extensions[$name])) {
@@ -563,6 +604,10 @@ class Modules
 
 		include_once $extension_class_path;
 
+		if (!class_exists($extension_class, FALSE)) {
+			show_error("Unable to load extension class: $extension_class");
+		}
+
 		$extension_class_obj = new $extension_class();
 
 		// Check for disabled plugins
@@ -581,7 +626,8 @@ class Modules
 	 *
 	 * @return void
 	 */
-	public static function autoload_extensions() {
+	public static function autoload_extensions()
+	{
 		if (self::$auto_loaded) {
 			return;
 		}
@@ -600,7 +646,8 @@ class Modules
 	 *
 	 * @return void
 	 */
-	public static function autoload_extension($extension = NULL) {
+	public static function autoload_extension($extension = null)
+	{
 		if (!$extension) {
 			return;
 		}
@@ -616,12 +663,14 @@ class Modules
 	 * Returns an array with all registered extensions
 	 * The index is the extension name, the value is the extension object.
 	 */
-	public static function get_extensions() {
-		$extensions = array();
+	public static function get_extensions()
+	{
+		$extensions = [];
 		foreach (self::$extensions as $name => $extension) {
 			if (!self::is_disabled($name))
 				$extensions[$name] = $extension;
 		}
+
 		return $extensions;
 	}
 
@@ -632,23 +681,55 @@ class Modules
 	 *
 	 * @return mixed|null
 	 */
-	public static function find_extension($name) {
+	public static function find_extension($name)
+	{
 		if (!self::has_extension($name)) {
-			return NULL;
+			return null;
 		}
 
 		return self::$extensions[$name];
 	}
 
 	/**
-	 * Checks to see if an extension has been registered.
+	 * Checks to see if an extension name is well formed.
 	 *
 	 * @param $name
 	 *
 	 * @return bool
 	 */
-	public static function check_name($name) {
-		return strpos($name, '_') === 0 ? NULL : $name;
+	public static function check_name($name)
+	{
+		return (strpos($name, '_') === 0 OR preg_match('/\s/', $name)) ? null : $name;
+	}
+
+	public static function check_config($name, $show_error = FALSE)
+	{
+		$config = NULL;
+
+		list($path, $file) = Modules::find('extension.json', strtolower($name), null);
+
+		if ($path != FALSE) {
+			$config = json_decode(file_get_contents($path . $file), TRUE);
+		} else {
+			list($path, $file) = Modules::find($name, $name, 'config/');
+
+			if ($path != FALSE) {
+				$config = Modules::load_file($file, $path, 'config');
+				$config = !array_key_exists('extension_meta', $config) ? null : $config;
+			}
+		}
+
+		if (empty($config) OR !array_key_exists('code', $config) OR !array_key_exists('name', $config)
+			OR !array_key_exists('description', $config) OR !array_key_exists('version', $config)
+			OR !array_key_exists('author', $config) OR !array_key_exists('icon', $config)
+			OR !array_key_exists('tags', $config))
+			$config = NULL;
+
+		if (!$config AND $show_error)
+			show_error(sprintf("The registration file for extension <b>%s</b> does not appear to contain a valid" .
+				" array.", $name));
+
+		return $config;
 	}
 
 	/**
@@ -658,7 +739,8 @@ class Modules
 	 *
 	 * @return bool
 	 */
-	public static function has_extension($name) {
+	public static function has_extension($name)
+	{
 		return isset(self::$extensions[$name]);
 	}
 
@@ -669,7 +751,8 @@ class Modules
 	 *
 	 * @return bool
 	 */
-	public static function is_disabled($name) {
+	public static function is_disabled($name)
+	{
 		if (!self::check_name($name) OR !array_key_exists($name, self::$installed_extensions)) {
 			return TRUE;
 		}
@@ -680,7 +763,8 @@ class Modules
 	/**
 	 * Loads all installed extension from application config.
 	 */
-	public static function load_installed() {
+	public static function load_installed()
+	{
 		if (($installed_extensions = config_item('installed_extensions')) AND is_array($installed_extensions)) {
 			self::$installed_extensions = config_item('installed_extensions');
 		}
@@ -689,34 +773,94 @@ class Modules
 	/**
 	 * Extract uploaded extension zip folder
 	 *
-	 * @param array $zip_file $_FILES[tmp_name]
+	 * @param $zipPath
+	 * @param array $extCode extension code
 	 *
 	 * @return bool TRUE on success, FALSE on failure
 	 */
-	public static function extract_extension($zip_file) {
-		if (file_exists($zip_file) AND class_exists('ZipArchive')) {
-			chmod($zip_file, DIR_READ_MODE);
-			$EXTPATH = ROOTPATH . EXTPATH;
+	public static function extract_extension($zipPath, $extCode = null)
+	{
+		if (!file_exists($zipPath) OR !class_exists('ZipArchive', FALSE))
+			return FALSE;
 
-			$zip = new ZipArchive;
-			if ($zip->open($zip_file) === TRUE) {
-				if ($zip->locateName('Extension.php') !== FALSE) {
-					return FALSE;
-				}
+		$extensionDir = null;
+		$extractTo = current(Modules::folders());
 
-				$extension_dir = $zip->getNameIndex(0);
-				if (preg_match('/\s/', $extension_dir) OR file_exists($EXTPATH . '/' . $extension_dir)) {
-					return FALSE;
-				}
+		$zip = new ZipArchive;
 
-				$zip->extractTo($EXTPATH);
-				$zip->close();
+		chmod($zipPath, DIR_READ_MODE);
+		if ($zip->open($zipPath) === TRUE) {
+			$extensionDir = $zip->getNameIndex(0);
 
-				return TRUE;
+			if ($zip->locateName($extensionDir.'Extension.php') === FALSE AND $zip->locateName($extensionDir.'extension.json') === FALSE)
+				return FALSE;
+
+			if (!self::check_name($extensionDir) OR file_exists($extractTo . $extensionDir))
+				return FALSE;
+
+			$zip->extractTo($extractTo);
+			$zip->close();
+		}
+
+		if (!file_exists($extractedPath = $extractTo . '/' . $extensionDir))
+			return FALSE;
+
+		if (is_string($extCode)) {
+			$CI =& get_instance();
+			if (!function_exists('copy_directory'))
+				$CI->load->helper('directory');
+
+			$extensionPath = ROOTPATH . EXTPATH . $extCode;
+			if (!file_exists($extensionPath))
+				copy_directory($extractedPath, $extensionPath);
+		}
+
+		return $extractedPath;
+	}
+
+	/**
+	 * Delete extension the filesystem
+	 *
+	 * @param array $extCode The extension to delete
+	 *
+	 * @return bool TRUE on success, FALSE on failure
+	 */
+	public static function remove_extension($extCode = null)
+	{
+		$extensionPath = rtrim(self::path($extCode), DIRECTORY_SEPARATOR);
+		// Delete the specified admin and main language folder.
+		if (!is_dir($extensionPath))
+			return FALSE;
+
+		if ( ! function_exists('delete_files'))
+			get_instance()->load->helper('file');
+
+		delete_files($extensionPath, TRUE);
+		rmdir($extensionPath);
+
+		return TRUE;
+	}
+
+	/**
+	 * Install downloaded/uploaded extension
+	 *
+	 * @param array $extCode extension code
+	 *
+	 * @return bool TRUE on success, FALSE on failure
+	 */
+	public static function install_extension($extCode)
+	{
+		if ($extension = Modules::find_extension($extCode)) {
+			$CI =& get_instance();
+			if (!isset($CI->Extensions_model))
+				$CI->load->model('Extensions_model');
+
+			if (!$CI->Extensions_model->install($extCode, $extension)) {
+				return FALSE;
 			}
 		}
 
-		return FALSE;
+		return TRUE;
 	}
 
 	/**
@@ -724,11 +868,12 @@ class Modules
 	 * for a given module migration
 	 *
 	 * @param string $module
-	 * @param bool   $downgrade
+	 * @param bool $downgrade
 	 *
 	 * @return bool
 	 */
-	public static function run_migration($module, $downgrade = FALSE) {
+	public static function run_migration($module, $downgrade = FALSE)
+	{
 		list($path) = Modules::find('migration', $module, 'config/');
 
 		if (!$path) {
@@ -743,9 +888,9 @@ class Modules
 		$CI->load->library('migration', $migration);
 
 		if ($downgrade === TRUE) {
-			$CI->migration->version('0', $module);
+			return $CI->migration->version('0', $module);
 		} else {
-			$CI->migration->current($module);
+			return $CI->migration->current($module);
 		}
 	}
 }

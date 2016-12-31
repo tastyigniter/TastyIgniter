@@ -7,13 +7,6 @@
 *
 */
 
-// Set a custom theme title.
-$theme['title']         = 'TastyIgniter Orange';
-$theme['author']        = 'SamPoyigi';
-$theme['version']       = '2.1';
-$theme['description']   = 'Responsive theme for front-end';
-$theme['child']       	= TRUE;
-
 $theme['head_tags'] = array(
 	'doctype'   => 'html5',
 	'favicon'   => theme_url('tastyigniter-orange/images/favicon.ico'),
@@ -379,8 +372,6 @@ $theme['customize']['sections']['header'] = array(
 	'title'		=> 'Header',
 	'desc'		=> '',
 	'icon'		=> '',
-	'fields'		=> array(
-	),
 	'fieldset'	=> array(
 		array(
 			'fields'		=> array(
@@ -424,7 +415,7 @@ $theme['customize']['sections']['header'] = array(
 					'desc'			=> 'Upload custom logo or text to your website.',
 					'type' 			=> 'input-group',
 					'group'			=> array(
-						array('id' => 'input-logo-image', 'name' => 'logo_image', 'type' => 'media', 'value' => '', 'rules' => 'required'),
+						array('id' => 'input-logo-image', 'name' => 'logo_image', 'type' => 'media', 'value' => ''),
 						array('id' => 'input-logo-text', 'name' => 'logo_text', 'type' => 'text', 'value' => ''),
 					)
 				),

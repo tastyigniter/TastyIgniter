@@ -17,7 +17,7 @@
 			</ul>
 		</div>
 
-		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo $_action; ?>">
+		<form role="form" id="edit-form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>">
 			<div class="tab-content">
 				<?php if ($is_customizable) { ?>
                     <div id="customize" class="tab-pane theme-sections clearfix active">
@@ -73,8 +73,9 @@ $(document).ready(function() {
 	<?php } ?>
 
     if ($('#editor-area').val()) {
-        var myCodeMirror = CodeMirror.fromTextArea(document.getElementById('editor-area'), {
+        CodeMirror.fromTextArea(document.getElementById('editor-area'), {
             lineNumbers: true,
+			theme: 'dracula',
             mode: "<?php echo $mode; ?>"
         });
     }

@@ -10,7 +10,7 @@ body {
 	font-family: 'Roboto', Arial, sans-serif;
 	font-weight: 400;
 	margin-bottom: 0;
-	font-size: 1.5em;
+	font-size: 1.456em;
 	color: #4C4C4C;
 }
 .body-login {
@@ -55,7 +55,8 @@ a, a:hover, a:active {
 	padding: 48px 15px;
 }
 .jumbotron p {
-	font-size: 14px;
+	font-size: 16px;
+	font-weight: 400;
 }
 b, strong, label {
 	font-weight: 500;
@@ -87,6 +88,11 @@ h1.block-heading, h2.block-heading, h3.block-heading, h4.block-heading, h5.block
 .a {
 	outline: 0 none;
 }
+.text-w-300 {font-weight: 300;}
+.text-w-400 {font-weight: 400;}
+.text-w-500 {font-weight: 500;}
+.text-w-700 {font-weight: 700;}
+.text-w-900 {font-weight: 900;}
 .text-sm {
 	font-size: 12px;
 }
@@ -193,6 +199,12 @@ h1.block-heading, h2.block-heading, h3.block-heading, h4.block-heading, h5.block
 .wrap-right {
 	padding-right: 15px !important;
 }
+.no-margin {
+	margin: 0;
+}
+.margin-bottom {
+	margin-bottom: 15px;
+}
 .inline-block {
 	display: inline-block;
 }
@@ -238,6 +250,11 @@ h1.block-heading, h2.block-heading, h3.block-heading, h4.block-heading, h5.block
 }
 .hide-sidebar .navbar-top .navbar-header {
 	width: 46px;
+}
+.hide-sidebar .navbar-top .navbar-logo {
+	width: 46px;
+	overflow: hidden;
+	padding: 0 6px;
 }
 .navbar-top .navbar-heading {
 	display: inline-block;
@@ -714,7 +731,7 @@ h1.block-heading, h2.block-heading, h3.block-heading, h4.block-heading, h5.block
 .page-header .page-action {
 	padding-bottom: 5px;
 }
-.page-header .btn {
+.page-action .btn {
 	padding: 8px 15px;
 	border-width: 0px 0px 4px 0px;
 	outline: 0 none;
@@ -722,31 +739,31 @@ h1.block-heading, h2.block-heading, h3.block-heading, h4.block-heading, h5.block
 	margin-left: 5px;
 	margin-right: 5px;
 }
-.page-header .btn-default:first-child {
+.page-action .btn-default:first-child {
 	margin-left: 0;
 }
-.page-header .btn-default:last-child {
+.page-action .btn-default:last-child {
 	margin-right: 0;
 }
-.page-header .btn-default {
+.page-action .btn-default {
 	border-width: 1px 1px 4px 1px;
 }
-.page-header .btn:hover,
-.page-header .btn:focus {
+.page-action .btn:hover,
+.page-action .btn:focus {
 	margin-top: 1px;
 	border-bottom-width: 3px;
 }
-.page-header .btn.active, .page-header .btn:active {
+.page-action .btn.active, .page-action .btn:active {
 	box-shadow: none;
 	border-bottom-width: 2px;
 	margin-top: 2px;
 }
-.page-header .fa {
+.page-action .fa {
 	font-size: 18px;
 	padding: 0;
 }
-.page-header .btn .fa {
-	font-size: 15px;
+.page-action .btn .fa {
+	font-size: 14px;
 	padding-right: 3px;
 }
 /** ALERT **/
@@ -842,7 +859,7 @@ form {
 .form-control {
 	border: 1px solid #DCE4EC;
 	box-shadow: 0 1px 0px #DCE4EC;
-	font-size: 15px;
+	font-size: 14px;
 	width: 100%;
 	border-radius: 3px;
 	height: 42px;
@@ -875,6 +892,11 @@ textarea.form-control {
 	line-height: 1.5;
 	padding: 5px 10px;
 }
+.input-lg {
+	height: 46px;
+	padding: 10px 16px;
+	font-size: 18px;
+}
 .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
 	background-color: #ECF0F5;
 	border-color: #C5D2E1;
@@ -883,7 +905,7 @@ textarea.form-control {
 	position: relative;
 	overflow: hidden;
 	margin: 0px;
-	line-height: 24px;
+	line-height: 29px;
 }
 .btn-file-input input[type=file] {
 	position: absolute;
@@ -1079,6 +1101,7 @@ textarea.form-control {
 	border: 0 none;
 	margin-bottom: 0;
 	width: auto;
+	font-weight: 500;
 }
 .fieldset-bordered legend span {
 	padding: 10px;
@@ -1229,7 +1252,7 @@ a:focus {
 	outline-offset: -1px;
 }
 .btn-default {
-	border-color: #DCE4EC;
+	border-color: #D2DCE7;
 	color: #575757;
 	text-shadow: 1px 1px 0 #F5F5F5;
 	box-shadow: 0px 1px 1px rgba(90, 90, 90, 0.1);
@@ -1242,7 +1265,7 @@ a:focus {
 .open .dropdown-toggle.btn-default {
 	color: #575757;
 	background-color: #ECF0F5;
-	border-color: #DCE4EC;
+	border-color: #D2DCE7;
 	box-shadow: inset 0px 3px 5px rgba(210, 220, 231, 0.825);
 }
 .btn-success {
@@ -1395,9 +1418,20 @@ a:focus {
 .btn-group > .btn-info.active {
 	background-color: #5CBAD5;
 }
+/** MODAL **/
+.modal-content {
+	border: 1px solid #DCE4EC;
+	box-shadow: 0 3px 8px rgba(95, 128, 171, 0.376);
+}
+.modal-header {
+	border-color: #DCE4EC;
+}
+.modal-body > .panel {
+	margin-bottom: 0;
+}
 /** DROPDOWN MENU **/
 .dropdown-menu {
-	border: 1px solid #DFE6EE;
+	border: 1px solid #DCE4EC;
 	box-shadow: 0 3px 8px rgba(95, 128, 171, 0.376);
 }
 .dropdown-toggle {
@@ -1667,7 +1701,7 @@ a:focus {
 	border-radius: 3px;
 }
 .filter-bar .btn .fa {
-	font-size: 15px;
+	font-size: 14px;
 }
 @media (min-width: 992px) {
 	.filter-bar .pull-left {
@@ -1903,35 +1937,51 @@ table td .extension-icon {
 .panel-theme {
 	position: relative;
 }
-.panel-theme .label-active {
-	background-color: transparent;
-	display: block;
+.panel-theme .child-theme {
+	border-right: 5px solid #46b8da;
+}
+.panel-theme .activated {
+	border-right: 5px solid #F0AD4E;
+}
+.panel-theme .theme-label {
 	position: absolute;
+	height: 100%;
 	top: 0;
 	right: 0;
-	border-left: 45px solid transparent;
-	border-top: 45px solid #F0AD4E;
+}
+.panel-theme .theme-label > span {
+	float: right;
+	background-color: transparent;
+	border-radius: 0;
+	display: block;
 	z-index: 9;
 	padding: 0;
-	border-radius: 0;
+	height: 100%;
 }
 .panel-theme .metas {
 	padding: 10px 0;
 }
-.panel-theme .theme-img {
-	position: relative;
+.panel-theme .description {
+	padding: 10px 0 0;
+	margin: 0;
 }
-.panel-theme .theme-img .preview-thumb {
+.panel-theme .preview-thumb {
+	position: relative;
+	cursor: pointer;
+	padding-right: 20px;
+}
+.panel-theme .preview-thumb .fa {
 	display: none;
 	position: absolute;
 	top: 35%;
 	left: 35%;
+	font-size: 2em;
 }
-.panel-theme .theme-img:hover img {
-	opacity: 0.2;
-}
-.panel-theme .theme-img:hover .preview-thumb {
+.panel-theme .preview-thumb:hover .fa {
 	display: block;
+}
+.panel-theme .preview-thumb:hover img {
+	opacity: 0.2;
 }
 /** MESSAGES **/
 .list-group-hover .list-group-item.active,
@@ -2518,7 +2568,8 @@ a.collapsed .fa-angle-double-down {
 }
 .CodeMirror {
 	height: 575px !important;
-	line-height: 1.2 !important;
+	line-height: 1.4 !important;
+	font-size: 13px;
 }
 .CodeMirror-gutters {
 	border-left: 1px solid #E7E7E7;

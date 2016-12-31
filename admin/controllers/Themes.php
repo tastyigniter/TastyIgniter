@@ -4,10 +4,11 @@ class Themes extends Admin_Controller
 {
 
 	public $create_url = 'themes/add';
-	public $edit_url = 'themes/edit/{name}';
-	public $delete_url = 'themes/delete/{name}';
-	public $activate_url = 'themes/activate/{name}';
-	protected $copy_url = 'themes/copy/{name}';
+	public $edit_url = 'themes/edit/{code}';
+	public $delete_url = 'themes/delete/{code}';
+	public $activate_url = 'themes/activate/{code}';
+	public $browse_url = 'updates/browse/themes';
+	protected $copy_url = 'themes/copy/{code}';
 
 	public function __construct()
 	{
@@ -29,6 +30,7 @@ class Themes extends Admin_Controller
 		$this->template->setTitle($this->lang->line('text_title'));
 		$this->template->setHeading($this->lang->line('text_heading'));
 		$this->template->setButton($this->lang->line('button_new'), ['class' => 'btn btn-primary', 'href' => page_url() . '/add']);
+		$this->template->setButton($this->lang->line('button_browse'), ['class' => 'btn btn-default', 'href' => $this->pageUrl($this->browse_url)]);
 
 		$data = $this->getList();
 
@@ -46,7 +48,8 @@ class Themes extends Admin_Controller
 		}
 
 		$this->load->library('customizer');
-		$this->customizer->initialize($theme_info);
+		$this->customizer->initialize($theme_info['customizer']);
+		$this->customizer->setFieldData($theme_info['data']);
 
 		if ($this->input->post() AND $this->_updateTheme($theme_info) === TRUE) {
 			if ($this->input->post('save_close') == '1') {
@@ -56,14 +59,15 @@ class Themes extends Admin_Controller
 			$this->redirect(current_url());
 		}
 
-		$this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $theme_info['title']));
-		$this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $theme_info['title']));
+		$this->template->setTitle(sprintf($this->lang->line('text_edit_heading'), $theme_info['name']));
+		$this->template->setHeading(sprintf($this->lang->line('text_edit_heading'), $theme_info['name']));
 
 		$this->template->setButton($this->lang->line('button_save'), ['class' => 'btn btn-primary', 'onclick' => '$(\'#edit-form\').submit();']);
 		$this->template->setButton($this->lang->line('button_save_close'), ['class' => 'btn btn-default', 'onclick' => 'saveClose();']);
 		$this->template->setButton($this->lang->line('button_icon_back'), ['class' => 'btn btn-default', 'href' => site_url('themes')]);
 
 		$this->assets->setStyleTag(assets_url('js/colorpicker/css/bootstrap-colorpicker.min.css'), 'bootstrap-colorpicker-css');
+		$this->assets->setStyleTag(assets_url('js/codemirror/dracula-theme.css'), 'dracula-theme-css');
 		$this->assets->setStyleTag(assets_url('js/codemirror/codemirror.css'), 'codemirror-css');
 		$this->assets->setScriptTag(assets_url('js/colorpicker/js/bootstrap-colorpicker.min.js'), 'bootstrap-colorpicker-js');
 		$this->assets->setScriptTag(assets_url('js/codemirror/codemirror.js'), 'codemirror-js', '300');
@@ -119,30 +123,26 @@ class Themes extends Admin_Controller
 		$this->template->setHeading($this->lang->line('text_copy_heading'));
 
 		$theme = $this->Themes_model->getTheme($this->uri->rsegment(3));
-
 		if (!$this->uri->rsegment(3) OR empty($theme)) {
 			$this->redirect(referrer_url());
 		}
 
-		$data['theme_title'] = $theme['title'];
 		$data['theme_name'] = $theme['name'];
 		$data['theme_data'] = !empty($theme['data']) ? TRUE : FALSE;
 		$data['copy_action'] = !empty($theme['data']) ? $this->lang->line('text_files_data') : $this->lang->line('text_files');
 
 		$data['files_to_copy'] = [];
-		$files[] = load_theme_file('theme_config.php', $theme['name']);
-		$files[] = load_theme_file('screenshot.png', $theme['name']);
-		foreach ($files as $file) {
-			$data['files_to_copy'][] = str_replace(ROOTPATH, '', $file['path']);
-		}
+		$files_to_copy = $this->theme_manager->getFilesToCopy($theme['code']);
+		foreach ($files_to_copy as $path)
+			$data['files_to_copy'][] = basename(dirname($path)) .DIRECTORY_SEPARATOR. basename($path);
 
 		if ($this->input->post('confirm_copy') == $theme['name']) {
 			$copy_data = ($this->input->post('copy_data') == '1') ? TRUE : FALSE;
 
-			if ($this->Themes_model->copyTheme($theme['name'], $files, $copy_data)) {
+			if ($this->Themes_model->copyTheme($theme['code'], $copy_data)) {
 				log_activity($this->user->getStaffId(), 'copied', 'themes', get_activity_message('activity_custom_no_link',
 					['{staff}', '{action}', '{context}', '{item}'],
-					[$this->user->getStaffName(), 'copied', 'theme', $data['theme_title']]
+					[$this->user->getStaffName(), 'copied', 'theme', $data['theme_name']]
 				));
 
 				$this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Theme [' . $theme['name'] . '] ' . $this->lang->line('text_copied')));
@@ -167,27 +167,29 @@ class Themes extends Admin_Controller
 		$theme = $this->Themes_model->getTheme($this->uri->rsegment(3));
 
 		if (!$this->uri->rsegment(3) OR empty($theme)) {
-			$this->redirect(referrer_url());
-		} else if ($this->config->item(MAINDIR, 'default_themes') == $theme['name'] . '/') {
+			$this->redirect();
+		} else if (isset($theme['activated']) AND $theme['activated'] == true) {
 			$this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted') . $this->lang->line('text_theme_is_active')));
-			$this->redirect(referrer_url());
-		} else if ($this->config->item(MAINDIR . '_parent', 'default_themes') == $theme['name'] . '/') {
-			$this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted') . $this->lang->line('text_theme_is_child_active')));
-			$this->redirect(referrer_url());
+			$this->redirect();
+		} else {
+			$activeParent = trim($this->config->item(MAINDIR . '_parent', 'default_themes'), DIRECTORY_SEPARATOR);
+			if ($activeParent == $theme['code']) {
+				$this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted') . $this->lang->line('text_theme_is_child_active')));
+				$this->redirect();
+			}
 		}
 
-		$data['theme_title'] = $theme['title'];
+		$data['theme_code'] = $theme['code'];
 		$data['theme_name'] = $theme['name'];
-		$data['theme_data'] = !empty($theme['data']) ? TRUE : FALSE;
-		$data['delete_action'] = !empty($theme['data']) ? $this->lang->line('text_files_data') : $this->lang->line('text_files');
+		$data['theme_data'] = !empty($theme['installed']) ? TRUE : FALSE;
 
-		if ($this->input->post('confirm_delete') == $theme['name']) {
+		if ($this->input->post('confirm_delete') == $theme['code']) {
 			$delete_data = ($this->input->post('delete_data') == '1') ? TRUE : FALSE;
 
-			if ($this->Themes_model->deleteTheme($theme['name'], $delete_data)) {
+			if ($this->Themes_model->deleteTheme($theme['code'], $delete_data)) {
 				log_activity($this->user->getStaffId(), 'deleted', 'themes', get_activity_message('activity_custom_no_link',
 					['{staff}', '{action}', '{context}', '{item}'],
-					[$this->user->getStaffName(), 'deleted', 'theme', $data['theme_title']]
+					[$this->user->getStaffName(), 'deleted', 'theme', $data['theme_name']]
 				));
 
 				$this->alert->set('success', sprintf($this->lang->line('alert_success'), 'Theme [' . $theme['name'] . '] ' . $this->lang->line('text_deleted')));
@@ -198,11 +200,7 @@ class Themes extends Admin_Controller
 			$this->redirect();
 		}
 
-		$data['files_to_delete'] = [];
-		$files = find_theme_files($theme['name']);
-		foreach ($files as $file) {
-			$data['files_to_delete'][] = str_replace(ROOTPATH, '', $file['path']);
-		}
+		$data['files_to_delete'] = $this->theme_manager->findFilesPath($theme['code']);
 
 		$this->template->render('themes_delete', $data);
 	}
@@ -212,19 +210,11 @@ class Themes extends Admin_Controller
 		$data['themes'] = [];
 		$results = $this->Themes_model->paginateWithFilter();
 		foreach ($results->list as $name => $theme) {
-			if ($theme['name'] === trim($this->config->item(MAINDIR, 'default_themes'), '/')) {
-				$active = '1';
-			} else {
-				$active = FALSE;
-			}
-
 			$data['themes'][$name] = array_merge($theme, [
-				'parent_title' => (!empty($theme['parent']) AND !empty($themes[$theme['parent']]['title'])) ? $themes[$theme['parent']]['title'] : '',
-				'active'       => $active,
-				'activate'     => $this->pageUrl($this->activate_url, ['name' => $theme['name']]),
-				'edit'         => $this->pageUrl($this->edit_url, ['name' => $theme['name']]),
-				'delete'       => $this->pageUrl($this->delete_url, ['name' => $theme['name']]),
-				'copy'         => $this->pageUrl($this->copy_url, ['name' => $theme['name']]),
+				'activate'     => $this->pageUrl($this->activate_url, ['code' => $theme['code']]),
+				'edit'         => $this->pageUrl($this->edit_url, ['code' => $theme['code']]),
+				'delete'       => $this->pageUrl($this->delete_url, ['code' => $theme['code']]),
+				'copy'         => $this->pageUrl($this->copy_url, ['code' => $theme['code']]),
 			]);
 		}
 
@@ -238,51 +228,14 @@ class Themes extends Admin_Controller
 		$url = '?';
 
 		$_GET['extension_id'] = $theme_info['extension_id'];
-		$theme_name = $theme_info['name'];
-		$theme_config = (isset($theme_info['config'])) ? $theme_info['config'] : FALSE;
+		$data['code'] = $theme_info['code'];
 
 		$data['file'] = [];
-		if ($this->input->get('file')) {
-			$url .= 'file=' . $this->input->get('file');
-
-			$theme_file = load_theme_file($this->input->get('file'), $theme_name);
-
-			if (isset($theme_file['type']) AND $theme_file['type'] === 'img') {
-				$theme_file['heading'] = sprintf($this->lang->line('text_viewing'), $this->input->get('file'), $theme_name);
-			} else if (isset($theme_file['type']) AND $theme_file['type'] === 'file') {
-				$theme_file['heading'] = sprintf($this->lang->line('text_editing'), $this->input->get('file'), $theme_name);
-			} else {
-				$this->alert->set('danger', $this->lang->line('error_file_not_supported'));
-			}
-
-			$data['file'] = $theme_file;
-			$data['close_file'] = $this->pageUrl($this->edit_url, ['name' => $theme_name]);
+		if ($filename = $this->input->get('file')) {
+			$url .= 'file=' . $filename;
+			$data['file'] = $this->_openFile($data['code'], $filename);
+			$data['close_file'] = $this->pageUrl($this->edit_url, ['code' => $data['code']]);
 		}
-
-		$theme_files = '';
-		$tree_link = $this->pageUrl($this->edit_url . '?file={link}', ['name' => $theme_name]);
-		$theme_files .= $this->_themeTree($theme_name, $tree_link);
-
-		$data['name'] = $theme_info['name'];
-		$data['theme_files'] = $theme_files;
-		$data['theme_config'] = $theme_config;
-		$data['is_customizable'] = (isset($theme_info['customize']) AND $theme_info['customize']) ? TRUE : FALSE;
-
-		$data['customizer_nav'] = $this->customizer->getNavView();
-		$data['customizer_sections'] = $this->customizer->getSectionsView();
-		$data['error_fields'] = [];
-
-		if (!empty($data['is_customizable'])) {
-			if (isset($theme_config['error_fields']) AND is_array($theme_config['error_fields'])) {
-				foreach ($theme_config['error_fields'] as $error_field) {
-					if (isset($error_field['field']) AND isset($error_field['error'])) {
-						$data['error_fields'][$error_field['field']] = $error_field['error'];
-					}
-				}
-			}
-		}
-
-		$data['_action'] = $this->pageUrl($this->edit_url . $url, ['name' => $theme_name]);
 
 		$data['mode'] = '';
 		if (!empty($data['file']['ext'])) {
@@ -295,43 +248,36 @@ class Themes extends Admin_Controller
 			}
 		}
 
+		$tree_link = $this->pageUrl($this->edit_url . '?file={link}', ['code' => $data['code']]);
+		$data['theme_files'] = $this->_themeTree($data['code'], $tree_link);
+
+		$data['is_customizable'] = (!empty($theme_info['customizer'])) ? TRUE : FALSE;
+		$data['customizer_nav'] = $this->customizer->getNavView();
+		$data['customizer_sections'] = $this->customizer->getSectionsView();
+
 		return $data;
 	}
 
-	protected function _themeTree($directory, $return_link, $parent = '')
+	protected function _openFile($theme_code, $filename)
 	{
-		$current_path = ($this->input->get('file')) ? explode('/', $this->input->get('file')) : [];
+		$theme_file = $this->theme_manager->readFile($filename, $theme_code);
 
-		$theme_tree = '';
-		$theme_tree .= ($parent === '') ? '<nav class="nav"><ul class="metisFolder">' : '<ul>';
-
-		$theme_files = find_theme_files($directory);
-
-		if (!empty($theme_files)) {
-			foreach ($theme_files as $file) {
-				$active = (in_array($file['name'], $current_path)) ? ' active' : '';
-
-				if ($file['type'] === 'dir') {
-					$parent_dir = $parent . '/' . $file['name'];
-					$theme_tree .= '<li class="directory' . $active . '"><a><i class="fa fa-folder-open"></i>&nbsp;&nbsp;' . htmlspecialchars($file['name']) . '</a>';
-					$theme_tree .= $this->_themeTree($directory . '/' . $file['name'], $return_link, $parent_dir);
-					$theme_tree .= '</li>';
-				} else if ($file['type'] === 'img') {
-					$link = str_replace('{link}', $parent . '/' . urlencode($file['name']), $return_link);
-					$theme_tree .= '<li class="img' . $active . '"><a href="' . $link . '"><i class="fa fa-file-image-o"></i>&nbsp;&nbsp;' . htmlspecialchars($file['name']) . '</a></li>';
-				} else if ($file['type'] === 'file') {
-					$link = str_replace('{link}', $parent . '/' . urlencode($file['name']), $return_link);
-					$theme_tree .= '<li class="file' . $active . '"><a href="' . $link . '"><i class="fa fa-file-code-o"></i>&nbsp;&nbsp;' . htmlspecialchars($file['name']) . '</a></li>';
-				}
-			}
+		if (isset($theme_file['type']) AND $theme_file['type'] === 'img') {
+			$theme_file['heading'] = sprintf($this->lang->line('text_viewing'), $filename, $theme_code);
+		} else if (isset($theme_file['type']) AND $theme_file['type'] === 'file') {
+			$theme_file['heading'] = sprintf($this->lang->line('text_editing'), $filename, $theme_code);
+		} else {
+			$this->alert->set('danger', $this->lang->line('error_file_not_supported'));
 		}
 
-		$theme_tree .= '</ul>';
-		if ($parent === '') {
-			$theme_tree .= '</nav>';
-		}
+		return $theme_file;
+	}
 
-		return $theme_tree;
+	protected function _themeTree($directory, $return_link)
+	{
+		$current_path = $this->input->get('file');
+		$theme_files = $this->theme_manager->findFiles($directory);
+		return $this->theme_manager->buildFilesTree($theme_files, $return_link, $current_path);
 	}
 
 	protected function _addTheme()
@@ -340,10 +286,21 @@ class Themes extends Admin_Controller
 			$this->user->restrict('Site.Themes.Add', site_url('themes/add'));
 
 			if ($this->validateUpload() === TRUE) {
-				$message = $this->Themes_model->extractTheme($_FILES['theme_zip']);
+				$extractedPath = $this->theme_manager->extractTheme($_FILES['theme_zip']['tmp_name']);
+				$theme_code = basename($extractedPath);
 
-				if ($message === TRUE) {
-					$theme_name = $_FILES['theme_zip']['name'];
+				if (file_exists($extractedPath) AND $this->theme_manager->loadTheme($theme_code, $extractedPath)) {
+					$theme_meta = $this->theme_manager->themeMeta($theme_code);
+
+					if (is_array($theme_meta)) {
+						$update['name'] = $theme_meta['code'];
+						$update['title'] = $theme_meta['name'];
+						$update['version'] = $theme_meta['version'];
+						$update['status'] = 1;
+						$this->Themes_model->updateTheme($update);
+					}
+
+					$theme_name = isset($theme_meta['name']) ? $theme_meta['name'] : $theme_code;
 
 					log_activity($this->user->getStaffId(), 'added', 'themes',
 						get_activity_message('activity_custom_no_link',
@@ -357,7 +314,8 @@ class Themes extends Admin_Controller
 					return TRUE;
 				}
 
-				$this->alert->danger_now(sprintf($this->lang->line('alert_error'), $message));
+				$this->alert->danger_now(is_string($extractedPath) ?
+					sprintf($this->lang->line('alert_error'), $extractedPath) : $this->lang->line('error_config_no_found'));
 			}
 		}
 
@@ -368,10 +326,10 @@ class Themes extends Admin_Controller
 	{
 		$this->user->restrict('Site.Themes.Manage');
 
-		if ($this->uri->rsegment(3) AND $this->validateForm($theme['customize']) === TRUE) {
-			if ($this->input->post('editor_area') AND $this->input->get('file')) {
-				$theme_file = $this->input->get('file');
-				if (save_theme_file($theme_file, $theme['name'], $this->input->post('editor_area'))) {
+		if ($theme_code = $this->uri->rsegment(3) AND $this->validateForm($theme['customizer']) === TRUE) {
+
+			if ($editor_area = $this->input->post('editor_area') AND $theme_file = $this->input->get('file')) {
+				if (save_theme_file($theme_file, $theme_code, $editor_area)) {
 					$this->alert->set('success', sprintf($this->lang->line('alert_success'), "Theme File [{$theme_file}] saved "));
 				} else {
 					$this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), 'saved'));
@@ -379,11 +337,11 @@ class Themes extends Admin_Controller
 			}
 
 			$update['extension_id'] = $this->input->get('extension_id') ? $this->input->get('extension_id') : $theme['extension_id'];
-			$update['name'] = $theme['name'];
-			$update['title'] = $theme['title'];
+			$update['name'] = $theme['code'];
+			$update['title'] = $theme['name'];
 			$update['version'] = $theme['version'];
 
-			if (isset($theme['customize'])) {
+			if (isset($theme['customizer'])) {
 				$update['data'] = $this->customizer->getPostData();
 			}
 
@@ -445,8 +403,6 @@ class Themes extends Admin_Controller
 		}
 
 		$rules[] = ['editor_area', 'Editor area'];
-
-		$this->Themes_model;
 
 		return $this->form_validation->set_rules($rules)->run();
 	}
