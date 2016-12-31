@@ -127,7 +127,7 @@ class CI_Log {
 		$this->_file_ext = (isset($config['log_file_extension']) && $config['log_file_extension'] !== '')
 			? ltrim($config['log_file_extension'], '.') : 'php';
 
-		file_exists($this->_log_path) OR mkdir($this->_log_path, 0755, TRUE);
+		file_exists($this->_log_path) OR mkdir($this->_log_path, DIR_WRITE_MODE, TRUE);
 
 		if (!is_dir($this->_log_path) OR !is_really_writable($this->_log_path)) {
 			$this->_enabled = FALSE;

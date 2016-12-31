@@ -34,7 +34,7 @@ if ( ! function_exists('unzip_file'))
 	 */
 	function unzip_file($file, $extractTo = NULL)
 	{
-		if ( ! class_exists('ZipArchive')) return FALSE;
+		if ( ! class_exists('ZipArchive', FALSE)) return FALSE;
 
 		$zip = new ZipArchive;
 
