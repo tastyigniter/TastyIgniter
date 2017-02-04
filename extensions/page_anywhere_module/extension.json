@@ -1,0 +1,12 @@
+{
+  "code": "page_anywhere_module",
+  "name": "Page anywhere",
+  "description": "Allows you to place a page in any partial",
+  "version": "0.1",
+  "author": "GeneralCss",
+  "icon": "fa-file-text-o",
+  "homepage": "",
+  "tags": {
+    "1.0.0": "Initial tag of page anywhere extension"
+  }
+}

@@ -34,3 +34,5 @@ system/tastyigniter/migrations/backups/*
 
 # Ignore all vendor files included by composer and the lock file
 /vendor/*
+composer.lock
+composer.phar
