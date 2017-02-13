@@ -7,5 +7,12 @@ $lang['text_component_desc'] 			= 'Displays a page in a partial';
 
 $lang['label_heading'] 			        = 'Heading';
 
+
+// Admin part
+$lang['column_page']                    = 'Page';
+$lang['column_layout_partial'] 	        = 'Layout - Partial Area';
+$lang['column_status'] 		            = 'Status';
+
+$lang['alert_set_module'] 		        = 'You must first add the page anywhere module to one or more layouts';
 /* End of file page_anywhere_module.php */
 /* Location: ./extensions/pages_module/language/english/page_anywhere_module_lang.php */

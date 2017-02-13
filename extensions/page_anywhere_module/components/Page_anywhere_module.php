@@ -4,7 +4,7 @@ class Page_anywhere_module extends Base_Component
 {
 
 	public function index() {
-		$this->load->model('Pages_model');                                                        // load the menus model
+		$this->load->model('Page_anywhere_model');                                                   // load the menus model
 		$this->lang->load('page_anywhere_module/page_anywhere_module');
 
 		if (is_numeric($this->input->get('page_id'))) {
@@ -16,16 +16,11 @@ class Page_anywhere_module extends Base_Component
 		$data['module_title'] = $this->setting('title', '');
 		$data['heading'] = $this->setting('heading', $this->lang->line('_text_title'));
 
-		$data['pages'] = array();
-		$results = $this->Pages_model->getPages();                                        // retrieve all menu categories from getCategories method in Menus model
-		foreach ($results as $result) {                                                            // loop through menu categories array
-
-			if (in_array('side_bar', $result['navigation'])) {
-				$data['pages'][] = array(                                                        // create array of category data to pass to view
-					'page_id' => $result['page_id'],
-					'name'    => $result['name'],
-					'href'    => site_url('pages?page_id=' . $result['page_id']),
-				);
+		$data['placedPages'] = array();
+		$results = $this->Page_anywhere_model->getPageAnywhereRefs();
+		foreach ($results as $result) {
+			if ($result['page_id'] === $data['page_id']) {
+				$data['placedPages'][] = $result;
 			}
 		}
 
@@ -35,4 +30,4 @@ class Page_anywhere_module extends Base_Component
 }
 
 /* End of file Page_anywhere_module.php */
-/* Location: ./extensions/pages_module/components/Page_anywhere_module.php */
+/* Location: ./extensions/page_anywhere_module/components/Page_anywhere_module.php */

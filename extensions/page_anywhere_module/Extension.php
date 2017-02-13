@@ -8,7 +8,7 @@ class Extension extends \Base_Extension
 	public function extensionMeta() {
 		return array(
 			'code'        => 'page_anywhere_module',
-			'name'       => 'Page anywhere',
+			'name'        => 'Page anywhere',
 			'description' => 'Allows you to place a page in any partial',
 			'author'      => 'GeneralCss',
 			'icon'        => 'fa-file-text-o',
@@ -35,6 +35,10 @@ class Extension extends \Base_Extension
 			'action'      => array('manage'),
 			'description' => 'Ability to manage page-anywhere module',
 		);
+	}
+
+	public function registerSettings() {
+		return admin_extension_url('page_anywhere_module/settings');
 	}
 }
 
