@@ -97,7 +97,7 @@
 var banner_row = <?php echo $banner_row; ?>;
 var banner_edit = '<?php echo admin_url('banners/edit'); ?>/';
 
-function addBanner() {
+function addBann    er() {
     var html = '<tr id="banner-row' + banner_row + '">';
     html += '	<td class="action action-one"><a class="btn btn-danger" onclick="confirm(\'<?php echo lang('alert_warning_confirm'); ?>\') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a></td>';
     html += '	<td><div class="input-group"><select name="banners[' + banner_row + '][banner_id]" class="form-control banners">';

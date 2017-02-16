@@ -77,8 +77,8 @@ defined('THEMEPATH') OR define('THEMEPATH', VIEWPATH.'themes/');
  *
  * NOTE: If you change these, also change the error_reporting() code below
  */
-defined('ENVIRONMENT') OR define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'production');
-
+//defined('ENVIRONMENT') OR define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'production');
+defined('ENVIRONMENT') OR define('ENVIRONMENT', 'development');
 /*
 |--------------------------------------------------------------------------
 | Display Debug Profiler

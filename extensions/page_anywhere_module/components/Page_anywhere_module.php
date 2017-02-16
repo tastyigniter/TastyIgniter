@@ -2,25 +2,27 @@
 
 class Page_anywhere_module extends Base_Component
 {
-
 	public function index() {
-		$this->load->model('Page_anywhere_model');                                                   // load the menus model
+		$this->load->model('Pages_model');
+		$this->load->model('Page_anywhere_model');
 		$this->lang->load('page_anywhere_module/page_anywhere_module');
 
-		if (is_numeric($this->input->get('page_id'))) {
-			$data['page_id'] = $this->input->get('page_id');
-		} else {
-			$data['page_id'] = 0;
-		}
+		$currentLayoutId = isset($this->properties['layout_id']) ? $this->properties['layout_id'] : null;
+		$currentPartialName = isset($this->properties['partial']) ? $this->properties['partial'] : null;
 
 		$data['module_title'] = $this->setting('title', '');
 		$data['heading'] = $this->setting('heading', $this->lang->line('_text_title'));
 
 		$data['placedPages'] = array();
 		$results = $this->Page_anywhere_model->getPageAnywhereRefs();
+
 		foreach ($results as $result) {
-			if ($result['page_id'] === $data['page_id']) {
-				$data['placedPages'][] = $result;
+			if ($result['layout_id'] === $currentLayoutId && $result['partial'] === $currentPartialName) {
+				$foundPage = $this->Pages_model->getPage($result['page_id']);
+
+				if ($foundPage) {
+					$data['placedPages'][] = $foundPage;
+				}
 			}
 		}
 

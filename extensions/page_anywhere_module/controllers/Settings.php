@@ -76,6 +76,8 @@ class Settings extends Admin_Controller
 		if ($this->validateForm() === TRUE) {
 
 			$formattedPageRefs = array();
+			$deleteRequests = array();
+
 			foreach($this->input->post('pagerefs') as $pageRef) {
 				$explodeLayoutPartial = explode('|', $pageRef['layout_partial']);
 
@@ -86,10 +88,25 @@ class Settings extends Admin_Controller
 					'partial' => $explodeLayoutPartial[1],
 					'status' => $pageRef['status']
 				);
+
+				if (is_numeric($pageRef['delete_pa'])) {
+					$deleteRequests[] = $pageRef['delete_pa'];
+				}
 			}
 
+
+
 			if ($this->Page_anywhere_model->savePageAnywhereRefs($formattedPageRefs)) {
-				$this->alert->set('success', sprintf($this->lang->line('alert_success'), $this->lang->line('_text_title') . ' module ' . $this->lang->line('text_updated')));
+				if ($deleteRequests) {
+					if ($this->Page_anywhere_model->deletePageAnywhereRefs($deleteRequests)) {
+						$this->alert->set('success', sprintf($this->lang->line('alert_success'), $this->lang->line('_text_title') . ' module ' . $this->lang->line('text_updated')));
+					}
+					else {
+						$this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_updated')));
+					}
+				} else {
+					$this->alert->set('success', sprintf($this->lang->line('alert_success'), $this->lang->line('_text_title') . ' module ' . $this->lang->line('text_updated')));
+				}
 			} else {
 				$this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_updated')));
 			}

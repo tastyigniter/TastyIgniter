@@ -24,7 +24,8 @@
                                 <tr class="pageRefRow" id="par-row<?php echo $par_row; ?>">
                                     <td class="action action-one">
                                         <input type="hidden" name="pagerefs[<?php echo $par_row; ?>][pa_id]" value="<?php echo $pageRef['pa_id']; ?>" />
-                                        <a class="btn btn-danger" onclick="confirm('<?php echo lang('alert_warning_confirm'); ?>') ? $(this).parent().parent().remove() : false;"><i class="fa fa-times-circle"></i></a>
+                                        <input type="hidden" id="deletePa_<?php echo $par_row; ?>" name="pagerefs[<?php echo $par_row; ?>][delete_pa]" value="" />
+                                        <a class="btn btn-danger" onclick="confirm('<?php echo lang('alert_warning_confirm'); ?>') ? deletePageRef('#deletePa_<?php echo $par_row; ?>', <?php echo $pageRef['pa_id']; ?>, this) : false;"><i class="fa fa-times-circle"></i></a>
                                     </td>
                                     <td>
                                         <select name="pagerefs[<?php echo $par_row; ?>][page_id]" class="form-control pages">
@@ -110,5 +111,10 @@
         $('#par-row' + par_row + ' select.form-control').select2();
 
         par_row++;
+    }
+
+    function deletePageRef(delInput, pa_id, deleteButton) {
+        $(delInput).val(pa_id);
+        $(deleteButton).parent().parent().hide();
     }
     //--></script>

@@ -69,19 +69,23 @@ class Page_anywhere_model extends Model
 	}
 
 	/**
-	 * Delete a single by pa_id
+	 * Delete a multiple page_refs by pa_id
 	 *
-	 * @param string|array $pa_id
+	 * @param array $page_refs
 	 *
-	 * @return int The number of deleted rows
+	 * @return true if done
 	 */
-	public function deletePageAnywhereRef($pa_id)
+	public function deletePageAnywhereRefs($deleteRequests)
 	{
-		if (is_numeric($pa_id)) $pa_id = [$pa_id];
-
-		if (isset($pa_id) AND ctype_digit(implode('', $pa_id))) {
-			return $this->whereIn('pa_id', $pa_id)->delete();
+		if ($deleteRequests) {
+			foreach($deleteRequests as $pa_id) {
+				if (is_numeric($pa_id)) {
+					$this->find($pa_id)->delete();
+				}
+			}
 		}
+
+		return true;
 	}
 }
 
