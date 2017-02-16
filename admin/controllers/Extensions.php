@@ -3,10 +3,12 @@
 class Extensions extends Admin_Controller
 {
 
+	public $index_url = 'extensions';
 	public $edit_url = 'extensions/{code}/settings';
 	public $delete_url = 'extensions/delete/{code}';
 	public $manage_url = 'extensions/{manage}/{code}';
-	public $browse_url = 'extensions/browse';
+	public $browse_url = 'updates/browse/extensions';
+	public $check_url = 'updates';
 
 	public $create_url = 'extensions/add';
 
@@ -37,7 +39,7 @@ class Extensions extends Admin_Controller
 		} else if (strtolower($this->uri->segment(3)) === 'settings') {
 			$this->edit();
 		} else {
-			show_404();
+			show_404($this->uri->uri_string());
 		}
 	}
 
@@ -48,7 +50,9 @@ class Extensions extends Admin_Controller
 		$this->template->setTitle($this->lang->line('text_title'));
 		$this->template->setHeading($this->lang->line('text_heading'));
 		$this->template->setButton($this->lang->line('button_new'), ['class' => 'btn btn-primary', 'href' => page_url() . '/add']);
+		$this->template->setButton($this->lang->line('button_browse'), ['class' => 'btn btn-default', 'href' => $this->pageUrl($this->browse_url)]);
 		$this->template->setButton($this->lang->line('button_icon_filter'), ['class' => 'btn btn-default btn-filter pull-right', 'data-toggle' => 'button']);
+		$this->template->setButton($this->lang->line('button_check'), ['class' => 'btn btn-default', 'href' => $this->pageUrl($this->check_url)]);
 
 		$data = $this->getList();
 
@@ -71,8 +75,8 @@ class Extensions extends Admin_Controller
 		$this->template->setTitle($this->lang->line('text_add_heading'));
 		$this->template->setHeading($this->lang->line('text_add_heading'));
 
-		$this->template->setButton($this->lang->line('button_browse'), ['class' => 'btn btn-default disabled', 'href' => site_url('extensions/browse')]);
 		$this->template->setButton($this->lang->line('button_icon_back'), ['class' => 'btn btn-default', 'href' => site_url('extensions')]);
+		$this->template->setButton($this->lang->line('button_browse'), ['class' => 'btn btn-default', 'href' => $this->pageUrl($this->browse_url)]);
 
 		$data['_action'] = $this->pageUrl($this->create_url);
 
@@ -166,24 +170,28 @@ class Extensions extends Admin_Controller
 
 		$data['extension_code'] = $this->uri->rsegment(3);
 
-		if (!($extension = Modules::find_extension($data['extension_code']))) {
-			$this->redirect(referrer_url());
-		}
-
-		$meta = $extension->extensionMeta();
 		$extension = $this->Extensions_model->getExtension($data['extension_code'], FALSE);
 
+		if (!($extensionClass = Modules::find_extension($data['extension_code']))) {
+			$this->redirect();
+		} else if ($extension['installed'] AND $extension['status']) {
+			$this->alert->set('warning', sprintf($this->lang->line('alert_error_nothing'), $this->lang->line('text_deleted') . $this->lang->line('alert_is_installed')));
+			$this->redirect();
+		}
+
+		$meta = $extensionClass->extensionMeta();
 		$data['extension_name'] = isset($meta['name']) ? $meta['name'] : '';
-		$data['extension_data'] = !empty($extension['ext_data']) ? TRUE : FALSE;
+		$data['extension_data'] = !empty($extension['installed']) ? TRUE : FALSE;
+
 		$data['delete_action'] = !empty($extension['ext_data']) ? $this->lang->line('text_files_data') : $this->lang->line('text_files');
 
 		if ($this->input->post('confirm_delete') == $data['extension_code']) {
 			$delete_data = ($this->input->post('delete_data') == '1') ? TRUE : FALSE;
 
-			if ($this->Extensions_model->delete($data['extension_code'], $delete_data)) {
+			if ($this->Extensions_model->deleteExtension($data['extension_code'], $delete_data)) {
 				log_activity($this->user->getStaffId(), 'deleted', 'extensions', get_activity_message('activity_custom_no_link',
 					['{staff}', '{action}', '{context}', '{item}'],
-					[$this->user->getStaffName(), 'deleted', $data['extension_type'] . ' extension', $data['extension_name']]
+					[$this->user->getStaffName(), 'deleted', 'Extension', $data['extension_name']]
 				));
 
 				$this->alert->set('success', sprintf($this->lang->line('alert_success'), "Extension {$data['extension_name']} deleted "));
@@ -194,7 +202,7 @@ class Extensions extends Admin_Controller
 			$this->redirect(referrer_url());
 		}
 
-		$files = $this->Extensions_model->getExtensionFiles($data['extension_code']);
+		$files = Modules::files_path($data['extension_code']);
 		$data['files_to_delete'] = $files;
 
 		$this->template->render('extensions_delete', $data);
@@ -277,19 +285,18 @@ class Extensions extends Admin_Controller
 
 		if (isset($_FILES['extension_zip'])) {
 			if ($this->validateUpload() === TRUE) {
-				$extension_name = $_FILES['extension_zip']['name'];
+				$extractedPath = Modules::extract_extension($_FILES['extension_zip']['tmp_name']);
+				$extension_code = basename($extractedPath);
 
-				Modules::extract_extension($_FILES['extension_zip']['tmp_name']);
-
-				$path = Modules::path($extension_name);
-				if ($extension = Modules::load_extension($extension_name, $path)) {
+				$path = Modules::path($extension_code);
+				if ($extension = Modules::load_extension($extension_code, $path)) {
 					$meta = $extension->extensionMeta();
 
 					$extension_name = isset($meta['name']) ? $meta['name'] : '';
 					$extension_type = isset($meta['type']) ? $meta['type'] : '';
 					$alert = "Extension {$extension_name} uploaded ";
 
-					if ($this->Extensions_model->install($extension_name, $extension)) {
+					if ($this->Extensions_model->install($extension_code, $extension)) {
 						log_activity($this->user->getStaffId(), 'installed', 'extensions', get_activity_message('activity_custom_no_link',
 							['{staff}', '{action}', '{context}', '{item}'],
 							[$this->user->getStaffName(), 'installed', $extension_type . ' extension', $extension_name]

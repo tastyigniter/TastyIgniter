@@ -4,12 +4,12 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package       TastyIgniter
- * @author        SamPoyigi
+ * @package   TastyIgniter
+ * @author    SamPoyigi
  * @copyright (c) 2013 - 2016. TastyIgniter
- * @link          http://tastyigniter.com
- * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since         File available since Release 1.0
+ * @link      http://tastyigniter.com
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 1.0
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -40,8 +40,10 @@ class TI_Form_validation extends CI_Form_validation
 					if (isset($rule[2]))
 						$temp_rule['rules'] = $rule[2];
 
-					$_field[] = $temp_rule;
+					$rule = $temp_rule;
 				}
+
+				$_field[] = $rule;
 			}
 
 			$field = !empty($_field) ? $_field : $field;

@@ -134,10 +134,10 @@ class Settings_model extends Model
 	public function deleteSettings($sort, $item)
 	{
 		if (!empty($sort) AND !empty($item)) {
-			return $this->where(
+			return $this->where([
 				['sort', '=', $sort],
 				['item', '=', $item]
-			)->delete();
+			])->delete();
 		}
 	}
 }

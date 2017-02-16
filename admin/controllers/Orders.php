@@ -99,7 +99,7 @@ class Orders extends Admin_Controller
 		$this->output->enable_profiler(FALSE);
 		$action = $this->uri->rsegment('3');
 
-		$this->assets->setStyleTag('css/bootstrap.min.css', 'bootstrap-css', '1');
+		$this->assets->setStyleTag(assets_url('css/bootstrap.min.css'), 'bootstrap-css', '1');
 		$this->assets->setStyleTag('css/fonts.css', 'fonts-css', '2');
 
 		$data = $this->getInvoice();

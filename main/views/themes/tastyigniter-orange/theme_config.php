@@ -7,13 +7,6 @@
 *
 */
 
-// Set a custom theme title.
-$theme['title']         = 'TastyIgniter Orange';
-$theme['author']        = 'SamPoyigi';
-$theme['version']       = '2.1';
-$theme['description']   = 'Responsive theme for front-end';
-$theme['child']       	= TRUE;
-
 $theme['head_tags'] = array(
 	'doctype'   => 'html5',
 	'favicon'   => theme_url('tastyigniter-orange/images/favicon.ico'),
@@ -23,19 +16,18 @@ $theme['head_tags'] = array(
 		array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no', 'type' => 'name'),
 	),
 	'style'    	=> array(
-		array(theme_url('tastyigniter-orange/css/bootstrap.min.css'), 'bootstrap-css', '10'),
-		array(theme_url('tastyigniter-orange/css/font-awesome.min.css'), 'font-awesome-css', '11'),
-		array(theme_url('tastyigniter-orange/css/select2.css'), 'select2-css', '13'),
-		array(theme_url('tastyigniter-orange/css/select2-bootstrap.css'), 'select2-bootstrap-css', '14'),
-		array(theme_url('tastyigniter-orange/css/jquery.raty.css'), 'jquery-raty-css', '15'),
+		array(assets_url('css/bootstrap.min.css'), 'bootstrap-css', '10'),
+		array(assets_url('css/font-awesome.min.css'), 'font-awesome-css', '11'),
+		array(assets_url('css/select2.css'), 'select2-css', '13'),
+		array(assets_url('css/select2-bootstrap.css'), 'select2-bootstrap-css', '14'),
+		array(assets_url('css/jquery.raty.css'), 'jquery-raty-css', '15'),
 		array(theme_url('tastyigniter-orange/css/fonts.css'), 'fonts-css', '16'),
 		array(theme_url('tastyigniter-orange/css/stylesheet.css'), 'stylesheet-css', '100100100100100'),
 	),
 	'script'   	=> array(
-		array(theme_url('tastyigniter-orange/js/jquery-1.11.2.min.js'), 'jquery-js', '1'),
-		array(theme_url('tastyigniter-orange/js/bootstrap.min.js'), 'bootstrap-js', '10'),
-		array(theme_url('tastyigniter-orange/js/select2.js'), 'select-2-js', '12'),
-		array(theme_url('tastyigniter-orange/js/jquery.raty.js'), 'jquery-raty-js', '13'),
+		array(assets_url('js/app/vendor.js'), 'vendor-js', '1'),
+		array(assets_url('js/select2.js'), 'select-2-js', '10'),
+		array(assets_url('js/jquery.raty.js'), 'jquery-raty-js', '12'),
 		array(theme_url('tastyigniter-orange/js/common.js'), 'common-js', '100100100100100'),
 	),
 );
@@ -380,8 +372,6 @@ $theme['customize']['sections']['header'] = array(
 	'title'		=> 'Header',
 	'desc'		=> '',
 	'icon'		=> '',
-	'fields'		=> array(
-	),
 	'fieldset'	=> array(
 		array(
 			'fields'		=> array(
@@ -425,7 +415,7 @@ $theme['customize']['sections']['header'] = array(
 					'desc'			=> 'Upload custom logo or text to your website.',
 					'type' 			=> 'input-group',
 					'group'			=> array(
-						array('id' => 'input-logo-image', 'name' => 'logo_image', 'type' => 'media', 'value' => '', 'rules' => 'required'),
+						array('id' => 'input-logo-image', 'name' => 'logo_image', 'type' => 'media', 'value' => ''),
 						array('id' => 'input-logo-text', 'name' => 'logo_text', 'type' => 'text', 'value' => ''),
 					)
 				),

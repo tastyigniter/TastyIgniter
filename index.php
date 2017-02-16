@@ -99,8 +99,6 @@
  */
 // $assign_to_config['name_of_config_item'] = 'value of config item';
 
-date_default_timezone_set('Europe/London');
-
 // --------------------------------------------------------------------
 // END OF USER CONFIGURABLE SETTINGS.  DO NOT EDIT BELOW THIS LINE
 // --------------------------------------------------------------------
@@ -157,6 +155,9 @@ date_default_timezone_set('Europe/London');
 
 	// Path to the extensions folder
     define('EXTPATH', 'extensions/');
+
+	// Path to the assets folder"
+	define('ASSETPATH', realpath('assets/') .'/');
 
 	// Path to the images folder"
 	define('IMAGEPATH', realpath('assets/images/') .'/');

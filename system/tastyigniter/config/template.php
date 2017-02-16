@@ -6,11 +6,10 @@
  *
  * @package   TastyIgniter
  * @author    SamPoyigi
- * @copyright TastyIgniter
+ * @copyright (c) 2013 - 2016. TastyIgniter
  * @link      http://tastyigniter.com
  * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
  * @since     File available since Release 1.0
- * @filesource
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -62,8 +61,6 @@ $config['theme'] = '';
 |
 | Which template head tag is allowed by default?
 |
-|
-|
 */
 
 $config['head_tags']['doctype'] = 'html5';
@@ -79,32 +76,15 @@ $config['head_tags']['back_button'] = '';
 
 /*
 |--------------------------------------------------------------------------
-| Theme Locations
-|--------------------------------------------------------------------------
-|
-| Where should we expect to see themes?
-|
-|	Default: array(THEMEPATH.'themes/') in the views folder
-|
-*/
-
-$config['theme_locations'] = array(
-    THEMEPATH,
-);
-
-/*
-|--------------------------------------------------------------------------
 | Theme allowed file and image extension
 |--------------------------------------------------------------------------
 |
 | Which theme file and image extension is allowed by default?
 |
-|
-|
 */
 
 $config['allowed_image_ext']        = array('jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff');
-$config['allowed_file_ext']         = array('html', 'txt', 'xml', 'js', 'php', 'css');
+$config['allowed_file_ext']         = array('html', 'txt', 'xml', 'js', 'css', 'php', 'json');
 
 /*
 |--------------------------------------------------------------------------
@@ -112,8 +92,6 @@ $config['allowed_file_ext']         = array('html', 'txt', 'xml', 'js', 'php', '
 |--------------------------------------------------------------------------
 |
 | Which theme file and folders is hidden by default?
-|
-|
 |
 */
 

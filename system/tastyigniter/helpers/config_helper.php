@@ -127,7 +127,7 @@ if ( ! function_exists('write_config')) {
 			// Format the value to be written to the file.
 			if (is_array($val)) {
 				// Get the array output.
-				$val = config_array_output($val);
+				$val = array_string_output($val);
 			} elseif ( ! is_numeric($val)) {
 				$val = "\"$val\"";
 			}

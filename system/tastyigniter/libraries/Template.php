@@ -4,12 +4,12 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package       TastyIgniter
- * @author        SamPoyigi
+ * @package   TastyIgniter
+ * @author    SamPoyigi
  * @copyright (c) 2013 - 2016. TastyIgniter
- * @link          http://tastyigniter.com
- * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since         File available since Release 1.0
+ * @link      http://tastyigniter.com
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 1.0
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -54,6 +54,7 @@ class Template
 		$this->CI =& get_instance();
 
 		// Load assets library
+		$this->CI->load->library('theme_manager');
 		$this->CI->load->library('assets');
 
 		$this->CI->load->helper('template');

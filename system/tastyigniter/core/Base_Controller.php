@@ -6,7 +6,7 @@
  *
  * @package   TastyIgniter
  * @author    SamPoyigi
- * @copyright TastyIgniter
+ * @copyright (c) 2013 - 2016. TastyIgniter
  * @link      http://tastyigniter.com
  * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
  * @since     File available since Release 1.0
@@ -153,7 +153,7 @@ class Base_Controller extends MX_Controller
 		if (!empty($params)) {
 			$uri = preg_replace_callback('/{(.*?)}/', function ($preg) use ($params) {
 				$preg[1] = ($preg[1] == 'id' AND !isset($params[$preg[1]])) ? singular($this->controller).'_'.$preg[1] : $preg[1];
-				return isset($params[$preg[1]]) ? $params[$preg[1]] : '';
+				return isset($params[$preg[1]]) ? $params[$preg[1]] : $preg[0];
 			}, $uri);
 		}
 

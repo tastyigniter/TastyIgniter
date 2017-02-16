@@ -6,7 +6,7 @@
 				<div class="panel panel-default panel-login">
 					<div class="thumbnail">
 						<?php if ($this->config->item('site_logo') === 'data/no_photo.png') { ?>
-							<img src="<?php echo base_url('views/themes/tastyigniter-blue/images/tastyigniter-logo.png'); ?>" width="250px">
+							<img src="<?php echo image_url('tastyigniter-logo.png'); ?>" width="250px">
 						<?php } else { ?>
 							<img alt="<?php echo $this->config->item('site_name'); ?>" src="<?php echo image_url($this->config->item('site_logo')) ?>" height="64px">
 						<?php } ?>

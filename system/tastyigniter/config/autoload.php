@@ -58,7 +58,7 @@ $autoload['packages'] = array();
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
 
-$autoload['libraries'] = array('session', 'alert', 'installer', 'events');
+$autoload['libraries'] = array('user_agent', 'session', 'alert', 'installer', 'events');
 
 
 /*
@@ -90,7 +90,7 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array('language', 'url', 'html', 'form', 'inflector', 'text', 'array', 'number', 'date', 'tastyigniter');
+$autoload['helper'] = array('language', 'path', 'url', 'html', 'form', 'inflector', 'text', 'array', 'number', 'date', 'tastyigniter');
 
 /*
 | -------------------------------------------------------------------

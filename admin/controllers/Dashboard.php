@@ -9,9 +9,9 @@ class Dashboard extends Admin_Controller
 
 		$this->load->model('Dashboard_model');
 		$this->load->model('Locations_model');
-		$this->load->model('Updates_model');
 
 		$this->load->library('currency'); // load the currency library
+		$this->load->library('updates_manager');
 
 		$this->lang->load('dashboard');
 	}
@@ -29,11 +29,8 @@ class Dashboard extends Admin_Controller
 		$this->assets->setScriptTag(assets_url('js/morris/morris.min.js'), 'morris-min-js', '1000454');
 
 		$data['activities'] = $this->getActivities();
-
 		$data['top_customers'] = $this->getTopCustomers();
-
 		$data['orders'] = $this->getRecentOrders();
-
 		$data['news_feed'] = $this->Dashboard_model->getNewsFeed();  // Get four items from the feed
 
 		if ($this->config->item('auto_update_currency_rates') == '1') {
@@ -43,7 +40,7 @@ class Dashboard extends Admin_Controller
 			}
 		}
 
-		if (!$this->Updates_model->lastVersionCheck()) {
+		if (!$this->updates_manager->isLastCheckDue()) {
 			$this->alert->set('success_now', sprintf($this->lang->line('text_last_version_check'), site_url('updates')));
 		}
 

@@ -8,7 +8,9 @@ Release Date: August 2016
 * User Library: `auth()` method to redirect unauthorised users (4802e01)
 * Template Library: new methods to add and remove nav menu items (24a521e)
 * New Event hook points: before_controller, after_controller_constructor, before_main_controller, after_main_controller
-* New Assets library to handle head html tags, css and js (71e09e2)
+* Display active modules on admin layout list page (76ad3fd)
+* Display number of customers in customer group (8dab2e1)
+g* New Assets library to handle working with html head tags, css and js (71e09e2)
 * New array helper with array_get method to get array item using dot notation (bd02bb9)
 * Eloquent ORM library for models and other subclass to provide extra functions
 * New Location_hours, Location_delivery, Location_geocode libraries to extend and extract Location library functions
@@ -16,36 +18,32 @@ Release Date: August 2016
 #### Changed
 * Improve nav menu to switch between single and multi location settings
 * Removed all index.html files, use htaccess to block access instead (2bf9172)
-* Improved TI base model with CRUD methods to remove repetition and increase productivity (232c012 & 232c012 & 7772f24)
-* Removed direct calls to `$this->db` from Models and add model properties (43b5a98 & 2a9401e & 86ce6d5 & fe1ef4a)
+* Improved Models: Use Eloquent ORM instead of custom-CRUD library (232c012 & 232c012 & 7772f24 & 43b5a98 & 2a9401e & 86ce6d5 & fe1ef4a)
 * Remove getList and getCount methods from models to use parent method or override instead (c63fc9b)
 * Moved `currency_format` function from `tastyigniter_helper` to new `TI_number_helper` (d3365e4)
 * Improved debug profiler: new Console library to log message to console and new profiler interface (8cb4f51 & 9e10c3b)
-* Code consistency: changed all controllers, models and libraries private methods to protected (579e7e6)
+* Code style consistency: changed all controllers, models and libraries private methods to protected (579e7e6)
 * Improved BASE controller (c34a825 & e288175)
 * Improved Installer library (81c202e)
 * Improved Controllers - reduced code (747e758 & dafb154 & a4300da & fd260bb)
-* Migration files extends TI_Migration library, and load demo data within migration like initial data (86c0e0b)
-* Display active modules on admin layout list page (76ad3fd)
-* Display number of customers in customer group (8dab2e1)
-* Enforce split single and multi location functions (937dd7a)
+* Migration files extends TI_Migration instead of CI_Migration library, and load demo data within migration like initial data (86c0e0b)
+* Enforce split single and multi restaurant location mode (937dd7a)
 * Improve local module display search box functionality (f987e8f)
 * Improved pagination and calendar libraries (92fde25)
 * Improve app setup and installer library (5504683)
 * Admin theme changes (775b214)
 * Moved load_db_config to Config library and new restaurant_url method (b85f32c)
-* New is_single_location method to check if config site location mode (4aa38c4)
+* New is_single_location method to check restaurant location mode (4aa38c4)
 * Moved extractExtension from Extensions_model to Modules::extract_extension
 * Moved runMigration from extension_manager library to Modules::run_migration
-* Removed Extension library, use Extensions_model or Modules class instead (7a59677)
+* Removed Extension library, use Extensions_model or Modules library instead (7a59677)
 * Improved Extensions api (2d0e759 & 162a72a & ece3167 & 4ad6da5 & 84c552d)
-* Use Modules class instead of Extensions model inside controllers ()
-* Improve Template library: move html tags methods to Assets library (1532de9)
-* Improved Lang: line() method accepts dotted array module.line_key_name or line_key_name (87a40bb)
-* Use Eloquent ORM instead of custom-CRUD library
+* Use Modules class instead of Extensions model within controllers ()
+* Improve Template library: move methods working with html head tags to new Assets library (1532de9)
+* Improved Lang: line() method now accepts dotted array module.line_key_name (87a40bb)
 * Improved design patterns: Use Fat model thin controller
 * Improve Location Library: extract functions to new libraries Location_hours, Location_delivery, Location_geocode
-* Use loose comparision on numeric values
+* Code style consistency: use loose instead of strict comparision where appropriate
 
 
 #### Fixed

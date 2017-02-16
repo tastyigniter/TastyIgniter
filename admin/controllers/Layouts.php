@@ -95,9 +95,6 @@ class Layouts extends Admin_Controller
 			$data['_action'] = $this->pageUrl($this->edit_url, ['id' => $layout_id]);
 		}
 
-//		$data['layout_id'] = $layout_info['layout_id'];
-//		$data['name'] = $layout_info['name'];
-
 		$theme_partials = get_theme_partials($this->config->item('main', 'default_themes'), 'main');
 		foreach ($theme_partials as $partial) {
 			$partial['id'] = isset($partial['id']) ? $partial['id'] : '';

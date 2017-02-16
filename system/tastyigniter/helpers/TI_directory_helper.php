@@ -22,6 +22,50 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @link           http://docs.tastyigniter.com
  */
 
+if ( ! function_exists('copy_directory')) {
+	/**
+	 * Copy all files in the source dir to destination
+	 *
+	 * Copy a single directory recursively ( all file and directories
+	 * inside it ).
+	 *
+	 * @param    string $source_dir   Path to source
+	 * @param    string $destination_dir Path to source
+	 *
+	 * @return bool
+	 */
+	function copy_directory($source_dir, $destination_dir)
+	{
+		if (!is_dir($source_dir) OR is_dir($destination_dir))
+			return FALSE;
+
+		// preparing the paths
+		$source_dir = rtrim($source_dir, '/');
+		$destination_dir = rtrim($destination_dir, '/');
+
+		// creating the destination directory
+		if ( ! is_dir($destination_dir))
+			mkdir($destination_dir, DIR_WRITE_MODE, TRUE);
+
+		if ( ! function_exists('directory_map'))
+			get_instance()->load->helper('directory');
+
+		// Mapping the directory
+		$directory_map = directory_map($source_dir);
+
+		foreach ($directory_map as $key => $value) {
+			// Check if its a file or directory
+			if (is_numeric($key)) {
+				copy("{$source_dir}/{$value}", "{$destination_dir}/{$value}");
+			} else {
+				copy_directory("{$source_dir}/{$key}", "{$destination_dir}/{$key}");
+			}
+		}
+
+		return TRUE;
+	}
+}
+
 if ( ! function_exists('directory_map'))
 {
     /**

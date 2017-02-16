@@ -505,13 +505,13 @@ $schema['extensions'] = "
   REPLACE INTO `".$this->db->dbprefix."extensions` (`extension_id`, `type`, `name`, `data`, `serialized`, `status`, `title`)
   VALUES
   (11, 'module', 'account_module', '', 1, 1, 'Account'),
-  (12, 'module', 'local_module', 'a:3:{s:20:\"location_search_mode\";s:5:\"multi\";s:12:\"use_location\";s:1:\"0\";s:6:\"status\";s:1:\"1\";}', 1, 1, 'Local'),
+  (12, 'module', 'local_module', 'a:3:{s:20:\"location_search_mode\";s:5:\"multi\";s:12:\"use_location\";s:1:\"0\";s:6:\"status\";s:1:\"1\";}', 1, 0, 'Local'),
   (13, 'module', 'categories_module', '', 1, 1, 'Categories'),
-  (14, 'module', 'cart_module', 'a:3:{s:16:\"show_cart_images\";s:1:\"0\";s:13:\"cart_images_h\";s:0:\"\";s:13:\"cart_images_w\";s:0:\"\";}', 1, 1, 'Cart'),
-  (15, 'module', 'reservation_module', '', 1, 1, 'Reservation'),
-  (16, 'module', 'slideshow', 'a:6:{s:11:\"dimension_w\";s:4:\"1170\";s:11:\"dimension_h\";s:3:\"420\";s:6:\"effect\";s:4:\"fade\";s:5:\"speed\";s:3:\"500\";s:7:\"display\";s:1:\"1\";s:6:\"slides\";a:1:{i:0;a:2:{s:9:\"image_src\";s:14:\"data/slide.jpg\";s:7:\"caption\";s:0:\"\";}}}', 1, 1, 'Slideshow'),
-  (18, 'payment', 'cod', 'a:5:{s:4:\"name\";N;s:11:\"order_total\";s:4:\"0.00\";s:12:\"order_status\";s:2:\"11\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}', 1, 1, 'Cash On Delivery'),
-  (20, 'module', 'pages_module', '', 1, 1, 'Pages'),
+  (14, 'module', 'cart_module', 'a:3:{s:16:\"show_cart_images\";s:1:\"0\";s:13:\"cart_images_h\";s:0:\"\";s:13:\"cart_images_w\";s:0:\"\";}', 1, 0, 'Cart'),
+  (15, 'module', 'reservation_module', '', 1, 0, 'Reservation'),
+  (16, 'module', 'slideshow', 'a:6:{s:11:\"dimension_w\";s:4:\"1170\";s:11:\"dimension_h\";s:3:\"420\";s:6:\"effect\";s:4:\"fade\";s:5:\"speed\";s:3:\"500\";s:7:\"display\";s:1:\"1\";s:6:\"slides\";a:1:{i:0;a:2:{s:9:\"image_src\";s:14:\"data/slide.jpg\";s:7:\"caption\";s:0:\"\";}}}', 1, 0, 'Slideshow'),
+  (18, 'payment', 'cod', 'a:5:{s:4:\"name\";N;s:11:\"order_total\";s:4:\"0.00\";s:12:\"order_status\";s:2:\"11\";s:8:\"priority\";s:1:\"1\";s:6:\"status\";s:1:\"1\";}', 1, 0, 'Cash On Delivery'),
+  (20, 'module', 'pages_module', '', 1, 0, 'Pages'),
   (21, 'payment', 'paypal_express', 'a:11:{s:8:\"priority\";s:0:\"\";s:6:\"status\";s:1:\"0\";s:8:\"api_mode\";s:7:\"sandbox\";s:8:\"api_user\";s:0:\"\";s:8:\"api_pass\";s:0:\"\";s:13:\"api_signature\";s:0:\"\";s:10:\"api_action\";s:4:\"sale\";s:10:\"return_uri\";s:24:\"paypal_express/authorize\";s:10:\"cancel_uri\";s:21:\"paypal_express/cancel\";s:11:\"order_total\";s:4:\"0.00\";s:12:\"order_status\";s:2:\"11\";}', 1, 0, 'PayPal Express'),
   (23, 'theme', 'tastyigniter-orange', '', 1, 1, 'TastyIgniter Orange'),
   (24, 'theme', 'tastyigniter-blue', '', 1, 0, 'TastyIgniter Blue'),
@@ -641,17 +641,7 @@ $schema['permissions'] = "
     (40, 'Admin.Staffs', 'Ability to access, manage, add and delete staffs', 'a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}', 1),
     (42, 'Admin.Statuses', 'Ability to access, manage, add and delete orders and reservations statuses', 'a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}', 1),
     (43, 'Admin.Tables', 'Ability to access, manage, add and delete reservations tables', 'a:4:{i:0;s:6:\"access\";i:1;s:6:\"manage\";i:2;s:3:\"add\";i:3;s:6:\"delete\";}', 1),
-    (44, 'Site.Themes', 'Ability to access, manage site themes', 'a:2:{i:0;s:6:\"access\";i:1;s:6:\"manage\";}', 1),
-    (45, 'Module.AccountModule', 'Ability to manage account module', 'a:1:{i:0;s:6:\"manage\";}', 1),
-    (46, 'Module.BannersModule', 'Ability to manage banners module', 'a:1:{i:0;s:6:\"manage\";}', 1),
-    (47, 'Module.CartModule', 'Ability to manage cart module', 'a:1:{i:0;s:6:\"manage\";}', 1),
-    (48, 'Module.CategoriesModule', 'Ability to manage categories module', 'a:1:{i:0;s:6:\"manage\";}', 1),
-    (49, 'Module.LocalModule', 'Ability to manage local module', 'a:1:{i:0;s:6:\"manage\";}', 1),
-    (50, 'Module.PagesModule', 'Ability to manage pages module', 'a:1:{i:0;s:6:\"manage\";}', 1),
-    (51, 'Module.ReservationModule', 'Ability to manage reservation module', 'a:1:{i:0;s:6:\"manage\";}', 1),
-    (52, 'Module.Slideshow', 'Ability to manage slideshow module', 'a:1:{i:0;s:6:\"manage\";}', 1),
-    (53, 'Payment.Cod', 'Ability to manage cash on delivery payment', 'a:1:{i:0;s:6:\"manage\";}', 1),
-    (54, 'Payment.PaypalExpress', 'Ability to manage paypal express payment', 'a:1:{i:0;s:6:\"manage\";}', 1);
+    (44, 'Site.Themes', 'Ability to access, manage site themes', 'a:2:{i:0;s:6:\"access\";i:1;s:6:\"manage\";}', 1);
 ";
 
 $schema['security_questions'] = "

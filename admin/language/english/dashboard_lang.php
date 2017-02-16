@@ -46,8 +46,6 @@ $lang['text_reports_chart'] 		        = 'Reports Chart';
 $lang['text_select_range'] 		            = 'Select date range';
 $lang['text_last_version_check'] 		    = 'Your last <b>TastyIgniter core version check</b> was more than a week ago. <a href="%s"><b>Check for Updates</b></a>';
 
-$lang['button_check_updates']       	    = '<i class="fa fa-refresh"></i> Check Updates';
-
 $lang['column_id']       		            = 'ID';
 $lang['column_location'] 		            = 'Location';
 $lang['column_name'] 		                = 'Customer Name';

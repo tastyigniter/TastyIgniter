@@ -28,7 +28,8 @@ $lang['text_settings'] 		     		= 'Settings';
 
 $lang['button_upload'] 		            = 'Upload & Install';
 $lang['button_choose'] 		            = 'Choose';
-$lang['button_browse'] 		            = '<i class="fa fa-puzzle-piece"></i>  Browse all extensions';
+$lang['button_browse'] 		            = '<i class="fa fa-globe"></i>  Browse all extensions';
+$lang['button_check']             		= '<i class="fa fa-refresh"></i>  Check Updates';
 $lang['button_change'] 		            = 'Change';
 $lang['button_delete'] 		            = 'Delete';
 $lang['button_yes_delete'] 		        = 'Yes, delete';
@@ -60,6 +61,7 @@ $lang['alert_info_layouts'] 		    = 'After you have installed and configured a m
 $lang['alert_warning_layouts'] 		    = 'To display this extension module in storefront add it to a layout <a href="%s" class="alert-link">here!</a>';
 $lang['alert_delete_warning'] 		    = 'You are about to delete the %s of extension <b>%s</b>';
 $lang['alert_delete_confirm'] 		    = 'Are you sure you wish to delete these %s? This cannot be undone!';
+$lang['alert_is_installed'] 		    = '. You must uninstall an extension before deleting.';
 
 /* End of file extensions_lang.php */
 /* Location: ./admin/language/english/extensions_lang.php */

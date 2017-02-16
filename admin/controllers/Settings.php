@@ -190,6 +190,11 @@ class Settings extends Admin_Controller
 			$data = $this->input->post();
 			unset($data['default_location_id']);
 
+			if (isset($data['carte_key']) AND is_string($data['carte_key'])) {
+				$this->installer->saveCarteKey($this->input->post('carte_key'));
+				unset($data['carte_key']);
+			}
+
 			if ($this->Settings_model->updateSettings('config', $data, TRUE)) {
 				if ($this->input->post('default_location_id')) {
 					$this->load->model('Locations_model');
@@ -297,6 +302,7 @@ class Settings extends Admin_Controller
 		$rules[] = ['smtp_user', 'lang:label_smtp_user', 'xss_clean|trim'];
 		$rules[] = ['smtp_pass', 'lang:label_smtp_pass', 'xss_clean|trim'];
 
+		$rules[] = ['carte_key', 'lang:label_carte_key', 'xss_clean|trim'];
 		$rules[] = ['customer_online_time_out', 'lang:label_customer_online_time_out', 'xss_clean|trim|required|integer'];
 		$rules[] = ['customer_online_archive_time_out', 'lang:label_customer_online_archive_time_out', 'xss_clean|trim|required|integer'];
 		$rules[] = ['permalink', 'lang:label_permalink', 'xss_clean|trim|required|integer'];

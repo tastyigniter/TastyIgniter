@@ -333,34 +333,10 @@ if ( ! function_exists('copy_language_files')) {
 	 * or $destination_lang already exist.
 	 */
 	function copy_language_files($source_lang, $destination_lang) {
-		if (empty($source_lang) OR is_file($source_lang) OR file_exists($destination_lang)) {
-			return FALSE;
-		}
-
-		// preparing the paths
-		$source_lang = rtrim($source_lang, '/');
-		$destination_lang = rtrim($destination_lang, '/');
-
-		// creating the destination directory
-		if ( ! is_dir($destination_lang)) {
-			mkdir($destination_lang, DIR_WRITE_MODE, TRUE);
-		}
-
-		if ( ! function_exists('directory_map')) {
+		if ( ! function_exists('directory_map'))
 			get_instance()->load->helper('directory');
-		}
 
-		// Mapping the directory
-		$directory_map = directory_map($source_lang);
-
-		foreach ($directory_map as $key => $value) {
-			// Check if its a file or directory
-			if (is_numeric($key)) {
-				copy("{$source_lang}/{$value}", "{$destination_lang}/{$value}");
-			} else {
-				copy_language_files("{$source_lang}/{$key}", "{$destination_lang}/{$key}");
-			}
-		}
+		return copy_directory($source_lang, $destination_lang);
 	}
 }
 
