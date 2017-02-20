@@ -16,7 +16,7 @@
 			<div class="row page-header">
 				<div id="logo" class="col-xs-12 col-sm-4 navbar-right">
 					<div class="col-xs-8 col-sm-12">
-						<img src="<?php echo base_url('views/assets/tastyigniter-logo.png'); ?>" alt="TastyIgniter Logo">
+						<img src="<?php echo image_url('tastyigniter-logo.png'); ?>" alt="TastyIgniter Logo">
 					</div>
 				</div>
 				<div class="col-xs-12 col-sm-8">
