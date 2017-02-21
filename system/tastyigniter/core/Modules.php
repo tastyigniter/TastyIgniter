@@ -597,7 +597,7 @@ class Modules
 
 		// Autoloader failed?
 		if (!file_exists($extension_class_path)) {
-			log_message('error', "Missing Extension class in '{$name}', create an Extension class to override extensionMeta() method.");
+			log_message('debug', "Missing Extension class in '{$name}', create an Extension class to override extensionMeta() method.");
 
 			return;
 		}

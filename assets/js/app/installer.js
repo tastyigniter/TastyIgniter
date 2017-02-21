@@ -28,13 +28,13 @@ var Installer = {
 
     init: function () {
         $(document).ready(function() {
-            this.form = $('#completeForm');
-            this.list = $('#extensions-list');
-            this.checkbox = $('#extensions-list .extension');
-            this.submitBtn = $('#btn-continue');
-            this.currentStep = this.form.find('input[name="install_step"]').val();
+            Installer.form = $('#completeForm');
+            Installer.list = $('#extensions-list');
+            Installer.checkbox = $('#extensions-list .extension');
+            Installer.submitBtn = $('#btn-continue');
+            Installer.currentStep = Installer.form.find('input[name="install_step"]').val();
 
-            this.form.submit(this.submitForm);
+            Installer.form.submit(Installer.submitForm);
 
             Installer.fetchExtensions();
         });
@@ -167,7 +167,8 @@ var Installer = {
             case 'extractComposer':
                 return 'installComposer';
             case 'installComposer':
-                return 'getExtensionMeta';
+                var skipInstall = Installer.form.find('input[name="install_skip"]').val();
+                return (skipInstall == '1') ? 'finish' : 'getExtensionMeta';
             case 'downloadExtension':
                 return 'extractExtension';
             case 'extractExtension':
@@ -209,7 +210,7 @@ var Installer = {
             if (json['results']) {
                 switch (currStep) {
                     case 'getExtensionMeta':
-                        if (Object.keys(json['results'].extensions).length > 0) {
+                        if (typeof json['results'].extensions != 'undefined' && Object.keys(json['results'].extensions).length > 0) {
                             for (var extCode in json['results'].extensions)
                                 if (json['results'].extensions.hasOwnProperty(extCode))
                                     Installer.dataCache.metas.push(json['results'].extensions[extCode]);
@@ -246,7 +247,7 @@ var Installer = {
                         Installer.refreshProgress(json['results'], 'success');
                         if (json['redirect']) setTimeout(function() {
                             window.location.href = json['redirect'];
-                        }, 3000);
+                        }, 1500);
                         break;
                 }
             }
@@ -257,7 +258,7 @@ var Installer = {
     },
 
     buildExtensionsList: function (results) {
-        var extList = $(Installer.list);
+        var $extList = $(Installer.list);
         var html = '<div class="select-box"><div class="row">';
         for (var key in results) {
             var extension = results[key];
@@ -265,7 +266,7 @@ var Installer = {
             html += '<div class="col-xs-12 col-sm-6">';
             html += '   <div class="panel panel-default">';
             html += '       <div class="panel-heading">';
-            if (typeof installedExtensions != 'undefined' && installedExtensions.hasOwnProperty(extension.code)) {
+            if (typeof installedExtensions != 'undefined' && $.inArray(extension.code, installedExtensions) > -1) {
                 html += '<div class="pull-right">';
                 html += '   <span class="small text-muted">Skip</span>';
                 html += '</div>';
@@ -286,8 +287,8 @@ var Installer = {
         html += '</div></div>';
 
         $('.loading-box').fadeOut();
-        extList.html(html);
-        extList.fadeIn();
+        $extList.html(html);
+        $extList.fadeIn();
     }
 };
 Installer.init();

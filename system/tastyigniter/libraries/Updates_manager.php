@@ -9,7 +9,7 @@
  * @copyright (c) 2013 - 2016. TastyIgniter
  * @link          http://tastyigniter.com
  * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since         File available since Release 1.0
+ * @since         File available since Release 2.2
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -125,7 +125,7 @@ class Updates_manager
 		$updateCount = 0;
 
 		$installedItems = $this->getInstalledItems();
-		$updates = $this->getHubManager()->setCacheLife(3 * 24)->requestUpdateList($installedItems, $force);
+		$updates = $this->getHubManager()->setCacheLife(24)->requestUpdateList($installedItems, $force);
 		if (is_string($updates))
 			return $updates;
 
@@ -153,7 +153,7 @@ class Updates_manager
 		$themes = [];
 		$themeManager = $this->getThemeManager();
 		foreach (array_get($updates, 'themes', []) as $code => $info) {
-			if (!$themeManager->isDisabled($code)) {
+			if (!$themeManager->hasTheme($code)) {
 				$info['installed'] = isset($installedItems[$code]);
 				$themes[$code] = $info;
 				$updateCount++;
@@ -316,7 +316,7 @@ class Updates_manager
 	 *
 	 * @return string
 	 */
-	protected function extractTo($fileCode, $extractTo, $checkIgnored = FALSE)
+	public function extractTo($fileCode, $extractTo, $checkIgnored = FALSE)
 	{
 		if (!class_exists('ZipArchive')) return FALSE;
 
@@ -343,7 +343,7 @@ class Updates_manager
 				if (substr($filename, -1) == '/') {
 					// Delete existing directory to replace all contents
 					if (!is_dir($relativePath))
-						@mkdir($relativePath, 0755, TRUE);
+						@mkdir($relativePath, DIR_WRITE_MODE, TRUE);
 				} else {
 					$this->copyFiles("zip://" . $zipPath . "#" . $filename, $relativePath);
 				}

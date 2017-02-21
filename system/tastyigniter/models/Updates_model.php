@@ -18,6 +18,8 @@ use TastyIgniter\Database\Model;
 /**
  * Updates Model Class
  *
+ * @deprecated since 2.2.0
+ *
  * @category       Models
  * @package        TastyIgniter\Models\Updates_model.php
  * @link           http://docs.tastyigniter.com

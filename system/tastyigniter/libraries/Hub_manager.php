@@ -9,7 +9,7 @@
  * @copyright (c) 2013 - 2016. TastyIgniter
  * @link          http://tastyigniter.com
  * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since         File available since Release 1.0
+ * @since         File available since Release 2.2
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Hub_manager
 {
 
-	protected $carteKey;
+	protected $siteKey;
 	protected $cachePrefix;
 	protected $cacheLife;
 	protected $downloadsPath;
@@ -59,24 +59,23 @@ class Hub_manager
 		return $items;
 	}
 
-	public function getDetail($itemType, $itemName)
+	public function getDetail($itemName)
 	{
-		return $this->requestRemoteData("{$itemType}/detail", ['name' => serialize($itemName)]);
+		return $this->requestRemoteData('item/detail', ['item' => json_encode($itemName)]);
 	}
 
-	public function getDetails($itemType, $itemNames = [])
+	public function getDetails($itemNames = [])
 	{
-		return $this->requestRemoteData("{$itemType}/details", ['names' => serialize($itemNames)]);
+		return $this->requestRemoteData('item/details', ['items' => json_encode($itemNames)]);
 	}
 
 	public function requestUpdateList($itemNames, $force = FALSE)
 	{
-		$itemNames = serialize($itemNames);
-
+		$itemNames = json_encode($itemNames);
 		$cacheFile = $this->cachePrefix . 'updates_' . md5($itemNames);
 
 		if ($force OR !$response = $this->CI->cache->file->get($cacheFile)) {
-			$response = $this->requestRemoteData('core/check', ['names' => $itemNames]);
+			$response = $this->requestRemoteData('core/check', ['items' => $itemNames]);
 
 			if (is_array($response)) {
 				$response['check_time'] = time();
@@ -92,18 +91,18 @@ class Hub_manager
 
 	public function applyInstallOrUpdate($itemNames = [])
 	{
-		$response = $this->requestRemoteData('core/apply', ['names' => serialize($itemNames)]);
+		$response = $this->requestRemoteData('core/apply', ['items' => json_encode($itemNames)]);
 
 		if (is_array($response))
-			$response = $this->buildMetaArray($response);
+			return $this->buildMetaArray($response);
 
-		return $response;
+		throw new Exception($response);
 	}
 
 	public function downloadFile($fileType, $filePath, $fileHash, $params = [])
 	{
 		return $this->requestRemoteFile("{$fileType}/download", [
-			'name' => serialize($params)
+			'item' => json_encode($params)
 		], $filePath, $fileHash);
 	}
 
@@ -134,7 +133,7 @@ class Hub_manager
 
 	public function setSecurity()
 	{
-		$this->carteKey = is_null($carteKey = $this->CI->config->item('carte_key')) ? md5('NULL') : $carteKey;
+		$this->siteKey = empty($siteKey = $this->CI->config->item('site_key')) ? md5('NULL') : $siteKey;
 	}
 
 	/**
@@ -170,7 +169,6 @@ class Hub_manager
 		if (!is_dir($fileDir = dirname($filePath)))
 			throw new Exception("Downloading failed, download path not found.");
 
-		$fileName = basename($fileDir);
 		$fileStream = fopen($filePath, 'w+');
 
 		get_remote_data(TI_ENDPOINT . $url, $this->buildPostData($params, ['FILE' => $fileStream]));
@@ -178,9 +176,9 @@ class Hub_manager
 		if (file_exists($filePath)) {
 			$fileSha = sha1_file($filePath);
 			if ($fileHash != $fileSha) {
-				log_message('error', "{$fileName} file hash mismatch: {$fileHash} (expected) vs {$fileSha} (actual)");
+				log_message('error', "File hash mismatch: {$fileHash} (expected) vs {$fileSha} (actual)");
 				@unlink($filePath);
-				throw new Exception("Downloading {$fileName} failed, check error log.");
+				throw new Exception("Downloading failed, check error log.");
 			}
 		}
 
@@ -207,16 +205,16 @@ class Hub_manager
 		if (!empty($params))
 			$options['POSTFIELDS'] = $params;
 
-		if ($this->carteKey)
-			$options['HTTPHEADER'][] = TI_CARTE_AUTH . ": {$this->carteKey}";
+		if ($this->siteKey)
+			$options['HTTPHEADER'][] = TI_SITE_AUTH . ": {$this->siteKey}";
 
-		$options['HTTPHEADER'][] = TI_SIGN_REQUEST . ": " . $this->createSignature($params, $this->carteKey);
+		$options['HTTPHEADER'][] = TI_SIGN_REQUEST . ": " . $this->createSignature($params, $this->siteKey);
 
 		return $options;
 	}
 
-	protected function createSignature($postData, $carteKey)
+	protected function createSignature($postData, $siteKey)
 	{
-		return base64_encode(hash_hmac('sha256', serialize($postData), $carteKey));
+		return base64_encode(hash_hmac('sha256', serialize($postData), $siteKey));
 	}
 }
