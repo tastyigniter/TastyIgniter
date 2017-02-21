@@ -1204,12 +1204,12 @@
 				<div id="system" class="tab-pane">
 					<h4 class="tab-pane-title"><?php echo lang('text_tab_title_updates'); ?></h4>
 					<div class="form-group">
-						<label for="input-carte-key" class="col-sm-3 control-label"><?php echo lang('label_carte_key'); ?>
-							<span class="help-block"><?php echo lang('help_carte_key'); ?></span>
+						<label for="input-site-key" class="col-sm-3 control-label"><?php echo lang('label_site_key'); ?>
+							<span class="help-block"><?php echo lang('help_site_key'); ?></span>
 						</label>
 						<div class="col-sm-5">
-							<input type="text" name="carte_key" class="form-control" value="<?php echo set_value('carte_key', config_item('carte_key')); ?>" />
-							<?php echo form_error('carte_key', '<span class="text-danger">', '</span>'); ?>
+							<input type="text" name="site_key" class="form-control" value="<?php echo set_value('site_key', config_item('site_key')); ?>" />
+							<?php echo form_error('site_key', '<span class="text-danger">', '</span>'); ?>
 						</div>
 					</div>
 
