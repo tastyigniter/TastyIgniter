@@ -5,19 +5,23 @@ $lang['text_license_heading'] 		    = 'License agreement';
 $lang['text_requirement_heading'] 		= 'Server Requirements';
 $lang['text_database_heading'] 		    = 'Database Settings';
 $lang['text_settings_heading'] 		    = 'Site Settings';
+$lang['text_complete_heading'] 			= 'Complete Installation';
 $lang['text_success_heading'] 		    = 'Installation Successful';
 
 $lang['text_license_sub_heading']       = 'Please read the TastyIgniter Licence agreement.';
 $lang['text_requirement_sub_heading']   = 'Check below to make sure all server requirements are met.';
 $lang['text_database_sub_heading']      = 'Enter your database connection details.';
 $lang['text_settings_sub_heading']      = 'Enter your restaurant and administrator details.';
+$lang['text_complete_sub_heading']   	= 'Install recommended extensions and attach your TastyIgniter Site.';
 $lang['text_success_sub_heading']       = 'Start receiving orders!';
 
 $lang['text_php_version'] 				= 'is version %s supported?';
 $lang['text_php_version'] 				= 'is version %s supported?';
 $lang['text_mysqli_installed'] 			= 'is MySQLi installed?';
+$lang['text_pdo_installed'] 			= 'is PDO PHP Extension installed?';
 $lang['text_curl_installed'] 			= 'is cURL installed?';
 $lang['text_gd_installed'] 				= 'is GD library installed?';
+$lang['text_zip_installed'] 			= 'is ZipArchive library installed?';
 $lang['text_register_globals_enabled'] 	= 'is Register Globals turned off?';
 $lang['text_magic_quotes_enabled'] 	    = 'is Magic Quotes GPC turned off?';
 $lang['text_file_uploads_enabled'] 		= 'is File Uploads turned on?';
@@ -41,29 +45,38 @@ $lang['text_single_location'] 			= 'Single Location';
 $lang['text_multi_location'] 			= 'Multiple Locations';
 $lang['text_no'] 		           		= 'NO';
 $lang['text_yes'] 		           		= 'YES';
+$lang['text_whats_this'] 		    	= 'What is this?';
+$lang['text_fetch_extensions'] 			= 'Fetching extensions from the TastyIgniter Marketplace...';
 
-$lang['label_php_version'] 				= 'PHP Version (required %s+):';
-$lang['label_register_globals'] 	    = 'Register Globals:';
-$lang['label_magic_quotes'] 		    = 'Magic Quotes GPC:';
-$lang['label_file_uploads'] 		    = 'File Uploads:';
-$lang['label_mysqli'] 				    = 'MySQL:';
-$lang['label_curl'] 				    = 'cURL:';
-$lang['label_gd'] 				        = 'GD/GD2:';
+$lang['label_requirement'] 				= 'Requirement Field';
+$lang['label_php_version'] 				= 'PHP Version (required %s+)';
+$lang['label_register_globals'] 	    = 'Register Globals';
+$lang['label_magic_quotes'] 		    = 'Magic Quotes GPC';
+$lang['label_file_uploads'] 		    = 'File Uploads';
+$lang['label_mysqli'] 				    = 'MySQL';
+$lang['label_pdo'] 				    	= 'PDO PHP Extension';
+$lang['label_curl'] 				    = 'cURL PHP Extension';
+$lang['label_gd'] 				        = 'GD PHP Library';
+$lang['label_zip'] 				        = 'ZipArchive PHP Library';
 
-$lang['label_database'] 			    = 'Database Name:';
-$lang['label_hostname'] 			    = 'Hostname:';
-$lang['label_username'] 			    = 'Username:';
-$lang['label_password'] 			    = 'Password:';
-$lang['label_prefix'] 				    = 'Table Prefix:';
+$lang['label_database'] 			    = 'Database Name';
+$lang['label_hostname'] 			    = 'Hostname';
+$lang['label_username'] 			    = 'Username';
+$lang['label_password'] 			    = 'Password';
+$lang['label_prefix'] 				    = 'Table Prefix';
 
-$lang['label_site_location_mode'] 		= 'Restaurant mode:';
-$lang['label_site_name'] 			    = 'Restaurant name:';
-$lang['label_site_email'] 			    = 'Restaurant email:';
-$lang['label_staff_name'] 			    = 'Full name:';
-$lang['label_admin_username'] 	        = 'Username:';
-$lang['label_admin_password'] 	        = 'Password:';
-$lang['label_confirm_password'] 	    = 'Confirm password:';
-$lang['label_demo_data'] 			    = 'Include demo data:';
+$lang['label_site_location_mode'] 		= 'Restaurant mode';
+$lang['label_site_name'] 			    = 'Restaurant name';
+$lang['label_site_email'] 			    = 'Restaurant email';
+$lang['label_staff_name'] 			    = 'Full name';
+$lang['label_admin_username'] 	        = 'Username';
+$lang['label_admin_password'] 	        = 'Password';
+$lang['label_confirm_password'] 	    = 'Confirm password';
+$lang['label_demo_data'] 			    = 'Include demo data';
+
+$lang['label_site_key'] 		     	= 'Attach Your Site';
+$lang['label_extensions'] 		     	= 'Recommended Extensions';
+$lang['label_meta_data'] 		     	= 'Meta Data';
 
 $lang['help_database'] 				    = 'Enter the name of the database you want to use.';
 $lang['help_hostname'] 				    = 'Enter the database host name.';
@@ -71,14 +84,18 @@ $lang['help_username'] 				    = 'Enter the database username.';
 $lang['help_password'] 				    = 'Enter the database password. Make sure to use a strong password.';
 $lang['help_dbprefix'] 				    = 'The database table prefix. Do not change unless you have to.';
 $lang['help_site_location_mode'] 		= 'You can change this setting later under System -> Setting -> Restaurant Tab';
+$lang['help_extensions'] 		     	= 'Enjoy TastyIgniter extended core features with these extensions';
+$lang['help_site_key'] 		   			= 'Extensions and themes already added to your TastyIgniter Site will be downloaded & installed';
 
 $lang['button_continue'] 				= 'Continue';
-$lang['button_back'] 				    = 'Back';
+$lang['button_back'] 				    = 'Start Over';
+$lang['button_skip'] 				    = 'Skip';
 
 $lang['alert_license_error'] 		    = 'Please read the TastyIgniter license before proceeding.';
 $lang['alert_requirement_error'] 		= 'Error checking server requirements, please make sure all lights are green.';
-$lang['alert_database_error'] 		    = 'Database connection was unsuccessful, please make sure the database server, username and password is correct.';
+$lang['alert_database_error'] 		    = 'Database connection was not successful, please make sure the database server, username and password is correct.';
 $lang['alert_settings_error'] 		    = 'Error installing user and site settings.';
+$lang['alert_complete_error'] 			= 'Missing addons are missing.';
 
 $lang['text_license_terms']             = '<h3>GNU GENERAL PUBLIC LICENSE</h3>
 <p>Version 3, 29 June 2007</p>

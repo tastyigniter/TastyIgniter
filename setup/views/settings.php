@@ -1,6 +1,4 @@
 <form role="form" class="form-horizontal" accept-charset="utf-8" method="POST" action="<?php echo current_url(); ?>" >
-	<h5><?php echo lang('text_restaurant_details'); ?></h5>
-	<hr>
 	<div class="form-group">
 		<label for="input-site-location-mode" class="col-sm-3 control-label"><?php echo lang('label_site_location_mode'); ?></label>
 		<div class="col-sm-9">

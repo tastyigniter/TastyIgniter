@@ -4,12 +4,12 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package       TastyIgniter
- * @author        SamPoyigi
+ * @package   TastyIgniter
+ * @author    SamPoyigi
  * @copyright (c) 2013 - 2016. TastyIgniter
- * @link          http://tastyigniter.com
- * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since         File available since Release 1.0
+ * @link      http://tastyigniter.com
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 1.0
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -23,19 +23,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Installer
 {
 	/** @var boolean Indicates whether the default database settings were found. */
-	public $db_exists = null;
+	public $db_exists = FALSE;
 
 	/** @var boolean Indicates whether the database settings were found. */
-	public $db_settings_exist = null;
+	public $db_settings_exist = FALSE;
 
-	protected $is_installed;
-	protected $_db_config_loaded;
+	protected $is_installed = FALSE;
+	protected $_db_config_loaded = FALSE;
 
 	public $installed_php_version;
 	public $installed_mysql_version;
-	public $required_php_version = '5.6';
+	public $required_php_version;
 
-	private $writable_folders = [
+	protected $writable_folders = [
 		'admin/cache',
 		'main/cache',
 		'system/tastyigniter/logs',
@@ -43,7 +43,7 @@ class Installer
 		'assets/images',
 	];
 
-	private $writable_files = [
+	protected $writable_files = [
 		'system/tastyigniter/config/database.php',
 	];
 
@@ -52,6 +52,8 @@ class Installer
 		$this->CI =& get_instance();
 
 		$this->installed_php_version = phpversion();
+
+		$this->CI->load->library('hub_manager');
 
 		$this->initialize($config);
 	}
@@ -86,31 +88,36 @@ class Installer
 	public function getSysInfo()
 	{
 		$info = [];
-		$info['version'] = TI_VERSION;
-		$info['php_version'] = $this->installed_php_version;
-		$info['mysql_version'] = $this->db_exists ? $this->CI->db->version() : '';
-		$info['sys_hash'] = $this->CI->config->item('sys_hash');  // md5(TastyIgniter!core!2.1.1)
-
-		$this->CI->load->model('Languages_model');
-		$languages = $this->CI->Languages_model->getLanguages();
-		foreach ($languages as $language) {
-			$langs[] = $language['idiom'];
-		}
-
-		$info['languages'] = implode(',', $langs);
+		$info['domain'] = root_url();
+		$info['ver'] = TI_VERSION;
+		$info['php'] = $this->installed_php_version;
+		$info['mysql'] = $this->db_exists ? $this->CI->db->version() : '5.5';
+		$info['web'] = isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : null;
+//		$info['site_key'] = empty($site_key = $this->CI->config->item('site_key')) ? md5('NULL') : $site_key;
 
 		return $info;
 	}
 
+	public function checkComposerVendor()
+	{
+		if (!isset($this->CI->composer_manager))
+			$this->CI->load->library('Composer_manager');
+
+		return $this->CI->composer_manager->checkVendor();
+	}
+
 	public function checkRequirements()
 	{
-		$result['php_status'] = (bool)!($this->installed_php_version < $this->required_php_version);
-		$result['mysqli_status'] = (bool)(extension_loaded('mysqli') AND class_exists('Mysqli'));
-		$result['curl_status'] = (bool)function_exists('curl_init');
-		$result['gd_status'] = (bool)extension_loaded('gd');
-		$result['magic_quotes_status'] = (bool)!ini_get('magic_quotes_gpc');
-		$result['register_globals_status'] = (bool)!ini_get('register_globals');
-		$result['file_uploads_status'] = (bool)ini_get('file_uploads');
+		$result['php_status'] = (int)version_compare($this->installed_php_version, $this->required_php_version, ">=");
+		$result['mysqli_status'] = (int)(extension_loaded('mysqli') AND class_exists('Mysqli'));
+		$result['pdo_status'] = (int)defined('PDO::ATTR_DRIVER_NAME') OR class_exists('PDO');
+		$result['curl_status'] = (int)(function_exists('curl_init') AND defined('CURLOPT_FOLLOWLOCATION'));
+		$result['mbstring_status'] = (int)extension_loaded('mbstring');
+		$result['gd_status'] = (int)extension_loaded('gd');
+		$result['zip_status'] = (int)class_exists('ZipArchive');
+		$result['magic_quotes_status'] = (int)!ini_get('magic_quotes_gpc');
+		$result['register_globals_status'] = (int)!ini_get('register_globals');
+		$result['file_uploads_status'] = (int)ini_get('file_uploads');
 
 		return $result;
 	}
@@ -125,7 +132,7 @@ class Installer
 		foreach ($writables as $writable) {
 			$data[$writable] = [
 				'file'   => $writable,
-				'status' => is_really_writable(ROOTPATH . $writable),
+				'status' => (int)is_really_writable(ROOTPATH . $writable),
 			];
 		}
 
@@ -167,8 +174,12 @@ class Installer
 
 	public function isInstalled()
 	{
+		if (!$this->checkComposerVendor()) {
+			return FALSE;
+		}
+
 		$encryptionKey = $this->CI->config->item('encryption_key');
-		if (!empty($encryptionKey)) {
+		if (empty($encryptionKey)) {
 			return FALSE;
 		}
 
@@ -177,7 +188,26 @@ class Installer
 			return FALSE;
 		}
 
+		$setup_state = $this->CI->config->item('ti_setup');
+		if (!in_array($setup_state, ['installed', 'updated'])) {
+			return FALSE;
+		}
+
 		return TRUE;
+	}
+
+	public function checkFolders($folders = null)
+	{
+		!is_null($folders) OR $folders = $this->writable_folders;
+
+		return $this->checkWritable($folders);
+	}
+
+	public function checkFiles($files = null)
+	{
+		!is_null($files) OR $files = $this->writable_files;
+
+		return $this->checkWritable($files);
 	}
 
 	public function checkDatabase()
@@ -201,6 +231,9 @@ class Installer
 			return FALSE;
 		}
 
+		// Try to load database as long as database configuration is not empty
+		$this->CI->load->database();
+
 		// Make sure the database name is specified
 		if (empty($db['default']['database']) OR $db['default']['dbprefix'] === 'ti_') {
 			$this->db_settings_exist = FALSE;
@@ -208,25 +241,27 @@ class Installer
 			return FALSE;
 		}
 
+		// At this point, its clear database configuration is set or modified
 		$this->db_settings_exist = TRUE;
 
-		$this->CI->load->database();
-
-		// Make sure the database is connected and the settings table exist
+		// Lets make sure the database is connected
 		if ($this->CI->db->conn_id === FALSE) {
 			$this->db_exists = FALSE;
 
 			return FALSE;
 		}
 
+		$this->db_exists = TRUE;
+
+		// This fix issue with SQL error 'no default value specified'
 		$this->CI->db->query("SET SESSION sql_mode=''");
 
+		// Check tastyigniter settings database table is installed
 		if (!$this->CI->db->table_exists('settings')) {
 			return FALSE;
 		}
 
-		$this->db_exists = TRUE;
-
+		// All clear, database is connected and all tables installed.
 		return TRUE;
 	}
 
@@ -318,20 +353,6 @@ class Installer
 		}
 	}
 
-	public function checkFolders($folders = null)
-	{
-		!is_null($folders) OR $folders = $this->writable_folders;
-
-		return $this->checkWritable($folders);
-	}
-
-	public function checkFiles($files = null)
-	{
-		!is_null($files) OR $files = $this->writable_files;
-
-		return $this->checkWritable($files);
-	}
-
 	public function setup()
 	{
 		$this->CI->load->model('Setup_model');
@@ -351,7 +372,7 @@ class Installer
 
 		// Save the site configuration to the settings table
 		$settings = [
-			'ti_setup'           => 'installed',
+			'ti_version'         => TI_VERSION,
 			'site_location_mode' => $this->CI->input->post('site_location_mode'),
 			'site_url'           => root_url(),
 			'site_name'          => $this->CI->input->post('site_name'),
@@ -362,14 +383,11 @@ class Installer
 			return FALSE;
 		}
 
-		$this->CI->Setup_model->updateVersion();
-
 		// Create the default location
-		$this->CI->Setup_model->updateLocation($settings);
+		$this->CI->Setup_model->updateDefaultLocation($settings);
 
 		// Create config array item containing all installed extensions
-		$this->CI->load->model('Extensions_model');
-		$this->CI->Extensions_model->updateInstalledExtensions();
+		$this->CI->Setup_model->updateInstalledExtensions();
 
 		// Create the encryption key used for sessions and encryption
 		$this->createEncryptionKey();
@@ -408,17 +426,17 @@ class Installer
 
 				return FALSE;
 			} else {
-				$this->CI->Setup_model->updateVersion($update_version);
-
 				// Save the site configuration to the settings table
-				$settings = ['ti_setup' => 'updated', 'site_url' => root_url()];
-				if (!$this->CI->Setup_model->updateSettings($settings, TRUE)) {
+				$settings = ['ti_version' => $update_version, 'site_url' => root_url()];
+				if (!$this->CI->Setup_model->updateSettings($settings)) {
 					return FALSE;
 				}
 
+				// Create the default location
+				$this->CI->Setup_model->updateDefaultLocation($settings);
+
 				// Create config array item containing all installed extensions
-				$this->CI->load->model('Extensions_model');
-				$this->CI->Extensions_model->updateInstalledExtensions();
+				$this->CI->Setup_model->updateInstalledExtensions();
 
 				// Create the encryption key used for sessions and encryption
 				$this->createEncryptionKey();
@@ -430,10 +448,64 @@ class Installer
 		}
 	}
 
+	public function complete()
+	{
+		$this->createEncryptionKey();
+
+		$settings = [
+			'ti_setup' => (config_item('ti_setup') == 'installed') ? 'updated' : 'installed',
+			'sys_hash' => md5("TastyIgniter!core!".TI_VERSION),
+		];
+
+		$this->CI->load->model('Setup_model');
+
+		return $this->CI->Setup_model->updateSettings($settings);
+	}
+
+	public function saveSiteKey($site_key)
+	{
+		if (!empty($site_key)) {
+			$this->CI->config->set_item('site_key', $site_key);
+			$this->CI->load->model('Setup_model');
+			$this->CI->Setup_model->updateSettings(['site_key' => $site_key]);
+		}
+	}
+
+	public function downloadFile($fileCode, $fileHash, $params = [])
+	{
+		$filePath = storage_path("temp/".md5($fileCode) . '.zip');
+
+		if (!is_dir($fileDir = dirname($filePath)))
+			mkdir($fileDir, 0777, TRUE);
+
+		return $this->CI->hub_manager->downloadFile('item', $filePath, $fileHash, $params);
+	}
+
+	public function extractFile($fileCode, $fileType)
+	{
+		$extractTo = current(Modules::folders());
+
+		$this->CI->load->library('updates_manager');
+
+		if (!$this->CI->updates_manager->extractTo($fileCode, $extractTo . $fileCode))
+			throw new Exception('Failed to extract %s archive file', $fileCode);
+
+		return TRUE;
+	}
+
+	public function cleanUp()
+	{
+		if (!function_exists('delete_files'))
+			get_instance()->load->helper('file_helper');
+
+		delete_files(ROOTPATH . 'assets/downloads/temp', TRUE);
+		@rmdir(ROOTPATH . 'assets/downloads/temp');
+
+		return 'Installation clean up complete';
+	}
+
 	protected function createEncryptionKey()
 	{
-		$this->CI->load->helper('config_helper');
-
 		$chars = [
 			'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
 			'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
@@ -451,9 +523,10 @@ class Installer
 			$token .= $chars[mt_rand(0, $num_chars)];
 		}
 
-		$config_array = [
-			'encryption_key' => $token,
-		];
+		$config_array = ['encryption_key' => $token];
+
+		if (!function_exists('write_config'))
+			$this->CI->load->helper('config_helper');
 
 		return write_config('config', $config_array, '', IGNITEPATH);
 	}

@@ -4,12 +4,12 @@
  *
  * An open source online ordering, reservation and management system for restaurants.
  *
- * @package       TastyIgniter
- * @author        SamPoyigi
+ * @package   TastyIgniter
+ * @author    SamPoyigi
  * @copyright (c) 2013 - 2016. TastyIgniter
- * @link          http://tastyigniter.com
- * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since         File available since Release 1.0
+ * @link      http://tastyigniter.com
+ * @license   http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
+ * @since     File available since Release 1.0
  */
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -90,7 +90,7 @@ class Setup_model extends TI_Model
 
 	public function updateSettings($setting = [])
 	{
-		$prefs_keys = ['ti_setup', 'ti_version', 'carte_key'];
+		$prefs_keys = ['ti_setup', 'ti_version', 'site_key'];
 		foreach ($setting as $key => $value) {
 			$setting_row = [
 				'sort'       => (in_array($key, $prefs_keys)) ? 'prefs' : 'config',

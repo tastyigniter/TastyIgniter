@@ -10,12 +10,15 @@ margin-bottom: 55px;
 color: #49596E;
 font-weight: 400;
 }
-a, a:hover, a:focus, a:active {
+.footer-links a, .footer-links a:hover, .footer-links a:focus, .footer-links a:active {
 color: #E3E3E3;
 outline: 0px none;
 }
 b, strong {
 font-weight: 600;
+}
+.fa {
+color: #7184a1;
 }
 .footer-links a {
 text-shadow: 0 1px 0 rgba(0, 0, 0, 1);
@@ -50,7 +53,7 @@ border-bottom: 0 solid #DDDBDB;
 }
 .page-header {
 border-bottom: 0 solid #EEE;
-margin: 25px -30px 0;
+margin: 50px -30px 0;
 color: #E3E3E3;
 }
 .page-header h1 {
@@ -251,7 +254,8 @@ border: 1px solid #F9FAFC;
 border-radius: 5px;
 padding: 25px;
 }
-.setup_box p, .setup_box h2 {
+.setup_box p {
+margin-bottom: 0;
 }
 .setup_box h1 {
 font-size: 30px;
@@ -287,6 +291,48 @@ padding-right: 10px;
 text-align: center;
 padding-top: 25px;
 }
+.select-box {
+/*height: 300px;*/
+/*overflow-y: auto;*/
+/*overflow-x: hidden;*/
+}
+.loading-box {
+	padding: 15px;
+}
+.loading-box p {
+	margin-top: 10px;
+}
+.extensions {
+margin-top: 30px;
+}
+.extensions .panel-default,
+.extensions .panel-heading {
+border-color: #E9EDF3;
+}
+.extensions .panel-heading {
+background-color: #F9FAFC;
+}
+.extensions .checkbox {
+margin: 0;
+}
+.extensions .checkbox input {
+width: 18px;
+height: 18px;
+margin-top: -1px;
+}
+.extensions .checkbox label::before,
+.extensions .checkbox label::after {
+height: 18px;
+width: 18px;
+top: -3px;
+}
+.extensions .checkbox label::before {
+border-color: #CBD5E3;
+}
+.extensions .checkbox label::after {
+padding-left: 3px;
+font-size: 12px;
+}
 .panel-next-steps {
 margin: -25px;
 border-radius: 0;
@@ -307,7 +353,6 @@ margin-top: 0;
 }
 .panel-next-steps .btn-cta {
 display: block;
-border: 1px solid;
 border-radius: 5px;
 text-transform: uppercase;
 padding: 20px;
@@ -319,13 +364,18 @@ margin-top: 10px;
 .panel-next-steps .btn-cta .fa {
 margin-bottom: 10px;
 }
-.btn-orange, .btn-orange:hover, .btn-orange:focus {
-background-color: transparent;
-color: #ED561A;
+.btn-orange {
+background-color: #E96531;
+border-color: #E96531;
+color: #FFF;
 }
-.btn-blue, .btn-blue:hover, .btn-blue:focus {
-background-color: transparent;
-color: #1A8EED;
+.btn-orange:hover, .btn-orange:focus {
+background-color: #CB582A;
+border-color: #CB582A;
+color: #FFF;
+}
+.btn-cta .fa {
+color: #FFF;
 }
 .call-to-action h3 {
 margin-top: 0px;
