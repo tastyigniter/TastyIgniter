@@ -46,12 +46,14 @@ class Theme_manager
 	public function __construct()
 	{
 		$this->CI =& get_instance();
+		$this->CI->load->helper('directory');
 
 		$this->config = $this->CI->config->load('template', TRUE);
 		$this->filesToCopy = ['theme.json', 'theme_config.php', 'screenshot.png'];
 
 		$this->loadInstalled();
 		$this->loadThemes();
+
 	}
 
 	/**

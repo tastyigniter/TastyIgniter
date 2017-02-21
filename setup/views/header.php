@@ -3,13 +3,12 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title><?php echo sprintf(lang('text_title'), $text_heading); ?></title>
-	<link type="image/ico" rel="shortcut icon" href="<?php echo base_url('views/assets/favicon.ico'); ?>">
-    <link type="text/css" rel="stylesheet" href="<?php echo base_url('views/assets/bootstrap.min.css'); ?>">
-	<link type="text/css" rel="stylesheet" href="<?php echo base_url('views/assets/font-awesome.min.css'); ?>">
+	<link type="image/ico" rel="shortcut icon" href="<?php echo root_url('favicon.ico'); ?>">
+    <link type="text/css" rel="stylesheet" href="<?php echo assets_url('css/bootstrap.min.css'); ?>">
+	<link type="text/css" rel="stylesheet" href="<?php echo assets_url('css/font-awesome.min.css'); ?>">
 	<link type="text/css" rel="stylesheet" href="<?php echo base_url('views/assets/fonts.css'); ?>">
 	<link type="text/css" rel="stylesheet" href="<?php echo base_url('views/assets/stylesheet.css'); ?>">
-	<script src="<?php echo base_url('views/assets/jquery-1.11.2.min.js'); ?>"></script>
-	<script src="<?php echo base_url('views/assets/bootstrap.min.js'); ?>"></script>
+	<script src="<?php echo assets_url('js/app/vendor.js'); ?>"></script>
 </head>
 <body>
 	<div class="container-fluid">
@@ -17,7 +16,7 @@
 			<div class="row page-header">
 				<div id="logo" class="col-xs-12 col-sm-4 navbar-right">
 					<div class="col-xs-8 col-sm-12">
-						<img src="<?php echo base_url('views/assets/tastyigniter-logo.png'); ?>" alt="TastyIgniter Logo">
+						<img src="<?php echo image_url('tastyigniter-logo.png'); ?>" alt="TastyIgniter Logo">
 					</div>
 				</div>
 				<div class="col-xs-12 col-sm-8">
