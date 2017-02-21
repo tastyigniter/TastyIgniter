@@ -10,10 +10,13 @@ Release Date: August 2016
 * New Event hook points: before_controller, after_controller_constructor, before_main_controller, after_main_controller
 * Display active modules on admin layout list page (76ad3fd)
 * Display number of customers in customer group (8dab2e1)
-g* New Assets library to handle working with html head tags, css and js (71e09e2)
+* New Assets library to handle working with html head tags, css and js (71e09e2)
 * New array helper with array_get method to get array item using dot notation (bd02bb9)
 * Eloquent ORM library for models and other subclass to provide extra functions
 * New Location_hours, Location_delivery, Location_geocode libraries to extend and extract Location library functions
+* Can now add extensions and themes from marketplace
+* New Composer manager library to manage composer dependencies
+* New Updates manager library to manage core, extensions & themes updates and installation from marketplace
 
 #### Changed
 * Improve nav menu to switch between single and multi location settings
@@ -44,6 +47,10 @@ g* New Assets library to handle working with html head tags, css and js (71e09e2
 * Improved design patterns: Use Fat model thin controller
 * Improve Location Library: extract functions to new libraries Location_hours, Location_delivery, Location_geocode
 * Code style consistency: use loose instead of strict comparision where appropriate
+** Improved updates center, now requires a site key to install/update core, extensions & themes
+* Improved Extensions & Themes functionality - upload, install, duplicate & delete
+** Improved installer library to use only the Setup_model during setup
+* Removed extensions files & schema from codebase
 
 
 #### Fixed
@@ -58,7 +65,7 @@ g* New Assets library to handle working with html head tags, css and js (71e09e2
 * Redirect url to use relative url (05a1a1b)
 * Fixed categories link on storefront, menu list category filter and location slug (2e640e6)
 * Minor changes (be8f975 & 00983ad)
-Fix issue with going back to previous setup step (debca3c)
+* Fix issue with going back to previous setup step (debca3c)
 
 ### v2.1.1
 
