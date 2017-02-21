@@ -70,7 +70,7 @@
 	                        <?php echo form_error('captcha', '<span class="text-danger">', '</span>'); ?>
 	                    </div>
 
-	                    <?php if ($find_table_action === 'view_summary') { ?>
+	                    <?php if ($find_table_action === 'view_summary' OR $find_table_action === 'no_module') { ?>
 	                        <div class="row">
 	                            <div class="col-sm-4">
 	                                <button type="submit" class="btn btn-primary btn-block btn-lg"><?php echo lang('button_reservation'); ?></button>

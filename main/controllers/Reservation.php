@@ -35,6 +35,7 @@ class Reservation extends Main_Controller
 		$data['text_login_register'] = ($this->customer->isLogged()) ? sprintf($this->lang->line('text_logout'), $this->customer->getName(), site_url('account/logout' . $prepend)) : sprintf($this->lang->line('text_login'), site_url('account/login' . $prepend));
 
 		$data['reset_url'] = site_url('reservation');
+		$data['find_table_action'] = 'no_module';
 
 		if ($this->input->post('first_name')) {
 			$data['first_name'] = $this->input->post('first_name');

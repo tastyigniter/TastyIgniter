@@ -2,7 +2,7 @@
 <div class="container">
 	<div class="row content">
 		<div class="col-md-12">
-			<div class="col-md-4 center-block float-none">
+			<div class="col-md-5 center-block float-none">
 				<div class="panel panel-default panel-login">
 					<div class="thumbnail">
 						<?php if ($this->config->item('site_logo') === 'data/no_photo.png') { ?>

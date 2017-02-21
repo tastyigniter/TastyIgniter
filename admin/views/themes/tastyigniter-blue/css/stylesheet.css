@@ -14,12 +14,12 @@ body {
 	color: #4C4C4C;
 }
 .body-login {
-	background-color: #C5D2E0;
+	background-color: #30425A;
 	color: #6A6A6A;
 }
 .body-login #page-wrapper {
 	margin-left: 0;
-	background-color: #C5D2E0;
+	background-color: #30425A;
 	border: 0;
 }
 .body-login .navbar, .body-login .navbar-brand, .body-login #footer {
@@ -33,6 +33,7 @@ body {
 .body-login .panel-login .panel-body {
 	background-color: #FFFFFF;
 	border-radius: 3px;
+	padding: 20px 40px;
 }
 .body-login .panel-login .thumbnail {
 	background-color: transparent;
@@ -40,6 +41,9 @@ body {
 .body-login .panel-login > .panel-heading {
 	text-align: center;
 	padding: 20px 15px;
+}
+.body-login .form-group {
+	margin-bottom: 10px;
 }
 .body-login .form-control {
 	width: 100%;
@@ -1269,8 +1273,8 @@ a:focus {
 	box-shadow: inset 0px 3px 5px rgba(210, 220, 231, 0.825);
 }
 .btn-success {
-	background-color: #47A447;
-	border-color: #398439;
+	background-color: #4CAE4C;
+	border-color: #429842;
 	text-shadow: 1px 1px 0 #398439;
 }
 .btn-success:hover,
@@ -1278,8 +1282,8 @@ a:focus {
 .btn-success:active,
 .btn-success.active,
 .open .dropdown-toggle.btn-success {
-	background-color: #4CAE4C;
-	border-color: #429842;
+	background-color: #47A447;
+	border-color: #398439;
 }
 .btn-primary {
 	background-color: #3E6AAB;
@@ -1839,8 +1843,13 @@ table .action .checkbox {
 table .action .btn {
 	background-color: #FFF;
 	display: inline-block;
+	float: left;
+	margin-right:8px;
 	padding: 8px 10px;
 	text-shadow: unset;
+}
+table .action .btn:last-child {
+	margin-right:0;
 }
 .table .action .btn-group-xs > .btn,
 .table .action .btn.btn-xs {

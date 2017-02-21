@@ -9,7 +9,7 @@
  * @copyright (c) 2013 - 2016. TastyIgniter
  * @link          http://tastyigniter.com
  * @license       http://opensource.org/licenses/GPL-3.0 The GNU GENERAL PUBLIC LICENSE
- * @since         File available since Release 1.0
+ * @since         File available since Release 2.2
  */
 namespace TastyIgniter\Database;
 
@@ -145,20 +145,19 @@ class Builder extends BuilderBase
 			$mode = 'all';
 
 		if ($mode === 'exact') {
-			$this->where(function($query) use ($columns, $term) {
+			$this->where(function ($query) use ($columns, $term) {
 				foreach ($columns as $field) {
 					if (!strlen($term)) continue;
 					$query->orLike($field, $term, 'both');
 				}
 			}, null, null, $boolean);
-		}
-		else {
+		} else {
 			$words = explode(' ', $term);
 			$wordBoolean = $mode === 'any' ? 'or' : 'and';
 
-			$this->where(function($query) use ($columns, $words, $wordBoolean) {
+			$this->where(function ($query) use ($columns, $words, $wordBoolean) {
 				foreach ($columns as $field) {
-					$query->orWhere(function($query) use ($field, $words, $wordBoolean) {
+					$query->orWhere(function ($query) use ($field, $words, $wordBoolean) {
 						foreach ($words as $word) {
 							if (!strlen($word)) continue;
 							$query->like($field, $word, 'both', $wordBoolean);
